@@ -26,6 +26,7 @@ import { abortableRequest } from '../utils/abortableRequest';
 export interface MessageQueryContext {
   agentId?: string;
   groupId?: string;
+  threadId?: string | null;
   topicId?: string | null;
 }
 
@@ -34,12 +35,7 @@ export class MessageService {
     return lambdaClient.message.createMessage.mutate(params as any);
   };
 
-  getMessages = async (params: {
-    agentId?: string;
-    groupId?: string;
-    threadId?: string;
-    topicId?: string;
-  }): Promise<UIChatMessage[]> => {
+  getMessages = async (params: MessageQueryContext): Promise<UIChatMessage[]> => {
     const data = await lambdaClient.message.getMessages.query(params);
 
     return data as unknown as UIChatMessage[];
@@ -152,7 +148,10 @@ export class MessageService {
     return lambdaClient.message.removeMessage.mutate({ ...ctx, id });
   };
 
-  removeMessages = async (ids: string[], ctx?: MessageQueryContext): Promise<UpdateMessageResult> => {
+  removeMessages = async (
+    ids: string[],
+    ctx?: MessageQueryContext,
+  ): Promise<UpdateMessageResult> => {
     return lambdaClient.message.removeMessages.mutate({ ...ctx, ids });
   };
 

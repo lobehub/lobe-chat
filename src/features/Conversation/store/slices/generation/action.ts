@@ -41,7 +41,6 @@ export interface GenerationAction {
 
   /**
    * Continue generation from a specific block
-   * @deprecated Temporary bridge to ChatStore
    */
   continueGenerationMessage: (blockId: string, messageId: string) => Promise<void>;
 
@@ -137,10 +136,19 @@ export const generationSlice: StateCreator<
   },
 
   continueGeneration: async (messageId: string) => {
-    const state = get();
-    const { hooks } = state;
+    // Note: continueGenerationMessage takes (blockId, messageId)
+    // For now, we use messageId for both since we don't have block ID
+    // Hooks are handled in continueGenerationMessage
+    await get().continueGenerationMessage(messageId, messageId);
+  },
 
+  continueGenerationMessage: async (blockId: string, messageId: string) => {
+    const { context, displayMessages, hooks } = get();
     const chatStore = useChatStore.getState();
+
+    // Find the message (blockId refers to the assistant message to continue from)
+    const message = displayMessages.find((m) => m.id === blockId);
+    if (!message) return;
 
     // ===== Hook: onBeforeContinue =====
     if (hooks.onBeforeContinue) {
@@ -148,20 +156,35 @@ export const generationSlice: StateCreator<
       if (shouldProceed === false) return;
     }
 
-    // Delegate to global ChatStore
-    // Note: continueGenerationMessage takes (blockId, messageId)
-    // For now, we use messageId for both since we don't have block ID
-    await chatStore.continueGenerationMessage(messageId, messageId);
+    // Create continue operation with ConversationStore context (includes groupId)
+    const { operationId } = chatStore.startOperation({
+      context: { ...context, messageId },
+      type: 'continue',
+    });
 
-    // ===== Hook: onContinueComplete =====
-    if (hooks.onContinueComplete) {
-      hooks.onContinueComplete(messageId);
+    try {
+      // Execute agent runtime with full context from ConversationStore
+      await chatStore.internal_execAgentRuntime({
+        context,
+        messages: displayMessages,
+        parentMessageId: blockId,
+        parentMessageType: message.role as 'assistant' | 'tool' | 'user',
+        parentOperationId: operationId,
+      });
+
+      chatStore.completeOperation(operationId);
+
+      // ===== Hook: onContinueComplete =====
+      if (hooks.onContinueComplete) {
+        hooks.onContinueComplete(messageId);
+      }
+    } catch (error) {
+      chatStore.failOperation(operationId, {
+        message: error instanceof Error ? error.message : String(error),
+        type: 'ContinueError',
+      });
+      throw error;
     }
-  },
-
-  continueGenerationMessage: async (blockId: string, messageId: string) => {
-    const chatStore = useChatStore.getState();
-    await chatStore.continueGenerationMessage(blockId, messageId);
   },
 
   delAndRegenerateMessage: async (messageId: string) => {

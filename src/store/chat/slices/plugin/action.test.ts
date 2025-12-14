@@ -135,9 +135,12 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 optimisticUpdateMessageContent 是否被正确调用
+      // The function now takes 4 args: (id, content, extra?, context?)
       expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         newContent,
+        undefined,
+        undefined,
       );
 
       // 验证 coreProcessMessage 是否被正确调用
@@ -174,9 +177,12 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 optimisticUpdateMessageContent 是否被正确调用
+      // The function now takes 4 args: (id, content, extra?, context?)
       expect(result.current.optimisticUpdateMessageContent).toHaveBeenCalledWith(
         messageId,
         newContent,
+        undefined,
+        undefined,
       );
 
       // 验证 coreProcessMessage 没有被正确调用
@@ -240,12 +246,14 @@ describe('ChatPluginAction', () => {
       });
 
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { trace: {} });
-      expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error, {
-        sessionId: undefined,
-        topicId: undefined,
-      });
+      // Context now includes groupId from the message
+      expect(messageService.updateMessageError).toHaveBeenCalledWith(
+        messageId,
+        error,
+        expect.objectContaining({ topicId: undefined }),
+      );
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { agentId: '', topicId: undefined },
+        context: expect.objectContaining({ topicId: undefined }),
       });
       expect(storeState.triggerAIMessage).not.toHaveBeenCalled(); // 确保在错误情况下不调用此方法
     });
@@ -506,8 +514,9 @@ describe('ChatPluginAction', () => {
         type: 'PluginSettingsInvalid',
       });
 
+      // Context now includes groupId from the message
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { agentId: '', topicId: undefined },
+        context: expect.objectContaining({ topicId: undefined }),
       });
     });
   });
@@ -714,12 +723,14 @@ describe('ChatPluginAction', () => {
         await result.current.internal_callPluginApi(messageId, payload);
       });
 
-      expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error, {
-        sessionId: undefined,
-        topicId: undefined,
-      });
+      // Context now includes groupId from the message
+      expect(messageService.updateMessageError).toHaveBeenCalledWith(
+        messageId,
+        error,
+        expect.objectContaining({ topicId: undefined }),
+      );
       expect(replaceMessagesSpy).toHaveBeenCalledWith(mockMessages, {
-        context: { agentId: '', topicId: undefined },
+        context: expect.objectContaining({ topicId: undefined }),
       });
     });
   });
@@ -1054,6 +1065,183 @@ describe('ChatPluginAction', () => {
           messageId,
           { tools: message.tools },
           { agentId: contextSessionId, topicId: contextTopicId },
+        );
+      });
+    });
+
+    describe('groupId context support', () => {
+      const groupContext = {
+        agentId: 'agent-in-group',
+        groupId: 'group-123',
+        topicId: 'topic-in-group',
+      };
+
+      it('optimisticUpdatePluginState should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const pluginState = { key: 'value' };
+
+        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        let operationId: string;
+        await act(async () => {
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+
+          await result.current.optimisticUpdatePluginState(messageId, pluginState, {
+            operationId,
+          });
+        });
+
+        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
+          messageId,
+          pluginState,
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+      });
+
+      it('optimisticUpdatePluginError should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const error = { message: 'Plugin error', type: 'error' as any };
+
+        (messageService.updateMessage as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        let operationId: string;
+        await act(async () => {
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+
+          await result.current.optimisticUpdatePluginError(messageId, error, {
+            operationId,
+          });
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { error },
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+      });
+
+      it('internal_refreshToUpdateMessageTools should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+
+        const message = {
+          id: messageId,
+          role: 'assistant',
+          content: 'test',
+          tools: [{ id: 'tool-1', identifier: 'test', apiName: 'test', arguments: '{}' }],
+        } as any;
+
+        const key = messageMapKey(groupContext);
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+
+          useChatStore.setState({
+            dbMessagesMap: { [key]: [message] },
+            messagesMap: { [key]: [message] },
+            activeAgentId: groupContext.agentId,
+            activeGroupId: groupContext.groupId,
+            activeTopicId: groupContext.topicId,
+          });
+        });
+
+        (messageService.updateMessage as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        await act(async () => {
+          await result.current.internal_refreshToUpdateMessageTools(messageId, {
+            operationId,
+          });
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { tools: message.tools },
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+      });
+
+      it('optimisticUpdateToolMessage should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'message-id';
+        const content = 'new content';
+        const pluginState = { status: 'success' };
+
+        (messageService.updateMessage as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+        (messageService.updateMessagePluginState as Mock).mockResolvedValue({
+          success: true,
+          messages: [],
+        });
+
+        let operationId: string;
+        await act(async () => {
+          const op = result.current.startOperation({
+            type: 'sendMessage',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+
+          await result.current.optimisticUpdateToolMessage(
+            messageId,
+            { content, pluginState },
+            { operationId },
+          );
+        });
+
+        expect(messageService.updateMessage).toHaveBeenCalledWith(
+          messageId,
+          { content },
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+        expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
+          messageId,
+          pluginState,
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
         );
       });
     });

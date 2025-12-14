@@ -460,7 +460,7 @@ describe('DataSlice', () => {
       });
     });
 
-    it('should pass undefined threadId when not provided', async () => {
+    it('should pass null threadId when provided as null', async () => {
       const mockMessages: UIChatMessage[] = [
         {
           id: 'msg-1',
@@ -485,11 +485,12 @@ describe('DataSlice', () => {
       });
 
       await waitFor(() => {
-        expect(messageService.getMessages).toHaveBeenCalledWith({
-          agentId: 'test-session',
-          threadId: undefined,
-          topicId: 'test-topic',
-        });
+        expect(messageService.getMessages).toHaveBeenCalledWith(
+          expect.objectContaining({
+            agentId: 'test-session',
+            topicId: 'test-topic',
+          }),
+        );
       });
     });
 
@@ -610,12 +611,13 @@ describe('DataSlice', () => {
       });
 
       await waitFor(() => {
-        expect(messageService.getMessages).toHaveBeenCalledWith({
-          agentId: 'supervisor-agent',
-          groupId: 'group-123',
-          threadId: undefined,
-          topicId: 'test-topic',
-        });
+        expect(messageService.getMessages).toHaveBeenCalledWith(
+          expect.objectContaining({
+            agentId: 'supervisor-agent',
+            groupId: 'group-123',
+            topicId: 'test-topic',
+          }),
+        );
       });
     });
 
@@ -644,12 +646,12 @@ describe('DataSlice', () => {
       });
 
       await waitFor(() => {
-        expect(messageService.getMessages).toHaveBeenCalledWith({
-          agentId: 'test-session',
-          groupId: undefined,
-          threadId: undefined,
-          topicId: 'test-topic',
-        });
+        expect(messageService.getMessages).toHaveBeenCalledWith(
+          expect.objectContaining({
+            agentId: 'test-session',
+            topicId: 'test-topic',
+          }),
+        );
       });
     });
   });

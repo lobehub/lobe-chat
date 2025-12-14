@@ -16,11 +16,14 @@ export const conversationContextSchema = z.object({
 });
 
 /**
- * 简化版上下文（不含 thread 和 group）
+ * 简化版上下文
+ * 用于 message 和 topic 的 CRUD 操作
  */
 export const basicContextSchema = z.object({
   agentId: z.string().optional(),
+  groupId: z.string().nullable().optional(),
   sessionId: z.string().nullable().optional(),
+  threadId: z.string().nullable().optional(),
   topicId: z.string().nullable().optional(),
 });
 

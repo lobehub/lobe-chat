@@ -101,6 +101,8 @@ export const messagePublicApi: StateCreator<
       updateMessageInput,
       activeTopicId,
       activeAgentId,
+      activeThreadId,
+      activeGroupId,
       inputMessage,
     } = get();
     if (!activeAgentId) return;
@@ -111,8 +113,9 @@ export const messagePublicApi: StateCreator<
       content: inputMessage,
       role: 'assistant',
       agentId: activeAgentId,
-      // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
+      threadId: activeThreadId,
+      groupId: activeGroupId,
       parentId,
     });
 
@@ -196,15 +199,12 @@ export const messagePublicApi: StateCreator<
     let ids = [message.id];
 
     get().internal_dispatchMessage({ type: 'deleteMessages', ids });
-    const agentId = get().activeAgentId;
+    const ctx = get().internal_getConversationContext();
     // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.removeMessages(ids, {
-      agentId,
-      topicId: get().activeTopicId,
-    });
+    const result = await messageService.removeMessages(ids, ctx);
 
     if (result?.success && result.messages) {
-      get().replaceMessages(result.messages);
+      get().replaceMessages(result.messages, { context: ctx });
     }
   },
 
