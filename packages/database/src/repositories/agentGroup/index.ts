@@ -1,5 +1,6 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { AgentGroupDetail, AgentGroupMember } from '@lobechat/types';
+import { cleanObject } from '@lobechat/utils';
 import { and, eq } from 'drizzle-orm';
 
 import {
@@ -69,12 +70,14 @@ export class AgentGroupRepository {
 
     for (const row of groupAgentsWithDetails) {
       const isSupervisor = row.role === 'supervisor';
-      agentItems.push({
-        ...row.agent,
-        isSupervisor,
-        // Inject builtin agent slug for supervisor
-        slug: isSupervisor ? BUILTIN_AGENT_SLUGS.groupSupervisor : row.agent.slug,
-      } as AgentGroupMember);
+      agentItems.push(
+        cleanObject({
+          ...row.agent,
+          isSupervisor,
+          // Inject builtin agent slug for supervisor
+          slug: isSupervisor ? BUILTIN_AGENT_SLUGS.groupSupervisor : row.agent.slug,
+        }) as AgentGroupMember,
+      );
       if (isSupervisor) {
         supervisorAgentId = row.agent.id;
       }
@@ -108,12 +111,14 @@ export class AgentGroupRepository {
       supervisorAgentId = supervisorAgent.id;
 
       // Insert at the beginning of agents array
-      agentItems.unshift({
-        ...supervisorAgent,
-        isSupervisor: true,
-        // Inject builtin agent slug for supervisor
-        slug: BUILTIN_AGENT_SLUGS.groupSupervisor,
-      } as AgentGroupMember);
+      agentItems.unshift(
+        cleanObject({
+          ...supervisorAgent,
+          isSupervisor: true,
+          // Inject builtin agent slug for supervisor
+          slug: BUILTIN_AGENT_SLUGS.groupSupervisor,
+        }) as AgentGroupMember,
+      );
     }
 
     return {

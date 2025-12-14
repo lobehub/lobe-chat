@@ -234,6 +234,7 @@ export const streamingExecutor: StateCreator<
 
     // Get agentId, topicId, groupId and abortController from operation
     let agentId: string;
+    let subAgentId: string | undefined;
     let topicId: string | null | undefined;
     let threadId: string | undefined;
     let groupId: string | undefined;
@@ -248,15 +249,17 @@ export const streamingExecutor: StateCreator<
         throw new Error(`Operation not found: ${operationId}`);
       }
       agentId = operation.context.agentId!;
+      subAgentId = operation.context.subAgentId;
       topicId = operation.context.topicId;
       threadId = operation.context.threadId ?? undefined;
       groupId = operation.context.groupId;
       scope = operation.context.scope;
       abortController = operation.abortController; // 👈 Use operation's abortController
       log(
-        '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, topicId=%s, groupId=%s, aborted=%s',
+        '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, subAgentId=%s, topicId=%s, groupId=%s, aborted=%s',
         operationId,
         agentId,
+        subAgentId,
         topicId,
         groupId,
         abortController.signal.aborted,
@@ -282,13 +285,17 @@ export const streamingExecutor: StateCreator<
     // Create base context for child operations and message queries
     const fetchContext = { agentId, topicId, threadId, groupId, scope };
 
-    // Get agent config from params or use agentId-specific config
+    // For group orchestration scenarios:
+    // - subAgentId is used for agent config retrieval (model, provider, plugins)
+    // - agentId is used for session ID (message storage location)
+    const effectiveAgentId = subAgentId || agentId;
+
+    // Get agent config from params or use effectiveAgentId-specific config
     const agentStoreState = getAgentStoreState();
     const finalAgentConfig =
-      agentConfig || agentSelectors.getAgentConfigById(agentId || '')(agentStoreState);
-    const chatConfig = agentChatConfigSelectors.getAgentChatConfigById(agentId || '')(
-      agentStoreState,
-    );
+      agentConfig || agentSelectors.getAgentConfigById(effectiveAgentId)(agentStoreState);
+    const chatConfig =
+      agentChatConfigSelectors.getAgentChatConfigById(effectiveAgentId)(agentStoreState);
 
     // ================================== //
     //   messages uniformly preprocess    //
@@ -346,7 +353,10 @@ export const streamingExecutor: StateCreator<
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
-        agentId: agentId || undefined, // Pass agentId to chatService
+        // Use effectiveAgentId for agent config resolution (system role, tools, etc.)
+        // In group orchestration: subAgentId for the actual speaking agent
+        // In normal chat: agentId for the main agent
+        agentId: effectiveAgentId || undefined,
         messages,
         model,
         provider,
@@ -356,7 +366,6 @@ export const streamingExecutor: StateCreator<
       historySummary: historySummary?.content,
       trace: {
         traceId,
-        sessionId: agentId,
         topicId: topicId ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
@@ -1054,6 +1063,28 @@ export const streamingExecutor: StateCreator<
       state.status,
       stepCount,
     );
+
+    // Execute afterCompletion hooks before completing operation
+    // These are registered by tools (e.g., speak/broadcast/delegate) that need to
+    // trigger actions after the AgentRuntime finishes
+    const operation = get().operations[operationId];
+    const afterCompletionCallbacks = operation?.metadata?.runtimeHooks?.afterCompletionCallbacks;
+    if (afterCompletionCallbacks && afterCompletionCallbacks.length > 0) {
+      log(
+        '[internal_execAgentRuntime] Executing %d afterCompletion callbacks',
+        afterCompletionCallbacks.length,
+      );
+
+      for (const callback of afterCompletionCallbacks) {
+        try {
+          await callback();
+        } catch (error) {
+          console.error('[internal_execAgentRuntime] afterCompletion callback error:', error);
+        }
+      }
+
+      log('[internal_execAgentRuntime] afterCompletion callbacks executed');
+    }
 
     // Complete operation
     if (state.status === 'done') {

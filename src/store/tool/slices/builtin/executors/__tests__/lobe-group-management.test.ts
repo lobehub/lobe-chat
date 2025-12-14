@@ -1,17 +1,23 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { BuiltinToolContext, GroupOrchestrationCallbacks } from '../../types';
+import type {
+  AfterCompletionCallback,
+  BuiltinToolContext,
+  GroupOrchestrationCallbacks,
+} from '../../types';
 import { groupManagement } from '../lobe-group-management';
 
 describe('GroupManagementExecutor', () => {
   const createMockContext = (
     groupOrchestration?: GroupOrchestrationCallbacks,
     agentId?: string,
+    registerAfterCompletion?: (callback: AfterCompletionCallback) => void,
   ): BuiltinToolContext => ({
     agentId,
     groupOrchestration,
     messageId: 'test-message-id',
     operationId: 'test-operation-id',
+    registerAfterCompletion,
   });
 
   describe('speak', () => {
@@ -32,8 +38,13 @@ describe('GroupManagementExecutor', () => {
       });
     });
 
-    it('should trigger groupOrchestration.triggerSpeak when available', async () => {
+    it('should register afterCompletion callback that triggers groupOrchestration.triggerSpeak', async () => {
       const triggerSpeak = vi.fn();
+      const registeredCallbacks: AfterCompletionCallback[] = [];
+      const registerAfterCompletion = vi.fn((cb: AfterCompletionCallback) => {
+        registeredCallbacks.push(cb);
+      });
+
       const ctx = createMockContext(
         {
           triggerBroadcast: vi.fn(),
@@ -41,10 +52,19 @@ describe('GroupManagementExecutor', () => {
           triggerSpeak,
         },
         'supervisor-agent',
+        registerAfterCompletion,
       );
 
       await groupManagement.speak({ agentId: 'agent-1', instruction: 'Please respond' }, ctx);
 
+      // Verify registerAfterCompletion was called
+      expect(registerAfterCompletion).toHaveBeenCalled();
+      expect(registeredCallbacks.length).toBe(1);
+
+      // Execute the registered callback (simulating AgentRuntime completion)
+      await registeredCallbacks[0]();
+
+      // Now triggerSpeak should have been called
       expect(triggerSpeak).toHaveBeenCalledWith({
         agentId: 'agent-1',
         instruction: 'Please respond',
@@ -61,8 +81,13 @@ describe('GroupManagementExecutor', () => {
       expect(result.stop).toBe(true);
     });
 
-    it('should handle undefined instruction', async () => {
+    it('should handle undefined instruction in afterCompletion callback', async () => {
       const triggerSpeak = vi.fn();
+      const registeredCallbacks: AfterCompletionCallback[] = [];
+      const registerAfterCompletion = vi.fn((cb: AfterCompletionCallback) => {
+        registeredCallbacks.push(cb);
+      });
+
       const ctx = createMockContext(
         {
           triggerBroadcast: vi.fn(),
@@ -70,9 +95,13 @@ describe('GroupManagementExecutor', () => {
           triggerSpeak,
         },
         'supervisor-agent',
+        registerAfterCompletion,
       );
 
       await groupManagement.speak({ agentId: 'agent-2' }, ctx);
+
+      // Execute the registered callback
+      await registeredCallbacks[0]();
 
       expect(triggerSpeak).toHaveBeenCalledWith({
         agentId: 'agent-2',
@@ -100,8 +129,13 @@ describe('GroupManagementExecutor', () => {
       });
     });
 
-    it('should trigger groupOrchestration.triggerBroadcast when available', async () => {
+    it('should register afterCompletion callback that triggers groupOrchestration.triggerBroadcast', async () => {
       const triggerBroadcast = vi.fn();
+      const registeredCallbacks: AfterCompletionCallback[] = [];
+      const registerAfterCompletion = vi.fn((cb: AfterCompletionCallback) => {
+        registeredCallbacks.push(cb);
+      });
+
       const ctx = createMockContext(
         {
           triggerBroadcast,
@@ -109,6 +143,7 @@ describe('GroupManagementExecutor', () => {
           triggerSpeak: vi.fn(),
         },
         'supervisor-agent',
+        registerAfterCompletion,
       );
 
       await groupManagement.broadcast(
@@ -116,6 +151,14 @@ describe('GroupManagementExecutor', () => {
         ctx,
       );
 
+      // Verify registerAfterCompletion was called
+      expect(registerAfterCompletion).toHaveBeenCalled();
+      expect(registeredCallbacks.length).toBe(1);
+
+      // Execute the registered callback (simulating AgentRuntime completion)
+      await registeredCallbacks[0]();
+
+      // Now triggerBroadcast should have been called
       expect(triggerBroadcast).toHaveBeenCalledWith({
         agentIds: ['agent-1', 'agent-2'],
         instruction: 'Discuss together',
@@ -151,8 +194,13 @@ describe('GroupManagementExecutor', () => {
       });
     });
 
-    it('should trigger groupOrchestration.triggerDelegate when available', async () => {
+    it('should register afterCompletion callback that triggers groupOrchestration.triggerDelegate', async () => {
       const triggerDelegate = vi.fn();
+      const registeredCallbacks: AfterCompletionCallback[] = [];
+      const registerAfterCompletion = vi.fn((cb: AfterCompletionCallback) => {
+        registeredCallbacks.push(cb);
+      });
+
       const ctx = createMockContext(
         {
           triggerBroadcast: vi.fn(),
@@ -160,10 +208,19 @@ describe('GroupManagementExecutor', () => {
           triggerSpeak: vi.fn(),
         },
         'supervisor-agent',
+        registerAfterCompletion,
       );
 
       await groupManagement.delegate({ agentId: 'agent-3', reason: 'Expert needed' }, ctx);
 
+      // Verify registerAfterCompletion was called
+      expect(registerAfterCompletion).toHaveBeenCalled();
+      expect(registeredCallbacks.length).toBe(1);
+
+      // Execute the registered callback (simulating AgentRuntime completion)
+      await registeredCallbacks[0]();
+
+      // Now triggerDelegate should have been called
       expect(triggerDelegate).toHaveBeenCalledWith({
         agentId: 'agent-3',
         reason: 'Expert needed',
