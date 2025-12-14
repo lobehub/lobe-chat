@@ -6,6 +6,7 @@ import { type ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
+import urlJoin from 'url-join';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
@@ -150,7 +151,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                navigate(`/settings?active=provider&provider=${providerItem.id}`);
+                navigate(urlJoin('/settings/provider', providerItem.id || 'all'));
               }}
               size={'small'}
               title={t('ModelSwitchPanel.goToSettings')}

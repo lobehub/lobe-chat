@@ -1,37 +1,42 @@
-import { Alert, Block } from '@lobehub/ui';
+import { Alert } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { Suspense, memo } from 'react';
 
-import { useStyles } from '../style';
+import { useConversationStore } from '@/features/Conversation';
+
 import { ChatItemProps } from '../type';
 
 export interface ErrorContentProps {
   customErrorRender?: ChatItemProps['customErrorRender'];
   error: ChatItemProps['error'];
+  id?: string;
 }
 
-const ErrorContent = memo<ErrorContentProps>(({ customErrorRender, error }) => {
-  const { styles } = useStyles();
+const ErrorContent = memo<ErrorContentProps>(({ customErrorRender, error, id }) => {
+  const [deleteMessage] = useConversationStore((s) => [s.deleteMessage]);
 
   if (!error) return;
 
   if (customErrorRender) {
     return (
-      <Block className={styles.errorContainer} gap={8} padding={16} variant={'outlined'}>
-        <Suspense fallback={<Skeleton active paragraph={{ rows: 1 }} title={false} />}>
-          {customErrorRender(error)}
-        </Suspense>
-      </Block>
+      <Suspense fallback={<Skeleton.Button active block />}>{customErrorRender(error)}</Suspense>
     );
   }
 
   return (
     <Alert
-      classNames={{
-        container: styles.errorContainer,
+      afterClose={() => {
+        if (id) {
+          deleteMessage(id);
+        }
       }}
-      closable={false}
+      closable
       showIcon
+      style={{
+        overflow: 'hidden',
+        position: 'relative',
+        width: '100%',
+      }}
       type={'secondary'}
       {...error}
     />

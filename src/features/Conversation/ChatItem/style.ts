@@ -30,11 +30,6 @@ export const useStyles = createStyles(({ css, token }) => {
         }
       }
     `,
-    errorContainer: css`
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-    `,
     loading: css`
       position: absolute;
       inset-block-end: 0;

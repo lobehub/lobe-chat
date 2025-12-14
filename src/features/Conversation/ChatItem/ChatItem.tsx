@@ -49,7 +49,7 @@ const ChatItem = memo<ChatItemProps>(
     const isEmptyMessage =
       !message || String(message).trim() === '' || message === placeholderMessage;
     const errorContent = error && (
-      <ErrorContent customErrorRender={customErrorRender} error={error} />
+      <ErrorContent customErrorRender={customErrorRender} error={error} id={id} />
     );
 
     return (
