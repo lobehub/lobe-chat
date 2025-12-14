@@ -136,6 +136,12 @@ export interface BuiltinToolContext {
   agentId?: string;
 
   /**
+   * The current group ID (only available in group chat context)
+   * Used by group management tools to access group member information
+   */
+  groupId?: string;
+
+  /**
    * Group orchestration callbacks (only available in group chat context)
    * Used by group management tools to trigger the next orchestration phase
    */
