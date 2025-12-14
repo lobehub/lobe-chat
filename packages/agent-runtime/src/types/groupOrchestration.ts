@@ -44,6 +44,11 @@ export interface GroupOrchestrationInstructionBroadcast {
   payload: {
     agentIds: string[];
     instruction?: string;
+    /**
+     * The tool message ID that triggered the broadcast
+     * Used as parentId for agent responses to build correct message tree
+     */
+    toolMessageId: string;
   };
   type: 'broadcast';
 }

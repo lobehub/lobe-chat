@@ -7,11 +7,9 @@ import { chatGroupAction } from './action';
 import { ChatGroupStore, initialChatGroupState } from './initialState';
 
 const createStore: StateCreator<ChatGroupStore, [['zustand/devtools', never]]> = (...params) => {
-  const actions = chatGroupAction(...params);
-
   return {
     ...initialChatGroupState,
-    ...actions,
+    ...chatGroupAction(...params),
   };
 };
 

@@ -28,6 +28,7 @@ import {
   useConversationStore,
   virtuaListSelectors,
 } from '../store';
+import AgentCouncilMessage from './AgentCouncil';
 import AssistantMessage from './Assistant';
 import AssistantGroupMessage from './AssistantGroup';
 import ToolMessage from './Tool';
@@ -203,6 +204,10 @@ const MessageItem = memo<MessageItemProps>(
               isLatestItem={isLatestItem}
             />
           );
+        }
+
+        case 'agentCouncil': {
+          return <AgentCouncilMessage id={id} index={index} />;
         }
 
         case 'tool': {

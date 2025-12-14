@@ -48,6 +48,30 @@ export class FlatListBuilder {
   ): void {
     const children = this.childrenMap.get(parentId) ?? [];
 
+    // Pre-loop check: AgentCouncil mode on parent (tool message with multiple assistant children)
+    // This handles the case when we continue from a tool message that triggered broadcast
+    if (parentId) {
+      const parentMessage = this.messageMap.get(parentId);
+      if (parentMessage && this.isAgentCouncilMode(parentMessage) && children.length > 1) {
+        // Create agentCouncil virtual message from the parent tool message
+        const agentCouncilMessage = this.createAgentCouncilMessageFromChildIds(
+          parentMessage,
+          children,
+          allMessages,
+          processedIds,
+        );
+        flatList.push(agentCouncilMessage);
+
+        // Continue processing children of the last member (for supervisor final reply)
+        // The last member's children should be processed next
+        const lastMemberId = children.at(-1);
+        if (lastMemberId) {
+          this.buildFlatListRecursive(lastMemberId, flatList, processedIds, allMessages);
+        }
+        return;
+      }
+    }
+
     for (const childId of children) {
       if (processedIds.has(childId)) continue;
 
@@ -158,7 +182,23 @@ export class FlatListBuilder {
         continue;
       }
 
-      // Priority 3b: User message with branches (multiple assistant children)
+      // Priority 3b: AgentCouncil mode (from message metadata, typically on tool messages)
+      if (this.isAgentCouncilMode(message) && childMessages.length > 1) {
+        // Create agentCouncil virtual message with proper handling of AssistantGroups
+        const agentCouncilMessage = this.createAgentCouncilMessageFromChildIds(
+          message,
+          childMessages,
+          allMessages,
+          processedIds,
+        );
+        flatList.push(agentCouncilMessage);
+
+        // AgentCouncil doesn't continue - all columns are parallel endpoints
+        // The conversation continues after the supervisor completes orchestration
+        continue;
+      }
+
+      // Priority 3d: User message with branches (multiple assistant children)
       // Branch indicator should be on the active assistant child message
       if (message.role === 'user' && childMessages.length > 1) {
         const activeBranchId = this.branchResolver.getActiveBranchIdFromMetadata(
@@ -255,7 +295,7 @@ export class FlatListBuilder {
         continue;
       }
 
-      // Priority 3c: Assistant message with branches (multiple user children)
+      // Priority 3e: Assistant message with branches (multiple user children)
       // Branch indicator should be on the active user child message
       if (message.role === 'assistant' && childMessages.length > 1) {
         const activeBranchId = this.branchResolver.getActiveBranchIdFromMetadata(
@@ -310,6 +350,14 @@ export class FlatListBuilder {
    */
   private isCompareMode(message: Message): boolean {
     return (message.metadata as any)?.compare === true;
+  }
+
+  /**
+   * Check if message has agentCouncil mode in metadata
+   * Used for multi-agent parallel responses (broadcast scenario)
+   */
+  private isAgentCouncilMode(message: Message): boolean {
+    return (message.metadata as any)?.agentCouncil === true;
   }
 
   /**
@@ -401,6 +449,94 @@ export class FlatListBuilder {
       id: compareId,
       meta: parentMessage.meta || {},
       role: 'compare' as any,
+      updatedAt,
+    } as Message;
+  }
+
+  /**
+   * Create agentCouncil virtual message from child IDs with AssistantGroup support
+   * Each member is a single message (not an array)
+   */
+  private createAgentCouncilMessageFromChildIds(
+    parentMessage: Message,
+    childIds: string[],
+    allMessages: Message[],
+    processedIds: Set<string>,
+  ): Message {
+    const members: Message[] = [];
+    const memberIds: string[] = [];
+
+    // Process each child (member)
+    for (const childId of childIds) {
+      const childMessage = this.messageMap.get(childId);
+      if (!childMessage) continue;
+
+      memberIds.push(childId);
+
+      // Check if this child is an AssistantGroup (agent with tool calls)
+      if (
+        childMessage.role === 'assistant' &&
+        childMessage.tools &&
+        childMessage.tools.length > 0
+      ) {
+        // Collect the entire assistant group chain for this member
+        const assistantChain: Message[] = [];
+        const allToolMessages: Message[] = [];
+        const memberProcessedIds = new Set<string>();
+
+        this.messageCollector.collectAssistantChain(
+          childMessage,
+          allMessages,
+          assistantChain,
+          allToolMessages,
+          memberProcessedIds,
+        );
+
+        // Create assistantGroup virtual message for this member
+        const groupMessage = this.createAssistantGroupMessage(
+          assistantChain[0],
+          assistantChain,
+          allToolMessages,
+        );
+
+        members.push(groupMessage);
+
+        // Mark all as processed
+        assistantChain.forEach((m) => processedIds.add(m.id));
+        allToolMessages.forEach((m) => processedIds.add(m.id));
+      } else {
+        // Regular message (not an AssistantGroup)
+        members.push(childMessage);
+        processedIds.add(childId);
+      }
+    }
+
+    // Generate ID with all member message IDs
+    const memberIdsStr = memberIds.join('-');
+    const agentCouncilId = `agentCouncil-${parentMessage.id}-${memberIdsStr}`;
+
+    // Calculate timestamps from all member messages
+    const allMemberMessages = childIds.map((id) => this.messageMap.get(id)).filter(Boolean);
+    const createdAt =
+      allMemberMessages.length > 0
+        ? Math.min(...allMemberMessages.map((m) => m!.createdAt))
+        : parentMessage.createdAt;
+    const updatedAt =
+      allMemberMessages.length > 0
+        ? Math.max(...allMemberMessages.map((m) => m!.updatedAt))
+        : parentMessage.updatedAt;
+
+    return {
+      content: '',
+      createdAt,
+      extra: {
+        parentMessageId: parentMessage.id,
+      },
+      id: agentCouncilId,
+      // members is a flat array of messages (not nested arrays)
+      members: members as any,
+      meta: parentMessage.meta || {},
+      role: 'agentCouncil' as any,
       updatedAt,
     } as Message;
   }

@@ -99,12 +99,13 @@ export const groupOrchestrationSlice: StateCreator<
    * Starts the group orchestration loop beginning with broadcast phase
    */
   triggerBroadcast: async (params) => {
-    const { supervisorAgentId, agentIds, instruction } = params;
+    const { supervisorAgentId, agentIds, instruction, toolMessageId } = params;
     log(
-      '[triggerBroadcast] Starting orchestration with broadcast: supervisorAgentId=%s, agentIds=%o, instruction=%s',
+      '[triggerBroadcast] Starting orchestration with broadcast: supervisorAgentId=%s, agentIds=%o, instruction=%s, toolMessageId=%s',
       supervisorAgentId,
       agentIds,
       instruction,
+      toolMessageId,
     );
 
     const groupId = get().activeGroupId;
@@ -114,11 +115,12 @@ export const groupOrchestrationSlice: StateCreator<
     }
 
     // Start orchestration loop with broadcast phase
+    // Pass toolMessageId so agent responses have correct parentId
     await get().internal_execGroupOrchestration({
       groupId,
       supervisorAgentId,
       topicId: get().activeTopicId,
-      initialPhase: { phase: 'broadcast', payload: { agentIds, instruction } },
+      initialPhase: { phase: 'broadcast', payload: { agentIds, instruction, toolMessageId } },
     });
   },
 

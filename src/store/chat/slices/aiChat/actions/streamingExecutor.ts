@@ -357,6 +357,7 @@ export const streamingExecutor: StateCreator<
         // In group orchestration: subAgentId for the actual speaking agent
         // In normal chat: agentId for the main agent
         agentId: effectiveAgentId || undefined,
+        groupId,
         messages,
         model,
         provider,

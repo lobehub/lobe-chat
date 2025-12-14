@@ -144,6 +144,26 @@ export class MessageService {
     return lambdaClient.message.updateMessageRAG.mutate({ ...ctx, id, value: data });
   };
 
+  /**
+   * Update tool message with content, metadata, pluginState, and pluginError in a single request
+   * This prevents race conditions when updating multiple fields
+   * Uses abortableRequest to cancel previous requests for the same message
+   */
+  updateToolMessage = async (
+    id: string,
+    value: {
+      content?: string;
+      metadata?: Record<string, any>;
+      pluginError?: any;
+      pluginState?: Record<string, any>;
+    },
+    ctx?: MessageQueryContext,
+  ): Promise<UpdateMessageResult> => {
+    return abortableRequest.execute(`tool-message-${id}`, (signal) =>
+      lambdaClient.message.updateToolMessage.mutate({ ...ctx, id, value }, { signal }),
+    );
+  };
+
   removeMessage = async (id: string, ctx?: MessageQueryContext): Promise<UpdateMessageResult> => {
     return lambdaClient.message.removeMessage.mutate({ ...ctx, id });
   };

@@ -54,6 +54,11 @@ export class MessageCollector {
 
     // Find next assistant after tools
     for (const toolMsg of toolMessages) {
+      // Stop if tool message has agentCouncil mode - its children belong to AgentCouncil
+      if ((toolMsg.metadata as any)?.agentCouncil === true) {
+        continue;
+      }
+
       const nextMessages = allMessages.filter((m) => m.parentId === toolMsg.id);
 
       for (const nextMsg of nextMessages) {
@@ -79,11 +84,7 @@ export class MessageCollector {
   /**
    * Recursively collect assistant messages for an AssistantGroup (contextTree version)
    */
-  collectAssistantGroupMessages(
-    message: Message,
-    idNode: IdNode,
-    children: ContextNode[],
-  ): void {
+  collectAssistantGroupMessages(message: Message, idNode: IdNode, children: ContextNode[]): void {
     // Get tool message IDs if this assistant has tools
     const toolIds = idNode.children
       .filter((child) => {
@@ -107,6 +108,11 @@ export class MessageCollector {
       const toolMsg = this.messageMap.get(toolNode.id);
       if (toolMsg?.role !== 'tool') continue;
 
+      // Stop if tool message has agentCouncil mode - its children belong to AgentCouncil
+      if ((toolMsg.metadata as any)?.agentCouncil === true) {
+        continue;
+      }
+
       // Check if tool has an assistant child
       if (toolNode.children.length > 0) {
         const nextChild = toolNode.children[0];
@@ -127,7 +133,17 @@ export class MessageCollector {
   findNextAfterTools(assistantMsg: Message, idNode: IdNode): IdNode | null {
     // Recursively find the last message in the assistant group
     const lastNode = this.findLastNodeInAssistantGroup(idNode);
-    if (lastNode && lastNode.children.length > 0) {
+    if (!lastNode) return null;
+
+    // Check if lastNode is a tool with agentCouncil mode
+    // In this case, return the tool node itself so ContextTreeBuilder can process it
+    const lastMsg = this.messageMap.get(lastNode.id);
+    if (lastMsg?.role === 'tool' && (lastMsg.metadata as any)?.agentCouncil === true) {
+      return lastNode;
+    }
+
+    // Otherwise, return the first child of the last node
+    if (lastNode.children.length > 0) {
       return lastNode.children[0];
     }
     return null;
@@ -149,6 +165,13 @@ export class MessageCollector {
 
     // Check if any tool has an assistant child
     for (const toolNode of toolChildren) {
+      const toolMsg = this.messageMap.get(toolNode.id);
+
+      // Stop if tool message has agentCouncil mode - its children belong to AgentCouncil
+      if ((toolMsg?.metadata as any)?.agentCouncil === true) {
+        continue;
+      }
+
       if (toolNode.children.length > 0) {
         const nextChild = toolNode.children[0];
         const nextMsg = this.messageMap.get(nextChild.id);

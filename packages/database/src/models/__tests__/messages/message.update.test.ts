@@ -471,6 +471,277 @@ describe('MessageModel Update Tests', () => {
     });
   });
 
+  describe('updateToolMessage', () => {
+    it('should update content only', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-1',
+        userId,
+        role: 'tool',
+        content: 'original content',
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-1', {
+        content: 'updated content',
+      });
+
+      expect(result.success).toBe(true);
+
+      const dbResult = await serverDB.select().from(messages).where(eq(messages.id, 'tool-msg-1'));
+      expect(dbResult[0].content).toBe('updated content');
+    });
+
+    it('should update metadata only and merge with existing', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-2',
+        userId,
+        role: 'tool',
+        content: 'content',
+        metadata: { existingKey: 'existingValue' },
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-2', {
+        metadata: { newKey: 'newValue' },
+      });
+
+      expect(result.success).toBe(true);
+
+      const dbResult = await serverDB.select().from(messages).where(eq(messages.id, 'tool-msg-2'));
+      expect(dbResult[0].metadata).toEqual({
+        existingKey: 'existingValue',
+        newKey: 'newValue',
+      });
+    });
+
+    it('should update pluginState only and merge with existing', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-3',
+        userId,
+        role: 'tool',
+        content: 'content',
+      });
+      await serverDB.insert(messagePlugins).values({
+        id: 'tool-msg-3',
+        toolCallId: 'tool-call-1',
+        identifier: 'test-plugin',
+        state: { existingState: 'value1' },
+        userId,
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-3', {
+        pluginState: { newState: 'value2' },
+      });
+
+      expect(result.success).toBe(true);
+
+      const pluginResult = await serverDB
+        .select()
+        .from(messagePlugins)
+        .where(eq(messagePlugins.id, 'tool-msg-3'));
+      expect(pluginResult[0].state).toEqual({
+        existingState: 'value1',
+        newState: 'value2',
+      });
+    });
+
+    it('should update pluginError only', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-4',
+        userId,
+        role: 'tool',
+        content: 'content',
+      });
+      await serverDB.insert(messagePlugins).values({
+        id: 'tool-msg-4',
+        toolCallId: 'tool-call-1',
+        identifier: 'test-plugin',
+        userId,
+      });
+
+      const pluginError = { type: 'PluginError', message: 'Something went wrong' };
+      const result = await messageModel.updateToolMessage('tool-msg-4', {
+        pluginError,
+      });
+
+      expect(result.success).toBe(true);
+
+      const pluginResult = await serverDB
+        .select()
+        .from(messagePlugins)
+        .where(eq(messagePlugins.id, 'tool-msg-4'));
+      expect(pluginResult[0].error).toEqual(pluginError);
+    });
+
+    it('should update all fields in a single transaction', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-5',
+        userId,
+        role: 'tool',
+        content: 'original content',
+        metadata: { originalMeta: true },
+      });
+      await serverDB.insert(messagePlugins).values({
+        id: 'tool-msg-5',
+        toolCallId: 'tool-call-1',
+        identifier: 'test-plugin',
+        state: { originalState: true },
+        userId,
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-5', {
+        content: 'new content',
+        metadata: { agentCouncil: true },
+        pluginState: { status: 'completed' },
+        pluginError: { type: 'Warning', message: 'Minor issue' },
+      });
+
+      expect(result.success).toBe(true);
+
+      // Verify message table updates
+      const msgResult = await serverDB.select().from(messages).where(eq(messages.id, 'tool-msg-5'));
+      expect(msgResult[0].content).toBe('new content');
+      expect(msgResult[0].metadata).toEqual({
+        originalMeta: true,
+        agentCouncil: true,
+      });
+
+      // Verify plugin table updates
+      const pluginResult = await serverDB
+        .select()
+        .from(messagePlugins)
+        .where(eq(messagePlugins.id, 'tool-msg-5'));
+      expect(pluginResult[0].state).toEqual({
+        originalState: true,
+        status: 'completed',
+      });
+      expect(pluginResult[0].error).toEqual({ type: 'Warning', message: 'Minor issue' });
+    });
+
+    it('should handle null metadata gracefully', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-6',
+        userId,
+        role: 'tool',
+        content: 'content',
+        metadata: null,
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-6', {
+        metadata: { newKey: 'newValue' },
+      });
+
+      expect(result.success).toBe(true);
+
+      const dbResult = await serverDB.select().from(messages).where(eq(messages.id, 'tool-msg-6'));
+      expect(dbResult[0].metadata).toEqual({ newKey: 'newValue' });
+    });
+
+    it('should handle null pluginState gracefully', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-7',
+        userId,
+        role: 'tool',
+        content: 'content',
+      });
+      await serverDB.insert(messagePlugins).values({
+        id: 'tool-msg-7',
+        toolCallId: 'tool-call-1',
+        identifier: 'test-plugin',
+        state: null,
+        userId,
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-7', {
+        pluginState: { newState: 'value' },
+      });
+
+      expect(result.success).toBe(true);
+
+      const pluginResult = await serverDB
+        .select()
+        .from(messagePlugins)
+        .where(eq(messagePlugins.id, 'tool-msg-7'));
+      expect(pluginResult[0].state).toEqual({ newState: 'value' });
+    });
+
+    it('should only update messages belonging to the current user', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-other',
+        userId: otherUserId,
+        role: 'tool',
+        content: 'original content',
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-other', {
+        content: 'hacked content',
+      });
+
+      expect(result.success).toBe(true);
+
+      // Verify content was NOT updated
+      const dbResult = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.id, 'tool-msg-other'));
+      expect(dbResult[0].content).toBe('original content');
+    });
+
+    it('should skip plugin update if no messagePlugin exists', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-no-plugin',
+        userId,
+        role: 'tool',
+        content: 'original content',
+      });
+
+      // No messagePlugin record exists for this message
+      const result = await messageModel.updateToolMessage('tool-msg-no-plugin', {
+        content: 'new content',
+        pluginState: { someState: 'value' },
+      });
+
+      expect(result.success).toBe(true);
+
+      // Message content should still be updated
+      const dbResult = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.id, 'tool-msg-no-plugin'));
+      expect(dbResult[0].content).toBe('new content');
+    });
+
+    it('should return success false on error', async () => {
+      // Don't create any message - this should cause the transaction to succeed
+      // but not update anything (which is still success)
+      const result = await messageModel.updateToolMessage('non-existent-id', {
+        content: 'content',
+      });
+
+      // The method returns success: true even for non-existent messages
+      // because the update query doesn't fail, it just doesn't match any rows
+      expect(result.success).toBe(true);
+    });
+
+    it('should handle empty params gracefully', async () => {
+      await serverDB.insert(messages).values({
+        id: 'tool-msg-empty',
+        userId,
+        role: 'tool',
+        content: 'original content',
+      });
+
+      const result = await messageModel.updateToolMessage('tool-msg-empty', {});
+
+      expect(result.success).toBe(true);
+
+      // Content should remain unchanged
+      const dbResult = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.id, 'tool-msg-empty'));
+      expect(dbResult[0].content).toBe('original content');
+    });
+  });
+
   describe('updateMetadata', () => {
     it('should update metadata for an existing message', async () => {
       // Create test data

@@ -65,6 +65,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
     params: CreateAgentParams,
     _ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
+    console.log(params);
     // TODO: Implement dynamic agent creation
     return {
       content: JSON.stringify({
@@ -144,13 +145,16 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
           agentIds: params.agentIds,
           instruction: params.instruction,
           supervisorAgentId: ctx.agentId!,
+          toolMessageId: ctx.messageId, // Pass tool message ID for correct parent-child relationship
         }),
       );
     }
 
     // Returns stop: true to trigger multiple agents to respond in parallel
+    // metadata.agentCouncil marks this tool message for parallel display in conversation-flow
     return {
       content: `Triggered broadcast to agents: ${params.agentIds.join(', ')}.`,
+      metadata: { agentCouncil: true },
       state: {
         agentIds: params.agentIds,
         instruction: params.instruction,

@@ -3,6 +3,7 @@ import type { FileContent, KnowledgeBaseInfo } from '@lobechat/prompts';
 
 import type { OpenAIChatMessage, UIChatMessage } from '@/types/index';
 
+import type { AgentInfo } from '../../processors/GroupMessageSender';
 import type { AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
 import type { PageEditorContext } from '../../providers/PageEditorContextInjector';
 
@@ -103,6 +104,15 @@ export interface UserMemoryConfig {
 }
 
 /**
+ * Agent group configuration
+ * Used to inject sender identity into assistant messages in multi-agent scenarios
+ */
+export interface AgentGroupConfig {
+  /** Mapping from agentId to agent info (name, role) */
+  agentMap?: Record<string, AgentInfo>;
+}
+
+/**
  * MessagesEngine main parameters
  */
 export interface MessagesEngineParams {
@@ -149,6 +159,8 @@ export interface MessagesEngineParams {
   // ========== Extended contexts (both frontend and backend) ==========
   /** Agent Builder context */
   agentBuilderContext?: AgentBuilderContext;
+  /** Agent group configuration for multi-agent scenarios */
+  agentGroup?: AgentGroupConfig;
   /** Page Editor context */
   pageEditorContext?: PageEditorContext;
   /** User memory configuration */
@@ -176,6 +188,7 @@ export interface MessagesEngineResult {
 
 // Re-export types for convenience
 
+export { type AgentInfo } from '../../processors/GroupMessageSender';
 export { type AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
 export { type PageEditorContext } from '../../providers/PageEditorContextInjector';
 export { type OpenAIChatMessage, type UIChatMessage } from '@/types/index';

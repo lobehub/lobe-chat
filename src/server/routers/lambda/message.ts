@@ -260,6 +260,7 @@ export const messageRouter = router({
       return ctx.messageService.updatePluginState(id, value, resolved);
     }),
 
+  
   updateTTS: messageProcedure
     .input(
       z.object({
@@ -279,6 +280,31 @@ export const messageRouter = router({
       }
 
       return ctx.messageModel.updateTTS(input.id, input.value);
+    }),
+
+  /**
+   * Update tool message with content, metadata, pluginState, and pluginError in a single transaction
+   * This prevents race conditions when updating multiple fields
+   */
+updateToolMessage: messageProcedure
+    .input(
+      z
+        .object({
+          id: z.string(),
+          value: z.object({
+            content: z.string().optional(),
+            metadata: z.object({}).passthrough().optional(),
+            pluginError: z.any().optional(),
+            pluginState: z.object({}).passthrough().optional(),
+          }),
+        })
+        .extend(basicContextSchema.shape),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, value, agentId, ...options } = input;
+      const resolved = await resolveContext({ agentId, ...options }, ctx.serverDB, ctx.userId);
+
+      return ctx.messageService.updateToolMessage(id, value, resolved);
     }),
   updateTranslate: messageProcedure
     .input(

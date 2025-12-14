@@ -24,7 +24,8 @@ export type UIMessageRoleType =
   | 'assistant'
   | 'tool'
   | 'supervisor'
-  | 'assistantGroup';
+  | 'assistantGroup'
+  | 'agentCouncil';
 
 export interface ChatFileItem {
   content?: string;
@@ -71,7 +72,6 @@ export interface UIChatMessage {
   error?: ChatMessageError | null;
   // 扩展字段
   extra?: ChatMessageExtra;
-
   fileList?: ChatFileItem[];
   /**
    * this is a deprecated field, only use in client db
@@ -83,6 +83,7 @@ export interface UIChatMessage {
   groupId?: string;
   id: string;
   imageList?: ChatImageItem[];
+  members?: UIChatMessage[];
   meta: MetaData;
   metadata?: MessageMetadata | null;
   model?: string | null;

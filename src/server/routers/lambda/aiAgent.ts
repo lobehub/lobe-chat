@@ -367,6 +367,7 @@ export const aiAgentRouter = router({
       // Messages include the assistant message with error if operation failed to start
       const { messages, topics } = await ctx.aiChatService.getMessagesAndTopics({
         agentId,
+        groupId,
         includeTopic: result.isCreateNewTopic,
         topicId: result.topicId,
       });

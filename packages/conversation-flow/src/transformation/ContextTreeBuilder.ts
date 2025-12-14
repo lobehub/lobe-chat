@@ -1,4 +1,5 @@
 import type {
+  AgentCouncilNode,
   AssistantGroupNode,
   BranchNode,
   CompareNode,
@@ -16,7 +17,7 @@ import type { MessageCollector } from './MessageCollector';
  *
  * Handles:
  * 1. Tree traversal with priority-based node type detection
- * 2. Creating different types of ContextNodes (Message, Branch, Compare, AssistantGroup)
+ * 2. Creating different types of ContextNodes (Message, Branch, Compare, AssistantGroup, AgentCouncil)
  * 3. Linear array output of the tree structure
  */
 export class ContextTreeBuilder {
@@ -93,7 +94,18 @@ export class ContextTreeBuilder {
       return;
     }
 
-    // Priority 3: AssistantGroup (assistant + tools)
+    // Priority 3: AgentCouncil mode (from message metadata, typically on tool messages)
+    if (this.isAgentCouncilMode(message) && idNode.children.length > 1) {
+      // Create agent council node with children
+      const agentCouncilNode = this.createAgentCouncilNodeFromChildren(message, idNode);
+      contextTree.push(agentCouncilNode);
+
+      // AgentCouncil doesn't continue - all columns are parallel endpoints
+      // The conversation continues after the supervisor completes orchestration
+      return;
+    }
+
+    // Priority 4: AssistantGroup (assistant + tools)
     if (this.isAssistantGroupNode(message, idNode)) {
       const assistantGroupNode = this.createAssistantGroupNode(message, idNode);
       contextTree.push(assistantGroupNode);
@@ -106,7 +118,7 @@ export class ContextTreeBuilder {
       return;
     }
 
-    // Priority 4: Branch (multiple children)
+    // Priority 6: Branch (multiple children)
     if (idNode.children.length > 1) {
       // Add current message node
       const messageNode = this.createMessageNode(message);
@@ -120,7 +132,7 @@ export class ContextTreeBuilder {
       return;
     }
 
-    // Priority 5: Regular message
+    // Priority 7: Regular message
     const messageNode = this.createMessageNode(message);
     contextTree.push(messageNode);
 
@@ -135,6 +147,14 @@ export class ContextTreeBuilder {
    */
   private isCompareMode(message: Message): boolean {
     return (message.metadata as any)?.compare === true;
+  }
+
+  /**
+   * Check if message has agentCouncil mode in metadata
+   * Used for multi-agent parallel responses (broadcast scenario)
+   */
+  private isAgentCouncilMode(message: Message): boolean {
+    return (message.metadata as any)?.agentCouncil === true;
   }
 
   /**
@@ -293,5 +313,34 @@ export class ContextTreeBuilder {
       messageId: group.parentMessageId || message.id,
       type: 'compare',
     };
+  }
+
+  /**
+   * Create AgentCouncilNode from children messages
+   * Similar to CompareNode but without activeColumnId (all columns enter context)
+   */
+  private createAgentCouncilNodeFromChildren(message: Message, idNode: IdNode): AgentCouncilNode {
+    // Each child is a column - need to recursively process to handle AssistantGroup
+    const columns = idNode.children.map((child) => {
+      const childMessage = this.messageMap.get(child.id);
+      if (!childMessage) {
+        return [{ id: child.id, type: 'message' } as MessageNode];
+      }
+
+      // Check if this column should be an AssistantGroup (agent with tool calls)
+      if (this.isAssistantGroupNode(childMessage, child)) {
+        const assistantGroupNode = this.createAssistantGroupNode(childMessage, child);
+        return [assistantGroupNode];
+      }
+
+      // Otherwise, just a simple MessageNode
+      return [{ id: child.id, type: 'message' } as MessageNode];
+    });
+
+    // Generate ID by joining parent message id and all column message ids
+    const columnIds = idNode.children.map((child) => child.id).join('-');
+    const agentCouncilId = `agentCouncil-${message.id}-${columnIds}`;
+
+    return { columns, id: agentCouncilId, messageId: message.id, type: 'agentCouncil' };
   }
 }

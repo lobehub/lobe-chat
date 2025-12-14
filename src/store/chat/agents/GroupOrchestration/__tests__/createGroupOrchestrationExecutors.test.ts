@@ -249,6 +249,7 @@ describe('createGroupOrchestrationExecutors', () => {
         payload: {
           agentIds: ['agent-1', 'agent-2', 'agent-3'],
           instruction: 'Discuss the topic',
+          toolMessageId: 'tool-msg-1',
         },
         type: 'broadcast',
       };
@@ -259,6 +260,7 @@ describe('createGroupOrchestrationExecutors', () => {
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledTimes(3);
 
       // Each call should use subAgentId for the target agent while keeping groupId in context
+      // parentMessageId should be toolMessageId (tool message that triggered broadcast)
       expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith({
         context: expect.objectContaining({
           agentId: 'group-1', // agentId remains as group's main agent ID
@@ -267,8 +269,8 @@ describe('createGroupOrchestrationExecutors', () => {
           scope: 'group',
         }),
         messages: expect.any(Array),
-        parentMessageId: 'msg-2',
-        parentMessageType: 'assistant',
+        parentMessageId: 'tool-msg-1', // Should use toolMessageId, not lastMessage.id
+        parentMessageType: 'tool',
         parentOperationId: 'orchestration-op-1',
       });
 
@@ -280,8 +282,8 @@ describe('createGroupOrchestrationExecutors', () => {
           scope: 'group',
         }),
         messages: expect.any(Array),
-        parentMessageId: 'msg-2',
-        parentMessageType: 'assistant',
+        parentMessageId: 'tool-msg-1',
+        parentMessageType: 'tool',
         parentOperationId: 'orchestration-op-1',
       });
 
@@ -293,8 +295,8 @@ describe('createGroupOrchestrationExecutors', () => {
           scope: 'group',
         }),
         messages: expect.any(Array),
-        parentMessageId: 'msg-2',
-        parentMessageType: 'assistant',
+        parentMessageId: 'tool-msg-1',
+        parentMessageType: 'tool',
         parentOperationId: 'orchestration-op-1',
       });
     });
@@ -307,6 +309,7 @@ describe('createGroupOrchestrationExecutors', () => {
         payload: {
           agentIds: ['agent-1', 'agent-2'],
           instruction: 'Discuss',
+          toolMessageId: 'tool-msg-1',
         },
         type: 'broadcast',
       };
@@ -332,6 +335,7 @@ describe('createGroupOrchestrationExecutors', () => {
       const instruction: GroupOrchestrationInstructionBroadcast = {
         payload: {
           agentIds: [],
+          toolMessageId: 'tool-msg-1',
         },
         type: 'broadcast',
       };
@@ -582,7 +586,11 @@ describe('createGroupOrchestrationExecutors', () => {
       // Step 1: broadcast to multiple agents
       const state1 = createMockState({ orchestrationRound: 0 } as any);
       const broadcastInstruction: GroupOrchestrationInstructionBroadcast = {
-        payload: { agentIds: ['agent-1', 'agent-2'], instruction: 'Discuss' },
+        payload: {
+          agentIds: ['agent-1', 'agent-2'],
+          instruction: 'Discuss',
+          toolMessageId: 'tool-msg-1',
+        },
         type: 'broadcast',
       };
 

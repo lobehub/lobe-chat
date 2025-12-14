@@ -1,6 +1,8 @@
 export { MessagesEngine } from './MessagesEngine';
 export type {
   AgentBuilderContext,
+  AgentGroupConfig,
+  AgentInfo,
   FileContent,
   FileContextConfig,
   KnowledgeBaseInfo,

@@ -1,5 +1,6 @@
 // Transformer processors
 export { GroupMessageFlattenProcessor } from './GroupMessageFlatten';
+export { GroupMessageSenderProcessor } from './GroupMessageSender';
 export { HistoryTruncateProcessor } from './HistoryTruncate';
 export { InputTemplateProcessor } from './InputTemplate';
 export { MessageCleanupProcessor } from './MessageCleanup';
@@ -14,6 +15,7 @@ export { ToolCallProcessor } from './ToolCall';
 export { ToolMessageReorder } from './ToolMessageReorder';
 
 // Re-export types
+export type { AgentInfo, GroupMessageSenderConfig } from './GroupMessageSender';
 export type { HistoryTruncateConfig } from './HistoryTruncate';
 export type { InputTemplateConfig } from './InputTemplate';
 export type { MessageContentConfig, UserMessageContentPart } from './MessageContent';
