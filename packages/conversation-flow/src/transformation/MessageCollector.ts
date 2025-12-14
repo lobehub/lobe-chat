@@ -35,6 +35,7 @@ export class MessageCollector {
   /**
    * Recursively collect the entire assistant chain
    * (assistant -> tools -> assistant -> tools -> ...)
+   * Only collects messages from the SAME agent (matching agentId)
    */
   collectAssistantChain(
     currentAssistant: Message,
@@ -47,6 +48,9 @@ export class MessageCollector {
 
     // Add current assistant to chain
     assistantChain.push(currentAssistant);
+
+    // Get the agentId of the first assistant in the chain (the group owner)
+    const groupAgentId = assistantChain[0].agentId;
 
     // Collect its tool messages
     const toolMessages = this.collectToolMessages(currentAssistant, allMessages);
@@ -62,8 +66,17 @@ export class MessageCollector {
       const nextMessages = allMessages.filter((m) => m.parentId === toolMsg.id);
 
       for (const nextMsg of nextMessages) {
-        if (nextMsg.role === 'assistant' && nextMsg.tools && nextMsg.tools.length > 0) {
-          // Continue the chain
+        // Only continue if the next assistant has the SAME agentId
+        // Different agentId means it's a different agent responding (e.g., via speak tool)
+        const isSameAgent = nextMsg.agentId === groupAgentId;
+
+        if (
+          nextMsg.role === 'assistant' &&
+          nextMsg.tools &&
+          nextMsg.tools.length > 0 &&
+          isSameAgent
+        ) {
+          // Continue the chain only for same agent
           this.collectAssistantChain(
             nextMsg,
             allMessages,
@@ -72,19 +85,29 @@ export class MessageCollector {
             processedIds,
           );
           return;
-        } else if (nextMsg.role === 'assistant') {
-          // Final assistant without tools
+        } else if (nextMsg.role === 'assistant' && isSameAgent) {
+          // Final assistant without tools (same agent)
           assistantChain.push(nextMsg);
           return;
         }
+        // If different agentId, don't add to chain - let it be processed separately
       }
     }
   }
 
   /**
    * Recursively collect assistant messages for an AssistantGroup (contextTree version)
+   * Only collects messages from the SAME agent (matching agentId)
    */
-  collectAssistantGroupMessages(message: Message, idNode: IdNode, children: ContextNode[]): void {
+  collectAssistantGroupMessages(
+    message: Message,
+    idNode: IdNode,
+    children: ContextNode[],
+    groupAgentId?: string,
+  ): void {
+    // Get the agentId of the first assistant in the group (the group owner)
+    const agentId = groupAgentId ?? message.agentId;
+
     // Get tool message IDs if this assistant has tools
     const toolIds = idNode.children
       .filter((child) => {
@@ -118,9 +141,10 @@ export class MessageCollector {
         const nextChild = toolNode.children[0];
         const nextMsg = this.messageMap.get(nextChild.id);
 
-        if (nextMsg?.role === 'assistant') {
-          // Recursively collect this assistant and its descendants
-          this.collectAssistantGroupMessages(nextMsg, nextChild, children);
+        // Only continue if the next assistant has the SAME agentId
+        if (nextMsg?.role === 'assistant' && nextMsg.agentId === agentId) {
+          // Recursively collect this assistant and its descendants (same agent only)
+          this.collectAssistantGroupMessages(nextMsg, nextChild, children, agentId);
           return; // Only follow one path
         }
       }
@@ -131,8 +155,8 @@ export class MessageCollector {
    * Find next message after tools in an assistant group
    */
   findNextAfterTools(assistantMsg: Message, idNode: IdNode): IdNode | null {
-    // Recursively find the last message in the assistant group
-    const lastNode = this.findLastNodeInAssistantGroup(idNode);
+    // Recursively find the last message in the assistant group (same agentId only)
+    const lastNode = this.findLastNodeInAssistantGroup(idNode, assistantMsg.agentId);
     if (!lastNode) return null;
 
     // Check if lastNode is a tool with agentCouncil mode
@@ -151,8 +175,9 @@ export class MessageCollector {
 
   /**
    * Find the last node in an AssistantGroup sequence
+   * Only follows messages from the SAME agent (matching agentId)
    */
-  findLastNodeInAssistantGroup(idNode: IdNode): IdNode | null {
+  findLastNodeInAssistantGroup(idNode: IdNode, groupAgentId?: string): IdNode | null {
     // Check if has tool children
     const toolChildren = idNode.children.filter((child) => {
       const childMsg = this.messageMap.get(child.id);
@@ -163,7 +188,7 @@ export class MessageCollector {
       return idNode;
     }
 
-    // Check if any tool has an assistant child
+    // Check if any tool has an assistant child with the same agentId
     for (const toolNode of toolChildren) {
       const toolMsg = this.messageMap.get(toolNode.id);
 
@@ -176,14 +201,15 @@ export class MessageCollector {
         const nextChild = toolNode.children[0];
         const nextMsg = this.messageMap.get(nextChild.id);
 
-        if (nextMsg?.role === 'assistant') {
-          // Continue following the assistant chain
-          return this.findLastNodeInAssistantGroup(nextChild);
+        // Only continue if the next assistant has the SAME agentId
+        if (nextMsg?.role === 'assistant' && nextMsg.agentId === groupAgentId) {
+          // Continue following the assistant chain (same agent only)
+          return this.findLastNodeInAssistantGroup(nextChild, groupAgentId);
         }
       }
     }
 
-    // No more assistant messages, return the last tool node
+    // No more assistant messages from the same agent, return the last tool node
     return toolChildren.at(-1) ?? null;
   }
 }
