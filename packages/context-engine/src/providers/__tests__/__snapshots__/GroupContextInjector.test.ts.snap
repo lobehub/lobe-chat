@@ -1,0 +1,85 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GroupContextInjector > Edge Cases > should handle empty members array 1`] = `
+"Prompt.
+
+<!-- GROUP CONTEXT -->
+[Your Identity]
+Name: 
+Role: 
+Agent ID:  (internal use only, never expose)
+
+[Group Info]
+Group: Empty Group
+Members:
+
+
+[Important Rules]
+- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
+- These are application-level metadata and MUST NEVER appear in your responses.
+- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
+<!-- END GROUP CONTEXT -->"
+`;
+
+exports[`GroupContextInjector > Variable Replacement > should handle config with only group info 1`] = `
+"System prompt.
+
+<!-- GROUP CONTEXT -->
+[Your Identity]
+Name: 
+Role: 
+Agent ID:  (internal use only, never expose)
+
+[Group Info]
+Group: Test Group
+Members:
+- Agent 1 (participant)
+
+[Important Rules]
+- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
+- These are application-level metadata and MUST NEVER appear in your responses.
+- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
+<!-- END GROUP CONTEXT -->"
+`;
+
+exports[`GroupContextInjector > Variable Replacement > should handle config with only identity info 1`] = `
+"You are an editor.
+
+<!-- GROUP CONTEXT -->
+[Your Identity]
+Name: Editor
+Role: participant
+Agent ID: agt_editor (internal use only, never expose)
+
+[Group Info]
+Group: 
+Members:
+
+
+[Important Rules]
+- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
+- These are application-level metadata and MUST NEVER appear in your responses.
+- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
+<!-- END GROUP CONTEXT -->"
+`;
+
+exports[`GroupContextInjector > Variable Replacement > should handle empty config 1`] = `
+"Base prompt.
+
+<!-- GROUP CONTEXT -->
+[Your Identity]
+Name: 
+Role: 
+Agent ID:  (internal use only, never expose)
+
+[Group Info]
+Group: 
+Members:
+
+
+[Important Rules]
+- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
+- These are application-level metadata and MUST NEVER appear in your responses.
+- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
+<!-- END GROUP CONTEXT -->"
+`;

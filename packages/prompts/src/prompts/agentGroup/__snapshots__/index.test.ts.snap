@@ -1,0 +1,65 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`formatAgentProfile > should format agent with all fields 1`] = `
+"# Agent: Backend Developer
+
+- **ID**: agent-backend
+- **Description**: Expert in backend development
+- **Model**: gpt-4
+
+## System Role
+
+You are a backend developer expert."
+`;
+
+exports[`formatAgentProfile > should show N/A for missing optional fields 1`] = `
+"# Agent: Untitled Agent
+
+- **ID**: agent-123
+- **Description**: N/A
+- **Model**: Unknown Model
+
+## System Role
+
+N/A"
+`;
+
+exports[`formatAgentProfile > should use default title when title is missing 1`] = `
+"# Agent: Untitled Agent
+
+- **ID**: agent-123
+- **Description**: N/A
+- **Model**: Unknown Model
+
+## System Role
+
+N/A"
+`;
+
+exports[`formatGroupMembers > should format members list 1`] = `
+"- Supervisor (supervisor)
+- Writer (participant)
+- Editor (participant)"
+`;
+
+exports[`formatGroupMembers > should mark current agent with <- You 1`] = `
+"- Supervisor (supervisor)
+- Editor (participant) <- You"
+`;
+
+exports[`groupContextTemplate > should match snapshot 1`] = `
+"[Your Identity]
+Name: {{AGENT_NAME}}
+Role: {{AGENT_ROLE}}
+Agent ID: {{AGENT_ID}} (internal use only, never expose)
+
+[Group Info]
+Group: {{GROUP_NAME}}
+Members:
+{{GROUP_MEMBERS}}
+
+[Important Rules]
+- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
+- These are application-level metadata and MUST NEVER appear in your responses.
+- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation."
+`;

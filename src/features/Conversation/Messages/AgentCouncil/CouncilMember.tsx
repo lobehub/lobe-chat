@@ -13,9 +13,10 @@ import { useAgentMeta } from '../../hooks';
 import { messageStateSelectors, useConversationStore } from '../../store';
 import MessageContent from '../Assistant/components/MessageContent';
 import Usage from '../components/Extras/Usage';
+import type { DisplayMode } from './index';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
-  card: css`
+  cardHorizontal: css`
     scroll-snap-align: start;
 
     overflow: hidden;
@@ -33,6 +34,28 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
       max-width: 360px;
     }
   `,
+  // Tab mode: full width, no border
+  cardTab: css`
+    overflow: hidden;
+
+    width: 100%;
+    padding: 12px;
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgContainer};
+  `,
+  // Vertical mode: full width with border
+  cardVertical: css`
+    overflow: hidden;
+
+    width: 100%;
+    padding: 12px;
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgContainer};
+  `,
   content: css`
     overflow: auto;
     flex: 1;
@@ -42,6 +65,7 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 interface CouncilMemberProps {
   index: number;
   message: UIChatMessage;
+  mode?: DisplayMode;
 }
 
 /**
@@ -51,20 +75,24 @@ interface CouncilMemberProps {
  * - assistantGroup: Agent response with tool calls
  * - assistant: Simple agent response without tools
  */
-const CouncilMember = memo<CouncilMemberProps>(({ message }) => {
-  const { styles } = useStyles();
+const CouncilMember = memo<CouncilMemberProps>(({ message, mode = 'horizontal' }) => {
+  const { styles, cx } = useStyles();
 
   const { agentId, performance, model, provider, usage, createdAt, id } = message;
   const avatar = useAgentMeta(agentId);
 
   const creating = useConversationStore(messageStateSelectors.isMessageCreating(id));
 
-  // For simple assistant message without tools, use MessageContent for consistent rendering
+  const cardClassName = cx({
+    [styles.cardHorizontal]: mode === 'horizontal',
+    [styles.cardTab]: mode === 'tab',
+    [styles.cardVertical]: mode === 'vertical',
+  });
+
   return (
-    <Flexbox className={styles.card} gap={12}>
+    <Flexbox className={cardClassName} gap={12}>
       <Flexbox align={'center'} gap={4} horizontal>
         <Avatar avatar={avatar} loading={creating} />
-
         <Title avatar={avatar} showTitle time={createdAt} />
       </Flexbox>
 
