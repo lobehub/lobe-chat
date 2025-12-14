@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.171](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.170...v2.0.0-next.171)
+
+<sup>Released on **2025-12-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update GPT-5.2 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update GPT-5.2 models, closes [#10749](https://github.com/lobehub/lobe-chat/issues/10749) ([0446127](https://github.com/lobehub/lobe-chat/commit/0446127))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.170](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.169...v2.0.0-next.170)
 
 <sup>Released on **2025-12-12**</sup>
