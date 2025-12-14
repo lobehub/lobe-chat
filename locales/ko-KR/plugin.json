@@ -20,6 +20,23 @@
       },
       "title": "에이전트 빌더"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "모두에게 발언",
+        "createAgent": "팀원 추가",
+        "createWorkflow": "워크플로우 계획",
+        "executeTask": "작업 실행",
+        "getAgentInfo": "팀원 정보 가져오기",
+        "interrupt": "작업 중단",
+        "inviteAgent": "팀원 초대",
+        "removeAgent": "팀원 제거",
+        "searchAgent": "관련 전문가 찾기",
+        "speak": "지정 팀원 발언",
+        "summarize": "대화 요약",
+        "vote": "투표 시작"
+      },
+      "title": "팀 조율"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "지식 베이스 내용 읽기",

@@ -20,6 +20,23 @@
       },
       "title": "Agent 建構器"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "所有人發言",
+        "createAgent": "新增團隊成員",
+        "createWorkflow": "規劃工作流程",
+        "executeTask": "執行任務",
+        "getAgentInfo": "取得成員資訊",
+        "interrupt": "中斷任務",
+        "inviteAgent": "邀請成員",
+        "removeAgent": "移除成員",
+        "searchAgent": "尋找相關專家",
+        "speak": "指定成員發言",
+        "summarize": "總結對話",
+        "vote": "發起投票"
+      },
+      "title": "協調團隊"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "讀取知識庫內容",

@@ -32,6 +32,7 @@
   },
   "availableAgents": "Assistentes disponíveis",
   "backToBottom": "Voltar para o início",
+  "builtinCopilot": "Copilot Integrado",
   "chatList": {
     "expandMessage": "Expandir mensagem",
     "longMessageDetail": "Ver detalhes"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Descrição da equipe",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Conversa",
+      "model": "Modelo"
+    },
     "members": {
       "addMember": "Adicionar membro",
+      "enableOrchestrator": "Ativar Moderador",
       "memberSettings": "Configurações do membro",
       "orchestrator": "Anfitrião",
       "orchestratorThinking": "O anfitrião está pensando...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Perfil do Grupo",
     "profile": "Perfil do assistente",
     "search": "Pesquisar"
   },
@@ -447,6 +454,7 @@
     "clear": "Limpar Leitura"
   },
   "untitledAgent": "Assistente sem nome",
+  "untitledGroup": "Grupo Sem Nome",
   "updateAgent": "Atualizar Informações do Assistente",
   "upload": {
     "action": {

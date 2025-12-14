@@ -1,6 +1,6 @@
 {
   "addFolder": "ایجاد پوشه",
-  "addLibrary": "افزودن به کتابخانه",
+  "addLibrary": "افزودن",
   "addPage": "ایجاد سند",
   "desc": "مدیریت منابع کاری، تحصیلی و زندگی شما.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "هیچ فایل/پوشه‌ای بارگذاری نشده است",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} فایل فیلتر شد (از مجموع {{total}} فایل)"
+      },
       "connect": "در حال اتصال...",
       "gitignore": {
         "apply": "اعمال قوانین",

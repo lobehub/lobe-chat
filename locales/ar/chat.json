@@ -32,6 +32,7 @@
   },
   "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
+  "builtinCopilot": "المساعد المدمج",
   "chatList": {
     "expandMessage": "عرض الرسائل",
     "longMessageDetail": "عرض التفاصيل"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "وصف الفريق",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "الدردشة",
+      "model": "النموذج"
+    },
     "members": {
       "addMember": "إضافة عضو",
+      "enableOrchestrator": "تفعيل المنسق",
       "memberSettings": "إعدادات العضو",
       "orchestrator": "المُنسق",
       "orchestratorThinking": "المُنسق يفكر...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "ملف المجموعة",
     "profile": "ملف المساعد",
     "search": "بحث"
   },
@@ -447,6 +454,7 @@
     "clear": "مسح الصوت"
   },
   "untitledAgent": "مساعد بدون اسم",
+  "untitledGroup": "مجموعة بدون عنوان",
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
     "action": {

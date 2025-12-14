@@ -20,6 +20,23 @@
       },
       "title": "Agenten-Builder"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "An alle sprechen",
+        "createAgent": "Teammitglied hinzufügen",
+        "createWorkflow": "Arbeitsablauf planen",
+        "executeTask": "Aufgabe ausführen",
+        "getAgentInfo": "Mitgliedsinformationen abrufen",
+        "interrupt": "Aufgabe unterbrechen",
+        "inviteAgent": "Mitglied einladen",
+        "removeAgent": "Mitglied entfernen",
+        "searchAgent": "Relevante Experten finden",
+        "speak": "Mitglied zum Sprechen auffordern",
+        "summarize": "Gespräch zusammenfassen",
+        "vote": "Abstimmung starten"
+      },
+      "title": "Team koordinieren"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Wissensdatenbank lesen",

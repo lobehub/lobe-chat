@@ -1,6 +1,6 @@
 {
   "addFolder": "Crear carpeta",
-  "addLibrary": "Agregar a la biblioteca",
+  "addLibrary": "Agregar",
   "addPage": "Crear documento",
   "desc": "Gestiona tus recursos de trabajo, estudio y vida.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "No hay archivos/carpetas subidos aún",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} archivos filtrados (de un total de {{total}} archivos)"
+      },
       "connect": "Conectar...",
       "gitignore": {
         "apply": "Aplicar reglas",

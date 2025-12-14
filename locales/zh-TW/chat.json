@@ -32,6 +32,7 @@
   },
   "availableAgents": "可用助理",
   "backToBottom": "返回底部",
+  "builtinCopilot": "內建 Copilot",
   "chatList": {
     "expandMessage": "展開訊息",
     "longMessageDetail": "查看詳情"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "團隊描述",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "對話",
+      "model": "模型"
+    },
     "members": {
       "addMember": "添加成員",
+      "enableOrchestrator": "啟用主持人",
       "memberSettings": "成員設定",
       "orchestrator": "主持人",
       "orchestratorThinking": "主持人正在思考中...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "群組檔案",
     "profile": "助手檔案",
     "search": "搜尋"
   },
@@ -447,6 +454,7 @@
     "clear": "刪除語音"
   },
   "untitledAgent": "未命名助理",
+  "untitledGroup": "未命名群組",
   "updateAgent": "更新助理信息",
   "upload": {
     "action": {

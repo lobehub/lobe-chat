@@ -700,11 +700,11 @@
     "agents": "Asistanlar",
     "downloads": "İndirmeler",
     "editProfile": "Profili Düzenle",
-    "login": "Giriş Yap",
+    "login": "Yaratıcı Ol",
     "logout": "Çıkış Yap",
     "myProfile": "Profilim",
     "noAgents": "Bu kullanıcı henüz asistan yayınlamadı",
-    "publishedAgents": "Yayınlanan Asistanlar",
+    "publishedAgents": "Oluşturulan Asistanlar",
     "website": "Kişisel Web Sitesi"
   }
 }

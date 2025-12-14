@@ -20,6 +20,23 @@
       },
       "title": "منشئ الوكيل"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "إرسال رسالة للجميع",
+        "createAgent": "إضافة عضو إلى الفريق",
+        "createWorkflow": "تخطيط سير العمل",
+        "executeTask": "تنفيذ المهمة",
+        "getAgentInfo": "الحصول على معلومات العضو",
+        "interrupt": "مقاطعة المهمة",
+        "inviteAgent": "دعوة عضو",
+        "removeAgent": "إزالة عضو",
+        "searchAgent": "البحث عن خبير ذي صلة",
+        "speak": "تعيين عضو للتحدث",
+        "summarize": "تلخيص المحادثة",
+        "vote": "بدء تصويت"
+      },
+      "title": "تنسيق الفريق"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "قراءة محتوى قاعدة المعرفة",

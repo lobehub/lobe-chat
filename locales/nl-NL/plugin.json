@@ -20,6 +20,23 @@
       },
       "title": "Agent Builder"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Tot iedereen spreken",
+        "createAgent": "Teamlid toevoegen",
+        "createWorkflow": "Workflow plannen",
+        "executeTask": "Taak uitvoeren",
+        "getAgentInfo": "Ledinformatie ophalen",
+        "interrupt": "Taak onderbreken",
+        "inviteAgent": "Lid uitnodigen",
+        "removeAgent": "Lid verwijderen",
+        "searchAgent": "Relevante expert zoeken",
+        "speak": "Specifiek lid laten spreken",
+        "summarize": "Gesprek samenvatten",
+        "vote": "Stemronde starten"
+      },
+      "title": "Teamcoördinatie"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Kennisbankinhoud lezen",

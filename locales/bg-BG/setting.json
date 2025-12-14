@@ -689,6 +689,7 @@
       "title": "Глас за преобразуване на текст в реч"
     }
   },
+  "startConversation": "Започване на разговор",
   "storage": {
     "actions": {
       "export": {

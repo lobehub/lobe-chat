@@ -689,6 +689,7 @@
       "title": "Text-to-Speech Voice"
     }
   },
+  "startConversation": "Start Conversation",
   "storage": {
     "actions": {
       "export": {

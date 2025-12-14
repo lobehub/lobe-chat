@@ -689,6 +689,7 @@
       "title": "مصدر توليد الكلام"
     }
   },
+  "startConversation": "ابدأ المحادثة",
   "storage": {
     "actions": {
       "export": {

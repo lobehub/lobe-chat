@@ -1,6 +1,6 @@
 {
   "addFolder": "Utwórz folder",
-  "addLibrary": "Dodaj do biblioteki",
+  "addLibrary": "Dodaj",
   "addPage": "Utwórz dokument",
   "desc": "Zarządzaj swoimi zasobami do pracy, nauki i życia.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Brak przesłanych plików/folderów",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "Odﬁltrowano {{ignored}} plików (z {{total}} wszystkich plików)"
+      },
       "connect": "Połącz...",
       "gitignore": {
         "apply": "Zastosuj reguły",

@@ -1,6 +1,6 @@
 {
   "addFolder": "Klasör Oluştur",
-  "addLibrary": "Kitaplığa Ekle",
+  "addLibrary": "Ekle",
   "addPage": "Belge Oluştur",
   "desc": "Çalışma, öğrenme ve yaşam kaynaklarını yönetin.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Henüz yüklenmiş dosya/klasör yok",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi"
+      },
       "connect": "Bağlan...",
       "gitignore": {
         "apply": "Kuralları Uygula",

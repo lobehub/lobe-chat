@@ -32,6 +32,7 @@
   },
   "availableAgents": "Доступные помощники",
   "backToBottom": "Вернуться вниз",
+  "builtinCopilot": "Встроенный Copilot",
   "chatList": {
     "expandMessage": "Развернуть сообщение",
     "longMessageDetail": "Посмотреть детали"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Описание команды",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Чат",
+      "model": "Модель"
+    },
     "members": {
       "addMember": "Добавить участника",
+      "enableOrchestrator": "Включить модератора",
       "memberSettings": "Настройки участника",
       "orchestrator": "Ведущий",
       "orchestratorThinking": "Ведущий обдумывает...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Профиль группы",
     "profile": "Профиль помощника",
     "search": "Поиск"
   },
@@ -447,6 +454,7 @@
     "clear": "Удалить озвучку"
   },
   "untitledAgent": "Безымянный помощник",
+  "untitledGroup": "Безымянная группа",
   "updateAgent": "Обновить информацию помощника",
   "upload": {
     "action": {

@@ -700,11 +700,11 @@
     "agents": "アシスタント",
     "downloads": "ダウンロード",
     "editProfile": "プロフィールを編集",
-    "login": "ログイン",
+    "login": "クリエイターになる",
     "logout": "ログアウト",
     "myProfile": "マイページ",
     "noAgents": "このユーザーはまだアシスタントを公開していません",
-    "publishedAgents": "公開したアシスタント",
+    "publishedAgents": "作成したアシスタント",
     "website": "個人ウェブサイト"
   }
 }

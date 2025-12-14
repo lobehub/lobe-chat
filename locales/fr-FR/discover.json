@@ -700,11 +700,11 @@
     "agents": "Assistants",
     "downloads": "Téléchargements",
     "editProfile": "Modifier le profil",
-    "login": "Connexion",
+    "login": "Devenir créateur",
     "logout": "Déconnexion",
     "myProfile": "Mon profil",
     "noAgents": "Cet utilisateur n’a publié aucun assistant pour le moment",
-    "publishedAgents": "Assistants publiés",
+    "publishedAgents": "Assistants créés",
     "website": "Site personnel"
   }
 }

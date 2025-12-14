@@ -1,6 +1,6 @@
 {
   "addFolder": "Crea cartella",
-  "addLibrary": "Aggiungi alla libreria",
+  "addLibrary": "Aggiungi",
   "addPage": "Crea documento",
   "desc": "Gestisci le tue risorse per il lavoro, lo studio e la vita quotidiana.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Nessun file/cartella caricato",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} file filtrati (su un totale di {{total}})"
+      },
       "connect": "Connessione in corso...",
       "gitignore": {
         "apply": "Applica regole",

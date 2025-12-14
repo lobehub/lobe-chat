@@ -700,11 +700,11 @@
     "agents": "도우미",
     "downloads": "다운로드",
     "editProfile": "프로필 편집",
-    "login": "로그인",
+    "login": "크리에이터 되기",
     "logout": "로그아웃",
     "myProfile": "내 프로필",
     "noAgents": "이 사용자가 아직 도우미를 게시하지 않았습니다",
-    "publishedAgents": "게시한 도우미",
+    "publishedAgents": "제작한 에이전트",
     "website": "개인 웹사이트"
   }
 }

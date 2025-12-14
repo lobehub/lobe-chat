@@ -1,6 +1,6 @@
 {
   "addFolder": "フォルダーを作成",
-  "addLibrary": "ライブラリに追加",
+  "addLibrary": "追加",
   "addPage": "ドキュメントを作成",
   "desc": "仕事、学習、生活のリソースを管理しましょう。",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "アップロードされたファイル/フォルダーはありません",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{total}} 件のファイルのうち {{ignored}} 件がフィルターされました"
+      },
       "connect": "接続中...",
       "gitignore": {
         "apply": "ルールを適用",

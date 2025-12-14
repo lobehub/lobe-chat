@@ -689,6 +689,7 @@
       "title": "음성 합성 음성"
     }
   },
+  "startConversation": "대화를 시작하기",
   "storage": {
     "actions": {
       "export": {

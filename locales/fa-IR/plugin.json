@@ -20,6 +20,23 @@
       },
       "title": "سازنده عامل"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "ارسال پیام به همه",
+        "createAgent": "افزودن عضو تیم",
+        "createWorkflow": "برنامه‌ریزی جریان کار",
+        "executeTask": "انجام وظیفه",
+        "getAgentInfo": "دریافت اطلاعات عضو",
+        "interrupt": "وقفه در وظیفه",
+        "inviteAgent": "دعوت از عضو",
+        "removeAgent": "حذف عضو",
+        "searchAgent": "جستجوی متخصص مرتبط",
+        "speak": "تعیین عضو برای صحبت",
+        "summarize": "خلاصه‌سازی گفتگو",
+        "vote": "آغاز رأی‌گیری"
+      },
+      "title": "هماهنگی تیم"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "خواندن محتوای پایگاه دانش",

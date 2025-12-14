@@ -1,6 +1,6 @@
 {
   "addFolder": "Tạo thư mục",
-  "addLibrary": "Thêm vào thư viện",
+  "addLibrary": "Thêm",
   "addPage": "Tạo tài liệu",
   "desc": "Quản lý tài nguyên công việc, học tập và cuộc sống của bạn.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "Đã lọc {{ignored}} tệp (trong tổng số {{total}} tệp)"
+      },
       "connect": "Kết nối...",
       "gitignore": {
         "apply": "Áp dụng quy tắc",

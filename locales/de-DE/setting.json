@@ -689,6 +689,7 @@
       "title": "Sprachsynthese-Stimme"
     }
   },
+  "startConversation": "Gespräch beginnen",
   "storage": {
     "actions": {
       "export": {

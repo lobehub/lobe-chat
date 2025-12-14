@@ -20,6 +20,23 @@
       },
       "title": "Créateur d'Agent"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Parler à tout le monde",
+        "createAgent": "Ajouter un membre à l'équipe",
+        "createWorkflow": "Planifier le flux de travail",
+        "executeTask": "Exécuter la tâche",
+        "getAgentInfo": "Obtenir les informations du membre",
+        "interrupt": "Interrompre la tâche",
+        "inviteAgent": "Inviter un membre",
+        "removeAgent": "Retirer un membre",
+        "searchAgent": "Rechercher un expert pertinent",
+        "speak": "Désigner un membre pour parler",
+        "summarize": "Résumer la conversation",
+        "vote": "Lancer un vote"
+      },
+      "title": "Coordination d'équipe"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Lire le contenu de la base de connaissances",

@@ -182,7 +182,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Zamknij powiadomienie",
-      "start": "Zainstalowano i uruchomiono, rozpocznij rozmowę"
+      "start": "Zainstalowano"
     },
     "cors": {
       "description": "Z powodu ograniczeń bezpieczeństwa przeglądarki, musisz skonfigurować CORS dla Ollama, aby móc go używać.",

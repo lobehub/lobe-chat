@@ -689,6 +689,7 @@
       "title": "Voz de síntese de fala"
     }
   },
+  "startConversation": "Iniciar conversa",
   "storage": {
     "actions": {
       "export": {

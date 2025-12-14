@@ -20,6 +20,23 @@
       },
       "title": "Agent Builder"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Broadcast to All",
+        "createAgent": "Add Team Member",
+        "createWorkflow": "Plan Workflow",
+        "executeTask": "Execute Task",
+        "getAgentInfo": "Get Member Info",
+        "interrupt": "Interrupt Task",
+        "inviteAgent": "Invite Member",
+        "removeAgent": "Remove Member",
+        "searchAgent": "Find Expert",
+        "speak": "Assign Speaker",
+        "summarize": "Summarize Conversation",
+        "vote": "Initiate Vote"
+      },
+      "title": "Team Coordination"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Read Knowledge Base Content",

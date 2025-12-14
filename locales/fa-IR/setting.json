@@ -689,6 +689,7 @@
       "title": "منبع صوتی تبدیل متن به گفتار"
     }
   },
+  "startConversation": "شروع گفتگو",
   "storage": {
     "actions": {
       "export": {

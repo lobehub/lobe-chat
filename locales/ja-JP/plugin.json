@@ -20,6 +20,23 @@
       },
       "title": "エージェントビルダー"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "全員に発言",
+        "createAgent": "チームメンバーを追加",
+        "createWorkflow": "ワークフローを計画",
+        "executeTask": "タスクを実行",
+        "getAgentInfo": "メンバー情報を取得",
+        "interrupt": "タスクを中断",
+        "inviteAgent": "メンバーを招待",
+        "removeAgent": "メンバーを削除",
+        "searchAgent": "関連する専門家を探す",
+        "speak": "特定のメンバーに発言させる",
+        "summarize": "会話を要約",
+        "vote": "投票を開始"
+      },
+      "title": "チームの調整"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "ナレッジベースの内容を読み取る",

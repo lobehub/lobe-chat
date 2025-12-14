@@ -31,8 +31,8 @@
     "unknownTitle": "未命名作品"
   },
   "availableAgents": "可用助手",
-  "builtinCopilot": "内置 Copilot",
   "backToBottom": "跳转至当前",
+  "builtinCopilot": "内置 Copilot",
   "chatList": {
     "expandMessage": "展开消息",
     "longMessageDetail": "查看详情"

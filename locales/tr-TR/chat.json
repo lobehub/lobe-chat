@@ -32,6 +32,7 @@
   },
   "availableAgents": "Kullanılabilir asistanlar",
   "backToBottom": "En alta git",
+  "builtinCopilot": "Yerleşik Copilot",
   "chatList": {
     "expandMessage": "Mesajı Genişlet",
     "longMessageDetail": "Detayları görüntüle"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Ekip Açıklaması",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Sohbet",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Üye Ekle",
+      "enableOrchestrator": "Sunucuyu Etkinleştir",
       "memberSettings": "Üye Ayarları",
       "orchestrator": "Yönetici",
       "orchestratorThinking": "Yönetici düşünüyor...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Grup Profili",
     "profile": "Asistan Profili",
     "search": "Ara"
   },
@@ -447,6 +454,7 @@
     "clear": "Sesi Temizle"
   },
   "untitledAgent": "Adsız Asistan",
+  "untitledGroup": "İsimsiz Grup",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
     "action": {

@@ -32,6 +32,7 @@
   },
   "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
+  "builtinCopilot": "Built-in Copilot",
   "chatList": {
     "expandMessage": "Expand Message",
     "longMessageDetail": "View Details"
