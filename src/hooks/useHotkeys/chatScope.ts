@@ -137,7 +137,7 @@ export const useClearCurrentMessagesHotkey = () => {
   });
 };
 
-// 注册聚合
+// Registration aggregation
 
 export const useRegisterChatHotkeys = () => {
   const { enableScope, disableScope } = useHotkeysContext();

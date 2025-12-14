@@ -49,7 +49,7 @@ export const useSwitchAgentHotkey = () => {
   };
 };
 
-// 切换到会话标签(并聚焦到随便聊聊)
+// Switch to chat tab (and focus on inbox chat)
 export const useNavigateToChatHotkey = () => {
   const switchSession = useSwitchSession();
   const [, { unpinAgent }] = usePinnedAgentState();
@@ -71,10 +71,10 @@ export const useOpenHotkeyHelperHotkey = () => {
   );
 };
 
-// 注册聚合
+// Registration aggregation
 
 export const useRegisterGlobalHotkeys = () => {
-  // 全局自动注册不需要 enableScope
+  // Global auto-registration doesn't need enableScope
   useSwitchAgentHotkey();
   useNavigateToChatHotkey();
   useOpenHotkeyHelperHotkey();
