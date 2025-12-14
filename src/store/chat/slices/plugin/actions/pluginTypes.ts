@@ -98,8 +98,9 @@ export const pluginTypes: StateCreator<
       const operation = operationId ? get().operations[operationId] : undefined;
       const context = operationId ? { operationId } : undefined;
 
-      // Get agent ID from operation context (the agent currently executing)
+      // Get agent ID and group ID from operation context
       const agentId = operation?.context?.agentId;
+      const groupId = operation?.context?.groupId;
 
       // Get group orchestration callbacks if available (for group management tools)
       const groupOrchestration = get().getGroupOrchestrationCallbacks?.();
@@ -128,11 +129,12 @@ export const pluginTypes: StateCreator<
         : undefined;
 
       log(
-        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s',
+        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, groupId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s',
         payload.identifier,
         payload.apiName,
         id,
         agentId,
+        groupId,
         !!groupOrchestration,
         rootRuntimeOperationId,
       );
@@ -142,6 +144,7 @@ export const pluginTypes: StateCreator<
         .getState()
         .invokeBuiltinTool(payload.identifier, payload.apiName, params, {
           agentId,
+          groupId,
           groupOrchestration,
           messageId: id,
           operationId,

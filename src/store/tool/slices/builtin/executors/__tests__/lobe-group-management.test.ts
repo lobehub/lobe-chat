@@ -248,12 +248,13 @@ describe('GroupManagementExecutor', () => {
       expect(result.stop).toBeUndefined();
     });
 
-    it('getAgentInfo should not return stop=true', async () => {
+    it('getAgentInfo should return error when no groupId in context', async () => {
       const ctx = createMockContext();
 
       const result = await groupManagement.getAgentInfo({ agentId: 'agent-1' }, ctx);
 
-      expect(result.success).toBe(true);
+      // No groupId means we can't get agent info
+      expect(result.success).toBe(false);
       expect(result.stop).toBeUndefined();
     });
   });

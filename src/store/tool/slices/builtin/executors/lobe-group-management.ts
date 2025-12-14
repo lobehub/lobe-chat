@@ -21,6 +21,9 @@ import {
   SummarizeParams,
   VoteParams,
 } from '@lobechat/builtin-tool-group-management';
+import { formatAgentProfile } from '@lobechat/prompts';
+
+import { agentGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
 
 import type { BuiltinToolContext, BuiltinToolResult } from '../types';
 import { BaseExecutor } from './BaseExecutor';
@@ -93,16 +96,28 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
 
   getAgentInfo = async (
     params: GetAgentInfoParams,
-    _ctx: BuiltinToolContext,
+    ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
-    // TODO: Implement agent info retrieval
-    return {
-      content: JSON.stringify({
-        agentId: params.agentId,
-        message: 'Agent info retrieval not yet implemented',
-      }),
-      success: true,
-    };
+    const { groupId } = ctx;
+
+    if (!groupId) {
+      return {
+        content: JSON.stringify({ error: 'No group context available', success: false }),
+        success: false,
+      };
+    }
+
+    const agent = agentGroupSelectors.getAgentByIdFromGroup(
+      groupId,
+      params.agentId,
+    )(useAgentGroupStore.getState());
+
+    if (!agent) {
+      return { content: `Agent "${params.agentId}" not found in this group`, success: false };
+    }
+
+    // Return formatted agent profile for the supervisor
+    return { content: formatAgentProfile(agent), state: agent, success: true };
   };
 
   // ==================== Communication Coordination ====================

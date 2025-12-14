@@ -31,7 +31,7 @@ export class GroupOrchestrationSupervisor implements IGroupOrchestrationSupervis
 
   async runner(
     context: GroupOrchestrationContext,
-    _state: AgentState,
+    state: AgentState,
   ): Promise<GroupOrchestrationInstruction> {
     const { phase, payload = {} } = context;
 
@@ -62,6 +62,7 @@ export class GroupOrchestrationSupervisor implements IGroupOrchestrationSupervis
       }
 
       case 'delegate': {
+        console.log(state);
         return {
           payload: payload as GroupOrchestrationInstructionDelegate['payload'],
           type: 'delegate',
