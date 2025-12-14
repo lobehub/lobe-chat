@@ -12,7 +12,7 @@ import type {
 import type { ConversationContext } from '@lobechat/types';
 import debug from 'debug';
 
-import { displayMessageSelectors } from '@/store/chat/slices/message/selectors';
+import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import type { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
@@ -63,7 +63,7 @@ export const createGroupOrchestrationExecutors = (
   /**
    * Helper to get current messages for the group conversation
    */
-  const getMessages = () => displayMessageSelectors.getDisplayMessagesByKey(chatKey)(get());
+  const getMessages = () => dbMessageSelectors.getDbMessagesByKey(chatKey)(get());
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
 

@@ -1,7 +1,8 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import { type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
+import { ReactElement, type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
+import { Center } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
 import WideScreenContainer from '../../../WideScreenContainer';
@@ -126,11 +127,20 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
         reverse
         style={{ height: '100%', paddingBottom: 24 }}
       >
-        {(data, index) => (
-          <WideScreenContainer key={data} style={{ position: 'relative' }}>
-            {itemContent(index, data)}
-          </WideScreenContainer>
-        )}
+        {(messageId, index): ReactElement => {
+          const shouldNotIncludeWideScreenContainer = messageId.includes('agentCouncil');
+          const content = itemContent(index, messageId);
+
+          if (shouldNotIncludeWideScreenContainer) {
+            return <Center width={'100%'}>{content}</Center>;
+          }
+
+          return (
+            <WideScreenContainer key={messageId} style={{ position: 'relative' }}>
+              {content}
+            </WideScreenContainer>
+          );
+        }}
       </VList>
       <WideScreenContainer
         onChange={() => {
