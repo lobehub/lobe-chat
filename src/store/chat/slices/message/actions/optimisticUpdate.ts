@@ -188,13 +188,8 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticDeleteMessage: async (id: string, context) => {
     get().internal_dispatchMessage({ id, type: 'deleteMessage' }, context);
     const ctx = get().internal_getConversationContext(context);
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.removeMessage(id, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.removeMessage(id, ctx);
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       get().replaceMessages(result.messages, { context: ctx });
     }
   },
@@ -202,13 +197,8 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticDeleteMessages: async (ids, context) => {
     get().internal_dispatchMessage({ ids, type: 'deleteMessages' }, context);
     const ctx = get().internal_getConversationContext(context);
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.removeMessages(ids, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.removeMessages(ids, ctx);
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       get().replaceMessages(result.messages, { context: ctx });
     }
   },
@@ -241,7 +231,6 @@ export const messageOptimisticUpdate: StateCreator<
 
     const ctx = get().internal_getConversationContext(context);
 
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
     const result = await messageService.updateMessage(
       id,
       {
@@ -254,15 +243,11 @@ export const messageOptimisticUpdate: StateCreator<
         search: extra?.search,
         tools: extra?.tools,
       },
-      { agentId: ctx.agentId, topicId: ctx.topicId },
+      ctx,
     );
 
     if (result && result.success && result.messages) {
-      // Store layer only uses agentId in context
-      replaceMessages(result.messages, {
-        action: 'optimisticUpdateMessageContent',
-        context: ctx,
-      });
+      replaceMessages(result.messages, { action: 'optimisticUpdateMessageContent', context: ctx });
     } else {
       await refreshMessages();
     }
@@ -271,14 +256,8 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticUpdateMessageError: async (id, error, context) => {
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
     const ctx = get().internal_getConversationContext(context);
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.updateMessage(
-      id,
-      { error },
-      { agentId: ctx.agentId, topicId: ctx.topicId },
-    );
+    const result = await messageService.updateMessage(id, { error }, ctx);
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       get().replaceMessages(result.messages, { context: ctx });
     } else {
       await get().refreshMessages();
@@ -288,26 +267,12 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticUpdateMessageMetadata: async (id, metadata, context) => {
     const { internal_dispatchMessage, refreshMessages, replaceMessages } = get();
 
-    // Optimistic update: update the frontend immediately
-    internal_dispatchMessage(
-      {
-        id,
-        type: 'updateMessageMetadata',
-        value: metadata,
-      },
-      context,
-    );
+    internal_dispatchMessage({ id, type: 'updateMessageMetadata', value: metadata }, context);
 
     const ctx = get().internal_getConversationContext(context);
-
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.updateMessageMetadata(id, metadata, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.updateMessageMetadata(id, metadata, ctx);
 
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       replaceMessages(result.messages, { context: ctx });
     } else {
       await refreshMessages();
@@ -317,52 +282,28 @@ export const messageOptimisticUpdate: StateCreator<
   optimisticUpdateMessagePlugin: async (id, value, context) => {
     const { internal_dispatchMessage, replaceMessages } = get();
 
-    // Optimistic update: update the frontend immediately
-    internal_dispatchMessage(
-      {
-        id,
-        type: 'updateMessagePlugin',
-        value,
-      },
-      context,
-    );
+    internal_dispatchMessage({ id, type: 'updateMessagePlugin', value }, context);
 
     const ctx = get().internal_getConversationContext(context);
-
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.updateMessagePlugin(id, value, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.updateMessagePlugin(id, value, ctx);
 
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       replaceMessages(result.messages, { context: ctx });
     }
   },
 
   optimisticUpdateMessagePluginError: async (id, error, context) => {
     const ctx = get().internal_getConversationContext(context);
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.updateMessagePluginError(id, error, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.updateMessagePluginError(id, error, ctx);
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       get().replaceMessages(result.messages, { context: ctx });
     }
   },
 
   optimisticUpdateMessageRAG: async (id, data, context) => {
     const ctx = get().internal_getConversationContext(context);
-    // CRUD operations pass agentId - backend handles sessionId mapping (LOBE-1086)
-    const result = await messageService.updateMessageRAG(id, data, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.updateMessageRAG(id, data, ctx);
     if (result?.success && result.messages) {
-      // Store layer only uses agentId in context
       get().replaceMessages(result.messages, { context: ctx });
     }
   },

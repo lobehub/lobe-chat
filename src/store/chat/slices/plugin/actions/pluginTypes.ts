@@ -241,17 +241,14 @@ export const pluginTypes: StateCreator<
       if (err.message.includes('aborted')) {
         log('[invokeKlavisTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
-        const result = await messageService.updateMessageError(id, error as any, {
+        const ctx = {
           agentId: message?.agentId,
+          groupId: message?.groupId,
           topicId: message?.topicId,
-        });
+        };
+        const result = await messageService.updateMessageError(id, error as any, ctx);
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages, {
-            context: {
-              agentId: message?.agentId,
-              topicId: message?.topicId,
-            },
-          });
+          get().replaceMessages(result.messages, { context: ctx });
         }
       }
     }
@@ -285,8 +282,13 @@ export const pluginTypes: StateCreator<
 
     // if the plugin settings is not valid, then set the message with error type
     if (!result.valid) {
-      // Get message to extract agentId/topicId
+      // Get message to extract agentId/topicId/groupId
       const message = dbMessageSelectors.getDbMessageById(id)(get());
+      const ctx = {
+        agentId: message?.agentId,
+        groupId: message?.groupId,
+        topicId: message?.topicId,
+      };
       const updateResult = await messageService.updateMessageError(
         id,
         {
@@ -297,16 +299,11 @@ export const pluginTypes: StateCreator<
           message: t('response.PluginSettingsInvalid', { ns: 'error' }),
           type: PluginErrorType.PluginSettingsInvalid as any,
         },
-        {
-          agentId: message?.agentId,
-          topicId: message?.topicId,
-        },
+        ctx,
       );
 
       if (updateResult?.success && updateResult.messages) {
-        get().replaceMessages(updateResult.messages, {
-          context: { agentId: message?.agentId || '', topicId: message?.topicId },
-        });
+        get().replaceMessages(updateResult.messages, { context: ctx });
       }
       return;
     }
@@ -353,14 +350,14 @@ export const pluginTypes: StateCreator<
       if (err.message.includes('The user aborted a request.')) {
         log('[invokeMCPTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
-        const result = await messageService.updateMessageError(id, error as any, {
+        const ctx = {
           agentId: message?.agentId,
+          groupId: message?.groupId,
           topicId: message?.topicId,
-        });
+        };
+        const result = await messageService.updateMessageError(id, error as any, ctx);
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages, {
-            context: { agentId: message?.agentId || '', topicId: message?.topicId },
-          });
+          get().replaceMessages(result.messages, { context: ctx });
         }
       }
     }
@@ -426,14 +423,14 @@ export const pluginTypes: StateCreator<
           payload.identifier,
         );
       } else {
-        const result = await messageService.updateMessageError(id, error as any, {
+        const ctx = {
           agentId: message?.agentId,
+          groupId: message?.groupId,
           topicId: message?.topicId,
-        });
+        };
+        const result = await messageService.updateMessageError(id, error as any, ctx);
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages, {
-            context: { agentId: message?.agentId || '', topicId: message?.topicId },
-          });
+          get().replaceMessages(result.messages, { context: ctx });
         }
       }
 

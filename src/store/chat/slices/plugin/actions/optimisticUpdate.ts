@@ -120,11 +120,7 @@ export const pluginOptimisticUpdate: StateCreator<
     );
 
     const ctx = internal_getConversationContext(context);
-
-    const result = await messageService.updateMessagePluginState(id, value, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.updateMessagePluginState(id, value, ctx);
 
     if (result?.success && result.messages) {
       replaceMessages(result.messages, { context: ctx });
@@ -194,11 +190,7 @@ export const pluginOptimisticUpdate: StateCreator<
     );
 
     const ctx = internal_getConversationContext(context);
-
-    const result = await messageService.updateMessagePlugin(id, value, {
-      agentId: ctx.agentId,
-      topicId: ctx.topicId,
-    });
+    const result = await messageService.updateMessagePlugin(id, value, ctx);
 
     if (result?.success && result.messages) {
       replaceMessages(result.messages, { context: ctx });
@@ -241,12 +233,7 @@ export const pluginOptimisticUpdate: StateCreator<
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } }, context);
 
     const ctx = internal_getConversationContext(context);
-
-    const result = await messageService.updateMessage(
-      id,
-      { error },
-      { agentId: ctx.agentId, topicId: ctx.topicId },
-    );
+    const result = await messageService.updateMessage(id, { error }, ctx);
     if (result?.success && result.messages) {
       replaceMessages(result.messages, { context: ctx });
     }
@@ -263,11 +250,7 @@ export const pluginOptimisticUpdate: StateCreator<
     const ctx = internal_getConversationContext(context);
 
     internal_toggleMessageLoading(true, id);
-    const result = await messageService.updateMessage(
-      id,
-      { tools: message.tools },
-      { agentId: ctx.agentId, topicId: ctx.topicId },
-    );
+    const result = await messageService.updateMessage(id, { tools: message.tools }, ctx);
     internal_toggleMessageLoading(false, id);
 
     if (result?.success && result.messages) {
@@ -281,17 +264,14 @@ export const pluginOptimisticUpdate: StateCreator<
     const { content, pluginState, pluginError } = params;
 
     // Batch optimistic updates - update frontend immediately
-    // Update content if provided
     if (content !== undefined) {
       internal_dispatchMessage({ id, type: 'updateMessage', value: { content } }, context);
     }
 
-    // Update pluginState if provided
     if (pluginState !== undefined) {
       internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState } }, context);
     }
 
-    // Update pluginError if provided (can be null to clear error)
     if (pluginError !== undefined) {
       internal_dispatchMessage(
         { id, type: 'updateMessagePlugin', value: { error: pluginError } },
@@ -300,31 +280,27 @@ export const pluginOptimisticUpdate: StateCreator<
     }
 
     const ctx = internal_getConversationContext(context);
-    const options = { agentId: ctx.agentId, topicId: ctx.topicId };
 
     // Persist to database in parallel for better performance
     const updatePromises: Promise<any>[] = [];
 
-    // Update content via message update
     if (content !== undefined) {
-      updatePromises.push(messageService.updateMessage(id, { content }, options));
+      updatePromises.push(messageService.updateMessage(id, { content }, ctx));
     }
 
-    // Update pluginState via plugin state update
     if (pluginState !== undefined) {
-      updatePromises.push(messageService.updateMessagePluginState(id, pluginState, options));
+      updatePromises.push(messageService.updateMessagePluginState(id, pluginState, ctx));
     }
 
-    // Update pluginError via plugin error update
     if (pluginError !== undefined) {
-      updatePromises.push(messageService.updateMessagePluginError(id, pluginError, options));
+      updatePromises.push(messageService.updateMessagePluginError(id, pluginError, ctx));
     }
 
     // Wait for all updates to complete and get the last result with messages
     const results = await Promise.all(updatePromises);
 
     // Use the last successful result's messages to update the store
-    const lastResult = results.filter((r) => r?.success && r.messages).pop();
+    const lastResult = results.findLast((r) => r?.success && r.messages);
     if (lastResult?.messages) {
       replaceMessages(lastResult.messages, { context: ctx });
     }

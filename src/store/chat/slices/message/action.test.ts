@@ -1379,14 +1379,174 @@ describe('chatMessage actions', () => {
 
         // Verify: service was called with the metadata update
         // Note: service is called with 3 args: (id, metadata, context)
+        // The context includes all fields from internal_getConversationContext
         expect(updateMetadataSpy).toHaveBeenCalledWith(
           messageId,
           { activeBranchIndex: branchIndex },
-          { agentId: groupContext.agentId, topicId: groupContext.topicId },
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
         );
 
         // Verify: global messages should remain untouched
         expect(result.current.messagesMap[globalKey]).toEqual(globalMessages);
+      });
+    });
+
+    describe('optimistic updates with groupId in operation context', () => {
+      const groupContext = {
+        agentId: 'agent-in-group',
+        groupId: 'group-456',
+        topicId: 'topic-in-group',
+      };
+      const groupKey = messageMapKey(groupContext);
+      const messageId = 'message-id';
+      const messages = [{ id: messageId, role: 'user', content: 'Test' }] as any;
+
+      beforeEach(() => {
+        act(() => {
+          useChatStore.setState({
+            activeAgentId: 'global-agent',
+            activeTopicId: undefined,
+            dbMessagesMap: { [groupKey]: messages },
+            messagesMap: { [groupKey]: messages },
+          });
+        });
+      });
+
+      it('optimisticUpdateMessageContent should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+        });
+
+        const updateSpy = vi
+          .spyOn(messageService, 'updateMessage')
+          .mockResolvedValue({ success: true, messages: [] } as any);
+
+        await act(async () => {
+          await result.current.optimisticUpdateMessageContent(messageId, 'new content', undefined, {
+            operationId: operationId!,
+          });
+        });
+
+        expect(updateSpy).toHaveBeenCalledWith(
+          messageId,
+          expect.objectContaining({ content: 'new content' }),
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+      });
+
+      it('optimisticDeleteMessage should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+        });
+
+        const removeSpy = vi
+          .spyOn(messageService, 'removeMessage')
+          .mockResolvedValue({ success: true, messages: [] } as any);
+
+        await act(async () => {
+          await result.current.optimisticDeleteMessage(messageId, { operationId: operationId! });
+        });
+
+        expect(removeSpy).toHaveBeenCalledWith(
+          messageId,
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+      });
+
+      it('optimisticUpdateMessageError should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+        });
+
+        const error = { type: 'TestError', message: 'Test' };
+
+        const updateSpy = vi
+          .spyOn(messageService, 'updateMessage')
+          .mockResolvedValue({ success: true, messages: [] } as any);
+
+        await act(async () => {
+          await result.current.optimisticUpdateMessageError(messageId, error as any, {
+            operationId: operationId!,
+          });
+        });
+
+        expect(updateSpy).toHaveBeenCalledWith(
+          messageId,
+          expect.objectContaining({ error }),
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
+      });
+
+      it('optimisticUpdateMessageMetadata should pass groupId via ctx', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        let operationId: string;
+        act(() => {
+          const op = result.current.startOperation({
+            type: 'regenerate',
+            context: groupContext,
+          });
+          operationId = op.operationId;
+        });
+
+        const metadata = { collapsed: true };
+
+        const updateSpy = vi
+          .spyOn(messageService, 'updateMessageMetadata')
+          .mockResolvedValue({ success: true, messages: [] } as any);
+
+        await act(async () => {
+          await result.current.optimisticUpdateMessageMetadata(messageId, metadata, {
+            operationId: operationId!,
+          });
+        });
+
+        expect(updateSpy).toHaveBeenCalledWith(
+          messageId,
+          metadata,
+          expect.objectContaining({
+            agentId: groupContext.agentId,
+            groupId: groupContext.groupId,
+            topicId: groupContext.topicId,
+          }),
+        );
       });
     });
   });

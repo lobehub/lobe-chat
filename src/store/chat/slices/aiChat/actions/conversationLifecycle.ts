@@ -24,12 +24,7 @@ import { getSessionStoreState } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
 
-import {
-  dbMessageSelectors,
-  displayMessageSelectors,
-  messageStateSelectors,
-  topicSelectors,
-} from '../../../selectors';
+import { dbMessageSelectors, displayMessageSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 /**
@@ -66,16 +61,6 @@ export interface ConversationLifecycleAction {
    * @returns Result containing message IDs and created thread ID if applicable
    */
   sendMessage: (params: SendMessageWithContextParams) => Promise<SendMessageResult | undefined>;
-  /**
-   * @deprecated Use ConversationStore.regenerateUserMessage instead.
-   * This method uses global state which doesn't work in Group Chat scenarios.
-   */
-  regenerateUserMessage: (id: string) => Promise<void>;
-  /**
-   * @deprecated Use ConversationStore.regenerateAssistantMessage instead.
-   * This method uses global state which doesn't work in Group Chat scenarios.
-   */
-  regenerateAssistantMessage: (id: string) => Promise<void>;
   /**
    * Continue generating from current assistant message
    */
@@ -397,93 +382,18 @@ export const conversationLifecycle: StateCreator<
     };
   },
 
-  /**
-   * @deprecated Use ConversationStore.regenerateUserMessage instead
-   */
-  regenerateUserMessage: async (id) => {
-    const isRegenerating = messageStateSelectors.isMessageRegenerating(id)(get());
-    if (isRegenerating) return;
-
-    const item = displayMessageSelectors.getDisplayMessageById(id)(get());
-    if (!item) return;
-
-    const chats = displayMessageSelectors.mainAIChats(get());
-
-    const currentIndex = chats.findIndex((c) => c.id === id);
-    const contextMessages = chats.slice(0, currentIndex + 1);
-
-    if (contextMessages.length <= 0) return;
-
-    const { internal_execAgentRuntime, activeThreadId, activeAgentId, activeTopicId } = get();
-
-    // Create base context for regeneration (using global state)
-    const regenContext = {
-      agentId: activeAgentId,
-      topicId: activeTopicId,
-      threadId: activeThreadId ?? undefined,
-    };
-
-    // Create regenerate operation
-    const { operationId } = get().startOperation({
-      type: 'regenerate',
-      context: { ...regenContext, messageId: id },
-    });
-
-    try {
-      // 切一个新的激活分支
-      await get().switchMessageBranch(id, item.branch ? item.branch.count : 1);
-
-      await internal_execAgentRuntime({
-        context: regenContext,
-        messages: contextMessages,
-        parentMessageId: id,
-        parentMessageType: 'user',
-        parentOperationId: operationId,
-      });
-
-      get().completeOperation(operationId);
-    } catch (error) {
-      get().failOperation(operationId, {
-        type: 'RegenerateError',
-        message: error instanceof Error ? error.message : String(error),
-      });
-      throw error;
-    }
-  },
-
-  /**
-   * @deprecated Use ConversationStore.regenerateAssistantMessage instead
-   */
-  regenerateAssistantMessage: async (id) => {
-    const isRegenerating = messageStateSelectors.isMessageRegenerating(id)(get());
-    if (isRegenerating) return;
-
-    const chats = displayMessageSelectors.mainAIChats(get());
-    const currentIndex = chats.findIndex((c) => c.id === id);
-    const currentMessage = chats[currentIndex];
-
-    // 消息是 AI 发出的因此需要找到它的 user 消息
-    const userId = currentMessage.parentId;
-    const userIndex = chats.findIndex((c) => c.id === userId);
-    // 如果消息没有 parentId，那么同 user 模式
-    const contextMessages = chats.slice(0, userIndex < 0 ? currentIndex + 1 : userIndex + 1);
-
-    if (contextMessages.length <= 0 || !userId) return;
-
-    await get().regenerateUserMessage(userId);
-  },
-
   continueGenerationMessage: async (id, messageId) => {
     const message = dbMessageSelectors.getDbMessageById(id)(get());
     if (!message) return;
 
-    const { activeAgentId, activeTopicId, activeThreadId } = get();
+    const { activeAgentId, activeTopicId, activeThreadId, activeGroupId } = get();
 
     // Create base context for continue operation (using global state)
     const continueContext = {
       agentId: activeAgentId,
       topicId: activeTopicId,
       threadId: activeThreadId ?? undefined,
+      groupId: activeGroupId,
     };
 
     // Create continue operation

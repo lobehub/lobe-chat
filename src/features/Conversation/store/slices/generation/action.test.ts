@@ -155,29 +155,65 @@ describe('Generation Actions', () => {
   });
 
   describe('continueGeneration', () => {
-    it('should continue generation from message', async () => {
-      // Reset mock to ensure continueGenerationMessage is available
+    it('should continue generation from message with context including groupId', async () => {
+      // Reset mock to ensure all required functions are available
       vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {},
-        continueGenerationMessage: mockContinueGenerationMessage,
+        operations: {},
+        startOperation: mockStartOperation,
+        completeOperation: mockCompleteOperation,
+        failOperation: mockFailOperation,
+        internal_execAgentRuntime: mockInternalExecAgentRuntime,
       } as any);
 
       const context: ConversationContext = {
         agentId: 'session-1',
-        topicId: null,
+        topicId: 'topic-1',
         threadId: null,
+        groupId: 'group-1',
       };
 
       const store = createStore({ context });
+
+      // Set displayMessages after store creation
+      act(() => {
+        store.setState({
+          displayMessages: [{ id: 'msg-1', role: 'assistant', content: 'Hello' }],
+        } as any);
+      });
 
       await act(async () => {
         await store.getState().continueGeneration('msg-1');
       });
 
-      expect(mockContinueGenerationMessage).toHaveBeenCalledWith('msg-1', 'msg-1');
+      // Should create operation with context including groupId
+      expect(mockStartOperation).toHaveBeenCalledWith({
+        context: { ...context, messageId: 'msg-1' },
+        type: 'continue',
+      });
+
+      // Should call internal_execAgentRuntime with context including groupId
+      expect(mockInternalExecAgentRuntime).toHaveBeenCalledWith(
+        expect.objectContaining({
+          context,
+          parentMessageId: 'msg-1',
+          parentMessageType: 'assistant',
+          parentOperationId: 'test-op-id',
+        }),
+      );
     });
 
     it('should call onBeforeContinue hook and respect false return', async () => {
+      // Reset mock to ensure all required functions are available
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
+        messagesMap: {},
+        operations: {},
+        startOperation: mockStartOperation,
+        completeOperation: mockCompleteOperation,
+        failOperation: mockFailOperation,
+        internal_execAgentRuntime: mockInternalExecAgentRuntime,
+      } as any);
+
       const onBeforeContinue = vi.fn().mockResolvedValue(false);
 
       const context: ConversationContext = {
@@ -189,19 +225,31 @@ describe('Generation Actions', () => {
 
       const store = createStore({ context, hooks });
 
+      // Set displayMessages after store creation
+      act(() => {
+        store.setState({
+          displayMessages: [{ id: 'msg-1', role: 'assistant', content: 'Hello' }],
+        } as any);
+      });
+
       await act(async () => {
         await store.getState().continueGeneration('msg-1');
       });
 
       expect(onBeforeContinue).toHaveBeenCalledWith('msg-1');
-      expect(mockContinueGenerationMessage).not.toHaveBeenCalled();
+      // Should not call internal_execAgentRuntime if hook returns false
+      expect(mockInternalExecAgentRuntime).not.toHaveBeenCalled();
     });
 
     it('should call onContinueComplete hook after continuation', async () => {
-      // Reset mock to ensure continueGenerationMessage is available
+      // Reset mock to ensure all required functions are available
       vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
         messagesMap: {},
-        continueGenerationMessage: mockContinueGenerationMessage.mockResolvedValue(undefined),
+        operations: {},
+        startOperation: mockStartOperation,
+        completeOperation: mockCompleteOperation,
+        failOperation: mockFailOperation,
+        internal_execAgentRuntime: mockInternalExecAgentRuntime.mockResolvedValue(undefined),
       } as any);
 
       const onContinueComplete = vi.fn();
@@ -215,11 +263,53 @@ describe('Generation Actions', () => {
 
       const store = createStore({ context, hooks });
 
+      // Set displayMessages after store creation
+      act(() => {
+        store.setState({
+          displayMessages: [{ id: 'msg-1', role: 'assistant', content: 'Hello' }],
+        } as any);
+      });
+
       await act(async () => {
         await store.getState().continueGeneration('msg-1');
       });
 
       expect(onContinueComplete).toHaveBeenCalledWith('msg-1');
+    });
+
+    it('should not continue if message is not found', async () => {
+      // Reset mock to ensure all required functions are available
+      vi.mocked(await import('@/store/chat').then((m) => m.useChatStore.getState)).mockReturnValue({
+        messagesMap: {},
+        operations: {},
+        startOperation: mockStartOperation,
+        completeOperation: mockCompleteOperation,
+        failOperation: mockFailOperation,
+        internal_execAgentRuntime: mockInternalExecAgentRuntime,
+      } as any);
+
+      const context: ConversationContext = {
+        agentId: 'session-1',
+        topicId: null,
+        threadId: null,
+      };
+
+      const store = createStore({ context });
+
+      // Set empty displayMessages
+      act(() => {
+        store.setState({
+          displayMessages: [],
+        } as any);
+      });
+
+      await act(async () => {
+        await store.getState().continueGeneration('msg-not-exist');
+      });
+
+      // Should not create operation if message not found
+      expect(mockStartOperation).not.toHaveBeenCalled();
+      expect(mockInternalExecAgentRuntime).not.toHaveBeenCalled();
     });
   });
 

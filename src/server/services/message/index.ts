@@ -9,6 +9,7 @@ interface QueryOptions {
   agentId?: string | null;
   groupId?: string | null;
   sessionId?: string | null;
+  threadId?: string | null;
   topicId?: string | null;
 }
 
@@ -65,10 +66,10 @@ export class MessageService {
       return { success: true };
     }
 
-    const { agentId, sessionId, topicId, groupId } = options;
+    const { agentId, sessionId, topicId, groupId, threadId } = options;
 
     const messages = await this.messageModel.query(
-      { agentId, groupId, sessionId, topicId },
+      { agentId, groupId, sessionId, threadId, topicId },
       this.getQueryOptions(),
     );
 

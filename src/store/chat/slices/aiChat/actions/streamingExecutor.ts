@@ -831,7 +831,7 @@ export const streamingExecutor: StateCreator<
     const { messages: originalMessages, parentMessageId, parentMessageType, context } = params;
 
     // Extract values from context
-    const { agentId, topicId, threadId, subAgentId } = context;
+    const { agentId, topicId, threadId, subAgentId, groupId } = context;
 
     // For group orchestration scenarios:
     // - subAgentId is used for agent config retrieval (model, provider, plugins)
@@ -879,7 +879,9 @@ export const streamingExecutor: StateCreator<
 
     const agentStoreState = getAgentStoreState();
     // Use effectiveAgentId to get agent config (subAgentId in group orchestration, agentId otherwise)
-    const agentConfigData = agentSelectors.getAgentConfigById(effectiveAgentId || '')(agentStoreState);
+    const agentConfigData = agentSelectors.getAgentConfigById(effectiveAgentId || '')(
+      agentStoreState,
+    );
     const { chatConfig } = agentConfigData;
 
     // Use agent config from agentId
