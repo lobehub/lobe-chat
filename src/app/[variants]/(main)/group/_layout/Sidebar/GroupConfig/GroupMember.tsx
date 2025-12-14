@@ -44,35 +44,12 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
   // const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
   // const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>();
 
-  const handleAddMembers = async (
-    selectedAgents: string[],
-    hostConfig?: { model?: string; provider?: string },
-    enableSupervisor?: boolean,
-  ) => {
+  const handleAddMembers = async (selectedAgents: string[]) => {
     if (!groupId) {
       console.error('No active group to add members to');
       return;
     }
 
-    // Update host config if changed
-    if (hostConfig !== undefined || enableSupervisor !== undefined) {
-      const newConfig: any = {};
-
-      if (enableSupervisor !== undefined) {
-        newConfig.enableSupervisor = enableSupervisor;
-      }
-
-      if (hostConfig) {
-        newConfig.orchestratorModel = hostConfig.model;
-        newConfig.orchestratorProvider = hostConfig.provider;
-      }
-
-      if (Object.keys(newConfig).length > 0) {
-        await updateGroupConfig(newConfig);
-      }
-    }
-
-    // Add selected agents
     if (selectedAgents.length > 0) {
       await addAgentsToGroup(groupId, selectedAgents);
     }
@@ -208,19 +185,15 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
         )}
       </Flexbox>
 
-      <AddGroupMemberModal
-        currentHostConfig={{
-          enableSupervisor: groupConfig?.enableSupervisor,
-          orchestratorModel: groupConfig?.orchestratorModel,
-          orchestratorProvider: groupConfig?.orchestratorProvider,
-        }}
-        existingMembers={groupMembers.map((member) => member.id)}
-        groupId={groupId}
-        mode="add"
-        onCancel={() => onAddModalOpenChange(false)}
-        onConfirm={handleAddMembers}
-        open={addModalOpen}
-      />
+      {groupId && (
+        <AddGroupMemberModal
+          existingMembers={groupMembers.map((member) => member.id)}
+          groupId={groupId}
+          onCancel={() => onAddModalOpenChange(false)}
+          onConfirm={handleAddMembers}
+          open={addModalOpen}
+        />
+      )}
     </>
   );
 });

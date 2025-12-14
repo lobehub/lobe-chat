@@ -205,6 +205,7 @@ export default {
     noAvailableAgents: '没有可邀请的 Agent',
     noSelectedAgents: '还未选择 Agent',
     searchAgents: '搜索 Agent...',
+    selectedAgents: '已选择 ({{count}})',
     setInitialMembers: '选择团队成员',
   },
   members: 'Members',

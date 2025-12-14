@@ -50,6 +50,18 @@ export interface NewChatGroupAgent {
   userId: string;
 }
 
+// New Chat Group type for creating groups (independent from schema)
+export interface NewChatGroup {
+  clientId?: string | null;
+  config?: LobeChatGroupConfig | null;
+  description?: string | null;
+  groupId?: string | null;
+  id?: string;
+  pinned?: boolean | null;
+  title?: string | null;
+  userId: string;
+}
+
 // Chat Group Item type (independent from schema)
 export interface ChatGroupItem {
   accessedAt?: Date;

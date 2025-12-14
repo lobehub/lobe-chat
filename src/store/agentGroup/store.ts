@@ -3,15 +3,15 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chatGroupAction } from './action';
-import { ChatGroupStore, initialChatGroupState } from './initialState';
+import { ChatGroupAction, chatGroupAction } from './action';
+import { ChatGroupState, initialChatGroupState } from './initialState';
 
-const createStore: StateCreator<ChatGroupStore, [['zustand/devtools', never]]> = (...params) => {
-  return {
-    ...initialChatGroupState,
-    ...chatGroupAction(...params),
-  };
-};
+export type ChatGroupStore = ChatGroupState & ChatGroupAction;
+
+const createStore: StateCreator<ChatGroupStore, [['zustand/devtools', never]]> = (...params) => ({
+  ...initialChatGroupState,
+  ...chatGroupAction(...params),
+});
 
 export const useAgentGroupStore = createWithEqualityFn<ChatGroupStore>()(
   devtools(createStore),

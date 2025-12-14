@@ -1,22 +1,27 @@
-import type { AgentGroupDetail } from '@lobechat/types';
+import type { AgentGroupDetail, LobeChatGroupConfig, NewChatGroup } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
 import { getAgentStoreState } from '@/store/agent';
+import { ChatGroupStore } from '@/store/agentGroup/store';
 import { useChatStore } from '@/store/chat';
-import { getSessionStoreState } from '@/store/session';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { ChatGroupAction, ChatGroupState, ChatGroupStore } from './initialState';
+import { ChatGroupState } from './initialState';
 import { ChatGroupReducer, chatGroupReducers } from './reducers';
-import { agentGroupSelectors } from './selectors';
+import {
+  ChatGroupCurdAction,
+  ChatGroupLifecycleAction,
+  ChatGroupMemberAction,
+  chatGroupCurdSlice,
+  chatGroupLifecycleSlice,
+  chatGroupMemberSlice,
+} from './slices';
 
 const n = setNamespace('chatGroup');
 
@@ -32,13 +37,42 @@ const toAgentGroupDetail = (group: ChatGroupItem): AgentGroupDetail =>
     agents: [],
   }) as AgentGroupDetail;
 
-export const chatGroupAction: StateCreator<
+// Internal action interface
+export interface ChatGroupInternalAction {
+  internal_dispatchChatGroup: (
+    payload:
+      | {
+          type: string;
+        }
+      | {
+          payload: any;
+          type: string;
+        },
+  ) => void;
+  internal_updateGroupMaps: (groups: ChatGroupItem[]) => void;
+  loadGroups: () => Promise<void>;
+  refreshGroupDetail: (groupId: string) => Promise<void>;
+  refreshGroups: () => Promise<void>;
+  toggleGroupSetting: (open: boolean) => void;
+  toggleThread: (agentId: string) => void;
+  useFetchGroupDetail: (enabled: boolean, groupId: string) => any;
+  useFetchGroups: (enabled: boolean, isLogin: boolean) => any;
+}
+
+// Combined action interface
+export interface ChatGroupAction
+  extends ChatGroupInternalAction,
+    ChatGroupLifecycleAction,
+    ChatGroupMemberAction,
+    ChatGroupCurdAction {}
+
+const chatGroupInternalSlice: StateCreator<
   ChatGroupStore,
   [['zustand/devtools', never]],
   [],
-  ChatGroupAction
+  ChatGroupInternalAction
 > = (set, get) => {
-  const dispatch: ChatGroupAction['internal_dispatchChatGroup'] = (payload) => {
+  const dispatch: ChatGroupInternalAction['internal_dispatchChatGroup'] = (payload) => {
     set(
       produce((draft: ChatGroupState) => {
         const reducer = chatGroupReducers[
@@ -55,123 +89,7 @@ export const chatGroupAction: StateCreator<
   };
 
   return {
-    addAgentsToGroup: async (groupId, agentIds) => {
-      await chatGroupService.addAgentsToGroup(groupId, agentIds);
-      await get().internal_refreshGroups();
-    },
-
-    /**
-     * @param silent - if true, do not switch to the new group session
-     */
-    createGroup: async (newGroup, agentIds, silent = false) => {
-      const { switchSession } = getSessionStoreState();
-
-      const { group } = await chatGroupService.createGroup(newGroup);
-
-      if (agentIds && agentIds.length > 0) {
-        await chatGroupService.addAgentsToGroup(group.id, agentIds);
-
-        // Wait a brief moment to ensure database transactions are committed
-        // This prevents race condition where loadGroups() executes before member addition is fully persisted
-        await new Promise<void>((resolve) => {
-          setTimeout(resolve, 100);
-        });
-      }
-
-      dispatch({ payload: group, type: 'addGroup' });
-
-      await get().loadGroups();
-      await getSessionStoreState().refreshSessions();
-
-      if (!silent) {
-        switchSession(group.id);
-      }
-
-      return group.id;
-    },
-    deleteGroup: async (id) => {
-      // First, get all group members to identify virtual members
-      // Note: ChatGroupAgentItem type is incorrectly defined in schema as agents table type
-      // but getGroupAgents actually returns chatGroupsAgents junction table entries
-      const groupAgents = (await chatGroupService.getGroupAgents(id)) as unknown as Array<{
-        agentId: string;
-        chatGroupId: string;
-      }>;
-
-      // Delete the group first (this will cascade delete the chat_groups_agents entries)
-      await chatGroupService.deleteGroup(id);
-      dispatch({ payload: id, type: 'deleteGroup' });
-
-      // Now delete virtual members (agents with virtual: true)
-      const sessionStore = getSessionStoreState();
-      const sessions = sessionStore.sessions || [];
-
-      // Find and delete all virtual sessions that were members of this group
-      const virtualMemberDeletions = groupAgents
-        .map((groupAgent) => {
-          // groupAgent has agentId property from the junction table
-          const session = sessions.find((s) => {
-            // Type guard: check if it's an agent session
-            if (s.type === 'agent') {
-              return s.config?.id === groupAgent.agentId;
-            }
-            return false;
-          });
-
-          // Only delete if the session exists and has virtual flag set to true
-          if (session && session.type === 'agent' && session.config?.virtual) {
-            return sessionStore.removeSession(session.id);
-          }
-          return null;
-        })
-        .filter(Boolean);
-
-      // Wait for all virtual member deletions to complete
-      await Promise.all(virtualMemberDeletions);
-
-      await get().loadGroups();
-      await getSessionStoreState().refreshSessions();
-
-      // If the active session is the deleted group, switch to the inbox session
-      if (sessionStore.activeId === id) {
-        sessionStore.switchSession(INBOX_SESSION_ID);
-      }
-    },
-
     internal_dispatchChatGroup: dispatch,
-
-    internal_refreshGroups: async () => {
-      await get().loadGroups();
-
-      // Also rebuild and update groupMap to keep it in sync
-      const groups = await chatGroupService.getGroups();
-      const currentGroupMap = get().groupMap;
-      const nextGroupMap = groups.reduce(
-        (map, group) => {
-          // Preserve existing agents data if available
-          const existing = currentGroupMap[group.id];
-          map[group.id] = existing
-            ? ({ ...existing, ...group } as AgentGroupDetail)
-            : toAgentGroupDetail(group);
-          return map;
-        },
-        {} as Record<string, AgentGroupDetail>,
-      );
-
-      if (!isEqual(get().groupMap, nextGroupMap)) {
-        set(
-          {
-            groupMap: nextGroupMap,
-            groupsInit: true,
-          },
-          false,
-          n('internal_refreshGroups/updateGroupMap'),
-        );
-      }
-
-      // Refresh sessions so session-related group info stays up to date
-      await getSessionStoreState().refreshSessions();
-    },
 
     internal_updateGroupMaps: (groups) => {
       // Build a candidate map from incoming groups
@@ -220,12 +138,6 @@ export const chatGroupAction: StateCreator<
       dispatch({ payload: groups, type: 'loadGroups' });
     },
 
-    pinGroup: async (id, pinned) => {
-      await chatGroupService.updateGroup(id, { pinned });
-      dispatch({ payload: { id, pinned }, type: 'updateGroup' });
-      await get().internal_refreshGroups();
-    },
-
     refreshGroupDetail: async (groupId: string) => {
       await mutate([FETCH_GROUP_DETAIL_KEY, groupId]);
     },
@@ -234,71 +146,12 @@ export const chatGroupAction: StateCreator<
       await mutate([FETCH_GROUPS_KEY, true]);
     },
 
-    removeAgentFromGroup: async (groupId, agentId) => {
-      await chatGroupService.removeAgentsFromGroup(groupId, [agentId]);
-      await get().internal_refreshGroups();
-    },
-
-    reorderGroupMembers: async (groupId, orderedAgentIds) => {
-      console.log('REORDER GROUP MEMBERS', groupId, orderedAgentIds);
-
-      await Promise.all(
-        orderedAgentIds.map((agentId, index) =>
-          chatGroupService.updateAgentInGroup(groupId, agentId, { order: index }),
-        ),
-      );
-
-      await get().internal_refreshGroups();
-    },
-
     toggleGroupSetting: (open) => {
       set({ showGroupSetting: open }, false, 'toggleGroupSetting');
     },
 
     toggleThread: (agentId) => {
       set({ activeThreadAgentId: agentId }, false, 'toggleThread');
-    },
-
-    updateGroup: async (id, value) => {
-      await chatGroupService.updateGroup(id, value);
-      dispatch({ payload: { id, value }, type: 'updateGroup' });
-      await get().internal_refreshGroups();
-    },
-
-    updateGroupConfig: async (config) => {
-      const group = agentGroupSelectors.currentGroup(get());
-      if (!group) return;
-
-      const mergedConfig = {
-        ...DEFAULT_CHAT_GROUP_CHAT_CONFIG,
-        ...group.config,
-        ...config,
-      };
-
-      // Update the database first
-      await chatGroupService.updateGroup(group.id, { config: mergedConfig });
-
-      // Immediately update the local store to ensure configuration is available
-      // Note: reducer expects payload: { id, value }
-      dispatch({
-        payload: { id: group.id, value: { config: mergedConfig } },
-        type: 'updateGroup',
-      });
-
-      // Refresh groups to ensure consistency
-      await get().internal_refreshGroups();
-    },
-
-    updateGroupMeta: async (meta) => {
-      const group = agentGroupSelectors.currentGroup(get());
-      if (!group) return;
-
-      const id = group.id;
-
-      await chatGroupService.updateGroup(id, meta);
-      // Keep local store in sync immediately
-      dispatch({ payload: { id, value: meta }, type: 'updateGroup' });
-      await get().internal_refreshGroups();
     },
 
     useFetchGroupDetail: (enabled, groupId) =>
@@ -391,3 +244,15 @@ export const chatGroupAction: StateCreator<
       ),
   };
 };
+
+export const chatGroupAction: StateCreator<
+  ChatGroupStore,
+  [['zustand/devtools', never]],
+  [],
+  ChatGroupAction
+> = (...params) => ({
+  ...chatGroupInternalSlice(...params),
+  ...chatGroupLifecycleSlice(...params),
+  ...chatGroupMemberSlice(...params),
+  ...chatGroupCurdSlice(...params),
+});
