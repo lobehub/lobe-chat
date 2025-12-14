@@ -9,6 +9,7 @@ import { MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMap
 import { setNamespace } from '@/utils/storeDebug';
 
 import type {
+  AfterCompletionCallback,
   Operation,
   OperationCancelContext,
   OperationContext,
@@ -89,6 +90,13 @@ export interface OperationActions {
     operationId: string,
     handler: (context: OperationCancelContext) => void | Promise<void>,
   ) => void;
+
+  /**
+   * Register an afterCompletion callback for an operation
+   * The callback will be executed after the AgentRuntime completes
+   * Used to avoid race conditions with message updates
+   */
+  registerAfterCompletionCallback: (operationId: string, callback: AfterCompletionCallback) => void;
 
   /**
    * Start an operation (supports auto-inheriting context from parent operation)
@@ -391,6 +399,40 @@ export const operationActions: StateCreator<
       }),
       false,
       n(`onOperationCancel/${operationId}`),
+    );
+  },
+
+  registerAfterCompletionCallback: (operationId, callback) => {
+    set(
+      produce((state: ChatStore) => {
+        const operation = state.operations[operationId];
+        if (!operation) {
+          log('[registerAfterCompletionCallback] WARNING: Operation not found: %s', operationId);
+          return;
+        }
+
+        // Initialize runtimeHooks if not exists
+        if (!operation.metadata.runtimeHooks) {
+          operation.metadata.runtimeHooks = {};
+        }
+
+        // Initialize afterCompletionCallbacks array if not exists
+        if (!operation.metadata.runtimeHooks.afterCompletionCallbacks) {
+          operation.metadata.runtimeHooks.afterCompletionCallbacks = [];
+        }
+
+        // Add callback to array
+        operation.metadata.runtimeHooks.afterCompletionCallbacks.push(callback);
+
+        log(
+          '[registerAfterCompletionCallback] registered callback for %s (type=%s), total callbacks: %d',
+          operationId,
+          operation.type,
+          operation.metadata.runtimeHooks.afterCompletionCallbacks.length,
+        );
+      }),
+      false,
+      n(`registerAfterCompletionCallback/${operationId}`),
     );
   },
 

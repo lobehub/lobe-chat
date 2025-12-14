@@ -441,6 +441,199 @@ describe('ChatPluginAction', () => {
       // Should not call the action if arguments can't be parsed
       expect(mockActionFn).not.toHaveBeenCalled();
     });
+
+    describe('registerAfterCompletion with Tool Store executor', () => {
+      it('should create registerAfterCompletion when root execAgentRuntime operation exists', async () => {
+        // Setup: Create operation hierarchy
+        // execAgentRuntime -> toolCalling -> executeToolCall
+        const { result } = renderHook(() => useChatStore());
+
+        let execAgentRuntimeOpId: string;
+        let toolCallingOpId: string;
+        let executeToolOpId: string;
+        const messageId = 'tool-message-id';
+
+        act(() => {
+          // Create root operation
+          execAgentRuntimeOpId = result.current.startOperation({
+            type: 'execAgentRuntime',
+            context: { agentId: 'session1' },
+          }).operationId;
+
+          // Create toolCalling child
+          toolCallingOpId = result.current.startOperation({
+            type: 'toolCalling',
+            parentOperationId: execAgentRuntimeOpId,
+          }).operationId;
+
+          // Create executeToolCall grandchild
+          executeToolOpId = result.current.startOperation({
+            type: 'executeToolCall',
+            context: { messageId },
+            parentOperationId: toolCallingOpId,
+          }).operationId;
+
+          // Associate message with executeToolCall operation
+          result.current.associateMessageWithOperation(messageId, executeToolOpId);
+        });
+
+        // Verify the operation hierarchy is set up correctly
+        expect(result.current.operations[execAgentRuntimeOpId!].type).toBe('execAgentRuntime');
+        expect(result.current.operations[toolCallingOpId!].parentOperationId).toBe(
+          execAgentRuntimeOpId!,
+        );
+        expect(result.current.operations[executeToolOpId!].parentOperationId).toBe(
+          toolCallingOpId!,
+        );
+
+        // Mock Tool Store's invokeBuiltinTool to capture the context
+        let capturedContext: any;
+        vi.spyOn(useToolStore.getState(), 'invokeBuiltinTool').mockImplementation(
+          async (_id, _api, _params, ctx) => {
+            capturedContext = ctx;
+            return { success: true };
+          },
+        );
+
+        const payload = {
+          identifier: 'lobe-group-management',
+          apiName: 'speak',
+          arguments: JSON.stringify({ agentId: 'agent-1' }),
+          type: 'builtin',
+        } as ChatToolPayload;
+
+        await act(async () => {
+          await result.current.invokeBuiltinTool(messageId, payload);
+        });
+
+        // Verify registerAfterCompletion was passed to Tool Store
+        expect(capturedContext).toBeDefined();
+        expect(capturedContext.registerAfterCompletion).toBeDefined();
+        expect(typeof capturedContext.registerAfterCompletion).toBe('function');
+
+        // Call registerAfterCompletion and verify it registers to root operation
+        const mockCallback = vi.fn();
+        act(() => {
+          capturedContext.registerAfterCompletion(mockCallback);
+        });
+
+        // The callback should be registered on the root execAgentRuntime operation
+        const rootOp = result.current.operations[execAgentRuntimeOpId!];
+        expect(rootOp).toBeDefined();
+        expect(rootOp.metadata.runtimeHooks?.afterCompletionCallbacks).toHaveLength(1);
+        expect(rootOp.metadata.runtimeHooks?.afterCompletionCallbacks?.[0]).toBe(mockCallback);
+      });
+
+      it('should not pass registerAfterCompletion when no root operation exists', async () => {
+        const { result } = renderHook(() => useChatStore());
+        const messageId = 'tool-message-id';
+
+        // No operations created - simulate standalone tool invocation
+
+        // Mock Tool Store's invokeBuiltinTool to capture the context
+        let capturedContext: any;
+        vi.spyOn(useToolStore.getState(), 'invokeBuiltinTool').mockImplementation(
+          async (_id, _api, _params, ctx) => {
+            capturedContext = ctx;
+            return { success: true };
+          },
+        );
+
+        const payload = {
+          identifier: 'lobe-group-management',
+          apiName: 'speak',
+          arguments: JSON.stringify({ agentId: 'agent-1' }),
+          type: 'builtin',
+        } as ChatToolPayload;
+
+        await act(async () => {
+          await result.current.invokeBuiltinTool(messageId, payload);
+        });
+
+        // registerAfterCompletion should be undefined when no operation context
+        expect(capturedContext).toBeDefined();
+        expect(capturedContext.registerAfterCompletion).toBeUndefined();
+      });
+
+      it('should find root operation through multiple levels of hierarchy', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        let execAgentRuntimeOpId: string;
+        let level1OpId: string;
+        let level2OpId: string;
+        let level3OpId: string;
+        const messageId = 'deep-tool-message-id';
+
+        act(() => {
+          // Create deep hierarchy: execAgentRuntime -> level1 -> level2 -> level3
+          execAgentRuntimeOpId = result.current.startOperation({
+            type: 'execAgentRuntime',
+            context: { agentId: 'session1' },
+          }).operationId;
+
+          level1OpId = result.current.startOperation({
+            type: 'callLLM',
+            parentOperationId: execAgentRuntimeOpId,
+          }).operationId;
+
+          level2OpId = result.current.startOperation({
+            type: 'toolCalling',
+            parentOperationId: level1OpId,
+          }).operationId;
+
+          level3OpId = result.current.startOperation({
+            type: 'executeToolCall',
+            context: { messageId },
+            parentOperationId: level2OpId,
+          }).operationId;
+
+          result.current.associateMessageWithOperation(messageId, level3OpId);
+        });
+
+        let capturedContext: any;
+        vi.spyOn(useToolStore.getState(), 'invokeBuiltinTool').mockImplementation(
+          async (_id, _api, _params, ctx) => {
+            capturedContext = ctx;
+            return { success: true };
+          },
+        );
+
+        const payload = {
+          identifier: 'lobe-group-management',
+          apiName: 'speak',
+          arguments: JSON.stringify({ agentId: 'agent-1' }),
+          type: 'builtin',
+        } as ChatToolPayload;
+
+        await act(async () => {
+          await result.current.invokeBuiltinTool(messageId, payload);
+        });
+
+        // Should still find the root operation
+        expect(capturedContext.registerAfterCompletion).toBeDefined();
+
+        const mockCallback = vi.fn();
+        act(() => {
+          capturedContext.registerAfterCompletion(mockCallback);
+        });
+
+        // Callback should be on root execAgentRuntime, not any intermediate level
+        expect(result.current.operations[execAgentRuntimeOpId!]).toBeDefined();
+        expect(
+          result.current.operations[execAgentRuntimeOpId!].metadata.runtimeHooks
+            ?.afterCompletionCallbacks,
+        ).toHaveLength(1);
+        expect(
+          result.current.operations[level1OpId!].metadata.runtimeHooks?.afterCompletionCallbacks,
+        ).toBeUndefined();
+        expect(
+          result.current.operations[level2OpId!].metadata.runtimeHooks?.afterCompletionCallbacks,
+        ).toBeUndefined();
+        expect(
+          result.current.operations[level3OpId!].metadata.runtimeHooks?.afterCompletionCallbacks,
+        ).toBeUndefined();
+      });
+    });
   });
 
   describe('invokeMarkdownTypePlugin', () => {

@@ -15,6 +15,7 @@ import { hasExecutor } from '@/store/tool/slices/builtin/executors';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { dbMessageSelectors } from '../../message/selectors';
+import { AI_RUNTIME_OPERATION_TYPES } from '../../operation/types';
 
 const log = debug('lobe-store:plugin-types');
 
@@ -90,7 +91,7 @@ export const pluginTypes: StateCreator<
 
     // Check if there's a registered executor in Tool Store (new architecture)
     if (hasExecutor(payload.identifier, payload.apiName)) {
-      const { optimisticUpdateToolMessage } = get();
+      const { optimisticUpdateToolMessage, registerAfterCompletionCallback } = get();
 
       // Get operation context
       const operationId = get().messageOperationMap[id];
@@ -103,13 +104,37 @@ export const pluginTypes: StateCreator<
       // Get group orchestration callbacks if available (for group management tools)
       const groupOrchestration = get().getGroupOrchestrationCallbacks?.();
 
+      // Find root execAgentRuntime operation for registering afterCompletion callbacks
+      // Navigate up the operation tree to find the root runtime operation
+      let rootRuntimeOperationId: string | undefined;
+      if (operationId) {
+        let currentOp = operation;
+        while (currentOp) {
+          if (AI_RUNTIME_OPERATION_TYPES.includes(currentOp.type)) {
+            rootRuntimeOperationId = currentOp.id;
+            break;
+          }
+          // Move up to parent operation
+          const parentId = currentOp.parentOperationId;
+          currentOp = parentId ? get().operations[parentId] : undefined;
+        }
+      }
+
+      // Create registerAfterCompletion function that registers callback to root runtime operation
+      const registerAfterCompletion = rootRuntimeOperationId
+        ? (callback: Parameters<typeof registerAfterCompletionCallback>[1]) => {
+            registerAfterCompletionCallback(rootRuntimeOperationId!, callback);
+          }
+        : undefined;
+
       log(
-        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, hasGroupOrchestration=%s',
+        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s',
         payload.identifier,
         payload.apiName,
         id,
         agentId,
         !!groupOrchestration,
+        rootRuntimeOperationId,
       );
 
       // Call Tool Store's invokeBuiltinTool
@@ -120,6 +145,7 @@ export const pluginTypes: StateCreator<
           groupOrchestration,
           messageId: id,
           operationId,
+          registerAfterCompletion,
           signal: operation?.abortController?.signal,
         });
 

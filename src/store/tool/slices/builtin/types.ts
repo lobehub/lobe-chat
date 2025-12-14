@@ -3,6 +3,9 @@
  *
  * Type definitions for the builtin tool execution framework.
  */
+import type { AfterCompletionCallback } from '@/store/chat/slices/operation/types';
+
+
 
 /**
  * Result returned by builtin tool executors
@@ -146,6 +149,20 @@ export interface BuiltinToolContext {
   operationId?: string;
 
   /**
+   * Register a callback to execute after AgentRuntime completes
+   * Used for actions that should happen after the current execution flow finishes
+   * to avoid race conditions with message updates
+   *
+   * @example
+   * // In speak tool executor:
+   * ctx.registerAfterCompletion(() =>
+   *   ctx.groupOrchestration?.triggerSpeak(params)
+   * );
+   * return { success: true, stop: true };
+   */
+  registerAfterCompletion?: (callback: AfterCompletionCallback) => void;
+
+  /**
    * AbortSignal for cancellation detection
    */
   signal?: AbortSignal;
@@ -214,3 +231,5 @@ export interface OptimisticUpdateToolMessageParams {
    */
   pluginState?: any;
 }
+
+export {type AfterCompletionCallback} from '@/store/chat/slices/operation/types';
