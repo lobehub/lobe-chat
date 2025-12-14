@@ -32,6 +32,7 @@
   },
   "availableAgents": "사용 가능한 도우미",
   "backToBottom": "하단으로 이동",
+  "builtinCopilot": "내장 Copilot",
   "chatList": {
     "expandMessage": "메시지 펼치기",
     "longMessageDetail": "자세히 보기"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "팀 설명",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "채팅",
+      "model": "모델"
+    },
     "members": {
       "addMember": "멤버 추가",
+      "enableOrchestrator": "오케스트레이터 활성화",
       "memberSettings": "멤버 설정",
       "orchestrator": "주최자",
       "orchestratorThinking": "주최자가 생각 중입니다...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "그룹 프로필",
     "profile": "도우미 프로필",
     "search": "검색"
   },
@@ -447,6 +454,7 @@
     "clear": "음성 삭제"
   },
   "untitledAgent": "이름 없는 에이전트",
+  "untitledGroup": "제목 없는 그룹",
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "action": {

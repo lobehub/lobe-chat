@@ -20,6 +20,23 @@
       },
       "title": "Temsilci Oluşturucu"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Herkese konuşma",
+        "createAgent": "Ekip üyesi ekle",
+        "createWorkflow": "İş akışı planla",
+        "executeTask": "Görevi yürüt",
+        "getAgentInfo": "Üye bilgilerini al",
+        "interrupt": "Görevi durdur",
+        "inviteAgent": "Üye davet et",
+        "removeAgent": "Üyeyi kaldır",
+        "searchAgent": "Uzman ara",
+        "speak": "Belirli üyeyi konuştur",
+        "summarize": "Konuşmayı özetle",
+        "vote": "Oylama başlat"
+      },
+      "title": "Ekibi Koordine Et"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Bilgi tabanını oku",

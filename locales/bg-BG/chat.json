@@ -32,6 +32,7 @@
   },
   "availableAgents": "Налични асистенти",
   "backToBottom": "Върни се в началото",
+  "builtinCopilot": "Вграден Copilot",
   "chatList": {
     "expandMessage": "Разгъни съобщението",
     "longMessageDetail": "Вижте детайлите"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Описание на екипа",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Чат",
+      "model": "Модел"
+    },
     "members": {
       "addMember": "Добавяне на член",
+      "enableOrchestrator": "Активирай модератор",
       "memberSettings": "Настройки на член",
       "orchestrator": "Водещ",
       "orchestratorThinking": "Водещият мисли...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Профил на групата",
     "profile": "Профил на асистента",
     "search": "Търсене"
   },
@@ -447,6 +454,7 @@
     "clear": "Изчисти речта"
   },
   "untitledAgent": "Безименен асистент",
+  "untitledGroup": "Група без име",
   "updateAgent": "Актуализирай информацията за агента",
   "upload": {
     "action": {

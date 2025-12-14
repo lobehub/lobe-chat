@@ -32,6 +32,7 @@
   },
   "availableAgents": "Dostępni asystenci",
   "backToBottom": "Przewiń na dół",
+  "builtinCopilot": "Wbudowany Copilot",
   "chatList": {
     "expandMessage": "Rozwiń wiadomość",
     "longMessageDetail": "Zobacz szczegóły"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Opis zespołu",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Czat",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Dodaj członka",
+      "enableOrchestrator": "Włącz prowadzącego",
       "memberSettings": "Ustawienia członka",
       "orchestrator": "Organizator",
       "orchestratorThinking": "Organizator myśli...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Profil grupy",
     "profile": "Profil asystenta",
     "search": "Szukaj"
   },
@@ -447,6 +454,7 @@
     "clear": "Wyczyść czytanie"
   },
   "untitledAgent": "Asystent bez nazwy",
+  "untitledGroup": "Grupa bez nazwy",
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
     "action": {

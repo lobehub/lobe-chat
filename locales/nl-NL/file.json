@@ -1,6 +1,6 @@
 {
   "addFolder": "Map aanmaken",
-  "addLibrary": "Toevoegen aan bibliotheek",
+  "addLibrary": "Toevoegen",
   "addPage": "Document aanmaken",
   "desc": "Beheer je bronnen voor werk, studie en dagelijks leven.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Geen bestanden/mappen geüpload",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} bestanden gefilterd (van in totaal {{total}} bestanden)"
+      },
       "connect": "Verbinden...",
       "gitignore": {
         "apply": "Regels toepassen",

@@ -132,6 +132,7 @@
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
     "ProviderBizError": "Erro no serviço {{provider}} solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
     "QuotaLimitReached": "Desculpe, o uso de tokens ou o número de solicitações atingiu o limite da cota desta chave. Aumente a cota da chave ou tente novamente mais tarde.",
+    "ServerAgentRuntimeError": "Desculpe, o serviço do Agente não está disponível no momento. Por favor, tente novamente mais tarde ou entre em contato conosco por e-mail para obter suporte.",
     "StreamChunkError": "Erro de análise do bloco de mensagem da solicitação em fluxo. Verifique se a interface da API atual está em conformidade com os padrões ou entre em contato com seu fornecedor de API para mais informações.",
     "SubscriptionKeyMismatch": "Desculpe, devido a uma falha ocasional no sistema, o uso da assinatura atual está temporariamente inativo. Por favor, clique no botão abaixo para restaurar a assinatura ou entre em contato conosco por e-mail para obter suporte.",
     "SubscriptionPlanLimit": "Seu limite de pontos de assinatura foi atingido, não é possível usar essa funcionalidade. Por favor, faça um upgrade para um plano superior ou configure a API do modelo personalizado para continuar usando.",
@@ -162,6 +163,7 @@
       "title": "Confirme suas credenciais de {{name}}"
     },
     "confirm": "Confirmar e tentar novamente",
+    "goToSettings": "Ir para Configurações",
     "oauth": {
       "description": "O administrador ativou a autenticação de login unificado. Clique no botão abaixo para fazer login e desbloquear o aplicativo.",
       "success": "Login bem-sucedido",

@@ -700,11 +700,11 @@
     "agents": "Trợ lý",
     "downloads": "Tải xuống",
     "editProfile": "Chỉnh sửa hồ sơ",
-    "login": "Đăng nhập",
+    "login": "Trở thành người sáng tạo",
     "logout": "Đăng xuất",
     "myProfile": "Trang cá nhân",
     "noAgents": "Người dùng này chưa đăng trợ lý nào",
-    "publishedAgents": "Trợ lý đã đăng",
+    "publishedAgents": "Trợ lý đã tạo",
     "website": "Trang web cá nhân"
   }
 }

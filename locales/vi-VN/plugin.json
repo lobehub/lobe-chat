@@ -20,6 +20,23 @@
       },
       "title": "Trình tạo Tác nhân"
     },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Phát biểu cho tất cả mọi người",
+        "createAgent": "Thêm thành viên nhóm",
+        "createWorkflow": "Lập kế hoạch quy trình làm việc",
+        "executeTask": "Thực hiện nhiệm vụ",
+        "getAgentInfo": "Lấy thông tin thành viên",
+        "interrupt": "Gián đoạn nhiệm vụ",
+        "inviteAgent": "Mời thành viên",
+        "removeAgent": "Loại bỏ thành viên",
+        "searchAgent": "Tìm kiếm chuyên gia liên quan",
+        "speak": "Chỉ định thành viên phát biểu",
+        "summarize": "Tóm tắt cuộc trò chuyện",
+        "vote": "Khởi xướng cuộc bỏ phiếu"
+      },
+      "title": "Điều phối nhóm"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Đọc nội dung cơ sở tri thức",

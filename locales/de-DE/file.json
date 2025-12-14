@@ -1,6 +1,6 @@
 {
   "addFolder": "Ordner erstellen",
-  "addLibrary": "Zur Bibliothek hinzufügen",
+  "addLibrary": "Hinzufügen",
   "addPage": "Dokument erstellen",
   "desc": "Verwalte deine Ressourcen für Arbeit, Studium und Alltag.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} Dateien gefiltert (von insgesamt {{total}} Dateien)"
+      },
       "connect": "Verbinden...",
       "gitignore": {
         "apply": "Regeln anwenden",

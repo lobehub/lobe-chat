@@ -1,6 +1,6 @@
 {
   "addFolder": "폴더 만들기",
-  "addLibrary": "라이브러리에 추가",
+  "addLibrary": "추가",
   "addPage": "문서 생성",
   "desc": "작업, 학습 및 생활 리소스를 관리하세요.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "업로드된 파일/폴더가 없습니다",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{total}}개 파일 중 {{ignored}}개 파일이 필터링되었습니다"
+      },
       "connect": "연결 중...",
       "gitignore": {
         "apply": "규칙 적용",

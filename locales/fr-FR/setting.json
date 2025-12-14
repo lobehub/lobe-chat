@@ -689,6 +689,7 @@
       "title": "Voix de synthèse vocale"
     }
   },
+  "startConversation": "Démarrer la conversation",
   "storage": {
     "actions": {
       "export": {

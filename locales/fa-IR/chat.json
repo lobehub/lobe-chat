@@ -32,6 +32,7 @@
   },
   "availableAgents": "دستیاران در دسترس",
   "backToBottom": "بازگشت به پایین",
+  "builtinCopilot": "دستیار داخلی",
   "chatList": {
     "expandMessage": "گسترش پیام",
     "longMessageDetail": "مشاهده جزئیات"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "توضیحات تیم",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "گفت‌وگو",
+      "model": "مدل"
+    },
     "members": {
       "addMember": "افزودن عضو",
+      "enableOrchestrator": "فعال‌سازی هماهنگ‌کننده",
       "memberSettings": "تنظیمات اعضا",
       "orchestrator": "مجری",
       "orchestratorThinking": "مجری در حال فکر کردن است...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "پروفایل گروه",
     "profile": "پروفایل دستیار",
     "search": "جستجو"
   },
@@ -447,6 +454,7 @@
     "clear": "حذف صدا"
   },
   "untitledAgent": "دستیار بدون نام",
+  "untitledGroup": "گروه بدون عنوان",
   "updateAgent": "به‌روزرسانی اطلاعات دستیار",
   "upload": {
     "action": {

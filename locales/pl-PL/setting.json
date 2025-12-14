@@ -689,6 +689,7 @@
       "title": "Głos syntezy mowy"
     }
   },
+  "startConversation": "Rozpocznij rozmowę",
   "storage": {
     "actions": {
       "export": {

@@ -32,6 +32,7 @@
   },
   "availableAgents": "利用可能なアシスタント",
   "backToBottom": "現在に戻る",
+  "builtinCopilot": "内蔵コパイロット",
   "chatList": {
     "expandMessage": "メッセージを展開",
     "longMessageDetail": "詳細を見る"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "チームの説明",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "チャット",
+      "model": "モデル"
+    },
     "members": {
       "addMember": "メンバーを追加",
+      "enableOrchestrator": "司会者を有効にする",
       "memberSettings": "メンバー設定",
       "orchestrator": "ホスト",
       "orchestratorThinking": "ホストが考え中です...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "グループプロフィール",
     "profile": "アシスタントプロフィール",
     "search": "検索"
   },
@@ -447,6 +454,7 @@
     "clear": "音声を削除"
   },
   "untitledAgent": "名前未設定のアシスタント",
+  "untitledGroup": "無題のグループ",
   "updateAgent": "エージェント情報を更新",
   "upload": {
     "action": {

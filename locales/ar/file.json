@@ -1,6 +1,6 @@
 {
   "addFolder": "إنشاء مجلد",
-  "addLibrary": "أضف إلى المكتبة",
+  "addLibrary": "إضافة",
   "addPage": "إنشاء مستند",
   "desc": "قم بإدارة مواردك للعمل، الدراسة والحياة.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "لا توجد ملفات/مجلدات تم تحميلها بعد",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "تم تصفية {{ignored}} ملفًا من أصل {{total}} ملف"
+      },
       "connect": "اتصال...",
       "gitignore": {
         "apply": "تطبيق القواعد",

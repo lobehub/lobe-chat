@@ -32,6 +32,7 @@
   },
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
+  "builtinCopilot": "Ingebouwde Copilot",
   "chatList": {
     "expandMessage": "Bericht uitvouwen",
     "longMessageDetail": "Bekijk details"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Teamomschrijving",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Chat",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Lid toevoegen",
+      "enableOrchestrator": "Orkestrator inschakelen",
       "memberSettings": "Lidinstellingen",
       "orchestrator": "Organisator",
       "orchestratorThinking": "De organisator denkt na...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Groepsprofiel",
     "profile": "Assistentprofiel",
     "search": "Zoeken"
   },
@@ -447,6 +454,7 @@
     "clear": "Spraak verwijderen"
   },
   "untitledAgent": "Naamloze assistent",
+  "untitledGroup": "Naamloze groep",
   "updateAgent": "Assistentgegevens bijwerken",
   "upload": {
     "action": {

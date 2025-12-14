@@ -182,7 +182,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Close Prompt",
-      "start": "Installed and running, start the conversation"
+      "start": "Installed"
     },
     "cors": {
       "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",

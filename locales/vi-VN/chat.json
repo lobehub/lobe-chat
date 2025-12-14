@@ -32,6 +32,7 @@
   },
   "availableAgents": "Trợ lý có sẵn",
   "backToBottom": "Quay về dưới cùng",
+  "builtinCopilot": "Copilot tích hợp",
   "chatList": {
     "expandMessage": "Mở rộng tin nhắn",
     "longMessageDetail": "Xem chi tiết"
@@ -106,8 +107,13 @@
   },
   "groupDescription": "Mô tả nhóm",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Trò chuyện",
+      "model": "Mô hình"
+    },
     "members": {
       "addMember": "Thêm thành viên",
+      "enableOrchestrator": "Bật người điều phối",
       "memberSettings": "Cài đặt thành viên",
       "orchestrator": "Người điều phối",
       "orchestratorThinking": "Người điều phối đang suy nghĩ...",
@@ -380,6 +386,7 @@
     }
   },
   "tab": {
+    "groupProfile": "Hồ sơ nhóm",
     "profile": "Hồ sơ trợ lý",
     "search": "Tìm kiếm"
   },
@@ -447,6 +454,7 @@
     "clear": "Xóa giọng nói"
   },
   "untitledAgent": "Trợ lý chưa đặt tên",
+  "untitledGroup": "Nhóm chưa đặt tên",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
     "action": {

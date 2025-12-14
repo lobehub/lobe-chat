@@ -689,6 +689,7 @@
       "title": "Голос синтезатора речи"
     }
   },
+  "startConversation": "Начать разговор",
   "storage": {
     "actions": {
       "export": {

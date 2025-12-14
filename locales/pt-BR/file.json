@@ -1,6 +1,6 @@
 {
   "addFolder": "Criar pasta",
-  "addLibrary": "Adicionar à Biblioteca",
+  "addLibrary": "Adicionar",
   "addPage": "Criar documento",
   "desc": "Gerencie seus recursos de trabalho, estudo e vida.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Nenhum arquivo/pasta enviado até o momento",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} arquivos filtrados (de um total de {{total}} arquivos)"
+      },
       "connect": "Conectar...",
       "gitignore": {
         "apply": "Aplicar regras",

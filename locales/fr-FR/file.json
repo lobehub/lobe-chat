@@ -1,6 +1,6 @@
 {
   "addFolder": "Créer un dossier",
-  "addLibrary": "Ajouter à la bibliothèque",
+  "addLibrary": "Ajouter",
   "addPage": "Créer un document",
   "desc": "Gérez vos ressources de travail, d'étude et de vie.",
   "detail": {
@@ -76,6 +76,9 @@
   "empty": "Aucun fichier/dossier téléchargé pour le moment",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} fichiers filtrés (sur un total de {{total}} fichiers)"
+      },
       "connect": "Connexion...",
       "gitignore": {
         "apply": "Appliquer les règles",

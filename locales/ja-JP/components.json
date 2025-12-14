@@ -182,7 +182,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "ヒントを閉じる",
-      "start": "インストールされ、実行中です。対話を開始します"
+      "start": "インストール済み"
     },
     "cors": {
       "description": "ブラウザのセキュリティ制限により、Ollamaを正常に使用するにはクロスオリジン設定が必要です。",

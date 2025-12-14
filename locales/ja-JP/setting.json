@@ -689,6 +689,7 @@
       "title": "音声合成音声"
     }
   },
+  "startConversation": "会話を開始する",
   "storage": {
     "actions": {
       "export": {

@@ -689,6 +689,7 @@
       "title": "語音合成聲源"
     }
   },
+  "startConversation": "開始對話",
   "storage": {
     "actions": {
       "export": {

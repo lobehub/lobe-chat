@@ -58,6 +58,7 @@
         "title": "Version History"
       }
     },
+    "downloads": "Downloads",
     "list": "Assistant List",
     "marketSource": {
       "label": "Switch Community Source",
@@ -100,7 +101,6 @@
         "title": "Assistant Under Review"
       }
     },
-    "downloads": "Downloads",
     "suggestions": "Related Recommendations",
     "systemRole": "Assistant Settings",
     "tokenUsage": "Assistant Prompt Token Usage",
@@ -700,11 +700,11 @@
     "agents": "Agents",
     "downloads": "Downloads",
     "editProfile": "Edit Profile",
-    "login": "Login",
+    "login": "Become a Creator",
     "logout": "Logout",
     "myProfile": "My Profile",
     "noAgents": "This user has not published any agents yet",
-    "publishedAgents": "Published Agents",
+    "publishedAgents": "Created Assistants",
     "website": "Website"
   }
 }

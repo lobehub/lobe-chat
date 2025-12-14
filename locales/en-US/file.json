@@ -1,6 +1,6 @@
 {
   "addFolder": "Create Folder",
-  "addLibrary": "Add to Library",
+  "addLibrary": "Add",
   "addPage": "Create Document",
   "desc": "Manage your resources for work, study, and life.",
   "detail": {
@@ -76,10 +76,10 @@
   "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
-      "connect": "Connect...",
       "builtInBlockList": {
-        "filtered": "Automatically filtered {{ignored}} system files ({{total}} files in total)"
+        "filtered": "{{ignored}} files filtered (out of {{total}} total)"
       },
+      "connect": "Connect...",
       "gitignore": {
         "apply": "Apply Rules",
         "cancel": "Ignore Rules",

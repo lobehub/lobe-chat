@@ -132,6 +132,7 @@
     "PluginSettingsInvalid": "該外掛需要正確設定後才可以使用。請檢查您的設定是否正確",
     "ProviderBizError": "請求 {{provider}} 服務出錯，請根據以下資訊排查或重試",
     "QuotaLimitReached": "很抱歉，目前的 Token 使用量或請求次數已達該金鑰的配額上限，請提升該金鑰的配額或稍後再試",
+    "ServerAgentRuntimeError": "很抱歉，目前的 Agent 服務暫時無法使用，請稍後再試，或透過電子郵件聯絡我們以獲得支援",
     "StreamChunkError": "流式請求的消息塊解析錯誤，請檢查當前 API 介面是否符合標準規範，或聯繫你的 API 供應商諮詢",
     "SubscriptionKeyMismatch": "很抱歉，由於系統偶發故障，當前訂閱用量暫時失效，請點擊下方按鈕恢復訂閱，或郵件聯繫我們獲取支持",
     "SubscriptionPlanLimit": "您的訂閱積分已用盡，無法使用該功能，請升級到更高計劃，或配置自訂模型 API 後繼續使用",
@@ -162,6 +163,7 @@
       "title": "確認你的 {{name}} 認證資訊"
     },
     "confirm": "確認並重試",
+    "goToSettings": "前往設定",
     "oauth": {
       "description": "管理員已開啟統一登錄認證，點擊下方按鈕登錄，即可解鎖應用",
       "success": "登錄成功",
