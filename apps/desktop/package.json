@@ -26,7 +26,8 @@
     "lint": "eslint --cache ",
     "start": "electron-vite preview",
     "test": "vitest --run",
-    "typecheck": "tsgo --noEmit -p tsconfig.json"
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "dev": "electron-vite dev"
   },
   "dependencies": {
     "electron-updater": "^6.6.2",

@@ -9,6 +9,7 @@ import { auth } from '@/auth';
 import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
+import { isDesktop } from '@/const/version';
 import { appEnv } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
 import NextAuth from '@/libs/next-auth';
@@ -359,7 +360,7 @@ const betterAuthMiddleware = async (req: NextRequest) => {
     userId: session?.user?.id,
   });
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isDesktop) {
     // If request a protected route, redirect to sign-in page
     if (isProtected) {
       logBetterAuth('Request a protected route, redirecting to sign-in page');
