@@ -60,7 +60,7 @@
     "e2e:install": "playwright install",
     "e2e:ui": "playwright test --ui",
     "i18n": "npm run workflow:i18n && lobe-i18n && prettier -c --write \"locales/**\"",
-    "lint": "npm run lint:ts && npm run lint:style && npm run typecheck && npm run lint:circular",
+    "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "npm run lint:circular:main && npm run lint:circular:packages",
     "lint:circular:main": "dpdm src/**/*.ts  --no-warning --no-tree --exit-code circular:1 --no-progress -T true --skip-dynamic-imports circular",
     "lint:circular:packages": "dpdm packages/**/src/**/*.ts  --no-warning --no-tree --exit-code circular:1 --no-progress -T true --skip-dynamic-imports circular",
