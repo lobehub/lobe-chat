@@ -73,7 +73,20 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
     const theme = useTheme();
     const { styles } = useStyles();
     const [isUploading, setIsUploading] = useState(false);
-    const createDocument = useFileStore((s) => s.createDocument);
+    const [createDocument, setSelectedPageId] = useFileStore((s) => [
+      s.createDocument,
+      s.setSelectedPageId,
+    ]);
+
+    const handleCreateDocument = async (content: string, title: string) => {
+      const newDoc = await createDocument({
+        content,
+        knowledgeBaseId,
+        title,
+      });
+      // Navigate to the newly created page
+      setSelectedPageId(newDoc.id);
+    };
 
     const handleUploadMarkdown = async (file: File) => {
       try {
@@ -83,11 +96,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
         const content = await file.text();
 
         // Create page with markdown content
-        await createDocument({
-          content,
-          knowledgeBaseId,
-          title: file.name.replace(/\.md$|\.markdown$/i, ''),
-        });
+        await handleCreateDocument(content, file.name.replace(/\.md$|\.markdown$/i, ''));
       } catch (error) {
         console.error('Failed to upload markdown:', error);
       } finally {
@@ -110,13 +119,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
           <Flexbox gap={12} horizontal>
             <Flexbox
               className={styles.card}
-              onClick={() =>
-                createDocument({
-                  content: '',
-                  knowledgeBaseId,
-                  title: t('documentList.untitled'),
-                })
-              }
+              onClick={() => handleCreateDocument('', t('documentList.untitled'))}
               padding={16}
             >
               <span className={styles.actionTitle}>

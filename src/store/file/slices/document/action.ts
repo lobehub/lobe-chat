@@ -240,7 +240,6 @@ export const createDocumentSlice: StateCreator<
     }
   },
 
-
   createOptimisticDocument: (title = 'Untitled') => {
     const { localDocumentMap } = get();
 
@@ -276,12 +275,8 @@ export const createDocumentSlice: StateCreator<
     const { selectedPageId } = get();
 
     if (selectedPageId === documentId) {
-      const updateUrl = (docId: string | null) => {
-        const newPath = docId ? `/pages/${docId}` : '/pages';
-        window.history.replaceState({}, '', newPath);
-      };
       set({ isCreatingNew: false, selectedPageId: null }, false, n('deletePage'));
-      updateUrl(null);
+      window.history.replaceState({}, '', '/page');
     }
   },
 
@@ -593,7 +588,7 @@ export const createDocumentSlice: StateCreator<
   setSelectedPageId: (pageId: string | null, updateHistory = true) => {
     set({ selectedPageId: pageId }, false, n('setSelectedPageId'));
     if (updateHistory) {
-      const newPath = pageId ? `/pages/${pageId}` : '/pages';
+      const newPath = pageId ? `/page/${pageId}` : '/page';
       window.history.replaceState({}, '', newPath);
     }
   },
