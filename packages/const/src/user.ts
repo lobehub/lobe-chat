@@ -5,8 +5,6 @@ export const DEFAULT_PREFERENCE: UserPreference = {
     moveSettingsToAvatar: true,
     topic: true,
   },
-  isDevMode: false,
-  isLiteMode: false,
   lab: {
     enableInputMarkdown: true,
   },

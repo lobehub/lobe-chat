@@ -56,8 +56,6 @@ export interface UserPreference {
   disableInputMarkdownRender?: boolean;
   guide?: UserGuide;
   hideSyncAlert?: boolean;
-  isDevMode?: boolean;
-  isLiteMode?: boolean;
   /**
    * lab experimental features
    */

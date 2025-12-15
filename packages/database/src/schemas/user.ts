@@ -80,7 +80,6 @@ export const userSettings = pgTable('user_settings', {
   market: jsonb('market'),
   tool: jsonb('tool'),
   image: jsonb('image'),
-  responseLanguage: text('response_language'),
 });
 export type UserSettingsItem = typeof userSettings.$inferSelect;
 
