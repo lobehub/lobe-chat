@@ -16,7 +16,6 @@ export interface UserMemoryStoreState {
   contexts: DisplayContextMemory[];
   contextsHasMore: boolean;
   contextsInit: boolean;
-  contextsIsLoading: boolean;
   contextsPage: number;
   contextsQuery?: string;
   contextsSearchLoading?: boolean;
@@ -25,7 +24,6 @@ export interface UserMemoryStoreState {
   experiences: DisplayExperienceMemory[];
   experiencesHasMore: boolean;
   experiencesInit: boolean;
-  experiencesIsLoading: boolean;
   experiencesPage: number;
   experiencesQuery?: string;
   experiencesSearchLoading?: boolean;
@@ -34,7 +32,6 @@ export interface UserMemoryStoreState {
   identities: UserMemoryIdentityWithoutVectors[];
   identitiesHasMore: boolean;
   identitiesInit: boolean;
-  identitiesIsLoading: boolean;
   identitiesPage: number;
   identitiesQuery?: string;
   identitiesSearchLoading?: boolean;
@@ -45,7 +42,6 @@ export interface UserMemoryStoreState {
   preferences: DisplayPreferenceMemory[];
   preferencesHasMore: boolean;
   preferencesInit: boolean;
-  preferencesIsLoading: boolean;
   preferencesPage: number;
   preferencesQuery?: string;
   preferencesSearchLoading?: boolean;
@@ -62,7 +58,6 @@ export const initialState: UserMemoryStoreState = {
   contexts: [],
   contextsHasMore: true,
   contextsInit: false,
-  contextsIsLoading: false,
   contextsPage: 1,
   contextsQuery: undefined,
   contextsSort: undefined,
@@ -70,7 +65,6 @@ export const initialState: UserMemoryStoreState = {
   experiences: [],
   experiencesHasMore: true,
   experiencesInit: false,
-  experiencesIsLoading: false,
   experiencesPage: 1,
   experiencesQuery: undefined,
   experiencesSort: undefined,
@@ -78,7 +72,6 @@ export const initialState: UserMemoryStoreState = {
   identities: [],
   identitiesHasMore: true,
   identitiesInit: false,
-  identitiesIsLoading: false,
   identitiesPage: 1,
   identitiesQuery: undefined,
   identitiesTotal: 0,
@@ -88,7 +81,6 @@ export const initialState: UserMemoryStoreState = {
   preferences: [],
   preferencesHasMore: true,
   preferencesInit: false,
-  preferencesIsLoading: false,
   preferencesPage: 1,
   preferencesQuery: undefined,
   preferencesSort: undefined,

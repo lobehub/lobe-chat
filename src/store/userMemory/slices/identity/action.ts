@@ -1,7 +1,4 @@
-import {
-  NewUserMemoryIdentity,
-  UpdateUserMemoryIdentity,
-} from '@lobechat/types';
+import { NewUserMemoryIdentity, UpdateUserMemoryIdentity } from '@lobechat/types';
 import { produce } from 'immer';
 import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
@@ -116,7 +113,6 @@ export const createIdentitySlice: StateCreator<
         onSuccess(data: any) {
           set(
             produce((draft) => {
-              draft.identitiesIsLoading = false;
               draft.identitiesSearchLoading = false;
 
               // 设置基础信息

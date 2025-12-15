@@ -9,14 +9,14 @@ import IdentityCard from './IdentityCard';
 
 interface TimelineViewProps {
   identities: UserMemoryIdentity[];
+  isLoading?: boolean;
   onClick?: (identity: UserMemoryIdentity) => void;
   onDelete?: (id: string) => void;
 }
 
-const TimelineView = memo<TimelineViewProps>(({ identities, onClick, onDelete }) => {
+const TimelineView = memo<TimelineViewProps>(({ identities, isLoading, onClick, onDelete }) => {
   const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
   const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
-  const identitiesIsLoading = useUserMemoryStore((s) => s.identitiesIsLoading);
 
   return (
     <GenericTimelineView
@@ -24,7 +24,7 @@ const TimelineView = memo<TimelineViewProps>(({ identities, onClick, onDelete })
       getDateForGrouping={(identity) => identity.episodicDate || identity.createdAt}
       groupBy="month"
       hasMore={identitiesHasMore}
-      isLoading={identitiesIsLoading}
+      isLoading={isLoading}
       onLoadMore={loadMoreIdentities}
       renderHeader={(periodKey, itemCount) => (
         <PeriodHeader groupBy="month" itemCount={itemCount} periodKey={periodKey} />

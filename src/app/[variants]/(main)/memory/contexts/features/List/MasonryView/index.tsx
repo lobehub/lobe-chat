@@ -8,21 +8,21 @@ import ContextCard from './ContextCard';
 
 interface MasonryViewProps {
   contexts: DisplayContextMemory[];
+  isLoading?: boolean;
   onClick: (context: DisplayContextMemory) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
 }
 
-const MasonryView = memo<MasonryViewProps>(({ contexts, onClick, onDelete, onEdit }) => {
+const MasonryView = memo<MasonryViewProps>(({ contexts, isLoading, onClick, onDelete, onEdit }) => {
   const loadMoreContexts = useUserMemoryStore((s) => s.loadMoreContexts);
   const contextsHasMore = useUserMemoryStore((s) => s.contextsHasMore);
-  const contextsIsLoading = useUserMemoryStore((s) => s.contextsIsLoading);
 
   return (
     <GridView
       defaultColumnCount={2}
       hasMore={contextsHasMore}
-      isLoading={contextsIsLoading}
+      isLoading={isLoading}
       items={contexts}
       maxItemWidth={480}
       onLoadMore={loadMoreContexts}

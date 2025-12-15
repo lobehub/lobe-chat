@@ -39,7 +39,7 @@ const ExperiencesArea = memo(() => {
   }, [searchValue, sortValue, viewMode]);
 
   // 调用 SWR hook 获取数据
-  useFetchExperiences({
+  const { isLoading } = useFetchExperiences({
     page: experiencesPage,
     pageSize: 20,
     q: searchValue || undefined,
@@ -91,7 +91,7 @@ const ExperiencesArea = memo(() => {
           {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
-            <List searchValue={searchValue} viewMode={viewMode} />
+            <List isLoading={isLoading} searchValue={searchValue} viewMode={viewMode} />
           )}
         </WideScreenContainer>
       </Flexbox>

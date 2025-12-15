@@ -95,7 +95,6 @@ export const createPreferenceSlice: StateCreator<
         onSuccess(data: any) {
           set(
             produce((draft) => {
-              draft.preferencesIsLoading = false;
               draft.preferencesSearchLoading = false;
 
               // 设置基础信息

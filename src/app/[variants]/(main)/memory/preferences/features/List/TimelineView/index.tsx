@@ -10,6 +10,7 @@ import { PeriodHeader, TimelineItemWrapper } from '../../../../features/TimeLine
 import PreferenceCard from './PreferenceCard';
 
 interface PreferenceTimelineViewProps {
+  isLoading?: boolean;
   onClick?: (preference: DisplayPreferenceMemory) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
@@ -17,17 +18,16 @@ interface PreferenceTimelineViewProps {
 }
 
 const PreferenceTimelineView = memo<PreferenceTimelineViewProps>(
-  ({ preferences, onClick, onDelete, onEdit }) => {
+  ({ preferences, isLoading, onClick, onDelete, onEdit }) => {
     const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
     const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
-    const preferencesIsLoading = useUserMemoryStore((s) => s.preferencesIsLoading);
 
     return (
       <GenericTimelineView
         data={preferences}
         groupBy="day"
         hasMore={preferencesHasMore}
-        isLoading={preferencesIsLoading}
+        isLoading={isLoading}
         onLoadMore={loadMorePreferences}
         renderHeader={(periodKey, itemCount) => (
           <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />

@@ -11,23 +11,23 @@ import ExperienceCard from './ExperienceCard';
 
 interface ExperienceTimelineViewProps {
   experiences: DisplayExperienceMemory[];
+  isLoading?: boolean;
   onCardClick: (experience: DisplayExperienceMemory) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
 }
 
 const ExperienceTimelineView = memo<ExperienceTimelineViewProps>(
-  ({ experiences, onCardClick, onDelete, onEdit }) => {
+  ({ experiences, isLoading, onCardClick, onDelete, onEdit }) => {
     const loadMoreExperiences = useUserMemoryStore((s) => s.loadMoreExperiences);
     const experiencesHasMore = useUserMemoryStore((s) => s.experiencesHasMore);
-    const experiencesIsLoading = useUserMemoryStore((s) => s.experiencesIsLoading);
 
     return (
       <GenericTimelineView
         data={experiences}
         groupBy="day"
         hasMore={experiencesHasMore}
-        isLoading={experiencesIsLoading}
+        isLoading={isLoading}
         onLoadMore={loadMoreExperiences}
         renderHeader={(periodKey, itemCount) => (
           <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />

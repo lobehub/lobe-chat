@@ -89,7 +89,6 @@ export const createContextSlice: StateCreator<
         onSuccess(data: any) {
           set(
             produce((draft) => {
-              draft.contextsIsLoading = false;
               draft.contextsSearchLoading = false;
 
               // 设置基础信息

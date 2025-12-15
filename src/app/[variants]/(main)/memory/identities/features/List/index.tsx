@@ -14,11 +14,12 @@ import TimelineView from './TimelineView';
 export type IdentityType = 'all' | 'demographic' | 'personal' | 'professional';
 
 interface IdentitiesListProps {
+  isLoading?: boolean;
   searchValue?: string;
   viewMode: ViewMode;
 }
 
-const IdentitiesList = memo<IdentitiesListProps>(({ searchValue, viewMode }) => {
+const IdentitiesList = memo<IdentitiesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setIdentityId] = useQueryState('identityId', { clearOnDefault: true });
@@ -50,10 +51,22 @@ const IdentitiesList = memo<IdentitiesListProps>(({ searchValue, viewMode }) => 
 
   if (viewMode === 'timeline')
     return (
-      <TimelineView identities={identities} onClick={handleCardClick} onDelete={handleDelete} />
+      <TimelineView
+        identities={identities}
+        isLoading={isLoading}
+        onClick={handleCardClick}
+        onDelete={handleDelete}
+      />
     );
 
-  return <MasonryView identities={identities} onClick={handleCardClick} onDelete={handleDelete} />;
+  return (
+    <MasonryView
+      identities={identities}
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+    />
+  );
 });
 
 export default IdentitiesList;

@@ -7,35 +7,37 @@ import { GridView } from '../../../../features/GridView';
 import PreferenceCard from './PreferenceCard';
 
 interface MasonryViewProps {
+  isLoading?: boolean;
   onClick: (preference: DisplayPreferenceMemory) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
   preferences: DisplayPreferenceMemory[];
 }
 
-const MasonryView = memo<MasonryViewProps>(({ preferences, onClick, onDelete, onEdit }) => {
-  const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
-  const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
-  const preferencesIsLoading = useUserMemoryStore((s) => s.preferencesIsLoading);
+const MasonryView = memo<MasonryViewProps>(
+  ({ preferences, isLoading, onClick, onDelete, onEdit }) => {
+    const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
+    const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
 
-  return (
-    <GridView
-      defaultColumnCount={3}
-      hasMore={preferencesHasMore}
-      isLoading={preferencesIsLoading}
-      items={preferences}
-      maxItemWidth={360}
-      onLoadMore={loadMorePreferences}
-      renderItem={(preference, actions) => (
-        <PreferenceCard
-          onClick={() => onClick(preference)}
-          onDelete={actions.onDelete || onDelete}
-          onEdit={actions.onEdit || onEdit}
-          preference={preference}
-        />
-      )}
-    />
-  );
-});
+    return (
+      <GridView
+        defaultColumnCount={3}
+        hasMore={preferencesHasMore}
+        isLoading={isLoading}
+        items={preferences}
+        maxItemWidth={360}
+        onLoadMore={loadMorePreferences}
+        renderItem={(preference, actions) => (
+          <PreferenceCard
+            onClick={() => onClick(preference)}
+            onDelete={actions.onDelete || onDelete}
+            onEdit={actions.onEdit || onEdit}
+            preference={preference}
+          />
+        )}
+      />
+    );
+  },
+);
 
 export default MasonryView;

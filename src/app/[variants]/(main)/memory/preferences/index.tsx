@@ -39,7 +39,7 @@ const PreferencesArea = memo(() => {
   }, [searchValue, sortValue, viewMode]);
 
   // 调用 SWR hook 获取数据
-  useFetchPreferences({
+  const { isLoading } = useFetchPreferences({
     page: preferencesPage,
     pageSize: 20,
     q: searchValue || undefined,
@@ -91,7 +91,7 @@ const PreferencesArea = memo(() => {
           {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
-            <List searchValue={searchValue} viewMode={viewMode} />
+            <List isLoading={isLoading} searchValue={searchValue} viewMode={viewMode} />
           )}
         </WideScreenContainer>
       </Flexbox>

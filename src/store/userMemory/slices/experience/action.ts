@@ -95,7 +95,6 @@ export const createExperienceSlice: StateCreator<
         onSuccess(data: any) {
           set(
             produce((draft) => {
-              draft.experiencesIsLoading = false;
               draft.experiencesSearchLoading = false;
 
               // 设置基础信息

@@ -8,20 +8,20 @@ import IdentityCard from './IdentityCard';
 
 interface MasonryViewProps {
   identities: UserMemoryIdentity[];
+  isLoading?: boolean;
   onClick?: (identity: UserMemoryIdentity) => void;
   onDelete?: (id: string) => void;
 }
 
-const MasonryView = memo<MasonryViewProps>(({ identities, onClick, onDelete }) => {
+const MasonryView = memo<MasonryViewProps>(({ identities, isLoading, onClick, onDelete }) => {
   const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
   const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
-  const identitiesIsLoading = useUserMemoryStore((s) => s.identitiesIsLoading);
 
   return (
     <GridView
       defaultColumnCount={3}
       hasMore={identitiesHasMore}
-      isLoading={identitiesIsLoading}
+      isLoading={isLoading}
       items={identities}
       maxItemWidth={360}
       onLoadMore={loadMoreIdentities}

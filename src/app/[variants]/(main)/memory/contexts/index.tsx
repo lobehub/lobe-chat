@@ -42,7 +42,7 @@ const ContextsArea = memo(() => {
   }, [searchValue, sortValue, viewMode]);
 
   // 调用 SWR hook 获取数据
-  useFetchContexts({
+  const { isLoading } = useFetchContexts({
     page: contextsPage,
     pageSize: 20,
     q: searchValue || undefined,
@@ -94,7 +94,7 @@ const ContextsArea = memo(() => {
           {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
-            <List searchValue={searchValue} viewMode={viewMode} />
+            <List isLoading={isLoading} searchValue={searchValue} viewMode={viewMode} />
           )}
         </WideScreenContainer>
       </Flexbox>

@@ -12,11 +12,12 @@ import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
 
 interface ExperiencesListProps {
+  isLoading?: boolean;
   searchValue?: string;
   viewMode: ViewMode;
 }
 
-const ExperiencesList = memo<ExperiencesListProps>(({ searchValue, viewMode }) => {
+const ExperiencesList = memo<ExperiencesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setExperienceId] = useQueryState('experienceId', { clearOnDefault: true });
@@ -50,9 +51,19 @@ const ExperiencesList = memo<ExperiencesListProps>(({ searchValue, viewMode }) =
   }
 
   return viewMode === 'timeline' ? (
-    <TimelineView experiences={experiences} onCardClick={handleCardClick} onDelete={handleDelete} />
+    <TimelineView
+      experiences={experiences}
+      isLoading={isLoading}
+      onCardClick={handleCardClick}
+      onDelete={handleDelete}
+    />
   ) : (
-    <MasonryView experiences={experiences} onClick={handleCardClick} onDelete={handleDelete} />
+    <MasonryView
+      experiences={experiences}
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+    />
   );
 });
 

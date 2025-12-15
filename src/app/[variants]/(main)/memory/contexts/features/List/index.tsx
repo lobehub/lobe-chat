@@ -12,11 +12,12 @@ import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
 
 interface ContextsListProps {
+  isLoading?: boolean;
   searchValue?: string;
   viewMode: ViewMode;
 }
 
-const ContextsList = memo<ContextsListProps>(({ searchValue, viewMode }) => {
+const ContextsList = memo<ContextsListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
@@ -51,9 +52,19 @@ const ContextsList = memo<ContextsListProps>(({ searchValue, viewMode }) => {
   }
 
   return viewMode === 'timeline' ? (
-    <TimelineView contexts={contexts} onClick={handleCardClick} onDelete={handleDelete} />
+    <TimelineView
+      contexts={contexts}
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+    />
   ) : (
-    <MasonryView contexts={contexts} onClick={handleCardClick} onDelete={handleDelete} />
+    <MasonryView
+      contexts={contexts}
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+    />
   );
 });
 
