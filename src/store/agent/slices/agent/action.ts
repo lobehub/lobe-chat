@@ -225,14 +225,7 @@ export const createAgentSlice: StateCreator<
         onSuccess: (data) => {
           get().internal_dispatchAgentMap(agentId, data);
 
-          set(
-            {
-              activeAgentId: data.id,
-              agentConfigInitMap: { ...get().agentConfigInitMap, [agentId]: true },
-            },
-            false,
-            'fetchAgentConfig',
-          );
+          set({ activeAgentId: data.id }, false, 'fetchAgentConfig');
         },
       },
     ),

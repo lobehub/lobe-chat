@@ -43,7 +43,6 @@ beforeEach(() => {
   vi.clearAllMocks();
   useAgentStore.setState({
     activeAgentId: undefined,
-    agentConfigInitMap: {},
     agentMap: {},
     builtinAgentIdMap: {},
     defaultAgentConfig: {} as any,
@@ -356,7 +355,7 @@ describe('AgentSlice Actions', () => {
 
       expect(agentService.getAgentConfigById).toHaveBeenCalledWith('agent-1');
       expect(useAgentStore.getState().activeAgentId).toBe('agent-1');
-      expect(useAgentStore.getState().agentConfigInitMap['agent-1']).toBe(true);
+      expect(useAgentStore.getState().agentMap['agent-1']).toBeDefined();
     });
   });
 });

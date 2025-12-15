@@ -78,7 +78,10 @@ class ChatGroupService {
     return lambdaClient.group.getGroups.query();
   };
 
-  addAgentsToGroup = (groupId: string, agentIds: string[]): Promise<ChatGroupAgentItem[]> => {
+  addAgentsToGroup = (
+    groupId: string,
+    agentIds: string[],
+  ): Promise<{ added: NewChatGroupAgent[]; existing: string[] }> => {
     return lambdaClient.group.addAgentsToGroup.mutate({ agentIds, groupId });
   };
 
@@ -90,7 +93,7 @@ class ChatGroupService {
     groupId: string,
     agentId: string,
     updates: Partial<Pick<NewChatGroupAgent, 'order' | 'role'>>,
-  ): Promise<ChatGroupAgentItem> => {
+  ): Promise<NewChatGroupAgent> => {
     return lambdaClient.group.updateAgentInGroup.mutate({
       agentId,
       groupId,

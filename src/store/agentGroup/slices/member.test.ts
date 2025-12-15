@@ -41,7 +41,7 @@ describe('ChatGroupMemberSlice', () => {
 
   describe('addAgentsToGroup', () => {
     it('should add agents to a group', async () => {
-      vi.mocked(chatGroupService.addAgentsToGroup).mockResolvedValue([]);
+      vi.mocked(chatGroupService.addAgentsToGroup).mockResolvedValue({ added: [], existing: [] });
 
       const { result } = renderHook(() => useAgentGroupStore());
 
@@ -57,7 +57,7 @@ describe('ChatGroupMemberSlice', () => {
 
     it('should refresh group detail after adding agents', async () => {
       const { mutate } = await import('swr');
-      vi.mocked(chatGroupService.addAgentsToGroup).mockResolvedValue([]);
+      vi.mocked(chatGroupService.addAgentsToGroup).mockResolvedValue({ added: [], existing: [] });
 
       const { result } = renderHook(() => useAgentGroupStore());
 

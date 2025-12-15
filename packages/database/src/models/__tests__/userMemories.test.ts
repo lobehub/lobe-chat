@@ -1,18 +1,18 @@
 // @vitest-environment node
+import { LayersEnum, MemorySourceType, MergeStrategyEnum, TypesEnum } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { idGenerator } from '@/database/utils/idGenerator';
-import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
 
 import {
+  topics,
   userMemories,
   userMemoriesContexts,
   userMemoriesExperiences,
   userMemoriesIdentities,
   userMemoriesPreferences,
-  topics,
   users,
 } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
@@ -22,10 +22,8 @@ import {
   CreateUserMemoryExperienceParams,
   CreateUserMemoryIdentityParams,
   CreateUserMemoryPreferenceParams,
-  MemorySourceType,
   UserMemoryModel,
 } from '../userMemory';
-import { TopicModel } from '../topic';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -179,7 +177,9 @@ describe('UserMemoryModel', () => {
     it('returns null when input is not an array or contains no valid items', () => {
       expect(UserMemoryModel.parseAssociatedObjects(undefined)).toHaveLength(0);
       expect(UserMemoryModel.parseAssociatedObjects('not-array')).toHaveLength(0);
-      expect(UserMemoryModel.parseAssociatedObjects([null, undefined, '', '   ', 0])).toHaveLength(0);
+      expect(UserMemoryModel.parseAssociatedObjects([null, undefined, '', '   ', 0])).toHaveLength(
+        0,
+      );
     });
 
     it('normalizes objects', () => {
@@ -190,9 +190,7 @@ describe('UserMemoryModel', () => {
         { another: true },
       ]);
 
-      expect(result).toEqual([
-        { name: 'object' },
-      ]);
+      expect(result).toEqual([{ name: 'object' }]);
     });
   });
 
@@ -994,13 +992,23 @@ describe('UserMemoryModel', () => {
       const preferenceInput = generateRandomCreateUserMemoryPreferenceParams();
       const identityDescription = 'identity ' + nanoid();
 
-      const { context, memory: contextMemory } = await userMemoryModel.createContextMemory(contextInput);
-      const { experience, memory: experienceMemory } = await userMemoryModel.createExperienceMemory(experienceInput);
-      const { preference, memory: preferenceMemory } = await userMemoryModel.createPreferenceMemory(preferenceInput);
-      const { identityId, userMemoryId: identityMemoryId } = await userMemoryModel.addIdentityEntry({
-        base: { summary: 'identity summary ' + nanoid(), tags: ['identity'] },
-        identity: { description: identityDescription, relationship: 'friend', tags: ['identity'], type: 'personal' },
-      });
+      const { context, memory: contextMemory } =
+        await userMemoryModel.createContextMemory(contextInput);
+      const { experience, memory: experienceMemory } =
+        await userMemoryModel.createExperienceMemory(experienceInput);
+      const { preference, memory: preferenceMemory } =
+        await userMemoryModel.createPreferenceMemory(preferenceInput);
+      const { identityId, userMemoryId: identityMemoryId } = await userMemoryModel.addIdentityEntry(
+        {
+          base: { summary: 'identity summary ' + nanoid(), tags: ['identity'] },
+          identity: {
+            description: identityDescription,
+            relationship: 'friend',
+            tags: ['identity'],
+            type: 'personal',
+          },
+        },
+      );
 
       const identity = await serverDB.query.userMemoriesIdentities.findFirst({
         where: eq(userMemoriesIdentities.id, identityId),

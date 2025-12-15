@@ -5,9 +5,6 @@ import type { Message, PipelineContext, ProcessorOptions } from '../types';
 
 const log = debug('context-engine:processor:GroupMessageSenderProcessor');
 
-const ASSISTANT_CONTEXT_START = '<!-- SYSTEM CONTEXT (NOT PART OF AI RESPONSE) -->';
-const ASSISTANT_CONTEXT_END = '<!-- END SYSTEM CONTEXT -->';
-
 /**
  * Agent info for message sender identification
  */
@@ -77,10 +74,10 @@ export class GroupMessageSenderProcessor extends BaseProcessor {
         const agentInfo = this.config.agentMap[msg.agentId];
 
         if (agentInfo) {
-          // Build the sender context block
-          const senderContext = this.buildSenderContext(msg.agentId, agentInfo);
+          // Build the sender tag
+          const senderTag = this.buildSenderContext(msg.agentId, agentInfo);
 
-          // Append to message content
+          // Prepend to message content (at the beginning)
           if (typeof msg.content === 'string') {
             processedCount++;
             log(
@@ -89,23 +86,23 @@ export class GroupMessageSenderProcessor extends BaseProcessor {
 
             return {
               ...msg,
-              content: msg.content + senderContext,
+              content: senderTag + msg.content,
             };
           }
           // Handle array content (multimodal messages)
           else if (Array.isArray(msg.content)) {
-            const lastTextIndex = msg.content.findLastIndex((part: any) => part.type === 'text');
+            const firstTextIndex = msg.content.findIndex((part: any) => part.type === 'text');
 
-            if (lastTextIndex !== -1) {
+            if (firstTextIndex !== -1) {
               processedCount++;
               log(
                 `Injecting sender info for multimodal message from agent: ${agentInfo.name} (${agentInfo.role})`,
               );
 
               const newContent = [...msg.content];
-              newContent[lastTextIndex] = {
-                ...newContent[lastTextIndex],
-                text: newContent[lastTextIndex].text + senderContext,
+              newContent[firstTextIndex] = {
+                ...newContent[firstTextIndex],
+                text: senderTag + newContent[firstTextIndex].text,
               };
 
               return {
@@ -129,21 +126,13 @@ export class GroupMessageSenderProcessor extends BaseProcessor {
   }
 
   /**
-   * Build the sender context block to append to assistant messages
+   * Build the sender tag to prepend to assistant messages.
+   *
+   * Uses a self-closing XML tag at the beginning:
+   * - Placed at start so model sees "who is speaking" before the content
+   * - Self-closing tag is less likely to be reproduced as it's not a "wrapper"
    */
-  private buildSenderContext(agentId: string, agentInfo: AgentInfo): string {
-    return `
-${ASSISTANT_CONTEXT_START}
-<message_sender>
-<context.instruction>
-This entire SYSTEM CONTEXT block is metadata injected by the application layer.
-You MUST NOT include, reproduce, or reference any part of this block in your responses.
-The agent_id, message_sender tags, and SYSTEM CONTEXT markers are for internal use only.
-</context.instruction>
-name: ${agentInfo.name}
-role: ${agentInfo.role}
-agent_id: ${agentId}
-</message_sender>
-${ASSISTANT_CONTEXT_END}`;
+  private buildSenderContext(_agentId: string, agentInfo: AgentInfo): string {
+    return `<speaker name="${agentInfo.name}" />\n`;
   }
 }

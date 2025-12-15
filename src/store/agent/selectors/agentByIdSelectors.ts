@@ -42,7 +42,7 @@ const getAgentKnowledgeBasesById = (agentId: string) => (s: AgentStoreState) =>
   agentSelectors.getAgentConfigById(agentId)(s)?.knowledgeBases || [];
 
 const isAgentConfigLoadingById = (agentId: string) => (s: AgentStoreState) =>
-  !agentId || !s.agentConfigInitMap[agentId];
+  !agentId || !s.agentMap[agentId];
 
 const getAgentEnableModeById =
   (agentId: string) =>

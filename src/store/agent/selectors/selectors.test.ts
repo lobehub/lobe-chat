@@ -319,19 +319,19 @@ describe('agentSelectors', () => {
       expect(agentSelectors.isAgentConfigLoading(state)).toBe(true);
     });
 
-    it('should return true when agent config not initialized', () => {
+    it('should return true when agent not in agentMap', () => {
       const state = createState({
         activeAgentId: 'agent-1',
-        agentConfigInitMap: {},
+        agentMap: {},
       });
 
       expect(agentSelectors.isAgentConfigLoading(state)).toBe(true);
     });
 
-    it('should return false when agent config is initialized', () => {
+    it('should return false when agent exists in agentMap', () => {
       const state = createState({
         activeAgentId: 'agent-1',
-        agentConfigInitMap: { 'agent-1': true },
+        agentMap: { 'agent-1': { id: 'agent-1' } },
       });
 
       expect(agentSelectors.isAgentConfigLoading(state)).toBe(false);
