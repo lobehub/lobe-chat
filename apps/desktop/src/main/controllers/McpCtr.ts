@@ -1,4 +1,3 @@
-import { CheckMcpInstallResult } from '@lobechat/types';
 import { exec } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
@@ -14,6 +13,55 @@ import { ControllerModule, IpcMethod } from './index';
 
 const execPromise = promisify(exec);
 const logger = createLogger('controllers:McpCtr');
+
+/**
+ * Desktop-only copy of `@lobechat/types`'s `CheckMcpInstallResult`.
+ *
+ * We intentionally keep it local to avoid pulling the web app's path-alias
+ * expectations (e.g. `@/config/*`) into the desktop `tsgo` typecheck.
+ */
+interface CheckMcpInstallResult {
+  allDependenciesMet?: boolean;
+  allOptions?: Array<{
+    allDependenciesMet?: boolean;
+    connection?: {
+      args?: string[];
+      command?: string;
+      installationMethod: string;
+      packageName?: string;
+      repositoryUrl?: string;
+    };
+    isRecommended?: boolean;
+    packageInstalled?: boolean;
+    systemDependencies?: Array<{
+      error?: string;
+      installed: boolean;
+      meetRequirement: boolean;
+      name: string;
+      version?: string;
+    }>;
+  }>;
+  configSchema?: any;
+  connection?: {
+    args?: string[];
+    command?: string;
+    type: 'stdio' | 'http';
+    url?: string;
+  };
+  error?: string;
+  isRecommended?: boolean;
+  needsConfig?: boolean;
+  packageInstalled?: boolean;
+  platform: string;
+  success: boolean;
+  systemDependencies?: Array<{
+    error?: string;
+    installed: boolean;
+    meetRequirement: boolean;
+    name: string;
+    version?: string;
+  }>;
+}
 
 interface CustomPluginMetadata {
   avatar?: string;

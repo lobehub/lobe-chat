@@ -3,7 +3,4 @@ packages:
   - '../../packages/electron-client-ipc'
   - '../../packages/file-loaders'
   - '../../packages/desktop-bridge'
-  - '../../packages/types'
-  - '../../packages/web-crawler'
-  - '../../packages/ssrf-safe-fetch'
   - '.'
