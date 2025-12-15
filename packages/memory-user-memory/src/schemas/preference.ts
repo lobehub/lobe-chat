@@ -55,7 +55,9 @@ export const WithPreferenceSchema = z.object({
   ),
   scorePriority: z
     .number()
-    .describe('Numeric prioritization weight where higher means more critical to respect'),
+    .min(0)
+    .max(1)
+    .describe('Numeric prioritization weight (0-1 (0% to 100%)) where higher means more critical to respect'),
   suggestions: z
     .array(z.string())
     .describe('Follow-up actions or assistant guidance derived from the preference'),

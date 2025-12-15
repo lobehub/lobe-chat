@@ -24,8 +24,10 @@ export const WithExperienceSchema = z.object({
     .describe('Narrative describing the thought process or motivations'),
   scoreConfidence: z
     .number()
+    .min(0)
+    .max(1)
     .describe(
-      'Numeric score (0-1 or domain-specific) describing confidence in the experience details',
+      'Numeric score (0-1 (0% to 100%)) describing confidence in the experience details',
     ),
   situation: z.string().describe('Narrative describing the situation or event'),
   type: z.string().describe('Type of experience being recorded'),

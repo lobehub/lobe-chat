@@ -36,10 +36,14 @@ export const WithContextSchema = z.object({
     .describe('Model generated tags that summarize the context themes'),
   scoreImpact: z
     .number()
-    .describe('Numeric score (0-1 or domain-specific) describing importance'),
+    .min(0)
+    .max(1)
+    .describe('Numeric score (0-1 (0% to 100%)) describing importance'),
   scoreUrgency: z
     .number()
-    .describe('Numeric score (0-1 or domain-specific) describing urgency'),
+    .min(0)
+    .max(1)
+    .describe('Numeric score (0-1 (0% to 100%)) describing urgency'),
   title: z.string().describe('Optional synthesized context headline'),
   type: z
     .string()

@@ -26,14 +26,16 @@ Evaluate the conversation for these memory layers:
   implementation techniques to the preference layer unless they materially
   change the user's biography.
 
-**Context Layer** - Situational frameworks and ongoing situations:
+**Context Layer** - Only capture brand-new situational frameworks and ongoing situations that have not been recorded before:
 
-- Ongoing projects and their status
-- Long-term goals and objectives
-- Persistent relationships and dynamics
-- Environmental factors and recurring situations
-- Timelines and temporal context
-- Impact and urgency assessments
+- Distinct situations, topics, research threads, sessions, or rounds that are clearly first-time mentions
+- Ongoing projects and their status when the project itself is new, not just progress updates
+- Long-term goals and objectives that are newly introduced
+- Persistent relationships and dynamics that have not been logged previously
+- Environmental factors and recurring situations only when they represent a new context
+- Timelines and temporal context that establish a novel situation
+- Impact and urgency assessments tied to a new context
+- If the content overlaps with learnings or takeaways, treat it as Experience instead of Context
 
 **Preference Layer** - Durable user choices and behavioral directives that apply across multiple conversations:
 
@@ -66,6 +68,7 @@ For each layer, consider:
 - **Clarity**: Is the information clear and extractable (not vague or ambiguous)?
 
 Additionally, review the retrieved similar memories first (top {{ topK }} items below). If the conversation content is clearly and fully covered by existing memories with no meaningful nuance or update, set `shouldExtract: false`.
+For the Context layer specifically, favor `shouldExtract: false` unless the conversation introduces a genuinely new situation/topic/research/session that is not already represented in existing context memories or overlaps with Experience items.
 Otherwise, favor `shouldExtract: true` for:
 
 - Novel facts OR even small clarifications/precision improvements to existing details
