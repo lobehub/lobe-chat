@@ -7,6 +7,7 @@
     "./ai21": "./src/aiModels/ai21.ts",
     "./ai302": "./src/aiModels/ai302.ts",
     "./ai360": "./src/aiModels/ai360.ts",
+    "./aibadgr": "./src/aiModels/aibadgr.ts",
     "./aihubmix": "./src/aiModels/aihubmix.ts",
     "./akashchat": "./src/aiModels/akashchat.ts",
     "./anthropic": "./src/aiModels/anthropic.ts",
