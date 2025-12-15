@@ -12,6 +12,7 @@ import {
   userMemoriesExperiences,
   userMemoriesIdentities,
   userMemoriesPreferences,
+  topics,
   users,
 } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
@@ -21,8 +22,10 @@ import {
   CreateUserMemoryExperienceParams,
   CreateUserMemoryIdentityParams,
   CreateUserMemoryPreferenceParams,
+  MemorySourceType,
   UserMemoryModel,
 } from '../userMemory';
+import { TopicModel } from '../topic';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -1118,12 +1121,44 @@ describe('UserMemoryModel', () => {
       expect((detail as any).context.userMemoryIds).toEqual([memory.id]);
       expect((detail as any).context.metadata).toEqual(params.context.metadata);
       expect(detail?.memory.memoryLayer).toBe(LayersEnum.Context);
+      expect(detail?.source).toBeUndefined();
+      expect(detail?.sourceType).toBe(MemorySourceType.ChatTopic);
 
-      const updated = await serverDB.query.userMemories.findFirst({
+      const persisted = await serverDB.query.userMemories.findFirst({
         where: eq(userMemories.id, memory.id),
       });
 
-      expect(updated?.accessedCount).toBe(1);
+      expect(persisted?.accessedCount).toBe(0);
+    });
+
+    it('resolves topic source data for memory detail', async () => {
+      const topic = {
+        agentId: 'agent-1',
+        id: idGenerator('topics'),
+        sessionId: 'session-1',
+        title: 'Topic title',
+        userId,
+      };
+
+      const topicSpy = vi
+        .spyOn((userMemoryModel as any).topicModel, 'findById')
+        .mockResolvedValue(topic as any);
+
+      const params = generateRandomCreateUserMemoryContextParams();
+      params.context.metadata = { sourceId: topic.id };
+
+      const { context } = await userMemoryModel.createContextMemory(params);
+
+      const detail = await userMemoryModel.getMemoryDetail({
+        id: context.id,
+        layer: LayersEnum.Context,
+      });
+
+      expect(detail?.sourceType).toBe(MemorySourceType.ChatTopic);
+      expect(detail?.source?.id).toBe(topic.id);
+      expect(detail?.source?.title).toBe(topic.title);
+
+      topicSpy.mockRestore();
     });
 
     it('returns undefined for memories owned by another user', async () => {
