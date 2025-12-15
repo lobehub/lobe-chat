@@ -1,8 +1,9 @@
 import { memo } from 'react';
 
 import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
+import { useUserMemoryStore } from '@/store/userMemory';
 
-import { MasonryView as GenericMasonryView } from '../../../../features/MasonryView';
+import { GridView } from '../../../../features/GridView';
 import PreferenceCard from './PreferenceCard';
 
 interface MasonryViewProps {
@@ -13,10 +14,18 @@ interface MasonryViewProps {
 }
 
 const MasonryView = memo<MasonryViewProps>(({ preferences, onClick, onDelete, onEdit }) => {
+  const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
+  const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
+  const preferencesIsLoading = useUserMemoryStore((s) => s.preferencesIsLoading);
+
   return (
-    <GenericMasonryView
+    <GridView
       defaultColumnCount={3}
+      hasMore={preferencesHasMore}
+      isLoading={preferencesIsLoading}
       items={preferences}
+      maxItemWidth={360}
+      onLoadMore={loadMorePreferences}
       renderItem={(preference, actions) => (
         <PreferenceCard
           onClick={() => onClick(preference)}

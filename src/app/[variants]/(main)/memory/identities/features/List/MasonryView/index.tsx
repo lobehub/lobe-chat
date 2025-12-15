@@ -1,8 +1,9 @@
 import { memo } from 'react';
 
+import { useUserMemoryStore } from '@/store/userMemory';
 import type { UserMemoryIdentity } from '@/types/index';
 
-import { MasonryView as GenericMasonryView } from '../../../../features/MasonryView';
+import { GridView } from '../../../../features/GridView';
 import IdentityCard from './IdentityCard';
 
 interface MasonryViewProps {
@@ -12,10 +13,18 @@ interface MasonryViewProps {
 }
 
 const MasonryView = memo<MasonryViewProps>(({ identities, onClick, onDelete }) => {
+  const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
+  const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
+  const identitiesIsLoading = useUserMemoryStore((s) => s.identitiesIsLoading);
+
   return (
-    <GenericMasonryView
+    <GridView
       defaultColumnCount={3}
+      hasMore={identitiesHasMore}
+      isLoading={identitiesIsLoading}
       items={identities}
+      maxItemWidth={360}
+      onLoadMore={loadMoreIdentities}
       renderItem={(identity) => (
         <IdentityCard identity={identity} onClick={() => onClick?.(identity)} onDelete={onDelete} />
       )}

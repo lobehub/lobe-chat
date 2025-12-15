@@ -38,6 +38,18 @@ interface TimelineViewProps<T extends { createdAt: Date | string; id: string }> 
    * @default 'day'
    */
   groupBy?: GroupBy;
+  /**
+   * Whether there are more items to load
+   */
+  hasMore?: boolean;
+  /**
+   * Whether data is currently loading
+   */
+  isLoading?: boolean;
+  /**
+   * Callback when end is reached
+   */
+  onLoadMore?: () => void;
   renderHeader: (periodKey: string, itemCount: number) => ReactNode;
   renderItem: (item: T) => ReactNode;
 }
@@ -46,6 +58,9 @@ function TimelineViewInner<T extends { createdAt: Date | string; id: string }>({
   data,
   groupBy = 'day',
   getDateForGrouping,
+  hasMore,
+  isLoading,
+  onLoadMore,
   renderHeader,
   renderItem,
 }: TimelineViewProps<T>) {
@@ -107,7 +122,24 @@ function TimelineViewInner<T extends { createdAt: Date | string; id: string }>({
     <div className={styles.timelineContainer}>
       <div className={styles.timelineLine} />
       <GroupedVirtuoso
+        components={{
+          Footer: isLoading
+            ? () => (
+                <div style={{ padding: '24px', textAlign: 'center' }}>
+                  <div className="ant-spin ant-spin-spinning">
+                    <span className="ant-spin-dot ant-spin-dot-spin">
+                      <i className="ant-spin-dot-item" />
+                      <i className="ant-spin-dot-item" />
+                      <i className="ant-spin-dot-item" />
+                      <i className="ant-spin-dot-item" />
+                    </span>
+                  </div>
+                </div>
+              )
+            : undefined,
+        }}
         customScrollParent={scrollParent}
+        endReached={hasMore && onLoadMore ? onLoadMore : undefined}
         groupContent={(index) => {
           const periodKey = sortedPeriods[index];
           const itemCount = groupCounts[index];

@@ -1,5 +1,5 @@
 import { App } from 'antd';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useQueryState } from '@/hooks/useQueryParam';
@@ -14,49 +14,17 @@ import TimelineView from './TimelineView';
 export type IdentityType = 'all' | 'demographic' | 'personal' | 'professional';
 
 interface IdentitiesListProps {
-  searchValue: string;
-  typeFilter: IdentityType;
+  searchValue?: string;
   viewMode: ViewMode;
 }
 
-const IdentitiesList = memo<IdentitiesListProps>(({ viewMode, typeFilter, searchValue }) => {
+const IdentitiesList = memo<IdentitiesListProps>(({ searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setIdentityId] = useQueryState('identityId', { clearOnDefault: true });
   const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
   const identities = useUserMemoryStore((s) => s.identities);
   const deleteIdentity = useUserMemoryStore((s) => s.deleteIdentity);
-
-  const filteredIdentities = useMemo(() => {
-    if (!identities) return [];
-
-    let filtered = identities;
-
-    // Type filter
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((identity) => identity.type === typeFilter);
-    }
-
-    // Search filter
-    if (searchValue.trim()) {
-      const searchLower = searchValue.toLowerCase();
-      filtered = filtered.filter((identity) => {
-        const role = identity.role?.toLowerCase() || '';
-        const relationship = identity.relationship?.toLowerCase() || '';
-        const description = identity.description?.toLowerCase() || '';
-        const labels = (Array.isArray(identity.tags) ? identity.tags.join(' ') : '').toLowerCase();
-
-        return (
-          role.includes(searchLower) ||
-          relationship.includes(searchLower) ||
-          description.includes(searchLower) ||
-          labels.includes(searchLower)
-        );
-      });
-    }
-
-    return filtered;
-  }, [identities, typeFilter, searchValue]);
 
   const handleCardClick = (identity: any) => {
     setIdentityId(identity.id);
@@ -78,27 +46,14 @@ const IdentitiesList = memo<IdentitiesListProps>(({ viewMode, typeFilter, search
   };
 
   if (!identities || identities.length === 0)
-    return <MemoryEmpty description={t('identity.empty')} />;
-
-  if (filteredIdentities.length === 0)
-    return <MemoryEmpty description={t('identity.list.noResults')} />;
+    return <MemoryEmpty search={Boolean(searchValue)} title={t('identity.empty')} />;
 
   if (viewMode === 'timeline')
     return (
-      <TimelineView
-        identities={filteredIdentities}
-        onClick={handleCardClick}
-        onDelete={handleDelete}
-      />
+      <TimelineView identities={identities} onClick={handleCardClick} onDelete={handleDelete} />
     );
 
-  return (
-    <MasonryView
-      identities={filteredIdentities}
-      onClick={handleCardClick}
-      onDelete={handleDelete}
-    />
-  );
+  return <MasonryView identities={identities} onClick={handleCardClick} onDelete={handleDelete} />;
 });
 
 export default IdentitiesList;

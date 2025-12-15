@@ -1,5 +1,6 @@
 import { memo } from 'react';
 
+import { useUserMemoryStore } from '@/store/userMemory';
 import type { UserMemoryIdentity } from '@/types/index';
 
 import { TimelineView as GenericTimelineView } from '../../../../features/TimeLineView';
@@ -13,11 +14,18 @@ interface TimelineViewProps {
 }
 
 const TimelineView = memo<TimelineViewProps>(({ identities, onClick, onDelete }) => {
+  const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
+  const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
+  const identitiesIsLoading = useUserMemoryStore((s) => s.identitiesIsLoading);
+
   return (
     <GenericTimelineView
       data={identities}
       getDateForGrouping={(identity) => identity.episodicDate || identity.createdAt}
       groupBy="month"
+      hasMore={identitiesHasMore}
+      isLoading={identitiesIsLoading}
+      onLoadMore={loadMoreIdentities}
       renderHeader={(periodKey, itemCount) => (
         <PeriodHeader groupBy="month" itemCount={itemCount} periodKey={periodKey} />
       )}

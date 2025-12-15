@@ -1,25 +1,50 @@
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
-import Loading from '@/components/Loading/BrandTextLoading';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import FilterBar from '../features/FilterBar';
+import Loading from '../features/Loading';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
 import List from './features/List';
 import PreferenceRightPanel from './features/PreferenceRightPanel';
 
 const PreferencesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const useFetchPreferences = useUserMemoryStore((s) => s.useFetchPreferences);
+  const [searchValue, setSearchValue] = useState('');
+  const [sortValue, setSortValue] = useState<'createdAt' | 'updatedAt'>('createdAt');
+
+  const refreshPreferences = useUserMemoryStore((s) => s.refreshPreferences);
   const preferencesInit = useUserMemoryStore((s) => s.preferencesInit);
+  const preferencesIsLoading = useUserMemoryStore((s) => s.preferencesIsLoading);
 
-  useFetchPreferences();
+  // Initial load
+  useEffect(() => {
+    refreshPreferences({ q: searchValue, sort: sortValue });
+  }, []);
 
-  if (!preferencesInit) return <Loading debugId={'Preferences'} />;
+  // Handle search and sort changes
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      refreshPreferences({ q: value, sort: sortValue });
+    },
+    [sortValue, refreshPreferences],
+  );
+
+  const handleSortChange = useCallback(
+    (sort: 'createdAt' | 'updatedAt') => {
+      setSortValue(sort);
+      refreshPreferences({ q: searchValue, sort });
+    },
+    [searchValue, refreshPreferences],
+  );
+
+  const isLoading = !preferencesInit && preferencesIsLoading;
 
   return (
     <Flexbox flex={1} height={'100%'}>
@@ -38,7 +63,17 @@ const PreferencesArea = memo(() => {
         width={'100%'}
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <List viewMode={viewMode} />
+          <FilterBar
+            onSearch={handleSearch}
+            onSortChange={handleSortChange}
+            searchValue={searchValue}
+            sortValue={sortValue}
+          />
+          {isLoading ? (
+            <Loading viewMode={viewMode} />
+          ) : (
+            <List searchValue={searchValue} viewMode={viewMode} />
+          )}
         </WideScreenContainer>
       </Flexbox>
     </Flexbox>

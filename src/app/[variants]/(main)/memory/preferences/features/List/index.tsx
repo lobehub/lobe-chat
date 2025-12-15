@@ -12,10 +12,11 @@ import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
 
 interface PreferencesListProps {
+  searchValue?: string;
   viewMode: ViewMode;
 }
 
-const PreferencesList = memo<PreferencesListProps>(({ viewMode }) => {
+const PreferencesList = memo<PreferencesListProps>(({ searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setPreferenceId] = useQueryState('preferenceId', { clearOnDefault: true });
@@ -43,7 +44,7 @@ const PreferencesList = memo<PreferencesListProps>(({ viewMode }) => {
   };
 
   if (!preferences || preferences.length === 0)
-    return <MemoryEmpty description={t('preference.empty')} />;
+    return <MemoryEmpty search={Boolean(searchValue)} title={t('preference.empty')} />;
 
   return viewMode === 'timeline' ? (
     <TimelineView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />

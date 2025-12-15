@@ -1,8 +1,9 @@
 import { memo } from 'react';
 
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
+import { useUserMemoryStore } from '@/store/userMemory';
 
-import { MasonryView as GenericMasonryView } from '../../../../features/MasonryView';
+import { GridView } from '../../../../features/GridView';
 import ContextCard from './ContextCard';
 
 interface MasonryViewProps {
@@ -13,10 +14,18 @@ interface MasonryViewProps {
 }
 
 const MasonryView = memo<MasonryViewProps>(({ contexts, onClick, onDelete, onEdit }) => {
+  const loadMoreContexts = useUserMemoryStore((s) => s.loadMoreContexts);
+  const contextsHasMore = useUserMemoryStore((s) => s.contextsHasMore);
+  const contextsIsLoading = useUserMemoryStore((s) => s.contextsIsLoading);
+
   return (
-    <GenericMasonryView
+    <GridView
       defaultColumnCount={2}
+      hasMore={contextsHasMore}
+      isLoading={contextsIsLoading}
       items={contexts}
+      maxItemWidth={480}
+      onLoadMore={loadMoreContexts}
       renderItem={(context, actions) => (
         <ContextCard
           context={context}

@@ -3,6 +3,7 @@
 import { memo } from 'react';
 
 import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
+import { useUserMemoryStore } from '@/store/userMemory';
 
 import { TimelineView as GenericTimelineView } from '../../../../features/TimeLineView';
 import { PeriodHeader, TimelineItemWrapper } from '../../../../features/TimeLineView/PeriodGroup';
@@ -17,10 +18,17 @@ interface PreferenceTimelineViewProps {
 
 const PreferenceTimelineView = memo<PreferenceTimelineViewProps>(
   ({ preferences, onClick, onDelete, onEdit }) => {
+    const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
+    const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
+    const preferencesIsLoading = useUserMemoryStore((s) => s.preferencesIsLoading);
+
     return (
       <GenericTimelineView
         data={preferences}
         groupBy="day"
+        hasMore={preferencesHasMore}
+        isLoading={preferencesIsLoading}
+        onLoadMore={loadMorePreferences}
         renderHeader={(periodKey, itemCount) => (
           <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />
         )}

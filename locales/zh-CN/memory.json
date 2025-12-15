@@ -33,6 +33,13 @@
       "situation": "情境背景"
     }
   },
+  "filter": {
+    "search": "搜索...",
+    "sort": {
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间"
+    }
+  },
   "identity": {
     "empty": "暂无身份记忆",
     "filter": {

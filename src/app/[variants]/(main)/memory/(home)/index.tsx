@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import MemoryEmpty from '@/app/[variants]/(main)/memory/features/MemoryEmpty';
@@ -13,8 +12,6 @@ import { useUserMemoryStore } from '@/store/userMemory';
 import RoleTagCloud from './features/RoleTagCloud';
 
 const Home = memo(() => {
-  const { t } = useTranslation('memory');
-
   const useFetchTags = useUserMemoryStore((s) => s.useFetchTags);
   const roles = useUserMemoryStore((s) => s.roles);
   const { isLoading } = useFetchTags();
@@ -22,7 +19,7 @@ const Home = memo(() => {
   if (isLoading) return <Loading debugId={'Home'} />;
 
   if (!roles || roles.length === 0) {
-    return <MemoryEmpty description={t('identity.empty')} />;
+    return <MemoryEmpty />;
   }
 
   return (

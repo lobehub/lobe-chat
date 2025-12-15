@@ -1,41 +1,103 @@
-import { Grid } from '@lobehub/ui';
-import dayjs from 'dayjs';
-import { ReactNode, memo, useMemo } from 'react';
+import { Grid , DivProps } from '@lobehub/ui';
+import { ReactNode, forwardRef, memo } from 'react';
+import { VirtuosoGrid } from 'react-virtuoso';
 
-export interface GridViewProps<T extends { createdAt: Date | string; id: string }> {
+import { useScrollParent } from '../TimeLineView/useScrollParent';
+
+interface GridViewProps<T> {
   /**
-   * Custom date field extractor for sorting
+   * Default column count (rows in Grid component)
+   * Will be responsive based on window width
    */
-  getDateForSorting?: (item: T) => Date | string;
+  defaultColumnCount?: number;
+  /**
+   * Whether there are more items to load
+   */
+  hasMore?: boolean;
+  /**
+   * Whether data is currently loading
+   */
+  isLoading?: boolean;
   items: T[];
-  renderItem: (item: T) => ReactNode;
   /**
-   * Number of rows in the grid
-   * @default 3
+   * Max item width in pixels
    */
-  rows?: number;
+  maxItemWidth?: number;
+  /**
+   * Callback when end is reached
+   */
+  onLoadMore?: () => void;
+  renderItem: (item: T, actions: ItemActions<T>) => ReactNode;
 }
 
-function GridViewInner<T extends { createdAt: Date | string; id: string }>({
+interface ItemActions<T> {
+  onClick?: (item: T) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
+}
+
+function GridViewInner<T extends { id: string }>({
   items,
-  rows = 3,
-  getDateForSorting,
+  defaultColumnCount = 3,
+  maxItemWidth = 360,
+  hasMore,
+  isLoading,
+  onLoadMore,
   renderItem,
 }: GridViewProps<T>) {
-  const sortedItems = useMemo(() => {
-    return [...items].sort((a, b) => {
-      const dateA = getDateForSorting ? getDateForSorting(a) : a.createdAt;
-      const dateB = getDateForSorting ? getDateForSorting(b) : b.createdAt;
-      return dayjs(dateB).valueOf() - dayjs(dateA).valueOf();
-    });
-  }, [items, getDateForSorting]);
+  const scrollParent = useScrollParent();
+
+  if (!items || items.length === 0) {
+    return null;
+  }
 
   return (
-    <Grid gap={16} rows={rows}>
-      {sortedItems.map((item) => (
-        <div key={item.id}>{renderItem(item)}</div>
-      ))}
-    </Grid>
+    <VirtuosoGrid
+      components={{
+        Footer: isLoading
+          ? () => (
+              <div style={{ gridColumn: '1 / -1', padding: '24px', textAlign: 'center' }}>
+                <div className="ant-spin ant-spin-spinning">
+                  <span className="ant-spin-dot ant-spin-dot-spin">
+                    <i className="ant-spin-dot-item" />
+                    <i className="ant-spin-dot-item" />
+                    <i className="ant-spin-dot-item" />
+                    <i className="ant-spin-dot-item" />
+                  </span>
+                </div>
+              </div>
+            )
+          : undefined,
+        List: forwardRef<HTMLDivElement, DivProps>((props, ref) => (
+          <Grid
+            gap={16}
+            maxItemWidth={maxItemWidth}
+            ref={ref}
+            rows={defaultColumnCount}
+            {...props}
+          />
+        )),
+      }}
+      customScrollParent={scrollParent}
+      data={items}
+      endReached={hasMore && onLoadMore ? onLoadMore : undefined}
+      increaseViewportBy={800}
+      itemContent={(index, item) => {
+        if (!item || !item.id) {
+          return null;
+        }
+
+        const actions: ItemActions<T> = {
+          onClick: undefined,
+          onDelete: undefined,
+          onEdit: undefined,
+        };
+
+        return renderItem(item, actions);
+      }}
+      overscan={24}
+      style={{ minHeight: '100%' }}
+    />
   );
 }
 

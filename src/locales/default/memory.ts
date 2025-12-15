@@ -13,6 +13,12 @@ export default {
     source: '来源',
     urgency: '紧急度',
   },
+  empty: {
+    description:
+      '记忆的提取是渐进式的过程，请积累更多话题以丰富记忆提取内容，尝试与助手进行更深入的对话，以便更好地捕捉和存储有价值的信息。',
+    search: '未找到匹配的记忆',
+    title: '暂无记忆',
+  },
   experience: {
     actions: {
       delete: '删除',
@@ -31,6 +37,13 @@ export default {
       outcome: '可能结果',
       reasoning: '推理过程',
       situation: '情境背景',
+    },
+  },
+  filter: {
+    search: '搜索...',
+    sort: {
+      createdAt: '创建时间',
+      updatedAt: '更新时间',
     },
   },
   identity: {

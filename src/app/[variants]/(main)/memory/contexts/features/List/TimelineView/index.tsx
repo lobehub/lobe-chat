@@ -3,6 +3,7 @@
 import { memo } from 'react';
 
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
+import { useUserMemoryStore } from '@/store/userMemory';
 
 import { TimelineView as GenericTimelineView } from '../../../../features/TimeLineView';
 import { PeriodHeader, TimelineItemWrapper } from '../../../../features/TimeLineView/PeriodGroup';
@@ -17,10 +18,17 @@ interface ContextTimelineViewProps {
 
 const ContextTimelineView = memo<ContextTimelineViewProps>(
   ({ contexts, onClick, onDelete, onEdit }) => {
+    const loadMoreContexts = useUserMemoryStore((s) => s.loadMoreContexts);
+    const contextsHasMore = useUserMemoryStore((s) => s.contextsHasMore);
+    const contextsIsLoading = useUserMemoryStore((s) => s.contextsIsLoading);
+
     return (
       <GenericTimelineView
         data={contexts}
         groupBy="day"
+        hasMore={contextsHasMore}
+        isLoading={contextsIsLoading}
+        onLoadMore={loadMoreContexts}
         renderHeader={(periodKey, itemCount) => (
           <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />
         )}
