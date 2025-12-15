@@ -28,7 +28,7 @@ import {
   SearchMemoryResult,
   searchMemorySchema,
 } from '@/types/userMemory';
-import { LayersEnum } from '@/types/userMemory/shared';
+import { LayersEnum, TypesEnum } from '@/types/userMemory/shared';
 import {
   AddIdentityActionSchema,
   ContextMemoryItemSchema,
@@ -207,6 +207,39 @@ const memoryProcedure = authedProcedure
   });
 
 export const userMemoriesRouter = router({
+  queryMemories: memoryProcedure
+    .input(
+      z
+        .object({
+          categories: z.array(z.string()).optional(),
+          layers: z.array(z.nativeEnum(LayersEnum)).optional(),
+          order: z.enum(['asc', 'desc']).optional(),
+          page: z.coerce.number().int().min(1).optional(),
+          pageSize: z.coerce.number().int().min(1).max(100).optional(),
+          q: z.string().optional(),
+          sort: z.enum(['createdAt', 'updatedAt']).optional(),
+          tags: z.array(z.string()).optional(),
+          types: z.array(z.nativeEnum(TypesEnum)).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const params = input ?? {};
+      const fallbackPage = params.page ?? 1;
+      const fallbackPageSize = params.pageSize ?? 20;
+
+      try {
+        return await ctx.memoryModel.queryMemories({
+          ...params,
+          order: params.order ?? 'desc',
+          sort: params.sort ?? 'createdAt',
+        });
+      } catch (error) {
+        console.error('Failed to query memories:', error);
+        return { items: [], page: fallbackPage, pageSize: fallbackPageSize, total: 0 };
+      }
+    }),
+
   queryIdentityRoles: memoryProcedure
     .input(
       z

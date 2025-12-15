@@ -12,7 +12,8 @@ import {
   UserMemoryIdentityWithoutVectors,
   UserMemoryPreferenceWithoutVectors,
 } from '@lobechat/types';
-import { and, cosineDistance, desc, eq, inArray, isNotNull, ne, sql } from 'drizzle-orm';
+import type { SQL } from 'drizzle-orm';
+import { and, asc, count, cosineDistance, desc, eq, ilike, inArray, isNotNull, ne, or, sql } from 'drizzle-orm';
 
 import { merge } from '@/utils/merge';
 
@@ -275,6 +276,71 @@ export interface QueryIdentityRolesResult {
   tags: Array<{ count: number; tag: string }>;
 }
 
+export interface QueryUserMemoriesParams {
+  categories?: string[];
+  layers?: LayersEnum[];
+  order?: 'asc' | 'desc';
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  sort?: 'createdAt' | 'updatedAt';
+  tags?: string[];
+  types?: string[];
+}
+
+export interface BaseMemoryInfo {
+  accessedAt: Date;
+  accessedCount: number;
+  createdAt: Date;
+  id: string;
+  lastAccessedAt: Date;
+  memoryCategory: string | null;
+  memoryLayer: string | null;
+  memoryType: string | null;
+  metadata: Record<string, unknown> | null;
+  status: string | null;
+  tags: string[] | null;
+  updatedAt: Date;
+  userId: string | null;
+}
+
+export interface QueriedContextMemory {
+  context: UserMemoryContextWithoutVectors;
+  layer: LayersEnum.Context;
+  memory: BaseMemoryInfo;
+}
+
+export interface QueriedExperienceMemory {
+  experience: UserMemoryExperienceWithoutVectors;
+  layer: LayersEnum.Experience;
+  memory: BaseMemoryInfo;
+}
+
+export interface QueriedPreferenceMemory {
+  layer: LayersEnum.Preference;
+  memory: BaseMemoryInfo;
+  preference: UserMemoryPreferenceWithoutVectors;
+}
+
+export interface QueriedIdentityMemory {
+  identity: UserMemoryIdentityWithoutVectors;
+  layer: LayersEnum.Identity;
+  memory: BaseMemoryInfo;
+}
+
+export type QueriedUserMemoryItem =
+  | QueriedContextMemory
+  | QueriedExperienceMemory
+  | QueriedIdentityMemory
+  | QueriedPreferenceMemory;
+
+export interface QueryUserMemoriesResult {
+  items: QueriedUserMemoryItem[];
+  page: number;
+  pageSize: number;
+  total: number;
+}
+
 export class UserMemoryModel {
   static parseAssociatedObjects(value?: unknown): Record<string, unknown>[] {
     if (!Array.isArray(value)) return [];
@@ -282,11 +348,16 @@ export class UserMemoryModel {
     const associations: Record<string, unknown>[] = [];
 
     value.forEach((item) => {
-      const parsed = AssociatedObjectSchema.safeParse(item)
+      const parsed = AssociatedObjectSchema.safeParse(item);
       if (parsed.success) {
         const extra = JSON.parse(parsed.data.extra || '{}');
         parsed.data.extra = extra;
         associations.push(parsed.data);
+        return;
+      }
+
+      if (item && typeof item === 'object' && 'name' in item && typeof (item as any).name === 'string') {
+        associations.push({ name: (item as any).name });
       }
     });
 
@@ -619,6 +690,307 @@ export class UserMemoryModel {
     return {
       roles: roles as QueryIdentityRolesResult['roles'],
       tags: tags as QueryIdentityRolesResult['tags'],
+    };
+  };
+
+  queryMemories = async (params: QueryUserMemoriesParams = {}): Promise<QueryUserMemoriesResult> => {
+    const {
+      categories,
+      layers,
+      order = 'desc',
+      page = 1,
+      pageSize = 20,
+      q,
+      sort = 'createdAt',
+      tags,
+      types,
+    } = params;
+
+    const resolvedPage = page ?? 1;
+    const resolvedPageSize = pageSize ?? 20;
+    const normalizedPage = Math.max(1, resolvedPage);
+    const normalizedPageSize = Math.min(Math.max(resolvedPageSize, 1), 100);
+    const offset = (normalizedPage - 1) * normalizedPageSize;
+
+    const normalizedQuery = typeof q === 'string' ? q.trim() : '';
+
+    const conditions: Array<SQL | undefined> = [
+      eq(userMemories.userId, this.userId),
+      categories && categories.length > 0 ? inArray(userMemories.memoryCategory, categories) : undefined,
+      layers && layers.length > 0 ? inArray(userMemories.memoryLayer, layers) : undefined,
+      normalizedQuery
+        ? or(
+            ilike(userMemories.title, `%${normalizedQuery}%`),
+            ilike(userMemories.summary, `%${normalizedQuery}%`),
+            ilike(userMemories.details, `%${normalizedQuery}%`),
+          )
+        : undefined,
+      tags && tags.length > 0
+        ? or(...tags.map((tag) => sql<boolean>`${tag} = ANY(${userMemories.tags})`))
+        : undefined,
+      types && types.length > 0 ? inArray(userMemories.memoryType, types) : undefined,
+    ];
+
+    const filters = conditions.filter((condition): condition is SQL => condition !== undefined);
+    const whereClause = filters.length > 0 ? and(...filters) : undefined;
+
+    const sortColumn = sort === 'updatedAt' ? userMemories.updatedAt : userMemories.createdAt;
+    const orderByClause = order === 'asc' ? asc(sortColumn) : desc(sortColumn);
+
+    const [baseMemories, totalResult] = await Promise.all([
+      this.db
+        .select({
+          accessedAt: userMemories.accessedAt,
+          accessedCount: userMemories.accessedCount,
+          createdAt: userMemories.createdAt,
+          id: userMemories.id,
+          lastAccessedAt: userMemories.lastAccessedAt,
+          memoryCategory: userMemories.memoryCategory,
+          memoryLayer: userMemories.memoryLayer,
+          memoryType: userMemories.memoryType,
+          metadata: userMemories.metadata,
+          status: userMemories.status,
+          tags: userMemories.tags,
+          updatedAt: userMemories.updatedAt,
+          userId: userMemories.userId,
+        })
+        .from(userMemories)
+        .where(whereClause)
+        .orderBy(orderByClause)
+        .limit(normalizedPageSize)
+        .offset(offset),
+      this.db
+        .select({ count: count() })
+        .from(userMemories)
+        .where(whereClause),
+    ]);
+
+    const baseByLayer: Record<LayersEnum, BaseMemoryInfo[]> = {
+      [LayersEnum.Context]: [],
+      [LayersEnum.Experience]: [],
+      [LayersEnum.Identity]: [],
+      [LayersEnum.Preference]: [],
+    };
+
+    baseMemories.forEach((memory) => {
+      const layer = memory.memoryLayer as LayersEnum | null;
+      if (layer && baseByLayer[layer]) {
+        baseByLayer[layer]?.push(memory as BaseMemoryInfo);
+      }
+    });
+
+    const [contexts, experiences, identities, preferences] = await Promise.all([
+      baseByLayer[LayersEnum.Context].length > 0
+        ? this.db
+            .select({
+              accessedAt: userMemoriesContexts.accessedAt,
+              associatedObjects: userMemoriesContexts.associatedObjects,
+              associatedSubjects: userMemoriesContexts.associatedSubjects,
+              createdAt: userMemoriesContexts.createdAt,
+              currentStatus: userMemoriesContexts.currentStatus,
+              description: userMemoriesContexts.description,
+              id: userMemoriesContexts.id,
+              metadata: userMemoriesContexts.metadata,
+              scoreImpact: userMemoriesContexts.scoreImpact,
+              scoreUrgency: userMemoriesContexts.scoreUrgency,
+              tags: userMemoriesContexts.tags,
+              title: userMemoriesContexts.title,
+              type: userMemoriesContexts.type,
+              updatedAt: userMemoriesContexts.updatedAt,
+              userId: userMemoriesContexts.userId,
+              userMemoryIds: userMemoriesContexts.userMemoryIds,
+            })
+            .from(userMemoriesContexts)
+            .where(eq(userMemoriesContexts.userId, this.userId))
+        : [],
+      baseByLayer[LayersEnum.Experience].length > 0
+        ? this.db
+            .select({
+              accessedAt: userMemoriesExperiences.accessedAt,
+              action: userMemoriesExperiences.action,
+              createdAt: userMemoriesExperiences.createdAt,
+              id: userMemoriesExperiences.id,
+              keyLearning: userMemoriesExperiences.keyLearning,
+              metadata: userMemoriesExperiences.metadata,
+              possibleOutcome: userMemoriesExperiences.possibleOutcome,
+              reasoning: userMemoriesExperiences.reasoning,
+              scoreConfidence: userMemoriesExperiences.scoreConfidence,
+              situation: userMemoriesExperiences.situation,
+              tags: userMemoriesExperiences.tags,
+              type: userMemoriesExperiences.type,
+              updatedAt: userMemoriesExperiences.updatedAt,
+              userId: userMemoriesExperiences.userId,
+              userMemoryId: userMemoriesExperiences.userMemoryId,
+            })
+            .from(userMemoriesExperiences)
+            .where(
+              and(
+                eq(userMemoriesExperiences.userId, this.userId),
+                inArray(
+                  userMemoriesExperiences.userMemoryId,
+                  baseByLayer[LayersEnum.Experience].map((item) => item.id),
+                ),
+              ),
+            )
+        : [],
+      baseByLayer[LayersEnum.Identity].length > 0
+        ? this.db
+            .select({
+              accessedAt: userMemoriesIdentities.accessedAt,
+              createdAt: userMemoriesIdentities.createdAt,
+              description: userMemoriesIdentities.description,
+              episodicDate: userMemoriesIdentities.episodicDate,
+              id: userMemoriesIdentities.id,
+              metadata: userMemoriesIdentities.metadata,
+              relationship: userMemoriesIdentities.relationship,
+              role: userMemoriesIdentities.role,
+              tags: userMemoriesIdentities.tags,
+              type: userMemoriesIdentities.type,
+              updatedAt: userMemoriesIdentities.updatedAt,
+              userId: userMemoriesIdentities.userId,
+              userMemoryId: userMemoriesIdentities.userMemoryId,
+            })
+            .from(userMemoriesIdentities)
+            .where(
+              and(
+                eq(userMemoriesIdentities.userId, this.userId),
+                inArray(
+                  userMemoriesIdentities.userMemoryId,
+                  baseByLayer[LayersEnum.Identity].map((item) => item.id),
+                ),
+              ),
+            )
+        : [],
+      baseByLayer[LayersEnum.Preference].length > 0
+        ? this.db
+            .select({
+              accessedAt: userMemoriesPreferences.accessedAt,
+              conclusionDirectives: userMemoriesPreferences.conclusionDirectives,
+              createdAt: userMemoriesPreferences.createdAt,
+              id: userMemoriesPreferences.id,
+              metadata: userMemoriesPreferences.metadata,
+              scorePriority: userMemoriesPreferences.scorePriority,
+              suggestions: userMemoriesPreferences.suggestions,
+              tags: userMemoriesPreferences.tags,
+              type: userMemoriesPreferences.type,
+              updatedAt: userMemoriesPreferences.updatedAt,
+              userId: userMemoriesPreferences.userId,
+              userMemoryId: userMemoriesPreferences.userMemoryId,
+            })
+            .from(userMemoriesPreferences)
+            .where(
+              and(
+                eq(userMemoriesPreferences.userId, this.userId),
+                inArray(
+                  userMemoriesPreferences.userMemoryId,
+                  baseByLayer[LayersEnum.Preference].map((item) => item.id),
+                ),
+              ),
+            )
+        : [],
+    ]);
+
+    const contextMap = new Map<string, UserMemoryContextWithoutVectors>();
+    const contextIdSet = new Set(baseByLayer[LayersEnum.Context].map((item) => item.id));
+    contexts.forEach((context) => {
+      const ids = Array.isArray(context.userMemoryIds)
+        ? (context.userMemoryIds as string[])
+        : [];
+      ids.forEach((id) => {
+        if (contextIdSet.has(id)) {
+          contextMap.set(id, context as UserMemoryContextWithoutVectors);
+        }
+      });
+    });
+
+    const experienceMap = new Map<string, UserMemoryExperienceWithoutVectors>();
+    experiences.forEach((experience) => {
+      if (experience.userMemoryId) {
+        experienceMap.set(experience.userMemoryId, experience as UserMemoryExperienceWithoutVectors);
+      }
+    });
+
+    const identityMap = new Map<string, UserMemoryIdentityWithoutVectors>();
+    identities.forEach((identity) => {
+      if (identity.userMemoryId) {
+        identityMap.set(identity.userMemoryId, identity as UserMemoryIdentityWithoutVectors);
+      }
+    });
+
+    const preferenceMap = new Map<string, UserMemoryPreferenceWithoutVectors>();
+    preferences.forEach((preference) => {
+      if (preference.userMemoryId) {
+        preferenceMap.set(
+          preference.userMemoryId,
+          preference as UserMemoryPreferenceWithoutVectors,
+        );
+      }
+    });
+
+    const items: QueriedUserMemoryItem[] = [];
+
+    baseMemories.forEach((memory) => {
+      const layer = memory.memoryLayer as LayersEnum | null;
+      if (!layer) return;
+
+      switch (layer) {
+      case LayersEnum.Context: {
+        const context = contextMap.get(memory.id);
+        if (context) {
+          items.push({
+            context,
+            layer,
+            memory: memory as BaseMemoryInfo,
+          });
+        }
+
+      break;
+      }
+      case LayersEnum.Experience: {
+        const experience = experienceMap.get(memory.id);
+        if (experience) {
+          items.push({
+            experience,
+            layer,
+            memory: memory as BaseMemoryInfo,
+          });
+        }
+
+      break;
+      }
+      case LayersEnum.Identity: {
+        const identity = identityMap.get(memory.id);
+        if (identity) {
+          items.push({
+            identity,
+            layer,
+            memory: memory as BaseMemoryInfo,
+          });
+        }
+
+      break;
+      }
+      case LayersEnum.Preference: {
+        const preference = preferenceMap.get(memory.id);
+        if (preference) {
+          items.push({
+            layer,
+            memory: memory as BaseMemoryInfo,
+            preference,
+          });
+        }
+
+      break;
+      }
+      // No default
+      }
+    });
+
+    return {
+      items,
+      page: normalizedPage,
+      pageSize: normalizedPageSize,
+      total: Number(totalResult[0]?.count ?? 0),
     };
   };
 

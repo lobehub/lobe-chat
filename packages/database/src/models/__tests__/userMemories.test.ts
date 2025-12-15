@@ -827,6 +827,214 @@ describe('UserMemoryModel', () => {
     });
   });
 
+  describe('queryMemories', () => {
+    it('supports filtering, sorting, and pagination for memories', async () => {
+      const baseTime = new Date('2024-04-05T00:00:00.000Z');
+      const newerId = idGenerator('memory');
+      const olderId = idGenerator('memory');
+
+      await serverDB.insert(userMemories).values([
+        {
+          createdAt: baseTime,
+          id: newerId,
+          lastAccessedAt: baseTime,
+          memoryCategory: 'work',
+          memoryLayer: LayersEnum.Context,
+          memoryType: TypesEnum.Topic,
+          summary: 'Atlas launch retrospective',
+          tags: ['atlas', 'project'],
+          title: 'Project Atlas retrospective',
+          updatedAt: new Date('2024-04-06T00:00:00.000Z'),
+          userId,
+        },
+        {
+          createdAt: baseTime,
+          id: olderId,
+          lastAccessedAt: baseTime,
+          memoryCategory: 'work',
+          memoryLayer: LayersEnum.Context,
+          memoryType: TypesEnum.Topic,
+          summary: 'Atlas kickoff planning',
+          tags: ['atlas'],
+          title: 'Atlas kickoff',
+          updatedAt: new Date('2024-04-05T12:00:00.000Z'),
+          userId,
+        },
+        {
+          createdAt: baseTime,
+          id: idGenerator('memory'),
+          lastAccessedAt: baseTime,
+          memoryCategory: 'personal',
+          memoryLayer: LayersEnum.Preference,
+          memoryType: TypesEnum.Preference,
+          summary: 'Atlas weekend plan',
+          tags: ['weekend'],
+          title: 'Weekend notes',
+          updatedAt: new Date('2024-04-07T00:00:00.000Z'),
+          userId,
+        },
+        {
+          createdAt: baseTime,
+          id: idGenerator('memory'),
+          lastAccessedAt: baseTime,
+          memoryCategory: 'work',
+          memoryLayer: LayersEnum.Context,
+          memoryType: TypesEnum.Topic,
+          summary: 'Atlas private note',
+          tags: ['atlas'],
+          title: 'Should not be visible',
+          updatedAt: new Date('2024-04-08T00:00:00.000Z'),
+          userId: userId2,
+        },
+      ]);
+
+      await serverDB.insert(userMemoriesContexts).values([
+        {
+          createdAt: baseTime,
+          description: 'Context newer',
+          id: idGenerator('memory'),
+          title: 'Newer Context',
+          updatedAt: new Date('2024-04-06T00:00:00.000Z'),
+          userId,
+          userMemoryIds: [newerId],
+        },
+        {
+          createdAt: baseTime,
+          description: 'Context older',
+          id: idGenerator('memory'),
+          title: 'Older Context',
+          updatedAt: new Date('2024-04-05T12:00:00.000Z'),
+          userId,
+          userMemoryIds: [olderId],
+        },
+      ]);
+
+      const firstPage = await userMemoryModel.queryMemories({
+        categories: ['work'],
+        layers: [LayersEnum.Context],
+        order: 'desc',
+        page: 1,
+        pageSize: 1,
+        q: 'Atlas',
+        sort: 'updatedAt',
+        tags: ['atlas'],
+        types: [TypesEnum.Topic],
+      });
+
+      expect(firstPage.total).toBe(2);
+      expect(firstPage.page).toBe(1);
+      expect(firstPage.pageSize).toBe(1);
+      expect(firstPage.items).toHaveLength(1);
+      expect(firstPage.items[0]?.memory.id).toBe(newerId);
+      expect(firstPage.items[0]?.layer).toBe(LayersEnum.Context);
+      expect((firstPage.items[0] as any).context.title).toBe('Newer Context');
+
+      const secondPage = await userMemoryModel.queryMemories({
+        categories: ['work'],
+        layers: [LayersEnum.Context],
+        order: 'desc',
+        page: 2,
+        pageSize: 1,
+        q: 'Atlas',
+        sort: 'updatedAt',
+        tags: ['atlas'],
+        types: [TypesEnum.Topic],
+      });
+
+      expect(secondPage.items).toHaveLength(1);
+      expect(secondPage.items[0]?.memory.id).toBe(olderId);
+      expect((secondPage.items[0] as any).context.title).toBe('Older Context');
+    });
+
+    it('returns defaults when no filters are provided', async () => {
+      const timestamp = new Date('2024-04-05T00:00:00.000Z');
+      const id = idGenerator('memory');
+
+      await serverDB.insert(userMemories).values({
+        createdAt: timestamp,
+        id,
+        lastAccessedAt: timestamp,
+        memoryCategory: 'misc',
+        memoryLayer: LayersEnum.Context,
+        memoryType: TypesEnum.Other,
+        summary: 'General note',
+        tags: ['general'],
+        title: 'Default',
+        updatedAt: timestamp,
+        userId,
+      });
+
+      await serverDB.insert(userMemoriesContexts).values({
+        createdAt: timestamp,
+        description: 'General context',
+        id: idGenerator('memory'),
+        title: 'Context title',
+        updatedAt: timestamp,
+        userId,
+        userMemoryIds: [id],
+      });
+
+      const result = await userMemoryModel.queryMemories();
+
+      expect(result.page).toBe(1);
+      expect(result.pageSize).toBe(20);
+      expect(result.total).toBe(1);
+      expect(result.items[0]?.memory.id).toBe(id);
+      expect(result.items[0]?.layer).toBe(LayersEnum.Context);
+    });
+
+    it('returns newly inserted layered memories when querying without filters', async () => {
+      const contextInput = generateRandomCreateUserMemoryContextParams();
+      const experienceInput = generateRandomCreateUserMemoryExperienceParams();
+      const preferenceInput = generateRandomCreateUserMemoryPreferenceParams();
+      const identityDescription = 'identity ' + nanoid();
+
+      const { context, memory: contextMemory } = await userMemoryModel.createContextMemory(contextInput);
+      const { experience, memory: experienceMemory } = await userMemoryModel.createExperienceMemory(experienceInput);
+      const { preference, memory: preferenceMemory } = await userMemoryModel.createPreferenceMemory(preferenceInput);
+      const { identityId, userMemoryId: identityMemoryId } = await userMemoryModel.addIdentityEntry({
+        base: { summary: 'identity summary ' + nanoid(), tags: ['identity'] },
+        identity: { description: identityDescription, relationship: 'friend', tags: ['identity'], type: 'personal' },
+      });
+
+      const identity = await serverDB.query.userMemoriesIdentities.findFirst({
+        where: eq(userMemoriesIdentities.id, identityId),
+      });
+
+      const result = await userMemoryModel.queryMemories();
+
+      expect(result.total).toBe(4);
+      expect(result.items).toHaveLength(4);
+
+      const itemsById = new Map(result.items.map((item) => [item.memory.id, item]));
+
+      const contextItem = itemsById.get(contextMemory.id) as any;
+      expect(contextItem).toBeDefined();
+      expect(contextItem.layer).toBe(LayersEnum.Context);
+      expect(contextItem.context.description).toBe(context.description);
+      expect(contextItem.context.userMemoryIds).toEqual([contextMemory.id]);
+
+      const experienceItem = itemsById.get(experienceMemory.id) as any;
+      expect(experienceItem).toBeDefined();
+      expect(experienceItem.layer).toBe(LayersEnum.Experience);
+      expect(experienceItem.experience.situation).toBe(experience.situation);
+      expect(experienceItem.experience.userMemoryId).toBe(experienceMemory.id);
+
+      const preferenceItem = itemsById.get(preferenceMemory.id) as any;
+      expect(preferenceItem).toBeDefined();
+      expect(preferenceItem.layer).toBe(LayersEnum.Preference);
+      expect(preferenceItem.preference.conclusionDirectives).toBe(preference.conclusionDirectives);
+      expect(preferenceItem.preference.userMemoryId).toBe(preferenceMemory.id);
+
+      const identityItem = itemsById.get(identityMemoryId) as any;
+      expect(identityItem).toBeDefined();
+      expect(identityItem.layer).toBe(LayersEnum.Identity);
+      expect(identityItem.identity.description).toBe(identityDescription);
+      expect(identityItem.identity.userMemoryId).toBe(identityMemoryId);
+      expect(identityItem.identity.type).toBe(identity?.type);
+    });
+  });
+
   describe('findById', () => {
     it('returns own memories and updates access metrics', async () => {
       const created = await userMemoryModel.create(

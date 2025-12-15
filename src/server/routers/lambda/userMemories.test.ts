@@ -140,6 +140,85 @@ describe('memoryRouter.reEmbedMemories', () => {
   });
 });
 
+describe('userMemories.queryMemories', () => {
+  it('forwards filters and pagination to the model and returns the result', async () => {
+    const queryMemories = vi.fn().mockResolvedValue({
+      items: [{ id: 'mem-1' }],
+      page: 2,
+      pageSize: 5,
+      total: 1,
+    });
+
+    vi.mocked(UserMemoryModel).mockImplementation(
+      () =>
+        ({
+          queryMemories,
+        }) as any,
+    );
+
+    vi.mocked(getServerDB).mockResolvedValue({
+      query: {},
+    } as any);
+
+    const caller = userMemoriesRouter.createCaller(mockCtx as any);
+
+    const input = {
+      categories: ['work'],
+      layers: ['context'],
+      order: 'asc' as const,
+      page: 2,
+      pageSize: 5,
+      q: 'atlas',
+      sort: 'updatedAt' as const,
+      tags: ['project'],
+      types: ['topic'],
+    };
+
+    const result = await caller.queryMemories(input as any);
+
+    expect(queryMemories).toHaveBeenCalledWith({
+      ...input,
+      order: 'asc',
+      sort: 'updatedAt',
+    });
+    expect(result).toEqual({
+      items: [{ id: 'mem-1' }],
+      page: 2,
+      pageSize: 5,
+      total: 1,
+    });
+  });
+
+  it('applies default sort and order when not provided', async () => {
+    const queryMemories = vi.fn().mockResolvedValue({
+      items: [],
+      page: 1,
+      pageSize: 20,
+      total: 0,
+    });
+
+    vi.mocked(UserMemoryModel).mockImplementation(
+      () =>
+        ({
+          queryMemories,
+        }) as any,
+    );
+
+    vi.mocked(getServerDB).mockResolvedValue({
+      query: {},
+    } as any);
+
+    const caller = userMemoriesRouter.createCaller(mockCtx as any);
+
+    await caller.queryMemories();
+
+    expect(queryMemories).toHaveBeenCalledWith({
+      order: 'desc',
+      sort: 'createdAt',
+    });
+  });
+});
+
 describe('userMemories.retrieveMemory', () => {
   it('returns aggregated memory search results', async () => {
     const searchWithEmbedding = vi.fn().mockResolvedValue({
