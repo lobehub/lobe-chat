@@ -1229,6 +1229,9 @@
   "deepseek_r1_distill_qwen_32b": {
     "description": "DeepSeek-R1-Distill-Qwen-32BはQwen2.5-32Bに基づき、知識蒸留を通じて得られたモデルです。このモデルはDeepSeek-R1が生成した80万の選りすぐりのサンプルを使用して微調整され、数学、プログラミング、推論などの複数の分野で卓越した性能を示しています。"
   },
+  "devstral-2:123b": {
+    "description": "Devstral 2 123B モデルは、ツールを活用してコードベースを探索し、複数のファイルを編集し、ソフトウェアエンジニアリングエージェントを支援することに優れています。"
+  },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-liteは全く新しい世代の軽量版モデルで、極限の応答速度を実現し、効果と遅延の両方で世界トップレベルに達しています。"
   },
@@ -1936,6 +1939,15 @@
   },
   "gpt-5.1-codex-mini": {
     "description": "GPT-5.1 Codex mini：より小型でコスト効率の高い Codex バリアントで、エージェント型のコーディングタスクに最適化。"
+  },
+  "gpt-5.2": {
+    "description": "GPT-5.2 — コーディングとエージェントワークフロー向けのフラッグシップモデルで、より強力な推論能力と長文コンテキスト処理に対応しています。"
+  },
+  "gpt-5.2-chat-latest": {
+    "description": "GPT-5.2 Chat：ChatGPT が使用する GPT-5.2 のバリアント（chat-latest）で、最新の対話機能を体験できます。"
+  },
+  "gpt-5.2-pro": {
+    "description": "GPT-5.2 pro：より賢く、より精密な GPT-5.2 のバージョン（Responses API のみ対応）で、難易度の高い問題や長いマルチターン推論に最適です。"
   },
   "gpt-audio": {
     "description": "GPT Audioは音声の入出力に対応した汎用チャットモデルで、Chat Completions APIでの音声I/O利用をサポートしています。"
