@@ -1077,7 +1077,6 @@ table user_settings {
   market jsonb
   tool jsonb
   image jsonb
-  response_language text
 }
 
 table users {
@@ -1090,7 +1089,6 @@ table users {
   first_name text
   last_name text
   full_name text
-  career text
   is_onboarded boolean [default: false]
   clerk_created_at "timestamp with time zone"
   email_verified boolean [not null, default: false]
