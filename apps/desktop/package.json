@@ -33,7 +33,8 @@
     "electron-window-state": "^5.0.3",
     "fetch-socks": "^1.3.2",
     "get-port-please": "^3.2.0",
-    "pdfjs-dist": "4.10.38"
+    "pdfjs-dist": "4.10.38",
+    "superjson": "^2.2.6"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
@@ -41,6 +42,7 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@electron-toolkit/utils": "^4.0.0",
+    "@lobechat/desktop-bridge": "workspace:*",
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
     "@lobechat/file-loaders": "workspace:*",
@@ -51,6 +53,7 @@
     "@types/semver": "^7.7.1",
     "@types/set-cookie-parser": "^2.4.10",
     "@typescript/native-preview": "7.0.0-dev.20251210.1",
+    "@modelcontextprotocol/sdk": "^1.24.3",
     "async-retry": "^1.3.3",
     "consola": "^3.4.2",
     "cookie": "^1.1.1",

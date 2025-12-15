@@ -89,9 +89,7 @@ export class MarketOIDC {
 
     console.log('[MarketOIDC] this.config:', this.config);
 
-    const authUrl = new URL(
-      `${this.config.baseUrl.replace(/\/$/, '')}${MARKET_OIDC_ENDPOINTS.auth}`,
-    );
+    const authUrl = new URL(MARKET_OIDC_ENDPOINTS.auth, this.config.baseUrl);
     authUrl.searchParams.set('client_id', this.config.clientId);
     authUrl.searchParams.set('redirect_uri', this.config.redirectUri);
     authUrl.searchParams.set('response_type', 'code');

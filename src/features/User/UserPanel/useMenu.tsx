@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import { Hotkey, Icon } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
@@ -11,7 +12,6 @@ import type { MenuProps } from '@/components/Menu';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
 import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
-import { isDesktop } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -128,15 +128,16 @@ export const useMenu = () => {
     ...(!hideDocs ? helps : []),
   ].filter(Boolean) as MenuProps['items'];
 
-  const logoutItems: MenuProps['items'] = isLoginWithAuth
-    ? [
-        {
-          icon: <Icon icon={LogOut} />,
-          key: 'logout',
-          label: <span>{t('signout', { ns: 'auth' })}</span>,
-        },
-      ]
-    : [];
+  const logoutItems: MenuProps['items'] =
+    isLoginWithAuth && !isDesktop
+      ? [
+          {
+            icon: <Icon icon={LogOut} />,
+            key: 'logout',
+            label: <span>{t('signout', { ns: 'auth' })}</span>,
+          },
+        ]
+      : [];
 
   return { logoutItems, mainItems };
 };

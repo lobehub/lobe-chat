@@ -23,8 +23,8 @@ import {
 } from '../loaders/routeParams';
 
 // Create desktop router configuration
-export const createDesktopRouter = () =>
-  createBrowserRouter([
+export const createDesktopRouter = () => {
+  return createBrowserRouter([
     {
       HydrateFallback: () => <Loading debugId="Desktop Router Hydration" />,
       children: [
@@ -423,3 +423,4 @@ export const createDesktopRouter = () =>
       path: '/',
     },
   ]);
+};

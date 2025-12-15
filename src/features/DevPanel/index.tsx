@@ -3,6 +3,8 @@
 import { BookText, Cog, DatabaseIcon, FlagIcon, GlobeLockIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
+import { isDesktop } from '@/const/version';
+
 import CacheViewer from './CacheViewer';
 import FeatureFlagViewer from './FeatureFlagViewer';
 import MetadataViewer from './MetadataViewer';
@@ -16,11 +18,15 @@ const FloatPanel = dynamic(() => import('./features/FloatPanel'), {
 const DevPanel = () => (
   <FloatPanel
     items={[
-      {
-        children: <PostgresViewer />,
-        icon: <DatabaseIcon size={16} />,
-        key: 'Postgres Viewer',
-      },
+      ...(isDesktop
+        ? [
+            {
+              children: <PostgresViewer />,
+              icon: <DatabaseIcon size={16} />,
+              key: 'Postgres Viewer',
+            },
+          ]
+        : []),
       {
         children: <MetadataViewer />,
         icon: <BookText size={16} />,

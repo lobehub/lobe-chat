@@ -20,6 +20,7 @@ import CmdkLazy from '@/layout/GlobalProvider/CmdkLazy';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { HotkeyScopeEnum } from '@/types/hotkey';
 
+import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
 
@@ -36,6 +37,7 @@ const Layout = memo(() => {
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
       <Suspense fallback={null}>
         {isDesktop && <TitleBar />}
+        {isDesktop && <DesktopAutoOidcOnFirstOpen />}
         {showCloudPromotion && <CloudBanner />}
       </Suspense>
       <DndContextWrapper>

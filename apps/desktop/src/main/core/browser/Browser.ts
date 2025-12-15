@@ -2,14 +2,17 @@ import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-c
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  session as electronSession,
   ipcMain,
   nativeTheme,
   screen,
 } from 'electron';
+import console from 'node:console';
 import { join } from 'node:path';
 
 import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
 import { isDev, isMac, isWindows } from '@/const/env';
+import { ELECTRON_BE_PROTOCOL_SCHEME } from '@/const/protocol';
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -18,12 +21,15 @@ import {
   THEME_CHANGE_DELAY,
   TITLE_BAR_HEIGHT,
 } from '@/const/theme';
+import RemoteServerConfigCtr from '@/controllers/RemoteServerConfigCtr';
 import { createLogger } from '@/utils/logger';
 
 import type { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:Browser');
+// Track sessions that already have protocol handlers installed to avoid duplicates
+const protocolHandledSessions = new WeakSet<Electron.Session>();
 
 export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
   devTools?: boolean;
@@ -41,7 +47,6 @@ export default class Browser {
   private app: App;
   private _browserWindow?: BrowserWindow;
   private themeListenerSetup = false;
-  private stopInterceptHandler;
   identifier: string;
   options: BrowserWindowOpts;
   private readonly windowStateKey: string;
@@ -167,11 +172,14 @@ export default class Browser {
   }
 
   loadUrl = async (path: string) => {
-    const initUrl = this.app.nextServerUrl + path;
+    const initUrl = await this.app.buildRendererUrl(path);
+
+    console.log('[Browser] initUrl', initUrl);
 
     try {
       logger.debug(`[${this.identifier}] Attempting to load URL: ${initUrl}`);
       await this._browserWindow.loadURL(initUrl);
+
       logger.debug(`[${this.identifier}] Successfully loaded URL: ${initUrl}`);
     } catch (error) {
       logger.error(`[${this.identifier}] Failed to load URL (${initUrl}):`, error);
@@ -295,7 +303,6 @@ export default class Browser {
    */
   destroy() {
     logger.debug(`Destroying window instance: ${this.identifier}`);
-    this.stopInterceptHandler?.();
     this.cleanupThemeListener();
     this._browserWindow = undefined;
   }
@@ -354,13 +361,10 @@ export default class Browser {
     // Apply initial visual effects
     this.applyVisualEffects();
 
-    logger.debug(`[${this.identifier}] Setting up nextInterceptor.`);
-    this.stopInterceptHandler = this.app.nextInterceptor({
-      session: browserWindow.webContents.session,
-    });
-
     // Setup CORS bypass for local file server
     this.setupCORSBypass(browserWindow);
+    // Setup request hook for remote server sync (base URL rewrite + OIDC header)
+    this.setupRemoteServerRequestHook(browserWindow);
 
     logger.debug(`[${this.identifier}] Initiating placeholder and URL loading sequence.`);
     this.loadPlaceholder().then(() => {
@@ -409,8 +413,7 @@ export default class Browser {
         } catch (error) {
           logger.error(`[${this.identifier}] Failed to save window state on quit:`, error);
         }
-        // Need to clean up intercept handler and theme manager
-        this.stopInterceptHandler?.();
+        // Need to clean up theme manager
         this.cleanupThemeListener();
         return;
       }
@@ -445,8 +448,7 @@ export default class Browser {
         } catch (error) {
           logger.error(`[${this.identifier}] Failed to save window state on close:`, error);
         }
-        // Need to clean up intercept handler and theme manager
-        this.stopInterceptHandler?.();
+        // Need to clean up theme manager
         this.cleanupThemeListener();
       }
     });
@@ -527,5 +529,115 @@ export default class Browser {
     });
 
     logger.debug(`[${this.identifier}] CORS bypass setup completed`);
+  }
+
+  /**
+   * Rewrite tRPC requests to remote server and inject OIDC token via webRequest hooks.
+   * Replaces the previous proxyTRPCRequest IPC forwarding.
+   */
+  private setupRemoteServerRequestHook(browserWindow: BrowserWindow) {
+    const session = browserWindow.webContents.session;
+    const remoteServerConfigCtr = this.app.getController(RemoteServerConfigCtr);
+    const logPrefix = `[${this.identifier}] RemoteServerRequestHook`;
+
+    // Guard to ensure hooks are registered only once per session
+    const targetSession = session || electronSession.defaultSession;
+    if (!targetSession || protocolHandledSessions.has(targetSession)) return;
+
+    const rewriteUrl = async (rawUrl: string) => {
+      let remoteServerUrl: string | undefined;
+      try {
+        const requestUrl = new URL(rawUrl);
+
+        const config = await remoteServerConfigCtr.getRemoteServerConfig();
+        remoteServerUrl = await remoteServerConfigCtr.getRemoteServerUrl(config);
+        const remoteBase = new URL(remoteServerUrl);
+        if (requestUrl.origin === remoteBase.origin) return;
+
+        const rewrittenUrl = new URL(
+          requestUrl.pathname + requestUrl.search,
+          remoteBase,
+        ).toString();
+        logger.debug(`${logPrefix} rewrite ${rawUrl} -> ${rewrittenUrl}`);
+        return rewrittenUrl;
+      } catch (error) {
+        logger.error(
+          `${logPrefix} rewriteUrl error (rawUrl=${rawUrl}, remoteServerUrl=${remoteServerUrl})`,
+          error,
+        );
+        return null;
+      }
+    };
+
+    // Transparent rewrite via protocol handlers (no HTTP 302)
+    const registerProtocolHandlers = async () => {
+      const proxyHandler = async (request: Request): Promise<Response | null> => {
+        // lobe-backend://lobe/trpc/xxx -> http://<target_host>/trpc/xxx
+        try {
+          const rewrittenUrl = await rewriteUrl(request.url);
+          if (!rewrittenUrl) return null;
+
+          const headers = new Headers(request.headers);
+
+          const token = await remoteServerConfigCtr.getAccessToken();
+          if (token) headers.set('Oidc-Auth', token);
+
+          const requestInit: RequestInit & { duplex?: 'half' } = {
+            headers,
+            method: request.method,
+          };
+
+          // Only forward body for non-GET/HEAD requests
+          if (request.method !== 'GET' && request.method !== 'HEAD') {
+            const body = request.body ?? undefined;
+            if (body) {
+              requestInit.body = body;
+              // Node.js (undici) requires `duplex` when sending a streaming body
+              requestInit.duplex = 'half';
+            }
+          }
+
+          let upstreamResponse: Response;
+          try {
+            upstreamResponse = await fetch(rewrittenUrl, requestInit);
+          } catch (error) {
+            logger.error(`${logPrefix} upstream fetch failed: ${rewrittenUrl}`, error);
+
+            return new Response('Upstream fetch failed, target url: ' + rewrittenUrl, {
+              headers: {
+                'Content-Type': 'text/plain; charset=utf-8',
+              },
+              status: 502,
+              statusText: 'Bad Gateway',
+            });
+          }
+          const responseHeaders = new Headers(upstreamResponse.headers);
+
+          const allowOrigin = request.headers.get('Origin') || undefined;
+          if (allowOrigin) {
+            responseHeaders.set('Access-Control-Allow-Origin', allowOrigin);
+            responseHeaders.set('Access-Control-Allow-Credentials', 'true');
+          }
+          responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+          responseHeaders.set('Access-Control-Allow-Headers', '*');
+
+          responseHeaders.set('X-Src-Url', rewrittenUrl);
+          return new Response(upstreamResponse.body, {
+            headers: responseHeaders,
+            status: upstreamResponse.status,
+            statusText: upstreamResponse.statusText,
+          });
+        } catch (error) {
+          logger.error(`${logPrefix} protocol.handle error:`, error);
+          return null;
+        }
+      };
+
+      targetSession.protocol.handle(ELECTRON_BE_PROTOCOL_SCHEME, proxyHandler);
+      logger.debug(`${logPrefix} protocol handler registered for ${ELECTRON_BE_PROTOCOL_SCHEME}`);
+    };
+
+    registerProtocolHandlers();
+    protocolHandledSessions.add(targetSession);
   }
 }
