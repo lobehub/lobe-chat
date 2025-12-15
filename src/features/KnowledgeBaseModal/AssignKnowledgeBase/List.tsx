@@ -19,9 +19,12 @@ import ViewSwitcher, { ViewMode } from './ViewSwitcher';
 export const List = memo(() => {
   const { t } = useTranslation('file');
 
-  const useFetchFilesAndKnowledgeBases = useAgentStore((s) => s.useFetchFilesAndKnowledgeBases);
+  const [useFetchFilesAndKnowledgeBases, activeAgentId] = useAgentStore((s) => [
+    s.useFetchFilesAndKnowledgeBases,
+    s.activeAgentId,
+  ]);
 
-  const { isLoading, error, data } = useFetchFilesAndKnowledgeBases();
+  const { isLoading, error, data } = useFetchFilesAndKnowledgeBases(activeAgentId);
 
   const [columnCount, setColumnCount] = useState(2);
   const [isTransitioning, setIsTransitioning] = useState(false);
