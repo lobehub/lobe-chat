@@ -8,7 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 interface PreferencesListProps {
@@ -58,7 +58,7 @@ const PreferencesList = memo<PreferencesListProps>(({ isLoading, searchValue, vi
       preferences={preferences}
     />
   ) : (
-    <MasonryView
+    <GridView
       isLoading={isLoading}
       onClick={handleCardClick}
       onDelete={handleDelete}

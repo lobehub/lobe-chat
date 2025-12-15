@@ -6,7 +6,7 @@ import { useUserMemoryStore } from '@/store/userMemory';
 import { GridView } from '../../../../features/GridView';
 import PreferenceCard from './PreferenceCard';
 
-interface MasonryViewProps {
+interface GridViewProps {
   isLoading?: boolean;
   onClick: (preference: DisplayPreferenceMemory) => void;
   onDelete?: (id: string) => void;
@@ -14,7 +14,7 @@ interface MasonryViewProps {
   preferences: DisplayPreferenceMemory[];
 }
 
-const MasonryView = memo<MasonryViewProps>(
+const PreferenceGridView = memo<GridViewProps>(
   ({ preferences, isLoading, onClick, onDelete, onEdit }) => {
     const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
     const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
@@ -38,4 +38,4 @@ const MasonryView = memo<MasonryViewProps>(
   },
 );
 
-export default MasonryView;
+export default PreferenceGridView;

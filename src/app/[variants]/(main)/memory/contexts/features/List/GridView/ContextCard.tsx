@@ -1,33 +1,31 @@
 import { ActionIcon, Dropdown } from '@lobehub/ui';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import { useTheme } from 'antd-style';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import MasonryCard from '@/app/[variants]/(main)/memory/features/GridView/MasonryCard';
+import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
-import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
+import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
-dayjs.extend(relativeTime);
-
-interface PreferenceCardProps {
+interface ContextCardProps {
+  context: DisplayContextMemory;
   onClick?: () => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
-  preference: DisplayPreferenceMemory;
 }
 
-const PreferenceCard = memo<PreferenceCardProps>(({ preference, onClick, onDelete, onEdit }) => {
+const ContextCard = memo<ContextCardProps>(({ context, onClick, onDelete, onEdit }) => {
   const { t } = useTranslation('memory');
+  const theme = useTheme();
 
   const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
     info.domEvent.stopPropagation();
     if (info.key === 'delete' && onDelete) {
-      onDelete(preference.id);
+      onDelete(context.id);
     } else if (info.key === 'edit' && onEdit) {
-      onEdit(preference.id);
+      onEdit(context.id);
     }
   };
 
@@ -35,38 +33,45 @@ const PreferenceCard = memo<PreferenceCardProps>(({ preference, onClick, onDelet
     {
       icon: <Pencil size={14} />,
       key: 'edit',
-      label: t('preference.actions.edit'),
+      label: t('context.actions.edit'),
     },
     {
       danger: true,
       icon: <Trash2 size={14} />,
       key: 'delete',
-      label: t('preference.actions.delete'),
+      label: t('context.actions.delete'),
     },
   ];
 
   return (
-    <MasonryCard
+    <GridCard
       actions={
         <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} trigger={['click']}>
           <ActionIcon icon={MoreHorizontal} size="small" />
         </Dropdown>
       }
       badges={
-        <ProgressIcon
-          format={(percent) => `Priority: ${percent}%`}
-          percent={preference.scorePriority}
-        />
+        <>
+          <ProgressIcon
+            format={(percent) => `Impact: ${percent}%`}
+            percent={(context.scoreImpact ?? 0) * 100}
+          />
+          <ProgressIcon
+            format={(percent) => `Urgency: ${percent}%`}
+            percent={(context.scoreUrgency ?? 0) * 100}
+            strokeColor={(context.scoreUrgency ?? 0) >= 0.7 ? theme.colorError : theme.colorWarning}
+          />
+        </>
       }
-      cate={preference.type}
-      footer={<SourceLink source={preference.source} />}
+      cate={context.type}
+      footer={<SourceLink source={context.source} />}
       onClick={onClick}
-      title={preference.title}
-      updatedAt={preference.updatedAt || preference.createdAt}
+      title={context.title}
+      updatedAt={context.updatedAt || context.createdAt}
     >
-      {preference.conclusionDirectives}
-    </MasonryCard>
+      {context.description}
+    </GridCard>
   );
 });
 
-export default PreferenceCard;
+export default ContextCard;

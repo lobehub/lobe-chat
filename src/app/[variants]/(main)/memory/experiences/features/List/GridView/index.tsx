@@ -6,7 +6,7 @@ import { useUserMemoryStore } from '@/store/userMemory';
 import { GridView } from '../../../../features/GridView';
 import ExperienceCard from './ExperienceCard';
 
-interface MasonryViewProps {
+interface GridViewProps {
   experiences: DisplayExperienceMemory[];
   isLoading?: boolean;
   onClick: (experience: DisplayExperienceMemory) => void;
@@ -14,7 +14,7 @@ interface MasonryViewProps {
   onEdit?: (id: string) => void;
 }
 
-const MasonryView = memo<MasonryViewProps>(
+const ExperiencesGridView = memo<GridViewProps>(
   ({ experiences, isLoading, onClick, onDelete, onEdit }) => {
     const loadMoreExperiences = useUserMemoryStore((s) => s.loadMoreExperiences);
     const experiencesHasMore = useUserMemoryStore((s) => s.experiencesHasMore);
@@ -38,4 +38,4 @@ const MasonryView = memo<MasonryViewProps>(
   },
 );
 
-export default MasonryView;
+export default ExperiencesGridView;

@@ -8,7 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 interface ContextsListProps {
@@ -59,7 +59,7 @@ const ContextsList = memo<ContextsListProps>(({ isLoading, searchValue, viewMode
       onDelete={handleDelete}
     />
   ) : (
-    <MasonryView
+    <GridView
       contexts={contexts}
       isLoading={isLoading}
       onClick={handleCardClick}

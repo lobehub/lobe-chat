@@ -5,7 +5,7 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import MasonryCard from '@/app/[variants]/(main)/memory/features/GridView/MasonryCard';
+import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
@@ -46,7 +46,7 @@ const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelet
   ];
 
   return (
-    <MasonryCard
+    <GridCard
       actions={
         <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} trigger={['click']}>
           <ActionIcon icon={MoreHorizontal} size="small" />
@@ -65,7 +65,7 @@ const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelet
       updatedAt={experience.updatedAt || experience.createdAt}
     >
       {experience.keyLearning || experience.situation}
-    </MasonryCard>
+    </GridCard>
   );
 });
 

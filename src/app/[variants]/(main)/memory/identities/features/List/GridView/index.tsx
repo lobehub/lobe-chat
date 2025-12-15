@@ -6,14 +6,14 @@ import type { UserMemoryIdentity } from '@/types/index';
 import { GridView } from '../../../../features/GridView';
 import IdentityCard from './IdentityCard';
 
-interface MasonryViewProps {
+interface GridViewProps {
   identities: UserMemoryIdentity[];
   isLoading?: boolean;
   onClick?: (identity: UserMemoryIdentity) => void;
   onDelete?: (id: string) => void;
 }
 
-const MasonryView = memo<MasonryViewProps>(({ identities, isLoading, onClick, onDelete }) => {
+const IdentityGridView = memo<GridViewProps>(({ identities, isLoading, onClick, onDelete }) => {
   const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
   const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
 
@@ -30,4 +30,4 @@ const MasonryView = memo<MasonryViewProps>(({ identities, isLoading, onClick, on
   );
 });
 
-export default MasonryView;
+export default IdentityGridView;

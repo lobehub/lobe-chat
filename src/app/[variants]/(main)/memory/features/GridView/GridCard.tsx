@@ -30,7 +30,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface MasonryCardProps {
+interface GridCardProps {
   actions?: ReactNode;
   badges?: ReactNode;
   cate?: string | null;
@@ -43,7 +43,7 @@ interface MasonryCardProps {
   updatedAt?: Date | number | string;
 }
 
-const MasonryCard = memo<MasonryCardProps>(
+const GridCard = memo<GridCardProps>(
   ({
     title,
     titleAddon,
@@ -187,4 +187,4 @@ const MasonryCard = memo<MasonryCardProps>(
   },
 );
 
-export default MasonryCard;
+export default GridCard;

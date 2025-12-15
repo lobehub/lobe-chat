@@ -3,7 +3,7 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import MasonryCard from '@/app/[variants]/(main)/memory/features/GridView/MasonryCard';
+import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import type { UserMemoryIdentity } from '@/types/index';
 
 interface IdentityCardProps {
@@ -40,7 +40,7 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
   ];
 
   return (
-    <MasonryCard
+    <GridCard
       actions={
         <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} trigger={['click']}>
           <ActionIcon icon={MoreHorizontal} size="small" />
@@ -52,7 +52,7 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
       title={identity.role}
     >
       {identity.description}
-    </MasonryCard>
+    </GridCard>
   );
 });
 

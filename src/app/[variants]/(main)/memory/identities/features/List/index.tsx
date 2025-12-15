@@ -8,7 +8,7 @@ import { useUserMemoryStore } from '@/store/userMemory';
 
 import MemoryEmpty from '../../../features/MemoryEmpty';
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 export type IdentityType = 'all' | 'demographic' | 'personal' | 'professional';
@@ -60,7 +60,7 @@ const IdentitiesList = memo<IdentitiesListProps>(({ isLoading, searchValue, view
     );
 
   return (
-    <MasonryView
+    <GridView
       identities={identities}
       isLoading={isLoading}
       onClick={handleCardClick}

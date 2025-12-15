@@ -8,7 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 interface ExperiencesListProps {
@@ -58,7 +58,7 @@ const ExperiencesList = memo<ExperiencesListProps>(({ isLoading, searchValue, vi
       onDelete={handleDelete}
     />
   ) : (
-    <MasonryView
+    <GridView
       experiences={experiences}
       isLoading={isLoading}
       onClick={handleCardClick}
