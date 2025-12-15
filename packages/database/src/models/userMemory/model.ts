@@ -350,6 +350,11 @@ export interface QueryUserMemoriesResult {
   total: number;
 }
 
+export interface GetMemoryDetailParams {
+  id: string;
+  layer: LayersEnum;
+}
+
 export class UserMemoryModel {
   static parseAssociatedObjects(value?: unknown): Record<string, unknown>[] {
     if (!Array.isArray(value)) return [];
@@ -1086,6 +1091,230 @@ export class UserMemoryModel {
       };
     }
     }
+  };
+
+  getMemoryDetail = async (
+    params: GetMemoryDetailParams,
+  ): Promise<QueriedUserMemoryItem | undefined> => {
+    const { id, layer } = params;
+
+    switch (layer) {
+      case LayersEnum.Context: {
+        const [context] = await this.db
+          .select({
+            accessedAt: userMemoriesContexts.accessedAt,
+            associatedObjects: userMemoriesContexts.associatedObjects,
+            associatedSubjects: userMemoriesContexts.associatedSubjects,
+            createdAt: userMemoriesContexts.createdAt,
+            currentStatus: userMemoriesContexts.currentStatus,
+            description: userMemoriesContexts.description,
+            id: userMemoriesContexts.id,
+            metadata: userMemoriesContexts.metadata,
+            scoreImpact: userMemoriesContexts.scoreImpact,
+            scoreUrgency: userMemoriesContexts.scoreUrgency,
+            tags: userMemoriesContexts.tags,
+            title: userMemoriesContexts.title,
+            type: userMemoriesContexts.type,
+            updatedAt: userMemoriesContexts.updatedAt,
+            userId: userMemoriesContexts.userId,
+            userMemoryIds: userMemoriesContexts.userMemoryIds,
+          })
+          .from(userMemoriesContexts)
+          .where(and(eq(userMemoriesContexts.id, id), eq(userMemoriesContexts.userId, this.userId)))
+          .limit(1);
+        if (!context) {
+          return undefined;
+        }
+
+        const memoryIds = Array.isArray(context.userMemoryIds)
+          ? (context.userMemoryIds as string[])
+          : [];
+        const memoryId = memoryIds[0];
+
+        if (!memoryId) {
+          return undefined;
+        }
+
+        const memory = await this.findBaseMemoryById(memoryId);
+        if (!memory) {
+          return undefined;
+        }
+
+        if (memory.memoryLayer !== LayersEnum.Context) {
+          return undefined;
+        }
+
+        await this.updateAccessMetrics([memory.id], { contextIds: [context.id] });
+
+        return {
+          context: { ...context, userMemoryIds: memoryIds } as UserMemoryContextWithoutVectors,
+          layer,
+          memory,
+        };
+      }
+      case LayersEnum.Experience: {
+        const [experience] = await this.db
+          .select({
+            accessedAt: userMemoriesExperiences.accessedAt,
+            action: userMemoriesExperiences.action,
+            createdAt: userMemoriesExperiences.createdAt,
+            id: userMemoriesExperiences.id,
+            keyLearning: userMemoriesExperiences.keyLearning,
+            metadata: userMemoriesExperiences.metadata,
+            possibleOutcome: userMemoriesExperiences.possibleOutcome,
+            reasoning: userMemoriesExperiences.reasoning,
+            scoreConfidence: userMemoriesExperiences.scoreConfidence,
+            situation: userMemoriesExperiences.situation,
+            tags: userMemoriesExperiences.tags,
+            type: userMemoriesExperiences.type,
+            updatedAt: userMemoriesExperiences.updatedAt,
+            userId: userMemoriesExperiences.userId,
+            userMemoryId: userMemoriesExperiences.userMemoryId,
+          })
+          .from(userMemoriesExperiences)
+          .where(
+            and(eq(userMemoriesExperiences.id, id), eq(userMemoriesExperiences.userId, this.userId)),
+          )
+          .limit(1);
+        if (!experience?.userMemoryId) {
+          return undefined;
+        }
+
+        const memory = await this.findBaseMemoryById(experience.userMemoryId);
+        if (!memory) {
+          return undefined;
+        }
+
+        if (memory.memoryLayer !== LayersEnum.Experience) {
+          return undefined;
+        }
+
+        await this.updateAccessMetrics([memory.id]);
+
+        return {
+          experience: experience as UserMemoryExperienceWithoutVectors,
+          layer,
+          memory,
+        };
+      }
+      case LayersEnum.Identity: {
+        const [identity] = await this.db
+          .select({
+            accessedAt: userMemoriesIdentities.accessedAt,
+            createdAt: userMemoriesIdentities.createdAt,
+            description: userMemoriesIdentities.description,
+            episodicDate: userMemoriesIdentities.episodicDate,
+            id: userMemoriesIdentities.id,
+            metadata: userMemoriesIdentities.metadata,
+            relationship: userMemoriesIdentities.relationship,
+            role: userMemoriesIdentities.role,
+            tags: userMemoriesIdentities.tags,
+            type: userMemoriesIdentities.type,
+            updatedAt: userMemoriesIdentities.updatedAt,
+            userId: userMemoriesIdentities.userId,
+            userMemoryId: userMemoriesIdentities.userMemoryId,
+          })
+          .from(userMemoriesIdentities)
+          .where(
+            and(eq(userMemoriesIdentities.id, id), eq(userMemoriesIdentities.userId, this.userId)),
+          )
+          .limit(1);
+        if (!identity?.userMemoryId) {
+          return undefined;
+        }
+
+        const memory = await this.findBaseMemoryById(identity.userMemoryId);
+        if (!memory) {
+          return undefined;
+        }
+
+        if (memory.memoryLayer !== LayersEnum.Identity) {
+          return undefined;
+        }
+
+        await this.updateAccessMetrics([memory.id]);
+
+        return {
+          identity: identity as UserMemoryIdentityWithoutVectors,
+          layer,
+          memory,
+        };
+      }
+      case LayersEnum.Preference: {
+        const [preference] = await this.db
+          .select({
+            accessedAt: userMemoriesPreferences.accessedAt,
+            capturedAt: userMemoriesPreferences.capturedAt,
+            conclusionDirectives: userMemoriesPreferences.conclusionDirectives,
+            createdAt: userMemoriesPreferences.createdAt,
+            id: userMemoriesPreferences.id,
+            metadata: userMemoriesPreferences.metadata,
+            scorePriority: userMemoriesPreferences.scorePriority,
+            suggestions: userMemoriesPreferences.suggestions,
+            tags: userMemoriesPreferences.tags,
+            type: userMemoriesPreferences.type,
+            updatedAt: userMemoriesPreferences.updatedAt,
+            userId: userMemoriesPreferences.userId,
+            userMemoryId: userMemoriesPreferences.userMemoryId,
+          })
+          .from(userMemoriesPreferences)
+          .where(
+            and(
+              eq(userMemoriesPreferences.id, id),
+              eq(userMemoriesPreferences.userId, this.userId),
+            ),
+          )
+          .limit(1);
+        if (!preference?.userMemoryId) {
+          return undefined;
+        }
+
+        const memory = await this.findBaseMemoryById(preference.userMemoryId);
+        if (!memory) {
+          return undefined;
+        }
+
+        if (memory.memoryLayer !== LayersEnum.Preference) {
+          return undefined;
+        }
+
+        await this.updateAccessMetrics([memory.id]);
+
+        return {
+          layer,
+          memory,
+          preference: preference as UserMemoryPreferenceWithoutVectors,
+        };
+      }
+    }
+  };
+
+  private findBaseMemoryById = async (memoryId: string): Promise<BaseMemoryInfo | undefined> => {
+    const [memory] = await this.db
+      .select({
+        accessedAt: userMemories.accessedAt,
+        accessedCount: userMemories.accessedCount,
+        createdAt: userMemories.createdAt,
+        id: userMemories.id,
+        lastAccessedAt: userMemories.lastAccessedAt,
+        memoryCategory: userMemories.memoryCategory,
+        memoryLayer: userMemories.memoryLayer,
+        memoryType: userMemories.memoryType,
+        metadata: userMemories.metadata,
+        status: userMemories.status,
+        tags: userMemories.tags,
+        updatedAt: userMemories.updatedAt,
+        userId: userMemories.userId,
+      })
+      .from(userMemories)
+      .where(and(eq(userMemories.id, memoryId), eq(userMemories.userId, this.userId)))
+      .limit(1);
+
+    if (!memory) {
+      return undefined;
+    }
+
+    return memory as BaseMemoryInfo;
   };
 
   findById = async (id: string): Promise<UserMemoryItem | undefined> => {

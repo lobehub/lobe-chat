@@ -204,6 +204,17 @@ const memoryProcedure = authedProcedure
   });
 
 export const userMemoriesRouter = router({
+  getMemoryDetail: memoryProcedure
+    .input(z.object({ id: z.string(), layer: z.nativeEnum(LayersEnum) }))
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.memoryModel.getMemoryDetail(input);
+      } catch (error) {
+        console.error('Failed to retrieve memory detail:', error);
+        return null;
+      }
+    }),
+
   queryIdentityRoles: memoryProcedure
     .input(
       z
