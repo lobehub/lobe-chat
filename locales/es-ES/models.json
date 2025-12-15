@@ -1229,6 +1229,9 @@
   "deepseek_r1_distill_qwen_32b": {
     "description": "DeepSeek-R1-Distill-Qwen-32B es un modelo obtenido a partir de Qwen2.5-32B mediante destilación de conocimiento. Este modelo se ajustó utilizando 800,000 muestras seleccionadas generadas por DeepSeek-R1, mostrando un rendimiento excepcional en múltiples campos como matemáticas, programación y razonamiento."
   },
+  "devstral-2:123b": {
+    "description": "Modelo Devstral 2 123B, especializado en el uso de herramientas para explorar bases de código, editar múltiples archivos y asistir a agentes de ingeniería de software."
+  },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite es un modelo ligero de nueva generación, con una velocidad de respuesta extrema, alcanzando niveles de rendimiento y latencia de clase mundial."
   },
@@ -1936,6 +1939,15 @@
   },
   "gpt-5.1-codex-mini": {
     "description": "GPT-5.1 Codex mini: variante de Codex más compacta y económica, optimizada para tareas de codificación agentica."
+  },
+  "gpt-5.2": {
+    "description": "GPT-5.2 — Modelo insignia orientado a la codificación y flujos de trabajo agenticos, con capacidades mejoradas de razonamiento y contexto extenso."
+  },
+  "gpt-5.2-chat-latest": {
+    "description": "GPT-5.2 Chat: Variante de GPT-5.2 utilizada por ChatGPT (chat-latest), diseñada para ofrecer las últimas mejoras en conversaciones."
+  },
+  "gpt-5.2-pro": {
+    "description": "GPT-5.2 pro: Versión más inteligente y precisa de GPT-5.2 (solo API de respuestas), ideal para problemas complejos y razonamientos multietapa más largos."
   },
   "gpt-audio": {
     "description": "GPT Audio es un modelo de chat general para entrada y salida de audio, compatible con el uso de audio I/O en la API de Chat Completions."
