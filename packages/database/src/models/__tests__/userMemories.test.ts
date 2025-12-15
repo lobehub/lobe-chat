@@ -1099,6 +1099,54 @@ describe('UserMemoryModel', () => {
     });
   });
 
+  describe('getMemoryDetail', () => {
+    it('returns full context memory detail and bumps access metrics', async () => {
+      const params = generateRandomCreateUserMemoryContextParams();
+      params.context.metadata = { contextDetail: true };
+      params.context.associatedObjects = [{ name: 'Doc', extra: { url: 'https://example.com' } }];
+
+      const { context, memory } = await userMemoryModel.createContextMemory(params);
+
+      const detail = await userMemoryModel.getMemoryDetail({
+        id: context.id,
+        layer: LayersEnum.Context,
+      });
+
+      expect(detail?.layer).toBe(LayersEnum.Context);
+      expect(detail?.memory.id).toBe(memory.id);
+      expect(detail && 'context' in detail ? detail.context.id : undefined).toBe(context.id);
+      expect((detail as any).context.userMemoryIds).toEqual([memory.id]);
+      expect((detail as any).context.metadata).toEqual(params.context.metadata);
+      expect(detail?.memory.memoryLayer).toBe(LayersEnum.Context);
+
+      const updated = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memory.id),
+      });
+
+      expect(updated?.accessedCount).toBe(1);
+    });
+
+    it('returns undefined for memories owned by another user', async () => {
+      const otherModel = new UserMemoryModel(serverDB, userId2);
+      const { experience, memory } = await otherModel.createExperienceMemory(
+        generateRandomCreateUserMemoryExperienceParams(),
+      );
+
+      const detail = await userMemoryModel.getMemoryDetail({
+        id: experience.id,
+        layer: LayersEnum.Experience,
+      });
+
+      expect(detail).toBeUndefined();
+
+      const persisted = await serverDB.query.userMemories.findFirst({
+        where: eq(userMemories.id, memory.id),
+      });
+
+      expect(persisted?.accessedCount).toBe(0);
+    });
+  });
+
   describe('update', () => {
     it('updates mutable fields for own memories only', async () => {
       const created = await userMemoryModel.create(

@@ -52,6 +52,10 @@ class UserMemoryService {
     return lambdaClient.userMemories.toolRemoveIdentityMemory.mutate(params);
   };
 
+  getMemoryDetail = async (params: { id: string; layer: LayersEnum }) => {
+    return lambdaClient.userMemories.getMemoryDetail.query(params);
+  };
+
   retrieveMemory = async (params: SearchMemoryParams): Promise<SearchMemoryResult> => {
     return lambdaClient.userMemories.toolSearchMemory.query(params);
   };

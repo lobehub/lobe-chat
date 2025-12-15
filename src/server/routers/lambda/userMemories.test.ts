@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { LayersEnum } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getServerDB } from '@/database/core/db-adaptor';
@@ -215,6 +216,60 @@ describe('userMemories.queryMemories', () => {
     expect(queryMemories).toHaveBeenCalledWith({
       order: 'desc',
     });
+  });
+});
+
+describe('userMemories.getMemoryDetail', () => {
+  it('forwards memory id to model and returns detail', async () => {
+    const getMemoryDetail = vi.fn().mockResolvedValue({ id: 'mem-1', layer: 'experience' });
+
+    vi.mocked(UserMemoryModel).mockImplementation(
+      () =>
+        ({
+          getMemoryDetail,
+        }) as any,
+    );
+
+    vi.mocked(getServerDB).mockResolvedValue({
+      query: {},
+    } as any);
+
+    const caller = userMemoriesRouter.createCaller(mockCtx as any);
+
+    const result = await caller.getMemoryDetail({
+      id: 'mem-1',
+      layer: LayersEnum.Experience,
+    } as any);
+
+    expect(getMemoryDetail).toHaveBeenCalledWith({
+      id: 'mem-1',
+      layer: LayersEnum.Experience,
+    });
+    expect(result).toEqual({ id: 'mem-1', layer: 'experience' });
+  });
+
+  it('returns null when model throws', async () => {
+    const getMemoryDetail = vi.fn().mockRejectedValue(new Error('boom'));
+
+    vi.mocked(UserMemoryModel).mockImplementation(
+      () =>
+        ({
+          getMemoryDetail,
+        }) as any,
+    );
+
+    vi.mocked(getServerDB).mockResolvedValue({
+      query: {},
+    } as any);
+
+    const caller = userMemoriesRouter.createCaller(mockCtx as any);
+
+    const result = await caller.getMemoryDetail({
+      id: 'mem-1',
+      layer: LayersEnum.Experience,
+    } as any);
+
+    expect(result).toBeNull();
   });
 });
 
