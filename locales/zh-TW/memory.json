@@ -13,6 +13,11 @@
     "source": "來源",
     "urgency": "緊急度"
   },
+  "empty": {
+    "description": "記憶的提取是一個漸進的過程，請累積更多話題以豐富記憶提取內容，嘗試與助手進行更深入的對話，以便更好地捕捉和儲存有價值的資訊。",
+    "search": "未找到符合的記憶",
+    "title": "暫無記憶"
+  },
   "experience": {
     "actions": {
       "delete": "刪除",
@@ -31,6 +36,16 @@
       "outcome": "可能結果",
       "reasoning": "推理過程",
       "situation": "情境背景"
+    }
+  },
+  "filter": {
+    "search": "搜尋...",
+    "sort": {
+      "createdAt": "建立時間",
+      "scoreConfidence": "信心指數",
+      "scoreImpact": "影響程度",
+      "scorePriority": "優先順序",
+      "scoreUrgency": "緊急程度"
     }
   },
   "identity": {

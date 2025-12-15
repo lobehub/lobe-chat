@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "有効にすると、開発者向けの機能とオプションが表示されます",
+      "title": "開発者モード"
+    },
     "lang": {
       "autoMode": "システムに従う",
       "title": "言語"
+    },
+    "liteMode": {
+      "desc": "有効にすると、インターフェースが簡素化され、高度な機能が非表示になります",
+      "title": "簡易モード"
+    },
+    "responseLanguage": {
+      "auto": "システムに従う",
+      "desc": "AIの返信に使用する言語を設定します",
+      "placeholder": "返信言語を選択",
+      "title": "返信言語"
     },
     "themeMode": {
       "auto": "自動",

@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Wanneer ingeschakeld, worden ontwikkelaarsfuncties en -opties weergegeven",
+      "title": "Ontwikkelaarsmodus"
+    },
     "lang": {
       "autoMode": "Volg systeem",
       "title": "Taal"
+    },
+    "liteMode": {
+      "desc": "Wanneer ingeschakeld, wordt de interface vereenvoudigd en worden geavanceerde functies verborgen",
+      "title": "Lichte modus"
+    },
+    "responseLanguage": {
+      "auto": "Volg systeeminstellingen",
+      "desc": "Stel de taal in die AI gebruikt voor antwoorden",
+      "placeholder": "Kies antwoordtaal",
+      "title": "Antwoordtaal"
     },
     "themeMode": {
       "auto": "Automatisch",

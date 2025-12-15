@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Etkinleştirildiğinde geliştiriciyle ilgili işlevler ve seçenekler gösterilir",
+      "title": "Geliştirici Modu"
+    },
     "lang": {
       "autoMode": "Sistemi Takip Et",
       "title": "Dil"
+    },
+    "liteMode": {
+      "desc": "Etkinleştirildiğinde arayüz sadeleştirilir ve gelişmiş özellikler gizlenir",
+      "title": "Hafif Mod"
+    },
+    "responseLanguage": {
+      "auto": "Sistemle aynı",
+      "desc": "Yapay zekanın yanıt dili ayarlanır",
+      "placeholder": "Yanıt dili seçin",
+      "title": "Yanıt Dili"
     },
     "themeMode": {
       "auto": "Otomatik",

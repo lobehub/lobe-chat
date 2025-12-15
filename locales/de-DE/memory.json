@@ -13,6 +13,11 @@
     "source": "Quelle",
     "urgency": "Dringlichkeit"
   },
+  "empty": {
+    "description": "Das Abrufen von Erinnerungen ist ein schrittweiser Prozess. Bitte sammeln Sie mehr Themen, um den Inhalt der Erinnerungserfassung zu bereichern. Versuchen Sie, tiefere Gespräche mit dem Assistenten zu führen, um wertvolle Informationen besser erfassen und speichern zu können.",
+    "search": "Keine passenden Erinnerungen gefunden",
+    "title": "Keine Erinnerungen vorhanden"
+  },
   "experience": {
     "actions": {
       "delete": "Löschen",
@@ -31,6 +36,16 @@
       "outcome": "Mögliches Ergebnis",
       "reasoning": "Begründung",
       "situation": "Situationshintergrund"
+    }
+  },
+  "filter": {
+    "search": "Suchen...",
+    "sort": {
+      "createdAt": "Erstellungsdatum",
+      "scoreConfidence": "Vertrauenswürdigkeit",
+      "scoreImpact": "Auswirkung",
+      "scorePriority": "Priorität",
+      "scoreUrgency": "Dringlichkeit"
     }
   },
   "identity": {

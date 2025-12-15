@@ -13,6 +13,11 @@
     "source": "Źródło",
     "urgency": "Pilność"
   },
+  "empty": {
+    "description": "Wydobywanie wspomnień to proces stopniowy. Gromadź więcej tematów, aby wzbogacić zawartość pamięci. Spróbuj prowadzić głębsze rozmowy z asystentem, aby lepiej uchwycić i przechować cenne informacje.",
+    "search": "Nie znaleziono pasujących wspomnień",
+    "title": "Brak wspomnień"
+  },
   "experience": {
     "actions": {
       "delete": "Usuń",
@@ -31,6 +36,16 @@
       "outcome": "Możliwy rezultat",
       "reasoning": "Tok rozumowania",
       "situation": "Tło sytuacyjne"
+    }
+  },
+  "filter": {
+    "search": "Szukaj...",
+    "sort": {
+      "createdAt": "Data utworzenia",
+      "scoreConfidence": "Pewność",
+      "scoreImpact": "Wpływ",
+      "scorePriority": "Priorytet",
+      "scoreUrgency": "Pilność"
     }
   },
   "identity": {

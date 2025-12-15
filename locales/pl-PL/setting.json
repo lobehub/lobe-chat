@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Po włączeniu zostaną wyświetlone funkcje i opcje dla deweloperów",
+      "title": "Tryb deweloperski"
+    },
     "lang": {
       "autoMode": "Podążaj za systemem",
       "title": "Język"
+    },
+    "liteMode": {
+      "desc": "Po włączeniu interfejs zostanie uproszczony, a zaawansowane funkcje ukryte",
+      "title": "Tryb uproszczony"
+    },
+    "responseLanguage": {
+      "auto": "Zgodnie z systemem",
+      "desc": "Ustaw język odpowiedzi AI",
+      "placeholder": "Wybierz język odpowiedzi",
+      "title": "Język odpowiedzi"
     },
     "themeMode": {
       "auto": "Automatyczny",

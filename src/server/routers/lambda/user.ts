@@ -135,12 +135,11 @@ export const userRouter = router({
       fullName: state.fullName,
 
       // 有消息，或者创建过助手，则认为有 conversation
-hasConversation: hasAnyMessages || hasExtraSession,
+      hasConversation: hasAnyMessages || hasExtraSession,
 
-      
       // always return true for community version
-isOnboard: state.isOnboarded || true,
-      
+      isOnboard: state.isOnboarded || true,
+
       lastName: state.lastName,
       occupation: state.occupation,
       preference: state.preference as UserPreference,

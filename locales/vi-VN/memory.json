@@ -13,6 +13,11 @@
     "source": "Nguồn",
     "urgency": "Mức độ khẩn cấp"
   },
+  "empty": {
+    "description": "Việc truy xuất ký ức là một quá trình tiến triển dần dần, hãy tích lũy thêm nhiều chủ đề để làm phong phú nội dung truy xuất ký ức. Hãy thử trò chuyện sâu hơn với trợ lý để nắm bắt và lưu trữ thông tin có giá trị tốt hơn.",
+    "search": "Không tìm thấy ký ức phù hợp",
+    "title": "Chưa có ký ức nào"
+  },
   "experience": {
     "actions": {
       "delete": "Xóa",
@@ -31,6 +36,16 @@
       "outcome": "Kết quả có thể xảy ra",
       "reasoning": "Quá trình suy luận",
       "situation": "Bối cảnh tình huống"
+    }
+  },
+  "filter": {
+    "search": "Tìm kiếm...",
+    "sort": {
+      "createdAt": "Thời gian tạo",
+      "scoreConfidence": "Mức độ tin cậy",
+      "scoreImpact": "Mức độ ảnh hưởng",
+      "scorePriority": "Mức độ ưu tiên",
+      "scoreUrgency": "Mức độ khẩn cấp"
     }
   },
   "identity": {
