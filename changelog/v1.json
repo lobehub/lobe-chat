@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-12-15",
+    "version": "2.0.0-next.172"
+  },
+  {
+    "children": {
       "improvements": ["Update GPT-5.2 models."]
     },
     "date": "2025-12-14",
