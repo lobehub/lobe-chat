@@ -2,6 +2,8 @@ import { BuiltinIntervention } from '@lobechat/types';
 
 import { AgentBuilderManifest } from './agent-builder';
 import { AgentBuilderInterventions } from './agent-builder/Intervention';
+import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
+import { CodeInterpreterInterventions } from './code-interpreter/Intervention';
 import { LocalSystemManifest } from './local-system';
 import { LocalSystemInterventions } from './local-system/Intervention';
 
@@ -12,6 +14,7 @@ import { LocalSystemInterventions } from './local-system/Intervention';
  */
 export const BuiltinToolInterventions: Record<string, Record<string, any>> = {
   [AgentBuilderManifest.identifier]: AgentBuilderInterventions,
+  [CloudCodeInterpreterManifest.identifier]: CodeInterpreterInterventions,
   [LocalSystemManifest.identifier]: LocalSystemInterventions,
 };
 

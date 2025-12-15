@@ -11,11 +11,10 @@ import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
-import { hasExecutor } from '@/store/tool/slices/builtin/executors';
+import { CodeInterpreterIdentifier } from '@/tools/code-interpreter';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { dbMessageSelectors } from '../../message/selectors';
-import { AI_RUNTIME_OPERATION_TYPES } from '../../operation/types';
 
 const log = debug('lobe-store:plugin-types');
 
@@ -23,25 +22,19 @@ const log = debug('lobe-store:plugin-types');
  * Plugin type-specific implementations
  * Each method handles a specific type of plugin invocation
  */
-/**
- * Result from invokeBuiltinTool
- */
-export interface BuiltinToolInvokeResult {
-  content?: string;
-  error?: any;
-  state?: any;
-  stop?: boolean;
-  success: boolean;
-}
-
 export interface PluginTypesAction {
   /**
    * Invoke builtin tool
    */
-  invokeBuiltinTool: (
+  invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
+
+  /**
+   * Invoke Cloud Code Interpreter tool
+   */
+  invokeCloudCodeInterpreterTool: (
     id: string,
     payload: ChatToolPayload,
-  ) => Promise<BuiltinToolInvokeResult | undefined>;
+  ) => Promise<string | undefined>;
 
   /**
    * Invoke default type plugin (returns data)
@@ -86,111 +79,114 @@ export const pluginTypes: StateCreator<
       return await get().invokeKlavisTypePlugin(id, payload);
     }
 
-    const params = safeParseJSON(payload.arguments);
-    if (!params) return { error: 'Invalid arguments', success: false };
-
-    // Check if there's a registered executor in Tool Store (new architecture)
-    if (hasExecutor(payload.identifier, payload.apiName)) {
-      const { optimisticUpdateToolMessage, registerAfterCompletionCallback } = get();
-
-      // Get operation context
-      const operationId = get().messageOperationMap[id];
-      const operation = operationId ? get().operations[operationId] : undefined;
-      const context = operationId ? { operationId } : undefined;
-
-      // Get agent ID and group ID from operation context
-      const agentId = operation?.context?.agentId;
-      const groupId = operation?.context?.groupId;
-
-      // Get group orchestration callbacks if available (for group management tools)
-      const groupOrchestration = get().getGroupOrchestrationCallbacks?.();
-
-      // Find root execAgentRuntime operation for registering afterCompletion callbacks
-      // Navigate up the operation tree to find the root runtime operation
-      let rootRuntimeOperationId: string | undefined;
-      if (operationId) {
-        let currentOp = operation;
-        while (currentOp) {
-          if (AI_RUNTIME_OPERATION_TYPES.includes(currentOp.type)) {
-            rootRuntimeOperationId = currentOp.id;
-            break;
-          }
-          // Move up to parent operation
-          const parentId = currentOp.parentOperationId;
-          currentOp = parentId ? get().operations[parentId] : undefined;
-        }
-      }
-
-      // Create registerAfterCompletion function that registers callback to root runtime operation
-      const registerAfterCompletion = rootRuntimeOperationId
-        ? (callback: Parameters<typeof registerAfterCompletionCallback>[1]) => {
-            registerAfterCompletionCallback(rootRuntimeOperationId!, callback);
-          }
-        : undefined;
-
-      log(
-        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, groupId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s',
-        payload.identifier,
-        payload.apiName,
-        id,
-        agentId,
-        groupId,
-        !!groupOrchestration,
-        rootRuntimeOperationId,
-      );
-
-      // Call Tool Store's invokeBuiltinTool
-      const result = await useToolStore
-        .getState()
-        .invokeBuiltinTool(payload.identifier, payload.apiName, params, {
-          agentId,
-          groupId,
-          groupOrchestration,
-          messageId: id,
-          operationId,
-          registerAfterCompletion,
-          signal: operation?.abortController?.signal,
-        });
-
-      // Use optimisticUpdateToolMessage to batch update content, state, error, metadata
-      await optimisticUpdateToolMessage(
-        id,
-        {
-          content: result.content,
-          metadata: result.metadata,
-          pluginError: result.error
-            ? {
-                body: result.error.body,
-                message: result.error.message,
-                type: result.error.type as any,
-              }
-            : undefined,
-          pluginState: result.state,
-        },
-        context,
-      );
-
-      // If result.stop is true, the tool wants to stop execution flow
-      // This is handled by returning from the function (no further processing)
-      if (result.stop) {
-        log('[invokeBuiltinTool] Executor returned stop=true, stopping execution');
-      }
-
-      // Return the result for call_tool executor to use
-      return result;
+    // Check if this is Cloud Code Interpreter - route to specific handler
+    if (payload.identifier === CodeInterpreterIdentifier) {
+      return await get().invokeCloudCodeInterpreterTool(id, payload);
     }
 
-    // Fallback to legacy action-based approach (for backward compatibility)
+    // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
     if (!action) {
       console.error(`[invokeBuiltinTool] plugin Action not found: ${payload.apiName}`);
-      return { error: `Action not found: ${payload.apiName}`, success: false };
+      return;
     }
 
-    log('[invokeBuiltinTool] Using legacy action: %s, messageId=%s', payload.apiName, id);
+    const content = safeParseJSON(payload.arguments);
 
-    return (await action(id, params)) as any;
+    if (!content) return;
+
+    return await action(id, content);
+  },
+
+  invokeCloudCodeInterpreterTool: async (id, payload) => {
+    const {
+      optimisticUpdateMessageContent,
+      optimisticUpdatePluginState,
+      optimisticUpdateMessagePluginError,
+    } = get();
+
+    // Get message to extract topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
+
+    log(
+      '[invokeCloudCodeInterpreterTool] messageId=%s, tool=%s, operationId=%s, aborted=%s',
+      id,
+      payload.apiName,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
+    let data: { content: string; error?: any; state?: any; success: boolean } | undefined;
+
+    try {
+      // Import ExecutionRuntime dynamically to avoid circular dependencies
+      const { CodeInterpreterExecutionRuntime } =
+        await import('@/tools/code-interpreter/ExecutionRuntime/index');
+
+      // Create runtime with context
+      const runtime = new CodeInterpreterExecutionRuntime({
+        topicId: message?.topicId || 'default',
+        userId: 'current-user', // TODO: Get actual userId from auth context
+      });
+
+      // Parse arguments
+      const args = safeParseJSON(payload.arguments) || {};
+
+      // Call the appropriate method based on apiName
+      const apiMethod = (runtime as Record<string, any>)[payload.apiName];
+      if (!apiMethod) {
+        throw new Error(`Cloud Code Interpreter API not found: ${payload.apiName}`);
+      }
+
+      data = await apiMethod.call(runtime, args);
+    } catch (error) {
+      console.error('[invokeCloudCodeInterpreterTool] Error:', error);
+
+      const err = error as Error;
+      if (err.message.includes('aborted') || err.message.includes('The user aborted a request.')) {
+        log(
+          '[invokeCloudCodeInterpreterTool] Request aborted: messageId=%s, tool=%s',
+          id,
+          payload.apiName,
+        );
+      } else {
+        const result = await messageService.updateMessageError(id, error as any, {
+          agentId: message?.agentId,
+          topicId: message?.topicId,
+        });
+        if (result?.success && result.messages) {
+          get().replaceMessages(result.messages, {
+            context: {
+              agentId: message?.agentId,
+              topicId: message?.topicId,
+            },
+          });
+        }
+      }
+    }
+
+    if (!data) return;
+
+    const context = operationId ? { operationId } : undefined;
+
+    await Promise.all([
+      optimisticUpdateMessageContent(id, data.content, undefined, context),
+      (async () => {
+        if (data.success && data.state) {
+          await optimisticUpdatePluginState(id, data.state, context);
+        } else if (!data.success && data.error) {
+          await optimisticUpdateMessagePluginError(id, data.error, context);
+        }
+      })(),
+    ]);
+
+    return data.content;
   },
 
   invokeDefaultTypePlugin: async (id, payload) => {
@@ -212,7 +208,7 @@ export const pluginTypes: StateCreator<
 
     let data: MCPToolCallResult | undefined;
 
-    // Get message to extract agentId/topicId
+    // Get message to extract sessionId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation
@@ -271,14 +267,17 @@ export const pluginTypes: StateCreator<
       if (err.message.includes('aborted')) {
         log('[invokeKlavisTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
-        const ctx = {
+        const result = await messageService.updateMessageError(id, error as any, {
           agentId: message?.agentId,
-          groupId: message?.groupId,
           topicId: message?.topicId,
-        };
-        const result = await messageService.updateMessageError(id, error as any, ctx);
+        });
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages, { context: ctx });
+          get().replaceMessages(result.messages, {
+            context: {
+              agentId: message?.agentId,
+              topicId: message?.topicId,
+            },
+          });
         }
       }
     }
@@ -312,13 +311,8 @@ export const pluginTypes: StateCreator<
 
     // if the plugin settings is not valid, then set the message with error type
     if (!result.valid) {
-      // Get message to extract agentId/topicId/groupId
+      // Get message to extract agentId/topicId
       const message = dbMessageSelectors.getDbMessageById(id)(get());
-      const ctx = {
-        agentId: message?.agentId,
-        groupId: message?.groupId,
-        topicId: message?.topicId,
-      };
       const updateResult = await messageService.updateMessageError(
         id,
         {
@@ -329,11 +323,16 @@ export const pluginTypes: StateCreator<
           message: t('response.PluginSettingsInvalid', { ns: 'error' }),
           type: PluginErrorType.PluginSettingsInvalid as any,
         },
-        ctx,
+        {
+          agentId: message?.agentId,
+          topicId: message?.topicId,
+        },
       );
 
       if (updateResult?.success && updateResult.messages) {
-        get().replaceMessages(updateResult.messages, { context: ctx });
+        get().replaceMessages(updateResult.messages, {
+          context: { agentId: message?.agentId || '', topicId: message?.topicId },
+        });
       }
       return;
     }
@@ -380,14 +379,14 @@ export const pluginTypes: StateCreator<
       if (err.message.includes('The user aborted a request.')) {
         log('[invokeMCPTypePlugin] Request aborted: messageId=%s, tool=%s', id, payload.apiName);
       } else {
-        const ctx = {
+        const result = await messageService.updateMessageError(id, error as any, {
           agentId: message?.agentId,
-          groupId: message?.groupId,
           topicId: message?.topicId,
-        };
-        const result = await messageService.updateMessageError(id, error as any, ctx);
+        });
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages, { context: ctx });
+          get().replaceMessages(result.messages, {
+            context: { agentId: message?.agentId || '', topicId: message?.topicId },
+          });
         }
       }
     }
@@ -453,14 +452,14 @@ export const pluginTypes: StateCreator<
           payload.identifier,
         );
       } else {
-        const ctx = {
+        const result = await messageService.updateMessageError(id, error as any, {
           agentId: message?.agentId,
-          groupId: message?.groupId,
           topicId: message?.topicId,
-        };
-        const result = await messageService.updateMessageError(id, error as any, ctx);
+        });
         if (result?.success && result.messages) {
-          get().replaceMessages(result.messages, { context: ctx });
+          get().replaceMessages(result.messages, {
+            context: { agentId: message?.agentId || '', topicId: message?.topicId },
+          });
         }
       }
 

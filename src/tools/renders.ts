@@ -3,8 +3,9 @@ import { BuiltinRender } from '@lobechat/types';
 // agent-builder
 import { AgentBuilderManifest } from './agent-builder';
 import { AgentBuilderRenders } from './agent-builder/Render';
+// code-interpreter
 import { CodeInterpreterManifest } from './code-interpreter';
-import CodeInterpreterRender from './code-interpreter/Render';
+import { CodeInterpreterRenders } from './code-interpreter/Render';
 // knowledge-base
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { KnowledgeBaseRenders } from './knowledge-base/Render';
@@ -24,9 +25,7 @@ const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
   [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,
   [WebBrowsingManifest.identifier]: WebBrowsingRenders as Record<string, BuiltinRender>,
   [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,
-  [CodeInterpreterManifest.identifier]: {
-    python: CodeInterpreterRender as BuiltinRender,
-  },
+  [CodeInterpreterManifest.identifier]: CodeInterpreterRenders as Record<string, BuiltinRender>,
 };
 
 /**
