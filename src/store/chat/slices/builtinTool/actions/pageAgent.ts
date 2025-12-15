@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { usePageEditorStore } from '@/features/PageEditor/store';
 import { ChatStore } from '@/store/chat/store';
 import { PageAgentExecutionRuntime } from '@/tools/page-agent/ExecutionRuntime';
 
@@ -14,6 +15,8 @@ export interface PageAgentAction {
   convertToList: (id: string, params: any) => Promise<boolean>;
   // ============ Basic CRUD ============
   createNode: (id: string, params: any) => Promise<boolean>;
+  // ============ Query & Read ============
+  getPageContent: (id: string, params: any) => Promise<boolean>;
   // ============ Image Operations ============
   cropImage: (id: string, params: any) => Promise<boolean>;
   deleteNode: (id: string, params: any) => Promise<boolean>;
@@ -256,6 +259,71 @@ export const pageAgentSlice: StateCreator<
 
     try {
       const result = await runtime.editTitle(params);
+      const { content, success, error, state } = result;
+
+      get().completeOperation(operationId);
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
+      }
+
+      return true;
+    } catch (error) {
+      const err = error as Error;
+
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        get().failOperation(operationId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        return true;
+      }
+
+      get().failOperation(operationId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return true;
+    }
+  },
+
+  // ============ Query & Read ============
+  getPageContent: async (id, params) => {
+    const parentOperationId = get().messageOperationMap[id];
+
+    const { operationId } = get().startOperation({
+      context: { messageId: id },
+      metadata: { apiName: 'getPageContent', params, startTime: Date.now() },
+      parentOperationId,
+      type: 'builtinToolPageAgent',
+    });
+
+    const context = { operationId };
+
+    try {
+      const result = await runtime.getPageContent(params);
       const { content, success, error, state } = result;
 
       get().completeOperation(operationId);

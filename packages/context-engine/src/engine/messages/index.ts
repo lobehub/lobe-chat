@@ -11,7 +11,6 @@ export type {
   MessagesEngineResult,
   ModelCapabilityChecker,
   OpenAIChatMessage,
-  PageEditorContext,
   ToolsConfig,
   UIChatMessage,
   UserMemoryConfig,

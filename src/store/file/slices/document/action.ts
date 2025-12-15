@@ -66,6 +66,9 @@ export interface DocumentAction {
    */
   duplicateDocument: (documentId: string) => Promise<{ [key: string]: any; id: string }>;
   /**
+   * Fetch full document detail by ID and update local map
+   */
+  fetchDocumentDetail: (documentId: string) => Promise<void>;
   /**
    * Fetch documents from the server with pagination
    */
@@ -335,6 +338,45 @@ export const createDocumentSlice: StateCreator<
     // This prevents the loading skeleton from appearing
 
     return newPage;
+  },
+
+  fetchDocumentDetail: async (documentId) => {
+    try {
+      const document = await documentService.getDocumentById(documentId);
+
+      if (!document) {
+        console.warn(`[fetchDocumentDetail] Document not found: ${documentId}`);
+        return;
+      }
+
+      // Update local map with full document details including editorData
+      const { localDocumentMap } = get();
+      const newMap = new Map(localDocumentMap);
+
+      const fullDocument: LobeDocument = {
+        content: document.content || null,
+        createdAt: document.createdAt ? new Date(document.createdAt) : new Date(),
+        editorData:
+          typeof document.editorData === 'string'
+            ? JSON.parse(document.editorData)
+            : document.editorData || null,
+        fileType: document.fileType,
+        filename: document.title || document.filename || 'Untitled',
+        id: document.id,
+        metadata: document.metadata || {},
+        source: 'document',
+        sourceType: DocumentSourceType.EDITOR,
+        title: document.title || '',
+        totalCharCount: document.content?.length || 0,
+        totalLineCount: 0,
+        updatedAt: document.updatedAt ? new Date(document.updatedAt) : new Date(),
+      };
+
+      newMap.set(documentId, fullDocument);
+      set({ localDocumentMap: newMap }, false, n('fetchDocumentDetail'));
+    } catch (error) {
+      console.error('[fetchDocumentDetail] Failed to fetch document:', error);
+    }
   },
 
   fetchDocuments: async ({ pageOnly = false }) => {

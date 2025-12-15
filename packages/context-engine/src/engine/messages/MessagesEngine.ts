@@ -21,7 +21,6 @@ import {
   GroupContextInjector,
   HistorySummaryProvider,
   KnowledgeInjector,
-  PageEditorContextInjector,
   SystemRoleInjector,
   ToolSystemRoleProvider,
   UserMemoryInjector,
@@ -117,7 +116,6 @@ export class MessagesEngine {
       fileContext,
       agentBuilderContext,
       agentGroup,
-      pageEditorContext,
       userMemory,
     } = this.params;
 
@@ -125,7 +123,6 @@ export class MessagesEngine {
     const isAgentGroupEnabled = agentGroup?.agentMap && Object.keys(agentGroup.agentMap).length > 0;
     const isGroupContextEnabled =
       isAgentGroupEnabled || !!agentGroup?.currentAgentId || !!agentGroup?.members;
-    const isPageEditorEnabled = !!pageEditorContext;
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
 
     return [
@@ -162,13 +159,7 @@ export class MessagesEngine {
         agentContext: agentBuilderContext,
       }),
 
-      // 5. Page Editor context injection (current page/document content for editing)
-      new PageEditorContextInjector({
-        enabled: isPageEditorEnabled,
-        pageContext: pageEditorContext,
-      }),
-
-      // 6. Tool system role injection (conditionally added)
+      // 5. Tool system role injection (conditionally added)
       ...(toolsConfig?.tools && toolsConfig.tools.length > 0
         ? [
             new ToolSystemRoleProvider({
@@ -181,13 +172,13 @@ export class MessagesEngine {
           ]
         : []),
 
-      // 7. History summary injection
+      // 6. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary,
         historySummary,
       }),
 
-      // 8. User memory injection (conditionally added)
+      // 7. User memory injection (conditionally added)
       ...(isUserMemoryEnabled
         ? [
             new UserMemoryInjector({

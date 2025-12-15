@@ -6,7 +6,6 @@ import type { OpenAIChatMessage, UIChatMessage } from '@/types/index';
 import type { AgentInfo } from '../../processors/GroupMessageSender';
 import type { AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
 import type { GroupMemberInfo } from '../../providers/GroupContextInjector';
-import type { PageEditorContext } from '../../providers/PageEditorContextInjector';
 
 /**
  * Model capability checker
@@ -174,8 +173,6 @@ export interface MessagesEngineParams {
   agentBuilderContext?: AgentBuilderContext;
   /** Agent group configuration for multi-agent scenarios */
   agentGroup?: AgentGroupConfig;
-  /** Page Editor context */
-  pageEditorContext?: PageEditorContext;
   /** User memory configuration */
   userMemory?: UserMemoryConfig;
 }
@@ -203,6 +200,5 @@ export interface MessagesEngineResult {
 
 export { type AgentInfo } from '../../processors/GroupMessageSender';
 export { type AgentBuilderContext } from '../../providers/AgentBuilderContextInjector';
-export { type PageEditorContext } from '../../providers/PageEditorContextInjector';
 export { type OpenAIChatMessage, type UIChatMessage } from '@/types/index';
 export { type FileContent, type KnowledgeBaseInfo } from '@lobechat/prompts';

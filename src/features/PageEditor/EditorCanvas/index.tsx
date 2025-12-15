@@ -7,6 +7,7 @@ import {
   ReactImagePlugin,
   ReactLinkHighlightPlugin,
   ReactListPlugin,
+  ReactLiteXmlPlugin,
   ReactMathPlugin,
   ReactTablePlugin,
   ReactToolbarPlugin,
@@ -50,6 +51,7 @@ const EditorCanvas = memo<EditorCanvasProps>(({ placeholder, style }) => {
         onTextChange={handleContentChange}
         placeholder={placeholder || t('documentEditor.editorPlaceholder')}
         plugins={[
+          ReactLiteXmlPlugin,
           ReactListPlugin,
           ReactCodePlugin,
           ReactCodeblockPlugin,

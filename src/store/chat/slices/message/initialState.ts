@@ -11,11 +11,6 @@ export interface ChatMessageState {
    */
   activeId: string;
   /**
-   * Active page/document ID when Page Agent is active
-   * Used for injecting current page context into the conversation
-   */
-  activePageId?: string;
-  /**
    * Raw messages from database (flat structure)
    */
   dbMessagesMap: Record<string, UIChatMessage[]>;
@@ -61,7 +56,6 @@ export interface ChatMessageState {
 export const initialMessageState: ChatMessageState = {
   activeAgentId: '',
   activeId: 'inbox',
-  activePageId: undefined,
   dbMessagesMap: {},
   groupAgentMaps: {},
   isCreatingMessage: false,

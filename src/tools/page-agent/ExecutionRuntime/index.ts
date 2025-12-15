@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
-import { IEditor } from '@lobehub/editor';
+import {
+  IEditor,
+  LITEXML_APPLY_COMMAND,
+  LITEXML_INSERT_COMMAND,
+  LITEXML_REMOVE_COMMAND,
+} from '@lobehub/editor';
 
 import type {
   BatchUpdateArgs,
@@ -24,6 +29,8 @@ import type {
   DuplicateNodeState,
   EditTitleArgs,
   EditTitleState,
+  GetPageContentArgs,
+  GetPageContentState,
   IndentListItemArgs,
   IndentListItemState,
   InitDocumentArgs,
@@ -74,12 +81,28 @@ export class PageAgentExecutionRuntime {
   private editor: IEditor | null = null;
   private titleSetter: ((title: string) => void) | null = null;
   private titleGetter: (() => string) | null = null;
+  private currentDocId: string | undefined = undefined;
 
   /**
    * Set the current editor instance
    */
   setEditor(editor: IEditor | null) {
     this.editor = editor;
+  }
+
+  /**
+   * Set the current document ID
+   */
+  setCurrentDocId(docId: string | undefined) {
+    console.log('[PageAgentRuntime] Setting current doc ID:', docId);
+    this.currentDocId = docId;
+  }
+
+  /**
+   * Get the current document ID
+   */
+  getCurrentDocId(): string | undefined {
+    return this.currentDocId;
   }
 
   /**
@@ -175,42 +198,180 @@ export class PageAgentExecutionRuntime {
     }
   }
 
+  // ==================== Query & Read ====================
+
+  /**
+   * Get the current page content and metadata
+   */
+  async getPageContent(args: GetPageContentArgs): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const editor = this.getEditor();
+      if (!editor) {
+        throw new Error('Editor instance not found');
+      }
+
+      const { getter: getTitleFn } = this.getTitleHandlers();
+      if (!getTitleFn) {
+        throw new Error('Title getter not found');
+      }
+
+      const format = args.format || 'both';
+      const title = getTitleFn() || 'Untitled';
+
+      // Get document in JSON format
+      const docJson = editor.getDocument('json') as any;
+      const pageXML = editor.getDocument('litexml') as any;
+      console.log('[getPageContent] docJson:', JSON.stringify(docJson, null, 2));
+
+      // Prepare state object
+      const state: GetPageContentState = {
+        documentId: 'current',
+        metadata: {
+          title,
+        },
+      };
+
+      // Get markdown format if requested
+      if (format === 'markdown' || format === 'both') {
+        const markdownRaw = editor.getDocument('markdown');
+        console.log('[getPageContent] markdownRaw:', markdownRaw);
+        const markdown = String(markdownRaw || '');
+        state.markdown = markdown;
+      }
+
+      // Convert to XML if requested
+      if (format === 'xml' || format === 'both') {
+        if (pageXML) {
+          state.xml = pageXML;
+        } else {
+          state.xml = '';
+        }
+      }
+
+      // Build content message
+      let contentMsg = `Successfully retrieved page content.\n\n**Title**: ${title}\n`;
+
+      if (state.markdown) {
+        const charCount = state.markdown.length;
+        const lineCount = state.markdown.split('\n').length;
+        contentMsg += `**Markdown**: ${charCount} characters, ${lineCount} lines\n`;
+        state.metadata.totalCharCount = charCount;
+        state.metadata.totalLineCount = lineCount;
+      }
+
+      if (state.xml) {
+        contentMsg += `**XML Structure**: ${state.xml}\n`;
+      }
+
+      return {
+        content: contentMsg,
+        state,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to get page content: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
   // ==================== Helper Methods ====================
 
   /**
-   * Find a node in the Lexical JSON structure by its path-based ID
-   * Node IDs are generated as "node_{path}" where path is like "0.1.2"
+   * Find a node in the Lexical JSON structure by its Lexical key
+   * @param root - The root node to search from
+   * @param key - The Lexical key (e.g., "9p5r")
+   * @returns The found node or null
    */
-  private findNodeByPath(root: any, path: number[]): any {
-    let current = root;
-    for (const index of path) {
-      if (!current.children || !current.children[index]) {
-        return null;
+  private findNodeByKey(node: any, key: string): any {
+    if (!node) return null;
+
+    // Check if this node has the key we're looking for
+    if (node.key === key) {
+      return node;
+    }
+
+    // Recursively search children
+    if (node.children && Array.isArray(node.children)) {
+      for (const child of node.children) {
+        const found = this.findNodeByKey(child, key);
+        if (found) return found;
       }
-      current = current.children[index];
     }
-    return current;
+
+    return null;
   }
 
   /**
-   * Parse a node ID (format: "node_0_1_2") into a path array [0, 1, 2]
+   * Find a node in XML string by its id attribute
+   * @param xml - The XML string to search
+   * @param nodeId - The id attribute value to find
+   * @returns Object with tag name and content, or null if not found
    */
-  private parseNodeId(nodeId: string): number[] {
-    if (!nodeId.startsWith('node_')) {
-      throw new Error(`Invalid node ID format: ${nodeId}. Expected format: node_0_1_2`);
+  private findNodeInXML(xml: string, nodeId: string): { content: string; tagName: string } | null {
+    if (!xml || !nodeId) return null;
+
+    // Match the element with the given id
+    // Pattern: <tagName id="nodeId" ...>content</tagName> or self-closing <tagName id="nodeId" ... />
+    const escapedId = nodeId.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // First try to match a full element with opening and closing tags
+    const fullElementRegex = new RegExp(
+      `<(\\w+)\\s+[^>]*id="${escapedId}"[^>]*>([\\s\\S]*?)<\\/\\1>`,
+      'i',
+    );
+    const fullMatch = fullElementRegex.exec(xml);
+
+    if (fullMatch) {
+      return {
+        content: fullMatch[2],
+        tagName: fullMatch[1],
+      };
     }
-    const pathStr = nodeId.slice(5);
-    if (!pathStr || pathStr.trim() === '') {
-      throw new Error(`Invalid node ID format: ${nodeId}. Expected format: node_0_1_2`);
+
+    // Try self-closing tag
+    const selfClosingRegex = new RegExp(`<(\\w+)\\s+[^>]*id="${escapedId}"[^>]*/\\s*>`, 'i');
+    const selfClosingMatch = selfClosingRegex.exec(xml);
+
+    if (selfClosingMatch) {
+      return {
+        content: '',
+        tagName: selfClosingMatch[1],
+      };
     }
-    return pathStr.split('_').map(Number);
+
+    return null;
   }
 
   /**
-   * Generate a node ID from a path array
+   * Find parent node and index of a child node by its key
+   * Returns { parent, index } or null if not found
    */
-  private generateNodeId(path: number[]): string {
-    return `node_${path.join('_')}`;
+  private findParentAndIndex(
+    node: any,
+    targetKey: string,
+    parent: any = null,
+    index: number = -1,
+  ): { index: number; parent: any } | null {
+    if (!node) return null;
+
+    // Check if this node has the key we're looking for
+    if (node.key === targetKey) {
+      return { index, parent };
+    }
+
+    // Recursively search children
+    if (node.children && Array.isArray(node.children)) {
+      for (let i = 0; i < node.children.length; i++) {
+        const found = this.findParentAndIndex(node.children[i], targetKey, node, i);
+        if (found) return found;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -221,7 +382,7 @@ export class PageAgentExecutionRuntime {
 
     // Simple regex-based XML parsing for table structures
     // Match tags like <tr>, <td>, <th>, etc.
-    const tagRegex = /<(\w+)[^>]*>(.*?)<\/\1>|<(\w+)[^>]*\/>/gs;
+    const tagRegex = /<(\w+)[^>]*>([\s\S]*?)<\/\1>|<(\w+)[^>]*\/>/g;
     let match;
 
     while ((match = tagRegex.exec(xml)) !== null) {
@@ -356,76 +517,55 @@ export class PageAgentExecutionRuntime {
     try {
       const editor = this.getEditor();
 
-      // Get current document
-      const docJson = editor.getDocument('json') as any;
-      if (!docJson || !docJson.root) {
-        throw new Error('Document not initialized');
+      console.log('[createNode] Creating node:', args);
+
+      // Build LiteXML for the new node
+      const nodeType = args.type;
+      let content = '';
+
+      if (args.content) {
+        // For text content, wrap in span
+        content = `<span>${args.content}</span>`;
+      } else if (args.children) {
+        content = args.children;
       }
 
-      // Create the new node
-      const newNode = this.createLexicalNode(args);
-
-      // Find the reference node and insert
-      if (args.referenceNodeId) {
-        const refPath = this.parseNodeId(args.referenceNodeId);
-        const parent = this.findNodeByPath(docJson.root, refPath.slice(0, -1)) || docJson.root;
-
-        if (!parent.children) {
-          parent.children = [];
-        }
-
-        const position = args.position || 'after';
-        const refIndex = refPath.at(-1);
-
-        if (refIndex === undefined) {
-          throw new Error('Invalid reference node path');
-        }
-
-        switch (position) {
-          case 'before': {
-            parent.children.splice(refIndex, 0, newNode);
-            break;
-          }
-          case 'after': {
-            parent.children.splice(refIndex + 1, 0, newNode);
-            break;
-          }
-          case 'prepend': {
-            const refNode = parent.children[refIndex];
-            if (!refNode.children) refNode.children = [];
-            refNode.children.unshift(newNode);
-            break;
-          }
-          case 'append': {
-            const refNode = parent.children[refIndex];
-            if (!refNode.children) refNode.children = [];
-            refNode.children.push(newNode);
-            break;
+      // Build attributes string
+      let attributesStr = '';
+      if (args.attributes) {
+        for (const [key, value] of Object.entries(args.attributes)) {
+          if (value !== null && value !== undefined) {
+            attributesStr += ` ${key}="${value}"`;
           }
         }
-      } else {
-        // Append to root
-        if (!docJson.root.children) {
-          docJson.root.children = [];
-        }
-        docJson.root.children.push(newNode);
       }
 
-      // Update the document
-      editor.setDocument('json', JSON.stringify(docJson));
+      const litexml = `<${nodeType}${attributesStr}>${content}</${nodeType}>`;
+
+      console.log('[createNode] Generated LiteXML:', litexml);
+
+      // Use LITEXML_INSERT_COMMAND to insert the node
+      // The command expects either { beforeId, litexml } or { afterId, litexml }
+      const position = args.position || 'after';
+      const commandPayload =
+        position === 'before'
+          ? { beforeId: args.referenceNodeId || 'root', litexml }
+          : { afterId: args.referenceNodeId || 'root', litexml };
+
+      const success = editor.dispatchCommand(LITEXML_INSERT_COMMAND, commandPayload);
+
+      console.log('[createNode] Command dispatched, success:', success);
 
       return {
         content: `Successfully created ${args.type} node${args.referenceNodeId ? ` ${args.position || 'after'} node ${args.referenceNodeId}` : ' at document root'}.`,
         state: {
-          createdNodeId: this.generateNodeId([
-            ...(args.referenceNodeId ? this.parseNodeId(args.referenceNodeId).slice(0, -1) : []),
-            docJson.root.children.length - 1,
-          ]),
+          createdNodeId: 'pending', // Node ID will be assigned by the editor
         } as CreateNodeState,
         success: true,
       };
     } catch (error) {
       const err = error as Error;
+      console.error('[createNode] Error:', err.message, err.stack);
       return {
         content: `Failed to create node: ${err.message}`,
         error,
@@ -438,66 +578,83 @@ export class PageAgentExecutionRuntime {
     try {
       const editor = this.getEditor();
 
-      // Get current document
-      const docJson = editor.getDocument('json') as any;
-      if (!docJson || !docJson.root) {
-        throw new Error('Document not initialized');
-      }
+      console.log('[updateNode] Attempting to update node:', args.nodeId);
+      console.log('[updateNode] Update args:', {
+        content: args.content,
+        hasChildren: !!args.children,
+        hasAttributes: !!args.attributes,
+      });
 
-      // Find the node
-      const path = this.parseNodeId(args.nodeId);
-      const node = this.findNodeByPath(docJson.root, path);
+      // Build the LiteXML for the updated node
+      let litexml = '';
 
-      if (!node) {
+      // Get node info from pageXML instead of docJSON
+      const pageXML = editor.getDocument('litexml') as unknown as string;
+      const xmlNode = this.findNodeInXML(pageXML, args.nodeId);
+
+      console.log('[updateNode] pageXML:', pageXML);
+      console.log('[updateNode] Found XML node:', xmlNode);
+
+      if (!xmlNode) {
+        console.error('[updateNode] Node not found in XML:', args.nodeId);
         throw new Error(`Node ${args.nodeId} not found`);
       }
 
-      // Update content
-      if (args.content !== undefined) {
-        if (node.type === 'text') {
-          node.text = args.content;
-        } else {
-          node.children = [
-            {
-              text: args.content,
-              type: 'text',
-            },
-          ];
-        }
-      }
+      const nodeType = xmlNode.tagName;
+      const updates: string[] = [];
 
-      // Update children
-      if (args.children !== undefined) {
-        // For now, replace with text - full implementation would parse XML
-        node.children = [
-          {
-            text: args.children,
-            type: 'text',
-          },
-        ];
-      }
+      // Start building the XML tag
+      let attributes = `id="${args.nodeId}"`;
 
-      // Update attributes
+      // Add or update attributes
       if (args.attributes) {
         for (const [key, value] of Object.entries(args.attributes)) {
-          if (value === null) {
-            delete node[key];
-          } else {
-            node[key] = value;
+          if (value !== null) {
+            attributes += ` ${key}="${value}"`;
+            updates.push(`set attribute ${key}`);
           }
         }
       }
 
-      // Update the document
-      editor.setDocument('json', JSON.stringify(docJson));
+      // Build content
+      let content = '';
+      if (args.content !== undefined) {
+        content = args.content;
+        updates.push('content');
+      } else if (args.children !== undefined) {
+        content = args.children;
+        updates.push('children');
+      } else {
+        // Keep existing content from XML
+        content = xmlNode.content;
+      }
+
+      litexml = `<${nodeType} ${attributes}>${content}</${nodeType}>`;
+
+      console.log('[updateNode] Generated LiteXML:', litexml);
+
+      // Apply the update using Lexical's command system
+      const lexicalEditor = editor.getLexicalEditor();
+      if (!lexicalEditor) {
+        throw new Error('Lexical editor not available');
+      }
+
+      const success = editor.dispatchCommand(LITEXML_APPLY_COMMAND, {
+        litexml: [litexml],
+      });
+
+      console.log('[updateNode] Command dispatched, success:', success);
+
+      const updateSummary = updates.length > 0 ? ` (${updates.join(', ')})` : '';
 
       return {
-        content: `Successfully updated node ${args.nodeId}.`,
+        content: `Successfully updated node ${args.nodeId}${updateSummary}.`,
         state: { updatedNodeId: args.nodeId } as UpdateNodeState,
         success: true,
       };
     } catch (error) {
       const err = error as Error;
+      console.error('[updateNode] Error:', err.message, err.stack);
       return {
         content: `Failed to update node: ${err.message}`,
         error,
@@ -506,49 +663,81 @@ export class PageAgentExecutionRuntime {
     }
   }
 
+  /**
+   * Convert Lexical node type back to XML tag name
+   */
+  private mapLexicalTypeToXML(lexicalType: string): string {
+    const mapping: Record<string, string> = {
+      code: 'code',
+      heading: 'h1', // Will need the tag property for h1-h6
+      image: 'img',
+      link: 'a',
+      list: 'ul', // Will need to check list type
+      listitem: 'li',
+      paragraph: 'p',
+      quote: 'blockquote',
+      table: 'table',
+      tablebody: 'tbody',
+      tablecell: 'td',
+      tablehead: 'thead',
+      tablerow: 'tr',
+      text: 'span',
+    };
+
+    return mapping[lexicalType] || lexicalType;
+  }
+
+  /**
+   * Convert node children to string representation
+   */
+  private stringifyNodeChildren(children: any[]): string {
+    if (!children || children.length === 0) return '';
+
+    return children
+      .map((child) => {
+        if (child.type === 'text') {
+          return child.text || '';
+        }
+        // For other nodes, recursively stringify
+        const tag = this.mapLexicalTypeToXML(child.type);
+        const content = child.children ? this.stringifyNodeChildren(child.children) : '';
+        return `<${tag}>${content}</${tag}>`;
+      })
+      .join('');
+  }
+
   async deleteNode(args: DeleteNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
       const editor = this.getEditor();
 
-      // Get current document
-      const docJson = editor.getDocument('json') as any;
-      if (!docJson || !docJson.root) {
-        throw new Error('Document not initialized');
-      }
+      console.log('[deleteNode] Deleting node:', args.nodeId);
 
-      // Find the parent and remove the node
-      const path = this.parseNodeId(args.nodeId);
-      if (path.length === 0) {
-        throw new Error('Cannot delete root node');
-      }
+      // First verify the node exists in the XML
+      const pageXML = editor.getDocument('litexml') as unknown as string;
+      const xmlNode = this.findNodeInXML(pageXML, args.nodeId);
 
-      const parentPath = path.slice(0, -1);
-      const nodeIndex = path.at(-1);
-      const parent =
-        parentPath.length === 0 ? docJson.root : this.findNodeByPath(docJson.root, parentPath);
-
-      if (nodeIndex === undefined) {
-        throw new Error('Invalid node path');
-      }
-
-      if (!parent || !parent.children || !parent.children[nodeIndex]) {
+      if (!xmlNode) {
+        console.error('[deleteNode] Node not found in XML:', args.nodeId);
         throw new Error(`Node ${args.nodeId} not found`);
       }
 
-      // Remove the node
-      const deletedNode = parent.children[nodeIndex];
-      parent.children.splice(nodeIndex, 1);
+      console.log('[deleteNode] Found node to delete:', xmlNode.tagName);
 
-      // Update the document
-      editor.setDocument('json', JSON.stringify(docJson));
+      // Use LITEXML_REMOVE_COMMAND to remove the node
+      const success = editor.dispatchCommand(LITEXML_REMOVE_COMMAND, {
+        id: args.nodeId,
+      });
+
+      console.log('[deleteNode] Command dispatched, success:', success);
 
       return {
-        content: `Successfully deleted ${deletedNode.type} node ${args.nodeId}.`,
+        content: `Successfully deleted ${xmlNode.tagName} node ${args.nodeId}.`,
         state: { deletedNodeId: args.nodeId } as DeleteNodeState,
         success: true,
       };
     } catch (error) {
       const err = error as Error;
+      console.error('[deleteNode] Error:', err.message, err.stack);
       return {
         content: `Failed to delete node: ${err.message}`,
         error,
@@ -727,11 +916,10 @@ export class PageAgentExecutionRuntime {
   }
 
   /**
-   * Helper: Find table node by ID
+   * Helper: Find table node by Lexical key
    */
   private findTableNode(docJson: any, tableId: string): any {
-    const path = this.parseNodeId(tableId);
-    const table = this.findNodeByPath(docJson.root, path);
+    const table = this.findNodeByKey(docJson.root, tableId);
 
     if (!table || table.type !== 'table') {
       throw new Error(`Table ${tableId} not found`);
@@ -774,25 +962,24 @@ export class PageAgentExecutionRuntime {
       let insertIndex = table.children.length;
 
       if (args.referenceRowId) {
-        const refPath = this.parseNodeId(args.referenceRowId);
-        const refIndex = refPath.at(-1);
-
-        if (refIndex !== undefined) {
+        // Find the reference row within the table
+        const refIndex = table.children.findIndex((row: any) => row.key === args.referenceRowId);
+        if (refIndex !== -1) {
           insertIndex = args.position === 'before' ? refIndex : refIndex + 1;
         }
       }
+
+      // Generate a unique key for the new row
+      newRow.key = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
       table.children.splice(insertIndex, 0, newRow);
 
       // Update the document
       editor.setDocument('json', JSON.stringify(docJson));
 
-      const newRowPath = this.parseNodeId(args.tableId).concat(insertIndex);
-      const newRowId = this.generateNodeId(newRowPath);
-
       return {
         content: `Successfully inserted row with ${columnCount} cells into table ${args.tableId}.`,
-        state: { newRowId } as InsertTableRowState,
+        state: { newRowId: newRow.key } as InsertTableRowState,
         success: true,
       };
     } catch (error) {
@@ -841,11 +1028,12 @@ export class PageAgentExecutionRuntime {
         }
 
         const newCell = this.createTableCell(cellContent);
+        // Generate a unique key for the new cell
+        newCell.key = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         row.children.splice(columnIndex, 0, newCell);
 
-        // Track the new cell ID
-        const cellPath = this.parseNodeId(args.tableId).concat(rowIndex, columnIndex);
-        newCellIds.push(this.generateNodeId(cellPath));
+        // Track the new cell key
+        newCellIds.push(newCell.key);
       });
 
       // Update the document
@@ -875,27 +1063,22 @@ export class PageAgentExecutionRuntime {
         throw new Error('Document not initialized');
       }
 
-      // Find the row and its parent table
-      const rowPath = this.parseNodeId(args.rowId);
-      if (rowPath.length < 2) {
-        throw new Error('Invalid row ID');
+      // Find the row by Lexical key and its parent
+      const result = this.findParentAndIndex(docJson.root, args.rowId);
+
+      if (!result || !result.parent) {
+        throw new Error(`Row ${args.rowId} not found`);
       }
 
-      const tablePath = rowPath.slice(0, -1);
-      const rowIndex = rowPath.at(-1);
+      const { parent: table, index: rowIndex } = result;
 
-      if (rowIndex === undefined) {
-        throw new Error('Invalid row index');
-      }
-
-      const table = this.findNodeByPath(docJson.root, tablePath);
-
-      if (!table || table.type !== 'table') {
-        throw new Error('Parent table not found');
+      // Verify parent is a table
+      if (table.type !== 'table') {
+        throw new Error('Parent of row is not a table');
       }
 
       if (!table.children || !table.children[rowIndex]) {
-        throw new Error(`Row ${args.rowId} not found`);
+        throw new Error(`Row ${args.rowId} not found in table children`);
       }
 
       // Remove the row
@@ -937,16 +1120,18 @@ export class PageAgentExecutionRuntime {
       const deletedCellIds: string[] = [];
 
       // Remove the cell at columnIndex from each row
-      table.children.forEach((row: any, rowIndex: number) => {
+      table.children.forEach((row: any) => {
         if (row.type !== 'tablerow') return;
 
         if (!row.children || !row.children[args.columnIndex]) {
           return;
         }
 
-        // Track the deleted cell ID
-        const cellPath = this.parseNodeId(args.tableId).concat(rowIndex, args.columnIndex);
-        deletedCellIds.push(this.generateNodeId(cellPath));
+        // Track the deleted cell key
+        const deletedCell = row.children[args.columnIndex];
+        if (deletedCell.key) {
+          deletedCellIds.push(deletedCell.key);
+        }
 
         // Remove the cell
         row.children.splice(args.columnIndex, 1);

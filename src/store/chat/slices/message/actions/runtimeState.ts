@@ -31,11 +31,6 @@ export interface MessageRuntimeStateAction {
    * other message role like user and tool , only this method need to be called
    */
   internal_toggleMessageLoading: (loading: boolean, id: string) => void;
-
-  /**
-   * Update active page ID for Page Agent context
-   */
-  internal_updateActivePageId: (pageId?: string) => void;
 }
 
 export const messageRuntimeState: StateCreator<
@@ -85,12 +80,5 @@ export const messageRuntimeState: StateCreator<
       false,
       `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
     );
-  },
-
-  internal_updateActivePageId: (pageId?: string) => {
-    if (get().activePageId === pageId) return;
-
-    log('[internal_updateActivePageId] Updating activePageId: %s', pageId);
-    set({ activePageId: pageId }, false, n(`updateActivePageId/${pageId || 'undefined'}`));
   },
 });

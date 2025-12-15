@@ -32,10 +32,12 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     const currentDocId = usePageEditorStore((s) => s.currentDocId);
 
     const updateActivePageId = useChatStore((s) => s.internal_updateActivePageId);
+    const fetchDocumentDetail = useFileStore((s) => s.fetchDocumentDetail);
     const currentPage = useFileStore(documentSelectors.getDocumentById(pageId));
 
     const [editorInit, setEditorInit] = React.useState(false);
     const [contentInit, setContentInit] = React.useState(false);
+    const [isLoadingDetail, setIsLoadingDetail] = React.useState(false);
     const lastLoadedDocIdRef = useRef<string | undefined>(undefined);
 
     // Update editorState in store
@@ -53,9 +55,40 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     useStoreUpdater('onBack', onBack);
     useStoreUpdater('parentId', parentId);
 
-    // Initialize currentDocId and document metadata
+    // Fetch full document detail when pageId changes
     useEffect(() => {
-      if (pageId !== lastLoadedDocIdRef.current) {
+      if (pageId && pageId !== lastLoadedDocIdRef.current) {
+        console.log('[StoreUpdater] PageId changed, fetching detail:', pageId);
+        // Immediately show loading state and reset for better UX
+        // Don't clear editor content manually - let the loading overlay hide it
+        // and the content loading effect will set the new content when ready
+        setIsLoadingDetail(true);
+        setContentInit(false);
+        storeApi.setState({
+          currentTitle: '',
+          isLoadingContent: true,
+          wordCount: 0,
+        });
+
+        // Fetch the full document detail
+        fetchDocumentDetail(pageId)
+          .then(() => {
+            console.log('[StoreUpdater] Document detail fetched successfully for:', pageId);
+          })
+          .finally(() => {
+            console.log('[StoreUpdater] Setting isLoadingDetail to false');
+            setIsLoadingDetail(false);
+          });
+      }
+    }, [pageId, fetchDocumentDetail, storeApi]);
+
+    // Initialize currentDocId and document metadata after fetch completes
+    useEffect(() => {
+      if (pageId !== lastLoadedDocIdRef.current && !isLoadingDetail) {
+        console.log('[StoreUpdater] Initializing metadata for pageId:', pageId, {
+          title: currentPage?.title,
+          hasEditorData: !!currentPage?.editorData,
+        });
         lastLoadedDocIdRef.current = pageId;
         setContentInit(false);
 
@@ -65,15 +98,26 @@ const StoreUpdater = memo<StoreUpdaterProps>(
           currentTitle: currentPage?.title || '',
         });
       }
-    }, [pageId, currentPage, storeApi]);
+    }, [pageId, currentPage, storeApi, isLoadingDetail]);
 
     // Load content into editor after initialization
     useEffect(() => {
-      if (!editorInit || !editor || contentInit) return;
+      console.log('[StoreUpdater] Content loading effect check:', {
+        editorInit,
+        hasEditor: !!editor,
+        contentInit,
+        isLoadingDetail,
+        pageId,
+        hasCurrentPage: !!currentPage,
+        hasEditorData: !!currentPage?.editorData,
+      });
+
+      if (!editorInit || !editor || contentInit || isLoadingDetail) return;
 
       // Defer editor content loading to avoid flushSync warning
       queueMicrotask(() => {
         try {
+          console.log('[StoreUpdater] Loading content for page:', pageId);
           // Helper to calculate word count
           const calculateWordCount = (text: string) =>
             text.trim().split(/\s+/).filter(Boolean).length;
@@ -82,10 +126,12 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
           // Load from editorData if available
           if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
+            console.log('[StoreUpdater] Loading from editorData');
             editor.setDocument('json', JSON.stringify(currentPage.editorData));
             const textContent = currentPage.content || '';
             storeApi.setState({ wordCount: calculateWordCount(textContent) });
           } else if (currentPage?.content && currentPage.content.trim()) {
+            console.log('[StoreUpdater] Loading from content (markdown)');
             // Fallback to markdown content (e.g., from Notion imports)
             editor.setDocument('markdown', currentPage.content);
             storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
@@ -96,24 +142,29 @@ const StoreUpdater = memo<StoreUpdaterProps>(
               .join('\n\n')
               .trim();
             if (pagesContent) {
+              console.log('[StoreUpdater] Loading from pages content');
               editor.setDocument('markdown', pagesContent);
               storeApi.setState({ wordCount: calculateWordCount(pagesContent) });
             } else {
-              editor.setDocument('text', '');
+              console.log('[StoreUpdater] Clearing editor - empty pages');
+              editor.setDocument('markdown', '');
               storeApi.setState({ wordCount: 0 });
             }
           } else {
-            // Empty document or temp page - clear editor
-            editor.setDocument('text', '');
+            // Empty document or temp page - clear editor with empty markdown
+            console.log('[StoreUpdater] Clearing editor - empty/new page');
+            editor.setDocument('markdown', '');
             storeApi.setState({ wordCount: 0 });
           }
 
           setContentInit(true);
+          storeApi.setState({ isLoadingContent: false });
         } catch (error) {
           console.error('[PageEditor] Failed to initialize editor content:', error);
+          storeApi.setState({ isLoadingContent: false });
         }
       });
-    }, [editorInit, contentInit, editor, pageId, currentPage, storeApi]);
+    }, [editorInit, contentInit, editor, pageId, currentPage, storeApi, isLoadingDetail]);
 
     // Track editor initialization
     useEffect(() => {
@@ -149,19 +200,19 @@ const StoreUpdater = memo<StoreUpdaterProps>(
       };
     }, [storeApi]);
 
-    // Update activePageId in chat store when page changes
+    // Update current document ID in page agent runtime when page changes
     useEffect(() => {
       // Use currentDocId (which includes temp docs) or fallback to pageId
       const activeId = currentDocId || pageId;
-      console.log('[StoreUpdater] Updating activePageId in chat store:', activeId);
-      updateActivePageId(activeId);
+      console.log('[StoreUpdater] Updating currentDocId in page agent runtime:', activeId);
+      pageAgentRuntime.setCurrentDocId(activeId);
 
-      // Cleanup: clear activePageId when unmounting
+      // Cleanup: clear currentDocId when unmounting
       return () => {
-        console.log('[StoreUpdater] Clearing activePageId on unmount');
-        updateActivePageId(undefined);
+        console.log('[StoreUpdater] Clearing currentDocId on unmount');
+        pageAgentRuntime.setCurrentDocId(undefined);
       };
-    }, [currentDocId, pageId, updateActivePageId]);
+    }, [currentDocId, pageId]);
 
     return null;
   },

@@ -18,6 +18,7 @@ export interface State extends PublicState {
   editor?: IEditor;
   editorState?: any; // EditorState from useEditorState hook
   isDirty: boolean; // Track if there are unsaved changes
+  isLoadingContent: boolean; // Track if content is being loaded
   lastSavedContent: string; // Last saved content hash for comparison
   lastUpdatedTime: Date | null;
   saveStatus: 'idle' | 'saving' | 'saved';
@@ -30,6 +31,7 @@ export const initialState: State = {
   currentEmoji: undefined,
   currentTitle: '',
   isDirty: false,
+  isLoadingContent: false,
   lastSavedContent: '',
   lastUpdatedTime: null,
   saveStatus: 'idle',

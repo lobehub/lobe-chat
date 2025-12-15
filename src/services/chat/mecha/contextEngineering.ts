@@ -3,7 +3,6 @@ import {
   AgentBuilderContext,
   AgentGroupConfig,
   MessagesEngine,
-  PageEditorContext,
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
@@ -18,7 +17,6 @@ import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
-import { PAGE_AGENT_TOOL_ID } from '@/tools/page-agent/const';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import type { UserMemoriesResult } from './memoryManager';
@@ -36,8 +34,6 @@ interface ContextEngineeringContext {
   inputTemplate?: string;
   messages: UIChatMessage[];
   model: string;
-  /** Page Editor context for injecting current page/document info */
-  pageEditorContext?: PageEditorContext;
   provider: string;
   sessionId?: string;
   systemRole?: string;
@@ -59,22 +55,13 @@ export const contextEngineering = async ({
   historySummary,
   agentBuilderContext,
   groupId,
-  pageEditorContext,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   log('tools: %o', tools);
-  log('pageEditorContext: %o', pageEditorContext);
 
   // Check if Agent Builder tool is enabled
   const isAgentBuilderEnabled = tools?.includes(AGENT_BUILDER_TOOL_ID) ?? false;
 
-  // Check if Page Agent tool is enabled
-  const isPageAgentEnabled = tools?.includes(PAGE_AGENT_TOOL_ID) ?? false;
-
-  log(
-    'isAgentBuilderEnabled: %s, isPageAgentEnabled: %s',
-    isAgentBuilderEnabled,
-    isPageAgentEnabled,
-  );
+  log('isAgentBuilderEnabled: %s', isAgentBuilderEnabled);
 
   // Build agent group configuration if groupId is provided
   let agentGroup: AgentGroupConfig | undefined;
@@ -163,7 +150,6 @@ export const contextEngineering = async ({
     // Extended contexts - only pass when enabled
     ...(isAgentBuilderEnabled && { agentBuilderContext }),
     ...(agentGroup && { agentGroup }),
-    ...(isPageAgentEnabled && { pageEditorContext }),
   });
 
   const result = await engine.process();

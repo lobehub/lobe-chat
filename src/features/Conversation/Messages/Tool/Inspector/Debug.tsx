@@ -45,7 +45,7 @@ const Debug = memo<DebugProps>(({ payload, requestArgs, toolCallId }) => {
           label: t('debug.pluginState'),
         },
       ]}
-      style={{ display: 'grid', maxWidth: 800, minWidth: 400 }}
+      style={{ display: 'grid', maxWidth: 800 }}
     />
   );
 });

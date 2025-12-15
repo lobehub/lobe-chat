@@ -42,6 +42,10 @@ export type NodeType =
   | string;
 
 // ============ Query & Search Args ============
+export interface GetPageContentArgs {
+  format?: 'xml' | 'markdown' | 'both';
+}
+
 export interface GetNodeArgs {
   nodeId: string;
 }
@@ -150,6 +154,18 @@ export interface DocumentNode {
   content?: string;
   id: string;
   type: string;
+}
+
+export interface GetPageContentState {
+  documentId: string;
+  markdown?: string;
+  metadata: {
+    fileType?: string;
+    title: string;
+    totalCharCount?: number;
+    totalLineCount?: number;
+  };
+  xml?: string;
 }
 
 export interface GetNodeState {

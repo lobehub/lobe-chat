@@ -55,7 +55,6 @@ describe('MessagesEngine', () => {
           fileContents: [{ content: 'test', fileId: 'f1', filename: 'test.txt' }],
           knowledgeBases: [{ id: 'kb1', name: 'Knowledge Base 1' }],
         },
-        pageEditorContext: { document: { id: 'doc-1' } },
         systemRole: 'You are a helpful assistant',
         toolsConfig: {
           getToolSystemRoles: () => undefined,
@@ -335,25 +334,6 @@ describe('MessagesEngine', () => {
       const result = await engine.process();
 
       expect(result.metadata.agentBuilderContextInjected).toBeUndefined();
-    });
-  });
-
-  describe('Page Editor context', () => {
-    it('should inject Page Editor context when provided', async () => {
-      const params = createBasicParams({
-        pageEditorContext: {
-          content: 'Page content',
-          document: {
-            id: 'doc-1',
-            title: 'Test Document',
-          },
-        },
-      });
-      const engine = new MessagesEngine(params);
-
-      const result = await engine.process();
-
-      expect(result.metadata.pageEditorContextInjected).toBe(true);
     });
   });
 

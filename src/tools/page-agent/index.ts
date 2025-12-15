@@ -10,6 +10,9 @@ export const DocumentApiName = {
   // Document Metadata
   editTitle: 'editTitle',
 
+  // Query & Read
+  getPageContent: 'getPageContent',
+
   // Basic CRUD
   createNode: 'createNode',
   deleteNode: 'deleteNode',
@@ -90,6 +93,26 @@ export const PageAgentManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+
+    // ============ Query & Read ============
+    {
+      description:
+        'Get the current page content and metadata. Returns the document in XML format with node IDs, markdown format, or both. Use this tool to retrieve the latest state of the document.',
+      name: DocumentApiName.getPageContent,
+      parameters: {
+        properties: {
+          format: {
+            default: 'both',
+            description:
+              'The format to return the content in. Options: "xml" (returns document structure with node IDs), "markdown" (returns plain markdown text), "both" (returns both formats). Defaults to "both".',
+            enum: ['xml', 'markdown', 'both'],
+            type: 'string',
+          },
+        },
+        type: 'object',
+      },
+    },
+
     // ============ Basic CRUD ============
     {
       description:
