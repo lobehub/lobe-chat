@@ -60,7 +60,10 @@ export interface UserPreference {
    * lab experimental features
    */
   lab?: UserLab;
-  telemetry: boolean | null;
+  /**
+   * @deprecated Use settings.general.telemetry instead
+   */
+  telemetry?: boolean | null;
   topicDisplayMode?: TopicDisplayMode;
   /**
    * whether to use cmd + enter to send message
