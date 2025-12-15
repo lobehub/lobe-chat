@@ -1,8 +1,8 @@
-import { Empty } from '@lobehub/ui';
 import { App } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import MemoryEmpty from '@/app/[variants]/(main)/memory/features/MemoryEmpty';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
@@ -43,7 +43,7 @@ const PreferencesList = memo<PreferencesListProps>(({ viewMode }) => {
   };
 
   if (!preferences || preferences.length === 0)
-    return <Empty description={t('preference.empty')} />;
+    return <MemoryEmpty description={t('preference.empty')} />;
 
   return viewMode === 'timeline' ? (
     <TimelineView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />

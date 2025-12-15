@@ -13,7 +13,7 @@ import ContextRightPanel from './features/ContextRightPanel';
 import List from './features/List';
 
 const ContextsArea = memo(() => {
-  const [viewMode, setViewMode] = useState<ViewMode>('masonry');
+  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const useFetchContexts = useUserMemoryStore((s) => s.useFetchContexts);
   const contextsInit = useUserMemoryStore((s) => s.contextsInit);
 

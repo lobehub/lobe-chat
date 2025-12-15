@@ -1,8 +1,8 @@
-import { Empty } from '@lobehub/ui';
 import { App } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import MemoryEmpty from '@/app/[variants]/(main)/memory/features/MemoryEmpty';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
@@ -43,7 +43,7 @@ const ContextsList = memo<ContextsListProps>(({ viewMode }) => {
     });
   };
 
-  if (!contexts || contexts.length === 0) return <Empty description={t('context.empty')} />;
+  if (!contexts || contexts.length === 0) return <MemoryEmpty description={t('context.empty')} />;
 
   return viewMode === 'timeline' ? (
     <TimelineView contexts={contexts} onClick={handleCardClick} onDelete={handleDelete} />

@@ -1,4 +1,3 @@
-import { Empty } from '@lobehub/ui';
 import { App } from 'antd';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +6,7 @@ import { useQueryState } from '@/hooks/useQueryParam';
 import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import MemoryEmpty from '../../../features/MemoryEmpty';
 import { ViewMode } from '../../../features/ViewModeSwitcher';
 import MasonryView from './MasonryView';
 import TimelineView from './TimelineView';
@@ -77,9 +77,11 @@ const IdentitiesList = memo<IdentitiesListProps>(({ viewMode, typeFilter, search
     });
   };
 
-  if (!identities || identities.length === 0) return <Empty description={t('identity.empty')} />;
+  if (!identities || identities.length === 0)
+    return <MemoryEmpty description={t('identity.empty')} />;
 
-  if (filteredIdentities.length === 0) return <Empty description={t('identity.list.noResults')} />;
+  if (filteredIdentities.length === 0)
+    return <MemoryEmpty description={t('identity.list.noResults')} />;
 
   if (viewMode === 'timeline')
     return (

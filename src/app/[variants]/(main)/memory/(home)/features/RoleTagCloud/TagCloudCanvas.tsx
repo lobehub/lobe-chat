@@ -459,36 +459,34 @@ const Cloud = memo<CloudProps>(({ tags, radius = 20 }) => {
   );
 });
 
-interface RoleTagCloudProps {
+interface TagCloudCanvasProps {
   tags: QueryTagsResult[];
 }
 
-const RoleTagCloud = memo<RoleTagCloudProps>(({ tags }) => {
+const TagCloudCanvas = memo<TagCloudCanvasProps>(({ tags }) => {
   const theme = useTheme();
 
   if (!tags.length) return null;
   return (
-    <div style={{ height: '100%', inset: 0, position: 'absolute', width: '100%' }}>
-      <Canvas camera={{ fov: 75, position: [0, 0, 35] }} dpr={[1, 2]}>
-        <color args={[theme.colorBgContainer]} attach="background" />
-        <fog args={[theme.colorBgLayout, 0, 80]} attach="fog" />
-        <ambientLight intensity={0.5} />
-        <pointLight intensity={1} position={[10, 10, 10]} />
-        <Suspense fallback={null}>
-          <Cloud radius={20} tags={tags} />
-        </Suspense>
-        <OrbitControls
-          autoRotate={false}
-          dampingFactor={0.05}
-          enableDamping
-          enablePan={false}
-          maxDistance={50}
-          minDistance={20}
-          rotateSpeed={0.5}
-        />
-      </Canvas>
-    </div>
+    <Canvas camera={{ fov: 75, position: [0, 0, 35] }} dpr={[1, 2]}>
+      <color args={[theme.colorBgContainer]} attach="background" />
+      <fog args={[theme.colorBgLayout, 0, 80]} attach="fog" />
+      <ambientLight intensity={0.5} />
+      <pointLight intensity={1} position={[10, 10, 10]} />
+      <Suspense fallback={null}>
+        <Cloud radius={20} tags={tags} />
+      </Suspense>
+      <OrbitControls
+        autoRotate={false}
+        dampingFactor={0.05}
+        enableDamping
+        enablePan={false}
+        maxDistance={50}
+        minDistance={20}
+        rotateSpeed={0.5}
+      />
+    </Canvas>
   );
 });
 
-export default RoleTagCloud;
+export default TagCloudCanvas;

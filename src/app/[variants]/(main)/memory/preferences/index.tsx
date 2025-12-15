@@ -13,7 +13,7 @@ import List from './features/List';
 import PreferenceRightPanel from './features/PreferenceRightPanel';
 
 const PreferencesArea = memo(() => {
-  const [viewMode, setViewMode] = useState<ViewMode>('masonry');
+  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const useFetchPreferences = useUserMemoryStore((s) => s.useFetchPreferences);
   const preferencesInit = useUserMemoryStore((s) => s.preferencesInit);
 

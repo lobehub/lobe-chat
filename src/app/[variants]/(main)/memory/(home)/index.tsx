@@ -1,8 +1,8 @@
-import { Empty } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import MemoryEmpty from '@/app/[variants]/(main)/memory/features/MemoryEmpty';
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
 import Loading from '@/components/Loading/BrandTextLoading';
 import NavHeader from '@/features/NavHeader';
@@ -22,7 +22,7 @@ const Home = memo(() => {
   if (isLoading) return <Loading debugId={'Home'} />;
 
   if (!roles || roles.length === 0) {
-    return <Empty description={t('identity.empty')} />;
+    return <MemoryEmpty description={t('identity.empty')} />;
   }
 
   return (
@@ -39,9 +39,8 @@ const Home = memo(() => {
         style={{ overflowY: 'auto', paddingBottom: '16vh' }}
         width={'100%'}
       >
-        <RoleTagCloud tags={roles} />
         <WideScreenContainer gap={32} paddingBlock={48}>
-          111
+          <RoleTagCloud tags={roles} />
         </WideScreenContainer>
       </Flexbox>
     </Flexbox>

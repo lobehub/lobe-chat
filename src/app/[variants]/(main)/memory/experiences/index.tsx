@@ -13,7 +13,7 @@ import ExperienceRightPanel from './features/ExperienceRightPanel';
 import List from './features/List';
 
 const ExperiencesArea = memo(() => {
-  const [viewMode, setViewMode] = useState<ViewMode>('masonry');
+  const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const useFetchExperiences = useUserMemoryStore((s) => s.useFetchExperiences);
   const experiencesInit = useUserMemoryStore((s) => s.experiencesInit);
 
