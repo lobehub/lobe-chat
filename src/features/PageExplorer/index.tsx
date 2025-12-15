@@ -8,7 +8,6 @@ import { useFileStore } from '@/store/file';
 import PageExplorerPlaceholder from './PageExplorerPlaceholder';
 
 interface PageExplorerProps {
-  knowledgeBaseId?: string;
   pageId?: string;
 }
 
@@ -17,7 +16,7 @@ interface PageExplorerProps {
  *
  * Work together with a sidebar src/app/[variants]/(main)/page/_layout/Body/index.tsx
  */
-const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
+const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
   const [selectedPageId, setSelectedPageId, getOptimisticDocuments, fetchDocuments, deletePage] =
     useFileStore((s) => [
       s.selectedPageId,
@@ -44,14 +43,11 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId, knowledgeBaseId }) => {
     deletePage(docId);
   };
 
-  if (!currentPageId)
-    return (
-      <PageExplorerPlaceholder hasPages={pages?.length > 0} knowledgeBaseId={knowledgeBaseId} />
-    );
+  if (!currentPageId) return <PageExplorerPlaceholder hasPages={pages?.length > 0} />;
 
   return (
     <PageEditor
-      knowledgeBaseId={knowledgeBaseId}
+      // knowledgeBaseId={knowledgeBaseId}
       onDelete={() => handleDelete(currentPageId)}
       pageId={currentPageId}
     />
