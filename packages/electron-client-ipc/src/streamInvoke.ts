@@ -1,4 +1,4 @@
-import { StreamInvokeRequestParams } from './types';
+import type { ProxyTRPCStreamRequestParams } from './types';
 import { headersToRecord } from './utils/headers';
 import { getRequestBody } from './utils/request';
 
@@ -11,10 +11,14 @@ export const streamInvoke = async (input: RequestInfo | URL, init?: RequestInit)
   const headers = headersToRecord(init?.headers);
   const body = await getRequestBody(init?.body);
 
-  const params: StreamInvokeRequestParams = {
+  const requestId =
+    globalThis.crypto?.randomUUID?.() ?? `stream_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+  const params: ProxyTRPCStreamRequestParams = {
     body,
     headers,
     method,
+    requestId,
     urlPath,
   };
 

@@ -4,7 +4,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": false,
-    "baseUrl": "./",
     "target": "ESNext",
     "declaration": true,
     "emitDeclarationOnly": true,
@@ -22,8 +21,8 @@
       "~common/*": [
         "./src/common/*"
       ],
-      "@lobechat/desktop-bridge": [
-        "../../packages/desktop-bridge/src"
+      "*": [
+        "./*"
       ]
     }
   },
