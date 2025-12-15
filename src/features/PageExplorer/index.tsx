@@ -8,6 +8,7 @@ import { useFileStore } from '@/store/file';
 import PageExplorerPlaceholder from './PageExplorerPlaceholder';
 
 interface PageExplorerProps {
+  // Current opened page id
   pageId?: string;
 }
 

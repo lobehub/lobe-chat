@@ -131,10 +131,6 @@ interface TreeItem {
   url: string;
 }
 
-interface FileTreeProps {
-  knowledgeBaseId: string;
-}
-
 // Recursive component to render folder and file tree
 const FileTreeItem = memo<{
   expandedFolders: Set<string>;
@@ -525,7 +521,7 @@ FileTreeItem.displayName = 'FileTreeItem';
 /**
  * As a sidebar along with the Explorer to work
  */
-const FileTree = memo<FileTreeProps>(() => {
+const FileTree = memo(() => {
   const { currentFolderSlug } = useFolderPath();
 
   const [useFetchKnowledgeItems, useFetchFolderBreadcrumb, useFetchKnowledgeItem] = useFileStore(

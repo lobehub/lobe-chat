@@ -13,7 +13,7 @@ const Menu = memo<{ id: string }>(({ id }) => {
       <Flexbox paddingInline={12}>
         <Head id={id} />
       </Flexbox>
-      <FileTree knowledgeBaseId={id} />
+      <FileTree />
     </Flexbox>
   );
 });
