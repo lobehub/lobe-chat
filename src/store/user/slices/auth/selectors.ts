@@ -35,6 +35,7 @@ const username = (s: UserStore) => {
 };
 
 export const userProfileSelectors = {
+  career: (s: UserStore): string => s.user?.career || '',
   displayUserName: (s: UserStore): string => username(s) || s.user?.email || '',
   email: (s: UserStore): string => s.user?.email || '',
   fullName: (s: UserStore): string => s.user?.fullName || '',

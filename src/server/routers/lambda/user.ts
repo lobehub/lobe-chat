@@ -130,6 +130,7 @@ export const userRouter = router({
       avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
+      career: state.career,
       email: state.email,
       firstName: state.firstName,
 
@@ -163,7 +164,7 @@ export const userRouter = router({
     await ctx.nextAuthUserService.unlinkAccount({ provider, providerAccountId });
   }),
 
-  // 服务端上传头像
+  
   updateAvatar: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     // 如果是 Base64 数据，需要上传到 S3
     if (input.startsWith('data:image')) {
@@ -216,6 +217,11 @@ export const userRouter = router({
 
     // 如果不是 Base64 数据，直接使用 URL 更新用户头像
     return ctx.userModel.updateUser({ avatar: input });
+  }),
+
+  // 服务端上传头像
+updateCareer: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ career: input });
   }),
 
   updateFullName: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {

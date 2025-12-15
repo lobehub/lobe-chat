@@ -25,6 +25,7 @@ const GET_USER_STATE_KEY = 'initUserState';
 export interface CommonAction {
   refreshUserState: () => Promise<void>;
   updateAvatar: (avatar: string) => Promise<void>;
+  updateCareer: (career: string) => Promise<void>;
   updateFullName: (fullName: string) => Promise<void>;
   updateKeyVaultConfig: (provider: string, config: any) => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
@@ -50,6 +51,11 @@ export const createCommonSlice: StateCreator<
   },
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
+    await get().refreshUserState();
+  },
+
+  updateCareer: async (career) => {
+    await userService.updateCareer(career);
     await get().refreshUserState();
   },
 
@@ -112,6 +118,7 @@ export const createCommonSlice: StateCreator<
               data.avatar || data.userId
                 ? merge(get().user, {
                     avatar: data.avatar,
+                    career: data.career,
                     email: data.email,
                     firstName: data.firstName,
                     fullName: data.fullName,
