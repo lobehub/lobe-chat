@@ -57,7 +57,9 @@ export interface FindNodesArgs {
 }
 
 // ============ Basic CRUD Args ============
-export interface CreateNodeArgs {
+
+/** Single node creation specification */
+export interface NodeCreate {
   attributes?: Record<string, string>;
   children?: string;
   content?: string;
@@ -66,12 +68,35 @@ export interface CreateNodeArgs {
   type: NodeType;
 }
 
-export interface UpdateNodeArgs {
+/**
+ * Args for creating nodes. Supports two modes:
+ * 1. Single node: Use type, content, etc. directly
+ * 2. Multiple nodes: Use nodes array containing multiple NodeCreate objects
+ */
+export type CreateNodeArgs =
+  | NodeCreate
+  | {
+      nodes: NodeCreate[];
+    };
+
+/** Single node update specification */
+export interface NodeUpdate {
   attributes?: Record<string, string | null>;
   children?: string;
   content?: string;
   nodeId: string;
 }
+
+/**
+ * Args for updating nodes. Supports two modes:
+ * 1. Single node: Use `nodeId` with optional `content`, `children`, `attributes`
+ * 2. Multiple nodes: Use `nodes` array containing multiple NodeUpdate objects
+ */
+export type UpdateNodeArgs =
+  | NodeUpdate
+  | {
+      nodes: NodeUpdate[];
+    };
 
 export interface DeleteNodeArgs {
   nodeId: string;
@@ -181,12 +206,38 @@ export interface FindNodesState {
   total: number;
 }
 
-export interface CreateNodeState {
+/** Details of a single node creation result */
+export interface NodeCreateResult {
+  content?: string;
   createdNodeId: string;
+  success: boolean;
+  type: string;
+}
+
+export interface CreateNodeState {
+  /** @deprecated Use results instead. Kept for backward compatibility */
+  createdNodeId?: string;
+  /** @deprecated Use results instead. Kept for backward compatibility */
+  createdNodeIds?: string[];
+  /** Individual creation results with details */
+  results: NodeCreateResult[];
+}
+
+/** Details of a single node update result */
+export interface NodeUpdateResult {
+  attributes?: Record<string, string | null>;
+  content?: string;
+  nodeId: string;
+  success: boolean;
 }
 
 export interface UpdateNodeState {
-  updatedNodeId: string;
+  /** Individual update results with details */
+  results: NodeUpdateResult[];
+  /** @deprecated Use results instead. Kept for backward compatibility */
+  updatedNodeId?: string;
+  /** @deprecated Use results instead. Kept for backward compatibility */
+  updatedNodeIds?: string[];
 }
 
 export interface DeleteNodeState {

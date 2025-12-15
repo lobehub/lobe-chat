@@ -45,6 +45,10 @@ import type {
   MergeNodesState,
   MoveNodeArgs,
   MoveNodeState,
+  NodeCreate,
+  NodeCreateResult,
+  NodeUpdate,
+  NodeUpdateResult,
   OutdentListItemArgs,
   OutdentListItemState,
   ReplaceTextArgs,
@@ -421,7 +425,7 @@ export class PageAgentExecutionRuntime {
   /**
    * Create a Lexical node structure from parameters
    */
-  private createLexicalNode(args: CreateNodeArgs): any {
+  private createLexicalNode(args: NodeCreate): any {
     const lexicalType = this.mapNodeTypeToLexical(args.type);
 
     // Handle text nodes specially
@@ -513,55 +517,131 @@ export class PageAgentExecutionRuntime {
 
   // ==================== Basic CRUD ====================
 
+  /**
+   * Build LiteXML and command payload for a single node creation
+   */
+  private buildNodeCreatePayload(nodeCreate: NodeCreate): {
+    commandPayload: { afterId: string; litexml: string } | { beforeId: string; litexml: string };
+    litexml: string;
+  } {
+    const nodeType = nodeCreate.type;
+    let content = '';
+
+    if (nodeCreate.content) {
+      // For text content, wrap in span
+      content = `<span>${nodeCreate.content}</span>`;
+    } else if (nodeCreate.children) {
+      content = nodeCreate.children;
+    }
+
+    // Build attributes string
+    let attributesStr = '';
+    if (nodeCreate.attributes) {
+      for (const [key, value] of Object.entries(nodeCreate.attributes)) {
+        if (value !== null && value !== undefined) {
+          attributesStr += ` ${key}="${value}"`;
+        }
+      }
+    }
+
+    const litexml = `<${nodeType}${attributesStr}>${content}</${nodeType}>`;
+
+    // Use LITEXML_INSERT_COMMAND to insert the node
+    // The command expects either { beforeId, litexml } or { afterId, litexml }
+    const position = nodeCreate.position || 'after';
+    const referenceId = nodeCreate.referenceNodeId || 'root';
+
+    const commandPayload =
+      position === 'before'
+        ? { beforeId: referenceId, litexml }
+        : { afterId: referenceId, litexml };
+
+    return { commandPayload, litexml };
+  }
+
+  /**
+   * Create one or multiple nodes in the document.
+   * Supports two modes:
+   * 1. Single node: args contains type, content, etc. directly
+   * 2. Multiple nodes: args contains nodes array with NodeCreate objects
+   */
   async createNode(args: CreateNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
       const editor = this.getEditor();
 
-      console.log('[createNode] Creating node:', args);
+      // Normalize input to always work with an array of nodes
+      const isMultiNodeCreate =
+        'nodes' in args && Array.isArray((args as { nodes: NodeCreate[] }).nodes);
+      const nodeCreates: NodeCreate[] = isMultiNodeCreate
+        ? (args as { nodes: NodeCreate[] }).nodes
+        : [args as NodeCreate];
 
-      // Build LiteXML for the new node
-      const nodeType = args.type;
-      let content = '';
+      console.log(
+        '[createNode] Creating nodes:',
+        nodeCreates.map((n) => n.type),
+      );
 
-      if (args.content) {
-        // For text content, wrap in span
-        content = `<span>${args.content}</span>`;
-      } else if (args.children) {
-        content = args.children;
-      }
+      const results: NodeCreateResult[] = [];
+      const createdNodeIds: string[] = [];
+      const errors: string[] = [];
 
-      // Build attributes string
-      let attributesStr = '';
-      if (args.attributes) {
-        for (const [key, value] of Object.entries(args.attributes)) {
-          if (value !== null && value !== undefined) {
-            attributesStr += ` ${key}="${value}"`;
-          }
+      // Process each node creation
+      for (const nodeCreate of nodeCreates) {
+        try {
+          const { commandPayload, litexml } = this.buildNodeCreatePayload(nodeCreate);
+
+          console.log('[createNode] Generated LiteXML for', nodeCreate.type, ':', litexml);
+
+          const success = editor.dispatchCommand(LITEXML_INSERT_COMMAND, commandPayload);
+
+          console.log('[createNode] Command dispatched, success:', success);
+
+          // Node ID will be assigned by the editor, we track it as 'pending'
+          const createdNodeId = 'pending';
+          createdNodeIds.push(createdNodeId);
+
+          results.push({
+            content: nodeCreate.content ?? nodeCreate.children,
+            createdNodeId,
+            success: true,
+            type: nodeCreate.type,
+          });
+        } catch (error) {
+          const err = error as Error;
+          console.error('[createNode] Error creating node:', nodeCreate.type, err.message);
+          errors.push(`${nodeCreate.type}: ${err.message}`);
+
+          results.push({
+            createdNodeId: '',
+            success: false,
+            type: nodeCreate.type,
+          });
         }
       }
 
-      const litexml = `<${nodeType}${attributesStr}>${content}</${nodeType}>`;
+      // Build response message
+      const successCount = results.filter((r) => r.success).length;
+      const nodesSummary =
+        nodeCreates.length === 1
+          ? `${nodeCreates[0].type} node`
+          : `${successCount} nodes (${nodeCreates.map((n) => n.type).join(', ')})`;
 
-      console.log('[createNode] Generated LiteXML:', litexml);
+      let content = `Successfully created ${nodesSummary}.`;
+      if (errors.length > 0) {
+        content += ` Errors: ${errors.join('; ')}`;
+      }
 
-      // Use LITEXML_INSERT_COMMAND to insert the node
-      // The command expects either { beforeId, litexml } or { afterId, litexml }
-      const position = args.position || 'after';
-      const commandPayload =
-        position === 'before'
-          ? { beforeId: args.referenceNodeId || 'root', litexml }
-          : { afterId: args.referenceNodeId || 'root', litexml };
-
-      const success = editor.dispatchCommand(LITEXML_INSERT_COMMAND, commandPayload);
-
-      console.log('[createNode] Command dispatched, success:', success);
+      // Return state with detailed results and backward compatibility
+      const state: CreateNodeState = {
+        createdNodeId: createdNodeIds.length === 1 ? createdNodeIds[0] : undefined,
+        createdNodeIds,
+        results,
+      };
 
       return {
-        content: `Successfully created ${args.type} node${args.referenceNodeId ? ` ${args.position || 'after'} node ${args.referenceNodeId}` : ' at document root'}.`,
-        state: {
-          createdNodeId: 'pending', // Node ID will be assigned by the editor
-        } as CreateNodeState,
-        success: true,
+        content,
+        state,
+        success: successCount > 0,
       };
     } catch (error) {
       const err = error as Error;
@@ -574,77 +654,146 @@ export class PageAgentExecutionRuntime {
     }
   }
 
-  // TODO: Shoould support muttiple nodes modification
+  /**
+   * Build LiteXML for a single node update
+   */
+  private buildNodeUpdateLiteXML(
+    nodeUpdate: NodeUpdate,
+    pageXML: string,
+  ): { litexml: string; updates: string[] } | { error: string } {
+    const xmlNode = this.findNodeInXML(pageXML, nodeUpdate.nodeId);
+
+    if (!xmlNode) {
+      return { error: `Node ${nodeUpdate.nodeId} not found` };
+    }
+
+    const nodeType = xmlNode.tagName;
+    const updates: string[] = [];
+
+    // Start building the XML tag
+    let attributes = `id="${nodeUpdate.nodeId}"`;
+
+    // Add or update attributes
+    if (nodeUpdate.attributes) {
+      for (const [key, value] of Object.entries(nodeUpdate.attributes)) {
+        if (value !== null) {
+          attributes += ` ${key}="${value}"`;
+          updates.push(`set attribute ${key}`);
+        }
+      }
+    }
+
+    // Build content
+    let content = '';
+    if (nodeUpdate.content !== undefined) {
+      content = nodeUpdate.content;
+      updates.push('content');
+    } else if (nodeUpdate.children !== undefined) {
+      content = nodeUpdate.children;
+      updates.push('children');
+    } else {
+      // Keep existing content from XML
+      content = xmlNode.content;
+    }
+
+    const litexml = `<${nodeType} ${attributes}>${content}</${nodeType}>`;
+
+    return { litexml, updates };
+  }
+
+  /**
+   * Update one or multiple nodes in the document.
+   * Supports two modes:
+   * 1. Single node: args contains `nodeId` with optional `content`, `children`, `attributes`
+   * 2. Multiple nodes: args contains `nodes` array with NodeUpdate objects
+   */
   async updateNode(args: UpdateNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
       const editor = this.getEditor();
 
-      console.log('[updateNode] Attempting to update node:', args.nodeId);
-      console.log('[updateNode] Update args:', {
-        content: args.content,
-        hasAttributes: !!args.attributes,
-        hasChildren: !!args.children,
-      });
+      // Normalize input to always work with an array of nodes
+      const isMultiNodeUpdate =
+        'nodes' in args && Array.isArray((args as { nodes: NodeUpdate[] }).nodes);
+      const nodeUpdates: NodeUpdate[] = isMultiNodeUpdate
+        ? (args as { nodes: NodeUpdate[] }).nodes
+        : [args as NodeUpdate];
 
-      // Build the LiteXML for the updated node
-      let litexml = '';
+      console.log(
+        '[updateNode] Attempting to update nodes:',
+        nodeUpdates.map((n) => n.nodeId),
+      );
 
-      // Get node info from pageXML instead of docJSON
       const pageXML = editor.getDocument('litexml') as unknown as string;
-      const xmlNode = this.findNodeInXML(pageXML, args.nodeId);
-
       console.log('[updateNode] pageXML:', pageXML);
-      console.log('[updateNode] Found XML node:', xmlNode);
 
-      if (!xmlNode) {
-        console.error('[updateNode] Node not found in XML:', args.nodeId);
-        throw new Error(`Node ${args.nodeId} not found`);
-      }
+      const litexmlList: string[] = [];
+      const updatedNodeIds: string[] = [];
+      const allUpdates: string[] = [];
+      const errors: string[] = [];
+      const results: NodeUpdateResult[] = [];
 
-      const nodeType = xmlNode.tagName;
-      const updates: string[] = [];
+      // Build LiteXML for each node update
+      for (const nodeUpdate of nodeUpdates) {
+        const result = this.buildNodeUpdateLiteXML(nodeUpdate, pageXML);
 
-      // Start building the XML tag
-      let attributes = `id="${args.nodeId}"`;
-
-      // Add or update attributes
-      if (args.attributes) {
-        for (const [key, value] of Object.entries(args.attributes)) {
-          if (value !== null) {
-            attributes += ` ${key}="${value}"`;
-            updates.push(`set attribute ${key}`);
-          }
+        if ('error' in result) {
+          console.error('[updateNode] Node not found:', nodeUpdate.nodeId);
+          errors.push(result.error);
+          // Track failed updates in results
+          results.push({
+            nodeId: nodeUpdate.nodeId,
+            success: false,
+          });
+          continue;
         }
+
+        console.log('[updateNode] Generated LiteXML for', nodeUpdate.nodeId, ':', result.litexml);
+        litexmlList.push(result.litexml);
+        updatedNodeIds.push(nodeUpdate.nodeId);
+        allUpdates.push(...result.updates);
+
+        // Track successful updates with their new values
+        results.push({
+          attributes: nodeUpdate.attributes,
+          content: nodeUpdate.content ?? nodeUpdate.children,
+          nodeId: nodeUpdate.nodeId,
+          success: true,
+        });
       }
 
-      // Build content
-      let content = '';
-      if (args.content !== undefined) {
-        content = args.content;
-        updates.push('content');
-      } else if (args.children !== undefined) {
-        content = args.children;
-        updates.push('children');
-      } else {
-        // Keep existing content from XML
-        content = xmlNode.content;
+      // If no valid nodes to update, return error
+      if (litexmlList.length === 0) {
+        throw new Error(errors.join('; '));
       }
 
-      litexml = `<${nodeType} ${attributes}>${content}</${nodeType}>`;
-
-      console.log('[updateNode] Generated LiteXML:', litexml);
-
+      // Dispatch all updates at once
       const success = editor.dispatchCommand(LITEXML_APPLY_COMMAND, {
-        litexml: [litexml],
+        litexml: litexmlList,
       });
 
       console.log('[updateNode] Command dispatched, success:', success);
 
-      const updateSummary = updates.length > 0 ? ` (${updates.join(', ')})` : '';
+      const updateSummary = allUpdates.length > 0 ? ` (${allUpdates.join(', ')})` : '';
+      const nodesSummary =
+        updatedNodeIds.length === 1
+          ? `node ${updatedNodeIds[0]}`
+          : `${updatedNodeIds.length} nodes (${updatedNodeIds.join(', ')})`;
+
+      let content = `Successfully updated ${nodesSummary}${updateSummary}.`;
+      if (errors.length > 0) {
+        content += ` Warnings: ${errors.join('; ')}`;
+      }
+
+      // Return state with detailed results and backward compatibility
+      const state: UpdateNodeState = {
+        results,
+        updatedNodeId: updatedNodeIds.length === 1 ? updatedNodeIds[0] : undefined,
+        updatedNodeIds,
+      };
 
       return {
-        content: `Successfully updated node ${args.nodeId}${updateSummary}.`,
-        state: { updatedNodeId: args.nodeId } as UpdateNodeState,
+        content,
+        state,
         success: true,
       };
     } catch (error) {

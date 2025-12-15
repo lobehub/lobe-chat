@@ -51,11 +51,11 @@ export const DocumentApiName = {
   toggleListType: 'toggleListType',
 
   // Snapshot Operations
-  compareSnapshots: 'compareSnapshots',
-  deleteSnapshot: 'deleteSnapshot',
-  listSnapshots: 'listSnapshots',
-  restoreSnapshot: 'restoreSnapshot',
-  saveSnapshot: 'saveSnapshot',
+  // compareSnapshots: 'compareSnapshots',
+  // deleteSnapshot: 'deleteSnapshot',
+  // listSnapshots: 'listSnapshots',
+  // restoreSnapshot: 'restoreSnapshot',
+  // saveSnapshot: 'saveSnapshot',
 };
 
 export const PageAgentManifest: BuiltinToolManifest = {
