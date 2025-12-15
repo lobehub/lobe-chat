@@ -1,6 +1,6 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
-import AIBadgrProvider from './aibadgr';
+import AIBadgr from './aibadgr';
 import Ai21Provider from './ai21';
 import Ai302Provider from './ai302';
 import Ai360Provider from './ai360';
@@ -141,7 +141,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   DeepSeekProvider,
   MoonshotProvider,
   AiHubMixProvider,
-  AIBadgrProvider,
+  AIBadgr,
   OpenRouterProvider,
   FalProvider,
   HuggingFaceProvider,
