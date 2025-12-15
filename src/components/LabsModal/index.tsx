@@ -26,10 +26,9 @@ interface LabsModalProps {
 const LabsModal = memo<LabsModalProps>(({ open, onClose }) => {
   const { t } = useTranslation('labs');
 
-  const [isPreferenceInit, enableInputMarkdown, enableGroupChat, updateLab] = useUserStore((s) => [
+  const [isPreferenceInit, enableInputMarkdown, updateLab] = useUserStore((s) => [
     preferenceSelectors.isPreferenceInit(s),
     labPreferSelectors.enableInputMarkdown(s),
-    labPreferSelectors.enableGroupChat(s),
     s.updateLab,
   ]);
 
@@ -40,13 +39,6 @@ const LabsModal = memo<LabsModalProps>(({ open, onClose }) => {
       desc: t('features.inputMarkdown.desc'),
       key: 'enableInputMarkdown',
       title: t('features.inputMarkdown.title'),
-    },
-    {
-      checked: enableGroupChat,
-      cover: 'https://github.com/user-attachments/assets/72894d24-a96a-4d7c-a823-ff9e6a1a8b6d',
-      desc: t('features.groupChat.desc'),
-      key: 'groupChat',
-      title: t('features.groupChat.title'),
     },
   ];
 

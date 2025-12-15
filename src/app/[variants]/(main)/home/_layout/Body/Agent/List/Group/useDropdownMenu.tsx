@@ -1,8 +1,6 @@
 import { type MenuProps } from '@lobehub/ui';
 import { useMemo } from 'react';
 
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-
 import { useCreateMenuItems, useSessionGroupMenuItems } from '../../../../hooks';
 
 interface GroupDropdownMenuProps {
@@ -22,7 +20,6 @@ export const useGroupDropdownMenu = ({
   handleOpenMemberSelection,
   openConfigGroupModal,
 }: GroupDropdownMenuProps): MenuProps['items'] => {
-  const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   // Session group menu items
   const { renameGroupMenuItem, configGroupMenuItem, deleteGroupMenuItem } =
@@ -40,14 +37,13 @@ export const useGroupDropdownMenu = ({
 
     return [
       createAgentItem,
-      ...(enableGroupChat ? [createGroupChatItem] : []),
+      createGroupChatItem,
       { type: 'divider' as const },
       ...(isCustomGroup
         ? [renameItem, configItem, { type: 'divider' as const }, deleteItem]
         : [configItem]),
     ].filter(Boolean) as MenuProps['items'];
   }, [
-    enableGroupChat,
     isCustomGroup,
     id,
     isPinned,

@@ -9,14 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { useAgentModal } from '../../Body/Agent/ModalProvider';
 import { useCreateMenuItems } from '../../hooks';
 
 const AddButton = memo(() => {
   const { t: tChat } = useTranslation('chat');
-  const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   const theme = useTheme();
 
@@ -85,19 +83,12 @@ const AddButton = memo(() => {
   );
 
   const dropdownItems = useMemo(() => {
-    const items = [
+    return [
       createAgentMenuItem(),
-      enableGroupChat ? createGroupChatMenuItem(handleOpenGroupWizard) : null,
+      createGroupChatMenuItem(handleOpenGroupWizard),
       createPageMenuItem(),
-    ].filter(Boolean);
-    return items as any;
-  }, [
-    createAgentMenuItem,
-    createGroupChatMenuItem,
-    createPageMenuItem,
-    enableGroupChat,
-    handleOpenGroupWizard,
-  ]);
+    ];
+  }, [createAgentMenuItem, createGroupChatMenuItem, createPageMenuItem, handleOpenGroupWizard]);
 
   return (
     <Flexbox horizontal>

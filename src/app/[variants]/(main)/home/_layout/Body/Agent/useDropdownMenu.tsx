@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { useCreateMenuItems } from '../../hooks';
 
@@ -19,7 +18,6 @@ export const useAgentActionsDropdownMenu = ({
   openConfigGroupModal,
 }: AgentActionsDropdownMenuProps): MenuProps['items'] => {
   const { t } = useTranslation('common');
-  const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
   const [agentPageSize, updateSystemStatus] = useGlobalStore((s) => [
     systemStatusSelectors.agentPageSize(s),
@@ -52,7 +50,7 @@ export const useAgentActionsDropdownMenu = ({
 
     return [
       createAgentItem,
-      ...(enableGroupChat ? [createGroupChatItem] : []),
+      createGroupChatItem,
       { type: 'divider' as const },
       {
         children: pageSizeItems,
@@ -65,7 +63,6 @@ export const useAgentActionsDropdownMenu = ({
       configItem,
     ].filter(Boolean) as MenuProps['items'];
   }, [
-    enableGroupChat,
     agentPageSize,
     updateSystemStatus,
     createAgentMenuItem,

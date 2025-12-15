@@ -6,7 +6,6 @@ export const DEFAULT_PREFERENCE: UserPreference = {
     topic: true,
   },
   lab: {
-    enableGroupChat: false,
     enableInputMarkdown: true,
   },
   telemetry: null,

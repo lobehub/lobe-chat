@@ -5,6 +5,7 @@ import type { OpenAIChatMessage } from '@/types/index';
 
 import { ContextEngine } from '../../pipeline';
 import {
+  AgentCouncilFlattenProcessor,
   GroupMessageFlattenProcessor,
   GroupMessageSenderProcessor,
   HistoryTruncateProcessor,
@@ -204,10 +205,13 @@ export class MessagesEngine {
         variableGenerators: variableGenerators || {},
       }),
 
-      // 11. Group message flatten (convert role=group to standard assistant + tool messages)
+      // 11. AgentCouncil message flatten (convert role=agentCouncil to standard assistant + tool messages)
+      new AgentCouncilFlattenProcessor(),
+
+      // 12. Group message flatten (convert role=assistantGroup to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
 
-      // 12. Group message sender identity injection (for multi-agent chat)
+      // 13. Group message sender identity injection (for multi-agent chat)
       ...(isAgentGroupEnabled
         ? [
             new GroupMessageSenderProcessor({
@@ -216,7 +220,7 @@ export class MessagesEngine {
           ]
         : []),
 
-      // 13. Message content processing (image encoding, etc.)
+      // 14. Message content processing (image encoding, etc.)
       new MessageContentProcessor({
         fileContext: fileContext || { enabled: true, includeFileUrl: true },
         isCanUseVideo: capabilities?.isCanUseVideo || (() => false),
@@ -225,7 +229,7 @@ export class MessagesEngine {
         provider,
       }),
 
-      // 14. Tool call processing
+      // 15. Tool call processing
       new ToolCallProcessor({
         genToolCallingName: this.toolNameResolver.generate.bind(this.toolNameResolver),
         isCanUseFC: capabilities?.isCanUseFC || (() => true),
@@ -233,10 +237,10 @@ export class MessagesEngine {
         provider,
       }),
 
-      // 15. Tool message reordering
+      // 16. Tool message reordering
       new ToolMessageReorder(),
 
-      // 16. Message cleanup (final step, keep only necessary fields)
+      // 17. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ];
   }

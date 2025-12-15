@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentGroupStore } from '@/store/agentGroup';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -43,8 +42,6 @@ const Actions = memo<ActionsProps>(
     ]);
 
     const [createGroup] = useAgentGroupStore((s) => [s.createGroup]);
-
-    const { enableGroupChat } = useServerConfigStore(featureFlagsSelectors);
 
     const sessionGroupConfigPublicItem: MenuItemType = {
       icon: <Icon icon={Settings2} />,
@@ -167,16 +164,8 @@ const Actions = memo<ActionsProps>(
     );
 
     const menuItems = useMemo(() => {
-      const items: MenuProps['items'] = [newAgentPublicItem];
-
-      if (enableGroupChat) {
-        items.push(newGroupChatItem);
-      }
-
-      items.push({ type: 'divider' }, ...tailItems);
-
-      return items;
-    }, [enableGroupChat, newAgentPublicItem, newGroupChatItem, tailItems]);
+      return [newAgentPublicItem, newGroupChatItem, { type: 'divider' as const }, ...tailItems];
+    }, [newAgentPublicItem, newGroupChatItem, tailItems]);
 
     return (
       <>
@@ -203,14 +192,12 @@ const Actions = memo<ActionsProps>(
           />
         </Dropdown>
 
-        {enableGroupChat && (
-          <MemberSelectionModal
-            mode="create"
-            onCancel={handleGroupModalCancel}
-            onConfirm={handleCreateGroupWithMembers}
-            open={isGroupModalOpen}
-          />
-        )}
+        <MemberSelectionModal
+          mode="create"
+          onCancel={handleGroupModalCancel}
+          onConfirm={handleCreateGroupWithMembers}
+          open={isGroupModalOpen}
+        />
       </>
     );
   },
