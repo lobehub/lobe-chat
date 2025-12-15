@@ -38,7 +38,6 @@ export const generalActionSlice: StateCreator<
   openSessionInNewWindow: async (sessionId: string) => {
     const url = `/chat?session=${sessionId}${isDesktop ? '&mode=single' : ''}`;
 
-
     if (isDesktop) {
       try {
         const { ensureElectronIpc } = await import('@/utils/electron/ipc');
@@ -124,6 +123,7 @@ export const generalActionSlice: StateCreator<
       (async () => {
         try {
           const { ensureElectronIpc } = await import('@/utils/electron/ipc');
+
           await ensureElectronIpc().system.updateThemeModeHandler(themeMode);
         } catch (error) {
           console.error('Failed to update theme in main process:', error);

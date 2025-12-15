@@ -87,6 +87,19 @@ export default class SystemController extends ControllerModule {
 
     // Apply visual effects to all browser windows when theme mode changes
     this.app.browserManager.handleAppThemeChange();
+    // Set app theme mode to the system theme mode
+
+    this.setSystemThemeMode(themeMode);
+  }
+
+  @IpcMethod()
+  async getSystemThemeMode() {
+    return nativeTheme.themeSource;
+  }
+
+  @IpcMethod()
+  async setSystemThemeMode(themeMode: ThemeMode) {
+    nativeTheme.themeSource = themeMode === 'auto' ? 'system' : themeMode;
   }
 
   /**

@@ -2,7 +2,7 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { Suspense, memo, useEffect } from 'react';
+import { Suspense, memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
@@ -30,9 +30,7 @@ const Layout = memo(() => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
-  useEffect(() => {
-    document.body.style.background = theme.colorBgLayout;
-  }, [theme.colorBgLayout]);
+
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
       <Suspense fallback={null}>
