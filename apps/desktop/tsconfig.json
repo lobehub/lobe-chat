@@ -4,7 +4,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": false,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "target": "ESNext",
     "declaration": true,
     "emitDeclarationOnly": true,
