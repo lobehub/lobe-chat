@@ -17,10 +17,10 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": [
-        "src/main/*"
+        "./src/main/*"
       ],
       "~common/*": [
-        "src/common/*"
+        "./src/common/*"
       ],
       "@lobechat/desktop-bridge": [
         "../../packages/desktop-bridge/src"
