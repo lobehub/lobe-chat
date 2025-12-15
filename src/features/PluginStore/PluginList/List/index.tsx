@@ -75,7 +75,7 @@ export const List = memo(() => {
       }}
       data={allItems}
       endReached={loadMorePlugins}
-      increaseViewportBy={800}
+      increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       itemContent={(_, item) => (
         <Flexbox
           key={item.identifier}

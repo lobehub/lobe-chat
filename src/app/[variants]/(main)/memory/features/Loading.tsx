@@ -4,10 +4,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ViewMode } from './ViewModeSwitcher';
 
-const Loading = memo<{ viewMode?: ViewMode }>(({ viewMode }) => {
+const Loading = memo<{ rows?: number; viewMode?: ViewMode }>(({ viewMode, rows = 3 }) => {
   if (viewMode === 'timeline') {
     return (
-      <Flexbox gap={36}>
+      <Flexbox gap={36} style={{ paddingLeft: 32 }}>
         <Skeleton active />
         <Skeleton active />
         <Skeleton active />
@@ -16,7 +16,7 @@ const Loading = memo<{ viewMode?: ViewMode }>(({ viewMode }) => {
   }
 
   return (
-    <Grid gap={16} rows={3}>
+    <Grid gap={8} maxItemWidth={240} rows={rows}>
       <Skeleton.Block active height={200} width={'100%'} />
       <Skeleton.Block active height={200} width={'100%'} />
       <Skeleton.Block active height={200} width={'100%'} />

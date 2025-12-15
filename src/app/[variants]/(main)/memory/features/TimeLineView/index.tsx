@@ -135,7 +135,7 @@ function TimelineViewInner<T extends { createdAt: Date | string; id: string }>({
           return renderHeader(periodKey, itemCount);
         }}
         groupCounts={groupCounts}
-        increaseViewportBy={800}
+        increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
         itemContent={(index) => {
           const item = groupedItems[index];
           return renderItem(item);

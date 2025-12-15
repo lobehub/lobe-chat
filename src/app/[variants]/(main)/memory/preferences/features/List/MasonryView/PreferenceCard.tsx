@@ -5,7 +5,7 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import MasonryCard from '@/app/[variants]/(main)/memory/features/MasonryView/MasonryCard';
+import MasonryCard from '@/app/[variants]/(main)/memory/features/GridView/MasonryCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';

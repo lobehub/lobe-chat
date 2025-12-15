@@ -24,7 +24,6 @@ const MasonryView = memo<MasonryViewProps>(({ contexts, isLoading, onClick, onDe
       hasMore={contextsHasMore}
       isLoading={isLoading}
       items={contexts}
-      maxItemWidth={480}
       onLoadMore={loadMoreContexts}
       renderItem={(context, actions) => (
         <ContextCard

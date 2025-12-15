@@ -62,6 +62,7 @@ const MasonryCard = memo<MasonryCardProps>(
       <Block
         className={styles.masonryCard}
         gap={4}
+        height={'100%'}
         onClick={onClick}
         padding={4}
         style={{
@@ -70,6 +71,7 @@ const MasonryCard = memo<MasonryCardProps>(
         variant={'filled'}
       >
         <Block
+          flex={1}
           gap={12}
           paddingBlock={16}
           paddingInline={12}
@@ -84,7 +86,13 @@ const MasonryCard = memo<MasonryCardProps>(
             <>
               <Flexbox align={'center'} gap={8} horizontal wrap={'wrap'}>
                 {title && typeof title === 'string' ? (
-                  <Text as={'h2'} fontSize={16} style={{ lineHeight: 1.5, margin: 0 }} weight={500}>
+                  <Text
+                    as={'h2'}
+                    ellipsis={{ rows: 2 }}
+                    fontSize={16}
+                    style={{ lineHeight: 1.5, margin: 0 }}
+                    weight={500}
+                  >
                     {title}
                   </Text>
                 ) : (
@@ -99,7 +107,7 @@ const MasonryCard = memo<MasonryCardProps>(
             </>
           )}
           {typeof children === 'string' ? (
-            <Text as={'p'} color={theme.colorTextSecondary}>
+            <Text as={'p'} color={theme.colorTextSecondary} ellipsis={{ rows: 4 }}>
               {children}
             </Text>
           ) : (

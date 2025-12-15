@@ -41,7 +41,7 @@ interface ItemActions<T> {
 function GridViewInner<T extends { id: string }>({
   items,
   defaultColumnCount = 3,
-  maxItemWidth = 360,
+  maxItemWidth = 240,
   hasMore,
   isLoading,
   onLoadMore,
@@ -56,10 +56,12 @@ function GridViewInner<T extends { id: string }>({
   return (
     <VirtuosoGrid
       components={{
-        Footer: isLoading ? () => <Loading viewMode={'grid'} /> : undefined,
+        Footer: isLoading
+          ? () => <Loading rows={defaultColumnCount} viewMode={'grid'} />
+          : undefined,
         List: forwardRef<HTMLDivElement, DivProps>((props, ref) => (
           <Grid
-            gap={16}
+            gap={8}
             maxItemWidth={maxItemWidth}
             ref={ref}
             rows={defaultColumnCount}
@@ -70,7 +72,7 @@ function GridViewInner<T extends { id: string }>({
       customScrollParent={scrollParent}
       data={items}
       endReached={hasMore && onLoadMore ? onLoadMore : undefined}
-      increaseViewportBy={800}
+      increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       itemContent={(index, item) => {
         if (!item || !item.id) {
           return null;
@@ -84,7 +86,7 @@ function GridViewInner<T extends { id: string }>({
 
         return renderItem(item, actions);
       }}
-      overscan={24}
+      overscan={48}
       style={{ minHeight: '100%' }}
     />
   );

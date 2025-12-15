@@ -79,7 +79,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
       }}
       data={allItems}
       endReached={loadMoreMCPPlugins}
-      increaseViewportBy={800}
+      increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       itemContent={(_, item) => {
         return (
           <Flexbox key={item.identifier} paddingBlock={2} paddingInline={4}>

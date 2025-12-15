@@ -19,11 +19,9 @@ const MasonryView = memo<MasonryViewProps>(({ identities, isLoading, onClick, on
 
   return (
     <GridView
-      defaultColumnCount={3}
       hasMore={identitiesHasMore}
       isLoading={isLoading}
       items={identities}
-      maxItemWidth={360}
       onLoadMore={loadMoreIdentities}
       renderItem={(identity) => (
         <IdentityCard identity={identity} onClick={() => onClick?.(identity)} onDelete={onDelete} />

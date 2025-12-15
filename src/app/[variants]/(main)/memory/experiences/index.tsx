@@ -22,7 +22,7 @@ const ExperiencesArea = memo(() => {
   const [sortValueRaw, setSortValueRaw] = useQueryState('sort', { clearOnDefault: true });
 
   const searchValue = searchValueRaw || '';
-  const sortValue = (sortValueRaw as 'scoreConfidence') || undefined;
+  const sortValue = (sortValueRaw as 'createdAt' | 'scoreConfidence') || 'createdAt';
 
   const experiencesPage = useUserMemoryStore((s) => s.experiencesPage);
   const experiencesInit = useUserMemoryStore((s) => s.experiencesInit);
@@ -30,20 +30,27 @@ const ExperiencesArea = memo(() => {
   const useFetchExperiences = useUserMemoryStore((s) => s.useFetchExperiences);
   const resetExperiencesList = useUserMemoryStore((s) => s.resetExperiencesList);
 
-  const sortOptions = [{ label: t('filter.sort.scoreConfidence'), value: 'scoreConfidence' }];
+  const sortOptions = [
+    { label: t('filter.sort.createdAt'), value: 'createdAt' },
+    { label: t('filter.sort.scoreConfidence'), value: 'scoreConfidence' },
+  ];
+
+  // 转换 sort：createdAt 转为 undefined（后端默认）
+  const apiSort = sortValue === 'createdAt' ? undefined : (sortValue as 'scoreConfidence');
 
   // 当搜索或排序变化时重置列表
   useEffect(() => {
-    const sort = viewMode === 'grid' ? sortValue : undefined;
+    if (!apiSort) return;
+    const sort = viewMode === 'grid' ? apiSort : undefined;
     resetExperiencesList({ q: searchValue || undefined, sort });
-  }, [searchValue, sortValue, viewMode]);
+  }, [searchValue, apiSort, viewMode]);
 
   // 调用 SWR hook 获取数据
   const { isLoading } = useFetchExperiences({
     page: experiencesPage,
     pageSize: 20,
     q: searchValue || undefined,
-    sort: viewMode === 'grid' ? sortValue : undefined,
+    sort: viewMode === 'grid' ? apiSort : undefined,
   });
 
   // Handle search and sort changes

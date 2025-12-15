@@ -21,11 +21,9 @@ const MasonryView = memo<MasonryViewProps>(
 
     return (
       <GridView
-        defaultColumnCount={3}
         hasMore={preferencesHasMore}
         isLoading={isLoading}
         items={preferences}
-        maxItemWidth={360}
         onLoadMore={loadMorePreferences}
         renderItem={(preference, actions) => (
           <PreferenceCard

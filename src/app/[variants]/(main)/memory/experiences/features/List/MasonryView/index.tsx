@@ -21,11 +21,9 @@ const MasonryView = memo<MasonryViewProps>(
 
     return (
       <GridView
-        defaultColumnCount={3}
         hasMore={experiencesHasMore}
         isLoading={isLoading}
         items={experiences}
-        maxItemWidth={360}
         onLoadMore={loadMoreExperiences}
         renderItem={(experience, actions) => (
           <ExperienceCard
