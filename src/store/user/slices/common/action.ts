@@ -25,9 +25,9 @@ const GET_USER_STATE_KEY = 'initUserState';
 export interface CommonAction {
   refreshUserState: () => Promise<void>;
   updateAvatar: (avatar: string) => Promise<void>;
-  updateCareer: (career: string) => Promise<void>;
   updateFullName: (fullName: string) => Promise<void>;
   updateKeyVaultConfig: (provider: string, config: any) => Promise<void>;
+  updateOccupation: (occupation: string) => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
@@ -54,11 +54,6 @@ export const createCommonSlice: StateCreator<
     await get().refreshUserState();
   },
 
-  updateCareer: async (career) => {
-    await userService.updateCareer(career);
-    await get().refreshUserState();
-  },
-
   updateFullName: async (fullName) => {
     await userService.updateFullName(fullName);
     await get().refreshUserState();
@@ -66,6 +61,11 @@ export const createCommonSlice: StateCreator<
 
   updateKeyVaultConfig: async (provider, config) => {
     await get().setSettings({ keyVaults: { [provider]: config } });
+  },
+
+  updateOccupation: async (occupation) => {
+    await userService.updateOccupation(occupation);
+    await get().refreshUserState();
   },
 
   updateUsername: async (username) => {
@@ -118,12 +118,12 @@ export const createCommonSlice: StateCreator<
               data.avatar || data.userId
                 ? merge(get().user, {
                     avatar: data.avatar,
-                    career: data.career,
                     email: data.email,
                     firstName: data.firstName,
                     fullName: data.fullName,
                     id: data.userId,
                     latestName: data.lastName,
+                    occupation: data.occupation,
                     username: data.username,
                   } as LobeUser)
                 : get().user;

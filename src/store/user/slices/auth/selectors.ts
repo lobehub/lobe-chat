@@ -35,11 +35,11 @@ const username = (s: UserStore) => {
 };
 
 export const userProfileSelectors = {
-  career: (s: UserStore): string => s.user?.career || '',
   displayUserName: (s: UserStore): string => username(s) || s.user?.email || '',
   email: (s: UserStore): string => s.user?.email || '',
   fullName: (s: UserStore): string => s.user?.fullName || '',
   nickName,
+  occupation: (s: UserStore): string => s.user?.occupation || '',
   userAvatar: (s: UserStore): string => s.user?.avatar || '',
   userId: (s: UserStore) => s.user?.id,
   userProfile: (s: UserStore): LobeUser | null | undefined => s.user,

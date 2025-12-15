@@ -258,16 +258,16 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
+const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
-  const career = useUserStore(userProfileSelectors.career);
-  const updateCareer = useUserStore((s) => s.updateCareer);
+  const occupation = useUserStore(userProfileSelectors.occupation);
+  const updateOccupation = useUserStore((s) => s.updateOccupation);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
   const [saving, setSaving] = useState(false);
 
   const handleStartEdit = () => {
-    setEditValue(career || '');
+    setEditValue(occupation || '');
     setIsEditing(true);
   };
 
@@ -279,10 +279,10 @@ const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   const handleSave = useCallback(async () => {
     try {
       setSaving(true);
-      await updateCareer(editValue.trim());
+      await updateOccupation(editValue.trim());
       setIsEditing(false);
     } catch (error) {
-      console.error('Failed to update career:', error);
+      console.error('Failed to update occupation:', error);
       fetchErrorNotification.error({
         errorMessage: error instanceof Error ? error.message : String(error),
         status: 500,
@@ -290,7 +290,7 @@ const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     } finally {
       setSaving(false);
     }
-  }, [editValue, updateCareer]);
+  }, [editValue, updateOccupation]);
 
   const editingContent = (
     <motion.div
@@ -301,12 +301,12 @@ const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       <Flexbox gap={12}>
-        {!mobile && <Typography.Text strong>{t('profile.careerInputHint')}</Typography.Text>}
+        {!mobile && <Typography.Text strong>{t('profile.occupationInputHint')}</Typography.Text>}
         <Input
           autoFocus
           onChange={(e) => setEditValue(e.target.value)}
           onPressEnter={handleSave}
-          placeholder={t('profile.careerPlaceholder')}
+          placeholder={t('profile.occupationPlaceholder')}
           value={editValue}
         />
         <Flexbox gap={8} horizontal justify="flex-end">
@@ -330,12 +330,12 @@ const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       {mobile ? (
-        <Typography.Text>{career || '--'}</Typography.Text>
+        <Typography.Text>{occupation || '--'}</Typography.Text>
       ) : (
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text>{career || '--'}</Typography.Text>
+          <Typography.Text>{occupation || '--'}</Typography.Text>
           <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
-            {t('profile.updateCareer')}
+            {t('profile.updateOccupation')}
           </Typography.Text>
         </Flexbox>
       )}
@@ -346,10 +346,10 @@ const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{t('profile.career')}</Typography.Text>
+          <Typography.Text strong>{t('profile.occupation')}</Typography.Text>
           {!isEditing && (
             <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
-              {t('profile.updateCareer')}
+              {t('profile.updateOccupation')}
             </Typography.Text>
           )}
         </Flexbox>
@@ -360,7 +360,7 @@ const CareerRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={24} horizontal style={rowStyle}>
-      <Typography.Text style={labelStyle}>{t('profile.career')}</Typography.Text>
+      <Typography.Text style={labelStyle}>{t('profile.occupation')}</Typography.Text>
       <Flexbox style={{ flex: 1 }}>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
       </Flexbox>
@@ -629,7 +629,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Divider style={{ margin: 0 }} />
 
       {/* Career Row - Editable */}
-      <CareerRow mobile={mobile} />
+      <OccupationRow mobile={mobile} />
 
       <Divider style={{ margin: 0 }} />
 

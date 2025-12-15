@@ -7,12 +7,12 @@ import { UserSettings } from './settings';
 
 export interface LobeUser {
   avatar?: string;
-  career?: string | null;
   email?: string | null;
   firstName?: string | null;
   fullName?: string | null;
   id: string;
   latestName?: string | null;
+  occupation?: string | null;
   username?: string | null;
 }
 
@@ -75,13 +75,13 @@ export interface UserInitializationState {
   avatar?: string;
   canEnablePWAGuide?: boolean;
   canEnableTrace?: boolean;
-  career?: string;
   email?: string;
   firstName?: string;
   fullName?: string;
   hasConversation?: boolean;
   isOnboard?: boolean;
   lastName?: string;
+  occupation?: string;
   preference: UserPreference;
   settings: PartialDeep<UserSettings>;
   subscriptionPlan?: Plans;

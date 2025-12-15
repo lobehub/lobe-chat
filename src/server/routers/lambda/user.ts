@@ -130,17 +130,19 @@ export const userRouter = router({
       avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
-      career: state.career,
       email: state.email,
       firstName: state.firstName,
-
       fullName: state.fullName,
 
       // 有消息，或者创建过助手，则认为有 conversation
-      hasConversation: hasAnyMessages || hasExtraSession,
+hasConversation: hasAnyMessages || hasExtraSession,
+
+      
       // always return true for community version
-      isOnboard: state.isOnboarded || true,
+isOnboard: state.isOnboarded || true,
+      
       lastName: state.lastName,
+      occupation: state.occupation,
       preference: state.preference as UserPreference,
       settings: state.settings,
       userId: ctx.userId,
@@ -164,7 +166,6 @@ export const userRouter = router({
     await ctx.nextAuthUserService.unlinkAccount({ provider, providerAccountId });
   }),
 
-  
   updateAvatar: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     // 如果是 Base64 数据，需要上传到 S3
     if (input.startsWith('data:image')) {
@@ -219,17 +220,16 @@ export const userRouter = router({
     return ctx.userModel.updateUser({ avatar: input });
   }),
 
-  // 服务端上传头像
-updateCareer: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updateUser({ career: input });
-  }),
-
   updateFullName: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateUser({ fullName: input });
   }),
 
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateGuide(input);
+  }),
+
+  updateOccupation: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ occupation: input });
   }),
 
   updatePreference: userProcedure.input(UserPreferenceSchema).mutation(async ({ ctx, input }) => {
