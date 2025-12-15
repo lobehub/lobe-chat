@@ -1,6 +1,8 @@
-import { Grid , DivProps } from '@lobehub/ui';
+import { DivProps, Grid } from '@lobehub/ui';
 import { ReactNode, forwardRef, memo } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
+
+import Loading from '@/app/[variants]/(main)/memory/features/Loading';
 
 import { useScrollParent } from '../TimeLineView/useScrollParent';
 
@@ -54,20 +56,7 @@ function GridViewInner<T extends { id: string }>({
   return (
     <VirtuosoGrid
       components={{
-        Footer: isLoading
-          ? () => (
-              <div style={{ gridColumn: '1 / -1', padding: '24px', textAlign: 'center' }}>
-                <div className="ant-spin ant-spin-spinning">
-                  <span className="ant-spin-dot ant-spin-dot-spin">
-                    <i className="ant-spin-dot-item" />
-                    <i className="ant-spin-dot-item" />
-                    <i className="ant-spin-dot-item" />
-                    <i className="ant-spin-dot-item" />
-                  </span>
-                </div>
-              </div>
-            )
-          : undefined,
+        Footer: isLoading ? () => <Loading viewMode={'grid'} /> : undefined,
         List: forwardRef<HTMLDivElement, DivProps>((props, ref) => (
           <Grid
             gap={16}

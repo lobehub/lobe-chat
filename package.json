@@ -51,6 +51,7 @@
     "desktop:build-next": "npm run build:electron",
     "desktop:prepare-dist": "tsx scripts/electronWorkflow/moveNextExports.ts",
     "dev": "next dev -p 3010",
+    "dev:bun": "bun --bun next dev -p 3010",
     "dev:desktop": "next dev -p 3015",
     "dev:desktop:static": "cross-env DESKTOP_RENDERER_STATIC=1 npm run electron:dev --prefix=./apps/desktop",
     "dev:mobile": "next dev -p 3018",

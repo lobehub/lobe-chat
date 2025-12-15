@@ -12,7 +12,7 @@ const HighlightedContent = memo<HighlightedContentProps>(({ title, children }) =
 
   const content = (
     <Markdown
-      fontSize={16}
+      fontSize={14}
       style={{
         overflow: 'visible',
       }}

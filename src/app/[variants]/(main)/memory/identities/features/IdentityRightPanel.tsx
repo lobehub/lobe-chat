@@ -1,8 +1,7 @@
 'use client';
 
-import { Tag, Text } from '@lobehub/ui';
+import { Text } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import CateTag from '@/app/[variants]/(main)/memory/features/CateTag';
 import DetailLoading from '@/app/[variants]/(main)/memory/features/DetailLoading';
@@ -24,8 +23,7 @@ const IdentityRightPanel = memo(() => {
 
   let content;
   if (isLoading) content = <DetailLoading />;
-  if (content) {
-    const showRelationship = identity.relationship && identity.relationship !== 'self';
+  if (identity) {
     content = (
       <>
         <CateTag cate={identity.type} />
@@ -40,10 +38,7 @@ const IdentityRightPanel = memo(() => {
         >
           {identity.role || identity.relationship || 'Identity'}
         </Text>
-        <Flexbox align="center" gap={8} horizontal justify={'space-between'} wrap={'wrap'}>
-          {showRelationship && <Tag>{identity.relationship}</Tag>}
-          <Time updatedAt={identity.updatedAt || identity.createdAt} />
-        </Flexbox>
+        <Time updatedAt={identity.updatedAt || identity.createdAt} />
         {identity.description && <HighlightedContent>{identity.description}</HighlightedContent>}
         <HashTags hashTags={identity.tags} />
       </>

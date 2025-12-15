@@ -15,7 +15,6 @@ interface IdentityCardProps {
 
 const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onClick }) => {
   const { t } = useTranslation('memory');
-  const showRelationship = identity.relationship && identity.relationship !== 'self';
 
   const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
     info.domEvent.stopPropagation();
@@ -51,7 +50,6 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
       hashTags={identity.tags}
       onClick={() => onClick?.(identity)}
       title={identity.role}
-      titleAddon={showRelationship ? identity.relationship : undefined}
       updatedAt={identity.updatedAt || identity.createdAt}
     >
       {identity.description}

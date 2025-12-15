@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import { ReactNode, memo, useMemo } from 'react';
 import { GroupedVirtuoso } from 'react-virtuoso';
 
+import Loading from '@/app/[variants]/(main)/memory/features/Loading';
+
 import { useScrollParent } from './useScrollParent';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -123,20 +125,7 @@ function TimelineViewInner<T extends { createdAt: Date | string; id: string }>({
       <div className={styles.timelineLine} />
       <GroupedVirtuoso
         components={{
-          Footer: isLoading
-            ? () => (
-                <div style={{ padding: '24px', textAlign: 'center' }}>
-                  <div className="ant-spin ant-spin-spinning">
-                    <span className="ant-spin-dot ant-spin-dot-spin">
-                      <i className="ant-spin-dot-item" />
-                      <i className="ant-spin-dot-item" />
-                      <i className="ant-spin-dot-item" />
-                      <i className="ant-spin-dot-item" />
-                    </span>
-                  </div>
-                </div>
-              )
-            : undefined,
+          Footer: isLoading ? () => <Loading viewMode={'timeline'} /> : undefined,
         }}
         customScrollParent={scrollParent}
         endReached={hasMore && onLoadMore ? onLoadMore : undefined}

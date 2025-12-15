@@ -1,4 +1,4 @@
-import { ActionIcon, Dropdown, Tag } from '@lobehub/ui';
+import { ActionIcon, Dropdown } from '@lobehub/ui';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,6 @@ interface IdentityCardProps {
 
 const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onClick }) => {
   const { t } = useTranslation('common');
-  const showRelationship = identity.relationship && identity.relationship !== 'self';
 
   const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
     info.domEvent.stopPropagation();
@@ -51,9 +50,6 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
       hashTags={identity.tags}
       onClick={() => onClick?.(identity)}
       title={identity.role}
-      titleAddon={
-        showRelationship ? <Tag variant="borderless">{identity.relationship}</Tag> : undefined
-      }
     >
       {identity.description}
     </MasonryCard>

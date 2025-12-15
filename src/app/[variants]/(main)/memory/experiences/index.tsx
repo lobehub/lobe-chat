@@ -34,7 +34,7 @@ const ExperiencesArea = memo(() => {
 
   // 当搜索或排序变化时重置列表
   useEffect(() => {
-    const sort = viewMode === 'masonry' ? sortValue : undefined;
+    const sort = viewMode === 'grid' ? sortValue : undefined;
     resetExperiencesList({ q: searchValue || undefined, sort });
   }, [searchValue, sortValue, viewMode]);
 
@@ -43,7 +43,7 @@ const ExperiencesArea = memo(() => {
     page: experiencesPage,
     pageSize: 20,
     q: searchValue || undefined,
-    sort: viewMode === 'masonry' ? sortValue : undefined,
+    sort: viewMode === 'grid' ? sortValue : undefined,
   });
 
   // Handle search and sort changes
@@ -83,9 +83,9 @@ const ExperiencesArea = memo(() => {
         <WideScreenContainer gap={32} paddingBlock={48}>
           <FilterBar
             onSearch={handleSearch}
-            onSortChange={viewMode === 'masonry' ? handleSortChange : undefined}
+            onSortChange={viewMode === 'grid' ? handleSortChange : undefined}
             searchValue={searchValue}
-            sortOptions={viewMode === 'masonry' ? sortOptions : undefined}
+            sortOptions={viewMode === 'grid' ? sortOptions : undefined}
             sortValue={sortValue}
           />
           {showLoading ? (
