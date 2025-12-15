@@ -582,23 +582,28 @@ export default class Browser {
           const token = await remoteServerConfigCtr.getAccessToken();
           if (token) headers.set('Oidc-Auth', token);
 
-          const requestInit: RequestInit = {
+          const requestInit: RequestInit & { duplex?: 'half' } = {
             headers,
             method: request.method,
           };
 
           // Only forward body for non-GET/HEAD requests
           if (request.method !== 'GET' && request.method !== 'HEAD') {
-            requestInit.body = request.body ?? undefined;
+            const body = request.body ?? undefined;
+            if (body) {
+              requestInit.body = body;
+              // Node.js (undici) requires `duplex` when sending a streaming body
+              requestInit.duplex = 'half';
+            }
           }
 
           let upstreamResponse: Response;
           try {
             upstreamResponse = await fetch(rewrittenUrl, requestInit);
           } catch (error) {
-            logger.warn(`${logPrefix} upstream fetch failed: ${rewrittenUrl}`, error);
+            logger.error(`${logPrefix} upstream fetch failed: ${rewrittenUrl}`, error);
 
-            return new Response('Bad Gateway', {
+            return new Response('Upstream fetch failed, target url: ' + rewrittenUrl, {
               headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
               },
