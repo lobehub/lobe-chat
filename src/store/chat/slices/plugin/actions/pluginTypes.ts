@@ -9,8 +9,10 @@ import { MCPToolCallResult } from '@/libs/mcp';
 import { chatService } from '@/services/chat';
 import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
+import { AI_RUNTIME_OPERATION_TYPES } from '@/store/chat/slices/operation';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
+import { hasExecutor } from '@/store/tool/slices/builtin/executors';
 import { CodeInterpreterIdentifier } from '@/tools/code-interpreter';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
@@ -84,6 +86,99 @@ export const pluginTypes: StateCreator<
       return await get().invokeCloudCodeInterpreterTool(id, payload);
     }
 
+    const params = safeParseJSON(payload.arguments);
+    if (!params) return { error: 'Invalid arguments', success: false };
+
+    // Check if there's a registered executor in Tool Store (new architecture)
+    if (hasExecutor(payload.identifier, payload.apiName)) {
+      const { optimisticUpdateToolMessage, registerAfterCompletionCallback } = get();
+
+      // Get operation context
+      const operationId = get().messageOperationMap[id];
+      const operation = operationId ? get().operations[operationId] : undefined;
+      const context = operationId ? { operationId } : undefined;
+
+      // Get agent ID and group ID from operation context
+      const agentId = operation?.context?.agentId;
+      const groupId = operation?.context?.groupId;
+
+      // Get group orchestration callbacks if available (for group management tools)
+      const groupOrchestration = get().getGroupOrchestrationCallbacks?.();
+
+      // Find root execAgentRuntime operation for registering afterCompletion callbacks
+      // Navigate up the operation tree to find the root runtime operation
+      let rootRuntimeOperationId: string | undefined;
+      if (operationId) {
+        let currentOp = operation;
+        while (currentOp) {
+          if (AI_RUNTIME_OPERATION_TYPES.includes(currentOp.type)) {
+            rootRuntimeOperationId = currentOp.id;
+            break;
+          }
+          // Move up to parent operation
+          const parentId = currentOp.parentOperationId;
+          currentOp = parentId ? get().operations[parentId] : undefined;
+        }
+      }
+
+      // Create registerAfterCompletion function that registers callback to root runtime operation
+      const registerAfterCompletion = rootRuntimeOperationId
+        ? (callback: Parameters<typeof registerAfterCompletionCallback>[1]) => {
+            registerAfterCompletionCallback(rootRuntimeOperationId!, callback);
+          }
+        : undefined;
+
+      log(
+        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, groupId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s',
+        payload.identifier,
+        payload.apiName,
+        id,
+        agentId,
+        groupId,
+        !!groupOrchestration,
+        rootRuntimeOperationId,
+      );
+
+      // Call Tool Store's invokeBuiltinTool
+      const result = await useToolStore
+        .getState()
+        .invokeBuiltinTool(payload.identifier, payload.apiName, params, {
+          agentId,
+          groupId,
+          groupOrchestration,
+          messageId: id,
+          operationId,
+          registerAfterCompletion,
+          signal: operation?.abortController?.signal,
+        });
+
+      // Use optimisticUpdateToolMessage to batch update content, state, error, metadata
+      await optimisticUpdateToolMessage(
+        id,
+        {
+          content: result.content,
+          metadata: result.metadata,
+          pluginError: result.error
+            ? {
+                body: result.error.body,
+                message: result.error.message,
+                type: result.error.type as any,
+              }
+            : undefined,
+          pluginState: result.state,
+        },
+        context,
+      );
+
+      // If result.stop is true, the tool wants to stop execution flow
+      // This is handled by returning from the function (no further processing)
+      if (result.stop) {
+        log('[invokeBuiltinTool] Executor returned stop=true, stopping execution');
+      }
+
+      // Return the result for call_tool executor to use
+      return result;
+    }
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
@@ -127,7 +222,7 @@ export const pluginTypes: StateCreator<
     try {
       // Import ExecutionRuntime dynamically to avoid circular dependencies
       const { CodeInterpreterExecutionRuntime } =
-        await import('@/tools/code-interpreter/ExecutionRuntime/index');
+        await import('@/tools/code-interpreter/ExecutionRuntime');
 
       // Create runtime with context
       const runtime = new CodeInterpreterExecutionRuntime({
