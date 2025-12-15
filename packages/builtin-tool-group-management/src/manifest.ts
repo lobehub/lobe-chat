@@ -157,26 +157,26 @@ export const GroupManagementManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
-    {
-      description:
-        'Delegate the conversation entirely to a specific agent. The supervisor exits orchestration mode and the delegated agent takes full control until explicitly recalled.',
-      name: GroupManagementApiName.delegate,
-      parameters: {
-        properties: {
-          agentId: {
-            description: 'The ID of the agent to delegate the conversation to.',
-            type: 'string',
-          },
-          reason: {
-            description:
-              'Brief explanation of why delegation is appropriate. Helps maintain conversation continuity.',
-            type: 'string',
-          },
-        },
-        required: ['agentId'],
-        type: 'object',
-      },
-    },
+    // {
+    //   description:
+    //     'Delegate the conversation entirely to a specific agent. The supervisor exits orchestration mode and the delegated agent takes full control until explicitly recalled.',
+    //   name: GroupManagementApiName.delegate,
+    //   parameters: {
+    //     properties: {
+    //       agentId: {
+    //         description: 'The ID of the agent to delegate the conversation to.',
+    //         type: 'string',
+    //       },
+    //       reason: {
+    //         description:
+    //           'Brief explanation of why delegation is appropriate. Helps maintain conversation continuity.',
+    //         type: 'string',
+    //       },
+    //     },
+    //     required: ['agentId'],
+    //     type: 'object',
+    //   },
+    // },
 
     // ==================== Task Execution ====================
     {
@@ -223,28 +223,28 @@ export const GroupManagementManifest: BuiltinToolManifest = {
     },
 
     // ==================== Context Management ====================
-    {
-      description:
-        'Summarize the current conversation and compress the context. Useful for long conversations to maintain relevant information while reducing token usage.',
-      name: GroupManagementApiName.summarize,
-      parameters: {
-        properties: {
-          focus: {
-            description:
-              'Optional focus area for the summary (e.g., "decisions made", "action items", "key points").',
-            type: 'string',
-          },
-          preserveRecent: {
-            default: 5,
-            description: 'Number of recent messages to preserve in full detail (default: 5).',
-            minimum: 0,
-            type: 'number',
-          },
-        },
-        required: [],
-        type: 'object',
-      },
-    },
+    // {
+    //   description:
+    //     'Summarize the current conversation and compress the context. Useful for long conversations to maintain relevant information while reducing token usage.',
+    //   name: GroupManagementApiName.summarize,
+    //   parameters: {
+    //     properties: {
+    //       focus: {
+    //         description:
+    //           'Optional focus area for the summary (e.g., "decisions made", "action items", "key points").',
+    //         type: 'string',
+    //       },
+    //       preserveRecent: {
+    //         default: 5,
+    //         description: 'Number of recent messages to preserve in full detail (default: 5).',
+    //         minimum: 0,
+    //         type: 'number',
+    //       },
+    //     },
+    //     required: [],
+    //     type: 'object',
+    //   },
+    // },
 
     // ==================== Flow Control ====================
     // {

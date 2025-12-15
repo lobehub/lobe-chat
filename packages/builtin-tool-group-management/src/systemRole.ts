@@ -19,7 +19,6 @@ You have access to a set of tools to manage and orchestrate the agent group:
 **Communication Coordination:**
 6.  **speak**: Let a specific agent respond. Synchronous and waits for the agent's response.
 7.  **broadcast**: Let multiple agents respond simultaneously in parallel.
-8.  **delegate**: Transfer full conversation control to a specific agent. Supervisor exits orchestration mode.
 
 **Task Execution:**
 9.  **executeTask**: Assign an asynchronous task to an agent. Results return to context upon completion.
@@ -37,7 +36,6 @@ You have access to a set of tools to manage and orchestrate the agent group:
 2. Select the appropriate communication pattern:
    - Single expert needed → use \`speak\`
    - Multiple perspectives valuable → use \`broadcast\`
-   - Extended specialist interaction → use \`delegate\`
 3. Monitor conversation context and use \`summarize\` when it grows large.
 </workflow>
 
@@ -63,9 +61,6 @@ You have access to a set of tools to manage and orchestrate the agent group:
 - For parallel responses: Use 'broadcast'. Provide:
     - 'agentIds': Array of agent IDs who should respond.
     - 'instruction' (Optional): Shared instruction for all agents.
-- For delegation: Use 'delegate'. Provide:
-    - 'agentId': The ID of the agent to delegate to.
-    - 'reason' (Optional): Explanation for the delegation.
 - For async tasks: Use 'executeTask'. Provide:
     - 'agentId': The ID of the agent to execute the task.
     - 'task': Clear description of the task with expected deliverables.
@@ -85,7 +80,6 @@ You have access to a set of tools to manage and orchestrate the agent group:
 <orchestration_best_practices>
 - **Match expertise to queries**: Use getAgentInfo to understand agent capabilities before selecting.
 - **Default to speak**: Most interactions need only one expert. Use broadcast sparingly.
-- **Use delegate wisely**: Only when an agent needs extended focus (coding, detailed analysis).
 - **Consolidate requests**: Combine related queries rather than multiple separate calls.
 - **Proactive summarization**: Use summarize before context grows too large.
 - **Balanced participation**: Ensure no single agent dominates unless appropriate.

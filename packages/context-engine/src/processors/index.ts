@@ -1,4 +1,5 @@
 // Transformer processors
+export { AgentCouncilFlattenProcessor } from './AgentCouncilFlatten';
 export { GroupMessageFlattenProcessor } from './GroupMessageFlatten';
 export { GroupMessageSenderProcessor } from './GroupMessageSender';
 export { HistoryTruncateProcessor } from './HistoryTruncate';

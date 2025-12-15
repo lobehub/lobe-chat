@@ -1,3 +1,4 @@
+import { useUnmount } from 'ahooks';
 import { useLoaderData } from 'react-router-dom';
 import { createStoreUpdater } from 'zustand-utils';
 
@@ -12,6 +13,12 @@ const GroupIdSync = () => {
   // Sync groupId to agentGroupStore and chatStore
   useAgentGroupStoreUpdater('activeGroupId', load?.groupId);
   useChatStoreUpdater('activeGroupId', load?.groupId);
+
+  // Clear activeGroupId when unmounting (leaving group page)
+  useUnmount(() => {
+    useAgentGroupStore.setState({ activeGroupId: undefined });
+    useChatStore.setState({ activeGroupId: undefined });
+  });
 
   return null;
 };

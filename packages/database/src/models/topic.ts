@@ -12,11 +12,12 @@ import {
   isNull,
   lte,
   ne,
+  not,
   or,
   sql,
 } from 'drizzle-orm';
 
-import { TopicItem, agentsToSessions, messages, topics } from '../schemas';
+import { TopicItem, agents, agentsToSessions, messages, topics } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
@@ -342,21 +343,43 @@ export class TopicModel {
 
   /**
    * Query recent topics for homepage display.
-   * Returns basic topic info with agentId and sessionId for later resolution.
+   * Returns basic topic info with agentId/groupId for later resolution.
+   * - For agent topics: excludes virtual agents (except inbox)
+   * - For group topics: includes topics with groupId
+   * - For inbox: includes topics with slug='inbox'
    */
   queryRecent = async (limit: number = 12) => {
-    return this.db
+    const result = await this.db
       .select({
         agentId: topics.agentId,
+        groupId: topics.groupId,
         id: topics.id,
         sessionId: topics.sessionId,
         title: topics.title,
         updatedAt: topics.updatedAt,
       })
       .from(topics)
-      .where(eq(topics.userId, this.userId))
+      .leftJoin(agents, eq(topics.agentId, agents.id))
+      .where(
+        and(
+          eq(topics.userId, this.userId),
+          or(
+            // Group topics: has groupId
+            not(isNull(topics.groupId)),
+            // Inbox agent topics
+            eq(agents.slug, 'inbox'),
+            // Agent topics: exclude virtual agents
+            and(isNull(topics.groupId), ne(agents.virtual, true)),
+          ),
+        ),
+      )
       .orderBy(desc(topics.updatedAt))
       .limit(limit);
+
+    return result.map((item) => ({
+      ...item,
+      type: item.groupId ? ('group' as const) : ('agent' as const),
+    }));
   };
 
   // **************** Create *************** //
