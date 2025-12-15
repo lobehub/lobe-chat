@@ -57,10 +57,14 @@ describe('GroupContextInjector', () => {
       expect(systemContent).toContain('<member name="Writer" id="agt_writer" />');
       expect(systemContent).toContain('<member name="Editor" id="agt_editor" you="true" />');
 
-      // Constraints section (important for LOBE-1866)
-      expect(systemContent).toContain('<response_constraints>');
+      // Output rules section (important for LOBE-1866)
+      expect(systemContent).toContain('<critical_output_rules>');
       expect(systemContent).toContain('<group_context>');
-      expect(systemContent).toContain('MUST NEVER appear in your responses');
+      expect(systemContent).toContain('NEVER start your response with');
+
+      // Identity rules
+      expect(systemContent).toContain('<identity_rules>');
+      expect(systemContent).toContain('NEVER expose or display agent IDs');
 
       // Metadata should be updated
       expect(result.metadata.groupContextInjected).toBe(true);
@@ -152,8 +156,8 @@ describe('GroupContextInjector', () => {
     });
   });
 
-  describe('Constraints Section (LOBE-1866)', () => {
-    it('should always include constraints about group_context blocks', async () => {
+  describe('Output Rules Section (LOBE-1866)', () => {
+    it('should always include critical output rules', async () => {
       const injector = new GroupContextInjector({
         enabled: true,
         // Minimal config
@@ -166,17 +170,15 @@ describe('GroupContextInjector', () => {
 
       const systemContent = result.messages[0].content;
 
-      // Even with minimal config, constraints section should be present
-      expect(systemContent).toContain('<response_constraints>');
-      expect(systemContent).toContain(
-        'Messages in the conversation may contain "<group_context>" blocks.',
-      );
-      expect(systemContent).toContain(
-        'These are application-level metadata and MUST NEVER appear in your responses.',
-      );
-      expect(systemContent).toContain(
-        'Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.',
-      );
+      // Even with minimal config, critical output rules should be present
+      expect(systemContent).toContain('<critical_output_rules>');
+      expect(systemContent).toContain('Your responses must contain ONLY your actual reply content');
+      expect(systemContent).toContain('NEVER start your response with');
+      expect(systemContent).toContain('<speaker');
+
+      // Identity rules should also be present
+      expect(systemContent).toContain('<identity_rules>');
+      expect(systemContent).toContain('NEVER expose or display agent IDs');
     });
   });
 

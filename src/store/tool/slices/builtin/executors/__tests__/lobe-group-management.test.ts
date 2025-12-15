@@ -489,7 +489,6 @@ describe('GroupManagementExecutor', () => {
       expect(result.content).toBe('Agent "Code Helper" has been created and added to the group.');
       expect(result.state).toEqual({
         agentId: 'new-agent-id',
-        sessionId: 'new-session-id',
         title: 'Code Helper',
         type: 'createAgent',
       });
