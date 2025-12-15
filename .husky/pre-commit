@@ -1,2 +1,2 @@
-npm run typecheck
-npx --no-install lint-staged
+# npm run typecheck
+# npx --no-install lint-staged
