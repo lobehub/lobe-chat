@@ -4,6 +4,7 @@ import { codeInterpreterService } from '@/services/codeInterpreter';
 
 import {
   EditLocalFileState,
+  ExportFileState,
   GetCommandOutputState,
   GlobFilesState,
   GrepContentState,
@@ -102,6 +103,10 @@ interface GrepContentParams {
 interface GlobLocalFilesParams {
   directory?: string;
   pattern: string;
+}
+
+interface ExportFileParams {
+  path: string;
 }
 
 export class CodeInterpreterExecutionRuntime {
@@ -373,6 +378,75 @@ export class CodeInterpreterExecutionRuntime {
 
       return {
         content: JSON.stringify(result.result),
+        state,
+        success: true,
+      };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  // ==================== Export Operations ====================
+
+  /**
+   * Export a file from the sandbox to cloud storage
+   * 1. Get a pre-signed upload URL from our server
+   * 2. Call the sandbox to upload the file to that URL
+   * 3. Return the download URL to the user
+   */
+  async exportFile(args: ExportFileParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      // Extract filename from path
+      const filename = args.path.split('/').pop() || 'exported_file';
+
+      // Step 1: Get pre-signed upload URL from our server
+      const uploadUrlResult = await codeInterpreterService.getExportFileUploadUrl(
+        filename,
+        this.context.topicId,
+      );
+
+      if (!uploadUrlResult.success) {
+        throw new Error(uploadUrlResult.error?.message || 'Failed to get upload URL');
+      }
+
+      // Step 2: Call the sandbox's exportFile tool with the upload URL
+      // The sandbox will read the file and upload it to the pre-signed URL
+      const result = await this.callTool('exportFile', {
+        path: args.path,
+        uploadUrl: uploadUrlResult.uploadUrl,
+      });
+
+      // Check if the sandbox upload was successful
+      const uploadSuccess = result.success && result.result?.success !== false;
+      const bytesUploaded = result.result?.bytesUploaded;
+
+      const state: ExportFileState = {
+        downloadUrl: uploadSuccess ? uploadUrlResult.downloadUrl : '',
+        filename,
+        path: args.path,
+        success: uploadSuccess,
+      };
+
+      if (!uploadSuccess) {
+        return {
+          content: JSON.stringify({
+            error: result.result?.error || 'Failed to upload file from sandbox',
+            filename,
+            success: false,
+          }),
+          state,
+          success: false,
+        };
+      }
+
+      return {
+        content: JSON.stringify({
+          bytesUploaded,
+          downloadUrl: uploadUrlResult.downloadUrl,
+          filename,
+          message: `Successfully exported ${filename}`,
+          success: true,
+        }),
         state,
         success: true,
       };

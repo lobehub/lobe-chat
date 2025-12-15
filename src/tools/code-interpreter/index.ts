@@ -4,6 +4,7 @@ import { systemPrompt } from './systemRole';
 
 export const CodeInterpreterApiName = {
   editLocalFile: 'editLocalFile',
+  exportFile: 'exportFile',
   getCommandOutput: 'getCommandOutput',
   globLocalFiles: 'globLocalFiles',
   grepContent: 'grepContent',
@@ -60,8 +61,7 @@ export const CodeInterpreterManifest: BuiltinToolManifest = {
       },
     },
     {
-      description:
-        'Search for files within the sandbox based on keywords and filter options.',
+      description: 'Search for files within the sandbox based on keywords and filter options.',
       name: CodeInterpreterApiName.searchLocalFiles,
       parameters: {
         properties: {
@@ -287,6 +287,22 @@ export const CodeInterpreterManifest: BuiltinToolManifest = {
           },
         },
         required: ['pattern'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Export a file from the sandbox to cloud storage. The file will be uploaded to a pre-signed URL and can be downloaded by the user.',
+      name: CodeInterpreterApiName.exportFile,
+      parameters: {
+        properties: {
+          path: {
+            description:
+              'The path of the file in the sandbox to export (e.g., "./output/result.csv")',
+            type: 'string',
+          },
+        },
+        required: ['path'],
         type: 'object',
       },
     },

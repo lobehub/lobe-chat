@@ -1,5 +1,20 @@
 import { toolsClient } from '@/libs/trpc/client';
-import type { CallToolInput, CallToolResult } from '@/server/routers/tools/codeInterpreter';
+import type {
+  CallToolInput,
+  CallToolResult,
+  GetExportFileUploadUrlInput,
+  GetExportFileUploadUrlResult,
+} from '@/server/routers/tools/codeInterpreter';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/slices/settings/selectors/settings';
+
+/**
+ * Get Market access token from user settings (stored by MarketAuthProvider)
+ */
+const getMarketAccessToken = (): string | undefined => {
+  const settings = settingsSelectors.currentSettings(useUserStore.getState());
+  return settings.market?.accessToken;
+};
 
 class CodeInterpreterService {
   /**
@@ -13,7 +28,10 @@ class CodeInterpreterService {
     params: Record<string, any>,
     context: { topicId: string; userId: string },
   ): Promise<CallToolResult> {
+    const marketAccessToken = getMarketAccessToken();
+
     const input: CallToolInput = {
+      marketAccessToken,
       params,
       toolName,
       topicId: context.topicId,
@@ -21,6 +39,23 @@ class CodeInterpreterService {
     };
 
     return toolsClient.codeInterpreter.callTool.mutate(input);
+  }
+
+  /**
+   * Get a pre-signed upload URL for exporting a file from the sandbox
+   * @param filename - The name of the file to export
+   * @param topicId - The topic ID for organizing files
+   */
+  async getExportFileUploadUrl(
+    filename: string,
+    topicId: string,
+  ): Promise<GetExportFileUploadUrlResult> {
+    const input: GetExportFileUploadUrlInput = {
+      filename,
+      topicId,
+    };
+
+    return toolsClient.codeInterpreter.getExportFileUploadUrl.mutate(input);
   }
 }
 

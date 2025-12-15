@@ -71,6 +71,17 @@ export interface GlobFilesState {
   totalCount: number;
 }
 
+export interface ExportFileState {
+  /** The download URL for the exported file */
+  downloadUrl: string;
+  /** The exported file name */
+  filename: string;
+  /** The original path in sandbox */
+  path: string;
+  /** Whether the export was successful */
+  success: boolean;
+}
+
 export interface GrepContentState {
   matches: Array<{
     content?: string;
