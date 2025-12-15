@@ -808,7 +808,7 @@ export class UserMemoryModel {
           : undefined,
       ];
       const contextWhereClause =
-        contextFilters.filter((condition): condition is SQL => condition !== undefined).length > 0
+        contextFilters.some((condition): condition is SQL => condition !== undefined)
           ? and(
               ...(contextFilters.filter(
                 (condition): condition is SQL => condition !== undefined,
@@ -882,8 +882,7 @@ export class UserMemoryModel {
           : undefined,
       ];
       const experienceWhereClause =
-        experienceFilters.filter((condition): condition is SQL => condition !== undefined).length >
-        0
+        experienceFilters.some((condition): condition is SQL => condition !== undefined)
           ? and(
               ...(experienceFilters.filter(
                 (condition): condition is SQL => condition !== undefined,
@@ -956,7 +955,7 @@ export class UserMemoryModel {
           : undefined,
       ];
       const identityWhereClause =
-        identityFilters.filter((condition): condition is SQL => condition !== undefined).length > 0
+        identityFilters.some((condition): condition is SQL => condition !== undefined)
           ? and(
               ...(identityFilters.filter(
                 (condition): condition is SQL => condition !== undefined,
@@ -1029,8 +1028,7 @@ export class UserMemoryModel {
           : undefined,
       ];
       const preferenceWhereClause =
-        preferenceFilters.filter((condition): condition is SQL => condition !== undefined).length >
-        0
+        preferenceFilters.some((condition): condition is SQL => condition !== undefined)
           ? and(
               ...(preferenceFilters.filter(
                 (condition): condition is SQL => condition !== undefined,

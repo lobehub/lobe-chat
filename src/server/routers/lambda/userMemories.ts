@@ -33,7 +33,7 @@ import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ClientSecretPayload } from '@/types/auth';
 import { SearchMemoryResult, searchMemorySchema } from '@/types/userMemory';
-import { LayersEnum, TypesEnum } from '@/types/userMemory/shared';
+import { LayersEnum } from '@/types/userMemory/shared';
 
 const EMPTY_SEARCH_RESULT: SearchMemoryResult = {
   contexts: [],
@@ -245,7 +245,7 @@ export const userMemoriesRouter = router({
           q: z.string().optional(),
           sort: z.enum(['scoreConfidence', 'scoreImpact', 'scorePriority', 'scoreUrgency']).optional(),
           tags: z.array(z.string()).optional(),
-          types: z.array(z.nativeEnum(TypesEnum)).optional(),
+          types: z.array(z.string()).optional(),
         })
         .optional(),
     )
