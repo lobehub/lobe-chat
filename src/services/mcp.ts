@@ -5,7 +5,8 @@ import { PluginManifest } from '@lobehub/market-sdk';
 import { CallReportRequest } from '@lobehub/market-types';
 
 import { MCPToolCallResult } from '@/libs/mcp';
-import { desktopClient, lambdaClient, toolsClient } from '@/libs/trpc/client';
+import { lambdaClient, toolsClient } from '@/libs/trpc/client';
+import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 import { discoverService } from './discover';
 
@@ -109,8 +110,9 @@ class MCPService {
           toolName: apiName,
         });
       } else if (isDesktop && isStdio) {
-        // For desktop and stdio, use the desktopClient
-        result = await desktopClient.mcp.callTool.mutate(data, { signal });
+        // For desktop and stdio, use IPC (main process)
+        // Note: IPC doesn't support AbortSignal yet
+        result = await ensureElectronIpc().mcp.callTool(data);
       } else {
         // For other types, use the toolsClient
         result = await toolsClient.mcp.callTool.mutate(data, { signal });
@@ -188,10 +190,11 @@ class MCPService {
     },
     signal?: AbortSignal,
   ) {
-    // If in Desktop mode and URL is local address, use desktopClient
+    // If in Desktop mode and URL is local address, use IPC (main process)
     // This avoids accessing user local services through remote server in production
     if (isDesktop && isLocalOrPrivateUrl(params.url)) {
-      return desktopClient.mcp.getStreamableMcpServerManifest.query(params, { signal });
+      // Note: IPC doesn't support AbortSignal yet
+      return ensureElectronIpc().mcp.getStreamableMcpServerManifest(params);
     }
 
     // Otherwise use toolsClient (via server relay)
@@ -206,12 +209,11 @@ class MCPService {
       name: string;
     },
     metadata?: CustomPluginMetadata,
-    signal?: AbortSignal,
+    _signal?: AbortSignal,
   ) {
-    return desktopClient.mcp.getStdioMcpServerManifest.query(
-      { ...stdioParams, metadata },
-      { signal },
-    );
+    void _signal;
+    // Note: IPC doesn't support AbortSignal yet
+    return ensureElectronIpc().mcp.getStdioMcpServerManifest({ ...stdioParams, metadata });
   }
 
   /**
@@ -222,13 +224,14 @@ class MCPService {
    */
   async checkInstallation(
     manifest: PluginManifest,
-    signal?: AbortSignal,
+    _signal?: AbortSignal,
   ): Promise<CheckMcpInstallResult> {
+    void _signal;
     // Pass all deployment options to main process for checking
-    return desktopClient.mcp.validMcpServerInstallable.mutate(
-      { deploymentOptions: manifest.deploymentOptions as any },
-      { signal },
-    );
+    // Note: IPC doesn't support AbortSignal yet
+    return ensureElectronIpc().mcp.validMcpServerInstallable({
+      deploymentOptions: manifest.deploymentOptions as any,
+    });
   }
 }
 

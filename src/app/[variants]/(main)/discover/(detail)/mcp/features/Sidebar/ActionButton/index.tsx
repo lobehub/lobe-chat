@@ -62,6 +62,8 @@ const ActionButton = memo(() => {
 
   const buttonLoading = isLoading || isAuthLoading;
 
+  console.log('installed', isLoading, isAuthLoading, installed);
+
   return installed ? (
     <Flexbox gap={8} horizontal>
       <Button

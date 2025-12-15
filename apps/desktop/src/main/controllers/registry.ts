@@ -4,6 +4,7 @@ import AuthCtr from './AuthCtr';
 import BrowserWindowsCtr from './BrowserWindowsCtr';
 import DevtoolsCtr from './DevtoolsCtr';
 import LocalFileCtr from './LocalFileCtr';
+import McpCtr from './McpCtr';
 import McpInstallCtr from './McpInstallCtr';
 import MenuController from './MenuCtr';
 import NetworkProxyCtr from './NetworkProxyCtr';
@@ -23,6 +24,7 @@ export const controllerIpcConstructors = [
   BrowserWindowsCtr,
   DevtoolsCtr,
   LocalFileCtr,
+  McpCtr,
   McpInstallCtr,
   MenuController,
   NetworkProxyCtr,

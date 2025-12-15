@@ -621,6 +621,7 @@ export default class Browser {
           responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
           responseHeaders.set('Access-Control-Allow-Headers', '*');
 
+          responseHeaders.set('X-Src-Url', rewrittenUrl);
           return new Response(upstreamResponse.body, {
             headers: responseHeaders,
             status: upstreamResponse.status,
