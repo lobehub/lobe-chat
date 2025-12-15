@@ -12,7 +12,8 @@ export const streamInvoke = async (input: RequestInfo | URL, init?: RequestInit)
   const body = await getRequestBody(init?.body);
 
   const requestId =
-    globalThis.crypto?.randomUUID?.() ?? `stream_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    globalThis.crypto?.randomUUID?.() ??
+    `stream_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 
   const params: ProxyTRPCStreamRequestParams = {
     body,

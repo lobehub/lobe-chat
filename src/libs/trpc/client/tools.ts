@@ -1,18 +1,12 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import superjson from 'superjson';
-import type { transformer } from 'zod';
 
 import { withElectronProtocolIfElectron } from '@/const/protocol';
-import { isDesktop } from '@/const/version';
 import type { ToolsRouter } from '@/server/routers/tools';
 
 export const toolsClient = createTRPCClient<ToolsRouter>({
   links: [
     httpBatchLink({
-      fetch: isDesktop
-        ? // eslint-disable-next-line no-undef
-          (input, init) => fetch(input as string, init as RequestInit)
-        : undefined,
       headers: async () => {
         // dynamic import to avoid circular dependency
         const { createHeaderWithAuth } = await import('@/services/_auth');
