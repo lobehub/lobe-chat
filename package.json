@@ -181,7 +181,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/editor": "^1.32.0",
     "@lobehub/icons": "^2.44.0",
-    "@lobehub/market-sdk": "^0.23.7",
+    "@lobehub/market-sdk": "0.24.0-beta.1",
     "@lobehub/tts": "^2.0.1",
     "@lobehub/ui": "^2.23.0",
     "@modelcontextprotocol/sdk": "^1.24.0",

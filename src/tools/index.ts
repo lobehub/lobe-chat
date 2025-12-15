@@ -4,7 +4,8 @@ import { isDesktop } from '@/const/version';
 
 import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
-import { CodeInterpreterManifest } from './code-interpreter';
+import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
+import { CodeInterpreterManifest } from './code-interpreter-draft';
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { LocalSystemManifest } from './local-system';
 import { MemoryManifest } from './memory';
@@ -38,6 +39,12 @@ export const builtinTools: LobeBuiltinTool[] = [
   {
     identifier: CodeInterpreterManifest.identifier,
     manifest: CodeInterpreterManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true, // Cloud Code Interpreter - enable when market-sdk integration is ready
+    identifier: CloudCodeInterpreterManifest.identifier,
+    manifest: CloudCodeInterpreterManifest,
     type: 'builtin',
   },
   {
