@@ -657,84 +657,84 @@ export const PageAgentManifest: BuiltinToolManifest = {
     },
 
     // ============ Snapshot Operations ============
-    {
-      description:
-        'Save a snapshot of the current document state. Useful for creating restore points before making significant changes.',
-      name: DocumentApiName.saveSnapshot,
-      parameters: {
-        properties: {
-          description: {
-            description:
-              'Optional description to identify this snapshot (e.g., "Before reformatting tables").',
-            type: 'string',
-          },
-        },
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Restore the document to a previously saved snapshot. This will discard all changes made after that snapshot.',
-      humanIntervention: 'required',
-      name: DocumentApiName.restoreSnapshot,
-      parameters: {
-        properties: {
-          snapshotId: {
-            description: 'The ID of the snapshot to restore.',
-            type: 'string',
-          },
-        },
-        required: ['snapshotId'],
-        type: 'object',
-      },
-    },
-    {
-      description: 'List all saved snapshots for the current document.',
-      name: DocumentApiName.listSnapshots,
-      parameters: {
-        properties: {
-          limit: {
-            default: 10,
-            description: 'Maximum number of snapshots to return.',
-            type: 'number',
-          },
-        },
-        type: 'object',
-      },
-    },
-    {
-      description: 'Delete a saved snapshot.',
-      name: DocumentApiName.deleteSnapshot,
-      parameters: {
-        properties: {
-          snapshotId: {
-            description: 'The ID of the snapshot to delete.',
-            type: 'string',
-          },
-        },
-        required: ['snapshotId'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Compare two snapshots to see what changed between them. Returns lists of added, deleted, and modified nodes.',
-      name: DocumentApiName.compareSnapshots,
-      parameters: {
-        properties: {
-          snapshotId1: {
-            description: 'The ID of the first (older) snapshot.',
-            type: 'string',
-          },
-          snapshotId2: {
-            description: 'The ID of the second (newer) snapshot.',
-            type: 'string',
-          },
-        },
-        required: ['snapshotId1', 'snapshotId2'],
-        type: 'object',
-      },
-    },
+    //   {
+    //     description:
+    //       'Save a snapshot of the current document state. Useful for creating restore points before making significant changes.',
+    //     name: DocumentApiName.saveSnapshot,
+    //     parameters: {
+    //       properties: {
+    //         description: {
+    //           description:
+    //             'Optional description to identify this snapshot (e.g., "Before reformatting tables").',
+    //           type: 'string',
+    //         },
+    //       },
+    //       type: 'object',
+    //     },
+    //   },
+    //   {
+    //     description:
+    //       'Restore the document to a previously saved snapshot. This will discard all changes made after that snapshot.',
+    //     humanIntervention: 'required',
+    //     name: DocumentApiName.restoreSnapshot,
+    //     parameters: {
+    //       properties: {
+    //         snapshotId: {
+    //           description: 'The ID of the snapshot to restore.',
+    //           type: 'string',
+    //         },
+    //       },
+    //       required: ['snapshotId'],
+    //       type: 'object',
+    //     },
+    //   },
+    //   {
+    //     description: 'List all saved snapshots for the current document.',
+    //     name: DocumentApiName.listSnapshots,
+    //     parameters: {
+    //       properties: {
+    //         limit: {
+    //           default: 10,
+    //           description: 'Maximum number of snapshots to return.',
+    //           type: 'number',
+    //         },
+    //       },
+    //       type: 'object',
+    //     },
+    //   },
+    //   {
+    //     description: 'Delete a saved snapshot.',
+    //     name: DocumentApiName.deleteSnapshot,
+    //     parameters: {
+    //       properties: {
+    //         snapshotId: {
+    //           description: 'The ID of the snapshot to delete.',
+    //           type: 'string',
+    //         },
+    //       },
+    //       required: ['snapshotId'],
+    //       type: 'object',
+    //     },
+    //   },
+    //   {
+    //     description:
+    //       'Compare two snapshots to see what changed between them. Returns lists of added, deleted, and modified nodes.',
+    //     name: DocumentApiName.compareSnapshots,
+    //     parameters: {
+    //       properties: {
+    //         snapshotId1: {
+    //           description: 'The ID of the first (older) snapshot.',
+    //           type: 'string',
+    //         },
+    //         snapshotId2: {
+    //           description: 'The ID of the second (newer) snapshot.',
+    //           type: 'string',
+    //         },
+    //       },
+    //       required: ['snapshotId1', 'snapshotId2'],
+    //       type: 'object',
+    //     },
+    //   },
   ],
   identifier: 'lobe-page-agent',
   meta: {
