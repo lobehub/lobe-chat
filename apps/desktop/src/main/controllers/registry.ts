@@ -13,7 +13,6 @@ import RemoteServerSyncCtr from './RemoteServerSyncCtr';
 import ShellCommandCtr from './ShellCommandCtr';
 import ShortcutController from './ShortcutCtr';
 import SystemController from './SystemCtr';
-import SystemServerCtr from './SystemServerCtr';
 import TrayMenuCtr from './TrayMenuCtr';
 import UpdaterCtr from './UpdaterCtr';
 import UploadFileCtr from './UploadFileCtr';
@@ -43,7 +42,6 @@ type DesktopControllerServices = CreateServicesResult<DesktopControllerIpcConstr
 export type DesktopIpcServices = MergeIpcService<DesktopControllerServices>;
 
 export const controllerServerIpcConstructors = [
-  SystemServerCtr,
   UploadFileServerCtr,
 ] as const satisfies readonly IpcServiceConstructor[];
 

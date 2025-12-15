@@ -545,15 +545,28 @@ export default class Browser {
     if (!targetSession || protocolHandledSessions.has(targetSession)) return;
 
     const rewriteUrl = async (rawUrl: string) => {
-      const requestUrl = new URL(rawUrl);
+      let remoteServerUrl: string | undefined;
+      try {
+        const requestUrl = new URL(rawUrl);
 
-      const config = await remoteServerConfigCtr.getRemoteServerConfig();
-      const remoteBase = new URL(config.remoteServerUrl);
-      if (requestUrl.origin === remoteBase.origin) return;
+        const config = await remoteServerConfigCtr.getRemoteServerConfig();
+        remoteServerUrl = await remoteServerConfigCtr.getRemoteServerUrl(config);
+        const remoteBase = new URL(remoteServerUrl);
+        if (requestUrl.origin === remoteBase.origin) return;
 
-      const rewrittenUrl = new URL(requestUrl.pathname + requestUrl.search, remoteBase).toString();
-      logger.debug(`${logPrefix} rewrite ${rawUrl} -> ${rewrittenUrl}`);
-      return rewrittenUrl;
+        const rewrittenUrl = new URL(
+          requestUrl.pathname + requestUrl.search,
+          remoteBase,
+        ).toString();
+        logger.debug(`${logPrefix} rewrite ${rawUrl} -> ${rewrittenUrl}`);
+        return rewrittenUrl;
+      } catch (error) {
+        logger.error(
+          `${logPrefix} rewriteUrl error (rawUrl=${rawUrl}, remoteServerUrl=${remoteServerUrl})`,
+          error,
+        );
+        return null;
+      }
     };
 
     // Transparent rewrite via protocol handlers (no HTTP 302)
