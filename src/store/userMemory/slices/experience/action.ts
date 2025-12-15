@@ -1,17 +1,29 @@
+import { produce } from 'immer';
+import { uniqBy } from 'lodash-es';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
 import { memoryCRUDService } from '@/services/userMemory/index';
 import { LayersEnum } from '@/types/userMemory';
+import { setNamespace } from '@/utils/storeDebug';
 
 import { UserMemoryStore } from '../../store';
 
-const n = (namespace: string) => namespace;
+const n = setNamespace('userMemory/experience');
+
+export interface ExperienceQueryParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  sort?: 'scoreConfidence';
+}
 
 export interface ExperienceAction {
   deleteExperience: (id: string) => Promise<void>;
-  loadMoreExperiences: () => Promise<void>;
-  refreshExperiences: (params?: { q?: string; sort?: 'createdAt' | 'updatedAt' }) => Promise<void>;
+  loadMoreExperiences: () => void;
+  resetExperiencesList: (params?: Omit<ExperienceQueryParams, 'page' | 'pageSize'>) => void;
+  useFetchExperiences: (params: ExperienceQueryParams) => SWRResponse<any>;
 }
 
 export const createExperienceSlice: StateCreator<
@@ -22,84 +34,100 @@ export const createExperienceSlice: StateCreator<
 > = (set, get) => ({
   deleteExperience: async (id) => {
     await memoryCRUDService.deleteExperience(id);
-    await get().refreshExperiences();
+    // Reset list to refresh
+    get().resetExperiencesList({ q: get().experiencesQuery, sort: get().experiencesSort });
   },
 
-  loadMoreExperiences: async () => {
-    const state = get();
-    if (state.experiencesIsLoading || !state.experiencesHasMore) return;
-
-    set({ experiencesIsLoading: true }, false, n('loadMoreExperiences/start'));
-
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Experience],
-        page: state.experiencesPage + 1,
-        pageSize: 20,
-        sort: 'createdAt',
-      });
-
-      const hasMore = result.items.length > 0 && result.items.length >= 20;
-
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.experience,
-      }));
-
+  loadMoreExperiences: () => {
+    const { experiencesPage, experiencesTotal, experiences } = get();
+    if (experiences.length < (experiencesTotal || 0)) {
       set(
-        {
-          experiences: [...state.experiences, ...transformedItems],
-          experiencesHasMore: hasMore,
-          experiencesInit: true,
-          experiencesIsLoading: false,
-          experiencesPage: state.experiencesPage + 1,
-          experiencesTotal: result.total,
-        },
+        produce((draft) => {
+          draft.experiencesPage = experiencesPage + 1;
+        }),
         false,
-        n('loadMoreExperiences/success'),
+        n('loadMoreExperiences'),
       );
-    } catch (error) {
-      console.error('Failed to load more experiences:', error);
-      set({ experiencesIsLoading: false }, false, n('loadMoreExperiences/error'));
     }
   },
 
-  refreshExperiences: async (params) => {
-    set({ experiencesIsLoading: true }, false, n('refreshExperiences/start'));
+  resetExperiencesList: (params) => {
+    set(
+      produce((draft) => {
+        draft.experiences = [];
+        draft.experiencesPage = 1;
+        draft.experiencesQuery = params?.q;
+        draft.experiencesSearchLoading = true;
+        draft.experiencesSort = params?.sort;
+      }),
+      false,
+      n('resetExperiencesList'),
+    );
+  },
 
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Experience],
-        page: 1,
-        pageSize: 20,
-        q: params?.q,
-        sort: params?.sort || 'createdAt',
-      });
+  useFetchExperiences: (params) => {
+    const swrKeyParts = [
+      'useFetchExperiences',
+      params.page,
+      params.pageSize,
+      params.q,
+      params.sort,
+    ];
+    const swrKey = swrKeyParts
+      .filter((part) => part !== undefined && part !== null && part !== '')
+      .join('-');
+    const page = params.page ?? 1;
 
-      const hasMore = result.items.length >= 20;
+    return useSWR(
+      swrKey,
+      async () => {
+        const result = await userMemoryService.queryMemories({
+          layer: LayersEnum.Experience,
+          page: params.page,
+          pageSize: params.pageSize,
+          q: params.q,
+          sort: params.sort,
+        });
 
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.experience,
-      }));
+        return result;
+      },
+      {
+        onSuccess(data: any) {
+          set(
+            produce((draft) => {
+              draft.experiencesIsLoading = false;
+              draft.experiencesSearchLoading = false;
 
-      set(
-        {
-          experiences: transformedItems,
-          experiencesHasMore: hasMore,
-          experiencesInit: true,
-          experiencesIsLoading: false,
-          experiencesPage: 1,
-          experiencesTotal: result.total,
+              // 设置基础信息
+              if (!draft.experiencesInit) {
+                draft.experiencesInit = true;
+                draft.experiencesTotal = data.total;
+              }
+
+              // 转换数据结构
+              const transformedItems = data.items.map((item: any) => ({
+                ...item.memory,
+                ...item.experience,
+              }));
+
+              // 累积数据逻辑
+              if (page === 1) {
+                // 第一页，直接设置
+                draft.experiences = uniqBy(transformedItems, 'id');
+              } else {
+                // 后续页面，累积数据
+                draft.experiences = uniqBy([...draft.experiences, ...transformedItems], 'id');
+              }
+
+              // 更新 hasMore
+              draft.experiencesHasMore = data.items.length >= (params.pageSize || 20);
+            }),
+            false,
+            n('useFetchExperiences/onSuccess'),
+          );
         },
-        false,
-        n('refreshExperiences/success'),
-      );
-    } catch (error) {
-      console.error('Failed to refresh experiences:', error);
-      set({ experiencesIsLoading: false }, false, n('refreshExperiences/error'));
-    }
+        revalidateOnFocus: false,
+      },
+    );
   },
 });

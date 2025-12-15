@@ -1,17 +1,29 @@
+import { produce } from 'immer';
+import { uniqBy } from 'lodash-es';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
 import { memoryCRUDService } from '@/services/userMemory/index';
 import { LayersEnum } from '@/types/userMemory';
+import { setNamespace } from '@/utils/storeDebug';
 
 import { UserMemoryStore } from '../../store';
 
-const n = (namespace: string) => namespace;
+const n = setNamespace('userMemory/preference');
+
+export interface PreferenceQueryParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  sort?: 'scorePriority';
+}
 
 export interface PreferenceAction {
   deletePreference: (id: string) => Promise<void>;
-  loadMorePreferences: () => Promise<void>;
-  refreshPreferences: (params?: { q?: string; sort?: 'createdAt' | 'updatedAt' }) => Promise<void>;
+  loadMorePreferences: () => void;
+  resetPreferencesList: (params?: Omit<PreferenceQueryParams, 'page' | 'pageSize'>) => void;
+  useFetchPreferences: (params: PreferenceQueryParams) => SWRResponse<any>;
 }
 
 export const createPreferenceSlice: StateCreator<
@@ -22,84 +34,100 @@ export const createPreferenceSlice: StateCreator<
 > = (set, get) => ({
   deletePreference: async (id) => {
     await memoryCRUDService.deletePreference(id);
-    await get().refreshPreferences();
+    // Reset list to refresh
+    get().resetPreferencesList({ q: get().preferencesQuery, sort: get().preferencesSort });
   },
 
-  loadMorePreferences: async () => {
-    const state = get();
-    if (state.preferencesIsLoading || !state.preferencesHasMore) return;
-
-    set({ preferencesIsLoading: true }, false, n('loadMorePreferences/start'));
-
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Preference],
-        page: state.preferencesPage + 1,
-        pageSize: 20,
-        sort: 'createdAt',
-      });
-
-      const hasMore = result.items.length > 0 && result.items.length >= 20;
-
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.preference,
-        ...item.memory,
-      }));
-
+  loadMorePreferences: () => {
+    const { preferencesPage, preferencesTotal, preferences } = get();
+    if (preferences.length < (preferencesTotal || 0)) {
       set(
-        {
-          preferences: [...state.preferences, ...transformedItems],
-          preferencesHasMore: hasMore,
-          preferencesInit: true,
-          preferencesIsLoading: false,
-          preferencesPage: state.preferencesPage + 1,
-          preferencesTotal: result.total,
-        },
+        produce((draft) => {
+          draft.preferencesPage = preferencesPage + 1;
+        }),
         false,
-        n('loadMorePreferences/success'),
+        n('loadMorePreferences'),
       );
-    } catch (error) {
-      console.error('Failed to load more preferences:', error);
-      set({ preferencesIsLoading: false }, false, n('loadMorePreferences/error'));
     }
   },
 
-  refreshPreferences: async (params) => {
-    set({ preferencesIsLoading: true }, false, n('refreshPreferences/start'));
+  resetPreferencesList: (params) => {
+    set(
+      produce((draft) => {
+        draft.preferences = [];
+        draft.preferencesPage = 1;
+        draft.preferencesQuery = params?.q;
+        draft.preferencesSearchLoading = true;
+        draft.preferencesSort = params?.sort;
+      }),
+      false,
+      n('resetPreferencesList'),
+    );
+  },
 
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Preference],
-        page: 1,
-        pageSize: 20,
-        q: params?.q,
-        sort: params?.sort || 'createdAt',
-      });
+  useFetchPreferences: (params) => {
+    const swrKeyParts = [
+      'useFetchPreferences',
+      params.page,
+      params.pageSize,
+      params.q,
+      params.sort,
+    ];
+    const swrKey = swrKeyParts
+      .filter((part) => part !== undefined && part !== null && part !== '')
+      .join('-');
+    const page = params.page ?? 1;
 
-      const hasMore = result.items.length >= 20;
+    return useSWR(
+      swrKey,
+      async () => {
+        const result = await userMemoryService.queryMemories({
+          layer: LayersEnum.Preference,
+          page: params.page,
+          pageSize: params.pageSize,
+          q: params.q,
+          sort: params.sort,
+        });
 
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.preference,
-      }));
+        return result;
+      },
+      {
+        onSuccess(data: any) {
+          set(
+            produce((draft) => {
+              draft.preferencesIsLoading = false;
+              draft.preferencesSearchLoading = false;
 
-      set(
-        {
-          preferences: transformedItems,
-          preferencesHasMore: hasMore,
-          preferencesInit: true,
-          preferencesIsLoading: false,
-          preferencesPage: 1,
-          preferencesTotal: result.total,
+              // 设置基础信息
+              if (!draft.preferencesInit) {
+                draft.preferencesInit = true;
+                draft.preferencesTotal = data.total;
+              }
+
+              // 转换数据结构
+              const transformedItems = data.items.map((item: any) => ({
+                ...item.memory,
+                ...item.preference,
+              }));
+
+              // 累积数据逻辑
+              if (page === 1) {
+                // 第一页，直接设置
+                draft.preferences = uniqBy(transformedItems, 'id');
+              } else {
+                // 后续页面，累积数据
+                draft.preferences = uniqBy([...draft.preferences, ...transformedItems], 'id');
+              }
+
+              // 更新 hasMore
+              draft.preferencesHasMore = data.items.length >= (params.pageSize || 20);
+            }),
+            false,
+            n('useFetchPreferences/onSuccess'),
+          );
         },
-        false,
-        n('refreshPreferences/success'),
-      );
-    } catch (error) {
-      console.error('Failed to refresh preferences:', error);
-      set({ preferencesIsLoading: false }, false, n('refreshPreferences/error'));
-    }
+        revalidateOnFocus: false,
+      },
+    );
   },
 });

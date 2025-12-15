@@ -75,12 +75,12 @@ class UserMemoryService {
 
   queryMemories = async (params?: {
     categories?: string[];
-    layers?: LayersEnum[];
+    layer?: LayersEnum;
     order?: 'asc' | 'desc';
     page?: number;
     pageSize?: number;
     q?: string;
-    sort?: 'createdAt' | 'updatedAt';
+    sort?: 'scoreConfidence' | 'scoreImpact' | 'scorePriority' | 'scoreUrgency';
     tags?: string[];
     types?: TypesEnum[];
   }) => {

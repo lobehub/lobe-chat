@@ -43,8 +43,11 @@ const PreferencesList = memo<PreferencesListProps>(({ searchValue, viewMode }) =
     });
   };
 
-  if (!preferences || preferences.length === 0)
+  const isEmpty = preferences.length === 0;
+
+  if (isEmpty) {
     return <MemoryEmpty search={Boolean(searchValue)} title={t('preference.empty')} />;
+  }
 
   return viewMode === 'timeline' ? (
     <TimelineView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />

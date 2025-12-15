@@ -2,27 +2,35 @@ import {
   NewUserMemoryIdentity,
   UpdateUserMemoryIdentity,
 } from '@lobechat/types';
+import { produce } from 'immer';
+import { uniqBy } from 'lodash-es';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { AddIdentityEntryResult } from '@/database/models/userMemory';
 import { userMemoryService } from '@/services/userMemory';
 import { memoryCRUDService } from '@/services/userMemory/index';
 import { LayersEnum, TypesEnum } from '@/types/userMemory';
+import { setNamespace } from '@/utils/storeDebug';
 
 import { UserMemoryStore } from '../../store';
 
-const n = (namespace: string) => namespace;
+const n = setNamespace('userMemory/identity');
+
+export interface IdentityQueryParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  types?: TypesEnum[];
+}
 
 export interface IdentityAction {
   createIdentity: (data: NewUserMemoryIdentity) => Promise<AddIdentityEntryResult>;
   deleteIdentity: (id: string) => Promise<void>;
-  loadMoreIdentities: () => Promise<void>;
-  refreshIdentities: (params?: {
-    q?: string;
-    sort?: 'createdAt' | 'updatedAt';
-    types?: TypesEnum[];
-  }) => Promise<void>;
+  loadMoreIdentities: () => void;
+  resetIdentitiesList: (params?: Omit<IdentityQueryParams, 'page' | 'pageSize'>) => void;
   updateIdentity: (id: string, data: UpdateUserMemoryIdentity) => Promise<boolean>;
+  useFetchIdentities: (params: IdentityQueryParams) => SWRResponse<any>;
 }
 
 export const createIdentitySlice: StateCreator<
@@ -33,97 +41,114 @@ export const createIdentitySlice: StateCreator<
 > = (set, get) => ({
   createIdentity: async (data) => {
     const result = await memoryCRUDService.createIdentity(data);
-    await get().refreshIdentities();
+    // Reset list to refresh
+    get().resetIdentitiesList({ q: get().identitiesQuery, types: get().identitiesTypes });
     return result;
   },
 
   deleteIdentity: async (id) => {
     await memoryCRUDService.deleteIdentity(id);
-    await get().refreshIdentities();
+    // Reset list to refresh
+    get().resetIdentitiesList({ q: get().identitiesQuery, types: get().identitiesTypes });
   },
 
-  loadMoreIdentities: async () => {
-    const state = get();
-    if (state.identitiesIsLoading || !state.identitiesHasMore) return;
-
-    set({ identitiesIsLoading: true }, false, n('loadMoreIdentities/start'));
-
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Identity],
-        page: state.identitiesPage + 1,
-        pageSize: 20,
-        sort: 'createdAt',
-      });
-
-      const hasMore = result.items.length > 0 && result.items.length >= 20;
-
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.identity,
-      }));
-
+  loadMoreIdentities: () => {
+    const { identitiesPage, identitiesTotal, identities } = get();
+    if (identities.length < (identitiesTotal || 0)) {
       set(
-        {
-          identities: [...state.identities, ...transformedItems],
-          identitiesHasMore: hasMore,
-          identitiesInit: true,
-          identitiesIsLoading: false,
-          identitiesPage: state.identitiesPage + 1,
-          identitiesTotal: result.total,
-        },
+        produce((draft) => {
+          draft.identitiesPage = identitiesPage + 1;
+        }),
         false,
-        n('loadMoreIdentities/success'),
+        n('loadMoreIdentities'),
       );
-    } catch (error) {
-      console.error('Failed to load more identities:', error);
-      set({ identitiesIsLoading: false }, false, n('loadMoreIdentities/error'));
     }
   },
 
-  refreshIdentities: async (params) => {
-    set({ identitiesIsLoading: true }, false, n('refreshIdentities/start'));
-
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Identity],
-        page: 1,
-        pageSize: 20,
-        q: params?.q,
-        sort: params?.sort || 'createdAt',
-        types: params?.types,
-      });
-
-      const hasMore = result.items.length >= 20;
-
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.identity,
-      }));
-
-      set(
-        {
-          identities: transformedItems,
-          identitiesHasMore: hasMore,
-          identitiesInit: true,
-          identitiesIsLoading: false,
-          identitiesPage: 1,
-          identitiesTotal: result.total,
-        },
-        false,
-        n('refreshIdentities/success'),
-      );
-    } catch (error) {
-      console.error('Failed to refresh identities:', error);
-      set({ identitiesIsLoading: false }, false, n('refreshIdentities/error'));
-    }
+  resetIdentitiesList: (params) => {
+    set(
+      produce((draft) => {
+        draft.identities = [];
+        draft.identitiesPage = 1;
+        draft.identitiesQuery = params?.q;
+        draft.identitiesSearchLoading = true;
+        draft.identitiesTypes = params?.types;
+      }),
+      false,
+      n('resetIdentitiesList'),
+    );
   },
 
   updateIdentity: async (id, data) => {
     const result = await memoryCRUDService.updateIdentity(id, data);
-    await get().refreshIdentities();
+    // Reset list to refresh
+    get().resetIdentitiesList({ q: get().identitiesQuery, types: get().identitiesTypes });
     return result;
+  },
+
+  useFetchIdentities: (params) => {
+    const swrKeyParts = [
+      'useFetchIdentities',
+      params.page,
+      params.pageSize,
+      params.q,
+      params.types?.join(','),
+    ];
+    const swrKey = swrKeyParts
+      .filter((part) => part !== undefined && part !== null && part !== '')
+      .join('-');
+    const page = params.page ?? 1;
+
+    return useSWR(
+      swrKey,
+      async () => {
+        const result = await userMemoryService.queryMemories({
+          layer: LayersEnum.Identity,
+          page: params.page,
+          pageSize: params.pageSize,
+          q: params.q,
+          types: params.types,
+        });
+
+        return result;
+      },
+      {
+        onSuccess(data: any) {
+          set(
+            produce((draft) => {
+              draft.identitiesIsLoading = false;
+              draft.identitiesSearchLoading = false;
+
+              // 设置基础信息
+              if (!draft.identitiesInit) {
+                draft.identitiesInit = true;
+                draft.identitiesTotal = data.total;
+              }
+
+              // 转换数据结构
+              const transformedItems = data.items.map((item: any) => ({
+                ...item.memory,
+                ...item.identity,
+              }));
+
+              // 累积数据逻辑
+              if (page === 1) {
+                // 第一页，直接设置
+                draft.identities = uniqBy(transformedItems, 'id');
+              } else {
+                // 后续页面，累积数据
+                draft.identities = uniqBy([...draft.identities, ...transformedItems], 'id');
+              }
+
+              // 更新 hasMore
+              draft.identitiesHasMore = data.items.length >= (params.pageSize || 20);
+            }),
+            false,
+            n('useFetchIdentities/onSuccess'),
+          );
+        },
+        revalidateOnFocus: false,
+      },
+    );
   },
 });

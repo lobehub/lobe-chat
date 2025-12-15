@@ -4,43 +4,50 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-interface FilterBarProps {
-  onSearch: (value: string) => void;
-  onSortChange: (sort: 'createdAt' | 'updatedAt') => void;
-  searchValue: string;
-  sortValue: 'createdAt' | 'updatedAt';
+interface SortOption {
+  label: string;
+  value: string;
 }
 
-const FilterBar = memo<FilterBarProps>(({ searchValue, onSearch, sortValue, onSortChange }) => {
-  const { t } = useTranslation('memory');
+interface FilterBarProps {
+  onSearch: (value: string) => void;
+  onSortChange?: (sort: string) => void;
+  searchValue: string;
+  sortOptions?: SortOption[];
+  sortValue?: string;
+}
 
-  return (
-    <Flexbox align={'center'} gap={12} horizontal>
-      <SearchBar
-        allowClear
-        defaultValue={searchValue}
-        onInputChange={(v) => {
-          if (!v) {
-            onSearch(v);
-          }
-        }}
-        onSearch={(v) => onSearch(v)}
-        placeholder={t('filter.search')}
-        prefix={<Search size={16} />}
-        style={{ flex: 1 }}
-      />
-      <Select
-        onChange={(value) => onSortChange(value as 'createdAt' | 'updatedAt')}
-        options={[
-          { label: t('filter.sort.createdAt'), value: 'createdAt' },
-          { label: t('filter.sort.updatedAt'), value: 'updatedAt' },
-        ]}
-        prefix={<Icon icon={ArrowDownNarrowWide} style={{ marginRight: 4 }} />}
-        style={{ minWidth: 150 }}
-        value={sortValue}
-      />
-    </Flexbox>
-  );
-});
+const FilterBar = memo<FilterBarProps>(
+  ({ searchValue, onSearch, sortValue, onSortChange, sortOptions }) => {
+    const { t } = useTranslation('memory');
+
+    return (
+      <Flexbox align={'center'} gap={12} horizontal>
+        <SearchBar
+          allowClear
+          defaultValue={searchValue}
+          onInputChange={(v) => {
+            if (!v) {
+              onSearch(v);
+            }
+          }}
+          onSearch={(v) => onSearch(v)}
+          placeholder={t('filter.search')}
+          prefix={<Search size={16} />}
+          style={{ flex: 1 }}
+        />
+        {sortOptions && sortOptions.length > 0 && onSortChange && (
+          <Select
+            onChange={(value) => onSortChange(value as string)}
+            options={sortOptions}
+            prefix={<Icon icon={ArrowDownNarrowWide} style={{ marginRight: 4 }} />}
+            style={{ minWidth: 150 }}
+            value={sortValue}
+          />
+        )}
+      </Flexbox>
+    );
+  },
+);
 
 export default FilterBar;

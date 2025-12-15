@@ -1,10 +1,12 @@
 import { memo, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import FilterBar from '../features/FilterBar';
@@ -14,37 +16,56 @@ import ContextRightPanel from './features/ContextRightPanel';
 import List from './features/List';
 
 const ContextsArea = memo(() => {
+  const { t } = useTranslation('memory');
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const [searchValue, setSearchValue] = useState('');
-  const [sortValue, setSortValue] = useState<'createdAt' | 'updatedAt'>('createdAt');
+  const [searchValueRaw, setSearchValueRaw] = useQueryState('q', { clearOnDefault: true });
+  const [sortValueRaw, setSortValueRaw] = useQueryState('sort', { clearOnDefault: true });
 
-  const refreshContexts = useUserMemoryStore((s) => s.refreshContexts);
+  const searchValue = searchValueRaw || '';
+  const sortValue = (sortValueRaw as 'scoreImpact' | 'scoreUrgency') || undefined;
+
+  const contextsPage = useUserMemoryStore((s) => s.contextsPage);
   const contextsInit = useUserMemoryStore((s) => s.contextsInit);
-  const contextsIsLoading = useUserMemoryStore((s) => s.contextsIsLoading);
+  const contextsSearchLoading = useUserMemoryStore((s) => s.contextsSearchLoading);
+  const useFetchContexts = useUserMemoryStore((s) => s.useFetchContexts);
+  const resetContextsList = useUserMemoryStore((s) => s.resetContextsList);
 
-  // Initial load
+  const sortOptions = [
+    { label: t('filter.sort.scoreImpact'), value: 'scoreImpact' },
+    { label: t('filter.sort.scoreUrgency'), value: 'scoreUrgency' },
+  ];
+
+  // 当搜索或排序变化时重置列表
   useEffect(() => {
-    refreshContexts({ q: searchValue, sort: sortValue });
-  }, []);
+    const sort = viewMode === 'masonry' ? sortValue : undefined;
+    resetContextsList({ q: searchValue || undefined, sort });
+  }, [searchValue, sortValue, viewMode]);
+
+  // 调用 SWR hook 获取数据
+  useFetchContexts({
+    page: contextsPage,
+    pageSize: 20,
+    q: searchValue || undefined,
+    sort: viewMode === 'masonry' ? sortValue : undefined,
+  });
 
   // Handle search and sort changes
   const handleSearch = useCallback(
     (value: string) => {
-      setSearchValue(value);
-      refreshContexts({ q: value, sort: sortValue });
+      setSearchValueRaw(value || null);
     },
-    [sortValue, refreshContexts],
+    [setSearchValueRaw],
   );
 
   const handleSortChange = useCallback(
-    (sort: 'createdAt' | 'updatedAt') => {
-      setSortValue(sort);
-      refreshContexts({ q: searchValue, sort });
+    (sort: string) => {
+      setSortValueRaw(sort);
     },
-    [searchValue, refreshContexts],
+    [setSortValueRaw],
   );
 
-  const isLoading = !contextsInit && contextsIsLoading;
+  // 显示 loading：搜索/重置中 或 首次加载中
+  const showLoading = contextsSearchLoading || !contextsInit;
 
   return (
     <Flexbox flex={1} height={'100%'}>
@@ -65,11 +86,12 @@ const ContextsArea = memo(() => {
         <WideScreenContainer gap={32} paddingBlock={48}>
           <FilterBar
             onSearch={handleSearch}
-            onSortChange={handleSortChange}
+            onSortChange={viewMode === 'masonry' ? handleSortChange : undefined}
             searchValue={searchValue}
+            sortOptions={viewMode === 'masonry' ? sortOptions : undefined}
             sortValue={sortValue}
           />
-          {isLoading ? (
+          {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
             <List searchValue={searchValue} viewMode={viewMode} />

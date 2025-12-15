@@ -44,8 +44,11 @@ const ContextsList = memo<ContextsListProps>(({ searchValue, viewMode }) => {
     });
   };
 
-  if (!contexts || contexts.length === 0)
+  const isEmpty = contexts.length === 0;
+
+  if (isEmpty) {
     return <MemoryEmpty search={Boolean(searchValue)} title={t('context.empty')} />;
+  }
 
   return viewMode === 'timeline' ? (
     <TimelineView contexts={contexts} onClick={handleCardClick} onDelete={handleDelete} />

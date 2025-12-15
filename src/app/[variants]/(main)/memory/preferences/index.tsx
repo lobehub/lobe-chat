@@ -1,10 +1,12 @@
 import { memo, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import FilterBar from '../features/FilterBar';
@@ -14,37 +16,53 @@ import List from './features/List';
 import PreferenceRightPanel from './features/PreferenceRightPanel';
 
 const PreferencesArea = memo(() => {
+  const { t } = useTranslation('memory');
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const [searchValue, setSearchValue] = useState('');
-  const [sortValue, setSortValue] = useState<'createdAt' | 'updatedAt'>('createdAt');
+  const [searchValueRaw, setSearchValueRaw] = useQueryState('q', { clearOnDefault: true });
+  const [sortValueRaw, setSortValueRaw] = useQueryState('sort', { clearOnDefault: true });
 
-  const refreshPreferences = useUserMemoryStore((s) => s.refreshPreferences);
+  const searchValue = searchValueRaw || '';
+  const sortValue = (sortValueRaw as 'scorePriority') || undefined;
+
+  const preferencesPage = useUserMemoryStore((s) => s.preferencesPage);
   const preferencesInit = useUserMemoryStore((s) => s.preferencesInit);
-  const preferencesIsLoading = useUserMemoryStore((s) => s.preferencesIsLoading);
+  const preferencesSearchLoading = useUserMemoryStore((s) => s.preferencesSearchLoading);
+  const useFetchPreferences = useUserMemoryStore((s) => s.useFetchPreferences);
+  const resetPreferencesList = useUserMemoryStore((s) => s.resetPreferencesList);
 
-  // Initial load
+  const sortOptions = [{ label: t('filter.sort.scorePriority'), value: 'scorePriority' }];
+
+  // 当搜索或排序变化时重置列表
   useEffect(() => {
-    refreshPreferences({ q: searchValue, sort: sortValue });
-  }, []);
+    const sort = viewMode === 'masonry' ? sortValue : undefined;
+    resetPreferencesList({ q: searchValue || undefined, sort });
+  }, [searchValue, sortValue, viewMode]);
+
+  // 调用 SWR hook 获取数据
+  useFetchPreferences({
+    page: preferencesPage,
+    pageSize: 20,
+    q: searchValue || undefined,
+    sort: viewMode === 'masonry' ? sortValue : undefined,
+  });
 
   // Handle search and sort changes
   const handleSearch = useCallback(
     (value: string) => {
-      setSearchValue(value);
-      refreshPreferences({ q: value, sort: sortValue });
+      setSearchValueRaw(value || null);
     },
-    [sortValue, refreshPreferences],
+    [setSearchValueRaw],
   );
 
   const handleSortChange = useCallback(
-    (sort: 'createdAt' | 'updatedAt') => {
-      setSortValue(sort);
-      refreshPreferences({ q: searchValue, sort });
+    (sort: string) => {
+      setSortValueRaw(sort);
     },
-    [searchValue, refreshPreferences],
+    [setSortValueRaw],
   );
 
-  const isLoading = !preferencesInit && preferencesIsLoading;
+  // 显示 loading：搜索/重置中 或 首次加载中
+  const showLoading = preferencesSearchLoading || !preferencesInit;
 
   return (
     <Flexbox flex={1} height={'100%'}>
@@ -65,11 +83,12 @@ const PreferencesArea = memo(() => {
         <WideScreenContainer gap={32} paddingBlock={48}>
           <FilterBar
             onSearch={handleSearch}
-            onSortChange={handleSortChange}
+            onSortChange={viewMode === 'masonry' ? handleSortChange : undefined}
             searchValue={searchValue}
+            sortOptions={viewMode === 'masonry' ? sortOptions : undefined}
             sortValue={sortValue}
           />
-          {isLoading ? (
+          {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
             <List searchValue={searchValue} viewMode={viewMode} />

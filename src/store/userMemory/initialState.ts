@@ -6,6 +6,7 @@ import type {
 import type {
   RetrieveMemoryParams,
   RetrieveMemoryResult,
+  TypesEnum,
   UserMemoryIdentityWithoutVectors,
 } from '@/types/userMemory';
 
@@ -17,19 +18,28 @@ export interface UserMemoryStoreState {
   contextsInit: boolean;
   contextsIsLoading: boolean;
   contextsPage: number;
+  contextsQuery?: string;
+  contextsSearchLoading?: boolean;
+  contextsSort?: 'scoreImpact' | 'scoreUrgency';
   contextsTotal: number;
   experiences: DisplayExperienceMemory[];
   experiencesHasMore: boolean;
   experiencesInit: boolean;
   experiencesIsLoading: boolean;
   experiencesPage: number;
+  experiencesQuery?: string;
+  experiencesSearchLoading?: boolean;
+  experiencesSort?: 'scoreConfidence';
   experiencesTotal: number;
   identities: UserMemoryIdentityWithoutVectors[];
   identitiesHasMore: boolean;
   identitiesInit: boolean;
   identitiesIsLoading: boolean;
   identitiesPage: number;
+  identitiesQuery?: string;
+  identitiesSearchLoading?: boolean;
   identitiesTotal: number;
+  identitiesTypes?: TypesEnum[];
   memoryFetchedAtMap: Record<string, number>;
   memoryMap: Record<string, RetrieveMemoryResult>;
   preferences: DisplayPreferenceMemory[];
@@ -37,6 +47,9 @@ export interface UserMemoryStoreState {
   preferencesInit: boolean;
   preferencesIsLoading: boolean;
   preferencesPage: number;
+  preferencesQuery?: string;
+  preferencesSearchLoading?: boolean;
+  preferencesSort?: 'scorePriority';
   preferencesTotal: number;
   roles: { count: number; tag: string }[];
   tags: { count: number; tag: string }[];
@@ -51,19 +64,25 @@ export const initialState: UserMemoryStoreState = {
   contextsInit: false,
   contextsIsLoading: false,
   contextsPage: 1,
+  contextsQuery: undefined,
+  contextsSort: undefined,
   contextsTotal: 0,
   experiences: [],
   experiencesHasMore: true,
   experiencesInit: false,
   experiencesIsLoading: false,
   experiencesPage: 1,
+  experiencesQuery: undefined,
+  experiencesSort: undefined,
   experiencesTotal: 0,
   identities: [],
   identitiesHasMore: true,
   identitiesInit: false,
   identitiesIsLoading: false,
   identitiesPage: 1,
+  identitiesQuery: undefined,
   identitiesTotal: 0,
+  identitiesTypes: undefined,
   memoryFetchedAtMap: {},
   memoryMap: {},
   preferences: [],
@@ -71,6 +90,8 @@ export const initialState: UserMemoryStoreState = {
   preferencesInit: false,
   preferencesIsLoading: false,
   preferencesPage: 1,
+  preferencesQuery: undefined,
+  preferencesSort: undefined,
   preferencesTotal: 0,
   roles: [],
   tags: [],

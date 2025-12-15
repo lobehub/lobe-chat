@@ -43,8 +43,11 @@ const ExperiencesList = memo<ExperiencesListProps>(({ searchValue, viewMode }) =
     });
   };
 
-  if (!experiences || experiences.length === 0)
+  const isEmpty = experiences.length === 0;
+
+  if (isEmpty) {
     return <MemoryEmpty search={Boolean(searchValue)} title={t('experience.empty')} />;
+  }
 
   return viewMode === 'timeline' ? (
     <TimelineView experiences={experiences} onCardClick={handleCardClick} onDelete={handleDelete} />

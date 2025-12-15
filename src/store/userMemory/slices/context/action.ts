@@ -1,17 +1,29 @@
+import { produce } from 'immer';
+import { uniqBy } from 'lodash-es';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
 import { memoryCRUDService } from '@/services/userMemory/index';
 import { LayersEnum } from '@/types/userMemory';
+import { setNamespace } from '@/utils/storeDebug';
 
 import { UserMemoryStore } from '../../store';
 
-const n = (namespace: string) => namespace;
+const n = setNamespace('userMemory/context');
+
+export interface ContextQueryParams {
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  sort?: 'scoreImpact' | 'scoreUrgency';
+}
 
 export interface ContextAction {
   deleteContext: (id: string) => Promise<void>;
-  loadMoreContexts: () => Promise<void>;
-  refreshContexts: (params?: { q?: string; sort?: 'createdAt' | 'updatedAt' }) => Promise<void>;
+  loadMoreContexts: () => void;
+  resetContextsList: (params?: Omit<ContextQueryParams, 'page' | 'pageSize'>) => void;
+  useFetchContexts: (params: ContextQueryParams) => SWRResponse<any>;
 }
 
 export const createContextSlice: StateCreator<
@@ -22,86 +34,95 @@ export const createContextSlice: StateCreator<
 > = (set, get) => ({
   deleteContext: async (id) => {
     await memoryCRUDService.deleteContext(id);
-    await get().refreshContexts();
+    // Reset list to refresh
+    get().resetContextsList({ q: get().contextsQuery, sort: get().contextsSort });
   },
 
-  loadMoreContexts: async () => {
-    const state = get();
-    if (state.contextsIsLoading || !state.contextsHasMore) return;
-
-    set({ contextsIsLoading: true }, false, n('loadMoreContexts/start'));
-
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Context],
-        page: state.contextsPage + 1,
-        pageSize: 20,
-        sort: 'createdAt',
-      });
-
-      const hasMore = result.items.length > 0 && result.items.length >= 20;
-
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.context,
-        source: null,
-      }));
-
+  loadMoreContexts: () => {
+    const { contextsPage, contextsTotal, contexts } = get();
+    if (contexts.length < (contextsTotal || 0)) {
       set(
-        {
-          contexts: [...state.contexts, ...transformedItems],
-          contextsHasMore: hasMore,
-          contextsInit: true,
-          contextsIsLoading: false,
-          contextsPage: state.contextsPage + 1,
-          contextsTotal: result.total,
-        },
+        produce((draft) => {
+          draft.contextsPage = contextsPage + 1;
+        }),
         false,
-        n('loadMoreContexts/success'),
+        n('loadMoreContexts'),
       );
-    } catch (error) {
-      console.error('Failed to load more contexts:', error);
-      set({ contextsIsLoading: false }, false, n('loadMoreContexts/error'));
     }
   },
 
-  refreshContexts: async (params) => {
-    set({ contextsIsLoading: true }, false, n('refreshContexts/start'));
+  resetContextsList: (params) => {
+    set(
+      produce((draft) => {
+        draft.contexts = [];
+        draft.contextsPage = 1;
+        draft.contextsQuery = params?.q;
+        draft.contextsSearchLoading = true;
+        draft.contextsSort = params?.sort;
+      }),
+      false,
+      n('resetContextsList'),
+    );
+  },
 
-    try {
-      const result = await userMemoryService.queryMemories({
-        layers: [LayersEnum.Context],
-        page: 1,
-        pageSize: 20,
-        q: params?.q,
-        sort: params?.sort || 'createdAt',
-      });
+  useFetchContexts: (params) => {
+    const swrKeyParts = ['useFetchContexts', params.page, params.pageSize, params.q, params.sort];
+    const swrKey = swrKeyParts
+      .filter((part) => part !== undefined && part !== null && part !== '')
+      .join('-');
+    const page = params.page ?? 1;
 
-      const hasMore = result.items.length >= 20;
+    return useSWR(
+      swrKey,
+      async () => {
+        const result = await userMemoryService.queryMemories({
+          layer: LayersEnum.Context,
+          page: params.page,
+          pageSize: params.pageSize,
+          q: params.q,
+          sort: params.sort,
+        });
 
-      // Transform nested structure to flat structure
-      const transformedItems = result.items.map((item: any) => ({
-        ...item.memory,
-        ...item.context,
-        source: null,
-      }));
+        return result;
+      },
+      {
+        onSuccess(data: any) {
+          set(
+            produce((draft) => {
+              draft.contextsIsLoading = false;
+              draft.contextsSearchLoading = false;
 
-      set(
-        {
-          contexts: transformedItems,
-          contextsHasMore: hasMore,
-          contextsInit: true,
-          contextsIsLoading: false,
-          contextsPage: 1,
-          contextsTotal: result.total,
+              // 设置基础信息
+              if (!draft.contextsInit) {
+                draft.contextsInit = true;
+                draft.contextsTotal = data.total;
+              }
+
+              // 转换数据结构
+              const transformedItems = data.items.map((item: any) => ({
+                ...item.memory,
+                ...item.context,
+                source: null,
+              }));
+
+              // 累积数据逻辑
+              if (page === 1) {
+                // 第一页，直接设置
+                draft.contexts = uniqBy(transformedItems, 'id');
+              } else {
+                // 后续页面，累积数据
+                draft.contexts = uniqBy([...draft.contexts, ...transformedItems], 'id');
+              }
+
+              // 更新 hasMore
+              draft.contextsHasMore = data.items.length >= (params.pageSize || 20);
+            }),
+            false,
+            n('useFetchContexts/onSuccess'),
+          );
         },
-        false,
-        n('refreshContexts/success'),
-      );
-    } catch (error) {
-      console.error('Failed to refresh contexts:', error);
-      set({ contextsIsLoading: false }, false, n('refreshContexts/error'));
-    }
+        revalidateOnFocus: false,
+      },
+    );
   },
 });

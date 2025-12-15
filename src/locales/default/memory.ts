@@ -42,8 +42,10 @@ export default {
   filter: {
     search: '搜索...',
     sort: {
-      createdAt: '创建时间',
-      updatedAt: '更新时间',
+      scoreConfidence: '置信度',
+      scoreImpact: '影响度',
+      scorePriority: '优先级',
+      scoreUrgency: '紧急度',
     },
   },
   identity: {

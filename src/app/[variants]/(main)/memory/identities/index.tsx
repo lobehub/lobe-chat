@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { TypesEnum } from '@/types/userMemory';
 
@@ -16,48 +17,49 @@ import List, { IdentityType } from './features/List';
 
 const IdentitiesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const [searchValue, setSearchValue] = useState('');
-  const [typeFilter, setTypeFilter] = useState<IdentityType>('all');
-  const [sortValue, setSortValue] = useState<'createdAt' | 'updatedAt'>('createdAt');
+  const [searchValueRaw, setSearchValueRaw] = useQueryState('q', { clearOnDefault: true });
+  const [typeFilterRaw, setTypeFilterRaw] = useQueryState('type', { clearOnDefault: true });
 
-  const refreshIdentities = useUserMemoryStore((s) => s.refreshIdentities);
+  const searchValue = searchValueRaw || '';
+  const typeFilter = (typeFilterRaw as IdentityType) || 'all';
+
+  const identitiesPage = useUserMemoryStore((s) => s.identitiesPage);
   const identitiesInit = useUserMemoryStore((s) => s.identitiesInit);
-  const identitiesIsLoading = useUserMemoryStore((s) => s.identitiesIsLoading);
+  const identitiesSearchLoading = useUserMemoryStore((s) => s.identitiesSearchLoading);
+  const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
+  const resetIdentitiesList = useUserMemoryStore((s) => s.resetIdentitiesList);
 
-  // Initial load
+  // 当搜索或类型变化时重置列表
   useEffect(() => {
-    refreshIdentities({ q: searchValue, sort: sortValue });
-  }, []);
+    const types = typeFilter === 'all' ? undefined : [typeFilter as TypesEnum];
+    resetIdentitiesList({ q: searchValue || undefined, types });
+  }, [searchValue, typeFilter]);
 
-  // Handle search and sort changes
+  // 调用 SWR hook 获取数据
+  useFetchIdentities({
+    page: identitiesPage,
+    pageSize: 20,
+    q: searchValue || undefined,
+    types: typeFilter === 'all' ? undefined : [typeFilter as TypesEnum],
+  });
+
+  // Handle search and type changes
   const handleSearch = useCallback(
     (value: string) => {
-      setSearchValue(value);
-      const types = typeFilter === 'all' ? undefined : [typeFilter as TypesEnum];
-      refreshIdentities({ q: value, sort: sortValue, types });
+      setSearchValueRaw(value || null);
     },
-    [typeFilter, sortValue, refreshIdentities],
+    [setSearchValueRaw],
   );
 
   const handleTypeChange = useCallback(
     (type: IdentityType) => {
-      setTypeFilter(type);
-      const types = type === 'all' ? undefined : [type as TypesEnum];
-      refreshIdentities({ q: searchValue, sort: sortValue, types });
+      setTypeFilterRaw(type === 'all' ? null : type);
     },
-    [searchValue, sortValue, refreshIdentities],
+    [setTypeFilterRaw],
   );
 
-  const handleSortChange = useCallback(
-    (sort: 'createdAt' | 'updatedAt') => {
-      setSortValue(sort);
-      const types = typeFilter === 'all' ? undefined : [typeFilter as TypesEnum];
-      refreshIdentities({ q: searchValue, sort, types });
-    },
-    [searchValue, typeFilter, refreshIdentities],
-  );
-
-  const isLoading = !identitiesInit && identitiesIsLoading;
+  // 显示 loading：搜索/重置中 或 首次加载中
+  const showLoading = identitiesSearchLoading || !identitiesInit;
 
   return (
     <Flexbox flex={1} height={'100%'}>
@@ -78,13 +80,11 @@ const IdentitiesArea = memo(() => {
         <WideScreenContainer gap={32} paddingBlock={48}>
           <FilterBar
             onSearch={handleSearch}
-            onSortChange={handleSortChange}
             onTypeChange={handleTypeChange}
             searchValue={searchValue}
-            sortValue={sortValue}
             typeValue={typeFilter}
           />
-          {isLoading ? (
+          {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
             <List searchValue={searchValue} viewMode={viewMode} />

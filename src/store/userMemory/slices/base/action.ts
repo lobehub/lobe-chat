@@ -1,9 +1,11 @@
 import isEqual from 'fast-deep-equal';
 import { type SWRResponse, mutate } from 'swr';
+import useSWR from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
+import { LayersEnum } from '@/types/userMemory';
 import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -19,6 +21,7 @@ type MemoryContext = Parameters<typeof createMemorySearchParams>[0];
 export interface BaseAction {
   refreshUserMemory: (params: RetrieveMemoryParams) => Promise<void>;
   setActiveMemoryContext: (context?: MemoryContext) => void;
+  useFetchMemoryDetail: (id: string | null, layer: LayersEnum) => SWRResponse<any>;
   useFetchUserMemory: (
     enable: boolean,
     params?: RetrieveMemoryParams,
@@ -48,6 +51,66 @@ export const createBaseSlice: StateCreator<
       },
       false,
       n('setActiveMemoryContext', { key }),
+    );
+  },
+
+  useFetchMemoryDetail: (id, layer) => {
+    const swrKey = id ? `memoryDetail-${layer}-${id}` : null;
+
+    return useSWR(
+      swrKey,
+      async () => {
+        if (!id) return null;
+
+        const detail = await userMemoryService.getMemoryDetail({ id, layer });
+
+        if (!detail) return null;
+
+        // Transform nested structure to flat structure
+        switch (layer) {
+          case LayersEnum.Context: {
+            if (detail.layer === LayersEnum.Context) {
+              return {
+                ...detail.memory,
+                ...detail.context,
+              };
+            }
+            break;
+          }
+          case LayersEnum.Experience: {
+            if (detail.layer === LayersEnum.Experience) {
+              return {
+                ...detail.memory,
+                ...detail.experience,
+              };
+            }
+            break;
+          }
+          case LayersEnum.Identity: {
+            if (detail.layer === LayersEnum.Identity) {
+              return {
+                ...detail.memory,
+                ...detail.identity,
+              };
+            }
+            break;
+          }
+          case LayersEnum.Preference: {
+            if (detail.layer === LayersEnum.Preference) {
+              return {
+                ...detail.memory,
+                ...detail.preference,
+              };
+            }
+            break;
+          }
+        }
+
+        return null;
+      },
+      {
+        revalidateOnFocus: false,
+      },
     );
   },
 
