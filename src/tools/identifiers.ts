@@ -1,7 +1,6 @@
 import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
-import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
-import { CodeInterpreterManifest } from './code-interpreter-draft';
+import { CodeInterpreterManifest } from './code-interpreter';
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { LocalSystemManifest } from './local-system';
 import { PageAgentManifest } from './page-agent';
@@ -14,6 +13,5 @@ export const builtinToolIdentifiers: string[] = [
   WebBrowsingManifest.identifier,
   KnowledgeBaseManifest.identifier,
   CodeInterpreterManifest.identifier,
-  CloudCodeInterpreterManifest.identifier,
   PageAgentManifest.identifier,
 ];

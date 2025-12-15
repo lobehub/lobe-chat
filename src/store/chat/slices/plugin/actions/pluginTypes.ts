@@ -11,6 +11,7 @@ import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
+import { CodeInterpreterIdentifier } from '@/tools/code-interpreter';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { dbMessageSelectors } from '../../message/selectors';
@@ -26,6 +27,14 @@ export interface PluginTypesAction {
    * Invoke builtin tool
    */
   invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
+
+  /**
+   * Invoke Cloud Code Interpreter tool
+   */
+  invokeCloudCodeInterpreterTool: (
+    id: string,
+    payload: ChatToolPayload,
+  ) => Promise<string | undefined>;
 
   /**
    * Invoke default type plugin (returns data)
@@ -70,6 +79,11 @@ export const pluginTypes: StateCreator<
       return await get().invokeKlavisTypePlugin(id, payload);
     }
 
+    // Check if this is Cloud Code Interpreter - route to specific handler
+    if (payload.identifier === CodeInterpreterIdentifier) {
+      return await get().invokeCloudCodeInterpreterTool(id, payload);
+    }
+
     // run tool api call
     // @ts-ignore
     const { [payload.apiName]: action } = get();
@@ -83,6 +97,96 @@ export const pluginTypes: StateCreator<
     if (!content) return;
 
     return await action(id, content);
+  },
+
+  invokeCloudCodeInterpreterTool: async (id, payload) => {
+    const {
+      optimisticUpdateMessageContent,
+      optimisticUpdatePluginState,
+      optimisticUpdateMessagePluginError,
+    } = get();
+
+    // Get message to extract topicId
+    const message = dbMessageSelectors.getDbMessageById(id)(get());
+
+    // Get abort controller from operation
+    const operationId = get().messageOperationMap[id];
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const abortController = operation?.abortController;
+
+    log(
+      '[invokeCloudCodeInterpreterTool] messageId=%s, tool=%s, operationId=%s, aborted=%s',
+      id,
+      payload.apiName,
+      operationId,
+      abortController?.signal.aborted,
+    );
+
+    let data: { content: string; error?: any; state?: any; success: boolean } | undefined;
+
+    try {
+      // Import ExecutionRuntime dynamically to avoid circular dependencies
+      const { CodeInterpreterExecutionRuntime } =
+        await import('@/tools/code-interpreter/ExecutionRuntime/index');
+
+      // Create runtime with context
+      const runtime = new CodeInterpreterExecutionRuntime({
+        topicId: message?.topicId || 'default',
+        userId: 'current-user', // TODO: Get actual userId from auth context
+      });
+
+      // Parse arguments
+      const args = safeParseJSON(payload.arguments) || {};
+
+      // Call the appropriate method based on apiName
+      const apiMethod = (runtime as Record<string, any>)[payload.apiName];
+      if (!apiMethod) {
+        throw new Error(`Cloud Code Interpreter API not found: ${payload.apiName}`);
+      }
+
+      data = await apiMethod.call(runtime, args);
+    } catch (error) {
+      console.error('[invokeCloudCodeInterpreterTool] Error:', error);
+
+      const err = error as Error;
+      if (err.message.includes('aborted') || err.message.includes('The user aborted a request.')) {
+        log(
+          '[invokeCloudCodeInterpreterTool] Request aborted: messageId=%s, tool=%s',
+          id,
+          payload.apiName,
+        );
+      } else {
+        const result = await messageService.updateMessageError(id, error as any, {
+          agentId: message?.agentId,
+          topicId: message?.topicId,
+        });
+        if (result?.success && result.messages) {
+          get().replaceMessages(result.messages, {
+            context: {
+              agentId: message?.agentId,
+              topicId: message?.topicId,
+            },
+          });
+        }
+      }
+    }
+
+    if (!data) return;
+
+    const context = operationId ? { operationId } : undefined;
+
+    await Promise.all([
+      optimisticUpdateMessageContent(id, data.content, undefined, context),
+      (async () => {
+        if (data.success && data.state) {
+          await optimisticUpdatePluginState(id, data.state, context);
+        } else if (!data.success && data.error) {
+          await optimisticUpdateMessagePluginError(id, data.error, context);
+        }
+      })(),
+    ]);
+
+    return data.content;
   },
 
   invokeDefaultTypePlugin: async (id, payload) => {

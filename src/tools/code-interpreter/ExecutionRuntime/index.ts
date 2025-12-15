@@ -1,5 +1,7 @@
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 
+import { codeInterpreterService } from '@/services/codeInterpreter';
+
 import {
   EditLocalFileState,
   GetCommandOutputState,
@@ -382,22 +384,22 @@ export class CodeInterpreterExecutionRuntime {
   // ==================== Helper Methods ====================
 
   /**
-   * Call a tool via the market SDK
-   * This is a placeholder that will be connected to the actual SDK
+   * Call a tool via the market SDK through tRPC
+   * Routes through: ExecutionRuntime -> codeInterpreterService -> tRPC -> codeInterpreterRouter -> MarketSDK
    */
   private async callTool(
     toolName: string,
     params: Record<string, any>,
   ): Promise<{ result: any; sessionExpiredAndRecreated?: boolean; success: boolean }> {
-    // TODO: Implement actual market-sdk integration
-    // This will be replaced with:
-    // const sdk = getMarketSDK();
-    // return sdk.plugins.runBuildInTool(toolName, params, this.context);
+    const result = await codeInterpreterService.callTool(toolName, params, this.context);
 
-    // For now, throw an error indicating SDK not configured
-    throw new Error(
-      `Cloud Code Interpreter not configured. Tool: ${toolName}, Context: ${JSON.stringify(this.context)}`,
-    );
+    if (!result.success) {
+      throw new Error(
+        (result as any).error?.message || `Cloud Code Interpreter tool ${toolName} failed`,
+      );
+    }
+
+    return result;
   }
 
   private handleError(error: unknown): BuiltinServerRuntimeOutput {

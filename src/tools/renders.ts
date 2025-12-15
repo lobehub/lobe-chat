@@ -3,11 +3,9 @@ import { BuiltinRender } from '@lobechat/types';
 // agent-builder
 import { AgentBuilderManifest } from './agent-builder';
 import { AgentBuilderRenders } from './agent-builder/Render';
-// cloud code-interpreter
-import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
-import { CodeInterpreterRenders as CloudCodeInterpreterRenders } from './code-interpreter/Render';
-import { CodeInterpreterManifest } from './code-interpreter-draft';
-import CodeInterpreterRender from './code-interpreter-draft/Render';
+// code-interpreter
+import { CodeInterpreterManifest } from './code-interpreter';
+import { CodeInterpreterRenders } from './code-interpreter/Render';
 // knowledge-base
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { KnowledgeBaseRenders } from './knowledge-base/Render';
@@ -27,10 +25,7 @@ const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
   [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,
   [WebBrowsingManifest.identifier]: WebBrowsingRenders as Record<string, BuiltinRender>,
   [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,
-  [CodeInterpreterManifest.identifier]: {
-    python: CodeInterpreterRender as BuiltinRender,
-  },
-  [CloudCodeInterpreterManifest.identifier]: CloudCodeInterpreterRenders as Record<string, BuiltinRender>,
+  [CodeInterpreterManifest.identifier]: CodeInterpreterRenders as Record<string, BuiltinRender>,
 };
 
 /**

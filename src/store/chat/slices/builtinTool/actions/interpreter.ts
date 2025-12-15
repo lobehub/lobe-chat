@@ -15,7 +15,7 @@ import { pythonService } from '@/services/python';
 import { dbMessageSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
-import { CodeInterpreterIdentifier } from '@/tools/code-interpreter-draft';
+import { CodeInterpreterIdentifier } from '@/tools/code-interpreter';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('codeInterpreter');
