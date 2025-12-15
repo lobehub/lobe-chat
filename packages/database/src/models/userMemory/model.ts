@@ -11,12 +11,10 @@ import {
   UserMemoryExperienceWithoutVectors,
   UserMemoryIdentityWithoutVectors,
   UserMemoryPreferenceWithoutVectors,
-  UserMemoryContextsListItem,
-  UserMemoryIdentitiesListItem,
-  UserMemoryExperiencesListItem,
-  UserMemoryPreferencesListItem,
-  UserMemoryListItem,
-  UserMemoryWithoutVectors
+  UserMemoryDetail,
+  UserMemoryItemSimple,
+  UserMemoryWithoutVectors,
+  MemorySourceType
 } from '@lobechat/types';
 import type { AnyColumn, SQL } from 'drizzle-orm';
 import { and, asc, cosineDistance, desc, eq, ilike, inArray, isNotNull, ne, or, sql } from 'drizzle-orm';
@@ -301,90 +299,8 @@ export interface QueryUserMemoriesParams {
   types?: string[];
 }
 
-export interface TopicSource {
-  agentId: string | null;
-  id: string;
-  sessionId: string | null;
-  title: string | null;
-}
-
-// TODO: Extend to other source types later, e.g. Notion, Obsidian, YuQue
-export type MemorySource = TopicSource;
-
-export enum MemorySourceType {
-  ChatTopic = 'chat_topic',
-}
-
-export interface QueriedContextMemory {
-  context: UserMemoryContextsListItem;
-  layer: LayersEnum.Context;
-  memory: UserMemoryListItem
-}
-
-export interface DetailedContextMemory {
-  context: UserMemoryContextWithoutVectors;
-  layer: LayersEnum.Context;
-  memory: UserMemoryWithoutVectors
-  source?: MemorySource;
-  sourceType?: MemorySourceType;
-}
-
-export interface QueriedExperienceMemory {
-  experience: UserMemoryExperiencesListItem;
-  layer: LayersEnum.Experience;
-  memory: UserMemoryListItem;
-}
-
-export interface DetailedExperienceMemory {
-  experience: UserMemoryExperienceWithoutVectors;
-  layer: LayersEnum.Experience;
-  memory: UserMemoryWithoutVectors;
-  source?: MemorySource;
-  sourceType?: MemorySourceType;
-}
-
-export interface QueriedPreferenceMemory {
-  layer: LayersEnum.Preference;
-  memory: UserMemoryListItem;
-  preference: UserMemoryPreferencesListItem;
-}
-
-export interface DetailedPreferenceMemory {
-  layer: LayersEnum.Preference;
-  memory: UserMemoryWithoutVectors;
-  preference: UserMemoryPreferenceWithoutVectors;
-  source?: MemorySource;
-  sourceType?: MemorySourceType;
-}
-
-export interface QueriedIdentityMemory {
-  identity: UserMemoryIdentitiesListItem;
-  layer: LayersEnum.Identity;
-  memory: UserMemoryListItem;
-}
-
-export interface DetailedIdentityMemory {
-  identity: UserMemoryIdentityWithoutVectors;
-  layer: LayersEnum.Identity;
-  memory: UserMemoryWithoutVectors;
-  source?: MemorySource;
-  sourceType?: MemorySourceType;
-}
-
-export type QueriedUserMemoryItem =
-  | QueriedContextMemory
-  | QueriedExperienceMemory
-  | QueriedIdentityMemory
-  | QueriedPreferenceMemory;
-
-export type DetailedUserMemoryItem =
-  | DetailedContextMemory
-  | DetailedExperienceMemory
-  | DetailedIdentityMemory
-  | DetailedPreferenceMemory;
-
-export interface QueryUserMemoriesResult {
-  items: QueriedUserMemoryItem[];
+export interface GetMemoriesResult {
+  items: UserMemoryItemSimple[];
   page: number;
   pageSize: number;
   total: number;
@@ -766,7 +682,7 @@ export class UserMemoryModel {
     };
   };
 
-  queryMemories = async (params: QueryUserMemoriesParams = {}): Promise<QueryUserMemoriesResult> => {
+  queryMemories = async (params: QueryUserMemoriesParams = {}): Promise<GetMemoriesResult> => {
     const {
       categories,
       layer,
@@ -1153,7 +1069,7 @@ export class UserMemoryModel {
 
   getMemoryDetail = async (
     params: GetMemoryDetailParams,
-  ): Promise<DetailedUserMemoryItem | undefined> => {
+  ): Promise<UserMemoryDetail | undefined> => {
     const { id, layer } = params;
 
     switch (layer) {
@@ -1399,10 +1315,6 @@ export class UserMemoryModel {
     const result = await this.db.query.userMemories.findFirst({
       where: and(eq(userMemories.id, id), eq(userMemories.userId, this.userId)),
     });
-
-    if (result) {
-      await this.updateAccessMetrics([id]);
-    }
 
     return result;
   };
