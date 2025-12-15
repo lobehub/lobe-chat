@@ -994,5 +994,15 @@
     "bps": true,
     "folderMillis": 1765728439737,
     "hash": "ba6a6beff2ad39419ec4aa7887539c9db0472e13f9242cb8780ff96eec450268"
+  },
+  {
+    "sql": [
+      "DROP INDEX IF EXISTS \"user_memories_contexts_title_vector_index\";",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"occupation\" text;",
+      "\nALTER TABLE \"user_memories_contexts\" DROP COLUMN IF EXISTS \"title_vector\";"
+    ],
+    "bps": true,
+    "folderMillis": 1765809113338,
+    "hash": "1243e202472008157d0feb460378d480198585b6816b273f9b0ddd471eefc709"
   }
 ]
