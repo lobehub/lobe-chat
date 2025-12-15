@@ -4,7 +4,6 @@ import { useEditorState } from '@lobehub/editor/react';
 import React, { memo, useEffect, useRef } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
-import { useChatStore } from '@/store/chat';
 import { pageAgentRuntime } from '@/store/chat/slices/builtinTool/actions/pageAgent';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
@@ -31,7 +30,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     const editorState = useEditorState(editor);
     const currentDocId = usePageEditorStore((s) => s.currentDocId);
 
-    const updateActivePageId = useChatStore((s) => s.internal_updateActivePageId);
     const fetchDocumentDetail = useFileStore((s) => s.fetchDocumentDetail);
     const currentPage = useFileStore(documentSelectors.getDocumentById(pageId));
 
@@ -86,8 +84,8 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     useEffect(() => {
       if (pageId !== lastLoadedDocIdRef.current && !isLoadingDetail) {
         console.log('[StoreUpdater] Initializing metadata for pageId:', pageId, {
-          title: currentPage?.title,
           hasEditorData: !!currentPage?.editorData,
+          title: currentPage?.title,
         });
         lastLoadedDocIdRef.current = pageId;
         setContentInit(false);
@@ -103,13 +101,13 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Load content into editor after initialization
     useEffect(() => {
       console.log('[StoreUpdater] Content loading effect check:', {
-        editorInit,
-        hasEditor: !!editor,
         contentInit,
+        editorInit,
+        hasCurrentPage: !!currentPage,
+        hasEditor: !!editor,
+        hasEditorData: !!currentPage?.editorData,
         isLoadingDetail,
         pageId,
-        hasCurrentPage: !!currentPage,
-        hasEditorData: !!currentPage?.editorData,
       });
 
       if (!editorInit || !editor || contentInit || isLoadingDetail) return;

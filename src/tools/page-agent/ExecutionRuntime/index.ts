@@ -316,7 +316,7 @@ export class PageAgentExecutionRuntime {
 
     // Match the element with the given id
     // Pattern: <tagName id="nodeId" ...>content</tagName> or self-closing <tagName id="nodeId" ... />
-    const escapedId = nodeId.replaceAll(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedId = nodeId.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
 
     // First try to match a full element with opening and closing tags
     const fullElementRegex = new RegExp(
@@ -382,7 +382,7 @@ export class PageAgentExecutionRuntime {
 
     // Simple regex-based XML parsing for table structures
     // Match tags like <tr>, <td>, <th>, etc.
-    const tagRegex = /<(\w+)[^>]*>([\s\S]*?)<\/\1>|<(\w+)[^>]*\/>/g;
+    const tagRegex = /<(\w+)[^>]*>([\S\s]*?)<\/\1>|<(\w+)[^>]*\/>/g;
     let match;
 
     while ((match = tagRegex.exec(xml)) !== null) {
@@ -574,6 +574,7 @@ export class PageAgentExecutionRuntime {
     }
   }
 
+  // TODO: Shoould support muttiple nodes modification
   async updateNode(args: UpdateNodeArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
       const editor = this.getEditor();
@@ -581,8 +582,8 @@ export class PageAgentExecutionRuntime {
       console.log('[updateNode] Attempting to update node:', args.nodeId);
       console.log('[updateNode] Update args:', {
         content: args.content,
-        hasChildren: !!args.children,
         hasAttributes: !!args.attributes,
+        hasChildren: !!args.children,
       });
 
       // Build the LiteXML for the updated node
@@ -632,12 +633,6 @@ export class PageAgentExecutionRuntime {
       litexml = `<${nodeType} ${attributes}>${content}</${nodeType}>`;
 
       console.log('[updateNode] Generated LiteXML:', litexml);
-
-      // Apply the update using Lexical's command system
-      const lexicalEditor = editor.getLexicalEditor();
-      if (!lexicalEditor) {
-        throw new Error('Lexical editor not available');
-      }
 
       const success = editor.dispatchCommand(LITEXML_APPLY_COMMAND, {
         litexml: [litexml],
@@ -970,7 +965,7 @@ export class PageAgentExecutionRuntime {
       }
 
       // Generate a unique key for the new row
-      newRow.key = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      newRow.key = `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 
       table.children.splice(insertIndex, 0, newRow);
 
@@ -1029,7 +1024,7 @@ export class PageAgentExecutionRuntime {
 
         const newCell = this.createTableCell(cellContent);
         // Generate a unique key for the new cell
-        newCell.key = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        newCell.key = `${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
         row.children.splice(columnIndex, 0, newCell);
 
         // Track the new cell key
