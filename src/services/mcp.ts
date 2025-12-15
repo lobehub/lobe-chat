@@ -3,6 +3,7 @@ import { ChatToolPayload, CheckMcpInstallResult, CustomPluginMetadata } from '@l
 import { isLocalOrPrivateUrl, safeParseJSON } from '@lobechat/utils';
 import { PluginManifest } from '@lobehub/market-sdk';
 import { CallReportRequest } from '@lobehub/market-types';
+import superjson from 'superjson';
 
 import { MCPToolCallResult } from '@/libs/mcp';
 import { lambdaClient, toolsClient } from '@/libs/trpc/client';
@@ -77,15 +78,17 @@ class MCPService {
       };
     }
 
+    const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
+    const isCloud = plugin?.customParams?.mcp?.type === 'cloud';
+
     const data = {
-      args,
+      // For desktop IPC, always pass a record/object for tool "arguments"
+      // (IPC layer will superjson serialize the whole payload).
+      args: isDesktop && isStdio ? (safeParseJSON(args) ?? {}) : args,
       env: connection?.type === 'stdio' ? params.env : (pluginSettings ?? connection?.env),
       params,
       toolName: apiName,
     };
-
-    const isStdio = plugin?.customParams?.mcp?.type === 'stdio';
-    const isCloud = plugin?.customParams?.mcp?.type === 'cloud';
 
     // Record call start time
     const callStartTime = Date.now();
@@ -112,7 +115,9 @@ class MCPService {
       } else if (isDesktop && isStdio) {
         // For desktop and stdio, use IPC (main process)
         // Note: IPC doesn't support AbortSignal yet
-        result = await ensureElectronIpc().mcp.callTool(data);
+        const serialized = superjson.serialize(data);
+        const serializedResult = await ensureElectronIpc().mcp.callTool(serialized as any);
+        result = superjson.deserialize(serializedResult as any) as any;
       } else {
         // For other types, use the toolsClient
         result = await toolsClient.mcp.callTool.mutate(data, { signal });
@@ -194,7 +199,11 @@ class MCPService {
     // This avoids accessing user local services through remote server in production
     if (isDesktop && isLocalOrPrivateUrl(params.url)) {
       // Note: IPC doesn't support AbortSignal yet
-      return ensureElectronIpc().mcp.getStreamableMcpServerManifest(params);
+      const serialized = superjson.serialize(params);
+      const serializedResult = await ensureElectronIpc().mcp.getStreamableMcpServerManifest(
+        serialized as any,
+      );
+      return superjson.deserialize(serializedResult as any) as any;
     }
 
     // Otherwise use toolsClient (via server relay)
@@ -213,7 +222,11 @@ class MCPService {
   ) {
     void _signal;
     // Note: IPC doesn't support AbortSignal yet
-    return ensureElectronIpc().mcp.getStdioMcpServerManifest({ ...stdioParams, metadata });
+    const serialized = superjson.serialize({ ...stdioParams, metadata });
+    const serializedResult = await ensureElectronIpc().mcp.getStdioMcpServerManifest(
+      serialized as any,
+    );
+    return superjson.deserialize(serializedResult as any) as any;
   }
 
   /**
@@ -229,9 +242,13 @@ class MCPService {
     void _signal;
     // Pass all deployment options to main process for checking
     // Note: IPC doesn't support AbortSignal yet
-    return ensureElectronIpc().mcp.validMcpServerInstallable({
+    const serialized = superjson.serialize({
       deploymentOptions: manifest.deploymentOptions as any,
     });
+    const serializedResult = await ensureElectronIpc().mcp.validMcpServerInstallable(
+      serialized as any,
+    );
+    return superjson.deserialize(serializedResult as any) as any;
   }
 }
 

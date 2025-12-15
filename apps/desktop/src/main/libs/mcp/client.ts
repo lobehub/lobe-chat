@@ -16,11 +16,10 @@ const MCP_TOOL_TIMEOUT = (() => {
 
 export class MCPClient {
   private readonly mcp: Client;
-  private readonly params: MCPClientParams;
+
   private transport: Transport;
 
   constructor(params: MCPClientParams) {
-    this.params = params;
     this.mcp = new Client({ name: 'lobehub-desktop-mcp-client', version: '1.0.0' });
 
     switch (params.type) {
@@ -64,6 +63,14 @@ export class MCPClient {
     }
   }
 
+  private isMethodNotFoundError(error: unknown) {
+    const err = error as any;
+    if (!err) return false;
+    if (err.code === -32601) return true;
+    if (typeof err.message === 'string' && err.message.includes('Method not found')) return true;
+    return false;
+  }
+
   async initialize(options: { onProgress?: (progress: Progress) => void } = {}) {
     await this.mcp.connect(this.transport, { onprogress: options.onProgress });
   }
@@ -97,8 +104,14 @@ export class MCPClient {
   async listManifests() {
     const [tools, prompts, resources] = await Promise.all([
       this.listTools(),
-      this.listPrompts(),
-      this.listResources(),
+      this.listPrompts().catch((error) => {
+        if (this.isMethodNotFoundError(error)) return [] as McpPrompt[];
+        throw error;
+      }),
+      this.listResources().catch((error) => {
+        if (this.isMethodNotFoundError(error)) return [] as McpResource[];
+        throw error;
+      }),
     ]);
 
     return {
@@ -117,5 +130,3 @@ export class MCPClient {
     return result as ToolCallResult;
   }
 }
-
-

@@ -1,6 +1,7 @@
 import { ChatToolPayload } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
+import superjson from 'superjson';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { mcpService } from './mcp';
@@ -577,7 +578,9 @@ describe('MCPService', () => {
           },
         ],
       };
-      vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mockResolvedValue(mockManifest);
+      vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mockResolvedValue(
+        superjson.serialize(mockManifest) as any,
+      );
 
       const stdioParams = {
         command: 'node',
@@ -595,10 +598,8 @@ describe('MCPService', () => {
       const result = await mcpService.getStdioMcpServerManifest(stdioParams, metadata);
 
       expect(result).toEqual(mockManifest);
-      expect(mockElectronIpc.mcp.getStdioMcpServerManifest).toHaveBeenCalledWith({
-        ...stdioParams,
-        metadata,
-      });
+      const callArg = vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mock.calls[0][0];
+      expect(superjson.deserialize(callArg as any)).toEqual({ ...stdioParams, metadata });
     });
 
     it('should handle abort signal for stdio manifest', async () => {
@@ -614,7 +615,9 @@ describe('MCPService', () => {
           },
         ],
       };
-      vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mockResolvedValue(mockManifest);
+      vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mockResolvedValue(
+        superjson.serialize(mockManifest) as any,
+      );
 
       const stdioParams = {
         command: 'python',
@@ -626,7 +629,8 @@ describe('MCPService', () => {
       await mcpService.getStdioMcpServerManifest(stdioParams, undefined, abortController.signal);
 
       // IPC client does not support AbortSignal yet
-      expect(mockElectronIpc.mcp.getStdioMcpServerManifest).toHaveBeenCalledWith({
+      const callArg = vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mock.calls[0][0];
+      expect(superjson.deserialize(callArg as any)).toEqual({
         ...stdioParams,
         metadata: undefined,
       });
@@ -645,7 +649,9 @@ describe('MCPService', () => {
           },
         ],
       };
-      vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mockResolvedValue(mockManifest);
+      vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mockResolvedValue(
+        superjson.serialize(mockManifest) as any,
+      );
 
       const stdioParams = {
         command: 'npm',
@@ -655,7 +661,8 @@ describe('MCPService', () => {
       const result = await mcpService.getStdioMcpServerManifest(stdioParams);
 
       expect(result).toEqual(mockManifest);
-      expect(mockElectronIpc.mcp.getStdioMcpServerManifest).toHaveBeenCalledWith({
+      const callArg = vi.mocked(mockElectronIpc.mcp.getStdioMcpServerManifest).mock.calls[0][0];
+      expect(superjson.deserialize(callArg as any)).toEqual({
         ...stdioParams,
         metadata: undefined,
       });
@@ -669,7 +676,9 @@ describe('MCPService', () => {
         success: true,
         packageInstalled: true,
       };
-      vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mockResolvedValue(mockInstallResult);
+      vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mockResolvedValue(
+        superjson.serialize(mockInstallResult) as any,
+      );
 
       const manifest = {
         identifier: 'test-plugin',
@@ -687,7 +696,8 @@ describe('MCPService', () => {
       const result = await mcpService.checkInstallation(manifest as any);
 
       expect(result).toEqual(mockInstallResult);
-      expect(mockElectronIpc.mcp.validMcpServerInstallable).toHaveBeenCalledWith({
+      const callArg = vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mock.calls[0][0];
+      expect(superjson.deserialize(callArg as any)).toEqual({
         deploymentOptions: manifest.deploymentOptions,
       });
     });
@@ -702,7 +712,9 @@ describe('MCPService', () => {
           { name: 'npm', installed: false, meetRequirement: false },
         ],
       };
-      vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mockResolvedValue(mockInstallResult);
+      vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mockResolvedValue(
+        superjson.serialize(mockInstallResult) as any,
+      );
 
       const manifest = {
         identifier: 'complex-plugin',
@@ -721,7 +733,8 @@ describe('MCPService', () => {
 
       expect(result).toEqual(mockInstallResult);
       // IPC client does not support AbortSignal yet
-      expect(mockElectronIpc.mcp.validMcpServerInstallable).toHaveBeenCalledWith({
+      const callArg = vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mock.calls[0][0];
+      expect(superjson.deserialize(callArg as any)).toEqual({
         deploymentOptions: manifest.deploymentOptions,
       });
     });
@@ -733,7 +746,9 @@ describe('MCPService', () => {
         packageInstalled: true,
         isRecommended: true,
       };
-      vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mockResolvedValue(mockInstallResult);
+      vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mockResolvedValue(
+        superjson.serialize(mockInstallResult) as any,
+      );
 
       const manifest = {
         identifier: 'multi-deploy-plugin',
@@ -759,7 +774,8 @@ describe('MCPService', () => {
       const result = await mcpService.checkInstallation(manifest as any);
 
       expect(result).toEqual(mockInstallResult);
-      expect(mockElectronIpc.mcp.validMcpServerInstallable).toHaveBeenCalledWith({
+      const callArg = vi.mocked(mockElectronIpc.mcp.validMcpServerInstallable).mock.calls[0][0];
+      expect(superjson.deserialize(callArg as any)).toEqual({
         deploymentOptions: manifest.deploymentOptions,
       });
     });

@@ -3,6 +3,7 @@ import { exec } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { promisify } from 'node:util';
+import superjson from 'superjson';
 
 import FileService from '@/services/fileSrv';
 import { createLogger } from '@/utils/logger';
@@ -47,6 +48,40 @@ interface CallToolInput {
   params: GetStdioMcpServerManifestInput;
   toolName: string;
 }
+
+interface SuperJSONSerialized<T = unknown> {
+  json: T;
+  meta?: any;
+}
+
+const isSuperJSONSerialized = (value: unknown): value is SuperJSONSerialized => {
+  if (!value || typeof value !== 'object') return false;
+  return 'json' in value;
+};
+
+const deserializePayload = <T>(payload: unknown): T => {
+  // Keep backward compatibility for older renderer builds that might not serialize yet
+  if (isSuperJSONSerialized(payload)) return superjson.deserialize(payload as any) as T;
+  return payload as T;
+};
+
+const serializePayload = <T>(payload: T): SuperJSONSerialized =>
+  superjson.serialize(payload) as any;
+
+const safeParseToRecord = (value: unknown): Record<string, unknown> => {
+  if (value && typeof value === 'object' && !Array.isArray(value))
+    return value as Record<string, unknown>;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value) as unknown;
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed))
+        return parsed as Record<string, unknown>;
+    } catch {
+      // ignore
+    }
+  }
+  return {};
+};
 
 const getFileExtensionFromMimeType = (mimeType: string, fallback: string) => {
   const [, ext] = mimeType.split('/');
@@ -135,7 +170,8 @@ export default class McpCtr extends ControllerModule {
   }
 
   @IpcMethod()
-  async getStdioMcpServerManifest(input: GetStdioMcpServerManifestInput) {
+  async getStdioMcpServerManifest(payload: SuperJSONSerialized<GetStdioMcpServerManifestInput>) {
+    const input = deserializePayload<GetStdioMcpServerManifestInput>(payload);
     const params: MCPClientParams = {
       args: input.args || [],
       command: input.command,
@@ -151,7 +187,7 @@ export default class McpCtr extends ControllerModule {
 
       const tools = manifest.tools || [];
 
-      return {
+      return serializePayload({
         api: tools.map((item) => ({
           description: item.description,
           name: item.name,
@@ -172,14 +208,17 @@ export default class McpCtr extends ControllerModule {
         ...manifest,
         mcpParams: params,
         type: 'mcp' as any,
-      };
+      });
     } finally {
       await client.disconnect();
     }
   }
 
   @IpcMethod()
-  async getStreamableMcpServerManifest(input: GetStreamableMcpServerManifestInput) {
+  async getStreamableMcpServerManifest(
+    payload: SuperJSONSerialized<GetStreamableMcpServerManifestInput>,
+  ) {
+    const input = deserializePayload<GetStreamableMcpServerManifestInput>(payload);
     const params: MCPClientParams = {
       auth: input.auth,
       headers: input.headers,
@@ -193,7 +232,7 @@ export default class McpCtr extends ControllerModule {
       const tools = await client.listTools();
       const identifier = input.identifier;
 
-      return {
+      return serializePayload({
         api: tools.map((item) => ({
           description: item.description,
           name: item.name,
@@ -209,14 +248,15 @@ export default class McpCtr extends ControllerModule {
           title: identifier,
         },
         type: 'mcp' as any,
-      };
+      });
     } finally {
       await client.disconnect();
     }
   }
 
   @IpcMethod()
-  async callTool(input: CallToolInput) {
+  async callTool(payload: SuperJSONSerialized<CallToolInput>) {
+    const input = deserializePayload<CallToolInput>(payload);
     const params: MCPClientParams = {
       args: input.params.args || [],
       command: input.params.command,
@@ -227,16 +267,18 @@ export default class McpCtr extends ControllerModule {
 
     const client = await this.createClient(params);
     try {
-      const raw = (await client.callTool(input.toolName, input.args)) as ToolCallResult;
+      const args = safeParseToRecord(input.args);
+
+      const raw = (await client.callTool(input.toolName, args)) as ToolCallResult;
       const processed = raw.isError ? raw.content : await this.processContentBlocks(raw.content);
 
       const content = await toMarkdown(processed, (key) => this.fileService.getFileHTTPURL(key));
 
-      return {
+      return serializePayload({
         content,
         state: { ...raw, content: processed },
         success: true,
-      };
+      });
     } catch (error) {
       logger.error('callTool failed:', error);
       throw error;
@@ -444,9 +486,12 @@ export default class McpCtr extends ControllerModule {
   }
 
   @IpcMethod()
-  async validMcpServerInstallable(input: {
-    deploymentOptions: any[];
-  }): Promise<CheckMcpInstallResult> {
+  async validMcpServerInstallable(
+    payload: SuperJSONSerialized<{
+      deploymentOptions: any[];
+    }>,
+  ) {
+    const input = deserializePayload<{ deploymentOptions: any[] }>(payload);
     try {
       const options = input.deploymentOptions || [];
       const results = [];
@@ -471,16 +516,16 @@ export default class McpCtr extends ControllerModule {
         checkResult.configSchema = bestResult.configSchema;
       }
 
-      return checkResult;
+      return serializePayload(checkResult);
     } catch (error) {
-      return {
+      return serializePayload({
         error:
           error instanceof Error
             ? error.message
             : 'Unknown error when checking MCP plugin installation status',
         platform: process.platform,
         success: false,
-      };
+      });
     }
   }
 }
