@@ -11,9 +11,13 @@ import {
   UserMemoryExperienceWithoutVectors,
   UserMemoryIdentityWithoutVectors,
   UserMemoryPreferenceWithoutVectors,
+  UserMemoryContextsListItem,
+  UserMemoryIdentitiesListItem,
+  UserMemoryExperiencesListItem,
+  UserMemoryPreferencesListItem,
 } from '@lobechat/types';
-import type { SQL } from 'drizzle-orm';
-import { and, asc, count, cosineDistance, desc, eq, ilike, inArray, isNotNull, ne, or, sql } from 'drizzle-orm';
+import type { AnyColumn, SQL } from 'drizzle-orm';
+import { and, asc, cosineDistance, desc, eq, ilike, inArray, isNotNull, ne, or, sql } from 'drizzle-orm';
 
 import { merge } from '@/utils/merge';
 
@@ -276,14 +280,20 @@ export interface QueryIdentityRolesResult {
   tags: Array<{ count: number; tag: string }>;
 }
 
+export type QueryUserMemoriesSort =
+  | 'scoreConfidence' // user_memories_experiences
+  | 'scoreImpact' // user_memories_contexts
+  | 'scorePriority' // user_memories_preferences
+  | 'scoreUrgency'; // user_memories_contexts
+
 export interface QueryUserMemoriesParams {
   categories?: string[];
-  layers?: LayersEnum[];
+  layer?: LayersEnum;
   order?: 'asc' | 'desc';
   page?: number;
   pageSize?: number;
   q?: string;
-  sort?: 'createdAt' | 'updatedAt';
+  sort?: QueryUserMemoriesSort;
   tags?: string[];
   types?: string[];
 }
@@ -297,7 +307,6 @@ export interface BaseMemoryInfo {
   memoryCategory: string | null;
   memoryLayer: string | null;
   memoryType: string | null;
-  metadata: Record<string, unknown> | null;
   status: string | null;
   tags: string[] | null;
   updatedAt: Date;
@@ -305,13 +314,13 @@ export interface BaseMemoryInfo {
 }
 
 export interface QueriedContextMemory {
-  context: UserMemoryContextWithoutVectors;
+  context: UserMemoryContextsListItem;
   layer: LayersEnum.Context;
   memory: BaseMemoryInfo;
 }
 
 export interface QueriedExperienceMemory {
-  experience: UserMemoryExperienceWithoutVectors;
+  experience: UserMemoryExperiencesListItem;
   layer: LayersEnum.Experience;
   memory: BaseMemoryInfo;
 }
@@ -319,11 +328,11 @@ export interface QueriedExperienceMemory {
 export interface QueriedPreferenceMemory {
   layer: LayersEnum.Preference;
   memory: BaseMemoryInfo;
-  preference: UserMemoryPreferenceWithoutVectors;
+  preference: UserMemoryPreferencesListItem;
 }
 
 export interface QueriedIdentityMemory {
-  identity: UserMemoryIdentityWithoutVectors;
+  identity: UserMemoryIdentitiesListItem;
   layer: LayersEnum.Identity;
   memory: BaseMemoryInfo;
 }
@@ -696,12 +705,12 @@ export class UserMemoryModel {
   queryMemories = async (params: QueryUserMemoriesParams = {}): Promise<QueryUserMemoriesResult> => {
     const {
       categories,
-      layers,
+      layer,
       order = 'desc',
       page = 1,
       pageSize = 20,
       q,
-      sort = 'createdAt',
+      sort,
       tags,
       types,
     } = params;
@@ -713,11 +722,12 @@ export class UserMemoryModel {
     const offset = (normalizedPage - 1) * normalizedPageSize;
 
     const normalizedQuery = typeof q === 'string' ? q.trim() : '';
+    const resolvedLayer = layer ?? LayersEnum.Context;
 
     const conditions: Array<SQL | undefined> = [
       eq(userMemories.userId, this.userId),
       categories && categories.length > 0 ? inArray(userMemories.memoryCategory, categories) : undefined,
-      layers && layers.length > 0 ? inArray(userMemories.memoryLayer, layers) : undefined,
+      eq(userMemories.memoryLayer, resolvedLayer),
       normalizedQuery
         ? or(
             ilike(userMemories.title, `%${normalizedQuery}%`),
@@ -725,67 +735,87 @@ export class UserMemoryModel {
             ilike(userMemories.details, `%${normalizedQuery}%`),
           )
         : undefined,
-      tags && tags.length > 0
-        ? or(...tags.map((tag) => sql<boolean>`${tag} = ANY(${userMemories.tags})`))
-        : undefined,
-      types && types.length > 0 ? inArray(userMemories.memoryType, types) : undefined,
     ];
 
     const filters = conditions.filter((condition): condition is SQL => condition !== undefined);
     const whereClause = filters.length > 0 ? and(...filters) : undefined;
 
-    const sortColumn = sort === 'updatedAt' ? userMemories.updatedAt : userMemories.createdAt;
-    const orderByClause = order === 'asc' ? asc(sortColumn) : desc(sortColumn);
+    const applyOrder = order === 'asc' ? asc : desc;
 
-    const [baseMemories, totalResult] = await Promise.all([
-      this.db
-        .select({
-          accessedAt: userMemories.accessedAt,
-          accessedCount: userMemories.accessedCount,
-          createdAt: userMemories.createdAt,
-          id: userMemories.id,
-          lastAccessedAt: userMemories.lastAccessedAt,
-          memoryCategory: userMemories.memoryCategory,
-          memoryLayer: userMemories.memoryLayer,
-          memoryType: userMemories.memoryType,
-          metadata: userMemories.metadata,
-          status: userMemories.status,
-          tags: userMemories.tags,
-          updatedAt: userMemories.updatedAt,
-          userId: userMemories.userId,
-        })
-        .from(userMemories)
-        .where(whereClause)
-        .orderBy(orderByClause)
-        .limit(normalizedPageSize)
-        .offset(offset),
-      this.db
-        .select({ count: count() })
-        .from(userMemories)
-        .where(whereClause),
-    ]);
-
-    const baseByLayer: Record<LayersEnum, BaseMemoryInfo[]> = {
-      [LayersEnum.Context]: [],
-      [LayersEnum.Experience]: [],
-      [LayersEnum.Identity]: [],
-      [LayersEnum.Preference]: [],
+    const baseSelection = {
+      accessedAt: userMemories.accessedAt,
+      accessedCount: userMemories.accessedCount,
+      createdAt: userMemories.createdAt,
+      id: userMemories.id,
+      lastAccessedAt: userMemories.lastAccessedAt,
+      memoryCategory: userMemories.memoryCategory,
+      memoryLayer: userMemories.memoryLayer,
+      memoryType: userMemories.memoryType,
+      status: userMemories.status,
+      tags: userMemories.tags,
+      title: userMemories.title,
+      updatedAt: userMemories.updatedAt,
+      userId: userMemories.userId,
     };
 
-    baseMemories.forEach((memory) => {
-      const layer = memory.memoryLayer as LayersEnum | null;
-      if (layer && baseByLayer[layer]) {
-        baseByLayer[layer]?.push(memory as BaseMemoryInfo);
-      }
-    });
+    const buildOrderBy = (
+      scoreColumn: SQL | AnyColumn | undefined,
+      updatedAtColumn: AnyColumn | SQL,
+      createdAtColumn: AnyColumn | SQL,
+    ) =>
+      [
+        scoreColumn ? applyOrder(scoreColumn) : undefined,
+        applyOrder(updatedAtColumn),
+        applyOrder(createdAtColumn),
+      ].filter((item): item is SQL => item !== undefined);
 
-    const [contexts, experiences, identities, preferences] = await Promise.all([
-      baseByLayer[LayersEnum.Context].length > 0
-        ? this.db
-            .select({
+    switch (resolvedLayer) {
+    case LayersEnum.Context: {
+      const scoreColumn =
+        sort === 'scoreUrgency' ? userMemoriesContexts.scoreUrgency : userMemoriesContexts.scoreImpact;
+
+      const orderByClauses = buildOrderBy(
+        scoreColumn,
+        userMemoriesContexts.updatedAt,
+        userMemoriesContexts.createdAt,
+      );
+      const joinCondition = and(
+        eq(userMemories.userId, userMemoriesContexts.userId),
+        // Use jsonb key-existence (jsonb_exists) to check membership without expanding the array
+        sql<boolean>`
+          COALESCE(${userMemoriesContexts.userMemoryIds}, '[]'::jsonb) ? (${userMemories.id})::text
+        `,
+      );
+
+      const contextFilters: Array<SQL | undefined> = [
+        whereClause,
+        types && types.length > 0 ? inArray(userMemoriesContexts.type, types) : undefined,
+        tags && tags.length > 0
+          ? or(
+              ...tags.map(
+                (tag) =>
+                  sql<boolean>`
+                    COALESCE(${tag} = ANY(${userMemoriesContexts.tags}), false)
+                    OR COALESCE(${tag} = ANY(${userMemories.tags}), false)
+                  `,
+              ),
+            )
+          : undefined,
+      ];
+      const contextWhereClause =
+        contextFilters.filter((condition): condition is SQL => condition !== undefined).length > 0
+          ? and(
+              ...(contextFilters.filter(
+                (condition): condition is SQL => condition !== undefined,
+              ) as SQL[]),
+            )
+          : undefined;
+
+      const [rows, totalResult] = await Promise.all([
+        this.db
+          .select({
+            context: {
               accessedAt: userMemoriesContexts.accessedAt,
-              associatedObjects: userMemoriesContexts.associatedObjects,
-              associatedSubjects: userMemoriesContexts.associatedSubjects,
               createdAt: userMemoriesContexts.createdAt,
               currentStatus: userMemoriesContexts.currentStatus,
               description: userMemoriesContexts.description,
@@ -799,21 +829,73 @@ export class UserMemoryModel {
               updatedAt: userMemoriesContexts.updatedAt,
               userId: userMemoriesContexts.userId,
               userMemoryIds: userMemoriesContexts.userMemoryIds,
-            })
-            .from(userMemoriesContexts)
-            .where(eq(userMemoriesContexts.userId, this.userId))
-        : [],
-      baseByLayer[LayersEnum.Experience].length > 0
-        ? this.db
-            .select({
+            },
+            memory: baseSelection,
+          })
+          .from(userMemories)
+          .innerJoin(userMemoriesContexts, joinCondition)
+          .where(contextWhereClause)
+          .orderBy(...orderByClauses)
+          .limit(normalizedPageSize)
+          .offset(offset),
+        this.db
+          .select({ count: sql<number>`COUNT(DISTINCT ${userMemories.id})::int` })
+          .from(userMemories)
+          .innerJoin(userMemoriesContexts, joinCondition)
+          .where(contextWhereClause),
+      ]);
+
+      const items = rows.map((row) => ({
+        context: row.context as UserMemoryContextsListItem,
+        layer: LayersEnum.Context as const,
+        memory: row.memory as BaseMemoryInfo,
+      }));
+
+      return {
+        items,
+        page: normalizedPage,
+        pageSize: normalizedPageSize,
+        total: Number(totalResult[0]?.count ?? 0),
+      };
+    }
+    case LayersEnum.Experience: {
+      const orderByClauses = buildOrderBy(
+        userMemoriesExperiences.scoreConfidence,
+        userMemoriesExperiences.updatedAt,
+        userMemoriesExperiences.createdAt,
+      );
+      const joinCondition = and(
+        eq(userMemories.id, userMemoriesExperiences.userMemoryId),
+        eq(userMemoriesExperiences.userId, this.userId),
+      );
+
+      const experienceFilters: Array<SQL | undefined> = [
+        whereClause,
+        types && types.length > 0 ? inArray(userMemoriesExperiences.type, types) : undefined,
+        tags && tags.length > 0
+          ? or(...tags.map((tag) => sql<boolean>`${tag} = ANY(${userMemoriesExperiences.tags})`))
+          : undefined,
+      ];
+      const experienceWhereClause =
+        experienceFilters.filter((condition): condition is SQL => condition !== undefined).length >
+        0
+          ? and(
+              ...(experienceFilters.filter(
+                (condition): condition is SQL => condition !== undefined,
+              ) as SQL[]),
+            )
+          : undefined;
+
+      const [rows, totalResult] = await Promise.all([
+        this.db
+          .select({
+            experience: {
               accessedAt: userMemoriesExperiences.accessedAt,
               action: userMemoriesExperiences.action,
               createdAt: userMemoriesExperiences.createdAt,
               id: userMemoriesExperiences.id,
               keyLearning: userMemoriesExperiences.keyLearning,
               metadata: userMemoriesExperiences.metadata,
-              possibleOutcome: userMemoriesExperiences.possibleOutcome,
-              reasoning: userMemoriesExperiences.reasoning,
               scoreConfidence: userMemoriesExperiences.scoreConfidence,
               situation: userMemoriesExperiences.situation,
               tags: userMemoriesExperiences.tags,
@@ -821,21 +903,66 @@ export class UserMemoryModel {
               updatedAt: userMemoriesExperiences.updatedAt,
               userId: userMemoriesExperiences.userId,
               userMemoryId: userMemoriesExperiences.userMemoryId,
-            })
-            .from(userMemoriesExperiences)
-            .where(
-              and(
-                eq(userMemoriesExperiences.userId, this.userId),
-                inArray(
-                  userMemoriesExperiences.userMemoryId,
-                  baseByLayer[LayersEnum.Experience].map((item) => item.id),
-                ),
-              ),
+            },
+            memory: baseSelection,
+          })
+          .from(userMemories)
+          .innerJoin(userMemoriesExperiences, joinCondition)
+          .where(experienceWhereClause)
+          .orderBy(...orderByClauses)
+          .limit(normalizedPageSize)
+          .offset(offset),
+        this.db
+          .select({ count: sql<number>`COUNT(*)::int` })
+          .from(userMemories)
+          .innerJoin(userMemoriesExperiences, joinCondition)
+          .where(experienceWhereClause),
+      ]);
+
+      const items = rows.map((row) => ({
+        experience: row.experience as UserMemoryExperiencesListItem,
+        layer: LayersEnum.Experience as const,
+        memory: row.memory as BaseMemoryInfo,
+      }));
+
+      return {
+        items,
+        page: normalizedPage,
+        pageSize: normalizedPageSize,
+        total: Number(totalResult[0]?.count ?? 0),
+      };
+    }
+    case LayersEnum.Identity: {
+      const orderByClauses = buildOrderBy(
+        undefined,
+        userMemoriesIdentities.updatedAt,
+        userMemoriesIdentities.createdAt,
+      );
+      const joinCondition = and(
+        eq(userMemories.id, userMemoriesIdentities.userMemoryId),
+        eq(userMemoriesIdentities.userId, this.userId),
+      );
+
+      const identityFilters: Array<SQL | undefined> = [
+        whereClause,
+        types && types.length > 0 ? inArray(userMemoriesIdentities.type, types) : undefined,
+        tags && tags.length > 0
+          ? or(...tags.map((tag) => sql<boolean>`${tag} = ANY(${userMemoriesIdentities.tags})`))
+          : undefined,
+      ];
+      const identityWhereClause =
+        identityFilters.filter((condition): condition is SQL => condition !== undefined).length > 0
+          ? and(
+              ...(identityFilters.filter(
+                (condition): condition is SQL => condition !== undefined,
+              ) as SQL[]),
             )
-        : [],
-      baseByLayer[LayersEnum.Identity].length > 0
-        ? this.db
-            .select({
+          : undefined;
+
+      const [rows, totalResult] = await Promise.all([
+        this.db
+          .select({
+            identity: {
               accessedAt: userMemoriesIdentities.accessedAt,
               createdAt: userMemoriesIdentities.createdAt,
               description: userMemoriesIdentities.description,
@@ -849,149 +976,116 @@ export class UserMemoryModel {
               updatedAt: userMemoriesIdentities.updatedAt,
               userId: userMemoriesIdentities.userId,
               userMemoryId: userMemoriesIdentities.userMemoryId,
-            })
-            .from(userMemoriesIdentities)
-            .where(
-              and(
-                eq(userMemoriesIdentities.userId, this.userId),
-                inArray(
-                  userMemoriesIdentities.userMemoryId,
-                  baseByLayer[LayersEnum.Identity].map((item) => item.id),
-                ),
-              ),
+            },
+            memory: baseSelection,
+          })
+          .from(userMemories)
+          .innerJoin(userMemoriesIdentities, joinCondition)
+          .where(identityWhereClause)
+          .orderBy(...orderByClauses)
+          .limit(normalizedPageSize)
+          .offset(offset),
+        this.db
+          .select({ count: sql<number>`COUNT(*)::int` })
+          .from(userMemories)
+          .innerJoin(userMemoriesIdentities, joinCondition)
+          .where(identityWhereClause),
+      ]);
+
+      const items = rows.map((row) => ({
+        identity: row.identity as UserMemoryIdentitiesListItem,
+        layer: LayersEnum.Identity as const,
+        memory: row.memory as BaseMemoryInfo,
+      }));
+
+      return {
+        items,
+        page: normalizedPage,
+        pageSize: normalizedPageSize,
+        total: Number(totalResult[0]?.count ?? 0),
+      };
+    }
+    case LayersEnum.Preference: {
+      const orderByClauses = buildOrderBy(
+        userMemoriesPreferences.scorePriority,
+        userMemoriesPreferences.updatedAt,
+        userMemoriesPreferences.createdAt,
+      );
+      const joinCondition = and(
+        eq(userMemories.id, userMemoriesPreferences.userMemoryId),
+        eq(userMemoriesPreferences.userId, this.userId),
+      );
+
+      const preferenceFilters: Array<SQL | undefined> = [
+        whereClause,
+        types && types.length > 0 ? inArray(userMemoriesPreferences.type, types) : undefined,
+        tags && tags.length > 0
+          ? or(...tags.map((tag) => sql<boolean>`${tag} = ANY(${userMemoriesPreferences.tags})`))
+          : undefined,
+      ];
+      const preferenceWhereClause =
+        preferenceFilters.filter((condition): condition is SQL => condition !== undefined).length >
+        0
+          ? and(
+              ...(preferenceFilters.filter(
+                (condition): condition is SQL => condition !== undefined,
+              ) as SQL[]),
             )
-        : [],
-      baseByLayer[LayersEnum.Preference].length > 0
-        ? this.db
-            .select({
+          : undefined;
+
+      const [rows, totalResult] = await Promise.all([
+        this.db
+          .select({
+            memory: baseSelection,
+            preference: {
               accessedAt: userMemoriesPreferences.accessedAt,
               conclusionDirectives: userMemoriesPreferences.conclusionDirectives,
               createdAt: userMemoriesPreferences.createdAt,
               id: userMemoriesPreferences.id,
               metadata: userMemoriesPreferences.metadata,
               scorePriority: userMemoriesPreferences.scorePriority,
-              suggestions: userMemoriesPreferences.suggestions,
               tags: userMemoriesPreferences.tags,
               type: userMemoriesPreferences.type,
               updatedAt: userMemoriesPreferences.updatedAt,
               userId: userMemoriesPreferences.userId,
               userMemoryId: userMemoriesPreferences.userMemoryId,
-            })
-            .from(userMemoriesPreferences)
-            .where(
-              and(
-                eq(userMemoriesPreferences.userId, this.userId),
-                inArray(
-                  userMemoriesPreferences.userMemoryId,
-                  baseByLayer[LayersEnum.Preference].map((item) => item.id),
-                ),
-              ),
-            )
-        : [],
-    ]);
+            },
+          })
+          .from(userMemories)
+          .innerJoin(userMemoriesPreferences, joinCondition)
+          .where(preferenceWhereClause)
+          .orderBy(...orderByClauses)
+          .limit(normalizedPageSize)
+          .offset(offset),
+        this.db
+          .select({ count: sql<number>`COUNT(*)::int` })
+          .from(userMemories)
+          .innerJoin(userMemoriesPreferences, joinCondition)
+          .where(preferenceWhereClause),
+      ]);
 
-    const contextMap = new Map<string, UserMemoryContextWithoutVectors>();
-    const contextIdSet = new Set(baseByLayer[LayersEnum.Context].map((item) => item.id));
-    contexts.forEach((context) => {
-      const ids = Array.isArray(context.userMemoryIds)
-        ? (context.userMemoryIds as string[])
-        : [];
-      ids.forEach((id) => {
-        if (contextIdSet.has(id)) {
-          contextMap.set(id, context as UserMemoryContextWithoutVectors);
-        }
-      });
-    });
+      const items = rows.map((row) => ({
+        layer: LayersEnum.Preference as const,
+        memory: row.memory as BaseMemoryInfo,
+        preference: row.preference as UserMemoryPreferencesListItem,
+      }));
 
-    const experienceMap = new Map<string, UserMemoryExperienceWithoutVectors>();
-    experiences.forEach((experience) => {
-      if (experience.userMemoryId) {
-        experienceMap.set(experience.userMemoryId, experience as UserMemoryExperienceWithoutVectors);
-      }
-    });
-
-    const identityMap = new Map<string, UserMemoryIdentityWithoutVectors>();
-    identities.forEach((identity) => {
-      if (identity.userMemoryId) {
-        identityMap.set(identity.userMemoryId, identity as UserMemoryIdentityWithoutVectors);
-      }
-    });
-
-    const preferenceMap = new Map<string, UserMemoryPreferenceWithoutVectors>();
-    preferences.forEach((preference) => {
-      if (preference.userMemoryId) {
-        preferenceMap.set(
-          preference.userMemoryId,
-          preference as UserMemoryPreferenceWithoutVectors,
-        );
-      }
-    });
-
-    const items: QueriedUserMemoryItem[] = [];
-
-    baseMemories.forEach((memory) => {
-      const layer = memory.memoryLayer as LayersEnum | null;
-      if (!layer) return;
-
-      switch (layer) {
-      case LayersEnum.Context: {
-        const context = contextMap.get(memory.id);
-        if (context) {
-          items.push({
-            context,
-            layer,
-            memory: memory as BaseMemoryInfo,
-          });
-        }
-
-      break;
-      }
-      case LayersEnum.Experience: {
-        const experience = experienceMap.get(memory.id);
-        if (experience) {
-          items.push({
-            experience,
-            layer,
-            memory: memory as BaseMemoryInfo,
-          });
-        }
-
-      break;
-      }
-      case LayersEnum.Identity: {
-        const identity = identityMap.get(memory.id);
-        if (identity) {
-          items.push({
-            identity,
-            layer,
-            memory: memory as BaseMemoryInfo,
-          });
-        }
-
-      break;
-      }
-      case LayersEnum.Preference: {
-        const preference = preferenceMap.get(memory.id);
-        if (preference) {
-          items.push({
-            layer,
-            memory: memory as BaseMemoryInfo,
-            preference,
-          });
-        }
-
-      break;
-      }
-      // No default
-      }
-    });
-
-    return {
-      items,
-      page: normalizedPage,
-      pageSize: normalizedPageSize,
-      total: Number(totalResult[0]?.count ?? 0),
-    };
+      return {
+        items,
+        page: normalizedPage,
+        pageSize: normalizedPageSize,
+        total: Number(totalResult[0]?.count ?? 0),
+      };
+    }
+    default: {
+      return {
+        items: [],
+        page: normalizedPage,
+        pageSize: normalizedPageSize,
+        total: 0,
+      };
+    }
+    }
   };
 
   findById = async (id: string): Promise<UserMemoryItem | undefined> => {

@@ -227,12 +227,12 @@ export const userMemoriesRouter = router({
       z
         .object({
           categories: z.array(z.string()).optional(),
-          layers: z.array(z.nativeEnum(LayersEnum)).optional(),
+          layer: z.nativeEnum(LayersEnum).optional(),
           order: z.enum(['asc', 'desc']).optional(),
           page: z.coerce.number().int().min(1).optional(),
           pageSize: z.coerce.number().int().min(1).max(100).optional(),
           q: z.string().optional(),
-          sort: z.enum(['createdAt', 'updatedAt']).optional(),
+          sort: z.enum(['scoreConfidence', 'scoreImpact', 'scorePriority', 'scoreUrgency']).optional(),
           tags: z.array(z.string()).optional(),
           types: z.array(z.nativeEnum(TypesEnum)).optional(),
         })
@@ -247,7 +247,7 @@ export const userMemoriesRouter = router({
         return await ctx.memoryModel.queryMemories({
           ...params,
           order: params.order ?? 'desc',
-          sort: params.sort ?? 'createdAt',
+          sort: params.sort,
         });
       } catch (error) {
         console.error('Failed to query memories:', error);

@@ -44,6 +44,11 @@ export type UserMemoryContextWithoutVectors = Omit<
   'descriptionVector' | 'titleVector'
 >;
 
+export type UserMemoryContextsListItem = Omit<
+  UserMemoryContextWithoutVectors,
+  'associatedObjects' | 'associatedSubjects'
+>;
+
 export interface UserMemoryExperience extends UserMemoryTimestamps {
   action: string | null;
   actionVector: number[] | null;
@@ -68,6 +73,11 @@ export type UserMemoryExperienceWithoutVectors = Omit<
   'actionVector' | 'keyLearningVector' | 'situationVector'
 >;
 
+export type UserMemoryExperiencesListItem = Omit<
+  UserMemoryExperienceWithoutVectors,
+  'possibleOutcome' | 'reasoning'
+>;
+
 export interface UserMemoryPreference extends UserMemoryTimestamps {
   conclusionDirectives: string | null;
   conclusionDirectivesVector: number[] | null;
@@ -85,4 +95,9 @@ export interface UserMemoryPreference extends UserMemoryTimestamps {
 export type UserMemoryPreferenceWithoutVectors = Omit<
   UserMemoryPreference,
   'conclusionDirectivesVector'
+>;
+
+export type UserMemoryPreferencesListItem = Omit<
+  UserMemoryPreferenceWithoutVectors,
+  'suggestions'
 >;

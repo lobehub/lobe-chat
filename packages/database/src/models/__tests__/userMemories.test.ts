@@ -893,6 +893,7 @@ describe('UserMemoryModel', () => {
           createdAt: baseTime,
           description: 'Context newer',
           id: idGenerator('memory'),
+          scoreImpact: 0.3,
           title: 'Newer Context',
           updatedAt: new Date('2024-04-06T00:00:00.000Z'),
           userId,
@@ -902,6 +903,7 @@ describe('UserMemoryModel', () => {
           createdAt: baseTime,
           description: 'Context older',
           id: idGenerator('memory'),
+          scoreImpact: 0.9,
           title: 'Older Context',
           updatedAt: new Date('2024-04-05T12:00:00.000Z'),
           userId,
@@ -911,12 +913,12 @@ describe('UserMemoryModel', () => {
 
       const firstPage = await userMemoryModel.queryMemories({
         categories: ['work'],
-        layers: [LayersEnum.Context],
+        layer: LayersEnum.Context,
         order: 'desc',
         page: 1,
         pageSize: 1,
         q: 'Atlas',
-        sort: 'updatedAt',
+        sort: 'scoreImpact',
         tags: ['atlas'],
         types: [TypesEnum.Topic],
       });
@@ -925,25 +927,25 @@ describe('UserMemoryModel', () => {
       expect(firstPage.page).toBe(1);
       expect(firstPage.pageSize).toBe(1);
       expect(firstPage.items).toHaveLength(1);
-      expect(firstPage.items[0]?.memory.id).toBe(newerId);
+      expect(firstPage.items[0]?.memory.id).toBe(olderId);
       expect(firstPage.items[0]?.layer).toBe(LayersEnum.Context);
-      expect((firstPage.items[0] as any).context.title).toBe('Newer Context');
+      expect((firstPage.items[0] as any).context.title).toBe('Older Context');
 
       const secondPage = await userMemoryModel.queryMemories({
         categories: ['work'],
-        layers: [LayersEnum.Context],
+        layer: LayersEnum.Context,
         order: 'desc',
         page: 2,
         pageSize: 1,
         q: 'Atlas',
-        sort: 'updatedAt',
+        sort: 'scoreImpact',
         tags: ['atlas'],
         types: [TypesEnum.Topic],
       });
 
       expect(secondPage.items).toHaveLength(1);
-      expect(secondPage.items[0]?.memory.id).toBe(olderId);
-      expect((secondPage.items[0] as any).context.title).toBe('Older Context');
+      expect(secondPage.items[0]?.memory.id).toBe(newerId);
+      expect((secondPage.items[0] as any).context.title).toBe('Newer Context');
     });
 
     it('returns defaults when no filters are provided', async () => {
@@ -1001,33 +1003,49 @@ describe('UserMemoryModel', () => {
         where: eq(userMemoriesIdentities.id, identityId),
       });
 
-      const result = await userMemoryModel.queryMemories();
+      const contextResult = await userMemoryModel.queryMemories({
+        layer: LayersEnum.Context,
+        sort: 'scoreImpact',
+      });
 
-      expect(result.total).toBe(4);
-      expect(result.items).toHaveLength(4);
-
-      const itemsById = new Map(result.items.map((item) => [item.memory.id, item]));
-
-      const contextItem = itemsById.get(contextMemory.id) as any;
-      expect(contextItem).toBeDefined();
+      expect(contextResult.total).toBe(1);
+      expect(contextResult.items).toHaveLength(1);
+      const contextItem = contextResult.items[0] as any;
       expect(contextItem.layer).toBe(LayersEnum.Context);
       expect(contextItem.context.description).toBe(context.description);
       expect(contextItem.context.userMemoryIds).toEqual([contextMemory.id]);
 
-      const experienceItem = itemsById.get(experienceMemory.id) as any;
-      expect(experienceItem).toBeDefined();
+      const experienceResult = await userMemoryModel.queryMemories({
+        layer: LayersEnum.Experience,
+        sort: 'scoreConfidence',
+      });
+
+      expect(experienceResult.total).toBe(1);
+      expect(experienceResult.items).toHaveLength(1);
+      const experienceItem = experienceResult.items[0] as any;
       expect(experienceItem.layer).toBe(LayersEnum.Experience);
       expect(experienceItem.experience.situation).toBe(experience.situation);
       expect(experienceItem.experience.userMemoryId).toBe(experienceMemory.id);
 
-      const preferenceItem = itemsById.get(preferenceMemory.id) as any;
-      expect(preferenceItem).toBeDefined();
+      const preferenceResult = await userMemoryModel.queryMemories({
+        layer: LayersEnum.Preference,
+        sort: 'scorePriority',
+      });
+
+      expect(preferenceResult.total).toBe(1);
+      expect(preferenceResult.items).toHaveLength(1);
+      const preferenceItem = preferenceResult.items[0] as any;
       expect(preferenceItem.layer).toBe(LayersEnum.Preference);
       expect(preferenceItem.preference.conclusionDirectives).toBe(preference.conclusionDirectives);
       expect(preferenceItem.preference.userMemoryId).toBe(preferenceMemory.id);
 
-      const identityItem = itemsById.get(identityMemoryId) as any;
-      expect(identityItem).toBeDefined();
+      const identityResult = await userMemoryModel.queryMemories({
+        layer: LayersEnum.Identity,
+      });
+
+      expect(identityResult.total).toBe(1);
+      expect(identityResult.items).toHaveLength(1);
+      const identityItem = identityResult.items[0] as any;
       expect(identityItem.layer).toBe(LayersEnum.Identity);
       expect(identityItem.identity.description).toBe(identityDescription);
       expect(identityItem.identity.userMemoryId).toBe(identityMemoryId);

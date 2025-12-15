@@ -30,6 +30,8 @@ export interface UserMemoryIdentity {
 
 export type UserMemoryIdentityWithoutVectors = Omit<UserMemoryIdentity, 'descriptionVector'>;
 
+export type UserMemoryIdentitiesListItem = UserMemoryIdentityWithoutVectors;
+
 export interface NewUserMemoryIdentity {
   description?: string;
   episodicDate?: string;

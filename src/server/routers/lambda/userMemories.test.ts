@@ -164,12 +164,12 @@ describe('userMemories.queryMemories', () => {
 
     const input = {
       categories: ['work'],
-      layers: ['context'],
+      layer: 'context',
       order: 'asc' as const,
       page: 2,
       pageSize: 5,
       q: 'atlas',
-      sort: 'updatedAt' as const,
+      sort: 'scoreImpact' as const,
       tags: ['project'],
       types: ['topic'],
     };
@@ -179,7 +179,7 @@ describe('userMemories.queryMemories', () => {
     expect(queryMemories).toHaveBeenCalledWith({
       ...input,
       order: 'asc',
-      sort: 'updatedAt',
+      sort: 'scoreImpact',
     });
     expect(result).toEqual({
       items: [{ id: 'mem-1' }],
@@ -214,7 +214,6 @@ describe('userMemories.queryMemories', () => {
 
     expect(queryMemories).toHaveBeenCalledWith({
       order: 'desc',
-      sort: 'createdAt',
     });
   });
 });
