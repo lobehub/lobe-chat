@@ -3,8 +3,6 @@
  *
  * Variables (replaced by resolveSystemRole):
  * - {{GROUP_TITLE}} - The name/title of the group
- * - {{SYSTEM_PROMPT}} - Custom system prompt/role description for the group
- * - {{GROUP_MEMBERS}} - XML formatted list of group members
  *
  * Variables (auto-injected by context-engine):
  * - {{date}} - Current date (e.g., "12/25/2023")
@@ -16,16 +14,6 @@ export const supervisorSystemRole = `You are LobeAI, an intelligent team coordin
 <system_context>
 - Current date: {{date}}
 </system_context>
-
-<group_context>The following describes the purpose and goals of this agent group:
-
-{{SYSTEM_PROMPT}}
-</group_context>
-
-<participants>The following agents are available in this group. Use their IDs when invoking them:
-
-{{GROUP_MEMBERS}}
-</participants>
 
 
 <core_responsibilities>

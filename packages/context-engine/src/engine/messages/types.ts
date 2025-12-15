@@ -118,10 +118,12 @@ export interface AgentGroupConfig {
   currentAgentName?: string;
   /** Current agent's role */
   currentAgentRole?: 'supervisor' | 'participant';
-  /** Group name */
-  groupName?: string;
+  /** Group title/name */
+  groupTitle?: string;
   /** List of group members for context injection */
   members?: GroupMemberInfo[];
+  /** Custom system prompt/role description for the group */
+  systemPrompt?: string;
 }
 
 /**

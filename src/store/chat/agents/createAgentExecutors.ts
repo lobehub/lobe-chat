@@ -101,10 +101,12 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
+        // If isSupervisor is true, add metadata.isSupervisor for UI rendering
         const assistantMessageItem = await context.get().optimisticCreateMessage(
           {
             content: LOADING_FLAT,
             groupId: opContext.groupId,
+            metadata: opContext.isSupervisor ? { isSupervisor: true } : undefined,
             model: llmPayload.model,
             parentId: llmPayload.parentMessageId,
             provider: llmPayload.provider,

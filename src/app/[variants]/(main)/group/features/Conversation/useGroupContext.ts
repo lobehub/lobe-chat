@@ -23,9 +23,8 @@ export function useGroupContext(): ConversationContext {
   const supervisorAgentId = currentGroup?.supervisorAgentId;
 
   // Group context uses supervisorAgentId as agentId for message storage
-  // Fallback to groupId if supervisorAgentId is not available yet
   return {
-    agentId: supervisorAgentId || groupId || '',
+    agentId: supervisorAgentId || '',
     groupId: groupId ?? undefined,
     scope: threadId ? 'group_agent' : 'group',
     threadId,

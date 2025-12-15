@@ -215,6 +215,7 @@ class ChatService {
     // Note: agentConfig.systemRole is already resolved by resolveAgentConfig for builtin agents
     const modelMessages = await contextEngineering({
       agentBuilderContext,
+      agentId: targetAgentId,
       enableHistoryCount:
         agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
       groupId,

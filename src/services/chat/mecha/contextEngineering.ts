@@ -1,9 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import {
-  AgentBuilderContext,
-  AgentGroupConfig,
-  MessagesEngine,
-} from '@lobechat/context-engine';
+import { AgentBuilderContext, AgentGroupConfig, MessagesEngine } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
@@ -26,6 +22,8 @@ const log = debug('context-engine:contextEngineering');
 interface ContextEngineeringContext {
   /** Agent Builder context for injecting current agent info */
   agentBuilderContext?: AgentBuilderContext;
+  /** The agent ID that will respond (for group context injection) */
+  agentId?: string;
   enableHistoryCount?: boolean;
   /** Group ID for multi-agent scenarios */
   groupId?: string;
@@ -54,6 +52,7 @@ export const contextEngineering = async ({
   historyCount,
   historySummary,
   agentBuilderContext,
+  agentId,
   groupId,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   log('tools: %o', tools);
@@ -71,13 +70,35 @@ export const contextEngineering = async ({
 
     if (groupDetail?.agents && groupDetail.agents.length > 0) {
       const agentMap: AgentGroupConfig['agentMap'] = {};
+      const members: AgentGroupConfig['members'] = [];
+
+      // Find the responding agent to get its name and role
+      let currentAgentName: string | undefined;
+      let currentAgentRole: 'supervisor' | 'participant' | undefined;
+
       for (const agent of groupDetail.agents) {
-        agentMap[agent.id] = {
-          name: agent.title || 'Untitled Agent',
-          role: agent.isSupervisor ? 'supervisor' : 'participant',
-        };
+        const role = agent.isSupervisor ? 'supervisor' : 'participant';
+        const name = agent.title || 'Untitled Agent';
+
+        agentMap[agent.id] = { name, role };
+        members.push({ id: agent.id, name, role });
+
+        // Capture responding agent info
+        if (agentId && agent.id === agentId) {
+          currentAgentName = name;
+          currentAgentRole = role;
+        }
       }
-      agentGroup = { agentMap };
+
+      agentGroup = {
+        agentMap,
+        currentAgentId: agentId,
+        currentAgentName,
+        currentAgentRole,
+        groupTitle: groupDetail.title || undefined,
+        members,
+        systemPrompt: groupDetail.config?.systemPrompt || undefined,
+      };
       log('agentGroup built: %o', agentGroup);
     }
   }
