@@ -1,9 +1,9 @@
+import { isDesktop } from '@lobechat/const';
 import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import type { PartialDeep } from 'type-fest';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { isDesktop } from '@lobechat/const';
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
@@ -14,7 +14,7 @@ import type { UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { preferenceSelectors } from '../preference/selectors';
+import { userGeneralSettingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -27,6 +27,7 @@ export interface CommonAction {
   updateAvatar: (avatar: string) => Promise<void>;
   updateFullName: (fullName: string) => Promise<void>;
   updateKeyVaultConfig: (provider: string, config: any) => Promise<void>;
+  updateOccupation: (occupation: string) => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
@@ -62,6 +63,11 @@ export const createCommonSlice: StateCreator<
     await get().setSettings({ keyVaults: { [provider]: config } });
   },
 
+  updateOccupation: async (occupation) => {
+    await userService.updateOccupation(occupation);
+    await get().refreshUserState();
+  },
+
   updateUsername: async (username) => {
     await userService.updateUsername(username);
     await get().refreshUserState();
@@ -71,10 +77,10 @@ export const createCommonSlice: StateCreator<
     useSWR<boolean>(
       shouldFetch ? 'checkTrace' : null,
       () => {
-        const userAllowTrace = preferenceSelectors.userAllowTrace(get());
+        const telemetry = userGeneralSettingsSelectors.telemetry(get());
 
-        // if user have set the trace, return false
-        if (typeof userAllowTrace === 'boolean') return Promise.resolve(false);
+        // if user have set the telemetry, return false
+        if (typeof telemetry === 'boolean') return Promise.resolve(false);
 
         return Promise.resolve(get().isUserCanEnableTrace);
       },
@@ -117,6 +123,7 @@ export const createCommonSlice: StateCreator<
                     fullName: data.fullName,
                     id: data.userId,
                     latestName: data.lastName,
+                    occupation: data.occupation,
                     username: data.username,
                   } as LobeUser)
                 : get().user;

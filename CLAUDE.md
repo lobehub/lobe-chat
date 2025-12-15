@@ -19,6 +19,7 @@ read @.cursor/rules/project-structure.mdc
 - git commit message should prefix with gitmoji
 - git branch name format example: tj/feat/feature-name
 - use .github/PULL_REQUEST_TEMPLATE.md to generate pull request description
+- PR titles starting with `✨ feat/` or `🐛 fix` will trigger the release workflow upon merge. Only use these prefixes for significant user-facing feature changes or bug fixes
 
 ### Package Management
 

@@ -13,6 +13,11 @@
     "source": "Kaynak",
     "urgency": "Aciliyet"
   },
+  "empty": {
+    "description": "Anıların çıkarılması aşamalı bir süreçtir. Daha fazla konu biriktirerek hafıza çıkarımını zenginleştirin, asistanla daha derinlemesine sohbetler yaparak değerli bilgilerin daha iyi yakalanıp saklanmasını sağlayın.",
+    "search": "Eşleşen hafıza bulunamadı",
+    "title": "Henüz hafıza yok"
+  },
   "experience": {
     "actions": {
       "delete": "Sil",
@@ -31,6 +36,16 @@
       "outcome": "Olası Sonuç",
       "reasoning": "Muhakeme Süreci",
       "situation": "Durum Arka Planı"
+    }
+  },
+  "filter": {
+    "search": "Ara...",
+    "sort": {
+      "createdAt": "Oluşturulma Zamanı",
+      "scoreConfidence": "Güven Skoru",
+      "scoreImpact": "Etkililik Skoru",
+      "scorePriority": "Öncelik Skoru",
+      "scoreUrgency": "Aciliyet Skoru"
     }
   },
   "identity": {

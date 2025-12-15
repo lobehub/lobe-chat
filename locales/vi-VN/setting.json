@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Khi bật sẽ hiển thị các chức năng và tùy chọn dành cho nhà phát triển",
+      "title": "Chế độ nhà phát triển"
+    },
     "lang": {
       "autoMode": "Theo hệ thống",
       "title": "Ngôn ngữ"
+    },
+    "liteMode": {
+      "desc": "Khi bật sẽ đơn giản hóa giao diện, ẩn các chức năng nâng cao",
+      "title": "Chế độ đơn giản"
+    },
+    "responseLanguage": {
+      "auto": "Theo hệ thống",
+      "desc": "Thiết lập ngôn ngữ mà AI sẽ sử dụng để trả lời",
+      "placeholder": "Chọn ngôn ngữ trả lời",
+      "title": "Ngôn ngữ trả lời"
     },
     "themeMode": {
       "auto": "Tự động",

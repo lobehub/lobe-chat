@@ -26,6 +26,7 @@ The project follows a well-organized monorepo structure:
 - `src/` - Main source code
 - `docs/` - Documentation
 - `.cursor/rules/` - Development rules and guidelines
+- PR titles starting with `✨ feat/` or `🐛 fix` will trigger the release workflow upon merge. Only use these prefixes for significant user-facing feature changes or bug fixes
 
 ## Development Workflow
 

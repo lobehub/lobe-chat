@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "開啟後將顯示開發者相關的功能與選項",
+      "title": "開發者模式"
+    },
     "lang": {
       "autoMode": "跟隨系統",
       "title": "語言"
+    },
+    "liteMode": {
+      "desc": "開啟後將簡化介面，隱藏進階功能",
+      "title": "精簡模式"
+    },
+    "responseLanguage": {
+      "auto": "依系統設定",
+      "desc": "設定 AI 回覆所使用的語言",
+      "placeholder": "選擇回覆語言",
+      "title": "回覆語言"
     },
     "themeMode": {
       "auto": "自動",

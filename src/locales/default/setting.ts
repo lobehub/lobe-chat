@@ -454,9 +454,23 @@ export default {
     },
   },
   settingCommon: {
+    devMode: {
+      desc: '开启后将显示开发者相关的功能和选项',
+      title: '开发者模式',
+    },
     lang: {
       autoMode: '跟随系统',
       title: '语言',
+    },
+    liteMode: {
+      desc: '开启后将简化界面，隐藏高级功能',
+      title: '精简模式',
+    },
+    responseLanguage: {
+      auto: '跟随系统',
+      desc: '设置 AI 回复使用的语言',
+      placeholder: '选择回复语言',
+      title: '回复语言',
     },
     themeMode: {
       auto: '自动',

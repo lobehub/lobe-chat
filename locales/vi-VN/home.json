@@ -1,6 +1,7 @@
 {
   "starter": {
     "createAgent": "Tạo trợ lý",
+    "createGroup": "Tạo nhóm",
     "deepResearch": "Nghiên cứu chuyên sâu",
     "developing": "Đang phát triển",
     "image": "Vẽ tranh",

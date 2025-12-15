@@ -39,6 +39,7 @@ export const userProfileSelectors = {
   email: (s: UserStore): string => s.user?.email || '',
   fullName: (s: UserStore): string => s.user?.fullName || '',
   nickName,
+  occupation: (s: UserStore): string => s.user?.occupation || '',
   userAvatar: (s: UserStore): string => s.user?.avatar || '',
   userId: (s: UserStore) => s.user?.id,
   userProfile: (s: UserStore): LobeUser | null | undefined => s.user,

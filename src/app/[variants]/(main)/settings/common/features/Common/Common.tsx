@@ -1,8 +1,8 @@
 'use client';
 
 import { Form, type FormGroupItemType, Icon, ImageSelect, InputPassword } from '@lobehub/ui';
-import { Select , Skeleton } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Select, Skeleton } from '@lobehub/ui';
+import { Segmented, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Ban, Gauge, Loader2Icon, Monitor, Moon, Mouse, Sun, Waves } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -147,6 +147,36 @@ const Common = memo(() => {
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: 'password',
+      },
+      {
+        children: (
+          <Select
+            options={[
+              { label: t('settingCommon.responseLanguage.auto'), value: '' },
+              ...localeOptions,
+            ]}
+            placeholder={t('settingCommon.responseLanguage.placeholder')}
+          />
+        ),
+        desc: t('settingCommon.responseLanguage.desc'),
+        label: t('settingCommon.responseLanguage.title'),
+        name: 'responseLanguage',
+      },
+      {
+        children: <Switch />,
+        desc: t('settingCommon.liteMode.desc'),
+        label: t('settingCommon.liteMode.title'),
+        minWidth: undefined,
+        name: 'isLiteMode',
+        valuePropName: 'checked',
+      },
+      {
+        children: <Switch />,
+        desc: t('settingCommon.devMode.desc'),
+        label: t('settingCommon.devMode.title'),
+        minWidth: undefined,
+        name: 'isDevMode',
+        valuePropName: 'checked',
       },
     ],
     extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,

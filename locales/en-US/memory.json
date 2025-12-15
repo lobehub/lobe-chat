@@ -13,6 +13,11 @@
     "source": "Source",
     "urgency": "Urgency"
   },
+  "empty": {
+    "description": "Memory retrieval is a gradual process. Please engage in more conversations to enrich the content available for recall. Try having deeper interactions with the assistant to better capture and store valuable information.",
+    "search": "No matching memories found",
+    "title": "No Memories Yet"
+  },
   "experience": {
     "actions": {
       "delete": "Delete",
@@ -31,6 +36,16 @@
       "outcome": "Possible Outcome",
       "reasoning": "Reasoning Process",
       "situation": "Situation Context"
+    }
+  },
+  "filter": {
+    "search": "Search...",
+    "sort": {
+      "createdAt": "Creation Time",
+      "scoreConfidence": "Confidence",
+      "scoreImpact": "Impact",
+      "scorePriority": "Priority",
+      "scoreUrgency": "Urgency"
     }
   },
   "identity": {

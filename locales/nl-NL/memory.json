@@ -13,6 +13,11 @@
     "source": "Bron",
     "urgency": "Urgentieniveau"
   },
+  "empty": {
+    "description": "Het ophalen van herinneringen is een geleidelijk proces. Probeer meer onderwerpen te verzamelen om de inhoud van het geheugen te verrijken. Voer diepgaandere gesprekken met de assistent om waardevolle informatie beter vast te leggen en op te slaan.",
+    "search": "Geen overeenkomende herinneringen gevonden",
+    "title": "Nog geen herinneringen"
+  },
   "experience": {
     "actions": {
       "delete": "Verwijderen",
@@ -31,6 +36,16 @@
       "outcome": "Mogelijke Uitkomst",
       "reasoning": "Redenering",
       "situation": "Situatiecontext"
+    }
+  },
+  "filter": {
+    "search": "Zoeken...",
+    "sort": {
+      "createdAt": "Aanmaakdatum",
+      "scoreConfidence": "Vertrouwensscore",
+      "scoreImpact": "Invloedscore",
+      "scorePriority": "Prioriteitsscore",
+      "scoreUrgency": "Urgentiescore"
     }
   },
   "identity": {
