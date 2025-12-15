@@ -14,21 +14,21 @@ export interface PageAgentAction {
   convertToList: (id: string, params: any) => Promise<boolean>;
   // ============ Basic CRUD ============
   createNode: (id: string, params: any) => Promise<boolean>;
-  // ============ Query & Read ============
-  getPageContent: (id: string, params: any) => Promise<boolean>;
   // ============ Image Operations ============
   cropImage: (id: string, params: any) => Promise<boolean>;
   deleteNode: (id: string, params: any) => Promise<boolean>;
   deleteSnapshot: (id: string, params: any) => Promise<boolean>;
-
   // ============ Table Operations ============
   deleteTableColumn: (id: string, params: any) => Promise<boolean>;
 
   deleteTableRow: (id: string, params: any) => Promise<boolean>;
 
   duplicateNode: (id: string, params: any) => Promise<boolean>;
+
   // ============ Document Metadata ============
   editTitle: (id: string, params: any) => Promise<boolean>;
+  // ============ Query & Read ============
+  getPageContent: (id: string, params: any) => Promise<boolean>;
   indentListItem: (id: string, params: any) => Promise<boolean>;
   // ============ Initialize ============
   initPage: (id: string, params: any) => Promise<boolean>;

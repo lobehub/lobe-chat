@@ -12,10 +12,12 @@ import Title from './Title';
 const useStyles = createStyles(({ css, token }) => ({
   loadingOverlay: css`
     position: absolute;
-    inset: 0;
     z-index: 10;
-    background: ${token.colorBgContainer};
+    inset: 0;
+
     padding: 24px;
+
+    background: ${token.colorBgContainer};
   `,
 }));
 
@@ -26,6 +28,7 @@ const Body = memo(() => {
 
   // Only show skeleton if loading takes more than 1 second
   useEffect(() => {
+    // eslint-disable-next-line no-undef
     let timer: NodeJS.Timeout;
 
     if (isLoadingContent) {

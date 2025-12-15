@@ -25,8 +25,6 @@ import {
 } from '@/store/agent/selectors';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getChatStoreState } from '@/store/chat';
-import { useFileStore } from '@/store/file';
-import { documentSelectors } from '@/store/file/slices/document/selectors';
 import { getToolStoreState } from '@/store/tool';
 import {
   builtinToolSelectors,

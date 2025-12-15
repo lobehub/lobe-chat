@@ -1,14 +1,10 @@
-import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
-import { Action, setNamespace } from '@/utils/storeDebug';
+import { Action } from '@/utils/storeDebug';
 
 import type { ChatStoreState } from '../../../initialState';
 import { preventLeavingFn, toggleBooleanList } from '../../../utils';
-
-const log = debug('lobe-store:runtime-state');
-const n = setNamespace('m');
 
 /**
  * Runtime state management for message-related states
