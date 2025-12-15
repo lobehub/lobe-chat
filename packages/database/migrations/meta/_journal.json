@@ -441,6 +441,13 @@
       "when": 1765728439737,
       "tag": "0062_add_more_index",
       "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1765794150841,
+      "tag": "0063_add_career_field",
+      "breakpoints": true
     }
   ],
   "version": "6"
