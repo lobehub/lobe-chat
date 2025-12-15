@@ -37,6 +37,7 @@ const AddButton = () => {
   const createDocument = useFileStore((s) => s.createDocument);
   const setPendingRenameItemId = useFileStore((s) => s.setPendingRenameItemId);
   const currentFolderId = useFileStore((s) => s.currentFolderId);
+  const refreshFileList = useFileStore((s) => s.refreshFileList);
 
   const [libraryId, setCurrentViewItemId, setMode] = useResourceManagerStore((s) => [
     s.libraryId,
@@ -98,6 +99,7 @@ const AddButton = () => {
     createDocument,
     currentFolderId,
     libraryId,
+    refreshFileList,
     t,
   });
 
