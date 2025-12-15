@@ -8,6 +8,7 @@ export type ContextMenuMode = 'disabled' | 'default';
 
 export interface UserGeneralConfig {
   animationMode?: AnimationMode;
+  autoScroll?: boolean;
   contextMenuMode?: ContextMenuMode;
   fontSize: number;
   highlighterTheme?: HighlighterProps['theme'];

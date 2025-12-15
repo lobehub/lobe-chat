@@ -297,6 +297,10 @@ export default {
       elegant: '优雅',
       title: '响应动画',
     },
+    autoScroll: {
+      desc: '控制消息生成时是否自动滚动到底部。',
+      title: '自动滚动',
+    },
     contextMenuMode: {
       default: '默认',
       desc: '选择聊天消息右键菜单的显示方案',

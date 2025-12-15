@@ -2,7 +2,7 @@
 
 import { Form, type FormGroupItemType, Icon, ImageSelect, InputPassword } from '@lobehub/ui';
 import { Select } from '@lobehub/ui';
-import { Segmented, Skeleton } from 'antd';
+import { Segmented, Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Ban, Gauge, Loader2Icon, Monitor, Moon, Mouse, Sun, Waves } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -134,6 +134,21 @@ const Common = memo(() => {
         label: t('settingAppearance.contextMenuMode.title'),
         minWidth: undefined,
         name: 'contextMenuMode',
+      },
+
+      {
+        children: (
+          <Switch
+            onChange={(v) => {
+              setSettings({ general: { ...general, autoScroll: v } });
+            }}
+            value={general.autoScroll}
+          />
+        ),
+        desc: t('settingAppearance.autoScroll.desc'),
+        label: t('settingAppearance.autoScroll.title'),
+        minWidth: undefined,
+        name: 'autoScroll',
       },
 
       {
