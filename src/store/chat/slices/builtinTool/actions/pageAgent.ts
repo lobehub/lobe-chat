@@ -1,6 +1,5 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { usePageEditorStore } from '@/features/PageEditor/store';
 import { ChatStore } from '@/store/chat/store';
 import { PageAgentExecutionRuntime } from '@/tools/page-agent/ExecutionRuntime';
 
