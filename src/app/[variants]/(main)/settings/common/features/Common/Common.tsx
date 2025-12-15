@@ -8,7 +8,6 @@ import { Ban, Gauge, Loader2Icon, Monitor, Moon, Mouse, Sun, Waves } from 'lucid
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import { localeOptions } from '@/locales/resources';
@@ -177,14 +176,6 @@ const Common = memo(() => {
         label: t('settingCommon.devMode.title'),
         minWidth: undefined,
         name: 'isDevMode',
-        valuePropName: 'checked',
-      },
-      {
-        children: <Switch />,
-        desc: t('analytics.telemetry.desc', { appName: BRANDING_NAME }),
-        label: t('analytics.telemetry.title'),
-        minWidth: undefined,
-        name: 'telemetry',
         valuePropName: 'checked',
       },
     ],
