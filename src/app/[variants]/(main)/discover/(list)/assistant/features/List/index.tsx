@@ -1,7 +1,6 @@
 'use client';
 
-import { Grid } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Empty, Grid } from '@lobehub/ui';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -18,7 +17,7 @@ const AssistantList = memo<AssistantListProps>(({ data = [], rows = 3 }) => {
   if (data.length === 0)
     return (
       <Center height={640}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Center>
     );
   return (

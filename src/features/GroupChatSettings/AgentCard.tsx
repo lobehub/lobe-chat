@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar, Icon, Text, Tooltip } from '@lobehub/ui';
-import { Skeleton, Switch } from 'antd';
+import { Avatar, Icon, Text, Tooltip , Skeleton } from '@lobehub/ui';
+import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { Bot, Loader2 } from 'lucide-react';
 import { memo } from 'react';

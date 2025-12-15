@@ -1,6 +1,6 @@
 'use client';
 
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,10 +44,7 @@ const SelectedAgentList = memo<SelectedAgentListProps>(({ agents }) => {
   if (selectedAgents.length === 0) {
     return (
       <Flexbox align="center" className={styles.container} flex={1} justify="center">
-        <Empty
-          description={t('memberSelection.noSelectedAgents')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={t('memberSelection.noSelectedAgents')} />
       </Flexbox>
     );
   }

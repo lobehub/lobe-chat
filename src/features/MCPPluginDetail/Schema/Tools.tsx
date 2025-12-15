@@ -1,5 +1,4 @@
-import { Block, Collapse, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Block, Collapse, Empty, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
 import { CheckIcon, MinusIcon } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
@@ -28,10 +27,7 @@ const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
   if (!tools)
     return (
       <Block variant={'outlined'}>
-        <Empty
-          description={t('mcp.details.schema.tools.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={t('mcp.details.schema.tools.empty')} />
       </Block>
     );
 

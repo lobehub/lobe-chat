@@ -1,5 +1,5 @@
-import { Button, Icon, Input, Text } from '@lobehub/ui';
-import { Divider, Form, Skeleton } from 'antd';
+import { Button, Icon, Input, Text , Skeleton } from '@lobehub/ui';
+import { Divider, Form } from 'antd';
 import type { FormInstance, InputRef } from 'antd';
 import { ChevronRight, Mail } from 'lucide-react';
 import { useEffect, useRef } from 'react';

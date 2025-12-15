@@ -1,5 +1,4 @@
-import { FluentEmoji } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { FluentEmoji , Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Clock3Icon, ClockArrowUp } from 'lucide-react';
 import { memo } from 'react';

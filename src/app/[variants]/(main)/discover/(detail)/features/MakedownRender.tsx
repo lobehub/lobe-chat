@@ -1,5 +1,4 @@
-import { Markdown } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Empty, Markdown } from '@lobehub/ui';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
 import { Center } from 'react-layout-kit';
@@ -10,7 +9,7 @@ const MarkdownRender = memo<{ children?: string }>(({ children }) => {
   if (!children)
     return (
       <Center paddingBlock={32} width={'100%'}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Center>
     );
 

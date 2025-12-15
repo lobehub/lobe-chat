@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, Button, Input, SortableList } from '@lobehub/ui';
-import { Empty, Space } from 'antd';
+import { ActionIcon, Button, Empty, Input, SortableList } from '@lobehub/ui';
+import { Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { PlusIcon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -135,7 +135,6 @@ const OpeningQuestions = memo(() => {
           <Empty
             className={styles.empty}
             description={t('settingOpening.openingQuestions.empty')}
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}
       </div>

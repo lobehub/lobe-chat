@@ -1,6 +1,5 @@
 import { ChatMessageError } from '@lobechat/types';
-import { AlertProps } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { AlertProps , Skeleton } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 

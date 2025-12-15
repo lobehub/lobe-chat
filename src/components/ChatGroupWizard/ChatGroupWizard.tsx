@@ -1,7 +1,17 @@
 'use client';
 
-import { Avatar, Collapse, GroupAvatar, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
-import { Button, Checkbox, Empty, Switch } from 'antd';
+import {
+  Avatar,
+  Collapse,
+  Empty,
+  GroupAvatar,
+  List,
+  Modal,
+  SearchBar,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
+import { Button, Checkbox, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { omit } from 'lodash-es';
 import { Users } from 'lucide-react';
@@ -600,7 +610,6 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               ? t('groupWizard.noMatchingTemplates')
                               : t('groupWizard.noTemplates')
                           }
-                          image={Empty.PRESENTED_IMAGE_SIMPLE}
                         />
                       ) : (
                         <Flexbox gap={4}>
@@ -628,7 +637,6 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               ? t('noMatchingAgents', { ns: 'chat' })
                               : t('noAvailableAgents', { ns: 'chat' })
                           }
-                          image={Empty.PRESENTED_IMAGE_SIMPLE}
                         />
                       ) : (
                         <Flexbox gap={4}>
@@ -743,18 +751,12 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                       }))}
                     />
                   ) : (
-                    <Empty
-                      description={t('groupWizard.noTemplateMembers')}
-                      image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    />
+                    <Empty description={t('groupWizard.noTemplateMembers')} />
                   )
                 ) : selectedAgentListItems.length > 0 ? (
                   <List items={selectedAgentListItems} />
                 ) : (
-                  <Empty
-                    description={t('memberSelection.noSelectedAgents')}
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  />
+                  <Empty description={t('memberSelection.noSelectedAgents')} />
                 )}
               </Flexbox>
             </Flexbox>

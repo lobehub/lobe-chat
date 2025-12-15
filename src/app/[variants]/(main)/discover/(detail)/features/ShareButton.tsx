@@ -8,8 +8,7 @@ import {
   Modal,
   Tag,
   Text,
-} from '@lobehub/ui';
-import { Skeleton } from 'antd';
+ Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import { LinkIcon, Share2Icon } from 'lucide-react';

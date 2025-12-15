@@ -1,9 +1,9 @@
 'use client';
 
 import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { EmojiPicker, Icon, Input, Tooltip } from '@lobehub/ui';
+import { EmojiPicker, Icon, Input, Tooltip , Skeleton } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
-import { Skeleton, message } from 'antd';
+import { message } from 'antd';
 import { PaletteIcon } from 'lucide-react';
 import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

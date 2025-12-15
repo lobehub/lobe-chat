@@ -1,7 +1,7 @@
 import { SiApple, SiLinux } from '@icons-pack/react-simple-icons';
 import { Microsoft } from '@lobehub/icons';
-import { ActionIcon, Block, Collapse, Icon, Snippet, Tag } from '@lobehub/ui';
-import { Divider, Empty, Popover, Steps } from 'antd';
+import { ActionIcon, Block, Collapse, Empty, Icon, Snippet, Tag } from '@lobehub/ui';
+import { Divider, Popover, Steps } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import {
@@ -44,10 +44,7 @@ const Deployment = memo<{ mobile?: boolean }>(({ mobile }) => {
   if (!deploymentOptions)
     return (
       <Block variant="outlined">
-        <Empty
-          description={t('mcp.details.deployment.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={t('mcp.details.deployment.empty')} />
       </Block>
     );
 

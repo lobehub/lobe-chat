@@ -1,7 +1,6 @@
 'use client';
 
-import { Accordion, AccordionItem, Dropdown, Text } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Accordion, AccordionItem, Dropdown, Empty, Text } from '@lobehub/ui';
 import React, { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -68,7 +67,6 @@ const Body = memo(() => {
                     description={
                       searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')
                     }
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
                   />
                 ) : (
                   <List />

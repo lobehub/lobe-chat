@@ -1,6 +1,6 @@
 import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Icon, Text } from '@lobehub/ui';
-import { Button, Skeleton } from 'antd';
+import { Icon, Text , Skeleton } from '@lobehub/ui';
+import { Button } from 'antd';
 import { uniq } from 'lodash-es';
 import { Edit2Icon } from 'lucide-react';
 import { memo } from 'react';

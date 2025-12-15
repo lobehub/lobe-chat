@@ -1,4 +1,4 @@
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +42,7 @@ export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) =>
   if (isEmpty)
     return (
       <Center paddingBlock={40}>
-        <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description={t('store.empty')} />
       </Center>
     );
 

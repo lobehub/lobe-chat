@@ -1,7 +1,6 @@
 'use client';
 
-import { Block, Grid } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Block, Grid , Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 

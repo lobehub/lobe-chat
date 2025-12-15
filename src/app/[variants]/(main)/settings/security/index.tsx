@@ -1,6 +1,6 @@
 'use client';
 
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Navigate } from 'react-router-dom';

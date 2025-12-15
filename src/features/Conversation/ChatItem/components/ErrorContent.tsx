@@ -1,5 +1,4 @@
-import { Alert } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Alert , Skeleton } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
 
 import { useConversationStore } from '@/features/Conversation';

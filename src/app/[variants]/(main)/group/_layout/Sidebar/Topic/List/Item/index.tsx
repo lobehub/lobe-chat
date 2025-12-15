@@ -1,5 +1,4 @@
-import { ActionIcon, Dropdown, Icon, Tag } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { ActionIcon, Dropdown, Icon, Tag , Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MessageSquareDashed, Star } from 'lucide-react';
 import { Suspense, memo, useCallback } from 'react';

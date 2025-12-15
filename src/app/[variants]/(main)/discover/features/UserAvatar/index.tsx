@@ -1,7 +1,6 @@
 'use client';
 
-import { Avatar, Button } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Avatar, Button , Skeleton } from '@lobehub/ui';
 import { UserCircleIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

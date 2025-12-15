@@ -1,4 +1,4 @@
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import { Center } from 'react-layout-kit';
 
 import DataTable from './DataTable';
@@ -11,7 +11,7 @@ const CacheViewer = async () => {
   if (!files || files.length === 0)
     return (
       <Center height={'80%'}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Center>
     );
 

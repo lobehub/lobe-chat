@@ -1,6 +1,5 @@
 import { PluginSource } from '@lobechat/types';
-import { Avatar, Block, Tag, Text } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Avatar, Block, Tag, Text , Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

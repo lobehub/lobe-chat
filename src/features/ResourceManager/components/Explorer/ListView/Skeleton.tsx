@@ -1,4 +1,4 @@
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { Flexbox } from 'react-layout-kit';
 
 import { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './ListItem';

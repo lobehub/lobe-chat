@@ -1,4 +1,4 @@
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +47,7 @@ const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
         }}
         width={'100%'}
       >
-        <Empty description={t('store.emptySelectHint')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description={t('store.emptySelectHint')} />
       </Center>
     );
 

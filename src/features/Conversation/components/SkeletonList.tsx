@@ -1,6 +1,6 @@
 'use client';
 
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 

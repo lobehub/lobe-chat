@@ -1,5 +1,4 @@
-import { Block, Highlighter, Tag } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Block, Empty, Highlighter, Tag } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,10 +16,7 @@ const Resources = memo<{ mode?: ModeType }>(({ mode }) => {
   if (!resources)
     return (
       <Block variant={'outlined'}>
-        <Empty
-          description={t('mcp.details.schema.resources.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={t('mcp.details.schema.resources.empty')} />
       </Block>
     );
 

@@ -1,5 +1,4 @@
-import { Block, Collapse, Highlighter, Markdown, Tag } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Block, Collapse, Empty, Highlighter, Markdown, Tag } from '@lobehub/ui';
 import { isString } from 'lodash-es';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useState } from 'react';
@@ -28,10 +27,7 @@ const Tools = memo<ToolProps>(({ mode }) => {
   if (!manifest || isString(manifest))
     return (
       <Block variant={'outlined'}>
-        <Empty
-          description={t('mcp.details.schema.tools.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={t('mcp.details.schema.tools.empty')} />
       </Block>
     );
 

@@ -1,6 +1,6 @@
 import { ListLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinPlaceholderProps } from '@lobechat/types';
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import React, { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 

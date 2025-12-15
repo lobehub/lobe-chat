@@ -1,4 +1,5 @@
-import { Empty, Table } from 'antd';
+import { Empty } from '@lobehub/ui';
+import { Table } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

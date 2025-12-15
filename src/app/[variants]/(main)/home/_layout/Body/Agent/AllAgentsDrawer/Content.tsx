@@ -1,6 +1,6 @@
 'use client';
 
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -57,7 +57,6 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
           description={
             isSearching ? t('navPanel.searchResultEmpty') : t('emptyAgentAction', { ns: 'chat' })
           }
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       </Center>
     );

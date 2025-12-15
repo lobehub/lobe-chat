@@ -1,8 +1,8 @@
 'use client';
 
-import { ActionIcon, Avatar, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Empty, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { List as AntdList, Button, Checkbox, Empty, Switch, Typography } from 'antd';
+import { List as AntdList, Button, Checkbox, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { type ChangeEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
@@ -408,7 +408,6 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
                       ? t('noMatchingAgents', { ns: 'chat' })
                       : t('noAvailableAgents', { ns: 'chat' })
                   }
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
                 />
               ) : (
                 <AntdList
@@ -489,7 +488,6 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
                           ? t('memberSelection.noSelectedAgents')
                           : t('memberSelection.noSelectedAgents')
                       }
-                      image={Empty.PRESENTED_IMAGE_SIMPLE}
                     />
                   </Flexbox>
                 ) : (

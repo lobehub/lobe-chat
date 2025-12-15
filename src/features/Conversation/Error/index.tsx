@@ -1,8 +1,7 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { ChatErrorType, ChatMessageError, ErrorType } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-import { AlertProps, Block } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { AlertProps, Block , Skeleton } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,7 +1,7 @@
 'use client';
 
+import { Skeleton } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
-import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';

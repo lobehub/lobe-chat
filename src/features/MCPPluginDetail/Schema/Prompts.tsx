@@ -1,5 +1,4 @@
-import { Block, Collapse, Highlighter, Icon, Markdown } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Block, Collapse, Empty, Highlighter, Icon, Markdown } from '@lobehub/ui';
 import { CheckIcon, MinusIcon } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
@@ -28,10 +27,7 @@ const Prompts = memo<PromptsProps>(({ mode, activeKey = [], setActiveKey }) => {
   if (!prompts)
     return (
       <Block variant={'outlined'}>
-        <Empty
-          description={t('mcp.details.schema.prompts.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={t('mcp.details.schema.prompts.empty')} />
       </Block>
     );
 

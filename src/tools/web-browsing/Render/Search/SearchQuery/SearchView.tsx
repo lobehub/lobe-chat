@@ -1,5 +1,4 @@
-import { Icon, Text } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Icon, Skeleton, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -66,7 +65,7 @@ const SearchBar = memo<SearchBarProps>(
         </Flexbox>
 
         {searching ? (
-          <Skeleton.Node active style={{ height: 20, width: 40 }} />
+          <Skeleton.Block active style={{ height: 20, width: 40 }} />
         ) : (
           <Flexbox align={'center'} horizontal>
             <EngineAvatarGroup engines={defaultEngines} />

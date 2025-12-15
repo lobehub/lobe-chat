@@ -1,6 +1,6 @@
 'use client';
 
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -68,10 +68,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
   if (count === 0) {
     return (
       <Center height={'100%'}>
-        <Empty
-          description={isSearching ? t('documentList.noResults') : t('documentList.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={isSearching ? t('documentList.noResults') : t('documentList.empty')} />
       </Center>
     );
   }

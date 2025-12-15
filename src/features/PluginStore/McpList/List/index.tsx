@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Empty, Icon } from '@lobehub/ui';
 import { ServerCrash } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,7 +68,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
   if (isEmpty)
     return (
       <Center paddingBlock={40}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Center>
     );
 

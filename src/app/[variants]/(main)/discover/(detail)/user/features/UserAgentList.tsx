@@ -1,7 +1,6 @@
 'use client';
 
-import { Grid, Tag, Text } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Empty, Grid, Tag, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -20,7 +19,7 @@ const UserAgentList = memo<UserAgentListProps>(({ rows = 4 }) => {
   if (agents.length === 0)
     return (
       <Center height={320}>
-        <Empty description={t('user.noAgents')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description={t('user.noAgents')} />
       </Center>
     );
 

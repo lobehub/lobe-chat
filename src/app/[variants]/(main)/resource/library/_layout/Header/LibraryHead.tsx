@@ -1,8 +1,7 @@
 'use client';
 
 import { useDroppable } from '@dnd-kit/core';
-import { Text } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Text , Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useCallback } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';

@@ -1,7 +1,6 @@
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Icon, Text } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Icon, Text , Skeleton } from '@lobehub/ui';
 import { createPatch } from 'diff';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';

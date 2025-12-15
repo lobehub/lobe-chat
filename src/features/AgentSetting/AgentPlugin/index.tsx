@@ -1,7 +1,8 @@
 'use client';
 
 import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lobehub/ui';
-import { Empty, Space, Switch } from 'antd';
+import { Empty } from '@lobehub/ui';
+import { Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -149,7 +150,6 @@ const AgentPlugin = memo(() => {
             安装
           </Trans>
         }
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
       />
     </Center>
   );

@@ -1,4 +1,4 @@
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
 
 import { ChatSettingsTabs } from '@/store/global/initialState';

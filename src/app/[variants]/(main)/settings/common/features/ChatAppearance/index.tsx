@@ -10,7 +10,7 @@ import {
   highlighterThemes,
   mermaidThemes,
 } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Loader2Icon, TriangleAlert } from 'lucide-react';

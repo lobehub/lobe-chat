@@ -1,7 +1,6 @@
 'use client';
 
-import { SearchBar } from '@lobehub/ui';
-import { Empty, Skeleton } from 'antd';
+import { Empty, SearchBar, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { type ChangeEvent, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -79,7 +78,6 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
                 ? t('noMatchingAgents', { ns: 'chat' })
                 : t('noAvailableAgents', { ns: 'chat' })
             }
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         ) : (
           <Virtuoso

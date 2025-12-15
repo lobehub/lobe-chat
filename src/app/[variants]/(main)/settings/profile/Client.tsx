@@ -1,7 +1,8 @@
 'use client';
 
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Divider, Input, Skeleton, Spin, Typography, Upload } from 'antd';
+import { Skeleton } from '@lobehub/ui';
+import { Button, Divider, Input, Spin, Typography, Upload } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   CSSProperties,

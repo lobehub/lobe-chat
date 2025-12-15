@@ -1,6 +1,6 @@
 'use client';
 
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -143,10 +143,7 @@ const Content = memo<ContentProps>(({ open, searchKeyword }) => {
   if (count === 0 && !showLoading && !showSearchLoading) {
     return (
       <Center height={'100%'}>
-        <Empty
-          description={searchKeyword ? t('searchResultEmpty') : t('guide.desc')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <Empty description={searchKeyword ? t('searchResultEmpty') : t('guide.desc')} />
       </Center>
     );
   }

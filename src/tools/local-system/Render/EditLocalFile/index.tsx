@@ -1,7 +1,6 @@
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Alert, Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Alert, Icon , Skeleton } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
 import React, { memo, useMemo } from 'react';

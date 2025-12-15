@@ -1,6 +1,5 @@
-import { Block } from '@lobehub/ui';
+import { Block, Empty } from '@lobehub/ui';
 import { Mdx } from '@lobehub/ui/mdx';
-import { Empty } from 'antd';
 import { memo } from 'react';
 
 import { useDetailContext } from '../../DetailProvider';
@@ -11,7 +10,7 @@ const Guide = memo(() => {
   if (!readme)
     return (
       <Block variant={'outlined'}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Block>
     );
 

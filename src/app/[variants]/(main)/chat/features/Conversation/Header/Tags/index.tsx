@@ -1,5 +1,5 @@
 import { ModelTag } from '@lobehub/icons';
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';

@@ -1,4 +1,5 @@
-import { App, Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
+import { App } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

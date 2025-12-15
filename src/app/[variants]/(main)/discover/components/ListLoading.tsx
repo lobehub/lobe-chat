@@ -1,7 +1,6 @@
 'use client';
 
-import { Block, Grid } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Block, Grid , Skeleton } from '@lobehub/ui';
 import { useResponsive, useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';

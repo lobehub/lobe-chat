@@ -1,8 +1,8 @@
 'use client';
 
 import { Form, type FormGroupItemType, Icon, ImageSelect, InputPassword } from '@lobehub/ui';
-import { Select } from '@lobehub/ui';
-import { Segmented, Skeleton } from 'antd';
+import { Select , Skeleton } from '@lobehub/ui';
+import { Segmented } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Ban, Gauge, Loader2Icon, Monitor, Moon, Mouse, Sun, Waves } from 'lucide-react';
 import { memo, useState } from 'react';

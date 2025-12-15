@@ -1,5 +1,4 @@
-import { Highlighter } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Empty, Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -11,7 +10,7 @@ const Ld = memo(() => {
   if (!ld)
     return (
       <Center height={'80%'}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Center>
     );
 

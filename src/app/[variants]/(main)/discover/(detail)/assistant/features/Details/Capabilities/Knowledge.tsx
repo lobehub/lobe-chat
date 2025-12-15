@@ -1,5 +1,4 @@
-import { Block } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Block, Empty } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -12,7 +11,7 @@ const Knowledge = memo(() => {
   if (!config?.knowledgeBases?.length)
     return (
       <Block variant={'outlined'}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty />
       </Block>
     );
 

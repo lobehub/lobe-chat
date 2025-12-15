@@ -1,6 +1,5 @@
-import { Icon } from '@lobehub/ui';
+import { Empty, Icon } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { Empty } from 'antd';
 import { ServerCrash } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -93,7 +92,7 @@ export const List = memo(() => {
               {t('networkError')}
             </>
           ) : (
-            <Empty description={t('empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            <Empty description={t('empty')} />
           )}
         </Center>
       ) : viewMode === 'list' ? (

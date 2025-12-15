@@ -1,5 +1,4 @@
-import { Avatar, Icon, Text } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Avatar, Icon, Text , Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Origami } from 'lucide-react';
