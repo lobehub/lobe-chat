@@ -994,5 +994,14 @@
     "bps": true,
     "folderMillis": 1765728439737,
     "hash": "ba6a6beff2ad39419ec4aa7887539c9db0472e13f9242cb8780ff96eec450268"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"response_language\" text;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"career\" text;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1765789962413,
+    "hash": "5dddf6155ca64f43f3db5f291ee7320f0c2937ea80b933d508be96b36d5ace22"
   }
 ]

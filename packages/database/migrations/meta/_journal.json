@@ -441,6 +441,13 @@
       "when": 1765728439737,
       "tag": "0062_add_more_index",
       "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1765789962413,
+      "tag": "0063_add_onboarding_fields",
+      "breakpoints": true
     }
   ],
   "version": "6"
