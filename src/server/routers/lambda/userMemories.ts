@@ -1,3 +1,11 @@
+import {
+  AddIdentityActionSchema,
+  ContextMemoryItemSchema,
+  ExperienceMemoryItemSchema,
+  PreferenceMemoryItemSchema,
+  RemoveIdentityActionSchema,
+  UpdateIdentityActionSchema,
+} from '@lobechat/memory-user-memory';
 import { type SQL, and, asc, eq, gte, lte } from 'drizzle-orm';
 import { ModelProvider } from 'model-bank';
 import pMap from 'p-map';
@@ -24,19 +32,8 @@ import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ClientSecretPayload } from '@/types/auth';
-import {
-  SearchMemoryResult,
-  searchMemorySchema,
-} from '@/types/userMemory';
+import { SearchMemoryResult, searchMemorySchema } from '@/types/userMemory';
 import { LayersEnum, TypesEnum } from '@/types/userMemory/shared';
-import {
-  AddIdentityActionSchema,
-  ContextMemoryItemSchema,
-  ExperienceMemoryItemSchema,
-  PreferenceMemoryItemSchema,
-  RemoveIdentityActionSchema,
-  UpdateIdentityActionSchema
-} from '@lobechat/memory-user-memory';
 
 const EMPTY_SEARCH_RESULT: SearchMemoryResult = {
   contexts: [],
@@ -207,6 +204,24 @@ const memoryProcedure = authedProcedure
   });
 
 export const userMemoriesRouter = router({
+  queryIdentityRoles: memoryProcedure
+    .input(
+      z
+        .object({
+          page: z.coerce.number().int().min(1).optional(),
+          size: z.coerce.number().int().min(1).max(100).optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        return await ctx.memoryModel.queryIdentityRoles(input ?? {});
+      } catch (error) {
+        console.error('Failed to query identity roles:', error);
+        return { roles: [], tags: [] };
+      }
+    }),
+
   queryMemories: memoryProcedure
     .input(
       z
@@ -237,24 +252,6 @@ export const userMemoriesRouter = router({
       } catch (error) {
         console.error('Failed to query memories:', error);
         return { items: [], page: fallbackPage, pageSize: fallbackPageSize, total: 0 };
-      }
-    }),
-
-  queryIdentityRoles: memoryProcedure
-    .input(
-      z
-        .object({
-          page: z.coerce.number().int().min(1).optional(),
-          size: z.coerce.number().int().min(1).max(100).optional(),
-        })
-        .optional(),
-    )
-    .query(async ({ ctx, input }) => {
-      try {
-        return await ctx.memoryModel.queryIdentityRoles(input ?? {});
-      } catch (error) {
-        console.error('Failed to query identity roles:', error);
-        return { roles: [], tags: [] };
       }
     }),
 
@@ -692,8 +689,10 @@ export const userMemoriesRouter = router({
 
         const { context, memory } = await ctx.memoryModel.createContextMemory({
           context: {
-            associatedObjects: UserMemoryModel.parseAssociatedObjects(input.withContext.associatedObjects) ?? null,
-            associatedSubjects: UserMemoryModel.parseAssociatedSubjects(input.withContext.associatedSubjects) ?? null,
+            associatedObjects:
+              UserMemoryModel.parseAssociatedObjects(input.withContext.associatedObjects) ?? null,
+            associatedSubjects:
+              UserMemoryModel.parseAssociatedSubjects(input.withContext.associatedSubjects) ?? null,
             currentStatus: input.withContext.currentStatus ?? null,
             description: input.withContext.description ?? null,
             descriptionVector: contextDescriptionEmbedding ?? null,

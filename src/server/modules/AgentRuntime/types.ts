@@ -9,29 +9,9 @@ import type { StreamChunkData, StreamEvent } from './StreamEventManager';
  */
 export interface IAgentStateManager {
   /**
-   * 保存 Agent 状态
+   * 清理过期的操作数据
    */
-  saveAgentState(operationId: string, state: AgentState): Promise<void>;
-
-  /**
-   * 加载 Agent 状态
-   */
-  loadAgentState(operationId: string): Promise<AgentState | null>;
-
-  /**
-   * 保存步骤执行结果
-   */
-  saveStepResult(operationId: string, stepResult: StepResult): Promise<void>;
-
-  /**
-   * 获取执行历史
-   */
-  getExecutionHistory(operationId: string, limit?: number): Promise<any[]>;
-
-  /**
-   * 获取操作元数据
-   */
-  getOperationMetadata(operationId: string): Promise<AgentOperationMetadata | null>;
+  cleanupExpiredOperations(): Promise<number>;
 
   /**
    * 创建新的操作元数据
@@ -51,14 +31,24 @@ export interface IAgentStateManager {
   deleteAgentOperation(operationId: string): Promise<void>;
 
   /**
+   * 关闭连接
+   */
+  disconnect(): Promise<void>;
+
+  /**
    * 获取所有活跃操作
    */
   getActiveOperations(): Promise<string[]>;
 
   /**
-   * 清理过期的操作数据
+   * 获取执行历史
    */
-  cleanupExpiredOperations(): Promise<number>;
+  getExecutionHistory(operationId: string, limit?: number): Promise<any[]>;
+
+  /**
+   * 获取操作元数据
+   */
+  getOperationMetadata(operationId: string): Promise<AgentOperationMetadata | null>;
 
   /**
    * 获取统计信息
@@ -71,9 +61,19 @@ export interface IAgentStateManager {
   }>;
 
   /**
-   * 关闭连接
+   * 加载 Agent 状态
    */
-  disconnect(): Promise<void>;
+  loadAgentState(operationId: string): Promise<AgentState | null>;
+
+  /**
+   * 保存 Agent 状态
+   */
+  saveAgentState(operationId: string, state: AgentState): Promise<void>;
+
+  /**
+   * 保存步骤执行结果
+   */
+  saveStepResult(operationId: string, stepResult: StepResult): Promise<void>;
 }
 
 /**
@@ -82,26 +82,24 @@ export interface IAgentStateManager {
  */
 export interface IStreamEventManager {
   /**
-   * 发布流式事件
+   * 清理操作的流式数据
    */
-  publishStreamEvent(
-    operationId: string,
-    event: Omit<StreamEvent, 'operationId' | 'timestamp'>,
-  ): Promise<string>;
+  cleanupOperation(operationId: string): Promise<void>;
 
   /**
-   * 发布流式内容块
+   * 关闭连接
    */
-  publishStreamChunk(
-    operationId: string,
-    stepIndex: number,
-    chunkData: StreamChunkData,
-  ): Promise<string>;
+  disconnect(): Promise<void>;
 
   /**
-   * 发布 Agent 运行时初始化事件
+   * 获取活跃操作数量
    */
-  publishAgentRuntimeInit(operationId: string, initialState: any): Promise<string>;
+  getActiveOperationsCount(): Promise<number>;
+
+  /**
+   * 获取流式事件历史
+   */
+  getStreamHistory(operationId: string, count?: number): Promise<StreamEvent[]>;
 
   /**
    * 发布 Agent 运行时结束事件
@@ -115,22 +113,24 @@ export interface IStreamEventManager {
   ): Promise<string>;
 
   /**
-   * 获取流式事件历史
+   * 发布 Agent 运行时初始化事件
    */
-  getStreamHistory(operationId: string, count?: number): Promise<StreamEvent[]>;
+  publishAgentRuntimeInit(operationId: string, initialState: any): Promise<string>;
 
   /**
-   * 清理操作的流式数据
+   * 发布流式内容块
    */
-  cleanupOperation(operationId: string): Promise<void>;
+  publishStreamChunk(
+    operationId: string,
+    stepIndex: number,
+    chunkData: StreamChunkData,
+  ): Promise<string>;
 
   /**
-   * 获取活跃操作数量
+   * 发布流式事件
    */
-  getActiveOperationsCount(): Promise<number>;
-
-  /**
-   * 关闭连接
-   */
-  disconnect(): Promise<void>;
+  publishStreamEvent(
+    operationId: string,
+    event: Omit<StreamEvent, 'operationId' | 'timestamp'>,
+  ): Promise<string>;
 }

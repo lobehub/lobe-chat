@@ -35,7 +35,7 @@ const GroupItem = memo<SidebarGroup>(({ items, id, name }) => {
   const { createGroupWithMembers, isCreatingGroup } = useSessionGroupMenuItems();
 
   // Create menu items
-  const { isCreatingAgent } = useCreateMenuItems();
+  const { isValidatingAgent } = useCreateMenuItems();
 
   const toggleEditing = useCallback(
     (visible?: boolean) => {
@@ -72,7 +72,7 @@ const GroupItem = memo<SidebarGroup>(({ items, id, name }) => {
     toggleEditing,
   });
 
-  const isLoading = isCreatingAgent || isCreatingGroup;
+  const isLoading = isValidatingAgent || isCreatingGroup;
 
   const groupIcon = useMemo(() => {
     if (isUpdating) {

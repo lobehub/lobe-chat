@@ -110,8 +110,7 @@ const CreateGroupModal = memo<CreateGroupModalProps>(({ id, onCancel, open }) =>
     onCancel();
   };
 
-  const isConfirmDisabled =
-    groupName.trim() === '' || selectedAgentIds.length === 0 || isCreating;
+  const isConfirmDisabled = groupName.trim() === '' || selectedAgentIds.length === 0 || isCreating;
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

@@ -31,7 +31,6 @@ import {
 } from 'lucide-react';
 import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { usePageEditorStore } from '../store';
 
@@ -43,9 +42,9 @@ interface ToolbarProps {
 
 const useStyles = createStyles(({ css, token }) => ({
   askCopilot: css`
+    border-radius: 6px;
     color: ${token.colorTextDescription};
 
-    border-radius: 6px;
     &:hover {
       color: ${token.colorTextSecondary};
     }
@@ -68,12 +67,12 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
           <Block
             align="center"
             className={styles.askCopilot}
+            clickable
             gap={8}
             horizontal
-            clickable
-            variant="borderless"
-            paddingInline={12}
             paddingBlock={6}
+            paddingInline={12}
+            variant="borderless"
           >
             <BotIcon />
             <span>Ask Copilot</span>

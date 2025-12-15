@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { type StarterMode, useHomeStore } from '@/store/home';
+import { useHomeStore } from '@/store/home';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { enableAuth } from '@/const/auth';
 import DataStatistics from '@/features/User/DataStatistics';

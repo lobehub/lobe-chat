@@ -5,6 +5,7 @@ import { ItemType } from 'antd/es/menu/interface';
 import { BotIcon, FileTextIcon, FolderCogIcon, FolderPlus } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { useGroupTemplates } from '@/components/ChatGroupWizard/templates';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
@@ -34,6 +35,7 @@ export const useCreateMenuItems = () => {
   const { t } = useTranslation('chat');
   const { t: tFile } = useTranslation('file');
   const { message } = App.useApp();
+  const navigate = useNavigate();
   const groupTemplates = useGroupTemplates();
 
   const [storeCreateAgent] = useAgentStore((s) => [s.createAgent]);
@@ -45,53 +47,33 @@ export const useCreateMenuItems = () => {
   const [createGroup, loadGroups] = useAgentGroupStore((s) => [s.createGroup, s.loadGroups]);
   const createNewPage = useFileStore((s) => s.createNewPage);
 
-  const [isCreatingAgent, setIsCreatingAgent] = useState(false);
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
   const [isCreatingSessionGroup, setIsCreatingSessionGroup] = useState(false);
 
-  // SWR-based agent creation for simple cases
+  // SWR-based agent creation with auto navigation to profile
   const { mutate: mutateAgent, isValidating: isValidatingAgent } = useActionSWR(
     'agent.createAgent',
-    () => storeCreateAgent({}),
+    async () => {
+      const result = await storeCreateAgent({});
+      navigate(`/agent/${result.agentId}/profile`);
+      return result;
+    },
+    {
+      onSuccess: async () => {
+        await refreshAgentList();
+      },
+    },
   );
 
   /**
    * Create agent action
-   * Supports both simple creation (SWR) and advanced with group/pin options
    */
   const createAgent = useCallback(
     async (options?: CreateAgentOptions) => {
-      // Simple creation without group/pin options - use SWR
-      if (!options?.groupId && !options?.isPinned) {
-        await mutateAgent();
-        await refreshAgentList();
-        options?.onSuccess?.();
-        return;
-      }
-
-      // Advanced creation with group/pin options
-      const key = 'createNewAgent';
-      message.loading({ content: t('sessionGroup.creatingAgent'), duration: 0, key });
-      setIsCreatingAgent(true);
-
-      try {
-        await storeCreateAgent({
-          groupId: options.groupId,
-        });
-        await refreshAgentList();
-
-        message.destroy(key);
-        message.success({ content: t('sessionGroup.createAgentSuccess') });
-        options?.onSuccess?.();
-      } catch (error) {
-        message.destroy(key);
-        message.error({ content: t('sessionGroup.createGroupFailed') });
-        throw error;
-      } finally {
-        setIsCreatingAgent(false);
-      }
+      await mutateAgent();
+      options?.onSuccess?.();
     },
-    [storeCreateAgent, mutateAgent, refreshAgentList, message, t],
+    [mutateAgent],
   );
 
   /**
@@ -309,10 +291,9 @@ export const useCreateMenuItems = () => {
     createSessionGroupMenuItem,
 
     // Loading states
-    isCreatingAgent,
     isCreatingGroup,
     isCreatingSessionGroup,
-    isLoading: isValidatingAgent || isCreatingAgent || isCreatingGroup || isCreatingSessionGroup,
+    isLoading: isValidatingAgent || isCreatingGroup || isCreatingSessionGroup,
     isValidatingAgent,
   };
 };

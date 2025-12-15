@@ -1,4 +1,4 @@
-import type { AgentGroupDetail, LobeChatGroupConfig, NewChatGroup } from '@lobechat/types';
+import type { AgentGroupDetail } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { mutate } from 'swr';
@@ -61,7 +61,8 @@ export interface ChatGroupInternalAction {
 
 // Combined action interface
 export interface ChatGroupAction
-  extends ChatGroupInternalAction,
+  extends
+    ChatGroupInternalAction,
     ChatGroupLifecycleAction,
     ChatGroupMemberAction,
     ChatGroupCurdAction {}

@@ -51,6 +51,10 @@ export interface AgentSliceAction {
     signal?: AbortSignal,
   ) => Promise<void>;
   /**
+   * Update current active agent id
+   */
+  setActiveAgentId: (agentId?: string) => void;
+  /**
    * Set the agent panel pinned state
    */
   setAgentPinned: (pinned: boolean | ((prev: boolean) => boolean)) => void;
@@ -58,10 +62,6 @@ export interface AgentSliceAction {
    * Start streaming system role update
    */
   startStreamingSystemRole: () => void;
-  /**
-   * Update current active agent id
-   */
-  setActiveAgentId: (agentId?: string) => void;
   /**
    * Toggle the agent panel pinned state
    */
@@ -136,6 +136,14 @@ export const createAgentSlice: StateCreator<
     );
   },
 
+  setActiveAgentId: (agentId) => {
+    set(
+      (state) => (state.activeAgentId === agentId ? state : { activeAgentId: agentId }),
+      false,
+      'setActiveAgentId',
+    );
+  },
+
   setAgentPinned: (value) => {
     set(
       (state) => ({
@@ -154,14 +162,6 @@ export const createAgentSlice: StateCreator<
       },
       false,
       'startStreamingSystemRole',
-    );
-  },
-
-  setActiveAgentId: (agentId) => {
-    set(
-      (state) => (state.activeAgentId === agentId ? state : { activeAgentId: agentId }),
-      false,
-      'setActiveAgentId',
     );
   },
 

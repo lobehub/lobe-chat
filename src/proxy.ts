@@ -340,7 +340,7 @@ const betterAuthMiddleware = async (req: NextRequest) => {
   const response = defaultMiddleware(req);
 
   // when enable auth protection, only public route is not protected, others are all protected
-  const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+  const isProtected = !isPublicRoute(req);
 
   logBetterAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
@@ -388,8 +388,6 @@ logDefault('Middleware configuration: %O', {
 
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkAuthMiddleware
-  : authEnv.NEXT_PUBLIC_ENABLE_BETTER_AUTH
-    ? betterAuthMiddleware
-    : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
-      ? nextAuthMiddleware
-      : defaultMiddleware;
+  : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
+    ? nextAuthMiddleware
+    : betterAuthMiddleware;

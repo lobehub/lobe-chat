@@ -17,8 +17,8 @@ const useStyles = createStyles(({ css, token }) => ({
   banner: css`
     position: relative;
     height: 60px;
-    background: linear-gradient(135deg, ${token.colorPrimaryBg} 0%, ${token.colorPrimary} 100%);
     border-radius: ${token.borderRadiusLG}px ${token.borderRadiusLG}px 0 0;
+    background: linear-gradient(135deg, ${token.colorPrimaryBg} 0%, ${token.colorPrimary} 100%);
   `,
   chatButton: css`
     width: 100%;
@@ -54,10 +54,12 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorText};
   `,
   section: css`
-    padding: 12px 16px;
+    padding-block: 12px;
+    padding-inline: 16px;
   `,
   sectionTitle: css`
     margin-block-end: 8px;
+
     font-size: 11px;
     font-weight: 600;
     color: ${token.colorTextTertiary};
