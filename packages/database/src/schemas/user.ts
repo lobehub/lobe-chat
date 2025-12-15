@@ -20,6 +20,7 @@ export const users = pgTable(
     firstName: text('first_name'),
     lastName: text('last_name'),
     fullName: text('full_name'),
+    career: text('career'),
 
     isOnboarded: boolean('is_onboarded').default(false),
     // Time user was created in Clerk
@@ -79,6 +80,7 @@ export const userSettings = pgTable('user_settings', {
   market: jsonb('market'),
   tool: jsonb('tool'),
   image: jsonb('image'),
+  responseLanguage: text('response_language'),
 });
 export type UserSettingsItem = typeof userSettings.$inferSelect;
 
