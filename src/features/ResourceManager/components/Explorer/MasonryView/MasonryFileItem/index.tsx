@@ -9,7 +9,6 @@ import {
   useDragState,
 } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import PageEditorModal from '@/features/PageEditor/Modal';
 import { documentService } from '@/services/document';
 import { FileListItem } from '@/types/files';
 
@@ -172,7 +171,6 @@ interface MasonryFileItemProps extends FileListItem {
 const MasonryFileItem = memo<MasonryFileItemProps>(
   ({
     chunkingError,
-    editorData,
     embeddingError,
     embeddingStatus,
     finishEmbedding,
@@ -194,7 +192,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
     const { styles, cx } = useStyles();
     const [markdownContent, setMarkdownContent] = useState<string>('');
     const [isLoadingMarkdown, setIsLoadingMarkdown] = useState(false);
-    const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const setMode = useResourceManagerStore((s) => s.setMode);
@@ -506,20 +503,6 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
             }
           })()}
         </div>
-
-        {/* Note Editor Modal */}
-        {isNote && (
-          <PageEditorModal
-            documentId={id}
-            documentTitle={name}
-            editorData={editorData}
-            knowledgeBaseId={knowledgeBaseId}
-            onClose={() => {
-              setIsNoteModalOpen(false);
-            }}
-            open={isNoteModalOpen}
-          />
-        )}
       </div>
     );
   },
