@@ -994,11 +994,5 @@
     "bps": true,
     "folderMillis": 1765728439737,
     "hash": "ba6a6beff2ad39419ec4aa7887539c9db0472e13f9242cb8780ff96eec450268"
-  },
-  {
-    "sql": ["ALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"career\" text;"],
-    "bps": true,
-    "folderMillis": 1765794150841,
-    "hash": "22e6c9f03f56a6603543faaf712dbae40f8d01aa621df509e76d5a2bfe7d5acb"
   }
 ]
