@@ -1,10 +1,10 @@
 export * from './agent';
+export * from './agentGroup';
 export * from './aiChat';
 export * from './aiProvider';
 export * from './artifact';
 export * from './asyncTask';
 export * from './auth';
-export * from './agentGroup';
 export * from './chunk';
 export * from './clientDB';
 export * from './conversation';
@@ -40,4 +40,5 @@ export * from './openai/plugin';
 export * from './subscription';
 export * from './trace';
 export * from './userMemory';
+export * from './util';
 export * from './zustand';

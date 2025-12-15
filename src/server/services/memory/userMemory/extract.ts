@@ -486,6 +486,7 @@ export class MemoryExtractionExecutor {
           associatedSubjects: UserMemoryModel.parseAssociatedObjects(
             item.withContext?.associatedSubjects,
           ),
+          capturedAt: job.sourceUpdatedAt,
           currentStatus: item.withContext?.currentStatus ?? null,
           description: item.withContext?.description ?? null,
           descriptionVector: descriptionVector || null,
@@ -546,6 +547,7 @@ export class MemoryExtractionExecutor {
         experience: {
           action: item.withExperience?.action ?? null,
           actionVector: actionVector || null,
+          capturedAt: job.sourceUpdatedAt,
           keyLearning: item.withExperience?.keyLearning ?? null,
           keyLearningVector: keyLearningVector || null,
           metadata: baseMetadata,
@@ -604,6 +606,7 @@ export class MemoryExtractionExecutor {
         memoryLayer: (item.memoryLayer as LayersEnum) ?? LayersEnum.Preference,
         memoryType: (item.memoryType as TypesEnum) ?? TypesEnum.Preference,
         preference: {
+          capturedAt: job.sourceUpdatedAt,
           conclusionDirectives: item.withPreference?.conclusionDirectives ?? null,
           conclusionDirectivesVector: directiveVector ?? null,
           metadata: {
@@ -668,6 +671,7 @@ export class MemoryExtractionExecutor {
           summaryVector1024: summaryVector ?? undefined,
         },
         identity: {
+          capturedAt: job.sourceUpdatedAt,
           description: action.withIdentity.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata,
@@ -705,6 +709,7 @@ export class MemoryExtractionExecutor {
           title: set.title,
         },
         identity: {
+          capturedAt: job.sourceUpdatedAt,
           description: set.withIdentity?.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata: set.withIdentity.extractedLabels

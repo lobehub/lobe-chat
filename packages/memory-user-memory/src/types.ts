@@ -59,6 +59,7 @@ export interface MemoryExtractionJob {
   layers?: LayersEnum[];
   source: MemoryExtractionSourceType;
   sourceId: string;
+  sourceUpdatedAt?: Date;
   userId: string;
 }
 

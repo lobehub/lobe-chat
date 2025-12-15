@@ -77,6 +77,7 @@ export class UserMemoryRepo {
       .select({
         accessedAt: userMemoriesExperiences.accessedAt,
         action: userMemoriesExperiences.action,
+        capturedAt: userMemoriesPreferences.capturedAt,
         createdAt: userMemoriesExperiences.createdAt,
         id: userMemoriesExperiences.id,
         keyLearning: userMemoriesExperiences.keyLearning,
@@ -197,6 +198,7 @@ export class UserMemoryRepo {
     const preferences = await this.db
       .select({
         accessedAt: userMemoriesPreferences.accessedAt,
+        capturedAt: userMemoriesPreferences.capturedAt,
         conclusionDirectives: userMemoriesPreferences.conclusionDirectives,
         createdAt: userMemoriesPreferences.createdAt,
         id: userMemoriesPreferences.id,
@@ -317,6 +319,7 @@ export class UserMemoryRepo {
         accessedAt: userMemoriesContexts.accessedAt,
         associatedObjects: userMemoriesContexts.associatedObjects,
         associatedSubjects: userMemoriesContexts.associatedSubjects,
+        capturedAt: userMemoriesPreferences.capturedAt,
         createdAt: userMemoriesContexts.createdAt,
         currentStatus: userMemoriesContexts.currentStatus,
         description: userMemoriesContexts.description,

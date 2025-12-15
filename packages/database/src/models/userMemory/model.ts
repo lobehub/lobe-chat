@@ -2,6 +2,7 @@ import {
   IdentityTypeEnum,
   LayersEnum,
   MergeStrategyEnum,
+  Optional,
   RelationshipEnum,
   TypesEnum,
   UserMemoryContextObjectType,
@@ -62,6 +63,7 @@ const coerceDate = (input: unknown): Date | null => {
 };
 
 export interface BaseCreateUserMemoryParams {
+  capturedAt?: Date;
   details: string;
   detailsEmbedding?: number[];
   memoryCategory: string;
@@ -74,31 +76,31 @@ export interface BaseCreateUserMemoryParams {
 }
 
 export interface CreateUserMemoryContextParams extends BaseCreateUserMemoryParams {
-  context: Omit<
+  context: Optional<Omit<
     UserMemoryContext,
     'id' | 'userId' | 'createdAt' | 'updatedAt' | 'accessedAt' | 'userMemoryIds'
-  >;
+  >, 'capturedAt'>;
 }
 
 export interface CreateUserMemoryExperienceParams extends BaseCreateUserMemoryParams {
-  experience: Omit<
+  experience: Optional<Omit<
     UserMemoryExperience,
     'id' | 'userId' | 'createdAt' | 'updatedAt' | 'accessedAt' | 'userMemoryId'
-  >;
+  >, 'capturedAt'>;
 }
 
 export interface CreateUserMemoryIdentityParams extends BaseCreateUserMemoryParams {
-  identity: Omit<
+  identity: Optional<Omit<
     UserMemoryIdentity,
     'id' | 'userId' | 'createdAt' | 'updatedAt' | 'accessedAt' | 'userMemoryId'
-  >;
+  >, 'capturedAt'>;
 }
 
 export interface CreateUserMemoryPreferenceParams extends BaseCreateUserMemoryParams {
-  preference: Omit<
+  preference: Optional<Omit<
     UserMemoryPreference,
     'id' | 'userId' | 'createdAt' | 'updatedAt' | 'accessedAt' | 'userMemoryId'
-  >;
+  >, 'capturedAt'>;
 }
 
 export type CreateUserMemoryParams =
@@ -154,6 +156,7 @@ export interface UpdateExperienceVectorsParams {
 }
 
 export interface IdentityEntryPayload {
+  capturedAt?: Date;
   description?: string | null;
   descriptionVector?: number[] | null;
   episodicDate?: string | Date | null;
@@ -165,6 +168,7 @@ export interface IdentityEntryPayload {
 }
 
 export interface IdentityEntryBasePayload {
+  capturedAt?: Date;
   details?: string | null;
   detailsVector1024?: number[] | null;
   lastAccessedAt?: string | Date | null;
@@ -337,6 +341,7 @@ export class UserMemoryModel {
 
     return {
       accessedCount: 0,
+      capturedAt: params.capturedAt,
       details: params.details ?? null,
       detailsVector1024: params.detailsEmbedding ?? null,
       lastAccessedAt: now,
@@ -377,6 +382,7 @@ export class UserMemoryModel {
       const contextValues = {
         associatedObjects: params.context.associatedObjects ?? [],
         associatedSubjects: params.context.associatedSubjects ?? [],
+        capturedAt: params.context.capturedAt,
         currentStatus: params.context.currentStatus ?? null,
         description: params.context.description ?? null,
         descriptionVector: params.context.descriptionVector ?? null,
@@ -411,6 +417,7 @@ export class UserMemoryModel {
       const experienceValues = {
         action: params.experience.action ?? null,
         actionVector: params.experience.actionVector ?? null,
+        capturedAt: params.experience.capturedAt,
         keyLearning: params.experience.keyLearning ?? null,
         keyLearningVector: params.experience.keyLearningVector ?? null,
         metadata: params.experience.metadata ?? null,
@@ -447,6 +454,7 @@ export class UserMemoryModel {
       if (!memory) throw new Error('Failed to create user memory preference');
 
       const preferenceValues = {
+        capturedAt: params.preference.capturedAt,
         conclusionDirectives: params.preference.conclusionDirectives ?? null,
         conclusionDirectivesVector: params.preference.conclusionDirectivesVector ?? null,
         metadata: params.preference.metadata ?? null,
@@ -761,6 +769,7 @@ export class UserMemoryModel {
       const base = params.base ?? {};
       const baseValues: typeof userMemories.$inferInsert = {
         accessedCount: 0,
+        capturedAt: base.capturedAt,
         details: base.details ?? null,
         detailsVector1024: base.detailsVector1024 ?? null,
         lastAccessedAt: coerceDate(base.lastAccessedAt) ?? now,
@@ -857,6 +866,7 @@ export class UserMemoryModel {
           const identity = params.identity;
 
           identityUpdate = {
+            capturedAt: identity.capturedAt,
             description: identity.description ?? null,
             descriptionVector: identity.descriptionVector ?? null,
             episodicDate:
