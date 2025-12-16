@@ -3,7 +3,6 @@ import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
 import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
 
@@ -51,7 +50,6 @@ const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelet
       hashTags={experience.tags}
       onClick={() => onClick(experience)}
       title={experience.title}
-      titleAddon={<SourceLink source={experience.source} />}
       updatedAt={experience.updatedAt || experience.createdAt}
     >
       {experience.keyLearning || experience.situation}

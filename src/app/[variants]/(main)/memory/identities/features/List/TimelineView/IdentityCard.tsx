@@ -4,11 +4,11 @@ import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
-import type { UserMemoryIdentity } from '@/types/index';
+import { DisplayIdentityMemory } from '@/database/repositories/userMemory';
 
 interface IdentityCardProps {
-  identity: UserMemoryIdentity;
-  onClick?: (identity: UserMemoryIdentity) => void;
+  identity: DisplayIdentityMemory;
+  onClick?: (identity: DisplayIdentityMemory) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
 }

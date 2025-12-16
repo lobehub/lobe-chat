@@ -50,7 +50,7 @@ const ContextsArea = memo(() => {
   // 调用 SWR hook 获取数据
   const { isLoading } = useFetchContexts({
     page: contextsPage,
-    pageSize: 20,
+    pageSize: 12,
     q: searchValue || undefined,
     sort: viewMode === 'grid' ? apiSort : undefined,
   });

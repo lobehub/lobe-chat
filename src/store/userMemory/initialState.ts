@@ -1,14 +1,10 @@
-import type {
+import {
   DisplayContextMemory,
   DisplayExperienceMemory,
+  DisplayIdentityMemory,
   DisplayPreferenceMemory,
 } from '@/database/repositories/userMemory';
-import type {
-  RetrieveMemoryParams,
-  RetrieveMemoryResult,
-  TypesEnum,
-  UserMemoryIdentityWithoutVectors,
-} from '@/types/userMemory';
+import type { RetrieveMemoryParams, RetrieveMemoryResult, TypesEnum } from '@/types/userMemory';
 
 export interface UserMemoryStoreState {
   activeParams?: RetrieveMemoryParams;
@@ -29,7 +25,7 @@ export interface UserMemoryStoreState {
   experiencesSearchLoading?: boolean;
   experiencesSort?: 'scoreConfidence';
   experiencesTotal: number;
-  identities: UserMemoryIdentityWithoutVectors[];
+  identities: DisplayIdentityMemory[];
   identitiesHasMore: boolean;
   identitiesInit: boolean;
   identitiesPage: number;

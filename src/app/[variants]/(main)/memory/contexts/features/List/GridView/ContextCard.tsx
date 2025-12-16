@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 
 import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
-import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
 interface ContextCardProps {
@@ -64,7 +63,6 @@ const ContextCard = memo<ContextCardProps>(({ context, onClick, onDelete, onEdit
         </>
       }
       cate={context.type}
-      footer={<SourceLink source={context.source} />}
       onClick={onClick}
       title={context.title}
       updatedAt={context.updatedAt || context.createdAt}

@@ -73,6 +73,8 @@ export const createBaseSlice: StateCreator<
               return {
                 ...detail.memory,
                 ...detail.context,
+                source: detail.source,
+                sourceType: detail.sourceType,
               };
             }
             break;
@@ -82,6 +84,8 @@ export const createBaseSlice: StateCreator<
               return {
                 ...detail.memory,
                 ...detail.experience,
+                source: detail.source,
+                sourceType: detail.sourceType,
               };
             }
             break;
@@ -91,6 +95,8 @@ export const createBaseSlice: StateCreator<
               return {
                 ...detail.memory,
                 ...detail.identity,
+                source: detail.source,
+                sourceType: detail.sourceType,
               };
             }
             break;
@@ -100,6 +106,8 @@ export const createBaseSlice: StateCreator<
               return {
                 ...detail.memory,
                 ...detail.preference,
+                source: detail.source,
+                sourceType: detail.sourceType,
               };
             }
             break;

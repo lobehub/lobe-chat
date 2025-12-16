@@ -1,16 +1,16 @@
 import { memo } from 'react';
 
+import { DisplayIdentityMemory } from '@/database/repositories/userMemory';
 import { useUserMemoryStore } from '@/store/userMemory';
-import type { UserMemoryIdentity } from '@/types/index';
 
 import { TimelineView as GenericTimelineView } from '../../../../features/TimeLineView';
 import { PeriodHeader, TimelineItemWrapper } from '../../../../features/TimeLineView/PeriodGroup';
 import IdentityCard from './IdentityCard';
 
 interface TimelineViewProps {
-  identities: UserMemoryIdentity[];
+  identities: DisplayIdentityMemory[];
   isLoading?: boolean;
-  onClick?: (identity: UserMemoryIdentity) => void;
+  onClick?: (identity: DisplayIdentityMemory) => void;
   onDelete?: (id: string) => void;
 }
 

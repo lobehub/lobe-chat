@@ -31,10 +31,6 @@ class MemoryCRUDService {
     return lambdaClient.userMemory.getContexts.query();
   };
 
-  getDisplayContexts = async () => {
-    return lambdaClient.userMemory.getDisplayContexts.query();
-  };
-
   updateContext = async (
     id: string,
     data: { currentStatus?: string; description?: string; title?: string },
@@ -46,10 +42,6 @@ class MemoryCRUDService {
 
   deleteExperience = async (id: string) => {
     return lambdaClient.userMemory.deleteExperience.mutate({ id });
-  };
-
-  getDisplayExperiences = async () => {
-    return lambdaClient.userMemory.getDisplayExperiences.query();
   };
 
   getExperiences = async () => {
@@ -67,10 +59,6 @@ class MemoryCRUDService {
 
   deletePreference = async (id: string) => {
     return lambdaClient.userMemory.deletePreference.mutate({ id });
-  };
-
-  getDisplayPreferences = async () => {
-    return lambdaClient.userMemory.getDisplayPreferences.query();
   };
 
   getPreferences = async () => {

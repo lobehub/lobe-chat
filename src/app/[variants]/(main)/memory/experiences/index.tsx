@@ -48,7 +48,7 @@ const ExperiencesArea = memo(() => {
   // 调用 SWR hook 获取数据
   const { isLoading } = useFetchExperiences({
     page: experiencesPage,
-    pageSize: 20,
+    pageSize: 12,
     q: searchValue || undefined,
     sort: viewMode === 'grid' ? apiSort : undefined,
   });

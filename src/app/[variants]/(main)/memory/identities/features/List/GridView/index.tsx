@@ -1,15 +1,15 @@
 import { memo } from 'react';
 
+import { DisplayIdentityMemory } from '@/database/repositories/userMemory';
 import { useUserMemoryStore } from '@/store/userMemory';
-import type { UserMemoryIdentity } from '@/types/index';
 
 import { GridView } from '../../../../features/GridView';
 import IdentityCard from './IdentityCard';
 
 interface GridViewProps {
-  identities: UserMemoryIdentity[];
+  identities: DisplayIdentityMemory[];
   isLoading?: boolean;
-  onClick?: (identity: UserMemoryIdentity) => void;
+  onClick?: (identity: DisplayIdentityMemory) => void;
   onDelete?: (id: string) => void;
 }
 

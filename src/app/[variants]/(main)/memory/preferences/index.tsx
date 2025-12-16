@@ -48,7 +48,7 @@ const PreferencesArea = memo(() => {
   // 调用 SWR hook 获取数据
   const { isLoading } = useFetchPreferences({
     page: preferencesPage,
-    pageSize: 20,
+    pageSize: 12,
     q: searchValue || undefined,
     sort: viewMode === 'grid' ? apiSort : undefined,
   });

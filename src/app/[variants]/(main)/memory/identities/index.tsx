@@ -38,7 +38,7 @@ const IdentitiesArea = memo(() => {
   // 调用 SWR hook 获取数据
   const { isLoading } = useFetchIdentities({
     page: identitiesPage,
-    pageSize: 20,
+    pageSize: 12,
     q: searchValue || undefined,
     types: typeFilter === 'all' ? undefined : [typeFilter as TypesEnum],
   });

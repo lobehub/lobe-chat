@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
-import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import { DisplayPreferenceMemory } from '@/database/repositories/userMemory';
 
 dayjs.extend(relativeTime);
@@ -55,11 +54,10 @@ const PreferenceCard = memo<PreferenceCardProps>(({ preference, onClick, onDelet
       badges={
         <ProgressIcon
           format={(percent) => `Priority: ${percent}%`}
-          percent={preference.scorePriority}
+          percent={(preference.scorePriority ?? 0) * 100}
         />
       }
       cate={preference.type}
-      footer={<SourceLink source={preference.source} />}
       onClick={onClick}
       title={preference.title}
       updatedAt={preference.updatedAt || preference.createdAt}

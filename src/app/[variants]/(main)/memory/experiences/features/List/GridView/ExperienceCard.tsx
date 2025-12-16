@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
-import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
 
 dayjs.extend(relativeTime);
@@ -59,7 +58,6 @@ const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelet
         />
       }
       cate={experience.type}
-      footer={<SourceLink source={experience.source} />}
       onClick={() => onClick(experience)}
       title={experience.title}
       updatedAt={experience.updatedAt || experience.createdAt}

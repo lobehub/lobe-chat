@@ -7,7 +7,7 @@ import { ViewMode } from './ViewModeSwitcher';
 const Loading = memo<{ rows?: number; viewMode?: ViewMode }>(({ viewMode, rows = 3 }) => {
   if (viewMode === 'timeline') {
     return (
-      <Flexbox gap={36} style={{ paddingLeft: 32 }}>
+      <Flexbox gap={36} paddingBlock={36} style={{ paddingLeft: 32 }}>
         <Skeleton active />
         <Skeleton active />
         <Skeleton active />
@@ -16,7 +16,7 @@ const Loading = memo<{ rows?: number; viewMode?: ViewMode }>(({ viewMode, rows =
   }
 
   return (
-    <Grid gap={8} maxItemWidth={240} rows={rows}>
+    <Grid gap={8} maxItemWidth={240} paddingBlock={8} rows={rows}>
       <Skeleton.Block active height={200} width={'100%'} />
       <Skeleton.Block active height={200} width={'100%'} />
       <Skeleton.Block active height={200} width={'100%'} />
