@@ -20,7 +20,7 @@ const useStyles = createStyles(({ css, token }) => ({
   // Placeholder to match DragHandle width (28px from SortableList.DragHandle small size)
   dragHandlePlaceholder: css`
     flex-shrink: 0;
-    width: 24px;
+    width: 20px;
     height: 24px;
   `,
 }));
@@ -91,7 +91,7 @@ const AddItemRow = memo<AddItemRowProps>(
     }, [setFocusedId]);
 
     return (
-      <Flexbox align="center" className={cx(styles.addRow, className)} gap={8} horizontal>
+      <Flexbox align="center" className={cx(styles.addRow, className)} gap={4} horizontal>
         {showDragHandle && <div className={styles.dragHandlePlaceholder} />}
         <Circle className={styles.circle} size={16} />
         <Input

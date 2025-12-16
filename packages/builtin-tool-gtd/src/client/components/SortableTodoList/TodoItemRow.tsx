@@ -34,6 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   dragHandle: css`
     flex-shrink: 0;
+    width: 20px !important;
     opacity: 0;
     transition: opacity 0.2s;
   `,
@@ -140,7 +141,7 @@ const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder = 'Enter todo item
   const CheckIcon = checked ? CheckCircle2 : Circle;
 
   return (
-    <Flexbox align="center" className={styles.itemRow} gap={8} horizontal width="100%">
+    <Flexbox align="center" className={styles.itemRow} gap={4} horizontal width="100%">
       <SortableList.DragHandle className={cx(styles.dragHandle, 'drag-handle')} size="small" />
       <CheckIcon
         className={cx(styles.checkbox, checked && styles.checkboxChecked)}

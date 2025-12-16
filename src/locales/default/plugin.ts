@@ -39,7 +39,7 @@ export default {
     },
     'lobe-gtd': {
       apiName: {
-        addTodo: '添加待办',
+        addTodo: '创建待办事项',
         clearTodos: '清除待办',
         completeTodo: '完成待办',
         createPlan: '创建计划',

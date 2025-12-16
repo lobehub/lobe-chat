@@ -1,48 +1,63 @@
-import { createContext, useContext } from 'react';
-import { StoreApi, createStore, useStore } from 'zustand';
+import { debounce } from 'lodash-es';
 
-export interface TodoListItem {
-  checked: boolean;
-  id: string;
-  text: string;
-}
-
-interface TodoListState {
-  cursorPosition: number;
-  focusedId: string | null;
-  items: TodoListItem[];
-  newItemText: string;
-}
-
-interface TodoListActions {
-  addItem: () => void;
-  deleteItem: (id: string) => void;
-  focusNextItem: (currentId: string | null, cursorPos: number) => void;
-  focusPrevItem: (currentId: string | null, cursorPos: number) => void;
-  setFocusedId: (id: string | null) => void;
-  setNewItemText: (text: string) => void;
-  sortItems: (sortedItems: TodoListItem[]) => void;
-  toggleItem: (id: string) => void;
-  updateItem: (id: string, text: string) => void;
-}
-
-export type TodoListStore = TodoListState & TodoListActions;
+import { AUTO_SAVE_DELAY, AUTO_SAVE_MAX_WAIT, initialState } from './initialState';
+import type { StoreInternals, TodoListItem, TodoListStore } from './types';
+import { ADD_ITEM_ID } from './types';
 
 let idCounter = 0;
-const generateId = () => `todo-${Date.now()}-${idCounter++}`;
+export const generateId = () => `todo-${Date.now()}-${idCounter++}`;
 
-// Special ID for the "add new item" input
-export const ADD_ITEM_ID = '__add_item__';
-
-const initialState = {
-  // State
-  cursorPosition: 0,
-  focusedId: null,
-
-  newItemText: '',
+// Reset counter for testing
+export const resetIdCounter = () => {
+  idCounter = 0;
 };
-export const createTodoListStore = (defaultItems: string[] = []) =>
-  createStore<TodoListStore>((set, get) => ({
+
+type SetState = (
+  partial: Partial<TodoListStore> | ((state: TodoListStore) => Partial<TodoListStore>),
+) => void;
+type GetState = () => TodoListStore;
+
+export const createActions = (
+  set: SetState,
+  get: GetState,
+  internals: StoreInternals,
+  defaultItems: string[],
+): TodoListStore => {
+  // Create debounced save function
+  const performSave = async () => {
+    if (!internals.onSave) return;
+
+    const { items, isDirty } = get();
+    if (!isDirty) return;
+
+    set({ saveStatus: 'saving' });
+
+    try {
+      await internals.onSave(items);
+      set({ isDirty: false, saveStatus: 'saved' });
+
+      // Reset to idle after showing "saved" briefly
+      setTimeout(() => {
+        set((state) => (state.saveStatus === 'saved' ? { saveStatus: 'idle' } : {}));
+      }, 1500);
+    } catch {
+      set({ saveStatus: 'error' });
+    }
+  };
+
+  internals.debouncedSave = debounce(performSave, AUTO_SAVE_DELAY, {
+    leading: false,
+    maxWait: AUTO_SAVE_MAX_WAIT,
+    trailing: true,
+  });
+
+  // Helper to mark dirty and trigger debounced save
+  const markDirtyAndSave = () => {
+    set({ isDirty: true });
+    internals.debouncedSave?.();
+  };
+
+  return {
     ...initialState,
     items: defaultItems.map((text) => ({ checked: false, id: generateId(), text })),
 
@@ -55,6 +70,7 @@ export const createTodoListStore = (defaultItems: string[] = []) =>
         items: [...items, { checked: false, id: generateId(), text: newItemText.trim() }],
         newItemText: '',
       });
+      markDirtyAndSave();
     },
 
     deleteItem: (id: string) => {
@@ -62,6 +78,11 @@ export const createTodoListStore = (defaultItems: string[] = []) =>
       set({
         items: items.filter((item) => item.id !== id),
       });
+      markDirtyAndSave();
+    },
+
+    flushSave: () => {
+      internals.debouncedSave?.flush();
     },
 
     focusNextItem: (currentId: string | null, cursorPos: number) => {
@@ -106,6 +127,7 @@ export const createTodoListStore = (defaultItems: string[] = []) =>
 
     sortItems: (sortedItems: TodoListItem[]) => {
       set({ items: sortedItems });
+      markDirtyAndSave();
     },
 
     toggleItem: (id: string) => {
@@ -113,6 +135,7 @@ export const createTodoListStore = (defaultItems: string[] = []) =>
       set({
         items: items.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item)),
       });
+      markDirtyAndSave();
     },
 
     updateItem: (id: string, text: string) => {
@@ -120,17 +143,7 @@ export const createTodoListStore = (defaultItems: string[] = []) =>
       set({
         items: items.map((item) => (item.id === id ? { ...item, text } : item)),
       });
+      markDirtyAndSave();
     },
-  }));
-
-// Context for the store
-export const TodoListStoreContext = createContext<StoreApi<TodoListStore> | null>(null);
-
-// Hook to use the store
-export const useTodoListStore = <T>(selector: (state: TodoListStore) => T): T => {
-  const store = useContext(TodoListStoreContext);
-  if (!store) {
-    throw new Error('useTodoListStore must be used within TodoListStoreContext.Provider');
-  }
-  return useStore(store, selector);
+  };
 };
