@@ -8,15 +8,6 @@ import { useAgentMeta, useIsBuiltinAgent } from './useAgentMeta';
 
 vi.mock('zustand/traditional');
 
-// Mock @lobechat/const
-vi.mock('@lobechat/const', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@lobechat/const')>();
-  return {
-    ...actual,
-    DEFAULT_INBOX_AVATAR: 'lobe-inbox-avatar',
-  };
-});
-
 // Mock the ConversationStore
 vi.mock('../store', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../store')>();
@@ -62,10 +53,10 @@ describe('useAgentMeta', () => {
     expect(result.current.avatar).toBe('agent-avatar.png');
   });
 
-  it('should return Lobe AI avatar and title for builtin inbox agent', () => {
+  it('should return Lobe AI title for builtin inbox agent, preserving avatar from backend', () => {
     const mockInboxAgentId = 'inbox-agent-id';
     const mockMeta = {
-      avatar: 'original-inbox-avatar.png',
+      avatar: '/icons/icon-lobe.png', // Avatar from backend (merged from builtin-agents package)
       title: 'Original Inbox Title',
       description: 'Inbox description',
     };
@@ -91,17 +82,17 @@ describe('useAgentMeta', () => {
 
     const { result } = renderHook(() => useAgentMeta());
 
-    // Should override with Lobe AI branding
-    expect(result.current.avatar).toBe('lobe-inbox-avatar');
+    // Should override title with Lobe AI, but preserve avatar from backend
+    expect(result.current.avatar).toBe('/icons/icon-lobe.png');
     expect(result.current.title).toBe('Lobe AI');
     // Should preserve other properties
     expect(result.current.description).toBe('Inbox description');
   });
 
-  it('should return Lobe AI avatar and title for page agent (builtin)', () => {
+  it('should return Lobe AI title for page agent (builtin), preserving avatar from backend', () => {
     const mockPageAgentId = 'page-agent-id';
     const mockMeta = {
-      avatar: 'page-avatar.png',
+      avatar: '/icons/icon-lobe.png', // Avatar from backend (merged from builtin-agents package)
       title: 'Page Agent Title',
     };
 
@@ -124,7 +115,8 @@ describe('useAgentMeta', () => {
 
     const { result } = renderHook(() => useAgentMeta());
 
-    expect(result.current.avatar).toBe('lobe-inbox-avatar');
+    // Should override title with Lobe AI, but preserve avatar from backend
+    expect(result.current.avatar).toBe('/icons/icon-lobe.png');
     expect(result.current.title).toBe('Lobe AI');
   });
 

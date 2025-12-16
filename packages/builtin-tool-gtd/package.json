@@ -12,5 +12,10 @@
     "lucide-react": "*",
     "react": "*",
     "react-layout-kit": "*"
+  },
+  "peerDependencies": {
+    "@lobehub/ui": "*",
+    "antd": "*",
+    "antd-style": "*"
   }
 }

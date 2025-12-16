@@ -6,6 +6,13 @@ export default {
     output: '输出：',
     returnValue: '返回值：',
   },
+  'codeInterpreter-legacy': {
+    error: '执行错误',
+    executing: '执行中...',
+    files: '文件：',
+    output: '输出：',
+    returnValue: '返回值：',
+  },
   'dalle': {
     autoGenerate: '自动生成',
     downloading: 'DallE3 生成的图片链接有效期仅1小时，正在缓存图片到本地...',
@@ -13,6 +20,49 @@ export default {
     generating: '生成中...',
     images: '图片:',
     prompt: '提示词',
+  },
+  'lobe-gtd': {
+    actions: {
+      add: '添加',
+      clearCompleted: '清除已完成',
+      placeholder: '输入待办项目...',
+    },
+    addTodo: {
+      added: '已添加 {{count}} 个项目到待办清单',
+      added_one: '已添加 {{count}} 个项目到待办清单',
+      added_other: '已添加 {{count}} 个项目到待办清单',
+      total: '共 {{count}} 个项目',
+      total_one: '共 {{count}} 个项目',
+      total_other: '共 {{count}} 个项目',
+    },
+    clearTodos: {
+      cleared: '已清除 {{count}} 个项目',
+      clearedCompleted: '已清除 {{count}} 个已完成项目',
+      clearedCompleted_one: '已清除 {{count}} 个已完成项目',
+      clearedCompleted_other: '已清除 {{count}} 个已完成项目',
+      cleared_one: '已清除 {{count}} 个项目',
+      cleared_other: '已清除 {{count}} 个项目',
+      noItems: '无项目可清除',
+      remaining: '剩余 {{count}} 个项目',
+      remaining_one: '剩余 {{count}} 个项目',
+      remaining_other: '剩余 {{count}} 个项目',
+    },
+    completeTodo: {
+      completed: '已完成 {{count}} 个项目',
+      completed_one: '已完成 {{count}} 个项目',
+      completed_other: '已完成 {{count}} 个项目',
+    },
+    listTodos: {
+      empty: '待办清单为空',
+      items: '{{count}} 个项目',
+      items_one: '{{count}} 个项目',
+      items_other: '{{count}} 个项目',
+      title: '待办清单',
+    },
+    status: {
+      done: '{{count}} 已完成',
+      pending: '{{count}} 待处理',
+    },
   },
   'lobe-knowledge-base': {
     readKnowledge: {

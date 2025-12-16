@@ -145,6 +145,48 @@ describe('AgentService', () => {
       expect(result?.model).toBe('claude-3');
       expect(result?.provider).toBe('anthropic');
     });
+
+    it('should merge avatar from builtin-agents package definition', async () => {
+      const mockAgent = {
+        id: 'agent-1',
+        slug: 'inbox',
+        model: 'gpt-4',
+      };
+
+      const mockAgentModel = {
+        getBuiltinAgent: vi.fn().mockResolvedValue(mockAgent),
+      };
+
+      (AgentModel as any).mockImplementation(() => mockAgentModel);
+      (parseAgentConfig as any).mockReturnValue({});
+
+      const newService = new AgentService(mockDb, mockUserId);
+      const result = await newService.getBuiltinAgent('inbox');
+
+      // Avatar should be merged from BUILTIN_AGENTS definition
+      expect((result as any)?.avatar).toBe('/icons/icon-lobe.png');
+    });
+
+    it('should not include avatar for non-builtin agents', async () => {
+      const mockAgent = {
+        id: 'agent-1',
+        slug: 'custom-agent',
+        model: 'gpt-4',
+      };
+
+      const mockAgentModel = {
+        getBuiltinAgent: vi.fn().mockResolvedValue(mockAgent),
+      };
+
+      (AgentModel as any).mockImplementation(() => mockAgentModel);
+      (parseAgentConfig as any).mockReturnValue({});
+
+      const newService = new AgentService(mockDb, mockUserId);
+      const result = await newService.getBuiltinAgent('custom-agent');
+
+      // Avatar should not be present for non-builtin agents
+      expect((result as any)?.avatar).toBeUndefined();
+    });
   });
 
   describe('getAgentConfigById', () => {

@@ -293,6 +293,7 @@ export const GTDManifest: BuiltinToolManifest = {
       description:
         'Add items to the quick todo list. This is a lightweight, session-scoped list for quick capture of action items.',
       name: GTDApiName.addTodo,
+      humanIntervention: 'always',
       parameters: {
         properties: {
           items: {
@@ -323,6 +324,7 @@ export const GTDManifest: BuiltinToolManifest = {
     {
       description: 'Clear todo items. Can clear only completed items or all items.',
       name: GTDApiName.clearTodos,
+      humanIntervention: 'always',
       parameters: {
         properties: {
           mode: {

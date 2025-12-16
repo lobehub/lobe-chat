@@ -37,6 +37,17 @@ export default {
       },
       title: '协调团队',
     },
+    'lobe-gtd': {
+      apiName: {
+        addTodo: '添加待办',
+        clearTodos: '清除待办',
+        completeTodo: '完成待办',
+        createPlan: '创建计划',
+        listTodos: '查看待办',
+        updatePlan: '更新计划',
+      },
+      title: 'GTD 工具',
+    },
     'lobe-knowledge-base': {
       apiName: {
         readKnowledge: '读取知识库内容',

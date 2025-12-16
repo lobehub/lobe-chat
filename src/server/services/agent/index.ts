@@ -1,3 +1,4 @@
+import { BUILTIN_AGENTS, BuiltinAgentSlug } from '@lobechat/builtin-agents';
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
 import { LobeChatDatabase } from '@lobechat/database';
 import { AgentItem, LobeAgentConfig } from '@lobechat/types';
@@ -41,13 +42,23 @@ export class AgentService {
    * 1. DEFAULT_AGENT_CONFIG (hardcoded defaults)
    * 2. Server's globalDefaultAgentConfig (from environment variable DEFAULT_AGENT_CONFIG)
    * 3. The actual agent config from database
+   * 4. Avatar from builtin-agents package definition (if available)
    *
    * This ensures the frontend always receives a complete config with model/provider.
    */
   async getBuiltinAgent(slug: string) {
     const agent = await this.agentModel.getBuiltinAgent(slug);
 
-    return this.mergeDefaultConfig(agent);
+    const mergedConfig = this.mergeDefaultConfig(agent);
+    if (!mergedConfig) return null;
+
+    // Merge avatar from builtin-agents package definition
+    const builtinAgent = BUILTIN_AGENTS[slug as BuiltinAgentSlug];
+    if (builtinAgent?.avatar) {
+      return { ...mergedConfig, avatar: builtinAgent.avatar };
+    }
+
+    return mergedConfig;
   }
 
   /**

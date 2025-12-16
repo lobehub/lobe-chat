@@ -1,19 +1,19 @@
 import { GTDApiName } from '../../types';
-import AddTodo from './AddTodo';
-import ClearTodos from './ClearTodos';
-import CompleteTodo from './CompleteTodo';
-import ListTodos from './ListTodos';
+import TodoListRender from './TodoList';
 
 /**
  * GTD Tool Render Components Registry
  *
- * MVP version includes Todo renders only.
- * Plan renders will be added when Plan functionality is fully implemented.
+ * All todo operations use the same TodoList render component
+ * which displays the current state of the todo list.
  */
 export const GTDRenders = {
-  // Todo operations
-  [GTDApiName.addTodo]: AddTodo,
-  [GTDApiName.clearTodos]: ClearTodos,
-  [GTDApiName.completeTodo]: CompleteTodo,
-  [GTDApiName.listTodos]: ListTodos,
+  // All todo operations render the same TodoList UI
+  [GTDApiName.addTodo]: TodoListRender,
+  [GTDApiName.clearTodos]: TodoListRender,
+  [GTDApiName.completeTodo]: TodoListRender,
+  [GTDApiName.listTodos]: TodoListRender,
 };
+
+export type { TodoListCallbacks, TodoListRenderState } from './TodoList';
+export { default as TodoListRender, TodoListUI } from './TodoList';
