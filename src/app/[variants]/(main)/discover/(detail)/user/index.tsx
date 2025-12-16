@@ -1,9 +1,8 @@
 'use client';
 
 import { memo, useMemo } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
 import { useDiscoverStore } from '@/store/discover';
 
@@ -19,8 +18,8 @@ interface UserDetailPageProps {
 }
 
 const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
-  const { slug } = useLoaderData() as SlugParams;
-  const username = decodeURIComponent(slug);
+  const params = useParams<{ slug: string }>();
+  const username = decodeURIComponent(params.slug ?? '');
 
   const { getCurrentUserInfo, isAuthenticated, openProfileSetup } = useMarketAuth();
 
