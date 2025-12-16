@@ -1,7 +1,7 @@
 import { Icon, SearchResultCards, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronRight, Globe } from 'lucide-react';
+import { AnimatePresence, m as motion } from 'motion/react';
 import Image from 'next/image';
 import { rgba } from 'polished';
 import { memo, useState } from 'react';

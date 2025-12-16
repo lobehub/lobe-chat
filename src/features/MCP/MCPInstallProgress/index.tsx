@@ -2,7 +2,7 @@ import { Text } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { motion } from 'framer-motion';
+import { m as motion } from 'motion/react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
