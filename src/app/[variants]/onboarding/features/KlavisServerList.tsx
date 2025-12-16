@@ -10,8 +10,6 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
 import {
   KlavisServer,
@@ -19,7 +17,7 @@ import {
   klavisStoreSelectors,
 } from '@/store/tool/slices/klavisStore';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
+import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 const POLL_INTERVAL_MS = 1000;
 const POLL_TIMEOUT_MS = 15_000;
@@ -143,9 +141,9 @@ const KlavisServerItemInline = memo<KlavisServerItemInlineProps>(
     );
 
     const pluginId = server ? server.identifier : '';
-    const [checked, togglePlugin] = useAgentStore((s) => [
-      agentSelectors.currentAgentPlugins(s).includes(pluginId),
-      s.togglePlugin,
+    const [checked, toggleDefaultPlugin] = useUserStore((s) => [
+      (settingsSelectors.currentSettings(s).defaultAgent?.config?.plugins || []).includes(pluginId),
+      s.toggleDefaultPlugin,
     ]);
 
     const handleConnect = async () => {
@@ -161,7 +159,7 @@ const KlavisServerItemInline = memo<KlavisServerItemInlineProps>(
 
         if (newServer) {
           const newPluginId = newServer.identifier;
-          await togglePlugin(newPluginId);
+          await toggleDefaultPlugin(newPluginId);
 
           if (newServer.isAuthenticated) {
             await refreshKlavisServerTools(newServer.identifier);
@@ -179,7 +177,7 @@ const KlavisServerItemInline = memo<KlavisServerItemInlineProps>(
     const handleToggle = async () => {
       if (!server) return;
       setIsToggling(true);
-      await togglePlugin(pluginId);
+      await toggleDefaultPlugin(pluginId);
       setIsToggling(false);
     };
 
@@ -187,7 +185,7 @@ const KlavisServerItemInline = memo<KlavisServerItemInlineProps>(
       if (!server) return;
       setIsToggling(true);
       if (checked) {
-        await togglePlugin(pluginId);
+        await toggleDefaultPlugin(pluginId);
       }
       await removeKlavisServer(server.identifier);
       setIsToggling(false);

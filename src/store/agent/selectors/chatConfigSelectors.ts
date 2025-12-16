@@ -11,7 +11,7 @@ import { agentSelectors } from './selectors';
 const getAgentChatConfigById =
   (agentId: string) =>
   (s: AgentStoreState): LobeAgentChatConfig =>
-    agentSelectors.getAgentConfigById(agentId)(s).chatConfig || {};
+    agentSelectors.getAgentConfigById(agentId)(s)?.chatConfig || {};
 
 const getEnableHistoryCountById = (agentId: string) => (s: AgentStoreState) => {
   const config = agentSelectors.getAgentConfigById(agentId)(s);
@@ -20,13 +20,13 @@ const getEnableHistoryCountById = (agentId: string) => (s: AgentStoreState) => {
   // 如果开启了上下文缓存，且当前模型类型匹配，则不开启历史记录
   const enableContextCaching = !chatConfig.disableContextCaching;
 
-  if (enableContextCaching && isContextCachingModel(config.model)) return false;
+  if (enableContextCaching && config?.model && isContextCachingModel(config.model)) return false;
 
   // 当开启搜索时，针对 claude 3.7 sonnet 模型不开启历史记录
   const searchMode = chatConfig.searchMode || 'off';
   const enableSearch = searchMode !== 'off';
 
-  if (enableSearch && isThinkingWithToolClaudeModel(config.model)) return false;
+  if (enableSearch && config?.model && isThinkingWithToolClaudeModel(config.model)) return false;
 
   return chatConfig.enableHistoryCount;
 };
