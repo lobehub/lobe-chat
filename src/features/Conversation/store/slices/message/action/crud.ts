@@ -503,7 +503,6 @@ export const messageCRUDSlice: StateCreator<
 
     // Get tool message from dbMessages (not displayMessages, since tool messages are nested in assistantGroup)
     const toolMessage = dataSelectors.getDbMessageById(id)(get());
-    console.log('updatePluginArguments', toolMessage);
     if (!toolMessage || !toolMessage.tool_call_id) return;
 
     const prevArguments = toolMessage.plugin?.arguments;

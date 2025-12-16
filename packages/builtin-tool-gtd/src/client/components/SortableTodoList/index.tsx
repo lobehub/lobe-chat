@@ -1,7 +1,7 @@
 'use client';
 
 import { useUnmount } from 'ahooks';
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 
 import type { TodoItem } from '../../../types';
 import TodoList from './TodoList';
@@ -23,12 +23,31 @@ export interface SortableTodoListProps {
    * Placeholder text for inputs
    */
   placeholder?: string;
+  /**
+   * Register a callback to flush pending saves before approval
+   * Used by intervention components to ensure all edits are saved before approve action
+   * @param id - Unique identifier for the callback
+   * @param callback - The callback to execute
+   * @returns Cleanup function to unregister
+   */
+  registerBeforeApprove?: (id: string, callback: () => void | Promise<void>) => () => void;
 }
 
 const SortableTodoList = memo<SortableTodoListProps>(
-  ({ defaultItems = [], placeholder = 'Enter todo item...', onSave }) => {
+  ({ defaultItems = [], placeholder = 'Enter todo item...', onSave, registerBeforeApprove }) => {
     // Create store instance once with onSave callback
     const store = useMemo(() => createTodoListStore(defaultItems, onSave), []);
+
+    // Register flushSave as beforeApprove callback
+    useEffect(() => {
+      if (registerBeforeApprove) {
+        const unregister = registerBeforeApprove('sortable-todo-list', () =>
+          store.getState().flushSave(),
+        );
+        // Cleanup: unregister on unmount
+        return unregister;
+      }
+    }, [registerBeforeApprove, store]);
 
     // Flush pending saves on unmount to ensure no data loss
     useUnmount(() => {

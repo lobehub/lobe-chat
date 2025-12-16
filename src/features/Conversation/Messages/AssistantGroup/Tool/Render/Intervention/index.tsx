@@ -1,5 +1,5 @@
 import { safeParseJSON } from '@lobechat/utils';
-import { Suspense, memo, useCallback, useState } from 'react';
+import { Suspense, memo, useCallback, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
@@ -28,6 +28,28 @@ const Intervention = memo<InterventionProps>(
     const approvalMode = useUserStore(toolInterventionSelectors.approvalMode);
     const [isEditing, setIsEditing] = useState(false);
     const updatePluginArguments = useConversationStore((s) => s.updatePluginArguments);
+
+    // Store beforeApprove callbacks from intervention components (support multiple registrations)
+    // Use Map with id as key for reliable cleanup
+    const beforeApproveCallbacksRef = useRef<Map<string, () => void | Promise<void>>>(new Map());
+
+    // Register a callback to be called before approval
+    const registerBeforeApprove = useCallback(
+      (callbackId: string, callback: () => void | Promise<void>) => {
+        beforeApproveCallbacksRef.current.set(callbackId, callback);
+        // Return cleanup function to unregister
+        return () => {
+          beforeApproveCallbacksRef.current.delete(callbackId);
+        };
+      },
+      [],
+    );
+
+    // Handler to be called before approve action - calls all registered callbacks
+    const handleBeforeApprove = useCallback(async () => {
+      const callbacks = Array.from(beforeApproveCallbacksRef.current.values());
+      await Promise.all(callbacks.map((cb) => cb()));
+    }, []);
 
     const handleCancel = useCallback(() => {
       setIsEditing(false);
@@ -82,6 +104,7 @@ const Intervention = memo<InterventionProps>(
             identifier={identifier}
             messageId={id}
             onArgsChange={handleArgsChange}
+            registerBeforeApprove={registerBeforeApprove}
           />
           <Flexbox horizontal justify={'space-between'}>
             <ModeSelector />
@@ -90,6 +113,7 @@ const Intervention = memo<InterventionProps>(
               approvalMode={approvalMode}
               identifier={identifier}
               messageId={id}
+              onBeforeApprove={handleBeforeApprove}
               toolCallId={toolCallId}
             />
           </Flexbox>

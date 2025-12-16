@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
-  ({ args, onArgsChange }) => {
+  ({ args, onArgsChange, registerBeforeApprove }) => {
     const { styles } = useStyles();
 
     // Handle both formats:
@@ -30,8 +30,6 @@ const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
 
     const handleSave = useCallback(
       async (items: TodoItem[]) => {
-        // Save as TodoItem[] in "items" field
-        console.log('handleSave', items);
         await onArgsChange?.({ items });
       },
       [onArgsChange],
@@ -43,6 +41,7 @@ const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
           defaultItems={defaultItems}
           onSave={handleSave}
           placeholder="Add a todo item..."
+          registerBeforeApprove={registerBeforeApprove}
         />
       </Flexbox>
     );

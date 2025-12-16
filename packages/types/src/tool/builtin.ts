@@ -169,8 +169,11 @@ export interface BuiltinInterventionProps<Arguments = any> {
    * Register a callback to be called before approval
    * Used by intervention components that need to flush pending saves (e.g., debounced saves)
    * before the approve action proceeds
+   * @param id - Unique identifier for the callback (for reliable cleanup)
+   * @param callback - The callback to execute before approval
+   * @returns Cleanup function to unregister the callback
    */
-  registerBeforeApprove?: (callback: () => void | Promise<void>) => void;
+  registerBeforeApprove?: (id: string, callback: () => void | Promise<void>) => () => void;
 }
 
 export type BuiltinIntervention = (props: BuiltinInterventionProps) => ReactNode;

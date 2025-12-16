@@ -16,11 +16,16 @@ interface ApprovalActionsProps {
   approvalMode: ApprovalMode;
   identifier: string;
   messageId: string;
+  /**
+   * Callback to be called before approve action
+   * Used to flush pending saves (e.g., debounced saves) from intervention components
+   */
+  onBeforeApprove?: () => void | Promise<void>;
   toolCallId: string;
 }
 
 const ApprovalActions = memo<ApprovalActionsProps>(
-  ({ approvalMode, messageId, identifier, apiName }) => {
+  ({ approvalMode, messageId, identifier, apiName, onBeforeApprove }) => {
     const { t } = useTranslation(['chat', 'common']);
     const [rejectReason, setRejectReason] = useState('');
     const [rejectPopoverOpen, setRejectPopoverOpen] = useState(false);
@@ -36,6 +41,11 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     const handleApprove = async (remember?: boolean) => {
       setApproveLoading(true);
       try {
+        // 0. Flush pending saves from intervention components (e.g., debounced saves)
+        if (onBeforeApprove) {
+          await onBeforeApprove();
+        }
+
         // 1. Update intervention status
         await approveToolCall(messageId, assistantGroupId);
 
