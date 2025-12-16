@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import {
   boolean,
+  index,
   integer,
   jsonb,
   pgTable,
@@ -45,7 +46,10 @@ export const chatGroups = pgTable(
 
     ...timestamps,
   },
-  (t) => [uniqueIndex('chat_groups_client_id_user_id_unique').on(t.clientId, t.userId)],
+  (t) => [
+    uniqueIndex('chat_groups_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('chat_groups_group_id_idx').on(t.groupId),
+  ],
 );
 
 export const insertChatGroupSchema = createInsertSchema(chatGroups);

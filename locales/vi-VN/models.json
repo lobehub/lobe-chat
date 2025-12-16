@@ -1229,6 +1229,9 @@
   "deepseek_r1_distill_qwen_32b": {
     "description": "DeepSeek-R1-Distill-Qwen-32B là mô hình được phát triển từ Qwen2.5-32B thông qua quá trình tinh chế kiến thức. Mô hình này được tinh chỉnh bằng 800.000 mẫu được chọn từ DeepSeek-R1, thể hiện hiệu suất xuất sắc trong nhiều lĩnh vực như toán học, lập trình và suy luận."
   },
+  "devstral-2:123b": {
+    "description": "Devstral 2 123B là mô hình xuất sắc trong việc sử dụng công cụ để khám phá kho mã, chỉnh sửa nhiều tệp và hỗ trợ các tác vụ kỹ thuật phần mềm."
+  },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite là mô hình phiên bản nhẹ thế hệ mới, tốc độ phản hồi cực nhanh, hiệu quả và độ trễ đạt tiêu chuẩn hàng đầu thế giới."
   },
@@ -1936,6 +1939,15 @@
   },
   "gpt-5.1-codex-mini": {
     "description": "GPT-5.1 Codex mini: Biến thể Codex nhỏ gọn hơn và tiết kiệm chi phí hơn, được tối ưu hóa cho các tác vụ lập trình mang tính agent."
+  },
+  "gpt-5.2": {
+    "description": "GPT-5.2 — mô hình hàng đầu dành cho lập trình và quy trình làm việc agentic, với khả năng suy luận mạnh mẽ và xử lý ngữ cảnh dài."
+  },
+  "gpt-5.2-chat-latest": {
+    "description": "GPT-5.2 Chat: Biến thể GPT-5.2 được ChatGPT sử dụng (chat-latest), mang đến trải nghiệm hội thoại mới nhất."
+  },
+  "gpt-5.2-pro": {
+    "description": "GPT-5.2 pro: Phiên bản GPT-5.2 thông minh và chính xác hơn (chỉ dùng qua Responses API), phù hợp với các câu hỏi phức tạp và suy luận nhiều vòng dài hơn."
   },
   "gpt-audio": {
     "description": "GPT Audio là mô hình trò chuyện chung hỗ trợ đầu vào và đầu ra âm thanh, có thể sử dụng âm thanh I/O trong API Chat Completions."

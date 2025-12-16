@@ -56,13 +56,17 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
-    after(async () => {
-      try {
-        await ctx.userModel.updateUser({ lastActiveAt: new Date() });
-      } catch (err) {
-        console.error('update lastActiveAt failed, error:', err);
-      }
-    });
+    try {
+      after(async () => {
+        try {
+          await ctx.userModel.updateUser({ lastActiveAt: new Date() });
+        } catch (err) {
+          console.error('update lastActiveAt failed, error:', err);
+        }
+      });
+    } catch {
+      // `after` may fail outside request scope (e.g., in tests), ignore silently
+    }
 
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 

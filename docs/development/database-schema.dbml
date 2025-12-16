@@ -125,6 +125,10 @@ table api_keys {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    user_id [name: 'api_keys_user_id_idx']
+  }
 }
 
 table async_tasks {
@@ -137,6 +141,10 @@ table async_tasks {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    user_id [name: 'async_tasks_user_id_idx']
+  }
 }
 
 table accounts {
@@ -215,6 +223,7 @@ table chat_groups {
 
   indexes {
     (client_id, user_id) [name: 'chat_groups_client_id_user_id_unique', unique]
+    group_id [name: 'chat_groups_group_id_idx']
   }
 }
 
@@ -303,6 +312,10 @@ table global_files {
   creator text [not null]
   created_at "timestamp with time zone" [not null, default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    creator [name: 'global_files_creator_idx']
+  }
 }
 
 table knowledge_base_files {
@@ -313,6 +326,7 @@ table knowledge_base_files {
 
   indexes {
     (knowledge_base_id, file_id) [pk]
+    knowledge_base_id [name: 'knowledge_base_files_kb_id_idx']
   }
 }
 
@@ -332,6 +346,7 @@ table knowledge_bases {
 
   indexes {
     (client_id, user_id) [name: 'knowledge_bases_client_id_user_id_unique', unique]
+    user_id [name: 'knowledge_bases_user_id_idx']
   }
 }
 
@@ -349,6 +364,11 @@ table generation_batches {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    user_id [name: 'generation_batches_user_id_idx']
+    generation_topic_id [name: 'generation_batches_topic_id_idx']
+  }
 }
 
 table generation_topics {
@@ -359,6 +379,10 @@ table generation_topics {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    user_id [name: 'generation_topics_user_id_idx']
+  }
 }
 
 table generations {
@@ -372,6 +396,11 @@ table generations {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    user_id [name: 'generations_user_id_idx']
+    generation_batch_id [name: 'generations_batch_id_idx']
+  }
 }
 
 table message_chunks {
@@ -513,6 +542,7 @@ table messages {
     session_id [name: 'messages_session_id_idx']
     thread_id [name: 'messages_thread_id_idx']
     agent_id [name: 'messages_agent_id_idx']
+    group_id [name: 'messages_group_id_idx']
   }
 }
 
@@ -731,6 +761,8 @@ table document_chunks {
 
   indexes {
     (document_id, chunk_id) [pk]
+    document_id [name: 'document_chunks_document_id_idx']
+    chunk_id [name: 'document_chunks_chunk_id_idx']
   }
 }
 
@@ -745,6 +777,7 @@ table embeddings {
   indexes {
     (client_id, user_id) [name: 'embeddings_client_id_user_id_unique', unique]
     chunk_id [name: 'embeddings_chunk_id_idx']
+    user_id [name: 'embeddings_user_id_idx']
   }
 }
 
