@@ -4,10 +4,8 @@ import { BuiltinInterventionProps } from '@lobechat/types';
 import { Radio } from 'antd';
 import { createStyles } from 'antd-style';
 import { Trash2 } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import { useConversationStore } from '@/features/Conversation/store';
 
 import type { ClearTodosParams } from '../../types';
 
@@ -37,44 +35,33 @@ const useStyles = createStyles(({ css, token }) => ({
  * ClearTodos Intervention component
  * Allows users to choose between clearing completed items or all items
  */
-const ClearTodosIntervention = memo<BuiltinInterventionProps<ClearTodosParams>>(
-  ({ args, messageId }) => {
-    const { styles } = useStyles();
-    const updatePluginArguments = useConversationStore((s) => s.updatePluginArguments);
-    const mode = args?.mode || 'completed';
+const ClearTodosIntervention = memo<BuiltinInterventionProps<ClearTodosParams>>(({ args }) => {
+  const { styles } = useStyles();
+  const defaultMode = args?.mode || 'completed';
 
-    const handleModeChange = useCallback(
-      (newMode: 'completed' | 'all') => {
-        const newArgs: ClearTodosParams = { mode: newMode };
-        updatePluginArguments(messageId, newArgs, true);
-      },
-      [messageId, updatePluginArguments],
-    );
-
-    return (
-      <Flexbox gap={12}>
-        <Flexbox align="center" className={styles.header} gap={8} horizontal>
-          <Trash2 size={16} />
-          <span style={{ fontSize: 14, fontWeight: 500 }}>Clear Todo Items</span>
-        </Flexbox>
-
-        <Flexbox className={styles.container} gap={8}>
-          <span className={styles.label}>Choose what to clear:</span>
-          <Radio.Group onChange={(e) => handleModeChange(e.target.value)} value={mode}>
-            <Flexbox gap={8}>
-              <Radio value="completed">
-                <span className={styles.normalText}>Clear completed items only</span>
-              </Radio>
-              <Radio value="all">
-                <span className={styles.dangerText}>Clear all items (including pending)</span>
-              </Radio>
-            </Flexbox>
-          </Radio.Group>
-        </Flexbox>
+  return (
+    <Flexbox gap={12}>
+      <Flexbox align="center" className={styles.header} gap={8} horizontal>
+        <Trash2 size={16} />
+        <span style={{ fontSize: 14, fontWeight: 500 }}>Clear Todo Items</span>
       </Flexbox>
-    );
-  },
-);
+
+      <Flexbox className={styles.container} gap={8}>
+        <span className={styles.label}>Choose what to clear:</span>
+        <Radio.Group defaultValue={defaultMode}>
+          <Flexbox gap={8}>
+            <Radio value="completed">
+              <span className={styles.normalText}>Clear completed items only</span>
+            </Radio>
+            <Radio value="all">
+              <span className={styles.dangerText}>Clear all items (including pending)</span>
+            </Radio>
+          </Flexbox>
+        </Radio.Group>
+      </Flexbox>
+    </Flexbox>
+  );
+});
 
 ClearTodosIntervention.displayName = 'ClearTodosIntervention';
 
