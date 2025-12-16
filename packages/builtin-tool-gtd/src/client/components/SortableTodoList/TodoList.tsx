@@ -12,10 +12,6 @@ import { TodoListItem, useTodoListStore } from './store';
 const useStyles = createStyles(({ css }) => ({
   container: css`
     width: 100%;
-
-    &:hover .add-row {
-      opacity: 1;
-    }
   `,
 }));
 
@@ -52,10 +48,20 @@ const TodoList = memo<TodoListProps>(({ placeholder }) => {
     );
   }
 
+  // Use items length as key to force remount when items change structure
+  // This fixes DragOverlay position issues after drag operations
+  const listKey = items.map((i) => i.id).join('-');
+
   return (
-    <Flexbox className={styles.container} gap={0}>
-      <SortableList items={items} onChange={handleSortEnd} renderItem={renderItem} />
-      <AddItemRow className="add-row" placeholder={placeholder} />
+    <Flexbox gap={0} width={'100%'}>
+      <SortableList
+        items={items}
+        key={listKey}
+        onChange={handleSortEnd}
+        renderItem={renderItem}
+        style={{ marginBottom: 0 }}
+      />
+      <AddItemRow placeholder={placeholder} />
     </Flexbox>
   );
 });

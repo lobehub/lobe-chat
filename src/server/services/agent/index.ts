@@ -52,7 +52,7 @@ export class AgentService {
   async getBuiltinAgent(slug: string) {
     const agent = await this.agentModel.getBuiltinAgent(slug);
 
-    const mergedConfig = this.mergeDefaultConfig(agent);
+    const mergedConfig = await this.mergeDefaultConfig(agent);
     if (!mergedConfig) return null;
 
     // Merge avatar from builtin-agents package definition
@@ -76,7 +76,7 @@ export class AgentService {
   async getAgentConfigById(agentId: string) {
     const agent = await this.agentModel.getAgentConfigById(agentId);
 
-    return this.mergeDefaultConfig(agent);
+    return await this.mergeDefaultConfig(agent);
   }
 
   /**

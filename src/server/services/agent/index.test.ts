@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AgentModel } from '@/database/models/agent';
 import { SessionModel } from '@/database/models/session';
+import { UserModel } from '@/database/models/user';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 
 import { AgentService } from './index';
@@ -29,13 +30,24 @@ vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(),
 }));
 
+vi.mock('@/database/models/user', () => ({
+  UserModel: vi.fn(),
+}));
+
 describe('AgentService', () => {
   let service: AgentService;
   const mockDb = {} as any;
   const mockUserId = 'test-user-id';
 
+  // Default mock for UserModel that returns empty settings
+  const mockUserModel = {
+    getUserSettings: vi.fn().mockResolvedValue({}),
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
+    // Setup default UserModel mock
+    (UserModel as any).mockImplementation(() => mockUserModel);
     service = new AgentService(mockDb, mockUserId);
   });
 
