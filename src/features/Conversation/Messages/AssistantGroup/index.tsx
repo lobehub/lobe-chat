@@ -14,6 +14,7 @@ import { useAgentMeta } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import FileListViewer from '../User/components/FileListViewer';
 import Usage from '../components/Extras/Usage';
+import MessageBranch from '../components/MessageBranch';
 import { GroupActionsBar } from './Actions';
 import EditState from './components/EditState';
 import Group from './components/Group';
@@ -32,7 +33,7 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
     (s) => s.actionsBar?.assistantGroup ?? s.actionsBar?.assistant,
   );
 
-  const { agentId, usage, createdAt, children, performance, model, provider } = item;
+  const { agentId, usage, createdAt, children, performance, model, provider, branch } = item;
   const avatar = useAgentMeta(agentId);
 
   // Collect fileList from all children blocks
@@ -74,13 +75,22 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
     <ChatItem
       actions={
         !disableEditing && (
-          <GroupActionsBar
-            actionsConfig={actionsConfig}
-            contentBlock={lastAssistantMsg}
-            contentId={contentId}
-            data={item}
-            id={id}
-          />
+          <>
+            {branch && (
+              <MessageBranch
+                activeBranchIndex={branch.activeBranchIndex}
+                count={branch.count}
+                messageId={id}
+              />
+            )}
+            <GroupActionsBar
+              actionsConfig={actionsConfig}
+              contentBlock={lastAssistantMsg}
+              contentId={contentId}
+              data={item}
+              id={id}
+            />
+          </>
         )
       }
       avatar={avatar}
