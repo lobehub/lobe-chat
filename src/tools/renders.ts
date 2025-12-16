@@ -1,6 +1,8 @@
 // agent-builder
 import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
 import { AgentBuilderRenders } from '@lobechat/builtin-tool-agent-builder/client';
+// gtd
+import { GTDManifest, GTDRenders } from '@lobechat/builtin-tool-gtd/client';
 import { BuiltinRender } from '@lobechat/types';
 
 // code-interpreter
@@ -22,10 +24,11 @@ import { WebBrowsingRenders } from './web-browsing/Render';
  */
 const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
   [AgentBuilderManifest.identifier]: AgentBuilderRenders as Record<string, BuiltinRender>,
+  [CodeInterpreterManifest.identifier]: CodeInterpreterRenders as Record<string, BuiltinRender>,
+  [GTDManifest.identifier]: GTDRenders as Record<string, BuiltinRender>,
+  [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,
   [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,
   [WebBrowsingManifest.identifier]: WebBrowsingRenders as Record<string, BuiltinRender>,
-  [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,
-  [CodeInterpreterManifest.identifier]: CodeInterpreterRenders as Record<string, BuiltinRender>,
 };
 
 /**

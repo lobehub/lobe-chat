@@ -1,6 +1,7 @@
 import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
 import { GTDManifest } from '@lobechat/builtin-tool-gtd';
+import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
@@ -9,12 +10,10 @@ import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { LocalSystemManifest } from './local-system';
-import { MemoryManifest } from './memory';
 import { PageAgentManifest } from './page-agent';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [
-  // TODO: Migrate to the extended plugin system to configure different context engineering combinations.
   {
     identifier: ArtifactsManifest.identifier,
     manifest: ArtifactsManifest,

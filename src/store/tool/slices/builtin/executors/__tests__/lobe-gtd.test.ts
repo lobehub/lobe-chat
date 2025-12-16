@@ -20,10 +20,10 @@ describe('GTDExecutor', () => {
       expect(result.content).toContain('Added 2 items');
       expect(result.content).toContain('Buy milk');
       expect(result.content).toContain('Call mom');
-      expect(result.state?.todos).toHaveLength(2);
-      expect(result.state?.todos[0].text).toBe('Buy milk');
-      expect(result.state?.todos[0].done).toBe(false);
-      expect(result.state?.todos[1].text).toBe('Call mom');
+      expect(result.state?.todos.items).toHaveLength(2);
+      expect(result.state?.todos.items[0].text).toBe('Buy milk');
+      expect(result.state?.todos.items[0].done).toBe(false);
+      expect(result.state?.todos.items[1].text).toBe('Call mom');
     });
 
     it('should append items to existing todo list', async () => {
@@ -34,9 +34,9 @@ describe('GTDExecutor', () => {
       const result = await gtd.addTodo({ items: ['New task'] }, ctx);
 
       expect(result.success).toBe(true);
-      expect(result.state?.todos).toHaveLength(2);
-      expect(result.state?.todos[0].text).toBe('Existing task');
-      expect(result.state?.todos[1].text).toBe('New task');
+      expect(result.state?.todos.items).toHaveLength(2);
+      expect(result.state?.todos.items[0].text).toBe('Existing task');
+      expect(result.state?.todos.items[1].text).toBe('New task');
     });
 
     it('should return error when no items provided', async () => {
@@ -73,9 +73,9 @@ describe('GTDExecutor', () => {
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('Completed 2 items');
-      expect(result.state?.todos[0].done).toBe(true);
-      expect(result.state?.todos[1].done).toBe(false);
-      expect(result.state?.todos[2].done).toBe(true);
+      expect(result.state?.todos.items[0].done).toBe(true);
+      expect(result.state?.todos.items[1].done).toBe(false);
+      expect(result.state?.todos.items[2].done).toBe(true);
     });
 
     it('should return error when no indices provided', async () => {
@@ -120,8 +120,8 @@ describe('GTDExecutor', () => {
       expect(result.success).toBe(true);
       expect(result.content).toContain('Completed 1 item');
       expect(result.content).toContain('Ignored invalid indices');
-      expect(result.state?.todos[0].done).toBe(true);
-      expect(result.state?.todos[1].done).toBe(false);
+      expect(result.state?.todos.items[0].done).toBe(true);
+      expect(result.state?.todos.items[1].done).toBe(false);
     });
 
     it('should handle single item completion with correct grammar', async () => {
@@ -150,7 +150,7 @@ describe('GTDExecutor', () => {
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('Cleared all 2 items');
-      expect(result.state?.todos).toHaveLength(0);
+      expect(result.state?.todos.items).toHaveLength(0);
     });
 
     it('should clear only completed items when mode is "completed"', async () => {
@@ -167,8 +167,8 @@ describe('GTDExecutor', () => {
       expect(result.success).toBe(true);
       expect(result.content).toContain('Cleared 2 completed items');
       expect(result.content).toContain('1 item remaining');
-      expect(result.state?.todos).toHaveLength(1);
-      expect(result.state?.todos[0].text).toBe('Task 1');
+      expect(result.state?.todos.items).toHaveLength(1);
+      expect(result.state?.todos.items[0].text).toBe('Task 1');
     });
 
     it('should handle empty todo list', async () => {
@@ -189,7 +189,7 @@ describe('GTDExecutor', () => {
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('No completed items to clear');
-      expect(result.state?.todos).toHaveLength(1);
+      expect(result.state?.todos.items).toHaveLength(1);
     });
   });
 

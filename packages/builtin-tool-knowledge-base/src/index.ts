@@ -1,12 +1,11 @@
-// Re-export from the package for backward compatibility
+export { KnowledgeBaseManifest } from './manifest';
+export { systemPrompt } from './systemRole';
 export {
   type FileContentDetail,
   KnowledgeBaseApiName,
   KnowledgeBaseIdentifier,
-  KnowledgeBaseManifest,
   type ReadKnowledgeArgs,
   type ReadKnowledgeState,
   type SearchKnowledgeBaseArgs,
   type SearchKnowledgeBaseState,
-  systemPrompt,
-} from '@lobechat/builtin-tool-knowledge-base';
+} from './types';

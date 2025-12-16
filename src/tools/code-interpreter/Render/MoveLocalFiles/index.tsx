@@ -22,7 +22,8 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 12px;
   `,
   moveItem: css`
-    padding: 4px 8px;
+    padding-block: 4px;
+    padding-inline: 8px;
     border-radius: 4px;
   `,
   path: css`
@@ -56,7 +57,10 @@ const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams, MoveLocalFi
         {/* Header */}
         <Flexbox align={'center'} gap={8} horizontal>
           {allSuccess ? (
-            <CheckCircleFilled className={styles.statusIcon} style={{ color: theme.colorSuccess }} />
+            <CheckCircleFilled
+              className={styles.statusIcon}
+              style={{ color: theme.colorSuccess }}
+            />
           ) : (
             <CloseCircleFilled className={styles.statusIcon} style={{ color: theme.colorError }} />
           )}
@@ -76,9 +80,7 @@ const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams, MoveLocalFi
                 horizontal
                 key={index}
                 style={{
-                  background: result.success
-                    ? theme.colorSuccessBg
-                    : theme.colorErrorBg,
+                  background: result.success ? theme.colorSuccessBg : theme.colorErrorBg,
                 }}
               >
                 {result.success ? (

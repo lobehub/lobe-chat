@@ -1,5 +1,11 @@
 import { ChatSemanticSearchChunk, FileSearchResult } from '@lobechat/types';
 
+export const KnowledgeBaseIdentifier = 'lobe-knowledge-base';
+
+export const KnowledgeBaseApiName = {
+  readKnowledge: 'readKnowledge',
+  searchKnowledgeBase: 'searchKnowledgeBase',
+};
 
 export interface SearchKnowledgeBaseArgs {
   query: string;
@@ -9,6 +15,10 @@ export interface SearchKnowledgeBaseState {
   chunks: ChatSemanticSearchChunk[];
   fileResults: FileSearchResult[];
   totalResults: number;
+}
+
+export interface ReadKnowledgeArgs {
+  fileIds: string[];
 }
 
 export interface FileContentDetail {

@@ -1,4 +1,5 @@
 import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
+import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
 import type { OfficialToolItem } from '@lobechat/context-engine';
 import {
@@ -33,7 +34,6 @@ import {
 } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
-import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { createTraceHeader, getTraceId } from '@/utils/trace';

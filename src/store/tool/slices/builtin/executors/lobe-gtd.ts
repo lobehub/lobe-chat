@@ -31,12 +31,26 @@ const GTDApiNameMVP = {
 
 /**
  * Helper to get todos from message plugin state
+ * Handles both old format ({ todos: TodoItem[] }) and new format ({ todos: { items: TodoItem[] } })
  */
 const getTodosFromState = (state: Record<string, unknown> | null | undefined): TodoItem[] => {
-  if (!state || !Array.isArray(state.todos)) {
-    return [];
+  if (!state) return [];
+
+  const todos = state.todos;
+  if (!todos) return [];
+
+  // New format: { todos: { items: TodoItem[] } }
+  if (typeof todos === 'object' && 'items' in (todos as Record<string, unknown>)) {
+    const items = (todos as Record<string, unknown>).items;
+    return Array.isArray(items) ? (items as TodoItem[]) : [];
   }
-  return state.todos as TodoItem[];
+
+  // Old format: { todos: TodoItem[] }
+  if (Array.isArray(todos)) {
+    return todos as TodoItem[];
+  }
+
+  return [];
 };
 
 class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
@@ -78,7 +92,10 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     return {
       content: `Added ${items.length} item${items.length > 1 ? 's' : ''} to todo list:\n${addedList}`,
-      state: { todos: updatedTodos, updatedAt: now },
+      state: {
+        addedItems: items,
+        todos: { items: updatedTodos, updatedAt: now },
+      },
       success: true,
     };
   };
@@ -104,7 +121,10 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     if (existingTodos.length === 0) {
       return {
         content: 'No todos to complete. The list is empty.',
-        state: { todos: [] },
+        state: {
+          completedIndices: [],
+          todos: { items: [], updatedAt: new Date().toISOString() },
+        },
         success: true,
       };
     }
@@ -140,7 +160,10 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     return {
       content,
-      state: { todos: updatedTodos, updatedAt: now },
+      state: {
+        completedIndices: validIndices,
+        todos: { items: updatedTodos, updatedAt: now },
+      },
       success: true,
     };
   };
@@ -159,7 +182,11 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     if (existingTodos.length === 0) {
       return {
         content: 'Todo list is already empty.',
-        state: { todos: [], updatedAt: new Date().toISOString() },
+        state: {
+          clearedCount: 0,
+          mode,
+          todos: { items: [], updatedAt: new Date().toISOString() },
+        },
         success: true,
       };
     }
@@ -188,7 +215,11 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     return {
       content,
-      state: { todos: updatedTodos, updatedAt: now },
+      state: {
+        clearedCount,
+        mode,
+        todos: { items: updatedTodos, updatedAt: now },
+      },
       success: true,
     };
   };
@@ -198,11 +229,12 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
    */
   listTodos = async (_params: unknown, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
     const todos = getTodosFromState(ctx.pluginState);
+    const now = new Date().toISOString();
 
     if (todos.length === 0) {
       return {
         content: 'Todo list is empty.',
-        state: { todos: [] },
+        state: { todos: { items: [], updatedAt: now } },
         success: true,
       };
     }
@@ -222,7 +254,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     return {
       content: `${summary}\n\n${todoList}`,
-      state: { todos },
+      state: { todos: { items: todos, updatedAt: now } },
       success: true,
     };
   };

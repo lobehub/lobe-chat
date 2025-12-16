@@ -3,13 +3,10 @@
 import { Alert, Text } from '@lobehub/ui';
 import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ComponentType, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import FileIcon from '@/components/FileIcon';
-
-import { FileContentDetail } from '../../type';
+import { FileContentDetail } from '../../../types';
 
 const useStyles = createStyles(({ token, css }) => {
   return {
@@ -72,11 +69,15 @@ const useStyles = createStyles(({ token, css }) => {
 });
 
 interface FileCardProps {
+  FileIcon: ComponentType<{ fileName: string; size: number }>;
   file: FileContentDetail;
+  labels: {
+    chars: string;
+    lines: string;
+  };
 }
 
-const FileCard = memo<FileCardProps>(({ file }) => {
-  const { t } = useTranslation('tool');
+const FileCard = memo<FileCardProps>(({ file, FileIcon, labels }) => {
   const { styles } = useStyles();
 
   if (file.error) {
@@ -118,11 +119,11 @@ const FileCard = memo<FileCardProps>(({ file }) => {
           items={[
             {
               children: file.totalCharCount?.toLocaleString(),
-              label: t('lobe-knowledge-base.readKnowledge.meta.chars'),
+              label: labels.chars,
             },
             {
               children: file.totalLineCount?.toLocaleString(),
-              label: t('lobe-knowledge-base.readKnowledge.meta.lines'),
+              label: labels.lines,
             },
           ]}
           size="small"

@@ -2,8 +2,15 @@
   "name": "@lobechat/builtin-tool-gtd",
   "version": "1.0.0",
   "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client/index.ts"
+  },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "workspace:*",
+    "lucide-react": "*",
+    "react": "*",
+    "react-layout-kit": "*"
   }
 }

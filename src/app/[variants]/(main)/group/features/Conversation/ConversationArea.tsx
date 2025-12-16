@@ -1,5 +1,6 @@
 'use client';
 
+import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { Suspense, memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,7 +14,6 @@ import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useUserMemoryStore } from '@/store/userMemory';
-import { MemoryManifest } from '@/tools/memory';
 
 import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
@@ -24,6 +24,7 @@ import ThreadHydration from './ThreadHydration';
 import ZenModeToast from './ZenModeToast';
 import { useActionsBarConfig } from './useActionsBarConfig';
 import { useGroupContext } from './useGroupContext';
+
 // import { useGroupHooks } from './useGroupHooks';
 
 interface ConversationAreaProps {

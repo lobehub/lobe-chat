@@ -1,5 +1,6 @@
 'use client';
 
+import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { Suspense, memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,7 +14,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
-import { MemoryManifest } from '@/tools/memory';
 
 import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
