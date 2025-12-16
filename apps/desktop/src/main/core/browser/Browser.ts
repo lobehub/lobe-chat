@@ -2,6 +2,7 @@ import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-c
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  type Session,
   session as electronSession,
   ipcMain,
   nativeTheme,
@@ -29,7 +30,7 @@ import type { App } from '../App';
 // Create logger
 const logger = createLogger('core:Browser');
 // Track sessions that already have protocol handlers installed to avoid duplicates
-const protocolHandledSessions = new WeakSet<Electron.Session>();
+const protocolHandledSessions = new WeakSet<Session>();
 
 export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
   devTools?: boolean;
@@ -346,6 +347,7 @@ export default class Browser {
         backgroundThrottling: false,
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
+        sandbox: false,
       },
       width: savedState?.width || width,
       ...this.getPlatformThemeConfig(isDarkMode),
@@ -582,6 +584,7 @@ export default class Browser {
           const token = await remoteServerConfigCtr.getAccessToken();
           if (token) headers.set('Oidc-Auth', token);
 
+          // eslint-disable-next-line no-undef
           const requestInit: RequestInit & { duplex?: 'half' } = {
             headers,
             method: request.method,

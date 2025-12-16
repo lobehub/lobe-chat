@@ -21,7 +21,11 @@ const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
         style={{
           background: theme.colorBgContainer,
           border: `1px solid ${theme.isDarkMode ? theme.colorBorderSecondary : theme.colorBorder}`,
-          borderRadius: theme.borderRadius,
+          borderRadius:
+            // macOS 26's darwin is 25
+            typeof window !== 'undefined' && (window.lobeEnv?.darwinMajorVersion ?? 0) >= 25
+              ? 12
+              : theme.borderRadius,
           overflow: 'hidden',
           position: 'relative',
         }}
