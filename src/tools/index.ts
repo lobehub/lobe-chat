@@ -1,4 +1,5 @@
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
+import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 import { LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
@@ -63,6 +64,12 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: true,
     identifier: GroupManagementManifest.identifier,
     manifest: GroupManagementManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true,
+    identifier: GTDManifest.identifier,
+    manifest: GTDManifest,
     type: 'builtin',
   },
 ];

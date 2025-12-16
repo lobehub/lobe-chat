@@ -1,4 +1,5 @@
-import { GroupManagementIdentifier } from '@lobechat/builtin-tool-group-management';
+import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
+import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 
 import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
@@ -16,5 +17,6 @@ export const builtinToolIdentifiers: string[] = [
   KnowledgeBaseManifest.identifier,
   CodeInterpreterManifest.identifier,
   PageAgentManifest.identifier,
-  GroupManagementIdentifier,
+  GroupManagementManifest.identifier,
+  GTDManifest.identifier,
 ];

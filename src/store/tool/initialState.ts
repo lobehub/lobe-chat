@@ -1,9 +1,9 @@
-import { BuiltinToolState, initialBuiltinToolState } from './slices/builtin';
-import { CustomPluginState, initialCustomPluginState } from './slices/customPlugin';
-import { KlavisStoreState, initialKlavisStoreState } from './slices/klavisStore';
-import { MCPStoreState, initialMCPStoreState } from './slices/mcpStore';
-import { PluginState, initialPluginState } from './slices/plugin';
-import { PluginStoreState, initialPluginStoreState } from './slices/oldStore';
+import { BuiltinToolState, initialBuiltinToolState } from './slices/builtin/initialState';
+import { CustomPluginState, initialCustomPluginState } from './slices/customPlugin/initialState';
+import { KlavisStoreState, initialKlavisStoreState } from './slices/klavisStore/initialState';
+import { MCPStoreState, initialMCPStoreState } from './slices/mcpStore/initialState';
+import { PluginStoreState, initialPluginStoreState } from './slices/oldStore/initialState';
+import { PluginState, initialPluginState } from './slices/plugin/initialState';
 
 export type ToolStoreState = PluginState &
   CustomPluginState &

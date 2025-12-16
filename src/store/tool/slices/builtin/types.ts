@@ -164,6 +164,12 @@ export interface BuiltinToolContext {
   operationId?: string;
 
   /**
+   * Current plugin state for this tool message
+   * Used by tools that need to read/update persistent state (e.g., GTD todos)
+   */
+  pluginState?: Record<string, unknown>;
+
+  /**
    * Register a callback to execute after AgentRuntime completes
    * Used for actions that should happen after the current execution flow finishes
    * to avoid race conditions with message updates

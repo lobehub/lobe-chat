@@ -163,6 +163,7 @@
     "@lobechat/agent-runtime": "workspace:*",
     "@lobechat/builtin-agents": "workspace:*",
     "@lobechat/builtin-tool-group-management": "workspace:*",
+    "@lobechat/builtin-tool-gtd": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/conversation-flow": "workspace:*",
