@@ -13,7 +13,6 @@ export interface UserGeneralConfig {
   highlighterTheme?: HighlighterProps['theme'];
   isDevMode: boolean;
   isLiteMode: boolean;
-  language?: string;
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;

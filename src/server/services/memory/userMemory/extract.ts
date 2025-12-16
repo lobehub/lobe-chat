@@ -952,7 +952,7 @@ export class MemoryExtractionExecutor {
           const userModel = new UserModel(db, job.userId);
           const userState = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
           const keyVaults = userState.settings?.keyVaults as UserKeyVaults | undefined;
-          const language = userState.settings?.general?.language;
+          const language = userState.settings?.general?.responseLanguage;
 
           const runtimes = await this.getRuntime(job.userId, keyVaults);
 
