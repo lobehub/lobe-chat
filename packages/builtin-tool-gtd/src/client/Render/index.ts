@@ -16,5 +16,5 @@ export const GTDRenders = {
   [GTDApiName.clearTodos]: TodoListRender,
 };
 
-export type { TodoListCallbacks, TodoListRenderState } from './TodoList';
+export type { TodoListRenderState } from './TodoList';
 export { default as TodoListRender, TodoListUI } from './TodoList';

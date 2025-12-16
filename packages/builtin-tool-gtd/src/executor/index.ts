@@ -96,9 +96,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const updatedTodos = [...existingTodos, ...itemsToAdd];
 
     // Format response
-    const addedList = itemsToAdd
-      .map((item, i) => `${existingTodos.length + i + 1}. ${item.text}`)
-      .join('\n');
+    const addedList = itemsToAdd.map((item) => `- [ ] ${item.text}`).join('\n');
 
     return {
       content: `Added ${itemsToAdd.length} item${itemsToAdd.length > 1 ? 's' : ''} to todo list:\n${addedList}`,

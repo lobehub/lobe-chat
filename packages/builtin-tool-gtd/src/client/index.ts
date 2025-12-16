@@ -1,5 +1,5 @@
 // Render components (read-only snapshots)
-export type { TodoListCallbacks, TodoListRenderState } from './Render';
+export type { TodoListRenderState } from './Render';
 export { GTDRenders, TodoListRender, TodoListUI } from './Render';
 
 // Intervention components (interactive editing)
