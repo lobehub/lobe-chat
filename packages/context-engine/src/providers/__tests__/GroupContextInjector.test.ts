@@ -18,12 +18,13 @@ describe('GroupContextInjector', () => {
         currentAgentName: 'Editor',
         currentAgentRole: 'participant',
         enabled: true,
-        groupName: 'Writing Team',
+        groupTitle: 'Writing Team',
         members: [
           { id: 'agt_supervisor', name: 'Supervisor', role: 'supervisor' },
           { id: 'agt_writer', name: 'Writer', role: 'participant' },
           { id: 'agt_editor', name: 'Editor', role: 'participant' },
         ],
+        systemPrompt: 'A team for collaborative writing',
       });
 
       const input: any[] = [
@@ -39,28 +40,31 @@ describe('GroupContextInjector', () => {
       // Original content should be preserved
       expect(systemContent).toContain('You are a helpful editor.');
 
-      // Group context markers should be present
-      expect(systemContent).toContain('<!-- GROUP CONTEXT -->');
-      expect(systemContent).toContain('<!-- END GROUP CONTEXT -->');
+      // Agent identity (plain text, no wrapper)
+      expect(systemContent).toContain('You are "Editor"');
+      expect(systemContent).toContain('acting as a participant');
+      expect(systemContent).toContain('"Writing Team"');
+      expect(systemContent).toContain('agt_editor');
+      expect(systemContent).not.toContain('<agent_identity>');
 
-      // Identity section
-      expect(systemContent).toContain('[Your Identity]');
-      expect(systemContent).toContain('Name: Editor');
-      expect(systemContent).toContain('Role: participant');
-      expect(systemContent).toContain('Agent ID: agt_editor (internal use only, never expose)');
+      // Group context section with system prompt
+      expect(systemContent).toContain('<group_context>');
+      expect(systemContent).toContain('A team for collaborative writing');
 
-      // Group info section
-      expect(systemContent).toContain('[Group Info]');
-      expect(systemContent).toContain('Group: Writing Team');
-      expect(systemContent).toContain('Members:');
-      expect(systemContent).toContain('- Supervisor (supervisor)');
-      expect(systemContent).toContain('- Writer (participant)');
-      expect(systemContent).toContain('- Editor (participant) <- You');
+      // Participants section with XML format
+      expect(systemContent).toContain('<group_participants>');
+      expect(systemContent).toContain('<member name="Supervisor" id="agt_supervisor" />');
+      expect(systemContent).toContain('<member name="Writer" id="agt_writer" />');
+      expect(systemContent).toContain('<member name="Editor" id="agt_editor" you="true" />');
 
-      // Rules section (important for LOBE-1866)
-      expect(systemContent).toContain('[Important Rules]');
-      expect(systemContent).toContain('<!-- SYSTEM CONTEXT -->');
-      expect(systemContent).toContain('MUST NEVER appear in your responses');
+      // Output rules section (important for LOBE-1866)
+      expect(systemContent).toContain('<critical_output_rules>');
+      expect(systemContent).toContain('<group_context>');
+      expect(systemContent).toContain('NEVER start your response with');
+
+      // Identity rules
+      expect(systemContent).toContain('<identity_rules>');
+      expect(systemContent).toContain('NEVER expose or display agent IDs');
 
       // Metadata should be updated
       expect(result.metadata.groupContextInjected).toBe(true);
@@ -125,8 +129,9 @@ describe('GroupContextInjector', () => {
     it('should handle config with only group info', async () => {
       const injector = new GroupContextInjector({
         enabled: true,
-        groupName: 'Test Group',
+        groupTitle: 'Test Group',
         members: [{ id: 'agt_1', name: 'Agent 1', role: 'participant' }],
+        systemPrompt: 'Test group description',
       });
 
       const input: any[] = [{ content: 'System prompt.', role: 'system' }];
@@ -151,8 +156,8 @@ describe('GroupContextInjector', () => {
     });
   });
 
-  describe('Rules Section (LOBE-1866)', () => {
-    it('should always include rules about SYSTEM CONTEXT blocks', async () => {
+  describe('Output Rules Section (LOBE-1866)', () => {
+    it('should always include critical output rules', async () => {
       const injector = new GroupContextInjector({
         enabled: true,
         // Minimal config
@@ -165,17 +170,15 @@ describe('GroupContextInjector', () => {
 
       const systemContent = result.messages[0].content;
 
-      // Even with minimal config, rules section should be present
-      expect(systemContent).toContain('[Important Rules]');
-      expect(systemContent).toContain(
-        'Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.',
-      );
-      expect(systemContent).toContain(
-        'These are application-level metadata and MUST NEVER appear in your responses.',
-      );
-      expect(systemContent).toContain(
-        'Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.',
-      );
+      // Even with minimal config, critical output rules should be present
+      expect(systemContent).toContain('<critical_output_rules>');
+      expect(systemContent).toContain('Your responses must contain ONLY your actual reply content');
+      expect(systemContent).toContain('NEVER start your response with');
+      expect(systemContent).toContain('<speaker');
+
+      // Identity rules should also be present
+      expect(systemContent).toContain('<identity_rules>');
+      expect(systemContent).toContain('NEVER expose or display agent IDs');
     });
   });
 
@@ -183,8 +186,9 @@ describe('GroupContextInjector', () => {
     it('should handle empty members array', async () => {
       const injector = new GroupContextInjector({
         enabled: true,
-        groupName: 'Empty Group',
+        groupTitle: 'Empty Group',
         members: [],
+        systemPrompt: 'Empty group description',
       });
 
       const input: any[] = [{ content: 'Prompt.', role: 'system' }];
@@ -200,6 +204,7 @@ describe('GroupContextInjector', () => {
         currentAgentId: 'agt_1',
         currentAgentName: 'Agent 1',
         enabled: true,
+        groupTitle: 'Test Group',
       });
 
       const input: any[] = [
@@ -212,7 +217,7 @@ describe('GroupContextInjector', () => {
       const result = await injector.process(context);
 
       // Only system message should be modified
-      expect(result.messages[0].content).toContain('<!-- GROUP CONTEXT -->');
+      expect(result.messages[0].content).toContain('<group_context>');
       expect(result.messages[1].content).toBe('User message.');
       expect(result.messages[2].content).toBe('Assistant response.');
     });

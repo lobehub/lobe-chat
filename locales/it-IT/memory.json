@@ -13,6 +13,11 @@
     "source": "Fonte",
     "urgency": "Urgenza"
   },
+  "empty": {
+    "description": "L'estrazione della memoria è un processo graduale. Accumula più argomenti per arricchire i contenuti estratti dalla memoria e prova a intrattenere conversazioni più approfondite con l'assistente per catturare e memorizzare meglio le informazioni di valore.",
+    "search": "Nessuna memoria corrispondente trovata",
+    "title": "Nessuna memoria disponibile"
+  },
   "experience": {
     "actions": {
       "delete": "Elimina",
@@ -31,6 +36,16 @@
       "outcome": "Risultato possibile",
       "reasoning": "Ragionamento",
       "situation": "Contesto di fondo"
+    }
+  },
+  "filter": {
+    "search": "Cerca...",
+    "sort": {
+      "createdAt": "Data di creazione",
+      "scoreConfidence": "Livello di confidenza",
+      "scoreImpact": "Impatto",
+      "scorePriority": "Priorità",
+      "scoreUrgency": "Urgenza"
     }
   },
   "identity": {

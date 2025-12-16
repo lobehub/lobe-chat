@@ -1089,6 +1089,7 @@ table users {
   first_name text
   last_name text
   full_name text
+  occupation text
   is_onboarded boolean [default: false]
   clerk_created_at "timestamp with time zone"
   email_verified boolean [not null, default: false]
@@ -1150,7 +1151,6 @@ table user_memories_contexts {
   associated_objects jsonb
   associated_subjects jsonb
   title text
-  title_vector vector(1024)
   description text
   description_vector vector(1024)
   type varchar(255)
@@ -1163,7 +1163,6 @@ table user_memories_contexts {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    title_vector [name: 'user_memories_contexts_title_vector_index']
     description_vector [name: 'user_memories_contexts_description_vector_index']
     type [name: 'user_memories_contexts_type_index']
     user_id [name: 'user_memories_contexts_user_id_index']

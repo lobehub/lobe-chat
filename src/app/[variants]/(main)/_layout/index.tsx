@@ -2,7 +2,7 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { Suspense, memo, useEffect } from 'react';
+import { Suspense, memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
@@ -20,6 +20,7 @@ import CmdkLazy from '@/layout/GlobalProvider/CmdkLazy';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { HotkeyScopeEnum } from '@/types/hotkey';
 
+import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
 
@@ -29,13 +30,12 @@ const Layout = memo(() => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
-  useEffect(() => {
-    document.body.style.background = theme.colorBgLayout;
-  }, [theme.colorBgLayout]);
+
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
       <Suspense fallback={null}>
         {isDesktop && <TitleBar />}
+        {isDesktop && <DesktopAutoOidcOnFirstOpen />}
         {showCloudPromotion && <CloudBanner />}
       </Suspense>
       <DndContextWrapper>

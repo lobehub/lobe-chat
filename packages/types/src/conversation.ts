@@ -138,6 +138,13 @@ export interface ConversationContext {
    */
   subAgentId?: string;
   /**
+   * Whether the current agent is the Supervisor in group orchestration
+   * - Used to mark assistant messages with metadata.isSupervisor
+   * - conversation-flow will transform role to 'supervisor' for UI rendering
+   * - context-engine will restore role back to 'assistant' for model
+   */
+  isSupervisor?: boolean;
+  /**
    * Whether this is creating a new conversation (new topic or new thread)
    * Used for optimistic updates
    */

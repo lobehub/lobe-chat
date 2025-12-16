@@ -12,6 +12,7 @@ export {
   PlaceholderVariablesProcessor,
   renderPlaceholderTemplate,
 } from './PlaceholderVariables';
+export { SupervisorRoleRestoreProcessor } from './SupervisorRoleRestore';
 export { ToolCallProcessor } from './ToolCall';
 export { ToolMessageReorder } from './ToolMessageReorder';
 

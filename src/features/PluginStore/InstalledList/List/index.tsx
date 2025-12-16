@@ -49,7 +49,7 @@ export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) =>
   return (
     <Virtuoso
       data={filteredPluginList}
-      increaseViewportBy={800}
+      increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       itemContent={(_, item) => {
         return (
           <Flexbox

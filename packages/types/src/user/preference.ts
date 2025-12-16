@@ -12,6 +12,7 @@ export interface LobeUser {
   fullName?: string | null;
   id: string;
   latestName?: string | null;
+  occupation?: string | null;
   username?: string | null;
 }
 
@@ -59,7 +60,10 @@ export interface UserPreference {
    * lab experimental features
    */
   lab?: UserLab;
-  telemetry: boolean | null;
+  /**
+   * @deprecated Use settings.general.telemetry instead
+   */
+  telemetry?: boolean | null;
   topicDisplayMode?: TopicDisplayMode;
   /**
    * whether to use cmd + enter to send message
@@ -77,6 +81,7 @@ export interface UserInitializationState {
   hasConversation?: boolean;
   isOnboard?: boolean;
   lastName?: string;
+  occupation?: string;
   preference: UserPreference;
   settings: PartialDeep<UserSettings>;
   subscriptionPlan?: Plans;

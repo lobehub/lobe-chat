@@ -11,10 +11,10 @@ import {
   UserMemoryExperienceWithoutVectors,
   UserMemoryIdentityWithoutVectors,
   UserMemoryPreferenceWithoutVectors,
-  UserMemoryContextsListItem,
-  UserMemoryIdentitiesListItem,
-  UserMemoryExperiencesListItem,
-  UserMemoryPreferencesListItem,
+  UserMemoryDetail,
+  UserMemoryItemSimple,
+  UserMemoryWithoutVectors,
+  MemorySourceType
 } from '@lobechat/types';
 import type { AnyColumn, SQL } from 'drizzle-orm';
 import { and, asc, cosineDistance, desc, eq, ilike, inArray, isNotNull, ne, or, sql } from 'drizzle-orm';
@@ -35,6 +35,7 @@ import {
 } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 import { AssociatedObjectSchema } from '@lobechat/memory-user-memory';
+import { TopicModel } from '../topic';
 
 const normalizeRelationshipValue = (input: unknown): RelationshipEnum | null => {
   if (input === null) return null;
@@ -298,53 +299,8 @@ export interface QueryUserMemoriesParams {
   types?: string[];
 }
 
-export interface BaseMemoryInfo {
-  accessedAt: Date;
-  accessedCount: number;
-  createdAt: Date;
-  id: string;
-  lastAccessedAt: Date;
-  memoryCategory: string | null;
-  memoryLayer: string | null;
-  memoryType: string | null;
-  status: string | null;
-  tags: string[] | null;
-  updatedAt: Date;
-  userId: string | null;
-}
-
-export interface QueriedContextMemory {
-  context: UserMemoryContextsListItem;
-  layer: LayersEnum.Context;
-  memory: BaseMemoryInfo;
-}
-
-export interface QueriedExperienceMemory {
-  experience: UserMemoryExperiencesListItem;
-  layer: LayersEnum.Experience;
-  memory: BaseMemoryInfo;
-}
-
-export interface QueriedPreferenceMemory {
-  layer: LayersEnum.Preference;
-  memory: BaseMemoryInfo;
-  preference: UserMemoryPreferencesListItem;
-}
-
-export interface QueriedIdentityMemory {
-  identity: UserMemoryIdentitiesListItem;
-  layer: LayersEnum.Identity;
-  memory: BaseMemoryInfo;
-}
-
-export type QueriedUserMemoryItem =
-  | QueriedContextMemory
-  | QueriedExperienceMemory
-  | QueriedIdentityMemory
-  | QueriedPreferenceMemory;
-
-export interface QueryUserMemoriesResult {
-  items: QueriedUserMemoryItem[];
+export interface GetMemoriesResult {
+  items: UserMemoryItemSimple[];
   page: number;
   pageSize: number;
   total: number;
@@ -408,10 +364,29 @@ export class UserMemoryModel {
 
   private userId: string;
   private db: LobeChatDatabase;
+  private topicModel: TopicModel;
 
   constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
     this.db = db;
+    this.topicModel = new TopicModel(db, userId);
+  }
+
+  private extractSourceMetadata(
+    metadata?: Record<string, unknown> | null,
+  ): {
+    sourceId?: string;
+    sourceType?: MemorySourceType;
+  } {
+    if (!metadata || typeof metadata !== 'object') {
+      return {};
+    }
+
+    const sourceId = typeof metadata.sourceId === 'string' ? metadata.sourceId : undefined;
+    const rawSourceType = typeof metadata.sourceType === 'string' ? metadata.sourceType as MemorySourceType : undefined;
+    const sourceType: MemorySourceType = rawSourceType ?? MemorySourceType.ChatTopic;
+
+    return { sourceId, sourceType };
   }
 
   private buildBaseMemoryInsertValues(
@@ -707,7 +682,7 @@ export class UserMemoryModel {
     };
   };
 
-  queryMemories = async (params: QueryUserMemoriesParams = {}): Promise<QueryUserMemoriesResult> => {
+  queryMemories = async (params: QueryUserMemoriesParams = {}): Promise<GetMemoriesResult> => {
     const {
       categories,
       layer,
@@ -756,6 +731,7 @@ export class UserMemoryModel {
       memoryCategory: userMemories.memoryCategory,
       memoryLayer: userMemories.memoryLayer,
       memoryType: userMemories.memoryType,
+      metadata: userMemories.metadata,
       status: userMemories.status,
       tags: userMemories.tags,
       title: userMemories.title,
@@ -850,14 +826,14 @@ export class UserMemoryModel {
           .where(contextWhereClause),
       ]);
 
-      const items = rows.map((row) => ({
-        context: row.context as UserMemoryContextsListItem,
-        layer: LayersEnum.Context as const,
-        memory: row.memory as BaseMemoryInfo,
-      }));
-
       return {
-        items,
+        items: rows.map((row) => {
+          return {
+            context: row.context,
+            layer: LayersEnum.Context,
+            memory: row.memory,
+          }
+        }),
         page: normalizedPage,
         pageSize: normalizedPageSize,
         total: Number(totalResult[0]?.count ?? 0),
@@ -923,14 +899,14 @@ export class UserMemoryModel {
           .where(experienceWhereClause),
       ]);
 
-      const items = rows.map((row) => ({
-        experience: row.experience as UserMemoryExperiencesListItem,
-        layer: LayersEnum.Experience as const,
-        memory: row.memory as BaseMemoryInfo,
-      }));
-
       return {
-        items,
+        items: rows.map((row) => {
+          return {
+            experience: row.experience,
+            layer: LayersEnum.Experience,
+            memory: row.memory,
+          }
+        }),
         page: normalizedPage,
         pageSize: normalizedPageSize,
         total: Number(totalResult[0]?.count ?? 0),
@@ -996,14 +972,14 @@ export class UserMemoryModel {
           .where(identityWhereClause),
       ]);
 
-      const items = rows.map((row) => ({
-        identity: row.identity as UserMemoryIdentitiesListItem,
-        layer: LayersEnum.Identity as const,
-        memory: row.memory as BaseMemoryInfo,
-      }));
-
       return {
-        items,
+        items: rows.map((row) => {
+          return {
+            identity: row.identity,
+            layer: LayersEnum.Identity,
+            memory: row.memory,
+          }
+        }),
         page: normalizedPage,
         pageSize: normalizedPageSize,
         total: Number(totalResult[0]?.count ?? 0),
@@ -1067,14 +1043,14 @@ export class UserMemoryModel {
           .where(preferenceWhereClause),
       ]);
 
-      const items = rows.map((row) => ({
-        layer: LayersEnum.Preference as const,
-        memory: row.memory as BaseMemoryInfo,
-        preference: row.preference as UserMemoryPreferencesListItem,
-      }));
-
       return {
-        items,
+        items: rows.map((row) => {
+          return {
+            layer: LayersEnum.Preference,
+            memory: row.memory,
+            preference: row.preference,
+          };
+        }),
         page: normalizedPage,
         pageSize: normalizedPageSize,
         total: Number(totalResult[0]?.count ?? 0),
@@ -1093,7 +1069,7 @@ export class UserMemoryModel {
 
   getMemoryDetail = async (
     params: GetMemoryDetailParams,
-  ): Promise<QueriedUserMemoryItem | undefined> => {
+  ): Promise<UserMemoryDetail | undefined> => {
     const { id, layer } = params;
 
     switch (layer) {
@@ -1103,6 +1079,7 @@ export class UserMemoryModel {
             accessedAt: userMemoriesContexts.accessedAt,
             associatedObjects: userMemoriesContexts.associatedObjects,
             associatedSubjects: userMemoriesContexts.associatedSubjects,
+            capturedAt: userMemoriesContexts.capturedAt,
             createdAt: userMemoriesContexts.createdAt,
             currentStatus: userMemoriesContexts.currentStatus,
             description: userMemoriesContexts.description,
@@ -1127,27 +1104,31 @@ export class UserMemoryModel {
         const memoryIds = Array.isArray(context.userMemoryIds)
           ? (context.userMemoryIds as string[])
           : [];
-        const memoryId = memoryIds[0];
 
+        const memoryId = memoryIds[0];
         if (!memoryId) {
           return undefined;
         }
 
-        const memory = await this.findBaseMemoryById(memoryId);
+        const memory = await this.findUserMemoryRawById(memoryId);
         if (!memory) {
           return undefined;
         }
-
         if (memory.memoryLayer !== LayersEnum.Context) {
           return undefined;
         }
 
-        await this.updateAccessMetrics([memory.id], { contextIds: [context.id] });
+        const { sourceId, sourceType } = await this.extractSourceMetadata(context.metadata);
+        const source = sourceId
+          ? await this.topicModel.findById(sourceId)
+          : undefined;
 
         return {
-          context: { ...context, userMemoryIds: memoryIds } as UserMemoryContextWithoutVectors,
+          context: context as UserMemoryContextWithoutVectors,
           layer,
           memory,
+          source,
+          sourceType,
         };
       }
       case LayersEnum.Experience: {
@@ -1178,21 +1159,25 @@ export class UserMemoryModel {
           return undefined;
         }
 
-        const memory = await this.findBaseMemoryById(experience.userMemoryId);
+        const memory = await this.findUserMemoryRawById(experience.userMemoryId);
         if (!memory) {
           return undefined;
         }
-
         if (memory.memoryLayer !== LayersEnum.Experience) {
           return undefined;
         }
 
-        await this.updateAccessMetrics([memory.id]);
+        const { sourceId, sourceType } = await this.extractSourceMetadata(experience.metadata);
+        const source = sourceId
+          ? await this.topicModel.findById(sourceId)
+          : undefined;
 
         return {
-          experience: experience as UserMemoryExperienceWithoutVectors,
+          experience,
           layer,
           memory,
+          source,
+          sourceType,
         };
       }
       case LayersEnum.Identity: {
@@ -1221,21 +1206,25 @@ export class UserMemoryModel {
           return undefined;
         }
 
-        const memory = await this.findBaseMemoryById(identity.userMemoryId);
+        const memory = await this.findUserMemoryRawById(identity.userMemoryId);
         if (!memory) {
           return undefined;
         }
-
         if (memory.memoryLayer !== LayersEnum.Identity) {
           return undefined;
         }
 
-        await this.updateAccessMetrics([memory.id]);
+        const { sourceId, sourceType } = await this.extractSourceMetadata(identity.metadata);
+        const source = sourceId
+          ? await this.topicModel.findById(sourceId)
+          : undefined;
 
         return {
-          identity: identity as UserMemoryIdentityWithoutVectors,
+          identity,
           layer,
           memory,
+          source,
+          sourceType,
         };
       }
       case LayersEnum.Preference: {
@@ -1267,32 +1256,38 @@ export class UserMemoryModel {
           return undefined;
         }
 
-        const memory = await this.findBaseMemoryById(preference.userMemoryId);
+        const memory = await this.findUserMemoryRawById(preference.userMemoryId);
         if (!memory) {
           return undefined;
         }
-
         if (memory.memoryLayer !== LayersEnum.Preference) {
           return undefined;
         }
 
-        await this.updateAccessMetrics([memory.id]);
+        const { sourceId, sourceType } = await this.extractSourceMetadata(preference.metadata);
+        const source = sourceId
+          ? await this.topicModel.findById(sourceId)
+          : undefined;
 
         return {
           layer,
           memory,
-          preference: preference as UserMemoryPreferenceWithoutVectors,
+          preference,
+          source,
+          sourceType,
         };
       }
     }
   };
 
-  private findBaseMemoryById = async (memoryId: string): Promise<BaseMemoryInfo | undefined> => {
+  private findUserMemoryRawById = async (memoryId: string): Promise<UserMemoryWithoutVectors | undefined> => {
     const [memory] = await this.db
       .select({
         accessedAt: userMemories.accessedAt,
         accessedCount: userMemories.accessedCount,
+        capturedAt: userMemories.capturedAt,
         createdAt: userMemories.createdAt,
+        details: userMemories.details,
         id: userMemories.id,
         lastAccessedAt: userMemories.lastAccessedAt,
         memoryCategory: userMemories.memoryCategory,
@@ -1300,29 +1295,26 @@ export class UserMemoryModel {
         memoryType: userMemories.memoryType,
         metadata: userMemories.metadata,
         status: userMemories.status,
+        summary: userMemories.summary,
         tags: userMemories.tags,
+        title: userMemories.title,
         updatedAt: userMemories.updatedAt,
         userId: userMemories.userId,
       })
       .from(userMemories)
       .where(and(eq(userMemories.id, memoryId), eq(userMemories.userId, this.userId)))
       .limit(1);
-
     if (!memory) {
       return undefined;
     }
 
-    return memory as BaseMemoryInfo;
+    return memory;
   };
 
   findById = async (id: string): Promise<UserMemoryItem | undefined> => {
     const result = await this.db.query.userMemories.findFirst({
       where: and(eq(userMemories.id, id), eq(userMemories.userId, this.userId)),
     });
-
-    if (result) {
-      await this.updateAccessMetrics([id]);
-    }
 
     return result;
   };

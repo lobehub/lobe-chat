@@ -1,12 +1,14 @@
 'use client';
 
 import { DraggablePanel } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStyles, useTheme } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PropsWithChildren, ReactNode, memo, useLayoutEffect, useSyncExternalStore } from 'react';
 
 import { USER_DROPDOWN_ICON_ID } from '@/app/[variants]/(main)/home/_layout/Header/components/User';
+import { isDesktop } from '@/const/version';
 import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/ToggleLeftPanelButton';
+import { isMacOS } from '@/utils/platform';
 
 import Sidebar from '../../app/[variants]/(main)/home/_layout/Sidebar';
 import { useNavPanel } from './hooks/useNavPanel';
@@ -37,7 +39,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     user-select: none;
     height: 100%;
     color: ${token.colorTextSecondary};
-    background: ${token.colorBgLayout};
+    background: ${isDesktop && isMacOS() ? 'transparent' : token.colorBgLayout};
 
     * {
       user-select: none;
@@ -85,6 +87,7 @@ const NavPanel = memo(() => {
   // Use home Content as fallback when no portal content is provided
   const activeContent = panelContent || { key: 'home', node: <Sidebar /> };
 
+  const theme = useTheme();
   return (
     <>
       <DraggablePanel
@@ -99,6 +102,7 @@ const NavPanel = memo(() => {
         placement="left"
         showBorder={false}
         style={{
+          background: isDesktop && isMacOS() ? 'transparent' : theme.colorBgLayout,
           zIndex: 11,
         }}
       >

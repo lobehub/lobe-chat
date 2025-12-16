@@ -1,9 +1,9 @@
-import { SearchBar, Segmented } from '@lobehub/ui';
-import { Search } from 'lucide-react';
+import { Segmented } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import CommonFilterBar from '../../features/FilterBar';
 import { IdentityType } from './List';
 
 interface FilterBarProps {
@@ -28,18 +28,7 @@ const FilterBar = memo<FilterBarProps>(({ searchValue, onSearch, typeValue, onTy
         ]}
         value={typeValue}
       />
-      <SearchBar
-        allowClear
-        defaultValue={searchValue}
-        onInputChange={(v) => {
-          if (!v) {
-            onSearch(v);
-          }
-        }}
-        onSearch={(v) => onSearch(v)}
-        placeholder={t('identity.filter.search')}
-        prefix={<Search size={16} />}
-      />
+      <CommonFilterBar onSearch={onSearch} searchValue={searchValue} />
     </Flexbox>
   );
 });

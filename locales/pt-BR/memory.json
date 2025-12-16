@@ -13,6 +13,11 @@
     "source": "Fonte",
     "urgency": "Grau de urgência"
   },
+  "empty": {
+    "description": "A recuperação de memórias é um processo gradual. Acumule mais tópicos para enriquecer o conteúdo extraído da memória e tente ter conversas mais profundas com o assistente para capturar e armazenar melhor informações valiosas.",
+    "search": "Nenhuma memória correspondente encontrada",
+    "title": "Nenhuma memória disponível"
+  },
   "experience": {
     "actions": {
       "delete": "Excluir",
@@ -31,6 +36,16 @@
       "outcome": "Resultado possível",
       "reasoning": "Raciocínio",
       "situation": "Cenário"
+    }
+  },
+  "filter": {
+    "search": "Pesquisar...",
+    "sort": {
+      "createdAt": "Data de criação",
+      "scoreConfidence": "Confiança",
+      "scoreImpact": "Impacto",
+      "scorePriority": "Prioridade",
+      "scoreUrgency": "Urgência"
     }
   },
   "identity": {

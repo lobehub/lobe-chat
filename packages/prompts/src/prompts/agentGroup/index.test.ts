@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { formatAgentProfile } from './agentProfile';
-import { formatGroupMembers, groupContextTemplate } from './groupContext';
+import { buildGroupMembersXml, formatGroupMembers, groupContextTemplate } from './groupContext';
 
 describe('formatAgentProfile', () => {
   it('should format agent with all fields', () => {
@@ -64,24 +64,10 @@ describe('groupContextTemplate', () => {
   it('should match snapshot', () => {
     expect(groupContextTemplate).toMatchSnapshot();
   });
-
-  it('should contain all required placeholders', () => {
-    expect(groupContextTemplate).toContain('{{AGENT_NAME}}');
-    expect(groupContextTemplate).toContain('{{AGENT_ROLE}}');
-    expect(groupContextTemplate).toContain('{{AGENT_ID}}');
-    expect(groupContextTemplate).toContain('{{GROUP_NAME}}');
-    expect(groupContextTemplate).toContain('{{GROUP_MEMBERS}}');
-  });
-
-  it('should contain LOBE-1866 rules section', () => {
-    expect(groupContextTemplate).toContain('[Important Rules]');
-    expect(groupContextTemplate).toContain('<!-- SYSTEM CONTEXT -->');
-    expect(groupContextTemplate).toContain('MUST NEVER appear in your responses');
-  });
 });
 
 describe('formatGroupMembers', () => {
-  it('should format members list', () => {
+  it('should format members list in XML format', () => {
     const members = [
       { id: 'agt_supervisor', name: 'Supervisor', role: 'supervisor' as const },
       { id: 'agt_writer', name: 'Writer', role: 'participant' as const },
@@ -91,7 +77,7 @@ describe('formatGroupMembers', () => {
     expect(formatGroupMembers(members)).toMatchSnapshot();
   });
 
-  it('should mark current agent with <- You', () => {
+  it('should mark current agent with you attribute', () => {
     const members = [
       { id: 'agt_supervisor', name: 'Supervisor', role: 'supervisor' as const },
       { id: 'agt_editor', name: 'Editor', role: 'participant' as const },
@@ -101,6 +87,27 @@ describe('formatGroupMembers', () => {
   });
 
   it('should handle empty members array', () => {
-    expect(formatGroupMembers([])).toBe('');
+    expect(formatGroupMembers([])).toMatchSnapshot();
+  });
+});
+
+describe('buildGroupMembersXml', () => {
+  it('should build XML for group supervisor agents', () => {
+    const agents = [
+      { id: 'agt_xxx', title: '创意总监' },
+      { id: 'agt_yyy', title: '设计师' },
+    ];
+
+    expect(buildGroupMembersXml(agents)).toMatchSnapshot();
+  });
+
+  it('should use agent id as fallback when title is missing', () => {
+    const agents = [{ id: 'agt_xxx', title: null }, { id: 'agt_yyy' }];
+
+    expect(buildGroupMembersXml(agents)).toMatchSnapshot();
+  });
+
+  it('should handle empty agents array', () => {
+    expect(buildGroupMembersXml([])).toMatchSnapshot();
   });
 });

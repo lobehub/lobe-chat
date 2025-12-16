@@ -14,7 +14,6 @@ import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { isDesktop } from '@/const/version';
 import { getSearchConfig } from '@/helpers/getSearchConfig';
 import { createAgentToolsEngine, createToolsEngine } from '@/helpers/toolEngineering';
 import { getAgentStoreState } from '@/store/agent';
@@ -32,15 +31,10 @@ import {
   pluginSelectors,
 } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
-import {
-  preferenceSelectors,
-  userGeneralSettingsSelectors,
-  userProfileSelectors,
-} from '@/store/user/selectors';
+import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
 import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
-import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
@@ -215,6 +209,7 @@ class ChatService {
     // Note: agentConfig.systemRole is already resolved by resolveAgentConfig for builtin agents
     const modelMessages = await contextEngineering({
       agentBuilderContext,
+      agentId: targetAgentId,
       enableHistoryCount:
         agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
       groupId,
@@ -330,10 +325,7 @@ class ChatService {
 
     let fetcher: typeof fetch | undefined = undefined;
 
-    // Add desktop remote RPC fetch support
-    if (isDesktop) {
-      fetcher = fetchWithInvokeStream;
-    } else if (enableFetchOnClient) {
+    if (enableFetchOnClient) {
       /**
        * Notes:
        * 1. Browser agent runtime will skip auth check if a key and endpoint provided by
@@ -486,7 +478,7 @@ class ChatService {
   private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
     const tags = agentSelectors.currentAgentMeta(getAgentStoreState()).tags || [];
 
-    const enabled = preferenceSelectors.userAllowTrace(getUserStoreState());
+    const enabled = userGeneralSettingsSelectors.telemetry(getUserStoreState());
 
     if (!enabled) return { ...trace, enabled: false };
 

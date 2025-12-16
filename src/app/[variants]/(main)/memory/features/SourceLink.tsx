@@ -10,18 +10,21 @@ import { MemorySource } from '@/database/repositories/userMemory';
 const SourceLink = memo<{ source?: MemorySource | null }>(({ source }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+
   if (!source) return;
 
-  const title = source.topicTitle || source.topicId.replace('tpc_', '').slice(0, 8);
+  console.log(source);
+
+  const title = source.title || source.id?.replace('tpc_', '').slice(0, 8);
 
   return (
     <Link
-      href={`/agent/${source.agentId}?topicId=${source.topicId}`}
+      href={`/agent/${source.agentId}?topicId=${source.id}`}
       onClick={(e) => {
         if (!source) return;
         e.stopPropagation();
         e.preventDefault();
-        navigate(`/agent/${source.agentId}?topicId=${source.topicId}`);
+        navigate(`/agent/${source.agentId}?topicId=${source.id}`);
       }}
       style={{
         flex: 1,

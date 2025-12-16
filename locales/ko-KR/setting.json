@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "활성화하면 개발자 관련 기능과 옵션이 표시됩니다",
+      "title": "개발자 모드"
+    },
     "lang": {
       "autoMode": "시스템 따르기",
       "title": "언어"
+    },
+    "liteMode": {
+      "desc": "활성화하면 인터페이스가 간소화되고 고급 기능이 숨겨집니다",
+      "title": "간소화 모드"
+    },
+    "responseLanguage": {
+      "auto": "시스템 설정 따르기",
+      "desc": "AI 응답에 사용할 언어를 설정합니다",
+      "placeholder": "응답 언어 선택",
+      "title": "응답 언어"
     },
     "themeMode": {
       "auto": "자동",

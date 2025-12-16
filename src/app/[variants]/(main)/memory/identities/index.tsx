@@ -1,13 +1,15 @@
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
-import Loading from '@/components/Loading/BrandTextLoading';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
+import { TypesEnum } from '@/types/userMemory';
 
+import Loading from '../features/Loading';
+import { SCROLL_PARENT_ID } from '../features/TimeLineView/useScrollParent';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
 import FilterBar from './features/FilterBar';
 import IdentityRightPanel from './features/IdentityRightPanel';
@@ -15,15 +17,49 @@ import List, { IdentityType } from './features/List';
 
 const IdentitiesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const [searchValue, setSearchValue] = useState('');
-  const [typeFilter, setTypeFilter] = useState<IdentityType>('all');
+  const [searchValueRaw, setSearchValueRaw] = useQueryState('q', { clearOnDefault: true });
+  const [typeFilterRaw, setTypeFilterRaw] = useQueryState('type', { clearOnDefault: true });
 
-  const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
+  const searchValue = searchValueRaw || '';
+  const typeFilter = (typeFilterRaw as IdentityType) || 'all';
+
+  const identitiesPage = useUserMemoryStore((s) => s.identitiesPage);
   const identitiesInit = useUserMemoryStore((s) => s.identitiesInit);
+  const identitiesSearchLoading = useUserMemoryStore((s) => s.identitiesSearchLoading);
+  const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
+  const resetIdentitiesList = useUserMemoryStore((s) => s.resetIdentitiesList);
 
-  useFetchIdentities();
+  // 当搜索或类型变化时重置列表
+  useEffect(() => {
+    const types = typeFilter === 'all' ? undefined : [typeFilter as TypesEnum];
+    resetIdentitiesList({ q: searchValue || undefined, types });
+  }, [searchValue, typeFilter]);
 
-  if (!identitiesInit) return <Loading debugId={'Identities'} />;
+  // 调用 SWR hook 获取数据
+  const { isLoading } = useFetchIdentities({
+    page: identitiesPage,
+    pageSize: 12,
+    q: searchValue || undefined,
+    types: typeFilter === 'all' ? undefined : [typeFilter as TypesEnum],
+  });
+
+  // Handle search and type changes
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchValueRaw(value || null);
+    },
+    [setSearchValueRaw],
+  );
+
+  const handleTypeChange = useCallback(
+    (type: IdentityType) => {
+      setTypeFilterRaw(type === 'all' ? null : type);
+    },
+    [setTypeFilterRaw],
+  );
+
+  // 显示 loading：搜索/重置中 或 首次加载中
+  const showLoading = identitiesSearchLoading || !identitiesInit;
 
   return (
     <Flexbox flex={1} height={'100%'}>
@@ -43,12 +79,16 @@ const IdentitiesArea = memo(() => {
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
           <FilterBar
-            onSearch={setSearchValue}
-            onTypeChange={setTypeFilter}
+            onSearch={handleSearch}
+            onTypeChange={handleTypeChange}
             searchValue={searchValue}
             typeValue={typeFilter}
           />
-          <List searchValue={searchValue} typeFilter={typeFilter} viewMode={viewMode} />
+          {showLoading ? (
+            <Loading viewMode={viewMode} />
+          ) : (
+            <List isLoading={isLoading} searchValue={searchValue} viewMode={viewMode} />
+          )}
         </WideScreenContainer>
       </Flexbox>
     </Flexbox>

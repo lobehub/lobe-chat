@@ -32,18 +32,10 @@ describe('GroupMessageSenderProcessor', () => {
       // User message should be unchanged
       expect(result.messages[0].content).toBe('What is the weather?');
 
-      // Assistant message should have sender context appended
+      // Assistant message should have speaker tag prepended
       const assistantContent = result.messages[1].content;
+      expect(assistantContent).toMatch(/^<speaker name="Weather Expert" \/>/);
       expect(assistantContent).toContain('The weather is sunny.');
-      expect(assistantContent).toContain('<!-- SYSTEM CONTEXT (NOT PART OF AI RESPONSE) -->');
-      expect(assistantContent).toContain('<message_sender>');
-      expect(assistantContent).toContain('name: Weather Expert');
-      expect(assistantContent).toContain('role: participant');
-      expect(assistantContent).toContain('agent_id: agt_weather');
-      expect(assistantContent).toContain('<!-- END SYSTEM CONTEXT -->');
-      expect(assistantContent).toContain(
-        'MUST NOT include, reproduce, or reference any part of this block',
-      );
 
       // Check metadata
       expect(result.metadata.groupMessageSenderProcessed).toBe(1);
@@ -64,9 +56,7 @@ describe('GroupMessageSenderProcessor', () => {
       const result = await processor.process(context);
 
       const assistantContent = result.messages[0].content;
-      expect(assistantContent).toContain('name: Group Supervisor');
-      expect(assistantContent).toContain('role: supervisor');
-      expect(assistantContent).toContain('agent_id: agt_supervisor');
+      expect(assistantContent).toMatch(/^<speaker name="Group Supervisor" \/>/);
     });
 
     it('should not modify assistant message without agentId', async () => {
@@ -146,15 +136,10 @@ describe('GroupMessageSenderProcessor', () => {
 
       expect(result.messages).toHaveLength(4);
 
-      // Check each assistant message has correct sender info
-      expect(result.messages[1].content).toContain('name: Weather Expert');
-      expect(result.messages[1].content).toContain('role: participant');
-
-      expect(result.messages[2].content).toContain('name: News Reporter');
-      expect(result.messages[2].content).toContain('role: participant');
-
-      expect(result.messages[3].content).toContain('name: Supervisor');
-      expect(result.messages[3].content).toContain('role: supervisor');
+      // Check each assistant message has correct speaker tag prepended
+      expect(result.messages[1].content).toMatch(/^<speaker name="Weather Expert" \/>/);
+      expect(result.messages[2].content).toMatch(/^<speaker name="News Reporter" \/>/);
+      expect(result.messages[3].content).toMatch(/^<speaker name="Supervisor" \/>/);
 
       expect(result.metadata.groupMessageSenderProcessed).toBe(3);
     });
@@ -185,11 +170,10 @@ describe('GroupMessageSenderProcessor', () => {
       const content = result.messages[0].content as any[];
       expect(Array.isArray(content)).toBe(true);
 
-      // The last text part should have sender context appended
+      // The first text part should have speaker tag prepended
       const textPart = content.find((p: any) => p.type === 'text');
+      expect(textPart.text).toMatch(/^<speaker name="Weather Expert" \/>/);
       expect(textPart.text).toContain('Here is the weather chart.');
-      expect(textPart.text).toContain('<!-- SYSTEM CONTEXT (NOT PART OF AI RESPONSE) -->');
-      expect(textPart.text).toContain('name: Weather Expert');
 
       // Image part should be unchanged
       const imagePart = content.find((p: any) => p.type === 'image_url');
@@ -222,12 +206,12 @@ describe('GroupMessageSenderProcessor', () => {
 
       const content = result.messages[0].content;
 
-      // First text should be unchanged
-      expect(content[0].text).toBe('First text.');
+      // First text part should have speaker tag prepended
+      expect(content[0].text).toMatch(/^<speaker name="Weather Expert" \/>/);
+      expect(content[0].text).toContain('First text.');
 
-      // Last text should have sender context
-      expect(content[2].text).toContain('Last text.');
-      expect(content[2].text).toContain('name: Weather Expert');
+      // Last text should be unchanged
+      expect(content[2].text).toBe('Last text.');
     });
   });
 

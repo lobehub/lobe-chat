@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
+import type { StreamInvokeRequestParams } from './types';
 import type { DispatchInvoke } from './types/dispatch';
-import type { ProxyTRPCRequestParams } from './types/proxyTRPCRequest';
 
 interface StreamerCallbacks {
   onData: (chunk: Uint8Array) => void;
@@ -46,7 +46,7 @@ declare global {
   interface Window {
     electronAPI?: {
       invoke?: DispatchInvoke;
-      onStreamInvoke: (params: ProxyTRPCRequestParams, callbacks: StreamerCallbacks) => () => void;
+      onStreamInvoke: (params: StreamInvokeRequestParams, callbacks: StreamerCallbacks) => () => void;
     };
   }
 }

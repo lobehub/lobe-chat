@@ -213,7 +213,7 @@ const currentKnowledgeIds = (s: AgentStoreState) => {
 };
 
 const isAgentConfigLoading = (s: AgentStoreState) =>
-  !s.activeAgentId || !s.agentConfigInitMap[s.activeAgentId];
+  !s.activeAgentId || !s.agentMap[s.activeAgentId];
 
 /**
  * Get agent's slug by ID (used to identify builtin agents)

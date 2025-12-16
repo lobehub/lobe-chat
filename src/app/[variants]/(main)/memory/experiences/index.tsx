@@ -1,25 +1,75 @@
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
-import Loading from '@/components/Loading/BrandTextLoading';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import FilterBar from '../features/FilterBar';
+import Loading from '../features/Loading';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
 import ExperienceRightPanel from './features/ExperienceRightPanel';
 import List from './features/List';
 
 const ExperiencesArea = memo(() => {
+  const { t } = useTranslation('memory');
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
-  const useFetchExperiences = useUserMemoryStore((s) => s.useFetchExperiences);
+  const [searchValueRaw, setSearchValueRaw] = useQueryState('q', { clearOnDefault: true });
+  const [sortValueRaw, setSortValueRaw] = useQueryState('sort', { clearOnDefault: true });
+
+  const searchValue = searchValueRaw || '';
+  const sortValue = (sortValueRaw as 'createdAt' | 'scoreConfidence') || 'createdAt';
+
+  const experiencesPage = useUserMemoryStore((s) => s.experiencesPage);
   const experiencesInit = useUserMemoryStore((s) => s.experiencesInit);
+  const experiencesSearchLoading = useUserMemoryStore((s) => s.experiencesSearchLoading);
+  const useFetchExperiences = useUserMemoryStore((s) => s.useFetchExperiences);
+  const resetExperiencesList = useUserMemoryStore((s) => s.resetExperiencesList);
 
-  useFetchExperiences();
+  const sortOptions = [
+    { label: t('filter.sort.createdAt'), value: 'createdAt' },
+    { label: t('filter.sort.scoreConfidence'), value: 'scoreConfidence' },
+  ];
 
-  if (!experiencesInit) return <Loading debugId={'Experiences'} />;
+  // 转换 sort：createdAt 转为 undefined（后端默认）
+  const apiSort = sortValue === 'createdAt' ? undefined : (sortValue as 'scoreConfidence');
+
+  // 当搜索或排序变化时重置列表
+  useEffect(() => {
+    if (!apiSort) return;
+    const sort = viewMode === 'grid' ? apiSort : undefined;
+    resetExperiencesList({ q: searchValue || undefined, sort });
+  }, [searchValue, apiSort, viewMode]);
+
+  // 调用 SWR hook 获取数据
+  const { isLoading } = useFetchExperiences({
+    page: experiencesPage,
+    pageSize: 12,
+    q: searchValue || undefined,
+    sort: viewMode === 'grid' ? apiSort : undefined,
+  });
+
+  // Handle search and sort changes
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchValueRaw(value || null);
+    },
+    [setSearchValueRaw],
+  );
+
+  const handleSortChange = useCallback(
+    (sort: string) => {
+      setSortValueRaw(sort);
+    },
+    [setSortValueRaw],
+  );
+
+  // 显示 loading：搜索/重置中 或 首次加载中
+  const showLoading = experiencesSearchLoading || !experiencesInit;
 
   return (
     <Flexbox flex={1} height={'100%'}>
@@ -38,7 +88,18 @@ const ExperiencesArea = memo(() => {
         width={'100%'}
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <List viewMode={viewMode} />
+          <FilterBar
+            onSearch={handleSearch}
+            onSortChange={viewMode === 'grid' ? handleSortChange : undefined}
+            searchValue={searchValue}
+            sortOptions={viewMode === 'grid' ? sortOptions : undefined}
+            sortValue={sortValue}
+          />
+          {showLoading ? (
+            <Loading viewMode={viewMode} />
+          ) : (
+            <List isLoading={isLoading} searchValue={searchValue} viewMode={viewMode} />
+          )}
         </WideScreenContainer>
       </Flexbox>
     </Flexbox>

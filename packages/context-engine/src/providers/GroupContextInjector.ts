@@ -10,9 +10,6 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 
 const log = debug('context-engine:provider:GroupContextInjector');
 
-const GROUP_CONTEXT_START = '<!-- GROUP CONTEXT -->';
-const GROUP_CONTEXT_END = '<!-- END GROUP CONTEXT -->';
-
 /**
  * Group member info for context injection
  * Re-export from @lobechat/prompts for convenience
@@ -44,14 +41,19 @@ export interface GroupContextInjectorConfig {
   enabled?: boolean;
 
   /**
-   * Group name
+   * Group title/name
    */
-  groupName?: string;
+  groupTitle?: string;
 
   /**
    * List of group members
    */
   members?: GroupMemberInfo[];
+
+  /**
+   * Custom system prompt/role description for the group
+   */
+  systemPrompt?: string;
 }
 
 /**
@@ -76,7 +78,8 @@ export interface GroupContextInjectorConfig {
  *   currentAgentId: 'agt_xxx',
  *   currentAgentName: 'Weather Expert',
  *   currentAgentRole: 'participant',
- *   groupName: 'Writing Team',
+ *   groupTitle: 'Writing Team',
+ *   systemPrompt: 'A collaborative writing team for creating articles',
  *   members: [
  *     { id: 'agt_xxx', name: 'Weather Expert', role: 'participant' },
  *     { id: 'agt_yyy', name: 'Supervisor', role: 'supervisor' },
@@ -135,7 +138,14 @@ export class GroupContextInjector extends BaseProvider {
    * Uses template from @lobechat/prompts with direct variable replacement
    */
   private buildGroupContextBlock(): string {
-    const { currentAgentId, currentAgentName, currentAgentRole, groupName, members } = this.config;
+    const {
+      currentAgentId,
+      currentAgentName,
+      currentAgentRole,
+      groupTitle,
+      members,
+      systemPrompt,
+    } = this.config;
 
     // Use formatGroupMembers from @lobechat/prompts
     const membersText = members ? formatGroupMembers(members, currentAgentId) : '';
@@ -145,13 +155,14 @@ export class GroupContextInjector extends BaseProvider {
       .replace('{{AGENT_NAME}}', currentAgentName || '')
       .replace('{{AGENT_ROLE}}', currentAgentRole || '')
       .replace('{{AGENT_ID}}', currentAgentId || '')
-      .replace('{{GROUP_NAME}}', groupName || '')
+      .replace('{{GROUP_TITLE}}', groupTitle || '')
+      .replace('{{SYSTEM_PROMPT}}', systemPrompt || '')
       .replace('{{GROUP_MEMBERS}}', membersText);
 
     return `
 
-${GROUP_CONTEXT_START}
+<group_context>
 ${groupContextContent}
-${GROUP_CONTEXT_END}`;
+</group_context>`;
   }
 }

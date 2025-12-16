@@ -2,9 +2,8 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 
-import { ProviderIdParams } from '@/app/[variants]/loaders/routeParams';
 import { isCustomBranding } from '@/const/version';
 
 import Footer from './(list)/Footer';
@@ -41,14 +40,19 @@ ProviderLayout.displayName = 'ProviderLayout';
 
 // Detail page component that receives providerId from route params
 export const ProviderDetailPage = memo(() => {
-  const { providerId } = useLoaderData() as ProviderIdParams;
+  const params = useParams<{ providerId: string }>();
   const navigate = useNavigate();
 
   const handleProviderSelect = (providerKey: string) => {
     navigate(`/settings/provider/${providerKey}`);
   };
 
-  return <ProviderDetailPageComponent id={providerId} onProviderSelect={handleProviderSelect} />;
+  return (
+    <ProviderDetailPageComponent
+      id={params.providerId ?? ''}
+      onProviderSelect={handleProviderSelect}
+    />
+  );
 });
 
 ProviderDetailPage.displayName = 'ProviderDetailPage';

@@ -22,7 +22,7 @@ const createMockStore = () => {
 
   return {
     internal_execAgentRuntime: vi.fn().mockResolvedValue(undefined),
-    messagesMap: {
+    dbMessagesMap: {
       'group_group-1_topic-1': [
         { content: 'Hello', id: 'msg-1', role: 'user' },
         { content: 'Hi there', id: 'msg-2', role: 'assistant' },
@@ -137,6 +137,7 @@ describe('createGroupOrchestrationExecutors', () => {
         context: {
           agentId: 'supervisor-agent',
           groupId: 'group-1',
+          isSupervisor: true,
           scope: 'group',
           topicId: 'topic-1',
         },
@@ -237,6 +238,114 @@ describe('createGroupOrchestrationExecutors', () => {
       const result = await executors.speak!(instruction, state);
 
       expect(result.events[0]).toEqual({ agentId: 'agent-1', type: 'agent_spoke' });
+    });
+
+    it('should inject instruction as virtual User Message when instruction is provided', async () => {
+      const executors = createGroupOrchestrationExecutors(context);
+      const state = createMockState();
+
+      const instruction: GroupOrchestrationInstructionSpeak = {
+        payload: {
+          agentId: 'agent-1',
+          instruction: 'Please review the article and provide feedback',
+        },
+        type: 'speak',
+      };
+
+      await executors.speak!(instruction, state);
+
+      // Verify that internal_execAgentRuntime was called with messages containing the virtual user message
+      expect(mockStore.internal_execAgentRuntime).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: expect.arrayContaining([
+            expect.objectContaining({
+              content: 'Please review the article and provide feedback',
+              role: 'user',
+            }),
+          ]),
+        }),
+      );
+
+      // Verify that the virtual message is at the end of the messages array
+      const callArgs = (mockStore.internal_execAgentRuntime as any).mock.calls[0][0];
+      const lastMessage = callArgs.messages.at(-1);
+      expect(lastMessage.role).toBe('user');
+      expect(lastMessage.content).toBe('Please review the article and provide feedback');
+      expect(lastMessage.id).toMatch(/^virtual_speak_instruction_\d+$/);
+    });
+
+    it('should NOT inject virtual User Message when instruction is not provided', async () => {
+      const executors = createGroupOrchestrationExecutors(context);
+      const state = createMockState();
+
+      const instruction: GroupOrchestrationInstructionSpeak = {
+        payload: {
+          agentId: 'agent-1',
+        },
+        type: 'speak',
+      };
+
+      await executors.speak!(instruction, state);
+
+      // Verify that messages array does not contain virtual instruction message
+      const callArgs = (mockStore.internal_execAgentRuntime as any).mock.calls[0][0];
+      const lastMessage = callArgs.messages.at(-1);
+
+      // Last message should be the original last message (msg-2), not a virtual one
+      expect(lastMessage.id).toBe('msg-2');
+      expect(lastMessage.role).toBe('assistant');
+    });
+
+    it('should NOT inject virtual User Message when instruction is empty string', async () => {
+      const executors = createGroupOrchestrationExecutors(context);
+      const state = createMockState();
+
+      const instruction: GroupOrchestrationInstructionSpeak = {
+        payload: {
+          agentId: 'agent-1',
+          instruction: '',
+        },
+        type: 'speak',
+      };
+
+      await executors.speak!(instruction, state);
+
+      // Verify that messages array does not contain virtual instruction message
+      const callArgs = (mockStore.internal_execAgentRuntime as any).mock.calls[0][0];
+      const lastMessage = callArgs.messages.at(-1);
+
+      // Empty string is falsy, so last message should be the original last message
+      expect(lastMessage.id).toBe('msg-2');
+      expect(lastMessage.role).toBe('assistant');
+    });
+
+    it('should preserve original messages and only append virtual message', async () => {
+      const executors = createGroupOrchestrationExecutors(context);
+      const state = createMockState();
+
+      const instruction: GroupOrchestrationInstructionSpeak = {
+        payload: {
+          agentId: 'agent-1',
+          instruction: 'Test instruction',
+        },
+        type: 'speak',
+      };
+
+      await executors.speak!(instruction, state);
+
+      const callArgs = (mockStore.internal_execAgentRuntime as any).mock.calls[0][0];
+      const messages = callArgs.messages;
+
+      // Should have 3 messages: 2 original + 1 virtual
+      expect(messages).toHaveLength(3);
+
+      // First two messages should be the original ones
+      expect(messages[0]).toEqual({ content: 'Hello', id: 'msg-1', role: 'user' });
+      expect(messages[1]).toEqual({ content: 'Hi there', id: 'msg-2', role: 'assistant' });
+
+      // Third message should be the virtual instruction
+      expect(messages[2].role).toBe('user');
+      expect(messages[2].content).toBe('Test instruction');
     });
   });
 

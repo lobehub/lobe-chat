@@ -1,0 +1,20 @@
+import { Skeleton } from '@lobehub/ui';
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+const DetailLoading = memo(() => {
+  return (
+    <>
+      <Skeleton.Button active shape={'round'} size={'small'} width={64} />
+      <Skeleton.Title active fontSize={20} lineHeight={1.4} />
+      <Skeleton.Tags active count={2} />
+      <Flexbox align="center" gap={16} horizontal justify="space-between">
+        <Skeleton.Tags active />
+        <Skeleton.Tags active />
+      </Flexbox>
+      <Skeleton.Paragraph active fontSize={16} rows={6} />
+    </>
+  );
+});
+
+export default DetailLoading;

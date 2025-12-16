@@ -6,7 +6,6 @@ import { AgentItem, LobeAgentConfig } from '@/types/agent';
 
 export interface AgentSliceState {
   activeAgentId?: string;
-  agentConfigInitMap: Record<string, boolean>;
   agentMap: Record<string, PartialDeep<AgentItem>>;
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
@@ -29,7 +28,6 @@ export interface AgentSliceState {
 }
 
 export const initialAgentSliceState: AgentSliceState = {
-  agentConfigInitMap: {},
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,
   isAgentPinned: false,

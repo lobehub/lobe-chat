@@ -12,7 +12,7 @@ export interface PageAgentAction {
 
   // ============ List Operations ============
   convertToList: (id: string, params: any) => Promise<boolean>;
-  // ============ Basic CRUD ============
+  // ============ Basic CRUD (Legacy) ============
   createNode: (id: string, params: any) => Promise<boolean>;
   // ============ Image Operations ============
   cropImage: (id: string, params: any) => Promise<boolean>;
@@ -38,6 +38,9 @@ export interface PageAgentAction {
   listSnapshots: (id: string, params: any) => Promise<boolean>;
   // ============ Structure Operations ============
   mergeNodes: (id: string, params: any) => Promise<boolean>;
+
+  // ============ Unified Node Operations ============
+  modifyNodes: (id: string, params: any) => Promise<boolean>;
 
   moveNode: (id: string, params: any) => Promise<boolean>;
   outdentListItem: (id: string, params: any) => Promise<boolean>;
@@ -462,6 +465,71 @@ export const pageAgentSlice: StateCreator<
   mergeNodes: async (id, params) => {
     console.log('mergeNodes', id, params);
     return true;
+  },
+
+  // ============ Unified Node Operations ============
+  modifyNodes: async (id, params) => {
+    const parentOperationId = get().messageOperationMap[id];
+
+    const { operationId } = get().startOperation({
+      context: { messageId: id },
+      metadata: { apiName: 'modifyNodes', params, startTime: Date.now() },
+      parentOperationId,
+      type: 'builtinToolPageAgent',
+    });
+
+    const context = { operationId };
+
+    try {
+      const result = await runtime.modifyNodes(params);
+      const { content, success, error, state } = result;
+
+      get().completeOperation(operationId);
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
+      }
+
+      return true;
+    } catch (error) {
+      const err = error as Error;
+
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        get().failOperation(operationId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        return true;
+      }
+
+      get().failOperation(operationId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return true;
+    }
   },
 
   moveNode: async (id, params) => {

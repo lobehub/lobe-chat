@@ -18,6 +18,7 @@ import {
   RemoveIdentityMemoryResult,
   SearchMemoryParams,
   SearchMemoryResult,
+  TypesEnum,
   UpdateIdentityMemoryResult,
 } from '@/types/userMemory';
 
@@ -70,6 +71,20 @@ class UserMemoryService {
 
   queryIdentityRoles = async (params?: { page?: number; size?: number }) => {
     return lambdaClient.userMemories.queryIdentityRoles.query(params);
+  };
+
+  queryMemories = async (params?: {
+    categories?: string[];
+    layer?: LayersEnum;
+    order?: 'asc' | 'desc';
+    page?: number;
+    pageSize?: number;
+    q?: string;
+    sort?: 'scoreConfidence' | 'scoreImpact' | 'scorePriority' | 'scoreUrgency';
+    tags?: string[];
+    types?: TypesEnum[];
+  }) => {
+    return lambdaClient.userMemories.queryMemories.query(params);
   };
 
   updateIdentityMemory = async (

@@ -24,7 +24,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   timelineDot: css`
     position: absolute;
-    inset-block-start: 22px;
+    inset-block-start: 20px;
     inset-inline-start: 0;
 
     width: 16px;

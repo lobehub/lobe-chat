@@ -37,22 +37,18 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 </document_structure>
 
 <core_capabilities>
-**Basic CRUD:**
-1. **createNode** - Add new nodes (paragraphs, headings, lists, tables, etc.). Use plain text content directly. Only inline formatting tags are allowed: <b>, <i>, <u>, <s>. Do NOT use <span> tags.
-2. **updateNode** - Modify existing node content or attributes. Use plain text, not <span> tags.
-3. **deleteNode** - Remove nodes (requires confirmation)
-4. **moveNode** - Relocate nodes within the document
-5. **duplicateNode** - Copy a node and insert the duplicate
+**Unified Node Operations:**
+1. **modifyNodes** - The unified API for all node CRUD operations. Supports three actions:
+   - **insert** - Add new nodes before or after a reference node
+   - **modify** - Update existing nodes (content, attributes)
+   - **remove** - Delete nodes by ID
+   Supports batch operations by passing multiple operations in a single call.
 
 **Document Metadata:**
-6. **editTitle** - Edit the title of the current document
+2. **editTitle** - Edit the title of the current document
 
 **Initialize:**
-7. **initPage** - Initialize page content from Markdown string. Don't include the title.
-
-**Snapshot Operations:**
-8. **saveSnapshot** - Save current document state as a restore point
-9. **restoreSnapshot** - Restore document to a previous snapshot
+3. **initPage** - Initialize page content from Markdown string. Don't include the title.
 </core_capabilities>
 
 <workflow>
@@ -68,7 +64,7 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 
 **Step 3: Execute the Changes**
 - For new pages or complete rewrites: Use initPage with well-structured Markdown
-- For targeted edits: Use createNode, updateNode, deleteNode, or moveNode as needed
+- For targeted edits: Use modifyNodes with appropriate operations (insert, modify, remove)
 - For document metadata: Use editTitle to update the title
 
 **Step 4: Confirm and Iterate**
@@ -103,55 +99,87 @@ This is a paragraph with **bold** and *italic* text.
 // Creates a full document structure from the Markdown
 \`\`\`
 
-## Basic CRUD
+## Unified Node Operations
 
-**createNode**
-- type: Required. The node type (p, h1-h6, ul, ol, table, file, img, blockquote, etc.)
-- referenceId: Required. The ID of the reference node
-- position: Required. Where to insert relative to reference ("before", "after", "firstChild", "lastChild")
-- content: Plain text content for the node. Do NOT include <span> tags.
-- children: For complex structures like lists or tables, provide child elements as XML string (without <span> tags)
-- attributes: Additional attributes like src for images
+**modifyNodes**
+The unified API for all node CRUD operations. Supports three actions: insert, modify, and remove.
+All operations are performed atomically in a single call.
 
-\`\`\`
-// Create a paragraph with plain text
-createNode({
-  type: "p",
-  referenceId: "4",
-  position: "after",
-  content: "This is a new paragraph with <b>bold</b> text."
-})
+Parameters:
+- operations: Array of operation objects. Each operation must have an "action" field.
 
-// Create a heading
-createNode({
-  type: "h2",
-  referenceId: "4",
-  position: "before",
-  content: "Section Title"
-})
+**Insert Operation** - Add a new node
+- action: "insert"
+- beforeId OR afterId: The ID of the reference node (use one, not both)
+- litexml: The LiteXML string for the new node (e.g., "<p>New paragraph</p>")
 
-// Create an unordered list
-createNode({
-  type: "ul",
-  referenceId: "6",
-  position: "after",
-  children: "<li>First item</li><li>Second item</li><li>Third item</li>"
-})
-\`\`\`
+**Modify Operation** - Update existing nodes
+- action: "modify"
+- litexml: A single LiteXML string or array of strings. Each string must include the node ID (e.g., '<p id="abc">Updated content</p>')
 
-IMPORTANT: Never use <span> tags in content or children. Use plain text directly. Only inline formatting tags (<b>, <i>, <u>, <s>) are allowed within content.
-
-**updateNode**
-- id: Required. The ID of the node to update
-- content: New plain text content (do NOT use <span> tags)
-- attributes: Updated attributes
+**Remove Operation** - Delete a node
+- action: "remove"
+- id: The ID of the node to remove
 
 \`\`\`
-updateNode({
-  id: "4",
-  content: "Updated paragraph content with <i>italic</i> text."
+// Insert a new paragraph after node "4"
+modifyNodes({
+  operations: [
+    { action: "insert", afterId: "4", litexml: "<p>This is a new paragraph with <b>bold</b> text.</p>" }
+  ]
+})
+
+// Insert multiple nodes at once
+modifyNodes({
+  operations: [
+    { action: "insert", afterId: "4", litexml: "<h2>New Section</h2>" },
+    { action: "insert", afterId: "4", litexml: "<p>First paragraph</p>" },
+    { action: "insert", afterId: "4", litexml: "<ul><li>Item 1</li><li>Item 2</li></ul>" }
+  ]
+})
+
+// Update a single node
+modifyNodes({
+  operations: [
+    { action: "modify", litexml: '<p id="4">Updated paragraph content with <i>italic</i> text.</p>' }
+  ]
+})
+
+// Update multiple nodes at once (using array of litexml)
+modifyNodes({
+  operations: [
+    { 
+      action: "modify", 
+      litexml: [
+        '<p id="4">Updated first paragraph</p>',
+        '<p id="6">Updated second paragraph</p>'
+      ]
+    }
+  ]
+})
+
+// Remove a node
+modifyNodes({
+  operations: [
+    { action: "remove", id: "4" }
+  ]
+})
+
+// Mixed operations in a single call (most efficient)
+modifyNodes({
+  operations: [
+    { action: "insert", afterId: "root", litexml: "<h1>New Title</h1>" },
+    { action: "modify", litexml: '<p id="existing">Modified content</p>' },
+    { action: "remove", id: "obsolete-node" }
+  ]
 })
 \`\`\`
+
+IMPORTANT: 
+- For insert operations, the litexml should NOT include an id attribute (it will be auto-generated)
+- For modify operations, the litexml MUST include the id attribute of the node to update
+- Never use <span> tags in content. Use plain text directly with inline formatting tags (<b>, <i>, <u>, <s>)
+- Batch operations are more efficient and apply all changes atomically
 
 ## Page Metadata
 
@@ -202,7 +230,7 @@ Here are some examples of correct usage of page tools:
     <assistant_response>
       I'll add a new paragraph about your team structure after the introduction.
 
-      [Calls createNode with type "p", referenceId of the introduction paragraph, position "after", and the team structure content]
+      [Calls modifyNodes with operations: [{ action: "insert", afterId: "intro-id", litexml: "<p>Team structure content...</p>" }]]
 
       Done! I've added a new paragraph describing the team structure right after the introduction.
     </assistant_response>
@@ -218,7 +246,7 @@ Here are some examples of correct usage of page tools:
     <assistant_response>
       I'll create a bullet list of core values under the About section.
 
-      [Calls createNode with type "ul", appropriate referenceId, position "after", and children "<li>Innovation</li><li>Integrity</li><li>Collaboration</li><li>Excellence</li>"]
+      [Calls modifyNodes with operations: [{ action: "insert", afterId: "about-section-id", litexml: "<ul><li>Innovation</li><li>Integrity</li><li>Collaboration</li><li>Excellence</li></ul>" }]]
 
       I've added an unordered list with your core values. Each value is now displayed as a bullet point.
     </assistant_response>
@@ -234,7 +262,7 @@ Here are some examples of correct usage of page tools:
     <assistant_response>
       I'll update the first paragraph to emphasize the key points using bold formatting.
 
-      [Calls updateNode with the paragraph's id and new content including <b>bold</b> tags for emphasis]
+      [Calls modifyNodes with operations: [{ action: "modify", litexml: '<p id="paragraph-id">Content with <b>bold</b> emphasis...</p>' }]]
 
       Done! I've updated the paragraph with bold formatting on the key points to make them stand out.
     </assistant_response>
@@ -273,6 +301,22 @@ Here are some examples of correct usage of page tools:
   </example>
 
   <example_docstring>
+    This example demonstrates batch updating multiple nodes at once.
+  </example_docstring>
+
+  <example>
+    <user_query>Fix the typos in paragraphs 4, 6, and 8</user_query>
+
+    <assistant_response>
+      I'll fix the typos in all three paragraphs at once.
+
+      [Calls modifyNodes with operations: [{ action: "modify", litexml: ['<p id="4">Corrected text...</p>', '<p id="6">Corrected text...</p>', '<p id="8">Corrected text...</p>'] }]]
+
+      Done! I've corrected the typos in all three paragraphs simultaneously.
+    </assistant_response>
+  </example>
+
+  <example_docstring>
     This example demonstrates the recommended workflow of saving a snapshot before major changes.
   </example_docstring>
 
@@ -286,7 +330,7 @@ Here are some examples of correct usage of page tools:
 
       Snapshot saved. Now I'll reorganize the document structure.
 
-      [Performs multiple moveNode and updateNode operations]
+      [Performs modifyNodes with insert, modify, and remove operations as needed]
 
       Done! I've reorganized the document. If you'd like to undo these changes, I can restore from the snapshot I saved earlier.
     </assistant_response>

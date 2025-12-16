@@ -8,14 +8,16 @@ import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 interface PreferencesListProps {
+  isLoading?: boolean;
+  searchValue?: string;
   viewMode: ViewMode;
 }
 
-const PreferencesList = memo<PreferencesListProps>(({ viewMode }) => {
+const PreferencesList = memo<PreferencesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setPreferenceId] = useQueryState('preferenceId', { clearOnDefault: true });
@@ -42,13 +44,26 @@ const PreferencesList = memo<PreferencesListProps>(({ viewMode }) => {
     });
   };
 
-  if (!preferences || preferences.length === 0)
-    return <MemoryEmpty description={t('preference.empty')} />;
+  const isEmpty = preferences.length === 0;
+
+  if (isEmpty) {
+    return <MemoryEmpty search={Boolean(searchValue)} title={t('preference.empty')} />;
+  }
 
   return viewMode === 'timeline' ? (
-    <TimelineView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />
+    <TimelineView
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+      preferences={preferences}
+    />
   ) : (
-    <MasonryView onClick={handleCardClick} onDelete={handleDelete} preferences={preferences} />
+    <GridView
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+      preferences={preferences}
+    />
   );
 });
 

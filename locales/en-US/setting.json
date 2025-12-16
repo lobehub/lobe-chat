@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Enable to show developer-related features and options",
+      "title": "Developer Mode"
+    },
     "lang": {
       "autoMode": "Follow System",
       "title": "Language"
+    },
+    "liteMode": {
+      "desc": "Enable to simplify the interface and hide advanced features",
+      "title": "Lite Mode"
+    },
+    "responseLanguage": {
+      "auto": "Follow System",
+      "desc": "Set the language for AI responses",
+      "placeholder": "Select response language",
+      "title": "Response Language"
     },
     "themeMode": {
       "auto": "Automatic",

@@ -10,7 +10,7 @@ import {
   useCallback,
   useEffect,
 } from 'react';
-import { useNavigate, useRouteError } from 'react-router-dom';
+import { Navigate, Route, useNavigate, useRouteError } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useGlobalStore } from '@/store/global';
@@ -109,3 +109,68 @@ export const NavigatorRegistrar = memo(() => {
 
   return null;
 });
+
+/**
+ * Route configuration object type (compatible with createBrowserRouter format)
+ */
+export interface RouteConfig {
+  // HydrateFallback is ignored in declarative mode
+  HydrateFallback?: ComponentType;
+  children?: RouteConfig[];
+  element?: ReactElement;
+  errorElement?: ReactElement;
+  index?: boolean;
+  loader?: (args: { params: Record<string, string | undefined> }) => unknown;
+  path?: string;
+}
+
+/**
+ * Convert route config objects to declarative Route elements
+ * This allows using createBrowserRouter-style config with BrowserRouter
+ *
+ * @example
+ * const routes: RouteConfig[] = [
+ *   {
+ *     path: '/',
+ *     element: <Layout />,
+ *     children: [
+ *       { path: 'chat', element: <Chat /> }
+ *     ]
+ *   }
+ * ];
+ *
+ * <BrowserRouter>
+ *   <Routes>{renderRoutes(routes)}</Routes>
+ * </BrowserRouter>
+ */
+export function renderRoutes(routes: RouteConfig[]): ReactElement[] {
+  return routes.map((route, index) => {
+    const { path, element, children, index: isIndex, loader } = route;
+
+    // Handle redirect loaders (convert to Navigate element)
+    if (loader && !element && isIndex) {
+      // Check if loader is a redirect by inspecting it
+      // For now, we'll handle this case in the config itself
+    }
+
+    const childRoutes = children ? renderRoutes(children) : undefined;
+
+    if (isIndex) {
+      return <Route element={element} index key={`index-${index}`} />;
+    }
+
+    return (
+      <Route element={element} key={path || index} path={path}>
+        {childRoutes}
+      </Route>
+    );
+  });
+}
+
+/**
+ * Create a redirect element for use in route config
+ * Replaces loader: () => redirect('/path') in declarative mode
+ */
+export function redirectElement(to: string): ReactElement {
+  return <Navigate replace to={to} />;
+}

@@ -8,7 +8,6 @@ export const DEFAULT_PREFERENCE: UserPreference = {
   lab: {
     enableInputMarkdown: true,
   },
-  telemetry: null,
   topicDisplayMode: TopicDisplayMode.ByTime,
   useCmdEnterToSend: false,
 };

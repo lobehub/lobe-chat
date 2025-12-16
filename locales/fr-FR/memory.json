@@ -13,6 +13,11 @@
     "source": "Source",
     "urgency": "Urgence"
   },
+  "empty": {
+    "description": "L'extraction de la mémoire est un processus progressif. Veuillez accumuler davantage de sujets pour enrichir le contenu extrait. Essayez d'engager une conversation plus approfondie avec l'assistant afin de mieux capter et stocker des informations précieuses.",
+    "search": "Aucun souvenir correspondant trouvé",
+    "title": "Aucun souvenir pour le moment"
+  },
   "experience": {
     "actions": {
       "delete": "Supprimer",
@@ -31,6 +36,16 @@
       "outcome": "Résultat possible",
       "reasoning": "Raisonnement",
       "situation": "Contexte de la situation"
+    }
+  },
+  "filter": {
+    "search": "Rechercher...",
+    "sort": {
+      "createdAt": "Date de création",
+      "scoreConfidence": "Niveau de confiance",
+      "scoreImpact": "Impact",
+      "scorePriority": "Priorité",
+      "scoreUrgency": "Urgence"
     }
   },
   "identity": {

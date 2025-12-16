@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 
-export type ViewMode = 'timeline' | 'masonry';
+export type ViewMode = 'timeline' | 'grid';
 
 interface ViewModeSwitcherProps {
   onChange: (mode: ViewMode) => void;
@@ -27,9 +27,9 @@ const ViewModeSwitcher = memo<ViewModeSwitcherProps>(({ value, onChange }) => {
         title={t('viewMode.timeline')}
       />
       <ActionIcon
-        active={value === 'masonry'}
+        active={value === 'grid'}
         icon={LayoutDashboardIcon}
-        onClick={() => onChange('masonry')}
+        onClick={() => onChange('grid')}
         size={DESKTOP_HEADER_ICON_SIZE}
         title={t('viewMode.masonry')}
       />

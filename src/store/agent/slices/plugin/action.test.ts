@@ -29,7 +29,6 @@ beforeEach(() => {
   vi.clearAllMocks();
   useAgentStore.setState({
     activeAgentId: undefined,
-    agentConfigInitMap: {},
     agentMap: {},
     builtinAgentIdMap: {},
     defaultAgentConfig: {} as any,

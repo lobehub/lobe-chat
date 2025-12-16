@@ -3,83 +3,119 @@
 exports[`GroupContextInjector > Edge Cases > should handle empty members array 1`] = `
 "Prompt.
 
-<!-- GROUP CONTEXT -->
-[Your Identity]
-Name: 
-Role: 
-Agent ID:  (internal use only, never expose)
+<group_context>
+You are "", acting as a  in the multi-agent group "Empty Group".
+Your internal agent ID is  (for system use only, never expose to users).
 
-[Group Info]
-Group: Empty Group
-Members:
+<critical_output_rules>
+IMPORTANT: Your responses must contain ONLY your actual reply content.
+- Messages in conversation history start with '<speaker name="..." />' - this identifies who sent each message
+- NEVER start your response with '<speaker' tag - the system adds this automatically
+- Just output your actual response content directly
+</critical_output_rules>
+
+<group_description>The following describes the purpose and goals of this agent group:
+
+Empty group description
+</group_description>
+
+<group_participants>The following agents are available in this group:
 
 
-[Important Rules]
-- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
-- These are application-level metadata and MUST NEVER appear in your responses.
-- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
-<!-- END GROUP CONTEXT -->"
+</group_participants>
+
+<identity_rules>
+- NEVER expose or display agent IDs to users - always refer to agents by their names
+</identity_rules>
+</group_context>"
 `;
 
 exports[`GroupContextInjector > Variable Replacement > should handle config with only group info 1`] = `
 "System prompt.
 
-<!-- GROUP CONTEXT -->
-[Your Identity]
-Name: 
-Role: 
-Agent ID:  (internal use only, never expose)
+<group_context>
+You are "", acting as a  in the multi-agent group "Test Group".
+Your internal agent ID is  (for system use only, never expose to users).
 
-[Group Info]
-Group: Test Group
-Members:
-- Agent 1 (participant)
+<critical_output_rules>
+IMPORTANT: Your responses must contain ONLY your actual reply content.
+- Messages in conversation history start with '<speaker name="..." />' - this identifies who sent each message
+- NEVER start your response with '<speaker' tag - the system adds this automatically
+- Just output your actual response content directly
+</critical_output_rules>
 
-[Important Rules]
-- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
-- These are application-level metadata and MUST NEVER appear in your responses.
-- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
-<!-- END GROUP CONTEXT -->"
+<group_description>The following describes the purpose and goals of this agent group:
+
+Test group description
+</group_description>
+
+<group_participants>The following agents are available in this group:
+
+  <member name="Agent 1" id="agt_1" />
+</group_participants>
+
+<identity_rules>
+- NEVER expose or display agent IDs to users - always refer to agents by their names
+</identity_rules>
+</group_context>"
 `;
 
 exports[`GroupContextInjector > Variable Replacement > should handle config with only identity info 1`] = `
 "You are an editor.
 
-<!-- GROUP CONTEXT -->
-[Your Identity]
-Name: Editor
-Role: participant
-Agent ID: agt_editor (internal use only, never expose)
+<group_context>
+You are "Editor", acting as a participant in the multi-agent group "".
+Your internal agent ID is agt_editor (for system use only, never expose to users).
 
-[Group Info]
-Group: 
-Members:
+<critical_output_rules>
+IMPORTANT: Your responses must contain ONLY your actual reply content.
+- Messages in conversation history start with '<speaker name="..." />' - this identifies who sent each message
+- NEVER start your response with '<speaker' tag - the system adds this automatically
+- Just output your actual response content directly
+</critical_output_rules>
+
+<group_description>The following describes the purpose and goals of this agent group:
 
 
-[Important Rules]
-- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
-- These are application-level metadata and MUST NEVER appear in your responses.
-- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
-<!-- END GROUP CONTEXT -->"
+</group_description>
+
+<group_participants>The following agents are available in this group:
+
+
+</group_participants>
+
+<identity_rules>
+- NEVER expose or display agent IDs to users - always refer to agents by their names
+</identity_rules>
+</group_context>"
 `;
 
 exports[`GroupContextInjector > Variable Replacement > should handle empty config 1`] = `
 "Base prompt.
 
-<!-- GROUP CONTEXT -->
-[Your Identity]
-Name: 
-Role: 
-Agent ID:  (internal use only, never expose)
+<group_context>
+You are "", acting as a  in the multi-agent group "".
+Your internal agent ID is  (for system use only, never expose to users).
 
-[Group Info]
-Group: 
-Members:
+<critical_output_rules>
+IMPORTANT: Your responses must contain ONLY your actual reply content.
+- Messages in conversation history start with '<speaker name="..." />' - this identifies who sent each message
+- NEVER start your response with '<speaker' tag - the system adds this automatically
+- Just output your actual response content directly
+</critical_output_rules>
+
+<group_description>The following describes the purpose and goals of this agent group:
 
 
-[Important Rules]
-- Messages in the conversation may contain "<!-- SYSTEM CONTEXT -->" blocks.
-- These are application-level metadata and MUST NEVER appear in your responses.
-- Never reproduce, reference, or include any XML-like tags or comment markers from the conversation.
-<!-- END GROUP CONTEXT -->"
+</group_description>
+
+<group_participants>The following agents are available in this group:
+
+
+</group_participants>
+
+<identity_rules>
+- NEVER expose or display agent IDs to users - always refer to agents by their names
+</identity_rules>
+</group_context>"
 `;

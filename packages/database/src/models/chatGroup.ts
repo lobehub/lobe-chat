@@ -143,17 +143,29 @@ export class ChatGroupModel {
     return result;
   }
 
-  async addAgentsToGroup(groupId: string, agentIds: string[]): Promise<ChatGroupAgentItem[]> {
+  /**
+   * Add multiple agents to a group.
+   * Automatically skips agents that are already in the group.
+   *
+   * @returns Object containing:
+   * - `added`: Agents that were newly added to the group
+   * - `existing`: Agent IDs that were already in the group (skipped)
+   */
+  async addAgentsToGroup(
+    groupId: string,
+    agentIds: string[],
+  ): Promise<{ added: NewChatGroupAgent[]; existing: string[] }> {
     const group = await this.findById(groupId);
     if (!group) throw new Error('Group not found');
 
     const existingAgents = await this.getGroupAgents(groupId);
-    const existingAgentIds = new Set(existingAgents.map((a) => a.id));
+    const existingAgentIds = new Set(existingAgents.map((a) => a.agentId));
 
     const newAgentIds = agentIds.filter((id) => !existingAgentIds.has(id));
+    const existingIds = agentIds.filter((id) => existingAgentIds.has(id));
 
     if (newAgentIds.length === 0) {
-      return [];
+      return { added: [], existing: existingIds };
     }
 
     const newAgents: NewChatGroupAgent[] = newAgentIds.map((agentId) => ({
@@ -163,7 +175,9 @@ export class ChatGroupModel {
       userId: this.userId,
     }));
 
-    return this.db.insert(chatGroupsAgents).values(newAgents).returning();
+    const added = await this.db.insert(chatGroupsAgents).values(newAgents).returning();
+
+    return { added, existing: existingIds };
   }
 
   async removeAgentFromGroup(groupId: string, agentId: string): Promise<void> {

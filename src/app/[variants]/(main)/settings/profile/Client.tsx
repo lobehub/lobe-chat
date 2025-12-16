@@ -258,6 +258,116 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
+const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
+  const { t } = useTranslation('auth');
+  const occupation = useUserStore(userProfileSelectors.occupation);
+  const updateOccupation = useUserStore((s) => s.updateOccupation);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleStartEdit = () => {
+    setEditValue(occupation || '');
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditValue('');
+  };
+
+  const handleSave = useCallback(async () => {
+    try {
+      setSaving(true);
+      await updateOccupation(editValue.trim());
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Failed to update occupation:', error);
+      fetchErrorNotification.error({
+        errorMessage: error instanceof Error ? error.message : String(error),
+        status: 500,
+      });
+    } finally {
+      setSaving(false);
+    }
+  }, [editValue, updateOccupation]);
+
+  const editingContent = (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: -10 }}
+      key="editing"
+      transition={{ duration: 0.2 }}
+    >
+      <Flexbox gap={12}>
+        {!mobile && <Typography.Text strong>{t('profile.occupationInputHint')}</Typography.Text>}
+        <Input
+          autoFocus
+          onChange={(e) => setEditValue(e.target.value)}
+          onPressEnter={handleSave}
+          placeholder={t('profile.occupationPlaceholder')}
+          value={editValue}
+        />
+        <Flexbox gap={8} horizontal justify="flex-end">
+          <Button disabled={saving} onClick={handleCancel} size="small">
+            {t('profile.cancel')}
+          </Button>
+          <Button loading={saving} onClick={handleSave} size="small" type="primary">
+            {t('profile.save')}
+          </Button>
+        </Flexbox>
+      </Flexbox>
+    </motion.div>
+  );
+
+  const displayContent = (
+    <motion.div
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }}
+      key="display"
+      transition={{ duration: 0.2 }}
+    >
+      {mobile ? (
+        <Typography.Text>{occupation || '--'}</Typography.Text>
+      ) : (
+        <Flexbox align="center" horizontal justify="space-between">
+          <Typography.Text>{occupation || '--'}</Typography.Text>
+          <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+            {t('profile.updateOccupation')}
+          </Typography.Text>
+        </Flexbox>
+      )}
+    </motion.div>
+  );
+
+  if (mobile) {
+    return (
+      <Flexbox gap={12} style={rowStyle}>
+        <Flexbox align="center" horizontal justify="space-between">
+          <Typography.Text strong>{t('profile.occupation')}</Typography.Text>
+          {!isEditing && (
+            <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+              {t('profile.updateOccupation')}
+            </Typography.Text>
+          )}
+        </Flexbox>
+        <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
+      </Flexbox>
+    );
+  }
+
+  return (
+    <Flexbox gap={24} horizontal style={rowStyle}>
+      <Typography.Text style={labelStyle}>{t('profile.occupation')}</Typography.Text>
+      <Flexbox style={{ flex: 1 }}>
+        <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
+      </Flexbox>
+    </Flexbox>
+  );
+});
+
 const UsernameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
   const username = useUserStore(userProfileSelectors.username);
@@ -515,6 +625,11 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       {/* Username Row - Editable */}
       <UsernameRow mobile={mobile} />
+
+      <Divider style={{ margin: 0 }} />
+
+      {/* Career Row - Editable */}
+      <OccupationRow mobile={mobile} />
 
       <Divider style={{ margin: 0 }} />
 

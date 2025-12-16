@@ -97,7 +97,7 @@ export const List = memo(() => {
         </Center>
       ) : viewMode === 'list' ? (
         <Virtuoso
-          increaseViewportBy={800}
+          increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
           itemContent={(index) => {
             const item = data![index];
             return <Item key={item.id} {...item} />;

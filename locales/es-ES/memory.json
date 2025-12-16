@@ -13,6 +13,11 @@
     "source": "Fuente",
     "urgency": "Urgencia"
   },
+  "empty": {
+    "description": "La recuperación de recuerdos es un proceso gradual. Acumula más temas para enriquecer el contenido de la memoria recuperada e intenta mantener conversaciones más profundas con el asistente para capturar y almacenar mejor información valiosa.",
+    "search": "No se encontraron recuerdos coincidentes",
+    "title": "Sin recuerdos por ahora"
+  },
   "experience": {
     "actions": {
       "delete": "Eliminar",
@@ -31,6 +36,16 @@
       "outcome": "Resultado posible",
       "reasoning": "Razonamiento",
       "situation": "Situación de fondo"
+    }
+  },
+  "filter": {
+    "search": "Buscar...",
+    "sort": {
+      "createdAt": "Fecha de creación",
+      "scoreConfidence": "Nivel de confianza",
+      "scoreImpact": "Nivel de impacto",
+      "scorePriority": "Nivel de prioridad",
+      "scoreUrgency": "Nivel de urgencia"
     }
   },
   "identity": {

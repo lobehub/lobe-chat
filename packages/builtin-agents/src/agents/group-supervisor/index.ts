@@ -4,24 +4,10 @@ import { supervisorSystemRole } from './systemRole';
 import type { GroupSupervisorContext } from './type';
 
 /**
- * Build group members XML from context
- */
-const buildGroupMembersXml = (agents: GroupSupervisorContext['availableAgents']): string => {
-  return agents
-    .map((agent) => `  <member name="${agent.title || agent.id}" id="${agent.id}" />`)
-    .join('\n');
-};
-
-/**
  * Replace template variables in system role
  */
 const resolveSystemRole = (ctx: GroupSupervisorContext): string => {
-  const membersXml = buildGroupMembersXml(ctx.availableAgents);
-
-  return supervisorSystemRole
-    .replace('{{GROUP_TITLE}}', ctx.groupTitle)
-    .replace('{{SYSTEM_PROMPT}}', ctx.systemPrompt || '')
-    .replace('{{GROUP_MEMBERS}}', membersXml);
+  return supervisorSystemRole.replace('{{GROUP_TITLE}}', ctx.groupTitle);
 };
 
 /**

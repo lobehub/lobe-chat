@@ -80,7 +80,7 @@ describe('ChatGroupLifecycleSlice', () => {
         group: mockGroup as any,
         supervisorAgentId: 'supervisor-1',
       });
-      vi.mocked(chatGroupService.addAgentsToGroup).mockResolvedValue([]);
+      vi.mocked(chatGroupService.addAgentsToGroup).mockResolvedValue({ added: [], existing: [] });
       vi.mocked(chatGroupService.getGroups).mockResolvedValue([mockGroup as any]);
 
       const { result } = renderHook(() => useAgentGroupStore());

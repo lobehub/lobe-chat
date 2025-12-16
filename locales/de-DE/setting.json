@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Wenn aktiviert, werden entwicklerbezogene Funktionen und Optionen angezeigt",
+      "title": "Entwicklermodus"
+    },
     "lang": {
       "autoMode": "System folgen",
       "title": "Sprache"
+    },
+    "liteMode": {
+      "desc": "Wenn aktiviert, wird die Benutzeroberfläche vereinfacht und erweiterte Funktionen werden ausgeblendet",
+      "title": "Kompaktmodus"
+    },
+    "responseLanguage": {
+      "auto": "Systemsprache verwenden",
+      "desc": "Sprache festlegen, in der die KI antwortet",
+      "placeholder": "Antwortsprache auswählen",
+      "title": "Antwortsprache"
     },
     "themeMode": {
       "auto": "Automatisch",

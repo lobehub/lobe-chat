@@ -1,12 +1,13 @@
 // @vitest-environment node
+import { LayersEnum, MemorySourceType, MergeStrategyEnum, TypesEnum } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { idGenerator } from '@/database/utils/idGenerator';
-import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
 
 import {
+  topics,
   userMemories,
   userMemoriesContexts,
   userMemoriesExperiences,
@@ -176,7 +177,9 @@ describe('UserMemoryModel', () => {
     it('returns null when input is not an array or contains no valid items', () => {
       expect(UserMemoryModel.parseAssociatedObjects(undefined)).toHaveLength(0);
       expect(UserMemoryModel.parseAssociatedObjects('not-array')).toHaveLength(0);
-      expect(UserMemoryModel.parseAssociatedObjects([null, undefined, '', '   ', 0])).toHaveLength(0);
+      expect(UserMemoryModel.parseAssociatedObjects([null, undefined, '', '   ', 0])).toHaveLength(
+        0,
+      );
     });
 
     it('normalizes objects', () => {
@@ -187,9 +190,7 @@ describe('UserMemoryModel', () => {
         { another: true },
       ]);
 
-      expect(result).toEqual([
-        { name: 'object' },
-      ]);
+      expect(result).toEqual([{ name: 'object' }]);
     });
   });
 
@@ -991,13 +992,23 @@ describe('UserMemoryModel', () => {
       const preferenceInput = generateRandomCreateUserMemoryPreferenceParams();
       const identityDescription = 'identity ' + nanoid();
 
-      const { context, memory: contextMemory } = await userMemoryModel.createContextMemory(contextInput);
-      const { experience, memory: experienceMemory } = await userMemoryModel.createExperienceMemory(experienceInput);
-      const { preference, memory: preferenceMemory } = await userMemoryModel.createPreferenceMemory(preferenceInput);
-      const { identityId, userMemoryId: identityMemoryId } = await userMemoryModel.addIdentityEntry({
-        base: { summary: 'identity summary ' + nanoid(), tags: ['identity'] },
-        identity: { description: identityDescription, relationship: 'friend', tags: ['identity'], type: 'personal' },
-      });
+      const { context, memory: contextMemory } =
+        await userMemoryModel.createContextMemory(contextInput);
+      const { experience, memory: experienceMemory } =
+        await userMemoryModel.createExperienceMemory(experienceInput);
+      const { preference, memory: preferenceMemory } =
+        await userMemoryModel.createPreferenceMemory(preferenceInput);
+      const { identityId, userMemoryId: identityMemoryId } = await userMemoryModel.addIdentityEntry(
+        {
+          base: { summary: 'identity summary ' + nanoid(), tags: ['identity'] },
+          identity: {
+            description: identityDescription,
+            relationship: 'friend',
+            tags: ['identity'],
+            type: 'personal',
+          },
+        },
+      );
 
       const identity = await serverDB.query.userMemoriesIdentities.findFirst({
         where: eq(userMemoriesIdentities.id, identityId),
@@ -1118,12 +1129,44 @@ describe('UserMemoryModel', () => {
       expect((detail as any).context.userMemoryIds).toEqual([memory.id]);
       expect((detail as any).context.metadata).toEqual(params.context.metadata);
       expect(detail?.memory.memoryLayer).toBe(LayersEnum.Context);
+      expect(detail?.source).toBeUndefined();
+      expect(detail?.sourceType).toBe(MemorySourceType.ChatTopic);
 
-      const updated = await serverDB.query.userMemories.findFirst({
+      const persisted = await serverDB.query.userMemories.findFirst({
         where: eq(userMemories.id, memory.id),
       });
 
-      expect(updated?.accessedCount).toBe(1);
+      expect(persisted?.accessedCount).toBe(0);
+    });
+
+    it('resolves topic source data for memory detail', async () => {
+      const topic = {
+        agentId: 'agent-1',
+        id: idGenerator('topics'),
+        sessionId: 'session-1',
+        title: 'Topic title',
+        userId,
+      };
+
+      const topicSpy = vi
+        .spyOn((userMemoryModel as any).topicModel, 'findById')
+        .mockResolvedValue(topic as any);
+
+      const params = generateRandomCreateUserMemoryContextParams();
+      params.context.metadata = { sourceId: topic.id };
+
+      const { context } = await userMemoryModel.createContextMemory(params);
+
+      const detail = await userMemoryModel.getMemoryDetail({
+        id: context.id,
+        layer: LayersEnum.Context,
+      });
+
+      expect(detail?.sourceType).toBe(MemorySourceType.ChatTopic);
+      expect(detail?.source?.id).toBe(topic.id);
+      expect(detail?.source?.title).toBe(topic.title);
+
+      topicSpy.mockRestore();
     });
 
     it('returns undefined for memories owned by another user', async () => {

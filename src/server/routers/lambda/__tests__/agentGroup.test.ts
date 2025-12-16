@@ -36,7 +36,9 @@ describe('agentGroupRouter', () => {
     };
 
     agentGroupRepoMock = {
+      createGroupWithSupervisor: vi.fn(),
       findByIdWithAgents: vi.fn(),
+      removeAgentsFromGroup: vi.fn(),
     };
 
     // Use vi.spyOn to mock the class constructors to return our mock instances
@@ -71,16 +73,19 @@ describe('agentGroupRouter', () => {
         config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: true },
       };
 
-      chatGroupModelMock.create.mockResolvedValue(mockCreatedGroup);
+      agentGroupRepoMock.createGroupWithSupervisor.mockResolvedValue({
+        group: mockCreatedGroup,
+        supervisorAgentId: 'supervisor-1',
+      });
 
       const caller = agentGroupRouter.createCaller(mockCtx);
       const result = await caller.createGroup(mockInput);
 
-      expect(chatGroupModelMock.create).toHaveBeenCalledWith({
+      expect(agentGroupRepoMock.createGroupWithSupervisor).toHaveBeenCalledWith({
         ...mockInput,
         config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: true },
       });
-      expect(result).toEqual(mockCreatedGroup);
+      expect(result).toEqual({ group: mockCreatedGroup, supervisorAgentId: 'supervisor-1' });
     });
 
     it('should create a group without config', async () => {
@@ -93,16 +98,19 @@ describe('agentGroupRouter', () => {
         title: 'Test Group',
       };
 
-      chatGroupModelMock.create.mockResolvedValue(mockCreatedGroup);
+      agentGroupRepoMock.createGroupWithSupervisor.mockResolvedValue({
+        group: mockCreatedGroup,
+        supervisorAgentId: 'supervisor-1',
+      });
 
       const caller = agentGroupRouter.createCaller(mockCtx);
       const result = await caller.createGroup(mockInput);
 
-      expect(chatGroupModelMock.create).toHaveBeenCalledWith({
+      expect(agentGroupRepoMock.createGroupWithSupervisor).toHaveBeenCalledWith({
         ...mockInput,
         config: undefined,
       });
-      expect(result).toEqual(mockCreatedGroup);
+      expect(result).toEqual({ group: mockCreatedGroup, supervisorAgentId: 'supervisor-1' });
     });
   });
 
@@ -123,7 +131,10 @@ describe('agentGroupRouter', () => {
       const mockCreatedGroup = { id: 'group-1', title: 'Team Group' };
 
       agentModelMock.batchCreate.mockResolvedValue(mockCreatedAgents);
-      chatGroupModelMock.createWithAgents.mockResolvedValue({ group: mockCreatedGroup });
+      agentGroupRepoMock.createGroupWithSupervisor.mockResolvedValue({
+        group: mockCreatedGroup,
+        supervisorAgentId: 'supervisor-1',
+      });
 
       const caller = agentGroupRouter.createCaller(mockCtx);
       const result = await caller.createGroupWithMembers(mockInput);
@@ -132,7 +143,7 @@ describe('agentGroupRouter', () => {
         { title: 'Agent 1', systemRole: 'Helper', virtual: true },
         { title: 'Agent 2', systemRole: 'Assistant', virtual: true },
       ]);
-      expect(chatGroupModelMock.createWithAgents).toHaveBeenCalledWith(
+      expect(agentGroupRepoMock.createGroupWithSupervisor).toHaveBeenCalledWith(
         {
           title: 'Team Group',
           config: { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, enableSupervisor: true },
@@ -142,6 +153,7 @@ describe('agentGroupRouter', () => {
       expect(result).toEqual({
         agentIds: ['agent-1', 'agent-2'],
         groupId: 'group-1',
+        supervisorAgentId: 'supervisor-1',
       });
     });
   });
@@ -281,20 +293,22 @@ describe('agentGroupRouter', () => {
         agentIds: ['agent-1', 'agent-2'],
       };
 
-      const caller = agentGroupRouter.createCaller(mockCtx);
-      await caller.removeAgentsFromGroup(mockInput);
+      const mockResult = {
+        deletedVirtualAgentIds: [],
+        removedFromGroup: 2,
+      };
 
-      expect(chatGroupModelMock.removeAgentFromGroup).toHaveBeenCalledTimes(2);
-      expect(chatGroupModelMock.removeAgentFromGroup).toHaveBeenNthCalledWith(
-        1,
+      agentGroupRepoMock.removeAgentsFromGroup.mockResolvedValue(mockResult);
+
+      const caller = agentGroupRouter.createCaller(mockCtx);
+      const result = await caller.removeAgentsFromGroup(mockInput);
+
+      expect(agentGroupRepoMock.removeAgentsFromGroup).toHaveBeenCalledWith(
         'group-1',
-        'agent-1',
+        ['agent-1', 'agent-2'],
+        undefined,
       );
-      expect(chatGroupModelMock.removeAgentFromGroup).toHaveBeenNthCalledWith(
-        2,
-        'group-1',
-        'agent-2',
-      );
+      expect(result).toEqual(mockResult);
     });
   });
 

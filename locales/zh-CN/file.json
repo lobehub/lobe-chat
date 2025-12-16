@@ -76,10 +76,10 @@
   "empty": "暂无已上传文件/文件夹",
   "header": {
     "actions": {
-      "connect": "连接...",
       "builtInBlockList": {
         "filtered": "已过滤 {{ignored}} 个文件（共 {{total}} 个文件）"
       },
+      "connect": "连接...",
       "gitignore": {
         "apply": "应用规则",
         "cancel": "忽略规则",

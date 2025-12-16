@@ -4,18 +4,17 @@ import { KeyboardEvent, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
-import type { UserMemoryIdentity } from '@/types/index';
+import { DisplayIdentityMemory } from '@/database/repositories/userMemory';
 
 interface IdentityCardProps {
-  identity: UserMemoryIdentity;
-  onClick?: (identity: UserMemoryIdentity) => void;
+  identity: DisplayIdentityMemory;
+  onClick?: (identity: DisplayIdentityMemory) => void;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
 }
 
 const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onClick }) => {
   const { t } = useTranslation('memory');
-  const showRelationship = identity.relationship && identity.relationship !== 'self';
 
   const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
     info.domEvent.stopPropagation();
@@ -51,7 +50,6 @@ const IdentityCard = memo<IdentityCardProps>(({ identity, onDelete, onEdit, onCl
       hashTags={identity.tags}
       onClick={() => onClick?.(identity)}
       title={identity.role}
-      titleAddon={showRelationship ? identity.relationship : undefined}
       updatedAt={identity.updatedAt || identity.createdAt}
     >
       {identity.description}

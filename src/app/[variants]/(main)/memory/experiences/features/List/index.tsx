@@ -8,14 +8,16 @@ import { useGlobalStore } from '@/store/global';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 interface ExperiencesListProps {
+  isLoading?: boolean;
+  searchValue?: string;
   viewMode: ViewMode;
 }
 
-const ExperiencesList = memo<ExperiencesListProps>(({ viewMode }) => {
+const ExperiencesList = memo<ExperiencesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setExperienceId] = useQueryState('experienceId', { clearOnDefault: true });
@@ -42,13 +44,26 @@ const ExperiencesList = memo<ExperiencesListProps>(({ viewMode }) => {
     });
   };
 
-  if (!experiences || experiences.length === 0)
-    return <MemoryEmpty description={t('experience.empty')} />;
+  const isEmpty = experiences.length === 0;
+
+  if (isEmpty) {
+    return <MemoryEmpty search={Boolean(searchValue)} title={t('experience.empty')} />;
+  }
 
   return viewMode === 'timeline' ? (
-    <TimelineView experiences={experiences} onCardClick={handleCardClick} onDelete={handleDelete} />
+    <TimelineView
+      experiences={experiences}
+      isLoading={isLoading}
+      onCardClick={handleCardClick}
+      onDelete={handleDelete}
+    />
   ) : (
-    <MasonryView experiences={experiences} onClick={handleCardClick} onDelete={handleDelete} />
+    <GridView
+      experiences={experiences}
+      isLoading={isLoading}
+      onClick={handleCardClick}
+      onDelete={handleDelete}
+    />
   );
 });
 

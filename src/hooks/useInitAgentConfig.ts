@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useAgentStore } from '@/store/agent';
 import { useUserStore } from '@/store/user';
@@ -16,9 +16,9 @@ export const useInitAgentConfig = () => {
 
   const isLogin = useUserStore(authSelectors.isLogin);
 
-  const load = useLoaderData();
+  const params = useParams<{ aid?: string }>();
 
-  const data = useFetchAgentConfig(isLogin, activeAgentId ?? load?.agentId);
+  const data = useFetchAgentConfig(isLogin, activeAgentId ?? params.aid ?? '');
 
   return { ...data, isLoading: data.isLoading && isLogin };
 };

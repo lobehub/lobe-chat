@@ -8,7 +8,6 @@ import {
   UserMemoryIdentityModel,
   UserMemoryPreferenceModel,
 } from '@/database/models/userMemory/index';
-import { UserMemoryRepo } from '@/database/repositories/userMemory';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 
@@ -22,7 +21,6 @@ const userMemoryProcedure = authedProcedure.use(serverDatabase).use(async (opts)
       identityModel: new UserMemoryIdentityModel(ctx.serverDB, ctx.userId),
       preferenceModel: new UserMemoryPreferenceModel(ctx.serverDB, ctx.userId),
       userMemoryModel: new UserMemoryModel(ctx.serverDB, ctx.userId),
-      userMemoryRepo: new UserMemoryRepo(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -75,18 +73,6 @@ export const userMemoryRouter = router({
 
   getContexts: userMemoryProcedure.query(async ({ ctx }) => {
     return ctx.userMemoryModel.searchContexts({});
-  }),
-
-  getDisplayContexts: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryRepo.getDisplayContexts();
-  }),
-
-  getDisplayExperiences: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryRepo.getDisplayExperiences();
-  }),
-
-  getDisplayPreferences: userMemoryProcedure.query(async ({ ctx }) => {
-    return ctx.userMemoryRepo.getDisplayPreferences();
   }),
 
   getExperiences: userMemoryProcedure.query(async ({ ctx }) => {

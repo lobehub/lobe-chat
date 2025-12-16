@@ -1,18 +1,17 @@
 'use client';
 
 import { memo } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import { SettingsTabParams } from '@/app/[variants]/loaders/routeParams';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import { LayoutProps } from './_layout/type';
 import SettingsContent from './features/SettingsContent';
 
 const Layout = memo<LayoutProps>(() => {
-  const { tab } = useLoaderData() as SettingsTabParams;
+  const params = useParams<{ tab?: string }>();
 
-  const activeTab = (tab as SettingsTabs) || SettingsTabs.Profile;
+  const activeTab = (params.tab as SettingsTabs) || SettingsTabs.Profile;
 
   return <SettingsContent activeTab={activeTab} mobile={false} />;
 });

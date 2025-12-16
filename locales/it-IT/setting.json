@@ -449,9 +449,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Se attivata, verranno mostrate funzionalità e opzioni per sviluppatori",
+      "title": "Modalità sviluppatore"
+    },
     "lang": {
       "autoMode": "Segui il sistema",
       "title": "Lingua"
+    },
+    "liteMode": {
+      "desc": "Se attivata, l'interfaccia sarà semplificata e le funzioni avanzate saranno nascoste",
+      "title": "Modalità semplificata"
+    },
+    "responseLanguage": {
+      "auto": "Segui sistema",
+      "desc": "Imposta la lingua utilizzata nelle risposte dell'AI",
+      "placeholder": "Seleziona la lingua di risposta",
+      "title": "Lingua di risposta"
     },
     "themeMode": {
       "auto": "Automatico",

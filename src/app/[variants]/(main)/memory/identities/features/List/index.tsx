@@ -1,5 +1,5 @@
 import { App } from 'antd';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useQueryState } from '@/hooks/useQueryParam';
@@ -8,55 +8,24 @@ import { useUserMemoryStore } from '@/store/userMemory';
 
 import MemoryEmpty from '../../../features/MemoryEmpty';
 import { ViewMode } from '../../../features/ViewModeSwitcher';
-import MasonryView from './MasonryView';
+import GridView from './GridView';
 import TimelineView from './TimelineView';
 
 export type IdentityType = 'all' | 'demographic' | 'personal' | 'professional';
 
 interface IdentitiesListProps {
-  searchValue: string;
-  typeFilter: IdentityType;
+  isLoading?: boolean;
+  searchValue?: string;
   viewMode: ViewMode;
 }
 
-const IdentitiesList = memo<IdentitiesListProps>(({ viewMode, typeFilter, searchValue }) => {
+const IdentitiesList = memo<IdentitiesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
   const { modal } = App.useApp();
   const [, setIdentityId] = useQueryState('identityId', { clearOnDefault: true });
   const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
   const identities = useUserMemoryStore((s) => s.identities);
   const deleteIdentity = useUserMemoryStore((s) => s.deleteIdentity);
-
-  const filteredIdentities = useMemo(() => {
-    if (!identities) return [];
-
-    let filtered = identities;
-
-    // Type filter
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((identity) => identity.type === typeFilter);
-    }
-
-    // Search filter
-    if (searchValue.trim()) {
-      const searchLower = searchValue.toLowerCase();
-      filtered = filtered.filter((identity) => {
-        const role = identity.role?.toLowerCase() || '';
-        const relationship = identity.relationship?.toLowerCase() || '';
-        const description = identity.description?.toLowerCase() || '';
-        const labels = (Array.isArray(identity.tags) ? identity.tags.join(' ') : '').toLowerCase();
-
-        return (
-          role.includes(searchLower) ||
-          relationship.includes(searchLower) ||
-          description.includes(searchLower) ||
-          labels.includes(searchLower)
-        );
-      });
-    }
-
-    return filtered;
-  }, [identities, typeFilter, searchValue]);
 
   const handleCardClick = (identity: any) => {
     setIdentityId(identity.id);
@@ -78,23 +47,22 @@ const IdentitiesList = memo<IdentitiesListProps>(({ viewMode, typeFilter, search
   };
 
   if (!identities || identities.length === 0)
-    return <MemoryEmpty description={t('identity.empty')} />;
-
-  if (filteredIdentities.length === 0)
-    return <MemoryEmpty description={t('identity.list.noResults')} />;
+    return <MemoryEmpty search={Boolean(searchValue)} title={t('identity.empty')} />;
 
   if (viewMode === 'timeline')
     return (
       <TimelineView
-        identities={filteredIdentities}
+        identities={identities}
+        isLoading={isLoading}
         onClick={handleCardClick}
         onDelete={handleDelete}
       />
     );
 
   return (
-    <MasonryView
-      identities={filteredIdentities}
+    <GridView
+      identities={identities}
+      isLoading={isLoading}
       onClick={handleCardClick}
       onDelete={handleDelete}
     />

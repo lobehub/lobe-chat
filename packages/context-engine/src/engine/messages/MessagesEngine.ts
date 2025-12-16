@@ -13,6 +13,7 @@ import {
   MessageCleanupProcessor,
   MessageContentProcessor,
   PlaceholderVariablesProcessor,
+  SupervisorRoleRestoreProcessor,
   ToolCallProcessor,
   ToolMessageReorder,
 } from '../../processors';
@@ -139,12 +140,13 @@ export class MessagesEngine {
 
       // 2.5. Group context injection (agent identity and group info for multi-agent chat)
       new GroupContextInjector({
-        enabled: isGroupContextEnabled,
         currentAgentId: agentGroup?.currentAgentId,
         currentAgentName: agentGroup?.currentAgentName,
         currentAgentRole: agentGroup?.currentAgentRole,
-        groupName: agentGroup?.groupName,
+        enabled: isGroupContextEnabled,
+        groupTitle: agentGroup?.groupTitle,
         members: agentGroup?.members,
+        systemPrompt: agentGroup?.systemPrompt,
       }),
 
       // 3. Knowledge injection (full content for agent files + metadata for knowledge bases)
@@ -201,6 +203,9 @@ export class MessagesEngine {
 
       // 12. Group message flatten (convert role=assistantGroup to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
+
+      // 12.5. Supervisor role restore (convert role=supervisor back to role=assistant for model)
+      new SupervisorRoleRestoreProcessor(),
 
       // 13. Group message sender identity injection (for multi-agent chat)
       ...(isAgentGroupEnabled

@@ -38,6 +38,7 @@ import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
 
 import { topicSelectors } from '../../../selectors';
+import { cleanSpeakerTag } from '../../../utils/cleanSpeakerTag';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const log = debug('lobe-store:streaming-executor');
@@ -561,6 +562,10 @@ export const streamingExecutor: StateCreator<
           case 'text': {
             output += chunk.text;
 
+            // Clean speaker tag that may be reproduced by model in group chat
+            // The tag is injected at message start to identify sender, but models may copy it
+            output = cleanSpeakerTag(output);
+
             // if there is no duration, it means the end of reasoning
             if (!thinkingDuration) {
               thinkingDuration = Date.now() - thinkingStartAt;
@@ -724,6 +729,9 @@ export const streamingExecutor: StateCreator<
                 contentParts = [...contentParts, { type: 'text', text: partContent }];
               }
               output += partContent;
+
+              // Clean speaker tag that may be reproduced by model in group chat
+              output = cleanSpeakerTag(output);
             } else if (partType === 'image') {
               // Image part - create new array to avoid mutation
               const tempImage = `data:${mimeType};base64,${partContent}`;

@@ -13,7 +13,10 @@ export const DocumentApiName = {
   // Query & Read
   getPageContent: 'getPageContent',
 
-  // Basic CRUD
+  // Unified CRUD - replaces createNode, updateNode, deleteNode
+  modifyNodes: 'modifyNodes',
+
+  // Legacy CRUD (deprecated, kept for backward compatibility)
   createNode: 'createNode',
   deleteNode: 'deleteNode',
   duplicateNode: 'duplicateNode',
@@ -113,137 +116,83 @@ export const PageAgentManifest: BuiltinToolManifest = {
       },
     },
 
-    // ============ Basic CRUD ============
+    // ============ Unified Node Operations ============
     {
       description:
-        'Create a new node in the page. You can create paragraph (p), span, file, image, heading, list, table and other elements. The new node will be inserted at the specified position.',
-      name: DocumentApiName.createNode,
+        'Perform node operations (insert, modify, remove) on the document. This is the unified API for all CRUD operations. Supports batch operations by passing multiple operations in a single call.',
+      name: DocumentApiName.modifyNodes,
       parameters: {
         properties: {
-          attributes: {
+          operations: {
             description:
-              'Additional attributes for the node (e.g., src for file/image, href for links). Example: { "src": "http://example.com/image.png" }',
-            type: 'object',
-          },
-          children: {
-            description:
-              'Child nodes as XML string. For complex structures like tables, provide the complete inner structure.',
-            type: 'string',
-          },
-          content: {
-            description:
-              'Text content for the node. For nodes with children (like p containing span), use the children parameter instead.',
-            type: 'string',
-          },
-          position: {
-            description:
-              'Where to insert the node relative to referenceNodeId. Options: "before" (insert before reference), "after" (insert after reference), "prepend" (first child of reference), "append" (last child of reference).',
-            enum: ['before', 'after', 'prepend', 'append'],
-            type: 'string',
-          },
-          referenceNodeId: {
-            description:
-              'The ID of the reference node for positioning. If not provided, the node will be appended to the root.',
-            type: 'string',
-          },
-          type: {
-            description:
-              'The type of node to create. Common types: p (paragraph), span, file, img, h1-h6 (headings), ul/ol (lists), li (list item), table, tr, td, th, blockquote, code, pre.',
-            type: 'string',
+              'Array of operations to perform. Each operation can be: insert (add a new node), modify (update existing nodes), or remove (delete a node).',
+            items: {
+              oneOf: [
+                {
+                  description: 'Insert a new node before a reference node',
+                  properties: {
+                    action: { const: 'insert', type: 'string' },
+                    beforeId: {
+                      description: 'ID of the node to insert before',
+                      type: 'string',
+                    },
+                    litexml: {
+                      description:
+                        'The LiteXML string representing the node to insert (e.g., "<p>New paragraph</p>")',
+                      type: 'string',
+                    },
+                  },
+                  required: ['action', 'beforeId', 'litexml'],
+                  type: 'object',
+                },
+                {
+                  description: 'Insert a new node after a reference node',
+                  properties: {
+                    action: { const: 'insert', type: 'string' },
+                    afterId: {
+                      description: 'ID of the node to insert after',
+                      type: 'string',
+                    },
+                    litexml: {
+                      description:
+                        'The LiteXML string representing the node to insert (e.g., "<p>New paragraph</p>")',
+                      type: 'string',
+                    },
+                  },
+                  required: ['action', 'afterId', 'litexml'],
+                  type: 'object',
+                },
+                {
+                  description: 'Modify existing nodes by providing updated LiteXML with node IDs',
+                  properties: {
+                    action: { const: 'modify', type: 'string' },
+                    litexml: {
+                      description:
+                        'LiteXML string or array of strings with node IDs to update (e.g., "<p id=\\"abc\\">Updated content</p>" or ["<p id=\\"a\\">Text 1</p>", "<p id=\\"b\\">Text 2</p>"])',
+                      oneOf: [{ type: 'string' }, { items: { type: 'string' }, type: 'array' }],
+                    },
+                  },
+                  required: ['action', 'litexml'],
+                  type: 'object',
+                },
+                {
+                  description: 'Remove a node by ID',
+                  properties: {
+                    action: { const: 'remove', type: 'string' },
+                    id: {
+                      description: 'ID of the node to remove',
+                      type: 'string',
+                    },
+                  },
+                  required: ['action', 'id'],
+                  type: 'object',
+                },
+              ],
+            },
+            type: 'array',
           },
         },
-        required: ['type'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Update an existing node in the document. You can modify the content, attributes, or replace child nodes. Only provided fields will be updated.',
-      name: DocumentApiName.updateNode,
-      parameters: {
-        properties: {
-          attributes: {
-            description:
-              'New attributes to set or update. Pass null for an attribute to remove it.',
-            type: 'object',
-          },
-          children: {
-            description: 'New child nodes as XML string. This will replace all existing children.',
-            type: 'string',
-          },
-          content: {
-            description:
-              'New text content for the node. For leaf nodes like span, this updates the text directly.',
-            type: 'string',
-          },
-          nodeId: {
-            description: 'The ID of the node to update.',
-            type: 'string',
-          },
-        },
-        required: ['nodeId'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Delete a node from the document. This will remove the node and all its children. Use with caution as this action cannot be undone.',
-      humanIntervention: 'required',
-      name: DocumentApiName.deleteNode,
-      parameters: {
-        properties: {
-          nodeId: {
-            description: 'The ID of the node to delete.',
-            type: 'string',
-          },
-        },
-        required: ['nodeId'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Move a node to a new position in the document. The node and all its children will be relocated.',
-      name: DocumentApiName.moveNode,
-      parameters: {
-        properties: {
-          nodeId: {
-            description: 'The ID of the node to move.',
-            type: 'string',
-          },
-          position: {
-            description:
-              'Where to place the node relative to targetNodeId. Options: "before", "after", "prepend", "append".',
-            enum: ['before', 'after', 'prepend', 'append'],
-            type: 'string',
-          },
-          targetNodeId: {
-            description: 'The ID of the target node for positioning.',
-            type: 'string',
-          },
-        },
-        required: ['nodeId', 'targetNodeId', 'position'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Duplicate a node and insert the copy at a specified position. The duplicated node will have a new ID.',
-      name: DocumentApiName.duplicateNode,
-      parameters: {
-        properties: {
-          nodeId: {
-            description: 'The ID of the node to duplicate.',
-            type: 'string',
-          },
-          position: {
-            default: 'after',
-            description: 'Where to insert the duplicate. Defaults to "after" the original node.',
-            enum: ['before', 'after'],
-            type: 'string',
-          },
-        },
-        required: ['nodeId'],
+        required: ['operations'],
         type: 'object',
       },
     },

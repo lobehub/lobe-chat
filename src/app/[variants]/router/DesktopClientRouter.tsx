@@ -1,12 +1,17 @@
 'use client';
 
-import { RouterProvider } from 'react-router-dom';
+import { BrowserRouter, Routes } from 'react-router-dom';
 
-import { createDesktopRouter } from './desktopRouter.config';
+import { renderRoutes } from '@/utils/router';
+
+import { desktopRoutes } from './desktopRouter.config';
 
 const ClientRouter = () => {
-  const router = createDesktopRouter();
-  return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>{renderRoutes(desktopRoutes)}</Routes>
+    </BrowserRouter>
+  );
 };
 
 ClientRouter.displayName = 'ClientRouter';

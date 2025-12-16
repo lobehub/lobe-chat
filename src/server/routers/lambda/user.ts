@@ -132,14 +132,16 @@ export const userRouter = router({
       canEnableTrace: hasMoreThan4Messages,
       email: state.email,
       firstName: state.firstName,
-
       fullName: state.fullName,
 
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
+
       // always return true for community version
       isOnboard: state.isOnboarded || true,
+
       lastName: state.lastName,
+      occupation: state.occupation,
       preference: state.preference as UserPreference,
       settings: state.settings,
       userId: ctx.userId,
@@ -163,7 +165,6 @@ export const userRouter = router({
     await ctx.nextAuthUserService.unlinkAccount({ provider, providerAccountId });
   }),
 
-  // 服务端上传头像
   updateAvatar: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     // 如果是 Base64 数据，需要上传到 S3
     if (input.startsWith('data:image')) {
@@ -224,6 +225,10 @@ export const userRouter = router({
 
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateGuide(input);
+  }),
+
+  updateOccupation: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ occupation: input });
   }),
 
   updatePreference: userProcedure.input(UserPreferenceSchema).mutation(async ({ ctx, input }) => {

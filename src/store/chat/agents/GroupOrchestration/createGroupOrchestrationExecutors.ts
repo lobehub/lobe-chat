@@ -9,7 +9,7 @@ import type {
   GroupOrchestrationInstructionFinish,
   GroupOrchestrationInstructionSpeak,
 } from '@lobechat/agent-runtime';
-import type { ConversationContext } from '@lobechat/types';
+import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
@@ -93,8 +93,9 @@ export const createGroupOrchestrationExecutors = (
       }
 
       // Execute Supervisor agent with the supervisor's agentId in context
+      // Mark isSupervisor=true so assistant messages get metadata.isSupervisor for UI rendering
       await get().internal_execAgentRuntime({
-        context: { ...messageContext, agentId: supervisorAgentId },
+        context: { ...messageContext, agentId: supervisorAgentId, isSupervisor: true },
         messages,
         operationId: state.operationId,
         parentMessageId: lastMessage.id,
@@ -116,6 +117,10 @@ export const createGroupOrchestrationExecutors = (
     /**
      * speak Executor
      * Executes target Agent completely
+     *
+     * If the Supervisor provides an instruction, it will be injected as a virtual
+     * User Message at the end of the messages array. This improves instruction-following
+     * as User Messages have stronger influence on model behavior.
      */
     speak: async (instruction, state) => {
       const { agentId, instruction: agentInstruction } = (
@@ -140,12 +145,29 @@ export const createGroupOrchestrationExecutors = (
         };
       }
 
+      // If instruction is provided, inject it as a virtual User Message
+      // This virtual message is not persisted to database, only used for model context
+      const now = Date.now();
+      const messagesWithInstruction: UIChatMessage[] = agentInstruction
+        ? [
+            ...messages,
+            {
+              content: agentInstruction,
+              createdAt: now,
+              id: `virtual_speak_instruction_${now}`,
+              meta: {},
+              role: 'user',
+              updatedAt: now,
+            },
+          ]
+        : messages;
+
       // Execute target Agent with subAgentId for agent config retrieval
       // - messageContext keeps the group's main conversation context (for message storage)
       // - subAgentId specifies which agent's config to use
       await get().internal_execAgentRuntime({
         context: { ...messageContext, subAgentId: agentId },
-        messages,
+        messages: messagesWithInstruction,
         parentMessageId: lastMessage.id,
         parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
         parentOperationId: orchestrationOperationId,
@@ -167,6 +189,10 @@ export const createGroupOrchestrationExecutors = (
     /**
      * broadcast Executor
      * Executes multiple Agents in parallel
+     *
+     * If the Supervisor provides an instruction, it will be injected as a virtual
+     * User Message at the end of the messages array. This improves instruction-following
+     * as User Messages have stronger influence on model behavior.
      */
     broadcast: async (instruction, state) => {
       const {
@@ -194,6 +220,23 @@ export const createGroupOrchestrationExecutors = (
         };
       }
 
+      // If instruction is provided, inject it as a virtual User Message
+      // This virtual message is not persisted to database, only used for model context
+      const now = Date.now();
+      const messagesWithInstruction: UIChatMessage[] = agentInstruction
+        ? [
+            ...messages,
+            {
+              content: agentInstruction,
+              createdAt: now,
+              id: `virtual_broadcast_instruction_${now}`,
+              meta: {},
+              role: 'user',
+              updatedAt: now,
+            },
+          ]
+        : messages;
+
       // Execute all Agents in parallel, each with their own subAgentId for config retrieval
       // - messageContext keeps the group's main conversation context (for message storage)
       // - subAgentId specifies which agent's config to use for each agent
@@ -202,7 +245,7 @@ export const createGroupOrchestrationExecutors = (
         agentIds.map(async (agentId) => {
           await get().internal_execAgentRuntime({
             context: { ...messageContext, subAgentId: agentId },
-            messages,
+            messages: messagesWithInstruction,
             parentMessageId: toolMessageId,
             parentMessageType: 'tool',
             parentOperationId: orchestrationOperationId,
