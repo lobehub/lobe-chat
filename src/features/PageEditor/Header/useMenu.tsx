@@ -55,7 +55,7 @@ export const useMenu = (): { menuItems: any[] } => {
                       transition: `background-color ${theme.motionDurationMid}`,
                     }}
                   >
-                    <Icon icon={PanelLeftRightDashedIcon} size={{ fontSize: 20 }} />
+                    <Icon icon={PanelLeftRightDashedIcon} size={20} />
                     <span
                       style={{
                         color: !wideScreen ? theme.colorText : theme.colorTextSecondary,
@@ -81,7 +81,7 @@ export const useMenu = (): { menuItems: any[] } => {
                       transition: `background-color ${theme.motionDurationMid}`,
                     }}
                   >
-                    <Icon icon={SquareChartGanttIcon} size={{ fontSize: 20 }} />
+                    <Icon icon={SquareChartGanttIcon} size={20} />
                     <span
                       style={{
                         color: wideScreen ? theme.colorText : theme.colorTextSecondary,
