@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.173](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.172...v2.0.0-next.173)
+
+<sup>Released on **2025-12-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Request to gpt5 series should not with `top_p`, temperature when reasoning effort is not none.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Request to gpt5 series should not with `top_p`, temperature when reasoning effort is not none, closes [#10800](https://github.com/lobehub/lobe-chat/issues/10800) ([b4ad470](https://github.com/lobehub/lobe-chat/commit/b4ad470))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.172](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.171...v2.0.0-next.172)
 
 <sup>Released on **2025-12-15**</sup>
