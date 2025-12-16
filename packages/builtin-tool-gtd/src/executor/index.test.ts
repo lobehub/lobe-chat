@@ -11,10 +11,10 @@ describe('GTDExecutor', () => {
   });
 
   describe('createTodos', () => {
-    it('should add items to empty todo list', async () => {
+    it('should add items to empty todo list using adds (AI input)', async () => {
       const ctx = createMockContext();
 
-      const result = await gtdExecutor.createTodos({ items: ['Buy milk', 'Call mom'] }, ctx);
+      const result = await gtdExecutor.createTodos({ adds: ['Buy milk', 'Call mom'] }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('Added 2 items');
@@ -26,6 +26,28 @@ describe('GTDExecutor', () => {
       expect(result.state?.todos.items[1].text).toBe('Call mom');
     });
 
+    it('should add items using items (user-edited format)', async () => {
+      const ctx = createMockContext();
+
+      const result = await gtdExecutor.createTodos(
+        {
+          items: [
+            { text: 'Buy milk', completed: false },
+            { text: 'Call mom', completed: true },
+          ],
+        },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.content).toContain('Added 2 items');
+      expect(result.state?.todos.items).toHaveLength(2);
+      expect(result.state?.todos.items[0].text).toBe('Buy milk');
+      expect(result.state?.todos.items[0].completed).toBe(false);
+      expect(result.state?.todos.items[1].text).toBe('Call mom');
+      expect(result.state?.todos.items[1].completed).toBe(true);
+    });
+
     it('should append items to existing todo list', async () => {
       const ctx = createMockContext({
         todos: {
@@ -34,7 +56,7 @@ describe('GTDExecutor', () => {
         },
       });
 
-      const result = await gtdExecutor.createTodos({ items: ['New task'] }, ctx);
+      const result = await gtdExecutor.createTodos({ adds: ['New task'] }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.state?.todos.items).toHaveLength(2);
@@ -45,7 +67,7 @@ describe('GTDExecutor', () => {
     it('should return error when no items provided', async () => {
       const ctx = createMockContext();
 
-      const result = await gtdExecutor.createTodos({ items: [] }, ctx);
+      const result = await gtdExecutor.createTodos({ adds: [] }, ctx);
 
       expect(result.success).toBe(false);
       expect(result.content).toContain('No items provided');
@@ -54,11 +76,28 @@ describe('GTDExecutor', () => {
     it('should add single item with correct singular grammar', async () => {
       const ctx = createMockContext();
 
-      const result = await gtdExecutor.createTodos({ items: ['Single task'] }, ctx);
+      const result = await gtdExecutor.createTodos({ adds: ['Single task'] }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('Added 1 item');
       expect(result.content).not.toContain('items');
+    });
+
+    it('should prioritize items over adds when both provided', async () => {
+      const ctx = createMockContext();
+
+      const result = await gtdExecutor.createTodos(
+        {
+          adds: ['AI task'],
+          items: [{ text: 'User edited task', completed: true }],
+        },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items).toHaveLength(1);
+      expect(result.state?.todos.items[0].text).toBe('User edited task');
+      expect(result.state?.todos.items[0].completed).toBe(true);
     });
   });
 

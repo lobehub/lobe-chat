@@ -82,6 +82,18 @@ export class MessageService {
     return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
   };
 
+  /**
+   * Update tool arguments - updates both tool message and parent assistant message in one transaction
+   * This is the preferred method for updating tool arguments as it prevents race conditions
+   */
+  updateToolArguments = async (
+    id: string,
+    value: string | Record<string, unknown>,
+    ctx?: MessageQueryContext,
+  ) => {
+    return lambdaClient.message.updateToolArguments.mutate({ ...ctx, id, value });
+  };
+
   updateMessage = async (
     id: string,
     value: Partial<UpdateMessageParams>,

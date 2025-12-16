@@ -3,21 +3,22 @@
 import { useUnmount } from 'ahooks';
 import { memo, useMemo } from 'react';
 
+import type { TodoItem } from '../../../types';
 import TodoList from './TodoList';
-import { TodoListItem, TodoListStoreContext, createTodoListStore } from './store';
+import { TodoListStoreContext, createTodoListStore } from './store';
 
 export type { TodoListItem } from './store';
 
 export interface SortableTodoListProps {
   /**
-   * Default items for initialization (string array)
+   * Default items for initialization (TodoItem array)
    */
-  defaultItems?: string[];
+  defaultItems?: TodoItem[];
   /**
    * Callback when items change (debounced, 3s after last change)
    * This is called automatically after content changes
    */
-  onSave?: (items: TodoListItem[]) => void | Promise<void>;
+  onSave?: (items: TodoItem[]) => void | Promise<void>;
   /**
    * Placeholder text for inputs
    */

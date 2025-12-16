@@ -71,7 +71,7 @@ const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder = 'Enter todo item
   // Find item by stable id
   const item = useTodoListStore((s) => s.items.find((item) => item.id === id));
   const text = item?.text ?? '';
-  const checked = item?.checked ?? false;
+  const completed = item?.completed ?? false;
 
   const focusedId = useTodoListStore((s) => s.focusedId);
   const cursorPosition = useTodoListStore((s) => s.cursorPosition);
@@ -138,18 +138,18 @@ const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder = 'Enter todo item
     toggleItem(id);
   }, [id, toggleItem]);
 
-  const CheckIcon = checked ? CheckCircle2 : Circle;
+  const CheckIcon = completed ? CheckCircle2 : Circle;
 
   return (
     <Flexbox align="center" className={styles.itemRow} gap={4} horizontal width="100%">
       <SortableList.DragHandle className={cx(styles.dragHandle, 'drag-handle')} size="small" />
       <CheckIcon
-        className={cx(styles.checkbox, checked && styles.checkboxChecked)}
+        className={cx(styles.checkbox, completed && styles.checkboxChecked)}
         onClick={handleToggle}
         size={16}
       />
       <Input
-        className={cx(checked && styles.textChecked)}
+        className={cx(completed && styles.textChecked)}
         onChange={handleChange}
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}

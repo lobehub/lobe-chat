@@ -165,6 +165,12 @@ export interface BuiltinInterventionProps<Arguments = any> {
    * The approve action will wait for this async callback to complete
    */
   onArgsChange?: (args: Arguments) => void | Promise<void>;
+  /**
+   * Register a callback to be called before approval
+   * Used by intervention components that need to flush pending saves (e.g., debounced saves)
+   * before the approve action proceeds
+   */
+  registerBeforeApprove?: (callback: () => void | Promise<void>) => void;
 }
 
 export type BuiltinIntervention = (props: BuiltinInterventionProps) => ReactNode;

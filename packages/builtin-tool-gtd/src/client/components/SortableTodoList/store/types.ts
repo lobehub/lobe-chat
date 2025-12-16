@@ -1,9 +1,9 @@
 import { DebouncedFunc } from 'lodash-es';
 
-export interface TodoListItem {
-  checked: boolean;
+import type { TodoItem } from '../../../../types';
+
+export interface TodoListItem extends TodoItem {
   id: string;
-  text: string;
 }
 
 export interface TodoListState {
@@ -33,7 +33,7 @@ export type TodoListStore = TodoListState & TodoListActions;
 // Store internal state for debounce function
 export interface StoreInternals {
   debouncedSave: DebouncedFunc<() => void> | null;
-  onSave: ((items: TodoListItem[]) => void | Promise<void>) | null;
+  onSave: ((items: TodoItem[]) => void | Promise<void>) | null;
 }
 
 // Special ID for the "add new item" input

@@ -230,4 +230,27 @@ export class MessageService {
     }
     return this.queryWithSuccess(options);
   }
+
+  /**
+   * Update tool arguments - updates both tool message plugin.arguments and parent assistant message tools[].arguments
+   * This method handles the update atomically to prevent race conditions
+   * Pattern: update tool message + update assistant message + conditional query
+   *
+   * @param toolMessageId - The ID of the tool message
+   * @param arguments - The new arguments value (will be stringified if object)
+   * @param options - Query options for returning updated messages
+   */
+  async updateToolArguments(
+    toolMessageId: string,
+    args: string | Record<string, unknown>,
+    options?: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
+    const argsString = typeof args === 'string' ? args : JSON.stringify(args);
+
+    const result = await this.messageModel.updateToolArguments(toolMessageId, argsString);
+    if (!result.success) {
+      return { success: false };
+    }
+    return this.queryWithSuccess(options);
+  }
 }

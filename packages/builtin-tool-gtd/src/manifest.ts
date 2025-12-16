@@ -15,7 +15,7 @@ export const GTDManifest: BuiltinToolManifest = {
       humanIntervention: 'always',
       parameters: {
         properties: {
-          items: {
+          adds: {
             description: 'Array of todo item texts to create.',
             items: { type: 'string' },
             type: 'array',

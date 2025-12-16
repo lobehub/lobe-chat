@@ -501,7 +501,9 @@ export const messageCRUDSlice: StateCreator<
   updatePluginArguments: async (id, value, replace = false) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
 
-    const toolMessage = dataSelectors.getDisplayMessageById(id)(get());
+    // Get tool message from dbMessages (not displayMessages, since tool messages are nested in assistantGroup)
+    const toolMessage = dataSelectors.getDbMessageById(id)(get());
+    console.log('updatePluginArguments', toolMessage);
     if (!toolMessage || !toolMessage.tool_call_id) return;
 
     const prevArguments = toolMessage.plugin?.arguments;
@@ -528,29 +530,13 @@ export const messageCRUDSlice: StateCreator<
       });
     }
 
-    // Create the update promise
+    // Create the update promise - use the new atomic backend API
     const updatePromise = (async () => {
-      // Persist to database
-      // Update both tool message plugin and assistant message tools
-      const assistantMessage = toolMessage.parentId
-        ? dataSelectors.getDisplayMessageById(toolMessage.parentId)(get())
-        : undefined;
+      // Use the new updateToolArguments API which handles both updates atomically
+      const result = await messageService.updateToolArguments(id, nextValue, context);
 
-      await Promise.all([
-        messageService.updateMessagePluginArguments(id, nextValue),
-        assistantMessage
-          ? messageService.updateMessage(
-              assistantMessage.id,
-              { tools: assistantMessage.tools },
-              context,
-            )
-          : Promise.resolve(),
-      ]);
-
-      // Refresh messages from database
-      const messages = await messageService.getMessages(context);
-      if (messages) {
-        replaceMessages(messages);
+      if (result?.success && result.messages) {
+        replaceMessages(result.messages);
       }
     })();
 

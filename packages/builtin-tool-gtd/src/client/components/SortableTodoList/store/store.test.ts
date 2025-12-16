@@ -1,9 +1,14 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { TodoItem } from '../../../../types';
 import { resetIdCounter } from './actions';
 import { createTodoListStore } from './index';
 import { ADD_ITEM_ID } from './types';
+
+// Helper to create TodoItem array from text strings
+const toTodoItems = (...texts: string[]): TodoItem[] =>
+  texts.map((text) => ({ completed: false, text }));
 
 describe('TodoListStore', () => {
   beforeEach(() => {
@@ -29,17 +34,17 @@ describe('TodoListStore', () => {
     });
 
     it('should create store with default items', () => {
-      const store = createTodoListStore(['Task 1', 'Task 2']);
+      const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
       const state = store.getState();
 
       expect(state.items).toHaveLength(2);
       expect(state.items[0].text).toBe('Task 1');
-      expect(state.items[0].checked).toBe(false);
+      expect(state.items[0].completed).toBe(false);
       expect(state.items[1].text).toBe('Task 2');
     });
 
     it('should generate unique IDs for items', () => {
-      const store = createTodoListStore(['Task 1', 'Task 2']);
+      const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
       const state = store.getState();
 
       expect(state.items[0].id).not.toBe(state.items[1].id);
@@ -58,7 +63,7 @@ describe('TodoListStore', () => {
       const state = store.getState();
       expect(state.items).toHaveLength(1);
       expect(state.items[0].text).toBe('New Task');
-      expect(state.items[0].checked).toBe(false);
+      expect(state.items[0].completed).toBe(false);
       expect(state.newItemText).toBe('');
     });
 
@@ -98,7 +103,7 @@ describe('TodoListStore', () => {
 
   describe('deleteItem', () => {
     it('should delete item by id', () => {
-      const store = createTodoListStore(['Task 1', 'Task 2']);
+      const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -111,7 +116,7 @@ describe('TodoListStore', () => {
     });
 
     it('should mark store as dirty after deleting item', () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -124,7 +129,7 @@ describe('TodoListStore', () => {
 
   describe('updateItem', () => {
     it('should update item text by id', () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -135,7 +140,7 @@ describe('TodoListStore', () => {
     });
 
     it('should mark store as dirty after updating item', () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -147,27 +152,27 @@ describe('TodoListStore', () => {
   });
 
   describe('toggleItem', () => {
-    it('should toggle item checked state', () => {
-      const store = createTodoListStore(['Task 1']);
+    it('should toggle item completed state', () => {
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
-      expect(store.getState().items[0].checked).toBe(false);
+      expect(store.getState().items[0].completed).toBe(false);
 
       act(() => {
         store.getState().toggleItem(itemId);
       });
 
-      expect(store.getState().items[0].checked).toBe(true);
+      expect(store.getState().items[0].completed).toBe(true);
 
       act(() => {
         store.getState().toggleItem(itemId);
       });
 
-      expect(store.getState().items[0].checked).toBe(false);
+      expect(store.getState().items[0].completed).toBe(false);
     });
 
     it('should mark store as dirty after toggling item', () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -180,7 +185,7 @@ describe('TodoListStore', () => {
 
   describe('sortItems', () => {
     it('should update items order', () => {
-      const store = createTodoListStore(['Task 1', 'Task 2', 'Task 3']);
+      const store = createTodoListStore(toTodoItems('Task 1', 'Task 2', 'Task 3'));
       const items = store.getState().items;
       const reversed = [...items].reverse();
 
@@ -195,7 +200,7 @@ describe('TodoListStore', () => {
     });
 
     it('should mark store as dirty after sorting', () => {
-      const store = createTodoListStore(['Task 1', 'Task 2']);
+      const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
       const items = store.getState().items;
 
       act(() => {
@@ -209,7 +214,7 @@ describe('TodoListStore', () => {
   describe('focus navigation', () => {
     describe('focusNextItem', () => {
       it('should focus next item in list', () => {
-        const store = createTodoListStore(['Task 1', 'Task 2', 'Task 3']);
+        const store = createTodoListStore(toTodoItems('Task 1', 'Task 2', 'Task 3'));
         const items = store.getState().items;
 
         act(() => {
@@ -221,7 +226,7 @@ describe('TodoListStore', () => {
       });
 
       it('should focus ADD_ITEM_ID when at last item', () => {
-        const store = createTodoListStore(['Task 1', 'Task 2']);
+        const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
         const items = store.getState().items;
 
         act(() => {
@@ -232,7 +237,7 @@ describe('TodoListStore', () => {
       });
 
       it('should not change focus when already at ADD_ITEM_ID', () => {
-        const store = createTodoListStore(['Task 1']);
+        const store = createTodoListStore(toTodoItems('Task 1'));
 
         act(() => {
           store.getState().setFocusedId(ADD_ITEM_ID);
@@ -243,7 +248,7 @@ describe('TodoListStore', () => {
       });
 
       it('should not change focus when currentId is null', () => {
-        const store = createTodoListStore(['Task 1']);
+        const store = createTodoListStore(toTodoItems('Task 1'));
 
         act(() => {
           store.getState().focusNextItem(null, 0);
@@ -255,7 +260,7 @@ describe('TodoListStore', () => {
 
     describe('focusPrevItem', () => {
       it('should focus previous item in list', () => {
-        const store = createTodoListStore(['Task 1', 'Task 2', 'Task 3']);
+        const store = createTodoListStore(toTodoItems('Task 1', 'Task 2', 'Task 3'));
         const items = store.getState().items;
 
         act(() => {
@@ -267,7 +272,7 @@ describe('TodoListStore', () => {
       });
 
       it('should not change focus when at first item', () => {
-        const store = createTodoListStore(['Task 1', 'Task 2']);
+        const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
         const items = store.getState().items;
 
         act(() => {
@@ -279,7 +284,7 @@ describe('TodoListStore', () => {
       });
 
       it('should focus last item when at ADD_ITEM_ID', () => {
-        const store = createTodoListStore(['Task 1', 'Task 2']);
+        const store = createTodoListStore(toTodoItems('Task 1', 'Task 2'));
         const items = store.getState().items;
 
         act(() => {
@@ -303,7 +308,7 @@ describe('TodoListStore', () => {
 
   describe('setFocusedId', () => {
     it('should set focused id', () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -314,7 +319,7 @@ describe('TodoListStore', () => {
     });
 
     it('should set focused id to null', () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -341,7 +346,7 @@ describe('TodoListStore', () => {
   describe('auto-save functionality', () => {
     it('should call onSave after debounce delay', async () => {
       const onSave = vi.fn();
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');
@@ -356,14 +361,15 @@ describe('TodoListStore', () => {
       });
 
       expect(onSave).toHaveBeenCalledTimes(1);
-      expect(onSave).toHaveBeenCalledWith(store.getState().items);
+      // onSave receives TodoItem[] (without id), not TodoListItem[]
+      expect(onSave).toHaveBeenCalledWith([{ completed: false, text: 'Updated' }]);
     });
 
     it('should set saveStatus to saving during save', async () => {
       const onSave = vi
         .fn()
         .mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');
@@ -378,7 +384,7 @@ describe('TodoListStore', () => {
 
     it('should set saveStatus to saved after successful save', async () => {
       const onSave = vi.fn().mockResolvedValue(undefined);
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');
@@ -395,7 +401,7 @@ describe('TodoListStore', () => {
 
     it('should set saveStatus to error on save failure', async () => {
       const onSave = vi.fn().mockRejectedValue(new Error('Save failed'));
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');
@@ -411,7 +417,7 @@ describe('TodoListStore', () => {
 
     it('should debounce multiple rapid changes', async () => {
       const onSave = vi.fn().mockResolvedValue(undefined);
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
       const itemId = store.getState().items[0].id;
 
       act(() => {
@@ -446,7 +452,7 @@ describe('TodoListStore', () => {
 
     it('should flush save immediately when flushSave is called', async () => {
       const onSave = vi.fn().mockResolvedValue(undefined);
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');
@@ -464,7 +470,7 @@ describe('TodoListStore', () => {
 
     it('should not call onSave if not dirty', async () => {
       const onSave = vi.fn();
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       await act(async () => {
         store.getState().flushSave();
@@ -475,7 +481,7 @@ describe('TodoListStore', () => {
     });
 
     it('should not call onSave if no onSave callback provided', async () => {
-      const store = createTodoListStore(['Task 1']);
+      const store = createTodoListStore(toTodoItems('Task 1'));
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');
@@ -491,7 +497,7 @@ describe('TodoListStore', () => {
 
     it('should reset saveStatus to idle after showing saved', async () => {
       const onSave = vi.fn().mockResolvedValue(undefined);
-      const store = createTodoListStore(['Task 1'], onSave);
+      const store = createTodoListStore(toTodoItems('Task 1'), onSave);
 
       act(() => {
         store.getState().updateItem(store.getState().items[0].id, 'Updated');

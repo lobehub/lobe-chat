@@ -1,5 +1,6 @@
 import { debounce } from 'lodash-es';
 
+import type { TodoItem } from '../../../../types';
 import { AUTO_SAVE_DELAY, AUTO_SAVE_MAX_WAIT, initialState } from './initialState';
 import type { StoreInternals, TodoListItem, TodoListStore } from './types';
 import { ADD_ITEM_ID } from './types';
@@ -21,7 +22,7 @@ export const createActions = (
   set: SetState,
   get: GetState,
   internals: StoreInternals,
-  defaultItems: string[],
+  defaultItems: TodoItem[],
 ): TodoListStore => {
   // Create debounced save function
   const performSave = async () => {
@@ -33,7 +34,9 @@ export const createActions = (
     set({ saveStatus: 'saving' });
 
     try {
-      await internals.onSave(items);
+      // Convert TodoListItem[] to TodoItem[] (remove id)
+      const todoItems: TodoItem[] = items.map(({ completed, text }) => ({ completed, text }));
+      await internals.onSave(todoItems);
       set({ isDirty: false, saveStatus: 'saved' });
 
       // Reset to idle after showing "saved" briefly
@@ -59,7 +62,7 @@ export const createActions = (
 
   return {
     ...initialState,
-    items: defaultItems.map((text) => ({ checked: false, id: generateId(), text })),
+    items: defaultItems.map((item) => ({ ...item, id: generateId() })),
 
     /* eslint-disable sort-keys-fix/sort-keys-fix */
     addItem: () => {
@@ -67,7 +70,7 @@ export const createActions = (
       if (!newItemText.trim()) return;
 
       set({
-        items: [...items, { checked: false, id: generateId(), text: newItemText.trim() }],
+        items: [...items, { completed: false, id: generateId(), text: newItemText.trim() }],
         newItemText: '',
       });
       markDirtyAndSave();
@@ -133,7 +136,9 @@ export const createActions = (
     toggleItem: (id: string) => {
       const { items } = get();
       set({
-        items: items.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item)),
+        items: items.map((item) =>
+          item.id === id ? { ...item, completed: !item.completed } : item,
+        ),
       });
       markDirtyAndSave();
     },

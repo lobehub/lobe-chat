@@ -297,6 +297,22 @@ export const messageRouter = router({
       return ctx.messageModel.updateTTS(input.id, input.value);
     }),
 
+  updateToolArguments: messageProcedure
+    .input(
+      z
+        .object({
+          id: z.string(),
+          value: z.union([z.string(), z.record(z.unknown())]),
+        })
+        .extend(basicContextSchema.shape),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, value, agentId, ...options } = input;
+      const resolved = await resolveContext({ agentId, ...options }, ctx.serverDB, ctx.userId);
+
+      return ctx.messageService.updateToolArguments(id, value, resolved);
+    }),
+
   /**
    * Update tool message with content, metadata, pluginState, and pluginError in a single transaction
    * This prevents race conditions when updating multiple fields

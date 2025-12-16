@@ -17,21 +17,21 @@ export const GTDApiName = {
   /** Mark todo items as done by indices */
   completeTodos: 'completeTodos',
 
+  // ==================== Planning ====================
+  /** Create a structured plan by breaking down a goal into actionable steps */
+  createPlan: 'createPlan',
+
   /** Create new todo items */
   createTodos: 'createTodos',
 
   /** Remove todo items by indices */
   removeTodos: 'removeTodos',
 
-  /** Update todo items with batch operations (add, update, remove, complete) */
-  updateTodos: 'updateTodos',
-
-  // ==================== Planning ====================
-  /** Create a structured plan by breaking down a goal into actionable steps */
-  createPlan: 'createPlan',
-
   /** Update an existing plan */
   updatePlan: 'updatePlan',
+
+  /** Update todo items with batch operations (add, update, remove, complete) */
+  updateTodos: 'updateTodos',
 } as const;
 
 export type GTDApiNameType = (typeof GTDApiName)[keyof typeof GTDApiName];
@@ -54,11 +54,14 @@ export interface TodoList {
 
 /**
  * Create new todo items
- * AI passes text[], application layer converts to TodoItem[]
+ * - AI input: { adds: string[] } - array of text strings from AI
+ * - After user edit: { items: TodoItem[] } - saved format with TodoItem objects
  */
 export interface CreateTodosParams {
-  /** Array of todo item texts to create */
-  items: string[];
+  /** Array of text strings from AI */
+  adds?: string[];
+  /** Array of TodoItem objects (saved format after user edit) */
+  items?: TodoItem[];
 }
 
 /**
@@ -70,16 +73,16 @@ export type TodoUpdateOperationType = 'add' | 'update' | 'remove' | 'complete';
  * Single update operation
  */
 export interface TodoUpdateOperation {
-  /** Operation type */
-  type: TodoUpdateOperationType;
-  /** For 'add': the text to add */
-  text?: string;
+  /** For 'update': the new completed status */
+  completed?: boolean;
   /** For 'update', 'remove', 'complete': the index of the item (0-based) */
   index?: number;
   /** For 'update': the new text */
   newText?: string;
-  /** For 'update': the new completed status */
-  completed?: boolean;
+  /** For 'add': the text to add */
+  text?: string;
+  /** Operation type */
+  type: TodoUpdateOperationType;
 }
 
 /**

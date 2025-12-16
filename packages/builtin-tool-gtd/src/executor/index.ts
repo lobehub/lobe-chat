@@ -66,14 +66,22 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
   /**
    * Create new todo items
+   * Handles both formats:
+   * - AI input: { adds: string[] }
+   * - User-edited: { items: TodoItem[] }
    */
   createTodos = async (
     params: CreateTodosParams,
     ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
-    const { items } = params;
+    // Handle both formats: items (user-edited) takes priority over adds (AI input)
+    const itemsToAdd: TodoItem[] = params.items
+      ? params.items
+      : params.adds
+        ? params.adds.map((text) => ({ completed: false, text }))
+        : [];
 
-    if (!items || items.length === 0) {
+    if (itemsToAdd.length === 0) {
       return {
         content: 'No items provided to add.',
         success: false,
@@ -85,22 +93,17 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     // Add new items
     const now = new Date().toISOString();
-    const newTodos: TodoItem[] = items.map((text: string) => ({
-      completed: false,
-      text,
-    }));
-
-    const updatedTodos = [...existingTodos, ...newTodos];
+    const updatedTodos = [...existingTodos, ...itemsToAdd];
 
     // Format response
-    const addedList = items
-      .map((item: string, i: number) => `${existingTodos.length + i + 1}. ${item}`)
+    const addedList = itemsToAdd
+      .map((item, i) => `${existingTodos.length + i + 1}. ${item.text}`)
       .join('\n');
 
     return {
-      content: `Added ${items.length} item${items.length > 1 ? 's' : ''} to todo list:\n${addedList}`,
+      content: `Added ${itemsToAdd.length} item${itemsToAdd.length > 1 ? 's' : ''} to todo list:\n${addedList}`,
       state: {
-        createdItems: items,
+        createdItems: itemsToAdd.map((item) => item.text),
         todos: { items: updatedTodos, updatedAt: now },
       },
       success: true,

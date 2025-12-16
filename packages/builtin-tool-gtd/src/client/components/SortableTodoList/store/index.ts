@@ -1,15 +1,16 @@
 import { createContext, useContext } from 'react';
 import { StoreApi, createStore, useStore } from 'zustand';
 
+import type { TodoItem } from '../../../../types';
 import { createActions } from './actions';
-import type { StoreInternals, TodoListItem, TodoListStore } from './types';
+import type { StoreInternals, TodoListStore } from './types';
 
 export type { TodoListItem, TodoListStore } from './types';
 export { ADD_ITEM_ID } from './types';
 
 export const createTodoListStore = (
-  defaultItems: string[] = [],
-  onSave?: (items: TodoListItem[]) => void | Promise<void>,
+  defaultItems: TodoItem[] = [],
+  onSave?: (items: TodoItem[]) => void | Promise<void>,
 ) => {
   // Internal state for debounce (not part of zustand state)
   const internals: StoreInternals = {
