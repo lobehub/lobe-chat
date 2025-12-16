@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "AI Configuration",
     "common": "General",
-    "market": "Market",
     "profile": "Account",
     "system": "System"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Hotkeys",
     "image": "Image Generation Service",
     "llm": "Language Model",
-    "my-agents": "My Published Assistants",
     "profile": "My Account",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",

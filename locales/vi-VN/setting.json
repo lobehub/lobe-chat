@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "Cấu hình AI",
     "common": "Chung",
-    "market": "Thị trường",
     "profile": "Tài khoản",
     "system": "Hệ thống"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Phím tắt",
     "image": "Dịch vụ vẽ",
     "llm": "Mô hình ngôn ngữ",
-    "my-agents": "Trợ lý tôi đã đăng",
     "profile": "Tài khoản của tôi",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",

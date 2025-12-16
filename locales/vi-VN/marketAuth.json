@@ -58,11 +58,23 @@
     "descriptionEdit": "Cập nhật thông tin hồ sơ cộng đồng của bạn.",
     "descriptionFirstTime": "Thiết lập hồ sơ của bạn để hoàn tất việc tạo hồ sơ cộng đồng.",
     "errors": {
+      "fileTooLarge": "Kích thước tệp không được vượt quá 2MB",
       "notAuthenticated": "Vui lòng đăng nhập trước khi thực hiện thao tác",
       "updateFailed": "Cập nhật hồ sơ thất bại, vui lòng thử lại",
+      "uploadFailed": "Tải lên thất bại, vui lòng thử lại",
       "usernameTaken": "ID người dùng này đã được sử dụng, vui lòng chọn ID khác"
     },
     "fields": {
+      "avatar": {
+        "label": "Ảnh đại diện"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Nhấn để tải lên ảnh bìa",
+        "label": "Ảnh bìa",
+        "remove": "Gỡ ảnh bìa",
+        "tooltip": "Ảnh bìa sẽ hiển thị ở đầu trang cá nhân của bạn (tỷ lệ khuyên dùng 16:9)",
+        "uploading": "Đang tải lên..."
+      },
       "description": {
         "label": "Giới thiệu bản thân",
         "maxLength": "Giới thiệu bản thân tối đa 200 ký tự",
@@ -74,6 +86,12 @@
         "placeholder": "Nhập biệt danh của bạn",
         "required": "Vui lòng nhập biệt danh"
       },
+      "github": {
+        "placeholder": "Tên người dùng GitHub"
+      },
+      "twitter": {
+        "placeholder": "Tên người dùng X (Twitter)"
+      },
       "userName": {
         "label": "ID người dùng",
         "maxLength": "ID người dùng tối đa 32 ký tự",
@@ -82,10 +100,17 @@
         "placeholder": "Nhập ID người dùng của bạn",
         "required": "Vui lòng nhập ID người dùng",
         "tooltip": "ID người dùng là định danh duy nhất của bạn, sẽ được sử dụng trong liên kết trang cá nhân của bạn"
+      },
+      "website": {
+        "invalidUrl": "Vui lòng nhập một liên kết hợp lệ",
+        "placeholder": "Liên kết trang cá nhân"
       }
     },
     "getStarted": "Bắt đầu",
     "save": "Lưu",
+    "socialLinks": {
+      "title": "Liên kết mạng xã hội"
+    },
     "success": "Hồ sơ đã được cập nhật",
     "titleEdit": "Chỉnh sửa hồ sơ",
     "titleFirstTime": "Hoàn thiện hồ sơ của bạn"

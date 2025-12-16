@@ -106,11 +106,11 @@
         "placeholder": "个人网站链接"
       }
     },
+    "getStarted": "开始使用",
+    "save": "保存",
     "socialLinks": {
       "title": "社交链接"
     },
-    "getStarted": "开始使用",
-    "save": "保存",
     "success": "个人资料已更新",
     "titleEdit": "编辑个人资料",
     "titleFirstTime": "完善你的档案"

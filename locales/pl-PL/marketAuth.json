@@ -58,11 +58,23 @@
     "descriptionEdit": "Zaktualizuj informacje w swoim profilu społeczności.",
     "descriptionFirstTime": "Ustaw swój profil, aby ukończyć tworzenie konta społecznościowego.",
     "errors": {
+      "fileTooLarge": "Rozmiar pliku nie może przekraczać 2 MB",
       "notAuthenticated": "Zaloguj się, aby kontynuować",
       "updateFailed": "Nie udało się zaktualizować profilu, spróbuj ponownie",
+      "uploadFailed": "Przesyłanie nie powiodło się, spróbuj ponownie",
       "usernameTaken": "Ten identyfikator użytkownika jest już zajęty, wybierz inny"
     },
     "fields": {
+      "avatar": {
+        "label": "Awatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Kliknij, aby przesłać baner",
+        "label": "Baner",
+        "remove": "Usuń baner",
+        "tooltip": "Baner będzie wyświetlany na górze Twojego profilu (zalecany format 16:9)",
+        "uploading": "Przesyłanie..."
+      },
       "description": {
         "label": "Opis profilu",
         "maxLength": "Opis może zawierać maksymalnie 200 znaków",
@@ -74,6 +86,12 @@
         "placeholder": "Wprowadź swój pseudonim",
         "required": "Wprowadź pseudonim"
       },
+      "github": {
+        "placeholder": "Nazwa użytkownika GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nazwa użytkownika X (Twitter)"
+      },
       "userName": {
         "label": "Identyfikator użytkownika",
         "maxLength": "Identyfikator użytkownika może zawierać maksymalnie 32 znaki",
@@ -82,10 +100,17 @@
         "placeholder": "Wprowadź swój identyfikator użytkownika",
         "required": "Wprowadź identyfikator użytkownika",
         "tooltip": "Identyfikator użytkownika to Twój unikalny identyfikator, który będzie używany w linku do Twojego profilu"
+      },
+      "website": {
+        "invalidUrl": "Wprowadź poprawny adres URL",
+        "placeholder": "Link do strony osobistej"
       }
     },
     "getStarted": "Rozpocznij",
     "save": "Zapisz",
+    "socialLinks": {
+      "title": "Linki społecznościowe"
+    },
     "success": "Profil został zaktualizowany",
     "titleEdit": "Edytuj profil",
     "titleFirstTime": "Uzupełnij swój profil"

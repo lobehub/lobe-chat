@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "Yapay Zeka Ayarları",
     "common": "Genel",
-    "market": "Pazar",
     "profile": "Hesap",
     "system": "Sistem"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Kısayollar",
     "image": "Görsel Hizmeti",
     "llm": "Modeller",
-    "my-agents": "Yayınladığım Asistanlar",
     "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",

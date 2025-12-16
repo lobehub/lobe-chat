@@ -58,11 +58,23 @@
     "descriptionEdit": "Aktualisiere deine Community-Profilinformationen.",
     "descriptionFirstTime": "Richte dein Profil ein, um dein Community-Konto zu vervollständigen.",
     "errors": {
+      "fileTooLarge": "Dateigröße darf 2 MB nicht überschreiten",
       "notAuthenticated": "Bitte melde dich an, um fortzufahren.",
       "updateFailed": "Profilaktualisierung fehlgeschlagen. Bitte versuche es erneut.",
+      "uploadFailed": "Hochladen fehlgeschlagen, bitte versuche es erneut",
       "usernameTaken": "Diese Benutzer-ID ist bereits vergeben. Bitte wähle eine andere."
     },
     "fields": {
+      "avatar": {
+        "label": "Profilbild"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Zum Hochladen des Banners klicken",
+        "label": "Bannerbild",
+        "remove": "Bannerbild entfernen",
+        "tooltip": "Das Bannerbild wird oben auf deinem Profil angezeigt (empfohlenes Seitenverhältnis 16:9)",
+        "uploading": "Wird hochgeladen..."
+      },
       "description": {
         "label": "Über mich",
         "maxLength": "Die Beschreibung darf maximal 200 Zeichen enthalten.",
@@ -74,6 +86,12 @@
         "placeholder": "Gib deinen Spitznamen ein",
         "required": "Bitte gib einen Spitznamen ein"
       },
+      "github": {
+        "placeholder": "GitHub-Benutzername"
+      },
+      "twitter": {
+        "placeholder": "X (Twitter)-Benutzername"
+      },
       "userName": {
         "label": "Benutzer-ID",
         "maxLength": "Die Benutzer-ID darf maximal 32 Zeichen enthalten.",
@@ -82,10 +100,17 @@
         "placeholder": "Gib deine Benutzer-ID ein",
         "required": "Bitte gib eine Benutzer-ID ein",
         "tooltip": "Die Benutzer-ID ist dein eindeutiger Identifikator und wird in deinem Profil-Link verwendet."
+      },
+      "website": {
+        "invalidUrl": "Bitte gib eine gültige URL ein",
+        "placeholder": "Link zur persönlichen Website"
       }
     },
     "getStarted": "Loslegen",
     "save": "Speichern",
+    "socialLinks": {
+      "title": "Soziale Netzwerke"
+    },
     "success": "Profil erfolgreich aktualisiert",
     "titleEdit": "Profil bearbeiten",
     "titleFirstTime": "Vervollständige dein Profil"

@@ -58,11 +58,23 @@
     "descriptionEdit": "Werk je communityprofiel bij.",
     "descriptionFirstTime": "Stel je profiel in om je communityprofiel aan te maken.",
     "errors": {
+      "fileTooLarge": "Bestandsgrootte mag niet groter zijn dan 2MB",
       "notAuthenticated": "Log eerst in voordat je deze actie uitvoert",
       "updateFailed": "Bijwerken van profiel mislukt, probeer het opnieuw",
+      "uploadFailed": "Upload mislukt, probeer het opnieuw",
       "usernameTaken": "Deze gebruikers-ID is al in gebruik, kies een andere"
     },
     "fields": {
+      "avatar": {
+        "label": "Profielfoto"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Klik om banner te uploaden",
+        "label": "Bannerafbeelding",
+        "remove": "Banner verwijderen",
+        "tooltip": "De banner wordt weergegeven bovenaan je profielpagina (aanbevolen verhouding 16:9)",
+        "uploading": "Bezig met uploaden..."
+      },
       "description": {
         "label": "Persoonlijke beschrijving",
         "maxLength": "De beschrijving mag maximaal 200 tekens bevatten",
@@ -74,6 +86,12 @@
         "placeholder": "Voer je bijnaam in",
         "required": "Voer een bijnaam in"
       },
+      "github": {
+        "placeholder": "GitHub-gebruikersnaam"
+      },
+      "twitter": {
+        "placeholder": "X (Twitter)-gebruikersnaam"
+      },
       "userName": {
         "label": "Gebruikers-ID",
         "maxLength": "De gebruikers-ID mag maximaal 32 tekens bevatten",
@@ -82,10 +100,17 @@
         "placeholder": "Voer je gebruikers-ID in",
         "required": "Voer een gebruikers-ID in",
         "tooltip": "Je gebruikers-ID is je unieke identificatie en wordt gebruikt in de link naar je profielpagina"
+      },
+      "website": {
+        "invalidUrl": "Voer een geldige URL in",
+        "placeholder": "Link naar persoonlijke website"
       }
     },
     "getStarted": "Aan de slag",
     "save": "Opslaan",
+    "socialLinks": {
+      "title": "Sociale links"
+    },
     "success": "Profiel succesvol bijgewerkt",
     "titleEdit": "Profiel bewerken",
     "titleFirstTime": "Maak je profiel compleet"

@@ -58,11 +58,23 @@
     "descriptionEdit": "Atualize as informações do seu perfil da comunidade.",
     "descriptionFirstTime": "Configure seu perfil para concluir a criação do seu perfil na comunidade.",
     "errors": {
+      "fileTooLarge": "O tamanho do arquivo não pode exceder 2MB",
       "notAuthenticated": "Por favor, faça login antes de continuar.",
       "updateFailed": "Falha ao atualizar o perfil. Tente novamente.",
+      "uploadFailed": "Falha no upload, tente novamente",
       "usernameTaken": "Este ID de usuário já está em uso. Escolha outro."
     },
     "fields": {
+      "avatar": {
+        "label": "Avatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Clique para enviar imagem de fundo",
+        "label": "Imagem de fundo",
+        "remove": "Remover imagem de fundo",
+        "tooltip": "A imagem de fundo será exibida no topo do seu perfil (recomendado proporção 16:9)",
+        "uploading": "Enviando..."
+      },
       "description": {
         "label": "Biografia",
         "maxLength": "A biografia pode ter no máximo 200 caracteres.",
@@ -74,6 +86,12 @@
         "placeholder": "Digite seu apelido",
         "required": "Por favor, insira um apelido."
       },
+      "github": {
+        "placeholder": "Nome de usuário do GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nome de usuário do X (Twitter)"
+      },
       "userName": {
         "label": "ID de Usuário",
         "maxLength": "O ID de usuário pode ter no máximo 32 caracteres.",
@@ -82,10 +100,17 @@
         "placeholder": "Digite seu ID de usuário",
         "required": "Por favor, insira um ID de usuário.",
         "tooltip": "O ID de usuário é seu identificador único e será usado no link do seu perfil."
+      },
+      "website": {
+        "invalidUrl": "Por favor, insira uma URL válida",
+        "placeholder": "Link do site pessoal"
       }
     },
     "getStarted": "Começar",
     "save": "Salvar",
+    "socialLinks": {
+      "title": "Links sociais"
+    },
     "success": "Perfil atualizado com sucesso.",
     "titleEdit": "Editar Perfil",
     "titleFirstTime": "Complete seu perfil"

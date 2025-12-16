@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "Konfiguracja AI",
     "common": "Ogólne",
-    "market": "Rynek",
     "profile": "Konto",
     "system": "System"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Skróty klawiszowe",
     "image": "Usługa rysowania",
     "llm": "Model językowy",
-    "my-agents": "Moi opublikowani asystenci",
     "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",

@@ -58,11 +58,23 @@
     "descriptionEdit": "Actualiza la información de tu perfil de la comunidad.",
     "descriptionFirstTime": "Configura tu perfil para completar la creación de tu cuenta en la comunidad.",
     "errors": {
+      "fileTooLarge": "El tamaño del archivo no puede superar los 2 MB",
       "notAuthenticated": "Por favor, inicia sesión antes de continuar.",
       "updateFailed": "No se pudo actualizar el perfil. Inténtalo de nuevo.",
+      "uploadFailed": "Error al subir el archivo, por favor inténtalo de nuevo",
       "usernameTaken": "Este ID de usuario ya está en uso. Por favor, elige otro."
     },
     "fields": {
+      "avatar": {
+        "label": "Avatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Haz clic para subir la imagen de fondo",
+        "label": "Imagen de fondo",
+        "remove": "Eliminar imagen de fondo",
+        "tooltip": "La imagen de fondo se mostrará en la parte superior de tu perfil (se recomienda una proporción de 16:9)",
+        "uploading": "Subiendo..."
+      },
       "description": {
         "label": "Biografía",
         "maxLength": "La biografía puede tener hasta 200 caracteres.",
@@ -74,6 +86,12 @@
         "placeholder": "Introduce tu nombre para mostrar",
         "required": "Por favor, introduce un nombre para mostrar."
       },
+      "github": {
+        "placeholder": "Nombre de usuario de GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nombre de usuario de X (Twitter)"
+      },
       "userName": {
         "label": "ID de usuario",
         "maxLength": "El ID de usuario puede tener hasta 32 caracteres.",
@@ -82,10 +100,17 @@
         "placeholder": "Introduce tu ID de usuario",
         "required": "Por favor, introduce un ID de usuario.",
         "tooltip": "El ID de usuario es tu identificador único y se usará en el enlace a tu perfil."
+      },
+      "website": {
+        "invalidUrl": "Por favor, introduce una URL válida",
+        "placeholder": "Enlace a tu sitio web personal"
       }
     },
     "getStarted": "Comenzar",
     "save": "Guardar",
+    "socialLinks": {
+      "title": "Enlaces sociales"
+    },
     "success": "Perfil actualizado correctamente",
     "titleEdit": "Editar perfil",
     "titleFirstTime": "Completa tu perfil"
