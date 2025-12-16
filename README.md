@@ -820,7 +820,7 @@ This project is [LobeHub Community License](./LICENSE) licensed.
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://lobehub.com/docs/usage/start
-[docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
+[docs-dev-guide]: https://lobehub.com/docs/development/start
 [docs-docker]: https://lobehub.com/docs/self-hosting/server-database/docker-compose
 [docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
 [docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
@@ -840,7 +840,7 @@ This project is [LobeHub Community License](./LICENSE) licensed.
 [docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
 [docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
 [docs-function-call]: https://lobehub.com/blog/openai-function-call
-[docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
+[docs-lighthouse]: https://lobehub.com/docs/development/others/lighthouse
 [docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
 [docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
 [docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
