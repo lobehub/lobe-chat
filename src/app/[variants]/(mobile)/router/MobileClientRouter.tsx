@@ -1,12 +1,17 @@
 'use client';
 
-import { RouterProvider } from 'react-router-dom';
+import { BrowserRouter, Routes } from 'react-router-dom';
 
-import { createMobileRouter } from './mobileRouter.config';
+import { renderRoutes } from '@/utils/router';
+
+import { mobileRoutes } from './mobileRouter.config';
 
 const ClientRouter = () => {
-  const router = createMobileRouter();
-  return <RouterProvider router={router} />;
+  return (
+    <BrowserRouter>
+      <Routes>{renderRoutes(mobileRoutes)}</Routes>
+    </BrowserRouter>
+  );
 };
 
 ClientRouter.displayName = 'ClientRouter';
