@@ -6,7 +6,7 @@ import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import type { AddTodoParams } from '../../types';
+import type { CreateTodosParams } from '../../types';
 import { SortableTodoList, TodoListItem } from '../components';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -18,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const AddTodoIntervention = memo<BuiltinInterventionProps<AddTodoParams>>(
+const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
   ({ args, onArgsChange }) => {
     const { styles } = useStyles();
 

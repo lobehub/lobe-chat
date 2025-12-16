@@ -595,4 +595,242 @@ describe('Message CRUD Actions', () => {
       );
     });
   });
+
+  describe('updatePluginArguments', () => {
+    it('should update plugin arguments and register pending promise', async () => {
+      const updatePluginArgsSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateMessagePluginArguments')
+        .mockResolvedValue({ success: true } as any);
+      vi.spyOn(messageServiceModule.messageService, 'updateMessage').mockResolvedValue({
+        success: true,
+        messages: [],
+      });
+      vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
+
+      const store = createTestStore();
+
+      // Create an assistant message with a tool
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'assistant-1',
+          value: { content: '', role: 'assistant', sessionId: 'test-session' },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'addMessageTool',
+          id: 'assistant-1',
+          value: {
+            id: 'tool-call-1',
+            type: 'default',
+            identifier: 'test',
+            apiName: 'testFunc',
+            arguments: '{"key": "old"}',
+          },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'tool-msg-1',
+          value: {
+            content: '',
+            role: 'tool',
+            sessionId: 'test-session',
+            parentId: 'assistant-1',
+            tool_call_id: 'tool-call-1',
+            plugin: {
+              apiName: 'test',
+              arguments: '{"key": "old"}',
+              identifier: 'test-plugin',
+              type: 'default',
+            },
+          },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().updatePluginArguments('tool-msg-1', { key: 'new' }, true);
+      });
+
+      expect(updatePluginArgsSpy).toHaveBeenCalledWith('tool-msg-1', { key: 'new' });
+    });
+
+    it('should register and remove pending promise during update', async () => {
+      let resolveUpdate: () => void;
+      const updatePromise = new Promise<void>((resolve) => {
+        resolveUpdate = resolve;
+      });
+
+      vi.spyOn(
+        messageServiceModule.messageService,
+        'updateMessagePluginArguments',
+      ).mockImplementation(async () => {
+        await updatePromise;
+        return { success: true } as any;
+      });
+      vi.spyOn(messageServiceModule.messageService, 'updateMessage').mockResolvedValue({
+        success: true,
+        messages: [],
+      });
+      vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
+
+      const store = createTestStore();
+
+      // Create tool message
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'tool-msg-1',
+          value: {
+            content: '',
+            role: 'tool',
+            sessionId: 'test-session',
+            tool_call_id: 'tool-call-1',
+            plugin: {
+              apiName: 'test',
+              arguments: '{"key": "old"}',
+              identifier: 'test-plugin',
+              type: 'default',
+            },
+          },
+        });
+      });
+
+      // Start update (don't await yet)
+      let updateFinished = false;
+      const updateAction = act(async () => {
+        await store.getState().updatePluginArguments('tool-msg-1', { key: 'new' }, true);
+        updateFinished = true;
+      });
+
+      // Give time for the promise to be registered
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // Verify pending promise is registered
+      expect(store.getState().pendingArgsUpdates.has('tool-msg-1')).toBe(true);
+      expect(updateFinished).toBe(false);
+
+      // Resolve the update
+      resolveUpdate!();
+      await updateAction;
+
+      // Verify pending promise is removed after completion
+      expect(store.getState().pendingArgsUpdates.has('tool-msg-1')).toBe(false);
+      expect(updateFinished).toBe(true);
+    });
+
+    it('should skip update if value is equal', async () => {
+      const updatePluginArgsSpy = vi.spyOn(
+        messageServiceModule.messageService,
+        'updateMessagePluginArguments',
+      );
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'tool-msg-1',
+          value: {
+            content: '',
+            role: 'tool',
+            sessionId: 'test-session',
+            tool_call_id: 'tool-call-1',
+            plugin: {
+              apiName: 'test',
+              arguments: '{"key": "value"}',
+              identifier: 'test-plugin',
+              type: 'default',
+            },
+          },
+        });
+      });
+
+      await act(async () => {
+        // Update with same value
+        await store.getState().updatePluginArguments('tool-msg-1', { key: 'value' }, true);
+      });
+
+      expect(updatePluginArgsSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('waitForPendingArgsUpdate', () => {
+    it('should wait for pending update to complete', async () => {
+      let resolveUpdate: () => void;
+      const updatePromise = new Promise<void>((resolve) => {
+        resolveUpdate = resolve;
+      });
+
+      vi.spyOn(
+        messageServiceModule.messageService,
+        'updateMessagePluginArguments',
+      ).mockImplementation(async () => {
+        await updatePromise;
+        return { success: true } as any;
+      });
+      vi.spyOn(messageServiceModule.messageService, 'updateMessage').mockResolvedValue({
+        success: true,
+        messages: [],
+      });
+      vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
+
+      const store = createTestStore();
+
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'tool-msg-1',
+          value: {
+            content: '',
+            role: 'tool',
+            sessionId: 'test-session',
+            tool_call_id: 'tool-call-1',
+            plugin: {
+              apiName: 'test',
+              arguments: '{"key": "old"}',
+              identifier: 'test-plugin',
+              type: 'default',
+            },
+          },
+        });
+      });
+
+      // Start update without awaiting
+      const updateAction = act(async () => {
+        await store.getState().updatePluginArguments('tool-msg-1', { key: 'new' }, true);
+      });
+
+      // Give time for the promise to be registered
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // Start waiting for pending update
+      let waitFinished = false;
+      const waitAction = act(async () => {
+        await store.getState().waitForPendingArgsUpdate('tool-msg-1');
+        waitFinished = true;
+      });
+
+      // Give time for wait to start
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(waitFinished).toBe(false);
+
+      // Resolve the update
+      resolveUpdate!();
+      await updateAction;
+      await waitAction;
+
+      expect(waitFinished).toBe(true);
+    });
+
+    it('should resolve immediately if no pending update', async () => {
+      const store = createTestStore();
+
+      let waitFinished = false;
+      await act(async () => {
+        await store.getState().waitForPendingArgsUpdate('nonexistent-msg');
+        waitFinished = true;
+      });
+
+      expect(waitFinished).toBe(true);
+    });
+  });
 });

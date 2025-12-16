@@ -1,10 +1,8 @@
 /**
  * Tests for BaseExecutor
  */
+import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
-
-import type { BuiltinToolContext, BuiltinToolResult } from '../../types';
-import { BaseExecutor } from '../BaseExecutor';
 
 // Test API enum
 const TestApiName = {

@@ -27,14 +27,6 @@ export default {
       clearCompleted: '清除已完成',
       placeholder: '输入待办项目...',
     },
-    addTodo: {
-      added: '已添加 {{count}} 个项目到待办清单',
-      added_one: '已添加 {{count}} 个项目到待办清单',
-      added_other: '已添加 {{count}} 个项目到待办清单',
-      total: '共 {{count}} 个项目',
-      total_one: '共 {{count}} 个项目',
-      total_other: '共 {{count}} 个项目',
-    },
     clearTodos: {
       cleared: '已清除 {{count}} 个项目',
       clearedCompleted: '已清除 {{count}} 个已完成项目',
@@ -47,21 +39,37 @@ export default {
       remaining_one: '剩余 {{count}} 个项目',
       remaining_other: '剩余 {{count}} 个项目',
     },
-    completeTodo: {
+    completeTodos: {
       completed: '已完成 {{count}} 个项目',
       completed_one: '已完成 {{count}} 个项目',
       completed_other: '已完成 {{count}} 个项目',
     },
-    listTodos: {
+    createTodos: {
+      created: '已创建 {{count}} 个待办项目',
+      created_one: '已创建 {{count}} 个待办项目',
+      created_other: '已创建 {{count}} 个待办项目',
+      total: '共 {{count}} 个项目',
+      total_one: '共 {{count}} 个项目',
+      total_other: '共 {{count}} 个项目',
+    },
+    removeTodos: {
+      removed: '已删除 {{count}} 个项目',
+      removed_one: '已删除 {{count}} 个项目',
+      removed_other: '已删除 {{count}} 个项目',
+    },
+    status: {
+      done: '{{count}} 已完成',
+      pending: '{{count}} 待处理',
+    },
+    todoList: {
       empty: '待办清单为空',
       items: '{{count}} 个项目',
       items_one: '{{count}} 个项目',
       items_other: '{{count}} 个项目',
       title: '待办清单',
     },
-    status: {
-      done: '{{count}} 已完成',
-      pending: '{{count}} 待处理',
+    updateTodos: {
+      updated: '待办清单已更新',
     },
   },
   'lobe-knowledge-base': {

@@ -15,16 +15,16 @@ export const GTDApiName = {
   clearTodos: 'clearTodos',
 
   /** Mark todo items as done by indices */
-  completeTodo: 'completeTodo',
+  completeTodos: 'completeTodos',
 
   /** Create new todo items */
-  createTodo: 'createTodo',
+  createTodos: 'createTodos',
 
   /** Remove todo items by indices */
-  removeTodo: 'removeTodo',
+  removeTodos: 'removeTodos',
 
-  /** Update todo list (supports batch operations: modify text, complete, remove) */
-  updateTodo: 'updateTodo',
+  /** Update todo items with batch operations (add, update, remove, complete) */
+  updateTodos: 'updateTodos',
 
   // ==================== Planning ====================
   /** Create a structured plan by breaking down a goal into actionable steps */
@@ -56,24 +56,45 @@ export interface TodoList {
  * Create new todo items
  * AI passes text[], application layer converts to TodoItem[]
  */
-export interface CreateTodoParams {
+export interface CreateTodosParams {
   /** Array of todo item texts to create */
   items: string[];
 }
 
 /**
- * Update todo list with batch operations
- * Supports: modify text, mark completed, remove items
+ * Update operation types for batch updates
  */
-export interface UpdateTodoParams {
-  /** Complete items list after update */
-  items: TodoItem[];
+export type TodoUpdateOperationType = 'add' | 'update' | 'remove' | 'complete';
+
+/**
+ * Single update operation
+ */
+export interface TodoUpdateOperation {
+  /** Operation type */
+  type: TodoUpdateOperationType;
+  /** For 'add': the text to add */
+  text?: string;
+  /** For 'update', 'remove', 'complete': the index of the item (0-based) */
+  index?: number;
+  /** For 'update': the new text */
+  newText?: string;
+  /** For 'update': the new completed status */
+  completed?: boolean;
+}
+
+/**
+ * Update todo list with batch operations
+ * Supports: add, update, remove, complete
+ */
+export interface UpdateTodosParams {
+  /** Array of update operations to apply */
+  operations: TodoUpdateOperation[];
 }
 
 /**
  * Mark todo items as completed by indices
  */
-export interface CompleteTodoParams {
+export interface CompleteTodosParams {
   /** Indices of items to mark as completed (0-based) */
   indices: number[];
 }
@@ -81,7 +102,7 @@ export interface CompleteTodoParams {
 /**
  * Remove todo items by indices
  */
-export interface RemoveTodoParams {
+export interface RemoveTodosParams {
   /** Indices of items to remove (0-based) */
   indices: number[];
 }
@@ -96,26 +117,28 @@ export interface ClearTodosParams {
 
 // ==================== Todo State Types for Render ====================
 
-export interface CreateTodoState {
+export interface CreateTodosState {
   /** Items that were created */
   createdItems: string[];
   /** Current todo list after creation */
   todos: TodoList;
 }
 
-export interface UpdateTodoState {
+export interface UpdateTodosState {
+  /** Operations that were applied */
+  appliedOperations: TodoUpdateOperation[];
   /** Current todo list after update */
   todos: TodoList;
 }
 
-export interface CompleteTodoState {
+export interface CompleteTodosState {
   /** Indices that were completed */
   completedIndices: number[];
   /** Current todo list after completion */
   todos: TodoList;
 }
 
-export interface RemoveTodoState {
+export interface RemoveTodosState {
   /** Indices that were removed */
   removedIndices: number[];
   /** Current todo list after removal */
@@ -133,44 +156,45 @@ export interface ClearTodosState {
 
 // ==================== Planning Params ====================
 
-export interface PlanStep {
-  /** Assigned agent ID (for multi-agent scenarios) */
-  assignee?: string;
-  /** Dependencies on other steps (by index) */
-  dependsOn?: number[];
-  /** Step description */
-  description: string;
-  /** Estimated effort (optional) */
-  effort?: 'small' | 'medium' | 'large';
-}
-
+/**
+ * Create a high-level plan document
+ * Plans define the strategic direction (what and why), not actionable steps
+ */
 export interface CreatePlanParams {
-  /** Additional context or constraints */
+  /** Additional context, constraints, or strategic considerations */
   context?: string;
-  /** The goal to plan for */
+  /** The main goal or objective to achieve */
   goal: string;
-  /** Breakdown the goal into steps */
-  steps: PlanStep[];
 }
 
 export interface UpdatePlanParams {
   /** Mark plan as completed */
   completed?: boolean;
+  /** Updated context information */
+  context?: string;
   /** Updated goal */
   goal?: string;
   /** Plan ID to update */
   planId: string;
-  /** Updated steps */
-  steps?: PlanStep[];
 }
 
 // ==================== Plan Result Types ====================
 
+/**
+ * A high-level plan document
+ * Contains goal and context, but no steps (steps are managed via Todos)
+ */
 export interface Plan {
+  /** Whether the plan is completed */
   completed: boolean;
+  /** Additional context and strategic information */
+  context?: string;
+  /** Creation timestamp */
   createdAt: string;
+  /** The main goal or objective */
   goal: string;
+  /** Unique plan identifier */
   id: string;
-  steps: PlanStep[];
+  /** Last update timestamp */
   updatedAt: string;
 }

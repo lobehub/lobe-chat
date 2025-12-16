@@ -9,10 +9,11 @@ import TodoListRender from './TodoList';
  */
 export const GTDRenders = {
   // All todo operations render the same TodoList UI
-  [GTDApiName.addTodo]: TodoListRender,
+  [GTDApiName.createTodos]: TodoListRender,
+  [GTDApiName.updateTodos]: TodoListRender,
+  [GTDApiName.completeTodos]: TodoListRender,
+  [GTDApiName.removeTodos]: TodoListRender,
   [GTDApiName.clearTodos]: TodoListRender,
-  [GTDApiName.completeTodo]: TodoListRender,
-  [GTDApiName.listTodos]: TodoListRender,
 };
 
 export type { TodoListCallbacks, TodoListRenderState } from './TodoList';

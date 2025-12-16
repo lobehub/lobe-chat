@@ -39,12 +39,13 @@ export default {
     },
     'lobe-gtd': {
       apiName: {
-        addTodo: '创建待办事项',
         clearTodos: '清除待办',
-        completeTodo: '完成待办',
+        completeTodos: '完成待办',
         createPlan: '创建计划',
-        listTodos: '查看待办',
+        createTodos: '创建待办',
+        removeTodos: '删除待办',
         updatePlan: '更新计划',
+        updateTodos: '更新待办',
       },
       title: 'GTD 工具',
     },

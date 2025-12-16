@@ -4,11 +4,12 @@
  * Central registry for all builtin tool executors.
  * Executors are registered as class instances by identifier.
  */
+import { groupManagementExecutor } from '@lobechat/builtin-tool-group-management/executor';
+import { gtdExecutor } from '@lobechat/builtin-tool-gtd';
+
 import type { IBuiltinToolExecutor } from '../types';
 // ==================== Import and register all executors ====================
 
-import { groupManagement } from './lobe-group-management';
-import { gtd } from './lobe-gtd';
 import { webBrowsing } from './lobe-web-browsing';
 
 /**
@@ -108,6 +109,6 @@ export const invokeExecutor = async (
 };
 
 // Register all executor instances
-registerExecutor(groupManagement);
-registerExecutor(gtd);
+registerExecutor(groupManagementExecutor);
+registerExecutor(gtdExecutor);
 registerExecutor(webBrowsing);

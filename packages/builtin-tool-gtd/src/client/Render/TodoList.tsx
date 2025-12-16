@@ -35,7 +35,7 @@ const TodoListUI = memo<TodoListProps>(({ items, callbacks, showActions = true }
   const [newTodoText, setNewTodoText] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 
-  const completedCount = items.filter((item) => item.done).length;
+  const completedCount = items.filter((item) => item.completed).length;
   const pendingCount = items.length - completedCount;
 
   const handleToggle = useCallback(
@@ -73,7 +73,7 @@ const TodoListUI = memo<TodoListProps>(({ items, callbacks, showActions = true }
       <Flexbox gap={8} style={{ fontSize: 13 }}>
         <Flexbox align={'center'} gap={6} horizontal style={{ color: 'var(--lobe-text-tertiary)' }}>
           <ListTodo size={14} />
-          <span>{t('lobe-gtd.listTodos.empty')}</span>
+          <span>{t('lobe-gtd.todoList.empty')}</span>
           {showActions && callbacks?.onAddTodo && (
             <Flexbox
               align={'center'}
@@ -101,7 +101,7 @@ const TodoListUI = memo<TodoListProps>(({ items, callbacks, showActions = true }
       <Flexbox align={'center'} gap={6} horizontal style={{ color: 'var(--lobe-primary-6)' }}>
         <ListTodo size={14} />
         <span style={{ fontWeight: 500 }}>
-          {t('lobe-gtd.listTodos.title')} ({t('lobe-gtd.listTodos.items', { count: items.length })})
+          {t('lobe-gtd.todoList.title')} ({t('lobe-gtd.todoList.items', { count: items.length })})
         </span>
         <span style={{ color: 'var(--lobe-text-tertiary)', fontSize: 12 }}>
           {t('lobe-gtd.status.done', { count: completedCount })},{' '}
@@ -135,20 +135,20 @@ const TodoListUI = memo<TodoListProps>(({ items, callbacks, showActions = true }
           >
             {showActions ? (
               <Checkbox
-                checked={item.done}
-                onChange={() => handleToggle(index, item.done)}
+                checked={item.completed}
+                onChange={() => handleToggle(index, item.completed)}
                 style={{ marginRight: 0 }}
               />
-            ) : item.done ? (
+            ) : item.completed ? (
               <CheckCircle size={14} style={{ color: 'var(--lobe-success-6)', flexShrink: 0 }} />
             ) : (
               <Circle size={14} style={{ color: 'var(--lobe-text-quaternary)', flexShrink: 0 }} />
             )}
             <span
               style={{
-                color: item.done ? 'var(--lobe-text-tertiary)' : 'var(--lobe-text)',
+                color: item.completed ? 'var(--lobe-text-tertiary)' : 'var(--lobe-text)',
                 flex: 1,
-                textDecoration: item.done ? 'line-through' : 'none',
+                textDecoration: item.completed ? 'line-through' : 'none',
               }}
             >
               {item.text}

@@ -4,13 +4,11 @@
  * Handles web search and page crawling tool calls.
  */
 import { CrawlMultiPagesQuery, SEARCH_SEARXNG_NOT_CONFIG, SearchQuery } from '@lobechat/types';
+import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 
 import { searchService } from '@/services/search';
 import { WebBrowsingApiName, WebBrowsingManifest } from '@/tools/web-browsing';
 import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
-
-import type { BuiltinToolContext, BuiltinToolResult } from '../types';
-import { BaseExecutor } from './BaseExecutor';
 
 const runtime = new WebBrowsingExecutionRuntime({ searchService });
 

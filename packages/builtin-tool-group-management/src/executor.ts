@@ -22,12 +22,10 @@ import {
   VoteParams,
 } from '@lobechat/builtin-tool-group-management';
 import { formatAgentProfile } from '@lobechat/prompts';
+import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 
 import { agentService } from '@/services/agent';
 import { agentGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
-
-import type { BuiltinToolContext, BuiltinToolResult } from '../types';
-import { BaseExecutor } from './BaseExecutor';
 
 class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName> {
   readonly identifier = GroupManagementIdentifier;
@@ -380,5 +378,4 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
   };
 }
 
-// Export the executor instance for registration in index.ts
-export const groupManagement = new GroupManagementExecutor();
+export const groupManagementExecutor = new GroupManagementExecutor();

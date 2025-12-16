@@ -262,4 +262,144 @@ describe('Tool Actions', () => {
       );
     });
   });
+
+  describe('waitForPendingArgsUpdate integration', () => {
+    it('approveToolCall should wait for pending args update before proceeding', async () => {
+      const context: ConversationContext = {
+        agentId: 'session-1',
+        topicId: null,
+        threadId: null,
+      };
+
+      const store = createStore({ context });
+
+      // Manually set a pending promise in the store
+      let resolvePending: () => void;
+      const pendingPromise = new Promise<void>((resolve) => {
+        resolvePending = resolve;
+      });
+
+      act(() => {
+        store.setState({
+          pendingArgsUpdates: new Map([['tool-call-1', pendingPromise]]),
+        });
+      });
+
+      // Start approve (should wait for pending promise)
+      let approveFinished = false;
+      const approveAction = act(async () => {
+        await store.getState().approveToolCall('tool-call-1', 'group-1');
+        approveFinished = true;
+      });
+
+      // Give time for approve to start waiting
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // Approve should not have finished yet (waiting for pending promise)
+      expect(approveFinished).toBe(false);
+      expect(mockApproveToolCalling).not.toHaveBeenCalled();
+
+      // Resolve the pending promise
+      resolvePending!();
+      await approveAction;
+
+      // Now approve should have finished
+      expect(approveFinished).toBe(true);
+      expect(mockApproveToolCalling).toHaveBeenCalledWith('tool-call-1', 'group-1', context);
+    });
+
+    it('rejectToolCall should wait for pending args update before proceeding', async () => {
+      const onToolRejected = vi.fn().mockResolvedValue(true);
+      const context: ConversationContext = {
+        agentId: 'session-1',
+        topicId: null,
+        threadId: null,
+      };
+      const hooks: ConversationHooks = { onToolRejected };
+
+      const store = createStore({ context, hooks });
+
+      // Manually set a pending promise in the store
+      let resolvePending: () => void;
+      const pendingPromise = new Promise<void>((resolve) => {
+        resolvePending = resolve;
+      });
+
+      act(() => {
+        store.setState({
+          pendingArgsUpdates: new Map([['tool-call-1', pendingPromise]]),
+        });
+      });
+
+      // Start reject (should wait for pending promise)
+      let rejectFinished = false;
+      const rejectAction = act(async () => {
+        await store.getState().rejectToolCall('tool-call-1', 'Reason');
+        rejectFinished = true;
+      });
+
+      // Give time for reject to start waiting
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // Reject should not have finished yet (waiting for pending promise)
+      expect(rejectFinished).toBe(false);
+      expect(onToolRejected).not.toHaveBeenCalled();
+
+      // Resolve the pending promise
+      resolvePending!();
+      await rejectAction;
+
+      // Now reject should have finished
+      expect(rejectFinished).toBe(true);
+      expect(onToolRejected).toHaveBeenCalledWith('tool-call-1', 'Reason');
+    });
+
+    it('rejectAndContinueToolCall should wait for pending args update before proceeding', async () => {
+      const context: ConversationContext = {
+        agentId: 'session-1',
+        topicId: null,
+        threadId: null,
+      };
+
+      const store = createStore({ context });
+
+      // Manually set a pending promise in the store
+      let resolvePending: () => void;
+      const pendingPromise = new Promise<void>((resolve) => {
+        resolvePending = resolve;
+      });
+
+      act(() => {
+        store.setState({
+          pendingArgsUpdates: new Map([['tool-call-1', pendingPromise]]),
+        });
+      });
+
+      // Start rejectAndContinue (should wait for pending promise)
+      let rejectFinished = false;
+      const rejectAction = act(async () => {
+        await store.getState().rejectAndContinueToolCall('tool-call-1', 'Reason');
+        rejectFinished = true;
+      });
+
+      // Give time for reject to start waiting
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // RejectAndContinue should not have finished yet (waiting for pending promise)
+      expect(rejectFinished).toBe(false);
+      expect(mockRejectAndContinueToolCalling).not.toHaveBeenCalled();
+
+      // Resolve the pending promise
+      resolvePending!();
+      await rejectAction;
+
+      // Now rejectAndContinue should have finished
+      expect(rejectFinished).toBe(true);
+      expect(mockRejectAndContinueToolCalling).toHaveBeenCalledWith(
+        'tool-call-1',
+        'Reason',
+        context,
+      );
+    });
+  });
 });

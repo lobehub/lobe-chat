@@ -11,7 +11,7 @@ import ClearTodosIntervention from './ClearTodos';
  * before the tool is executed.
  */
 export const GTDInterventions: Record<string, BuiltinIntervention> = {
-  [GTDApiName.addTodo]: AddTodoIntervention as BuiltinIntervention,
+  [GTDApiName.createTodos]: AddTodoIntervention as BuiltinIntervention,
   [GTDApiName.clearTodos]: ClearTodosIntervention as BuiltinIntervention,
 };
 

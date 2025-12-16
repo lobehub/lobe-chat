@@ -5,7 +5,7 @@ import type {
   BuiltinToolContext,
   GroupOrchestrationCallbacks,
 } from '../../types';
-import { groupManagement } from '../lobe-group-management';
+import { groupManagementExecutor } from './executor';
 
 // Mock agentGroupStore
 const mockAddAgentsToGroup = vi.fn();
@@ -51,7 +51,7 @@ describe('GroupManagementExecutor', () => {
     it('should return stop=true to terminate supervisor execution', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.speak(
+      const result = await groupManagementExecutor.speak(
         { agentId: 'agent-1', instruction: 'Please respond' },
         ctx,
       );
@@ -82,7 +82,10 @@ describe('GroupManagementExecutor', () => {
         registerAfterCompletion,
       );
 
-      await groupManagement.speak({ agentId: 'agent-1', instruction: 'Please respond' }, ctx);
+      await groupManagementExecutor.speak(
+        { agentId: 'agent-1', instruction: 'Please respond' },
+        ctx,
+      );
 
       // Verify registerAfterCompletion was called
       expect(registerAfterCompletion).toHaveBeenCalled();
@@ -102,7 +105,7 @@ describe('GroupManagementExecutor', () => {
     it('should not fail when groupOrchestration is not available', async () => {
       const ctx = createMockContext(); // No groupOrchestration
 
-      const result = await groupManagement.speak({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.speak({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.stop).toBe(true);
@@ -125,7 +128,7 @@ describe('GroupManagementExecutor', () => {
         registerAfterCompletion,
       );
 
-      await groupManagement.speak({ agentId: 'agent-2' }, ctx);
+      await groupManagementExecutor.speak({ agentId: 'agent-2' }, ctx);
 
       // Execute the registered callback
       await registeredCallbacks[0]();
@@ -142,7 +145,7 @@ describe('GroupManagementExecutor', () => {
     it('should return stop=true to terminate supervisor execution', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.broadcast(
+      const result = await groupManagementExecutor.broadcast(
         { agentIds: ['agent-1', 'agent-2'], instruction: 'Discuss' },
         ctx,
       );
@@ -173,7 +176,7 @@ describe('GroupManagementExecutor', () => {
         registerAfterCompletion,
       );
 
-      await groupManagement.broadcast(
+      await groupManagementExecutor.broadcast(
         { agentIds: ['agent-1', 'agent-2'], instruction: 'Discuss together' },
         ctx,
       );
@@ -197,7 +200,7 @@ describe('GroupManagementExecutor', () => {
     it('should not fail when groupOrchestration is not available', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.broadcast({ agentIds: ['agent-1'] }, ctx);
+      const result = await groupManagementExecutor.broadcast({ agentIds: ['agent-1'] }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.stop).toBe(true);
@@ -208,7 +211,7 @@ describe('GroupManagementExecutor', () => {
     it('should return stop=true to terminate supervisor execution', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.delegate(
+      const result = await groupManagementExecutor.delegate(
         { agentId: 'agent-1', reason: 'User requested' },
         ctx,
       );
@@ -239,7 +242,7 @@ describe('GroupManagementExecutor', () => {
         registerAfterCompletion,
       );
 
-      await groupManagement.delegate({ agentId: 'agent-3', reason: 'Expert needed' }, ctx);
+      await groupManagementExecutor.delegate({ agentId: 'agent-3', reason: 'Expert needed' }, ctx);
 
       // Verify registerAfterCompletion was called
       expect(registerAfterCompletion).toHaveBeenCalled();
@@ -259,7 +262,7 @@ describe('GroupManagementExecutor', () => {
     it('should not fail when groupOrchestration is not available', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.delegate({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.delegate({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.stop).toBe(true);
@@ -274,7 +277,10 @@ describe('GroupManagementExecutor', () => {
     it('should return community not supported message when source is community', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.searchAgent({ query: 'test', source: 'community' }, ctx);
+      const result = await groupManagementExecutor.searchAgent(
+        { query: 'test', source: 'community' },
+        ctx,
+      );
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('Community agent search is not yet supported');
@@ -288,7 +294,7 @@ describe('GroupManagementExecutor', () => {
       ]);
 
       const ctx = createMockContext();
-      const result = await groupManagement.searchAgent({ query: 'test' }, ctx);
+      const result = await groupManagementExecutor.searchAgent({ query: 'test' }, ctx);
 
       expect(result.success).toBe(true);
       expect(mockQueryAgents).toHaveBeenCalledWith({ keyword: 'test', limit: 10 });
@@ -303,7 +309,7 @@ describe('GroupManagementExecutor', () => {
       mockQueryAgents.mockResolvedValue([]);
 
       const ctx = createMockContext();
-      const result = await groupManagement.searchAgent({ query: 'nonexistent' }, ctx);
+      const result = await groupManagementExecutor.searchAgent({ query: 'nonexistent' }, ctx);
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('No agents found matching "nonexistent"');
@@ -317,7 +323,7 @@ describe('GroupManagementExecutor', () => {
       ]);
 
       const ctx = createMockContext();
-      const result = await groupManagement.searchAgent({ query: 'test', limit: 2 }, ctx);
+      const result = await groupManagementExecutor.searchAgent({ query: 'test', limit: 2 }, ctx);
 
       expect(result.success).toBe(true);
       expect(mockQueryAgents).toHaveBeenCalledWith({ keyword: 'test', limit: 2 });
@@ -328,7 +334,7 @@ describe('GroupManagementExecutor', () => {
       mockQueryAgents.mockRejectedValue(new Error('Network error'));
 
       const ctx = createMockContext();
-      const result = await groupManagement.searchAgent({ query: 'test' }, ctx);
+      const result = await groupManagementExecutor.searchAgent({ query: 'test' }, ctx);
 
       expect(result.success).toBe(false);
       expect(result.content).toBe('Failed to search agents: Network error');
@@ -339,7 +345,7 @@ describe('GroupManagementExecutor', () => {
     it('should return error when no groupId in context', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.getAgentInfo({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.getAgentInfo({ agentId: 'agent-1' }, ctx);
 
       // No groupId means we can't get agent info
       expect(result.success).toBe(false);
@@ -355,7 +361,7 @@ describe('GroupManagementExecutor', () => {
     it('should return error when no groupId in context', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.inviteAgent({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.inviteAgent({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(false);
       expect(result.content).toBe('No group context available');
@@ -369,7 +375,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.inviteAgent({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.inviteAgent({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(true);
       expect(mockAddAgentsToGroup).toHaveBeenCalledWith('test-group-id', ['agent-1']);
@@ -385,7 +391,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.inviteAgent({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.inviteAgent({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(false);
       expect(result.content).toBe('Failed to invite agent "agent-1": Database error');
@@ -400,7 +406,7 @@ describe('GroupManagementExecutor', () => {
     it('should return error when no groupId in context', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.removeAgent({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.removeAgent({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(false);
       expect(result.content).toBe('No group context available');
@@ -414,7 +420,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.removeAgent({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.removeAgent({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(true);
       expect(mockRemoveAgentFromGroup).toHaveBeenCalledWith('test-group-id', 'agent-1');
@@ -430,7 +436,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.removeAgent({ agentId: 'agent-1' }, ctx);
+      const result = await groupManagementExecutor.removeAgent({ agentId: 'agent-1' }, ctx);
 
       expect(result.success).toBe(false);
       expect(result.content).toBe('Failed to remove agent "agent-1": Agent not found');
@@ -445,7 +451,7 @@ describe('GroupManagementExecutor', () => {
     it('should return error when no groupId in context', async () => {
       const ctx = createMockContext();
 
-      const result = await groupManagement.createAgent(
+      const result = await groupManagementExecutor.createAgent(
         { title: 'New Agent', systemRole: 'You are a helpful assistant' },
         ctx,
       );
@@ -465,7 +471,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.createAgent(
+      const result = await groupManagementExecutor.createAgent(
         {
           avatar: '🤖',
           description: 'A helpful coding assistant',
@@ -505,7 +511,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.createAgent(
+      const result = await groupManagementExecutor.createAgent(
         { title: 'New Agent', systemRole: 'Test' },
         ctx,
       );
@@ -522,7 +528,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.createAgent(
+      const result = await groupManagementExecutor.createAgent(
         { title: 'New Agent', systemRole: 'Test' },
         ctx,
       );
@@ -542,7 +548,7 @@ describe('GroupManagementExecutor', () => {
         groupId: 'test-group-id',
       };
 
-      const result = await groupManagement.createAgent(
+      const result = await groupManagementExecutor.createAgent(
         { title: 'Minimal Agent', systemRole: 'Basic assistant' },
         ctx,
       );

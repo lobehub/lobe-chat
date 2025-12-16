@@ -9,6 +9,9 @@
  * - The executor receives current state via ctx and returns updated state in result
  * - The framework handles persisting state to the database
  */
+import type { BuiltinToolContext, BuiltinToolResult } from '@lobechat/types';
+import { BaseExecutor } from '@lobechat/types';
+
 import {
   AddTodoParams,
   ClearTodosParams,
@@ -16,10 +19,7 @@ import {
   GTDApiName,
   GTDIdentifier,
   TodoItem,
-} from '@lobechat/builtin-tool-gtd';
-
-import type { BuiltinToolContext, BuiltinToolResult } from '../types';
-import { BaseExecutor } from './BaseExecutor';
+} from './types';
 
 // API enum for MVP (Todo only)
 const GTDApiNameMVP = {
@@ -261,4 +261,4 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 }
 
 // Export the executor instance for registration
-export const gtd = new GTDExecutor();
+export const gtdExecutor = new GTDExecutor();
