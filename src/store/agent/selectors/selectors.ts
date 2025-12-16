@@ -13,7 +13,6 @@ import {
   LobeAgentTTSConfig,
   MetaData,
 } from '@lobechat/types';
-import { merge } from '@lobechat/utils';
 import { VoiceList } from '@lobehub/tts';
 
 import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selectors';
@@ -87,13 +86,13 @@ const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
 const getAgentConfigById =
   (agentId: string) =>
   (s: AgentStoreState): LobeAgentConfig =>
-    merge(s.defaultAgentConfig, s.agentMap[agentId]);
+    s.agentMap[agentId] as LobeAgentConfig;
 
 export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>
   getAgentConfigById(s.activeAgentId || '')(s);
 
 const currentAgentSystemRole = (s: AgentStoreState) => {
-  return currentAgentConfig(s).systemRole;
+  return currentAgentConfig(s)?.systemRole;
 };
 
 const currentAgentModel = (s: AgentStoreState): string => {
@@ -181,7 +180,7 @@ const currentEnabledKnowledge = (s: AgentStoreState) => {
 const hasSystemRole = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
-  return !!config.systemRole;
+  return !!config?.systemRole;
 };
 
 const hasKnowledgeBases = (s: AgentStoreState) => {
@@ -221,8 +220,8 @@ const isAgentConfigLoading = (s: AgentStoreState) =>
 const getAgentSlugById = (agentId: string) => (s: AgentStoreState) => s.agentMap[agentId]?.slug;
 
 const openingQuestions = (s: AgentStoreState) =>
-  currentAgentConfig(s).openingQuestions || DEFAULT_OPENING_QUESTIONS;
-const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
+  currentAgentConfig(s)?.openingQuestions || DEFAULT_OPENING_QUESTIONS;
+const openingMessage = (s: AgentStoreState) => currentAgentConfig(s)?.openingMessage || '';
 
 export const agentSelectors = {
   currentAgentAvatar,

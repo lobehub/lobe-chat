@@ -32,13 +32,12 @@ const createState = (overrides: Partial<AgentStoreState> = {}): AgentStoreState 
 
 describe('agentSelectors', () => {
   describe('currentAgentConfig', () => {
-    it('should return merged config with default agent config', () => {
+    it('should return agent config from agentMap', () => {
       const state = createState({
         activeAgentId: 'agent-1',
         agentMap: {
           'agent-1': { model: 'gpt-4', systemRole: 'Test role' } as any,
         },
-        defaultAgentConfig: { model: 'default-model' } as any,
       });
 
       const config = currentAgentConfig(state);
@@ -47,16 +46,15 @@ describe('agentSelectors', () => {
       expect(config.systemRole).toBe('Test role');
     });
 
-    it('should use default values when no agent config exists', () => {
+    it('should return undefined when no agent config exists', () => {
       const state = createState({
         activeAgentId: 'non-existent',
         agentMap: {},
-        defaultAgentConfig: DEFAULT_AGENT_CONFIG,
       });
 
       const config = currentAgentConfig(state);
 
-      expect(config).toEqual(DEFAULT_AGENT_CONFIG);
+      expect(config).toBeUndefined();
     });
   });
 

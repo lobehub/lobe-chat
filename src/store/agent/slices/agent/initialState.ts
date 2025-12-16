@@ -1,14 +1,12 @@
 import type { PartialDeep } from 'type-fest';
 
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { AgentSettingsInstance } from '@/features/AgentSetting';
-import { AgentItem, LobeAgentConfig } from '@/types/agent';
+import { AgentItem } from '@/types/agent';
 
 export interface AgentSliceState {
   activeAgentId?: string;
   agentMap: Record<string, PartialDeep<AgentItem>>;
   agentSettingInstance?: AgentSettingsInstance | null;
-  defaultAgentConfig: LobeAgentConfig;
   /**
    * Whether the agent panel is pinned (UI state)
    */
@@ -29,7 +27,6 @@ export interface AgentSliceState {
 
 export const initialAgentSliceState: AgentSliceState = {
   agentMap: {},
-  defaultAgentConfig: DEFAULT_AGENT_CONFIG,
   isAgentPinned: false,
   showAgentSetting: false,
   streamingSystemRole: undefined,

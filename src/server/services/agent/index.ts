@@ -7,6 +7,7 @@ import type { PartialDeep } from 'type-fest';
 
 import { AgentModel } from '@/database/models/agent';
 import { SessionModel } from '@/database/models/session';
+import { UserModel } from '@/database/models/user';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
 
 import { UpdateAgentResult } from './type';
@@ -21,11 +22,13 @@ export class AgentService {
   private readonly userId: string;
   private readonly db: LobeChatDatabase;
   private readonly agentModel: AgentModel;
+  private readonly userModel: UserModel;
 
   constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
     this.db = db;
     this.agentModel = new AgentModel(db, userId);
+    this.userModel = new UserModel(db, userId);
   }
 
   async createInbox() {
@@ -67,9 +70,8 @@ export class AgentService {
    * The returned agent config is merged with:
    * 1. DEFAULT_AGENT_CONFIG (hardcoded defaults)
    * 2. Server's globalDefaultAgentConfig (from environment variable DEFAULT_AGENT_CONFIG)
-   * 3. The actual agent config from database
-   *
-   * This ensures the frontend always receives a complete config with model/provider.
+   * 3. User's defaultAgentConfig (from user settings)
+   * 4. The actual agent config from database
    */
   async getAgentConfigById(agentId: string) {
     const agent = await this.agentModel.getAgentConfigById(agentId);
@@ -80,15 +82,27 @@ export class AgentService {
   /**
    * Merge default config with agent config.
    * Returns null if agent is null/undefined.
+   *
+   * Merge order (later values override earlier):
+   * 1. DEFAULT_AGENT_CONFIG - hardcoded defaults
+   * 2. serverDefaultAgentConfig - from environment variable
+   * 3. userDefaultAgentConfig - from user settings (defaultAgent.config)
+   * 4. agent - actual agent config from database
    */
-  private mergeDefaultConfig(agent: any): LobeAgentConfig | null {
+  private async mergeDefaultConfig(agent: any): Promise<LobeAgentConfig | null> {
     if (!agent) return null;
 
-    // Merge configs: DEFAULT_AGENT_CONFIG -> serverDefaultAgentConfig -> agent
-    // This ensures model/provider are always present
-    const serverDefaultAgentConfig = merge(DEFAULT_AGENT_CONFIG, getServerDefaultAgentConfig());
+    // Get user's default agent config from settings
+    const userSettings = await this.userModel.getUserSettings();
+    const userDefaultAgentConfig =
+      (userSettings?.defaultAgent as { config?: PartialDeep<LobeAgentConfig> })?.config || {};
 
-    return merge(serverDefaultAgentConfig, cleanObject(agent));
+    // Merge configs in order: DEFAULT -> server -> user -> agent
+    const serverDefaultAgentConfig = getServerDefaultAgentConfig();
+    const baseConfig = merge(DEFAULT_AGENT_CONFIG, serverDefaultAgentConfig);
+    const withUserConfig = merge(baseConfig, userDefaultAgentConfig);
+
+    return merge(withUserConfig, cleanObject(agent));
   }
 
   /**

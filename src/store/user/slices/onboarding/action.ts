@@ -1,7 +1,8 @@
-import { CURRENT_ONBOARDING_VERSION } from '@lobechat/const';
+import { CURRENT_ONBOARDING_VERSION, INBOX_SESSION_ID } from '@lobechat/const';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { userService } from '@/services/user';
+import { getAgentStoreState } from '@/store/agent';
 import type { UserStore } from '@/store/user';
 
 import { onboardingSelectors } from './selectors';
@@ -11,6 +12,10 @@ export interface OnboardingAction {
   goToNextStep: () => Promise<void>;
   goToPreviousStep: () => Promise<void>;
   setOnboardingStep: (step: number) => Promise<void>;
+  /**
+   * Update default model for both user settings and inbox agent
+   */
+  updateDefaultModel: (model: string, provider: string) => Promise<void>;
 }
 
 export const createOnboardingSlice: StateCreator<
@@ -64,5 +69,17 @@ export const createOnboardingSlice: StateCreator<
     });
 
     await get().refreshUserState();
+  },
+
+  updateDefaultModel: async (model, provider) => {
+    const agentStore = getAgentStoreState();
+    const inboxAgentId = agentStore.builtinAgentIdMap[INBOX_SESSION_ID];
+
+    await Promise.all([
+      // 1. Update user settings' defaultAgentConfig
+      get().updateDefaultAgent({ config: { model, provider } }),
+      // 2. Update inbox agent's model
+      inboxAgentId && agentStore.updateAgentConfigById(inboxAgentId, { model, provider }),
+    ]);
   },
 });

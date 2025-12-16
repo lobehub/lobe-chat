@@ -22,25 +22,26 @@ const ProfileArea = memo(() => {
   return (
     <>
       <Flexbox flex={1} height={'100%'}>
-        <Header />
-        <Flexbox
-          height={'100%'}
-          horizontal
-          onClick={() => {
-            if (isAgentConfigLoading) return;
-            editor?.focus();
-          }}
-          style={{ cursor: 'text', display: 'flex', overflowY: 'auto', position: 'relative' }}
-          width={'100%'}
-        >
-          {isAgentConfigLoading ? (
-            <Loading debugId="ProfileArea > AgentConfig" />
-          ) : (
-            <WideScreenContainer>
-              <ProfileEditor />
-            </WideScreenContainer>
-          )}
-        </Flexbox>
+        {isAgentConfigLoading ? (
+          <Loading debugId="ProfileArea" />
+        ) : (
+          <>
+            <Header />
+            <Flexbox
+              height={'100%'}
+              horizontal
+              onClick={() => {
+                editor?.focus();
+              }}
+              style={{ cursor: 'text', display: 'flex', overflowY: 'auto', position: 'relative' }}
+              width={'100%'}
+            >
+              <WideScreenContainer>
+                <ProfileEditor />
+              </WideScreenContainer>
+            </Flexbox>
+          </>
+        )}
       </Flexbox>
       <Suspense fallback={null}>
         <ProfileHydration />

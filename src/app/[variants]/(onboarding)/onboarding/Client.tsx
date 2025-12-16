@@ -9,6 +9,7 @@ import { onboardingSelectors } from '@/store/user/selectors';
 
 import FullNameStep from './features/FullNameStep';
 import ModeSelectionStep from './features/ModeSelectionStep';
+import ProSettingsStep from './features/ProSettingsStep';
 import ResponseLanguageStep from './features/ResponseLanguageStep';
 import TelemetryStep from './features/TelemetryStep';
 
@@ -37,6 +38,9 @@ const Client = memo(() => {
       }
       case 4: {
         return <ModeSelectionStep onBack={goToPreviousStep} onNext={goToNextStep} />;
+      }
+      case 5: {
+        return <ProSettingsStep onBack={goToPreviousStep} />;
       }
       default: {
         return null;

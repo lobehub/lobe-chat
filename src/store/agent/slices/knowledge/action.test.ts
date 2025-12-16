@@ -38,7 +38,6 @@ beforeEach(() => {
     activeAgentId: undefined,
     agentMap: {},
     builtinAgentIdMap: {},
-    defaultAgentConfig: {} as any,
     updateAgentConfigSignal: undefined,
     updateAgentMetaSignal: undefined,
   });

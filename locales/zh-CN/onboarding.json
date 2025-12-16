@@ -13,6 +13,22 @@
     "title": "选择使用模式"
   },
   "next": "下一步",
+  "proSettings": {
+    "connectors": {
+      "desc": "连接您常用的第三方服务",
+      "title": "连接器"
+    },
+    "desc": "配置您的高级选项",
+    "devMode": {
+      "desc": "开启后将显示开发者相关的功能和选项",
+      "title": "开发者模式"
+    },
+    "model": {
+      "desc": "选择 AI 对话使用的默认模型",
+      "title": "默认模型"
+    },
+    "title": "Pro 设置"
+  },
   "responseLanguage": {
     "auto": "自动（跟随系统语言）",
     "desc": "选择 AI 助手回复消息时使用的语言",

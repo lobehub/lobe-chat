@@ -13,6 +13,22 @@
     "title": "Select Mode"
   },
   "next": "Next",
+  "proSettings": {
+    "connectors": {
+      "desc": "Connect your frequently used third-party services",
+      "title": "Connectors"
+    },
+    "desc": "Configure your advanced options",
+    "devMode": {
+      "desc": "Enable to show developer-related features and options",
+      "title": "Developer Mode"
+    },
+    "model": {
+      "desc": "Select the default model for AI conversations",
+      "title": "Default Model"
+    },
+    "title": "Pro Settings"
+  },
   "responseLanguage": {
     "auto": "Auto (Follow system language)",
     "desc": "Choose the language AI assistant will use when replying to messages",
