@@ -8,6 +8,7 @@ export default {
       authRequired: '云端 MCP 插件需要登录认证',
       cancel: '取消',
       clickApproveToConnect: '点击「批准」连接并授权此集成',
+      clickApproveToInstall: '点击「批准」安装此插件',
       connectedAndEnabled: '已连接并启用',
       connectionFailed: '连接失败',
       installFailed: '安装失败',

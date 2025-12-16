@@ -342,90 +342,114 @@ export class AgentBuilderExecutionRuntime {
   }
 
   /**
-   * Open OAuth window and poll for authentication completion
-   * This mimics the behavior in KlavisServerItem.tsx
+   * Open OAuth window and wait for authentication completion
+   * Returns a Promise that resolves when OAuth completes or fails
    */
-  private openOAuthWindowAndPoll(oauthUrl: string, identifier: string): void {
-    // Polling configuration
-    const POLL_INTERVAL_MS = 1000;
-    const POLL_TIMEOUT_MS = 15_000;
+  private openOAuthWindowAndWait(
+    oauthUrl: string,
+    identifier: string,
+  ): Promise<{ cancelled: boolean; success: boolean }> {
+    return new Promise((resolve) => {
+      // Configuration
+      const WINDOW_CHECK_INTERVAL_MS = 500;
+      const POLL_INTERVAL_MS = 1000;
+      const POLL_TIMEOUT_MS = 300_000; // 5 minutes timeout
 
-    let pollInterval: ReturnType<typeof setInterval> | null = null;
-    let pollTimeout: ReturnType<typeof setTimeout> | null = null;
-    let windowCheckInterval: ReturnType<typeof setInterval> | null = null;
+      let pollInterval: ReturnType<typeof setInterval> | null = null;
+      let pollTimeout: ReturnType<typeof setTimeout> | null = null;
+      let windowCheckInterval: ReturnType<typeof setInterval> | null = null;
+      let resolved = false;
 
-    const cleanup = () => {
-      if (windowCheckInterval) {
-        clearInterval(windowCheckInterval);
-        windowCheckInterval = null;
-      }
-      if (pollInterval) {
-        clearInterval(pollInterval);
-        pollInterval = null;
-      }
-      if (pollTimeout) {
-        clearTimeout(pollTimeout);
-        pollTimeout = null;
-      }
-    };
+      const cleanup = () => {
+        if (windowCheckInterval) {
+          clearInterval(windowCheckInterval);
+          windowCheckInterval = null;
+        }
+        if (pollInterval) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+        }
+        if (pollTimeout) {
+          clearTimeout(pollTimeout);
+          pollTimeout = null;
+        }
+      };
 
-    const startFallbackPolling = () => {
-      if (pollInterval) return;
+      const resolveOnce = (result: { cancelled: boolean; success: boolean }) => {
+        if (resolved) return;
+        resolved = true;
+        cleanup();
+        resolve(result);
+      };
 
-      pollInterval = setInterval(async () => {
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const checkAuthStatus = async (): Promise<boolean> => {
         try {
-          const toolStore = getToolStoreState();
+          // Refresh server status first
+          await getToolStoreState().refreshKlavisServerTools(identifier);
+
+          // Get fresh state after refresh (important: must get new state after refresh)
+          const freshToolStore = getToolStoreState();
           const server = klavisStoreSelectors
-            .getServers(toolStore)
+            .getServers(freshToolStore)
             .find((s) => s.identifier === identifier);
 
-          if (server?.status === KlavisServerStatus.CONNECTED) {
-            cleanup();
-            return;
-          }
-
-          await toolStore.refreshKlavisServerTools(identifier);
+          return server?.status === KlavisServerStatus.CONNECTED;
         } catch (error) {
           console.error('[Klavis] Failed to check auth status:', error);
+          return false;
         }
-      }, POLL_INTERVAL_MS);
+      };
 
-      pollTimeout = setTimeout(() => {
-        cleanup();
-      }, POLL_TIMEOUT_MS);
-    };
+      const startFallbackPolling = () => {
+        if (pollInterval) return;
 
-    // Open OAuth window
-    const oauthWindow = window.open(oauthUrl, '_blank', 'width=600,height=700');
+        pollInterval = setInterval(async () => {
+          const isConnected = await checkAuthStatus();
+          if (isConnected) {
+            resolveOnce({ cancelled: false, success: true });
+          }
+        }, POLL_INTERVAL_MS);
 
-    if (oauthWindow) {
-      // Monitor window close
-      windowCheckInterval = setInterval(() => {
-        try {
-          if (oauthWindow.closed) {
+        // Timeout after 5 minutes
+        pollTimeout = setTimeout(() => {
+          resolveOnce({ cancelled: true, success: false });
+        }, POLL_TIMEOUT_MS);
+      };
+
+      // Open OAuth window
+      const oauthWindow = window.open(oauthUrl, '_blank', 'width=600,height=700');
+
+      if (oauthWindow) {
+        // Monitor window close
+        windowCheckInterval = setInterval(async () => {
+          try {
+            if (oauthWindow.closed) {
+              if (windowCheckInterval) {
+                clearInterval(windowCheckInterval);
+                windowCheckInterval = null;
+              }
+
+              // Window closed, check auth status
+              const isConnected = await checkAuthStatus();
+              resolveOnce({ cancelled: !isConnected, success: isConnected });
+            }
+          } catch {
+            // COOP blocked window.closed access, fall back to polling
+            console.log('[Klavis] COOP blocked window.closed access, falling back to polling');
             if (windowCheckInterval) {
               clearInterval(windowCheckInterval);
               windowCheckInterval = null;
             }
-
-            // Window closed, check auth status
-            getToolStoreState().refreshKlavisServerTools(identifier);
-            cleanup();
+            startFallbackPolling();
           }
-        } catch {
-          // COOP blocked window.closed access, fall back to polling
-          console.log('[Klavis] COOP blocked window.closed access, falling back to polling');
-          if (windowCheckInterval) {
-            clearInterval(windowCheckInterval);
-            windowCheckInterval = null;
-          }
-          startFallbackPolling();
-        }
-      }, 500);
-    } else {
-      // Window was blocked, use polling
-      startFallbackPolling();
-    }
+        }, WINDOW_CHECK_INTERVAL_MS);
+      } else {
+        // Window was blocked, use polling
+        console.log('[Klavis] OAuth window was blocked, falling back to polling');
+        startFallbackPolling();
+      }
+    });
   }
 
   /**
@@ -514,25 +538,66 @@ export class AgentBuilderExecutionRuntime {
                   success: true,
                 };
               } else if (klavisServer.status === KlavisServerStatus.PENDING_AUTH) {
-                // Needs OAuth authorization - open OAuth window and start polling
+                // Needs OAuth authorization - open OAuth window and wait for completion
                 if (klavisServer.oauthUrl) {
-                  this.openOAuthWindowAndPoll(klavisServer.oauthUrl, identifier);
+                  const authResult = await this.openOAuthWindowAndWait(
+                    klavisServer.oauthUrl,
+                    identifier,
+                  );
+
+                  if (authResult.success) {
+                    // OAuth successful, enable the plugin
+                    const agentState = getAgentStoreState();
+                    const currentPlugins =
+                      agentSelectors.getAgentConfigById(agentId)(agentState).plugins || [];
+
+                    if (!currentPlugins.includes(identifier)) {
+                      await getAgentStoreState().optimisticUpdateAgentConfig(agentId, {
+                        plugins: [...currentPlugins, identifier],
+                      });
+                    }
+
+                    return {
+                      content: `Successfully connected and enabled Klavis tool: ${klavisTypeInfo.label}`,
+                      state: {
+                        installed: true,
+                        isKlavis: true,
+                        pluginId: identifier,
+                        pluginName: klavisTypeInfo.label,
+                        serverStatus: 'connected',
+                        success: true,
+                      } as InstallPluginState,
+                      success: true,
+                    };
+                  } else {
+                    // OAuth cancelled or failed
+                    return {
+                      content: `OAuth authorization was cancelled or failed for Klavis tool: ${klavisTypeInfo.label}. Please try again.`,
+                      state: {
+                        installed: false,
+                        isKlavis: true,
+                        pluginId: identifier,
+                        pluginName: klavisTypeInfo.label,
+                        serverStatus: 'pending_auth',
+                        success: false,
+                      } as InstallPluginState,
+                      success: false,
+                    };
+                  }
                 }
 
+                // No OAuth URL available
                 return {
-                  content: `Klavis tool "${klavisTypeInfo.label}" requires OAuth authorization. An authorization window has been opened. Please complete the authorization.`,
+                  content: `Klavis tool "${klavisTypeInfo.label}" requires OAuth authorization but no OAuth URL is available.`,
                   state: {
-                    awaitingApproval: true,
                     installed: false,
                     isKlavis: true,
-                    oauthUrl: klavisServer.oauthUrl,
                     pluginId: identifier,
                     pluginName: klavisTypeInfo.label,
-                    serverName: klavisTypeInfo.serverName,
                     serverStatus: 'pending_auth',
-                    success: true,
+                    success: false,
                   } as InstallPluginState,
-                  success: true,
+                  success: false,
                 };
               } else {
                 // Server exists but in ERROR state or other unknown state
@@ -601,24 +666,41 @@ export class AgentBuilderExecutionRuntime {
                     success: true,
                   };
                 } else if (newServer.oauthUrl) {
-                  // Needs OAuth, open window and start polling
-                  this.openOAuthWindowAndPoll(newServer.oauthUrl, newServer.identifier);
+                  // Needs OAuth, open window and wait for completion
+                  const authResult = await this.openOAuthWindowAndWait(
+                    newServer.oauthUrl,
+                    newServer.identifier,
+                  );
 
-                  return {
-                    content: `Klavis tool "${klavisTypeInfo.label}" requires OAuth authorization. An authorization window has been opened. Please complete the authorization.`,
-                    state: {
-                      awaitingApproval: true,
-                      installed: false,
-                      isKlavis: true,
-                      oauthUrl: newServer.oauthUrl,
-                      pluginId: identifier,
-                      pluginName: klavisTypeInfo.label,
-                      serverName: klavisTypeInfo.serverName,
-                      serverStatus: 'pending_auth',
+                  if (authResult.success) {
+                    // OAuth successful
+                    return {
+                      content: `Successfully connected and enabled Klavis tool: ${klavisTypeInfo.label}`,
+                      state: {
+                        installed: true,
+                        isKlavis: true,
+                        pluginId: identifier,
+                        pluginName: klavisTypeInfo.label,
+                        serverStatus: 'connected',
+                        success: true,
+                      } as InstallPluginState,
                       success: true,
-                    } as InstallPluginState,
-                    success: true,
-                  };
+                    };
+                  } else {
+                    // OAuth cancelled or failed
+                    return {
+                      content: `OAuth authorization was cancelled or failed for Klavis tool: ${klavisTypeInfo.label}. Please try again.`,
+                      state: {
+                        installed: false,
+                        isKlavis: true,
+                        pluginId: identifier,
+                        pluginName: klavisTypeInfo.label,
+                        serverStatus: 'pending_auth',
+                        success: false,
+                      } as InstallPluginState,
+                      success: false,
+                    };
+                  }
                 } else {
                   // Server created but neither authenticated nor has OAuth URL
                   return {

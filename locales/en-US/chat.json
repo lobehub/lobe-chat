@@ -8,6 +8,7 @@
       "authRequired": "Authentication required for cloud MCP plugins",
       "cancel": "Cancel",
       "clickApproveToConnect": "Click \"Approve\" to connect and authorize this integration",
+      "clickApproveToInstall": "Click \"Approve\" to install this plugin",
       "connectedAndEnabled": "Connected and enabled",
       "connectionFailed": "Connection failed",
       "installFailed": "Installation failed",
