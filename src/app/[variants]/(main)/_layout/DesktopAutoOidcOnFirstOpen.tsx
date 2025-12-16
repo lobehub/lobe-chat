@@ -3,8 +3,10 @@
 import { memo, useEffect } from 'react';
 
 import { useElectronStore } from '@/store/electron';
-
-const STORAGE_KEY = 'lobechat:desktop:auto-oidc:first-open:v1';
+import {
+  getDesktopAutoOidcFirstOpenHandled,
+  setDesktopAutoOidcFirstOpenHandled,
+} from '@/utils/electron/autoOidc';
 
 /**
  * Desktop-only bootstrap: auto invoke OIDC authorization on the very first app open.
@@ -30,13 +32,9 @@ const DesktopAutoOidcOnFirstOpen = memo(() => {
     if (dataSyncConfig.active) return;
     if (dataSyncConfig.storageMode !== 'cloud') return;
 
-    try {
-      if (window.localStorage.getItem(STORAGE_KEY) === '1') return;
-      window.localStorage.setItem(STORAGE_KEY, '1');
-    } catch {
-      // If localStorage is unavailable, don't auto-invoke to avoid repeated prompts.
-      return;
-    }
+    if (getDesktopAutoOidcFirstOpenHandled()) return;
+    // If localStorage is unavailable, don't auto-invoke to avoid repeated prompts.
+    if (!setDesktopAutoOidcFirstOpenHandled()) return;
 
     // This will trigger IPC -> main process -> `shell.openExternal(/oidc/auth...)`.
     connectRemoteServer({ remoteServerUrl: dataSyncConfig.remoteServerUrl, storageMode: 'cloud' });

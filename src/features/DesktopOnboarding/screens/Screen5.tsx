@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 import { useElectronStore } from '@/store/electron';
+import { setDesktopAutoOidcFirstOpenHandled } from '@/utils/electron/autoOidc';
 
 import { AuthResult } from '../common/AuthResult';
 import { LogoBrand } from '../common/LogoBrand';
@@ -279,6 +280,10 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
 
   const isCloudAuthed = !!dataSyncConfig?.active && dataSyncConfig.storageMode === 'cloud';
   const isSelfHostAuthed = !!dataSyncConfig?.active && dataSyncConfig.storageMode === 'selfHost';
+  const isSelfHostEndpointVerified =
+    isSelfHostAuthed &&
+    !!endpoint.trim() &&
+    endpoint.trim() === (dataSyncConfig?.remoteServerUrl ?? '');
 
   // 判断是否可以开始使用
   const canStart = () => {
@@ -287,7 +292,8 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
         return isCloudAuthed || cloudLoginStatus === 'success';
       }
       case 'selfhost': {
-        return isSelfHostAuthed || selfhostLoginStatus === 'success';
+        // For self-host, require endpoint input AND verification completed for that endpoint.
+        return isSelfHostEndpointVerified;
       }
       default: {
         return false;
@@ -322,7 +328,8 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
   // 处理登录方式切换
   const handleMethodChange = (method: LoginMethod) => {
     setCurrentMethod(method);
-    setEndpoint(''); // 重置endpoint
+    // For self-host, prefill saved remoteServerUrl so "verified endpoint" can be determined.
+    setEndpoint(method === 'selfhost' ? (dataSyncConfig?.remoteServerUrl ?? '') : '');
     // 重置登录状态
     setCloudLoginStatus('idle');
     setSelfhostLoginStatus('idle');
@@ -342,7 +349,12 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
     setRemoteError(null);
     clearRemoteServerSyncError();
     setCloudLoginStatus('loading');
-    await connectRemoteServer({ storageMode: 'cloud' });
+    // Keep consistent with `DesktopAutoOidcOnFirstOpen`: mark as handled to prevent a second auto prompt.
+    setDesktopAutoOidcFirstOpenHandled();
+    await connectRemoteServer({
+      remoteServerUrl: dataSyncConfig?.remoteServerUrl,
+      storageMode: 'cloud',
+    });
   };
 
   // 处理自建服务器连接
@@ -382,8 +394,16 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
   // Sync local UI status with real remote config
   useEffect(() => {
     if (isCloudAuthed) setCloudLoginStatus('success');
-    if (isSelfHostAuthed) setSelfhostLoginStatus('success');
-  }, [isCloudAuthed, isSelfHostAuthed]);
+    if (isSelfHostEndpointVerified) setSelfhostLoginStatus('success');
+  }, [isCloudAuthed, isSelfHostEndpointVerified]);
+
+  // If user changes self-host endpoint after success, require re-authorization.
+  useEffect(() => {
+    if (currentMethod !== 'selfhost') return;
+    if (selfhostLoginStatus !== 'success') return;
+    if (isSelfHostEndpointVerified) return;
+    setSelfhostLoginStatus('idle');
+  }, [currentMethod, isSelfHostEndpointVerified, selfhostLoginStatus]);
 
   // Surface requestAuthorization errors reported via store
   useEffect(() => {
