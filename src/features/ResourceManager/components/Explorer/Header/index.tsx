@@ -1,17 +1,19 @@
 'use client';
 
+import { ActionIcon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
+import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import NavHeader from '@/features/NavHeader';
+import { useGlobalStore } from '@/store/global';
 import { FilesTabs } from '@/types/files';
 
 import AddButton from '../../Header/AddButton';
 import BatchActionsDropdown from '../ToolBar/BatchActionsDropdown';
-import ExpandableSearch from '../ToolBar/ExpandableSearch';
 import SortDropdown from '../ToolBar/SortDropdown';
 import ViewSwitcher from '../ToolBar/ViewSwitcher';
 import { useFileExplorer } from '../useFileExplorer';
@@ -22,6 +24,7 @@ const Header = memo(() => {
   const { t } = useTranslation('file');
 
   const [libraryId] = useResourceManagerStore((s) => [s.libraryId]);
+  const toggleCommandMenu = useGlobalStore((s) => s.toggleCommandMenu);
 
   const { category, onActionClick, selectFileIds } = useFileExplorer({
     libraryId,
@@ -42,7 +45,7 @@ const Header = memo(() => {
       left={leftContent}
       right={
         <>
-          <ExpandableSearch />
+          <ActionIcon icon={SearchIcon} onClick={() => toggleCommandMenu(true)} />
           <SortDropdown />
           <BatchActionsDropdown onActionClick={onActionClick} selectCount={selectFileIds.length} />
           <ViewSwitcher />
