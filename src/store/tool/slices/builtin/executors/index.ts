@@ -5,7 +5,7 @@
  * Executors are registered as class instances by identifier.
  */
 import { groupManagementExecutor } from '@lobechat/builtin-tool-group-management/executor';
-import { gtdExecutor } from '@lobechat/builtin-tool-gtd';
+import { gtdExecutor } from '@lobechat/builtin-tool-gtd/executor';
 
 import type { IBuiltinToolExecutor } from '../types';
 // ==================== Import and register all executors ====================

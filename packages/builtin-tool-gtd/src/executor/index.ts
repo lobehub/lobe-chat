@@ -9,24 +9,26 @@
  * - The executor receives current state via ctx and returns updated state in result
  * - The framework handles persisting state to the database
  */
-import type { BuiltinToolContext, BuiltinToolResult } from '@lobechat/types';
-import { BaseExecutor } from '@lobechat/types';
+import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 
+import { GTDIdentifier } from '../manifest';
 import {
-  AddTodoParams,
-  ClearTodosParams,
-  CompleteTodoParams,
+  type ClearTodosParams,
+  type CompleteTodosParams,
+  type CreateTodosParams,
   GTDApiName,
-  GTDIdentifier,
-  TodoItem,
-} from './types';
+  type RemoveTodosParams,
+  type TodoItem,
+  type UpdateTodosParams,
+} from '../types';
 
 // API enum for MVP (Todo only)
 const GTDApiNameMVP = {
-  addTodo: GTDApiName.addTodo,
   clearTodos: GTDApiName.clearTodos,
-  completeTodo: GTDApiName.completeTodo,
-  listTodos: GTDApiName.listTodos,
+  completeTodos: GTDApiName.completeTodos,
+  createTodos: GTDApiName.createTodos,
+  removeTodos: GTDApiName.removeTodos,
+  updateTodos: GTDApiName.updateTodos,
 } as const;
 
 /**
@@ -53,6 +55,9 @@ const getTodosFromState = (state: Record<string, unknown> | null | undefined): T
   return [];
 };
 
+/**
+ * GTD Tool Executor
+ */
 class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
   readonly identifier = GTDIdentifier;
   protected readonly apiEnum = GTDApiNameMVP;
@@ -60,9 +65,12 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
   // ==================== Todo APIs ====================
 
   /**
-   * Add items to the quick todo list
+   * Create new todo items
    */
-  addTodo = async (params: AddTodoParams, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
+  createTodos = async (
+    params: CreateTodosParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
     const { items } = params;
 
     if (!items || items.length === 0) {
@@ -78,8 +86,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     // Add new items
     const now = new Date().toISOString();
     const newTodos: TodoItem[] = items.map((text: string) => ({
-      addedAt: now,
-      done: false,
+      completed: false,
       text,
     }));
 
@@ -93,7 +100,80 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     return {
       content: `Added ${items.length} item${items.length > 1 ? 's' : ''} to todo list:\n${addedList}`,
       state: {
-        addedItems: items,
+        createdItems: items,
+        todos: { items: updatedTodos, updatedAt: now },
+      },
+      success: true,
+    };
+  };
+
+  /**
+   * Update todo items with batch operations
+   */
+  updateTodos = async (
+    params: UpdateTodosParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
+    const { operations } = params;
+
+    if (!operations || operations.length === 0) {
+      return {
+        content: 'No operations provided.',
+        success: false,
+      };
+    }
+
+    const existingTodos = getTodosFromState(ctx.pluginState);
+    let updatedTodos = [...existingTodos];
+    const results: string[] = [];
+
+    for (const op of operations) {
+      switch (op.type) {
+        case 'add': {
+          if (op.text) {
+            updatedTodos.push({ completed: false, text: op.text });
+            results.push(`Added: "${op.text}"`);
+          }
+          break;
+        }
+        case 'update': {
+          if (op.index !== undefined && op.index >= 0 && op.index < updatedTodos.length) {
+            const item = updatedTodos[op.index];
+            if (op.newText !== undefined) {
+              item.text = op.newText;
+            }
+            if (op.completed !== undefined) {
+              item.completed = op.completed;
+            }
+            results.push(`Updated item ${op.index + 1}`);
+          }
+          break;
+        }
+        case 'remove': {
+          if (op.index !== undefined && op.index >= 0 && op.index < updatedTodos.length) {
+            const removed = updatedTodos.splice(op.index, 1)[0];
+            results.push(`Removed: "${removed.text}"`);
+          }
+          break;
+        }
+        case 'complete': {
+          if (op.index !== undefined && op.index >= 0 && op.index < updatedTodos.length) {
+            updatedTodos[op.index].completed = true;
+            results.push(`Completed: "${updatedTodos[op.index].text}"`);
+          }
+          break;
+        }
+      }
+    }
+
+    const now = new Date().toISOString();
+
+    return {
+      content:
+        results.length > 0
+          ? `Applied ${results.length} operation${results.length > 1 ? 's' : ''}:\n${results.join('\n')}`
+          : 'No operations applied.',
+      state: {
         todos: { items: updatedTodos, updatedAt: now },
       },
       success: true,
@@ -103,8 +183,8 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
   /**
    * Mark todo items as done by their indices
    */
-  completeTodo = async (
-    params: CompleteTodoParams,
+  completeTodos = async (
+    params: CompleteTodosParams,
     ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
     const { indices } = params;
@@ -140,10 +220,10 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       };
     }
 
-    // Mark items as done
+    // Mark items as completed
     const updatedTodos = existingTodos.map((todo, index) => {
       if (validIndices.includes(index)) {
-        return { ...todo, done: true };
+        return { ...todo, completed: true };
       }
       return todo;
     });
@@ -162,6 +242,68 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       content,
       state: {
         completedIndices: validIndices,
+        todos: { items: updatedTodos, updatedAt: now },
+      },
+      success: true,
+    };
+  };
+
+  /**
+   * Remove todo items by indices
+   */
+  removeTodos = async (
+    params: RemoveTodosParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
+    const { indices } = params;
+
+    if (!indices || indices.length === 0) {
+      return {
+        content: 'No indices provided to remove.',
+        success: false,
+      };
+    }
+
+    const existingTodos = getTodosFromState(ctx.pluginState);
+
+    if (existingTodos.length === 0) {
+      return {
+        content: 'No todos to remove. The list is empty.',
+        state: {
+          removedIndices: [],
+          todos: { items: [], updatedAt: new Date().toISOString() },
+        },
+        success: true,
+      };
+    }
+
+    // Validate indices
+    const validIndices = indices.filter((i: number) => i >= 0 && i < existingTodos.length);
+    const invalidIndices = indices.filter((i: number) => i < 0 || i >= existingTodos.length);
+
+    if (validIndices.length === 0) {
+      return {
+        content: `Invalid indices: ${indices.join(', ')}. Valid range is 0-${existingTodos.length - 1}.`,
+        success: false,
+      };
+    }
+
+    // Remove items
+    const removedItems = validIndices.map((i: number) => existingTodos[i].text);
+    const updatedTodos = existingTodos.filter((_, index) => !validIndices.includes(index));
+    const now = new Date().toISOString();
+
+    let content = `Removed ${validIndices.length} item${validIndices.length > 1 ? 's' : ''}:\n`;
+    content += removedItems.map((text: string) => `- ${text}`).join('\n');
+
+    if (invalidIndices.length > 0) {
+      content += `\n\nNote: Ignored invalid indices: ${invalidIndices.join(', ')}`;
+    }
+
+    return {
+      content,
+      state: {
+        removedIndices: validIndices,
         todos: { items: updatedTodos, updatedAt: now },
       },
       success: true,
@@ -201,7 +343,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       content = `Cleared all ${clearedCount} item${clearedCount > 1 ? 's' : ''} from todo list.`;
     } else {
       // mode === 'completed'
-      updatedTodos = existingTodos.filter((todo) => !todo.done);
+      updatedTodos = existingTodos.filter((todo) => !todo.completed);
       clearedCount = existingTodos.length - updatedTodos.length;
 
       if (clearedCount === 0) {
@@ -220,41 +362,6 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
         mode,
         todos: { items: updatedTodos, updatedAt: now },
       },
-      success: true,
-    };
-  };
-
-  /**
-   * List all current todo items with their completion status
-   */
-  listTodos = async (_params: unknown, ctx: BuiltinToolContext): Promise<BuiltinToolResult> => {
-    const todos = getTodosFromState(ctx.pluginState);
-    const now = new Date().toISOString();
-
-    if (todos.length === 0) {
-      return {
-        content: 'Todo list is empty.',
-        state: { todos: { items: [], updatedAt: now } },
-        success: true,
-      };
-    }
-
-    const completedCount = todos.filter((t) => t.done).length;
-    const pendingCount = todos.length - completedCount;
-
-    // Format todo list
-    const todoList = todos
-      .map((todo, index) => {
-        const checkbox = todo.done ? '[x]' : '[ ]';
-        return `${index}. ${checkbox} ${todo.text}`;
-      })
-      .join('\n');
-
-    const summary = `Total: ${todos.length} | Pending: ${pendingCount} | Completed: ${completedCount}`;
-
-    return {
-      content: `${summary}\n\n${todoList}`,
-      state: { todos: { items: todos, updatedAt: now } },
       success: true,
     };
   };

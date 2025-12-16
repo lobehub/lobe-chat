@@ -1,7 +1,7 @@
 import type { BuiltinToolContext } from '@lobechat/types';
 import { describe, expect, it } from 'vitest';
 
-import { gtdExecutor } from './executor';
+import { gtdExecutor } from './index';
 
 describe('GTDExecutor', () => {
   const createMockContext = (pluginState?: Record<string, unknown>): BuiltinToolContext => ({
