@@ -53,7 +53,7 @@ const TodoList = memo<TodoListProps>(({ placeholder }) => {
   const listKey = items.map((i) => i.id).join('-');
 
   return (
-    <Flexbox paddingInline={4} width={'100%'}>
+    <Flexbox paddingBlock={8} paddingInline={4} width={'100%'}>
       <SortableList
         items={items}
         key={listKey}

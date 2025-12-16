@@ -50,6 +50,16 @@ const Intervention = memo<InterventionProps>(
       },
       [requestArgs, id, updatePluginArguments],
     );
+
+    // Callback for builtin intervention components to update arguments
+    const handleArgsChange = useCallback(
+      async (newArgs: unknown) => {
+        if (!id) return;
+        await updatePluginArguments(id, newArgs, true);
+      },
+      [id, updatePluginArguments],
+    );
+
     const BuiltinToolInterventionRender = getBuiltinIntervention(identifier, apiName);
 
     if (BuiltinToolInterventionRender) {
@@ -71,6 +81,7 @@ const Intervention = memo<InterventionProps>(
             args={safeParseJSON(requestArgs || '')}
             identifier={identifier}
             messageId={id}
+            onArgsChange={handleArgsChange}
           />
           <Flexbox horizontal justify={'space-between'}>
             <ModeSelector />

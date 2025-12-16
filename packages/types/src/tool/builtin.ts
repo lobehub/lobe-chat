@@ -159,6 +159,12 @@ export interface BuiltinInterventionProps<Arguments = any> {
   args: Arguments;
   identifier?: string;
   messageId: string;
+  /**
+   * Callback to update the arguments before approval
+   * This is called when the user modifies the intervention content
+   * The approve action will wait for this async callback to complete
+   */
+  onArgsChange?: (args: Arguments) => void | Promise<void>;
 }
 
 export type BuiltinIntervention = (props: BuiltinInterventionProps) => ReactNode;

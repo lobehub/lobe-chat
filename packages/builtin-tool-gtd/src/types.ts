@@ -10,100 +10,126 @@
  * Task management will be added in future iterations.
  */
 export const GTDApiName = {
-  
-  
-  // /** Get the current plan */
-// getPlan: 'getPlan',
-// ==================== Task Management (Coming Soon) ====================
-// /** Create a new task */
-// createTask: 'createTask',
-// /** Update an existing task */
-// updateTask: 'updateTask',
-// /** Delete a task */
-// deleteTask: 'deleteTask',
-// /** List all tasks with optional filters */
-// listTasks: 'listTasks',
-// /** Get task details */
-// getTask: 'getTask',
-// ==================== Quick Todo ====================
-/** Add items to the quick todo list */
-addTodo: 'addTodo',
+  // ==================== Quick Todo ====================
+  /** Clear completed or all todos */
+  clearTodos: 'clearTodos',
 
-  
-  
+  /** Mark todo items as done by indices */
+  completeTodo: 'completeTodo',
 
+  /** Create new todo items */
+  createTodo: 'createTodo',
 
+  /** Remove todo items by indices */
+  removeTodo: 'removeTodo',
 
+  /** Update todo list (supports batch operations: modify text, complete, remove) */
+  updateTodo: 'updateTodo',
 
+  // ==================== Planning ====================
+  /** Create a structured plan by breaking down a goal into actionable steps */
+  createPlan: 'createPlan',
 
-
-
-
-
-
-
-
-
-
-
-
-/** Clear completed or all todos */
-clearTodos: 'clearTodos',
-
-  
-  
-
-  
-  
-  
-
-  
-  
-
-  
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-
-
-
-/** Mark todo items as done */
-completeTodo: 'completeTodo',
-
-  
-  
-
-
-// ==================== Planning ====================
-/** Create a structured plan by breaking down a goal into actionable steps */
-createPlan: 'createPlan',
-
-  
-  
-
-/** List current todos */
-listTodos: 'listTodos',
-
-  
   /** Update an existing plan */
-updatePlan: 'updatePlan',
+  updatePlan: 'updatePlan',
 } as const;
 
 export type GTDApiNameType = (typeof GTDApiName)[keyof typeof GTDApiName];
 
-// ==================== Task Status (Coming Soon) ====================
+// ==================== Todo Item ====================
 
-// export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'blocked' | 'cancelled';
+export interface TodoItem {
+  /** Whether the item is completed */
+  completed: boolean;
+  /** The todo item text */
+  text: string;
+}
 
-// export type TaskPriority = 'urgent' | 'high' | 'normal' | 'low';
+export interface TodoList {
+  items: TodoItem[];
+  updatedAt: string;
+}
+
+// ==================== Todo Params ====================
+
+/**
+ * Create new todo items
+ * AI passes text[], application layer converts to TodoItem[]
+ */
+export interface CreateTodoParams {
+  /** Array of todo item texts to create */
+  items: string[];
+}
+
+/**
+ * Update todo list with batch operations
+ * Supports: modify text, mark completed, remove items
+ */
+export interface UpdateTodoParams {
+  /** Complete items list after update */
+  items: TodoItem[];
+}
+
+/**
+ * Mark todo items as completed by indices
+ */
+export interface CompleteTodoParams {
+  /** Indices of items to mark as completed (0-based) */
+  indices: number[];
+}
+
+/**
+ * Remove todo items by indices
+ */
+export interface RemoveTodoParams {
+  /** Indices of items to remove (0-based) */
+  indices: number[];
+}
+
+/**
+ * Clear todo items
+ */
+export interface ClearTodosParams {
+  /** Clear mode: 'completed' only clears done items, 'all' clears everything */
+  mode: 'completed' | 'all';
+}
+
+// ==================== Todo State Types for Render ====================
+
+export interface CreateTodoState {
+  /** Items that were created */
+  createdItems: string[];
+  /** Current todo list after creation */
+  todos: TodoList;
+}
+
+export interface UpdateTodoState {
+  /** Current todo list after update */
+  todos: TodoList;
+}
+
+export interface CompleteTodoState {
+  /** Indices that were completed */
+  completedIndices: number[];
+  /** Current todo list after completion */
+  todos: TodoList;
+}
+
+export interface RemoveTodoState {
+  /** Indices that were removed */
+  removedIndices: number[];
+  /** Current todo list after removal */
+  todos: TodoList;
+}
+
+export interface ClearTodosState {
+  /** Number of items cleared */
+  clearedCount: number;
+  /** Mode used for clearing */
+  mode: 'completed' | 'all';
+  /** Current todo list after clearing */
+  todos: TodoList;
+}
 
 // ==================== Planning Params ====================
 
@@ -138,94 +164,7 @@ export interface UpdatePlanParams {
   steps?: PlanStep[];
 }
 
-// export interface GetPlanParams {
-//   /** Plan ID to retrieve */
-//   planId?: string;
-// }
-
-// ==================== Task Params (Coming Soon) ====================
-
-// export interface CreateTaskParams {
-//   /** Task title */
-//   title: string;
-//   /** Task description */
-//   description?: string;
-//   /** Task priority */
-//   priority?: TaskPriority;
-//   /** Tags for categorization */
-//   tags?: string[];
-//   /** Due date in ISO format */
-//   dueDate?: string;
-//   /** Parent task ID for subtasks */
-//   parentId?: string;
-//   /** Associated plan ID */
-//   planId?: string;
-//   /** Assigned agent ID */
-//   assignee?: string;
-// }
-
-// export interface UpdateTaskParams {
-//   /** Task ID to update */
-//   taskId: string;
-//   /** Updated title */
-//   title?: string;
-//   /** Updated description */
-//   description?: string;
-//   /** Updated status */
-//   status?: TaskStatus;
-//   /** Updated priority */
-//   priority?: TaskPriority;
-//   /** Updated tags */
-//   tags?: string[];
-//   /** Updated due date */
-//   dueDate?: string;
-//   /** Progress note */
-//   note?: string;
-// }
-
-// export interface DeleteTaskParams {
-//   /** Task ID to delete */
-//   taskId: string;
-// }
-
-// export interface ListTasksParams {
-//   /** Filter by status */
-//   status?: TaskStatus | TaskStatus[];
-//   /** Filter by priority */
-//   priority?: TaskPriority | TaskPriority[];
-//   /** Filter by tags */
-//   tags?: string[];
-//   /** Filter by assignee */
-//   assignee?: string;
-//   /** Filter by plan ID */
-//   planId?: string;
-//   /** Maximum results */
-//   limit?: number;
-// }
-
-// export interface GetTaskParams {
-//   /** Task ID to retrieve */
-//   taskId: string;
-// }
-
-// ==================== Todo Params ====================
-
-export interface AddTodoParams {
-  /** Todo items to add */
-  items: string[];
-}
-
-export interface CompleteTodoParams {
-  /** Indices of items to mark as done (0-based) */
-  indices: number[];
-}
-
-export interface ClearTodosParams {
-  /** Clear mode: 'completed' only clears done items, 'all' clears everything */
-  mode: 'completed' | 'all';
-}
-
-// ==================== Result Types ====================
+// ==================== Plan Result Types ====================
 
 export interface Plan {
   completed: boolean;
@@ -234,61 +173,4 @@ export interface Plan {
   id: string;
   steps: PlanStep[];
   updatedAt: string;
-}
-
-// export interface Task {
-//   id: string;
-//   title: string;
-//   description?: string;
-//   status: TaskStatus;
-//   priority: TaskPriority;
-//   tags: string[];
-//   dueDate?: string;
-//   parentId?: string;
-//   planId?: string;
-//   assignee?: string;
-//   notes: string[];
-//   createdAt: string;
-//   updatedAt: string;
-// }
-
-export interface TodoItem {
-  addedAt: string;
-  done: boolean;
-  text: string;
-}
-
-export interface TodoList {
-  items: TodoItem[];
-  updatedAt: string;
-}
-
-// ==================== State Types for Render ====================
-
-export interface AddTodoState {
-  /** Items that were added */
-  addedItems: string[];
-  /** Current todo list after addition */
-  todos: TodoList;
-}
-
-export interface CompleteTodoState {
-  /** Indices that were completed */
-  completedIndices: number[];
-  /** Current todo list after completion */
-  todos: TodoList;
-}
-
-export interface ClearTodosState {
-  /** Number of items cleared */
-  clearedCount: number;
-  /** Mode used for clearing */
-  mode: 'completed' | 'all';
-  /** Current todo list after clearing */
-  todos: TodoList;
-}
-
-export interface ListTodosState {
-  /** Current todo list */
-  todos: TodoList;
 }

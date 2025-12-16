@@ -34,7 +34,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   dragHandle: css`
     flex-shrink: 0;
-    width: 20px !important;
+    width: 16px !important;
     opacity: 0;
     transition: opacity 0.2s;
   `,

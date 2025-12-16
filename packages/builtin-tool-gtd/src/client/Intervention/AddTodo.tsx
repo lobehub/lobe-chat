@@ -3,11 +3,11 @@
 import { BuiltinInterventionProps } from '@lobechat/types';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import type { AddTodoParams } from '../../types';
-import { SortableTodoList } from '../components';
+import { SortableTodoList, TodoListItem } from '../components';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -18,22 +18,32 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-/**
- * AddTodo Intervention component
- * Allows users to review and modify todo items before adding them
- */
-const AddTodoIntervention = memo<BuiltinInterventionProps<AddTodoParams>>(({ args }) => {
-  const { styles } = useStyles();
+const AddTodoIntervention = memo<BuiltinInterventionProps<AddTodoParams>>(
+  ({ args, onArgsChange }) => {
+    const { styles } = useStyles();
 
-  // Pass string array directly
-  const defaultItems = args?.items || [];
+    // Pass string array directly
+    const defaultItems = args?.items || [];
 
-  return (
-    <Flexbox className={styles.container}>
-      <SortableTodoList defaultItems={defaultItems} placeholder="Add a todo item..." />
-    </Flexbox>
-  );
-}, isEqual);
+    const handleSave = useCallback(
+      async (items: TodoListItem[]) => {
+        await onArgsChange?.({ items: items.map((item) => item.text) });
+      },
+      [onArgsChange],
+    );
+
+    return (
+      <Flexbox className={styles.container}>
+        <SortableTodoList
+          defaultItems={defaultItems}
+          onSave={handleSave}
+          placeholder="Add a todo item..."
+        />
+      </Flexbox>
+    );
+  },
+  isEqual,
+);
 
 AddTodoIntervention.displayName = 'AddTodoIntervention';
 

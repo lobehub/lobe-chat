@@ -140,6 +140,12 @@ export interface MessageCRUDAction {
    * Updates both the tool message plugin arguments and the parent assistant message tools
    */
   updatePluginArguments: <T = any>(id: string, value: T, replace?: boolean) => Promise<void>;
+
+  /**
+   * Wait for pending plugin arguments update to complete for a specific message
+   * Should be called before approve/reject to ensure all pending saves are complete
+   */
+  waitForPendingArgsUpdate: (messageId: string) => Promise<void>;
 }
 
 export const messageCRUDSlice: StateCreator<
@@ -522,27 +528,61 @@ export const messageCRUDSlice: StateCreator<
       });
     }
 
-    // Persist to database
-    // Update both tool message plugin and assistant message tools
-    const assistantMessage = toolMessage.parentId
-      ? dataSelectors.getDisplayMessageById(toolMessage.parentId)(get())
-      : undefined;
+    // Create the update promise
+    const updatePromise = (async () => {
+      // Persist to database
+      // Update both tool message plugin and assistant message tools
+      const assistantMessage = toolMessage.parentId
+        ? dataSelectors.getDisplayMessageById(toolMessage.parentId)(get())
+        : undefined;
 
-    await Promise.all([
-      messageService.updateMessagePluginArguments(id, nextValue),
-      assistantMessage
-        ? messageService.updateMessage(
-            assistantMessage.id,
-            { tools: assistantMessage.tools },
-            context,
-          )
-        : Promise.resolve(),
-    ]);
+      await Promise.all([
+        messageService.updateMessagePluginArguments(id, nextValue),
+        assistantMessage
+          ? messageService.updateMessage(
+              assistantMessage.id,
+              { tools: assistantMessage.tools },
+              context,
+            )
+          : Promise.resolve(),
+      ]);
 
-    // Refresh messages from database
-    const messages = await messageService.getMessages(context);
-    if (messages) {
-      replaceMessages(messages);
+      // Refresh messages from database
+      const messages = await messageService.getMessages(context);
+      if (messages) {
+        replaceMessages(messages);
+      }
+    })();
+
+    // Register the pending promise
+    set(
+      (state) => ({
+        pendingArgsUpdates: new Map(state.pendingArgsUpdates).set(id, updatePromise),
+      }),
+      false,
+      'updatePluginArguments/pending',
+    );
+
+    try {
+      await updatePromise;
+    } finally {
+      // Remove the completed promise
+      set(
+        (state) => {
+          const newMap = new Map(state.pendingArgsUpdates);
+          newMap.delete(id);
+          return { pendingArgsUpdates: newMap };
+        },
+        false,
+        'updatePluginArguments/complete',
+      );
+    }
+  },
+
+  waitForPendingArgsUpdate: async (messageId) => {
+    const pending = get().pendingArgsUpdates.get(messageId);
+    if (pending) {
+      await pending;
     }
   },
 });

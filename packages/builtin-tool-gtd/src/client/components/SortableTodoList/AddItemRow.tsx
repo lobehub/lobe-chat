@@ -20,7 +20,7 @@ const useStyles = createStyles(({ css, token }) => ({
   // Placeholder to match DragHandle width (28px from SortableList.DragHandle small size)
   dragHandlePlaceholder: css`
     flex-shrink: 0;
-    width: 20px;
+    width: 16px;
     height: 24px;
   `,
 }));

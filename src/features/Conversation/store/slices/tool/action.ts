@@ -35,7 +35,10 @@ export const toolSlice: StateCreator<
 > = (set, get) => ({
   approveToolCall: async (toolMessageId: string, assistantGroupId: string) => {
     const state = get();
-    const { hooks, context } = state;
+    const { hooks, context, waitForPendingArgsUpdate } = state;
+
+    // Wait for any pending args update to complete before approval
+    await waitForPendingArgsUpdate(toolMessageId);
 
     // ===== Hook: onToolApproved =====
     if (hooks.onToolApproved) {
@@ -54,7 +57,10 @@ export const toolSlice: StateCreator<
   },
 
   rejectAndContinueToolCall: async (toolMessageId: string, reason?: string) => {
-    const { context } = get();
+    const { context, waitForPendingArgsUpdate } = get();
+
+    // Wait for any pending args update to complete before rejection
+    await waitForPendingArgsUpdate(toolMessageId);
 
     // First reject the tool call
     await get().rejectToolCall(toolMessageId, reason);
@@ -66,7 +72,10 @@ export const toolSlice: StateCreator<
 
   rejectToolCall: async (toolMessageId: string, reason?: string) => {
     const state = get();
-    const { hooks, updateMessagePlugin, updateMessageContent } = state;
+    const { hooks, updateMessagePlugin, updateMessageContent, waitForPendingArgsUpdate } = state;
+
+    // Wait for any pending args update to complete before rejection
+    await waitForPendingArgsUpdate(toolMessageId);
 
     // ===== Hook: onToolRejected =====
     if (hooks.onToolRejected) {
