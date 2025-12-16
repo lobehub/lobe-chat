@@ -34,6 +34,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent }) => {
         <Avatar
           avatar={agent?.avatar || DEFAULT_AVATAR}
           background={agent?.backgroundColor || undefined}
+          emojiScaleWithBackground
           shape={'square'}
           size={200}
           style={{
@@ -51,6 +52,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent }) => {
           <Avatar
             avatar={agent?.avatar || DEFAULT_AVATAR}
             background={agent?.backgroundColor || undefined}
+            emojiScaleWithBackground
             shape={'square'}
             size={36}
             title={agent?.title || undefined}

@@ -12,8 +12,9 @@ const AgentAvatar = memo<AgentAvatarProps>(({ avatar, avatarBackground }) => {
     <Avatar
       avatar={avatar || DEFAULT_AVATAR}
       background={avatarBackground}
+      emojiScaleWithBackground
       shape={'square'}
-      size={28}
+      size={24}
     />
   );
 });
