@@ -657,6 +657,8 @@ export class FlatListBuilder {
       } as AssistantContentBlock;
 
       if (assistant.error) childBlock.error = assistant.error;
+      if (assistant.fileList && assistant.fileList.length > 0)
+        childBlock.fileList = assistant.fileList;
       if (assistant.imageList && assistant.imageList.length > 0)
         childBlock.imageList = assistant.imageList;
       if (msgPerformance) childBlock.performance = msgPerformance;
