@@ -1,3 +1,4 @@
+import { isDesktop } from '@lobechat/const';
 import { ActionIcon } from '@lobehub/ui';
 import { Dropdown, type MenuProps, Typography } from 'antd';
 import { ArrowRight, Plus, Unlink } from 'lucide-react';
@@ -7,7 +8,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { modal, notification } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
-import { linkSocial, unlinkAccount } from '@/libs/better-auth/auth-client';
 import { userService } from '@/services/user';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
@@ -28,6 +28,7 @@ export const SSOProvidersList = memo(() => {
 
   // Allow unlink if user has multiple SSO providers OR has email/password login
   const allowUnlink = providers.length > 1 || hasPasswordAccount;
+  const enableBetterAuthActions = !isDesktop && isLoginWithBetterAuth;
 
   // Get linked provider IDs for filtering
   const linkedProviderIds = useMemo(() => {
@@ -40,6 +41,9 @@ export const SSOProvidersList = memo(() => {
   }, [oAuthSSOProviders, linkedProviderIds]);
 
   const handleUnlinkSSO = async (provider: string, providerAccountId: string) => {
+    // Better-auth link/unlink operations are not available on desktop
+    if (isDesktop && isLoginWithBetterAuth) return;
+
     // Prevent unlink if this is the only login method
     if (!allowUnlink) {
       notification.error({
@@ -55,6 +59,7 @@ export const SSOProvidersList = memo(() => {
       onOk: async () => {
         if (isLoginWithBetterAuth) {
           // Use better-auth native API
+          const { unlinkAccount } = await import('@/libs/better-auth/auth-client');
           await unlinkAccount({ providerId: provider });
         } else {
           // Fallback for NextAuth
@@ -67,8 +72,9 @@ export const SSOProvidersList = memo(() => {
   };
 
   const handleLinkSSO = async (provider: string) => {
-    if (isLoginWithBetterAuth) {
+    if (enableBetterAuthActions) {
       // Use better-auth native linkSocial API
+      const { linkSocial } = await import('@/libs/better-auth/auth-client');
       await linkSocial({
         callbackURL: '/profile',
         provider: provider as any,
@@ -103,17 +109,19 @@ export const SSOProvidersList = memo(() => {
               </Typography.Text>
             )}
           </Flexbox>
-          <ActionIcon
-            disabled={!allowUnlink}
-            icon={Unlink}
-            onClick={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
-            size={'small'}
-          />
+          {!(isDesktop && isLoginWithBetterAuth) && (
+            <ActionIcon
+              disabled={!allowUnlink}
+              icon={Unlink}
+              onClick={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
+              size={'small'}
+            />
+          )}
         </Flexbox>
       ))}
 
       {/* Link Account Button - Only show for Better-Auth users with available providers */}
-      {isLoginWithBetterAuth && availableProviders.length > 0 && (
+      {enableBetterAuthActions && availableProviders.length > 0 && (
         <Dropdown menu={{ items: linkMenuItems, style: { maxWidth: '200px' } }} trigger={['click']}>
           <Flexbox align={'center'} gap={6} horizontal style={{ cursor: 'pointer', fontSize: 12 }}>
             <Plus size={14} />

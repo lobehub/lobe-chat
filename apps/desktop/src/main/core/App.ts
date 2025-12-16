@@ -455,8 +455,25 @@ export class App {
 
     // If the incoming path already contains an extension (like .html or .ico),
     // treat it as a direct asset lookup to avoid double variant prefixes.
-    if (extname(normalizedPathname)) {
-      return this.resolveExportFilePath(pathname);
+    const extension = extname(normalizedPathname);
+    if (extension) {
+      const directPath = this.resolveExportFilePath(pathname);
+      if (directPath) return directPath;
+
+      // Next.js RSC payloads are emitted under variant folders (e.g. /en-US__0__light/__next._tree.txt),
+      // but the runtime may request them without the variant prefix. For missing .txt requests,
+      // retry resolution with variant injection.
+      if (extension === '.txt' && normalizedPathname.includes('__next.')) {
+        const variant = await this.getRouteVariantFromCookies();
+
+        return (
+          this.resolveExportFilePath(`/${variant}${pathname}`) ||
+          this.resolveExportFilePath(`/${this.defaultRouteVariant}${pathname}`) ||
+          null
+        );
+      }
+
+      return null;
     }
 
     const variant = await this.getRouteVariantFromCookies();

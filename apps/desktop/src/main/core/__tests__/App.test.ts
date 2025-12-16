@@ -3,6 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // Import after mocks are set up
 import { App } from '../App';
 
+const mockPathExistsSync = vi.fn();
+
 // Mock electron modules
 vi.mock('electron', () => ({
   app: {
@@ -31,6 +33,17 @@ vi.mock('electron', () => ({
   protocol: {
     registerSchemesAsPrivileged: vi.fn(),
   },
+  session: {
+    defaultSession: {
+      cookies: {
+        get: vi.fn(async () => []),
+      },
+    },
+  },
+}));
+
+vi.mock('fs-extra', () => ({
+  pathExistsSync: (...args: any[]) => mockPathExistsSync(...args),
 }));
 
 // Mock logger
@@ -151,6 +164,7 @@ describe('App', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockPathExistsSync.mockReset();
 
     // Mock glob imports to return empty arrays
     import.meta.glob = vi.fn(() => ({}));
@@ -167,6 +181,48 @@ describe('App', () => {
       const storagePath = appInstance.appStoragePath;
 
       expect(storagePath).toBe('/mock/storage/path');
+    });
+  });
+
+  describe('resolveRendererFilePath', () => {
+    it('should retry missing .txt requests with variant-prefixed lookup', async () => {
+      appInstance = new App();
+
+      // Avoid touching the electron session cookie code path in this unit test
+      (appInstance as any).getRouteVariantFromCookies = vi.fn(async () => 'en-US__0__light');
+
+      mockPathExistsSync.mockImplementation((p: string) => {
+        // root miss
+        if (p === '/mock/export/out/__next._tree.txt') return false;
+        // variant hit
+        if (p === '/mock/export/out/en-US__0__light/__next._tree.txt') return true;
+        return false;
+      });
+
+      const resolved = await (appInstance as any).resolveRendererFilePath(
+        new URL('app://next/__next._tree.txt'),
+      );
+
+      expect(resolved).toBe('/mock/export/out/en-US__0__light/__next._tree.txt');
+    });
+
+    it('should keep direct lookup for existing root .txt assets (no variant retry)', async () => {
+      appInstance = new App();
+
+      (appInstance as any).getRouteVariantFromCookies = vi.fn(async () => {
+        throw new Error('should not be called');
+      });
+
+      mockPathExistsSync.mockImplementation((p: string) => {
+        if (p === '/mock/export/out/en-US__0__light.txt') return true;
+        return false;
+      });
+
+      const resolved = await (appInstance as any).resolveRendererFilePath(
+        new URL('app://next/en-US__0__light.txt'),
+      );
+
+      expect(resolved).toBe('/mock/export/out/en-US__0__light.txt');
     });
   });
 });

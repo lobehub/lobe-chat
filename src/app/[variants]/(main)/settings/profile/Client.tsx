@@ -1,6 +1,7 @@
 'use client';
 
 import { LoadingOutlined } from '@ant-design/icons';
+import { isDesktop } from '@lobechat/const';
 import { Skeleton } from '@lobehub/ui';
 import { Button, Divider, Input, Spin, Typography, Upload } from 'antd';
 import { AnimatePresence, m as motion } from 'motion/react';
@@ -20,7 +21,6 @@ import { notification } from '@/components/AntdStaticMethods';
 import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
 import { enableAuth } from '@/const/auth';
 import UserAvatar from '@/features/User/UserAvatar';
-import { requestPasswordReset } from '@/libs/better-auth/auth-client';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
@@ -536,6 +536,7 @@ const PasswordRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
     try {
       setSending(true);
+      const { requestPasswordReset } = await import('@/libs/better-auth/auth-client');
       await requestPasswordReset({
         email: userProfile.email,
         redirectTo: `/reset-password?email=${encodeURIComponent(userProfile.email)}`,
@@ -638,7 +639,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Divider style={{ margin: 0 }} />
 
       {/* Password Row - For Better Auth users to change or set password */}
-      {isLoginWithBetterAuth && (
+      {!isDesktop && isLoginWithBetterAuth && (
         <>
           <PasswordRow mobile={mobile} />
           <Divider style={{ margin: 0 }} />
