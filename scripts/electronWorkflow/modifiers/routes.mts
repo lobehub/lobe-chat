@@ -22,10 +22,6 @@ export const modifyRoutes = async (TEMP_DIR: string) => {
     'src/app/[variants]/(main)/changelog',
     'src/app/[variants]/oauth',
 
-    // Desktop specific (to be cleaned up or checked)
-    'src/app/desktop/devtools',
-    'src/app/desktop/layout',
-
     // Other app roots
     'src/app/market-auth-callback',
     'src/app/manifest.ts',
@@ -38,7 +34,7 @@ export const modifyRoutes = async (TEMP_DIR: string) => {
     'src/instrumentation.node.ts',
 
     // Desktop specific routes
-    'src/app/desktop/devtools/page.tsx',
+    'src/app/desktop/devtools',
     'src/app/desktop/layout.tsx',
   ];
 
