@@ -10,6 +10,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useChatInputStore } from '@/features/ChatInput/store';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { fileChatSelectors, useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -58,6 +59,8 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
       systemStatusSelectors.chatInputHeight(s),
       s.updateSystemStatus,
     ]);
+    const hasContextSelections = useFileStore(fileChatSelectors.chatContextSelectionHasItem);
+    const hasFiles = useFileStore(fileChatSelectors.chatUploadFileListHasItem);
     const [slashMenuRef, expand, showTypoBar, editor, leftActions] = useChatInputStore((s) => [
       s.slashMenuRef,
       s.expand,
@@ -74,7 +77,9 @@ const DesktopChatInput = memo<{ inputContainerProps?: ChatInputProps; showFootno
       if (editor) editor.focus();
     }, [chatKey, editor]);
 
-    const contextContainerNode = leftActions.flat().includes('fileUpload') && <ContextContainer />;
+    const shouldShowContextContainer =
+      leftActions.flat().includes('fileUpload') || hasContextSelections || hasFiles;
+    const contextContainerNode = shouldShowContextContainer && <ContextContainer />;
 
     return (
       <Flexbox

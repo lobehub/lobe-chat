@@ -1,5 +1,6 @@
 'use client';
 
+import { nanoid } from '@lobechat/utils';
 import { HotkeyEnum, INSERT_HEADING_COMMAND, getHotkeyById } from '@lobehub/editor';
 import {
   ChatInputActions,
@@ -32,6 +33,8 @@ import {
 import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFileStore } from '@/store/file';
+
 import { usePageEditorStore } from '../store';
 
 interface ToolbarProps {
@@ -55,14 +58,14 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
   const { t } = useTranslation('editor');
   const editor = usePageEditorStore((s) => s.editor);
   const editorState = usePageEditorStore((s) => s.editorState);
+  const addSelectionContext = useFileStore((s) => s.addChatContextSelection);
   const theme = useTheme();
   const { styles } = useStyles();
 
   const items: ChatInputActionsProps['items'] = useMemo(() => {
     if (!editorState) return [];
     const baseItems = [
-      {
-        active: editorState.isItalic,
+      floating && {
         children: (
           <Block
             align="center"
@@ -70,6 +73,30 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
             clickable
             gap={8}
             horizontal
+            onClick={() => {
+              if (!editor) return;
+
+              const xml = (editor.getSelectionDocument?.('litexml') as string) || '';
+              const plainText = (editor.getSelectionDocument?.('text') as string) || '';
+              const content = xml.trim() || plainText.trim();
+
+              if (!content) return;
+
+              const preview =
+                (plainText || xml)
+                  .replaceAll(/<[^>]*>/g, ' ')
+                  .replaceAll(/\s+/g, ' ')
+                  .trim() || undefined;
+
+              addSelectionContext({
+                content,
+                format: xml.trim() ? 'xml' : 'text',
+                id: `selection-${nanoid(6)}`,
+                preview,
+                title: 'Selection',
+                type: 'text',
+              });
+            }}
             paddingBlock={6}
             paddingInline={12}
             variant="borderless"
@@ -78,12 +105,10 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
             <span>Ask Copilot</span>
           </Block>
         ),
-        key: 'italic',
+        key: 'ask-copilot',
         label: 'Ask Copilot',
-        onClick: () => {
-          // TODO: Ask Copilot
-        },
-        tooltipProps: { hotkey: getHotkeyById(HotkeyEnum.Italic).keys },
+        onClick: () => {},
+        tooltipProps: { hotkey: undefined },
       },
       {
         type: 'divider',
@@ -249,7 +274,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
     ];
 
     return baseItems.filter(Boolean) as ChatInputActionsProps['items'];
-  }, [editorState, editor, t, floating]);
+  }, [addSelectionContext, editor, editorState, floating, t]);
 
   if (!editorState) return null;
 

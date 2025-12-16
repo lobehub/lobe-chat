@@ -5,7 +5,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
-import FileItem from './FileItem';
+import ContextItem from './FileItem';
+import SelectionItem from './SelectionItem';
 
 const useStyles = createStyles(({ css }) => ({
   container: css`
@@ -14,12 +15,14 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const FileList = memo(() => {
+const ContextList = memo(() => {
   const inputFilesList = useFileStore(fileChatSelectors.chatUploadFileList);
   const showFileList = useFileStore(fileChatSelectors.chatUploadFileListHasItem);
+  const selectionList = useFileStore(fileChatSelectors.chatContextSelections);
+  const showSelectionList = useFileStore(fileChatSelectors.chatContextSelectionHasItem);
   const { styles } = useStyles();
 
-  if (!inputFilesList.length || !showFileList) return null;
+  if ((!inputFilesList.length || !showFileList) && !showSelectionList) return null;
 
   return (
     <ScrollShadow
@@ -30,12 +33,15 @@ const FileList = memo(() => {
       size={8}
     >
       <Flexbox gap={4} horizontal paddingBlock={4} paddingInline={0} wrap={'wrap'}>
+        {selectionList.map((item) => (
+          <SelectionItem key={item.id} {...item} />
+        ))}
         {inputFilesList.map((item) => (
-          <FileItem key={item.id} {...item} />
+          <ContextItem key={item.id} {...item} />
         ))}
       </Flexbox>
     </ScrollShadow>
   );
 });
 
-export default FileList;
+export default ContextList;

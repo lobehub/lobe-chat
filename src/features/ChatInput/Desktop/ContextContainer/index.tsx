@@ -7,9 +7,12 @@ import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 
 import { useAgentId } from '../../hooks/useAgentId';
-import FileItemList from './ContextList';
+import ContextList from './ContextList';
 
-const FilePreview = memo(() => {
+/**
+ * Contains the context item to be attached, such as file, image, text, etc.
+ */
+const ContextContainer = memo(() => {
   const agentId = useAgentId();
   const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(agentId)(s));
   const provider = useAgentStore((s) => agentByIdSelectors.getAgentModelProviderById(agentId)(s));
@@ -34,9 +37,9 @@ const FilePreview = memo(() => {
   return (
     <>
       <DragUpload onUploadFiles={upload} />
-      <FileItemList />
+      <ContextList />
     </>
   );
 });
 
-export default FilePreview;
+export default ContextContainer;

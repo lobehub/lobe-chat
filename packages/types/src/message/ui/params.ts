@@ -71,6 +71,21 @@ export interface CreateNewMessageParams {
   fileChunks?: MessageSemanticSearchChunk[];
 }
 
+export interface ChatContextContent {
+  content: string;
+  /**
+   * Format of the content. Defaults to text.
+   */
+  format?: 'xml' | 'text' | 'markdown';
+  id: string;
+  /**
+   * Optional short preview for displaying in UI.
+   */
+  preview?: string;
+  title?: string;
+  type: 'text';
+}
+
 export interface SendMessageParams {
   /**
    * create a thread
@@ -102,6 +117,10 @@ export interface SendMessageParams {
    * If not provided, will be calculated from messages list.
    */
   parentId?: string;
+  /**
+   * Additional contextual snippets (e.g., text selections) attached to the request.
+   */
+  contexts?: ChatContextContent[];
 }
 
 export interface SendGroupMessageParams {

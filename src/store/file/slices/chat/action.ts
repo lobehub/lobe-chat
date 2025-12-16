@@ -1,3 +1,4 @@
+import { ChatContextContent } from '@lobechat/types';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -21,8 +22,11 @@ import { FileStore } from '../../store';
 const n = setNamespace('chat');
 
 export interface FileAction {
+  addChatContextSelection: (context: ChatContextContent) => void;
+  clearChatContextSelections: () => void;
   clearChatUploadFileList: () => void;
   dispatchChatUploadFileList: (payload: UploadFileListDispatch) => void;
+  removeChatContextSelection: (id: string) => void;
   removeChatUploadFile: (id: string) => Promise<void>;
   startAsyncTask: (
     fileId: string,
@@ -38,6 +42,17 @@ export const createFileSlice: StateCreator<
   [],
   FileAction
 > = (set, get) => ({
+  addChatContextSelection: (context) => {
+    const current = get().chatContextSelections;
+    const next = [context, ...current.filter((item) => item.id !== context.id)];
+
+    set({ chatContextSelections: next }, false, n('addChatContextSelection'));
+  },
+
+  clearChatContextSelections: () => {
+    set({ chatContextSelections: [] }, false, n('clearChatContextSelections'));
+  },
+
   clearChatUploadFileList: () => {
     set({ chatUploadFileList: [] }, false, n('clearChatUploadFileList'));
   },
@@ -47,6 +62,11 @@ export const createFileSlice: StateCreator<
     if (nextValue === get().chatUploadFileList) return;
 
     set({ chatUploadFileList: nextValue }, false, `dispatchChatFileList/${payload.type}`);
+  },
+
+  removeChatContextSelection: (id) => {
+    const next = get().chatContextSelections.filter((item) => item.id !== id);
+    set({ chatContextSelections: next }, false, n('removeChatContextSelection'));
   },
 
   removeChatUploadFile: async (id) => {

@@ -84,10 +84,11 @@ const ChatInput = memo<ChatInputProps>(
 
     // File store - for UI state only (disabled button, etc.)
     const fileList = useFileStore(fileChatSelectors.chatUploadFileList);
+    const contextList = useFileStore(fileChatSelectors.chatContextSelections);
     const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
 
     // Computed state
-    const isInputEmpty = !inputMessage.trim() && fileList.length === 0;
+    const isInputEmpty = !inputMessage.trim() && fileList.length === 0 && contextList.length === 0;
     const disabled = isInputEmpty || isUploadingFiles || isAIGenerating;
 
     // Send handler - gets message, clears editor immediately, then sends
@@ -97,19 +98,22 @@ const ChatInput = memo<ChatInputProps>(
         const fileStore = useFileStore.getState();
         const currentFileList = fileChatSelectors.chatUploadFileList(fileStore);
         const currentIsUploading = fileChatSelectors.isUploadingFiles(fileStore);
+        const currentContextList = fileChatSelectors.chatContextSelections(fileStore);
 
         if (currentIsUploading || isAIGenerating) return;
 
         // Get content before clearing
         const message = getMarkdownContent();
-        if (!message.trim() && currentFileList.length === 0) return;
+        if (!message.trim() && currentFileList.length === 0 && currentContextList.length === 0)
+          return;
 
         // Clear content immediately for responsive UX
         clearContent();
         fileStore.clearChatUploadFileList();
+        fileStore.clearChatContextSelections();
 
         // Fire and forget - send with captured message
-        await sendMessage({ files: currentFileList, message });
+        await sendMessage({ contexts: currentContextList, files: currentFileList, message });
       },
       [isAIGenerating, sendMessage],
     );

@@ -13,12 +13,14 @@ export const useSend = () => {
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
   const sendMessage = useChatStore((s) => s.sendMessage);
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
+  const clearChatContextSelections = useFileStore((s) => s.clearChatContextSelections);
 
   const homeInputLoading = useHomeStore((s) => s.homeInputLoading);
 
   const send = useCallback(async () => {
     const { inputMessage, mainInputEditor } = useChatStore.getState();
     const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
+    const contextList = fileChatSelectors.chatContextSelections(useFileStore.getState());
     const { sendAsAgent, sendAsWrite, sendAsImage, sendAsResearch, inputActiveMode } =
       useHomeStore.getState();
 
@@ -29,7 +31,7 @@ export const useSend = () => {
     }
 
     // Other modes require input content
-    if (!inputMessage && fileList.length === 0) return;
+    if (!inputMessage && fileList.length === 0 && contextList.length === 0) return;
 
     try {
       switch (inputActiveMode) {
@@ -58,6 +60,7 @@ export const useSend = () => {
               threadId: undefined,
               topicId: undefined,
             },
+            contexts: contextList,
             files: fileList,
             message: inputMessage,
           });
@@ -68,9 +71,10 @@ export const useSend = () => {
     } finally {
       // Clear input and files after send
       clearChatUploadFileList();
+      clearChatContextSelections();
       mainInputEditor?.clearContent();
     }
-  }, [inboxAgentId, sendMessage, clearChatUploadFileList, router]);
+  }, [inboxAgentId, sendMessage, clearChatContextSelections, clearChatUploadFileList, router]);
 
   return {
     inboxAgentId,
