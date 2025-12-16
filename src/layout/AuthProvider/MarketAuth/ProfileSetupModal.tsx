@@ -1,15 +1,22 @@
 'use client';
 
-import { Modal, Text } from '@lobehub/ui';
-import { App, Form, Input, Tooltip } from 'antd';
-import { CircleHelp } from 'lucide-react';
+import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
+import { EmojiPicker, Modal, Text } from '@lobehub/ui';
+import { App, Divider, Form, Input, Tooltip, Upload, UploadProps } from 'antd';
+import { useTheme } from 'antd-style';
+import { CircleHelp, Globe, ImagePlus, Trash2 } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { MARKET_ENDPOINTS } from '@/services/_url';
+import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
 
 import { MarketUserProfile } from './types';
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB limit
 
 interface ProfileSetupModalProps {
   accessToken: string | null;
@@ -36,7 +43,10 @@ interface ProfileSetupModalProps {
 interface FormValues {
   description?: string;
   displayName: string;
+  github?: string;
+  twitter?: string;
   userName: string;
+  website?: string;
 }
 
 const ProfileSetupModal = memo<ProfileSetupModalProps>(
@@ -50,9 +60,22 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
     isFirstTimeSetup = false,
   }) => {
     const { t } = useTranslation('marketAuth');
+    const theme = useTheme();
     const { message } = App.useApp();
     const [form] = Form.useForm<FormValues>();
     const [loading, setLoading] = useState(false);
+    const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
+
+    // Avatar state
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [avatarUploading, setAvatarUploading] = useState(false);
+
+    // Banner state
+    const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+    const [bannerUploading, setBannerUploading] = useState(false);
+
+    // File upload
+    const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
 
     // Reset form when modal opens
     useEffect(() => {
@@ -69,10 +92,85 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         form.setFieldsValue({
           description: userProfile?.description || '',
           displayName: existingDisplayName,
+          github: userProfile?.socialLinks?.github || '',
+          twitter: userProfile?.socialLinks?.twitter || '',
           userName: existingUserName || generatedUserName,
+          website: userProfile?.socialLinks?.website || '',
         });
+
+        // Reset avatar and banner
+        setAvatarUrl(userProfile?.avatarUrl || null);
+        setBannerUrl(userProfile?.bannerUrl || null);
       }
     }, [open, userProfile, defaultDisplayName, form]);
+
+    // Handle avatar change (emoji)
+    const handleAvatarChange = useCallback((emoji: string) => {
+      setAvatarUrl(emoji);
+    }, []);
+
+    // Handle avatar upload
+    const handleAvatarUpload = useCallback(
+      async (file: File) => {
+        if (file.size > MAX_FILE_SIZE) {
+          message.error(t('profileSetup.errors.fileTooLarge'));
+          return;
+        }
+
+        setAvatarUploading(true);
+        try {
+          const result = await uploadWithProgress({ file });
+          if (result?.url) {
+            setAvatarUrl(result.url);
+          }
+        } catch (error) {
+          console.error('[ProfileSetupModal] Avatar upload failed:', error);
+          message.error(t('profileSetup.errors.uploadFailed'));
+        } finally {
+          setAvatarUploading(false);
+        }
+      },
+      [uploadWithProgress, message, t],
+    );
+
+    // Handle avatar delete
+    const handleAvatarDelete = useCallback(() => {
+      setAvatarUrl(null);
+    }, []);
+
+    // Handle banner upload
+    const handleBannerUpload: UploadProps['customRequest'] = useCallback(
+      async (options: Parameters<NonNullable<UploadProps['customRequest']>>[0]) => {
+        const file = options.file as File;
+
+        if (file.size > MAX_FILE_SIZE) {
+          message.error(t('profileSetup.errors.fileTooLarge'));
+          options.onError?.(new Error('File too large'));
+          return;
+        }
+
+        setBannerUploading(true);
+        try {
+          const result = await uploadWithProgress({ file });
+          if (result?.url) {
+            setBannerUrl(result.url);
+            options.onSuccess?.(result);
+          }
+        } catch (error) {
+          console.error('[ProfileSetupModal] Banner upload failed:', error);
+          message.error(t('profileSetup.errors.uploadFailed'));
+          options.onError?.(error as Error);
+        } finally {
+          setBannerUploading(false);
+        }
+      },
+      [uploadWithProgress, message, t],
+    );
+
+    // Handle banner delete
+    const handleBannerDelete = useCallback(() => {
+      setBannerUrl(null);
+    }, []);
 
     const handleSubmit = useCallback(async () => {
       if (!accessToken) {
@@ -84,10 +182,27 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         const values = await form.validateFields();
         setLoading(true);
 
+        // Build socialLinks object (only include non-empty values)
+        const socialLinks: { github?: string; twitter?: string; website?: string } = {};
+        if (values.github) socialLinks.github = values.github;
+        if (values.twitter) socialLinks.twitter = values.twitter;
+        if (values.website) socialLinks.website = values.website;
+
+        // Build meta object (socialLinks should be inside meta)
+        const meta: {
+          bannerUrl?: string;
+          description?: string;
+          socialLinks?: { github?: string; twitter?: string; website?: string };
+        } = {};
+        if (values.description) meta.description = values.description;
+        if (bannerUrl) meta.bannerUrl = bannerUrl;
+        if (Object.keys(socialLinks).length > 0) meta.socialLinks = socialLinks;
+
         const response = await fetch(MARKET_ENDPOINTS.updateUserProfile, {
           body: JSON.stringify({
+            avatarUrl: avatarUrl || undefined,
             displayName: values.displayName,
-            meta: values.description ? { description: values.description } : undefined,
+            meta: Object.keys(meta).length > 0 ? meta : undefined,
             userName: values.userName,
           }),
           headers: {
@@ -118,7 +233,7 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
       } finally {
         setLoading(false);
       }
-    }, [accessToken, form, message, onClose, onSuccess, t]);
+    }, [accessToken, avatarUrl, bannerUrl, form, message, onClose, onSuccess, t]);
 
     const handleCancel = useCallback(() => {
       if (!isFirstTimeSetup) {
@@ -140,7 +255,7 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         onOk={handleSubmit}
         open={open}
         title={isFirstTimeSetup ? t('profileSetup.titleFirstTime') : t('profileSetup.titleEdit')}
-        width={440}
+        width={480}
       >
         <Text style={{ display: 'block', marginBottom: 24 }} type="secondary">
           {isFirstTimeSetup
@@ -149,6 +264,22 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         </Text>
 
         <Form form={form} layout="vertical">
+          {/* Avatar Section */}
+          <Form.Item label={t('profileSetup.fields.avatar.label')}>
+            <EmojiPicker
+              allowDelete={!!avatarUrl}
+              allowUpload
+              loading={avatarUploading}
+              locale={locale}
+              onChange={handleAvatarChange}
+              onDelete={handleAvatarDelete}
+              onUpload={handleAvatarUpload}
+              shape="circle"
+              size={80}
+              value={avatarUrl || undefined}
+            />
+          </Form.Item>
+
           <Form.Item
             label={t('profileSetup.fields.displayName.label')}
             name="displayName"
@@ -218,6 +349,138 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
               showCount
             />
           </Form.Item>
+
+          {/* Only show banner and social links in edit mode, not first-time setup */}
+          {!isFirstTimeSetup && (
+            <>
+              <Divider style={{ margin: '16px 0' }} />
+
+              {/* Banner Upload Section */}
+              <Form.Item
+                label={
+                  <Flexbox align="center" gap={4} horizontal>
+                    {t('profileSetup.fields.bannerUrl.label')}
+                    <Tooltip title={t('profileSetup.fields.bannerUrl.tooltip')}>
+                      <CircleHelp size={14} style={{ cursor: 'help', opacity: 0.5 }} />
+                    </Tooltip>
+                  </Flexbox>
+                }
+              >
+                <Flexbox gap={8} width="100%">
+                  <Upload
+                    accept="image/*"
+                    customRequest={handleBannerUpload}
+                    maxCount={1}
+                    showUploadList={false}
+                    style={{ display: 'block', width: '100%' }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: bannerUrl ? undefined : theme.colorFillTertiary,
+                        backgroundImage: bannerUrl ? `url(${bannerUrl})` : undefined,
+                        backgroundPosition: 'center',
+                        backgroundSize: 'cover',
+                        borderRadius: theme.borderRadiusLG,
+                        cursor: 'pointer',
+                        height: 120,
+                        overflow: 'hidden',
+                        position: 'relative',
+                        width: '100%',
+                      }}
+                    >
+                      <Center
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.opacity = '1';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (bannerUrl) e.currentTarget.style.opacity = '0';
+                        }}
+                        style={{
+                          background: bannerUrl ? 'rgba(0,0,0,0.4)' : 'transparent',
+                          height: '100%',
+                          opacity: bannerUrl ? 0 : 1,
+                          transition: 'opacity 0.2s',
+                          width: '100%',
+                        }}
+                      >
+                        <Flexbox align="center" gap={8}>
+                          <ImagePlus
+                            size={24}
+                            style={{ color: bannerUrl ? '#fff' : theme.colorTextSecondary }}
+                          />
+                          <Text
+                            style={{
+                              color: bannerUrl ? '#fff' : theme.colorTextSecondary,
+                              fontSize: 12,
+                            }}
+                          >
+                            {bannerUploading
+                              ? t('profileSetup.fields.bannerUrl.uploading')
+                              : t('profileSetup.fields.bannerUrl.clickToUpload')}
+                          </Text>
+                        </Flexbox>
+                      </Center>
+                    </div>
+                  </Upload>
+                  {bannerUrl && (
+                    <Flexbox align="center" gap={8} horizontal justify="flex-end">
+                      <Text
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBannerDelete();
+                        }}
+                        style={{
+                          color: theme.colorError,
+                          cursor: 'pointer',
+                          fontSize: 12,
+                        }}
+                      >
+                        <Flexbox align="center" gap={4} horizontal>
+                          <Trash2 size={12} />
+                          {t('profileSetup.fields.bannerUrl.remove')}
+                        </Flexbox>
+                      </Text>
+                    </Flexbox>
+                  )}
+                </Flexbox>
+              </Form.Item>
+
+              <Divider style={{ margin: '16px 0' }} />
+
+              <Text style={{ display: 'block', marginBottom: 12 }} type="secondary">
+                {t('profileSetup.socialLinks.title')}
+              </Text>
+
+              <Form.Item name="github">
+                <Input
+                  placeholder={t('profileSetup.fields.github.placeholder')}
+                  prefix={<SiGithub size={14} style={{ opacity: 0.5 }} />}
+                />
+              </Form.Item>
+
+              <Form.Item name="twitter">
+                <Input
+                  placeholder={t('profileSetup.fields.twitter.placeholder')}
+                  prefix={<SiX size={14} style={{ opacity: 0.5 }} />}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="website"
+                rules={[
+                  {
+                    message: t('profileSetup.fields.website.invalidUrl'),
+                    type: 'url',
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={t('profileSetup.fields.website.placeholder')}
+                  prefix={<Globe size={14} style={{ opacity: 0.5 }} />}
+                />
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
     );

@@ -24,6 +24,7 @@ export interface MarketUserInfo {
  */
 export interface MarketUserProfile {
   avatarUrl: string | null;
+  bannerUrl: string | null;
   createdAt: string;
   description: string | null;
   displayName: string | null;

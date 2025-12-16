@@ -58,11 +58,23 @@
     "descriptionEdit": "更新你的社区个人资料信息。",
     "descriptionFirstTime": "设置你的个人资料以完成社区档案创建。",
     "errors": {
+      "fileTooLarge": "文件大小不能超过 2MB",
       "notAuthenticated": "请先登录后再操作",
       "updateFailed": "更新个人资料失败，请重试",
+      "uploadFailed": "上传失败，请重试",
       "usernameTaken": "该用户 ID 已被使用，请选择其他用户 ID"
     },
     "fields": {
+      "avatar": {
+        "label": "头像"
+      },
+      "bannerUrl": {
+        "clickToUpload": "点击上传背景图",
+        "label": "背景图",
+        "remove": "移除背景图",
+        "tooltip": "背景图将展示在你的个人主页顶部（建议 16:9 比例）",
+        "uploading": "上传中..."
+      },
       "description": {
         "label": "个人简介",
         "maxLength": "个人简介最多 200 个字符",
@@ -74,6 +86,12 @@
         "placeholder": "输入你的昵称",
         "required": "请输入昵称"
       },
+      "github": {
+        "placeholder": "GitHub 用户名"
+      },
+      "twitter": {
+        "placeholder": "X (Twitter) 用户名"
+      },
       "userName": {
         "label": "用户 ID",
         "maxLength": "用户 ID 最多 32 个字符",
@@ -82,7 +100,14 @@
         "placeholder": "输入你的用户 ID",
         "required": "请输入用户 ID",
         "tooltip": "用户 ID 是你的唯一标识符，将用于你的个人主页链接"
+      },
+      "website": {
+        "invalidUrl": "请输入有效的网址",
+        "placeholder": "个人网站链接"
       }
+    },
+    "socialLinks": {
+      "title": "社交链接"
     },
     "getStarted": "开始使用",
     "save": "保存",

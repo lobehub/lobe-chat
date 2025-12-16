@@ -42,6 +42,7 @@ export const GET = async (req: NextRequest, context: RouteContext) => {
 
     return NextResponse.json({
       avatarUrl: user.avatarUrl || null,
+      bannerUrl: user.meta?.bannerUrl || null,
       createdAt: user.createdAt,
       description: user.meta?.description || null,
       displayName: user.displayName || null,
