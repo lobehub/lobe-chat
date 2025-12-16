@@ -28,6 +28,22 @@ const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
 });
 
 export const messageRouter = router({
+  addFilesToMessage: messageProcedure
+    .input(
+      z
+        .object({
+          fileIds: z.array(z.string()),
+          id: z.string(),
+        })
+        .extend(basicContextSchema.shape),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, fileIds, agentId, ...options } = input;
+      const resolved = await resolveContext({ agentId, ...options }, ctx.serverDB, ctx.userId);
+
+      return ctx.messageService.addFilesToMessage(id, fileIds, resolved);
+    }),
+
   count: messageProcedure
     .input(
       z
@@ -260,7 +276,6 @@ export const messageRouter = router({
       return ctx.messageService.updatePluginState(id, value, resolved);
     }),
 
-  
   updateTTS: messageProcedure
     .input(
       z.object({
@@ -286,7 +301,7 @@ export const messageRouter = router({
    * Update tool message with content, metadata, pluginState, and pluginError in a single transaction
    * This prevents race conditions when updating multiple fields
    */
-updateToolMessage: messageProcedure
+  updateToolMessage: messageProcedure
     .input(
       z
         .object({

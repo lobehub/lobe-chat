@@ -39,6 +39,7 @@ export interface ChatFileItem {
 export interface AssistantContentBlock {
   content: string;
   error?: ChatMessageError | null;
+  fileList?: ChatFileItem[];
   id: string;
   imageList?: ChatImageItem[];
   metadata?: Record<string, any>;

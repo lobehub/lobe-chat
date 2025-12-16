@@ -186,6 +186,18 @@ export class MessageService {
   removeAllMessages = async () => {
     return lambdaClient.message.removeAllMessages.mutate();
   };
+
+  /**
+   * Add files to a message
+   * Used to associate exported files from code interpreter with the tool message
+   */
+  addFilesToMessage = async (
+    id: string,
+    fileIds: string[],
+    ctx?: MessageQueryContext,
+  ): Promise<UpdateMessageResult> => {
+    return lambdaClient.message.addFilesToMessage.mutate({ ...ctx, fileIds, id });
+  };
 }
 
 export const messageService = new MessageService();

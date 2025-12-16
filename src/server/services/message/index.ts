@@ -214,4 +214,20 @@ export class MessageService {
     }
     return this.queryWithSuccess(options);
   }
+
+  /**
+   * Add files to a message
+   * Pattern: update + conditional query
+   */
+  async addFilesToMessage(
+    messageId: string,
+    fileIds: string[],
+    options?: QueryOptions,
+  ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
+    const result = await this.messageModel.addFiles(messageId, fileIds);
+    if (!result.success) {
+      return { success: false };
+    }
+    return this.queryWithSuccess(options);
+  }
 }

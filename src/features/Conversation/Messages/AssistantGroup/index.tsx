@@ -1,7 +1,7 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
 import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useNewScreen } from '@/features/Conversation/Messages/components/useNewScreen';
@@ -12,6 +12,7 @@ import { useGlobalStore } from '@/store/global';
 
 import { useAgentMeta } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
+import FileListViewer from '../User/components/FileListViewer';
 import Usage from '../components/Extras/Usage';
 import { GroupActionsBar } from './Actions';
 import EditState from './components/EditState';
@@ -33,6 +34,12 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
 
   const { agentId, usage, createdAt, children, performance, model, provider } = item;
   const avatar = useAgentMeta(agentId);
+
+  // Collect fileList from all children blocks
+  const aggregatedFileList = useMemo(() => {
+    if (!children || children.length === 0) return [];
+    return children.flatMap((child) => child.fileList || []);
+  }, [children]);
 
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
@@ -92,6 +99,11 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
           id={id}
           messageIndex={index}
         />
+      )}
+      {aggregatedFileList.length > 0 && (
+        <div style={{ marginTop: 8 }}>
+          <FileListViewer items={aggregatedFileList} />
+        </div>
       )}
       {model && (
         <Usage model={model} performance={performance} provider={provider!} usage={usage} />

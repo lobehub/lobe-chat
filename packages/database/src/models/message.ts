@@ -1069,6 +1069,28 @@ export class MessageModel {
     });
   };
 
+  /**
+   * Add files to a message by inserting records into messagesFiles table
+   * This associates existing files with a message for display in fileList/imageList/videoList
+   */
+  addFiles = async (messageId: string, fileIds: string[]): Promise<{ success: boolean }> => {
+    if (fileIds.length === 0) return { success: true };
+
+    try {
+      await this.db.insert(messagesFiles).values(
+        fileIds.map((fileId) => ({
+          fileId,
+          messageId,
+          userId: this.userId,
+        })),
+      );
+      return { success: true };
+    } catch (error) {
+      console.error('Add files to message error:', error);
+      return { success: false };
+    }
+  };
+
   deleteMessageTranslate = async (id: string) =>
     this.db
       .delete(messageTranslates)
