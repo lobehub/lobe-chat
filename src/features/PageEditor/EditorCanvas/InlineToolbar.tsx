@@ -96,6 +96,8 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
                 title: 'Selection',
                 type: 'text',
               });
+
+              editor.blur();
             }}
             paddingBlock={6}
             paddingInline={12}

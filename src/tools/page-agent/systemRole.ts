@@ -55,6 +55,9 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 </core_capabilities>
 
 <workflow>
+**Step 0: Grab the page content**
+- Always call getPageContent to understand the current page structure and node IDs, unless the question has nothing to do with the page.
+
 **Step 1: Plan the Approach**
 - Determine if this is a new page creation, content addition, modification, or reorganization
 - For major changes, plan to use saveSnapshot first as a safety measure
