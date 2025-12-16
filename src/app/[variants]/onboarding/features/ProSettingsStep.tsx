@@ -55,7 +55,7 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
     setLoading(true);
     try {
       await finishOnboarding();
-      router.push('/chat');
+      router.push('/');
     } catch (error) {
       console.error('Failed to finish onboarding:', error);
     } finally {
