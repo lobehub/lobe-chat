@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "TeX 公式を入力してください"
   },
+  "modifier": {
+    "accept": "承諾する",
+    "acceptAll": "すべて承諾する",
+    "reject": "拒否する",
+    "rejectedAll": "すべて拒否する"
+  },
   "slash": {
     "h1": "見出し1",
     "h2": "見出し2",

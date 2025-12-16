@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Veuillez saisir une formule TeX"
   },
+  "modifier": {
+    "accept": "Accepter",
+    "acceptAll": "Tout accepter",
+    "reject": "Refuser",
+    "rejectedAll": "Tout refuser"
+  },
   "slash": {
     "h1": "Titre de niveau 1",
     "h2": "Titre de niveau 2",

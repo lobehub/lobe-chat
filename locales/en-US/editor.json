@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Please enter a TeX formula"
   },
+  "modifier": {
+    "accept": "Accept",
+    "acceptAll": "Accept All",
+    "reject": "Reject",
+    "rejectedAll": "Reject All"
+  },
   "slash": {
     "h1": "Heading 1",
     "h2": "Heading 2",

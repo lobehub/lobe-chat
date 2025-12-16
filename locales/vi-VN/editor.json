@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Vui lòng nhập công thức TeX"
   },
+  "modifier": {
+    "accept": "Chấp nhận",
+    "acceptAll": "Chấp nhận tất cả",
+    "reject": "Từ chối",
+    "rejectedAll": "Từ chối tất cả"
+  },
   "slash": {
     "h1": "Tiêu đề cấp 1",
     "h2": "Tiêu đề cấp 2",

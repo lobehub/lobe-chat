@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Wprowadź formułę TeX"
   },
+  "modifier": {
+    "accept": "Akceptuj",
+    "acceptAll": "Akceptuj wszystkie",
+    "reject": "Odrzuć",
+    "rejectedAll": "Odrzuć wszystkie"
+  },
   "slash": {
     "h1": "Nagłówek poziomu 1",
     "h2": "Nagłówek poziomu 2",

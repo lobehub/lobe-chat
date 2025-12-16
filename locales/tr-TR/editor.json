@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Lütfen TeX formülünü girin"
   },
+  "modifier": {
+    "accept": "Kabul Et",
+    "acceptAll": "Hepsini Kabul Et",
+    "reject": "Reddet",
+    "rejectedAll": "Hepsini Reddet"
+  },
   "slash": {
     "h1": "Birinci Seviye Başlık",
     "h2": "İkinci Seviye Başlık",

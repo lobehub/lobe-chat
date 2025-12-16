@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Bitte TeX-Formel eingeben"
   },
+  "modifier": {
+    "accept": "Akzeptieren",
+    "acceptAll": "Alle akzeptieren",
+    "reject": "Ablehnen",
+    "rejectedAll": "Alle ablehnen"
+  },
   "slash": {
     "h1": "Überschrift 1. Ordnung",
     "h2": "Überschrift 2. Ordnung",

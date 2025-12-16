@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "Voer TeX-formule in"
   },
+  "modifier": {
+    "accept": "Accepteren",
+    "acceptAll": "Alles accepteren",
+    "reject": "Weigeren",
+    "rejectedAll": "Alles weigeren"
+  },
   "slash": {
     "h1": "Kop 1",
     "h2": "Kop 2",

@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "請輸入 TeX 公式"
   },
+  "modifier": {
+    "accept": "接受",
+    "acceptAll": "全部接受",
+    "reject": "拒絕",
+    "rejectedAll": "全部拒絕"
+  },
   "slash": {
     "h1": "一級標題",
     "h2": "二級標題",

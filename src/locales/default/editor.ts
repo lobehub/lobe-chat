@@ -40,6 +40,12 @@ export default {
   math: {
     placeholder: '请输入 TeX 公式',
   },
+  modifier: {
+    accept: '接受',
+    acceptAll: '全部接受',
+    reject: '拒绝',
+    rejectedAll: '全部拒绝',
+  },
   slash: {
     h1: '一级标题',
     h2: '二级标题',

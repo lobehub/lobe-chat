@@ -40,6 +40,12 @@
   "math": {
     "placeholder": "TeX 수식을 입력하세요"
   },
+  "modifier": {
+    "accept": "수락",
+    "acceptAll": "모두 수락",
+    "reject": "거부",
+    "rejectedAll": "모두 거부"
+  },
   "slash": {
     "h1": "제목 1",
     "h2": "제목 2",
