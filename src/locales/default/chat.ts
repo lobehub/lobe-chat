@@ -513,6 +513,10 @@ export default {
       videoSizeExceeded: '视频文件大小不能超过 20MB，当前文件大小为 {{actualSize}}',
     },
   },
+  viewMode: {
+    normal: '普通',
+    wideScreen: '宽屏',
+  },
   you: '你',
   zenMode: '专注模式',
 };

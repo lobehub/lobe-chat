@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import ToggleRightPanelButton from '@/features/RightPanel/ToggleRightPanelButton';
-import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 
 import { usePageEditorStore } from '../store';
 import AutoSaveHint from './AutoSaveHint';
@@ -47,7 +46,6 @@ const Header = memo(() => {
       }
       right={
         <>
-          <WideScreenButton />
           <ToggleRightPanelButton icon={BotMessageSquareIcon} showActive={true} />
           {/* Three-dot menu */}
           <Dropdown
