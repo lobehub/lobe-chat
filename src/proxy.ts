@@ -60,7 +60,6 @@ export const config = {
     '/verify-email(.*)',
     '/reset-password(.*)',
     '/auth-error(.*)',
-    '/onboarding(.*)',
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
@@ -156,7 +155,7 @@ const defaultMiddleware = (request: NextRequest) => {
     '/changelog',
     '/profile',
     '/me',
-    '/desktop-onboarding',
+    '/onboarding',
   ];
   const isSpaRoute = spaRoutes.some((route) => url.pathname.startsWith(route));
 

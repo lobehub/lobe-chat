@@ -390,7 +390,12 @@ export const desktopRoutes: RouteConfig[] = [
     errorElement: <ErrorBoundary resetPath="/" />,
     path: '/',
   },
-  // Desktop onboarding route (SPA-only)
+  // Onboarding route (outside main layout)
+  {
+    element: dynamicElement(() => import('../onboarding'), 'Desktop > Onboarding'),
+    errorElement: <ErrorBoundary resetPath="/" />,
+    path: '/onboarding',
+  },
 ];
 
 if (isDesktop) {

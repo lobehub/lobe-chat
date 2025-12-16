@@ -241,4 +241,10 @@ export const mobileRoutes: RouteConfig[] = [
     errorElement: <ErrorBoundary resetPath="/" />,
     path: '/',
   },
+  // Onboarding route (outside main layout)
+  {
+    element: dynamicElement(() => import('../../onboarding'), 'Mobile > Onboarding'),
+    errorElement: <ErrorBoundary resetPath="/" />,
+    path: '/onboarding',
+  },
 ];

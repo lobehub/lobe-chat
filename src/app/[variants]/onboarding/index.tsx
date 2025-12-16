@@ -7,13 +7,14 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import { useUserStore } from '@/store/user';
 import { onboardingSelectors } from '@/store/user/selectors';
 
+import OnboardingContainer from './_layout';
 import FullNameStep from './features/FullNameStep';
 import ModeSelectionStep from './features/ModeSelectionStep';
 import ProSettingsStep from './features/ProSettingsStep';
 import ResponseLanguageStep from './features/ResponseLanguageStep';
 import TelemetryStep from './features/TelemetryStep';
 
-const Client = memo(() => {
+const OnboardingPage = memo(() => {
   const [isUserStateInit, currentStep, goToNextStep, goToPreviousStep] = useUserStore((s) => [
     s.isUserStateInit,
     onboardingSelectors.currentStep(s),
@@ -49,12 +50,14 @@ const Client = memo(() => {
   };
 
   return (
-    <Flexbox gap={24} style={{ maxWidth: 480, width: '100%' }}>
-      {renderStep()}
-    </Flexbox>
+    <OnboardingContainer>
+      <Flexbox gap={24} style={{ maxWidth: 480, width: '100%' }}>
+        {renderStep()}
+      </Flexbox>
+    </OnboardingContainer>
   );
 });
 
-Client.displayName = 'OnboardingClient';
+OnboardingPage.displayName = 'OnboardingPage';
 
-export default Client;
+export default OnboardingPage;
