@@ -51,6 +51,8 @@ export const config = {
     '/page(.*)',
     '/me',
     '/me(.*)',
+    '/desktop-onboarding',
+    '/desktop-onboarding(.*)',
 
     '/login(.*)',
     '/signup(.*)',
@@ -153,6 +155,7 @@ const defaultMiddleware = (request: NextRequest) => {
     '/changelog',
     '/profile',
     '/me',
+    '/desktop-onboarding',
   ];
   const isSpaRoute = spaRoutes.some((route) => url.pathname.startsWith(route));
 

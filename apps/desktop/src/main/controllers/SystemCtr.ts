@@ -51,13 +51,42 @@ export default class SystemController extends ControllerModule {
     };
   }
 
-  /**
-   * 检查可用性
-   */
   @IpcMethod()
-  checkAccessibilityForMacOS() {
-    if (!macOS()) return;
+  requestAccessibilityAccess() {
+    if (!macOS()) return true;
     return systemPreferences.isTrustedAccessibilityClient(true);
+  }
+
+  @IpcMethod()
+  getAccessibilityStatus() {
+    if (!macOS()) return true;
+    return systemPreferences.isTrustedAccessibilityClient(false);
+  }
+
+  @IpcMethod()
+  async getMediaAccessStatus(mediaType: 'microphone' | 'screen'): Promise<string> {
+    if (!macOS()) return 'granted';
+    return systemPreferences.getMediaAccessStatus(mediaType);
+  }
+
+  @IpcMethod()
+  async requestMicrophoneAccess(): Promise<boolean> {
+    if (!macOS()) return true;
+    return systemPreferences.askForMediaAccess('microphone');
+  }
+
+  @IpcMethod()
+  async requestScreenAccess(): Promise<void> {
+    if (!macOS()) return;
+    shell.openExternal(
+      'x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture',
+    );
+  }
+
+  @IpcMethod()
+  openFullDiskAccessSettings() {
+    if (!macOS()) return;
+    shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles');
   }
 
   @IpcMethod()

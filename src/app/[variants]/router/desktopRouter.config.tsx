@@ -4,6 +4,7 @@ import { ErrorBoundary, type RouteConfig, dynamicElement, redirectElement } from
 
 import DesktopMainLayout from '../(main)/_layout';
 import DesktopChatLayout from '../(main)/chat/_layout';
+import DesktopOnboarding from '../(main)/desktop-onboarding';
 import DesktopGroupLayout from '../(main)/group/_layout';
 import DesktopHome from '../(main)/home';
 import DesktopHomeLayout from '../(main)/home/_layout';
@@ -387,5 +388,11 @@ export const desktopRoutes: RouteConfig[] = [
     element: <DesktopMainLayout />,
     errorElement: <ErrorBoundary resetPath="/" />,
     path: '/',
+  },
+  // Desktop onboarding route (SPA-only)
+  {
+    element: <DesktopOnboarding />,
+    errorElement: <ErrorBoundary resetPath="/" />,
+    path: '/desktop-onboarding',
   },
 ];
