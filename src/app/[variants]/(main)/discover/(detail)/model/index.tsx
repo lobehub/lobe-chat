@@ -2,9 +2,8 @@
 
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-import type { SlugParams } from '@/app/[variants]/loaders/routeParams';
 import { useDiscoverStore } from '@/store/discover';
 
 import NotFound from '../components/NotFound';
@@ -18,8 +17,8 @@ interface ModelDetailPageProps {
 }
 
 const ModelDetailPage = memo<ModelDetailPageProps>(({ mobile }) => {
-  const { slug } = useLoaderData() as SlugParams;
-  const identifier = decodeURIComponent(slug);
+  const params = useParams<{ slug: string }>();
+  const identifier = decodeURIComponent(params.slug ?? '');
 
   const useModelDetail = useDiscoverStore((s) => s.useModelDetail);
   const { data, isLoading } = useModelDetail({ identifier });

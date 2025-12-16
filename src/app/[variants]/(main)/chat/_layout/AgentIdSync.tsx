@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useAgentStore } from '@/store/agent';
@@ -7,10 +7,10 @@ import { useChatStore } from '@/store/chat';
 const AgentIdSync = () => {
   const useStoreUpdater = createStoreUpdater(useAgentStore);
   const useChatStoreUpdater = createStoreUpdater(useChatStore);
-  const load = useLoaderData();
+  const params = useParams<{ aid?: string }>();
 
-  useStoreUpdater('activeAgentId', load?.agentId);
-  useChatStoreUpdater('activeAgentId', load?.agentId);
+  useStoreUpdater('activeAgentId', params.aid);
+  useChatStoreUpdater('activeAgentId', params.aid ?? '');
 
   return null;
 };
