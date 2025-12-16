@@ -29,8 +29,6 @@ import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { chatService } from '@/services/chat';
 import { resolveAgentConfig } from '@/services/chat/mecha';
 import { messageService } from '@/services/message';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
-import { getAgentStoreState } from '@/store/agent/store';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
@@ -291,25 +289,14 @@ export const streamingExecutor: StateCreator<
     // - agentId is used for session ID (message storage location)
     const effectiveAgentId = subAgentId || agentId;
 
-    // Get agent config from params or use effectiveAgentId-specific config
-    const agentStoreState = getAgentStoreState();
-    const finalAgentConfig =
-      agentConfig || agentSelectors.getAgentConfigById(effectiveAgentId)(agentStoreState);
-    const chatConfig =
-      agentChatConfigSelectors.getAgentChatConfigById(effectiveAgentId)(agentStoreState);
-
-    // ================================== //
-    //   messages uniformly preprocess    //
-    // ================================== //
-    // 4. handle max_tokens
-    finalAgentConfig.params.max_tokens = chatConfig.enableMaxTokens
-      ? finalAgentConfig.params.max_tokens
-      : undefined;
-
-    // 5. handle reasoning_effort
-    finalAgentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
-      ? finalAgentConfig.params.reasoning_effort
-      : undefined;
+    // Resolve agent config with params adjusted based on chatConfig
+    // If agentConfig is passed in, use it directly (it's already resolved)
+    // Otherwise, resolve from mecha layer which handles:
+    // - Builtin agent runtime config merging
+    // - max_tokens/reasoning_effort based on chatConfig settings
+    const resolved = resolveAgentConfig({ agentId: effectiveAgentId });
+    const finalAgentConfig = agentConfig || resolved.agentConfig;
+    const chatConfig = resolved.chatConfig;
 
     let isFunctionCall = false;
     let tools: ChatToolPayload[] | undefined;
@@ -895,12 +882,13 @@ export const streamingExecutor: StateCreator<
     // Create a new array to avoid modifying the original messages
     let messages = [...originalMessages];
 
-    const agentStoreState = getAgentStoreState();
     // Use effectiveAgentId to get agent config (subAgentId in group orchestration, agentId otherwise)
-    const agentConfigData = agentSelectors.getAgentConfigById(effectiveAgentId || '')(
-      agentStoreState,
-    );
-    const { chatConfig } = agentConfigData;
+    // resolveAgentConfig handles:
+    // - Builtin agent runtime config merging
+    // - max_tokens/reasoning_effort based on chatConfig settings
+    const { agentConfig: agentConfigData, chatConfig } = resolveAgentConfig({
+      agentId: effectiveAgentId || '',
+    });
 
     // Use agent config from agentId
     const model = agentConfigData.model;
@@ -1131,12 +1119,10 @@ export const streamingExecutor: StateCreator<
     }
 
     // Summary history if context messages is larger than historyCount
-    const historyCount = agentChatConfigSelectors.getHistoryCountById(agentId || '')(
-      agentStoreState,
-    );
+    const historyCount = chatConfig.historyCount ?? 0;
 
     if (
-      agentChatConfigSelectors.getEnableHistoryCountById(agentId || '')(agentStoreState) &&
+      chatConfig.enableHistoryCount &&
       chatConfig.enableCompressHistory &&
       messages.length > historyCount
     ) {

@@ -1,10 +1,40 @@
 import { BUILTIN_AGENT_SLUGS, getAgentRuntimeConfig } from '@lobechat/builtin-agents';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
+import { produce } from 'immer';
 
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getChatGroupStoreState } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
+
+/**
+ * Applies params adjustments based on chatConfig settings.
+ *
+ * This function handles the conditional enabling/disabling of certain params:
+ * - max_tokens: Only included if chatConfig.enableMaxTokens is true
+ * - reasoning_effort: Only included if chatConfig.enableReasoningEffort is true
+ *
+ * Uses immer to create a new object without mutating the original.
+ */
+const applyParamsFromChatConfig = (
+  agentConfig: LobeAgentConfig,
+  chatConfig: LobeAgentChatConfig,
+): LobeAgentConfig => {
+  // If params is not defined, return agentConfig as-is
+  if (!agentConfig.params) {
+    return agentConfig;
+  }
+
+  return produce(agentConfig, (draft) => {
+    // Only include max_tokens if enableMaxTokens is true
+    draft.params.max_tokens = chatConfig.enableMaxTokens ? draft.params.max_tokens : undefined;
+
+    // Only include reasoning_effort if enableReasoningEffort is true
+    draft.params.reasoning_effort = chatConfig.enableReasoningEffort
+      ? draft.params.reasoning_effort
+      : undefined;
+  });
+};
 
 /**
  * Runtime context for resolving agent config
@@ -74,7 +104,14 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
   if (!slug) {
     // Regular agent - use provided plugins if available, fallback to agent's plugins
     const finalPlugins = plugins && plugins.length > 0 ? plugins : basePlugins;
-    return { agentConfig, chatConfig, isBuiltinAgent: false, plugins: finalPlugins };
+    // Apply params adjustments based on chatConfig
+    const finalAgentConfig = applyParamsFromChatConfig(agentConfig, chatConfig);
+    return {
+      agentConfig: finalAgentConfig,
+      chatConfig,
+      isBuiltinAgent: false,
+      plugins: finalPlugins,
+    };
   }
 
   // Build groupSupervisorContext if this is a group-supervisor agent
@@ -123,8 +160,11 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
     ...runtimeConfig?.chatConfig,
   };
 
+  // Apply params adjustments based on chatConfig
+  const finalAgentConfig = applyParamsFromChatConfig(resolvedAgentConfig, resolvedChatConfig);
+
   return {
-    agentConfig: resolvedAgentConfig,
+    agentConfig: finalAgentConfig,
     chatConfig: resolvedChatConfig,
     isBuiltinAgent: true,
     plugins: finalPlugins,

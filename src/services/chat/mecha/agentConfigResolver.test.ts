@@ -77,6 +77,152 @@ describe('resolveAgentConfig', () => {
       expect(result.agentConfig).toEqual(mockAgentConfig);
       expect(result.chatConfig).toEqual(mockChatConfig);
     });
+
+    describe('params adjustment based on chatConfig', () => {
+      const mockAgentConfigWithParams = {
+        model: 'gpt-4',
+        params: {
+          max_tokens: 4096,
+          reasoning_effort: 'high',
+          temperature: 0.7,
+        },
+        plugins: ['plugin-a'],
+        systemRole: 'You are a helpful assistant',
+      };
+
+      beforeEach(() => {
+        vi.spyOn(agentSelectors.agentSelectors, 'getAgentConfigById').mockReturnValue(
+          () => mockAgentConfigWithParams as any,
+        );
+      });
+
+      it('should include max_tokens when enableMaxTokens is true', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: true,
+              enableReasoningEffort: false,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params.max_tokens).toBe(4096);
+        expect(result.agentConfig.params.reasoning_effort).toBeUndefined();
+        expect(result.agentConfig.params.temperature).toBe(0.7);
+      });
+
+      it('should set max_tokens to undefined when enableMaxTokens is false', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: false,
+              enableReasoningEffort: true,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params.max_tokens).toBeUndefined();
+        expect(result.agentConfig.params.reasoning_effort).toBe('high');
+      });
+
+      it('should include reasoning_effort when enableReasoningEffort is true', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: false,
+              enableReasoningEffort: true,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params.reasoning_effort).toBe('high');
+      });
+
+      it('should set reasoning_effort to undefined when enableReasoningEffort is false', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: true,
+              enableReasoningEffort: false,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params.reasoning_effort).toBeUndefined();
+      });
+
+      it('should handle both params being enabled', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: true,
+              enableReasoningEffort: true,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params.max_tokens).toBe(4096);
+        expect(result.agentConfig.params.reasoning_effort).toBe('high');
+      });
+
+      it('should handle both params being disabled', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: false,
+              enableReasoningEffort: false,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params.max_tokens).toBeUndefined();
+        expect(result.agentConfig.params.reasoning_effort).toBeUndefined();
+      });
+
+      it('should not mutate original agent config', () => {
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: false,
+              enableReasoningEffort: false,
+            }) as any,
+        );
+
+        resolveAgentConfig({ agentId: 'test-agent' });
+
+        // Original should be unchanged
+        expect(mockAgentConfigWithParams.params.max_tokens).toBe(4096);
+        expect(mockAgentConfigWithParams.params.reasoning_effort).toBe('high');
+      });
+
+      it('should skip params adjustment when params is undefined', () => {
+        vi.spyOn(agentSelectors.agentSelectors, 'getAgentConfigById').mockReturnValue(
+          () =>
+            ({
+              model: 'gpt-4',
+              plugins: ['plugin-a'],
+              systemRole: 'You are a helpful assistant',
+            }) as any,
+        );
+        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+          () =>
+            ({
+              enableMaxTokens: true,
+              enableReasoningEffort: true,
+            }) as any,
+        );
+
+        const result = resolveAgentConfig({ agentId: 'test-agent' });
+
+        expect(result.agentConfig.params).toBeUndefined();
+      });
+    });
   });
 
   describe('builtin agent', () => {
