@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import type { ActionKeys } from '@/features/ChatInput';
 import { ChatInput, ChatList } from '@/features/Conversation';
 import { useAgentStore } from '@/store/agent';
+import { useChatStore } from '@/store/chat';
 
 import CopilotToolbar from './Toolbar';
 
@@ -21,6 +22,8 @@ const Conversation = memo<ConversationProps>(({ agentId }) => {
 
   useEffect(() => {
     setActiveAgentId(agentId);
+    // Also set the chat store's activeAgentId so topic selectors can work correctly
+    useChatStore.setState({ activeAgentId: agentId });
   }, [agentId, setActiveAgentId]);
 
   const currentAgentId = activeAgentId || agentId;

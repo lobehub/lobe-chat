@@ -24,7 +24,7 @@ import { homeAgentListSelectors } from '@/store/home/selectors';
 const useStyles = createStyles(({ css }) => ({
   fadeContainer: css`
     display: flex;
-    gap: 4px;
+    gap: 0;
     align-items: center;
     transition: opacity 0.2s ease-in-out;
   `,
