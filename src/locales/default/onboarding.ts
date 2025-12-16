@@ -1,5 +1,17 @@
 export default {
   finish: '完成',
+  modeSelection: {
+    desc: '选择适合您的使用模式',
+    lite: {
+      desc: '简洁界面，专注于对话体验，适合日常使用',
+      title: 'Lite 模式',
+    },
+    pro: {
+      desc: '完整功能，包含高级设置和开发者工具，适合进阶用户',
+      title: 'Pro 模式',
+    },
+    title: '选择使用模式',
+  },
   next: '下一步',
   responseLanguage: {
     auto: '自动（跟随系统语言）',

@@ -4,7 +4,6 @@ import { Button, Icon, Select } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { ArrowLeft, Languages } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,16 +15,16 @@ import { useUserStore } from '@/store/user';
 
 interface ResponseLanguageStepProps {
   onBack: () => Promise<void>;
+  onNext: () => Promise<void>;
 }
 
-const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack }) => {
+const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }) => {
   const { t } = useTranslation('onboarding');
   const theme = useTheme();
-  const router = useRouter();
 
   const currentLanguage = useGlobalStore(systemStatusSelectors.language);
   const switchLocale = useGlobalStore((s) => s.switchLocale);
-  const [setSettings, finishOnboarding] = useUserStore((s) => [s.setSettings, s.finishOnboarding]);
+  const setSettings = useUserStore((s) => s.setSettings);
 
   const [value, setValue] = useState<Locales | ''>(
     currentLanguage === 'auto' ? '' : currentLanguage,
@@ -41,7 +40,7 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack }) => {
     }
   };
 
-  const handleFinish = async () => {
+  const handleNext = async () => {
     setLoading(true);
 
     try {
@@ -53,13 +52,9 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack }) => {
         switchLocale(value);
       }
 
-      // Mark onboarding as complete
-      await finishOnboarding();
-
-      // Navigate to chat
-      router.push('/chat');
+      await onNext();
     } catch (error) {
-      console.error('Failed to finish onboarding:', error);
+      console.error('Failed to save response language:', error);
     } finally {
       setLoading(false);
     }
@@ -108,8 +103,8 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack }) => {
           onClick={handleBack}
           style={{ flex: 'none' }}
         />
-        <Button block loading={loading} onClick={handleFinish} type="primary">
-          {t('finish')}
+        <Button block loading={loading} onClick={handleNext} type="primary">
+          {t('next')}
         </Button>
       </Flexbox>
     </Flexbox>

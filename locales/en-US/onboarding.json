@@ -1,5 +1,17 @@
 {
   "finish": "Finish",
+  "modeSelection": {
+    "desc": "Choose the mode that suits you best",
+    "lite": {
+      "desc": "Clean interface focused on conversation, great for everyday use",
+      "title": "Lite Mode"
+    },
+    "pro": {
+      "desc": "Full features with advanced settings and developer tools, for power users",
+      "title": "Pro Mode"
+    },
+    "title": "Select Mode"
+  },
   "next": "Next",
   "responseLanguage": {
     "auto": "Auto (Follow system language)",
