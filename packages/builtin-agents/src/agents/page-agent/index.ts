@@ -6,6 +6,7 @@ import { systemRoleTemplate } from './systemRole';
  * Page Agent - used for document editing assistance
  */
 export const PAGE_AGENT: BuiltinAgentDefinition = {
+  avatar: '/icons/icon-lobe.png',
   // Persist config - stored in database
   persist: {
     model: 'claude-sonnet-4-5-20250929',

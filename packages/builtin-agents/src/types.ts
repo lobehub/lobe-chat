@@ -76,6 +76,7 @@ export type BuiltinAgentRuntimeConfig =
  * Builtin Agent Definition - complete definition with persist and runtime parts
  */
 export interface BuiltinAgentDefinition {
+  avatar?: string;
   /**
    * Persist config - stored in database
    */

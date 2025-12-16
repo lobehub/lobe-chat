@@ -8,6 +8,7 @@ import { systemRole } from './systemRole';
  * Note: model and provider are intentionally undefined to use user's default settings
  */
 export const INBOX: BuiltinAgentDefinition = {
+  avatar: '/icons/icon-lobe.png',
   runtime: { systemRole: systemRole },
 
   slug: BUILTIN_AGENT_SLUGS.inbox,
