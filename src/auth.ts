@@ -94,7 +94,7 @@ export const auth = betterAuth({
    * seeing upwards of 2x to 3x performance improvements depending on database latency.
    * Ref: https://www.better-auth.com/docs/adapters/drizzle#joins-experimental
    */
-  experimental: { joins: true },
+  // experimental: { joins: true },
   /**
    * Run user bootstrap for every newly created account (email, magic link, OAuth/social, etc.).
    * Using Better Auth database hooks ensures we catch social flows that bypass /sign-up/* routes.

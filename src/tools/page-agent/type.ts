@@ -113,6 +113,41 @@ export interface DuplicateNodeArgs {
   position?: 'before' | 'after';
 }
 
+// ============ Unified Modify Nodes Args ============
+
+/** Insert operation: insert a node before or after a reference node */
+export type ModifyInsertOperation =
+  | {
+      action: 'insert';
+      afterId: string;
+      litexml: string;
+    }
+  | {
+      action: 'insert';
+      beforeId: string;
+      litexml: string;
+    };
+
+/** Remove operation: remove a node by ID */
+export interface ModifyRemoveOperation {
+  action: 'remove';
+  id: string;
+}
+
+/** Modify operation: update existing nodes by their IDs (embedded in litexml) */
+export interface ModifyUpdateOperation {
+  action: 'modify';
+  litexml: string | string[];
+}
+
+/** Union type for all modify operations */
+export type ModifyOperation = ModifyInsertOperation | ModifyRemoveOperation | ModifyUpdateOperation;
+
+/** Args for the unified modifyNodes API */
+export interface ModifyNodesArgs {
+  operations: ModifyOperation[];
+}
+
 // ============ Text Operations Args ============
 export interface ReplaceTextArgs {
   newText: string;
@@ -252,6 +287,19 @@ export interface MoveNodeState {
 export interface DuplicateNodeState {
   newNodeId: string;
   originalNodeId: string;
+}
+
+/** Result of a single modify operation */
+export interface ModifyOperationResult {
+  action: 'insert' | 'remove' | 'modify';
+  error?: string;
+  success: boolean;
+}
+
+export interface ModifyNodesState {
+  results: ModifyOperationResult[];
+  successCount: number;
+  totalCount: number;
 }
 
 export interface ReplaceTextState {

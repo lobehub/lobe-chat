@@ -4,6 +4,7 @@ import {
   IEditor,
   LITEXML_APPLY_COMMAND,
   LITEXML_INSERT_COMMAND,
+  LITEXML_MODIFY_COMMAND,
   LITEXML_REMOVE_COMMAND,
 } from '@lobehub/editor';
 
@@ -43,6 +44,9 @@ import type {
   ListSnapshotsState,
   MergeNodesArgs,
   MergeNodesState,
+  ModifyNodesArgs,
+  ModifyNodesState,
+  ModifyOperationResult,
   MoveNodeArgs,
   MoveNodeState,
   NodeCreate,
@@ -884,6 +888,119 @@ export class PageAgentExecutionRuntime {
       console.error('[deleteNode] Error:', err.message, err.stack);
       return {
         content: `Failed to delete node: ${err.message}`,
+        error,
+        success: false,
+      };
+    }
+  }
+
+  // ==================== Unified Node Operations ====================
+
+  /**
+   * Unified node operations API using LITEXML_MODIFY_COMMAND.
+   * Supports insert, modify, and remove operations in a single call.
+   */
+  async modifyNodes(args: ModifyNodesArgs): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const editor = this.getEditor();
+      const { operations } = args;
+
+      console.log('[modifyNodes] Processing operations:', operations.length);
+
+      // Build the command payload for LITEXML_MODIFY_COMMAND
+      const commandPayload: Array<
+        | { action: 'insert'; afterId: string; litexml: string }
+        | { action: 'insert'; beforeId: string; litexml: string }
+        | { action: 'modify'; litexml: string | string[] }
+        | { action: 'remove'; id: string }
+      > = [];
+
+      const results: ModifyOperationResult[] = [];
+
+      for (const op of operations) {
+        try {
+          switch (op.action) {
+            case 'insert': {
+              if ('beforeId' in op) {
+                commandPayload.push({
+                  action: 'insert',
+                  beforeId: op.beforeId,
+                  litexml: op.litexml,
+                });
+              } else if ('afterId' in op) {
+                commandPayload.push({
+                  action: 'insert',
+                  afterId: op.afterId,
+                  litexml: op.litexml,
+                });
+              }
+              results.push({ action: 'insert', success: true });
+              break;
+            }
+
+            case 'modify': {
+              commandPayload.push({
+                action: 'modify',
+                litexml: op.litexml,
+              });
+              results.push({ action: 'modify', success: true });
+              break;
+            }
+
+            case 'remove': {
+              commandPayload.push({
+                action: 'remove',
+                id: op.id,
+              });
+              results.push({ action: 'remove', success: true });
+              break;
+            }
+          }
+        } catch (error) {
+          const err = error as Error;
+          console.error('[modifyNodes] Error processing operation:', op.action, err.message);
+          results.push({ action: op.action, error: err.message, success: false });
+        }
+      }
+
+      // Dispatch all operations at once
+      console.log('[modifyNodes] Dispatching LITEXML_MODIFY_COMMAND with payload:', commandPayload);
+      const success = editor.dispatchCommand(LITEXML_MODIFY_COMMAND, commandPayload);
+      console.log('[modifyNodes] Command dispatched, success:', success);
+
+      const successCount = results.filter((r) => r.success).length;
+      const totalCount = results.length;
+
+      // Build summary message
+      const actionSummary = operations.reduce(
+        (acc, op) => {
+          acc[op.action] = (acc[op.action] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      const summaryParts = Object.entries(actionSummary).map(
+        ([action, count]) => `${count} ${action}${count > 1 ? 's' : ''}`,
+      );
+      const content = `Successfully executed ${summaryParts.join(', ')} (${successCount}/${totalCount} operations succeeded).`;
+
+      const state: ModifyNodesState = {
+        results,
+        successCount,
+        totalCount,
+      };
+
+      return {
+        content,
+        state,
+        success: successCount > 0,
+      };
+    } catch (error) {
+      const err = error as Error;
+      console.error('[modifyNodes] Error:', err.message, err.stack);
+      return {
+        content: `Failed to modify nodes: ${err.message}`,
         error,
         success: false,
       };
