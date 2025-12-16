@@ -122,11 +122,19 @@ export class TopicModel {
       // Build condition to match both new (agentId) and legacy (sessionId) data
       let agentCondition;
       if (isInbox) {
-        // For inbox agent: also query legacy inbox topics (sessionId IS NULL AND groupId IS NULL AND agentId IS NULL)
-        agentCondition = or(
+        // For inbox agent: query topics that match:
+        // 1. topics.agentId = agentId (new data)
+        // 2. topics.sessionId = associatedSessionId (legacy data with session relation)
+        // 3. sessionId IS NULL AND groupId IS NULL AND agentId IS NULL (very old legacy inbox data)
+        const conditions = [
           eq(topics.agentId, agentId),
           and(isNull(topics.sessionId), isNull(topics.groupId), isNull(topics.agentId)),
-        );
+        ];
+        // Also include topics linked via legacy session relation
+        if (associatedSessionId) {
+          conditions.push(eq(topics.sessionId, associatedSessionId));
+        }
+        agentCondition = or(...conditions);
       } else if (associatedSessionId) {
         agentCondition = or(eq(topics.agentId, agentId), eq(topics.sessionId, associatedSessionId));
       } else {

@@ -644,7 +644,7 @@ describe('TopicModel - Query', () => {
       expect(result.items[0].id).toBe('normal-topic');
     });
 
-    it('should not include topics with sessionId when querying inbox legacy data', async () => {
+    it('should not include topics with unrelated sessionId when querying inbox legacy data', async () => {
       await serverDB.transaction(async (trx) => {
         await trx.insert(sessions).values([{ id: 'some-session', userId }]);
         await trx.insert(agents).values([{ id: 'inbox-agent-2', userId, title: 'Inbox Agent 2' }]);
@@ -670,8 +670,62 @@ describe('TopicModel - Query', () => {
 
       const result = await topicModel.query({ agentId: 'inbox-agent-2', isInbox: true });
 
+      // Should only include true legacy inbox (no sessionId), not the unrelated session topic
       expect(result.items).toHaveLength(1);
       expect(result.items[0].id).toBe('true-legacy-inbox');
+    });
+
+    it('should include topics with associated sessionId via agentsToSessions when isInbox is true', async () => {
+      // This tests the scenario where old users have inbox topics with sessionId
+      // but no agentId, linked via agentsToSessions relation
+      await serverDB.transaction(async (trx) => {
+        // Create inbox session and agent with relation
+        await trx.insert(sessions).values([{ id: 'inbox-session', slug: 'inbox', userId }]);
+        await trx
+          .insert(agents)
+          .values([{ id: 'inbox-agent-linked', userId, title: 'Inbox Agent' }]);
+        await trx
+          .insert(agentsToSessions)
+          .values([{ agentId: 'inbox-agent-linked', sessionId: 'inbox-session', userId }]);
+
+        // Create topics: one with sessionId (legacy), one with agentId (new), one completely orphan
+        await trx.insert(topics).values([
+          {
+            id: 'legacy-session-topic',
+            userId,
+            sessionId: 'inbox-session',
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-01'),
+          },
+          {
+            id: 'new-agentid-topic',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: 'inbox-agent-linked',
+            updatedAt: new Date('2023-01-02'),
+          },
+          {
+            id: 'orphan-legacy-topic',
+            userId,
+            sessionId: null,
+            groupId: null,
+            agentId: null,
+            updatedAt: new Date('2023-01-03'),
+          },
+        ]);
+      });
+
+      const result = await topicModel.query({ agentId: 'inbox-agent-linked', isInbox: true });
+
+      // Should include all three: legacy with sessionId, new with agentId, orphan legacy
+      expect(result.items).toHaveLength(3);
+      expect(result.items.map((t) => t.id).sort()).toEqual([
+        'legacy-session-topic',
+        'new-agentid-topic',
+        'orphan-legacy-topic',
+      ]);
     });
 
     it('should not include topics with groupId when querying inbox legacy data', async () => {

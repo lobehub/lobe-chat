@@ -176,7 +176,7 @@ export const topicRouter = router({
         );
 
         const migrationParams = isInbox
-          ? { agentId: effectiveAgentId, isInbox: true as const }
+          ? { agentId: effectiveAgentId, isInbox: true as const, sessionId: resolved.sessionId }
           : resolved.sessionId
             ? { agentId: effectiveAgentId, sessionId: resolved.sessionId }
             : null;

@@ -209,6 +209,132 @@ describe('AgentMigrationRepo', () => {
       expect(msg?.agentId).toBeNull();
     });
 
+    it('should migrate both orphan and sessionId-based legacy data when isInbox with sessionId', async () => {
+      const agentId = 'inbox-combined-agent';
+      const inboxSessionId = 'inbox-combined-session';
+      await serverDB.insert(agents).values({ id: agentId, userId });
+      await serverDB.insert(sessions).values({ id: inboxSessionId, userId, slug: 'inbox' });
+
+      // Create orphan legacy inbox topics (sessionId IS NULL, groupId IS NULL, agentId IS NULL)
+      await serverDB.insert(topics).values([
+        {
+          id: 'orphan-inbox-topic-1',
+          userId,
+          title: 'Orphan inbox topic 1',
+          sessionId: null,
+          groupId: null,
+          agentId: null,
+        },
+        {
+          id: 'orphan-inbox-topic-2',
+          userId,
+          title: 'Orphan inbox topic 2',
+          sessionId: null,
+          groupId: null,
+          agentId: null,
+        },
+      ]);
+
+      // Create sessionId-based legacy topics (has sessionId but no agentId)
+      await serverDB.insert(topics).values([
+        {
+          id: 'session-based-topic-1',
+          userId,
+          title: 'Session-based topic 1',
+          sessionId: inboxSessionId,
+          groupId: null,
+          agentId: null,
+        },
+        {
+          id: 'session-based-topic-2',
+          userId,
+          title: 'Session-based topic 2',
+          sessionId: inboxSessionId,
+          groupId: null,
+          agentId: null,
+        },
+      ]);
+
+      // Create messages for orphan topics
+      await serverDB.insert(messages).values([
+        {
+          id: 'orphan-msg-1',
+          userId,
+          role: 'user',
+          topicId: 'orphan-inbox-topic-1',
+          sessionId: null,
+          agentId: null,
+        },
+        {
+          id: 'orphan-msg-no-topic',
+          userId,
+          role: 'user',
+          sessionId: null,
+          topicId: null,
+          agentId: null,
+        },
+      ]);
+
+      // Create messages for session-based topics
+      await serverDB.insert(messages).values([
+        {
+          id: 'session-based-msg-1',
+          userId,
+          role: 'user',
+          topicId: 'session-based-topic-1',
+          sessionId: null,
+          agentId: null,
+        },
+        {
+          id: 'session-msg-no-topic',
+          userId,
+          role: 'user',
+          sessionId: inboxSessionId,
+          topicId: null,
+          agentId: null,
+        },
+      ]);
+
+      // Run migration with isInbox and sessionId
+      await agentMigrationRepo.migrateAgentId({
+        agentId,
+        isInbox: true,
+        sessionId: inboxSessionId,
+      });
+
+      // Verify all orphan topics are migrated
+      const orphanTopics = await serverDB.query.topics.findMany({
+        where: inArray(topics.id, ['orphan-inbox-topic-1', 'orphan-inbox-topic-2']),
+      });
+      expect(orphanTopics).toHaveLength(2);
+      orphanTopics.forEach((topic) => {
+        expect(topic.agentId).toBe(agentId);
+      });
+
+      // Verify all session-based topics are migrated
+      const sessionBasedTopics = await serverDB.query.topics.findMany({
+        where: inArray(topics.id, ['session-based-topic-1', 'session-based-topic-2']),
+      });
+      expect(sessionBasedTopics).toHaveLength(2);
+      sessionBasedTopics.forEach((topic) => {
+        expect(topic.agentId).toBe(agentId);
+      });
+
+      // Verify all messages are migrated
+      const allMessages = await serverDB.query.messages.findMany({
+        where: inArray(messages.id, [
+          'orphan-msg-1',
+          'orphan-msg-no-topic',
+          'session-based-msg-1',
+          'session-msg-no-topic',
+        ]),
+      });
+      expect(allMessages).toHaveLength(4);
+      allMessages.forEach((msg) => {
+        expect(msg.agentId).toBe(agentId);
+      });
+    });
+
     it('should preserve messages updatedAt during inbox migration', async () => {
       const agentId = 'inbox-agent-preserve-time';
       await serverDB.insert(agents).values({ id: agentId, userId });

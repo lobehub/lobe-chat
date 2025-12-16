@@ -4,7 +4,7 @@ import { agentsToSessions, messages, topics } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
 type MigrateBySessionParams = { agentId: string; sessionId: string };
-type MigrateInboxParams = { agentId: string; isInbox: true };
+type MigrateInboxParams = { agentId: string; isInbox: true; sessionId?: string | null };
 type MigrateAgentIdParams = MigrateBySessionParams | MigrateInboxParams;
 
 /**
@@ -33,7 +33,12 @@ export class AgentMigrationRepo {
     return this.db.transaction(async (tx) => {
       if ('isInbox' in params && params.isInbox) {
         // Migrate inbox legacy topics and messages
+        // 1. Migrate orphan legacy data (sessionId IS NULL)
         await this.migrateInbox(tx, params.agentId);
+        // 2. Also migrate legacy data with associated sessionId (if exists)
+        if (params.sessionId) {
+          await this.migrateBySession(tx, { agentId: params.agentId, sessionId: params.sessionId });
+        }
       } else {
         // Migrate session-based legacy topics and messages
         await this.migrateBySession(tx, params as MigrateBySessionParams);
