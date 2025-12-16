@@ -36,6 +36,10 @@ export const modifyRoutes = async (TEMP_DIR: string) => {
     // Config files
     'src/instrumentation.ts',
     'src/instrumentation.node.ts',
+
+    // Desktop specific routes
+    'src/app/desktop/devtools/page.tsx',
+    'src/app/desktop/layout.tsx',
   ];
 
   for (const file of filesToDelete) {
