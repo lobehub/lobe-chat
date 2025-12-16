@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "AI 설정",
     "common": "일반",
-    "market": "마켓",
     "profile": "계정",
     "system": "시스템"
   },
@@ -838,7 +837,6 @@
     "hotkey": "단축키",
     "image": "그림 서비스",
     "llm": "언어 모델",
-    "my-agents": "내가 등록한 에이전트",
     "profile": "내 계정",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",

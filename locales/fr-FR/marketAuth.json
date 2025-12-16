@@ -58,11 +58,23 @@
     "descriptionEdit": "Mettez à jour les informations de votre profil communautaire.",
     "descriptionFirstTime": "Configurez votre profil pour compléter la création de votre compte communautaire.",
     "errors": {
+      "fileTooLarge": "La taille du fichier ne doit pas dépasser 2 Mo",
       "notAuthenticated": "Veuillez vous connecter avant de continuer.",
       "updateFailed": "Échec de la mise à jour du profil. Veuillez réessayer.",
+      "uploadFailed": "Échec du téléversement, veuillez réessayer",
       "usernameTaken": "Cet identifiant est déjà utilisé. Veuillez en choisir un autre."
     },
     "fields": {
+      "avatar": {
+        "label": "Photo de profil"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Cliquez pour téléverser une bannière",
+        "label": "Bannière",
+        "remove": "Supprimer la bannière",
+        "tooltip": "La bannière s'affichera en haut de votre profil (format recommandé : 16:9)",
+        "uploading": "Téléversement en cours..."
+      },
       "description": {
         "label": "Présentation",
         "maxLength": "La présentation ne peut pas dépasser 200 caractères.",
@@ -74,6 +86,12 @@
         "placeholder": "Entrez votre surnom",
         "required": "Veuillez entrer un surnom."
       },
+      "github": {
+        "placeholder": "Nom d'utilisateur GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nom d'utilisateur X (Twitter)"
+      },
       "userName": {
         "label": "Identifiant",
         "maxLength": "L’identifiant ne peut pas dépasser 32 caractères.",
@@ -82,10 +100,17 @@
         "placeholder": "Entrez votre identifiant",
         "required": "Veuillez entrer un identifiant.",
         "tooltip": "L’identifiant est votre identifiant unique et sera utilisé dans le lien vers votre profil."
+      },
+      "website": {
+        "invalidUrl": "Veuillez entrer une URL valide",
+        "placeholder": "Lien vers votre site personnel"
       }
     },
     "getStarted": "Commencer",
     "save": "Enregistrer",
+    "socialLinks": {
+      "title": "Liens sociaux"
+    },
     "success": "Profil mis à jour avec succès",
     "titleEdit": "Modifier le profil",
     "titleFirstTime": "Complétez votre profil"

@@ -1689,6 +1689,7 @@ export class DiscoverService {
         agents: transformedAgents,
         user: {
           avatarUrl: user.avatarUrl || null,
+          bannerUrl: user.meta?.bannerUrl || null,
           createdAt: user.createdAt,
           description: user.meta?.description || null,
           displayName: user.displayName || null,

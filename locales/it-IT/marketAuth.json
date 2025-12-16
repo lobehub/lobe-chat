@@ -58,11 +58,23 @@
     "descriptionEdit": "Aggiorna le informazioni del tuo profilo nella community.",
     "descriptionFirstTime": "Configura il tuo profilo per completare la creazione dell'account nella community.",
     "errors": {
+      "fileTooLarge": "La dimensione del file non può superare i 2MB",
       "notAuthenticated": "Effettua l'accesso prima di procedere",
       "updateFailed": "Aggiornamento del profilo non riuscito, riprova",
+      "uploadFailed": "Caricamento non riuscito, riprova",
       "usernameTaken": "Questo ID utente è già in uso, scegline un altro"
     },
     "fields": {
+      "avatar": {
+        "label": "Avatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Clicca per caricare l'immagine di copertina",
+        "label": "Immagine di copertina",
+        "remove": "Rimuovi immagine di copertina",
+        "tooltip": "L'immagine di copertina verrà mostrata nella parte superiore del tuo profilo (rapporto consigliato 16:9)",
+        "uploading": "Caricamento in corso..."
+      },
       "description": {
         "label": "Biografia",
         "maxLength": "La biografia può contenere al massimo 200 caratteri",
@@ -74,6 +86,12 @@
         "placeholder": "Inserisci il tuo nickname",
         "required": "Il nickname è obbligatorio"
       },
+      "github": {
+        "placeholder": "Nome utente GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nome utente X (Twitter)"
+      },
       "userName": {
         "label": "ID utente",
         "maxLength": "L'ID utente può contenere al massimo 32 caratteri",
@@ -82,10 +100,17 @@
         "placeholder": "Inserisci il tuo ID utente",
         "required": "L'ID utente è obbligatorio",
         "tooltip": "L'ID utente è il tuo identificativo univoco e verrà utilizzato nel link al tuo profilo"
+      },
+      "website": {
+        "invalidUrl": "Inserisci un URL valido",
+        "placeholder": "Link al sito personale"
       }
     },
     "getStarted": "Inizia",
     "save": "Salva",
+    "socialLinks": {
+      "title": "Link ai social"
+    },
     "success": "Profilo aggiornato con successo",
     "titleEdit": "Modifica profilo",
     "titleFirstTime": "Completa il tuo profilo"

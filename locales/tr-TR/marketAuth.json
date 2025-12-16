@@ -58,11 +58,23 @@
     "descriptionEdit": "Topluluk profil bilgilerini güncelle.",
     "descriptionFirstTime": "Topluluk profilini tamamlamak için bilgilerini ayarla.",
     "errors": {
+      "fileTooLarge": "Dosya boyutu 2MB'ı geçemez",
       "notAuthenticated": "Lütfen önce giriş yap.",
       "updateFailed": "Profil güncellenemedi, lütfen tekrar dene.",
+      "uploadFailed": "Yükleme başarısız oldu, lütfen tekrar deneyin",
       "usernameTaken": "Bu kullanıcı kimliği zaten kullanılıyor, lütfen başka bir tane seç."
     },
     "fields": {
+      "avatar": {
+        "label": "Profil Fotoğrafı"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Arka plan görseli yüklemek için tıklayın",
+        "label": "Arka Plan Görseli",
+        "remove": "Arka plan görselini kaldır",
+        "tooltip": "Arka plan görseli profil sayfanızın üst kısmında gösterilecektir (16:9 oranı önerilir)",
+        "uploading": "Yükleniyor..."
+      },
       "description": {
         "label": "Kısa Biyografi",
         "maxLength": "Kısa biyografi en fazla 200 karakter olabilir",
@@ -74,6 +86,12 @@
         "placeholder": "Görünen adını gir",
         "required": "Lütfen görünen adını gir"
       },
+      "github": {
+        "placeholder": "GitHub kullanıcı adı"
+      },
+      "twitter": {
+        "placeholder": "X (Twitter) kullanıcı adı"
+      },
       "userName": {
         "label": "Kullanıcı Kimliği",
         "maxLength": "Kullanıcı kimliği en fazla 32 karakter olabilir",
@@ -82,10 +100,17 @@
         "placeholder": "Kullanıcı kimliğini gir",
         "required": "Lütfen kullanıcı kimliğini gir",
         "tooltip": "Kullanıcı kimliği senin benzersiz tanımlayıcındır ve profil bağlantında kullanılacaktır"
+      },
+      "website": {
+        "invalidUrl": "Lütfen geçerli bir web sitesi adresi girin",
+        "placeholder": "Kişisel web sitesi bağlantısı"
       }
     },
     "getStarted": "Başla",
     "save": "Kaydet",
+    "socialLinks": {
+      "title": "Sosyal Medya Bağlantıları"
+    },
     "success": "Profil başarıyla güncellendi",
     "titleEdit": "Profili Düzenle",
     "titleFirstTime": "Profilini Tamamla"

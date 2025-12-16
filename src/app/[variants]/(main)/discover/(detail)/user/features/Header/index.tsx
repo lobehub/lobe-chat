@@ -22,7 +22,7 @@ const UserHeader = memo(() => {
 
   return (
     <>
-      <Banner avatar={user?.avatarUrl} />
+      <Banner avatar={user?.avatarUrl} bannerUrl={user?.bannerUrl} />
       <Flexbox gap={16}>
         <Avatar
           avatar={user.avatarUrl || undefined}

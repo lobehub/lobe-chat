@@ -14,7 +14,6 @@ import {
   PaletteIcon,
   ShieldCheck,
   Sparkles,
-  Store,
   UserCircle,
 } from 'lucide-react';
 import { useMemo } from 'react';
@@ -28,7 +27,6 @@ import { authSelectors, userProfileSelectors } from '@/store/user/slices/auth/se
 export enum SettingsGroupKey {
   AIConfig = 'ai-config',
   Account = 'account',
-  Market = 'market',
   Profile = 'profile',
   System = 'system',
 }
@@ -142,21 +140,6 @@ export const useCategory = () => {
       items: aiConfigItems,
       key: SettingsGroupKey.AIConfig,
       title: t('group.aiConfig'),
-    });
-
-    // 市场组 - 市场相关设置
-    const marketItems: CategoryItem[] = [
-      {
-        icon: Store,
-        key: SettingsTabs.MyAgents,
-        label: t('tab.my-agents'),
-      },
-    ];
-
-    groups.push({
-      items: marketItems,
-      key: SettingsGroupKey.Market,
-      title: t('group.market'),
     });
 
     // 系统组 - 系统相关设置

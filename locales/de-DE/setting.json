@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "KI-Konfiguration",
     "common": "Allgemein",
-    "market": "Marktplatz",
     "profile": "Konto",
     "system": "System"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Tastenkombinationen",
     "image": "Bildgenerierungsdienst",
     "llm": "Sprachmodell",
-    "my-agents": "Meine veröffentlichten Assistenten",
     "profile": "Mein Konto",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",

@@ -52,10 +52,6 @@ const componentMap = {
   [SettingsTabs.Usage]: dynamic(() => import('../usage'), {
     loading: () => <Loading debugId="Settings > Usage" />,
   }),
-  // Market related tabs
-  [SettingsTabs.MyAgents]: dynamic(() => import('../my-agents'), {
-    loading: () => <Loading debugId="Settings > MyAgents" />,
-  }),
 };
 
 interface SettingsContentProps {

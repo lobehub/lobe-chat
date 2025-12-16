@@ -40,6 +40,7 @@ export enum CacheRevalidate {
  */
 export interface DiscoverUserInfo {
   avatarUrl: string | null;
+  bannerUrl: string | null;
   createdAt: string;
   description: string | null;
   displayName: string | null;

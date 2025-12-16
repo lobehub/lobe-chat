@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "Configuración de IA",
     "common": "General",
-    "market": "Mercado",
     "profile": "Cuenta",
     "system": "Sistema"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Atajos de teclado",
     "image": "Servicio de ilustración",
     "llm": "Modelo de lenguaje",
-    "my-agents": "Mis asistentes publicados",
     "profile": "Mi cuenta",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",

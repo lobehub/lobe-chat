@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "AI 設定",
     "common": "通用",
-    "market": "市集",
     "profile": "帳號",
     "system": "系統"
   },
@@ -838,7 +837,6 @@
     "hotkey": "快速鍵",
     "image": "繪圖服務",
     "llm": "語言模型",
-    "my-agents": "我發布的助手",
     "profile": "我的帳號",
     "provider": "AI 服務商",
     "proxy": "網路代理",

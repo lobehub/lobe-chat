@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "AI 設定",
     "common": "共通",
-    "market": "マーケット",
     "profile": "アカウント",
     "system": "システム"
   },
@@ -838,7 +837,6 @@
     "hotkey": "ショートカットキー",
     "image": "画像生成サービス",
     "llm": "言語モデル",
-    "my-agents": "自分の公開アシスタント",
     "profile": "マイアカウント",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",

@@ -79,7 +79,6 @@
   "group": {
     "aiConfig": "AI-configuratie",
     "common": "Algemeen",
-    "market": "Marktplaats",
     "profile": "Account",
     "system": "Systeem"
   },
@@ -838,7 +837,6 @@
     "hotkey": "Sneltoetsen",
     "image": "Tekenservice",
     "llm": "Taalmodel",
-    "my-agents": "Mijn gepubliceerde assistenten",
     "profile": "Mijn account",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",

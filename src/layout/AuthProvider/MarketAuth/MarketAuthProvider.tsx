@@ -3,6 +3,7 @@
 import { App } from 'antd';
 import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { mutate as globalMutate } from 'swr';
 
 import { MARKET_ENDPOINTS, MARKET_OIDC_ENDPOINTS } from '@/services/_url';
 import { useUserStore } from '@/store/user';
@@ -432,6 +433,19 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       handleProfileUpdateSuccess();
       // Update the SWR cache with the new profile
       mutateUserProfile(profile, false);
+
+      // Also refresh the discover store's user profile cache
+      // The discover store uses keys like 'user-profile-{locale}-{username}'
+      if (profile.userName) {
+        globalMutate(
+          (key) =>
+            typeof key === 'string' &&
+            key.includes(`user-profile`) &&
+            key.includes(profile.userName!),
+          undefined,
+          { revalidate: true },
+        );
+      }
     },
     [handleProfileUpdateSuccess, mutateUserProfile],
   );
