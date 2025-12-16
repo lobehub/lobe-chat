@@ -60,6 +60,7 @@ export const config = {
     '/verify-email(.*)',
     '/reset-password(.*)',
     '/auth-error(.*)',
+    '/onboarding(.*)',
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',

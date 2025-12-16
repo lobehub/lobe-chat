@@ -136,6 +136,7 @@ export const createCommonSlice: StateCreator<
                 isUserCanEnableTrace: data.canEnableTrace,
                 isUserHasConversation: data.hasConversation,
                 isUserStateInit: true,
+                onboarding: data.onboarding,
                 preference,
                 settings: data.settings || {},
                 subscriptionPlan: data.subscriptionPlan,

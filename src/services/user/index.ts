@@ -1,7 +1,13 @@
 import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { SSOProvider, UserGuide, UserInitializationState, UserPreference } from '@/types/user';
+import {
+  SSOProvider,
+  UserGuide,
+  UserInitializationState,
+  UserOnboarding,
+  UserPreference,
+} from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
 export class UserService {
@@ -27,6 +33,10 @@ export class UserService {
 
   makeUserOnboarded = async () => {
     return lambdaClient.user.makeUserOnboarded.mutate();
+  };
+
+  updateOnboarding = async (onboarding: UserOnboarding) => {
+    return lambdaClient.user.updateOnboarding.mutate(onboarding);
   };
 
   updateAvatar = async (avatar: string) => {

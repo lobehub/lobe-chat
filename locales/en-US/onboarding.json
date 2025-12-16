@@ -1,0 +1,24 @@
+{
+  "finish": "Finish",
+  "next": "Next",
+  "responseLanguage": {
+    "auto": "Auto (Follow system language)",
+    "desc": "Choose the language AI assistant will use when replying to messages",
+    "hint": "After selecting a language, AI responses will use that language, and the interface language will also sync",
+    "title": "Select AI Response Language"
+  },
+  "telemetry": {
+    "desc": "To help us improve {{appName}}, would you like to share anonymous usage data?",
+    "disable": "No, thanks",
+    "enable": "Yes, I'd like to help improve",
+    "privacy": "We take your privacy very seriously. We only collect anonymous usage data and never collect your conversation content or personal information.",
+    "title": "Help Us Improve"
+  },
+  "title": "Welcome to {{appName}}",
+  "username": {
+    "desc": "Tell us how to address you",
+    "hint": "You can change this anytime in settings",
+    "placeholder": "Enter your name",
+    "title": "What should we call you?"
+  }
+}

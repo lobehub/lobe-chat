@@ -1,7 +1,7 @@
 'use client';
 
-import { INBOX_SESSION_ID, enableNextAuth } from '@lobechat/const';
-import { useRouter } from 'next/navigation';
+import { CURRENT_ONBOARDING_VERSION, INBOX_SESSION_ID, enableNextAuth } from '@lobechat/const';
+import { usePathname, useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
@@ -22,6 +22,7 @@ const StoreInitialization = memo(() => {
   useTranslation('error');
 
   const router = useRouter();
+  const pathname = usePathname();
   const [isLogin, isSignedIn, useInitUserState] = useUserStore((s) => [
     authSelectors.isLogin(s),
     s.isSignedIn,
@@ -68,8 +69,17 @@ const StoreInitialization = memo(() => {
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
     onSuccess: (state) => {
-      if (state.isOnboard === false) {
-        router.push('/onboard');
+      // Skip redirect if already on onboarding page
+      if (pathname?.includes('/onboarding')) return;
+
+      // Check if user needs to go through onboarding
+      // Use onboarding field first, fallback to deprecated isOnboard for backward compatibility
+      const hasCompletedOnboarding =
+        (state.onboarding?.finishedAt && state.onboarding.version >= CURRENT_ONBOARDING_VERSION) ||
+        state.isOnboard;
+
+      if (!hasCompletedOnboarding) {
+        router.push('/onboarding');
       }
     },
   });

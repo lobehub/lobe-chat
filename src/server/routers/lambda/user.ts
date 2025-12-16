@@ -4,6 +4,7 @@ import {
   NextAuthAccountSchame,
   UserGuideSchema,
   UserInitializationState,
+  UserOnboardingSchema,
   UserPreference,
   UserPreferenceSchema,
   UserSettings,
@@ -138,10 +139,11 @@ export const userRouter = router({
       hasConversation: hasAnyMessages || hasExtraSession,
 
       // always return true for community version
-      isOnboard: state.isOnboarded || true,
+      isOnboard: state.isOnboarded ?? true,
 
       lastName: state.lastName,
       occupation: state.occupation,
+      onboarding: state.onboarding,
       preference: state.preference as UserPreference,
       settings: state.settings,
       userId: ctx.userId,
@@ -229,6 +231,10 @@ export const userRouter = router({
 
   updateOccupation: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateUser({ occupation: input });
+  }),
+
+  updateOnboarding: userProcedure.input(UserOnboardingSchema).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ onboarding: input });
   }),
 
   updatePreference: userProcedure.input(UserPreferenceSchema).mutation(async ({ ctx, input }) => {

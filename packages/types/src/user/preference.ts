@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { Plans } from '../subscription';
 import { TopicDisplayMode } from '../topic';
+import { UserOnboarding } from './onboarding';
 import { UserSettings } from './settings';
 
 export interface LobeUser {
@@ -79,9 +80,11 @@ export interface UserInitializationState {
   firstName?: string;
   fullName?: string;
   hasConversation?: boolean;
+  /** @deprecated Use onboarding field instead */
   isOnboard?: boolean;
   lastName?: string;
   occupation?: string;
+  onboarding?: UserOnboarding;
   preference: UserPreference;
   settings: PartialDeep<UserSettings>;
   subscriptionPlan?: Plans;
