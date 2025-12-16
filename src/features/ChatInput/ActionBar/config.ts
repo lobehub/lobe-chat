@@ -1,5 +1,6 @@
 import Clear from './Clear';
 import History from './History';
+import InputTranslate from './InputTranslate';
 import Knowledge from './Knowledge';
 import Mention from './Mention';
 import Model from './Model';
@@ -17,6 +18,7 @@ export const actionMap = {
   fileUpload: Upload,
   groupChatToken: GroupChatToken,
   history: History,
+  inputTranslate: InputTranslate,
   knowledgeBase: Knowledge,
   mainToken: MainToken,
   mention: Mention,
