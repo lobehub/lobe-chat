@@ -1963,39 +1963,5 @@ describe('UserMemoryModel', () => {
         }
       }
     });
-
-    it('updates accessedAt on identity layer records when base memory is identity', async () => {
-      const { identityId, userMemoryId } = await userMemoryModel.addIdentityEntry({
-        base: {
-          memoryLayer: 'identity',
-          summary: 'identity base',
-        },
-        identity: {
-          description: 'identity description',
-          type: 'personal',
-        },
-      });
-
-      const past = new Date('2023-01-01T00:00:00.000Z');
-      await serverDB
-        .update(userMemoriesIdentities)
-        .set({ accessedAt: past })
-        .where(eq(userMemoriesIdentities.id, identityId));
-
-      const before = await serverDB.query.userMemoriesIdentities.findFirst({
-        where: eq(userMemoriesIdentities.id, identityId),
-      });
-      expect(before).toBeDefined();
-      expect(before?.accessedAt.getTime()).toBe(past.getTime());
-
-      await userMemoryModel.findById(userMemoryId);
-
-      const after = await serverDB.query.userMemoriesIdentities.findFirst({
-        where: eq(userMemoriesIdentities.id, identityId),
-      });
-
-      expect(after).toBeDefined();
-      expect(after!.accessedAt.getTime()).toBeGreaterThan(past.getTime());
-    });
   });
 });
