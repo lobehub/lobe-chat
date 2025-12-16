@@ -45,10 +45,15 @@ export interface ExtractorTemplateProps {
   username?: string;
 }
 
+export interface GatekeeperTemplateProps extends ExtractorTemplateProps {
+  gateKeeperLanguage?: string;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export type GatekeeperOptions = Pick<ExtractorOptions, 'language' | 'retrievedContexts' | 'topK'> & {
+export type GatekeeperOptions = Pick<ExtractorOptions, 'retrievedContexts' | 'topK'> & {
   additionalMessages?: OpenAIChatMessage[];
   callbacks?: ExtractorOptions['callbacks'];
+  gateKeeperLanguage?: string;
 };
 
 export interface BaseExtractorDependencies {

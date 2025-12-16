@@ -351,7 +351,6 @@ type ServerConfig = Awaited<ReturnType<typeof getServerGlobalConfig>>;
 
 export class MemoryExtractionExecutor {
   private readonly privateConfig: MemoryExtractionConfig;
-  private readonly serverConfig: ServerConfig;
   private readonly modelConfig: {
     embeddingsModel: string;
     gateModel: string;
@@ -364,7 +363,6 @@ export class MemoryExtractionExecutor {
   private readonly db = getServerDB();
 
   private constructor(serverConfig: ServerConfig, privateConfig: MemoryExtractionConfig) {
-    this.serverConfig = serverConfig;
     this.privateConfig = privateConfig;
 
     const publicMemoryConfig = serverConfig.memory?.userMemory;
@@ -1111,6 +1109,7 @@ export class MemoryExtractionExecutor {
                 }
               : undefined,
             contextProvider: topicContextProvider,
+            gatekeeperLanguage: this.privateConfig.agentGateKeeper.language || 'English',
             language: language,
             resultRecorder: resultRecorder,
             retrievedContexts: trimmedRetrievedContexts,

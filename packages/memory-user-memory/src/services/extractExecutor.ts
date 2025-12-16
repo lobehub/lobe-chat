@@ -28,6 +28,7 @@ import {
   MemoryExtractionLayerOutputs,
   MemoryExtractionResult,
   MemoryResultRecorder,
+  GatekeeperOptions,
 } from '../types';
 import { resolvePromptRoot } from '../utils/path';
 import { attributesCommon } from '@lobechat/observability-otel/node';
@@ -217,8 +218,10 @@ export class MemoryExtractionService<RO> {
       contextProvider: MemoryContextProvider<{ topK?: number }>;
       resultRecorder?: MemoryResultRecorder<RO>;
     } & ExtractorOptions & {
-        existingIdentitiesContext?: string;
-      },
+      existingIdentitiesContext?: string;
+    } & {
+      gatekeeperLanguage?: string;
+    },
   ): Promise<MemoryExtractionResult | null> {
     try {
       const decision = await this.runGatekeeper(job, { ...options });
@@ -260,14 +263,14 @@ export class MemoryExtractionService<RO> {
 
   private async runGatekeeper(
     job: MemoryExtractionJob,
-    options: ExtractorOptions,
+    options: GatekeeperOptions,
   ): Promise<GatekeeperDecision> {
     const start = Date.now();
 
     try {
       const decision = await this.gatekeeper.check({
         callbacks: options.callbacks,
-        language: options.language ?? 'English',
+        gateKeeperLanguage: options.gateKeeperLanguage || 'English',
         retrievedContexts: options.retrievedContexts,
         topK: options.topK,
       });

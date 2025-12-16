@@ -19,7 +19,7 @@ const parseTokenLimitEnv = (value?: string) => {
   return Math.floor(parsed);
 };
 
-export type MemoryAgentConfig = MemoryAgentPublicConfig & { apiKey?: string; model: string };
+export type MemoryAgentConfig = MemoryAgentPublicConfig & { apiKey?: string; language?: string, model: string; };
 export type MemoryLayerExtractorConfig = MemoryLayerExtractorPublicConfig &
   MemoryAgentConfig & {
     layers: Record<GlobalMemoryLayer, string>;
@@ -49,10 +49,12 @@ const parseGateKeeperAgent = (): MemoryAgentConfig => {
   const baseURL = process.env.MEMORY_USER_MEMORY_GATEKEEPER_BASE_URL;
   const model = process.env.MEMORY_USER_MEMORY_GATEKEEPER_MODEL || DEFAULT_GATE_MODEL;
   const provider = process.env.MEMORY_USER_MEMORY_GATEKEEPER_PROVIDER || DEFAULT_PROVIDER;
+  const language = process.env.MEMORY_USER_MEMORY_GATEKEEPER_LANGUAGE || 'English';
 
   return {
     apiKey,
     baseURL,
+    language,
     model,
     provider,
   };
