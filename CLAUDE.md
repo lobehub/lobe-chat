@@ -50,7 +50,7 @@ see @.cursor/rules/typescript.mdc
 
 ### Typecheck
 
-- use `bun run typecheck` to check type errors.
+- use `bun run type-check` to check type errors.
 
 ### i18n
 
