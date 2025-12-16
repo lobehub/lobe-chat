@@ -11,7 +11,7 @@
   "author": "LobeHub",
   "main": "./dist/main/index.js",
   "scripts": {
-    "build": "npm run typecheck && electron-vite build",
+    "build": "electron-vite build",
     "build-local": "npm run build && electron-builder --dir --config electron-builder.js  --c.mac.notarize=false -c.mac.identity=null --c.asar=false",
     "build:linux": "npm run build && electron-builder --linux --config electron-builder.js  --publish never",
     "build:mac": "npm run build && electron-builder --mac --config electron-builder.js  --publish never",
@@ -34,7 +34,8 @@
     "start": "electron-vite preview",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "vitest --run",
-    "type-check": "tsgo --noEmit -p tsconfig.json"
+    "type-check": "tsgo --noEmit -p tsconfig.json",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "electron-updater": "^6.6.2",

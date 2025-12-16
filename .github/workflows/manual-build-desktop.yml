@@ -109,17 +109,14 @@ jobs:
         run: |
           echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
 
-  build:
+  build-macos:
     needs: [version, test]
-    name: Build Desktop App
+    name: Build Desktop App (macOS)
+    if: inputs.build_macos
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-15-intel, windows-2025, ubuntu-latest]
-    if: |
-      ((startsWith(matrix.os, 'macos-') || matrix.os == 'macos-latest') && inputs.build_macos) ||
-      (matrix.os == 'windows-2025' && inputs.build_windows) ||
-      (matrix.os == 'ubuntu-latest' && inputs.build_linux)
+        os: [macos-latest, macos-15-intel]
     steps:
       - uses: actions/checkout@v5
         with:
@@ -142,7 +139,6 @@ jobs:
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ inputs.channel }}
 
       - name: Build artifact on macOS
-        if: runner.os == 'macOS'
         run: npm run desktop:build
         env:
           UPDATE_CHANNEL: ${{ inputs.channel }}
@@ -157,30 +153,6 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-
-      - name: Build artifact on Windows
-        if: runner.os == 'Windows'
-        run: npm run desktop:build
-        env:
-          UPDATE_CHANNEL: ${{ inputs.channel }}
-          APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
-          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_PROJECT_ID || secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
-          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_BASE_URL || secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
-          TEMP: C:\temp
-          TMP: C:\temp
-
-      - name: Build artifact on Linux
-        if: runner.os == 'Linux'
-        run: npm run desktop:build
-        env:
-          UPDATE_CHANNEL: ${{ inputs.channel }}
-          APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
-          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_PROJECT_ID || secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
-          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_BASE_URL || secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
 
       - name: Rename macOS latest-mac.yml for multi-architecture support
         if: runner.os == 'macOS'
@@ -218,8 +190,112 @@ jobs:
             apps/desktop/release/*.tar.gz*
           retention-days: 5
 
+  build-windows:
+    needs: [version, test]
+    name: Build Desktop App (Windows)
+    if: inputs.build_windows
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node & pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: 'false'
+
+      - name: Install dependencies
+        run: pnpm install --node-linker=hoisted
+
+      - name: Install deps on Desktop
+        run: npm run install-isolated --prefix=./apps/desktop
+
+      - name: Set package version
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ inputs.channel }}
+
+      - name: Build artifact on Windows
+        run: npm run desktop:build
+        env:
+          UPDATE_CHANNEL: ${{ inputs.channel }}
+          APP_URL: http://localhost:3015
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_PROJECT_ID || secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
+          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_BASE_URL || secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
+          TEMP: C:\temp
+          TMP: C:\temp
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: release-windows-2025
+          path: |
+            apps/desktop/release/latest*
+            apps/desktop/release/*.dmg*
+            apps/desktop/release/*.zip*
+            apps/desktop/release/*.exe*
+            apps/desktop/release/*.AppImage
+            apps/desktop/release/*.deb*
+            apps/desktop/release/*.snap*
+            apps/desktop/release/*.rpm*
+            apps/desktop/release/*.tar.gz*
+          retention-days: 5
+
+  build-linux:
+    needs: [version, test]
+    name: Build Desktop App (Linux)
+    if: inputs.build_linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node & pnpm
+        uses: ./.github/actions/setup-node-pnpm
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: 'false'
+
+      - name: Install dependencies
+        run: pnpm install --node-linker=hoisted
+
+      - name: Install deps on Desktop
+        run: npm run install-isolated --prefix=./apps/desktop
+
+      - name: Set package version
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ inputs.channel }}
+
+      - name: Build artifact on Linux
+        run: npm run desktop:build
+        env:
+          UPDATE_CHANNEL: ${{ inputs.channel }}
+          APP_URL: http://localhost:3015
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_PROJECT_ID || secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
+          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ inputs.channel == 'beta' && secrets.UMAMI_BETA_DESKTOP_BASE_URL || secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: release-ubuntu-latest
+          path: |
+            apps/desktop/release/latest*
+            apps/desktop/release/*.dmg*
+            apps/desktop/release/*.zip*
+            apps/desktop/release/*.exe*
+            apps/desktop/release/*.AppImage
+            apps/desktop/release/*.deb*
+            apps/desktop/release/*.snap*
+            apps/desktop/release/*.rpm*
+            apps/desktop/release/*.tar.gz*
+          retention-days: 5
+
   merge-mac-files:
-    needs: [build, version]
+    needs: [build-macos, version]
     name: Merge macOS Release Files
     runs-on: ubuntu-latest
     permissions:
