@@ -1,3 +1,4 @@
+import { LazyMotion, domMax } from 'motion/react';
 import { ReactNode, Suspense } from 'react';
 
 import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
@@ -58,7 +59,9 @@ const GlobalLayout = async ({
             serverConfig={serverConfig}
           >
             <QueryProvider>
-              <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+              <LazyMotion features={domMax}>
+                <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+              </LazyMotion>
             </QueryProvider>
             <StoreInitialization />
             <Suspense>

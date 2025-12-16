@@ -3,7 +3,7 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Skeleton } from '@lobehub/ui';
 import { Button, Divider, Input, Spin, Typography, Upload } from 'antd';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m as motion } from 'motion/react';
 import {
   CSSProperties,
   ChangeEvent,
