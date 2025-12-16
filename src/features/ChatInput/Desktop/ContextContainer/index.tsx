@@ -36,7 +36,7 @@ const ContextContainer = memo(() => {
   };
 
   return (
-    <Flexbox paddingInline={8} style={{ paddingBlockStart: 8 }}>
+    <Flexbox paddingInline={8}>
       <DragUpload onUploadFiles={upload} />
       <ContextList />
     </Flexbox>

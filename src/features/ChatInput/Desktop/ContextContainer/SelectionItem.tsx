@@ -18,6 +18,8 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
+const MAX_PREVIEW_LENGTH = 8;
+
 const getPreviewText = (content?: string, fallback?: string) => {
   const source = content || fallback || '';
   if (!source) return 'Text selection';
@@ -28,21 +30,18 @@ const getPreviewText = (content?: string, fallback?: string) => {
     .trim();
   if (!plain) return 'Text selection';
 
-  return plain.length > 120 ? `${plain.slice(0, 117)}...` : plain;
+  return plain.length > MAX_PREVIEW_LENGTH ? `${plain.slice(0, MAX_PREVIEW_LENGTH)}...` : plain;
 };
 
-const SelectionItem = memo<ChatContextContent>(({ content, preview, title, id }) => {
+const SelectionItem = memo<ChatContextContent>(({ preview, id }) => {
   const { styles } = useStyles();
   const [removeSelection] = useFileStore((s) => [s.removeChatContextSelection]);
 
-  const displayText = useMemo(
-    () => title || preview || getPreviewText(content, preview),
-    [content, preview, title],
-  );
+  const displayText = useMemo(() => getPreviewText(preview), [preview]);
 
   return (
     <Tag closable icon={<TextIcon size={16} />} onClose={() => removeSelection(id)} size={'large'}>
-      <Tooltip title={displayText}>
+      <Tooltip title={preview}>
         <span className={styles.name}>{displayText}</span>
       </Tooltip>
     </Tag>

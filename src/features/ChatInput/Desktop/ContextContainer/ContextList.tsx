@@ -32,7 +32,7 @@ const ContextList = memo(() => {
       orientation={'horizontal'}
       size={8}
     >
-      <Flexbox gap={4} horizontal paddingBlock={4} paddingInline={0} wrap={'wrap'}>
+      <Flexbox gap={4} horizontal paddingInline={0} style={{ paddingBlockStart: 8 }} wrap={'wrap'}>
         {selectionList.map((item) => (
           <SelectionItem key={item.id} {...item} />
         ))}
