@@ -8,6 +8,7 @@
       "authRequired": "クラウドMCPプラグインにはログイン認証が必要です",
       "cancel": "キャンセル",
       "clickApproveToConnect": "「承認」をクリックして接続し、この統合を許可してください",
+      "clickApproveToInstall": "「承認」をクリックしてこのプラグインをインストールしてください",
       "connectedAndEnabled": "接続済みかつ有効化されています",
       "connectionFailed": "接続に失敗しました",
       "installFailed": "インストールに失敗しました",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "動画ファイルのサイズは20MBを超えることはできません。現在のファイルサイズは{{actualSize}}です"
     }
+  },
+  "viewMode": {
+    "normal": "標準",
+    "wideScreen": "ワイドスクリーン"
   },
   "you": "あなた",
   "zenMode": "集中モード"

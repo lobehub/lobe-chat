@@ -51,8 +51,8 @@
       "search": "جستجوی نقش، رابطه یا توضیح...",
       "type": {
         "all": "همه",
-        "demographic": "جمعیت‌شناسی",
-        "personal": "شخصی",
+        "demographic": "ویژگی‌ها",
+        "personal": "نقش‌ها",
         "professional": "حرفه‌ای"
       }
     },

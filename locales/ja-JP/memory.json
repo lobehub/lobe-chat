@@ -51,8 +51,8 @@
       "search": "役割、関係、または説明を検索...",
       "type": {
         "all": "すべて",
-        "demographic": "人口統計",
-        "personal": "個人",
+        "demographic": "属性",
+        "personal": "役割",
         "professional": "職業"
       }
     },

@@ -51,8 +51,8 @@
       "search": "Search roles, relationships, or descriptions...",
       "type": {
         "all": "All",
-        "demographic": "Demographic",
-        "personal": "Personal",
+        "demographic": "Demographics",
+        "personal": "Role",
         "professional": "Professional"
       }
     },

@@ -51,8 +51,8 @@
       "search": "Szukaj roli, relacji lub opisu...",
       "type": {
         "all": "Wszystkie",
-        "demographic": "Demograficzne",
-        "personal": "Osobiste",
+        "demographic": "Atrybut",
+        "personal": "Rola",
         "professional": "Zawodowe"
       }
     },

@@ -8,6 +8,7 @@
       "authRequired": "Wtyczka MCP w chmurze wymaga uwierzytelnienia",
       "cancel": "Anuluj",
       "clickApproveToConnect": "Kliknij „Zatwierdź”, aby połączyć i autoryzować tę integrację",
+      "clickApproveToInstall": "Kliknij „Zatwierdź”, aby zainstalować tę wtyczkę",
       "connectedAndEnabled": "Połączono i włączono",
       "connectionFailed": "Połączenie nie powiodło się",
       "installFailed": "Instalacja nie powiodła się",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "Rozmiar pliku wideo nie może przekraczać 20MB, aktualny rozmiar pliku to {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Zwykły",
+    "wideScreen": "Szeroki ekran"
   },
   "you": "ty",
   "zenMode": "Tryb skupienia"

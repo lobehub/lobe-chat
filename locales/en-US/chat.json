@@ -490,6 +490,10 @@
       "videoSizeExceeded": "Video file size must not exceed 20MB. Current file size is {{actualSize}}."
     }
   },
+  "viewMode": {
+    "normal": "Standard",
+    "wideScreen": "Widescreen"
+  },
   "you": "you",
   "zenMode": "Zen Mode"
 }

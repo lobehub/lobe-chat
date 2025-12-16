@@ -52,7 +52,7 @@
       "type": {
         "all": "Tümü",
         "demographic": "Demografik",
-        "personal": "Kişisel",
+        "personal": "Rol",
         "professional": "Mesleki"
       }
     },

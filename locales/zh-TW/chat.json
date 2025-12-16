@@ -8,6 +8,7 @@
       "authRequired": "雲端 MCP 外掛需要登入驗證",
       "cancel": "取消",
       "clickApproveToConnect": "點擊「批准」以連接並授權此整合",
+      "clickApproveToInstall": "點擊「批准」以安裝此外掛程式",
       "connectedAndEnabled": "已連接並啟用",
       "connectionFailed": "連接失敗",
       "installFailed": "安裝失敗",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "影片檔案大小不能超過 20MB，當前檔案大小為 {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "一般",
+    "wideScreen": "寬螢幕"
   },
   "you": "你",
   "zenMode": "專注模式"

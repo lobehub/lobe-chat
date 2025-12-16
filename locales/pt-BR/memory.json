@@ -51,8 +51,8 @@
       "search": "Pesquisar por papel, relação ou descrição...",
       "type": {
         "all": "Todos",
-        "demographic": "Demográfico",
-        "personal": "Pessoal",
+        "demographic": "Atributo",
+        "personal": "Papel",
         "professional": "Profissional"
       }
     },

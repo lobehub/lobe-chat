@@ -8,6 +8,7 @@
       "authRequired": "Bulut MCP eklentisi giriş doğrulaması gerektirir",
       "cancel": "İptal",
       "clickApproveToConnect": "Bu entegrasyonu bağlamak ve yetkilendirmek için 'Onayla'ya tıklayın",
+      "clickApproveToInstall": "Bu eklentiyi yüklemek için 'Onayla'ya tıklayın",
       "connectedAndEnabled": "Bağlandı ve etkinleştirildi",
       "connectionFailed": "Bağlantı başarısız",
       "installFailed": "Kurulum başarısız",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "Video dosyası boyutu 20MB'ı geçemez, mevcut dosya boyutu {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normal",
+    "wideScreen": "Geniş Ekran"
   },
   "you": "sen",
   "zenMode": "Odak Modu"

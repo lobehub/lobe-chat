@@ -8,6 +8,7 @@
       "authRequired": "클라우드 MCP 플러그인은 로그인 인증이 필요합니다",
       "cancel": "취소",
       "clickApproveToConnect": "‘승인’을 클릭하여 연결하고 이 통합을 승인하세요",
+      "clickApproveToInstall": "「승인」을 클릭하여 이 플러그인을 설치하세요",
       "connectedAndEnabled": "연결됨 및 활성화됨",
       "connectionFailed": "연결 실패",
       "installFailed": "설치 실패",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "비디오 파일 크기는 20MB를 초과할 수 없습니다. 현재 파일 크기: {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "일반",
+    "wideScreen": "와이드스크린"
   },
   "you": "당신",
   "zenMode": "집중 모드"

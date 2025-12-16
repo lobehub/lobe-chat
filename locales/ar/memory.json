@@ -51,8 +51,8 @@
       "search": "ابحث عن دور أو علاقة أو وصف...",
       "type": {
         "all": "الكل",
-        "demographic": "التركيبة السكانية",
-        "personal": "شخصي",
+        "demographic": "السمات",
+        "personal": "الدور",
         "professional": "مهني"
       }
     },
