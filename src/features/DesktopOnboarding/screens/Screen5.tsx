@@ -9,7 +9,10 @@ import { useElectronStore } from '@/store/electron';
 import { AuthResult } from '../common/AuthResult';
 import { LogoBrand } from '../common/LogoBrand';
 import { TitleSection } from '../common/TitleSection';
-import { customTheme, useLayoutStyles } from '../styles';
+import { useLayoutStyles } from '../styles';
+import { getThemeToken } from '../styles/theme';
+
+const themeToken = getThemeToken();
 
 // Screen4 特有的样式
 const useScreen4Styles = createStyles(({ token, css }) => ({
@@ -186,7 +189,7 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
     align-items: center;
     justify-content: center;
     padding: 12px 32px;
-    background: ${token.colorHighlight};
+    background: ${themeToken.colorHighlight};
     border: none;
     border-radius: ${token.borderRadius}px;
     color: #000;
@@ -195,7 +198,7 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
     cursor: pointer;
 
     &:hover {
-      background: #ffe227;
+      background: ${themeToken.colorHighlightHover};
       transform: translateY(-1px);
     }
 
@@ -534,7 +537,7 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
               key="selfhost-header"
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              <Server color={customTheme.token.colorGreen} size={80} />
+              <Server color={themeToken.colorGreen} size={80} />
               <h2 className={screen4Styles.serviceTitle}>{method.name}</h2>
               <p className={screen4Styles.authDescription}>{method.description}</p>
             </motion.div>

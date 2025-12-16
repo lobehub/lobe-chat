@@ -5,7 +5,10 @@ import { motion } from 'motion/react';
 import { useEffect } from 'react';
 
 import { TitleSection } from '../common/TitleSection';
-import { customTheme, useLayoutStyles } from '../styles';
+import { useLayoutStyles } from '../styles';
+import { getThemeToken } from '../styles/theme';
+
+const themeToken = getThemeToken();
 
 // Screen2 特有的样式
 const useScreen2Styles = createStyles(({ token, css }) => ({
@@ -58,7 +61,7 @@ const useScreen2Styles = createStyles(({ token, css }) => ({
     font-family: ${token.fontFamily};
     font-size: 24px;
     font-weight: 500;
-    color: ${token.colorTextBase};
+    color: ${themeToken.colorTextBase};
     margin: 0;
     text-align: left;
     line-height: 1.3;
@@ -70,7 +73,7 @@ const useScreen2Styles = createStyles(({ token, css }) => ({
     overflow: hidden;
     border-radius: ${token.borderRadiusLG}px;
     padding: ${token.paddingLG}px;
-    background: #000000;
+    background: ${themeToken.colorBgBase};
     background-repeat: no-repeat;
     background-size: cover;
     background-position: right bottom;
@@ -92,7 +95,7 @@ const cardBg6 = new URL('../assets/card-bg-6.webp', import.meta.url).href;
 const features = [
   {
     backgroundImage: cardBg1,
-    color: customTheme.token.colorPurple,
+    color: themeToken.colorPurple,
     icon: Image,
     id: 1,
     subtitle: 'Image Generation',
@@ -100,7 +103,7 @@ const features = [
   },
   {
     backgroundImage: cardBg2,
-    color: customTheme.token.colorYellow,
+    color: themeToken.colorYellow,
     icon: MCP,
     id: 2,
     subtitle: 'MCP Marketplace',
@@ -108,7 +111,7 @@ const features = [
   },
   {
     backgroundImage: cardBg3,
-    color: customTheme.token.colorBlue,
+    color: themeToken.colorBlue,
     icon: Globe,
     id: 3,
     subtitle: 'Smart Web Search',
@@ -116,7 +119,7 @@ const features = [
   },
   {
     backgroundImage: cardBg4,
-    color: customTheme.token.colorBlue,
+    color: themeToken.colorBlue,
     icon: RefreshCw,
     id: 4,
     subtitle: 'Cross-Platform Sync',
@@ -124,7 +127,7 @@ const features = [
   },
   {
     backgroundImage: cardBg5,
-    color: customTheme.token.colorGreen,
+    color: themeToken.colorGreen,
     icon: Flower,
     id: 5,
     subtitle: 'Artifacts',
@@ -132,7 +135,7 @@ const features = [
   },
   {
     backgroundImage: cardBg6,
-    color: customTheme.token.colorPurple,
+    color: themeToken.colorPurple,
     icon: RefreshCw,
     id: 6,
     subtitle: 'Multi AI Providers',

@@ -1,5 +1,6 @@
 'use client';
 
+import { isDesktop } from '@/const/version';
 import { ErrorBoundary, type RouteConfig, dynamicElement, redirectElement } from '@/utils/router';
 
 import DesktopMainLayout from '../(main)/_layout';
@@ -390,9 +391,12 @@ export const desktopRoutes: RouteConfig[] = [
     path: '/',
   },
   // Desktop onboarding route (SPA-only)
-  {
+];
+
+if (isDesktop) {
+  desktopRoutes.push({
     element: <DesktopOnboarding />,
     errorElement: <ErrorBoundary resetPath="/" />,
     path: '/desktop-onboarding',
-  },
-];
+  });
+}

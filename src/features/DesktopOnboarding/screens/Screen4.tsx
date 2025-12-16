@@ -7,7 +7,10 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { TitleSection } from '../common/TitleSection';
-import { customTheme, useLayoutStyles } from '../styles';
+import { useLayoutStyles } from '../styles';
+import { getThemeToken } from '../styles/theme';
+
+const themeToken = getThemeToken();
 
 // Screen4 特有的样式
 const useScreen4Styles = createStyles(({ token, css }) => ({
@@ -34,7 +37,7 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
     font-family: ${token.fontFamily};
     font-size: 20px;
     font-weight: 700;
-    color: ${token.colorTextBase};
+    color: ${themeToken.colorTextBase};
     margin: 0;
     text-align: center;
   `,
@@ -44,7 +47,7 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
     position: absolute;
     top: 20px;
     right: 20px;
-    color: ${customTheme.token.colorGreen};
+    color: ${themeToken.colorGreen};
     opacity: 0;
     transition: opacity 0.3s ease;
   `,
@@ -116,7 +119,7 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
 
     &.selected {
       background: rgba(255, 255, 255, 0.08);
-      border-color: ${customTheme.token.colorGreen};
+      border-color: ${themeToken.colorGreen};
 
       .check-icon {
         opacity: 1;
@@ -219,7 +222,7 @@ export const Screen4 = ({ onScreenConfigChange }: Screen4Props) => {
               <CheckCircle className={`${screen4Styles.checkIcon} check-icon`} size={24} />
 
               <div className={screen4Styles.cardHeader}>
-                <HeartHandshake color={customTheme.token.colorGreen} size={48} />
+                <HeartHandshake color={themeToken.colorGreen} size={48} />
                 <h3 className={screen4Styles.cardTitle}>Help Improve LobeHub</h3>
               </div>
 
@@ -242,7 +245,7 @@ export const Screen4 = ({ onScreenConfigChange }: Screen4Props) => {
               <CheckCircle className={`${screen4Styles.checkIcon} check-icon`} size={24} />
 
               <div className={screen4Styles.cardHeader}>
-                <Shield color={customTheme.token.colorBlue} size={48} />
+                <Shield color={themeToken.colorBlue} size={48} />
                 <h3 className={screen4Styles.cardTitle}>Privacy Mode</h3>
               </div>
 

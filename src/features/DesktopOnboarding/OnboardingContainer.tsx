@@ -12,9 +12,10 @@ import { Screen2 } from './screens/Screen2';
 import { Screen3 } from './screens/Screen3';
 import { Screen4 } from './screens/Screen4';
 import { Screen5 } from './screens/Screen5';
-import { customTheme } from './styles/theme';
+import { customTheme, getThemeToken } from './styles/theme';
 
-const useStyles = createStyles(({ token, css }) => ({
+const token = getThemeToken();
+const useStyles = createStyles(({ css }) => ({
   backgroundLayer: css`
     width: 100%;
     height: 100%;
@@ -30,6 +31,7 @@ const useStyles = createStyles(({ token, css }) => ({
     background-color: ${token.colorBgBase};
     overflow: hidden;
     z-index: 1;
+    color: #fff;
   `,
 
   content: css`

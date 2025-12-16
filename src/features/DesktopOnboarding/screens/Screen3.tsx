@@ -6,7 +6,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 import { TitleSection } from '../common/TitleSection';
-import { customTheme, useLayoutStyles } from '../styles';
+import { useLayoutStyles } from '../styles';
+import { getThemeToken } from '../styles/theme';
+
+const themeToken = getThemeToken();
 
 // Screen3 特有的样式
 const useScreen3Styles = createStyles(({ token, css }) => ({
@@ -42,7 +45,7 @@ const useScreen3Styles = createStyles(({ token, css }) => ({
   itemTitle: css`
     font-size: ${token.fontSizeLG}px;
     font-weight: 500;
-    color: ${token.colorTextBase};
+    color: ${themeToken.colorTextBase};
     margin: 0;
   `,
 
@@ -57,7 +60,7 @@ const useScreen3Styles = createStyles(({ token, css }) => ({
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    color: ${token.colorTextBase};
+    color: ${themeToken.colorTextBase};
     font-size: ${token.fontSize}px;
     font-weight: 700;
     cursor: pointer;
@@ -127,7 +130,7 @@ const initialPermissions = [
       'Send system notifications for task completions, AI responses, and important updates when the app is running in background',
     granted: false,
     icon: Bell,
-    iconColor: customTheme.token.colorYellow,
+    iconColor: themeToken.colorYellow,
     id: 1,
     title: 'Notification Permission',
   },
@@ -137,7 +140,7 @@ const initialPermissions = [
       'Access documents and files to enable AI analysis, knowledge base creation, and document processing workflows',
     granted: false,
     icon: FolderOpen,
-    iconColor: customTheme.token.colorGreen,
+    iconColor: themeToken.colorGreen,
     id: 2,
     title: 'File & Folder Access',
   },
@@ -147,7 +150,7 @@ const initialPermissions = [
       'Capture screen content and audio input for voice interactions, screen analysis, and multimodal AI assistance',
     granted: false,
     icon: Mic,
-    iconColor: customTheme.token.colorBlue,
+    iconColor: themeToken.colorBlue,
     id: 3,
     title: 'Screen & Audio Recording',
   },
@@ -157,7 +160,7 @@ const initialPermissions = [
       'Enable system-level automation and enhanced integration for seamless AI workflow execution across applications',
     granted: false,
     icon: MonitorCog,
-    iconColor: customTheme.token.colorPurple,
+    iconColor: themeToken.colorPurple,
     id: 4,
     title: 'Accessibility Settings',
   },

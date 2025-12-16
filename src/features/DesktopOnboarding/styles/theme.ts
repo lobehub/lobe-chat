@@ -25,31 +25,8 @@ export const customTheme = {
   },
 
   token: {
-    // 绿色 - 用于成功状态
-    colorBlue: '#4A77FF',
-
-    // 成功色
-    colorError: '#ff4d4f',
-
-    // 黄色 - 用于突出显示
-    colorGreen: '#67AF3F',
-
-    // 错误色
-    // 渐变背景色
-    colorGradientPrimary: '#732FAE',
-
-    colorHighlight: '#FFDE04',
-
     // 基础样式
     borderRadius: 8,
-
-    colorHighlightHover: '#FFE227',
-
-    // 主渐变色
-    colorGradientSecondary: '#3A31C1',
-
-    // 主色 - 黄色（影响 Primary 按钮等主要元素）
-    colorPrimary: '#FFFFFF',
 
     // 背景色
     colorBgBase: '#000000',
@@ -57,17 +34,42 @@ export const customTheme = {
     // 暗黑模式背景
     colorBgElevated: 'rgba(0, 0, 0, 0.85)',
 
-    // 品牌色彩系统
-    colorYellow: '#FFCB47',
+    // 绿色 - 用于成功状态
+    colorBlue: '#4A77FF',
 
     // 导航条等浮层背景
     colorBorderSecondary: 'rgba(255, 255, 255, 0.08)',
+
+    // 成功色
+    colorError: '#ff4d4f',
+
+    // 错误色
+    // 渐变背景色
+    colorGradientPrimary: '#732FAE',
+
+    // 主渐变色
+    colorGradientSecondary: '#3A31C1',
+
+    // 黄色 - 用于突出显示
+    colorGreen: '#67AF3F',
+
+    colorHighlight: '#FFDE04',
+    colorHighlightHover: '#FFE227',
+    // 主色 - 黄色（影响 Primary 按钮等主要元素）
+    colorPrimary: '#FFFFFF',
 
     // 蓝色 - 用于信息提示
     colorPurple: '#7A45D3',
 
     // 紫色 - 用于特殊功能
     colorSuccess: '#52c41a',
+
+    colorTextBase: '#fff',
+
+    colorTextSecondary: 'rgba(255,255,255,0.45)',
+
+    // 品牌色彩系统
+    colorYellow: '#FFCB47',
 
     // 次渐变色
     // 字体配置

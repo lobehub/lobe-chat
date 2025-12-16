@@ -13,7 +13,7 @@ const DesktopOnboardingRedirect = () => {
   const navigate = useNavigate();
   useEffect(() => {
     // Desktop runtime guard
-    if (isDesktop) return;
+    if (!isDesktop) return;
 
     // If already completed, allow normal routing.
     if (getDesktopOnboardingCompleted()) return;

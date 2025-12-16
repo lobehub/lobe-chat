@@ -24,9 +24,6 @@ const DesktopAutoOidcOnFirstOpen = memo(() => {
   useDataSyncConfig();
 
   useEffect(() => {
-    // Desktop runtime guard
-    if (process.env.NEXT_PUBLIC_IS_DESKTOP_APP !== '1') return;
-    if (typeof window === 'undefined') return;
     if (!isInitRemoteServerConfig) return;
 
     // If already connected or not in cloud mode, don't auto-trigger.
@@ -55,5 +52,3 @@ const DesktopAutoOidcOnFirstOpen = memo(() => {
 });
 
 export default DesktopAutoOidcOnFirstOpen;
-
-

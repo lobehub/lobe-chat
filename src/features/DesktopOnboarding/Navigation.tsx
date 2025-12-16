@@ -4,6 +4,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { m as motion } from 'motion/react';
 import React from 'react';
 
+import { getThemeToken } from './styles/theme';
+
+const themeToken = getThemeToken();
+
 // 组件特有样式 - 仅用于 Navigation 组件
 const useStyles = createStyles(({ token, css }) => ({
   // 布局容器
@@ -29,10 +33,14 @@ const useStyles = createStyles(({ token, css }) => ({
   // 高亮按钮样式 - 仅在启用状态下生效
   highlightButton: css`
     &:not(:disabled) {
-      background: ${token.colorHighlight} !important;
-      border-color: ${token.colorHighlight} !important;
-      color: ${token.colorBgBase} !important;
+      background: ${themeToken.colorHighlight} !important;
+      border-color: ${themeToken.colorHighlight} !important;
+      color: #000 !important;
       font-weight: 500;
+
+      & > * {
+        color: #000 !important;
+      }
 
       &:hover {
         background: #ffe227 !important;
@@ -77,7 +85,7 @@ const useStyles = createStyles(({ token, css }) => ({
 
   progressDotActive: css`
     width: 24px;
-    background-color: ${token.colorHighlight};
+    background-color: ${themeToken.colorHighlight};
   `,
 
   progressDotCompleted: css`
