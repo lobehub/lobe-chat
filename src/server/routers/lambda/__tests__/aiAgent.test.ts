@@ -43,6 +43,13 @@ vi.mock('@/server/modules/Mecha', () => ({
   ]),
 }));
 
+// Mock AiChatService to avoid S3 dependency
+vi.mock('@/server/services/aiChat', () => ({
+  AiChatService: vi.fn().mockImplementation(() => ({
+    getMessagesAndTopics: vi.fn().mockResolvedValue({ messages: [], topics: [] }),
+  })),
+}));
+
 // Mock model-bank with dynamic import to preserve other exports
 vi.mock('model-bank', async (importOriginal) => {
   const actual = await importOriginal<typeof import('model-bank')>();

@@ -327,9 +327,11 @@ describe('ConversationControl actions', () => {
         await result.current.switchMessageBranch(messageId, branchIndex);
       });
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
-        activeBranchIndex: branchIndex,
-      });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(
+        messageId,
+        { activeBranchIndex: branchIndex },
+        undefined,
+      );
     });
 
     it('should handle switching to branch 0', async () => {
@@ -345,7 +347,11 @@ describe('ConversationControl actions', () => {
         await result.current.switchMessageBranch(messageId, branchIndex);
       });
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, { activeBranchIndex: 0 });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(
+        messageId,
+        { activeBranchIndex: 0 },
+        undefined,
+      );
     });
 
     it('should handle errors gracefully when optimistic update fails', async () => {
@@ -363,9 +369,11 @@ describe('ConversationControl actions', () => {
         }),
       ).rejects.toThrow('Update failed');
 
-      expect(optimisticUpdateSpy).toHaveBeenCalledWith(messageId, {
-        activeBranchIndex: branchIndex,
-      });
+      expect(optimisticUpdateSpy).toHaveBeenCalledWith(
+        messageId,
+        { activeBranchIndex: branchIndex },
+        undefined,
+      );
     });
   });
 

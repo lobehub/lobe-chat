@@ -7,6 +7,7 @@ import { useFetchTopics } from './useFetchTopics';
 // Mock store dependencies
 const mockUseGlobalStore = vi.hoisted(() => vi.fn());
 const mockUseChatStore = vi.hoisted(() => vi.fn());
+const mockUseAgentStore = vi.hoisted(() => vi.fn());
 
 vi.mock('@/store/chat', () => ({
   useChatStore: mockUseChatStore,
@@ -14,6 +15,16 @@ vi.mock('@/store/chat', () => ({
 
 vi.mock('@/store/global', () => ({
   useGlobalStore: mockUseGlobalStore,
+}));
+
+vi.mock('@/store/agent', () => ({
+  useAgentStore: mockUseAgentStore,
+}));
+
+vi.mock('@/store/agent/selectors', () => ({
+  builtinAgentSelectors: {
+    isInboxAgent: vi.fn((s) => s.isInboxAgent),
+  },
 }));
 
 vi.mock('@/store/global/selectors', () => ({
@@ -28,6 +39,8 @@ describe('useFetchTopics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockUseGlobalStore.mockImplementation((selector) => selector({ topicPageSize: 20 }));
+    // Default: not inbox agent
+    mockUseAgentStore.mockImplementation((selector) => selector({ isInboxAgent: false }));
   });
 
   it('should fetch topics with agentId when no groupId is active', () => {
@@ -76,6 +89,9 @@ describe('useFetchTopics', () => {
   it('should set isInbox to false when groupId is present even if agentId is inbox', () => {
     const activeGroupId = 'group-789';
 
+    // Even if isInboxAgent is true, groupId takes precedence
+    mockUseAgentStore.mockImplementation((selector) => selector({ isInboxAgent: true }));
+
     mockUseChatStore.mockImplementation((selector) =>
       selector({
         activeAgentId: INBOX_SESSION_ID,
@@ -95,6 +111,9 @@ describe('useFetchTopics', () => {
   });
 
   it('should pass isInbox true when agentId is inbox and no groupId', () => {
+    // Set isInboxAgent to true for this test
+    mockUseAgentStore.mockImplementation((selector) => selector({ isInboxAgent: true }));
+
     mockUseChatStore.mockImplementation((selector) =>
       selector({
         activeAgentId: INBOX_SESSION_ID,

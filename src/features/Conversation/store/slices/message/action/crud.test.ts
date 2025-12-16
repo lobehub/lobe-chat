@@ -152,7 +152,8 @@ describe('Message CRUD Actions', () => {
 
       expect(removeMessageSpy).toHaveBeenCalledWith('msg-1', {
         agentId: 'test-session',
-        topicId: undefined,
+        threadId: null,
+        topicId: null,
       });
     });
 
