@@ -193,6 +193,16 @@ export default {
   login: '登录',
   loginOrSignup: '登录 / 注册',
   profile: {
+    authorizations: {
+      actions: {
+        revoke: '取消授权',
+      },
+      revoke: {
+        description: '取消授权后，该工具将无法访问您的数据。如需再次使用，需要重新授权。',
+        title: '确认取消授权 {{name}}？',
+      },
+      title: '管理授权',
+    },
     avatar: '头像',
     cancel: '取消',
     changePassword: '重置密码',
