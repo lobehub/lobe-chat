@@ -79,7 +79,6 @@ export default {
   group: {
     aiConfig: 'AI 配置',
     common: '通用',
-    market: '市场',
     profile: '账号',
     system: '系统',
   },
@@ -843,7 +842,6 @@ export default {
     'hotkey': '快捷键',
     'image': '绘画服务',
     'llm': '语言模型',
-    'my-agents': '我发布的助手',
     'profile': '我的账号',
     'provider': 'AI 服务商',
     'proxy': '网络代理',
