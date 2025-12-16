@@ -21,11 +21,14 @@ import { fetchErrorNotification } from '@/components/Error/fetchErrorNotificatio
 import { enableAuth } from '@/const/auth';
 import UserAvatar from '@/features/User/UserAvatar';
 import { requestPasswordReset } from '@/libs/better-auth/auth-client';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
 
+import KlavisAuthorizationList from './features/KlavisAuthorizationList';
 import SSOProvidersList from './features/SSOProvidersList';
 
 interface ProfileRowProps {
@@ -583,6 +586,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   ]);
   const isLoadedAuthProviders = useUserStore(authSelectors.isLoadedAuthProviders);
   const fetchAuthProviders = useUserStore((s) => s.fetchAuthProviders);
+  const enableKlavis = useServerConfigStore(serverConfigSelectors.enableKlavis);
 
   const isLoginWithAuth = isLoginWithNextAuth || isLoginWithBetterAuth;
   const isLoading = !isUserLoaded || (isLoginWithAuth && !isLoadedAuthProviders);
@@ -653,8 +657,18 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       {/* SSO Providers Row */}
       {isLoginWithAuth && (
-        <ProfileRow label={t('profile.sso.providers')} mobile={mobile}>
-          <SSOProvidersList />
+        <>
+          <ProfileRow label={t('profile.sso.providers')} mobile={mobile}>
+            <SSOProvidersList />
+          </ProfileRow>
+          <Divider style={{ margin: 0 }} />
+        </>
+      )}
+
+      {/* Klavis Authorizations Row */}
+      {enableKlavis && (
+        <ProfileRow label={t('profile.authorizations.title')} mobile={mobile}>
+          <KlavisAuthorizationList />
         </ProfileRow>
       )}
     </Flexbox>
