@@ -51,8 +51,8 @@
       "search": "Tìm kiếm vai trò, mối quan hệ hoặc mô tả...",
       "type": {
         "all": "Tất cả",
-        "demographic": "Thống kê dân số",
-        "personal": "Cá nhân",
+        "demographic": "Thuộc tính",
+        "personal": "Vai trò",
         "professional": "Nghề nghiệp"
       }
     },

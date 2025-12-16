@@ -8,6 +8,7 @@
       "authRequired": "Plugin MCP đám mây yêu cầu đăng nhập xác thực",
       "cancel": "Hủy",
       "clickApproveToConnect": "Nhấp vào 'Phê duyệt' để kết nối và cấp quyền tích hợp này",
+      "clickApproveToInstall": "Nhấp vào 'Phê duyệt' để cài đặt plugin này",
       "connectedAndEnabled": "Đã kết nối và kích hoạt",
       "connectionFailed": "Kết nối thất bại",
       "installFailed": "Cài đặt thất bại",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "Kích thước tệp video không được vượt quá 20MB, kích thước tệp hiện tại là {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Bình thường",
+    "wideScreen": "Toàn màn hình"
   },
   "you": "bạn",
   "zenMode": "Chế độ tập trung"

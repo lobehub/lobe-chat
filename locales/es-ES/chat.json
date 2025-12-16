@@ -8,6 +8,7 @@
       "authRequired": "El complemento MCP en la nube requiere autenticación",
       "cancel": "Cancelar",
       "clickApproveToConnect": "Haz clic en «Aprobar» para conectar y autorizar esta integración",
+      "clickApproveToInstall": "Haz clic en «Aprobar» para instalar este complemento",
       "connectedAndEnabled": "Conectado y habilitado",
       "connectionFailed": "Conexión fallida",
       "installFailed": "Error de instalación",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "El tamaño del archivo de video no puede superar los 20 MB, el tamaño actual es {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normal",
+    "wideScreen": "Pantalla ancha"
   },
   "you": "tú",
   "zenMode": "Modo de concentración"

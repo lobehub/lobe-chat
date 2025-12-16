@@ -52,7 +52,7 @@
       "type": {
         "all": "Tutti",
         "demographic": "Demografico",
-        "personal": "Personale",
+        "personal": "Ruolo",
         "professional": "Professionale"
       }
     },

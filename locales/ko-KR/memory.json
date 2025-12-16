@@ -51,8 +51,8 @@
       "search": "역할, 관계 또는 설명 검색...",
       "type": {
         "all": "전체",
-        "demographic": "인구 통계",
-        "personal": "개인",
+        "demographic": "속성",
+        "personal": "역할",
         "professional": "직업"
       }
     },

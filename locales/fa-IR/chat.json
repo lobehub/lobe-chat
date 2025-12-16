@@ -8,6 +8,7 @@
       "authRequired": "افزونه MCP ابری نیاز به احراز هویت دارد",
       "cancel": "لغو",
       "clickApproveToConnect": "برای اتصال و اعطای دسترسی، روی «تأیید» کلیک کنید",
+      "clickApproveToInstall": "برای نصب این افزونه، روی «تأیید» کلیک کنید",
       "connectedAndEnabled": "متصل شده و فعال است",
       "connectionFailed": "اتصال ناموفق بود",
       "installFailed": "نصب ناموفق بود",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "حجم فایل ویدئویی نباید از ۲۰ مگابایت بیشتر باشد، حجم فعلی فایل {{actualSize}} است"
     }
+  },
+  "viewMode": {
+    "normal": "عادی",
+    "wideScreen": "تمام‌صفحه"
   },
   "you": "شما",
   "zenMode": "حالت تمرکز"

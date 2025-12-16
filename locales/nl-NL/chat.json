@@ -8,6 +8,7 @@
       "authRequired": "Cloud MCP-plug-in vereist aanmelding en verificatie",
       "cancel": "Annuleren",
       "clickApproveToConnect": "Klik op 'Goedkeuren' om verbinding te maken en deze integratie te autoriseren",
+      "clickApproveToInstall": "Klik op 'Toestaan' om deze plug-in te installeren",
       "connectedAndEnabled": "Verbonden en ingeschakeld",
       "connectionFailed": "Verbinding mislukt",
       "installFailed": "Installatie mislukt",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normaal",
+    "wideScreen": "Breedbeeld"
   },
   "you": "jij",
   "zenMode": "Focusmodus"

@@ -8,6 +8,7 @@
       "authRequired": "يتطلب مكون MCP السحابي تسجيل الدخول والمصادقة",
       "cancel": "إلغاء",
       "clickApproveToConnect": "انقر على \"الموافقة\" للاتصال وتفويض هذا التكامل",
+      "clickApproveToInstall": "انقر على \"الموافقة\" لتثبيت هذا المكون الإضافي",
       "connectedAndEnabled": "تم الاتصال والتفعيل",
       "connectionFailed": "فشل الاتصال",
       "installFailed": "فشل التثبيت",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "لا يمكن أن يتجاوز حجم ملف الفيديو 20 ميغابايت، حجم الملف الحالي هو {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "عادي",
+    "wideScreen": "شاشة عريضة"
   },
   "you": "أنت",
   "zenMode": "وضع التركيز"

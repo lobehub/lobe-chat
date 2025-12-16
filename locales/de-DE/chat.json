@@ -8,6 +8,7 @@
       "authRequired": "Das Cloud-MCP-Plugin erfordert eine Anmeldung",
       "cancel": "Abbrechen",
       "clickApproveToConnect": "Klicken Sie auf „Genehmigen“, um die Verbindung herzustellen und diese Integration zu autorisieren",
+      "clickApproveToInstall": "Klicken Sie auf „Genehmigen“, um dieses Plugin zu installieren",
       "connectedAndEnabled": "Verbunden und aktiviert",
       "connectionFailed": "Verbindung fehlgeschlagen",
       "installFailed": "Installation fehlgeschlagen",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "Die Videodatei darf nicht größer als 20 MB sein, die aktuelle Dateigröße beträgt {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normal",
+    "wideScreen": "Breitbild"
   },
   "you": "du",
   "zenMode": "Fokusmodus"

@@ -51,8 +51,8 @@
       "search": "搜尋角色、關係或描述...",
       "type": {
         "all": "全部",
-        "demographic": "人口統計",
-        "personal": "個人",
+        "demographic": "屬性",
+        "personal": "角色",
         "professional": "職業"
       }
     },

@@ -8,6 +8,7 @@
       "authRequired": "O plugin MCP na nuvem requer autenticação de login",
       "cancel": "Cancelar",
       "clickApproveToConnect": "Clique em \"Aprovar\" para conectar e autorizar esta integração",
+      "clickApproveToInstall": "Clique em \"Aprovar\" para instalar este plugin",
       "connectedAndEnabled": "Conectado e ativado",
       "connectionFailed": "Falha na conexão",
       "installFailed": "Falha na instalação",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "O tamanho do arquivo de vídeo não pode exceder 20MB, o tamanho atual do arquivo é {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normal",
+    "wideScreen": "Tela cheia"
   },
   "you": "você",
   "zenMode": "Modo de Foco"

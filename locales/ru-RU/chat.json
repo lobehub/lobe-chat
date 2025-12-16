@@ -8,6 +8,7 @@
       "authRequired": "Плагин облачного MCP требует аутентификации",
       "cancel": "Отмена",
       "clickApproveToConnect": "Нажмите «Одобрить» для подключения и авторизации этой интеграции",
+      "clickApproveToInstall": "Нажмите «Одобрить», чтобы установить этот плагин",
       "connectedAndEnabled": "Подключено и включено",
       "connectionFailed": "Не удалось подключиться",
       "installFailed": "Ошибка установки",
@@ -488,6 +489,10 @@
     "validation": {
       "videoSizeExceeded": "Размер видеофайла не должен превышать 20 МБ, текущий размер файла: {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Обычный",
+    "wideScreen": "Широкий экран"
   },
   "you": "ты",
   "zenMode": "Режим концентрации"

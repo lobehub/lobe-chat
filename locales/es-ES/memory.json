@@ -51,8 +51,8 @@
       "search": "Buscar por rol, relación o descripción...",
       "type": {
         "all": "Todos",
-        "demographic": "Demográficos",
-        "personal": "Personales",
+        "demographic": "Demografía",
+        "personal": "Rol",
         "professional": "Profesionales"
       }
     },
