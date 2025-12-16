@@ -11,7 +11,12 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { z } from 'zod';
 
-import { ExtractorOptions, ExtractorTemplateProps, TemplateProps } from '../types';
+import {
+  ExtractorOptions,
+  ExtractorTemplateProps,
+  MemoryExtractionAgent,
+  TemplateProps,
+} from '../types';
 import { buildGenerateObjectSchema } from '../utils/zod';
 
 const serializeForSpan = (value: unknown, limit = 4000) => {
@@ -28,6 +33,7 @@ const serializeForSpan = (value: unknown, limit = 4000) => {
 };
 
 export interface BaseMemoryExtractorConfig {
+  agent: MemoryExtractionAgent;
   model: string;
   modelRuntime: ModelRuntime;
 
@@ -40,6 +46,7 @@ export abstract class BaseMemoryExtractor<
   TExtractorOptions extends ExtractorOptions = ExtractorOptions,
 > {
   protected readonly model: string;
+  protected readonly agent: MemoryExtractionAgent;
   protected readonly runtime: ModelRuntime;
 
   protected promptTemplate: string | undefined;
@@ -48,6 +55,7 @@ export abstract class BaseMemoryExtractor<
 
   constructor(config: BaseMemoryExtractorConfig) {
     this.model = config.model;
+    this.agent = config.agent;
     this.runtime = config.modelRuntime;
     this.promptRoot = config.promptRoot ?? join(import.meta.dirname, '../prompts');
   }
@@ -142,7 +150,7 @@ export abstract class BaseMemoryExtractor<
             try {
               try {
                 if (options?.callbacks?.onExtractRequest) {
-                  options.callbacks.onExtractRequest(payload);
+                  await options.callbacks.onExtractRequest(this.agent, payload);
                 }
               } catch (err) {
                 console.error('onExtractRequest callback error', err);
@@ -159,7 +167,7 @@ export abstract class BaseMemoryExtractor<
 
               try {
                 if (options?.callbacks?.onExtractResponse) {
-                  await options.callbacks.onExtractResponse<TOutput>(result as TOutput);
+                  await options.callbacks.onExtractResponse<TOutput>(this.agent, result as TOutput);
                 }
               } catch (err) {
                 console.error('onExtractResponse callback error', err);
@@ -178,6 +186,15 @@ export abstract class BaseMemoryExtractor<
                 message: error instanceof Error ? error.message : 'Structured call failed',
               });
               span.recordException(error as Error);
+
+              try {
+                if (options?.callbacks?.onExtractError) {
+                  await options.callbacks.onExtractError(this.agent, error);
+                }
+              } catch (err) {
+                console.error('onExtractError callback error', err);
+                // ignore
+              }
               throw error;
             } finally {
               span.end();

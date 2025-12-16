@@ -8,6 +8,11 @@ import type { ExtractorTemplateProps } from '../types';
 import { ExperienceExtractor } from './experience';
 
 const runtimeMock = { generateObject: vi.fn() } as unknown as ModelRuntime;
+const extractorConfig = {
+  agent: 'layer-experience' as const,
+  model: 'gpt-mock',
+  modelRuntime: runtimeMock,
+};
 
 const templateOptions: ExtractorTemplateProps = {
   availableCategories: ['work', 'personal'],
@@ -24,10 +29,7 @@ describe('ExperienceExtractor', () => {
   });
 
   it('builds generate object schema with experience constraints', () => {
-    const extractor = new ExperienceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ExperienceExtractor(extractorConfig);
 
     const schema = (extractor as any).getSchema();
     expect(schema?.name).toBe('experience_extraction');
@@ -44,10 +46,7 @@ describe('ExperienceExtractor', () => {
   });
 
   it('returns full template props from options', () => {
-    const extractor = new ExperienceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ExperienceExtractor(extractorConfig);
 
     expect(extractor.getTemplateProps(templateOptions)).toEqual({
       availableCategories: templateOptions.availableCategories,
@@ -61,10 +60,7 @@ describe('ExperienceExtractor', () => {
   });
 
   it('throws when building user prompt without template', () => {
-    const extractor = new ExperienceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ExperienceExtractor(extractorConfig);
 
     expect(() => (extractor as any).buildUserPrompt(templateOptions)).toThrowError(
       'Prompt template not loaded',
@@ -72,10 +68,7 @@ describe('ExperienceExtractor', () => {
   });
 
   it('renders user prompt with provided template props', async () => {
-    const extractor = new ExperienceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ExperienceExtractor(extractorConfig);
 
     await extractor.ensurePromptTemplate();
     const result = (extractor as any).buildUserPrompt(templateOptions);

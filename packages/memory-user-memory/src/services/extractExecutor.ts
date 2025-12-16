@@ -1,5 +1,5 @@
 import type { LobeChatDatabase } from '@lobechat/database';
-import { GenerateObjectPayload, ModelRuntime } from '@lobechat/model-runtime';
+import { ModelRuntime } from '@lobechat/model-runtime';
 import { SpanStatusCode } from '@lobechat/observability-otel/api';
 import {
   gateKeeperCallDurationHistogram,
@@ -21,6 +21,7 @@ import {
   BaseExtractorDependencies,
   ExtractorOptions,
   GatekeeperDecision,
+  MemoryExtractionAgent,
   MemoryContextProvider,
   MemoryExtractionJob,
   MemoryExtractionLLMConfig,
@@ -52,10 +53,7 @@ export interface MemoryExtractionRuntimeOptions {
 }
 
 export interface MemoryExtractionServiceOptions {
-  callbacks?: {
-    onExtractRequest?: (request: GenerateObjectPayload) => Promise<void> | void;
-    onExtractResponse?: <TOutput>(response: TOutput) => Promise<void> | void;
-  };
+  callbacks?: ExtractorOptions['callbacks'];
   config: MemoryExtractionLLMConfig;
   db: LobeChatDatabase;
   language?: string;
@@ -96,6 +94,7 @@ export class MemoryExtractionService<RO> {
     this.promptRoot = options.promptRoot ?? resolvePromptRoot();
 
     const gatekeeperConfig: BaseExtractorDependencies = {
+      agent: 'gatekeeper',
       model: this.config.gateModel,
       modelRuntime: this.gatekeeperRuntime,
       promptRoot: this.promptRoot,
@@ -103,23 +102,35 @@ export class MemoryExtractionService<RO> {
 
     this.gatekeeper = new UserMemoryGateKeeper(gatekeeperConfig);
 
-    const buildExtractorConfig = (layer: LayersEnum): BaseExtractorDependencies => {
+    const buildExtractorConfig = (
+      layer: LayersEnum,
+      agent: MemoryExtractionAgent,
+    ): BaseExtractorDependencies => {
       const model = this.config.layerModels[layer];
       if (!model) {
         throw new Error(`Missing model configuration for memory layer: ${layer}`);
       }
 
       return {
+        agent,
         model,
         modelRuntime: this.layerRuntime,
         promptRoot: this.promptRoot,
       } satisfies BaseExtractorDependencies;
     };
 
-    this.identityExtractor = new IdentityExtractor(buildExtractorConfig(LayersEnum.Identity));
-    this.contextExtractor = new ContextExtractor(buildExtractorConfig(LayersEnum.Context));
-    this.experienceExtractor = new ExperienceExtractor(buildExtractorConfig(LayersEnum.Experience));
-    this.preferenceExtractor = new PreferenceExtractor(buildExtractorConfig(LayersEnum.Preference));
+    this.identityExtractor = new IdentityExtractor(
+      buildExtractorConfig(LayersEnum.Identity, 'layer-identity'),
+    );
+    this.contextExtractor = new ContextExtractor(
+      buildExtractorConfig(LayersEnum.Context, 'layer-context'),
+    );
+    this.experienceExtractor = new ExperienceExtractor(
+      buildExtractorConfig(LayersEnum.Experience, 'layer-experience'),
+    );
+    this.preferenceExtractor = new PreferenceExtractor(
+      buildExtractorConfig(LayersEnum.Preference, 'layer-preference'),
+    );
   }
 
   private recordGatekeeperMetrics(
@@ -255,8 +266,10 @@ export class MemoryExtractionService<RO> {
 
     try {
       const decision = await this.gatekeeper.check({
+        callbacks: options.callbacks,
         language: options.language ?? 'English',
         retrievedContexts: options.retrievedContexts,
+        topK: options.topK,
       });
       this.recordGatekeeperMetrics(job, Date.now() - start, 'ok');
 

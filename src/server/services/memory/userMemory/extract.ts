@@ -9,6 +9,7 @@ import {
 import type {
   MemoryExtractionJob,
   MemoryExtractionResult,
+  MemoryExtractionAgent,
   MemoryExtractionSourceType,
   PersistedMemoryResult,
 } from '@lobechat/memory-user-memory';
@@ -76,6 +77,53 @@ const LAYER_LABEL_MAP: Record<LayersEnum, string> = {
   [LayersEnum.Identity]: 'identities',
   [LayersEnum.Preference]: 'preferences',
 };
+
+interface SerializedError {
+  message: string;
+  name?: string;
+  stack?: string;
+}
+
+interface AgentCallTrace {
+  durationMs?: number;
+  error?: SerializedError;
+  request?: GenerateObjectPayload;
+  response?: unknown;
+}
+
+interface ExtractionTracePayload {
+  agentCalls: Partial<Record<MemoryExtractionAgent, AgentCallTrace>>;
+  contexts?: {
+    built?: {
+      retrievalMemoryContext?: unknown;
+      retrievedIdentityContext?: unknown;
+      topicContext?: unknown;
+    };
+    trimmed?: {
+      retrievedContexts?: string[];
+      retrievedIdentitiesContext?: string;
+    };
+  };
+  error?: SerializedError;
+  extractionJob?: MemoryExtractionJob | null;
+  memories?: {
+    identities?: unknown;
+    layers?: unknown;
+  };
+  result?: {
+    extraction?: MemoryExtractionResult | null;
+    persisted?: PersistedMemoryResult | null;
+  };
+  source?: {
+    chatTopic?: {
+      conversations?: unknown;
+      topic?: unknown;
+    };
+  };
+  sourceType?: MemoryExtractionSourceType;
+  userId?: string;
+  userState?: unknown;
+}
 
 export interface MemoryExtractionWorkflowCursor {
   createdAt: string;
@@ -219,6 +267,18 @@ const extractCredentialsFromVault = (provider: string, keyVaults?: UserKeyVaults
     'baseURL' in vault && typeof vault.baseURL === 'string' ? vault.baseURL : undefined;
 
   return { apiKey, baseURL };
+};
+
+const serializeError = (error: unknown): SerializedError => {
+  if (error instanceof Error) {
+    return { message: error.message, name: error.name, stack: error.stack };
+  }
+
+  try {
+    return { message: JSON.stringify(error) };
+  } catch {
+    return { message: String(error) };
+  }
 };
 
 const resolveLayerModels = (
@@ -842,6 +902,7 @@ export class MemoryExtractionExecutor {
         let extractionJob: MemoryExtractionJob | null = null;
         let extraction: MemoryExtractionResult | null = null;
         let resultRecorder: LobeChatTopicResultRecorder | null = null;
+        let tracePayload: ExtractionTracePayload | null = null;
 
         try {
           const db = await this.db;
@@ -976,6 +1037,56 @@ export class MemoryExtractionExecutor {
             extractorContextLimit,
           );
 
+          const agentCalls: Partial<Record<MemoryExtractionAgent, AgentCallTrace>> = {};
+          const agentStartedAt: Partial<Record<MemoryExtractionAgent, number>> = {};
+
+          const recordRequest = (agent: MemoryExtractionAgent, request: GenerateObjectPayload) => {
+            agentStartedAt[agent] = Date.now();
+            agentCalls[agent] = { ...(agentCalls[agent]), request };
+          };
+
+          const recordResponse = (agent: MemoryExtractionAgent, response: unknown) => {
+            const duration = agentStartedAt[agent] ? Date.now() - agentStartedAt[agent]! : undefined;
+            agentCalls[agent] = { ...(agentCalls[agent]), durationMs: duration, response };
+          };
+
+          const recordError = (agent: MemoryExtractionAgent, error: unknown) => {
+            const duration = agentStartedAt[agent] ? Date.now() - agentStartedAt[agent]! : undefined;
+            agentCalls[agent] = {
+              ...agentCalls[agent],
+              durationMs: duration,
+              error: serializeError(error),
+            };
+          };
+
+          tracePayload = {
+            agentCalls,
+            contexts: {
+              built: {
+                retrievalMemoryContext,
+                retrievedIdentityContext,
+                topicContext,
+              },
+              trimmed: {
+                retrievedContexts: trimmedRetrievedContexts,
+                retrievedIdentitiesContext: trimmedRetrievedIdentitiesContext,
+              },
+            },
+            extractionJob,
+            memories: {
+              identities: retrievedMemoryIdentities,
+              layers: retrievedMemories,
+            },
+            source: {
+              chatTopic: {
+                conversations: extractorConversations,
+                topic,
+              },
+            },
+            sourceType: extractionJob.source,
+            userId: job.userId,
+          };
+
           const service = new MemoryExtractionService({
             config: this.modelConfig,
             db,
@@ -983,21 +1094,22 @@ export class MemoryExtractionExecutor {
             runtimes,
           });
 
+          const shouldRecordTrace = Boolean(observabilityS3);
+
           extraction = await service.run(extractionJob, {
-            callbacks: {
-              onExtractRequest: this.onExtractRequestHook(
-                job.userId,
-                extractionJob?.source,
-                extractionJob?.sourceId,
-                observabilityS3,
-              ),
-              onExtractResponse: this.onExtractResponseHook(
-                job.userId,
-                extractionJob?.source,
-                extractionJob?.sourceId,
-                observabilityS3,
-              ),
-            },
+            callbacks: shouldRecordTrace
+              ? {
+                  onExtractError: async (agent, error) => {
+                    recordError(agent, error);
+                  },
+                  onExtractRequest: async (agent, payload) => {
+                    recordRequest(agent, payload);
+                  },
+                  onExtractResponse: async (agent, response) => {
+                    recordResponse(agent, response);
+                  },
+                }
+              : undefined,
             contextProvider: topicContextProvider,
             language: language,
             resultRecorder: resultRecorder,
@@ -1028,6 +1140,9 @@ export class MemoryExtractionExecutor {
             runtimes,
             db,
           );
+          if (tracePayload) {
+            tracePayload.result = { extraction, persisted: persistedRes };
+          }
           await resultRecorder.recordComplete(extractionJob, {
             ...persistedRes,
             processedMemoryCount: persistedRes.createdIds.length,
@@ -1054,8 +1169,25 @@ export class MemoryExtractionExecutor {
             message: error instanceof Error ? error.message : 'Extraction failed',
           });
           span.recordException(error as Error);
+
+          if (tracePayload) {
+            tracePayload.error = serializeError(error);
+          }
           throw error;
         } finally {
+          if (observabilityS3 && tracePayload) {
+            try {
+              await this.uploadExtractionTrace(
+                tracePayload,
+                job.userId,
+                extractionJob?.source ?? job.source,
+                extractionJob?.sourceId ?? job.topicId,
+                observabilityS3,
+              );
+            } catch (err) {
+              console.error('[memory-extraction] failed to upload extraction trace', err);
+            }
+          }
           span.end();
         }
       },
@@ -1078,52 +1210,26 @@ export class MemoryExtractionExecutor {
         : this.modelConfig.observabilityS3?.pathPrefix
       : '';
 
-    const key = join(`/${base}`, withoutBase);
+    const key = join(`${base}`, withoutBase);
     return key;
   }
 
-  onExtractRequestHook(
+  private async uploadExtractionTrace(
+    payload: ExtractionTracePayload,
     userId: string,
     source: string,
     sourceId: string,
-    s3?: S3,
-  ): ((payload: GenerateObjectPayload) => Promise<void>) | undefined {
-    if (!this.modelConfig.observabilityS3?.enabled) {
-      return undefined;
-    }
+    s3: S3,
+  ) {
+    if (!this.modelConfig.observabilityS3?.enabled) return;
 
-    return async (payload: GenerateObjectPayload) => {
-      await s3!.uploadContent(
-        join(
-          this.getOnExtractHooksPath(userId, source, sourceId)!,
-          'requests',
-          `${new Date().toISOString()}.json`,
-        ),
-        JSON.stringify(payload, null, 2),
-      );
-    };
-  }
+    const key = join(
+      this.getOnExtractHooksPath(userId, source, sourceId)!,
+      'trace',
+      `${new Date().toISOString()}.json`,
+    );
 
-  onExtractResponseHook<TOutput>(
-    userId: string,
-    source: string,
-    sourceId: string,
-    s3?: S3,
-  ): ((response: TOutput) => Promise<void>) | undefined {
-    if (!this.modelConfig.observabilityS3?.enabled) {
-      return undefined;
-    }
-
-    return async (response: TOutput) => {
-      await s3!.uploadContent(
-        join(
-          this.getOnExtractHooksPath(userId, source, sourceId)!,
-          'response',
-          `${new Date().toISOString()}.json`,
-        ),
-        JSON.stringify(response, null, 2),
-      );
-    };
+    await s3.uploadContent(key, JSON.stringify(payload, null, 2));
   }
 
   async runDirect(payload: MemoryExtractionNormalizedPayload) {

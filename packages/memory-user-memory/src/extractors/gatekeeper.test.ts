@@ -7,6 +7,11 @@ import type { GatekeeperOptions } from '../types';
 import { UserMemoryGateKeeper } from './gatekeeper';
 
 const runtimeMock = { generateObject: vi.fn() } as unknown as ModelRuntime;
+const extractorConfig = {
+  agent: 'gatekeeper' as const,
+  model: 'gpt-mock',
+  modelRuntime: runtimeMock,
+};
 
 const templateOptions: GatekeeperOptions = {
   retrievedContexts: ['existing context'],
@@ -19,10 +24,7 @@ describe('UserMemoryGateKeeper', () => {
   });
 
   it('builds generate object schema with layer decisions', () => {
-    const extractor = new UserMemoryGateKeeper({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new UserMemoryGateKeeper(extractorConfig);
 
     const schema = extractor.getSchema();
     expect(schema?.name).toBe('gatekeeper_decision');
@@ -45,10 +47,7 @@ describe('UserMemoryGateKeeper', () => {
   });
 
   it('returns template props with defaults applied', () => {
-    const extractor = new UserMemoryGateKeeper({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new UserMemoryGateKeeper(extractorConfig);
 
     expect(extractor.getTemplateProps({} as GatekeeperOptions)).toEqual({
       retrievedContext: 'No similar memories retrieved.',
@@ -57,10 +56,7 @@ describe('UserMemoryGateKeeper', () => {
   });
 
   it('throws when building user prompt without template', () => {
-    const extractor = new UserMemoryGateKeeper({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new UserMemoryGateKeeper(extractorConfig);
 
     expect(() => extractor.buildUserPrompt(templateOptions)).toThrowError(
       'Prompt template not loaded',
@@ -68,10 +64,7 @@ describe('UserMemoryGateKeeper', () => {
   });
 
   it('renders user prompt with provided template props', async () => {
-    const extractor = new UserMemoryGateKeeper({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new UserMemoryGateKeeper(extractorConfig);
 
     await extractor.ensurePromptTemplate();
     const result = extractor.buildUserPrompt(templateOptions);
@@ -87,10 +80,7 @@ describe('UserMemoryGateKeeper', () => {
   });
 
   it('parses gatekeeper decisions from structured call', async () => {
-    const extractor = new UserMemoryGateKeeper({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new UserMemoryGateKeeper(extractorConfig);
 
     const llmResult = {
       context: { reasoning: 'reasoning', shouldExtract: true },

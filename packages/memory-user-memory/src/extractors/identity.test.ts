@@ -6,6 +6,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { IdentityExtractor, IdentityExtractorTemplateProps } from './identity';
 
 const runtimeMock = { generateObject: vi.fn() } as unknown as ModelRuntime;
+const extractorConfig = {
+  agent: 'layer-identity' as const,
+  model: 'gpt-mock',
+  modelRuntime: runtimeMock,
+};
 
 const templateOptions: IdentityExtractorTemplateProps = {
   availableCategories: ['work', 'personal'],
@@ -23,10 +28,7 @@ describe('IdentityExtractor', () => {
   });
 
   it('builds a structured schema without registering tools', () => {
-    const extractor = new IdentityExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new IdentityExtractor(extractorConfig);
 
     const tools = (extractor as any).getTools(templateOptions);
     const schema = (extractor as any).getSchema(templateOptions);
@@ -37,10 +39,7 @@ describe('IdentityExtractor', () => {
   });
 
   it('uses structuredCall to invoke the runtime and parse structured results', async () => {
-    const extractor = new IdentityExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new IdentityExtractor(extractorConfig);
     const structuredResult = {
       withIdentities: {
         actions: {
@@ -65,10 +64,7 @@ describe('IdentityExtractor', () => {
   });
 
   it('returns full template props from options', () => {
-    const extractor = new IdentityExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new IdentityExtractor(extractorConfig);
 
     expect((extractor as any).getTemplateProps(templateOptions)).toEqual({
       availableCategories: templateOptions.availableCategories,
@@ -83,10 +79,7 @@ describe('IdentityExtractor', () => {
   });
 
   it('throws when building user prompt without template', () => {
-    const extractor = new IdentityExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new IdentityExtractor(extractorConfig);
 
     expect(() => (extractor as any).buildUserPrompt(templateOptions)).toThrowError(
       'Prompt template not loaded',
@@ -94,10 +87,7 @@ describe('IdentityExtractor', () => {
   });
 
   it('renders user prompt with provided template props', async () => {
-    const extractor = new IdentityExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new IdentityExtractor(extractorConfig);
 
     await extractor.ensurePromptTemplate();
     const result = (extractor as any).buildUserPrompt(templateOptions);

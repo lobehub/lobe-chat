@@ -8,6 +8,11 @@ import type { ExtractorTemplateProps } from '../types';
 import { ContextExtractor } from './context';
 
 const runtimeMock = { generateObject: vi.fn() } as unknown as ModelRuntime;
+const extractorConfig = {
+  agent: 'layer-context' as const,
+  model: 'gpt-mock',
+  modelRuntime: runtimeMock,
+};
 
 const templateOptions: ExtractorTemplateProps = {
   availableCategories: ['work', 'personal'],
@@ -24,10 +29,7 @@ describe('ContextExtractor', () => {
   });
 
   it('builds generate object schema with context constraints', () => {
-    const extractor = new ContextExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ContextExtractor(extractorConfig);
 
     const schema = extractor.getSchema();
     expect(schema?.name).toBe('context_extraction');
@@ -44,10 +46,7 @@ describe('ContextExtractor', () => {
   });
 
   it('returns full template props from options', () => {
-    const extractor = new ContextExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ContextExtractor(extractorConfig);
 
     expect(extractor.getTemplateProps(templateOptions)).toEqual({
       availableCategories: templateOptions.availableCategories,
@@ -61,10 +60,7 @@ describe('ContextExtractor', () => {
   });
 
   it('throws when building user prompt without template', async () => {
-    const extractor = new ContextExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ContextExtractor(extractorConfig);
 
     expect(() => extractor.buildUserPrompt(templateOptions)).toThrowError(
       'Prompt template not loaded',
@@ -72,10 +68,7 @@ describe('ContextExtractor', () => {
   });
 
   it('renders user prompt with provided template props', async () => {
-    const extractor = new ContextExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new ContextExtractor(extractorConfig);
 
     await extractor.ensurePromptTemplate();
     const result = extractor.buildUserPrompt(templateOptions);

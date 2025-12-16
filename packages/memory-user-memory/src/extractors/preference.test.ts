@@ -8,6 +8,11 @@ import type { ExtractorTemplateProps } from '../types';
 import { PreferenceExtractor } from './preference';
 
 const runtimeMock = { generateObject: vi.fn() } as unknown as ModelRuntime;
+const extractorConfig = {
+  agent: 'layer-preference' as const,
+  model: 'gpt-mock',
+  modelRuntime: runtimeMock,
+};
 
 const templateOptions: ExtractorTemplateProps = {
   availableCategories: ['work', 'personal'],
@@ -24,10 +29,7 @@ describe('PreferenceExtractor', () => {
   });
 
   it('builds generate object schema with preference constraints', () => {
-    const extractor = new PreferenceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new PreferenceExtractor(extractorConfig);
 
     const schema = extractor.getSchema();
     expect(schema?.name).toBe('preference_extraction');
@@ -44,10 +46,7 @@ describe('PreferenceExtractor', () => {
   });
 
   it('returns full template props from options', () => {
-    const extractor = new PreferenceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new PreferenceExtractor(extractorConfig);
 
     expect(extractor.getTemplateProps(templateOptions)).toEqual({
       availableCategories: templateOptions.availableCategories,
@@ -61,10 +60,7 @@ describe('PreferenceExtractor', () => {
   });
 
   it('throws when building user prompt without template', () => {
-    const extractor = new PreferenceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new PreferenceExtractor(extractorConfig);
 
     expect(() => extractor.buildUserPrompt(templateOptions)).toThrowError(
       'Prompt template not loaded',
@@ -72,10 +68,7 @@ describe('PreferenceExtractor', () => {
   });
 
   it('renders user prompt with provided template props', async () => {
-    const extractor = new PreferenceExtractor({
-      model: 'gpt-mock',
-      modelRuntime: runtimeMock,
-    });
+    const extractor = new PreferenceExtractor(extractorConfig);
 
     await extractor.ensurePromptTemplate();
     const result = extractor.buildUserPrompt(templateOptions);

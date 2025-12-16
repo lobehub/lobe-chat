@@ -12,11 +12,23 @@ import type {
   PreferenceExtractor,
 } from './extractors';
 
+export type MemoryExtractionAgent =
+  | 'gatekeeper'
+  | 'layer-context'
+  | 'layer-experience'
+  | 'layer-identity'
+  | 'layer-preference';
+
 export interface ExtractorOptions extends ExtractorTemplateProps {
   additionalMessages?: OpenAIChatMessage[];
   callbacks?: {
-    onExtractRequest?: (request: GenerateObjectPayload) => Promise<void> | void;
-    onExtractResponse?: <TOutput>(response: TOutput) => Promise<void> | void;
+    onExtractError?: (agent: MemoryExtractionAgent, error: unknown) => Promise<void> | void;
+    onExtractRequest?: (agent: MemoryExtractionAgent, request: GenerateObjectPayload) =>
+      | Promise<void>
+      | void;
+    onExtractResponse?: <TOutput>(agent: MemoryExtractionAgent, response: TOutput) =>
+      | Promise<void>
+      | void;
   };
   messageIds?: string[];
   sourceId?: string;
@@ -34,14 +46,13 @@ export interface ExtractorTemplateProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export type GatekeeperOptions = Pick<
-  ExtractorTemplateProps,
-  'language' | 'retrievedContexts' | 'topK'
-> & {
+export type GatekeeperOptions = Pick<ExtractorOptions, 'language' | 'retrievedContexts' | 'topK'> & {
   additionalMessages?: OpenAIChatMessage[];
+  callbacks?: ExtractorOptions['callbacks'];
 };
 
 export interface BaseExtractorDependencies {
+  agent: MemoryExtractionAgent;
   model: string;
   modelRuntime: ModelRuntime;
   promptRoot: string;
