@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import DragUpload from '@/components/DragUpload';
 import { useModelSupportVision } from '@/hooks/useModelSupportVision';
@@ -35,10 +36,10 @@ const ContextContainer = memo(() => {
   };
 
   return (
-    <>
+    <Flexbox paddingInline={8} style={{ paddingBlockStart: 8 }}>
       <DragUpload onUploadFiles={upload} />
       <ContextList />
-    </>
+    </Flexbox>
   );
 });
 

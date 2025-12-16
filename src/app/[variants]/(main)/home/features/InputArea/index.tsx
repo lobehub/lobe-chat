@@ -16,9 +16,9 @@ const InputArea = memo(() => {
   const inputActiveMode = useHomeStore((s) => s.inputActiveMode);
 
   // A slot to insert content above the chat input
+  // Override some default behavior of the chat input
   const inputContainerProps = useMemo(
     () => ({
-      header: inputActiveMode ? <ModeHeader /> : undefined,
       minHeight: 88,
       resize: false,
       style: {
@@ -49,7 +49,10 @@ const InputArea = memo(() => {
           shape: 'round',
         }}
       >
-        <DesktopChatInput inputContainerProps={inputContainerProps} />
+        <DesktopChatInput
+          extenHeaderContent={inputActiveMode ? <ModeHeader /> : undefined}
+          inputContainerProps={inputContainerProps}
+        />
       </ChatInputProvider>
 
       <StarterList />
