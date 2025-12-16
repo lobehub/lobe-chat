@@ -1,3 +1,4 @@
+import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import { isDesktop } from '@lobechat/const';
 import { AgentBuilderContext, AgentGroupConfig, MessagesEngine } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
@@ -12,7 +13,6 @@ import { getChatGroupStoreState } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { getToolStoreState } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import type { UserMemoriesResult } from './memoryManager';
@@ -58,7 +58,7 @@ export const contextEngineering = async ({
   log('tools: %o', tools);
 
   // Check if Agent Builder tool is enabled
-  const isAgentBuilderEnabled = tools?.includes(AGENT_BUILDER_TOOL_ID) ?? false;
+  const isAgentBuilderEnabled = tools?.includes(AgentBuilderIdentifier) ?? false;
 
   log('isAgentBuilderEnabled: %s', isAgentBuilderEnabled);
 

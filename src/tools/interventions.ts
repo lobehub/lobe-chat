@@ -1,7 +1,9 @@
+import {
+  AgentBuilderInterventions,
+  AgentBuilderManifest,
+} from '@lobechat/builtin-tool-agent-builder/client';
 import { BuiltinIntervention } from '@lobechat/types';
 
-import { AgentBuilderManifest } from './agent-builder';
-import { AgentBuilderInterventions } from './agent-builder/Intervention';
 import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
 import { CodeInterpreterInterventions } from './code-interpreter/Intervention';
 import { LocalSystemManifest } from './local-system';

@@ -1,16 +1,16 @@
-import debug from 'debug';
-import { StateCreator } from 'zustand/vanilla';
-
-import { getAgentStoreState } from '@/store/agent';
-import { ChatStore } from '@/store/chat/store';
-import { AgentBuilderExecutionRuntime } from '@/tools/agent-builder/ExecutionRuntime';
 import type {
   GetAvailableModelsParams,
   InstallPluginParams,
   SearchMarketToolsParams,
   UpdateAgentConfigParams,
   UpdatePromptParams,
-} from '@/tools/agent-builder/types';
+} from '@lobechat/builtin-tool-agent-builder';
+import { AgentBuilderExecutionRuntime } from '@lobechat/builtin-tool-agent-builder/executionRuntime';
+import debug from 'debug';
+import { StateCreator } from 'zustand/vanilla';
+
+import { getAgentStoreState } from '@/store/agent';
+import { ChatStore } from '@/store/chat/store';
 
 const log = debug('lobe-store:builtin-tool:agent-builder');
 

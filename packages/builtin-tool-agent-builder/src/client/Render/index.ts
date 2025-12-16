@@ -1,4 +1,4 @@
-import { AgentBuilderApiName } from '../types';
+import { AgentBuilderApiName } from '../../types';
 import GetAvailableModels from './GetAvailableModels';
 import InstallPlugin from './InstallPlugin';
 import SearchMarketTools from './SearchMarketTools';

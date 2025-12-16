@@ -1,10 +1,10 @@
+import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
 import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 import { LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
 
-import { AgentBuilderManifest } from './agent-builder';
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
 import { KnowledgeBaseManifest } from './knowledge-base';

@@ -1,3 +1,4 @@
+import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
 import type { OfficialToolItem } from '@lobechat/context-engine';
 import {
@@ -32,7 +33,6 @@ import {
 } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
-import { AGENT_BUILDER_TOOL_ID } from '@/tools/agent-builder/const';
 import { MemoryManifest } from '@/tools/memory';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
@@ -144,7 +144,7 @@ class ChatService {
     // Check if Agent Builder tool is enabled and build context for it
     // Note: When Agent Builder is active, we need to get the context of the agent being edited,
     // which is stored in chatStore.activeAgentId, not the targetAgentId (which is the Agent Builder itself)
-    const isAgentBuilderEnabled = enabledToolIds.includes(AGENT_BUILDER_TOOL_ID);
+    const isAgentBuilderEnabled = enabledToolIds.includes(AgentBuilderIdentifier);
     let agentBuilderContext;
 
     if (isAgentBuilderEnabled) {

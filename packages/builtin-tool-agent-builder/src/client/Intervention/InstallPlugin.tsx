@@ -13,7 +13,7 @@ import { useToolStore } from '@/store/tool';
 import { klavisStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 import { KlavisServerStatus } from '@/store/tool/slices/klavisStore/types';
 
-import type { InstallPluginParams } from '../types';
+import type { InstallPluginParams } from '../../types';
 
 /**
  * InstallPlugin Intervention Component

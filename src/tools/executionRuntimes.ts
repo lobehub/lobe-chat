@@ -1,5 +1,6 @@
-import { AgentBuilderManifest } from './agent-builder';
-import { AgentBuilderExecutionRuntime } from './agent-builder/ExecutionRuntime';
+import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
+import { AgentBuilderExecutionRuntime } from '@lobechat/builtin-tool-agent-builder/executionRuntime';
+
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { KnowledgeBaseExecutionRuntime } from './knowledge-base/ExecutionRuntime';
 import { LocalSystemManifest } from './local-system';

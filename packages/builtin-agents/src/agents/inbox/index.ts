@@ -1,3 +1,5 @@
+import { GTDIdentifier } from '@lobechat/builtin-tool-gtd';
+
 import type { BuiltinAgentDefinition } from '../../types';
 import { BUILTIN_AGENT_SLUGS } from '../../types';
 import { systemRole } from './systemRole';
@@ -9,7 +11,10 @@ import { systemRole } from './systemRole';
  */
 export const INBOX: BuiltinAgentDefinition = {
   avatar: '/icons/icon-lobe.png',
-  runtime: { systemRole: systemRole },
+  runtime: (ctx) => ({
+    plugins: [GTDIdentifier, ...(ctx.plugins || [])],
+    systemRole: systemRole,
+  }),
 
   slug: BUILTIN_AGENT_SLUGS.inbox,
 };

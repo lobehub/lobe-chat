@@ -1,4 +1,4 @@
-import { AgentBuilderApiName } from '../types';
+import { AgentBuilderApiName } from '../../types';
 import InstallPlugin from './InstallPlugin';
 
 /**

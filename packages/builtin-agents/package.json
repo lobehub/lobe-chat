@@ -4,6 +4,9 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
+    "@lobechat/builtin-tool-agent-builder": "workspace:*",
+    "@lobechat/builtin-tool-group-management": "workspace:*",
+    "@lobechat/builtin-tool-gtd": "workspace:*",
     "@lobechat/types": "workspace:*"
   }
 }

@@ -1,3 +1,5 @@
+import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
+
 import type { BuiltinAgentDefinition } from '../../types';
 import { BUILTIN_AGENT_SLUGS } from '../../types';
 import { systemRoleTemplate } from './systemRole';
@@ -16,7 +18,7 @@ export const AGENT_BUILDER: BuiltinAgentDefinition = {
 
   // Runtime config - static systemRole
   runtime: (ctx) => ({
-    plugins: ['lobe-agent-builder', ...(ctx.plugins || [])],
+    plugins: [AgentBuilderIdentifier, ...(ctx.plugins || [])],
     systemRole: systemRoleTemplate,
   }),
 

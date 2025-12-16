@@ -11,7 +11,7 @@ import { useAgentStore } from '@/store/agent';
 import { useToolStore } from '@/store/tool';
 import { mcpStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 
-import type { MarketToolItem, SearchMarketToolsParams, SearchMarketToolsState } from '../types';
+import type { MarketToolItem, SearchMarketToolsParams, SearchMarketToolsState } from '../../types';
 
 interface ToolItemProps {
   tool: MarketToolItem;

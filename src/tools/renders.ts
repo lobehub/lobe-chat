@@ -1,8 +1,8 @@
+// agent-builder
+import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
+import { AgentBuilderRenders } from '@lobechat/builtin-tool-agent-builder/client';
 import { BuiltinRender } from '@lobechat/types';
 
-// agent-builder
-import { AgentBuilderManifest } from './agent-builder';
-import { AgentBuilderRenders } from './agent-builder/Render';
 // code-interpreter
 import { CodeInterpreterManifest } from './code-interpreter';
 import { CodeInterpreterRenders } from './code-interpreter/Render';

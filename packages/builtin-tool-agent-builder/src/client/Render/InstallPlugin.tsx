@@ -5,7 +5,7 @@ import { CheckCircle, Clock, XCircle } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import type { InstallPluginParams, InstallPluginState } from '../types';
+import type { InstallPluginParams, InstallPluginState } from '../../types';
 
 const InstallPlugin = memo<BuiltinRenderProps<InstallPluginParams, InstallPluginState>>(
   ({ pluginState }) => {

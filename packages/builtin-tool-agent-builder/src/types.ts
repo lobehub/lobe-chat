@@ -1,5 +1,10 @@
-import { LobeAgentConfig, MetaData } from '@lobechat/types';
+import type { LobeAgentConfig, MetaData } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
+
+/**
+ * Agent Builder Tool Identifier
+ */
+export const AgentBuilderIdentifier = 'lobe-agent-builder';
 
 /**
  * Agent Builder API Names
@@ -17,6 +22,9 @@ export const AgentBuilderApiName = {
   updateAgentConfig: 'updateConfig',
   updatePrompt: 'updatePrompt',
 } as const;
+
+export type AgentBuilderApiNameType =
+  (typeof AgentBuilderApiName)[keyof typeof AgentBuilderApiName];
 
 // ============== Parameter Types ==============
 

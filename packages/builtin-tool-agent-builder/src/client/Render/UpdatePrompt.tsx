@@ -3,7 +3,7 @@ import { CheckCircle, FileText } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import type { UpdatePromptParams, UpdatePromptState } from '../types';
+import type { UpdatePromptParams, UpdatePromptState } from '../../types';
 
 const UpdatePrompt = memo<BuiltinRenderProps<UpdatePromptParams, UpdatePromptState>>(
   ({ pluginState }) => {

@@ -3,7 +3,7 @@ import { CheckCircle, XCircle } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import type { UpdateAgentConfigParams, UpdateConfigState } from '../types';
+import type { UpdateAgentConfigParams, UpdateConfigState } from '../../types';
 import ConfigDiffView from './components/ConfigDiffView';
 
 const UpdateConfig = memo<BuiltinRenderProps<UpdateAgentConfigParams, UpdateConfigState>>(

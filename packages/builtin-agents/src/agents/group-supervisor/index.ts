@@ -1,3 +1,6 @@
+import { GroupManagementIdentifier } from '@lobechat/builtin-tool-group-management';
+import { GTDIdentifier } from '@lobechat/builtin-tool-gtd';
+
 import type { BuiltinAgentDefinition } from '../../types';
 import { BUILTIN_AGENT_SLUGS } from '../../types';
 import { supervisorSystemRole } from './systemRole';
@@ -30,7 +33,7 @@ export const GROUP_SUPERVISOR: BuiltinAgentDefinition = {
       chatConfig: {
         enableHistoryCount: false,
       },
-      plugins: ['lobe-group-management', ...(ctx.plugins || [])],
+      plugins: [GroupManagementIdentifier, GTDIdentifier, ...(ctx.plugins || [])],
       systemRole: resolveSystemRole(groupSupervisorContext),
     };
   },

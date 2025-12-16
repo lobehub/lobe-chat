@@ -1,7 +1,7 @@
-import { BuiltinToolManifest } from '@lobechat/types';
+import type { BuiltinToolManifest } from '@lobechat/types';
 
 import { systemPrompt } from './systemRole';
-import { AgentBuilderApiName } from './types';
+import { AgentBuilderApiName, AgentBuilderIdentifier } from './types';
 
 export const AgentBuilderManifest: BuiltinToolManifest = {
   api: [
@@ -198,7 +198,7 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
       },
     },
   ],
-  identifier: 'lobe-agent-builder',
+  identifier: AgentBuilderIdentifier,
   meta: {
     avatar: '🛠️',
     title: 'Agent Builder',
@@ -206,5 +206,3 @@ export const AgentBuilderManifest: BuiltinToolManifest = {
   systemRole: systemPrompt,
   type: 'builtin',
 };
-
-export { AgentBuilderApiName } from './types';
