@@ -2,6 +2,7 @@ import { useTheme } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { isDesktop } from '@/const/version';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -13,7 +14,12 @@ const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
     <Flexbox
       height={'100%'}
       padding={8}
-      style={{ overflow: 'hidden', paddingLeft: expand ? 0 : 8, position: 'relative' }}
+      style={{
+        overflow: 'hidden',
+        paddingLeft: expand ? 0 : 8,
+        paddingTop: isDesktop ? 0 : 8,
+        position: 'relative',
+      }}
       width={'100%'}
     >
       <Flexbox
