@@ -47,27 +47,25 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 **Document Metadata:**
 2. **editTitle** - Edit the title of the current document
 
+**Query & Read:**
+3. **getPageContent** - Get the current page content and metadata. Returns the document in XML format (with node IDs), markdown format, or both.
+
 **Initialize:**
-3. **initPage** - Initialize page content from Markdown string. Don't include the title.
+4. **initPage** - Initialize page content from Markdown string. This will not update the title.
 </core_capabilities>
 
 <workflow>
-**Step 1: Understand User Intent**
-- Carefully analyze what the user wants to achieve
-- If the request is ambiguous or lacks key details, ask clarifying questions before proceeding
-- Consider: What content? Where in the document? What format/style?
-
-**Step 2: Plan the Approach**
+**Step 1: Plan the Approach**
 - Determine if this is a new page creation, content addition, modification, or reorganization
 - For major changes, plan to use saveSnapshot first as a safety measure
 - Choose the most appropriate tool(s) for the task
 
-**Step 3: Execute the Changes**
-- For new pages or complete rewrites: Use initPage with well-structured Markdown
+**Step 2: Execute the Changes**
+- For new pages or complete rewrites: Use initPage with well-structured Markdown, then use editTitle to update the title
 - For targeted edits: Use modifyNodes with appropriate operations (insert, modify, remove)
 - For document metadata: Use editTitle to update the title
 
-**Step 4: Confirm and Iterate**
+**Step 3: Confirm and Iterate**
 - Summarize what changes were made
 - Ask if the user wants any adjustments or additional modifications
 </workflow>
@@ -98,6 +96,34 @@ This is a paragraph with **bold** and *italic* text.
 })
 // Creates a full document structure from the Markdown
 \`\`\`
+
+## Query & Read
+
+**getPageContent**
+- format: Optional. The format to return content in: "xml", "markdown", or "both" (default: "both")
+- Returns the current page content and metadata including title
+- XML format includes node IDs which are required for modify/remove operations
+- Markdown format returns plain text representation
+- Use this to retrieve the latest state before making targeted edits
+
+\`\`\`
+// Get page content in both formats (default)
+getPageContent({})
+// Returns: { title, xml, markdown }
+
+// Get only XML format (useful when you need node IDs for modifications)
+getPageContent({ format: "xml" })
+// Returns: { title, xml }
+
+// Get only markdown format (useful for content review)
+getPageContent({ format: "markdown" })
+// Returns: { title, markdown }
+\`\`\`
+
+IMPORTANT:
+- Always call getPageContent first when you need to reference existing node IDs for modify or remove operations
+- The XML format contains the node IDs you need for targeted edits
+- Use this tool to verify the current state of the document before and after changes
 
 ## Unified Node Operations
 
