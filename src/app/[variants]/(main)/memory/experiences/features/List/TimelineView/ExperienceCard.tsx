@@ -1,51 +1,19 @@
-import { ActionIcon, Dropdown } from '@lobehub/ui';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { KeyboardEvent, MouseEvent, memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { memo } from 'react';
 
 import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
 import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
 
+import ExperienceDropdown from '../../ExperienceDropdown';
+
 interface ExperienceCardProps {
   experience: DisplayExperienceMemory;
   onClick: (experience: DisplayExperienceMemory) => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
 }
 
-const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick, onDelete, onEdit }) => {
-  const { t } = useTranslation('memory');
-
-  const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
-    info.domEvent.stopPropagation();
-    if (info.key === 'delete' && onDelete) {
-      onDelete(experience.id);
-    } else if (info.key === 'edit' && onEdit) {
-      onEdit(experience.id);
-    }
-  };
-
-  const menuItems = [
-    {
-      icon: <Pencil size={14} />,
-      key: 'edit',
-      label: t('experience.actions.edit'),
-    },
-    {
-      danger: true,
-      icon: <Trash2 size={14} />,
-      key: 'delete',
-      label: t('experience.actions.delete'),
-    },
-  ];
-
+const ExperienceCard = memo<ExperienceCardProps>(({ experience, onClick }) => {
   return (
     <TimeLineCard
-      actions={
-        <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} trigger={['click']}>
-          <ActionIcon icon={MoreHorizontal} size="small" />
-        </Dropdown>
-      }
+      actions={<ExperienceDropdown id={experience.id} />}
       cate={experience.type}
       hashTags={experience.tags}
       onClick={() => onClick(experience)}

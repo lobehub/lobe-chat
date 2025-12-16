@@ -1,4 +1,3 @@
-import { App } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,29 +18,13 @@ interface PreferencesListProps {
 
 const PreferencesList = memo<PreferencesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
-  const { modal } = App.useApp();
   const [, setPreferenceId] = useQueryState('preferenceId', { clearOnDefault: true });
   const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
   const preferences = useUserMemoryStore((s) => s.preferences);
-  const deletePreference = useUserMemoryStore((s) => s.deletePreference);
 
   const handleCardClick = (preference: any) => {
     setPreferenceId(preference.id);
     toggleRightPanel(true);
-  };
-
-  const handleDelete = (id: string) => {
-    modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
-      content: t('preference.deleteConfirm'),
-      okButtonProps: { danger: true },
-      okText: t('confirm', { ns: 'common' }),
-      onOk: async () => {
-        await deletePreference(id);
-      },
-      title: t('preference.deleteTitle'),
-      type: 'warning',
-    });
   };
 
   const isEmpty = preferences.length === 0;
@@ -51,19 +34,9 @@ const PreferencesList = memo<PreferencesListProps>(({ isLoading, searchValue, vi
   }
 
   return viewMode === 'timeline' ? (
-    <TimelineView
-      isLoading={isLoading}
-      onClick={handleCardClick}
-      onDelete={handleDelete}
-      preferences={preferences}
-    />
+    <TimelineView isLoading={isLoading} onClick={handleCardClick} preferences={preferences} />
   ) : (
-    <GridView
-      isLoading={isLoading}
-      onClick={handleCardClick}
-      onDelete={handleDelete}
-      preferences={preferences}
-    />
+    <GridView isLoading={isLoading} onClick={handleCardClick} preferences={preferences} />
   );
 });
 

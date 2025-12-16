@@ -9,9 +9,7 @@
     "deleteTitle": "Kontextspeicher löschen",
     "description": "Beschreibung",
     "empty": "Keine Kontextspeicher vorhanden",
-    "impact": "Auswirkungsgrad",
-    "source": "Quelle",
-    "urgency": "Dringlichkeit"
+    "source": "Quelle"
   },
   "empty": {
     "description": "Das Abrufen von Erinnerungen ist ein schrittweiser Prozess. Bitte sammeln Sie mehr Themen, um den Inhalt der Erinnerungserfassung zu bereichern. Versuchen Sie, tiefere Gespräche mit dem Assistenten zu führen, um wertvolle Informationen besser erfassen und speichern zu können.",
@@ -23,7 +21,6 @@
       "delete": "Löschen",
       "edit": "Bearbeiten"
     },
-    "confidence": "Vertrauensgrad",
     "defaultType": "Erfahrung",
     "deleteConfirm": "Möchten Sie diesen Erfahrungsspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteTitle": "Erfahrungsspeicher löschen",
@@ -32,19 +29,19 @@
     "situation": "Kontext",
     "source": "Quelle",
     "steps": {
-      "action": "Maßnahme",
-      "outcome": "Mögliches Ergebnis",
-      "reasoning": "Begründung",
-      "situation": "Situationshintergrund"
+      "action": "Aktion",
+      "result": "Ergebnis",
+      "situation": "Situation",
+      "task": "Aufgabe"
     }
   },
   "filter": {
-    "search": "Suchen...",
+    "search": "Suchbegriff oder Beschreibung der Erinnerung suchen...",
     "sort": {
       "createdAt": "Erstellungsdatum",
       "scoreConfidence": "Vertrauenswürdigkeit",
-      "scoreImpact": "Auswirkung",
-      "scorePriority": "Priorität",
+      "scoreImpact": "Wichtigkeit",
+      "scorePriority": "Präferenzgewichtung",
       "scoreUrgency": "Dringlichkeit"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Möchten Sie diesen Präferenzspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "deleteTitle": "Präferenzspeicher löschen",
     "empty": "Keine Präferenzspeicher vorhanden",
-    "priority": "Priorität",
     "source": "Quelle",
-    "suggestions": "Vorschläge"
+    "suggestions": "Mögliche Aktionen des Assistenten"
   },
   "tab": {
     "contexts": "Kontexte",

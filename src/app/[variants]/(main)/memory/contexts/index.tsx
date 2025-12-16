@@ -1,3 +1,5 @@
+import { Icon, Tag } from '@lobehub/ui';
+import { BrainCircuitIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -9,6 +11,7 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import EditableModal from '../features/EditableModal';
 import FilterBar from '../features/FilterBar';
 import Loading from '../features/Loading';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
@@ -26,6 +29,7 @@ const ContextsArea = memo(() => {
 
   const contextsPage = useUserMemoryStore((s) => s.contextsPage);
   const contextsInit = useUserMemoryStore((s) => s.contextsInit);
+  const contextsTotal = useUserMemoryStore((s) => s.contextsTotal);
   const contextsSearchLoading = useUserMemoryStore((s) => s.contextsSearchLoading);
   const useFetchContexts = useUserMemoryStore((s) => s.useFetchContexts);
   const resetContextsList = useUserMemoryStore((s) => s.resetContextsList);
@@ -76,6 +80,7 @@ const ContextsArea = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
+        left={contextsTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{contextsTotal}</Tag>}
         right={
           <>
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
@@ -110,10 +115,13 @@ const ContextsArea = memo(() => {
 
 const Contexts = memo(() => {
   return (
-    <Flexbox height={'100%'} horizontal width={'100%'}>
-      <ContextsArea />
-      <ContextRightPanel />
-    </Flexbox>
+    <>
+      <Flexbox height={'100%'} horizontal width={'100%'}>
+        <ContextsArea />
+        <ContextRightPanel />
+      </Flexbox>
+      <EditableModal />
+    </>
   );
 });
 

@@ -1,3 +1,5 @@
+import { Icon, Tag } from '@lobehub/ui';
+import { BrainCircuitIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -9,6 +11,7 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import EditableModal from '../features/EditableModal';
 import FilterBar from '../features/FilterBar';
 import Loading from '../features/Loading';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
@@ -26,6 +29,7 @@ const ExperiencesArea = memo(() => {
 
   const experiencesPage = useUserMemoryStore((s) => s.experiencesPage);
   const experiencesInit = useUserMemoryStore((s) => s.experiencesInit);
+  const experiencesTotal = useUserMemoryStore((s) => s.experiencesTotal);
   const experiencesSearchLoading = useUserMemoryStore((s) => s.experiencesSearchLoading);
   const useFetchExperiences = useUserMemoryStore((s) => s.useFetchExperiences);
   const resetExperiencesList = useUserMemoryStore((s) => s.resetExperiencesList);
@@ -74,6 +78,9 @@ const ExperiencesArea = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
+        left={
+          experiencesTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{experiencesTotal}</Tag>
+        }
         right={
           <>
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
@@ -108,10 +115,13 @@ const ExperiencesArea = memo(() => {
 
 const Experiences = memo(() => {
   return (
-    <Flexbox height={'100%'} horizontal width={'100%'}>
-      <ExperiencesArea />
-      <ExperienceRightPanel />
-    </Flexbox>
+    <>
+      <Flexbox height={'100%'} horizontal width={'100%'}>
+        <ExperiencesArea />
+        <ExperienceRightPanel />
+      </Flexbox>
+      <EditableModal />
+    </>
   );
 });
 

@@ -9,9 +9,7 @@
     "deleteTitle": "Excluir Memória de Contexto",
     "description": "Descrição",
     "empty": "Nenhuma memória de contexto disponível",
-    "impact": "Grau de impacto",
-    "source": "Fonte",
-    "urgency": "Grau de urgência"
+    "source": "Fonte"
   },
   "empty": {
     "description": "A recuperação de memórias é um processo gradual. Acumule mais tópicos para enriquecer o conteúdo extraído da memória e tente ter conversas mais profundas com o assistente para capturar e armazenar melhor informações valiosas.",
@@ -23,7 +21,6 @@
       "delete": "Excluir",
       "edit": "Editar"
     },
-    "confidence": "Nível de confiança",
     "defaultType": "Experiência",
     "deleteConfirm": "Tem certeza de que deseja excluir esta memória de experiência? Esta ação não pode ser desfeita.",
     "deleteTitle": "Excluir Memória de Experiência",
@@ -32,19 +29,19 @@
     "situation": "Contexto",
     "source": "Fonte",
     "steps": {
-      "action": "Ação tomada",
-      "outcome": "Resultado possível",
-      "reasoning": "Raciocínio",
-      "situation": "Cenário"
+      "action": "Ação",
+      "result": "Resultado",
+      "situation": "Situação",
+      "task": "Tarefa"
     }
   },
   "filter": {
-    "search": "Pesquisar...",
+    "search": "Pesquisar palavras-chave ou descrições da memória...",
     "sort": {
       "createdAt": "Data de criação",
       "scoreConfidence": "Confiança",
-      "scoreImpact": "Impacto",
-      "scorePriority": "Prioridade",
+      "scoreImpact": "Importância",
+      "scorePriority": "Peso da preferência",
       "scoreUrgency": "Urgência"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Tem certeza de que deseja excluir esta memória de preferência? Esta ação não pode ser desfeita.",
     "deleteTitle": "Excluir Memória de Preferência",
     "empty": "Nenhuma memória de preferência disponível",
-    "priority": "Prioridade",
     "source": "Fonte",
-    "suggestions": "Sugestões"
+    "suggestions": "Ações que o assistente pode realizar"
   },
   "tab": {
     "contexts": "Contextos",

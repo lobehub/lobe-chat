@@ -4,6 +4,7 @@ import { Text, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import CateTag from '@/app/[variants]/(main)/memory/features/CateTag';
@@ -14,15 +15,18 @@ import HighlightedContent from '@/app/[variants]/(main)/memory/features/Highligh
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import Time from '@/app/[variants]/(main)/memory/features/Time';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { LayersEnum } from '@/types/userMemory';
+
+import ContextDropdown from './ContextDropdown';
 
 const ContextRightPanel = memo(() => {
   const theme = useTheme();
   const [contextId] = useQueryState('contextId', { clearOnDefault: true });
   const useFetchMemoryDetail = useUserMemoryStore((s) => s.useFetchMemoryDetail);
-
+  const { t } = useTranslation('memory');
   const { data: context, isLoading } = useFetchMemoryDetail(contextId, LayersEnum.Context);
 
   if (!contextId) return null;
@@ -57,12 +61,12 @@ const ContextRightPanel = memo(() => {
         </Text>
         <Flexbox align="center" gap={16} horizontal>
           <ProgressIcon
-            format={(percent) => `Impact: ${percent}%`}
+            format={(percent) => `${t('filter.sort.scoreImpact')}: ${percent}%`}
             percent={(context.scoreImpact ?? 0) * 100}
             showInfo
           />
           <ProgressIcon
-            format={(percent) => `Urgency: ${percent}%`}
+            format={(percent) => `${t('filter.sort.scoreUrgency')}: ${percent}%`}
             percent={(context.scoreUrgency ?? 0) * 100}
             showInfo
             strokeColor={(context.scoreUrgency ?? 0) >= 0.7 ? theme.colorError : theme.colorWarning}
@@ -77,7 +81,17 @@ const ContextRightPanel = memo(() => {
       </>
     );
 
-  return <DetailPanel>{content}</DetailPanel>;
+  return (
+    <DetailPanel
+      header={{
+        right: contextId ? (
+          <ContextDropdown id={contextId} size={DESKTOP_HEADER_ICON_SIZE} />
+        ) : undefined,
+      }}
+    >
+      {content}
+    </DetailPanel>
+  );
 });
 
 export default ContextRightPanel;

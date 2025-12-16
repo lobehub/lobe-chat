@@ -13,8 +13,6 @@ const SourceLink = memo<{ source?: MemorySource | null }>(({ source }) => {
 
   if (!source) return;
 
-  console.log(source);
-
   const title = source.title || source.id?.replace('tpc_', '').slice(0, 8);
 
   return (

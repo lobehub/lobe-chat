@@ -1,6 +1,6 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Avatar, Text } from '@lobehub/ui';
 import { Steps } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
@@ -15,9 +15,12 @@ import HighlightedContent from '@/app/[variants]/(main)/memory/features/Highligh
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import Time from '@/app/[variants]/(main)/memory/features/Time';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { LayersEnum } from '@/types/userMemory';
+
+import ExperienceDropdown from './ExperienceDropdown';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
@@ -39,7 +42,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const ExperienceRightPanel = memo(() => {
   const { t } = useTranslation('memory');
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const [experienceId] = useQueryState('experienceId', { clearOnDefault: true });
   const useFetchMemoryDetail = useUserMemoryStore((s) => s.useFetchMemoryDetail);
 
@@ -50,24 +53,6 @@ const ExperienceRightPanel = memo(() => {
   let content;
   if (isLoading) content = <DetailLoading />;
   if (experience) {
-    const steps = [
-      {
-        description: experience.situation,
-        title: t('experience.steps.situation'),
-      },
-      {
-        description: experience.reasoning,
-        title: t('experience.steps.reasoning'),
-      },
-      {
-        description: experience.action,
-        title: t('experience.steps.action'),
-      },
-      {
-        description: experience.possibleOutcome,
-        title: t('experience.steps.outcome'),
-      },
-    ].filter((step) => step.description);
     content = (
       <>
         <CateTag cate={experience.type} />
@@ -84,7 +69,7 @@ const ExperienceRightPanel = memo(() => {
         </Text>
         <Flexbox align="center" gap={16} horizontal justify="space-between">
           <ProgressIcon
-            format={(percent) => `Confidence: ${percent}%`}
+            format={(percent) => `${t('filter.sort.scoreConfidence')}: ${percent}%`}
             percent={(experience.scoreConfidence ?? 0) * 100}
             showInfo
           />
@@ -98,25 +83,107 @@ const ExperienceRightPanel = memo(() => {
           <HighlightedContent>{experience.keyLearning}</HighlightedContent>
         )}
 
-        {steps.length > 0 && (
-          <Steps
-            className={styles.stepsContainer}
-            current={steps.length}
-            direction="vertical"
-            items={steps.map((step) => ({
-              description: <div className={styles.content}>{step.description}</div>,
-              title: step.title,
-            }))}
-            size="small"
-          />
-        )}
+        <Steps
+          className={styles.stepsContainer}
+          current={null as any}
+          direction="vertical"
+          items={[
+            {
+              description: <HighlightedContent>{experience.situation}</HighlightedContent>,
+              icon: (
+                <Avatar
+                  avatar={'S'}
+                  shadow
+                  shape={'square'}
+                  size={24}
+                  style={{
+                    border: `1px solid ${theme.colorBorderSecondary}`,
+                  }}
+                />
+              ),
+              title: (
+                <Text as={'h4'} fontSize={12} type={'secondary'} weight={500}>
+                  {t('experience.steps.situation')}
+                </Text>
+              ),
+            },
+            {
+              description: <HighlightedContent>{experience.reasoning}</HighlightedContent>,
+              icon: (
+                <Avatar
+                  avatar={'T'}
+                  shadow
+                  shape={'square'}
+                  size={24}
+                  style={{
+                    border: `1px solid ${theme.colorBorderSecondary}`,
+                  }}
+                />
+              ),
+              title: (
+                <Text as={'h4'} fontSize={12} type={'secondary'} weight={500}>
+                  {t('experience.steps.task')}
+                </Text>
+              ),
+            },
+            {
+              description: <HighlightedContent>{experience.action}</HighlightedContent>,
+              icon: (
+                <Avatar
+                  avatar={'A'}
+                  shadow
+                  shape={'square'}
+                  size={24}
+                  style={{
+                    border: `1px solid ${theme.colorBorderSecondary}`,
+                  }}
+                />
+              ),
+              title: (
+                <Text as={'h4'} fontSize={12} type={'secondary'} weight={500}>
+                  {t('experience.steps.action')}
+                </Text>
+              ),
+            },
+            {
+              description: <HighlightedContent>{experience.possibleOutcome}</HighlightedContent>,
+              icon: (
+                <Avatar
+                  avatar={'R'}
+                  shadow
+                  shape={'square'}
+                  size={24}
+                  style={{
+                    border: `1px solid ${theme.colorBorderSecondary}`,
+                  }}
+                />
+              ),
+              title: (
+                <Text as={'h4'} fontSize={12} type={'secondary'} weight={500}>
+                  {t('experience.steps.result')}
+                </Text>
+              ),
+            },
+          ]}
+          size="small"
+        />
 
         <HashTags hashTags={experience.tags} />
       </>
     );
   }
 
-  return <DetailPanel>{content}</DetailPanel>;
+  return (
+    <DetailPanel
+      header={{
+        right: experienceId ? (
+          <ExperienceDropdown id={experienceId} size={DESKTOP_HEADER_ICON_SIZE} />
+        ) : undefined,
+      }}
+    >
+      {content}
+    </DetailPanel>
+  );
 });
 
 export default ExperienceRightPanel;

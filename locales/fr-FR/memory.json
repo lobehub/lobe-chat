@@ -9,9 +9,7 @@
     "deleteTitle": "Supprimer le souvenir contextuel",
     "description": "Description",
     "empty": "Aucun souvenir contextuel pour le moment",
-    "impact": "Impact",
-    "source": "Source",
-    "urgency": "Urgence"
+    "source": "Source"
   },
   "empty": {
     "description": "L'extraction de la mémoire est un processus progressif. Veuillez accumuler davantage de sujets pour enrichir le contenu extrait. Essayez d'engager une conversation plus approfondie avec l'assistant afin de mieux capter et stocker des informations précieuses.",
@@ -23,7 +21,6 @@
       "delete": "Supprimer",
       "edit": "Modifier"
     },
-    "confidence": "Niveau de confiance",
     "defaultType": "Expérience",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir d'expérience ? Cette action est irréversible.",
     "deleteTitle": "Supprimer le souvenir d'expérience",
@@ -32,19 +29,19 @@
     "situation": "Contexte",
     "source": "Source",
     "steps": {
-      "action": "Action entreprise",
-      "outcome": "Résultat possible",
-      "reasoning": "Raisonnement",
-      "situation": "Contexte de la situation"
+      "action": "Action",
+      "result": "Résultat",
+      "situation": "Situation",
+      "task": "Tâche"
     }
   },
   "filter": {
-    "search": "Rechercher...",
+    "search": "Rechercher par mot-clé ou description de mémoire...",
     "sort": {
       "createdAt": "Date de création",
       "scoreConfidence": "Niveau de confiance",
-      "scoreImpact": "Impact",
-      "scorePriority": "Priorité",
+      "scoreImpact": "Importance",
+      "scorePriority": "Poids de préférence",
       "scoreUrgency": "Urgence"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir de préférence ? Cette action est irréversible.",
     "deleteTitle": "Supprimer le souvenir de préférence",
     "empty": "Aucun souvenir de préférence pour le moment",
-    "priority": "Priorité",
     "source": "Source",
-    "suggestions": "Suggestions"
+    "suggestions": "Actions possibles de l’assistant"
   },
   "tab": {
     "contexts": "Contextes",

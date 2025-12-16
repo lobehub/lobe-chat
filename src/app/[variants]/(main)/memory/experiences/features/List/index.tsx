@@ -1,4 +1,3 @@
-import { App } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,29 +18,13 @@ interface ExperiencesListProps {
 
 const ExperiencesList = memo<ExperiencesListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
-  const { modal } = App.useApp();
   const [, setExperienceId] = useQueryState('experienceId', { clearOnDefault: true });
   const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
   const experiences = useUserMemoryStore((s) => s.experiences);
-  const deleteExperience = useUserMemoryStore((s) => s.deleteExperience);
 
   const handleCardClick = (experience: any) => {
     setExperienceId(experience.id);
     toggleRightPanel(true);
-  };
-
-  const handleDelete = (id: string) => {
-    modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
-      content: t('experience.deleteConfirm'),
-      okButtonProps: { danger: true },
-      okText: t('confirm', { ns: 'common' }),
-      onOk: async () => {
-        await deleteExperience(id);
-      },
-      title: t('experience.deleteTitle'),
-      type: 'warning',
-    });
   };
 
   const isEmpty = experiences.length === 0;
@@ -51,19 +34,9 @@ const ExperiencesList = memo<ExperiencesListProps>(({ isLoading, searchValue, vi
   }
 
   return viewMode === 'timeline' ? (
-    <TimelineView
-      experiences={experiences}
-      isLoading={isLoading}
-      onCardClick={handleCardClick}
-      onDelete={handleDelete}
-    />
+    <TimelineView experiences={experiences} isLoading={isLoading} onCardClick={handleCardClick} />
   ) : (
-    <GridView
-      experiences={experiences}
-      isLoading={isLoading}
-      onClick={handleCardClick}
-      onDelete={handleDelete}
-    />
+    <GridView experiences={experiences} isLoading={isLoading} onClick={handleCardClick} />
   );
 });
 

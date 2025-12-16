@@ -9,9 +9,7 @@
     "deleteTitle": "Eliminar memoria de contexto",
     "description": "Descripción",
     "empty": "No hay memorias de contexto disponibles",
-    "impact": "Impacto",
-    "source": "Fuente",
-    "urgency": "Urgencia"
+    "source": "Fuente"
   },
   "empty": {
     "description": "La recuperación de recuerdos es un proceso gradual. Acumula más temas para enriquecer el contenido de la memoria recuperada e intenta mantener conversaciones más profundas con el asistente para capturar y almacenar mejor información valiosa.",
@@ -23,7 +21,6 @@
       "delete": "Eliminar",
       "edit": "Editar"
     },
-    "confidence": "Nivel de confianza",
     "defaultType": "Experiencia",
     "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de experiencia? Esta acción no se puede deshacer.",
     "deleteTitle": "Eliminar memoria de experiencia",
@@ -32,19 +29,19 @@
     "situation": "Contexto",
     "source": "Fuente",
     "steps": {
-      "action": "Acción tomada",
-      "outcome": "Resultado posible",
-      "reasoning": "Razonamiento",
-      "situation": "Situación de fondo"
+      "action": "Acción",
+      "result": "Resultado",
+      "situation": "Situación",
+      "task": "Tarea"
     }
   },
   "filter": {
-    "search": "Buscar...",
+    "search": "Buscar palabras clave o descripciones de memoria...",
     "sort": {
       "createdAt": "Fecha de creación",
       "scoreConfidence": "Nivel de confianza",
-      "scoreImpact": "Nivel de impacto",
-      "scorePriority": "Nivel de prioridad",
+      "scoreImpact": "Importancia",
+      "scorePriority": "Peso de preferencia",
       "scoreUrgency": "Nivel de urgencia"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de preferencia? Esta acción no se puede deshacer.",
     "deleteTitle": "Eliminar memoria de preferencia",
     "empty": "No hay memorias de preferencia disponibles",
-    "priority": "Prioridad",
     "source": "Fuente",
-    "suggestions": "Sugerencias"
+    "suggestions": "Acciones que el asistente podría tomar"
   },
   "tab": {
     "contexts": "Contextos",

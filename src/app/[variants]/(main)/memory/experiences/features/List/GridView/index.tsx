@@ -10,32 +10,23 @@ interface GridViewProps {
   experiences: DisplayExperienceMemory[];
   isLoading?: boolean;
   onClick: (experience: DisplayExperienceMemory) => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
 }
 
-const ExperiencesGridView = memo<GridViewProps>(
-  ({ experiences, isLoading, onClick, onDelete, onEdit }) => {
-    const loadMoreExperiences = useUserMemoryStore((s) => s.loadMoreExperiences);
-    const experiencesHasMore = useUserMemoryStore((s) => s.experiencesHasMore);
+const ExperiencesGridView = memo<GridViewProps>(({ experiences, isLoading, onClick }) => {
+  const loadMoreExperiences = useUserMemoryStore((s) => s.loadMoreExperiences);
+  const experiencesHasMore = useUserMemoryStore((s) => s.experiencesHasMore);
 
-    return (
-      <GridView
-        hasMore={experiencesHasMore}
-        isLoading={isLoading}
-        items={experiences}
-        onLoadMore={loadMoreExperiences}
-        renderItem={(experience, actions) => (
-          <ExperienceCard
-            experience={experience}
-            onClick={() => onClick(experience)}
-            onDelete={actions.onDelete || onDelete}
-            onEdit={actions.onEdit || onEdit}
-          />
-        )}
-      />
-    );
-  },
-);
+  return (
+    <GridView
+      hasMore={experiencesHasMore}
+      isLoading={isLoading}
+      items={experiences}
+      onLoadMore={loadMoreExperiences}
+      renderItem={(experience) => (
+        <ExperienceCard experience={experience} onClick={() => onClick(experience)} />
+      )}
+    />
+  );
+});
 
 export default ExperiencesGridView;

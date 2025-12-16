@@ -19,8 +19,15 @@ const n = setNamespace('userMemory');
 type MemoryContext = Parameters<typeof createMemorySearchParams>[0];
 
 export interface BaseAction {
+  clearEditingMemory: () => void;
   refreshUserMemory: (params: RetrieveMemoryParams) => Promise<void>;
   setActiveMemoryContext: (context?: MemoryContext) => void;
+  setEditingMemory: (
+    id: string,
+    content: string,
+    layer: 'context' | 'experience' | 'identity' | 'preference',
+  ) => void;
+  updateMemory: (id: string, content: string, layer: LayersEnum) => Promise<void>;
   useFetchMemoryDetail: (id: string | null, layer: LayersEnum) => SWRResponse<any>;
   useFetchUserMemory: (
     enable: boolean,
@@ -34,6 +41,18 @@ export const createBaseSlice: StateCreator<
   [],
   BaseAction
 > = (set, get) => ({
+  clearEditingMemory: () => {
+    set(
+      {
+        editingMemoryContent: undefined,
+        editingMemoryId: undefined,
+        editingMemoryLayer: undefined,
+      },
+      false,
+      n('clearEditingMemory'),
+    );
+  },
+
   refreshUserMemory: async (params) => {
     const key = userMemoryCacheKey(params);
 
@@ -52,6 +71,51 @@ export const createBaseSlice: StateCreator<
       false,
       n('setActiveMemoryContext', { key }),
     );
+  },
+
+  setEditingMemory: (id, content, layer) => {
+    set(
+      {
+        editingMemoryContent: content,
+        editingMemoryId: id,
+        editingMemoryLayer: layer,
+      },
+      false,
+      n('setEditingMemory', { id, layer }),
+    );
+  },
+
+  updateMemory: async (id, content, layer) => {
+    const { memoryCRUDService } = await import('@/services/userMemory/index');
+    const { resetContextsList, resetExperiencesList, resetIdentitiesList, resetPreferencesList } =
+      get();
+
+    // Update the memory content based on layer
+    switch (layer) {
+      case LayersEnum.Context: {
+        await memoryCRUDService.updateContext(id, { description: content });
+        resetContextsList({ q: get().contextsQuery, sort: get().contextsSort });
+        break;
+      }
+      case LayersEnum.Experience: {
+        await memoryCRUDService.updateExperience(id, { keyLearning: content });
+        resetExperiencesList({ q: get().experiencesQuery, sort: get().experiencesSort });
+        break;
+      }
+      case LayersEnum.Identity: {
+        await memoryCRUDService.updateIdentity(id, { description: content });
+        resetIdentitiesList({ q: get().identitiesQuery, types: get().identitiesTypes });
+        break;
+      }
+      case LayersEnum.Preference: {
+        await memoryCRUDService.updatePreference(id, { conclusionDirectives: content });
+        resetPreferencesList({ q: get().preferencesQuery, sort: get().preferencesSort });
+        break;
+      }
+    }
+
+    // Clear editing state
+    get().clearEditingMemory();
   },
 
   useFetchMemoryDetail: (id, layer) => {

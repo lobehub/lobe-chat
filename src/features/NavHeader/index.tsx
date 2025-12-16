@@ -4,7 +4,7 @@ import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import ToggleLeftPanelButton from '@/features/NavPanel/ToggleLeftPanelButton';
 import { useNavPanel } from '@/features/NavPanel/hooks/useNavPanel';
 
-interface NavHeaderProps extends Omit<FlexboxProps, 'children'> {
+export interface NavHeaderProps extends Omit<FlexboxProps, 'children'> {
   children?: ReactNode;
   left?: ReactNode;
   right?: ReactNode;

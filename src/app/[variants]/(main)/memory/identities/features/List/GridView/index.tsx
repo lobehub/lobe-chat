@@ -10,10 +10,9 @@ interface GridViewProps {
   identities: DisplayIdentityMemory[];
   isLoading?: boolean;
   onClick?: (identity: DisplayIdentityMemory) => void;
-  onDelete?: (id: string) => void;
 }
 
-const IdentityGridView = memo<GridViewProps>(({ identities, isLoading, onClick, onDelete }) => {
+const IdentityGridView = memo<GridViewProps>(({ identities, isLoading, onClick }) => {
   const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
   const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
 
@@ -24,7 +23,7 @@ const IdentityGridView = memo<GridViewProps>(({ identities, isLoading, onClick, 
       items={identities}
       onLoadMore={loadMoreIdentities}
       renderItem={(identity) => (
-        <IdentityCard identity={identity} onClick={() => onClick?.(identity)} onDelete={onDelete} />
+        <IdentityCard identity={identity} onClick={() => onClick?.(identity)} />
       )}
     />
   );

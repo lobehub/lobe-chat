@@ -9,9 +9,7 @@
     "deleteTitle": "コンテキストメモリの削除",
     "description": "説明",
     "empty": "コンテキストメモリはありません",
-    "impact": "影響度",
-    "source": "出典",
-    "urgency": "緊急度"
+    "source": "出典"
   },
   "empty": {
     "description": "記憶の抽出は段階的なプロセスです。より多くのトピックを蓄積し、記憶の内容を豊かにしましょう。アシスタントとの対話を深めることで、より価値のある情報を捉え、保存しやすくなります。",
@@ -23,7 +21,6 @@
       "delete": "削除",
       "edit": "編集"
     },
-    "confidence": "確信度",
     "defaultType": "経験",
     "deleteConfirm": "この経験メモリを削除してもよろしいですか？この操作は元に戻せません。",
     "deleteTitle": "経験メモリの削除",
@@ -32,19 +29,19 @@
     "situation": "状況",
     "source": "出典",
     "steps": {
-      "action": "取った行動",
-      "outcome": "想定される結果",
-      "reasoning": "推論過程",
-      "situation": "状況背景"
+      "action": "行動",
+      "result": "結果",
+      "situation": "状況",
+      "task": "タスク"
     }
   },
   "filter": {
-    "search": "検索...",
+    "search": "メモリのキーワードまたは説明を検索...",
     "sort": {
       "createdAt": "作成日時",
       "scoreConfidence": "信頼度",
-      "scoreImpact": "影響度",
-      "scorePriority": "優先度",
+      "scoreImpact": "重要度",
+      "scorePriority": "優先度の重み",
       "scoreUrgency": "緊急度"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "この好みのメモリを削除してもよろしいですか？この操作は元に戻せません。",
     "deleteTitle": "好みのメモリの削除",
     "empty": "好みのメモリはありません",
-    "priority": "優先度",
     "source": "出典",
-    "suggestions": "提案"
+    "suggestions": "アシスタントが提案する可能性のある行動"
   },
   "tab": {
     "contexts": "コンテキスト",

@@ -9,33 +9,24 @@ import PreferenceCard from './PreferenceCard';
 interface GridViewProps {
   isLoading?: boolean;
   onClick: (preference: DisplayPreferenceMemory) => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
   preferences: DisplayPreferenceMemory[];
 }
 
-const PreferenceGridView = memo<GridViewProps>(
-  ({ preferences, isLoading, onClick, onDelete, onEdit }) => {
-    const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
-    const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
+const PreferenceGridView = memo<GridViewProps>(({ preferences, isLoading, onClick }) => {
+  const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
+  const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
 
-    return (
-      <GridView
-        hasMore={preferencesHasMore}
-        isLoading={isLoading}
-        items={preferences}
-        onLoadMore={loadMorePreferences}
-        renderItem={(preference, actions) => (
-          <PreferenceCard
-            onClick={() => onClick(preference)}
-            onDelete={actions.onDelete || onDelete}
-            onEdit={actions.onEdit || onEdit}
-            preference={preference}
-          />
-        )}
-      />
-    );
-  },
-);
+  return (
+    <GridView
+      hasMore={preferencesHasMore}
+      isLoading={isLoading}
+      items={preferences}
+      onLoadMore={loadMorePreferences}
+      renderItem={(preference) => (
+        <PreferenceCard onClick={() => onClick(preference)} preference={preference} />
+      )}
+    />
+  );
+});
 
 export default PreferenceGridView;

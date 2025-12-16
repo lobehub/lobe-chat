@@ -12,13 +12,11 @@ import PreferenceCard from './PreferenceCard';
 interface PreferenceTimelineViewProps {
   isLoading?: boolean;
   onClick?: (preference: DisplayPreferenceMemory) => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
   preferences: DisplayPreferenceMemory[];
 }
 
 const PreferenceTimelineView = memo<PreferenceTimelineViewProps>(
-  ({ preferences, isLoading, onClick, onDelete, onEdit }) => {
+  ({ preferences, isLoading, onClick }) => {
     const loadMorePreferences = useUserMemoryStore((s) => s.loadMorePreferences);
     const preferencesHasMore = useUserMemoryStore((s) => s.preferencesHasMore);
 
@@ -29,17 +27,10 @@ const PreferenceTimelineView = memo<PreferenceTimelineViewProps>(
         hasMore={preferencesHasMore}
         isLoading={isLoading}
         onLoadMore={loadMorePreferences}
-        renderHeader={(periodKey, itemCount) => (
-          <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />
-        )}
+        renderHeader={(periodKey) => <PeriodHeader groupBy="day" periodKey={periodKey} />}
         renderItem={(preference) => (
           <TimelineItemWrapper>
-            <PreferenceCard
-              onClick={() => onClick?.(preference)}
-              onDelete={onDelete}
-              onEdit={onEdit}
-              preference={preference}
-            />
+            <PreferenceCard onClick={() => onClick?.(preference)} preference={preference} />
           </TimelineItemWrapper>
         )}
       />

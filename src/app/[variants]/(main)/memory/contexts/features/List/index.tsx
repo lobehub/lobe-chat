@@ -1,4 +1,3 @@
-import { App } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,30 +18,14 @@ interface ContextsListProps {
 
 const ContextsList = memo<ContextsListProps>(({ isLoading, searchValue, viewMode }) => {
   const { t } = useTranslation(['memory', 'common']);
-  const { modal } = App.useApp();
   const toggleRightPanel = useGlobalStore((s) => s.toggleRightPanel);
   const [, setContextId] = useQueryState('contextId', { clearOnDefault: true });
 
   const contexts = useUserMemoryStore((s) => s.contexts);
-  const deleteContext = useUserMemoryStore((s) => s.deleteContext);
 
   const handleCardClick = (context: any) => {
     setContextId(context.id);
     toggleRightPanel(true);
-  };
-
-  const handleDelete = (id: string) => {
-    modal.confirm({
-      cancelText: t('cancel', { ns: 'common' }),
-      content: t('context.deleteConfirm'),
-      okButtonProps: { danger: true },
-      okText: t('confirm', { ns: 'common' }),
-      onOk: async () => {
-        await deleteContext(id);
-      },
-      title: t('context.deleteTitle'),
-      type: 'warning',
-    });
   };
 
   const isEmpty = contexts.length === 0;
@@ -52,19 +35,9 @@ const ContextsList = memo<ContextsListProps>(({ isLoading, searchValue, viewMode
   }
 
   return viewMode === 'timeline' ? (
-    <TimelineView
-      contexts={contexts}
-      isLoading={isLoading}
-      onClick={handleCardClick}
-      onDelete={handleDelete}
-    />
+    <TimelineView contexts={contexts} isLoading={isLoading} onClick={handleCardClick} />
   ) : (
-    <GridView
-      contexts={contexts}
-      isLoading={isLoading}
-      onClick={handleCardClick}
-      onDelete={handleDelete}
-    />
+    <GridView contexts={contexts} isLoading={isLoading} onClick={handleCardClick} />
   );
 });
 

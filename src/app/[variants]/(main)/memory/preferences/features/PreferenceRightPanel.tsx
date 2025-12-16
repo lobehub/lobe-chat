@@ -2,7 +2,7 @@
 
 import { Block, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Lightbulb } from 'lucide-react';
+import { BotIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -15,20 +15,18 @@ import HighlightedContent from '@/app/[variants]/(main)/memory/features/Highligh
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import SourceLink from '@/app/[variants]/(main)/memory/features/SourceLink';
 import Time from '@/app/[variants]/(main)/memory/features/Time';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { LayersEnum } from '@/types/userMemory';
 
-const useStyles = createStyles(({ css, token }) => ({
-  suggestions: css`
-    border-color: ${token.colorInfoBorder};
-    background: ${token.colorInfoBg};
-  `,
+import PreferenceDropdown from './PreferenceDropdown';
 
+const useStyles = createStyles(({ css, token }) => ({
   suggestionsTitle: css`
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 500;
-    color: ${token.colorInfo};
+    color: ${token.colorTextSecondary};
   `,
 }));
 
@@ -61,7 +59,7 @@ const PreferenceRightPanel = memo(() => {
         </Text>
         <Flexbox align="center" gap={16} horizontal justify="space-between">
           <ProgressIcon
-            format={(percent) => `Priority: ${percent}%`}
+            format={(percent) => `${t('filter.sort.scorePriority')}: ${percent}%`}
             percent={(preference.scorePriority ?? 0) * 100}
             showInfo
           />
@@ -76,10 +74,10 @@ const PreferenceRightPanel = memo(() => {
         )}
 
         {preference.suggestions && (
-          <Block className={styles.suggestions} gap={8} padding={16} variant={'outlined'}>
+          <Block gap={8} padding={16} variant={'filled'}>
             <Flexbox align={'center'} className={styles.suggestionsTitle} gap={6} horizontal>
-              <Icon icon={Lightbulb} />
-              {t('preference.suggestions')}
+              <Icon icon={BotIcon} size={16} />
+              <span>{t('preference.suggestions')}</span>
             </Flexbox>
             <HighlightedContent>{preference.suggestions}</HighlightedContent>
           </Block>
@@ -90,7 +88,17 @@ const PreferenceRightPanel = memo(() => {
     );
   }
 
-  return <DetailPanel>{content}</DetailPanel>;
+  return (
+    <DetailPanel
+      header={{
+        right: preferenceId ? (
+          <PreferenceDropdown id={preferenceId} size={DESKTOP_HEADER_ICON_SIZE} />
+        ) : undefined,
+      }}
+    >
+      {content}
+    </DetailPanel>
+  );
 });
 
 export default PreferenceRightPanel;

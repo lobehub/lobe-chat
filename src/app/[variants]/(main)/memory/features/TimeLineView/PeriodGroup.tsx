@@ -1,6 +1,6 @@
 'use client';
 
-import { Tag, Text } from '@lobehub/ui';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ReactNode, memo } from 'react';
@@ -39,22 +39,21 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface PeriodHeaderProps {
   groupBy?: GroupBy;
-  itemCount: number;
+
   periodKey: string;
 }
 
-export const PeriodHeader = memo<PeriodHeaderProps>(({ periodKey, itemCount, groupBy = 'day' }) => {
+export const PeriodHeader = memo<PeriodHeaderProps>(({ periodKey, groupBy = 'day' }) => {
   const { styles } = useStyles();
 
   const periodName =
     groupBy === 'month'
-      ? dayjs(`${periodKey}-01`).format('YYYY年MM月')
-      : dayjs(periodKey).format('YYYY年MM月DD日');
+      ? dayjs(`${periodKey}-01`).format('MMMM YYYY')
+      : dayjs(periodKey).format('MMMM D, YYYY');
 
   return (
     <Flexbox align={'center'} className={styles.periodHeader} gap={12} horizontal paddingBlock={8}>
       <Text weight={500}>{periodName}</Text>
-      <Tag>{itemCount}</Tag>
     </Flexbox>
   );
 });

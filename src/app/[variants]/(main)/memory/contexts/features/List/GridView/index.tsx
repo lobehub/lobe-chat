@@ -10,33 +10,22 @@ interface GridViewProps {
   contexts: DisplayContextMemory[];
   isLoading?: boolean;
   onClick: (context: DisplayContextMemory) => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
 }
 
-const ContextsGridView = memo<GridViewProps>(
-  ({ contexts, isLoading, onClick, onDelete, onEdit }) => {
-    const loadMoreContexts = useUserMemoryStore((s) => s.loadMoreContexts);
-    const contextsHasMore = useUserMemoryStore((s) => s.contextsHasMore);
+const ContextsGridView = memo<GridViewProps>(({ contexts, isLoading, onClick }) => {
+  const loadMoreContexts = useUserMemoryStore((s) => s.loadMoreContexts);
+  const contextsHasMore = useUserMemoryStore((s) => s.contextsHasMore);
 
-    return (
-      <GridView
-        defaultColumnCount={2}
-        hasMore={contextsHasMore}
-        isLoading={isLoading}
-        items={contexts}
-        onLoadMore={loadMoreContexts}
-        renderItem={(context, actions) => (
-          <ContextCard
-            context={context}
-            onClick={() => onClick(context)}
-            onDelete={actions.onDelete || onDelete}
-            onEdit={actions.onEdit || onEdit}
-          />
-        )}
-      />
-    );
-  },
-);
+  return (
+    <GridView
+      defaultColumnCount={2}
+      hasMore={contextsHasMore}
+      isLoading={isLoading}
+      items={contexts}
+      onLoadMore={loadMoreContexts}
+      renderItem={(context) => <ContextCard context={context} onClick={() => onClick(context)} />}
+    />
+  );
+});
 
 export default ContextsGridView;

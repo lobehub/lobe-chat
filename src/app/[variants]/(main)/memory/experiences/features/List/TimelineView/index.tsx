@@ -13,12 +13,10 @@ interface ExperienceTimelineViewProps {
   experiences: DisplayExperienceMemory[];
   isLoading?: boolean;
   onCardClick: (experience: DisplayExperienceMemory) => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
 }
 
 const ExperienceTimelineView = memo<ExperienceTimelineViewProps>(
-  ({ experiences, isLoading, onCardClick, onDelete, onEdit }) => {
+  ({ experiences, isLoading, onCardClick }) => {
     const loadMoreExperiences = useUserMemoryStore((s) => s.loadMoreExperiences);
     const experiencesHasMore = useUserMemoryStore((s) => s.experiencesHasMore);
 
@@ -29,17 +27,10 @@ const ExperienceTimelineView = memo<ExperienceTimelineViewProps>(
         hasMore={experiencesHasMore}
         isLoading={isLoading}
         onLoadMore={loadMoreExperiences}
-        renderHeader={(periodKey, itemCount) => (
-          <PeriodHeader groupBy="day" itemCount={itemCount} periodKey={periodKey} />
-        )}
+        renderHeader={(periodKey) => <PeriodHeader groupBy="day" periodKey={periodKey} />}
         renderItem={(experience) => (
           <TimelineItemWrapper>
-            <ExperienceCard
-              experience={experience}
-              onClick={onCardClick}
-              onDelete={onDelete}
-              onEdit={onEdit}
-            />
+            <ExperienceCard experience={experience} onClick={onCardClick} />
           </TimelineItemWrapper>
         )}
       />

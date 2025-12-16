@@ -1,62 +1,33 @@
-import { ActionIcon, Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { KeyboardEvent, MouseEvent, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
 import { DisplayContextMemory } from '@/database/repositories/userMemory';
 
+import ContextDropdown from '../../ContextDropdown';
+
 interface ContextCardProps {
   context: DisplayContextMemory;
   onClick?: () => void;
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
 }
 
-const ContextCard = memo<ContextCardProps>(({ context, onClick, onDelete, onEdit }) => {
+const ContextCard = memo<ContextCardProps>(({ context, onClick }) => {
   const { t } = useTranslation('memory');
   const theme = useTheme();
 
-  const handleMenuClick = (info: { domEvent: MouseEvent | KeyboardEvent; key: string }) => {
-    info.domEvent.stopPropagation();
-    if (info.key === 'delete' && onDelete) {
-      onDelete(context.id);
-    } else if (info.key === 'edit' && onEdit) {
-      onEdit(context.id);
-    }
-  };
-
-  const menuItems = [
-    {
-      icon: <Pencil size={14} />,
-      key: 'edit',
-      label: t('context.actions.edit'),
-    },
-    {
-      danger: true,
-      icon: <Trash2 size={14} />,
-      key: 'delete',
-      label: t('context.actions.delete'),
-    },
-  ];
-
   return (
     <GridCard
-      actions={
-        <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} trigger={['click']}>
-          <ActionIcon icon={MoreHorizontal} size="small" />
-        </Dropdown>
-      }
+      actions={<ContextDropdown id={context.id} />}
       badges={
         <>
           <ProgressIcon
-            format={(percent) => `Impact: ${percent}%`}
+            format={(percent) => `${t('filter.sort.scoreImpact')}: ${percent}%`}
             percent={(context.scoreImpact ?? 0) * 100}
           />
           <ProgressIcon
-            format={(percent) => `Urgency: ${percent}%`}
+            format={(percent) => `${t('filter.sort.scoreUrgency')}: ${percent}%`}
             percent={(context.scoreUrgency ?? 0) * 100}
             strokeColor={(context.scoreUrgency ?? 0) >= 0.7 ? theme.colorError : theme.colorWarning}
           />

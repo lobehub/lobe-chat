@@ -11,10 +11,9 @@ interface TimelineViewProps {
   identities: DisplayIdentityMemory[];
   isLoading?: boolean;
   onClick?: (identity: DisplayIdentityMemory) => void;
-  onDelete?: (id: string) => void;
 }
 
-const TimelineView = memo<TimelineViewProps>(({ identities, isLoading, onClick, onDelete }) => {
+const TimelineView = memo<TimelineViewProps>(({ identities, isLoading, onClick }) => {
   const loadMoreIdentities = useUserMemoryStore((s) => s.loadMoreIdentities);
   const identitiesHasMore = useUserMemoryStore((s) => s.identitiesHasMore);
 
@@ -26,16 +25,10 @@ const TimelineView = memo<TimelineViewProps>(({ identities, isLoading, onClick, 
       hasMore={identitiesHasMore}
       isLoading={isLoading}
       onLoadMore={loadMoreIdentities}
-      renderHeader={(periodKey, itemCount) => (
-        <PeriodHeader groupBy="month" itemCount={itemCount} periodKey={periodKey} />
-      )}
+      renderHeader={(periodKey) => <PeriodHeader groupBy="month" periodKey={periodKey} />}
       renderItem={(identity) => (
         <TimelineItemWrapper>
-          <IdentityCard
-            identity={identity}
-            onClick={() => onClick?.(identity)}
-            onDelete={onDelete}
-          />
+          <IdentityCard identity={identity} onClick={() => onClick?.(identity)} />
         </TimelineItemWrapper>
       )}
     />

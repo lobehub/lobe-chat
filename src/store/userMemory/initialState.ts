@@ -17,6 +17,9 @@ export interface UserMemoryStoreState {
   contextsSearchLoading?: boolean;
   contextsSort?: 'scoreImpact' | 'scoreUrgency';
   contextsTotal: number;
+  editingMemoryContent?: string;
+  editingMemoryId?: string;
+  editingMemoryLayer?: 'context' | 'experience' | 'identity' | 'preference';
   experiences: DisplayExperienceMemory[];
   experiencesHasMore: boolean;
   experiencesInit: boolean;
@@ -58,6 +61,9 @@ export const initialState: UserMemoryStoreState = {
   contextsQuery: undefined,
   contextsSort: undefined,
   contextsTotal: 0,
+  editingMemoryContent: undefined,
+  editingMemoryId: undefined,
+  editingMemoryLayer: undefined,
   experiences: [],
   experiencesHasMore: true,
   experiencesInit: false,

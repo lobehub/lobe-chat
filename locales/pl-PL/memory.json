@@ -9,9 +9,7 @@
     "deleteTitle": "Usuń pamięć kontekstową",
     "description": "Opis",
     "empty": "Brak zapisanych kontekstów",
-    "impact": "Wpływ",
-    "source": "Źródło",
-    "urgency": "Pilność"
+    "source": "Źródło"
   },
   "empty": {
     "description": "Wydobywanie wspomnień to proces stopniowy. Gromadź więcej tematów, aby wzbogacić zawartość pamięci. Spróbuj prowadzić głębsze rozmowy z asystentem, aby lepiej uchwycić i przechować cenne informacje.",
@@ -23,7 +21,6 @@
       "delete": "Usuń",
       "edit": "Edytuj"
     },
-    "confidence": "Pewność",
     "defaultType": "Doświadczenie",
     "deleteConfirm": "Czy na pewno chcesz usunąć to doświadczenie? Tej operacji nie można cofnąć.",
     "deleteTitle": "Usuń doświadczenie",
@@ -32,19 +29,19 @@
     "situation": "Sytuacja",
     "source": "Źródło",
     "steps": {
-      "action": "Podjęte działanie",
-      "outcome": "Możliwy rezultat",
-      "reasoning": "Tok rozumowania",
-      "situation": "Tło sytuacyjne"
+      "action": "Działanie",
+      "result": "Rezultat",
+      "situation": "Sytuacja",
+      "task": "Zadanie"
     }
   },
   "filter": {
-    "search": "Szukaj...",
+    "search": "Szukaj słów kluczowych lub opisu wspomnienia...",
     "sort": {
       "createdAt": "Data utworzenia",
       "scoreConfidence": "Pewność",
-      "scoreImpact": "Wpływ",
-      "scorePriority": "Priorytet",
+      "scoreImpact": "Ważność",
+      "scorePriority": "Waga preferencji",
       "scoreUrgency": "Pilność"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Czy na pewno chcesz usunąć tę preferencję? Tej operacji nie można cofnąć.",
     "deleteTitle": "Usuń preferencję",
     "empty": "Brak zapisanych preferencji",
-    "priority": "Priorytet",
     "source": "Źródło",
-    "suggestions": "Sugestie"
+    "suggestions": "Możliwe działania asystenta"
   },
   "tab": {
     "contexts": "Konteksty",

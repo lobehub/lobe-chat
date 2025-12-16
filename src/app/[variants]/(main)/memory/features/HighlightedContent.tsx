@@ -1,4 +1,5 @@
 import { Markdown, Text } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -8,12 +9,13 @@ interface HighlightedContentProps {
 }
 
 const HighlightedContent = memo<HighlightedContentProps>(({ title, children }) => {
+  const theme = useTheme();
   if (!children) return;
-
   const content = (
     <Markdown
       fontSize={14}
       style={{
+        color: theme.colorText,
         overflow: 'visible',
       }}
       variant={'chat'}

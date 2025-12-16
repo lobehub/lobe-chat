@@ -9,9 +9,7 @@
     "deleteTitle": "Xóa ký ức ngữ cảnh",
     "description": "Mô tả",
     "empty": "Chưa có ký ức ngữ cảnh nào",
-    "impact": "Mức độ ảnh hưởng",
-    "source": "Nguồn",
-    "urgency": "Mức độ khẩn cấp"
+    "source": "Nguồn"
   },
   "empty": {
     "description": "Việc truy xuất ký ức là một quá trình tiến triển dần dần, hãy tích lũy thêm nhiều chủ đề để làm phong phú nội dung truy xuất ký ức. Hãy thử trò chuyện sâu hơn với trợ lý để nắm bắt và lưu trữ thông tin có giá trị tốt hơn.",
@@ -23,7 +21,6 @@
       "delete": "Xóa",
       "edit": "Chỉnh sửa"
     },
-    "confidence": "Độ tin cậy",
     "defaultType": "Kinh nghiệm",
     "deleteConfirm": "Bạn có chắc chắn muốn xóa ký ức kinh nghiệm này không? Hành động này không thể hoàn tác.",
     "deleteTitle": "Xóa ký ức kinh nghiệm",
@@ -32,19 +29,19 @@
     "situation": "Ngữ cảnh",
     "source": "Nguồn",
     "steps": {
-      "action": "Hành động đã thực hiện",
-      "outcome": "Kết quả có thể xảy ra",
-      "reasoning": "Quá trình suy luận",
-      "situation": "Bối cảnh tình huống"
+      "action": "Hành động",
+      "result": "Kết quả",
+      "situation": "Tình huống",
+      "task": "Nhiệm vụ"
     }
   },
   "filter": {
-    "search": "Tìm kiếm...",
+    "search": "Tìm kiếm từ khóa hoặc mô tả ghi nhớ...",
     "sort": {
       "createdAt": "Thời gian tạo",
       "scoreConfidence": "Mức độ tin cậy",
-      "scoreImpact": "Mức độ ảnh hưởng",
-      "scorePriority": "Mức độ ưu tiên",
+      "scoreImpact": "Mức độ quan trọng",
+      "scorePriority": "Trọng số ưu tiên",
       "scoreUrgency": "Mức độ khẩn cấp"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Bạn có chắc chắn muốn xóa ký ức sở thích này không? Hành động này không thể hoàn tác.",
     "deleteTitle": "Xóa ký ức sở thích",
     "empty": "Chưa có ký ức sở thích nào",
-    "priority": "Mức độ ưu tiên",
     "source": "Nguồn",
-    "suggestions": "Đề xuất"
+    "suggestions": "Hành động có thể được trợ lý thực hiện"
   },
   "tab": {
     "contexts": "Ngữ cảnh",

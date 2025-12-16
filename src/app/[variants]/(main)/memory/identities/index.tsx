@@ -1,6 +1,9 @@
+import { Icon, Tag } from '@lobehub/ui';
+import { BrainCircuitIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import CommonFilterBar from '@/app/[variants]/(main)/memory/features/FilterBar';
 import NavHeader from '@/features/NavHeader';
 import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
@@ -8,12 +11,13 @@ import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { TypesEnum } from '@/types/userMemory';
 
+import EditableModal from '../features/EditableModal';
 import Loading from '../features/Loading';
 import { SCROLL_PARENT_ID } from '../features/TimeLineView/useScrollParent';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
-import FilterBar from './features/FilterBar';
 import IdentityRightPanel from './features/IdentityRightPanel';
 import List, { IdentityType } from './features/List';
+import SegmentedBar from './features/SegmentedBar';
 
 const IdentitiesArea = memo(() => {
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
@@ -25,6 +29,7 @@ const IdentitiesArea = memo(() => {
 
   const identitiesPage = useUserMemoryStore((s) => s.identitiesPage);
   const identitiesInit = useUserMemoryStore((s) => s.identitiesInit);
+  const identitiesTotal = useUserMemoryStore((s) => s.identitiesTotal);
   const identitiesSearchLoading = useUserMemoryStore((s) => s.identitiesSearchLoading);
   const useFetchIdentities = useUserMemoryStore((s) => s.useFetchIdentities);
   const resetIdentitiesList = useUserMemoryStore((s) => s.resetIdentitiesList);
@@ -64,6 +69,9 @@ const IdentitiesArea = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
+        left={
+          identitiesTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{identitiesTotal}</Tag>
+        }
         right={
           <>
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
@@ -78,12 +86,10 @@ const IdentitiesArea = memo(() => {
         width={'100%'}
       >
         <WideScreenContainer gap={32} paddingBlock={48}>
-          <FilterBar
-            onSearch={handleSearch}
-            onTypeChange={handleTypeChange}
-            searchValue={searchValue}
-            typeValue={typeFilter}
-          />
+          <Flexbox align={'center'} gap={12} horizontal justify={'space-between'}>
+            <SegmentedBar onTypeChange={handleTypeChange} typeValue={typeFilter} />
+            <CommonFilterBar onSearch={handleSearch} searchValue={searchValue} />
+          </Flexbox>
           {showLoading ? (
             <Loading viewMode={viewMode} />
           ) : (
@@ -97,10 +103,13 @@ const IdentitiesArea = memo(() => {
 
 const Identities = memo(() => {
   return (
-    <Flexbox height={'100%'} horizontal width={'100%'}>
-      <IdentitiesArea />
-      <IdentityRightPanel />
-    </Flexbox>
+    <>
+      <Flexbox height={'100%'} horizontal width={'100%'}>
+        <IdentitiesArea />
+        <IdentityRightPanel />
+      </Flexbox>
+      <EditableModal />
+    </>
   );
 });
 

@@ -9,9 +9,12 @@ import DetailPanel from '@/app/[variants]/(main)/memory/features/DetailPanel';
 import HashTags from '@/app/[variants]/(main)/memory/features/HashTags';
 import HighlightedContent from '@/app/[variants]/(main)/memory/features/HighlightedContent';
 import Time from '@/app/[variants]/(main)/memory/features/Time';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 import { LayersEnum } from '@/types/userMemory';
+
+import IdentityDropdown from './IdentityDropdown';
 
 const IdentityRightPanel = memo(() => {
   const [identityId] = useQueryState('identityId', { clearOnDefault: true });
@@ -45,7 +48,17 @@ const IdentityRightPanel = memo(() => {
     );
   }
 
-  return <DetailPanel>{content}</DetailPanel>;
+  return (
+    <DetailPanel
+      header={{
+        right: identityId ? (
+          <IdentityDropdown id={identityId} size={DESKTOP_HEADER_ICON_SIZE} />
+        ) : undefined,
+      }}
+    >
+      {content}
+    </DetailPanel>
+  );
 });
 
 export default IdentityRightPanel;

@@ -9,9 +9,7 @@
     "deleteTitle": "删除情境记忆",
     "description": "描述",
     "empty": "暂无情境记忆",
-    "impact": "影响度",
-    "source": "来源",
-    "urgency": "紧急度"
+    "source": "来源"
   },
   "empty": {
     "description": "记忆的提取是渐进式的过程，请积累更多话题以丰富记忆提取内容，尝试与助手进行更深入的对话，以便更好地捕捉和存储有价值的信息。",
@@ -23,7 +21,6 @@
       "delete": "删除",
       "edit": "编辑"
     },
-    "confidence": "置信度",
     "defaultType": "经验",
     "deleteConfirm": "确定要删除这条经验记忆吗？此操作不可恢复。",
     "deleteTitle": "删除经验记忆",
@@ -32,19 +29,19 @@
     "situation": "情境",
     "source": "来源",
     "steps": {
-      "action": "采取行动",
-      "outcome": "可能结果",
-      "reasoning": "推理过程",
-      "situation": "情境背景"
+      "action": "行动",
+      "result": "结果",
+      "situation": "情境",
+      "task": "任务"
     }
   },
   "filter": {
-    "search": "搜索...",
+    "search": "搜索记忆关键词或描述...",
     "sort": {
       "createdAt": "创建时间",
       "scoreConfidence": "置信度",
-      "scoreImpact": "影响度",
-      "scorePriority": "优先级",
+      "scoreImpact": "重要度",
+      "scorePriority": "偏好权重",
       "scoreUrgency": "紧急度"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "确定要删除这条偏好记忆吗？此操作不可恢复。",
     "deleteTitle": "删除偏好记忆",
     "empty": "暂无偏好记忆",
-    "priority": "优先级",
     "source": "来源",
-    "suggestions": "建议"
+    "suggestions": "助手可能会采取的行动"
   },
   "tab": {
     "contexts": "情境",

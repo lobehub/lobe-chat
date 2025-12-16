@@ -9,9 +9,7 @@
     "deleteTitle": "Bağlam Hafızasını Sil",
     "description": "Açıklama",
     "empty": "Henüz bağlam hafızası yok",
-    "impact": "Etkisi",
-    "source": "Kaynak",
-    "urgency": "Aciliyet"
+    "source": "Kaynak"
   },
   "empty": {
     "description": "Anıların çıkarılması aşamalı bir süreçtir. Daha fazla konu biriktirerek hafıza çıkarımını zenginleştirin, asistanla daha derinlemesine sohbetler yaparak değerli bilgilerin daha iyi yakalanıp saklanmasını sağlayın.",
@@ -23,7 +21,6 @@
       "delete": "Sil",
       "edit": "Düzenle"
     },
-    "confidence": "Güven Düzeyi",
     "defaultType": "Deneyim",
     "deleteConfirm": "Bu deneyim hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "deleteTitle": "Deneyim Hafızasını Sil",
@@ -33,18 +30,18 @@
     "source": "Kaynak",
     "steps": {
       "action": "Eylem",
-      "outcome": "Olası Sonuç",
-      "reasoning": "Muhakeme Süreci",
-      "situation": "Durum Arka Planı"
+      "result": "Sonuç",
+      "situation": "Durum",
+      "task": "Görev"
     }
   },
   "filter": {
-    "search": "Ara...",
+    "search": "Hafıza anahtar kelimelerini veya açıklamaları ara...",
     "sort": {
       "createdAt": "Oluşturulma Zamanı",
       "scoreConfidence": "Güven Skoru",
-      "scoreImpact": "Etkililik Skoru",
-      "scorePriority": "Öncelik Skoru",
+      "scoreImpact": "Önem Derecesi",
+      "scorePriority": "Tercih Ağırlığı",
       "scoreUrgency": "Aciliyet Skoru"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Bu tercih hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "deleteTitle": "Tercih Hafızasını Sil",
     "empty": "Henüz tercih hafızası yok",
-    "priority": "Öncelik",
     "source": "Kaynak",
-    "suggestions": "Öneriler"
+    "suggestions": "Asistanın gerçekleştirebileceği eylemler"
   },
   "tab": {
     "contexts": "Bağlamlar",

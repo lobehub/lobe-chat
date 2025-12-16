@@ -9,9 +9,7 @@
     "deleteTitle": "Contextgeheugen Verwijderen",
     "description": "Beschrijving",
     "empty": "Geen contextgeheugen beschikbaar",
-    "impact": "Impactniveau",
-    "source": "Bron",
-    "urgency": "Urgentieniveau"
+    "source": "Bron"
   },
   "empty": {
     "description": "Het ophalen van herinneringen is een geleidelijk proces. Probeer meer onderwerpen te verzamelen om de inhoud van het geheugen te verrijken. Voer diepgaandere gesprekken met de assistent om waardevolle informatie beter vast te leggen en op te slaan.",
@@ -23,7 +21,6 @@
       "delete": "Verwijderen",
       "edit": "Bewerken"
     },
-    "confidence": "Vertrouwensniveau",
     "defaultType": "Ervaring",
     "deleteConfirm": "Weet je zeker dat je dit ervaringsgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
     "deleteTitle": "Ervaringsgeheugen Verwijderen",
@@ -32,19 +29,19 @@
     "situation": "Situatie",
     "source": "Bron",
     "steps": {
-      "action": "Actie Ondernomen",
-      "outcome": "Mogelijke Uitkomst",
-      "reasoning": "Redenering",
-      "situation": "Situatiecontext"
+      "action": "Actie",
+      "result": "Resultaat",
+      "situation": "Situatie",
+      "task": "Taak"
     }
   },
   "filter": {
-    "search": "Zoeken...",
+    "search": "Zoek naar geheugen trefwoorden of beschrijvingen...",
     "sort": {
       "createdAt": "Aanmaakdatum",
       "scoreConfidence": "Vertrouwensscore",
-      "scoreImpact": "Invloedscore",
-      "scorePriority": "Prioriteitsscore",
+      "scoreImpact": "Belang",
+      "scorePriority": "Voorkeursgewicht",
       "scoreUrgency": "Urgentiescore"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "Weet je zeker dat je dit voorkeurgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
     "deleteTitle": "Voorkeurgeheugen Verwijderen",
     "empty": "Geen voorkeurgeheugen beschikbaar",
-    "priority": "Prioriteit",
     "source": "Bron",
-    "suggestions": "Suggesties"
+    "suggestions": "Acties die de assistent mogelijk onderneemt"
   },
   "tab": {
     "contexts": "Contexten",

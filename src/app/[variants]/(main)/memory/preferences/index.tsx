@@ -1,3 +1,5 @@
+import { Icon, Tag } from '@lobehub/ui';
+import { BrainCircuitIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -9,6 +11,7 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
 
+import EditableModal from '../features/EditableModal';
 import FilterBar from '../features/FilterBar';
 import Loading from '../features/Loading';
 import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
@@ -26,6 +29,7 @@ const PreferencesArea = memo(() => {
 
   const preferencesPage = useUserMemoryStore((s) => s.preferencesPage);
   const preferencesInit = useUserMemoryStore((s) => s.preferencesInit);
+  const preferencesTotal = useUserMemoryStore((s) => s.preferencesTotal);
   const preferencesSearchLoading = useUserMemoryStore((s) => s.preferencesSearchLoading);
   const useFetchPreferences = useUserMemoryStore((s) => s.useFetchPreferences);
   const resetPreferencesList = useUserMemoryStore((s) => s.resetPreferencesList);
@@ -74,6 +78,9 @@ const PreferencesArea = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
+        left={
+          preferencesTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{preferencesTotal}</Tag>
+        }
         right={
           <>
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />
@@ -108,10 +115,13 @@ const PreferencesArea = memo(() => {
 
 const Preferences = memo(() => {
   return (
-    <Flexbox height={'100%'} horizontal width={'100%'}>
-      <PreferencesArea />
-      <PreferenceRightPanel />
-    </Flexbox>
+    <>
+      <Flexbox height={'100%'} horizontal width={'100%'}>
+        <PreferencesArea />
+        <PreferenceRightPanel />
+      </Flexbox>
+      <EditableModal />
+    </>
   );
 });
 

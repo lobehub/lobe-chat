@@ -9,9 +9,7 @@
     "deleteTitle": "상황 기억 삭제",
     "description": "설명",
     "empty": "상황 기억이 없습니다",
-    "impact": "영향도",
-    "source": "출처",
-    "urgency": "긴급도"
+    "source": "출처"
   },
   "empty": {
     "description": "기억은 점진적으로 추출되는 과정입니다. 더 많은 주제를 축적하여 기억을 풍부하게 하고, 어시스턴트와 더 깊이 있는 대화를 시도해 가치 있는 정보를 더 잘 포착하고 저장하세요.",
@@ -23,7 +21,6 @@
       "delete": "삭제",
       "edit": "편집"
     },
-    "confidence": "신뢰도",
     "defaultType": "경험",
     "deleteConfirm": "이 경험 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
     "deleteTitle": "경험 기억 삭제",
@@ -32,19 +29,19 @@
     "situation": "상황",
     "source": "출처",
     "steps": {
-      "action": "행동 취하기",
-      "outcome": "예상 결과",
-      "reasoning": "추론 과정",
-      "situation": "상황 배경"
+      "action": "행동",
+      "result": "결과",
+      "situation": "상황",
+      "task": "과제"
     }
   },
   "filter": {
-    "search": "검색...",
+    "search": "기억 키워드나 설명 검색...",
     "sort": {
       "createdAt": "생성 시간",
       "scoreConfidence": "신뢰도",
-      "scoreImpact": "영향도",
-      "scorePriority": "우선순위",
+      "scoreImpact": "중요도",
+      "scorePriority": "선호 가중치",
       "scoreUrgency": "긴급도"
     }
   },
@@ -87,9 +84,8 @@
     "deleteConfirm": "이 선호 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
     "deleteTitle": "선호 기억 삭제",
     "empty": "선호 기억이 없습니다",
-    "priority": "우선순위",
     "source": "출처",
-    "suggestions": "제안"
+    "suggestions": "도우미가 취할 수 있는 행동"
   },
   "tab": {
     "contexts": "상황",
