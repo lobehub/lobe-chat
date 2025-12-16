@@ -398,6 +398,7 @@ export const desktopRoutes: RouteConfig[] = [
   },
 ];
 
+// Desktop onboarding route (SPA-only)
 if (isDesktop) {
   desktopRoutes.push({
     element: <DesktopOnboarding />,
