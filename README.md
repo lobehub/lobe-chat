@@ -352,7 +352,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Git OSS Stats](https://lobechat.com/discover/plugin/gitUserRepoStats)<br/><sup>By **yunwei37** on **2025-12-13**</sup> | Dynamically generate and analyze stats and history for OSS repos and developers.<br/>`github` `oss`                                                |
 | [Questmate Forms](https://lobechat.com/discover/plugin/questmate)<br/><sup>By **questmate** on **2025-12-13**</sup>     | Create forms, checklists and workflows (we call 'em Quests!) that you can assign, schedule or make public.<br/>`forms` `checklists` `productivity` |
 
-> 📊 Total plugins: [<kbd>**41**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**39**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 

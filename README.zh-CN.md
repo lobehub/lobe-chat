@@ -345,7 +345,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [Git OSS Stats](https://lobechat.com/discover/plugin/gitUserRepoStats)<br/><sup>By **yunwei37** on **2025-12-13**</sup> | 动态生成和分析开源软件仓库和开发者的统计数据和历史记录。<br/>`github` `oss`                       |
 | [Questmate Forms](https://lobechat.com/discover/plugin/questmate)<br/><sup>By **questmate** on **2025-12-13**</sup>     | 创建表单、清单和工作流程（我们称之为任务！），您可以分配、安排或公开。<br/>`表单` `清单` `生产力` |
 
-> 📊 Total plugins: [<kbd>**41**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**39**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
