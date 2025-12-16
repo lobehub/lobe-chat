@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { MemoryTypeSchema } from './common';
-import { LayersEnum, UserMemoryContextObjectType, UserMemoryContextSubjectType } from '@/types/userMemory';
+import { LayersEnum, ContextStatusEnum, UserMemoryContextObjectType, UserMemoryContextSubjectType } from '@/types/userMemory';
 
 export const AssociatedObjectSchema = z.object({
   extra:z.string().nullable().describe('Additional metadata about the object, should always be a valid JSON string if present'),
@@ -26,8 +26,8 @@ export const WithContextSchema = z.object({
     .array(AssociatedSubjectSchema)
     .describe('Array of JSON objects describing involved subjects or participants, [] empty if none'),
   currentStatus: z
-    .string()
-    .describe("High level status markers (e.g., 'active', 'pending')"),
+    .nativeEnum(ContextStatusEnum)
+    .describe("High level status markers (must be one of 'planned', 'ongoing', 'completed', 'aborted', 'on_hold', 'cancelled')"),
   description: z
     .string()
     .describe('Rich narrative describing the situation, timeline, or environment'),
@@ -68,7 +68,7 @@ export const ContextMemoryItemSchema = z.object({
  * Context memory extraction result
  */
 export const ContextMemorySchema = z.object({
-  memories: z.array(ContextMemoryItemSchema),
+  memories: z.array(ContextMemoryItemSchema).describe('Array of extracted context memory items, could be empty if decided no relevant context to extract'),
 });
 
 export type WithContext = z.infer<typeof WithContextSchema>;

@@ -542,6 +542,7 @@ export class MemoryExtractionExecutor {
       );
 
       const { memory } = await userMemoryModel.createExperienceMemory({
+        capturedAt: job.sourceUpdatedAt,
         details: item.details ?? '',
         detailsEmbedding: detailsVector ?? undefined,
         experience: {
@@ -600,6 +601,7 @@ export class MemoryExtractionExecutor {
       );
 
       const { memory } = await userMemoryModel.createPreferenceMemory({
+        capturedAt: job.sourceUpdatedAt,
         details: item.details ?? '',
         detailsEmbedding: detailsVector ?? undefined,
         memoryCategory: item.memoryCategory ?? null,
@@ -661,6 +663,7 @@ export class MemoryExtractionExecutor {
 
       const res = await userMemoryModel.addIdentityEntry({
         base: {
+          capturedAt: job.sourceUpdatedAt,
           details: action.withIdentity.description,
           detailsVector1024: detailsVector ?? undefined,
           memoryCategory: 'people',
@@ -709,7 +712,6 @@ export class MemoryExtractionExecutor {
           title: set.title,
         },
         identity: {
-          capturedAt: job.sourceUpdatedAt,
           description: set.withIdentity?.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata: set.withIdentity.extractedLabels
@@ -884,6 +886,7 @@ export class MemoryExtractionExecutor {
             layers: job.layers,
             source: job.source,
             sourceId: topic.id,
+            sourceUpdatedAt: topic.updatedAt,
             userId: job.userId,
           };
 

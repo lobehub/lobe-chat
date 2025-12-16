@@ -51,7 +51,7 @@ export const ExperienceMemoryItemSchema = z.object({
  * Experience memory extraction result
  */
 export const ExperienceMemorySchema = z.object({
-  memories: z.array(ExperienceMemoryItemSchema),
+  memories: z.array(ExperienceMemoryItemSchema).describe('Array of extracted experience memory items, could be empty if decided no relevant experience to extract'),
 });
 
 export type WithExperience = z.infer<typeof WithExperienceSchema>;

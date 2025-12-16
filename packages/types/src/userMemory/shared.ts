@@ -61,3 +61,12 @@ export enum TypesEnum {
   Technology = 'technology',
   Topic = 'topic',
 }
+
+export enum ContextStatusEnum {
+  Aborted = 'aborted',
+  Cancelled = 'cancelled',
+  Completed = 'completed',
+  OnHold = 'on_hold',
+  Ongoing = 'ongoing',
+  Planned = 'planned'
+}

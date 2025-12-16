@@ -84,7 +84,7 @@ export const PreferenceMemoryItemSchema = z.object({
  * Preference memory extraction result
  */
 export const PreferenceMemorySchema = z.object({
-  memories: z.array(PreferenceMemoryItemSchema),
+  memories: z.array(PreferenceMemoryItemSchema).describe('Array of extracted preference memory items, could be empty if decided no relevant preference to extract'),
 });
 
 export type OriginContext = z.infer<typeof OriginContextSchema>;
