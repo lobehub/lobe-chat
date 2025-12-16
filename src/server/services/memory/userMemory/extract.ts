@@ -54,6 +54,7 @@ import type { UserKeyVaults } from '@/types/user/settings';
 import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
 import { encodeAsync } from '@/utils/tokenizer';
 import { attributesCommon } from '@lobechat/observability-otel/node';
+import { ATTR_GEN_AI_OPERATION_NAME, ATTR_GEN_AI_REQUEST_MODEL } from '@lobechat/observability-otel/gen-ai';
 
 const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
   chatTopic: 'chat_topic',
@@ -471,43 +472,72 @@ export class MemoryExtractionExecutor {
     texts: Array<string | undefined | null>,
     tokenLimit?: number,
   ) {
-    const requests = texts
-      .map((text, index) => {
-        if (typeof text !== 'string') return null;
+    const attributes = {
+      [ATTR_GEN_AI_OPERATION_NAME]: 'embed',
+      [ATTR_GEN_AI_REQUEST_MODEL]: model,
+      memory_embedding_token_limit: tokenLimit ?? undefined,
+      ...attributesCommon(),
+    };
 
-        const trimmed = this.trimTextToTokenLimit(text, tokenLimit);
-        if (!trimmed.trim()) return null;
+    return tracer.startActiveSpan(
+      'gen_ai.embed',
+      { attributes },
+      async (span) => {
+        const requests = texts
+          .map((text, index) => {
+            if (typeof text !== 'string') return null;
 
-        return { index, text: trimmed };
-      })
-      .filter(Boolean);
+            const trimmed = this.trimTextToTokenLimit(text, tokenLimit);
+            if (!trimmed.trim()) return null;
 
-    if (requests.length === 0) {
-      return texts.map(() => null);
-    }
+            return { index, text: trimmed };
+          })
+          .filter(Boolean);
 
-    try {
-      const response = await runtimes.embeddings(
-        {
-          dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
-          input: requests.map((item) => item!.text),
-          model,
-        },
-        { user: 'memory-extraction' },
-      );
+        span.setAttribute('memory.embedding.text_count', texts.length);
+        span.setAttribute('memory.embedding.request_count', requests.length);
 
-      const vectors = texts.map<Embeddings | null>(() => null);
-      response?.forEach((embedding, idx) => {
-        const request = requests[idx];
-        if (request) {
-          vectors[request.index] = embedding;
+        if (requests.length === 0) {
+          span.setStatus({ code: SpanStatusCode.OK, message: 'empty_requests' });
+          span.end();
+          return texts.map(() => null);
         }
-      });
 
-      return vectors;
-    } catch {
-      return texts.map(() => null);
-    }
+        try {
+          const response = await runtimes.embeddings(
+            {
+              dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
+              input: requests.map((item) => item!.text),
+              model,
+            },
+            { user: 'memory-extraction' },
+          );
+
+          const vectors = texts.map<Embeddings | null>(() => null);
+          response?.forEach((embedding, idx) => {
+            const request = requests[idx];
+            if (request) {
+              vectors[request.index] = embedding;
+            }
+          });
+
+          span.setAttribute('memory.embedding.response_count', response?.length ?? 0);
+          span.setStatus({ code: SpanStatusCode.OK });
+
+          return vectors;
+        } catch (error) {
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: error instanceof Error ? error.message : 'Failed to generate embeddings',
+          });
+          span.recordException(error as Error);
+
+          return texts.map(() => null);
+        } finally {
+          span.end();
+        }
+      },
+    );
   }
 
   async persistContextMemories(
