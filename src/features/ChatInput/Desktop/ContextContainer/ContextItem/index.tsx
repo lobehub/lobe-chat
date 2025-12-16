@@ -46,7 +46,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 type FileItemProps = UploadFileItem;
 
-const FileItem = memo<FileItemProps>((props) => {
+const ContextItem = memo<FileItemProps>((props) => {
   const { file, id } = props;
   const { styles } = useStyles();
   const [removeChatUploadFile] = useFileStore((s) => [s.removeChatUploadFile]);
@@ -65,4 +65,4 @@ const FileItem = memo<FileItemProps>((props) => {
   );
 });
 
-export default FileItem;
+export default ContextItem;

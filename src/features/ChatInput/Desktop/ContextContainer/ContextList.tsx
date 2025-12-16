@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
-import ContextItem from './FileItem';
+import ContextItem from './ContextItem';
 import SelectionItem from './SelectionItem';
 
 const useStyles = createStyles(({ css }) => ({

@@ -1,6 +1,7 @@
 import { ChatContextContent } from '@lobechat/types';
 import { Tag, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { TextIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 
 import { useFileStore } from '@/store/file';
@@ -40,7 +41,7 @@ const SelectionItem = memo<ChatContextContent>(({ content, preview, title, id })
   );
 
   return (
-    <Tag closable onClose={() => removeSelection(id)} size={'large'}>
+    <Tag closable icon={<TextIcon size={16} />} onClose={() => removeSelection(id)} size={'large'}>
       <Tooltip title={displayText}>
         <span className={styles.name}>{displayText}</span>
       </Tooltip>
