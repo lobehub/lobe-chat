@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { DEFAULT_PREFERENCE } from '@lobechat/const';
-import type { CustomPluginParams } from '@lobechat/types';
+import type { CustomPluginParams, UserOnboarding } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { sql } from 'drizzle-orm';
 import { boolean, index, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
@@ -23,6 +23,7 @@ export const users = pgTable(
     occupation: text('occupation'),
 
     isOnboarded: boolean('is_onboarded').default(false),
+    onboarding: jsonb('onboarding').$type<UserOnboarding>(),
     // Time user was created in Clerk
     clerkCreatedAt: timestamptz('clerk_created_at'),
 

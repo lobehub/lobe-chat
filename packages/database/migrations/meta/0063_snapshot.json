@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "af0a0a8f-a6d5-4efc-a43c-f921a80c150c",
+  "id": "d53d3859-38c9-415d-96b8-86197a6cd7d9",
   "policies": {},
   "prevId": "bb23fd35-9ac8-4563-9d03-bee161464483",
   "roles": {},
@@ -7779,6 +7779,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "onboarding": {
+          "name": "onboarding",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         },
         "clerk_created_at": {
           "name": "clerk_created_at",
