@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
 import { existsSync } from 'node:fs';
 import { rm } from 'node:fs/promises';
 import path from 'node:path';
@@ -6,7 +7,12 @@ import { fileURLToPath } from 'node:url';
 
 const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 
-dotenv.config();
+if (isDesktop) {
+  dotenvExpand.expand(dotenv.config({ path: '.env.desktop' }));
+  dotenvExpand.expand(dotenv.config({ override: true, path: '.env.desktop.local' }));
+} else {
+  dotenvExpand.expand(dotenv.config());
+}
 // 创建需要排除的特性映射
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 const partialBuildPages = [
