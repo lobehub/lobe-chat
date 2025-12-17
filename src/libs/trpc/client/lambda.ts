@@ -34,15 +34,20 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
 
           // Don't show notifications for abort errors
           if (showError && !isAbortError) {
-            const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
-
             switch (status) {
               case 401: {
                 // Debounce: only show login notification once every 5 seconds
                 const now = Date.now();
                 if (now - last401Time > MIN_401_INTERVAL) {
                   last401Time = now;
-                  loginRequired.redirect();
+                  // Desktop app doesn't have the web auth routes like `/signin`,
+                  // so skip the login redirect/notification there.
+                  if (!isDesktop) {
+                    const { loginRequired } = await import(
+                      '@/components/Error/loginRequiredNotification'
+                    );
+                    loginRequired.redirect();
+                  }
                 }
                 // Mark error as non-retryable to prevent SWR infinite retry loop
                 err.meta = { ...err.meta, shouldRetry: false };
