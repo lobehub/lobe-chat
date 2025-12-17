@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { DEFAULT_AGENT_CHAT_CONFIG, LOADING_FLAT } from '@lobechat/const';
+import { LOADING_FLAT } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatVideoItem,
@@ -15,7 +15,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
 import { getAgentStoreState } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentSelectors } from '@/store/agent/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
@@ -132,14 +132,6 @@ export const conversationLifecycle: StateCreator<
       parentId = displayMessageSelectors.findLastMessageId(lastMessage.id)(get());
     }
 
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-    const autoCreateThreshold =
-      chatConfig.autoCreateTopicThreshold ?? DEFAULT_AGENT_CHAT_CONFIG.autoCreateTopicThreshold;
-    const shouldCreateNewTopic =
-      !context.topicId &&
-      !!chatConfig.enableAutoCreateTopic &&
-      messages.length + 2 >= autoCreateThreshold;
-
     // Create operation for send message first, so we can use operationId for optimistic updates
     const tempId = 'tmp_' + nanoid();
     const tempAssistantId = 'tmp_' + nanoid();
@@ -226,12 +218,10 @@ export const conversationLifecycle: StateCreator<
                 type: newThread.type,
               }
             : undefined,
-          newTopic: shouldCreateNewTopic
-            ? {
-                topicMessageIds: messages.map((m) => m.id),
-                title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
-              }
-            : undefined,
+          newTopic: {
+            topicMessageIds: messages.map((m) => m.id),
+            title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
+          },
           agentId: operationContext.agentId,
           // Pass groupId for group chat scenarios
           groupId: operationContext.groupId ?? undefined,
