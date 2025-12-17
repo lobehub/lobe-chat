@@ -14,4 +14,4 @@ export interface Context {
   type: ContextType;
 }
 
-export type ContextType = 'agent' | 'painting' | 'settings' | 'resource' | 'page';
+export type ContextType = 'agent' | 'group' | 'painting' | 'settings' | 'resource' | 'page';
