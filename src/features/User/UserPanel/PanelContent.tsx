@@ -2,11 +2,12 @@ import { enableBetterAuth, enableNextAuth } from '@lobechat/const';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
 import { isDesktop } from '@/const/version';
+import { clearDesktopOnboardingCompleted } from '@/features/DesktopOnboarding/storage';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -18,6 +19,7 @@ import { useMenu } from './useMenu';
 
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
+  const navigate = useNavigate();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
   const [openSignIn, signOut] = useUserStore((s) => [s.openLogin, s.logout]);
   const { mainItems, logoutItems } = useMenu();
@@ -27,7 +29,24 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
     closePopover();
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    if (isDesktop) {
+      closePopover();
+
+      // Desktop: clear OIDC tokens (electron main) + re-enter desktop onboarding at Screen5.
+      try {
+        const { remoteServerService } = await import('@/services/electron/remoteServer');
+        await remoteServerService.clearRemoteServerConfig();
+      } catch {
+        // Ignore: even if IPC is unavailable, still proceed to onboarding.
+      }
+
+      clearDesktopOnboardingCompleted();
+      signOut();
+      navigate('/desktop-onboarding#5', { replace: true });
+      return;
+    }
+
     signOut();
     closePopover();
     // NextAuth and Better Auth handle redirect in their own signOut methods
@@ -51,7 +70,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
       )}
 
       <Menu items={mainItems} onClick={closePopover} />
-      {isLoginWithAuth && <Menu items={logoutItems} onClick={handleSignOut} />}
+      <Menu items={logoutItems} onClick={handleSignOut} />
       <Flexbox gap={4} horizontal justify={'space-between'} style={{ padding: '6px 8px 6px 16px' }}>
         <BrandWatermark />
         <LangButton placement={'right'} />

@@ -22,4 +22,15 @@ export const setDesktopOnboardingCompleted = () => {
   }
 };
 
+export const clearDesktopOnboardingCompleted = () => {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    window.localStorage.removeItem(DESKTOP_ONBOARDING_STORAGE_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 

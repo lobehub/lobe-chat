@@ -128,16 +128,18 @@ export const useMenu = () => {
     ...(!hideDocs ? helps : []),
   ].filter(Boolean) as MenuProps['items'];
 
-  const logoutItems: MenuProps['items'] =
-    isLoginWithAuth && !isDesktop
-      ? [
-          {
-            icon: <Icon icon={LogOut} />,
-            key: 'logout',
-            label: <span>{t('signout', { ns: 'auth' })}</span>,
-          },
-        ]
-      : [];
+  const logoutItems: MenuProps['items'] = isLoginWithAuth
+    ? [
+        {
+          icon: <Icon icon={LogOut} />,
+          key: 'logout',
+          label: <span>{t('signout', { ns: 'auth' })}</span>,
+        },
+        {
+          type: 'divider',
+        },
+      ]
+    : [];
 
   return { logoutItems, mainItems };
 };
