@@ -1,3 +1,4 @@
+import { NavigationBroadcastEvents } from './navigation';
 import { ProtocolBroadcastEvents } from './protocol';
 import { RemoteServerBroadcastEvents } from './remoteServer';
 import { SystemBroadcastEvents } from './system';
@@ -10,6 +11,7 @@ import { AutoUpdateBroadcastEvents } from './update';
 export interface MainBroadcastEvents
   extends
     AutoUpdateBroadcastEvents,
+    NavigationBroadcastEvents,
     RemoteServerBroadcastEvents,
     SystemBroadcastEvents,
     ProtocolBroadcastEvents {}

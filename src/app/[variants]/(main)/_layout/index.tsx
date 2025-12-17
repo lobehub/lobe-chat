@@ -11,6 +11,7 @@ import { DndContextWrapper } from '@/app/[variants]/(main)/resource/features/Dnd
 import Loading from '@/components/Loading/BrandTextLoading';
 import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
+import DesktopNavigationBridge from '@/features/DesktopNavigationBridge';
 import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
 import NavPanel from '@/features/NavPanel';
@@ -36,6 +37,7 @@ const Layout = memo(() => {
       <Suspense fallback={null}>
         {isDesktop && <TitleBar />}
         {isDesktop && <DesktopAutoOidcOnFirstOpen />}
+        {isDesktop && <DesktopNavigationBridge />}
         {showCloudPromotion && <CloudBanner />}
       </Suspense>
       <DndContextWrapper>

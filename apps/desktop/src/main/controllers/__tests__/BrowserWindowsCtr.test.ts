@@ -22,6 +22,7 @@ vi.mock('electron', () => ({
 const mockToggleVisible = vi.fn();
 const mockLoadUrl = vi.fn();
 const mockShow = vi.fn();
+const mockBroadcast = vi.fn();
 const mockRedirectToPage = vi.fn();
 const mockCloseWindow = vi.fn();
 const mockMinimizeWindow = vi.fn();
@@ -34,6 +35,7 @@ const mockGetMainWindow = vi.fn(() => ({
   toggleVisible: mockToggleVisible,
   loadUrl: mockLoadUrl,
   show: mockShow,
+  broadcast: mockBroadcast,
 }));
 const mockShowOther = vi.fn();
 
@@ -85,14 +87,18 @@ describe('BrowserWindowsCtr', () => {
       const tab = 'appearance';
       const result = await browserWindowsCtr.openSettingsWindow(tab);
       expect(mockGetMainWindow).toHaveBeenCalled();
-      expect(mockLoadUrl).toHaveBeenCalledWith('/settings?active=appearance');
       expect(mockShow).toHaveBeenCalled();
+      expect(mockBroadcast).toHaveBeenCalledWith('navigate', {
+        path: '/settings?active=appearance',
+      });
       expect(result).toEqual({ success: true });
     });
 
     it('should return error if navigation fails', async () => {
       const errorMessage = 'Failed to navigate';
-      mockLoadUrl.mockRejectedValueOnce(new Error(errorMessage));
+      mockBroadcast.mockImplementationOnce(() => {
+        throw new Error(errorMessage);
+      });
       const result = await browserWindowsCtr.openSettingsWindow('display');
       expect(result).toEqual({ error: errorMessage, success: false });
     });

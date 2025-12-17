@@ -42,8 +42,8 @@ export default class BrowserWindowsCtr extends ControllerModule {
       const fullPath = `/settings${subPath}${queryString ? `?${queryString}` : ''}`;
 
       const mainWindow = this.app.browserManager.getMainWindow();
-      await mainWindow.loadUrl(fullPath);
       mainWindow.show();
+      mainWindow.broadcast('navigate', { path: fullPath });
 
       return { success: true };
     } catch (error) {
