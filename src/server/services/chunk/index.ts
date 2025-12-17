@@ -72,8 +72,32 @@ export class ChunkService {
 
     if (!result) return;
 
-    // skip if already exist chunk tasks
-    if (skipExist && result.chunkTaskId) return;
+    // skip if already exist chunk tasks not in error status
+    if (skipExist && result.chunkTaskId) {
+      let chunkTask = await this.asyncTaskModel.findById(result.chunkTaskId);
+
+      if (chunkTask) {
+        if (chunkTask.status === AsyncTaskStatus.Success) {
+          // chunk task successful, check embedding task
+          if (result.embeddingTaskId) {
+            let embeddingTask = await this.asyncTaskModel.findById(result.embeddingTaskId);
+            if (embeddingTask && embeddingTask.status !== AsyncTaskStatus.Error) {
+              // embedding task exists and not in error status, skip
+              return;
+            } else {
+              // embedding task not exist or in error status, re-trigger embedding task
+              return this.asyncEmbeddingFileChunks(fileId, payload);
+            }
+          } else {
+            // no embedding task, trigger embedding task
+            return this.asyncEmbeddingFileChunks(fileId, payload);
+          }
+        } else if (chunkTask.status !== AsyncTaskStatus.Error) {
+          // chunk task exists and not in error status, skip
+          return;
+        }
+      }
+    }
 
     // 1. create a asyncTaskId
     const asyncTaskId = await this.asyncTaskModel.create({

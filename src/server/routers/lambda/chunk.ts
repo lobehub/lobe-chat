@@ -1,6 +1,7 @@
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
 import {
   ChatSemanticSearchChunk,
+  ClientSecretPayload,
   FileSearchResult,
   ProviderConfig,
   SemanticSearchSchema,
@@ -96,14 +97,17 @@ const groupAndRankFiles = (chunks: ChatSemanticSearchChunk[], topK: number): Fil
     .slice(0, topK);
 };
 
-const resolvePayload = async (ctx: { aiInfraRepos: AiInfraRepos; jwtPayload: any }) => {
+const resolvePayload = async (ctx: {
+  aiInfraRepos: AiInfraRepos;
+  jwtPayload: ClientSecretPayload;
+}) => {
   // For embedding tasks, frontend may not include provider payload in JWT.
   // Prefer user DB keyVaults; fallback to env (handled inside ModelRuntime) when DB is empty.
   let payload = ctx.jwtPayload;
   const { provider } =
     getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
   if (!payload?.apiKey && !payload?.baseURL) {
-    const providerDetail = await ctx.aiInfraRepos.getAiProviderDetail(
+    const providerDetail = await ctx.aiInfraRepos?.getAiProviderDetail(
       provider,
       KeyVaultsGateKeeper.getUserKeyVaults,
     );
@@ -243,7 +247,9 @@ export const chunkRouter = router({
       }
 
       // 2. create a new asyncTask for chunking
-      const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(input.id, ctx.jwtPayload);
+      const payload = await resolvePayload(ctx);
+
+      const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(input.id, payload);
 
       return { id: asyncTaskId, success: true };
     }),
