@@ -28,7 +28,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
 
-  const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+  const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
 
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [
@@ -58,7 +58,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
 
   const handleDoubleClick = () => {
     if (isDesktop) {
-      openSessionInNewWindow(id);
+      openAgentInNewWindow(id);
     }
   };
 
@@ -70,7 +70,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
   const handleDragEnd = (e: React.DragEvent) => {
     // If drag ends without being dropped in a valid target, open in new window
     if (isDesktop && e.dataTransfer.dropEffect === 'none') {
-      openSessionInNewWindow(id);
+      openAgentInNewWindow(id);
     }
   };
 

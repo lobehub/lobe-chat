@@ -38,7 +38,7 @@ export const useSessionItemMenuItems = () => {
   const { styles } = useStyles();
   const { modal, message } = App.useApp();
 
-  const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+  const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
   const sessionCustomGroups = useHomeStore(homeAgentListSelectors.agentGroups, isEqual);
 
   const [pinAgent, duplicateAgent, updateAgentGroup, removeAgent] = useHomeStore((s) => [
@@ -124,11 +124,11 @@ export const useSessionItemMenuItems = () => {
         label: t('openInNewWindow'),
         onClick: ({ domEvent }: any) => {
           domEvent.stopPropagation();
-          openSessionInNewWindow(id);
+          openAgentInNewWindow(id);
         },
       };
     },
-    [t, openSessionInNewWindow],
+    [t, openAgentInNewWindow],
   );
 
   /**
