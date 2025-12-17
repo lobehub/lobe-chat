@@ -1516,6 +1516,7 @@ export class UserMemoryModel {
 
       const identity = params.identity ?? {};
       const identityValues: typeof userMemoriesIdentities.$inferInsert = {
+        capturedAt: identity.capturedAt,
         description: identity.description ?? null,
         descriptionVector: identity.descriptionVector ?? null,
         episodicDate:
@@ -1630,6 +1631,10 @@ export class UserMemoryModel {
 
           if (params.identity.episodicDate !== undefined) {
             identityUpdate.episodicDate = coerceDate(params.identity.episodicDate);
+          }
+
+          if (params.identity.capturedAt !== undefined) {
+            identityUpdate.capturedAt = params.identity.capturedAt;
           }
         }
 

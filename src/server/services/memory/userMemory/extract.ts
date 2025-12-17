@@ -566,6 +566,7 @@ export class MemoryExtractionExecutor {
       );
 
       const { memory } = await userMemoryModel.createContextMemory({
+        capturedAt: job.sourceUpdatedAt,
         context: {
           associatedObjects: UserMemoryModel.parseAssociatedObjects(
             item.withContext?.associatedObjects,
@@ -794,6 +795,7 @@ export class MemoryExtractionExecutor {
 
       await userMemoryModel.updateIdentityEntry({
         base: {
+          capturedAt: job.sourceUpdatedAt,
           details: set.details,
           detailsVector1024: detailsVector ?? undefined,
           memoryCategory: set.memoryCategory,
@@ -804,6 +806,7 @@ export class MemoryExtractionExecutor {
           title: set.title,
         },
         identity: {
+          capturedAt: job.sourceUpdatedAt,
           description: set.withIdentity?.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata: set.withIdentity.extractedLabels
