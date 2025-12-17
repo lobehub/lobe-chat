@@ -170,13 +170,14 @@ export class AgentRuntime {
 
         // Special handling for batch tool execution
         if (instruction.type === 'call_tools_batch') {
-          result = await this.executeToolsBatch(instruction as any, currentState);
+          result = await this.executeToolsBatch(instruction as any, currentState, runtimeContext);
         } else {
           const executor = this.executors[instruction.type as keyof typeof this.executors];
           if (!executor) {
             throw new Error(`No executor found for instruction type: ${instruction.type}`);
           }
-          result = await executor(instruction, currentState);
+          // Pass runtimeContext to executor so it can access stepContext
+          result = await executor(instruction, currentState, runtimeContext);
         }
 
         // Accumulate events
@@ -663,6 +664,7 @@ export class AgentRuntime {
   private async executeToolsBatch(
     instruction: AgentInstructionCallToolsBatch,
     baseState: AgentState,
+    context?: AgentRuntimeContext,
   ): Promise<{
     events: AgentEvent[];
     newState: AgentState;
@@ -678,6 +680,7 @@ export class AgentRuntime {
           type: 'call_tool',
         } as AgentInstructionCallTool,
         structuredClone(baseState), // Each tool starts from the same base state
+        context, // Pass context to each tool call
       ),
     );
 

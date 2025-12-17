@@ -266,7 +266,7 @@ export const createAgentExecutors = (context: {
      * Wraps internal_invokeDifferentTypePlugin
      * Follows server-side pattern: always create tool message before execution
      */
-    call_tool: async (instruction, state) => {
+    call_tool: async (instruction, state, runtimeContext) => {
       const payload = (instruction as AgentInstructionCallTool)
         .payload as GeneralAgentCallingToolInstructionPayload;
 
@@ -470,10 +470,20 @@ export const createAgentExecutors = (context: {
         });
 
         // Execute tool - abort handling is done by cancel handler
-        log('[%s][call_tool] Executing tool %s ...', sessionLogId, toolName);
+        // Pass stepContext from runtimeContext for dynamic state access
+        log(
+          '[%s][call_tool] Executing tool %s (hasTodos=%s) ...',
+          sessionLogId,
+          toolName,
+          !!runtimeContext?.stepContext?.todos,
+        );
         const result = await context
           .get()
-          .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
+          .internal_invokeDifferentTypePlugin(
+            toolMessageId,
+            chatToolPayload,
+            runtimeContext?.stepContext,
+          );
 
         // Check if operation was cancelled during tool execution
         const executeToolOperation = context.get().operations[executeToolOpId];

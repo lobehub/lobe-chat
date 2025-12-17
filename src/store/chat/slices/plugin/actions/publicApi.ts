@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { ChatToolPayload, UIChatMessage } from '@lobechat/types';
+import { ChatToolPayload, RuntimeStepContext, UIChatMessage } from '@lobechat/types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
@@ -39,8 +39,16 @@ export interface PluginPublicApiAction {
   /**
    * Invoke different type of plugin based on payload type
    * This is the unified entry point for plugin invocation
+   *
+   * @param id - Tool message ID
+   * @param payload - Tool call payload
+   * @param stepContext - Optional step context with dynamic state like GTD todos
    */
-  internal_invokeDifferentTypePlugin: (id: string, payload: ChatToolPayload) => Promise<any>;
+  internal_invokeDifferentTypePlugin: (
+    id: string,
+    payload: ChatToolPayload,
+    stepContext?: RuntimeStepContext,
+  ) => Promise<any>;
 }
 
 export const pluginPublicApi: StateCreator<
@@ -105,7 +113,7 @@ export const pluginPublicApi: StateCreator<
     });
   },
 
-  internal_invokeDifferentTypePlugin: async (id, payload) => {
+  internal_invokeDifferentTypePlugin: async (id, payload, stepContext) => {
     switch (payload.type) {
       case 'standalone': {
         return await get().invokeStandaloneTypePlugin(id, payload);
@@ -116,7 +124,8 @@ export const pluginPublicApi: StateCreator<
       }
 
       case 'builtin': {
-        return await get().invokeBuiltinTool(id, payload);
+        // Pass stepContext to builtin tools for dynamic state access
+        return await get().invokeBuiltinTool(id, payload, stepContext);
       }
 
       // @ts-ignore

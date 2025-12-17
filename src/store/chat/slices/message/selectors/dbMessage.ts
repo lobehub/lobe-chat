@@ -1,4 +1,4 @@
-import { UIChatMessage } from '@lobechat/types';
+import { StepContextTodos, UIChatMessage } from '@lobechat/types';
 
 import { chatHelpers } from '../../../helpers';
 import type { ChatStoreState } from '../../../initialState';
@@ -146,6 +146,67 @@ const inboxActiveTopicDbMessages = (state: ChatStoreState) => {
   return state.dbMessagesMap[key] || [];
 };
 
+// ============= GTD Todos Selectors ========== //
+
+const GTD_IDENTIFIER = 'lobe-gtd';
+
+/**
+ * Select the latest todos state from messages array
+ *
+ * Searches messages in reverse order to find the most recent GTD tool message
+ * that contains todos state.
+ *
+ * This is a pure function that can be used for both:
+ * - UI display (showing current todos)
+ * - Agent runtime step context computation
+ *
+ * @param messages - Array of chat messages to search
+ * @returns The latest todos state or undefined if not found
+ */
+export const selectTodosFromMessages = (
+  messages: UIChatMessage[],
+): StepContextTodos | undefined => {
+  // Search from newest to oldest
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const msg = messages[i];
+
+    // Check if this is a GTD tool message with todos state
+    if (
+      msg.role === 'tool' &&
+      msg.plugin?.identifier === GTD_IDENTIFIER &&
+      msg.pluginState?.todos
+    ) {
+      const todos = msg.pluginState.todos as { items?: unknown[]; updatedAt?: string };
+
+      // Handle the todos structure: { items: TodoItem[], updatedAt: string }
+      if (typeof todos === 'object' && 'items' in todos && Array.isArray(todos.items)) {
+        return {
+          items: todos.items as StepContextTodos['items'],
+          updatedAt: todos.updatedAt || new Date().toISOString(),
+        };
+      }
+
+      // Legacy format: direct array of TodoItem[]
+      if (Array.isArray(todos)) {
+        return {
+          items: todos as StepContextTodos['items'],
+          updatedAt: new Date().toISOString(),
+        };
+      }
+    }
+  }
+
+  return undefined;
+};
+
+/**
+ * Get current active chat's todos state from db messages
+ */
+const getActiveTodos = (s: ChatStoreState): StepContextTodos | undefined => {
+  const messages = activeDbMessages(s);
+  return selectTodosFromMessages(messages);
+};
+
 export const dbMessageSelectors = {
   activeDbMessages,
   countDbMessagesByThreadId,
@@ -153,6 +214,7 @@ export const dbMessageSelectors = {
   dbToolMessages,
   dbUserFiles,
   dbUserMessages,
+  getActiveTodos,
   getDbMessageById,
   getDbMessageByToolCallId,
   getDbMessagesByKey,
@@ -161,4 +223,5 @@ export const dbMessageSelectors = {
   isCurrentDbChatLoaded,
   latestDbMessage,
   latestUserMessage,
+  selectTodosFromMessages,
 };

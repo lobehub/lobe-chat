@@ -433,6 +433,141 @@ describe('GTDExecutor', () => {
     });
   });
 
+  describe('stepContext priority', () => {
+    it('should prioritize stepContext.todos over pluginState.todos', async () => {
+      // Create context with both stepContext and pluginState
+      const ctx: BuiltinToolContext = {
+        messageId: 'test-message-id',
+        operationId: 'test-operation-id',
+        pluginState: {
+          todos: {
+            items: [{ text: 'Old task from pluginState', completed: false }],
+            updatedAt: '2024-01-01T00:00:00.000Z',
+          },
+        },
+        stepContext: {
+          todos: {
+            items: [{ text: 'New task from stepContext', completed: true }],
+            updatedAt: '2024-06-01T00:00:00.000Z',
+          },
+        },
+      };
+
+      // createTodos should use stepContext.todos as base
+      const result = await gtdExecutor.createTodos({ adds: ['Another task'] }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items).toHaveLength(2);
+      // First item should be from stepContext, not pluginState
+      expect(result.state?.todos.items[0].text).toBe('New task from stepContext');
+      expect(result.state?.todos.items[0].completed).toBe(true);
+      expect(result.state?.todos.items[1].text).toBe('Another task');
+    });
+
+    it('should fallback to pluginState.todos when stepContext.todos is undefined', async () => {
+      const ctx: BuiltinToolContext = {
+        messageId: 'test-message-id',
+        operationId: 'test-operation-id',
+        pluginState: {
+          todos: {
+            items: [{ text: 'Task from pluginState', completed: false }],
+            updatedAt: '2024-01-01T00:00:00.000Z',
+          },
+        },
+        stepContext: {
+          // No todos in stepContext
+        },
+      };
+
+      const result = await gtdExecutor.createTodos({ adds: ['New task'] }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items).toHaveLength(2);
+      expect(result.state?.todos.items[0].text).toBe('Task from pluginState');
+      expect(result.state?.todos.items[1].text).toBe('New task');
+    });
+
+    it('should start with empty todos when both stepContext and pluginState are empty', async () => {
+      const ctx: BuiltinToolContext = {
+        messageId: 'test-message-id',
+        operationId: 'test-operation-id',
+        stepContext: {},
+      };
+
+      const result = await gtdExecutor.createTodos({ adds: ['First task'] }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items).toHaveLength(1);
+      expect(result.state?.todos.items[0].text).toBe('First task');
+    });
+
+    it('should work with stepContext.todos for completeTodos', async () => {
+      const ctx: BuiltinToolContext = {
+        messageId: 'test-message-id',
+        operationId: 'test-operation-id',
+        stepContext: {
+          todos: {
+            items: [
+              { text: 'Task 1', completed: false },
+              { text: 'Task 2', completed: false },
+            ],
+            updatedAt: '2024-06-01T00:00:00.000Z',
+          },
+        },
+      };
+
+      const result = await gtdExecutor.completeTodos({ indices: [0] }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items[0].completed).toBe(true);
+      expect(result.state?.todos.items[1].completed).toBe(false);
+    });
+
+    it('should work with stepContext.todos for removeTodos', async () => {
+      const ctx: BuiltinToolContext = {
+        messageId: 'test-message-id',
+        operationId: 'test-operation-id',
+        stepContext: {
+          todos: {
+            items: [
+              { text: 'Task 1', completed: false },
+              { text: 'Task 2', completed: false },
+            ],
+            updatedAt: '2024-06-01T00:00:00.000Z',
+          },
+        },
+      };
+
+      const result = await gtdExecutor.removeTodos({ indices: [0] }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items).toHaveLength(1);
+      expect(result.state?.todos.items[0].text).toBe('Task 2');
+    });
+
+    it('should work with stepContext.todos for clearTodos', async () => {
+      const ctx: BuiltinToolContext = {
+        messageId: 'test-message-id',
+        operationId: 'test-operation-id',
+        stepContext: {
+          todos: {
+            items: [
+              { text: 'Task 1', completed: true },
+              { text: 'Task 2', completed: false },
+            ],
+            updatedAt: '2024-06-01T00:00:00.000Z',
+          },
+        },
+      };
+
+      const result = await gtdExecutor.clearTodos({ mode: 'completed' }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.state?.todos.items).toHaveLength(1);
+      expect(result.state?.todos.items[0].text).toBe('Task 2');
+    });
+  });
+
   describe('executor metadata', () => {
     it('should have correct identifier', () => {
       expect(gtdExecutor.identifier).toBe('lobe-gtd');

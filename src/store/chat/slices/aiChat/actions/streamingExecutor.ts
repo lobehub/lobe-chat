@@ -5,6 +5,7 @@ import {
   type AgentRuntimeContext,
   type AgentState,
   GeneralChatAgent,
+  computeStepContext,
 } from '@lobechat/agent-runtime';
 import { isDesktop } from '@lobechat/const';
 import {
@@ -38,6 +39,7 @@ import { getUserStoreState } from '@/store/user/store';
 import { topicSelectors } from '../../../selectors';
 import { cleanSpeakerTag } from '../../../utils/cleanSpeakerTag';
 import { messageMapKey } from '../../../utils/messageMapKey';
+import { selectTodosFromMessages } from '../../message/selectors/dbMessage';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -979,11 +981,26 @@ export const streamingExecutor: StateCreator<
       }
 
       stepCount++;
+
+      // Compute step context from current messages before each step
+      // Get latest messages from store in case they were updated by previous step
+      const currentMessages = get().messagesMap[messageKey] || [];
+      // Use selectTodosFromMessages selector (shared with UI display)
+      const todos = selectTodosFromMessages(currentMessages);
+      const stepContext = computeStepContext({ todos });
+
+      // Inject stepContext into the runtime context for this step
+      nextContext = {
+        ...nextContext,
+        stepContext,
+      };
+
       log(
-        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
+        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s, hasTodos=%s',
         stepCount,
         nextContext.phase,
         state.status,
+        !!stepContext.todos,
       );
 
       const result = await runtime.step(state, nextContext);

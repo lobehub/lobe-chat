@@ -21,6 +21,7 @@ import {
   type TodoItem,
   type UpdateTodosParams,
 } from '../types';
+import { getTodosFromContext } from './helper';
 
 // API enum for MVP (Todo only)
 const GTDApiNameMVP = {
@@ -30,30 +31,6 @@ const GTDApiNameMVP = {
   removeTodos: GTDApiName.removeTodos,
   updateTodos: GTDApiName.updateTodos,
 } as const;
-
-/**
- * Helper to get todos from message plugin state
- * Handles both old format ({ todos: TodoItem[] }) and new format ({ todos: { items: TodoItem[] } })
- */
-const getTodosFromState = (state: Record<string, unknown> | null | undefined): TodoItem[] => {
-  if (!state) return [];
-
-  const todos = state.todos;
-  if (!todos) return [];
-
-  // New format: { todos: { items: TodoItem[] } }
-  if (typeof todos === 'object' && 'items' in (todos as Record<string, unknown>)) {
-    const items = (todos as Record<string, unknown>).items;
-    return Array.isArray(items) ? (items as TodoItem[]) : [];
-  }
-
-  // Old format: { todos: TodoItem[] }
-  if (Array.isArray(todos)) {
-    return todos as TodoItem[];
-  }
-
-  return [];
-};
 
 /**
  * GTD Tool Executor
@@ -88,8 +65,8 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       };
     }
 
-    // Get current todos from context's plugin state (passed from framework)
-    const existingTodos = getTodosFromState(ctx.pluginState);
+    // Get current todos from step context (priority) or plugin state (fallback)
+    const existingTodos = getTodosFromContext(ctx);
 
     // Add new items
     const now = new Date().toISOString();
@@ -124,7 +101,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       };
     }
 
-    const existingTodos = getTodosFromState(ctx.pluginState);
+    const existingTodos = getTodosFromContext(ctx);
     let updatedTodos = [...existingTodos];
     const results: string[] = [];
 
@@ -197,7 +174,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       };
     }
 
-    const existingTodos = getTodosFromState(ctx.pluginState);
+    const existingTodos = getTodosFromContext(ctx);
 
     if (existingTodos.length === 0) {
       return {
@@ -265,7 +242,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       };
     }
 
-    const existingTodos = getTodosFromState(ctx.pluginState);
+    const existingTodos = getTodosFromContext(ctx);
 
     if (existingTodos.length === 0) {
       return {
@@ -320,7 +297,7 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
   ): Promise<BuiltinToolResult> => {
     const { mode } = params;
 
-    const existingTodos = getTodosFromState(ctx.pluginState);
+    const existingTodos = getTodosFromContext(ctx);
 
     if (existingTodos.length === 0) {
       return {
