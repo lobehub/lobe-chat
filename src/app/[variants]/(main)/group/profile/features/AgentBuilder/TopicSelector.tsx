@@ -17,13 +17,13 @@ interface TopicSelectorProps {
 const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   const { t } = useTranslation('topic');
 
-  // Fetch topics for the agent builder
+  // Fetch topics for the group agent builder
   useChatStore((s) => s.useFetchTopics)(true, { agentId });
 
   const [activeTopicId, switchTopic, topics] = useChatStore((s) => [
     s.activeTopicId,
     s.switchTopic,
-    topicSelectors.currentTopics(s),
+    topicSelectors.getTopicsByAgentId(agentId)(s),
   ]);
 
   // Find active topic from the agent's topics list directly

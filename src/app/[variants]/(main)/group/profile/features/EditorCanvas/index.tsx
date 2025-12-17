@@ -16,8 +16,8 @@ import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
 import { useMentionOptions } from '../ProfileEditor/MentionList';
 import PROMPT_TEMPLATE from '../ProfileEditor/promptTemplate.json';
@@ -29,27 +29,37 @@ const EditorCanvas = memo(() => {
   const { t } = useTranslation('setting');
   const [editorInit, setEditorInit] = useState(false);
   const [contentInit, setContentInit] = useState(false);
-  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
-  const editorData = config?.editorData;
-  const systemRole = config?.systemRole;
-  const updateConfig = useAgentStore((s) => s.updateAgentConfig);
-  const [initialLoad] = useState(editorData || PROMPT_TEMPLATE);
+
+  // Get systemPrompt from agentGroup store (groupMap.config.systemPrompt)
+  const groupConfig = useAgentGroupStore(agentGroupSelectors.currentGroupConfig, isEqual);
+  const systemRole = groupConfig?.systemPrompt;
+  const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
+
+  // Get streaming state from agentGroup store
+  const streamingInProgress = useAgentGroupStore((s) => s.streamingSystemPromptInProgress);
+  const streamingSystemRole = useAgentGroupStore((s) => s.streamingSystemPrompt);
+
+  // For group profile, we don't use editorData - just systemPrompt
+  const editorData = undefined;
+  const [initialLoad] = useState(PROMPT_TEMPLATE);
   const mentionOptions = useMentionOptions();
   const editor = useProfileStore((s) => s.editor);
   const handleContentChange = useProfileStore((s) => s.handleContentChange);
   const slashItems = useSlashItems();
 
-  // Streaming state from AgentStore
-  const streamingSystemRole = useAgentStore((s) => s.streamingSystemRole);
-  const streamingInProgress = useAgentStore((s) => s.streamingSystemRoleInProgress);
   const prevStreamingRef = useRef<string | undefined>(undefined);
 
-  // Wrap handleContentChange with updateConfig
+  // Wrap handleContentChange with updateGroupConfig
   const handleChange = useCallback(() => {
     // Don't trigger save during streaming
     if (streamingInProgress) return;
-    handleContentChange(updateConfig);
-  }, [handleContentChange, updateConfig, streamingInProgress]);
+    handleContentChange(async (config) => {
+      // Only update systemPrompt in group config
+      if (config.systemRole !== undefined) {
+        await updateGroupConfig({ systemPrompt: config.systemRole });
+      }
+    });
+  }, [handleContentChange, updateGroupConfig, streamingInProgress]);
 
   // Handle streaming updates - update editor with streaming content
   useEffect(() => {

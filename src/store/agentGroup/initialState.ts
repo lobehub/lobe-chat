@@ -9,6 +9,14 @@ export interface ChatGroupState {
   groups: ChatGroupItem[];
   groupsInit: boolean;
   showGroupSetting: boolean;
+  /**
+   * Content being streamed for system prompt update (for GroupAgentBuilder)
+   */
+  streamingSystemPrompt?: string;
+  /**
+   * Whether system prompt streaming is in progress
+   */
+  streamingSystemPromptInProgress?: boolean;
 }
 
 export const initialChatGroupState: ChatGroupState = {
@@ -17,4 +25,6 @@ export const initialChatGroupState: ChatGroupState = {
   groups: [],
   groupsInit: false,
   showGroupSetting: false,
+  streamingSystemPrompt: undefined,
+  streamingSystemPromptInProgress: false,
 };

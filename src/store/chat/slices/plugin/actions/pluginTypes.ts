@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { GroupAgentBuilderIdentifier } from '@lobechat/builtin-tool-group-agent-builder';
 import { ChatToolPayload } from '@lobechat/types';
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import debug from 'debug';
@@ -224,7 +225,14 @@ export const pluginTypes: StateCreator<
       // Return the result for call_tool executor to use
       return result;
     }
-    // run tool api call
+
+    // Route GroupAgentBuilder to its dedicated action
+    if (payload.identifier === GroupAgentBuilderIdentifier) {
+      log('[invokeBuiltinTool] Routing to GroupAgentBuilder: %s', payload.apiName);
+      return await get().internal_triggerGroupAgentBuilderToolCalling(id, payload.apiName, params);
+    }
+
+    // run tool api call (fallback for AgentBuilder and other legacy tools)
     // @ts-ignore
     const { [payload.apiName]: action } = get();
     if (!action) {

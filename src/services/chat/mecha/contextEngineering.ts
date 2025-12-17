@@ -1,6 +1,13 @@
 import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
-import { isDesktop } from '@lobechat/const';
-import { AgentBuilderContext, AgentGroupConfig, MessagesEngine } from '@lobechat/context-engine';
+import { GroupAgentBuilderIdentifier } from '@lobechat/builtin-tool-group-agent-builder';
+import { KLAVIS_SERVER_TYPES, isDesktop } from '@lobechat/const';
+import {
+  AgentBuilderContext,
+  AgentGroupConfig,
+  GroupAgentBuilderContext,
+  GroupOfficialToolItem,
+  MessagesEngine,
+} from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
@@ -11,8 +18,9 @@ import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { getChatGroupStoreState } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
+import { getChatStoreState } from '@/store/chat';
 import { getToolStoreState } from '@/store/tool';
-import { toolSelectors } from '@/store/tool/selectors';
+import { builtinToolSelectors, klavisStoreSelectors, toolSelectors } from '@/store/tool/selectors';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
 import type { UserMemoriesResult } from './memoryManager';
@@ -59,8 +67,11 @@ export const contextEngineering = async ({
 
   // Check if Agent Builder tool is enabled
   const isAgentBuilderEnabled = tools?.includes(AgentBuilderIdentifier) ?? false;
+  // Check if Group Agent Builder tool is enabled
+  const isGroupAgentBuilderEnabled = tools?.includes(GroupAgentBuilderIdentifier) ?? false;
 
   log('isAgentBuilderEnabled: %s', isAgentBuilderEnabled);
+  log('isGroupAgentBuilderEnabled: %s', isGroupAgentBuilderEnabled);
 
   // Build agent group configuration if groupId is provided
   let agentGroup: AgentGroupConfig | undefined;
@@ -103,8 +114,99 @@ export const contextEngineering = async ({
     }
   }
 
-  // Get enabled agent files with content and knowledge bases from agent store
+  // Get agent store state (used for both group agent builder context and file/knowledge base)
   const agentStoreState = getAgentStoreState();
+
+  // Build group agent builder context if Group Agent Builder is enabled
+  // Note: Uses activeGroupId from chatStore to get the group being edited
+  let groupAgentBuilderContext: GroupAgentBuilderContext | undefined;
+  if (isGroupAgentBuilderEnabled) {
+    const activeGroupId = getChatStoreState().activeGroupId;
+    if (activeGroupId) {
+      const groupStoreState = getChatGroupStoreState();
+      const activeGroupDetail = agentGroupSelectors.getGroupById(activeGroupId)(groupStoreState);
+
+      if (activeGroupDetail) {
+        // Get supervisor agent config if supervisorAgentId exists
+        let supervisorConfig: GroupAgentBuilderContext['supervisorConfig'];
+        let enabledPlugins: string[] = [];
+        if (activeGroupDetail.supervisorAgentId) {
+          const supervisorAgentConfig = agentSelectors.getAgentConfigById(
+            activeGroupDetail.supervisorAgentId,
+          )(agentStoreState);
+          supervisorConfig = {
+            model: supervisorAgentConfig.model,
+            plugins: supervisorAgentConfig.plugins,
+            provider: supervisorAgentConfig.provider,
+          };
+          enabledPlugins = supervisorAgentConfig.plugins || [];
+        }
+
+        // Build official tools list (builtin tools + Klavis tools)
+        const toolState = getToolStoreState();
+        const officialTools: GroupOfficialToolItem[] = [];
+
+        // Get builtin tools (excluding Klavis tools)
+        const builtinTools = builtinToolSelectors.metaList(toolState);
+        const klavisIdentifiers = new Set(KLAVIS_SERVER_TYPES.map((t) => t.identifier));
+
+        for (const tool of builtinTools) {
+          // Skip Klavis tools in builtin list (they'll be shown separately)
+          if (klavisIdentifiers.has(tool.identifier)) continue;
+
+          officialTools.push({
+            description: tool.meta?.description,
+            enabled: enabledPlugins.includes(tool.identifier),
+            identifier: tool.identifier,
+            installed: true,
+            name: tool.meta?.title || tool.identifier,
+            type: 'builtin',
+          });
+        }
+
+        // Get Klavis tools (if enabled)
+        const isKlavisEnabled =
+          typeof window !== 'undefined' &&
+          window.global_serverConfigStore?.getState()?.serverConfig?.enableKlavis;
+
+        if (isKlavisEnabled) {
+          const allKlavisServers = klavisStoreSelectors.getServers(toolState);
+
+          for (const klavisType of KLAVIS_SERVER_TYPES) {
+            const server = allKlavisServers.find((s) => s.identifier === klavisType.identifier);
+
+            officialTools.push({
+              description: `Klavis MCP Server: ${klavisType.label}`,
+              enabled: enabledPlugins.includes(klavisType.identifier),
+              identifier: klavisType.identifier,
+              installed: !!server,
+              name: klavisType.label,
+              type: 'klavis',
+            });
+          }
+        }
+
+        groupAgentBuilderContext = {
+          config: {
+            systemPrompt: activeGroupDetail.config?.systemPrompt || undefined,
+          },
+          groupId: activeGroupId,
+          groupTitle: activeGroupDetail.title || undefined,
+          members: activeGroupDetail.agents?.map((agent) => ({
+            description: agent.description || undefined,
+            id: agent.id,
+            isSupervisor: agent.isSupervisor,
+            title: agent.title || 'Untitled Agent',
+          })),
+          officialTools,
+          supervisorConfig,
+        };
+        log('groupAgentBuilderContext built from activeGroupId: %o', groupAgentBuilderContext);
+      }
+    }
+  }
+
+  // Get enabled agent files with content and knowledge bases from agent store
   const agentFiles = agentSelectors.currentAgentFiles(agentStoreState);
   const agentKnowledgeBases = agentSelectors.currentAgentKnowledgeBases(agentStoreState);
 
@@ -170,6 +272,7 @@ export const contextEngineering = async ({
 
     // Extended contexts - only pass when enabled
     ...(isAgentBuilderEnabled && { agentBuilderContext }),
+    ...(isGroupAgentBuilderEnabled && { groupAgentBuilderContext }),
     ...(agentGroup && { agentGroup }),
   });
 

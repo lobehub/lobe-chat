@@ -9,7 +9,19 @@ import { ChatGroupStore } from '@/store/agentGroup/store';
 import { agentGroupSelectors } from '../selectors';
 
 export interface ChatGroupCurdAction {
+  /**
+   * Append content chunk to streaming system prompt
+   */
+  appendStreamingSystemPrompt: (chunk: string) => void;
+  /**
+   * Finish streaming and save final content to group config
+   */
+  finishStreamingSystemPrompt: () => Promise<void>;
   pinGroup: (id: string, pinned: boolean) => Promise<void>;
+  /**
+   * Start streaming system prompt update
+   */
+  startStreamingSystemPrompt: () => void;
   updateGroup: (id: string, value: Partial<ChatGroupItem>) => Promise<void>;
   updateGroupConfig: (config: Partial<LobeChatGroupConfig>) => Promise<void>;
   updateGroupMeta: (meta: Partial<ChatGroupItem>) => Promise<void>;
@@ -20,11 +32,49 @@ export const chatGroupCurdSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   ChatGroupCurdAction
-> = (_, get) => ({
+> = (set, get) => ({
+  appendStreamingSystemPrompt: (chunk) => {
+    const currentContent = get().streamingSystemPrompt || '';
+    set({ streamingSystemPrompt: currentContent + chunk }, false, 'appendStreamingSystemPrompt');
+  },
+
+  finishStreamingSystemPrompt: async () => {
+    const { streamingSystemPrompt, updateGroupConfig } = get();
+
+    if (!streamingSystemPrompt) {
+      set({ streamingSystemPromptInProgress: false }, false, 'finishStreamingSystemPrompt');
+      return;
+    }
+
+    // Save the streamed content to group config
+    await updateGroupConfig({ systemPrompt: streamingSystemPrompt });
+
+    // Reset streaming state
+    set(
+      {
+        streamingSystemPrompt: undefined,
+        streamingSystemPromptInProgress: false,
+      },
+      false,
+      'finishStreamingSystemPrompt',
+    );
+  },
+
   pinGroup: async (id, pinned) => {
     await chatGroupService.updateGroup(id, { pinned });
     get().internal_dispatchChatGroup({ payload: { id, pinned }, type: 'updateGroup' });
     await get().refreshGroupDetail(id);
+  },
+
+  startStreamingSystemPrompt: () => {
+    set(
+      {
+        streamingSystemPrompt: '',
+        streamingSystemPromptInProgress: true,
+      },
+      false,
+      'startStreamingSystemPrompt',
+    );
   },
 
   updateGroup: async (id, value) => {

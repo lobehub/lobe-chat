@@ -1,3 +1,4 @@
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { DraggablePanel } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo, useState } from 'react';
@@ -15,8 +16,14 @@ const AgentBuilder = memo(() => {
   const chatPanelExpanded = useProfileStore((s) => s.chatPanelExpanded);
   const setChatPanelExpanded = useProfileStore((s) => s.setChatPanelExpanded);
   const agentId = useAgentStore((s) => s.activeAgentId);
-  const agentBuilderId = useAgentStore(builtinAgentSelectors.agentBuilderId);
+  const groupAgentBuilderId = useAgentStore(builtinAgentSelectors.groupAgentBuilderId);
+
+  console.log('groupAgentBuilderId', groupAgentBuilderId);
+  console.log('agentId', agentId);
   const [width, setWidth] = useState<string | number>(360);
+
+  const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.groupAgentBuilder);
 
   return (
     <DraggablePanel
@@ -37,12 +44,12 @@ const AgentBuilder = memo(() => {
         width,
       }}
     >
-      {agentId && agentBuilderId ? (
-        <AgentBuilderProvider agentId={agentBuilderId}>
-          <AgentBuilderConversation agentId={agentBuilderId} />
+      {agentId && groupAgentBuilderId ? (
+        <AgentBuilderProvider agentId={groupAgentBuilderId}>
+          <AgentBuilderConversation agentId={groupAgentBuilderId} />
         </AgentBuilderProvider>
       ) : (
-        <Loading debugId="AgentBuilder > Init" />
+        <Loading debugId="GroupAgentBuilder > Init" />
       )}
     </DraggablePanel>
   );

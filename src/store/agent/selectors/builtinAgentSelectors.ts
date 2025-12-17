@@ -25,6 +25,12 @@ const agentBuilderId = (s: AgentStoreState) =>
   s.builtinAgentIdMap[BUILTIN_AGENT_SLUGS.agentBuilder];
 
 /**
+ * Get group agent builder ID (convenience selector)
+ */
+const groupAgentBuilderId = (s: AgentStoreState) =>
+  s.builtinAgentIdMap[BUILTIN_AGENT_SLUGS.groupAgentBuilder];
+
+/**
  * Get inbox agent id from builtinAgentIdMap
  */
 const inboxAgentId = (s: AgentStoreState) => s.builtinAgentIdMap[INBOX_SESSION_ID];
@@ -45,6 +51,7 @@ const isInboxAgent = (s: AgentStoreState) => {
 export const builtinAgentSelectors = {
   agentBuilderId,
   getBuiltinAgentId,
+  groupAgentBuilderId,
   inboxAgentId,
   isBuiltinAgentInit,
   isInboxAgent,
