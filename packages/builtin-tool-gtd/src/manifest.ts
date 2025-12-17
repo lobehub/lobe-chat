@@ -13,6 +13,7 @@ export const GTDManifest: BuiltinToolManifest = {
       description: 'Create new todo items. Pass an array of text strings.',
       name: GTDApiName.createTodos,
       humanIntervention: 'always',
+      renderDisplayControl: 'expand',
       parameters: {
         properties: {
           adds: {
@@ -29,6 +30,7 @@ export const GTDManifest: BuiltinToolManifest = {
       description:
         'Update todo items with batch operations. Each operation specifies a type (add, update, remove, complete) and the relevant data.',
       name: GTDApiName.updateTodos,
+      renderDisplayControl: 'expand',
       parameters: {
         properties: {
           operations: {
@@ -71,6 +73,7 @@ export const GTDManifest: BuiltinToolManifest = {
     {
       description: 'Mark todo items as completed by their indices (0-based).',
       name: GTDApiName.completeTodos,
+      renderDisplayControl: 'expand',
       parameters: {
         properties: {
           indices: {
@@ -87,6 +90,7 @@ export const GTDManifest: BuiltinToolManifest = {
       description: 'Remove todo items by their indices (0-based).',
       name: GTDApiName.removeTodos,
       humanIntervention: 'always',
+      renderDisplayControl: 'expand',
       parameters: {
         properties: {
           indices: {
@@ -103,6 +107,7 @@ export const GTDManifest: BuiltinToolManifest = {
       description: 'Clear todo items. Can clear only completed items or all items.',
       name: GTDApiName.clearTodos,
       humanIntervention: 'always',
+      renderDisplayControl: 'expand',
       parameters: {
         properties: {
           mode: {

@@ -1,5 +1,6 @@
 import { ToolNameResolver } from '@lobechat/context-engine';
 import { pluginPrompts } from '@lobechat/prompts';
+import { RenderDisplayControl } from '@lobechat/types';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { MetaData } from '@/types/meta';
@@ -107,11 +108,30 @@ const isToolHasUI = (id: string) => (s: ToolStoreState) => {
   return !!manifest.ui;
 };
 
+/**
+ * Get the renderDisplayControl configuration for a specific tool API
+ * Only works for builtin tools, plugins don't support this feature yet
+ * @param identifier - Tool identifier
+ * @param apiName - API name
+ * @returns RenderDisplayControl value, defaults to 'collapsed'
+ */
+const getRenderDisplayControl =
+  (identifier: string, apiName: string) =>
+  (s: ToolStoreState): RenderDisplayControl => {
+    // Only builtin tools support renderDisplayControl
+    const builtinTool = s.builtinTools.find((t) => t.identifier === identifier);
+    if (!builtinTool) return 'collapsed';
+
+    const api = builtinTool.manifest.api.find((a) => a.name === apiName);
+    return api?.renderDisplayControl ?? 'collapsed';
+  };
+
 export const toolSelectors = {
   enabledSystemRoles,
   getManifestById,
   getManifestLoadingStatus,
   getMetaById,
+  getRenderDisplayControl,
   isToolHasUI,
   metaList,
 };

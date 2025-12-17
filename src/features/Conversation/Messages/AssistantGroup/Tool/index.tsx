@@ -3,6 +3,8 @@ import { CSSProperties, memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AnimatedCollapsed from '@/components/AnimatedCollapsed';
+import { useToolStore } from '@/store/tool';
+import { toolSelectors } from '@/store/tool/selectors';
 
 import Inspectors from './Inspector';
 import Render from './Render';
@@ -44,8 +46,12 @@ const Tool = memo<GroupToolProps>(
     type,
     toolMessageId,
   }) => {
-    // Default to false since group messages are all completed
+    // Get renderDisplayControl from manifest
+    const renderDisplayControl = useToolStore(
+      toolSelectors.getRenderDisplayControl(identifier, apiName),
+    );
 
+    // Default to false since group messages are all completed
     const [showToolContent, setShowToolDetail] = useState(false);
     const [showCustomPluginUI, setShowCustomPluginUI] = useState(false);
 
@@ -65,6 +71,7 @@ const Tool = memo<GroupToolProps>(
           identifier={identifier}
           index={index}
           intervention={intervention}
+          renderDisplayControl={renderDisplayControl}
           result={result}
           setShowPluginRender={setShowCustomPluginUI}
           setShowRender={setShowToolDetail}

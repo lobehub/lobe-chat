@@ -1,4 +1,4 @@
-import { ToolIntervention } from '@lobechat/types';
+import { RenderDisplayControl, ToolIntervention } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, Trash2 } from 'lucide-react';
@@ -71,6 +71,13 @@ interface InspectorProps {
   identifier: string;
   index: number;
   intervention?: ToolIntervention;
+  /**
+   * Control the render display behavior
+   * - 'collapsed': Default collapsed, user can expand (default)
+   * - 'expand': Default expanded, user can collapse
+   * - 'alwaysExpand': Always expanded, user cannot collapse
+   */
+  renderDisplayControl?: RenderDisplayControl;
   result?: { content: string | null; error?: any; state?: any };
   setShowPluginRender: (show: boolean) => void;
   setShowRender: (show: boolean) => void;
@@ -97,6 +104,7 @@ const Inspectors = memo<InspectorProps>(
     type,
     intervention,
     toolMessageId,
+    renderDisplayControl = 'collapsed',
   }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
@@ -119,13 +127,20 @@ const Inspectors = memo<InspectorProps>(
     const isAbort = intervention?.status === 'aborted';
     const isTitleLoading = !hasResult && !isPending;
 
+    // Calculate default expanded state based on renderDisplayControl
+    const defaultExpanded = renderDisplayControl !== 'collapsed';
+
     // Use ConversationStore for reading message data
     const isExpanded = useConversationStore((s) => {
-      if (!toolMessageId) return false;
+      if (!toolMessageId) return defaultExpanded;
 
       const message = dataSelectors.getDbMessageById(toolMessageId)(s);
-      return message?.metadata?.inspectExpanded ?? false;
+      // Use metadata value if set, otherwise use default from renderDisplayControl
+      return message?.metadata?.inspectExpanded ?? defaultExpanded;
     });
+
+    // Check if user can toggle the expand state
+    const canToggle = renderDisplayControl !== 'alwaysExpand';
 
     // Sync with parent state
     useEffect(() => {
@@ -142,9 +157,10 @@ const Inspectors = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              if (toolMessageId) toggleInspectExpanded(toolMessageId);
+              if (canToggle && toolMessageId) toggleInspectExpanded(toolMessageId);
             }}
             paddingInline={4}
+            style={{ cursor: canToggle ? 'pointer' : 'default' }}
           >
             <ToolTitle
               apiName={apiName}

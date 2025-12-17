@@ -37,6 +37,16 @@ const MetaSchema = z.object({
   title: z.string(),
 });
 
+/**
+ * Control the render display behavior for tool results
+ * - 'collapsed': Default collapsed, user can expand (default)
+ * - 'expand': Default expanded, user can collapse
+ * - 'alwaysExpand': Always expanded, user cannot collapse
+ */
+export type RenderDisplayControl = 'alwaysExpand' | 'collapsed' | 'expand';
+
+export const RenderDisplayControlSchema = z.enum(['collapsed', 'expand', 'alwaysExpand']);
+
 export interface LobeChatPluginApi {
   description: string;
   /**
@@ -54,6 +64,15 @@ export interface LobeChatPluginApi {
   humanIntervention?: HumanInterventionConfig;
   name: string;
   parameters: Record<string, any>;
+  /**
+   * Control the render display behavior for tool results
+   * - 'collapsed': Default collapsed, user can expand (default)
+   * - 'expand': Default expanded, user can collapse
+   * - 'alwaysExpand': Always expanded, user cannot collapse
+   *
+   * @default 'collapsed'
+   */
+  renderDisplayControl?: RenderDisplayControl;
   url?: string;
 }
 
@@ -62,6 +81,7 @@ export const LobeChatPluginApiSchema = z.object({
   humanIntervention: HumanInterventionConfigSchema.optional(),
   name: z.string(),
   parameters: z.record(z.string(), z.any()),
+  renderDisplayControl: RenderDisplayControlSchema.optional(),
   url: z.string().optional(),
 });
 

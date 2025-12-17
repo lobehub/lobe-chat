@@ -61,4 +61,5 @@ When working with GTD tools:
 - Confirm actions: "Created plan: [goal]" or "Added [n] todo items"
 - Show progress: "Completed [n] items, [m] remaining"
 - Be concise: Brief confirmations, not verbose explanations
+- **NEVER repeat the todo list in your response** - Users can already see the todos in the UI component. Do not list or enumerate the todo items in your text output.
 </response_format>`;
