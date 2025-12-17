@@ -4,6 +4,7 @@ import { memo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import ResourceManager from '@/features/ResourceManager';
+import { documentSelectors, useFileStore } from '@/store/file';
 import { FilesTabs } from '@/types/files';
 
 import { useResourceManagerStore } from '../features/store';
@@ -16,6 +17,11 @@ const ResourceHomePage = memo(() => {
 
   const categoryParam = (searchParams.get('category') as FilesTabs) || FilesTabs.All;
   const fileId = searchParams.get('file');
+
+  // Fetch file or document details to determine correct mode
+  const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
+  const { data: fileData } = useFetchKnowledgeItem(fileId || undefined);
+  const documentData = useFileStore(documentSelectors.getDocumentById(fileId || undefined));
 
   // Clear libraryId when on home route (only once on mount)
   useEffect(() => {
@@ -31,7 +37,21 @@ const ResourceHomePage = memo(() => {
   useEffect(() => {
     if (fileId) {
       setCurrentViewItemId(fileId);
-      if (fileId.startsWith('doc')) {
+
+      // Check if it's a PDF file - check both file data and document data
+      const isPDF =
+        fileData?.fileType?.toLowerCase() === 'pdf' ||
+        fileData?.fileType?.toLowerCase() === 'application/pdf' ||
+        fileData?.name?.toLowerCase().endsWith('.pdf') ||
+        documentData?.fileType?.toLowerCase() === 'pdf' ||
+        documentData?.fileType?.toLowerCase() === 'application/pdf' ||
+        documentData?.filename?.toLowerCase().endsWith('.pdf');
+
+      // Determine mode based on file type
+      if (isPDF) {
+        // PDF files should always use editor mode for PDF viewer
+        setMode('editor');
+      } else if (fileId.startsWith('doc')) {
         setMode('page');
       } else {
         setMode('editor');
@@ -41,7 +61,7 @@ const ResourceHomePage = memo(() => {
       setMode('explorer');
       setCurrentViewItemId(undefined);
     }
-  }, [fileId, setCurrentViewItemId, setMode]);
+  }, [fileId, fileData, documentData, setCurrentViewItemId, setMode]);
 
   return <ResourceManager />;
 });

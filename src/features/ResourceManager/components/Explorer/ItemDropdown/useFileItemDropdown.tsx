@@ -165,7 +165,19 @@ export const useFileItemDropdown = ({
           label: t('FileManager.actions.copyUrl'),
           onClick: async ({ domEvent }) => {
             domEvent.stopPropagation();
-            await copyToClipboard(url);
+
+            // For pages, use the route path instead of the storage URL
+            let urlToCopy = url;
+            if (isPage) {
+              const baseUrl = window.location.origin;
+              if (knowledgeBaseId) {
+                urlToCopy = `${baseUrl}/resource/library/${knowledgeBaseId}?file=${id}`;
+              } else {
+                urlToCopy = `${baseUrl}/resource?file=${id}`;
+              }
+            }
+
+            await copyToClipboard(urlToCopy);
             message.success(t('FileManager.actions.copyUrlSuccess'));
           },
         },
