@@ -5,8 +5,9 @@ import { basename, extname } from 'node:path';
 
 import { createLogger } from '@/utils/logger';
 
+import { getExportMimeType } from '../../utils/mime';
+
 type ResolveRendererFilePath = (url: URL) => Promise<string | null>;
-type GetExportMimeType = (filePath: string) => string | undefined;
 
 const RENDERER_PROTOCOL_PRIVILEGES = {
   allowServiceWorkers: true,
@@ -17,7 +18,6 @@ const RENDERER_PROTOCOL_PRIVILEGES = {
 } as const;
 
 interface RendererProtocolManagerOptions {
-  getExportMimeType: GetExportMimeType;
   host?: string;
   nextExportDir: string;
   resolveRendererFilePath: ResolveRendererFilePath;
@@ -30,17 +30,15 @@ export class RendererProtocolManager {
   private readonly host: string;
   private readonly nextExportDir: string;
   private readonly resolveRendererFilePath: ResolveRendererFilePath;
-  private readonly getExportMimeType: GetExportMimeType;
   private handlerRegistered = false;
 
   constructor(options: RendererProtocolManagerOptions) {
-    const { nextExportDir, resolveRendererFilePath, getExportMimeType } = options;
+    const { nextExportDir, resolveRendererFilePath } = options;
 
     this.scheme = 'app';
     this.host = RENDERER_DIR;
     this.nextExportDir = nextExportDir;
     this.resolveRendererFilePath = resolveRendererFilePath;
-    this.getExportMimeType = getExportMimeType;
   }
 
   /**
@@ -91,7 +89,7 @@ export class RendererProtocolManager {
 
           const buffer = await readFile(targetPath);
           const headers = new Headers();
-          const mimeType = this.getExportMimeType(targetPath);
+          const mimeType = getExportMimeType(targetPath);
 
           if (mimeType) headers.set('Content-Type', mimeType);
 

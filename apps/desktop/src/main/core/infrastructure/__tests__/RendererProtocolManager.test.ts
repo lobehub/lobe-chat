@@ -65,11 +65,9 @@ describe('RendererProtocolManager', () => {
       if (url.pathname === '/') return '/export/index.html';
       return null;
     });
-    const getExportMimeType = vi.fn(() => 'text/html; charset=utf-8');
     mockReadFile.mockImplementation(async (path: string) => Buffer.from(`content:${path}`));
 
     const manager = new RendererProtocolManager({
-      getExportMimeType,
       nextExportDir: '/export',
       resolveRendererFilePath,
     });
@@ -78,7 +76,11 @@ describe('RendererProtocolManager', () => {
     expect(mockProtocol.handle).toHaveBeenCalled();
     const handler = protocolHandlerRef.current;
 
-    const response = await handler({ url: 'app://next/missing' } as any);
+    const response = await handler({
+      headers: new Headers(),
+      method: 'GET',
+      url: 'app://next/missing',
+    } as any);
     const body = await response.text();
 
     expect(resolveRendererFilePath).toHaveBeenCalledTimes(2);
@@ -96,11 +98,9 @@ describe('RendererProtocolManager', () => {
       if (url.pathname === '/') return '/export/index.html';
       return null;
     });
-    const getExportMimeType = vi.fn(() => 'text/html; charset=utf-8');
     mockReadFile.mockImplementation(async (path: string) => Buffer.from(`content:${path}`));
 
     const manager = new RendererProtocolManager({
-      getExportMimeType,
       nextExportDir: '/export',
       resolveRendererFilePath,
     });
@@ -108,7 +108,11 @@ describe('RendererProtocolManager', () => {
     manager.registerHandler();
     const handler = protocolHandlerRef.current;
 
-    const response = await handler({ url: 'app://next/404.html' } as any);
+    const response = await handler({
+      headers: new Headers(),
+      method: 'GET',
+      url: 'app://next/404.html',
+    } as any);
 
     expect(resolveRendererFilePath).toHaveBeenCalledTimes(1);
     expect(mockReadFile).toHaveBeenCalledWith('/export/404.html');
@@ -117,10 +121,8 @@ describe('RendererProtocolManager', () => {
 
   it('should return 404 for missing asset requests without fallback', async () => {
     const resolveRendererFilePath = vi.fn(async (_url: URL) => null);
-    const getExportMimeType = vi.fn();
 
     const manager = new RendererProtocolManager({
-      getExportMimeType,
       nextExportDir: '/export',
       resolveRendererFilePath,
     });
@@ -136,14 +138,12 @@ describe('RendererProtocolManager', () => {
 
   it('should support Range requests for media assets', async () => {
     const resolveRendererFilePath = vi.fn(async (_url: URL) => '/export/intro-video.mp4');
-    const getExportMimeType = vi.fn(() => 'video/mp4');
     const payload = Buffer.from('0123456789');
 
     mockStat.mockImplementation(async () => ({ size: payload.length }));
     mockReadFile.mockImplementation(async () => payload);
 
     const manager = new RendererProtocolManager({
-      getExportMimeType,
       nextExportDir: '/export',
       resolveRendererFilePath,
     });
