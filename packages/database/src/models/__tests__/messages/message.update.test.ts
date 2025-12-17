@@ -941,7 +941,7 @@ describe('MessageModel Update Tests', () => {
   });
 
   describe('updateToolArguments', () => {
-    it('should update tool message plugin arguments', async () => {
+    it('should update both assistant tools and tool message plugin using toolCallId', async () => {
       // Create assistant message with tools
       await serverDB.insert(messages).values({
         id: 'assistant-msg-1',
@@ -978,9 +978,9 @@ describe('MessageModel Update Tests', () => {
         userId,
       });
 
-      // Call updateToolArguments
+      // Call updateToolArguments using toolCallId
       const result = await messageModel.updateToolArguments(
-        'tool-msg-1',
+        'tool-call-1',
         '{"query":"updated query"}',
       );
 
@@ -1064,9 +1064,9 @@ describe('MessageModel Update Tests', () => {
         },
       ]);
 
-      // Update only the search tool
+      // Update only the search tool using toolCallId
       const result = await messageModel.updateToolArguments(
-        'tool-msg-search',
+        'tool-call-search',
         '{"query":"new search query"}',
       );
 
@@ -1082,133 +1082,113 @@ describe('MessageModel Update Tests', () => {
       expect(tools[1].arguments).toBe('{"expression":"1+1"}'); // Should remain unchanged
     });
 
-    it('should handle tool message without parent', async () => {
-      // Create orphan tool message (no parentId)
-      await serverDB.insert(messages).values({
-        id: 'orphan-tool-msg',
-        userId,
-        role: 'tool',
-        content: 'orphan result',
-        tool_call_id: 'orphan-tool-call',
-      });
-
-      await serverDB.insert(messagePlugins).values({
-        id: 'orphan-tool-msg',
-        toolCallId: 'orphan-tool-call',
-        identifier: 'test-plugin',
-        arguments: '{"key":"original"}',
-        userId,
-      });
-
-      // Call updateToolArguments
-      const result = await messageModel.updateToolArguments('orphan-tool-msg', '{"key":"updated"}');
-
-      expect(result.success).toBe(true);
-
-      // Verify plugin arguments updated
-      const pluginResult = await serverDB
-        .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, 'orphan-tool-msg'));
-      expect(pluginResult[0].arguments).toBe('{"key":"updated"}');
-    });
-
-    it('should return success false for non-existent tool message', async () => {
-      const result = await messageModel.updateToolArguments('non-existent-msg', '{"key":"value"}');
-
-      expect(result.success).toBe(false);
-    });
-
-    it('should return success false for message without tool_call_id', async () => {
-      // Create regular user message (not a tool message)
-      await serverDB.insert(messages).values({
-        id: 'user-msg',
-        userId,
-        role: 'user',
-        content: 'regular message',
-      });
-
-      const result = await messageModel.updateToolArguments('user-msg', '{"key":"value"}');
+    it('should return success false for non-existent toolCallId', async () => {
+      const result = await messageModel.updateToolArguments(
+        'non-existent-tool-call',
+        '{"key":"value"}',
+      );
 
       expect(result.success).toBe(false);
     });
 
     it('should only update messages belonging to the current user', async () => {
-      // Create tool message for other user
+      // Create assistant message for other user
       await serverDB.insert(messages).values({
-        id: 'other-user-tool-msg',
+        id: 'other-user-assistant',
         userId: otherUserId,
-        role: 'tool',
-        content: 'other user result',
-        tool_call_id: 'other-tool-call',
-      });
-
-      await serverDB.insert(messagePlugins).values({
-        id: 'other-user-tool-msg',
-        toolCallId: 'other-tool-call',
-        identifier: 'test-plugin',
-        arguments: '{"key":"original"}',
-        userId: otherUserId,
+        role: 'assistant',
+        content: 'other user message',
+        tools: [
+          {
+            id: 'other-tool-call',
+            type: 'builtin',
+            apiName: 'test',
+            arguments: '{"key":"original"}',
+            identifier: 'test-plugin',
+          },
+        ],
       });
 
       // Try to update as different user
-      const result = await messageModel.updateToolArguments(
-        'other-user-tool-msg',
-        '{"key":"hacked"}',
-      );
+      const result = await messageModel.updateToolArguments('other-tool-call', '{"key":"hacked"}');
 
       expect(result.success).toBe(false);
 
       // Verify arguments were NOT updated
-      const pluginResult = await serverDB
+      const assistantResult = await serverDB
         .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, 'other-user-tool-msg'));
-      expect(pluginResult[0].arguments).toBe('{"key":"original"}');
+        .from(messages)
+        .where(eq(messages.id, 'other-user-assistant'));
+      expect((assistantResult[0].tools as any)[0].arguments).toBe('{"key":"original"}');
     });
 
-    it('should handle parent message without tools array', async () => {
-      // Create assistant message without tools
-      await serverDB.insert(messages).values({
-        id: 'assistant-no-tools',
-        userId,
-        role: 'assistant',
-        content: 'message without tools',
-        tools: null,
-      });
+    it('should complete within acceptable time even with many messages', async () => {
+      const COUNT = 100; // Use 100 records for performance test
 
-      // Create tool message pointing to it
-      await serverDB.insert(messages).values({
-        id: 'tool-msg-orphan-parent',
+      // Create assistant messages with tools
+      const assistantMessagesData = Array.from({ length: COUNT }, (_, i) => ({
+        id: `perf-assistant-${i}`,
         userId,
-        role: 'tool',
-        content: 'tool result',
-        parentId: 'assistant-no-tools',
-        tool_call_id: 'tool-call-orphan',
-      });
+        role: 'assistant' as const,
+        content: `Message ${i}`,
+        tools: [
+          {
+            id: `perf-tool-call-${i}`,
+            type: 'builtin',
+            apiName: 'test',
+            arguments: `{"index":${i}}`,
+            identifier: 'test-plugin',
+          },
+        ],
+      }));
 
-      await serverDB.insert(messagePlugins).values({
-        id: 'tool-msg-orphan-parent',
-        toolCallId: 'tool-call-orphan',
+      await serverDB.insert(messages).values(assistantMessagesData);
+
+      // Create tool messages
+      const toolMessagesData = Array.from({ length: COUNT }, (_, i) => ({
+        id: `perf-tool-msg-${i}`,
+        userId,
+        role: 'tool' as const,
+        content: '',
+        parentId: `perf-assistant-${i}`,
+        tool_call_id: `perf-tool-call-${i}`,
+      }));
+
+      await serverDB.insert(messages).values(toolMessagesData);
+
+      // Create message plugins
+      const pluginsData = Array.from({ length: COUNT }, (_, i) => ({
+        id: `perf-tool-msg-${i}`,
+        toolCallId: `perf-tool-call-${i}`,
+        type: 'builtin',
+        apiName: 'test',
         identifier: 'test-plugin',
-        arguments: '{"key":"original"}',
+        arguments: `{"index":${i}}`,
         userId,
-      });
+      }));
 
-      // Should still update plugin arguments even if parent has no tools
+      await serverDB.insert(messagePlugins).values(pluginsData);
+
+      // Test updating tool arguments - should use indexed lookup, not full scan
+      const targetIndex = Math.floor(COUNT / 2); // Middle of the list
+      const start = performance.now();
       const result = await messageModel.updateToolArguments(
-        'tool-msg-orphan-parent',
-        '{"key":"updated"}',
+        `perf-tool-call-${targetIndex}`,
+        '{"updated":true}',
       );
+      const duration = performance.now() - start;
 
       expect(result.success).toBe(true);
+      // Query should complete within 100ms even with many messages
+      // (indexed lookup should be O(1), not O(n))
+      expect(duration).toBeLessThan(30);
 
-      // Verify plugin arguments updated
-      const pluginResult = await serverDB
+      // Verify the update was correct
+      const parentResult = await serverDB
         .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, 'tool-msg-orphan-parent'));
-      expect(pluginResult[0].arguments).toBe('{"key":"updated"}');
+        .from(messages)
+        .where(eq(messages.id, `perf-assistant-${targetIndex}`));
+      expect((parentResult[0].tools as any)[0].arguments).toBe('{"updated":true}');
     });
   });
 

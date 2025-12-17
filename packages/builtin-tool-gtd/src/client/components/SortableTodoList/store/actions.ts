@@ -26,9 +26,11 @@ export const createActions = (
 ): TodoListStore => {
   // Save implementation (used by both debounced and immediate save)
   const performSave = async () => {
+    console.log('[performSave] called, onSave:', !!internals.onSave);
     if (!internals.onSave) return;
 
     const { items, isDirty } = get();
+    console.log('[performSave] isDirty:', isDirty, 'items:', items.length);
     if (!isDirty) return;
 
     set({ saveStatus: 'saving' });
@@ -36,13 +38,10 @@ export const createActions = (
     try {
       // Convert TodoListItem[] to TodoItem[] (remove id)
       const todoItems: TodoItem[] = items.map(({ completed, text }) => ({ completed, text }));
+      console.log('[performSave] calling onSave with', todoItems.length, 'items');
       await internals.onSave(todoItems);
+      console.log('[performSave] onSave completed');
       set({ isDirty: false, saveStatus: 'saved' });
-
-      // Reset to idle after showing "saved" briefly
-      setTimeout(() => {
-        set((state) => (state.saveStatus === 'saved' ? { saveStatus: 'idle' } : {}));
-      }, 1500);
     } catch {
       set({ saveStatus: 'error' });
     }
@@ -91,8 +90,25 @@ export const createActions = (
     saveNow: async () => {
       // Cancel pending debounced save to avoid double-save
       internals.debouncedSave?.cancel();
-      // Immediately save if dirty
-      await performSave();
+      // Force save current items (skip isDirty check)
+      if (!internals.onSave) return;
+
+      const { items } = get();
+      set({ saveStatus: 'saving' });
+
+      try {
+        const todoItems: TodoItem[] = items.map(({ completed, text }) => ({ completed, text }));
+        console.log('[saveNow] force saving', todoItems.length, 'items');
+        await internals.onSave(todoItems);
+        console.log('[saveNow] save completed');
+        set({ isDirty: false, saveStatus: 'saved' });
+
+        setTimeout(() => {
+          set((state) => (state.saveStatus === 'saved' ? { saveStatus: 'idle' } : {}));
+        }, 1500);
+      } catch {
+        set({ saveStatus: 'error' });
+      }
     },
 
     focusNextItem: (currentId: string | null, cursorPos: number) => {

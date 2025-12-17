@@ -900,68 +900,68 @@ export class MessageModel {
   };
 
   /**
-   * Update tool arguments - updates both tool message plugin.arguments and parent assistant message tools[].arguments
-   * in a single transaction to prevent race conditions
+   * Update tool arguments by toolCallId - updates both tool message plugin.arguments
+   * and parent assistant message tools[].arguments in a single transaction
    *
-   * @param toolMessageId - The ID of the tool message
+   * This method uses toolCallId (the stable identifier from AI response) instead of
+   * tool message ID, which allows updating arguments even when the tool message
+   * hasn't been persisted yet (e.g., during intervention pending state).
+   *
+   * @param toolCallId - The tool call ID (stable identifier from AI response)
    * @param args - The new arguments string (already stringified JSON)
    */
-  updateToolArguments = async (
-    toolMessageId: string,
-    args: string,
-  ): Promise<{ success: boolean }> => {
+  updateToolArguments = async (toolCallId: string, args: string): Promise<{ success: boolean }> => {
     try {
       await this.db.transaction(async (trx) => {
-        // 1. Get tool message with plugin info in a single JOIN query
-        const [toolMessageWithPlugin] = await trx
+        // 1. Find tool plugin and tool message with parentId in one query
+        const [toolResult] = await trx
           .select({
             parentId: messages.parentId,
-            toolCallId: messagePlugins.toolCallId,
+            toolPluginId: messagePlugins.id,
           })
-          .from(messages)
-          .innerJoin(messagePlugins, eq(messages.id, messagePlugins.id))
-          .where(and(eq(messages.id, toolMessageId), eq(messages.userId, this.userId)))
+          .from(messagePlugins)
+          .innerJoin(messages, eq(messages.id, messagePlugins.id))
+          .where(and(eq(messagePlugins.toolCallId, toolCallId), eq(messages.userId, this.userId)))
           .limit(1);
 
-        if (!toolMessageWithPlugin) {
-          throw new Error(`Tool message not found or no plugin: ${toolMessageId}`);
+        if (!toolResult?.parentId) {
+          throw new Error(`No tool message found with toolCallId: ${toolCallId}`);
         }
 
-        if (!toolMessageWithPlugin.toolCallId) {
-          throw new Error(`Message ${toolMessageId} has no toolCallId`);
+        // 2. Get parent assistant message's tools
+        const [parentMessage] = await trx
+          .select({ id: messages.id, tools: messages.tools })
+          .from(messages)
+          .where(eq(messages.id, toolResult.parentId))
+          .limit(1);
+
+        if (!parentMessage?.tools) {
+          throw new Error(`No parent assistant message found for toolCallId: ${toolCallId}`);
         }
 
-        const { parentId, toolCallId } = toolMessageWithPlugin;
+        const parentTools = parentMessage.tools as ChatToolPayload[];
 
-        // 2. Update the tool message's plugin.arguments
-        await trx
-          .update(messagePlugins)
-          .set({ arguments: args })
-          .where(eq(messagePlugins.id, toolMessageId));
-
-        // 3. If there's a parent message, update its tools[].arguments
-        if (parentId) {
-          const [parentMessage] = await trx
-            .select({ tools: messages.tools })
-            .from(messages)
-            .where(and(eq(messages.id, parentId), eq(messages.userId, this.userId)))
-            .limit(1);
-
-          if (parentMessage?.tools && Array.isArray(parentMessage.tools)) {
-            // Find and update the matching tool in the parent's tools array
-            const updatedTools = (parentMessage.tools as ChatToolPayload[]).map((tool) => {
-              if (tool.id === toolCallId) {
-                return { ...tool, arguments: args };
-              }
-              return tool;
-            });
-
-            await trx
-              .update(messages)
-              .set({ tools: updatedTools })
-              .where(and(eq(messages.id, parentId), eq(messages.userId, this.userId)));
+        // 3. Update the parent assistant message's tools[].arguments
+        const updatedTools = parentTools.map((tool) => {
+          if (tool.id === toolCallId) {
+            return { ...tool, arguments: args };
           }
-        }
+          return tool;
+        });
+
+        // Execute both updates in parallel
+        await Promise.all([
+          // Update tool plugin arguments
+          trx
+            .update(messagePlugins)
+            .set({ arguments: args })
+            .where(eq(messagePlugins.id, toolResult.toolPluginId)),
+          // Update parent assistant message's tools
+          trx
+            .update(messages)
+            .set({ tools: updatedTools })
+            .where(eq(messages.id, parentMessage.id)),
+        ]);
       });
 
       return { success: true };

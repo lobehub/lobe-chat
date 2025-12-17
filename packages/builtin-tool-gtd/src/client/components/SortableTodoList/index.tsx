@@ -41,9 +41,11 @@ const SortableTodoList = memo<SortableTodoListProps>(
     // Register saveNow as beforeApprove callback (async, waits for save to complete)
     useEffect(() => {
       if (registerBeforeApprove) {
-        const unregister = registerBeforeApprove('sortable-todo-list', () =>
-          store.getState().saveNow(),
-        );
+        const unregister = registerBeforeApprove('sortable-todo-list', async () => {
+          console.log('trigger save');
+          await store.getState().saveNow();
+          console.log('trigger save successful');
+        });
         // Cleanup: unregister on unmount
         return unregister;
       }

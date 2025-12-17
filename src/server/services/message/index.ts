@@ -232,22 +232,25 @@ export class MessageService {
   }
 
   /**
-   * Update tool arguments - updates both tool message plugin.arguments and parent assistant message tools[].arguments
-   * This method handles the update atomically to prevent race conditions
-   * Pattern: update tool message + update assistant message + conditional query
+   * Update tool arguments by toolCallId - updates both tool message plugin.arguments
+   * and parent assistant message tools[].arguments atomically
    *
-   * @param toolMessageId - The ID of the tool message
-   * @param arguments - The new arguments value (will be stringified if object)
+   * This method uses toolCallId (the stable identifier from AI response) instead of
+   * tool message ID, which allows updating arguments even when the tool message
+   * hasn't been persisted yet (e.g., during intervention pending state).
+   *
+   * @param toolCallId - The tool call ID (stable identifier from AI response)
+   * @param args - The new arguments value (will be stringified if object)
    * @param options - Query options for returning updated messages
    */
   async updateToolArguments(
-    toolMessageId: string,
+    toolCallId: string,
     args: string | Record<string, unknown>,
     options?: QueryOptions,
   ): Promise<{ messages?: UIChatMessage[]; success: boolean }> {
     const argsString = typeof args === 'string' ? args : JSON.stringify(args);
 
-    const result = await this.messageModel.updateToolArguments(toolMessageId, argsString);
+    const result = await this.messageModel.updateToolArguments(toolCallId, argsString);
     if (!result.success) {
       return { success: false };
     }

@@ -301,16 +301,16 @@ export const messageRouter = router({
     .input(
       z
         .object({
-          id: z.string(),
+          toolCallId: z.string(),
           value: z.union([z.string(), z.record(z.unknown())]),
         })
         .extend(basicContextSchema.shape),
     )
     .mutation(async ({ input, ctx }) => {
-      const { id, value, agentId, ...options } = input;
+      const { toolCallId, value, agentId, ...options } = input;
       const resolved = await resolveContext({ agentId, ...options }, ctx.serverDB, ctx.userId);
 
-      return ctx.messageService.updateToolArguments(id, value, resolved);
+      return ctx.messageService.updateToolArguments(toolCallId, value, resolved);
     }),
 
   /**
