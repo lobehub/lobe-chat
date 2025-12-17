@@ -3,6 +3,7 @@ import {
   DEFAULT_DISCOVER_ASSISTANT_ITEM,
   DEFAULT_DISCOVER_PLUGIN_ITEM,
   DEFAULT_DISCOVER_PROVIDER_ITEM,
+  KLAVIS_SERVER_TYPES,
   isDesktop,
 } from '@lobechat/const';
 import {
@@ -1047,6 +1048,32 @@ export class DiscoverService {
         title: builtinTool.manifest.meta.title,
       };
       log('getPluginDetail: returning builtin tool plugin');
+      return plugin;
+    }
+
+    // Step 4: Try to find in Klavis server types (builtin tools that require env config)
+    const klavisTool = KLAVIS_SERVER_TYPES.find((tool) => tool.identifier === identifier);
+    if (klavisTool) {
+      log('getPluginDetail: found Klavis tool for identifier=%s', identifier);
+
+      // Avatar is empty here because frontend will render Klavis icons using KlavisIcon component
+      // which handles both string URLs and React component icons
+      const plugin: DiscoverPluginDetail = {
+        author: 'Klavis',
+        avatar: typeof klavisTool.icon === 'string' ? klavisTool.icon : '',
+        category: undefined,
+        createdAt: '',
+        description: `LobeHub Mcp Server: ${klavisTool.label}`,
+        homepage: 'https://klavis.ai',
+        identifier: klavisTool.identifier,
+        manifest: undefined,
+        related: [],
+        schemaVersion: 1,
+        source: 'builtin',
+        tags: ['klavis', 'mcp'],
+        title: klavisTool.label,
+      };
+      log('getPluginDetail: returning Klavis tool plugin');
       return plugin;
     }
 

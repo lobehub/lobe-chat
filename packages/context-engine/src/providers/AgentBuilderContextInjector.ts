@@ -31,7 +31,7 @@ export interface OfficialToolItem {
   installed?: boolean;
   /** Tool display name */
   name: string;
-  /** Tool type: 'builtin' for built-in tools, 'klavis' for Klavis MCP servers */
+  /** Tool type: 'builtin' for built-in tools, 'klavis' for LobeHub Mcp servers */
   type: 'builtin' | 'klavis';
 }
 

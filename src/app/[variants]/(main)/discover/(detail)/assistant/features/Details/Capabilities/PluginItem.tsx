@@ -1,6 +1,7 @@
-import { PluginSource } from '@lobechat/types';
-import { Avatar, Block, Tag, Text , Skeleton } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
+import { DiscoverPluginDetail, PluginSource } from '@lobechat/types';
+import { Avatar, Block, Icon, Image, Skeleton, Tag, Text } from '@lobehub/ui';
+import { createStyles, useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -8,6 +9,24 @@ import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { useDiscoverStore } from '@/store/discover';
+
+/**
+ * Klavis icon component
+ * For string type icon, use Image component to render
+ * For IconType type icon, use Icon component to render with theme fill color
+ */
+const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label }) => {
+  const theme = useTheme();
+
+  if (typeof icon === 'string') {
+    return <Image alt={label} height={40} src={icon} style={{ flex: 'none' }} width={40} />;
+  }
+
+  // Use theme color fill, automatically adapts in dark mode
+  return <Icon fill={theme.colorText} icon={icon} size={40} />;
+});
+
+KlavisIcon.displayName = 'KlavisIcon';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -52,8 +71,35 @@ interface PluginItemProps {
 const PluginItem = memo<PluginItemProps>(({ identifier }) => {
   const { t } = useTranslation('discover');
   const usePluginDetail = useDiscoverStore((s) => s.usePluginDetail);
-  const { data, isLoading } = usePluginDetail({ identifier, withManifest: false });
+  const { data: apiData, isLoading } = usePluginDetail({ identifier, withManifest: false });
   const { styles, cx } = useStyles();
+
+  // Try to get Klavis tool info if API returns no data
+  const klavisTool = useMemo(() => {
+    return KLAVIS_SERVER_TYPES.find((tool) => tool.identifier === identifier);
+  }, [identifier]);
+
+  // Convert Klavis tool to plugin detail format
+  const data: DiscoverPluginDetail | undefined = useMemo(() => {
+    if (apiData) return apiData;
+    if (!klavisTool) return undefined;
+
+    return {
+      author: 'Klavis',
+      avatar: '', // Avatar will be rendered by KlavisIcon component
+      category: undefined,
+      createdAt: '',
+      description: `LobeHub Mcp Server: ${klavisTool.label}`,
+      homepage: 'https://klavis.ai',
+      identifier: klavisTool.identifier,
+      manifest: undefined,
+      related: [],
+      schemaVersion: 1,
+      source: 'builtin' as const,
+      tags: ['klavis', 'mcp'],
+      title: klavisTool.label,
+    };
+  }, [apiData, klavisTool]);
 
   const sourceConfig = useMemo(() => {
     const source: PluginSource = data?.source || 'market';
@@ -91,12 +137,23 @@ const PluginItem = memo<PluginItemProps>(({ identifier }) => {
     }
   }, [data?.source, data?.homepage, identifier, t]);
 
-  if (isLoading || !data)
+  if (isLoading)
     return (
       <Block gap={12} horizontal key={identifier} padding={12} variant={'outlined'}>
         <Skeleton paragraph={{ rows: 1 }} title={false} />
       </Block>
     );
+
+  // If loading is complete but no data found, don't render anything
+  if (!data) return null;
+
+  // Render avatar - use KlavisIcon for Klavis tools, Avatar for others
+  const renderAvatar = () => {
+    if (klavisTool) {
+      return <KlavisIcon icon={klavisTool.icon} label={klavisTool.label} />;
+    }
+    return <Avatar avatar={data.avatar} shape={'square'} size={40} style={{ flex: 'none' }} />;
+  };
 
   const content = (
     <Block
@@ -107,7 +164,7 @@ const PluginItem = memo<PluginItemProps>(({ identifier }) => {
       padding={12}
       variant={'outlined'}
     >
-      <Avatar avatar={data.avatar} shape={'square'} size={40} style={{ flex: 'none' }} />
+      {renderAvatar()}
       <Flexbox
         flex={1}
         gap={6}
