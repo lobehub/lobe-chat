@@ -470,6 +470,13 @@ export default {
       toolRejected: '本次工具调用被主动拒绝',
     },
   },
+  toolAuth: {
+    authorize: '授权',
+    authorizing: '授权中...',
+    hint: '如不授权或配置，这些工具将无法正常使用，可能导致助手功能缺失或报错。',
+    signIn: '登录',
+    title: '该助手使用了以下需要授权的工具',
+  },
   topic: {
     checkOpenNewTopic: '是否开启新话题?',
     checkSaveCurrentMessages: '是否保存当前会话为话题?',

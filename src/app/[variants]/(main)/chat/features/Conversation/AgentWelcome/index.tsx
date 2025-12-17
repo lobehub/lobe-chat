@@ -15,6 +15,7 @@ import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import AddButton from './AddButton';
 import OpeningQuestions from './OpeningQuestions';
+import ToolAuthAlert from './ToolAuthAlert';
 
 const InboxWelcome = memo(() => {
   const { t } = useTranslation(['welcome', 'chat']);
@@ -83,6 +84,7 @@ const InboxWelcome = memo(() => {
         {openingQuestions.length > 0 && (
           <OpeningQuestions mobile={mobile} questions={openingQuestions} />
         )}
+        <ToolAuthAlert />
       </Flexbox>
     </>
   );
