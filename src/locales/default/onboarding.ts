@@ -17,7 +17,7 @@ export default {
     },
     title: '你偏爱什么工作模式？',
     title2: '轻盈 or 专业，由你决定！',
-    title3: '告诉我，为 {{fullName}} 量身定制～',
+    title3: '告诉我，为你量身定制～',
   },
   next: '下一步',
   occupation: {

@@ -1,6 +1,5 @@
 'use client';
 
-import { SendButton } from '@lobehub/editor/react';
 import { Block, Button, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Undo2Icon } from 'lucide-react';
@@ -11,42 +10,68 @@ import { useNavigate } from 'react-router-dom';
 
 import LobeMessage from '@/app/[variants]/onboarding/components/LobeMessage';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 
-const useStyles = createStyles(({ css, token }) => ({
-  base: css`
-    transition: all 0.15s ease;
+const useStyles = createStyles(({ isDarkMode, css, token }) => {
+  const liteImg = isDarkMode ? '/images/mode_lite_dark.webp' : '/images/mode_lite_light.webp';
+  const proImg = isDarkMode ? '/images/mode_pro_dark.webp' : '/images/mode_pro_light.webp';
+  return {
+    base: css`
+      position: relative;
+      padding-inline-end: 160px;
+      transition: all 0.25s ease-in-out;
 
-    .next-btn {
-      transform: scale(0.4);
-      opacity: 0;
-      transition: all 0.15s ease;
-    }
+      &::before {
+        content: '';
 
-    &:hover {
-      .next-btn {
-        transform: scale(1);
-        opacity: 1;
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        opacity: 0.5;
+        background-repeat: no-repeat;
+        background-position: 100% 100%;
+        background-size: auto 120px;
+
+        transition: all 0.25s ease-in-out;
       }
-    }
-  `,
-  disabled: css`
-    transform: scale(1) !important;
-    opacity: 1 !important;
-  `,
-  lite: css`
-    &:hover {
-      border-inline-end-color: ${token.purple};
-      border-inline-end-width: 4px;
-    }
-  `,
-  pro: css`
-    &:hover {
-      border-inline-end-color: ${token.gold};
-      border-inline-end-width: 4px;
-    }
-  `,
-}));
+
+      &:hover {
+        border-inline-end-width: 3px;
+
+        &::before {
+          opacity: 1;
+        }
+      }
+    `,
+    disabled: css`
+      transform: scale(1) !important;
+      opacity: 1 !important;
+    `,
+    lite: css`
+      &:hover {
+        border-inline-end-color: ${token.purple};
+      }
+
+      &::before {
+        z-index: 0;
+        background-image: url('${liteImg}');
+      }
+    `,
+    pro: css`
+      &:hover {
+        border-inline-end-color: ${token.gold};
+      }
+
+      &::before {
+        z-index: 0;
+        background-image: url('${proImg}');
+      }
+    `,
+  };
+});
 
 interface ModeSelectionStepProps {
   onBack: () => void;
@@ -56,7 +81,6 @@ interface ModeSelectionStepProps {
 const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
   const { t } = useTranslation('onboarding');
   const navigate = useNavigate();
-  const fullName = useUserStore(userProfileSelectors.fullName);
   const { cx, styles, theme } = useStyles();
 
   const [updateGeneralConfig, finishOnboarding] = useUserStore((s) => [
@@ -78,11 +102,7 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
   return (
     <Flexbox>
       <LobeMessage
-        sentences={[
-          t('modeSelection.title'),
-          t('modeSelection.title2'),
-          t('modeSelection.title3', { fullName }),
-        ]}
+        sentences={[t('modeSelection.title'), t('modeSelection.title2'), t('modeSelection.title3')]}
       />
       <Text type={'secondary'}>{t('modeSelection.hint')}</Text>
       <Flexbox gap={16} paddingBlock={24}>
@@ -94,21 +114,19 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
           padding={16}
           variant={'outlined'}
         >
-          <Text as={'h2'} fontSize={18} strong>
-            {t('modeSelection.lite.title')}
-          </Text>
-          <Text as={'p'}>{t('modeSelection.lite.subtitle')}</Text>
           <Flexbox
-            align={'center'}
-            gap={16}
-            horizontal
-            justify={'space-between'}
-            style={{ marginTop: 8 }}
+            gap={8}
+            style={{
+              zIndex: 10,
+            }}
           >
+            <Text as={'h2'} fontSize={18} strong>
+              {t('modeSelection.lite.title')}
+            </Text>
+            <Text as={'p'}>{t('modeSelection.lite.subtitle')}</Text>
             <Text as={'p'} type={'secondary'}>
               {t('modeSelection.lite.desc')}
             </Text>
-            <SendButton className={cx('next-btn')} type="primary" />
           </Flexbox>
         </Block>
 
@@ -120,21 +138,19 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
           padding={16}
           variant={'outlined'}
         >
-          <Text as={'h2'} fontSize={18} strong>
-            {t('modeSelection.pro.title')}
-          </Text>
-          <Text as={'p'}>{t('modeSelection.pro.subtitle')}</Text>
           <Flexbox
-            align={'center'}
-            gap={16}
-            horizontal
-            justify={'space-between'}
-            style={{ marginTop: 8 }}
+            gap={8}
+            style={{
+              zIndex: 10,
+            }}
           >
+            <Text as={'h2'} fontSize={18} strong>
+              {t('modeSelection.pro.title')}
+            </Text>
+            <Text as={'p'}>{t('modeSelection.pro.subtitle')}</Text>
             <Text as={'p'} type={'secondary'}>
               {t('modeSelection.pro.desc')}
             </Text>
-            <SendButton className={cx('next-btn')} type="primary" />
           </Flexbox>
         </Block>
       </Flexbox>
