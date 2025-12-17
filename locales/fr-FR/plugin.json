@@ -20,6 +20,18 @@
       },
       "title": "Créateur d'Agent"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Obtenir les modèles disponibles",
+        "installPlugin": "Installer le plugin",
+        "inviteAgent": "Inviter un membre",
+        "removeAgent": "Supprimer un membre",
+        "searchMarketTools": "Rechercher dans le marché des plugins",
+        "updateAgentConfig": "Mettre à jour la configuration de l'agent",
+        "updatePrompt": "Mettre à jour l'invite système"
+      },
+      "title": "Créateur d'agents de groupe"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "Parler à tout le monde",

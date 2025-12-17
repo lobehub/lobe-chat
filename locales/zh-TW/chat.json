@@ -446,6 +446,13 @@
       "toolRejected": "本次工具調用被主動拒絕"
     }
   },
+  "toolAuth": {
+    "authorize": "授權",
+    "authorizing": "授權中...",
+    "hint": "若未授權或設定，這些工具將無法正常使用，可能導致助手功能缺失或發生錯誤。",
+    "signIn": "登入",
+    "title": "此助手使用了以下需要授權的工具"
+  },
   "topic": {
     "checkOpenNewTopic": "是否開啟新主題?",
     "checkSaveCurrentMessages": "是否將當前對話保存為話題？",

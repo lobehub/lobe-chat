@@ -20,6 +20,18 @@
       },
       "title": "Agent Builder"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Get Available Models",
+        "installPlugin": "Install Plugin",
+        "inviteAgent": "Invite Member",
+        "removeAgent": "Remove Member",
+        "searchMarketTools": "Search Plugin Marketplace",
+        "updateAgentConfig": "Update Agent Configuration",
+        "updatePrompt": "Update System Prompt"
+      },
+      "title": "Group Agent Builder"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "Broadcast to All",

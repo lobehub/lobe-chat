@@ -20,6 +20,18 @@
       },
       "title": "Temsilci Oluşturucu"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Kullanılabilir Modelleri Al",
+        "installPlugin": "Eklenti Yükle",
+        "inviteAgent": "Üye Davet Et",
+        "removeAgent": "Üyeyi Kaldır",
+        "searchMarketTools": "Eklenti Pazarında Ara",
+        "updateAgentConfig": "Aracı Yapılandırmasını Güncelle",
+        "updatePrompt": "Sistem Komutunu Güncelle"
+      },
+      "title": "Grup Aracı Oluşturucu"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "Herkese konuşma",

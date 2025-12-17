@@ -20,6 +20,18 @@
       },
       "title": "Agent Builder"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Beschikbare modellen ophalen",
+        "installPlugin": "Plug-in installeren",
+        "inviteAgent": "Lid uitnodigen",
+        "removeAgent": "Lid verwijderen",
+        "searchMarketTools": "Plug-inmarkt doorzoeken",
+        "updateAgentConfig": "Agentconfiguratie bijwerken",
+        "updatePrompt": "Systeemprompt bijwerken"
+      },
+      "title": "Groepsagentbouwer"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "Tot iedereen spreken",

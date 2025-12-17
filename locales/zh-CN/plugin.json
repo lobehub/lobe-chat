@@ -20,6 +20,18 @@
       },
       "title": "Agent Builder"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "获取可用模型",
+        "installPlugin": "安装插件",
+        "inviteAgent": "邀请成员",
+        "removeAgent": "移除成员",
+        "searchMarketTools": "搜索插件市场",
+        "updateAgentConfig": "更新代理配置",
+        "updatePrompt": "更新系统提示词"
+      },
+      "title": "Group Agent Builder"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "所有人发言",

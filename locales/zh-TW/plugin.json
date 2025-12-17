@@ -20,6 +20,18 @@
       },
       "title": "Agent 建構器"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "取得可用模型",
+        "installPlugin": "安裝外掛",
+        "inviteAgent": "邀請成員",
+        "removeAgent": "移除成員",
+        "searchMarketTools": "搜尋外掛市集",
+        "updateAgentConfig": "更新代理設定",
+        "updatePrompt": "更新系統提示詞"
+      },
+      "title": "群組代理建構器"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "所有人發言",

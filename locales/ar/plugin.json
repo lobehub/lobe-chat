@@ -20,6 +20,18 @@
       },
       "title": "منشئ الوكيل"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "الحصول على النماذج المتاحة",
+        "installPlugin": "تثبيت الإضافة",
+        "inviteAgent": "دعوة عضو",
+        "removeAgent": "إزالة العضو",
+        "searchMarketTools": "البحث في سوق الإضافات",
+        "updateAgentConfig": "تحديث إعدادات الوكيل",
+        "updatePrompt": "تحديث التعليمات النظامية"
+      },
+      "title": "منشئ الوكلاء الجماعي"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "إرسال رسالة للجميع",

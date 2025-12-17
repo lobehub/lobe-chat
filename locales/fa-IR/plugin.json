@@ -20,6 +20,18 @@
       },
       "title": "سازنده عامل"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "دریافت مدل‌های در دسترس",
+        "installPlugin": "نصب افزونه",
+        "inviteAgent": "دعوت از عضو",
+        "removeAgent": "حذف عضو",
+        "searchMarketTools": "جستجوی بازار افزونه‌ها",
+        "updateAgentConfig": "به‌روزرسانی تنظیمات نماینده",
+        "updatePrompt": "به‌روزرسانی پیام سیستم"
+      },
+      "title": "سازنده نماینده گروهی"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "ارسال پیام به همه",
