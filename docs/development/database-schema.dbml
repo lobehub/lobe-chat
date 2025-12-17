@@ -422,6 +422,9 @@ table message_groups {
   parent_message_id text
   title varchar(255)
   description text
+  type text
+  content text
+  editor_data jsonb
   client_id varchar(255)
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
@@ -430,6 +433,7 @@ table message_groups {
   indexes {
     (client_id, user_id) [name: 'message_groups_client_id_user_id_unique', unique]
     topic_id [name: 'message_groups_topic_id_idx']
+    type [name: 'message_groups_type_idx']
   }
 }
 
@@ -509,6 +513,7 @@ table messages {
   role varchar(255) [not null]
   content text
   editor_data jsonb
+  summary text
   reasoning jsonb
   search jsonb
   metadata jsonb
@@ -999,6 +1004,8 @@ table threads {
   source_message_id text
   parent_thread_id text
   client_id text
+  agent_id text
+  metadata jsonb
   user_id text [not null]
   last_active_at "timestamp with time zone" [default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
@@ -1008,6 +1015,7 @@ table threads {
   indexes {
     (client_id, user_id) [name: 'threads_client_id_user_id_unique', unique]
     topic_id [name: 'threads_topic_id_idx']
+    agent_id [name: 'threads_agent_id_idx']
   }
 }
 

@@ -58,7 +58,7 @@ export const CreateThreadWithMessageSchema = z.object({
   parentThreadId: z.string().optional(),
   sourceMessageId: z.string().optional(),
   title: z.string().optional(),
-  type: z.enum([ThreadType.Continuation, ThreadType.Standalone]),
+  type: z.enum([ThreadType.Continuation, ThreadType.Standalone, ThreadType.Isolation]),
 });
 
 export const AiSendMessageServerSchema = z.object({

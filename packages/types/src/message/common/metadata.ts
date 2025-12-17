@@ -136,4 +136,8 @@ export interface MessageMetadata extends ModelUsage, ModelPerformance {
    * Used by conversation-flow to transform role to 'supervisor' for UI rendering
    */
   isSupervisor?: boolean;
+  /**
+   * Flag indicating if message is pinned (excluded from compression)
+   */
+  pinned?: boolean;
 }
