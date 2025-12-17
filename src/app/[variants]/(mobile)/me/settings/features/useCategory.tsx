@@ -16,14 +16,14 @@ export const useCategory = () => {
       label: t('tab.common'),
     },
     {
-      icon: Sparkles,
-      key: SettingsTabs.Agent,
-      label: t('tab.agent'),
-    },
-    {
       icon: Brain,
       key: SettingsTabs.Provider,
       label: t('tab.provider'),
+    },
+    {
+      icon: Sparkles,
+      key: SettingsTabs.Agent,
+      label: t('tab.agent'),
     },
     { icon: Mic2, key: SettingsTabs.TTS, label: t('tab.tts') },
     {

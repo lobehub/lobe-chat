@@ -119,6 +119,11 @@ export const useCategory = () => {
         key: SettingsTabs.Provider,
         label: t('tab.provider'),
       },
+      {
+        icon: Sparkles,
+        key: SettingsTabs.Agent,
+        label: t('tab.agent'),
+      },
       showAiImage && {
         icon: ImageIcon,
         key: SettingsTabs.Image,
@@ -128,11 +133,6 @@ export const useCategory = () => {
         icon: Mic2,
         key: SettingsTabs.TTS,
         label: t('tab.tts'),
-      },
-      {
-        icon: Sparkles,
-        key: SettingsTabs.Agent,
-        label: t('tab.agent'),
       },
     ].filter(Boolean) as CategoryItem[];
 
