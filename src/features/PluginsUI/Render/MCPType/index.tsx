@@ -9,11 +9,18 @@ export interface MCPTypeProps {
   apiName?: string;
   arguments?: string;
   content: string;
-  id: string;
   identifier?: string;
   loading?: boolean;
+  /**
+   * The real message ID (tool message ID)
+   */
+  messageId?: string;
   pluginError?: any;
   pluginState?: ToolCallResult;
+  /**
+   * The tool call ID from the assistant message
+   */
+  toolCallId?: string;
 }
 
 const MCPType = memo<MCPTypeProps>(({ pluginState, arguments: args }) => {

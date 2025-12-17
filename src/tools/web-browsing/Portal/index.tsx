@@ -1,4 +1,4 @@
-import { CrawlPluginState, SearchQuery , BuiltinPortalProps } from '@lobechat/types';
+import { BuiltinPortalProps, CrawlPluginState, SearchQuery } from '@lobechat/types';
 import { memo } from 'react';
 
 import { WebBrowsingApiName } from '@/tools/web-browsing';
@@ -8,9 +8,9 @@ import PageContents from './PageContents';
 import Search from './Search';
 
 const Inspector = memo<BuiltinPortalProps>(({ arguments: args, messageId, state, apiName }) => {
+  console.log('messageId:', messageId);
   switch (apiName) {
     // 兼容旧版数据
-    case 'searchWithSearXNG':
     case WebBrowsingApiName.search: {
       return <Search messageId={messageId} query={args as SearchQuery} response={state} />;
     }

@@ -144,6 +144,10 @@ export interface BuiltinRenderProps<Arguments = any, State = any, Content = any>
   messageId: string;
   pluginError?: any;
   pluginState?: State;
+  /**
+   * The tool call ID from the assistant message
+   */
+  toolCallId?: string;
 }
 
 export type BuiltinRender = <A = any, S = any, C = any>(

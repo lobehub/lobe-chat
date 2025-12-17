@@ -89,12 +89,13 @@ const CustomRender = memo<CustomRenderProps>(
           <PluginRender
             arguments={plugin?.arguments}
             content={content}
-            id={id}
             identifier={plugin?.identifier}
             loading={loading}
+            messageId={id}
             payload={plugin}
             pluginError={pluginError}
             pluginState={pluginState}
+            toolCallId={tool_call_id}
             type={plugin?.type}
           />
         </Flexbox>

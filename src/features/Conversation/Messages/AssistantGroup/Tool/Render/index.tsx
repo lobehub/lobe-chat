@@ -109,7 +109,7 @@ const Render = memo<RenderProps>(
         <Flexbox gap={8}>
           <CustomRender
             content={result.content || ''}
-            id={toolCallId}
+            messageId={toolMessageId}
             plugin={
               type
                 ? ({
@@ -124,6 +124,7 @@ const Render = memo<RenderProps>(
             requestArgs={requestArgs}
             setShowPluginRender={setShowPluginRender}
             showPluginRender={showPluginRender}
+            toolCallId={toolCallId}
           />
           <div>
             <ModeSelector />

@@ -9,12 +9,19 @@ import Arguments from './Arguments';
 
 interface CustomRenderProps {
   content: string;
-  id: string;
+  /**
+   * The real message ID (tool message ID)
+   */
+  messageId?: string;
   plugin?: ChatPluginPayload;
   pluginState?: any;
   requestArgs?: string;
   setShowPluginRender: (value: boolean) => void;
   showPluginRender: boolean;
+  /**
+   * The tool call ID from the assistant message
+   */
+  toolCallId: string;
 }
 
 /**
@@ -26,7 +33,16 @@ interface CustomRenderProps {
  * - Results are directly available in content prop
  */
 const CustomRender = memo<CustomRenderProps>(
-  ({ id, content, pluginState, plugin, requestArgs, showPluginRender, setShowPluginRender }) => {
+  ({
+    toolCallId,
+    messageId,
+    content,
+    pluginState,
+    plugin,
+    requestArgs,
+    showPluginRender,
+    setShowPluginRender,
+  }) => {
     // Determine if plugin UI should be shown based on plugin type
     useEffect(() => {
       if (!plugin?.type) return;
@@ -50,15 +66,16 @@ const CustomRender = memo<CustomRenderProps>(
     // Show plugin custom UI if applicable
     if (showPluginRender) {
       return (
-        <Flexbox gap={12} id={id} width={'100%'}>
+        <Flexbox gap={12} id={toolCallId} width={'100%'}>
           <PluginRender
             arguments={plugin?.arguments}
             content={content}
-            id={id}
             identifier={plugin?.identifier}
             loading={false}
+            messageId={messageId}
             payload={plugin}
             pluginState={pluginState}
+            toolCallId={toolCallId}
             type={plugin?.type}
           />
         </Flexbox>
@@ -67,7 +84,7 @@ const CustomRender = memo<CustomRenderProps>(
 
     // Default render: show arguments and result
     return (
-      <Flexbox gap={12} id={id} width={'100%'}>
+      <Flexbox gap={12} id={toolCallId} width={'100%'}>
         <Arguments arguments={requestArgs} />
         {content && (
           <Highlighter
