@@ -5,7 +5,7 @@ alwaysApply: false
 
 # Database Migrations Guide
 
-## Step1: Generate migrations:
+## Step1: Generate migrations
 
 ```bash
 bun run db:generate
