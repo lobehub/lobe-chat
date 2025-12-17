@@ -43,7 +43,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
 
-  const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+  const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
 
   const sessionCustomGroups = useSessionStore(sessionGroupSelectors.sessionGroupItems, isEqual);
   const [pin, removeSession, pinSession, sessionType, duplicateSession, updateSessionGroup] =
@@ -100,7 +100,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
                   label: t('openInNewWindow'),
                   onClick: ({ domEvent }: { domEvent: Event }) => {
                     domEvent.stopPropagation();
-                    openSessionInNewWindow(id);
+                    openAgentInNewWindow(id);
                   },
                 },
               ]
@@ -175,7 +175,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
           },
         ] as ItemType[]
       ).filter(Boolean),
-    [id, pin, openSessionInNewWindow],
+    [id, pin, openAgentInNewWindow],
   );
 
   return (

@@ -26,12 +26,12 @@ interface AgentItemProps {
 }
 
 const AgentItem = memo<AgentItemProps>(({ item, style, className }) => {
-  const { id, avatar, title, pinned, sessionId } = item;
+  const { id, avatar, title, pinned } = item;
   const { t } = useTranslation('chat');
 
   const theme = useTheme();
   const { openCreateGroupModal } = useAgentModal();
-  const openSessionInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+  const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
 
   // Get UI state from homeStore (editing, updating)
   const [editing, isUpdating] = useHomeStore((s) => [
@@ -50,8 +50,8 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className }) => {
 
   // Memoize event handlers
   const handleDoubleClick = useCallback(() => {
-    openSessionInNewWindow(sessionId || id);
-  }, [id, sessionId, openSessionInNewWindow]);
+    openAgentInNewWindow(id);
+  }, [id, openAgentInNewWindow]);
 
   const handleDragStart = useCallback(
     (e: DragEvent) => {
@@ -63,10 +63,10 @@ const AgentItem = memo<AgentItemProps>(({ item, style, className }) => {
   const handleDragEnd = useCallback(
     (e: DragEvent) => {
       if (e.dataTransfer.dropEffect === 'none') {
-        openSessionInNewWindow(sessionId || id);
+        openAgentInNewWindow(id);
       }
     },
-    [id, sessionId, openSessionInNewWindow],
+    [id, openAgentInNewWindow],
   );
 
   const handleOpenCreateGroupModal = useCallback(() => {

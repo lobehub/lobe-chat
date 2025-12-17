@@ -27,7 +27,7 @@ const GroupItem = memo<GroupItemProps>(({ item, style, className }) => {
   const { t } = useTranslation('chat');
 
   const theme = useTheme();
-  const openGroupInNewWindow = useGlobalStore((s) => s.openSessionInNewWindow);
+  const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
 
   // Get UI state from homeStore (editing, updating)
   const [editing, isUpdating] = useHomeStore((s) => [
@@ -43,8 +43,8 @@ const GroupItem = memo<GroupItemProps>(({ item, style, className }) => {
 
   // Memoize event handlers
   const handleDoubleClick = useCallback(() => {
-    openGroupInNewWindow(id);
-  }, [id, openGroupInNewWindow]);
+    openAgentInNewWindow(id);
+  }, [id, openAgentInNewWindow]);
 
   const handleDragStart = useCallback(
     (e: DragEvent) => {
@@ -56,10 +56,10 @@ const GroupItem = memo<GroupItemProps>(({ item, style, className }) => {
   const handleDragEnd = useCallback(
     (e: DragEvent) => {
       if (e.dataTransfer.dropEffect === 'none') {
-        openGroupInNewWindow(id);
+        openAgentInNewWindow(id);
       }
     },
-    [id, openGroupInNewWindow],
+    [id, openAgentInNewWindow],
   );
 
   const toggleEditing = useCallback(

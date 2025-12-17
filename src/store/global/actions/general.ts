@@ -20,8 +20,8 @@ import type { GlobalStore } from '../store';
 const n = setNamespace('g');
 
 export interface GlobalGeneralAction {
-  openSessionInNewWindow: (sessionId: string) => Promise<void>;
-  openTopicInNewWindow: (sessionId: string, topicId: string) => Promise<void>;
+  openAgentInNewWindow: (agentId: string) => Promise<void>;
+  openTopicInNewWindow: (agentId: string, topicId: string) => Promise<void>;
   switchLocale: (locale: LocaleMode, params?: { skipBroadcast?: boolean }) => void;
   switchThemeMode: (themeMode: ThemeMode, params?: { skipBroadcast?: boolean }) => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
@@ -35,25 +35,25 @@ export const generalActionSlice: StateCreator<
   [],
   GlobalGeneralAction
 > = (set, get) => ({
-  openSessionInNewWindow: async (sessionId: string) => {
-    const url = `/chat?session=${sessionId}${isDesktop ? '&mode=single' : ''}`;
+  openAgentInNewWindow: async (agentId: string) => {
+    const url = `/agent/${agentId}${isDesktop ? '?mode=single' : ''}`;
 
     if (isDesktop) {
       try {
         const { ensureElectronIpc } = await import('@/utils/electron/ipc');
-        const url = `/chat?session=${sessionId}&mode=single`;
+        const path = `/agent/${agentId}?mode=single`;
 
         const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
-          path: url,
+          path,
           templateId: 'chatSingle',
-          uniqueId: `chat_${sessionId}`,
+          uniqueId: `chat_${agentId}`,
         });
 
         if (!result.success) {
-          console.error('Failed to open session in new window:', result.error);
+          console.error('Failed to open agent in new window:', result.error);
         }
       } catch (error) {
-        console.error('Error opening session in new window:', error);
+        console.error('Error opening agent in new window:', error);
       }
     } else {
       // Open in popup window for browser
@@ -62,22 +62,22 @@ export const generalActionSlice: StateCreator<
       const left = (window.screen.width - width) / 2;
       const top = (window.screen.height - height) / 2;
       const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`;
-      window.open(url, `session_${sessionId}`, features);
+      window.open(url, `agent_${agentId}`, features);
     }
   },
 
-  openTopicInNewWindow: async (sessionId: string, topicId: string) => {
-    const url = `/chat?session=${sessionId}&topic=${topicId}${isDesktop ? '&mode=single' : ''}`;
+  openTopicInNewWindow: async (agentId: string, topicId: string) => {
+    const url = `/agent/${agentId}?topic=${topicId}${isDesktop ? '&mode=single' : ''}`;
 
     if (isDesktop) {
       try {
         const { ensureElectronIpc } = await import('@/utils/electron/ipc');
-        const url = `/chat?session=${sessionId}&topic=${topicId}&mode=single`;
+        const path = `/agent/${agentId}?topic=${topicId}&mode=single`;
 
         const result = await ensureElectronIpc().windows.createMultiInstanceWindow({
-          path: url,
+          path,
           templateId: 'chatSingle',
-          uniqueId: `chat_${sessionId}_${topicId}`,
+          uniqueId: `chat_${agentId}_${topicId}`,
         });
 
         if (!result.success) {
@@ -93,7 +93,7 @@ export const generalActionSlice: StateCreator<
       const left = (window.screen.width - width) / 2;
       const top = (window.screen.height - height) / 2;
       const features = `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`;
-      window.open(url, `session_${sessionId}_topic_${topicId}`, features);
+      window.open(url, `agent_${agentId}_topic_${topicId}`, features);
     }
   },
 
