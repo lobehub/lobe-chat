@@ -1,16 +1,18 @@
 'use client';
 
 import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { EmojiPicker, Icon, Input, Tooltip , Skeleton } from '@lobehub/ui';
+import { EmojiPicker, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { message } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { PaletteIcon } from 'lucide-react';
 import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import BackgroundSwatches from '@/features/AgentSetting/AgentMeta/BackgroundSwatches';
-import { useStore } from '@/features/AgentSetting/store';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
@@ -22,8 +24,8 @@ const AgentHeader = memo(() => {
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
   // Get current meta from store
-  const meta = useStore((s) => s.meta);
-  const updateMeta = useStore((s) => s.setAgentMeta);
+  const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
+  const updateMeta = useAgentStore((s) => s.updateAgentMeta);
 
   // File upload
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);

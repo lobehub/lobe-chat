@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useStore } from '@/features/AgentSetting/store';
 import ModelSelect from '@/features/ModelSelect';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
@@ -24,7 +23,7 @@ const ProfileEditor = memo(() => {
   const theme = useTheme();
   const { t } = useTranslation('setting');
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
-  const updateConfig = useStore((s) => s.setAgentConfig);
+  const updateConfig = useAgentStore((s) => s.updateAgentConfig);
   const agentId = useAgentStore((s) => s.activeAgentId);
   const router = useQueryRoute();
 

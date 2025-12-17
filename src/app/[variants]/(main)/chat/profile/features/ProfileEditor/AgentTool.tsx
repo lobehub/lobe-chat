@@ -11,13 +11,14 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
-import { useStore } from '@/features/AgentSetting/store';
 import KlavisServerItem from '@/features/ChatInput/ActionBar/Tools/KlavisServerItem';
 import ToolItem from '@/features/ChatInput/ActionBar/Tools/ToolItem';
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import PluginStore from '@/features/PluginStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import {
@@ -50,14 +51,14 @@ const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label
 
 const AgentTool = memo(() => {
   const { t } = useTranslation('setting');
-  const config = useStore((s) => s.config);
+  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
 
   const theme = useTheme();
 
   // Plugin state management
   const plugins = config?.plugins || [];
 
-  const toggleAgentPlugin = useStore((s) => s.toggleAgentPlugin);
+  const toggleAgentPlugin = useAgentStore((s) => s.toggleAgentPlugin);
   const installedPluginList = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const builtinList = useToolStore(builtinToolSelectors.metaList, isEqual);
 

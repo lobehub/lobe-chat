@@ -9,7 +9,6 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useStore } from '@/features/AgentSetting/store';
 import ModelSelect from '@/features/ModelSelect';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -23,7 +22,7 @@ const ProfileEditor = memo(() => {
   const theme = useTheme();
   const { t } = useTranslation('setting');
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
-  const updateConfig = useStore((s) => s.setAgentConfig);
+  const updateConfig = useAgentStore((s) => s.updateAgentConfig);
 
   return (
     <>

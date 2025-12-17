@@ -1,8 +1,8 @@
-import { devtools } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
+import { createDevtools } from '../middleware/createDevtools';
 import { ChatGroupAction, chatGroupAction } from './action';
 import { ChatGroupState, initialChatGroupState } from './initialState';
 
@@ -12,6 +12,8 @@ const createStore: StateCreator<ChatGroupStore, [['zustand/devtools', never]]> =
   ...initialChatGroupState,
   ...chatGroupAction(...params),
 });
+
+const devtools = createDevtools('agentGroup');
 
 export const useAgentGroupStore = createWithEqualityFn<ChatGroupStore>()(
   devtools(createStore),
