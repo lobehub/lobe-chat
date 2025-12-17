@@ -96,6 +96,23 @@ const groupAndRankFiles = (chunks: ChatSemanticSearchChunk[], topK: number): Fil
     .slice(0, topK);
 };
 
+const resolvePayload = async (ctx: { aiInfraRepos: AiInfraRepos; jwtPayload: any }) => {
+  // For embedding tasks, frontend may not include provider payload in JWT.
+  // Prefer user DB keyVaults; fallback to env (handled inside ModelRuntime) when DB is empty.
+  let payload = ctx.jwtPayload;
+  const { provider } =
+    getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
+  if (!payload?.apiKey && !payload?.baseURL) {
+    const providerDetail = await ctx.aiInfraRepos.getAiProviderDetail(
+      provider,
+      KeyVaultsGateKeeper.getUserKeyVaults,
+    );
+    const keyVaults = providerDetail?.keyVaults || {};
+    if (keyVaults.apiKey || keyVaults.baseURL) payload = { ...payload, ...keyVaults };
+  }
+  return payload;
+};
+
 export const chunkRouter = router({
   createEmbeddingChunksTask: chunkProcedure
     .input(
@@ -104,20 +121,7 @@ export const chunkRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { provider } =
-        getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
-
-      // For embedding tasks, frontend may not include provider payload in JWT.
-      // Prefer user DB keyVaults; fallback to env (handled inside ModelRuntime) when DB is empty.
-      let payload = ctx.jwtPayload;
-      if (!payload?.apiKey && !payload?.baseURL) {
-        const providerDetail = await ctx.aiInfraRepos.getAiProviderDetail(
-          provider,
-          KeyVaultsGateKeeper.getUserKeyVaults,
-        );
-        const keyVaults = providerDetail?.keyVaults || {};
-        if (keyVaults.apiKey || keyVaults.baseURL) payload = { ...payload, ...keyVaults };
-      }
+      const payload = await resolvePayload(ctx);
 
       const asyncTaskId = await ctx.chunkService.asyncEmbeddingFileChunks(input.id, payload);
 
@@ -132,9 +136,11 @@ export const chunkRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const payload = await resolvePayload(ctx);
+
       const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(
         input.id,
-        ctx.jwtPayload,
+        payload,
         input.skipExist,
       );
 
