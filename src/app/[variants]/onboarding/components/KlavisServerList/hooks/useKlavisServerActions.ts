@@ -23,7 +23,7 @@ export const useKlavisServerActions = ({
   const userId = useUserStore(userProfileSelectors.userId);
   const createKlavisServer = useToolStore((s) => s.createKlavisServer);
   const refreshKlavisServerTools = useToolStore((s) => s.refreshKlavisServerTools);
-  const toggleDefaultPlugin = useUserStore((s) => s.toggleDefaultPlugin);
+  const toggleDefaultPlugin = useUserStore((s) => s.toggleInboxAgentDefaultPlugin);
 
   const handleConnect = async () => {
     if (!userId || server) return;
