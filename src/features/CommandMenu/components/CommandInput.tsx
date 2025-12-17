@@ -24,12 +24,45 @@ interface CommandInputProps {
 const CommandInput = memo<CommandInputProps>(
   ({ context, hasPages, isAiMode, onBack, onValueChange, search, styles }) => {
     const { t } = useTranslation('common');
+    const { t: tSetting } = useTranslation('setting');
+    const { t: tChat } = useTranslation('chat');
+
+    // Get localized context name
+    const getContextName = () => {
+      if (!context) return undefined;
+
+      switch (context.type) {
+        case 'settings': {
+          return tSetting('header.title', { defaultValue: context.name });
+        }
+        case 'agent': {
+          return t('cmdk.search.agent', { defaultValue: context.name });
+        }
+        case 'group': {
+          return tChat('group.title', { defaultValue: context.name });
+        }
+        case 'page': {
+          return t('cmdk.pages', { defaultValue: context.name });
+        }
+        case 'painting': {
+          return t('cmdk.painting', { defaultValue: context.name });
+        }
+        case 'resource': {
+          return t('cmdk.resource', { defaultValue: context.name });
+        }
+        default: {
+          return context.name;
+        }
+      }
+    };
+
+    const contextName = getContextName();
 
     return (
       <>
         {context && !hasPages && (
           <div className={styles.contextWrapper}>
-            <Tag className={styles.contextTag}>{context.name}</Tag>
+            <Tag className={styles.contextTag}>{contextName}</Tag>
           </div>
         )}
         <div className={styles.inputWrapper}>

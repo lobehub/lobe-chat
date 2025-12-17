@@ -8,7 +8,6 @@ import {
   KeyIcon,
   KeyboardIcon,
   Palette as PaletteIcon,
-  ShieldCheck,
   UserCircle,
 } from 'lucide-react';
 
@@ -18,6 +17,8 @@ export interface ContextCommand {
   icon: LucideIcon;
   keywords: string[];
   label: string;
+  labelKey?: string; // i18n key for the label
+  labelNamespace?: 'setting' | 'auth'; // i18n namespace for the label
   path: string;
   subPath: string;
 }
@@ -36,6 +37,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: UserCircle,
       keywords: ['profile', 'user', 'account', 'personal'],
       label: 'Profile',
+      labelKey: 'tab.profile',
+      labelNamespace: 'auth',
       path: '/settings/profile',
       subPath: 'profile',
     },
@@ -43,6 +46,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: PaletteIcon,
       keywords: ['common', 'appearance', 'theme', 'display'],
       label: 'Appearance',
+      labelKey: 'tab.common',
+      labelNamespace: 'setting',
       path: '/settings/common',
       subPath: 'common',
     },
@@ -50,6 +55,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: Brain,
       keywords: ['provider', 'llm', 'model', 'ai'],
       label: 'Model Provider',
+      labelKey: 'tab.provider',
+      labelNamespace: 'setting',
       path: '/settings/provider',
       subPath: 'provider',
     },
@@ -57,6 +64,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: KeyboardIcon,
       keywords: ['hotkey', 'shortcut', 'keyboard'],
       label: 'Hotkeys',
+      labelKey: 'tab.hotkey',
+      labelNamespace: 'setting',
       path: '/settings/hotkey',
       subPath: 'hotkey',
     },
@@ -64,6 +73,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: ImageIcon,
       keywords: ['image', 'picture', 'photo'],
       label: 'Image Settings',
+      labelKey: 'tab.image',
+      labelNamespace: 'setting',
       path: '/settings/image',
       subPath: 'image',
     },
@@ -71,20 +82,17 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: EthernetPort,
       keywords: ['proxy', 'network', 'connection'],
       label: 'Proxy',
+      labelKey: 'tab.proxy',
+      labelNamespace: 'setting',
       path: '/settings/proxy',
       subPath: 'proxy',
-    },
-    {
-      icon: ShieldCheck,
-      keywords: ['security', 'password', 'auth'],
-      label: 'Security',
-      path: '/settings/security',
-      subPath: 'security',
     },
     {
       icon: ChartColumnBigIcon,
       keywords: ['stats', 'statistics', 'analytics'],
       label: 'Statistics',
+      labelKey: 'tab.stats',
+      labelNamespace: 'auth',
       path: '/settings/stats',
       subPath: 'stats',
     },
@@ -92,6 +100,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: KeyIcon,
       keywords: ['apikey', 'api', 'key', 'token'],
       label: 'API Keys',
+      labelKey: 'tab.apikey',
+      labelNamespace: 'auth',
       path: '/settings/apikey',
       subPath: 'apikey',
     },
@@ -99,6 +109,8 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
       icon: Info,
       keywords: ['about', 'version', 'info'],
       label: 'About',
+      labelKey: 'tab.about',
+      labelNamespace: 'setting',
       path: '/settings/about',
       subPath: 'about',
     },
