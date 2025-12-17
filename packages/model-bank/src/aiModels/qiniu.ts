@@ -29,6 +29,29 @@ const qiniuChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description: 'DeepSeek Math V2 是一款在数学推理能力上取得显著突破的模型，其核心创新在于“自我验证”的训练机制，并在多项顶级数学竞赛中达到了金牌水平。',
+    displayName: 'DeepSeek Math V2',
+    enabled: true,
+    id: 'deepseek/deepseek-math-v2',
+    maxOutput: 131_072,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 4.0, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 16.0, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-27',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       reasoning: true,
       search: true,
