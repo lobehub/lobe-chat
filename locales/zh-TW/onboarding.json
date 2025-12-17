@@ -1,6 +1,6 @@
 {
   "back": "上一步",
-  "finish": "完成",
+  "finish": "開始使用",
   "modeSelection": {
     "desc": "選擇適合你的使用模式",
     "hint": "你可以隨時在設定中修改",
@@ -19,21 +19,26 @@
     "title3": "告訴我，為 {{fullName}} 量身打造～"
   },
   "next": "下一步",
+  "occupation": {
+    "hint": "你可以隨時在設定中修改",
+    "placeholder": "請輸入你的職業...",
+    "title": "{{fullName}}，你是從事什麼工作的呢？",
+    "title2": "了解你的職業，才能更好地協助你！",
+    "title3": "讓我為你量身打造專業建議～"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "連接你常用的第三方服務",
-      "title": "連接器"
+      "title": "連接你常用的工具"
     },
-    "desc": "設定你的進階選項",
     "devMode": {
-      "desc": "啟用後將顯示開發者相關功能與選項",
       "title": "開發者模式"
     },
     "model": {
-      "desc": "選擇 AI 對話使用的預設模型",
-      "title": "預設模型"
+      "title": "Agent 使用的預設模型"
     },
-    "title": "Pro 設定"
+    "title": "可以預先設定一些進階選項",
+    "title2": "試著連接一些常用工具～",
+    "title3": "讓我們為高效工作做好準備吧！"
   },
   "responseLanguage": {
     "auto": "自動（依系統語言）",

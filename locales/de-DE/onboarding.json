@@ -1,6 +1,6 @@
 {
   "back": "Zurück",
-  "finish": "Fertigstellen",
+  "finish": "Loslegen",
   "modeSelection": {
     "desc": "Wähle den Modus, der am besten zu dir passt",
     "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
@@ -19,21 +19,26 @@
     "title3": "Sag es mir, damit ich es für {{fullName}} maßschneidern kann～"
   },
   "next": "Weiter",
+  "occupation": {
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "placeholder": "Bitte gib deinen Beruf ein...",
+    "title": "{{fullName}}, was machst du beruflich?",
+    "title2": "Wenn wir deinen Beruf kennen, können wir dir besser helfen!",
+    "title3": "Lass mich dir maßgeschneiderte Ratschläge geben～"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "Verbinde deine bevorzugten Drittanbieterdienste",
-      "title": "Konnektoren"
+      "title": "Verbinde deine bevorzugten Tools"
     },
-    "desc": "Konfiguriere deine erweiterten Optionen",
     "devMode": {
-      "desc": "Aktiviert Entwicklerfunktionen und -optionen",
       "title": "Entwicklermodus"
     },
     "model": {
-      "desc": "Wähle das Standardmodell für KI-Gespräche",
-      "title": "Standardmodell"
+      "title": "Standardmodell für den Agenten"
     },
-    "title": "Pro-Einstellungen"
+    "title": "Erweiterte Optionen im Voraus konfigurieren",
+    "title2": "Versuche, einige gängige Tools zu verknüpfen～",
+    "title3": "Lass uns alles für produktives Arbeiten vorbereiten!"
   },
   "responseLanguage": {
     "auto": "Automatisch (Systemsprache folgen)",

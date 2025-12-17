@@ -1,6 +1,6 @@
 {
   "back": "Back",
-  "finish": "Finish",
+  "finish": "Get Started",
   "modeSelection": {
     "desc": "Choose the mode that suits you best",
     "hint": "You can change this anytime in settings",
@@ -28,19 +28,17 @@
   },
   "proSettings": {
     "connectors": {
-      "desc": "Connect your favorite third-party services",
-      "title": "Connectors"
+      "title": "Connect Your Favorite Tools"
     },
-    "desc": "Configure your advanced options",
     "devMode": {
-      "desc": "Enable to show developer-related features and options",
       "title": "Developer Mode"
     },
     "model": {
-      "desc": "Select the default model for AI conversations",
-      "title": "Default Model"
+      "title": "Default Model Used by the Agent"
     },
-    "title": "Pro Settings"
+    "title": "Configure Advanced Options in Advance",
+    "title2": "Try Connecting Some Common Tools~",
+    "title3": "Let's Get Ready for Efficient Work!"
   },
   "responseLanguage": {
     "auto": "Auto (Follow system language)",

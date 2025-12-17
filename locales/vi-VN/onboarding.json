@@ -1,6 +1,6 @@
 {
   "back": "Quay lại",
-  "finish": "Hoàn tất",
+  "finish": "Bắt đầu sử dụng",
   "modeSelection": {
     "desc": "Chọn chế độ sử dụng phù hợp với bạn",
     "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
@@ -19,21 +19,26 @@
     "title3": "Hãy cho tôi biết để tùy chỉnh riêng cho {{fullName}} nhé～"
   },
   "next": "Tiếp theo",
+  "occupation": {
+    "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
+    "placeholder": "Vui lòng nhập nghề nghiệp của bạn...",
+    "title": "{{fullName}}, bạn làm nghề gì vậy?",
+    "title2": "Hiểu rõ nghề nghiệp của bạn sẽ giúp chúng tôi hỗ trợ tốt hơn!",
+    "title3": "Hãy để tôi đưa ra những lời khuyên chuyên nghiệp phù hợp với bạn~"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "Kết nối với các dịch vụ bên thứ ba bạn thường dùng",
-      "title": "Trình kết nối"
+      "title": "Kết nối với các công cụ bạn thường dùng"
     },
-    "desc": "Cấu hình các tùy chọn nâng cao của bạn",
     "devMode": {
-      "desc": "Bật để hiển thị các tính năng và tùy chọn dành cho nhà phát triển",
       "title": "Chế độ nhà phát triển"
     },
     "model": {
-      "desc": "Chọn mô hình AI mặc định cho hội thoại",
-      "title": "Mô hình mặc định"
+      "title": "Mô hình mặc định mà Agent sử dụng"
     },
-    "title": "Cài đặt Pro"
+    "title": "Bạn có thể cấu hình trước một số tùy chọn nâng cao",
+    "title2": "Hãy thử kết nối với một số công cụ quen thuộc~",
+    "title3": "Cùng chuẩn bị để làm việc hiệu quả hơn nhé!"
   },
   "responseLanguage": {
     "auto": "Tự động (theo ngôn ngữ hệ thống)",

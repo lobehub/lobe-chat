@@ -1,6 +1,6 @@
 {
   "back": "Önceki",
-  "finish": "Tamamla",
+  "finish": "Başlamaya Hazır",
   "modeSelection": {
     "desc": "Sana en uygun kullanım modunu seç",
     "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
@@ -19,21 +19,26 @@
     "title3": "Söyle bana, {{fullName}} için özel olarak uyarlayalım～"
   },
   "next": "Sonraki",
+  "occupation": {
+    "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
+    "placeholder": "Lütfen mesleğini gir...",
+    "title": "{{fullName}}, ne iş yapıyorsun?",
+    "title2": "Sana daha iyi yardımcı olabilmemiz için mesleğini bilmemiz önemli!",
+    "title3": "Sana özel profesyonel öneriler hazırlayayım～"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "Sık kullandığın üçüncü taraf hizmetleri bağla",
-      "title": "Bağlayıcılar"
+      "title": "Sık kullandığın araçları bağla"
     },
-    "desc": "Gelişmiş ayarlarını yapılandır",
     "devMode": {
-      "desc": "Açıldığında geliştiriciye özel özellikler ve seçenekler görünür",
       "title": "Geliştirici Modu"
     },
     "model": {
-      "desc": "AI sohbetlerinde kullanılacak varsayılan modeli seç",
-      "title": "Varsayılan Model"
+      "title": "Agent için varsayılan model"
     },
-    "title": "Pro Ayarları"
+    "title": "Bazı gelişmiş ayarları önceden yapılandırabilirsin",
+    "title2": "Sık kullandığın bazı araçları bağlamayı dene～",
+    "title3": "Verimli çalışmaya hazır olalım!"
   },
   "responseLanguage": {
     "auto": "Otomatik (sistem dilini takip et)",

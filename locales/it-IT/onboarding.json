@@ -1,6 +1,6 @@
 {
   "back": "Indietro",
-  "finish": "Fine",
+  "finish": "Inizia subito",
   "modeSelection": {
     "desc": "Scegli la modalità d'uso più adatta a te",
     "hint": "Puoi modificarla in qualsiasi momento nelle impostazioni",
@@ -19,21 +19,26 @@
     "title3": "Dimmi tutto, così posso personalizzare per {{fullName}}～"
   },
   "next": "Avanti",
+  "occupation": {
+    "hint": "Puoi modificarlo in qualsiasi momento nelle impostazioni",
+    "placeholder": "Inserisci la tua professione...",
+    "title": "{{fullName}}, qual è la tua professione?",
+    "title2": "Conoscere il tuo lavoro ci aiuta a offrirti un supporto migliore!",
+    "title3": "Lascia che ti proponga consigli su misura per te～"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "Collega i tuoi servizi di terze parti preferiti",
-      "title": "Connettori"
+      "title": "Collega gli strumenti che usi più spesso"
     },
-    "desc": "Configura le tue opzioni avanzate",
     "devMode": {
-      "desc": "Attiva per visualizzare funzionalità e opzioni per sviluppatori",
       "title": "Modalità sviluppatore"
     },
     "model": {
-      "desc": "Scegli il modello AI predefinito per le conversazioni",
-      "title": "Modello predefinito"
+      "title": "Modello predefinito utilizzato dall'agente"
     },
-    "title": "Impostazioni Pro"
+    "title": "Puoi configurare in anticipo alcune opzioni avanzate",
+    "title2": "Prova a collegare alcuni strumenti comuni～",
+    "title3": "Prepariamoci a lavorare in modo più efficiente!"
   },
   "responseLanguage": {
     "auto": "Automatico (segui la lingua di sistema)",

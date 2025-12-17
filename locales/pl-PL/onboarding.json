@@ -1,6 +1,6 @@
 {
   "back": "Wstecz",
-  "finish": "Zakończ",
+  "finish": "Rozpocznij",
   "modeSelection": {
     "desc": "Wybierz tryb pracy, który najlepiej Ci odpowiada",
     "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
@@ -19,21 +19,26 @@
     "title3": "Powiedz mi, by dostosować wszystko specjalnie dla {{fullName}}～"
   },
   "next": "Dalej",
+  "occupation": {
+    "hint": "Możesz to później zmienić w ustawieniach",
+    "placeholder": "Wpisz swój zawód...",
+    "title": "{{fullName}}, czym się zajmujesz?",
+    "title2": "Poznanie Twojego zawodu pomoże nam lepiej Cię wspierać!",
+    "title3": "Pozwól, że przygotuję dla Ciebie spersonalizowane porady～"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "Połącz z ulubionymi usługami zewnętrznymi",
-      "title": "Konektory"
+      "title": "Połącz swoje ulubione narzędzia"
     },
-    "desc": "Skonfiguruj zaawansowane opcje",
     "devMode": {
-      "desc": "Po włączeniu pojawią się funkcje i opcje dla deweloperów",
       "title": "Tryb deweloperski"
     },
     "model": {
-      "desc": "Wybierz domyślny model AI do rozmów",
-      "title": "Domyślny model"
+      "title": "Domyślny model używany przez Agenta"
     },
-    "title": "Ustawienia Pro"
+    "title": "Możesz wcześniej skonfigurować zaawansowane opcje",
+    "title2": "Spróbuj połączyć kilka popularnych narzędzi～",
+    "title3": "Przygotujmy się do efektywnej pracy!"
   },
   "responseLanguage": {
     "auto": "Automatycznie (zgodnie z językiem systemu)",

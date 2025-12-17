@@ -1,6 +1,6 @@
 {
   "back": "Vorige stap",
-  "finish": "Voltooien",
+  "finish": "Aan de slag",
   "modeSelection": {
     "desc": "Kies de gebruiksmodus die bij je past",
     "hint": "Je kunt dit later altijd aanpassen in de instellingen",
@@ -19,21 +19,26 @@
     "title3": "Vertel het me, zodat ik het perfect kan afstemmen op {{fullName}}～"
   },
   "next": "Volgende stap",
+  "occupation": {
+    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
+    "placeholder": "Voer je beroep in...",
+    "title": "{{fullName}}, wat voor werk doe je?",
+    "title2": "Als we je beroep kennen, kunnen we je beter helpen!",
+    "title3": "Laat me professioneel advies op maat voor je samenstellen～"
+  },
   "proSettings": {
     "connectors": {
-      "desc": "Verbind met je favoriete externe diensten",
-      "title": "Connectors"
+      "title": "Verbind je favoriete tools"
     },
-    "desc": "Stel je geavanceerde opties in",
     "devMode": {
-      "desc": "Toont ontwikkelaarsfuncties en -opties wanneer ingeschakeld",
       "title": "Ontwikkelaarsmodus"
     },
     "model": {
-      "desc": "Kies het standaardmodel voor AI-gesprekken",
-      "title": "Standaardmodel"
+      "title": "Standaardmodel gebruikt door de Agent"
     },
-    "title": "Pro-instellingen"
+    "title": "Configureer geavanceerde opties vooraf",
+    "title2": "Probeer een aantal veelgebruikte tools te koppelen～",
+    "title3": "Laten we ons voorbereiden op efficiënt werken!"
   },
   "responseLanguage": {
     "auto": "Automatisch (volgt systeemtaal)",
