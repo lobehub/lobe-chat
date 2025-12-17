@@ -151,7 +151,12 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                navigate(urlJoin('/settings/provider', providerItem.id || 'all'));
+                const url = urlJoin('/settings/provider', providerItem.id || 'all');
+                if (e.ctrlKey || e.metaKey) {
+                  window.open(url, '_blank');
+                } else {
+                  navigate(url);
+                }
               }}
               size={'small'}
               title={t('ModelSwitchPanel.goToSettings')}
