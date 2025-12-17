@@ -2,9 +2,9 @@
 
 import {
   BrainCircuitIcon,
-  FingerprintIcon,
-  HazeIcon,
+  BubblesIcon,
   HeartPulseIcon,
+  LightbulbIcon,
   SearchIcon,
   SignatureIcon,
 } from 'lucide-react';
@@ -62,13 +62,13 @@ const Nav = memo(() => {
         url: '/memory',
       },
       {
-        icon: FingerprintIcon,
+        icon: SignatureIcon,
         key: MemoryTabKey.Identities,
         title: t('tab.identities'),
         url: '/memory/identities',
       },
       {
-        icon: HazeIcon,
+        icon: BubblesIcon,
         key: MemoryTabKey.Contexts,
         title: t('tab.contexts'),
         url: '/memory/contexts',
@@ -80,7 +80,7 @@ const Nav = memo(() => {
         url: '/memory/preferences',
       },
       {
-        icon: SignatureIcon,
+        icon: LightbulbIcon,
         key: MemoryTabKey.Experiences,
         title: t('tab.experiences'),
         url: '/memory/experiences',

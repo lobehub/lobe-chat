@@ -79,7 +79,9 @@ const PreferencesArea = memo(() => {
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
         left={
-          preferencesTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{preferencesTotal}</Tag>
+          Boolean(preferencesTotal) && (
+            <Tag icon={<Icon icon={BrainCircuitIcon} />}>{preferencesTotal}</Tag>
+          )
         }
         right={
           <>

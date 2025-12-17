@@ -70,7 +70,9 @@ const IdentitiesArea = memo(() => {
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
         left={
-          identitiesTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{identitiesTotal}</Tag>
+          Boolean(identitiesTotal) && (
+            <Tag icon={<Icon icon={BrainCircuitIcon} />}>{identitiesTotal}</Tag>
+          )
         }
         right={
           <>
