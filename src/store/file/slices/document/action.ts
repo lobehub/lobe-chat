@@ -505,14 +505,24 @@ export const createDocumentSlice: StateCreator<
 
   removeDocument: async (documentId) => {
     // Remove from local optimistic map first (optimistic update)
-    const { localDocumentMap, documents } = get();
+    const { localDocumentMap, documents, selectedPageId } = get();
     const newMap = new Map(localDocumentMap);
     newMap.delete(documentId);
 
     // Also remove from pages array to update the list immediately
     const newPages = documents.filter((doc) => doc.id !== documentId);
 
-    set({ documents: newPages, localDocumentMap: newMap }, false, n('removeDocument/optimistic'));
+    // Clear selected page ID if the deleted page is currently selected
+    const updates: Partial<FileStore> = {
+      documents: newPages,
+      localDocumentMap: newMap,
+    };
+    if (selectedPageId === documentId) {
+      updates.selectedPageId = null;
+      updateUrl(null);
+    }
+
+    set(updates, false, n('removeDocument/optimistic'));
 
     try {
       // Delete from pages table
@@ -522,7 +532,15 @@ export const createDocumentSlice: StateCreator<
       console.error('Failed to delete page:', error);
       // Restore the page in local map and pages array on error
       const restoredMap = new Map(localDocumentMap);
-      set({ documents, localDocumentMap: restoredMap }, false, n('removeDocument/restore'));
+      const restoreUpdates: Partial<FileStore> = {
+        documents,
+        localDocumentMap: restoredMap,
+      };
+      if (selectedPageId === documentId) {
+        restoreUpdates.selectedPageId = documentId;
+        updateUrl(documentId);
+      }
+      set(restoreUpdates, false, n('removeDocument/restore'));
       throw error;
     }
   },
