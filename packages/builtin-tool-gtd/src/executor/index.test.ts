@@ -191,6 +191,45 @@ describe('GTDExecutor', () => {
       expect(result.success).toBe(false);
       expect(result.content).toContain('No operations provided');
     });
+
+    it('should handle complete operations with out-of-range indices gracefully', async () => {
+      // Test case: 5 items (indices 0-4), operations reference index 5 (out of range) and index 2 (valid)
+      const ctx = createMockContext({
+        createdItems: ['Task A', 'Task B', 'Task C', 'Task D', 'Task E'],
+        todos: {
+          items: [
+            { completed: false, text: 'Task A' },
+            { completed: false, text: 'Task B' },
+            { completed: false, text: 'Task C' },
+            { completed: false, text: 'Task D' },
+            { completed: false, text: 'Task E' },
+          ],
+          updatedAt: '2025-01-01T00:00:00.000Z',
+        },
+      });
+
+      const result = await gtdExecutor.updateTodos(
+        {
+          operations: [
+            { completed: true, index: 5, newText: '', text: '', type: 'complete' }, // out of range
+            { completed: true, index: 2, newText: '', text: '', type: 'complete' }, // valid
+          ],
+        },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      // Should have all 5 items preserved
+      expect(result.state?.todos.items).toHaveLength(5);
+      // Index 5 is out of range (0-4), so should be skipped
+      // Index 2 should be completed
+      expect(result.state?.todos.items[2].completed).toBe(true);
+      // Other items should remain uncompleted
+      expect(result.state?.todos.items[0].completed).toBe(false);
+      expect(result.state?.todos.items[1].completed).toBe(false);
+      expect(result.state?.todos.items[3].completed).toBe(false);
+      expect(result.state?.todos.items[4].completed).toBe(false);
+    });
   });
 
   describe('completeTodos', () => {

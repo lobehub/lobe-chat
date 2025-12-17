@@ -1,11 +1,11 @@
-import { RecentTopic } from '@lobechat/types';
-import { inArray } from 'drizzle-orm';
+import { RecentTopic, RecentTopicGroup, RecentTopicGroupMember } from '@lobechat/types';
+import { eq, inArray } from 'drizzle-orm';
 import { after } from 'next/server';
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
 import { AgentMigrationRepo } from '@/database/repositories/agentMigration';
-import { agents } from '@/database/schemas';
+import { agents, chatGroups, chatGroupsAgents } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { BatchTaskResult } from '@/types/service';
@@ -209,8 +209,12 @@ export const topicRouter = router({
     .query(async ({ ctx, input }): Promise<RecentTopic[]> => {
       const recentTopics = await ctx.topicModel.queryRecent(input?.limit ?? 12);
 
+      // Separate agent topics and group topics
+      const agentTopics = recentTopics.filter((t) => t.type === 'agent');
+      const groupTopics = recentTopics.filter((t) => t.type === 'group');
+
       // Find legacy topics: no agentId but has sessionId
-      const legacyTopics = recentTopics.filter(
+      const legacyTopics = agentTopics.filter(
         (topic) => topic.agentId === null && topic.sessionId !== null,
       );
 
@@ -224,7 +228,7 @@ export const topicRouter = router({
 
       // Build agentId map: merge existing agentId with resolved ones
       const topicAgentIdMap = new Map<string, string>();
-      for (const topic of recentTopics) {
+      for (const topic of agentTopics) {
         if (topic.agentId) {
           topicAgentIdMap.set(topic.id, topic.agentId);
         } else if (topic.sessionId) {
@@ -260,6 +264,53 @@ export const topicRouter = router({
         }
       }
 
+      // Batch query group info with member avatars
+      const groupInfoMap = new Map<string, RecentTopicGroup>();
+      const allGroupIds = [...new Set(groupTopics.map((t) => t.groupId!).filter(Boolean))];
+
+      if (allGroupIds.length > 0) {
+        // Query chat groups
+        const chatGroupInfos = await ctx.serverDB
+          .select({
+            id: chatGroups.id,
+            title: chatGroups.title,
+          })
+          .from(chatGroups)
+          .where(inArray(chatGroups.id, allGroupIds));
+
+        // Query group member agents (get avatar info)
+        const groupMembersRaw = await ctx.serverDB
+          .select({
+            agentAvatar: agents.avatar,
+            agentBackgroundColor: agents.backgroundColor,
+            chatGroupId: chatGroupsAgents.chatGroupId,
+            order: chatGroupsAgents.order,
+          })
+          .from(chatGroupsAgents)
+          .leftJoin(agents, eq(chatGroupsAgents.agentId, agents.id))
+          .where(inArray(chatGroupsAgents.chatGroupId, allGroupIds));
+
+        // Group members by chatGroupId
+        const groupMembersMap = new Map<string, RecentTopicGroupMember[]>();
+        for (const member of groupMembersRaw) {
+          const members = groupMembersMap.get(member.chatGroupId) || [];
+          members.push({
+            avatar: member.agentAvatar,
+            backgroundColor: member.agentBackgroundColor,
+          });
+          groupMembersMap.set(member.chatGroupId, members);
+        }
+
+        // Build group info map
+        for (const group of chatGroupInfos) {
+          groupInfoMap.set(group.id, {
+            id: group.id,
+            members: groupMembersMap.get(group.id) || [],
+            title: group.title,
+          });
+        }
+      }
+
       // Runtime migration: backfill agentId for legacy topics
       const runMigration = async () => {
         for (const [sessionId, agentId] of sessionAgentMap) {
@@ -276,13 +327,28 @@ export const topicRouter = router({
 
       // Assemble final result
       return recentTopics.map((topic) => {
+        if (topic.type === 'group' && topic.groupId) {
+          const groupInfo = groupInfoMap.get(topic.groupId);
+          return {
+            agent: null,
+            group: groupInfo ?? null,
+            id: topic.id,
+            title: topic.title,
+            type: 'group' as const,
+            updatedAt: topic.updatedAt,
+          };
+        }
+
+        // Agent topic
         const agentId = topicAgentIdMap.get(topic.id);
         const agentInfo = agentId ? agentInfoMap.get(agentId) : null;
 
         return {
           agent: agentInfo ?? null,
+          group: null,
           id: topic.id,
           title: topic.title,
+          type: 'agent' as const,
           updatedAt: topic.updatedAt,
         };
       });

@@ -70,10 +70,23 @@ export interface RecentTopicAgent {
   title: string | null;
 }
 
+export interface RecentTopicGroupMember {
+  avatar: string | null;
+  backgroundColor: string | null;
+}
+
+export interface RecentTopicGroup {
+  id: string;
+  members: RecentTopicGroupMember[];
+  title: string | null;
+}
+
 export interface RecentTopic {
   agent: RecentTopicAgent | null;
+  group: RecentTopicGroup | null;
   id: string;
   title: string | null;
+  type: 'agent' | 'group';
   updatedAt: Date;
 }
 

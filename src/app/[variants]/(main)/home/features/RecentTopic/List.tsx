@@ -23,7 +23,11 @@ const RecentTopicList = memo(() => {
   }
 
   return recentTopics.map((topic) => {
-    const topicUrl = `/agent/${topic?.agent?.id}?topic=${topic.id}`;
+    // Build URL based on topic type
+    const topicUrl =
+      topic.type === 'group' && topic.group
+        ? `/group/${topic.group.id}?topic=${topic.id}`
+        : `/agent/${topic?.agent?.id}?topic=${topic.id}`;
 
     return (
       <Link
