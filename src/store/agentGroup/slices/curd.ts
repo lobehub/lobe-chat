@@ -17,7 +17,6 @@ export interface ChatGroupCurdAction {
    * Finish streaming and save final content to group config
    */
   finishStreamingSystemPrompt: () => Promise<void>;
-  pinGroup: (id: string, pinned: boolean) => Promise<void>;
   /**
    * Start streaming system prompt update
    */
@@ -58,12 +57,6 @@ export const chatGroupCurdSlice: StateCreator<
       false,
       'finishStreamingSystemPrompt',
     );
-  },
-
-  pinGroup: async (id, pinned) => {
-    await chatGroupService.updateGroup(id, { pinned });
-    get().internal_dispatchChatGroup({ payload: { id, pinned }, type: 'updateGroup' });
-    await get().refreshGroupDetail(id);
   },
 
   startStreamingSystemPrompt: () => {

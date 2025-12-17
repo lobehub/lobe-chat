@@ -5,6 +5,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { message } from '@/components/AntdStaticMethods';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { agentService } from '@/services/agent';
+import { chatGroupService } from '@/services/chatGroup';
 import { sessionService } from '@/services/session';
 import type { HomeStore } from '@/store/home/store';
 import { getSessionStoreState } from '@/store/session';
@@ -23,6 +24,10 @@ export interface SidebarUIAction {
    * Pin or unpin an agent
    */
   pinAgent: (agentId: string, pinned: boolean) => Promise<void>;
+  /**
+   * Pin or unpin an agent group
+   */
+  pinAgentGroup: (groupId: string, pinned: boolean) => Promise<void>;
   /**
    * Remove an agent
    */
@@ -106,6 +111,11 @@ export const createSidebarUISlice: StateCreator<
 
   pinAgent: async (agentId, pinned) => {
     await agentService.updateAgentPinned(agentId, pinned);
+    await get().refreshAgentList();
+  },
+
+  pinAgentGroup: async (groupId, pinned) => {
+    await chatGroupService.updateGroup(groupId, { pinned });
     await get().refreshAgentList();
   },
 

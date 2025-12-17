@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { isDesktop } from '@/const/index';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { useGlobalStore } from '@/store/global';
+import { useHomeStore } from '@/store/home';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
@@ -59,7 +60,8 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
       ];
     });
 
-  const [deleteGroup, pinGroup] = useAgentGroupStore((s) => [s.deleteGroup, s.pinGroup]);
+  const deleteGroup = useAgentGroupStore((s) => s.deleteGroup);
+  const pinAgentGroup = useHomeStore((s) => s.pinAgentGroup);
 
   const { modal, message } = App.useApp();
 
@@ -76,7 +78,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
             label: t(pin ? 'pinOff' : 'pin'),
             onClick: () => {
               if (parentType === 'group') {
-                pinGroup(id, !pin);
+                pinAgentGroup(id, !pin);
               } else {
                 pinSession(id, !pin);
               }

@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { agentService } from '@/services/agent';
+import { chatGroupService } from '@/services/chatGroup';
 import { sessionService } from '@/services/session';
 import { useHomeStore } from '@/store/home';
 import { getSessionStoreState } from '@/store/session';
@@ -33,7 +34,7 @@ describe('createSidebarUISlice', () => {
   describe('pinAgent', () => {
     it('should pin an agent and refresh agent list', async () => {
       const mockAgentId = 'agent-123';
-      vi.spyOn(sessionService, 'updateSession').mockResolvedValueOnce(undefined as any);
+      vi.spyOn(agentService, 'updateAgentPinned').mockResolvedValueOnce(undefined as any);
       const spyOnRefresh = vi.spyOn(useHomeStore.getState(), 'refreshAgentList');
 
       const { result } = renderHook(() => useHomeStore());
@@ -42,13 +43,13 @@ describe('createSidebarUISlice', () => {
         await result.current.pinAgent(mockAgentId, true);
       });
 
-      expect(sessionService.updateSession).toHaveBeenCalledWith(mockAgentId, { pinned: true });
+      expect(agentService.updateAgentPinned).toHaveBeenCalledWith(mockAgentId, true);
       expect(spyOnRefresh).toHaveBeenCalled();
     });
 
     it('should unpin an agent and refresh agent list', async () => {
       const mockAgentId = 'agent-123';
-      vi.spyOn(sessionService, 'updateSession').mockResolvedValueOnce(undefined as any);
+      vi.spyOn(agentService, 'updateAgentPinned').mockResolvedValueOnce(undefined as any);
       const spyOnRefresh = vi.spyOn(useHomeStore.getState(), 'refreshAgentList');
 
       const { result } = renderHook(() => useHomeStore());
@@ -57,7 +58,39 @@ describe('createSidebarUISlice', () => {
         await result.current.pinAgent(mockAgentId, false);
       });
 
-      expect(sessionService.updateSession).toHaveBeenCalledWith(mockAgentId, { pinned: false });
+      expect(agentService.updateAgentPinned).toHaveBeenCalledWith(mockAgentId, false);
+      expect(spyOnRefresh).toHaveBeenCalled();
+    });
+  });
+
+  describe('pinAgentGroup', () => {
+    it('should pin an agent group and refresh agent list', async () => {
+      const mockGroupId = 'group-123';
+      vi.spyOn(chatGroupService, 'updateGroup').mockResolvedValueOnce(undefined as any);
+      const spyOnRefresh = vi.spyOn(useHomeStore.getState(), 'refreshAgentList');
+
+      const { result } = renderHook(() => useHomeStore());
+
+      await act(async () => {
+        await result.current.pinAgentGroup(mockGroupId, true);
+      });
+
+      expect(chatGroupService.updateGroup).toHaveBeenCalledWith(mockGroupId, { pinned: true });
+      expect(spyOnRefresh).toHaveBeenCalled();
+    });
+
+    it('should unpin an agent group and refresh agent list', async () => {
+      const mockGroupId = 'group-123';
+      vi.spyOn(chatGroupService, 'updateGroup').mockResolvedValueOnce(undefined as any);
+      const spyOnRefresh = vi.spyOn(useHomeStore.getState(), 'refreshAgentList');
+
+      const { result } = renderHook(() => useHomeStore());
+
+      await act(async () => {
+        await result.current.pinAgentGroup(mockGroupId, false);
+      });
+
+      expect(chatGroupService.updateGroup).toHaveBeenCalledWith(mockGroupId, { pinned: false });
       expect(spyOnRefresh).toHaveBeenCalled();
     });
   });

@@ -41,14 +41,11 @@ export const useSessionItemMenuItems = () => {
   const openAgentInNewWindow = useGlobalStore((s) => s.openAgentInNewWindow);
   const sessionCustomGroups = useHomeStore(homeAgentListSelectors.agentGroups, isEqual);
 
-  const [pinAgent, duplicateAgent, updateAgentGroup, removeAgent] = useHomeStore((s) => [
-    s.pinAgent,
-    s.duplicateAgent,
-    s.updateAgentGroup,
-    s.removeAgent,
-  ]);
+  const [pinAgent, pinAgentGroup, duplicateAgent, updateAgentGroup, removeAgent] = useHomeStore(
+    (s) => [s.pinAgent, s.pinAgentGroup, s.duplicateAgent, s.updateAgentGroup, s.removeAgent],
+  );
 
-  const [pinGroup, deleteGroup] = useAgentGroupStore((s) => [s.pinGroup, s.deleteGroup]);
+  const deleteGroup = useAgentGroupStore((s) => s.deleteGroup);
 
   /**
    * Pin/Unpin menu item
@@ -62,14 +59,14 @@ export const useSessionItemMenuItems = () => {
         label: t(isPinned ? 'pinOff' : 'pin'),
         onClick: () => {
           if (parentType === 'group') {
-            pinGroup(id, !isPinned);
+            pinAgentGroup(id, !isPinned);
           } else {
             pinAgent(id, !isPinned);
           }
         },
       };
     },
-    [t, pinGroup, pinAgent],
+    [t, pinAgentGroup, pinAgent],
   );
 
   /**

@@ -54,45 +54,6 @@ describe('ChatGroupCurdSlice', () => {
     vi.restoreAllMocks();
   });
 
-  describe('pinGroup', () => {
-    it('should pin a group', async () => {
-      vi.mocked(chatGroupService.updateGroup).mockResolvedValue({} as any);
-
-      const { result } = renderHook(() => useAgentGroupStore());
-
-      await act(async () => {
-        await result.current.pinGroup('group-1', true);
-      });
-
-      expect(chatGroupService.updateGroup).toHaveBeenCalledWith('group-1', { pinned: true });
-    });
-
-    it('should unpin a group', async () => {
-      vi.mocked(chatGroupService.updateGroup).mockResolvedValue({} as any);
-
-      const { result } = renderHook(() => useAgentGroupStore());
-
-      await act(async () => {
-        await result.current.pinGroup('group-1', false);
-      });
-
-      expect(chatGroupService.updateGroup).toHaveBeenCalledWith('group-1', { pinned: false });
-    });
-
-    it('should refresh group detail after pinning', async () => {
-      const { mutate } = await import('swr');
-      vi.mocked(chatGroupService.updateGroup).mockResolvedValue({} as any);
-
-      const { result } = renderHook(() => useAgentGroupStore());
-
-      await act(async () => {
-        await result.current.pinGroup('group-1', true);
-      });
-
-      expect(mutate).toHaveBeenCalledWith(['fetchGroupDetail', 'group-1']);
-    });
-  });
-
   describe('updateGroup', () => {
     it('should update group properties', async () => {
       vi.mocked(chatGroupService.updateGroup).mockResolvedValue({} as any);
