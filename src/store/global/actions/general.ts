@@ -174,7 +174,14 @@ export const generalActionSlice: StateCreator<
         onSuccess: (status) => {
           set({ isStatusInit: true }, false, 'setStatusInit');
 
-          get().updateSystemStatus(status, 'initSystemStatus');
+          // Reset transient UI states that should not persist across page reloads
+          const statusWithResetTransientStates = {
+            ...status,
+            showCommandMenu: false,
+            showHotkeyHelper: false,
+          };
+
+          get().updateSystemStatus(statusWithResetTransientStates, 'initSystemStatus');
         },
       },
     ),
