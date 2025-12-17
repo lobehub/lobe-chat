@@ -76,6 +76,13 @@
       "title": "重置所有设置"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "设置新对话的默认模型",
+      "title": "模型"
+    },
+    "title": "默认助手设置"
+  },
   "group": {
     "aiConfig": "AI 配置",
     "common": "通用",
@@ -830,7 +837,7 @@
   },
   "tab": {
     "about": "关于",
-    "agent": "默认助手",
+    "agent": "助手服务",
     "apikey": "API Key 管理",
     "common": "外观",
     "experiment": "实验",
@@ -844,7 +851,6 @@
     "stats": "数据统计",
     "storage": "数据存储",
     "sync": "云端同步",
-    "system-agent": "系统助手",
     "tts": "语音服务",
     "usage": "用量统计"
   },

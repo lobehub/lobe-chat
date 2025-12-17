@@ -49,7 +49,6 @@ export enum SettingsTabs {
   Security = 'security',
   Stats = 'stats',
   Storage = 'storage',
-  SystemAgent = 'system-agent',
   TTS = 'tts',
   Usage = 'usage',
 }

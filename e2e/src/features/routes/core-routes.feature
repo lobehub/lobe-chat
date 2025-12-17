@@ -39,5 +39,4 @@ Feature: Core Routes Accessibility
       | provider     |
       | proxy        |
       | storage      |
-      | system-agent |
       | tts          |

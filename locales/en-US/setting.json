@@ -76,6 +76,13 @@
       "title": "Reset All Settings"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Set the default model for new conversations",
+      "title": "Model"
+    },
+    "title": "Default Assistant Settings"
+  },
   "group": {
     "aiConfig": "AI Configuration",
     "common": "General",
@@ -830,7 +837,7 @@
   },
   "tab": {
     "about": "About",
-    "agent": "Default Assistant",
+    "agent": "Agent Service",
     "apikey": "API Key Management",
     "common": "Appearance",
     "experiment": "Experiment",
@@ -844,7 +851,6 @@
     "stats": "Analytics",
     "storage": "Data Storage",
     "sync": "Cloud Sync",
-    "system-agent": "System Assistant",
     "tts": "Text-to-Speech",
     "usage": "Usage Statistics"
   },

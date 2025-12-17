@@ -33,8 +33,8 @@ const componentMap = {
   [SettingsTabs.Storage]: dynamic(() => import('../storage'), {
     loading: () => <Loading debugId="Settings > Storage" />,
   }),
-  [SettingsTabs.SystemAgent]: dynamic(() => import('../system-agent'), {
-    loading: () => <Loading debugId="Settings > SystemAgent" />,
+  [SettingsTabs.Agent]: dynamic(() => import('../agent'), {
+    loading: () => <Loading debugId="Settings > Agent" />,
   }),
   // Profile related tabs
   [SettingsTabs.Profile]: dynamic(() => import('../profile'), {

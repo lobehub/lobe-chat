@@ -131,8 +131,8 @@ export const useCategory = () => {
       },
       {
         icon: Sparkles,
-        key: SettingsTabs.SystemAgent,
-        label: t('tab.system-agent'),
+        key: SettingsTabs.Agent,
+        label: t('tab.agent'),
       },
     ].filter(Boolean) as CategoryItem[];
 

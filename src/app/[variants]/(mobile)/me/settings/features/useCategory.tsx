@@ -1,4 +1,4 @@
-import { Bot, Brain, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
+import { Brain, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,8 +17,8 @@ export const useCategory = () => {
     },
     {
       icon: Sparkles,
-      key: SettingsTabs.SystemAgent,
-      label: t('tab.system-agent'),
+      key: SettingsTabs.Agent,
+      label: t('tab.agent'),
     },
     {
       icon: Brain,
@@ -26,11 +26,6 @@ export const useCategory = () => {
       label: t('tab.provider'),
     },
     { icon: Mic2, key: SettingsTabs.TTS, label: t('tab.tts') },
-    {
-      icon: Bot,
-      key: SettingsTabs.Agent,
-      label: t('tab.agent'),
-    },
     {
       icon: Info,
       key: SettingsTabs.About,

@@ -4,12 +4,14 @@ import { DEFAULT_REWRITE_QUERY } from '@lobechat/prompts';
 
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
+import DefaultAgentForm from './features/DefaultAgentForm';
 import SystemAgentForm from './features/SystemAgentForm';
 
 const Page = () => {
   const { enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
   return (
     <>
+      <DefaultAgentForm />
       <SystemAgentForm systemAgentKey="topic" />
       <SystemAgentForm systemAgentKey="generationTopic" />
       <SystemAgentForm systemAgentKey="translation" />
