@@ -446,6 +446,13 @@
       "toolRejected": "Die Tool-Ausführung wurde abgelehnt"
     }
   },
+  "toolAuth": {
+    "authorize": "Autorisieren",
+    "authorizing": "Autorisierung läuft...",
+    "hint": "Ohne Autorisierung oder Konfiguration können diese Tools nicht ordnungsgemäß verwendet werden, was zu eingeschränkter Funktionalität oder Fehlern des Assistenten führen kann.",
+    "signIn": "Anmelden",
+    "title": "Dieser Assistent verwendet die folgenden Tools, die eine Autorisierung erfordern"
+  },
   "topic": {
     "checkOpenNewTopic": "Soll ein neues Thema eröffnet werden?",
     "checkSaveCurrentMessages": "Möchten Sie die aktuelle Konversation als Thema speichern?",

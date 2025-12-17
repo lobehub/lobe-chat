@@ -20,6 +20,18 @@
       },
       "title": "에이전트 빌더"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "사용 가능한 모델 가져오기",
+        "installPlugin": "플러그인 설치",
+        "inviteAgent": "멤버 초대",
+        "removeAgent": "멤버 제거",
+        "searchMarketTools": "플러그인 마켓 검색",
+        "updateAgentConfig": "에이전트 설정 업데이트",
+        "updatePrompt": "시스템 프롬프트 업데이트"
+      },
+      "title": "그룹 에이전트 빌더"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "모두에게 발언",

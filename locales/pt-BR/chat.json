@@ -446,6 +446,13 @@
       "toolRejected": "Esta chamada de ferramenta foi rejeitada"
     }
   },
+  "toolAuth": {
+    "authorize": "Autorizar",
+    "authorizing": "Autorizando...",
+    "hint": "Se não for autorizado ou configurado, essas ferramentas não funcionarão corretamente, o que pode causar falhas ou erros nas funcionalidades do assistente.",
+    "signIn": "Entrar",
+    "title": "Este assistente utiliza as seguintes ferramentas que requerem autorização"
+  },
   "topic": {
     "checkOpenNewTopic": "Deseja abrir um novo tópico?",
     "checkSaveCurrentMessages": "Salvar a conversa atual como tópico?",

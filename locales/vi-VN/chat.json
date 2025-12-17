@@ -446,6 +446,13 @@
       "toolRejected": "Lần gọi công cụ này đã bị từ chối"
     }
   },
+  "toolAuth": {
+    "authorize": "Ủy quyền",
+    "authorizing": "Đang ủy quyền...",
+    "hint": "Nếu không ủy quyền hoặc cấu hình, các công cụ này sẽ không hoạt động bình thường, có thể dẫn đến thiếu chức năng trợ lý hoặc lỗi.",
+    "signIn": "Đăng nhập",
+    "title": "Trợ lý này sử dụng các công cụ sau cần được ủy quyền"
+  },
   "topic": {
     "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
     "checkSaveCurrentMessages": "Bạn có muốn lưu cuộc trò chuyện hiện tại thành chủ đề không?",

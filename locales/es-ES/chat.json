@@ -446,6 +446,13 @@
       "toolRejected": "Esta ejecución de herramienta fue rechazada"
     }
   },
+  "toolAuth": {
+    "authorize": "Autorizar",
+    "authorizing": "Autorizando...",
+    "hint": "Si no se autoriza o configura, estas herramientas no funcionarán correctamente, lo que podría causar errores o la falta de funciones del asistente.",
+    "signIn": "Iniciar sesión",
+    "title": "Este asistente utiliza las siguientes herramientas que requieren autorización"
+  },
   "topic": {
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",
     "checkSaveCurrentMessages": "¿Desea guardar la conversación actual como tema?",

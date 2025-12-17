@@ -20,6 +20,18 @@
       },
       "title": "Agenten-Builder"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Verfügbare Modelle abrufen",
+        "installPlugin": "Plugin installieren",
+        "inviteAgent": "Mitglied einladen",
+        "removeAgent": "Mitglied entfernen",
+        "searchMarketTools": "Plugin-Marktplatz durchsuchen",
+        "updateAgentConfig": "Agentenkonfiguration aktualisieren",
+        "updatePrompt": "Systemaufforderung aktualisieren"
+      },
+      "title": "Gruppen-Agenten-Builder"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "An alle sprechen",

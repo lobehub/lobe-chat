@@ -446,6 +446,13 @@
       "toolRejected": "To wywołanie narzędzia zostało odrzucone"
     }
   },
+  "toolAuth": {
+    "authorize": "Autoryzuj",
+    "authorizing": "Autoryzowanie...",
+    "hint": "Jeśli nie udzielisz autoryzacji lub nie skonfigurujesz narzędzi, mogą one nie działać poprawnie, co może skutkować brakiem funkcji asystenta lub błędami.",
+    "signIn": "Zaloguj się",
+    "title": "Ten asystent korzysta z poniższych narzędzi wymagających autoryzacji"
+  },
   "topic": {
     "checkOpenNewTopic": "Czy otworzyć nowy temat?",
     "checkSaveCurrentMessages": "Czy zapisać bieżącą rozmowę jako temat?",

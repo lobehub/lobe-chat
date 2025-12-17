@@ -20,6 +20,18 @@
       },
       "title": "Създател на агент"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Извличане на налични модели",
+        "installPlugin": "Инсталиране на плъгин",
+        "inviteAgent": "Покани член",
+        "removeAgent": "Премахни член",
+        "searchMarketTools": "Търсене в магазина за плъгини",
+        "updateAgentConfig": "Актуализиране на конфигурацията на агента",
+        "updatePrompt": "Актуализиране на системния подканващ текст"
+      },
+      "title": "Създател на групов агент"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "Изказване пред всички",

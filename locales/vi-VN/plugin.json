@@ -20,6 +20,18 @@
       },
       "title": "Trình tạo Tác nhân"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Lấy mô hình khả dụng",
+        "installPlugin": "Cài đặt plugin",
+        "inviteAgent": "Mời thành viên",
+        "removeAgent": "Xóa thành viên",
+        "searchMarketTools": "Tìm kiếm trong chợ plugin",
+        "updateAgentConfig": "Cập nhật cấu hình đại lý",
+        "updatePrompt": "Cập nhật lời nhắc hệ thống"
+      },
+      "title": "Trình xây dựng Đại lý Nhóm"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "Phát biểu cho tất cả mọi người",

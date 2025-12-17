@@ -20,6 +20,18 @@
       },
       "title": "エージェントビルダー"
     },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "利用可能なモデルを取得",
+        "installPlugin": "プラグインをインストール",
+        "inviteAgent": "メンバーを招待",
+        "removeAgent": "メンバーを削除",
+        "searchMarketTools": "プラグインマーケットを検索",
+        "updateAgentConfig": "エージェント設定を更新",
+        "updatePrompt": "システムプロンプトを更新"
+      },
+      "title": "グループエージェントビルダー"
+    },
     "lobe-group-management": {
       "apiName": {
         "broadcast": "全員に発言",
