@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useChatStore } from '@/store/chat';
+import { useConversationStore } from '@/features/Conversation';
 
 // import { useSend } from '../../features/ChatInput/useSend';
 
@@ -39,10 +39,9 @@ interface OpeningQuestionsProps {
 
 const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => {
   const { t } = useTranslation('welcome');
-  const [updateMessageInput] = useChatStore((s) => [s.updateMessageInput]);
+  const [sendMessage] = useConversationStore((s) => [s.sendMessage]);
 
   const { styles } = useStyles();
-  // const { send: sendMessage } = useSend();
 
   return (
     <div className={styles.container}>
@@ -55,8 +54,7 @@ const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => 
               clickable
               key={question}
               onClick={() => {
-                updateMessageInput(question);
-                // sendMessage({ isWelcomeQuestion: true });
+                sendMessage({ message: question });
               }}
               paddingBlock={8}
               paddingInline={12}
