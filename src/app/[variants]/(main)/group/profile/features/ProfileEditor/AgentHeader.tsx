@@ -1,16 +1,20 @@
 'use client';
 
 import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { EmojiPicker, Icon, Input, Tooltip , Skeleton } from '@lobehub/ui';
+import { EmojiPicker, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { message } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { PaletteIcon } from 'lucide-react';
 import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import BackgroundSwatches from '@/features/AgentSetting/AgentMeta/BackgroundSwatches';
-import { useStore } from '@/features/AgentSetting/store';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
@@ -21,33 +25,37 @@ const AgentHeader = memo(() => {
   const { t } = useTranslation(['setting', 'common']);
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
-  // Get current meta from store
-  const meta = useStore((s) => s.meta);
-  const updateMeta = useStore((s) => s.setAgentMeta);
+  // Get title from agentGroup store (groupMap.title)
+  const groupMeta = useAgentGroupStore(agentGroupSelectors.currentGroupMeta, isEqual);
+  const updateGroupMeta = useAgentGroupStore((s) => s.updateGroupMeta);
+
+  // Get avatar/backgroundColor from supervisor agent (useAgentStore)
+  const agentMeta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
+  const updateAgentMeta = useAgentStore((s) => s.updateAgentMeta);
 
   // File upload
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
   const [uploading, setUploading] = useState(false);
 
   // Local state for inputs (to avoid stuttering during typing)
-  const [localTitle, setLocalTitle] = useState(meta.title || '');
+  const [localTitle, setLocalTitle] = useState(groupMeta.title || '');
 
   // Sync local state when meta changes from external source
   useEffect(() => {
-    setLocalTitle(meta.title || '');
-  }, [meta.title]);
+    setLocalTitle(groupMeta.title || '');
+  }, [groupMeta.title]);
 
-  // Debounced save for title
+  // Debounced save for title - save to group store
   const { run: debouncedSaveTitle } = useDebounceFn(
     (value: string) => {
-      updateMeta({ title: value });
+      updateGroupMeta({ title: value });
     },
     { wait: EDITOR_DEBOUNCE_TIME },
   );
 
-  // Handle avatar change (immediate save)
+  // Handle avatar change (immediate save) - save to agent store (supervisor agent)
   const handleAvatarChange = (emoji: string) => {
-    updateMeta({ avatar: emoji });
+    updateAgentMeta({ avatar: emoji });
   };
 
   // Handle avatar upload
@@ -63,24 +71,24 @@ const AgentHeader = memo(() => {
         const result = await uploadWithProgress({ file });
         console.log('result', result);
         if (result?.url) {
-          updateMeta({ avatar: result.url });
+          updateAgentMeta({ avatar: result.url });
         }
       } finally {
         setUploading(false);
       }
     },
-    [uploadWithProgress, updateMeta, t],
+    [uploadWithProgress, updateAgentMeta, t],
   );
 
   // Handle avatar delete
   const handleAvatarDelete = useCallback(() => {
-    updateMeta({ avatar: undefined });
-  }, [updateMeta]);
+    updateAgentMeta({ avatar: undefined });
+  }, [updateAgentMeta]);
 
-  // Handle background color change (immediate save)
+  // Handle background color change (immediate save) - save to agent store (supervisor agent)
   const handleBackgroundColorChange = (color?: string) => {
     if (color !== undefined) {
-      updateMeta({ backgroundColor: color });
+      updateAgentMeta({ backgroundColor: color });
     }
   };
 
@@ -97,11 +105,11 @@ const AgentHeader = memo(() => {
       }}
     >
       <EmojiPicker
-        allowDelete={!!meta.avatar}
+        allowDelete={!!agentMeta.avatar}
         allowUpload
         background={
-          meta.backgroundColor && meta.backgroundColor !== 'rgba(0,0,0,0)'
-            ? meta.backgroundColor
+          agentMeta.backgroundColor && agentMeta.backgroundColor !== 'rgba(0,0,0,0)'
+            ? agentMeta.backgroundColor
             : undefined
         }
         customTabs={[
@@ -126,7 +134,7 @@ const AgentHeader = memo(() => {
                     onChange={handleBackgroundColorChange}
                     shape={'square'}
                     size={38}
-                    value={meta.backgroundColor}
+                    value={agentMeta.backgroundColor}
                   />
                 </Suspense>
               </Flexbox>
@@ -144,7 +152,7 @@ const AgentHeader = memo(() => {
         }}
         shape={'square'}
         size={72}
-        value={meta.avatar}
+        value={agentMeta.avatar}
       />
       <Input
         onChange={(e) => {

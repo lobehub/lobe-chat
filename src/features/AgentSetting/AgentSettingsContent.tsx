@@ -1,6 +1,7 @@
 import { ReactNode, memo } from 'react';
 
-import { useStore } from '@/features/AgentSetting/store';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 
 import AgentChat from './AgentChat';
@@ -13,7 +14,7 @@ export interface AgentSettingsContentProps {
 }
 
 const AgentSettingsContent = memo<AgentSettingsContentProps>(({ tab, loadingSkeleton }) => {
-  const loading = useStore((s) => s.loading);
+  const loading = useAgentStore(agentSelectors.isAgentConfigLoading);
 
   if (loading) return loadingSkeleton;
 

@@ -11,19 +11,19 @@ interface AgentBuilderProviderProps {
 }
 
 /**
- * Agent Builder Conversation Provider
- * Provides context for the Agent Builder chat panel
- * Uses 'agent_builder' scope to isolate messages from main conversation
+ * Group Agent Builder Conversation Provider
+ * Provides context for the Group Agent Builder chat panel
+ * Uses 'group_agent_builder' scope with groupId to isolate messages per group
  */
 const AgentBuilderProvider = memo<AgentBuilderProviderProps>(({ agentId, children }) => {
   const activeTopicId = useChatStore((s) => s.activeTopicId);
 
-  // Build conversation context for agent builder
-  // Using agent_builder scope for message management
+  // Build conversation context for group agent builder
+  // Using group_agent_builder scope with groupId for per-group message isolation
   const context = useMemo<MessageMapKeyInput>(
     () => ({
       agentId,
-      scope: 'agent_builder',
+      scope: 'group_agent_builder',
       topicId: activeTopicId,
     }),
     [agentId, activeTopicId],
@@ -32,7 +32,7 @@ const AgentBuilderProvider = memo<AgentBuilderProviderProps>(({ agentId, childre
   // Get messages from ChatStore based on context
   const chatKey = useMemo(
     () => (context ? messageMapKey(context) : null),
-    [context?.agentId, context?.topicId],
+    [context?.agentId, context?.groupId, context?.topicId],
   );
 
   const replaceMessages = useChatStore((s) => s.replaceMessages);

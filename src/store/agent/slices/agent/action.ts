@@ -15,7 +15,7 @@ import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 import type { AgentStore } from '../../store';
-import { AgentSliceState } from './initialState';
+import { AgentSliceState, LoadingState, SaveStatus } from './initialState';
 
 const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
 
@@ -66,6 +66,12 @@ export interface AgentSliceAction {
    * Toggle the agent panel pinned state
    */
   toggleAgentPinned: () => void;
+  /**
+   * Toggle a plugin for the current agent
+   * @param pluginId - The plugin identifier
+   * @param state - Optional explicit state (true = enable, false = disable). If not provided, toggles.
+   */
+  toggleAgentPlugin: (pluginId: string, state?: boolean) => Promise<void>;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   updateAgentChatConfigById: (
     agentId: string,
@@ -74,6 +80,14 @@ export interface AgentSliceAction {
   updateAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
   updateAgentConfigById: (agentId: string, config: PartialDeep<LobeAgentConfig>) => Promise<void>;
   updateAgentMeta: (meta: Partial<MetaData>) => Promise<void>;
+  /**
+   * Update loading state for meta fields (used during autocomplete)
+   */
+  updateLoadingState: (key: keyof LoadingState, value: boolean) => void;
+  /**
+   * Update save status for showing auto-save hint
+   */
+  updateSaveStatus: (status: SaveStatus) => void;
   useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
 }
 
@@ -169,6 +183,29 @@ export const createAgentSlice: StateCreator<
     set((state) => ({ isAgentPinned: !state.isAgentPinned }), false, 'toggleAgentPinned');
   },
 
+  toggleAgentPlugin: async (pluginId, state) => {
+    const { activeAgentId, agentMap, updateAgentConfig } = get();
+    if (!activeAgentId) return;
+
+    const currentPlugins = (agentMap[activeAgentId]?.plugins as string[]) || [];
+    const hasPlugin = currentPlugins.includes(pluginId);
+
+    // Determine new state
+    const shouldEnable = state !== undefined ? state : !hasPlugin;
+
+    let newPlugins: string[];
+    if (shouldEnable && !hasPlugin) {
+      newPlugins = [...currentPlugins, pluginId];
+    } else if (!shouldEnable && hasPlugin) {
+      newPlugins = currentPlugins.filter((id) => id !== pluginId);
+    } else {
+      // No change needed
+      return;
+    }
+
+    await updateAgentConfig({ plugins: newPlugins });
+  },
+
   updateAgentChatConfig: async (config) => {
     const { activeAgentId } = get();
 
@@ -211,6 +248,21 @@ export const createAgentSlice: StateCreator<
     await get().optimisticUpdateAgentMeta(activeAgentId, meta, controller.signal);
   },
 
+  updateLoadingState: (key, value) => {
+    set({ loadingState: { ...get().loadingState, [key]: value } }, false, 'updateLoadingState');
+  },
+
+  updateSaveStatus: (status) => {
+    set(
+      {
+        lastUpdatedTime: status === 'saved' ? new Date() : get().lastUpdatedTime,
+        saveStatus: status,
+      },
+      false,
+      'updateSaveStatus',
+    );
+  },
+
   useFetchAgentConfig: (isLogin, agentId) =>
     useClientDataSWR<LobeAgentConfig>(
       // Only fetch when login status is explicitly true (not null/undefined)
@@ -247,28 +299,54 @@ export const createAgentSlice: StateCreator<
   },
 
   optimisticUpdateAgentConfig: async (id, data, signal) => {
+    const { internal_dispatchAgentMap, updateSaveStatus } = get();
+
     // 1. Optimistic update (instant UI feedback)
-    get().internal_dispatchAgentMap(id, data);
+    internal_dispatchAgentMap(id, data);
+    updateSaveStatus('saving');
 
-    // 2. API call returns updated agent data
-    const result = await agentService.updateAgentConfig(id, data, signal);
+    try {
+      // 2. API call returns updated agent data
+      const result = await agentService.updateAgentConfig(id, data, signal);
 
-    // 3. Use returned data directly (no refetch needed!)
-    if (result?.success && result.agent) {
-      get().internal_dispatchAgentMap(id, result.agent);
+      // 3. Use returned data directly (no refetch needed!)
+      if (result?.success && result.agent) {
+        internal_dispatchAgentMap(id, result.agent);
+      }
+      updateSaveStatus('saved');
+    } catch (error: any) {
+      if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
+        updateSaveStatus('idle');
+      } else {
+        console.error('[AgentStore] Failed to save config:', error);
+        updateSaveStatus('idle');
+      }
     }
   },
 
   optimisticUpdateAgentMeta: async (id, meta, signal) => {
+    const { internal_dispatchAgentMap, updateSaveStatus } = get();
+
     // 1. Optimistic update - meta fields are at the top level of agent config
-    get().internal_dispatchAgentMap(id, meta as PartialDeep<LobeAgentConfig>);
+    internal_dispatchAgentMap(id, meta as PartialDeep<LobeAgentConfig>);
+    updateSaveStatus('saving');
 
-    // 2. API call returns updated agent data
-    const result = await agentService.updateAgentMeta(id, meta, signal);
+    try {
+      // 2. API call returns updated agent data
+      const result = await agentService.updateAgentMeta(id, meta, signal);
 
-    // 3. Use returned data directly (no refetch needed!)
-    if (result?.success && result.agent) {
-      get().internal_dispatchAgentMap(id, result.agent);
+      // 3. Use returned data directly (no refetch needed!)
+      if (result?.success && result.agent) {
+        internal_dispatchAgentMap(id, result.agent);
+      }
+      updateSaveStatus('saved');
+    } catch (error: any) {
+      if (error?.name === 'AbortError' || error?.message?.includes('aborted')) {
+        updateSaveStatus('idle');
+      } else {
+        console.error('[AgentStore] Failed to save meta:', error);
+        updateSaveStatus('idle');
+      }
     }
   },
 

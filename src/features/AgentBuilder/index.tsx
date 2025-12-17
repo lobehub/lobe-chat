@@ -1,3 +1,4 @@
+import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { memo } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -11,6 +12,9 @@ import AgentBuilderProvider from './AgentBuilderProvider';
 const AgentBuilder = memo(() => {
   const agentId = useAgentStore((s) => s.activeAgentId);
   const agentBuilderId = useAgentStore(builtinAgentSelectors.agentBuilderId);
+
+  const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
 
   return (
     <RightPanel>

@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { ChatStore } from '@/store/chat/store';
 
 import { AgentBuilderAction, agentBuilderSlice } from './agentBuilder';
+import { GroupAgentBuilderAction, groupAgentBuilderSlice } from './groupAgentBuilder';
 import { ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
 import { KnowledgeBaseAction, knowledgeBaseSlice } from './knowledgeBase';
 import { LocalFileAction, localSystemSlice } from './localSystem';
@@ -18,6 +19,7 @@ export interface ChatBuiltinToolAction
     KnowledgeBaseAction,
     UserMemoryAction,
     AgentBuilderAction,
+    GroupAgentBuilderAction,
     PageAgentAction {}
 
 export const chatToolSlice: StateCreator<
@@ -32,5 +34,6 @@ export const chatToolSlice: StateCreator<
   ...knowledgeBaseSlice(...params),
   ...userMemorySlice(...params),
   ...agentBuilderSlice(...params),
+  ...groupAgentBuilderSlice(...params),
   ...pageAgentSlice(...params),
 });

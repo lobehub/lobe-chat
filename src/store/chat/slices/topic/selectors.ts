@@ -40,6 +40,16 @@ const getTopicById =
   (s: ChatStoreState): ChatTopic | undefined =>
     currentTopics(s)?.find((topic) => topic.id === id);
 
+/**
+ * Get topics by specific agentId (for AgentBuilder scenarios where agentId differs from activeAgentId)
+ */
+const getTopicsByAgentId =
+  (agentId: string) =>
+  (s: ChatStoreState): ChatTopic[] | undefined => {
+    const key = topicMapKey({ agentId });
+    return s.topicDataMap[key]?.items;
+  };
+
 const currentActiveTopicSummary = (s: ChatStoreState): ChatTopicSummary | undefined => {
   const activeTopic = currentActiveTopic(s);
   if (!activeTopic) return undefined;
@@ -127,6 +137,7 @@ export const topicSelectors = {
   displayTopics,
   displayTopicsForSidebar,
   getTopicById,
+  getTopicsByAgentId,
   groupedTopicsForSidebar,
   groupedTopicsSelector,
   hasMoreTopics,

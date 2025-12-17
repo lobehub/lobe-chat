@@ -1,4 +1,5 @@
 import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
+import { GroupAgentBuilderManifest } from '@lobechat/builtin-tool-group-agent-builder';
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
 import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
@@ -57,6 +58,12 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: true,
     identifier: AgentBuilderManifest.identifier,
     manifest: AgentBuilderManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true,
+    identifier: GroupAgentBuilderManifest.identifier,
+    manifest: GroupAgentBuilderManifest,
     type: 'builtin',
   },
   {

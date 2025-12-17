@@ -12,12 +12,12 @@ import {
   ReactToolbarPlugin,
 } from '@lobehub/editor';
 import { Editor } from '@lobehub/editor/react';
-import { isEqual } from 'lodash-es';
+import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useStore } from '@/features/AgentSetting/store';
 import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import { useMentionOptions } from '../ProfileEditor/MentionList';
 import PROMPT_TEMPLATE from '../ProfileEditor/promptTemplate.json';
@@ -29,9 +29,10 @@ const EditorCanvas = memo(() => {
   const { t } = useTranslation('setting');
   const [editorInit, setEditorInit] = useState(false);
   const [contentInit, setContentInit] = useState(false);
-  const editorData = useStore((s) => s.config.editorData, isEqual);
-  const systemRole = useStore((s) => s.config.systemRole);
-  const updateConfig = useStore((s) => s.setAgentConfig);
+  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
+  const editorData = config?.editorData;
+  const systemRole = config?.systemRole;
+  const updateConfig = useAgentStore((s) => s.updateAgentConfig);
   const [initialLoad] = useState(editorData || PROMPT_TEMPLATE);
   const mentionOptions = useMentionOptions();
   const editor = useProfileStore((s) => s.editor);

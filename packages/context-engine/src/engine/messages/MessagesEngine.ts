@@ -19,6 +19,7 @@ import {
 } from '../../processors';
 import {
   AgentBuilderContextInjector,
+  GroupAgentBuilderContextInjector,
   GroupContextInjector,
   HistorySummaryProvider,
   KnowledgeInjector,
@@ -116,11 +117,13 @@ export class MessagesEngine {
       variableGenerators,
       fileContext,
       agentBuilderContext,
+      groupAgentBuilderContext,
       agentGroup,
       userMemory,
     } = this.params;
 
     const isAgentBuilderEnabled = !!agentBuilderContext;
+    const isGroupAgentBuilderEnabled = !!groupAgentBuilderContext;
     const isAgentGroupEnabled = agentGroup?.agentMap && Object.keys(agentGroup.agentMap).length > 0;
     const isGroupContextEnabled =
       isAgentGroupEnabled || !!agentGroup?.currentAgentId || !!agentGroup?.members;
@@ -159,6 +162,12 @@ export class MessagesEngine {
       new AgentBuilderContextInjector({
         enabled: isAgentBuilderEnabled,
         agentContext: agentBuilderContext,
+      }),
+
+      // 4.5. Group Agent Builder context injection (current group config/members for editing)
+      new GroupAgentBuilderContextInjector({
+        enabled: isGroupAgentBuilderEnabled,
+        groupContext: groupAgentBuilderContext,
       }),
 
       // 5. Tool system role injection (conditionally added)

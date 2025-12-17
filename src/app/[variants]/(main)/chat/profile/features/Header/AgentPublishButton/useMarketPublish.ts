@@ -3,7 +3,6 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { message } from '@/components/AntdStaticMethods';
-import { useStore } from '@/features/AgentSetting/store';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { marketApiService } from '@/services/marketApi';
@@ -29,7 +28,8 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
   const updateAgentMeta = useAgentStore((s) => s.updateAgentMeta);
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
-  const editorData = useStore((s) => s.config.editorData);
+  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
+  const editorData = config?.editorData;
   const language = useGlobalStore(globalGeneralSelectors.currentLanguage);
   const agentConfig = useAgentStore(agentSelectors.currentAgentConfig);
   const chatConfig = useAgentStore(agentChatConfigSelectors.currentChatConfig);

@@ -12,6 +12,7 @@ export type MessageMapScope =
   | 'thread'
   | 'group'
   | 'group_agent'
+  | 'group_agent_builder'
   | 'page'
   | 'agent_builder';
 

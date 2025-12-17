@@ -7,6 +7,7 @@ import { GroupSupervisorContext } from './agents/group-supervisor/type';
  */
 export const BUILTIN_AGENT_SLUGS = {
   agentBuilder: 'agent-builder',
+  groupAgentBuilder: 'group-agent-builder',
   groupSupervisor: 'group-supervisor',
   inbox: 'inbox',
   pageAgent: 'page-agent',

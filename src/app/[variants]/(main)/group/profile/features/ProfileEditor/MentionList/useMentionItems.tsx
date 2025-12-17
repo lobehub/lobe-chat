@@ -9,7 +9,7 @@ import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useMemo } from 'react';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
-import { useStore } from '@/features/AgentSetting/store';
+import { useAgentStore } from '@/store/agent';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
@@ -112,7 +112,7 @@ const resolveApiDescription = (
 
 const useMentionOptions = () => {
   const installedTools = useToolStore(toolSelectors.metaList, isEqual);
-  const toggleAgentPlugin = useStore((s) => s.toggleAgentPlugin);
+  const toggleAgentPlugin = useAgentStore((s) => s.toggleAgentPlugin);
 
   const baseItems = useMemo<MentionListOption[]>(() => {
     const state = useToolStore.getState();

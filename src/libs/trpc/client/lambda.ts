@@ -43,9 +43,8 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
                   // Desktop app doesn't have the web auth routes like `/signin`,
                   // so skip the login redirect/notification there.
                   if (!isDesktop) {
-                    const { loginRequired } = await import(
-                      '@/components/Error/loginRequiredNotification'
-                    );
+                    const { loginRequired } =
+                      await import('@/components/Error/loginRequiredNotification');
                     loginRequired.redirect();
                   }
                 }
