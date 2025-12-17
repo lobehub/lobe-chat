@@ -3,6 +3,7 @@ export * from './agentGroup';
 export * from './chatMessages';
 export * from './files';
 export * from './groupChat';
+export * from './gtd';
 export * from './knowledgeBaseQA';
 export * from './messagesToText';
 export * from './plugin';

@@ -9,6 +9,7 @@
  * - The executor receives current state via ctx and returns updated state in result
  * - The framework handles persisting state to the database
  */
+import { formatTodoStateSummary } from '@lobechat/prompts';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 
 import { GTDIdentifier } from '../manifest';
@@ -72,11 +73,12 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const now = new Date().toISOString();
     const updatedTodos = [...existingTodos, ...itemsToAdd];
 
-    // Format response
-    const addedList = itemsToAdd.map((item) => `- [ ] ${item.text}`).join('\n');
+    // Format response: action summary + todo state
+    const addedList = itemsToAdd.map((item) => `- ${item.text}`).join('\n');
+    const actionSummary = `✅ Added ${itemsToAdd.length} item${itemsToAdd.length > 1 ? 's' : ''}:\n${addedList}`;
 
     return {
-      content: `Added ${itemsToAdd.length} item${itemsToAdd.length > 1 ? 's' : ''} to todo list:\n${addedList}`,
+      content: actionSummary + '\n\n' + formatTodoStateSummary(updatedTodos, now),
       state: {
         createdItems: itemsToAdd.map((item) => item.text),
         todos: { items: updatedTodos, updatedAt: now },
@@ -146,11 +148,14 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     const now = new Date().toISOString();
 
+    // Format response: action summary + todo state
+    const actionSummary =
+      results.length > 0
+        ? `🔄 Applied ${results.length} operation${results.length > 1 ? 's' : ''}:\n${results.map((r) => `- ${r}`).join('\n')}`
+        : 'No operations applied.';
+
     return {
-      content:
-        results.length > 0
-          ? `Applied ${results.length} operation${results.length > 1 ? 's' : ''}:\n${results.join('\n')}`
-          : 'No operations applied.',
+      content: actionSummary + '\n\n' + formatTodoStateSummary(updatedTodos, now),
       state: {
         todos: { items: updatedTodos, updatedAt: now },
       },
@@ -177,11 +182,12 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const existingTodos = getTodosFromContext(ctx);
 
     if (existingTodos.length === 0) {
+      const now = new Date().toISOString();
       return {
-        content: 'No todos to complete. The list is empty.',
+        content: 'No todos to complete. The list is empty.\n\n' + formatTodoStateSummary([], now),
         state: {
           completedIndices: [],
-          todos: { items: [], updatedAt: new Date().toISOString() },
+          todos: { items: [], updatedAt: now },
         },
         success: true,
       };
@@ -209,15 +215,16 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const completedItems = validIndices.map((i: number) => existingTodos[i].text);
     const now = new Date().toISOString();
 
-    let content = `Completed ${validIndices.length} item${validIndices.length > 1 ? 's' : ''}:\n`;
-    content += completedItems.map((text: string) => `- [x] ${text}`).join('\n');
+    // Format response: action summary + todo state
+    let actionSummary = `✔️ Completed ${validIndices.length} item${validIndices.length > 1 ? 's' : ''}:\n`;
+    actionSummary += completedItems.map((text: string) => `- ${text}`).join('\n');
 
     if (invalidIndices.length > 0) {
-      content += `\n\nNote: Ignored invalid indices: ${invalidIndices.join(', ')}`;
+      actionSummary += `\n\nNote: Ignored invalid indices: ${invalidIndices.join(', ')}`;
     }
 
     return {
-      content,
+      content: actionSummary + '\n\n' + formatTodoStateSummary(updatedTodos, now),
       state: {
         completedIndices: validIndices,
         todos: { items: updatedTodos, updatedAt: now },
@@ -245,11 +252,12 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const existingTodos = getTodosFromContext(ctx);
 
     if (existingTodos.length === 0) {
+      const now = new Date().toISOString();
       return {
-        content: 'No todos to remove. The list is empty.',
+        content: 'No todos to remove. The list is empty.\n\n' + formatTodoStateSummary([], now),
         state: {
           removedIndices: [],
-          todos: { items: [], updatedAt: new Date().toISOString() },
+          todos: { items: [], updatedAt: now },
         },
         success: true,
       };
@@ -271,15 +279,16 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const updatedTodos = existingTodos.filter((_, index) => !validIndices.includes(index));
     const now = new Date().toISOString();
 
-    let content = `Removed ${validIndices.length} item${validIndices.length > 1 ? 's' : ''}:\n`;
-    content += removedItems.map((text: string) => `- ${text}`).join('\n');
+    // Format response: action summary + todo state
+    let actionSummary = `🗑️ Removed ${validIndices.length} item${validIndices.length > 1 ? 's' : ''}:\n`;
+    actionSummary += removedItems.map((text: string) => `- ${text}`).join('\n');
 
     if (invalidIndices.length > 0) {
-      content += `\n\nNote: Ignored invalid indices: ${invalidIndices.join(', ')}`;
+      actionSummary += `\n\nNote: Ignored invalid indices: ${invalidIndices.join(', ')}`;
     }
 
     return {
-      content,
+      content: actionSummary + '\n\n' + formatTodoStateSummary(updatedTodos, now),
       state: {
         removedIndices: validIndices,
         todos: { items: updatedTodos, updatedAt: now },
@@ -300,12 +309,13 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
     const existingTodos = getTodosFromContext(ctx);
 
     if (existingTodos.length === 0) {
+      const now = new Date().toISOString();
       return {
-        content: 'Todo list is already empty.',
+        content: 'Todo list is already empty.\n\n' + formatTodoStateSummary([], now),
         state: {
           clearedCount: 0,
           mode,
-          todos: { items: [], updatedAt: new Date().toISOString() },
+          todos: { items: [], updatedAt: now },
         },
         success: true,
       };
@@ -313,28 +323,28 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
 
     let updatedTodos: TodoItem[];
     let clearedCount: number;
-    let content: string;
+    let actionSummary: string;
 
     if (mode === 'all') {
       clearedCount = existingTodos.length;
       updatedTodos = [];
-      content = `Cleared all ${clearedCount} item${clearedCount > 1 ? 's' : ''} from todo list.`;
+      actionSummary = `🧹 Cleared all ${clearedCount} item${clearedCount > 1 ? 's' : ''} from todo list.`;
     } else {
       // mode === 'completed'
       updatedTodos = existingTodos.filter((todo) => !todo.completed);
       clearedCount = existingTodos.length - updatedTodos.length;
 
       if (clearedCount === 0) {
-        content = 'No completed items to clear.';
+        actionSummary = 'No completed items to clear.';
       } else {
-        content = `Cleared ${clearedCount} completed item${clearedCount > 1 ? 's' : ''}. ${updatedTodos.length} item${updatedTodos.length !== 1 ? 's' : ''} remaining.`;
+        actionSummary = `🧹 Cleared ${clearedCount} completed item${clearedCount > 1 ? 's' : ''}.`;
       }
     }
 
     const now = new Date().toISOString();
 
     return {
-      content,
+      content: actionSummary + '\n\n' + formatTodoStateSummary(updatedTodos, now),
       state: {
         clearedCount,
         mode,

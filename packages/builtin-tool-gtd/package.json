@@ -9,6 +9,7 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
+    "@lobechat/prompts": "workspace:*",
     "@lobechat/types": "workspace:*",
     "lucide-react": "*",
     "react": "*",

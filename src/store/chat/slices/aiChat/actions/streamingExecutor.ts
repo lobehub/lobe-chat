@@ -996,11 +996,11 @@ export const streamingExecutor: StateCreator<
       };
 
       log(
-        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s, hasTodos=%s',
+        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s, stepContext=%O',
         stepCount,
         nextContext.phase,
         state.status,
-        !!stepContext.todos,
+        stepContext,
       );
 
       const result = await runtime.step(state, nextContext);

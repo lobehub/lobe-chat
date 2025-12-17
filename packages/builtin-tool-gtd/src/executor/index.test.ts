@@ -401,7 +401,8 @@ describe('GTDExecutor', () => {
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('Cleared 2 completed items');
-      expect(result.content).toContain('1 item remaining');
+      // New format shows "1 pending" instead of "1 item remaining"
+      expect(result.content).toContain('1 pending');
       expect(result.state?.todos.items).toHaveLength(1);
       expect(result.state?.todos.items[0].text).toBe('Task 1');
     });
