@@ -164,12 +164,10 @@ export const messagePlugins = pgTable(
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('message_plugins_client_id_user_id_unique').on(
-      t.clientId,
-      t.userId,
-    ),
-  }),
+  (t) => [
+    uniqueIndex('message_plugins_client_id_user_id_unique').on(t.clientId, t.userId),
+    index('message_plugins_tool_call_id_idx').on(t.toolCallId),
+  ],
 );
 
 export const messageTTS = pgTable(
