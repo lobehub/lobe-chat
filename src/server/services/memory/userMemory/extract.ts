@@ -1,3 +1,7 @@
+import {
+  DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
+  DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM,
+} from '@lobechat/const';
 import { messages, topics } from '@lobechat/database/schemas';
 import {
   LobeChatTopicContextProvider,
@@ -7,9 +11,9 @@ import {
   RetrievalUserMemoryIdentitiesProvider,
 } from '@lobechat/memory-user-memory';
 import type {
+  MemoryExtractionAgent,
   MemoryExtractionJob,
   MemoryExtractionResult,
-  MemoryExtractionAgent,
   MemoryExtractionSourceType,
   PersistedMemoryResult,
 } from '@lobechat/memory-user-memory';
@@ -22,20 +26,21 @@ import type {
 } from '@lobechat/model-runtime';
 import { SpanStatusCode } from '@lobechat/observability-otel/api';
 import {
+  ATTR_GEN_AI_OPERATION_NAME,
+  ATTR_GEN_AI_REQUEST_MODEL,
+} from '@lobechat/observability-otel/gen-ai';
+import {
   layerEntriesHistogram,
   processedDurationHistogram,
   processedSourceCounter,
   tracer,
 } from '@lobechat/observability-otel/modules/memory-user-memory';
+import { attributesCommon } from '@lobechat/observability-otel/node';
 import { Client } from '@upstash/workflow';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { join } from 'pathe';
 import { z } from 'zod';
 
-import {
-  DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
-  DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM,
-} from '@/const/settings';
 import type { ListTopicsForMemoryExtractorCursor } from '@/database/models/topic';
 import { TopicModel } from '@/database/models/topic';
 import type { ListUsersForMemoryExtractorCursor } from '@/database/models/user';
@@ -53,8 +58,6 @@ import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
 import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
 import { encodeAsync } from '@/utils/tokenizer';
-import { attributesCommon } from '@lobechat/observability-otel/node';
-import { ATTR_GEN_AI_OPERATION_NAME, ATTR_GEN_AI_REQUEST_MODEL } from '@lobechat/observability-otel/gen-ai';
 
 const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
   chatTopic: 'chat_topic',
@@ -479,65 +482,61 @@ export class MemoryExtractionExecutor {
       ...attributesCommon(),
     };
 
-    return tracer.startActiveSpan(
-      'gen_ai.embed',
-      { attributes },
-      async (span) => {
-        const requests = texts
-          .map((text, index) => {
-            if (typeof text !== 'string') return null;
+    return tracer.startActiveSpan('gen_ai.embed', { attributes }, async (span) => {
+      const requests = texts
+        .map((text, index) => {
+          if (typeof text !== 'string') return null;
 
-            const trimmed = this.trimTextToTokenLimit(text, tokenLimit);
-            if (!trimmed.trim()) return null;
+          const trimmed = this.trimTextToTokenLimit(text, tokenLimit);
+          if (!trimmed.trim()) return null;
 
-            return { index, text: trimmed };
-          })
-          .filter(Boolean);
+          return { index, text: trimmed };
+        })
+        .filter(Boolean);
 
-        span.setAttribute('memory.embedding.text_count', texts.length);
-        span.setAttribute('memory.embedding.request_count', requests.length);
+      span.setAttribute('memory.embedding.text_count', texts.length);
+      span.setAttribute('memory.embedding.request_count', requests.length);
 
-        if (requests.length === 0) {
-          span.setStatus({ code: SpanStatusCode.OK, message: 'empty_requests' });
-          span.end();
-          return texts.map(() => null);
-        }
+      if (requests.length === 0) {
+        span.setStatus({ code: SpanStatusCode.OK, message: 'empty_requests' });
+        span.end();
+        return texts.map(() => null);
+      }
 
-        try {
-          const response = await runtimes.embeddings(
-            {
-              dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
-              input: requests.map((item) => item!.text),
-              model,
-            },
-            { user: 'memory-extraction' },
-          );
+      try {
+        const response = await runtimes.embeddings(
+          {
+            dimensions: DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
+            input: requests.map((item) => item!.text),
+            model,
+          },
+          { user: 'memory-extraction' },
+        );
 
-          const vectors = texts.map<Embeddings | null>(() => null);
-          response?.forEach((embedding, idx) => {
-            const request = requests[idx];
-            if (request) {
-              vectors[request.index] = embedding;
-            }
-          });
+        const vectors = texts.map<Embeddings | null>(() => null);
+        response?.forEach((embedding, idx) => {
+          const request = requests[idx];
+          if (request) {
+            vectors[request.index] = embedding;
+          }
+        });
 
-          span.setAttribute('memory.embedding.response_count', response?.length ?? 0);
-          span.setStatus({ code: SpanStatusCode.OK });
+        span.setAttribute('memory.embedding.response_count', response?.length ?? 0);
+        span.setStatus({ code: SpanStatusCode.OK });
 
-          return vectors;
-        } catch (error) {
-          span.setStatus({
-            code: SpanStatusCode.ERROR,
-            message: error instanceof Error ? error.message : 'Failed to generate embeddings',
-          });
-          span.recordException(error as Error);
+        return vectors;
+      } catch (error) {
+        span.setStatus({
+          code: SpanStatusCode.ERROR,
+          message: error instanceof Error ? error.message : 'Failed to generate embeddings',
+        });
+        span.recordException(error as Error);
 
-          return texts.map(() => null);
-        } finally {
-          span.end();
-        }
-      },
-    );
+        return texts.map(() => null);
+      } finally {
+        span.end();
+      }
+    });
   }
 
   async persistContextMemories(
@@ -615,13 +614,18 @@ export class MemoryExtractionExecutor {
 
     for (const item of result?.memories ?? []) {
       const [summaryVector, detailsVector, situationVector, actionVector, keyLearningVector] =
-        await this.generateEmbeddings(runtime, model, [
-          item.summary,
-          item.details,
-          item.withExperience?.situation,
-          item.withExperience?.action,
-          item.withExperience?.keyLearning,
-        ], tokenLimit);
+        await this.generateEmbeddings(
+          runtime,
+          model,
+          [
+            item.summary,
+            item.details,
+            item.withExperience?.situation,
+            item.withExperience?.action,
+            item.withExperience?.keyLearning,
+          ],
+          tokenLimit,
+        );
       const baseMetadata = this.buildBaseMetadata(
         job,
         messageIds,
@@ -803,7 +807,12 @@ export class MemoryExtractionExecutor {
           description: set.withIdentity?.description,
           descriptionVector: descriptionVector ?? undefined,
           metadata: set.withIdentity.extractedLabels
-            ? this.buildBaseMetadata(job, messageIds, LayersEnum.Identity, set.withIdentity.extractedLabels)
+            ? this.buildBaseMetadata(
+                job,
+                messageIds,
+                LayersEnum.Identity,
+                set.withIdentity.extractedLabels,
+              )
             : undefined,
           relationship: set.withIdentity.relationship ?? undefined,
           role: set.withIdentity.role ?? undefined,
@@ -1057,9 +1066,10 @@ export class MemoryExtractionExecutor {
             });
           const retrievedIdentityContext =
             await retrievedMemoryIdentitiesContextProvider.buildContext(extractionJob);
-          const trimmedRetrievedContexts = [topicContext.context, retrievalMemoryContext.context].map(
-            (context) => this.trimTextToTokenLimit(context, extractorContextLimit),
-          );
+          const trimmedRetrievedContexts = [
+            topicContext.context,
+            retrievalMemoryContext.context,
+          ].map((context) => this.trimTextToTokenLimit(context, extractorContextLimit));
           const trimmedRetrievedIdentitiesContext = this.trimTextToTokenLimit(
             retrievedIdentityContext.context,
             extractorContextLimit,
@@ -1070,16 +1080,20 @@ export class MemoryExtractionExecutor {
 
           const recordRequest = (agent: MemoryExtractionAgent, request: GenerateObjectPayload) => {
             agentStartedAt[agent] = Date.now();
-            agentCalls[agent] = { ...(agentCalls[agent]), request };
+            agentCalls[agent] = { ...agentCalls[agent], request };
           };
 
           const recordResponse = (agent: MemoryExtractionAgent, response: unknown) => {
-            const duration = agentStartedAt[agent] ? Date.now() - agentStartedAt[agent]! : undefined;
-            agentCalls[agent] = { ...(agentCalls[agent]), durationMs: duration, response };
+            const duration = agentStartedAt[agent]
+              ? Date.now() - agentStartedAt[agent]!
+              : undefined;
+            agentCalls[agent] = { ...agentCalls[agent], durationMs: duration, response };
           };
 
           const recordError = (agent: MemoryExtractionAgent, error: unknown) => {
-            const duration = agentStartedAt[agent] ? Date.now() - agentStartedAt[agent]! : undefined;
+            const duration = agentStartedAt[agent]
+              ? Date.now() - agentStartedAt[agent]!
+              : undefined;
             agentCalls[agent] = {
               ...agentCalls[agent],
               durationMs: duration,
