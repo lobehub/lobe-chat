@@ -86,7 +86,7 @@ When creating new Linear issues using `mcp__linear-server__create_issue`, **MUST
 **Workflow for EACH individual issue:**
 
 1. Complete the implementation for this specific issue
-2. Run type check: `bun run typecheck`
+2. Run type check: `bun run type-check`
 3. Run related tests if applicable
 4. Create PR if needed
 5. **IMMEDIATELY** update issue status to **"In Review"** (NOT "Done"): `mcp__linear-server__update_issue`

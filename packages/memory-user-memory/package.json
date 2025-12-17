@@ -11,6 +11,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "vitest --run",
+    "type-check": "tsgo --noEmit -p tsconfig.json",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
