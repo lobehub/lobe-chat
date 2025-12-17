@@ -1,6 +1,6 @@
 import { CURRENT_ONBOARDING_VERSION } from '@lobechat/const';
 
-import { UserStore } from '@/store/user';
+import type { UserStore } from '../../store';
 
 const currentStep = (s: UserStore) => s.onboarding?.currentStep ?? 1;
 
