@@ -1,4 +1,5 @@
 import { Segmented } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { Blocks } from 'lucide-react';
 import { Suspense, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +16,36 @@ import { useControls } from './useControls';
 
 type TabType = 'all' | 'installed';
 
+const useStyles = createStyles(({ css, prefixCls, token }) => ({
+  dropdown: css`
+    overflow: hidden;
+
+    width: 100%;
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgElevated};
+    box-shadow: ${token.boxShadowSecondary};
+
+    .${prefixCls}-dropdown-menu {
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+  `,
+  header: css`
+    padding: ${token.paddingXS}px;
+    border-block-end: 1px solid ${token.colorBorderSecondary};
+    background: transparent;
+  `,
+  scroller: css`
+    overflow: hidden auto;
+  `,
+}));
+
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
+  const { styles } = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType | null>(null);
@@ -53,34 +82,45 @@ const Tools = memo(() => {
     <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>
       <Action
         dropdown={{
-          maxHeight: 500,
-          maxWidth: 480,
+          dropdownRender: (menu) => (
+            <div className={styles.dropdown}>
+              <div className={styles.header}>
+                <Segmented
+                  block
+                  onChange={(v) => setActiveTab(v as TabType)}
+                  options={[
+                    {
+                      label: t('tools.tabs.all', { defaultValue: 'all' }),
+                      value: 'all',
+                    },
+                    {
+                      label: t('tools.tabs.installed', { defaultValue: 'Installed' }),
+                      value: 'installed',
+                    },
+                  ]}
+                  size="small"
+                  value={effectiveTab}
+                />
+              </div>
+              <div
+                className={styles.scroller}
+                style={{
+                  maxHeight: 500,
+                  minHeight: enableKlavis ? 500 : undefined,
+                }}
+              >
+                {menu}
+              </div>
+            </div>
+          ),
+          maxWidth: 320,
           menu: {
-            items: [
-              {
-                key: 'tabs',
-                label: (
-                  <Segmented
-                    block
-                    onChange={(v) => setActiveTab(v as TabType)}
-                    options={[
-                      {
-                        label: t('tools.tabs.all', { defaultValue: 'all' }),
-                        value: 'all',
-                      },
-                      {
-                        label: t('tools.tabs.installed', { defaultValue: 'Installed' }),
-                        value: 'installed',
-                      },
-                    ]}
-                    size="small"
-                    value={effectiveTab}
-                  />
-                ),
-                type: 'group',
-              },
-              ...currentItems,
-            ],
+            items: [...currentItems],
+            style: {
+              // let only the custom scroller scroll
+              maxHeight: 'unset',
+              overflowY: 'visible',
+            },
           },
           minHeight: enableKlavis ? 500 : undefined,
           minWidth: 320,
