@@ -37,6 +37,18 @@
       },
       "title": "Координиране на екипа"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Изчистване на задачите",
+        "completeTodos": "Завършване на задачите",
+        "createPlan": "Създаване на план",
+        "createTodos": "Създаване на задачи",
+        "removeTodos": "Премахване на задачите",
+        "updatePlan": "Актуализиране на плана",
+        "updateTodos": "Актуализиране на задачите"
+      },
+      "title": "GTD инструмент"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Прочети съдържанието на базата знания",

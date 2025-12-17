@@ -1,0 +1,52 @@
+{
+  "finish": "Zakończ",
+  "modeSelection": {
+    "desc": "Wybierz tryb użytkowania odpowiedni dla Ciebie",
+    "lite": {
+      "desc": "Prosty interfejs, skoncentrowany na doświadczeniu rozmowy, idealny do codziennego użytku",
+      "title": "Tryb Lite"
+    },
+    "pro": {
+      "desc": "Pełna funkcjonalność, zawiera zaawansowane ustawienia i narzędzia deweloperskie, odpowiedni dla zaawansowanych użytkowników",
+      "title": "Tryb Pro"
+    },
+    "title": "Wybierz tryb użytkowania"
+  },
+  "next": "Dalej",
+  "proSettings": {
+    "connectors": {
+      "desc": "Połącz z często używanymi usługami zewnętrznymi",
+      "title": "Konektory"
+    },
+    "desc": "Skonfiguruj swoje zaawansowane opcje",
+    "devMode": {
+      "desc": "Po włączeniu pojawią się funkcje i opcje dla deweloperów",
+      "title": "Tryb deweloperski"
+    },
+    "model": {
+      "desc": "Wybierz domyślny model AI do rozmów",
+      "title": "Domyślny model"
+    },
+    "title": "Ustawienia Pro"
+  },
+  "responseLanguage": {
+    "auto": "Automatycznie (zgodnie z językiem systemu)",
+    "desc": "Wybierz język, w którym asystent AI będzie odpowiadał",
+    "hint": "Po wybraniu języka, odpowiedzi AI będą w tym języku, a język interfejsu również zostanie zmieniony",
+    "title": "Wybierz język odpowiedzi AI"
+  },
+  "telemetry": {
+    "desc": "Czy chcesz udostępnić anonimowe dane użytkowania, aby pomóc nam ulepszyć {{appName}}?",
+    "disable": "Nie, dziękuję",
+    "enable": "Tak, chcę pomóc w ulepszaniu",
+    "privacy": "Bardzo poważnie traktujemy Twoją prywatność. Zbieramy wyłącznie anonimowe dane użytkowania i nigdy nie gromadzimy treści rozmów ani danych osobowych.",
+    "title": "Pomóż nam się ulepszać"
+  },
+  "title": "Witamy w {{appName}}",
+  "username": {
+    "desc": "Powiedz nam, jak mamy się do Ciebie zwracać",
+    "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
+    "placeholder": "Wprowadź swoje imię lub pseudonim",
+    "title": "Jak mamy się do Ciebie zwracać?"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "finish": "Concluir",
+  "modeSelection": {
+    "desc": "Escolha o modo de uso que melhor se adapta a você",
+    "lite": {
+      "desc": "Interface simples, focada na experiência de conversa, ideal para uso diário",
+      "title": "Modo Lite"
+    },
+    "pro": {
+      "desc": "Funcionalidades completas, incluindo configurações avançadas e ferramentas para desenvolvedores, ideal para usuários experientes",
+      "title": "Modo Pro"
+    },
+    "title": "Escolher modo de uso"
+  },
+  "next": "Próximo",
+  "proSettings": {
+    "connectors": {
+      "desc": "Conecte seus serviços de terceiros favoritos",
+      "title": "Conectores"
+    },
+    "desc": "Configure suas opções avançadas",
+    "devMode": {
+      "desc": "Ao ativar, serão exibidas funcionalidades e opções para desenvolvedores",
+      "title": "Modo Desenvolvedor"
+    },
+    "model": {
+      "desc": "Escolha o modelo padrão de IA para conversas",
+      "title": "Modelo Padrão"
+    },
+    "title": "Configurações Pro"
+  },
+  "responseLanguage": {
+    "auto": "Automático (seguir idioma do sistema)",
+    "desc": "Escolha o idioma que o assistente de IA usará para responder",
+    "hint": "Após selecionar o idioma, as respostas da IA serão nesse idioma e a interface também será ajustada",
+    "title": "Escolher idioma de resposta da IA"
+  },
+  "telemetry": {
+    "desc": "Para nos ajudar a melhorar o {{appName}}, você gostaria de compartilhar dados de uso anônimos?",
+    "disable": "Não, obrigado",
+    "enable": "Sim, quero ajudar a melhorar",
+    "privacy": "Levamos sua privacidade muito a sério. Coletamos apenas dados de uso anônimos e nunca coletaremos o conteúdo das suas conversas ou informações pessoais.",
+    "title": "Ajude-nos a melhorar"
+  },
+  "title": "Bem-vindo ao {{appName}}",
+  "username": {
+    "desc": "Diga-nos como devemos chamá-lo",
+    "hint": "Você pode alterar isso a qualquer momento nas configurações",
+    "placeholder": "Digite seu nome ou apelido",
+    "title": "Como você gostaria que chamássemos você?"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "finish": "Terminer",
+  "modeSelection": {
+    "desc": "Choisissez le mode d'utilisation qui vous convient",
+    "lite": {
+      "desc": "Interface épurée, centrée sur l'expérience de conversation, idéale pour un usage quotidien",
+      "title": "Mode Lite"
+    },
+    "pro": {
+      "desc": "Fonctionnalités complètes, avec paramètres avancés et outils pour développeurs, destiné aux utilisateurs expérimentés",
+      "title": "Mode Pro"
+    },
+    "title": "Choisir un mode d'utilisation"
+  },
+  "next": "Suivant",
+  "proSettings": {
+    "connectors": {
+      "desc": "Connectez vos services tiers préférés",
+      "title": "Connecteurs"
+    },
+    "desc": "Configurez vos options avancées",
+    "devMode": {
+      "desc": "Activez pour afficher les fonctionnalités et options destinées aux développeurs",
+      "title": "Mode développeur"
+    },
+    "model": {
+      "desc": "Choisissez le modèle par défaut pour les conversations avec l'IA",
+      "title": "Modèle par défaut"
+    },
+    "title": "Paramètres Pro"
+  },
+  "responseLanguage": {
+    "auto": "Automatique (suivre la langue du système)",
+    "desc": "Choisissez la langue utilisée par l'assistant IA pour répondre",
+    "hint": "Une fois la langue choisie, l'IA répondra dans cette langue et l'interface s'adaptera également",
+    "title": "Choisir la langue des réponses de l'IA"
+  },
+  "telemetry": {
+    "desc": "Pour nous aider à améliorer {{appName}}, souhaitez-vous partager des données d'utilisation anonymes ?",
+    "disable": "Non merci",
+    "enable": "Oui, je veux aider à améliorer",
+    "privacy": "Nous accordons une grande importance à votre vie privée. Nous ne collectons que des données d'utilisation anonymes, jamais vos conversations ni vos informations personnelles.",
+    "title": "Aidez-nous à nous améliorer"
+  },
+  "title": "Bienvenue sur {{appName}}",
+  "username": {
+    "desc": "Dites-nous comment vous appeler",
+    "hint": "Vous pouvez modifier cela à tout moment dans les paramètres",
+    "placeholder": "Veuillez entrer votre nom ou surnom",
+    "title": "Comment souhaitez-vous que nous vous appelions ?"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "finish": "Fertigstellen",
+  "modeSelection": {
+    "desc": "Wählen Sie den für Sie passenden Modus",
+    "lite": {
+      "desc": "Schlanke Oberfläche, fokussiert auf das Chat-Erlebnis – ideal für den täglichen Gebrauch",
+      "title": "Lite-Modus"
+    },
+    "pro": {
+      "desc": "Vollständige Funktionen mit erweiterten Einstellungen und Entwickler-Tools – für fortgeschrittene Nutzer",
+      "title": "Pro-Modus"
+    },
+    "title": "Modus auswählen"
+  },
+  "next": "Weiter",
+  "proSettings": {
+    "connectors": {
+      "desc": "Verbinden Sie Ihre bevorzugten Drittanbieterdienste",
+      "title": "Connectoren"
+    },
+    "desc": "Konfigurieren Sie Ihre erweiterten Optionen",
+    "devMode": {
+      "desc": "Aktivieren Sie diese Option, um Entwicklerfunktionen und -einstellungen anzuzeigen",
+      "title": "Entwicklermodus"
+    },
+    "model": {
+      "desc": "Wählen Sie das Standardmodell für die KI-Konversation",
+      "title": "Standardmodell"
+    },
+    "title": "Pro-Einstellungen"
+  },
+  "responseLanguage": {
+    "auto": "Automatisch (entsprechend der Systemsprache)",
+    "desc": "Wählen Sie die Sprache, in der der KI-Assistent antworten soll",
+    "hint": "Nach Auswahl der Sprache antwortet die KI in dieser Sprache und die Benutzeroberfläche wird entsprechend angepasst",
+    "title": "Antwortsprache der KI wählen"
+  },
+  "telemetry": {
+    "desc": "Möchten Sie anonyme Nutzungsdaten teilen, um uns bei der Verbesserung von {{appName}} zu unterstützen?",
+    "disable": "Nein, danke",
+    "enable": "Ja, ich möchte helfen",
+    "privacy": "Der Schutz Ihrer Privatsphäre ist uns sehr wichtig. Wir erfassen nur anonyme Nutzungsdaten und niemals Ihre Gespräche oder persönlichen Informationen.",
+    "title": "Helfen Sie uns, besser zu werden"
+  },
+  "title": "Willkommen bei {{appName}}",
+  "username": {
+    "desc": "Sagen Sie uns, wie wir Sie nennen dürfen",
+    "hint": "Sie können dies jederzeit in den Einstellungen ändern",
+    "placeholder": "Bitte geben Sie Ihre bevorzugte Anrede ein",
+    "title": "Wie dürfen wir Sie ansprechen?"
+  }
+}

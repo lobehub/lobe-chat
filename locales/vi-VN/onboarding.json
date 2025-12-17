@@ -1,0 +1,52 @@
+{
+  "finish": "Hoàn tất",
+  "modeSelection": {
+    "desc": "Chọn chế độ sử dụng phù hợp với bạn",
+    "lite": {
+      "desc": "Giao diện đơn giản, tập trung vào trải nghiệm hội thoại, phù hợp cho sử dụng hàng ngày",
+      "title": "Chế độ Lite"
+    },
+    "pro": {
+      "desc": "Đầy đủ tính năng, bao gồm cài đặt nâng cao và công cụ dành cho nhà phát triển, phù hợp với người dùng nâng cao",
+      "title": "Chế độ Pro"
+    },
+    "title": "Chọn chế độ sử dụng"
+  },
+  "next": "Tiếp theo",
+  "proSettings": {
+    "connectors": {
+      "desc": "Kết nối với các dịch vụ bên thứ ba bạn thường sử dụng",
+      "title": "Trình kết nối"
+    },
+    "desc": "Cấu hình các tùy chọn nâng cao của bạn",
+    "devMode": {
+      "desc": "Bật để hiển thị các tính năng và tùy chọn dành cho nhà phát triển",
+      "title": "Chế độ nhà phát triển"
+    },
+    "model": {
+      "desc": "Chọn mô hình AI mặc định cho hội thoại",
+      "title": "Mô hình mặc định"
+    },
+    "title": "Cài đặt Pro"
+  },
+  "responseLanguage": {
+    "auto": "Tự động (theo ngôn ngữ hệ thống)",
+    "desc": "Chọn ngôn ngữ mà trợ lý AI sẽ sử dụng để trả lời",
+    "hint": "Sau khi chọn ngôn ngữ, AI sẽ trả lời bằng ngôn ngữ đó và giao diện cũng sẽ được chuyển đổi tương ứng",
+    "title": "Chọn ngôn ngữ trả lời của AI"
+  },
+  "telemetry": {
+    "desc": "Để giúp chúng tôi cải thiện {{appName}}, bạn có sẵn lòng chia sẻ dữ liệu sử dụng ẩn danh không?",
+    "disable": "Không, cảm ơn",
+    "enable": "Có, tôi sẵn lòng hỗ trợ cải thiện",
+    "privacy": "Chúng tôi rất coi trọng quyền riêng tư của bạn. Chúng tôi chỉ thu thập dữ liệu sử dụng ẩn danh và không bao giờ thu thập nội dung hội thoại hoặc thông tin cá nhân của bạn.",
+    "title": "Giúp chúng tôi cải thiện"
+  },
+  "title": "Chào mừng đến với {{appName}}",
+  "username": {
+    "desc": "Cho chúng tôi biết cách xưng hô với bạn",
+    "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
+    "placeholder": "Vui lòng nhập tên bạn muốn được gọi",
+    "title": "Bạn muốn chúng tôi gọi bạn là gì?"
+  }
+}

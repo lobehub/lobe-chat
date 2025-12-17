@@ -446,6 +446,13 @@
       "toolRejected": "Questa esecuzione dello strumento è stata rifiutata"
     }
   },
+  "toolAuth": {
+    "authorize": "Autorizza",
+    "authorizing": "Autorizzazione in corso...",
+    "hint": "Se non autorizzati o configurati, questi strumenti potrebbero non funzionare correttamente, causando la mancanza di funzionalità dell'assistente o errori.",
+    "signIn": "Accedi",
+    "title": "Questo assistente utilizza i seguenti strumenti che richiedono autorizzazione"
+  },
   "topic": {
     "checkOpenNewTopic": "Abilitare un nuovo argomento?",
     "checkSaveCurrentMessages": "Vuoi salvare la conversazione attuale come argomento?",

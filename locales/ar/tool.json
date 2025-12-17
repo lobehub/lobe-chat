@@ -6,6 +6,13 @@
     "output": "الإخراج:",
     "returnValue": "قيمة الإرجاع:"
   },
+  "codeInterpreter-legacy": {
+    "error": "خطأ في التنفيذ",
+    "executing": "جارٍ التنفيذ...",
+    "files": "الملفات:",
+    "output": "المخرجات:",
+    "returnValue": "قيمة الإرجاع:"
+  },
   "dalle": {
     "autoGenerate": "توليد تلقائي",
     "downloading": "صلاحية روابط الصور المُولَّدة بواسطة DallE3 تدوم ساعة واحدة فقط، يتم تحميل الصور إلى الجهاز المحلي...",
@@ -13,6 +20,57 @@
     "generating": "جارٍ التوليد...",
     "images": "الصور:",
     "prompt": "كلمة تلميح"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "إضافة",
+      "clearCompleted": "مسح المكتملة",
+      "placeholder": "أدخل مهمة للقيام بها..."
+    },
+    "clearTodos": {
+      "cleared": "تم مسح {{count}} عنصرًا",
+      "clearedCompleted": "تم مسح {{count}} من العناصر المكتملة",
+      "clearedCompleted_one": "تم مسح {{count}} من العناصر المكتملة",
+      "clearedCompleted_other": "تم مسح {{count}} من العناصر المكتملة",
+      "cleared_one": "تم مسح {{count}} عنصرًا",
+      "cleared_other": "تم مسح {{count}} عنصرًا",
+      "noItems": "لا توجد عناصر للمسح",
+      "remaining": "{{count}} عنصرًا متبقيًا",
+      "remaining_one": "{{count}} عنصرًا متبقيًا",
+      "remaining_other": "{{count}} عنصرًا متبقيًا"
+    },
+    "completeTodos": {
+      "completed": "تم إكمال {{count}} عنصرًا",
+      "completed_one": "تم إكمال {{count}} عنصرًا",
+      "completed_other": "تم إكمال {{count}} عنصرًا"
+    },
+    "createTodos": {
+      "created": "تم إنشاء {{count}} مهمة",
+      "created_one": "تم إنشاء {{count}} مهمة",
+      "created_other": "تم إنشاء {{count}} مهمة",
+      "total": "المجموع: {{count}} عنصر",
+      "total_one": "المجموع: {{count}} عنصر",
+      "total_other": "المجموع: {{count}} عنصر"
+    },
+    "removeTodos": {
+      "removed": "تم حذف {{count}} عنصر",
+      "removed_one": "تم حذف {{count}} عنصر",
+      "removed_other": "تم حذف {{count}} عنصر"
+    },
+    "status": {
+      "done": "{{count}} مكتملة",
+      "pending": "{{count}} قيد الانتظار"
+    },
+    "todoList": {
+      "empty": "قائمة المهام فارغة",
+      "items": "{{count}} عنصر",
+      "items_one": "{{count}} عنصر",
+      "items_other": "{{count}} عنصر",
+      "title": "قائمة المهام"
+    },
+    "updateTodos": {
+      "updated": "تم تحديث قائمة المهام"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

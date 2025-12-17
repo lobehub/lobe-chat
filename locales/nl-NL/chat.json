@@ -446,6 +446,13 @@
       "toolRejected": "Deze tooloproep is geweigerd"
     }
   },
+  "toolAuth": {
+    "authorize": "Autoriseren",
+    "authorizing": "Bezig met autoriseren...",
+    "hint": "Zonder autorisatie of configuratie kunnen deze tools niet correct functioneren, wat kan leiden tot ontbrekende functies of fouten in de assistent.",
+    "signIn": "Inloggen",
+    "title": "Deze assistent maakt gebruik van de volgende tools die autorisatie vereisen"
+  },
   "topic": {
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
     "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",

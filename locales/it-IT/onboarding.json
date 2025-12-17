@@ -1,0 +1,52 @@
+{
+  "finish": "Completato",
+  "modeSelection": {
+    "desc": "Scegli la modalità d'uso più adatta a te",
+    "lite": {
+      "desc": "Interfaccia semplice, focalizzata sull'esperienza di conversazione, ideale per l'uso quotidiano",
+      "title": "Modalità Lite"
+    },
+    "pro": {
+      "desc": "Funzionalità complete, include impostazioni avanzate e strumenti per sviluppatori, ideale per utenti esperti",
+      "title": "Modalità Pro"
+    },
+    "title": "Seleziona la modalità d'uso"
+  },
+  "next": "Avanti",
+  "proSettings": {
+    "connectors": {
+      "desc": "Collega i tuoi servizi di terze parti preferiti",
+      "title": "Connettori"
+    },
+    "desc": "Configura le tue opzioni avanzate",
+    "devMode": {
+      "desc": "Attiva per visualizzare funzionalità e opzioni per sviluppatori",
+      "title": "Modalità sviluppatore"
+    },
+    "model": {
+      "desc": "Scegli il modello AI predefinito per le conversazioni",
+      "title": "Modello predefinito"
+    },
+    "title": "Impostazioni Pro"
+  },
+  "responseLanguage": {
+    "auto": "Automatico (segui la lingua di sistema)",
+    "desc": "Scegli la lingua da usare per le risposte dell'assistente AI",
+    "hint": "Dopo aver selezionato una lingua, le risposte dell'AI saranno in quella lingua e anche l'interfaccia verrà aggiornata di conseguenza",
+    "title": "Seleziona la lingua delle risposte AI"
+  },
+  "telemetry": {
+    "desc": "Per aiutarci a migliorare {{appName}}, vuoi condividere dati di utilizzo anonimi?",
+    "disable": "No, grazie",
+    "enable": "Sì, voglio contribuire al miglioramento",
+    "privacy": "Teniamo molto alla tua privacy. Raccogliamo solo dati di utilizzo anonimi e non memorizziamo mai i tuoi contenuti o informazioni personali.",
+    "title": "Aiutaci a migliorare"
+  },
+  "title": "Benvenuto in {{appName}}",
+  "username": {
+    "desc": "Dicci come vuoi essere chiamato",
+    "hint": "Puoi modificarlo in qualsiasi momento nelle impostazioni",
+    "placeholder": "Inserisci il tuo nome",
+    "title": "Come vuoi che ti chiamiamo?"
+  }
+}

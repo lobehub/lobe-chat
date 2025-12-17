@@ -1,0 +1,52 @@
+{
+  "finish": "Tamamla",
+  "modeSelection": {
+    "desc": "Kullanımınıza en uygun modu seçin",
+    "lite": {
+      "desc": "Sade arayüz, sohbet deneyimine odaklı, günlük kullanım için ideal",
+      "title": "Lite Modu"
+    },
+    "pro": {
+      "desc": "Gelişmiş ayarlar ve geliştirici araçlarını içeren tam özellikli mod, ileri düzey kullanıcılar için uygun",
+      "title": "Pro Modu"
+    },
+    "title": "Kullanım Modunu Seçin"
+  },
+  "next": "Sonraki",
+  "proSettings": {
+    "connectors": {
+      "desc": "Sık kullandığınız üçüncü taraf hizmetlere bağlanın",
+      "title": "Bağlayıcılar"
+    },
+    "desc": "Gelişmiş seçeneklerinizi yapılandırın",
+    "devMode": {
+      "desc": "Etkinleştirildiğinde geliştiriciyle ilgili özellikler ve seçenekler gösterilir",
+      "title": "Geliştirici Modu"
+    },
+    "model": {
+      "desc": "AI sohbeti için varsayılan modeli seçin",
+      "title": "Varsayılan Model"
+    },
+    "title": "Pro Ayarları"
+  },
+  "responseLanguage": {
+    "auto": "Otomatik (sistem dilini takip eder)",
+    "desc": "Yapay zekâ asistanının yanıt verirken kullanacağı dili seçin",
+    "hint": "Bir dil seçtiğinizde, yapay zekâ bu dili kullanarak yanıt verecek ve arayüz dili de buna göre değişecektir",
+    "title": "Yapay Zekâ Yanıt Dili Seçimi"
+  },
+  "telemetry": {
+    "desc": "{{appName}} uygulamasını geliştirmemize yardımcı olmak için anonim kullanım verilerinizi paylaşmak ister misiniz?",
+    "disable": "Hayır, teşekkürler",
+    "enable": "Evet, geliştirmeye yardımcı olmak isterim",
+    "privacy": "Gizliliğinize büyük önem veriyoruz. Sadece anonim kullanım verileri toplarız; sohbet içeriklerinizi veya kişisel bilgilerinizi asla toplamayız.",
+    "title": "Geliştirmemize Yardımcı Olun"
+  },
+  "title": "{{appName}} Uygulamasına Hoş Geldiniz",
+  "username": {
+    "desc": "Size nasıl hitap etmemizi istersiniz?",
+    "hint": "Bu ayarı dilediğiniz zaman değiştirebilirsiniz",
+    "placeholder": "Lütfen adınızı girin",
+    "title": "Size nasıl hitap etmemizi istersiniz?"
+  }
+}

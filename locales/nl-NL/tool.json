@@ -6,6 +6,13 @@
     "output": "Uitvoer:",
     "returnValue": "Retourwaarde:"
   },
+  "codeInterpreter-legacy": {
+    "error": "Fout bij uitvoeren",
+    "executing": "Bezig met uitvoeren...",
+    "files": "Bestanden:",
+    "output": "Uitvoer:",
+    "returnValue": "Retourwaarde:"
+  },
   "dalle": {
     "autoGenerate": "Automatisch genereren",
     "downloading": "De link naar de afbeelding gegenereerd door DallE3 is slechts 1 uur geldig. De afbeelding wordt lokaal in de cache opgeslagen...",
@@ -13,6 +20,57 @@
     "generating": "Bezig met genereren...",
     "images": "Afbeeldingen:",
     "prompt": "prompt"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Toevoegen",
+      "clearCompleted": "Voltooide items wissen",
+      "placeholder": "Voer een taak in..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} item(s) gewist",
+      "clearedCompleted": "{{count}} voltooide item(s) gewist",
+      "clearedCompleted_one": "{{count}} voltooid item gewist",
+      "clearedCompleted_other": "{{count}} voltooide items gewist",
+      "cleared_one": "{{count}} item gewist",
+      "cleared_other": "{{count}} items gewist",
+      "noItems": "Geen items om te wissen",
+      "remaining": "{{count}} item(s) over",
+      "remaining_one": "{{count}} item over",
+      "remaining_other": "{{count}} items over"
+    },
+    "completeTodos": {
+      "completed": "{{count}} item(s) voltooid",
+      "completed_one": "{{count}} item voltooid",
+      "completed_other": "{{count}} items voltooid"
+    },
+    "createTodos": {
+      "created": "{{count}} taak/ta(a)ken aangemaakt",
+      "created_one": "{{count}} taak aangemaakt",
+      "created_other": "{{count}} taken aangemaakt",
+      "total": "Totaal {{count}} item(s)",
+      "total_one": "Totaal {{count}} item",
+      "total_other": "Totaal {{count}} items"
+    },
+    "removeTodos": {
+      "removed": "{{count}} item(s) verwijderd",
+      "removed_one": "{{count}} item verwijderd",
+      "removed_other": "{{count}} items verwijderd"
+    },
+    "status": {
+      "done": "{{count}} voltooid",
+      "pending": "{{count}} in behandeling"
+    },
+    "todoList": {
+      "empty": "De takenlijst is leeg",
+      "items": "{{count}} item(s)",
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items",
+      "title": "Takenlijst"
+    },
+    "updateTodos": {
+      "updated": "Takenlijst bijgewerkt"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

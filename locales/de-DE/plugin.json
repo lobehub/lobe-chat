@@ -37,6 +37,18 @@
       },
       "title": "Team koordinieren"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Aufgaben löschen",
+        "completeTodos": "Aufgaben abschließen",
+        "createPlan": "Plan erstellen",
+        "createTodos": "Aufgaben erstellen",
+        "removeTodos": "Aufgaben entfernen",
+        "updatePlan": "Plan aktualisieren",
+        "updateTodos": "Aufgaben aktualisieren"
+      },
+      "title": "GTD-Tool"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Wissensdatenbank lesen",

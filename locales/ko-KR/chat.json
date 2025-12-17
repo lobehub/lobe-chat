@@ -446,6 +446,13 @@
       "toolRejected": "이번 도구 호출이 거부되었습니다"
     }
   },
+  "toolAuth": {
+    "authorize": "권한 부여",
+    "authorizing": "권한 부여 중...",
+    "hint": "권한을 부여하거나 설정하지 않으면 이 도구들을 정상적으로 사용할 수 없으며, 어시스턴트 기능이 누락되거나 오류가 발생할 수 있습니다.",
+    "signIn": "로그인",
+    "title": "이 어시스턴트는 다음과 같은 권한이 필요한 도구들을 사용합니다"
+  },
   "topic": {
     "checkOpenNewTopic": "새 주제를 열까요?",
     "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",

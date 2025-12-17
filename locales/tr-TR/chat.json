@@ -446,6 +446,13 @@
       "toolRejected": "Bu araç çağrısı kullanıcı tarafından reddedildi"
     }
   },
+  "toolAuth": {
+    "authorize": "Yetkilendir",
+    "authorizing": "Yetkilendiriliyor...",
+    "hint": "Yetkilendirme veya yapılandırma yapılmazsa, bu araçlar düzgün çalışmayabilir ve asistanın bazı işlevleri eksik olabilir ya da hata verebilir.",
+    "signIn": "Giriş Yap",
+    "title": "Bu asistan, aşağıdaki yetkilendirme gerektiren araçları kullanmaktadır"
+  },
   "topic": {
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
     "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",

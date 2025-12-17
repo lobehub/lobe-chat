@@ -6,6 +6,13 @@
     "output": "Ausgabe:",
     "returnValue": "Rückgabewert:"
   },
+  "codeInterpreter-legacy": {
+    "error": "Ausführungsfehler",
+    "executing": "Wird ausgeführt...",
+    "files": "Dateien:",
+    "output": "Ausgabe:",
+    "returnValue": "Rückgabewert:"
+  },
   "dalle": {
     "autoGenerate": "Automatisch generieren",
     "downloading": "Die von DallE3 generierten Bildlinks sind nur 1 Stunde lang gültig. Das Bild wird lokal zwischengespeichert...",
@@ -13,6 +20,57 @@
     "generating": "Generiert",
     "images": "Bilder:",
     "prompt": "Hinweiswort"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Hinzufügen",
+      "clearCompleted": "Erledigte löschen",
+      "placeholder": "Geben Sie eine Aufgabe ein..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} Einträge gelöscht",
+      "clearedCompleted": "{{count}} erledigte Einträge gelöscht",
+      "clearedCompleted_one": "{{count}} erledigter Eintrag gelöscht",
+      "clearedCompleted_other": "{{count}} erledigte Einträge gelöscht",
+      "cleared_one": "{{count}} Eintrag gelöscht",
+      "cleared_other": "{{count}} Einträge gelöscht",
+      "noItems": "Keine Einträge zum Löschen",
+      "remaining": "{{count}} verbleibende Einträge",
+      "remaining_one": "{{count}} verbleibender Eintrag",
+      "remaining_other": "{{count}} verbleibende Einträge"
+    },
+    "completeTodos": {
+      "completed": "{{count}} Einträge abgeschlossen",
+      "completed_one": "{{count}} Eintrag abgeschlossen",
+      "completed_other": "{{count}} Einträge abgeschlossen"
+    },
+    "createTodos": {
+      "created": "{{count}} Aufgaben erstellt",
+      "created_one": "{{count}} Aufgabe erstellt",
+      "created_other": "{{count}} Aufgaben erstellt",
+      "total": "Insgesamt {{count}} Einträge",
+      "total_one": "Insgesamt {{count}} Eintrag",
+      "total_other": "Insgesamt {{count}} Einträge"
+    },
+    "removeTodos": {
+      "removed": "{{count}} Einträge gelöscht",
+      "removed_one": "{{count}} Eintrag gelöscht",
+      "removed_other": "{{count}} Einträge gelöscht"
+    },
+    "status": {
+      "done": "{{count}} erledigt",
+      "pending": "{{count}} offen"
+    },
+    "todoList": {
+      "empty": "Aufgabenliste ist leer",
+      "items": "{{count}} Einträge",
+      "items_one": "{{count}} Eintrag",
+      "items_other": "{{count}} Einträge",
+      "title": "Aufgabenliste"
+    },
+    "updateTodos": {
+      "updated": "Aufgabenliste aktualisiert"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

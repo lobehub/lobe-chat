@@ -6,6 +6,13 @@
     "output": "Çıktı:",
     "returnValue": "Dönüş değeri:"
   },
+  "codeInterpreter-legacy": {
+    "error": "Yürütme hatası",
+    "executing": "Yürütülüyor...",
+    "files": "Dosyalar:",
+    "output": "Çıktı:",
+    "returnValue": "Dönüş değeri:"
+  },
   "dalle": {
     "autoGenerate": "Otomatik Oluştur",
     "downloading": "DallE3 tarafından oluşturulan resim bağlantıları sadece 1 saat geçerlidir, resim yerel olarak önbelleğe alınıyor...",
@@ -13,6 +20,57 @@
     "generating": "Oluşturuluyor...",
     "images": "Görseller:",
     "prompt": "İpucu"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Ekle",
+      "clearCompleted": "Tamamlananları temizle",
+      "placeholder": "Yapılacak bir öğe girin..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} öğe temizlendi",
+      "clearedCompleted": "{{count}} tamamlanan öğe temizlendi",
+      "clearedCompleted_one": "{{count}} tamamlanan öğe temizlendi",
+      "clearedCompleted_other": "{{count}} tamamlanan öğe temizlendi",
+      "cleared_one": "{{count}} öğe temizlendi",
+      "cleared_other": "{{count}} öğe temizlendi",
+      "noItems": "Temizlenecek öğe yok",
+      "remaining": "{{count}} öğe kaldı",
+      "remaining_one": "{{count}} öğe kaldı",
+      "remaining_other": "{{count}} öğe kaldı"
+    },
+    "completeTodos": {
+      "completed": "{{count}} öğe tamamlandı",
+      "completed_one": "{{count}} öğe tamamlandı",
+      "completed_other": "{{count}} öğe tamamlandı"
+    },
+    "createTodos": {
+      "created": "{{count}} yapılacak öğe oluşturuldu",
+      "created_one": "{{count}} yapılacak öğe oluşturuldu",
+      "created_other": "{{count}} yapılacak öğe oluşturuldu",
+      "total": "Toplam {{count}} öğe",
+      "total_one": "Toplam {{count}} öğe",
+      "total_other": "Toplam {{count}} öğe"
+    },
+    "removeTodos": {
+      "removed": "{{count}} öğe silindi",
+      "removed_one": "{{count}} öğe silindi",
+      "removed_other": "{{count}} öğe silindi"
+    },
+    "status": {
+      "done": "{{count}} tamamlandı",
+      "pending": "{{count}} bekliyor"
+    },
+    "todoList": {
+      "empty": "Yapılacaklar listesi boş",
+      "items": "{{count}} öğe",
+      "items_one": "{{count}} öğe",
+      "items_other": "{{count}} öğe",
+      "title": "Yapılacaklar Listesi"
+    },
+    "updateTodos": {
+      "updated": "Yapılacaklar listesi güncellendi"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

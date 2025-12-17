@@ -6,6 +6,13 @@
     "output": "Saída:",
     "returnValue": "Valor de retorno:"
   },
+  "codeInterpreter-legacy": {
+    "error": "Erro de execução",
+    "executing": "Executando...",
+    "files": "Arquivos:",
+    "output": "Saída:",
+    "returnValue": "Valor de retorno:"
+  },
   "dalle": {
     "autoGenerate": "Auto gerar",
     "downloading": "O link da imagem gerada pelo DALL·E3 é válido apenas por 1 hora, está baixando a imagem para o armazenamento local...",
@@ -13,6 +20,57 @@
     "generating": "Gerando...",
     "images": "Imagens:",
     "prompt": "Palavra-chave"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Adicionar",
+      "clearCompleted": "Limpar concluídos",
+      "placeholder": "Digite uma tarefa..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} itens limpos",
+      "clearedCompleted": "{{count}} itens concluídos limpos",
+      "clearedCompleted_one": "{{count}} item concluído limpo",
+      "clearedCompleted_other": "{{count}} itens concluídos limpos",
+      "cleared_one": "{{count}} item limpo",
+      "cleared_other": "{{count}} itens limpos",
+      "noItems": "Nenhum item para limpar",
+      "remaining": "{{count}} itens restantes",
+      "remaining_one": "{{count}} item restante",
+      "remaining_other": "{{count}} itens restantes"
+    },
+    "completeTodos": {
+      "completed": "{{count}} itens concluídos",
+      "completed_one": "{{count}} item concluído",
+      "completed_other": "{{count}} itens concluídos"
+    },
+    "createTodos": {
+      "created": "{{count}} tarefas criadas",
+      "created_one": "{{count}} tarefa criada",
+      "created_other": "{{count}} tarefas criadas",
+      "total": "Total de {{count}} itens",
+      "total_one": "Total de {{count}} item",
+      "total_other": "Total de {{count}} itens"
+    },
+    "removeTodos": {
+      "removed": "{{count}} itens removidos",
+      "removed_one": "{{count}} item removido",
+      "removed_other": "{{count}} itens removidos"
+    },
+    "status": {
+      "done": "{{count}} concluídos",
+      "pending": "{{count}} pendentes"
+    },
+    "todoList": {
+      "empty": "A lista de tarefas está vazia",
+      "items": "{{count}} itens",
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} itens",
+      "title": "Lista de Tarefas"
+    },
+    "updateTodos": {
+      "updated": "Lista de tarefas atualizada"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

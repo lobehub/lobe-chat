@@ -1,0 +1,52 @@
+{
+  "finish": "完成",
+  "modeSelection": {
+    "desc": "選擇適合您的使用模式",
+    "lite": {
+      "desc": "簡潔介面，專注於對話體驗，適合日常使用",
+      "title": "Lite 模式"
+    },
+    "pro": {
+      "desc": "完整功能，包含進階設定與開發者工具，適合進階使用者",
+      "title": "Pro 模式"
+    },
+    "title": "選擇使用模式"
+  },
+  "next": "下一步",
+  "proSettings": {
+    "connectors": {
+      "desc": "連接您常用的第三方服務",
+      "title": "連接器"
+    },
+    "desc": "設定您的進階選項",
+    "devMode": {
+      "desc": "啟用後將顯示開發者相關的功能與選項",
+      "title": "開發者模式"
+    },
+    "model": {
+      "desc": "選擇 AI 對話使用的預設模型",
+      "title": "預設模型"
+    },
+    "title": "Pro 設定"
+  },
+  "responseLanguage": {
+    "auto": "自動（依系統語言）",
+    "desc": "選擇 AI 助手回覆訊息時使用的語言",
+    "hint": "選擇語言後，AI 回覆將使用該語言，介面語言也會同步切換",
+    "title": "選擇 AI 回覆語言"
+  },
+  "telemetry": {
+    "desc": "為了幫助我們改進 {{appName}}，您是否願意分享匿名使用資料？",
+    "disable": "不用，謝謝",
+    "enable": "好的，我願意協助改進",
+    "privacy": "我們非常重視您的隱私。我們僅收集匿名使用資料，絕不會收集您的對話內容或個人資訊。",
+    "title": "協助我們改進"
+  },
+  "title": "歡迎使用 {{appName}}",
+  "username": {
+    "desc": "告訴我們如何稱呼您",
+    "hint": "您可以隨時在設定中修改",
+    "placeholder": "請輸入您的稱呼",
+    "title": "您希望我們怎麼稱呼您？"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "finish": "Voltooien",
+  "modeSelection": {
+    "desc": "Kies de gebruiksmodus die bij u past",
+    "lite": {
+      "desc": "Eenvoudige interface, gericht op de gespreksbeleving, geschikt voor dagelijks gebruik",
+      "title": "Lite-modus"
+    },
+    "pro": {
+      "desc": "Volledige functionaliteit met geavanceerde instellingen en ontwikkelaarstools, geschikt voor gevorderde gebruikers",
+      "title": "Pro-modus"
+    },
+    "title": "Kies een gebruiksmodus"
+  },
+  "next": "Volgende",
+  "proSettings": {
+    "connectors": {
+      "desc": "Verbind met uw favoriete diensten van derden",
+      "title": "Connectors"
+    },
+    "desc": "Configureer uw geavanceerde opties",
+    "devMode": {
+      "desc": "Toont ontwikkelaarsfuncties en -opties wanneer ingeschakeld",
+      "title": "Ontwikkelaarsmodus"
+    },
+    "model": {
+      "desc": "Kies het standaardmodel voor AI-gesprekken",
+      "title": "Standaardmodel"
+    },
+    "title": "Pro-instellingen"
+  },
+  "responseLanguage": {
+    "auto": "Automatisch (volgt systeemtaal)",
+    "desc": "Kies de taal waarin de AI-assistent reageert",
+    "hint": "Na het kiezen van een taal zal de AI in die taal antwoorden en wordt de interface ook aangepast",
+    "title": "Kies de taal voor AI-antwoorden"
+  },
+  "telemetry": {
+    "desc": "Wilt u anonieme gebruiksgegevens delen om ons te helpen {{appName}} te verbeteren?",
+    "disable": "Nee, bedankt",
+    "enable": "Ja, ik help graag mee",
+    "privacy": "Uw privacy is erg belangrijk voor ons. We verzamelen alleen anonieme gebruiksgegevens en nooit uw gesprekken of persoonlijke informatie.",
+    "title": "Help ons verbeteren"
+  },
+  "title": "Welkom bij {{appName}}",
+  "username": {
+    "desc": "Laat ons weten hoe we u mogen noemen",
+    "hint": "U kunt dit later altijd aanpassen in de instellingen",
+    "placeholder": "Voer uw naam in",
+    "title": "Hoe mogen we u noemen?"
+  }
+}

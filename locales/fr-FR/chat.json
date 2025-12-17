@@ -446,6 +446,13 @@
       "toolRejected": "Cet appel d'outil a été rejeté volontairement"
     }
   },
+  "toolAuth": {
+    "authorize": "Autoriser",
+    "authorizing": "Autorisation en cours...",
+    "hint": "Sans autorisation ou configuration, ces outils ne fonctionneront pas correctement, ce qui pourrait entraîner des erreurs ou un fonctionnement incomplet de l'assistant.",
+    "signIn": "Se connecter",
+    "title": "Cet assistant utilise les outils suivants nécessitant une autorisation"
+  },
   "topic": {
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
     "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
