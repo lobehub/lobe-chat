@@ -24,18 +24,10 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
   const theme = useTheme();
   const [check, setCheck] = useState(true);
   const updateGeneralConfig = useUserStore((s) => s.updateGeneralConfig);
-  const [loading, setLoading] = useState(false);
 
-  const handleChoice = async (enabled: boolean) => {
-    setLoading(true);
-    try {
-      await updateGeneralConfig({ telemetry: enabled });
-      onNext();
-    } catch (error) {
-      console.error('Failed to update telemetry config:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleChoice = (enabled: boolean) => {
+    updateGeneralConfig({ telemetry: enabled });
+    onNext();
   };
 
   const IconAvatar = useCallback(
@@ -136,7 +128,6 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
         </Flexbox>
       </Flexbox>
       <Button
-        loading={loading}
         onClick={() => handleChoice(check)}
         size={'large'}
         style={{

@@ -25,20 +25,12 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
   const updateFullName = useUserStore((s) => s.updateFullName);
 
   const [value, setValue] = useState(existingFullName || '');
-  const [loading, setLoading] = useState(false);
 
-  const handleNext = async () => {
-    setLoading(true);
-    try {
-      if (value.trim()) {
-        await updateFullName(value.trim());
-      }
-      onNext();
-    } catch (error) {
-      console.error('Failed to update full name:', error);
-    } finally {
-      setLoading(false);
+  const handleNext = () => {
+    if (value.trim()) {
+      updateFullName(value.trim());
     }
+    onNext();
   };
 
   return (
@@ -70,7 +62,6 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
           suffix={
             <SendButton
               disabled={!value?.trim()}
-              loading={loading}
               onClick={handleNext}
               style={{
                 zoom: 1.5,
@@ -84,7 +75,6 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
       </Flexbox>
       <Flexbox horizontal justify={'flex-start'} style={{ marginTop: 32 }}>
         <Button
-          disabled={loading}
           icon={Undo2Icon}
           onClick={onBack}
           style={{

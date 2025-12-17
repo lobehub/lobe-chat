@@ -19,7 +19,7 @@ const isFinished = (s: UserStore) => !!s.onboarding?.finishedAt;
  */
 const needsOnboarding = (s: Pick<UserStore, 'onboarding'>) => {
   return (
-    s.onboarding?.finishedAt ||
+    !s.onboarding?.finishedAt ||
     (s.onboarding?.version && s.onboarding.version < CURRENT_ONBOARDING_VERSION)
   );
 };

@@ -3,7 +3,7 @@
 import { Button, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Undo2Icon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
@@ -36,22 +36,13 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
     (s) => settingsSelectors.currentSettings(s).defaultAgent?.config,
   );
 
-  const [loading, setLoading] = useState(false);
-
-  const handleFinish = async () => {
-    setLoading(true);
-    try {
-      await finishOnboarding();
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to finish onboarding:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleFinish = () => {
+    finishOnboarding();
+    navigate('/');
   };
 
-  const handleModelChange = async ({ model, provider }: { model: string; provider: string }) => {
-    await updateDefaultModel(model, provider);
+  const handleModelChange = ({ model, provider }: { model: string; provider: string }) => {
+    updateDefaultModel(model, provider);
   };
 
   return (
@@ -81,7 +72,6 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
 
       <Flexbox align={'center'} horizontal justify={'space-between'} style={{ marginTop: 16 }}>
         <Button
-          disabled={Boolean(loading)}
           icon={Undo2Icon}
           onClick={onBack}
           style={{
@@ -91,7 +81,7 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
         >
           {t('back')}
         </Button>
-        <Button loading={loading} onClick={handleFinish} style={{ minWidth: 120 }} type="primary">
+        <Button onClick={handleFinish} style={{ minWidth: 120 }} type="primary">
           {t('finish')}
         </Button>
       </Flexbox>

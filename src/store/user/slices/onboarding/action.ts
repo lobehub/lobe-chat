@@ -40,9 +40,6 @@ export const createOnboardingSlice: StateCreator<
   finishOnboarding: async () => {
     const currentStep = onboardingSelectors.currentStep(get());
 
-    // Clear local state first
-    set({ localOnboardingStep: undefined }, false, 'finishOnboarding/clearLocal');
-
     await userService.updateOnboarding({
       currentStep,
       finishedAt: new Date().toISOString(),
@@ -106,9 +103,6 @@ export const createOnboardingSlice: StateCreator<
 
     // Sync with server state after all updates complete
     await get().refreshUserState();
-
-    // Clear local state after server sync
-    set({ localOnboardingStep: undefined }, false, 'processStepUpdateQueue/clearLocal');
   },
 
   internal_queueStepUpdate: (step) => {
@@ -137,7 +131,6 @@ export const createOnboardingSlice: StateCreator<
     });
 
     await get().refreshUserState();
-    set({ localOnboardingStep: undefined }, false, 'setOnboardingStep/clearLocal');
   },
 
   toggleDefaultPlugin: async (id, open) => {

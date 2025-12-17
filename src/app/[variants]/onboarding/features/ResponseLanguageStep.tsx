@@ -26,21 +26,10 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
   const setSettings = useUserStore((s) => s.setSettings);
 
   const [value, setValue] = useState<Locales | ''>(normalizeLocale(navigator.language));
-  const [loading, setLoading] = useState(false);
 
-  const handleNext = async () => {
-    setLoading(true);
-
-    try {
-      // Save response language to settings
-      await setSettings({ general: { responseLanguage: value || '' } });
-
-      onNext();
-    } catch (error) {
-      console.error('Failed to save response language:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleNext = () => {
+    setSettings({ general: { responseLanguage: value || '' } });
+    onNext();
   };
 
   const Message = useCallback(
@@ -86,7 +75,6 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
           value={value}
         />
         <SendButton
-          loading={loading}
           onClick={handleNext}
           style={{
             zoom: 1.5,
@@ -99,7 +87,6 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
       </Text>
       <Flexbox horizontal justify={'flex-start'} style={{ marginTop: 32 }}>
         <Button
-          disabled={loading}
           icon={Undo2Icon}
           onClick={onBack}
           style={{

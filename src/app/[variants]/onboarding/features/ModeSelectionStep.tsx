@@ -4,7 +4,7 @@ import { SendButton } from '@lobehub/editor/react';
 import { Block, Button, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Undo2Icon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
@@ -64,31 +64,15 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
     s.finishOnboarding,
   ]);
 
-  const [loading, setLoading] = useState<boolean | 'lite' | 'pro'>(false);
-
-  const handleSelectLite = async () => {
-    setLoading('lite');
-    try {
-      await updateGeneralConfig({ isLiteMode: true });
-      await finishOnboarding();
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to select lite mode:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleSelectLite = () => {
+    updateGeneralConfig({ isLiteMode: true });
+    finishOnboarding();
+    navigate('/');
   };
 
-  const handleSelectPro = async () => {
-    setLoading('pro');
-    try {
-      await updateGeneralConfig({ isLiteMode: false });
-      onNext();
-    } catch (error) {
-      console.error('Failed to select pro mode:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleSelectPro = () => {
+    updateGeneralConfig({ isLiteMode: false });
+    onNext();
   };
 
   return (
@@ -124,11 +108,7 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
             <Text as={'p'} type={'secondary'}>
               {t('modeSelection.lite.desc')}
             </Text>
-            <SendButton
-              className={cx('next-btn', loading === 'lite' && styles.disabled)}
-              loading={Boolean(loading)}
-              type="primary"
-            />
+            <SendButton className={cx('next-btn')} type="primary" />
           </Flexbox>
         </Block>
 
@@ -154,17 +134,12 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
             <Text as={'p'} type={'secondary'}>
               {t('modeSelection.pro.desc')}
             </Text>
-            <SendButton
-              className={cx('next-btn', loading === 'pro' && styles.disabled)}
-              loading={Boolean(loading)}
-              type="primary"
-            />
+            <SendButton className={cx('next-btn')} type="primary" />
           </Flexbox>
         </Block>
       </Flexbox>
       <Flexbox align={'center'} horizontal justify={'space-between'}>
         <Button
-          disabled={Boolean(loading)}
           icon={Undo2Icon}
           onClick={onBack}
           style={{
