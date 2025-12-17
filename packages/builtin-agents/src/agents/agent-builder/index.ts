@@ -8,7 +8,7 @@ import { systemRoleTemplate } from './systemRole';
  * Agent Builder - used for configuring AI agents through natural conversation
  */
 export const AGENT_BUILDER: BuiltinAgentDefinition = {
-  avatar: '/icons/icon-agent-builder.png',
+  avatar: '/avatars/agent-builder.png',
 
   // Persist config - stored in database
   persist: {
