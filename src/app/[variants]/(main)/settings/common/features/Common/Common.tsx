@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
+import { isDesktop } from '@/const/version';
 import { localeOptions } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -68,7 +69,7 @@ const Common = memo(() => {
                 value: 'auto',
               },
             ]}
-            unoptimized={false}
+            unoptimized={isDesktop}
             value={themeMode}
             width={100}
           />
