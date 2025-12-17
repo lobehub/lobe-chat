@@ -110,7 +110,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
                 </Flexbox>
               ),
               onClick: () => {
-                navigate(`/settings?active=provider&provider=${providerItem.id}`);
+                navigate(`/settings/provider/${providerItem.id}`);
               },
             },
           ];
