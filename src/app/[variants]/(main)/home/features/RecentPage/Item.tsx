@@ -76,7 +76,7 @@ const RecentPageItem = memo<RecentPageItemProps>(({ document }) => {
           }}
         >
           {emoji ? (
-            <Avatar avatar={emoji} shape={'square'} size={36} />
+            <Avatar avatar={emoji} emojiScaleWithBackground shape={'square'} size={36} />
           ) : (
             <Center flex={'none'} height={36} style={{ marginLeft: -8 }} width={36}>
               <Icon color={theme.colorTextDescription} icon={FileTextIcon} size={24} />

@@ -58,6 +58,7 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
           <Avatar
             avatar={avatar || DEFAULT_AVATAR}
             background={backgroundColor || undefined}
+            emojiScaleWithBackground
             shape={'square'}
             size={36}
             style={{

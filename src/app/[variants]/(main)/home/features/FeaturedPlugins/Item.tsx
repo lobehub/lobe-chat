@@ -28,6 +28,7 @@ const FeaturedPluginItem = memo<DiscoverMcpItem>(({ name, icon, github, installC
       {/* Left side - Icon */}
       <Avatar
         avatar={icon}
+        emojiScaleWithBackground
         shape={'square'}
         size={48}
         style={{

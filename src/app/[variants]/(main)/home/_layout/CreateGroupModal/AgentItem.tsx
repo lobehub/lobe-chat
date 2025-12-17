@@ -113,6 +113,7 @@ const AgentItem = memo<AgentItemProps>(({ agent, defaultTitle, showCheckbox, sho
           animation={isHovering}
           avatar={avatar}
           background={avatarBackground}
+          emojiScaleWithBackground
           shape="circle"
           size={28}
         />

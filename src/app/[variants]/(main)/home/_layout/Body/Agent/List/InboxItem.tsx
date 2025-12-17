@@ -41,7 +41,9 @@ const InboxItem = memo<InboxItemProps>(({ className, style }) => {
     <NavItem
       active={isActive}
       className={className}
-      icon={<Avatar avatar={DEFAULT_INBOX_AVATAR} shape={'square'} size={28} />}
+      icon={
+        <Avatar avatar={DEFAULT_INBOX_AVATAR} emojiScaleWithBackground shape={'square'} size={28} />
+      }
       loading={isLoading}
       onClick={handleClick}
       style={style}
