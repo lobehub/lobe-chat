@@ -9,7 +9,7 @@ import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vite
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import * as toolEngineeringModule from '@/helpers/toolEngineering';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
@@ -58,6 +58,15 @@ beforeEach(async () => {
     isDeprecatedEdition: true,
     isDesktop: false,
   }));
+
+  // Default mock for agentSelectors - resolveAgentConfig needs these
+  vi.spyOn(agentSelectors, 'getAgentConfigById').mockReturnValue(
+    () => ({ plugins: [], systemRole: '' }) as any,
+  );
+  vi.spyOn(agentSelectors, 'getAgentSlugById').mockReturnValue(() => undefined);
+  vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
+    () => ({ searchMode: 'off' }) as any,
+  );
 });
 
 // mock auth
@@ -128,7 +137,7 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['enableReasoning']);
 
         // Mock agent chat config with reasoning enabled
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableReasoning: true,
@@ -164,7 +173,7 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['enableReasoning']);
 
         // Mock agent chat config with reasoning disabled
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableReasoning: false,
@@ -199,7 +208,7 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['enableReasoning']);
 
         // Mock agent chat config with reasoning enabled but no custom budget
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableReasoning: true,
@@ -235,7 +244,7 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['reasoningEffort']);
 
         // Mock agent chat config with reasoning effort set
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               reasoningEffort: 'high',
@@ -267,7 +276,7 @@ describe('ChatService', () => {
         vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['thinkingBudget']);
 
         // Mock agent chat config with thinking budget set
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               thinkingBudget: 5000,
@@ -915,7 +924,7 @@ describe('ChatService', () => {
         const messages = [{ content: 'Search for something', role: 'user' }] as UIChatMessage[];
 
         // Mock agent store state with search enabled
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               searchMode: 'auto', // not 'off'
@@ -969,7 +978,7 @@ describe('ChatService', () => {
         const messages = [{ content: 'Search for something', role: 'user' }] as UIChatMessage[];
 
         // Mock agent store state with search enabled and useModelBuiltinSearch enabled
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               searchMode: 'auto', // not 'off'
@@ -1017,7 +1026,7 @@ describe('ChatService', () => {
         const messages = [{ content: 'Search for something', role: 'user' }] as UIChatMessage[];
 
         // Mock agent store state with search disabled
-        vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               searchMode: 'off',
@@ -1340,7 +1349,7 @@ describe('ChatService private methods', () => {
       ]);
 
       // Mock agent chat config with context caching disabled
-      vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+      vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
         () =>
           ({
             disableContextCaching: true,
@@ -1376,7 +1385,7 @@ describe('ChatService private methods', () => {
       ]);
 
       // Mock agent chat config with context caching enabled (default)
-      vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+      vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
         () =>
           ({
             disableContextCaching: false,
@@ -1405,7 +1414,7 @@ describe('ChatService private methods', () => {
       vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['reasoningEffort']);
 
       // Mock agent chat config with reasoning effort set
-      vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+      vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
         () =>
           ({
             reasoningEffort: 'high',
@@ -1437,7 +1446,7 @@ describe('ChatService private methods', () => {
       vi.spyOn(aiModelSelectors, 'modelExtendParams').mockReturnValue(() => ['thinkingBudget']);
 
       // Mock agent chat config with thinking budget set
-      vi.spyOn(agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+      vi.spyOn(chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
         () =>
           ({
             thinkingBudget: 5000,

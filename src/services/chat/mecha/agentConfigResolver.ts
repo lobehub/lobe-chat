@@ -3,7 +3,7 @@ import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
 import { produce } from 'immer';
 
 import { getAgentStoreState } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { getChatGroupStoreState } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
@@ -94,7 +94,7 @@ export const resolveAgentConfig = (ctx: AgentConfigResolverContext): ResolvedAge
 
   // Get base config from store
   const agentConfig = agentSelectors.getAgentConfigById(agentId)(agentStoreState);
-  const chatConfig = agentChatConfigSelectors.getAgentChatConfigById(agentId)(agentStoreState);
+  const chatConfig = chatConfigByIdSelectors.getChatConfigById(agentId)(agentStoreState);
 
   // Base plugins from agent config
   const basePlugins = agentConfig.plugins ?? [];

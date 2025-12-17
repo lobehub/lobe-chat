@@ -24,7 +24,7 @@ describe('resolveAgentConfig', () => {
     vi.spyOn(agentSelectors.agentSelectors, 'getAgentConfigById').mockReturnValue(
       () => mockAgentConfig as any,
     );
-    vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+    vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
       () => mockChatConfig as any,
     );
   });
@@ -97,7 +97,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should include max_tokens when enableMaxTokens is true', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: true,
@@ -113,7 +113,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should set max_tokens to undefined when enableMaxTokens is false', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: false,
@@ -128,7 +128,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should include reasoning_effort when enableReasoningEffort is true', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: false,
@@ -142,7 +142,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should set reasoning_effort to undefined when enableReasoningEffort is false', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: true,
@@ -156,7 +156,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should handle both params being enabled', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: true,
@@ -171,7 +171,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should handle both params being disabled', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: false,
@@ -186,7 +186,7 @@ describe('resolveAgentConfig', () => {
       });
 
       it('should not mutate original agent config', () => {
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: false,
@@ -210,7 +210,7 @@ describe('resolveAgentConfig', () => {
               systemRole: 'You are a helpful assistant',
             }) as any,
         );
-        vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+        vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
           () =>
             ({
               enableMaxTokens: true,
@@ -367,7 +367,7 @@ describe('resolveAgentConfig', () => {
     });
 
     it('should override base chatConfig values with runtime chatConfig', () => {
-      vi.spyOn(agentSelectors.agentChatConfigSelectors, 'getAgentChatConfigById').mockReturnValue(
+      vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
         () =>
           ({
             enableHistoryCount: true,

@@ -23,6 +23,7 @@ import {
   agentByIdSelectors,
   agentChatConfigSelectors,
   agentSelectors,
+  chatConfigByIdSelectors,
 } from '@/store/agent/selectors';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getChatStoreState } from '@/store/chat';
@@ -211,10 +212,10 @@ class ChatService {
       agentBuilderContext,
       agentId: targetAgentId,
       enableHistoryCount:
-        agentChatConfigSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
+        chatConfigByIdSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
       groupId,
       historyCount:
-        agentChatConfigSelectors.getHistoryCountById(targetAgentId)(getAgentStoreState()) + 2,
+        chatConfigByIdSelectors.getHistoryCountById(targetAgentId)(getAgentStoreState()) + 2,
       inputTemplate: chatConfig.inputTemplate,
       messages,
       model: payload.model,

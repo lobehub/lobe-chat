@@ -1,5 +1,5 @@
 import { getAgentStoreState } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { getAiInfraStoreState } from '@/store/aiInfra';
 import { aiModelSelectors, aiProviderSelectors } from '@/store/aiInfra/selectors';
 
@@ -33,8 +33,7 @@ export const getSearchConfig = (
 ): SearchConfig => {
   const agentStoreState = getAgentStoreState();
   const targetAgentId = agentId || agentStoreState.activeAgentId || '';
-  const chatConfig =
-    agentChatConfigSelectors.getAgentChatConfigById(targetAgentId)(agentStoreState);
+  const chatConfig = chatConfigByIdSelectors.getChatConfigById(targetAgentId)(agentStoreState);
   const aiInfraStoreState = getAiInfraStoreState();
 
   const enabledSearch = chatConfig.searchMode !== 'off';
