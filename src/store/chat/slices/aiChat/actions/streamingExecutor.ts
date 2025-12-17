@@ -982,11 +982,11 @@ export const streamingExecutor: StateCreator<
 
       stepCount++;
 
-      // Compute step context from current messages before each step
-      // Get latest messages from store in case they were updated by previous step
-      const currentMessages = get().messagesMap[messageKey] || [];
+      // Compute step context from current db messages before each step
+      // Use dbMessagesMap which contains persisted state (including pluginState.todos)
+      const currentDBMessages = get().dbMessagesMap[messageKey] || [];
       // Use selectTodosFromMessages selector (shared with UI display)
-      const todos = selectTodosFromMessages(currentMessages);
+      const todos = selectTodosFromMessages(currentDBMessages);
       const stepContext = computeStepContext({ todos });
 
       // Inject stepContext into the runtime context for this step
