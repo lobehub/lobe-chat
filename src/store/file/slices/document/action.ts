@@ -49,8 +49,9 @@ export interface DocumentAction {
   createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<string>;
   /**
    * Create a new page with optimistic update (for page explorer)
+   * Returns the ID of the created page
    */
-  createNewPage: (title: string) => Promise<void>;
+  createNewPage: (title: string) => Promise<string>;
   /**
    * Create a new optimistic document immediately in local map
    * Returns the temporary ID for the new document
@@ -199,8 +200,6 @@ export const createDocumentSlice: StateCreator<
     const tempPageId = createOptimisticDocument(title);
     set({ isCreatingNew: true, selectedPageId: tempPageId }, false, n('createNewPage/start'));
 
-    updateUrl(tempPageId);
-
     try {
       // Create real page
       const newPage = await createDocument({
@@ -231,12 +230,13 @@ export const createDocumentSlice: StateCreator<
       // Replace optimistic with real
       replaceTempDocumentWithReal(tempPageId, realPage);
       set({ isCreatingNew: false, selectedPageId: newPage.id }, false, n('createNewPage/success'));
-      updateUrl(newPage.id);
+
+      return newPage.id;
     } catch (error) {
       console.error('Failed to create page:', error);
       get().removeTempDocument(tempPageId);
       set({ isCreatingNew: false, selectedPageId: null }, false, n('createNewPage/error'));
-      updateUrl(null);
+      throw error;
     }
   },
 
