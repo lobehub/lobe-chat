@@ -42,7 +42,7 @@ const InboxItem = memo<InboxItemProps>(({ className, style }) => {
       active={isActive}
       className={className}
       icon={
-        <Avatar avatar={DEFAULT_INBOX_AVATAR} emojiScaleWithBackground shape={'square'} size={22} />
+        <Avatar avatar={DEFAULT_INBOX_AVATAR} emojiScaleWithBackground shape={'square'} size={24} />
       }
       loading={isLoading}
       onClick={handleClick}
