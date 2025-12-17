@@ -53,6 +53,12 @@
       "desc": "Ograniczenia oparte na mechanizmie Claude Thinking (<1>Dowiedz się więcej</1>), po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
       "title": "Włącz głębokie myślenie"
     },
+    "imageAspectRatio": {
+      "title": "Proporcje obrazu"
+    },
+    "imageResolution": {
+      "title": "Rozdzielczość obrazu"
+    },
     "reasoningBudgetToken": {
       "title": "Token zużycia myślenia"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Przełącznik głębokiego myślenia"
+    },
+    "thinkingLevel": {
+      "title": "Poziom myślenia"
     },
     "title": "Funkcje rozszerzenia modelu",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Zrzut ekranu",
     "settings": "Ustawienia eksportu",
     "text": "Tekst",
+    "widthMode": {
+      "label": "Tryb szerokości",
+      "narrow": "Tryb wąskiego ekranu",
+      "wide": "Tryb szerokiego ekranu"
+    },
     "withBackground": "Z tłem",
     "withFooter": "Z stopką",
     "withPluginInfo": "Z informacjami o wtyczce",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Wprowadzenie powodu odrzucenia pomoże Agentowi zrozumieć i zoptymalizować przyszłe działania",
       "rejectTitle": "Odrzuć to wywołanie narzędzia",
       "rejectedWithReason": "To wywołanie narzędzia zostało odrzucone: {{reason}}",
+      "toolAbort": "To wywołanie narzędzia zostało anulowane przez użytkownika",
       "toolRejected": "To wywołanie narzędzia zostało odrzucone"
     }
   },

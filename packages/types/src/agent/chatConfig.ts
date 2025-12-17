@@ -38,7 +38,16 @@ export interface LobeAgentChatConfig {
    */
   textVerbosity?: 'low' | 'medium' | 'high';
   thinking?: 'disabled' | 'auto' | 'enabled';
+  thinkingLevel?: 'low' | 'high';
   thinkingBudget?: number;
+  /**
+   * Image aspect ratio for image generation models
+   */
+  imageAspectRatio?: string;
+  /**
+   * Image resolution for image generation models
+   */
+  imageResolution?: '1K' | '2K' | '4K';
   /**
    * Disable context caching
    */
@@ -79,6 +88,8 @@ export const AgentChatConfigSchema = z.object({
   gpt5ReasoningEffort: z.enum(['minimal', 'low', 'medium', 'high']).optional(),
   gpt5_1ReasoningEffort: z.enum(['none', 'low', 'medium', 'high']).optional(),
   historyCount: z.number().optional(),
+  imageAspectRatio: z.string().optional(),
+  imageResolution: z.enum(['1K', '2K', '4K']).optional(),
   reasoningBudgetToken: z.number().optional(),
   reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
   searchFCModel: z
@@ -91,6 +102,7 @@ export const AgentChatConfigSchema = z.object({
   textVerbosity: z.enum(['low', 'medium', 'high']).optional(),
   thinking: z.enum(['disabled', 'auto', 'enabled']).optional(),
   thinkingBudget: z.number().optional(),
+  thinkingLevel: z.enum(['low', 'high']).optional(),
   urlContext: z.boolean().optional(),
   useModelBuiltinSearch: z.boolean().optional(),
 });

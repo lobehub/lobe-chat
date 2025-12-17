@@ -2,10 +2,10 @@ import { ProviderIcon } from '@lobehub/icons';
 import { Button, type FormItemProps, FormModal, Icon, Input, Select, TextArea } from '@lobehub/ui';
 import { App } from 'antd';
 import { BrainIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useAiInfraStore } from '@/store/aiInfra/store';
 import { AiProviderDetailItem, UpdateAiProviderParams } from '@/types/aiProvider';
@@ -28,7 +28,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
   ]);
 
   const { message, modal } = App.useApp();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const onFinish = async (values: UpdateAiProviderParams) => {
     setLoading(true);
@@ -84,12 +84,16 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
     {
       children: (
         <Select
-          optionRender={({ label, value }) => (
-            <Flexbox align={'center'} gap={8} horizontal>
-              <ProviderIcon provider={value as string} size={18} />
-              {label}
-            </Flexbox>
-          )}
+          optionRender={({ label, value }) => {
+            // Map 'router' to 'newapi' for displaying the correct icon
+            const iconProvider = value === 'router' ? 'newapi' : (value as string);
+            return (
+              <Flexbox align={'center'} gap={8} horizontal>
+                <ProviderIcon provider={iconProvider} size={18} />
+                {label}
+              </Flexbox>
+            );
+          }}
           options={CUSTOM_PROVIDER_SDK_OPTIONS}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
           variant={'filled'}
@@ -117,7 +121,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
                 okText: t('delete', { ns: 'common' }),
                 onOk: async () => {
                   await deleteAiProvider(id);
-                  router.push('/settings?active=provider');
+                  navigate('/settings?active=provider');
 
                   onClose?.();
                   message.success(t('updateAiProvider.deleteSuccess'));

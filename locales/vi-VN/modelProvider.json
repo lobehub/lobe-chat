@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Chưa kích hoạt nhà cung cấp tùy chỉnh",
       "disabled": "Nhà cung cấp chưa được kích hoạt",
       "enabled": "Nhà cung cấp đã được kích hoạt"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Thêm nhà cung cấp tùy chỉnh",
     "all": "Tất cả",
     "list": {
+      "custom": "Tùy chỉnh chưa được kích hoạt",
       "disabled": "Chưa kích hoạt",
       "disabledActions": {
         "sort": "Cách sắp xếp",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Hướng dẫn cấu hình",
       "responsesApi": {
-        "desc": "Sử dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi suy nghĩ",
+        "desc": "Áp dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi tư duy (chỉ hỗ trợ mô hình OpenAI)",
         "title": "Sử dụng chuẩn Responses API"
       },
       "waitingForMore": "Nhiều mô hình hơn đang <1>được lên kế hoạch</1>, xin hãy chờ đợi"

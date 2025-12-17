@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Özel hizmet sağlayıcısı etkin değil",
       "disabled": "Hizmet sağlayıcı devre dışı",
       "enabled": "Hizmet sağlayıcı etkin"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Özel Hizmet Sağlayıcı Ekle",
     "all": "Tümü",
     "list": {
+      "custom": "Özel ayar etkin değil",
       "disabled": "Devre Dışı",
       "disabledActions": {
         "sort": "Sıralama Yöntemi",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Yapılandırma Kılavuzu",
       "responsesApi": {
-        "desc": "OpenAI'nin yeni nesil istek formatı standardını kullanarak düşünce zinciri gibi gelişmiş özelliklerin kilidini açın",
+        "desc": "OpenAI'nin yeni nesil istek formatı standardını kullanır, düşünce zinciri gibi gelişmiş özelliklerin kilidini açar (yalnızca OpenAI modelleri desteklenir)",
         "title": "Responses API Standardını Kullan"
       },
       "waitingForMore": "Daha fazla model <1>planlanıyor</1>, lütfen bekleyin"

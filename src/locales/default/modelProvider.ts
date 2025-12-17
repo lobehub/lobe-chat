@@ -193,6 +193,7 @@ export default {
   },
   list: {
     title: {
+      custom: '未启用自定义服务商',
       disabled: '未启用服务商',
       enabled: '已启用服务商',
     },
@@ -201,6 +202,7 @@ export default {
     addCustomProvider: '添加自定义服务商',
     all: '全部',
     list: {
+      custom: '自定义未启用',
       disabled: '未启用',
       disabledActions: {
         sort: '排序方式',
@@ -298,7 +300,7 @@ export default {
       },
       helpDoc: '配置教程',
       responsesApi: {
-        desc: '采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性',
+        desc: '采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性 (仅 OpenAI 模型支持)',
         title: '使用 Responses API 规范',
       },
       waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',

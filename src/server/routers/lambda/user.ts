@@ -9,6 +9,8 @@ import {
   UserSettings,
   UserSettingsSchema,
 } from '@lobechat/types';
+import { TRPCError } from '@trpc/server';
+import { after } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
@@ -24,6 +26,12 @@ import { S3 } from '@/server/modules/S3';
 import { FileService } from '@/server/services/file';
 import { NextAuthUserService } from '@/server/services/nextAuthUser';
 import { UserService } from '@/server/services/user';
+
+const usernameSchema = z
+  .string()
+  .trim()
+  .min(1, { message: 'USERNAME_REQUIRED' })
+  .regex(/^\w+$/, { message: 'USERNAME_INVALID' });
 
 const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
   return next({
@@ -48,6 +56,18 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
+    try {
+      after(async () => {
+        try {
+          await ctx.userModel.updateUser({ lastActiveAt: new Date() });
+        } catch (err) {
+          console.error('update lastActiveAt failed, error:', err);
+        }
+      });
+    } catch {
+      // `after` may fail outside request scope (e.g., in tests), ignore silently
+    }
+
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
     // get or create first-time user
@@ -198,6 +218,10 @@ export const userRouter = router({
     return ctx.userModel.updateUser({ avatar: input });
   }),
 
+  updateFullName: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ fullName: input });
+  }),
+
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateGuide(input);
   }),
@@ -223,6 +247,17 @@ export const userRouter = router({
     const nextValue = { ...res, keyVaults: encryptedKeyVaults };
 
     return ctx.userModel.updateSetting(nextValue);
+  }),
+
+  updateUsername: userProcedure.input(usernameSchema).mutation(async ({ ctx, input }) => {
+    const username = input.trim();
+
+    const existedUser = await UserModel.findByUsername(ctx.serverDB, username);
+    if (existedUser && existedUser.id !== ctx.userId) {
+      throw new TRPCError({ code: 'CONFLICT', message: 'USERNAME_TAKEN' });
+    }
+
+    return ctx.userModel.updateUser({ username });
   }),
 });
 

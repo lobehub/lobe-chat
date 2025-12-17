@@ -4,7 +4,6 @@ import urlJoin from 'url-join';
 import { responsesAPIModels } from '../../const/models';
 import { createRouterRuntime } from '../../core/RouterRuntime';
 import { CreateRouterRuntimeOptions } from '../../core/RouterRuntime/createRuntime';
-import { ChatStreamPayload } from '../../types/chat';
 import { detectModelProvider, processMultiProviderModelList } from '../../utils/modelParse';
 
 export interface NewAPIModelCard {
@@ -26,16 +25,60 @@ export interface NewAPIPricing {
   supported_endpoint_types?: string[];
 }
 
-export const handlePayload = (payload: ChatStreamPayload) => {
-  // Handle OpenAI responses API mode
-  if (
-    responsesAPIModels.has(payload.model) ||
-    payload.model.includes('gpt-') ||
-    /^o\d/.test(payload.model)
-  ) {
-    return { ...payload, apiMode: 'responses' };
+/**
+ * Detect if running in browser environment
+ */
+const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined';
+
+/**
+ * Parse a pricing API HTTP response into a `NewAPIPricing[] | null`.
+ * Shared between browser and server branches to avoid duplicated logic.
+ */
+const parsePricingResponse = async (res: Response): Promise<NewAPIPricing[] | null> => {
+  if (!res.ok) {
+    return null;
   }
-  return payload;
+
+  try {
+    const body = await res.json();
+    return body?.success && body?.data ? (body.data as NewAPIPricing[]) : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Fetch pricing information with CORS bypass for client-side requests
+ * In browser environment, use /webapi/proxy to avoid CORS errors
+ */
+const fetchPricing = async (
+  pricingUrl: string,
+  apiKey: string,
+): Promise<NewAPIPricing[] | null> => {
+  try {
+    if (isBrowser()) {
+      // In browser environment, use the proxy endpoint to avoid CORS
+      // The proxy endpoint expects the URL as the request body
+      const proxyResponse = await fetch('/webapi/proxy', {
+        body: pricingUrl,
+        method: 'POST',
+      });
+
+      return await parsePricingResponse(proxyResponse);
+    } else {
+      // In server environment, fetch directly
+      const pricingResponse = await fetch(pricingUrl, {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
+
+      return await parsePricingResponse(pricingResponse);
+    }
+  } catch (error) {
+    console.debug('Failed to fetch NewAPI pricing info:', error);
+    return null;
+  }
 };
 
 export const params = {
@@ -55,25 +98,12 @@ export const params = {
 
     // Try to get pricing information to enrich model details
     let pricingMap: Map<string, NewAPIPricing> = new Map();
-    try {
-      // Use saved baseURL
-      const pricingResponse = await fetch(`${baseURL}/api/pricing`, {
-        headers: {
-          Authorization: `Bearer ${openAIClient.apiKey}`,
-        },
-      });
 
-      if (pricingResponse.ok) {
-        const pricingData = await pricingResponse.json();
-        if (pricingData.success && pricingData.data) {
-          (pricingData.data as NewAPIPricing[]).forEach((pricing) => {
-            pricingMap.set(pricing.model_name, pricing);
-          });
-        }
-      }
-    } catch (error) {
-      // If fetching pricing information fails, continue using the basic model information
-      console.debug('Failed to fetch NewAPI pricing info:', error);
+    const pricingList = await fetchPricing(`${baseURL}/api/pricing`, openAIClient.apiKey || '');
+    if (pricingList) {
+      pricingList.forEach((pricing) => {
+        pricingMap.set(pricing.model_name, pricing);
+      });
     }
 
     // Process the model list: determine the provider for each model based on priority rules
@@ -178,7 +208,7 @@ export const params = {
           ...options,
           baseURL: urlJoin(userBaseURL, '/v1'),
           chatCompletion: {
-            handlePayload,
+            useResponseModels: [...Array.from(responsesAPIModels), /gpt-\d(?!\d)/, /^o\d/],
           },
         },
       },

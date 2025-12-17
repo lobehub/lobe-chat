@@ -1,10 +1,10 @@
 'use client';
 
 import { SearchBar } from '@lobehub/ui';
-import { useQueryState } from 'nuqs';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';

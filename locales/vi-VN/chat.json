@@ -53,6 +53,12 @@
       "desc": "Giới hạn dựa trên cơ chế Claude Thinking (<1>Tìm hiểu thêm</1>), khi bật sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
       "title": "Bật tư duy sâu sắc"
     },
+    "imageAspectRatio": {
+      "title": "Tỷ lệ khung hình ảnh"
+    },
+    "imageResolution": {
+      "title": "Độ phân giải hình ảnh"
+    },
     "reasoningBudgetToken": {
       "title": "Token tiêu tốn cho tư duy"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Công tắc suy nghĩ sâu"
+    },
+    "thinkingLevel": {
+      "title": "Mức độ tư duy"
     },
     "title": "Chức năng mở rộng mô hình",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Ảnh chụp màn hình",
     "settings": "Cài đặt xuất",
     "text": "Văn bản",
+    "widthMode": {
+      "label": "Chế độ chiều rộng",
+      "narrow": "Chế độ màn hình hẹp",
+      "wide": "Chế độ màn hình rộng"
+    },
     "withBackground": "Bao gồm hình nền",
     "withFooter": "Bao gồm chân trang",
     "withPluginInfo": "Bao gồm thông tin plugin",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
       "rejectTitle": "Từ chối lần gọi công cụ này",
       "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",
+      "toolAbort": "Lần gọi công cụ này đã bị người dùng hủy",
       "toolRejected": "Lần gọi công cụ này đã bị từ chối"
     }
   },

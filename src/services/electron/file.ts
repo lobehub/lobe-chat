@@ -1,5 +1,6 @@
-import { dispatch } from '@lobechat/electron-client-ipc';
 import { FileMetadata } from '@lobechat/types';
+
+import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 /**
  * Desktop application file API client service
@@ -19,7 +20,7 @@ class DesktopFileAPI {
   ): Promise<{ metadata: FileMetadata; success: boolean }> {
     const arrayBuffer = await file.arrayBuffer();
 
-    return dispatch('createFile', {
+    return ensureElectronIpc().upload.uploadFile({
       content: arrayBuffer,
       filename: file.name,
       hash,

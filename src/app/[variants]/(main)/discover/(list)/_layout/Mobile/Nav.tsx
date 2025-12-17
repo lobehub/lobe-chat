@@ -9,10 +9,18 @@ import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import Menu from '@/components/Menu';
-import { withSuspense } from '@/components/withSuspense';
 import { DiscoverTab } from '@/types/discover';
 
 import { useNav } from '../../../features/useNav';
+
+const SCROLL_CONTAINER_ID = 'lobe-mobile-scroll-container';
+
+const scrollToTop = () => {
+  const scrollableElement = document?.querySelector(`#${SCROLL_CONTAINER_ID}`);
+
+  if (!scrollableElement) return;
+  scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
+};
 
 export const useStyles = createStyles(({ css, token }) => ({
   activeNavItem: css`
@@ -45,7 +53,9 @@ const Nav = memo(() => {
         <ActionIcon
           color={theme.colorText}
           icon={MenuIcon}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true);
+          }}
           size={{ blockSize: 32, size: 18 }}
         />
         {activeItem?.label}
@@ -77,10 +87,11 @@ const Nav = memo(() => {
           compact
           items={items}
           onClick={({ key }) => {
+            scrollToTop();
             if (key === DiscoverTab.Home) {
-              navigate('/');
+              navigate('/discover');
             } else {
-              navigate(`/${key}`);
+              navigate(`/discover/${key}`);
             }
           }}
           selectable
@@ -91,4 +102,4 @@ const Nav = memo(() => {
   );
 });
 
-export default withSuspense(Nav);
+export default Nav;

@@ -53,6 +53,12 @@
       "desc": "Limitazioni basate sul meccanismo di pensiero di Claude (<1>Scopri di più</1>), attivando questa opzione verrà disabilitato automaticamente il limite sul numero di messaggi storici.",
       "title": "Attiva il pensiero profondo"
     },
+    "imageAspectRatio": {
+      "title": "Proporzioni dell'immagine"
+    },
+    "imageResolution": {
+      "title": "Risoluzione dell'immagine"
+    },
     "reasoningBudgetToken": {
       "title": "Token di consumo del pensiero"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Interruttore di pensiero profondo"
+    },
+    "thinkingLevel": {
+      "title": "Livello di pensiero"
     },
     "title": "Funzionalità di estensione del modello",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Screenshot",
     "settings": "Impostazioni di esportazione",
     "text": "Testo",
+    "widthMode": {
+      "label": "Modalità larghezza",
+      "narrow": "Modalità schermo stretto",
+      "wide": "Modalità schermo ampio"
+    },
     "withBackground": "Con immagine di sfondo",
     "withFooter": "Con piè di pagina",
     "withPluginInfo": "Con informazioni sul plugin",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Inserire il motivo del rifiuto aiuterà l'agente a comprendere e ottimizzare le azioni future",
       "rejectTitle": "Rifiuta questa esecuzione dello strumento",
       "rejectedWithReason": "Questa esecuzione dello strumento è stata rifiutata: {{reason}}",
+      "toolAbort": "L'utilizzo dello strumento è stato annullato dall'utente",
       "toolRejected": "Questa esecuzione dello strumento è stata rifiutata"
     }
   },

@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { aiChatService } from '@/services/aiChat';
+import { getSessionStoreState } from '@/store/session';
 
 import { useChatStore } from '../../../../store';
 import { TEST_CONTENT, TEST_IDS, createMockMessage } from './fixtures';
@@ -15,10 +16,23 @@ import {
 // Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
 
+// Mock lambdaClient to prevent network requests
+vi.mock('@/libs/trpc/client', () => ({
+  lambdaClient: {
+    session: {
+      updateSession: {
+        mutate: vi.fn().mockResolvedValue(undefined),
+      },
+    },
+  },
+}));
+
 beforeEach(() => {
   resetTestEnvironment();
   setupMockSelectors();
   spyOnMessageService();
+  const sessionStore = getSessionStoreState();
+  vi.spyOn(sessionStore, 'triggerSessionUpdate').mockResolvedValue(undefined);
 
   act(() => {
     useChatStore.setState({
@@ -151,9 +165,14 @@ describe('ConversationLifecycle actions', () => {
     it('should not regenerate when already regenerating', async () => {
       const { result } = renderHook(() => useChatStore());
 
+      // Create a regenerate operation to simulate already regenerating
       act(() => {
+        const { operationId } = result.current.startOperation({
+          type: 'regenerate',
+          context: { sessionId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.USER_MESSAGE_ID },
+        });
+
         useChatStore.setState({
-          regeneratingIds: [TEST_IDS.USER_MESSAGE_ID],
           internal_execAgentRuntime: vi.fn(),
         });
       });
@@ -204,9 +223,14 @@ describe('ConversationLifecycle actions', () => {
     it('should not regenerate when already regenerating', async () => {
       const { result } = renderHook(() => useChatStore());
 
+      // Create a regenerate operation to simulate already regenerating
       act(() => {
+        result.current.startOperation({
+          type: 'regenerate',
+          context: { sessionId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.MESSAGE_ID },
+        });
+
         useChatStore.setState({
-          regeneratingIds: [TEST_IDS.MESSAGE_ID],
           internal_execAgentRuntime: vi.fn(),
         });
       });

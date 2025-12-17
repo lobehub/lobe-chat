@@ -129,12 +129,6 @@ export class KnowledgeRepo {
       };
     });
 
-    console.log('[KnowledgeRepo.query] Fetched items:', {
-      count: mappedResults.length,
-      documents: mappedResults.filter((item) => item.sourceType === 'document'),
-      sampleEditorData: mappedResults.find((item) => item.sourceType === 'document')?.editorData,
-    });
-
     return mappedResults;
   }
 
@@ -287,7 +281,10 @@ export class KnowledgeRepo {
     q,
     knowledgeBaseId,
   }: QueryFileListParams = {}): ReturnType<typeof sql> {
-    let whereConditions: any[] = [sql`${documents.userId} = ${this.userId}`];
+    let whereConditions: any[] = [
+      sql`${documents.userId} = ${this.userId}`,
+      sql`${documents.sourceType} != ${'file'}`,
+    ];
 
     // Search filter
     if (q) {
@@ -306,9 +303,9 @@ export class KnowledgeRepo {
         );
         whereConditions.push(sql`(${sql.join(orConditions, sql` OR `)})`);
 
-        // Exclude custom/document and source_type='file' from Documents category
+        // Exclude custom/document from Documents category
         if (category === FilesTabs.Documents) {
-          whereConditions.push(sql`${documents.fileType} != ${'custom/document'}`, sql`${documents.sourceType} != ${'file'}`);
+          whereConditions.push(sql`${documents.fileType} != ${'custom/document'}`);
         }
       } else if (fileTypePrefix) {
         whereConditions.push(sql`${documents.fileType} ILIKE ${`${fileTypePrefix}%`}`);
@@ -338,7 +335,7 @@ export class KnowledgeRepo {
     // Documents don't have knowledge base association currently, so skip if knowledgeBaseId is set
     if (knowledgeBaseId) {
       return sql`
-        SELECT 
+        SELECT
           NULL::varchar(30) as id,
           NULL::text as name,
           NULL::varchar(255) as file_type,

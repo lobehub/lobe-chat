@@ -83,20 +83,11 @@
   "DeepSeek-V3-Fast": {
     "description": "Il fornitore del modello è la piattaforma sophnet. DeepSeek V3 Fast è la versione ad alta velocità TPS del modello DeepSeek V3 0324, completamente non quantificata, con capacità di codice e matematica potenziate e risposte più rapide!"
   },
-  "DeepSeek-V3.1": {
-    "description": "DeepSeek-V3.1 - modalità senza pensiero; DeepSeek-V3.1 è un nuovo modello di ragionamento ibrido lanciato da DeepSeek, che supporta due modalità di ragionamento: con e senza pensiero, con un'efficienza di pensiero superiore rispetto a DeepSeek-R1-0528. Ottimizzato post-addestramento, l'uso degli strumenti Agent e le prestazioni nei compiti degli agenti sono notevolmente migliorati."
-  },
   "DeepSeek-V3.1-Fast": {
     "description": "DeepSeek V3.1 Fast è la versione ad alta TPS e alta velocità del modello DeepSeek V3.1. Modalità di pensiero ibrida: modificando il template di chat, un singolo modello può supportare sia la modalità con pensiero che quella senza pensiero. Chiamata degli strumenti più intelligente: grazie all'ottimizzazione post-addestramento, le prestazioni del modello nell'uso degli strumenti e nei compiti degli agenti sono significativamente migliorate."
   },
   "DeepSeek-V3.1-Think": {
     "description": "DeepSeek-V3.1 - modalità con pensiero; DeepSeek-V3.1 è un nuovo modello di ragionamento ibrido lanciato da DeepSeek, che supporta due modalità di ragionamento: con e senza pensiero, con un'efficienza di pensiero superiore rispetto a DeepSeek-R1-0528. Ottimizzato post-addestramento, l'uso degli strumenti Agent e le prestazioni nei compiti degli agenti sono notevolmente migliorati."
-  },
-  "DeepSeek-V3.2-Exp": {
-    "description": "DeepSeek V3.2 è l'ultimo modello generale rilasciato da DeepSeek, supporta un'architettura di inferenza ibrida e possiede capacità agenti potenziate."
-  },
-  "DeepSeek-V3.2-Exp-Think": {
-    "description": "Modalità di pensiero di DeepSeek V3.2. Prima di fornire la risposta finale, il modello genera una catena di pensieri per migliorare l'accuratezza della risposta."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 128k."
@@ -230,11 +221,17 @@
   "MiniMax-M2": {
     "description": "Progettato per una codifica efficiente e flussi di lavoro con agenti."
   },
+  "MiniMax-M2-Stable": {
+    "description": "Progettato per una codifica efficiente e flussi di lavoro agentici, con alta concorrenza e uso commerciale."
+  },
   "MiniMax-Text-01": {
     "description": "Nella serie di modelli MiniMax-01, abbiamo fatto un'innovazione audace: per la prima volta abbiamo implementato su larga scala un meccanismo di attenzione lineare, rendendo l'architettura Transformer tradizionale non più l'unica opzione. Questo modello ha un numero di parametri che raggiunge i 456 miliardi, con un'attivazione singola di 45,9 miliardi. Le prestazioni complessive del modello sono paragonabili a quelle dei migliori modelli internazionali, mentre è in grado di gestire in modo efficiente contesti globali lunghi fino a 4 milioni di token, 32 volte rispetto a GPT-4o e 20 volte rispetto a Claude-3.5-Sonnet."
   },
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 è un modello di inferenza a grande scala con pesi open source e attenzione mista, con 456 miliardi di parametri, di cui circa 45,9 miliardi attivati per ogni token. Il modello supporta nativamente un contesto ultra-lungo di 1 milione di token e, grazie al meccanismo di attenzione lampo, riduce del 75% il carico computazionale in operazioni floating point rispetto a DeepSeek R1 in compiti di generazione con 100.000 token. Inoltre, MiniMax-M1 adotta un'architettura MoE (Mixture of Experts), combinando l'algoritmo CISPO e un design di attenzione mista per un addestramento efficiente tramite apprendimento rinforzato, raggiungendo prestazioni leader nel settore per inferenze con input lunghi e scenari reali di ingegneria software."
+  },
+  "MiniMaxAI/MiniMax-M2": {
+    "description": "MiniMax-M2 ridefinisce l'efficienza per gli agenti intelligenti. È un modello MoE compatto, veloce ed economico, con 230 miliardi di parametri totali e 10 miliardi di parametri attivi, progettato per offrire prestazioni di alto livello nei compiti di codifica e agenti, mantenendo al contempo una solida intelligenza generale. Con soli 10 miliardi di parametri attivi, MiniMax-M2 offre prestazioni paragonabili a quelle dei modelli su larga scala, rendendolo la scelta ideale per applicazioni ad alta efficienza."
   },
   "Moonshot-Kimi-K2-Instruct": {
     "description": "Con un totale di 1 trilione di parametri e 32 miliardi di parametri attivi, questo modello non pensante raggiunge livelli d'eccellenza in conoscenze all'avanguardia, matematica e programmazione, ed è particolarmente adatto a compiti di agenti generici. Ottimizzato per attività di agenti, non solo risponde a domande ma può anche agire. Ideale per chat improvvisate, conversazioni generiche e esperienze di agenti, è un modello riflessivo che non richiede lunghi tempi di elaborazione."
@@ -304,6 +301,9 @@
   },
   "Pro/moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 è l'ultima e più potente versione di Kimi K2. Si tratta di un modello linguistico di esperti misti (MoE) all'avanguardia, con un totale di 1 trilione di parametri e 32 miliardi di parametri attivi. Le caratteristiche principali del modello includono: intelligenza potenziata per la codifica degli agenti, con miglioramenti significativi nelle prestazioni sia nei test di riferimento pubblici sia nelle attività di codifica degli agenti nel mondo reale; esperienza di codifica frontend migliorata, con progressi sia nell'estetica che nella praticità della programmazione frontend."
+  },
+  "Pro/moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking Turbo è la versione Turbo della serie Kimi K2, ottimizzata per velocità di inferenza e throughput, mantenendo le capacità di ragionamento multi-step e utilizzo di strumenti di K2 Thinking. Basato su un'architettura a esperti misti (MoE), il modello ha circa 1 trilione di parametri, supporta nativamente un contesto di 256K token ed esegue in modo stabile chiamate a strumenti su larga scala. Ideale per scenari produttivi con elevate esigenze di latenza e concorrenza."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview è un modello di elaborazione del linguaggio naturale innovativo, in grado di gestire in modo efficiente compiti complessi di generazione di dialoghi e comprensione del contesto."
@@ -717,25 +717,31 @@
     "description": "Claude 3 Opus è il modello più intelligente di Anthropic, con prestazioni leader di mercato in compiti altamente complessi. Gestisce prompt aperti e scenari mai visti con fluidità eccezionale e comprensione simile a quella umana."
   },
   "anthropic/claude-3.5-haiku": {
-    "description": "Claude 3.5 Haiku è la nuova generazione del nostro modello più veloce. Con velocità simile a Claude 3 Haiku, Claude 3.5 Haiku migliora ogni set di competenze e supera in molti benchmark intelligenti il nostro modello più grande della generazione precedente, Claude 3 Opus."
+    "description": "Claude 3.5 Haiku offre capacità migliorate in velocità, accuratezza nella programmazione e utilizzo degli strumenti. Ideale per scenari che richiedono alta velocità e interazione con strumenti."
   },
   "anthropic/claude-3.5-sonnet": {
-    "description": "Claude 3.5 Sonnet raggiunge un equilibrio ideale tra intelligenza e velocità, particolarmente adatto per carichi di lavoro aziendali. Offre prestazioni potenti a costi inferiori rispetto ai concorrenti ed è progettato per alta durabilità nelle implementazioni AI su larga scala."
+    "description": "Claude 3.5 Sonnet è un modello rapido ed efficiente della famiglia Sonnet, con prestazioni migliorate in codifica e ragionamento. Alcune versioni saranno gradualmente sostituite da Sonnet 3.7 e successivi."
   },
   "anthropic/claude-3.7-sonnet": {
-    "description": "Claude 3.7 Sonnet è il primo modello di ragionamento ibrido ed è il modello più intelligente di Anthropic finora. Offre prestazioni all'avanguardia in codifica, generazione di contenuti, analisi dati e pianificazione, costruito sulle capacità di ingegneria del software e uso informatico del suo predecessore Claude 3.5 Sonnet."
+    "description": "Claude 3.7 Sonnet è una versione avanzata della serie Sonnet, con capacità superiori di ragionamento e codifica, adatta a compiti aziendali complessi."
+  },
+  "anthropic/claude-haiku-4.5": {
+    "description": "Claude Haiku 4.5 è un modello ad alte prestazioni di Anthropic, con latenza estremamente bassa e alta accuratezza."
   },
   "anthropic/claude-opus-4": {
-    "description": "Claude Opus 4 è il modello più potente di Anthropic e il miglior modello di codifica al mondo, leader nei benchmark SWE-bench (72,5%) e Terminal-bench (43,2%). Fornisce prestazioni continue per compiti a lungo termine che richiedono sforzi concentrati e migliaia di passaggi, lavorando per ore consecutive e ampliando significativamente le capacità degli agenti AI."
+    "description": "Opus 4 è il modello di punta di Anthropic, progettato per compiti complessi e applicazioni aziendali."
   },
   "anthropic/claude-opus-4.1": {
-    "description": "Claude Opus 4.1 è un'alternativa plug-and-play a Opus 4, offrendo prestazioni e precisione eccezionali per compiti di codifica e agenti pratici. Opus 4.1 porta le prestazioni di codifica all'avanguardia al 74,5% verificato da SWE-bench, gestendo problemi complessi a più passaggi con maggiore rigore e attenzione ai dettagli."
+    "description": "Opus 4.1 è un modello avanzato di Anthropic, ottimizzato per programmazione, ragionamento complesso e compiti continuativi."
+  },
+  "anthropic/claude-opus-4.5": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
   },
   "anthropic/claude-sonnet-4": {
-    "description": "Claude Sonnet 4 migliora significativamente le capacità leader del settore di Sonnet 3.7, eccellendo nella codifica con un punteggio all'avanguardia del 72,7% su SWE-bench. Il modello bilancia prestazioni ed efficienza, adatto a casi d'uso interni ed esterni, e offre un controllo maggiore sull'implementazione grazie a una controllabilità migliorata."
+    "description": "Claude Sonnet 4 è una versione a ragionamento ibrido di Anthropic, che combina capacità cognitive e non cognitive."
   },
   "anthropic/claude-sonnet-4.5": {
-    "description": "Claude Sonnet 4.5 è il modello più intelligente di Anthropic fino ad oggi."
+    "description": "Claude Sonnet 4.5 è l'ultimo modello a ragionamento ibrido di Anthropic, ottimizzato per ragionamento complesso e codifica."
   },
   "ascend-tribe/pangu-pro-moe": {
     "description": "Pangu-Pro-MoE 72B-A16B è un modello linguistico di grandi dimensioni a parametri sparsi con 72 miliardi di parametri totali e 16 miliardi di parametri attivati, basato sull'architettura Mixture of Group Experts (MoGE). Durante la fase di selezione degli esperti, gli esperti sono raggruppati e il token attiva un numero uguale di esperti all'interno di ogni gruppo, garantendo un bilanciamento del carico degli esperti e migliorando significativamente l'efficienza di distribuzione del modello sulla piattaforma Ascend."
@@ -757,6 +763,21 @@
   },
   "baidu/ERNIE-4.5-300B-A47B": {
     "description": "ERNIE-4.5-300B-A47B è un modello linguistico di grandi dimensioni sviluppato da Baidu basato sull'architettura Mixture of Experts (MoE). Il modello ha un totale di 300 miliardi di parametri, ma durante l'inferenza attiva solo 47 miliardi di parametri per token, garantendo così un equilibrio tra prestazioni elevate ed efficienza computazionale. Come uno dei modelli principali della serie ERNIE 4.5, eccelle in compiti di comprensione del testo, generazione, ragionamento e programmazione. Il modello utilizza un innovativo metodo di pre-addestramento multimodale eterogeneo MoE, addestrando congiuntamente testo e modalità visive, migliorando efficacemente le capacità complessive, con risultati particolarmente evidenti nell'aderenza alle istruzioni e nella memoria della conoscenza mondiale."
+  },
+  "baidu/ernie-5.0-thinking-preview": {
+    "description": "ERNIE 5.0 Thinking Preview è il nuovo modello multimodale nativo di Baidu, eccelle nella comprensione multimodale, esecuzione di istruzioni, creazione, Q&A fattuale e utilizzo di strumenti."
+  },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - Una versione Pro di FLUX più veloce e migliorata, con qualità d'immagine eccezionale e ottima aderenza alle istruzioni."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - Versione di sviluppo di FLUX, destinata esclusivamente a usi non commerciali."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - Modello FLUX professionale per la generazione di immagini di alta qualità."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - Modello di generazione immagini ottimizzato per la velocità."
   },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse è un modello multilingue ad alte prestazioni da 32B, progettato per sfidare le prestazioni dei modelli monolingue attraverso innovazioni in ottimizzazione delle istruzioni, arbitraggio dei dati, addestramento delle preferenze e fusione dei modelli. Supporta 23 lingue."
@@ -818,6 +839,9 @@
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 è il modello più potente di Anthropic per gestire compiti altamente complessi. Eccelle in prestazioni, intelligenza, fluidità e comprensione."
   },
+  "claude-opus-4-5-20251101": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "claude-sonnet-4-20250514": {
     "description": "Claude Sonnet 4 può generare risposte quasi istantanee o un pensiero graduale prolungato, permettendo all'utente di vedere chiaramente questi processi."
   },
@@ -865,6 +889,9 @@
   },
   "codex-mini-latest": {
     "description": "codex-mini-latest è una versione ottimizzata di o4-mini, progettata specificamente per Codex CLI. Per l'uso diretto tramite API, consigliamo di iniziare con gpt-4.1."
+  },
+  "cogito-2.1:671b": {
+    "description": "Cogito v2.1 671B è un modello linguistico open source statunitense a uso commerciale gratuito, con prestazioni comparabili ai modelli top, efficienza di ragionamento superiore, contesto lungo da 128k token e forti capacità generali."
   },
   "cogview-4": {
     "description": "CogView-4 è il primo modello open source di Zhipu che supporta la generazione di caratteri cinesi, con miglioramenti completi nella comprensione semantica, nella qualità della generazione delle immagini e nella capacità di generare testi in cinese e inglese. Supporta input bilingue cinese-inglese di qualsiasi lunghezza e può generare immagini a risoluzione arbitraria entro un intervallo specificato."
@@ -1043,6 +1070,9 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 è un modello di codice open source di esperti misti, eccelle nei compiti di codice, paragonabile a GPT4-Turbo."
   },
+  "deepseek-ocr": {
+    "description": "DeepSeek-OCR è un modello visivo-linguistico sviluppato da DeepSeek AI, focalizzato sul riconoscimento ottico dei caratteri (OCR) e sulla \"compressione ottica contestuale\". Il modello esplora i limiti della compressione delle informazioni contestuali da immagini, elaborando documenti in modo efficiente e convertendoli in formati strutturati come Markdown. È in grado di riconoscere accuratamente il testo nelle immagini, particolarmente adatto per digitalizzazione di documenti, estrazione di testo e processi di strutturazione."
+  },
   "deepseek-r1": {
     "description": "DeepSeek-R1 è un modello di inferenza guidato da apprendimento rinforzato (RL) che affronta i problemi di ripetitività e leggibilità nel modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di cold start, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva attraverso metodi di addestramento accuratamente progettati."
   },
@@ -1136,6 +1166,9 @@
   "deepseek-vl2-small": {
     "description": "DeepSeek VL2 Small, versione multimodale leggera, adatta a scenari con risorse limitate e alta concorrenza."
   },
+  "deepseek/deepseek-chat": {
+    "description": "DeepSeek-V3 è un modello a ragionamento ibrido ad alte prestazioni del team DeepSeek, adatto a compiti complessi e integrazione con strumenti."
+  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 è un modello misto esperto con 685B di parametri, l'ultima iterazione della serie di modelli di chat di punta del team DeepSeek.\n\nEredita il modello [DeepSeek V3](/deepseek/deepseek-chat-v3) e si comporta eccezionalmente in vari compiti."
   },
@@ -1143,19 +1176,19 @@
     "description": "DeepSeek V3 è un modello misto esperto con 685B di parametri, l'ultima iterazione della serie di modelli di chat di punta del team DeepSeek.\n\nEredita il modello [DeepSeek V3](/deepseek/deepseek-chat-v3) e si comporta eccezionalmente in vari compiti."
   },
   "deepseek/deepseek-chat-v3.1": {
-    "description": "DeepSeek-V3.1 è un grande modello di ragionamento ibrido che supporta contesti lunghi fino a 128K e un cambio efficiente di modalità. Offre prestazioni e velocità eccellenti nell'uso di strumenti, generazione di codice e compiti di ragionamento complessi."
+    "description": "DeepSeek-V3.1 è un modello a ragionamento ibrido con contesto lungo di DeepSeek, supporta modalità miste cognitive/non cognitive e integrazione con strumenti."
   },
   "deepseek/deepseek-r1": {
     "description": "Il modello DeepSeek R1 ha ricevuto un aggiornamento minore, attualmente versione DeepSeek-R1-0528. Nell'ultimo aggiornamento, DeepSeek R1 ha migliorato significativamente la profondità e la capacità di ragionamento sfruttando risorse computazionali aumentate e introducendo meccanismi di ottimizzazione algoritmica post-addestramento. Il modello eccelle in benchmark di matematica, programmazione e logica generale, avvicinandosi alle prestazioni di modelli leader come O3 e Gemini 2.5 Pro."
   },
   "deepseek/deepseek-r1-0528": {
-    "description": "DeepSeek-R1 migliora notevolmente la capacità di ragionamento del modello anche con pochissimi dati annotati. Prima di fornire la risposta finale, il modello genera una catena di pensieri per aumentare la precisione della risposta."
+    "description": "DeepSeek R1 0528 è una variante aggiornata di DeepSeek, focalizzata su disponibilità open source e profondità di ragionamento."
   },
   "deepseek/deepseek-r1-0528:free": {
     "description": "DeepSeek-R1 migliora notevolmente la capacità di ragionamento del modello anche con pochissimi dati annotati. Prima di fornire la risposta finale, il modello genera una catena di pensieri per aumentare la precisione della risposta."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B è una variante distillata e più efficiente del modello Llama da 70B. Mantiene prestazioni robuste nelle attività di generazione testuale, riducendo il carico computazionale per facilitare il deployment e la ricerca. Servito da Groq con il suo hardware personalizzato Language Processing Unit (LPU) per inferenze rapide ed efficienti."
+    "description": "DeepSeek R1 Distill Llama 70B è un modello linguistico di grandi dimensioni basato su Llama3.3 70B. Grazie al fine-tuning effettuato con l'output di DeepSeek R1, il modello raggiunge prestazioni competitive paragonabili a quelle dei modelli all'avanguardia di grandi dimensioni."
   },
   "deepseek/deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek R1 Distill Llama 8B è un modello di linguaggio distillato basato su Llama-3.1-8B-Instruct, addestrato utilizzando l'output di DeepSeek R1."
@@ -1171,6 +1204,9 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 ha notevolmente migliorato le capacità di ragionamento del modello con pochissimi dati etichettati. Prima di fornire la risposta finale, il modello genera una catena di pensiero per migliorare l'accuratezza della risposta finale."
+  },
+  "deepseek/deepseek-reasoner": {
+    "description": "DeepSeek-V3 Thinking (reasoner) è un modello sperimentale di ragionamento di DeepSeek, adatto a compiti di alta complessità."
   },
   "deepseek/deepseek-v3": {
     "description": "Un modello linguistico grande universale veloce con capacità di ragionamento potenziate."
@@ -1192,6 +1228,9 @@
   },
   "deepseek_r1_distill_qwen_32b": {
     "description": "DeepSeek-R1-Distill-Qwen-32B è un modello ottenuto tramite distillazione della conoscenza basato su Qwen2.5-32B. Questo modello è stato affinato utilizzando 800.000 campioni selezionati generati da DeepSeek-R1, mostrando prestazioni eccezionali in vari campi, tra cui matematica, programmazione e ragionamento."
+  },
+  "devstral-2:123b": {
+    "description": "Devstral 2 123B, un modello specializzato nell'esplorazione di repository di codice tramite strumenti, nella modifica di più file e nel supporto agli agenti per l'ingegneria del software."
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite è un modello leggero di nuova generazione, con una velocità di risposta eccezionale, raggiungendo standard di livello mondiale sia in termini di prestazioni che di latenza."
@@ -1253,6 +1292,9 @@
   "doubao-seed-1.6-vision": {
     "description": "Doubao-Seed-1.6-vision è un modello di pensiero profondo visivo che dimostra una più forte capacità di comprensione e ragionamento multimodale generale in scenari come educazione, revisione delle immagini, ispezione e sicurezza, e ricerca e risposta AI. Supporta una finestra di contesto di 256k e una lunghezza di output fino a 64k token."
   },
+  "doubao-seed-code": {
+    "description": "Doubao-Seed-Code è stato profondamente ottimizzato per compiti di programmazione agentica, supporta multimodalità (testo/immagini/video) e contesto lungo fino a 256K token, compatibile con l'API di Anthropic. Ideale per scenari di programmazione, comprensione visiva e agenti intelligenti."
+  },
   "doubao-seededit-3-0-i2i-250628": {
     "description": "Il modello di generazione immagini Doubao è sviluppato dal team Seed di ByteDance, supporta input di testo e immagini, offrendo un'esperienza di generazione immagini altamente controllabile e di alta qualità. Supporta l'editing delle immagini tramite comandi testuali, con dimensioni dell'immagine generate tra 512 e 1536 pixel."
   },
@@ -1312,6 +1354,9 @@
   },
   "ernie-4.5-vl-28b-a3b": {
     "description": "ERNIE 4.5 VL 28B A3B, modello multimodale open source, supporta compiti di comprensione e ragionamento immagine-testo."
+  },
+  "ernie-5.0-thinking-latest": {
+    "description": "Wenxin 5.0 Thinking è un modello di punta nativamente multimodale, che supporta testo, immagini, audio e video in un'unica architettura. Le sue capacità complessive sono state notevolmente migliorate, rendendolo adatto a domande complesse, creazione di contenuti e scenari con agenti intelligenti."
   },
   "ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview, modello flagship nativo multimodale, supporta testo, immagini, audio e video, ideale per Q&A complessi, creazione e agenti intelligenti."
@@ -1478,9 +1523,6 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash è una variante del modello Flash, ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."
   },
-  "gemini-2.0-flash-preview-image-generation": {
-    "description": "Gemini 2.0 Flash modello di anteprima, supporta la generazione di immagini"
-  },
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash è il modello Google con il miglior rapporto qualità-prezzo, offrendo funzionalità complete."
   },
@@ -1508,9 +1550,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview è il modello più conveniente di Google, che offre funzionalità complete."
   },
-  "gemini-2.5-flash-preview-05-20": {
-    "description": "Gemini 2.5 Flash Preview è il modello Google con il miglior rapporto qualità-prezzo, che offre funzionalità complete."
-  },
   "gemini-2.5-flash-preview-09-2025": {
     "description": "Versione anteprima (25 settembre 2025) di Gemini 2.5 Flash"
   },
@@ -1525,6 +1564,15 @@
   },
   "gemini-2.5-pro-preview-06-05": {
     "description": "Gemini 2.5 Pro Preview è il modello di pensiero più avanzato di Google, capace di ragionare su problemi complessi in codice, matematica e ambito STEM, oltre a utilizzare contesti estesi per analizzare grandi dataset, librerie di codice e documenti."
+  },
+  "gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) è il modello di generazione immagini di Google, con supporto per dialoghi multimodali."
+  },
+  "gemini-3-pro-image-preview:image": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) è il modello di generazione immagini di Google, con supporto per dialoghi multimodali."
+  },
+  "gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro è il miglior modello di comprensione multimodale al mondo, nonché il più potente agente e modello di programmazione contestuale di Google, con capacità visive avanzate e interazioni profonde, basate su ragionamento all'avanguardia."
   },
   "gemini-flash-latest": {
     "description": "Ultima versione di Gemini Flash"
@@ -1649,8 +1697,11 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possiede potenti capacità di ragionamento complesso, eccellendo nei campi del ragionamento logico, della matematica e della programmazione."
   },
+  "global.anthropic.claude-opus-4-5-20251101-v1:0": {
+    "description": "Claude Opus 4.5 è il modello di punta di Anthropic, che unisce un'intelligenza straordinaria a prestazioni scalabili, ideale per compiti complessi che richiedono risposte di altissima qualità e capacità di ragionamento avanzate."
+  },
   "google/gemini-2.0-flash": {
-    "description": "Gemini 2.0 Flash offre funzionalità di nuova generazione e miglioramenti, inclusa velocità eccezionale, uso integrato di strumenti, generazione multimodale e una finestra di contesto di 1 milione di token."
+    "description": "Gemini 2.0 Flash è un modello di ragionamento ad alte prestazioni di Google, adatto a compiti multimodali estesi."
   },
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offre funzionalità e miglioramenti di nuova generazione, tra cui velocità eccezionale, utilizzo di strumenti nativi, generazione multimodale e una finestra di contesto di 1M token."
@@ -1661,14 +1712,23 @@
   "google/gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash Lite offre funzionalità di nuova generazione e miglioramenti, inclusa velocità eccezionale, uso integrato di strumenti, generazione multimodale e una finestra di contesto di 1 milione di token."
   },
+  "google/gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash Lite è la versione leggera della famiglia Gemini, con modalità di ragionamento disattivata per migliorare latenza e costi, ma attivabile tramite parametri."
+  },
   "google/gemini-2.5-flash": {
-    "description": "Gemini 2.5 Flash è un modello di ragionamento che offre capacità eccellenti e complete. È progettato per bilanciare prezzo e prestazioni, supportando input multimodali e una finestra di contesto di 1 milione di token."
+    "description": "La serie Gemini 2.5 Flash (Lite/Pro/Flash) è composta da modelli di ragionamento da bassa latenza a prestazioni elevate di Google."
+  },
+  "google/gemini-2.5-flash-image": {
+    "description": "Gemini 2.5 Flash Image (Nano Banana) è il modello di generazione immagini di Google, con supporto per dialoghi multimodali."
+  },
+  "google/gemini-2.5-flash-image-free": {
+    "description": "Gemini 2.5 Flash Image versione gratuita, supporta generazione multimodale con limiti di utilizzo."
   },
   "google/gemini-2.5-flash-image-preview": {
     "description": "Modello sperimentale Gemini 2.5 Flash, supporta la generazione di immagini."
   },
   "google/gemini-2.5-flash-lite": {
-    "description": "Gemini 2.5 Flash-Lite è un modello bilanciato a bassa latenza con budget di ragionamento configurabile e connettività agli strumenti (ad esempio, Google Search grounding ed esecuzione di codice). Supporta input multimodali e offre una finestra di contesto di 1 milione di token."
+    "description": "Gemini 2.5 Flash Lite è la versione leggera di Gemini 2.5, ottimizzata per latenza e costi, ideale per scenari ad alto throughput."
   },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash è il modello principale più avanzato di Google, progettato per ragionamenti avanzati, codifica, matematica e compiti scientifici. Include capacità di 'pensiero' integrate, permettendo di fornire risposte con maggiore accuratezza e una gestione contestuale più dettagliata.\n\nNota: questo modello ha due varianti: pensiero e non pensiero. I prezzi di output variano significativamente a seconda che la capacità di pensiero sia attivata o meno. Se scegli la variante standard (senza il suffisso ':thinking'), il modello eviterà esplicitamente di generare token di pensiero.\n\nPer sfruttare la capacità di pensiero e ricevere token di pensiero, devi scegliere la variante ':thinking', che comporterà un prezzo di output di pensiero più elevato.\n\nInoltre, Gemini 2.5 Flash può essere configurato tramite il parametro 'numero massimo di token per il ragionamento', come descritto nella documentazione (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
@@ -1677,10 +1737,25 @@
     "description": "Gemini 2.5 Flash è il modello principale più avanzato di Google, progettato per ragionamenti avanzati, codifica, matematica e compiti scientifici. Include capacità di 'pensiero' integrate, permettendo di fornire risposte con maggiore accuratezza e una gestione contestuale più dettagliata.\n\nNota: questo modello ha due varianti: pensiero e non pensiero. I prezzi di output variano significativamente a seconda che la capacità di pensiero sia attivata o meno. Se scegli la variante standard (senza il suffisso ':thinking'), il modello eviterà esplicitamente di generare token di pensiero.\n\nPer sfruttare la capacità di pensiero e ricevere token di pensiero, devi scegliere la variante ':thinking', che comporterà un prezzo di output di pensiero più elevato.\n\nInoltre, Gemini 2.5 Flash può essere configurato tramite il parametro 'numero massimo di token per il ragionamento', come descritto nella documentazione (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-pro": {
-    "description": "Gemini 2.5 Pro è il nostro modello Gemini di ragionamento più avanzato, capace di risolvere problemi complessi. Ha una finestra di contesto di 2 milioni di token e supporta input multimodali tra cui testo, immagini, audio, video e documenti PDF."
+    "description": "Gemini 2.5 Pro è il modello di punta di Google per il ragionamento, con supporto per contesto lungo e compiti complessi."
+  },
+  "google/gemini-2.5-pro-free": {
+    "description": "Gemini 2.5 Pro versione gratuita, supporta contesto lungo multimodale con limiti di utilizzo, adatto a test e flussi di lavoro leggeri."
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview è il modello di pensiero più avanzato di Google, in grado di ragionare su problemi complessi nel campo del codice, della matematica e delle STEM, oltre a utilizzare un contesto esteso per analizzare grandi set di dati, repository di codice e documenti."
+  },
+  "google/gemini-3-pro-image-preview": {
+    "description": "Gemini 3 Pro Image (Nano Banana Pro) è il modello di generazione di immagini di Google, che supporta anche il dialogo multimodale."
+  },
+  "google/gemini-3-pro-image-preview-free": {
+    "description": "Gemini 3 Pro Image versione gratuita, supporta generazione multimodale con limiti di utilizzo."
+  },
+  "google/gemini-3-pro-preview": {
+    "description": "Gemini 3 Pro è il modello di ragionamento multimodale di nuova generazione della serie Gemini, in grado di comprendere testo, audio, immagini e video, e gestire compiti complessi e grandi basi di codice."
+  },
+  "google/gemini-3-pro-preview-free": {
+    "description": "Gemini 3 Pro versione gratuita in anteprima, con le stesse capacità di comprensione e ragionamento multimodale della versione standard, ma con limiti di utilizzo e velocità, ideale per test e uso occasionale."
   },
   "google/gemini-embedding-001": {
     "description": "Modello di embedding all'avanguardia con prestazioni eccellenti in compiti in inglese, multilingue e codice."
@@ -1865,6 +1940,15 @@
   "gpt-5.1-codex-mini": {
     "description": "GPT-5.1 Codex mini: Variante più compatta e conveniente di Codex, ottimizzata per compiti di codifica agentica."
   },
+  "gpt-5.2": {
+    "description": "GPT-5.2 — modello di punta per la programmazione e i flussi di lavoro agentici, con capacità avanzate di ragionamento e gestione di contesti estesi."
+  },
+  "gpt-5.2-chat-latest": {
+    "description": "GPT-5.2 Chat: variante di GPT-5.2 utilizzata da ChatGPT (chat-latest), progettata per offrire la più recente esperienza di conversazione migliorata."
+  },
+  "gpt-5.2-pro": {
+    "description": "GPT-5.2 pro: una versione più intelligente e precisa di GPT-5.2 (solo tramite Responses API), ideale per problemi complessi e ragionamenti multi-turno più lunghi."
+  },
   "gpt-audio": {
     "description": "GPT Audio è un modello di chat universale per input e output audio, supporta l'uso di I/O audio nell'API Chat Completions."
   },
@@ -1906,6 +1990,12 @@
   },
   "grok-4-0709": {
     "description": "Grok 4 di xAI, dotato di potenti capacità di ragionamento."
+  },
+  "grok-4-1-fast-non-reasoning": {
+    "description": "Modello multimodale all'avanguardia, ottimizzato specificamente per l'utilizzo ad alte prestazioni con strumenti di agenti."
+  },
+  "grok-4-1-fast-reasoning": {
+    "description": "Modello multimodale all'avanguardia, ottimizzato specificamente per l'utilizzo ad alte prestazioni con strumenti di agenti."
   },
   "grok-4-fast-non-reasoning": {
     "description": "Siamo lieti di annunciare Grok 4 Fast, il nostro ultimo progresso nei modelli di inferenza con ottimo rapporto costo-efficacia."
@@ -2051,20 +2141,35 @@
   "inception/mercury-coder-small": {
     "description": "Mercury Coder Small è la scelta ideale per compiti di generazione, debug e refactoring di codice, con latenza minima."
   },
-  "inclusionAI/Ling-1T": {
-    "description": "Ling-1T è il primo modello di punta della serie \"Ling 2.0\" non orientato al pensiero, con un totale di 1 trilione di parametri e circa 50 miliardi di parametri attivi per token. Costruito sull'architettura Ling 2.0, Ling-1T mira a superare i limiti del ragionamento efficiente e della cognizione scalabile. Ling-1T-base è stato addestrato su oltre 20 trilioni di token di alta qualità e ad alta intensità di ragionamento."
-  },
   "inclusionAI/Ling-flash-2.0": {
     "description": "Ling-flash-2.0 è il terzo modello della serie basata sull'architettura Ling 2.0 rilasciato dal team Bailing di Ant Group. È un modello di esperti misti (MoE) con un totale di 100 miliardi di parametri, ma attiva solo 6,1 miliardi di parametri per token (4,8 miliardi non embedding). Come modello leggero, Ling-flash-2.0 dimostra prestazioni paragonabili o superiori a modelli densi da 40 miliardi e a modelli MoE di scala maggiore in molte valutazioni autorevoli. Il modello esplora un percorso efficiente attraverso un design architetturale e strategie di addestramento estreme, sfidando il consenso che “modello grande equivale a molti parametri”."
   },
   "inclusionAI/Ling-mini-2.0": {
     "description": "Ling-mini-2.0 è un modello di linguaggio di grandi dimensioni ad alte prestazioni e dimensioni ridotte basato sull'architettura MoE. Ha 16 miliardi di parametri totali, ma attiva solo 1,4 miliardi per token (789 milioni non embedding), raggiungendo così velocità di generazione molto elevate. Grazie al design efficiente MoE e a dati di addestramento di grande scala e alta qualità, Ling-mini-2.0 mostra prestazioni di punta in compiti downstream, comparabili a modelli densi sotto i 10 miliardi e a modelli MoE di scala maggiore."
   },
-  "inclusionAI/Ring-1T": {
-    "description": "Ring-1T è un modello open source su scala trilionaria sviluppato dal team Bailing. Basato sull'architettura Ling 2.0 e sul modello di base Ling-1T, possiede 1 trilione di parametri totali e 50 miliardi di parametri attivi, con supporto per finestre contestuali fino a 128K. Il modello è ottimizzato tramite apprendimento per rinforzo con ricompense verificabili su larga scala."
-  },
   "inclusionAI/Ring-flash-2.0": {
     "description": "Ring-flash-2.0 è un modello di pensiero ad alte prestazioni profondamente ottimizzato basato su Ling-flash-2.0-base. Utilizza un'architettura di esperti misti (MoE) con 100 miliardi di parametri totali, ma attiva solo 6,1 miliardi di parametri per inferenza. Il modello risolve l'instabilità dell'addestramento RL nei grandi modelli MoE grazie all'algoritmo innovativo icepop, migliorando continuamente le capacità di ragionamento complesso durante l'addestramento a lungo termine. Ring-flash-2.0 ha raggiunto risultati significativi in competizioni matematiche, generazione di codice e ragionamento logico, superando modelli densi di punta sotto i 40 miliardi di parametri e competendo con modelli MoE open source di scala maggiore e modelli di pensiero ad alte prestazioni closed source. Pur focalizzato sul ragionamento complesso, eccelle anche in compiti di scrittura creativa. Inoltre, grazie al design architetturale efficiente, Ring-flash-2.0 offre prestazioni elevate con inferenza veloce, riducendo significativamente i costi di deployment in scenari ad alta concorrenza."
+  },
+  "inclusionai/ling-1t": {
+    "description": "Ling-1T è il modello MoE da 1T di inclusionAI, ottimizzato per compiti di ragionamento intensivo e contesto su larga scala."
+  },
+  "inclusionai/ling-flash-2.0": {
+    "description": "Ling-flash-2.0 è un modello MoE di inclusionAI, ottimizzato per efficienza e prestazioni di ragionamento, adatto a compiti di media e grande scala."
+  },
+  "inclusionai/ling-mini-2.0": {
+    "description": "Ling-mini-2.0 è il modello MoE leggero di inclusionAI, che riduce significativamente i costi mantenendo buone capacità di ragionamento."
+  },
+  "inclusionai/ming-flash-omini-preview": {
+    "description": "Ming-flash-omni Preview è il modello multimodale di inclusionAI, supporta input vocali, immagini e video, con capacità ottimizzate di rendering e riconoscimento vocale."
+  },
+  "inclusionai/ring-1t": {
+    "description": "Ring-1T è il modello MoE da trilioni di parametri di inclusionAI, progettato per ragionamento su larga scala e compiti di ricerca."
+  },
+  "inclusionai/ring-flash-2.0": {
+    "description": "Ring-flash-2.0 è una variante del modello Ring di inclusionAI per scenari ad alto throughput, con enfasi su velocità ed efficienza dei costi."
+  },
+  "inclusionai/ring-mini-2.0": {
+    "description": "Ring-mini-2.0 è la versione MoE leggera ad alto throughput di inclusionAI, pensata per scenari ad alta concorrenza."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offre soluzioni di dialogo intelligente in vari scenari."
@@ -2117,6 +2222,12 @@
   "kimi-k2-instruct": {
     "description": "Kimi K2 Instruct, modello ufficiale di inferenza Kimi, supporta contesto lungo, codice, Q&A e altri scenari."
   },
+  "kimi-k2-thinking": {
+    "description": "Il modello kimi-k2-thinking, fornito da Moonshot AI, è un modello di pensiero dotato di capacità agentiche generali e di ragionamento, eccellente nel ragionamento profondo e capace di utilizzare strumenti in più fasi per risolvere una vasta gamma di problemi complessi."
+  },
+  "kimi-k2-thinking-turbo": {
+    "description": "Versione ad alta velocità del modello K2 Thinking, supporta contesto da 256k, eccelle nel ragionamento profondo con output a 60-100 token al secondo."
+  },
   "kimi-k2-turbo-preview": {
     "description": "kimi-k2 è un modello di base con architettura MoE che offre potenti capacità di programmazione e di agent, con 1T di parametri totali e 32B di parametri attivi. Nei benchmark delle principali categorie — ragionamento su conoscenze generali, programmazione, matematica e agent — il modello K2 supera gli altri modelli open source più diffusi."
   },
@@ -2126,8 +2237,8 @@
   "kimi-latest": {
     "description": "Il prodotto Kimi Smart Assistant utilizza il più recente modello Kimi, che potrebbe includere funzionalità non ancora stabili. Supporta la comprensione delle immagini e selezionerà automaticamente il modello di fatturazione 8k/32k/128k in base alla lunghezza del contesto della richiesta."
   },
-  "kimi-thinking-preview": {
-    "description": "Il modello kimi-thinking-preview, fornito da Moon's Dark Side, è un modello multimodale di pensiero con capacità di ragionamento multimodale e generale, eccellente nel ragionamento profondo per aiutare a risolvere problemi più complessi."
+  "kuaishou/kat-coder-pro-v1": {
+    "description": "KAT-Coder-Pro-V1 (gratuito per un periodo limitato) è focalizzato sulla comprensione del codice e programmazione automatica, ideale per agenti di programmazione efficienti."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
@@ -2170,9 +2281,6 @@
   },
   "llama-3.3-instruct": {
     "description": "Il modello Llama 3.3 per l'addestramento di istruzioni è stato ottimizzato per scenari di conversazione, superando molti modelli di chat open source esistenti nelle comuni benchmark settoriali."
-  },
-  "llama-4-scout-17b-16e-instruct": {
-    "description": "Llama 4 Scout: un modello ad alte prestazioni della serie Llama, adatto a scenari che richiedono elevato throughput e bassa latenza."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B offre capacità di elaborazione della complessità senza pari, progettato su misura per progetti ad alta richiesta."
@@ -2224,6 +2332,9 @@
   },
   "megrez-3b-instruct": {
     "description": "Megrez 3B Instruct è un modello efficiente a basso numero di parametri sviluppato da Wuwen Xinqiong."
+  },
+  "meituan/longcat-flash-chat": {
+    "description": "Modello base non riflessivo open source di Meituan, ottimizzato per l'interazione dialogica e i compiti degli agenti intelligenti, eccelle nell'uso di strumenti e in scenari complessi di conversazione multi-turno."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Un potente modello con 70 miliardi di parametri che eccelle nel ragionamento, nella codifica e nelle ampie applicazioni linguistiche."
@@ -2456,6 +2567,12 @@
   "minimax-m2": {
     "description": "MiniMax M2 è un modello linguistico di grandi dimensioni, efficiente e progettato per flussi di lavoro di codifica e agenti intelligenti."
   },
+  "minimax/minimax-m2": {
+    "description": "MiniMax-M2 è un modello ad alto rapporto qualità-prezzo con ottime prestazioni in codifica e compiti di agenti, adatto a vari scenari ingegneristici."
+  },
+  "minimaxai/minimax-m2": {
+    "description": "MiniMax-M2 è un modello MoE (Mixture of Experts) compatto, veloce ed economico, con 230 miliardi di parametri totali e 10 miliardi di parametri attivi, progettato per offrire prestazioni eccellenti nei compiti di codifica e agenti, mantenendo una forte intelligenza generale. Si distingue per le sue prestazioni in attività come l'editing di file multipli, il ciclo chiuso codifica-esecuzione-correzione, la verifica e correzione dei test, e le complesse catene di strumenti a collegamento lungo, rendendolo una scelta ideale per i flussi di lavoro degli sviluppatori."
+  },
   "ministral-3b-latest": {
     "description": "Ministral 3B è il modello di punta di Mistral per edge computing."
   },
@@ -2597,14 +2714,26 @@
   "moonshotai/Kimi-K2-Instruct-0905": {
     "description": "Kimi K2-Instruct-0905 è l'ultima e più potente versione di Kimi K2. Si tratta di un modello linguistico di esperti misti (MoE) all'avanguardia, con un totale di 1 trilione di parametri e 32 miliardi di parametri attivi. Le caratteristiche principali del modello includono: intelligenza potenziata per la codifica degli agenti, con miglioramenti significativi nelle prestazioni sia nei test di riferimento pubblici sia nelle attività di codifica degli agenti nel mondo reale; esperienza di codifica frontend migliorata, con progressi sia nell'estetica che nella praticità della programmazione frontend."
   },
+  "moonshotai/Kimi-K2-Thinking": {
+    "description": "Kimi K2 Thinking è il più recente e potente modello open source per il ragionamento. Estende significativamente la profondità del ragionamento multi-step e mantiene un uso stabile degli strumenti anche in 200–300 chiamate consecutive. Ha stabilito nuovi standard nei benchmark come Humanity's Last Exam (HLE), BrowseComp e altri. Eccelle in programmazione, matematica, ragionamento logico e scenari agentici. Basato su un'architettura a esperti misti (MoE), ha circa 1 trilione di parametri, supporta una finestra di contesto di 256K token e l'utilizzo di strumenti."
+  },
   "moonshotai/kimi-k2": {
     "description": "Kimi K2 è un modello linguistico a esperti misti (MoE) su larga scala sviluppato da Moonshot AI, con un totale di 1 trilione di parametri e 32 miliardi di parametri attivi per ogni passaggio in avanti. Ottimizzato per capacità di agente, inclusi uso avanzato di strumenti, ragionamento e sintesi di codice."
   },
+  "moonshotai/kimi-k2-0711": {
+    "description": "Kimi K2 0711 è la versione Instruct della serie Kimi, adatta a scenari di codifica di alta qualità e utilizzo di strumenti."
+  },
   "moonshotai/kimi-k2-0905": {
-    "description": "Il modello kimi-k2-0905-preview ha una lunghezza di contesto di 256k, con capacità di Agentic Coding più forti, una migliore estetica e praticità del codice frontend, e una migliore comprensione del contesto."
+    "description": "Kimi K2 0905 è l'aggiornamento 0905 della serie Kimi, con contesto esteso e prestazioni di ragionamento migliorate, ottimizzato per la codifica."
   },
   "moonshotai/kimi-k2-instruct-0905": {
     "description": "Il modello kimi-k2-0905-preview ha una lunghezza di contesto di 256k, con capacità di Agentic Coding più forti, una migliore estetica e praticità del codice frontend, e una migliore comprensione del contesto."
+  },
+  "moonshotai/kimi-k2-thinking": {
+    "description": "Kimi K2 Thinking è il modello ottimizzato da Moonshot per compiti di ragionamento profondo, con capacità generali da agente."
+  },
+  "moonshotai/kimi-k2-thinking-turbo": {
+    "description": "Kimi K2 Thinking Turbo è la versione ad alta velocità di Kimi K2 Thinking, con bassa latenza e mantenimento delle capacità di ragionamento profondo."
   },
   "morph/morph-v3-fast": {
     "description": "Morph offre un modello AI specializzato che applica rapidamente le modifiche al codice suggerite da modelli all'avanguardia come Claude o GPT-4o ai tuoi file di codice esistenti - VELOCE - oltre 4500 token al secondo. Funziona come l'ultimo passo nel flusso di lavoro di codifica AI. Supporta 16k token in input e 16k token in output."
@@ -2628,7 +2757,7 @@
     "description": "Focalizzato su inferenze avanzate e risoluzione di problemi complessi, inclusi compiti matematici e scientifici. È particolarmente adatto per applicazioni che richiedono una comprensione profonda del contesto e flussi di lavoro agenti."
   },
   "o1-mini": {
-    "description": "o1-mini è un modello di inferenza rapido ed economico progettato per applicazioni di programmazione, matematica e scienza. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
+    "description": "Più piccolo e veloce rispetto a o1-preview, con un costo ridotto dell'80%. Ottime prestazioni nella generazione di codice e operazioni su contesti ridotti."
   },
   "o1-preview": {
     "description": "Si concentra sul ragionamento avanzato e sulla risoluzione di problemi complessi, inclusi compiti matematici e scientifici. È particolarmente adatto per applicazioni che richiedono una comprensione profonda del contesto e flussi di lavoro autonomi."
@@ -2688,28 +2817,49 @@
     "description": "gpt-4-turbo di OpenAI possiede una vasta conoscenza generale e competenze settoriali, permettendogli di seguire istruzioni complesse in linguaggio naturale e risolvere problemi difficili con precisione. La sua conoscenza è aggiornata ad aprile 2023 e ha una finestra di contesto di 128.000 token."
   },
   "openai/gpt-4.1": {
-    "description": "GPT 4.1 è il modello di punta di OpenAI, adatto a compiti complessi. È eccellente nella risoluzione di problemi interdisciplinari."
+    "description": "La serie GPT-4.1 offre contesto esteso e capacità avanzate di ingegneria e ragionamento."
   },
   "openai/gpt-4.1-mini": {
-    "description": "GPT 4.1 mini bilancia intelligenza, velocità e costo, rendendolo un modello attraente per molti casi d'uso."
+    "description": "GPT-4.1 Mini offre bassa latenza e ottimo rapporto qualità-prezzo, adatto a contesti medi."
   },
   "openai/gpt-4.1-nano": {
-    "description": "GPT-4.1 nano è il modello GPT 4.1 più veloce e conveniente."
+    "description": "GPT-4.1 Nano è l'opzione a bassissimo costo e latenza, ideale per dialoghi brevi ad alta frequenza o classificazione."
   },
   "openai/gpt-4o": {
-    "description": "GPT-4o di OpenAI possiede una vasta conoscenza generale e competenze settoriali, capace di seguire istruzioni complesse in linguaggio naturale e risolvere problemi difficili con precisione. Offre prestazioni equivalenti a GPT-4 Turbo con un'API più veloce e meno costosa."
+    "description": "La serie GPT-4o è il modello Omni di OpenAI, supporta input testo + immagine e output testuale."
   },
   "openai/gpt-4o-mini": {
-    "description": "GPT-4o mini di OpenAI è il loro modello piccolo più avanzato e conveniente. È multimodale (accetta input di testo o immagini e produce testo) ed è più intelligente di gpt-3.5-turbo, mantenendo la stessa velocità."
+    "description": "GPT-4o-mini è la versione compatta e veloce di GPT-4o, adatta a scenari misti testo-immagine a bassa latenza."
   },
   "openai/gpt-5": {
-    "description": "GPT-5 è il modello linguistico di punta di OpenAI, eccellente in ragionamento complesso, ampia conoscenza del mondo reale, compiti intensivi di codice e agenti a più passaggi."
+    "description": "GPT-5 è il modello ad alte prestazioni di OpenAI, adatto a un'ampia gamma di compiti produttivi e di ricerca."
+  },
+  "openai/gpt-5-chat": {
+    "description": "GPT-5 Chat è una variante di GPT-5 ottimizzata per dialoghi, con latenza ridotta per una migliore esperienza interattiva."
+  },
+  "openai/gpt-5-codex": {
+    "description": "GPT-5-Codex è una variante di GPT-5 ulteriormente ottimizzata per scenari di codifica, adatta a flussi di lavoro su larga scala."
   },
   "openai/gpt-5-mini": {
-    "description": "GPT-5 mini è un modello ottimizzato per i costi, con ottime prestazioni in compiti di ragionamento e chat. Offre il miglior equilibrio tra velocità, costo e capacità."
+    "description": "GPT-5 Mini è la versione compatta della famiglia GPT-5, adatta a scenari a bassa latenza e basso costo."
   },
   "openai/gpt-5-nano": {
-    "description": "GPT-5 nano è un modello ad alto throughput, eccellente in compiti semplici di istruzioni o classificazione."
+    "description": "GPT-5 Nano è la versione ultra-compatta della famiglia, ideale per scenari con requisiti estremi su costi e latenza."
+  },
+  "openai/gpt-5-pro": {
+    "description": "GPT-5 Pro è il modello di punta di OpenAI, con capacità avanzate di ragionamento, generazione di codice e funzionalità aziendali, supporta routing in fase di test e politiche di sicurezza rigorose."
+  },
+  "openai/gpt-5.1": {
+    "description": "GPT-5.1 è l'ultimo modello di punta della serie GPT-5, con miglioramenti significativi in ragionamento generale, esecuzione di istruzioni e naturalezza del dialogo, adatto a una vasta gamma di compiti."
+  },
+  "openai/gpt-5.1-chat": {
+    "description": "GPT-5.1 Chat è il membro leggero della famiglia GPT-5.1, ottimizzato per dialoghi a bassa latenza, mantenendo buone capacità di ragionamento ed esecuzione di istruzioni."
+  },
+  "openai/gpt-5.1-codex": {
+    "description": "GPT-5.1-Codex è una variante di GPT-5.1 ottimizzata per ingegneria del software e flussi di lavoro di codifica, adatta a refactoring su larga scala, debug complesso e codifica autonoma prolungata."
+  },
+  "openai/gpt-5.1-codex-mini": {
+    "description": "GPT-5.1-Codex-Mini è la versione compatta e accelerata di GPT-5.1-Codex, ideale per scenari di codifica sensibili a latenza e costi."
   },
   "openai/gpt-oss-120b": {
     "description": "Modello linguistico grande universale estremamente capace, con potenti capacità di ragionamento controllabile."
@@ -2736,7 +2886,7 @@
     "description": "o3-mini alta versione di ragionamento, offre alta intelligenza mantenendo gli stessi obiettivi di costo e latenza di o1-mini."
   },
   "openai/o4-mini": {
-    "description": "o4-mini di OpenAI offre ragionamento veloce e conveniente, con prestazioni eccezionali per la sua dimensione, specialmente in matematica (eccellente nel benchmark AIME), codifica e compiti visivi."
+    "description": "OpenAI o4-mini è un modello di ragionamento compatto ed efficiente, adatto a scenari a bassa latenza."
   },
   "openai/o4-mini-high": {
     "description": "Versione ad alta capacità di inferenza di o4-mini, ottimizzata per un'inferenza rapida ed efficace, mostrando un'elevata efficienza e prestazioni in compiti di codifica e visivi."
@@ -2846,9 +2996,6 @@
   "qwen-3-32b": {
     "description": "Qwen 3 32B: eccellente nelle attività multilingue e di codifica, adatto per applicazioni produttive di media scala."
   },
-  "qwen-3-coder-480b": {
-    "description": "Qwen 3 Coder 480B: un modello con contesto esteso progettato per la generazione di codice e compiti di programmazione complessi."
-  },
   "qwen-coder-plus": {
     "description": "Modello di codice Tongyi Qianwen."
   },
@@ -2940,13 +3087,19 @@
     "description": "Potente modello di codice di medie dimensioni, supporta una lunghezza di contesto di 32K, specializzato in programmazione multilingue."
   },
   "qwen/qwen3-14b": {
-    "description": "Qwen3-14B è un modello linguistico causale denso con 14,8 miliardi di parametri della serie Qwen3, progettato per ragionamenti complessi e dialoghi efficienti. Supporta un passaggio senza soluzione di continuità tra modalità di 'pensiero' per compiti di matematica, programmazione e ragionamento logico e modalità 'non di pensiero' per dialoghi generali. Questo modello è stato ottimizzato per seguire istruzioni, utilizzo di strumenti per agenti, scrittura creativa e compiti multilingue in oltre 100 lingue e dialetti. Gestisce nativamente un contesto di 32K token e può essere esteso a 131K token utilizzando estensioni basate su YaRN."
+    "description": "Qwen3-14B è la versione da 14B della serie Qwen, adatta a scenari di ragionamento e dialogo standard."
   },
   "qwen/qwen3-14b:free": {
     "description": "Qwen3-14B è un modello linguistico causale denso con 14,8 miliardi di parametri della serie Qwen3, progettato per ragionamenti complessi e dialoghi efficienti. Supporta un passaggio senza soluzione di continuità tra modalità di 'pensiero' per compiti di matematica, programmazione e ragionamento logico e modalità 'non di pensiero' per dialoghi generali. Questo modello è stato ottimizzato per seguire istruzioni, utilizzo di strumenti per agenti, scrittura creativa e compiti multilingue in oltre 100 lingue e dialetti. Gestisce nativamente un contesto di 32K token e può essere esteso a 131K token utilizzando estensioni basate su YaRN."
   },
   "qwen/qwen3-235b-a22b": {
     "description": "Qwen3-235B-A22B è un modello esperto a miscelazione (MoE) con 235 miliardi di parametri sviluppato da Qwen, attivando 22 miliardi di parametri ad ogni passaggio in avanti. Supporta un passaggio senza soluzione di continuità tra modalità di 'pensiero' per ragionamenti complessi, matematica e compiti di codifica e modalità 'non di pensiero' per dialoghi generali. Questo modello dimostra forti capacità di ragionamento, supporto multilingue (in oltre 100 lingue e dialetti), avanzate capacità di seguire istruzioni e chiamate a strumenti per agenti. Gestisce nativamente una finestra di contesto di 32K token e può essere esteso a 131K token utilizzando estensioni basate su YaRN."
+  },
+  "qwen/qwen3-235b-a22b-2507": {
+    "description": "Qwen3-235B-A22B-Instruct-2507 è la versione Instruct della serie Qwen3, bilancia istruzioni multilingue e contesto lungo."
+  },
+  "qwen/qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3-235B-A22B-Thinking-2507 è la variante Thinking di Qwen3, potenziata per compiti complessi di matematica e ragionamento."
   },
   "qwen/qwen3-235b-a22b:free": {
     "description": "Qwen3-235B-A22B è un modello esperto a miscelazione (MoE) con 235 miliardi di parametri sviluppato da Qwen, attivando 22 miliardi di parametri ad ogni passaggio in avanti. Supporta un passaggio senza soluzione di continuità tra modalità di 'pensiero' per ragionamenti complessi, matematica e compiti di codifica e modalità 'non di pensiero' per dialoghi generali. Questo modello dimostra forti capacità di ragionamento, supporto multilingue (in oltre 100 lingue e dialetti), avanzate capacità di seguire istruzioni e chiamate a strumenti per agenti. Gestisce nativamente una finestra di contesto di 32K token e può essere esteso a 131K token utilizzando estensioni basate su YaRN."
@@ -2965,6 +3118,21 @@
   },
   "qwen/qwen3-8b:free": {
     "description": "Qwen3-8B è un modello linguistico causale denso con 8,2 miliardi di parametri della serie Qwen3, progettato per compiti intensivi di inferenza e dialoghi efficienti. Supporta un passaggio senza soluzione di continuità tra modalità di 'pensiero' per matematica, codifica e ragionamento logico e modalità 'non di pensiero' per dialoghi generali. Questo modello è stato ottimizzato per seguire istruzioni, integrazione di agenti, scrittura creativa e utilizzo multilingue in oltre 100 lingue e dialetti. Supporta nativamente una finestra di contesto di 32K token e può essere esteso a 131K token tramite YaRN."
+  },
+  "qwen/qwen3-coder": {
+    "description": "Qwen3-Coder è la famiglia di generatori di codice di Qwen3, eccelle nella comprensione e generazione di codice in documenti lunghi."
+  },
+  "qwen/qwen3-coder-plus": {
+    "description": "Qwen3-Coder-Plus è un modello di codifica ottimizzato della serie Qwen, supporta chiamate di strumenti complesse e conversazioni prolungate."
+  },
+  "qwen/qwen3-max": {
+    "description": "Qwen3 Max è il modello di ragionamento avanzato della serie Qwen3, adatto a ragionamento multilingue e integrazione con strumenti."
+  },
+  "qwen/qwen3-max-preview": {
+    "description": "Qwen3 Max (preview) è la versione Max della serie Qwen per ragionamento avanzato e integrazione con strumenti (anteprima)."
+  },
+  "qwen/qwen3-vl-plus": {
+    "description": "Qwen3 VL-Plus è la versione con capacità visive avanzate della serie Qwen3, migliora il ragionamento multimodale e l'elaborazione video."
   },
   "qwen2": {
     "description": "Qwen2 è la nuova generazione di modelli di linguaggio su larga scala di Alibaba, supporta prestazioni eccellenti per esigenze applicative diversificate."
@@ -3188,6 +3356,9 @@
   "sonar-reasoning-pro": {
     "description": "Nuovo prodotto API supportato dal modello di ragionamento DeepSeek."
   },
+  "spark-x": {
+    "description": "Caratteristiche di X1.5: (1) Nuova modalità di pensiero dinamico controllabile tramite il campo 'thinking'; (2) Lunghezza del contesto aumentata: 64K in input e output; (3) Supporto per la funzionalità FunctionCall."
+  },
   "stable-diffusion-3-medium": {
     "description": "Ultimo modello di generazione immagini da testo lanciato da Stability AI. Questa versione migliora significativamente qualità dell'immagine, comprensione testuale e varietà di stili rispetto alle precedenti, interpretando con maggiore precisione prompt linguistici complessi e generando immagini più accurate e diversificate."
   },
@@ -3259,9 +3430,6 @@
   },
   "step-r1-v-mini": {
     "description": "Questo modello è un grande modello di inferenza con potenti capacità di comprensione delle immagini, in grado di gestire informazioni visive e testuali, producendo contenuti testuali dopo un profondo ragionamento. Questo modello si distingue nel campo del ragionamento visivo, mostrando anche capacità di ragionamento matematico, codice e testo di primo livello. La lunghezza del contesto è di 100k."
-  },
-  "step3": {
-    "description": "Step3 è un modello multimodale sviluppato da StepStar, con potenti capacità di comprensione visiva."
   },
   "stepfun-ai/step3": {
     "description": "Step3 è un modello di inferenza multimodale all'avanguardia rilasciato da StepFun (阶跃星辰). È costruito su un'architettura Mixture of Experts (MoE) con 321 miliardi di parametri totali e 38 miliardi di parametri di attivazione. Il modello adotta un design end-to-end, pensato per minimizzare i costi di decodifica e al contempo offrire prestazioni di primo livello nel ragionamento visivo-linguistico. Grazie al design sinergico che combina Multi-Matrix Factorized Attention (MFA) e il disaccoppiamento attenzione-FFN (AFD), Step3 mantiene un'elevata efficienza sia sui più potenti acceleratori flagship sia su quelli di fascia bassa. Durante la fase di pre-addestramento, Step3 ha elaborato oltre 20T di token testuali e 4T di token misti immagine-testo, coprendo più di dieci lingue. Il modello ha raggiunto livelli leader tra i modelli open source in numerosi benchmark, inclusi matematica, codice e scenari multimodali."
@@ -3344,6 +3512,9 @@
   "vercel/v0-1.5-md": {
     "description": "Accesso al modello dietro v0 per generare, correggere e ottimizzare applicazioni web moderne, con ragionamento specifico per framework e conoscenze aggiornate."
   },
+  "volcengine/doubao-seed-code": {
+    "description": "Doubao-Seed-Code è il modello di Byte Volcano Engine ottimizzato per Agentic Programming, eccelle in benchmark di programmazione e agenti, supporta contesto da 256K."
+  },
   "wan2.2-t2i-flash": {
     "description": "Versione ultra-veloce Wanxiang 2.2, modello più recente. Miglioramenti completi in creatività, stabilità e realismo, con velocità di generazione elevata e ottimo rapporto qualità-prezzo."
   },
@@ -3371,8 +3542,23 @@
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 è un modello di linguaggio fornito da Microsoft AI, particolarmente efficace in dialoghi complessi, multilingue, ragionamento e assistenti intelligenti."
   },
-  "x1": {
-    "description": "Il modello Spark X1 sarà ulteriormente aggiornato, raggiungendo risultati in compiti generali come ragionamento, generazione di testo e comprensione del linguaggio, in linea con OpenAI o1 e DeepSeek R1, partendo da una posizione di leadership nei compiti matematici."
+  "x-ai/grok-4": {
+    "description": "Grok 4 è il modello di punta di xAI per il ragionamento, con potenti capacità di ragionamento e multimodalità."
+  },
+  "x-ai/grok-4-fast": {
+    "description": "Grok 4 Fast è il modello ad alto throughput e basso costo di xAI (supporta contesto da 2M), adatto a scenari con alta concorrenza e contesto lungo."
+  },
+  "x-ai/grok-4-fast-non-reasoning": {
+    "description": "Grok 4 Fast (Non-Reasoning) è il modello multimodale ad alto throughput e basso costo di xAI (supporta contesto da 2M), pensato per scenari sensibili a latenza e costi che non richiedono ragionamento interno. È affiancato alla versione reasoning e può attivare il ragionamento tramite parametro API. Prompt e completamenti possono essere usati da xAI o OpenRouter per migliorare i modelli futuri."
+  },
+  "x-ai/grok-4.1-fast": {
+    "description": "Grok 4 Fast è il modello ad alto throughput e basso costo di xAI (supporta contesto da 2M), adatto a scenari con alta concorrenza e contesto lungo."
+  },
+  "x-ai/grok-4.1-fast-non-reasoning": {
+    "description": "Grok 4 Fast (Non-Reasoning) è il modello multimodale ad alto throughput e basso costo di xAI (supporta contesto da 2M), pensato per scenari sensibili a latenza e costi che non richiedono ragionamento interno. È affiancato alla versione reasoning e può attivare il ragionamento tramite parametro API. Prompt e completamenti possono essere usati da xAI o OpenRouter per migliorare i modelli futuri."
+  },
+  "x-ai/grok-code-fast-1": {
+    "description": "Grok Code Fast 1 è il modello di codifica veloce di xAI, con output leggibile e adatto all'ingegneria del software."
   },
   "xai/grok-2": {
     "description": "Grok 2 è un modello linguistico all'avanguardia con capacità di ragionamento avanzate. Eccelle in chat, codifica e ragionamento, superando Claude 3.5 Sonnet e GPT-4-Turbo nella classifica LMSYS."
@@ -3431,6 +3617,18 @@
   "yi-vision-v2": {
     "description": "Modello per compiti visivi complessi, che offre capacità di comprensione e analisi ad alte prestazioni basate su più immagini."
   },
+  "z-ai/glm-4.5": {
+    "description": "GLM 4.5 è il modello di punta di Z.AI, supporta modalità di ragionamento ibrido ed è ottimizzato per compiti ingegneristici e contesto lungo."
+  },
+  "z-ai/glm-4.5-air": {
+    "description": "GLM 4.5 Air è la versione leggera di GLM 4.5, adatta a scenari sensibili ai costi ma con forti capacità di ragionamento."
+  },
+  "z-ai/glm-4.6": {
+    "description": "GLM 4.6 è il modello di punta di Z.AI, con contesto esteso e capacità di codifica migliorate."
+  },
+  "zai-glm-4.6": {
+    "description": "Eccellente nelle attività di programmazione e ragionamento, supporta lo streaming e l'utilizzo di strumenti. Ideale per codifica agentica e scenari di ragionamento complesso."
+  },
   "zai-org/GLM-4.5": {
     "description": "GLM-4.5 è un modello base progettato per applicazioni agenti intelligenti, che utilizza un'architettura Mixture-of-Experts (MoE). Ottimizzato profondamente per chiamate a strumenti, navigazione web, ingegneria del software e programmazione frontend, supporta integrazioni fluide con agenti di codice come Claude Code e Roo Code. Adotta una modalità di inferenza ibrida per adattarsi a scenari di ragionamento complessi e uso quotidiano."
   },
@@ -3451,5 +3649,8 @@
   },
   "zai/glm-4.5v": {
     "description": "GLM-4.5V è costruito sul modello base GLM-4.5-Air, eredita la tecnologia verificata di GLM-4.1V-Thinking e si espande efficacemente con una potente architettura MoE da 106 miliardi di parametri."
+  },
+  "zenmux/auto": {
+    "description": "La funzione di routing automatico di ZenMux seleziona automaticamente il modello con il miglior rapporto qualità/prezzo e prestazioni in base alla tua richiesta tra i modelli supportati."
   }
 }

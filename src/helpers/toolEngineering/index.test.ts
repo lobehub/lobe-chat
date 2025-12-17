@@ -1,7 +1,7 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createChatToolsEngine, createToolsEngine, getEnabledTools } from './index';
+import { createAgentToolsEngine, createToolsEngine, getEnabledTools } from './index';
 
 // Mock the store and helper dependencies
 vi.mock('@/store/tool', () => ({
@@ -66,6 +66,9 @@ vi.mock('@/store/tool', () => ({
 vi.mock('@/store/tool/selectors', () => ({
   pluginSelectors: {
     installedPluginManifestList: () => [],
+  },
+  klavisStoreSelectors: {
+    klavisAsLobeTools: () => [],
   },
 }));
 
@@ -137,7 +140,7 @@ describe('toolEngineering', () => {
 
   describe('createChatToolsEngine', () => {
     it('should include web browsing tool as default when no tools are provided', () => {
-      const toolsEngine = createChatToolsEngine({
+      const toolsEngine = createAgentToolsEngine({
         model: 'gpt-4',
         provider: 'openai',
       });
@@ -152,7 +155,7 @@ describe('toolEngineering', () => {
     });
 
     it('should include web browsing tool alongside user-provided tools', () => {
-      const toolsEngine = createChatToolsEngine({
+      const toolsEngine = createAgentToolsEngine({
         model: 'gpt-4',
         provider: 'openai',
       });

@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Benutzerdefinierter Anbieter nicht aktiviert",
       "disabled": "Dienstanbieter nicht aktiviert",
       "enabled": "Dienstanbieter aktiviert"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Benutzerdefinierten Anbieter hinzufügen",
     "all": "Alle",
     "list": {
+      "custom": "Benutzerdefiniert nicht aktiviert",
       "disabled": "Nicht aktiviert",
       "disabledActions": {
         "sort": "Sortieroptionen",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Konfigurationsanleitung",
       "responsesApi": {
-        "desc": "Verwendet das neue Anforderungsformat von OpenAI, um fortgeschrittene Funktionen wie Chain-of-Thought freizuschalten",
+        "desc": "Verwendet das neue Anforderungsformat von OpenAI, um erweiterte Funktionen wie Chain-of-Thought freizuschalten (nur mit OpenAI-Modellen kompatibel)",
         "title": "Verwendung des Responses API-Standards"
       },
       "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte warten Sie"

@@ -53,6 +53,12 @@
       "desc": "Baseado nas restrições do mecanismo Claude Thinking (<1>Saiba mais</1>), ao ativar, o limite de mensagens históricas será desativado automaticamente.",
       "title": "Ativar Pensamento Profundo"
     },
+    "imageAspectRatio": {
+      "title": "Proporção da Imagem"
+    },
+    "imageResolution": {
+      "title": "Resolução da Imagem"
+    },
     "reasoningBudgetToken": {
       "title": "Token de Consumo de Pensamento"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Interruptor de Pensamento Profundo"
+    },
+    "thinkingLevel": {
+      "title": "Nível de raciocínio"
     },
     "title": "Funcionalidade de Extensão do Modelo",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Captura de Tela",
     "settings": "Configurações de Exportação",
     "text": "Texto",
+    "widthMode": {
+      "label": "Modo de largura",
+      "narrow": "Modo de tela estreita",
+      "wide": "Modo de tela larga"
+    },
     "withBackground": "Com Imagem de Fundo",
     "withFooter": "Com Rodapé",
     "withPluginInfo": "Com Informações do Plugin",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Inserir o motivo da rejeição ajudará o Agente a entender e melhorar ações futuras",
       "rejectTitle": "Rejeitar esta chamada de ferramenta",
       "rejectedWithReason": "Esta chamada de ferramenta foi rejeitada: {{reason}}",
+      "toolAbort": "Esta chamada de ferramenta foi cancelada pelo usuário",
       "toolRejected": "Esta chamada de ferramenta foi rejeitada"
     }
   },

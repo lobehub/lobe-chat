@@ -13,16 +13,35 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.minimaxi.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, max_tokens, temperature, tools, top_p, ...params } = payload;
+      const { enabledSearch, max_tokens, messages, temperature, top_p, ...params } = payload;
 
-      const minimaxTools = enabledSearch
-        ? [
-          ...(tools || []),
-          {
-            type: 'web_search',
-          },
-        ]
-        : tools;
+      // Interleaved thinking
+      const processedMessages = messages.map((message: any) => {
+        if (message.role === 'assistant' && message.reasoning) {
+          // 只处理没有 signature 的历史推理内容
+          if (!message.reasoning.signature && message.reasoning.content) {
+            const { reasoning, ...messageWithoutReasoning } = message;
+            return {
+              ...messageWithoutReasoning,
+              reasoning_details: [
+                {
+                  format: 'MiniMax-response-v1',
+                  id: 'reasoning-text-0',
+                  index: 0,
+                  text: reasoning.content,
+                  type: 'reasoning.text',
+                },
+              ],
+            };
+          }
+
+          // 有 signature 或没有 content 的情况，移除 reasoning 字段
+          // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
+          const { reasoning, ...messageWithoutReasoning } = message;
+          return messageWithoutReasoning;
+        }
+        return message;
+      });
 
       // Resolve parameters with constraints
       const resolvedParams = resolveParameters(
@@ -46,8 +65,9 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
       return {
         ...params,
         max_tokens: resolvedParams.max_tokens,
+        messages: processedMessages,
+        reasoning_split: true,
         temperature: finalTemperature,
-        tools: minimaxTools,
         top_p: resolvedParams.top_p,
       } as any;
     },

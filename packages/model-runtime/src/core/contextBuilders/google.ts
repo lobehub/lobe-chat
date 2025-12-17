@@ -12,6 +12,12 @@ import { safeParseJSON } from '../../utils/safeParseJSON';
 import { parseDataUri } from '../../utils/uriParser';
 
 /**
+ * Magic thoughtSignature
+ * @see https://ai.google.dev/gemini-api/docs/thought-signatures#model-behavior:~:text=context_engineering_is_the_way_to_go
+ */
+export const GEMINI_MAGIC_THOUGHT_SIGNATURE = 'context_engineering_is_the_way_to_go';
+
+/**
  * Convert OpenAI content part to Google Part format
  */
 export const buildGooglePart = async (
@@ -23,7 +29,10 @@ export const buildGooglePart = async (
     }
 
     case 'text': {
-      return { text: content.text };
+      return {
+        text: content.text,
+        thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
+      };
     }
 
     case 'image_url': {
@@ -36,6 +45,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType: mimeType || 'image/png' },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -44,6 +54,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -60,6 +71,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType: mimeType || 'video/mp4' },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -70,6 +82,7 @@ export const buildGooglePart = async (
 
         return {
           inlineData: { data: base64, mimeType },
+          thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE,
         };
       }
 
@@ -95,6 +108,7 @@ export const buildGoogleMessage = async (
           args: safeParseJSON(tool.function.arguments)!,
           name: tool.function.name,
         },
+        thoughtSignature: tool.thoughtSignature,
       })),
       role: 'model',
     };
@@ -119,7 +133,8 @@ export const buildGoogleMessage = async (
   }
 
   const getParts = async () => {
-    if (typeof content === 'string') return [{ text: content }];
+    if (typeof content === 'string')
+      return [{ text: content, thoughtSignature: GEMINI_MAGIC_THOUGHT_SIGNATURE }];
 
     const parts = await Promise.all(content.map(async (c) => await buildGooglePart(c)));
     return parts.filter(Boolean) as Part[];
@@ -155,7 +170,43 @@ export const buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promis
   const contents = await Promise.all(pools);
 
   // Filter out empty messages: contents.parts must not be empty.
-  return contents.filter((content: Content) => content.parts && content.parts.length > 0);
+  const filteredContents = contents.filter(
+    (content: Content) => content.parts && content.parts.length > 0,
+  );
+
+  // Check if the last message is a tool message
+  const lastMessage = messages.at(-1);
+  const shouldAddMagicSignature = lastMessage?.role === 'tool';
+
+  if (shouldAddMagicSignature) {
+    // Find the last user message index in filtered contents
+    let lastUserIndex = -1;
+    for (let i = filteredContents.length - 1; i >= 0; i--) {
+      if (filteredContents[i].role === 'user') {
+        // Skip if it's a functionResponse (tool result)
+        const hasFunctionResponse = filteredContents[i].parts?.some((p) => p.functionResponse);
+        if (!hasFunctionResponse) {
+          lastUserIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Add magic signature to all function calls after last user message that don't have thoughtSignature
+    for (let i = lastUserIndex + 1; i < filteredContents.length; i++) {
+      const content = filteredContents[i];
+      if (content.role === 'model' && content.parts) {
+        for (const part of content.parts) {
+          if (part.functionCall && !part.thoughtSignature) {
+            // Only add magic signature if thoughtSignature doesn't exist
+            part.thoughtSignature = GEMINI_MAGIC_THOUGHT_SIGNATURE;
+          }
+        }
+      }
+    }
+  }
+
+  return filteredContents;
 };
 
 /**

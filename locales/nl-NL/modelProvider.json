@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Aangepaste provider niet ingeschakeld",
       "disabled": "Dienstverlener niet ingeschakeld",
       "enabled": "Dienstverlener ingeschakeld"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Voeg aangepaste provider toe",
     "all": "Alles",
     "list": {
+      "custom": "Aangepaste provider niet ingeschakeld",
       "disabled": "Niet ingeschakeld",
       "disabledActions": {
         "sort": "Sorteervolgorde",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Configuratiehandleiding",
       "responsesApi": {
-        "desc": "Gebruik de nieuwe generatie OpenAI-aanvraagformaatstandaard om geavanceerde functies zoals keten van gedachten te ontgrendelen",
+        "desc": "Maakt gebruik van het nieuwe generatie aanvraagformaat van OpenAI om geavanceerde functies zoals Chain of Thought te ontgrendelen (alleen ondersteund door OpenAI-modellen)",
         "title": "Gebruik Responses API-standaard"
       },
       "waitingForMore": "Meer modellen zijn in <1>planning voor integratie</1>, blijf op de hoogte"

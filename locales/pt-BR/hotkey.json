@@ -7,6 +7,10 @@
     "desc": "Limpar as mensagens da conversa atual e os arquivos enviados",
     "title": "Limpar mensagens da conversa"
   },
+  "commandPalette": {
+    "desc": "Abra o painel de comandos global para acessar funções rapidamente",
+    "title": "Painel de Comandos"
+  },
   "deleteAndRegenerateMessage": {
     "desc": "Excluir a última mensagem e gerar novamente",
     "title": "Excluir e gerar novamente"

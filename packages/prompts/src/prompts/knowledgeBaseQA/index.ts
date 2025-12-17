@@ -4,6 +4,12 @@ import { chunkPrompts } from './chunk';
 import { knowledgePrompts } from './knowledge';
 import { userQueryPrompt } from './userQuery';
 
+export type { FileContent } from './formatFileContents';
+export { promptFileContents } from './formatFileContents';
+export { promptNoSearchResults } from './formatNoSearchResults';
+export type { FileSearchResult, FileSearchResultChunk } from './formatSearchResults';
+export { formatSearchResults } from './formatSearchResults';
+
 export const knowledgeBaseQAPrompts = ({
   chunks,
   knowledge,

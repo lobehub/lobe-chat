@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Proveedor personalizado no habilitado",
       "disabled": "Proveedor no habilitado",
       "enabled": "Proveedor habilitado"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Agregar proveedor personalizado",
     "all": "Todo",
     "list": {
+      "custom": "Personalización no habilitada",
       "disabled": "No habilitado",
       "disabledActions": {
         "sort": "Ordenar por",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Guía de configuración",
       "responsesApi": {
-        "desc": "Utiliza el nuevo formato de solicitud de OpenAI para desbloquear características avanzadas como cadenas de pensamiento",
+        "desc": "Adopta el nuevo formato de solicitud de OpenAI, desbloqueando funciones avanzadas como la cadena de pensamiento (solo compatible con modelos de OpenAI)",
         "title": "Uso de la especificación Responses API"
       },
       "waitingForMore": "Más modelos están en <1>planificación de integración</1>, por favor, espera"

@@ -41,7 +41,7 @@ export enum McpNavKey {
 
 export enum McpConnectionType {
   http = 'http',
-  stdio = 'stdio'
+  stdio = 'stdio',
 }
 
 export type DiscoverMcpItem = PluginItem;
@@ -60,6 +60,7 @@ export interface McpQueryParams {
 export type McpListResponse = PluginListResponse;
 
 export interface DiscoverMcpDetail extends PluginItemDetail {
+  haveCloudEndpoint?: boolean;
   isClaimed?: boolean;
   related: DiscoverMcpItem[];
 }

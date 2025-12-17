@@ -293,6 +293,12 @@
       "elegant": "우아함",
       "title": "반응 애니메이션"
     },
+    "contextMenuMode": {
+      "default": "기본값",
+      "desc": "채팅 메시지 우클릭 메뉴 표시 방식을 선택하세요",
+      "disabled": "사용 안 함",
+      "title": "우클릭 메뉴 방식"
+    },
     "neutralColor": {
       "desc": "다양한 색상 경향의 회색조 사용자 정의",
       "title": "중립 색상"
@@ -769,11 +775,36 @@
       "groupName": "내장"
     },
     "disabled": "현재 모델은 함수 호출을 지원하지 않으며 플러그인을 사용할 수 없습니다",
+    "klavis": {
+      "addServer": "서버 추가",
+      "authCompleted": "인증 완료",
+      "authFailed": "인증 실패",
+      "authRequired": "인증 필요",
+      "connected": "연결됨",
+      "error": "오류",
+      "groupName": "Klavis 도구",
+      "manage": "Klavis 관리",
+      "manageTitle": "Klavis 통합 관리",
+      "noServers": "연결된 서버 없음",
+      "notEnabled": "Klavis 서비스가 활성화되지 않음",
+      "oauthRequired": "새 창에서 OAuth 인증을 완료해 주세요",
+      "pendingAuth": "인증 대기 중",
+      "serverCreated": "서버 생성 성공",
+      "serverCreatedFailed": "서버 생성 실패",
+      "serverRemoved": "서버 삭제됨",
+      "servers": "개의 서버",
+      "tools": "개의 도구",
+      "verifyAuth": "인증을 완료했습니다"
+    },
     "plugins": {
       "enabled": "활성화됨 {{num}}",
       "groupName": "플러그인",
       "noEnabled": "활성화된 플러그인이 없음",
       "store": "플러그인 스토어"
+    },
+    "tabs": {
+      "all": "전체",
+      "installed": "활성화됨"
     },
     "title": "확장 도구"
   }

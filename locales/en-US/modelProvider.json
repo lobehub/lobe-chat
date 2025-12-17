@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Custom provider not enabled",
       "disabled": "Disabled",
       "enabled": "Enabled"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Add Custom Provider",
     "all": "All",
     "list": {
+      "custom": "Custom not enabled",
       "disabled": "Disabled",
       "disabledActions": {
         "sort": "Sort By",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Configuration Guide",
       "responsesApi": {
-        "desc": "Utilizes OpenAI's next-generation request format specification to unlock advanced features like chain of thought",
+        "desc": "Uses OpenAI's next-generation request format specification to unlock advanced features like chain-of-thought (supported by OpenAI models only)",
         "title": "Use Responses API Specification"
       },
       "waitingForMore": "More models are currently <1>planned for integration</1>, please stay tuned"

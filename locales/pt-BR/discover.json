@@ -616,6 +616,7 @@
     "supportedProviders": "Provedores que suportam este modelo"
   },
   "plugins": {
+    "builtinTag": "Plugin Integrado",
     "community": "Plugins da Comunidade",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Instalar Plugin",
     "installed": "Instalado",
+    "legacyTag": "Plugin Legado",
     "list": "Lista de Plugins",
     "meta": {
       "description": "Descrição",

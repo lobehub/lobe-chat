@@ -137,6 +137,9 @@
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
+  "replicate": {
+    "description": "Replicate esegue modelli di immagini open source come FLUX e Stable Diffusion tramite una semplice API cloud."
+  },
   "sambanova": {
     "description": "SambaNova Cloud consente agli sviluppatori di utilizzare facilmente i migliori modelli open source e di godere della velocità di inferenza più rapida."
   },
@@ -190,6 +193,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) è una piattaforma open source progettata per semplificare l'esecuzione e l'integrazione di vari modelli AI. Con Xinference, è possibile eseguire inferenze utilizzando qualsiasi modello LLM open source, modelli di embedding e modelli multimodali, sia in un ambiente cloud che locale, creando potenti applicazioni AI."
+  },
+  "zenmux": {
+    "description": "ZenMux è una piattaforma unificata per l'aggregazione di servizi AI, compatibile con le principali interfacce di servizi AI come OpenAI, Anthropic, Google VertexAI e molte altre. Offre una gestione flessibile del routing, permettendoti di passare e gestire facilmente diversi modelli di intelligenza artificiale."
   },
   "zeroone": {
     "description": "01.AI si concentra sulla tecnologia AI dell'era 2.0, promuovendo attivamente l'innovazione e l'applicazione di \"uomo + intelligenza artificiale\", utilizzando modelli potenti e tecnologie AI avanzate per migliorare la produttività umana e realizzare l'abilitazione tecnologica."

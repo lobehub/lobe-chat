@@ -1,7 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { SkeletonList } from '@/features/Conversation';
+import { SkeletonList } from '@/features/ChatList';
 
 const Content = lazy(() => import('./Content'));
 

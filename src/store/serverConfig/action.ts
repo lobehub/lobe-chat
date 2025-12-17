@@ -25,7 +25,11 @@ export const createServerConfigSlice: StateCreator<
       {
         onSuccess: (data) => {
           set(
-            { featureFlags: data.serverFeatureFlags, serverConfig: data.serverConfig },
+            {
+              featureFlags: data.serverFeatureFlags,
+              serverConfig: data.serverConfig,
+              serverConfigInit: true,
+            },
             false,
             'initServerConfig',
           );

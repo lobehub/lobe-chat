@@ -137,6 +137,9 @@
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
+  "replicate": {
+    "description": "Replicate vận hành các mô hình hình ảnh mã nguồn mở như FLUX và Stable Diffusion thông qua API đám mây đơn giản."
+  },
   "sambanova": {
     "description": "SambaNova Cloud cho phép các nhà phát triển dễ dàng sử dụng các mô hình mã nguồn mở tốt nhất và tận hưởng tốc độ suy diễn nhanh nhất."
   },
@@ -190,6 +193,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) là một nền tảng mã nguồn mở, được thiết kế để đơn giản hóa việc chạy và tích hợp các mô hình AI khác nhau. Với Xinference, bạn có thể chạy suy luận trên bất kỳ mô hình LLM mã nguồn mở, mô hình nhúng và mô hình đa phương thức nào trong môi trường đám mây hoặc cục bộ, và tạo ra các ứng dụng AI mạnh mẽ."
+  },
+  "zenmux": {
+    "description": "ZenMux là một nền tảng tổng hợp dịch vụ AI thống nhất, hỗ trợ nhiều giao diện dịch vụ AI phổ biến như OpenAI, Anthropic, Google VertexAI, v.v. Nền tảng cung cấp khả năng định tuyến linh hoạt, giúp bạn dễ dàng chuyển đổi và quản lý các mô hình AI khác nhau."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."

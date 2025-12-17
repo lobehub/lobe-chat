@@ -18,6 +18,7 @@ import {
   WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import { SYSTEM_FILES_TO_IGNORE, loadFile } from '@lobechat/file-loaders';
+import { createPatch } from 'diff';
 import { shell } from 'electron';
 import fg from 'fast-glob';
 import { Stats, constants } from 'node:fs';
@@ -29,19 +30,20 @@ import { FileResult, SearchOptions } from '@/types/fileSearch';
 import { makeSureDirExist } from '@/utils/file-system';
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 // Create logger
 const logger = createLogger('controllers:LocalFileCtr');
 
 export default class LocalFileCtr extends ControllerModule {
+  static override readonly groupName = 'localSystem';
   private get searchService() {
     return this.app.getService(FileSearchService);
   }
 
   // ==================== File Operation ====================
 
-  @ipcClientEvent('openLocalFile')
+  @IpcMethod()
   async handleOpenLocalFile({ path: filePath }: OpenLocalFileParams): Promise<{
     error?: string;
     success: boolean;
@@ -58,7 +60,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('openLocalFolder')
+  @IpcMethod()
   async handleOpenLocalFolder({ path: targetPath, isDirectory }: OpenLocalFolderParams): Promise<{
     error?: string;
     success: boolean;
@@ -76,7 +78,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('readLocalFiles')
+  @IpcMethod()
   async readFiles({ paths }: LocalReadFilesParams): Promise<LocalReadFileResult[]> {
     logger.debug('Starting batch file reading:', { count: paths.length });
 
@@ -93,27 +95,46 @@ export default class LocalFileCtr extends ControllerModule {
     return results;
   }
 
-  @ipcClientEvent('readLocalFile')
-  async readFile({ path: filePath, loc }: LocalReadFileParams): Promise<LocalReadFileResult> {
-    const effectiveLoc = loc ?? [0, 200];
-    logger.debug('Starting to read file:', { filePath, loc: effectiveLoc });
+  @IpcMethod()
+  async readFile({
+    path: filePath,
+    loc,
+    fullContent,
+  }: LocalReadFileParams): Promise<LocalReadFileResult> {
+    const effectiveLoc = fullContent ? undefined : (loc ?? [0, 200]);
+    logger.debug('Starting to read file:', { filePath, fullContent, loc: effectiveLoc });
 
     try {
       const fileDocument = await loadFile(filePath);
 
-      const [startLine, endLine] = effectiveLoc;
       const lines = fileDocument.content.split('\n');
       const totalLineCount = lines.length;
       const totalCharCount = fileDocument.content.length;
 
-      // Adjust slice indices to be 0-based and inclusive/exclusive
-      const selectedLines = lines.slice(startLine, endLine);
-      const content = selectedLines.join('\n');
-      const charCount = content.length;
-      const lineCount = selectedLines.length;
+      let content: string;
+      let charCount: number;
+      let lineCount: number;
+      let actualLoc: [number, number];
+
+      if (effectiveLoc === undefined) {
+        // Return full content
+        content = fileDocument.content;
+        charCount = totalCharCount;
+        lineCount = totalLineCount;
+        actualLoc = [0, totalLineCount];
+      } else {
+        // Return specified range
+        const [startLine, endLine] = effectiveLoc;
+        const selectedLines = lines.slice(startLine, endLine);
+        content = selectedLines.join('\n');
+        charCount = content.length;
+        lineCount = selectedLines.length;
+        actualLoc = effectiveLoc;
+      }
 
       logger.debug('File read successfully:', {
         filePath,
+        fullContent,
         selectedLineCount: lineCount,
         totalCharCount,
         totalLineCount,
@@ -128,7 +149,7 @@ export default class LocalFileCtr extends ControllerModule {
         fileType: fileDocument.fileType,
         filename: fileDocument.filename,
         lineCount,
-        loc: effectiveLoc,
+        loc: actualLoc,
         // Line count for the selected range
         modifiedTime: fileDocument.modifiedTime,
 
@@ -172,7 +193,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('listLocalFiles')
+  @IpcMethod()
   async listLocalFiles({ path: dirPath }: ListLocalFileParams): Promise<FileResult[]> {
     logger.debug('Listing directory contents:', { dirPath });
 
@@ -230,7 +251,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('moveLocalFiles')
+  @IpcMethod()
   async handleMoveFiles({ items }: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
     logger.debug('Starting batch file move:', { itemsCount: items?.length });
 
@@ -335,7 +356,7 @@ export default class LocalFileCtr extends ControllerModule {
     return results;
   }
 
-  @ipcClientEvent('renameLocalFile')
+  @IpcMethod()
   async handleRenameFile({
     path: currentPath,
     newName,
@@ -420,7 +441,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('writeLocalFile')
+  @IpcMethod()
   async handleWriteFile({ path: filePath, content }: WriteLocalFileParams) {
     const logPrefix = `[Writing file ${filePath}]`;
     logger.debug(`${logPrefix} Starting to write file`, { contentLength: content?.length });
@@ -465,7 +486,7 @@ export default class LocalFileCtr extends ControllerModule {
   /**
    * Handle IPC event for local file search
    */
-  @ipcClientEvent('searchLocalFiles')
+  @IpcMethod()
   async handleLocalFilesSearch(params: LocalSearchFilesParams): Promise<FileResult[]> {
     logger.debug('Received file search request:', {
       directory: params.directory,
@@ -503,7 +524,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('grepContent')
+  @IpcMethod()
   async handleGrepContent(params: GrepContentParams): Promise<GrepContentResult> {
     const {
       pattern,
@@ -619,7 +640,7 @@ export default class LocalFileCtr extends ControllerModule {
     }
   }
 
-  @ipcClientEvent('globLocalFiles')
+  @IpcMethod()
   async handleGlobFiles({
     path: searchPath = process.cwd(),
     pattern,
@@ -660,7 +681,7 @@ export default class LocalFileCtr extends ControllerModule {
 
   // ==================== File Editing ====================
 
-  @ipcClientEvent('editLocalFile')
+  @IpcMethod()
   async handleEditFile({
     file_path: filePath,
     new_string,
@@ -711,8 +732,32 @@ export default class LocalFileCtr extends ControllerModule {
       // Write back to file
       await writeFile(filePath, newContent, 'utf8');
 
-      logger.info(`${logPrefix} File edited successfully`, { replacements });
+      // Generate diff for UI display
+      const patch = createPatch(filePath, content, newContent, '', '');
+      const diffText = `diff --git a${filePath} b${filePath}\n${patch}`;
+
+      // Calculate lines added and deleted from patch
+      const patchLines = patch.split('\n');
+      let linesAdded = 0;
+      let linesDeleted = 0;
+
+      for (const line of patchLines) {
+        if (line.startsWith('+') && !line.startsWith('+++')) {
+          linesAdded++;
+        } else if (line.startsWith('-') && !line.startsWith('---')) {
+          linesDeleted++;
+        }
+      }
+
+      logger.info(`${logPrefix} File edited successfully`, {
+        linesAdded,
+        linesDeleted,
+        replacements,
+      });
       return {
+        diffText,
+        linesAdded,
+        linesDeleted,
         replacements,
         success: true,
       };

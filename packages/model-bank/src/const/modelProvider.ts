@@ -46,6 +46,7 @@ export enum ModelProvider {
   Perplexity = 'perplexity',
   Qiniu = 'qiniu',
   Qwen = 'qwen',
+  Replicate = 'replicate',
   SambaNova = 'sambanova',
   Search1API = 'search1api',
   SenseNova = 'sensenova',
@@ -64,6 +65,7 @@ export enum ModelProvider {
   Wenxin = 'wenxin',
   XAI = 'xai',
   Xinference = 'xinference',
+  ZenMux = 'zenmux',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }

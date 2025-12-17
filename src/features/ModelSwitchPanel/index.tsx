@@ -2,11 +2,10 @@ import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
@@ -53,7 +52,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
     agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
-  const router = useRouter();
+  const navigate = useNavigate();
   const enabledList = useEnabledChatModels();
 
   const items = useMemo<ItemType[]>(() => {
@@ -78,7 +77,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(`/settings?active=provider&provider=${provider.id}`);
+              navigate(`/settings?active=provider&provider=${provider.id}`);
             },
           },
         ];
@@ -97,7 +96,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             </Flexbox>
           ),
           onClick: () => {
-            router.push('/settings?active=provider');
+            navigate('/settings?active=provider');
           },
         },
       ];
@@ -114,18 +113,21 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link href={`/settings?active=provider&provider=${provider.id}`}>
-            <ActionIcon
-              icon={LucideBolt}
-              size={'small'}
-              title={t('ModelSwitchPanel.goToSettings')}
-            />
-          </Link>
+          <ActionIcon
+            icon={LucideBolt}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(`/settings?active=provider&provider=${provider.id}`);
+            }}
+            size={'small'}
+            title={t('ModelSwitchPanel.goToSettings')}
+          />
         </Flexbox>
       ),
       type: 'group',
     }));
-  }, [enabledList]);
+  }, [enabledList, navigate, t, theme.colorTextTertiary]);
 
   const icon = <div className={styles.tag}>{children}</div>;
 
@@ -146,7 +148,6 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
       onOpenChange={onOpenChange}
       open={open}
       placement={'topLeft'}
-      prefetch
     >
       {icon}
     </ActionDropdown>

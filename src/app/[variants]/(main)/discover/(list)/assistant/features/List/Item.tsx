@@ -64,17 +64,17 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     backgroundColor,
   }) => {
 
-    console.log("author",author)
     const { styles, theme } = useStyles();
     const navigate = useNavigate();
     const { source } = useQuery() as { source?: AssistantMarketSource };
     const link = qs.stringifyUrl(
       {
         query: { source },
-        url: urlJoin('/assistant', identifier),
+        url: urlJoin('/discover/assistant', identifier),
       },
       { skipNull: true },
     );
+
     const { t } = useTranslation('discover');
 
     return (

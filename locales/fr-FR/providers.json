@@ -137,6 +137,9 @@
   "qwen": {
     "description": "Tongyi Qianwen est un modèle de langage à grande échelle développé de manière autonome par Alibaba Cloud, doté de puissantes capacités de compréhension et de génération du langage naturel. Il peut répondre à diverses questions, créer du contenu écrit, exprimer des opinions, rédiger du code, etc., jouant un rôle dans plusieurs domaines."
   },
+  "replicate": {
+    "description": "Replicate exécute des modèles d'image open source comme FLUX et Stable Diffusion via une API cloud simple."
+  },
   "sambanova": {
     "description": "SambaNova Cloud permet aux développeurs d'utiliser facilement les meilleurs modèles open source et de bénéficier de la vitesse d'inférence la plus rapide."
   },
@@ -190,6 +193,9 @@
   },
   "xinference": {
     "description": "Xorbits Inference (Xinference) est une plateforme open source conçue pour simplifier l'exécution et l'intégration de divers modèles d'IA. Grâce à Xinference, vous pouvez utiliser n'importe quel LLM open source, modèle d'embedding ou modèle multimodal pour effectuer des inférences dans le cloud ou en local, et créer des applications IA puissantes."
+  },
+  "zenmux": {
+    "description": "ZenMux est une plateforme unifiée d’agrégation de services d’IA, compatible avec les principales interfaces de services d’IA telles que OpenAI, Anthropic, Google VertexAI, etc. Elle offre une capacité de routage flexible, vous permettant de basculer et de gérer facilement différents modèles d’IA."
   },
   "zeroone": {
     "description": "01.AI se concentre sur les technologies d'intelligence artificielle de l'ère IA 2.0, promouvant activement l'innovation et l'application de \"l'homme + l'intelligence artificielle\", utilisant des modèles puissants et des technologies IA avancées pour améliorer la productivité humaine et réaliser l'autonomisation technologique."

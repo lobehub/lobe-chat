@@ -1,5 +1,6 @@
 import analyzer from '@next/bundle-analyzer';
 import withSerwistInit from '@serwist/next';
+import { codeInspectorPlugin } from 'code-inspector-plugin';
 import type { NextConfig } from 'next';
 import ReactComponentName from 'react-scan/react-component-name/webpack';
 
@@ -9,6 +10,9 @@ const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 const shouldUseCSP = process.env.ENABLED_CSP === '1';
+
+const isTest =
+  process.env.NODE_ENV === 'test' || process.env.TEST === '1' || process.env.E2E === '1';
 
 // if you need to proxy the api endpoint to remote server
 
@@ -42,7 +46,6 @@ const nextConfig: NextConfig = {
     // so we need to disable it
     // refs: https://github.com/lobehub/lobe-chat/pull/7430
     serverMinification: false,
-    turbopackFileSystemCacheForDev: true,
     webVitalsAttribution: ['CLS', 'LCP'],
     webpackBuildWorker: true,
     webpackMemoryOptimizations: true,
@@ -249,11 +252,11 @@ const nextConfig: NextConfig = {
     //   permanent: true,
     //   source: '/settings',
     // },
-    {
-      destination: '/chat',
-      permanent: false,
-      source: '/',
-    },
+    // {
+    //   destination: '/chat',
+    //   permanent: false,
+    //   source: '/',
+    // },
     {
       destination: '/chat',
       permanent: true,
@@ -269,8 +272,16 @@ const nextConfig: NextConfig = {
 
   // when external packages in dev mode with turbopack, this config will lead to bundle error
   serverExternalPackages: isProd ? ['@electric-sql/pglite', 'pdfkit'] : ['pdfkit'],
-  transpilePackages: ['pdfjs-dist', 'mermaid'],
-  turbopack: {},
+
+  transpilePackages: ['pdfjs-dist', 'mermaid', 'better-auth-harmony'],
+  turbopack: {
+    rules: isTest
+      ? void 0
+      : codeInspectorPlugin({
+          bundler: 'turbopack',
+          hotKeys: ['altKey'],
+        }),
+  },
 
   typescript: {
     ignoreBuildErrors: true,

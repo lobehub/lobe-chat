@@ -36,25 +36,25 @@ export const messageGroups = pgTable(
       .$defaultFn(() => idGenerator('messageGroups'))
       .notNull(),
 
-    // 关联关系 - 只需要 topic 层级
+    // Association - only needs topic level
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
 
-    // 支持嵌套结构
+    // Support nested structure
     // @ts-ignore
     parentGroupId: varchar255('parent_group_id').references(() => messageGroups.id, {
       onDelete: 'cascade',
     }),
 
-    // 关联的用户消息
+    // Associated user message
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     parentMessageId: text('parent_message_id').references(() => messages.id, {
       onDelete: 'cascade',
     }),
 
-    // 元数据
+    // Metadata
     title: varchar255('title'),
     description: text('description'),
 
@@ -83,6 +83,7 @@ export const messages = pgTable(
 
     role: varchar255('role').notNull(),
     content: text('content'),
+    editorData: jsonb('editor_data'),
     reasoning: jsonb('reasoning').$type<ModelReasoning>(),
     search: jsonb('search').$type<GroundingSearch>(),
     metadata: jsonb('metadata'),
@@ -104,6 +105,9 @@ export const messages = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+    /**
+     * we might deprecate sessionId in the future
+     */
     sessionId: text('session_id').references(() => sessions.id, { onDelete: 'cascade' }),
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
     threadId: text('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
@@ -111,8 +115,7 @@ export const messages = pgTable(
     parentId: text('parent_id').references(() => messages.id, { onDelete: 'set null' }),
     quotaId: text('quota_id').references(() => messages.id, { onDelete: 'set null' }),
 
-    // used for group chat
-    agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
+    agentId: text('agent_id').references(() => agents.id, { onDelete: 'cascade' }),
     groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'set null' }),
     // targetId can be an agent ID, "user", or null - no FK constraint
     targetId: text('target_id'),
@@ -134,6 +137,7 @@ export const messages = pgTable(
     index('messages_session_id_idx').on(table.sessionId),
     index('messages_thread_id_idx').on(table.threadId),
     index('messages_agent_id_idx').on(table.agentId),
+    index('messages_group_id_idx').on(table.groupId),
   ],
 );
 

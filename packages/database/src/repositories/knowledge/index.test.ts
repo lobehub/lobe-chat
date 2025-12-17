@@ -3,7 +3,7 @@ import { FilesTabs } from '@lobechat/types';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../models/__tests__/_util';
-import { NewDocument, documents } from '../../schemas/document';
+import { NewDocument, documents } from '../../schemas/file';
 import { NewFile, files } from '../../schemas/file';
 import { users } from '../../schemas/user';
 import { LobeChatDatabase } from '../../type';
@@ -146,17 +146,29 @@ describe('KnowledgeRepo', () => {
       expect(regularFile?.sourceType).toBe('file');
     });
 
-    it('should show all documents in All category (no filtering)', async () => {
+    it('should exclude sourceType=file documents from All category', async () => {
       const results = await knowledgeRepo.query({ category: FilesTabs.All });
 
-      // All category should include everything
-      expect(results.length).toBeGreaterThanOrEqual(6); // 2 files + 4 documents
+      // All category should include files from files table + documents with sourceType != 'file'
+      // 2 files + 2 documents (api-pdf and web-doc)
+      // Excluded: uploaded-pdf and editor-doc both have sourceType='file'
+      expect(results.length).toBe(4);
 
+      // Should NOT include documents with sourceType='file' (globally excluded now)
       const editorDoc = results.find((item) => item.name === 'editor-doc.md');
       const uploadedPdf = results.find((item) => item.name === 'uploaded-pdf.pdf');
+      expect(editorDoc).toBeUndefined();
+      expect(uploadedPdf).toBeUndefined();
 
-      expect(editorDoc).toBeDefined();
-      expect(uploadedPdf).toBeDefined();
+      // Should include documents with sourceType != 'file'
+      const apiPdf = results.find((item) => item.name === 'api-pdf.pdf');
+      const webDoc = results.find((item) => item.name === 'web-doc.txt');
+      expect(apiPdf).toBeDefined();
+      expect(webDoc).toBeDefined();
+
+      // Should include files from files table
+      const regularFile = results.find((item) => item.name === 'regular-pdf-file.pdf');
+      expect(regularFile).toBeDefined();
     });
 
     it('should apply both filters together in Documents category', async () => {

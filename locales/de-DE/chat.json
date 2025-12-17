@@ -53,6 +53,12 @@
       "desc": "Basierend auf den Einschränkungen des Claude Thinking-Mechanismus (<1>Mehr erfahren</1>), wird bei Aktivierung die Begrenzung der Anzahl historischer Nachrichten automatisch deaktiviert.",
       "title": "Tiefes Denken aktivieren"
     },
+    "imageAspectRatio": {
+      "title": "Seitenverhältnis des Bildes"
+    },
+    "imageResolution": {
+      "title": "Bildauflösung"
+    },
     "reasoningBudgetToken": {
       "title": "Token für Denkaufwand"
     },
@@ -64,6 +70,9 @@
     },
     "thinking": {
       "title": "Tiefdenk-Schalter"
+    },
+    "thinkingLevel": {
+      "title": "Denkebene"
     },
     "title": "Modell Erweiterungsfunktionen",
     "urlContext": {
@@ -330,6 +339,11 @@
     "screenshot": "Screenshot",
     "settings": "Exporteinstellungen",
     "text": "Text",
+    "widthMode": {
+      "label": "Breitenmodus",
+      "narrow": "Schmalbildmodus",
+      "wide": "Breitbildmodus"
+    },
     "withBackground": "Mit Hintergrundbild",
     "withFooter": "Mit Fußzeile",
     "withPluginInfo": "Mit Plugin-Informationen",
@@ -391,6 +405,7 @@
       "rejectReasonPlaceholder": "Die Angabe eines Ablehnungsgrundes hilft dem Agenten, zukünftige Aktionen zu verbessern",
       "rejectTitle": "Tool-Ausführung ablehnen",
       "rejectedWithReason": "Die Tool-Ausführung wurde abgelehnt: {{reason}}",
+      "toolAbort": "Dieser Werkzeugaufruf wurde vom Benutzer abgebrochen",
       "toolRejected": "Die Tool-Ausführung wurde abgelehnt"
     }
   },

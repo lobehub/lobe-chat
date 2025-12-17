@@ -616,6 +616,7 @@
     "supportedProviders": "Поставщики, поддерживающие эту модель"
   },
   "plugins": {
+    "builtinTag": "Встроенный плагин",
     "community": "Сообщество плагинов",
     "details": {
       "settings": {
@@ -630,6 +631,7 @@
     },
     "install": "Установить плагин",
     "installed": "Установлено",
+    "legacyTag": "Устаревший плагин",
     "list": "Список плагинов",
     "meta": {
       "description": "Описание",

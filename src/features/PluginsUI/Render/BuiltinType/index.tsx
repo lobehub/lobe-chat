@@ -37,7 +37,7 @@ const BuiltinType = memo<BuiltinTypeProps>(
     return (
       <Render
         apiName={apiName}
-        args={args}
+        args={args || {}}
         content={data}
         identifier={identifier}
         messageId={id}

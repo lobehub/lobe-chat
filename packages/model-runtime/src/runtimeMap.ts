@@ -44,6 +44,7 @@ import { LobePerplexityAI } from './providers/perplexity';
 import { LobePPIOAI } from './providers/ppio';
 import { LobeQiniuAI } from './providers/qiniu';
 import { LobeQwenAI } from './providers/qwen';
+import { LobeReplicateAI } from './providers/replicate';
 import { LobeSambaNovaAI } from './providers/sambanova';
 import { LobeSearch1API } from './providers/search1api';
 import { LobeSenseNovaAI } from './providers/sensenova';
@@ -61,6 +62,7 @@ import { LobeVolcengineAI } from './providers/volcengine';
 import { LobeWenxinAI } from './providers/wenxin';
 import { LobeXAI } from './providers/xai';
 import { LobeXinferenceAI } from './providers/xinference';
+import { LobeZenMuxAI } from './providers/zenmux';
 import { LobeZeroOneAI } from './providers/zeroone';
 import { LobeZhipuAI } from './providers/zhipu';
 
@@ -111,6 +113,8 @@ export const providerRuntimeMap = {
   ppio: LobePPIOAI,
   qiniu: LobeQiniuAI,
   qwen: LobeQwenAI,
+  replicate: LobeReplicateAI,
+  router: LobeNewAPIAI,
   sambanova: LobeSambaNovaAI,
   search1api: LobeSearch1API,
   sensenova: LobeSenseNovaAI,
@@ -128,6 +132,7 @@ export const providerRuntimeMap = {
   wenxin: LobeWenxinAI,
   xai: LobeXAI,
   xinference: LobeXinferenceAI,
+  zenmux: LobeZenMuxAI,
   zeroone: LobeZeroOneAI,
   zhipu: LobeZhipuAI,
 };

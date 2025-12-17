@@ -37,6 +37,14 @@
         "standard": "عادي"
       }
     },
+    "resolution": {
+      "label": "الدقة",
+      "options": {
+        "1K": "1K",
+        "2K": "2K",
+        "4K": "4K"
+      }
+    },
     "seed": {
       "label": "البذرة",
       "random": "بذرة عشوائية"

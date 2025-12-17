@@ -680,7 +680,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'GLM-4-0520 是最新模型版本，专为高度复杂和多样化任务设计，表现卓越。',
     displayName: 'GLM-4-0520',
-    id: 'glm-4-0520', // 弃用时间 2025年12月30日
+    id: 'glm-4-0520', // Deprecation date: December 30, 2025
     pricing: {
       currency: 'CNY',
       units: [

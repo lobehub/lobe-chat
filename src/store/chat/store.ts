@@ -16,6 +16,7 @@ import { ChatAIChatAction, chatAiChat } from './slices/aiChat/actions';
 import { ChatTTSAction, chatTTS } from './slices/tts/action';
 import { ChatThreadAction, chatThreadMessage } from './slices/thread/action';
 import { chatAiGroupChat, ChatGroupChatAction } from './slices/aiChat/actions/generateAIGroupChat';
+import { OperationActions, operationActions } from './slices/operation/actions';
 
 export interface ChatStoreAction
   extends ChatMessageAction,
@@ -27,11 +28,12 @@ export interface ChatStoreAction
     ChatTTSAction,
     ChatPluginAction,
     ChatBuiltinToolAction,
-    ChatPortalAction {}
+    ChatPortalAction,
+    OperationActions {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
-//  ===============  聚合 createStoreFn ============ //
+//  ===============  Aggregate createStoreFn ============ //
 
 const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...params) => ({
   ...initialState,
@@ -46,11 +48,12 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatToolSlice(...params),
   ...chatPlugin(...params),
   ...chatPortalSlice(...params),
+  ...operationActions(...params),
 
   // cloud
 });
 
-//  ===============  实装 useStore ============ //
+//  ===============  Implement useStore ============ //
 const devtools = createDevtools('chat');
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(

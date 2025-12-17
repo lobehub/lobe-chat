@@ -190,6 +190,7 @@
   },
   "list": {
     "title": {
+      "custom": "Serviço personalizado não ativado",
       "disabled": "Fornecedor não habilitado",
       "enabled": "Fornecedor habilitado"
     }
@@ -198,6 +199,7 @@
     "addCustomProvider": "Adicionar Provedor Personalizado",
     "all": "Todos",
     "list": {
+      "custom": "Personalização não ativada",
       "disabled": "Desativado",
       "disabledActions": {
         "sort": "Ordenar por",
@@ -295,7 +297,7 @@
       },
       "helpDoc": "Tutorial de Configuração",
       "responsesApi": {
-        "desc": "Adota o novo padrão de formato de requisição da OpenAI, desbloqueando recursos avançados como cadeias de raciocínio",
+        "desc": "Adota o novo formato de solicitação da OpenAI, desbloqueando recursos avançados como Cadeia de Raciocínio (disponível apenas para modelos da OpenAI)",
         "title": "Usar o padrão Responses API"
       },
       "waitingForMore": "Mais modelos estão <1>planejados para integração</1>, fique atento"

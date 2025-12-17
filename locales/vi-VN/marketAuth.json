@@ -1,4 +1,15 @@
 {
+  "authorize": {
+    "cancel": "Hủy",
+    "confirm": "Ủy quyền sử dụng",
+    "description": {
+      "and": "và",
+      "prefix": "Bằng cách nhấp vào ủy quyền sử dụng, bạn đồng ý với",
+      "privacy": "Chính sách quyền riêng tư",
+      "terms": "Điều khoản dịch vụ"
+    },
+    "title": "Xác nhận ủy quyền"
+  },
   "callback": {
     "buttons": {
       "close": "Đóng cửa sổ"
@@ -33,8 +44,10 @@
     "stateMissing": "Không tìm thấy trạng thái xác thực, vui lòng thử lại."
   },
   "messages": {
+    "authorized": "Dịch vụ LobeHub đã được cấp quyền thành công",
     "loading": "Đang khởi động quy trình xác thực...",
     "success": {
+      "cloudMcpInstall": "Ủy quyền thành công! Bây giờ bạn có thể cài đặt plugin Cloud MCP.",
       "submit": "Xác thực thành công! Bây giờ bạn có thể xuất bản trợ lý.",
       "upload": "Xác thực thành công! Bây giờ bạn có thể xuất bản phiên bản mới."
     }

@@ -15,6 +15,7 @@ import type { ChatToolPayload, CreateMessageParams } from '@lobechat/types';
 import debug from 'debug';
 import pMap from 'p-map';
 
+import { LOADING_FLAT } from '@/const/message';
 import type { ChatStore } from '@/store/chat/store';
 
 const log = debug('lobe-store:agent-executors');
@@ -28,21 +29,33 @@ const TOOL_PRICING: Record<string, number> = {
 /**
  * Creates custom executors for the Chat Agent Runtime
  * These executors wrap existing chat store methods to integrate with agent-runtime
+ *
+ * @param context.operationId - Operation ID to get business context (sessionId, topicId, etc.)
+ * @param context.get - Store getter function
+ * @param context.messageKey - Message map key
+ * @param context.parentId - Parent message ID
+ * @param context.skipCreateFirstMessage - Skip first message creation
  */
 export const createAgentExecutors = (context: {
   get: () => ChatStore;
   messageKey: string;
-  params: {
-    inPortalThread?: boolean;
-    inSearchWorkflow?: boolean;
-    ragQuery?: string;
-    threadId?: string;
-    traceId?: string;
-  };
+  operationId: string;
   parentId: string;
   skipCreateFirstMessage?: boolean;
 }) => {
   let shouldSkipCreateMessage = context.skipCreateFirstMessage;
+
+  /**
+   * Get operation context via closure
+   * Returns the business context (sessionId, topicId, etc.) captured by the operation
+   */
+  const getOperationContext = () => {
+    const operation = context.get().operations[context.operationId];
+    if (!operation) {
+      throw new Error(`Operation not found: ${context.operationId}`);
+    }
+    return operation.context;
+  };
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
@@ -57,8 +70,6 @@ export const createAgentExecutors = (context: {
       const llmPayload = (instruction as AgentInstructionCallLlm)
         .payload as GeneralAgentCallLLMInstructionPayload;
 
-      const events: AgentEvent[] = [];
-
       log(`${stagePrefix} Starting session`);
 
       let assistantMessageId: string;
@@ -68,6 +79,9 @@ export const createAgentExecutors = (context: {
         assistantMessageId = context.parentId;
         shouldSkipCreateMessage = false;
       } else {
+        // Get context from operation
+        const opContext = getOperationContext();
+
         // 如果是 userMessage 的第一次 regenerated 创建， llmPayload 不存在 parentMessageId
         // 因此用这种方式做个赋值
         // TODO: 也许未来这个应该用 init 方法实现
@@ -75,21 +89,27 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
-        const assistantMessageItem = await context.get().optimisticCreateMessage({
-          content: '',
-          model: llmPayload.model,
-          parentId: llmPayload.parentMessageId,
-          provider: llmPayload.provider,
-          role: 'assistant',
-          sessionId: state.metadata!.sessionId!,
-          threadId: state.metadata?.threadId,
-          topicId: state.metadata?.topicId,
-        });
+        const assistantMessageItem = await context.get().optimisticCreateMessage(
+          {
+            content: LOADING_FLAT,
+            model: llmPayload.model,
+            parentId: llmPayload.parentMessageId,
+            provider: llmPayload.provider,
+            role: 'assistant',
+            sessionId: opContext.sessionId!,
+            threadId: opContext.threadId,
+            topicId: opContext.topicId ?? undefined,
+          },
+          { operationId: context.operationId },
+        );
 
         if (!assistantMessageItem) {
           throw new Error('Failed to create assistant message');
         }
         assistantMessageId = assistantMessageItem.id;
+
+        // Associate the assistant message with the operation for UI loading states
+        context.get().associateMessageWithOperation(assistantMessageId, context.operationId);
       }
 
       log(`${stagePrefix} Created assistant message, id: %s`, assistantMessageId);
@@ -115,12 +135,13 @@ export const createAgentExecutors = (context: {
         tools,
         usage: currentStepUsage,
         tool_calls,
+        finishType,
       } = await context.get().internal_fetchAIChatMessage({
         messageId: assistantMessageId,
-        messages: messages,
+        messages,
         model: llmPayload.model,
-        params: context.params,
         provider: llmPayload.provider,
+        operationId: context.operationId,
       });
 
       log(`[${sessionLogId}] finish model-runtime calling`);
@@ -133,6 +154,7 @@ export const createAgentExecutors = (context: {
 
       const toolCalls = tools || [];
 
+      // Log llm result
       if (content) {
         log(`[${sessionLogId}][content]`, content);
       }
@@ -148,32 +170,12 @@ export const createAgentExecutors = (context: {
         log(`[${sessionLogId}][usage] %O`, currentStepUsage);
       }
 
-      // Add llm_stream events (similar to backend)
-      if (content) {
-        events.push({
-          chunk: { text: content, type: 'text' },
-          type: 'llm_stream',
-        });
-      }
-
-      if (assistantMessage?.reasoning?.content) {
-        events.push({
-          chunk: { text: assistantMessage.reasoning.content, type: 'reasoning' },
-          type: 'llm_stream',
-        });
-      }
-
-      events.push({
-        result: {
-          content,
-          reasoning: assistantMessage?.reasoning?.content,
-          tool_calls: toolCalls,
-          usage: currentStepUsage,
-        },
-        type: 'llm_result',
-      });
-
-      log('[%s:%d] call_llm completed', state.sessionId, state.stepCount);
+      log(
+        '[%s:%d] call_llm completed, finishType: %s',
+        state.sessionId,
+        state.stepCount,
+        finishType,
+      );
 
       // Accumulate usage and cost to state
       const newState = { ...state, messages: latestMessages };
@@ -192,8 +194,38 @@ export const createAgentExecutors = (context: {
         if (cost) newState.cost = cost;
       }
 
+      // If operation was aborted, enter human_abort phase to let agent decide how to handle
+      if (finishType === 'abort') {
+        log(
+          '[%s:%d] call_llm aborted by user, entering human_abort phase',
+          state.sessionId,
+          state.stepCount,
+        );
+
+        return {
+          events: [],
+          newState,
+          nextContext: {
+            payload: {
+              reason: 'user_cancelled',
+              parentMessageId: assistantMessageId,
+              hasToolsCalling: isFunctionCall,
+              toolsCalling: toolCalls,
+              result: { content, tool_calls },
+            },
+            phase: 'human_abort',
+            session: {
+              messageCount: newState.messages.length,
+              sessionId: state.sessionId,
+              status: 'running',
+              stepCount: state.stepCount + 1,
+            },
+          } as AgentRuntimeContext,
+        };
+      }
+
       return {
-        events,
+        events: [],
         newState,
         nextContext: {
           payload: {
@@ -204,7 +236,6 @@ export const createAgentExecutors = (context: {
           } as GeneralAgentCallLLMResultPayload,
           phase: 'llm_result',
           session: {
-            eventCount: events.length,
             messageCount: newState.messages.length,
             sessionId: state.sessionId,
             status: 'running',
@@ -235,6 +266,27 @@ export const createAgentExecutors = (context: {
       const toolName = `${chatToolPayload.identifier}/${chatToolPayload.apiName}`;
       const startTime = performance.now();
 
+      // Get context from operation
+      const opContext = getOperationContext();
+
+      let toolOperationId: string | undefined;
+      // ============ Create toolCalling operation (top-level) ============
+      const { operationId } = context.get().startOperation({
+        type: 'toolCalling',
+        context: {
+          sessionId: opContext.sessionId!,
+          topicId: opContext.topicId,
+        },
+        parentOperationId: context.operationId,
+        metadata: {
+          startTime: Date.now(),
+          identifier: chatToolPayload.identifier,
+          apiName: chatToolPayload.apiName,
+          tool_call_id: chatToolPayload.id,
+        },
+      });
+      toolOperationId = operationId;
+
       try {
         // Get assistant message to extract groupId
         const latestMessages = context.get().dbMessagesMap[context.messageKey] || [];
@@ -263,26 +315,78 @@ export const createAgentExecutors = (context: {
             chatToolPayload.id,
           );
 
+          // ============ Sub-operation 1: Create tool message ============
+          const createToolMsgOpId = context.get().startOperation({
+            type: 'createToolMessage',
+            context: {
+              sessionId: opContext.sessionId!,
+              topicId: opContext.topicId,
+            },
+            parentOperationId: toolOperationId,
+            metadata: {
+              startTime: Date.now(),
+              tool_call_id: chatToolPayload.id,
+            },
+          }).operationId;
+
+          // Register cancel handler: Ensure message creation completes, then mark as aborted
+          context.get().onOperationCancel(createToolMsgOpId, async ({ metadata }) => {
+            log(
+              '[%s][call_tool] createToolMessage cancelled, ensuring creation completes',
+              sessionLogId,
+            );
+
+            // Wait for message creation to complete (ensure-complete strategy)
+            const createResult = await metadata?.createMessagePromise;
+            if (createResult) {
+              const msgId = createResult.id;
+              // Update message to aborted state
+              await Promise.all([
+                context
+                  .get()
+                  .optimisticUpdateMessageContent(
+                    msgId,
+                    'Tool execution was cancelled by user.',
+                    undefined,
+                    { operationId: createToolMsgOpId },
+                  ),
+                context
+                  .get()
+                  .optimisticUpdateMessagePlugin(
+                    msgId,
+                    { intervention: { status: 'aborted' } },
+                    { operationId: createToolMsgOpId },
+                  ),
+              ]);
+            }
+          });
+
+          // Execute creation and save Promise to metadata
           const toolMessageParams: CreateMessageParams = {
             content: '',
             groupId: assistantMessage?.groupId,
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            sessionId: context.get().activeId,
-            threadId: context.params.threadId,
+            sessionId: opContext.sessionId!,
+            threadId: opContext.threadId,
             tool_call_id: chatToolPayload.id,
-            topicId: context.get().activeTopicId,
+            topicId: opContext.topicId ?? undefined,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+          const createPromise = context
+            .get()
+            .optimisticCreateMessage(toolMessageParams, { operationId: createToolMsgOpId });
+          context.get().updateOperationMetadata(createToolMsgOpId, {
+            createMessagePromise: createPromise,
+          });
+          const createResult = await createPromise;
 
           if (!createResult) {
-            log(
-              '[%s][call_tool] ERROR: Failed to create tool message for tool_call_id: %s',
-              sessionLogId,
-              chatToolPayload.id,
-            );
+            context.get().failOperation(createToolMsgOpId, {
+              type: 'CreateMessageError',
+              message: `Failed to create tool message for tool_call_id: ${chatToolPayload.id}`,
+            });
             throw new Error(
               `Failed to create tool message for tool_call_id: ${chatToolPayload.id}`,
             );
@@ -290,17 +394,79 @@ export const createAgentExecutors = (context: {
 
           toolMessageId = createResult.id;
           log('[%s][call_tool] Created tool message, id: %s', sessionLogId, toolMessageId);
+          context.get().completeOperation(createToolMsgOpId);
         }
 
-        // Execute tool
+        // Check if parent operation was cancelled while creating message
+        const toolOperation = toolOperationId
+          ? context.get().operations[toolOperationId]
+          : undefined;
+        if (toolOperation?.abortController.signal.aborted) {
+          log('[%s][call_tool] Parent operation cancelled, skipping tool execution', sessionLogId);
+          // Message already created with aborted status by cancel handler
+          return { events, newState: state };
+        }
+
+        // ============ Sub-operation 2: Execute tool call ============
+        // Auto-associates message with this operation via messageId in context
+        const { operationId: executeToolOpId } = context.get().startOperation({
+          type: 'executeToolCall',
+          context: {
+            messageId: toolMessageId,
+          },
+          parentOperationId: toolOperationId,
+          metadata: {
+            startTime: Date.now(),
+            tool_call_id: chatToolPayload.id,
+          },
+        });
+
+        log(
+          '[%s][call_tool] Created executeToolCall operation %s for message %s',
+          sessionLogId,
+          executeToolOpId,
+          toolMessageId,
+        );
+
+        // Register cancel handler: Just update message (message already exists)
+        context.get().onOperationCancel(executeToolOpId, async () => {
+          log('[%s][call_tool] executeToolCall cancelled, updating message', sessionLogId);
+
+          // Update message to aborted state (cleanup strategy)
+          await Promise.all([
+            context
+              .get()
+              .optimisticUpdateMessageContent(
+                toolMessageId,
+                'Tool execution was cancelled by user.',
+                undefined,
+                { operationId: executeToolOpId },
+              ),
+            context
+              .get()
+              .optimisticUpdateMessagePlugin(
+                toolMessageId,
+                { intervention: { status: 'aborted' } },
+                { operationId: executeToolOpId },
+              ),
+          ]);
+        });
+
+        // Execute tool - abort handling is done by cancel handler
         log('[%s][call_tool] Executing tool %s ...', sessionLogId, toolName);
-        // This method handles:
-        // - Tool execution (builtin, plugin, MCP)
-        // - Content updates via optimisticUpdateMessageContent
-        // - Error handling via internal_updateMessageError
         const result = await context
           .get()
           .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
+
+        // Check if operation was cancelled during tool execution
+        const executeToolOperation = context.get().operations[executeToolOpId];
+        if (executeToolOperation?.abortController.signal.aborted) {
+          log('[%s][call_tool] Tool execution completed but operation was cancelled', sessionLogId);
+          // Don't complete - cancel handler already updated message to aborted
+          return { events, newState: state };
+        }
+
+        context.get().completeOperation(executeToolOpId);
 
         const executionTime = Math.round(performance.now() - startTime);
         const isSuccess = !result.error;
@@ -312,6 +478,18 @@ export const createAgentExecutors = (context: {
           executionTime,
           result,
         );
+
+        // Complete or fail the toolCalling operation
+        if (toolOperationId) {
+          if (isSuccess) {
+            context.get().completeOperation(toolOperationId);
+          } else {
+            context.get().failOperation(toolOperationId, {
+              type: 'ToolExecutionError',
+              message: result.error || 'Tool execution failed',
+            });
+          }
+        }
 
         events.push({ id: chatToolPayload.id, result, type: 'tool_result' });
 
@@ -431,6 +609,9 @@ export const createAgentExecutors = (context: {
         // Resumption mode: Tool messages already exist, just verify them
         log('[%s][request_human_approve] Resuming with existing tool messages', sessionLogId);
       } else {
+        // Get context from operation
+        const opContext = getOperationContext();
+
         // Create tool messages for each pending tool call with intervention status
         await pMap(pendingToolsCalling, async (toolPayload) => {
           const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
@@ -450,13 +631,15 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            sessionId: context.get().activeId,
-            threadId: context.params.threadId,
+            sessionId: opContext.sessionId!,
+            threadId: opContext.threadId,
             tool_call_id: toolPayload.id,
-            topicId: context.get().activeTopicId,
+            topicId: opContext.topicId ?? undefined,
           };
 
-          const createResult = await context.get().optimisticCreateMessage(toolMessageParams);
+          const createResult = await context
+            .get()
+            .optimisticCreateMessage(toolMessageParams, { operationId: context.operationId });
 
           if (!createResult) {
             log(
@@ -489,6 +672,80 @@ export const createAgentExecutors = (context: {
 
       return { events, newState };
     },
+
+    /**
+     * Resolve aborted tools executor
+     * Creates tool messages with 'aborted' intervention status for cancelled tools
+     */
+    resolve_aborted_tools: async (instruction, state) => {
+      const { parentMessageId, toolsCalling } = (
+        instruction as Extract<AgentInstruction, { type: 'resolve_aborted_tools' }>
+      ).payload;
+
+      const events: AgentEvent[] = [];
+      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const newState = structuredClone(state);
+
+      log(
+        '[%s][resolve_aborted_tools] Resolving %d aborted tools',
+        sessionLogId,
+        toolsCalling.length,
+      );
+
+      // Get context from operation
+      const opContext = getOperationContext();
+
+      // Create tool messages for each aborted tool
+      await pMap(toolsCalling, async (toolPayload) => {
+        const toolName = `${toolPayload.identifier}/${toolPayload.apiName}`;
+        log(
+          '[%s][resolve_aborted_tools] Creating aborted tool message for %s',
+          sessionLogId,
+          toolName,
+        );
+
+        const toolMessageParams: CreateMessageParams = {
+          content: 'Tool execution was aborted by user.',
+          parentId: parentMessageId,
+          plugin: toolPayload,
+          pluginIntervention: { status: 'aborted' },
+          role: 'tool',
+          sessionId: opContext.sessionId!,
+          threadId: opContext.threadId,
+          tool_call_id: toolPayload.id,
+          topicId: opContext.topicId ?? undefined,
+        };
+
+        const createResult = await context
+          .get()
+          .optimisticCreateMessage(toolMessageParams, { operationId: context.operationId });
+
+        if (createResult) {
+          log(
+            '[%s][resolve_aborted_tools] Created aborted tool message: %s for %s',
+            sessionLogId,
+            createResult.id,
+            toolName,
+          );
+        }
+      });
+
+      log('[%s][resolve_aborted_tools] All aborted tool messages created', sessionLogId);
+
+      // Mark state as done since we're finishing after abort
+      newState.lastModified = new Date().toISOString();
+      newState.status = 'done';
+
+      events.push({
+        finalState: newState,
+        reason: 'user_aborted',
+        reasonDetail: 'User aborted operation with pending tool calls',
+        type: 'done',
+      });
+
+      return { events, newState };
+    },
+
     /**
      * Finish executor
      * Completes the runtime execution

@@ -1,4 +1,38 @@
 {
+  "builtins": {
+    "lobe-knowledge-base": {
+      "apiName": {
+        "readKnowledge": "讀取知識庫內容",
+        "searchKnowledgeBase": "搜尋知識庫"
+      },
+      "title": "知識庫"
+    },
+    "lobe-local-system": {
+      "apiName": {
+        "editLocalFile": "編輯檔案",
+        "getCommandOutput": "取得程式碼輸出",
+        "globLocalFiles": "匹配搜尋檔案",
+        "grepContent": "搜尋內容",
+        "killCommand": "終止程式碼執行",
+        "listLocalFiles": "查看檔案清單",
+        "moveLocalFiles": "移動檔案",
+        "readLocalFile": "讀取檔案內容",
+        "renameLocalFile": "重新命名",
+        "runCommand": "執行程式碼",
+        "searchLocalFiles": "搜尋檔案",
+        "writeLocalFile": "寫入檔案"
+      },
+      "title": "本機系統"
+    },
+    "lobe-web-browsing": {
+      "apiName": {
+        "crawlMultiPages": "讀取多個頁面內容",
+        "crawlSinglePage": "讀取頁面內容",
+        "search": "搜尋頁面"
+      },
+      "title": "網路搜尋"
+    }
+  },
   "confirm": "確定",
   "debug": {
     "arguments": "調用參數",
@@ -251,23 +285,6 @@
     "content": "調用插件中...",
     "plugin": "插件運行中..."
   },
-  "localSystem": {
-    "apiName": {
-      "editLocalFile": "編輯檔案",
-      "getCommandOutput": "取得程式輸出",
-      "globLocalFiles": "匹配搜尋檔案",
-      "grepContent": "搜尋內容",
-      "killCommand": "終止程式執行",
-      "listLocalFiles": "查看檔案列表",
-      "moveLocalFiles": "移動檔案",
-      "readLocalFile": "讀取檔案內容",
-      "renameLocalFile": "重新命名",
-      "runCommand": "執行程式碼",
-      "searchLocalFiles": "搜尋檔案",
-      "writeLocalFile": "寫入檔案"
-    },
-    "title": "本機系統"
-  },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "檢查安裝環境...",
     "COMPLETED": "安裝完成",
@@ -375,11 +392,6 @@
     "warning": "⚠️ 請確認您信任此插件的來源，惡意插件可能會危害您的系統安全。"
   },
   "search": {
-    "apiName": {
-      "crawlMultiPages": "讀取多個頁面內容",
-      "crawlSinglePage": "讀取頁面內容",
-      "search": "搜尋頁面"
-    },
     "config": {
       "addKey": "添加密鑰",
       "close": "刪除",

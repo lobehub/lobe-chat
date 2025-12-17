@@ -55,11 +55,11 @@ export default {
   },
   documentList: {
     copyContent: '复制全文',
-    documentCount: '共 {{count}} 个文档',
     duplicate: '创建副本',
-    empty: '暂无文档，点击上方按钮创建你的第一篇文档',
-    noResults: '未找到匹配的文档',
-    selectNote: '选择一个文档开始编辑',
+    empty: '暂无文稿，点击上方按钮创建你的第一篇文稿',
+    noResults: '未找到匹配的文稿',
+    pageCount: '共 {{count}} 个文稿',
+    selectNote: '选择一个文稿开始编辑',
     untitled: '无标题',
   },
   empty: '暂无已上传文件/文件夹',
@@ -70,7 +70,6 @@ export default {
       uploadFile: '上传文件',
       uploadFolder: '上传文件夹',
     },
-    newDocumentButton: '新建文档',
     newNoteDialog: {
       cancel: '取消',
       editTitle: '编辑文档',
@@ -83,14 +82,15 @@ export default {
       title: '新建文档',
       updateSuccess: '文档更新成功',
     },
+    newPageButton: '新建文稿',
     uploadButton: '上传',
   },
   home: {
     getStarted: '开始使用',
     greeting: '开始',
     quickActions: '快捷操作',
-    recentDocuments: '最近文档',
     recentFiles: '最近文件',
+    recentPages: '最近文稿',
     subtitle: '欢迎使用知识库，从这里开始管理你的文档和文档',
     uploadEntries: {
       files: {
@@ -102,8 +102,8 @@ export default {
       knowledgeBase: {
         title: '新建知识库',
       },
-      newDocument: {
-        title: '新建文档',
+      newPage: {
+        title: '新建文稿',
       },
     },
   },
@@ -117,8 +117,8 @@ export default {
     title: '知识库',
   },
   menu: {
-    allDocuments: '全部文档',
     allFiles: '全部文件',
+    allPages: '全部文稿',
   },
   networkError: '获取知识库失败，请检测网络连接后重试',
   notSupportGuide: {
@@ -143,8 +143,8 @@ export default {
     downloadFile: '下载文件',
     unsupportedFileAndContact: '此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>',
   },
-  searchDocumentPlaceholder: '搜索文档',
   searchFilePlaceholder: '搜索文件',
+  searchPagePlaceholder: '搜索文稿',
   tab: {
     all: '全部',
     audios: '语音',
@@ -157,9 +157,7 @@ export default {
     websites: '网页',
   },
   title: '知识库',
-  toggleLeftPanel: {
-    title: '显示/隐藏左侧面板',
-  },
+  toggleLeftPanel: '显示/隐藏左侧面板',
   uploadDock: {
     body: {
       collapse: '收起',

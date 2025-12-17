@@ -102,7 +102,7 @@
       "SPII": "Votre contenu peut contenir des informations personnelles sensibles. Pour protéger la vie privée, veuillez retirer ces informations sensibles puis réessayer.",
       "default": "Contenu bloqué : {{blockReason}}. Veuillez modifier votre demande et réessayer."
     },
-    "InsufficientQuota": "Désolé, le quota de cette clé a atteint sa limite. Veuillez vérifier si le solde de votre compte est suffisant ou augmenter le quota de la clé avant de réessayer.",
+    "InsufficientQuota": "Désolé, le quota associé à cette clé a été atteint. Veuillez vérifier si le solde de votre compte est suffisant ou augmenter le quota de la clé avant de réessayer.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidClerkUser": "Désolé, vous n'êtes pas actuellement connecté. Veuillez vous connecter ou vous inscrire avant de continuer.",
@@ -131,7 +131,7 @@
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
-    "QuotaLimitReached": "Désolé, l'utilisation actuelle des tokens ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de cette clé ou réessayer plus tard.",
+    "QuotaLimitReached": "Désolé, la consommation de jetons ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de la clé ou réessayer plus tard.",
     "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
     "SubscriptionKeyMismatch": "Nous sommes désolés, en raison d'une défaillance système occasionnelle, l'utilisation actuelle de l'abonnement est temporairement inactive. Veuillez cliquer sur le bouton ci-dessous pour rétablir votre abonnement ou nous contacter par e-mail pour obtenir de l'aide.",
     "SubscriptionPlanLimit": "Votre quota d'abonnement est épuisé, vous ne pouvez pas utiliser cette fonctionnalité. Veuillez passer à un plan supérieur ou configurer l'API du modèle personnalisé pour continuer à l'utiliser.",

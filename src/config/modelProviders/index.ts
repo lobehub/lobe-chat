@@ -46,6 +46,7 @@ import PerplexityProvider from './perplexity';
 import PPIOProvider from './ppio';
 import QiniuProvider from './qiniu';
 import QwenProvider from './qwen';
+import ReplicateProvider from './replicate';
 import SambaNovaProvider from './sambanova';
 import Search1APIProvider from './search1api';
 import SenseNovaProvider from './sensenova';
@@ -64,6 +65,7 @@ import VolcengineProvider from './volcengine';
 import WenxinProvider from './wenxin';
 import XAIProvider from './xai';
 import XinferenceProvider from './xinference';
+import ZenMuxProvider from './zenmux';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -186,10 +188,12 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   InfiniAIProvider,
   AkashChatProvider,
   QiniuProvider,
+  ReplicateProvider,
   NebiusProvider,
   CometAPIProvider,
   VercelAIGatewayProvider,
   CerebrasProvider,
+  ZenMuxProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -248,6 +252,7 @@ export { default as PerplexityProviderCard } from './perplexity';
 export { default as PPIOProviderCard } from './ppio';
 export { default as QiniuProviderCard } from './qiniu';
 export { default as QwenProviderCard } from './qwen';
+export { default as ReplicateProviderCard } from './replicate';
 export { default as SambaNovaProviderCard } from './sambanova';
 export { default as Search1APIProviderCard } from './search1api';
 export { default as SenseNovaProviderCard } from './sensenova';
@@ -266,5 +271,6 @@ export { default as VolcengineProviderCard } from './volcengine';
 export { default as WenxinProviderCard } from './wenxin';
 export { default as XAIProviderCard } from './xai';
 export { default as XinferenceProviderCard } from './xinference';
+export { default as ZenMuxProviderCard } from './zenmux';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

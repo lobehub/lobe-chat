@@ -1,21 +1,28 @@
-import { parseAsBoolean, useQueryState } from 'nuqs';
-import { useMemo } from 'react';
+'use client';
+
+import { useSessionStore } from '@/store/session';
+import { useUrlHydrationStore } from '@/store/urlHydration';
 
 export const usePinnedAgentState = () => {
-  const [isPinned, setIsPinned] = useQueryState(
-    'pinned',
-    parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true }),
-  );
+  const isPinned = useSessionStore((s) => s.isAgentPinned);
+  const setAgentPinned = useSessionStore((s) => s.setAgentPinned);
+  const toggleAgentPinned = useSessionStore((s) => s.toggleAgentPinned);
+  const syncToUrl = useUrlHydrationStore((s) => s.syncAgentPinnedToUrl);
 
-  const actions = useMemo(
-    () => ({
-      pinAgent: () => setIsPinned(true),
-      setIsPinned,
-      togglePinAgent: () => setIsPinned((prev) => !prev),
-      unpinAgent: () => setIsPinned(false),
-    }),
-    [],
-  );
+  const withSync = <T extends (...args: any[]) => void>(fn: T) => {
+    return (...args: Parameters<T>) => {
+      fn(...args);
+      syncToUrl();
+    };
+  };
 
-  return [isPinned, actions] as const;
+  return [
+    isPinned,
+    {
+      pinAgent: withSync(() => setAgentPinned(true)),
+      setIsPinned: withSync(setAgentPinned),
+      togglePinAgent: withSync(toggleAgentPinned),
+      unpinAgent: withSync(() => setAgentPinned(false)),
+    },
+  ] as const;
 };
