@@ -14,9 +14,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent, group, type
   const isGroup = type === 'group';
 
   // For group topics, get the first member's background for blur effect
-  const blurBackground = isGroup
-    ? group?.members?.[0]?.backgroundColor
-    : agent?.backgroundColor;
+  const blurBackground = isGroup ? group?.members?.[0]?.backgroundColor : agent?.backgroundColor;
 
   // Build group avatars for GroupAvatar component
   const groupAvatars = useMemo(() => {
@@ -52,7 +50,11 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent, group, type
         }}
       >
         <Avatar
-          avatar={isGroup ? (group?.members?.[0]?.avatar || DEFAULT_AVATAR) : (agent?.avatar || DEFAULT_AVATAR)}
+          avatar={
+            isGroup
+              ? group?.members?.[0]?.avatar || DEFAULT_AVATAR
+              : agent?.avatar || DEFAULT_AVATAR
+          }
           background={blurBackground || undefined}
           emojiScaleWithBackground
           shape={'square'}
@@ -66,7 +68,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent, group, type
         <Flexbox
           gap={6}
           style={{
-            marginTop: -32,
+            marginTop: -28,
           }}
         >
           {isGroup ? (
@@ -74,7 +76,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent, group, type
               avatarShape={'square'}
               avatars={groupAvatars}
               cornerShape={'square'}
-              size={36}
+              size={30}
             />
           ) : (
             <Avatar
@@ -82,7 +84,7 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent, group, type
               background={agent?.backgroundColor || undefined}
               emojiScaleWithBackground
               shape={'square'}
-              size={36}
+              size={30}
               title={agent?.title || undefined}
             />
           )}

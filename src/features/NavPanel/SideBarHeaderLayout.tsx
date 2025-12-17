@@ -20,8 +20,8 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
       margin-inline: 4px;
     }
     .${prefixCls}-breadcrumb-link {
-      display: flex;
-      align-items: center;
+      display: flex !important;
+      align-items: center !important;
       font-size: 12px;
       color: ${token.colorTextDescription};
     }

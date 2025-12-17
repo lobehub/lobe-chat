@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Text } from '@lobehub/ui';
+import { Block, Image, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -47,12 +47,15 @@ const RecentResourceItem = memo<RecentResourceItemProps>(({ file }) => {
         style={{ background: theme.colorFillTertiary, overflow: 'hidden' }}
       >
         {isImage && file.url ? (
-          <img
+          <Image
             alt={file.name}
             height={'100%'}
+            objectFit={'cover'}
+            preview={false}
             src={file.url}
             style={{
-              objectFit: 'cover',
+              borderRadius: 0,
+              width: '100%',
             }}
             width={'100%'}
           />
@@ -63,7 +66,7 @@ const RecentResourceItem = memo<RecentResourceItemProps>(({ file }) => {
 
       {/* File Info */}
       <Flexbox flex={1} gap={6} justify={'space-between'} padding={12}>
-        <Text ellipsis={{ rows: 2 }} style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.4 }}>
+        <Text ellipsis={{ rows: 2 }} fontSize={13} style={{ lineHeight: 1.4 }} weight={500}>
           {file.name}
         </Text>
         <Flexbox align={'center'} gap={8} horizontal>

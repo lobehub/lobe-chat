@@ -72,13 +72,13 @@ const RecentPageItem = memo<RecentPageItemProps>(({ document }) => {
         <Flexbox
           gap={6}
           style={{
-            marginTop: -32,
+            marginTop: -28,
           }}
         >
           {emoji ? (
-            <Avatar avatar={emoji} emojiScaleWithBackground shape={'square'} size={36} />
+            <Avatar avatar={emoji} shape={'square'} size={30} />
           ) : (
-            <Center flex={'none'} height={36} style={{ marginLeft: -8 }} width={36}>
+            <Center flex={'none'} height={30} style={{ marginLeft: -4 }} width={30}>
               <Icon color={theme.colorTextDescription} icon={FileTextIcon} size={24} />
             </Center>
           )}
@@ -87,7 +87,7 @@ const RecentPageItem = memo<RecentPageItemProps>(({ document }) => {
           </Text>
           {previewText && (
             <Text
-              ellipsis={{ rows: 3 }}
+              ellipsis={{ rows: 2 }}
               fontSize={13}
               style={{ lineHeight: 1.5 }}
               type={'secondary'}

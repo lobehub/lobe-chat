@@ -8,7 +8,7 @@ export const RECENT_BLOCK_SIZE = {
     WIDTH: 200,
   },
   PLUGIN: {
-    HEIGHT: 72,
+    HEIGHT: 68,
     WIDTH: '100%',
   },
   RESOURCE: {
