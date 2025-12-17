@@ -1,15 +1,17 @@
 'use client';
 
-import { Button, Icon } from '@lobehub/ui';
-import { Input, Typography } from 'antd';
+import { SendButton } from '@lobehub/editor/react';
+import { Button, Icon, Input } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { ArrowLeft, User } from 'lucide-react';
+import { SignatureIcon, Undo2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
+
+import LobeMessage from '../components/LobeMessage';
 
 interface FullNameStepProps {
   onBack: () => Promise<void>;
@@ -49,51 +51,57 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
   };
 
   return (
-    <Flexbox gap={32}>
-      <Flexbox align="center" gap={16}>
-        <Flexbox
-          align="center"
-          justify="center"
-          style={{
-            background: theme.colorPrimaryBg,
-            borderRadius: theme.borderRadiusLG,
-            height: 64,
-            width: 64,
-          }}
-        >
-          <Icon icon={User} size={32} style={{ color: theme.colorPrimary }} />
-        </Flexbox>
-        <Typography.Title level={3} style={{ margin: 0, textAlign: 'center' }}>
-          {t('username.title')}
-        </Typography.Title>
-        <Typography.Text style={{ textAlign: 'center' }} type="secondary">
-          {t('username.desc')}
-        </Typography.Text>
-      </Flexbox>
-
-      <Flexbox gap={8}>
+    <Flexbox gap={16}>
+      <LobeMessage sentences={[t('username.title'), t('username.title2'), t('username.title3')]} />
+      <Flexbox align={'center'} gap={12} horizontal>
         <Input
           autoFocus
           onChange={(e) => setValue(e.target.value)}
           onPressEnter={handleNext}
           placeholder={t('username.placeholder')}
+          prefix={
+            <Icon
+              color={theme.colorTextDescription}
+              icon={SignatureIcon}
+              size={32}
+              style={{
+                marginInline: 8,
+              }}
+            />
+          }
           size="large"
+          styles={{
+            input: {
+              fontSize: 28,
+              fontWeight: 'bolder',
+            },
+          }}
+          suffix={
+            <SendButton
+              disabled={!value?.trim()}
+              loading={loading}
+              onClick={handleNext}
+              style={{
+                zoom: 1.5,
+              }}
+              type="primary"
+            />
+          }
+          title={t('username.hint')}
           value={value}
         />
-        <Typography.Text style={{ fontSize: 12 }} type="secondary">
-          {t('username.hint')}
-        </Typography.Text>
       </Flexbox>
-
-      <Flexbox gap={12} horizontal>
+      <Flexbox horizontal justify={'flex-start'}>
         <Button
           disabled={loading}
-          icon={<Icon icon={ArrowLeft} />}
+          icon={Undo2Icon}
           onClick={handleBack}
-          style={{ flex: 'none' }}
-        />
-        <Button block loading={loading} onClick={handleNext} type="primary">
-          {t('next')}
+          style={{
+            color: theme.colorTextDescription,
+          }}
+          type={'text'}
+        >
+          {t('back')}
         </Button>
       </Flexbox>
     </Flexbox>

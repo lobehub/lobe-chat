@@ -1,17 +1,20 @@
 'use client';
 
-import { Button, Icon, Select } from '@lobehub/ui';
+import { SendButton } from '@lobehub/editor/react';
+import { Button, Select, Text } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
-import { ArrowLeft, Languages } from 'lucide-react';
-import { memo, useState } from 'react';
+import { Undo2Icon } from 'lucide-react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { Locales, localeOptions } from '@/locales/resources';
+import { Locales, localeOptions, normalizeLocale } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
+
+import LobeMessage from '../components/LobeMessage';
 
 interface ResponseLanguageStepProps {
   onBack: () => Promise<void>;
@@ -19,16 +22,13 @@ interface ResponseLanguageStepProps {
 }
 
 const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }) => {
-  const { t } = useTranslation('onboarding');
+  const { t } = useTranslation(['onboarding', 'common']);
   const theme = useTheme();
-
-  const currentLanguage = useGlobalStore(systemStatusSelectors.language);
+  const fullName = useUserStore(userProfileSelectors.fullName);
   const switchLocale = useGlobalStore((s) => s.switchLocale);
   const setSettings = useUserStore((s) => s.setSettings);
 
-  const [value, setValue] = useState<Locales | ''>(
-    currentLanguage === 'auto' ? '' : currentLanguage,
-  );
+  const [value, setValue] = useState<Locales | ''>(normalizeLocale(navigator.language));
   const [loading, setLoading] = useState(false);
 
   const handleBack = async () => {
@@ -47,11 +47,6 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
       // Save response language to settings
       await setSettings({ general: { responseLanguage: value || '' } });
 
-      // If user selected a specific language, also sync the UI language
-      if (value) {
-        switchLocale(value);
-      }
-
       await onNext();
     } catch (error) {
       console.error('Failed to save response language:', error);
@@ -60,51 +55,71 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
     }
   };
 
-  return (
-    <Flexbox gap={32}>
-      <Flexbox align="center" gap={16}>
-        <Flexbox
-          align="center"
-          justify="center"
-          style={{
-            background: theme.colorPrimaryBg,
-            borderRadius: theme.borderRadiusLG,
-            height: 64,
-            width: 64,
-          }}
-        >
-          <Icon icon={Languages} size={32} style={{ color: theme.colorPrimary }} />
-        </Flexbox>
-        <Typography.Title level={3} style={{ margin: 0, textAlign: 'center' }}>
-          {t('responseLanguage.title')}
-        </Typography.Title>
-        <Typography.Text style={{ textAlign: 'center' }} type="secondary">
-          {t('responseLanguage.desc')}
-        </Typography.Text>
-      </Flexbox>
+  const Message = useCallback(
+    () => (
+      <LobeMessage
+        sentences={[
+          t('responseLanguage.title', { fullName }),
+          t('responseLanguage.title2'),
+          t('responseLanguage.title3'),
+        ]}
+      />
+    ),
+    [t, value],
+  );
 
-      <Flexbox gap={8}>
+  return (
+    <Flexbox gap={16}>
+      <Message />
+      <Flexbox align={'center'} gap={12} horizontal>
         <Select
-          onChange={setValue}
-          options={[{ label: t('responseLanguage.auto'), value: '' }, ...localeOptions]}
+          onChange={(v) => {
+            if (v) {
+              switchLocale(v);
+              setValue(v);
+            }
+          }}
+          optionRender={(item) => (
+            <Flexbox key={item.value}>
+              <Text>{item.label}</Text>
+              <Text fontSize={12} type={'secondary'}>
+                {t(`lang.${item.value}` as any, { ns: 'common' })}
+              </Text>
+            </Flexbox>
+          )}
+          options={localeOptions}
+          showSearch
           size="large"
-          style={{ width: '100%' }}
+          style={{
+            fontSize: 28,
+            width: '100%',
+            zoom: 1.1,
+          }}
           value={value}
         />
-        <Typography.Text style={{ fontSize: 12 }} type="secondary">
-          {t('responseLanguage.hint')}
-        </Typography.Text>
+        <SendButton
+          loading={loading}
+          onClick={handleNext}
+          style={{
+            zoom: 1.5,
+          }}
+          type="primary"
+        />
       </Flexbox>
-
-      <Flexbox gap={12} horizontal>
+      <Typography.Text style={{ fontSize: 12 }} type="secondary">
+        {t('responseLanguage.hint')}
+      </Typography.Text>
+      <Flexbox horizontal justify={'flex-start'}>
         <Button
           disabled={loading}
-          icon={<Icon icon={ArrowLeft} />}
+          icon={Undo2Icon}
           onClick={handleBack}
-          style={{ flex: 'none' }}
-        />
-        <Button block loading={loading} onClick={handleNext} type="primary">
-          {t('next')}
+          style={{
+            color: theme.colorTextDescription,
+          }}
+          type={'text'}
+        >
+          {t('back')}
         </Button>
       </Flexbox>
     </Flexbox>

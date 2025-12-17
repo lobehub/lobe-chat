@@ -1,8 +1,9 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Text } from '@lobehub/ui';
 import { Popover, type PopoverProps } from 'antd';
 import { Languages } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import Menu, { type MenuProps } from '@/components/Menu';
 import { localeOptions } from '@/locales/resources';
@@ -21,18 +22,32 @@ const LangButton = memo<{ placement?: PopoverProps['placement']; size?: number }
       switchLocale(value);
     };
 
-    const { t } = useTranslation('setting');
+    const { t } = useTranslation(['setting', 'common']);
 
     const items: MenuProps['items'] = useMemo(
       () => [
         {
           key: 'auto',
-          label: t('settingCommon.lang.autoMode'),
+          label: (
+            <Flexbox>
+              <Text>{t('settingCommon.lang.autoMode')}</Text>
+              <Text fontSize={12} type={'secondary'}>
+                {t(`lang.auto` as any, { ns: 'common' })}
+              </Text>
+            </Flexbox>
+          ),
           onClick: () => handleLangChange('auto'),
         },
         ...localeOptions.map((item) => ({
           key: item.value,
-          label: item.label,
+          label: (
+            <Flexbox key={item.value}>
+              <Text>{item.label}</Text>
+              <Text fontSize={12} type={'secondary'}>
+                {t(`lang.${item.value}` as any, { ns: 'common' })}
+              </Text>
+            </Flexbox>
+          ),
           onClick: () => handleLangChange(item.value),
         })),
       ],
@@ -47,6 +62,7 @@ const LangButton = memo<{ placement?: PopoverProps['placement']; size?: number }
         styles={{
           body: {
             maxHeight: 360,
+            minWidth: 240,
             overflow: 'auto',
             padding: 0,
           },
