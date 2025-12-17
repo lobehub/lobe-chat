@@ -1,6 +1,6 @@
 export default {
   back: '上一步',
-  finish: '完成',
+  finish: '开始使用',
   modeSelection: {
     desc: '选择适合你的使用模式',
     hint: '你可以随时在设置中修改',
@@ -29,19 +29,17 @@ export default {
   },
   proSettings: {
     connectors: {
-      desc: '连接你常用的第三方服务',
-      title: '连接器',
+      title: '连接你常用的工具',
     },
-    desc: '配置你的高级选项',
     devMode: {
-      desc: '开启后将显示开发者相关的功能和选项',
       title: '开发者模式',
     },
     model: {
-      desc: '选择 AI 对话使用的默认模型',
-      title: '默认模型',
+      title: 'Agent 使用的默认模型',
     },
-    title: 'Pro 设置',
+    title: '可以提前配置一些进阶选项',
+    title2: '试着链接一些常用工具～',
+    title3: '让我们为高效工作做好准备吧！',
   },
   responseLanguage: {
     auto: '自动（跟随系统语言）',

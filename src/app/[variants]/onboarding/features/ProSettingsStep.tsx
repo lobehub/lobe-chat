@@ -1,20 +1,20 @@
 'use client';
 
-import { Button, Icon } from '@lobehub/ui';
-import { Switch, Typography } from 'antd';
+import { Button, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { ArrowLeft, Settings2 } from 'lucide-react';
+import { Undo2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
+import LobeMessage from '@/app/[variants]/onboarding/components/LobeMessage';
 import ModelSelect from '@/features/ModelSelect';
 import { serverConfigSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
-import KlavisServerList from './KlavisServerList';
+import KlavisServerList from '../components/KlavisServerList';
 
 interface ProSettingsStepProps {
   onBack: () => void;
@@ -27,17 +27,13 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
 
   const enableKlavis = useServerConfigStore(serverConfigSelectors.enableKlavis);
 
-  const [updateDefaultModel, updateGeneralConfig, finishOnboarding] = useUserStore((s) => [
+  const [updateDefaultModel, finishOnboarding] = useUserStore((s) => [
     s.updateDefaultModel,
-    s.updateGeneralConfig,
     s.finishOnboarding,
   ]);
 
   const defaultAgentConfig = useUserStore(
     (s) => settingsSelectors.currentSettings(s).defaultAgent?.config,
-  );
-  const isDevMode = useUserStore(
-    (s) => settingsSelectors.currentSettings(s).general?.isDevMode ?? false,
   );
 
   const [loading, setLoading] = useState(false);
@@ -58,90 +54,44 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
     await updateDefaultModel(model, provider);
   };
 
-  const handleDevModeChange = async (checked: boolean) => {
-    await updateGeneralConfig({ isDevMode: checked });
-  };
-
   return (
-    <Flexbox gap={32}>
-      <Flexbox align="center" gap={16}>
-        <Flexbox
-          align="center"
-          justify="center"
-          style={{
-            background: theme.colorPrimaryBg,
-            borderRadius: theme.borderRadiusLG,
-            height: 64,
-            width: 64,
-          }}
-        >
-          <Icon icon={Settings2} size={32} style={{ color: theme.colorPrimary }} />
-        </Flexbox>
-        <Typography.Title level={3} style={{ margin: 0, textAlign: 'center' }}>
-          {t('proSettings.title')}
-        </Typography.Title>
-        <Typography.Text style={{ textAlign: 'center' }} type="secondary">
-          {t('proSettings.desc')}
-        </Typography.Text>
-      </Flexbox>
-
-      <Flexbox gap={24}>
-        {/* Default Model Section */}
-        <Flexbox gap={8}>
-          <Typography.Text strong>{t('proSettings.model.title')}</Typography.Text>
-          <Typography.Text style={{ fontSize: 12 }} type="secondary">
-            {t('proSettings.model.desc')}
-          </Typography.Text>
-          <ModelSelect
-            onChange={handleModelChange}
-            showAbility={false}
-            size="large"
-            style={{ width: '100%' }}
-            value={defaultAgentConfig}
-          />
-        </Flexbox>
-
-        {/* Connectors Section (only show if Klavis is enabled) */}
-        {enableKlavis && (
-          <Flexbox gap={8}>
-            <Typography.Text strong>{t('proSettings.connectors.title')}</Typography.Text>
-            <Typography.Text style={{ fontSize: 12 }} type="secondary">
-              {t('proSettings.connectors.desc')}
-            </Typography.Text>
-            <KlavisServerList />
-          </Flexbox>
-        )}
-
-        {/* Developer Mode Section */}
-        <Flexbox
-          align="center"
-          gap={12}
-          horizontal
-          justify="space-between"
-          style={{
-            background: theme.colorFillQuaternary,
-            borderRadius: theme.borderRadius,
-            padding: 16,
-          }}
-        >
-          <Flexbox gap={4}>
-            <Typography.Text strong>{t('proSettings.devMode.title')}</Typography.Text>
-            <Typography.Text style={{ fontSize: 12 }} type="secondary">
-              {t('proSettings.devMode.desc')}
-            </Typography.Text>
-          </Flexbox>
-          <Switch checked={isDevMode} onChange={handleDevModeChange} />
-        </Flexbox>
-      </Flexbox>
-
-      <Flexbox gap={12} horizontal>
-        <Button
-          disabled={loading}
-          icon={<Icon icon={ArrowLeft} />}
-          onClick={onBack}
-          style={{ flex: 'none' }}
+    <Flexbox gap={16}>
+      <LobeMessage
+        sentences={[t('proSettings.title'), t('proSettings.title2'), t('proSettings.title3')]}
+      />
+      {/* Default Model Section */}
+      <Flexbox gap={16}>
+        <Text color={theme.colorTextSecondary}>{t('proSettings.model.title')}</Text>
+        <ModelSelect
+          onChange={handleModelChange}
+          showAbility={false}
+          size="large"
+          style={{ width: '100%' }}
+          value={defaultAgentConfig}
         />
-        <Button block loading={loading} onClick={handleFinish} type="primary">
+      </Flexbox>
+
+      {/* Connectors Section (only show if Klavis is enabled) */}
+      {enableKlavis && (
+        <Flexbox gap={16}>
+          <Text color={theme.colorTextSecondary}>{t('proSettings.connectors.title')}</Text>
+          <KlavisServerList />
+        </Flexbox>
+      )}
+
+      <Flexbox align={'center'} horizontal justify={'space-between'} style={{ marginTop: 16 }}>
+        <Button
+          disabled={Boolean(loading)}
+          icon={Undo2Icon}
+          onClick={onBack}
+          style={{
+            color: theme.colorTextDescription,
+          }}
+          type={'text'}
+        >
+          {t('back')}
+        </Button>
+        <Button loading={loading} onClick={handleFinish} style={{ minWidth: 120 }} type="primary">
           {t('finish')}
         </Button>
       </Flexbox>
