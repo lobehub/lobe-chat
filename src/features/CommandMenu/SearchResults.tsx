@@ -1,4 +1,5 @@
 import { Command } from 'cmdk';
+import dayjs from 'dayjs';
 import { Bot, FileText, MessageCircle, MessageSquare, Plug, Puzzle, Sparkles } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
@@ -146,6 +147,22 @@ const SearchResults = memo<SearchResultsProps>(
       return result.description;
     };
 
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const getSubtitle = (result: SearchResult) => {
+      const description = getDescription(result);
+
+      // For topic and message results, append creation date
+      if (result.type === 'topic' || result.type === 'message') {
+        const formattedDate = dayjs(result.createdAt).format('MMM D, YYYY');
+        if (description) {
+          return `${description} · ${formattedDate}`;
+        }
+        return formattedDate;
+      }
+
+      return description;
+    };
+
     const hasResults = results.length > 0;
 
     // Group results by type
@@ -203,8 +220,8 @@ const SearchResults = memo<SearchResultsProps>(
                   <div className={styles.itemIcon}>{getIcon(result.type)}</div>
                   <div className={styles.itemDetails}>
                     <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
+                    {getSubtitle(result) && (
+                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
                     )}
                   </div>
                   <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
@@ -249,8 +266,8 @@ const SearchResults = memo<SearchResultsProps>(
                   <div className={styles.itemIcon}>{getIcon(result.type)}</div>
                   <div className={styles.itemDetails}>
                     <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
+                    {getSubtitle(result) && (
+                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
                     )}
                   </div>
                   <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
