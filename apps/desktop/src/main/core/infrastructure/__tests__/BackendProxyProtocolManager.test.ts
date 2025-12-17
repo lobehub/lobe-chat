@@ -2,6 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BackendProxyProtocolManager } from '../BackendProxyProtocolManager';
 
+interface RequestInitWithDuplex extends RequestInit {
+  duplex?: 'half';
+}
+
+type FetchMock = (input: RequestInfo | URL, init?: RequestInitWithDuplex) => Promise<Response>;
+
 const { mockProtocol, protocolHandlerRef } = vi.hoisted(() => {
   const protocolHandlerRef = { current: null as any };
 
@@ -34,7 +40,7 @@ describe('BackendProxyProtocolManager', () => {
     const manager = new BackendProxyProtocolManager();
     const session = { protocol: mockProtocol } as any;
 
-    const fetchMock = vi.fn(async () => {
+    const fetchMock = vi.fn<FetchMock>(async () => {
       return new Response('ok', {
         headers: { 'Content-Type': 'text/plain' },
         status: 200,
@@ -62,9 +68,13 @@ describe('BackendProxyProtocolManager', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [calledUrl, init] = fetchMock.mock.calls[0]!;
     expect(calledUrl).toBe('https://remote.example.com/trpc/hello?batch=1');
+    expect(init).toBeDefined();
+    if (!init) throw new Error('Expected fetch init to be defined');
+
     expect(init.method).toBe('GET');
-    expect(init.headers.get('Oidc-Auth')).toBe('token-123');
-    expect(init.headers.get('X-Test')).toBe('1');
+    const headers = init.headers as Headers;
+    expect(headers.get('Oidc-Auth')).toBe('token-123');
+    expect(headers.get('X-Test')).toBe('1');
 
     expect(response.status).toBe(200);
     expect(response.headers.get('X-Src-Url')).toBe('https://remote.example.com/trpc/hello?batch=1');
@@ -77,7 +87,7 @@ describe('BackendProxyProtocolManager', () => {
     const manager = new BackendProxyProtocolManager();
     const session = { protocol: mockProtocol } as any;
 
-    const fetchMock = vi.fn(async () => new Response('ok', { status: 200 }));
+    const fetchMock = vi.fn<FetchMock>(async () => new Response('ok', { status: 200 }));
     vi.stubGlobal('fetch', fetchMock as any);
 
     manager.registerWithRemoteBaseUrl(session, {
@@ -97,6 +107,9 @@ describe('BackendProxyProtocolManager', () => {
     } as any);
 
     const [, init] = fetchMock.mock.calls[0]!;
+    expect(init).toBeDefined();
+    if (!init) throw new Error('Expected fetch init to be defined');
+
     expect(init.method).toBe('POST');
     expect(init.body).toBe('payload');
     expect(init.duplex).toBe('half');
