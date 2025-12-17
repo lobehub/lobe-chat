@@ -49,8 +49,8 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface ModeSelectionStepProps {
-  onBack: () => Promise<void>;
-  onNext: () => Promise<void>;
+  onBack: () => void;
+  onNext: () => void;
 }
 
 const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
@@ -65,15 +65,6 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
   ]);
 
   const [loading, setLoading] = useState<boolean | 'lite' | 'pro'>(false);
-
-  const handleBack = async () => {
-    setLoading(true);
-    try {
-      await onBack();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSelectLite = async () => {
     setLoading('lite');
@@ -92,7 +83,7 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
     setLoading('pro');
     try {
       await updateGeneralConfig({ isLiteMode: false });
-      await onNext();
+      onNext();
     } catch (error) {
       console.error('Failed to select pro mode:', error);
     } finally {
@@ -175,7 +166,7 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
         <Button
           disabled={Boolean(loading)}
           icon={Undo2Icon}
-          onClick={handleBack}
+          onClick={onBack}
           style={{
             color: theme.colorTextDescription,
           }}

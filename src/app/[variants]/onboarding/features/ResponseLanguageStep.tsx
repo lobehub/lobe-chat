@@ -17,8 +17,8 @@ import { userProfileSelectors } from '@/store/user/selectors';
 import LobeMessage from '../components/LobeMessage';
 
 interface ResponseLanguageStepProps {
-  onBack: () => Promise<void>;
-  onNext: () => Promise<void>;
+  onBack: () => void;
+  onNext: () => void;
 }
 
 const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }) => {
@@ -31,15 +31,6 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
   const [value, setValue] = useState<Locales | ''>(normalizeLocale(navigator.language));
   const [loading, setLoading] = useState(false);
 
-  const handleBack = async () => {
-    setLoading(true);
-    try {
-      await onBack();
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleNext = async () => {
     setLoading(true);
 
@@ -47,7 +38,7 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
       // Save response language to settings
       await setSettings({ general: { responseLanguage: value || '' } });
 
-      await onNext();
+      onNext();
     } catch (error) {
       console.error('Failed to save response language:', error);
     } finally {
@@ -113,7 +104,7 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
         <Button
           disabled={loading}
           icon={Undo2Icon}
-          onClick={handleBack}
+          onClick={onBack}
           style={{
             color: theme.colorTextDescription,
           }}

@@ -14,8 +14,8 @@ import { userProfileSelectors } from '@/store/user/selectors';
 import LobeMessage from '../components/LobeMessage';
 
 interface FullNameStepProps {
-  onBack: () => Promise<void>;
-  onNext: () => Promise<void>;
+  onBack: () => void;
+  onNext: () => void;
 }
 
 const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
@@ -33,18 +33,9 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
       if (value.trim()) {
         await updateFullName(value.trim());
       }
-      await onNext();
+      onNext();
     } catch (error) {
       console.error('Failed to update full name:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleBack = async () => {
-    setLoading(true);
-    try {
-      await onBack();
     } finally {
       setLoading(false);
     }
@@ -95,7 +86,7 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
         <Button
           disabled={loading}
           icon={Undo2Icon}
-          onClick={handleBack}
+          onClick={onBack}
           style={{
             color: theme.colorTextDescription,
           }}

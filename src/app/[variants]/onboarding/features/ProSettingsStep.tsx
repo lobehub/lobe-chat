@@ -17,7 +17,7 @@ import { settingsSelectors } from '@/store/user/selectors';
 import KlavisServerList from './KlavisServerList';
 
 interface ProSettingsStepProps {
-  onBack: () => Promise<void>;
+  onBack: () => void;
 }
 
 const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
@@ -41,15 +41,6 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
   );
 
   const [loading, setLoading] = useState(false);
-
-  const handleBack = async () => {
-    setLoading(true);
-    try {
-      await onBack();
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleFinish = async () => {
     setLoading(true);
@@ -147,7 +138,7 @@ const ProSettingsStep = memo<ProSettingsStepProps>(({ onBack }) => {
         <Button
           disabled={loading}
           icon={<Icon icon={ArrowLeft} />}
-          onClick={handleBack}
+          onClick={onBack}
           style={{ flex: 'none' }}
         />
         <Button block loading={loading} onClick={handleFinish} type="primary">

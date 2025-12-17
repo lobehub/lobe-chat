@@ -10,8 +10,16 @@ import { onboardingSelectors } from './selectors';
 
 export interface OnboardingAction {
   finishOnboarding: () => Promise<void>;
-  goToNextStep: () => Promise<void>;
-  goToPreviousStep: () => Promise<void>;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  /**
+   * Internal method to process the step update queue
+   */
+  internal_processStepUpdateQueue: () => Promise<void>;
+  /**
+   * Internal method to queue a step update
+   */
+  internal_queueStepUpdate: (step: number) => void;
   setOnboardingStep: (step: number) => Promise<void>;
   /**
    * Toggle plugin in default agent config for onboarding
@@ -28,9 +36,12 @@ export const createOnboardingSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   OnboardingAction
-> = (_set, get) => ({
+> = (set, get) => ({
   finishOnboarding: async () => {
     const currentStep = onboardingSelectors.currentStep(get());
+
+    // Clear local state first
+    set({ localOnboardingStep: undefined }, false, 'finishOnboarding/clearLocal');
 
     await userService.updateOnboarding({
       currentStep,
@@ -41,39 +52,92 @@ export const createOnboardingSlice: StateCreator<
     await get().refreshUserState();
   },
 
-  goToNextStep: async () => {
+  goToNextStep: () => {
     const currentStep = onboardingSelectors.currentStep(get());
     const nextStep = currentStep + 1;
 
-    await userService.updateOnboarding({
-      currentStep: nextStep,
-      version: CURRENT_ONBOARDING_VERSION,
-    });
+    // Optimistic update: immediately update local state
+    set({ localOnboardingStep: nextStep }, false, 'goToNextStep/optimistic');
 
-    await get().refreshUserState();
+    // Queue the server update
+    get().internal_queueStepUpdate(nextStep);
   },
 
-  goToPreviousStep: async () => {
+  goToPreviousStep: () => {
     const currentStep = onboardingSelectors.currentStep(get());
     if (currentStep <= 1) return;
 
     const prevStep = currentStep - 1;
 
-    await userService.updateOnboarding({
-      currentStep: prevStep,
-      version: CURRENT_ONBOARDING_VERSION,
-    });
+    // Optimistic update: immediately update local state
+    set({ localOnboardingStep: prevStep }, false, 'goToPreviousStep/optimistic');
 
+    // Queue the server update
+    get().internal_queueStepUpdate(prevStep);
+  },
+
+  internal_processStepUpdateQueue: async () => {
+    const { isProcessingStepQueue, stepUpdateQueue } = get();
+    if (isProcessingStepQueue || stepUpdateQueue.length === 0) return;
+
+    set({ isProcessingStepQueue: true }, false, 'processStepUpdateQueue/start');
+
+    while (get().stepUpdateQueue.length > 0) {
+      const step = get().stepUpdateQueue[0];
+
+      try {
+        await userService.updateOnboarding({
+          currentStep: step,
+          version: CURRENT_ONBOARDING_VERSION,
+        });
+      } catch (error) {
+        console.error('Failed to update onboarding step:', error);
+      }
+
+      // Remove the completed task
+      set(
+        { stepUpdateQueue: get().stepUpdateQueue.slice(1) },
+        false,
+        'processStepUpdateQueue/shift',
+      );
+    }
+
+    set({ isProcessingStepQueue: false }, false, 'processStepUpdateQueue/end');
+
+    // Sync with server state after all updates complete
     await get().refreshUserState();
+
+    // Clear local state after server sync
+    set({ localOnboardingStep: undefined }, false, 'processStepUpdateQueue/clearLocal');
+  },
+
+  internal_queueStepUpdate: (step) => {
+    const { stepUpdateQueue } = get();
+
+    if (stepUpdateQueue.length === 0) {
+      // Queue is empty, add task and start processing
+      set({ stepUpdateQueue: [step] }, false, 'queueStepUpdate/push');
+      get().internal_processStepUpdateQueue();
+    } else if (stepUpdateQueue.length === 1) {
+      // One task is executing, add as pending
+      set({ stepUpdateQueue: [...stepUpdateQueue, step] }, false, 'queueStepUpdate/push');
+    } else {
+      // Queue is full (length >= 2), replace the pending task
+      set({ stepUpdateQueue: [stepUpdateQueue[0], step] }, false, 'queueStepUpdate/replace');
+    }
   },
 
   setOnboardingStep: async (step) => {
+    // Optimistic update
+    set({ localOnboardingStep: step }, false, 'setOnboardingStep/optimistic');
+
     await userService.updateOnboarding({
       currentStep: step,
       version: CURRENT_ONBOARDING_VERSION,
     });
 
     await get().refreshUserState();
+    set({ localOnboardingStep: undefined }, false, 'setOnboardingStep/clearLocal');
   },
 
   toggleDefaultPlugin: async (id, open) => {

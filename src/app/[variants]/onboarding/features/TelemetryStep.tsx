@@ -16,7 +16,7 @@ import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
 
 interface TelemetryStepProps {
-  onNext: () => Promise<void>;
+  onNext: () => void;
 }
 
 const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
@@ -30,7 +30,7 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
     setLoading(true);
     try {
       await updateGeneralConfig({ telemetry: enabled });
-      await onNext();
+      onNext();
     } catch (error) {
       console.error('Failed to update telemetry config:', error);
     } finally {
