@@ -104,7 +104,22 @@ export const chunkRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const asyncTaskId = await ctx.chunkService.asyncEmbeddingFileChunks(input.id, ctx.jwtPayload);
+      const { provider } =
+        getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
+
+      // For embedding tasks, frontend may not include provider payload in JWT.
+      // Prefer user DB keyVaults; fallback to env (handled inside ModelRuntime) when DB is empty.
+      let payload = ctx.jwtPayload;
+      if (!payload?.apiKey && !payload?.baseURL) {
+        const providerDetail = await ctx.aiInfraRepos.getAiProviderDetail(
+          provider,
+          KeyVaultsGateKeeper.getUserKeyVaults,
+        );
+        const keyVaults = providerDetail?.keyVaults || {};
+        if (keyVaults.apiKey || keyVaults.baseURL) payload = { ...payload, ...keyVaults };
+      }
+
+      const asyncTaskId = await ctx.chunkService.asyncEmbeddingFileChunks(input.id, payload);
 
       return { id: asyncTaskId, success: true };
     }),
