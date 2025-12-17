@@ -16,8 +16,8 @@ const DefaultAgentForm = memo(() => {
   const [form] = AntForm.useForm();
   const [loading, setLoading] = useState(false);
 
-  const [updateDefaultModel, isUserStateInit] = useUserStore((s) => [
-    s.updateDefaultModel,
+  const [updateDefaultAgent, isUserStateInit] = useUserStore((s) => [
+    s.updateDefaultAgent,
     s.isUserStateInit,
   ]);
 
@@ -34,7 +34,7 @@ const DefaultAgentForm = memo(() => {
           <ModelSelect
             onChange={async ({ model, provider }) => {
               setLoading(true);
-              await updateDefaultModel(model, provider);
+              await updateDefaultAgent({ config: { model, provider } });
               setLoading(false);
             }}
             showAbility={false}
