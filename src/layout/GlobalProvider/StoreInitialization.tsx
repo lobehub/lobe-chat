@@ -1,7 +1,7 @@
 'use client';
 
 import { INBOX_SESSION_ID, enableNextAuth } from '@lobechat/const';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
@@ -21,7 +21,6 @@ const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
   useTranslation('error');
 
-  const router = useRouter();
   const pathname = usePathname();
   const [isLogin, isSignedIn, useInitUserState] = useUserStore((s) => [
     authSelectors.isLogin(s),
@@ -73,7 +72,7 @@ const StoreInitialization = memo(() => {
       if (pathname?.includes('/onboarding')) return;
 
       if (onboardingSelectors.needsOnboarding(state)) {
-        router.push('/onboarding');
+        window.location.href = '/onboarding';
       }
     },
   });
