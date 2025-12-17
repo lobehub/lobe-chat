@@ -3,6 +3,7 @@ import { Avatar } from '@lobehub/ui';
 import {
   BadgeCentIcon,
   Brain,
+  BrainCircuit,
   ChartColumnBigIcon,
   Database,
   EthernetPort,
@@ -123,6 +124,11 @@ export const useCategory = () => {
         icon: Sparkles,
         key: SettingsTabs.Agent,
         label: t('tab.agent'),
+      },
+      {
+        icon: BrainCircuit,
+        key: SettingsTabs.Memory,
+        label: t('tab.memory'),
       },
       showAiImage && {
         icon: ImageIcon,

@@ -18,6 +18,9 @@ const componentMap = {
   [SettingsTabs.Image]: dynamic(() => import('../image'), {
     loading: () => <Loading debugId="Settings > Image" />,
   }),
+  [SettingsTabs.Memory]: dynamic(() => import('../memory'), {
+    loading: () => <Loading debugId="Settings > Memory" />,
+  }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {
     loading: () => <Loading debugId="Settings > TTS" />,
   }),

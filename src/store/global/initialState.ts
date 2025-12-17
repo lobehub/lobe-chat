@@ -43,6 +43,7 @@ export enum SettingsTabs {
   Hotkey = 'hotkey',
   Image = 'image',
   LLM = 'llm',
+  Memory = 'memory',
   Profile = 'profile',
   Provider = 'provider',
   Proxy = 'proxy',

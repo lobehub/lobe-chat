@@ -253,6 +253,13 @@
       "tooltip": "Publish a new version to the Assistant Community"
     }
   },
+  "memory": {
+    "enabled": {
+      "desc": "When enabled, AI will remember your preferences and conversation history",
+      "title": "Enable Memory"
+    },
+    "title": "Memory Settings"
+  },
   "message": {
     "success": "Update successful"
   },
@@ -844,6 +851,7 @@
     "hotkey": "Hotkeys",
     "image": "Image Generation Service",
     "llm": "Language Model",
+    "memory": "Memory",
     "profile": "My Account",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",

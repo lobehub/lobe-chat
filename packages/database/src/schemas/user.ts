@@ -79,6 +79,7 @@ export const userSettings = pgTable('user_settings', {
   systemAgent: jsonb('system_agent'),
   defaultAgent: jsonb('default_agent'),
   market: jsonb('market'),
+  memory: jsonb('memory'),
   tool: jsonb('tool'),
   image: jsonb('image'),
 });

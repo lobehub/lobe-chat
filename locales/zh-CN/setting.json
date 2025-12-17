@@ -253,6 +253,13 @@
       "tooltip": "发布新版本到助手社区"
     }
   },
+  "memory": {
+    "enabled": {
+      "desc": "开启后，AI 将记住你的偏好和对话历史",
+      "title": "启用记忆功能"
+    },
+    "title": "记忆设置"
+  },
   "message": {
     "success": "更新成功"
   },
@@ -844,6 +851,7 @@
     "hotkey": "快捷键",
     "image": "绘画服务",
     "llm": "语言模型",
+    "memory": "记忆设置",
     "profile": "我的账号",
     "provider": "AI 服务商",
     "proxy": "网络代理",
