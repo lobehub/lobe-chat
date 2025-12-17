@@ -2,16 +2,15 @@
 
 import type { AgentItem } from '@lobechat/types';
 import { Avatar, Text, Tooltip } from '@lobehub/ui';
-import { Button, Popover } from 'antd';
+import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { MessageSquare } from 'lucide-react';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import ModelSelect from '@/features/ModelSelect';
-import { useAgentStore } from '@/store/agent';
+import { useAgentGroupStore } from '@/store/agentGroup';
 
 const useStyles = createStyles(({ css, token }) => ({
   banner: css`
@@ -69,21 +68,28 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface AgentProfilePopupProps extends PropsWithChildren {
   agent: AgentItem;
+  groupId: string;
   onChat: () => void;
 }
 
-const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, onChat, children }) => {
+const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, onChat, children }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const updateAgentConfigById = useAgentStore((s) => s.updateAgentConfigById);
+  const updateMemberAgentConfig = useAgentGroupStore((s) => s.updateMemberAgentConfig);
 
   const handleModelChange = async (props: { model: string; provider: string }) => {
-    await updateAgentConfigById(agent.id, {
-      model: props.model,
-      provider: props.provider,
-    });
+    setLoading(true);
+    try {
+      await updateMemberAgentConfig(groupId, agent.id, {
+        model: props.model,
+        provider: props.provider,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChat = () => {
@@ -132,24 +138,23 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, onChat, childre
       <Flexbox className={styles.section} gap={4}>
         <div className={styles.sectionTitle}>{t('groupSidebar.agentProfile.model')}</div>
         <ModelSelect
+          loading={loading}
           onChange={handleModelChange}
-          size="small"
-          value={{ model: agent.model || '', provider: agent.provider || '' }}
-          variant="filled"
+          value={{ model: agent.model!, provider: agent.provider! }}
         />
       </Flexbox>
 
       {/* Actions */}
-      <Flexbox className={styles.section} style={{ paddingBlockStart: 0 }}>
-        <Button
-          className={styles.chatButton}
-          icon={<MessageSquare size={14} />}
-          onClick={handleChat}
-          type="primary"
-        >
-          {t('groupSidebar.agentProfile.chat')}
-        </Button>
-      </Flexbox>
+      {/*<Flexbox className={styles.section} style={{ paddingBlockStart: 0 }}>*/}
+      {/*  <Button*/}
+      {/*    className={styles.chatButton}*/}
+      {/*    icon={<MessageSquare size={14} />}*/}
+      {/*    onClick={handleChat}*/}
+      {/*    type="primary"*/}
+      {/*  >*/}
+      {/*    {t('groupSidebar.agentProfile.chat')}*/}
+      {/*  </Button>*/}
+      {/*</Flexbox>*/}
     </Flexbox>
   );
 
@@ -161,9 +166,7 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, onChat, childre
       open={open}
       placement="right"
       styles={{
-        body: {
-          padding: 0,
-        },
+        body: { padding: 0 },
       }}
       trigger={['click']}
     >

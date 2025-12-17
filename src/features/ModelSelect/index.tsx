@@ -27,7 +27,7 @@ interface ModelOption {
   value: string;
 }
 
-interface ModelSelectProps extends Pick<SelectProps, 'size' | 'style' | 'variant'> {
+interface ModelSelectProps extends Pick<SelectProps, 'loading' | 'size' | 'style' | 'variant'> {
   defaultValue?: { model: string; provider?: string };
   onChange?: (props: { model: string; provider: string }) => void;
   requiredAbilities?: (keyof EnabledProviderWithModels['children'][number]['abilities'])[];
@@ -36,7 +36,7 @@ interface ModelSelectProps extends Pick<SelectProps, 'size' | 'style' | 'variant
 }
 
 const ModelSelect = memo<ModelSelectProps>(
-  ({ value, onChange, showAbility = true, requiredAbilities, size, style, variant }) => {
+  ({ value, onChange, showAbility = true, requiredAbilities, loading, size, style, variant }) => {
     const enabledList = useEnabledChatModels();
 
     const { styles } = useStyles();
@@ -90,6 +90,7 @@ const ModelSelect = memo<ModelSelectProps>(
           popup: { root: styles.popup },
         }}
         defaultValue={`${value?.provider}/${value?.model}`}
+        loading={loading}
         onChange={(value, option) => {
           const model = value.split('/').slice(1).join('/');
           onChange?.({ model, provider: (option as unknown as ModelOption).provider });

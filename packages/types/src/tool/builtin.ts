@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { z } from 'zod';
 
+import type { RuntimeStepContext } from '../stepContext';
 import { HumanInterventionConfigSchema, HumanInterventionPolicySchema } from './intervention';
 import type { HumanInterventionConfig, HumanInterventionPolicy } from './intervention';
 
@@ -262,7 +263,7 @@ export interface BuiltinToolContext {
 
   /**
    * Current plugin state for this tool message
-   * Used by tools that need to read/update persistent state (e.g., GTD todos)
+   * @deprecated Use stepContext instead for cross-message state
    */
   pluginState?: Record<string, unknown>;
 
@@ -277,6 +278,13 @@ export interface BuiltinToolContext {
    * AbortSignal for cancellation detection
    */
   signal?: AbortSignal;
+
+  /**
+   * Step context computed at the beginning of each step
+   * Contains dynamic state like GTD todos that changes between steps
+   * Computed by AgentRuntime and passed to Tool Executors
+   */
+  stepContext?: RuntimeStepContext;
 }
 
 /**

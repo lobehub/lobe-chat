@@ -28,6 +28,7 @@ export * from './search';
 export * from './serverConfig';
 export * from './service';
 export * from './session';
+export * from './stepContext';
 export * from './tableViewer';
 export * from './tool';
 export * from './topic';

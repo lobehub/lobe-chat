@@ -44,7 +44,7 @@ const Members = memo<MembersProps>(({ itemKey }) => {
       paddingInline={'8px 4px'}
       title={
         <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {`${t('groupSidebar.tabs.members')} ${membersCount + 1}`}
+          {`${t('groupSidebar.tabs.members')} ${membersCount}`}
         </Text>
       }
     >

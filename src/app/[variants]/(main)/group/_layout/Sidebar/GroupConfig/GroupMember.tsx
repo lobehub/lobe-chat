@@ -1,9 +1,8 @@
 'use client';
 
-import type { AgentItem } from '@lobechat/types';
-import { ActionIcon, SortableList } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { UserMinus, UserPlus } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -30,7 +29,6 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
 
   const addAgentsToGroup = useAgentGroupStore((s) => s.addAgentsToGroup);
   const removeAgentFromGroup = useAgentGroupStore((s) => s.removeAgentFromGroup);
-  const persistReorder = useAgentGroupStore((s) => s.reorderGroupMembers);
   const toggleThread = useAgentGroupStore((s) => s.toggleThread);
   const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
   const togglePortal = useChatStore((s) => s.togglePortal);
@@ -57,9 +55,6 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
     onAddModalOpenChange(false);
   };
 
-  // Use members from store as the initial local state
-  const [members, setMembers] = useState<AgentItem[]>(groupMembers);
-
   const [removingMemberIds, setRemovingMemberIds] = useState<string[]>([]);
 
   const withRemovingFlag = async (id: string, task: () => Promise<void>) => {
@@ -70,11 +65,6 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
       setRemovingMemberIds((prev) => prev.filter((memberId) => memberId !== id));
     }
   };
-
-  // Sync local state with store when groupMembers changes
-  useEffect(() => {
-    setMembers(groupMembers);
-  }, [groupMembers]);
 
   const handleRemoveMember = async (memberId: string) => {
     if (!groupId) return;
@@ -118,8 +108,6 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
               />
             }
             avatar={DEFAULT_SUPERVISOR_AVATAR}
-            id={'orchestrator'}
-            pin
             showActionsOnHover={true}
             title={t('groupSidebar.members.orchestrator')}
           />
@@ -138,27 +126,20 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
               />
             }
             avatar={DEFAULT_SUPERVISOR_AVATAR}
-            id={'orchestrator-disabled'}
-            pin
             showActionsOnHover={false}
             title={t('groupSidebar.members.orchestrator')}
           />
         )}
 
-        {Boolean(members && members.length > 0) && (
-          <SortableList
-            gap={2}
-            items={members}
-            onChange={async (items: AgentItem[]) => {
-              setMembers(items);
-              if (!groupId) return;
-              const orderedIds = items.map((m) => m.id);
-              persistReorder(groupId, orderedIds).catch(() => {
-                console.error('Failed to persist reorder');
-              });
-            }}
-            renderItem={(item: AgentItem) => (
-              <AgentProfilePopup agent={item} onChat={() => handleMemberClick(item.id)}>
+        {groupId &&
+          groupMembers.map((item) => (
+            <AgentProfilePopup
+              agent={item}
+              groupId={groupId}
+              key={item.id}
+              onChat={() => handleMemberClick(item.id)}
+            >
+              <div>
                 <GroupMemberItem
                   actions={
                     <ActionIcon
@@ -175,14 +156,11 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
                   }
                   avatar={item.avatar || DEFAULT_AVATAR}
                   background={item.backgroundColor ?? undefined}
-                  id={item.id}
                   title={item.title || t('defaultSession', { ns: 'common' })}
                 />
-              </AgentProfilePopup>
-            )}
-            style={{ margin: 0 }}
-          />
-        )}
+              </div>
+            </AgentProfilePopup>
+          ))}
       </Flexbox>
 
       {groupId && (
