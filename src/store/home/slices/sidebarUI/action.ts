@@ -105,7 +105,7 @@ export const createSidebarUISlice: StateCreator<
   },
 
   pinAgent: async (agentId, pinned) => {
-    await sessionService.updateSession(agentId, { pinned });
+    await agentService.updateAgentPinned(agentId, pinned);
     await get().refreshAgentList();
   },
 

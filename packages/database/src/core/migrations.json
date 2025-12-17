@@ -1014,5 +1014,11 @@
     "bps": true,
     "folderMillis": 1765962844228,
     "hash": "bbc1402d1c11e42f306c3dd5eb2c2f1d43b69995e63d146acdea0d964219c4dc"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ADD COLUMN \"pinned\" boolean;"],
+    "bps": true,
+    "folderMillis": 1765991196753,
+    "hash": "2b6e66f0f4d82da8cf22a47a5876cb2a110694756242436ec8701e0cffeba2e5"
   }
 ]

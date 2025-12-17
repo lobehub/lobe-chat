@@ -178,6 +178,13 @@ class AgentService {
   queryAgents = async (params?: { keyword?: string; limit?: number; offset?: number }) => {
     return lambdaClient.agent.queryAgents.query(params);
   };
+
+  /**
+   * Pin or unpin an agent
+   */
+  updateAgentPinned = async (agentId: string, pinned: boolean) => {
+    return lambdaClient.agent.updateAgentPinned.mutate({ id: agentId, pinned });
+  };
 }
 
 export const agentService = new AgentService();

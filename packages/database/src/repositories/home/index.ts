@@ -37,14 +37,17 @@ export class HomeRepository {
    */
   async getSidebarAgentList(): Promise<SidebarAgentListResponse> {
     // 1. Query all agents (non-virtual) with their session info
+    // Note: We query both agents.pinned and sessions.pinned for backward compatibility
+    // agents.pinned takes priority, falling back to sessions.pinned for legacy data
     const agentList = await this.db
       .select({
         avatar: agents.avatar,
         description: agents.description,
         groupId: sessions.groupId,
         id: agents.id,
-        pinned: sessions.pinned,
+        pinned: agents.pinned,
         sessionId: sessions.id,
+        sessionPinned: sessions.pinned,
         title: agents.title,
         updatedAt: agents.updatedAt,
       })
@@ -119,6 +122,7 @@ export class HomeRepository {
       id: string;
       pinned: boolean | null;
       sessionId: string;
+      sessionPinned: boolean | null;
       title: string | null;
       updatedAt: Date;
     }>,
@@ -138,13 +142,14 @@ export class HomeRepository {
     memberAvatarsMap: Map<string, Array<{ avatar: string; background?: string }>>,
   ): SidebarAgentListResponse {
     // Convert to unified format
+    // For pinned status: agents.pinned takes priority, fallback to sessions.pinned for backward compatibility
     const allItems: Array<SidebarAgentItem & { groupId: string | null }> = [
       ...agentItems.map((a) => ({
         avatar: a.avatar,
         description: a.description,
         groupId: a.groupId,
         id: a.id,
-        pinned: a.pinned ?? false,
+        pinned: a.pinned ?? a.sessionPinned ?? false,
         sessionId: a.sessionId,
         title: a.title,
         type: 'agent' as const,
@@ -207,13 +212,15 @@ export class HomeRepository {
     const searchPattern = `%${keyword.toLowerCase()}%`;
 
     // 1. Search agents by title or description
+    // Note: We query both agents.pinned and sessions.pinned for backward compatibility
     const agentResults = await this.db
       .select({
         avatar: agents.avatar,
         description: agents.description,
         id: agents.id,
-        pinned: sessions.pinned,
+        pinned: agents.pinned,
         sessionId: sessions.id,
+        sessionPinned: sessions.pinned,
         title: agents.title,
         updatedAt: agents.updatedAt,
       })
@@ -276,13 +283,14 @@ export class HomeRepository {
     }
 
     // 3. Combine and format results
+    // For pinned status: agents.pinned takes priority, fallback to sessions.pinned for backward compatibility
     const results: SidebarAgentItem[] = [
       ...agentResults.map((a) =>
         cleanObject({
           avatar: a.avatar,
           description: a.description,
           id: a.id,
-          pinned: a.pinned ?? false,
+          pinned: a.pinned ?? a.sessionPinned ?? false,
           sessionId: a.sessionId,
           title: a.title,
           type: 'agent' as const,

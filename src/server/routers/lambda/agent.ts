@@ -182,12 +182,11 @@ export const agentRouter = router({
       return ctx.agentService.getAgentConfigById(input.agentId);
     }),
 
-  
   /**
    * Get a builtin agent by slug, creating it if it doesn't exist.
    * This is a generic interface for all builtin agents (page-copilot, inbox, etc.)
    */
-getBuiltinAgent: agentProcedure
+  getBuiltinAgent: agentProcedure
     .input(
       z.object({
         slug: z.string(),
@@ -197,9 +196,7 @@ getBuiltinAgent: agentProcedure
       return ctx.agentService.getBuiltinAgent(input.slug);
     }),
 
-  
-  
-getKnowledgeBasesAndFiles: agentProcedure
+  getKnowledgeBasesAndFiles: agentProcedure
     .input(
       z.object({
         agentId: z.string(),
@@ -241,7 +238,7 @@ getKnowledgeBasesAndFiles: agentProcedure
    * Returns agents with minimal info (id, title, description, avatar, backgroundColor).
    * Used by AddGroupMemberModal and group-management tool to search/select agents.
    */
-queryAgents: agentProcedure
+  queryAgents: agentProcedure
     .input(
       z
         .object({
@@ -302,5 +299,19 @@ queryAgents: agentProcedure
     .mutation(async ({ input, ctx }) => {
       // Use AgentService to update and return the updated agent data
       return ctx.agentService.updateAgentConfig(input.agentId, input.value);
+    }),
+
+  /**
+   * Pin or unpin an agent
+   */
+  updateAgentPinned: agentProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        pinned: z.boolean(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.agentModel.update(input.id, { pinned: input.pinned });
     }),
 });
