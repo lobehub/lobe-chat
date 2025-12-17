@@ -4,10 +4,10 @@ import { Button, Icon } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { ArrowLeft, Sparkles, Zap } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { useNavigate } from 'react-router-dom';
 
 import { useUserStore } from '@/store/user';
 
@@ -19,7 +19,7 @@ interface ModeSelectionStepProps {
 const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
   const { t } = useTranslation('onboarding');
   const theme = useTheme();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const [updateGeneralConfig, finishOnboarding] = useUserStore((s) => [
     s.updateGeneralConfig,
@@ -42,7 +42,7 @@ const ModeSelectionStep = memo<ModeSelectionStepProps>(({ onBack, onNext }) => {
     try {
       await updateGeneralConfig({ isLiteMode: true });
       await finishOnboarding();
-      router.push('/chat');
+      navigate('/');
     } catch (error) {
       console.error('Failed to select lite mode:', error);
     } finally {
