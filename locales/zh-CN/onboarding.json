@@ -19,6 +19,13 @@
     "title3": "告诉我，为 {{fullName}} 量身定制～"
   },
   "next": "下一步",
+  "occupation": {
+    "hint": "你可以随时在设置中修改",
+    "placeholder": "请输入你的职业...",
+    "title": "{{fullName}}，你是做什么工作的呢？",
+    "title2": "了解你的职业，才能更好地帮助你！",
+    "title3": "让我为你量身定制专业建议～"
+  },
   "proSettings": {
     "connectors": {
       "desc": "连接你常用的第三方服务",

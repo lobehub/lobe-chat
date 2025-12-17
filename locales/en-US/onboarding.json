@@ -19,6 +19,13 @@
     "title3": "Tell me, so we can tailor it just for {{fullName}}~"
   },
   "next": "Next",
+  "occupation": {
+    "hint": "You can change this anytime in settings",
+    "placeholder": "Enter your occupation...",
+    "title": "{{fullName}}, what do you do for work?",
+    "title2": "Knowing your profession helps me assist you better!",
+    "title3": "Let me tailor professional advice just for you~"
+  },
   "proSettings": {
     "connectors": {
       "desc": "Connect your favorite third-party services",

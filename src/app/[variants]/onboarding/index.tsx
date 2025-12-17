@@ -10,6 +10,7 @@ import { onboardingSelectors } from '@/store/user/selectors';
 import OnboardingContainer from './_layout';
 import FullNameStep from './features/FullNameStep';
 import ModeSelectionStep from './features/ModeSelectionStep';
+import OccupationStep from './features/OccupationStep';
 import ProSettingsStep from './features/ProSettingsStep';
 import ResponseLanguageStep from './features/ResponseLanguageStep';
 import TelemetryStep from './features/TelemetryStep';
@@ -35,12 +36,15 @@ const OnboardingPage = memo(() => {
         return <FullNameStep onBack={goToPreviousStep} onNext={goToNextStep} />;
       }
       case 3: {
-        return <ResponseLanguageStep onBack={goToPreviousStep} onNext={goToNextStep} />;
+        return <OccupationStep onBack={goToPreviousStep} onNext={goToNextStep} />;
       }
       case 4: {
-        return <ModeSelectionStep onBack={goToPreviousStep} onNext={goToNextStep} />;
+        return <ResponseLanguageStep onBack={goToPreviousStep} onNext={goToNextStep} />;
       }
       case 5: {
+        return <ModeSelectionStep onBack={goToPreviousStep} onNext={goToNextStep} />;
+      }
+      case 6: {
         return <ProSettingsStep onBack={goToPreviousStep} />;
       }
       default: {
