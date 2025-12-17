@@ -446,6 +446,13 @@
       "toolRejected": "This tool invocation was actively rejected"
     }
   },
+  "toolAuth": {
+    "authorize": "Authorize",
+    "authorizing": "Authorizing...",
+    "hint": "Without authorization, these tools may not work properly, which could cause the assistant to have limited functionality or errors.",
+    "signIn": "Sign In",
+    "title": "This assistant uses tools that require authorization"
+  },
   "topic": {
     "checkOpenNewTopic": "Enable new topic?",
     "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
