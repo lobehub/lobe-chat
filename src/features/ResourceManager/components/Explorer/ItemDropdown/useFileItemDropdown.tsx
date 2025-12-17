@@ -133,10 +133,12 @@ export const useFileItemDropdown = ({
           ]
     ) as ItemType[];
 
+    const hasKnowledgeBaseActions = knowledgeBaseActions.some(Boolean);
+
     return (
       [
         ...knowledgeBaseActions,
-        {
+        hasKnowledgeBaseActions && {
           type: 'divider',
         },
         inKnowledgeBase && {
