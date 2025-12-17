@@ -84,7 +84,7 @@ const CommandMenu = memo(() => {
           />
 
           <Command.List>
-            {!isAiMode && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
+            {!isAiMode && !isSearching && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
 
             {!page && (
               <MainMenu
@@ -102,9 +102,11 @@ const CommandMenu = memo(() => {
 
             {!page && hasSearch && !isAiMode && (
               <SearchResults
+                context={context}
                 isLoading={isSearching}
                 onClose={closeCommandMenu}
                 results={searchResults}
+                searchQuery={search}
                 styles={styles}
               />
             )}
