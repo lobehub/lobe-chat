@@ -6,11 +6,12 @@ import useSWR from 'swr';
 import type { SearchResult } from '@/database/repositories/search';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
+import { builtinAgentSelectors } from '@/store/agent/selectors/builtinAgentSelectors';
 import { useGlobalStore } from '@/store/global';
 import { globalHelpers } from '@/store/global/helpers';
 import { useHomeStore } from '@/store/home';
 
-import type { ChatMessage, ThemeMode } from './types';
+import type { ThemeMode } from './types';
 import { detectContext } from './utils/context';
 
 export const useCommandMenu = () => {
@@ -18,7 +19,6 @@ export const useCommandMenu = () => {
   const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState('');
   const [pages, setPages] = useState<string[]>([]);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,6 +26,7 @@ export const useCommandMenu = () => {
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
+  const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
 
   const page = pages.at(-1);
   const isAiMode = page === 'ai-chat';
@@ -78,12 +79,11 @@ export const useCommandMenu = () => {
     }
   }, [open]);
 
-  // Reset pages, search, and chat when opening/closing
+  // Reset pages and search when opening/closing
   useEffect(() => {
     if (open) {
       setPages([]);
       setSearch('');
-      setChatMessages([]);
     }
   }, [open]);
 
@@ -107,26 +107,20 @@ export const useCommandMenu = () => {
   };
 
   const handleAskAI = () => {
-    // Allow entering AI mode even without content
-    if (search.trim()) {
-      const userMessage: ChatMessage = {
-        content: search,
-        id: Date.now().toString(),
-        role: 'user',
-      };
-      setChatMessages((prev) => [...prev, userMessage]);
-    }
+    // Enter AI mode without adding messages
     setPages([...pages, 'ai-chat']);
   };
 
-  const handleBack = () => {
-    // If exiting AI mode, restore the last user message
-    if (isAiMode && chatMessages.length > 0) {
-      const lastUserMessage = chatMessages.at(-1);
-      if (lastUserMessage?.role === 'user') {
-        setSearch(lastUserMessage.content);
-      }
+  const handleAskAISubmit = () => {
+    // Navigate to inbox agent with the message query parameter
+    if (inboxAgentId && search.trim()) {
+      const message = encodeURIComponent(search.trim());
+      navigate(`/agent/${inboxAgentId}?message=${message}`);
+      closeCommandMenu();
     }
+  };
+
+  const handleBack = () => {
     setPages((prev) => prev.slice(0, -1));
   };
 
@@ -141,10 +135,10 @@ export const useCommandMenu = () => {
   };
 
   return {
-    chatMessages,
     closeCommandMenu,
     context,
     handleAskAI,
+    handleAskAISubmit,
     handleBack,
     handleCreateSession,
     handleExternalLink,

@@ -5,7 +5,6 @@ import { memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
-import ChatList from './ChatList';
 import MainMenu from './MainMenu';
 import SearchResults from './SearchResults';
 import ThemeMenu from './ThemeMenu';
@@ -18,10 +17,10 @@ const CommandMenu = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const {
-    chatMessages,
     closeCommandMenu,
     context,
     handleAskAI,
+    handleAskAISubmit,
     handleBack,
     handleCreateSession,
     handleExternalLink,
@@ -54,6 +53,12 @@ const CommandMenu = memo(() => {
             if (e.key === 'Tab' && !isAiMode) {
               e.preventDefault();
               handleAskAI();
+              return;
+            }
+            // Enter key in AI mode to submit
+            if (e.key === 'Enter' && isAiMode) {
+              e.preventDefault();
+              handleAskAISubmit();
               return;
             }
             // Escape goes to previous page or closes
@@ -110,8 +115,6 @@ const CommandMenu = memo(() => {
                 styles={styles}
               />
             )}
-
-            {isAiMode && <ChatList messages={chatMessages} styles={styles} />}
           </Command.List>
 
           <CommandFooter styles={styles} />
