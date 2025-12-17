@@ -447,6 +447,7 @@ table message_plugins {
 
   indexes {
     (client_id, user_id) [name: 'message_plugins_client_id_user_id_unique', unique]
+    tool_call_id [name: 'message_plugins_tool_call_id_idx']
   }
 }
 
@@ -1075,6 +1076,7 @@ table user_settings {
   system_agent jsonb
   default_agent jsonb
   market jsonb
+  memory jsonb
   tool jsonb
   image jsonb
 }

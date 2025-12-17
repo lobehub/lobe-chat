@@ -448,6 +448,13 @@
       "when": 1765865719074,
       "tag": "0063_add_user_occupation_and_onboarding",
       "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1765962844228,
+      "tag": "0064_add_memory_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"

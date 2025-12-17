@@ -1,0 +1,2 @@
+ALTER TABLE "user_settings" ADD COLUMN IF NOT EXISTS "memory" jsonb;--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "message_plugins_tool_call_id_idx" ON "message_plugins" USING btree ("tool_call_id");

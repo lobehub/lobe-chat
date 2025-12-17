@@ -1005,5 +1005,14 @@
     "bps": true,
     "folderMillis": 1765865719074,
     "hash": "10b3b440378efc6719e445fbca206927e0e34e0e16da423cb1f784d887c12353"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"memory\" jsonb;",
+      "\nCREATE INDEX IF NOT EXISTS \"message_plugins_tool_call_id_idx\" ON \"message_plugins\" USING btree (\"tool_call_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1765962844228,
+    "hash": "bbc1402d1c11e42f306c3dd5eb2c2f1d43b69995e63d146acdea0d964219c4dc"
   }
 ]
