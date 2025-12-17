@@ -84,6 +84,7 @@ export const threads = pgTable(
     clientId: text('client_id'),
 
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'cascade' }),
+    groupId: text('group_id').references(() => chatGroups.id, { onDelete: 'cascade' }),
     metadata: jsonb('metadata').$type<ThreadMetadata | undefined>(),
 
     userId: text('user_id')
@@ -97,6 +98,7 @@ export const threads = pgTable(
     uniqueIndex('threads_client_id_user_id_unique').on(t.clientId, t.userId),
     index('threads_topic_id_idx').on(t.topicId),
     index('threads_agent_id_idx').on(t.agentId),
+    index('threads_group_id_idx').on(t.groupId),
   ],
 );
 

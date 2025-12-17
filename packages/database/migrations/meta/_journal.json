@@ -469,6 +469,13 @@
       "when": 1766040132181,
       "tag": "0066_agents_plugins_drop_default",
       "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1765995150080,
+      "tag": "0067_awesome_sugar_man",
+      "breakpoints": true
     }
   ],
   "version": "6"

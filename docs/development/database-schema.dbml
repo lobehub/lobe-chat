@@ -1005,6 +1005,7 @@ table threads {
   parent_thread_id text
   client_id text
   agent_id text
+  group_id text
   metadata jsonb
   user_id text [not null]
   last_active_at "timestamp with time zone" [default: `now()`]
@@ -1016,6 +1017,7 @@ table threads {
     (client_id, user_id) [name: 'threads_client_id_user_id_unique', unique]
     topic_id [name: 'threads_topic_id_idx']
     agent_id [name: 'threads_agent_id_idx']
+    group_id [name: 'threads_group_id_idx']
   }
 }
 
