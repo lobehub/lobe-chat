@@ -244,6 +244,82 @@ const removeClerkLogic = (code: string) => {
   return result;
 };
 
+const removeManifestFromMetadata = (code: string) => {
+  const ast = parse(Lang.Tsx, code);
+  const root = ast.root();
+  const edits: Array<{ start: number; end: number; text: string }> = [];
+
+  // Find generateMetadata function
+  const generateMetadataFunc = root.find({
+    rule: {
+      pattern: 'export const generateMetadata = async ($$$) => { $$$ }',
+    },
+  });
+
+  if (!generateMetadataFunc) return code;
+
+  // Find return statement
+  const returnStatement = generateMetadataFunc.find({
+    rule: {
+      kind: 'return_statement',
+    },
+  });
+
+  if (!returnStatement) return code;
+
+  // Find the object in return statement
+  const returnObject = returnStatement.find({
+    rule: {
+      kind: 'object',
+    },
+  });
+
+  if (!returnObject) return code;
+
+  // Find all pair nodes (key-value pairs in the object)
+  const allPairs = returnObject.findAll({
+    rule: {
+      kind: 'pair',
+    },
+  });
+
+  const keysToRemove = ['manifest', 'metadataBase'];
+
+  for (const pair of allPairs) {
+    // Find the property_identifier or identifier
+    const key = pair.find({
+      rule: {
+        any: [{ kind: 'property_identifier' }, { kind: 'identifier' }],
+      },
+    });
+
+    if (key && keysToRemove.includes(key.text())) {
+      const range = pair.range();
+      // Include the trailing comma if present
+      const afterPair = code.slice(range.end.index, range.end.index + 10);
+      const commaMatch = afterPair.match(/^,\s*/);
+      const endIndex = commaMatch ? range.end.index + commaMatch[0].length : range.end.index;
+
+      edits.push({
+        start: range.start.index,
+        end: endIndex,
+        text: '',
+      });
+    }
+  }
+
+  // Apply edits
+  if (edits.length === 0) return code;
+
+  edits.sort((a, b) => b.start - a.start);
+  let result = code;
+  for (const edit of edits) {
+    result = result.slice(0, edit.start) + edit.text + result.slice(edit.end);
+  }
+
+  return result;
+};
+
 export const modifyAppCode = async (TEMP_DIR: string) => {
   // 1. Replace src/app/[variants]/page.tsx with a desktop-only entry
   const variantsPagePath = path.join(TEMP_DIR, 'src/app/[variants]/page.tsx');
@@ -296,6 +372,13 @@ export const modifyAppCode = async (TEMP_DIR: string) => {
     console.log('  Processing src/components/mdx/Image.tsx...');
     await fs.writeFile(mdxImagePath, "export { default } from 'next/image';\n");
   }
+
+  // 8. Remove manifest from metadata
+  const metadataPath = path.join(TEMP_DIR, 'src/app/[variants]/metadata.ts');
+  if (fs.existsSync(metadataPath)) {
+    console.log('  Processing src/app/[variants]/metadata.ts...');
+    await rewriteFile(metadataPath, removeManifestFromMetadata);
+  }
 };
 
 if (isDirectRun(import.meta.url)) {
@@ -306,5 +389,6 @@ if (isDirectRun(import.meta.url)) {
     { lang: Lang.Tsx, path: 'src/app/[variants]/layout.tsx' },
     { lang: Lang.Tsx, path: 'src/layout/AuthProvider/index.tsx' },
     { lang: Lang.Tsx, path: 'src/components/mdx/Image.tsx' },
+    { lang: Lang.Tsx, path: 'src/app/[variants]/metadata.ts' },
   ]);
 }

@@ -76,6 +76,13 @@
       "title": "Ripristina tutte le impostazioni"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Modello predefinito utilizzato durante la creazione di un nuovo agente",
+      "title": "Modello"
+    },
+    "title": "Impostazioni predefinite dell'assistente"
+  },
   "group": {
     "aiConfig": "Configurazione AI",
     "common": "Generale",
@@ -245,6 +252,13 @@
       "button": "Pubblica nuova versione",
       "tooltip": "Pubblica una nuova versione nella community degli assistenti"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Quando è attivata, l'IA ricorderà le tue preferenze dalla cronologia delle conversazioni, accumulando memoria da utilizzare come riferimento nei dialoghi futuri",
+      "title": "Attiva la funzione di memoria"
+    },
+    "title": "Impostazioni della memoria"
   },
   "message": {
     "success": "Aggiornamento riuscito"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Modello di generazione metadati assistente",
+      "label": "Modello",
       "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
-      "title": "Genera automaticamente informazioni sull'assistente"
+      "title": "Assistente per la generazione delle informazioni dell'assistente"
     },
     "customPrompt": {
       "addPrompt": "Aggiungi suggerimento personalizzato",
@@ -796,36 +810,36 @@
       "title": "Suggerimento personalizzato"
     },
     "generationTopic": {
-      "label": "Modello di denominazione argomenti per disegno AI",
+      "label": "Modello",
       "modelDesc": "Modello specificato per la denominazione automatica degli argomenti nel disegno AI",
-      "title": "Denominazione automatica argomenti per disegno AI"
+      "title": "Assistente per la denominazione dei temi di disegno AI"
     },
     "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {
-      "label": "Modello di storia delle conversazioni",
+      "label": "Modello",
       "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",
-      "title": "Riepilogo automatico della storia delle conversazioni"
+      "title": "Assistente per la compressione della cronologia delle conversazioni"
     },
     "queryRewrite": {
-      "label": "Modello di riscrittura delle domande",
+      "label": "Modello",
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
-      "title": "Riscrittura delle domande del knowledge base"
+      "title": "Assistente per la riformulazione delle domande nella base di conoscenza"
     },
     "thread": {
-      "label": "Modello di denominazione dei sottoargomenti",
+      "label": "Modello",
       "modelDesc": "Modello designato per la rinominazione automatica dei sottoargomenti",
-      "title": "Rinominazione automatica dei sottoargomenti"
+      "title": "Assistente per la denominazione automatica dei sotto-argomenti"
     },
     "title": "Assistente di sistema",
     "topic": {
-      "label": "Modello di denominazione degli argomenti",
+      "label": "Modello",
       "modelDesc": "Modello designato per la ridenominazione automatica degli argomenti",
-      "title": "Ridenominazione automatica degli argomenti"
+      "title": "Assistente per la denominazione automatica degli argomenti"
     },
     "translation": {
-      "label": "Modello di traduzione",
+      "label": "Modello",
       "modelDesc": "Modello specificato per la traduzione",
-      "title": "Impostazioni dell'assistente di traduzione"
+      "title": "Assistente per la traduzione del contenuto dei messaggi"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Scorciatoie",
     "image": "Servizio di disegno",
     "llm": "Modello linguistico",
+    "memory": "Impostazioni della memoria",
     "profile": "Il mio account",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",
@@ -844,7 +859,6 @@
     "stats": "Statistiche",
     "storage": "Storage dati",
     "sync": "云端同步",
-    "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale",
     "usage": "Statistiche di utilizzo"
   },

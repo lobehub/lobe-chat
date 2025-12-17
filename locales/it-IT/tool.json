@@ -6,6 +6,13 @@
     "output": "Output:",
     "returnValue": "Valore di ritorno:"
   },
+  "codeInterpreter-legacy": {
+    "error": "Errore di esecuzione",
+    "executing": "Esecuzione in corso...",
+    "files": "File:",
+    "output": "Output:",
+    "returnValue": "Valore restituito:"
+  },
   "dalle": {
     "autoGenerate": "Auto-generato",
     "downloading": "Il link dell'immagine generata da DALL·E3 è valido solo per 1 ora, sta scaricando l'immagine in locale...",
@@ -13,6 +20,57 @@
     "generating": "Generazione in corso...",
     "images": "Immagini:",
     "prompt": "parola chiave"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Aggiungi",
+      "clearCompleted": "Cancella completati",
+      "placeholder": "Inserisci un'attività..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} attività cancellate",
+      "clearedCompleted": "{{count}} attività completate cancellate",
+      "clearedCompleted_one": "{{count}} attività completata cancellata",
+      "clearedCompleted_other": "{{count}} attività completate cancellate",
+      "cleared_one": "{{count}} attività cancellata",
+      "cleared_other": "{{count}} attività cancellate",
+      "noItems": "Nessuna attività da cancellare",
+      "remaining": "{{count}} attività rimanenti",
+      "remaining_one": "{{count}} attività rimanente",
+      "remaining_other": "{{count}} attività rimanenti"
+    },
+    "completeTodos": {
+      "completed": "{{count}} attività completate",
+      "completed_one": "{{count}} attività completata",
+      "completed_other": "{{count}} attività completate"
+    },
+    "createTodos": {
+      "created": "{{count}} attività create",
+      "created_one": "{{count}} attività creata",
+      "created_other": "{{count}} attività create",
+      "total": "Totale: {{count}} attività",
+      "total_one": "Totale: {{count}} attività",
+      "total_other": "Totale: {{count}} attività"
+    },
+    "removeTodos": {
+      "removed": "{{count}} attività eliminate",
+      "removed_one": "{{count}} attività eliminata",
+      "removed_other": "{{count}} attività eliminate"
+    },
+    "status": {
+      "done": "{{count}} completate",
+      "pending": "{{count}} in sospeso"
+    },
+    "todoList": {
+      "empty": "La lista delle attività è vuota",
+      "items": "{{count}} attività",
+      "items_one": "{{count}} attività",
+      "items_other": "{{count}} attività",
+      "title": "Lista delle attività"
+    },
+    "updateTodos": {
+      "updated": "Lista delle attività aggiornata"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

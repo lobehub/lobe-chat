@@ -69,7 +69,7 @@ const Editing = memo<EditingProps>(({ id, title, avatar, toggleEditing }) => {
                 variant={isDarkMode ? 'filled' : 'outlined'}
                 width={36}
               >
-                <Avatar avatar={avatarValue} shape={'square'} size={32} />
+                <Avatar avatar={avatarValue} emojiScaleWithBackground shape={'square'} size={32} />
               </Block>
             )}
             locale={locale}

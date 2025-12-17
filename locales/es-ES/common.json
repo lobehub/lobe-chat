@@ -283,6 +283,7 @@
   "labs": "Laboratorio",
   "lang": {
     "ar": "árabe",
+    "auto": "Seguir la configuración del idioma del sistema",
     "bg-BG": "búlgaro",
     "bn": "bengalí",
     "cs-CZ": "checo",

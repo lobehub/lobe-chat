@@ -79,7 +79,9 @@ const ExperiencesArea = memo(() => {
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
         left={
-          experiencesTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{experiencesTotal}</Tag>
+          Boolean(experiencesTotal) && (
+            <Tag icon={<Icon icon={BrainCircuitIcon} />}>{experiencesTotal}</Tag>
+          )
         }
         right={
           <>

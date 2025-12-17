@@ -1,4 +1,5 @@
-import { DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM } from '@/const/settings';
+import { DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
+
 import {
   GlobalMemoryExtractionConfig,
   GlobalMemoryLayer,
@@ -19,7 +20,11 @@ const parseTokenLimitEnv = (value?: string) => {
   return Math.floor(parsed);
 };
 
-export type MemoryAgentConfig = MemoryAgentPublicConfig & { apiKey?: string; language?: string, model: string; };
+export type MemoryAgentConfig = MemoryAgentPublicConfig & {
+  apiKey?: string;
+  language?: string;
+  model: string;
+};
 export type MemoryLayerExtractorConfig = MemoryLayerExtractorPublicConfig &
   MemoryAgentConfig & {
     layers: Record<GlobalMemoryLayer, string>;

@@ -263,7 +263,7 @@ export interface BuiltinToolContext {
 
   /**
    * Current plugin state for this tool message
-   * @deprecated Use stepContext instead for cross-message state
+   * Use `stepContext` instead for cross-message state
    */
   pluginState?: Record<string, unknown>;
 

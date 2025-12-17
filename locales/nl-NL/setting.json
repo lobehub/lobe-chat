@@ -76,6 +76,13 @@
       "title": "Alle instellingen resetten"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Standaardmodel dat wordt gebruikt bij het aanmaken van een nieuwe Agent",
+      "title": "Model"
+    },
+    "title": "Standaard Assistent Instellingen"
+  },
   "group": {
     "aiConfig": "AI-configuratie",
     "common": "Algemeen",
@@ -245,6 +252,13 @@
       "button": "Nieuwe versie publiceren",
       "tooltip": "Publiceer een nieuwe versie naar de assistentengemeenschap"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Wanneer ingeschakeld, onthoudt de AI je voorkeuren uit eerdere gesprekken, bouwt geheugen op en gebruikt dit als referentie in toekomstige gesprekken",
+      "title": "Geheugenfunctie inschakelen"
+    },
+    "title": "Geheugeninstellingen"
   },
   "message": {
     "success": "Succesvol bijgewerkt"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Assistentmetadata-generatiemodel",
+      "label": "Model",
       "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
-      "title": "Automatisch assistentinformatie genereren"
+      "title": "Assistent voor het genereren van assistentinformatie"
     },
     "customPrompt": {
       "addPrompt": "Voeg aangepaste prompt toe",
@@ -796,36 +810,36 @@
       "title": "Aangepaste prompt"
     },
     "generationTopic": {
-      "label": "AI-schilderij onderwerp naamgevingsmodel",
+      "label": "Model",
       "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
-      "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+      "title": "AI-hulpmiddel voor het benoemen van tekentopics"
     },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
-      "label": "Gespreksgeschiedenismodel",
+      "label": "Model",
       "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",
-      "title": "Automatisch samenvatten van gespreksgeschiedenis"
+      "title": "Assistent voor het comprimeren van gespreksgeschiedenis"
     },
     "queryRewrite": {
-      "label": "Vraag herschrijvingsmodel",
+      "label": "Model",
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
-      "title": "Herformuleren van vragen in de kennisbank"
+      "title": "Assistent voor het herschrijven van kennisbankvragen"
     },
     "thread": {
-      "label": "Subtopic Naamgevingsmodel",
+      "label": "Model",
       "modelDesc": "Model dat wordt gebruikt voor het automatisch hernoemen van subonderwerpen",
-      "title": "Automatische naamgeving van subonderwerpen"
+      "title": "Assistent voor het automatisch benoemen van subonderwerpen"
     },
     "title": "Systeemassistent",
     "topic": {
-      "label": "Onderwerp Naamgevingsmodel",
+      "label": "Model",
       "modelDesc": "Specificeer het model dat wordt gebruikt voor automatische hernoeming van onderwerpen",
-      "title": "Automatische Onderwerpnaamgeving"
+      "title": "Assistent voor het automatisch benoemen van onderwerpen"
     },
     "translation": {
-      "label": "Vertaalmodel",
+      "label": "Model",
       "modelDesc": "Specificeer het model voor vertaling",
-      "title": "Instellingen voor vertaalassistent"
+      "title": "Assistent voor het vertalen van berichtinhoud"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Sneltoetsen",
     "image": "Tekenservice",
     "llm": "Taalmodel",
+    "memory": "Geheugeninstellingen",
     "profile": "Mijn account",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",
@@ -844,7 +859,6 @@
     "stats": "Statistieken",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
-    "system-agent": "Systeemassistent",
     "tts": "Spraakdienst",
     "usage": "Gebruiksoverzicht"
   },

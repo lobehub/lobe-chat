@@ -2,30 +2,26 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RendererProtocolManager } from '../RendererProtocolManager';
 
-const {
-  mockApp,
-  mockPathExistsSync,
-  mockProtocol,
-  mockReadFile,
-  protocolHandlerRef,
-} = vi.hoisted(() => {
-  const protocolHandlerRef = { current: null as any };
+const { mockApp, mockPathExistsSync, mockProtocol, mockReadFile, mockStat, protocolHandlerRef } =
+  vi.hoisted(() => {
+    const protocolHandlerRef = { current: null as any };
 
-  return {
-    mockApp: {
-      isReady: vi.fn().mockReturnValue(true),
-      whenReady: vi.fn().mockResolvedValue(undefined),
-    },
-    mockPathExistsSync: vi.fn().mockReturnValue(true),
-    mockProtocol: {
-      handle: vi.fn((_scheme: string, handler: any) => {
-        protocolHandlerRef.current = handler;
-      }),
-    },
-    mockReadFile: vi.fn(),
-    protocolHandlerRef,
-  };
-});
+    return {
+      mockApp: {
+        isReady: vi.fn().mockReturnValue(true),
+        whenReady: vi.fn().mockResolvedValue(undefined),
+      },
+      mockPathExistsSync: vi.fn().mockReturnValue(true),
+      mockProtocol: {
+        handle: vi.fn((_scheme: string, handler: any) => {
+          protocolHandlerRef.current = handler;
+        }),
+      },
+      mockReadFile: vi.fn(),
+      mockStat: vi.fn(),
+      protocolHandlerRef,
+    };
+  });
 
 vi.mock('electron', () => ({
   app: mockApp,
@@ -38,6 +34,7 @@ vi.mock('fs-extra', () => ({
 
 vi.mock('node:fs/promises', () => ({
   readFile: mockReadFile,
+  stat: mockStat,
 }));
 
 vi.mock('@/utils/logger', () => ({
@@ -55,6 +52,7 @@ describe('RendererProtocolManager', () => {
     protocolHandlerRef.current = null;
     mockApp.isReady.mockReturnValue(true);
     mockPathExistsSync.mockReturnValue(true);
+    mockStat.mockImplementation(async () => ({ size: 1024 }));
   });
 
   afterEach(() => {
@@ -135,5 +133,37 @@ describe('RendererProtocolManager', () => {
     expect(resolveRendererFilePath).toHaveBeenCalledTimes(1);
     expect(response.status).toBe(404);
   });
-});
 
+  it('should support Range requests for media assets', async () => {
+    const resolveRendererFilePath = vi.fn(async (_url: URL) => '/export/intro-video.mp4');
+    const getExportMimeType = vi.fn(() => 'video/mp4');
+    const payload = Buffer.from('0123456789');
+
+    mockStat.mockImplementation(async () => ({ size: payload.length }));
+    mockReadFile.mockImplementation(async () => payload);
+
+    const manager = new RendererProtocolManager({
+      getExportMimeType,
+      nextExportDir: '/export',
+      resolveRendererFilePath,
+    });
+
+    manager.registerHandler();
+    const handler = protocolHandlerRef.current;
+
+    const response = await handler({
+      headers: new Headers({ Range: 'bytes=0-1' }),
+      method: 'GET',
+      url: 'app://next/_next/static/media/intro-video.mp4',
+    } as any);
+
+    expect(response.status).toBe(206);
+    expect(response.headers.get('Accept-Ranges')).toBe('bytes');
+    expect(response.headers.get('Content-Range')).toBe('bytes 0-1/10');
+    expect(response.headers.get('Content-Length')).toBe('2');
+    expect(response.headers.get('Content-Type')).toBe('video/mp4');
+
+    const buf = Buffer.from(await response.arrayBuffer());
+    expect(buf.toString()).toBe('01');
+  });
+});

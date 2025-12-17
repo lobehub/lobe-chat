@@ -17,6 +17,7 @@ logo emoji: 🤯
 ## Project Technologies Stack
 
 - Next.js 16
+- implement spa inside nextjs with `react-router-dom`
 - react 19
 - TypeScript
 - `@lobehub/ui`, antd for component framework
@@ -31,6 +32,6 @@ logo emoji: 🤯
 - dayjs for time library
 - lodash-es for utility library
 - TRPC for type safe backend
-- PGLite for client DB and Neon PostgreSQL for backend DB
+- Neon PostgreSQL for backend DB
 - Drizzle ORM
 - Vitest for testing

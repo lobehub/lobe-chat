@@ -283,6 +283,7 @@
   "labs": "Laboratoires",
   "lang": {
     "ar": "arabe",
+    "auto": "Suivre la langue du système",
     "bg-BG": "Bulgare",
     "bn": "Bengali",
     "cs-CZ": "Tchèque",

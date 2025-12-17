@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { GroupAgentBuilderIdentifier } from '@lobechat/builtin-tool-group-agent-builder';
-import { ChatToolPayload } from '@lobechat/types';
+import { ChatToolPayload, RuntimeStepContext } from '@lobechat/types';
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import debug from 'debug';
 import { t } from 'i18next';
@@ -73,8 +73,16 @@ const getMimeTypeFromFilename = (filename: string): string => {
 export interface PluginTypesAction {
   /**
    * Invoke builtin tool
+   *
+   * @param id - Tool message ID
+   * @param payload - Tool call payload
+   * @param stepContext - Optional step context with dynamic state like GTD todos
    */
-  invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
+  invokeBuiltinTool: (
+    id: string,
+    payload: ChatToolPayload,
+    stepContext?: RuntimeStepContext,
+  ) => Promise<void>;
 
   /**
    * Invoke Cloud Code Interpreter tool
@@ -121,7 +129,7 @@ export const pluginTypes: StateCreator<
   [],
   PluginTypesAction
 > = (set, get) => ({
-  invokeBuiltinTool: async (id, payload) => {
+  invokeBuiltinTool: async (id, payload, stepContext) => {
     // Check if this is a Klavis tool by source field
     if (payload.source === 'klavis') {
       return await get().invokeKlavisTypePlugin(id, payload);
@@ -175,7 +183,7 @@ export const pluginTypes: StateCreator<
         : undefined;
 
       log(
-        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, groupId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s',
+        '[invokeBuiltinTool] Using Tool Store executor: %s/%s, messageId=%s, agentId=%s, groupId=%s, hasGroupOrchestration=%s, rootRuntimeOp=%s, stepContext=%O',
         payload.identifier,
         payload.apiName,
         id,
@@ -183,6 +191,7 @@ export const pluginTypes: StateCreator<
         groupId,
         !!groupOrchestration,
         rootRuntimeOperationId,
+        !!stepContext,
       );
 
       // Call Tool Store's invokeBuiltinTool
@@ -196,6 +205,7 @@ export const pluginTypes: StateCreator<
           operationId,
           registerAfterCompletion,
           signal: operation?.abortController?.signal,
+          stepContext,
         });
 
       // Use optimisticUpdateToolMessage to batch update content, state, error, metadata

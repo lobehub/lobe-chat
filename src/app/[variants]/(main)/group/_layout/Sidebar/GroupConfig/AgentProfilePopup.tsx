@@ -72,7 +72,7 @@ interface AgentProfilePopupProps extends PropsWithChildren {
   onChat: () => void;
 }
 
-const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, onChat, children }) => {
+const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, children }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const [open, setOpen] = useState(false);
@@ -92,10 +92,10 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, onChat
     }
   };
 
-  const handleChat = () => {
-    setOpen(false);
-    onChat();
-  };
+  // const handleChat = () => {
+  //   setOpen(false);
+  //   onChat();
+  // };
 
   const content = (
     <Flexbox className={styles.container}>

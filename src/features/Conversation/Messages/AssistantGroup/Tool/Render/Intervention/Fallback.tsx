@@ -35,20 +35,20 @@ const FallbackIntervention = memo<FallbackInterventionProps>(
 
     const handleFinish = useCallback(
       async (editedObject: Record<string, any>) => {
-        if (!id) return;
+        if (!toolCallId) return;
 
         try {
           const newArgsString = JSON.stringify(editedObject, null, 2);
 
           if (newArgsString !== requestArgs) {
-            await updatePluginArguments(id, editedObject, true);
+            await updatePluginArguments(toolCallId, editedObject, true);
           }
           setIsEditing(false);
         } catch (error) {
           console.error('Error stringifying arguments:', error);
         }
       },
-      [requestArgs, id, updatePluginArguments],
+      [requestArgs, toolCallId, updatePluginArguments],
     );
 
     if (isEditing)

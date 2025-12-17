@@ -43,9 +43,11 @@ const isMarkdownFile = (name: string, fileType?: string) => {
   );
 };
 
-// Helper to check if it's a custom note that should be rendered
-const isCustomNote = (fileType?: string) => {
-  return fileType === CUSTOM_NOTE_TYPE;
+// Helper to check if it's a custom page that should be rendered
+// PDF files should not be treated as pages even if they have fileType='custom/document'
+const isCustomPage = (fileType?: string, name?: string) => {
+  const isPDF = fileType?.toLowerCase() === 'pdf' || name?.toLowerCase().endsWith('.pdf');
+  return !isPDF && fileType === CUSTOM_NOTE_TYPE;
 };
 
 // Helper function to extract text from editor's JSON format for preview
@@ -208,12 +210,12 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         isFolder: fileType === 'custom/folder',
         isImage: fileType && IMAGE_TYPES.has(fileType),
         isMarkdown: isMarkdownFile(name, fileType),
-        isNote: isCustomNote(fileType),
+        isPage: isCustomPage(fileType, name),
       }),
       [fileType, name],
     );
 
-    const { isImage, isMarkdown, isNote, isFolder } = computedValues;
+    const { isImage, isMarkdown, isPage, isFolder } = computedValues;
 
     // Memoize drag data to prevent recreation
     const dragData = useMemo(
@@ -300,15 +302,15 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
     // Fetch markdown content only when in viewport
     useEffect(() => {
-      if ((isMarkdown || isNote) && isInView && !markdownContent) {
+      if ((isMarkdown || isPage) && isInView && !markdownContent) {
         setIsLoadingMarkdown(true);
 
         const fetchContent = async () => {
           try {
             let text: string;
 
-            if (isNote) {
-              // For custom notes, fetch from document service
+            if (isPage) {
+              // For custom pages, fetch from document service
               const page = await documentService.getDocumentById(id);
               const content = page?.content || '';
 
@@ -330,8 +332,8 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
               text = '';
             }
 
-            // For custom notes, take more content for better preview; for regular markdown, take first 500 chars
-            const preview = isNote ? text.slice(0, 1000) : text.slice(0, 500);
+            // For custom pages, take more content for better preview; for regular markdown, take first 500 chars
+            const preview = isPage ? text.slice(0, 1000) : text.slice(0, 500);
             setMarkdownContent(preview);
           } catch (error) {
             console.error('Failed to fetch markdown content:', error);
@@ -343,7 +345,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
 
         fetchContent();
       }
-    }, [isMarkdown, isNote, url, isInView, markdownContent, id]);
+    }, [isMarkdown, isPage, url, isInView, markdownContent, id]);
 
     return (
       <div
@@ -390,7 +392,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
         <div
           className={cx(
             styles.content,
-            !isImage && !isMarkdown && !isNote && styles.contentWithPadding,
+            !isImage && !isMarkdown && !isPage && styles.contentWithPadding,
           )}
           onClick={() => {
             if (isFolder) {
@@ -406,7 +408,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                 const basePath = `/resource/library/${knowledgeBaseId}/${folderSlug}`;
                 navigate(queryString ? `${basePath}?${queryString}` : basePath);
               }
-            } else if (isNote) {
+            } else if (isPage) {
               // Switch to page view mode instead of opening modal
               setCurrentViewItemId(id);
               setMode('page');
@@ -448,7 +450,7 @@ const MasonryFileItem = memo<MasonryFileItemProps>(
                   />
                 );
               }
-              case isNote: {
+              case isPage: {
                 return (
                   <NoteFileItem
                     chunkCount={chunkCount ?? undefined}

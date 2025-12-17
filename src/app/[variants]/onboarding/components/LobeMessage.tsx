@@ -1,0 +1,34 @@
+import { Text } from '@lobehub/ui';
+import { TypewriterEffect, TypewriterEffectProps } from '@lobehub/ui/awesome';
+import { LoadingDots } from '@lobehub/ui/chat';
+import { memo } from 'react';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
+
+import { ProductLogo } from '@/components/Branding';
+
+interface LobeMessageProps extends Omit<FlexboxProps, 'children'> {
+  fontSize?: number;
+  sentences: TypewriterEffectProps['sentences'];
+}
+
+const LobeMessage = memo<LobeMessageProps>(({ sentences, fontSize = 24, ...rest }) => {
+  return (
+    <Flexbox gap={8} {...rest}>
+      <ProductLogo size={fontSize * 2} />
+      <Text as={'h1'} fontSize={fontSize} weight={'bold'}>
+        <TypewriterEffect
+          cursorCharacter={<LoadingDots size={fontSize} variant={'pulse'} />}
+          cursorFade={false}
+          deletePauseDuration={1000}
+          deletingSpeed={44}
+          hideCursorWhileTyping={'afterTyping'}
+          pauseDuration={16_000}
+          sentences={sentences}
+          typingSpeed={88}
+        />
+      </Text>
+    </Flexbox>
+  );
+});
+
+export default LobeMessage;

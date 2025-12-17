@@ -37,6 +37,18 @@
       },
       "title": "Team Coordination"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Clear Tasks",
+        "completeTodos": "Complete Tasks",
+        "createPlan": "Create Plan",
+        "createTodos": "Create Tasks",
+        "removeTodos": "Delete Tasks",
+        "updatePlan": "Update Plan",
+        "updateTodos": "Update Tasks"
+      },
+      "title": "GTD Tool"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Read Knowledge Base Content",

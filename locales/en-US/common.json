@@ -283,6 +283,7 @@
   "labs": "Labs",
   "lang": {
     "ar": "Arabic",
+    "auto": "Follow system language settings",
     "bg-BG": "Bulgarian",
     "bn": "Bengali",
     "cs-CZ": "Czech",

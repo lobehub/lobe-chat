@@ -30,7 +30,9 @@ const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
 
     const handleSave = useCallback(
       async (items: TodoItem[]) => {
+        console.log('[AddTodoIntervention] handleSave called with', items.length, 'items');
         await onArgsChange?.({ items });
+        console.log('[AddTodoIntervention] onArgsChange completed');
       },
       [onArgsChange],
     );

@@ -391,6 +391,7 @@ export class App {
       '.js': 'application/javascript; charset=utf-8',
       '.json': 'application/json; charset=utf-8',
       '.map': 'application/json; charset=utf-8',
+      '.mp4': 'video/mp4',
       '.png': 'image/png',
       '.svg': 'image/svg+xml; charset=utf-8',
       '.txt': 'text/plain; charset=utf-8',

@@ -80,7 +80,11 @@ const ContextsArea = memo(() => {
   return (
     <Flexbox flex={1} height={'100%'}>
       <NavHeader
-        left={contextsTotal && <Tag icon={<Icon icon={BrainCircuitIcon} />}>{contextsTotal}</Tag>}
+        left={
+          Boolean(contextsTotal) && (
+            <Tag icon={<Icon icon={BrainCircuitIcon} />}>{contextsTotal}</Tag>
+          )
+        }
         right={
           <>
             <ViewModeSwitcher onChange={setViewMode} value={viewMode} />

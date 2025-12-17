@@ -49,8 +49,9 @@ export interface DocumentAction {
   createFolder: (name: string, parentId?: string, knowledgeBaseId?: string) => Promise<string>;
   /**
    * Create a new page with optimistic update (for page explorer)
+   * Returns the ID of the created page
    */
-  createNewPage: (title: string) => Promise<void>;
+  createNewPage: (title: string) => Promise<string>;
   /**
    * Create a new optimistic document immediately in local map
    * Returns the temporary ID for the new document
@@ -199,8 +200,6 @@ export const createDocumentSlice: StateCreator<
     const tempPageId = createOptimisticDocument(title);
     set({ isCreatingNew: true, selectedPageId: tempPageId }, false, n('createNewPage/start'));
 
-    updateUrl(tempPageId);
-
     try {
       // Create real page
       const newPage = await createDocument({
@@ -231,12 +230,13 @@ export const createDocumentSlice: StateCreator<
       // Replace optimistic with real
       replaceTempDocumentWithReal(tempPageId, realPage);
       set({ isCreatingNew: false, selectedPageId: newPage.id }, false, n('createNewPage/success'));
-      updateUrl(newPage.id);
+
+      return newPage.id;
     } catch (error) {
       console.error('Failed to create page:', error);
       get().removeTempDocument(tempPageId);
       set({ isCreatingNew: false, selectedPageId: null }, false, n('createNewPage/error'));
-      updateUrl(null);
+      throw error;
     }
   },
 
@@ -505,14 +505,24 @@ export const createDocumentSlice: StateCreator<
 
   removeDocument: async (documentId) => {
     // Remove from local optimistic map first (optimistic update)
-    const { localDocumentMap, documents } = get();
+    const { localDocumentMap, documents, selectedPageId } = get();
     const newMap = new Map(localDocumentMap);
     newMap.delete(documentId);
 
     // Also remove from pages array to update the list immediately
     const newPages = documents.filter((doc) => doc.id !== documentId);
 
-    set({ documents: newPages, localDocumentMap: newMap }, false, n('removeDocument/optimistic'));
+    // Clear selected page ID if the deleted page is currently selected
+    const updates: Partial<FileStore> = {
+      documents: newPages,
+      localDocumentMap: newMap,
+    };
+    if (selectedPageId === documentId) {
+      updates.selectedPageId = null;
+      updateUrl(null);
+    }
+
+    set(updates, false, n('removeDocument/optimistic'));
 
     try {
       // Delete from pages table
@@ -522,7 +532,15 @@ export const createDocumentSlice: StateCreator<
       console.error('Failed to delete page:', error);
       // Restore the page in local map and pages array on error
       const restoredMap = new Map(localDocumentMap);
-      set({ documents, localDocumentMap: restoredMap }, false, n('removeDocument/restore'));
+      const restoreUpdates: Partial<FileStore> = {
+        documents,
+        localDocumentMap: restoredMap,
+      };
+      if (selectedPageId === documentId) {
+        restoreUpdates.selectedPageId = documentId;
+        updateUrl(documentId);
+      }
+      set(restoreUpdates, false, n('removeDocument/restore'));
       throw error;
     }
   },

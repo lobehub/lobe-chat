@@ -76,6 +76,13 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Yeni bir Agent oluşturulurken varsayılan olarak kullanılan model",
+      "title": "Model"
+    },
+    "title": "Varsayılan Asistan Ayarları"
+  },
   "group": {
     "aiConfig": "Yapay Zeka Ayarları",
     "common": "Genel",
@@ -245,6 +252,13 @@
       "button": "Yeni Sürüm Yayımla",
       "tooltip": "Asistan Topluluğuna Yeni Sürüm Yayınla"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Etkinleştirildiğinde, yapay zeka sohbet geçmişinden tercihlerinizi hatırlar, bu bilgileri biriktirir ve sonraki konuşmalarda referans olarak kullanır",
+      "title": "Hafıza Özelliğini Etkinleştir"
+    },
+    "title": "Hafıza Ayarları"
   },
   "message": {
     "success": "Güncelleme başarılı"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Asistan Meta Veri Oluşturma Modeli",
+      "label": "Model",
       "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
-      "title": "Asistan Bilgilerini Otomatik Oluştur"
+      "title": "Asistan Bilgisi Oluşturma Yardımcısı"
     },
     "customPrompt": {
       "addPrompt": "Özel İpucu Ekle",
@@ -796,36 +810,36 @@
       "title": "Özel İpucu"
     },
     "generationTopic": {
-      "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
+      "label": "Model",
       "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
-      "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+      "title": "Yapay Zeka Resim Konusu Adlandırma Yardımcısı"
     },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
-      "label": "Oturum Geçmişi Modeli",
+      "label": "Model",
       "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",
-      "title": "Oturum Geçmişini Otomatik Olarak Özetle"
+      "title": "Sohbet Geçmişi Sıkıştırma Yardımcısı"
     },
     "queryRewrite": {
-      "label": "Soru Yeniden Yazım Modeli",
+      "label": "Model",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
-      "title": "Bilgi Tabanı Soru Yeniden Yazımı"
+      "title": "Bilgi Tabanı Soru Yeniden Yazma Yardımcısı"
     },
     "thread": {
-      "label": "Alt konu adlandırma modeli",
+      "label": "Model",
       "modelDesc": "Alt konuların otomatik olarak yeniden adlandırılması için kullanılan model",
-      "title": "Alt konu otomatik adlandırma"
+      "title": "Alt Konu Otomatik Adlandırma Yardımcısı"
     },
     "title": "Sistem Asistanı",
     "topic": {
-      "label": "Konu Adlandırma Modeli",
+      "label": "Model",
       "modelDesc": "Konuların otomatik olarak yeniden adlandırılması için belirlenen model",
-      "title": "Konu Otomatik Adlandırma"
+      "title": "Konu Otomatik Adlandırma Yardımcısı"
     },
     "translation": {
-      "label": "Çeviri Modeli",
+      "label": "Model",
       "modelDesc": "Çeviri için belirlenen model",
-      "title": "Çeviri Asistanı Ayarları"
+      "title": "Mesaj İçeriği Çeviri Yardımcısı"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Kısayollar",
     "image": "Görsel Hizmeti",
     "llm": "Modeller",
+    "memory": "Hafıza Ayarları",
     "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
@@ -844,7 +859,6 @@
     "stats": "İstatistikler",
     "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
-    "system-agent": "Sistem Asistanı",
     "tts": "Metin Seslendirme",
     "usage": "Kullanım İstatistikleri"
   },

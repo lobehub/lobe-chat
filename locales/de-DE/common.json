@@ -283,6 +283,7 @@
   "labs": "Labore",
   "lang": {
     "ar": "Arabisch",
+    "auto": "Systemsprache automatisch übernehmen",
     "bg-BG": "Bulgarisch",
     "bn": "Bengalisch",
     "cs-CZ": "Tschechisch",

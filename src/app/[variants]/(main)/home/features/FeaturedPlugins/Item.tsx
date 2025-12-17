@@ -28,8 +28,9 @@ const FeaturedPluginItem = memo<DiscoverMcpItem>(({ name, icon, github, installC
       {/* Left side - Icon */}
       <Avatar
         avatar={icon}
+        emojiScaleWithBackground
         shape={'square'}
-        size={48}
+        size={40}
         style={{
           background: 'transparent',
           flex: 'none',
@@ -37,10 +38,10 @@ const FeaturedPluginItem = memo<DiscoverMcpItem>(({ name, icon, github, installC
       />
 
       {/* Right side - Content */}
-      <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
+      <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
         {/* Title and Tags */}
         <Flexbox align={'center'} gap={8} horizontal>
-          <Text ellipsis weight={500}>
+          <Text ellipsis fontSize={13} weight={500}>
             {name}
           </Text>
         </Flexbox>

@@ -20,6 +20,11 @@ const CONTEXT_CONFIGS: ContextConfig[] = [
     type: 'agent',
   },
   {
+    matcher: /^\/group\/[^/]+$/,
+    name: 'Group',
+    type: 'group',
+  },
+  {
     matcher: /^\/image$/,
     name: 'Painting',
     type: 'painting',

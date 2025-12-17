@@ -1,4 +1,8 @@
 import {
+  DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
+  DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM,
+} from '@lobechat/const';
+import {
   AddIdentityActionSchema,
   ContextMemoryItemSchema,
   ExperienceMemoryItemSchema,
@@ -11,10 +15,6 @@ import { ModelProvider } from 'model-bank';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import {
-  DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
-  DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM,
-} from '@/const/settings';
 import {
   IdentityEntryBasePayload,
   IdentityEntryPayload,
@@ -243,7 +243,9 @@ export const userMemoriesRouter = router({
           page: z.coerce.number().int().min(1).optional(),
           pageSize: z.coerce.number().int().min(1).max(100).optional(),
           q: z.string().optional(),
-          sort: z.enum(['scoreConfidence', 'scoreImpact', 'scorePriority', 'scoreUrgency']).optional(),
+          sort: z
+            .enum(['scoreConfidence', 'scoreImpact', 'scorePriority', 'scoreUrgency'])
+            .optional(),
           tags: z.array(z.string()).optional(),
           types: z.array(z.string()).optional(),
         })

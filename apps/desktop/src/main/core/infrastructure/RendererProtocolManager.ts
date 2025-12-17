@@ -1,6 +1,6 @@
 import { app, protocol } from 'electron';
 import { pathExistsSync } from 'fs-extra';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { basename, extname } from 'node:path';
 
 import { createLogger } from '@/utils/logger';
@@ -86,13 +86,86 @@ export class RendererProtocolManager {
         }
 
         const buildFileResponse = async (targetPath: string) => {
+          const fileStat = await stat(targetPath);
+          const totalSize = fileStat.size;
+
           const buffer = await readFile(targetPath);
           const headers = new Headers();
           const mimeType = this.getExportMimeType(targetPath);
 
           if (mimeType) headers.set('Content-Type', mimeType);
 
-          return new Response(buffer, { headers });
+          // Chromium media pipeline relies on byte ranges for video/audio.
+          headers.set('Accept-Ranges', 'bytes');
+
+          const method = request.method?.toUpperCase?.() || 'GET';
+          const rangeHeader = request.headers.get('range') || request.headers.get('Range');
+
+          // HEAD (no range): return only headers
+          if (method === 'HEAD' && !rangeHeader) {
+            headers.set('Content-Length', String(totalSize));
+            return new Response(null, { headers, status: 200 });
+          }
+
+          // No Range: return entire file
+          if (!rangeHeader) {
+            headers.set('Content-Length', String(buffer.byteLength));
+            return new Response(buffer, { headers, status: 200 });
+          }
+
+          // Range: bytes=start-end | bytes=-suffixLength
+          const match = /^bytes=(\d*)-(\d*)$/i.exec(rangeHeader.trim());
+          if (!match) {
+            headers.set('Content-Range', `bytes */${totalSize}`);
+            return new Response(null, {
+              headers,
+              status: 416,
+              statusText: 'Range Not Satisfiable',
+            });
+          }
+
+          const [, startRaw, endRaw] = match;
+          let start = startRaw ? Number(startRaw) : NaN;
+          let end = endRaw ? Number(endRaw) : NaN;
+
+          // Suffix range: bytes=-N (last N bytes)
+          if (!startRaw && endRaw) {
+            const suffixLength = Number(endRaw);
+            if (!Number.isFinite(suffixLength) || suffixLength <= 0) {
+              headers.set('Content-Range', `bytes */${totalSize}`);
+              return new Response(null, {
+                headers,
+                status: 416,
+                statusText: 'Range Not Satisfiable',
+              });
+            }
+            start = Math.max(totalSize - suffixLength, 0);
+            end = totalSize - 1;
+          } else {
+            if (!Number.isFinite(start)) start = 0;
+            if (!Number.isFinite(end)) end = totalSize - 1;
+          }
+
+          if (start < 0 || end < 0 || start > end || start >= totalSize) {
+            headers.set('Content-Range', `bytes */${totalSize}`);
+            return new Response(null, {
+              headers,
+              status: 416,
+              statusText: 'Range Not Satisfiable',
+            });
+          }
+
+          end = Math.min(end, totalSize - 1);
+          const sliced = buffer.subarray(start, end + 1);
+
+          headers.set('Content-Range', `bytes ${start}-${end}/${totalSize}`);
+          headers.set('Content-Length', String(sliced.byteLength));
+
+          if (method === 'HEAD') {
+            return new Response(null, { headers, status: 206, statusText: 'Partial Content' });
+          }
+
+          return new Response(sliced, { headers, status: 206, statusText: 'Partial Content' });
         };
 
         const resolveEntryFilePath = () =>
@@ -121,7 +194,7 @@ export class RendererProtocolManager {
         try {
           return await buildFileResponse(filePath);
         } catch (error) {
-          const code = (error as NodeJS.ErrnoException).code;
+          const code = (error as any).code;
 
           if (code === 'ENOENT') {
             logger.warn(`Export asset missing on disk ${filePath}, falling back`, error);

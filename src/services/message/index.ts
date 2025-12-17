@@ -83,15 +83,19 @@ export class MessageService {
   };
 
   /**
-   * Update tool arguments - updates both tool message and parent assistant message in one transaction
+   * Update tool arguments by toolCallId - updates both tool message and parent assistant message in one transaction
    * This is the preferred method for updating tool arguments as it prevents race conditions
+   *
+   * @param toolCallId - The tool call ID (stable identifier from AI response)
+   * @param value - The new arguments value
+   * @param ctx - Message query context
    */
   updateToolArguments = async (
-    id: string,
+    toolCallId: string,
     value: string | Record<string, unknown>,
     ctx?: MessageQueryContext,
   ) => {
-    return lambdaClient.message.updateToolArguments.mutate({ ...ctx, id, value });
+    return lambdaClient.message.updateToolArguments.mutate({ ...ctx, toolCallId, value });
   };
 
   updateMessage = async (

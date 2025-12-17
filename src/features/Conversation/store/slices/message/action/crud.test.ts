@@ -597,19 +597,15 @@ describe('Message CRUD Actions', () => {
   });
 
   describe('updatePluginArguments', () => {
-    it('should update plugin arguments and register pending promise', async () => {
-      const updatePluginArgsSpy = vi
-        .spyOn(messageServiceModule.messageService, 'updateMessagePluginArguments')
-        .mockResolvedValue({ success: true } as any);
-      vi.spyOn(messageServiceModule.messageService, 'updateMessage').mockResolvedValue({
-        success: true,
-        messages: [],
-      });
+    it('should update plugin arguments using toolCallId', async () => {
+      const updateToolArgsSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateToolArguments')
+        .mockResolvedValue({ success: true, messages: [] } as any);
       vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
 
       const store = createTestStore();
 
-      // Create an assistant message with a tool
+      // Create an assistant message with a tool, and a tool message
       act(() => {
         store.getState().internal_dispatchMessage({
           type: 'createMessage',
@@ -647,10 +643,57 @@ describe('Message CRUD Actions', () => {
       });
 
       await act(async () => {
-        await store.getState().updatePluginArguments('tool-msg-1', { key: 'new' }, true);
+        // Use toolCallId (tool-call-1) instead of message id
+        await store.getState().updatePluginArguments('tool-call-1', { key: 'new' }, true);
       });
 
-      expect(updatePluginArgsSpy).toHaveBeenCalledWith('tool-msg-1', { key: 'new' });
+      // Backend API now uses toolCallId directly
+      expect(updateToolArgsSpy).toHaveBeenCalledWith(
+        'tool-call-1',
+        { key: 'new' },
+        expect.any(Object),
+      );
+    });
+
+    it('should update using toolCallId even when tool message not persisted (intervention pending)', async () => {
+      const updateToolArgsSpy = vi
+        .spyOn(messageServiceModule.messageService, 'updateToolArguments')
+        .mockResolvedValue({ success: true, messages: [] } as any);
+      vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
+
+      const store = createTestStore();
+
+      // Create an assistant message with a tool, but NO tool message (simulating intervention pending)
+      act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'assistant-1',
+          value: { content: '', role: 'assistant', sessionId: 'test-session' },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'addMessageTool',
+          id: 'assistant-1',
+          value: {
+            id: 'tool-call-1',
+            type: 'default',
+            identifier: 'test',
+            apiName: 'testFunc',
+            arguments: '{"key": "old"}',
+            result_msg_id: 'tmp_123', // Temporary ID
+          },
+        });
+      });
+
+      await act(async () => {
+        await store.getState().updatePluginArguments('tool-call-1', { key: 'new' }, true);
+      });
+
+      // Backend API uses toolCallId and handles intervention pending internally
+      expect(updateToolArgsSpy).toHaveBeenCalledWith(
+        'tool-call-1',
+        { key: 'new' },
+        expect.any(Object),
+      );
     });
 
     it('should register and remove pending promise during update', async () => {
@@ -659,23 +702,34 @@ describe('Message CRUD Actions', () => {
         resolveUpdate = resolve;
       });
 
-      vi.spyOn(
-        messageServiceModule.messageService,
-        'updateMessagePluginArguments',
-      ).mockImplementation(async () => {
-        await updatePromise;
-        return { success: true } as any;
-      });
-      vi.spyOn(messageServiceModule.messageService, 'updateMessage').mockResolvedValue({
-        success: true,
-        messages: [],
-      });
+      vi.spyOn(messageServiceModule.messageService, 'updateToolArguments').mockImplementation(
+        async () => {
+          await updatePromise;
+          return { success: true, messages: [] } as any;
+        },
+      );
       vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
 
       const store = createTestStore();
 
-      // Create tool message
+      // Create assistant with tool and tool message
       act(() => {
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
+          id: 'assistant-1',
+          value: { content: '', role: 'assistant', sessionId: 'test-session' },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'addMessageTool',
+          id: 'assistant-1',
+          value: {
+            id: 'tool-call-1',
+            type: 'default',
+            identifier: 'test',
+            apiName: 'testFunc',
+            arguments: '{"key": "old"}',
+          },
+        });
         store.getState().internal_dispatchMessage({
           type: 'createMessage',
           id: 'tool-msg-1',
@@ -683,6 +737,7 @@ describe('Message CRUD Actions', () => {
             content: '',
             role: 'tool',
             sessionId: 'test-session',
+            parentId: 'assistant-1',
             tool_call_id: 'tool-call-1',
             plugin: {
               apiName: 'test',
@@ -697,15 +752,15 @@ describe('Message CRUD Actions', () => {
       // Start update (don't await yet)
       let updateFinished = false;
       const updateAction = act(async () => {
-        await store.getState().updatePluginArguments('tool-msg-1', { key: 'new' }, true);
+        await store.getState().updatePluginArguments('tool-call-1', { key: 'new' }, true);
         updateFinished = true;
       });
 
       // Give time for the promise to be registered
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      // Verify pending promise is registered
-      expect(store.getState().pendingArgsUpdates.has('tool-msg-1')).toBe(true);
+      // Verify pending promise is registered using toolCallId
+      expect(store.getState().pendingArgsUpdates.has('tool-call-1')).toBe(true);
       expect(updateFinished).toBe(false);
 
       // Resolve the update
@@ -713,14 +768,14 @@ describe('Message CRUD Actions', () => {
       await updateAction;
 
       // Verify pending promise is removed after completion
-      expect(store.getState().pendingArgsUpdates.has('tool-msg-1')).toBe(false);
+      expect(store.getState().pendingArgsUpdates.has('tool-call-1')).toBe(false);
       expect(updateFinished).toBe(true);
     });
 
     it('should skip update if value is equal', async () => {
-      const updatePluginArgsSpy = vi.spyOn(
+      const updateToolArgsSpy = vi.spyOn(
         messageServiceModule.messageService,
-        'updateMessagePluginArguments',
+        'updateToolArguments',
       );
 
       const store = createTestStore();
@@ -728,11 +783,28 @@ describe('Message CRUD Actions', () => {
       act(() => {
         store.getState().internal_dispatchMessage({
           type: 'createMessage',
+          id: 'assistant-1',
+          value: { content: '', role: 'assistant', sessionId: 'test-session' },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'addMessageTool',
+          id: 'assistant-1',
+          value: {
+            id: 'tool-call-1',
+            type: 'default',
+            identifier: 'test',
+            apiName: 'testFunc',
+            arguments: '{"key": "value"}',
+          },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
           id: 'tool-msg-1',
           value: {
             content: '',
             role: 'tool',
             sessionId: 'test-session',
+            parentId: 'assistant-1',
             tool_call_id: 'tool-call-1',
             plugin: {
               apiName: 'test',
@@ -745,11 +817,11 @@ describe('Message CRUD Actions', () => {
       });
 
       await act(async () => {
-        // Update with same value
-        await store.getState().updatePluginArguments('tool-msg-1', { key: 'value' }, true);
+        // Update with same value using toolCallId
+        await store.getState().updatePluginArguments('tool-call-1', { key: 'value' }, true);
       });
 
-      expect(updatePluginArgsSpy).not.toHaveBeenCalled();
+      expect(updateToolArgsSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -760,17 +832,12 @@ describe('Message CRUD Actions', () => {
         resolveUpdate = resolve;
       });
 
-      vi.spyOn(
-        messageServiceModule.messageService,
-        'updateMessagePluginArguments',
-      ).mockImplementation(async () => {
-        await updatePromise;
-        return { success: true } as any;
-      });
-      vi.spyOn(messageServiceModule.messageService, 'updateMessage').mockResolvedValue({
-        success: true,
-        messages: [],
-      });
+      vi.spyOn(messageServiceModule.messageService, 'updateToolArguments').mockImplementation(
+        async () => {
+          await updatePromise;
+          return { success: true, messages: [] } as any;
+        },
+      );
       vi.spyOn(messageServiceModule.messageService, 'getMessages').mockResolvedValue([]);
 
       const store = createTestStore();
@@ -778,11 +845,28 @@ describe('Message CRUD Actions', () => {
       act(() => {
         store.getState().internal_dispatchMessage({
           type: 'createMessage',
+          id: 'assistant-1',
+          value: { content: '', role: 'assistant', sessionId: 'test-session' },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'addMessageTool',
+          id: 'assistant-1',
+          value: {
+            id: 'tool-call-1',
+            type: 'default',
+            identifier: 'test',
+            apiName: 'testFunc',
+            arguments: '{"key": "old"}',
+          },
+        });
+        store.getState().internal_dispatchMessage({
+          type: 'createMessage',
           id: 'tool-msg-1',
           value: {
             content: '',
             role: 'tool',
             sessionId: 'test-session',
+            parentId: 'assistant-1',
             tool_call_id: 'tool-call-1',
             plugin: {
               apiName: 'test',
@@ -794,18 +878,18 @@ describe('Message CRUD Actions', () => {
         });
       });
 
-      // Start update without awaiting
+      // Start update without awaiting (using toolCallId)
       const updateAction = act(async () => {
-        await store.getState().updatePluginArguments('tool-msg-1', { key: 'new' }, true);
+        await store.getState().updatePluginArguments('tool-call-1', { key: 'new' }, true);
       });
 
       // Give time for the promise to be registered
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      // Start waiting for pending update
+      // Start waiting for pending update (using toolCallId)
       let waitFinished = false;
       const waitAction = act(async () => {
-        await store.getState().waitForPendingArgsUpdate('tool-msg-1');
+        await store.getState().waitForPendingArgsUpdate('tool-call-1');
         waitFinished = true;
       });
 
@@ -826,7 +910,7 @@ describe('Message CRUD Actions', () => {
 
       let waitFinished = false;
       await act(async () => {
-        await store.getState().waitForPendingArgsUpdate('nonexistent-msg');
+        await store.getState().waitForPendingArgsUpdate('nonexistent-tool-call');
         waitFinished = true;
       });
 

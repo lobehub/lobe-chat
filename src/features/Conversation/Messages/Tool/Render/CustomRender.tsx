@@ -57,13 +57,13 @@ const CustomRender = memo<CustomRenderProps>(
 
     const handleFinish = useCallback(
       async (editedObject: Record<string, any>) => {
-        if (!id) return;
+        if (!tool_call_id) return;
 
         try {
           const newArgsString = JSON.stringify(editedObject, null, 2);
 
           if (newArgsString !== requestArgs) {
-            await updatePluginArguments(id, editedObject, true);
+            await updatePluginArguments(tool_call_id, editedObject, true);
             await reInvokeToolMessage(id);
           }
           setIsEditing(false);
@@ -72,7 +72,7 @@ const CustomRender = memo<CustomRenderProps>(
           message.error(t('updateArgs.stringifyError'));
         }
       },
-      [requestArgs, id, updatePluginArguments, reInvokeToolMessage, message, t],
+      [requestArgs, id, tool_call_id, updatePluginArguments, reInvokeToolMessage, message, t],
     );
 
     useEffect(() => {

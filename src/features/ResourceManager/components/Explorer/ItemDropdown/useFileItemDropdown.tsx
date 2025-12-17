@@ -133,10 +133,12 @@ export const useFileItemDropdown = ({
           ]
     ) as ItemType[];
 
+    const hasKnowledgeBaseActions = knowledgeBaseActions.some(Boolean);
+
     return (
       [
         ...knowledgeBaseActions,
-        {
+        hasKnowledgeBaseActions && {
           type: 'divider',
         },
         inKnowledgeBase && {
@@ -163,7 +165,19 @@ export const useFileItemDropdown = ({
           label: t('FileManager.actions.copyUrl'),
           onClick: async ({ domEvent }) => {
             domEvent.stopPropagation();
-            await copyToClipboard(url);
+
+            // For pages, use the route path instead of the storage URL
+            let urlToCopy = url;
+            if (isPage) {
+              const baseUrl = window.location.origin;
+              if (knowledgeBaseId) {
+                urlToCopy = `${baseUrl}/resource/library/${knowledgeBaseId}?file=${id}`;
+              } else {
+                urlToCopy = `${baseUrl}/resource?file=${id}`;
+              }
+            }
+
+            await copyToClipboard(urlToCopy);
             message.success(t('FileManager.actions.copyUrlSuccess'));
           },
         },
@@ -185,8 +199,12 @@ export const useFileItemDropdown = ({
               try {
                 const doc = await documentService.getDocumentById(id);
                 if (doc?.content) {
-                  // Create a blob with the markdown content
-                  const blob = new Blob([doc.content], { type: 'text/markdown' });
+                  // Add title as markdown heading
+                  const title = doc.title || filename;
+                  const contentWithTitle = `# ${title}\n\n${doc.content}`;
+
+                  // Create a blob with the markdown content including title
+                  const blob = new Blob([contentWithTitle], { type: 'text/markdown' });
                   const blobUrl = URL.createObjectURL(blob);
 
                   // Ensure filename has .md extension

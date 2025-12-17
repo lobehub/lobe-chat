@@ -6,11 +6,11 @@ import { UserHotkeyConfig } from './hotkey';
 import { UserImageConfig } from './image';
 import { UserKeyVaults } from './keyVaults';
 import { MarketAuthTokens } from './market';
+import { UserMemorySettings } from './memory';
 import { UserModelProviderConfig } from './modelProvider';
 import { UserSystemAgentConfig } from './systemAgent';
 import { UserToolConfig } from './tool';
 import { UserTTSConfig } from './tts';
-import { UserMemoryConfig } from './userMemory';
 
 export type UserDefaultAgent = LobeAgentSettings;
 
@@ -20,12 +20,12 @@ export * from './hotkey';
 export * from './image';
 export * from './keyVaults';
 export * from './market';
+export * from './memory';
 export * from './modelProvider';
 export * from './sync';
 export * from './systemAgent';
 export * from './tool';
 export * from './tts';
-export * from './userMemory';
 
 /**
  * 配置设置
@@ -38,10 +38,10 @@ export interface UserSettings {
   keyVaults: UserKeyVaults;
   languageModel: UserModelProviderConfig;
   market?: MarketAuthTokens;
+  memory?: UserMemorySettings;
   systemAgent: UserSystemAgentConfig;
   tool: UserToolConfig;
   tts: UserTTSConfig;
-  userMemory: UserMemoryConfig;
 }
 
 /**
@@ -57,6 +57,7 @@ export const UserSettingsSchema = z
     keyVaults: z.any().optional(),
     languageModel: z.any().optional(),
     market: z.any().optional(),
+    memory: z.any().optional(),
     systemAgent: z.any().optional(),
     tool: z.any().optional(),
     tts: z.any().optional(),

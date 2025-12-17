@@ -1,4 +1,4 @@
-import { ChatToolPayload, ModelUsage } from '@lobechat/types';
+import { ChatToolPayload, ModelUsage, RuntimeStepContext } from '@lobechat/types';
 
 import type { FinishReason } from './event';
 import { AgentState, ToolRegistry } from './state';
@@ -15,6 +15,7 @@ export interface AgentRuntimeContext {
 
   /** Phase-specific payload/context */
   payload?: unknown;
+
   /** Current execution phase */
   phase:
     | 'init'
@@ -34,6 +35,14 @@ export interface AgentRuntimeContext {
     status: AgentState['status'];
     stepCount: number;
   };
+
+  /**
+   * Step context computed at the beginning of each step
+   * Contains dynamic state like GTD todos that changes between steps
+   * Computed by AgentRuntime and passed to Context Engine and Tool Executors
+   */
+  stepContext?: RuntimeStepContext;
+
   /** Usage statistics from the current step (if applicable) */
   stepUsage?: ModelUsage | unknown;
 }

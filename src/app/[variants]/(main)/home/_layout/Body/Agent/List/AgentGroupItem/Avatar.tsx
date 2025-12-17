@@ -21,7 +21,7 @@ const AgentGroupAvatar = memo<GroupAvatarProps>(({ avatar }) => {
   }
 
   return (
-    <GroupAvatar avatarShape={'square'} avatars={displayAvatars} cornerShape={'square'} size={24} />
+    <GroupAvatar avatarShape={'square'} avatars={displayAvatars} cornerShape={'square'} size={22} />
   );
 });
 

@@ -258,10 +258,16 @@ export const useCreateMenuItems = () => {
   /**
    * Create page action
    */
-  const createPage = useCallback(() => {
+  const createPage = useCallback(async () => {
     const untitledTitle = tFile('documentList.untitled');
-    createNewPage(untitledTitle);
-  }, [createNewPage, tFile]);
+    try {
+      const newPageId = await createNewPage(untitledTitle);
+      navigate(`/page/${newPageId}`);
+    } catch (error) {
+      console.error('Failed to create page:', error);
+      message.error('Failed to create page');
+    }
+  }, [createNewPage, tFile, navigate, message]);
 
   /**
    * Create page menu item
@@ -271,9 +277,9 @@ export const useCreateMenuItems = () => {
       icon: <Icon icon={FileTextIcon} />,
       key: 'newPage',
       label: t('newPage'),
-      onClick: (info) => {
+      onClick: async (info) => {
         info.domEvent?.stopPropagation();
-        createPage();
+        await createPage();
       },
     }),
     [t, createPage],

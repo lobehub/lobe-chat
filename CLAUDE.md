@@ -58,7 +58,7 @@ see @.cursor/rules/typescript.mdc
 - **Dev**: Translate `locales/zh-CN/namespace.json` and `locales/en-US/namespace.json` locales file only for dev preview
 - DON'T run `pnpm i18n`, let CI auto handle it
 
-## Linear Issue Management
+## Linear Issue Management (ignore if not installed linear mcp)
 
 When working with Linear issues:
 

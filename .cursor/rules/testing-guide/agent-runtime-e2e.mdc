@@ -9,7 +9,7 @@
 E2E 测试的目标是尽可能接近真实运行环境。因此，我们只 Mock **三个外部依赖**：
 
 | 依赖 | Mock 方式 | 说明 |
-|------|----------|------|
+| --- | --- | --- |
 | **Database** | PGLite | 使用 `@lobechat/database/test-utils` 提供的内存数据库 |
 | **Redis** | InMemoryAgentStateManager | Mock `AgentStateManager` 使用内存实现 |
 | **Redis** | InMemoryStreamEventManager | Mock `StreamEventManager` 使用内存实现 |
@@ -79,11 +79,13 @@ export const createOpenAIStreamResponse = (options: {
             id: 'chatcmpl-mock',
             object: 'chat.completion.chunk',
             model: 'gpt-5',
-            choices: [{
-              index: 0,
-              delta: { content },
-              finish_reason: null,
-            }],
+            choices: [
+              {
+                index: 0,
+                delta: { content },
+                finish_reason: null,
+              },
+            ],
           };
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
         }
@@ -95,21 +97,25 @@ export const createOpenAIStreamResponse = (options: {
               id: 'chatcmpl-mock',
               object: 'chat.completion.chunk',
               model: 'gpt-5',
-              choices: [{
-                index: 0,
-                delta: {
-                  tool_calls: [{
-                    index: 0,
-                    id: tool.id,
-                    type: 'function',
-                    function: {
-                      name: tool.name,
-                      arguments: tool.arguments,
-                    },
-                  }],
+              choices: [
+                {
+                  index: 0,
+                  delta: {
+                    tool_calls: [
+                      {
+                        index: 0,
+                        id: tool.id,
+                        type: 'function',
+                        function: {
+                          name: tool.name,
+                          arguments: tool.arguments,
+                        },
+                      },
+                    ],
+                  },
+                  finish_reason: null,
                 },
-                finish_reason: null,
-              }],
+              ],
             };
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
           }
@@ -120,11 +126,13 @@ export const createOpenAIStreamResponse = (options: {
           id: 'chatcmpl-mock',
           object: 'chat.completion.chunk',
           model: 'gpt-5',
-          choices: [{
-            index: 0,
-            delta: {},
-            finish_reason: finishReason,
-          }],
+          choices: [
+            {
+              index: 0,
+              delta: {},
+              finish_reason: finishReason,
+            },
+          ],
         };
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(finishChunk)}\n\n`));
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
@@ -172,9 +180,7 @@ const fetchSpy = vi.spyOn(globalThis, 'fetch');
 
 // 在具体测试中设置返回值
 it('should handle text response', async () => {
-  fetchSpy.mockResolvedValueOnce(
-    createOpenAIStreamResponse({ content: '杭州今天天气晴朗' })
-  );
+  fetchSpy.mockResolvedValueOnce(createOpenAIStreamResponse({ content: '杭州今天天气晴朗' }));
 
   // ... 执行测试
 });
@@ -182,13 +188,15 @@ it('should handle text response', async () => {
 it('should handle tool calls', async () => {
   fetchSpy.mockResolvedValueOnce(
     createOpenAIStreamResponse({
-      toolCalls: [{
-        id: 'call_123',
-        name: 'lobe-web-browsing____search____builtin',
-        arguments: JSON.stringify({ query: '杭州天气' }),
-      }],
+      toolCalls: [
+        {
+          id: 'call_123',
+          name: 'lobe-web-browsing____search____builtin',
+          arguments: JSON.stringify({ query: '杭州天气' }),
+        },
+      ],
       finishReason: 'tool_calls',
-    })
+    }),
   );
 
   // ... 执行测试
@@ -203,7 +211,7 @@ it('should handle tool calls', async () => {
 describe('Basic Chat', () => {
   it('should complete a simple conversation', async () => {
     fetchSpy.mockResolvedValueOnce(
-      createOpenAIStreamResponse({ content: 'Hello! How can I help you?' })
+      createOpenAIStreamResponse({ content: 'Hello! How can I help you?' }),
     );
 
     const result = await service.createOperation({
@@ -226,18 +234,20 @@ describe('Tool Calls', () => {
     // 第一次调用：LLM 返回 tool_calls
     fetchSpy.mockResolvedValueOnce(
       createOpenAIStreamResponse({
-        toolCalls: [{
-          id: 'call_123',
-          name: 'lobe-web-browsing____search____builtin',
-          arguments: JSON.stringify({ query: '杭州天气' }),
-        }],
+        toolCalls: [
+          {
+            id: 'call_123',
+            name: 'lobe-web-browsing____search____builtin',
+            arguments: JSON.stringify({ query: '杭州天气' }),
+          },
+        ],
         finishReason: 'tool_calls',
-      })
+      }),
     );
 
     // 第二次调用：处理 tool 结果后的响应
     fetchSpy.mockResolvedValueOnce(
-      createOpenAIStreamResponse({ content: '根据搜索结果，杭州今天...' })
+      createOpenAIStreamResponse({ content: '根据搜索结果，杭州今天...' }),
     );
 
     // ... 执行测试

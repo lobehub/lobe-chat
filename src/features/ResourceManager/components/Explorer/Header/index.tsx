@@ -30,6 +30,9 @@ const Header = memo(() => {
     libraryId,
   });
 
+  // Disable batch actions dropdown when no items selected and not in any library
+  const isBatchActionsDisabled = selectFileIds.length === 0 && !libraryId;
+
   // If no libraryId, show just the category name
   const leftContent =
     !libraryId && category && category !== FilesTabs.All ? (
@@ -47,7 +50,11 @@ const Header = memo(() => {
         <>
           <ActionIcon icon={SearchIcon} onClick={() => toggleCommandMenu(true)} />
           <SortDropdown />
-          <BatchActionsDropdown onActionClick={onActionClick} selectCount={selectFileIds.length} />
+          <BatchActionsDropdown
+            disabled={isBatchActionsDisabled}
+            onActionClick={onActionClick}
+            selectCount={selectFileIds.length}
+          />
           <ViewSwitcher />
           <Flexbox style={{ marginLeft: 8 }}>
             <AddButton />

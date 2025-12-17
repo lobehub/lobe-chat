@@ -1,0 +1,84 @@
+{
+  "back": "Quay lại",
+  "finish": "Hoàn tất",
+  "modeSelection": {
+    "desc": "Chọn chế độ sử dụng phù hợp với bạn",
+    "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
+    "lite": {
+      "desc": "Phù hợp cho trò chuyện hàng ngày, hỏi đáp, hỗ trợ công việc nhẹ và trải nghiệm mô hình mới",
+      "subtitle": "Nhẹ nhàng, tinh gọn, ưu tiên cộng tác hiệu quả với một trợ lý toàn năng. Dễ dàng chuyển đổi giữa các mô hình phổ biến để duy trì trạng thái tư duy tốt nhất.",
+      "title": "Lite Nhẹ nhàng"
+    },
+    "pro": {
+      "desc": "Hướng đến quy trình làm việc, cộng tác sâu và tùy chỉnh cao",
+      "subtitle": "Chế độ năng suất chuyên nghiệp. Doanh nghiệp một người, cộng tác đa trợ lý, tùy chỉnh sâu mô hình và quy trình làm việc – xây dựng trung tâm trí tuệ của riêng bạn.",
+      "title": "Pro Chuyên nghiệp"
+    },
+    "title": "Bạn thích phong cách làm việc nào?",
+    "title2": "Nhẹ nhàng hay Chuyên nghiệp, bạn quyết định!",
+    "title3": "Hãy cho tôi biết để tùy chỉnh riêng cho {{fullName}} nhé～"
+  },
+  "next": "Tiếp theo",
+  "proSettings": {
+    "connectors": {
+      "desc": "Kết nối với các dịch vụ bên thứ ba bạn thường dùng",
+      "title": "Trình kết nối"
+    },
+    "desc": "Cấu hình các tùy chọn nâng cao của bạn",
+    "devMode": {
+      "desc": "Bật để hiển thị các tính năng và tùy chọn dành cho nhà phát triển",
+      "title": "Chế độ nhà phát triển"
+    },
+    "model": {
+      "desc": "Chọn mô hình AI mặc định cho hội thoại",
+      "title": "Mô hình mặc định"
+    },
+    "title": "Cài đặt Pro"
+  },
+  "responseLanguage": {
+    "auto": "Tự động (theo ngôn ngữ hệ thống)",
+    "desc": "Chọn ngôn ngữ mà trợ lý AI sẽ sử dụng để trả lời",
+    "hint": "Sau khi chọn, AI sẽ trả lời bằng ngôn ngữ đó và giao diện cũng sẽ được đồng bộ",
+    "title": "{{fullName}}, chúng ta sẽ giao tiếp bằng ngôn ngữ nào?",
+    "title2": "Bắt đầu từ ngôn ngữ, xây dựng sự thấu hiểu thực sự.",
+    "title3": "Để tôi nói rõ ràng, bạn nghe dễ hiểu nhé～"
+  },
+  "telemetry": {
+    "agreement": "Tất cả dữ liệu thu thập đều được ẩn danh và chỉ dùng để tối ưu trải nghiệm sản phẩm. Việc tiếp tục sử dụng đồng nghĩa với việc bạn xác nhận đã hiểu và đồng ý với <terms>Điều khoản dịch vụ</terms> và <privacy>Chính sách quyền riêng tư</privacy>.",
+    "desc": "Tôi là trợ lý AI của bạn, luôn sẵn sàng đồng hành cùng bạn suy nghĩ, sáng tạo và quản lý đội ngũ Agent.",
+    "helpImprove": "Giúp cải thiện {{appName}}",
+    "next": "Bắt đầu thôi",
+    "privacy": "Chính sách quyền riêng tư",
+    "rows": {
+      "collaborate": {
+        "desc": "Tại đây, con người, Agent và Agent cùng làm việc, học hỏi và phát triển – để năng suất chảy trôi một cách tự nhiên nhất.",
+        "title": "Cộng tác · Đồng hành cùng trí tuệ"
+      },
+      "create": {
+        "desc": "Nghĩ là làm. Chỉ cần một ý tưởng, Agent sẽ được tạo ra ngay lập tức.",
+        "title": "Sáng tạo · Cảm hứng thành hiện thực"
+      },
+      "evolve": {
+        "desc": "Mỗi lần tương tác, tôi hiểu bạn hơn. Không chỉ phản hồi, mà còn thấu hiểu.",
+        "title": "Tiến hóa · Càng dùng càng hiểu bạn"
+      },
+      "privacy": {
+        "desc": "Chúng tôi sử dụng dữ liệu ẩn danh để liên tục cải thiện trải nghiệm {{appName}}. Tất nhiên, bạn có thể điều chỉnh tùy chọn này bất cứ lúc nào trong phần cài đặt quyền riêng tư.",
+        "title": "Cùng nhau làm cho {{appName}} tốt hơn"
+      }
+    },
+    "terms": "Điều khoản dịch vụ",
+    "title": "Chào bạn, tôi là {{name}}",
+    "title2": "Rất vui được gặp bạn～",
+    "title3": "Loooobe! Hãy bắt đầu thôi!"
+  },
+  "title": "Chào mừng đến với {{appName}}",
+  "username": {
+    "desc": "Cho chúng tôi biết cách xưng hô với bạn",
+    "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
+    "placeholder": "Vui lòng nhập tên bạn muốn được gọi...",
+    "title": "À đúng rồi, tôi nên gọi bạn là gì nhỉ?",
+    "title2": "Hãy làm quen một chút nhé!",
+    "title3": "Để sau này chúng ta trò chuyện thân mật hơn～"
+  }
+}

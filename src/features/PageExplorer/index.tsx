@@ -44,7 +44,12 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
     deletePage(docId);
   };
 
-  if (!currentPageId) return <PageExplorerPlaceholder hasPages={pages?.length > 0} />;
+  // Check if the current page exists in the pages list
+  const currentPageExists = currentPageId && pages.some((page) => page.id === currentPageId);
+
+  if (!currentPageId || !currentPageExists) {
+    return <PageExplorerPlaceholder hasPages={pages?.length > 0} />;
+  }
 
   return (
     <PageEditor

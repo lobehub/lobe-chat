@@ -76,6 +76,13 @@
       "title": "Restablecer todas las configuraciones"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Modelo predeterminado utilizado al crear un nuevo Agente",
+      "title": "Modelo"
+    },
+    "title": "Configuración predeterminada del asistente"
+  },
   "group": {
     "aiConfig": "Configuración de IA",
     "common": "General",
@@ -245,6 +252,13 @@
       "button": "Publicar nueva versión",
       "tooltip": "Publicar nueva versión en la comunidad de asistentes"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Al activarlo, la IA recordará tus preferencias a partir del historial de conversaciones, acumulando memoria para usarla como referencia en futuras interacciones",
+      "title": "Activar función de memoria"
+    },
+    "title": "Configuración de memoria"
   },
   "message": {
     "success": "Actualización exitosa"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Modelo de generación de metadatos de asistente",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para generar el nombre, descripción, avatar y etiquetas del asistente",
-      "title": "Generación automática de información del asistente"
+      "title": "Asistente de generación de información del asistente"
     },
     "customPrompt": {
       "addPrompt": "Agregar aviso personalizado",
@@ -796,36 +810,36 @@
       "title": "Palabra clave personalizada"
     },
     "generationTopic": {
-      "label": "Modelo de denominación de temas para pintura AI",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para la denominación automática de temas en pintura AI",
-      "title": "Denominación automática de temas para pintura AI"
+      "title": "Asistente para nombrar temas de ilustración con IA"
     },
     "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {
-      "label": "Modelo de historial de conversación",
+      "label": "Modelo",
       "modelDesc": "Especifica el modelo utilizado para comprimir el historial de conversación",
-      "title": "Resumen automático del historial de conversación"
+      "title": "Asistente de compresión del historial de conversación"
     },
     "queryRewrite": {
-      "label": "Modelo de reescritura de preguntas",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para optimizar las preguntas de los usuarios",
-      "title": "Reescritura de preguntas de la base de conocimientos"
+      "title": "Asistente de reescritura de preguntas para la base de conocimientos"
     },
     "thread": {
-      "label": "Modelo de nombramiento de subtemas",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para el renombramiento automático de subtemas",
-      "title": "Nombramiento automático de subtemas"
+      "title": "Asistente de nombramiento automático de subtemas"
     },
     "title": "Asistente del sistema",
     "topic": {
-      "label": "Modelo de nombramiento de temas",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para el renombramiento automático de temas",
-      "title": "Renombramiento automático de temas"
+      "title": "Asistente de nombramiento automático de temas"
     },
     "translation": {
-      "label": "Modelo de traducción",
+      "label": "Modelo",
       "modelDesc": "Especifica el modelo a utilizar para la traducción",
-      "title": "Configuración del asistente de traducción"
+      "title": "Asistente de traducción de contenido de mensajes"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Atajos de teclado",
     "image": "Servicio de ilustración",
     "llm": "Modelo de lenguaje",
+    "memory": "Configuración de memoria",
     "profile": "Mi cuenta",
     "provider": "Proveedor de servicios de IA",
     "proxy": "Proxy de red",
@@ -844,7 +859,6 @@
     "stats": "Estadísticas",
     "storage": "Almacenamiento de datos",
     "sync": "Sincronización en la nube",
-    "system-agent": "Asistente del sistema",
     "tts": "Servicio de voz",
     "usage": "Estadísticas de uso"
   },

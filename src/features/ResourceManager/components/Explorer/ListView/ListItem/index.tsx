@@ -156,15 +156,16 @@ const FileListItem = memo<FileListItemProps>(
     const [isOver, setIsOver] = useState(false);
 
     // Memoize computed values that don't change
-    const computedValues = useMemo(
-      () => ({
+    const computedValues = useMemo(() => {
+      const isPDF = fileType?.toLowerCase() === 'pdf' || name?.toLowerCase().endsWith('.pdf');
+      return {
         emoji: sourceType === 'document' || fileType === 'custom/document' ? metadata?.emoji : null,
         isFolder: fileType === 'custom/folder',
-        isPage: sourceType === 'document' || fileType === 'custom/document',
+        // PDF files should not be treated as pages, even if they have sourceType='document'
+        isPage: !isPDF && (sourceType === 'document' || fileType === 'custom/document'),
         isSupportedForChunking: !isChunkingUnsupported(fileType),
-      }),
-      [fileType, sourceType, metadata?.emoji],
-    );
+      };
+    }, [fileType, sourceType, metadata?.emoji, name]);
 
     const { isSupportedForChunking, isPage, isFolder, emoji } = computedValues;
 

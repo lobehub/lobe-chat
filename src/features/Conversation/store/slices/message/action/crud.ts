@@ -138,8 +138,15 @@ export interface MessageCRUDAction {
   /**
    * Update plugin arguments with optimistic update
    * Updates both the tool message plugin arguments and the parent assistant message tools
+   * @param toolCallId - The tool call ID (stable identifier from AI response)
+   * @param value - The new arguments value
+   * @param replace - If true, replace arguments entirely; if false, merge with existing
    */
-  updatePluginArguments: <T = any>(id: string, value: T, replace?: boolean) => Promise<void>;
+  updatePluginArguments: <T = any>(
+    toolCallId: string,
+    value: T,
+    replace?: boolean,
+  ) => Promise<void>;
 
   /**
    * Wait for pending plugin arguments update to complete for a specific message
@@ -498,51 +505,80 @@ export const messageCRUDSlice: StateCreator<
     }
   },
 
-  updatePluginArguments: async (id, value, replace = false) => {
+  updatePluginArguments: async (toolCallId, value, replace = false) => {
     const { internal_dispatchMessage, replaceMessages, context } = get();
 
-    // Get tool message from dbMessages (not displayMessages, since tool messages are nested in assistantGroup)
-    const toolMessage = dataSelectors.getDbMessageById(id)(get());
-    if (!toolMessage || !toolMessage.tool_call_id) return;
+    // Find previous arguments from either tool message or parent's tools array
+    let prevArguments: string | undefined;
+    let toolMessageId: string | undefined;
+    let parentMessageId: string | undefined;
 
-    const prevArguments = toolMessage.plugin?.arguments;
+    // First, try to find the tool message by toolCallId
+    const toolMessage = dataSelectors.getDbMessageByToolCallId(toolCallId)(get());
+    if (toolMessage) {
+      prevArguments = toolMessage.plugin?.arguments;
+      toolMessageId = toolMessage.id;
+      parentMessageId = toolMessage.parentId;
+    } else {
+      // Tool message not in dbMessages yet (intervention pending state)
+      // Find the tool from assistant message's tools array
+      const dbMessages = get().dbMessages;
+      for (const msg of dbMessages) {
+        if (msg.role === 'assistant' && msg.tools) {
+          const tool = msg.tools.find((t) => t.id === toolCallId);
+          if (tool) {
+            prevArguments = tool.arguments;
+            parentMessageId = msg.id;
+            toolMessageId = tool.result_msg_id; // May be tmp_xxx or undefined
+            break;
+          }
+        }
+      }
+    }
+
+    // If we can't find the tool anywhere, return early
+    if (prevArguments === undefined && !parentMessageId) {
+      console.warn('[updatePluginArguments] Cannot find tool with toolCallId:', toolCallId);
+      return;
+    }
+
     const prevJson = safeParseJSON(prevArguments || '');
     const nextValue = replace ? (value as any) : merge(prevJson || {}, value);
     if (isEqual(prevJson, nextValue)) return;
 
     const nextArgumentsStr = JSON.stringify(nextValue);
 
-    // Optimistic update - update tool message plugin
-    internal_dispatchMessage({
-      id,
-      type: 'updateMessagePlugin',
-      value: { arguments: nextArgumentsStr },
-    });
-
-    // Also update parent assistant message tools
-    if (toolMessage.parentId) {
+    // Optimistic update - update tool message plugin (if it exists)
+    if (toolMessageId) {
       internal_dispatchMessage({
-        id: toolMessage.parentId,
-        tool_call_id: toolMessage.tool_call_id,
+        id: toolMessageId,
+        type: 'updateMessagePlugin',
+        value: { arguments: nextArgumentsStr },
+      });
+    }
+
+    // Update parent assistant message tools
+    if (parentMessageId) {
+      internal_dispatchMessage({
+        id: parentMessageId,
+        tool_call_id: toolCallId,
         type: 'updateMessageTools',
         value: { arguments: nextArgumentsStr },
       });
     }
 
-    // Create the update promise - use the new atomic backend API
+    // Create the update promise - backend handles all cases using toolCallId
     const updatePromise = (async () => {
-      // Use the new updateToolArguments API which handles both updates atomically
-      const result = await messageService.updateToolArguments(id, nextValue, context);
-
+      const result = await messageService.updateToolArguments(toolCallId, nextValue, context);
       if (result?.success && result.messages) {
         replaceMessages(result.messages);
       }
     })();
 
-    // Register the pending promise
+    // Register the pending promise using toolCallId as key
     set(
       (state) => ({
-        pendingArgsUpdates: new Map(state.pendingArgsUpdates).set(id, updatePromise),
+        pendingArgsUpdates: new Map(state.pendingArgsUpdates).set(toolCallId, updatePromise),
       }),
       false,
       'updatePluginArguments/pending',
@@ -555,7 +591,7 @@ export const messageCRUDSlice: StateCreator<
       set(
         (state) => {
           const newMap = new Map(state.pendingArgsUpdates);
-          newMap.delete(id);
+          newMap.delete(toolCallId);
           return { pendingArgsUpdates: newMap };
         },
         false,

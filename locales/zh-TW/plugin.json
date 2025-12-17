@@ -37,6 +37,18 @@
       },
       "title": "協調團隊"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "清除待辦",
+        "completeTodos": "完成待辦",
+        "createPlan": "建立計劃",
+        "createTodos": "建立待辦",
+        "removeTodos": "刪除待辦",
+        "updatePlan": "更新計劃",
+        "updateTodos": "更新待辦"
+      },
+      "title": "GTD 工具"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "讀取知識庫內容",

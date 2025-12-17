@@ -76,6 +76,13 @@
       "title": "모든 설정 초기화"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "새 에이전트를 생성할 때 사용하는 기본 모델",
+      "title": "모델"
+    },
+    "title": "기본 어시스턴트 설정"
+  },
   "group": {
     "aiConfig": "AI 설정",
     "common": "일반",
@@ -245,6 +252,13 @@
       "button": "새 버전 게시",
       "tooltip": "어시스턴트 커뮤니티에 새 버전 게시"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "이 기능을 활성화하면 AI가 대화 기록에서 사용자의 선호도를 기억하고 누적된 기억을 이후 대화에 참고합니다",
+      "title": "기억 기능 활성화"
+    },
+    "title": "기억 설정"
   },
   "message": {
     "success": "업데이트 성공"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "어시스턴트 메타 생성 모델",
+      "label": "모델",
       "modelDesc": "어시스턴트 이름, 설명, 프로필 이미지, 레이블을 생성하는 데 사용되는 모델을 지정합니다.",
-      "title": "어시스턴트 정보 자동 생성"
+      "title": "어시스턴트 정보 생성 도우미"
     },
     "customPrompt": {
       "addPrompt": "사용자 정의 프롬프트 추가",
@@ -796,36 +810,36 @@
       "title": "사용자 정의 프롬프트"
     },
     "generationTopic": {
-      "label": "AI 그림 주제 명명 모델",
+      "label": "모델",
       "modelDesc": "AI 그림 자동 주제 명명에 사용되는 모델 지정",
-      "title": "AI 그림 자동 주제 명명"
+      "title": "AI 그림 주제 명명 도우미"
     },
     "helpInfo": "새 도우미를 생성할 때 기본 도우미 설정이 기본값으로 사용됩니다.",
     "historyCompress": {
-      "label": "대화 기록 모델",
+      "label": "모델",
       "modelDesc": "대화 기록 압축에 사용되는 모델을 지정합니다",
-      "title": "대화 기록 자동 요약"
+      "title": "대화 기록 압축 도우미"
     },
     "queryRewrite": {
-      "label": "질문 재작성 모델",
+      "label": "모델",
       "modelDesc": "사용자의 질문을 최적화하는 데 사용되는 모델 지정",
-      "title": "지식 베이스 질문 재작성"
+      "title": "지식베이스 질문 재작성 도우미"
     },
     "thread": {
-      "label": "하위 주제 명명 모델",
+      "label": "모델",
       "modelDesc": "하위 주제 자동 이름 변경에 사용되는 모델 지정",
-      "title": "하위 주제 자동 명명"
+      "title": "하위 주제 자동 명명 도우미"
     },
     "title": "시스템 도우미",
     "topic": {
-      "label": "주제 명명 모델",
+      "label": "모델",
       "modelDesc": "주제 자동 재명명에 사용되는 모델 지정",
-      "title": "주제 자동 명명"
+      "title": "주제 자동 명명 도우미"
     },
     "translation": {
-      "label": "번역 모델",
+      "label": "모델",
       "modelDesc": "번역에 사용되는 모델 지정",
-      "title": "번역 도우미 설정"
+      "title": "메시지 내용 번역 도우미"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "단축키",
     "image": "그림 서비스",
     "llm": "언어 모델",
+    "memory": "기억 설정",
     "profile": "내 계정",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",
@@ -844,7 +859,6 @@
     "stats": "데이터 통계",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
-    "system-agent": "시스템 도우미",
     "tts": "음성 서비스",
     "usage": "사용량 통계"
   },

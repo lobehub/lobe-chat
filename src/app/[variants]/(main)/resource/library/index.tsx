@@ -6,6 +6,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import Container from '@/app/[variants]/(main)/resource/library/features/Container';
 import NProgress from '@/components/NProgress';
 import ResourceManager from '@/features/ResourceManager';
+import { documentSelectors, useFileStore } from '@/store/file';
 
 import { useKnowledgeBaseItem } from '../features/hooks/useKnowledgeItem';
 import { useResourceManagerStore } from '../features/store';
@@ -21,6 +22,11 @@ const MainContent = memo(() => {
 
   const fileId = searchParams.get('file');
 
+  // Fetch file or document details to determine correct mode
+  const useFetchKnowledgeItem = useFileStore((s) => s.useFetchKnowledgeItem);
+  const { data: fileData } = useFetchKnowledgeItem(fileId || undefined);
+  const documentData = useFileStore(documentSelectors.getDocumentById(fileId || undefined));
+
   // Load knowledge base data
   useKnowledgeBaseItem(knowledgeBaseId || '');
 
@@ -33,7 +39,21 @@ const MainContent = memo(() => {
   useEffect(() => {
     if (fileId) {
       setCurrentViewItemId(fileId);
-      if (fileId.startsWith('doc')) {
+
+      // Check if it's a PDF file - check both file data and document data
+      const isPDF =
+        fileData?.fileType?.toLowerCase() === 'pdf' ||
+        fileData?.fileType?.toLowerCase() === 'application/pdf' ||
+        fileData?.name?.toLowerCase().endsWith('.pdf') ||
+        documentData?.fileType?.toLowerCase() === 'pdf' ||
+        documentData?.fileType?.toLowerCase() === 'application/pdf' ||
+        documentData?.filename?.toLowerCase().endsWith('.pdf');
+
+      // Determine mode based on file type
+      if (isPDF) {
+        // PDF files should always use editor mode for PDF viewer
+        setMode('editor');
+      } else if (fileId.startsWith('doc')) {
         setMode('page');
       } else {
         setMode('editor');
@@ -43,7 +63,7 @@ const MainContent = memo(() => {
       setMode('explorer');
       setCurrentViewItemId(undefined);
     }
-  }, [fileId, setCurrentViewItemId, setMode]);
+  }, [fileId, fileData, documentData, setCurrentViewItemId, setMode]);
 
   return <ResourceManager />;
 });

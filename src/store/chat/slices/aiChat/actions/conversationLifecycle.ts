@@ -205,11 +205,12 @@ export const conversationLifecycle: StateCreator<
     try {
       const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
 
+      const topicId = operationContext.topicId;
       data = await aiChatService.sendMessageInServer(
         {
           newUserMessage: { content: message, files: fileIdList, parentId },
           // if there is topicId，then add topicId to message
-          topicId: operationContext.topicId ?? undefined,
+          topicId: topicId ?? undefined,
           threadId: operationContext.threadId ?? undefined,
           // Support creating new thread along with message
           newThread: newThread
@@ -218,10 +219,12 @@ export const conversationLifecycle: StateCreator<
                 type: newThread.type,
               }
             : undefined,
-          newTopic: {
-            topicMessageIds: messages.map((m) => m.id),
-            title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
-          },
+          newTopic: !topicId
+            ? {
+                topicMessageIds: messages.map((m) => m.id),
+                title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
+              }
+            : undefined,
           agentId: operationContext.agentId,
           // Pass groupId for group chat scenarios
           groupId: operationContext.groupId ?? undefined,

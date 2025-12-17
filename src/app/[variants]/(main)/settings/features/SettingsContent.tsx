@@ -18,6 +18,9 @@ const componentMap = {
   [SettingsTabs.Image]: dynamic(() => import('../image'), {
     loading: () => <Loading debugId="Settings > Image" />,
   }),
+  [SettingsTabs.Memory]: dynamic(() => import('../memory'), {
+    loading: () => <Loading debugId="Settings > Memory" />,
+  }),
   [SettingsTabs.TTS]: dynamic(() => import('../tts'), {
     loading: () => <Loading debugId="Settings > TTS" />,
   }),
@@ -33,8 +36,8 @@ const componentMap = {
   [SettingsTabs.Storage]: dynamic(() => import('../storage'), {
     loading: () => <Loading debugId="Settings > Storage" />,
   }),
-  [SettingsTabs.SystemAgent]: dynamic(() => import('../system-agent'), {
-    loading: () => <Loading debugId="Settings > SystemAgent" />,
+  [SettingsTabs.Agent]: dynamic(() => import('../agent'), {
+    loading: () => <Loading debugId="Settings > Agent" />,
   }),
   // Profile related tabs
   [SettingsTabs.Profile]: dynamic(() => import('../profile'), {

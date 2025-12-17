@@ -283,6 +283,7 @@
   "labs": "Phòng thí nghiệm",
   "lang": {
     "ar": "Tiếng Ả Rập",
+    "auto": "Theo cài đặt ngôn ngữ của hệ thống",
     "bg-BG": "Tiếng Bun-ga-ri",
     "bn": "Tiếng Bengal",
     "cs-CZ": "Tiếng Séc",

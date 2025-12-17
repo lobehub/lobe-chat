@@ -40,7 +40,7 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
             {description}
           </Text>
         </Block>
-        <Flexbox gap={8} horizontal paddingBlock={8} paddingInline={12}>
+        <Flexbox align={'center'} gap={8} horizontal paddingBlock={8} paddingInline={12}>
           <Flexbox
             flex={1}
             gap={1}
@@ -58,8 +58,9 @@ const CommunityAgentItem = memo<DiscoverAssistantItem>(
           <Avatar
             avatar={avatar || DEFAULT_AVATAR}
             background={backgroundColor || undefined}
+            emojiScaleWithBackground
             shape={'square'}
-            size={36}
+            size={30}
             style={{
               flex: 'none',
             }}
