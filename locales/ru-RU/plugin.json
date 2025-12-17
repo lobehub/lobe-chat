@@ -37,6 +37,18 @@
       },
       "title": "Координация команды"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Очистить задачи",
+        "completeTodos": "Завершить задачи",
+        "createPlan": "Создать план",
+        "createTodos": "Создать задачи",
+        "removeTodos": "Удалить задачи",
+        "updatePlan": "Обновить план",
+        "updateTodos": "Обновить задачи"
+      },
+      "title": "Инструмент GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Чтение содержимого базы знаний",

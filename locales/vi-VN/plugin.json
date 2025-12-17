@@ -37,6 +37,18 @@
       },
       "title": "Điều phối nhóm"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Xóa việc cần làm",
+        "completeTodos": "Hoàn thành việc cần làm",
+        "createPlan": "Tạo kế hoạch",
+        "createTodos": "Tạo việc cần làm",
+        "removeTodos": "Xóa việc cần làm",
+        "updatePlan": "Cập nhật kế hoạch",
+        "updateTodos": "Cập nhật việc cần làm"
+      },
+      "title": "Công cụ GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Đọc nội dung cơ sở tri thức",

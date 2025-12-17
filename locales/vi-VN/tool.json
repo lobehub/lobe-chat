@@ -6,6 +6,13 @@
     "output": "Đầu ra:",
     "returnValue": "Giá trị trả về:"
   },
+  "codeInterpreter-legacy": {
+    "error": "Lỗi thực thi",
+    "executing": "Đang thực thi...",
+    "files": "Tệp:",
+    "output": "Đầu ra:",
+    "returnValue": "Giá trị trả về:"
+  },
   "dalle": {
     "autoGenerate": "Tự động tạo",
     "downloading": "Liên kết hình ảnh được tạo bởi DallE3 chỉ có hiệu lực trong 1 giờ, đang tải hình ảnh xuống máy...",
@@ -13,6 +20,57 @@
     "generating": "Đang tạo...",
     "images": "Hình ảnh:",
     "prompt": "Từ khóa"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Thêm",
+      "clearCompleted": "Xóa các mục đã hoàn thành",
+      "placeholder": "Nhập công việc cần làm..."
+    },
+    "clearTodos": {
+      "cleared": "Đã xóa {{count}} mục",
+      "clearedCompleted": "Đã xóa {{count}} mục đã hoàn thành",
+      "clearedCompleted_one": "Đã xóa {{count}} mục đã hoàn thành",
+      "clearedCompleted_other": "Đã xóa {{count}} mục đã hoàn thành",
+      "cleared_one": "Đã xóa {{count}} mục",
+      "cleared_other": "Đã xóa {{count}} mục",
+      "noItems": "Không có mục nào để xóa",
+      "remaining": "Còn lại {{count}} mục",
+      "remaining_one": "Còn lại {{count}} mục",
+      "remaining_other": "Còn lại {{count}} mục"
+    },
+    "completeTodos": {
+      "completed": "Đã hoàn thành {{count}} mục",
+      "completed_one": "Đã hoàn thành {{count}} mục",
+      "completed_other": "Đã hoàn thành {{count}} mục"
+    },
+    "createTodos": {
+      "created": "Đã tạo {{count}} công việc cần làm",
+      "created_one": "Đã tạo {{count}} công việc cần làm",
+      "created_other": "Đã tạo {{count}} công việc cần làm",
+      "total": "Tổng cộng {{count}} mục",
+      "total_one": "Tổng cộng {{count}} mục",
+      "total_other": "Tổng cộng {{count}} mục"
+    },
+    "removeTodos": {
+      "removed": "Đã xóa {{count}} mục",
+      "removed_one": "Đã xóa {{count}} mục",
+      "removed_other": "Đã xóa {{count}} mục"
+    },
+    "status": {
+      "done": "{{count}} đã hoàn thành",
+      "pending": "{{count}} đang chờ xử lý"
+    },
+    "todoList": {
+      "empty": "Danh sách công việc trống",
+      "items": "{{count}} mục",
+      "items_one": "{{count}} mục",
+      "items_other": "{{count}} mục",
+      "title": "Danh sách công việc"
+    },
+    "updateTodos": {
+      "updated": "Danh sách công việc đã được cập nhật"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

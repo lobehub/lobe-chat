@@ -1,0 +1,84 @@
+{
+  "back": "Vorige stap",
+  "finish": "Voltooien",
+  "modeSelection": {
+    "desc": "Kies de gebruiksmodus die bij je past",
+    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
+    "lite": {
+      "desc": "Geschikt voor dagelijkse gesprekken, vraag-en-antwoord, lichte werkondersteuning en kennismaking met modellen",
+      "subtitle": "Lichtgewicht en puur, ideaal voor efficiënte samenwerking met één alleskunner. Wissel eenvoudig tussen populaire modellen en blijf scherp.",
+      "title": "Lite Lichtgewicht"
+    },
+    "pro": {
+      "desc": "Voor workflows, diepgaande samenwerking en maatwerk",
+      "subtitle": "Professionele productiviteitsmodus. Voor solopreneurs, samenwerking met meerdere assistenten en diepgaande aanpassing van modellen en workflows. Bouw jouw slimme kern.",
+      "title": "Pro Professioneel"
+    },
+    "title": "Welke werkmodus heeft jouw voorkeur?",
+    "title2": "Lichtgewicht of Professioneel, jij beslist!",
+    "title3": "Vertel het me, zodat ik het perfect kan afstemmen op {{fullName}}～"
+  },
+  "next": "Volgende stap",
+  "proSettings": {
+    "connectors": {
+      "desc": "Verbind met je favoriete externe diensten",
+      "title": "Connectors"
+    },
+    "desc": "Stel je geavanceerde opties in",
+    "devMode": {
+      "desc": "Toont ontwikkelaarsfuncties en -opties wanneer ingeschakeld",
+      "title": "Ontwikkelaarsmodus"
+    },
+    "model": {
+      "desc": "Kies het standaardmodel voor AI-gesprekken",
+      "title": "Standaardmodel"
+    },
+    "title": "Pro-instellingen"
+  },
+  "responseLanguage": {
+    "auto": "Automatisch (volgt systeemtaal)",
+    "desc": "Kies de taal waarin de AI-assistent reageert",
+    "hint": "Na het kiezen van een taal zal de AI in die taal antwoorden en wordt de interface ook aangepast",
+    "title": "{{fullName}}, in welke taal zullen we communiceren?",
+    "title2": "Begrip begint met taal.",
+    "title3": "Laat me duidelijk spreken en goed luisteren～"
+  },
+  "telemetry": {
+    "agreement": "Alle verzamelde gegevens zijn anoniem en worden uitsluitend gebruikt om de gebruikerservaring te verbeteren. Door verder te gaan bevestig je dat je de <terms>algemene voorwaarden</terms> en het <privacy>privacybeleid</privacy> hebt begrepen en ermee akkoord gaat.",
+    "desc": "Ik ben je AI-assistent en sta altijd klaar om met je mee te denken, te creëren en je Agent-team te beheren.",
+    "helpImprove": "Help {{appName}} verbeteren",
+    "next": "Laten we beginnen",
+    "privacy": "Privacybeleid",
+    "rows": {
+      "collaborate": {
+        "desc": "Hier werken mensen, Agents en Agents samen, leren ze van elkaar en evolueren ze. Zo stroomt productiviteit op de meest natuurlijke manier.",
+        "title": "Samenwerken · Groeien met intelligentie"
+      },
+      "create": {
+        "desc": "Een idee? Maak het waar. Eén gedachte en je Agent is geboren.",
+        "title": "Creëren · Inspiratie wordt realiteit"
+      },
+      "evolve": {
+        "desc": "Elke interactie leert mij meer over jou. Niet alleen in antwoorden, maar in echt begrip.",
+        "title": "Evolueren · Hoe meer je gebruikt, hoe beter ik je begrijp"
+      },
+      "privacy": {
+        "desc": "We gebruiken geanonimiseerde gegevens om de ervaring met {{appName}} continu te verbeteren. Uiteraard kun je dit altijd aanpassen in de privacy-instellingen.",
+        "title": "Samen maken we {{appName}} beter"
+      }
+    },
+    "terms": "Gebruiksvoorwaarden",
+    "title": "Hoi, ik ben {{name}}",
+    "title2": "Leuk je te ontmoeten～",
+    "title3": "Loooobe! Laten we beginnen!"
+  },
+  "title": "Welkom bij {{appName}}",
+  "username": {
+    "desc": "Vertel ons hoe we je mogen noemen",
+    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
+    "placeholder": "Voer je naam in...",
+    "title": "Hoe mag ik je noemen?",
+    "title2": "Laten we elkaar eerst leren kennen!",
+    "title3": "Zo kunnen we straks nog beter met elkaar praten～"
+  }
+}

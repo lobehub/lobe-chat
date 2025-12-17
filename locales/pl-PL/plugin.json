@@ -37,6 +37,18 @@
       },
       "title": "Koordynacja zespołu"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Wyczyść zadania",
+        "completeTodos": "Zakończ zadania",
+        "createPlan": "Utwórz plan",
+        "createTodos": "Utwórz zadania",
+        "removeTodos": "Usuń zadania",
+        "updatePlan": "Zaktualizuj plan",
+        "updateTodos": "Zaktualizuj zadania"
+      },
+      "title": "Narzędzie GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Odczytaj zawartość bazy wiedzy",

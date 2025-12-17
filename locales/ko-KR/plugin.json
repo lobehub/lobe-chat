@@ -37,6 +37,18 @@
       },
       "title": "팀 조율"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "할 일 비우기",
+        "completeTodos": "할 일 완료",
+        "createPlan": "계획 만들기",
+        "createTodos": "할 일 만들기",
+        "removeTodos": "할 일 삭제",
+        "updatePlan": "계획 업데이트",
+        "updateTodos": "할 일 업데이트"
+      },
+      "title": "GTD 도구"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "지식 베이스 내용 읽기",

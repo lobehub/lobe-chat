@@ -37,6 +37,18 @@
       },
       "title": "Coordination d'équipe"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Effacer les tâches",
+        "completeTodos": "Terminer les tâches",
+        "createPlan": "Créer un plan",
+        "createTodos": "Créer des tâches",
+        "removeTodos": "Supprimer les tâches",
+        "updatePlan": "Mettre à jour le plan",
+        "updateTodos": "Mettre à jour les tâches"
+      },
+      "title": "Outil GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Lire le contenu de la base de connaissances",

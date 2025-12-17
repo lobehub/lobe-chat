@@ -1,0 +1,84 @@
+{
+  "back": "Précédent",
+  "finish": "Terminer",
+  "modeSelection": {
+    "desc": "Choisissez le mode qui vous convient le mieux",
+    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
+    "lite": {
+      "desc": "Idéal pour les conversations quotidiennes, les questions-réponses, une assistance légère au travail et la découverte des modèles",
+      "subtitle": "Léger et épuré, parfait pour collaborer efficacement avec un assistant polyvalent unique. Changez de modèle à tout moment pour rester au top de vos idées.",
+      "title": "Lite Léger"
+    },
+    "pro": {
+      "desc": "Conçu pour les flux de travail, la collaboration approfondie et la personnalisation",
+      "subtitle": "Mode productivité professionnelle. Une entreprise à vous seul, collaboration multi-assistants, personnalisation poussée des modèles et des flux de travail : construisez votre centre d’intelligence personnel.",
+      "title": "Pro Professionnel"
+    },
+    "title": "Quel mode de travail préférez-vous ?",
+    "title2": "Léger ou Professionnel, à vous de choisir !",
+    "title3": "Dites-moi tout, pour un {{fullName}} sur mesure ~"
+  },
+  "next": "Suivant",
+  "proSettings": {
+    "connectors": {
+      "desc": "Connectez vos services tiers préférés",
+      "title": "Connecteurs"
+    },
+    "desc": "Configurez vos options avancées",
+    "devMode": {
+      "desc": "Activez pour afficher les fonctionnalités et options destinées aux développeurs",
+      "title": "Mode développeur"
+    },
+    "model": {
+      "desc": "Choisissez le modèle par défaut pour les conversations avec l’IA",
+      "title": "Modèle par défaut"
+    },
+    "title": "Paramètres Pro"
+  },
+  "responseLanguage": {
+    "auto": "Automatique (suivre la langue du système)",
+    "desc": "Choisissez la langue utilisée par l’assistant IA pour répondre",
+    "hint": "Une fois la langue choisie, l’IA répondra dans cette langue et l’interface s’adaptera également",
+    "title": "{{fullName}}, dans quelle langue souhaites-tu que l’on communique ?",
+    "title2": "La compréhension commence par la langue.",
+    "title3": "Laisse-moi m’exprimer clairement et te comprendre parfaitement ~"
+  },
+  "telemetry": {
+    "agreement": "Toutes les données collectées sont anonymes et utilisées uniquement pour améliorer l’expérience produit. En continuant, vous confirmez avoir lu et accepté les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>.",
+    "desc": "Je suis ton assistant IA personnel, toujours là pour t’aider à réfléchir, créer et gérer ton équipe d’Agents.",
+    "helpImprove": "Aidez à améliorer {{appName}}",
+    "next": "C’est parti",
+    "privacy": "Politique de confidentialité",
+    "rows": {
+      "collaborate": {
+        "desc": "Ici, humains et Agents travaillent, apprennent et évoluent ensemble, pour une productivité fluide et naturelle.",
+        "title": "Collaborer · Avancer avec l’intelligence"
+      },
+      "create": {
+        "desc": "Une idée ? Elle prend vie. Il suffit d’y penser, et un Agent naît instantanément.",
+        "title": "Créer · L’inspiration devient réalité"
+      },
+      "evolve": {
+        "desc": "Chaque interaction permet de mieux vous comprendre. Pas seulement répondre, mais vraiment saisir.",
+        "title": "Évoluer · Plus vous l’utilisez, mieux il vous comprend"
+      },
+      "privacy": {
+        "desc": "Nous utilisons des données anonymisées pour améliorer continuellement l’expérience {{appName}}. Bien sûr, vous pouvez modifier ce paramètre à tout moment dans les options de confidentialité.",
+        "title": "Améliorons {{appName}} ensemble"
+      }
+    },
+    "terms": "Conditions d’utilisation",
+    "title": "Salut, je suis {{name}}",
+    "title2": "Ravi de faire votre connaissance ~",
+    "title3": "Loooobe ! C’est parti !"
+  },
+  "title": "Bienvenue sur {{appName}}",
+  "username": {
+    "desc": "Dites-nous comment vous appeler",
+    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
+    "placeholder": "Entrez votre nom ou surnom...",
+    "title": "Au fait, comment dois-je vous appeler ?",
+    "title2": "Faisons d’abord connaissance !",
+    "title3": "Comme ça, on pourra discuter plus familièrement ~"
+  }
+}

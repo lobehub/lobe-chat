@@ -1,0 +1,84 @@
+{
+  "back": "Anterior",
+  "finish": "Finalizar",
+  "modeSelection": {
+    "desc": "Elige el modo de uso que mejor se adapte a ti",
+    "hint": "Puedes cambiarlo en la configuración en cualquier momento",
+    "lite": {
+      "desc": "Ideal para conversaciones cotidianas, asistencia ligera en el trabajo y exploración de modelos",
+      "subtitle": "Ligero y puro, perfecto para colaborar eficientemente con un asistente todo en uno. Cambia entre modelos populares cuando quieras y mantén tu mente en su mejor estado.",
+      "title": "Lite Ligero"
+    },
+    "pro": {
+      "desc": "Con enfoque en flujos de trabajo, colaboración profunda y personalización",
+      "subtitle": "Modo de productividad profesional. Una empresa de una sola persona, colaboración entre múltiples asistentes, personalización avanzada de modelos y flujos de trabajo: construye tu centro de inteligencia personal.",
+      "title": "Pro Profesional"
+    },
+    "title": "¿Qué modo de trabajo prefieres?",
+    "title2": "Ligero o Profesional, ¡tú decides!",
+    "title3": "Cuéntame, para personalizarlo a medida para {{fullName}}～"
+  },
+  "next": "Siguiente",
+  "proSettings": {
+    "connectors": {
+      "desc": "Conecta tus servicios de terceros favoritos",
+      "title": "Conectores"
+    },
+    "desc": "Configura tus opciones avanzadas",
+    "devMode": {
+      "desc": "Al activarlo, se mostrarán funciones y opciones para desarrolladores",
+      "title": "Modo desarrollador"
+    },
+    "model": {
+      "desc": "Selecciona el modelo predeterminado para las conversaciones con IA",
+      "title": "Modelo predeterminado"
+    },
+    "title": "Configuración Pro"
+  },
+  "responseLanguage": {
+    "auto": "Automático (según el idioma del sistema)",
+    "desc": "Elige el idioma que usará el asistente de IA para responder",
+    "hint": "Una vez seleccionado, el asistente responderá en ese idioma y la interfaz también cambiará",
+    "title": "{{fullName}}, ¿en qué idioma quieres que hablemos?",
+    "title2": "Comencemos con el idioma para lograr una verdadera comprensión.",
+    "title3": "Déjame hablar claro y entenderte mejor～"
+  },
+  "telemetry": {
+    "agreement": "Todos los datos recopilados son anónimos y se utilizan únicamente para mejorar la experiencia del producto. Al continuar, confirmas que has leído y aceptado los <terms>Términos y Condiciones</terms> y la <privacy>Política de Privacidad</privacy>.",
+    "desc": "Soy tu asistente de IA personal, siempre listo para pensar, crear y ayudarte a gestionar tu equipo de agentes.",
+    "helpImprove": "Ayuda a mejorar {{appName}}",
+    "next": "¡Empecemos!",
+    "privacy": "Política de Privacidad",
+    "rows": {
+      "collaborate": {
+        "desc": "Aquí, personas y agentes trabajan, aprenden y evolucionan juntos, haciendo que la productividad fluya de forma natural.",
+        "title": "Colaborar · Avanzar con inteligencia"
+      },
+      "create": {
+        "desc": "Si lo piensas, lo haces. Solo con una idea, nace un agente.",
+        "title": "Crear · La inspiración se hace realidad"
+      },
+      "evolve": {
+        "desc": "Cada interacción te entiende mejor. No solo responde, también comprende.",
+        "title": "Evolucionar · Cuanto más lo usas, mejor te entiende"
+      },
+      "privacy": {
+        "desc": "Usamos datos anónimos para mejorar continuamente la experiencia de {{appName}}. Por supuesto, puedes cambiar esta opción en la configuración de privacidad en cualquier momento.",
+        "title": "Hagamos que {{appName}} sea aún mejor"
+      }
+    },
+    "terms": "Términos del Servicio",
+    "title": "Hola, soy {{name}}",
+    "title2": "¡Encantado de conocerte～!",
+    "title3": "¡Loooobe! ¡Vamos a empezar!"
+  },
+  "title": "Bienvenido a {{appName}}",
+  "username": {
+    "desc": "Dinos cómo quieres que te llamemos",
+    "hint": "Puedes cambiarlo en la configuración en cualquier momento",
+    "placeholder": "Introduce tu nombre...",
+    "title": "Por cierto, ¿cómo debo llamarte?",
+    "title2": "¡Conozcámonos primero!",
+    "title3": "Así podremos hablar con más confianza～"
+  }
+}

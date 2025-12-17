@@ -37,6 +37,18 @@
       },
       "title": "チームの調整"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "ToDoをクリア",
+        "completeTodos": "ToDoを完了",
+        "createPlan": "プランを作成",
+        "createTodos": "ToDoを作成",
+        "removeTodos": "ToDoを削除",
+        "updatePlan": "プランを更新",
+        "updateTodos": "ToDoを更新"
+      },
+      "title": "GTDツール"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "ナレッジベースの内容を読み取る",

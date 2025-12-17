@@ -76,6 +76,13 @@
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Domyślny model używany podczas tworzenia nowego Agenta",
+      "title": "Model"
+    },
+    "title": "Ustawienia domyślnego asystenta"
+  },
   "group": {
     "aiConfig": "Konfiguracja AI",
     "common": "Ogólne",
@@ -245,6 +252,13 @@
       "button": "Opublikuj nową wersję",
       "tooltip": "Opublikuj nową wersję w społeczności asystentów"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Po włączeniu AI będzie zapamiętywać Twoje preferencje z historii rozmów, gromadzić je i wykorzystywać jako odniesienie w przyszłych konwersacjach",
+      "title": "Włącz funkcję pamięci"
+    },
+    "title": "Ustawienia pamięci"
   },
   "message": {
     "success": "Pomyślnie zaktualizowano"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Model generowania metadanych asystenta",
+      "label": "Model",
       "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
-      "title": "Automatyczne generowanie informacji o asystencie"
+      "title": "Asystent generowania informacji o asystencie"
     },
     "customPrompt": {
       "addPrompt": "Dodaj niestandardowy podpowiedź",
@@ -796,36 +810,36 @@
       "title": "Niestandardowe słowo podpowiedzi"
     },
     "generationTopic": {
-      "label": "Model nazewnictwa tematów do AI w malarstwie",
+      "label": "Model",
       "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
-      "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+      "title": "Asystent do nadawania nazw tematom AI do rysowania"
     },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
-      "label": "Model historii rozmów",
+      "label": "Model",
       "modelDesc": "Model używany do kompresji historii rozmów",
-      "title": "Automatyczne podsumowanie historii rozmów"
+      "title": "Asystent kompresji historii konwersacji"
     },
     "queryRewrite": {
-      "label": "Model przekształcania zapytań",
+      "label": "Model",
       "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
-      "title": "Przekształcenie zapytań w bazie wiedzy"
+      "title": "Asystent do przekształcania pytań w bazie wiedzy"
     },
     "thread": {
-      "label": "Model do nazywania podtematów",
+      "label": "Model",
       "modelDesc": "Model używany do automatycznego zmieniania nazw podtematów",
-      "title": "Automatyczne nazywanie podtematów"
+      "title": "Asystent automatycznego nadawania nazw wątkom podrzędnym"
     },
     "title": "Asystent Systemowy",
     "topic": {
-      "label": "Model nazewnictwa tematów",
+      "label": "Model",
       "modelDesc": "Określa model używany do automatycznego zmieniania nazw tematów",
-      "title": "Automatyczne nadawanie nazw tematom"
+      "title": "Asystent automatycznego nadawania nazw tematom"
     },
     "translation": {
-      "label": "Model Tłumaczenia",
+      "label": "Model",
       "modelDesc": "Określ model używany do tłumaczenia",
-      "title": "Ustawienia Asystenta Tłumaczenia"
+      "title": "Asystent tłumaczenia treści wiadomości"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Skróty klawiszowe",
     "image": "Usługa rysowania",
     "llm": "Model językowy",
+    "memory": "Ustawienia pamięci",
     "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",
@@ -844,7 +859,6 @@
     "stats": "Statystyki danych",
     "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
-    "system-agent": "System Agent",
     "tts": "Usługa głosowa",
     "usage": "Statystyki użycia"
   },

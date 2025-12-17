@@ -37,6 +37,18 @@
       },
       "title": "تنسيق الفريق"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "مسح المهام",
+        "completeTodos": "إكمال المهام",
+        "createPlan": "إنشاء خطة",
+        "createTodos": "إنشاء مهام",
+        "removeTodos": "حذف المهام",
+        "updatePlan": "تحديث الخطة",
+        "updateTodos": "تحديث المهام"
+      },
+      "title": "أداة GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "قراءة محتوى قاعدة المعرفة",

@@ -37,6 +37,18 @@
       },
       "title": "Coordinar equipo"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Borrar tareas",
+        "completeTodos": "Completar tareas",
+        "createPlan": "Crear plan",
+        "createTodos": "Crear tareas",
+        "removeTodos": "Eliminar tareas",
+        "updatePlan": "Actualizar plan",
+        "updateTodos": "Actualizar tareas"
+      },
+      "title": "Herramienta GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Leer contenido de la base de conocimientos",

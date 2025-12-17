@@ -1,0 +1,84 @@
+{
+  "back": "Zurück",
+  "finish": "Fertigstellen",
+  "modeSelection": {
+    "desc": "Wähle den Modus, der am besten zu dir passt",
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "lite": {
+      "desc": "Ideal für alltägliche Gespräche, einfache Aufgabenunterstützung und erste Erfahrungen mit KI",
+      "subtitle": "Leichtgewichtig und fokussiert – für effiziente Zusammenarbeit mit einem vielseitigen Assistenten. Wechsle jederzeit zwischen beliebten Modellen, um stets klar zu denken.",
+      "title": "Lite Leicht"
+    },
+    "pro": {
+      "desc": "Für tiefgreifende Zusammenarbeit, Workflows und individuelle Anpassung",
+      "subtitle": "Professioneller Produktivitätsmodus. Für Solo-Unternehmen, Zusammenarbeit mit mehreren Assistenten und maßgeschneiderte Workflows – baue dein eigenes intelligentes Zentrum.",
+      "title": "Pro Professionell"
+    },
+    "title": "Welcher Arbeitsmodus passt zu dir?",
+    "title2": "Leicht oder Professionell – du entscheidest!",
+    "title3": "Sag es mir, damit ich es für {{fullName}} maßschneidern kann～"
+  },
+  "next": "Weiter",
+  "proSettings": {
+    "connectors": {
+      "desc": "Verbinde deine bevorzugten Drittanbieterdienste",
+      "title": "Konnektoren"
+    },
+    "desc": "Konfiguriere deine erweiterten Optionen",
+    "devMode": {
+      "desc": "Aktiviert Entwicklerfunktionen und -optionen",
+      "title": "Entwicklermodus"
+    },
+    "model": {
+      "desc": "Wähle das Standardmodell für KI-Gespräche",
+      "title": "Standardmodell"
+    },
+    "title": "Pro-Einstellungen"
+  },
+  "responseLanguage": {
+    "auto": "Automatisch (Systemsprache folgen)",
+    "desc": "Wähle die Sprache, in der der KI-Assistent antworten soll",
+    "hint": "Nach Auswahl wird die KI in dieser Sprache antworten und die Oberfläche entsprechend angepasst",
+    "title": "{{fullName}}, in welcher Sprache sollen wir kommunizieren?",
+    "title2": "Verständigung beginnt mit Sprache.",
+    "title3": "Lass mich klar sprechen und dich gut verstehen～"
+  },
+  "telemetry": {
+    "agreement": "Alle gesammelten Daten sind anonymisiert und dienen ausschließlich der Verbesserung des Produkterlebnisses. Mit der Nutzung bestätigst du, dass du die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy> gelesen und akzeptiert hast.",
+    "desc": "Ich bin dein KI-Assistent und stehe dir jederzeit zur Seite – beim Denken, Erschaffen und beim Managen deines Agenten-Teams.",
+    "helpImprove": "Hilf mit, {{appName}} zu verbessern",
+    "next": "Los geht’s",
+    "privacy": "Datenschutzerklärung",
+    "rows": {
+      "collaborate": {
+        "desc": "Hier arbeiten Menschen und Agenten gemeinsam, lernen voneinander und entwickeln sich weiter – für einen natürlichen Fluss der Produktivität.",
+        "title": "Zusammenarbeit · Gemeinsam mit KI"
+      },
+      "create": {
+        "desc": "Ein Gedanke genügt – und ein Agent entsteht.",
+        "title": "Kreation · Inspiration wird Realität"
+      },
+      "evolve": {
+        "desc": "Jede Interaktion bringt mehr Verständnis – nicht nur in der Antwort, sondern im Verstehen.",
+        "title": "Weiterentwicklung · Je mehr du nutzt, desto besser werde ich"
+      },
+      "privacy": {
+        "desc": "Wir verwenden anonymisierte Daten, um das Erlebnis mit {{appName}} kontinuierlich zu verbessern. Du kannst diese Option jederzeit in den Datenschutzeinstellungen anpassen.",
+        "title": "Gemeinsam machen wir {{appName}} besser"
+      }
+    },
+    "terms": "Nutzungsbedingungen",
+    "title": "Hallo, ich bin {{name}}",
+    "title2": "Schön, dich kennenzulernen～",
+    "title3": "Loooobe! Lass uns loslegen!"
+  },
+  "title": "Willkommen bei {{appName}}",
+  "username": {
+    "desc": "Sag uns, wie wir dich nennen dürfen",
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "placeholder": "Bitte gib deinen Namen ein...",
+    "title": "Wie darf ich dich nennen?",
+    "title2": "Lass uns zuerst einander kennenlernen!",
+    "title3": "So können wir uns künftig besser unterhalten～"
+  }
+}

@@ -37,6 +37,18 @@
       },
       "title": "Teamcoördinatie"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Taken wissen",
+        "completeTodos": "Taken voltooien",
+        "createPlan": "Plan maken",
+        "createTodos": "Taken aanmaken",
+        "removeTodos": "Taken verwijderen",
+        "updatePlan": "Plan bijwerken",
+        "updateTodos": "Taken bijwerken"
+      },
+      "title": "GTD-hulpmiddel"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Kennisbankinhoud lezen",

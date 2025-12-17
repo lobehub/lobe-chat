@@ -1,0 +1,84 @@
+{
+  "back": "Önceki",
+  "finish": "Tamamla",
+  "modeSelection": {
+    "desc": "Sana en uygun kullanım modunu seç",
+    "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
+    "lite": {
+      "desc": "Günlük sohbet, soru-cevap, hafif iş desteği ve model keşfi için ideal",
+      "subtitle": "Hafif, sade ve çok yönlü bir asistanla verimli iş birliği. Popüler modeller arasında kolayca geçiş yap, zihnini hep en iyi durumda tut.",
+      "title": "Lite Hafif"
+    },
+    "pro": {
+      "desc": "İş akışı odaklı, derin iş birliği ve özelleştirme arayanlar için",
+      "subtitle": "Profesyonel üretkenlik modu. Tek kişilik şirketler, çoklu asistan iş birliği, model ve iş akışı özelleştirmesiyle kendi akıllı merkezini oluştur.",
+      "title": "Pro Profesyonel"
+    },
+    "title": "Hangi çalışma modunu tercih edersin?",
+    "title2": "Hafif mi Profesyonel mi, karar senin!",
+    "title3": "Söyle bana, {{fullName}} için özel olarak uyarlayalım～"
+  },
+  "next": "Sonraki",
+  "proSettings": {
+    "connectors": {
+      "desc": "Sık kullandığın üçüncü taraf hizmetleri bağla",
+      "title": "Bağlayıcılar"
+    },
+    "desc": "Gelişmiş ayarlarını yapılandır",
+    "devMode": {
+      "desc": "Açıldığında geliştiriciye özel özellikler ve seçenekler görünür",
+      "title": "Geliştirici Modu"
+    },
+    "model": {
+      "desc": "AI sohbetlerinde kullanılacak varsayılan modeli seç",
+      "title": "Varsayılan Model"
+    },
+    "title": "Pro Ayarları"
+  },
+  "responseLanguage": {
+    "auto": "Otomatik (sistem dilini takip et)",
+    "desc": "AI asistanının yanıt verirken kullanacağı dili seç",
+    "hint": "Dil seçildikten sonra, AI bu dili kullanarak yanıt verecek ve arayüz dili de buna göre değişecektir",
+    "title": "{{fullName}}, hangi dili kullanarak iletişim kuralım?",
+    "title2": "Gerçek anlayış, dille başlar.",
+    "title3": "Seni net anlayayım, kendimi açık ifade edeyim～"
+  },
+  "telemetry": {
+    "agreement": "Toplanan tüm veriler anonimdir ve yalnızca ürün deneyimini iyileştirmek için kullanılır. Devam ederek <terms>Hizmet Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'nı anladığını ve kabul ettiğini onaylamış olursun.",
+    "desc": "Ben senin AI asistan yöneticinim, her zaman seninle birlikte düşünür, üretir ve Agent ekibini yönetirim.",
+    "helpImprove": "{{appName}}'i geliştirmeye yardımcı ol",
+    "next": "Hadi başlayalım",
+    "privacy": "Gizlilik Politikası",
+    "rows": {
+      "collaborate": {
+        "desc": "Burada insanlar, Agent'lar ve diğer Agent'lar birlikte çalışır, öğrenir ve gelişir. Üretkenlik en doğal haliyle akar.",
+        "title": "İş Birliği · Zekayla birlikte ilerle"
+      },
+      "create": {
+        "desc": "Aklına geleni hemen gerçekleştir. Sadece düşün, Agent anında doğar.",
+        "title": "Yaratıcılık · İlham anında gerçeğe dönüşür"
+      },
+      "evolve": {
+        "desc": "Her etkileşim seni daha iyi anlamamı sağlar. Sadece yanıtlamakla kalmam, seni gerçekten anlarım.",
+        "title": "Evrim · Kullandıkça seni daha iyi tanır"
+      },
+      "privacy": {
+        "desc": "{{appName}} deneyimini sürekli iyileştirmek için anonimleştirilmiş veriler kullanıyoruz. Elbette, bu seçeneği gizlilik ayarlarından istediğin zaman değiştirebilirsin.",
+        "title": "Haydi birlikte {{appName}}'i daha iyi hale getirelim"
+      }
+    },
+    "terms": "Hizmet Şartları",
+    "title": "Merhaba, ben {{name}}",
+    "title2": "Tanıştığımıza memnun oldum～",
+    "title3": "Loooobe! Hadi başlayalım!"
+  },
+  "title": "{{appName}}'e hoş geldin",
+  "username": {
+    "desc": "Sana nasıl hitap etmemizi istersin?",
+    "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
+    "placeholder": "Lütfen adını gir...",
+    "title": "Bu arada, sana nasıl hitap edeyim?",
+    "title2": "Önce biraz tanışalım!",
+    "title3": "Böylece daha samimi sohbetler edebiliriz～"
+  }
+}

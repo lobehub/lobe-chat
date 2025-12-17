@@ -37,6 +37,18 @@
       },
       "title": "协调团队"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "清除待办",
+        "completeTodos": "完成待办",
+        "createPlan": "创建计划",
+        "createTodos": "创建待办",
+        "removeTodos": "删除待办",
+        "updatePlan": "更新计划",
+        "updateTodos": "更新待办"
+      },
+      "title": "GTD 工具"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "读取知识库内容",

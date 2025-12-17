@@ -76,6 +76,13 @@
       "title": "Alle Einstellungen zurücksetzen"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Standardmodell, das beim Erstellen eines neuen Agenten verwendet wird",
+      "title": "Modell"
+    },
+    "title": "Standard-Assistenten-Einstellungen"
+  },
   "group": {
     "aiConfig": "KI-Konfiguration",
     "common": "Allgemein",
@@ -245,6 +252,13 @@
       "button": "Neue Version veröffentlichen",
       "tooltip": "Neue Version in der Assistenten-Community veröffentlichen"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Wenn aktiviert, merkt sich die KI Ihre Vorlieben aus dem Gesprächsverlauf, sammelt Erinnerungen und nutzt sie als Referenz für zukünftige Unterhaltungen",
+      "title": "Speicherfunktion aktivieren"
+    },
+    "title": "Speichereinstellungen"
   },
   "message": {
     "success": "Erfolgreich aktualisiert"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Assistentenmetadaten-Generierungsmodell",
+      "label": "Modell",
       "modelDesc": "Das Modell, das zur Generierung von Assistentennamen, -beschreibungen, -avatars und -tags verwendet wird",
-      "title": "Automatische Generierung von Assistenteninformationen"
+      "title": "Assistent zur Generierung von Assistenteninformationen"
     },
     "customPrompt": {
       "addPrompt": "Benutzerdefinierte Eingabe hinzufügen",
@@ -796,36 +810,36 @@
       "title": "Benutzerdefinierte Eingabe"
     },
     "generationTopic": {
-      "label": "Modell zur Benennung von KI-Malthemen",
+      "label": "Modell",
       "modelDesc": "Modell zur automatischen Benennung von Themen für KI-Malerei",
-      "title": "Automatische Benennung von KI-Malthemen"
+      "title": "Assistent zur Benennung von KI-Zeichnungsthemen"
     },
     "helpInfo": "Beim Erstellen eines neuen Assistenten werden die Standardassistenteneinstellungen als Voreinstellungen verwendet.",
     "historyCompress": {
-      "label": "Gesprächshistorienmodell",
+      "label": "Modell",
       "modelDesc": "Das Modell, das zur Komprimierung der Gesprächshistorie verwendet wird",
-      "title": "Automatische Zusammenfassung der Gesprächshistorie"
+      "title": "Assistent zur Komprimierung von Gesprächsverläufen"
     },
     "queryRewrite": {
-      "label": "Fragenumformulierung Modell",
+      "label": "Modell",
       "modelDesc": "Modell zur Optimierung der Benutzeranfragen",
-      "title": "Wiederformulierung von Fragen aus der Wissensdatenbank"
+      "title": "Assistent zur Umformulierung von Wissensdatenbankanfragen"
     },
     "thread": {
-      "label": "Unterthema-Namensmodell",
+      "label": "Modell",
       "modelDesc": "Modell zur automatischen Umbenennung von Unterthemen",
-      "title": "Automatische Benennung von Unterthemen"
+      "title": "Assistent zur automatischen Benennung von Unterthemen"
     },
     "title": "Systemassistent",
     "topic": {
-      "label": "Themenbenennungsmodell",
+      "label": "Modell",
       "modelDesc": "Das Modell, das für die automatische Umbenennung von Themen verwendet wird",
-      "title": "Automatische Themenbenennung"
+      "title": "Assistent zur automatischen Themenbenennung"
     },
     "translation": {
-      "label": "Übersetzungsmodell",
+      "label": "Modell",
       "modelDesc": "Das für die Übersetzung verwendete Modell",
-      "title": "Einstellungen für Übersetzungsassistent"
+      "title": "Assistent zur Übersetzung von Nachrichteninhalten"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Tastenkombinationen",
     "image": "Bildgenerierungsdienst",
     "llm": "Sprachmodell",
+    "memory": "Speichereinstellungen",
     "profile": "Mein Konto",
     "provider": "KI-Dienstanbieter",
     "proxy": "Netzwerkproxy",
@@ -844,7 +859,6 @@
     "stats": "Statistiken",
     "storage": "Datenspeicher",
     "sync": "Cloud-Synchronisierung",
-    "system-agent": "Systemassistent",
     "tts": "Sprachdienste",
     "usage": "Nutzungsstatistik"
   },

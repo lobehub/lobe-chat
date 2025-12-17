@@ -6,6 +6,13 @@
     "output": "출력:",
     "returnValue": "반환값:"
   },
+  "codeInterpreter-legacy": {
+    "error": "실행 오류",
+    "executing": "실행 중...",
+    "files": "파일:",
+    "output": "출력:",
+    "returnValue": "반환값:"
+  },
   "dalle": {
     "autoGenerate": "자동 생성",
     "downloading": "DallE3로 생성된 이미지 링크는 1시간 동안만 유효합니다. 이미지를 로컬에 캐시하는 중...",
@@ -13,6 +20,57 @@
     "generating": "생성 중...",
     "images": "이미지:",
     "prompt": "프롬프트"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "추가",
+      "clearCompleted": "완료된 항목 삭제",
+      "placeholder": "할 일 항목 입력..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}}개 항목 삭제됨",
+      "clearedCompleted": "완료된 {{count}}개 항목 삭제됨",
+      "clearedCompleted_one": "완료된 {{count}}개 항목 삭제됨",
+      "clearedCompleted_other": "완료된 {{count}}개 항목 삭제됨",
+      "cleared_one": "{{count}}개 항목 삭제됨",
+      "cleared_other": "{{count}}개 항목 삭제됨",
+      "noItems": "삭제할 항목이 없습니다",
+      "remaining": "남은 항목 {{count}}개",
+      "remaining_one": "남은 항목 {{count}}개",
+      "remaining_other": "남은 항목 {{count}}개"
+    },
+    "completeTodos": {
+      "completed": "{{count}}개 항목 완료됨",
+      "completed_one": "{{count}}개 항목 완료됨",
+      "completed_other": "{{count}}개 항목 완료됨"
+    },
+    "createTodos": {
+      "created": "{{count}}개 할 일 항목 생성됨",
+      "created_one": "{{count}}개 할 일 항목 생성됨",
+      "created_other": "{{count}}개 할 일 항목 생성됨",
+      "total": "총 {{count}}개 항목",
+      "total_one": "총 {{count}}개 항목",
+      "total_other": "총 {{count}}개 항목"
+    },
+    "removeTodos": {
+      "removed": "{{count}}개 항목 삭제됨",
+      "removed_one": "{{count}}개 항목 삭제됨",
+      "removed_other": "{{count}}개 항목 삭제됨"
+    },
+    "status": {
+      "done": "{{count}}개 완료됨",
+      "pending": "{{count}}개 대기 중"
+    },
+    "todoList": {
+      "empty": "할 일 목록이 비어 있습니다",
+      "items": "{{count}}개 항목",
+      "items_one": "{{count}}개 항목",
+      "items_other": "{{count}}개 항목",
+      "title": "할 일 목록"
+    },
+    "updateTodos": {
+      "updated": "할 일 목록이 업데이트되었습니다"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

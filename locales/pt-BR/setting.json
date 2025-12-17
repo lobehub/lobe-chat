@@ -76,6 +76,13 @@
       "title": "Redefinir Todas as Configurações"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Modelo padrão usado ao criar um novo Agente",
+      "title": "Modelo"
+    },
+    "title": "Configurações padrão do assistente"
+  },
   "group": {
     "aiConfig": "Configuração de IA",
     "common": "Geral",
@@ -245,6 +252,13 @@
       "button": "Publicar Nova Versão",
       "tooltip": "Publicar nova versão na Comunidade de Assistentes"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Quando ativado, a IA lembrará suas preferências com base no histórico de conversas, acumulando memórias para referência em interações futuras",
+      "title": "Ativar função de memória"
+    },
+    "title": "Configurações de memória"
   },
   "message": {
     "success": "Atualização bem-sucedida"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Modelo de Geração de Metadados do Assistente",
+      "label": "Modelo",
       "modelDesc": "Especifica o modelo usado para gerar o nome, descrição, avatar e tags do assistente",
-      "title": "Geração Automática de Informações do Assistente"
+      "title": "Assistente de Geração de Informações do Assistente"
     },
     "customPrompt": {
       "addPrompt": "Adicionar prompt personalizado",
@@ -796,36 +810,36 @@
       "title": "Palavra-chave personalizada"
     },
     "generationTopic": {
-      "label": "Modelo de Nomeação de Tópicos para Pintura AI",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para nomeação automática de tópicos em pintura AI",
-      "title": "Nomeação Automática de Tópicos para Pintura AI"
+      "title": "Assistente de Nomeação de Tópicos de Arte com IA"
     },
     "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {
-      "label": "Modelo de Histórico de Conversa",
+      "label": "Modelo",
       "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",
-      "title": "Resumo Automático do Histórico de Conversa"
+      "title": "Assistente de Compressão do Histórico de Conversas"
     },
     "queryRewrite": {
-      "label": "Modelo de Reescrita de Perguntas",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",
-      "title": "Reescrita de perguntas do banco de dados"
+      "title": "Assistente de Reescrita de Perguntas da Base de Conhecimento"
     },
     "thread": {
-      "label": "Modelo de Nomeação de Subtópicos",
+      "label": "Modelo",
       "modelDesc": "Modelo designado para a renomeação automática de subtópicos",
-      "title": "Nomeação Automática de Subtópicos"
+      "title": "Assistente de Nomeação Automática de Subtópicos"
     },
     "title": "Assistente do Sistema",
     "topic": {
-      "label": "Modelo de Nomeação de Tópicos",
+      "label": "Modelo",
       "modelDesc": "Especifica o modelo usado para renomeação automática de tópicos",
-      "title": "Renomeação Automática de Tópicos"
+      "title": "Assistente de Nomeação Automática de Tópicos"
     },
     "translation": {
-      "label": "Modelo de Tradução",
+      "label": "Modelo",
       "modelDesc": "Especifica o modelo usado para tradução",
-      "title": "Configurações do Assistente de Tradução"
+      "title": "Assistente de Tradução de Conteúdo de Mensagens"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Atalhos",
     "image": "Serviço de Ilustração",
     "llm": "Modelo de Linguagem",
+    "memory": "Configurações de memória",
     "profile": "Minha Conta",
     "provider": "Fornecedor de IA",
     "proxy": "Proxy de Rede",
@@ -844,7 +859,6 @@
     "stats": "Estatísticas",
     "storage": "Armazenamento de Dados",
     "sync": "Sincronização na nuvem",
-    "system-agent": "Assistente do Sistema",
     "tts": "Serviço de Voz",
     "usage": "Estatísticas de Uso"
   },

@@ -76,6 +76,13 @@
       "title": "Đặt lại tất cả cài đặt"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Mô hình mặc định được sử dụng khi tạo Agent mới",
+      "title": "Mô hình"
+    },
+    "title": "Cài đặt trợ lý mặc định"
+  },
   "group": {
     "aiConfig": "Cấu hình AI",
     "common": "Chung",
@@ -245,6 +252,13 @@
       "button": "Phát hành phiên bản mới",
       "tooltip": "Phát hành phiên bản mới lên cộng đồng trợ lý"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Khi bật, AI sẽ ghi nhớ sở thích của bạn từ lịch sử trò chuyện, tích lũy trí nhớ và sử dụng làm tham chiếu trong các cuộc trò chuyện sau",
+      "title": "Bật chức năng ghi nhớ"
+    },
+    "title": "Cài đặt ghi nhớ"
   },
   "message": {
     "success": "Cập nhật thành công"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "label": "Mô hình",
       "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
-      "title": "Tự động tạo thông tin trợ lý"
+      "title": "Trợ lý tạo thông tin trợ lý"
     },
     "customPrompt": {
       "addPrompt": "Thêm gợi ý tùy chỉnh",
@@ -796,36 +810,36 @@
       "title": "Từ gợi ý tùy chỉnh"
     },
     "generationTopic": {
-      "label": "Mô hình đặt tên chủ đề vẽ AI",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề cho vẽ AI",
-      "title": "Tự động đặt tên chủ đề vẽ AI"
+      "title": "Trợ lý đặt tên chủ đề vẽ AI"
     },
     "helpInfo": "Khi tạo trợ lý mới, sẽ sử dụng cài đặt trợ lý mặc định làm giá trị mặc định.",
     "historyCompress": {
-      "label": "Mô hình lịch sử cuộc trò chuyện",
+      "label": "Mô hình",
       "modelDesc": "Chỉ định mô hình được sử dụng để nén lịch sử cuộc trò chuyện",
-      "title": "Tóm tắt tự động lịch sử cuộc trò chuyện"
+      "title": "Trợ lý nén lịch sử hội thoại"
     },
     "queryRewrite": {
-      "label": "Mô hình viết lại câu hỏi",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
-      "title": "Viết lại câu hỏi trong kho kiến thức"
+      "title": "Trợ lý viết lại câu hỏi trong kho tri thức"
     },
     "thread": {
-      "label": "Mô hình đặt tên chủ đề phụ",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tự động đổi tên chủ đề phụ",
-      "title": "Tự động đặt tên chủ đề phụ"
+      "title": "Trợ lý đặt tên tự động cho chủ đề phụ"
     },
     "title": "Trợ lý hệ thống",
     "topic": {
-      "label": "Mô hình đặt tên chủ đề",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề",
-      "title": "Tự động đặt tên chủ đề"
+      "title": "Trợ lý đặt tên chủ đề tự động"
     },
     "translation": {
-      "label": "Mô hình dịch",
+      "label": "Mô hình",
       "modelDesc": "Chọn mô hình để dịch",
-      "title": "Cài đặt trợ lý dịch"
+      "title": "Trợ lý dịch nội dung tin nhắn"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Phím tắt",
     "image": "Dịch vụ vẽ",
     "llm": "Mô hình ngôn ngữ",
+    "memory": "Cài đặt ghi nhớ",
     "profile": "Tài khoản của tôi",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",
@@ -844,7 +859,6 @@
     "stats": "Thống kê dữ liệu",
     "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
-    "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói",
     "usage": "Thống kê sử dụng"
   },

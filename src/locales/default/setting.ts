@@ -78,7 +78,7 @@ export default {
   },
   defaultAgent: {
     model: {
-      desc: '设置新对话的默认模型',
+      desc: '创建新 Agent 时使用的默认模型',
       title: '模型',
     },
     title: '默认助手设置',
@@ -257,7 +257,7 @@ export default {
   },
   memory: {
     enabled: {
-      desc: '开启后，AI 将记住你的偏好和对话历史',
+      desc: '开启后，AI 将会从对话历史中记住你的偏好，累计记忆并在后续对话中用作参考',
       title: '启用记忆功能',
     },
     title: '记忆设置',
@@ -804,9 +804,9 @@ export default {
   },
   systemAgent: {
     agentMeta: {
-      label: '助理元数据生成模型',
+      label: '模型',
       modelDesc: '指定用于生成助理名称、描述、头像、标签的模型',
-      title: '自动生成助理信息',
+      title: '助理信息生成助手',
     },
     customPrompt: {
       addPrompt: '添加自定义提示',
@@ -815,36 +815,36 @@ export default {
       title: '自定义提示词',
     },
     generationTopic: {
-      label: 'AI 绘画话题命名模型',
+      label: '模型',
       modelDesc: '指定用于 AI 绘画自动命名话题的模型',
-      title: 'AI 绘画自动命名话题',
+      title: 'AI 绘画话题命名助手',
     },
     helpInfo: '当创建新助手时，将以默认助手设置作为预设值。',
     historyCompress: {
-      label: '会话历史模型',
+      label: '模型',
       modelDesc: '指定用于压缩会话历史的模型',
-      title: '自动总结会话历史',
+      title: '会话历史压缩助手',
     },
     queryRewrite: {
-      label: '提问重写模型',
+      label: '模型',
       modelDesc: '指定用于优化用户提问的模型',
-      title: '知识库提问重写',
+      title: '知识库提问重写助手',
     },
     thread: {
-      label: '子话题命名模型',
+      label: '模型',
       modelDesc: '指定用于子话题自动重命名的模型',
-      title: '子话题自动命名',
+      title: '子话题自动命名助手',
     },
     title: '系统助手',
     topic: {
-      label: '话题命名模型',
+      label: '模型',
       modelDesc: '指定用于话题自动重命名的模型',
-      title: '话题自动命名',
+      title: '话题自动命名助手',
     },
     translation: {
-      label: '翻译模型',
+      label: '模型',
       modelDesc: '指定用于翻译的模型',
-      title: '消息内容翻译',
+      title: '消息内容翻译助手',
     },
   },
   tab: {

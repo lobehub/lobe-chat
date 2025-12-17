@@ -76,6 +76,13 @@
       "title": "Réinitialiser tous les paramètres"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Modèle par défaut utilisé lors de la création d’un nouvel agent",
+      "title": "Modèle"
+    },
+    "title": "Paramètres de l'assistant par défaut"
+  },
   "group": {
     "aiConfig": "Configuration de l'IA",
     "common": "Général",
@@ -245,6 +252,13 @@
       "button": "Publier une nouvelle version",
       "tooltip": "Publier une nouvelle version sur la communauté des assistants"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Une fois activé, l'IA se souviendra de vos préférences à partir de l'historique des conversations, accumulera des souvenirs et les utilisera comme référence dans les échanges futurs",
+      "title": "Activer la mémoire"
+    },
+    "title": "Paramètres de mémoire"
   },
   "message": {
     "success": "Mise à jour réussie"
@@ -785,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Modèle de génération de métadonnées d'assistant",
+      "label": "Modèle",
       "modelDesc": "Modèle spécifié pour générer le nom, la description, l'avatar et les balises de l'assistant",
-      "title": "Génération automatique des informations de l'assistant"
+      "title": "Assistant de génération d'informations de l'assistant"
     },
     "customPrompt": {
       "addPrompt": "Ajouter un prompt personnalisé",
@@ -796,36 +810,36 @@
       "title": "Mot-clé personnalisé"
     },
     "generationTopic": {
-      "label": "Modèle de nomination de sujets pour peinture IA",
+      "label": "Modèle",
       "modelDesc": "Modèle spécifiquement utilisé pour la nomination automatique des sujets de peinture IA",
-      "title": "Nomination automatique des sujets de peinture IA"
+      "title": "Assistant de nomination de sujets pour l'art généré par IA"
     },
     "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {
-      "label": "Modèle d'historique de conversation",
+      "label": "Modèle",
       "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",
-      "title": "Résumé automatique de l'historique des conversations"
+      "title": "Assistant de compression de l’historique des conversations"
     },
     "queryRewrite": {
-      "label": "Modèle de reformulation des questions",
+      "label": "Modèle",
       "modelDesc": "Modèle utilisé pour optimiser les questions des utilisateurs",
-      "title": "Réécriture de la question de la base de connaissances"
+      "title": "Assistant de reformulation des questions pour la base de connaissances"
     },
     "thread": {
-      "label": "Modèle de nomination de sous-thème",
+      "label": "Modèle",
       "modelDesc": "Modèle utilisé pour le renommage automatique des sous-thèmes",
-      "title": "Nommer automatiquement les sous-thèmes"
+      "title": "Assistant de nomination automatique des sous-sujets"
     },
     "title": "Agent système",
     "topic": {
-      "label": "Modèle de nommage des sujets",
+      "label": "Modèle",
       "modelDesc": "Modèle spécifié pour le renommage automatique des sujets",
-      "title": "Renommage automatique des sujets"
+      "title": "Assistant de nomination automatique des sujets"
     },
     "translation": {
-      "label": "Modèle de traduction",
+      "label": "Modèle",
       "modelDesc": "Modèle spécifié pour la traduction",
-      "title": "Paramètres de l'agent de traduction"
+      "title": "Assistant de traduction du contenu des messages"
     }
   },
   "tab": {
@@ -837,6 +851,7 @@
     "hotkey": "Raccourcis clavier",
     "image": "Service de génération d'images",
     "llm": "Modèle de langue",
+    "memory": "Paramètres de mémoire",
     "profile": "Mon compte",
     "provider": "Fournisseur de services d'IA",
     "proxy": "Proxy réseau",
@@ -844,7 +859,6 @@
     "stats": "Statistiques",
     "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
-    "system-agent": "Agent système",
     "tts": "Service vocal",
     "usage": "Statistiques d'utilisation"
   },

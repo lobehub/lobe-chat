@@ -37,6 +37,18 @@
       },
       "title": "هماهنگی تیم"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "پاک‌سازی کارهای در انتظار",
+        "completeTodos": "تکمیل کارهای در انتظار",
+        "createPlan": "ایجاد برنامه",
+        "createTodos": "ایجاد کارهای در انتظار",
+        "removeTodos": "حذف کارهای در انتظار",
+        "updatePlan": "به‌روزرسانی برنامه",
+        "updateTodos": "به‌روزرسانی کارهای در انتظار"
+      },
+      "title": "ابزار GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "خواندن محتوای پایگاه دانش",

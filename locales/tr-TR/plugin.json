@@ -37,6 +37,18 @@
       },
       "title": "Ekibi Koordine Et"
     },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Yapılacakları Temizle",
+        "completeTodos": "Yapılacakları Tamamla",
+        "createPlan": "Plan Oluştur",
+        "createTodos": "Yapılacak Oluştur",
+        "removeTodos": "Yapılacakları Sil",
+        "updatePlan": "Planı Güncelle",
+        "updateTodos": "Yapılacakları Güncelle"
+      },
+      "title": "GTD Aracı"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Bilgi tabanını oku",

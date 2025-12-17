@@ -78,7 +78,7 @@
   },
   "defaultAgent": {
     "model": {
-      "desc": "Set the default model for new conversations",
+      "desc": "Default model used when creating a new Agent",
       "title": "Model"
     },
     "title": "Default Assistant Settings"
@@ -255,7 +255,7 @@
   },
   "memory": {
     "enabled": {
-      "desc": "When enabled, AI will remember your preferences and conversation history",
+      "desc": "When enabled, the AI will remember your preferences from the conversation history, accumulate memories, and use them as references in future interactions.",
       "title": "Enable Memory"
     },
     "title": "Memory Settings"
@@ -799,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Assistant Metadata Generation Model",
+      "label": "Model",
       "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
-      "title": "Automatically Generate Assistant Information"
+      "title": "Assistant Info Generation Helper"
     },
     "customPrompt": {
       "addPrompt": "Add Custom Prompt",
@@ -810,36 +810,36 @@
       "title": "Custom Prompt"
     },
     "generationTopic": {
-      "label": "AI Art Topic Naming Model",
+      "label": "Model",
       "modelDesc": "Model designated for automatic naming of AI art topics",
-      "title": "AI Art Automatic Topic Naming"
+      "title": "AI Art Topic Naming Assistant"
     },
     "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {
-      "label": "Conversation History Model",
+      "label": "Model",
       "modelDesc": "Specify the model used to compress conversation history",
-      "title": "Automatically Summarize Conversation History"
+      "title": "Conversation History Compression Assistant"
     },
     "queryRewrite": {
-      "label": "Question Rewriting Model",
+      "label": "Model",
       "modelDesc": "Specify the model used to optimize user inquiries",
-      "title": "Knowledge Base Question Rewrite"
+      "title": "Knowledge Base Query Rewriting Assistant"
     },
     "thread": {
-      "label": "Subtopic Naming Model",
+      "label": "Model",
       "modelDesc": "The model designated for automatic renaming of subtopics",
-      "title": "Automatic Subtopic Naming"
+      "title": "Subtopic Auto-Naming Assistant"
     },
     "title": "System Assistants",
     "topic": {
-      "label": "Topic Naming Model",
+      "label": "Model",
       "modelDesc": "Model designated for automatic topic renaming",
-      "title": "Automatic Topic Naming"
+      "title": "Topic Auto-Naming Assistant"
     },
     "translation": {
-      "label": "Translation Assistant",
+      "label": "Model",
       "modelDesc": "Specific model for translate message",
-      "title": "Translation Settings"
+      "title": "Message Translation Assistant"
     }
   },
   "tab": {
