@@ -38,11 +38,11 @@ const SortableTodoList = memo<SortableTodoListProps>(
     // Create store instance once with onSave callback
     const store = useMemo(() => createTodoListStore(defaultItems, onSave), []);
 
-    // Register flushSave as beforeApprove callback
+    // Register saveNow as beforeApprove callback (async, waits for save to complete)
     useEffect(() => {
       if (registerBeforeApprove) {
         const unregister = registerBeforeApprove('sortable-todo-list', () =>
-          store.getState().flushSave(),
+          store.getState().saveNow(),
         );
         // Cleanup: unregister on unmount
         return unregister;

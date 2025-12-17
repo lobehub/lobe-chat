@@ -1593,6 +1593,216 @@ describe('AgentRuntime', () => {
     });
   });
 
+  describe('StepContext Passing', () => {
+    it('should pass stepContext to agent runner', async () => {
+      const agent = new MockAgent();
+      const runnerSpy = vi.spyOn(agent, 'runner');
+
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        operationId: 'test-session',
+        messages: [{ role: 'user', content: 'Hello' }],
+      });
+
+      const stepContext = {
+        todos: {
+          items: [
+            { text: 'Buy milk', completed: false },
+            { text: 'Call mom', completed: true },
+          ],
+          updatedAt: '2024-06-01T00:00:00.000Z',
+        },
+      };
+
+      const context: AgentRuntimeContext = {
+        phase: 'user_input',
+        payload: { message: { role: 'user', content: 'Hello' } },
+        session: {
+          sessionId: 'test-session',
+          messageCount: 1,
+          status: 'idle',
+          stepCount: 0,
+        },
+        stepContext,
+      };
+
+      await runtime.step(state, context);
+
+      // Verify agent runner received the stepContext
+      expect(runnerSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          stepContext: expect.objectContaining({
+            todos: expect.objectContaining({
+              items: expect.arrayContaining([
+                expect.objectContaining({ text: 'Buy milk', completed: false }),
+              ]),
+            }),
+          }),
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('should pass stepContext to custom executors', async () => {
+      const customExecutor = vi.fn().mockResolvedValue({
+        events: [{ type: 'done', finalState: {}, reason: 'completed' }],
+        newState: { status: 'done' },
+      });
+
+      const agent = new MockAgent();
+      agent.runner = vi.fn().mockResolvedValue({
+        type: 'finish',
+        reason: 'completed',
+      });
+
+      const config: RuntimeConfig = {
+        executors: {
+          finish: customExecutor,
+        },
+      };
+
+      const runtime = new AgentRuntime(agent, config);
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
+
+      const stepContext = {
+        todos: {
+          items: [{ text: 'Task 1', completed: false }],
+          updatedAt: '2024-06-01T00:00:00.000Z',
+        },
+      };
+
+      const context: AgentRuntimeContext = {
+        phase: 'init',
+        session: {
+          sessionId: 'test-session',
+          messageCount: 0,
+          status: 'idle',
+          stepCount: 0,
+        },
+        stepContext,
+      };
+
+      await runtime.step(state, context);
+
+      // Verify custom executor received the context with stepContext
+      expect(customExecutor).toHaveBeenCalledWith(
+        expect.any(Object), // instruction
+        expect.any(Object), // state
+        expect.objectContaining({
+          stepContext: expect.objectContaining({
+            todos: expect.objectContaining({
+              items: expect.arrayContaining([expect.objectContaining({ text: 'Task 1' })]),
+            }),
+          }),
+        }),
+      );
+    });
+
+    it('should pass stepContext to batch tool execution', async () => {
+      const toolASpy = vi.fn().mockResolvedValue({ result: 'a' });
+      const toolBSpy = vi.fn().mockResolvedValue({ result: 'b' });
+
+      class BatchToolAgent implements Agent {
+        tools = {
+          tool_a: toolASpy,
+          tool_b: toolBSpy,
+        };
+
+        async runner(context: AgentRuntimeContext, _state: AgentState) {
+          if (context.phase === 'user_input') {
+            return {
+              type: 'call_tools_batch' as const,
+              payload: {
+                parentMessageId: 'msg',
+                toolsCalling: [
+                  {
+                    id: 'call_a',
+                    type: 'default' as const,
+                    apiName: 'tool_a',
+                    identifier: 'tool_a',
+                    arguments: '{}',
+                  },
+                  {
+                    id: 'call_b',
+                    type: 'default' as const,
+                    apiName: 'tool_b',
+                    identifier: 'tool_b',
+                    arguments: '{}',
+                  },
+                ],
+              },
+            };
+          }
+          return { type: 'finish' as const, reason: 'completed' as const };
+        }
+      }
+
+      const agent = new BatchToolAgent();
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({
+        operationId: 'batch-test',
+        messages: [{ role: 'user', content: 'Execute tools' }],
+      });
+
+      const stepContext = {
+        todos: {
+          items: [{ text: 'Batch task', completed: false }],
+          updatedAt: '2024-06-01T00:00:00.000Z',
+        },
+      };
+
+      const context: AgentRuntimeContext = {
+        phase: 'user_input',
+        payload: { message: { role: 'user', content: 'Execute tools' } },
+        session: {
+          sessionId: 'batch-test',
+          messageCount: 1,
+          status: 'idle',
+          stepCount: 0,
+        },
+        stepContext,
+      };
+
+      const result = await runtime.step(state, context);
+
+      // Both tools should have been executed
+      expect(toolASpy).toHaveBeenCalled();
+      expect(toolBSpy).toHaveBeenCalled();
+
+      // nextContext should preserve stepContext-related phase info
+      expect(result.nextContext?.phase).toBe('tools_batch_result');
+    });
+
+    it('should handle undefined stepContext gracefully', async () => {
+      const agent = new MockAgent();
+      agent.runner = vi.fn().mockResolvedValue({
+        type: 'finish',
+        reason: 'completed',
+      });
+
+      const runtime = new AgentRuntime(agent);
+      const state = AgentRuntime.createInitialState({ operationId: 'test-session' });
+
+      // Context without stepContext
+      const context: AgentRuntimeContext = {
+        phase: 'init',
+        session: {
+          sessionId: 'test-session',
+          messageCount: 0,
+          status: 'idle',
+          stepCount: 0,
+        },
+        // No stepContext
+      };
+
+      const result = await runtime.step(state, context);
+
+      // Should complete without errors
+      expect(result.newState.status).toBe('done');
+      expect(result.events[0].type).toBe('done');
+    });
+  });
+
   describe('Edge Cases and Error Handling', () => {
     it('should handle unknown instruction type', async () => {
       const agent = new MockAgent();

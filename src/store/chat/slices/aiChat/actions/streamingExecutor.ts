@@ -1100,16 +1100,28 @@ export const streamingExecutor: StateCreator<
       log('[internal_execAgentRuntime] afterCompletion callbacks executed');
     }
 
-    // Complete operation
-    if (state.status === 'done') {
-      get().completeOperation(operationId);
-      log('[internal_execAgentRuntime] Operation completed successfully');
-    } else if (state.status === 'error') {
-      get().failOperation(operationId, {
-        type: 'runtime_error',
-        message: 'Agent runtime execution failed',
-      });
-      log('[internal_execAgentRuntime] Operation failed');
+    // Complete operation based on final state
+    switch (state.status) {
+      case 'done': {
+        get().completeOperation(operationId);
+        log('[internal_execAgentRuntime] Operation completed successfully');
+        break;
+      }
+      case 'error': {
+        get().failOperation(operationId, {
+          type: 'runtime_error',
+          message: 'Agent runtime execution failed',
+        });
+        log('[internal_execAgentRuntime] Operation failed');
+        break;
+      }
+      case 'waiting_for_human': {
+        // When waiting for human intervention, complete the current operation
+        // A new operation will be created when user approves/rejects
+        get().completeOperation(operationId);
+        log('[internal_execAgentRuntime] Operation paused for human intervention');
+        break;
+      }
     }
 
     log('[internal_execAgentRuntime] completed');

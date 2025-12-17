@@ -1,135 +1,147 @@
-import { motion } from "motion/react";
-import { createStyles } from "antd-style";
-import { Check, X } from "lucide-react";
-import { LogoBrand } from "./LogoBrand";
+import { createStyles } from 'antd-style';
+import { Check, X } from 'lucide-react';
+import { motion } from 'motion/react';
+
+import { LogoBrand } from './LogoBrand';
 
 const useAuthResultStyles = createStyles(({ token, css }) => ({
+  connectionLine: css`
+    position: relative;
+    width: 60px;
+    height: 2px;
+    background: #666;
+  `,
+
   container: css`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    padding-block: 40px;
+    padding-inline: 20px;
+
     text-align: center;
-    padding: 40px 20px;
+  `,
+
+  description: css`
+    max-width: 400px;
+    margin: 0;
+
+    font-size: ${token.fontSize}px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 60%);
+  `,
+
+  deviceIcon: css`
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 80px;
+    height: 72px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: #2d2d2d;
+
+    &::before {
+      content: '';
+
+      position: absolute;
+      inset-block-start: 8px;
+      inset-inline: 8px;
+
+      height: 6px;
+      border-radius: 2px;
+
+      background: #666;
+    }
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      inset-block: 20px 8px;
+      inset-inline: 8px;
+
+      border-radius: 4px;
+
+      background: #444;
+    }
+  `,
+
+  errorIcon: css`
+    color: white;
+    background: ${token.colorError};
   `,
 
   iconContainer: css`
     display: flex;
-    align-items: center;
     gap: 24px;
-    margin-bottom: 32px;
-  `,
-
-  deviceIcon: css`
-    width: 80px;
-    height: 72px;
-    background: #2d2d2d;
-    border-radius: ${token.borderRadiusLG}px;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      right: 8px;
-      height: 6px;
-      background: #666;
-      border-radius: 2px;
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 20px;
-      left: 8px;
-      right: 8px;
-      bottom: 8px;
-      background: #444;
-      border-radius: 4px;
-    }
-  `,
-
-  connectionLine: css`
-    width: 60px;
-    height: 2px;
-    background: #666;
-    position: relative;
-  `,
-
-  statusIcon: css`
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  `,
-
-  successIcon: css`
-    background: ${token.colorSuccess};
-    color: white;
-  `,
-
-  errorIcon: css`
-    background: ${token.colorError};
-    color: white;
+    margin-block-end: 32px;
   `,
 
   logoContainer: css`
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: ${token.colorBgElevated}; 
-    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
+
+    width: 80px;
+    height: 80px;
     padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 10%);
+    border-radius: 50%;
+
+    background: ${token.colorBgElevated};
+  `,
+
+  statusIcon: css`
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  `,
+
+  successIcon: css`
+    color: white;
+    background: ${token.colorSuccess};
   `,
 
   title: css`
+    margin-block: 0 16px;
+    margin-inline: 0;
+
+    font-family: ${token.fontFamily};
     font-size: 28px;
     font-weight: 600;
     color: ${token.colorTextBase};
-    margin: 0 0 16px 0;
-    font-family: ${token.fontFamily};
-  `,
-
-  description: css`
-    font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.6);
-    margin: 0;
-    line-height: 1.5;
-    max-width: 400px;
   `,
 }));
 
 interface AuthResultProps {
+  animated?: boolean;
+  description?: string;
   success: boolean;
   title?: string;
-  description?: string;
-  animated?: boolean;
 }
 
-export const AuthResult = ({ 
-  success, 
-  title,
-  description,
-  animated = true 
-}: AuthResultProps) => {
+export const AuthResult = ({ success, title, description, animated = true }: AuthResultProps) => {
   const { styles } = useAuthResultStyles();
 
-  const defaultTitle = success ? "Authorization Successful" : "Authorization Failed";
-  const defaultDescription = success 
-    ? "Please click the Start button below to continue using LobeHub Desktop"
-    : "Please try again or switch to a different login method";
+  const defaultTitle = success ? 'Authorization Successful' : 'Authorization Failed';
+  const defaultDescription = success
+    ? 'Please click the Start button below to continue using LobeHub Desktop'
+    : 'Please try again or switch to a different login method';
 
   const content = (
     <>
@@ -137,22 +149,19 @@ export const AuthResult = ({
       <div className={styles.iconContainer}>
         {/* 设备图标 */}
         <div className={styles.deviceIcon} />
-        
+
         {/* 连接线和状态图标 */}
         <div className={styles.connectionLine}>
-          <div className={`${styles.statusIcon} ${success ? styles.successIcon : styles.errorIcon}`}>
+          <div
+            className={`${styles.statusIcon} ${success ? styles.successIcon : styles.errorIcon}`}
+          >
             {success ? <Check size={14} /> : <X size={14} />}
           </div>
         </div>
-        
+
         {/* Logo */}
         <div className={styles.logoContainer}>
-          <LogoBrand
-            logoSize={88}
-            textHeight={0}
-            spacing={0}
-            animated={false}
-          />
+          <LogoBrand animated={false} logoSize={88} spacing={0} textHeight={0} />
         </div>
       </div>
 
@@ -165,19 +174,15 @@ export const AuthResult = ({
   if (animated) {
     return (
       <motion.div
+        animate={{ opacity: 1, y: 0 }}
         className={styles.container}
         initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
       >
         {content}
       </motion.div>
     );
   }
 
-  return (
-    <div className={styles.container}>
-      {content}
-    </div>
-  );
+  return <div className={styles.container}>{content}</div>;
 };

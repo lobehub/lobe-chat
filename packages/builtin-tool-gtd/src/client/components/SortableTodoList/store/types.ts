@@ -18,9 +18,18 @@ export interface TodoListState {
 export interface TodoListActions {
   addItem: () => void;
   deleteItem: (id: string) => void;
+  /**
+   * Immediately trigger pending debounced save (fire-and-forget, sync)
+   * Used on unmount to ensure data is not lost
+   */
   flushSave: () => void;
   focusNextItem: (currentId: string | null, cursorPos: number) => void;
   focusPrevItem: (currentId: string | null, cursorPos: number) => void;
+  /**
+   * Immediately save current items if dirty (async)
+   * Use this before approval to ensure all edits are persisted
+   */
+  saveNow: () => Promise<void>;
   setFocusedId: (id: string | null) => void;
   setNewItemText: (text: string) => void;
   sortItems: (sortedItems: TodoListItem[]) => void;

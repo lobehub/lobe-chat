@@ -24,7 +24,7 @@ export const createActions = (
   internals: StoreInternals,
   defaultItems: TodoItem[],
 ): TodoListStore => {
-  // Create debounced save function
+  // Save implementation (used by both debounced and immediate save)
   const performSave = async () => {
     if (!internals.onSave) return;
 
@@ -86,6 +86,13 @@ export const createActions = (
 
     flushSave: () => {
       internals.debouncedSave?.flush();
+    },
+
+    saveNow: async () => {
+      // Cancel pending debounced save to avoid double-save
+      internals.debouncedSave?.cancel();
+      // Immediately save if dirty
+      await performSave();
     },
 
     focusNextItem: (currentId: string | null, cursorPos: number) => {

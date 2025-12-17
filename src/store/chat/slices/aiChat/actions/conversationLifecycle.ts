@@ -218,10 +218,12 @@ export const conversationLifecycle: StateCreator<
                 type: newThread.type,
               }
             : undefined,
-          newTopic: {
-            topicMessageIds: messages.map((m) => m.id),
-            title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
-          },
+          newTopic: !context.topicId
+            ? {
+                topicMessageIds: messages.map((m) => m.id),
+                title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
+              }
+            : undefined,
           agentId: operationContext.agentId,
           // Pass groupId for group chat scenarios
           groupId: operationContext.groupId ?? undefined,

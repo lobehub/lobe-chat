@@ -3,10 +3,17 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { chatService } from '@/services/chat';
+import * as agentConfigResolver from '@/services/chat/mecha/agentConfigResolver';
 import { messageService } from '@/services/message';
 
 import { useChatStore } from '../../../../store';
-import { TEST_CONTENT, TEST_IDS, createMockMessage } from './fixtures';
+import {
+  TEST_CONTENT,
+  TEST_IDS,
+  createMockAgentConfig,
+  createMockChatConfig,
+  createMockMessage,
+} from './fixtures';
 import { resetTestEnvironment, setupMockSelectors, spyOnMessageService } from './helpers';
 
 // Keep zustand mock as it's needed globally
@@ -963,6 +970,14 @@ describe('StreamingExecutor actions', () => {
         });
       });
 
+      // Mock resolveAgentConfig to avoid agent store dependency
+      vi.spyOn(agentConfigResolver, 'resolveAgentConfig').mockReturnValue({
+        agentConfig: createMockAgentConfig(),
+        chatConfig: createMockChatConfig(),
+        isBuiltinAgent: false,
+        plugins: [],
+      });
+
       // Create operation manually to register callbacks
       let operationId: string;
       const afterCompletionCallback1 = vi.fn();
@@ -1054,6 +1069,14 @@ describe('StreamingExecutor actions', () => {
         useChatStore.setState({
           internal_execAgentRuntime: realExecAgentRuntime,
         });
+      });
+
+      // Mock resolveAgentConfig to avoid agent store dependency
+      vi.spyOn(agentConfigResolver, 'resolveAgentConfig').mockReturnValue({
+        agentConfig: createMockAgentConfig(),
+        chatConfig: createMockChatConfig(),
+        isBuiltinAgent: false,
+        plugins: [],
       });
 
       let operationId: string;
@@ -1153,6 +1176,14 @@ describe('StreamingExecutor actions', () => {
         });
       });
 
+      // Mock resolveAgentConfig to avoid agent store dependency
+      vi.spyOn(agentConfigResolver, 'resolveAgentConfig').mockReturnValue({
+        agentConfig: createMockAgentConfig(),
+        chatConfig: createMockChatConfig(),
+        isBuiltinAgent: false,
+        plugins: [],
+      });
+
       let operationId: string;
 
       act(() => {
@@ -1222,6 +1253,193 @@ describe('StreamingExecutor actions', () => {
 
       // Operation should complete successfully
       expect(result.current.operations[operationId!].status).toBe('completed');
+    });
+  });
+
+  describe('operation status handling', () => {
+    it('should complete operation when state is waiting_for_human', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      // Restore real internal_execAgentRuntime for this test
+      act(() => {
+        useChatStore.setState({
+          internal_execAgentRuntime: realExecAgentRuntime,
+        });
+      });
+
+      // Mock resolveAgentConfig to avoid agent store dependency
+      vi.spyOn(agentConfigResolver, 'resolveAgentConfig').mockReturnValue({
+        agentConfig: createMockAgentConfig(),
+        chatConfig: createMockChatConfig(),
+        isBuiltinAgent: false,
+        plugins: [],
+      });
+
+      let operationId: string;
+
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+        });
+        operationId = res.operationId;
+      });
+
+      // Mock internal_createAgentState to return waiting_for_human status
+      vi.spyOn(result.current, 'internal_createAgentState').mockReturnValue({
+        state: {
+          status: 'waiting_for_human' as const,
+          operationId: operationId!,
+          messages: [],
+          maxSteps: 10,
+          stepCount: 1,
+          createdAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          toolManifestMap: {},
+          userInterventionConfig: { approvalMode: 'manual', allowList: [] },
+          usage: {
+            llm: {
+              apiCalls: 1,
+              processingTimeMs: 100,
+              tokens: { input: 10, output: 20, total: 30 },
+            },
+            tools: { byTool: [], totalCalls: 0, totalTimeMs: 0 },
+            humanInteraction: {
+              approvalRequests: 1,
+              promptRequests: 0,
+              selectRequests: 0,
+              totalWaitingTimeMs: 0,
+            },
+          },
+          cost: {
+            calculatedAt: new Date().toISOString(),
+            currency: 'USD',
+            total: 0,
+            llm: { byModel: [], currency: 'USD', total: 0 },
+            tools: { byTool: [], currency: 'USD', total: 0 },
+          },
+        },
+        context: {
+          phase: 'init',
+          payload: { model: 'gpt-4o-mini', provider: 'openai' },
+          session: {
+            sessionId: TEST_IDS.SESSION_ID,
+            messageCount: 0,
+            status: 'waiting_for_human',
+            stepCount: 1,
+          },
+        },
+      });
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          context: {
+            agentId: TEST_IDS.SESSION_ID,
+            topicId: TEST_IDS.TOPIC_ID,
+          },
+          messages: [],
+          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
+          parentMessageType: 'user',
+          operationId: operationId!,
+        });
+      });
+
+      // Operation should be completed (not stuck in running state)
+      // This is important because:
+      // 1. User can see the tool intervention UI without loading indicator
+      // 2. A new operation will be created when user approves/rejects
+      expect(result.current.operations[operationId!].status).toBe('completed');
+    });
+
+    it('should fail operation when state is error', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      // Restore real internal_execAgentRuntime for this test
+      act(() => {
+        useChatStore.setState({
+          internal_execAgentRuntime: realExecAgentRuntime,
+        });
+      });
+
+      // Mock resolveAgentConfig to avoid agent store dependency
+      vi.spyOn(agentConfigResolver, 'resolveAgentConfig').mockReturnValue({
+        agentConfig: createMockAgentConfig(),
+        chatConfig: createMockChatConfig(),
+        isBuiltinAgent: false,
+        plugins: [],
+      });
+
+      let operationId: string;
+
+      act(() => {
+        const res = result.current.startOperation({
+          type: 'execAgentRuntime',
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+        });
+        operationId = res.operationId;
+      });
+
+      // Mock internal_createAgentState to return error status
+      vi.spyOn(result.current, 'internal_createAgentState').mockReturnValue({
+        state: {
+          status: 'error' as const,
+          operationId: operationId!,
+          messages: [],
+          maxSteps: 10,
+          stepCount: 1,
+          createdAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          toolManifestMap: {},
+          userInterventionConfig: { approvalMode: 'manual', allowList: [] },
+          usage: {
+            llm: {
+              apiCalls: 1,
+              processingTimeMs: 100,
+              tokens: { input: 10, output: 20, total: 30 },
+            },
+            tools: { byTool: [], totalCalls: 0, totalTimeMs: 0 },
+            humanInteraction: {
+              approvalRequests: 0,
+              promptRequests: 0,
+              selectRequests: 0,
+              totalWaitingTimeMs: 0,
+            },
+          },
+          cost: {
+            calculatedAt: new Date().toISOString(),
+            currency: 'USD',
+            total: 0,
+            llm: { byModel: [], currency: 'USD', total: 0 },
+            tools: { byTool: [], currency: 'USD', total: 0 },
+          },
+        },
+        context: {
+          phase: 'init',
+          payload: { model: 'gpt-4o-mini', provider: 'openai' },
+          session: {
+            sessionId: TEST_IDS.SESSION_ID,
+            messageCount: 0,
+            status: 'error',
+            stepCount: 1,
+          },
+        },
+      });
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          context: {
+            agentId: TEST_IDS.SESSION_ID,
+            topicId: TEST_IDS.TOPIC_ID,
+          },
+          messages: [],
+          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
+          parentMessageType: 'user',
+          operationId: operationId!,
+        });
+      });
+
+      // Operation should be failed
+      expect(result.current.operations[operationId!].status).toBe('failed');
     });
   });
 });
