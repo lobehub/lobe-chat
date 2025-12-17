@@ -85,7 +85,7 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
         items={[
           {
             description: (
-              <Text as={'p'} style={{ marginBottom: 16 }}>
+              <Text as={'p'} color={theme.colorTextSecondary} style={{ marginBottom: 16 }}>
                 {t('telemetry.rows.create.desc')}
               </Text>
             ),
@@ -98,7 +98,7 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
           },
           {
             description: (
-              <Text as={'p'} style={{ marginBottom: 16 }}>
+              <Text as={'p'} color={theme.colorTextSecondary} style={{ marginBottom: 16 }}>
                 {t('telemetry.rows.collaborate.desc')}
               </Text>
             ),
@@ -110,7 +110,11 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
             ),
           },
           {
-            description: <Text as={'p'}>{t('telemetry.rows.evolve.desc')}</Text>,
+            description: (
+              <Text as={'p'} color={theme.colorTextSecondary}>
+                {t('telemetry.rows.evolve.desc')}
+              </Text>
+            ),
             icon: <IconAvatar icon={BrainIcon} />,
             title: (
               <Text as={'h2'} fontSize={16}>
@@ -121,7 +125,9 @@ const TelemetryStep = memo<TelemetryStepProps>(({ onNext }) => {
         ]}
       />
       <Flexbox gap={8}>
-        <Text as={'p'}>{t('telemetry.rows.privacy.desc', { appName: BRANDING_NAME })}</Text>
+        <Text as={'p'} color={theme.colorTextSecondary}>
+          {t('telemetry.rows.privacy.desc', { appName: BRANDING_NAME })}
+        </Text>
         <Flexbox align="center" gap={8} horizontal>
           <Switch checked={check} onChange={(v) => setCheck(v)} size={'small'} />
           <Text fontSize={12} type={check ? undefined : 'secondary'}>

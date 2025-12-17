@@ -2,7 +2,6 @@
 
 import { SendButton } from '@lobehub/editor/react';
 import { Button, Select, Text } from '@lobehub/ui';
-import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { Undo2Icon } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
@@ -12,7 +11,6 @@ import { Flexbox } from 'react-layout-kit';
 import { Locales, localeOptions, normalizeLocale } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
 
 import LobeMessage from '../components/LobeMessage';
 
@@ -24,7 +22,6 @@ interface ResponseLanguageStepProps {
 const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }) => {
   const { t } = useTranslation(['onboarding', 'common']);
   const theme = useTheme();
-  const fullName = useUserStore(userProfileSelectors.fullName);
   const switchLocale = useGlobalStore((s) => s.switchLocale);
   const setSettings = useUserStore((s) => s.setSettings);
 
@@ -50,7 +47,7 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
     () => (
       <LobeMessage
         sentences={[
-          t('responseLanguage.title', { fullName }),
+          t('responseLanguage.title'),
           t('responseLanguage.title2'),
           t('responseLanguage.title3'),
         ]}
@@ -97,10 +94,10 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
           type="primary"
         />
       </Flexbox>
-      <Typography.Text style={{ fontSize: 12 }} type="secondary">
+      <Text style={{ fontSize: 12 }} type="secondary">
         {t('responseLanguage.hint')}
-      </Typography.Text>
-      <Flexbox horizontal justify={'flex-start'}>
+      </Text>
+      <Flexbox horizontal justify={'flex-start'} style={{ marginTop: 32 }}>
         <Button
           disabled={loading}
           icon={Undo2Icon}

@@ -20,11 +20,22 @@
   },
   "next": "Sonraki",
   "occupation": {
+    "area": {
+      "business": "Ticaret ve Strateji",
+      "coding": "Programlama ve Geliştirme",
+      "design": "Tasarım ve Yaratıcılık",
+      "education": "Öğrenim ve Araştırma",
+      "marketing": "Pazarlama ve Tanıtım",
+      "other": "Diğer Alanlar",
+      "product": "Ürün ve Yönetim",
+      "sales": "Satış ve Müşteri Hizmetleri",
+      "writing": "İçerik Üretimi"
+    },
     "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
     "placeholder": "Lütfen mesleğini gir...",
-    "title": "{{fullName}}, ne iş yapıyorsun?",
-    "title2": "Sana daha iyi yardımcı olabilmemiz için mesleğini bilmemiz önemli!",
-    "title3": "Sana özel profesyonel öneriler hazırlayayım～"
+    "title": "Hangi alanda çalıştığını bana söyleyebilir misin?",
+    "title2": "Seninle ilgili ilk izlenimimi oluşturmama yardım et～",
+    "title3": "Acele etme, seni zamanla daha iyi tanıyacağım"
   },
   "proSettings": {
     "connectors": {
@@ -44,7 +55,7 @@
     "auto": "Otomatik (sistem dilini takip et)",
     "desc": "AI asistanının yanıt verirken kullanacağı dili seç",
     "hint": "Dil seçildikten sonra, AI bu dili kullanarak yanıt verecek ve arayüz dili de buna göre değişecektir",
-    "title": "{{fullName}}, hangi dili kullanarak iletişim kuralım?",
+    "title": "Hangi dili kullanarak iletişim kuralım?",
     "title2": "Gerçek anlayış, dille başlar.",
     "title3": "Seni net anlayayım, kendimi açık ifade edeyim～"
   },

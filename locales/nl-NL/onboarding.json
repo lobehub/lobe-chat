@@ -20,11 +20,22 @@
   },
   "next": "Volgende stap",
   "occupation": {
+    "area": {
+      "business": "Zakelijk en Strategie",
+      "coding": "Programmeren en Ontwikkeling",
+      "design": "Design en Creativiteit",
+      "education": "Leren en Onderzoek",
+      "marketing": "Marketing en Promotie",
+      "other": "Overige Gebieden",
+      "product": "Product en Management",
+      "sales": "Verkoop en Klantenservice",
+      "writing": "Contentcreatie"
+    },
     "hint": "Je kunt dit later altijd aanpassen in de instellingen",
     "placeholder": "Voer je beroep in...",
-    "title": "{{fullName}}, wat voor werk doe je?",
-    "title2": "Als we je beroep kennen, kunnen we je beter helpen!",
-    "title3": "Laat me professioneel advies op maat voor je samenstellen～"
+    "title": "Kun je me vertellen in welk vakgebied je werkt?",
+    "title2": "Help me een eerste indruk van je te krijgen~",
+    "title3": "Geen haast, ik leer je steeds beter kennen"
   },
   "proSettings": {
     "connectors": {
@@ -44,7 +55,7 @@
     "auto": "Automatisch (volgt systeemtaal)",
     "desc": "Kies de taal waarin de AI-assistent reageert",
     "hint": "Na het kiezen van een taal zal de AI in die taal antwoorden en wordt de interface ook aangepast",
-    "title": "{{fullName}}, in welke taal zullen we communiceren?",
+    "title": "In welke taal zullen we communiceren?",
     "title2": "Begrip begint met taal.",
     "title3": "Laat me duidelijk spreken en goed luisteren～"
   },

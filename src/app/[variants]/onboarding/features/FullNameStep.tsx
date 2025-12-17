@@ -82,7 +82,7 @@ const FullNameStep = memo<FullNameStepProps>(({ onBack, onNext }) => {
           value={value}
         />
       </Flexbox>
-      <Flexbox horizontal justify={'flex-start'}>
+      <Flexbox horizontal justify={'flex-start'} style={{ marginTop: 32 }}>
         <Button
           disabled={loading}
           icon={Undo2Icon}

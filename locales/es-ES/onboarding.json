@@ -20,11 +20,22 @@
   },
   "next": "Siguiente",
   "occupation": {
+    "area": {
+      "business": "Negocios y estrategia",
+      "coding": "Programación y desarrollo",
+      "design": "Diseño y creatividad",
+      "education": "Aprendizaje e investigación",
+      "marketing": "Marketing y promoción",
+      "other": "Otros campos",
+      "product": "Producto y gestión",
+      "sales": "Ventas y atención al cliente",
+      "writing": "Creación de contenidos"
+    },
     "hint": "Puedes cambiarlo en la configuración en cualquier momento",
     "placeholder": "Introduce tu profesión...",
-    "title": "{{fullName}}, ¿a qué te dedicas?",
-    "title2": "¡Conocer tu profesión nos ayuda a ayudarte mejor!",
-    "title3": "Déjame ofrecerte consejos personalizados solo para ti~"
+    "title": "¿Puedes decirme en qué área trabajas?",
+    "title2": "Ayúdame a formarme una primera impresión de ti~",
+    "title3": "Tómate tu tiempo, te iré conociendo mejor poco a poco"
   },
   "proSettings": {
     "connectors": {
@@ -44,7 +55,7 @@
     "auto": "Automático (según el idioma del sistema)",
     "desc": "Elige el idioma que usará el asistente de IA para responder",
     "hint": "Una vez seleccionado, el asistente responderá en ese idioma y la interfaz también cambiará",
-    "title": "{{fullName}}, ¿en qué idioma quieres que hablemos?",
+    "title": "¿En qué idioma deberíamos comunicarnos?",
     "title2": "Comencemos con el idioma para lograr una verdadera comprensión.",
     "title3": "Déjame hablar claro y entenderte mejor～"
   },

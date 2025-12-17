@@ -20,11 +20,22 @@
   },
   "next": "Weiter",
   "occupation": {
+    "area": {
+      "business": "Geschäft & Strategie",
+      "coding": "Programmierung & Entwicklung",
+      "design": "Design & Kreativität",
+      "education": "Lernen & Forschung",
+      "marketing": "Marketing & Promotion",
+      "other": "Andere Bereiche",
+      "product": "Produkt & Management",
+      "sales": "Vertrieb & Kundenservice",
+      "writing": "Content-Erstellung"
+    },
     "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
     "placeholder": "Bitte gib deinen Beruf ein...",
-    "title": "{{fullName}}, was machst du beruflich?",
-    "title2": "Wenn wir deinen Beruf kennen, können wir dir besser helfen!",
-    "title3": "Lass mich dir maßgeschneiderte Ratschläge geben～"
+    "title": "In welchem Bereich bist du tätig?",
+    "title2": "Hilf mir, einen ersten Eindruck von dir zu bekommen~",
+    "title3": "Keine Eile, ich werde dich nach und nach besser verstehen"
   },
   "proSettings": {
     "connectors": {
@@ -44,7 +55,7 @@
     "auto": "Automatisch (Systemsprache folgen)",
     "desc": "Wähle die Sprache, in der der KI-Assistent antworten soll",
     "hint": "Nach Auswahl wird die KI in dieser Sprache antworten und die Oberfläche entsprechend angepasst",
-    "title": "{{fullName}}, in welcher Sprache sollen wir kommunizieren?",
+    "title": "In welcher Sprache sollen wir kommunizieren?",
     "title2": "Verständigung beginnt mit Sprache.",
     "title3": "Lass mich klar sprechen und dich gut verstehen～"
   },

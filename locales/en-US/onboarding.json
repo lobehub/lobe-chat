@@ -20,11 +20,22 @@
   },
   "next": "Next",
   "occupation": {
+    "area": {
+      "business": "Business & Strategy",
+      "coding": "Programming & Development",
+      "design": "Design & Creativity",
+      "education": "Learning & Research",
+      "marketing": "Marketing & Promotion",
+      "other": "Other Fields",
+      "product": "Product & Management",
+      "sales": "Sales & Customer Relations",
+      "writing": "Content Creation"
+    },
     "hint": "You can change this anytime in settings",
     "placeholder": "Enter your occupation...",
-    "title": "{{fullName}}, what do you do for work?",
-    "title2": "Knowing your profession helps me assist you better!",
-    "title3": "Let me tailor professional advice just for you~"
+    "title": "Could you tell me what field you work in?",
+    "title2": "This will help me get a first impression of you~",
+    "title3": "Take your time, I’ll get to know you better and better"
   },
   "proSettings": {
     "connectors": {
@@ -44,7 +55,7 @@
     "auto": "Auto (Follow system language)",
     "desc": "Choose the language AI assistant will use when replying to messages",
     "hint": "After selecting a language, AI responses will use that language, and the interface language will also sync",
-    "title": "{{fullName}}, which language should we use to communicate?",
+    "title": "Which language should we use to communicate?",
     "title2": "Start with language, build true understanding.",
     "title3": "Let me speak clearly and understand you better~"
   },

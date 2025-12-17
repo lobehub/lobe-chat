@@ -20,11 +20,22 @@
   },
   "next": "Tiếp theo",
   "occupation": {
+    "area": {
+      "business": "Kinh doanh & Chiến lược",
+      "coding": "Lập trình & Phát triển",
+      "design": "Thiết kế & Sáng tạo",
+      "education": "Học tập & Nghiên cứu",
+      "marketing": "Tiếp thị & Quảng bá",
+      "other": "Lĩnh vực khác",
+      "product": "Sản phẩm & Quản lý",
+      "sales": "Bán hàng & Chăm sóc khách hàng",
+      "writing": "Sáng tác nội dung"
+    },
     "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
     "placeholder": "Vui lòng nhập nghề nghiệp của bạn...",
-    "title": "{{fullName}}, bạn làm nghề gì vậy?",
-    "title2": "Hiểu rõ nghề nghiệp của bạn sẽ giúp chúng tôi hỗ trợ tốt hơn!",
-    "title3": "Hãy để tôi đưa ra những lời khuyên chuyên nghiệp phù hợp với bạn~"
+    "title": "Bạn đang làm việc trong lĩnh vực nào vậy?",
+    "title2": "Giúp mình có ấn tượng ban đầu về bạn nhé~",
+    "title3": "Cứ từ từ, mình sẽ hiểu bạn nhiều hơn theo thời gian"
   },
   "proSettings": {
     "connectors": {
@@ -44,7 +55,7 @@
     "auto": "Tự động (theo ngôn ngữ hệ thống)",
     "desc": "Chọn ngôn ngữ mà trợ lý AI sẽ sử dụng để trả lời",
     "hint": "Sau khi chọn, AI sẽ trả lời bằng ngôn ngữ đó và giao diện cũng sẽ được đồng bộ",
-    "title": "{{fullName}}, chúng ta sẽ giao tiếp bằng ngôn ngữ nào?",
+    "title": "Chúng ta sẽ giao tiếp bằng ngôn ngữ nào?",
     "title2": "Bắt đầu từ ngôn ngữ, xây dựng sự thấu hiểu thực sự.",
     "title3": "Để tôi nói rõ ràng, bạn nghe dễ hiểu nhé～"
   },
