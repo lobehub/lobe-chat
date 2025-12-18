@@ -20,8 +20,8 @@ export default {
   },
   FileManager: {
     actions: {
-      addToKnowledgeBase: '添加到知识库',
-      addToOtherKnowledgeBase: '添加到其他知识库',
+      addToKnowledgeBase: '添加到资源库',
+      addToOtherKnowledgeBase: '添加到其他资源库',
       batchChunking: '批量分块',
       chunking: '分块',
       chunkingTooltip: '将文件拆分为多个文本块并向量化后，可用于语义检索和文件对话',
@@ -31,7 +31,7 @@ export default {
       confirmDeleteMultiFiles:
         '即将删除选中的 {{count}} 个文件，删除后该将无法找回，请确认你的操作',
       confirmRemoveFromKnowledgeBase:
-        '即将从知识库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作',
+        '即将从资源库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作',
       copyUrl: '复制链接',
       copyUrlSuccess: '文件地址复制成功',
       createChunkingTask: '准备中...',
@@ -45,7 +45,7 @@ export default {
       moveSuccess: '文件移动成功',
       moveToFolder: '移动到...',
       moveToRoot: '移动到根目录',
-      removeFromKnowledgeBase: '从知识库中移除',
+      removeFromKnowledgeBase: '从资源库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
       rename: '重命名',
       renameError: '重命名失败',
@@ -53,13 +53,13 @@ export default {
     },
     bottom: '已经到底啦',
     config: {
-      showFilesInKnowledgeBase: '显示知识库中内容',
+      showFilesInKnowledgeBase: '显示资源库中内容',
     },
     emptyStatus: {
       actions: {
         file: '上传文件',
         folder: '上传文件夹',
-        knowledgeBase: '新建知识库',
+        knowledgeBase: '新建资源库',
       },
       or: '或者',
       title: '将文件或文件夹拖到这里',
@@ -236,9 +236,9 @@ export default {
   },
   knowledgeBase: {
     empty: {
-      description: '创建知识库来组织和管理你的资源',
-      search: '未找到匹配的知识库',
-      title: '暂无知识库',
+      description: '创建资源库来组织和管理你的资源',
+      search: '未找到匹配的资源库',
+      title: '暂无资源库',
     },
   },
 };

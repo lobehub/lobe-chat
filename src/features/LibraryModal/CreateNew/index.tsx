@@ -1,7 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { LibraryBig } from 'lucide-react';
 import { Suspense, memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { createModal } from '@/components/FunctionModal';
@@ -14,18 +11,10 @@ interface ModalContentProps {
 }
 
 const ModalContent = memo<ModalContentProps>(({ onClose, onSuccess }) => {
-  const { t } = useTranslation('knowledgeBase');
-
   return (
-    <>
-      <Flexbox gap={8} horizontal paddingBlock={16} paddingInline={16} style={{ paddingBottom: 0 }}>
-        <Icon icon={LibraryBig} />
-        {t('createNew.title')}
-      </Flexbox>
-      <Flexbox paddingInline={16} style={{ paddingBottom: 16 }}>
-        <CreateForm onClose={onClose} onSuccess={onSuccess} />
-      </Flexbox>
-    </>
+    <Flexbox paddingInline={16} style={{ paddingBottom: 16 }}>
+      <CreateForm onClose={onClose} onSuccess={onSuccess} />
+    </Flexbox>
   );
 });
 

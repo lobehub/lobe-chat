@@ -7,9 +7,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LIBRARY_URL } from '@/const/url';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
+import EmptyNavItem from '../../../../../../../../features/NavPanel/components/EmptyNavItem';
 import SkeletonList from '../../../../../../../../features/NavPanel/components/SkeletonList';
 import { useProjectMenuItems } from '../../../hooks';
-import EmptyStatus from '../../EmptyStatus';
 import Item from './Item';
 
 const ProjectList = memo(() => {
@@ -23,7 +23,7 @@ const ProjectList = memo(() => {
   const isEmpty = data.length === 0;
 
   if (isEmpty) {
-    return <EmptyStatus onClick={createProject} title={'新建项目'} />;
+    return <EmptyNavItem onClick={createProject} title={'新建项目'} />;
   }
 
   return (

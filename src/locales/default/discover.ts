@@ -13,8 +13,8 @@ export default {
     details: {
       capabilities: {
         knowledge: {
-          desc: '助手内置了以下知识库，帮助你回答更多问题。',
-          title: '知识库',
+          desc: '助手内置了以下资源库，帮助你回答更多问题。',
+          title: '资源库',
         },
         plugin: {
           desc: '助手内置了以下插件，帮助你完成更多任务。',
@@ -76,7 +76,7 @@ export default {
     sorts: {
       createdAt: '最近发布',
       identifier: '助手 ID',
-      knowledgeCount: '知识库数量',
+      knowledgeCount: '资源库数量',
       myown: '查看我的',
       pluginCount: '插件数量',
       title: '助手名称',
@@ -111,7 +111,7 @@ export default {
     systemRole: '助手设定',
     tokenUsage: '助手提示词 Token 使用量',
     try: '试一下',
-    withKnowledge: '该助手附带知识库',
+    withKnowledge: '该助手附带资源库',
     withPlugin: '该助手附带插件',
   },
   back: '返回发现',
@@ -179,7 +179,7 @@ export default {
       functionCall: '支持函数调用',
       title: '其他',
       vision: '支持视觉识别',
-      withKnowledge: '附带知识库',
+      withKnowledge: '附带资源库',
       withTool: '附带插件',
     },
     pricing: '模型价格',

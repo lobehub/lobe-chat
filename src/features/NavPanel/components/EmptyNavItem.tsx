@@ -9,7 +9,7 @@ interface EmptyStatusProps {
   title: string;
 }
 
-const EmptyStatus = memo<EmptyStatusProps>(({ title, onClick, className }) => {
+const EmptyNavItem = memo<EmptyStatusProps>(({ title, onClick, className }) => {
   return (
     <Block
       align={'center'}
@@ -32,4 +32,4 @@ const EmptyStatus = memo<EmptyStatusProps>(({ title, onClick, className }) => {
   );
 });
 
-export default EmptyStatus;
+export default EmptyNavItem;

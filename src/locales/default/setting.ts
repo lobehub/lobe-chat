@@ -828,7 +828,7 @@ export default {
     queryRewrite: {
       label: '模型',
       modelDesc: '指定用于优化用户提问的模型',
-      title: '知识库提问重写助手',
+      title: '资源库提问重写助手',
     },
     thread: {
       label: '模型',

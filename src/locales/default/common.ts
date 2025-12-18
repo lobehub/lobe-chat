@@ -60,12 +60,12 @@ export default {
       ready: '数据库已就绪',
     },
     modal: {
-      desc: '立即启用下一代客户端数据库。在你的浏览器中持久存储聊天数据，并使用知识库等进阶特性。',
+      desc: '立即启用下一代客户端数据库。在你的浏览器中持久存储聊天数据，并使用资源库等进阶特性。',
       enable: '立即启用',
       features: {
         knowledgeBase: {
-          desc: '沉淀你的个人知识库，并与你的助手轻松开启知识库对话（即将上线）',
-          title: '支持知识库对话，开启第二大脑',
+          desc: '沉淀你的个人资源库，并与你的助手轻松开启资源库对话（即将上线）',
+          title: '支持资源库对话，开启第二大脑',
         },
         localFirst: {
           desc: '聊天数据完全存储在浏览器中，你的数据始终在你的掌握。',
@@ -391,7 +391,7 @@ export default {
     discover: '发现',
     files: '文件',
     home: '首页',
-    knowledgeBase: '知识库',
+    knowledgeBase: '资源库',
     me: '我',
     memory: '记忆',
     pages: '文稿',

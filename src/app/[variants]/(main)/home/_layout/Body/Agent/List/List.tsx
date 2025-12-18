@@ -11,8 +11,8 @@ import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
 import { SessionDefaultGroup } from '@/types/session';
 
+import EmptyNavItem from '../../../../../../../../features/NavPanel/components/EmptyNavItem';
 import { useCreateMenuItems } from '../../../hooks';
-import EmptyStatus from '../../EmptyStatus';
 import GroupItem from './AgentGroupItem';
 import AgentItem from './AgentItem';
 
@@ -42,7 +42,7 @@ const List = memo<SessionListProps>(
 
     if (isEmpty) {
       return (
-        <EmptyStatus
+        <EmptyNavItem
           className={itemClassName}
           onClick={() => createAgent({ groupId })}
           title={t('emptyAgentAction')}
