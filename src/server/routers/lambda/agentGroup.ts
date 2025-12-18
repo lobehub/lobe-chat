@@ -162,7 +162,7 @@ export const agentGroupRouter = router({
 
     return groups.map((group) => ({
       ...group,
-      members: ctx.chatGroupService.mergeAgentsDefaultConfig(userSettings, group.members),
+      agents: ctx.chatGroupService.mergeAgentsDefaultConfig(userSettings, group.agents),
     }));
   }),
 

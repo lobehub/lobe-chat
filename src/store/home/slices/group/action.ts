@@ -14,8 +14,6 @@ export const createGroupSlice: StateCreator<
 > = (_set, get) => ({
   switchToGroup: (groupId) => {
     const { navigate } = get();
-
-    console.log('groupId', groupId, navigate);
     navigate?.(`/group/${groupId}`);
   },
 });
