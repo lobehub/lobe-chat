@@ -36,6 +36,11 @@ import {
   tracer,
 } from '@lobechat/observability-otel/modules/memory-user-memory';
 import { attributesCommon } from '@lobechat/observability-otel/node';
+import type {
+  MemoryExtractionAgentCallTrace,
+  MemoryExtractionTraceError,
+  MemoryExtractionTracePayload,
+} from '@lobechat/types';
 import { Client } from '@upstash/workflow';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { join } from 'pathe';
@@ -81,53 +86,6 @@ const LAYER_LABEL_MAP: Record<LayersEnum, string> = {
   [LayersEnum.Identity]: 'identities',
   [LayersEnum.Preference]: 'preferences',
 };
-
-interface SerializedError {
-  message: string;
-  name?: string;
-  stack?: string;
-}
-
-interface AgentCallTrace {
-  durationMs?: number;
-  error?: SerializedError;
-  request?: GenerateObjectPayload;
-  response?: unknown;
-}
-
-interface ExtractionTracePayload {
-  agentCalls: Partial<Record<MemoryExtractionAgent, AgentCallTrace>>;
-  contexts?: {
-    built?: {
-      retrievalMemoryContext?: unknown;
-      retrievedIdentityContext?: unknown;
-      topicContext?: unknown;
-    };
-    trimmed?: {
-      retrievedContexts?: string[];
-      retrievedIdentitiesContext?: string;
-    };
-  };
-  error?: SerializedError;
-  extractionJob?: MemoryExtractionJob | null;
-  memories?: {
-    identities?: unknown;
-    layers?: unknown;
-  };
-  result?: {
-    extraction?: MemoryExtractionResult | null;
-    persisted?: PersistedMemoryResult | null;
-  };
-  source?: {
-    chatTopic?: {
-      conversations?: unknown;
-      topic?: unknown;
-    };
-  };
-  sourceType?: MemoryExtractionSourceType;
-  userId?: string;
-  userState?: unknown;
-}
 
 export interface MemoryExtractionWorkflowCursor {
   createdAt: string;
@@ -273,7 +231,7 @@ const extractCredentialsFromVault = (provider: string, keyVaults?: UserKeyVaults
   return { apiKey, baseURL };
 };
 
-const serializeError = (error: unknown): SerializedError => {
+const serializeError = (error: unknown): MemoryExtractionTraceError => {
   if (error instanceof Error) {
     return { message: error.message, name: error.name, stack: error.stack };
   }
@@ -942,7 +900,11 @@ export class MemoryExtractionExecutor {
         let extractionJob: MemoryExtractionJob | null = null;
         let extraction: MemoryExtractionResult | null = null;
         let resultRecorder: LobeChatTopicResultRecorder | null = null;
-        let tracePayload: ExtractionTracePayload | null = null;
+        let tracePayload: MemoryExtractionTracePayload<
+          MemoryExtractionResult,
+          MemoryExtractionJob | null,
+          GenerateObjectPayload
+        > | null = null;
 
         try {
           const db = await this.db;
@@ -1078,7 +1040,9 @@ export class MemoryExtractionExecutor {
             extractorContextLimit,
           );
 
-          const agentCalls: Partial<Record<MemoryExtractionAgent, AgentCallTrace>> = {};
+          const agentCalls: Partial<
+            Record<MemoryExtractionAgent, MemoryExtractionAgentCallTrace<GenerateObjectPayload>>
+          > = {};
           const agentStartedAt: Partial<Record<MemoryExtractionAgent, number>> = {};
 
           const recordRequest = (agent: MemoryExtractionAgent, request: GenerateObjectPayload) => {
@@ -1261,7 +1225,11 @@ export class MemoryExtractionExecutor {
   }
 
   private async uploadExtractionTrace(
-    payload: ExtractionTracePayload,
+    payload: MemoryExtractionTracePayload<
+      MemoryExtractionResult,
+      MemoryExtractionJob | null,
+      GenerateObjectPayload
+    >,
     userId: string,
     source: string,
     sourceId: string,
