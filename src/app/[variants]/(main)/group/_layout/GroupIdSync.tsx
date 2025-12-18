@@ -17,7 +17,7 @@ const GroupIdSync = () => {
   // Clear activeGroupId when unmounting (leaving group page)
   useUnmount(() => {
     useAgentGroupStore.setState({ activeGroupId: undefined });
-    useChatStore.setState({ activeGroupId: undefined });
+    useChatStore.setState({ activeGroupId: undefined, activeTopicId: undefined });
   });
 
   return null;
