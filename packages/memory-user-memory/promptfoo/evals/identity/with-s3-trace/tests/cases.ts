@@ -13,7 +13,7 @@ interface PromptfooTestCase {
   vars: Record<string, unknown>;
 }
 
-const tracesDir = join(dirname(fileURLToPath(import.meta.url)), './datasets/traces');
+const tracesDir = join(dirname(fileURLToPath(import.meta.url)), '../datasets');
 
 const identityShouldDedupe: PromptfooAssert = {
   type: 'javascript',

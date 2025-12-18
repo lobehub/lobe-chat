@@ -208,7 +208,7 @@ Choose the appropriate memoryType:
 1. Analyze the conversation for identity layer information
 2. Extract each distinct identity memory as a separate item
 3. Ensure all memories are self-contained (no pronouns, complete context)
-4. Return a JSON object conforming to the schema above with `withIdentities.actions.add|update|remove` arrays (empty when none)
+4. Return a JSON object conforming to the schema above with arrays (empty when none, e.g. `withIdentities: { "add": [], "update": [], "remove": [] }` if no any operations)
 5. No matter what the language of the retrieved language is, always use {{ language }} for output
 
 Respond with valid JSON without commentary.
