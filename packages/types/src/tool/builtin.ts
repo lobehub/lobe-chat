@@ -344,6 +344,11 @@ export interface TriggerSpeakParams extends GroupOrchestrationBaseParams {
    * Optional instruction for the agent
    */
   instruction?: string;
+  /**
+   * If true, the orchestration will end after this agent responds,
+   * without calling the supervisor again.
+   */
+  skipCallSupervisor?: boolean;
 }
 
 /**
@@ -358,6 +363,11 @@ export interface TriggerBroadcastParams extends GroupOrchestrationBaseParams {
    * Optional instruction for the agents
    */
   instruction?: string;
+  /**
+   * If true, the orchestration will end after all agents respond,
+   * without calling the supervisor again.
+   */
+  skipCallSupervisor?: boolean;
   /**
    * The tool message ID that triggered the broadcast
    * Used as parentId for agent responses to build correct message tree
@@ -380,6 +390,28 @@ export interface TriggerDelegateParams extends GroupOrchestrationBaseParams {
 }
 
 /**
+ * Params for triggerExecuteTask callback
+ */
+export interface TriggerExecuteTaskParams extends GroupOrchestrationBaseParams {
+  /**
+   * The agent ID to execute the task
+   */
+  agentId: string;
+  /**
+   * The task description for the agent
+   */
+  task: string;
+  /**
+   * Optional timeout in milliseconds
+   */
+  timeout?: number;
+  /**
+   * The tool message ID that triggered the task
+   */
+  toolMessageId: string;
+}
+
+/**
  * Group Orchestration callbacks for group management tools
  * These callbacks are used to trigger the next phase in multi-agent orchestration
  */
@@ -393,6 +425,11 @@ export interface GroupOrchestrationCallbacks {
    * Trigger delegate to a specific agent
    */
   triggerDelegate: (params: TriggerDelegateParams) => Promise<void>;
+
+  /**
+   * Trigger async task execution for an agent
+   */
+  triggerExecuteTask: (params: TriggerExecuteTaskParams) => Promise<void>;
 
   /**
    * Trigger speak to a specific agent

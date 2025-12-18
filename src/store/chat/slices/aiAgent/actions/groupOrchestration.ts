@@ -1,13 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import type { AgentState, GroupOrchestrationContext } from '@lobechat/agent-runtime';
-import { GroupOrchestrationRuntime } from '@lobechat/agent-runtime';
+import type { AgentState, ExecutorResult } from '@lobechat/agent-runtime';
+import { GroupOrchestrationRuntime, GroupOrchestrationSupervisor } from '@lobechat/agent-runtime';
 import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
-import {
-  GroupOrchestrationSupervisor,
-  createGroupOrchestrationExecutors,
-} from '@/store/chat/agents/GroupOrchestration';
+import { createGroupOrchestrationExecutors } from '@/store/chat/agents/GroupOrchestration';
 import { ChatStore } from '@/store/chat/store';
 import type { GroupOrchestrationCallbacks } from '@/store/tool/slices/builtin/types';
 
@@ -20,7 +17,11 @@ const DEFAULT_MAX_ROUNDS = 10;
 
 export interface GroupOrchestrationParams {
   groupId: string;
-  initialPhase: GroupOrchestrationContext;
+  /**
+   * Initial result to start the orchestration
+   * This is the first ExecutorResult that will be passed to Supervisor.decide()
+   */
+  initialResult: ExecutorResult;
   supervisorAgentId: string;
   topicId?: string;
 }
@@ -40,21 +41,27 @@ export interface GroupOrchestrationAction {
 
   /**
    * Trigger speak - called by speak tool when supervisor decides to let an agent speak
-   * This starts the group orchestration loop with speak phase
+   * This starts the group orchestration loop with supervisor_decided result
    */
   triggerSpeak: GroupOrchestrationCallbacks['triggerSpeak'];
 
   /**
    * Trigger broadcast - called by broadcast tool when supervisor decides to broadcast
-   * This starts the group orchestration loop with broadcast phase
+   * This starts the group orchestration loop with supervisor_decided result
    */
   triggerBroadcast: GroupOrchestrationCallbacks['triggerBroadcast'];
 
   /**
    * Trigger delegate - called by delegate tool when supervisor decides to delegate
-   * This starts the group orchestration loop with delegate phase
+   * This starts the group orchestration loop with supervisor_decided result
    */
   triggerDelegate: GroupOrchestrationCallbacks['triggerDelegate'];
+
+  /**
+   * Trigger execute task - called by executeTask tool when supervisor decides to execute an async task
+   * This starts the group orchestration loop with supervisor_decided result
+   */
+  triggerExecuteTask: GroupOrchestrationCallbacks['triggerExecuteTask'];
 }
 
 export const groupOrchestrationSlice: StateCreator<
@@ -65,15 +72,16 @@ export const groupOrchestrationSlice: StateCreator<
 > = (set, get) => ({
   /**
    * Trigger speak - Entry point when supervisor calls speak tool
-   * Starts the group orchestration loop beginning with speak phase
+   * Creates a supervisor_decided result with decision='speak' and starts orchestration
    */
   triggerSpeak: async (params) => {
-    const { supervisorAgentId, agentId, instruction } = params;
+    const { supervisorAgentId, agentId, instruction, skipCallSupervisor } = params;
     log(
-      '[triggerSpeak] Starting orchestration with speak: supervisorAgentId=%s, agentId=%s, instruction=%s',
+      '[triggerSpeak] Starting orchestration with speak: supervisorAgentId=%s, agentId=%s, instruction=%s, skipCallSupervisor=%s',
       supervisorAgentId,
       agentId,
       instruction,
+      skipCallSupervisor,
     );
 
     const groupId = get().activeGroupId;
@@ -82,29 +90,34 @@ export const groupOrchestrationSlice: StateCreator<
       return;
     }
 
-    // Start orchestration loop with speak phase
+    // Start orchestration loop with supervisor_decided result (decision=speak)
     await get().internal_execGroupOrchestration({
       groupId,
       supervisorAgentId,
       topicId: get().activeTopicId,
-      initialPhase: {
-        phase: 'speak',
-        payload: { agentId, instruction },
+      initialResult: {
+        type: 'supervisor_decided',
+        payload: {
+          decision: 'speak',
+          params: { agentId, instruction },
+          skipCallSupervisor,
+        },
       },
     });
   },
 
   /**
    * Trigger broadcast - Entry point when supervisor calls broadcast tool
-   * Starts the group orchestration loop beginning with broadcast phase
+   * Creates a supervisor_decided result with decision='broadcast' and starts orchestration
    */
   triggerBroadcast: async (params) => {
-    const { supervisorAgentId, agentIds, instruction, toolMessageId } = params;
+    const { supervisorAgentId, agentIds, instruction, skipCallSupervisor, toolMessageId } = params;
     log(
-      '[triggerBroadcast] Starting orchestration with broadcast: supervisorAgentId=%s, agentIds=%o, instruction=%s, toolMessageId=%s',
+      '[triggerBroadcast] Starting orchestration with broadcast: supervisorAgentId=%s, agentIds=%o, instruction=%s, skipCallSupervisor=%s, toolMessageId=%s',
       supervisorAgentId,
       agentIds,
       instruction,
+      skipCallSupervisor,
       toolMessageId,
     );
 
@@ -114,19 +127,25 @@ export const groupOrchestrationSlice: StateCreator<
       return;
     }
 
-    // Start orchestration loop with broadcast phase
-    // Pass toolMessageId so agent responses have correct parentId
+    // Start orchestration loop with supervisor_decided result (decision=broadcast)
     await get().internal_execGroupOrchestration({
       groupId,
       supervisorAgentId,
       topicId: get().activeTopicId,
-      initialPhase: { phase: 'broadcast', payload: { agentIds, instruction, toolMessageId } },
+      initialResult: {
+        type: 'supervisor_decided',
+        payload: {
+          decision: 'broadcast',
+          params: { agentIds, instruction, toolMessageId },
+          skipCallSupervisor,
+        },
+      },
     });
   },
 
   /**
    * Trigger delegate - Entry point when supervisor calls delegate tool
-   * Starts the group orchestration loop beginning with delegate phase
+   * Creates a supervisor_decided result with decision='delegate' and starts orchestration
    */
   triggerDelegate: async (params) => {
     const { supervisorAgentId, agentId, reason } = params;
@@ -143,14 +162,55 @@ export const groupOrchestrationSlice: StateCreator<
       return;
     }
 
-    // Start orchestration loop with delegate phase
+    // Start orchestration loop with supervisor_decided result (decision=delegate)
     await get().internal_execGroupOrchestration({
       groupId,
       supervisorAgentId,
       topicId: get().activeTopicId,
-      initialPhase: {
-        phase: 'delegate',
-        payload: { agentId, reason },
+      initialResult: {
+        type: 'supervisor_decided',
+        payload: {
+          decision: 'delegate',
+          params: { agentId, reason },
+          skipCallSupervisor: false, // delegate always ends orchestration
+        },
+      },
+    });
+  },
+
+  /**
+   * Trigger execute task - Entry point when supervisor calls executeTask tool
+   * Creates a supervisor_decided result with decision='execute_task' and starts orchestration
+   */
+  triggerExecuteTask: async (params) => {
+    const { supervisorAgentId, agentId, task, timeout, toolMessageId } = params;
+    log(
+      '[triggerExecuteTask] Starting orchestration with execute_task: supervisorAgentId=%s, agentId=%s, task=%s, timeout=%s, toolMessageId=%s',
+      supervisorAgentId,
+      agentId,
+      task,
+      timeout,
+      toolMessageId,
+    );
+
+    const groupId = get().activeGroupId;
+    if (!groupId) {
+      log('[triggerExecuteTask] No active group, skipping');
+      return;
+    }
+
+    // Start orchestration loop with supervisor_decided result (decision=execute_task)
+    await get().internal_execGroupOrchestration({
+      groupId,
+      supervisorAgentId,
+      topicId: get().activeTopicId,
+      initialResult: {
+        type: 'supervisor_decided',
+        payload: {
+          decision: 'execute_task',
+          params: { agentId, task, timeout, toolMessageId },
+          skipCallSupervisor: false,
+        },
       },
     });
   },
@@ -164,33 +224,34 @@ export const groupOrchestrationSlice: StateCreator<
       triggerSpeak: get().triggerSpeak,
       triggerBroadcast: get().triggerBroadcast,
       triggerDelegate: get().triggerDelegate,
+      triggerExecuteTask: get().triggerExecuteTask,
     };
   },
 
   /**
    * Internal: Execute the Group Orchestration Loop
-   * Called after supervisor decides to speak/broadcast/delegate
+   * Called after supervisor decides to speak/broadcast/delegate/execute_task
    */
   internal_execGroupOrchestration: async (params) => {
-    const { groupId, topicId, initialPhase, supervisorAgentId } = params;
+    const { groupId, topicId, initialResult, supervisorAgentId } = params;
 
     log(
-      '[internal_execGroupOrchestration] Starting orchestration for group: %s, supervisorAgentId: %s, initialPhase: %s',
+      '[internal_execGroupOrchestration] Starting orchestration for group: %s, supervisorAgentId: %s, initialResult: %s',
       groupId,
       supervisorAgentId,
-      initialPhase.phase,
+      initialResult.type,
     );
 
     // 1. Create Orchestration Operation
     const { operationId } = get().startOperation({
       type: 'execAgentRuntime',
       context: { groupId, topicId, agentId: supervisorAgentId },
-      label: `Group Orchestration (${initialPhase.phase})`,
+      label: `Group Orchestration (${initialResult.type})`,
     });
 
     log('[internal_execGroupOrchestration] Created operation: %s', operationId);
 
-    // 2. Get Group Configuration - supervisorAgentId is passed from external
+    // 2. Get Group Configuration
     const groupConfig = {
       supervisorAgentId,
       maxRounds: DEFAULT_MAX_ROUNDS,
@@ -198,15 +259,13 @@ export const groupOrchestrationSlice: StateCreator<
 
     log('[internal_execGroupOrchestration] Group config: %o', groupConfig);
 
-    // 3. Create Orchestration Supervisor
+    // 3. Create Orchestration Supervisor (State Machine)
     const orchestrationSupervisor = new GroupOrchestrationSupervisor({
       supervisorAgentId: groupConfig.supervisorAgentId,
       maxRounds: groupConfig.maxRounds,
     });
 
-    // 4. Create Executors
-    // Note: messageContext.agentId should be supervisorAgentId (for fallback in message creation)
-    // messageMapKey will use groupId (via groupId field) for message storage location
+    // 4. Create Executors (Execution Layer)
     const executors = createGroupOrchestrationExecutors({
       get,
       messageContext: { agentId: supervisorAgentId, groupId, scope: 'group', topicId },
@@ -231,24 +290,19 @@ export const groupOrchestrationSlice: StateCreator<
     // 6. Initialize State
     let state = GroupOrchestrationRuntime.createInitialState({
       operationId,
-      maxRounds: groupConfig.maxRounds,
-      orchestrationRound: 0,
-    } as any);
-
-    // 7. Initial Context - start from the phase triggered by tool
-    let nextContext: GroupOrchestrationContext | undefined = {
-      ...initialPhase,
-      operationId,
-    };
+    });
 
     log(
-      '[internal_execGroupOrchestration] Starting orchestration loop from phase: %s',
-      initialPhase.phase,
+      '[internal_execGroupOrchestration] Starting orchestration loop with initial result: %s',
+      initialResult.type,
     );
 
-    // 8. Orchestration Loop
+    // 7. Orchestration Loop
+    // Start with the initial result (supervisor_decided) and loop until no more results
+    let currentResult: ExecutorResult | undefined = initialResult;
     let stepCount = 0;
-    while (state.status !== 'done' && state.status !== 'error') {
+
+    while (currentResult && state.status !== 'done' && state.status !== 'error') {
       // Check if operation has been cancelled
       const currentOperation = get().operations[operationId];
       if (currentOperation?.status === 'cancelled') {
@@ -257,31 +311,26 @@ export const groupOrchestrationSlice: StateCreator<
         break;
       }
 
-      if (!nextContext) {
-        log('[internal_execGroupOrchestration] No next context, stopping loop');
-        break;
-      }
-
       stepCount++;
       log(
-        '[internal_execGroupOrchestration][step-%d]: phase=%s, status=%s, round=%d',
+        '[internal_execGroupOrchestration][step-%d]: result=%s, status=%s',
         stepCount,
-        nextContext.phase,
+        currentResult.type,
         state.status,
-        (state as any).orchestrationRound || 0,
       );
 
-      const result = await runtime.step(state, nextContext);
+      const output = await runtime.step(state, currentResult);
 
       log(
-        '[internal_execGroupOrchestration] Step %d completed, events: %d, newStatus=%s',
+        '[internal_execGroupOrchestration] Step %d completed, events: %d, newStatus=%s, nextResult=%s',
         stepCount,
-        result.events.length,
-        result.newState.status,
+        output.events.length,
+        output.newState.status,
+        output.result?.type || 'none',
       );
 
-      state = result.newState;
-      nextContext = result.nextContext;
+      state = output.newState;
+      currentResult = output.result;
     }
 
     log(
@@ -290,7 +339,7 @@ export const groupOrchestrationSlice: StateCreator<
       stepCount,
     );
 
-    // 9. Complete Operation
+    // 8. Complete Operation
     if (state.status === 'done') {
       get().completeOperation(operationId);
       log('[internal_execGroupOrchestration] Operation completed successfully');

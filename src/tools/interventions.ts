@@ -2,6 +2,10 @@ import {
   AgentBuilderInterventions,
   AgentBuilderManifest,
 } from '@lobechat/builtin-tool-agent-builder/client';
+import {
+  GroupManagementInterventions,
+  GroupManagementManifest,
+} from '@lobechat/builtin-tool-group-management/client';
 import { GTDInterventions, GTDManifest } from '@lobechat/builtin-tool-gtd/client';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinIntervention } from '@lobechat/types';
@@ -18,6 +22,7 @@ import { LocalSystemInterventions } from './local-system/Intervention';
 export const BuiltinToolInterventions: Record<string, Record<string, any>> = {
   [AgentBuilderManifest.identifier]: AgentBuilderInterventions,
   [CloudCodeInterpreterManifest.identifier]: CodeInterpreterInterventions,
+  [GroupManagementManifest.identifier]: GroupManagementInterventions,
   [GTDManifest.identifier]: GTDInterventions,
   [LocalSystemManifest.identifier]: LocalSystemInterventions,
 };

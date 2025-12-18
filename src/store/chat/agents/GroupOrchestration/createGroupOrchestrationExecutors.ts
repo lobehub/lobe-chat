@@ -1,13 +1,13 @@
 import type {
-  GroupOrchestrationContext,
   GroupOrchestrationEvent,
   GroupOrchestrationExecutor,
-  GroupOrchestrationInstruction,
-  GroupOrchestrationInstructionAgentSpoke,
-  GroupOrchestrationInstructionAgentsBroadcasted,
-  GroupOrchestrationInstructionBroadcast,
-  GroupOrchestrationInstructionFinish,
-  GroupOrchestrationInstructionSpeak,
+  GroupOrchestrationExecutorOutput,
+  SupervisorInstruction,
+  SupervisorInstructionCallAgent,
+  SupervisorInstructionCallSupervisor,
+  SupervisorInstructionDelegate,
+  SupervisorInstructionExecAsyncTask,
+  SupervisorInstructionParallelCallAgents,
 } from '@lobechat/agent-runtime';
 import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
@@ -32,29 +32,44 @@ export interface GroupOrchestrationExecutorsContext {
 /**
  * Creates executors for Group Orchestration
  *
- * Control flow:
+ * Architecture:
+ * - Supervisor (State Machine): Receives ExecutorResult → Returns SupervisorInstruction
+ * - Executor (Execution Layer): Receives SupervisorInstruction → Returns ExecutorResult
+ *
+ * Flow:
  * ```
- * call_supervisor Executor
+ * Supervisor.decide(init)
  *        │
- *        ├─► internal_execAgentRuntime(Supervisor)
- *        │        │
- *        │        ├─► Supervisor calls speak tool
- *        │        │        │
- *        │        │        └─► speak tool handler returns false
- *        │        │             │
- *        │        │             ├─► Terminates Supervisor Runtime
- *        │        │             └─► tool handler internally triggers speak Executor
- *        │        │
- *        │        └─► Supervisor finishes normally (no group-mgmt tool)
- *        │                │
- *        │                └─► Returns here, Orchestration ends
- *        │
- *        └─► return { status: 'done' }  // Only reached on normal finish
+ *        └─► call_supervisor instruction
+ *                │
+ *                └─► call_supervisor Executor
+ *                        │
+ *                        ├─► internal_execAgentRuntime(Supervisor)
+ *                        │        │
+ *                        │        ├─► Supervisor calls speak tool
+ *                        │        │        │
+ *                        │        │        └─► tool handler triggers orchestration
+ *                        │        │
+ *                        │        └─► Supervisor finishes normally
+ *                        │
+ *                        └─► Returns supervisor_decided result
+ *                                │
+ *                                └─► Supervisor.decide(supervisor_decided)
+ *                                        │
+ *                                        └─► call_agent instruction
+ *                                                │
+ *                                                └─► call_agent Executor
+ *                                                        │
+ *                                                        └─► Returns agent_spoke result
+ *                                                                │
+ *                                                                └─► Supervisor.decide(agent_spoke)
+ *                                                                        │
+ *                                                                        └─► call_supervisor OR finish
  * ```
  */
 export const createGroupOrchestrationExecutors = (
   context: GroupOrchestrationExecutorsContext,
-): Partial<Record<GroupOrchestrationInstruction['type'], GroupOrchestrationExecutor>> => {
+): Partial<Record<SupervisorInstruction['type'], GroupOrchestrationExecutor>> => {
   const { get, messageContext, orchestrationOperationId, supervisorAgentId } = context;
 
   // Pre-compute the chat key for message fetching
@@ -72,13 +87,18 @@ export const createGroupOrchestrationExecutors = (
      * call_supervisor Executor
      * Executes the Supervisor Agent completely
      *
-     * Note: When Supervisor calls a group-management tool,
-     * the tool handler returns false to terminate the Runtime,
-     * then the tool handler internally triggers the next step (speak/broadcast etc.)
+     * Returns: supervisor_decided result with the decision made by supervisor
+     *
+     * Note: When Supervisor calls a group-management tool (speak/broadcast/delegate),
+     * the tool returns `stop: true` which terminates the AgentRuntime.
+     * The tool also registers an afterCompletion callback to trigger the orchestration.
      */
-    call_supervisor: async (instruction, state) => {
+    call_supervisor: async (instruction, state): Promise<GroupOrchestrationExecutorOutput> => {
+      const { supervisorAgentId: agentId } = (instruction as SupervisorInstructionCallSupervisor)
+        .payload;
+
       const sessionLogId = `${state.operationId}:call_supervisor`;
-      log(`[${sessionLogId}] Starting supervisor agent: ${supervisorAgentId}`);
+      log(`[${sessionLogId}] Starting supervisor agent: ${agentId}`);
 
       const messages = getMessages();
       const lastMessage = messages.at(-1);
@@ -88,9 +108,15 @@ export const createGroupOrchestrationExecutors = (
         return {
           events: [{ type: 'supervisor_finished' }] as GroupOrchestrationEvent[],
           newState: { ...state, status: 'done' },
-          nextContext: undefined,
+          // Supervisor finished without action - end orchestration
+          result: undefined,
         };
       }
+
+      // Variable to capture the decision from tool handler
+      // let decision: ExecutorResult['type'] | undefined;
+      // let decisionParams: Record<string, unknown> = {};
+      // let skipCallSupervisor = false;
 
       // Execute Supervisor agent with the supervisor's agentId in context
       // Mark isSupervisor=true so assistant messages get metadata.isSupervisor for UI rendering
@@ -105,30 +131,44 @@ export const createGroupOrchestrationExecutors = (
 
       log(`[${sessionLogId}] Supervisor agent finished`);
 
-      // If we reach here, Supervisor finished without calling group-management tool
-      // Orchestration ends
+      // Check what decision was made by the supervisor
+      // This is captured from the groupOrchestration callbacks registered by tools
+      // const orchestrationCallbacks = get().getGroupOrchestrationCallbacks();
+
+      // If no tool was called (supervisor finished normally), end orchestration
+      // The actual decision is captured via the afterCompletion callbacks
+      // For now, return a finish decision if we reach here
       return {
         events: [{ type: 'supervisor_finished' }] as GroupOrchestrationEvent[],
-        newState: { ...state, status: 'done' },
-        nextContext: undefined,
+        newState: state,
+        result: {
+          payload: {
+            decision: 'finish',
+            params: { reason: 'supervisor_completed_without_action' },
+            skipCallSupervisor: false,
+          },
+          type: 'supervisor_decided',
+        },
       };
     },
 
     /**
-     * speak Executor
-     * Executes target Agent completely
+     * call_agent Executor
+     * Executes a single target Agent completely
+     *
+     * Returns: agent_spoke result
      *
      * If the Supervisor provides an instruction, it will be injected as a virtual
      * User Message at the end of the messages array. This improves instruction-following
      * as User Messages have stronger influence on model behavior.
      */
-    speak: async (instruction, state) => {
+    call_agent: async (instruction, state): Promise<GroupOrchestrationExecutorOutput> => {
       const { agentId, instruction: agentInstruction } = (
-        instruction as GroupOrchestrationInstructionSpeak
+        instruction as SupervisorInstructionCallAgent
       ).payload;
 
-      const sessionLogId = `${state.operationId}:speak`;
-      log(`[${sessionLogId}] Speaking agent: ${agentId}, instruction: ${agentInstruction}`);
+      const sessionLogId = `${state.operationId}:call_agent`;
+      log(`[${sessionLogId}] Calling agent: ${agentId}, instruction: ${agentInstruction}`);
 
       const messages = getMessages();
       const lastMessage = messages.at(-1);
@@ -138,10 +178,7 @@ export const createGroupOrchestrationExecutors = (
         return {
           events: [{ agentId, type: 'agent_spoke' }] as GroupOrchestrationEvent[],
           newState: state,
-          nextContext: {
-            payload: { agentId, completed: true },
-            phase: 'agent_spoke',
-          } as GroupOrchestrationContext,
+          result: { payload: { agentId, completed: true }, type: 'agent_spoke' },
         };
       }
 
@@ -175,33 +212,35 @@ export const createGroupOrchestrationExecutors = (
 
       log(`[${sessionLogId}] Agent ${agentId} finished speaking`);
 
-      // Return agent_spoke phase
+      // Return agent_spoke result
       return {
         events: [{ agentId, type: 'agent_spoke' }] as GroupOrchestrationEvent[],
         newState: state,
-        nextContext: {
+        result: {
           payload: { agentId, completed: true },
-          phase: 'agent_spoke',
-        } as GroupOrchestrationContext,
+          type: 'agent_spoke',
+        },
       };
     },
 
     /**
-     * broadcast Executor
+     * parallel_call_agents Executor
      * Executes multiple Agents in parallel
+     *
+     * Returns: agents_broadcasted result
      *
      * If the Supervisor provides an instruction, it will be injected as a virtual
      * User Message at the end of the messages array. This improves instruction-following
      * as User Messages have stronger influence on model behavior.
      */
-    broadcast: async (instruction, state) => {
+    parallel_call_agents: async (instruction, state): Promise<GroupOrchestrationExecutorOutput> => {
       const {
         agentIds,
         instruction: agentInstruction,
         toolMessageId,
-      } = (instruction as GroupOrchestrationInstructionBroadcast).payload;
+      } = (instruction as SupervisorInstructionParallelCallAgents).payload;
 
-      const sessionLogId = `${state.operationId}:broadcast`;
+      const sessionLogId = `${state.operationId}:parallel_call_agents`;
       log(
         `[${sessionLogId}] Broadcasting to agents: ${agentIds.join(', ')}, instruction: ${agentInstruction}, toolMessageId: ${toolMessageId}`,
       );
@@ -213,10 +252,10 @@ export const createGroupOrchestrationExecutors = (
         return {
           events: [{ agentIds, type: 'agents_broadcasted' }] as GroupOrchestrationEvent[],
           newState: state,
-          nextContext: {
+          result: {
             payload: { agentIds, completed: true },
-            phase: 'agents_broadcasted',
-          } as GroupOrchestrationContext,
+            type: 'agents_broadcasted',
+          },
         };
       }
 
@@ -255,93 +294,117 @@ export const createGroupOrchestrationExecutors = (
 
       log(`[${sessionLogId}] All agents finished broadcasting`);
 
+      // Return agents_broadcasted result
       return {
         events: [{ agentIds, type: 'agents_broadcasted' }] as GroupOrchestrationEvent[],
         newState: state,
-        nextContext: {
+        result: {
           payload: { agentIds, completed: true },
-          phase: 'agents_broadcasted',
-        } as GroupOrchestrationContext,
+          type: 'agents_broadcasted',
+        },
       };
     },
 
     /**
-     * agent_spoke Executor
-     * After Agent response completes, return to call_supervisor to continue loop
+     * delegate Executor
+     * Delegates control to another agent
+     *
+     * Returns: delegated result
      */
-    agent_spoke: async (instruction, state) => {
-      const { agentId } = (instruction as GroupOrchestrationInstructionAgentSpoke).payload;
-      const newRound = ((state as any).orchestrationRound || 0) + 1;
-      const maxRounds = (state as any).maxRounds || 10;
+    delegate: async (instruction, state): Promise<GroupOrchestrationExecutorOutput> => {
+      const { agentId, reason } = (instruction as SupervisorInstructionDelegate).payload;
 
-      const sessionLogId = `${state.operationId}:agent_spoke`;
-      log(`[${sessionLogId}] Agent ${agentId} spoke, round ${newRound}/${maxRounds}`);
+      const sessionLogId = `${state.operationId}:delegate`;
+      log(`[${sessionLogId}] Delegating to agent: ${agentId}, reason: ${reason}`);
 
-      if (newRound >= maxRounds) {
-        log(`[${sessionLogId}] Max rounds exceeded`);
+      const messages = getMessages();
+      const lastMessage = messages.at(-1);
+
+      if (!lastMessage) {
+        log(`[${sessionLogId}] No messages found, cannot delegate`);
         return {
-          events: [{ type: 'max_rounds_exceeded' }] as GroupOrchestrationEvent[],
-          newState: { ...state, status: 'done' },
-          nextContext: undefined,
+          events: [] as GroupOrchestrationEvent[],
+          newState: state,
+          result: {
+            payload: { agentId, completed: true },
+            type: 'delegated',
+          },
         };
       }
 
+      // Execute delegated Agent
+      await get().internal_execAgentRuntime({
+        context: { ...messageContext, subAgentId: agentId },
+        messages,
+        parentMessageId: lastMessage.id,
+        parentMessageType: lastMessage.role as 'user' | 'assistant' | 'tool',
+        parentOperationId: orchestrationOperationId,
+      });
+
+      log(`[${sessionLogId}] Delegated agent ${agentId} finished`);
+
+      // Return delegated result
       return {
         events: [] as GroupOrchestrationEvent[],
-        newState: { ...state, orchestrationRound: newRound } as any,
-        nextContext: {
-          payload: { round: newRound },
-          phase: 'call_supervisor',
-        } as GroupOrchestrationContext,
+        newState: state,
+        result: {
+          payload: { agentId, completed: true },
+          type: 'delegated',
+        },
       };
     },
 
     /**
-     * agents_broadcasted Executor
-     * Same logic as agent_spoke
+     * exec_async_task Executor
+     * Executes an async task for an agent
+     *
+     * Returns: task_completed result
      */
-    agents_broadcasted: async (instruction, state) => {
-      const { agentIds } = (instruction as GroupOrchestrationInstructionAgentsBroadcasted).payload;
-      const newRound = ((state as any).orchestrationRound || 0) + 1;
-      const maxRounds = (state as any).maxRounds || 10;
+    exec_async_task: async (instruction, state): Promise<GroupOrchestrationExecutorOutput> => {
+      const { agentId, task, timeout, toolMessageId } = (
+        instruction as SupervisorInstructionExecAsyncTask
+      ).payload;
 
-      const sessionLogId = `${state.operationId}:agents_broadcasted`;
+      const sessionLogId = `${state.operationId}:exec_async_task`;
       log(
-        `[${sessionLogId}] Agents ${agentIds.join(', ')} broadcasted, round ${newRound}/${maxRounds}`,
+        `[${sessionLogId}] Executing async task for agent: ${agentId}, task: ${task}, timeout: ${timeout}`,
       );
 
-      if (newRound >= maxRounds) {
-        log(`[${sessionLogId}] Max rounds exceeded`);
-        return {
-          events: [{ type: 'max_rounds_exceeded' }] as GroupOrchestrationEvent[],
-          newState: { ...state, status: 'done' },
-          nextContext: undefined,
-        };
-      }
+      const messages = getMessages();
 
+      // Inject task as virtual user message
+      const now = Date.now();
+      const messagesWithTask: UIChatMessage[] = [
+        ...messages,
+        {
+          content: task,
+          createdAt: now,
+          id: `virtual_task_instruction_${now}`,
+          meta: {},
+          role: 'user',
+          updatedAt: now,
+        },
+      ];
+
+      // Execute agent with task
+      await get().internal_execAgentRuntime({
+        context: { ...messageContext, subAgentId: agentId },
+        messages: messagesWithTask,
+        parentMessageId: toolMessageId,
+        parentMessageType: 'tool',
+        parentOperationId: orchestrationOperationId,
+      });
+
+      log(`[${sessionLogId}] Async task for agent ${agentId} completed`);
+
+      // Return task_completed result
       return {
         events: [] as GroupOrchestrationEvent[],
-        newState: { ...state, orchestrationRound: newRound } as any,
-        nextContext: {
-          payload: { round: newRound },
-          phase: 'call_supervisor',
-        } as GroupOrchestrationContext,
-      };
-    },
-
-    /**
-     * finish Executor
-     * Ends the orchestration
-     */
-    finish: async (instruction, state) => {
-      const { reason } = instruction as GroupOrchestrationInstructionFinish;
-      const sessionLogId = `${state.operationId}:finish`;
-      log(`[${sessionLogId}] Finishing orchestration: ${reason}`);
-
-      return {
-        events: [{ reason, type: 'done' }] as GroupOrchestrationEvent[],
-        newState: { ...state, status: 'done' },
-        nextContext: undefined,
+        newState: state,
+        result: {
+          payload: { agentId, success: true },
+          type: 'task_completed',
+        },
       };
     },
   };

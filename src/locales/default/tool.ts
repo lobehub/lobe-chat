@@ -7,6 +7,12 @@ export default {
       cost: '费用',
       failed: '任务失败',
       interrupted: '已中断',
+      intervention: {
+        taskPlaceholder: '请详细描述需要 Agent 执行的任务...',
+        timeout: '最长执行时间',
+        timeoutUnit: '分钟',
+        unknownAgent: '未知 Agent',
+      },
       processing: '执行中...',
       steps: '执行步数',
       task: '任务内容',

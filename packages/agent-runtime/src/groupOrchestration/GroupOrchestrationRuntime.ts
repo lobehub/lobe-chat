@@ -1,25 +1,30 @@
+import type { AgentState } from '../types/state';
 import type {
-  AgentState,
-  GroupOrchestrationContext,
+  ExecutorResult,
   GroupOrchestrationExecutor,
-  GroupOrchestrationExecutorResult,
-  GroupOrchestrationInstruction,
+  GroupOrchestrationExecutorOutput,
   GroupOrchestrationRuntimeConfig,
   IGroupOrchestrationSupervisor,
-} from '../types';
+  SupervisorInstruction,
+} from './types';
 
 /**
  * GroupOrchestrationRuntime - Specialized Runtime for Multi-Agent collaboration
  *
- * Differences from AgentRuntime:
- * - Uses IGroupOrchestrationSupervisor instead of Agent
- * - Uses GroupOrchestrationContext instead of AgentRuntimeContext
- * - Uses GroupOrchestrationInstruction instead of AgentInstruction
+ * Architecture:
+ * - Supervisor (State Machine): Receives ExecutorResult → Returns SupervisorInstruction
+ * - Executor (Execution Layer): Receives SupervisorInstruction → Returns ExecutorResult
+ * - Runtime: Orchestrates the loop between Supervisor and Executor
+ *
+ * Flow:
+ * 1. Start with 'init' result
+ * 2. Supervisor decides next instruction based on result
+ * 3. Executor executes the instruction
+ * 4. Executor returns result
+ * 5. Repeat from step 2 until Supervisor returns 'finish' instruction
  */
 export class GroupOrchestrationRuntime {
-  private executors: Partial<
-    Record<GroupOrchestrationInstruction['type'], GroupOrchestrationExecutor>
-  >;
+  private executors: Partial<Record<SupervisorInstruction['type'], GroupOrchestrationExecutor>>;
   private operationId?: string;
   private getOperation?: GroupOrchestrationRuntimeConfig['getOperation'];
 
@@ -34,11 +39,12 @@ export class GroupOrchestrationRuntime {
 
   /**
    * Execute a single step of the orchestration loop
+   *
+   * @param state - Current agent state
+   * @param result - The result from the previous step (or 'init' for the first step)
+   * @returns The executor output containing new state and next result
    */
-  async step(
-    state: AgentState,
-    context: GroupOrchestrationContext,
-  ): Promise<GroupOrchestrationExecutorResult> {
+  async step(state: AgentState, result: ExecutorResult): Promise<GroupOrchestrationExecutorOutput> {
     // 1. Increment step count
     const newState = structuredClone(state);
     newState.stepCount = (newState.stepCount || 0) + 1;
@@ -55,27 +61,72 @@ export class GroupOrchestrationRuntime {
           },
         ],
         newState,
-        nextContext: undefined,
+        result: undefined,
       };
     }
 
-    // 3. Get instruction from supervisor
-    const instruction = await this.supervisor.runner(context, newState);
+    // 3. Get instruction from supervisor based on result
+    const instruction = await this.supervisor.decide(result, newState);
 
-    // 4. Get executor for instruction type
+    // 4. Check if we should finish
+    if (instruction.type === 'finish') {
+      newState.status = 'done';
+      return {
+        events: [
+          {
+            reason: instruction.reason,
+            type: 'done',
+          },
+        ],
+        newState,
+        result: undefined,
+      };
+    }
+
+    // 5. Get executor for instruction type
     const executor = this.executors[instruction.type];
     if (!executor) {
       throw new Error(`No executor found for instruction type: ${instruction.type}`);
     }
 
-    // 5. Execute instruction
-    const result = await executor(instruction, newState);
+    // 6. Execute instruction
+    const executorOutput = await executor(instruction, newState);
 
-    // 6. Preserve step count and lastModified
-    result.newState.stepCount = newState.stepCount;
-    result.newState.lastModified = newState.lastModified;
+    // 7. Preserve step count and lastModified
+    executorOutput.newState.stepCount = newState.stepCount;
+    executorOutput.newState.lastModified = newState.lastModified;
 
-    return result;
+    return executorOutput;
+  }
+
+  /**
+   * Run the full orchestration loop until completion
+   *
+   * @param initialState - Initial agent state
+   * @param groupId - Optional group ID for the orchestration
+   * @returns Final agent state after orchestration completes
+   */
+  async run(initialState: AgentState, groupId?: string): Promise<AgentState> {
+    let state = initialState;
+    let result: ExecutorResult | undefined = {
+      payload: { groupId },
+      type: 'init',
+    };
+
+    while (result) {
+      const output = await this.step(state, result);
+      state = output.newState;
+      result = output.result;
+
+      // Check for abort
+      const abortController = this.getAbortController();
+      if (abortController?.signal.aborted) {
+        state.status = 'done';
+        break;
+      }
+    }
+
+    return state;
   }
 
   /**
