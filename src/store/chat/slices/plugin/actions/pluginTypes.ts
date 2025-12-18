@@ -153,9 +153,10 @@ export const pluginTypes: StateCreator<
       const operation = operationId ? get().operations[operationId] : undefined;
       const context = operationId ? { operationId } : undefined;
 
-      // Get agent ID and group ID from operation context
+      // Get agent ID, group ID, and topic ID from operation context
       const agentId = operation?.context?.agentId;
       const groupId = operation?.context?.groupId;
+      const topicId = operation?.context?.topicId;
 
       // Get group orchestration callbacks if available (for group management tools)
       const groupOrchestration = get().getGroupOrchestrationCallbacks?.();
@@ -207,6 +208,7 @@ export const pluginTypes: StateCreator<
           registerAfterCompletion,
           signal: operation?.abortController?.signal,
           stepContext,
+          topicId,
         });
 
       // Use optimisticUpdateToolMessage to batch update content, state, error, metadata

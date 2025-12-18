@@ -309,6 +309,12 @@ export interface BuiltinToolContext {
    * Computed by AgentRuntime and passed to Tool Executors
    */
   stepContext?: RuntimeStepContext;
+
+  /**
+   * The current topic ID (only available when operating within a topic)
+   * Used by tools that need to create messages or operations within a topic
+   */
+  topicId?: string | null;
 }
 
 /**

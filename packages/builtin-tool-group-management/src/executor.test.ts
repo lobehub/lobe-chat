@@ -34,6 +34,21 @@ vi.mock('@/services/agent', () => ({
   },
 }));
 
+// Mock lambdaClient for Task APIs
+const mockExecGroupSubAgentTask = vi.fn();
+const mockGetTaskStatus = vi.fn();
+const mockInterruptTask = vi.fn();
+
+vi.mock('@/libs/trpc/client', () => ({
+  lambdaClient: {
+    aiAgent: {
+      execGroupSubAgentTask: { mutate: (...args: any[]) => mockExecGroupSubAgentTask(...args) },
+      getTaskStatus: { query: (...args: any[]) => mockGetTaskStatus(...args) },
+      interruptTask: { mutate: (...args: any[]) => mockInterruptTask(...args) },
+    },
+  },
+}));
+
 describe('GroupManagementExecutor', () => {
   const createMockContext = (
     groupOrchestration?: GroupOrchestrationCallbacks,
@@ -564,6 +579,304 @@ describe('GroupManagementExecutor', () => {
         },
         groupId: 'test-group-id',
       });
+    });
+  });
+
+  describe('executeTask', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should return error when no groupId in context', async () => {
+      const ctx = createMockContext();
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('No group context available');
+    });
+
+    it('should return error when no topicId in context', async () => {
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('No topic context available');
+    });
+
+    it('should handle task creation failure', async () => {
+      mockExecGroupSubAgentTask.mockResolvedValue({
+        error: 'Agent not found',
+        success: false,
+        threadId: 'thread-123',
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to create task: Agent not found');
+      expect(result.state).toEqual({
+        error: 'Agent not found',
+        status: 'failed',
+        threadId: 'thread-123',
+      });
+    });
+
+    it('should successfully complete task after polling', async () => {
+      mockExecGroupSubAgentTask.mockResolvedValue({
+        success: true,
+        threadId: 'thread-123',
+      });
+
+      mockGetTaskStatus.mockResolvedValue({
+        cost: { total: 0.05 },
+        result: 'Task completed with result XYZ',
+        status: 'completed',
+        stepCount: 3,
+        usage: { completion_tokens: 100, prompt_tokens: 50, total_tokens: 150 },
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.content).toBe('Task completed with result XYZ');
+      expect(result.state).toEqual({
+        cost: { total: 0.05 },
+        status: 'completed',
+        stepCount: 3,
+        threadId: 'thread-123',
+        usage: { completion_tokens: 100, prompt_tokens: 50, total_tokens: 150 },
+      });
+      expect(mockExecGroupSubAgentTask).toHaveBeenCalledWith({
+        agentId: 'agent-1',
+        groupId: 'test-group-id',
+        instruction: 'Do something',
+        parentMessageId: 'test-message-id',
+        topicId: 'test-topic-id',
+      });
+    });
+
+    it('should return failed status when task fails', async () => {
+      mockExecGroupSubAgentTask.mockResolvedValue({
+        success: true,
+        threadId: 'thread-123',
+      });
+
+      mockGetTaskStatus.mockResolvedValue({
+        error: 'Model API error',
+        status: 'failed',
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Task failed: Model API error');
+      expect(result.state).toEqual({
+        error: 'Model API error',
+        status: 'failed',
+        threadId: 'thread-123',
+      });
+    });
+
+    it('should return cancelled status when task is cancelled', async () => {
+      mockExecGroupSubAgentTask.mockResolvedValue({
+        success: true,
+        threadId: 'thread-123',
+      });
+
+      mockGetTaskStatus.mockResolvedValue({
+        status: 'cancel',
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Task was cancelled');
+      expect(result.state).toEqual({
+        status: 'cancelled',
+        threadId: 'thread-123',
+      });
+    });
+
+    it('should handle signal interruption', async () => {
+      mockExecGroupSubAgentTask.mockResolvedValue({
+        success: true,
+        threadId: 'thread-123',
+      });
+
+      // Mock processing status (task still running)
+      mockGetTaskStatus.mockResolvedValue({
+        status: 'processing',
+      });
+
+      const abortController = new AbortController();
+      // Abort immediately
+      abortController.abort();
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        signal: abortController.signal,
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Task was interrupted by user');
+      expect(result.state).toEqual({
+        status: 'interrupted',
+        threadId: 'thread-123',
+      });
+    });
+
+    it('should handle API errors gracefully', async () => {
+      mockExecGroupSubAgentTask.mockRejectedValue(new Error('Network error'));
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to execute task: Network error');
+    });
+
+    it('should use default result message when completed without result', async () => {
+      mockExecGroupSubAgentTask.mockResolvedValue({
+        success: true,
+        threadId: 'thread-123',
+      });
+
+      mockGetTaskStatus.mockResolvedValue({
+        status: 'completed',
+        // No result field
+      });
+
+      const ctx: BuiltinToolContext = {
+        ...createMockContext(),
+        groupId: 'test-group-id',
+        topicId: 'test-topic-id',
+      };
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something' },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.content).toBe('Task completed successfully');
+    });
+  });
+
+  describe('interrupt', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should successfully interrupt a running task', async () => {
+      mockInterruptTask.mockResolvedValue({
+        operationId: 'op-123',
+        success: true,
+      });
+
+      const ctx = createMockContext();
+
+      const result = await groupManagementExecutor.interrupt({ taskId: 'thread-123' }, ctx);
+
+      expect(result.success).toBe(true);
+      expect(result.content).toBe('Task thread-123 has been cancelled successfully');
+      expect(result.state).toEqual({
+        cancelled: true,
+        operationId: 'op-123',
+        taskId: 'thread-123',
+      });
+      expect(mockInterruptTask).toHaveBeenCalledWith({
+        threadId: 'thread-123',
+      });
+    });
+
+    it('should handle failed interrupt attempt', async () => {
+      mockInterruptTask.mockResolvedValue({
+        success: false,
+      });
+
+      const ctx = createMockContext();
+
+      const result = await groupManagementExecutor.interrupt({ taskId: 'thread-123' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to cancel task thread-123');
+      expect(result.state).toEqual({
+        cancelled: false,
+        taskId: 'thread-123',
+      });
+    });
+
+    it('should handle API errors gracefully', async () => {
+      mockInterruptTask.mockRejectedValue(new Error('Task not found'));
+
+      const ctx = createMockContext();
+
+      const result = await groupManagementExecutor.interrupt({ taskId: 'thread-123' }, ctx);
+
+      expect(result.success).toBe(false);
+      expect(result.content).toBe('Failed to interrupt task: Task not found');
     });
   });
 });

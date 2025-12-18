@@ -1,6 +1,9 @@
 // agent-builder
 import { AgentBuilderManifest } from '@lobechat/builtin-tool-agent-builder';
 import { AgentBuilderRenders } from '@lobechat/builtin-tool-agent-builder/client';
+// group-management
+import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
+import { GroupManagementRenders } from '@lobechat/builtin-tool-group-management/client';
 // gtd
 import { GTDManifest, GTDRenders } from '@lobechat/builtin-tool-gtd/client';
 import { BuiltinRender } from '@lobechat/types';
@@ -25,6 +28,7 @@ import { WebBrowsingRenders } from './web-browsing/Render';
 const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
   [AgentBuilderManifest.identifier]: AgentBuilderRenders as Record<string, BuiltinRender>,
   [CodeInterpreterManifest.identifier]: CodeInterpreterRenders as Record<string, BuiltinRender>,
+  [GroupManagementManifest.identifier]: GroupManagementRenders as Record<string, BuiltinRender>,
   [GTDManifest.identifier]: GTDRenders as Record<string, BuiltinRender>,
   [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,
   [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,

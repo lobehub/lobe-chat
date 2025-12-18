@@ -239,3 +239,64 @@ export interface ExecGroupAgentResponse {
   /** The user message ID created for this operation */
   userMessageId: string;
 }
+
+// ============ Group SubAgent Task Execution Types ============
+
+/**
+ * Parameters for execGroupSubAgentTask - execute SubAgent task in Group chat
+ * This is called by Supervisor to delegate tasks to SubAgents
+ */
+export interface ExecGroupSubAgentTaskParams {
+  /** The SubAgent ID to execute the task */
+  agentId: string;
+  /** The Group ID (required) */
+  groupId: string;
+  /** Task instruction/prompt for the SubAgent */
+  instruction: string;
+  /** The parent message ID (Supervisor's tool call message) */
+  parentMessageId: string;
+  /** Timeout in milliseconds (optional) */
+  timeout?: number;
+  /** The Topic ID */
+  topicId: string;
+}
+
+/**
+ * Result from execGroupSubAgentTask
+ */
+export interface ExecGroupSubAgentTaskResult {
+  /** The assistant message ID created for this task */
+  assistantMessageId: string;
+  /** Error message if task failed to start */
+  error?: string;
+  /** Operation ID for tracking execution status */
+  operationId: string;
+  /** Whether the task was created successfully */
+  success: boolean;
+  /** The Thread ID where the task is executed */
+  threadId: string;
+}
+
+/**
+ * Task status query result
+ */
+export interface TaskStatusResult {
+  /** Task completion time (ISO string) */
+  completedAt?: string;
+  /** Cost information */
+  cost?: { total: number };
+  /** Error message if task failed */
+  error?: string;
+  /** Task result content (last assistant message) */
+  result?: string;
+  /** Current task status */
+  status: 'processing' | 'completed' | 'failed' | 'cancel';
+  /** Number of steps executed */
+  stepCount?: number;
+  /** Model usage information */
+  usage?: {
+    completion_tokens?: number;
+    prompt_tokens?: number;
+    total_tokens?: number;
+  };
+}

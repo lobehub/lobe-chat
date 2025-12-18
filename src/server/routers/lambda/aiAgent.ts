@@ -1,4 +1,5 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
+import { TaskStatusResult, ThreadStatus } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import pMap from 'p-map';
@@ -6,6 +7,7 @@ import { z } from 'zod';
 
 import { isEnableAgent } from '@/app/(backend)/api/agent/isEnableAgent';
 import { MessageModel } from '@/database/models/message';
+import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -132,6 +134,52 @@ const ExecAgentsSchema = z.object({
   tasks: z.array(ExecAgentSchema).min(1),
 });
 
+/**
+ * Schema for execGroupSubAgentTask - execute SubAgent task in Group chat
+ */
+const ExecGroupSubAgentTaskSchema = z.object({
+  /** The SubAgent ID to execute the task */
+  agentId: z.string(),
+  /** The Group ID (required) */
+  groupId: z.string(),
+  /** Task instruction/prompt for the SubAgent */
+  instruction: z.string(),
+  /** The parent message ID (Supervisor's tool call message) */
+  parentMessageId: z.string(),
+  /** Timeout in milliseconds (optional) */
+  timeout: z.number().optional(),
+  /** The Topic ID */
+  topicId: z.string(),
+});
+
+/**
+ * Schema for getTaskStatus - query task execution status
+ */
+const GetTaskStatusSchema = z
+  .object({
+    /** Operation ID */
+    operationId: z.string().optional(),
+    /** Thread ID */
+    threadId: z.string().optional(),
+  })
+  .refine((data) => data.threadId || data.operationId, {
+    message: 'Either threadId or operationId must be provided',
+  });
+
+/**
+ * Schema for interruptTask - interrupt a running task
+ */
+const InterruptTaskSchema = z
+  .object({
+    /** Operation ID */
+    operationId: z.string().optional(),
+    /** Thread ID */
+    threadId: z.string().optional(),
+  })
+  .refine((data) => data.threadId || data.operationId, {
+    message: 'Either threadId or operationId must be provided',
+  });
+
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   // Check if agent features are enabled
   if (!isEnableAgent()) {
@@ -146,6 +194,7 @@ const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
       aiAgentService: new AiAgentService(ctx.serverDB, ctx.userId),
       aiChatService: new AiChatService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      threadModel: new ThreadModel(ctx.serverDB, ctx.userId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -390,6 +439,44 @@ export const aiAgentRouter = router({
     }
   }),
 
+  /**
+   * Execute SubAgent task in Group chat
+   *
+   * This endpoint is called by Supervisor to delegate tasks to SubAgents.
+   * Each task runs in an isolated Thread context.
+   */
+  execGroupSubAgentTask: aiAgentProcedure
+    .input(ExecGroupSubAgentTaskSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { agentId, groupId, instruction, parentMessageId, topicId, timeout } = input;
+
+      log('execGroupSubAgentTask: agentId=%s, groupId=%s', agentId, groupId);
+
+      try {
+        return await ctx.aiAgentService.execGroupSubAgentTask({
+          agentId,
+          groupId,
+          instruction,
+          parentMessageId,
+          timeout,
+          topicId,
+        });
+      } catch (error: any) {
+        log('execGroupSubAgentTask failed: %O', error);
+
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          cause: error,
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Failed to execute sub-agent task: ${error.message}`,
+        });
+      }
+    }),
+
+  
   getOperationStatus: aiAgentProcedure
     .input(GetOperationStatusSchema)
     .query(async ({ input, ctx }) => {
@@ -411,7 +498,8 @@ export const aiAgentRouter = router({
       return operationStatus;
     }),
 
-  getPendingInterventions: aiAgentProcedure
+  
+getPendingInterventions: aiAgentProcedure
     .input(GetPendingInterventionsSchema)
     .query(async ({ input, ctx }) => {
       const { operationId, userId } = input;
@@ -427,6 +515,114 @@ export const aiAgentRouter = router({
       return result;
     }),
 
+  /**
+   * Get task execution status
+   *
+   * This endpoint queries the status of a SubAgent task by threadId or operationId.
+   * It maps operation status to task status and syncs Thread status when task completes.
+   */
+getTaskStatus: aiAgentProcedure.input(GetTaskStatusSchema).query(async ({ input, ctx }) => {
+    const { threadId, operationId } = input;
+
+    log('getTaskStatus: threadId=%s, operationId=%s', threadId, operationId);
+
+    // 1. Get operationId from thread if only threadId is provided
+    let resolvedOperationId = operationId;
+    let thread;
+
+    if (threadId && !operationId) {
+      thread = await ctx.threadModel.findById(threadId);
+      if (!thread) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Thread not found' });
+      }
+      resolvedOperationId = thread.metadata?.operationId;
+      if (!resolvedOperationId) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Operation ID not found in thread' });
+      }
+    }
+
+    // 2. Get operation status
+    let operationStatus;
+    try {
+      operationStatus = await ctx.agentRuntimeService.getOperationStatus({
+        operationId: resolvedOperationId!,
+      });
+    } catch (error: any) {
+      log('getTaskStatus: getOperationStatus failed: %O', error);
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: `Operation not found: ${resolvedOperationId}`,
+      });
+    }
+
+    // 3. Map operation status to task status
+    const currentState = operationStatus.currentState;
+    const statusMap: Record<string, TaskStatusResult['status']> = {
+      done: 'completed',
+      error: 'failed',
+      idle: 'processing',
+      interrupted: 'cancel',
+      running: 'processing',
+      waiting_for_human: 'processing',
+    };
+
+    const taskStatus: TaskStatusResult = {
+      completedAt: operationStatus.isCompleted ? operationStatus.metadata?.lastActiveAt : undefined,
+      cost: currentState?.cost,
+      error: operationStatus.hasError ? currentState?.error : undefined,
+      // Note: result content would need to be fetched from assistant message if needed
+      // For now, we rely on thread metadata or message queries for full result
+      status: statusMap[currentState?.status || 'idle'] || 'processing',
+      stepCount: currentState?.stepCount,
+      usage: currentState?.usage,
+    };
+
+    // 4. Sync Thread status if task is in terminal state
+    if (thread && ['completed', 'failed', 'cancel'].includes(taskStatus.status)) {
+      const threadStatusMap: Record<string, ThreadStatus> = {
+        cancel: ThreadStatus.Cancel,
+        completed: ThreadStatus.Completed,
+        failed: ThreadStatus.Failed,
+      };
+
+      await ctx.threadModel.update(thread.id, {
+        metadata: {
+          ...thread.metadata,
+          completedAt: taskStatus.completedAt || new Date().toISOString(),
+          error: taskStatus.error,
+        },
+        status: threadStatusMap[taskStatus.status],
+      });
+    }
+
+    return taskStatus;
+  }),
+
+  /**
+   * Interrupt a running task
+   *
+   * This endpoint interrupts a SubAgent task by threadId or operationId.
+   * It updates both operation status and Thread status to cancelled state.
+   */
+interruptTask: aiAgentProcedure.input(InterruptTaskSchema).mutation(async ({ input, ctx }) => {
+    const { threadId, operationId } = input;
+
+    log('interruptTask: threadId=%s, operationId=%s', threadId, operationId);
+
+    try {
+      return await ctx.aiAgentService.interruptTask({ operationId, threadId });
+    } catch (error: any) {
+      if (error.message === 'Thread not found') {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Thread not found' });
+      }
+      if (error.message === 'Operation ID not found') {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Operation ID not found' });
+      }
+      throw error;
+    }
+  }),
+
+  
   processHumanIntervention: aiAgentProcedure
     .input(ProcessHumanInterventionSchema)
     .mutation(async ({ input, ctx }) => {

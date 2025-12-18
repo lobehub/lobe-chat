@@ -24,8 +24,14 @@ import {
 import { formatAgentProfile } from '@lobechat/prompts';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 
+import { lambdaClient } from '@/libs/trpc/client';
 import { agentService } from '@/services/agent';
 import { agentGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
+
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName> {
   readonly identifier = GroupManagementIdentifier;
@@ -304,31 +310,133 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
 
   executeTask = async (
     params: ExecuteTaskParams,
-    _ctx: BuiltinToolContext,
+    ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
-    // TODO: Implement async task execution
-    return {
-      content: JSON.stringify({
+    const { groupId, messageId, topicId } = ctx;
+
+    if (!groupId) {
+      return { content: 'No group context available', success: false };
+    }
+
+    if (!topicId) {
+      return { content: 'No topic context available', success: false };
+    }
+
+    try {
+      // 1. Create task via backend API
+      const result = await lambdaClient.aiAgent.execGroupSubAgentTask.mutate({
         agentId: params.agentId,
-        message: 'Task execution not yet implemented',
-        task: params.task,
-      }),
-      success: true,
-    };
+        groupId,
+        instruction: params.task,
+        parentMessageId: messageId,
+        topicId,
+      });
+
+      if (!result.success) {
+        return {
+          content: `Failed to create task: ${result.error || 'Unknown error'}`,
+          state: { error: result.error, status: 'failed', threadId: result.threadId },
+          success: false,
+        };
+      }
+
+      // 2. Poll for task completion (blocking)
+      const pollInterval = 2000; // 2 seconds
+      const maxWait = params.timeout || 300_000; // Default 5 minutes
+      const startTime = Date.now();
+
+      while (Date.now() - startTime < maxWait) {
+        // Check if interrupted via AbortSignal
+        if (ctx.signal?.aborted) {
+          return {
+            content: 'Task was interrupted by user',
+            state: { status: 'interrupted', threadId: result.threadId },
+            success: false,
+          };
+        }
+
+        const status = await lambdaClient.aiAgent.getTaskStatus.query({
+          threadId: result.threadId,
+        });
+
+        if (status.status === 'completed') {
+          return {
+            content: status.result || 'Task completed successfully',
+            state: {
+              cost: status.cost,
+              status: 'completed',
+              stepCount: status.stepCount,
+              threadId: result.threadId,
+              usage: status.usage,
+            },
+            success: true,
+          };
+        }
+
+        if (status.status === 'failed') {
+          return {
+            content: `Task failed: ${status.error || 'Unknown error'}`,
+            state: { error: status.error, status: 'failed', threadId: result.threadId },
+            success: false,
+          };
+        }
+
+        if (status.status === 'cancel') {
+          return {
+            content: 'Task was cancelled',
+            state: { status: 'cancelled', threadId: result.threadId },
+            success: false,
+          };
+        }
+
+        // Still processing, wait and poll again
+        await sleep(pollInterval);
+      }
+
+      // Timeout reached
+      return {
+        content: `Task timeout after ${maxWait}ms`,
+        state: { status: 'timeout', threadId: result.threadId },
+        success: false,
+      };
+    } catch (error) {
+      return {
+        content: `Failed to execute task: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        success: false,
+      };
+    }
   };
 
   interrupt = async (
     params: InterruptParams,
     _ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
-    // TODO: Implement task interruption
-    return {
-      content: JSON.stringify({
-        message: 'Task interruption not yet implemented',
-        taskId: params.taskId,
-      }),
-      success: true,
-    };
+    const { taskId } = params;
+
+    try {
+      const result = await lambdaClient.aiAgent.interruptTask.mutate({
+        threadId: taskId,
+      });
+
+      if (result.success) {
+        return {
+          content: `Task ${taskId} has been cancelled successfully`,
+          state: { cancelled: true, operationId: result.operationId, taskId },
+          success: true,
+        };
+      }
+
+      return {
+        content: `Failed to cancel task ${taskId}`,
+        state: { cancelled: false, taskId },
+        success: false,
+      };
+    } catch (error) {
+      return {
+        content: `Failed to interrupt task: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        success: false,
+      };
+    }
   };
 
   // ==================== Context Management ====================

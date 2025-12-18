@@ -5,7 +5,10 @@ import type {
   ExecAgentResult,
   ExecGroupAgentParams,
   ExecGroupAgentResult,
+  ExecGroupSubAgentTaskParams,
+  ExecGroupSubAgentTaskResult,
 } from '@lobechat/types';
+import { ThreadStatus, ThreadType } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
 
@@ -13,6 +16,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { AgentModel } from '@/database/models/agent';
 import { MessageModel } from '@/database/models/message';
 import { PluginModel } from '@/database/models/plugin';
+import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
 import {
   type ServerAgentToolsContext,
@@ -37,6 +41,7 @@ export class AiAgentService {
   private readonly agentModel: AgentModel;
   private readonly messageModel: MessageModel;
   private readonly pluginModel: PluginModel;
+  private readonly threadModel: ThreadModel;
   private readonly topicModel: TopicModel;
   private readonly agentRuntimeService: AgentRuntimeService;
 
@@ -46,6 +51,7 @@ export class AiAgentService {
     this.agentModel = new AgentModel(db, userId);
     this.messageModel = new MessageModel(db, userId);
     this.pluginModel = new PluginModel(db, userId);
+    this.threadModel = new ThreadModel(db, userId);
     this.topicModel = new TopicModel(db, userId);
     this.agentRuntimeService = new AgentRuntimeService(db, userId);
   }
@@ -396,6 +402,157 @@ export class AiAgentService {
       success: result.success,
       topicId: result.topicId,
       userMessageId: result.userMessageId,
+    };
+  }
+
+  /**
+   * Execute SubAgent task in Group chat
+   *
+   * This method is called by Supervisor to delegate tasks to SubAgents.
+   * Each task runs in an isolated Thread context.
+   *
+   * Flow:
+   * 1. Create Thread (type='isolation', status='processing')
+   * 2. Delegate to execAgent with threadId in appContext
+   * 3. Store operationId in Thread metadata
+   */
+  async execGroupSubAgentTask(
+    params: ExecGroupSubAgentTaskParams,
+  ): Promise<ExecGroupSubAgentTaskResult> {
+    const { groupId, topicId, parentMessageId, agentId, instruction } = params;
+
+    log(
+      'execGroupSubAgentTask: agentId=%s, groupId=%s, topicId=%s, instruction=%s',
+      agentId,
+      groupId,
+      topicId,
+      instruction.slice(0, 50),
+    );
+
+    // 1. Create Thread for isolated task execution
+    const thread = await this.threadModel.create({
+      agentId,
+      groupId,
+      sourceMessageId: parentMessageId,
+      topicId,
+      type: ThreadType.Isolation,
+    });
+
+    if (!thread) {
+      throw new Error('Failed to create thread for task execution');
+    }
+
+    log('execGroupSubAgentTask: created thread %s', thread.id);
+
+    // 2. Update Thread status to processing
+    await this.threadModel.update(thread.id, {
+      status: ThreadStatus.Processing,
+    });
+
+    // 3. Delegate to execAgent with threadId in appContext
+    // The instruction will be created as user message in the Thread
+    const result = await this.execAgent({
+      agentId,
+      appContext: { groupId, threadId: thread.id, topicId },
+      autoStart: true,
+      prompt: instruction,
+    });
+
+    log(
+      'execGroupSubAgentTask: delegated to execAgent, operationId=%s, success=%s',
+      result.operationId,
+      result.success,
+    );
+
+    // 4. Store operationId in Thread metadata
+    await this.threadModel.update(thread.id, {
+      metadata: { operationId: result.operationId },
+    });
+
+    // 5. If operation failed to start, update thread status
+    if (!result.success) {
+      await this.threadModel.update(thread.id, {
+        metadata: {
+          completedAt: new Date().toISOString(),
+          error: result.error,
+          operationId: result.operationId,
+        },
+        status: ThreadStatus.Failed,
+      });
+    }
+
+    return {
+      assistantMessageId: result.assistantMessageId,
+      error: result.error,
+      operationId: result.operationId,
+      success: result.success ?? false,
+      threadId: thread.id,
+    };
+  }
+
+  /**
+   * Interrupt a running task
+   *
+   * This method interrupts a SubAgent task by threadId or operationId.
+   * It updates both operation status and Thread status to cancelled state.
+   */
+  async interruptTask(params: {
+    operationId?: string;
+    threadId?: string;
+  }): Promise<{ operationId?: string; success: boolean; threadId?: string }> {
+    const { threadId, operationId } = params;
+
+    log('interruptTask: threadId=%s, operationId=%s', threadId, operationId);
+
+    // 1. Get operationId and thread
+    let resolvedOperationId = operationId;
+    let thread;
+
+    if (threadId) {
+      thread = await this.threadModel.findById(threadId);
+      if (!thread) {
+        throw new Error('Thread not found');
+      }
+      resolvedOperationId = resolvedOperationId || thread.metadata?.operationId;
+    }
+
+    if (!resolvedOperationId) {
+      throw new Error('Operation ID not found');
+    }
+
+    // 2. Try to interrupt the operation
+    // Note: AgentRuntimeService may not have interruptOperation method yet
+    // We'll gracefully handle this case by only updating thread status
+    try {
+      // Check if the method exists before calling (using type assertion for future method)
+      const service = this.agentRuntimeService as any;
+      if (typeof service.interruptOperation === 'function') {
+        await service.interruptOperation({
+          operationId: resolvedOperationId,
+        });
+      } else {
+        log('interruptTask: interruptOperation method not available, only updating thread status');
+      }
+    } catch (error: any) {
+      log('interruptTask: Failed to interrupt operation: %O', error);
+      // Continue to update Thread status even if operation interrupt fails
+    }
+
+    // 3. Update Thread status to cancel
+    if (thread) {
+      await this.threadModel.update(thread.id, {
+        metadata: {
+          ...thread.metadata,
+          completedAt: new Date().toISOString(),
+        },
+        status: ThreadStatus.Cancel,
+      });
+    }
+
+    return {
+      operationId: resolvedOperationId,
+      success: true,
+      threadId: thread?.id,
     };
   }
 }

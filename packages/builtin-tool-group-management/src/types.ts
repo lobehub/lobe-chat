@@ -1,3 +1,5 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+
 /**
  * API names for Group Management tool
  */
@@ -146,4 +148,33 @@ export interface VoteResult {
   agentId: string;
   reasoning?: string;
   selectedOptionId: string;
+}
+
+// ==================== State Types for UI Rendering ====================
+
+export type ExecuteTaskStatus =
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'cancelled'
+  | 'timeout'
+  | 'interrupted';
+
+export interface ExecuteTaskState {
+  cost?: { total: number };
+  error?: string;
+  status: ExecuteTaskStatus;
+  stepCount?: number;
+  threadId: string;
+  usage?: {
+    completion_tokens?: number;
+    prompt_tokens?: number;
+    total_tokens?: number;
+  };
+}
+
+export interface InterruptState {
+  cancelled: boolean;
+  operationId?: string;
+  taskId: string;
 }

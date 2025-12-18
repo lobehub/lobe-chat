@@ -82,7 +82,18 @@ const Tools = memo(() => {
     <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>
       <Action
         dropdown={{
-          dropdownRender: (menu) => (
+          maxWidth: 320,
+          menu: {
+            items: [...currentItems],
+            style: {
+              // let only the custom scroller scroll
+              maxHeight: 'unset',
+              overflowY: 'visible',
+            },
+          },
+          minHeight: enableKlavis ? 500 : undefined,
+          minWidth: 320,
+          popupRender: (menu) => (
             <div className={styles.dropdown}>
               <div className={styles.header}>
                 <Segmented
@@ -113,17 +124,6 @@ const Tools = memo(() => {
               </div>
             </div>
           ),
-          maxWidth: 320,
-          menu: {
-            items: [...currentItems],
-            style: {
-              // let only the custom scroller scroll
-              maxHeight: 'unset',
-              overflowY: 'visible',
-            },
-          },
-          minHeight: enableKlavis ? 500 : undefined,
-          minWidth: 320,
         }}
         icon={Blocks}
         loading={updating}
