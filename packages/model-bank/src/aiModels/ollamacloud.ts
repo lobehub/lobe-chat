@@ -42,6 +42,19 @@ const ollamaCloudModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576,
+    description: 'Gemini 3 Flash 是为速度而打造的最智能的模型，将前沿智能与卓越的搜索接地相结合。',
+    displayName: 'Gemini 3 Flash Preview',
+    id: 'gemini-3-flash-preview',
+    releasedAt: '2025-12-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 200_000,
     description: 'MiniMax M2 是专为编码和代理工作流程构建的高效大型语言模型。',
