@@ -1,7 +1,12 @@
 'use client';
 
 import { nanoid } from '@lobechat/utils';
-import { HotkeyEnum, INSERT_HEADING_COMMAND, getHotkeyById } from '@lobehub/editor';
+import {
+  HIDE_TOOLBAR_COMMAND,
+  HotkeyEnum,
+  INSERT_HEADING_COMMAND,
+  getHotkeyById,
+} from '@lobehub/editor';
 import {
   ChatInputActions,
   type ChatInputActionsProps,
@@ -59,7 +64,6 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
   const editor = usePageEditorStore((s) => s.editor);
   const editorState = usePageEditorStore((s) => s.editorState);
   const addSelectionContext = useFileStore((s) => s.addChatContextSelection);
-  const existingSelections = useFileStore((s) => s.chatContextSelections);
   const theme = useTheme();
   const { styles } = useStyles();
 
@@ -84,20 +88,13 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
               if (!content) return;
 
               const format = xml.trim() ? 'xml' : 'text';
-
-              // Check for duplicate content with same format
-              const isDuplicate = existingSelections.some(
-                (selection) => selection.content === content && selection.format === format,
-              );
-
-              if (isDuplicate) return;
-
               const preview =
                 (plainText || xml)
                   .replaceAll(/<[^>]*>/g, ' ')
                   .replaceAll(/\s+/g, ' ')
                   .trim() || undefined;
 
+              // Store action handles deduplication
               addSelectionContext({
                 content,
                 format,
@@ -107,6 +104,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
                 type: 'text',
               });
 
+              editor.dispatchCommand(HIDE_TOOLBAR_COMMAND, undefined);
               editor.blur();
             }}
             paddingBlock={6}
@@ -286,7 +284,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
     ];
 
     return baseItems.filter(Boolean) as ChatInputActionsProps['items'];
-  }, [addSelectionContext, editor, editorState, existingSelections, floating, t]);
+  }, [addSelectionContext, editor, editorState, floating, t]);
 
   if (!editorState) return null;
 
