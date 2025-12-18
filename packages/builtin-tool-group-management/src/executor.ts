@@ -24,14 +24,8 @@ import {
 import { formatAgentProfile } from '@lobechat/prompts';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 
-import { lambdaClient } from '@/libs/trpc/client';
 import { agentService } from '@/services/agent';
 import { agentGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
-
-const sleep = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 
 class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName> {
   readonly identifier = GroupManagementIdentifier;
@@ -227,6 +221,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
         ctx.groupOrchestration!.triggerSpeak({
           agentId: params.agentId,
           instruction: params.instruction,
+          skipCallSupervisor: params.skipCallSupervisor,
           supervisorAgentId: ctx.agentId!,
         }),
       );
@@ -238,6 +233,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
       state: {
         agentId: params.agentId,
         instruction: params.instruction,
+        skipCallSupervisor: params.skipCallSupervisor,
         type: 'speak',
       },
       stop: true,
@@ -256,6 +252,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
         ctx.groupOrchestration!.triggerBroadcast({
           agentIds: params.agentIds,
           instruction: params.instruction,
+          skipCallSupervisor: params.skipCallSupervisor,
           supervisorAgentId: ctx.agentId!,
           toolMessageId: ctx.messageId, // Pass tool message ID for correct parent-child relationship
         }),
@@ -270,6 +267,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
       state: {
         agentIds: params.agentIds,
         instruction: params.instruction,
+        skipCallSupervisor: params.skipCallSupervisor,
         type: 'broadcast',
       },
       stop: true,
@@ -312,99 +310,32 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
     params: ExecuteTaskParams,
     ctx: BuiltinToolContext,
   ): Promise<BuiltinToolResult> => {
-    const { groupId, messageId, topicId } = ctx;
-
-    if (!groupId) {
-      return { content: 'No group context available', success: false };
+    // Register afterCompletion callback to trigger async task execution after AgentRuntime completes
+    // This follows the same pattern as speak/broadcast - trigger mode, not blocking
+    if (ctx.groupOrchestration && ctx.agentId && ctx.registerAfterCompletion) {
+      ctx.registerAfterCompletion(() =>
+        ctx.groupOrchestration!.triggerExecuteTask({
+          agentId: params.agentId,
+          supervisorAgentId: ctx.agentId!,
+          task: params.task,
+          timeout: params.timeout,
+          toolMessageId: ctx.messageId,
+        }),
+      );
     }
 
-    if (!topicId) {
-      return { content: 'No topic context available', success: false };
-    }
-
-    try {
-      // 1. Create task via backend API
-      const result = await lambdaClient.aiAgent.execGroupSubAgentTask.mutate({
+    // Returns stop: true to indicate the supervisor should stop and let the task execute
+    return {
+      content: `Triggered async task for agent "${params.agentId}".`,
+      state: {
         agentId: params.agentId,
-        groupId,
-        instruction: params.task,
-        parentMessageId: messageId,
-        topicId,
-      });
-
-      if (!result.success) {
-        return {
-          content: `Failed to create task: ${result.error || 'Unknown error'}`,
-          state: { error: result.error, status: 'failed', threadId: result.threadId },
-          success: false,
-        };
-      }
-
-      // 2. Poll for task completion (blocking)
-      const pollInterval = 2000; // 2 seconds
-      const maxWait = params.timeout || 300_000; // Default 5 minutes
-      const startTime = Date.now();
-
-      while (Date.now() - startTime < maxWait) {
-        // Check if interrupted via AbortSignal
-        if (ctx.signal?.aborted) {
-          return {
-            content: 'Task was interrupted by user',
-            state: { status: 'interrupted', threadId: result.threadId },
-            success: false,
-          };
-        }
-
-        const status = await lambdaClient.aiAgent.getTaskStatus.query({
-          threadId: result.threadId,
-        });
-
-        if (status.status === 'completed') {
-          return {
-            content: status.result || 'Task completed successfully',
-            state: {
-              cost: status.cost,
-              status: 'completed',
-              stepCount: status.stepCount,
-              threadId: result.threadId,
-              usage: status.usage,
-            },
-            success: true,
-          };
-        }
-
-        if (status.status === 'failed') {
-          return {
-            content: `Task failed: ${status.error || 'Unknown error'}`,
-            state: { error: status.error, status: 'failed', threadId: result.threadId },
-            success: false,
-          };
-        }
-
-        if (status.status === 'cancel') {
-          return {
-            content: 'Task was cancelled',
-            state: { status: 'cancelled', threadId: result.threadId },
-            success: false,
-          };
-        }
-
-        // Still processing, wait and poll again
-        await sleep(pollInterval);
-      }
-
-      // Timeout reached
-      return {
-        content: `Task timeout after ${maxWait}ms`,
-        state: { status: 'timeout', threadId: result.threadId },
-        success: false,
-      };
-    } catch (error) {
-      return {
-        content: `Failed to execute task: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        success: false,
-      };
-    }
+        task: params.task,
+        timeout: params.timeout,
+        type: 'executeTask',
+      },
+      stop: true,
+      success: true,
+    };
   };
 
   interrupt = async (
@@ -414,7 +345,8 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
     const { taskId } = params;
 
     try {
-      const result = await lambdaClient.aiAgent.interruptTask.mutate({
+      const { aiAgentService } = await import('@/services/aiAgent');
+      const result = await aiAgentService.interruptTask({
         threadId: taskId,
       });
 

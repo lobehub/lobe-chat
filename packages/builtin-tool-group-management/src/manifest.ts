@@ -131,6 +131,12 @@ export const GroupManagementManifest: BuiltinToolManifest = {
               "Optional instruction or context to guide the agent's response. If omitted, the agent responds based on conversation context.",
             type: 'string',
           },
+          skipCallSupervisor: {
+            default: false,
+            description:
+              'If true, the orchestration will end after this agent responds, without calling the supervisor again. Use this when the user explicitly requests a specific agent (e.g., "@Designer, help me review this UI") and no further orchestration is needed.',
+            type: 'boolean',
+          },
         },
         required: ['agentId'],
         type: 'object',
@@ -151,6 +157,12 @@ export const GroupManagementManifest: BuiltinToolManifest = {
             description:
               'Optional shared instruction for all agents. Each agent interprets it based on their role.',
             type: 'string',
+          },
+          skipCallSupervisor: {
+            default: false,
+            description:
+              'If true, the orchestration will end after all agents respond, without calling the supervisor again. Use this when the user explicitly requests specific agents and no further orchestration is needed.',
+            type: 'boolean',
           },
         },
         required: ['agentIds'],
@@ -183,7 +195,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
       description:
         'Assign an asynchronous task to an agent. The task runs in the background and results are returned to the conversation context upon completion. Ideal for longer operations.',
       name: GroupManagementApiName.executeTask,
-      humanIntervention: 'required',
+      humanIntervention: 'always',
       parameters: {
         properties: {
           agentId: {
@@ -196,9 +208,9 @@ export const GroupManagementManifest: BuiltinToolManifest = {
             type: 'string',
           },
           timeout: {
-            default: 60_000,
+            default: 1_800_000,
             description:
-              'Maximum time in milliseconds to wait for task completion (default: 60000).',
+              'Maximum time in milliseconds to wait for task completion (default: 1800000, 30 minutes).',
             type: 'number',
           },
         },
@@ -209,6 +221,7 @@ export const GroupManagementManifest: BuiltinToolManifest = {
     {
       description:
         'Interrupt a running agent task. Use this to stop a task that is taking too long or is no longer needed.',
+      humanIntervention: 'always',
       name: GroupManagementApiName.interrupt,
       parameters: {
         properties: {

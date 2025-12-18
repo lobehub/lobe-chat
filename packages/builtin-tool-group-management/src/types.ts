@@ -76,11 +76,25 @@ export interface GetAgentInfoParams {
 export interface SpeakParams {
   agentId: string;
   instruction?: string;
+  /**
+   * If true, the orchestration will end after this agent responds,
+   * without calling the supervisor again.
+   * Use this when the user explicitly requests a specific agent
+   * and no further orchestration is needed.
+   */
+  skipCallSupervisor?: boolean;
 }
 
 export interface BroadcastParams {
   agentIds: string[];
   instruction?: string;
+  /**
+   * If true, the orchestration will end after agents respond,
+   * without calling the supervisor again.
+   * Use this when the user explicitly requests specific agents
+   * and no further orchestration is needed.
+   */
+  skipCallSupervisor?: boolean;
 }
 
 export interface DelegateParams {

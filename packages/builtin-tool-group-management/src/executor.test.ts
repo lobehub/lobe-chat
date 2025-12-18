@@ -91,6 +91,7 @@ describe('GroupManagementExecutor', () => {
         {
           triggerBroadcast: vi.fn(),
           triggerDelegate: vi.fn(),
+          triggerExecuteTask: vi.fn(),
           triggerSpeak,
         },
         'supervisor-agent',
@@ -137,6 +138,7 @@ describe('GroupManagementExecutor', () => {
         {
           triggerBroadcast: vi.fn(),
           triggerDelegate: vi.fn(),
+          triggerExecuteTask: vi.fn(),
           triggerSpeak,
         },
         'supervisor-agent',
@@ -185,6 +187,7 @@ describe('GroupManagementExecutor', () => {
         {
           triggerBroadcast,
           triggerDelegate: vi.fn(),
+          triggerExecuteTask: vi.fn(),
           triggerSpeak: vi.fn(),
         },
         'supervisor-agent',
@@ -251,6 +254,7 @@ describe('GroupManagementExecutor', () => {
         {
           triggerBroadcast: vi.fn(),
           triggerDelegate,
+          triggerExecuteTask: vi.fn(),
           triggerSpeak: vi.fn(),
         },
         'supervisor-agent',
@@ -587,7 +591,7 @@ describe('GroupManagementExecutor', () => {
       vi.clearAllMocks();
     });
 
-    it('should return error when no groupId in context', async () => {
+    it('should return stop=true to terminate supervisor execution', async () => {
       const ctx = createMockContext();
 
       const result = await groupManagementExecutor.executeTask(
@@ -595,224 +599,59 @@ describe('GroupManagementExecutor', () => {
         ctx,
       );
 
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('No group context available');
-    });
-
-    it('should return error when no topicId in context', async () => {
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
-        ctx,
-      );
-
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('No topic context available');
-    });
-
-    it('should handle task creation failure', async () => {
-      mockExecGroupSubAgentTask.mockResolvedValue({
-        error: 'Agent not found',
-        success: false,
-        threadId: 'thread-123',
-      });
-
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        topicId: 'test-topic-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
-        ctx,
-      );
-
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('Failed to create task: Agent not found');
-      expect(result.state).toEqual({
-        error: 'Agent not found',
-        status: 'failed',
-        threadId: 'thread-123',
-      });
-    });
-
-    it('should successfully complete task after polling', async () => {
-      mockExecGroupSubAgentTask.mockResolvedValue({
-        success: true,
-        threadId: 'thread-123',
-      });
-
-      mockGetTaskStatus.mockResolvedValue({
-        cost: { total: 0.05 },
-        result: 'Task completed with result XYZ',
-        status: 'completed',
-        stepCount: 3,
-        usage: { completion_tokens: 100, prompt_tokens: 50, total_tokens: 150 },
-      });
-
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        topicId: 'test-topic-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
-        ctx,
-      );
-
       expect(result.success).toBe(true);
-      expect(result.content).toBe('Task completed with result XYZ');
+      expect(result.stop).toBe(true);
+      expect(result.content).toBe('Triggered async task for agent "agent-1".');
       expect(result.state).toEqual({
-        cost: { total: 0.05 },
-        status: 'completed',
-        stepCount: 3,
-        threadId: 'thread-123',
-        usage: { completion_tokens: 100, prompt_tokens: 50, total_tokens: 150 },
-      });
-      expect(mockExecGroupSubAgentTask).toHaveBeenCalledWith({
         agentId: 'agent-1',
-        groupId: 'test-group-id',
-        instruction: 'Do something',
-        parentMessageId: 'test-message-id',
-        topicId: 'test-topic-id',
+        task: 'Do something',
+        timeout: undefined,
+        type: 'executeTask',
       });
     });
 
-    it('should return failed status when task fails', async () => {
-      mockExecGroupSubAgentTask.mockResolvedValue({
-        success: true,
-        threadId: 'thread-123',
+    it('should register afterCompletion callback that triggers groupOrchestration.triggerExecuteTask', async () => {
+      const triggerExecuteTask = vi.fn();
+      const registeredCallbacks: AfterCompletionCallback[] = [];
+      const registerAfterCompletion = vi.fn((cb: AfterCompletionCallback) => {
+        registeredCallbacks.push(cb);
       });
 
-      mockGetTaskStatus.mockResolvedValue({
-        error: 'Model API error',
-        status: 'failed',
-      });
+      const ctx = createMockContext(
+        {
+          triggerBroadcast: vi.fn(),
+          triggerDelegate: vi.fn(),
+          triggerExecuteTask,
+          triggerSpeak: vi.fn(),
+        },
+        'supervisor-agent',
+        registerAfterCompletion,
+      );
 
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        topicId: 'test-topic-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
+      await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something', timeout: 30000 },
         ctx,
       );
 
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('Task failed: Model API error');
-      expect(result.state).toEqual({
-        error: 'Model API error',
-        status: 'failed',
-        threadId: 'thread-123',
+      // Verify registerAfterCompletion was called
+      expect(registerAfterCompletion).toHaveBeenCalled();
+      expect(registeredCallbacks.length).toBe(1);
+
+      // Execute the registered callback (simulating AgentRuntime completion)
+      await registeredCallbacks[0]();
+
+      // Now triggerExecuteTask should have been called
+      expect(triggerExecuteTask).toHaveBeenCalledWith({
+        agentId: 'agent-1',
+        supervisorAgentId: 'supervisor-agent',
+        task: 'Do something',
+        timeout: 30000,
+        toolMessageId: 'test-message-id',
       });
     });
 
-    it('should return cancelled status when task is cancelled', async () => {
-      mockExecGroupSubAgentTask.mockResolvedValue({
-        success: true,
-        threadId: 'thread-123',
-      });
-
-      mockGetTaskStatus.mockResolvedValue({
-        status: 'cancel',
-      });
-
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        topicId: 'test-topic-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
-        ctx,
-      );
-
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('Task was cancelled');
-      expect(result.state).toEqual({
-        status: 'cancelled',
-        threadId: 'thread-123',
-      });
-    });
-
-    it('should handle signal interruption', async () => {
-      mockExecGroupSubAgentTask.mockResolvedValue({
-        success: true,
-        threadId: 'thread-123',
-      });
-
-      // Mock processing status (task still running)
-      mockGetTaskStatus.mockResolvedValue({
-        status: 'processing',
-      });
-
-      const abortController = new AbortController();
-      // Abort immediately
-      abortController.abort();
-
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        signal: abortController.signal,
-        topicId: 'test-topic-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
-        ctx,
-      );
-
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('Task was interrupted by user');
-      expect(result.state).toEqual({
-        status: 'interrupted',
-        threadId: 'thread-123',
-      });
-    });
-
-    it('should handle API errors gracefully', async () => {
-      mockExecGroupSubAgentTask.mockRejectedValue(new Error('Network error'));
-
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        topicId: 'test-topic-id',
-      };
-
-      const result = await groupManagementExecutor.executeTask(
-        { agentId: 'agent-1', task: 'Do something' },
-        ctx,
-      );
-
-      expect(result.success).toBe(false);
-      expect(result.content).toBe('Failed to execute task: Network error');
-    });
-
-    it('should use default result message when completed without result', async () => {
-      mockExecGroupSubAgentTask.mockResolvedValue({
-        success: true,
-        threadId: 'thread-123',
-      });
-
-      mockGetTaskStatus.mockResolvedValue({
-        status: 'completed',
-        // No result field
-      });
-
-      const ctx: BuiltinToolContext = {
-        ...createMockContext(),
-        groupId: 'test-group-id',
-        topicId: 'test-topic-id',
-      };
+    it('should not fail when groupOrchestration is not available', async () => {
+      const ctx = createMockContext();
 
       const result = await groupManagementExecutor.executeTask(
         { agentId: 'agent-1', task: 'Do something' },
@@ -820,7 +659,24 @@ describe('GroupManagementExecutor', () => {
       );
 
       expect(result.success).toBe(true);
-      expect(result.content).toBe('Task completed successfully');
+      expect(result.stop).toBe(true);
+    });
+
+    it('should include timeout in state when provided', async () => {
+      const ctx = createMockContext();
+
+      const result = await groupManagementExecutor.executeTask(
+        { agentId: 'agent-1', task: 'Do something', timeout: 60000 },
+        ctx,
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.state).toEqual({
+        agentId: 'agent-1',
+        task: 'Do something',
+        timeout: 60000,
+        type: 'executeTask',
+      });
     });
   });
 

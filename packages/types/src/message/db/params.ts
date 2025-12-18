@@ -75,7 +75,7 @@ export interface NewMessage {
   provider?: string | null;
   quotaId?: string | null;
   // optional because it has a default function
-  role: 'user' | 'system' | 'assistant' | 'tool';
+  role: 'user' | 'system' | 'assistant' | 'tool' | 'task';
   // required because it's notNull
   sessionId?: string | null;
   threadId?: string | null;

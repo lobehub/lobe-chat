@@ -23,6 +23,7 @@ export type UIMessageRoleType =
   | 'system'
   | 'assistant'
   | 'tool'
+  | 'task'
   | 'supervisor'
   | 'assistantGroup'
   | 'agentCouncil'

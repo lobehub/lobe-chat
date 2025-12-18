@@ -140,4 +140,10 @@ export interface MessageMetadata extends ModelUsage, ModelPerformance {
    * Flag indicating if message is pinned (excluded from compression)
    */
   pinned?: boolean;
+  /**
+   * Task instruction (for role='task' messages)
+   * The instruction given by supervisor to the agent
+   * Thread's sourceMessageId links back to this message for status tracking
+   */
+  instruction?: string;
 }
