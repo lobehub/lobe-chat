@@ -1,5 +1,6 @@
 import { CodeInterpreterApiName } from '../index';
 import EditLocalFile from './EditLocalFile';
+import ExecuteCode from './ExecuteCode';
 import ExportFile from './ExportFile';
 import ListFiles from './ListFiles';
 import MoveLocalFiles from './MoveLocalFiles';
@@ -13,6 +14,7 @@ import WriteFile from './WriteFile';
  */
 export const CodeInterpreterRenders = {
   [CodeInterpreterApiName.editLocalFile]: EditLocalFile,
+  [CodeInterpreterApiName.executeCode]: ExecuteCode,
   [CodeInterpreterApiName.exportFile]: ExportFile,
   [CodeInterpreterApiName.listLocalFiles]: ListFiles,
   [CodeInterpreterApiName.moveLocalFiles]: MoveLocalFiles,

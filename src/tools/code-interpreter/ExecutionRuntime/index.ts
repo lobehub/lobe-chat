@@ -4,6 +4,7 @@ import { codeInterpreterService } from '@/services/codeInterpreter';
 
 import {
   EditLocalFileState,
+  ExecuteCodeState,
   ExportFileState,
   GetCommandOutputState,
   GlobFilesState,
@@ -107,6 +108,11 @@ interface GlobLocalFilesParams {
 
 interface ExportFileParams {
   path: string;
+}
+
+interface ExecuteCodeParams {
+  code: string;
+  language?: 'javascript' | 'python' | 'typescript';
 }
 
 export class CodeInterpreterExecutionRuntime {
@@ -266,6 +272,35 @@ export class CodeInterpreterExecutionRuntime {
           message: `Successfully renamed ${args.oldPath} to ${args.newName}`,
           success: true,
         }),
+        state,
+        success: result.success,
+      };
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  // ==================== Code Execution ====================
+
+  async executeCode(args: ExecuteCodeParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const language = args.language || 'python';
+      const result = await this.callTool('executeCode', {
+        code: args.code,
+        language,
+      });
+
+      const state: ExecuteCodeState = {
+        error: result.result?.error,
+        exitCode: result.result?.exitCode,
+        language,
+        output: result.result?.output,
+        stderr: result.result?.stderr,
+        success: result.success,
+      };
+
+      return {
+        content: JSON.stringify(result.result),
         state,
         success: result.success,
       };
