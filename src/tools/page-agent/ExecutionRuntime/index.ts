@@ -903,7 +903,18 @@ export class PageAgentExecutionRuntime {
   async modifyNodes(args: ModifyNodesArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
       const editor = this.getEditor();
-      const { operations } = args;
+      let { operations } = args;
+
+      // Normalize operations to always be an array
+      // Handle case where LLM sends a single operation object instead of array
+      if (!operations) {
+        throw new Error('No operations provided');
+      }
+
+      if (!Array.isArray(operations)) {
+        console.log('[modifyNodes] Converting single operation to array');
+        operations = [operations as any];
+      }
 
       console.log('[modifyNodes] Processing operations:', operations.length);
 

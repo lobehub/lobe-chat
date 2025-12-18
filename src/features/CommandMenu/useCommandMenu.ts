@@ -125,8 +125,14 @@ export const useCommandMenu = () => {
   };
 
   const handleCreateSession = async () => {
-    await createAgent({});
+    const result = await createAgent({});
     await refreshAgentList();
+
+    // Navigate to the newly created agent
+    if (result.agentId) {
+      navigate(`/agent/${result.agentId}`);
+    }
+
     closeCommandMenu();
   };
 
