@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useRef } from 'react';
 
 import PageEditor from '@/features/PageEditor';
 import { useFileStore } from '@/store/file';
@@ -18,26 +18,42 @@ interface PageExplorerProps {
  * Work together with a sidebar src/app/[variants]/(main)/page/_layout/Body/index.tsx
  */
 const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
-  const [selectedPageId, setSelectedPageId, getOptimisticDocuments, fetchDocuments, deletePage] =
-    useFileStore((s) => [
-      s.selectedPageId,
-      s.setSelectedPageId,
-      s.getOptimisticDocuments,
-      s.fetchDocuments,
-      s.deletePage,
-    ]);
+  const [
+    selectedPageId,
+    setSelectedPageId,
+    pages,
+    fetchDocuments,
+    fetchDocumentDetail,
+    deletePage,
+  ] = useFileStore((s) => [
+    s.selectedPageId,
+    s.setSelectedPageId,
+    s.getOptimisticDocuments(), // Call inside selector to subscribe to changes
+    s.fetchDocuments,
+    s.fetchDocumentDetail,
+    s.deletePage,
+    s.isDocumentListLoading,
+  ]);
 
-  useEffect(() => {
-    if (pageId && pageId !== selectedPageId) {
-      setSelectedPageId(pageId, false);
-    }
-  }, [pageId]);
+  // Track previous pageId to detect actual URL changes (start undefined to run on first load)
+  const prevPageIdRef = useRef<string | undefined>(undefined);
 
+  // Fetch documents on mount
   useEffect(() => {
     fetchDocuments({ pageOnly: true });
   }, [fetchDocuments]);
 
-  const pages = getOptimisticDocuments();
+  // When pageId prop changes (from URL navigation), update selected page and fetch details
+  // Use ref to only sync when pageId actually changes, avoiding conflicts with sidebar selection
+  useEffect(() => {
+    if (pageId && pageId !== prevPageIdRef.current) {
+      prevPageIdRef.current = pageId;
+      setSelectedPageId(pageId, false);
+      // Fetch the document detail to ensure it's loaded in the local map
+      fetchDocumentDetail(pageId);
+    }
+  }, [pageId, setSelectedPageId, fetchDocumentDetail]);
+
   const currentPageId = selectedPageId || pageId;
 
   const handleDelete = (docId: string) => {
