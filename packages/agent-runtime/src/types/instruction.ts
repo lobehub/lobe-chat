@@ -26,6 +26,7 @@ export interface AgentRuntimeContext {
     | 'human_response'
     | 'human_approved_tool'
     | 'human_abort'
+    | 'compression_result'
     | 'error';
 
   /** Session info (kept for backward compatibility, will be optional in the future) */
@@ -193,6 +194,25 @@ export interface AgentInstructionResolveAbortedTools {
 }
 
 /**
+ * Instruction to execute context compression
+ */
+export interface AgentInstructionCompressContext {
+  payload: {
+    /** Current token count before compression */
+    currentTokenCount: number;
+    /** Existing summary to incorporate (for incremental compression) */
+    existingSummary?: string;
+    /** Number of recent messages to keep uncompressed */
+    keepRecentCount: number;
+    /** Messages to compress */
+    messages: any[];
+    /** Topic ID for the conversation */
+    topicId: string;
+  };
+  type: 'compress_context';
+}
+
+/**
  * A serializable instruction object that the "Agent" (Brain) returns
  * to the "AgentRuntime" (Engine) to execute.
  */
@@ -204,4 +224,5 @@ export type AgentInstruction =
   | AgentInstructionRequestHumanSelect
   | AgentInstructionRequestHumanApprove
   | AgentInstructionResolveAbortedTools
+  | AgentInstructionCompressContext
   | AgentInstructionFinish;

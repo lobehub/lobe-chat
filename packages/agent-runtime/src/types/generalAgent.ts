@@ -63,10 +63,37 @@ export interface GeneralAgentConfig {
     [key: string]: any;
     maxSteps?: number;
   };
+  /**
+   * Context compression configuration
+   * Note: Compression checking is always enabled to prevent context overflow.
+   * This config only controls the compression parameters.
+   */
+  compressionConfig?: {
+    /** Number of recent messages to keep uncompressed (default: 10) */
+    keepRecentCount?: number;
+    /** Model's max context window token count (default: 128k) */
+    maxWindowToken?: number;
+  };
   modelRuntimeConfig?: {
     model: string;
     provider: string;
   };
   operationId: string;
   userId?: string;
+}
+
+/**
+ * Payload for compression_result phase
+ */
+export interface GeneralAgentCompressionResultPayload {
+  /** Compressed messages (summary + pinned + recent) */
+  compressedMessages: any[];
+  /** Token count after compression */
+  compressedTokenCount: number;
+  /** Compression group ID in database */
+  groupId: string;
+  /** Token count before compression */
+  originalTokenCount: number;
+  /** Whether compression was skipped (no messages to compress) */
+  skipped?: boolean;
 }

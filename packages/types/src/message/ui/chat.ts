@@ -25,7 +25,9 @@ export type UIMessageRoleType =
   | 'tool'
   | 'supervisor'
   | 'assistantGroup'
-  | 'agentCouncil';
+  | 'agentCouncil'
+  | 'compressedGroup'
+  | 'compareGroup';
 
 export interface ChatFileItem {
   content?: string;
@@ -101,6 +103,18 @@ export interface UIChatMessage {
    * Aggregated from all children in group messages
    */
   performance?: ModelPerformance;
+  /**
+   * Pinned messages within a compression group (role: 'compressedGroup')
+   * Messages marked as favorite=true are included here
+   */
+  pinnedMessages?: {
+    content: string | null;
+    createdAt: Date;
+    id: string;
+    model: string | null;
+    provider: string | null;
+    role: string;
+  }[];
   plugin?: ChatPluginPayload;
   pluginError?: any;
   pluginIntervention?: ToolIntervention;

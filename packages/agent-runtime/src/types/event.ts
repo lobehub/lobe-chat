@@ -98,6 +98,16 @@ export interface AgentEventResumed {
   metadata?: Record<string, unknown>;
 }
 
+export interface AgentEventCompressionComplete {
+  type: 'compression_complete';
+  groupId: string;
+}
+
+export interface AgentEventCompressionError {
+  type: 'compression_error';
+  error: unknown;
+}
+
 /**
  * Events emitted by the AgentRuntime during execution
  */
@@ -121,4 +131,7 @@ export type AgentEvent =
   | AgentEventHumanSelectRequired
   // Interruption and resumption
   | AgentEventInterrupted
-  | AgentEventResumed;
+  | AgentEventResumed
+  // Context compression
+  | AgentEventCompressionComplete
+  | AgentEventCompressionError;
