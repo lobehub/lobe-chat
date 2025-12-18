@@ -20,8 +20,8 @@ const identityShouldDedupe: PromptfooAssert = {
   value: `
     const jsonOutput = JSON.parse(output);
     return (
-      jsonOutput?.withIdentities?.actions?.add == null ||
-      jsonOutput.withIdentities.actions.add === 0
+      !jsonOutput?.withIdentities?.actions?.add ||
+      jsonOutput.withIdentities.actions.add.length === 0
     );
   `,
 };

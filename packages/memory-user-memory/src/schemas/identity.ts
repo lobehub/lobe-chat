@@ -124,9 +124,18 @@ export const RemoveIdentityActionSchema = z
 
 export const IdentityActionsSchema = z
   .object({
-    add: z.array(AddIdentityActionSchema),
-    remove: z.array(RemoveIdentityActionSchema),
-    update: z.array(UpdateIdentityActionSchema),
+    add: z
+      .array(AddIdentityActionSchema)
+      .nullable()
+      .describe('Identity entries to add; use an empty array when nothing to add'),
+    remove: z
+      .array(RemoveIdentityActionSchema)
+      .nullable()
+      .describe('Identity entries to remove; use an empty array when nothing to remove'),
+    update: z
+      .array(UpdateIdentityActionSchema)
+      .nullable()
+      .describe('Identity entries to update; use an empty array when nothing to update'),
   })
   .strict();
 
