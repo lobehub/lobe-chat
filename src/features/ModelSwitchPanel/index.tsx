@@ -1,35 +1,76 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
+import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
-import type { ItemType } from 'antd/es/menu/interface';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
-import { type ReactNode, memo, useCallback, useMemo } from 'react';
+import { AiModelForSelect } from 'model-bank';
+import { type ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Rnd } from 'react-rnd';
 import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
+import { VList } from 'virtua';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
-import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
-  menu: css`
-    .${prefixCls}-dropdown-menu-item {
-      display: flex;
-      gap: 8px;
-    }
-    .${prefixCls}-dropdown-menu {
-      &-item-group-title {
-        padding-inline: 8px;
-      }
+const STORAGE_KEY = 'MODEL_SWITCH_PANEL_WIDTH';
+const DEFAULT_WIDTH = 320;
+const MIN_WIDTH = 280;
+const MAX_WIDTH = 600;
+const PANEL_HEIGHT = 550;
 
-      &-item-group-list {
-        margin: 0 !important;
-      }
+const ENABLE_RESIZING = {
+  bottom: false,
+  bottomLeft: false,
+  bottomRight: false,
+  left: true,
+  right: true,
+  top: false,
+  topLeft: false,
+  topRight: false,
+} as const;
+
+const useStyles = createStyles(({ css, token }) => ({
+  dropdown: css`
+    overflow: hidden;
+
+    width: 100%;
+    height: 100%;
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgElevated};
+    box-shadow: ${token.boxShadowSecondary};
+  `,
+  groupHeader: css`
+    padding-block: 8px;
+    padding-inline: 12px;
+    color: ${token.colorTextSecondary};
+    background: ${token.colorFillQuaternary};
+  `,
+  menuItem: css`
+    cursor: pointer;
+
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    box-sizing: border-box;
+    padding-block: 8px;
+    padding-inline: 12px;
+
+    white-space: nowrap;
+
+    &:hover {
+      background: ${token.colorFillTertiary};
     }
+  `,
+  menuItemActive: css`
+    background: ${token.colorPrimaryBg};
   `,
   tag: css`
     cursor: pointer;
@@ -37,6 +78,24 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 }));
 
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;
+
+type VirtualItem =
+  | {
+      provider: EnabledProviderWithModels;
+      type: 'group-header';
+    }
+  | {
+      model: AiModelForSelect;
+      provider: EnabledProviderWithModels;
+      type: 'model-item';
+    }
+  | {
+      provider: EnabledProviderWithModels;
+      type: 'empty-model';
+    }
+  | {
+      type: 'no-provider';
+    };
 
 interface ModelSwitchPanelProps {
   children?: ReactNode;
@@ -54,7 +113,6 @@ interface ModelSwitchPanelProps {
    * Current provider ID. If not provided, uses currentAgentModelProvider from store.
    */
   provider?: string;
-  updating?: boolean;
 }
 
 const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
@@ -62,7 +120,13 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
     const { t } = useTranslation('components');
     const { t: tCommon } = useTranslation('common');
     const newLabel = tCommon('new');
-    const { styles, theme } = useStyles();
+    const { cx, styles, theme } = useStyles();
+
+    const [panelWidth, setPanelWidth] = useState(() => {
+      if (typeof window === 'undefined') return DEFAULT_WIDTH;
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? Number(stored) : DEFAULT_WIDTH;
+    });
 
     // Get values from store for fallback when props are not provided
     const [storeModel, storeProvider, updateAgentConfig] = useAgentStore((s) => [
@@ -90,123 +154,156 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
       [onModelChange, updateAgentConfig],
     );
 
-    const items = useMemo<ItemType[]>(() => {
-      const getModelItems = (providerItem: EnabledProviderWithModels) => {
-        const modelItems = providerItem.children.map((modelItem) => ({
-          key: menuKey(providerItem.id, modelItem.id),
-          label: (
-            <ModelItemRender
-              {...modelItem}
-              {...modelItem.abilities}
-              /**
-               * This dropdown can contain a large number of items.
-               * Mounting Tooltip overlays for every row upfront can noticeably slow down opening/hovering the dropdown.
-               * Here we lazy-mount tooltips only when the user hovers a specific row.
-               */
-              infoTagTooltipOnHover
-              /**
-               * Avoid calling `useTranslation` in every row by passing the translated label down.
-               */
-              newBadgeLabel={newLabel}
-              showInfoTag
-            />
-          ),
-          onClick: async () => {
-            await handleModelChange(modelItem.id, providerItem.id);
-          },
-        }));
+    // Flatten the provider/model tree into a flat list for virtual scrolling
+    const virtualItems = useMemo<VirtualItem[]>(() => {
+      if (enabledList.length === 0) {
+        return [{ type: 'no-provider' }];
+      }
 
-        // if there is empty items, add a placeholder guide
-        if (modelItems.length === 0)
-          return [
-            {
-              key: `${providerItem.id}-empty`,
-              label: (
+      const items: VirtualItem[] = [];
+      for (const providerItem of enabledList) {
+        // Add provider group header
+        items.push({ provider: providerItem, type: 'group-header' });
+
+        if (providerItem.children.length === 0) {
+          // Add empty model placeholder
+          items.push({ provider: providerItem, type: 'empty-model' });
+        } else {
+          // Add each model item
+          for (const modelItem of providerItem.children) {
+            items.push({ model: modelItem, provider: providerItem, type: 'model-item' });
+          }
+        }
+      }
+      return items;
+    }, [enabledList]);
+
+    const activeKey = menuKey(provider, model);
+
+    const renderVirtualItem = useCallback(
+      (item: VirtualItem) => {
+        switch (item.type) {
+          case 'no-provider': {
+            return (
+              <div
+                className={styles.menuItem}
+                key="no-provider"
+                onClick={() => navigate('/settings/provider/all')}
+              >
+                <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
+                  {t('ModelSwitchPanel.emptyProvider')}
+                  <Icon icon={LucideArrowRight} />
+                </Flexbox>
+              </div>
+            );
+          }
+
+          case 'group-header': {
+            return (
+              <div className={styles.groupHeader} key={`header-${item.provider.id}`}>
+                <Flexbox horizontal justify="space-between">
+                  <ProviderItemRender
+                    logo={item.provider.logo}
+                    name={item.provider.name}
+                    provider={item.provider.id}
+                    source={item.provider.source}
+                  />
+                  <ActionIcon
+                    icon={LucideBolt}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const url = urlJoin('/settings/provider', item.provider.id || 'all');
+                      if (e.ctrlKey || e.metaKey) {
+                        window.open(url, '_blank');
+                      } else {
+                        navigate(url);
+                      }
+                    }}
+                    size={'small'}
+                    title={t('ModelSwitchPanel.goToSettings')}
+                  />
+                </Flexbox>
+              </div>
+            );
+          }
+
+          case 'empty-model': {
+            return (
+              <div
+                className={styles.menuItem}
+                key={`empty-${item.provider.id}`}
+                onClick={() => navigate(`/settings/provider/${item.provider.id}`)}
+              >
                 <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
                   {t('ModelSwitchPanel.emptyModel')}
                   <Icon icon={LucideArrowRight} />
                 </Flexbox>
-              ),
-              onClick: () => {
-                navigate(`/settings/provider/${providerItem.id}`);
-              },
-            },
-          ];
+              </div>
+            );
+          }
 
-        return modelItems;
-      };
+          case 'model-item': {
+            const key = menuKey(item.provider.id, item.model.id);
+            const isActive = key === activeKey;
 
-      if (enabledList.length === 0)
-        return [
-          {
-            key: `no-provider`,
-            label: (
-              <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
-                {t('ModelSwitchPanel.emptyProvider')}
-                <Icon icon={LucideArrowRight} />
-              </Flexbox>
-            ),
-            onClick: () => {
-              navigate('/settings/provider/all');
-            },
-          },
-        ];
+            return (
+              <div
+                className={cx(styles.menuItem, isActive && styles.menuItemActive)}
+                key={key}
+                onClick={async () => {
+                  await handleModelChange(item.model.id, item.provider.id);
+                }}
+              >
+                <ModelItemRender
+                  {...item.model}
+                  {...item.model.abilities}
+                  infoTagTooltipOnHover
+                  newBadgeLabel={newLabel}
+                  showInfoTag
+                />
+              </div>
+            );
+          }
 
-      // otherwise show with provider group
-      return enabledList.map((providerItem) => ({
-        children: getModelItems(providerItem),
-        key: providerItem.id,
-        label: (
-          <Flexbox horizontal justify="space-between">
-            <ProviderItemRender
-              logo={providerItem.logo}
-              name={providerItem.name}
-              provider={providerItem.id}
-              source={providerItem.source}
-            />
-            <ActionIcon
-              icon={LucideBolt}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const url = urlJoin('/settings/provider', providerItem.id || 'all');
-                if (e.ctrlKey || e.metaKey) {
-                  window.open(url, '_blank');
-                } else {
-                  navigate(url);
-                }
-              }}
-              size={'small'}
-              title={t('ModelSwitchPanel.goToSettings')}
-            />
-          </Flexbox>
-        ),
-        type: 'group',
-      }));
-    }, [enabledList, handleModelChange, navigate, newLabel, t, theme.colorTextTertiary]);
-
-    const icon = <div className={styles.tag}>{children}</div>;
+          default: {
+            return null;
+          }
+        }
+      },
+      [activeKey, cx, handleModelChange, navigate, newLabel, styles, t, theme.colorTextTertiary],
+    );
 
     return (
-      <ActionDropdown
-        menu={{
-          // @ts-expect-error 等待 antd 修复
-          activeKey: menuKey(provider, model),
-          className: styles.menu,
-          items,
-          // 不加限高就会导致面板超长，顶部的内容会被隐藏
-          // https://github.com/user-attachments/assets/9c043c47-42c5-46ef-b5c1-bee89376f042
-          style: {
-            maxHeight: 550,
-            overflowY: 'scroll',
-          },
-        }}
+      <Dropdown
+        arrow={false}
         onOpenChange={onOpenChange}
         open={open}
         placement={'topLeft'}
+        popupRender={() => (
+          <Rnd
+            className={styles.dropdown}
+            disableDragging
+            enableResizing={ENABLE_RESIZING}
+            maxWidth={MAX_WIDTH}
+            minWidth={MIN_WIDTH}
+            onResizeStop={(_e, _direction, ref) => {
+              const newWidth = ref.offsetWidth;
+              setPanelWidth(newWidth);
+              localStorage.setItem(STORAGE_KEY, String(newWidth));
+            }}
+            position={{ x: 0, y: 0 }}
+            size={{ height: PANEL_HEIGHT, width: panelWidth }}
+            style={{ position: 'relative' }}
+          >
+            <VList style={{ height: PANEL_HEIGHT, width: '100%' }}>
+              {virtualItems.map(renderVirtualItem)}
+            </VList>
+          </Rnd>
+        )}
       >
-        {icon}
-      </ActionDropdown>
+        <div className={styles.tag}>{children}</div>
+      </Dropdown>
     );
   },
 );
