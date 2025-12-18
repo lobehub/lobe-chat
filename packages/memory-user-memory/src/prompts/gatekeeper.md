@@ -50,14 +50,16 @@ Evaluate the conversation for these memory layers:
 
 Note: Task-specific requirements, constraints for a single object/entity, or one-time instructions do NOT belong to this layer.
 
-**Experience Layer** - Learned insights and practical knowledge:
+**Experience Layer** - Learned insights and practical knowledge worth reusing and
+sharing publicly:
 
-- Lessons learned and insights gained
-- Practical tricks and techniques
-- Transferable knowledge and wisdom
+- Lessons learned and insights gained, especially surprising aha/yurika moments
+- Practical tricks and techniques that solve tough or non-obvious problems
+- Transferable knowledge and wisdom that would make a strong blog/knowledge-base
+  snippet
 - Situation → Reasoning → Action → Outcome patterns
-- Key learnings from experiences
-- Confidence in the lessons
+- Key learnings from experiences with self-assessed confidence/impact
+- Skip routine or repetitive steps already well covered in retrieved memories
 
 ## Gate Keeping Guidelines
 
@@ -68,6 +70,7 @@ For each layer, consider:
 - **Clarity**: Is the information clear and extractable (not vague or ambiguous)?
 
 Additionally, review the retrieved similar memories first (top {{ topK }} items below). If the conversation content is clearly and fully covered by existing memories with no meaningful nuance or update, set `shouldExtract: false`.
+For the Experience layer, prefer `shouldExtract: true` only when the conversation adds a new takeaway, aha moment, or harder challenge resolution beyond what is already recorded.
 For the Context layer specifically, favor `shouldExtract: false` unless the conversation introduces a genuinely new situation/topic/research/session that is not already represented in existing context memories or overlaps with Experience items.
 Otherwise, favor `shouldExtract: true` for:
 

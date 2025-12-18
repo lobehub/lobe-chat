@@ -11,6 +11,16 @@ export const WithExperienceSchema = z.object({
   keyLearning: z.string().describe('Narrative describing key insights or lessons learned'),
   labels: z.array(z.string()).describe('Model generated tags that summarize the experience facets'),
   possibleOutcome: z.string().describe('Narrative describing potential outcomes or learnings'),
+  problemSolvingScore: z
+    .number()
+    .min(0)
+    .max(1)
+    .describe('Numeric score (0-1) describing how effectively the problem was solved'),
+  knowledgeValueScore: z
+    .number()
+    .min(0)
+    .max(1)
+    .describe('Numeric score (0-1) describing how reusable and shareable this experience is'),
   reasoning: z.string().describe('Narrative describing the thought process or motivations'),
   scoreConfidence: z
     .number()
