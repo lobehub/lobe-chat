@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Agent uitvoeren",
+      "cancelled": "Geannuleerd",
+      "completed": "Taak voltooid",
+      "cost": "Kosten",
+      "failed": "Taak mislukt",
+      "interrupted": "Onderbroken",
+      "processing": "Bezig met uitvoeren...",
+      "steps": "Aantal stappen",
+      "task": "Taakinhoud",
+      "thread": "Thread-ID",
+      "timeout": "Uitvoeringstijd verstreken",
+      "tokens": "Tokenverbruik"
+    }
+  },
   "codeInterpreter": {
     "error": "Fout bij uitvoering",
     "executing": "Bezig met uitvoeren...",

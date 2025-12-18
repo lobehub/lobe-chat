@@ -10,6 +10,14 @@
     "dragFileTitle": "Carica file",
     "dragTitle": "Carica immagini"
   },
+  "EmojiPicker": {
+    "delete": "Elimina avatar",
+    "draggerDesc": "Fai clic o trascina un'immagine qui per caricarla",
+    "emoji": "Avatar emoji",
+    "fileTypeError": "Carica un file immagine valido",
+    "upload": "Carica avatar",
+    "uploadBtn": "Ritaglia e carica"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Aggiungi alla base di conoscenza",

@@ -10,6 +10,14 @@
     "dragFileTitle": "Prześlij plik",
     "dragTitle": "Prześlij obraz"
   },
+  "EmojiPicker": {
+    "delete": "Usuń awatar",
+    "draggerDesc": "Kliknij lub przeciągnij obraz tutaj, aby go przesłać",
+    "emoji": "Awatar emoji",
+    "fileTypeError": "Prześlij prawidłowy plik graficzny",
+    "upload": "Prześlij awatar",
+    "uploadBtn": "Przytnij i prześlij"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Dodaj do bazy wiedzy",

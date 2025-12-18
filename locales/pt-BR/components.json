@@ -10,6 +10,14 @@
     "dragFileTitle": "Enviar arquivo",
     "dragTitle": "Enviar imagem"
   },
+  "EmojiPicker": {
+    "delete": "Excluir avatar",
+    "draggerDesc": "Clique ou arraste a imagem para esta área para fazer o upload",
+    "emoji": "Avatar de emoji",
+    "fileTypeError": "Por favor, envie um arquivo de imagem válido",
+    "upload": "Enviar avatar",
+    "uploadBtn": "Cortar e enviar"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Adicionar ao banco de conhecimento",

@@ -10,6 +10,14 @@
     "dragFileTitle": "Télécharger des fichiers",
     "dragTitle": "Télécharger des images"
   },
+  "EmojiPicker": {
+    "delete": "Supprimer l’avatar",
+    "draggerDesc": "Cliquez ou faites glisser une image ici pour la téléverser",
+    "emoji": "Avatar emoji",
+    "fileTypeError": "Veuillez téléverser un fichier image valide",
+    "upload": "Téléverser l’avatar",
+    "uploadBtn": "Rogner et téléverser"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Ajouter à la base de connaissances",

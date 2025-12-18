@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "執行 Agent",
+      "cancelled": "已取消",
+      "completed": "任務完成",
+      "cost": "費用",
+      "failed": "任務失敗",
+      "interrupted": "已中斷",
+      "processing": "執行中...",
+      "steps": "執行步數",
+      "task": "任務內容",
+      "thread": "Thread ID",
+      "timeout": "執行逾時",
+      "tokens": "Token 消耗"
+    }
+  },
   "codeInterpreter": {
     "error": "執行錯誤",
     "executing": "執行中...",

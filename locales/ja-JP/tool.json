@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "エージェントを実行",
+      "cancelled": "キャンセルされました",
+      "completed": "タスク完了",
+      "cost": "費用",
+      "failed": "タスク失敗",
+      "interrupted": "中断されました",
+      "processing": "実行中...",
+      "steps": "実行ステップ数",
+      "task": "タスク内容",
+      "thread": "スレッドID",
+      "timeout": "実行タイムアウト",
+      "tokens": "トークン消費"
+    }
+  },
   "codeInterpreter": {
     "error": "実行エラー",
     "executing": "実行中...",

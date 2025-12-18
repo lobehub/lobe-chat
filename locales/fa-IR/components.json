@@ -10,6 +10,14 @@
     "dragFileTitle": "بارگذاری فایل",
     "dragTitle": "بارگذاری تصویر"
   },
+  "EmojiPicker": {
+    "delete": "حذف تصویر نمایه",
+    "draggerDesc": "برای بارگذاری، تصویر را اینجا بکشید یا کلیک کنید",
+    "emoji": "تصویر نمایه احساسی",
+    "fileTypeError": "لطفاً یک فایل تصویر معتبر بارگذاری کنید",
+    "upload": "بارگذاری تصویر نمایه",
+    "uploadBtn": "برش و بارگذاری"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "افزودن به پایگاه دانش",

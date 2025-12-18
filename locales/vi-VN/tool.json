@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Thực thi Agent",
+      "cancelled": "Đã hủy",
+      "completed": "Hoàn thành nhiệm vụ",
+      "cost": "Chi phí",
+      "failed": "Nhiệm vụ thất bại",
+      "interrupted": "Đã bị gián đoạn",
+      "processing": "Đang thực thi...",
+      "steps": "Số bước thực hiện",
+      "task": "Nội dung nhiệm vụ",
+      "thread": "ID luồng",
+      "timeout": "Hết thời gian thực thi",
+      "tokens": "Tiêu tốn Token"
+    }
+  },
   "codeInterpreter": {
     "error": "Lỗi thực thi",
     "executing": "Đang thực thi...",

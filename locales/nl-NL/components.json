@@ -10,6 +10,14 @@
     "dragFileTitle": "Bestanden uploaden",
     "dragTitle": "Afbeeldingen uploaden"
   },
+  "EmojiPicker": {
+    "delete": "Verwijder avatar",
+    "draggerDesc": "Klik of sleep een afbeelding naar dit gebied om te uploaden",
+    "emoji": "Emoji-avatar",
+    "fileTypeError": "Upload een geldig afbeeldingsbestand",
+    "upload": "Avatar uploaden",
+    "uploadBtn": "Bijsnijden en uploaden"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Toevoegen aan kennisbank",

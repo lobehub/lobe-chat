@@ -10,6 +10,14 @@
     "dragFileTitle": "ファイルをアップロード",
     "dragTitle": "画像をアップロード"
   },
+  "EmojiPicker": {
+    "delete": "アバターを削除",
+    "draggerDesc": "クリックまたは画像をドラッグしてアップロード",
+    "emoji": "絵文字アバター",
+    "fileTypeError": "有効な画像ファイルをアップロードしてください",
+    "upload": "アバターをアップロード",
+    "uploadBtn": "トリミングしてアップロード"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "知識ベースに追加",

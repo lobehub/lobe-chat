@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "اجرای عامل",
+      "cancelled": "لغو شد",
+      "completed": "وظیفه تکمیل شد",
+      "cost": "هزینه",
+      "failed": "وظیفه ناموفق بود",
+      "interrupted": "متوقف شد",
+      "processing": "در حال اجرا...",
+      "steps": "تعداد مراحل اجرا",
+      "task": "محتوای وظیفه",
+      "thread": "شناسه Thread",
+      "timeout": "پایان زمان اجرا",
+      "tokens": "مصرف توکن"
+    }
+  },
   "codeInterpreter": {
     "error": "خطا در اجرا",
     "executing": "در حال اجرا...",

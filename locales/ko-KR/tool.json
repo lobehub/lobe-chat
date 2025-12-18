@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "에이전트 실행",
+      "cancelled": "취소됨",
+      "completed": "작업 완료",
+      "cost": "비용",
+      "failed": "작업 실패",
+      "interrupted": "중단됨",
+      "processing": "실행 중...",
+      "steps": "실행 단계 수",
+      "task": "작업 내용",
+      "thread": "스레드 ID",
+      "timeout": "실행 시간 초과",
+      "tokens": "토큰 사용량"
+    }
+  },
   "codeInterpreter": {
     "error": "실행 오류",
     "executing": "실행 중...",

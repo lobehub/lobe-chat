@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Agent'i Yürüt",
+      "cancelled": "İptal Edildi",
+      "completed": "Görev Tamamlandı",
+      "cost": "Maliyet",
+      "failed": "Görev Başarısız",
+      "interrupted": "Yarıda Kesildi",
+      "processing": "Yürütülüyor...",
+      "steps": "Adım Sayısı",
+      "task": "Görev İçeriği",
+      "thread": "Thread Kimliği",
+      "timeout": "Yürütme Zaman Aşımı",
+      "tokens": "Token Tüketimi"
+    }
+  },
   "codeInterpreter": {
     "error": "Yürütme hatası",
     "executing": "Yürütülüyor...",

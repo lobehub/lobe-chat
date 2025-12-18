@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "تنفيذ الوكيل",
+      "cancelled": "تم الإلغاء",
+      "completed": "اكتمل المهمة",
+      "cost": "التكلفة",
+      "failed": "فشل المهمة",
+      "interrupted": "تمت المقاطعة",
+      "processing": "جارٍ التنفيذ...",
+      "steps": "عدد خطوات التنفيذ",
+      "task": "محتوى المهمة",
+      "thread": "معرّف الخيط",
+      "timeout": "انتهت مهلة التنفيذ",
+      "tokens": "استهلاك الرموز"
+    }
+  },
   "codeInterpreter": {
     "error": "خطأ في التنفيذ",
     "executing": "جارٍ التنفيذ...",

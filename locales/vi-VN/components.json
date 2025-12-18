@@ -10,6 +10,14 @@
     "dragFileTitle": "Tải lên tệp",
     "dragTitle": "Tải lên hình ảnh"
   },
+  "EmojiPicker": {
+    "delete": "Xóa ảnh đại diện",
+    "draggerDesc": "Nhấp hoặc kéo thả hình ảnh vào khu vực này để tải lên",
+    "emoji": "Biểu tượng cảm xúc",
+    "fileTypeError": "Vui lòng tải lên tệp hình ảnh hợp lệ",
+    "upload": "Tải lên ảnh đại diện",
+    "uploadBtn": "Cắt và tải lên"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Thêm vào kho tri thức",

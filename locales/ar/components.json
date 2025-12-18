@@ -10,6 +10,14 @@
     "dragFileTitle": "تحميل الملفات",
     "dragTitle": "تحميل الصور"
   },
+  "EmojiPicker": {
+    "delete": "حذف الصورة الرمزية",
+    "draggerDesc": "انقر أو اسحب الصورة إلى هذه المنطقة للتحميل",
+    "emoji": "رمز تعبيري",
+    "fileTypeError": "يرجى تحميل ملف صورة صالح",
+    "upload": "تحميل الصورة الرمزية",
+    "uploadBtn": "قص وتحميل"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "إضافة إلى قاعدة المعرفة",

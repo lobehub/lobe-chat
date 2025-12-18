@@ -10,6 +10,14 @@
     "dragFileTitle": "Upload Files",
     "dragTitle": "Upload Images"
   },
+  "EmojiPicker": {
+    "delete": "Delete Avatar",
+    "draggerDesc": "Click or drag an image here to upload",
+    "emoji": "Emoji Avatar",
+    "fileTypeError": "Please upload a valid image file",
+    "upload": "Upload Avatar",
+    "uploadBtn": "Crop and Upload"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Add to Knowledge Base",

@@ -10,6 +10,14 @@
     "dragFileTitle": "Dateien hochladen",
     "dragTitle": "Bilder hochladen"
   },
+  "EmojiPicker": {
+    "delete": "Avatar löschen",
+    "draggerDesc": "Klicken oder ziehen Sie ein Bild in diesen Bereich, um es hochzuladen",
+    "emoji": "Emoji-Avatar",
+    "fileTypeError": "Bitte laden Sie eine gültige Bilddatei hoch",
+    "upload": "Avatar hochladen",
+    "uploadBtn": "Zuschneiden und hochladen"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Zur Wissensdatenbank hinzufügen",

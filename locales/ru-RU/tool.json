@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Выполнение агента",
+      "cancelled": "Отменено",
+      "completed": "Задача выполнена",
+      "cost": "Стоимость",
+      "failed": "Задача не выполнена",
+      "interrupted": "Прервано",
+      "processing": "Выполняется...",
+      "steps": "Количество шагов",
+      "task": "Содержание задачи",
+      "thread": "ID потока",
+      "timeout": "Время выполнения истекло",
+      "tokens": "Потребление токенов"
+    }
+  },
   "codeInterpreter": {
     "error": "Ошибка выполнения",
     "executing": "Выполнение...",

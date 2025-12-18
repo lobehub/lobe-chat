@@ -10,6 +10,14 @@
     "dragFileTitle": "Dosya Yükle",
     "dragTitle": "Resim Yükle"
   },
+  "EmojiPicker": {
+    "delete": "Avatarı sil",
+    "draggerDesc": "Yüklemek için resme tıklayın veya buraya sürükleyin",
+    "emoji": "Emoji Avatarı",
+    "fileTypeError": "Lütfen geçerli bir resim dosyası yükleyin",
+    "upload": "Avatarı yükle",
+    "uploadBtn": "Kırp ve yükle"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Bilgi tabanına ekle",

@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Ejecutar agente",
+      "cancelled": "Cancelado",
+      "completed": "Tarea completada",
+      "cost": "Costo",
+      "failed": "Tarea fallida",
+      "interrupted": "Interrumpido",
+      "processing": "Ejecutando...",
+      "steps": "Pasos ejecutados",
+      "task": "Contenido de la tarea",
+      "thread": "ID del hilo",
+      "timeout": "Tiempo de ejecución agotado",
+      "tokens": "Consumo de tokens"
+    }
+  },
   "codeInterpreter": {
     "error": "Error de ejecución",
     "executing": "Ejecutando...",

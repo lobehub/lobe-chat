@@ -1,4 +1,20 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Wykonaj agenta",
+      "cancelled": "Anulowano",
+      "completed": "Zadanie zakończone",
+      "cost": "Koszt",
+      "failed": "Zadanie nie powiodło się",
+      "interrupted": "Przerwano",
+      "processing": "W trakcie wykonywania...",
+      "steps": "Liczba kroków",
+      "task": "Treść zadania",
+      "thread": "ID wątku",
+      "timeout": "Przekroczono limit czasu",
+      "tokens": "Zużycie tokenów"
+    }
+  },
   "codeInterpreter": {
     "error": "Błąd wykonania",
     "executing": "Wykonywanie...",

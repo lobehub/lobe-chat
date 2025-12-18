@@ -10,6 +10,14 @@
     "dragFileTitle": "上传文件",
     "dragTitle": "上传图片"
   },
+  "EmojiPicker": {
+    "delete": "删除头像",
+    "draggerDesc": "点击或拖拽图片到此区域上传",
+    "emoji": "表情头像",
+    "fileTypeError": "请上传有效的图片文件",
+    "upload": "上传头像",
+    "uploadBtn": "裁剪并上传"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "添加到知识库",

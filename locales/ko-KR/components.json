@@ -10,6 +10,14 @@
     "dragFileTitle": "파일 업로드",
     "dragTitle": "이미지 업로드"
   },
+  "EmojiPicker": {
+    "delete": "아바타 삭제",
+    "draggerDesc": "이미지를 클릭하거나 끌어다 이 영역에 놓아 업로드하세요",
+    "emoji": "이모지 아바타",
+    "fileTypeError": "유효한 이미지 파일을 업로드해주세요",
+    "upload": "아바타 업로드",
+    "uploadBtn": "자르기 및 업로드"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "지식베이스에 추가",
