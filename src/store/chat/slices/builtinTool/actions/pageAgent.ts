@@ -544,8 +544,67 @@ export const pageAgentSlice: StateCreator<
 
   // ============ Text Operations ============
   replaceText: async (id, params) => {
-    console.log('replaceText', id, params);
-    return true;
+    const parentOperationId = get().messageOperationMap[id];
+
+    const { operationId } = get().startOperation({
+      context: { messageId: id },
+      metadata: { apiName: 'replaceText', params, startTime: Date.now() },
+      parentOperationId,
+      type: 'builtinToolPageAgent',
+    });
+
+    const context = { operationId };
+
+    try {
+      const result = await runtime.replaceText(params);
+      const { content, success, error, state } = result;
+
+      get().completeOperation(operationId);
+      await get().optimisticUpdateMessageContent(id, content, undefined, context);
+
+      if (success) {
+        await get().optimisticUpdatePluginState(id, state, context);
+      } else {
+        await get().optimisticUpdatePluginError(
+          id,
+          {
+            body: error,
+            message: error?.message || content,
+            type: 'PluginServerError',
+          },
+          context,
+        );
+      }
+
+      return true;
+    } catch (error) {
+      const err = error as Error;
+
+      if (err.message.includes('The user aborted a request.') || err.name === 'AbortError') {
+        get().failOperation(operationId, {
+          message: 'User cancelled the request',
+          type: 'UserAborted',
+        });
+        return true;
+      }
+
+      get().failOperation(operationId, {
+        message: err.message,
+        type: 'PluginServerError',
+      });
+
+      await get().optimisticUpdateMessagePluginError(
+        id,
+        {
+          body: error,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        context,
+      );
+
+      return true;
+    }
   },
 
   resizeImage: async (id, params) => {

@@ -303,6 +303,9 @@ export interface ModifyNodesState {
 }
 
 export interface ReplaceTextState {
+  /** IDs of nodes that were modified */
+  modifiedNodeIds: string[];
+  /** Number of replacements made */
   replacementCount: number;
 }
 

@@ -1,7 +1,7 @@
 import { ActionIcon, Block } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { ArrowRightFromLineIcon, ChevronsUpDownIcon, Clock3Icon, PlusIcon } from 'lucide-react';
+import { ChevronsUpDownIcon, Clock3Icon, PanelRightCloseIcon, PlusIcon } from 'lucide-react';
 import { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -11,7 +11,6 @@ import { AgentModalProvider } from '@/app/[variants]/(main)/home/_layout/Body/Ag
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
-import { onClose } from '@/features/Portal/GroupThread/hook';
 import { useFetchAgentList } from '@/hooks/useFetchAgentList';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
@@ -52,7 +51,6 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
   const isAgentListInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   const pageAgentId = useAgentStore((s) => s.builtinAgentIdMap['page-agent']);
   const pageAgentData = useAgentStore((s) => s.agentMap[pageAgentId || '']);
-  const builtinAgentIds = useAgentStore((s) => Object.values(s.builtinAgentIdMap));
 
   useFetchAgentList();
 
@@ -101,7 +99,6 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
           agentId={agent.id}
           agentTitle={agent.title || t('untitledAgent', { ns: 'chat' })}
           avatar={agent.avatar}
-          isBuiltinAgent={builtinAgentIds.includes(agent.id)}
           key={agent.id}
           onAgentChange={onAgentChange}
           onClose={() => setOpen(false)}
@@ -181,8 +178,6 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
   ]);
 
   const [toggleRightPanel] = useGlobalStore((s) => [s.toggleRightPanel]);
-
-  const hideHistory = !topics || topics.length === 0;
 
   return (
     <NavHeader

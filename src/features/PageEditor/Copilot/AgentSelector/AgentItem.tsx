@@ -5,33 +5,21 @@ import { useTranslation } from 'react-i18next';
 import AgentAvatar from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/AgentItem/Avatar';
 import NavItem from '@/features/NavPanel/components/NavItem';
 
-import Actions from './Actions';
-import { useDropdownMenu } from './useDropdownMenu';
-
 interface AgentItemProps {
   active: boolean;
   agentId: string;
   agentTitle: string;
   avatar: string | GroupMemberAvatar[] | null | undefined;
-  isBuiltinAgent: boolean;
   onAgentChange: (agentId: string) => void;
   onClose: () => void;
 }
 
 const AgentItem = memo<AgentItemProps>(
-  ({ active, agentId, agentTitle, avatar, isBuiltinAgent, onAgentChange, onClose }) => {
+  ({ active, agentId, agentTitle, avatar, onAgentChange, onClose }) => {
     const { t } = useTranslation('chat');
-
-    const dropdownMenu = useDropdownMenu({
-      agentId,
-      agentTitle,
-      isBuiltinAgent,
-      onClose,
-    });
 
     return (
       <NavItem
-        actions={<Actions dropdownMenu={dropdownMenu} />}
         active={active}
         icon={<AgentAvatar avatar={typeof avatar === 'string' ? avatar : undefined} />}
         onClick={() => {
