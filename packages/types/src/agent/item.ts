@@ -7,6 +7,8 @@ import { LobeAgentChatConfig } from './chatConfig';
 import { LobeAgentTTSConfig } from './tts';
 
 export interface LobeAgentConfig {
+  avatar?: string;
+
   chatConfig: LobeAgentChatConfig;
 
   /**
@@ -14,11 +16,11 @@ export interface LobeAgentConfig {
    * 用于保存富文本编辑器的完整状态，包括 mention 等特殊节点
    */
   editorData?: any;
-
   enableAgentMode?: boolean;
   fewShots?: FewShots;
   files?: FileItem[];
   id?: string;
+
   /**
    * knowledge bases
    */

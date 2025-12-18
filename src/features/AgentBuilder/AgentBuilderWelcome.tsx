@@ -1,13 +1,19 @@
 'use client';
 
-import { DEFAULT_INBOX_AVATAR } from '@/const/index';
 import { Avatar, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DEFAULT_INBOX_AVATAR } from '@/const/index';
+import { conversationSelectors, useConversationStore } from '@/features/Conversation';
+import { useAgentStore } from '@/store/agent';
+import { agentByIdSelectors } from '@/store/agent/selectors';
+
 const AgentBuilderWelcome = memo(() => {
   const { t } = useTranslation('chat');
+  const agentId = useConversationStore(conversationSelectors.agentId);
+  const agent = useAgentStore(agentByIdSelectors.getAgentConfigById(agentId));
 
   return (
     <>
@@ -19,7 +25,7 @@ const AgentBuilderWelcome = memo(() => {
         }}
         width={'100%'}
       >
-        <Avatar avatar={DEFAULT_INBOX_AVATAR} shape={'square'} size={78} />
+        <Avatar avatar={agent.avatar || DEFAULT_INBOX_AVATAR} shape={'square'} size={78} />
         <Markdown fontSize={14} variant={'chat'}>
           {t('agentBuilder.welcome')}
         </Markdown>
