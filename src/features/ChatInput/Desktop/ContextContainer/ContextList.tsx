@@ -22,11 +22,10 @@ const ContextList = memo(() => {
   const showSelectionList = useFileStore(fileChatSelectors.chatContextSelectionHasItem);
   const { styles } = useStyles();
 
-  // Filter duplicates based on content + format
-  const selectionList = rawSelectionList.filter((item, index, arr) => {
-    const key = `${item.content}::${item.format || 'text'}`;
-    return arr.findIndex((i) => `${i.content}::${i.format || 'text'}` === key) === index;
-  });
+  // Filter duplicates based on preview content
+  const selectionList = rawSelectionList.filter(
+    (item, index, self) => index === self.findIndex((t) => t.preview === item.preview),
+  );
 
   if ((!inputFilesList.length || !showFileList) && !showSelectionList) return null;
 
