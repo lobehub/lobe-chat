@@ -63,7 +63,7 @@ const ModelSelect = memo(() => {
               </Flexbox>
             ),
             onClick: () => {
-              navigate(`/settings?active=provider&provider=${provider.id}`);
+              navigate(`/settings/provider/${provider.id}`);
             },
             value: `${provider.id}/empty`,
           },
@@ -85,7 +85,7 @@ const ModelSelect = memo(() => {
             </Flexbox>
           ),
           onClick: () => {
-            navigate('/settings?active=provider');
+            navigate('/settings/provider/all');
           },
           value: 'no-provider',
         },
@@ -110,7 +110,7 @@ const ModelSelect = memo(() => {
             icon={LucideBolt}
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/settings?active=provider&provider=${provider.id}`);
+              navigate(`/settings/provider/${provider.id}`);
             }}
             size={'small'}
             title={t('ModelSwitchPanel.goToSettings')}

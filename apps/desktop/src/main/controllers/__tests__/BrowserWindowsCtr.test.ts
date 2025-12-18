@@ -83,13 +83,13 @@ describe('BrowserWindowsCtr', () => {
   });
 
   describe('openSettingsWindow', () => {
-    it('should navigate to settings in main window with the specified tab', async () => {
-      const tab = 'appearance';
-      const result = await browserWindowsCtr.openSettingsWindow(tab);
+    it('should navigate to settings in main window with the specified path', async () => {
+      const path = '/settings/common';
+      const result = await browserWindowsCtr.openSettingsWindow({ path });
       expect(mockGetMainWindow).toHaveBeenCalled();
       expect(mockShow).toHaveBeenCalled();
       expect(mockBroadcast).toHaveBeenCalledWith('navigate', {
-        path: '/settings?active=appearance',
+        path: '/settings/common',
       });
       expect(result).toEqual({ success: true });
     });
@@ -99,7 +99,7 @@ describe('BrowserWindowsCtr', () => {
       mockBroadcast.mockImplementationOnce(() => {
         throw new Error(errorMessage);
       });
-      const result = await browserWindowsCtr.openSettingsWindow('display');
+      const result = await browserWindowsCtr.openSettingsWindow({ path: '/settings/common' });
       expect(result).toEqual({ error: errorMessage, success: false });
     });
   });
