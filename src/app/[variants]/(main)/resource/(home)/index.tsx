@@ -47,11 +47,18 @@ const ResourceHomePage = memo(() => {
         documentData?.fileType?.toLowerCase() === 'application/pdf' ||
         documentData?.filename?.toLowerCase().endsWith('.pdf');
 
+      // Check if it's a page/document
+      const isPage =
+        !isPDF &&
+        (fileData?.sourceType === 'document' ||
+          fileData?.fileType === 'custom/document' ||
+          !!documentData);
+
       // Determine mode based on file type
       if (isPDF) {
         // PDF files should always use editor mode for PDF viewer
         setMode('editor');
-      } else if (fileId.startsWith('doc')) {
+      } else if (isPage) {
         setMode('page');
       } else {
         setMode('editor');

@@ -59,6 +59,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
   const editor = usePageEditorStore((s) => s.editor);
   const editorState = usePageEditorStore((s) => s.editorState);
   const addSelectionContext = useFileStore((s) => s.addChatContextSelection);
+  const existingSelections = useFileStore((s) => s.chatContextSelections);
   const theme = useTheme();
   const { styles } = useStyles();
 
@@ -82,6 +83,15 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
 
               if (!content) return;
 
+              const format = xml.trim() ? 'xml' : 'text';
+
+              // Check for duplicate content with same format
+              const isDuplicate = existingSelections.some(
+                (selection) => selection.content === content && selection.format === format,
+              );
+
+              if (isDuplicate) return;
+
               const preview =
                 (plainText || xml)
                   .replaceAll(/<[^>]*>/g, ' ')
@@ -90,7 +100,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
 
               addSelectionContext({
                 content,
-                format: xml.trim() ? 'xml' : 'text',
+                format,
                 id: `selection-${nanoid(6)}`,
                 preview,
                 title: 'Selection',
@@ -276,7 +286,7 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
     ];
 
     return baseItems.filter(Boolean) as ChatInputActionsProps['items'];
-  }, [addSelectionContext, editor, editorState, floating, t]);
+  }, [addSelectionContext, editor, editorState, existingSelections, floating, t]);
 
   if (!editorState) return null;
 
