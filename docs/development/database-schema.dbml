@@ -8,7 +8,7 @@ table agents {
   avatar text
   background_color text
   market_identifier text
-  plugins jsonb [default: `[]`]
+  plugins jsonb
   client_id text
   user_id text [not null]
   chat_config jsonb

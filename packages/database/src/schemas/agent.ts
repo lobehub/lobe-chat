@@ -37,7 +37,7 @@ export const agents = pgTable(
     backgroundColor: text('background_color'),
     marketIdentifier: text('market_identifier'),
 
-    plugins: jsonb('plugins').$type<string[]>().default([]),
+    plugins: jsonb('plugins').$type<string[]>(),
 
     clientId: text('client_id'),
 

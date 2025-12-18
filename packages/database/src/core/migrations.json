@@ -1020,5 +1020,11 @@
     "bps": true,
     "folderMillis": 1765991196753,
     "hash": "2b6e66f0f4d82da8cf22a47a5876cb2a110694756242436ec8701e0cffeba2e5"
+  },
+  {
+    "sql": ["ALTER TABLE \"agents\" ALTER COLUMN \"plugins\" DROP DEFAULT;"],
+    "bps": true,
+    "folderMillis": 1766040132181,
+    "hash": "f405330fd63c12a5d47290327573efaee91df8ca8a390d2f5973a6f42ca3d04f"
   }
 ]

@@ -462,6 +462,13 @@
       "when": 1765991196753,
       "tag": "0065_gigantic_firedrake",
       "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1766040132181,
+      "tag": "0066_agents_plugins_drop_default",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -269,7 +269,7 @@ export class SessionModel {
         params,
         systemRole,
         provider,
-        plugins = [],
+        plugins,
         openingMessage,
         openingQuestions = [],
         // TTS config
