@@ -104,6 +104,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         className={TAG_CLASSNAME}
         direction={directionReverse ? 'horizontal-reverse' : 'horizontal'}
         gap={4}
+        style={{ marginLeft: 'auto' }}
         width={'fit-content'}
       >
         {renderTag(model.files, () => t('ModelSelect.featureTag.file'), 'success', LucidePaperclip)}
@@ -220,10 +221,9 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
       onMouseEnter={shouldLazyMountTooltip ? () => setHovered(true) : undefined}
       onMouseLeave={shouldLazyMountTooltip ? () => setHovered(false) : undefined}
       style={{
-        minWidth: mobile ? '100%' : undefined,
         overflow: 'hidden',
         position: 'relative',
-        width: mobile ? '80vw' : 'auto',
+        width: '100%',
       }}
     >
       <Flexbox
@@ -233,7 +233,7 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
         style={{ flexShrink: 1, minWidth: 0, overflow: 'hidden' }}
       >
         <ModelIcon model={model.id} size={20} />
-        <Text style={mobile ? { maxWidth: '60vw', overflowX: 'auto', whiteSpace: 'nowrap' } : {}}>
+        <Text ellipsis style={mobile ? { maxWidth: '60vw' } : { minWidth: 0, overflow: 'hidden' }}>
           {model.displayName || model.id}
         </Text>
         {newBadgeLabel ? (

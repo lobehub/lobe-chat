@@ -3,7 +3,7 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import { AiModelForSelect } from 'model-bank';
-import { type ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { type ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
@@ -21,7 +21,18 @@ const STORAGE_KEY = 'MODEL_SWITCH_PANEL_WIDTH';
 const DEFAULT_WIDTH = 320;
 const MIN_WIDTH = 280;
 const MAX_WIDTH = 600;
-const PANEL_HEIGHT = 550;
+const MAX_PANEL_HEIGHT = 550;
+
+const INITIAL_BUFFER_SIZE = 10;
+const FULL_BUFFER_SIZE = 1000;
+const BUFFER_DELAY_MS = 500;
+
+const ITEM_HEIGHT = {
+  'empty-model': 38,
+  'group-header': 40,
+  'model-item': 38,
+  'no-provider': 38,
+} as const;
 
 const ENABLE_RESIZING = {
   bottom: false,
@@ -128,6 +139,33 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
       return stored ? Number(stored) : DEFAULT_WIDTH;
     });
 
+    const [bufferSize, setBufferSize] = useState(INITIAL_BUFFER_SIZE);
+    const bufferTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleOpenChange = useCallback(
+      (isOpen: boolean) => {
+        if (isOpen) {
+          // Start with minimal buffer for fast initial render, then increase after delay
+          setBufferSize(INITIAL_BUFFER_SIZE);
+          bufferTimerRef.current = setTimeout(() => {
+            setBufferSize(FULL_BUFFER_SIZE);
+          }, BUFFER_DELAY_MS);
+        } else {
+          // Reset buffer when closing
+          if (bufferTimerRef.current) clearTimeout(bufferTimerRef.current);
+          setBufferSize(INITIAL_BUFFER_SIZE);
+        }
+        onOpenChange?.(isOpen);
+      },
+      [onOpenChange],
+    );
+
+    useEffect(() => {
+      return () => {
+        if (bufferTimerRef.current) clearTimeout(bufferTimerRef.current);
+      };
+    }, []);
+
     // Get values from store for fallback when props are not provided
     const [storeModel, storeProvider, updateAgentConfig] = useAgentStore((s) => [
       agentSelectors.currentAgentModel(s),
@@ -155,27 +193,39 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
     );
 
     // Flatten the provider/model tree into a flat list for virtual scrolling
-    const virtualItems = useMemo<VirtualItem[]>(() => {
+    const { virtualItems, panelHeight } = useMemo(() => {
       if (enabledList.length === 0) {
-        return [{ type: 'no-provider' }];
+        return {
+          panelHeight: ITEM_HEIGHT['no-provider'],
+          virtualItems: [{ type: 'no-provider' }] as VirtualItem[],
+        };
       }
 
       const items: VirtualItem[] = [];
+      let totalHeight = 0;
+
       for (const providerItem of enabledList) {
         // Add provider group header
         items.push({ provider: providerItem, type: 'group-header' });
+        totalHeight += ITEM_HEIGHT['group-header'];
 
         if (providerItem.children.length === 0) {
           // Add empty model placeholder
           items.push({ provider: providerItem, type: 'empty-model' });
+          totalHeight += ITEM_HEIGHT['empty-model'];
         } else {
           // Add each model item
           for (const modelItem of providerItem.children) {
             items.push({ model: modelItem, provider: providerItem, type: 'model-item' });
+            totalHeight += ITEM_HEIGHT['model-item'];
           }
         }
       }
-      return items;
+
+      return {
+        panelHeight: Math.min(totalHeight, MAX_PANEL_HEIGHT),
+        virtualItems: items,
+      };
     }, [enabledList]);
 
     const activeKey = menuKey(provider, model);
@@ -277,7 +327,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
     return (
       <Dropdown
         arrow={false}
-        onOpenChange={onOpenChange}
+        onOpenChange={handleOpenChange}
         open={open}
         placement={'topLeft'}
         popupRender={() => (
@@ -293,10 +343,10 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
               localStorage.setItem(STORAGE_KEY, String(newWidth));
             }}
             position={{ x: 0, y: 0 }}
-            size={{ height: PANEL_HEIGHT, width: panelWidth }}
+            size={{ height: panelHeight, width: panelWidth }}
             style={{ position: 'relative' }}
           >
-            <VList bufferSize={400} style={{ height: PANEL_HEIGHT, width: '100%' }}>
+            <VList bufferSize={bufferSize} style={{ height: panelHeight, width: '100%' }}>
               {virtualItems.map(renderVirtualItem)}
             </VList>
           </Rnd>
