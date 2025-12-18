@@ -1102,7 +1102,7 @@ table users {
   first_name text
   last_name text
   full_name text
-  occupation text
+  interests "varchar(64)[]"
   is_onboarded boolean [default: false]
   onboarding jsonb
   clerk_created_at "timestamp with time zone"

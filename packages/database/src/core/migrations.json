@@ -1054,21 +1054,30 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"message_groups\" ADD COLUMN \"type\" text;",
-      "\nALTER TABLE \"message_groups\" ADD COLUMN \"content\" text;",
-      "\nALTER TABLE \"message_groups\" ADD COLUMN \"editor_data\" jsonb;",
-      "\nALTER TABLE \"messages\" ADD COLUMN \"summary\" text;",
-      "\nALTER TABLE \"threads\" ADD COLUMN \"agent_id\" text;",
-      "\nALTER TABLE \"threads\" ADD COLUMN \"group_id\" text;",
-      "\nALTER TABLE \"threads\" ADD COLUMN \"metadata\" jsonb;",
+      "ALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"type\" text;",
+      "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"content\" text;",
+      "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"summary\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"agent_id\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"group_id\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"metadata\" jsonb;",
       "\nALTER TABLE \"threads\" ADD CONSTRAINT \"threads_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
       "\nALTER TABLE \"threads\" ADD CONSTRAINT \"threads_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nCREATE INDEX \"message_groups_type_idx\" ON \"message_groups\" USING btree (\"type\");",
-      "\nCREATE INDEX \"threads_agent_id_idx\" ON \"threads\" USING btree (\"agent_id\");",
-      "\nCREATE INDEX \"threads_group_id_idx\" ON \"threads\" USING btree (\"group_id\");"
+      "\nCREATE INDEX IF NOT EXISTS \"message_groups_type_idx\" ON \"message_groups\" USING btree (\"type\");",
+      "\nCREATE INDEX IF NOT EXISTS \"threads_agent_id_idx\" ON \"threads\" USING btree (\"agent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"threads_group_id_idx\" ON \"threads\" USING btree (\"group_id\");\n"
     ],
     "bps": true,
     "folderMillis": 1766041955064,
-    "hash": "cfa54004e4a45b8299055c5be87f9d8730cb4ec976fac17631d6fa360ed7a0bb"
+    "hash": "6e51ad0e6066dcfdacb542d68d21a65703e77fa503dc424b5af88b236e199a2e"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"users\" DROP COLUMN IF EXISTS \"occupation\";",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"interests\" varchar(64)[];\n"
+    ],
+    "bps": true,
+    "folderMillis": 1766062800000,
+    "hash": "1dfe86b13dc0f4f52e838460acdaa0d73c113887640cce2197692e9f8c38026e"
   }
 ]

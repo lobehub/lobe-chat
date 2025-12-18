@@ -476,6 +476,13 @@
       "when": 1766041955064,
       "tag": "0067_dapper_alex_wilder",
       "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1766062800000,
+      "tag": "0068_replace_occupation_with_interests",
+      "breakpoints": true
     }
   ],
   "version": "6"
