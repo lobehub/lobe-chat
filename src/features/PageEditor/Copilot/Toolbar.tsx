@@ -181,6 +181,8 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
 
   const [toggleRightPanel] = useGlobalStore((s) => [s.toggleRightPanel]);
 
+  const hideHistory = !topics || topics.length === 0;
+
   return (
     <NavHeader
       left={
