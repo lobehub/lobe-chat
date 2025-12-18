@@ -1,10 +1,10 @@
 // @vitest-environment node
+import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { ToolsEngine } from '@lobechat/context-engine';
 import { describe, expect, it } from 'vitest';
 
 import { builtinTools } from '@/tools';
 import { KnowledgeBaseManifest } from '@/tools/knowledge-base';
-import { LocalSystemManifest } from '@/tools/local-system';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import { createServerAgentToolsEngine, createServerToolsEngine } from '../index';

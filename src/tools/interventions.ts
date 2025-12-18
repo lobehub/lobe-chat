@@ -3,11 +3,11 @@ import {
   AgentBuilderManifest,
 } from '@lobechat/builtin-tool-agent-builder/client';
 import { GTDInterventions, GTDManifest } from '@lobechat/builtin-tool-gtd/client';
+import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinIntervention } from '@lobechat/types';
 
 import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
 import { CodeInterpreterInterventions } from './code-interpreter/Intervention';
-import { LocalSystemManifest } from './local-system';
 import { LocalSystemInterventions } from './local-system/Intervention';
 
 /**

@@ -5,6 +5,8 @@ import { SKIP, visit } from 'unist-util-visit';
 // 创建 debugger 实例
 const log = debug('lobe-markdown:remark-plugin:self-closing');
 
+const escapeRegExp = (str: string) => str.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
+
 // Regex to parse attributes from a string
 // Handles keys, keys with quoted values (double or single), and boolean keys
 const attributeRegex = /([\w-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
@@ -26,9 +28,11 @@ export const createRemarkSelfClosingTagPlugin =
   () => {
     // Regex for the specific tag, ensure it matches the entire string for HTML check
     // Allow trailing whitespace after /> to handle cases where markdown parsers include it
-    const exactTagRegex = new RegExp(`^<${tagName}(\\s+[^>]*?)?\\s*\\/>\\s*$`);
+    // Tag names are case-insensitive in HTML, and some upstream processors may normalize casing.
+    const escapedTagName = escapeRegExp(tagName);
+    const exactTagRegex = new RegExp(`^<${escapedTagName}(\\s+[^>]*?)?\\s*\\/>\\s*$`, 'i');
     // Regex for finding tags within text
-    const textTagRegex = new RegExp(`<${tagName}(\\s+[^>]*?)?\\s*\\/>`, 'g');
+    const textTagRegex = new RegExp(`<${escapedTagName}(\\s+[^>]*?)?\\s*\\/>`, 'gi');
 
     return (tree) => {
       // --- DEBUG LOG START (Before Visit) ---
@@ -73,6 +77,55 @@ export const createRemarkSelfClosingTagPlugin =
           parent.children.splice(index, 1, newNode);
           return [SKIP, index + 1]; // Skip the node we just inserted
         }
+
+        // Handle the common case where remark parses multiple consecutive HTML tags as a single `html` node
+        // e.g.
+        // <localFile ... />
+        // <localFile ... />
+        if (
+          parent &&
+          typeof index === 'number' &&
+          typeof node.value === 'string' &&
+          node.value.toLowerCase().includes(`<${tagName.toLowerCase()}`)
+        ) {
+          const html = node.value;
+          const newChildren: any[] = [];
+          let lastIndex = 0;
+          let textMatch: RegExpExecArray | null;
+
+          textTagRegex.lastIndex = 0;
+          while ((textMatch = textTagRegex.exec(html)) !== null) {
+            const [fullMatch, attributesString] = textMatch;
+            const matchIndex = textMatch.index;
+
+            // Preserve any non-tag fragments as `html` nodes (flow content), so we don't create invalid root-level `text`.
+            if (matchIndex > lastIndex) {
+              const fragment = html.slice(lastIndex, matchIndex);
+              if (fragment) newChildren.push({ type: 'html', value: fragment });
+            }
+
+            const properties = attributesString ? parseAttributes(attributesString.trim()) : {};
+            newChildren.push({
+              data: { hName: tagName, hProperties: properties },
+              type: tagName,
+            });
+
+            lastIndex = matchIndex + fullMatch.length;
+          }
+
+          if (newChildren.length > 0) {
+            if (lastIndex < html.length) {
+              const fragment = html.slice(lastIndex);
+              if (fragment) newChildren.push({ type: 'html', value: fragment });
+            }
+
+            // Only replace when we actually produced at least one tag node
+            if (newChildren.some((n) => n?.type === tagName)) {
+              parent.children.splice(index, 1, ...newChildren);
+              return [SKIP, index + newChildren.length];
+            }
+          }
+        }
       });
 
       // 2. Visit Text nodes for inline matches
@@ -80,7 +133,12 @@ export const createRemarkSelfClosingTagPlugin =
       visit(tree, 'text', (node: any, index: number, parent) => {
         log('>>> Visiting Text node: "%s"', node.value);
 
-        if (!parent || typeof index !== 'number' || !node.value?.includes(`<${tagName}`)) {
+        if (
+          !parent ||
+          typeof index !== 'number' ||
+          typeof node.value !== 'string' ||
+          !node.value.toLowerCase().includes(`<${tagName.toLowerCase()}`)
+        ) {
           return; // Quick exit if tag isn't possibly present
         }
 
@@ -136,7 +194,12 @@ export const createRemarkSelfClosingTagPlugin =
       visit(tree, 'inlineCode', (node: any, index: number, parent) => {
         log('>>> Visiting inlineCode node: "%s"', node.value);
 
-        if (!parent || typeof index !== 'number' || !node.value?.includes(`<${tagName}`)) {
+        if (
+          !parent ||
+          typeof index !== 'number' ||
+          typeof node.value !== 'string' ||
+          !node.value.toLowerCase().includes(`<${tagName.toLowerCase()}`)
+        ) {
           return;
         }
 

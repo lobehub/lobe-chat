@@ -6,6 +6,8 @@ import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management
 import { GroupManagementRenders } from '@lobechat/builtin-tool-group-management/client';
 // gtd
 import { GTDManifest, GTDRenders } from '@lobechat/builtin-tool-gtd/client';
+// local-system
+import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinRender } from '@lobechat/types';
 
 // code-interpreter
@@ -14,8 +16,6 @@ import { CodeInterpreterRenders } from './code-interpreter/Render';
 // knowledge-base
 import { KnowledgeBaseManifest } from './knowledge-base';
 import { KnowledgeBaseRenders } from './knowledge-base/Render';
-// local-system
-import { LocalSystemManifest } from './local-system';
 import { LocalSystemRenders } from './local-system/Render';
 // web-browsing
 import { WebBrowsingManifest } from './web-browsing';

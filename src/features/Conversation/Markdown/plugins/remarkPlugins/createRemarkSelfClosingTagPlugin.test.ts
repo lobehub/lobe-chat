@@ -15,6 +15,18 @@ const processMarkdown = (markdown: string, tagName: string) => {
 describe('createRemarkSelfClosingTagPlugin', () => {
   const tagName = 'localFile';
 
+  const collectNodesByType = (tree: any, type: string) => {
+    const nodes: any[] = [];
+    const walk = (node: any) => {
+      if (!node || typeof node !== 'object') return;
+      if (node.type === type) nodes.push(node);
+      const children = (node as any).children;
+      if (Array.isArray(children)) for (const child of children) walk(child);
+    };
+    walk(tree);
+    return nodes;
+  };
+
   it('should replace a single self-closing tag (parsed as HTML) with a custom node', () => {
     const markdown = `<${tagName} name="test.txt" path="/path/to/test.txt" />`;
     const tree = processMarkdown(markdown, tagName);
@@ -200,6 +212,64 @@ describe('createRemarkSelfClosingTagPlugin', () => {
 `;
     const tree = processMarkdown(markdown, tagName);
     expect(tree).toMatchSnapshot();
+  });
+
+  it('should parse attributes containing spaces and @ (real-world screenshot file name)', () => {
+    const markdown = `<${tagName} name="CleanShot 2025-12-17 at 17.56.33@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 17.56.33@2x.jpg" />`;
+    const tree = processMarkdown(markdown, tagName);
+
+    expect(tree.children).toHaveLength(1);
+    const node = tree.children[0];
+    expect(node.type).toBe(tagName);
+    expect(node.data?.hName).toBe(tagName);
+    expect(node.data?.hProperties).toEqual({
+      name: 'CleanShot 2025-12-17 at 17.56.33@2x.jpg',
+      path: '/Users/innei/Desktop/CleanShot 2025-12-17 at 17.56.33@2x.jpg',
+    });
+  });
+
+  it('should handle multiple consecutive tags parsed as a single html block node', () => {
+    const markdown = [
+      '以下是桌面（`<localFile name="Desktop" path="/Users/innei/Desktop" isDirectory />`）下的文件列表：',
+      '',
+      '<localFile name="CleanShot 2025-12-17 at 17.56.33@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 17.56.33@2x.jpg" />',
+      '<localFile name="CleanShot 2025-12-17 at 17.56.39@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 17.56.39@2x.jpg" />',
+      '<localFile name="CleanShot 2025-12-17 at 21.49.12@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 21.49.12@2x.jpg" />',
+      '<localFile name="CleanShot 2025-12-17 at 22.04.01@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 22.04.01@2x.jpg" />',
+      '<localFile name="CleanShot 2025-12-17 at 22.07.37@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 22.07.37@2x.jpg" />',
+      '<localFile name="CleanShot 2025-12-17 at 22.39.37.mp4" path="/Users/innei/Desktop/CleanShot 2025-12-17 at 22.39.37.mp4" />',
+      '<localFile name="CleanShot 2025-12-18 at 10.36.19@2x.jpg" path="/Users/innei/Desktop/CleanShot 2025-12-18 at 10.36.19@2x.jpg" />',
+      '',
+      '如果你想查看其他目录或进一步筛选文件，请告诉我！',
+    ].join('\n');
+
+    const tree = processMarkdown(markdown, tagName);
+    const localFiles = collectNodesByType(tree, tagName);
+
+    expect(localFiles).toHaveLength(8);
+    expect(localFiles.map((n) => n.data?.hProperties?.name)).toEqual([
+      'Desktop',
+      'CleanShot 2025-12-17 at 17.56.33@2x.jpg',
+      'CleanShot 2025-12-17 at 17.56.39@2x.jpg',
+      'CleanShot 2025-12-17 at 21.49.12@2x.jpg',
+      'CleanShot 2025-12-17 at 22.04.01@2x.jpg',
+      'CleanShot 2025-12-17 at 22.07.37@2x.jpg',
+      'CleanShot 2025-12-17 at 22.39.37.mp4',
+      'CleanShot 2025-12-18 at 10.36.19@2x.jpg',
+    ]);
+  });
+
+  it('should match tag name in a case-insensitive way (HTML tag names are case-insensitive)', () => {
+    const markdown = `<localfile name="a.txt" path="/tmp/a.txt" />`;
+    const tree = processMarkdown(markdown, tagName);
+
+    expect(tree.children).toHaveLength(1);
+    const node = tree.children[0];
+    expect(node.type).toBe(tagName);
+    expect(node.data?.hProperties).toEqual({
+      name: 'a.txt',
+      path: '/tmp/a.txt',
+    });
   });
 
   it('should handle multiple tags in unordered list with directories and files', () => {

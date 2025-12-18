@@ -167,6 +167,8 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
   const { styles, cx } = useStyles();
   const setActiveAgentId = useAgentStore((s) => s.setActiveAgentId);
   const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
+  // Feature flag to show/hide topic history in page editor
+  const hideHistory = false;
 
   // Feature flag to show/hide topic history in page editor
   const hideHistory = false;

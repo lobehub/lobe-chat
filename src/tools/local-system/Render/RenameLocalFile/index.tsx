@@ -1,3 +1,4 @@
+import type { LocalReadFileState } from '@lobechat/builtin-tool-local-system';
 import { RenameLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
@@ -8,7 +9,6 @@ import React, { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile } from '@/features/LocalFile';
-import { LocalReadFileState } from '@/tools/local-system/type';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

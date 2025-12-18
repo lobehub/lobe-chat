@@ -9,13 +9,13 @@
  * - Gets model capabilities from provided function
  * - No dependency on frontend stores (useToolStore, useAgentStore, etc.)
  */
+import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { ToolsEngine } from '@lobechat/context-engine';
 import type { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import debug from 'debug';
 
 import { builtinTools } from '@/tools';
 import { KnowledgeBaseManifest } from '@/tools/knowledge-base';
-import { LocalSystemManifest } from '@/tools/local-system';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import type {

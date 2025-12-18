@@ -1,6 +1,7 @@
+import { EditLocalFileState } from '@lobechat/builtin-tool-local-system';
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Alert, Icon , Skeleton } from '@lobehub/ui';
+import { Alert, Icon, Skeleton } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
 import React, { memo, useMemo } from 'react';
@@ -9,8 +10,6 @@ import 'react-diff-view/style/index.css';
 import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
-
-import { EditLocalFileState } from '../../type';
 
 const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFileState>>(
   ({ args, pluginState, pluginError }) => {
