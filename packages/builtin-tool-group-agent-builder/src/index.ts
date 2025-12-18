@@ -8,6 +8,8 @@ export {
   type InviteAgentState,
   type RemoveAgentParams,
   type RemoveAgentState,
+  type UpdateGroupConfigParams,
+  type UpdateGroupConfigState,
   type UpdateGroupMetaParams,
   type UpdateGroupPromptParams,
   type UpdateGroupPromptState,

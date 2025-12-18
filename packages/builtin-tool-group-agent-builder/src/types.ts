@@ -12,16 +12,18 @@ export const GroupAgentBuilderApiName = {
   // Read operations (inherited from AgentBuilder)
   getAvailableModels: 'getAvailableModels',
   // Write operations (inherited from AgentBuilder)
-installPlugin: 'installPlugin',
-  
+  installPlugin: 'installPlugin',
+
   // Group-specific operations
-inviteAgent: 'inviteAgent',
-  
-removeAgent: 'removeAgent',
-  
-searchMarketTools: 'searchMarketTools',
-  
+  inviteAgent: 'inviteAgent',
+
+  removeAgent: 'removeAgent',
+
+  searchMarketTools: 'searchMarketTools',
+
   updateAgentConfig: 'updateConfig',
+  // Group config operations
+  updateGroupConfig: 'updateGroupConfig',
   updatePrompt: 'updatePrompt',
 } as const;
 
@@ -98,4 +100,36 @@ export interface UpdateGroupPromptState {
   newPrompt: string;
   previousPrompt?: string;
   success: boolean;
+}
+
+// ============== Group Config Types ==============
+
+export interface UpdateGroupConfigParams {
+  /**
+   * Partial group configuration to update
+   */
+  config?: {
+    /**
+     * Opening message shown when starting a new conversation with the group
+     */
+    openingMessage?: string;
+    /**
+     * Suggested opening questions to help users get started
+     */
+    openingQuestions?: string[];
+  };
+}
+
+export interface UpdateGroupConfigState {
+  /**
+   * Whether the operation was successful
+   */
+  success: boolean;
+  /**
+   * The updated configuration values
+   */
+  updatedConfig: {
+    openingMessage?: string;
+    openingQuestions?: string[];
+  };
 }

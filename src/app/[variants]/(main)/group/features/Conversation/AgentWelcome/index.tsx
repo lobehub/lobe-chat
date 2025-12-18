@@ -22,16 +22,30 @@ const InboxWelcome = memo(() => {
   const { t } = useTranslation(['welcome', 'chat']);
   const mobile = useIsMobile();
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
-  const openingQuestions = useAgentStore(agentSelectors.openingQuestions, isEqual);
   const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
   const [groupMeta] = useAgentGroupStore((s) => [agentGroupSelectors.currentGroupMeta(s)]);
+
+  // Use group config for opening message and questions
+  const groupOpeningMessage = useAgentGroupStore(agentGroupSelectors.currentGroupOpeningMessage);
+  const groupOpeningQuestions = useAgentGroupStore(
+    agentGroupSelectors.currentGroupOpeningQuestions,
+    isEqual,
+  );
 
   const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
     name: meta.title || t('defaultAgent', { ns: 'chat' }),
     ns: 'chat',
   });
-  const openingMessage = useAgentStore(agentSelectors.openingMessage);
+
+  // Get agent opening message and questions (always call hooks)
+  const agentOpeningMessage = useAgentStore(agentSelectors.openingMessage);
+  const agentOpeningQuestions = useAgentStore(agentSelectors.openingQuestions, isEqual);
+
+  // Prefer group opening message/questions over agent's
+  const openingMessage = groupOpeningMessage || agentOpeningMessage;
+  const openingQuestions =
+    groupOpeningQuestions.length > 0 ? groupOpeningQuestions : agentOpeningQuestions;
 
   const message = useMemo(() => {
     if (openingMessage) return openingMessage;

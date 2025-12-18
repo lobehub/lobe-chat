@@ -18,6 +18,16 @@ const currentGroupConfig = (s: ChatGroupStore) => {
   return groupId ? agentGroupByIdSelectors.groupConfig(groupId)(s) : DEFAULT_CHAT_GROUP_CHAT_CONFIG;
 };
 
+const currentGroupOpeningMessage = (s: ChatGroupStore): string | undefined => {
+  const config = currentGroupConfig(s);
+  return config?.openingMessage;
+};
+
+const currentGroupOpeningQuestions = (s: ChatGroupStore): string[] => {
+  const config = currentGroupConfig(s);
+  return config?.openingQuestions || [];
+};
+
 const currentGroupMeta = (s: ChatGroupStore) => {
   const groupId = activeGroupId(s);
   return groupId ? agentGroupByIdSelectors.groupMeta(groupId)(s) : DEFAULT_CHAT_GROUP_META_CONFIG;
@@ -51,6 +61,8 @@ export const currentSelectors = {
   currentGroupConfig,
   currentGroupMembers,
   currentGroupMeta,
+  currentGroupOpeningMessage,
+  currentGroupOpeningQuestions,
   getAllGroups,
   isGroupsInit,
   isGroupsInitialized,

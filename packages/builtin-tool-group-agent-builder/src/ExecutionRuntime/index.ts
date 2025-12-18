@@ -9,6 +9,8 @@ import type {
   InviteAgentState,
   RemoveAgentParams,
   RemoveAgentState,
+  UpdateGroupConfigParams,
+  UpdateGroupConfigState,
   UpdateGroupPromptParams,
   UpdateGroupPromptState,
 } from '../types';
@@ -196,6 +198,82 @@ export class GroupAgentBuilderExecutionRuntime {
           newPrompt: args.prompt,
           success: false,
         } as UpdateGroupPromptState,
+        success: false,
+      };
+    }
+  }
+
+  /**
+   * Update group configuration (openingMessage, openingQuestions)
+   */
+  async updateGroupConfig(args: UpdateGroupConfigParams): Promise<BuiltinServerRuntimeOutput> {
+    try {
+      const state = getChatGroupStoreState();
+      const group = agentGroupSelectors.currentGroup(state);
+
+      if (!group) {
+        return {
+          content: 'No active group found',
+          error: 'No active group found',
+          success: false,
+        };
+      }
+
+      const { config } = args;
+
+      if (!config) {
+        return {
+          content: 'No configuration provided',
+          error: 'No configuration provided',
+          success: false,
+        };
+      }
+
+      // Build the config update object
+      const configUpdate: { openingMessage?: string; openingQuestions?: string[] } = {};
+
+      if (config.openingMessage !== undefined) {
+        configUpdate.openingMessage = config.openingMessage;
+      }
+
+      if (config.openingQuestions !== undefined) {
+        configUpdate.openingQuestions = config.openingQuestions;
+      }
+
+      // Update the group config
+      await state.updateGroupConfig(configUpdate);
+
+      const updatedFields: string[] = [];
+      if (config.openingMessage !== undefined) {
+        updatedFields.push(
+          config.openingMessage
+            ? `openingMessage (${config.openingMessage.length} chars)`
+            : 'openingMessage (cleared)',
+        );
+      }
+      if (config.openingQuestions !== undefined) {
+        updatedFields.push(
+          config.openingQuestions.length > 0
+            ? `openingQuestions (${config.openingQuestions.length} questions)`
+            : 'openingQuestions (cleared)',
+        );
+      }
+
+      const content = `Successfully updated group configuration: ${updatedFields.join(', ')}`;
+
+      return {
+        content,
+        state: {
+          success: true,
+          updatedConfig: configUpdate,
+        } as UpdateGroupConfigState,
+        success: true,
+      };
+    } catch (error) {
+      const err = error as Error;
+      return {
+        content: `Failed to update group configuration: ${err.message}`,
+        error,
         success: false,
       };
     }

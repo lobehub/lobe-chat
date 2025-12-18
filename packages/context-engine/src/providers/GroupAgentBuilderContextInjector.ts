@@ -59,6 +59,10 @@ export interface GroupAgentBuilderContext {
   config?: {
     /** Whether the supervisor is enabled */
     enableSupervisor?: boolean;
+    /** Opening message shown when starting a new conversation */
+    openingMessage?: string;
+    /** Suggested opening questions */
+    openingQuestions?: string[];
     /** Scene type */
     scene?: string;
     /** Group's system prompt */
@@ -128,6 +132,19 @@ const defaultFormatGroupContext = (context: GroupAgentBuilderContext): string =>
           : context.config.systemPrompt;
       configFields.push(
         `  <systemPrompt length="${context.config.systemPrompt.length}">${escapeXml(preview)}</systemPrompt>`,
+      );
+    }
+    if (context.config.openingMessage) {
+      configFields.push(
+        `  <openingMessage>${escapeXml(context.config.openingMessage)}</openingMessage>`,
+      );
+    }
+    if (context.config.openingQuestions && context.config.openingQuestions.length > 0) {
+      const questionsXml = context.config.openingQuestions
+        .map((q) => `    <question>${escapeXml(q)}</question>`)
+        .join('\n');
+      configFields.push(
+        `  <openingQuestions count="${context.config.openingQuestions.length}">\n${questionsXml}\n  </openingQuestions>`,
       );
     }
 
@@ -221,7 +238,7 @@ const defaultFormatGroupContext = (context: GroupAgentBuilderContext): string =>
   }
 
   return `<current_group_context>
-<instruction>This is the current group's configuration context. Use this information when the user asks about or wants to modify group settings. Use inviteAgent/removeAgent to manage members, or updatePrompt to modify the group's system prompt.</instruction>
+<instruction>This is the current group's configuration context. Use this information when the user asks about or wants to modify group settings. Use inviteAgent/removeAgent to manage members, updatePrompt to modify the group's system prompt, or updateGroupConfig to set opening message and opening questions.</instruction>
 ${parts.join('\n')}
 </current_group_context>`;
 };

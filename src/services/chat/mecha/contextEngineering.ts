@@ -188,6 +188,8 @@ export const contextEngineering = async ({
 
         groupAgentBuilderContext = {
           config: {
+            openingMessage: activeGroupDetail.config?.openingMessage || undefined,
+            openingQuestions: activeGroupDetail.config?.openingQuestions,
             systemPrompt: activeGroupDetail.config?.systemPrompt || undefined,
           },
           groupId: activeGroupId,
