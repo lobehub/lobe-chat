@@ -1,13 +1,7 @@
 import { ActionIcon, Block } from '@lobehub/ui';
-import { Dropdown, Popover } from 'antd';
+import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import type { ItemType } from 'antd/es/menu/interface';
-import {
-  ChevronsUpDownIcon,
-  Clock3Icon,
-  PanelRightCloseIcon,
-  PlusIcon,
-} from 'lucide-react';
+import { ArrowRightFromLineIcon, ChevronsUpDownIcon, Clock3Icon, PlusIcon } from 'lucide-react';
 import { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,8 +10,8 @@ import AgentAvatar from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/Ag
 import { AgentModalProvider } from '@/app/[variants]/(main)/home/_layout/Body/Agent/ModalProvider';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import NavHeader from '@/features/NavHeader';
-import NavItem from '@/features/NavPanel/components/NavItem';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import { onClose } from '@/features/Portal/GroupThread/hook';
 import { useFetchAgentList } from '@/hooks/useFetchAgentList';
 import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
@@ -25,6 +19,9 @@ import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
+
+import AgentItem from './AgentSelector/AgentItem';
+import TopicItem from './TopicSelector/TopicItem';
 
 const useStyles = createStyles(({ css }) => ({
   fadeContainer: css`
@@ -55,6 +52,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
   const isAgentListInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   const pageAgentId = useAgentStore((s) => s.builtinAgentIdMap['page-agent']);
   const pageAgentData = useAgentStore((s) => s.agentMap[pageAgentId || '']);
+  const builtinAgentIds = useAgentStore((s) => Object.values(s.builtinAgentIdMap));
 
   useFetchAgentList();
 
@@ -98,18 +96,15 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
       }}
     >
       {agentsWithBuiltin.map((agent) => (
-        <NavItem
+        <AgentItem
           active={agent.id === agentId}
-          icon={
-            <AgentAvatar avatar={typeof agent.avatar === 'string' ? agent.avatar : undefined} />
-          }
+          agentId={agent.id}
+          agentTitle={agent.title || t('untitledAgent', { ns: 'chat' })}
+          avatar={agent.avatar}
+          isBuiltinAgent={builtinAgentIds.includes(agent.id)}
           key={agent.id}
-          onClick={() => {
-            onAgentChange(agent.id);
-            setOpen(false);
-          }}
-          style={{ flexShrink: 0 }}
-          title={agent.title || t('untitledAgent', { ns: 'chat' })}
+          onAgentChange={onAgentChange}
+          onClose={() => setOpen(false)}
         />
       ))}
     </Flexbox>
@@ -174,6 +169,7 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
   const { t } = useTranslation('topic');
   const { styles, cx } = useStyles();
   const setActiveAgentId = useAgentStore((s) => s.setActiveAgentId);
+  const [topicPopoverOpen, setTopicPopoverOpen] = useState(false);
 
   // Fetch topics for the agent builder
   useChatStore((s) => s.useFetchTopics)(true, { agentId });
@@ -183,16 +179,6 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
     s.switchTopic,
     topicSelectors.currentTopics(s),
   ]);
-
-  const items = useMemo<ItemType[]>(
-    () =>
-      (topics || []).map((topic) => ({
-        key: topic.id,
-        label: topic.title,
-        onClick: () => switchTopic(topic.id),
-      })),
-    [topics, t, switchTopic],
-  );
 
   const [toggleRightPanel] = useGlobalStore((s) => [s.toggleRightPanel]);
 
@@ -214,23 +200,47 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
               size={DESKTOP_HEADER_ICON_SIZE}
               title={t('actions.addNewTopic')}
             />
-            {!hideHistory && (
-              <Dropdown
-                menu={{
-                  items,
-                  selectedKeys: activeTopicId ? [activeTopicId] : [],
-                }}
-                overlayStyle={{
-                  maxHeight: 600,
-                  minWidth: 200,
-                  overflowY: 'auto',
-                }}
-                placement="bottomRight"
-                trigger={['click']}
-              >
-                <ActionIcon icon={Clock3Icon} />
-              </Dropdown>
-            )}
+            <Popover
+              arrow={false}
+              content={
+                <Flexbox
+                  gap={4}
+                  padding={8}
+                  style={{
+                    maxHeight: '50vh',
+                    overflowY: 'auto',
+                    width: '100%',
+                  }}
+                >
+                  {(topics || []).map((topic) => (
+                    <TopicItem
+                      active={topic.id === activeTopicId}
+                      key={topic.id}
+                      onClose={() => setTopicPopoverOpen(false)}
+                      onTopicChange={(id) => switchTopic(id)}
+                      topicId={topic.id}
+                      topicTitle={topic.title}
+                    />
+                  ))}
+                </Flexbox>
+              }
+              onOpenChange={setTopicPopoverOpen}
+              open={topicPopoverOpen}
+              placement="bottomRight"
+              styles={{
+                body: {
+                  padding: 0,
+                  width: 240,
+                },
+              }}
+              trigger={['click']}
+            >
+              <ActionIcon
+                disabled={!topics || topics.length === 0}
+                icon={Clock3Icon}
+                size={DESKTOP_HEADER_ICON_SIZE}
+              />
+            </Popover>
           </div>
           <ActionIcon
             icon={PanelRightCloseIcon}
