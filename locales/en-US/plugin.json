@@ -354,6 +354,11 @@
     "update": "Update",
     "updateSuccess": "Plugin settings updated successfully"
   },
+  "empty": {
+    "description": "The plugin store is full of powerful tools waiting to be discovered. Visit the store to start exploring.",
+    "search": "No matching plugins found",
+    "title": "No plugins available"
+  },
   "error": {
     "fetchError": "Failed to request the manifest link, please ensure the link is valid and allows cross-origin access",
     "installError": "Plugin {{name}} installation failed",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Calling plugin...",
     "plugin": "Plugin running..."
+  },
+  "mcpEmpty": {
+    "deployment": "No deployment options available",
+    "prompts": "This plugin has no prompts",
+    "resources": "This plugin has no resources",
+    "tools": "This plugin has no tool capabilities"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Checking installation environment...",

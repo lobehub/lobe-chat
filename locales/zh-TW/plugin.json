@@ -354,6 +354,11 @@
     "update": "更新",
     "updateSuccess": "插件設定更新成功"
   },
+  "empty": {
+    "description": "外掛商店有豐富的工具等你發掘，前往商店開始探索",
+    "search": "未找到符合的外掛",
+    "title": "暫無外掛"
+  },
   "error": {
     "fetchError": "請求該 manifest 連結失敗，請確保連結的有效性，並檢查連結是否允許跨域訪問",
     "installError": "插件 {{name}} 安裝失敗",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "調用插件中...",
     "plugin": "插件運行中..."
+  },
+  "mcpEmpty": {
+    "deployment": "暫無部署選項",
+    "prompts": "此外掛暫無提示詞",
+    "resources": "此外掛暫無資源",
+    "tools": "此外掛暫無工具功能"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "檢查安裝環境...",

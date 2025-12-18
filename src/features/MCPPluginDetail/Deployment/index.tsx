@@ -10,6 +10,7 @@ import {
   CodeIcon,
   DownloadIcon,
   MinusIcon,
+  Package,
   TerminalIcon,
 } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
@@ -37,14 +38,19 @@ const useStyles = createStyles(({ css, token }) => {
 
 const Deployment = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles, theme } = useStyles();
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'plugin']);
   const { deploymentOptions = [], identifier } = useDetailContext();
   const [activeKey, setActiveKey] = useState<string[]>(['0']);
 
   if (!deploymentOptions)
     return (
       <Block variant="outlined">
-        <Empty description={t('mcp.details.deployment.empty')} />
+        <Empty
+          description={t('plugin:mcpEmpty.deployment')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Package}
+          style={{ maxWidth: 400 }}
+        />
       </Block>
     );
 

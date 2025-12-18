@@ -1,5 +1,5 @@
 import { Block, Collapse, Empty, Highlighter, Icon, Markdown } from '@lobehub/ui';
-import { CheckIcon, MinusIcon } from 'lucide-react';
+import { CheckIcon, MessageSquare, MinusIcon } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,14 +20,19 @@ interface PromptsProps {
 }
 
 const Prompts = memo<PromptsProps>(({ mode, activeKey = [], setActiveKey }) => {
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'plugin']);
   const { prompts } = useDetailContext();
   const { styles, theme } = useStyles();
 
   if (!prompts)
     return (
       <Block variant={'outlined'}>
-        <Empty description={t('mcp.details.schema.prompts.empty')} />
+        <Empty
+          description={t('plugin:mcpEmpty.prompts')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={MessageSquare}
+          style={{ maxWidth: 400 }}
+        />
       </Block>
     );
 

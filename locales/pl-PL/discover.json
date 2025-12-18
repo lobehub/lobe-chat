@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Liczba pobrań",
+    "empty": {
+      "description": "Spróbuj zmienić filtry lub odwiedź społeczność, aby odkryć więcej asystentów",
+      "search": "Nie znaleziono pasujących asystentów",
+      "title": "Brak dostępnych asystentów"
+    },
     "list": "Lista asystentów",
     "marketSource": {
       "label": "Przełącz źródło społeczności",
@@ -543,6 +548,11 @@
       "title": "Zweryfikowany"
     }
   },
+  "mcpEmpty": {
+    "description": "Spróbuj zmienić filtry lub wyszukać inne słowa kluczowe",
+    "search": "Nie znaleziono pasujących serwerów MCP",
+    "title": "Brak dostępnych serwerów MCP"
+  },
   "models": {
     "abilities": "Możliwości modelu",
     "chat": "Rozpocznij rozmowę",
@@ -556,6 +566,11 @@
         "more": "Zobacz więcej",
         "title": "Powiązane rekomendacje"
       }
+    },
+    "empty": {
+      "description": "Spróbuj zmienić filtry, aby zobaczyć więcej modeli",
+      "search": "Nie znaleziono pasujących modeli",
+      "title": "Brak dostępnych modeli"
     },
     "free": "Darmowe",
     "guide": "Przewodnik konfiguracyjny",
@@ -666,6 +681,11 @@
         "more": "Zobacz więcej",
         "title": "Powiązane rekomendacje"
       }
+    },
+    "empty": {
+      "description": "Spróbuj zmienić filtry, aby zobaczyć więcej dostawców usług",
+      "search": "Nie znaleziono pasujących dostawców usług",
+      "title": "Brak dostępnych dostawców usług"
     },
     "list": "Lista dostawców modeli",
     "modelCount": "{{count}} modeli",

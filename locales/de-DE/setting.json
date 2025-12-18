@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Leitfragen, die zu Beginn des Gesprächs angezeigt werden",
-      "empty": "Keine Fragen vorhanden",
+      "empty": "Fügen Sie Einstiegsfragen hinzu, um den Nutzern den Gesprächseinstieg zu erleichtern",
       "placeholder": "Bitte Frage eingeben",
       "repeat": "Frage existiert bereits",
       "title": "Eröffnungsfragen"

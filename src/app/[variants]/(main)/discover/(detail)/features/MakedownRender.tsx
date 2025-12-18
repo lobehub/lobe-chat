@@ -1,4 +1,5 @@
 import { Empty, Markdown } from '@lobehub/ui';
+import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
 import { Center } from 'react-layout-kit';
@@ -9,7 +10,12 @@ const MarkdownRender = memo<{ children?: string }>(({ children }) => {
   if (!children)
     return (
       <Center paddingBlock={32} width={'100%'}>
-        <Empty />
+        <Empty
+          description="暂无内容"
+          descriptionProps={{ fontSize: 14 }}
+          icon={FileText}
+          style={{ maxWidth: 400 }}
+        />
       </Center>
     );
 

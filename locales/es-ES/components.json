@@ -211,5 +211,20 @@
     "thinking": "Pensando profundamente...",
     "thought": "He pensado profundamente (durante {{duration}} segundos)",
     "thoughtWithDuration": "He pensado profundamente"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "La caché está vacía"
+    },
+    "metadata": {
+      "empty": "No hay metadatos disponibles"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Crea una base de conocimientos para organizar y gestionar tus recursos",
+      "search": "No se encontró ninguna base de conocimientos coincidente",
+      "title": "No hay bases de conocimientos disponibles"
+    }
   }
 }

@@ -1,11 +1,11 @@
 'use client';
 
-import { Empty, Grid } from '@lobehub/ui';
+import { Grid } from '@lobehub/ui';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 import { DiscoverProviderItem } from '@/types/discover';
 
+import ProviderEmpty from '../../../../features/ProviderEmpty';
 import Item from './Item';
 
 export interface ProvoderListProps {
@@ -14,12 +14,8 @@ export interface ProvoderListProps {
 }
 
 const ProvoderList = memo<ProvoderListProps>(({ data = [], rows = 3 }) => {
-  if (data.length === 0)
-    return (
-      <Center height={640}>
-        <Empty />
-      </Center>
-    );
+  if (data.length === 0) return <ProviderEmpty />;
+
   return (
     <Grid rows={rows} width={'100%'}>
       {data.map((item, index) => (

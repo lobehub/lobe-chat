@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Guiding questions displayed at the beginning of the conversation",
-      "empty": "No questions available",
+      "empty": "Add opening questions to help users start the conversation quickly",
       "placeholder": "Please enter a question",
       "repeat": "Question already exists",
       "title": "Opening Questions"

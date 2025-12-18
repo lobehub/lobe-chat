@@ -354,6 +354,11 @@
     "update": "Mettre à jour",
     "updateSuccess": "Paramètres du plugin mis à jour avec succès"
   },
+  "empty": {
+    "description": "La boutique de plugins regorge d'outils à découvrir. Visitez la boutique pour commencer l'exploration.",
+    "search": "Aucun plugin correspondant trouvé",
+    "title": "Aucun plugin disponible"
+  },
   "error": {
     "fetchError": "Échec de la requête vers le lien manifest, veuillez vérifier la validité du lien et s'assurer qu'il autorise l'accès cross-origin",
     "installError": "Échec de l'installation du plugin {{name}}",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Appel du plugin en cours...",
     "plugin": "Plugin en cours d'exécution..."
+  },
+  "mcpEmpty": {
+    "deployment": "Aucune option de déploiement disponible",
+    "prompts": "Ce plugin ne propose aucun message prédéfini",
+    "resources": "Ce plugin ne dispose d'aucune ressource",
+    "tools": "Ce plugin ne propose aucune fonctionnalité"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Vérification de l'environnement d'installation...",

@@ -211,5 +211,20 @@
     "thinking": "Głęboko myślę...",
     "thought": "Głęboko przemyślane (czas: {{duration}} sekund)",
     "thoughtWithDuration": "Głęboko przemyślane"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Pamięć podręczna jest pusta"
+    },
+    "metadata": {
+      "empty": "Brak metadanych"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Utwórz bazę wiedzy, aby organizować i zarządzać swoimi zasobami",
+      "search": "Nie znaleziono pasującej bazy wiedzy",
+      "title": "Brak bazy wiedzy"
+    }
   }
 }

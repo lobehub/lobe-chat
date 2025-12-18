@@ -1,4 +1,10 @@
 {
+  "agentSelection": {
+    "empty": "Geen beschikbare assistenten",
+    "noAvailable": "Er zijn momenteel geen assistenten toe te voegen",
+    "noSelected": "Er is nog geen assistent geselecteerd",
+    "search": "Geen overeenkomende assistenten gevonden"
+  },
   "starter": {
     "createAgent": "Assistent aanmaken",
     "createGroup": "Groep aanmaken",

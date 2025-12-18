@@ -1,12 +1,11 @@
 'use client';
 
-import { Empty } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import PageEmpty from '@/features/PageEmpty';
 import { documentSelectors, useFileStore } from '@/store/file';
 import { LobeDocument } from '@/types/document';
 
@@ -17,7 +16,6 @@ interface ContentProps {
 }
 
 const Content = memo<ContentProps>(({ searchKeyword }) => {
-  const { t } = useTranslation('file');
   const virtuaRef = useRef<VListHandle>(null);
   const fetchedCountRef = useRef(-1);
 
@@ -66,11 +64,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
 
   // Show empty state
   if (count === 0) {
-    return (
-      <Center height={'100%'}>
-        <Empty description={isSearching ? t('documentList.noResults') : t('documentList.empty')} />
-      </Center>
-    );
+    return <PageEmpty search={isSearching} />;
   }
 
   return (

@@ -651,7 +651,7 @@ export default {
     },
     openingQuestions: {
       desc: '会话开始时展示的引导性问题',
-      empty: '暂无问题',
+      empty: '添加开场问题，帮助用户快速开始对话',
       placeholder: '请输入问题',
       repeat: '问题已存在',
       title: '开场问题',

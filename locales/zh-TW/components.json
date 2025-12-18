@@ -211,5 +211,20 @@
     "thinking": "深度思考中...",
     "thought": "已深度思考（用時 {{duration}} 秒）",
     "thoughtWithDuration": "已深度思考"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "快取為空"
+    },
+    "metadata": {
+      "empty": "暫無中繼資料"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "建立知識庫以組織和管理你的資源",
+      "search": "未找到符合的知識庫",
+      "title": "暫無知識庫"
+    }
   }
 }

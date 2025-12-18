@@ -211,5 +211,20 @@
     "thinking": "Diep in gedachten...",
     "thought": "Diep nagedacht (tijd gebruikt {{duration}} seconden)",
     "thoughtWithDuration": "Diep nagedacht"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Cache is leeg"
+    },
+    "metadata": {
+      "empty": "Geen metadata beschikbaar"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Maak een kennisbank aan om je bronnen te organiseren en beheren",
+      "search": "Geen overeenkomende kennisbank gevonden",
+      "title": "Geen kennisbank beschikbaar"
+    }
   }
 }

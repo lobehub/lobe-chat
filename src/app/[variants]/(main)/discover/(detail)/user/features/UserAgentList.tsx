@@ -1,10 +1,11 @@
 'use client';
 
-import { Empty, Grid, Tag, Text } from '@lobehub/ui';
+import { Grid, Tag, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
+import AssistantEmpty from '../../../features/AssistantEmpty';
 import { useUserDetailContext } from './DetailProvider';
 import UserAgentCard from './UserAgentCard';
 
@@ -16,12 +17,7 @@ const UserAgentList = memo<UserAgentListProps>(({ rows = 4 }) => {
   const { t } = useTranslation('discover');
   const { agents, agentCount } = useUserDetailContext();
 
-  if (agents.length === 0)
-    return (
-      <Center height={320}>
-        <Empty description={t('user.noAgents')} />
-      </Center>
-    );
+  if (agents.length === 0) return <AssistantEmpty />;
 
   return (
     <Flexbox gap={16}>

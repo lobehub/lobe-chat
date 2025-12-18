@@ -1,4 +1,10 @@
 {
+  "agentSelection": {
+    "empty": "Hiện không có trợ lý nào",
+    "noAvailable": "Hiện tại không có trợ lý nào để thêm",
+    "noSelected": "Chưa chọn trợ lý nào",
+    "search": "Không tìm thấy trợ lý phù hợp"
+  },
   "starter": {
     "createAgent": "Tạo trợ lý",
     "createGroup": "Tạo nhóm",

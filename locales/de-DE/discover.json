@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Downloads",
+    "empty": {
+      "description": "Versuchen Sie, die Filtereinstellungen anzupassen oder besuchen Sie die Community, um weitere Assistenten zu entdecken",
+      "search": "Keine passenden Assistenten gefunden",
+      "title": "Keine Assistenten verfügbar"
+    },
     "list": "Assistentenliste",
     "marketSource": {
       "label": "Community-Quelle wechseln",
@@ -543,6 +548,11 @@
       "title": "Validiert"
     }
   },
+  "mcpEmpty": {
+    "description": "Versuchen Sie, die Filtereinstellungen oder Suchbegriffe anzupassen",
+    "search": "Keine passenden MCP-Server gefunden",
+    "title": "Keine MCP-Server verfügbar"
+  },
   "models": {
     "abilities": "Modellfähigkeiten",
     "chat": "Gespräch starten",
@@ -556,6 +566,11 @@
         "more": "Mehr anzeigen",
         "title": "Empfehlungen"
       }
+    },
+    "empty": {
+      "description": "Versuchen Sie, die Filtereinstellungen anzupassen, um weitere Modelle zu sehen",
+      "search": "Keine passenden Modelle gefunden",
+      "title": "Keine Modelle verfügbar"
     },
     "free": "Kostenlos",
     "guide": "Konfigurationsanleitung",
@@ -666,6 +681,11 @@
         "more": "Mehr anzeigen",
         "title": "Empfehlungen"
       }
+    },
+    "empty": {
+      "description": "Versuchen Sie, die Filtereinstellungen anzupassen, um weitere Anbieter zu sehen",
+      "search": "Keine passenden Anbieter gefunden",
+      "title": "Keine Anbieter verfügbar"
     },
     "list": "Liste der Modellanbieter",
     "modelCount": "{{count}} Modelle",

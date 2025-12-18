@@ -211,5 +211,20 @@
     "thinking": "Derin düşünme aşamasında...",
     "thought": "Derinlemesine düşündüm (geçen süre {{duration}} saniye)",
     "thoughtWithDuration": "Derinlemesine düşündüm"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Önbellek boş"
+    },
+    "metadata": {
+      "empty": "Henüz meta veri yok"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Kaynaklarınızı düzenlemek ve yönetmek için bir bilgi tabanı oluşturun",
+      "search": "Eşleşen bilgi tabanı bulunamadı",
+      "title": "Henüz bilgi tabanı yok"
+    }
   }
 }

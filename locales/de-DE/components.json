@@ -211,5 +211,20 @@
     "thinking": "Tiefes Nachdenken...",
     "thought": "Tiefgründig nachgedacht (Dauer: {{duration}} Sekunden)",
     "thoughtWithDuration": "Tiefgründig nachgedacht"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Cache ist leer"
+    },
+    "metadata": {
+      "empty": "Keine Metadaten verfügbar"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Erstellen Sie eine Wissensdatenbank, um Ihre Ressourcen zu organisieren und zu verwalten",
+      "search": "Keine passende Wissensdatenbank gefunden",
+      "title": "Keine Wissensdatenbank vorhanden"
+    }
   }
 }

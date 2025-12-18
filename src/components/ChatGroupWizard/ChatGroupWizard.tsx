@@ -610,6 +610,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               ? t('groupWizard.noMatchingTemplates')
                               : t('groupWizard.noTemplates')
                           }
+                          descriptionProps={{ fontSize: 14 }}
+                          icon={Users}
+                          style={{ maxWidth: 400 }}
                         />
                       ) : (
                         <Flexbox gap={4}>
@@ -637,6 +640,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               ? t('noMatchingAgents', { ns: 'chat' })
                               : t('noAvailableAgents', { ns: 'chat' })
                           }
+                          descriptionProps={{ fontSize: 14 }}
+                          icon={Users}
+                          style={{ maxWidth: 400 }}
                         />
                       ) : (
                         <Flexbox gap={4}>
@@ -751,12 +757,22 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                       }))}
                     />
                   ) : (
-                    <Empty description={t('groupWizard.noTemplateMembers')} />
+                    <Empty
+                      description={t('groupWizard.noTemplateMembers')}
+                      descriptionProps={{ fontSize: 14 }}
+                      icon={Users}
+                      style={{ maxWidth: 400 }}
+                    />
                   )
                 ) : selectedAgentListItems.length > 0 ? (
                   <List items={selectedAgentListItems} />
                 ) : (
-                  <Empty description={t('memberSelection.noSelectedAgents')} />
+                  <Empty
+                    description={t('memberSelection.noSelectedAgents')}
+                    descriptionProps={{ fontSize: 14 }}
+                    icon={Users}
+                    style={{ maxWidth: 400 }}
+                  />
                 )}
               </Flexbox>
             </Flexbox>

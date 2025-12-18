@@ -211,5 +211,20 @@
     "thinking": "Đang suy nghĩ sâu sắc...",
     "thought": "Đã suy nghĩ sâu sắc (mất {{duration}} giây)",
     "thoughtWithDuration": "Đã suy nghĩ sâu sắc"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Bộ nhớ đệm trống"
+    },
+    "metadata": {
+      "empty": "Chưa có siêu dữ liệu"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Tạo cơ sở tri thức để tổ chức và quản lý tài nguyên của bạn",
+      "search": "Không tìm thấy cơ sở tri thức phù hợp",
+      "title": "Chưa có cơ sở tri thức"
+    }
   }
 }

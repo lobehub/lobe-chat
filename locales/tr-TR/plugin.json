@@ -354,6 +354,11 @@
     "update": "Güncelle",
     "updateSuccess": "Eklenti ayarları başarıyla güncellendi"
   },
+  "empty": {
+    "description": "Eklenti mağazasında keşfetmeniz için birçok araç sizi bekliyor, mağazayı ziyaret ederek keşfe başlayın",
+    "search": "Eşleşen eklenti bulunamadı",
+    "title": "Henüz eklenti yok"
+  },
   "error": {
     "fetchError": "Manifest bağlantısı isteği başarısız oldu, lütfen bağlantının geçerli olduğundan ve CORS erişimine izin verdiğinden emin olun",
     "installError": "{{name}} eklentisi yüklenemedi",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Eklenti çağrılıyor...",
     "plugin": "Eklenti çalışıyor..."
+  },
+  "mcpEmpty": {
+    "deployment": "Henüz dağıtım seçeneği yok",
+    "prompts": "Bu eklenti için henüz bir komut bulunmamaktadır",
+    "resources": "Bu eklenti için henüz kaynak yok",
+    "tools": "Bu eklenti için henüz araç yeteneği yok"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Kurulum ortamı kontrol ediliyor...",

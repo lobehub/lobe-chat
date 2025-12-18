@@ -1,14 +1,13 @@
-import { Empty } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { LobeToolType } from '@/types/tool/tool';
 
+import PluginEmpty from '../../PluginEmpty';
 import PluginItem from './Item';
 
 interface ListProps {
@@ -22,7 +21,6 @@ interface ListProps {
 }
 
 export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) => {
-  const { t } = useTranslation('plugin');
   const installedPlugins = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
 
   const filteredPluginList = useMemo(
@@ -38,13 +36,9 @@ export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) =>
   );
 
   const isEmpty = installedPlugins.length === 0;
+  const hasSearchKeywords = Boolean(keywords && keywords.trim());
 
-  if (isEmpty)
-    return (
-      <Center paddingBlock={40}>
-        <Empty description={t('store.empty')} />
-      </Center>
-    );
+  if (isEmpty) return <PluginEmpty search={hasSearchKeywords} />;
 
   return (
     <Virtuoso

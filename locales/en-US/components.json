@@ -211,5 +211,20 @@
     "thinking": "Deep Thinking...",
     "thought": "Deeply Thought (in {{duration}} seconds)",
     "thoughtWithDuration": "Deeply Thought"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Cache is empty"
+    },
+    "metadata": {
+      "empty": "No metadata available"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Create a knowledge base to organize and manage your resources",
+      "search": "No matching knowledge base found",
+      "title": "No knowledge base available"
+    }
   }
 }

@@ -354,6 +354,11 @@
     "update": "Atualizar",
     "updateSuccess": "Configurações do plugin atualizadas com sucesso"
   },
+  "empty": {
+    "description": "A loja de plugins está repleta de ferramentas esperando para serem descobertas. Visite a loja e comece a explorar.",
+    "search": "Nenhum plugin correspondente encontrado",
+    "title": "Nenhum plugin disponível"
+  },
   "error": {
     "fetchError": "Falha ao solicitar o link do manifest, por favor verifique a validade do link e se permite acesso cross-origin",
     "installError": "Falha na instalação do plugin {{name}}",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Chamando plugin...",
     "plugin": "Plugin em execução..."
+  },
+  "mcpEmpty": {
+    "deployment": "Nenhuma opção de implantação disponível",
+    "prompts": "Este plugin não possui prompts no momento",
+    "resources": "Este plugin não possui recursos no momento",
+    "tools": "Este plugin não possui funcionalidades no momento"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Verificando ambiente de instalação...",

@@ -1,6 +1,6 @@
 import { Empty, Icon } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { ServerCrash } from 'lucide-react';
+import { BookOpen, ServerCrash } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -92,7 +92,12 @@ export const List = memo(() => {
               {t('networkError')}
             </>
           ) : (
-            <Empty description={t('empty')} />
+            <Empty
+              description={t('empty')}
+              descriptionProps={{ fontSize: 14 }}
+              icon={BookOpen}
+              style={{ maxWidth: 400 }}
+            />
           )}
         </Center>
       ) : viewMode === 'list' ? (

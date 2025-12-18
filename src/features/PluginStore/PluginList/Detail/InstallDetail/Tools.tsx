@@ -1,5 +1,6 @@
 import { Block, Collapse, Empty, Highlighter, Markdown, Tag } from '@lobehub/ui';
 import { isString } from 'lodash-es';
+import { Wrench } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,12 @@ const Tools = memo<ToolProps>(({ mode }) => {
   if (!manifest || isString(manifest))
     return (
       <Block variant={'outlined'}>
-        <Empty description={t('mcp.details.schema.tools.empty')} />
+        <Empty
+          description={t('mcp.details.schema.tools.empty')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Wrench}
+          style={{ maxWidth: 400 }}
+        />
       </Block>
     );
 

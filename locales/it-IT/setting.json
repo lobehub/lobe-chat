@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Domande guida visualizzate all'inizio della conversazione",
-      "empty": "Nessuna domanda disponibile",
+      "empty": "Aggiungi domande introduttive per aiutare gli utenti a iniziare rapidamente la conversazione",
       "placeholder": "Inserisci una domanda",
       "repeat": "La domanda esiste già",
       "title": "Domande di apertura"

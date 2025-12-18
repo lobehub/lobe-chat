@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "會話開始時展示的引導性問題",
-      "empty": "暫無問題",
+      "empty": "新增開場問題，協助使用者快速開始對話",
       "placeholder": "請輸入問題",
       "repeat": "問題已存在",
       "title": "開場問題"

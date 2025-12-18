@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Sohbetin başlangıcında gösterilecek yönlendirici sorular",
-      "empty": "Henüz soru yok",
+      "empty": "Açılış soruları ekleyin, kullanıcıların sohbete hızlıca başlamasına yardımcı olun",
       "placeholder": "Soruyu girin",
       "repeat": "Soru zaten mevcut",
       "title": "Açılış Soruları"

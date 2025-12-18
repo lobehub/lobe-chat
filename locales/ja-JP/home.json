@@ -1,4 +1,10 @@
 {
+  "agentSelection": {
+    "empty": "利用可能なアシスタントがありません",
+    "noAvailable": "現在追加できるアシスタントはありません",
+    "noSelected": "アシスタントがまだ選択されていません",
+    "search": "一致するアシスタントが見つかりませんでした"
+  },
   "starter": {
     "createAgent": "アシスタントを作成",
     "createGroup": "グループを作成",

@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Download",
+    "empty": {
+      "description": "Prova a modificare i filtri o visita la community per scoprire più assistenti",
+      "search": "Nessun assistente corrispondente trovato",
+      "title": "Nessun assistente disponibile"
+    },
     "list": "Elenco assistenti",
     "marketSource": {
       "label": "Cambia sorgente della community",
@@ -543,6 +548,11 @@
       "title": "Verificato"
     }
   },
+  "mcpEmpty": {
+    "description": "Prova a modificare i filtri o a cercare con parole chiave diverse",
+    "search": "Nessun server MCP corrispondente trovato",
+    "title": "Nessun server MCP disponibile"
+  },
   "models": {
     "abilities": "Capacità del modello",
     "chat": "Inizia conversazione",
@@ -556,6 +566,11 @@
         "more": "Vedi di più",
         "title": "Raccomandazioni correlate"
       }
+    },
+    "empty": {
+      "description": "Prova a modificare i filtri per visualizzare più modelli",
+      "search": "Nessun modello corrispondente trovato",
+      "title": "Nessun modello disponibile"
     },
     "free": "Gratuito",
     "guide": "Guida alla configurazione",
@@ -666,6 +681,11 @@
         "more": "Vedi di più",
         "title": "Raccomandazioni correlate"
       }
+    },
+    "empty": {
+      "description": "Prova a modificare i filtri per visualizzare più fornitori",
+      "search": "Nessun fornitore corrispondente trovato",
+      "title": "Nessun fornitore disponibile"
     },
     "list": "Elenco fornitori di modelli",
     "modelCount": "{{count}} modelli",

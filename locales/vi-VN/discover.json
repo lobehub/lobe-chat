@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Lượt tải xuống",
+    "empty": {
+      "description": "Hãy thử điều chỉnh điều kiện lọc hoặc truy cập cộng đồng để khám phá thêm trợ lý",
+      "search": "Không tìm thấy trợ lý phù hợp",
+      "title": "Chưa có trợ lý nào"
+    },
     "list": "Danh sách trợ lý",
     "marketSource": {
       "label": "Chuyển đổi nguồn cộng đồng",
@@ -543,6 +548,11 @@
       "title": "Đã xác minh"
     }
   },
+  "mcpEmpty": {
+    "description": "Hãy thử điều chỉnh điều kiện lọc hoặc tìm kiếm bằng từ khóa",
+    "search": "Không tìm thấy máy chủ MCP phù hợp",
+    "title": "Chưa có máy chủ MCP nào"
+  },
   "models": {
     "abilities": "Khả năng mô hình",
     "chat": "Bắt đầu cuộc trò chuyện",
@@ -556,6 +566,11 @@
         "more": "Xem thêm",
         "title": "Gợi ý liên quan"
       }
+    },
+    "empty": {
+      "description": "Hãy thử điều chỉnh điều kiện lọc để xem thêm mô hình",
+      "search": "Không tìm thấy mô hình phù hợp",
+      "title": "Chưa có mô hình nào"
     },
     "free": "Miễn phí",
     "guide": "Hướng dẫn cấu hình",
@@ -666,6 +681,11 @@
         "more": "Xem thêm",
         "title": "Gợi ý liên quan"
       }
+    },
+    "empty": {
+      "description": "Hãy thử điều chỉnh điều kiện lọc để xem thêm nhà cung cấp",
+      "search": "Không tìm thấy nhà cung cấp phù hợp",
+      "title": "Chưa có nhà cung cấp nào"
     },
     "list": "Danh sách nhà cung cấp mô hình",
     "modelCount": "{{count}} mô hình",

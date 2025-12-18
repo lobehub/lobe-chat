@@ -59,6 +59,11 @@
       }
     },
     "downloads": "下載次數",
+    "empty": {
+      "description": "嘗試調整篩選條件，或造訪社群探索更多助手",
+      "search": "未找到符合的助手",
+      "title": "暫無助手"
+    },
     "list": "助手列表",
     "marketSource": {
       "label": "切換社群來源",
@@ -543,6 +548,11 @@
       "title": "已驗證"
     }
   },
+  "mcpEmpty": {
+    "description": "嘗試調整篩選條件或搜尋關鍵字",
+    "search": "未找到符合的 MCP 伺服器",
+    "title": "暫無 MCP 伺服器"
+  },
   "models": {
     "abilities": "模型能力",
     "chat": "開始會話",
@@ -556,6 +566,11 @@
         "more": "查看更多",
         "title": "相關推薦"
       }
+    },
+    "empty": {
+      "description": "嘗試調整篩選條件以查看更多模型",
+      "search": "未找到符合的模型",
+      "title": "暫無模型"
     },
     "free": "免費",
     "guide": "配置指南",
@@ -666,6 +681,11 @@
         "more": "查看更多",
         "title": "相關推薦"
       }
+    },
+    "empty": {
+      "description": "嘗試調整篩選條件以查看更多服務商",
+      "search": "未找到符合的服務商",
+      "title": "暫無服務商"
     },
     "list": "模型服務商列表",
     "modelCount": "{{count}} 個模型",

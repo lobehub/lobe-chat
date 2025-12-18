@@ -59,6 +59,11 @@ export default {
       },
     },
     downloads: '下载量',
+    empty: {
+      description: '尝试调整筛选条件，或访问社区发现更多助手',
+      search: '未找到匹配的助手',
+      title: '暂无助手',
+    },
     list: '助手列表',
     marketSource: {
       label: '切换社区源',
@@ -550,6 +555,11 @@ export default {
       title: '已验证',
     },
   },
+  mcpEmpty: {
+    description: '尝试调整筛选条件或搜索关键词',
+    search: '未找到匹配的 MCP 服务器',
+    title: '暂无 MCP 服务器',
+  },
   models: {
     abilities: '模型能力',
     chat: '开始会话',
@@ -563,6 +573,11 @@ export default {
         more: '查看更多',
         title: '相关推荐',
       },
+    },
+    empty: {
+      description: '尝试调整筛选条件查看更多模型',
+      search: '未找到匹配的模型',
+      title: '暂无模型',
     },
     free: '免费',
     guide: '配置指南',
@@ -673,6 +688,11 @@ export default {
         more: '查看更多',
         title: '相关推荐',
       },
+    },
+    empty: {
+      description: '尝试调整筛选条件查看更多服务商',
+      search: '未找到匹配的服务商',
+      title: '暂无服务商',
     },
     list: '模型服务商列表',
     modelCount: '{{count}} 个模型',

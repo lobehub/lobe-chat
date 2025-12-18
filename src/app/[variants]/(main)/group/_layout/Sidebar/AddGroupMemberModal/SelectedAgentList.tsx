@@ -1,10 +1,11 @@
 'use client';
 
-import { Empty } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+
+import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';
 
 import AgentItem, { type AgentItemData } from './AgentItem';
 import { useAgentSelectionStore } from './store';
@@ -43,8 +44,8 @@ const SelectedAgentList = memo<SelectedAgentListProps>(({ agents }) => {
 
   if (selectedAgents.length === 0) {
     return (
-      <Flexbox align="center" className={styles.container} flex={1} justify="center">
-        <Empty description={t('memberSelection.noSelectedAgents')} />
+      <Flexbox className={styles.container} flex={1}>
+        <AgentSelectionEmpty variant="noSelected" />
       </Flexbox>
     );
   }

@@ -1,12 +1,11 @@
 'use client';
 
-import { Empty } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import { VList } from 'virtua';
 
+import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useHomeStore } from '@/store/home';
 import { homeAgentListSelectors } from '@/store/home/selectors';
@@ -20,8 +19,6 @@ interface ContentProps {
 }
 
 const Content = memo<ContentProps>(({ searchKeyword }) => {
-  const { t } = useTranslation('common');
-
   // Use server-side search if there's a keyword
   const trimmedKeyword = searchKeyword.trim();
   const isSearching = trimmedKeyword.length > 0;
@@ -51,15 +48,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
 
   // Show empty state when no agents
   if (count === 0) {
-    return (
-      <Center height={'100%'}>
-        <Empty
-          description={
-            isSearching ? t('navPanel.searchResultEmpty') : t('emptyAgentAction', { ns: 'chat' })
-          }
-        />
-      </Center>
-    );
+    return <AgentSelectionEmpty search={isSearching} />;
   }
 
   return (

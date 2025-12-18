@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Aantal downloads",
+    "empty": {
+      "description": "Probeer de filters aan te passen of bezoek de community om meer assistenten te ontdekken",
+      "search": "Geen overeenkomende assistenten gevonden",
+      "title": "Geen assistenten beschikbaar"
+    },
     "list": "Assistentenlijst",
     "marketSource": {
       "label": "Wissel van communitybron",
@@ -543,6 +548,11 @@
       "title": "Gevalideerd"
     }
   },
+  "mcpEmpty": {
+    "description": "Probeer de filters aan te passen of zoek met andere trefwoorden",
+    "search": "Geen overeenkomende MCP-servers gevonden",
+    "title": "Geen MCP-servers beschikbaar"
+  },
   "models": {
     "abilities": "Modelmogelijkheden",
     "chat": "Begin gesprek",
@@ -556,6 +566,11 @@
         "more": "Meer bekijken",
         "title": "Aanbevolen"
       }
+    },
+    "empty": {
+      "description": "Probeer de filters aan te passen om meer modellen te bekijken",
+      "search": "Geen overeenkomende modellen gevonden",
+      "title": "Geen modellen beschikbaar"
     },
     "free": "Gratis",
     "guide": "Configuratiegids",
@@ -666,6 +681,11 @@
         "more": "Meer bekijken",
         "title": "Aanbevolen"
       }
+    },
+    "empty": {
+      "description": "Probeer de filters aan te passen om meer providers te bekijken",
+      "search": "Geen overeenkomende providers gevonden",
+      "title": "Geen providers beschikbaar"
     },
     "list": "Lijst van modelproviders",
     "modelCount": "{{count}} modellen",

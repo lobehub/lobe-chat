@@ -3,7 +3,7 @@
 import { ActionIcon, Button, Empty, Input, SortableList } from '@lobehub/ui';
 import { Space } from 'antd';
 import { createStyles } from 'antd-style';
-import { PlusIcon, Trash } from 'lucide-react';
+import { MessageCircle, PlusIcon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -135,6 +135,9 @@ const OpeningQuestions = memo(() => {
           <Empty
             className={styles.empty}
             description={t('settingOpening.openingQuestions.empty')}
+            descriptionProps={{ fontSize: 14 }}
+            icon={MessageCircle}
+            style={{ maxWidth: 400 }}
           />
         )}
       </div>

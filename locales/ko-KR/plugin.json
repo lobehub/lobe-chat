@@ -354,6 +354,11 @@
     "update": "업데이트",
     "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다"
   },
+  "empty": {
+    "description": "플러그인 스토어에는 다양한 도구가 준비되어 있습니다. 스토어를 방문하여 탐색을 시작하세요.",
+    "search": "일치하는 플러그인을 찾을 수 없습니다.",
+    "title": "플러그인이 없습니다."
+  },
   "error": {
     "fetchError": "manifest 링크 요청 실패. 링크가 유효한지, CORS 허용 여부를 확인하세요",
     "installError": "플러그인 {{name}} 설치 실패",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "플러그인 호출 중...",
     "plugin": "플러그인 실행 중..."
+  },
+  "mcpEmpty": {
+    "deployment": "배포 옵션이 없습니다.",
+    "prompts": "이 플러그인에는 프롬프트가 없습니다.",
+    "resources": "이 플러그인에는 리소스가 없습니다.",
+    "tools": "이 플러그인에는 도구 기능이 없습니다."
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "설치 환경 확인 중...",

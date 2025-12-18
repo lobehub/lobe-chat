@@ -59,6 +59,11 @@
       }
     },
     "downloads": "İndirme Sayısı",
+    "empty": {
+      "description": "Filtreleri ayarlamayı deneyin veya daha fazla asistan keşfetmek için topluluğu ziyaret edin",
+      "search": "Eşleşen asistan bulunamadı",
+      "title": "Asistan yok"
+    },
     "list": "Asistan Listesi",
     "marketSource": {
       "label": "Topluluk Kaynağını Değiştir",
@@ -543,6 +548,11 @@
       "title": "Doğrulanmış"
     }
   },
+  "mcpEmpty": {
+    "description": "Filtreleri ayarlamayı veya anahtar kelimeleri aramayı deneyin",
+    "search": "Eşleşen MCP sunucusu bulunamadı",
+    "title": "MCP sunucusu yok"
+  },
   "models": {
     "abilities": "Model Yetenekleri",
     "chat": "Sohbete Başla",
@@ -556,6 +566,11 @@
         "more": "Daha Fazla Görüntüle",
         "title": "İlgili Öneriler"
       }
+    },
+    "empty": {
+      "description": "Daha fazla modeli görmek için filtreleri ayarlamayı deneyin",
+      "search": "Eşleşen model bulunamadı",
+      "title": "Model yok"
     },
     "free": "Ücretsiz",
     "guide": "Yapılandırma Kılavuzu",
@@ -666,6 +681,11 @@
         "more": "Daha Fazla Görüntüle",
         "title": "İlgili Öneriler"
       }
+    },
+    "empty": {
+      "description": "Daha fazla hizmet sağlayıcısı görmek için filtreleri ayarlamayı deneyin",
+      "search": "Eşleşen hizmet sağlayıcısı bulunamadı",
+      "title": "Hizmet sağlayıcısı yok"
     },
     "list": "Model Sağlayıcıları Listesi",
     "modelCount": "{{count}} model",

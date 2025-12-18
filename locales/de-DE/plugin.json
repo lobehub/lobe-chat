@@ -354,6 +354,11 @@
     "update": "Aktualisieren",
     "updateSuccess": "Plugin-Einstellungen erfolgreich aktualisiert"
   },
+  "empty": {
+    "description": "Der Plugin-Store bietet eine Vielzahl von Tools, die darauf warten, entdeckt zu werden. Besuchen Sie den Store, um loszulegen.",
+    "search": "Keine passenden Plugins gefunden",
+    "title": "Keine Plugins verfügbar"
+  },
   "error": {
     "fetchError": "Abruf des Manifest-Links fehlgeschlagen. Bitte überprüfen Sie die Gültigkeit des Links und ob CORS-Zugriff erlaubt ist.",
     "installError": "Installation des Plugins {{name}} fehlgeschlagen",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Plugin wird aufgerufen...",
     "plugin": "Plugin läuft..."
+  },
+  "mcpEmpty": {
+    "deployment": "Keine Bereitstellungsoptionen verfügbar",
+    "prompts": "Dieses Plugin enthält keine Eingabeaufforderungen",
+    "resources": "Dieses Plugin enthält keine Ressourcen",
+    "tools": "Dieses Plugin bietet keine Tool-Funktionen"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installationsumgebung wird geprüft...",

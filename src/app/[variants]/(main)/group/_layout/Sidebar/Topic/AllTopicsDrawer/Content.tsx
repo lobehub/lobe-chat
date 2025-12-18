@@ -1,13 +1,12 @@
 'use client';
 
-import { Empty } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import TopicEmpty from '@/features/TopicEmpty';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 
@@ -21,8 +20,6 @@ interface ContentProps {
 }
 
 const Content = memo<ContentProps>(({ open, searchKeyword }) => {
-  const { t } = useTranslation('topic');
-
   const virtuaRef = useRef<VListHandle>(null);
   const fetchedCountRef = useRef(-1);
   const initializedRef = useRef(false);
@@ -141,11 +138,7 @@ const Content = memo<ContentProps>(({ open, searchKeyword }) => {
 
   // Show empty state when no topics
   if (count === 0 && !showLoading && !showSearchLoading) {
-    return (
-      <Center height={'100%'}>
-        <Empty description={searchKeyword ? t('searchResultEmpty') : t('guide.desc')} />
-      </Center>
-    );
+    return <TopicEmpty search={Boolean(searchKeyword)} />;
   }
 
   // Show loading when searching

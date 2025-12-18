@@ -1,5 +1,5 @@
 import { Block, Collapse, Empty, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
-import { CheckIcon, MinusIcon } from 'lucide-react';
+import { CheckIcon, MinusIcon, Wrench } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,14 +20,19 @@ interface ToolsProps {
 }
 
 const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'plugin']);
   const { tools } = useDetailContext();
   const { styles, theme } = useStyles();
 
   if (!tools)
     return (
       <Block variant={'outlined'}>
-        <Empty description={t('mcp.details.schema.tools.empty')} />
+        <Empty
+          description={t('plugin:mcpEmpty.tools')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Wrench}
+          style={{ maxWidth: 400 }}
+        />
       </Block>
     );
 

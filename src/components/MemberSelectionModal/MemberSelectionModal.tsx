@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar, Empty, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { List as AntdList, Button, Checkbox, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
+import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';
 import ModelSelect from '@/features/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useSessionStore } from '@/store/session';
@@ -402,12 +403,9 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
 
             <Flexbox flex={1} style={{ overflowY: 'auto' }}>
               {filteredAvailableAgents.length === 0 ? (
-                <Empty
-                  description={
-                    searchTerm
-                      ? t('noMatchingAgents', { ns: 'chat' })
-                      : t('noAvailableAgents', { ns: 'chat' })
-                  }
+                <AgentSelectionEmpty
+                  search={Boolean(searchTerm)}
+                  variant={searchTerm ? 'empty' : 'noAvailable'}
                 />
               ) : (
                 <AntdList
@@ -481,15 +479,7 @@ const MemberSelectionModal = memo<MemberSelectionModalProps>(
               {/* Selected Agents List */}
               <Flexbox flex={1}>
                 {selectedAgentListItems.length === 0 ? (
-                  <Flexbox align="center" flex={1} justify="center">
-                    <Empty
-                      description={
-                        mode === 'create'
-                          ? t('memberSelection.noSelectedAgents')
-                          : t('memberSelection.noSelectedAgents')
-                      }
-                    />
-                  </Flexbox>
+                  <AgentSelectionEmpty variant="noSelected" />
                 ) : (
                   <List items={selectedAgentListItems} />
                 )}

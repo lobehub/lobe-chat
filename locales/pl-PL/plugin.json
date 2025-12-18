@@ -354,6 +354,11 @@
     "update": "Aktualizuj",
     "updateSuccess": "Ustawienia wtyczki zostały zaktualizowane pomyślnie"
   },
+  "empty": {
+    "description": "Sklep z wtyczkami oferuje wiele narzędzi do odkrycia — odwiedź sklep i zacznij eksplorować",
+    "search": "Nie znaleziono pasujących wtyczek",
+    "title": "Brak dostępnych wtyczek"
+  },
   "error": {
     "fetchError": "Nie udało się pobrać pliku manifestu, upewnij się, że link jest poprawny i pozwala na dostęp z innych domen",
     "installError": "Instalacja wtyczki {{name}} nie powiodła się",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Wywoływanie wtyczki...",
     "plugin": "Wtyczka działa..."
+  },
+  "mcpEmpty": {
+    "deployment": "Brak dostępnych opcji wdrożenia",
+    "prompts": "Ta wtyczka nie zawiera żadnych podpowiedzi",
+    "resources": "Ta wtyczka nie zawiera żadnych zasobów",
+    "tools": "Ta wtyczka nie oferuje żadnych funkcji narzędziowych"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",

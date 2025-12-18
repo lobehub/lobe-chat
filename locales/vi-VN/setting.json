@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Câu hỏi hướng dẫn hiển thị khi bắt đầu cuộc trò chuyện",
-      "empty": "Chưa có câu hỏi nào",
+      "empty": "Thêm câu hỏi mở đầu để giúp người dùng bắt đầu cuộc trò chuyện nhanh chóng",
       "placeholder": "Nhập câu hỏi",
       "repeat": "Câu hỏi đã tồn tại",
       "title": "Câu hỏi mở đầu"

@@ -1,11 +1,12 @@
 'use client';
 
-import { Accordion, AccordionItem, Dropdown, Empty, Text } from '@lobehub/ui';
+import { Accordion, AccordionItem, Dropdown, Text } from '@lobehub/ui';
 import React, { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import PageEmpty from '@/features/PageEmpty';
 import { documentSelectors, useFileStore } from '@/store/file';
 
 import Actions from './Actions';
@@ -63,11 +64,7 @@ const Body = memo(() => {
             ) : (
               <Flexbox gap={1} paddingBlock={1}>
                 {filteredPages.length === 0 ? (
-                  <Empty
-                    description={
-                      searchKeywords.trim() ? t('documentList.noResults') : t('documentList.empty')
-                    }
-                  />
+                  <PageEmpty search={Boolean(searchKeywords.trim())} />
                 ) : (
                   <List />
                 )}

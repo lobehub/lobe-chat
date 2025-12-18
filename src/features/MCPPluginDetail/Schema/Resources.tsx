@@ -1,4 +1,5 @@
 import { Block, Empty, Highlighter, Tag } from '@lobehub/ui';
+import { Database } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,14 +10,19 @@ import { useStyles } from './style';
 import { ModeType } from './types';
 
 const Resources = memo<{ mode?: ModeType }>(({ mode }) => {
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'plugin']);
   const { resources } = useDetailContext();
   const { styles, theme } = useStyles();
 
   if (!resources)
     return (
       <Block variant={'outlined'}>
-        <Empty description={t('mcp.details.schema.resources.empty')} />
+        <Empty
+          description={t('plugin:mcpEmpty.resources')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Database}
+          style={{ maxWidth: 400 }}
+        />
       </Block>
     );
 

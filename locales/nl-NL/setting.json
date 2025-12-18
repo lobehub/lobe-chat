@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Leidende vragen die worden weergegeven aan het begin van het gesprek",
-      "empty": "Geen vragen beschikbaar",
+      "empty": "Voeg openingsvragen toe om gebruikers te helpen snel een gesprek te beginnen",
       "placeholder": "Voer een vraag in",
       "repeat": "Vraag bestaat al",
       "title": "Openingsvragen"

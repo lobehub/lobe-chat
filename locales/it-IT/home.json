@@ -1,4 +1,10 @@
 {
+  "agentSelection": {
+    "empty": "Nessun assistente disponibile al momento",
+    "noAvailable": "Attualmente non ci sono assistenti da aggiungere",
+    "noSelected": "Nessun assistente selezionato",
+    "search": "Nessun assistente corrispondente trovato"
+  },
   "starter": {
     "createAgent": "Crea assistente",
     "createGroup": "Crea un gruppo",

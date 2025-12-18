@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Downloads",
+    "empty": {
+      "description": "Try adjusting the filters or visit the community to discover more assistants",
+      "search": "No matching assistants found",
+      "title": "No assistants available"
+    },
     "list": "Assistant List",
     "marketSource": {
       "label": "Switch Community Source",
@@ -543,6 +548,11 @@
       "title": "Validated"
     }
   },
+  "mcpEmpty": {
+    "description": "Try adjusting the filters or search with different keywords",
+    "search": "No matching MCP servers found",
+    "title": "No MCP servers available"
+  },
   "models": {
     "abilities": "Model Capabilities",
     "chat": "Start Conversation",
@@ -556,6 +566,11 @@
         "more": "View More",
         "title": "Related Recommendations"
       }
+    },
+    "empty": {
+      "description": "Try adjusting the filters to see more models",
+      "search": "No matching models found",
+      "title": "No models available"
     },
     "free": "Free",
     "guide": "Configuration Guide",
@@ -666,6 +681,11 @@
         "more": "View More",
         "title": "Related Recommendations"
       }
+    },
+    "empty": {
+      "description": "Try adjusting the filters to see more providers",
+      "search": "No matching providers found",
+      "title": "No providers available"
     },
     "list": "Model Provider List",
     "modelCount": "{{count}} models",

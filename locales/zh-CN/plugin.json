@@ -354,6 +354,11 @@
     "update": "更新",
     "updateSuccess": "插件设置更新成功"
   },
+  "empty": {
+    "description": "插件商店有丰富的工具等你发现，访问商店开始探索",
+    "search": "未找到匹配的插件",
+    "title": "暂无插件"
+  },
   "error": {
     "fetchError": "请求该 manifest 链接失败，请确保链接的有效性，并检查链接是否允许跨域访问",
     "installError": "插件 {{name}} 安装失败",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "调用插件中...",
     "plugin": "插件运行中..."
+  },
+  "mcpEmpty": {
+    "deployment": "暂无部署选项",
+    "prompts": "该插件暂无提示词",
+    "resources": "该插件暂无资源",
+    "tools": "该插件暂无工具能力"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "检查安装环境...",

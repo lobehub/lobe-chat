@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Preguntas orientativas que se muestran al inicio de la conversación",
-      "empty": "No hay preguntas disponibles",
+      "empty": "Agrega preguntas iniciales para ayudar a los usuarios a comenzar la conversación rápidamente",
       "placeholder": "Introduce una pregunta",
       "repeat": "La pregunta ya existe",
       "title": "Preguntas de apertura"

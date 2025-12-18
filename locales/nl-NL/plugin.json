@@ -354,6 +354,11 @@
     "update": "Bijwerken",
     "updateSuccess": "Plugin-instellingen succesvol bijgewerkt"
   },
+  "empty": {
+    "description": "De plug-inwinkel biedt een scala aan handige tools om te ontdekken. Bezoek de winkel om te beginnen met verkennen.",
+    "search": "Geen overeenkomende plug-ins gevonden",
+    "title": "Geen plug-ins beschikbaar"
+  },
   "error": {
     "fetchError": "Manifest-link ophalen mislukt, controleer de geldigheid van de link en of cross-origin toegang is toegestaan",
     "installError": "Plugin {{name}} installatie mislukt",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Plugin aan het aanroepen...",
     "plugin": "Plugin wordt uitgevoerd..."
+  },
+  "mcpEmpty": {
+    "deployment": "Geen implementatieopties beschikbaar",
+    "prompts": "Deze plug-in heeft geen promptwoorden",
+    "resources": "Deze plug-in heeft geen bronnen",
+    "tools": "Deze plug-in heeft geen toolfunctionaliteit"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installatieomgeving controleren...",

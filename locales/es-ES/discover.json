@@ -59,6 +59,11 @@
       }
     },
     "downloads": "Descargas",
+    "empty": {
+      "description": "Intenta ajustar los filtros o visita la comunidad para descubrir más asistentes",
+      "search": "No se encontraron asistentes coincidentes",
+      "title": "No hay asistentes disponibles"
+    },
     "list": "Lista de asistentes",
     "marketSource": {
       "label": "Cambiar fuente de la comunidad",
@@ -543,6 +548,11 @@
       "title": "Validado"
     }
   },
+  "mcpEmpty": {
+    "description": "Intenta ajustar los filtros o buscar con otras palabras clave",
+    "search": "No se encontraron servidores MCP coincidentes",
+    "title": "No hay servidores MCP disponibles"
+  },
   "models": {
     "abilities": "Capacidades del modelo",
     "chat": "Iniciar conversación",
@@ -556,6 +566,11 @@
         "more": "Ver más",
         "title": "Recomendaciones relacionadas"
       }
+    },
+    "empty": {
+      "description": "Intenta ajustar los filtros para ver más modelos",
+      "search": "No se encontraron modelos coincidentes",
+      "title": "No hay modelos disponibles"
     },
     "free": "Gratis",
     "guide": "Guía de configuración",
@@ -666,6 +681,11 @@
         "more": "Ver más",
         "title": "Recomendaciones relacionadas"
       }
+    },
+    "empty": {
+      "description": "Intenta ajustar los filtros para ver más proveedores",
+      "search": "No se encontraron proveedores coincidentes",
+      "title": "No hay proveedores disponibles"
     },
     "list": "Lista de proveedores de modelos",
     "modelCount": "{{count}} modelos",

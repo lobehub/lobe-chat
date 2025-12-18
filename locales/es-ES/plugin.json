@@ -354,6 +354,11 @@
     "update": "Actualizar",
     "updateSuccess": "Configuración del plugin actualizada con éxito"
   },
+  "empty": {
+    "description": "La tienda de complementos está llena de herramientas esperando a ser descubiertas. Visita la tienda para comenzar a explorar.",
+    "search": "No se encontraron complementos coincidentes",
+    "title": "No hay complementos disponibles"
+  },
   "error": {
     "fetchError": "Error al solicitar el enlace manifest, por favor asegúrese de que el enlace es válido y permite acceso cruzado",
     "installError": "Error al instalar el plugin {{name}}",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Llamando al plugin...",
     "plugin": "Plugin en ejecución..."
+  },
+  "mcpEmpty": {
+    "deployment": "No hay opciones de implementación disponibles",
+    "prompts": "Este complemento no tiene frases sugeridas",
+    "resources": "Este complemento no tiene recursos disponibles",
+    "tools": "Este complemento no ofrece funcionalidades"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Verificando entorno de instalación...",

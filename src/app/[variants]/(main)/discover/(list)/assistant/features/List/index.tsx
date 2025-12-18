@@ -1,11 +1,11 @@
 'use client';
 
-import { Empty, Grid } from '@lobehub/ui';
+import { Grid } from '@lobehub/ui';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 import { DiscoverAssistantItem } from '@/types/discover';
 
+import AssistantEmpty from '../../../../features/AssistantEmpty';
 import Item from './Item';
 
 export interface AssistantListProps {
@@ -14,12 +14,8 @@ export interface AssistantListProps {
 }
 
 const AssistantList = memo<AssistantListProps>(({ data = [], rows = 3 }) => {
-  if (data.length === 0)
-    return (
-      <Center height={640}>
-        <Empty />
-      </Center>
-    );
+  if (data.length === 0) return <AssistantEmpty />;
+
   return (
     <Grid rows={rows} width={'100%'}>
       {data.map((item, index) => (

@@ -218,4 +218,19 @@ export default {
     thought: '已深度思考（用时 {{duration}} 秒）',
     thoughtWithDuration: '已深度思考',
   },
+  devTools: {
+    cache: {
+      empty: '缓存为空',
+    },
+    metadata: {
+      empty: '暂无元数据',
+    },
+  },
+  knowledgeBase: {
+    empty: {
+      description: '创建知识库来组织和管理你的资源',
+      search: '未找到匹配的知识库',
+      title: '暂无知识库',
+    },
+  },
 };

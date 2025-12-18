@@ -1,11 +1,13 @@
 'use client';
 
-import { Empty, SearchBar, Skeleton } from '@lobehub/ui';
+import { SearchBar, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { type ChangeEvent, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
+
+import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';
 
 import AgentItem, { type AgentItemData } from './AgentItem';
 
@@ -72,12 +74,9 @@ const AvailableAgentList = memo<AvailableAgentListProps>(({ agents, isLoading })
             <Skeleton active paragraph={{ rows: 1 }} title={false} />
           </Flexbox>
         ) : filteredAgents.length === 0 ? (
-          <Empty
-            description={
-              searchTerm
-                ? t('noMatchingAgents', { ns: 'chat' })
-                : t('noAvailableAgents', { ns: 'chat' })
-            }
+          <AgentSelectionEmpty
+            search={Boolean(searchTerm)}
+            variant={searchTerm ? 'empty' : 'noAvailable'}
           />
         ) : (
           <Virtuoso

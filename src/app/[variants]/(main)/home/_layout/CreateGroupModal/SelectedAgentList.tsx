@@ -1,10 +1,12 @@
 'use client';
 
-import { Empty, Input } from '@lobehub/ui';
+import { Input } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+
+import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';
 
 import AgentItem, { type AgentItemData } from './AgentItem';
 import { useAgentSelectionStore } from './store';
@@ -61,9 +63,7 @@ const SelectedAgentList = memo<SelectedAgentListProps>(
             {t('sessionGroup.selectedAgents', { count: selectedAgents.length })}
           </div>
           {selectedAgents.length === 0 ? (
-            <Flexbox align="center" flex={1} justify="center">
-              <Empty description={t('sessionGroup.noSelectedAgents')} />
-            </Flexbox>
+            <AgentSelectionEmpty variant="noSelected" />
           ) : (
             <Flexbox>
               {selectedAgents.map((agent) => (

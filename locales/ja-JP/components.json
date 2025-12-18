@@ -211,5 +211,20 @@
     "thinking": "深く考えています...",
     "thought": "深く考えました（所要時間 {{duration}} 秒）",
     "thoughtWithDuration": "深く考えました"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "キャッシュが空です"
+    },
+    "metadata": {
+      "empty": "メタデータはありません"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "ナレッジベースを作成して、リソースを整理・管理しましょう",
+      "search": "一致するナレッジベースが見つかりませんでした",
+      "title": "ナレッジベースはまだありません"
+    }
   }
 }

@@ -646,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Questions d'orientation affichées au début de la conversation",
-      "empty": "Aucune question pour le moment",
+      "empty": "Ajoutez des questions d'ouverture pour aider les utilisateurs à démarrer rapidement la conversation",
       "placeholder": "Veuillez entrer une question",
       "repeat": "La question existe déjà",
       "title": "Questions d'ouverture"

@@ -1,4 +1,4 @@
-import { Empty, Icon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { ServerCrash } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { useToolStore } from '@/store/tool';
 
 import SearchLoading from '../../Loading';
+import PluginEmpty from '../../PluginEmpty';
 import VirtuosoLoading from '../../VirtuosoLoading';
 import Item from './Item';
 
@@ -60,13 +61,9 @@ export const List = memo(() => {
     );
 
   const isEmpty = allItems.length === 0;
+  const hasSearchKeywords = Boolean(keywords && keywords.trim());
 
-  if (isEmpty)
-    return (
-      <Center paddingBlock={40}>
-        <Empty />
-      </Center>
-    );
+  if (isEmpty) return <PluginEmpty search={hasSearchKeywords} />;
 
   return (
     <Virtuoso

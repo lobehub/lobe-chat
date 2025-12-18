@@ -354,6 +354,11 @@
     "update": "Cập nhật",
     "updateSuccess": "Cập nhật cấu hình plugin thành công"
   },
+  "empty": {
+    "description": "Cửa hàng plugin có rất nhiều công cụ đang chờ bạn khám phá, hãy truy cập cửa hàng để bắt đầu hành trình",
+    "search": "Không tìm thấy plugin phù hợp",
+    "title": "Chưa có plugin nào"
+  },
   "error": {
     "fetchError": "Yêu cầu lấy liên kết manifest thất bại, vui lòng đảm bảo liên kết hợp lệ và cho phép truy cập chéo",
     "installError": "Cài đặt plugin {{name}} thất bại",
@@ -380,6 +385,12 @@
   "loading": {
     "content": "Đang gọi plugin...",
     "plugin": "Plugin đang chạy..."
+  },
+  "mcpEmpty": {
+    "deployment": "Chưa có tùy chọn triển khai",
+    "prompts": "Plugin này hiện chưa có gợi ý",
+    "resources": "Plugin này hiện chưa có tài nguyên",
+    "tools": "Plugin này hiện chưa có chức năng công cụ"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Đang kiểm tra môi trường cài đặt...",

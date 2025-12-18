@@ -211,5 +211,20 @@
     "thinking": "심층 사고 중...",
     "thought": "심층 사고 완료 (소요 시간 {{duration}}초)",
     "thoughtWithDuration": "심층 사고 완료"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "캐시가 비어 있습니다"
+    },
+    "metadata": {
+      "empty": "메타데이터가 없습니다"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "지식 베이스를 생성하여 리소스를 체계적으로 관리하세요",
+      "search": "일치하는 지식 베이스를 찾을 수 없습니다",
+      "title": "지식 베이스가 없습니다"
+    }
   }
 }
