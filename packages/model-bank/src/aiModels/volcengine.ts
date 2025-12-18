@@ -129,6 +129,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3.2 是深度求索推出的首个将思考融入工具使用的混合推理模型，用高效架构省算力、大规模强化学习提能力、大规模合成任务数据强泛化，三者结合性能媲美 GPT-5-High，输出长度大幅降低，显著减少了计算开销与用户等待时间。',
     displayName: 'DeepSeek V3.2',
+    enabled: true,
     id: 'deepseek-v3.2',
     maxOutput: 32_768,
     pricing: {
