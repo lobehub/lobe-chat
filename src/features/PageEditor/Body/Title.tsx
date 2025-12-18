@@ -3,17 +3,15 @@
 import { Button, Icon, TextArea } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { SmilePlus } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import EmojiPicker from '@/components/EmojiPicker';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
 import { usePageEditorStore } from '../store';
-
-const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const Title = memo(() => {
   const { t } = useTranslation('file');

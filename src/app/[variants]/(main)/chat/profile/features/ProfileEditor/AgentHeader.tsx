@@ -1,7 +1,7 @@
 'use client';
 
 import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { EmojiPicker, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
+import { Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { message } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -10,6 +10,7 @@ import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import EmojiPicker from '@/components/EmojiPicker';
 import BackgroundSwatches from '@/features/AgentSetting/AgentMeta/BackgroundSwatches';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

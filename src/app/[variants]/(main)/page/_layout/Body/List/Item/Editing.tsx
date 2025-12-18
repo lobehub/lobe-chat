@@ -1,10 +1,11 @@
-import { Block, EmojiPicker, Input } from '@lobehub/ui';
+import { Block, Input } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { useThemeMode } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import EmojiPicker from '@/components/EmojiPicker';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
