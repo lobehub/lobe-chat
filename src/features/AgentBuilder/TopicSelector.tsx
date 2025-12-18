@@ -42,7 +42,7 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
   const [activeTopicId, switchTopic, topics] = useChatStore((s) => [
     s.activeTopicId,
     s.switchTopic,
-    topicSelectors.currentTopics(s),
+    topicSelectors.getTopicsByAgentId(agentId)(s),
   ]);
 
   // Find active topic from the agent's topics list directly
