@@ -296,7 +296,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
             size={{ height: PANEL_HEIGHT, width: panelWidth }}
             style={{ position: 'relative' }}
           >
-            <VList style={{ height: PANEL_HEIGHT, width: '100%' }}>
+            <VList bufferSize={400} style={{ height: PANEL_HEIGHT, width: '100%' }}>
               {virtualItems.map(renderVirtualItem)}
             </VList>
           </Rnd>
