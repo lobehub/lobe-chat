@@ -60,7 +60,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-12-18',
     settings: {
-      extendParams: ['enableReasoning', 'gpt5ReasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort'],
     },
     type: 'chat',
   },
@@ -368,7 +368,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning', 'gpt5ReasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort'],
     },
     type: 'chat',
   },
@@ -421,7 +421,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       ],
     },
     settings: {
-      extendParams: ['enableReasoning', 'gpt5ReasoningEffort'],
+      extendParams: ['gpt5ReasoningEffort'],
     },
     type: 'chat',
   },
