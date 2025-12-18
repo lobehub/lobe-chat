@@ -250,10 +250,13 @@ export const chatTopic: StateCreator<
         if (!agentId && !groupId) return { items: [], total: 0 };
 
         const currentData = get().topicDataMap[key];
-        const currentLength = currentData?.items?.length || 0;
+        const lastPageSize = currentData?.pageSize;
+        const hasExistingItems = (currentData?.items?.length || 0) > 0;
 
-        // If we already have data and new pageSize is larger, show expanding loading state
-        const isExpanding = currentLength > 0 && pageSize > currentLength;
+        // Only treat as "expanding page size" when user actually increases pageSize,
+        // not when SWR revalidates or when total items < pageSize.
+        const isExpanding =
+          hasExistingItems && typeof lastPageSize === 'number' && pageSize > lastPageSize;
         if (isExpanding) {
           get().internal_updateTopicData(key, { isExpandingPageSize: true });
         }
@@ -295,6 +298,7 @@ export const chatTopic: StateCreator<
                   hasMore,
                   isExpandingPageSize: false,
                   items: topics,
+                  pageSize,
                   total: totalCount,
                 },
               },
@@ -349,6 +353,7 @@ export const chatTopic: StateCreator<
               hasMore,
               isLoadingMore: false,
               items: [...currentTopics, ...result.items],
+              pageSize,
               total: result.total,
             },
           },
@@ -552,6 +557,7 @@ export const chatTopic: StateCreator<
             isExpandingPageSize: false,
             isLoadingMore: false,
             items: nextItems,
+            pageSize,
             total,
           },
         },

@@ -373,6 +373,7 @@ describe('topic action', () => {
               total: topics.length,
               currentPage: 0,
               hasMore: false,
+              pageSize: 20,
             },
           },
         });
@@ -505,6 +506,7 @@ describe('topic action', () => {
               total: topics.length,
               currentPage: 0,
               hasMore: false,
+              pageSize: 20,
             },
           },
         });
@@ -552,6 +554,7 @@ describe('topic action', () => {
               total: topics.length,
               currentPage: 0,
               hasMore: false,
+              pageSize: 20,
             },
           },
           activeAgentId: 'test',
@@ -632,6 +635,7 @@ describe('topic action', () => {
               total: topics.length,
               currentPage: 0,
               hasMore: false,
+              pageSize: 20,
             },
           },
         });

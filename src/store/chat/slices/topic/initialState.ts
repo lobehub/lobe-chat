@@ -9,6 +9,12 @@ export interface TopicData {
   isExpandingPageSize?: boolean;
   isLoadingMore?: boolean;
   items: ChatTopic[];
+  /**
+   * Last fetched/used page size for this topic container.
+   * Used to detect "pageSize expansion" (user increases pageSize) without being affected by SWR revalidation
+   * or cases where total items < pageSize.
+   */
+  pageSize: number;
   total: number;
 }
 
