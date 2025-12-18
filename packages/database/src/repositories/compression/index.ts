@@ -95,7 +95,7 @@ export class CompressionRepository {
    */
   async getLatestCompressionGroup(topicId: string): Promise<CompressionGroupResult | null> {
     const groups = await this.getCompressionGroups(topicId);
-    return groups.length > 0 ? groups.at(-1) : null;
+    return groups.length > 0 ? groups.at(-1)! : null;
   }
 
   /**

@@ -152,17 +152,17 @@ describe('ChatGroupModel', () => {
       expect(result).toHaveLength(2);
 
       const group1 = result.find((g) => g.id === 'group-1');
-      expect(group1?.members).toHaveLength(2);
-      expect(group1?.members.map((m: any) => m.title)).toEqual(
+      expect(group1?.agents).toHaveLength(2);
+      expect(group1?.agents.map((m: any) => m.title)).toEqual(
         expect.arrayContaining(['Agent 1', 'Agent 2']),
       );
 
       const group2 = result.find((g) => g.id === 'group-2');
-      expect(group2?.members).toHaveLength(1);
-      expect(group2?.members[0].title).toBe('Agent 3');
+      expect(group2?.agents).toHaveLength(1);
+      expect(group2?.agents[0].title).toBe('Agent 3');
     });
 
-    it('should return groups with empty members array when no agents assigned', async () => {
+    it('should return groups with empty agents array when no agents assigned', async () => {
       await serverDB.insert(chatGroups).values({
         id: 'group-no-agents',
         userId,
@@ -172,7 +172,7 @@ describe('ChatGroupModel', () => {
       const result = await chatGroupModel.queryWithMemberDetails();
 
       expect(result).toHaveLength(1);
-      expect(result[0].members).toEqual([]);
+      expect(result[0].agents).toEqual([]);
     });
 
     it('should return empty array when no groups exist', async () => {

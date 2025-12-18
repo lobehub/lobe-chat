@@ -58,7 +58,7 @@ export class ChatGroupModel {
 
     return groups.map((group) => ({
       ...group,
-      members: groupAgentMap.get(group.id) || [],
+      agents: groupAgentMap.get(group.id) || [],
     }));
   }
 
