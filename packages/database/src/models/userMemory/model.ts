@@ -47,6 +47,7 @@ import {
   userMemoriesPreferences,
 } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
+import { selectNonVectorColumns } from '../../utils/columns';
 import { TopicModel } from '../topic';
 
 const normalizeRelationshipValue = (input: unknown): RelationshipEnum | null => {
@@ -1924,20 +1925,25 @@ export class UserMemoryModel {
   };
 
   getAllIdentities = async (): Promise<UserMemoryIdentityWithoutVectors[]> => {
-    return this.db.query.userMemoriesIdentities.findMany({
-      orderBy: [desc(userMemoriesIdentities.createdAt)],
-      where: eq(userMemoriesIdentities.userId, this.userId),
-    });
+    const res = await this.db
+      .select(selectNonVectorColumns(userMemoriesIdentities))
+      .from(userMemoriesIdentities)
+      .where(eq(userMemoriesIdentities.userId, this.userId))
+      .orderBy(desc(userMemoriesIdentities.createdAt));
+
+    return res;
   };
 
   getIdentitiesByType = async (type: string): Promise<UserMemoryIdentityWithoutVectors[]> => {
-    return this.db.query.userMemoriesIdentities.findMany({
-      orderBy: [desc(userMemoriesIdentities.createdAt)],
-      where: and(
-        eq(userMemoriesIdentities.userId, this.userId),
-        eq(userMemoriesIdentities.type, type),
-      ),
-    });
+    const res = await this.db
+      .select(selectNonVectorColumns(userMemoriesIdentities))
+      .from(userMemoriesIdentities)
+      .where(
+        and(eq(userMemoriesIdentities.userId, this.userId), eq(userMemoriesIdentities.type, type)),
+      )
+      .orderBy(desc(userMemoriesIdentities.createdAt));
+
+    return res;
   };
 
   private updateAccessMetrics = async (
