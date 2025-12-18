@@ -1,15 +1,19 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { UserMinus, UserPlus } from 'lucide-react';
+import { UserMinus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DEFAULT_AVATAR, DEFAULT_SUPERVISOR_AVATAR } from '@/const/meta';
+import { DEFAULT_AVATAR } from '@/const/meta';
+import NavItem from '@/features/NavPanel/components/NavItem';
+import UserAvatar from '@/features/User/UserAvatar';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 
 import AddGroupMemberModal from '../AddGroupMemberModal';
 import AgentProfilePopup from './AgentProfilePopup';
@@ -26,18 +30,17 @@ interface GroupMemberProps {
  */
 const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange, groupId }) => {
   const { t } = useTranslation('chat');
-
+  const [nickname, username] = useUserStore((s) => [
+    userProfileSelectors.nickName(s),
+    userProfileSelectors.username(s),
+  ]);
   const addAgentsToGroup = useAgentGroupStore((s) => s.addAgentsToGroup);
   const removeAgentFromGroup = useAgentGroupStore((s) => s.removeAgentFromGroup);
   const toggleThread = useAgentGroupStore((s) => s.toggleThread);
-  const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
   const togglePortal = useChatStore((s) => s.togglePortal);
-  const groupConfig = useAgentGroupStore(agentGroupSelectors.getGroupConfig(groupId || ''));
 
   // Get members from store (excluding supervisor)
   const groupMembers = useAgentGroupStore(agentGroupSelectors.getGroupMembers(groupId || ''));
-
-  const [enablingSupervisor, setEnablingSupervisor] = useState(false);
 
   // const [agentSettingsOpen, setAgentSettingsOpen] = useState(false);
   // const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>();
@@ -77,60 +80,11 @@ const GroupMember = memo<GroupMemberProps>(({ addModalOpen, onAddModalOpenChange
     togglePortal(true);
   };
 
-  const handleEnableSupervisor = async () => {
-    setEnablingSupervisor(true);
-    try {
-      await updateGroupConfig({ enableSupervisor: true });
-    } finally {
-      setEnablingSupervisor(false);
-    }
-  };
-
   return (
     <>
       <Flexbox gap={2}>
-        {/* Supervisor */}
-        {groupConfig?.enableSupervisor ? (
-          <GroupMemberItem
-            actions={
-              <ActionIcon
-                danger
-                icon={UserMinus}
-                loading={removingMemberIds.includes('orchestrator')}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  void withRemovingFlag('orchestrator', () =>
-                    updateGroupConfig({ enableSupervisor: false }),
-                  );
-                }}
-                size={'small'}
-                title={t('groupSidebar.members.removeMember')}
-              />
-            }
-            avatar={DEFAULT_SUPERVISOR_AVATAR}
-            showActionsOnHover={true}
-            title={t('groupSidebar.members.orchestrator')}
-          />
-        ) : (
-          <GroupMemberItem
-            actions={
-              <ActionIcon
-                icon={UserPlus}
-                loading={enablingSupervisor}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEnableSupervisor();
-                }}
-                size={'small'}
-                title={t('groupSidebar.members.enableOrchestrator')}
-              />
-            }
-            avatar={DEFAULT_SUPERVISOR_AVATAR}
-            showActionsOnHover={false}
-            title={t('groupSidebar.members.orchestrator')}
-          />
-        )}
-
+        {/* User */}
+        <NavItem icon={<UserAvatar size={24} />} title={nickname || username || 'User'} />
         {groupId &&
           groupMembers.map((item) => (
             <AgentProfilePopup

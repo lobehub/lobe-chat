@@ -13,6 +13,7 @@ export const EmojiPicker = memo<EmojiPickerProps>(({ shape = 'square', ...rest }
     <LobeEmojiPicker
       shape={shape}
       {...rest}
+      defaultAvatar={null as any}
       locale={locale}
       texts={{
         delete: t('EmojiPicker.delete'),

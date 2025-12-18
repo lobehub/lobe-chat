@@ -1,21 +1,26 @@
 'use client';
 
-import { GroupAvatar } from '@lobehub/ui';
-import React, { PropsWithChildren, memo } from 'react';
+import { Avatar, GroupAvatar, Skeleton } from '@lobehub/ui';
+import React, { memo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import { SkeletonItem } from '@/features/NavPanel/components/SkeletonList';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 
-const SupervisorAvatar = memo<PropsWithChildren>(() => {
+const SupervisorAvatar = memo<{ size?: number }>(({ size = 28 }) => {
+  const meta = useAgentStore(agentSelectors.currentAgentMeta);
   const [isGroupsInit, groupMeta, agents] = useAgentGroupStore((s) => [
     agentGroupSelectors.isGroupsInit(s),
     agentGroupSelectors.currentGroupMeta(s),
     agentGroupSelectors.currentGroupAgents(s),
   ]);
 
-  if (isGroupsInit) return <SkeletonItem height={32} padding={0} />;
+  if (isGroupsInit) return <Skeleton.Avatar shape={'square'} size={size} />;
+
+  if (meta?.avatar && meta?.avatar !== DEFAULT_AVATAR)
+    return <Avatar avatar={meta.avatar} background={meta?.backgroundColor} size={size} />;
 
   return (
     <GroupAvatar
@@ -26,7 +31,7 @@ const SupervisorAvatar = memo<PropsWithChildren>(() => {
         style: { borderRadius: 3 },
       }))}
       cornerShape={'square'}
-      size={28}
+      size={size}
       title={groupMeta?.title || undefined}
     />
   );

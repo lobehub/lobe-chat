@@ -1,7 +1,7 @@
 'use client';
 
-import { EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
+import { DEFAULT_AVATAR, EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
+import { Block, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { message } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -10,6 +10,7 @@ import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import SupervisorAvatar from '@/app/[variants]/(main)/group/features/GroupAvatar';
 import EmojiPicker from '@/components/EmojiPicker';
 import BackgroundSwatches from '@/features/AgentSetting/AgentMeta/BackgroundSwatches';
 import { useAgentStore } from '@/store/agent';
@@ -112,6 +113,17 @@ const AgentHeader = memo(() => {
           agentMeta.backgroundColor && agentMeta.backgroundColor !== 'rgba(0,0,0,0)'
             ? agentMeta.backgroundColor
             : undefined
+        }
+        customRender={
+          agentMeta.avatar && agentMeta.avatar !== DEFAULT_AVATAR
+            ? undefined
+            : () => {
+                return (
+                  <Block clickable height={72} width={72}>
+                    <SupervisorAvatar size={72} />
+                  </Block>
+                );
+              }
         }
         customTabs={[
           {

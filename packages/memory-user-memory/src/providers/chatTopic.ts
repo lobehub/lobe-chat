@@ -162,7 +162,7 @@ export class LobeChatTopicResultRecorder implements MemoryResultRecorder<{
 
     await this.options.database
       .update(topics)
-      .set({ metadata: updatedMetadata })
+      .set({ metadata: updatedMetadata, updatedAt: topics.updatedAt })
       .where(and(eq(topics.id, this.options.topicId), eq(topics.userId, job.userId)));
   }
 
@@ -195,7 +195,7 @@ export class LobeChatTopicResultRecorder implements MemoryResultRecorder<{
 
     await this.options.database
       .update(topics)
-      .set({ metadata: updatedMetadata })
+      .set({ metadata: updatedMetadata, updatedAt: topics.updatedAt })
       .where(and(eq(topics.id, this.options.topicId), eq(topics.userId, job.userId)));
   }
 }

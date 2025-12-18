@@ -2,6 +2,7 @@ import { EditLocalFileState } from '@lobechat/builtin-tool-local-system';
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
 import { Alert, Icon, Skeleton } from '@lobehub/ui';
+import { useThemeMode } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
 import React, { memo, useMemo } from 'react';
@@ -10,6 +11,7 @@ import 'react-diff-view/style/index.css';
 import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
+import '@/styles/react-diff-view.dark.css';
 
 const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFileState>>(
   ({ args, pluginState, pluginError }) => {
@@ -27,6 +29,7 @@ const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFile
         return [];
       }
     }, [pluginState?.diffText]);
+    const { isDarkMode } = useThemeMode();
 
     if (!args) return <Skeleton active />;
 
@@ -45,7 +48,7 @@ const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFile
             type="error"
           />
         ) : (
-          <Flexbox gap={12}>
+          <Flexbox data-theme={isDarkMode ? 'dark' : 'light'} gap={12}>
             {files.map((file, index) => (
               <div key={`${file.oldPath}-${index}`} style={{ fontSize: '12px' }}>
                 <Diff diffType={file.type} gutterType="default" hunks={file.hunks} viewType="split">

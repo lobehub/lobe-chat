@@ -1,17 +1,16 @@
 'use client';
 
-import { Avatar, Markdown, Text } from '@lobehub/ui';
+import { Markdown, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import SupervisorAvatar from '@/app/[variants]/(main)/group/features/GroupAvatar';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
-import { useAgentGroupStore } from '@/store/agentGroup';
-import { agentGroupSelectors } from '@/store/agentGroup/selectors';
+import { agentGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
@@ -25,6 +24,7 @@ const InboxWelcome = memo(() => {
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
   const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
+  const [groupMeta] = useAgentGroupStore((s) => [agentGroupSelectors.currentGroupMeta(s)]);
 
   // Use group config for opening message and questions
   const groupOpeningMessage = useAgentGroupStore(agentGroupSelectors.currentGroupOpeningMessage);
@@ -52,7 +52,7 @@ const InboxWelcome = memo(() => {
     return agentSystemRoleMsg;
   }, [openingMessage, agentSystemRoleMsg, meta.description]);
 
-  const displayTitle = isInbox ? 'Lobe AI' : meta.title || t('defaultSession', { ns: 'common' });
+  const displayTitle = groupMeta.title;
 
   return (
     <>
@@ -64,12 +64,7 @@ const InboxWelcome = memo(() => {
         }}
         width={'100%'}
       >
-        <Avatar
-          avatar={isInbox ? DEFAULT_INBOX_AVATAR : meta.avatar || DEFAULT_AVATAR}
-          background={meta.backgroundColor}
-          shape={'square'}
-          size={78}
-        />
+        <SupervisorAvatar size={78} />
         <Text fontSize={32} weight={'bold'}>
           {displayTitle}
         </Text>
