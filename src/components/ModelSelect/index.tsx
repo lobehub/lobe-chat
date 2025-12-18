@@ -14,14 +14,14 @@ import {
 } from 'lucide-react';
 import { ModelAbilities } from 'model-bank';
 import numeral from 'numeral';
-import { FC, memo } from 'react';
+import { type ComponentProps, FC, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { AiProviderSourceType } from '@/types/aiProvider';
 import { formatTokenNumber } from '@/utils/format';
 
-import NewModelBadge from './NewModelBadge';
+import NewModelBadgeI18n, { NewModelBadge as NewModelBadgeCore } from './NewModelBadge';
 
 export const TAG_CLASSNAME = 'lobe-model-info-tags';
 
@@ -55,12 +55,49 @@ interface ModelInfoTagsProps extends ModelAbilities {
   directionReverse?: boolean;
   isCustom?: boolean;
   placement?: 'top' | 'right';
+  /**
+   * Whether to render tooltip overlays for each tag.
+   * Disable this when rendering a large list (e.g. dropdown menus) to avoid mounting hundreds of Tooltip instances.
+   *
+   * When `false`, tags are rendered without any tooltip/title fallback by design.
+   */
+  withTooltip?: boolean;
 }
 
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
-  ({ directionReverse, placement = 'right', ...model }) => {
+  ({ directionReverse, placement = 'right', withTooltip = true, ...model }) => {
     const { t } = useTranslation('components');
     const { styles } = useStyles();
+
+    const renderTag = (
+      enabled: boolean | undefined,
+      getTitle: () => string,
+      color: Parameters<typeof Tag>[0]['color'],
+      icon: Parameters<typeof Icon>[0]['icon'],
+      className = styles.tag,
+      tooltipStyles?: ComponentProps<typeof Tooltip>['styles'],
+    ) => {
+      if (!enabled) return null;
+
+      const tag = (
+        <Tag className={className} color={color} size={'small'}>
+          <Icon icon={icon} />
+        </Tag>
+      );
+
+      if (!withTooltip) return tag;
+
+      const title = getTitle();
+      return (
+        <Tooltip
+          placement={placement}
+          styles={tooltipStyles ?? { root: { pointerEvents: 'none' } }}
+          title={title}
+        >
+          {tag}
+        </Tooltip>
+      );
+    };
 
     return (
       <Flexbox
@@ -69,118 +106,110 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         gap={4}
         width={'fit-content'}
       >
-        {model.files && (
-          <Tooltip
-            placement={placement}
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('ModelSelect.featureTag.file')}
-          >
-            <Tag className={styles.tag} color={'success'} size={'small'}>
-              <Icon icon={LucidePaperclip} />
-            </Tag>
-          </Tooltip>
+        {renderTag(model.files, () => t('ModelSelect.featureTag.file'), 'success', LucidePaperclip)}
+        {renderTag(
+          model.imageOutput,
+          () => t('ModelSelect.featureTag.imageOutput'),
+          'success',
+          LucideImage,
         )}
-        {model.imageOutput && (
-          <Tooltip
-            placement={placement}
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('ModelSelect.featureTag.imageOutput')}
-          >
-            <Tag className={styles.tag} color={'success'} size={'small'}>
-              <Icon icon={LucideImage} />
-            </Tag>
-          </Tooltip>
+        {renderTag(model.vision, () => t('ModelSelect.featureTag.vision'), 'success', LucideEye)}
+        {renderTag(model.video, () => t('ModelSelect.featureTag.video'), 'magenta', Video)}
+        {renderTag(
+          model.functionCall,
+          () => t('ModelSelect.featureTag.functionCall'),
+          'info',
+          ToyBrick,
+          styles.tag,
+          {
+            root: { maxWidth: 'unset', pointerEvents: 'none' },
+          },
         )}
-        {model.vision && (
-          <Tooltip
-            placement={placement}
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('ModelSelect.featureTag.vision')}
-          >
-            <Tag className={styles.tag} color={'success'} size={'small'}>
-              <Icon icon={LucideEye} />
-            </Tag>
-          </Tooltip>
+        {renderTag(
+          model.reasoning,
+          () => t('ModelSelect.featureTag.reasoning'),
+          'purple',
+          AtomIcon,
         )}
-        {model.video && (
-          <Tooltip
-            placement={placement}
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('ModelSelect.featureTag.video')}
-          >
-            <Tag className={styles.tag} color={'magenta'} size={'small'}>
-              <Icon icon={Video} />
-            </Tag>
-          </Tooltip>
-        )}
-        {model.functionCall && (
-          <Tooltip
-            placement={placement}
-            styles={{
-              root: { maxWidth: 'unset', pointerEvents: 'none' },
-            }}
-            title={t('ModelSelect.featureTag.functionCall')}
-          >
-            <Tag className={styles.tag} color={'info'} size={'small'}>
-              <Icon icon={ToyBrick} />
-            </Tag>
-          </Tooltip>
-        )}
-        {model.reasoning && (
-          <Tooltip
-            placement={placement}
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('ModelSelect.featureTag.reasoning')}
-          >
-            <Tag className={styles.tag} color={'purple'} size={'small'}>
-              <Icon icon={AtomIcon} />
-            </Tag>
-          </Tooltip>
-        )}
-        {model.search && (
-          <Tooltip
-            placement={placement}
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('ModelSelect.featureTag.search')}
-          >
-            <Tag className={styles.tag} color={'cyan'} size={'small'}>
-              <Icon icon={LucideGlobe} />
-            </Tag>
-          </Tooltip>
-        )}
-        {typeof model.contextWindowTokens === 'number' && (
-          <Tooltip
-            placement={placement}
-            styles={{
-              root: { maxWidth: 'unset', pointerEvents: 'none' },
-            }}
-            title={t('ModelSelect.featureTag.tokens', {
-              tokens:
-                model.contextWindowTokens === 0
-                  ? '∞'
-                  : numeral(model.contextWindowTokens).format('0,0'),
-            })}
-          >
-            <Tag className={styles.token} size={'small'}>
-              {model.contextWindowTokens === 0 ? (
-                <Infinity size={17} strokeWidth={1.6} />
-              ) : (
-                formatTokenNumber(model.contextWindowTokens as number)
-              )}
-            </Tag>
-          </Tooltip>
-        )}
+        {renderTag(model.search, () => t('ModelSelect.featureTag.search'), 'cyan', LucideGlobe)}
+        {typeof model.contextWindowTokens === 'number' &&
+          (() => {
+            const tokensText =
+              model.contextWindowTokens === 0 ? '∞' : formatTokenNumber(model.contextWindowTokens);
+
+            const tag = (
+              <Tag className={styles.token} size={'small'}>
+                {model.contextWindowTokens === 0 ? (
+                  <Infinity size={17} strokeWidth={1.6} />
+                ) : (
+                  tokensText
+                )}
+              </Tag>
+            );
+
+            if (!withTooltip) return tag;
+
+            return (
+              <Tooltip
+                placement={placement}
+                styles={{
+                  root: { maxWidth: 'unset', pointerEvents: 'none' },
+                }}
+                title={t('ModelSelect.featureTag.tokens', {
+                  tokens:
+                    model.contextWindowTokens === 0
+                      ? '∞'
+                      : numeral(model.contextWindowTokens).format('0,0'),
+                })}
+              >
+                {tag}
+              </Tooltip>
+            );
+          })()}
       </Flexbox>
     );
   },
 );
 
 interface ModelItemRenderProps extends ChatModelCard {
+  abilities?: ModelAbilities;
+  infoTagTooltip?: boolean;
+  /**
+   * Only mounts Tooltip components while hovering the item, to reduce initial render cost in large dropdown lists.
+   *
+   * Note: hover is not available on mobile, so this will be ignored on mobile.
+   * Also note: since tooltips are mounted lazily, the very first hover may require a tiny pointer movement
+   * before the tooltip system detects the hover target (depends on the underlying tooltip implementation).
+   */
+  infoTagTooltipOnHover?: boolean;
+  newBadgeLabel?: string;
   showInfoTag?: boolean;
 }
 
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
   const { mobile } = useResponsive();
+  const [hovered, setHovered] = useState(false);
+  const {
+    abilities,
+    infoTagTooltip = true,
+    infoTagTooltipOnHover = false,
+    contextWindowTokens,
+    files,
+    functionCall,
+    imageOutput,
+    newBadgeLabel,
+    reasoning,
+    search,
+    video,
+    vision,
+  } = model;
+
+  const shouldLazyMountTooltip = infoTagTooltipOnHover && !mobile;
+  /**
+   * When `infoTagTooltipOnHover` is enabled, we don't mount Tooltip components until the row is hovered.
+   * This avoids creating many overlays on dropdown open, while keeping the tooltip UX on demand.
+   */
+  const withTooltip = infoTagTooltip && (!shouldLazyMountTooltip || hovered);
 
   return (
     <Flexbox
@@ -188,6 +217,8 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
       gap={32}
       horizontal
       justify={'space-between'}
+      onMouseEnter={shouldLazyMountTooltip ? () => setHovered(true) : undefined}
+      onMouseLeave={shouldLazyMountTooltip ? () => setHovered(false) : undefined}
       style={{
         minWidth: mobile ? '100%' : undefined,
         overflow: 'hidden',
@@ -205,9 +236,25 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
         <Text style={mobile ? { maxWidth: '60vw', overflowX: 'auto', whiteSpace: 'nowrap' } : {}}>
           {model.displayName || model.id}
         </Text>
-        <NewModelBadge releasedAt={model.releasedAt} />
+        {newBadgeLabel ? (
+          <NewModelBadgeCore label={newBadgeLabel} releasedAt={model.releasedAt} />
+        ) : (
+          <NewModelBadgeI18n releasedAt={model.releasedAt} />
+        )}
       </Flexbox>
-      {showInfoTag && <ModelInfoTags {...model} />}
+      {showInfoTag && (
+        <ModelInfoTags
+          contextWindowTokens={contextWindowTokens}
+          files={files ?? abilities?.files}
+          functionCall={functionCall ?? abilities?.functionCall}
+          imageOutput={imageOutput ?? abilities?.imageOutput}
+          reasoning={reasoning ?? abilities?.reasoning}
+          search={search ?? abilities?.search}
+          video={video ?? abilities?.video}
+          vision={vision ?? abilities?.vision}
+          withTooltip={withTooltip}
+        />
+      )}
     </Flexbox>
   );
 });

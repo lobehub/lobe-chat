@@ -60,6 +60,8 @@ interface ModelSwitchPanelProps {
 const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
   ({ children, model: modelProp, provider: providerProp, onModelChange, onOpenChange, open }) => {
     const { t } = useTranslation('components');
+    const { t: tCommon } = useTranslation('common');
+    const newLabel = tCommon('new');
     const { styles, theme } = useStyles();
 
     // Get values from store for fallback when props are not provided
@@ -92,7 +94,23 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
       const getModelItems = (providerItem: EnabledProviderWithModels) => {
         const modelItems = providerItem.children.map((modelItem) => ({
           key: menuKey(providerItem.id, modelItem.id),
-          label: <ModelItemRender {...modelItem} {...modelItem.abilities} />,
+          label: (
+            <ModelItemRender
+              {...modelItem}
+              {...modelItem.abilities}
+              /**
+               * This dropdown can contain a large number of items.
+               * Mounting Tooltip overlays for every row upfront can noticeably slow down opening/hovering the dropdown.
+               * Here we lazy-mount tooltips only when the user hovers a specific row.
+               */
+              infoTagTooltipOnHover
+              /**
+               * Avoid calling `useTranslation` in every row by passing the translated label down.
+               */
+              newBadgeLabel={newLabel}
+              showInfoTag
+            />
+          ),
           onClick: async () => {
             await handleModelChange(modelItem.id, providerItem.id);
           },
@@ -165,7 +183,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
         ),
         type: 'group',
       }));
-    }, [enabledList, handleModelChange, navigate, t, theme.colorTextTertiary]);
+    }, [enabledList, handleModelChange, navigate, newLabel, t, theme.colorTextTertiary]);
 
     const icon = <div className={styles.tag}>{children}</div>;
 
