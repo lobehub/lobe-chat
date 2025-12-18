@@ -4,6 +4,8 @@ import type {
   CallToolResult,
   GetExportFileUploadUrlInput,
   GetExportFileUploadUrlResult,
+  SaveExportedFileContentInput,
+  SaveExportedFileContentResult,
 } from '@/server/routers/tools/codeInterpreter';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors/settings';
@@ -56,6 +58,17 @@ class CodeInterpreterService {
     };
 
     return toolsClient.codeInterpreter.getExportFileUploadUrl.mutate(input);
+  }
+
+  /**
+   * Save exported file content to documents table
+   * This creates a document record linked to the file for content retrieval
+   * @param params - File content and metadata
+   */
+  async saveExportedFileContent(
+    params: SaveExportedFileContentInput,
+  ): Promise<SaveExportedFileContentResult> {
+    return toolsClient.codeInterpreter.saveExportedFileContent.mutate(params);
   }
 }
 

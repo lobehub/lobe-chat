@@ -8,6 +8,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { MCPToolCallResult } from '@/libs/mcp';
 import { chatService } from '@/services/chat';
+import { codeInterpreterService } from '@/services/codeInterpreter';
 import { fileService } from '@/services/file';
 import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
@@ -349,25 +350,41 @@ export const pluginTypes: StateCreator<
       const exportState = data.state as ExportFileState;
       if (exportState.downloadUrl && exportState.filename) {
         try {
-          // Parse content to get bytesUploaded
-          const contentData = safeParseJSON(data.content) as { bytesUploaded?: number } | undefined;
-
           // Generate a hash from the URL path (without query params) for deduplication
           // Extract the path before query params: .../code-interpreter-exports/tpc_xxx/filename.ext
           const urlPath = exportState.downloadUrl.split('?')[0];
           const hash = `ci-export-${btoa(urlPath).slice(0, 32)}`;
 
+          // Use mimeType from state if available, otherwise infer from filename
+          const mimeType = exportState.mimeType || getMimeTypeFromFilename(exportState.filename);
+
           // 1. Create file record in database
           const fileResult = await fileService.createFile({
-            fileType: getMimeTypeFromFilename(exportState.filename),
+            fileType: mimeType,
             hash,
             name: exportState.filename,
-            size: contentData?.bytesUploaded || 0,
+            size: exportState.size || 0,
             source: 'code-interpreter',
             url: exportState.downloadUrl,
           });
 
-          // 2. Associate file with the assistant message (parent of tool message)
+          // 2. If there's text content, save it to documents table for retrieval
+          if (exportState.content) {
+            await codeInterpreterService.saveExportedFileContent({
+              content: exportState.content,
+              fileId: fileResult.id,
+              fileType: mimeType,
+              filename: exportState.filename,
+              url: exportState.downloadUrl,
+            });
+
+            log(
+              '[invokeCloudCodeInterpreterTool] Saved file content to document: fileId=%s',
+              fileResult.id,
+            );
+          }
+
+          // 3. Associate file with the assistant message (parent of tool message)
           // The current message (id) is the tool message, we need to attach to its parent
           const targetMessageId = message?.parentId || id;
 

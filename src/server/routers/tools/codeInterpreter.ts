@@ -2,7 +2,10 @@ import { CodeInterpreterToolName, MarketSDK } from '@lobehub/market-sdk';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { DocumentModel } from '@/database/models/document';
+import { FileModel } from '@/database/models/file';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileS3 } from '@/server/modules/S3';
 
 const log = debug('lobe-server:tools:code-interpreter');
@@ -28,8 +31,23 @@ const getExportFileUploadUrlSchema = z.object({
   topicId: z.string(),
 });
 
+// Schema for saving exported file content to document
+const saveExportedFileContentSchema = z.object({
+  /** File content (text content from code-interpreter export) */
+  content: z.string(),
+  /** File ID to associate with the document */
+  fileId: z.string(),
+  /** File MIME type */
+  fileType: z.string(),
+  /** Filename */
+  filename: z.string(),
+  /** File URL */
+  url: z.string(),
+});
+
 export type CallToolInput = z.infer<typeof callToolSchema>;
 export type GetExportFileUploadUrlInput = z.infer<typeof getExportFileUploadUrlSchema>;
+export type SaveExportedFileContentInput = z.infer<typeof saveExportedFileContentSchema>;
 
 export interface CallToolResult {
   error?: {
@@ -52,6 +70,15 @@ export interface GetExportFileUploadUrlResult {
   success: boolean;
   /** Pre-signed upload URL */
   uploadUrl: string;
+}
+
+export interface SaveExportedFileContentResult {
+  /** Created document ID */
+  documentId?: string;
+  error?: {
+    message: string;
+  };
+  success: boolean;
 }
 
 export const codeInterpreterRouter = router({
@@ -161,6 +188,61 @@ export const codeInterpreterRouter = router({
           success: false,
           uploadUrl: '',
         } as GetExportFileUploadUrlResult;
+      }
+    }),
+
+  /**
+   * Save exported file content to documents table
+   * This creates a document record linked to the file, allowing content to be retrieved
+   * when querying messages with file attachments
+   */
+  saveExportedFileContent: codeInterpreterProcedure
+    .input(saveExportedFileContentSchema)
+    .use(serverDatabase)
+    .mutation(async ({ ctx, input }) => {
+      const { content, fileId, fileType, filename, url } = input;
+
+      log('Saving exported file content: fileId=%s, filename=%s', fileId, filename);
+
+      try {
+        const documentModel = new DocumentModel(ctx.serverDB, ctx.userId);
+        const fileModel = new FileModel(ctx.serverDB, ctx.userId);
+
+        // Verify the file exists
+        const file = await fileModel.findById(fileId);
+        if (!file) {
+          return {
+            error: { message: 'File not found' },
+            success: false,
+          } as SaveExportedFileContentResult;
+        }
+
+        // Create document record with the file content
+        const document = await documentModel.create({
+          content,
+          fileId,
+          fileType,
+          filename,
+          source: url,
+          sourceType: 'file',
+          title: filename,
+          totalCharCount: content.length,
+          totalLineCount: content.split('\n').length,
+        });
+
+        log('Created document for exported file: documentId=%s, fileId=%s', document.id, fileId);
+
+        return {
+          documentId: document.id,
+          success: true,
+        } as SaveExportedFileContentResult;
+      } catch (error) {
+        log('Error saving exported file content: %O', error);
+
+        return {
+          error: { message: (error as Error).message },
+          success: false,
+        } as SaveExportedFileContentResult;
       }
     }),
 });
