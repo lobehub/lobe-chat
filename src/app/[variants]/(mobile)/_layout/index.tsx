@@ -14,12 +14,12 @@ import NavBar from './NavBar';
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const MOBILE_NAV_ROUTES = new Set([
   '/',
-  '/discover',
-  '/discover/assistant',
-  '/discover/mcp',
-  '/discover/plugin',
-  '/discover/model',
-  '/discover/provider',
+  '/community',
+  '/community/assistant',
+  '/community/mcp',
+  '/community/plugin',
+  '/community/model',
+  '/community/provider',
   '/me',
 ]);
 

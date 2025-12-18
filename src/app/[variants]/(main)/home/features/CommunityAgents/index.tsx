@@ -25,7 +25,7 @@ const CommunityAgents = memo(() => {
                 key: 'all-assistants',
                 label: t('home.more'),
                 onClick: () => {
-                  navigate('/discover/assistant');
+                  navigate('/community/assistant');
                 },
               },
             ],

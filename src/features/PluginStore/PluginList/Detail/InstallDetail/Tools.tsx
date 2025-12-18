@@ -12,7 +12,7 @@ import { ModeType } from '@/features/MCPPluginDetail/Schema/types';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import Title from '../../../../../app/[variants]/(main)/discover/features/Title';
+import Title from '../../../../../app/[variants]/(main)/community/features/Title';
 
 interface ToolProps {
   mode?: ModeType;

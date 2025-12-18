@@ -52,7 +52,7 @@ export const mobileRoutes: RouteConfig[] = [
             children: [
               {
                 element: dynamicElement(
-                  () => import('../../(main)/discover/(list)/(home)'),
+                  () => import('../../(main)/community/(list)/(home)'),
                   'Mobile > Discover > List > Home',
                 ),
                 index: true,
@@ -61,7 +61,7 @@ export const mobileRoutes: RouteConfig[] = [
                 children: [
                   {
                     element: dynamicElement(
-                      () => import('../../(main)/discover/(list)/assistant'),
+                      () => import('../../(main)/community/(list)/assistant'),
                       'Mobile > Discover > List > Assistant',
                     ),
                     path: 'assistant',
@@ -72,7 +72,7 @@ export const mobileRoutes: RouteConfig[] = [
                 children: [
                   {
                     element: dynamicElement(
-                      () => import('../../(main)/discover/(list)/model'),
+                      () => import('../../(main)/community/(list)/model'),
                       'Mobile > Discover > List > Model',
                     ),
                     path: 'model',
@@ -81,7 +81,7 @@ export const mobileRoutes: RouteConfig[] = [
               },
               {
                 element: dynamicElement(
-                  () => import('../../(main)/discover/(list)/provider'),
+                  () => import('../../(main)/community/(list)/provider'),
                   'Mobile > Discover > List > Provider',
                 ),
                 path: 'provider',
@@ -90,7 +90,7 @@ export const mobileRoutes: RouteConfig[] = [
                 children: [
                   {
                     element: dynamicElement(
-                      () => import('../../(main)/discover/(list)/mcp'),
+                      () => import('../../(main)/community/(list)/mcp'),
                       'Mobile > Discover > List > MCP',
                     ),
                     path: 'mcp',
@@ -99,7 +99,7 @@ export const mobileRoutes: RouteConfig[] = [
               },
             ],
             element: dynamicElement(
-              () => import('../disocver/(list)/_layout'),
+              () => import('../community/(list)/_layout'),
               'Mobile > Discover > List > Layout',
             ),
           },
@@ -109,7 +109,7 @@ export const mobileRoutes: RouteConfig[] = [
               {
                 element: dynamicElement(
                   () =>
-                    import('../../(main)/discover/(detail)/assistant').then(
+                    import('../../(main)/community/(detail)/assistant').then(
                       (m) => m.MobileDiscoverAssistantDetailPage,
                     ),
                   'Mobile > Discover > Detail > Assistant',
@@ -119,7 +119,7 @@ export const mobileRoutes: RouteConfig[] = [
               {
                 element: dynamicElement(
                   () =>
-                    import('../../(main)/discover/(detail)/model').then((m) => m.MobileModelPage),
+                    import('../../(main)/community/(detail)/model').then((m) => m.MobileModelPage),
                   'Mobile > Discover > Detail > Model',
                 ),
                 path: 'model/:slug',
@@ -127,7 +127,7 @@ export const mobileRoutes: RouteConfig[] = [
               {
                 element: dynamicElement(
                   () =>
-                    import('../../(main)/discover/(detail)/provider').then(
+                    import('../../(main)/community/(detail)/provider').then(
                       (m) => m.MobileProviderPage,
                     ),
                   'Mobile > Discover > Detail > Provider',
@@ -136,7 +136,7 @@ export const mobileRoutes: RouteConfig[] = [
               },
               {
                 element: dynamicElement(
-                  () => import('../../(main)/discover/(detail)/mcp').then((m) => m.MobileMcpPage),
+                  () => import('../../(main)/community/(detail)/mcp').then((m) => m.MobileMcpPage),
                   'Mobile > Discover > Detail > MCP',
                 ),
                 path: 'mcp/:slug',
@@ -144,7 +144,7 @@ export const mobileRoutes: RouteConfig[] = [
               {
                 element: dynamicElement(
                   () =>
-                    import('../../(main)/discover/(detail)/user').then(
+                    import('../../(main)/community/(detail)/user').then(
                       (m) => m.MobileUserDetailPage,
                     ),
                   'Mobile > Discover > Detail > User',
@@ -153,14 +153,14 @@ export const mobileRoutes: RouteConfig[] = [
               },
             ],
             element: dynamicElement(
-              () => import('../disocver/(detail)/_layout'),
+              () => import('../community/(detail)/_layout'),
               'Mobile > Discover > Detail > Layout',
             ),
           },
         ],
-        element: dynamicElement(() => import('../disocver/_layout'), 'Mobile > Discover > Layout'),
-        errorElement: <ErrorBoundary resetPath="/discover" />,
-        path: 'discover',
+        element: dynamicElement(() => import('../community/_layout'), 'Mobile > Discover > Layout'),
+        errorElement: <ErrorBoundary resetPath="/community" />,
+        path: 'community',
       },
 
       // Settings routes

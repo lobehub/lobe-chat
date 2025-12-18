@@ -85,14 +85,14 @@ export const desktopRoutes: RouteConfig[] = [
                 children: [
                   {
                     element: dynamicElement(
-                      () => import('../(main)/discover/(list)/assistant'),
+                      () => import('../(main)/community/(list)/assistant'),
                       'Desktop > Discover > List > Assistant',
                     ),
                     index: true,
                   },
                 ],
                 element: dynamicElement(
-                  () => import('../(main)/discover/(list)/assistant/_layout'),
+                  () => import('../(main)/community/(list)/assistant/_layout'),
                   'Desktop > Discover > List > Assistant > Layout',
                 ),
                 path: 'assistant',
@@ -101,21 +101,21 @@ export const desktopRoutes: RouteConfig[] = [
                 children: [
                   {
                     element: dynamicElement(
-                      () => import('../(main)/discover/(list)/model'),
+                      () => import('../(main)/community/(list)/model'),
                       'Desktop > Discover > List > Model',
                     ),
                     index: true,
                   },
                 ],
                 element: dynamicElement(
-                  () => import('../(main)/discover/(list)/model/_layout'),
+                  () => import('../(main)/community/(list)/model/_layout'),
                   'Desktop > Discover > List > Model > Layout',
                 ),
                 path: 'model',
               },
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(list)/provider'),
+                  () => import('../(main)/community/(list)/provider'),
                   'Desktop > Discover > List > Provider',
                 ),
                 path: 'provider',
@@ -124,28 +124,28 @@ export const desktopRoutes: RouteConfig[] = [
                 children: [
                   {
                     element: dynamicElement(
-                      () => import('../(main)/discover/(list)/mcp'),
+                      () => import('../(main)/community/(list)/mcp'),
                       'Desktop > Discover > List > MCP',
                     ),
                     index: true,
                   },
                 ],
                 element: dynamicElement(
-                  () => import('../(main)/discover/(list)/mcp/_layout'),
+                  () => import('../(main)/community/(list)/mcp/_layout'),
                   'Desktop > Discover > List > MCP > Layout',
                 ),
                 path: 'mcp',
               },
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(list)/(home)'),
+                  () => import('../(main)/community/(list)/(home)'),
                   'Desktop > Discover > List > Home',
                 ),
                 index: true,
               },
             ],
             element: dynamicElement(
-              () => import('../(main)/discover/(list)/_layout'),
+              () => import('../(main)/community/(list)/_layout'),
               'Desktop > Discover > List > Layout',
             ),
           },
@@ -154,52 +154,52 @@ export const desktopRoutes: RouteConfig[] = [
             children: [
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(detail)/assistant'),
+                  () => import('../(main)/community/(detail)/assistant'),
                   'Desktop > Discover > Detail > Assistant',
                 ),
                 path: 'assistant/:slug',
               },
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(detail)/model'),
+                  () => import('../(main)/community/(detail)/model'),
                   'Desktop > Discover > Detail > Model',
                 ),
                 path: 'model/:slug',
               },
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(detail)/provider'),
+                  () => import('../(main)/community/(detail)/provider'),
                   'Desktop > Discover > Detail > Provider',
                 ),
                 path: 'provider/:slug',
               },
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(detail)/mcp'),
+                  () => import('../(main)/community/(detail)/mcp'),
                   'Desktop > Discover > Detail > MCP',
                 ),
                 path: 'mcp/:slug',
               },
               {
                 element: dynamicElement(
-                  () => import('../(main)/discover/(detail)/user'),
+                  () => import('../(main)/community/(detail)/user'),
                   'Desktop > Discover > Detail > User',
                 ),
                 path: 'user/:slug',
               },
             ],
             element: dynamicElement(
-              () => import('../(main)/discover/(detail)/_layout'),
+              () => import('../(main)/community/(detail)/_layout'),
               'Desktop > Discover > Detail > Layout',
             ),
           },
         ],
         element: dynamicElement(
-          () => import('../(main)/discover/_layout'),
+          () => import('../(main)/community/_layout'),
           'Desktop > Discover > Layout',
         ),
-        errorElement: <ErrorBoundary resetPath="/discover" />,
-        path: 'discover',
+        errorElement: <ErrorBoundary resetPath="/community" />,
+        path: 'community',
       },
 
       // Resource routes

@@ -40,7 +40,7 @@ const FeaturedPluginsList = memo(() => {
         color: 'inherit',
         textDecoration: 'none',
       }}
-      to={urlJoin('/discover/mcp', item.identifier)}
+      to={urlJoin('/community/mcp', item.identifier)}
     >
       <FeaturedPluginItem {...item} />
     </Link>

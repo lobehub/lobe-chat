@@ -41,7 +41,7 @@ const CommunityAgentsList = memo(() => {
             color: 'inherit',
             textDecoration: 'none',
           }}
-          to={urlJoin('/discover/assistant', item.identifier)}
+          to={urlJoin('/community/assistant', item.identifier)}
         >
           <CommunityAgentItem {...item} />
         </Link>
