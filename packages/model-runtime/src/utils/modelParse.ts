@@ -154,7 +154,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   volcengine: ['doubao'],
   wenxin: ['ernie', 'qianfan'],
   xai: ['grok'],
-  xiaomimimo: ['mimo'],
+  xiaomimimo: ['mimo-'],
   zeroone: ['yi-'],
   zhipu: ['glm'],
 } as const;
