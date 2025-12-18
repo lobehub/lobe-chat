@@ -1,5 +1,6 @@
 import { MetaData } from '../../meta';
 import { GroundingSearch } from '../../search';
+import { ThreadStatus } from '../../topic/thread';
 import {
   ChatImageItem,
   ChatMessageError,
@@ -56,6 +57,29 @@ interface UIMessageBranch {
   activeBranchIndex: number;
   /** Total number of branches */
   count: number;
+}
+
+/**
+ * Task execution details for role='task' messages
+ * Retrieved from the associated Thread via sourceMessageId
+ */
+export interface TaskDetail {
+  /** Execution duration in milliseconds */
+  duration?: number;
+  /** Task status */
+  status: ThreadStatus;
+  /** Thread ID for navigation */
+  threadId: string;
+  /** Thread title/summary */
+  title?: string;
+  /** Total cost in dollars */
+  totalCost?: number;
+  /** Total messages created during execution */
+  totalMessages?: number;
+  /** Total tokens consumed */
+  totalTokens?: number;
+  /** Total tool calls made */
+  totalToolCalls?: number;
 }
 
 export interface UIChatMessage {
@@ -139,6 +163,11 @@ export interface UIChatMessage {
    * target member ID for DM messages in group chat
    */
   targetId?: string | null;
+  /**
+   * Task execution details for role='task' messages
+   * Retrieved from the associated Thread via sourceMessageId
+   */
+  taskDetail?: TaskDetail;
   threadId?: string | null;
   tool_call_id?: string;
   tools?: ChatToolPayload[];

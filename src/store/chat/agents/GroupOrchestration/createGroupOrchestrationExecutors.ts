@@ -12,11 +12,17 @@ import type {
 import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 import debug from 'debug';
 
+import { aiAgentService } from '@/services/aiAgent';
 import { dbMessageSelectors } from '@/store/chat/slices/message/selectors';
 import type { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 const log = debug('lobe-store:group-orchestration-executors');
+
+const sleep = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 export interface GroupOrchestrationExecutorsContext {
   get: () => ChatStore;
@@ -356,7 +362,13 @@ export const createGroupOrchestrationExecutors = (
 
     /**
      * exec_async_task Executor
-     * Executes an async task for an agent
+     * Executes an async task for an agent using aiAgentService with polling
+     *
+     * Flow:
+     * 1. Create a task message (role: 'task') as placeholder
+     * 2. Call execGroupSubAgentTask API (backend creates thread with sourceMessageId)
+     * 3. Poll for task completion
+     * 4. Update task message content with summary on completion
      *
      * Returns: task_completed result
      */
@@ -370,42 +382,197 @@ export const createGroupOrchestrationExecutors = (
         `[${sessionLogId}] Executing async task for agent: ${agentId}, task: ${task}, timeout: ${timeout}`,
       );
 
-      const messages = getMessages();
+      const { groupId, topicId } = messageContext;
 
-      // Inject task as virtual user message
-      const now = Date.now();
-      const messagesWithTask: UIChatMessage[] = [
-        ...messages,
-        {
-          content: task,
-          createdAt: now,
-          id: `virtual_task_instruction_${now}`,
-          meta: {},
-          role: 'user',
-          updatedAt: now,
-        },
-      ];
+      if (!groupId || !topicId) {
+        log(`[${sessionLogId}] No valid context, cannot execute async task`, groupId, topicId);
+        return {
+          events: [] as GroupOrchestrationEvent[],
+          newState: state,
+          result: {
+            payload: { agentId, error: 'No valid context available', success: false },
+            type: 'task_completed',
+          },
+        };
+      }
 
-      // Execute agent with task
-      await get().internal_execAgentRuntime({
-        context: { ...messageContext, subAgentId: agentId },
-        messages: messagesWithTask,
-        parentMessageId: toolMessageId,
-        parentMessageType: 'tool',
-        parentOperationId: orchestrationOperationId,
-      });
+      try {
+        // 1. Create task message as placeholder
+        const taskMessageResult = await get().optimisticCreateMessage(
+          {
+            agentId,
+            content: '',
+            groupId,
+            metadata: { instruction: task },
+            parentId: toolMessageId,
+            role: 'task',
+            topicId,
+          },
+          { operationId: state.operationId },
+        );
 
-      log(`[${sessionLogId}] Async task for agent ${agentId} completed`);
+        if (!taskMessageResult) {
+          console.error(`[${sessionLogId}] Failed to create task message`);
+          return {
+            events: [] as GroupOrchestrationEvent[],
+            newState: state,
+            result: {
+              payload: { agentId, error: 'Failed to create task message', success: false },
+              type: 'task_completed',
+            },
+          };
+        }
 
-      // Return task_completed result
-      return {
-        events: [] as GroupOrchestrationEvent[],
-        newState: state,
-        result: {
-          payload: { agentId, success: true },
-          type: 'task_completed',
-        },
-      };
+        const taskMessageId = taskMessageResult.id;
+        log(`[${sessionLogId}] Created task message: ${taskMessageId}`);
+
+        // 2. Create task via backend API (backend creates thread with sourceMessageId)
+        const createResult = await aiAgentService.execGroupSubAgentTask({
+          agentId,
+          groupId,
+          instruction: task,
+          parentMessageId: taskMessageId,
+          topicId,
+        });
+
+        if (!createResult.success) {
+          log(`[${sessionLogId}] Failed to create task: ${createResult.error}`);
+          // Update task message with error
+          await get().optimisticUpdateMessageContent(
+            taskMessageId,
+            `Task creation failed: ${createResult.error}`,
+            undefined,
+            { operationId: state.operationId },
+          );
+          return {
+            events: [] as GroupOrchestrationEvent[],
+            newState: state,
+            result: {
+              payload: { agentId, error: createResult.error, success: false },
+              type: 'task_completed',
+            },
+          };
+        }
+
+        log(`[${sessionLogId}] Task created with threadId: ${createResult.threadId}`);
+
+        // 3. Poll for task completion
+        const pollInterval = 2000; // 2 seconds
+        const maxWait = timeout || 1_800_000; // Default 30 minutes
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < maxWait) {
+          // Check if operation has been cancelled
+          const currentOperation = get().operations[state.operationId];
+          if (currentOperation?.status === 'cancelled') {
+            console.warn(`[${sessionLogId}] Operation cancelled, stopping polling`);
+            return {
+              events: [] as GroupOrchestrationEvent[],
+              newState: { ...state, status: 'done' },
+              result: {
+                payload: { agentId, error: 'Operation cancelled', success: false },
+                type: 'task_completed',
+              },
+            };
+          }
+
+          const status = await aiAgentService.getTaskStatus({
+            threadId: createResult.threadId,
+          });
+
+          if (status.status === 'completed') {
+            log(`[${sessionLogId}] Task completed successfully`);
+            // 4. Update task message with summary
+            if (status.result) {
+              await get().optimisticUpdateMessageContent(taskMessageId, status.result, undefined, {
+                operationId: state.operationId,
+              });
+            }
+            return {
+              events: [] as GroupOrchestrationEvent[],
+              newState: state,
+              result: {
+                payload: { agentId, result: status.result, success: true },
+                type: 'task_completed',
+              },
+            };
+          }
+
+          if (status.status === 'failed') {
+            console.error(`[${sessionLogId}] Task failed: ${status.error}`);
+            // Update task message with error
+            await get().optimisticUpdateMessageContent(
+              taskMessageId,
+              `Task failed: ${status.error}`,
+              undefined,
+              { operationId: state.operationId },
+            );
+            return {
+              events: [] as GroupOrchestrationEvent[],
+              newState: state,
+              result: {
+                payload: { agentId, error: status.error, success: false },
+                type: 'task_completed',
+              },
+            };
+          }
+
+          if (status.status === 'cancel') {
+            log(`[${sessionLogId}] Task was cancelled`);
+            // Update task message with cancelled status
+            await get().optimisticUpdateMessageContent(
+              taskMessageId,
+              'Task was cancelled',
+              undefined,
+              { operationId: state.operationId },
+            );
+            return {
+              events: [] as GroupOrchestrationEvent[],
+              newState: state,
+              result: {
+                payload: { agentId, error: 'Task was cancelled', success: false },
+                type: 'task_completed',
+              },
+            };
+          }
+
+          // Still processing, wait and poll again
+          await sleep(pollInterval);
+        }
+
+        // Timeout reached
+        log(`[${sessionLogId}] Task timeout after ${maxWait}ms`);
+        // Update task message with timeout error
+        await get().optimisticUpdateMessageContent(
+          taskMessageId,
+          `Task timeout after ${maxWait}ms`,
+          undefined,
+          { operationId: state.operationId },
+        );
+
+        return {
+          events: [] as GroupOrchestrationEvent[],
+          newState: state,
+          result: {
+            payload: { agentId, error: `Task timeout after ${maxWait}ms`, success: false },
+            type: 'task_completed',
+          },
+        };
+      } catch (error) {
+        log(`[${sessionLogId}] Error executing async task: ${error}`);
+        return {
+          events: [] as GroupOrchestrationEvent[],
+          newState: state,
+          result: {
+            payload: {
+              agentId,
+              error: error instanceof Error ? error.message : 'Unknown error',
+              success: false,
+            },
+            type: 'task_completed',
+          },
+        };
+      }
     },
   };
 };

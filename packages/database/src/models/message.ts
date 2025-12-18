@@ -13,6 +13,8 @@ import {
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
+  TaskDetail,
+  ThreadStatus,
   ThreadType,
   UIChatMessage,
   UpdateMessageParams,
@@ -325,6 +327,45 @@ export class MessageModel {
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
 
+    // 5. get thread info for task messages
+    const taskMessageIds = result.filter((m) => m.role === 'task').map((m) => m.id as string);
+
+    let threadMap = new Map<string, TaskDetail>();
+
+    if (taskMessageIds.length > 0) {
+      const threadData = await this.db
+        .select({
+          metadata: threads.metadata,
+          sourceMessageId: threads.sourceMessageId,
+          status: threads.status,
+          threadId: threads.id,
+          title: threads.title,
+        })
+        .from(threads)
+        .where(
+          and(eq(threads.userId, this.userId), inArray(threads.sourceMessageId, taskMessageIds)),
+        );
+
+      threadMap = new Map(
+        threadData.map((t) => {
+          const metadata = t.metadata as Record<string, unknown> | null;
+          return [
+            t.sourceMessageId!,
+            {
+              duration: metadata?.duration as number | undefined,
+              status: t.status as ThreadStatus,
+              threadId: t.threadId,
+              title: t.title ?? undefined,
+              totalCost: metadata?.totalCost as number | undefined,
+              totalMessages: metadata?.totalMessages as number | undefined,
+              totalTokens: metadata?.totalTokens as number | undefined,
+              totalToolCalls: metadata?.totalToolCalls as number | undefined,
+            },
+          ];
+        }),
+      );
+    }
+
     return result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
@@ -372,6 +413,8 @@ export class MessageModel {
           ragQuery: messageQuery?.rewriteQuery,
           ragQueryId: messageQuery?.id,
           ragRawQuery: messageQuery?.userQuery,
+          // Add taskDetail for task messages
+          taskDetail: item.role === 'task' ? threadMap.get(item.id as string) : undefined,
           videoList: videoList
             .filter((relation) => relation.messageId === item.id)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
