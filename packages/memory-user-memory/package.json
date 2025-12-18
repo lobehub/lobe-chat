@@ -12,6 +12,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "vitest --run",
+    "build:gen-response-formats": "tsx scripts/generate-response-formats.ts",
     "type-check": "tsgo --noEmit -p tsconfig.json",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@lobechat/types": "workspace:*",
     "@types/xast": "^2.0.4",
+    "promptfoo": "^0.118.17",
     "tsx": "^4.20.6"
   },
   "peerDependencies": {
