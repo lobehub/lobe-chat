@@ -1,54 +1,90 @@
 'use client';
 
-import { Grid , Skeleton } from '@lobehub/ui';
+import { Block, Grid, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
-  container: css`
-    cursor: pointer;
-
-    position: relative;
-
-    overflow: hidden;
-
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-    box-shadow: 0 0 1px 1px ${isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary}
-      inset;
-
-    transition: box-shadow 0.2s ${token.motionEaseInOut};
-  `,
-  desc: css`
-    min-height: 44px;
-    margin-block-end: 0 !important;
-    color: ${token.colorTextDescription};
-  `,
-
-  time: css`
-    color: ${token.colorTextDescription};
-  `,
-  title: css`
-    margin-block-end: 0 !important;
-    font-weight: bold;
+const useStyles = createStyles(({ css, token }) => ({
+  footer: css`
+    border-block-start: 1px dashed ${token.colorBorder};
+    background: ${token.colorBgContainerSecondary};
   `,
 }));
 
 const Card = memo<{ banner?: boolean }>(({ banner }) => {
   const { styles } = useStyles();
   return (
-    <Flexbox className={styles.container}>
-      {banner && (
-        <Flexbox width={'100%'}>
-          <Skeleton.Button style={{ height: 64, width: '100%' }} />
+    <Block height={'100%'} style={{ overflow: 'hidden' }} variant={'outlined'} width={'100%'}>
+      {banner && <Skeleton.Block active height={64} width={'100%'} />}
+      {/* Header with avatar and title */}
+      <Flexbox gap={16} horizontal padding={16}>
+        <Flexbox gap={12} horizontal style={{ flex: 1, overflow: 'hidden' }}>
+          <Skeleton.Avatar active shape="square" size={40} style={{ flex: 'none' }} />
+          <Flexbox flex={1} gap={4} style={{ overflow: 'hidden' }}>
+            <Skeleton.Button
+              active
+              size={'small'}
+              style={{
+                height: 20,
+                width: '80%',
+              }}
+            />
+            <Skeleton.Button
+              active
+              size={'small'}
+              style={{
+                height: 14,
+                width: '50%',
+              }}
+            />
+          </Flexbox>
         </Flexbox>
-      )}
-      <Flexbox padding={16}>
-        <Skeleton active />
+        <Skeleton.Button
+          active
+          size={'small'}
+          style={{
+            height: 24,
+            width: 24,
+          }}
+        />
       </Flexbox>
-    </Flexbox>
+
+      {/* Description */}
+      <Flexbox gap={12} paddingInline={16}>
+        <Skeleton.Paragraph active fontSize={14} rows={3} style={{ marginBottom: 0 }} />
+        <Flexbox gap={8} horizontal>
+          <Skeleton.Button
+            active
+            size={'small'}
+            style={{
+              height: 20,
+              width: 60,
+            }}
+          />
+          <Skeleton.Button
+            active
+            size={'small'}
+            style={{
+              height: 20,
+              width: 50,
+            }}
+          />
+        </Flexbox>
+      </Flexbox>
+
+      {/* Footer */}
+      <Flexbox className={styles.footer} gap={4} horizontal padding={16} style={{ marginTop: 12 }}>
+        <Skeleton.Button
+          active
+          size={'small'}
+          style={{
+            height: 14,
+            width: 100,
+          }}
+        />
+      </Flexbox>
+    </Block>
   );
 });
 

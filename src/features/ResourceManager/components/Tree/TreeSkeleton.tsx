@@ -5,26 +5,16 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   container: css`
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    gap: 6px;
+    align-items: center;
 
     height: 32px;
     padding-block: 4px;
     padding-inline: 8px;
-
-    .${prefixCls}-skeleton-content {
-      display: flex;
-      flex-direction: column;
-    }
-  `,
-
-  paragraph: css`
-    > li {
-      height: 16px !important;
-    }
+    border-radius: ${token.borderRadiusSM}px;
   `,
 }));
 
@@ -32,18 +22,25 @@ const TreeSkeletonItem = memo(() => {
   const { styles } = useStyles();
 
   return (
-    <Skeleton
-      active
-      avatar={false}
-      className={styles.container}
-      paragraph={{
-        className: styles.paragraph,
-        rows: 1,
-        style: { marginBottom: 0 },
-        width: '60%',
-      }}
-      title={false}
-    />
+    <Flexbox className={styles.container} horizontal>
+      <Skeleton.Button
+        active
+        size={'small'}
+        style={{
+          flex: 'none',
+          height: 16,
+          width: 16,
+        }}
+      />
+      <Skeleton.Button
+        active
+        size={'small'}
+        style={{
+          height: 16,
+          width: `${Math.floor(Math.random() * 30 + 40)}%`,
+        }}
+      />
+    </Flexbox>
   );
 });
 
@@ -51,7 +48,7 @@ TreeSkeletonItem.displayName = 'TreeSkeletonItem';
 
 const TreeSkeleton = memo(() => (
   <Flexbox gap={2}>
-    {Array.from({ length: 5 }).map((_, i) => (
+    {Array.from({ length: 8 }).map((_, i) => (
       <TreeSkeletonItem key={i} />
     ))}
   </Flexbox>

@@ -5,28 +5,23 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
-  avatar: css`
-    border-radius: 6px;
-  `,
+const useStyles = createStyles(({ css, token }) => ({
   container: css`
     display: flex;
+    gap: 8px;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 
-    height: 40px;
     padding-block: 8px;
     padding-inline: 12px;
-
-    .${prefixCls}-skeleton-content {
-      display: flex;
-      flex-direction: column;
-    }
+    border-radius: ${token.borderRadius}px;
   `,
-  paragraph: css`
-    > li {
-      height: 20px !important;
-    }
+  leftContent: css`
+    overflow: hidden;
+    display: flex;
+    flex: 1;
+    gap: 8px;
+    align-items: center;
   `,
 }));
 
@@ -34,23 +29,38 @@ export const Placeholder = memo(() => {
   const { styles } = useStyles();
 
   return (
-    <Skeleton
-      active
-      avatar={{ className: styles.avatar, shape: 'square', size: 'small' }}
-      className={styles.container}
-      paragraph={{
-        className: styles.paragraph,
-        rows: 1,
-        style: { marginBottom: 0 },
-        width: '95%',
-      }}
-      title={false}
-    />
+    <Flexbox className={styles.container} horizontal>
+      <Flexbox className={styles.leftContent} horizontal>
+        <Skeleton.Avatar
+          active
+          shape="square"
+          size={24}
+          style={{ borderRadius: 6, flex: 'none' }}
+        />
+        <Skeleton.Button
+          active
+          size={'small'}
+          style={{
+            height: 20,
+            width: 100,
+          }}
+        />
+      </Flexbox>
+      <Skeleton.Button
+        active
+        size={'small'}
+        style={{
+          borderRadius: '50%',
+          height: 8,
+          width: 8,
+        }}
+      />
+    </Flexbox>
   );
 });
 
 export const SkeletonList = memo(() => (
-  <Flexbox flex={1} gap={4} style={{ paddingTop: 6 }}>
+  <Flexbox gap={4} paddingBlock={8}>
     {Array.from({ length: 6 }).map((_, i) => (
       <Placeholder key={i} />
     ))}

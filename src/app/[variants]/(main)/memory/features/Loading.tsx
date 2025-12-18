@@ -1,28 +1,52 @@
 import { Grid, Skeleton } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { ViewMode } from './ViewModeSwitcher';
 
+const useStyles = createStyles(({ css, token }) => ({
+  card: css`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 16px;
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgContainer};
+  `,
+}));
+
 const Loading = memo<{ rows?: number; viewMode?: ViewMode }>(({ viewMode, rows = 3 }) => {
+  const { styles } = useStyles();
+
   if (viewMode === 'timeline') {
     return (
-      <Flexbox gap={36} paddingBlock={36} style={{ paddingLeft: 32 }}>
-        <Skeleton active />
-        <Skeleton active />
-        <Skeleton active />
+      <Flexbox gap={24} paddingBlock={24} style={{ paddingLeft: 32 }}>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Flexbox gap={8} key={i}>
+            <Skeleton.Title active fontSize={18} lineHeight={1.4} width={'30%'} />
+            <Skeleton.Paragraph active rows={4} style={{ marginBottom: 0 }} />
+          </Flexbox>
+        ))}
       </Flexbox>
     );
   }
 
   return (
-    <Grid gap={8} maxItemWidth={240} paddingBlock={8} rows={rows}>
-      <Skeleton.Block active height={200} width={'100%'} />
-      <Skeleton.Block active height={200} width={'100%'} />
-      <Skeleton.Block active height={200} width={'100%'} />
-      <Skeleton.Block active height={200} width={'100%'} />
-      <Skeleton.Block active height={200} width={'100%'} />
-      <Skeleton.Block active height={200} width={'100%'} />
+    <Grid gap={12} maxItemWidth={240} paddingBlock={8} rows={rows}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Flexbox className={styles.card} key={i}>
+          <Skeleton.Title active fontSize={16} lineHeight={1.4} width={'80%'} />
+          <Skeleton.Paragraph active rows={5} style={{ marginBottom: 0 }} />
+          <Flexbox gap={8} horizontal>
+            <Skeleton.Button active size={'small'} style={{ height: 20, width: 60 }} />
+            <Skeleton.Button active size={'small'} style={{ height: 20, width: 50 }} />
+          </Flexbox>
+        </Flexbox>
+      ))}
     </Grid>
   );
 });

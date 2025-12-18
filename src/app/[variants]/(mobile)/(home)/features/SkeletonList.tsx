@@ -5,21 +5,37 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css }) => ({
+const useStyles = createStyles(({ css, token, prefixCls }) => ({
+  item: css`
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    padding-block: 12px;
+    padding-inline: 16px;
+    border-radius: ${token.borderRadius}px;
+
+    &:hover {
+      background: ${token.colorFillTertiary};
+    }
+
+    .${prefixCls}-skeleton-header {
+      padding: 0;
+    }
+  `,
   paragraph: css`
-    height: 12px !important;
-    margin-block-start: 12px !important;
+    margin-block: 8px 0 !important;
 
     > li {
       height: 12px !important;
     }
   `,
   title: css`
-    height: 14px !important;
-    margin-block: 4px 12px !important;
+    height: 16px !important;
+    margin-block-end: 0 !important;
 
     > li {
-      height: 14px !important;
+      height: 16px !important;
     }
   `,
 }));
@@ -29,22 +45,29 @@ interface SkeletonListProps {
 }
 
 const SkeletonList = memo<SkeletonListProps>(({ count = 4 }) => {
-  const { styles } = useStyles();
-
-  const list = Array.from({ length: count }).fill('');
+  const { styles, theme } = useStyles();
 
   return (
-    <Flexbox gap={8} paddingInline={16}>
-      {list.map((_, index) => (
-        <Skeleton
-          active
-          avatar
-          key={index}
-          paragraph={{ className: styles.paragraph, rows: 1 }}
-          title={{ className: styles.title }}
-        />
+    <Flexbox gap={4}>
+      {Array.from({ length: count }).map((_, index) => (
+        <Flexbox className={styles.item} key={index}>
+          <Skeleton.Avatar
+            active
+            shape="square"
+            size={40}
+            style={{ borderRadius: theme.borderRadius, flex: 'none' }}
+          />
+          <Flexbox flex={1} style={{ overflow: 'hidden' }}>
+            <Skeleton
+              active
+              paragraph={{ className: styles.paragraph, rows: 1, width: '80%' }}
+              title={{ className: styles.title, width: '60%' }}
+            />
+          </Flexbox>
+        </Flexbox>
       ))}
     </Flexbox>
   );
 });
+
 export default SkeletonList;

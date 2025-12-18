@@ -195,47 +195,45 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
               size={DESKTOP_HEADER_ICON_SIZE}
               title={t('actions.addNewTopic')}
             />
-            <Popover
-              arrow={false}
-              content={
-                <Flexbox
-                  gap={4}
-                  padding={8}
-                  style={{
-                    maxHeight: '50vh',
-                    overflowY: 'auto',
-                    width: '100%',
-                  }}
-                >
-                  {(topics || []).map((topic) => (
-                    <TopicItem
-                      active={topic.id === activeTopicId}
-                      key={topic.id}
-                      onClose={() => setTopicPopoverOpen(false)}
-                      onTopicChange={(id) => switchTopic(id)}
-                      topicId={topic.id}
-                      topicTitle={topic.title}
-                    />
-                  ))}
-                </Flexbox>
-              }
-              onOpenChange={setTopicPopoverOpen}
-              open={topicPopoverOpen}
-              placement="bottomRight"
-              styles={{
-                body: {
-                  padding: 0,
-                  width: 240,
-                },
-              }}
-              trigger={['click']}
-            >
-              <ActionIcon
-                disabled={!topics || topics.length === 0}
-                icon={Clock3Icon}
-                size={DESKTOP_HEADER_ICON_SIZE}
-              />
-            </Popover>
+            {!hideHistory && (
+              <Popover
+                arrow={false}
+                content={
+                  <Flexbox
+                    gap={4}
+                    padding={8}
+                    style={{
+                      maxHeight: '50vh',
+                      overflowY: 'auto',
+                      width: '100%',
+                    }}
+                  >
+                    {(topics || []).map((topic) => (
+                      <TopicItem
+                        active={topic.id === activeTopicId}
+                        key={topic.id}
+                        onClose={() => setTopicPopoverOpen(false)}
+                        onTopicChange={(id) => switchTopic(id)}
+                        topicId={topic.id}
+                        topicTitle={topic.title}
+                      />
+                    ))}
+                  </Flexbox>
+                }
+                onOpenChange={setTopicPopoverOpen}
+                open={topicPopoverOpen}
+                placement="bottomRight"
+                styles={{
+                  body: {
+                    padding: 0,
+                    width: 240,
+                  },
+                }}
+                trigger={['click']}
+              >
+                <ActionIcon icon={Clock3Icon} size={DESKTOP_HEADER_ICON_SIZE} />
+              </Popover>
+            )}
           </div>
           <ActionIcon
             icon={PanelRightCloseIcon}
