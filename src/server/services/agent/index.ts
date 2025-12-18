@@ -75,8 +75,7 @@ export class AgentService {
    */
   async getAgentConfigById(agentId: string) {
     const agent = await this.agentModel.getAgentConfigById(agentId);
-
-    return await this.mergeDefaultConfig(agent);
+    return this.mergeDefaultConfig(agent);
   }
 
   /**
