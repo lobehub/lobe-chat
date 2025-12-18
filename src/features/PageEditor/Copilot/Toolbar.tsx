@@ -49,6 +49,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
   const agents = useHomeStore(homeAgentListSelectors.allAgents);
   const isAgentListInit = useHomeStore(homeAgentListSelectors.isAgentListInit);
   const pageAgentId = useAgentStore((s) => s.builtinAgentIdMap['page-agent']);
+  const pageAgentData = useAgentStore((s) => s.agentMap[pageAgentId || '']);
 
   useFetchAgentList();
 
@@ -61,8 +62,8 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
     if (pageAgentId && !hasPageAgent) {
       return [
         {
-          avatar: null,
-          description: null,
+          avatar: pageAgentData?.avatar || null,
+          description: pageAgentData?.description || null,
           id: pageAgentId,
           pinned: false,
           title: t('builtinCopilot', { defaultValue: 'Built-in Copilot', ns: 'chat' }),
@@ -74,7 +75,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
     }
 
     return agents;
-  }, [agents, pageAgentId, t]);
+  }, [agents, pageAgentId, pageAgentData, t]);
 
   const activeAgent = useMemo(
     () => agentsWithBuiltin.find((agent) => agent.id === agentId),
