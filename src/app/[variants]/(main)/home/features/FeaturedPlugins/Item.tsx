@@ -3,7 +3,7 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import MetaInfo from '@/app/[variants]/(main)/discover/(list)/mcp/features/List/MetaInfo';
+import MetaInfo from '@/app/[variants]/(main)/community/(list)/mcp/features/List/MetaInfo';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
 import { DiscoverMcpItem } from '@/types/discover';
 

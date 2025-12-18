@@ -140,9 +140,9 @@ const AgentPlugin = memo(() => {
                 e.stopPropagation();
                 e.preventDefault();
                 setShowStore(true);
-                navigate('/discover/mcp');
+                navigate('/community/mcp');
               }}
-              to={'/discover/mcp'}
+              to={'/community/mcp'}
             >
               前往插件市场
             </Link>

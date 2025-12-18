@@ -53,11 +53,11 @@ const NavBar = memo(() => {
           icon: (active: boolean) => (
             <Icon className={active ? styles.active : undefined} icon={Compass} />
           ),
-          key: SidebarTabKey.Discover,
+          key: SidebarTabKey.Community,
           onClick: () => {
-            navigate('/discover');
+            navigate('/community');
           },
-          title: t('tab.discover'),
+          title: t('tab.community'),
         },
         {
           icon: (active: boolean) => (

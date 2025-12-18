@@ -75,11 +75,11 @@ const MainMenu = memo<MainMenuProps>(
         </Command.Group>
 
         <Command.Group heading={t('cmdk.navigate')}>
-          {!pathname?.startsWith('/discover') && (
-            <Command.Item onSelect={() => onNavigate('/discover')} value="discover">
+          {!pathname?.startsWith('/community') && (
+            <Command.Item onSelect={() => onNavigate('/community')} value="community">
               <Shapes className={styles.icon} />
               <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.discover')}</div>
+                <div className={styles.itemLabel}>{t('cmdk.community')}</div>
               </div>
             </Command.Item>
           )}

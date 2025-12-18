@@ -62,9 +62,9 @@ const Nav = memo(() => {
       {
         hidden: !showMarket,
         icon: ShapesIcon,
-        key: SidebarTabKey.Discover,
+        key: SidebarTabKey.Community,
         title: t('tab.community'),
-        url: '/discover',
+        url: '/community',
       },
     ],
     [t],

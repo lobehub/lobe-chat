@@ -21,7 +21,7 @@ import { Flexbox } from 'react-layout-kit';
 import Descriptions from '@/components/Descriptions';
 import InlineTable from '@/components/InlineTable';
 
-import Title from '../../../app/[variants]/(main)/discover/features/Title';
+import Title from '../../../app/[variants]/(main)/community/features/Title';
 import InstallationIcon from '../../../components/MCPDepsIcon';
 import CollapseDesc from '../CollapseDesc';
 import CollapseLayout from '../CollapseLayout';

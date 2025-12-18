@@ -28,7 +28,7 @@ const FeaturedPlugins = memo(() => {
                 key: 'all-plugins',
                 label: t('home.more'),
                 onClick: () => {
-                  navigate('/discover/mcp');
+                  navigate('/community/mcp');
                 },
               },
             ],

@@ -56,15 +56,15 @@ const SearchResults = memo<SearchResultsProps>(
           break;
         }
         case 'mcp': {
-          navigate(`/discover/mcp/${result.identifier}`);
+          navigate(`/community/mcp/${result.identifier}`);
           break;
         }
         case 'plugin': {
-          navigate(`/discover/plugins/${result.identifier}`);
+          navigate(`/community/plugins/${result.identifier}`);
           break;
         }
         case 'assistant': {
-          navigate(`/discover/assistant/${result.identifier}`);
+          navigate(`/community/assistant/${result.identifier}`);
           break;
         }
       }
