@@ -1,10 +1,11 @@
 import { ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import ContextItem from './ContextItem';
 import SelectionItem from './SelectionItem';
 
@@ -16,11 +17,22 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const ContextList = memo(() => {
+  const agentId = useAgentId();
+  const prevAgentIdRef = useRef<string | undefined>(undefined);
   const inputFilesList = useFileStore(fileChatSelectors.chatUploadFileList);
   const showFileList = useFileStore(fileChatSelectors.chatUploadFileListHasItem);
   const rawSelectionList = useFileStore(fileChatSelectors.chatContextSelections);
   const showSelectionList = useFileStore(fileChatSelectors.chatContextSelectionHasItem);
+  const clearChatContextSelections = useFileStore((s) => s.clearChatContextSelections);
   const { styles } = useStyles();
+
+  // Clear selections only when agentId changes (not on initial mount)
+  useEffect(() => {
+    if (prevAgentIdRef.current !== undefined && prevAgentIdRef.current !== agentId) {
+      clearChatContextSelections();
+    }
+    prevAgentIdRef.current = agentId;
+  }, [agentId, clearChatContextSelections]);
 
   // Filter duplicates based on preview content
   const selectionList = rawSelectionList.filter(
