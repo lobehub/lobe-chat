@@ -1,4 +1,4 @@
-import { TypesEnum } from '@/types/userMemory';
+import { TypesEnum } from '@lobechat/types';
 import { z } from 'zod';
 
 /**

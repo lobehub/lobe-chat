@@ -1,23 +1,15 @@
+import { LayersEnum } from '@lobechat/types';
 import { z } from 'zod';
 
 import { MemoryTypeSchema } from './common';
-import { LayersEnum } from '@/types/userMemory';
 
 /**
  * Preference origin context
  */
 export const OriginContextSchema = z.object({
-  actor: z
-    .string()
-    .describe("Who stated the preference; use 'User' for the user"),
-  applicableWhen: z
-    .string()
-    .nullable()
-    .describe('Conditions where this preference applies'),
-  notApplicableWhen: z
-    .string()
-    .nullable()
-    .describe('Conditions where it does not apply'),
+  actor: z.string().describe("Who stated the preference; use 'User' for the user"),
+  applicableWhen: z.string().nullable().describe('Conditions where this preference applies'),
+  notApplicableWhen: z.string().nullable().describe('Conditions where it does not apply'),
   scenario: z.string().nullable().describe('Applicable scenario or use case'),
   trigger: z.string().nullable().describe('What prompted this preference'),
 });
@@ -57,7 +49,9 @@ export const WithPreferenceSchema = z.object({
     .number()
     .min(0)
     .max(1)
-    .describe('Numeric prioritization weight (0-1 (0% to 100%)) where higher means more critical to respect'),
+    .describe(
+      'Numeric prioritization weight (0-1 (0% to 100%)) where higher means more critical to respect',
+    ),
   suggestions: z
     .array(z.string())
     .describe('Follow-up actions or assistant guidance derived from the preference'),
@@ -84,7 +78,11 @@ export const PreferenceMemoryItemSchema = z.object({
  * Preference memory extraction result
  */
 export const PreferenceMemorySchema = z.object({
-  memories: z.array(PreferenceMemoryItemSchema).describe('Array of extracted preference memory items, could be empty if decided no relevant preference to extract'),
+  memories: z
+    .array(PreferenceMemoryItemSchema)
+    .describe(
+      'Array of extracted preference memory items, could be empty if decided no relevant preference to extract',
+    ),
 });
 
 export type OriginContext = z.infer<typeof OriginContextSchema>;

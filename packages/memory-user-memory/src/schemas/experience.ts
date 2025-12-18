@@ -1,34 +1,22 @@
+import { LayersEnum } from '@lobechat/types';
 import { z } from 'zod';
 
 import { MemoryTypeSchema } from './common';
-import { LayersEnum } from '@/types/userMemory';
 
 /**
  * Experience-specific fields
  */
 export const WithExperienceSchema = z.object({
-  action: z
-    .string()
-    .describe('Narrative describing actions taken or behaviors exhibited'),
-  keyLearning: z
-    .string()
-    .describe('Narrative describing key insights or lessons learned'),
-  labels: z
-    .array(z.string())
-    .describe('Model generated tags that summarize the experience facets'),
-  possibleOutcome: z
-    .string()
-    .describe('Narrative describing potential outcomes or learnings'),
-  reasoning: z
-    .string()
-    .describe('Narrative describing the thought process or motivations'),
+  action: z.string().describe('Narrative describing actions taken or behaviors exhibited'),
+  keyLearning: z.string().describe('Narrative describing key insights or lessons learned'),
+  labels: z.array(z.string()).describe('Model generated tags that summarize the experience facets'),
+  possibleOutcome: z.string().describe('Narrative describing potential outcomes or learnings'),
+  reasoning: z.string().describe('Narrative describing the thought process or motivations'),
   scoreConfidence: z
     .number()
     .min(0)
     .max(1)
-    .describe(
-      'Numeric score (0-1 (0% to 100%)) describing confidence in the experience details',
-    ),
+    .describe('Numeric score (0-1 (0% to 100%)) describing confidence in the experience details'),
   situation: z.string().describe('Narrative describing the situation or event'),
   type: z.string().describe('Type of experience being recorded'),
 });
@@ -51,7 +39,11 @@ export const ExperienceMemoryItemSchema = z.object({
  * Experience memory extraction result
  */
 export const ExperienceMemorySchema = z.object({
-  memories: z.array(ExperienceMemoryItemSchema).describe('Array of extracted experience memory items, could be empty if decided no relevant experience to extract'),
+  memories: z
+    .array(ExperienceMemoryItemSchema)
+    .describe(
+      'Array of extracted experience memory items, could be empty if decided no relevant experience to extract',
+    ),
 });
 
 export type WithExperience = z.infer<typeof WithExperienceSchema>;

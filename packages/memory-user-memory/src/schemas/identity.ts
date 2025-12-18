@@ -1,7 +1,7 @@
+import { LayersEnum, MergeStrategyEnum } from '@lobechat/types';
 import { z } from 'zod';
 
 import { MemoryTypeSchema } from './common';
-import { LayersEnum, MergeStrategyEnum } from '@/types/userMemory';
 
 export const RELATIONSHIP_ENUM = [
   'self',
@@ -61,34 +61,57 @@ export const AddIdentityActionSchema = z
       })
       .strict(),
   })
-  .strict()
+  .strict();
 
 export const UpdateIdentityActionSchema = z
   .object({
     id: z.string(),
     mergeStrategy: z.nativeEnum(MergeStrategyEnum),
     set: z.object({
-      details: z.string().nullable().describe('Optional detailed information, use null for omitting the field'),
-      memoryCategory: z.string().nullable().describe('Memory category, use null for omitting the field'),
+      details: z
+        .string()
+        .nullable()
+        .describe('Optional detailed information, use null for omitting the field'),
+      memoryCategory: z
+        .string()
+        .nullable()
+        .describe('Memory category, use null for omitting the field'),
       memoryType: MemoryTypeSchema.describe('Memory type, use null for omitting the field'),
-      summary: z.string().nullable().describe('Concise overview of this specific memory, use null for omitting the field'),
-      tags: z.array(z.string()).nullable().describe('Model generated tags that summarize the identity facets, use null for omitting the field'),
-      title: z.string().nullable().describe('Brief descriptive title, use null for omitting the field'),
+      summary: z
+        .string()
+        .nullable()
+        .describe('Concise overview of this specific memory, use null for omitting the field'),
+      tags: z
+        .array(z.string())
+        .nullable()
+        .describe(
+          'Model generated tags that summarize the identity facets, use null for omitting the field',
+        ),
+      title: z
+        .string()
+        .nullable()
+        .describe('Brief descriptive title, use null for omitting the field'),
       withIdentity: z
         .object({
           description: z.string().nullable(),
           episodicDate: z.string().nullable(),
           extractedLabels: z.array(z.string()).nullable(),
           // TODO: OpenAI requires `required` fields to be always present, while enum fields cannot be null
-          relationship: z.string().describe(`Possible values: ${RELATIONSHIP_ENUM.join(' | ')}`).nullable(),
+          relationship: z
+            .string()
+            .describe(`Possible values: ${RELATIONSHIP_ENUM.join(' | ')}`)
+            .nullable(),
           role: z.string().nullable(),
           scoreConfidence: z.number().nullable(),
           sourceEvidence: z.string().nullable(),
           // TODO: OpenAI requires `required` fields to be always present, while enum fields cannot be null
-          type: z.string().describe(`Possible values: ${IdentityTypeEnum.options.join(' | ')}`).nullable(),
+          type: z
+            .string()
+            .describe(`Possible values: ${IdentityTypeEnum.options.join(' | ')}`)
+            .nullable(),
         })
         .strict(),
-    })
+    }),
   })
   .strict();
 
@@ -111,7 +134,7 @@ export const WithIdentitySchema = z
   .object({
     actions: IdentityActionsSchema,
   })
-  .strict()
+  .strict();
 
 export type IdentityActions = z.infer<typeof IdentityActionsSchema>;
 export type AddIdentityAction = z.infer<typeof AddIdentityActionSchema>;
