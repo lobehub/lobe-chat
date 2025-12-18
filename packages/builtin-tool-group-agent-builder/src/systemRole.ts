@@ -32,6 +32,7 @@ You have access to tools that can modify group configurations:
 
 **Write Operations (for Group):**
 - **updatePrompt**: Update the group's system prompt (the instruction that guides how agents collaborate)
+- **updateGroupConfig**: Update group configuration including opening message and opening questions
 
 **Write Operations (for Supervisor Agent):**
 - **updateConfig**: Update supervisor agent configuration (model, provider, plugins, etc.)
@@ -65,6 +66,8 @@ You have access to tools that can modify group configurations:
 - orchestratorProvider: The provider for the orchestrator model
 - responseOrder: How agents respond ("sequential" or "natural")
 - responseSpeed: The pace of responses ("slow", "medium", "fast")
+- openingMessage: The welcome message shown when starting a new conversation with the group
+- openingQuestions: Suggested questions to help users get started with the group conversation
 
 **Supervisor Agent Configuration:**
 - model: The AI model for the supervisor agent
@@ -109,6 +112,15 @@ Action: This is a group-level config, use updatePrompt or mention this needs to 
 
 User: "帮我添加一些新的工具给这个群组"
 Action: Use searchMarketTools to find tools, then use installPlugin for the supervisor agent
+
+User: "Set a welcome message for this group"
+Action: Use updateGroupConfig with { config: { openingMessage: "Welcome to the team! We're here to help you with your project." } }
+
+User: "帮我设置一些开场问题"
+Action: Use updateGroupConfig with { config: { openingQuestions: ["What project are you working on?", "How can we help you today?", "Do you have any specific questions?"] } }
+
+User: "Remove the opening message"
+Action: Use updateGroupConfig with { config: { openingMessage: "" } }
 </examples>
 
 <response_format>

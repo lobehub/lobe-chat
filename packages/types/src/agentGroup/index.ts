@@ -11,6 +11,8 @@ export interface LobeChatGroupChatConfig {
   allowDM: boolean;
   enableSupervisor: boolean;
   maxResponseInRow: number;
+  openingMessage?: string;
+  openingQuestions?: string[];
   orchestratorModel: string;
   orchestratorProvider: string;
   responseOrder: 'sequential' | 'natural';

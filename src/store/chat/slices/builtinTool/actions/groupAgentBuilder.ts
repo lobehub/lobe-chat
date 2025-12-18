@@ -8,6 +8,7 @@ import { AgentBuilderExecutionRuntime } from '@lobechat/builtin-tool-agent-build
 import type {
   InviteAgentParams,
   RemoveAgentParams,
+  UpdateGroupConfigParams,
   UpdateGroupPromptParams,
 } from '@lobechat/builtin-tool-group-agent-builder';
 import { GroupAgentBuilderExecutionRuntime } from '@lobechat/builtin-tool-group-agent-builder/executionRuntime';
@@ -35,6 +36,10 @@ export interface GroupAgentBuilderAction {
     params: SearchMarketToolsParams,
   ) => Promise<boolean>;
   groupAgentBuilder_updateConfig: (id: string, params: UpdateAgentConfigParams) => Promise<boolean>;
+  groupAgentBuilder_updateGroupConfig: (
+    id: string,
+    params: UpdateGroupConfigParams,
+  ) => Promise<boolean>;
   groupAgentBuilder_updatePrompt: (id: string, params: UpdateGroupPromptParams) => Promise<boolean>;
   internal_triggerGroupAgentBuilderToolCalling: (
     id: string,
@@ -52,26 +57,19 @@ export const groupAgentBuilderSlice: StateCreator<
   [],
   GroupAgentBuilderAction
 > = (set, get) => ({
-  
-
   // ==================== Inherited Operations (from AgentBuilder) ====================
-groupAgentBuilder_getAvailableModels: async (id, params) => {
+  groupAgentBuilder_getAvailableModels: async (id, params) => {
     return get().internal_triggerGroupAgentBuilderToolCalling(id, 'getAvailableModels', params);
   },
 
-  
-
-groupAgentBuilder_installPlugin: async (id, params) => {
+  groupAgentBuilder_installPlugin: async (id, params) => {
     return get().internal_triggerGroupAgentBuilderToolCalling(id, 'installPlugin', params);
   },
 
-  
-// ==================== Group-specific Operations ====================
-groupAgentBuilder_inviteAgent: async (id, params) => {
+  // ==================== Group-specific Operations ====================
+  groupAgentBuilder_inviteAgent: async (id, params) => {
     return get().internal_triggerGroupAgentBuilderToolCalling(id, 'inviteAgent', params);
   },
-
-  
 
   groupAgentBuilder_removeAgent: async (id, params) => {
     return get().internal_triggerGroupAgentBuilderToolCalling(id, 'removeAgent', params);
@@ -83,6 +81,10 @@ groupAgentBuilder_inviteAgent: async (id, params) => {
 
   groupAgentBuilder_updateConfig: async (id, params) => {
     return get().internal_triggerGroupAgentBuilderToolCalling(id, 'updateConfig', params);
+  },
+
+  groupAgentBuilder_updateGroupConfig: async (id, params) => {
+    return get().internal_triggerGroupAgentBuilderToolCalling(id, 'updateGroupConfig', params);
   },
 
   groupAgentBuilder_updatePrompt: async (id, params) => {
@@ -147,6 +149,12 @@ groupAgentBuilder_inviteAgent: async (id, params) => {
             streaming: true,
             ...params,
           } as UpdateGroupPromptParams);
+          break;
+        }
+        case 'updateGroupConfig': {
+          result = await groupAgentBuilderRuntime.updateGroupConfig(
+            params as UpdateGroupConfigParams,
+          );
           break;
         }
         // Inherited operations (use AgentBuilder runtime for supervisor agent)

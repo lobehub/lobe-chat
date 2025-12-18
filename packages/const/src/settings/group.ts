@@ -10,6 +10,8 @@ export const DEFAULT_CHAT_GROUP_CHAT_CONFIG: LobeChatGroupChatConfig = {
   allowDM: true,
   enableSupervisor: true,
   maxResponseInRow: 10,
+  openingMessage: '',
+  openingQuestions: [],
   orchestratorModel: DEFAULT_MODEL,
   orchestratorProvider: DEFAULT_PROVIDER,
   responseOrder: 'natural',

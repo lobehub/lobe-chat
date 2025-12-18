@@ -178,6 +178,35 @@ export const GroupAgentBuilderManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+    {
+      description:
+        "Update the group's configuration including opening message and opening questions. Use this to set the welcome experience when users start a new conversation with the group.",
+      name: GroupAgentBuilderApiName.updateGroupConfig,
+      parameters: {
+        properties: {
+          config: {
+            description:
+              'Partial group configuration object. Only include fields you want to update.',
+            properties: {
+              openingMessage: {
+                description:
+                  'Opening message shown when starting a new conversation with the group. Set to empty string to remove.',
+                type: 'string',
+              },
+              openingQuestions: {
+                description:
+                  'Array of suggested opening questions to help users get started. Set to empty array to remove all.',
+                items: { type: 'string' },
+                type: 'array',
+              },
+            },
+            type: 'object',
+          },
+        },
+        required: ['config'],
+        type: 'object',
+      },
+    },
   ],
   identifier: GroupAgentBuilderIdentifier,
   meta: {
