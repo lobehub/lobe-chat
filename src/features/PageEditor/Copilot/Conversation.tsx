@@ -34,6 +34,7 @@ const Conversation = memo<ConversationProps>(({ agentId }) => {
       height={'100%'}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{ minWidth: 300 }}
     >
       <CopilotToolbar agentId={currentAgentId} isHovered={isHovered} />
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>

@@ -2,7 +2,12 @@ import { ActionIcon, Block } from '@lobehub/ui';
 import { Dropdown, Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { ArrowRightFromLineIcon, ChevronsUpDownIcon, Clock3Icon, PlusIcon } from 'lucide-react';
+import {
+  ChevronsUpDownIcon,
+  Clock3Icon,
+  PanelRightCloseIcon,
+  PlusIcon,
+} from 'lucide-react';
 import { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -191,6 +196,8 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
 
   const [toggleRightPanel] = useGlobalStore((s) => [s.toggleRightPanel]);
 
+  const hideHistory = !topics || topics.length === 0;
+
   return (
     <NavHeader
       left={
@@ -207,25 +214,26 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
               size={DESKTOP_HEADER_ICON_SIZE}
               title={t('actions.addNewTopic')}
             />
-            <Dropdown
-              disabled={!topics || topics.length === 0}
-              menu={{
-                items,
-                selectedKeys: activeTopicId ? [activeTopicId] : [],
-              }}
-              overlayStyle={{
-                maxHeight: 600,
-                minWidth: 200,
-                overflowY: 'auto',
-              }}
-              placement="bottomRight"
-              trigger={['click']}
-            >
-              <ActionIcon disabled={!topics || topics.length === 0} icon={Clock3Icon} />
-            </Dropdown>
+            {!hideHistory && (
+              <Dropdown
+                menu={{
+                  items,
+                  selectedKeys: activeTopicId ? [activeTopicId] : [],
+                }}
+                overlayStyle={{
+                  maxHeight: 600,
+                  minWidth: 200,
+                  overflowY: 'auto',
+                }}
+                placement="bottomRight"
+                trigger={['click']}
+              >
+                <ActionIcon icon={Clock3Icon} />
+              </Dropdown>
+            )}
           </div>
           <ActionIcon
-            icon={ArrowRightFromLineIcon}
+            icon={PanelRightCloseIcon}
             onClick={() => toggleRightPanel()}
             size={DESKTOP_HEADER_ICON_SIZE}
           />
