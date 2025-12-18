@@ -418,15 +418,19 @@ export class CodeInterpreterExecutionRuntime {
 
       // Check if the sandbox upload was successful
       const uploadSuccess = result.success && result.result?.success !== false;
-      const bytesUploaded = result.result?.bytesUploaded;
+      const fileSize = result.result?.size;
+      const mimeType = result.result?.mimeType;
+      const fileContent = result.result?.content;
 
       const state: ExportFileState = {
+        content: fileContent,
         downloadUrl: uploadSuccess ? uploadUrlResult.downloadUrl : '',
         filename,
+        mimeType,
         path: args.path,
+        size: fileSize,
         success: uploadSuccess,
       };
-
       if (!uploadSuccess) {
         return {
           content: JSON.stringify({
@@ -440,13 +444,7 @@ export class CodeInterpreterExecutionRuntime {
       }
 
       return {
-        content: JSON.stringify({
-          bytesUploaded,
-          downloadUrl: uploadUrlResult.downloadUrl,
-          filename,
-          message: `Successfully exported ${filename}`,
-          success: true,
-        }),
+        content: `File exported successfully.\n\nFilename: ${filename}\nDownload URL: ${uploadUrlResult.downloadUrl}`,
         state,
         success: true,
       };

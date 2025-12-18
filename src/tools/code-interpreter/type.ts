@@ -72,12 +72,18 @@ export interface GlobFilesState {
 }
 
 export interface ExportFileState {
+  /** File content for text files (only when mimeType is text-like and size <= 1MB) */
+  content?: string;
   /** The download URL for the exported file */
   downloadUrl: string;
   /** The exported file name */
   filename: string;
+  /** The MIME type of the file */
+  mimeType?: string;
   /** The original path in sandbox */
   path: string;
+  /** The file size in bytes */
+  size?: number;
   /** Whether the export was successful */
   success: boolean;
 }
