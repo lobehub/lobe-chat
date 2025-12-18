@@ -4,6 +4,7 @@ import { systemPrompt } from './systemRole';
 
 export const CodeInterpreterApiName = {
   editLocalFile: 'editLocalFile',
+  executeCode: 'executeCode',
   exportFile: 'exportFile',
   getCommandOutput: 'getCommandOutput',
   globLocalFiles: 'globLocalFiles',
@@ -22,6 +23,27 @@ export const CodeInterpreterIdentifier = 'lobe-cloud-code-interpreter';
 
 export const CodeInterpreterManifest: BuiltinToolManifest = {
   api: [
+    {
+      description:
+        'Execute code directly in the sandbox environment. Supports Python, JavaScript, and TypeScript. Returns execution output, errors, and exit code.',
+      humanIntervention: 'required',
+      name: CodeInterpreterApiName.executeCode,
+      parameters: {
+        properties: {
+          code: {
+            description: 'The code to execute',
+            type: 'string',
+          },
+          language: {
+            description: 'Programming language: python (default), javascript, or typescript',
+            enum: ['python', 'javascript', 'typescript'],
+            type: 'string',
+          },
+        },
+        required: ['code'],
+        type: 'object',
+      },
+    },
     {
       description:
         'List files and folders in a specified directory. Input should be a path. Output is a JSON array of file/folder names.',

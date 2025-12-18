@@ -98,6 +98,23 @@ export interface GrepContentState {
   totalMatches: number;
 }
 
+// ==================== Code Execution ====================
+
+export interface ExecuteCodeState {
+  /** Error message if execution failed */
+  error?: string;
+  /** Exit code of the execution */
+  exitCode?: number;
+  /** The programming language used */
+  language: 'javascript' | 'python' | 'typescript';
+  /** Standard output from execution */
+  output?: string;
+  /** Standard error from execution */
+  stderr?: string;
+  /** Whether the execution was successful */
+  success: boolean;
+}
+
 // ==================== Shell Commands ====================
 
 export interface RunCommandState {
