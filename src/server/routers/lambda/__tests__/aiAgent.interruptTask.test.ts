@@ -15,11 +15,6 @@ vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
 
-// Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
-  isEnableAgent: vi.fn(() => true),
-}));
-
 // Mock AgentRuntimeService - interruptOperation method doesn't exist yet
 vi.mock('@/server/services/agentRuntime', () => ({
   AgentRuntimeService: vi.fn().mockImplementation(() => ({
@@ -90,7 +85,7 @@ describe('aiAgentRouter.interruptTask', () => {
     testTopicId = topic.id;
 
     // Create test thread with operationId in metadata
-    const [thread] = await serverDB
+    const [thread] = (await serverDB
       .insert(threads)
       .values({
         userId,
@@ -102,7 +97,7 @@ describe('aiAgentRouter.interruptTask', () => {
         status: ThreadStatus.Processing,
         metadata: { operationId: 'op-interrupt-test' },
       })
-      .returning();
+      .returning()) as any[];
     testThreadId = thread.id;
   });
 
@@ -150,7 +145,7 @@ describe('aiAgentRouter.interruptTask', () => {
 
     it('should work even when thread has no operationId (only updates thread status)', async () => {
       // Create a thread without operationId
-      const [threadWithoutOp] = await serverDB
+      const [threadWithoutOp] = (await serverDB
         .insert(threads)
         .values({
           userId,
@@ -162,7 +157,7 @@ describe('aiAgentRouter.interruptTask', () => {
           status: ThreadStatus.Processing,
           metadata: {},
         })
-        .returning();
+        .returning()) as any[];
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
@@ -272,21 +267,6 @@ describe('aiAgentRouter.interruptTask', () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       await expect(caller.interruptTask({} as any)).rejects.toThrow();
-    });
-  });
-
-  describe('agent feature disabled', () => {
-    it('should return NOT_IMPLEMENTED when agent feature is disabled', async () => {
-      const { isEnableAgent } = await import('@/app/(backend)/api/agent/isEnableAgent');
-      vi.mocked(isEnableAgent).mockReturnValueOnce(false);
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await expect(
-        caller.interruptTask({
-          threadId: testThreadId,
-        }),
-      ).rejects.toThrow('Agent features are not enabled');
     });
   });
 

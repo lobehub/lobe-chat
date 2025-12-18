@@ -4,8 +4,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { StreamEventManager } from '@/server/modules/AgentRuntime';
 
-import { isEnableAgent } from '../isEnableAgent';
-
 const log = debug('api-route:agent:stream');
 const timing = debug('lobe-server:agent-runtime:timing');
 
@@ -14,10 +12,6 @@ const timing = debug('lobe-server:agent-runtime:timing');
  * Provides real-time Agent execution event stream for clients
  */
 export async function GET(request: NextRequest) {
-  if (!isEnableAgent()) {
-    return NextResponse.json({ error: 'Agent features are not enabled' }, { status: 404 });
-  }
-
   // Initialize stream event manager
   const streamManager = new StreamEventManager();
 

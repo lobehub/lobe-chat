@@ -5,8 +5,6 @@ import { getServerDB } from '@/database/core/db-adaptor';
 import { AgentRuntimeCoordinator } from '@/server/modules/AgentRuntime';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
 
-import { isEnableAgent } from '../isEnableAgent';
-
 const log = debug('api-route:agent:execute-step');
 
 /**
@@ -41,10 +39,6 @@ async function verifyQStashSignature(request: NextRequest, rawBody: string): Pro
 }
 
 export async function POST(request: NextRequest) {
-  if (!isEnableAgent()) {
-    return NextResponse.json({ error: 'Agent features are not enabled' }, { status: 404 });
-  }
-
   const startTime = Date.now();
 
   // Read raw body for signature verification (must be done before parsing JSON)
@@ -142,10 +136,6 @@ export async function POST(request: NextRequest) {
  * 健康检查端点
  */
 export async function GET() {
-  if (!isEnableAgent()) {
-    return NextResponse.json({ error: 'Agent features are not enabled' }, { status: 404 });
-  }
-
   try {
     return NextResponse.json({
       healthy: true,

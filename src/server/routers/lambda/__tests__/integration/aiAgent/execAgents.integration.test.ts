@@ -1,6 +1,9 @@
 // @vitest-environment node
 /**
  * Integration tests for execAgents (batch execution) router
+ *
+ * Note: AgentStateManager and StreamEventManager will automatically use
+ * InMemory implementations when Redis is not available (test environment).
  */
 import { LobeChatDatabase } from '@lobechat/database';
 import { agents, topics } from '@lobechat/database/schemas';
@@ -24,37 +27,6 @@ let testDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
-
-// Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
-  isEnableAgent: vi.fn(() => true),
-}));
-
-// Mock AgentStateManager to use the exported singleton instance
-vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
-  const { inMemoryAgentStateManager } =
-    await import('@/server/modules/AgentRuntime/InMemoryAgentStateManager');
-  return {
-    AgentStateManager: class {
-      constructor() {
-        return inMemoryAgentStateManager;
-      }
-    },
-  };
-});
-
-// Mock StreamEventManager to use the exported singleton instance
-vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
-  const { inMemoryStreamEventManager } =
-    await import('@/server/modules/AgentRuntime/InMemoryStreamEventManager');
-  return {
-    StreamEventManager: class {
-      constructor() {
-        return inMemoryStreamEventManager;
-      }
-    },
-  };
-});
 
 // Mock FileService to avoid S3 environment variable requirements
 vi.mock('@/server/services/file', () => ({

@@ -4,8 +4,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerDB } from '@/database/core/db-adaptor';
 import { AiAgentService } from '@/server/services/aiAgent';
 
-import { isEnableAgent } from './isEnableAgent';
-
 const log = debug('api-route:agent:exec');
 
 /**
@@ -63,10 +61,6 @@ function verifyApiKey(request: NextRequest): boolean {
 }
 
 export async function POST(request: NextRequest) {
-  if (!isEnableAgent()) {
-    return NextResponse.json({ error: 'Agent features are not enabled' }, { status: 404 });
-  }
-
   const startTime = Date.now();
 
   // Read raw body for signature verification (must be done before parsing JSON)

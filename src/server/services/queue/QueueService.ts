@@ -1,15 +1,34 @@
-import { QueueServiceImpl, createQueueServiceModule } from './impls';
+import { LocalQueueServiceImpl, QueueServiceImpl, createQueueServiceModule } from './impls';
 import { HealthCheckResult, QueueMessage, QueueStats } from './types';
 
 /**
  * Queue Service
  * Uses modular implementation approach to provide queue operation services
+ *
+ * Execution modes:
+ * - Local mode (default): LocalQueueServiceImpl with setTimeout for async step execution
+ * - Queue mode (AGENT_RUNTIME_MODE=queue): QStashQueueServiceImpl for production
  */
 export class QueueService {
   private impl: QueueServiceImpl;
 
   constructor() {
     this.impl = createQueueServiceModule();
+  }
+
+  /**
+   * Get the underlying implementation
+   * Used by AgentRuntimeService to set execution callback for LocalQueueServiceImpl
+   */
+  getImpl(): QueueServiceImpl {
+    return this.impl;
+  }
+
+  /**
+   * Check if using LocalQueueServiceImpl (local development mode)
+   */
+  isLocalExecution(): boolean {
+    return this.impl instanceof LocalQueueServiceImpl;
   }
 
   /**

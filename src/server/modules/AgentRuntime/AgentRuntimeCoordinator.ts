@@ -1,8 +1,8 @@
 import { AgentState } from '@lobechat/agent-runtime';
 import debug from 'debug';
 
-import { AgentOperationMetadata, AgentStateManager, StepResult } from './AgentStateManager';
-import { StreamEventManager } from './StreamEventManager';
+import { AgentOperationMetadata, StepResult } from './AgentStateManager';
+import { createAgentStateManager, createStreamEventManager } from './factory';
 import type { IAgentStateManager, IStreamEventManager } from './types';
 
 const log = debug('lobe-server:agent-runtime:coordinator');
@@ -10,12 +10,12 @@ const log = debug('lobe-server:agent-runtime:coordinator');
 export interface AgentRuntimeCoordinatorOptions {
   /**
    * 自定义状态管理器实现
-   * 默认使用 Redis 实现的 AgentStateManager
+   * 默认根据 Redis 可用性自动选择实现
    */
   stateManager?: IAgentStateManager;
   /**
    * 自定义流式事件管理器实现
-   * 默认使用 Redis 实现的 StreamEventManager
+   * 默认根据 Redis 可用性自动选择实现
    */
   streamEventManager?: IStreamEventManager;
 }
@@ -25,15 +25,19 @@ export interface AgentRuntimeCoordinatorOptions {
  * 协调 AgentStateManager 和 StreamEventManager 的操作
  * 负责在状态变更时发送相应的事件
  *
- * 支持依赖注入，可以使用内存实现进行测试
+ * 默认行为：
+ * - Redis 可用时使用 Redis 实现
+ * - Redis 不可用时自动回退到内存实现（本地开发模式）
+ *
+ * 支持依赖注入，可以传入自定义实现
  */
 export class AgentRuntimeCoordinator {
   private stateManager: IAgentStateManager;
   private streamEventManager: IStreamEventManager;
 
   constructor(options?: AgentRuntimeCoordinatorOptions) {
-    this.stateManager = options?.stateManager ?? new AgentStateManager();
-    this.streamEventManager = options?.streamEventManager ?? new StreamEventManager();
+    this.stateManager = options?.stateManager ?? createAgentStateManager();
+    this.streamEventManager = options?.streamEventManager ?? createStreamEventManager();
   }
 
   /**

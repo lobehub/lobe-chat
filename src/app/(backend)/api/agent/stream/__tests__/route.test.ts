@@ -2,9 +2,6 @@
 import { NextRequest } from 'next/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { StreamEventManager } from '@/server/modules/AgentRuntime';
-
-import * as isEnableAgentModule from '../../isEnableAgent';
 import { GET } from '../route';
 
 // Mock dependencies first
@@ -18,13 +15,10 @@ vi.mock('@/server/modules/AgentRuntime', () => ({
 }));
 
 describe('/api/agent/stream route', () => {
-  const isEnableAgentSpy = vi.spyOn(isEnableAgentModule, 'isEnableAgent');
   const MOCK_TIMESTAMP = 1758203237000;
 
   beforeEach(() => {
     vi.resetAllMocks();
-    // Default to enabled for most tests
-    isEnableAgentSpy.mockReturnValue(true);
     // Mock Date.now to return consistent timestamp
     vi.spyOn(Date, 'now').mockReturnValue(MOCK_TIMESTAMP);
   });
@@ -34,19 +28,6 @@ describe('/api/agent/stream route', () => {
   });
 
   describe('GET handler', () => {
-    it('should return 404 when agent features are not enabled', async () => {
-      isEnableAgentSpy.mockReturnValue(false);
-
-      const request = new NextRequest(
-        'https://test.com/api/agent/stream?operationId=test-operation',
-      );
-      const response = await GET(request);
-
-      expect(response.status).toBe(404);
-      const data = await response.json();
-      expect(data.error).toBe('Agent features are not enabled');
-    });
-
     it('should return 400 when operationId parameter is missing', async () => {
       const request = new NextRequest('https://test.com/api/agent/stream');
       const response = await GET(request);

@@ -2,6 +2,9 @@
 /**
  * Integration tests for multi-round tool execution
  * Tests for LOBE-1657 fix: tool messages should not be duplicated across rounds
+ *
+ * Note: AgentStateManager and StreamEventManager will automatically use
+ * InMemory implementations when Redis is not available (test environment).
  */
 import { LobeChatDatabase } from '@lobechat/database';
 import { agents, messages } from '@lobechat/database/schemas';
@@ -16,7 +19,7 @@ import { ToolExecutionService } from '@/server/services/toolExecution';
 
 import { aiAgentRouter } from '../../../aiAgent';
 import { cleanupTestUser, createTestUser } from '../setup';
-import { createMockResponsesStream } from './helpers';
+import { createMockResponsesStream, waitForOperationComplete } from './helpers';
 
 // Set fake API key for testing to bypass OpenAI SDK validation
 process.env.OPENAI_API_KEY = 'sk-test-fake-api-key-for-testing';
@@ -27,39 +30,6 @@ vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
 
-// Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
-  isEnableAgent: vi.fn(() => true),
-}));
-
-// Mock AgentStateManager to use the exported singleton instance
-vi.mock('@/server/modules/AgentRuntime/AgentStateManager', async () => {
-  const { inMemoryAgentStateManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryAgentStateManager'
-  );
-  return {
-    AgentStateManager: class {
-      constructor() {
-        return inMemoryAgentStateManager;
-      }
-    },
-  };
-});
-
-// Mock StreamEventManager to use the exported singleton instance
-vi.mock('@/server/modules/AgentRuntime/StreamEventManager', async () => {
-  const { inMemoryStreamEventManager } = await import(
-    '@/server/modules/AgentRuntime/InMemoryStreamEventManager'
-  );
-  return {
-    StreamEventManager: class {
-      constructor() {
-        return inMemoryStreamEventManager;
-      }
-    },
-  };
-});
-
 // Mock FileService to avoid S3 environment variable requirements
 vi.mock('@/server/services/file', () => ({
   FileService: vi.fn().mockImplementation(() => ({
@@ -69,9 +39,6 @@ vi.mock('@/server/services/file', () => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let mockResponsesCreate: any;
-
-// AgentRuntimeService must be dynamically imported after mocks are set up
-let AgentRuntimeService: typeof import('@/server/services/agentRuntime').AgentRuntimeService;
 
 let serverDB: LobeChatDatabase;
 let userId: string;
@@ -262,10 +229,6 @@ beforeEach(async () => {
 
   // Setup spyOn for OpenAI Responses API prototype
   mockResponsesCreate = vi.spyOn(OpenAI.Responses.prototype, 'create');
-
-  // Dynamically import AgentRuntimeService after mocks are set up
-  const agentRuntimeModule = await import('@/server/services/agentRuntime');
-  AgentRuntimeService = agentRuntimeModule.AgentRuntimeService;
 });
 
 afterEach(async () => {
@@ -322,19 +285,16 @@ describe('Multi-Round Tool Execution', () => {
 
     const createResult = await caller.execAgent({
       agentId: testAgentWithToolsId,
-      autoStart: false,
       prompt: 'Please search and crawl multiple pages for comprehensive research',
     });
 
     expect(createResult.success).toBe(true);
 
-    const service = new AgentRuntimeService(serverDB, userId, {
-      queueService: null,
-    });
-
-    const finalState = await service.executeSync(createResult.operationId, {
-      maxSteps: 15,
-    });
+    // Wait for async execution to complete
+    const finalState = await waitForOperationComplete(
+      inMemoryAgentStateManager,
+      createResult.operationId,
+    );
 
     expect(finalState.status).toBe('done');
 
@@ -402,17 +362,14 @@ describe('Multi-Round Tool Execution', () => {
 
     const createResult = await caller.execAgent({
       agentId: testAgentWithToolsId,
-      autoStart: false,
       prompt: 'Multi-round tool test',
     });
 
-    const service = new AgentRuntimeService(serverDB, userId, {
-      queueService: null,
-    });
-
-    const finalState = await service.executeSync(createResult.operationId, {
-      maxSteps: 15,
-    });
+    // Wait for async execution to complete
+    const finalState = await waitForOperationComplete(
+      inMemoryAgentStateManager,
+      createResult.operationId,
+    );
 
     expect(finalState.status).toBe('done');
 
@@ -421,9 +378,7 @@ describe('Multi-Round Tool Execution', () => {
     );
     expect(stateToolMessages).toHaveLength(4);
 
-    const stateToolCallIds = stateToolMessages.map(
-      (m: { tool_call_id: string }) => m.tool_call_id,
-    );
+    const stateToolCallIds = stateToolMessages.map((m: { tool_call_id: string }) => m.tool_call_id);
     expect(new Set(stateToolCallIds).size).toBe(4);
 
     mockExecuteTool.mockRestore();

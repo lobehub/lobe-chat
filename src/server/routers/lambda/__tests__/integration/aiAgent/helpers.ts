@@ -1,7 +1,51 @@
 /**
  * Shared helpers for aiAgent integration tests
  */
+import { AgentState } from '@lobechat/agent-runtime';
 import { vi } from 'vitest';
+
+import { IAgentStateManager } from '@/server/modules/AgentRuntime/types';
+
+/**
+ * Wait for an operation to complete (or reach terminal state)
+ *
+ * @param stateManager - The agent state manager to check state
+ * @param operationId - The operation ID to wait for
+ * @param options - Configuration options
+ * @returns The final state when complete
+ */
+export const waitForOperationComplete = async (
+  stateManager: IAgentStateManager,
+  operationId: string,
+  options?: {
+    /** Maximum time to wait in ms (default: 30000) */
+    maxWaitTime?: number;
+    /** Polling interval in ms (default: 100) */
+    pollInterval?: number;
+  },
+): Promise<AgentState> => {
+  const { maxWaitTime = 30_000, pollInterval = 100 } = options ?? {};
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < maxWaitTime) {
+    const state = await stateManager.loadAgentState(operationId);
+    if (!state) {
+      throw new Error(`Operation ${operationId} not found`);
+    }
+
+    // Check for terminal states
+    if (['done', 'error', 'interrupted', 'waiting_for_human'].includes(state.status)) {
+      return state;
+    }
+
+    // Wait before next poll
+    await new Promise((resolve) => {
+      setTimeout(resolve, pollInterval);
+    });
+  }
+
+  throw new Error(`Operation ${operationId} did not complete within ${maxWaitTime}ms`);
+};
 
 // Mock FileService to avoid S3 environment variable requirements
 // This mock needs to be in a shared place but vitest hoists vi.mock

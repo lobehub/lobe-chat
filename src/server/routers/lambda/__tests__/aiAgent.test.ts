@@ -14,11 +14,6 @@ vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
 
-// Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
-  isEnableAgent: vi.fn(() => true),
-}));
-
 // Mock AgentRuntimeService since we only want to test the router's business logic
 vi.mock('@/server/services/agentRuntime', () => ({
   AgentRuntimeService: vi.fn().mockImplementation(() => ({

@@ -15,11 +15,6 @@ vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
 
-// Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
-  isEnableAgent: vi.fn(() => true),
-}));
-
 // Mock AiAgentService - controls task execution behavior
 const mockExecGroupSubAgentTask = vi.fn();
 vi.mock('@/server/services/aiAgent', () => ({

@@ -12,7 +12,7 @@ import { LobeChatDatabase } from '@/database/type';
 import {
   AgentRuntimeCoordinator,
   type AgentRuntimeCoordinatorOptions,
-  StreamEventManager,
+  createStreamEventManager,
 } from '@/server/modules/AgentRuntime';
 import {
   RuntimeExecutorContext,
@@ -22,6 +22,7 @@ import type { IStreamEventManager } from '@/server/modules/AgentRuntime/types';
 import { mcpService } from '@/server/services/mcp';
 import { PluginGatewayService } from '@/server/services/pluginGateway';
 import { QueueService } from '@/server/services/queue';
+import { LocalQueueServiceImpl } from '@/server/services/queue/impls';
 import { ToolExecutionService } from '@/server/services/toolExecution';
 import { BuiltinToolsExecutor } from '@/server/services/toolExecution/builtin';
 
@@ -88,11 +89,11 @@ export class AgentRuntimeService {
   private messageModel: MessageModel;
 
   constructor(db: LobeChatDatabase, userId: string, options?: AgentRuntimeServiceOptions) {
-    // Default to Redis-based StreamEventManager for production
+    // Use factory function to auto-select Redis or InMemory implementation
     this.streamManager =
       options?.streamEventManager ??
       options?.coordinatorOptions?.streamEventManager ??
-      new StreamEventManager();
+      createStreamEventManager();
     this.coordinator = new AgentRuntimeCoordinator({
       ...options?.coordinatorOptions,
       streamEventManager: this.streamManager,
@@ -111,6 +112,30 @@ export class AgentRuntimeService {
       mcpService,
       pluginGatewayService,
     });
+
+    // Setup local execution callback for LocalQueueServiceImpl
+    this.setupLocalExecutionCallback();
+  }
+
+  /**
+   * Setup execution callback for LocalQueueServiceImpl
+   * This breaks the circular dependency by using callback injection
+   */
+  private setupLocalExecutionCallback(): void {
+    if (!this.queueService) return;
+
+    const impl = this.queueService.getImpl();
+    if (impl instanceof LocalQueueServiceImpl) {
+      log('Setting up local execution callback');
+      impl.setExecutionCallback(async (operationId, stepIndex, context) => {
+        log('[%s] Local callback executing step %d', operationId, stepIndex);
+        await this.executeStep({
+          context,
+          operationId,
+          stepIndex,
+        });
+      });
+    }
   }
 
   /**
@@ -170,8 +195,10 @@ export class AgentRuntimeService {
       let messageId: string | undefined;
       let autoStarted = false;
 
-      // 只有在 autoStart 为 true 且 queueService 存在时才调度第一步执行
       if (autoStart && this.queueService) {
+        // Both local and queue modes use scheduleMessage
+        // LocalQueueServiceImpl uses setTimeout + callback mechanism
+        // QStashQueueServiceImpl schedules HTTP requests
         messageId = await this.queueService.scheduleMessage({
           context: initialContext,
           delay: 50, // 短延迟启动
@@ -182,7 +209,9 @@ export class AgentRuntimeService {
         });
         autoStarted = true;
         log('[%s] Scheduled first step (messageId: %s)', operationId, messageId);
-      } else {
+      }
+
+      if (!autoStarted) {
         log('[%s] Created operation without auto-start', operationId);
       }
 
@@ -784,13 +813,13 @@ export class AgentRuntimeService {
     options?: {
       /** 初始上下文（如果不提供，从状态中推断） */
       initialContext?: AgentRuntimeContext;
-      /** 最大步数限制，防止无限循环 */
+      /** 最大步数限制，防止无限循环，默认 9999 */
       maxSteps?: number;
       /** 每步执行后的回调（用于调试） */
       onStepComplete?: (stepIndex: number, state: AgentState) => void;
     },
   ): Promise<AgentState> {
-    const { maxSteps = 100, onStepComplete, initialContext } = options ?? {};
+    const { maxSteps = 9999, onStepComplete, initialContext } = options ?? {};
 
     log('[%s] Starting sync execution (maxSteps: %d)', operationId, maxSteps);
 

@@ -14,11 +14,6 @@ vi.mock('@/database/core/db-adaptor', () => ({
   getServerDB: vi.fn(() => testDB),
 }));
 
-// Mock isEnableAgent to always return true for tests
-vi.mock('@/app/(backend)/api/agent/isEnableAgent', () => ({
-  isEnableAgent: vi.fn(() => true),
-}));
-
 // Mock AiAgentService
 const mockExecGroupSubAgentTask = vi.fn();
 vi.mock('@/server/services/aiAgent', () => ({
@@ -291,25 +286,6 @@ describe('aiAgentRouter.execGroupSubAgentTask', () => {
           topicId: testTopicId,
         }),
       ).rejects.toThrow('Failed to execute sub-agent task: Database connection failed');
-    });
-  });
-
-  describe('agent feature disabled', () => {
-    it('should return NOT_IMPLEMENTED when agent feature is disabled', async () => {
-      const { isEnableAgent } = await import('@/app/(backend)/api/agent/isEnableAgent');
-      vi.mocked(isEnableAgent).mockReturnValueOnce(false);
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await expect(
-        caller.execGroupSubAgentTask({
-          agentId: testAgentId,
-          groupId: testGroupId,
-          instruction: 'Test instruction',
-          parentMessageId: 'parent-msg-1',
-          topicId: testTopicId,
-        }),
-      ).rejects.toThrow('Agent features are not enabled');
     });
   });
 });

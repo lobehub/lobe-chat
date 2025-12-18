@@ -5,7 +5,6 @@ import debug from 'debug';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import { isEnableAgent } from '@/app/(backend)/api/agent/isEnableAgent';
 import { MessageModel } from '@/database/models/message';
 import { ThreadModel } from '@/database/models/thread';
 import { TopicModel } from '@/database/models/topic';
@@ -181,11 +180,6 @@ const InterruptTaskSchema = z
   });
 
 const aiAgentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
-  // Check if agent features are enabled
-  if (!isEnableAgent()) {
-    throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: 'Agent features are not enabled' });
-  }
-
   const { ctx } = opts;
 
   return opts.next({
@@ -476,7 +470,6 @@ export const aiAgentRouter = router({
       }
     }),
 
-  
   getOperationStatus: aiAgentProcedure
     .input(GetOperationStatusSchema)
     .query(async ({ input, ctx }) => {
@@ -498,8 +491,7 @@ export const aiAgentRouter = router({
       return operationStatus;
     }),
 
-  
-getPendingInterventions: aiAgentProcedure
+  getPendingInterventions: aiAgentProcedure
     .input(GetPendingInterventionsSchema)
     .query(async ({ input, ctx }) => {
       const { operationId, userId } = input;
@@ -521,7 +513,7 @@ getPendingInterventions: aiAgentProcedure
    * This endpoint queries the status of a SubAgent task by threadId or operationId.
    * It maps operation status to task status and syncs Thread status when task completes.
    */
-getTaskStatus: aiAgentProcedure.input(GetTaskStatusSchema).query(async ({ input, ctx }) => {
+  getTaskStatus: aiAgentProcedure.input(GetTaskStatusSchema).query(async ({ input, ctx }) => {
     const { threadId, operationId } = input;
 
     log('getTaskStatus: threadId=%s, operationId=%s', threadId, operationId);
@@ -604,7 +596,7 @@ getTaskStatus: aiAgentProcedure.input(GetTaskStatusSchema).query(async ({ input,
    * This endpoint interrupts a SubAgent task by threadId or operationId.
    * It updates both operation status and Thread status to cancelled state.
    */
-interruptTask: aiAgentProcedure.input(InterruptTaskSchema).mutation(async ({ input, ctx }) => {
+  interruptTask: aiAgentProcedure.input(InterruptTaskSchema).mutation(async ({ input, ctx }) => {
     const { threadId, operationId } = input;
 
     log('interruptTask: threadId=%s, operationId=%s', threadId, operationId);
@@ -622,7 +614,6 @@ interruptTask: aiAgentProcedure.input(InterruptTaskSchema).mutation(async ({ inp
     }
   }),
 
-  
   processHumanIntervention: aiAgentProcedure
     .input(ProcessHumanInterventionSchema)
     .mutation(async ({ input, ctx }) => {
