@@ -4,8 +4,8 @@
     "confirm": "Hinzufügen",
     "error": "Datei konnte nicht zur Wissensdatenbank hinzugefügt werden",
     "id": {
-      "placeholder": "Bitte wählen Sie die zu hinzuzufügende Wissensdatenbank",
-      "required": "Bitte wählen Sie eine Wissensdatenbank",
+      "placeholder": "Bitte wählen Sie die Ziel-Wissensdatenbank aus",
+      "required": "Bitte wählen Sie eine Wissensdatenbank aus",
       "title": "Ziel-Wissensdatenbank"
     },
     "title": "Zur Wissensdatenbank hinzufügen",
@@ -19,9 +19,9 @@
     "formTitle": "Grundinformationen",
     "name": {
       "placeholder": "Name der Wissensdatenbank",
-      "required": "Bitte geben Sie den Namen der Wissensdatenbank ein"
+      "required": "Bitte geben Sie einen Namen für die Wissensdatenbank ein"
     },
-    "title": "Wissensdatenbank neu erstellen"
+    "title": "Neue Wissensdatenbank erstellen"
   },
   "tab": {
     "evals": "Bewertungen",

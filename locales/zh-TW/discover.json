@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "助理內建以下知識庫，幫助你回答更多問題。",
-          "title": "知識庫"
+          "desc": "助手內建了以下資源庫，幫助你解答更多問題。",
+          "title": "資源庫"
         },
         "plugin": {
           "desc": "助理內建以下外掛，幫助你完成更多任務。",
@@ -76,7 +76,7 @@
     "sorts": {
       "createdAt": "最近發布",
       "identifier": "助理 ID",
-      "knowledgeCount": "知識庫數量",
+      "knowledgeCount": "資源庫數量",
       "myown": "查看我的",
       "pluginCount": "外掛數量",
       "title": "助理名稱",
@@ -110,7 +110,7 @@
     "systemRole": "助手設定",
     "tokenUsage": "助理提示詞 Token 使用量",
     "try": "試一下",
-    "withKnowledge": "該助理附帶知識庫",
+    "withKnowledge": "此助手附帶資源庫",
     "withPlugin": "該助理附帶外掛"
   },
   "back": "返回發現",
@@ -178,7 +178,7 @@
       "functionCall": "支持函數調用",
       "title": "其他",
       "vision": "支持視覺識別",
-      "withKnowledge": "附帶知識庫",
+      "withKnowledge": "附帶資源庫",
       "withTool": "附帶插件"
     },
     "pricing": "模型價格",

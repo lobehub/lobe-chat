@@ -4,7 +4,7 @@
     "confirm": "Add",
     "error": "Failed to add file to knowledge base",
     "id": {
-      "placeholder": "Please select a knowledge base to add",
+      "placeholder": "Please select a knowledge base to add to",
       "required": "Please select a knowledge base",
       "title": "Target Knowledge Base"
     },
@@ -19,9 +19,9 @@
     "formTitle": "Basic Information",
     "name": {
       "placeholder": "Knowledge base name",
-      "required": "Please enter the knowledge base name"
+      "required": "Please enter a knowledge base name"
     },
-    "title": "Create Knowledge Base"
+    "title": "Create New Knowledge Base"
   },
   "tab": {
     "evals": "Evaluations",

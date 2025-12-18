@@ -64,7 +64,7 @@
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Чтение содержимого базы знаний",
-        "searchKnowledgeBase": "Поиск в базе знаний"
+        "searchKnowledgeBase": "Поиск по базе знаний"
       },
       "title": "База знаний"
     },

@@ -58,12 +58,12 @@
       "ready": "Veritabanı hazır"
     },
     "modal": {
-      "desc": "PGlite istemci veritabanını etkinleştirerek, tarayıcınızda sohbet verilerini kalıcı olarak depolayın ve bilgi bankası gibi gelişmiş özellikleri kullanın.",
+      "desc": "Yeni nesil istemci veritabanını hemen etkinleştirin. Sohbet verilerinizi tarayıcınızda kalıcı olarak saklayın ve kaynak kütüphanesi gibi gelişmiş özellikleri kullanın.",
       "enable": "Hemen Etkinleştir",
       "features": {
         "knowledgeBase": {
-          "desc": "Kişisel bilgi havuzunuzu oluşturun ve asistanınızla kolayca bilgi havuzu sohbetine başlayın (yakında gelecek)",
-          "title": "Bilgi havuzu sohbetini destekleyin, ikinci beyninizi açın"
+          "desc": "Kişisel bilgi kütüphanenizi oluşturun ve asistanınızla kolayca bilgi tabanlı sohbetler başlatın (yakında geliyor)",
+          "title": "Bilgi tabanlı sohbet desteği, ikinci beyninizi etkinleştirin"
         },
         "localFirst": {
           "desc": "Sohbet verileri tamamen tarayıcıda saklanır, verileriniz her zaman sizin kontrolünüzde.",
@@ -139,6 +139,7 @@
     "about": "Hakkında",
     "aiModeEmptyState": "Yukarıdaki giriş kutusuna sorunuzu yazarak yapay zeka ile sohbet etmeye başlayın",
     "aiModePlaceholder": "Yapay zekaya soru sor...",
+    "community": "Topluluk",
     "communitySupport": "Topluluk Desteği",
     "discover": "Keşfet",
     "memory": "Hafıza",

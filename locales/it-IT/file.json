@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Stai per eliminare questa libreria. I file al suo interno non verranno eliminati, ma spostati in 'Tutti i file'. Una volta eliminata, la libreria non potrà essere recuperata. Procedi con cautela.",
       "empty": "Fai clic su <1>+</1> per iniziare a creare una libreria"
     },
-    "new": "Libreria",
+    "new": "Nuova libreria",
     "title": "Librerie"
   },
   "menu": {

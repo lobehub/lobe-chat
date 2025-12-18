@@ -20,8 +20,8 @@
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "知識ベースに追加",
-      "addToOtherKnowledgeBase": "他の知識ベースに追加",
+      "addToKnowledgeBase": "ナレッジベースに追加",
+      "addToOtherKnowledgeBase": "他のナレッジベースに追加",
       "batchChunking": "バッチ分割",
       "chunking": "分割",
       "chunkingTooltip": "ファイルを複数のテキストブロックに分割し、ベクトル化した後、意味検索やファイル対話に使用できます",
@@ -29,7 +29,7 @@
       "confirmDelete": "このファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
       "confirmDeleteFolder": "このフォルダーとそのすべての内容を削除しようとしています。削除後は元に戻せません。本当に実行しますか？",
       "confirmDeleteMultiFiles": "選択した {{count}} 個のファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
-      "confirmRemoveFromKnowledgeBase": "選択した {{count}} 個のファイルを知識ベースから削除しようとしています。削除後もファイルはすべてのファイルで表示できますので、操作を確認してください",
+      "confirmRemoveFromKnowledgeBase": "選択された {{count}} 件のファイルをナレッジベースから削除しようとしています。削除後もすべてのファイル一覧から閲覧可能です。操作を確認してください。",
       "copyUrl": "リンクをコピー",
       "copyUrlSuccess": "ファイルのアドレスがコピーされました",
       "createChunkingTask": "準備中...",
@@ -43,7 +43,7 @@
       "moveSuccess": "ファイルを正常に移動しました",
       "moveToFolder": "フォルダへ移動...",
       "moveToRoot": "ルートディレクトリへ移動",
-      "removeFromKnowledgeBase": "知識ベースから削除",
+      "removeFromKnowledgeBase": "ナレッジベースから削除",
       "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました",
       "rename": "名前を変更",
       "renameError": "名前の変更に失敗しました",
@@ -51,13 +51,13 @@
     },
     "bottom": "これ以上ありません",
     "config": {
-      "showFilesInKnowledgeBase": "知識ベースの内容を表示"
+      "showFilesInKnowledgeBase": "ナレッジベースの内容を表示"
     },
     "emptyStatus": {
       "actions": {
         "file": "ファイルをアップロード",
         "folder": "フォルダーをアップロード",
-        "knowledgeBase": "新しい知識ベースを作成"
+        "knowledgeBase": "ナレッジベースを新規作成"
       },
       "or": "または",
       "title": "ここにファイルまたはフォルダーをドラッグしてください"
@@ -232,7 +232,7 @@
     "empty": {
       "description": "ナレッジベースを作成して、リソースを整理・管理しましょう",
       "search": "一致するナレッジベースが見つかりませんでした",
-      "title": "ナレッジベースはまだありません"
+      "title": "ナレッジベースがまだありません"
     }
   }
 }

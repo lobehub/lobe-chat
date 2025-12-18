@@ -29,7 +29,7 @@
       "confirmDelete": "Vous allez supprimer ce fichier. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
       "confirmDeleteFolder": "Ce dossier et tout son contenu vont être supprimés. Cette action est irréversible. Veuillez confirmer votre choix.",
       "confirmDeleteMultiFiles": "Vous allez supprimer les {{count}} fichiers sélectionnés. Une fois supprimés, ils ne pourront pas être récupérés. Veuillez confirmer votre action.",
-      "confirmRemoveFromKnowledgeBase": "Vous allez retirer les {{count}} fichiers sélectionnés de la base de connaissances. Une fois retirés, les fichiers resteront visibles dans tous les fichiers. Veuillez confirmer votre action.",
+      "confirmRemoveFromKnowledgeBase": "Vous êtes sur le point de retirer {{count}} fichier(s) de la base de connaissances. Les fichiers resteront accessibles dans la section Tous les fichiers. Veuillez confirmer votre action.",
       "copyUrl": "Copier le lien",
       "copyUrlSuccess": "Adresse du fichier copiée avec succès",
       "createChunkingTask": "Préparation en cours...",
@@ -51,7 +51,7 @@
     },
     "bottom": "C'est tout",
     "config": {
-      "showFilesInKnowledgeBase": "Afficher le contenu dans la base de connaissances"
+      "showFilesInKnowledgeBase": "Afficher le contenu de la base de connaissances"
     },
     "emptyStatus": {
       "actions": {

@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "Nieuw onderwerp aanmaken",
+    "addNewTopic": "Nieuw onderwerp starten",
     "autoRename": "Slim hernoemen",
     "confirmRemoveAll": "U staat op het punt om alle onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
     "confirmRemoveTopic": "U staat op het punt om dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld, wees voorzichtig.",

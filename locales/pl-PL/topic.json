@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "Dodaj nowy temat",
+    "addNewTopic": "Rozpocznij nowy temat",
     "autoRename": "Inteligentne zmienianie nazw",
     "confirmRemoveAll": "Zaraz usuniesz wszystkie tematy. Po usunięciu nie będzie możliwości ich przywrócenia, proszę działać ostrożnie.",
     "confirmRemoveTopic": "Zaraz usuniesz ten temat. Po usunięciu nie będzie możliwości jego przywrócenia, proszę działać ostrożnie.",

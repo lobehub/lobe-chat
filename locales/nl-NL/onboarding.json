@@ -1,6 +1,24 @@
 {
   "back": "Vorige stap",
   "finish": "Aan de slag",
+  "interests": {
+    "area": {
+      "business": "Zakelijk en Strategie",
+      "coding": "Programmeren en Ontwikkeling",
+      "design": "Design en Creativiteit",
+      "education": "Leren en Onderzoek",
+      "marketing": "Marketing en Promotie",
+      "other": "Overige Gebieden",
+      "product": "Product en Management",
+      "sales": "Verkoop en Klanten",
+      "writing": "Contentcreatie"
+    },
+    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
+    "placeholder": "Voer een interessegebied in...",
+    "title": "Kun je me vertellen waar je in geïnteresseerd bent?",
+    "title2": "Help me een eerste indruk van je te krijgen~",
+    "title3": "Neem je tijd, ik leer je steeds beter kennen"
+  },
   "modeSelection": {
     "desc": "Kies de gebruiksmodus die bij je past",
     "hint": "Je kunt dit later altijd aanpassen in de instellingen",
@@ -19,24 +37,6 @@
     "title3": "Vertel het me, speciaal voor jou op maat gemaakt～"
   },
   "next": "Volgende stap",
-  "occupation": {
-    "area": {
-      "business": "Zakelijk en Strategie",
-      "coding": "Programmeren en Ontwikkeling",
-      "design": "Design en Creativiteit",
-      "education": "Leren en Onderzoek",
-      "marketing": "Marketing en Promotie",
-      "other": "Overige Gebieden",
-      "product": "Product en Management",
-      "sales": "Verkoop en Klantenservice",
-      "writing": "Contentcreatie"
-    },
-    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
-    "placeholder": "Voer je beroep in...",
-    "title": "Kun je me vertellen in welk vakgebied je werkt?",
-    "title2": "Help me een eerste indruk van je te krijgen~",
-    "title3": "Geen haast, ik leer je steeds beter kennen"
-  },
   "proSettings": {
     "connectors": {
       "title": "Verbind je favoriete tools"

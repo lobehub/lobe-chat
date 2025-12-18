@@ -58,12 +58,12 @@
       "ready": "Database is gereed"
     },
     "modal": {
-      "desc": "Schakel de PGlite-clientdatabase in om chatgegevens permanent op te slaan in je browser en gebruik geavanceerde functies zoals de kennisbank.",
+      "desc": "Activeer direct de volgende generatie clientdatabase. Sla chatgegevens permanent op in je browser en gebruik geavanceerde functies zoals de kennisbank.",
       "enable": "Nu inschakelen",
       "features": {
         "knowledgeBase": {
-          "desc": "Bouw je persoonlijke kennisbasis op en start eenvoudig een gesprek met je assistent (binnenkort beschikbaar)",
-          "title": "Ondersteuning voor kennisbasisgesprekken, activeer je tweede brein"
+          "desc": "Bouw je persoonlijke kennisbank op en start eenvoudig gesprekken met je assistent op basis van deze bronnen (binnenkort beschikbaar)",
+          "title": "Ondersteuning voor kennisbankgesprekken, activeer je tweede brein"
         },
         "localFirst": {
           "desc": "Chatgegevens worden volledig in de browser opgeslagen, jouw gegevens zijn altijd in jouw beheer.",
@@ -139,6 +139,7 @@
     "about": "Over",
     "aiModeEmptyState": "Typ je vraag in het invoerveld hierboven om een gesprek met de AI te starten",
     "aiModePlaceholder": "Stel een vraag aan de AI...",
+    "community": "Community",
     "communitySupport": "Communityondersteuning",
     "discover": "Ontdekken",
     "memory": "Geheugen",

@@ -1,6 +1,24 @@
 {
   "back": "Précédent",
   "finish": "Commencer",
+  "interests": {
+    "area": {
+      "business": "Affaires et stratégie",
+      "coding": "Programmation et développement",
+      "design": "Design et créativité",
+      "education": "Apprentissage et recherche",
+      "marketing": "Marketing et promotion",
+      "other": "Autres domaines",
+      "product": "Produit et gestion",
+      "sales": "Ventes et relation client",
+      "writing": "Création de contenu"
+    },
+    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
+    "placeholder": "Veuillez saisir les domaines qui vous intéressent...",
+    "title": "Pouvez-vous me dire quels domaines vous intéressent ?",
+    "title2": "Aidez-moi à me faire une première idée de vous~",
+    "title3": "Prenez votre temps, j’apprendrai à mieux vous connaître"
+  },
   "modeSelection": {
     "desc": "Choisissez le mode qui vous convient le mieux",
     "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
@@ -19,24 +37,6 @@
     "title3": "Dis-moi tout, je vais te créer quelque chose sur mesure~"
   },
   "next": "Suivant",
-  "occupation": {
-    "area": {
-      "business": "Affaires et stratégie",
-      "coding": "Programmation et développement",
-      "design": "Design et créativité",
-      "education": "Apprentissage et recherche",
-      "marketing": "Marketing et promotion",
-      "other": "Autres domaines",
-      "product": "Produit et gestion",
-      "sales": "Ventes et relation client",
-      "writing": "Création de contenu"
-    },
-    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
-    "placeholder": "Veuillez saisir votre profession...",
-    "title": "Peux-tu me dire dans quel domaine tu travailles ?",
-    "title2": "Aide-moi à me faire une première idée de toi~",
-    "title3": "Pas de précipitation, j’apprendrai à mieux te connaître petit à petit"
-  },
   "proSettings": {
     "connectors": {
       "title": "Connectez vos outils préférés"

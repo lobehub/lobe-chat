@@ -18,7 +18,8 @@
       "requiresAuth": "Autorisatie vereist, klik op 'Goedkeuren' om verbinding te maken",
       "retry": "Opnieuw proberen"
     },
-    "welcome": "Hallo, ik ben **Lobe AI**, jouw assistentconfiguratie-expert. Vertel me wat voor soort assistent je wilt, dan help ik je om deze in te stellen."
+    "title": "Assistentenbouwer",
+    "welcome": "Vertel me over jouw gebruikssituatie – een professionele partner staat voor je klaar.\n\nOf het nu gaat om schrijven, programmeren of data-analyse, ik help je een persoonlijke assistent te creëren!"
   },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "Nog geen leden geselecteerd",
   "openInNewWindow": "Open in een nieuw venster",
   "owner": "Groepseigenaar",
+  "pageCopilot": {
+    "title": "Schrijfassistent",
+    "welcome": "**Maak elke zin krachtiger.**\n\nOf je nu aan het opstellen, herschrijven of redigeren bent, ik help je om je tekst duidelijker, natuurlijker en overtuigender te maken."
+  },
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
   "rag": {

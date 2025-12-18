@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "Crea un nuovo argomento",
+    "addNewTopic": "Avvia una nuova conversazione",
     "autoRename": "Rinomina automaticamente",
     "confirmRemoveAll": "Stai per eliminare tutti i temi. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
     "confirmRemoveTopic": "Stai per eliminare questo tema. Dopo l'eliminazione, non sarà possibile recuperarlo. Procedi con cautela.",

@@ -18,7 +18,8 @@
       "requiresAuth": "Wymaga autoryzacji, kliknij „Zatwierdź”, aby połączyć",
       "retry": "Ponów próbę"
     },
-    "welcome": "Cześć, jestem **Lobe AI**, Twój ekspert od konfiguracji asystenta. Powiedz mi, jakiego asystenta potrzebujesz, a ja pomogę Ci go skonfigurować."
+    "title": "Ekspert Tworzenia Asystentów",
+    "welcome": "Opowiedz mi o swoim scenariuszu — profesjonalny partner gotowy do działania.\n\nNiezależnie od tego, czy piszesz, programujesz, czy analizujesz dane, pomogę Ci stworzyć spersonalizowanego asystenta!"
   },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "Nie wybrano jeszcze członków",
   "openInNewWindow": "Otwórz w nowym oknie",
   "owner": "Właściciel grupy",
+  "pageCopilot": {
+    "title": "Asystent Tekstowy",
+    "welcome": "**Spraw, by każde zdanie brzmiało lepiej.**\n\nNiezależnie od tego, czy tworzysz szkic, przepisujesz czy redagujesz, pomogę Ci uczynić tekst jaśniejszym, bardziej naturalnym i przekonującym."
+  },
   "pin": "Przypnij",
   "pinOff": "Odepnij",
   "rag": {

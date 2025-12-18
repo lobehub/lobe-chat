@@ -18,7 +18,9 @@ export default {
       requiresAuth: '需要授权，点击「批准」连接',
       retry: '重试',
     },
-    welcome: '你好，我是 **Lobe AI**，你的助手配置专家。告诉我你想要什么样的助手，我会帮你设置好。',
+    title: '助手构建专家',
+    welcome:
+      '说说你的需求场景？专业搭档应运而生。\n\n无论是写作、编程，还是数据分析，我都能帮你打造专属助理！',
   },
   agentDefaultMessage:
     '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。',
@@ -198,7 +200,6 @@ export default {
     uploadGuide: '上传过的文件可以在「资源」中查看哦',
     viewMore: '查看更多',
   },
-
   memberSelection: {
     addMember: '添加成员',
     allMembers: '全体成员',
@@ -213,7 +214,6 @@ export default {
   mention: {
     title: '提及成员',
   },
-
   messageAction: {
     collapse: '收起消息',
     continueGeneration: '继续生成',
@@ -283,10 +283,10 @@ export default {
   },
 
   newAgent: '创建助手',
+
   newGroupChat: '创建群组',
   newPage: '创建文稿',
   noAgentsYet: '此群组还没有成员。点击 + 按钮邀请助手。',
-
   noAvailableAgents: '没有可邀请的成员',
 
   noMatchingAgents: '没有匹配的成员',
@@ -298,6 +298,12 @@ export default {
   openInNewWindow: '打开独立窗口',
 
   owner: '群主',
+
+  pageCopilot: {
+    title: '文稿助理',
+    welcome:
+      '**让每一句话更到位。**\n\n无论是起草、改写还是润色，我都会帮你把文字变得更清晰、更自然、更有说服力。',
+  },
 
   pin: '置顶',
 

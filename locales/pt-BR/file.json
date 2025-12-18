@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Esta biblioteca será excluída. Os arquivos nela contidos não serão apagados, mas movidos para Todos os Arquivos. A exclusão da biblioteca é irreversível, por favor, proceda com cautela.",
       "empty": "Clique em <1>+</1> para começar a criar uma biblioteca"
     },
-    "new": "Biblioteca",
+    "new": "Nova Biblioteca de Recursos",
     "title": "Bibliotecas"
   },
   "menu": {

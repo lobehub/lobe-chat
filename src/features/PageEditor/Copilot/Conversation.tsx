@@ -7,6 +7,7 @@ import { useAgentStore } from '@/store/agent';
 import { useChatStore } from '@/store/chat';
 
 import CopilotToolbar from './Toolbar';
+import Welcome from './Welcome';
 
 interface ConversationProps {
   agentId: string;
@@ -38,7 +39,7 @@ const Conversation = memo<ConversationProps>(({ agentId }) => {
     >
       <CopilotToolbar agentId={currentAgentId} isHovered={isHovered} />
       <Flexbox flex={1} style={{ overflow: 'hidden' }}>
-        <ChatList />
+        <ChatList welcome={<Welcome />} />
       </Flexbox>
       <ChatInput leftActions={actions} />
     </Flexbox>

@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "You are about to delete this library. The files within it will not be deleted but moved to All Files. This action cannot be undone, so please proceed with caution.",
       "empty": "Click <1>+</1> to create a new library"
     },
-    "new": "Library",
+    "new": "New Library",
     "title": "Library"
   },
   "menu": {

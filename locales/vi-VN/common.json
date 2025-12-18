@@ -58,12 +58,12 @@
       "ready": "Cơ sở dữ liệu đã sẵn sàng"
     },
     "modal": {
-      "desc": "Kích hoạt cơ sở dữ liệu khách hàng PGlite, lưu trữ dữ liệu trò chuyện của bạn trong trình duyệt và sử dụng các tính năng nâng cao như kho kiến thức",
+      "desc": "Kích hoạt ngay cơ sở dữ liệu khách hàng thế hệ mới. Lưu trữ dữ liệu trò chuyện vĩnh viễn trong trình duyệt của bạn và sử dụng các tính năng nâng cao như thư viện tài nguyên.",
       "enable": "Kích hoạt ngay",
       "features": {
         "knowledgeBase": {
-          "desc": "Xây dựng kho kiến thức cá nhân của bạn và dễ dàng bắt đầu cuộc trò chuyện với trợ lý của bạn (sắp ra mắt)",
-          "title": "Hỗ trợ trò chuyện kho kiến thức, mở ra bộ não thứ hai"
+          "desc": "Xây dựng thư viện tài nguyên cá nhân của bạn và dễ dàng bắt đầu cuộc trò chuyện với trợ lý thông qua thư viện (sắp ra mắt)",
+          "title": "Hỗ trợ trò chuyện qua thư viện, kích hoạt bộ não thứ hai"
         },
         "localFirst": {
           "desc": "Dữ liệu trò chuyện hoàn toàn được lưu trữ trên trình duyệt, dữ liệu của bạn luôn nằm trong tầm kiểm soát của bạn.",
@@ -139,6 +139,7 @@
     "about": "Giới thiệu",
     "aiModeEmptyState": "Nhập câu hỏi của bạn vào ô phía trên để bắt đầu trò chuyện với AI",
     "aiModePlaceholder": "Đặt câu hỏi cho AI...",
+    "community": "Cộng đồng",
     "communitySupport": "Hỗ trợ cộng đồng",
     "discover": "Khám phá",
     "memory": "Ký ức",
@@ -395,7 +396,7 @@
     "discover": "Khám phá",
     "files": "Tệp",
     "home": "Trang chủ",
-    "knowledgeBase": "Cơ sở tri thức",
+    "knowledgeBase": "Thư viện",
     "me": "Tôi",
     "memory": "Bộ nhớ",
     "pages": "Tài liệu",

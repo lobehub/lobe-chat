@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "El asistente incluye las siguientes bases de conocimiento para ayudarte a responder más preguntas.",
-          "title": "Base de Conocimiento"
+          "desc": "El asistente incluye las siguientes bibliotecas de recursos para ayudarte a responder más preguntas.",
+          "title": "Bibliotecas de recursos"
         },
         "plugin": {
           "desc": "El asistente incluye los siguientes complementos para ayudarte a completar más tareas.",
@@ -76,7 +76,7 @@
     "sorts": {
       "createdAt": "Publicado recientemente",
       "identifier": "ID del Asistente",
-      "knowledgeCount": "Cantidad de bases de conocimiento",
+      "knowledgeCount": "Cantidad de bibliotecas de recursos",
       "myown": "Ver mis asistentes",
       "pluginCount": "Cantidad de complementos",
       "title": "Nombre del Asistente",
@@ -110,7 +110,7 @@
     "systemRole": "Configuración del asistente",
     "tokenUsage": "Uso de Tokens en el prompt del asistente",
     "try": "Prueba",
-    "withKnowledge": "Este asistente incluye bases de conocimiento",
+    "withKnowledge": "Este asistente incluye bibliotecas de recursos",
     "withPlugin": "Este asistente incluye complementos"
   },
   "back": "Volver a Descubrir",
@@ -178,7 +178,7 @@
       "functionCall": "Soporte para llamadas a funciones",
       "title": "Otros",
       "vision": "Soporte para reconocimiento visual",
-      "withKnowledge": "Con base de conocimientos",
+      "withKnowledge": "Incluye bibliotecas de recursos",
       "withTool": "Con plugins"
     },
     "pricing": "Precio del modelo",

@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "The assistant is equipped with the following knowledge bases to help you answer more questions.",
-          "title": "Knowledge Base"
+          "desc": "This assistant includes the following knowledge bases to help answer more questions.",
+          "title": "Knowledge Bases"
         },
         "plugin": {
           "desc": "The assistant is equipped with the following plugins to help you complete more tasks.",
@@ -178,7 +178,7 @@
       "functionCall": "Supports Function Calls",
       "title": "Other",
       "vision": "Supports Visual Recognition",
-      "withKnowledge": "Includes Knowledge Base",
+      "withKnowledge": "Includes Knowledge Bases",
       "withTool": "Includes Plugins"
     },
     "pricing": "Model Pricing",

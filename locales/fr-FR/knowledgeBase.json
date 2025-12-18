@@ -4,7 +4,7 @@
     "confirm": "Ajouter",
     "error": "Échec de l'ajout du fichier à la base de connaissances",
     "id": {
-      "placeholder": "Veuillez sélectionner la base de connaissances à ajouter",
+      "placeholder": "Veuillez sélectionner une base de connaissances",
       "required": "Veuillez sélectionner une base de connaissances",
       "title": "Base de connaissances cible"
     },
@@ -14,12 +14,12 @@
   "createNew": {
     "confirm": "Créer",
     "description": {
-      "placeholder": "Description de la base de connaissances (facultatif)"
+      "placeholder": "Description de la base de connaissances (optionnel)"
     },
     "formTitle": "Informations de base",
     "name": {
       "placeholder": "Nom de la base de connaissances",
-      "required": "Veuillez remplir le nom de la base de connaissances"
+      "required": "Veuillez saisir le nom de la base de connaissances"
     },
     "title": "Créer une nouvelle base de connaissances"
   },

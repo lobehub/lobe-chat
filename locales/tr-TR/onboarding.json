@@ -1,6 +1,24 @@
 {
   "back": "Önceki",
   "finish": "Başlamaya Hazır",
+  "interests": {
+    "area": {
+      "business": "İş ve Strateji",
+      "coding": "Programlama ve Geliştirme",
+      "design": "Tasarım ve Yaratıcılık",
+      "education": "Öğrenme ve Araştırma",
+      "marketing": "Pazarlama ve Tanıtım",
+      "other": "Diğer Alanlar",
+      "product": "Ürün ve Yönetim",
+      "sales": "Satış ve Müşteri İlişkileri",
+      "writing": "İçerik Üretimi"
+    },
+    "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
+    "placeholder": "İlgilendiğin alanları gir...",
+    "title": "İlgilendiğin alanları benimle paylaşır mısın?",
+    "title2": "Seni daha iyi tanımama yardımcı ol～",
+    "title3": "Acele etme, seni zamanla daha iyi anlayacağım"
+  },
   "modeSelection": {
     "desc": "Sana en uygun kullanım modunu seç",
     "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
@@ -19,24 +37,6 @@
     "title3": "Bana söyle, senin için özel olarak hazırlayayım～"
   },
   "next": "Sonraki",
-  "occupation": {
-    "area": {
-      "business": "Ticaret ve Strateji",
-      "coding": "Programlama ve Geliştirme",
-      "design": "Tasarım ve Yaratıcılık",
-      "education": "Öğrenim ve Araştırma",
-      "marketing": "Pazarlama ve Tanıtım",
-      "other": "Diğer Alanlar",
-      "product": "Ürün ve Yönetim",
-      "sales": "Satış ve Müşteri Hizmetleri",
-      "writing": "İçerik Üretimi"
-    },
-    "hint": "Ayarlar bölümünden istediğin zaman değiştirebilirsin",
-    "placeholder": "Lütfen mesleğini gir...",
-    "title": "Hangi alanda çalıştığını bana söyleyebilir misin?",
-    "title2": "Seninle ilgili ilk izlenimimi oluşturmama yardım et～",
-    "title3": "Acele etme, seni zamanla daha iyi tanıyacağım"
-  },
   "proSettings": {
     "connectors": {
       "title": "Sık kullandığın araçları bağla"

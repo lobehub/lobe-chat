@@ -20,8 +20,8 @@
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "Dodaj do bazy wiedzy",
-      "addToOtherKnowledgeBase": "Dodaj do innej bazy wiedzy",
+      "addToKnowledgeBase": "Dodaj do bazy zasobów",
+      "addToOtherKnowledgeBase": "Dodaj do innej bazy zasobów",
       "batchChunking": "Partycjonowanie wsadowe",
       "chunking": "Partycjonowanie",
       "chunkingTooltip": "Podziel plik na wiele bloków tekstowych i wektoryzuj, aby umożliwić wyszukiwanie semantyczne i rozmowy o plikach",
@@ -29,7 +29,7 @@
       "confirmDelete": "Zaraz usuniesz ten plik. Po usunięciu nie będzie można go odzyskać, proszę potwierdź swoje działanie",
       "confirmDeleteFolder": "Zamierzasz usunąć ten folder wraz z całą jego zawartością. Po usunięciu nie będzie można go odzyskać. Proszę potwierdź swoją decyzję.",
       "confirmDeleteMultiFiles": "Zaraz usuniesz wybrane {{count}} plików. Po usunięciu nie będzie można ich odzyskać, proszę potwierdź swoje działanie",
-      "confirmRemoveFromKnowledgeBase": "Zaraz usuniesz wybrane {{count}} plików z bazy wiedzy. Po usunięciu pliki będą nadal widoczne wśród wszystkich plików, proszę potwierdź swoje działanie",
+      "confirmRemoveFromKnowledgeBase": "Zamierzasz usunąć {{count}} wybranych plików z bazy zasobów. Po usunięciu pliki nadal będą widoczne we wszystkich plikach. Proszę potwierdź swoją decyzję.",
       "copyUrl": "Kopiuj link",
       "copyUrlSuccess": "Adres pliku skopiowany pomyślnie",
       "createChunkingTask": "Przygotowywanie...",
@@ -43,7 +43,7 @@
       "moveSuccess": "Plik został pomyślnie przeniesiony",
       "moveToFolder": "Przenieś do...",
       "moveToRoot": "Przenieś do katalogu głównego",
-      "removeFromKnowledgeBase": "Usuń z bazy wiedzy",
+      "removeFromKnowledgeBase": "Usuń z bazy zasobów",
       "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie",
       "rename": "Zmień nazwę",
       "renameError": "Nie udało się zmienić nazwy",
@@ -51,13 +51,13 @@
     },
     "bottom": "To już wszystko",
     "config": {
-      "showFilesInKnowledgeBase": "Pokaż zawartość w bazie wiedzy"
+      "showFilesInKnowledgeBase": "Pokaż zawartość bazy zasobów"
     },
     "emptyStatus": {
       "actions": {
         "file": "Prześlij plik",
         "folder": "Prześlij folder",
-        "knowledgeBase": "Utwórz nową bazę wiedzy"
+        "knowledgeBase": "Utwórz nową bazę zasobów"
       },
       "or": "lub",
       "title": "Przeciągnij plik lub folder tutaj"
@@ -230,9 +230,9 @@
   },
   "knowledgeBase": {
     "empty": {
-      "description": "Utwórz bazę wiedzy, aby organizować i zarządzać swoimi zasobami",
-      "search": "Nie znaleziono pasującej bazy wiedzy",
-      "title": "Brak bazy wiedzy"
+      "description": "Utwórz bazę zasobów, aby organizować i zarządzać swoimi materiałami",
+      "search": "Nie znaleziono pasującej bazy zasobów",
+      "title": "Brak dostępnych baz zasobów"
     }
   }
 }

@@ -64,7 +64,7 @@
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "خواندن محتوای پایگاه دانش",
-        "searchKnowledgeBase": "جستجو در پایگاه دانش"
+        "searchKnowledgeBase": "جستجوی پایگاه دانش"
       },
       "title": "پایگاه دانش"
     },

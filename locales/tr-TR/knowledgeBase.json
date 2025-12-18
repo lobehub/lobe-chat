@@ -4,24 +4,24 @@
     "confirm": "Ekle",
     "error": "Dosya bilgi tabanına eklenemedi",
     "id": {
-      "placeholder": "Eklenecek bilgi havuzunu seçin",
-      "required": "Lütfen bilgi havuzunu seçin",
-      "title": "Hedef bilgi havuzu"
+      "placeholder": "Lütfen eklenecek bilgi tabanını seçin",
+      "required": "Lütfen bir bilgi tabanı seçin",
+      "title": "Hedef Bilgi Tabanı"
     },
-    "title": "Bilgi Havuzuna Ekle",
+    "title": "Bilgi Tabanına Ekle",
     "totalFiles": "Seçilen {{count}} dosya"
   },
   "createNew": {
     "confirm": "Yeni Oluştur",
     "description": {
-      "placeholder": "Bilgi havuzu tanımı (isteğe bağlı)"
+      "placeholder": "Bilgi tabanı açıklaması (isteğe bağlı)"
     },
     "formTitle": "Temel Bilgiler",
     "name": {
-      "placeholder": "Bilgi havuzu adı",
-      "required": "Lütfen bilgi havuzu adını girin"
+      "placeholder": "Bilgi tabanı adı",
+      "required": "Lütfen bilgi tabanı adını girin"
     },
-    "title": "Yeni Bilgi Havuzu"
+    "title": "Yeni Bilgi Tabanı Oluştur"
   },
   "tab": {
     "evals": "Değerlendirme",
@@ -29,5 +29,5 @@
     "settings": "Ayarlar",
     "testing": "Geri Çağırma Testi"
   },
-  "title": "Bilgi Havuzu"
+  "title": "Bilgi Tabanı"
 }

@@ -1,6 +1,24 @@
 {
   "back": "Indietro",
   "finish": "Inizia subito",
+  "interests": {
+    "area": {
+      "business": "Business e Strategia",
+      "coding": "Programmazione e Sviluppo",
+      "design": "Design e Creatività",
+      "education": "Apprendimento e Ricerca",
+      "marketing": "Marketing e Promozione",
+      "other": "Altri Settori",
+      "product": "Prodotto e Gestione",
+      "sales": "Vendite e Clienti",
+      "writing": "Creazione di Contenuti"
+    },
+    "hint": "Puoi modificarlo in qualsiasi momento nelle impostazioni",
+    "placeholder": "Inserisci i settori che ti interessano...",
+    "title": "Mi dici quali sono i tuoi interessi?",
+    "title2": "Aiutami a farmi una prima impressione su di te~",
+    "title3": "Con calma, ti capirò sempre meglio"
+  },
   "modeSelection": {
     "desc": "Scegli la modalità d'uso più adatta a te",
     "hint": "Puoi modificarla in qualsiasi momento nelle impostazioni",
@@ -19,24 +37,6 @@
     "title3": "Dimmi tutto, creerò qualcosa su misura per te～"
   },
   "next": "Avanti",
-  "occupation": {
-    "area": {
-      "business": "Business e Strategia",
-      "coding": "Programmazione e Sviluppo",
-      "design": "Design e Creatività",
-      "education": "Apprendimento e Ricerca",
-      "marketing": "Marketing e Promozione",
-      "other": "Altri Settori",
-      "product": "Prodotto e Gestione",
-      "sales": "Vendite e Clienti",
-      "writing": "Creazione di Contenuti"
-    },
-    "hint": "Puoi modificarlo in qualsiasi momento nelle impostazioni",
-    "placeholder": "Inserisci la tua professione...",
-    "title": "Puoi dirmi in quale settore lavori?",
-    "title2": "Aiutami a farmi una prima impressione di te~",
-    "title3": "Prendiamocela con calma, ti capirò sempre meglio"
-  },
   "proSettings": {
     "connectors": {
       "title": "Collega gli strumenti che usi più spesso"

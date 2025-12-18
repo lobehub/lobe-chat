@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Der Assistent verfügt über die folgenden Wissensdatenbanken, die Ihnen helfen, mehr Fragen zu beantworten.",
-          "title": "Wissensdatenbank"
+          "desc": "Der Assistent verfügt über integrierte Wissensdatenbanken, um dir bei der Beantwortung weiterer Fragen zu helfen.",
+          "title": "Wissensdatenbanken"
         },
         "plugin": {
           "desc": "Der Assistent verfügt über die folgenden Plugins, die Ihnen helfen, mehr Aufgaben zu erledigen.",
@@ -178,7 +178,7 @@
       "functionCall": "Funktionaufrufe unterstützen",
       "title": "Sonstiges",
       "vision": "Visuelle Erkennung unterstützen",
-      "withKnowledge": "Mit Wissensdatenbank",
+      "withKnowledge": "Mit Wissensdatenbanken",
       "withTool": "Mit Plugin"
     },
     "pricing": "Modellpreise",

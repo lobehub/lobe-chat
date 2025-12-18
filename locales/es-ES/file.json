@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Estás a punto de eliminar esta biblioteca. Los archivos no se eliminarán, sino que se moverán a Todos los archivos. Esta acción no se puede deshacer, procede con precaución.",
       "empty": "Haz clic en <1>+</1> para comenzar a crear una biblioteca"
     },
-    "new": "Biblioteca",
+    "new": "Nueva biblioteca de recursos",
     "title": "Biblioteca"
   },
   "menu": {

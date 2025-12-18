@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Model",
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
-      "title": "Assistent voor het herschrijven van kennisbankvragen"
+      "title": "Herschrijfassistent voor vragen in de kennisbank"
     },
     "thread": {
       "label": "Model",

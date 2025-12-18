@@ -1,6 +1,24 @@
 {
   "back": "Voltar",
   "finish": "Começar",
+  "interests": {
+    "area": {
+      "business": "Negócios e Estratégia",
+      "coding": "Programação e Desenvolvimento",
+      "design": "Design e Criatividade",
+      "education": "Aprendizado e Pesquisa",
+      "marketing": "Marketing e Promoção",
+      "other": "Outras Áreas",
+      "product": "Produto e Gestão",
+      "sales": "Vendas e Atendimento ao Cliente",
+      "writing": "Criação de Conteúdo"
+    },
+    "hint": "Você pode alterar isso a qualquer momento nas configurações",
+    "placeholder": "Digite as áreas do seu interesse...",
+    "title": "Você pode me contar quais áreas te interessam?",
+    "title2": "Isso vai me ajudar a formar uma primeira impressão sobre você~",
+    "title3": "Sem pressa, vou te conhecer melhor com o tempo"
+  },
   "modeSelection": {
     "desc": "Escolha o modo de uso que melhor se adapta a você",
     "hint": "Você pode alterá-lo a qualquer momento nas configurações",
@@ -19,24 +37,6 @@
     "title3": "Conte para mim, vou personalizar especialmente para você～"
   },
   "next": "Próximo",
-  "occupation": {
-    "area": {
-      "business": "Negócios e Estratégia",
-      "coding": "Programação e Desenvolvimento",
-      "design": "Design e Criatividade",
-      "education": "Aprendizado e Pesquisa",
-      "marketing": "Marketing e Promoção",
-      "other": "Outras Áreas",
-      "product": "Produto e Gestão",
-      "sales": "Vendas e Atendimento ao Cliente",
-      "writing": "Criação de Conteúdo"
-    },
-    "hint": "Você pode alterar isso a qualquer momento nas configurações",
-    "placeholder": "Digite sua profissão...",
-    "title": "Você pode me contar em qual área você trabalha?",
-    "title2": "Isso vai me ajudar a formar uma primeira impressão sobre você~",
-    "title3": "Sem pressa, vou te conhecer cada vez melhor"
-  },
   "proSettings": {
     "connectors": {
       "title": "Conecte suas ferramentas favoritas"

@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Model",
       "modelDesc": "Specify the model used to optimize user inquiries",
-      "title": "Knowledge Base Query Rewriting Assistant"
+      "title": "Knowledge Base Question Rewriting Assistant"
     },
     "thread": {
       "label": "Model",

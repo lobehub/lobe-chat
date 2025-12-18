@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Model",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
-      "title": "Bilgi Tabanı Soru Yeniden Yazma Yardımcısı"
+      "title": "Kaynak Merkezi Soru Yeniden Yazma Asistanı"
     },
     "thread": {
       "label": "Model",

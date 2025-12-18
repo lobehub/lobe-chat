@@ -58,12 +58,12 @@
       "ready": "La base de datos está lista"
     },
     "modal": {
-      "desc": "Habilite la base de datos del cliente PGlite para almacenar de forma persistente los datos del chat en su navegador y utilizar características avanzadas como la base de conocimientos.",
+      "desc": "Activa ahora la base de datos de cliente de nueva generación. Almacena de forma persistente los datos de tus chats en el navegador y accede a funciones avanzadas como la biblioteca de recursos.",
       "enable": "Habilitar ahora",
       "features": {
         "knowledgeBase": {
-          "desc": "Consolida tu base de conocimientos personal y comienza conversaciones sobre ella con tu asistente fácilmente (próximamente)",
-          "title": "Soporte para conversaciones de base de conocimientos, activa tu segundo cerebro"
+          "desc": "Construye tu propia biblioteca de recursos y conversa fácilmente con tu asistente utilizando esta función (próximamente disponible).",
+          "title": "Compatible con conversaciones en la biblioteca, activa tu segundo cerebro"
         },
         "localFirst": {
           "desc": "Los datos de chat se almacenan completamente en el navegador, tus datos siempre están bajo tu control.",
@@ -139,6 +139,7 @@
     "about": "Acerca de",
     "aiModeEmptyState": "Escribe tu pregunta en el cuadro de arriba para comenzar a conversar con la IA",
     "aiModePlaceholder": "Hazle una pregunta a la IA...",
+    "community": "Comunidad",
     "communitySupport": "Soporte de la comunidad",
     "discover": "Descubrir",
     "memory": "Memoria",
@@ -395,7 +396,7 @@
     "discover": "Descubrir",
     "files": "Archivos",
     "home": "Inicio",
-    "knowledgeBase": "Base de conocimientos",
+    "knowledgeBase": "Biblioteca de recursos",
     "me": "Yo",
     "memory": "Memoria",
     "pages": "Documentos",

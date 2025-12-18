@@ -20,8 +20,8 @@
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "إضافة إلى قاعدة المعرفة",
-      "addToOtherKnowledgeBase": "إضافة إلى قاعدة معرفة أخرى",
+      "addToKnowledgeBase": "إضافة إلى قاعدة الموارد",
+      "addToOtherKnowledgeBase": "إضافة إلى قاعدة موارد أخرى",
       "batchChunking": "تقسيم دفعي",
       "chunking": "تقسيم",
       "chunkingTooltip": "قم بتقسيم الملف إلى عدة كتل نصية وتحويلها إلى متجهات، يمكن استخدامها في البحث الدلالي والمحادثة حول الملفات",
@@ -29,7 +29,7 @@
       "confirmDelete": "سيتم حذف هذا الملف، ولن يمكن استعادته بعد الحذف، يرجى تأكيد العملية",
       "confirmDeleteFolder": "سيتم حذف هذا المجلد وجميع محتوياته، ولن يكون بالإمكان استعادته بعد الحذف. يرجى تأكيد العملية.",
       "confirmDeleteMultiFiles": "سيتم حذف {{count}} ملفًا محددًا، ولن يمكن استعادته بعد الحذف، يرجى تأكيد العملية",
-      "confirmRemoveFromKnowledgeBase": "سيتم إزالة {{count}} ملفًا محددًا من قاعدة المعرفة، لا يزال بإمكانك رؤية الملفات في جميع الملفات، يرجى تأكيد العملية",
+      "confirmRemoveFromKnowledgeBase": "سيتم إزالة {{count}} ملفًا محددًا من قاعدة الموارد. بعد الإزالة، ستظل الملفات مرئية في جميع الملفات. يرجى تأكيد الإجراء.",
       "copyUrl": "نسخ الرابط",
       "copyUrlSuccess": "تم نسخ عنوان الملف بنجاح",
       "createChunkingTask": "جارٍ التحضير...",
@@ -43,7 +43,7 @@
       "moveSuccess": "تم نقل الملف بنجاح",
       "moveToFolder": "نقل إلى...",
       "moveToRoot": "نقل إلى الدليل الجذري",
-      "removeFromKnowledgeBase": "إزالة من قاعدة المعرفة",
+      "removeFromKnowledgeBase": "إزالة من قاعدة الموارد",
       "removeFromKnowledgeBaseSuccess": "تمت إزالة الملف بنجاح",
       "rename": "إعادة التسمية",
       "renameError": "فشل في إعادة التسمية",
@@ -51,13 +51,13 @@
     },
     "bottom": "لقد وصلت إلى النهاية",
     "config": {
-      "showFilesInKnowledgeBase": "عرض المحتوى في قاعدة المعرفة"
+      "showFilesInKnowledgeBase": "عرض المحتوى في قاعدة الموارد"
     },
     "emptyStatus": {
       "actions": {
         "file": "رفع ملف",
         "folder": "رفع مجلد",
-        "knowledgeBase": "إنشاء قاعدة معرفة جديدة"
+        "knowledgeBase": "إنشاء قاعدة موارد جديدة"
       },
       "or": "أو",
       "title": "قم بسحب الملف أو المجلد هنا"
@@ -230,9 +230,9 @@
   },
   "knowledgeBase": {
     "empty": {
-      "description": "أنشئ قاعدة معرفة لتنظيم مواردك وإدارتها",
-      "search": "لم يتم العثور على قاعدة معرفة مطابقة",
-      "title": "لا توجد قواعد معرفة حالياً"
+      "description": "أنشئ قاعدة موارد لتنظيم وإدارة ملفاتك",
+      "search": "لم يتم العثور على قاعدة موارد مطابقة",
+      "title": "لا توجد قواعد موارد حالياً"
     }
   }
 }

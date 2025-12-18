@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "De assistent bevat de volgende kennisbanken om je te helpen meer vragen te beantwoorden.",
-          "title": "Kennisbank"
+          "desc": "De assistent bevat de volgende kennisbanken om je beter te helpen met je vragen.",
+          "title": "Kennisbanken"
         },
         "plugin": {
           "desc": "De assistent bevat de volgende plugins om je te helpen meer taken uit te voeren.",
@@ -178,7 +178,7 @@
       "functionCall": "Ondersteunt functie-aanroep",
       "title": "Overige",
       "vision": "Ondersteunt visuele herkenning",
-      "withKnowledge": "Met kennisbank",
+      "withKnowledge": "Bevat kennisbanken",
       "withTool": "Met plugin"
     },
     "pricing": "Modelprijs",

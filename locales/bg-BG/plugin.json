@@ -63,8 +63,8 @@
     },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Прочети съдържанието на базата знания",
-        "searchKnowledgeBase": "Търси в базата знания"
+        "readKnowledge": "Прочет на съдържанието на базата знания",
+        "searchKnowledgeBase": "Търсене в базата знания"
       },
       "title": "База знания"
     },

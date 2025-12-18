@@ -1,6 +1,24 @@
 {
   "back": "Anterior",
   "finish": "Comenzar",
+  "interests": {
+    "area": {
+      "business": "Negocios y estrategia",
+      "coding": "Programación y desarrollo",
+      "design": "Diseño y creatividad",
+      "education": "Aprendizaje e investigación",
+      "marketing": "Marketing y promoción",
+      "other": "Otros campos",
+      "product": "Producto y gestión",
+      "sales": "Ventas y atención al cliente",
+      "writing": "Creación de contenidos"
+    },
+    "hint": "Puedes cambiarlo en la configuración en cualquier momento",
+    "placeholder": "Introduce las áreas que te interesan...",
+    "title": "¿Puedes decirme qué áreas te interesan?",
+    "title2": "Ayúdame a formarme una primera impresión de ti~",
+    "title3": "Tómate tu tiempo, te iré conociendo mejor poco a poco"
+  },
   "modeSelection": {
     "desc": "Elige el modo de uso que mejor se adapte a ti",
     "hint": "Puedes cambiarlo en la configuración en cualquier momento",
@@ -19,24 +37,6 @@
     "title3": "Cuéntame, y lo haré a tu medida~"
   },
   "next": "Siguiente",
-  "occupation": {
-    "area": {
-      "business": "Negocios y estrategia",
-      "coding": "Programación y desarrollo",
-      "design": "Diseño y creatividad",
-      "education": "Aprendizaje e investigación",
-      "marketing": "Marketing y promoción",
-      "other": "Otros campos",
-      "product": "Producto y gestión",
-      "sales": "Ventas y atención al cliente",
-      "writing": "Creación de contenidos"
-    },
-    "hint": "Puedes cambiarlo en la configuración en cualquier momento",
-    "placeholder": "Introduce tu profesión...",
-    "title": "¿Puedes decirme en qué área trabajas?",
-    "title2": "Ayúdame a formarme una primera impresión de ti~",
-    "title3": "Tómate tu tiempo, te iré conociendo mejor poco a poco"
-  },
   "proSettings": {
     "connectors": {
       "title": "Conecta tus herramientas habituales"

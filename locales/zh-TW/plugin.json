@@ -63,10 +63,10 @@
     },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "讀取知識庫內容",
-        "searchKnowledgeBase": "搜尋知識庫"
+        "readKnowledge": "讀取資源庫內容",
+        "searchKnowledgeBase": "搜尋資源庫"
       },
-      "title": "知識庫"
+      "title": "資源庫"
     },
     "lobe-local-system": {
       "apiName": {

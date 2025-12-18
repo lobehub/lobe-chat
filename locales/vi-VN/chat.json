@@ -18,7 +18,8 @@
       "requiresAuth": "Yêu cầu ủy quyền, nhấp vào 'Phê duyệt' để kết nối",
       "retry": "Thử lại"
     },
-    "welcome": "Xin chào, tôi là **Lobe AI**, chuyên gia cấu hình trợ lý của bạn. Hãy cho tôi biết bạn muốn một trợ lý như thế nào, tôi sẽ giúp bạn thiết lập."
+    "title": "Chuyên Gia Xây Dựng Trợ Lý",
+    "welcome": "Hãy chia sẻ nhu cầu của bạn nhé? Người cộng sự chuyên nghiệp sẽ xuất hiện.\n\nDù là viết lách, lập trình hay phân tích dữ liệu, tôi đều có thể giúp bạn tạo ra một trợ lý cá nhân hóa!"
   },
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay bây giờ, hoặc bạn có thể đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, tôi có thể giúp gì cho bạn?",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "Chưa chọn thành viên nào",
   "openInNewWindow": "Mở trong cửa sổ mới",
   "owner": "Chủ nhóm",
+  "pageCopilot": {
+    "title": "Trợ Lý Soạn Thảo",
+    "welcome": "**Giúp từng câu chữ trở nên hoàn hảo hơn.**\n\nDù là phác thảo, viết lại hay chỉnh sửa, tôi sẽ giúp bạn làm cho văn bản rõ ràng hơn, tự nhiên hơn và thuyết phục hơn."
+  },
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
   "rag": {

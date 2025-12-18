@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Vous êtes sur le point de supprimer cette bibliothèque. Les fichiers qu'elle contient ne seront pas supprimés, mais déplacés vers Tous les fichiers. Cette action est irréversible, veuillez procéder avec prudence.",
       "empty": "Cliquez sur <1>+</1> pour commencer à créer une bibliothèque"
     },
-    "new": "Bibliothèque",
+    "new": "Nouvelle bibliothèque de ressources",
     "title": "Bibliothèques"
   },
   "menu": {

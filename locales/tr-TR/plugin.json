@@ -63,10 +63,10 @@
     },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Bilgi tabanını oku",
-        "searchKnowledgeBase": "Bilgi tabanında ara"
+        "readKnowledge": "Bilgi kaynağını oku",
+        "searchKnowledgeBase": "Bilgi kaynağında ara"
       },
-      "title": "Bilgi Tabanı"
+      "title": "Bilgi Kaynağı"
     },
     "lobe-local-system": {
       "apiName": {

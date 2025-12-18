@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Trợ lý được tích hợp các kho tri thức sau, giúp bạn trả lời nhiều câu hỏi hơn.",
-          "title": "Kho tri thức"
+          "desc": "Trợ lý này được tích hợp các thư viện tài nguyên sau để giúp bạn trả lời nhiều câu hỏi hơn.",
+          "title": "Thư viện tài nguyên"
         },
         "plugin": {
           "desc": "Trợ lý được tích hợp các plugin sau, giúp bạn hoàn thành nhiều nhiệm vụ hơn.",
@@ -76,7 +76,7 @@
     "sorts": {
       "createdAt": "Mới phát hành",
       "identifier": "ID trợ lý",
-      "knowledgeCount": "Số kho tri thức",
+      "knowledgeCount": "Số lượng thư viện tài nguyên",
       "myown": "Xem của tôi",
       "pluginCount": "Số plugin",
       "title": "Tên trợ lý",
@@ -110,7 +110,7 @@
     "systemRole": "Cài đặt trợ lý",
     "tokenUsage": "Lượng Token sử dụng cho lời nhắc trợ lý",
     "try": "Thử ngay",
-    "withKnowledge": "Trợ lý này đi kèm kho tri thức",
+    "withKnowledge": "Trợ lý này đi kèm với thư viện tài nguyên",
     "withPlugin": "Trợ lý này đi kèm plugin"
   },
   "back": "Quay lại khám phá",
@@ -178,7 +178,7 @@
       "functionCall": "Hỗ trợ gọi hàm",
       "title": "Khác",
       "vision": "Hỗ trợ nhận diện hình ảnh",
-      "withKnowledge": "Kèm theo kho kiến thức",
+      "withKnowledge": "Có kèm thư viện tài nguyên",
       "withTool": "Kèm theo plugin"
     },
     "pricing": "Giá mô hình",

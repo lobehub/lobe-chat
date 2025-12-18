@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "模型",
       "modelDesc": "指定用於優化用戶提問的模型",
-      "title": "知識庫提問重寫助手"
+      "title": "資源庫提問重寫助手"
     },
     "thread": {
       "label": "模型",

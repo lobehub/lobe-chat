@@ -58,12 +58,12 @@
       "ready": "數據庫已就緒"
     },
     "modal": {
-      "desc": "啟用 PGlite 客戶端數據庫，在你的瀏覽器中持久存儲聊天數據，並使用知識庫等進階特性",
+      "desc": "立即啟用次世代用戶端資料庫。在你的瀏覽器中持久儲存聊天資料，並使用資源庫等進階功能。",
       "enable": "立即啟用",
       "features": {
         "knowledgeBase": {
-          "desc": "沉澱你的個人知識庫，並與你的助手輕鬆開啟知識庫對話（即將上線）",
-          "title": "支持知識庫對話，開啟第二大腦"
+          "desc": "累積你的個人資源庫，並與你的助手輕鬆展開資源庫對話（即將上線）",
+          "title": "支援資源庫對話，啟動第二大腦"
         },
         "localFirst": {
           "desc": "聊天數據完全存儲在瀏覽器中，你的數據始終在你的掌握。",
@@ -139,6 +139,7 @@
     "about": "關於",
     "aiModeEmptyState": "在上方輸入框中輸入你的問題，開始與 AI 對話",
     "aiModePlaceholder": "向 AI 提問...",
+    "community": "社群",
     "communitySupport": "社群支援",
     "discover": "探索",
     "memory": "記憶",
@@ -395,7 +396,7 @@
     "discover": "發現",
     "files": "檔案",
     "home": "首頁",
-    "knowledgeBase": "知識庫",
+    "knowledgeBase": "資源庫",
     "me": "我",
     "memory": "記憶",
     "pages": "文稿",

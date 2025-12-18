@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "Criar novo tópico",
+    "addNewTopic": "Iniciar novo tópico",
     "autoRename": "Renomeação automática",
     "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",

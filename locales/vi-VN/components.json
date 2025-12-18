@@ -20,8 +20,8 @@
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "Thêm vào kho tri thức",
-      "addToOtherKnowledgeBase": "Thêm vào kho tri thức khác",
+      "addToKnowledgeBase": "Thêm vào thư viện tài nguyên",
+      "addToOtherKnowledgeBase": "Thêm vào thư viện tài nguyên khác",
       "batchChunking": "Chia nhỏ theo lô",
       "chunking": "Chia nhỏ",
       "chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
@@ -29,7 +29,7 @@
       "confirmDelete": "Bạn sắp xóa tệp này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
       "confirmDeleteFolder": "Thư mục này và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn và không thể khôi phục. Vui lòng xác nhận thao tác của bạn.",
       "confirmDeleteMultiFiles": "Bạn sắp xóa {{count}} tệp đã chọn, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
-      "confirmRemoveFromKnowledgeBase": "Bạn sắp xóa {{count}} tệp đã chọn khỏi kho tri thức, sau khi xóa tệp vẫn có thể xem trong tất cả các tệp, vui lòng xác nhận hành động của bạn",
+      "confirmRemoveFromKnowledgeBase": "Sắp xóa {{count}} tệp đã chọn khỏi thư viện tài nguyên. Sau khi xóa, các tệp này vẫn có thể được xem trong mục Tất cả tệp. Vui lòng xác nhận thao tác của bạn.",
       "copyUrl": "Sao chép liên kết",
       "copyUrlSuccess": "Địa chỉ tệp đã được sao chép thành công",
       "createChunkingTask": "Đang chuẩn bị...",
@@ -43,7 +43,7 @@
       "moveSuccess": "Di chuyển tệp thành công",
       "moveToFolder": "Di chuyển đến...",
       "moveToRoot": "Di chuyển đến thư mục gốc",
-      "removeFromKnowledgeBase": "Xóa khỏi kho tri thức",
+      "removeFromKnowledgeBase": "Xóa khỏi thư viện tài nguyên",
       "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công",
       "rename": "Đổi tên",
       "renameError": "Đổi tên thất bại",
@@ -51,13 +51,13 @@
     },
     "bottom": "Đã đến cuối rồi",
     "config": {
-      "showFilesInKnowledgeBase": "Hiển thị nội dung trong kho tri thức"
+      "showFilesInKnowledgeBase": "Hiển thị nội dung trong thư viện tài nguyên"
     },
     "emptyStatus": {
       "actions": {
         "file": "Tải lên tệp",
         "folder": "Tải lên thư mục",
-        "knowledgeBase": "Tạo kho tri thức mới"
+        "knowledgeBase": "Tạo thư viện tài nguyên mới"
       },
       "or": "hoặc",
       "title": "Kéo tệp hoặc thư mục vào đây"
@@ -230,9 +230,9 @@
   },
   "knowledgeBase": {
     "empty": {
-      "description": "Tạo cơ sở tri thức để tổ chức và quản lý tài nguyên của bạn",
-      "search": "Không tìm thấy cơ sở tri thức phù hợp",
-      "title": "Chưa có cơ sở tri thức"
+      "description": "Tạo thư viện tài nguyên để tổ chức và quản lý tài nguyên của bạn",
+      "search": "Không tìm thấy thư viện tài nguyên phù hợp",
+      "title": "Chưa có thư viện tài nguyên nào"
     }
   }
 }

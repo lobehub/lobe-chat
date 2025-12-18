@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "이 도우미는 다음과 같은 지식 기반을 내장하고 있어 더 많은 질문에 답할 수 있습니다.",
-          "title": "지식 기반"
+          "desc": "도우미에는 더 많은 질문에 답할 수 있도록 다음 자료 라이브러리가 내장되어 있습니다.",
+          "title": "자료 라이브러리"
         },
         "plugin": {
           "desc": "이 도우미는 다음과 같은 플러그인을 내장하고 있어 다양한 작업을 수행할 수 있습니다.",
@@ -76,7 +76,7 @@
     "sorts": {
       "createdAt": "최신 등록",
       "identifier": "도우미 ID",
-      "knowledgeCount": "지식 기반 수",
+      "knowledgeCount": "자료 라이브러리 수",
       "myown": "내가 만든 것 보기",
       "pluginCount": "플러그인 수",
       "title": "도우미 이름",
@@ -110,7 +110,7 @@
     "systemRole": "도우미 설정",
     "tokenUsage": "도우미 프롬프트 토큰 사용량",
     "try": "시도해보기",
-    "withKnowledge": "이 도우미는 지식 기반을 포함합니다",
+    "withKnowledge": "이 도우미에는 자료 라이브러리가 포함되어 있습니다",
     "withPlugin": "이 도우미는 플러그인을 포함합니다"
   },
   "back": "탐색으로 돌아가기",
@@ -178,7 +178,7 @@
       "functionCall": "함수 호출 지원",
       "title": "기타",
       "vision": "비전 인식 지원",
-      "withKnowledge": "지식 기반 포함",
+      "withKnowledge": "자료 라이브러리 포함",
       "withTool": "플러그인 포함"
     },
     "pricing": "모델 가격",

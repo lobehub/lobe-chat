@@ -29,7 +29,7 @@
       "confirmDelete": "Je staat op het punt dit bestand te verwijderen. Na verwijdering kan het niet meer worden hersteld. Bevestig je actie.",
       "confirmDeleteFolder": "Deze map en alle inhoud zullen worden verwijderd. Dit kan niet ongedaan worden gemaakt. Weet je zeker dat je wilt doorgaan?",
       "confirmDeleteMultiFiles": "Je staat op het punt de geselecteerde {{count}} bestanden te verwijderen. Na verwijdering kunnen ze niet meer worden hersteld. Bevestig je actie.",
-      "confirmRemoveFromKnowledgeBase": "Je staat op het punt de geselecteerde {{count}} bestanden uit de kennisbank te verwijderen. Na verwijdering zijn de bestanden nog steeds zichtbaar in alle bestanden. Bevestig je actie.",
+      "confirmRemoveFromKnowledgeBase": "Je staat op het punt om {{count}} geselecteerde bestanden uit de kennisbank te verwijderen. De bestanden blijven beschikbaar in 'Alle bestanden'. Bevestig je actie alstublieft.",
       "copyUrl": "Kopieer link",
       "copyUrlSuccess": "Bestandsadres succesvol gekopieerd",
       "createChunkingTask": "Voorbereiden...",
@@ -51,7 +51,7 @@
     },
     "bottom": "Je bent onderaan aangekomen",
     "config": {
-      "showFilesInKnowledgeBase": "Toon inhoud in kennisbank"
+      "showFilesInKnowledgeBase": "Toon inhoud van kennisbank"
     },
     "emptyStatus": {
       "actions": {

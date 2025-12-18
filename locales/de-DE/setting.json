@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Modell",
       "modelDesc": "Modell zur Optimierung der Benutzeranfragen",
-      "title": "Assistent zur Umformulierung von Wissensdatenbankanfragen"
+      "title": "Assistent zur Umformulierung von Fragen in der Wissensdatenbank"
     },
     "thread": {
       "label": "Modell",

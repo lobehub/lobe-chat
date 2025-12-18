@@ -18,7 +18,8 @@
       "requiresAuth": "需要授權，請點擊「批准」以連接",
       "retry": "重試"
     },
-    "welcome": "你好，我是 **Lobe AI**，你的助手設定專家。告訴我你想要什麼樣的助手，我會幫你設定好。"
+    "title": "助手建構專家",
+    "welcome": "說說你的需求場景？專業夥伴應運而生。\n\n無論是寫作、程式設計，還是資料分析，我都能幫你打造專屬助理！"
   },
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "尚未選擇成員",
   "openInNewWindow": "開啟獨立視窗",
   "owner": "群組擁有者",
+  "pageCopilot": {
+    "title": "文稿助手",
+    "welcome": "**讓每一句話更精準。**\n\n無論是起草、改寫還是潤飾，我都會幫你讓文字更清晰、更自然、更具說服力。"
+  },
   "pin": "置頂",
   "pinOff": "取消置頂",
   "rag": {

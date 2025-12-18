@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Model",
       "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
-      "title": "Asystent do przekształcania pytań w bazie wiedzy"
+      "title": "Asystent do Przekształcania Pytań w Bazie Wiedzy"
     },
     "thread": {
       "label": "Model",

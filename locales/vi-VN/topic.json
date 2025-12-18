@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "Tạo chủ đề mới",
+    "addNewTopic": "Bắt đầu chủ đề mới",
     "autoRename": "Đặt tên tự động",
     "confirmRemoveAll": "Sắp xóa tất cả các chủ đề, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
     "confirmRemoveTopic": "Sắp xóa chủ đề này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",

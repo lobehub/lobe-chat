@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Bu kitaplık silinmek üzere. İçindeki dosyalar silinmeyecek, Tüm Dosyalar'a taşınacaktır. Kitaplık silindikten sonra geri alınamaz, lütfen dikkatli olun.",
       "empty": "<1>+</1> simgesine tıklayarak kitaplık oluşturmaya başlayın"
     },
-    "new": "Kitaplık",
+    "new": "Yeni Kütüphane Oluştur",
     "title": "Kitaplık"
   },
   "menu": {

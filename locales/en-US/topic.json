@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "New Topic",
+    "addNewTopic": "Start New Topic",
     "autoRename": "Smart Rename",
     "confirmRemoveAll": "You are about to delete all topics. This action cannot be undone, please proceed with caution.",
     "confirmRemoveTopic": "You are about to delete this topic. This action cannot be undone, please proceed with caution.",

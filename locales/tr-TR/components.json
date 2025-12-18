@@ -21,7 +21,7 @@
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Bilgi tabanına ekle",
-      "addToOtherKnowledgeBase": "Diğer bilgi tabanına ekle",
+      "addToOtherKnowledgeBase": "Başka bir bilgi tabanına ekle",
       "batchChunking": "Toplu parçalara ayırma",
       "chunking": "Parçalara ayırma",
       "chunkingTooltip": "Dosyayı birden fazla metin parçasına ayırıp vektörleştirdikten sonra, anlamsal arama ve dosya diyalogları için kullanılabilir",
@@ -29,7 +29,7 @@
       "confirmDelete": "Bu dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
       "confirmDeleteFolder": "Bu klasör ve içeriği silinmek üzere. Silme işlemi geri alınamaz, lütfen işleminizi onaylayın.",
       "confirmDeleteMultiFiles": "Seçilen {{count}} dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
-      "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak, kaldırıldıktan sonra dosyalar tüm dosyalar arasında görüntülenebilir, lütfen işleminizi onaylayın",
+      "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak. Kaldırıldıktan sonra dosyalar hâlâ tüm dosyalar arasında görüntülenebilir. Lütfen işleminizi onaylayın.",
       "copyUrl": "Bağlantıyı kopyala",
       "copyUrlSuccess": "Dosya adresi başarıyla kopyalandı",
       "createChunkingTask": "Hazırlanıyor...",
@@ -51,7 +51,7 @@
     },
     "bottom": "Artık sona geldik",
     "config": {
-      "showFilesInKnowledgeBase": "Bilgi tabanındaki içeriği göster"
+      "showFilesInKnowledgeBase": "Bilgi tabanındaki içerikleri göster"
     },
     "emptyStatus": {
       "actions": {

@@ -1,6 +1,24 @@
 {
   "back": "Quay lại",
   "finish": "Bắt đầu sử dụng",
+  "interests": {
+    "area": {
+      "business": "Kinh doanh & Chiến lược",
+      "coding": "Lập trình & Phát triển",
+      "design": "Thiết kế & Sáng tạo",
+      "education": "Học tập & Nghiên cứu",
+      "marketing": "Tiếp thị & Quảng bá",
+      "other": "Lĩnh vực khác",
+      "product": "Sản phẩm & Quản lý",
+      "sales": "Bán hàng & Khách hàng",
+      "writing": "Sáng tác nội dung"
+    },
+    "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
+    "placeholder": "Vui lòng nhập lĩnh vực bạn quan tâm...",
+    "title": "Bạn có thể cho tôi biết lĩnh vực bạn quan tâm không?",
+    "title2": "Giúp tôi tạo ấn tượng ban đầu về bạn nhé~",
+    "title3": "Cứ từ từ, tôi sẽ ngày càng hiểu bạn hơn"
+  },
   "modeSelection": {
     "desc": "Chọn chế độ sử dụng phù hợp với bạn",
     "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
@@ -19,24 +37,6 @@
     "title3": "Hãy nói cho tôi biết, để tôi tùy chỉnh riêng cho bạn nhé～"
   },
   "next": "Tiếp theo",
-  "occupation": {
-    "area": {
-      "business": "Kinh doanh & Chiến lược",
-      "coding": "Lập trình & Phát triển",
-      "design": "Thiết kế & Sáng tạo",
-      "education": "Học tập & Nghiên cứu",
-      "marketing": "Tiếp thị & Quảng bá",
-      "other": "Lĩnh vực khác",
-      "product": "Sản phẩm & Quản lý",
-      "sales": "Bán hàng & Chăm sóc khách hàng",
-      "writing": "Sáng tác nội dung"
-    },
-    "hint": "Bạn có thể thay đổi bất cứ lúc nào trong phần cài đặt",
-    "placeholder": "Vui lòng nhập nghề nghiệp của bạn...",
-    "title": "Bạn đang làm việc trong lĩnh vực nào vậy?",
-    "title2": "Giúp mình có ấn tượng ban đầu về bạn nhé~",
-    "title3": "Cứ từ từ, mình sẽ hiểu bạn nhiều hơn theo thời gian"
-  },
   "proSettings": {
     "connectors": {
       "title": "Kết nối với các công cụ bạn thường dùng"

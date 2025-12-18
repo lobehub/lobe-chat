@@ -20,8 +20,8 @@
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "Aggiungi alla base di conoscenza",
-      "addToOtherKnowledgeBase": "Aggiungi a un'altra base di conoscenza",
+      "addToKnowledgeBase": "Aggiungi alla raccolta",
+      "addToOtherKnowledgeBase": "Aggiungi a un'altra raccolta",
       "batchChunking": "Suddivisione in batch",
       "chunking": "Suddivisione",
       "chunkingTooltip": "Dividi il file in più blocchi di testo e vettorizzali, utilizzabili per la ricerca semantica e il dialogo sui file",
@@ -29,7 +29,7 @@
       "confirmDelete": "Stai per eliminare questo file. Una volta eliminato, non sarà possibile recuperarlo. Ti preghiamo di confermare l'operazione.",
       "confirmDeleteFolder": "Stai per eliminare questa cartella e tutto il suo contenuto. L'operazione è irreversibile. Confermi di voler procedere?",
       "confirmDeleteMultiFiles": "Stai per eliminare i {{count}} file selezionati. Una volta eliminati, non sarà possibile recuperarli. Ti preghiamo di confermare l'operazione.",
-      "confirmRemoveFromKnowledgeBase": "Stai per rimuovere i {{count}} file selezionati dalla base di conoscenza. I file rimarranno visibili in tutti i file. Ti preghiamo di confermare l'operazione.",
+      "confirmRemoveFromKnowledgeBase": "Stai per rimuovere {{count}} file selezionati dalla raccolta. I file saranno ancora visibili in Tutti i file dopo la rimozione. Confermi l'operazione?",
       "copyUrl": "Copia link",
       "copyUrlSuccess": "Indirizzo del file copiato con successo",
       "createChunkingTask": "Preparazione in corso...",
@@ -43,7 +43,7 @@
       "moveSuccess": "File spostato con successo",
       "moveToFolder": "Sposta in...",
       "moveToRoot": "Sposta nella directory principale",
-      "removeFromKnowledgeBase": "Rimuovi dalla base di conoscenza",
+      "removeFromKnowledgeBase": "Rimuovi dalla raccolta",
       "removeFromKnowledgeBaseSuccess": "File rimosso con successo",
       "rename": "Rinomina",
       "renameError": "Rinomina non riuscita",
@@ -51,13 +51,13 @@
     },
     "bottom": "Hai raggiunto il fondo",
     "config": {
-      "showFilesInKnowledgeBase": "Mostra contenuti nella base di conoscenza"
+      "showFilesInKnowledgeBase": "Mostra contenuti nella raccolta"
     },
     "emptyStatus": {
       "actions": {
         "file": "Carica file",
         "folder": "Carica cartella",
-        "knowledgeBase": "Crea nuova base di conoscenza"
+        "knowledgeBase": "Crea nuova raccolta"
       },
       "or": "oppure",
       "title": "Trascina qui file o cartelle"
@@ -230,9 +230,9 @@
   },
   "knowledgeBase": {
     "empty": {
-      "description": "Crea una base di conoscenza per organizzare e gestire le tue risorse",
-      "search": "Nessuna base di conoscenza corrispondente trovata",
-      "title": "Nessuna base di conoscenza disponibile"
+      "description": "Crea una raccolta per organizzare e gestire le tue risorse",
+      "search": "Nessuna raccolta corrispondente trovata",
+      "title": "Nessuna raccolta disponibile"
     }
   }
 }

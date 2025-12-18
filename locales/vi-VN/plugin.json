@@ -63,10 +63,10 @@
     },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Đọc nội dung cơ sở tri thức",
-        "searchKnowledgeBase": "Tìm kiếm trong cơ sở tri thức"
+        "readKnowledge": "Đọc nội dung kho tài nguyên",
+        "searchKnowledgeBase": "Tìm kiếm trong kho tài nguyên"
       },
-      "title": "Cơ sở tri thức"
+      "title": "Kho tài nguyên"
     },
     "lobe-local-system": {
       "apiName": {

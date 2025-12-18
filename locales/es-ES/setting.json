@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Modelo",
       "modelDesc": "Modelo designado para optimizar las preguntas de los usuarios",
-      "title": "Asistente de reescritura de preguntas para la base de conocimientos"
+      "title": "Asistente de reescritura de preguntas del repositorio"
     },
     "thread": {
       "label": "Modelo",

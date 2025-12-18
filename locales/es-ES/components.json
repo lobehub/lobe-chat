@@ -20,8 +20,8 @@
   },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "Agregar a la base de conocimientos",
-      "addToOtherKnowledgeBase": "Agregar a otra base de conocimientos",
+      "addToKnowledgeBase": "Agregar a la base de recursos",
+      "addToOtherKnowledgeBase": "Agregar a otra base de recursos",
       "batchChunking": "División por lotes",
       "chunking": "División",
       "chunkingTooltip": "Divida el archivo en múltiples bloques de texto y vectorícelos para su uso en búsqueda semántica y diálogo de archivos",
@@ -29,7 +29,7 @@
       "confirmDelete": "Está a punto de eliminar este archivo. Una vez eliminado, no podrá recuperarlo. Por favor, confirme su acción.",
       "confirmDeleteFolder": "Estás a punto de eliminar esta carpeta y todo su contenido. Esta acción no se puede deshacer. Por favor, confirma tu decisión.",
       "confirmDeleteMultiFiles": "Está a punto de eliminar los {{count}} archivos seleccionados. Una vez eliminados, no podrá recuperarlos. Por favor, confirme su acción.",
-      "confirmRemoveFromKnowledgeBase": "Está a punto de eliminar los {{count}} archivos seleccionados de la base de conocimientos. Los archivos seguirán siendo visibles en todos los archivos. Por favor, confirme su acción.",
+      "confirmRemoveFromKnowledgeBase": "Estás a punto de eliminar {{count}} archivos seleccionados de la base de recursos. Los archivos seguirán estando disponibles en 'Todos los archivos' después de ser eliminados. Por favor, confirma tu acción.",
       "copyUrl": "Copiar enlace",
       "copyUrlSuccess": "Dirección del archivo copiada con éxito",
       "createChunkingTask": "Preparando...",
@@ -43,7 +43,7 @@
       "moveSuccess": "Archivo movido con éxito",
       "moveToFolder": "Mover a...",
       "moveToRoot": "Mover a la carpeta raíz",
-      "removeFromKnowledgeBase": "Eliminar de la base de conocimientos",
+      "removeFromKnowledgeBase": "Eliminar de la base de recursos",
       "removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito",
       "rename": "Renombrar",
       "renameError": "Error al renombrar",
@@ -51,13 +51,13 @@
     },
     "bottom": "Ya has llegado al final",
     "config": {
-      "showFilesInKnowledgeBase": "Mostrar contenido en la base de conocimientos"
+      "showFilesInKnowledgeBase": "Mostrar contenido en la base de recursos"
     },
     "emptyStatus": {
       "actions": {
         "file": "Subir archivo",
         "folder": "Subir carpeta",
-        "knowledgeBase": "Crear nueva base de conocimientos"
+        "knowledgeBase": "Crear nueva base de recursos"
       },
       "or": "o",
       "title": "Arrastra archivos o carpetas aquí"
@@ -230,9 +230,9 @@
   },
   "knowledgeBase": {
     "empty": {
-      "description": "Crea una base de conocimientos para organizar y gestionar tus recursos",
-      "search": "No se encontró ninguna base de conocimientos coincidente",
-      "title": "No hay bases de conocimientos disponibles"
+      "description": "Crea una base de recursos para organizar y gestionar tus materiales",
+      "search": "No se encontró ninguna base de recursos coincidente",
+      "title": "Aún no hay bases de recursos"
     }
   }
 }

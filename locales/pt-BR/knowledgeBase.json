@@ -4,24 +4,24 @@
     "confirm": "Adicionar",
     "error": "Falha ao adicionar o arquivo à base de conhecimento",
     "id": {
-      "placeholder": "Selecione o conhecimento a ser adicionado",
-      "required": "Selecione o conhecimento",
-      "title": "Conhecimento alvo"
+      "placeholder": "Selecione a base de conhecimento de destino",
+      "required": "Por favor, selecione uma base de conhecimento",
+      "title": "Base de conhecimento de destino"
     },
-    "title": "Adicionar ao conhecimento",
+    "title": "Adicionar à base de conhecimento",
     "totalFiles": "Foram selecionados {{count}} arquivos"
   },
   "createNew": {
     "confirm": "Criar novo",
     "description": {
-      "placeholder": "Descrição do conhecimento (opcional)"
+      "placeholder": "Descrição da base de conhecimento (opcional)"
     },
     "formTitle": "Informações básicas",
     "name": {
-      "placeholder": "Nome do conhecimento",
-      "required": "Por favor, preencha o nome do conhecimento"
+      "placeholder": "Nome da base de conhecimento",
+      "required": "Por favor, insira o nome da base de conhecimento"
     },
-    "title": "Criar conhecimento"
+    "title": "Criar nova base de conhecimento"
   },
   "tab": {
     "evals": "Avaliações",
@@ -29,5 +29,5 @@
     "settings": "Configurações",
     "testing": "Teste de recuperação"
   },
-  "title": "Conhecimento"
+  "title": "Base de conhecimento"
 }

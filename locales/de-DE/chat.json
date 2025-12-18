@@ -18,7 +18,8 @@
       "requiresAuth": "Autorisierung erforderlich, klicken Sie auf „Genehmigen“, um die Verbindung herzustellen",
       "retry": "Erneut versuchen"
     },
-    "welcome": "Hallo, ich bin **Lobe AI**, dein Experte für die Konfiguration von Assistenten. Sag mir, was für einen Assistenten du dir wünschst, und ich helfe dir, ihn einzurichten."
+    "title": "Assistenten-Erstellungsprofi",
+    "welcome": "Erzähl mir von deinem Anwendungsfall – dein professioneller Partner ist zur Stelle.\n\nOb Schreiben, Programmieren oder Datenanalyse – ich helfe dir, deinen persönlichen Assistenten zu gestalten!"
   },
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**. Wie kann ich Ihnen behilflich sein?",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "Noch keine Mitglieder ausgewählt",
   "openInNewWindow": "In neuem Fenster öffnen",
   "owner": "Gruppeninhaber",
+  "pageCopilot": {
+    "title": "Textassistent",
+    "welcome": "**Mach jeden Satz wirkungsvoller.**\n\nOb Entwurf, Überarbeitung oder Feinschliff – ich helfe dir, deine Texte klarer, natürlicher und überzeugender zu gestalten."
+  },
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
   "rag": {

@@ -2,26 +2,26 @@
   "addToKnowledgeBase": {
     "addSuccess": "文件添加成功，<1>立即查看</1>",
     "confirm": "添加",
-    "error": "添加文件到知识库失败",
+    "error": "添加文件到资源库失败",
     "id": {
-      "placeholder": "请选择要添加的知识库",
-      "required": "请选择知识库",
-      "title": "目标知识库"
+      "placeholder": "请选择要添加的资源库",
+      "required": "请选择资源库",
+      "title": "目标资源库"
     },
-    "title": "添加到知识库",
+    "title": "添加到资源库",
     "totalFiles": "已选择 {{count}} 个文件"
   },
   "createNew": {
     "confirm": "新建",
     "description": {
-      "placeholder": "知识库简介（选填）"
+      "placeholder": "资源库简介（选填）"
     },
     "formTitle": "基本信息",
     "name": {
-      "placeholder": "知识库名称",
-      "required": "请填写知识库名称"
+      "placeholder": "资源库名称",
+      "required": "请填写资源库名称"
     },
-    "title": "新建知识库"
+    "title": "新建资源库"
   },
   "tab": {
     "evals": "评测",
@@ -29,5 +29,5 @@
     "settings": "设置",
     "testing": "召回测试"
   },
-  "title": "知识库"
+  "title": "资源库"
 }

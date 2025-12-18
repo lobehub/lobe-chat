@@ -58,12 +58,12 @@
       "ready": "Banco de dados pronto"
     },
     "modal": {
-      "desc": "Ative o banco de dados cliente PGlite para armazenar dados de chat de forma persistente no seu navegador e usar recursos avançados como a base de conhecimento",
+      "desc": "Ative agora o banco de dados de cliente de nova geração. Armazene dados de conversa de forma persistente no seu navegador e aproveite recursos avançados como a base de conhecimento.",
       "enable": "Ativar agora",
       "features": {
         "knowledgeBase": {
-          "desc": "Consolide seu repositório de conhecimento pessoal e inicie conversas sobre ele com seu assistente de forma fácil (em breve)",
-          "title": "Suporte a conversas sobre o repositório de conhecimento, ative seu segundo cérebro"
+          "desc": "Construa sua base de conhecimento pessoal e inicie conversas com seu assistente usando esse conteúdo com facilidade (em breve disponível)",
+          "title": "Suporte à base de conhecimento, ative seu segundo cérebro"
         },
         "localFirst": {
           "desc": "Os dados do chat são armazenados completamente no navegador, seus dados estão sempre sob seu controle.",
@@ -139,6 +139,7 @@
     "about": "Sobre",
     "aiModeEmptyState": "Digite sua pergunta na caixa acima para começar a conversar com a IA",
     "aiModePlaceholder": "Pergunte algo à IA...",
+    "community": "Comunidade",
     "communitySupport": "Suporte da Comunidade",
     "discover": "Descobrir",
     "memory": "Memória",

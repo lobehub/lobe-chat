@@ -27,10 +27,10 @@ const AgentBuilderWelcome = memo(() => {
       >
         <Avatar avatar={agent.avatar || DEFAULT_INBOX_AVATAR} shape={'square'} size={78} />
         <Text fontSize={24} weight={'bold'}>
-          {t('agentBuilder.title')}
+          {t('pageCopilot.title')}
         </Text>
         <Markdown fontSize={14} variant={'chat'}>
-          {t('agentBuilder.welcome')}
+          {t('pageCopilot.welcome')}
         </Markdown>
       </Flexbox>
     </>

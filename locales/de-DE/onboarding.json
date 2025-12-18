@@ -1,6 +1,24 @@
 {
   "back": "Zurück",
   "finish": "Loslegen",
+  "interests": {
+    "area": {
+      "business": "Geschäft & Strategie",
+      "coding": "Programmierung & Entwicklung",
+      "design": "Design & Kreativität",
+      "education": "Lernen & Forschung",
+      "marketing": "Marketing & Promotion",
+      "other": "Andere Bereiche",
+      "product": "Produkt & Management",
+      "sales": "Vertrieb & Kundenservice",
+      "writing": "Content-Erstellung"
+    },
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "placeholder": "Bitte gib die Bereiche ein, die dich interessieren...",
+    "title": "Kannst du mir sagen, welche Bereiche dich interessieren?",
+    "title2": "Hilf mir, einen ersten Eindruck von dir zu bekommen~",
+    "title3": "Keine Eile, ich werde dich nach und nach besser verstehen"
+  },
   "modeSelection": {
     "desc": "Wähle den Modus, der am besten zu dir passt",
     "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
@@ -19,24 +37,6 @@
     "title3": "Erzähl mir mehr, damit ich es genau auf dich zuschneiden kann～"
   },
   "next": "Weiter",
-  "occupation": {
-    "area": {
-      "business": "Geschäft & Strategie",
-      "coding": "Programmierung & Entwicklung",
-      "design": "Design & Kreativität",
-      "education": "Lernen & Forschung",
-      "marketing": "Marketing & Promotion",
-      "other": "Andere Bereiche",
-      "product": "Produkt & Management",
-      "sales": "Vertrieb & Kundenservice",
-      "writing": "Content-Erstellung"
-    },
-    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
-    "placeholder": "Bitte gib deinen Beruf ein...",
-    "title": "In welchem Bereich bist du tätig?",
-    "title2": "Hilf mir, einen ersten Eindruck von dir zu bekommen~",
-    "title3": "Keine Eile, ich werde dich nach und nach besser verstehen"
-  },
   "proSettings": {
     "connectors": {
       "title": "Verbinde deine bevorzugten Tools"

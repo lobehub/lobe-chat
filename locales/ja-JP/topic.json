@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "新しいトピックを作成",
+    "addNewTopic": "新しいトピックを開始する",
     "autoRename": "自動リネーム",
     "confirmRemoveAll": "すべてのトピックを削除しようとしています。削除後は復元できませんので、慎重に操作してください。",
     "confirmRemoveTopic": "このトピックを削除しようとしています。削除後は復元できませんので、慎重に操作してください。",

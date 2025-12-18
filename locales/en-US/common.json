@@ -58,12 +58,12 @@
       "ready": "Database is ready"
     },
     "modal": {
-      "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
+      "desc": "Activate the next-generation client database now. Persistently store your chat data in your browser and unlock advanced features like the Knowledge Base.",
       "enable": "Enable Now",
       "features": {
         "knowledgeBase": {
-          "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
-          "title": "Support for knowledge base conversations"
+          "desc": "Build your personal knowledge base and easily start conversations with your assistant using it (coming soon).",
+          "title": "Knowledge Base Support — Unlock Your Second Brain"
         },
         "localFirst": {
           "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",

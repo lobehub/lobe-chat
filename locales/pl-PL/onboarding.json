@@ -1,6 +1,24 @@
 {
   "back": "Wstecz",
   "finish": "Rozpocznij",
+  "interests": {
+    "area": {
+      "business": "Biznes i strategia",
+      "coding": "Programowanie i rozwój",
+      "design": "Projektowanie i kreatywność",
+      "education": "Nauka i badania",
+      "marketing": "Marketing i promocja",
+      "other": "Inne dziedziny",
+      "product": "Produkt i zarządzanie",
+      "sales": "Sprzedaż i obsługa klienta",
+      "writing": "Tworzenie treści"
+    },
+    "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
+    "placeholder": "Wpisz dziedzinę, która Cię interesuje...",
+    "title": "Czy możesz powiedzieć mi, co Cię interesuje?",
+    "title2": "Pomóż mi zbudować pierwsze wrażenie o Tobie~",
+    "title3": "Spokojnie, z czasem lepiej Cię poznam"
+  },
   "modeSelection": {
     "desc": "Wybierz tryb pracy, który najlepiej Ci odpowiada",
     "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
@@ -19,24 +37,6 @@
     "title3": "Powiedz mi, a dostosuję wszystko specjalnie dla Ciebie～"
   },
   "next": "Dalej",
-  "occupation": {
-    "area": {
-      "business": "Biznes i strategia",
-      "coding": "Programowanie i rozwój",
-      "design": "Projektowanie i kreatywność",
-      "education": "Nauka i badania",
-      "marketing": "Marketing i promocja",
-      "other": "Inne dziedziny",
-      "product": "Zarządzanie produktem",
-      "sales": "Sprzedaż i obsługa klienta",
-      "writing": "Tworzenie treści"
-    },
-    "hint": "Możesz to później zmienić w ustawieniach",
-    "placeholder": "Wpisz swój zawód...",
-    "title": "Możesz mi powiedzieć, w jakiej dziedzinie pracujesz?",
-    "title2": "Pomóż mi zbudować pierwsze wrażenie o Tobie~",
-    "title3": "Spokojnie, z czasem lepiej Cię poznam"
-  },
   "proSettings": {
     "connectors": {
       "title": "Połącz swoje ulubione narzędzia"

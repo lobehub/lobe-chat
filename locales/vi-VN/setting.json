@@ -823,7 +823,7 @@
     "queryRewrite": {
       "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
-      "title": "Trợ lý viết lại câu hỏi trong kho tri thức"
+      "title": "Trợ lý Viết lại Câu hỏi Thư viện Tài nguyên"
     },
     "thread": {
       "label": "Mô hình",

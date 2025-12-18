@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Thư viện này sẽ bị xóa, các tệp bên trong sẽ không bị xóa mà sẽ được chuyển vào mục Tất cả tệp. Sau khi xóa, thư viện sẽ không thể khôi phục, vui lòng cẩn thận.",
       "empty": "Nhấn <1>+</1> để bắt đầu tạo thư viện"
     },
-    "new": "Thư viện",
+    "new": "Tạo thư viện mới",
     "title": "Thư viện"
   },
   "menu": {

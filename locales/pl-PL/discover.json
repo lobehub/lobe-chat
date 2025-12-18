@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Asystent ma wbudowane następujące bazy wiedzy, które pomogą Ci odpowiedzieć na więcej pytań.",
-          "title": "Baza wiedzy"
+          "desc": "Asystent ma wbudowane następujące zasoby, które pomagają odpowiadać na więcej pytań.",
+          "title": "Zasoby"
         },
         "plugin": {
           "desc": "Asystent ma wbudowane następujące wtyczki, które pomogą Ci wykonać więcej zadań.",
@@ -76,7 +76,7 @@
     "sorts": {
       "createdAt": "Najnowsze publikacje",
       "identifier": "ID asystenta",
-      "knowledgeCount": "Liczba baz wiedzy",
+      "knowledgeCount": "Liczba zasobów",
       "myown": "Zobacz moje",
       "pluginCount": "Liczba wtyczek",
       "title": "Nazwa asystenta",
@@ -110,7 +110,7 @@
     "systemRole": "Ustawienia asystenta",
     "tokenUsage": "Zużycie tokenów w promptach asystenta",
     "try": "Spróbuj",
-    "withKnowledge": "Ten asystent zawiera bazę wiedzy",
+    "withKnowledge": "Ten asystent zawiera zasoby",
     "withPlugin": "Ten asystent zawiera wtyczki"
   },
   "back": "Powrót do odkryć",
@@ -178,7 +178,7 @@
       "functionCall": "Obsługuje wywołania funkcji",
       "title": "Inne",
       "vision": "Obsługuje rozpoznawanie wizualne",
-      "withKnowledge": "Z dołączoną bazą wiedzy",
+      "withKnowledge": "Z zasobami",
       "withTool": "Z dołączoną wtyczką"
     },
     "pricing": "Cena modelu",

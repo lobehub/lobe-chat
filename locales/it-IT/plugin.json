@@ -63,7 +63,7 @@
     },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Leggi contenuti della base di conoscenza",
+        "readKnowledge": "Leggi contenuto della base di conoscenza",
         "searchKnowledgeBase": "Cerca nella base di conoscenza"
       },
       "title": "Base di conoscenza"

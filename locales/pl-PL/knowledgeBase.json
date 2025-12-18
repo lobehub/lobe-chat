@@ -4,8 +4,8 @@
     "confirm": "Dodaj",
     "error": "Nie udało się dodać pliku do bazy wiedzy",
     "id": {
-      "placeholder": "Wybierz bazę wiedzy do dodania",
-      "required": "Wybierz bazę wiedzy",
+      "placeholder": "Wybierz bazę wiedzy, do której chcesz dodać",
+      "required": "Proszę wybrać bazę wiedzy",
       "title": "Docelowa baza wiedzy"
     },
     "title": "Dodaj do bazy wiedzy",
@@ -19,7 +19,7 @@
     "formTitle": "Podstawowe informacje",
     "name": {
       "placeholder": "Nazwa bazy wiedzy",
-      "required": "Proszę wpisać nazwę bazy wiedzy"
+      "required": "Proszę podać nazwę bazy wiedzy"
     },
     "title": "Utwórz nową bazę wiedzy"
   },

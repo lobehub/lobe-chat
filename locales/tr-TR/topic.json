@@ -1,6 +1,6 @@
 {
   "actions": {
-    "addNewTopic": "Yeni Konu Ekle",
+    "addNewTopic": "Yeni Konu Başlat",
     "autoRename": "Akıllı Yeniden Adlandırma",
     "confirmRemoveAll": "Tüm konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
     "confirmRemoveTopic": "Bu konu silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",

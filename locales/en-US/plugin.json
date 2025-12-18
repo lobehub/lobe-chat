@@ -63,7 +63,7 @@
     },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Read Knowledge Base Content",
+        "readKnowledge": "Read Knowledge Base",
         "searchKnowledgeBase": "Search Knowledge Base"
       },
       "title": "Knowledge Base"

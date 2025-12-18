@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Zamierzasz usunąć tę bibliotekę. Pliki w niej zawarte nie zostaną usunięte, lecz przeniesione do folderu Wszystkie pliki. Po usunięciu biblioteki nie będzie można jej przywrócić — proszę zachować ostrożność.",
       "empty": "Kliknij <1>+</1>, aby rozpocząć tworzenie biblioteki"
     },
-    "new": "Biblioteka",
+    "new": "Nowa biblioteka zasobów",
     "title": "Biblioteka"
   },
   "menu": {

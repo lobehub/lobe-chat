@@ -58,12 +58,12 @@
       "ready": "Baza danych gotowa"
     },
     "modal": {
-      "desc": "Włącz klienta bazy danych PGlite, aby trwale przechowywać dane czatu w przeglądarce i korzystać z zaawansowanych funkcji, takich jak baza wiedzy",
+      "desc": "Włącz nową generację bazy danych klienta już teraz. Trwale przechowuj dane czatu w swojej przeglądarce i korzystaj z zaawansowanych funkcji, takich jak biblioteka zasobów.",
       "enable": "Włącz teraz",
       "features": {
         "knowledgeBase": {
-          "desc": "Zgromadź swoją osobistą bazę wiedzy i łatwo rozpocznij rozmowę z asystentem (wkrótce dostępne)",
-          "title": "Wsparcie dla rozmów w bazie wiedzy, uruchomienie drugiego mózgu"
+          "desc": "Zbuduj swoją osobistą bibliotekę zasobów i łatwo rozpocznij rozmowę z asystentem opartą na tych zasobach (już wkrótce dostępne)",
+          "title": "Wsparcie dla rozmów opartych na bibliotece zasobów – uruchom swój drugi mózg"
         },
         "localFirst": {
           "desc": "Dane czatu są całkowicie przechowywane w przeglądarce, twoje dane są zawsze pod twoją kontrolą.",
@@ -139,6 +139,7 @@
     "about": "O nas",
     "aiModeEmptyState": "Wpisz swoje pytanie w polu powyżej, aby rozpocząć rozmowę z AI",
     "aiModePlaceholder": "Zadaj pytanie AI...",
+    "community": "Społeczność",
     "communitySupport": "Wsparcie społeczności",
     "discover": "Odkrywaj",
     "memory": "Pamięć",
@@ -395,7 +396,7 @@
     "discover": "Odkryj",
     "files": "Pliki",
     "home": "Strona główna",
-    "knowledgeBase": "Baza wiedzy",
+    "knowledgeBase": "Biblioteka zasobów",
     "me": "ja",
     "memory": "Pamięć",
     "pages": "Dokumenty",

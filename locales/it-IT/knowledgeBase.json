@@ -4,24 +4,24 @@
     "confirm": "Aggiungi",
     "error": "Aggiunta del file alla base di conoscenza non riuscita",
     "id": {
-      "placeholder": "Seleziona il knowledge base da aggiungere",
-      "required": "Seleziona il knowledge base",
-      "title": "Knowledge base di destinazione"
+      "placeholder": "Seleziona la base di conoscenza di destinazione",
+      "required": "Seleziona una base di conoscenza",
+      "title": "Base di conoscenza di destinazione"
     },
-    "title": "Aggiungi al knowledge base",
+    "title": "Aggiungi alla base di conoscenza",
     "totalFiles": "Hai selezionato {{count}} file"
   },
   "createNew": {
     "confirm": "Crea nuovo",
     "description": {
-      "placeholder": "Descrizione del knowledge base (opzionale)"
+      "placeholder": "Descrizione della base di conoscenza (facoltativa)"
     },
     "formTitle": "Informazioni di base",
     "name": {
-      "placeholder": "Nome del knowledge base",
-      "required": "Per favore, inserisci il nome del knowledge base"
+      "placeholder": "Nome della base di conoscenza",
+      "required": "Inserisci il nome della base di conoscenza"
     },
-    "title": "Crea knowledge base"
+    "title": "Crea nuova base di conoscenza"
   },
   "tab": {
     "evals": "Valutazioni",
@@ -29,5 +29,5 @@
     "settings": "Impostazioni",
     "testing": "Test di richiamo"
   },
-  "title": "Knowledge base"
+  "title": "Base di conoscenza"
 }

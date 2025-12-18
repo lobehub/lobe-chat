@@ -18,7 +18,8 @@
       "requiresAuth": "Se requiere autorización, haz clic en «Aprobar» para conectar",
       "retry": "Reintentar"
     },
-    "welcome": "Hola, soy **Lobe AI**, tu experto en configuración de asistentes. Cuéntame qué tipo de asistente necesitas y te ayudaré a configurarlo."
+    "title": "Especialista en Creación de Asistentes",
+    "welcome": "¿Cuál es tu escenario de necesidad? Tu compañero profesional está listo para ayudarte.\n\nYa sea para escribir, programar o analizar datos, ¡puedo ayudarte a crear un asistente personalizado!"
   },
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "Aún no se han seleccionado miembros",
   "openInNewWindow": "Abrir en una ventana nueva",
   "owner": "Propietario del grupo",
+  "pageCopilot": {
+    "title": "Asistente de Redacción",
+    "welcome": "**Haz que cada frase cuente.**\n\nYa sea redactando, reescribiendo o puliendo textos, te ayudaré a que tus palabras sean más claras, naturales y persuasivas."
+  },
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {

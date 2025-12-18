@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Asistan, daha fazla soruyu yanıtlamanıza yardımcı olmak için aşağıdaki bilgi tabanlarını içerir.",
-          "title": "Bilgi Tabanı"
+          "desc": "Asistan, daha fazla soruyu yanıtlamanıza yardımcı olmak için aşağıdaki bilgi kaynaklarıyla donatılmıştır.",
+          "title": "Bilgi Kaynakları"
         },
         "plugin": {
           "desc": "Asistan, daha fazla görevi tamamlamanıza yardımcı olmak için aşağıdaki eklentileri içerir.",
@@ -76,7 +76,7 @@
     "sorts": {
       "createdAt": "En Son Yayınlanan",
       "identifier": "Asistan ID",
-      "knowledgeCount": "Bilgi Tabanı Sayısı",
+      "knowledgeCount": "Bilgi Kaynağı Sayısı",
       "myown": "Benimkileri Görüntüle",
       "pluginCount": "Eklenti Sayısı",
       "title": "Asistan Adı",
@@ -110,7 +110,7 @@
     "systemRole": "Asistan Ayarları",
     "tokenUsage": "Asistan İpucu Token Kullanımı",
     "try": "Deneyin",
-    "withKnowledge": "Bu asistan bilgi tabanı içerir",
+    "withKnowledge": "Bu asistan bilgi kaynaklarıyla birlikte gelir",
     "withPlugin": "Bu asistan eklenti içerir"
   },
   "back": "Geri Dön",
@@ -178,7 +178,7 @@
       "functionCall": "Fonksiyon Çağrısını Destekle",
       "title": "Diğer",
       "vision": "Görsel Tanımayı Destekle",
-      "withKnowledge": "Bilgi Tabanı ile",
+      "withKnowledge": "Bilgi kaynaklarıyla birlikte",
       "withTool": "Araç ile"
     },
     "pricing": "Model Fiyatı",

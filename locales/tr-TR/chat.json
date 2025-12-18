@@ -18,7 +18,8 @@
       "requiresAuth": "Yetkilendirme gerekli, bağlanmak için 'Onayla'ya tıklayın",
       "retry": "Yeniden Dene"
     },
-    "welcome": "Merhaba, ben **Lobe AI**, asistan yapılandırma uzmanınızım. Nasıl bir asistan istediğinizi bana söyleyin, sizin için ayarlayayım."
+    "title": "Asistan Oluşturma Uzmanı",
+    "welcome": "İhtiyaç duyduğun senaryoyu anlat, profesyonel bir yardımcı hemen hazır.\n\nİster yazı yazma, ister programlama ya da veri analizi olsun, sana özel bir asistan oluşturmana yardımcı olabilirim!"
   },
   "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle konuşmaya başlayabilir veya [Asistan Ayarları]({{url}}) sayfasına giderek bilgilerimi güncelleyebilirsin.",
   "agentDefaultMessageWithSystemRole": "Merhaba, ben **{{name}}**. Size nasıl yardımcı olabilirim?",
@@ -280,6 +281,10 @@
   "noSelectedAgents": "Henüz üye seçilmedi",
   "openInNewWindow": "Yeni Pencerede Aç",
   "owner": "Grup sahibi",
+  "pageCopilot": {
+    "title": "Metin Asistanı",
+    "welcome": "**Her cümleyi daha etkili hale getirin.**\n\nİster taslak hazırlama, ister yeniden yazma ya da metin düzenleme olsun, ifadelerinizi daha net, doğal ve ikna edici hale getirmek için buradayım."
+  },
   "pin": "Sabitle",
   "pinOff": "Sabitlemeyi Kaldır",
   "rag": {

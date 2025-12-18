@@ -1,6 +1,24 @@
 {
   "back": "上一步",
   "finish": "開始使用",
+  "interests": {
+    "area": {
+      "business": "商業與策略",
+      "coding": "程式設計與開發",
+      "design": "設計與創意",
+      "education": "學習與研究",
+      "marketing": "行銷與推廣",
+      "other": "其他領域",
+      "product": "產品與管理",
+      "sales": "銷售與客戶",
+      "writing": "內容創作"
+    },
+    "hint": "你可以隨時在設定中修改",
+    "placeholder": "請輸入你感興趣的領域...",
+    "title": "可以告訴我你感興趣的領域嗎？",
+    "title2": "幫助我建立對你的初步印象～",
+    "title3": "慢慢來，我會越來越了解你"
+  },
   "modeSelection": {
     "desc": "選擇適合你的使用模式",
     "hint": "你可以隨時在設定中修改",
@@ -19,24 +37,6 @@
     "title3": "告訴我，為你量身打造～"
   },
   "next": "下一步",
-  "occupation": {
-    "area": {
-      "business": "商業與策略",
-      "coding": "程式設計與開發",
-      "design": "設計與創意",
-      "education": "學習與研究",
-      "marketing": "行銷與推廣",
-      "other": "其他領域",
-      "product": "產品與管理",
-      "sales": "銷售與客戶",
-      "writing": "內容創作"
-    },
-    "hint": "你可以隨時在設定中修改",
-    "placeholder": "請輸入你的職業...",
-    "title": "可以告訴我你從事的領域嗎？",
-    "title2": "幫助我建立對你的初步印象～",
-    "title3": "慢慢來，我會越來越了解你"
-  },
   "proSettings": {
     "connectors": {
       "title": "連接你常用的工具"

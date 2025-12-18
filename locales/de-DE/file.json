@@ -148,7 +148,7 @@
       "confirmRemoveLibrary": "Diese Bibliothek wird gelöscht. Die darin enthaltenen Dateien bleiben erhalten und werden in 'Alle Dateien' verschoben. Nach dem Löschen kann die Bibliothek nicht wiederhergestellt werden. Bitte gehe vorsichtig vor.",
       "empty": "Klicke auf <1>+</1>, um eine neue Bibliothek zu erstellen"
     },
-    "new": "Bibliothek",
+    "new": "Neue Bibliothek erstellen",
     "title": "Bibliothek"
   },
   "menu": {

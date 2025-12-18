@@ -21,7 +21,7 @@
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Add to Knowledge Base",
-      "addToOtherKnowledgeBase": "Add to Other Knowledge Base",
+      "addToOtherKnowledgeBase": "Add to Another Knowledge Base",
       "batchChunking": "Batch Chunking",
       "chunking": "Chunking",
       "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
@@ -29,7 +29,7 @@
       "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
       "confirmDeleteFolder": "You are about to delete this folder and all of its contents. This action cannot be undone. Please confirm your decision.",
       "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
-      "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",
+      "confirmRemoveFromKnowledgeBase": "You are about to remove {{count}} selected file(s) from the knowledge base. The files will still be accessible in All Files. Please confirm your action.",
       "copyUrl": "Copy Link",
       "copyUrlSuccess": "File url copied successfully.",
       "createChunkingTask": "Preparing...",
@@ -57,7 +57,7 @@
       "actions": {
         "file": "Upload File",
         "folder": "Upload Folder",
-        "knowledgeBase": "Create New Knowledge Base"
+        "knowledgeBase": "Create Knowledge Base"
       },
       "or": "or",
       "title": "Drag files or folders here"
@@ -232,7 +232,7 @@
     "empty": {
       "description": "Create a knowledge base to organize and manage your resources",
       "search": "No matching knowledge base found",
-      "title": "No knowledge base available"
+      "title": "No Knowledge Base Available"
     }
   }
 }
