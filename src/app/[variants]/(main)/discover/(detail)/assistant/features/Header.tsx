@@ -1,7 +1,7 @@
 'use client';
 
-import { Github, MCP } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Icon, Text, Tooltip } from '@lobehub/ui';
+import { MCP } from '@lobehub/icons';
+import { Avatar, Button, Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DotIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -105,18 +105,6 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
               >
                 {title}
               </Text>
-            </Flexbox>
-            <Flexbox align={'center'} gap={6} horizontal>
-              <Link
-                href={urlJoin(
-                  'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-                  identifier as string,
-                )}
-                onClick={(e) => e.stopPropagation()}
-                target={'_blank'}
-              >
-                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
-              </Link>
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>

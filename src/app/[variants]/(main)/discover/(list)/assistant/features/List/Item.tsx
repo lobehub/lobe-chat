@@ -1,5 +1,4 @@
-import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
+import { Avatar, Block, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import qs from 'query-string';
@@ -70,7 +69,7 @@ const AssistantItem = memo<DiscoverAssistantItem>(
     backgroundColor,
     userName,
   }) => {
-    const { styles, theme } = useStyles();
+    const { styles } = useStyles();
     const navigate = useNavigate();
     const { source } = useQuery() as { source?: AssistantMarketSource };
     const link = qs.stringifyUrl(
@@ -164,19 +163,6 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                 </div>
               )}
             </Flexbox>
-          </Flexbox>
-          <Flexbox align={'center'} gap={4} horizontal>
-            <a
-              href={urlJoin(
-                'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-                identifier,
-              )}
-              onClick={(e) => e.stopPropagation()}
-              rel="noopener noreferrer"
-              target={'_blank'}
-            >
-              <ActionIcon fill={theme.colorTextDescription} icon={Github} />
-            </a>
           </Flexbox>
         </Flexbox>
         <Flexbox flex={1} gap={12} paddingInline={16}>
