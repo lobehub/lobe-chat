@@ -190,7 +190,7 @@
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/desktop-ipc-typings": "workspace:*",
-    "@lobehub/editor": "^1.34.3",
+    "@lobehub/editor": "^1.34.4",
     "@lobehub/icons": "^2.45.0",
     "@lobehub/market-sdk": "^0.23.8",
     "@lobehub/tts": "^2.0.1",

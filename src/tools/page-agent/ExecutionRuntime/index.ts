@@ -150,15 +150,35 @@ export class PageAgentExecutionRuntime {
     try {
       const editor = this.getEditor();
 
+      let markdown = args.markdown;
+      let extractedTitle: string | undefined;
+
+      // Check if markdown starts with a # title heading
+      const titleMatch = /^#\s+(.+?)(?:\r?\n|$)/.exec(markdown);
+      if (titleMatch) {
+        extractedTitle = titleMatch[1].trim();
+        // Remove the title line from markdown
+        markdown = markdown.slice(titleMatch[0].length).trimStart();
+
+        // Set the title separately if title handlers are available
+        if (this.titleSetter) {
+          this.titleSetter(extractedTitle);
+        }
+      }
+
       // Set markdown content directly - the editor will convert it internally
-      editor.setDocument('markdown', args.markdown);
+      editor.setDocument('markdown', markdown);
 
       // Get the resulting document to count nodes
       const jsonState = editor.getDocument('json') as any;
       const nodeCount = jsonState?.children?.length || 0;
 
+      const titleInfo = extractedTitle
+        ? ` Title "${extractedTitle}" was extracted and set separately.`
+        : '';
+
       return {
-        content: `Successfully initialized document with ${nodeCount} top-level nodes from ${args.markdown.length} characters of markdown content.`,
+        content: `Successfully initialized document with ${nodeCount} top-level nodes from ${args.markdown.length} characters of markdown content.${titleInfo}`,
         state: {
           nodeCount,
           rootId: 'root',
