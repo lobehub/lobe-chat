@@ -25,21 +25,16 @@ export default class BrowserWindowsCtr extends ControllerModule {
     console.log('[BrowserWindowsCtr] Received request to open settings', normalizedOptions);
 
     try {
-      const query = new URLSearchParams();
-      if (normalizedOptions.searchParams) {
-        Object.entries(normalizedOptions.searchParams).forEach(([key, value]) => {
-          if (value !== undefined) query.set(key, value);
-        });
-      }
+      let fullPath: string;
 
-      const tab = normalizedOptions.tab;
-      if (tab && tab !== 'common' && !query.has('active')) {
-        query.set('active', tab);
+      // If direct path is provided, use it directly
+      if (normalizedOptions.path) {
+        fullPath = normalizedOptions.path;
+      } else {
+        // Legacy support for tab and searchParams
+        const tab = normalizedOptions.tab;
+        fullPath = tab ? `/settings/${tab}` : '/settings/common';
       }
-
-      const queryString = query.toString();
-      const subPath = tab && !queryString ? `/${tab}` : '';
-      const fullPath = `/settings${subPath}${queryString ? `?${queryString}` : ''}`;
 
       const mainWindow = this.app.browserManager.getMainWindow();
       mainWindow.show();

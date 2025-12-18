@@ -291,7 +291,7 @@ export class AiInfraRepos {
   };
 
   /**
-   * use in the `/settings?active=provider&provider=[id]` page
+   * use in the `/settings/provider/[id]` page
    */
   getAiProviderDetail = async (id: string, decryptor?: DecryptUserKeyVaults) => {
     const config = await this.aiProviderModel.getAiProviderById(id, decryptor);

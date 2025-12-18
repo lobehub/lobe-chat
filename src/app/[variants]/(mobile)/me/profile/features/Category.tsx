@@ -23,19 +23,19 @@ const Category = memo(() => {
       icon: UserCircle,
       key: ProfileTabs.Profile,
       label: t('tab.profile'),
-      onClick: () => navigate('/settings?active=profile'),
+      onClick: () => navigate('/settings/profile'),
     },
     isLoginWithClerk && {
       icon: ShieldCheck,
       key: ProfileTabs.Security,
       label: t('tab.security'),
-      onClick: () => navigate('/settings?active=security'),
+      onClick: () => navigate('/settings/security'),
     },
     {
       icon: ChartColumnBigIcon,
       key: ProfileTabs.Stats,
       label: t('tab.stats'),
-      onClick: () => navigate('/settings?active=stats'),
+      onClick: () => navigate('/settings/stats'),
     },
     isLogin && {
       type: 'divider',

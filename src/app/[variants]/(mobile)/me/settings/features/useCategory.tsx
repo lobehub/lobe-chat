@@ -40,6 +40,12 @@ export const useCategory = () => {
 
   return items.map((item) => ({
     ...item,
-    onClick: () => navigate(`/settings?active=${item.key}`),
+    onClick: () => {
+      if (item.key === SettingsTabs.Provider) {
+        navigate('/settings/provider/all');
+      } else {
+        navigate(`/settings/${item.key}`);
+      }
+    },
   }));
 };

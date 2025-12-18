@@ -26,20 +26,14 @@ const ProviderConfig = memo(() => {
   const { url, modelsUrl, identifier } = useDetailContext();
   const navigate = useNavigate();
   const openSettings = async () => {
-    const searchParams = { active: 'provider', provider: identifier };
-    const tab = 'provider';
-
     if (isDesktop) {
       const { ensureElectronIpc } = await import('@/utils/electron/ipc');
       await ensureElectronIpc().windows.openSettingsWindow({
-        searchParams,
-        tab,
+        path: `/settings/provider/${identifier}`,
       });
       return;
     }
-    navigate(
-      `/settings?active=provider&provider=${identifier}`
-    )
+    navigate(`/settings/provider/${identifier}`);
   };
 
   const icon = <Icon icon={SquareArrowOutUpRight} size={16} />;

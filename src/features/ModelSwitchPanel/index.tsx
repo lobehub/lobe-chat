@@ -129,7 +129,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
               </Flexbox>
             ),
             onClick: () => {
-              navigate('/settings?active=provider');
+              navigate('/settings/provider/all');
             },
           },
         ];
