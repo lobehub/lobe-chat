@@ -1,5 +1,5 @@
 import { AgentItem } from '../agent';
-import { UIChatMessage } from '../message';
+import { TaskDetail, UIChatMessage } from '../message';
 import { ChatTopic } from '../topic';
 
 export interface LobeChatGroupMetaConfig {
@@ -295,6 +295,8 @@ export interface TaskStatusResult {
   status: 'processing' | 'completed' | 'failed' | 'cancel';
   /** Number of steps executed */
   stepCount?: number;
+  /** Task detail from Thread table */
+  taskDetail?: TaskDetail;
   /** Model usage information */
   usage?: {
     completion_tokens?: number;

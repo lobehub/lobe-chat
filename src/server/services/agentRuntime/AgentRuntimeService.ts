@@ -35,6 +35,8 @@ import type {
   PendingInterventionsResult,
   StartExecutionParams,
   StartExecutionResult,
+  StepCompletionReason,
+  StepLifecycleCallbacks,
 } from './types';
 
 const log = debug('lobe-server:agent-runtime-service');
@@ -79,6 +81,11 @@ export class AgentRuntimeService {
   private streamManager: IStreamEventManager;
   private queueService: QueueService | null;
   private toolExecutionService: ToolExecutionService;
+  /**
+   * Step 生命周期回调注册表
+   * key: operationId, value: callbacks
+   */
+  private stepCallbacks: Map<string, StepLifecycleCallbacks> = new Map();
   private get baseURL() {
     const baseUrl =
       process.env.AGENT_RUNTIME_BASE_URL || process.env.APP_URL || 'http://localhost:3010';
@@ -138,6 +145,37 @@ export class AgentRuntimeService {
     }
   }
 
+  // ==================== Step Lifecycle Callbacks ====================
+
+  /**
+   * 注册 step 生命周期回调
+   * @param operationId - 操作 ID
+   * @param callbacks - 回调函数集合
+   */
+  registerStepCallbacks(operationId: string, callbacks: StepLifecycleCallbacks): void {
+    this.stepCallbacks.set(operationId, callbacks);
+    log('[%s] Registered step callbacks', operationId);
+  }
+
+  /**
+   * 移除 step 生命周期回调
+   * @param operationId - 操作 ID
+   */
+  unregisterStepCallbacks(operationId: string): void {
+    this.stepCallbacks.delete(operationId);
+    log('[%s] Unregistered step callbacks', operationId);
+  }
+
+  /**
+   * 获取 step 生命周期回调
+   * @param operationId - 操作 ID
+   */
+  getStepCallbacks(operationId: string): StepLifecycleCallbacks | undefined {
+    return this.stepCallbacks.get(operationId);
+  }
+
+  // ==================== Operation Management ====================
+
   /**
    * 创建新的 Agent 操作
    */
@@ -153,6 +191,7 @@ export class AgentRuntimeService {
       initialMessages = [],
       appContext,
       toolManifestMap,
+      stepCallbacks,
     } = params;
 
     try {
@@ -192,6 +231,11 @@ export class AgentRuntimeService {
       // 保存初始状态
       await this.coordinator.saveAgentState(operationId, initialState as any);
 
+      // 注册 step 生命周期回调
+      if (stepCallbacks) {
+        this.registerStepCallbacks(operationId, stepCallbacks);
+      }
+
       let messageId: string | undefined;
       let autoStarted = false;
 
@@ -229,6 +273,9 @@ export class AgentRuntimeService {
     const { operationId, stepIndex, context, humanInput, approvedToolCall, rejectionReason } =
       params;
 
+    // 获取已注册的回调
+    const callbacks = this.getStepCallbacks(operationId);
+
     try {
       log('[%s] Executing step %d', operationId, stepIndex);
 
@@ -247,6 +294,20 @@ export class AgentRuntimeService {
 
       if (!agentState) {
         throw new Error(`Agent state not found for operation ${operationId}`);
+      }
+
+      // 调用 onBeforeStep 回调
+      if (callbacks?.onBeforeStep) {
+        try {
+          await callbacks.onBeforeStep({
+            context,
+            operationId,
+            state: agentState,
+            stepIndex,
+          });
+        } catch (callbackError) {
+          log('[%s] onBeforeStep callback error: %O', operationId, callbackError);
+        }
       }
 
       // 创建 Agent 和 Runtime 实例
@@ -301,6 +362,21 @@ export class AgentRuntimeService {
 
       log('[%s] Step %d completed', operationId, stepIndex);
 
+      // 调用 onAfterStep 回调
+      if (callbacks?.onAfterStep) {
+        try {
+          await callbacks.onAfterStep({
+            operationId,
+            shouldContinue,
+            state: stepResult.newState,
+            stepIndex,
+            stepResult,
+          });
+        } catch (callbackError) {
+          log('[%s] onAfterStep callback error: %O', operationId, callbackError);
+        }
+      }
+
       if (shouldContinue && stepResult.nextContext && this.queueService) {
         const nextStepIndex = stepIndex + 1;
         const delay = this.calculateStepDelay(stepResult);
@@ -317,6 +393,22 @@ export class AgentRuntimeService {
         nextStepScheduled = true;
 
         log('[%s] Scheduled next step %d', operationId, nextStepIndex);
+      }
+
+      // 检查是否操作完成，调用 onComplete 回调
+      if (!shouldContinue && callbacks?.onComplete) {
+        const reason = this.determineCompletionReason(stepResult.newState);
+        try {
+          await callbacks.onComplete({
+            finalState: stepResult.newState,
+            operationId,
+            reason,
+          });
+          // 操作完成后清理回调
+          this.unregisterStepCallbacks(operationId);
+        } catch (callbackError) {
+          log('[%s] onComplete callback error: %O', operationId, callbackError);
+        }
       }
 
       return {
@@ -338,6 +430,21 @@ export class AgentRuntimeService {
         stepIndex,
         type: 'error',
       });
+
+      // 执行失败时也调用 onComplete 回调
+      if (callbacks?.onComplete) {
+        try {
+          const errorState = await this.coordinator.loadAgentState(operationId);
+          await callbacks.onComplete({
+            finalState: errorState!,
+            operationId,
+            reason: 'error',
+          });
+          this.unregisterStepCallbacks(operationId);
+        } catch (callbackError) {
+          log('[%s] onComplete callback error in catch: %O', operationId, callbackError);
+        }
+      }
 
       throw error;
     }
@@ -790,6 +897,19 @@ export class AgentRuntimeService {
   }
 
   /**
+   * 确定操作完成原因
+   */
+  private determineCompletionReason(state: AgentState): StepCompletionReason {
+    if (state.status === 'done') return 'done';
+    if (state.status === 'error') return 'error';
+    if (state.status === 'interrupted') return 'interrupted';
+    if (state.status === 'waiting_for_human') return 'waiting_for_human';
+    if (state.maxSteps && state.stepCount >= state.maxSteps) return 'max_steps';
+    if (state.costLimit && state.cost?.total >= state.costLimit.maxTotalCost) return 'cost_limit';
+    return 'done';
+  }
+
+  /**
    * 同步执行 Agent 操作直到完成
    *
    * 用于测试场景，不依赖 QueueService，直接在当前进程中执行所有步骤。
@@ -889,6 +1009,21 @@ export class AgentRuntimeService {
 
     if (stepIndex >= maxSteps) {
       log('[%s] Sync execution stopped: reached maxSteps (%d)', operationId, maxSteps);
+      // 如果因为 executeSync 的 maxSteps 限制停止，需要手动调用 onComplete
+      // 注意：如果是因为 state.maxSteps 达到，onComplete 已经在 executeStep 中被调用
+      const callbacks = this.getStepCallbacks(operationId);
+      if (callbacks?.onComplete && state.status !== 'done' && state.status !== 'error') {
+        try {
+          await callbacks.onComplete({
+            finalState: state,
+            operationId,
+            reason: 'max_steps',
+          });
+          this.unregisterStepCallbacks(operationId);
+        } catch (callbackError) {
+          log('[%s] onComplete callback error in executeSync: %O', operationId, callbackError);
+        }
+      }
     }
 
     return state;

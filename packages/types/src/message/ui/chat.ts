@@ -64,8 +64,14 @@ interface UIMessageBranch {
  * Retrieved from the associated Thread via sourceMessageId
  */
 export interface TaskDetail {
+  /** Task completion time (ISO string) */
+  completedAt?: string;
   /** Execution duration in milliseconds */
   duration?: number;
+  /** Error message if task failed */
+  error?: string;
+  /** Task start time (ISO string) */
+  startedAt?: string;
   /** Task status */
   status: ThreadStatus;
   /** Thread ID for navigation */

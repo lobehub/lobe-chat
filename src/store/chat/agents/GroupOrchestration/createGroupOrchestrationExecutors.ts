@@ -480,6 +480,19 @@ export const createGroupOrchestrationExecutors = (
             threadId: createResult.threadId,
           });
 
+          // Update taskDetail in message if available
+          if (status.taskDetail) {
+            get().internal_dispatchMessage(
+              {
+                id: taskMessageId,
+                type: 'updateMessage',
+                value: { taskDetail: status.taskDetail },
+              },
+              { operationId: state.operationId },
+            );
+            log(`[${sessionLogId}] Updated task message with taskDetail`);
+          }
+
           if (status.status === 'completed') {
             log(`[${sessionLogId}] Task completed successfully`);
             // 4. Update task message with summary

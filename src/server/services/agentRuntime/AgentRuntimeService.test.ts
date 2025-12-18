@@ -50,24 +50,29 @@ vi.mock('@/server/services/pluginGateway', () => ({
 vi.mock('@/server/modules/AgentRuntime', () => ({
   AgentRuntimeCoordinator: vi.fn().mockImplementation(() => ({
     createAgentOperation: vi.fn(),
-    saveAgentState: vi.fn(),
-    loadAgentState: vi.fn(),
-    getOperationMetadata: vi.fn(),
-    saveStepResult: vi.fn(),
-    getExecutionHistory: vi.fn(),
-    getActiveOperations: vi.fn(),
     deleteAgentOperation: vi.fn(),
     disconnect: vi.fn(),
+    getActiveOperations: vi.fn(),
+    getExecutionHistory: vi.fn(),
+    getOperationMetadata: vi.fn(),
+    loadAgentState: vi.fn(),
+    saveAgentState: vi.fn(),
+    saveStepResult: vi.fn(),
   })),
-  StreamEventManager: vi.fn().mockImplementation(() => ({
-    publishStreamEvent: vi.fn(),
-    getStreamHistory: vi.fn(),
-  })),
-  DurableLobeChatAgent: vi.fn(),
-  createStreamingLLMExecutor: vi.fn(),
-  createStreamingToolExecutor: vi.fn(),
+  createStreamEventManager: vi.fn().mockReturnValue({
+    getStreamHistory: vi.fn().mockResolvedValue([]),
+    publishStreamEvent: vi.fn().mockResolvedValue(undefined),
+    subscribe: vi.fn().mockReturnValue(() => {}),
+  }),
   createStreamingFinishExecutor: vi.fn(),
   createStreamingHumanApprovalExecutor: vi.fn(),
+  createStreamingLLMExecutor: vi.fn(),
+  createStreamingToolExecutor: vi.fn(),
+  DurableLobeChatAgent: vi.fn(),
+  StreamEventManager: vi.fn().mockImplementation(() => ({
+    getStreamHistory: vi.fn(),
+    publishStreamEvent: vi.fn(),
+  })),
 }));
 
 vi.mock('@lobechat/agent-runtime', () => ({
@@ -78,6 +83,7 @@ vi.mock('@lobechat/agent-runtime', () => ({
 
 vi.mock('@/server/services/queue', () => ({
   QueueService: vi.fn().mockImplementation(() => ({
+    getImpl: vi.fn().mockReturnValue(null),
     scheduleMessage: vi.fn(),
   })),
 }));

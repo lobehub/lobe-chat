@@ -111,7 +111,7 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
       });
     });
 
-    it('should update Thread status to processing', async () => {
+    it('should update Thread status to processing with startedAt', async () => {
       vi.spyOn(service, 'execAgent').mockResolvedValue({
         agentId: 'agent-1',
         assistantMessageId: 'assistant-msg-1',
@@ -136,11 +136,12 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
       });
 
       expect(mockThreadModel.update).toHaveBeenCalledWith('thread-123', {
+        metadata: { startedAt: expect.any(String) },
         status: ThreadStatus.Processing,
       });
     });
 
-    it('should call execAgent with threadId in appContext', async () => {
+    it('should call execAgent with threadId in appContext and stepCallbacks', async () => {
       const execAgentSpy = vi.spyOn(service, 'execAgent').mockResolvedValue({
         agentId: 'agent-1',
         assistantMessageId: 'assistant-msg-1',
@@ -173,10 +174,14 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
         },
         autoStart: true,
         prompt: 'Test instruction',
+        stepCallbacks: expect.objectContaining({
+          onAfterStep: expect.any(Function),
+          onComplete: expect.any(Function),
+        }),
       });
     });
 
-    it('should store operationId in Thread metadata', async () => {
+    it('should store operationId and startedAt in Thread metadata', async () => {
       vi.spyOn(service, 'execAgent').mockResolvedValue({
         agentId: 'agent-1',
         assistantMessageId: 'assistant-msg-1',
@@ -200,9 +205,9 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
         topicId: 'topic-1',
       });
 
-      // Second update call should be storing operationId in metadata
+      // Second update call should be storing operationId and startedAt in metadata
       expect(mockThreadModel.update).toHaveBeenCalledWith('thread-123', {
-        metadata: { operationId: 'op-123' },
+        metadata: { operationId: 'op-123', startedAt: expect.any(String) },
       });
     });
 
@@ -265,17 +270,20 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
         topicId: 'topic-1',
       });
 
-      // Should update Thread status to failed
+      // Should update Thread status to failed with metadata
       expect(mockThreadModel.update).toHaveBeenCalledWith('thread-123', {
         metadata: expect.objectContaining({
+          completedAt: expect.any(String),
+          duration: expect.any(Number),
           error: 'Agent execution failed',
           operationId: 'op-123',
+          startedAt: expect.any(String),
         }),
         status: ThreadStatus.Failed,
       });
     });
 
-    it('should store error info in Thread metadata when execAgent fails', async () => {
+    it('should store error info with duration in Thread metadata when execAgent fails', async () => {
       vi.spyOn(service, 'execAgent').mockResolvedValue({
         agentId: 'agent-1',
         assistantMessageId: 'assistant-msg-1',
@@ -299,16 +307,18 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
         topicId: 'topic-1',
       });
 
-      // Last update call should contain error info and completedAt
+      // Last update call should contain error info, completedAt, startedAt, and duration
       const lastUpdateCall = mockThreadModel.update.mock.calls.find(
         (call) => call[1].status === ThreadStatus.Failed,
       );
       expect(lastUpdateCall).toBeDefined();
       expect(lastUpdateCall![1].metadata).toMatchObject({
+        completedAt: expect.any(String),
+        duration: expect.any(Number),
         error: 'QStash service unavailable',
         operationId: 'op-123',
+        startedAt: expect.any(String),
       });
-      expect(lastUpdateCall![1].metadata.completedAt).toBeDefined();
     });
 
     it('should return result with error info when execAgent fails', async () => {
@@ -372,6 +382,48 @@ describe('AiAgentService.execGroupSubAgentTask', () => {
           topicId: 'topic-1',
         }),
       ).rejects.toThrow('Database connection failed');
+    });
+  });
+
+  describe('task message summary update', () => {
+    it('should pass sourceMessageId (parentMessageId) to callbacks for summary update', async () => {
+      const execAgentSpy = vi.spyOn(service, 'execAgent').mockResolvedValue({
+        agentId: 'agent-1',
+        assistantMessageId: 'assistant-msg-1',
+        autoStarted: true,
+        createdAt: new Date().toISOString(),
+        message: 'Agent operation created successfully',
+        messageId: 'queue-msg-1',
+        operationId: 'op-123',
+        status: 'created',
+        success: true,
+        timestamp: new Date().toISOString(),
+        topicId: 'topic-1',
+        userMessageId: 'user-msg-1',
+      });
+
+      await service.execGroupSubAgentTask({
+        agentId: 'agent-1',
+        groupId: 'group-1',
+        instruction: 'Test instruction',
+        parentMessageId: 'parent-msg-1',
+        topicId: 'topic-1',
+      });
+
+      // Verify that stepCallbacks was passed with onComplete
+      expect(execAgentSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          stepCallbacks: expect.objectContaining({
+            onComplete: expect.any(Function),
+          }),
+        }),
+      );
+
+      // Get the onComplete callback
+      const callArgs = execAgentSpy.mock.calls[0][0];
+      const onComplete = callArgs.stepCallbacks?.onComplete;
+
+      expect(onComplete).toBeDefined();
     });
   });
 });

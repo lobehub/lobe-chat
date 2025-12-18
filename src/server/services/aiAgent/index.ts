@@ -1,4 +1,4 @@
-import { AgentRuntimeContext } from '@lobechat/agent-runtime';
+import type { AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
 import { LobeChatDatabase } from '@lobechat/database';
 import type {
   ExecAgentParams,
@@ -24,8 +24,18 @@ import {
   serverMessagesEngine,
 } from '@/server/modules/Mecha';
 import { AgentRuntimeService } from '@/server/services/agentRuntime';
+import type { StepLifecycleCallbacks } from '@/server/services/agentRuntime/types';
 
 const log = debug('lobe-server:ai-agent-service');
+
+/**
+ * Internal params for execAgent with step lifecycle callbacks
+ * This extends the public ExecAgentParams with server-side only options
+ */
+interface InternalExecAgentParams extends ExecAgentParams {
+  /** Step lifecycle callbacks for operation tracking (server-side only) */
+  stepCallbacks?: StepLifecycleCallbacks;
+}
 
 /**
  * AI Agent Service
@@ -69,8 +79,16 @@ export class AiAgentService {
    *   → ServerMechaModule.ContextEngineering(input, config, messages)
    *   → AgentRuntimeService.createOperation(...)
    */
-  async execAgent(params: ExecAgentParams): Promise<ExecAgentResult> {
-    const { agentId, slug, prompt, appContext, autoStart = true, existingMessageIds = [] } = params;
+  async execAgent(params: InternalExecAgentParams): Promise<ExecAgentResult> {
+    const {
+      agentId,
+      slug,
+      prompt,
+      appContext,
+      autoStart = true,
+      existingMessageIds = [],
+      stepCallbacks,
+    } = params;
 
     // Validate that either agentId or slug is provided
     if (!agentId && !slug) {
@@ -280,6 +298,7 @@ export class AiAgentService {
         initialMessages: processedMessages,
         modelRuntimeConfig: { model, provider },
         operationId,
+        stepCallbacks,
         toolManifestMap,
         tools,
         userId: this.userId,
@@ -444,18 +463,24 @@ export class AiAgentService {
 
     log('execGroupSubAgentTask: created thread %s', thread.id);
 
-    // 2. Update Thread status to processing
+    // 2. Update Thread status to processing with startedAt timestamp
+    const startedAt = new Date().toISOString();
     await this.threadModel.update(thread.id, {
+      metadata: { startedAt },
       status: ThreadStatus.Processing,
     });
 
-    // 3. Delegate to execAgent with threadId in appContext
+    // 3. Create step lifecycle callbacks for updating Thread metadata and task message
+    const stepCallbacks = this.createThreadMetadataCallbacks(thread.id, startedAt, parentMessageId);
+
+    // 4. Delegate to execAgent with threadId in appContext and callbacks
     // The instruction will be created as user message in the Thread
     const result = await this.execAgent({
       agentId,
       appContext: { groupId, threadId: thread.id, topicId },
       autoStart: true,
       prompt: instruction,
+      stepCallbacks,
     });
 
     log(
@@ -464,18 +489,21 @@ export class AiAgentService {
       result.success,
     );
 
-    // 4. Store operationId in Thread metadata
+    // 5. Store operationId in Thread metadata
     await this.threadModel.update(thread.id, {
-      metadata: { operationId: result.operationId },
+      metadata: { operationId: result.operationId, startedAt },
     });
 
-    // 5. If operation failed to start, update thread status
+    // 6. If operation failed to start, update thread status
     if (!result.success) {
+      const completedAt = new Date().toISOString();
       await this.threadModel.update(thread.id, {
         metadata: {
-          completedAt: new Date().toISOString(),
+          completedAt,
+          duration: Date.now() - new Date(startedAt).getTime(),
           error: result.error,
           operationId: result.operationId,
+          startedAt,
         },
         status: ThreadStatus.Failed,
       });
@@ -488,6 +516,133 @@ export class AiAgentService {
       success: result.success ?? false,
       threadId: thread.id,
     };
+  }
+
+  /**
+   * Create step lifecycle callbacks for updating Thread metadata
+   * These callbacks accumulate metrics during execution and update Thread on completion
+   *
+   * @param threadId - The Thread ID to update
+   * @param startedAt - The start time ISO string
+   * @param sourceMessageId - The task message ID (sourceMessageId from Thread) to update with summary
+   */
+  private createThreadMetadataCallbacks(
+    threadId: string,
+    startedAt: string,
+    sourceMessageId: string,
+  ): StepLifecycleCallbacks {
+    // Accumulator for tracking metrics across steps
+    let accumulatedToolCalls = 0;
+
+    return {
+      onAfterStep: async ({ state, stepResult }) => {
+        // Count tool calls from this step
+        const toolCallsInStep = stepResult?.events?.filter(
+          (e: { type: string }) => e.type === 'tool_call',
+        )?.length;
+        if (toolCallsInStep) {
+          accumulatedToolCalls += toolCallsInStep;
+        }
+
+        // Update Thread metadata with current progress
+        try {
+          await this.threadModel.update(threadId, {
+            metadata: {
+              operationId: state.operationId,
+              startedAt,
+              totalMessages: state.messages?.length ?? 0,
+              totalTokens: this.calculateTotalTokens(state.usage),
+              totalToolCalls: accumulatedToolCalls,
+            },
+          });
+          log(
+            'execGroupSubAgentTask: updated thread %s metadata after step %d',
+            threadId,
+            state.stepCount,
+          );
+        } catch (error) {
+          log('execGroupSubAgentTask: failed to update thread metadata: %O', error);
+        }
+      },
+
+      onComplete: async ({ finalState, reason }) => {
+        const completedAt = new Date().toISOString();
+        const duration = Date.now() - new Date(startedAt).getTime();
+
+        // Determine thread status based on completion reason
+        let status: ThreadStatus;
+        switch (reason) {
+          case 'done': {
+            status = ThreadStatus.Completed;
+            break;
+          }
+          case 'error': {
+            status = ThreadStatus.Failed;
+            break;
+          }
+          case 'interrupted': {
+            status = ThreadStatus.Cancel;
+            break;
+          }
+          case 'waiting_for_human': {
+            status = ThreadStatus.InReview;
+            break;
+          }
+          default: {
+            status = ThreadStatus.Completed;
+          }
+        }
+
+        try {
+          // Extract summary from last assistant message and update task message content
+          const lastAssistantMessage = finalState.messages
+            ?.slice()
+            .reverse()
+            .find((m: { role: string }) => m.role === 'assistant');
+
+          if (lastAssistantMessage?.content) {
+            await this.messageModel.update(sourceMessageId, {
+              content: lastAssistantMessage.content,
+            });
+            log('execGroupSubAgentTask: updated task message %s with summary', sourceMessageId);
+          }
+
+          // Update Thread metadata
+          await this.threadModel.update(threadId, {
+            metadata: {
+              completedAt,
+              duration,
+              error: finalState.error,
+              operationId: finalState.operationId,
+              startedAt,
+              totalCost: finalState.cost?.total,
+              totalMessages: finalState.messages?.length ?? 0,
+              totalTokens: this.calculateTotalTokens(finalState.usage),
+              totalToolCalls: accumulatedToolCalls,
+            },
+            status,
+          });
+
+          log(
+            'execGroupSubAgentTask: thread %s completed with status %s, reason: %s',
+            threadId,
+            status,
+            reason,
+          );
+        } catch (error) {
+          console.error('execGroupSubAgentTask: failed to update thread on completion: %O', error);
+        }
+      },
+    };
+  }
+
+  /**
+   * Calculate total tokens from AgentState usage object
+   * AgentState.usage is of type Usage from @lobechat/agent-runtime
+   */
+  private calculateTotalTokens(usage?: AgentState['usage']): number | undefined {
+    if (!usage) return undefined;
+    return usage.llm?.tokens?.total;
   }
 
   /**

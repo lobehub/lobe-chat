@@ -25,8 +25,7 @@ export interface ExecGroupSubAgentTaskParams {
 }
 
 export interface GetTaskStatusParams {
-  operationId?: string;
-  threadId?: string;
+  threadId: string;
 }
 
 export interface InterruptTaskParams {
@@ -50,7 +49,7 @@ class AiAgentService {
   }
 
   /**
-   * Get task status by threadId or operationId
+   * Get task status by threadId
    */
   async getTaskStatus(params: GetTaskStatusParams) {
     return await lambdaClient.aiAgent.getTaskStatus.query(params);

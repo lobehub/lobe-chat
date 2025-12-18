@@ -1,5 +1,56 @@
-import { AgentRuntimeContext } from '@lobechat/agent-runtime';
+import { AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
 import { LobeToolManifest } from '@lobechat/context-engine';
+
+// ==================== Step Lifecycle Callbacks ====================
+
+/**
+ * Step 执行生命周期回调
+ * 用于在 step 执行的不同阶段注入自定义逻辑
+ */
+export interface StepLifecycleCallbacks {
+  /**
+   * 在 step 执行后调用
+   */
+  onAfterStep?: (params: {
+    operationId: string;
+    shouldContinue: boolean;
+    state: AgentState;
+    stepIndex: number;
+    stepResult: any;
+  }) => Promise<void>;
+
+  /**
+   * 在 step 执行前调用
+   */
+  onBeforeStep?: (params: {
+    context?: AgentRuntimeContext;
+    operationId: string;
+    state: AgentState;
+    stepIndex: number;
+  }) => Promise<void>;
+
+  /**
+   * 在操作完成时调用（status 变为 done/error/interrupted）
+   */
+  onComplete?: (params: {
+    finalState: AgentState;
+    operationId: string;
+    reason: StepCompletionReason;
+  }) => Promise<void>;
+}
+
+/**
+ * Step 完成原因
+ */
+export type StepCompletionReason =
+  | 'done'
+  | 'error'
+  | 'interrupted'
+  | 'max_steps'
+  | 'cost_limit'
+  | 'waiting_for_human';
+
+// ==================== Execution Params ====================
 
 export interface AgentExecutionParams {
   approvedToolCall?: any;
@@ -30,6 +81,11 @@ export interface OperationCreationParams {
   initialMessages?: any[];
   modelRuntimeConfig?: any;
   operationId: string;
+  /**
+   * Step 生命周期回调
+   * 用于在 step 执行的不同阶段注入自定义逻辑
+   */
+  stepCallbacks?: StepLifecycleCallbacks;
   toolManifestMap: Record<string, LobeToolManifest>;
   tools?: any[];
   userId?: string;

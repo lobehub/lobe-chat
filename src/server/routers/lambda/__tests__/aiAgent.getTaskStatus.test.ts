@@ -3,7 +3,6 @@ import { LobeChatDatabase } from '@lobechat/database';
 import { agents, chatGroups, sessions, threads, topics } from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { ThreadStatus, ThreadType } from '@lobechat/types';
-import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -86,7 +85,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
       .returning();
     testTopicId = topic.id;
 
-    // Create test thread with operationId in metadata
+    // Create test thread
     const [thread] = (await serverDB
       .insert(threads)
       .values({
@@ -117,7 +116,91 @@ describe('aiAgentRouter.getTaskStatus', () => {
   });
 
   describe('query by threadId', () => {
-    it('should return task status when queried by threadId', async () => {
+    it('should return task status from Thread table', async () => {
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('processing');
+      expect(result.taskDetail).toBeDefined();
+      expect(result.taskDetail?.threadId).toBe(testThreadId);
+      expect(result.taskDetail?.status).toBe(ThreadStatus.Processing);
+    });
+
+    it('should throw NOT_FOUND when thread does not exist', async () => {
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      await expect(
+        caller.getTaskStatus({
+          threadId: 'non-existent-thread-id',
+        }),
+      ).rejects.toThrow('Thread not found');
+    });
+
+    it('should return completed status from Thread', async () => {
+      // Update thread to completed status
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Completed,
+          metadata: {
+            operationId: 'op-test-123',
+            completedAt: '2024-01-01T00:00:00Z',
+            duration: 5000,
+            totalTokens: 1000,
+            totalToolCalls: 3,
+          },
+        })
+        .where(eq(threads.id, testThreadId));
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('completed');
+      expect(result.completedAt).toBe('2024-01-01T00:00:00Z');
+      expect(result.taskDetail?.duration).toBe(5000);
+      expect(result.taskDetail?.totalTokens).toBe(1000);
+      expect(result.taskDetail?.totalToolCalls).toBe(3);
+    });
+  });
+
+  describe('status mapping from ThreadStatus', () => {
+    it.each([
+      [ThreadStatus.Active, 'processing'],
+      [ThreadStatus.Processing, 'processing'],
+      [ThreadStatus.Pending, 'processing'],
+      [ThreadStatus.InReview, 'processing'],
+      [ThreadStatus.Todo, 'processing'],
+      [ThreadStatus.Completed, 'completed'],
+      [ThreadStatus.Failed, 'failed'],
+      [ThreadStatus.Cancel, 'cancel'],
+    ])(
+      'should map ThreadStatus.%s to task status "%s"',
+      async (threadStatus, expectedTaskStatus) => {
+        // Update thread status
+        await serverDB
+          .update(threads)
+          .set({ status: threadStatus })
+          .where(eq(threads.id, testThreadId));
+
+        const caller = aiAgentRouter.createCaller(createTestContext());
+
+        const result = await caller.getTaskStatus({
+          threadId: testThreadId,
+        });
+
+        expect(result.status).toBe(expectedTaskStatus);
+      },
+    );
+  });
+
+  describe('real-time status from Redis', () => {
+    it('should supplement with Redis status when available for processing tasks', async () => {
       mockGetOperationStatus.mockResolvedValue({
         currentState: {
           status: 'running',
@@ -144,246 +227,125 @@ describe('aiAgentRouter.getTaskStatus', () => {
       });
     });
 
-    it('should throw NOT_FOUND when thread does not exist', async () => {
-      const caller = aiAgentRouter.createCaller(createTestContext());
+    it('should fallback to Thread data when Redis is unavailable', async () => {
+      mockGetOperationStatus.mockRejectedValue(new Error('Redis unavailable'));
 
-      await expect(
-        caller.getTaskStatus({
-          threadId: 'non-existent-thread-id',
-        }),
-      ).rejects.toThrow('Thread not found');
-    });
-
-    it('should throw NOT_FOUND when thread has no operationId', async () => {
-      // Create a thread without operationId
-      const [threadWithoutOp] = (await serverDB
-        .insert(threads)
-        .values({
-          userId,
-          agentId: testAgentId,
-          topicId: testTopicId,
-          groupId: testGroupId,
-          sourceMessageId: 'source-msg-2',
-          type: ThreadType.Isolation,
-          status: ThreadStatus.Active,
-          metadata: {},
+      // Update thread with metadata
+      await serverDB
+        .update(threads)
+        .set({
+          metadata: {
+            operationId: 'op-test-123',
+            totalTokens: 500,
+            totalCost: 0.02,
+          },
         })
-        .returning()) as any[];
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await expect(
-        caller.getTaskStatus({
-          threadId: threadWithoutOp.id,
-        }),
-      ).rejects.toThrow('Operation ID not found in thread');
-    });
-  });
-
-  describe('query by operationId', () => {
-    it('should return task status when queried by operationId directly', async () => {
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'done',
-          stepCount: 5,
-          cost: { total: 0.1 },
-          usage: { total_tokens: 2000 },
-        },
-        isCompleted: true,
-        hasError: false,
-        metadata: { lastActiveAt: '2024-01-01T00:00:00Z' },
-      });
+        .where(eq(threads.id, testThreadId));
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       const result = await caller.getTaskStatus({
-        operationId: 'op-direct-query',
+        threadId: testThreadId,
       });
 
-      expect(result.status).toBe('completed');
-      expect(result.completedAt).toBe('2024-01-01T00:00:00Z');
-      expect(mockGetOperationStatus).toHaveBeenCalledWith({
-        operationId: 'op-direct-query',
-      });
+      expect(result.status).toBe('processing');
+      expect(result.usage).toEqual({ total_tokens: 500 });
+      expect(result.cost).toEqual({ total: 0.02 });
     });
 
-    it('should throw NOT_FOUND when operation does not exist', async () => {
-      mockGetOperationStatus.mockRejectedValue(new Error('Operation not found'));
+    it('should not query Redis for completed tasks', async () => {
+      // Update thread to completed status
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Completed,
+          metadata: { operationId: 'op-test-123' },
+        })
+        .where(eq(threads.id, testThreadId));
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await expect(
-        caller.getTaskStatus({
-          operationId: 'non-existent-op',
-        }),
-      ).rejects.toThrow('Operation not found: non-existent-op');
+      await caller.getTaskStatus({
+        threadId: testThreadId,
+      });
+
+      // Should not call Redis for completed tasks
+      expect(mockGetOperationStatus).not.toHaveBeenCalled();
     });
-  });
-
-  describe('status mapping', () => {
-    it.each([
-      ['idle', 'processing'],
-      ['running', 'processing'],
-      ['waiting_for_human', 'processing'],
-      ['done', 'completed'],
-      ['error', 'failed'],
-      ['interrupted', 'cancel'],
-    ])(
-      'should map operation status "%s" to task status "%s"',
-      async (opStatus, expectedTaskStatus) => {
-        mockGetOperationStatus.mockResolvedValue({
-          currentState: {
-            status: opStatus,
-            stepCount: 1,
-          },
-          isCompleted: opStatus === 'done',
-          hasError: opStatus === 'error',
-          metadata: opStatus === 'done' ? { lastActiveAt: '2024-01-01T00:00:00Z' } : {},
-        });
-
-        const caller = aiAgentRouter.createCaller(createTestContext());
-
-        const result = await caller.getTaskStatus({
-          operationId: 'op-status-test',
-        });
-
-        expect(result.status).toBe(expectedTaskStatus);
-      },
-    );
   });
 
   describe('error handling', () => {
-    it('should include error message when operation has error', async () => {
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'error',
-          stepCount: 2,
-          error: 'Tool execution failed',
-        },
-        isCompleted: false,
-        hasError: true,
-        metadata: {},
-      });
+    it('should include error message from Thread metadata', async () => {
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Failed,
+          metadata: {
+            operationId: 'op-test-123',
+            error: 'Tool execution failed',
+          },
+        })
+        .where(eq(threads.id, testThreadId));
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       const result = await caller.getTaskStatus({
-        operationId: 'op-error-test',
+        threadId: testThreadId,
       });
 
       expect(result.status).toBe('failed');
       expect(result.error).toBe('Tool execution failed');
+      expect(result.taskDetail?.error).toBe('Tool execution failed');
     });
   });
 
-  describe('thread status sync', () => {
-    it('should update thread status when task completes', async () => {
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'done',
-          stepCount: 5,
-        },
-        isCompleted: true,
-        hasError: false,
-        metadata: { lastActiveAt: '2024-01-01T00:00:00Z' },
-      });
+  describe('taskDetail', () => {
+    it('should include complete taskDetail in response', async () => {
+      const startedAt = '2024-01-01T10:00:00.000Z';
+      const completedAt = '2024-01-01T10:05:00.000Z';
+
+      await serverDB
+        .update(threads)
+        .set({
+          title: 'Research Task',
+          status: ThreadStatus.Completed,
+          metadata: {
+            operationId: 'op-test-123',
+            startedAt,
+            completedAt,
+            duration: 300000,
+            totalTokens: 5000,
+            totalToolCalls: 10,
+            totalMessages: 20,
+            totalCost: 0.15,
+          },
+        })
+        .where(eq(threads.id, testThreadId));
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await caller.getTaskStatus({
+      const result = await caller.getTaskStatus({
         threadId: testThreadId,
       });
 
-      // Verify thread status was updated
-      const [updatedThread] = await serverDB
-        .select()
-        .from(threads)
-        .where(eq(threads.id, testThreadId));
-
-      expect(updatedThread.status).toBe(ThreadStatus.Completed);
-      expect(updatedThread.metadata?.completedAt).toBeDefined();
-    });
-
-    it('should update thread status to failed when task fails', async () => {
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'error',
-          stepCount: 2,
-          error: 'Agent crashed',
-        },
-        isCompleted: false,
-        hasError: true,
-        metadata: {},
-      });
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await caller.getTaskStatus({
+      expect(result.taskDetail).toEqual({
         threadId: testThreadId,
+        title: 'Research Task',
+        status: ThreadStatus.Completed,
+        startedAt,
+        completedAt,
+        duration: 300000,
+        totalTokens: 5000,
+        totalToolCalls: 10,
+        totalMessages: 20,
+        totalCost: 0.15,
+        error: undefined,
       });
-
-      // Verify thread status was updated
-      const [updatedThread] = await serverDB
-        .select()
-        .from(threads)
-        .where(eq(threads.id, testThreadId));
-
-      expect(updatedThread.status).toBe(ThreadStatus.Failed);
-      expect(updatedThread.metadata?.error).toBe('Agent crashed');
-    });
-
-    it('should update thread status to cancel when task is interrupted', async () => {
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'interrupted',
-          stepCount: 1,
-        },
-        isCompleted: false,
-        hasError: false,
-        metadata: {},
-      });
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await caller.getTaskStatus({
-        threadId: testThreadId,
-      });
-
-      // Verify thread status was updated
-      const [updatedThread] = await serverDB
-        .select()
-        .from(threads)
-        .where(eq(threads.id, testThreadId));
-
-      expect(updatedThread.status).toBe(ThreadStatus.Cancel);
-    });
-
-    it('should not update thread status when queried by operationId only', async () => {
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'done',
-          stepCount: 5,
-        },
-        isCompleted: true,
-        hasError: false,
-        metadata: { lastActiveAt: '2024-01-01T00:00:00Z' },
-      });
-
-      const caller = aiAgentRouter.createCaller(createTestContext());
-
-      await caller.getTaskStatus({
-        operationId: 'op-test-123',
-      });
-
-      // Thread status should remain unchanged
-      const [thread] = await serverDB.select().from(threads).where(eq(threads.id, testThreadId));
-
-      expect(thread.status).toBe(ThreadStatus.Processing);
     });
   });
 
   describe('input validation', () => {
-    it('should require at least one of threadId or operationId', async () => {
+    it('should require threadId', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       await expect(caller.getTaskStatus({} as any)).rejects.toThrow();

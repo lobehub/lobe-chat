@@ -13,6 +13,7 @@ export {
   renderPlaceholderTemplate,
 } from './PlaceholderVariables';
 export { SupervisorRoleRestoreProcessor } from './SupervisorRoleRestore';
+export { TaskMessageProcessor } from './TaskMessage';
 export { ToolCallProcessor } from './ToolCall';
 export { ToolMessageReorder } from './ToolMessageReorder';
 
@@ -26,4 +27,5 @@ export type {
   PlaceholderValueMap,
   PlaceholderVariablesConfig,
 } from './PlaceholderVariables';
+export type { TaskMessageConfig } from './TaskMessage';
 export type { ToolCallConfig } from './ToolCall';

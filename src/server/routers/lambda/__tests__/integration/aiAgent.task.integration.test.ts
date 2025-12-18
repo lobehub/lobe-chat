@@ -17,9 +17,11 @@ vi.mock('@/database/core/db-adaptor', () => ({
 
 // Mock AiAgentService - controls task execution behavior
 const mockExecGroupSubAgentTask = vi.fn();
+const mockInterruptTask = vi.fn();
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: vi.fn().mockImplementation(() => ({
     execGroupSubAgentTask: mockExecGroupSubAgentTask,
+    interruptTask: mockInterruptTask,
   })),
 }));
 
@@ -174,7 +176,22 @@ describe('Agent Task Integration', () => {
       expect(processingStatus.status).toBe('processing');
       expect(processingStatus.stepCount).toBe(2);
 
-      // 3. Simulate task completion
+      // 3. Simulate task completion by updating Thread status
+      // Note: Status now comes from Thread table, Redis only supplements real-time info
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Completed,
+          metadata: {
+            operationId,
+            completedAt: '2024-01-01T12:00:00Z',
+            totalCost: 0.05,
+            totalTokens: 1500,
+          },
+        })
+        .where(eq(threads.id, threadId));
+
+      // Mock realtime status from Redis (optional, used for stepCount)
       mockGetOperationStatus.mockResolvedValue({
         currentState: {
           status: 'done',
@@ -192,10 +209,16 @@ describe('Agent Task Integration', () => {
       });
 
       expect(completedStatus.status).toBe('completed');
-      expect(completedStatus.stepCount).toBe(5);
       expect(completedStatus.completedAt).toBe('2024-01-01T12:00:00Z');
 
-      // 4. Verify Thread status was synced
+      // Verify taskDetail contains thread info
+      expect(completedStatus.taskDetail).toBeDefined();
+      expect(completedStatus.taskDetail?.threadId).toBe(threadId);
+      expect(completedStatus.taskDetail?.status).toBe(ThreadStatus.Completed);
+      expect(completedStatus.taskDetail?.totalCost).toBe(0.05);
+      expect(completedStatus.taskDetail?.totalTokens).toBe(1500);
+
+      // 4. Verify Thread status in DB
       const [thread] = await serverDB.select().from(threads).where(eq(threads.id, threadId));
 
       expect(thread.status).toBe(ThreadStatus.Completed);
@@ -241,7 +264,12 @@ describe('Agent Task Integration', () => {
 
       expect(createResult.success).toBe(true);
 
-      // 2. Interrupt task
+      // 2. Mock interruptTask and call it
+      mockInterruptTask.mockResolvedValue({
+        success: true,
+        threadId,
+      });
+
       const interruptResult = await caller.interruptTask({
         threadId,
       });
@@ -249,16 +277,11 @@ describe('Agent Task Integration', () => {
       expect(interruptResult.success).toBe(true);
       expect(interruptResult.threadId).toBe(threadId);
 
-      // 3. Mock status to return interrupted
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'interrupted',
-          stepCount: 1,
-        },
-        isCompleted: false,
-        hasError: false,
-        metadata: {},
-      });
+      // 3. Update thread status to Cancel (since status comes from Thread table now)
+      await serverDB
+        .update(threads)
+        .set({ status: ThreadStatus.Cancel })
+        .where(eq(threads.id, threadId));
 
       const statusResult = await caller.getTaskStatus({
         threadId,
@@ -270,7 +293,6 @@ describe('Agent Task Integration', () => {
       const [thread] = await serverDB.select().from(threads).where(eq(threads.id, threadId));
 
       expect(thread.status).toBe(ThreadStatus.Cancel);
-      expect(thread.metadata?.completedAt).toBeDefined();
     });
   });
 
@@ -326,7 +348,8 @@ describe('Agent Task Integration', () => {
       const threadId = 'thread-exec-fail-test';
       const operationId = 'op-exec-fail-test';
 
-      // Setup: Create thread in DB
+      // Setup: Create thread in DB with Failed status and error in metadata
+      // Note: Status now comes from Thread table, Redis only supplements real-time info
       await serverDB.insert(threads).values({
         id: threadId,
         userId,
@@ -335,23 +358,11 @@ describe('Agent Task Integration', () => {
         groupId: testGroupId,
         sourceMessageId: 'parent-msg-4',
         type: ThreadType.Isolation,
-        status: ThreadStatus.Processing,
-        metadata: { operationId },
+        status: ThreadStatus.Failed,
+        metadata: { operationId, error: 'Tool execution timeout' },
       });
 
       const caller = aiAgentRouter.createCaller(createTestContext());
-
-      // Mock operation status to return error
-      mockGetOperationStatus.mockResolvedValue({
-        currentState: {
-          status: 'error',
-          stepCount: 3,
-          error: 'Tool execution timeout',
-        },
-        isCompleted: false,
-        hasError: true,
-        metadata: {},
-      });
 
       const statusResult = await caller.getTaskStatus({
         threadId,
@@ -360,11 +371,10 @@ describe('Agent Task Integration', () => {
       expect(statusResult.status).toBe('failed');
       expect(statusResult.error).toBe('Tool execution timeout');
 
-      // Verify Thread status was synced
-      const [thread] = await serverDB.select().from(threads).where(eq(threads.id, threadId));
-
-      expect(thread.status).toBe(ThreadStatus.Failed);
-      expect(thread.metadata?.error).toBe('Tool execution timeout');
+      // Verify taskDetail contains thread info
+      expect(statusResult.taskDetail).toBeDefined();
+      expect(statusResult.taskDetail?.threadId).toBe(threadId);
+      expect(statusResult.taskDetail?.status).toBe(ThreadStatus.Failed);
     });
   });
 
@@ -457,8 +467,8 @@ describe('Agent Task Integration', () => {
     });
   });
 
-  describe('query task by different identifiers', () => {
-    it('should query task status by both threadId and operationId', async () => {
+  describe('query task by threadId', () => {
+    it('should query task status by threadId', async () => {
       const threadId = 'thread-query-test';
       const operationId = 'op-query-test';
 
@@ -488,19 +498,240 @@ describe('Agent Task Integration', () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       // Query by threadId
-      const statusByThread = await caller.getTaskStatus({
+      const status = await caller.getTaskStatus({
         threadId,
       });
 
-      // Query by operationId
-      const statusByOp = await caller.getTaskStatus({
-        operationId,
+      expect(status.status).toBe('processing');
+      expect(status.stepCount).toBe(2);
+    });
+  });
+
+  describe('step lifecycle callbacks - thread metadata updates', () => {
+    it('should have complete metadata after task completion', async () => {
+      const threadId = 'thread-metadata-test';
+      const operationId = 'op-metadata-test';
+      const startedAt = '2024-01-01T10:00:00.000Z';
+      const completedAt = '2024-01-01T10:05:00.000Z';
+
+      // Setup: Create thread with complete metadata (simulating what callbacks would set)
+      await serverDB.insert(threads).values({
+        id: threadId,
+        userId,
+        agentId: testAgentId,
+        topicId: testTopicId,
+        groupId: testGroupId,
+        sourceMessageId: 'parent-msg-metadata',
+        type: ThreadType.Isolation,
+        status: ThreadStatus.Completed,
+        metadata: {
+          completedAt,
+          duration: 300000, // 5 minutes
+          operationId,
+          startedAt,
+          totalCost: 0.0123,
+          totalMessages: 5,
+          totalTokens: 2500,
+          totalToolCalls: 3,
+        },
       });
 
-      // Both should return same status
-      expect(statusByThread.status).toBe('processing');
-      expect(statusByOp.status).toBe('processing');
-      expect(statusByThread.stepCount).toBe(statusByOp.stepCount);
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      // Query task status
+      const status = await caller.getTaskStatus({ threadId });
+
+      // Verify all metadata fields are accessible
+      expect(status.status).toBe('completed');
+      expect(status.completedAt).toBe(completedAt);
+
+      // Verify taskDetail contains all callback-populated metadata
+      expect(status.taskDetail).toBeDefined();
+      expect(status.taskDetail?.threadId).toBe(threadId);
+      expect(status.taskDetail?.status).toBe(ThreadStatus.Completed);
+      expect(status.taskDetail?.startedAt).toBe(startedAt);
+      expect(status.taskDetail?.completedAt).toBe(completedAt);
+      expect(status.taskDetail?.duration).toBe(300000);
+      expect(status.taskDetail?.totalCost).toBe(0.0123);
+      expect(status.taskDetail?.totalMessages).toBe(5);
+      expect(status.taskDetail?.totalTokens).toBe(2500);
+      expect(status.taskDetail?.totalToolCalls).toBe(3);
+    });
+
+    it('should have partial metadata during task processing', async () => {
+      const threadId = 'thread-processing-metadata';
+      const operationId = 'op-processing-metadata';
+      const startedAt = new Date().toISOString();
+
+      // Setup: Create thread with partial metadata (during processing, onAfterStep updates)
+      await serverDB.insert(threads).values({
+        id: threadId,
+        userId,
+        agentId: testAgentId,
+        topicId: testTopicId,
+        groupId: testGroupId,
+        sourceMessageId: 'parent-msg-processing',
+        type: ThreadType.Isolation,
+        status: ThreadStatus.Processing,
+        metadata: {
+          operationId,
+          startedAt,
+          totalMessages: 3,
+          totalTokens: 1200,
+          totalToolCalls: 1,
+        },
+      });
+
+      // Mock realtime status from operation
+      mockGetOperationStatus.mockResolvedValue({
+        currentState: {
+          status: 'running',
+          stepCount: 3,
+        },
+        isCompleted: false,
+        hasError: false,
+        metadata: {},
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const status = await caller.getTaskStatus({ threadId });
+
+      // Should be processing with partial metadata
+      expect(status.status).toBe('processing');
+      expect(status.taskDetail?.startedAt).toBe(startedAt);
+      expect(status.taskDetail?.totalMessages).toBe(3);
+      expect(status.taskDetail?.totalTokens).toBe(1200);
+      expect(status.taskDetail?.totalToolCalls).toBe(1);
+      // completedAt and duration should not be set yet
+      expect(status.taskDetail?.completedAt).toBeUndefined();
+      expect(status.taskDetail?.duration).toBeUndefined();
+    });
+
+    it('should have error info in metadata when task fails', async () => {
+      const threadId = 'thread-error-metadata';
+      const operationId = 'op-error-metadata';
+      const startedAt = '2024-01-01T10:00:00.000Z';
+      const completedAt = '2024-01-01T10:01:30.000Z';
+      const errorMessage = 'Tool execution failed: API rate limit exceeded';
+
+      // Setup: Create thread with error metadata (simulating onComplete with error)
+      await serverDB.insert(threads).values({
+        id: threadId,
+        userId,
+        agentId: testAgentId,
+        topicId: testTopicId,
+        groupId: testGroupId,
+        sourceMessageId: 'parent-msg-error',
+        type: ThreadType.Isolation,
+        status: ThreadStatus.Failed,
+        metadata: {
+          completedAt,
+          duration: 90000, // 1.5 minutes
+          error: errorMessage,
+          operationId,
+          startedAt,
+          totalCost: 0.005,
+          totalMessages: 2,
+          totalTokens: 800,
+          totalToolCalls: 1,
+        },
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const status = await caller.getTaskStatus({ threadId });
+
+      // Should be failed with error in metadata
+      expect(status.status).toBe('failed');
+      expect(status.error).toBe(errorMessage);
+      expect(status.taskDetail?.error).toBe(errorMessage);
+      expect(status.taskDetail?.duration).toBe(90000);
+      expect(status.taskDetail?.totalToolCalls).toBe(1);
+    });
+
+    it('should have correct status when task is interrupted', async () => {
+      const threadId = 'thread-interrupted-metadata';
+      const operationId = 'op-interrupted-metadata';
+      const startedAt = '2024-01-01T10:00:00.000Z';
+      const completedAt = '2024-01-01T10:02:00.000Z';
+
+      // Setup: Create thread with interrupted status (simulating onComplete with 'interrupted' reason)
+      await serverDB.insert(threads).values({
+        id: threadId,
+        userId,
+        agentId: testAgentId,
+        topicId: testTopicId,
+        groupId: testGroupId,
+        sourceMessageId: 'parent-msg-interrupted',
+        type: ThreadType.Isolation,
+        status: ThreadStatus.Cancel,
+        metadata: {
+          completedAt,
+          duration: 120000, // 2 minutes
+          operationId,
+          startedAt,
+          totalCost: 0.008,
+          totalMessages: 3,
+          totalTokens: 1000,
+          totalToolCalls: 2,
+        },
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const status = await caller.getTaskStatus({ threadId });
+
+      expect(status.status).toBe('cancel');
+      expect(status.taskDetail?.status).toBe(ThreadStatus.Cancel);
+      expect(status.taskDetail?.completedAt).toBe(completedAt);
+      expect(status.taskDetail?.duration).toBe(120000);
+    });
+
+    it('should have correct status when waiting for human intervention', async () => {
+      const threadId = 'thread-inreview-metadata';
+      const operationId = 'op-inreview-metadata';
+      const startedAt = '2024-01-01T10:00:00.000Z';
+
+      // Setup: Create thread with InReview status (simulating onComplete with 'waiting_for_human' reason)
+      await serverDB.insert(threads).values({
+        id: threadId,
+        userId,
+        agentId: testAgentId,
+        topicId: testTopicId,
+        groupId: testGroupId,
+        sourceMessageId: 'parent-msg-inreview',
+        type: ThreadType.Isolation,
+        status: ThreadStatus.InReview,
+        metadata: {
+          operationId,
+          startedAt,
+          totalMessages: 4,
+          totalTokens: 1500,
+          totalToolCalls: 2,
+        },
+      });
+
+      // Mock realtime status showing waiting for human
+      mockGetOperationStatus.mockResolvedValue({
+        currentState: {
+          status: 'waiting_for_human',
+          stepCount: 4,
+          pendingToolsCalling: [{ name: 'dangerous_tool' }],
+        },
+        isCompleted: false,
+        hasError: false,
+        needsHumanInput: true,
+        metadata: {},
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const status = await caller.getTaskStatus({ threadId });
+
+      // Status should reflect InReview from Thread table
+      expect(status.taskDetail?.status).toBe(ThreadStatus.InReview);
+      expect(status.taskDetail?.totalToolCalls).toBe(2);
     });
   });
 });

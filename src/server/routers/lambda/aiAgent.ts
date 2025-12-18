@@ -154,16 +154,10 @@ const ExecGroupSubAgentTaskSchema = z.object({
 /**
  * Schema for getTaskStatus - query task execution status
  */
-const GetTaskStatusSchema = z
-  .object({
-    /** Operation ID */
-    operationId: z.string().optional(),
-    /** Thread ID */
-    threadId: z.string().optional(),
-  })
-  .refine((data) => data.threadId || data.operationId, {
-    message: 'Either threadId or operationId must be provided',
-  });
+const GetTaskStatusSchema = z.object({
+  /** Thread ID */
+  threadId: z.string(),
+});
 
 /**
  * Schema for interruptTask - interrupt a running task
@@ -510,84 +504,86 @@ export const aiAgentRouter = router({
   /**
    * Get task execution status
    *
-   * This endpoint queries the status of a SubAgent task by threadId or operationId.
-   * It maps operation status to task status and syncs Thread status when task completes.
+   * This endpoint queries the status of a SubAgent task by threadId.
+   * It queries from Thread table (PostgreSQL) for persistence,
+   * and optionally supplements with real-time status from Redis if available.
    */
   getTaskStatus: aiAgentProcedure.input(GetTaskStatusSchema).query(async ({ input, ctx }) => {
-    const { threadId, operationId } = input;
+    const { threadId } = input;
 
-    log('getTaskStatus: threadId=%s, operationId=%s', threadId, operationId);
+    log('getTaskStatus: threadId=%s', threadId);
 
-    // 1. Get operationId from thread if only threadId is provided
-    let resolvedOperationId = operationId;
-    let thread;
+    // 1. Find thread by threadId
+    const thread = await ctx.threadModel.findById(threadId);
 
-    if (threadId && !operationId) {
-      thread = await ctx.threadModel.findById(threadId);
-      if (!thread) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Thread not found' });
-      }
-      resolvedOperationId = thread.metadata?.operationId;
-      if (!resolvedOperationId) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Operation ID not found in thread' });
-      }
-    }
-
-    // 2. Get operation status
-    let operationStatus;
-    try {
-      operationStatus = await ctx.agentRuntimeService.getOperationStatus({
-        operationId: resolvedOperationId!,
-      });
-    } catch (error: any) {
-      log('getTaskStatus: getOperationStatus failed: %O', error);
+    if (!thread) {
       throw new TRPCError({
         code: 'NOT_FOUND',
-        message: `Operation not found: ${resolvedOperationId}`,
+        message: 'Thread not found',
       });
     }
 
-    // 3. Map operation status to task status
-    const currentState = operationStatus.currentState;
-    const statusMap: Record<string, TaskStatusResult['status']> = {
-      done: 'completed',
-      error: 'failed',
-      idle: 'processing',
-      interrupted: 'cancel',
-      running: 'processing',
-      waiting_for_human: 'processing',
+    // 2. Map Thread status to task status
+    const threadStatusToTaskStatus: Record<string, TaskStatusResult['status']> = {
+      [ThreadStatus.Active]: 'processing',
+      [ThreadStatus.Cancel]: 'cancel',
+      [ThreadStatus.Completed]: 'completed',
+      [ThreadStatus.Failed]: 'failed',
+      [ThreadStatus.InReview]: 'processing',
+      [ThreadStatus.Pending]: 'processing',
+      [ThreadStatus.Processing]: 'processing',
+      [ThreadStatus.Todo]: 'processing',
     };
 
-    const taskStatus: TaskStatusResult = {
-      completedAt: operationStatus.isCompleted ? operationStatus.metadata?.lastActiveAt : undefined,
-      cost: currentState?.cost,
-      error: operationStatus.hasError ? currentState?.error : undefined,
-      // Note: result content would need to be fetched from assistant message if needed
-      // For now, we rely on thread metadata or message queries for full result
-      status: statusMap[currentState?.status || 'idle'] || 'processing',
-      stepCount: currentState?.stepCount,
-      usage: currentState?.usage,
+    const taskStatus = threadStatusToTaskStatus[thread.status] || 'processing';
+    const metadata = thread.metadata;
+
+    // 3. Build TaskDetail from Thread (uses ThreadStatus)
+    const taskDetail = {
+      completedAt: metadata?.completedAt,
+      duration: metadata?.duration,
+      error: metadata?.error,
+      startedAt: metadata?.startedAt,
+      status: thread.status,
+      threadId: thread.id,
+      title: thread.title,
+      totalCost: metadata?.totalCost,
+      totalMessages: metadata?.totalMessages,
+      totalTokens: metadata?.totalTokens,
+      totalToolCalls: metadata?.totalToolCalls,
     };
 
-    // 4. Sync Thread status if task is in terminal state
-    if (thread && ['completed', 'failed', 'cancel'].includes(taskStatus.status)) {
-      const threadStatusMap: Record<string, ThreadStatus> = {
-        cancel: ThreadStatus.Cancel,
-        completed: ThreadStatus.Completed,
-        failed: ThreadStatus.Failed,
-      };
-
-      await ctx.threadModel.update(thread.id, {
-        metadata: {
-          ...thread.metadata,
-          completedAt: taskStatus.completedAt || new Date().toISOString(),
-          error: taskStatus.error,
-        },
-        status: threadStatusMap[taskStatus.status],
-      });
+    // 4. Try to get real-time status from Redis (optional, for active tasks)
+    let realtimeStatus;
+    const resolvedOperationId = metadata?.operationId;
+    if (resolvedOperationId && taskStatus === 'processing') {
+      try {
+        realtimeStatus = await ctx.agentRuntimeService.getOperationStatus({
+          operationId: resolvedOperationId,
+        });
+        log('getTaskStatus: got realtime status from Redis');
+      } catch {
+        // Redis status not available (expired or local mode), use Thread data only
+        log('getTaskStatus: Redis status not available, using Thread data only');
+      }
     }
 
-    return taskStatus;
+    // 5. Build result, preferring real-time data if available
+    const result: TaskStatusResult = {
+      completedAt: metadata?.completedAt,
+      cost:
+        realtimeStatus?.currentState?.cost ??
+        (metadata?.totalCost ? { total: metadata.totalCost } : undefined),
+      error: metadata?.error ?? realtimeStatus?.currentState?.error,
+      status: taskStatus,
+      stepCount: realtimeStatus?.currentState?.stepCount,
+      taskDetail,
+      usage:
+        realtimeStatus?.currentState?.usage ??
+        (metadata?.totalTokens ? { total_tokens: metadata.totalTokens } : undefined),
+    };
+
+    return result;
   }),
 
   /**

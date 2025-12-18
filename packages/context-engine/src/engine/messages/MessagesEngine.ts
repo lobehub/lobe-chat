@@ -14,6 +14,7 @@ import {
   MessageContentProcessor,
   PlaceholderVariablesProcessor,
   SupervisorRoleRestoreProcessor,
+  TaskMessageProcessor,
   ToolCallProcessor,
   ToolMessageReorder,
 } from '../../processors';
@@ -130,18 +131,24 @@ export class MessagesEngine {
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
 
     return [
+      // =============================================
+      // Phase 1: History Management
+      // =============================================
+
       // 1. History truncation (MUST be first, before any message injection)
       new HistoryTruncateProcessor({
         enableHistoryCount,
         historyCount,
       }),
 
-      // --------- System role injection providers ---------
+      // =============================================
+      // Phase 2: System Role Injection
+      // =============================================
 
       // 2. System role injection (agent's system role)
       new SystemRoleInjector({ systemRole }),
 
-      // 2.5. Group context injection (agent identity and group info for multi-agent chat)
+      // 3. Group context injection (agent identity and group info for multi-agent chat)
       new GroupContextInjector({
         currentAgentId: agentGroup?.currentAgentId,
         currentAgentName: agentGroup?.currentAgentName,
@@ -152,25 +159,25 @@ export class MessagesEngine {
         systemPrompt: agentGroup?.systemPrompt,
       }),
 
-      // 3. Knowledge injection (full content for agent files + metadata for knowledge bases)
+      // 4. Knowledge injection (full content for agent files + metadata for knowledge bases)
       new KnowledgeInjector({
         fileContents: knowledge?.fileContents,
         knowledgeBases: knowledge?.knowledgeBases,
       }),
 
-      // 4. Agent Builder context injection (current agent config/meta for editing)
+      // 5. Agent Builder context injection (current agent config/meta for editing)
       new AgentBuilderContextInjector({
         enabled: isAgentBuilderEnabled,
         agentContext: agentBuilderContext,
       }),
 
-      // 4.5. Group Agent Builder context injection (current group config/members for editing)
+      // 6. Group Agent Builder context injection (current group config/members for editing)
       new GroupAgentBuilderContextInjector({
         enabled: isGroupAgentBuilderEnabled,
         groupContext: groupAgentBuilderContext,
       }),
 
-      // 5. Tool system role injection (conditionally added)
+      // 7. Tool system role injection (conditionally added)
       ...(toolsConfig?.tools && toolsConfig.tools.length > 0
         ? [
             new ToolSystemRoleProvider({
@@ -183,13 +190,13 @@ export class MessagesEngine {
           ]
         : []),
 
-      // 6. History summary injection
+      // 8. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary,
         historySummary,
       }),
 
-      // 7. User memory injection (conditionally added)
+      // 9. User memory injection (conditionally added)
       ...(isUserMemoryEnabled
         ? [
             new UserMemoryInjector({
@@ -199,24 +206,31 @@ export class MessagesEngine {
           ]
         : []),
 
-      // 9. Input template processing
+      // =============================================
+      // Phase 3: Message Transformation
+      // =============================================
+
+      // 10. Input template processing
       new InputTemplateProcessor({ inputTemplate }),
 
-      // 10. Placeholder variables processing
+      // 11. Placeholder variables processing
       new PlaceholderVariablesProcessor({
         variableGenerators: variableGenerators || {},
       }),
 
-      // 11. AgentCouncil message flatten (convert role=agentCouncil to standard assistant + tool messages)
+      // 12. AgentCouncil message flatten (convert role=agentCouncil to standard assistant + tool messages)
       new AgentCouncilFlattenProcessor(),
 
-      // 12. Group message flatten (convert role=assistantGroup to standard assistant + tool messages)
+      // 13. Group message flatten (convert role=assistantGroup to standard assistant + tool messages)
       new GroupMessageFlattenProcessor(),
 
-      // 12.5. Supervisor role restore (convert role=supervisor back to role=assistant for model)
+      // 14. Task message processing (convert role=task to assistant with instruction + content)
+      new TaskMessageProcessor(),
+
+      // 15. Supervisor role restore (convert role=supervisor back to role=assistant for model)
       new SupervisorRoleRestoreProcessor(),
 
-      // 13. Group message sender identity injection (for multi-agent chat)
+      // 16. Group message sender identity injection (for multi-agent chat)
       ...(isAgentGroupEnabled
         ? [
             new GroupMessageSenderProcessor({
@@ -225,7 +239,11 @@ export class MessagesEngine {
           ]
         : []),
 
-      // 14. Message content processing (image encoding, etc.)
+      // =============================================
+      // Phase 4: Content Processing
+      // =============================================
+
+      // 17. Message content processing (image encoding, etc.)
       new MessageContentProcessor({
         fileContext: fileContext || { enabled: true, includeFileUrl: true },
         isCanUseVideo: capabilities?.isCanUseVideo || (() => false),
@@ -234,7 +252,7 @@ export class MessagesEngine {
         provider,
       }),
 
-      // 15. Tool call processing
+      // 18. Tool call processing
       new ToolCallProcessor({
         genToolCallingName: this.toolNameResolver.generate.bind(this.toolNameResolver),
         isCanUseFC: capabilities?.isCanUseFC || (() => true),
@@ -242,10 +260,10 @@ export class MessagesEngine {
         provider,
       }),
 
-      // 16. Tool message reordering
+      // 19. Tool message reordering
       new ToolMessageReorder(),
 
-      // 17. Message cleanup (final step, keep only necessary fields)
+      // 20. Message cleanup (final step, keep only necessary fields)
       new MessageCleanupProcessor(),
     ];
   }

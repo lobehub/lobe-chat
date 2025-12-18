@@ -31,6 +31,7 @@ import {
 import AgentCouncilMessage from './AgentCouncil';
 import AssistantMessage from './Assistant';
 import AssistantGroupMessage from './AssistantGroup';
+import TaskMessage from './Task';
 import ToolMessage from './Tool';
 import UserMessage from './User';
 
@@ -198,6 +199,16 @@ const MessageItem = memo<MessageItemProps>(
         case 'assistantGroup': {
           return (
             <AssistantGroupMessage
+              disableEditing={disableEditing}
+              id={id}
+              index={index}
+              isLatestItem={isLatestItem}
+            />
+          );
+        }
+        case 'task': {
+          return (
+            <TaskMessage
               disableEditing={disableEditing}
               id={id}
               index={index}
