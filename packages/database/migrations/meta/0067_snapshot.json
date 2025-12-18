@@ -1,6 +1,6 @@
 {
-  "id": "82802d67-e319-47ba-bbac-4168c5ad090b",
-  "prevId": "9b7313ee-e7cf-4a4c-891a-d1f35f4dd4bf",
+  "id": "3f200104-2d47-4e24-9e12-918f72b7562b",
+  "prevId": "f0d7cc78-a236-4de9-9ac1-4ddf5f5cb1f3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -67,8 +67,7 @@
           "name": "plugins",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::jsonb"
+          "notNull": false
         },
         "client_id": {
           "name": "client_id",
