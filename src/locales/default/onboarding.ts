@@ -1,6 +1,24 @@
 export default {
   back: '上一步',
   finish: '开始使用',
+  interests: {
+    area: {
+      business: '商业与战略',
+      coding: '编程与开发',
+      design: '设计与创意',
+      education: '学习与研究',
+      marketing: '市场与推广',
+      other: '其他领域',
+      product: '产品与管理',
+      sales: '销售与客户',
+      writing: '内容创作',
+    },
+    hint: '你可以随时在设置中修改',
+    placeholder: '请输入你感兴趣的领域...',
+    title: '能告诉我你感兴趣的领域吗？',
+    title2: '帮助我建立对你的初始印象～',
+    title3: '慢慢来，我会越来越懂你',
+  },
   modeSelection: {
     desc: '选择适合你的使用模式',
     hint: '你可以随时在设置中修改',
@@ -20,24 +38,6 @@ export default {
     title3: '告诉我，为你量身定制～',
   },
   next: '下一步',
-  occupation: {
-    area: {
-      business: '商业与战略',
-      coding: '编程与开发',
-      design: '设计与创意',
-      education: '学习与研究',
-      marketing: '市场与推广',
-      other: '其他领域',
-      product: '产品与管理',
-      sales: '销售与客户',
-      writing: '内容创作',
-    },
-    hint: '你可以随时在设置中修改',
-    placeholder: '请输入你的职业...',
-    title: '能告诉我你从事的领域吗？',
-    title2: '帮助我建立对你的初始印象～',
-    title3: '慢慢来，我会越来越懂你',
-  },
   proSettings: {
     connectors: {
       title: '连接你常用的工具',

@@ -138,11 +138,12 @@ export const userRouter = router({
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
 
-      // always return true for community version
-      isOnboard: state.isOnboarded ?? true,
+      
+      interests: state.interests,
 
+      // always return true for community version
+isOnboard: state.isOnboarded ?? true,
       lastName: state.lastName,
-      occupation: state.occupation,
       onboarding: state.onboarding,
       preference: state.preference as UserPreference,
       settings: state.settings,
@@ -229,8 +230,8 @@ export const userRouter = router({
     return ctx.userModel.updateGuide(input);
   }),
 
-  updateOccupation: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updateUser({ occupation: input });
+  updateInterests: userProcedure.input(z.array(z.string())).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateUser({ interests: input });
   }),
 
   updateOnboarding: userProcedure.input(UserOnboardingSchema).mutation(async ({ ctx, input }) => {

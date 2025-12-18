@@ -12,8 +12,8 @@ export interface LobeUser {
   firstName?: string | null;
   fullName?: string | null;
   id: string;
+  interests?: string[];
   latestName?: string | null;
-  occupation?: string | null;
   username?: string | null;
 }
 
@@ -80,10 +80,10 @@ export interface UserInitializationState {
   firstName?: string;
   fullName?: string;
   hasConversation?: boolean;
+  interests?: string[];
   /** @deprecated Use onboarding field instead */
   isOnboard?: boolean;
   lastName?: string;
-  occupation?: string;
   onboarding?: UserOnboarding;
   preference: UserPreference;
   settings: PartialDeep<UserSettings>;

@@ -2,8 +2,10 @@
 
 import { LoadingOutlined } from '@ant-design/icons';
 import { isDesktop } from '@lobechat/const';
-import { Skeleton } from '@lobehub/ui';
+import { Block, Icon, Skeleton, Tag, Text } from '@lobehub/ui';
 import { Button, Divider, Input, Spin, Typography, Upload } from 'antd';
+import { useTheme } from 'antd-style';
+import { BriefcaseIcon } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
 import {
   CSSProperties,
@@ -12,11 +14,13 @@ import {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { INTEREST_AREAS } from '@/app/[variants]/onboarding/config';
 import { notification } from '@/components/AntdStaticMethods';
 import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
 import { enableAuth } from '@/const/auth';
@@ -261,31 +265,73 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
+const InterestsRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
-  const occupation = useUserStore(userProfileSelectors.occupation);
-  const updateOccupation = useUserStore((s) => s.updateOccupation);
+  const { t: tOnboarding } = useTranslation('onboarding');
+  const theme = useTheme();
+  const interests = useUserStore(userProfileSelectors.interests);
+  const updateInterests = useUserStore((s) => s.updateInterests);
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState('');
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [customInput, setCustomInput] = useState('');
+  const [showCustomInput, setShowCustomInput] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const areas = useMemo(
+    () =>
+      INTEREST_AREAS.map((area) => ({
+        ...area,
+        label: tOnboarding(`interests.area.${area.key}`),
+      })),
+    [tOnboarding],
+  );
+
   const handleStartEdit = () => {
-    setEditValue(occupation || '');
+    setSelectedInterests([...interests]);
     setIsEditing(true);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setEditValue('');
+    setSelectedInterests([]);
+    setCustomInput('');
+    setShowCustomInput(false);
   };
 
+  const toggleInterest = useCallback((label: string) => {
+    setSelectedInterests((prev) =>
+      prev.includes(label) ? prev.filter((i) => i !== label) : [...prev, label],
+    );
+  }, []);
+
+  const handleAddCustom = useCallback(() => {
+    const trimmed = customInput.trim();
+    if (trimmed && !selectedInterests.includes(trimmed)) {
+      setSelectedInterests((prev) => [...prev, trimmed]);
+      setCustomInput('');
+    }
+  }, [customInput, selectedInterests]);
+
   const handleSave = useCallback(async () => {
+    // Include custom input if has content
+    const finalInterests = [...selectedInterests];
+    const trimmedCustom = customInput.trim();
+    if (showCustomInput && trimmedCustom && !finalInterests.includes(trimmedCustom)) {
+      finalInterests.push(trimmedCustom);
+    }
+
+    // Deduplicate
+    const uniqueInterests = [...new Set(finalInterests)];
+
     try {
       setSaving(true);
-      await updateOccupation(editValue.trim());
+      await updateInterests(uniqueInterests);
       setIsEditing(false);
+      setSelectedInterests([]);
+      setCustomInput('');
+      setShowCustomInput(false);
     } catch (error) {
-      console.error('Failed to update occupation:', error);
+      console.error('Failed to update interests:', error);
       fetchErrorNotification.error({
         errorMessage: error instanceof Error ? error.message : String(error),
         status: 500,
@@ -293,7 +339,7 @@ const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     } finally {
       setSaving(false);
     }
-  }, [editValue, updateOccupation]);
+  }, [selectedInterests, customInput, showCustomInput, updateInterests]);
 
   const editingContent = (
     <motion.div
@@ -304,14 +350,83 @@ const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       <Flexbox gap={12}>
-        {!mobile && <Typography.Text strong>{t('profile.occupationInputHint')}</Typography.Text>}
-        <Input
-          autoFocus
-          onChange={(e) => setEditValue(e.target.value)}
-          onPressEnter={handleSave}
-          placeholder={t('profile.occupationPlaceholder')}
-          value={editValue}
-        />
+        <Flexbox align="center" gap={8} horizontal wrap="wrap">
+          {areas.map((item) => {
+            const isSelected = selectedInterests.includes(item.label);
+            return (
+              <Block
+                clickable
+                gap={8}
+                horizontal
+                key={item.key}
+                onClick={() => toggleInterest(item.label)}
+                padding={8}
+                style={
+                  isSelected
+                    ? {
+                        background: theme.colorFillSecondary,
+                        borderColor: theme.colorFillSecondary,
+                      }
+                    : {}
+                }
+                variant="outlined"
+              >
+                <Icon color={theme.colorTextSecondary} icon={item.icon} size={14} />
+                <Text fontSize={13} weight={500}>
+                  {item.label}
+                </Text>
+              </Block>
+            );
+          })}
+          {/* Render custom interests with same Block style but no icon */}
+          {selectedInterests
+            .filter((i) => !areas.some((a) => a.label === i))
+            .map((interest) => (
+              <Block
+                clickable
+                key={interest}
+                onClick={() => toggleInterest(interest)}
+                padding={8}
+                style={{
+                  background: theme.colorFillSecondary,
+                  borderColor: theme.colorFillSecondary,
+                }}
+                variant="outlined"
+              >
+                <Text fontSize={13} weight={500}>
+                  {interest}
+                </Text>
+              </Block>
+            ))}
+          <Block
+            clickable
+            gap={8}
+            horizontal
+            onClick={() => setShowCustomInput(!showCustomInput)}
+            padding={8}
+            style={
+              showCustomInput
+                ? { background: theme.colorFillSecondary, borderColor: theme.colorFillSecondary }
+                : {}
+            }
+            variant="outlined"
+          >
+            <Icon color={theme.colorTextSecondary} icon={BriefcaseIcon} size={14} />
+            <Text fontSize={13} weight={500}>
+              {tOnboarding('interests.area.other')}
+            </Text>
+          </Block>
+        </Flexbox>
+        {showCustomInput && (
+          <Input
+            onChange={(e) => setCustomInput(e.target.value)}
+            onPressEnter={handleAddCustom}
+            placeholder={tOnboarding('interests.placeholder')}
+            size="small"
+            style={{ width: 200 }}
+            value={customInput}
+          />
+        )}
         <Flexbox gap={8} horizontal justify="flex-end">
           <Button disabled={saving} onClick={handleCancel} size="small">
             {t('profile.cancel')}
@@ -333,12 +448,28 @@ const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       {mobile ? (
-        <Typography.Text>{occupation || '--'}</Typography.Text>
+        interests.length > 0 ? (
+          <Flexbox gap={8} horizontal style={{ flexWrap: 'wrap' }}>
+            {interests.map((interest) => (
+              <Tag key={interest}>{interest}</Tag>
+            ))}
+          </Flexbox>
+        ) : (
+          <Typography.Text>--</Typography.Text>
+        )
       ) : (
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text>{occupation || '--'}</Typography.Text>
+          {interests.length > 0 ? (
+            <Flexbox gap={8} horizontal style={{ flexWrap: 'wrap' }}>
+              {interests.map((interest) => (
+                <Tag key={interest}>{interest}</Tag>
+              ))}
+            </Flexbox>
+          ) : (
+            <Typography.Text>--</Typography.Text>
+          )}
           <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
-            {t('profile.updateOccupation')}
+            {t('profile.updateInterests')}
           </Typography.Text>
         </Flexbox>
       )}
@@ -349,10 +480,10 @@ const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{t('profile.occupation')}</Typography.Text>
+          <Typography.Text strong>{t('profile.interests')}</Typography.Text>
           {!isEditing && (
             <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
-              {t('profile.updateOccupation')}
+              {t('profile.updateInterests')}
             </Typography.Text>
           )}
         </Flexbox>
@@ -363,7 +494,7 @@ const OccupationRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={24} horizontal style={rowStyle}>
-      <Typography.Text style={labelStyle}>{t('profile.occupation')}</Typography.Text>
+      <Typography.Text style={labelStyle}>{t('profile.interests')}</Typography.Text>
       <Flexbox style={{ flex: 1 }}>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
       </Flexbox>
@@ -633,8 +764,8 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
       <Divider style={{ margin: 0 }} />
 
-      {/* Career Row - Editable */}
-      <OccupationRow mobile={mobile} />
+      {/* Interests Row - Editable */}
+      <InterestsRow mobile={mobile} />
 
       <Divider style={{ margin: 0 }} />
 

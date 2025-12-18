@@ -43,8 +43,8 @@ export class UserService {
     return lambdaClient.user.updateAvatar.mutate(avatar);
   };
 
-  updateOccupation = async (occupation: string) => {
-    return lambdaClient.user.updateOccupation.mutate(occupation);
+  updateInterests = async (interests: string[]) => {
+    return lambdaClient.user.updateInterests.mutate(interests);
   };
 
   updateFullName = async (fullName: string) => {

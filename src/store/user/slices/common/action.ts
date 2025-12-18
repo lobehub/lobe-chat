@@ -26,8 +26,8 @@ export interface CommonAction {
   refreshUserState: () => Promise<void>;
   updateAvatar: (avatar: string) => Promise<void>;
   updateFullName: (fullName: string) => Promise<void>;
+  updateInterests: (interests: string[]) => Promise<void>;
   updateKeyVaultConfig: (provider: string, config: any) => Promise<void>;
-  updateOccupation: (occupation: string) => Promise<void>;
   updateUsername: (username: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
@@ -59,13 +59,13 @@ export const createCommonSlice: StateCreator<
     await get().refreshUserState();
   },
 
-  updateKeyVaultConfig: async (provider, config) => {
-    await get().setSettings({ keyVaults: { [provider]: config } });
+  updateInterests: async (interests) => {
+    await userService.updateInterests(interests);
+    await get().refreshUserState();
   },
 
-  updateOccupation: async (occupation) => {
-    await userService.updateOccupation(occupation);
-    await get().refreshUserState();
+  updateKeyVaultConfig: async (provider, config) => {
+    await get().setSettings({ keyVaults: { [provider]: config } });
   },
 
   updateUsername: async (username) => {
@@ -122,8 +122,8 @@ export const createCommonSlice: StateCreator<
                     firstName: data.firstName,
                     fullName: data.fullName,
                     id: data.userId,
+                    interests: data.interests,
                     latestName: data.lastName,
-                    occupation: data.occupation,
                     username: data.username,
                   } as LobeUser)
                 : get().user;

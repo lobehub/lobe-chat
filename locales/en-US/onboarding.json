@@ -1,6 +1,24 @@
 {
   "back": "Back",
   "finish": "Get Started",
+  "interests": {
+    "area": {
+      "business": "Business & Strategy",
+      "coding": "Programming & Development",
+      "design": "Design & Creativity",
+      "education": "Learning & Research",
+      "marketing": "Marketing & Promotion",
+      "other": "Other Fields",
+      "product": "Product & Management",
+      "sales": "Sales & Customer Relations",
+      "writing": "Content Creation"
+    },
+    "hint": "You can change this anytime in settings",
+    "placeholder": "Enter your interests...",
+    "title": "Could you tell me what areas you're interested in?",
+    "title2": "This will help me get a first impression of you~",
+    "title3": "Take your time, I'll get to know you better and better"
+  },
   "modeSelection": {
     "desc": "Choose the mode that suits you best",
     "hint": "You can change this anytime in settings",
@@ -19,24 +37,6 @@
     "title3": "Tell me, so I can tailor it just for you~"
   },
   "next": "Next",
-  "occupation": {
-    "area": {
-      "business": "Business & Strategy",
-      "coding": "Programming & Development",
-      "design": "Design & Creativity",
-      "education": "Learning & Research",
-      "marketing": "Marketing & Promotion",
-      "other": "Other Fields",
-      "product": "Product & Management",
-      "sales": "Sales & Customer Relations",
-      "writing": "Content Creation"
-    },
-    "hint": "You can change this anytime in settings",
-    "placeholder": "Enter your occupation...",
-    "title": "Could you tell me what field you work in?",
-    "title2": "This will help me get a first impression of you~",
-    "title3": "Take your time, I’ll get to know you better and better"
-  },
   "proSettings": {
     "connectors": {
       "title": "Connect Your Favorite Tools"
