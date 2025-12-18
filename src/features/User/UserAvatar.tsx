@@ -50,9 +50,10 @@ export interface UserAvatarProps extends AvatarProps {
 
 const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
   ({ size = 40, background, clickable, className, style, ...rest }, ref) => {
-    const { styles, cx } = useStyles();
-    const [avatar, username] = useUserStore((s) => [
+    const { styles, cx, theme } = useStyles();
+    const [avatar, nickName, username] = useUserStore((s) => [
       userProfileSelectors.userAvatar(s),
+      userProfileSelectors.nickName(s),
       userProfileSelectors.username(s),
     ]);
 
@@ -61,7 +62,8 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
 
     // Process avatar URL for desktop environment
     const avatarUrl = useMemo(() => {
-      if (!isSignedIn || !avatar) return DEFAULT_USER_AVATAR_URL;
+      if (!isSignedIn) return DEFAULT_USER_AVATAR_URL;
+      if (!avatar) return;
 
       // If in desktop environment and avatar starts with /, prepend the remote server URL
       if (isDesktop && avatar.startsWith('/') && remoteServerUrl) {
@@ -73,9 +75,9 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
 
     return (
       <Avatar
-        alt={isSignedIn && !!username ? username : BRANDING_NAME}
-        avatar={avatarUrl}
-        background={isSignedIn && avatar ? background : 'transparent'}
+        alt={isSignedIn ? nickName || username || 'User' : BRANDING_NAME}
+        avatar={avatarUrl || nickName || username}
+        background={avatarUrl ? background : theme.colorText}
         className={cx(clickable && styles.clickable, className)}
         ref={ref}
         shape={'square'}

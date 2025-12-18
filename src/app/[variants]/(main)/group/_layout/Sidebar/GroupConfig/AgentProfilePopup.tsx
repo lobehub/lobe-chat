@@ -6,7 +6,7 @@ import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import ModelSelect from '@/features/ModelSelect';
@@ -15,9 +15,11 @@ import { useAgentGroupStore } from '@/store/agentGroup';
 const useStyles = createStyles(({ css, token }) => ({
   banner: css`
     position: relative;
+    overflow: hidden;
     height: 60px;
-    border-radius: ${token.borderRadiusLG}px ${token.borderRadiusLG}px 0 0;
-    background: linear-gradient(135deg, ${token.colorPrimaryBg} 0%, ${token.colorPrimary} 100%);
+  `,
+  bannerInner: css`
+    filter: blur(44px);
   `,
   chatButton: css`
     width: 100%;
@@ -25,7 +27,6 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     overflow: hidden;
     width: 280px;
-    border-radius: ${token.borderRadiusLG}px;
     background: ${token.colorBgElevated};
   `,
   description: css`
@@ -74,7 +75,7 @@ interface AgentProfilePopupProps extends PropsWithChildren {
 
 const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, children }) => {
   const { t } = useTranslation('chat');
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -100,24 +101,32 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, childr
   const content = (
     <Flexbox className={styles.container}>
       {/* Banner */}
-      <div
+      <Center
         className={styles.banner}
         style={{
-          background: agent.backgroundColor
-            ? `linear-gradient(135deg, ${agent.backgroundColor}40 0%, ${agent.backgroundColor} 100%)`
-            : undefined,
+          background: theme.colorFillTertiary,
         }}
-      />
+      >
+        <Avatar
+          avatar={agent.avatar || DEFAULT_AVATAR}
+          background={agent.backgroundColor ?? undefined}
+          className={styles.bannerInner}
+          emojiScaleWithBackground
+          shape={'square'}
+          size={400}
+        />
+      </Center>
 
       {/* Header with Avatar */}
       <Flexbox className={styles.header} gap={8}>
         <Avatar
           avatar={agent.avatar || DEFAULT_AVATAR}
           background={agent.backgroundColor ?? undefined}
+          emojiScaleWithBackground
+          shape={'square'}
           size={48}
           style={{
-            border: '3px solid var(--lobe-colorBgElevated)',
-            borderRadius: '50%',
+            border: `2px solid ${theme.colorBgElevated}`,
           }}
         />
         <Flexbox gap={2}>
@@ -166,7 +175,7 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, childr
       open={open}
       placement="right"
       styles={{
-        body: { padding: 0 },
+        body: { overflow: 'hidden', padding: 0 },
       }}
       trigger={['click']}
     >
