@@ -341,6 +341,21 @@ const betterAuthMiddleware = async (req: NextRequest) => {
   });
 
   const isLoggedIn = !!session?.user;
+  if (pathname.startsWith("/logout")) {
+    // Clear local session
+    const response = NextResponse.redirect("/login");
+    response.cookies.delete("next-auth.session-token");
+    response.cookies.delete("next-auth.csrf-token");
+
+    // Redirect to Auth0 logout endpoint
+    const domain = process.env.AUTH0_ISSUER?.replace("https://", "");
+    const clientId = process.env.AUTH0_CLIENT_ID;
+    const returnTo = process.env.NEXT_PUBLIC_SITE_URL + "/login";
+
+    return NextResponse.redirect(
+      `https://${domain}/v2/logout?client_id=${clientId}&returnTo=${encodeURIComponent(returnTo)}`
+    );
+  }
 
   logBetterAuth('BetterAuth session status: %O', {
     isLoggedIn,
