@@ -39,6 +39,7 @@ import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFileStore } from '@/store/file';
+import { useGlobalStore } from '@/store/global';
 
 import { usePageEditorStore } from '../store';
 
@@ -103,6 +104,20 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
                 title: 'Selection',
                 type: 'text',
               });
+
+              // Open right panel if not opened
+              useGlobalStore.getState().toggleRightPanel(true);
+
+              // Focus on chat input after a short delay to ensure panel is opened
+              setTimeout(() => {
+                // Find the chat input editor within the right panel
+                // Query all lexical editors and get the last one (which should be the chat input)
+                const allEditors = document.querySelectorAll('[data-lexical-editor="true"]');
+                const chatInputEditor = allEditors[allEditors.length - 1] as HTMLElement;
+                if (chatInputEditor) {
+                  chatInputEditor.focus();
+                }
+              }, 300);
 
               editor.dispatchCommand(HIDE_TOOLBAR_COMMAND, undefined);
               editor.blur();
