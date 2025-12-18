@@ -21,8 +21,8 @@ import {
 } from '@lobechat/types';
 import { serializePartsForStorage } from '@lobechat/utils';
 import debug from 'debug';
+import { throttle } from 'es-toolkit/compat';
 import { t } from 'i18next';
-import { throttle } from 'lodash-es';
 import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 

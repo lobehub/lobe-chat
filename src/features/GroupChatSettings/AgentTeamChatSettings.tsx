@@ -9,7 +9,7 @@ import {
   SliderWithInput,
 } from '@lobehub/ui';
 import { Form as AntdForm, App, Input, Switch } from 'antd';
-import { isEqual } from 'lodash';
+import { isEqual } from 'es-toolkit/compat';
 import { Coffee, Rabbit, Turtle } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

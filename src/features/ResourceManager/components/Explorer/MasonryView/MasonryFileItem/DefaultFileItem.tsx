@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { isNull } from 'lodash-es';
+import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon, Folder } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

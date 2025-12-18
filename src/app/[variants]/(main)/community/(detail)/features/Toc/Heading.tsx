@@ -2,7 +2,7 @@
 
 import { Icon } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
-import { kebabCase } from 'lodash-es';
+import { kebabCase } from 'es-toolkit/compat';
 import { Heading2, Heading3, Heading4, Heading5 } from 'lucide-react';
 import Link from 'next/link';
 import { Children, ComponentProps, FC, ReactNode, isValidElement, useEffect, useMemo } from 'react';

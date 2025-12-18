@@ -7,9 +7,9 @@ import { useTypographyStyles } from '../styles';
 const useTitleSectionStyles = createStyles(({ css }) => ({
   // 标题区域容器
   titleSection: css`
-    text-align: center;
-    margin-bottom: 48px;
+    margin-block-end: 48px;
     line-height: 1.4;
+    text-align: center;
   `,
 }));
 

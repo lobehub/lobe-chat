@@ -1,5 +1,5 @@
 import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
-import { debounce } from 'lodash-es';
+import { debounce } from 'es-toolkit/compat';
 import { StateCreator } from 'zustand';
 
 import { State, initialState } from './initialState';
@@ -83,7 +83,8 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
 
         if (editor) {
           try {
-            finalContent = (editor.getDocument('markdown') as unknown as string) || streamingContent;
+            finalContent =
+              (editor.getDocument('markdown') as unknown as string) || streamingContent;
             editorData = editor.getDocument('json') as unknown as Record<string, any>;
           } catch {
             // Use streaming content if editor read fails

@@ -1,5 +1,5 @@
 import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
-import { debounce } from 'lodash-es';
+import { debounce } from 'es-toolkit/compat';
 import { StateCreator } from 'zustand';
 
 import { documentService } from '@/services/document';

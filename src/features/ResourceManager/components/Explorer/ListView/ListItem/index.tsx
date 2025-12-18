@@ -3,7 +3,7 @@ import { App, Checkbox, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { isNull } from 'lodash-es';
+import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';

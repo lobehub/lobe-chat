@@ -7,7 +7,7 @@ import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { omit } from 'lodash-es';
+import { omit } from 'es-toolkit/compat';
 import { CopyIcon, RotateCcwSquareIcon, Trash2 } from 'lucide-react';
 import { RuntimeImageGenParams } from 'model-bank';
 import { memo, useMemo } from 'react';

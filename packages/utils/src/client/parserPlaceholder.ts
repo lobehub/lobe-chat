@@ -1,4 +1,4 @@
-import { template } from 'lodash-es';
+import { template } from 'es-toolkit/compat';
 
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

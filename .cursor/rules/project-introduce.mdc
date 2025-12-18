@@ -30,7 +30,7 @@ logo emoji: 🤯
 - SWR for data fetch
 - aHooks for react hooks library
 - dayjs for time library
-- lodash-es for utility library
+- es-toolkit for utility library
 - TRPC for type safe backend
 - Neon PostgreSQL for backend DB
 - Drizzle ORM

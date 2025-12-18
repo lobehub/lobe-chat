@@ -11,7 +11,7 @@ import {
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import { ChatErrorType, TracePayload, TraceTagMap, UIChatMessage } from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
-import { merge } from 'lodash-es';
+import { merge } from 'es-toolkit/compat';
 import { ModelProvider } from 'model-bank';
 
 import { enableAuth } from '@/const/auth';

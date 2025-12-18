@@ -1,4 +1,4 @@
-import { debounce } from 'lodash-es';
+import { debounce } from 'es-toolkit/compat';
 
 import type { TodoItem } from '../../../../types';
 import { AUTO_SAVE_DELAY, AUTO_SAVE_MAX_WAIT, initialState } from './initialState';

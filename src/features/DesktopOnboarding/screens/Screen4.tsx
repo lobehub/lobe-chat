@@ -16,39 +16,45 @@ const themeToken = getThemeToken();
 const useScreen4Styles = createStyles(({ token, css }) => ({
   // 卡片描述
   cardDescription: css`
+    margin-block-end: 24px;
+
     font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.6);
     line-height: 1.5;
+    color: rgba(255, 255, 255, 60%);
     text-align: center;
-    margin-bottom: 24px;
   `,
 
   // 卡片头部
   cardHeader: css`
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 16px;
-    margin-bottom: 8px;
+    align-items: center;
+
+    margin-block-end: 8px;
   `,
 
   // 卡片标题
   cardTitle: css`
+    margin: 0;
+
     font-family: ${token.fontFamily};
     font-size: 20px;
     font-weight: 700;
     color: ${themeToken.colorTextBase};
-    margin: 0;
     text-align: center;
   `,
 
   // 选中标记
   checkIcon: css`
     position: absolute;
-    top: 20px;
-    right: 20px;
+    inset-block-start: 20px;
+    inset-inline-end: 20px;
+
     color: ${themeToken.colorGreen};
+
     opacity: 0;
+
     transition: opacity 0.3s ease;
   `,
 
@@ -56,70 +62,82 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
   contentContainer: css`
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 32px;
+    align-items: center;
+
     max-width: 900px;
-    margin: 0 auto;
+    margin-block: 0;
+    margin-inline: auto;
   `,
 
   // 特性列表
   featureList: css`
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
     li {
       position: relative;
-      padding-left: 20px;
+
+      padding-inline-start: 20px;
+
       font-size: ${token.fontSize}px;
-      color: rgba(255, 255, 255, 1);
       line-height: 1.5;
+      color: rgba(255, 255, 255, 100%);
 
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      &:before {
+      &::before {
         content: '•';
         position: absolute;
-        left: 0;
-        color: rgba(255, 255, 255, 0.4);
+        inset-inline-start: 0;
+        color: rgba(255, 255, 255, 40%);
+      }
+
+      &:last-child {
+        margin-block-end: 0;
       }
     }
   `,
 
   // 底部说明文字
   footerNote: css`
+    margin-block-start: 24px;
     font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 50%);
     text-align: center;
-    margin-top: 24px;
   `,
 
   // 数据选项卡片
   optionCard: css`
-    flex: 1;
-    max-width: 400px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: ${token.borderRadiusLG}px;
-    padding: 32px 28px;
     cursor: pointer;
-    transition: all 0.3s ease;
+
     position: relative;
 
+    flex: 1;
+
+    max-width: 400px;
+    padding-block: 32px;
+    padding-inline: 28px;
+    border: 1px solid rgba(255, 255, 255, 10%);
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: rgba(255, 255, 255, 2%);
+
+    transition: all 0.3s ease;
+
     &:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.15);
       transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 15%);
+      background: rgba(255, 255, 255, 4%);
     }
 
     &.selected {
-      background: rgba(255, 255, 255, 0.08);
       border-color: ${themeToken.colorGreen};
+      background: rgba(255, 255, 255, 8%);
 
       .check-icon {
         opacity: 1;
@@ -131,8 +149,8 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
   optionsContainer: css`
     display: flex;
     gap: 16px;
-    width: 100%;
     justify-content: center;
+    width: 100%;
   `,
 }));
 

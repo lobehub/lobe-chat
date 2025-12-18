@@ -1,6 +1,6 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import {
   AudioLines,
   BoltIcon,

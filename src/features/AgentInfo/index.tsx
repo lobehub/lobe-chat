@@ -1,7 +1,7 @@
 import { Avatar, Markdown, Tag } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import { CSSProperties, memo } from 'react';
 import { Center } from 'react-layout-kit';
 

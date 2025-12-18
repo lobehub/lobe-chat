@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { isNull } from 'lodash-es';
+import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon } from 'lucide-react';
 import markdownToTxt from 'markdown-to-txt';
 import { memo } from 'react';

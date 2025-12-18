@@ -17,27 +17,28 @@ import { customTheme, getThemeToken } from './styles/theme';
 const token = getThemeToken();
 const useStyles = createStyles(({ css }) => ({
   backgroundLayer: css`
+    position: relative;
     width: 100%;
     height: 100%;
-    position: relative;
   `,
 
   container: css`
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: ${token.colorBgBase};
-    overflow: hidden;
     z-index: 1;
+    inset-block: 0 0;
+    inset-inline: 0 0;
+
+    overflow: hidden;
+
     color: #fff;
+
+    background-color: ${token.colorBgBase};
   `,
 
   content: css`
     position: relative;
-    height: 100%;
     z-index: 10;
+    height: 100%;
     background: transparent;
   `,
 
@@ -47,9 +48,9 @@ const useStyles = createStyles(({ css }) => ({
   `,
 
   screenContent: css`
-    height: 100%;
     position: relative;
     z-index: 10;
+    height: 100%;
   `,
 
   screenWrapper: css`

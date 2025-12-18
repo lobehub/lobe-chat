@@ -6,7 +6,7 @@ import type {
   UpdateAiProviderConfigParams,
 } from '@lobechat/types';
 import { and, asc, desc, eq } from 'drizzle-orm';
-import { isEmpty } from 'lodash-es';
+import { isEmpty } from 'es-toolkit/compat';
 import { ModelProvider } from 'model-bank';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';

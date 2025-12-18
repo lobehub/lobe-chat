@@ -1,4 +1,4 @@
-import { DebouncedFunc } from 'lodash-es';
+import { DebouncedFunc } from 'es-toolkit/compat';
 
 import type { TodoItem } from '../../../../types';
 

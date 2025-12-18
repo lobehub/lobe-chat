@@ -46,8 +46,8 @@ import { CategoryItem, CategoryListQuery, MarketSDK, UserInfoResponse } from '@l
 import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
 import dayjs from 'dayjs';
 import debug from 'debug';
+import { cloneDeep, countBy, isString, merge, uniq, uniqBy } from 'es-toolkit/compat';
 import matter from 'gray-matter';
-import { cloneDeep, countBy, isString, merge, uniq, uniqBy } from 'lodash-es';
 import urlJoin from 'url-join';
 
 import { normalizeLocale } from '@/locales/resources';

@@ -95,7 +95,7 @@ export const parsePlaceholderVariables = (
       // Only perform replacement when there are available variables
       if (Object.keys(availableVariables).length === 0) break;
 
-      // Replace variables one by one to avoid lodash template's error handling for undefined variables
+      // Replace variables one by one to avoid es-toolkit template's error handling for undefined variables
       let tempResult = result;
       for (const [key, value] of Object.entries(availableVariables)) {
         const regex = new RegExp(

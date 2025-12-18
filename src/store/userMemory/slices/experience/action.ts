@@ -1,5 +1,5 @@
+import { uniqBy } from 'es-toolkit/compat';
 import { produce } from 'immer';
-import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 

@@ -768,7 +768,7 @@ describe('MessageModel Update Tests', () => {
       });
     });
 
-    it('should merge new metadata with existing metadata using lodash merge behavior', async () => {
+    it('should merge new metadata with existing metadata using es-toolkit merge behavior', async () => {
       // Create test data
       await serverDB.insert(messages).values({
         id: 'msg-merge-metadata',
@@ -793,7 +793,7 @@ describe('MessageModel Update Tests', () => {
         newTopLevel: 'value',
       });
 
-      // Assert result - 应该使用 lodash merge 行为
+      // Assert result - 应该使用 es-toolkit merge 行为
       const result = await serverDB
         .select()
         .from(messages)

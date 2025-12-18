@@ -1,4 +1,4 @@
-import { isString } from 'lodash-es';
+import { isString } from 'es-toolkit/compat';
 import qs from 'query-string';
 import urlJoin from 'url-join';
 

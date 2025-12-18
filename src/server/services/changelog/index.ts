@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
+import { template } from 'es-toolkit/compat';
 import matter from 'gray-matter';
-import { template } from 'lodash-es';
 import { markdownToTxt } from 'markdown-to-txt';
 import semver from 'semver';
 import urlJoin from 'url-join';

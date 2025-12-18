@@ -112,8 +112,8 @@ const TypoBar = memo<ToolbarProps>(({ floating, style, className }) => {
               setTimeout(() => {
                 // Find the chat input editor within the right panel
                 // Query all lexical editors and get the last one (which should be the chat input)
-                const allEditors = document.querySelectorAll('[data-lexical-editor="true"]');
-                const chatInputEditor = allEditors[allEditors.length - 1] as HTMLElement;
+                const allEditors = [...document.querySelectorAll('[data-lexical-editor="true"]')];
+                const chatInputEditor = allEditors.at(-1) as HTMLElement;
                 if (chatInputEditor) {
                   chatInputEditor.focus();
                 }

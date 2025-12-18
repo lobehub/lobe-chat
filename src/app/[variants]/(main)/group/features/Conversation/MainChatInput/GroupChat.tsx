@@ -2,7 +2,7 @@
 
 import { SlashOptions } from '@lobehub/editor';
 import { Alert, Avatar, GroupAvatar } from '@lobehub/ui';
-import { isEqual } from 'lodash';
+import { isEqual } from 'es-toolkit/compat';
 import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

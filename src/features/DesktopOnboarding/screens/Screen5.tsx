@@ -19,10 +19,11 @@ const themeToken = getThemeToken();
 const useScreen4Styles = createStyles(({ token, css }) => ({
   // 授权说明文字
   authDescription: css`
-    font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.6);
     margin: 0;
-    margin-bottom: 32px;
+    margin-block-end: 32px;
+
+    font-size: ${token.fontSize}px;
+    color: rgba(255, 255, 255, 60%);
     text-align: center;
   `,
 
@@ -35,49 +36,55 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
 
   // 禁用状态按钮样式
   disabledButton: css`
-    opacity: 0.5;
     cursor: not-allowed;
+    opacity: 0.5;
   `,
 
   // Endpoint输入框
   endpointInput: css`
     width: 100%;
-    padding: 12px 16px;
-    margin: 16px 0;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-block: 16px;
+    margin-inline: 0;
+    padding-block: 12px;
+    padding-inline: 16px;
+    border: 1px solid rgba(255, 255, 255, 10%);
     border-radius: ${token.borderRadius}px;
-    color: ${token.colorTextBase};
+
     font-size: ${token.fontSize}px;
+    color: ${token.colorTextBase};
+
+    background: rgba(255, 255, 255, 5%);
     outline: none;
 
     &:focus {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 20%);
+      background: rgba(255, 255, 255, 8%);
     }
   `,
 
   errorText: css`
+    max-width: 520px;
+    margin: 0;
+    margin-block-start: 16px;
+
     font-size: ${token.fontSizeSM}px;
     color: ${token.colorError};
-    margin: 0;
-    margin-top: 16px;
-    max-width: 520px;
     text-align: center;
-    white-space: pre-wrap;
     word-break: break-word;
+    white-space: pre-wrap;
   `,
 
   // 加载状态按钮样式
   loadingButton: css`
-    opacity: 0.7;
     cursor: not-allowed;
+    opacity: 0.7;
   `,
 
   loginContentBody: css`
     display: flex;
     flex-direction: column;
     align-items: center;
+
     width: 100%;
     min-width: 500px;
   `,
@@ -90,53 +97,60 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
 
   // 登录内容包装器（固定高度）
   loginContentWrapper: css`
+    position: relative;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 360px;
+
     width: 100%;
-    position: relative;
+    min-height: 360px;
   `,
 
   // 登录方式选项卡片
   methodCard: css`
+    cursor: pointer;
+
     display: flex;
     flex-direction: row;
-    align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    align-items: center;
+
     min-width: 140px;
+    padding-block: 10px;
+    padding-inline: 20px;
+    border: 1px solid rgba(255, 255, 255, 10%);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 2%);
+
+    transition: all 0.3s ease;
 
     svg {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 70%);
     }
 
     &:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.2);
       transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 20%);
+      background: rgba(255, 255, 255, 5%);
 
       svg {
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 90%);
       }
     }
 
     &.active {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 30%);
+      background: rgba(255, 255, 255, 8%);
 
       svg {
-        color: rgba(255, 255, 255, 1);
+        color: rgba(255, 255, 255, 100%);
       }
 
       span {
-        color: rgba(255, 255, 255, 1);
+        color: rgba(255, 255, 255, 100%);
       }
     }
   `,
@@ -145,7 +159,7 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
   methodCardText: css`
     font-size: ${token.fontSize}px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 90%);
     white-space: nowrap;
   `,
 
@@ -161,46 +175,54 @@ const useScreen4Styles = createStyles(({ token, css }) => ({
   methodSelector: css`
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 16px;
-    margin-top: 48px;
+    align-items: center;
+
     width: 100%;
+    margin-block-start: 48px;
   `,
 
   // 登录方式标题
   methodSelectorTitle: css`
+    margin-block-end: 8px;
     font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 60%);
   `,
 
   // 服务名称标题
   serviceTitle: css`
+    margin-block: 16px;
+    margin-block-end: 8px;
+    margin-inline: 0;
+
     font-family: ${token.fontFamily};
     font-size: 32px;
     font-weight: 500;
     color: ${token.colorTextBase};
-    margin: 16px 0;
-    margin-bottom: 8px;
   `,
 
   // 登录按钮
   signInButton: css`
+    cursor: pointer;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 32px;
-    background: ${themeToken.colorHighlight};
+
+    padding-block: 12px;
+    padding-inline: 32px;
     border: none;
     border-radius: ${token.borderRadius}px;
-    color: #000;
+
     font-size: ${token.fontSize}px;
     font-weight: 700;
-    cursor: pointer;
+    color: #000;
+
+    background: ${themeToken.colorHighlight};
 
     &:hover {
-      background: ${themeToken.colorHighlightHover};
       transform: translateY(-1px);
+      background: ${themeToken.colorHighlightHover};
     }
 
     &:active {

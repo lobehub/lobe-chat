@@ -27,9 +27,9 @@ const useScreen2Styles = createStyles(({ token, css }) => ({
   // 图标和小标题行
   cardHeader: css`
     display: flex;
-    align-items: center;
     gap: 8px;
-    margin-bottom: 8px;
+    align-items: center;
+    margin-block-end: 8px;
   `,
 
   cardIcon: css`
@@ -40,47 +40,51 @@ const useScreen2Styles = createStyles(({ token, css }) => ({
   // 径向渐变蒙层
   cardOverlay: css`
     position: absolute;
+    z-index: 1;
     inset: 0;
     background: radial-gradient(
       ellipse 150% 100% at 10% 10%,
-      rgba(0, 0, 0, 0.9) 0%,
-      rgba(0, 0, 0, 0.8) 35%,
-      rgba(0, 0, 0, 0.2) 60%,
+      rgba(0, 0, 0, 90%) 0%,
+      rgba(0, 0, 0, 80%) 35%,
+      rgba(0, 0, 0, 20%) 60%,
       transparent 85%
     );
-    z-index: 1;
   `,
 
   cardSubtitle: css`
     font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.8);
     font-weight: 500;
+    color: rgba(255, 255, 255, 80%);
   `,
 
   cardTitle: css`
+    margin: 0;
+
     font-family: ${token.fontFamily};
     font-size: 24px;
     font-weight: 500;
-    color: ${themeToken.colorTextBase};
-    margin: 0;
-    text-align: left;
     line-height: 1.3;
+    color: ${themeToken.colorTextBase};
+    text-align: start;
   `,
 
   // 卡片样式
   featureCard: css`
     position: relative;
+
     overflow: hidden;
-    border-radius: ${token.borderRadiusLG}px;
-    padding: ${token.paddingLG}px;
-    background: ${themeToken.colorBgBase};
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: right bottom;
-    outline: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+
+    padding: ${token.paddingLG}px;
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${themeToken.colorBgBase};
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-size: cover;
+    outline: 1px solid rgba(255, 255, 255, 10%);
   `,
 }));
 

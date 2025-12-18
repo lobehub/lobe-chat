@@ -17,27 +17,27 @@ export const useSpacingStyles = createStyles(({ token, css }) => ({
 
   // Margin
   marginBottom: css`
-    margin-bottom: ${token.margin}px;
+    margin-block-end: ${token.margin}px;
   `,
 
   marginBottomLG: css`
-    margin-bottom: ${token.marginLG}px;
+    margin-block-end: ${token.marginLG}px;
   `,
 
   marginBottomSM: css`
-    margin-bottom: ${token.marginSM}px;
+    margin-block-end: ${token.marginSM}px;
   `,
 
   marginTop: css`
-    margin-top: ${token.margin}px;
+    margin-block-start: ${token.margin}px;
   `,
 
   marginTopLG: css`
-  margin-top: ${token.marginLG}px;
+    margin-block-start: ${token.marginLG}px;
   `,
 
   marginTopSM: css`
-    margin-top: ${token.marginSM}px;
+    margin-block-start: ${token.marginSM}px;
   `,
 
   // Padding

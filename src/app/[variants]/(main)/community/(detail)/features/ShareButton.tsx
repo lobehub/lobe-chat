@@ -6,11 +6,12 @@ import {
   CopyButton,
   Input,
   Modal,
+  Skeleton,
   Tag,
   Text,
- Skeleton } from '@lobehub/ui';
+} from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import { LinkIcon, Share2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo, useState } from 'react';

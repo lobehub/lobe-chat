@@ -13,46 +13,50 @@ const useStyles = createStyles(({ token, css }) => ({
   // 布局容器
   container: css`
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    inset-block-end: 0;
+    inset-inline: 0 0;
   `,
 
   content: css`
-    margin: 0 auto;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    padding: 24px 24px;
     position: relative;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     min-height: 48px;
+    margin-block: 0;
+    margin-inline: auto;
+    padding-block: 24px;
+    padding-inline: 24px;
+
+    background: rgba(0, 0, 0, 85%);
+    backdrop-filter: blur(10px);
   `,
 
   // 高亮按钮样式 - 仅在启用状态下生效
   highlightButton: css`
     &:not(:disabled) {
-      background: ${themeToken.colorHighlight} !important;
       border-color: ${themeToken.colorHighlight} !important;
-      color: #000 !important;
       font-weight: 500;
+      color: #000 !important;
+      background: ${themeToken.colorHighlight} !important;
 
       & > * {
         color: #000 !important;
       }
 
       &:hover {
-        background: #ffe227 !important;
         border-color: #ffe227 !important;
+        background: #ffe227 !important;
       }
     }
   `,
 
   // 确保按钮在指示器上方
   navigationButton: css`
-    z-index: 2;
     position: relative;
+    z-index: 2;
   `,
 
   // 导航按钮区域 - 已整合到 content 中，不再需要
@@ -67,20 +71,21 @@ const useStyles = createStyles(({ token, css }) => ({
   // 进度指示器 - 绝对定位居中
   progressContainer: css`
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    gap: 8px;
     z-index: 1;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    gap: 8px;
+    align-items: center;
   `,
 
   progressDot: css`
+    cursor: pointer;
     height: 6px;
     border-radius: 9999px;
     transition: all 0.3s ease;
-    cursor: pointer;
   `,
 
   progressDotActive: css`
@@ -99,14 +104,16 @@ const useStyles = createStyles(({ token, css }) => ({
   `,
 
   squareButton: css`
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    padding: 0;
+    z-index: 2;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
   `,
 }));
 

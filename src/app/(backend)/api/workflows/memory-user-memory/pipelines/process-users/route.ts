@@ -1,5 +1,5 @@
 import { serve } from '@upstash/workflow/nextjs';
-import { chunk } from 'lodash-es';
+import { chunk } from 'es-toolkit/compat';
 
 import {
   MemoryExtractionExecutor,

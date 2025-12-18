@@ -1,5 +1,5 @@
 import { Block, Collapse, Empty, Highlighter, Markdown, Tag } from '@lobehub/ui';
-import { isString } from 'lodash-es';
+import { isString } from 'es-toolkit/compat';
 import { Wrench } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useState } from 'react';

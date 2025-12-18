@@ -1,4 +1,4 @@
-import { flatten } from 'lodash-es';
+import { flatten } from 'es-toolkit/compat';
 import { MetadataRoute } from 'next';
 import qs from 'query-string';
 import urlJoin from 'url-join';

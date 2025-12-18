@@ -1,7 +1,7 @@
 'use client';
 
 import { AnchorProps } from 'antd';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

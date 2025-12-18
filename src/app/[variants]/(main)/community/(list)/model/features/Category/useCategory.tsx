@@ -1,5 +1,5 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { uniqBy } from 'lodash-es';
+import { uniqBy } from 'es-toolkit/compat';
 import { LayoutPanelTopIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

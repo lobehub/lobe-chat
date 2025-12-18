@@ -3,7 +3,7 @@ import { Microsoft } from '@lobehub/icons';
 import { ActionIcon, Block, Collapse, Empty, Icon, Snippet, Tag } from '@lobehub/ui';
 import { Divider, Popover, Steps } from 'antd';
 import { createStyles } from 'antd-style';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import {
   CheckIcon,
   CloudIcon,

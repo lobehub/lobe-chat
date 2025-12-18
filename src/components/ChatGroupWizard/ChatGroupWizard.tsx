@@ -13,7 +13,7 @@ import {
 } from '@lobehub/ui';
 import { Button, Checkbox, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { omit } from 'lodash-es';
+import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';
 import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

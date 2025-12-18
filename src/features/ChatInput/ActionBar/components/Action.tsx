@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, type ActionIconProps } from '@lobehub/ui';
-import { isUndefined } from 'lodash-es';
+import { isUndefined } from 'es-toolkit/compat';
 import { memo } from 'react';
 import useMergeState from 'use-merge-value';
 

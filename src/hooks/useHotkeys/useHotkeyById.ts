@@ -1,4 +1,4 @@
-import { uniq } from 'lodash-es';
+import { uniq } from 'es-toolkit/compat';
 import { DependencyList } from 'react';
 import { type HotkeyCallback, type Options, useHotkeys } from 'react-hotkeys-hook';
 

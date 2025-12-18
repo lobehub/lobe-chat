@@ -7,23 +7,29 @@ const colorToken = getThemeToken();
 export const useTypographyStyles = createStyles(({ token, css }) => ({
   badge: css`
     display: inline-block;
-    background-color: ${colorToken.colorHighlight};
+
+    padding-block: ${token.paddingXS}px;
+    padding-inline: ${token.paddingMD}px;
     border-radius: 100px;
-    padding: ${token.paddingXS}px ${token.paddingMD}px;
+
     font-size: ${token.fontSize}px;
     font-weight: 500;
     color: #000;
+
+    background-color: ${colorToken.colorHighlight};
   `,
 
   // 正文文本 - 用于主要内容
   body: css`
+    max-width: 672px;
+    margin: 0;
+    padding-block: 0;
+    padding-inline: ${token.paddingLG}px;
+
     font-size: ${token.fontSizeLG}px;
+    line-height: ${token.lineHeight};
     color: ${colorToken.colorTextSecondary};
     text-align: center;
-    max-width: 672px;
-    line-height: ${token.lineHeight};
-    margin: 0;
-    padding: 0 ${token.paddingLG}px;
   `,
 
   // 加粗文本
@@ -33,24 +39,25 @@ export const useTypographyStyles = createStyles(({ token, css }) => ({
 
   // 描述文本 - 用于次要说明
   description: css`
+    max-width: 576px;
+    margin: 0;
+
     font-size: ${token.fontSize}px;
+    line-height: ${token.lineHeight};
     color: ${colorToken.colorTextSecondary};
     text-align: center;
-    max-width: 576px;
-    line-height: ${token.lineHeight};
-    margin: 0;
   `,
 
   // 主标题 - 用于页面主要标题
   heroTitle: css`
-    font-size: 80px;
     font-family: ${token.fontFamily};
+    font-size: 80px;
     font-weight: 900;
     font-style: italic;
-    text-align: center;
-    letter-spacing: -5px;
     line-height: 0.9;
     color: ${colorToken.colorTextBase};
+    text-align: center;
+    letter-spacing: -5px;
   `,
 
   // 小号文本
@@ -61,13 +68,15 @@ export const useTypographyStyles = createStyles(({ token, css }) => ({
 
   // 副标题 - 用于次级标题
   subtitle: css`
-    font-size: 48px;
+    margin-block: ${token.marginXS}px;
+    margin-inline: 0;
+
     font-family: ${token.fontFamily};
+    font-size: 48px;
     font-weight: 700;
     font-style: italic;
-    text-align: center;
     color: ${colorToken.colorTextBase};
-    margin: ${token.marginXS}px 0;
+    text-align: center;
   `,
 
   // 文本对齐
@@ -76,10 +85,10 @@ export const useTypographyStyles = createStyles(({ token, css }) => ({
   `,
 
   textLeft: css`
-    text-align: left;
+    text-align: start;
   `,
 
   textRight: css`
-    text-align: right;
+    text-align: end;
   `,
 }));

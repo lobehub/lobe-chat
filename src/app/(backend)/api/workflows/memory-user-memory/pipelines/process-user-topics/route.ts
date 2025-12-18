@@ -1,5 +1,5 @@
 import { serve } from '@upstash/workflow/nextjs';
-import { chunk } from 'lodash-es';
+import { chunk } from 'es-toolkit/compat';
 
 import type { ListTopicsForMemoryExtractorCursor } from '@/database/models/topic';
 import {
@@ -24,11 +24,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
 
   const executor = await MemoryExtractionExecutor.create();
 
-  const scheduleNextPage = async (
-    userId: string,
-    cursorCreatedAt: Date,
-    cursorId: string,
-  ) => {
+  const scheduleNextPage = async (userId: string, cursorCreatedAt: Date, cursorId: string) => {
     await MemoryExtractionWorkflowService.triggerProcessUserTopics({
       ...buildWorkflowPayloadInput({
         ...params,
@@ -119,7 +115,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
             throw new Error('Invalid cursor date when scheduling next topic page');
           }
 
-          scheduleNextPage(userId, createdAt, cursor.id)
+          scheduleNextPage(userId, createdAt, cursor.id);
         },
       );
     }

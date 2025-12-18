@@ -1,4 +1,4 @@
-import { kebabCase } from 'lodash-es';
+import { kebabCase } from 'es-toolkit/compat';
 import type { MetadataRoute } from 'next';
 
 import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { chunk } from 'lodash-es';
+import { chunk } from 'es-toolkit/compat';
 import pMap from 'p-map';
 import { z } from 'zod';
 

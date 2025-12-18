@@ -15,61 +15,69 @@ const themeToken = getThemeToken();
 const useScreen3Styles = createStyles(({ token, css }) => ({
   // 内容区
   content: css`
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 4px;
   `,
 
   // 图标容器
   iconWrapper: css`
-    width: 48px;
-    height: 48px;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
+
+    width: 48px;
+    height: 48px;
     border-radius: 12px;
+
     background: transparent;
-    flex-shrink: 0;
   `,
 
   // 项目描述
   itemDescription: css`
-    font-size: ${token.fontSize}px;
-    color: rgba(255, 255, 255, 0.6);
     margin: 0;
+    font-size: ${token.fontSize}px;
     line-height: 1.5;
+    color: rgba(255, 255, 255, 60%);
   `,
 
   // 项目标题
   itemTitle: css`
+    margin: 0;
     font-size: ${token.fontSizeLG}px;
     font-weight: 500;
     color: ${themeToken.colorTextBase};
-    margin: 0;
   `,
 
   // 按钮
   permissionButton: css`
+    cursor: pointer;
+
     display: flex;
+    gap: 8px;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
+
     min-width: 170px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding-block: 10px;
+    padding-inline: 20px;
+    border: 1px solid rgba(255, 255, 255, 20%);
     border-radius: 8px;
-    color: ${themeToken.colorTextBase};
+
     font-size: ${token.fontSize}px;
     font-weight: 700;
-    cursor: pointer;
+    color: ${themeToken.colorTextBase};
     white-space: nowrap;
+
+    background: rgba(255, 255, 255, 10%);
+
     transition: all 0.2s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 30%);
+      background: rgba(255, 255, 255, 15%);
     }
 
     &:active {
@@ -77,16 +85,19 @@ const useScreen3Styles = createStyles(({ token, css }) => ({
     }
 
     &.granted {
-      background: rgba(255, 255, 255, 0.03);
-      border-color: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.4);
       cursor: not-allowed;
+
+      border-color: rgba(255, 255, 255, 8%);
+
+      color: rgba(255, 255, 255, 40%);
+
       opacity: 0.6;
+      background: rgba(255, 255, 255, 3%);
 
       &:hover {
-        background: rgba(255, 255, 255, 0.03);
-        border-color: rgba(255, 255, 255, 0.08);
         transform: none;
+        border-color: rgba(255, 255, 255, 8%);
+        background: rgba(255, 255, 255, 3%);
       }
     }
   `,
@@ -94,20 +105,24 @@ const useScreen3Styles = createStyles(({ token, css }) => ({
   // 列表项
   permissionItem: css`
     display: flex;
-    align-items: center;
     gap: 20px;
-    padding: 20px 24px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    align-items: center;
+
+    padding-block: 20px;
+    padding-inline: 24px;
+    border: 1px solid rgba(255, 255, 255, 10%);
     border-radius: ${token.borderRadiusLG}px;
+
+    background: rgba(255, 255, 255, 4%);
     backdrop-filter: blur(20px);
+
     transition:
       background-color 0.5s ease,
       border-color 0.5s ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 15%);
+      background: rgba(255, 255, 255, 8%);
     }
   `,
 
@@ -116,8 +131,10 @@ const useScreen3Styles = createStyles(({ token, css }) => ({
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-width: 800px;
+
     width: 100%;
+    max-width: 800px;
+
     font-family: ${token.fontFamily};
   `,
 }));

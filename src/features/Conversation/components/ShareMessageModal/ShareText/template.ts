@@ -1,5 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { template } from 'lodash-es';
+import { template } from 'es-toolkit/compat';
 
 import { LOADING_FLAT } from '@/const/message';
 
