@@ -58,8 +58,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
       if (pageId && pageId !== lastLoadedDocIdRef.current) {
         console.log('[StoreUpdater] PageId changed, fetching detail:', pageId);
         // Immediately show loading state and reset for better UX
-        // Don't clear editor content manually - let the loading overlay hide it
-        // and the content loading effect will set the new content when ready
         setIsLoadingDetail(true);
         setContentInit(false);
         storeApi.setState({
@@ -116,6 +114,18 @@ const StoreUpdater = memo<StoreUpdaterProps>(
       queueMicrotask(() => {
         try {
           console.log('[StoreUpdater] Loading content for page:', pageId);
+
+          // Safety check: ensure we're loading content for the current page
+          // This prevents loading old content when currentPage has stale data
+          const currentState = storeApi.getState();
+          if (currentState.currentDocId && currentState.currentDocId !== pageId) {
+            console.log('[StoreUpdater] Skipping content load - currentDocId mismatch', {
+              currentDocId: currentState.currentDocId,
+              pageId,
+            });
+            return;
+          }
+
           // Helper to calculate word count
           const calculateWordCount = (text: string) =>
             text.trim().split(/\s+/).filter(Boolean).length;
@@ -145,13 +155,13 @@ const StoreUpdater = memo<StoreUpdaterProps>(
               storeApi.setState({ wordCount: calculateWordCount(pagesContent) });
             } else {
               console.log('[StoreUpdater] Clearing editor - empty pages');
-              editor.setDocument('markdown', '');
+              editor.setDocument('markdown', ' ');
               storeApi.setState({ wordCount: 0 });
             }
           } else {
-            // Empty document or temp page - clear editor with empty markdown
+            // Empty document or temp page - clear editor with minimal content
             console.log('[StoreUpdater] Clearing editor - empty/new page');
-            editor.setDocument('markdown', '');
+            editor.setDocument('markdown', ' ');
             storeApi.setState({ wordCount: 0 });
           }
 
@@ -162,7 +172,16 @@ const StoreUpdater = memo<StoreUpdaterProps>(
           storeApi.setState({ isLoadingContent: false });
         }
       });
-    }, [editorInit, contentInit, editor, pageId, currentPage, storeApi, isLoadingDetail]);
+    }, [
+      editorInit,
+      contentInit,
+      editor,
+      pageId,
+      currentPage,
+      storeApi,
+      isLoadingDetail,
+      currentDocId,
+    ]);
 
     // Track editor initialization
     useEffect(() => {

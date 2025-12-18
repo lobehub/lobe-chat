@@ -78,6 +78,7 @@ const PageEditor = memo<PageEditorProps>(
     return (
       <PageAgentProvider pageAgentId={pageAgentId}>
         <PageEditorProvider
+          key={pageId}
           knowledgeBaseId={knowledgeBaseId}
           onBack={onBack}
           onDelete={onDelete}
