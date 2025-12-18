@@ -89,6 +89,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
       style={{
         maxHeight: '50vh',
         overflowY: 'auto',
+        width: '100%',
       }}
     >
       {agentsWithBuiltin.map((agent) => (
@@ -102,6 +103,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
             onAgentChange(agent.id);
             setOpen(false);
           }}
+          style={{ flexShrink: 0 }}
           title={agent.title || t('untitledAgent', { ns: 'chat' })}
         />
       ))}
