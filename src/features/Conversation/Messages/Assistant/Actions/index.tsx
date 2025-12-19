@@ -174,16 +174,15 @@ export const AssistantActionsBar = memo<AssistantActionsBarProps>(
       [allActions],
     );
 
+    const shareOnCancel = useCallback(() => {
+      setShareModal(false);
+    }, []);
     if (error) return <ErrorActionsBar actions={defaultActions} onActionClick={handleAction} />;
 
     return (
       <>
         <ActionIconGroup items={items} menu={{ items: menu }} onActionClick={handleAction} />
-        <ShareMessageModal
-          message={data}
-          onCancel={() => setShareModal(false)}
-          open={showShareModal}
-        />
+        <ShareMessageModal message={data} onCancel={shareOnCancel} open={showShareModal} />
       </>
     );
   },

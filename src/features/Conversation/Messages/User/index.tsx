@@ -1,6 +1,6 @@
 import { Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo, useMemo } from 'react';
+import { type MouseEventHandler, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChatItem } from '@/features/Conversation/ChatItem';
@@ -12,6 +12,10 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import { useDoubleClickEdit } from '../../hooks/useDoubleClickEdit';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
+import {
+  useSetMessageItemActionElementPortialContext,
+  useSetMessageItemActionTypeContext,
+} from '../Contexts/message-action-context';
 import Actions from './Actions';
 import { UserMessageExtra } from './Extra';
 import UserMessageContent from './components/MessageContent';
@@ -54,6 +58,24 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
 
   const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
 
+  const setMessageItemActionElementPortialContext = useSetMessageItemActionElementPortialContext();
+  const setMessageItemActionTypeContext = useSetMessageItemActionTypeContext();
+
+  const onMouseEnter: MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      if (disableEditing) return;
+      setMessageItemActionElementPortialContext(e.currentTarget);
+      setMessageItemActionTypeContext({ id, index, type: 'user' });
+    },
+    [
+      disableEditing,
+      id,
+      index,
+      setMessageItemActionElementPortialContext,
+      setMessageItemActionTypeContext,
+    ],
+  );
+
   return (
     <ChatItem
       actions={
@@ -71,6 +93,7 @@ const UserMessage = memo<UserMessageProps>(({ id, disableEditing, index }) => {
       message={content}
       messageExtra={<UserMessageExtra content={content} extra={extra} id={id} />}
       onDoubleClick={onDoubleClick}
+      onMouseEnter={onMouseEnter}
       placement={'right'}
       showAvatar={false}
       showTitle={false}

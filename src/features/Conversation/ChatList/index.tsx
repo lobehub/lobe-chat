@@ -4,6 +4,7 @@ import { type ReactNode, memo, useCallback } from 'react';
 
 import WideScreenContainer from '../../WideScreenContainer';
 import MessageItem from '../Messages';
+import { MessageActionProvider } from '../Messages/Contexts/MessageActionProvider';
 import SkeletonList from '../components/SkeletonList';
 import { dataSelectors, useConversationStore } from '../store';
 import VirtualizedList from './components/VirtualizedList';
@@ -18,7 +19,6 @@ export interface ChatListProps {
    */
   welcome?: ReactNode;
 }
-
 /**
  * ChatList component for Conversation
  *
@@ -34,7 +34,7 @@ const ChatList = memo<ChatListProps>(({ welcome, itemContent }) => {
   useFetchMessages(context, skipFetch);
 
   // Use selectors for data
-  const messagesInit = useConversationStore(dataSelectors.messagesInit);
+
   const displayMessageIds = useConversationStore(dataSelectors.displayMessageIds);
 
   const defaultItemContent = useCallback(
@@ -44,6 +44,7 @@ const ChatList = memo<ChatListProps>(({ welcome, itemContent }) => {
     },
     [displayMessageIds.length],
   );
+  const messagesInit = useConversationStore(dataSelectors.messagesInit);
 
   if (!messagesInit) {
     return <SkeletonList />;
@@ -66,11 +67,13 @@ const ChatList = memo<ChatListProps>(({ welcome, itemContent }) => {
   }
 
   return (
-    <VirtualizedList
-      dataSource={displayMessageIds}
-      // isGenerating={isGenerating}
-      itemContent={itemContent ?? defaultItemContent}
-    />
+    <MessageActionProvider withSingletonActionsBar>
+      <VirtualizedList
+        dataSource={displayMessageIds}
+        // isGenerating={isGenerating}
+        itemContent={itemContent ?? defaultItemContent}
+      />
+    </MessageActionProvider>
   );
 });
 

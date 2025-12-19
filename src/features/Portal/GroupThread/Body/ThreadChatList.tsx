@@ -1,9 +1,10 @@
 'use client';
 
-import React, { memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import VirtualizedList from '@/features/Conversation/ChatList/components/VirtualizedList';
+import { MessageActionProvider } from '@/features/Conversation/Messages/Contexts/MessageActionProvider';
 import SkeletonList from '@/features/Conversation/components/SkeletonList';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
@@ -48,7 +49,11 @@ const ThreadChatList = memo(() => {
     );
   }
 
-  return <VirtualizedList dataSource={data} itemContent={itemContent} />;
+  return (
+    <MessageActionProvider>
+      <VirtualizedList dataSource={data} itemContent={itemContent} />
+    </MessageActionProvider>
+  );
 });
 
 export default ThreadChatList;

@@ -3,9 +3,10 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback, useMemo } from 'react';
+import { type MouseEventHandler, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES } from '@/const/messageActionPortal';
 import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useNewScreen } from '@/features/Conversation/Messages/components/useNewScreen';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
@@ -22,11 +23,17 @@ import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { useAgentMeta, useDoubleClickEdit } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
 import { normalizeThinkTags, processWithArtifact } from '../../utils/markdown';
+import {
+  useSetMessageItemActionElementPortialContext,
+  useSetMessageItemActionTypeContext,
+} from '../Contexts/message-action-context';
 import MessageBranch from '../components/MessageBranch';
-import { AssistantActionsBar } from './Actions';
 import { AssistantMessageExtra } from './Extra';
 import MessageContent from './components/MessageContent';
 
+const actionBarHolder = (
+  <div {...{ [MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES.assistant]: '' }} style={{ height: '28px' }} />
+);
 interface AssistantMessageProps {
   disableEditing?: boolean;
   id: string;
@@ -38,7 +45,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
   ({ id, index, disableEditing, isLatestItem }) => {
     // Get message and actionsConfig from ConversationStore
     const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
-    const actionsConfig = useConversationStore((s) => s.actionsBar?.assistant);
 
     const {
       agentId,
@@ -108,6 +114,17 @@ const AssistantMessage = memo<AssistantMessageProps>(
     }, [isInbox]);
 
     const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
+    const setMessageItemActionElementPortialContext =
+      useSetMessageItemActionElementPortialContext();
+    const setMessageItemActionTypeContext = useSetMessageItemActionTypeContext();
+
+    const onMouseEnter: MouseEventHandler<HTMLDivElement> = useCallback(
+      (e) => {
+        setMessageItemActionElementPortialContext(e.currentTarget);
+        setMessageItemActionTypeContext({ id, index, type: 'assistant' });
+      },
+      [id, index, setMessageItemActionElementPortialContext, setMessageItemActionTypeContext],
+    );
 
     return (
       <ChatItem
@@ -121,7 +138,8 @@ const AssistantMessage = memo<AssistantMessageProps>(
                 messageId={id}
               />
             )}
-            <AssistantActionsBar actionsConfig={actionsConfig} data={item} id={id} index={index} />
+
+            {actionBarHolder}
           </>
         }
         avatar={avatar}
@@ -148,6 +166,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
         newScreen={newScreen}
         onAvatarClick={onAvatarClick}
         onDoubleClick={onDoubleClick}
+        onMouseEnter={onMouseEnter}
         placement={'left'}
         showTitle
         time={createdAt}

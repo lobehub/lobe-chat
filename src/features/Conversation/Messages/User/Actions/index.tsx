@@ -4,6 +4,8 @@ import type { ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui'
 import { memo, useCallback, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES } from '@/const/messageActionPortal';
+
 import type {
   MessageActionItem,
   MessageActionItemOrDivider,
@@ -147,14 +149,17 @@ interface ActionsProps {
   index: number;
 }
 
-const Actions = memo<ActionsProps>(({ actionsConfig, id, data, disableEditing }) => {
+const actionBarHolder = (
+  <div {...{ [MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES.user]: '' }} style={{ height: '28px' }} />
+);
+const Actions = memo<ActionsProps>(({ id, data, disableEditing }) => {
   const { branch } = data;
 
   return (
     <Flexbox align={'center'} horizontal>
       {!disableEditing && (
         <Flexbox align={'flex-start'} role="menubar">
-          <UserActionsBar actionsConfig={actionsConfig} data={data} id={id} />
+          {actionBarHolder}
         </Flexbox>
       )}
       {branch && (

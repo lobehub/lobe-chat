@@ -1,8 +1,9 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback, useMemo } from 'react';
+import { type MouseEventHandler, memo, useCallback, useMemo } from 'react';
 
+import { MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES } from '@/const/messageActionPortal';
 import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useNewScreen } from '@/features/Conversation/Messages/components/useNewScreen';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
@@ -12,13 +13,22 @@ import { useGlobalStore } from '@/store/global';
 
 import { useAgentMeta } from '../../hooks';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../../store';
+import {
+  useSetMessageItemActionElementPortialContext,
+  useSetMessageItemActionTypeContext,
+} from '../Contexts/message-action-context';
 import FileListViewer from '../User/components/FileListViewer';
 import Usage from '../components/Extras/Usage';
 import MessageBranch from '../components/MessageBranch';
-import { GroupActionsBar } from './Actions';
 import EditState from './components/EditState';
 import Group from './components/Group';
 
+const actionBarHolder = (
+  <div
+    {...{ [MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES.assistantGroup]: '' }}
+    style={{ height: '28px' }}
+  />
+);
 interface GroupMessageProps {
   disableEditing?: boolean;
   id: string;
@@ -29,9 +39,6 @@ interface GroupMessageProps {
 const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLatestItem }) => {
   // Get message and actionsConfig from ConversationStore
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
-  const actionsConfig = useConversationStore(
-    (s) => s.actionsBar?.assistantGroup ?? s.actionsBar?.assistant,
-  );
 
   const { agentId, usage, createdAt, children, performance, model, provider, branch } = item;
   const avatar = useAgentMeta(agentId);
@@ -58,6 +65,24 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
   const creating = useConversationStore(messageStateSelectors.isMessageCreating(id));
   const newScreen = useNewScreen({ creating, isLatestItem });
 
+  const setMessageItemActionElementPortialContext = useSetMessageItemActionElementPortialContext();
+  const setMessageItemActionTypeContext = useSetMessageItemActionTypeContext();
+
+  const onMouseEnter: MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      if (disableEditing) return;
+      setMessageItemActionElementPortialContext(e.currentTarget);
+      setMessageItemActionTypeContext({ id, index, type: 'assistantGroup' });
+    },
+    [
+      disableEditing,
+      id,
+      index,
+      setMessageItemActionElementPortialContext,
+      setMessageItemActionTypeContext,
+    ],
+  );
+
   const onAvatarClick = useCallback(() => {
     if (!isInbox) {
       toggleSystemRole(true);
@@ -83,19 +108,14 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
                 messageId={id}
               />
             )}
-            <GroupActionsBar
-              actionsConfig={actionsConfig}
-              contentBlock={lastAssistantMsg}
-              contentId={contentId}
-              data={item}
-              id={id}
-            />
+            {actionBarHolder}
           </>
         )
       }
       avatar={avatar}
       newScreen={newScreen}
       onAvatarClick={onAvatarClick}
+      onMouseEnter={onMouseEnter}
       placement={'left'}
       showTitle
       time={createdAt}
