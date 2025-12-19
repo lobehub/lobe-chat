@@ -14,7 +14,6 @@ const useStyles = createStyles(({ css, token }) => ({
   instruction: css`
     padding-block: 12px;
     padding-inline: 16px;
-    border-block-end: 1px solid ${token.colorBorderSecondary};
 
     font-size: 12px;
     line-height: 1.6;
@@ -25,58 +24,64 @@ const useStyles = createStyles(({ css, token }) => ({
 interface TaskDetailPanelProps {
   content?: string;
   instruction?: string;
+  /**
+   * Message ID for updating task status in store
+   */
+  messageId: string;
   taskDetail: TaskDetail;
 }
 
-const TaskDetailPanel = memo<TaskDetailPanelProps>(({ taskDetail, instruction, content }) => {
-  const { styles } = useStyles();
-  const { status } = taskDetail;
+const TaskDetailPanel = memo<TaskDetailPanelProps>(
+  ({ taskDetail, instruction, content, messageId }) => {
+    const { styles } = useStyles();
+    const { status } = taskDetail;
 
-  // Processing states: Processing, InReview, Pending, Active, Todo
-  const isProcessing =
-    status === ThreadStatus.Processing ||
-    status === ThreadStatus.InReview ||
-    status === ThreadStatus.Pending ||
-    status === ThreadStatus.Active ||
-    status === ThreadStatus.Todo;
+    // Processing states: Processing, InReview, Pending, Active, Todo
+    const isProcessing =
+      status === ThreadStatus.Processing ||
+      status === ThreadStatus.InReview ||
+      status === ThreadStatus.Pending ||
+      status === ThreadStatus.Active ||
+      status === ThreadStatus.Todo;
 
-  // Completed state
-  const isCompleted = status === ThreadStatus.Completed;
+    // Completed state
+    const isCompleted = status === ThreadStatus.Completed;
 
-  // Error states: Failed, Cancel
-  const isError = status === ThreadStatus.Failed || status === ThreadStatus.Cancel;
+    // Error states: Failed, Cancel
+    const isError = status === ThreadStatus.Failed || status === ThreadStatus.Cancel;
 
-  const renderStatusContent = () => {
-    if (isProcessing) {
-      return <ProcessingState taskDetail={taskDetail} />;
-    }
+    const renderStatusContent = () => {
+      if (isProcessing) {
+        return <ProcessingState messageId={messageId} taskDetail={taskDetail} />;
+      }
 
-    if (isCompleted) {
-      return <CompletedState content={content} taskDetail={taskDetail} />;
-    }
+      if (isCompleted) {
+        return <CompletedState content={content} taskDetail={taskDetail} />;
+      }
 
-    if (isError) {
-      return <ErrorState taskDetail={taskDetail} />;
-    }
+      if (isError) {
+        return <ErrorState taskDetail={taskDetail} />;
+      }
 
-    // Fallback to processing state for unknown status
-    return <ProcessingState taskDetail={taskDetail} />;
-  };
+      // Fallback to processing state for unknown status
+      return <ProcessingState messageId={messageId} taskDetail={taskDetail} />;
+    };
 
-  return (
-    <Block variant="filled">
-      {/* Instruction Header */}
-      {instruction && (
-        <Text className={styles.instruction} style={{ display: 'block' }}>
-          {instruction}
-        </Text>
-      )}
+    return (
+      <Block paddingBlock={8} paddingInline={12}>
+        {/* Instruction Header */}
+        {instruction && (
+          <Text className={styles.instruction} style={{ display: 'block' }}>
+            {instruction}
+          </Text>
+        )}
 
-      {/* Status Content */}
-      <Block variant="outlined">{renderStatusContent()}</Block>
-    </Block>
-  );
-});
+        {/* Status Content */}
+        <Block variant="outlined">{renderStatusContent()}</Block>
+      </Block>
+    );
+  },
+);
 
 TaskDetailPanel.displayName = 'TaskDetailPanel';
 

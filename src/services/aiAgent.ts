@@ -24,7 +24,7 @@ export interface ExecGroupSubAgentTaskParams {
   topicId: string;
 }
 
-export interface GetTaskStatusParams {
+export interface GetGroupSubAgentTaskStatusParams {
   threadId: string;
 }
 
@@ -49,10 +49,10 @@ class AiAgentService {
   }
 
   /**
-   * Get task status by threadId
+   * Get SubAgent task status by threadId
    */
-  async getTaskStatus(params: GetTaskStatusParams) {
-    return await lambdaClient.aiAgent.getTaskStatus.query(params);
+  async getGroupSubAgentTaskStatus(params: GetGroupSubAgentTaskStatusParams) {
+    return await lambdaClient.aiAgent.getGroupSubAgentTaskStatus.query(params);
   }
 
   /**

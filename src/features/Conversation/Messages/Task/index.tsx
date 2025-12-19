@@ -85,6 +85,7 @@ const AssistantMessage = memo<TaskMessageProps>(({ id, index, disableEditing, is
         <TaskDetailPanel
           content={content}
           instruction={metadata?.instruction}
+          messageId={id}
           taskDetail={taskDetail}
         />
       )}

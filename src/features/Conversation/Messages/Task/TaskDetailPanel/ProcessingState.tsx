@@ -1,17 +1,18 @@
 'use client';
 
+import { TaskDetail } from '@lobechat/types';
 import { createStyles } from 'antd-style';
-import { Loader2, MessageSquare, Wrench } from 'lucide-react';
+import { Clock, Loader2, MessageSquare, Wrench } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { TaskDetail } from '@/types/index';
+import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     padding-block: 12px;
-padding-inline: 16px;
+    padding-inline: 16px;
   `,
   metricItem: css`
     display: flex;
@@ -98,6 +99,10 @@ padding-inline: 16px;
 }));
 
 interface ProcessingStateProps {
+  /**
+   * Message ID for updating task status in store
+   */
+  messageId: string;
   taskDetail: TaskDetail;
 }
 
@@ -106,14 +111,45 @@ const PROGRESS_INTERVAL = 30_000;
 const PROGRESS_INCREMENT = 5;
 const MAX_PROGRESS = 95;
 
-const ProcessingState = memo<ProcessingStateProps>(({ taskDetail }) => {
+// Format elapsed time as mm:ss or hh:mm:ss
+const formatElapsedTime = (ms: number): string => {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  if (hours > 0) {
+    return `${hours}:${String(minutes % 60).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+  }
+  return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
+};
+
+const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
   const [progress, setProgress] = useState(5);
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  // Get polling hook and check if there's an active operation polling
+  const [useEnablePollingTaskStatus, operations] = useChatStore((s) => [
+    s.useEnablePollingTaskStatus,
+    s.operations,
+  ]);
+
+  // Check if exec_async_task is already polling for this message
+  const hasActiveOperationPolling = Object.values(operations).some(
+    (op) =>
+      op.status === 'running' &&
+      op.type === 'execAgentRuntime' &&
+      op.context?.messageId === messageId,
+  );
+
+  // Enable polling only when no active operation is already polling
+  // This handles the case when user refreshes page and exec_async_task is no longer running
+  useEnablePollingTaskStatus(taskDetail.threadId, messageId, !hasActiveOperationPolling);
 
   const { totalToolCalls, totalMessages, startedAt } = taskDetail;
 
-  // Calculate initial progress based on startedAt
+  // Calculate initial progress and elapsed time based on startedAt
   useEffect(() => {
     if (startedAt) {
       const startTime = new Date(startedAt).getTime();
@@ -121,7 +157,20 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail }) => {
       const intervals = Math.floor(elapsed / PROGRESS_INTERVAL);
       const initialProgress = Math.min(5 + intervals * PROGRESS_INCREMENT, MAX_PROGRESS);
       setProgress(initialProgress);
+      setElapsedTime(elapsed);
     }
+  }, [startedAt]);
+
+  // Timer for updating elapsed time every second
+  useEffect(() => {
+    if (!startedAt) return;
+
+    const timer = setInterval(() => {
+      const startTime = new Date(startedAt).getTime();
+      setElapsedTime(Date.now() - startTime);
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [startedAt]);
 
   // Progress timer - increment every 30 seconds
@@ -143,6 +192,17 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail }) => {
         <span className={styles.statusText}>
           {t('task.status.processing', { defaultValue: 'Working...' })}
         </span>
+
+        {/* Working Time */}
+        {startedAt && (
+          <>
+            <div className={styles.separator} />
+            <div className={styles.metricItem}>
+              <Clock size={12} />
+              <span className={styles.metricValue}>{formatElapsedTime(elapsedTime)}</span>
+            </div>
+          </>
+        )}
 
         {hasMetrics && (
           <>

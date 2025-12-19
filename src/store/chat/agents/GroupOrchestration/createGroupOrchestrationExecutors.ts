@@ -476,7 +476,7 @@ export const createGroupOrchestrationExecutors = (
             };
           }
 
-          const status = await aiAgentService.getTaskStatus({
+          const status = await aiAgentService.getGroupSubAgentTaskStatus({
             threadId: createResult.threadId,
           });
 

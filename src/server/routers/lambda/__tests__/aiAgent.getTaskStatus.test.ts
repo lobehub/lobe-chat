@@ -33,7 +33,7 @@ vi.mock('@/server/services/aiChat', () => ({
   AiChatService: vi.fn().mockImplementation(() => ({})),
 }));
 
-describe('aiAgentRouter.getTaskStatus', () => {
+describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
   let serverDB: LobeChatDatabase;
   let userId: string;
   let testAgentId: string;
@@ -119,7 +119,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
     it('should return task status from Thread table', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.getTaskStatus({
+      const result = await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -133,7 +133,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       await expect(
-        caller.getTaskStatus({
+        caller.getGroupSubAgentTaskStatus({
           threadId: 'non-existent-thread-id',
         }),
       ).rejects.toThrow('Thread not found');
@@ -157,7 +157,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.getTaskStatus({
+      const result = await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -190,7 +190,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
         const caller = aiAgentRouter.createCaller(createTestContext());
 
-        const result = await caller.getTaskStatus({
+        const result = await caller.getGroupSubAgentTaskStatus({
           threadId: testThreadId,
         });
 
@@ -215,7 +215,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.getTaskStatus({
+      const result = await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -227,8 +227,9 @@ describe('aiAgentRouter.getTaskStatus', () => {
       });
     });
 
-    it('should fallback to Thread data when Redis is unavailable', async () => {
-      mockGetOperationStatus.mockRejectedValue(new Error('Redis unavailable'));
+    it('should fallback to Thread data when Redis returns null (operation expired)', async () => {
+      // getOperationStatus now returns null when operation not found (instead of throwing)
+      mockGetOperationStatus.mockResolvedValue(null);
 
       // Update thread with metadata
       await serverDB
@@ -244,7 +245,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.getTaskStatus({
+      const result = await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -265,7 +266,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await caller.getTaskStatus({
+      await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -289,7 +290,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.getTaskStatus({
+      const result = await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -324,7 +325,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const result = await caller.getTaskStatus({
+      const result = await caller.getGroupSubAgentTaskStatus({
         threadId: testThreadId,
       });
 
@@ -348,7 +349,7 @@ describe('aiAgentRouter.getTaskStatus', () => {
     it('should require threadId', async () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      await expect(caller.getTaskStatus({} as any)).rejects.toThrow();
+      await expect(caller.getGroupSubAgentTaskStatus({} as any)).rejects.toThrow();
     });
   });
 });

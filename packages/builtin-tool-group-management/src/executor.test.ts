@@ -43,7 +43,7 @@ vi.mock('@/libs/trpc/client', () => ({
   lambdaClient: {
     aiAgent: {
       execGroupSubAgentTask: { mutate: (...args: any[]) => mockExecGroupSubAgentTask(...args) },
-      getTaskStatus: { query: (...args: any[]) => mockGetTaskStatus(...args) },
+      getGroupSubAgentTaskStatus: { query: (...args: any[]) => mockGetTaskStatus(...args) },
       interruptTask: { mutate: (...args: any[]) => mockInterruptTask(...args) },
     },
   },

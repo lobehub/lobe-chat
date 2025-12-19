@@ -169,7 +169,7 @@ describe('Agent Task Integration', () => {
         metadata: {},
       });
 
-      const processingStatus = await caller.getTaskStatus({
+      const processingStatus = await caller.getGroupSubAgentTaskStatus({
         threadId,
       });
 
@@ -204,7 +204,7 @@ describe('Agent Task Integration', () => {
         metadata: { lastActiveAt: '2024-01-01T12:00:00Z' },
       });
 
-      const completedStatus = await caller.getTaskStatus({
+      const completedStatus = await caller.getGroupSubAgentTaskStatus({
         threadId,
       });
 
@@ -283,7 +283,7 @@ describe('Agent Task Integration', () => {
         .set({ status: ThreadStatus.Cancel })
         .where(eq(threads.id, threadId));
 
-      const statusResult = await caller.getTaskStatus({
+      const statusResult = await caller.getGroupSubAgentTaskStatus({
         threadId,
       });
 
@@ -364,7 +364,7 @@ describe('Agent Task Integration', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const statusResult = await caller.getTaskStatus({
+      const statusResult = await caller.getGroupSubAgentTaskStatus({
         threadId,
       });
 
@@ -498,7 +498,7 @@ describe('Agent Task Integration', () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       // Query by threadId
-      const status = await caller.getTaskStatus({
+      const status = await caller.getGroupSubAgentTaskStatus({
         threadId,
       });
 
@@ -539,7 +539,7 @@ describe('Agent Task Integration', () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       // Query task status
-      const status = await caller.getTaskStatus({ threadId });
+      const status = await caller.getGroupSubAgentTaskStatus({ threadId });
 
       // Verify all metadata fields are accessible
       expect(status.status).toBe('completed');
@@ -595,7 +595,7 @@ describe('Agent Task Integration', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const status = await caller.getTaskStatus({ threadId });
+      const status = await caller.getGroupSubAgentTaskStatus({ threadId });
 
       // Should be processing with partial metadata
       expect(status.status).toBe('processing');
@@ -640,7 +640,7 @@ describe('Agent Task Integration', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const status = await caller.getTaskStatus({ threadId });
+      const status = await caller.getGroupSubAgentTaskStatus({ threadId });
 
       // Should be failed with error in metadata
       expect(status.status).toBe('failed');
@@ -680,7 +680,7 @@ describe('Agent Task Integration', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const status = await caller.getTaskStatus({ threadId });
+      const status = await caller.getGroupSubAgentTaskStatus({ threadId });
 
       expect(status.status).toBe('cancel');
       expect(status.taskDetail?.status).toBe(ThreadStatus.Cancel);
@@ -727,7 +727,7 @@ describe('Agent Task Integration', () => {
 
       const caller = aiAgentRouter.createCaller(createTestContext());
 
-      const status = await caller.getTaskStatus({ threadId });
+      const status = await caller.getGroupSubAgentTaskStatus({ threadId });
 
       // Status should reflect InReview from Thread table
       expect(status.taskDetail?.status).toBe(ThreadStatus.InReview);

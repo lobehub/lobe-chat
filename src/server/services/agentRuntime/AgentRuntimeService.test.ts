@@ -466,19 +466,19 @@ describe('AgentRuntimeService', () => {
         historyLimit: 20,
       });
 
-      expect(result.executionHistory).toEqual(mockHistory);
-      expect(result.recentEvents).toEqual(mockEvents.slice(0, 10));
+      expect(result?.executionHistory).toEqual(mockHistory);
+      expect(result?.recentEvents).toEqual(mockEvents.slice(0, 10));
     });
 
-    it('should handle missing operation', async () => {
+    it('should return null for missing operation', async () => {
       mockCoordinator.loadAgentState.mockResolvedValue(null);
       mockCoordinator.getOperationMetadata.mockResolvedValue(null);
 
-      await expect(
-        service.getOperationStatus({
-          operationId: 'nonexistent-operation',
-        }),
-      ).rejects.toThrow('Operation not found');
+      const result = await service.getOperationStatus({
+        operationId: 'nonexistent-operation',
+      });
+
+      expect(result).toBeNull();
     });
 
     it('should handle different operation statuses', async () => {
@@ -490,8 +490,8 @@ describe('AgentRuntimeService', () => {
         operationId: 'test-operation-1',
       });
 
-      expect(result.isActive).toBe(true);
-      expect(result.needsHumanInput).toBe(true);
+      expect(result?.isActive).toBe(true);
+      expect(result?.needsHumanInput).toBe(true);
     });
   });
 

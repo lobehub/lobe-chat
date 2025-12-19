@@ -457,7 +457,7 @@ export class AgentRuntimeService {
     historyLimit?: number;
     includeHistory?: boolean;
     operationId: string;
-  }): Promise<OperationStatusResult> {
+  }): Promise<OperationStatusResult | null> {
     const { operationId, includeHistory = false, historyLimit = 10 } = params;
 
     try {
@@ -469,8 +469,10 @@ export class AgentRuntimeService {
         this.coordinator.getOperationMetadata(operationId),
       ]);
 
+      // Operation 可能已过期或不存在，返回 null
       if (!currentState || !operationMetadata) {
-        throw new Error('Operation not found');
+        log('Operation %s not found (may have expired)', operationId);
+        return null;
       }
 
       // 获取执行历史（如果需要）

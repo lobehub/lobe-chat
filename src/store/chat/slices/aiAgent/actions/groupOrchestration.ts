@@ -1,9 +1,13 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import type { AgentState, ExecutorResult } from '@lobechat/agent-runtime';
 import { GroupOrchestrationRuntime, GroupOrchestrationSupervisor } from '@lobechat/agent-runtime';
+import { TaskStatusResult } from '@lobechat/types';
 import debug from 'debug';
+import { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { useClientDataSWR } from '@/libs/swr';
+import { aiAgentService } from '@/services/aiAgent';
 import { createGroupOrchestrationExecutors } from '@/store/chat/agents/GroupOrchestration';
 import { ChatStore } from '@/store/chat/store';
 import type { GroupOrchestrationCallbacks } from '@/store/tool/slices/builtin/types';
@@ -14,6 +18,12 @@ const log = debug('lobe-store:group-orchestration');
  * Default maximum rounds for group orchestration
  */
 const DEFAULT_MAX_ROUNDS = 10;
+
+// SWR key for polling task status
+const SWR_USE_POLLING_TASK_STATUS = 'SWR_USE_POLLING_TASK_STATUS';
+
+// Polling interval for task status (5 seconds)
+const POLLING_INTERVAL = 5000;
 
 export interface GroupOrchestrationParams {
   groupId: string;
@@ -62,6 +72,20 @@ export interface GroupOrchestrationAction {
    * This starts the group orchestration loop with supervisor_decided result
    */
   triggerExecuteTask: GroupOrchestrationCallbacks['triggerExecuteTask'];
+
+  /**
+   * Enable polling for task status
+   * Used by ProcessingState component to poll for real-time task updates
+   *
+   * @param threadId - Thread ID to poll status for
+   * @param messageId - Message ID to update with taskDetail
+   * @param enabled - Whether polling should be enabled (caller decides based on processing state and active operations)
+   */
+  useEnablePollingTaskStatus: (
+    threadId: string | undefined,
+    messageId: string | undefined,
+    enabled: boolean,
+  ) => SWRResponse<TaskStatusResult>;
 }
 
 export const groupOrchestrationSlice: StateCreator<
@@ -352,5 +376,32 @@ export const groupOrchestrationSlice: StateCreator<
     }
 
     return state;
+  },
+
+  /**
+   * Enable polling for task status using SWR
+   * Caller is responsible for determining when to enable polling
+   */
+  useEnablePollingTaskStatus: (threadId, messageId, enabled) => {
+    return useClientDataSWR<TaskStatusResult>(
+      enabled && threadId && messageId ? [SWR_USE_POLLING_TASK_STATUS, threadId] : null,
+      async ([, tid]: [string, string]) => {
+        return aiAgentService.getGroupSubAgentTaskStatus({ threadId: tid });
+      },
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        refreshInterval: POLLING_INTERVAL,
+        onSuccess: (data) => {
+          if (data?.taskDetail && messageId) {
+            get().internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: { taskDetail: data.taskDetail },
+            });
+          }
+        },
+      },
+    );
   },
 });

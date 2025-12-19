@@ -82,6 +82,8 @@ export interface TaskDetail {
   totalCost?: number;
   /** Total messages created during execution */
   totalMessages?: number;
+  /** Total execution steps */
+  totalSteps?: number;
   /** Total tokens consumed */
   totalTokens?: number;
   /** Total tool calls made */
