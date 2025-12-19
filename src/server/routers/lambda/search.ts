@@ -30,6 +30,11 @@ const searchProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
   });
 });
 
+/**
+ * The unified search router for all entities in the database.
+ *
+ * Can specify the type of entity to search for.
+ */
 export const searchRouter = router({
   query: searchProcedure
     .input(

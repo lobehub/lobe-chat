@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 
-import { agents, documents, files, messages, topics } from '../../schemas';
+import { agents, documents, files, knowledgeBaseFiles, messages, topics } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
 export type SearchResultType =
@@ -40,6 +40,7 @@ export interface TopicSearchResult extends BaseSearchResult {
 
 export interface FileSearchResult extends BaseSearchResult {
   fileType: string;
+  knowledgeBaseId: string | null;
   name: string;
   size: number;
   type: 'file';
@@ -240,7 +241,8 @@ export class SearchRepo {
         NULL::text as name,
         NULL::varchar(255) as file_type,
         NULL::integer as size,
-        NULL::text as url
+        NULL::text as url,
+        NULL::text as knowledge_base_id
       FROM ${agents} a
       WHERE a.user_id = ${this.userId}
         AND (
@@ -315,7 +317,8 @@ export class SearchRepo {
         NULL::text as name,
         NULL::varchar(255) as file_type,
         NULL::integer as size,
-        NULL::text as url
+        NULL::text as url,
+        NULL::text as knowledge_base_id
       FROM ${topics} t
       WHERE t.user_id = ${this.userId}
         AND (
@@ -402,7 +405,8 @@ export class SearchRepo {
         m.role as name,
         NULL::varchar(255) as file_type,
         NULL::integer as size,
-        NULL::text as url
+        NULL::text as url,
+        NULL::text as knowledge_base_id
       FROM ${messages} m
       LEFT JOIN ${agents} a ON m.agent_id = a.id
       WHERE m.user_id = ${this.userId}
@@ -428,7 +432,7 @@ export class SearchRepo {
     // Query for files (with optional linked documents)
     const fileQuery = sql`
       SELECT
-        COALESCE(d.id, f.id) as id,
+        f.id,
         'file' as type,
         f.name as title,
         d.content as description,
@@ -449,9 +453,11 @@ export class SearchRepo {
         f.name,
         f.file_type,
         f.size,
-        f.url
+        f.url,
+        kbf.knowledge_base_id
       FROM ${files} f
       LEFT JOIN ${documents} d ON f.id = d.file_id
+      LEFT JOIN ${knowledgeBaseFiles} kbf ON f.id = kbf.file_id
       WHERE f.user_id = ${this.userId}
         AND f.name ILIKE ${searchTerm}
     `;
@@ -480,8 +486,11 @@ export class SearchRepo {
         COALESCE(d.title, d.filename, 'Untitled') as name,
         d.file_type,
         d.total_char_count as size,
-        d.source as url
+        d.source as url,
+        kbf.knowledge_base_id
       FROM ${documents} d
+      LEFT JOIN ${files} f ON d.file_id = f.id
+      LEFT JOIN ${knowledgeBaseFiles} kbf ON f.id = kbf.file_id
       WHERE d.user_id = ${this.userId}
         AND d.source_type != 'file'
         AND (
@@ -557,6 +566,7 @@ export class SearchRepo {
           return {
             ...base,
             fileType: row.file_type,
+            knowledgeBaseId: row.knowledge_base_id,
             name: row.name,
             size: Number(row.size),
             type: 'file' as const,

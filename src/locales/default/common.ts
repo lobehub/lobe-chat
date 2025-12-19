@@ -165,6 +165,8 @@ export default {
       mcps: 'MCP 服务器',
       message: '对话',
       messages: '对话',
+      page: '文稿',
+      pages: '文稿',
       plugin: '插件',
       plugins: '插件',
       searching: '搜索结果',

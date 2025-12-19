@@ -1,10 +1,37 @@
 import { Tag } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
 import { ArrowLeft } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { Context } from '../types';
+
+const useStyles = createStyles(({ css, token }) => ({
+  backTag: css`
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  `,
+  contextTag: css`
+    cursor: default;
+    user-select: none;
+  `,
+  contextWrapper: css`
+    padding-block: 12px 6px;
+    padding-inline: 16px;
+  `,
+  inputWrapper: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding: 16px;
+    border-block-end: 1px solid ${token.colorBorderSecondary};
+  `,
+}));
 
 interface CommandInputProps {
   context?: Context;
@@ -13,19 +40,14 @@ interface CommandInputProps {
   onBack: () => void;
   onValueChange: (value: string) => void;
   search: string;
-  styles: {
-    backTag: string;
-    contextTag: string;
-    contextWrapper: string;
-    inputWrapper: string;
-  };
 }
 
 const CommandInput = memo<CommandInputProps>(
-  ({ context, hasPages, isAiMode, onBack, onValueChange, search, styles }) => {
+  ({ context, hasPages, isAiMode, onBack, onValueChange, search }) => {
     const { t } = useTranslation('common');
     const { t: tSetting } = useTranslation('setting');
     const { t: tChat } = useTranslation('chat');
+    const { styles } = useStyles();
 
     // Get localized context name
     const getContextName = () => {

@@ -1,13 +1,6 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
-  backTag: css`
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  `,
   chatContainer: css`
     display: flex;
     flex-direction: column;
@@ -38,18 +31,6 @@ export const useStyles = createStyles(({ css, token }) => ({
   commandContainer: css`
     display: flex;
     flex-direction: column;
-  `,
-  commandFooter: css`
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    justify-content: flex-end;
-
-    padding-block: 8px;
-    padding-inline: 16px;
-    border-block-start: 1px solid ${token.colorBorderSecondary};
-
-    background: ${token.colorBgContainer};
   `,
   commandRoot: css`
     overflow: hidden;
@@ -153,27 +134,11 @@ export const useStyles = createStyles(({ css, token }) => ({
       background: ${token.colorBorderSecondary};
     }
   `,
-  contextTag: css`
-    cursor: default;
-    user-select: none;
-  `,
-  contextWrapper: css`
-    padding-block: 12px 6px;
-    padding-inline: 16px;
-  `,
   icon: css`
     flex-shrink: 0;
     width: 20px;
     height: 20px;
     color: ${token.colorTextSecondary};
-  `,
-  inputWrapper: css`
-    display: flex;
-    gap: 8px;
-    align-items: center;
-
-    padding: 16px;
-    border-block-end: 1px solid ${token.colorBorderSecondary};
   `,
   itemContent: css`
     display: flex;
@@ -228,26 +193,6 @@ export const useStyles = createStyles(({ css, token }) => ({
     font-size: 11px;
     color: ${token.colorTextTertiary};
     text-transform: capitalize;
-  `,
-  kbd: css`
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-
-    padding-block: 2px;
-    padding-inline: 6px;
-    border-radius: ${token.borderRadiusSM}px;
-
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 1.2;
-    color: ${token.colorTextSecondary};
-
-    background: ${token.colorFillQuaternary};
-  `,
-  kbdIcon: css`
-    width: 12px;
-    height: 12px;
   `,
   overlay: css`
     position: fixed;

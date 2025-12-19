@@ -13,6 +13,13 @@ import CommandInput from './components/CommandInput';
 import { useStyles } from './styles';
 import { useCommandMenu } from './useCommandMenu';
 
+// type MenuViewMode = 'default' | 'search' | 'ai-chat';
+
+/**
+ * CMDK Menu.
+ *
+ * Search everything in LobeHub.
+ */
 const CommandMenu = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
@@ -85,7 +92,6 @@ const CommandMenu = memo(() => {
             onBack={handleBack}
             onValueChange={setSearch}
             search={search}
-            styles={styles}
           />
 
           <Command.List>
@@ -117,7 +123,7 @@ const CommandMenu = memo(() => {
             )}
           </Command.List>
 
-          <CommandFooter styles={styles} />
+          <CommandFooter />
         </Command>
       </div>
     </div>,
