@@ -16,6 +16,7 @@ import Copilot from './Copilot';
 import Header from './Header';
 import PageAgentProvider from './PageAgentProvider';
 import { PageEditorProvider } from './PageEditorProvider';
+import PageTitle from './PageTitle';
 import { usePageEditorStore } from './store';
 
 interface PageEditorProps {
@@ -38,27 +39,30 @@ const PageEditorCanvas = memo(() => {
   useSaveDocumentHotkey(flushSave);
 
   return (
-    <Flexbox
-      height={'100%'}
-      horizontal
-      style={{ backgroundColor: theme.colorBgContainer }}
-      width={'100%'}
-    >
-      <Flexbox flex={1} height={'100%'}>
-        <Header />
-        <Flexbox
-          height={'100%'}
-          horizontal
-          style={{ display: 'flex', overflowY: 'auto', position: 'relative' }}
-          width={'100%'}
-        >
-          <WideScreenContainer onClick={() => editor?.focus()} wrapperStyle={{ cursor: 'text' }}>
-            <Body />
-          </WideScreenContainer>
+    <>
+      <PageTitle />
+      <Flexbox
+        height={'100%'}
+        horizontal
+        style={{ backgroundColor: theme.colorBgContainer }}
+        width={'100%'}
+      >
+        <Flexbox flex={1} height={'100%'}>
+          <Header />
+          <Flexbox
+            height={'100%'}
+            horizontal
+            style={{ display: 'flex', overflowY: 'auto', position: 'relative' }}
+            width={'100%'}
+          >
+            <WideScreenContainer onClick={() => editor?.focus()} wrapperStyle={{ cursor: 'text' }}>
+              <Body />
+            </WideScreenContainer>
+          </Flexbox>
         </Flexbox>
+        <Copilot />
       </Flexbox>
-      <Copilot />
-    </Flexbox>
+    </>
   );
 });
 
