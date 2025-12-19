@@ -713,6 +713,19 @@ export class MessageModel {
     return result.length > n;
   };
 
+  /**
+   * Count messages up to a limit, useful for avoiding full table scans
+   */
+  countUpTo = async (n: number): Promise<number> => {
+    const result = await this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(eq(messages.userId, this.userId))
+      .limit(n);
+
+    return result.length;
+  };
+
   // **************** Create *************** //
 
   create = async (

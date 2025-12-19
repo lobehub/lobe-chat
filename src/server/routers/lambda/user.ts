@@ -69,63 +69,71 @@ export const userRouter = router({
       // `after` may fail outside request scope (e.g., in tests), ignore silently
     }
 
-    let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
+    // Helper function to get or create user state
+    const getOrCreateUserState = async () => {
+      let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
-    // get or create first-time user
-    while (!state) {
-      try {
-        state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
-      } catch (error) {
-        // user not create yet
-        if (error instanceof UserNotFoundError) {
-          // if in clerk auth mode
-          if (enableClerk) {
-            const user = await ctx.clerkAuth.getCurrentUser();
-            if (user) {
-              const userService = new UserService(ctx.serverDB);
+      // get or create first-time user
+      while (!state) {
+        try {
+          state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+        } catch (error) {
+          // user not create yet
+          if (error instanceof UserNotFoundError) {
+            // if in clerk auth mode
+            if (enableClerk) {
+              const user = await ctx.clerkAuth.getCurrentUser();
+              if (user) {
+                const userService = new UserService(ctx.serverDB);
 
-              await userService.createUser(user.id, {
-                created_at: user.createdAt,
-                email_addresses: user.emailAddresses.map((e) => ({
-                  email_address: e.emailAddress,
-                  id: e.id,
-                })),
-                first_name: user.firstName,
-                id: user.id,
-                image_url: user.imageUrl,
-                last_name: user.lastName,
-                phone_numbers: user.phoneNumbers.map((e) => ({
-                  id: e.id,
-                  phone_number: e.phoneNumber,
-                })),
-                primary_email_address_id: user.primaryEmailAddressId,
-                primary_phone_number_id: user.primaryPhoneNumberId,
-                username: user.username,
-              } as UserJSON);
+                await userService.createUser(user.id, {
+                  created_at: user.createdAt,
+                  email_addresses: user.emailAddresses.map((e) => ({
+                    email_address: e.emailAddress,
+                    id: e.id,
+                  })),
+                  first_name: user.firstName,
+                  id: user.id,
+                  image_url: user.imageUrl,
+                  last_name: user.lastName,
+                  phone_numbers: user.phoneNumbers.map((e) => ({
+                    id: e.id,
+                    phone_number: e.phoneNumber,
+                  })),
+                  primary_email_address_id: user.primaryEmailAddressId,
+                  primary_phone_number_id: user.primaryPhoneNumberId,
+                  username: user.username,
+                } as UserJSON);
 
+                continue;
+              }
+            }
+
+            // if in desktop mode, make sure desktop user exist
+            else if (isDesktop) {
+              await UserModel.makeSureUserExist(ctx.serverDB, ctx.userId);
+              pino.info('create desktop user');
               continue;
             }
           }
 
-          // if in desktop mode, make sure desktop user exist
-          else if (isDesktop) {
-            await UserModel.makeSureUserExist(ctx.serverDB, ctx.userId);
-            pino.info('create desktop user');
-            continue;
-          }
+          console.error('getUserState:', error);
+          throw error;
         }
-
-        console.error('getUserState:', error);
-        throw error;
       }
-    }
 
-    // Run all count queries in parallel
-    const [hasMoreThan4Messages, hasAnyMessages, hasExtraSession] = await Promise.all([
-      ctx.messageModel.hasMoreThanN(4),
-      ctx.messageModel.hasMoreThanN(0),
+      return state;
+    };
+
+    // Run user state fetch and count queries in parallel
+    const [state, messageCount, hasExtraSession] = await Promise.all([
+      getOrCreateUserState(),
+      ctx.messageModel.countUpTo(5),
       ctx.sessionModel.hasMoreThanN(1),
     ]);
+
+    const hasMoreThan4Messages = messageCount > 4;
+    const hasAnyMessages = messageCount > 0;
 
     return {
       avatar: state.avatar,
@@ -138,11 +146,10 @@ export const userRouter = router({
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
 
-      
       interests: state.interests,
 
       // always return true for community version
-isOnboard: state.isOnboarded ?? true,
+      isOnboard: state.isOnboarded ?? true,
       lastName: state.lastName,
       onboarding: state.onboarding,
       preference: state.preference as UserPreference,
