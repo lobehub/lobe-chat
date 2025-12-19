@@ -36,7 +36,7 @@ const ENABLE_RESIZING = {
   bottom: false,
   bottomLeft: false,
   bottomRight: false,
-  left: true,
+  left: false,
   right: true,
   top: false,
   topLeft: false,
