@@ -2,6 +2,7 @@
 globs: *.tsx
 alwaysApply: false
 ---
+
 # LobeChat Internationalization Guide
 
 ## Key Points
@@ -14,7 +15,7 @@ alwaysApply: false
 
 ## Directory Structure
 
-```
+```plaintext
 src/locales/
 ├── default/           # Source language files (zh-CN)
 │   ├── index.ts      # Namespace exports
@@ -176,7 +177,3 @@ export default {
 - Check if the key exists in src/locales/default/namespace.ts
 - Ensure the namespace is correctly imported in the component
 - Ensure new namespaces are exported in src/locales/default/index.ts
-
-- 检查键是否存在于 src/locales/default/namespace.ts 中
-- 确保在组件中正确导入命名空间
-- 确保新命名空间已在 src/locales/default/index.ts 中导出
