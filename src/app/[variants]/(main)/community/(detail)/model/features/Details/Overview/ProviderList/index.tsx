@@ -4,10 +4,10 @@ import { ProviderIcon } from '@lobehub/icons';
 import { ActionIcon, Block, Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { BadgeCheck, BookIcon, ChevronRightIcon, KeyIcon } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import InlineTable from '@/components/InlineTable';
@@ -32,7 +32,7 @@ const ProviderList = memo(() => {
             key: 'provider',
             render: (_, record) => {
               return (
-                <Link href={urlJoin('/community/provider', record.id)} style={{ color: 'inherit' }}>
+                <Link style={{ color: 'inherit' }} to={urlJoin('/community/provider', record.id)}>
                   <Flexbox align="center" gap={8} horizontal>
                     <ProviderIcon provider={record.id} size={24} type={'avatar'} />
                     <div style={{ fontWeight: 500 }}>{record.name}</div>
@@ -157,14 +157,11 @@ const ProviderList = memo(() => {
                     </Tooltip>
                   )}
                   <Tooltip title={t('models.guide')}>
-                    <Link href={urlJoin(BASE_PROVIDER_DOC_URL, record.id)} target={'_blank'}>
+                    <a href={urlJoin(BASE_PROVIDER_DOC_URL, record.id)} rel="noreferrer" target={'_blank'}>
                       <ActionIcon icon={BookIcon} size={'small'} variant={'filled'} />
-                    </Link>
+                    </a>
                   </Tooltip>
-                  <Link
-                    href={urlJoin('/community/provider', record.id)}
-                    style={{ color: 'inherit' }}
-                  >
+                  <Link style={{ color: 'inherit' }} to={urlJoin('/community/provider', record.id)}>
                     <ActionIcon
                       color={theme.colorTextDescription}
                       icon={ChevronRightIcon}

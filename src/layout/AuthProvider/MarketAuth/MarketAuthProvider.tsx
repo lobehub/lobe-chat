@@ -166,6 +166,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   const [pendingSignInReject, setPendingSignInReject] = useState<((_reason?: any) => void) | null>(
     null,
   );
+  const [pendingProfileSuccessCallback, setPendingProfileSuccessCallback] = useState<
+    ((profile: MarketUserProfile) => void) | null
+  >(null);
 
   // 订阅 user store 的初始化状态，当 isUserStateInit 为 true 时，settings 数据已加载完成
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
@@ -281,8 +284,12 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
       if (userInfo?.sub) {
         const needsSetup = await checkNeedsProfileSetup(userInfo.sub);
         if (needsSetup) {
-          setIsFirstTimeSetup(true);
-          setShowProfileSetupModal(true);
+          // Wait for next tick to ensure session state is updated before opening modal
+          // This prevents the edge case where accessToken is null when modal opens
+          setTimeout(() => {
+            setIsFirstTimeSetup(true);
+            setShowProfileSetupModal(true);
+          }, 0);
         }
       }
 
@@ -378,8 +385,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   /**
    * 打开个人资料设置模态框（用于用户手动编辑）
    */
-  const openProfileSetup = useCallback(() => {
+  const openProfileSetup = useCallback((onSuccess?: (profile: MarketUserProfile) => void) => {
     setIsFirstTimeSetup(false);
+    setPendingProfileSuccessCallback(() => onSuccess || null);
     setShowProfileSetupModal(true);
   }, []);
 
@@ -389,6 +397,7 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   const handleCloseProfileSetup = useCallback(() => {
     setShowProfileSetupModal(false);
     setIsFirstTimeSetup(false);
+    setPendingProfileSuccessCallback(null);
   }, []);
 
   /**
@@ -446,8 +455,14 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
           { revalidate: true },
         );
       }
+
+      // Call the external success callback if provided
+      if (pendingProfileSuccessCallback) {
+        pendingProfileSuccessCallback(profile);
+        setPendingProfileSuccessCallback(null);
+      }
     },
-    [handleProfileUpdateSuccess, mutateUserProfile],
+    [handleProfileUpdateSuccess, mutateUserProfile, pendingProfileSuccessCallback],
   );
 
   return (

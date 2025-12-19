@@ -1,9 +1,9 @@
 import { Button, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
 const useStyles = createStyles(({ css, token }) => ({
   more: css`
@@ -33,7 +33,7 @@ const Block = memo<BlockProps>(({ title, more, moreLink, children, ...rest }) =>
       <Flexbox align={'center'} gap={16} horizontal justify={'space-between'} width={'100%'}>
         <h2 className={styles.title}>{title}</h2>
         {moreLink && (
-          <Link href={moreLink} target={moreLink.startsWith('http') ? '_blank' : undefined}>
+          <Link target={moreLink.startsWith('http') ? '_blank' : undefined} to={moreLink}>
             <Button className={styles.more} type={'text'}>
               <span>{more}</span>
               <Icon icon={ChevronRight} />

@@ -2,6 +2,7 @@
 
 import { type ReactNode, createContext, memo, use } from 'react';
 
+import { MarketUserProfile } from '@/layout/AuthProvider/MarketAuth/types';
 import { DiscoverAssistantItem, DiscoverUserInfo } from '@/types/discover';
 
 export interface UserDetailContextConfig {
@@ -9,7 +10,7 @@ export interface UserDetailContextConfig {
   agents: DiscoverAssistantItem[];
   isOwner: boolean;
   mobile?: boolean;
-  onEditProfile?: () => void;
+  onEditProfile?: (onSuccess?: (profile: MarketUserProfile) => void) => void;
   onStatusChange?: (identifier: string, action: 'publish' | 'unpublish' | 'deprecate') => void;
   totalInstalls: number;
   user: DiscoverUserInfo;

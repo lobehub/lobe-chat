@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Button , Skeleton } from '@lobehub/ui';
+import { Avatar, Button, Skeleton } from '@lobehub/ui';
 import { UserCircleIcon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +30,7 @@ const UserAvatar = memo(() => {
 
   const handleNavigateToProfile = useCallback(() => {
     // Use userName from profile for the URL (not OIDC sub/id)
-    const profileUserName = userProfile?.userName;
+    const profileUserName = userProfile?.userName || userProfile?.namespace;
     if (profileUserName) {
       navigate(`/community/user/${profileUserName}`);
     }

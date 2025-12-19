@@ -5,10 +5,9 @@ import { Button, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { useDetailContext } from '../../DetailProvider';
@@ -33,7 +32,7 @@ const ChatWithModel = memo(() => {
     icon: <ProviderIcon provider={item.id} size={20} type={'avatar'} />,
     key: item.id,
     label: (
-      <Link href={urlJoin('/community/provider', item.id)}>
+      <Link to={urlJoin('/community/provider', item.id)}>
         {[item.name, t('models.guide')].join(' ')}
       </Link>
     ),
@@ -63,7 +62,7 @@ const ChatWithModel = memo(() => {
 
   if (items.length === 1)
     return (
-      <Link href={urlJoin('/community/provider', items[0].key)} style={{ flex: 1 }}>
+      <Link style={{ flex: 1 }} to={urlJoin('/community/provider', items[0].key)}>
         <Button block className={styles.button} size={'large'} type={'primary'}>
           {t('models.guide')}
         </Button>
