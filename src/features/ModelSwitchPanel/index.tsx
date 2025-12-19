@@ -3,13 +3,12 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import { AiModelForSelect } from 'model-bank';
-import { type ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
 import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
-import { VList } from 'virtua';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
@@ -23,9 +22,8 @@ const MIN_WIDTH = 280;
 const MAX_WIDTH = 600;
 const MAX_PANEL_HEIGHT = 550;
 
-const INITIAL_BUFFER_SIZE = 10;
-const FULL_BUFFER_SIZE = 1000;
-const BUFFER_DELAY_MS = 500;
+const INITIAL_RENDER_COUNT = 15;
+const RENDER_ALL_DELAY_MS = 500;
 
 const ITEM_HEIGHT = {
   'empty-model': 38,
@@ -138,34 +136,29 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
       return stored ? Number(stored) : DEFAULT_WIDTH;
     });
 
-    const [bufferSize, setBufferSize] = useState(INITIAL_BUFFER_SIZE);
-    const bufferTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [renderAll, setRenderAll] = useState(false);
     const [internalOpen, setInternalOpen] = useState(false);
 
     // Use controlled open if provided, otherwise use internal state
     const isOpen = open ?? internalOpen;
 
+    // Only delay render all items on first open, then keep cached
+    useEffect(() => {
+      if (isOpen && !renderAll) {
+        const timer = setTimeout(() => {
+          setRenderAll(true);
+        }, RENDER_ALL_DELAY_MS);
+        return () => clearTimeout(timer);
+      }
+    }, [isOpen, renderAll]);
+
     const handleOpenChange = useCallback(
       (nextOpen: boolean) => {
-        if (nextOpen) {
-          bufferTimerRef.current = setTimeout(() => {
-            setBufferSize(FULL_BUFFER_SIZE);
-          }, BUFFER_DELAY_MS);
-        } else {
-          // Reset buffer when closing
-          if (bufferTimerRef.current) clearTimeout(bufferTimerRef.current);
-        }
         setInternalOpen(nextOpen);
         onOpenChange?.(nextOpen);
       },
       [onOpenChange],
     );
-
-    useEffect(() => {
-      return () => {
-        if (bufferTimerRef.current) clearTimeout(bufferTimerRef.current);
-      };
-    }, []);
 
     // Get values from store for fallback when props are not provided
     const [storeModel, storeProvider, updateAgentConfig] = useAgentStore((s) => [
@@ -358,9 +351,11 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
             size={{ height: panelHeight, width: panelWidth }}
             style={{ position: 'relative' }}
           >
-            <VList bufferSize={bufferSize} style={{ height: panelHeight, width: '100%' }}>
-              {virtualItems.map(renderVirtualItem)}
-            </VList>
+            <div style={{ height: panelHeight, overflow: 'auto', width: '100%' }}>
+              {(renderAll ? virtualItems : virtualItems.slice(0, INITIAL_RENDER_COUNT)).map(
+                renderVirtualItem,
+              )}
+            </div>
           </Rnd>
         )}
       >
