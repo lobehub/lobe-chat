@@ -89,6 +89,7 @@ const createMockApp = () => {
     },
     browserManager: {
       getMainWindow: vi.fn(() => ({
+        broadcast: vi.fn(),
         loadUrl: vi.fn(),
         show: vi.fn(),
       })),

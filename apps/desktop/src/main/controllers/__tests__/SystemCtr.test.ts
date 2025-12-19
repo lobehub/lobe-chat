@@ -139,22 +139,24 @@ describe('SystemController', () => {
     });
   });
 
-  describe('checkAccessibilityForMacOS', () => {
-    it('should check accessibility on macOS', async () => {
+  describe('accessibility', () => {
+    it('should request accessibility access on macOS', async () => {
       const { systemPreferences } = await import('electron');
 
-      await invokeIpc('system.checkAccessibilityForMacOS');
+      await invokeIpc('system.requestAccessibilityAccess');
 
       expect(systemPreferences.isTrustedAccessibilityClient).toHaveBeenCalledWith(true);
     });
 
-    it('should return undefined on non-macOS', async () => {
+    it('should return true on non-macOS when requesting accessibility access', async () => {
       const { macOS } = await import('electron-is');
+      const { systemPreferences } = await import('electron');
       vi.mocked(macOS).mockReturnValue(false);
 
-      const result = await invokeIpc('system.checkAccessibilityForMacOS');
+      const result = await invokeIpc('system.requestAccessibilityAccess');
 
-      expect(result).toBeUndefined();
+      expect(result).toBe(true);
+      expect(systemPreferences.isTrustedAccessibilityClient).not.toHaveBeenCalled();
 
       // Reset
       vi.mocked(macOS).mockReturnValue(true);
