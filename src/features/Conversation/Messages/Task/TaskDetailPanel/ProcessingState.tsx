@@ -2,7 +2,7 @@
 
 import { TaskDetail } from '@lobechat/types';
 import { createStyles } from 'antd-style';
-import { Clock, Loader2, MessageSquare, Wrench } from 'lucide-react';
+import { Footprints, Timer, Wrench } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -10,9 +10,10 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    padding-block: 12px;
+  footer: css`
+    padding-block: 8px;
     padding-inline: 16px;
+    border-block-start: 1px solid ${token.colorBorderSecondary};
   `,
   metricItem: css`
     display: flex;
@@ -20,11 +21,11 @@ const useStyles = createStyles(({ css, token }) => ({
     align-items: center;
 
     font-size: 12px;
-    color: ${token.colorTextSecondary};
+    color: ${token.colorTextTertiary};
   `,
   metricValue: css`
     font-weight: 500;
-    color: ${token.colorText};
+    color: ${token.colorTextSecondary};
   `,
   progress: css`
     position: relative;
@@ -32,6 +33,8 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
 
     height: 3px;
+    margin-block: 12px;
+    margin-inline: 16px;
     border-radius: 2px;
 
     background: ${token.colorFillSecondary};
@@ -71,9 +74,10 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   separator: css`
-    width: 1px;
-    height: 12px;
-    background: ${token.colorBorderSecondary};
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: ${token.colorTextQuaternary};
   `,
   spin: css`
     animation: spin 1s linear infinite;
@@ -88,13 +92,19 @@ const useStyles = createStyles(({ css, token }) => ({
       }
     }
   `,
-  statusRow: css`
-    font-size: 13px;
-    color: ${token.colorTextSecondary};
-  `,
-  statusText: css`
-    font-weight: 500;
-    color: ${token.colorText};
+  statusIcon: css`
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+
+    color: ${token.colorPrimaryText};
+
+    background: ${token.colorPrimaryBg};
   `,
 }));
 
@@ -147,7 +157,7 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) =
   // This handles the case when user refreshes page and exec_async_task is no longer running
   useEnablePollingTaskStatus(taskDetail.threadId, messageId, !hasActiveOperationPolling);
 
-  const { totalToolCalls, totalMessages, startedAt } = taskDetail;
+  const { totalToolCalls, totalSteps, startedAt } = taskDetail;
 
   // Calculate initial progress and elapsed time based on startedAt
   useEffect(() => {
@@ -182,54 +192,58 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) =
     return () => clearInterval(timer);
   }, []);
 
-  const hasMetrics = (totalToolCalls && totalToolCalls > 0) || (totalMessages && totalMessages > 0);
+  const hasMetrics = totalSteps || totalToolCalls;
 
   return (
-    <Flexbox className={styles.container} gap={12}>
-      {/* Status Row */}
-      <Flexbox align="center" className={styles.statusRow} gap={8} horizontal>
-        <Loader2 className={styles.spin} size={14} />
-        <span className={styles.statusText}>
-          {t('task.status.processing', { defaultValue: 'Working...' })}
-        </span>
-
-        {/* Working Time */}
-        {startedAt && (
-          <>
-            <div className={styles.separator} />
-            <div className={styles.metricItem}>
-              <Clock size={12} />
-              <span className={styles.metricValue}>{formatElapsedTime(elapsedTime)}</span>
-            </div>
-          </>
-        )}
-
-        {hasMetrics && (
-          <>
-            <div className={styles.separator} />
-            {totalToolCalls !== undefined && totalToolCalls > 0 && (
-              <div className={styles.metricItem}>
-                <Wrench size={12} />
-                <span className={styles.metricValue}>{totalToolCalls}</span>
-                <span>{t('task.metrics.toolCallsShort', { defaultValue: 'tools' })}</span>
-              </div>
-            )}
-            {totalMessages !== undefined && totalMessages > 0 && (
-              <div className={styles.metricItem}>
-                <MessageSquare size={12} />
-                <span className={styles.metricValue}>{totalMessages}</span>
-                <span>{t('task.metrics.messagesShort', { defaultValue: 'messages' })}</span>
-              </div>
-            )}
-          </>
-        )}
-      </Flexbox>
-
+    <Flexbox>
       {/* Progress Bar */}
       <div className={styles.progress}>
         <div className={styles.progressBar} style={{ width: `${progress}%` }} />
         <div className={styles.progressShimmer} />
       </div>
+
+      {/* Footer with metrics */}
+      <Flexbox
+        align="center"
+        className={styles.footer}
+        gap={12}
+        horizontal
+        justify={'space-between'}
+        wrap="wrap"
+      >
+        <Flexbox align="center" gap={12} horizontal>
+          {/* Elapsed Time */}
+          {startedAt && (
+            <div className={styles.metricItem}>
+              <Timer size={12} />
+              <span className={styles.metricValue}>{formatElapsedTime(elapsedTime)}</span>
+            </div>
+          )}
+        </Flexbox>
+        <Flexbox align="center" gap={12} horizontal>
+          {/* Steps */}
+          {totalSteps !== undefined && totalSteps > 0 && (
+            <div className={styles.metricItem}>
+              <Footprints size={12} />
+              <span className={styles.metricValue}>{totalSteps}</span>
+              <span>{t('task.metrics.stepsShort')}</span>
+            </div>
+          )}
+          {/* Tool Calls */}
+          {totalToolCalls !== undefined && totalToolCalls > 0 && (
+            <>
+              {hasMetrics && totalSteps !== undefined && totalSteps > 0 && (
+                <div className={styles.separator} />
+              )}
+              <div className={styles.metricItem}>
+                <Wrench size={12} />
+                <span className={styles.metricValue}>{totalToolCalls}</span>
+                <span>{t('task.metrics.toolCallsShort')}</span>
+              </div>
+            </>
+          )}
+        </Flexbox>
+      </Flexbox>
     </Flexbox>
   );
 });

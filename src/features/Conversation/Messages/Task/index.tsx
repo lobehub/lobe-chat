@@ -81,14 +81,12 @@ const AssistantMessage = memo<TaskMessageProps>(({ id, index, disableEditing, is
       showTitle
       time={createdAt}
     >
-      {taskDetail && (
-        <TaskDetailPanel
-          content={content}
-          instruction={metadata?.instruction}
-          messageId={id}
-          taskDetail={taskDetail}
-        />
-      )}
+      <TaskDetailPanel
+        content={content}
+        instruction={metadata?.instruction}
+        messageId={id}
+        taskDetail={taskDetail}
+      />
     </ChatItem>
   );
 }, isEqual);

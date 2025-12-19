@@ -4,11 +4,9 @@ import { Block, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { TaskDetail, ThreadStatus } from '@/types/index';
+import { TaskDetail } from '@/types/index';
 
-import CompletedState from './CompletedState';
-import ErrorState from './ErrorState';
-import ProcessingState from './ProcessingState';
+import StatusContent from './StatusContent';
 
 const useStyles = createStyles(({ css, token }) => ({
   instruction: css`
@@ -28,44 +26,12 @@ interface TaskDetailPanelProps {
    * Message ID for updating task status in store
    */
   messageId: string;
-  taskDetail: TaskDetail;
+  taskDetail?: TaskDetail;
 }
 
 const TaskDetailPanel = memo<TaskDetailPanelProps>(
   ({ taskDetail, instruction, content, messageId }) => {
     const { styles } = useStyles();
-    const { status } = taskDetail;
-
-    // Processing states: Processing, InReview, Pending, Active, Todo
-    const isProcessing =
-      status === ThreadStatus.Processing ||
-      status === ThreadStatus.InReview ||
-      status === ThreadStatus.Pending ||
-      status === ThreadStatus.Active ||
-      status === ThreadStatus.Todo;
-
-    // Completed state
-    const isCompleted = status === ThreadStatus.Completed;
-
-    // Error states: Failed, Cancel
-    const isError = status === ThreadStatus.Failed || status === ThreadStatus.Cancel;
-
-    const renderStatusContent = () => {
-      if (isProcessing) {
-        return <ProcessingState messageId={messageId} taskDetail={taskDetail} />;
-      }
-
-      if (isCompleted) {
-        return <CompletedState content={content} taskDetail={taskDetail} />;
-      }
-
-      if (isError) {
-        return <ErrorState taskDetail={taskDetail} />;
-      }
-
-      // Fallback to processing state for unknown status
-      return <ProcessingState messageId={messageId} taskDetail={taskDetail} />;
-    };
 
     return (
       <Block paddingBlock={8} paddingInline={12}>
@@ -77,7 +43,9 @@ const TaskDetailPanel = memo<TaskDetailPanelProps>(
         )}
 
         {/* Status Content */}
-        <Block variant="outlined">{renderStatusContent()}</Block>
+        <Block variant="outlined">
+          <StatusContent content={content} messageId={messageId} taskDetail={taskDetail} />
+        </Block>
       </Block>
     );
   },

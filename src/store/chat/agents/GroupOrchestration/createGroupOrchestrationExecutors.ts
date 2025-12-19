@@ -457,7 +457,7 @@ export const createGroupOrchestrationExecutors = (
         log(`[${sessionLogId}] Task created with threadId: ${createResult.threadId}`);
 
         // 3. Poll for task completion
-        const pollInterval = 2000; // 2 seconds
+        const pollInterval = 3000; // 3 seconds
         const maxWait = timeout || 1_800_000; // Default 30 minutes
         const startTime = Date.now();
 

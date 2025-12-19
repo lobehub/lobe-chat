@@ -428,6 +428,15 @@ export default {
     profile: '助手档案',
     search: '搜索',
   },
+  task: {
+    metrics: {
+      stepsShort: '步',
+      toolCallsShort: '次使用工具',
+    },
+    status: {
+      initializing: '任务启动中...',
+    },
+  },
   thread: {
     divider: '子话题',
     threadMessageCount: '{{messageCount}} 条消息',

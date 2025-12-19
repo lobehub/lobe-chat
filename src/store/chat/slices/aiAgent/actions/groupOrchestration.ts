@@ -394,11 +394,24 @@ export const groupOrchestrationSlice: StateCreator<
         refreshInterval: POLLING_INTERVAL,
         onSuccess: (data) => {
           if (data?.taskDetail && messageId) {
+            // Update taskDetail
             get().internal_dispatchMessage({
               id: messageId,
               type: 'updateMessage',
               value: { taskDetail: data.taskDetail },
             });
+
+            // Update content when task is completed or failed
+            if (
+              (data.status === 'completed' || data.status === 'failed') &&
+              data.result !== undefined
+            ) {
+              get().internal_dispatchMessage({
+                id: messageId,
+                type: 'updateMessage',
+                value: { content: data.result },
+              });
+            }
           }
         },
       },

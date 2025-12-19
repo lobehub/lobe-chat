@@ -596,7 +596,18 @@ export const aiAgentRouter = router({
       const updatedStatus = updatedThread?.status ?? thread.status;
       const updatedTaskStatus = threadStatusToTaskStatus[updatedStatus] || 'processing';
 
-      // 6. Build TaskDetail from Thread (uses ThreadStatus)
+      // 6. Get result content from sourceMessage when task is completed or failed
+      // The sourceMessage content is updated in onComplete callback (AiAgentService)
+      let resultContent: string | undefined;
+      if (
+        (updatedTaskStatus === 'completed' || updatedTaskStatus === 'failed') &&
+        thread.sourceMessageId
+      ) {
+        const sourceMessage = await ctx.messageModel.findById(thread.sourceMessageId);
+        resultContent = sourceMessage?.content;
+      }
+
+      // 7. Build TaskDetail from Thread (uses ThreadStatus)
       const taskDetail = {
         completedAt: updatedMetadata?.completedAt,
         duration: updatedMetadata?.duration,
@@ -612,13 +623,14 @@ export const aiAgentRouter = router({
         totalToolCalls: updatedMetadata?.totalToolCalls,
       };
 
-      // 7. Build result
+      // 8. Build result
       const result: TaskStatusResult = {
         completedAt: updatedMetadata?.completedAt,
         cost:
           realtimeStatus?.currentState?.cost ??
           (updatedMetadata?.totalCost ? { total: updatedMetadata.totalCost } : undefined),
         error: updatedMetadata?.error ?? realtimeStatus?.currentState?.error,
+        result: resultContent,
         status: updatedTaskStatus,
         stepCount: realtimeStatus?.currentState?.stepCount,
         taskDetail,

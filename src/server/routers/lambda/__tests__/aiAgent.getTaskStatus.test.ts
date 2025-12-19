@@ -1,6 +1,13 @@
 // @vitest-environment node
 import { LobeChatDatabase } from '@lobechat/database';
-import { agents, chatGroups, sessions, threads, topics } from '@lobechat/database/schemas';
+import {
+  agents,
+  chatGroups,
+  messages,
+  sessions,
+  threads,
+  topics,
+} from '@lobechat/database/schemas';
 import { getTestDB } from '@lobechat/database/test-utils';
 import { ThreadStatus, ThreadType } from '@lobechat/types';
 import { eq } from 'drizzle-orm';
@@ -385,6 +392,136 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       await expect(caller.getGroupSubAgentTaskStatus({} as any)).rejects.toThrow();
+    });
+  });
+
+  describe('result content', () => {
+    it('should return result content from sourceMessage when task is completed', async () => {
+      // Create a source message (the task message that will be updated with result)
+      const [sourceMessage] = await serverDB
+        .insert(messages)
+        .values({
+          userId,
+          role: 'assistant',
+          content: 'This is the final result of the task execution.',
+          agentId: testAgentId,
+          topicId: testTopicId,
+        })
+        .returning();
+
+      // Update thread to completed status with sourceMessageId
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Completed,
+          sourceMessageId: sourceMessage.id,
+          metadata: {
+            operationId: 'op-test-123',
+            completedAt: '2024-01-01T00:00:00Z',
+          },
+        })
+        .where(eq(threads.id, testThreadId));
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('completed');
+      expect(result.result).toBe('This is the final result of the task execution.');
+    });
+
+    it('should return result content from sourceMessage when task is failed', async () => {
+      // Create a source message
+      const [sourceMessage] = await serverDB
+        .insert(messages)
+        .values({
+          userId,
+          role: 'assistant',
+          content: 'Partial result before failure.',
+          agentId: testAgentId,
+          topicId: testTopicId,
+        })
+        .returning();
+
+      // Update thread to failed status with sourceMessageId
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Failed,
+          sourceMessageId: sourceMessage.id,
+          metadata: {
+            operationId: 'op-test-123',
+            error: 'Task failed due to timeout',
+          },
+        })
+        .where(eq(threads.id, testThreadId));
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('failed');
+      expect(result.result).toBe('Partial result before failure.');
+      expect(result.error).toBe('Task failed due to timeout');
+    });
+
+    it('should not return result content when task is still processing', async () => {
+      // Create a source message
+      const [sourceMessage] = await serverDB
+        .insert(messages)
+        .values({
+          userId,
+          role: 'assistant',
+          content: 'Some content',
+          agentId: testAgentId,
+          topicId: testTopicId,
+        })
+        .returning();
+
+      // Thread is in processing status (default from beforeEach)
+      await serverDB
+        .update(threads)
+        .set({
+          sourceMessageId: sourceMessage.id,
+        })
+        .where(eq(threads.id, testThreadId));
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('processing');
+      expect(result.result).toBeUndefined();
+    });
+
+    it('should return undefined result when sourceMessageId is not set', async () => {
+      // Update thread to completed status without sourceMessageId
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Completed,
+          sourceMessageId: null,
+          metadata: {
+            operationId: 'op-test-123',
+            completedAt: '2024-01-01T00:00:00Z',
+          },
+        })
+        .where(eq(threads.id, testThreadId));
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('completed');
+      expect(result.result).toBeUndefined();
     });
   });
 });

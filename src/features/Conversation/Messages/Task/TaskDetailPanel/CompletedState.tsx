@@ -2,7 +2,7 @@
 
 import { Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Check, MessageSquare, Timer, Wrench } from 'lucide-react';
+import { Check, Footprints, Timer, Wrench } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -12,7 +12,7 @@ import { TaskDetail } from '@/types/index';
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
     padding-block: 12px;
-padding-inline: 16px;
+    padding-inline: 16px;
   `,
   footer: css`
     padding-block: 8px;
@@ -62,7 +62,7 @@ const CompletedState = memo<CompletedStateProps>(({ taskDetail, content }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
 
-  const { duration, totalToolCalls, totalMessages, totalCost } = taskDetail;
+  const { duration, totalToolCalls, totalSteps, totalCost } = taskDetail;
 
   // Format duration
   const formattedDuration = useMemo(() => {
@@ -81,7 +81,7 @@ const CompletedState = memo<CompletedStateProps>(({ taskDetail, content }) => {
     return `$${totalCost.toFixed(2)}`;
   }, [totalCost]);
 
-  const hasMetrics = formattedDuration || totalToolCalls || totalMessages || formattedCost;
+  const hasMetrics = formattedDuration || totalSteps || totalToolCalls || formattedCost;
 
   return (
     <Flexbox>
@@ -94,53 +94,57 @@ const CompletedState = memo<CompletedStateProps>(({ taskDetail, content }) => {
 
       {/* Footer with metrics */}
       {hasMetrics && (
-        <Flexbox align="center" className={styles.footer} gap={12} horizontal wrap="wrap">
-          {/* Status Icon */}
-          <div className={styles.statusIcon}>
-            <Check size={10} strokeWidth={3} />
-          </div>
-
-          {/* Duration */}
-          {formattedDuration && (
-            <div className={styles.metricItem}>
-              <Timer size={12} />
-              <span className={styles.metricValue}>{formattedDuration}</span>
+        <Flexbox
+          align="center"
+          className={styles.footer}
+          gap={12}
+          horizontal
+          justify={'space-between'}
+          wrap="wrap"
+        >
+          <Flexbox align="center" gap={12} horizontal>
+            {/* Status Icon */}
+            <div className={styles.statusIcon}>
+              <Check size={10} strokeWidth={3} />
             </div>
-          )}
-
-          {/* Tool Calls */}
-          {totalToolCalls !== undefined && totalToolCalls > 0 && (
-            <>
-              <div className={styles.separator} />
+            {/* Duration */}
+            {formattedDuration && (
               <div className={styles.metricItem}>
-                <Wrench size={12} />
-                <span className={styles.metricValue}>{totalToolCalls}</span>
-                <span>{t('task.metrics.toolCallsShort', { defaultValue: 'tools' })}</span>
+                <Timer size={12} />
+                <span className={styles.metricValue}>{formattedDuration}</span>
               </div>
-            </>
-          )}
-
-          {/* Messages */}
-          {totalMessages !== undefined && totalMessages > 0 && (
-            <>
-              <div className={styles.separator} />
+            )}
+          </Flexbox>
+          <Flexbox align="center" gap={12} horizontal>
+            {/* Steps */}
+            {totalSteps !== undefined && totalSteps > 0 && (
               <div className={styles.metricItem}>
-                <MessageSquare size={12} />
-                <span className={styles.metricValue}>{totalMessages}</span>
-                <span>{t('task.metrics.messagesShort', { defaultValue: 'messages' })}</span>
+                <Footprints size={12} />
+                <span className={styles.metricValue}>{totalSteps}</span>
+                <span>{t('task.metrics.stepsShort', { defaultValue: '步' })}</span>
               </div>
-            </>
-          )}
-
-          {/* Cost */}
-          {formattedCost && (
-            <>
-              <div className={styles.separator} />
-              <div className={styles.metricItem}>
-                <span className={styles.metricValue}>{formattedCost}</span>
-              </div>
-            </>
-          )}
+            )}
+            {/* Tool Calls */}
+            {totalToolCalls !== undefined && totalToolCalls > 0 && (
+              <>
+                <div className={styles.separator} />
+                <div className={styles.metricItem}>
+                  <Wrench size={12} />
+                  <span className={styles.metricValue}>{totalToolCalls}</span>
+                  <span>{t('task.metrics.toolCallsShort')}</span>
+                </div>
+              </>
+            )}
+            {/* Cost */}
+            {formattedCost && (
+              <>
+                <div className={styles.separator} />
+                <div className={styles.metricItem}>
+                  <span className={styles.metricValue}>{formattedCost}</span>
+                </div>
+              </>
+            )}
+          </Flexbox>
         </Flexbox>
       )}
     </Flexbox>
