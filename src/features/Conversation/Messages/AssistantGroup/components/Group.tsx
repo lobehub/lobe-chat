@@ -53,7 +53,7 @@ const Group = memo<GroupChildrenProps>(
                 {...item}
                 contentId={contentId}
                 disableEditing={disableEditing}
-                key={id}
+                key={id + '.' + item.id}
                 messageIndex={messageIndex}
               />
             );
