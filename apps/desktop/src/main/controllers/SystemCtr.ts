@@ -51,13 +51,42 @@ export default class SystemController extends ControllerModule {
     };
   }
 
-  /**
-   * 检查可用性
-   */
   @IpcMethod()
-  checkAccessibilityForMacOS() {
-    if (!macOS()) return;
+  requestAccessibilityAccess() {
+    if (!macOS()) return true;
     return systemPreferences.isTrustedAccessibilityClient(true);
+  }
+
+  @IpcMethod()
+  getAccessibilityStatus() {
+    if (!macOS()) return true;
+    return systemPreferences.isTrustedAccessibilityClient(false);
+  }
+
+  @IpcMethod()
+  async getMediaAccessStatus(mediaType: 'microphone' | 'screen'): Promise<string> {
+    if (!macOS()) return 'granted';
+    return systemPreferences.getMediaAccessStatus(mediaType);
+  }
+
+  @IpcMethod()
+  async requestMicrophoneAccess(): Promise<boolean> {
+    if (!macOS()) return true;
+    return systemPreferences.askForMediaAccess('microphone');
+  }
+
+  @IpcMethod()
+  async requestScreenAccess(): Promise<void> {
+    if (!macOS()) return;
+    shell.openExternal(
+      'x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture',
+    );
+  }
+
+  @IpcMethod()
+  openFullDiskAccessSettings() {
+    if (!macOS()) return;
+    shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles');
   }
 
   @IpcMethod()
@@ -87,6 +116,19 @@ export default class SystemController extends ControllerModule {
 
     // Apply visual effects to all browser windows when theme mode changes
     this.app.browserManager.handleAppThemeChange();
+    // Set app theme mode to the system theme mode
+
+    this.setSystemThemeMode(themeMode);
+  }
+
+  @IpcMethod()
+  async getSystemThemeMode() {
+    return nativeTheme.themeSource;
+  }
+
+  @IpcMethod()
+  async setSystemThemeMode(themeMode: ThemeMode) {
+    nativeTheme.themeSource = themeMode === 'auto' ? 'system' : themeMode;
   }
 
   /**
