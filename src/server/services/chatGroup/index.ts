@@ -5,10 +5,12 @@ import { cleanObject, merge } from '@lobechat/utils';
 import type { PartialDeep } from 'type-fest';
 
 import { ChatGroupModel } from '@/database/models/chatGroup';
+import { UserModel } from '@/database/models/user';
 import { AgentGroupRepository } from '@/database/repositories/agentGroup';
-import { UserSettingsItem } from '@/database/schemas';
 import { ChatGroupConfig } from '@/database/types/chatGroup';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
+
+type DefaultAgentConfig = Awaited<ReturnType<UserModel['getUserSettingsDefaultAgentConfig']>>;
 
 /**
  * ChatGroup Service
@@ -61,16 +63,16 @@ export class ChatGroupService {
    * 3. userDefaultAgentConfig - from user settings
    * 4. agent - actual agent config from database
    *
-   * @param userSettings - User settings for extracting default agent config
+   * @param defaultAgentConfig - User's default agent config from settings
    * @param agents - Array of agents to merge
    * @returns Merged agents array
    */
   mergeAgentsDefaultConfig<T extends Record<string, any>>(
-    userSettings: UserSettingsItem | null | undefined,
+    defaultAgentConfig: DefaultAgentConfig,
     agents: T[],
   ) {
     const userDefaultAgentConfig =
-      (userSettings?.defaultAgent as { config?: PartialDeep<LobeAgentConfig> })?.config || {};
+      (defaultAgentConfig as { config?: PartialDeep<LobeAgentConfig> })?.config || {};
 
     const serverDefaultAgentConfig = getServerDefaultAgentConfig();
     const baseConfig = merge(DEFAULT_AGENT_CONFIG, serverDefaultAgentConfig);

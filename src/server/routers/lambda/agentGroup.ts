@@ -141,8 +141,8 @@ export const agentGroupRouter = router({
   getGroupDetail: agentGroupProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
-      const [userSettings, detail] = await Promise.all([
-        ctx.userModel.getUserSettings(),
+      const [defaultAgentConfig, detail] = await Promise.all([
+        ctx.userModel.getUserSettingsDefaultAgentConfig(),
         ctx.chatGroupService.getGroupDetail(input.id),
       ]);
 
@@ -150,19 +150,19 @@ export const agentGroupRouter = router({
 
       return {
         ...detail,
-        agents: ctx.chatGroupService.mergeAgentsDefaultConfig(userSettings, detail.agents),
+        agents: ctx.chatGroupService.mergeAgentsDefaultConfig(defaultAgentConfig, detail.agents),
       };
     }),
 
   getGroups: agentGroupProcedure.query(async ({ ctx }) => {
-    const [userSettings, groups] = await Promise.all([
-      ctx.userModel.getUserSettings(),
+    const [defaultAgentConfig, groups] = await Promise.all([
+      ctx.userModel.getUserSettingsDefaultAgentConfig(),
       ctx.chatGroupService.getGroups(),
     ]);
 
     return groups.map((group) => ({
       ...group,
-      agents: ctx.chatGroupService.mergeAgentsDefaultConfig(userSettings, group.agents),
+      agents: ctx.chatGroupService.mergeAgentsDefaultConfig(defaultAgentConfig, group.agents),
     }));
   }),
 
