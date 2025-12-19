@@ -596,15 +596,15 @@ export const aiAgentRouter = router({
       const updatedStatus = updatedThread?.status ?? thread.status;
       const updatedTaskStatus = threadStatusToTaskStatus[updatedStatus] || 'processing';
 
-      // 6. Get result content from sourceMessage when task is completed or failed
-      // The sourceMessage content is updated in onComplete callback (AiAgentService)
+      // 6. Get result content when task is completed or failed
+      // In QStash mode, onComplete callback doesn't fire, so we query the last assistant message directly
       let resultContent: string | undefined;
-      if (
-        (updatedTaskStatus === 'completed' || updatedTaskStatus === 'failed') &&
-        thread.sourceMessageId
-      ) {
-        const sourceMessage = await ctx.messageModel.findById(thread.sourceMessageId);
-        resultContent = sourceMessage?.content;
+      if (updatedTaskStatus === 'completed' || updatedTaskStatus === 'failed') {
+        const threadMessages = await ctx.messageModel.query({ threadId });
+        const lastAssistantMessage = threadMessages
+          .filter((m) => m.role === 'assistant')
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+        resultContent = lastAssistantMessage?.content;
       }
 
       // 7. Build TaskDetail from Thread (uses ThreadStatus)

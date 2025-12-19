@@ -163,7 +163,7 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) =
   useEffect(() => {
     if (startedAt) {
       const startTime = new Date(startedAt).getTime();
-      const elapsed = Date.now() - startTime;
+      const elapsed = Math.max(0, Date.now() - startTime);
       const intervals = Math.floor(elapsed / PROGRESS_INTERVAL);
       const initialProgress = Math.min(5 + intervals * PROGRESS_INCREMENT, MAX_PROGRESS);
       setProgress(initialProgress);
@@ -177,7 +177,7 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) =
 
     const timer = setInterval(() => {
       const startTime = new Date(startedAt).getTime();
-      setElapsedTime(Date.now() - startTime);
+      setElapsedTime(Math.max(0, Date.now() - startTime));
     }, 1000);
 
     return () => clearInterval(timer);

@@ -396,25 +396,44 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
   });
 
   describe('result content', () => {
-    it('should return result content from sourceMessage when task is completed', async () => {
-      // Create a source message (the task message that will be updated with result)
-      const [sourceMessage] = await serverDB
-        .insert(messages)
-        .values({
+    it('should return result content from last assistant message when task is completed', async () => {
+      // Create assistant messages in the thread with different timestamps
+      const now = new Date();
+      await serverDB.insert(messages).values([
+        {
+          userId,
+          role: 'user',
+          content: 'User question',
+          agentId: testAgentId,
+          topicId: testTopicId,
+          threadId: testThreadId,
+          createdAt: new Date(now.getTime() - 2000),
+        },
+        {
+          userId,
+          role: 'assistant',
+          content: 'First assistant response',
+          agentId: testAgentId,
+          topicId: testTopicId,
+          threadId: testThreadId,
+          createdAt: new Date(now.getTime() - 1000),
+        },
+        {
           userId,
           role: 'assistant',
           content: 'This is the final result of the task execution.',
           agentId: testAgentId,
           topicId: testTopicId,
-        })
-        .returning();
+          threadId: testThreadId,
+          createdAt: now,
+        },
+      ]);
 
-      // Update thread to completed status with sourceMessageId
+      // Update thread to completed status
       await serverDB
         .update(threads)
         .set({
           status: ThreadStatus.Completed,
-          sourceMessageId: sourceMessage.id,
           metadata: {
             operationId: 'op-test-123',
             completedAt: '2024-01-01T00:00:00Z',
@@ -432,25 +451,22 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
       expect(result.result).toBe('This is the final result of the task execution.');
     });
 
-    it('should return result content from sourceMessage when task is failed', async () => {
-      // Create a source message
-      const [sourceMessage] = await serverDB
-        .insert(messages)
-        .values({
-          userId,
-          role: 'assistant',
-          content: 'Partial result before failure.',
-          agentId: testAgentId,
-          topicId: testTopicId,
-        })
-        .returning();
+    it('should return result content from last assistant message when task is failed', async () => {
+      // Create assistant message in the thread
+      await serverDB.insert(messages).values({
+        userId,
+        role: 'assistant',
+        content: 'Partial result before failure.',
+        agentId: testAgentId,
+        topicId: testTopicId,
+        threadId: testThreadId,
+      });
 
-      // Update thread to failed status with sourceMessageId
+      // Update thread to failed status
       await serverDB
         .update(threads)
         .set({
           status: ThreadStatus.Failed,
-          sourceMessageId: sourceMessage.id,
           metadata: {
             operationId: 'op-test-123',
             error: 'Task failed due to timeout',
@@ -470,26 +486,17 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
     });
 
     it('should not return result content when task is still processing', async () => {
-      // Create a source message
-      const [sourceMessage] = await serverDB
-        .insert(messages)
-        .values({
-          userId,
-          role: 'assistant',
-          content: 'Some content',
-          agentId: testAgentId,
-          topicId: testTopicId,
-        })
-        .returning();
+      // Create assistant message in the thread
+      await serverDB.insert(messages).values({
+        userId,
+        role: 'assistant',
+        content: 'Some content',
+        agentId: testAgentId,
+        topicId: testTopicId,
+        threadId: testThreadId,
+      });
 
       // Thread is in processing status (default from beforeEach)
-      await serverDB
-        .update(threads)
-        .set({
-          sourceMessageId: sourceMessage.id,
-        })
-        .where(eq(threads.id, testThreadId));
-
       const caller = aiAgentRouter.createCaller(createTestContext());
 
       const result = await caller.getGroupSubAgentTaskStatus({
@@ -500,13 +507,12 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
       expect(result.result).toBeUndefined();
     });
 
-    it('should return undefined result when sourceMessageId is not set', async () => {
-      // Update thread to completed status without sourceMessageId
+    it('should return undefined result when no assistant messages in thread', async () => {
+      // Update thread to completed status without any messages
       await serverDB
         .update(threads)
         .set({
           status: ThreadStatus.Completed,
-          sourceMessageId: null,
           metadata: {
             operationId: 'op-test-123',
             completedAt: '2024-01-01T00:00:00Z',
