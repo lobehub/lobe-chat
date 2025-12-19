@@ -50,9 +50,13 @@ export class AgentService {
    * This ensures the frontend always receives a complete config with model/provider.
    */
   async getBuiltinAgent(slug: string) {
-    const agent = await this.agentModel.getBuiltinAgent(slug);
+    // Fetch agent and defaultAgentConfig in parallel
+    const [agent, defaultAgentConfig] = await Promise.all([
+      this.agentModel.getBuiltinAgent(slug),
+      this.userModel.getUserSettingsDefaultAgentConfig(),
+    ]);
 
-    const mergedConfig = await this.mergeDefaultConfig(agent);
+    const mergedConfig = this.mergeDefaultConfig(agent, defaultAgentConfig);
     if (!mergedConfig) return null;
 
     // Merge avatar from builtin-agents package definition
@@ -74,8 +78,11 @@ export class AgentService {
    * 4. The actual agent config from database
    */
   async getAgentConfigById(agentId: string) {
-    const agent = await this.agentModel.getAgentConfigById(agentId);
-    return this.mergeDefaultConfig(agent);
+    const [agent, defaultAgentConfig] = await Promise.all([
+      this.agentModel.getAgentConfigById(agentId),
+      this.userModel.getUserSettingsDefaultAgentConfig(),
+    ]);
+    return this.mergeDefaultConfig(agent, defaultAgentConfig);
   }
 
   /**
@@ -88,13 +95,14 @@ export class AgentService {
    * 3. userDefaultAgentConfig - from user settings (defaultAgent.config)
    * 4. agent - actual agent config from database
    */
-  private async mergeDefaultConfig(agent: any): Promise<LobeAgentConfig | null> {
+  private mergeDefaultConfig(
+    agent: any,
+    defaultAgentConfig: Awaited<ReturnType<UserModel['getUserSettingsDefaultAgentConfig']>>,
+  ): LobeAgentConfig | null {
     if (!agent) return null;
 
-    // Get user's default agent config from settings
-    const userSettings = await this.userModel.getUserSettings();
     const userDefaultAgentConfig =
-      (userSettings?.defaultAgent as { config?: PartialDeep<LobeAgentConfig> })?.config || {};
+      (defaultAgentConfig as { config?: PartialDeep<LobeAgentConfig> })?.config || {};
 
     // Merge configs in order: DEFAULT -> server -> user -> agent
     const serverDefaultAgentConfig = getServerDefaultAgentConfig();

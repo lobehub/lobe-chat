@@ -165,6 +165,16 @@ export class UserModel {
     return this.db.query.userSettings.findFirst({ where: eq(userSettings.id, this.userId) });
   };
 
+  getUserSettingsDefaultAgentConfig = async () => {
+    const result = await this.db
+      .select({ defaultAgent: userSettings.defaultAgent })
+      .from(userSettings)
+      .where(eq(userSettings.id, this.userId))
+      .limit(1);
+
+    return result[0]?.defaultAgent;
+  };
+
   updateUser = async (value: Partial<UserItem>) => {
     const nextValue = UserModel.normalizeUniqueUserFields(value);
 
