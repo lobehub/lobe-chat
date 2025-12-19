@@ -77,6 +77,9 @@ const ReactTopicItem = memo<RecentTopic>(({ title, updatedAt, agent, group, type
               avatars={groupAvatars}
               cornerShape={'square'}
               size={30}
+              style={{
+                background: theme.colorBgLayout,
+              }}
             />
           ) : (
             <Avatar

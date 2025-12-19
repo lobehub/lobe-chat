@@ -1,20 +1,8 @@
 import { ChatToolPayloadWithResult } from '@lobechat/types';
-import { createStyles } from 'antd-style';
+import { Block } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Tool from './Tool';
-
-const useStyles = createStyles(({ css, token }) => {
-  return {
-    toolsContainer: css`
-      padding-block: 6px;
-      padding-inline: 12px;
-      border: 1px solid ${token.colorBorderSecondary};
-      border-radius: 8px;
-    `,
-  };
-});
 
 interface ToolsRendererProps {
   messageId: string;
@@ -22,12 +10,16 @@ interface ToolsRendererProps {
 }
 
 export const Tools = memo<ToolsRendererProps>(({ messageId, tools }) => {
-  const { styles, cx } = useStyles();
-
   if (!tools || tools.length === 0) return null;
 
   return (
-    <Flexbox className={cx(styles.toolsContainer, 'tool-blocks')} gap={8}>
+    <Block
+      className={'tool-blocks'}
+      gap={8}
+      paddingBlock={6}
+      paddingInline={12}
+      variant={'outlined'}
+    >
       {tools.map((tool, index) => (
         <Tool
           apiName={tool.apiName}
@@ -43,6 +35,6 @@ export const Tools = memo<ToolsRendererProps>(({ messageId, tools }) => {
           type={tool.type}
         />
       ))}
-    </Flexbox>
+    </Block>
   );
 });
