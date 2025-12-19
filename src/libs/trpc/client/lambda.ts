@@ -1,4 +1,4 @@
-import { TRPCLink, createTRPCClient, httpBatchLink } from '@trpc/client';
+import { TRPCLink, createTRPCClient, httpBatchLink, httpLink, splitLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { observable } from '@trpc/server/observable';
 import debug from 'debug';
@@ -66,9 +66,10 @@ const errorHandlingLink: TRPCLink<LambdaRouter> = () => {
     );
 };
 
-// 2. httpBatchLink
-const customHttpBatchLink = httpBatchLink({
-  fetch: async (input, init) => {
+// 2. Shared link options
+const linkOptions = {
+  // eslint-disable-next-line no-undef
+  fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     if (isDesktop) {
       // eslint-disable-next-line no-undef
       const res = await fetch(input as string, init as RequestInit);
@@ -100,13 +101,22 @@ const customHttpBatchLink = httpBatchLink({
     log('Headers: %O', headers);
     return headers;
   },
-  maxURLLength: 2083,
   transformer: superjson,
   url: withElectronProtocolIfElectron('/trpc/lambda'),
+};
+
+// Procedures that should skip batching for faster initial load
+const SKIP_BATCH_PROCEDURES = new Set(['user.getUserState', 'config.getGlobalConfig']);
+
+// 3. splitLink to conditionally disable batching
+const customSplitLink = splitLink({
+  condition: (op) => SKIP_BATCH_PROCEDURES.has(op.path),
+  false: httpBatchLink({ ...linkOptions, maxURLLength: 2083 }),
+  true: httpLink(linkOptions),
 });
 
-// 3. assembly links
-const links = [errorHandlingLink, customHttpBatchLink];
+// 4. assembly links
+const links = [errorHandlingLink, customSplitLink];
 
 export const lambdaClient = createTRPCClient<LambdaRouter>({
   links,
