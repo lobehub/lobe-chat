@@ -1,15 +1,19 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { expo } from '@better-auth/expo';
+import { passkey } from '@better-auth/passkey';
 import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
+import * as schema from '@lobechat/database/schemas';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { betterAuth } from 'better-auth/minimal';
-import { admin, genericOAuth, magicLink } from 'better-auth/plugins';
+import { admin, emailOTP, genericOAuth, magicLink } from 'better-auth/plugins';
 
 import { authEnv } from '@/envs/auth';
 import {
   getMagicLinkEmailTemplate,
   getResetPasswordEmailTemplate,
   getVerificationEmailTemplate,
+  getVerificationOTPEmailTemplate,
 } from '@/libs/better-auth/email-templates';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
 import { createSecondaryStorage, getTrustedOrigins } from '@/libs/better-auth/utils/config';
@@ -21,6 +25,8 @@ import { UserService } from '@/server/services/user';
 // Default is 1 hour (3600 seconds) as per Better Auth documentation
 const VERIFICATION_LINK_EXPIRES_IN = 3600;
 const MAGIC_LINK_EXPIRES_IN = 900;
+// OTP expiration time (in seconds) - 5 minutes for mobile OTP verification
+const OTP_EXPIRES_IN = 300;
 const enableMagicLink = authEnv.NEXT_PUBLIC_ENABLE_MAGIC_LINK;
 const enabledSSOProviders = parseSSOProviders(authEnv.AUTH_SSO_PROVIDERS);
 
@@ -85,6 +91,8 @@ export const auth = betterAuth({
   },
   database: drizzleAdapter(serverDB, {
     provider: 'pg',
+    // experimental joins feature needs schema to pass full relation
+    schema,
   }),
   secondaryStorage: createSecondaryStorage(),
   /**
@@ -149,8 +157,40 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    expo(),
     emailHarmony({ allowNormalizedSignin: false }),
     admin(),
+    // Email OTP plugin for mobile verification
+    emailOTP({
+      expiresIn: OTP_EXPIRES_IN,
+      otpLength: 6,
+      allowedAttempts: 3,
+      // Don't automatically send OTP on sign up - let mobile client manually trigger it
+      sendVerificationOnSignUp: false,
+      async sendVerificationOTP({ email, otp }) {
+        const emailService = new EmailService();
+
+        // For all OTP types, use the same template
+        // userName is optional and will be null since we don't have user context here
+        const template = getVerificationOTPEmailTemplate({
+          expiresInSeconds: OTP_EXPIRES_IN,
+          otp,
+          userName: null,
+        });
+
+        await emailService.sendMail({
+          to: email,
+          ...template,
+        });
+      },
+    }),
+    passkey({
+      rpName: 'LobeHub',
+      // Extract rpID from auth URL (e.g., 'lobehub.com' from 'https://lobehub.com')
+      rpID: new URL(authEnv.NEXT_PUBLIC_AUTH_URL!).hostname,
+      // Use the full origin URL (e.g., 'https://lobehub.com')
+      origin: authEnv.NEXT_PUBLIC_AUTH_URL,
+    }),
     ...(genericOAuthProviders.length > 0
       ? [
           genericOAuth({

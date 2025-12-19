@@ -99,7 +99,7 @@ export const groupRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: insertChatGroupSchema.partial(),
+        value: insertChatGroupSchema.partial() as any,
       }),
     )
     .mutation(async ({ input, ctx }) => {
