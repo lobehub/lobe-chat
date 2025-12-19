@@ -32,6 +32,9 @@ const ApprovalActions = memo<ApprovalActionsProps>(
     const [rejectLoading, setRejectLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
 
+    // Disable actions while message is still being created (temp ID)
+    const isMessageCreating = messageId.startsWith('tmp_');
+
     const { assistantGroupId } = useGroupMessage();
     const [approveToolCall, rejectToolCall, rejectAndContinueToolCall] = useConversationStore(
       (s) => [s.approveToolCall, s.rejectToolCall, s.rejectAndContinueToolCall],
@@ -123,7 +126,12 @@ const ApprovalActions = memo<ApprovalActionsProps>(
           placement="bottomRight"
           trigger="click"
         >
-          <Button color={'default'} size="small" variant={'filled'}>
+          <Button
+            color={'default'}
+            disabled={isMessageCreating}
+            size="small"
+            variant={'filled'}
+          >
             {t('tool.intervention.reject')}
           </Button>
         </Popover>
@@ -131,6 +139,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
         {approvalMode === 'allow-list' ? (
           <Space.Compact>
             <Button
+              disabled={isMessageCreating}
               loading={approveLoading}
               onClick={() => handleApprove(true)}
               size="small"
@@ -142,7 +151,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
               menu={{
                 items: [
                   {
-                    disabled: approveLoading,
+                    disabled: approveLoading || isMessageCreating,
                     key: 'once',
                     label: t('tool.intervention.approveOnce'),
                     onClick: () => handleApprove(false),
@@ -150,11 +159,17 @@ const ApprovalActions = memo<ApprovalActionsProps>(
                 ],
               }}
             >
-              <Button disabled={approveLoading} icon={ChevronDown} size="small" type="primary" />
+              <Button
+                disabled={approveLoading || isMessageCreating}
+                icon={ChevronDown}
+                size="small"
+                type="primary"
+              />
             </Dropdown>
           </Space.Compact>
         ) : (
           <Button
+            disabled={isMessageCreating}
             loading={approveLoading}
             onClick={() => handleApprove()}
             size="small"
