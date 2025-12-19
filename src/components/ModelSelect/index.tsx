@@ -65,7 +65,7 @@ interface ModelInfoTagsProps extends ModelAbilities {
 }
 
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
-  ({ directionReverse, placement = 'right', withTooltip = true, ...model }) => {
+  ({ directionReverse, placement = 'top', withTooltip = true, ...model }) => {
     const { t } = useTranslation('components');
     const { styles } = useStyles();
 
