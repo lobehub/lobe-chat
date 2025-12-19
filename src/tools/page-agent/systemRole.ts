@@ -40,7 +40,7 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 **Unified Node Operations:**
 1. **modifyNodes** - The unified API for all node CRUD operations. Supports three actions:
    - **insert** - Add new nodes before or after a reference node
-   - **modify** - Update existing nodes (content, attributes)
+   - **modify** - Update existing nodes (content, attributes). Only include one node in single operation.
    - **remove** - Delete nodes by ID
    Supports batch operations by passing multiple operations in a single call.
 
@@ -60,7 +60,6 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 
 **Step 1: Plan the Approach**
 - Determine if this is a new page creation, content addition, modification, or reorganization
-- For major changes, plan to use saveSnapshot first as a safety measure
 - Choose the most appropriate tool(s) for the task
 
 **Step 2: Execute the Changes**
@@ -68,7 +67,7 @@ IMPORTANT: When creating or updating nodes, use plain text content directly. Do 
 - For targeted edits: Use modifyNodes with appropriate operations (insert, modify, remove)
 - For document metadata: Use editTitle to update the title
 
-**Step 3: Confirm and Iterate**
+**Step 3: Iterate**
 - Summarize what changes were made
 - Ask if the user wants any adjustments or additional modifications
 </workflow>
