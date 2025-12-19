@@ -61,7 +61,6 @@ const useStyles = createStyles(({ css, token }) => ({
     padding-block: 8px;
     padding-inline: 12px;
     color: ${token.colorTextSecondary};
-    background: ${token.colorFillQuaternary};
   `,
   menuItem: css`
     cursor: pointer;
@@ -81,7 +80,7 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   menuItemActive: css`
-    background: ${token.colorPrimaryBg};
+    background: ${token.colorFillTertiary};
   `,
   tag: css`
     cursor: pointer;
@@ -141,21 +140,23 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
 
     const [bufferSize, setBufferSize] = useState(INITIAL_BUFFER_SIZE);
     const bufferTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [internalOpen, setInternalOpen] = useState(false);
+
+    // Use controlled open if provided, otherwise use internal state
+    const isOpen = open ?? internalOpen;
 
     const handleOpenChange = useCallback(
-      (isOpen: boolean) => {
-        if (isOpen) {
-          // Start with minimal buffer for fast initial render, then increase after delay
-          setBufferSize(INITIAL_BUFFER_SIZE);
+      (nextOpen: boolean) => {
+        if (nextOpen) {
           bufferTimerRef.current = setTimeout(() => {
             setBufferSize(FULL_BUFFER_SIZE);
           }, BUFFER_DELAY_MS);
         } else {
           // Reset buffer when closing
           if (bufferTimerRef.current) clearTimeout(bufferTimerRef.current);
-          setBufferSize(INITIAL_BUFFER_SIZE);
         }
-        onOpenChange?.(isOpen);
+        setInternalOpen(nextOpen);
+        onOpenChange?.(nextOpen);
       },
       [onOpenChange],
     );
@@ -303,6 +304,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
                 key={key}
                 onClick={async () => {
                   await handleModelChange(item.model.id, item.provider.id);
+                  handleOpenChange(false);
                 }}
               >
                 <ModelItemRender
@@ -321,14 +323,24 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
           }
         }
       },
-      [activeKey, cx, handleModelChange, navigate, newLabel, styles, t, theme.colorTextTertiary],
+      [
+        activeKey,
+        cx,
+        handleModelChange,
+        handleOpenChange,
+        navigate,
+        newLabel,
+        styles,
+        t,
+        theme.colorTextTertiary,
+      ],
     );
 
     return (
       <Dropdown
         arrow={false}
         onOpenChange={handleOpenChange}
-        open={open}
+        open={isOpen}
         placement={'topLeft'}
         popupRender={() => (
           <Rnd
