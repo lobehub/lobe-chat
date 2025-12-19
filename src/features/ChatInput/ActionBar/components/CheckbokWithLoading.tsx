@@ -22,6 +22,7 @@ const CheckboxItem = memo<CheckboxItemProps>(({ id, onUpdate, label, checked }) 
 
   return (
     <Flexbox
+      align={'center'}
       gap={24}
       horizontal
       justify={'space-between'}
