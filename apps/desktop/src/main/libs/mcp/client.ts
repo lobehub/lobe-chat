@@ -7,12 +7,9 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import type { Progress } from '@modelcontextprotocol/sdk/types.js';
 
-import type { MCPClientParams, McpPrompt, McpResource, McpTool, ToolCallResult } from './types';
+import { getDesktopEnv } from '@/env';
 
-const MCP_TOOL_TIMEOUT = (() => {
-  const val = Number(process.env.MCP_TOOL_TIMEOUT);
-  return Number.isFinite(val) && val > 0 ? val : 60_000;
-})();
+import type { MCPClientParams, McpPrompt, McpResource, McpTool, ToolCallResult } from './types';
 
 export class MCPClient {
   private readonly mcp: Client;
@@ -125,7 +122,7 @@ export class MCPClient {
 
   async callTool(toolName: string, args: any): Promise<ToolCallResult> {
     const result = await this.mcp.callTool({ arguments: args, name: toolName }, undefined, {
-      timeout: MCP_TOOL_TIMEOUT,
+      timeout: getDesktopEnv().MCP_TOOL_TIMEOUT,
     });
     return result as ToolCallResult;
   }

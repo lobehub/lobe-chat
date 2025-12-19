@@ -42,6 +42,13 @@ vi.mock('electron', () => ({
   },
 }));
 
+// electron-devtools-installer accesses electron.app.getPath at import-time in node env;
+// mock it to avoid side effects in unit tests
+vi.mock('electron-devtools-installer', () => ({
+  REACT_DEVELOPER_TOOLS: 'REACT_DEVELOPER_TOOLS',
+  default: vi.fn(),
+}));
+
 vi.mock('fs-extra', () => ({
   pathExistsSync: (...args: any[]) => mockPathExistsSync(...args),
 }));

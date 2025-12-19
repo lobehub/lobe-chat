@@ -18,6 +18,7 @@ import { buildDir, nextExportDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { ELECTRON_BE_PROTOCOL_SCHEME } from '@/const/protocol';
 import { IControlModule } from '@/controllers';
+import { getDesktopEnv } from '@/env';
 import { IServiceModule } from '@/services';
 import { getServerMethodMetadata } from '@/utils/ipc';
 import { createLogger } from '@/utils/logger';
@@ -63,8 +64,7 @@ export class App {
   /**
    * Escape hatch: allow testing static renderer in dev via env
    */
-  private readonly rendererStaticOverride =
-    process.env.DESKTOP_RENDERER_STATIC === '1' || process.env.DESKTOP_RENDERER_STATIC === 'true';
+  private readonly rendererStaticOverride = getDesktopEnv().DESKTOP_RENDERER_STATIC;
 
   /**
    * whether app is in quiting
