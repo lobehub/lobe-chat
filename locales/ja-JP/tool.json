@@ -7,6 +7,12 @@
       "cost": "費用",
       "failed": "タスク失敗",
       "interrupted": "中断されました",
+      "intervention": {
+        "taskPlaceholder": "Agent に実行してほしいタスクの詳細を入力してください...",
+        "timeout": "最大実行時間",
+        "timeoutUnit": "分",
+        "unknownAgent": "不明な Agent"
+      },
       "processing": "実行中...",
       "steps": "実行ステップ数",
       "task": "タスク内容",

@@ -7,6 +7,12 @@
       "cost": "Kosten",
       "failed": "Taak mislukt",
       "interrupted": "Onderbroken",
+      "intervention": {
+        "taskPlaceholder": "Beschrijf de taak die de Agent moet uitvoeren in detail...",
+        "timeout": "Maximale uitvoeringstijd",
+        "timeoutUnit": "minuten",
+        "unknownAgent": "Onbekende Agent"
+      },
       "processing": "Bezig met uitvoeren...",
       "steps": "Aantal stappen",
       "task": "Taakinhoud",

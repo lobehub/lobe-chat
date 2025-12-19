@@ -4,24 +4,24 @@
     "confirm": "Add",
     "error": "Failed to add file to knowledge base",
     "id": {
-      "placeholder": "Please select a knowledge base to add to",
-      "required": "Please select a knowledge base",
-      "title": "Target Knowledge Base"
+      "placeholder": "Please select a library to add to",
+      "required": "Please select a library",
+      "title": "Target Library"
     },
-    "title": "Add to Knowledge Base",
+    "title": "Add to Library",
     "totalFiles": "{{count}} files selected"
   },
   "createNew": {
     "confirm": "Create New",
     "description": {
-      "placeholder": "Knowledge base description (optional)"
+      "placeholder": "Library description (optional)"
     },
     "formTitle": "Basic Information",
     "name": {
-      "placeholder": "Knowledge base name",
-      "required": "Please enter a knowledge base name"
+      "placeholder": "Library name",
+      "required": "Please enter a library name"
     },
-    "title": "Create New Knowledge Base"
+    "title": "Create New Library"
   },
   "tab": {
     "evals": "Evaluations",
@@ -29,5 +29,5 @@
     "settings": "Settings",
     "testing": "Recall Testing"
   },
-  "title": "Knowledge Base"
+  "title": "Library"
 }

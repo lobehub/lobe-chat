@@ -106,7 +106,7 @@ const UploadDock = memo(() => {
     if (isUploading) setShow(true);
   }, [isUploading, show]);
 
-  if (count === 0 || !show) return;
+  // if (count === 0 || !show) return;
 
   return (
     <Flexbox className={styles.container}>

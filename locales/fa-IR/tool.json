@@ -7,6 +7,12 @@
       "cost": "هزینه",
       "failed": "وظیفه ناموفق بود",
       "interrupted": "متوقف شد",
+      "intervention": {
+        "taskPlaceholder": "لطفاً وظیفه‌ای را که باید توسط Agent انجام شود به‌طور دقیق توضیح دهید...",
+        "timeout": "حداکثر زمان اجرا",
+        "timeoutUnit": "دقیقه",
+        "unknownAgent": "Agent ناشناخته"
+      },
       "processing": "در حال اجرا...",
       "steps": "تعداد مراحل اجرا",
       "task": "محتوای وظیفه",

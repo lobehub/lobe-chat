@@ -7,6 +7,12 @@
       "cost": "Chi phí",
       "failed": "Nhiệm vụ thất bại",
       "interrupted": "Đã bị gián đoạn",
+      "intervention": {
+        "taskPlaceholder": "Vui lòng mô tả chi tiết nhiệm vụ mà Agent cần thực hiện...",
+        "timeout": "Thời gian thực hiện tối đa",
+        "timeoutUnit": "phút",
+        "unknownAgent": "Agent không xác định"
+      },
       "processing": "Đang thực thi...",
       "steps": "Số bước thực hiện",
       "task": "Nội dung nhiệm vụ",

@@ -7,6 +7,12 @@
       "cost": "Kosten",
       "failed": "Aufgabe fehlgeschlagen",
       "interrupted": "Unterbrochen",
+      "intervention": {
+        "taskPlaceholder": "Bitte beschreiben Sie die Aufgabe, die der Agent ausführen soll, so detailliert wie möglich...",
+        "timeout": "Maximale Ausführungszeit",
+        "timeoutUnit": "Minuten",
+        "unknownAgent": "Unbekannter Agent"
+      },
       "processing": "Wird ausgeführt...",
       "steps": "Ausführungsschritte",
       "task": "Aufgabeninhalt",

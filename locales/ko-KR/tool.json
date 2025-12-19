@@ -7,6 +7,12 @@
       "cost": "비용",
       "failed": "작업 실패",
       "interrupted": "중단됨",
+      "intervention": {
+        "taskPlaceholder": "Agent가 수행해야 할 작업을 자세히 설명해 주세요...",
+        "timeout": "최대 실행 시간",
+        "timeoutUnit": "분",
+        "unknownAgent": "알 수 없는 Agent"
+      },
       "processing": "실행 중...",
       "steps": "실행 단계 수",
       "task": "작업 내용",

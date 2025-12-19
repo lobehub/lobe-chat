@@ -7,6 +7,12 @@
       "cost": "費用",
       "failed": "任務失敗",
       "interrupted": "已中斷",
+      "intervention": {
+        "taskPlaceholder": "請詳細描述需要 Agent 執行的任務...",
+        "timeout": "最長執行時間",
+        "timeoutUnit": "分鐘",
+        "unknownAgent": "未知 Agent"
+      },
       "processing": "執行中...",
       "steps": "執行步數",
       "task": "任務內容",

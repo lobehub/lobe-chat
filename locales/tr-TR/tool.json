@@ -7,6 +7,12 @@
       "cost": "Maliyet",
       "failed": "Görev Başarısız",
       "interrupted": "Yarıda Kesildi",
+      "intervention": {
+        "taskPlaceholder": "Lütfen Agent'ın gerçekleştirmesini istediğiniz görevi ayrıntılı olarak açıklayın...",
+        "timeout": "Maksimum yürütme süresi",
+        "timeoutUnit": "dakika",
+        "unknownAgent": "Bilinmeyen Agent"
+      },
       "processing": "Yürütülüyor...",
       "steps": "Adım Sayısı",
       "task": "Görev İçeriği",

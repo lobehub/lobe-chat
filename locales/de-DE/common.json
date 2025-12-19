@@ -162,6 +162,8 @@
       "mcps": "MCP-Server",
       "message": "Nachricht",
       "messages": "Nachrichten",
+      "page": "Dokument",
+      "pages": "Dokumente",
       "plugin": "Plugin",
       "plugins": "Plugins",
       "searching": "Suchergebnisse",
