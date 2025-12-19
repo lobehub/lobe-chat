@@ -280,6 +280,21 @@ export interface ExecGroupSubAgentTaskResult {
 }
 
 /**
+ * Current activity for real-time progress display
+ * Only returned when task is processing
+ */
+export interface TaskCurrentActivity {
+  /** API name, e.g. "search" */
+  apiName?: string;
+  /** Content preview (truncated) */
+  contentPreview?: string;
+  /** Plugin identifier, e.g. "lobe-web-browsing" */
+  identifier?: string;
+  /** Activity type */
+  type: 'tool_calling' | 'tool_result' | 'generating';
+}
+
+/**
  * Task status query result
  */
 export interface TaskStatusResult {
@@ -287,6 +302,8 @@ export interface TaskStatusResult {
   completedAt?: string;
   /** Cost information */
   cost?: { total: number };
+  /** Current activity for real-time progress display (only when processing) */
+  currentActivity?: TaskCurrentActivity;
   /** Error message if task failed */
   error?: string;
   /** Task result content (last assistant message) */

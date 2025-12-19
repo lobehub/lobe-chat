@@ -1,5 +1,5 @@
 import { AgentRuntimeContext } from '@lobechat/agent-runtime';
-import { TaskStatusResult, ThreadStatus } from '@lobechat/types';
+import { TaskCurrentActivity, TaskStatusResult, ThreadStatus } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import pMap from 'p-map';
@@ -596,18 +596,55 @@ export const aiAgentRouter = router({
       const updatedStatus = updatedThread?.status ?? thread.status;
       const updatedTaskStatus = threadStatusToTaskStatus[updatedStatus] || 'processing';
 
-      // 6. Get result content when task is completed or failed
-      // In QStash mode, onComplete callback doesn't fire, so we query the last assistant message directly
+      // 6. Query thread messages for result content or current activity
+      const threadMessages = await ctx.messageModel.query({ threadId });
+      const sortedMessages = threadMessages.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+
+      // 7. Get result content when task is completed or failed
       let resultContent: string | undefined;
       if (updatedTaskStatus === 'completed' || updatedTaskStatus === 'failed') {
-        const threadMessages = await ctx.messageModel.query({ threadId });
-        const lastAssistantMessage = threadMessages
-          .filter((m) => m.role === 'assistant')
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+        const lastAssistantMessage = sortedMessages.find((m) => m.role === 'assistant');
         resultContent = lastAssistantMessage?.content;
       }
 
-      // 7. Build TaskDetail from Thread (uses ThreadStatus)
+      // 8. Build currentActivity when task is processing
+      let currentActivity: TaskCurrentActivity | undefined;
+      if (updatedTaskStatus === 'processing' && sortedMessages.length > 0) {
+        const lastMessage = sortedMessages[0];
+
+        if (lastMessage.role === 'tool') {
+          // Tool message means tool has returned result
+          currentActivity = {
+            apiName: lastMessage.plugin?.apiName ?? undefined,
+            identifier: lastMessage.plugin?.identifier ?? undefined,
+            type: 'tool_result',
+          };
+        } else if (lastMessage.role === 'assistant') {
+          // Check if assistant is calling tools
+          const tools = lastMessage.tools as Array<{
+            apiName?: string;
+            identifier?: string;
+          }> | null;
+          if (tools && tools.length > 0) {
+            const lastTool = tools.at(-1);
+            currentActivity = {
+              apiName: lastTool?.apiName,
+              identifier: lastTool?.identifier,
+              type: 'tool_calling',
+            };
+          } else {
+            // Assistant is generating content
+            currentActivity = {
+              contentPreview: lastMessage.content?.slice(0, 100),
+              type: 'generating',
+            };
+          }
+        }
+      }
+
+      // 9. Build TaskDetail from Thread (uses ThreadStatus)
       const taskDetail = {
         completedAt: updatedMetadata?.completedAt,
         duration: updatedMetadata?.duration,
@@ -623,12 +660,13 @@ export const aiAgentRouter = router({
         totalToolCalls: updatedMetadata?.totalToolCalls,
       };
 
-      // 8. Build result
+      // 10. Build result
       const result: TaskStatusResult = {
         completedAt: updatedMetadata?.completedAt,
         cost:
           realtimeStatus?.currentState?.cost ??
           (updatedMetadata?.totalCost ? { total: updatedMetadata.totalCost } : undefined),
+        currentActivity,
         error: updatedMetadata?.error ?? realtimeStatus?.currentState?.error,
         result: resultContent,
         status: updatedTaskStatus,

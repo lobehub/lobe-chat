@@ -530,4 +530,181 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
       expect(result.result).toBeUndefined();
     });
   });
+
+  describe('currentActivity', () => {
+    it('should return tool_calling activity when last assistant message has tools', async () => {
+      // Create assistant message with tools
+      await serverDB.insert(messages).values({
+        userId,
+        role: 'assistant',
+        content: '',
+        agentId: testAgentId,
+        topicId: testTopicId,
+        threadId: testThreadId,
+        tools: [
+          { identifier: 'lobe-web-browsing', apiName: 'search', arguments: '{"query":"test"}' },
+        ],
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('processing');
+      expect(result.currentActivity).toEqual({
+        type: 'tool_calling',
+        identifier: 'lobe-web-browsing',
+        apiName: 'search',
+      });
+    });
+
+    it('should return tool_result activity when last message is tool role', async () => {
+      // First create the assistant message, then create tool message
+      const now = new Date();
+      await serverDB.insert(messages).values([
+        {
+          userId,
+          role: 'assistant',
+          content: '',
+          agentId: testAgentId,
+          topicId: testTopicId,
+          threadId: testThreadId,
+          tools: [{ identifier: 'lobe-web-browsing', apiName: 'search' }],
+          createdAt: new Date(now.getTime() - 1000),
+        },
+        {
+          userId,
+          role: 'tool',
+          content: 'Search results: found 10 items matching your query...',
+          agentId: testAgentId,
+          topicId: testTopicId,
+          threadId: testThreadId,
+          createdAt: now,
+        },
+      ]);
+
+      // Update the tool message with plugin info
+      const toolMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.threadId, testThreadId));
+      const toolMsg = toolMessages.find((m) => m.role === 'tool');
+
+      if (toolMsg) {
+        const { messagePlugins } = await import('@lobechat/database/schemas');
+        await serverDB.insert(messagePlugins).values({
+          id: toolMsg.id,
+          userId,
+          identifier: 'lobe-web-browsing',
+          apiName: 'search',
+          type: 'default',
+        });
+      }
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('processing');
+      expect(result.currentActivity?.type).toBe('tool_result');
+      expect(result.currentActivity?.identifier).toBe('lobe-web-browsing');
+      expect(result.currentActivity?.apiName).toBe('search');
+      expect(result.currentActivity?.contentPreview).toBe(
+        'Search results: found 10 items matching your query...',
+      );
+    });
+
+    it('should return generating activity when last assistant message has no tools', async () => {
+      // Create assistant message without tools
+      await serverDB.insert(messages).values({
+        userId,
+        role: 'assistant',
+        content: 'I am generating a response based on the information...',
+        agentId: testAgentId,
+        topicId: testTopicId,
+        threadId: testThreadId,
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('processing');
+      expect(result.currentActivity).toEqual({
+        type: 'generating',
+        contentPreview: 'I am generating a response based on the information...',
+      });
+    });
+
+    it('should truncate contentPreview to 100 characters', async () => {
+      const longContent = 'A'.repeat(200);
+
+      await serverDB.insert(messages).values({
+        userId,
+        role: 'assistant',
+        content: longContent,
+        agentId: testAgentId,
+        topicId: testTopicId,
+        threadId: testThreadId,
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.currentActivity?.contentPreview).toBe('A'.repeat(100));
+    });
+
+    it('should not return currentActivity when task is completed', async () => {
+      // Create messages in thread
+      await serverDB.insert(messages).values({
+        userId,
+        role: 'assistant',
+        content: 'Final result',
+        agentId: testAgentId,
+        topicId: testTopicId,
+        threadId: testThreadId,
+      });
+
+      // Update thread to completed status
+      await serverDB
+        .update(threads)
+        .set({
+          status: ThreadStatus.Completed,
+          metadata: {
+            operationId: 'op-test-123',
+            completedAt: '2024-01-01T00:00:00Z',
+          },
+        })
+        .where(eq(threads.id, testThreadId));
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('completed');
+      expect(result.currentActivity).toBeUndefined();
+    });
+
+    it('should not return currentActivity when no messages in thread', async () => {
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.status).toBe('processing');
+      expect(result.currentActivity).toBeUndefined();
+    });
+  });
 });

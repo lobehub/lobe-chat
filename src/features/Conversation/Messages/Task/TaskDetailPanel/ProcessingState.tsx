@@ -1,8 +1,8 @@
 'use client';
 
-import { TaskDetail } from '@lobechat/types';
+import { TaskCurrentActivity, TaskDetail } from '@lobechat/types';
 import { createStyles } from 'antd-style';
-import { Footprints, Timer, Wrench } from 'lucide-react';
+import { Footprints, Loader2, Timer, Wrench } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -10,6 +10,31 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token }) => ({
+  activityContent: css`
+    overflow: hidden;
+
+    font-size: 12px;
+    color: ${token.colorTextSecondary};
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  activityRow: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding-block: 8px;
+    padding-inline: 16px;
+  `,
+  activityType: css`
+    display: flex;
+    flex-shrink: 0;
+    gap: 4px;
+    align-items: center;
+
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+  `,
   footer: css`
     padding-block: 8px;
     padding-inline: 16px;
@@ -133,6 +158,14 @@ const formatElapsedTime = (ms: number): string => {
   return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
 };
 
+// Format tool name from identifier and apiName
+const formatToolName = (activity: TaskCurrentActivity): string => {
+  if (activity.identifier && activity.apiName) {
+    return `${activity.identifier}/${activity.apiName}`;
+  }
+  return activity.identifier || activity.apiName || '';
+};
+
 const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
@@ -155,8 +188,13 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) =
 
   // Enable polling only when no active operation is already polling
   // This handles the case when user refreshes page and exec_async_task is no longer running
-  useEnablePollingTaskStatus(taskDetail.threadId, messageId, !hasActiveOperationPolling);
+  const { data } = useEnablePollingTaskStatus(
+    taskDetail.threadId,
+    messageId,
+    !hasActiveOperationPolling,
+  );
 
+  const currentActivity = data?.currentActivity;
   const { totalToolCalls, totalSteps, startedAt } = taskDetail;
 
   // Calculate initial progress and elapsed time based on startedAt
@@ -194,8 +232,45 @@ const ProcessingState = memo<ProcessingStateProps>(({ taskDetail, messageId }) =
 
   const hasMetrics = totalSteps || totalToolCalls;
 
+  // Render current activity text
+  const renderActivityText = () => {
+    if (!currentActivity) return null;
+
+    switch (currentActivity.type) {
+      case 'tool_calling': {
+        const toolName = formatToolName(currentActivity);
+        return toolName ? t('task.activity.toolCalling', { toolName }) : t('task.activity.calling');
+      }
+      case 'tool_result': {
+        const toolName = formatToolName(currentActivity);
+        return toolName
+          ? t('task.activity.toolResult', { toolName })
+          : t('task.activity.gotResult');
+      }
+      case 'generating': {
+        return t('task.activity.generating');
+      }
+      default: {
+        return null;
+      }
+    }
+  };
+
   return (
     <Flexbox>
+      {/* Current Activity */}
+      {currentActivity && (
+        <div className={styles.activityRow}>
+          <div className={styles.activityType}>
+            <Loader2 className={styles.spin} size={12} />
+            <span>{renderActivityText()}</span>
+          </div>
+          {currentActivity.contentPreview && (
+            <span className={styles.activityContent}>{currentActivity.contentPreview}</span>
+          )}
+        </div>
+      )}
+
       {/* Progress Bar */}
       <div className={styles.progress}>
         <div className={styles.progressBar} style={{ width: `${progress}%` }} />
