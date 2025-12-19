@@ -398,6 +398,11 @@ export interface TriggerExecuteTaskParams extends GroupOrchestrationBaseParams {
    */
   agentId: string;
   /**
+   * If true, the orchestration will end after the task completes,
+   * without calling the supervisor again.
+   */
+  skipCallSupervisor?: boolean;
+  /**
    * The task description for the agent
    */
   task: string;

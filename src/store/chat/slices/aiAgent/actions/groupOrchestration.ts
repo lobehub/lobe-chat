@@ -207,14 +207,15 @@ export const groupOrchestrationSlice: StateCreator<
    * Creates a supervisor_decided result with decision='execute_task' and starts orchestration
    */
   triggerExecuteTask: async (params) => {
-    const { supervisorAgentId, agentId, task, timeout, toolMessageId } = params;
+    const { supervisorAgentId, agentId, task, timeout, toolMessageId, skipCallSupervisor } = params;
     log(
-      '[triggerExecuteTask] Starting orchestration with execute_task: supervisorAgentId=%s, agentId=%s, task=%s, timeout=%s, toolMessageId=%s',
+      '[triggerExecuteTask] Starting orchestration with execute_task: supervisorAgentId=%s, agentId=%s, task=%s, timeout=%s, toolMessageId=%s, skipCallSupervisor=%s',
       supervisorAgentId,
       agentId,
       task,
       timeout,
       toolMessageId,
+      skipCallSupervisor,
     );
 
     const groupId = get().activeGroupId;
@@ -233,7 +234,7 @@ export const groupOrchestrationSlice: StateCreator<
         payload: {
           decision: 'execute_task',
           params: { agentId, task, timeout, toolMessageId },
-          skipCallSupervisor: false,
+          skipCallSupervisor: skipCallSupervisor ?? false,
         },
       },
     });

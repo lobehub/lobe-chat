@@ -316,6 +316,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
       ctx.registerAfterCompletion(() =>
         ctx.groupOrchestration!.triggerExecuteTask({
           agentId: params.agentId,
+          skipCallSupervisor: params.skipCallSupervisor,
           supervisorAgentId: ctx.agentId!,
           task: params.task,
           timeout: params.timeout,
@@ -329,6 +330,7 @@ class GroupManagementExecutor extends BaseExecutor<typeof GroupManagementApiName
       content: `Triggered async task for agent "${params.agentId}".`,
       state: {
         agentId: params.agentId,
+        skipCallSupervisor: params.skipCallSupervisor,
         task: params.task,
         timeout: params.timeout,
         type: 'executeTask',

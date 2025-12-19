@@ -106,6 +106,12 @@ export interface DelegateParams {
 
 export interface ExecuteTaskParams {
   agentId: string;
+  /**
+   * If true, the orchestration will end after the task completes,
+   * without calling the supervisor again.
+   * Use this when the task is the final action needed.
+   */
+  skipCallSupervisor?: boolean;
   task: string;
   timeout?: number;
 }

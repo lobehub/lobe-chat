@@ -213,6 +213,12 @@ export const GroupManagementManifest: BuiltinToolManifest = {
               'Maximum time in milliseconds to wait for task completion (default: 1800000, 30 minutes).',
             type: 'number',
           },
+          skipCallSupervisor: {
+            default: false,
+            description:
+              'If true, the orchestration will end after the task completes, without calling the supervisor again. Use this when the task is the final action needed.',
+            type: 'boolean',
+          },
         },
         required: ['agentId', 'task'],
         type: 'object',
