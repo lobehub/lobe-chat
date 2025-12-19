@@ -64,6 +64,10 @@ const SearchResults = memo<SearchResultsProps>(
           }
           break;
         }
+        case 'page': {
+          navigate(`/page/${result.id}`);
+          break;
+        }
         case 'mcp': {
           navigate(`/community/mcp/${result.identifier}`);
           break;
@@ -94,6 +98,9 @@ const SearchResults = memo<SearchResultsProps>(
         case 'file': {
           return <FileText size={16} />;
         }
+        case 'page': {
+          return <FileText size={16} />;
+        }
         case 'mcp': {
           return <Puzzle size={16} />;
         }
@@ -120,6 +127,9 @@ const SearchResults = memo<SearchResultsProps>(
         case 'file': {
           return t('cmdk.search.file');
         }
+        case 'page': {
+          return t('cmdk.search.page');
+        }
         case 'mcp': {
           return t('cmdk.search.mcp');
         }
@@ -134,13 +144,7 @@ const SearchResults = memo<SearchResultsProps>(
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
     const getItemValue = (result: SearchResult) => {
-      const meta = [
-        result.title,
-        result.description,
-        result.type === 'file' ? result.fileType : null,
-      ]
-        .filter(Boolean)
-        .join(' ');
+      const meta = [result.title, result.description].filter(Boolean).join(' ');
       // Prefix with "search-result" to ensure these items rank after built-in commands
       // Include ID to ensure uniqueness when multiple items have the same title
       return `search-result ${result.type} ${result.id} ${meta}`.trim();
@@ -178,15 +182,15 @@ const SearchResults = memo<SearchResultsProps>(
     const messageResults = results.filter((r) => r.type === 'message');
     const agentResults = results.filter((r) => r.type === 'agent');
     const topicResults = results.filter((r) => r.type === 'topic');
-    const allFileResults = results.filter((r) => r.type === 'file');
-    const documentResults = allFileResults.filter((r) => r.fileType === 'custom/document');
-    const fileResults = allFileResults.filter((r) => r.fileType !== 'custom/document');
+    const fileResults = results.filter((r) => r.type === 'file');
+    const pageResults = results.filter((r) => r.type === 'page');
     const mcpResults = results.filter((r) => r.type === 'mcp');
     const pluginResults = results.filter((r) => r.type === 'plugin');
     const assistantResults = results.filter((r) => r.type === 'assistant');
 
-    // In resource context, prioritize file results
+    // Detect context types
     const isResourceContext = context?.type === 'resource';
+    const isPageContext = context?.type === 'page';
 
     // Don't render anything if no results and not loading
     if (!hasResults && !isLoading) {
@@ -195,12 +199,36 @@ const SearchResults = memo<SearchResultsProps>(
 
     return (
       <>
-        {/* Show pages first in resource context */}
-        {hasResults && isResourceContext && documentResults.length > 0 && (
-          <Command.Group heading={t('cmdk.search.pages')} key="pages-resource">
-            {documentResults.map((result) => (
+        {/* Show pages first in page context */}
+        {hasResults && isPageContext && pageResults.length > 0 && (
+          <Command.Group heading={t('cmdk.search.pages')} key="pages-page-context">
+            {pageResults.map((result) => (
               <Command.Item
-                key={`page-resource-${result.id}`}
+                key={`page-page-context-${result.id}`}
+                onSelect={() => handleNavigate(result)}
+                value={getItemValue(result)}
+              >
+                <div className={styles.itemContent}>
+                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.itemTitle}>{result.title}</div>
+                    {result.description && (
+                      <div className={styles.itemDescription}>{result.description}</div>
+                    )}
+                  </div>
+                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+                </div>
+              </Command.Item>
+            ))}
+          </Command.Group>
+        )}
+
+        {/* Show other results in page context */}
+        {hasResults && isPageContext && fileResults.length > 0 && (
+          <Command.Group heading={t('cmdk.search.files')}>
+            {fileResults.map((result) => (
+              <Command.Item
+                key={`file-page-context-${result.id}`}
                 onSelect={() => handleNavigate(result)}
                 value={getItemValue(result)}
               >
@@ -210,6 +238,99 @@ const SearchResults = memo<SearchResultsProps>(
                     <div className={styles.itemTitle}>{result.title}</div>
                     {result.type === 'file' && (
                       <div className={styles.itemDescription}>{result.fileType}</div>
+                    )}
+                  </div>
+                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+                </div>
+              </Command.Item>
+            ))}
+          </Command.Group>
+        )}
+
+        {hasResults && isPageContext && agentResults.length > 0 && (
+          <Command.Group heading={t('cmdk.search.agents')}>
+            {agentResults.map((result) => (
+              <Command.Item
+                key={`agent-page-context-${result.id}`}
+                onSelect={() => handleNavigate(result)}
+                value={getItemValue(result)}
+              >
+                <div className={styles.itemContent}>
+                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.itemTitle}>{result.title}</div>
+                    {getDescription(result) && (
+                      <div className={styles.itemDescription}>{getDescription(result)}</div>
+                    )}
+                  </div>
+                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+                </div>
+              </Command.Item>
+            ))}
+          </Command.Group>
+        )}
+
+        {hasResults && isPageContext && topicResults.length > 0 && (
+          <Command.Group heading={t('cmdk.search.topics')}>
+            {topicResults.map((result) => (
+              <Command.Item
+                key={`topic-page-context-${result.id}`}
+                onSelect={() => handleNavigate(result)}
+                value={getItemValue(result)}
+              >
+                <div className={styles.itemContent}>
+                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.itemTitle}>{result.title}</div>
+                    {getSubtitle(result) && (
+                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
+                    )}
+                  </div>
+                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+                </div>
+              </Command.Item>
+            ))}
+          </Command.Group>
+        )}
+
+        {hasResults && isPageContext && messageResults.length > 0 && (
+          <Command.Group heading={t('cmdk.search.messages')}>
+            {messageResults.map((result) => (
+              <Command.Item
+                key={`message-page-context-${result.id}`}
+                onSelect={() => handleNavigate(result)}
+                value={getItemValue(result)}
+              >
+                <div className={styles.itemContent}>
+                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.itemTitle}>{result.title}</div>
+                    {getSubtitle(result) && (
+                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
+                    )}
+                  </div>
+                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
+                </div>
+              </Command.Item>
+            ))}
+          </Command.Group>
+        )}
+
+        {/* Show pages first in resource context */}
+        {hasResults && isResourceContext && pageResults.length > 0 && (
+          <Command.Group heading={t('cmdk.search.pages')} key="pages-resource">
+            {pageResults.map((result) => (
+              <Command.Item
+                key={`page-resource-${result.id}`}
+                onSelect={() => handleNavigate(result)}
+                value={getItemValue(result)}
+              >
+                <div className={styles.itemContent}>
+                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
+                  <div className={styles.itemDetails}>
+                    <div className={styles.itemTitle}>{result.title}</div>
+                    {result.description && (
+                      <div className={styles.itemDescription}>{result.description}</div>
                     )}
                   </div>
                   <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
@@ -312,10 +433,10 @@ const SearchResults = memo<SearchResultsProps>(
           </Command.Group>
         )}
 
-        {/* Show document pages in normal context */}
-        {hasResults && !isResourceContext && documentResults.length > 0 && (
+        {/* Show document pages in normal context (not in resource or page context) */}
+        {hasResults && !isResourceContext && !isPageContext && pageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.pages')} key="pages-normal">
-            {documentResults.map((result) => (
+            {pageResults.map((result) => (
               <Command.Item
                 key={`page-normal-${result.id}`}
                 onSelect={() => handleNavigate(result)}
@@ -325,8 +446,8 @@ const SearchResults = memo<SearchResultsProps>(
                   <div className={styles.itemIcon}>{getIcon(result.type)}</div>
                   <div className={styles.itemDetails}>
                     <div className={styles.itemTitle}>{result.title}</div>
-                    {result.type === 'file' && (
-                      <div className={styles.itemDescription}>{result.fileType}</div>
+                    {result.description && (
+                      <div className={styles.itemDescription}>{result.description}</div>
                     )}
                   </div>
                   <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
@@ -336,8 +457,8 @@ const SearchResults = memo<SearchResultsProps>(
           </Command.Group>
         )}
 
-        {/* Show files in original position when NOT in resource context */}
-        {hasResults && !isResourceContext && fileResults.length > 0 && (
+        {/* Show files in original position when NOT in resource or page context */}
+        {hasResults && !isResourceContext && !isPageContext && fileResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.files')}>
             {fileResults.map((result) => (
               <Command.Item

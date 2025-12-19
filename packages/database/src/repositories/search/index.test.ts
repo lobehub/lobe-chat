@@ -598,7 +598,7 @@ describe('SearchRepo', () => {
       }
     });
 
-    it('should return 10 topics in agent context', async () => {
+    it('should return 6 topics in agent context', async () => {
       // Create additional topics to test limit
       await serverDB.insert(topics).values(
         Array.from({ length: 12 }, (_, i) => ({
@@ -614,7 +614,7 @@ describe('SearchRepo', () => {
       });
 
       const topicResults = results.filter((r) => r.type === 'topic');
-      expect(topicResults.length).toBe(10);
+      expect(topicResults.length).toBe(6);
     });
 
     it('should return 3 agents and 3 files in agent context', async () => {
@@ -657,8 +657,8 @@ describe('SearchRepo', () => {
 
       const topicResults = results.filter((r) => r.type === 'topic');
 
-      // Should use default limit of 5 per type
-      expect(topicResults.length).toBeLessThanOrEqual(5);
+      // Should use default limit of 3 per type
+      expect(topicResults.length).toBeLessThanOrEqual(3);
     });
 
     it('should not boost topics when agentId is not provided', async () => {

@@ -44,7 +44,7 @@ export const useCommandMenu = () => {
   }, [context, pathname]);
 
   // Debounce search input to reduce API calls
-  const debouncedSearch = useDebounce(search, { wait: 300 });
+  const debouncedSearch = useDebounce(search, { wait: 600 });
 
   // Search functionality
   const hasSearch = debouncedSearch.trim().length > 0;
