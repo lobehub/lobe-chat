@@ -19,6 +19,9 @@ interface SearchResultsProps {
   styles: any;
 }
 
+/**
+ * Search results from unified search index.
+ */
 const SearchResults = memo<SearchResultsProps>(
   ({ results, isLoading, onClose, styles, context, searchQuery = '' }) => {
     const { t } = useTranslation('common');
