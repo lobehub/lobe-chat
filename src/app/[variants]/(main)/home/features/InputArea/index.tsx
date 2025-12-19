@@ -50,6 +50,7 @@ const InputArea = memo(() => {
         }}
       >
         <DesktopChatInput
+          dropdownPlacement="bottomLeft"
           extenHeaderContent={inputActiveMode ? <ModeHeader /> : undefined}
           inputContainerProps={inputContainerProps}
         />

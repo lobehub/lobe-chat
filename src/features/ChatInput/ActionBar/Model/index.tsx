@@ -12,6 +12,7 @@ import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { useAgentId } from '../../hooks/useAgentId';
 import Action from '../components/Action';
+import { useActionBarContext } from '../context';
 import ControlsForm from './ControlsForm';
 
 const useStyles = createStyles(({ css, token, cx }) => ({
@@ -56,6 +57,7 @@ const useStyles = createStyles(({ css, token, cx }) => ({
 const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
+  const { dropdownPlacement } = useActionBarContext();
 
   const agentId = useAgentId();
   const [model, provider, updateAgentConfigById] = useAgentStore((s) => [
@@ -77,7 +79,12 @@ const ModelSwitch = memo(() => {
 
   return (
     <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>
-      <ModelSwitchPanel model={model} onModelChange={handleModelChange} provider={provider}>
+      <ModelSwitchPanel
+        model={model}
+        onModelChange={handleModelChange}
+        placement={dropdownPlacement}
+        provider={provider}
+      >
         <Center
           className={cx(styles.model, isModelHasExtendParams && styles.modelWithControl)}
           height={36}

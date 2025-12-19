@@ -105,6 +105,8 @@ type VirtualItem =
       type: 'no-provider';
     };
 
+type DropdownPlacement = 'bottom' | 'bottomLeft' | 'bottomRight' | 'top' | 'topLeft' | 'topRight';
+
 interface ModelSwitchPanelProps {
   children?: ReactNode;
   /**
@@ -118,13 +120,25 @@ interface ModelSwitchPanelProps {
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
   /**
+   * Dropdown placement. Defaults to 'topLeft'.
+   */
+  placement?: DropdownPlacement;
+  /**
    * Current provider ID. If not provided, uses currentAgentModelProvider from store.
    */
   provider?: string;
 }
 
 const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
-  ({ children, model: modelProp, provider: providerProp, onModelChange, onOpenChange, open }) => {
+  ({
+    children,
+    model: modelProp,
+    onModelChange,
+    onOpenChange,
+    open,
+    placement = 'topLeft',
+    provider: providerProp,
+  }) => {
     const { t } = useTranslation('components');
     const { t: tCommon } = useTranslation('common');
     const newLabel = tCommon('new');
@@ -334,7 +348,7 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
         arrow={false}
         onOpenChange={handleOpenChange}
         open={isOpen}
-        placement={'topLeft'}
+        placement={placement}
         popupRender={() => (
           <Rnd
             className={styles.dropdown}
