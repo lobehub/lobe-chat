@@ -7,6 +7,7 @@ import {
 } from '@lobechat/desktop-bridge';
 import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
 import { app, protocol, session } from 'electron';
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { macOS, windows } from 'electron-is';
 import { pathExistsSync } from 'fs-extra';
 import os from 'node:os';
@@ -277,6 +278,8 @@ export class App {
     await app.whenReady();
     logger.debug('Application ready');
 
+    await this.installReactDevtools();
+
     this.controllers.forEach((controller) => {
       if (typeof controller.afterAppReady === 'function') {
         try {
@@ -288,6 +291,21 @@ export class App {
       }
     });
     logger.info('Application ready state completed');
+  };
+
+  /**
+   * Development only: install React DevTools extension into Electron's devtools.
+   */
+  private installReactDevtools = async () => {
+    if (!isDev) return;
+
+    try {
+      const name = await installExtension(REACT_DEVELOPER_TOOLS);
+
+      logger.info(`Installed DevTools extension: ${name}`);
+    } catch (error) {
+      logger.warn('Failed to install React DevTools extension', error);
+    }
   };
 
   // ============= helper ============= //
