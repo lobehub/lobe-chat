@@ -10,7 +10,6 @@ import {
   Suspense,
   memo,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
 } from 'react';
@@ -85,10 +84,6 @@ const MessageItem = memo<MessageItemProps>(
       messageStateSelectors.isMessageCreating(id)(s),
     ]);
 
-    // Get virtua methods from ConversationStore
-    const upsertVisibleItem = useConversationStore((s) => s.upsertVisibleItem);
-    const removeVisibleItem = useConversationStore((s) => s.removeVisibleItem);
-
     const {
       containerRef: contextMenuContainerRef,
       contextMenuState,
@@ -106,45 +101,6 @@ const MessageItem = memo<MessageItemProps>(
       },
       [contextMenuContainerRef],
     );
-
-    // ======================= Performance Optimization ======================= //
-    useEffect(() => {
-      if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
-
-      const element = containerRef.current;
-      if (!element) return;
-
-      const root = element.closest('[data-virtuoso-scroller]');
-      const thresholds = [0, 0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 1];
-      const options: any = { threshold: thresholds };
-
-      if (root instanceof Element) options.root = root;
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.target !== element) return;
-
-          if (entry.isIntersecting) {
-            const { bottom, top } = entry.intersectionRect;
-
-            upsertVisibleItem(index, {
-              bottom,
-              ratio: entry.intersectionRatio,
-              top,
-            });
-          } else {
-            removeVisibleItem(index);
-          }
-        });
-      }, options);
-
-      observer.observe(element);
-
-      return () => {
-        observer.disconnect();
-        removeVisibleItem(index);
-      };
-    }, [index, upsertVisibleItem, removeVisibleItem]);
 
     const onContextMenu = useCallback(
       async (event: MouseEvent<HTMLDivElement>) => {
