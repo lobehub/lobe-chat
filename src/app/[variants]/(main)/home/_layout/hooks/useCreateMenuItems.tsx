@@ -259,7 +259,7 @@ export const useCreateMenuItems = () => {
    * Create page action
    */
   const createPage = useCallback(async () => {
-    const untitledTitle = tFile('documentList.untitled');
+    const untitledTitle = tFile('pageList.untitled');
     try {
       const newPageId = await createNewPage(untitledTitle);
       navigate(`/page/${newPageId}`);

@@ -25,19 +25,19 @@ export const useDropdownMenu = ({
   const handleDelete = () => {
     modal.confirm({
       cancelText: t('cancel'),
-      content: t('documentEditor.deleteConfirm.content', { ns: 'file' }),
+      content: t('pageEditor.deleteConfirm.content', { ns: 'file' }),
       okButtonProps: { danger: true },
       okText: t('delete'),
       onOk: async () => {
         try {
           await removeDocument(documentId);
-          message.success(t('documentEditor.deleteSuccess', { ns: 'file' }));
+          message.success(t('pageEditor.deleteSuccess', { ns: 'file' }));
         } catch (error) {
           console.error('Failed to delete page:', error);
-          message.error(t('documentEditor.deleteError', { ns: 'file' }));
+          message.error(t('pageEditor.deleteError', { ns: 'file' }));
         }
       },
-      title: t('documentEditor.deleteConfirm.title', { ns: 'file' }),
+      title: t('pageEditor.deleteConfirm.title', { ns: 'file' }),
     });
   };
 
@@ -71,13 +71,13 @@ export const useDropdownMenu = ({
         {
           icon: <Icon icon={Copy} />,
           key: 'copy',
-          label: t('documentList.copyContent', { ns: 'file' }),
+          label: t('pageList.copyContent', { ns: 'file' }),
           onClick: handleCopy,
         },
         {
           icon: <Icon icon={CopyPlus} />,
           key: 'duplicate',
-          label: t('documentList.duplicate', { ns: 'file' }),
+          label: t('pageList.duplicate', { ns: 'file' }),
           onClick: handleDuplicate,
         },
         { type: 'divider' },

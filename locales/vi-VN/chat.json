@@ -403,6 +403,15 @@
     "profile": "Hồ sơ trợ lý",
     "search": "Tìm kiếm"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "bước",
+      "toolCallsShort": "lượt dùng công cụ"
+    },
+    "status": {
+      "initializing": "Đang khởi động nhiệm vụ..."
+    }
+  },
   "thread": {
     "divider": "Chủ đề con",
     "threadMessageCount": "{{messageCount}} tin nhắn",

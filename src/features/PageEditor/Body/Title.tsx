@@ -60,7 +60,7 @@ const Title = memo(() => {
           open={showEmojiPicker}
           shape={'square'}
           size={72}
-          title={t('documentEditor.chooseIcon')}
+          title={t('pageEditor.chooseIcon')}
           value={currentEmoji}
         />
       )}
@@ -81,7 +81,7 @@ const Title = memo(() => {
           }}
           type="text"
         >
-          {t('documentEditor.chooseIcon')}
+          {t('pageEditor.chooseIcon')}
         </Button>
       )}
 
@@ -97,7 +97,7 @@ const Title = memo(() => {
             handleTitleSubmit();
           }
         }}
-        placeholder={t('documentEditor.titlePlaceholder')}
+        placeholder={t('pageEditor.titlePlaceholder')}
         style={{
           fontSize: 36,
           fontWeight: 600,

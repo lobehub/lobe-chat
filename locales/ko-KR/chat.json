@@ -403,6 +403,15 @@
     "profile": "도우미 프로필",
     "search": "검색"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "단계",
+      "toolCallsShort": "도구 사용 횟수"
+    },
+    "status": {
+      "initializing": "작업 시작 중..."
+    }
+  },
   "thread": {
     "divider": "하위 주제",
     "threadMessageCount": "{{messageCount}}개의 메시지",

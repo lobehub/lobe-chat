@@ -2,7 +2,6 @@
   "addFolder": "Tạo thư mục",
   "addLibrary": "Thêm",
   "addPage": "Tạo tài liệu",
-  "desc": "Quản lý tài nguyên công việc, học tập và cuộc sống của bạn.",
   "detail": {
     "basic": {
       "createdAt": "Thời gian tạo",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "Trạng thái vector hóa"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Thêm biểu tượng",
-    "autoSaveMessage": "Tài liệu sẽ được tự động lưu, không cần lưu thủ công",
-    "chooseIcon": "Chọn biểu tượng",
-    "deleteConfirm": {
-      "content": "Tài liệu này sẽ bị xóa và không thể khôi phục. Vui lòng cẩn trọng.",
-      "title": "Xóa tài liệu"
-    },
-    "deleteError": "Xóa tài liệu thất bại",
-    "deleteSuccess": "Xóa tài liệu thành công",
-    "editedAt": "Chỉnh sửa lần cuối vào {{time}}",
-    "editedBy": "Người chỉnh sửa cuối cùng: {{name}}",
-    "editorPlaceholder": "Nhập nội dung tài liệu, nhấn / để mở menu lệnh",
-    "empty": {
-      "createNewDocument": "Tạo tài liệu mới",
-      "title": "Chọn một tài liệu để bắt đầu",
-      "uploadMarkdown": "Tải lên tệp Markdown"
-    },
-    "linkCopied": "Đã sao chép liên kết",
-    "menu": {
-      "copyLink": "Sao chép liên kết",
-      "exportDocument": "Xuất tài liệu",
-      "importDocument": "Nhập tài liệu",
-      "pin": "Ghim tài liệu"
-    },
-    "saving": "Đang lưu...",
-    "slashCommands": {
-      "bulletedList": "Danh sách không thứ tự",
-      "image": "Hình ảnh",
-      "orderedList": "Danh sách có thứ tự",
-      "todoList": "Danh sách việc cần làm"
-    },
-    "titlePlaceholder": "Không có tiêu đề",
-    "wordCount": "{{wordCount}} từ"
-  },
-  "documentList": {
-    "copyContent": "Sao chép toàn bộ nội dung",
-    "duplicate": "Tạo bản sao",
-    "empty": "Chưa có bản thảo nào, hãy nhấn nút phía trên để tạo bản thảo đầu tiên của bạn",
-    "filter": {
-      "all": "Tất cả",
-      "onlyInPages": "Chỉ trong tài liệu"
-    },
-    "noResults": "Không tìm thấy bản thảo phù hợp",
-    "pageCount": "Tổng cộng {{count}} bản thảo",
-    "selectNote": "Chọn một bản thảo để bắt đầu chỉnh sửa",
-    "title": "Tài liệu",
-    "untitled": "Không có tiêu đề"
   },
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "Tải tệp lên",
       "uploadFolder": "Tải thư mục lên"
-    },
-    "newNoteDialog": {
-      "cancel": "Hủy",
-      "editTitle": "Chỉnh sửa tài liệu",
-      "emptyContent": "Nội dung tài liệu không được để trống",
-      "loadError": "Tải tài liệu thất bại, vui lòng thử lại",
-      "loading": "Đang tải...",
-      "save": "Lưu",
-      "saveError": "Lưu tài liệu thất bại, vui lòng thử lại",
-      "saveSuccess": "Lưu tài liệu thành công",
-      "title": "Tạo tài liệu mới",
-      "updateSuccess": "Cập nhật tài liệu thành công"
     },
     "newPageButton": "Tạo tài liệu mới",
     "uploadButton": "Tải lên"
@@ -173,6 +111,49 @@
       }
     },
     "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
+  },
+  "pageEditor": {
+    "addIcon": "Thêm biểu tượng",
+    "autoSaveMessage": "Tài liệu sẽ được lưu tự động, không cần lưu thủ công",
+    "chooseIcon": "Chọn biểu tượng",
+    "deleteConfirm": {
+      "content": "Tài liệu này sẽ bị xóa và không thể khôi phục. Vui lòng cẩn trọng.",
+      "title": "Xóa tài liệu"
+    },
+    "deleteError": "Xóa tài liệu thất bại",
+    "deleteSuccess": "Xóa tài liệu thành công",
+    "editedAt": "Chỉnh sửa lần cuối vào {{time}}",
+    "editedBy": "Người chỉnh sửa cuối cùng: {{name}}",
+    "editorPlaceholder": "Nhập nội dung tài liệu, nhấn / để mở menu lệnh",
+    "empty": {
+      "createNewDocument": "Tạo tài liệu mới",
+      "title": "Chọn một tài liệu để bắt đầu",
+      "uploadMarkdown": "Tải lên tệp Markdown"
+    },
+    "linkCopied": "Đã sao chép liên kết",
+    "menu": {
+      "copyLink": "Sao chép liên kết",
+      "exportDocument": "Xuất tài liệu",
+      "importDocument": "Nhập tài liệu",
+      "pin": "Ghim tài liệu"
+    },
+    "saving": "Đang lưu...",
+    "titlePlaceholder": "Không có tiêu đề",
+    "wordCount": "{{wordCount}} từ"
+  },
+  "pageList": {
+    "copyContent": "Sao chép toàn bộ nội dung",
+    "duplicate": "Tạo bản sao",
+    "empty": "Chưa có tài liệu nào, nhấn nút phía trên để tạo tài liệu đầu tiên của bạn",
+    "filter": {
+      "all": "Tất cả",
+      "onlyInPages": "Chỉ trong tài liệu"
+    },
+    "noResults": "Không tìm thấy tài liệu phù hợp",
+    "pageCount": "Tổng cộng {{count}} tài liệu",
+    "selectNote": "Chọn một tài liệu để bắt đầu chỉnh sửa",
+    "title": "Tài liệu",
+    "untitled": "Không có tiêu đề"
   },
   "preview": {
     "downloadFile": "Tải tệp",

@@ -14,7 +14,7 @@ const PageEmpty = memo<PageEmptyProps>(({ search, ...rest }) => {
   return (
     <Center height="100%" style={{ minHeight: '50vh' }} width="100%">
       <Empty
-        description={search ? t('documentList.noResults') : t('documentList.empty')}
+        description={search ? t('pageList.noResults') : t('pageList.empty')}
         descriptionProps={{
           fontSize: 14,
         }}

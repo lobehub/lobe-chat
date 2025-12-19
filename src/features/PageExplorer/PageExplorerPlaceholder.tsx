@@ -112,19 +112,17 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
         <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
           {hasPages && (
             <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-              <Text as={'h4'}>{t('documentEditor.empty.title')}</Text>
+              <Text as={'h4'}>{t('pageEditor.empty.title')}</Text>
               <Text type={'secondary'}>{t('or', { ns: 'common' })}</Text>
             </Flexbox>
           )}
           <Flexbox gap={12} horizontal>
             <Flexbox
               className={styles.card}
-              onClick={() => handleCreateDocument('', t('documentList.untitled'))}
+              onClick={() => handleCreateDocument('', t('pageList.untitled'))}
               padding={16}
             >
-              <span className={styles.actionTitle}>
-                {t('documentEditor.empty.createNewDocument')}
-              </span>
+              <span className={styles.actionTitle}>{t('pageEditor.empty.createNewDocument')}</span>
               <div className={styles.glow} style={{ background: theme.purple }} />
               <FileTypeIcon
                 className={styles.icon}
@@ -149,7 +147,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
                 style={{ opacity: isUploading ? 0.5 : 1 }}
               >
                 <span className={styles.actionTitle}>
-                  {isUploading ? 'Uploading...' : t('documentEditor.empty.uploadMarkdown')}
+                  {isUploading ? 'Uploading...' : t('pageEditor.empty.uploadMarkdown')}
                 </span>
                 <div className={styles.glow} style={{ background: theme.gold }} />
                 <FileTypeIcon

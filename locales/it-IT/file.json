@@ -2,7 +2,6 @@
   "addFolder": "Crea cartella",
   "addLibrary": "Aggiungi",
   "addPage": "Crea documento",
-  "desc": "Gestisci le tue risorse per il lavoro, lo studio e la vita quotidiana.",
   "detail": {
     "basic": {
       "createdAt": "Data di creazione",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "Vettorizzazione"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Aggiungi icona",
-    "autoSaveMessage": "Il documento viene salvato automaticamente, non è necessario salvarlo manualmente",
-    "chooseIcon": "Scegli icona",
-    "deleteConfirm": {
-      "content": "Stai per eliminare questo documento. Una volta eliminato, non potrà essere recuperato. Procedi con cautela.",
-      "title": "Elimina documento"
-    },
-    "deleteError": "Eliminazione del documento non riuscita",
-    "deleteSuccess": "Documento eliminato con successo",
-    "editedAt": "Ultima modifica il {{time}}",
-    "editedBy": "Ultima modifica di {{name}}",
-    "editorPlaceholder": "Inserisci il contenuto del documento, premi / per aprire il menu dei comandi",
-    "empty": {
-      "createNewDocument": "Crea un nuovo documento",
-      "title": "Seleziona un documento per iniziare",
-      "uploadMarkdown": "Carica un file Markdown"
-    },
-    "linkCopied": "Link copiato",
-    "menu": {
-      "copyLink": "Copia link",
-      "exportDocument": "Esporta documento",
-      "importDocument": "Importa documento",
-      "pin": "Fissa documento"
-    },
-    "saving": "Salvataggio in corso...",
-    "slashCommands": {
-      "bulletedList": "Elenco puntato",
-      "image": "Immagine",
-      "orderedList": "Elenco numerato",
-      "todoList": "Elenco delle cose da fare"
-    },
-    "titlePlaceholder": "Senza titolo",
-    "wordCount": "{{wordCount}} parole"
-  },
-  "documentList": {
-    "copyContent": "Copia tutto il contenuto",
-    "duplicate": "Crea una copia",
-    "empty": "Nessun documento disponibile, clicca sul pulsante in alto per creare il tuo primo documento",
-    "filter": {
-      "all": "Tutti",
-      "onlyInPages": "Solo nei documenti"
-    },
-    "noResults": "Nessun documento corrispondente trovato",
-    "pageCount": "Totale {{count}} documenti",
-    "selectNote": "Seleziona un documento per iniziare a modificare",
-    "title": "Documenti",
-    "untitled": "Senza titolo"
   },
   "empty": "Nessun file/cartella caricato",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "Carica file",
       "uploadFolder": "Carica cartella"
-    },
-    "newNoteDialog": {
-      "cancel": "Annulla",
-      "editTitle": "Modifica documento",
-      "emptyContent": "Il contenuto del documento non può essere vuoto",
-      "loadError": "Caricamento del documento non riuscito, riprova",
-      "loading": "Caricamento in corso...",
-      "save": "Salva",
-      "saveError": "Salvataggio del documento non riuscito, riprova",
-      "saveSuccess": "Documento salvato con successo",
-      "title": "Nuovo documento",
-      "updateSuccess": "Documento aggiornato con successo"
     },
     "newPageButton": "Nuovo Documento",
     "uploadButton": "Carica"
@@ -173,6 +111,49 @@
       }
     },
     "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
+  },
+  "pageEditor": {
+    "addIcon": "Aggiungi icona",
+    "autoSaveMessage": "Il documento viene salvato automaticamente, non è necessario salvarlo manualmente",
+    "chooseIcon": "Scegli icona",
+    "deleteConfirm": {
+      "content": "Stai per eliminare questo documento. Una volta eliminato, non potrà essere recuperato. Procedi con cautela.",
+      "title": "Elimina documento"
+    },
+    "deleteError": "Eliminazione del documento non riuscita",
+    "deleteSuccess": "Documento eliminato con successo",
+    "editedAt": "Ultima modifica il {{time}}",
+    "editedBy": "Ultima modifica di {{name}}",
+    "editorPlaceholder": "Inserisci il contenuto del documento, premi / per aprire il menu dei comandi",
+    "empty": {
+      "createNewDocument": "Crea un nuovo documento",
+      "title": "Seleziona un documento per iniziare",
+      "uploadMarkdown": "Carica un file Markdown"
+    },
+    "linkCopied": "Link copiato",
+    "menu": {
+      "copyLink": "Copia link",
+      "exportDocument": "Esporta documento",
+      "importDocument": "Importa documento",
+      "pin": "Fissa documento"
+    },
+    "saving": "Salvataggio in corso...",
+    "titlePlaceholder": "Senza titolo",
+    "wordCount": "{{wordCount}} parole"
+  },
+  "pageList": {
+    "copyContent": "Copia tutto il contenuto",
+    "duplicate": "Crea una copia",
+    "empty": "Nessun documento presente. Clicca sul pulsante in alto per creare il tuo primo documento",
+    "filter": {
+      "all": "Tutti",
+      "onlyInPages": "Solo nei documenti"
+    },
+    "noResults": "Nessun documento corrispondente trovato",
+    "pageCount": "Totale {{count}} documenti",
+    "selectNote": "Seleziona un documento per iniziare a modificare",
+    "title": "Documenti",
+    "untitled": "Senza titolo"
   },
   "preview": {
     "downloadFile": "Scarica file",

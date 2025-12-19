@@ -2,7 +2,6 @@
   "addFolder": "Map aanmaken",
   "addLibrary": "Toevoegen",
   "addPage": "Document aanmaken",
-  "desc": "Beheer je bronnen voor werk, studie en dagelijks leven.",
   "detail": {
     "basic": {
       "createdAt": "Aanmaakdatum",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "Vectorisatie"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Pictogram toevoegen",
-    "autoSaveMessage": "Documenten worden automatisch opgeslagen, handmatig opslaan is niet nodig",
-    "chooseIcon": "Pictogram kiezen",
-    "deleteConfirm": {
-      "content": "Je staat op het punt dit document te verwijderen. Dit kan niet ongedaan worden gemaakt. Wees voorzichtig.",
-      "title": "Document verwijderen"
-    },
-    "deleteError": "Verwijderen van document mislukt",
-    "deleteSuccess": "Document succesvol verwijderd",
-    "editedAt": "Laatst bewerkt op {{time}}",
-    "editedBy": "Laatst bewerkt door {{name}}",
-    "editorPlaceholder": "Voer documentinhoud in, druk op / om het opdrachtmenu te openen",
-    "empty": {
-      "createNewDocument": "Nieuw document aanmaken",
-      "title": "Selecteer een document om te beginnen",
-      "uploadMarkdown": "Markdown-bestand uploaden"
-    },
-    "linkCopied": "Link gekopieerd",
-    "menu": {
-      "copyLink": "Link kopiëren",
-      "exportDocument": "Document exporteren",
-      "importDocument": "Document importeren",
-      "pin": "Document vastzetten"
-    },
-    "saving": "Bezig met opslaan...",
-    "slashCommands": {
-      "bulletedList": "Ongenummerde lijst",
-      "image": "Afbeelding",
-      "orderedList": "Genummerde lijst",
-      "todoList": "Takenlijst"
-    },
-    "titlePlaceholder": "Zonder titel",
-    "wordCount": "{{wordCount}} woorden"
-  },
-  "documentList": {
-    "copyContent": "Volledige inhoud kopiëren",
-    "duplicate": "Kopie maken",
-    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken.",
-    "filter": {
-      "all": "Alles",
-      "onlyInPages": "Alleen in documenten"
-    },
-    "noResults": "Geen overeenkomende documenten gevonden",
-    "pageCount": "Totaal {{count}} documenten",
-    "selectNote": "Selecteer een document om te beginnen met bewerken",
-    "title": "Documenten",
-    "untitled": "Zonder titel"
   },
   "empty": "Geen bestanden/mappen geüpload",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "Bestand uploaden",
       "uploadFolder": "Map uploaden"
-    },
-    "newNoteDialog": {
-      "cancel": "Annuleren",
-      "editTitle": "Document bewerken",
-      "emptyContent": "Documentinhoud mag niet leeg zijn",
-      "loadError": "Laden van document mislukt, probeer het opnieuw",
-      "loading": "Bezig met laden...",
-      "save": "Opslaan",
-      "saveError": "Opslaan van document mislukt, probeer het opnieuw",
-      "saveSuccess": "Document succesvol opgeslagen",
-      "title": "Nieuw document",
-      "updateSuccess": "Document succesvol bijgewerkt"
     },
     "newPageButton": "Nieuw document",
     "uploadButton": "Uploaden"
@@ -173,6 +111,49 @@
       }
     },
     "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
+  },
+  "pageEditor": {
+    "addIcon": "Pictogram toevoegen",
+    "autoSaveMessage": "Het document wordt automatisch opgeslagen, handmatig opslaan is niet nodig",
+    "chooseIcon": "Pictogram kiezen",
+    "deleteConfirm": {
+      "content": "Je staat op het punt dit document te verwijderen. Dit kan niet ongedaan worden gemaakt, wees voorzichtig.",
+      "title": "Document verwijderen"
+    },
+    "deleteError": "Verwijderen van document mislukt",
+    "deleteSuccess": "Document succesvol verwijderd",
+    "editedAt": "Laatst bewerkt op {{time}}",
+    "editedBy": "Laatst bewerkt door {{name}}",
+    "editorPlaceholder": "Voer de inhoud van het document in, druk op / om het opdrachtmenu te openen",
+    "empty": {
+      "createNewDocument": "Nieuw document aanmaken",
+      "title": "Selecteer een document om te beginnen",
+      "uploadMarkdown": "Markdown-bestand uploaden"
+    },
+    "linkCopied": "Link gekopieerd",
+    "menu": {
+      "copyLink": "Link kopiëren",
+      "exportDocument": "Document exporteren",
+      "importDocument": "Document importeren",
+      "pin": "Document vastzetten"
+    },
+    "saving": "Bezig met opslaan...",
+    "titlePlaceholder": "Zonder titel",
+    "wordCount": "{{wordCount}} woorden"
+  },
+  "pageList": {
+    "copyContent": "Volledige inhoud kopiëren",
+    "duplicate": "Kopie maken",
+    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken",
+    "filter": {
+      "all": "Alles",
+      "onlyInPages": "Alleen in documenten"
+    },
+    "noResults": "Geen overeenkomende documenten gevonden",
+    "pageCount": "Totaal {{count}} documenten",
+    "selectNote": "Selecteer een document om te beginnen met bewerken",
+    "title": "Documenten",
+    "untitled": "Zonder titel"
   },
   "preview": {
     "downloadFile": "Bestand downloaden",

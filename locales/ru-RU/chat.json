@@ -403,6 +403,15 @@
     "profile": "Профиль помощника",
     "search": "Поиск"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "шаг",
+      "toolCallsShort": "исп. инструм."
+    },
+    "status": {
+      "initializing": "Запуск задачи..."
+    }
+  },
   "thread": {
     "divider": "Подтема",
     "threadMessageCount": "{{messageCount}} сообщений",

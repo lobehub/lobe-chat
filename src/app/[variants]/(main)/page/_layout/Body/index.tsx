@@ -53,7 +53,7 @@ const Body = memo(() => {
           paddingInline={'8px 4px'}
           title={
             <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-              {t('documentList.title')}
+              {t('pageList.title')}
               {filteredPagesCount > 0 && ` ${filteredPagesCount}`}
             </Text>
           }

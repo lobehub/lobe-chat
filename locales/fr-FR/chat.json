@@ -403,6 +403,15 @@
     "profile": "Profil de l'assistant",
     "search": "Recherche"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "étapes",
+      "toolCallsShort": "utilisations d’outils"
+    },
+    "status": {
+      "initializing": "Initialisation de la tâche..."
+    }
+  },
   "thread": {
     "divider": "Sous-sujet",
     "threadMessageCount": "{{messageCount}} messages",

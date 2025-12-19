@@ -403,6 +403,15 @@
     "profile": "Asistan Profili",
     "search": "Ara"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "Adım",
+      "toolCallsShort": "Araç Kullanımı"
+    },
+    "status": {
+      "initializing": "Görev başlatılıyor..."
+    }
+  },
   "thread": {
     "divider": "Alt konu",
     "threadMessageCount": "{{messageCount}} mesaj",

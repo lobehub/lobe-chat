@@ -2,7 +2,6 @@
   "addFolder": "إنشاء مجلد",
   "addLibrary": "إضافة",
   "addPage": "إنشاء مستند",
-  "desc": "قم بإدارة مواردك للعمل، الدراسة والحياة.",
   "detail": {
     "basic": {
       "createdAt": "تاريخ الإنشاء",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "تحويل إلى متجهات"
     }
-  },
-  "documentEditor": {
-    "addIcon": "إضافة أيقونة",
-    "autoSaveMessage": "يتم حفظ المستند تلقائيًا، لا حاجة للحفظ اليدوي",
-    "chooseIcon": "اختر أيقونة",
-    "deleteConfirm": {
-      "content": "سيتم حذف هذا المستند، ولا يمكن استعادته بعد الحذف. يرجى توخي الحذر.",
-      "title": "حذف المستند"
-    },
-    "deleteError": "فشل في حذف المستند",
-    "deleteSuccess": "تم حذف المستند بنجاح",
-    "editedAt": "آخر تعديل في {{time}}",
-    "editedBy": "آخر من عدّل: {{name}}",
-    "editorPlaceholder": "أدخل محتوى المستند، اضغط / لفتح قائمة الأوامر",
-    "empty": {
-      "createNewDocument": "إنشاء مستند جديد",
-      "title": "اختر مستندًا للبدء",
-      "uploadMarkdown": "رفع ملف Markdown"
-    },
-    "linkCopied": "تم نسخ الرابط",
-    "menu": {
-      "copyLink": "نسخ الرابط",
-      "exportDocument": "تصدير المستند",
-      "importDocument": "استيراد مستند",
-      "pin": "تثبيت المستند"
-    },
-    "saving": "جارٍ الحفظ...",
-    "slashCommands": {
-      "bulletedList": "قائمة غير مرتبة",
-      "image": "صورة",
-      "orderedList": "قائمة مرتبة",
-      "todoList": "قائمة المهام"
-    },
-    "titlePlaceholder": "بدون عنوان",
-    "wordCount": "{{wordCount}} كلمة"
-  },
-  "documentList": {
-    "copyContent": "نسخ المحتوى الكامل",
-    "duplicate": "إنشاء نسخة",
-    "empty": "لا توجد مستندات حالياً، انقر على الزر أعلاه لإنشاء أول مستند لك",
-    "filter": {
-      "all": "الكل",
-      "onlyInPages": "فقط في المستندات"
-    },
-    "noResults": "لم يتم العثور على مستندات مطابقة",
-    "pageCount": "إجمالي {{count}} مستند",
-    "selectNote": "اختر مستندًا لبدء التحرير",
-    "title": "المستندات",
-    "untitled": "بدون عنوان"
   },
   "empty": "لا توجد ملفات/مجلدات تم تحميلها بعد",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "رفع ملف",
       "uploadFolder": "رفع مجلد"
-    },
-    "newNoteDialog": {
-      "cancel": "إلغاء",
-      "editTitle": "تحرير المستند",
-      "emptyContent": "لا يمكن أن يكون محتوى المستند فارغًا",
-      "loadError": "فشل في تحميل المستند، يرجى المحاولة مرة أخرى",
-      "loading": "جارٍ التحميل...",
-      "save": "حفظ",
-      "saveError": "فشل في حفظ المستند، يرجى المحاولة مرة أخرى",
-      "saveSuccess": "تم حفظ المستند بنجاح",
-      "title": "مستند جديد",
-      "updateSuccess": "تم تحديث المستند بنجاح"
     },
     "newPageButton": "إنشاء مستند جديد",
     "uploadButton": "رفع"
@@ -173,6 +111,49 @@
       }
     },
     "title": "الوضع الحالي للنشر لا يدعم إدارة الملفات"
+  },
+  "pageEditor": {
+    "addIcon": "إضافة أيقونة",
+    "autoSaveMessage": "يتم حفظ المستند تلقائيًا، لا حاجة للحفظ اليدوي",
+    "chooseIcon": "اختر أيقونة",
+    "deleteConfirm": {
+      "content": "سيتم حذف هذا المستند، ولا يمكن استعادته بعد الحذف. يرجى توخي الحذر.",
+      "title": "حذف المستند"
+    },
+    "deleteError": "فشل في حذف المستند",
+    "deleteSuccess": "تم حذف المستند بنجاح",
+    "editedAt": "آخر تعديل في {{time}}",
+    "editedBy": "آخر من عدّل: {{name}}",
+    "editorPlaceholder": "أدخل محتوى المستند، اضغط / لفتح قائمة الأوامر",
+    "empty": {
+      "createNewDocument": "إنشاء مستند جديد",
+      "title": "اختر مستندًا للبدء",
+      "uploadMarkdown": "رفع ملف Markdown"
+    },
+    "linkCopied": "تم نسخ الرابط",
+    "menu": {
+      "copyLink": "نسخ الرابط",
+      "exportDocument": "تصدير المستند",
+      "importDocument": "استيراد مستند",
+      "pin": "تثبيت المستند"
+    },
+    "saving": "جارٍ الحفظ...",
+    "titlePlaceholder": "بدون عنوان",
+    "wordCount": "{{wordCount}} كلمة"
+  },
+  "pageList": {
+    "copyContent": "نسخ المحتوى الكامل",
+    "duplicate": "إنشاء نسخة",
+    "empty": "لا توجد مستندات حاليًا، انقر على الزر أعلاه لإنشاء أول مستند لك",
+    "filter": {
+      "all": "الكل",
+      "onlyInPages": "فقط في المستندات"
+    },
+    "noResults": "لم يتم العثور على مستندات مطابقة",
+    "pageCount": "عدد المستندات: {{count}}",
+    "selectNote": "اختر مستندًا للبدء في التحرير",
+    "title": "المستندات",
+    "untitled": "بدون عنوان"
   },
   "preview": {
     "downloadFile": "تحميل الملف",

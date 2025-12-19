@@ -2,7 +2,6 @@
   "addFolder": "Ordner erstellen",
   "addLibrary": "Hinzufügen",
   "addPage": "Dokument erstellen",
-  "desc": "Verwalte deine Ressourcen für Arbeit, Studium und Alltag.",
   "detail": {
     "basic": {
       "createdAt": "Erstellungszeit",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "Vektorisierung"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Symbol hinzufügen",
-    "autoSaveMessage": "Das Dokument wird automatisch gespeichert, ein manuelles Speichern ist nicht erforderlich.",
-    "chooseIcon": "Symbol auswählen",
-    "deleteConfirm": {
-      "content": "Dieses Dokument wird gelöscht und kann danach nicht wiederhergestellt werden. Bitte seien Sie vorsichtig.",
-      "title": "Dokument löschen"
-    },
-    "deleteError": "Löschen des Dokuments fehlgeschlagen",
-    "deleteSuccess": "Dokument erfolgreich gelöscht",
-    "editedAt": "Zuletzt bearbeitet am {{time}}",
-    "editedBy": "Zuletzt bearbeitet von {{name}}",
-    "editorPlaceholder": "Geben Sie den Dokumentinhalt ein, drücken Sie / für das Befehlsmenü",
-    "empty": {
-      "createNewDocument": "Neues Dokument erstellen",
-      "title": "Wählen Sie ein Dokument, um zu beginnen",
-      "uploadMarkdown": "Markdown-Datei hochladen"
-    },
-    "linkCopied": "Link wurde kopiert",
-    "menu": {
-      "copyLink": "Link kopieren",
-      "exportDocument": "Dokument exportieren",
-      "importDocument": "Dokument importieren",
-      "pin": "Dokument anheften"
-    },
-    "saving": "Speichern...",
-    "slashCommands": {
-      "bulletedList": "Aufzählungsliste",
-      "image": "Bild",
-      "orderedList": "Nummerierte Liste",
-      "todoList": "Aufgabenliste"
-    },
-    "titlePlaceholder": "Ohne Titel",
-    "wordCount": "{{wordCount}} Wörter"
-  },
-  "documentList": {
-    "copyContent": "Gesamten Inhalt kopieren",
-    "duplicate": "Kopie erstellen",
-    "empty": "Noch keine Dokumente vorhanden. Klicke auf die Schaltfläche oben, um dein erstes Dokument zu erstellen.",
-    "filter": {
-      "all": "Alle",
-      "onlyInPages": "Nur in Dokumenten"
-    },
-    "noResults": "Keine passenden Dokumente gefunden",
-    "pageCount": "Insgesamt {{count}} Dokumente",
-    "selectNote": "Wähle ein Dokument aus, um mit der Bearbeitung zu beginnen",
-    "title": "Dokumente",
-    "untitled": "Ohne Titel"
   },
   "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "Datei hochladen",
       "uploadFolder": "Ordner hochladen"
-    },
-    "newNoteDialog": {
-      "cancel": "Abbrechen",
-      "editTitle": "Dokument bearbeiten",
-      "emptyContent": "Der Dokumentinhalt darf nicht leer sein",
-      "loadError": "Fehler beim Laden des Dokuments. Bitte versuchen Sie es erneut.",
-      "loading": "Wird geladen...",
-      "save": "Speichern",
-      "saveError": "Fehler beim Speichern des Dokuments. Bitte versuchen Sie es erneut.",
-      "saveSuccess": "Dokument erfolgreich gespeichert",
-      "title": "Neues Dokument",
-      "updateSuccess": "Dokument erfolgreich aktualisiert"
     },
     "newPageButton": "Neues Dokument erstellen",
     "uploadButton": "Hochladen"
@@ -173,6 +111,49 @@
       }
     },
     "title": "Der aktuelle Bereitstellungsmodus unterstützt keine Dateiverwaltung"
+  },
+  "pageEditor": {
+    "addIcon": "Symbol hinzufügen",
+    "autoSaveMessage": "Das Dokument wird automatisch gespeichert, manuelles Speichern ist nicht erforderlich",
+    "chooseIcon": "Symbol auswählen",
+    "deleteConfirm": {
+      "content": "Dieses Dokument wird gelöscht und kann danach nicht wiederhergestellt werden. Bitte seien Sie vorsichtig.",
+      "title": "Dokument löschen"
+    },
+    "deleteError": "Löschen des Dokuments fehlgeschlagen",
+    "deleteSuccess": "Dokument erfolgreich gelöscht",
+    "editedAt": "Zuletzt bearbeitet am {{time}}",
+    "editedBy": "Zuletzt bearbeitet von {{name}}",
+    "editorPlaceholder": "Geben Sie den Inhalt des Dokuments ein, drücken Sie / für das Befehlsmenü",
+    "empty": {
+      "createNewDocument": "Neues Dokument erstellen",
+      "title": "Wählen Sie ein Dokument, um zu beginnen",
+      "uploadMarkdown": "Markdown-Datei hochladen"
+    },
+    "linkCopied": "Link wurde kopiert",
+    "menu": {
+      "copyLink": "Link kopieren",
+      "exportDocument": "Dokument exportieren",
+      "importDocument": "Dokument importieren",
+      "pin": "Dokument anheften"
+    },
+    "saving": "Speichern...",
+    "titlePlaceholder": "Ohne Titel",
+    "wordCount": "{{wordCount}} Wörter"
+  },
+  "pageList": {
+    "copyContent": "Gesamten Inhalt kopieren",
+    "duplicate": "Kopie erstellen",
+    "empty": "Noch keine Dokumente vorhanden. Klicken Sie oben, um Ihr erstes Dokument zu erstellen.",
+    "filter": {
+      "all": "Alle",
+      "onlyInPages": "Nur in Dokumenten"
+    },
+    "noResults": "Keine passenden Dokumente gefunden",
+    "pageCount": "Insgesamt {{count}} Dokumente",
+    "selectNote": "Wählen Sie ein Dokument zum Bearbeiten",
+    "title": "Dokumente",
+    "untitled": "Ohne Titel"
   },
   "preview": {
     "downloadFile": "Datei herunterladen",

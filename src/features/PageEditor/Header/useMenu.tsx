@@ -102,7 +102,7 @@ export const useMenu = (): { menuItems: any[] } => {
       {
         icon: <Icon icon={Link2} />,
         key: 'copy-link',
-        label: t('documentEditor.menu.copyLink'),
+        label: t('pageEditor.menu.copyLink'),
         onClick: () => {
           const state = storeApi.getState();
           state.handleCopyLink(t as any, message);
@@ -126,10 +126,10 @@ export const useMenu = (): { menuItems: any[] } => {
         key: 'page-info',
         label: (
           <div style={{ color: theme.colorTextTertiary, fontSize: 12, lineHeight: 1.6 }}>
-            <div>{t('documentEditor.wordCount', { wordCount })}</div>
+            <div>{t('pageEditor.wordCount', { wordCount })}</div>
             <div>
               {lastUpdatedTime
-                ? t('documentEditor.editedAt', {
+                ? t('pageEditor.editedAt', {
                     time: dayjs(lastUpdatedTime).format('MMMM D, YYYY [at] h:mm A'),
                   })
                 : ''}

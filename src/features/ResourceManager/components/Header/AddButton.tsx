@@ -47,7 +47,7 @@ const AddButton = () => {
 
   const handleOpenPageEditor = useCallback(async () => {
     // Create a new page directly and switch to page view
-    const untitledTitle = t('documentList.untitled');
+    const untitledTitle = t('pageList.untitled');
     const newPage = await createDocument({
       content: '',
       knowledgeBaseId: libraryId,

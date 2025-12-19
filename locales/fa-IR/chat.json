@@ -403,6 +403,15 @@
     "profile": "پروفایل دستیار",
     "search": "جستجو"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "گام",
+      "toolCallsShort": "بار استفاده از ابزار"
+    },
+    "status": {
+      "initializing": "در حال راه‌اندازی وظیفه..."
+    }
+  },
   "thread": {
     "divider": "زیرموضوع",
     "threadMessageCount": "{{messageCount}} پیام",

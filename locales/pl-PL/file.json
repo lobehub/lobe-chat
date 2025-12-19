@@ -2,7 +2,6 @@
   "addFolder": "Utwórz folder",
   "addLibrary": "Dodaj",
   "addPage": "Utwórz dokument",
-  "desc": "Zarządzaj swoimi zasobami do pracy, nauki i życia.",
   "detail": {
     "basic": {
       "createdAt": "Data utworzenia",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "Indeksowanie"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Dodaj ikonę",
-    "autoSaveMessage": "Dokument jest zapisywany automatycznie, nie ma potrzeby zapisywania ręcznego",
-    "chooseIcon": "Wybierz ikonę",
-    "deleteConfirm": {
-      "content": "Zamierzasz usunąć ten dokument. Po usunięciu nie będzie można go odzyskać. Proszę postępować ostrożnie.",
-      "title": "Usuń dokument"
-    },
-    "deleteError": "Nie udało się usunąć dokumentu",
-    "deleteSuccess": "Dokument został pomyślnie usunięty",
-    "editedAt": "Ostatnia edycja: {{time}}",
-    "editedBy": "Ostatnio edytował: {{name}}",
-    "editorPlaceholder": "Wpisz treść dokumentu, naciśnij / aby otworzyć menu poleceń",
-    "empty": {
-      "createNewDocument": "Utwórz nowy dokument",
-      "title": "Wybierz dokument, aby rozpocząć",
-      "uploadMarkdown": "Prześlij plik Markdown"
-    },
-    "linkCopied": "Link został skopiowany",
-    "menu": {
-      "copyLink": "Kopiuj link",
-      "exportDocument": "Eksportuj dokument",
-      "importDocument": "Importuj dokument",
-      "pin": "Przypnij dokument"
-    },
-    "saving": "Zapisywanie...",
-    "slashCommands": {
-      "bulletedList": "Lista punktowana",
-      "image": "Obraz",
-      "orderedList": "Lista numerowana",
-      "todoList": "Lista zadań"
-    },
-    "titlePlaceholder": "Bez tytułu",
-    "wordCount": "{{wordCount}} słów"
-  },
-  "documentList": {
-    "copyContent": "Kopiuj całą treść",
-    "duplicate": "Utwórz kopię",
-    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć swój pierwszy dokument.",
-    "filter": {
-      "all": "Wszystkie",
-      "onlyInPages": "Tylko w dokumentach"
-    },
-    "noResults": "Nie znaleziono pasujących dokumentów",
-    "pageCount": "Łącznie {{count}} dokumentów",
-    "selectNote": "Wybierz dokument, aby rozpocząć edycję",
-    "title": "Dokumenty",
-    "untitled": "Bez tytułu"
   },
   "empty": "Brak przesłanych plików/folderów",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "Prześlij plik",
       "uploadFolder": "Prześlij folder"
-    },
-    "newNoteDialog": {
-      "cancel": "Anuluj",
-      "editTitle": "Edytuj dokument",
-      "emptyContent": "Treść dokumentu nie może być pusta",
-      "loadError": "Nie udało się załadować dokumentu, spróbuj ponownie",
-      "loading": "Ładowanie...",
-      "save": "Zapisz",
-      "saveError": "Nie udało się zapisać dokumentu, spróbuj ponownie",
-      "saveSuccess": "Dokument został zapisany pomyślnie",
-      "title": "Nowy dokument",
-      "updateSuccess": "Dokument został zaktualizowany pomyślnie"
     },
     "newPageButton": "Nowy dokument",
     "uploadButton": "Prześlij"
@@ -173,6 +111,49 @@
       }
     },
     "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
+  },
+  "pageEditor": {
+    "addIcon": "Dodaj ikonę",
+    "autoSaveMessage": "Dokument jest zapisywany automatycznie, nie ma potrzeby zapisywania ręcznego",
+    "chooseIcon": "Wybierz ikonę",
+    "deleteConfirm": {
+      "content": "Zamierzasz usunąć ten dokument. Po usunięciu nie będzie można go odzyskać. Proszę postępować ostrożnie.",
+      "title": "Usuń dokument"
+    },
+    "deleteError": "Nie udało się usunąć dokumentu",
+    "deleteSuccess": "Dokument został pomyślnie usunięty",
+    "editedAt": "Ostatnia edycja: {{time}}",
+    "editedBy": "Ostatnio edytował: {{name}}",
+    "editorPlaceholder": "Wpisz treść dokumentu, naciśnij / aby otworzyć menu poleceń",
+    "empty": {
+      "createNewDocument": "Utwórz nowy dokument",
+      "title": "Wybierz dokument, aby rozpocząć",
+      "uploadMarkdown": "Prześlij plik Markdown"
+    },
+    "linkCopied": "Link został skopiowany",
+    "menu": {
+      "copyLink": "Kopiuj link",
+      "exportDocument": "Eksportuj dokument",
+      "importDocument": "Importuj dokument",
+      "pin": "Przypnij dokument"
+    },
+    "saving": "Zapisywanie...",
+    "titlePlaceholder": "Bez tytułu",
+    "wordCount": "{{wordCount}} słów"
+  },
+  "pageList": {
+    "copyContent": "Kopiuj całą treść",
+    "duplicate": "Utwórz kopię",
+    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć pierwszy dokument",
+    "filter": {
+      "all": "Wszystkie",
+      "onlyInPages": "Tylko w dokumentach"
+    },
+    "noResults": "Nie znaleziono pasujących dokumentów",
+    "pageCount": "Łącznie {{count}} dokumentów",
+    "selectNote": "Wybierz dokument, aby rozpocząć edycję",
+    "title": "Dokumenty",
+    "untitled": "Bez tytułu"
   },
   "preview": {
     "downloadFile": "Pobierz plik",

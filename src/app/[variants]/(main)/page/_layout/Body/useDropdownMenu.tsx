@@ -35,13 +35,13 @@ export const useDropdownMenu = (): MenuProps['items'] => {
       {
         icon: <Icon icon={Check} style={{ opacity: !showOnlyPagesNotInLibrary ? 1 : 0 }} />,
         key: 'all',
-        label: t('documentList.filter.all'),
+        label: t('pageList.filter.all'),
         onClick: () => setShowOnlyPagesNotInLibrary(false),
       },
       {
         icon: <Icon icon={Check} style={{ opacity: showOnlyPagesNotInLibrary ? 1 : 0 }} />,
         key: 'onlyInPages',
-        label: t('documentList.filter.onlyInPages'),
+        label: t('pageList.filter.onlyInPages'),
         onClick: () => setShowOnlyPagesNotInLibrary(true),
       },
       {

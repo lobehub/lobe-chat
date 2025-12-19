@@ -46,10 +46,10 @@ const EditorCanvas = memo<EditorCanvasProps>(({ placeholder, style }) => {
       <Editor
         content={''}
         editor={editor!}
-        lineEmptyPlaceholder={placeholder || t('documentEditor.editorPlaceholder')}
+        lineEmptyPlaceholder={placeholder || t('pageEditor.editorPlaceholder')}
         onInit={onEditorInit}
         onTextChange={handleContentChange}
-        placeholder={placeholder || t('documentEditor.editorPlaceholder')}
+        placeholder={placeholder || t('pageEditor.editorPlaceholder')}
         plugins={[
           ReactLiteXmlPlugin,
           ReactListPlugin,

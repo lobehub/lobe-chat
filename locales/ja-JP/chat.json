@@ -403,6 +403,15 @@
     "profile": "アシスタントプロフィール",
     "search": "検索"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "歩",
+      "toolCallsShort": "回ツール使用"
+    },
+    "status": {
+      "initializing": "タスクを起動しています..."
+    }
+  },
   "thread": {
     "divider": "サブトピック",
     "threadMessageCount": "{{messageCount}} 件のメッセージ",

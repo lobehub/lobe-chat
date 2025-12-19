@@ -152,7 +152,7 @@ const NoteFileItem = memo<NoteFileItemProps>(
     const isSupportedForChunking = !isChunkingUnsupported(fileType || '');
 
     const extractedTitle = markdownContent ? extractTitle(markdownContent) : null;
-    const displayTitle = extractedTitle || name || t('file:documentList.untitled');
+    const displayTitle = extractedTitle || name || t('file:pageList.untitled');
     const emoji = metadata?.emoji;
     const previewText = markdownContent ? getPreviewText(markdownContent) : '';
 

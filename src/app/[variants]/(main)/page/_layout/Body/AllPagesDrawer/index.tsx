@@ -44,7 +44,7 @@ const AllPagesDrawer = memo<AllPagesDrawerProps>(({ open, onClose }) => {
           />
         </Flexbox>
       }
-      title={t('documentList.title')}
+      title={t('pageList.title')}
     >
       <Content searchKeyword={searchKeyword} />
     </SideBarDrawer>

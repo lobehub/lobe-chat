@@ -62,7 +62,7 @@ const Breadcrumb = memo(() => {
     return null;
   }
 
-  const documentTitle = currentTitle || t('documentEditor.titlePlaceholder');
+  const documentTitle = currentTitle || t('pageEditor.titlePlaceholder');
 
   return (
     <Flexbox align={'center'} className={styles.breadcrumb} flex={1} gap={0} horizontal>

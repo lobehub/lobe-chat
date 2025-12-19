@@ -405,7 +405,7 @@ const FileListItem = memo<FileListItemProps>(
                 value={renamingValue}
               />
             ) : (
-              <span className={styles.name}>{name || t('file:documentList.untitled')}</span>
+              <span className={styles.name}>{name || t('file:pageList.untitled')}</span>
             )}
           </Flexbox>
           <Flexbox

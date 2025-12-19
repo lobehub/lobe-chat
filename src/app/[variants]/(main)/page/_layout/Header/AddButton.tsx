@@ -13,7 +13,7 @@ const AddButton = memo(() => {
   const createNewPage = useFileStore((s) => s.createNewPage);
 
   const handleNewDocument = () => {
-    const untitledTitle = t('documentList.untitled');
+    const untitledTitle = t('pageList.untitled');
     createNewPage(untitledTitle);
   };
 

@@ -2,7 +2,6 @@
   "addFolder": "Klasör Oluştur",
   "addLibrary": "Ekle",
   "addPage": "Belge Oluştur",
-  "desc": "Çalışma, öğrenme ve yaşam kaynaklarını yönetin.",
   "detail": {
     "basic": {
       "createdAt": "Oluşturulma Zamanı",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "Vektörleştirme"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Simge Ekle",
-    "autoSaveMessage": "Belge otomatik olarak kaydedilir, manuel kaydetmeye gerek yoktur",
-    "chooseIcon": "Simge Seç",
-    "deleteConfirm": {
-      "content": "Bu belge silinmek üzere. Silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-      "title": "Belgeyi Sil"
-    },
-    "deleteError": "Belge silinemedi",
-    "deleteSuccess": "Belge başarıyla silindi",
-    "editedAt": "Son düzenleme: {{time}}",
-    "editedBy": "Son düzenleyen: {{name}}",
-    "editorPlaceholder": "Belge içeriğini girin, komut menüsünü açmak için / tuşuna basın",
-    "empty": {
-      "createNewDocument": "Yeni Belge Oluştur",
-      "title": "Başlamak için bir belge seçin",
-      "uploadMarkdown": "Markdown Dosyası Yükle"
-    },
-    "linkCopied": "Bağlantı kopyalandı",
-    "menu": {
-      "copyLink": "Bağlantıyı Kopyala",
-      "exportDocument": "Belgeyi Dışa Aktar",
-      "importDocument": "Belgeyi İçe Aktar",
-      "pin": "Belgeyi Sabitle"
-    },
-    "saving": "Kaydediliyor...",
-    "slashCommands": {
-      "bulletedList": "Madde İşaretli Liste",
-      "image": "Görsel",
-      "orderedList": "Sıralı Liste",
-      "todoList": "Yapılacaklar Listesi"
-    },
-    "titlePlaceholder": "Başlıksız",
-    "wordCount": "{{wordCount}} kelime"
-  },
-  "documentList": {
-    "copyContent": "Tüm İçeriği Kopyala",
-    "duplicate": "Kopyasını Oluştur",
-    "empty": "Henüz bir belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
-    "filter": {
-      "all": "Tümü",
-      "onlyInPages": "Yalnızca belgelerde"
-    },
-    "noResults": "Eşleşen belge bulunamadı",
-    "pageCount": "Toplam {{count}} belge",
-    "selectNote": "Düzenlemeye başlamak için bir belge seçin",
-    "title": "Belgeler",
-    "untitled": "Başlıksız"
   },
   "empty": "Henüz yüklenmiş dosya/klasör yok",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "Dosya Yükle",
       "uploadFolder": "Klasör Yükle"
-    },
-    "newNoteDialog": {
-      "cancel": "İptal",
-      "editTitle": "Belgeyi Düzenle",
-      "emptyContent": "Belge içeriği boş olamaz",
-      "loadError": "Belge yüklenemedi, lütfen tekrar deneyin",
-      "loading": "Yükleniyor...",
-      "save": "Kaydet",
-      "saveError": "Belge kaydedilemedi, lütfen tekrar deneyin",
-      "saveSuccess": "Belge başarıyla kaydedildi",
-      "title": "Yeni Belge",
-      "updateSuccess": "Belge başarıyla güncellendi"
     },
     "newPageButton": "Yeni Belge Oluştur",
     "uploadButton": "Yükle"
@@ -173,6 +111,49 @@
       }
     },
     "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
+  },
+  "pageEditor": {
+    "addIcon": "Simge Ekle",
+    "autoSaveMessage": "Belge otomatik olarak kaydedilir, manuel kaydetmeye gerek yoktur",
+    "chooseIcon": "Simge Seç",
+    "deleteConfirm": {
+      "content": "Bu belge silinmek üzere. Silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "title": "Belgeyi Sil"
+    },
+    "deleteError": "Belge silinemedi",
+    "deleteSuccess": "Belge başarıyla silindi",
+    "editedAt": "Son düzenleme: {{time}}",
+    "editedBy": "Son düzenleyen: {{name}}",
+    "editorPlaceholder": "Belge içeriğini girin, komut menüsünü açmak için / tuşuna basın",
+    "empty": {
+      "createNewDocument": "Yeni Belge Oluştur",
+      "title": "Başlamak için bir belge seçin",
+      "uploadMarkdown": "Markdown Dosyası Yükle"
+    },
+    "linkCopied": "Bağlantı kopyalandı",
+    "menu": {
+      "copyLink": "Bağlantıyı Kopyala",
+      "exportDocument": "Belgeyi Dışa Aktar",
+      "importDocument": "Belgeyi İçe Aktar",
+      "pin": "Belgeyi Sabitle"
+    },
+    "saving": "Kaydediliyor...",
+    "titlePlaceholder": "Başlıksız",
+    "wordCount": "{{wordCount}} kelime"
+  },
+  "pageList": {
+    "copyContent": "Tüm İçeriği Kopyala",
+    "duplicate": "Kopya Oluştur",
+    "empty": "Henüz belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "filter": {
+      "all": "Tümü",
+      "onlyInPages": "Sadece Belgelerde"
+    },
+    "noResults": "Eşleşen belge bulunamadı",
+    "pageCount": "Toplam {{count}} belge",
+    "selectNote": "Düzenlemeye başlamak için bir belge seçin",
+    "title": "Belgeler",
+    "untitled": "Başlıksız"
   },
   "preview": {
     "downloadFile": "Dosyayı İndir",

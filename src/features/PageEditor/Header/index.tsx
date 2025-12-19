@@ -36,7 +36,7 @@ const Header = memo(() => {
               {currentEmoji && <Avatar avatar={currentEmoji} shape={'square'} size={28} />}
               {/* Title */}
               <Text ellipsis style={{ marginLeft: 4 }} weight={500}>
-                {currentTitle || t('documentEditor.titlePlaceholder')}
+                {currentTitle || t('pageEditor.titlePlaceholder')}
               </Text>
             </>
           )}

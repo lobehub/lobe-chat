@@ -403,6 +403,15 @@
     "profile": "助手檔案",
     "search": "搜尋"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "步驟",
+      "toolCallsShort": "次使用工具"
+    },
+    "status": {
+      "initializing": "任務啟動中..."
+    }
+  },
   "thread": {
     "divider": "子話題",
     "threadMessageCount": "{{messageCount}} 條消息",

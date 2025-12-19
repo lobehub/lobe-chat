@@ -1,8 +1,7 @@
 {
   "addFolder": "Create Folder",
   "addLibrary": "Add",
-  "addPage": "Create Document",
-  "desc": "Manage your resources for work, study, and life.",
+  "addPage": "Create Page",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "embedding"
     }
-  },
-  "documentEditor": {
-    "addIcon": "Add Icon",
-    "autoSaveMessage": "Document auto-saves, no manual save needed",
-    "chooseIcon": "Choose Icon",
-    "deleteConfirm": {
-      "content": "This document will be deleted permanently and cannot be recovered. Please proceed with caution.",
-      "title": "Delete Document"
-    },
-    "deleteError": "Failed to delete document",
-    "deleteSuccess": "Document deleted successfully",
-    "editedAt": "Edited {{time}}",
-    "editedBy": "Edited by {{name}}",
-    "editorPlaceholder": "Type document content, press / to open command menu",
-    "empty": {
-      "createNewDocument": "Create New Page",
-      "title": "Select a page to start",
-      "uploadMarkdown": "Upload Markdown File"
-    },
-    "linkCopied": "Link copied",
-    "menu": {
-      "copyLink": "Copy Link",
-      "exportDocument": "Export Document",
-      "importDocument": "Import Document",
-      "pin": "Pin Document"
-    },
-    "saving": "Saving...",
-    "slashCommands": {
-      "bulletedList": "Bulleted List",
-      "image": "Image",
-      "orderedList": "Ordered List",
-      "todoList": "Todo List"
-    },
-    "titlePlaceholder": "Untitled",
-    "wordCount": "{{wordCount}} words"
-  },
-  "documentList": {
-    "copyContent": "Copy All",
-    "duplicate": "Duplicate",
-    "empty": "No documents yet. Click the button above to create your first one.",
-    "filter": {
-      "all": "All",
-      "onlyInPages": "In Documents Only"
-    },
-    "noResults": "No matching documents found.",
-    "pageCount": "{{count}} pages in total",
-    "selectNote": "Select a document to start editing",
-    "title": "Documents",
-    "untitled": "Untitled"
   },
   "empty": "No files or folders have been uploaded yet.",
   "header": {
@@ -106,18 +56,6 @@
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
     },
-    "newNoteDialog": {
-      "cancel": "Cancel",
-      "editTitle": "Edit Document",
-      "emptyContent": "Document content cannot be empty.",
-      "loadError": "Failed to load the document. Please try again.",
-      "loading": "Loading...",
-      "save": "Save",
-      "saveError": "Failed to save the document. Please try again.",
-      "saveSuccess": "Document saved successfully.",
-      "title": "New Page",
-      "updateSuccess": "Document updated successfully."
-    },
     "newPageButton": "New Page",
     "uploadButton": "Upload"
   },
@@ -126,7 +64,7 @@
     "greeting": "Get Started",
     "quickActions": "Quick Actions",
     "recentFiles": "Recent Files",
-    "recentPages": "Recent Documents",
+    "recentPages": "Recent Pages",
     "subtitle": "Welcome to the Resource Center. Start managing your documents and files here.",
     "uploadEntries": {
       "files": {
@@ -153,7 +91,7 @@
   },
   "menu": {
     "allFiles": "All Files",
-    "allPages": "All Documents"
+    "allPages": "All Pages"
   },
   "networkError": "Failed to retrieve libraries. Please check your network connection and try again.",
   "notSupportGuide": {
@@ -173,6 +111,49 @@
       }
     },
     "title": "The current deployment mode does not support file management"
+  },
+  "pageEditor": {
+    "addIcon": "Add Icon",
+    "autoSaveMessage": "Your document is saved automatically. No need to save manually.",
+    "chooseIcon": "Choose Icon",
+    "deleteConfirm": {
+      "content": "This document will be deleted and cannot be recovered. Please proceed with caution.",
+      "title": "Delete Document"
+    },
+    "deleteError": "Failed to delete the document",
+    "deleteSuccess": "Document deleted successfully",
+    "editedAt": "Last edited on {{time}}",
+    "editedBy": "Last edited by {{name}}",
+    "editorPlaceholder": "Start writing your document. Press / to open the command menu",
+    "empty": {
+      "createNewDocument": "Create New Page",
+      "title": "Select a page to get started",
+      "uploadMarkdown": "Upload Markdown File"
+    },
+    "linkCopied": "Link copied",
+    "menu": {
+      "copyLink": "Copy Link",
+      "exportDocument": "Export Document",
+      "importDocument": "Import Page",
+      "pin": "Pin Page"
+    },
+    "saving": "Saving...",
+    "titlePlaceholder": "Untitled",
+    "wordCount": "{{wordCount}} words"
+  },
+  "pageList": {
+    "copyContent": "Copy Full Text",
+    "duplicate": "Duplicate",
+    "empty": "No pages yet. Click the button above to create your first one.",
+    "filter": {
+      "all": "All",
+      "onlyInPages": "In Pages Only"
+    },
+    "noResults": "No matching pages found",
+    "pageCount": "{{count}} pages in total",
+    "selectNote": "Select a page to start editing",
+    "title": "Pages",
+    "untitled": "Untitled"
   },
   "preview": {
     "downloadFile": "Download File",

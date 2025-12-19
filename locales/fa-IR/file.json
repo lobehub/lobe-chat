@@ -2,7 +2,6 @@
   "addFolder": "ایجاد پوشه",
   "addLibrary": "افزودن",
   "addPage": "ایجاد سند",
-  "desc": "مدیریت منابع کاری، تحصیلی و زندگی شما.",
   "detail": {
     "basic": {
       "createdAt": "زمان ایجاد",
@@ -23,55 +22,6 @@
       },
       "embeddingStatus": "برداری‌سازی"
     }
-  },
-  "documentEditor": {
-    "addIcon": "افزودن آیکون",
-    "autoSaveMessage": "سند به‌صورت خودکار ذخیره می‌شود، نیازی به ذخیره دستی نیست",
-    "chooseIcon": "انتخاب آیکون",
-    "deleteConfirm": {
-      "content": "در شرف حذف این سند هستید. پس از حذف، قابل بازیابی نخواهد بود. لطفاً با احتیاط عمل کنید.",
-      "title": "حذف سند"
-    },
-    "deleteError": "حذف سند ناموفق بود",
-    "deleteSuccess": "سند با موفقیت حذف شد",
-    "editedAt": "آخرین ویرایش در {{time}}",
-    "editedBy": "آخرین ویرایش توسط {{name}}",
-    "editorPlaceholder": "محتوای سند را وارد کنید، برای باز کردن منوی دستورات / را فشار دهید",
-    "empty": {
-      "createNewDocument": "ایجاد سند جدید",
-      "title": "برای شروع یک سند انتخاب کنید",
-      "uploadMarkdown": "بارگذاری فایل Markdown"
-    },
-    "linkCopied": "پیوند کپی شد",
-    "menu": {
-      "copyLink": "کپی پیوند",
-      "exportDocument": "صادرات سند",
-      "importDocument": "وارد کردن سند",
-      "pin": "سند را سنجاق کن"
-    },
-    "saving": "در حال ذخیره‌سازی...",
-    "slashCommands": {
-      "bulletedList": "فهرست گلوله‌ای",
-      "image": "تصویر",
-      "orderedList": "فهرست شماره‌دار",
-      "todoList": "فهرست کارها"
-    },
-    "titlePlaceholder": "بدون عنوان",
-    "wordCount": "{{wordCount}} کلمه"
-  },
-  "documentList": {
-    "copyContent": "کپی کل محتوا",
-    "duplicate": "ایجاد نسخه مشابه",
-    "empty": "هنوز هیچ سندی وجود ندارد، برای ایجاد اولین سند خود روی دکمه بالا کلیک کنید",
-    "filter": {
-      "all": "همه",
-      "onlyInPages": "فقط در اسناد"
-    },
-    "noResults": "هیچ سندی مطابق با جستجو یافت نشد",
-    "pageCount": "مجموعاً {{count}} سند",
-    "selectNote": "برای ویرایش، یک سند را انتخاب کنید",
-    "title": "اسناد",
-    "untitled": "بدون عنوان"
   },
   "empty": "هیچ فایل/پوشه‌ای بارگذاری نشده است",
   "header": {
@@ -105,18 +55,6 @@
       },
       "uploadFile": "بارگذاری فایل",
       "uploadFolder": "بارگذاری پوشه"
-    },
-    "newNoteDialog": {
-      "cancel": "لغو",
-      "editTitle": "ویرایش سند",
-      "emptyContent": "محتوای سند نمی‌تواند خالی باشد",
-      "loadError": "بارگذاری سند ناموفق بود، لطفاً دوباره تلاش کنید",
-      "loading": "در حال بارگذاری...",
-      "save": "ذخیره",
-      "saveError": "ذخیره سند ناموفق بود، لطفاً دوباره تلاش کنید",
-      "saveSuccess": "سند با موفقیت ذخیره شد",
-      "title": "سند جدید",
-      "updateSuccess": "سند با موفقیت به‌روزرسانی شد"
     },
     "newPageButton": "ایجاد سند جدید",
     "uploadButton": "بارگذاری"
@@ -173,6 +111,49 @@
       }
     },
     "title": "حالت استقرار فعلی از مدیریت فایل پشتیبانی نمی‌کند"
+  },
+  "pageEditor": {
+    "addIcon": "افزودن آیکون",
+    "autoSaveMessage": "سند به‌صورت خودکار ذخیره می‌شود، نیازی به ذخیره‌سازی دستی نیست",
+    "chooseIcon": "انتخاب آیکون",
+    "deleteConfirm": {
+      "content": "در شرف حذف این سند هستید. پس از حذف، قابل بازیابی نخواهد بود. لطفاً با احتیاط عمل کنید.",
+      "title": "حذف سند"
+    },
+    "deleteError": "حذف سند ناموفق بود",
+    "deleteSuccess": "سند با موفقیت حذف شد",
+    "editedAt": "آخرین ویرایش در {{time}}",
+    "editedBy": "آخرین ویرایش توسط {{name}}",
+    "editorPlaceholder": "محتوای سند را وارد کنید، برای باز کردن منوی دستورات / را فشار دهید",
+    "empty": {
+      "createNewDocument": "ایجاد سند جدید",
+      "title": "برای شروع یک سند انتخاب کنید",
+      "uploadMarkdown": "بارگذاری فایل Markdown"
+    },
+    "linkCopied": "پیوند کپی شد",
+    "menu": {
+      "copyLink": "کپی پیوند",
+      "exportDocument": "صادرات سند",
+      "importDocument": "وارد کردن سند",
+      "pin": "سنجاق کردن سند"
+    },
+    "saving": "در حال ذخیره‌سازی...",
+    "titlePlaceholder": "بدون عنوان",
+    "wordCount": "{{wordCount}} کلمه"
+  },
+  "pageList": {
+    "copyContent": "کپی کامل محتوا",
+    "duplicate": "ایجاد نسخه مشابه",
+    "empty": "هیچ سندی موجود نیست، برای ایجاد اولین سند خود روی دکمه بالا کلیک کنید",
+    "filter": {
+      "all": "همه",
+      "onlyInPages": "فقط در اسناد"
+    },
+    "noResults": "هیچ سندی مطابق با جستجو یافت نشد",
+    "pageCount": "مجموع {{count}} سند",
+    "selectNote": "برای ویرایش یک سند انتخاب کنید",
+    "title": "اسناد",
+    "untitled": "بدون عنوان"
   },
   "preview": {
     "downloadFile": "دانلود فایل",

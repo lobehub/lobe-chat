@@ -403,6 +403,15 @@
     "profile": "Assistentprofiel",
     "search": "Zoeken"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "stap",
+      "toolCallsShort": "keer gereedschap gebruikt"
+    },
+    "status": {
+      "initializing": "Taak wordt gestart..."
+    }
+  },
   "thread": {
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",

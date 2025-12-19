@@ -403,6 +403,15 @@
     "profile": "ملف المساعد",
     "search": "بحث"
   },
+  "task": {
+    "metrics": {
+      "stepsShort": "خطوة",
+      "toolCallsShort": "مرة استخدام الأداة"
+    },
+    "status": {
+      "initializing": "جارٍ بدء المهمة..."
+    }
+  },
   "thread": {
     "divider": "موضوع فرعي",
     "threadMessageCount": "{{messageCount}} رسالة",

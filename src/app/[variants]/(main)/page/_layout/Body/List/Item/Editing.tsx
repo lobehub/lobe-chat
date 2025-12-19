@@ -83,7 +83,7 @@ const Editing = memo<EditingProps>(({ documentId, title, currentEmoji, toggleEdi
               handleUpdate();
               toggleEditing(false);
             }}
-            placeholder={t('documentEditor.titlePlaceholder')}
+            placeholder={t('pageEditor.titlePlaceholder')}
             style={{ flex: 1 }}
           />
         </Flexbox>

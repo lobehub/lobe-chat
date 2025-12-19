@@ -82,7 +82,7 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
         if (currentDocId) {
           const url = `${window.location.origin}${window.location.pathname}`;
           navigator.clipboard.writeText(url);
-          message.success(t('documentEditor.linkCopied'));
+          message.success(t('pageEditor.linkCopied'));
         }
       },
 
@@ -93,23 +93,23 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
         return new Promise((resolve, reject) => {
           modal.confirm({
             cancelText: t('cancel'),
-            content: t('documentEditor.deleteConfirm.content'),
+            content: t('pageEditor.deleteConfirm.content'),
             okButtonProps: { danger: true },
             okText: t('delete'),
             onOk: async () => {
               try {
                 const { removeDocument } = useFileStore.getState();
                 await removeDocument(currentDocId);
-                message.success(t('documentEditor.deleteSuccess'));
+                message.success(t('pageEditor.deleteSuccess'));
                 onDeleteCallback?.();
                 resolve();
               } catch (error) {
                 console.error('Failed to delete page:', error);
-                message.error(t('documentEditor.deleteError'));
+                message.error(t('pageEditor.deleteError'));
                 reject(error);
               }
             },
-            title: t('documentEditor.deleteConfirm.title'),
+            title: t('pageEditor.deleteConfirm.title'),
           });
         });
       },
