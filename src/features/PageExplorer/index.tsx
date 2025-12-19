@@ -25,6 +25,7 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
     fetchDocuments,
     fetchDocumentDetail,
     deletePage,
+    isDocumentListLoading,
   ] = useFileStore((s) => [
     s.selectedPageId,
     s.setSelectedPageId,
@@ -63,7 +64,14 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
   // Check if the current page exists in the pages list
   const currentPageExists = currentPageId && pages.some((page) => page.id === currentPageId);
 
-  if (!currentPageId || !currentPageExists) {
+  // When we have a pageId from URL but document list is not yet loaded (empty list or still loading),
+  // proceed to show the editor instead of placeholder. The editor handles its own loading state.
+  // This prevents the placeholder flash on page refresh.
+  const isWaitingForDocuments = pages.length === 0 || isDocumentListLoading;
+  const shouldShowEditor =
+    currentPageId && (currentPageExists || (pageId && isWaitingForDocuments));
+
+  if (!shouldShowEditor) {
     return <PageExplorerPlaceholder hasPages={pages?.length > 0} />;
   }
 
