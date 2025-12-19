@@ -106,7 +106,9 @@ const linkOptions = {
 };
 
 // Procedures that should skip batching for faster initial load
-const SKIP_BATCH_PROCEDURES = new Set(['user.getUserState', 'config.getGlobalConfig']);
+const initialLoadProcedures = new Set(['user.getUserState', 'config.getGlobalConfig']);
+const slowProcedures = new Set(['market.getAssistantList']);
+const SKIP_BATCH_PROCEDURES = new Set([...initialLoadProcedures, ...slowProcedures]);
 
 // 3. splitLink to conditionally disable batching
 const customSplitLink = splitLink({
