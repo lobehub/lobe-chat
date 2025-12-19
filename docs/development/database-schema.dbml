@@ -89,6 +89,7 @@ table ai_models {
 
   indexes {
     (id, provider_id, user_id) [pk]
+    user_id [name: 'ai_models_user_id_idx']
   }
 }
 
@@ -112,6 +113,7 @@ table ai_providers {
 
   indexes {
     (id, user_id) [pk]
+    user_id [name: 'ai_providers_user_id_idx']
   }
 }
 
