@@ -211,6 +211,7 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
    * This avoids creating many overlays on dropdown open, while keeping the tooltip UX on demand.
    */
   const withTooltip = infoTagTooltip && (!shouldLazyMountTooltip || hovered);
+  const displayName = model.displayName || model.id;
 
   return (
     <Flexbox
@@ -233,8 +234,17 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
         style={{ flexShrink: 1, minWidth: 0, overflow: 'hidden' }}
       >
         <ModelIcon model={model.id} size={20} />
-        <Text ellipsis style={mobile ? { maxWidth: '60vw' } : { minWidth: 0, overflow: 'hidden' }}>
-          {model.displayName || model.id}
+        <Text
+          ellipsis={
+            withTooltip
+              ? {
+                  tooltip: displayName,
+                }
+              : true
+          }
+          style={mobile ? { maxWidth: '60vw' } : { minWidth: 0, overflow: 'hidden' }}
+        >
+          {displayName}
         </Text>
         {newBadgeLabel ? (
           <NewModelBadgeCore label={newBadgeLabel} releasedAt={model.releasedAt} />
