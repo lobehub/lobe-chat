@@ -1693,8 +1693,7 @@ export class DiscoverService {
       const { user, agents } = response;
 
       // Transform agents to DiscoverAssistantItem format
-      // Note: UserAgentItem doesn't have tags or tokenUsage, using defaults
-      const transformedAgents: DiscoverAssistantItem[] = (agents || []).map((agent) => ({
+      const transformedAgents: DiscoverAssistantItem[] = (agents || []).map((agent: any) => ({
         author: user.displayName || user.userName || user.namespace || '',
         avatar: agent.avatar || '',
         category: agent.category as any,
@@ -1704,12 +1703,12 @@ export class DiscoverService {
         homepage: `https://lobehub.com/discover/assistant/${agent.identifier}`,
         identifier: agent.identifier,
         installCount: agent.installCount,
-        knowledgeCount: 0,
-        pluginCount: 0,
+        knowledgeCount: agent.knowledgeCount || 0,
+        pluginCount: agent.pluginCount || 0,
         schemaVersion: 1,
-        tags: [],
+        tags: agent.tags || [],
         title: agent.name || agent.identifier,
-        tokenUsage: 0,
+        tokenUsage: agent.tokenUsage || 0,
       }));
 
       const result: DiscoverUserProfile = {

@@ -45,7 +45,7 @@ const UserHeader = memo(() => {
             </Text>
           </Flexbox>
           {isOwner && onEditProfile && (
-            <Button onClick={onEditProfile} shape={'round'}>
+            <Button onClick={() => onEditProfile()} shape={'round'}>
               {t('user.editProfile')}
             </Button>
           )}

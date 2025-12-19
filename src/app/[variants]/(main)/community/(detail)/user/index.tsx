@@ -1,9 +1,10 @@
 'use client';
 
-import { memo, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { memo, useCallback, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/MarketAuth';
+import { MarketUserProfile } from '@/layout/AuthProvider/MarketAuth/types';
 import { useDiscoverStore } from '@/store/discover';
 
 import NotFound from '../components/NotFound';
@@ -20,6 +21,7 @@ interface UserDetailPageProps {
 const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   const params = useParams<{ slug: string }>();
   const username = decodeURIComponent(params.slug ?? '');
+  const navigate = useNavigate();
 
   const { getCurrentUserInfo, isAuthenticated, openProfileSetup } = useMarketAuth();
 
@@ -32,13 +34,27 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
 
   // Check if the current user is viewing their own profile
   const isOwner =
-    isAuthenticated &&
-    !!currentUser &&
-    !!data?.user?.userName &&
-    !!currentUserProfile?.userName &&
-    data.user.userName === currentUserProfile.userName;
+    isAuthenticated && !!currentUser && data?.user?.namespace === currentUserProfile?.namespace;
 
   const { handleStatusChange } = useUserDetail({ onMutate: mutate });
+
+  // Handle profile edit with navigation on userName change
+  const handleEditProfile = useCallback(
+    (onSuccess?: (profile: MarketUserProfile) => void) => {
+      const currentUserName = data?.user?.userName || data?.user?.namespace;
+      openProfileSetup((profile) => {
+        // Call the original onSuccess callback if provided
+        onSuccess?.(profile);
+
+        // Navigate to new URL if userName changed
+        const newUserName = profile.userName || profile.namespace;
+        if (newUserName && newUserName !== currentUserName) {
+          navigate(`/community/user/${newUserName}`, { replace: true });
+        }
+      });
+    },
+    [data?.user?.userName, data?.user?.namespace, openProfileSetup, navigate],
+  );
 
   const contextConfig = useMemo(() => {
     if (!data || !data.user) return null;
@@ -49,12 +65,12 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
       agents,
       isOwner,
       mobile,
-      onEditProfile: openProfileSetup,
+      onEditProfile: handleEditProfile,
       onStatusChange: isOwner ? handleStatusChange : undefined,
       totalInstalls,
       user,
     };
-  }, [data, isOwner, mobile, openProfileSetup, handleStatusChange]);
+  }, [data, isOwner, mobile, handleEditProfile, handleStatusChange]);
 
   if (isLoading) return <Loading />;
   if (!contextConfig) return <NotFound />;
