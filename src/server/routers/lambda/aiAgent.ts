@@ -531,6 +531,7 @@ export const aiAgentRouter = router({
           // Update metrics from Redis state using currentState and stats
           if (redisState.usage) {
             updatedMetadata.totalTokens = redisState.usage.llm?.tokens?.total;
+            updatedMetadata.totalToolCalls = redisState.usage.tools?.totalCalls;
           }
           if (redisState.cost?.total !== undefined) {
             updatedMetadata.totalCost = redisState.cost.total;

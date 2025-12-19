@@ -227,6 +227,41 @@ describe('aiAgentRouter.getGroupSubAgentTaskStatus', () => {
       });
     });
 
+    it('should extract totalToolCalls from usage.tools.totalCalls', async () => {
+      mockGetOperationStatus.mockResolvedValue({
+        currentState: {
+          status: 'running',
+          stepCount: 2,
+          cost: { total: 0.006678 },
+          usage: {
+            llm: {
+              tokens: { total: 8358 },
+            },
+            tools: {
+              totalCalls: 5,
+              byTool: [
+                { name: 'lobe-web-browsing/search', calls: 3 },
+                { name: 'lobe-web-browsing/fetch', calls: 2 },
+              ],
+            },
+          },
+        },
+        stats: { totalMessages: 4 },
+        isCompleted: false,
+        hasError: false,
+        metadata: {},
+      });
+
+      const caller = aiAgentRouter.createCaller(createTestContext());
+
+      const result = await caller.getGroupSubAgentTaskStatus({
+        threadId: testThreadId,
+      });
+
+      expect(result.taskDetail?.totalToolCalls).toBe(5);
+      expect(result.taskDetail?.totalTokens).toBe(8358);
+    });
+
     it('should fallback to Thread data when Redis returns null (operation expired)', async () => {
       // getOperationStatus now returns null when operation not found (instead of throwing)
       mockGetOperationStatus.mockResolvedValue(null);
