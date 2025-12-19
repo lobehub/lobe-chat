@@ -5,7 +5,7 @@ import {
   ReactCodeblockPlugin,
   ReactHRPlugin,
   ReactImagePlugin,
-  ReactLinkHighlightPlugin,
+  ReactLinkPlugin,
   ReactListPlugin,
   ReactLiteXmlPlugin,
   ReactMathPlugin,
@@ -56,7 +56,7 @@ const EditorCanvas = memo<EditorCanvasProps>(({ placeholder, style }) => {
           ReactCodePlugin,
           ReactCodeblockPlugin,
           ReactHRPlugin,
-          ReactLinkHighlightPlugin,
+          ReactLinkPlugin,
           ReactTablePlugin,
           ReactMathPlugin,
           Editor.withProps(ReactImagePlugin, {
