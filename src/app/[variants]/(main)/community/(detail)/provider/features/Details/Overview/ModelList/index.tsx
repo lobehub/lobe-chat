@@ -4,10 +4,10 @@ import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Block, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ChevronRightIcon } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import InlineTable from '@/components/InlineTable';
@@ -31,7 +31,7 @@ const ModelList = memo(() => {
             key: 'model',
             render: (_, record) => {
               return (
-                <Link href={urlJoin('/community/model', record.id)} style={{ color: 'inherit' }}>
+                <Link style={{ color: 'inherit' }} to={urlJoin('/community/model', record.id)}>
                   <Flexbox align="center" gap={8} horizontal>
                     <ModelIcon model={record.id} size={24} type={'avatar'} />
                     <Flexbox style={{ overflow: 'hidden' }}>
@@ -129,7 +129,7 @@ const ModelList = memo(() => {
             render: (_, record) => {
               return (
                 <Flexbox align="center" gap={4} horizontal justify={'flex-end'}>
-                  <Link href={urlJoin('/community/model', record.id)} style={{ color: 'inherit' }}>
+                  <Link style={{ color: 'inherit' }} to={urlJoin('/community/model', record.id)}>
                     <ActionIcon
                       color={theme.colorTextDescription}
                       icon={ChevronRightIcon}

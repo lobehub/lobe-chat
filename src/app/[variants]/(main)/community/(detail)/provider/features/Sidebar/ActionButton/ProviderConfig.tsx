@@ -5,10 +5,9 @@ import { Button, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon, SquareArrowOutUpRight } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useDetailContext } from '../../DetailProvider';
 
@@ -43,7 +42,7 @@ const ProviderConfig = memo(() => {
       icon,
       key: 'officialSite',
       label: (
-        <Link href={url} target={'_blank'}>
+        <Link target={'_blank'} to={url}>
           {t('providers.officialSite')}
         </Link>
       ),
@@ -52,7 +51,7 @@ const ProviderConfig = memo(() => {
       icon,
       key: 'modelSite',
       label: (
-        <Link href={modelsUrl} target={'_blank'}>
+        <Link target={'_blank'} to={modelsUrl}>
           {t('providers.modelSite')}
         </Link>
       ),

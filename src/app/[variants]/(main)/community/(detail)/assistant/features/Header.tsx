@@ -4,12 +4,11 @@ import { MCP } from '@lobehub/icons';
 import { Avatar, Button, Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DotIcon } from 'lucide-react';
-import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { formatIntergerNumber } from '@/utils/format';
@@ -55,7 +54,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
 
   const cateButton = (
     <Link
-      href={qs.stringifyUrl({
+      to={qs.stringifyUrl({
         query: { category: cate?.key },
         url: '/community/assistant',
       })}
@@ -109,9 +108,9 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
             {author && userName ? (
-              <RouterLink style={{ color: 'inherit' }} to={urlJoin('/community/user', userName)}>
+              <Link style={{ color: 'inherit' }} to={urlJoin('/community/user', userName)}>
                 {author}
-              </RouterLink>
+              </Link>
             ) : (
               author
             )}

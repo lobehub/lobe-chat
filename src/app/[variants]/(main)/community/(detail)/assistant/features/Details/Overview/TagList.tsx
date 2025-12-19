@@ -2,10 +2,10 @@
 
 import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
 import { useQuery } from '@/hooks/useQuery';
 import { AssistantMarketSource } from '@/types/discover';
@@ -33,7 +33,8 @@ const TagList = memo<{ tags: string[] }>(({ tags }) => {
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {tags.map((tag) => (
           <Link
-            href={qs.stringifyUrl(
+            key={tag}
+            to={qs.stringifyUrl(
               {
                 query: {
                   q: tag,
@@ -43,7 +44,6 @@ const TagList = memo<{ tags: string[] }>(({ tags }) => {
               },
               { skipNull: true },
             )}
-            key={tag}
           >
             <Tag className={styles.tag}>{tag}</Tag>
           </Link>
