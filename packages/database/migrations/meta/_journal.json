@@ -445,43 +445,8 @@
     {
       "idx": 63,
       "version": "7",
-      "when": 1765865719074,
-      "tag": "0063_add_user_occupation_and_onboarding",
-      "breakpoints": true
-    },
-    {
-      "idx": 64,
-      "version": "7",
-      "when": 1765962844228,
-      "tag": "0064_add_memory_settings",
-      "breakpoints": true
-    },
-    {
-      "idx": 65,
-      "version": "7",
-      "when": 1765991196753,
-      "tag": "0065_gigantic_firedrake",
-      "breakpoints": true
-    },
-    {
-      "idx": 66,
-      "version": "7",
-      "when": 1766040132181,
-      "tag": "0066_agents_plugins_drop_default",
-      "breakpoints": true
-    },
-    {
-      "idx": 67,
-      "version": "7",
-      "when": 1766041955064,
-      "tag": "0067_dapper_alex_wilder",
-      "breakpoints": true
-    },
-    {
-      "idx": 68,
-      "version": "7",
-      "when": 1766135959449,
-      "tag": "0068_rename_occupation_add_ai_infra_indexes",
+      "when": 1766138483060,
+      "tag": "0063_add_threads_metadata_and_columns",
       "breakpoints": true
     }
   ],

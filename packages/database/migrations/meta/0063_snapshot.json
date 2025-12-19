@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "d53d3859-38c9-415d-96b8-86197a6cd7d9",
+  "id": "56d2c6e8-4bcb-489e-a051-cadf323438e1",
   "policies": {},
   "prevId": "bb23fd35-9ac8-4563-9d03-bee161464483",
   "roles": {},
@@ -76,8 +76,7 @@
           "name": "plugins",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::jsonb"
+          "notNull": false
         },
         "client_id": {
           "name": "client_id",
@@ -140,6 +139,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "pinned": {
+          "name": "pinned",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
         },
         "opening_message": {
           "name": "opening_message",
@@ -630,7 +635,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "ai_models_user_id_idx": {
+          "name": "ai_models_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "ai_models_user_id_users_id_fk": {
           "name": "ai_models_user_id_users_id_fk",
@@ -757,7 +778,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "ai_providers_user_id_idx": {
+          "name": "ai_providers_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "ai_providers_user_id_users_id_fk": {
           "name": "ai_providers_user_id_users_id_fk",
@@ -2922,6 +2959,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "editor_data": {
+          "name": "editor_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "client_id": {
           "name": "client_id",
           "type": "varchar(255)",
@@ -2977,6 +3032,21 @@
           "columns": [
             {
               "expression": "topic_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "message_groups_type_idx": {
+          "name": "message_groups_type_idx",
+          "columns": [
+            {
+              "expression": "type",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -3122,6 +3192,21 @@
             }
           ],
           "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "message_plugins_tool_call_id_idx": {
+          "name": "message_plugins_tool_call_id_idx",
+          "columns": [
+            {
+              "expression": "tool_call_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -3558,6 +3643,12 @@
         "editor_data": {
           "name": "editor_data",
           "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -7088,6 +7179,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "agent_id": {
+          "name": "agent_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "user_id": {
           "name": "user_id",
           "type": "text",
@@ -7159,6 +7268,36 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "threads_agent_id_idx": {
+          "name": "threads_agent_id_idx",
+          "columns": [
+            {
+              "expression": "agent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "threads_group_id_idx": {
+          "name": "threads_group_id_idx",
+          "columns": [
+            {
+              "expression": "group_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -7178,6 +7317,24 @@
           "columnsFrom": ["parent_thread_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "threads_agent_id_agents_id_fk": {
+          "name": "threads_agent_id_agents_id_fk",
+          "tableFrom": "threads",
+          "tableTo": "agents",
+          "columnsFrom": ["agent_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "threads_group_id_chat_groups_id_fk": {
+          "name": "threads_group_id_chat_groups_id_fk",
+          "tableFrom": "threads",
+          "tableTo": "chat_groups",
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "threads_user_id_users_id_fk": {
@@ -7678,6 +7835,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "memory": {
+          "name": "memory",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "tool": {
           "name": "tool",
           "type": "jsonb",
@@ -7767,9 +7930,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "occupation": {
-          "name": "occupation",
-          "type": "text",
+        "interests": {
+          "name": "interests",
+          "type": "varchar(64)[]",
           "primaryKey": false,
           "notNull": false
         },

@@ -998,62 +998,30 @@
   {
     "sql": [
       "DROP INDEX IF EXISTS \"user_memories_contexts_title_vector_index\";",
-      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"occupation\" text;",
-      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"onboarding\" jsonb;",
-      "\nALTER TABLE \"user_memories_contexts\" DROP COLUMN IF EXISTS \"title_vector\";"
-    ],
-    "bps": true,
-    "folderMillis": 1765865719074,
-    "hash": "10b3b440378efc6719e445fbca206927e0e34e0e16da423cb1f784d887c12353"
-  },
-  {
-    "sql": [
-      "ALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"memory\" jsonb;",
-      "\nCREATE INDEX IF NOT EXISTS \"message_plugins_tool_call_id_idx\" ON \"message_plugins\" USING btree (\"tool_call_id\");"
-    ],
-    "bps": true,
-    "folderMillis": 1765962844228,
-    "hash": "bbc1402d1c11e42f306c3dd5eb2c2f1d43b69995e63d146acdea0d964219c4dc"
-  },
-  {
-    "sql": ["ALTER TABLE \"agents\" ADD COLUMN \"pinned\" boolean;"],
-    "bps": true,
-    "folderMillis": 1765991196753,
-    "hash": "2b6e66f0f4d82da8cf22a47a5876cb2a110694756242436ec8701e0cffeba2e5"
-  },
-  {
-    "sql": ["ALTER TABLE \"agents\" ALTER COLUMN \"plugins\" DROP DEFAULT;"],
-    "bps": true,
-    "folderMillis": 1766040132181,
-    "hash": "f405330fd63c12a5d47290327573efaee91df8ca8a390d2f5973a6f42ca3d04f"
-  },
-  {
-    "sql": [
-      "ALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"type\" text;",
+      "\nALTER TABLE \"agents\" ALTER COLUMN \"plugins\" DROP DEFAULT;",
+      "\nALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"pinned\" boolean;",
+      "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"type\" text;",
       "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"content\" text;",
       "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
       "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"summary\" text;",
       "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"agent_id\" text;",
       "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"group_id\" text;",
       "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"metadata\" jsonb;",
-      "\nALTER TABLE \"threads\" ADD CONSTRAINT \"threads_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nALTER TABLE \"threads\" ADD CONSTRAINT \"threads_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nCREATE INDEX IF NOT EXISTS \"message_groups_type_idx\" ON \"message_groups\" USING btree (\"type\");",
-      "\nCREATE INDEX IF NOT EXISTS \"threads_agent_id_idx\" ON \"threads\" USING btree (\"agent_id\");",
-      "\nCREATE INDEX IF NOT EXISTS \"threads_group_id_idx\" ON \"threads\" USING btree (\"group_id\");\n"
-    ],
-    "bps": true,
-    "folderMillis": 1766041955064,
-    "hash": "6e51ad0e6066dcfdacb542d68d21a65703e77fa503dc424b5af88b236e199a2e"
-  },
-  {
-    "sql": [
-      "ALTER TABLE \"users\" RENAME COLUMN \"occupation\" TO \"interests\";",
+      "\nALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"memory\" jsonb;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"interests\" varchar(64)[];",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"onboarding\" jsonb;",
+      "\nDO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'threads_agent_id_agents_id_fk') THEN\n    ALTER TABLE \"threads\" ADD CONSTRAINT \"threads_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;",
+      "\nDO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'threads_group_id_chat_groups_id_fk') THEN\n    ALTER TABLE \"threads\" ADD CONSTRAINT \"threads_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;",
       "\nCREATE INDEX IF NOT EXISTS \"ai_models_user_id_idx\" ON \"ai_models\" USING btree (\"user_id\");",
-      "\nCREATE INDEX IF NOT EXISTS \"ai_providers_user_id_idx\" ON \"ai_providers\" USING btree (\"user_id\");"
+      "\nCREATE INDEX IF NOT EXISTS \"ai_providers_user_id_idx\" ON \"ai_providers\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"message_groups_type_idx\" ON \"message_groups\" USING btree (\"type\");",
+      "\nCREATE INDEX IF NOT EXISTS \"message_plugins_tool_call_id_idx\" ON \"message_plugins\" USING btree (\"tool_call_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"threads_agent_id_idx\" ON \"threads\" USING btree (\"agent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"threads_group_id_idx\" ON \"threads\" USING btree (\"group_id\");",
+      "\nALTER TABLE \"user_memories_contexts\" DROP COLUMN IF EXISTS \"title_vector\";\n"
     ],
     "bps": true,
-    "folderMillis": 1766135959449,
-    "hash": "1da40985b40328c6bd369809f22e557248c5a6555142a86186b607552ad3aa4c"
+    "folderMillis": 1766138483060,
+    "hash": "7a8ee107778222390e676951173baa81bfa09dd47216a8467575fca54915172c"
   }
 ]

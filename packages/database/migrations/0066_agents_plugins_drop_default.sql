@@ -1,1 +1,0 @@
-ALTER TABLE "agents" ALTER COLUMN "plugins" DROP DEFAULT;
