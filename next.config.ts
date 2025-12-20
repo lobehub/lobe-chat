@@ -228,40 +228,41 @@ const nextConfig: NextConfig = {
       source: '/manifest.json',
     },
     {
-      destination: '/discover/assistant',
+      destination: '/community/assistant',
       permanent: true,
-      source: '/discover/assistants',
+      source: '/community/assistants',
     },
     {
-      destination: '/discover/plugin',
+      destination: '/community/plugin',
       permanent: true,
-      source: '/discover/plugins',
+      source: '/community/plugins',
     },
     {
-      destination: '/discover/model',
+      destination: '/community/model',
       permanent: true,
-      source: '/discover/models',
+      source: '/community/models',
     },
     {
-      destination: '/discover/provider',
+      destination: '/community/provider',
       permanent: true,
-      source: '/discover/providers',
+      source: '/community/providers',
+    },
+    // Legacy redirects from /discover to /community
+    {
+      destination: '/community',
+      permanent: true,
+      source: '/discover',
+    },
+    {
+      destination: '/community/:path*',
+      permanent: true,
+      source: '/discover/:path*',
     },
     // {
     //   destination: '/settings/common',
     //   permanent: true,
     //   source: '/settings',
     // },
-    // {
-    //   destination: '/chat',
-    //   permanent: false,
-    //   source: '/',
-    // },
-    {
-      destination: '/chat',
-      permanent: true,
-      source: '/welcome',
-    },
     // we need back /repos url in the further
     {
       destination: '/files',
@@ -279,7 +280,7 @@ const nextConfig: NextConfig = {
       ? void 0
       : codeInspectorPlugin({
           bundler: 'turbopack',
-          hotKeys: ['altKey'],
+          hotKeys: ['altKey', 'ctrlKey'],
         }),
   },
 
