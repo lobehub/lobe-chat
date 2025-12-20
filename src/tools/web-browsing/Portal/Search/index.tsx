@@ -1,6 +1,6 @@
 import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Skeleton } from 'antd';
-import { uniq } from 'lodash-es';
+import { Skeleton } from '@lobehub/ui';
+import { uniq } from 'es-toolkit/compat';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
