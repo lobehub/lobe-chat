@@ -1,9 +1,19 @@
 'use client';
 
-import { Avatar, Collapse, GroupAvatar, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
-import { Button, Checkbox, Empty, Switch } from 'antd';
+import {
+  Avatar,
+  Collapse,
+  Empty,
+  GroupAvatar,
+  List,
+  Modal,
+  SearchBar,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
+import { Button, Checkbox, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { omit } from 'lodash-es';
+import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';
 import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -600,7 +610,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               ? t('groupWizard.noMatchingTemplates')
                               : t('groupWizard.noTemplates')
                           }
-                          image={Empty.PRESENTED_IMAGE_SIMPLE}
+                          descriptionProps={{ fontSize: 14 }}
+                          icon={Users}
+                          style={{ maxWidth: 400 }}
                         />
                       ) : (
                         <Flexbox gap={4}>
@@ -628,7 +640,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                               ? t('noMatchingAgents', { ns: 'chat' })
                               : t('noAvailableAgents', { ns: 'chat' })
                           }
-                          image={Empty.PRESENTED_IMAGE_SIMPLE}
+                          descriptionProps={{ fontSize: 14 }}
+                          icon={Users}
+                          style={{ maxWidth: 400 }}
                         />
                       ) : (
                         <Flexbox gap={4}>
@@ -745,7 +759,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                   ) : (
                     <Empty
                       description={t('groupWizard.noTemplateMembers')}
-                      image={Empty.PRESENTED_IMAGE_SIMPLE}
+                      descriptionProps={{ fontSize: 14 }}
+                      icon={Users}
+                      style={{ maxWidth: 400 }}
                     />
                   )
                 ) : selectedAgentListItems.length > 0 ? (
@@ -753,7 +769,9 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                 ) : (
                   <Empty
                     description={t('memberSelection.noSelectedAgents')}
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    descriptionProps={{ fontSize: 14 }}
+                    icon={Users}
+                    style={{ maxWidth: 400 }}
                   />
                 )}
               </Flexbox>
