@@ -8,22 +8,43 @@ import {
   ChatVideoItem,
   CreateMessageParams,
   DBMessageItem,
+  IThreadType,
   MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
   QueryMessageParams,
+  TaskDetail,
+  ThreadStatus,
+  ThreadType,
   UIChatMessage,
   UpdateMessageParams,
   UpdateMessageRAGParams,
 } from '@lobechat/types';
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
-import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
+import {
+  SQL,
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  inArray,
+  isNotNull,
+  isNull,
+  like,
+  lte,
+  not,
+  or,
+  sql,
+} from 'drizzle-orm';
 
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import {
+  agentsToSessions,
   chunks,
   documents,
   embeddings,
@@ -36,10 +57,33 @@ import {
   messageTranslates,
   messages,
   messagesFiles,
+  threads,
 } from '../schemas';
 import { LobeChatDatabase } from '../type';
 import { genEndDateWhere, genRangeWhere, genStartDateWhere, genWhere } from '../utils/genWhere';
 import { idGenerator } from '../utils/idGenerator';
+
+/**
+ * Options for querying messages with relations
+ */
+export interface QueryMessagesOptions {
+  /**
+   * Current page number (0-indexed)
+   */
+  current?: number;
+  /**
+   * Number of messages per page
+   */
+  pageSize?: number;
+  /**
+   * Post-process function for file URLs
+   */
+  postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+  /**
+   * Custom where condition for message filtering
+   */
+  where?: SQL;
+}
 
 export class MessageModel {
   private userId: string;
@@ -51,16 +95,95 @@ export class MessageModel {
   }
 
   // **************** Query *************** //
+
+  /**
+   * Query messages by params (high-level API)
+   *
+   * This is the main query method that handles common query patterns.
+   * For custom queries, use `queryWithWhere` directly.
+   */
   query = async (
-    { current = 0, pageSize = 1000, sessionId, topicId, groupId }: QueryMessageParams = {},
+    {
+      agentId,
+      current = 0,
+      pageSize = 1000,
+      sessionId,
+      topicId,
+      groupId,
+      threadId,
+    }: QueryMessageParams = {},
     options: {
-      groupAssistantMessages?: boolean;
       postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
     } = {},
   ) => {
+    // Build agent condition (handles legacy sessionId lookup)
+    let agentCondition: SQL | undefined;
+    if (agentId) {
+      agentCondition = await this.buildAgentCondition(agentId);
+    } else if (sessionId) {
+      agentCondition = this.matchSession(sessionId);
+    }
+
+    // For thread queries, we need to fetch complete thread data (parent + thread messages)
+    if (threadId) {
+      const threadCondition = await this.buildThreadQueryCondition(threadId);
+      return this.queryWithWhere({
+        current,
+        pageSize,
+        postProcessUrl: options.postProcessUrl,
+        // Thread queries optionally add agent/session scope if provided
+        where: agentCondition ? and(agentCondition, threadCondition) : threadCondition,
+      });
+    }
+
+    // For Group Chat queries: filter by groupId only (not agentId)
+    // In Group Chat, all messages (user, supervisor, workers) should have groupId
+    // and may have different agentIds, so we only filter by groupId + topicId
+    if (groupId) {
+      const whereCondition = and(
+        eq(messages.groupId, groupId),
+        this.matchTopic(topicId),
+        this.matchThread(threadId),
+      );
+
+      return this.queryWithWhere({
+        current,
+        pageSize,
+        postProcessUrl: options.postProcessUrl,
+        where: whereCondition,
+      });
+    }
+
+    // Standard query with session/topic/group filters
+    const whereCondition = and(
+      agentCondition ?? this.matchSession(sessionId),
+      this.matchTopic(topicId),
+      this.matchGroup(groupId),
+      this.matchThread(threadId),
+    );
+
+    return this.queryWithWhere({
+      current,
+      pageSize,
+      postProcessUrl: options.postProcessUrl,
+      where: whereCondition,
+    });
+  };
+
+  /**
+   * Query messages with full relations (files, plugins, translations, etc.)
+   *
+   * This is the low-level query method that accepts a custom where condition.
+   * Use this for building custom query scenarios.
+   *
+   * @param options - Query options including where condition and pagination
+   * @returns Messages with all related data
+   */
+  queryWithWhere = async (options: QueryMessagesOptions = {}): Promise<UIChatMessage[]> => {
+    const { where, current = 0, pageSize = 1000, postProcessUrl } = options;
     const offset = current * pageSize;
 
-    // 1. get basic messages
+    // 1. get basic messages with joins
     const result = await this.db
       .select({
         /* eslint-disable sort-keys-fix/sort-keys-fix*/
@@ -113,14 +236,7 @@ export class MessageModel {
         /* eslint-enable */
       })
       .from(messages)
-      .where(
-        and(
-          eq(messages.userId, this.userId),
-          this.matchSession(sessionId),
-          this.matchTopic(topicId),
-          this.matchGroup(groupId),
-        ),
-      )
+      .where(and(eq(messages.userId, this.userId), where))
       .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
       .leftJoin(messageTranslates, eq(messageTranslates.id, messages.id))
       .leftJoin(messageTTS, eq(messageTTS.id, messages.id))
@@ -149,9 +265,7 @@ export class MessageModel {
     const relatedFileList = await Promise.all(
       rawRelatedFileList.map(async (file) => ({
         ...file,
-        url: options.postProcessUrl
-          ? await options.postProcessUrl(file.url, file as any)
-          : (file.url as string),
+        url: postProcessUrl ? await postProcessUrl(file.url, file as any) : (file.url as string),
       })),
     );
 
@@ -202,7 +316,7 @@ export class MessageModel {
       .innerJoin(files, eq(fileChunks.fileId, files.id))
       .where(inArray(messageQueryChunks.messageId, messageIds));
 
-    // 3. get relative message query
+    // 4. get relative message query
     const messageQueriesList = await this.db
       .select({
         id: messageQueries.id,
@@ -212,6 +326,45 @@ export class MessageModel {
       })
       .from(messageQueries)
       .where(inArray(messageQueries.messageId, messageIds));
+
+    // 5. get thread info for task messages
+    const taskMessageIds = result.filter((m) => m.role === 'task').map((m) => m.id as string);
+
+    let threadMap = new Map<string, TaskDetail>();
+
+    if (taskMessageIds.length > 0) {
+      const threadData = await this.db
+        .select({
+          metadata: threads.metadata,
+          sourceMessageId: threads.sourceMessageId,
+          status: threads.status,
+          threadId: threads.id,
+          title: threads.title,
+        })
+        .from(threads)
+        .where(
+          and(eq(threads.userId, this.userId), inArray(threads.sourceMessageId, taskMessageIds)),
+        );
+
+      threadMap = new Map(
+        threadData.map((t) => {
+          const metadata = t.metadata as Record<string, unknown> | null;
+          return [
+            t.sourceMessageId!,
+            {
+              duration: metadata?.duration as number | undefined,
+              status: t.status as ThreadStatus,
+              threadId: t.threadId,
+              title: t.title ?? undefined,
+              totalCost: metadata?.totalCost as number | undefined,
+              totalMessages: metadata?.totalMessages as number | undefined,
+              totalTokens: metadata?.totalTokens as number | undefined,
+              totalToolCalls: metadata?.totalToolCalls as number | undefined,
+            },
+          ];
+        }),
+      );
+    }
 
     return result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
@@ -260,6 +413,8 @@ export class MessageModel {
           ragQuery: messageQuery?.rewriteQuery,
           ragQueryId: messageQuery?.id,
           ragRawQuery: messageQuery?.userQuery,
+          // Add taskDetail for task messages
+          taskDetail: item.role === 'task' ? threadMap.get(item.id as string) : undefined,
           videoList: videoList
             .filter((relation) => relation.messageId === item.id)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -269,10 +424,113 @@ export class MessageModel {
     );
   };
 
+  /**
+   * Build where condition for thread queries
+   *
+   * Returns a condition that matches both parent messages and thread messages.
+   */
+  private buildThreadQueryCondition = async (threadId: string): Promise<SQL | undefined> => {
+    // Fetch the thread info to get sourceMessageId and type
+    const thread = await this.db.query.threads.findFirst({
+      where: and(eq(threads.id, threadId), eq(threads.userId, this.userId)),
+    });
+
+    if (!thread?.sourceMessageId || !thread?.topicId) {
+      // Fallback to simple thread query if no source message
+      return eq(messages.threadId, threadId);
+    }
+
+    // Get parent messages based on thread type
+    const parentMessages = await this.getThreadParentMessages({
+      sourceMessageId: thread.sourceMessageId,
+      threadType: thread.type as IThreadType,
+      topicId: thread.topicId,
+    });
+
+    const parentMessageIds = parentMessages.map((m) => m.id);
+
+    if (parentMessageIds.length === 0) {
+      return eq(messages.threadId, threadId);
+    }
+
+    // Match either thread messages or parent messages
+    return or(eq(messages.threadId, threadId), inArray(messages.id, parentMessageIds));
+  };
+
+  /**
+   * Build agent condition with legacy sessionId support
+   */
+  private buildAgentCondition = async (agentId: string): Promise<SQL | undefined> => {
+    // Get the associated sessionId for backward compatibility with legacy data
+    const agentSession = await this.db
+      .select({ sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
+      .limit(1);
+
+    const associatedSessionId = agentSession[0]?.sessionId;
+
+    // Build condition to match both new (agentId) and legacy (sessionId) data
+    return associatedSessionId
+      ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
+      : eq(messages.agentId, agentId);
+  };
+
   findById = async (id: string) => {
     return this.db.query.messages.findFirst({
       where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
     });
+  };
+
+  /**
+   * Get parent messages for a thread
+   *
+   * @param params - Parameters for getting parent messages
+   * @param params.sourceMessageId - The ID of the source message that started the thread
+   * @param params.topicId - The topic ID the thread belongs to
+   * @param params.threadType - The type of thread (Continuation or Standalone)
+   * @returns Parent messages based on thread type:
+   *   - Continuation: All messages from the topic up to and including the source message
+   *   - Standalone: Only the source message itself
+   */
+  getThreadParentMessages = async (params: {
+    sourceMessageId: string;
+    threadType: IThreadType;
+    topicId: string;
+  }): Promise<DBMessageItem[]> => {
+    const { sourceMessageId, topicId, threadType } = params;
+
+    // For Standalone type, only return the source message
+    if (threadType === ThreadType.Standalone) {
+      const sourceMessage = await this.db.query.messages.findFirst({
+        where: and(eq(messages.id, sourceMessageId), eq(messages.userId, this.userId)),
+      });
+
+      return sourceMessage ? [sourceMessage as DBMessageItem] : [];
+    }
+
+    // For Continuation type, get the source message first to know its createdAt
+    const sourceMessage = await this.db.query.messages.findFirst({
+      where: and(eq(messages.id, sourceMessageId), eq(messages.userId, this.userId)),
+    });
+
+    if (!sourceMessage) return [];
+
+    // Get all main conversation messages up to and including the source message
+    const result = await this.db
+      .select()
+      .from(messages)
+      .where(
+        and(
+          eq(messages.userId, this.userId),
+          eq(messages.topicId, topicId),
+          isNull(messages.threadId), // Only main conversation messages (not in any thread)
+          lte(messages.createdAt, sourceMessage.createdAt),
+        ),
+      )
+      .orderBy(asc(messages.createdAt));
+
+    return result as DBMessageItem[];
   };
 
   findMessageQueriesById = async (messageId: string) => {
@@ -455,6 +713,19 @@ export class MessageModel {
     return result.length > n;
   };
 
+  /**
+   * Count messages up to a limit, useful for avoiding full table scans
+   */
+  countUpTo = async (n: number): Promise<number> => {
+    const result = await this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(eq(messages.userId, this.userId))
+      .limit(n);
+
+    return result.length;
+  };
+
   // **************** Create *************** //
 
   create = async (
@@ -609,6 +880,153 @@ export class MessageModel {
     return this.db.update(messagePlugins).set(value).where(eq(messagePlugins.id, id));
   };
 
+  /**
+   * Update tool message with content, metadata, pluginState, and pluginError in a single transaction
+   * This prevents race conditions when updating multiple fields
+   */
+  updateToolMessage = async (
+    id: string,
+    params: {
+      content?: string;
+      metadata?: Record<string, any>;
+      pluginError?: any;
+      pluginState?: Record<string, any>;
+    },
+  ): Promise<{ success: boolean }> => {
+    const { content, metadata, pluginState, pluginError } = params;
+
+    try {
+      await this.db.transaction(async (trx) => {
+        // Update messages table (content, metadata)
+        if (content !== undefined || metadata !== undefined) {
+          const messageUpdateData: Record<string, any> = {};
+
+          if (content !== undefined) {
+            messageUpdateData.content = content;
+          }
+
+          if (metadata !== undefined) {
+            // Need to merge with existing metadata
+            const existingMessage = await trx.query.messages.findFirst({
+              where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
+            });
+            messageUpdateData.metadata = merge(existingMessage?.metadata || {}, metadata);
+          }
+
+          if (Object.keys(messageUpdateData).length > 0) {
+            await trx
+              .update(messages)
+              .set(messageUpdateData)
+              .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
+          }
+        }
+
+        // Update messagePlugins table (pluginState, pluginError)
+        if (pluginState !== undefined || pluginError !== undefined) {
+          const pluginItem = await trx.query.messagePlugins.findFirst({
+            where: eq(messagePlugins.id, id),
+          });
+
+          if (pluginItem) {
+            const pluginUpdateData: Record<string, any> = {};
+
+            if (pluginState !== undefined) {
+              pluginUpdateData.state = merge(pluginItem.state || {}, pluginState);
+            }
+
+            if (pluginError !== undefined) {
+              pluginUpdateData.error = pluginError;
+            }
+
+            if (Object.keys(pluginUpdateData).length > 0) {
+              await trx
+                .update(messagePlugins)
+                .set(pluginUpdateData)
+                .where(eq(messagePlugins.id, id));
+            }
+          }
+        }
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('Update tool message error:', error);
+      return { success: false };
+    }
+  };
+
+  /**
+   * Update tool arguments by toolCallId - updates both tool message plugin.arguments
+   * and parent assistant message tools[].arguments in a single transaction
+   *
+   * This method uses toolCallId (the stable identifier from AI response) instead of
+   * tool message ID, which allows updating arguments even when the tool message
+   * hasn't been persisted yet (e.g., during intervention pending state).
+   *
+   * @param toolCallId - The tool call ID (stable identifier from AI response)
+   * @param args - The new arguments string (already stringified JSON)
+   */
+  updateToolArguments = async (toolCallId: string, args: string): Promise<{ success: boolean }> => {
+    try {
+      await this.db.transaction(async (trx) => {
+        // 1. Find tool plugin and tool message with parentId in one query
+        const [toolResult] = await trx
+          .select({
+            parentId: messages.parentId,
+            toolPluginId: messagePlugins.id,
+          })
+          .from(messagePlugins)
+          .innerJoin(messages, eq(messages.id, messagePlugins.id))
+          .where(and(eq(messagePlugins.toolCallId, toolCallId), eq(messages.userId, this.userId)))
+          .limit(1);
+
+        if (!toolResult?.parentId) {
+          throw new Error(`No tool message found with toolCallId: ${toolCallId}`);
+        }
+
+        // 2. Get parent assistant message's tools
+        const [parentMessage] = await trx
+          .select({ id: messages.id, tools: messages.tools })
+          .from(messages)
+          .where(eq(messages.id, toolResult.parentId))
+          .limit(1);
+
+        if (!parentMessage?.tools) {
+          throw new Error(`No parent assistant message found for toolCallId: ${toolCallId}`);
+        }
+
+        const parentTools = parentMessage.tools as ChatToolPayload[];
+
+        // 3. Update the parent assistant message's tools[].arguments
+        const updatedTools = parentTools.map((tool) => {
+          if (tool.id === toolCallId) {
+            return { ...tool, arguments: args };
+          }
+          return tool;
+        });
+
+        // Execute both updates in parallel
+        await Promise.all([
+          // Update tool plugin arguments
+          trx
+            .update(messagePlugins)
+            .set({ arguments: args })
+            .where(eq(messagePlugins.id, toolResult.toolPluginId)),
+          // Update parent assistant message's tools
+          trx
+            .update(messages)
+            .set({ tools: updatedTools })
+            .where(eq(messages.id, parentMessage.id)),
+        ]);
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('Update tool arguments error:', error);
+      return { success: false };
+    }
+  };
+
   updateTranslate = async (id: string, translate: Partial<ChatTranslate>) => {
     const result = await this.db.query.messageTranslates.findFirst({
       where: and(eq(messageTranslates.id, id)),
@@ -672,7 +1090,14 @@ export class MessageModel {
       // If the message to be deleted is not found, return directly
       if (message.length === 0) return;
 
-      // 2. Check if the message contains tools
+      // 2. Update child messages' parentId to the current message's parentId
+      // This preserves the tree structure when deleting a node
+      await tx
+        .update(messages)
+        .set({ parentId: message[0].parentId })
+        .where(and(eq(messages.parentId, id), eq(messages.userId, this.userId)));
+
+      // 3. Check if the message contains tools
       const toolCallIds = (message[0].tools as ChatToolPayload[])
         ?.map((tool) => tool.id)
         .filter(Boolean);
@@ -680,7 +1105,7 @@ export class MessageModel {
       let relatedMessageIds: string[] = [];
 
       if (toolCallIds?.length > 0) {
-        // 3. If the message contains tools, query all associated message ids
+        // 4. If the message contains tools, query all associated message ids
         const res = await tx
           .select({ id: messagePlugins.id })
           .from(messagePlugins)
@@ -689,18 +1114,110 @@ export class MessageModel {
         relatedMessageIds = res.map((row) => row.id);
       }
 
-      // 4. Merge the list of message ids to be deleted
+      // 5. Merge the list of message ids to be deleted
       const messageIdsToDelete = [id, ...relatedMessageIds];
 
-      // 5. Delete all related messages
-      await tx.delete(messages).where(inArray(messages.id, messageIdsToDelete));
+      // 6. Delete all related messages
+      await tx
+        .delete(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, messageIdsToDelete)));
     });
   };
 
-  deleteMessages = async (ids: string[]) =>
-    this.db
-      .delete(messages)
-      .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+  deleteMessages = async (ids: string[]) => {
+    if (ids.length === 0) return;
+
+    return this.db.transaction(async (tx) => {
+      // 1. Query all messages to be deleted with their parentId
+      const toDelete = await tx
+        .select({ id: messages.id, parentId: messages.parentId })
+        .from(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+
+      if (toDelete.length === 0) return;
+
+      // 2. Build id -> parentId map and deleteSet
+      const parentMap = new Map<string, string | null>();
+      const deleteSet = new Set<string>();
+      for (const msg of toDelete) {
+        parentMap.set(msg.id, msg.parentId);
+        deleteSet.add(msg.id);
+      }
+
+      // 3. Find the final ancestor for each deleted message (first ancestor not in deleteSet)
+      const finalAncestorMap = new Map<string, string | null>();
+
+      const findFinalAncestor = (id: string): string | null => {
+        if (finalAncestorMap.has(id)) return finalAncestorMap.get(id)!;
+
+        const parentId = parentMap.get(id);
+        if (parentId === null || parentId === undefined) {
+          finalAncestorMap.set(id, null);
+          return null;
+        }
+
+        if (!deleteSet.has(parentId)) {
+          // Parent is not being deleted, it's the final ancestor
+          finalAncestorMap.set(id, parentId);
+          return parentId;
+        }
+
+        // Parent is also being deleted, recursively find its ancestor
+        const ancestor = findFinalAncestor(parentId);
+        finalAncestorMap.set(id, ancestor);
+        return ancestor;
+      };
+
+      for (const id of deleteSet) {
+        findFinalAncestor(id);
+      }
+
+      // 4. Query child messages whose parentId points to messages being deleted
+      const children = await tx
+        .select({ id: messages.id, parentId: messages.parentId })
+        .from(messages)
+        .where(
+          and(
+            eq(messages.userId, this.userId),
+            inArray(messages.parentId, ids),
+            not(inArray(messages.id, ids)),
+          ),
+        );
+
+      // 5. Update each child's parentId to the final ancestor
+      for (const child of children) {
+        const newParentId = finalAncestorMap.get(child.parentId!) ?? null;
+        await tx.update(messages).set({ parentId: newParentId }).where(eq(messages.id, child.id));
+      }
+
+      // 6. Delete the messages
+      await tx
+        .delete(messages)
+        .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+    });
+  };
+
+  /**
+   * Add files to a message by inserting records into messagesFiles table
+   * This associates existing files with a message for display in fileList/imageList/videoList
+   */
+  addFiles = async (messageId: string, fileIds: string[]): Promise<{ success: boolean }> => {
+    if (fileIds.length === 0) return { success: true };
+
+    try {
+      await this.db.insert(messagesFiles).values(
+        fileIds.map((fileId) => ({
+          fileId,
+          messageId,
+          userId: this.userId,
+        })),
+      );
+      return { success: true };
+    } catch (error) {
+      console.error('Add files to message error:', error);
+      return { success: false };
+    }
+  };
 
   deleteMessageTranslate = async (id: string) =>
     this.db
@@ -737,6 +1254,30 @@ export class MessageModel {
     return this.db.delete(messages).where(eq(messages.userId, this.userId));
   };
 
+  /**
+   * Deletes multiple messages based on the agentId.
+   * This will delete messages that have either:
+   * 1. Direct agentId match (new data)
+   * 2. SessionId match via agentsToSessions lookup (legacy data)
+   */
+  batchDeleteByAgentId = async (agentId: string) => {
+    // Get the associated sessionId for backward compatibility with legacy data
+    const agentSession = await this.db
+      .select({ sessionId: agentsToSessions.sessionId })
+      .from(agentsToSessions)
+      .where(and(eq(agentsToSessions.agentId, agentId), eq(agentsToSessions.userId, this.userId)))
+      .limit(1);
+
+    const associatedSessionId = agentSession[0]?.sessionId;
+
+    // Build condition to match both new (agentId) and legacy (sessionId) data
+    const agentCondition = associatedSessionId
+      ? or(eq(messages.agentId, agentId), eq(messages.sessionId, associatedSessionId))
+      : eq(messages.agentId, agentId);
+
+    return this.db.delete(messages).where(and(eq(messages.userId, this.userId), agentCondition));
+  };
+
   // **************** Helper *************** //
 
   private genId = () => idGenerator('messages', 14);
@@ -752,4 +1293,9 @@ export class MessageModel {
 
   private matchGroup = (groupId?: string | null) =>
     groupId ? eq(messages.groupId, groupId) : isNull(messages.groupId);
+
+  private matchThread = (threadId?: string | null) => {
+    if (!!threadId) return eq(messages.threadId, threadId);
+    return isNull(messages.threadId);
+  };
 }
