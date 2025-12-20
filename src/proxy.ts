@@ -9,6 +9,7 @@ import { auth } from '@/auth';
 import { OAUTH_AUTHORIZED } from '@/const/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
+import { isDesktop } from '@/const/version';
 import { appEnv } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
 import NextAuth from '@/libs/next-auth';
@@ -33,19 +34,26 @@ export const config = {
     '/(api|trpc|webapi)(.*)',
     // include the /
     '/',
-    '/discover',
-    '/discover(.*)',
+    '/community',
+    '/community(.*)',
     '/labs',
-    '/chat',
-    '/chat(.*)',
+    '/agent',
+    '/agent(.*)',
+    '/group',
+    '/group(.*)',
     '/changelog(.*)',
     '/settings(.*)',
     '/image',
-    '/knowledge',
-    '/knowledge(.*)',
+    '/resource',
+    '/resource(.*)',
     '/profile(.*)',
+    '/page',
+    '/page(.*)',
     '/me',
     '/me(.*)',
+    '/desktop-onboarding',
+    '/desktop-onboarding(.*)',
+    '/onboarding',
 
     '/login(.*)',
     '/signup(.*)',
@@ -56,6 +64,7 @@ export const config = {
     '/next-auth/(.*)',
     '/oauth(.*)',
     '/oidc(.*)',
+    '/market-auth-callback(.*)',
   ],
 };
 
@@ -72,8 +81,8 @@ const defaultMiddleware = (request: NextRequest) => {
   }
 
   // 1. Read user preferences from cookies
-  const theme =
-    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
+  const theme = (request.cookies.get(LOBE_THEME_APPEARANCE)?.value ||
+    parseDefaultThemeFromCountry(request)) as 'dark' | 'light';
 
   // locale has three levels
   // 1. search params
@@ -136,14 +145,19 @@ const defaultMiddleware = (request: NextRequest) => {
   // All SPA routes that use react-router-dom should be rewritten to just /${route}
   const spaRoutes = [
     '/chat',
-    '/discover',
-    '/knowledge',
+    '/agent',
+    '/group',
+    '/community',
+    '/resource',
+    '/page',
     '/settings',
     '/image',
     '/labs',
     '/changelog',
     '/profile',
     '/me',
+    '/desktop-onboarding',
+    '/onboarding',
   ];
   const isSpaRoute = spaRoutes.some((route) => url.pathname.startsWith(route));
 
@@ -157,7 +171,7 @@ const defaultMiddleware = (request: NextRequest) => {
     ? urlJoin(url.origin, nextPathname)
     : nextPathname;
 
-  console.log('nextURL', nextURL);
+  console.log(`[rewrite] ${url.pathname} -> ${nextURL}`);
 
   logDefault('URL rewrite: %O', {
     isLocalRewrite: appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL,
@@ -201,6 +215,8 @@ const isPublicRoute = createRouteMatcher([
   // backend api
   '/api/auth(.*)',
   '/api/webhooks(.*)',
+  '/api/workflows(.*)',
+  '/api/agent(.*)',
   '/webapi(.*)',
   '/trpc(.*)',
   // next auth
@@ -217,6 +233,8 @@ const isPublicRoute = createRouteMatcher([
   '/oauth/consent/(.*)',
   '/oidc/handoff',
   '/oidc/token',
+  // market
+  '/market-auth-callback',
 ]);
 
 const isProtectedRoute = createRouteMatcher([
@@ -328,7 +346,7 @@ const betterAuthMiddleware = async (req: NextRequest) => {
   const response = defaultMiddleware(req);
 
   // when enable auth protection, only public route is not protected, others are all protected
-  const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+  const isProtected = !isPublicRoute(req);
 
   logBetterAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
@@ -347,7 +365,7 @@ const betterAuthMiddleware = async (req: NextRequest) => {
     userId: session?.user?.id,
   });
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && !isDesktop) {
     // If request a protected route, redirect to sign-in page
     if (isProtected) {
       logBetterAuth('Request a protected route, redirecting to sign-in page');
@@ -376,8 +394,6 @@ logDefault('Middleware configuration: %O', {
 
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkAuthMiddleware
-  : authEnv.NEXT_PUBLIC_ENABLE_BETTER_AUTH
-    ? betterAuthMiddleware
-    : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
-      ? nextAuthMiddleware
-      : defaultMiddleware;
+  : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
+    ? nextAuthMiddleware
+    : betterAuthMiddleware;

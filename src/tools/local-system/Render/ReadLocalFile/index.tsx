@@ -1,10 +1,10 @@
+import type { LocalReadFileState } from '@lobechat/builtin-tool-local-system';
 import { LocalReadFileParams } from '@lobechat/electron-client-ipc';
 import { ChatMessagePluginError } from '@lobechat/types';
 import { memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/slices/builtinTool/selectors';
-import { LocalReadFileState } from '@/tools/local-system/type';
 
 import ReadFileSkeleton from './ReadFileSkeleton';
 import ReadFileView from './ReadFileView';

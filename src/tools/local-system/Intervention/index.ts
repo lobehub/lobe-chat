@@ -1,4 +1,5 @@
-import { LocalSystemApiName } from '../index';
+import { LocalSystemApiName } from '@lobechat/builtin-tool-local-system';
+
 import EditLocalFile from './EditLocalFile';
 import MoveLocalFiles from './MoveLocalFiles';
 import RunCommand from './RunCommand';

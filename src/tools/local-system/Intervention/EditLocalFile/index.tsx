@@ -1,7 +1,7 @@
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Icon, Text } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Icon, Skeleton, Text } from '@lobehub/ui';
+import { useThemeMode } from 'antd-style';
 import { createPatch } from 'diff';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
@@ -14,6 +14,7 @@ import useSWR from 'swr';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
 import { localFileService } from '@/services/electron/localFileService';
+import '@/styles/react-diff-view.dark.css';
 
 const EditLocalFile = memo<BuiltinInterventionProps<EditLocalFileParams>>(({ args }) => {
   const { t } = useTranslation('tool');
@@ -29,6 +30,7 @@ const EditLocalFile = memo<BuiltinInterventionProps<EditLocalFileParams>>(({ arg
     },
   );
 
+  const { isDarkMode } = useThemeMode();
   // Generate diff from full file content
   const files = useMemo(() => {
     if (!fileData?.content) return [];
@@ -73,7 +75,12 @@ const EditLocalFile = memo<BuiltinInterventionProps<EditLocalFileParams>>(({ arg
           </Text>
           {files.map((file, index) => (
             <div key={`${file.oldPath}-${index}`} style={{ fontSize: '12px' }}>
-              <Diff diffType={file.type} hunks={file.hunks} viewType="split">
+              <Diff
+                data-theme={isDarkMode ? 'dark' : 'light'}
+                diffType={file.type}
+                hunks={file.hunks}
+                viewType="split"
+              >
                 {(hunks) => hunks.map((hunk) => <Hunk hunk={hunk} key={hunk.content} />)}
               </Diff>
             </div>

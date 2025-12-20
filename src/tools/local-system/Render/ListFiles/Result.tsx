@@ -1,6 +1,6 @@
 import { LocalFileItem } from '@lobechat/electron-client-ipc';
 import { ChatMessagePluginError } from '@lobechat/types';
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 

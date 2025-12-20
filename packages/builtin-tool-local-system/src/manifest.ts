@@ -1,21 +1,7 @@
 import { BuiltinToolManifest } from '@lobechat/types';
 
 import { systemPrompt } from './systemRole';
-
-export const LocalSystemApiName = {
-  editLocalFile: 'editLocalFile',
-  getCommandOutput: 'getCommandOutput',
-  globLocalFiles: 'globLocalFiles',
-  grepContent: 'grepContent',
-  killCommand: 'killCommand',
-  listLocalFiles: 'listLocalFiles',
-  moveLocalFiles: 'moveLocalFiles',
-  readLocalFile: 'readLocalFile',
-  renameLocalFile: 'renameLocalFile',
-  runCommand: 'runCommand',
-  searchLocalFiles: 'searchLocalFiles',
-  writeLocalFile: 'writeLocalFile',
-};
+import { LocalSystemApiName, LocalSystemIdentifier } from './types';
 
 export const LocalSystemManifest: BuiltinToolManifest = {
   api: [
@@ -378,7 +364,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
       },
     },
   ],
-  identifier: 'lobe-local-system',
+  identifier: LocalSystemIdentifier,
   meta: {
     avatar: '📁',
     title: 'Local System',
