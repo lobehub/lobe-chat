@@ -1,0 +1,16 @@
+{
+  "agentSelection": {
+    "empty": "Keine verfügbaren Assistenten",
+    "noAvailable": "Derzeit können keine Assistenten hinzugefügt werden",
+    "noSelected": "Es wurde noch kein Assistent ausgewählt",
+    "search": "Kein passender Assistent gefunden"
+  },
+  "starter": {
+    "createAgent": "Assistent erstellen",
+    "createGroup": "Gruppe erstellen",
+    "deepResearch": "Tiefenrecherche",
+    "developing": "In Entwicklung",
+    "image": "Zeichnen",
+    "write": "Schreiben"
+  }
+}

@@ -2,8 +2,9 @@
   "addToKnowledgeBase": {
     "addSuccess": "Bestand succesvol toegevoegd, <1>direct bekijken</1>",
     "confirm": "Toevoegen",
+    "error": "Bestand toevoegen aan kennisbank mislukt",
     "id": {
-      "placeholder": "Selecteer de kennisbank die u wilt toevoegen",
+      "placeholder": "Selecteer de kennisbank om toe te voegen",
       "required": "Selecteer een kennisbank",
       "title": "Doelkennisbank"
     },
@@ -13,12 +14,12 @@
   "createNew": {
     "confirm": "Nieuw aanmaken",
     "description": {
-      "placeholder": "Kennisbank beschrijving (optioneel)"
+      "placeholder": "Beschrijving van de kennisbank (optioneel)"
     },
     "formTitle": "Basisinformatie",
     "name": {
-      "placeholder": "Kennisbank naam",
-      "required": "Vul de naam van de kennisbank in"
+      "placeholder": "Naam van de kennisbank",
+      "required": "Voer een naam in voor de kennisbank"
     },
     "title": "Nieuwe kennisbank aanmaken"
   },

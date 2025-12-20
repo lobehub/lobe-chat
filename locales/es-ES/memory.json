@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "defaultType": "Contexto",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de contexto? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar memoria de contexto",
+    "description": "Descripción",
+    "empty": "No hay memorias de contexto disponibles",
+    "source": "Fuente"
+  },
+  "empty": {
+    "description": "La recuperación de recuerdos es un proceso gradual. Acumula más temas para enriquecer el contenido de la memoria recuperada e intenta mantener conversaciones más profundas con el asistente para capturar y almacenar mejor información valiosa.",
+    "search": "No se encontraron recuerdos coincidentes",
+    "title": "Sin recuerdos por ahora"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "defaultType": "Experiencia",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de experiencia? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar memoria de experiencia",
+    "empty": "No hay memorias de experiencia disponibles",
+    "keyLearning": "Aprendizaje clave",
+    "situation": "Contexto",
+    "source": "Fuente",
+    "steps": {
+      "action": "Acción",
+      "result": "Resultado",
+      "situation": "Situación",
+      "task": "Tarea"
+    }
+  },
+  "filter": {
+    "search": "Buscar palabras clave o descripciones de memoria...",
+    "sort": {
+      "createdAt": "Fecha de creación",
+      "scoreConfidence": "Nivel de confianza",
+      "scoreImpact": "Importancia",
+      "scorePriority": "Peso de preferencia",
+      "scoreUrgency": "Nivel de urgencia"
+    }
+  },
+  "identity": {
+    "empty": "No hay recuerdos de identidad por ahora",
+    "filter": {
+      "search": "Buscar por rol, relación o descripción...",
+      "type": {
+        "all": "Todos",
+        "demographic": "Demografía",
+        "personal": "Rol",
+        "professional": "Profesionales"
+      }
+    },
+    "list": {
+      "confirmDelete": "Confirmar eliminación",
+      "deleteCancel": "Cancelar",
+      "deleteContent": "¿Estás seguro de que deseas eliminar este recuerdo de identidad? Esta acción no se puede deshacer.",
+      "deleteOk": "Eliminar",
+      "noResults": "No se encontraron recuerdos de identidad coincidentes",
+      "updated": "Actualizado"
+    },
+    "roleCloud": {
+      "collapse": "Colapsar",
+      "expand": "Mostrar más"
+    },
+    "view": {
+      "list": "Lista",
+      "timeline": "Línea de tiempo"
+    }
+  },
+  "loading": "Cargando...",
+  "preference": {
+    "actions": {
+      "delete": "Eliminar",
+      "edit": "Editar"
+    },
+    "conclusionDirectives": "Directrices de conclusión",
+    "defaultType": "Preferencia",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta memoria de preferencia? Esta acción no se puede deshacer.",
+    "deleteTitle": "Eliminar memoria de preferencia",
+    "empty": "No hay memorias de preferencia disponibles",
+    "source": "Fuente",
+    "suggestions": "Acciones que el asistente podría tomar"
+  },
+  "tab": {
+    "contexts": "Contextos",
+    "experiences": "Experiencias",
+    "home": "Inicio",
+    "identities": "Identidades",
+    "preferences": "Preferencias",
+    "search": "Buscar"
+  },
+  "viewMode": {
+    "masonry": "Mosaico",
+    "timeline": "Línea de tiempo"
+  }
+}

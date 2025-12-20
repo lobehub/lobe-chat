@@ -2,6 +2,7 @@
   "about": {
     "title": "Over"
   },
+  "advancedSettings": "Geavanceerde instellingen",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Profielfoto",
@@ -11,7 +12,6 @@
       "title": "Assistentinformatie"
     },
     "chat": {
-      "displayMode": "Weergavemodus",
       "enableHistoryCount": "Aantal berichten in geschiedenis inschakelen",
       "historyCount": "Aantal berichten in geschiedenis",
       "no": "Nee",
@@ -76,6 +76,19 @@
       "title": "Alle instellingen resetten"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Standaardmodel dat wordt gebruikt bij het aanmaken van een nieuwe Agent",
+      "title": "Model"
+    },
+    "title": "Standaard Assistent Instellingen"
+  },
+  "group": {
+    "aiConfig": "AI-configuratie",
+    "common": "Algemeen",
+    "profile": "Account",
+    "system": "Systeem"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Leden",
@@ -85,7 +98,7 @@
     "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
     "group": "Teaminstellingen",
-    "groupDesc": "Beheer Agent-teams en chatvoorkeuren",
+    "groupDesc": "Beheer groeps- en chatvoorkeuren",
     "session": "Sessie-instellingen",
     "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
     "sessionWithName": "Sessie-instellingen · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "Versie aanmaken mislukt: {{message}}",
         "fetchRemoteFailed": "Ophalen van externe assistentgegevens mislukt",
-        "missingIdentifier": "Deze assistent heeft nog geen marktplaatsidentifier",
-        "notAuthenticated": "Log eerst in op je marktplaatsaccount",
+        "missingIdentifier": "Deze assistent heeft nog geen community-identificatie",
+        "notAuthenticated": "Log eerst in op je community-account",
         "publishFailed": "Publicatie mislukt: {{message}}"
       },
       "submitButton": "Publiceren",
       "title": {
-        "submit": "Delen op de assistentenmarktplaats",
+        "submit": "Delen met de assistentengemeenschap",
         "upload": "Nieuwe versie publiceren"
       }
     },
     "resultModal": {
-      "message": "De assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd. Klik op 'Bekijk in marktplaats' om de gepubliceerde assistent te bekijken.",
-      "view": "Bekijk in marktplaats"
+      "message": "Je assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd.",
+      "title": "Succesvol ingediend",
+      "view": "Bekijk in de community"
     },
     "submit": {
-      "button": "Delen op marktplaats",
-      "tooltip": "Deel de assistent op de marktplaats"
+      "button": "Delen met de community",
+      "tooltip": "Deel je assistent met de community"
     },
     "upload": {
       "button": "Nieuwe versie publiceren",
-      "tooltip": "Publiceer een nieuwe versie op de assistentenmarktplaats"
+      "tooltip": "Publiceer een nieuwe versie naar de assistentengemeenschap"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Wanneer ingeschakeld, onthoudt de AI je voorkeuren uit eerdere gesprekken, bouwt geheugen op en gebruikt dit als referentie in toekomstige gesprekken",
+      "title": "Geheugenfunctie inschakelen"
+    },
+    "title": "Geheugeninstellingen"
   },
   "message": {
     "success": "Succesvol bijgewerkt"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Annuleren",
+      "confirmDeprecate": "Veroudering bevestigen",
+      "deprecate": "Permanent verwijderen",
+      "deprecateConfirmContent": "Na veroudering wordt deze assistent permanent uit de marktplaats verwijderd en kan niet opnieuw worden gepubliceerd. Deze actie is onomkeerbaar, wees voorzichtig.",
+      "deprecateConfirmTitle": "Weet je zeker dat je deze assistent wilt verouderd maken?",
+      "deprecateError": "Veroudering van assistent mislukt",
+      "deprecateLoading": "Assistent wordt verouderd...",
+      "deprecateSuccess": "Assistent is verouderd",
+      "edit": "Agent bewerken",
+      "publish": "Agent publiceren",
+      "publishError": "Publiceren van assistent mislukt",
+      "publishLoading": "Assistent wordt gepubliceerd...",
+      "publishSuccess": "Assistent is gepubliceerd",
+      "unpublish": "Agent depubliceren",
+      "unpublishError": "Depubliceren van assistent mislukt",
+      "unpublishLoading": "Assistent wordt gedepubliceerd...",
+      "unpublishSuccess": "Assistent is gedepubliceerd",
+      "viewDetail": "Details bekijken"
+    },
+    "detail": {
+      "category": "Categorie",
+      "description": "Beschrijving",
+      "identifier": "Identificatie",
+      "title": "Assistentdetails"
+    },
+    "empty": {
+      "description": "Je hebt nog geen assistenten gepubliceerd op de marktplaats",
+      "title": "Nog geen gepubliceerde assistenten"
+    },
+    "errors": {
+      "editFailed": "Bewerken van assistent mislukt, probeer het later opnieuw",
+      "fetchFailed": "Ophalen van assistentdetails mislukt",
+      "notAuthenticated": "Log eerst in op je marktplaatsaccount"
+    },
+    "loginRequired": {
+      "button": "Inloggen op marktplaatsaccount",
+      "description": "Log eerst in op je marktplaatsaccount om je gepubliceerde assistenten te bekijken",
+      "title": "Inloggen vereist"
+    },
+    "status": {
+      "archived": "Gearchiveerd",
+      "deprecated": "Verouderd",
+      "published": "Gepubliceerd",
+      "unpublished": "Niet gepubliceerd"
+    },
+    "title": "Mijn gepubliceerde assistenten"
   },
   "plugin": {
     "addMCPPlugin": "MCP-plug-in toevoegen",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "De afbeeldingsgrootte overschrijdt de limiet van 1 MB. Kies een kleinere afbeelding.",
       "title": "Avatar"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "Naam"
     },
     "prompt": {
-      "placeholder": "Voer rol Prompt-woord in",
-      "title": "Rolinstelling"
+      "placeholder": "Voer assistentinstellingen in, druk op / om het opdrachtmenu te openen",
+      "title": "Assistentinstellingen"
     },
     "submit": "Assistentinformatie bijwerken",
     "tag": {
-      "desc": "Assistentlabels worden weergegeven in de assistentmarkt",
+      "desc": "Assistent-tags worden weergegeven in de assistentengemeenschap",
       "placeholder": "Voer tag in",
       "title": "Tag"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Wanneer ingeschakeld, worden ontwikkelaarsfuncties en -opties weergegeven",
+      "title": "Ontwikkelaarsmodus"
+    },
     "lang": {
       "autoMode": "Volg systeem",
       "title": "Taal"
+    },
+    "liteMode": {
+      "desc": "Wanneer ingeschakeld, wordt de interface vereenvoudigd en worden geavanceerde functies verborgen",
+      "title": "Lichte modus"
+    },
+    "responseLanguage": {
+      "auto": "Volg systeeminstellingen",
+      "desc": "Stel de taal in die AI gebruikt voor antwoorden",
+      "placeholder": "Kies antwoordtaal",
+      "title": "Antwoordtaal"
     },
     "themeMode": {
       "auto": "Automatisch",
@@ -425,7 +510,7 @@
       "placeholder": "Voer de systeemopdracht van de host in",
       "title": "Systeemopdracht van de host"
     },
-    "title": "Agent Teaminformatie"
+    "title": "Groepsinformatie"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "Sta privéberichten van assistent toe"
     },
     "enableSupervisor": {
-      "desc": "Schakel de moderatorfunctie voor het Agent-team in. De moderator beheert het verloop van teamgesprekken.",
+      "desc": "Schakel de functie voor groepsmoderator in; de moderator beheert het verloop van teamgesprekken",
       "title": "Moderator inschakelen"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Leidende vragen die worden weergegeven aan het begin van het gesprek",
-      "empty": "Geen vragen beschikbaar",
+      "empty": "Voeg openingsvragen toe om gebruikers te helpen snel een gesprek te beginnen",
       "placeholder": "Voer een vraag in",
       "repeat": "Vraag bestaat al",
       "title": "Openingsvragen"
@@ -631,6 +716,7 @@
       "title": "Spraaksynthese stem"
     }
   },
+  "startConversation": "Gesprek starten",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "Assistentidentifier (identifier)",
     "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
-    "tooltips": "Delen op de assistentenmarkt"
+    "success": "Assistent succesvol ingediend",
+    "tooltips": "Delen met de assistentengemeenschap"
   },
   "submitFooter": {
     "reset": "Resetten",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Assistentmetadata-generatiemodel",
+      "label": "Model",
       "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
-      "title": "Automatisch assistentinformatie genereren"
+      "title": "Assistent voor het genereren van assistentinformatie"
     },
     "customPrompt": {
       "addPrompt": "Voeg aangepaste prompt toe",
@@ -723,54 +810,60 @@
       "title": "Aangepaste prompt"
     },
     "generationTopic": {
-      "label": "AI-schilderij onderwerp naamgevingsmodel",
+      "label": "Model",
       "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
-      "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+      "title": "AI-hulpmiddel voor het benoemen van tekentopics"
     },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
-      "label": "Gespreksgeschiedenismodel",
+      "label": "Model",
       "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",
-      "title": "Automatisch samenvatten van gespreksgeschiedenis"
+      "title": "Assistent voor het comprimeren van gespreksgeschiedenis"
     },
     "queryRewrite": {
-      "label": "Vraag herschrijvingsmodel",
+      "label": "Model",
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
-      "title": "Herformuleren van vragen in de kennisbank"
+      "title": "Herschrijfassistent voor vragen in de kennisbank"
     },
     "thread": {
-      "label": "Subtopic Naamgevingsmodel",
+      "label": "Model",
       "modelDesc": "Model dat wordt gebruikt voor het automatisch hernoemen van subonderwerpen",
-      "title": "Automatische naamgeving van subonderwerpen"
+      "title": "Assistent voor het automatisch benoemen van subonderwerpen"
     },
     "title": "Systeemassistent",
     "topic": {
-      "label": "Onderwerp Naamgevingsmodel",
+      "label": "Model",
       "modelDesc": "Specificeer het model dat wordt gebruikt voor automatische hernoeming van onderwerpen",
-      "title": "Automatische Onderwerpnaamgeving"
+      "title": "Assistent voor het automatisch benoemen van onderwerpen"
     },
     "translation": {
-      "label": "Vertaalmodel",
+      "label": "Model",
       "modelDesc": "Specificeer het model voor vertaling",
-      "title": "Instellingen voor vertaalassistent"
+      "title": "Assistent voor het vertalen van berichtinhoud"
     }
   },
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
-    "common": "Algemene instellingen",
+    "apikey": "API-sleutelbeheer",
+    "common": "Uiterlijk",
     "experiment": "Experiment",
     "hotkey": "Sneltoetsen",
-    "image": "AI Tekeningen",
+    "image": "Tekenservice",
     "llm": "Taalmodel",
+    "memory": "Geheugeninstellingen",
+    "profile": "Mijn account",
     "provider": "AI-dienstverlener",
     "proxy": "Netwerkproxy",
+    "security": "Beveiliging",
+    "stats": "Statistieken",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
-    "system-agent": "Systeemassistent",
-    "tts": "Spraakdienst"
+    "tts": "Spraakdienst",
+    "usage": "Gebruiksoverzicht"
   },
   "tools": {
+    "add": "Plug-in integreren",
     "builtins": {
       "groupName": "Ingebouwd"
     },
@@ -796,6 +889,8 @@
       "tools": "tools",
       "verifyAuth": "Ik heb de authenticatie voltooid"
     },
+    "notInstalled": "Niet geïnstalleerd",
+    "notInstalledWarning": "Deze plug-in is momenteel niet geïnstalleerd, wat de werking van de assistent kan beïnvloeden",
     "plugins": {
       "enabled": "Ingeschakeld {{num}}",
       "groupName": "Plug-ins",

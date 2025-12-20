@@ -2,6 +2,7 @@
   "about": {
     "title": "について"
   },
+  "advancedSettings": "詳細設定",
   "agentInfoDescription": {
     "basic": {
       "avatar": "アバター",
@@ -11,7 +12,6 @@
       "title": "アシスタント情報"
     },
     "chat": {
-      "displayMode": "表示モード",
       "enableHistoryCount": "履歴メッセージ数を有効にする",
       "historyCount": "履歴メッセージ数",
       "no": "いいえ",
@@ -76,6 +76,19 @@
       "title": "すべての設定をリセット"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "新しいエージェントを作成する際に使用されるデフォルトモデル",
+      "title": "モデル"
+    },
+    "title": "デフォルトアシスタント設定"
+  },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "共通",
+    "profile": "アカウント",
+    "system": "システム"
+  },
   "groupTab": {
     "chat": "チャット",
     "members": "メンバー",
@@ -85,7 +98,7 @@
     "desc": "設定優先順位和模型設置。",
     "global": "グローバル設定",
     "group": "チーム設定",
-    "groupDesc": "エージェントチームとチャットの設定を管理",
+    "groupDesc": "グループとチャットの設定を管理",
     "session": "セッション設定",
     "sessionDesc": "キャラクター設定とセッションの好み。",
     "sessionWithName": "セッション設定 · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "バージョンの作成に失敗しました: {{message}}",
         "fetchRemoteFailed": "リモートアシスタントデータの取得に失敗しました",
-        "missingIdentifier": "現在のアシスタントにはマーケット識別子がありません",
-        "notAuthenticated": "まずマーケットアカウントにログインしてください",
+        "missingIdentifier": "このアシスタントにはまだコミュニティ識別子がありません",
+        "notAuthenticated": "まずはコミュニティアカウントにログインしてください",
         "publishFailed": "公開に失敗しました: {{message}}"
       },
       "submitButton": "公開",
       "title": {
-        "submit": "アシスタントマーケットに共有",
+        "submit": "アシスタントコミュニティに共有",
         "upload": "新しいバージョンを公開"
       }
     },
     "resultModal": {
-      "message": "アシスタントは審査に提出されました。審査に通過すると自動的に公開されます。「マーケットで確認」をクリックして公開済みのアシスタントを確認できます。",
-      "view": "マーケットで確認"
+      "message": "作成したアシスタントは審査に提出されました。審査に通過すると自動的に公開されます。",
+      "title": "送信成功",
+      "view": "コミュニティで確認"
     },
     "submit": {
-      "button": "マーケットに共有",
-      "tooltip": "アシスタントをマーケットに共有する"
+      "button": "コミュニティに共有",
+      "tooltip": "アシスタントをコミュニティに共有する"
     },
     "upload": {
       "button": "新しいバージョンを公開",
-      "tooltip": "アシスタントマーケットに新しいバージョンを公開する"
+      "tooltip": "新しいバージョンをアシスタントコミュニティに公開"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "有効にすると、AI は会話履歴からあなたの好みを記憶し、蓄積された記憶を今後の会話の参考にします",
+      "title": "記憶機能を有効にする"
+    },
+    "title": "記憶設定"
   },
   "message": {
     "success": "更新に成功しました"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "キャンセル",
+      "confirmDeprecate": "廃止を確認",
+      "deprecate": "永久に廃止",
+      "deprecateConfirmContent": "廃止後、このアシスタントはマーケットから永久に削除され、再掲載はできません。この操作は元に戻せませんので、慎重に行ってください。",
+      "deprecateConfirmTitle": "アシスタントを廃止しますか？",
+      "deprecateError": "アシスタントの廃止に失敗しました",
+      "deprecateLoading": "アシスタントを廃止中...",
+      "deprecateSuccess": "アシスタントが廃止されました",
+      "edit": "Agent を編集",
+      "publish": "Agent を公開",
+      "publishError": "アシスタントの公開に失敗しました",
+      "publishLoading": "アシスタントを公開中...",
+      "publishSuccess": "アシスタントが公開されました",
+      "unpublish": "Agent を非公開",
+      "unpublishError": "アシスタントの非公開に失敗しました",
+      "unpublishLoading": "アシスタントを非公開にしています...",
+      "unpublishSuccess": "アシスタントが非公開になりました",
+      "viewDetail": "詳細を見る"
+    },
+    "detail": {
+      "category": "カテゴリ",
+      "description": "説明",
+      "identifier": "識別子",
+      "title": "アシスタントの詳細"
+    },
+    "empty": {
+      "description": "まだマーケットにアシスタントを公開していません",
+      "title": "公開中のアシスタントはありません"
+    },
+    "errors": {
+      "editFailed": "アシスタントの編集に失敗しました。しばらくしてから再試行してください。",
+      "fetchFailed": "アシスタントの詳細取得に失敗しました",
+      "notAuthenticated": "まずマーケットアカウントにログインしてください"
+    },
+    "loginRequired": {
+      "button": "マーケットアカウントにログイン",
+      "description": "公開したアシスタントを見るには、まずマーケットアカウントにログインしてください",
+      "title": "ログインが必要です"
+    },
+    "status": {
+      "archived": "アーカイブ済み",
+      "deprecated": "廃止済み",
+      "published": "公開中",
+      "unpublished": "非公開"
+    },
+    "title": "自分の公開アシスタント"
   },
   "plugin": {
     "addMCPPlugin": "MCPプラグインを追加",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "画像のサイズが1MBの制限を超えています。より小さい画像を選択してください。",
       "title": "アバター"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "名前"
     },
     "prompt": {
-      "placeholder": "役割のプロンプトワードを入力してください",
-      "title": "役割の設定"
+      "placeholder": "アシスタントの設定を入力し、「/」でコマンドメニューを開く",
+      "title": "アシスタント設定"
     },
     "submit": "アシスタント情報を更新",
     "tag": {
-      "desc": "アシスタントのタグはアシスタントマーケットに表示されます",
+      "desc": "アシスタントのタグはコミュニティ内で表示されます",
       "placeholder": "タグを入力してください",
       "title": "タグ"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "有効にすると、開発者向けの機能とオプションが表示されます",
+      "title": "開発者モード"
+    },
     "lang": {
       "autoMode": "システムに従う",
       "title": "言語"
+    },
+    "liteMode": {
+      "desc": "有効にすると、インターフェースが簡素化され、高度な機能が非表示になります",
+      "title": "簡易モード"
+    },
+    "responseLanguage": {
+      "auto": "システムに従う",
+      "desc": "AIの返信に使用する言語を設定します",
+      "placeholder": "返信言語を選択",
+      "title": "返信言語"
     },
     "themeMode": {
       "auto": "自動",
@@ -425,7 +510,7 @@
       "placeholder": "ホストのシステムプロンプトを入力してください",
       "title": "ホストのシステムプロンプト"
     },
-    "title": "エージェントチーム情報"
+    "title": "グループ情報"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "アシスタントからのダイレクトメッセージを許可"
     },
     "enableSupervisor": {
-      "desc": "エージェントチームのモデレーター機能を有効にします。モデレーターはチームの会話の流れを管理します",
+      "desc": "グループモデレーター機能を有効にすると、モデレーターがチームの会話の進行を管理します",
       "title": "司会者を有効にする"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "会話開始時に表示されるガイド質問",
-      "empty": "質問はありません",
+      "empty": "開始用の質問を追加して、ユーザーがスムーズに会話を始められるようにしましょう",
       "placeholder": "質問を入力してください",
       "repeat": "質問は既に存在します",
       "title": "オープニング質問"
@@ -631,6 +716,7 @@
       "title": "音声合成音声"
     }
   },
+  "startConversation": "会話を開始する",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "アシスタント識別子（identifier）",
     "metaMiss": "エージェント情報を入力してから提出してください。名前、説明、タグが必要です。",
     "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development",
-    "tooltips": "エージェントマーケットに共有"
+    "success": "アシスタントの送信が成功しました",
+    "tooltips": "アシスタントコミュニティに共有"
   },
   "submitFooter": {
     "reset": "リセット",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "アシスタントメタデータ生成モデル",
+      "label": "モデル",
       "modelDesc": "アシスタントの名前、説明、アバター、ラベルを生成するために指定されたモデル",
-      "title": "アシスタント情報の自動生成"
+      "title": "アシスタント情報生成アシスタント"
     },
     "customPrompt": {
       "addPrompt": "カスタムプロンプトを追加",
@@ -723,54 +810,60 @@
       "title": "カスタムプロンプト"
     },
     "generationTopic": {
-      "label": "AI絵画トピック命名モデル",
+      "label": "モデル",
       "modelDesc": "AI絵画の自動トピック命名に使用されるモデルを指定します",
-      "title": "AI絵画自動トピック命名"
+      "title": "AIイラスト用トピック命名アシスタント"
     },
     "helpInfo": "新しいアシスタントを作成するとき、デフォルトのアシスタント設定がプリセット値として使用されます。",
     "historyCompress": {
-      "label": "会話履歴モデル",
+      "label": "モデル",
       "modelDesc": "会話履歴を圧縮するために指定されたモデル",
-      "title": "会話履歴の自動要約"
+      "title": "会話履歴圧縮アシスタント"
     },
     "queryRewrite": {
-      "label": "質問リライトモデル",
+      "label": "モデル",
       "modelDesc": "ユーザーの質問を最適化するために指定されたモデル",
-      "title": "知識ベースの質問の書き換え"
+      "title": "リソースライブラリ質問リライトアシスタント"
     },
     "thread": {
-      "label": "サブトピック命名モデル",
+      "label": "モデル",
       "modelDesc": "サブトピックの自動命名に使用されるモデルを指定します",
-      "title": "サブトピックの自動命名"
+      "title": "サブトピック自動命名アシスタント"
     },
     "title": "システムアシスタント",
     "topic": {
-      "label": "トピックネーミングモデル",
+      "label": "モデル",
       "modelDesc": "トピックの自動リネームに使用されるモデルを指定します",
-      "title": "トピックの自動リネーム"
+      "title": "トピック自動命名アシスタント"
     },
     "translation": {
-      "label": "翻訳モデル",
+      "label": "モデル",
       "modelDesc": "翻訳に使用するモデルを指定します",
-      "title": "翻訳アシスタントの設定"
+      "title": "メッセージ内容翻訳アシスタント"
     }
   },
   "tab": {
     "about": "について",
     "agent": "デフォルトエージェント",
-    "common": "一般設定",
+    "apikey": "APIキー管理",
+    "common": "外観",
     "experiment": "実験",
     "hotkey": "ショートカットキー",
-    "image": "AI画像生成",
+    "image": "画像生成サービス",
     "llm": "言語モデル",
+    "memory": "記憶設定",
+    "profile": "マイアカウント",
     "provider": "AIサービスプロバイダー",
     "proxy": "ネットワークプロキシ",
+    "security": "セキュリティ",
+    "stats": "データ統計",
     "storage": "データストレージ",
     "sync": "クラウド同期",
-    "system-agent": "システムアシスタント",
-    "tts": "音声サービス"
+    "tts": "音声サービス",
+    "usage": "使用状況"
   },
   "tools": {
+    "add": "プラグインを統合",
     "builtins": {
       "groupName": "組み込み"
     },
@@ -796,6 +889,8 @@
       "tools": "個のツール",
       "verifyAuth": "認証を完了しました"
     },
+    "notInstalled": "未インストール",
+    "notInstalledWarning": "このプラグインはまだインストールされておらず、アシスタントの使用に影響する可能性があります",
     "plugins": {
       "enabled": "{{num}} が有効",
       "groupName": "プラグイン",

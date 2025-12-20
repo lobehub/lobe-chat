@@ -9,6 +9,11 @@
       "on": "Formatierungsleiste anzeigen"
     }
   },
+  "autoSave": {
+    "latest": "Neueste Version geladen",
+    "saved": "Gespeichert",
+    "saving": "Automatisches Speichern..."
+  },
   "cancel": "Abbrechen",
   "confirm": "Bestätigen",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Link bearbeiten",
+    "editLinkTitle": "Link",
+    "editTextTitle": "Titel",
     "open": "Link öffnen",
     "placeholder": "Link-URL eingeben",
     "unlink": "Link entfernen"
   },
+  "markdown": {
+    "cancel": "Abbrechen",
+    "confirm": "Konvertieren",
+    "parseMessage": "In Markdown-Format konvertieren. Der vorhandene Inhalt wird überschrieben. Möchten Sie fortfahren? (Automatisches Schließen in 5 Sekunden)",
+    "parseTitle": "Markdown formatieren"
+  },
   "math": {
     "placeholder": "Bitte TeX-Formel eingeben"
+  },
+  "modifier": {
+    "accept": "Akzeptieren",
+    "acceptAll": "Alle akzeptieren",
+    "reject": "Ablehnen",
+    "rejectedAll": "Alle ablehnen"
   },
   "slash": {
     "h1": "Überschrift 1. Ordnung",
@@ -50,13 +69,16 @@
     "bulletList": "Ungeordnete Liste",
     "code": "Inline-Code",
     "codeblock": "Codeblock",
+    "image": "Bild",
     "italic": "Kursiv",
     "link": "Link",
     "numberList": "Nummerierte Liste",
+    "redo": "Wiederholen",
     "strikethrough": "Durchgestrichen",
     "table": "Tabelle",
     "taskList": "Aufgabenliste",
     "tex": "TeX-Formel",
-    "underline": "Unterstrichen"
+    "underline": "Unterstrichen",
+    "undo": "Rückgängig"
   }
 }

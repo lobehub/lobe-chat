@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Anuluj",
-    "confirm": "Autoryzuj użycie",
-    "description": {
-      "and": "oraz",
-      "prefix": "Klikając „Autoryzuj użycie”, wyrażasz zgodę na",
-      "privacy": "Politykę prywatności",
-      "terms": "Warunki korzystania z usługi"
+    "confirm": "Utwórz swój profil",
+    "description": "Twój profil społecznościowy jest niezależny od konta użytkownika {{appName}}.",
+    "footer": {
+      "agreement": "Kontynuując, potwierdzasz, że zapoznałeś się i akceptujesz <terms>Regulamin</terms> oraz <privacy>Politykę prywatności</privacy>",
+      "privacy": "Polityka prywatności",
+      "terms": "Regulamin"
     },
-    "title": "Potwierdź autoryzację"
+    "subtitle": "Utwórz profil społecznościowy, aby przesyłać i zarządzać zgłoszeniami w społeczności.",
+    "title": "Utwórz profil społecznościowy"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować asystenta.",
       "upload": "Autoryzacja zakończona sukcesem! Możesz teraz opublikować nową wersję."
     }
+  },
+  "profileSetup": {
+    "cancel": "Anuluj",
+    "descriptionEdit": "Zaktualizuj informacje w swoim profilu społeczności.",
+    "descriptionFirstTime": "Ustaw swój profil, aby ukończyć tworzenie konta społecznościowego.",
+    "errors": {
+      "fileTooLarge": "Rozmiar pliku nie może przekraczać 2 MB",
+      "notAuthenticated": "Zaloguj się, aby kontynuować",
+      "updateFailed": "Nie udało się zaktualizować profilu, spróbuj ponownie",
+      "uploadFailed": "Przesyłanie nie powiodło się, spróbuj ponownie",
+      "usernameTaken": "Ten identyfikator użytkownika jest już zajęty, wybierz inny"
+    },
+    "fields": {
+      "avatar": {
+        "label": "Awatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Kliknij, aby przesłać baner",
+        "label": "Baner",
+        "remove": "Usuń baner",
+        "tooltip": "Baner będzie wyświetlany na górze Twojego profilu (zalecany format 16:9)",
+        "uploading": "Przesyłanie..."
+      },
+      "description": {
+        "label": "Opis profilu",
+        "maxLength": "Opis może zawierać maksymalnie 200 znaków",
+        "placeholder": "Opowiedz coś o sobie..."
+      },
+      "displayName": {
+        "label": "Pseudonim",
+        "maxLength": "Pseudonim może zawierać maksymalnie 50 znaków",
+        "placeholder": "Wprowadź swój pseudonim",
+        "required": "Wprowadź pseudonim"
+      },
+      "github": {
+        "placeholder": "Nazwa użytkownika GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nazwa użytkownika X (Twitter)"
+      },
+      "userName": {
+        "label": "Identyfikator użytkownika",
+        "maxLength": "Identyfikator użytkownika może zawierać maksymalnie 32 znaki",
+        "minLength": "Identyfikator użytkownika musi zawierać co najmniej 3 znaki",
+        "pattern": "Identyfikator użytkownika może zawierać tylko litery, cyfry, podkreślenia i myślniki",
+        "placeholder": "Wprowadź swój identyfikator użytkownika",
+        "required": "Wprowadź identyfikator użytkownika",
+        "tooltip": "Identyfikator użytkownika to Twój unikalny identyfikator, który będzie używany w linku do Twojego profilu"
+      },
+      "website": {
+        "invalidUrl": "Wprowadź poprawny adres URL",
+        "placeholder": "Link do strony osobistej"
+      }
+    },
+    "getStarted": "Rozpocznij",
+    "save": "Zapisz",
+    "socialLinks": {
+      "title": "Linki społecznościowe"
+    },
+    "success": "Profil został zaktualizowany",
+    "titleEdit": "Edytuj profil",
+    "titleFirstTime": "Uzupełnij swój profil"
   }
 }

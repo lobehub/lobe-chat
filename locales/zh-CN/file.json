@@ -1,8 +1,7 @@
 {
   "addFolder": "创建文件夹",
-  "addKnowledge": "添加知识",
+  "addLibrary": "添加",
   "addPage": "创建文稿",
-  "desc": "管理你的工作、学习与生活知识。",
   "detail": {
     "basic": {
       "createdAt": "创建时间",
@@ -24,63 +23,38 @@
       "embeddingStatus": "向量化"
     }
   },
-  "documentEditor": {
-    "addIcon": "添加图标",
-    "autoSaveMessage": "文档会自动保存，无需手动保存",
-    "chooseIcon": "选择图标",
-    "deleteConfirm": {
-      "content": "即将删除该文档，删除后将不可恢复，请谨慎操作。",
-      "title": "删除文档"
-    },
-    "deleteError": "删除文档失败",
-    "deleteSuccess": "文档删除成功",
-    "editedAt": "最后编辑于 {{time}}",
-    "editedBy": "最后编辑者 {{name}}",
-    "editorPlaceholder": "输入文档内容，按 / 打开命令菜单",
-    "empty": {
-      "createNewDocument": "创建新文档",
-      "title": "选择一个文档以开始",
-      "uploadMarkdown": "上传 Markdown 文件"
-    },
-    "linkCopied": "链接已复制",
-    "menu": {
-      "copyLink": "复制链接",
-      "exportDocument": "导出文档",
-      "importDocument": "导入文档",
-      "pin": "置顶文档"
-    },
-    "saving": "保存中...",
-    "titlePlaceholder": "无标题",
-    "wordCount": "{{wordCount}} 字"
-  },
-  "documentList": {
-    "copyContent": "复制全文",
-    "duplicate": "创建副本",
-    "empty": "暂无文稿，点击上方按钮创建你的第一篇文稿",
-    "noResults": "未找到匹配的文稿",
-    "pageCount": "共 {{count}} 个文稿",
-    "selectNote": "选择一个文稿开始编辑",
-    "untitled": "无标题"
-  },
   "empty": "暂无已上传文件/文件夹",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "已过滤 {{ignored}} 个文件（共 {{total}} 个文件）"
+      },
+      "connect": "连接...",
+      "gitignore": {
+        "apply": "应用规则",
+        "cancel": "忽略规则",
+        "content": "检测到 .gitignore 文件（共 {{count}} 个文件），是否应用忽略规则？",
+        "filtered": "已过滤 {{ignored}} 个文件（共 {{total}} 个文件）",
+        "title": "检测到 .gitignore"
+      },
       "newFolder": "新建文件夹",
       "newPage": "新建文稿",
+      "notion": {
+        "error": "导入 Notion 文件失败",
+        "foundFiles": "找到 {{count}} 个文件",
+        "importing": "正在导入 Notion 文件...",
+        "noMarkdownFiles": "未在 ZIP 文件中找到 Markdown 文件",
+        "partial": "已成功导入 {{success}} 个文件，失败 {{failed}} 个",
+        "success": "成功导入 {{count}} 个文件"
+      },
+      "notionGuide": {
+        "cancel": "暂不导入",
+        "desc": "请先在 Notion 中导出 Markdown（ZIP），点击继续选择压缩包即可导入其中所有页面。",
+        "ok": "选择 Notion ZIP",
+        "title": "导入 Notion 内容"
+      },
       "uploadFile": "上传文件",
       "uploadFolder": "上传文件夹"
-    },
-    "newNoteDialog": {
-      "cancel": "取消",
-      "editTitle": "编辑文档",
-      "emptyContent": "文档内容不能为空",
-      "loadError": "加载文档失败,请重试",
-      "loading": "加载中...",
-      "save": "保存",
-      "saveError": "保存文档失败,请重试",
-      "saveSuccess": "文档保存成功",
-      "title": "新建文档",
-      "updateSuccess": "文档更新成功"
     },
     "newPageButton": "新建文稿",
     "uploadButton": "上传"
@@ -91,7 +65,7 @@
     "quickActions": "快捷操作",
     "recentFiles": "最近文件",
     "recentPages": "最近文稿",
-    "subtitle": "欢迎使用知识库，从这里开始管理你的文档和文档",
+    "subtitle": "欢迎使用资源中心，从这里开始管理你的文档和文档",
     "uploadEntries": {
       "files": {
         "title": "上传文件"
@@ -99,27 +73,27 @@
       "folder": {
         "title": "上传文件夹"
       },
-      "knowledgeBase": {
-        "title": "新建知识库"
+      "library": {
+        "title": "新建资源库"
       },
       "newPage": {
         "title": "新建文稿"
       }
     }
   },
-  "knowledgeBase": {
+  "library": {
     "list": {
-      "confirmRemoveKnowledgeBase": "即将删除该知识库，其中的文件不会删除，将移入全部文件中。知识库删除后将不可恢复，请谨慎操作。",
-      "empty": "点击 <1>+</1> 开始创建知识库"
+      "confirmRemoveLibrary": "即将删除该资源库，其中的文件不会删除，将移入全部文件中。资源库删除后将不可恢复，请谨慎操作。",
+      "empty": "点击 <1>+</1> 开始创建资源库"
     },
-    "new": "新建知识库",
-    "title": "知识库"
+    "new": "新建资源库",
+    "title": "库"
   },
   "menu": {
     "allFiles": "全部文件",
     "allPages": "全部文稿"
   },
-  "networkError": "获取知识库失败，请检测网络连接后重试",
+  "networkError": "获取资源库失败，请检测网络连接后重试",
   "notSupportGuide": {
     "desc": "当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>",
     "features": {
@@ -131,12 +105,55 @@
         "desc": "使用高性能向量模型，对文本分块进行向量化，实现文件内容的语义化检索",
         "title": "向量语义化"
       },
-      "repos": {
-        "desc": "支持创建知识库，并允许添加不同类型的文件，构建属于你的领域知识",
-        "title": "知识库"
+      "libraries": {
+        "desc": "支持创建资源库，并允许添加不同类型的文件，构建属于你的领域资源",
+        "title": "资源库"
       }
     },
     "title": "当前部署模式不支持文件管理"
+  },
+  "pageEditor": {
+    "addIcon": "添加图标",
+    "autoSaveMessage": "文稿会自动保存，无需手动保存",
+    "chooseIcon": "选择图标",
+    "deleteConfirm": {
+      "content": "即将删除该文稿，删除后将不可恢复，请谨慎操作。",
+      "title": "删除文稿"
+    },
+    "deleteError": "删除文稿失败",
+    "deleteSuccess": "文稿删除成功",
+    "editedAt": "最后编辑于 {{time}}",
+    "editedBy": "最后编辑者 {{name}}",
+    "editorPlaceholder": "输入文稿内容，按 / 打开命令菜单",
+    "empty": {
+      "createNewDocument": "创建新文稿",
+      "title": "选择一个文稿以开始",
+      "uploadMarkdown": "上传 Markdown 文件"
+    },
+    "linkCopied": "链接已复制",
+    "menu": {
+      "copyLink": "复制链接",
+      "exportDocument": "导出文稿",
+      "importDocument": "导入文稿",
+      "pin": "置顶文稿"
+    },
+    "saving": "保存中...",
+    "titlePlaceholder": "无标题",
+    "wordCount": "{{wordCount}} 字"
+  },
+  "pageList": {
+    "copyContent": "复制全文",
+    "duplicate": "创建副本",
+    "empty": "暂无文稿，点击上方按钮创建你的第一篇文稿",
+    "filter": {
+      "all": "全部",
+      "onlyInPages": "仅在文稿中"
+    },
+    "noResults": "未找到匹配的文稿",
+    "pageCount": "共 {{count}} 个文稿",
+    "selectNote": "选择一个文稿开始编辑",
+    "title": "文稿",
+    "untitled": "无标题"
   },
   "preview": {
     "downloadFile": "下载文件",
@@ -155,7 +172,7 @@
     "videos": "视频",
     "websites": "网页"
   },
-  "title": "知识库",
+  "title": "资源",
   "toggleLeftPanel": "显示/隐藏左侧面板",
   "uploadDock": {
     "body": {

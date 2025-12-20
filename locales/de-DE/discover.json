@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Der Assistent verfügt über die folgenden Wissensdatenbanken, die Ihnen helfen, mehr Fragen zu beantworten.",
-          "title": "Wissensdatenbank"
+          "desc": "Der Assistent verfügt über integrierte Wissensdatenbanken, um dir bei der Beantwortung weiterer Fragen zu helfen.",
+          "title": "Wissensdatenbanken"
         },
         "plugin": {
           "desc": "Der Assistent verfügt über die folgenden Plugins, die Ihnen helfen, mehr Aufgaben zu erledigen.",
@@ -58,11 +58,17 @@
         "title": "Versionsverlauf"
       }
     },
+    "downloads": "Downloads",
+    "empty": {
+      "description": "Versuchen Sie, die Filtereinstellungen anzupassen oder besuchen Sie die Community, um weitere Assistenten zu entdecken",
+      "search": "Keine passenden Assistenten gefunden",
+      "title": "Keine Assistenten verfügbar"
+    },
     "list": "Assistentenliste",
     "marketSource": {
-      "label": "Marktquelle wechseln",
-      "legacy": "Alter Markt",
-      "new": "Neuer Markt"
+      "label": "Community-Quelle wechseln",
+      "legacy": "Alte Community",
+      "new": "Neue Community"
     },
     "more": "Mehr",
     "plugins": "Integrations-Plugins",
@@ -85,7 +91,7 @@
         "subtitle": "Der aktuell aufgerufene Assistent wurde aus einem der folgenden Gründe archiviert:",
         "title": "Assistent archiviert"
       },
-      "backToMarket": "Zurück zum Assistenten-Markt",
+      "backToMarket": "Zurück zur Assistenten-Community",
       "deprecated": {
         "reasons": {
           "official": "Der Assistent wurde aufgrund von Sicherheits- oder politischen Problemen offiziell entfernt.",
@@ -94,9 +100,9 @@
         "subtitle": "Der aktuell aufgerufene Assistent wurde aus einem der folgenden Gründe abgelehnt:",
         "title": "Assistent abgelehnt"
       },
-      "support": "Bei Fragen senden Sie bitte den Link an <1>support@lobehub.com</1>.",
+      "support": "Bei Fragen senden Sie bitte den Link an <email>support@lobehub.com</email> zur Beratung.",
       "unpublished": {
-        "subtitle": "Der aktuell aufgerufene Assistent befindet sich in der Versionsprüfung. Bei Fragen senden Sie bitte den Link an <1>support@lobehub.com</1>.",
+        "subtitle": "Der aktuell aufgerufene Assistent befindet sich in der Versionsprüfung. Bei Fragen senden Sie bitte den Link an <email>support@lobehub.com</email> zur Beratung.",
         "title": "Assistent in Überprüfung"
       }
     },
@@ -144,7 +150,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Gehe im Chatfenster über die Einstellungen in der oberen rechten Ecke zur Seite, auf der du deinen Assistenten einreichen möchtest;",
-      "desc2": "Klicke auf die Schaltfläche 'In den Assistentenmarkt einreichen' in der oberen rechten Ecke.",
+      "desc2": "Klicken Sie oben rechts auf die Schaltfläche, um zur Assistenten-Community einzureichen.",
       "tag": "Methode Eins",
       "title": "Einreichung über LobeChat"
     },
@@ -172,7 +178,7 @@
       "functionCall": "Funktionaufrufe unterstützen",
       "title": "Sonstiges",
       "vision": "Visuelle Erkennung unterstützen",
-      "withKnowledge": "Mit Wissensdatenbank",
+      "withKnowledge": "Mit Wissensdatenbanken",
       "withTool": "Mit Plugin"
     },
     "pricing": "Modellpreise",
@@ -186,8 +192,10 @@
     }
   },
   "home": {
+    "communityAgents": "Community-Assistenten",
     "featuredAssistants": "Empfohlene Assistenten",
     "featuredModels": "Empfohlene Modelle",
+    "featuredPlugins": "Empfohlene Plugins",
     "featuredProviders": "Empfohlene Modellanbieter",
     "featuredTools": "Empfohlene Plugins",
     "more": "Mehr entdecken"
@@ -516,7 +524,7 @@
     "hero": {
       "desc": "Offene, bereitstellbare MCP-Server-Plattform, die KI-Systemen den einfachen Zugriff auf Dateisysteme, Datenbanken, APIs und andere wichtige Ressourcen ermöglicht und Ihre KI-Fähigkeiten umfassend erweitert.",
       "subTitle": "Open Source & sofort einsatzbereit",
-      "title": "Open Source MCP-Marktplatz für KI"
+      "title": "Open-Source-MCP-Community für KI"
     },
     "sorts": {
       "createdAt": "Zuletzt hinzugefügt",
@@ -529,7 +537,7 @@
       "toolsCount": "Anzahl der Werkzeuge",
       "updatedAt": "Zuletzt aktualisiert"
     },
-    "title": "MCP-Marktplatz",
+    "title": "MCP-Community",
     "unvalidated": {
       "desc": "Dieser MCP-Server wurde noch nicht validiert",
       "title": "Nicht validiert"
@@ -539,6 +547,11 @@
       "descWithDate": "Dieser MCP-Server wurde am {{date}} validiert, um Qualität und Zuverlässigkeit sicherzustellen.",
       "title": "Validiert"
     }
+  },
+  "mcpEmpty": {
+    "description": "Versuchen Sie, die Filtereinstellungen oder Suchbegriffe anzupassen",
+    "search": "Keine passenden MCP-Server gefunden",
+    "title": "Keine MCP-Server verfügbar"
   },
   "models": {
     "abilities": "Modellfähigkeiten",
@@ -553,6 +566,11 @@
         "more": "Mehr anzeigen",
         "title": "Empfehlungen"
       }
+    },
+    "empty": {
+      "description": "Versuchen Sie, die Filtereinstellungen anzupassen, um weitere Modelle zu sehen",
+      "search": "Keine passenden Modelle gefunden",
+      "title": "Keine Modelle verfügbar"
     },
     "free": "Kostenlos",
     "guide": "Konfigurationsanleitung",
@@ -664,6 +682,11 @@
         "title": "Empfehlungen"
       }
     },
+    "empty": {
+      "description": "Versuchen Sie, die Filtereinstellungen anzupassen, um weitere Anbieter zu sehen",
+      "search": "Keine passenden Anbieter gefunden",
+      "title": "Keine Anbieter verfügbar"
+    },
     "list": "Liste der Modellanbieter",
     "modelCount": "{{count}} Modelle",
     "modelName": "Modellname",
@@ -690,6 +713,18 @@
     "home": "Startseite",
     "model": "Modell",
     "plugin": "Plugin",
-    "provider": "Modellanbieter"
+    "provider": "Modellanbieter",
+    "user": "Benutzer"
+  },
+  "user": {
+    "agents": "Assistenten",
+    "downloads": "Downloads",
+    "editProfile": "Profil bearbeiten",
+    "login": "Kreator werden",
+    "logout": "Abmelden",
+    "myProfile": "Mein Profil",
+    "noAgents": "Dieser Benutzer hat noch keine Assistenten veröffentlicht",
+    "publishedAgents": "Erstellte Assistenten",
+    "website": "Persönliche Webseite"
   }
 }

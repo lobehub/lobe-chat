@@ -9,6 +9,11 @@
       "on": "Mostra barra degli strumenti di formattazione"
     }
   },
+  "autoSave": {
+    "latest": "Ultima versione caricata",
+    "saved": "Salvato",
+    "saving": "Salvataggio automatico in corso..."
+  },
   "cancel": "Annulla",
   "confirm": "Conferma",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Modifica link",
+    "editLinkTitle": "Collegamento",
+    "editTextTitle": "Titolo",
     "open": "Apri link",
     "placeholder": "Inserisci URL del link",
     "unlink": "Rimuovi link"
   },
+  "markdown": {
+    "cancel": "Annulla",
+    "confirm": "Converti",
+    "parseMessage": "Convertire in formato Markdown. Il contenuto esistente verrà sovrascritto. Confermi? (Chiusura automatica tra 5 secondi)",
+    "parseTitle": "Formatta in Markdown"
+  },
   "math": {
     "placeholder": "Inserisci la formula TeX"
+  },
+  "modifier": {
+    "accept": "Accetta",
+    "acceptAll": "Accetta tutto",
+    "reject": "Rifiuta",
+    "rejectedAll": "Rifiuta tutto"
   },
   "slash": {
     "h1": "Titolo di primo livello",
@@ -50,13 +69,16 @@
     "bulletList": "Elenco puntato",
     "code": "Codice in linea",
     "codeblock": "Blocco di codice",
+    "image": "Immagine",
     "italic": "Corsivo",
     "link": "Collegamento",
     "numberList": "Elenco numerato",
+    "redo": "Ripeti",
     "strikethrough": "Testo barrato",
     "table": "tabella",
     "taskList": "Elenco attività",
     "tex": "Formula TeX",
-    "underline": "Sottolineato"
+    "underline": "Sottolineato",
+    "undo": "Annulla"
   }
 }

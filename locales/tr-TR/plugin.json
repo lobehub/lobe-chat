@@ -1,11 +1,72 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Kullanılabilir modelleri al",
+        "getAvailableTools": "Kullanılabilir araçları al",
+        "getConfig": "Yapılandırmayı al",
+        "getMeta": "Meta verileri al",
+        "getPrompt": "Sistem istemini al",
+        "searchMarketTools": "Eklenti pazarında ara",
+        "searchOfficialTools": "Resmi araçları ara",
+        "setModel": "Modeli ayarla",
+        "setOpeningMessage": "Açılış mesajını ayarla",
+        "setOpeningQuestions": "Açılış sorularını ayarla",
+        "togglePlugin": "Eklentiyi değiştir",
+        "updateChatConfig": "Sohbet yapılandırmasını güncelle",
+        "updateConfig": "Yapılandırmayı güncelle",
+        "updateMeta": "Meta verileri güncelle",
+        "updatePrompt": "Sistem istemini güncelle"
+      },
+      "title": "Temsilci Oluşturucu"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Kullanılabilir Modelleri Al",
+        "installPlugin": "Eklenti Yükle",
+        "inviteAgent": "Üye Davet Et",
+        "removeAgent": "Üyeyi Kaldır",
+        "searchMarketTools": "Eklenti Pazarında Ara",
+        "updateAgentConfig": "Aracı Yapılandırmasını Güncelle",
+        "updatePrompt": "Sistem Komutunu Güncelle"
+      },
+      "title": "Grup Aracı Oluşturucu"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Herkese konuşma",
+        "createAgent": "Ekip üyesi ekle",
+        "createWorkflow": "İş akışı planla",
+        "executeTask": "Görevi yürüt",
+        "getAgentInfo": "Üye bilgilerini al",
+        "interrupt": "Görevi durdur",
+        "inviteAgent": "Üye davet et",
+        "removeAgent": "Üyeyi kaldır",
+        "searchAgent": "Uzman ara",
+        "speak": "Belirli üyeyi konuştur",
+        "summarize": "Konuşmayı özetle",
+        "vote": "Oylama başlat"
+      },
+      "title": "Ekibi Koordine Et"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Yapılacakları Temizle",
+        "completeTodos": "Yapılacakları Tamamla",
+        "createPlan": "Plan Oluştur",
+        "createTodos": "Yapılacak Oluştur",
+        "removeTodos": "Yapılacakları Sil",
+        "updatePlan": "Planı Güncelle",
+        "updateTodos": "Yapılacakları Güncelle"
+      },
+      "title": "GTD Aracı"
+    },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Bilgi tabanını oku",
-        "searchKnowledgeBase": "Bilgi tabanında ara"
+        "readKnowledge": "Bilgi kaynağını oku",
+        "searchKnowledgeBase": "Bilgi kaynağında ara"
       },
-      "title": "Bilgi Tabanı"
+      "title": "Bilgi Kaynağı"
     },
     "lobe-local-system": {
       "apiName": {
@@ -23,6 +84,41 @@
         "writeLocalFile": "Dosyaya yaz"
       },
       "title": "Yerel Sistem"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Düğümleri toplu güncelle",
+        "compareSnapshots": "Anlık görüntüleri karşılaştır",
+        "convertToList": "Listeye dönüştür",
+        "createNode": "Düğüm oluştur",
+        "cropImage": "Görseli kırp",
+        "deleteNode": "Düğümü sil",
+        "deleteSnapshot": "Anlık görüntüyü sil",
+        "deleteTableColumn": "Tablo sütununu sil",
+        "deleteTableRow": "Tablo satırını sil",
+        "duplicateNode": "Düğümü kopyala",
+        "editTitle": "Belge başlığını düzenle",
+        "indentListItem": "Liste öğesini girintile",
+        "initPage": "Belgeyi başlat",
+        "insertTableColumn": "Tablo sütunu ekle",
+        "insertTableRow": "Tablo satırı ekle",
+        "listSnapshots": "Anlık görüntüleri listele",
+        "mergeNodes": "Düğümleri birleştir",
+        "moveNode": "Düğümü taşı",
+        "outdentListItem": "Liste öğesinin girintisini kaldır",
+        "replaceText": "Metni değiştir",
+        "resizeImage": "Görseli yeniden boyutlandır",
+        "restoreSnapshot": "Anlık görüntüyü geri yükle",
+        "rotateImage": "Görseli döndür",
+        "saveSnapshot": "Anlık görüntüyü kaydet",
+        "setImageAlt": "Görsel alternatif metnini ayarla",
+        "splitNode": "Düğümü böl",
+        "toggleListType": "Liste türünü değiştir",
+        "unwrapNode": "Düğümün paketini aç",
+        "updateNode": "Düğümü güncelle",
+        "wrapNodes": "Düğümleri paketle"
+      },
+      "title": "Belge"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Güncelle",
     "updateSuccess": "Eklenti ayarları başarıyla güncellendi"
   },
+  "empty": {
+    "description": "Eklenti mağazasında keşfetmeniz için birçok araç sizi bekliyor, mağazayı ziyaret ederek keşfe başlayın",
+    "search": "Eşleşen eklenti bulunamadı",
+    "title": "Henüz eklenti yok"
+  },
   "error": {
     "fetchError": "Manifest bağlantısı isteği başarısız oldu, lütfen bağlantının geçerli olduğundan ve CORS erişimine izin verdiğinden emin olun",
     "installError": "{{name}} eklentisi yüklenemedi",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Eklenti çağrılıyor...",
     "plugin": "Eklenti çalışıyor..."
+  },
+  "mcpEmpty": {
+    "deployment": "Henüz dağıtım seçeneği yok",
+    "prompts": "Bu eklenti için henüz bir komut bulunmamaktadır",
+    "resources": "Bu eklenti için henüz kaynak yok",
+    "tools": "Bu eklenti için henüz araç yeteneği yok"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Kurulum ortamı kontrol ediliyor...",
@@ -338,6 +445,8 @@
       "installed": "Yüklendi"
     },
     "config": {
+      "addEnv": "Ortam Değişkeni Ekle",
+      "addHeaders": "İstek Başlığı Ekle",
       "args": "Parametreler",
       "command": "Komut",
       "env": "Ortam değişkenleri",
@@ -358,12 +467,15 @@
       },
       "title": "Özel Eklenti Yükle"
     },
+    "install": {
+      "title": "Kurulum Bilgisi"
+    },
     "marketplace": {
       "title": "Üçüncü Taraf Eklenti Yükle",
       "trustedBy": "{{name}} tarafından sağlanmaktadır",
       "unverified": {
         "title": "Doğrulanmamış Üçüncü Taraf Eklenti",
-        "warning": "Bu eklenti doğrulanmamış üçüncü taraf pazarından gelmektedir, yüklemeden önce kaynağa güvendiğinizden emin olun."
+        "warning": "Bu eklenti doğrulanmamış üçüncü taraf bir topluluktan gelmektedir, yüklemeden önce bu kaynağa güvenip güvenmediğinizi lütfen doğrulayın."
       },
       "verified": "Doğrulanmış"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Bu yapılandırmalar MCP sunucusu başlatılırken ortam değişkenleri olarak sürece iletilecektir",
     "httpTypeNotice": "HTTP türündeki MCP eklentileri için yapılandırılacak ortam değişkeni yoktur",
     "indexUrl": {
-      "title": "Pazar Endeksi",
+      "title": "Topluluk Dizini",
       "tooltip": "Çevrimiçi düzenleme desteklenmiyor, lütfen dağıtım ortam değişkenleri ile ayarlayın"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Ortam değişkeni kaydedilemedi",
       "envUpdateSuccess": "Ortam değişkeni başarıyla kaydedildi"
     },
-    "modalDesc": "Eklenti pazar adresini yapılandırdıktan sonra, özel eklenti pazarını kullanabilirsiniz",
+    "modalDesc": "Eklenti topluluğunun adresini yapılandırdıktan sonra, özel eklenti topluluklarını kullanabilirsiniz.",
     "rules": {
       "argsRequired": "Lütfen başlatma parametrelerini girin",
       "commandRequired": "Lütfen başlatma komutunu girin",
       "urlRequired": "Lütfen sunucu adresini girin"
     },
     "saveSettings": "Ayarları Kaydet",
-    "title": "Eklenti Pazarı Ayarları"
+    "title": "Eklenti Topluluğunu Ayarla"
   },
   "showInPortal": "Detayları çalışma alanında görüntüleyin",
   "store": {

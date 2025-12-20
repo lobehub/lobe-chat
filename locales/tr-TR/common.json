@@ -58,12 +58,12 @@
       "ready": "Veritabanı hazır"
     },
     "modal": {
-      "desc": "PGlite istemci veritabanını etkinleştirerek, tarayıcınızda sohbet verilerini kalıcı olarak depolayın ve bilgi bankası gibi gelişmiş özellikleri kullanın.",
+      "desc": "Yeni nesil istemci veritabanını hemen etkinleştirin. Sohbet verilerinizi tarayıcınızda kalıcı olarak saklayın ve kaynak kütüphanesi gibi gelişmiş özellikleri kullanın.",
       "enable": "Hemen Etkinleştir",
       "features": {
         "knowledgeBase": {
-          "desc": "Kişisel bilgi havuzunuzu oluşturun ve asistanınızla kolayca bilgi havuzu sohbetine başlayın (yakında gelecek)",
-          "title": "Bilgi havuzu sohbetini destekleyin, ikinci beyninizi açın"
+          "desc": "Kişisel bilgi kütüphanenizi oluşturun ve asistanınızla kolayca bilgi tabanlı sohbetler başlatın (yakında geliyor)",
+          "title": "Bilgi tabanlı sohbet desteği, ikinci beyninizi etkinleştirin"
         },
         "localFirst": {
           "desc": "Sohbet verileri tamamen tarayıcıda saklanır, verileriniz her zaman sizin kontrolünüzde.",
@@ -137,14 +137,39 @@
   "close": "Kapat",
   "cmdk": {
     "about": "Hakkında",
+    "aiModeEmptyState": "Yukarıdaki giriş kutusuna sorunuzu yazarak yapay zeka ile sohbet etmeye başlayın",
+    "aiModePlaceholder": "Yapay zekaya soru sor...",
+    "community": "Topluluk",
     "communitySupport": "Topluluk Desteği",
     "discover": "Keşfet",
-    "knowledgeBase": "Bilgi Tabanı",
+    "memory": "Hafıza",
     "navigate": "Gezin",
     "newAgent": "Yeni Asistan Oluştur",
     "noResults": "Sonuç bulunamadı",
     "openSettings": "Ayarları Aç",
-    "painting": "Yapay Zeka Resmi",
+    "pages": "Belgeler",
+    "painting": "Resim",
+    "resource": "Kaynak",
+    "search": {
+      "agent": "Asistan",
+      "agents": "Asistanlar",
+      "assistant": "Yapay Zeka Asistanı",
+      "assistants": "Yapay Zeka Asistanları",
+      "file": "Dosya",
+      "files": "Dosyalar",
+      "loading": "Aranıyor...",
+      "mcp": "MCP Sunucusu",
+      "mcps": "MCP Sunucuları",
+      "message": "Mesaj",
+      "messages": "Mesajlar",
+      "page": "Belge",
+      "pages": "Belgeler",
+      "plugin": "Eklenti",
+      "plugins": "Eklentiler",
+      "searching": "Arama Sonuçları",
+      "topic": "Konu",
+      "topics": "Konular"
+    },
     "searchPlaceholder": "Komut girin veya arayın...",
     "settings": "Ayarlar",
     "starOnGitHub": "GitHub'da Bize Yıldız Verin",
@@ -261,6 +286,7 @@
   "labs": "Laboratuvarlar",
   "lang": {
     "ar": "Arapça",
+    "auto": "Sistem dil ayarlarını takip et",
     "bg-BG": "Bulgarca",
     "bn": "Bengalce",
     "cs-CZ": "Çekçe",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "İşbirliği",
     "support": "E-posta Desteği"
+  },
+  "navPanel": {
+    "agent": "Asistan",
+    "displayItems": "Öğeleri Göster",
+    "library": "Kütüphane",
+    "searchAgent": "Asistan Ara...",
+    "searchResultEmpty": "Arama sonucu bulunamadı"
   },
   "new": "Yeni",
   "oauth": "SSO Girişi",
@@ -359,12 +392,20 @@
   },
   "tab": {
     "aiImage": "Yapay Zeka Resim",
+    "audio": "Ses",
     "chat": "Sohbet",
+    "community": "Topluluk",
     "discover": "Keşfet",
     "files": "Dosyalar",
+    "home": "Ana Sayfa",
     "knowledgeBase": "Bilgi Tabanı",
     "me": "ben",
-    "setting": "Ayarlar"
+    "memory": "Hafıza",
+    "pages": "Belgeler",
+    "resource": "Kaynaklar",
+    "search": "Ara",
+    "setting": "Ayarlar",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "İzin ver",

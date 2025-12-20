@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "사용 가능한 모델 가져오기",
+        "getAvailableTools": "사용 가능한 도구 가져오기",
+        "getConfig": "설정 가져오기",
+        "getMeta": "메타데이터 가져오기",
+        "getPrompt": "시스템 프롬프트 가져오기",
+        "searchMarketTools": "플러그인 마켓 검색",
+        "searchOfficialTools": "공식 도구 검색",
+        "setModel": "모델 설정",
+        "setOpeningMessage": "시작 메시지 설정",
+        "setOpeningQuestions": "시작 질문 설정",
+        "togglePlugin": "플러그인 전환",
+        "updateChatConfig": "채팅 설정 업데이트",
+        "updateConfig": "설정 업데이트",
+        "updateMeta": "메타데이터 업데이트",
+        "updatePrompt": "시스템 프롬프트 업데이트"
+      },
+      "title": "에이전트 빌더"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "사용 가능한 모델 가져오기",
+        "installPlugin": "플러그인 설치",
+        "inviteAgent": "멤버 초대",
+        "removeAgent": "멤버 제거",
+        "searchMarketTools": "플러그인 마켓 검색",
+        "updateAgentConfig": "에이전트 설정 업데이트",
+        "updatePrompt": "시스템 프롬프트 업데이트"
+      },
+      "title": "그룹 에이전트 빌더"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "모두에게 발언",
+        "createAgent": "팀원 추가",
+        "createWorkflow": "워크플로우 계획",
+        "executeTask": "작업 실행",
+        "getAgentInfo": "팀원 정보 가져오기",
+        "interrupt": "작업 중단",
+        "inviteAgent": "팀원 초대",
+        "removeAgent": "팀원 제거",
+        "searchAgent": "관련 전문가 찾기",
+        "speak": "지정 팀원 발언",
+        "summarize": "대화 요약",
+        "vote": "투표 시작"
+      },
+      "title": "팀 조율"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "할 일 비우기",
+        "completeTodos": "할 일 완료",
+        "createPlan": "계획 만들기",
+        "createTodos": "할 일 만들기",
+        "removeTodos": "할 일 삭제",
+        "updatePlan": "계획 업데이트",
+        "updateTodos": "할 일 업데이트"
+      },
+      "title": "GTD 도구"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "지식 베이스 내용 읽기",
@@ -23,6 +84,41 @@
         "writeLocalFile": "파일 쓰기"
       },
       "title": "로컬 시스템"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "노드 일괄 업데이트",
+        "compareSnapshots": "스냅샷 비교",
+        "convertToList": "목록으로 변환",
+        "createNode": "노드 생성",
+        "cropImage": "이미지 자르기",
+        "deleteNode": "노드 삭제",
+        "deleteSnapshot": "스냅샷 삭제",
+        "deleteTableColumn": "표 열 삭제",
+        "deleteTableRow": "표 행 삭제",
+        "duplicateNode": "노드 복제",
+        "editTitle": "문서 제목 편집",
+        "indentListItem": "목록 항목 들여쓰기",
+        "initPage": "문서 초기화",
+        "insertTableColumn": "표 열 삽입",
+        "insertTableRow": "표 행 삽입",
+        "listSnapshots": "스냅샷 목록",
+        "mergeNodes": "노드 병합",
+        "moveNode": "노드 이동",
+        "outdentListItem": "목록 항목 내어쓰기",
+        "replaceText": "텍스트 교체",
+        "resizeImage": "이미지 크기 조정",
+        "restoreSnapshot": "스냅샷 복원",
+        "rotateImage": "이미지 회전",
+        "saveSnapshot": "스냅샷 저장",
+        "setImageAlt": "이미지 대체 텍스트 설정",
+        "splitNode": "노드 분할",
+        "toggleListType": "목록 유형 전환",
+        "unwrapNode": "노드 풀기",
+        "updateNode": "노드 업데이트",
+        "wrapNodes": "노드 감싸기"
+      },
+      "title": "문서"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "업데이트",
     "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다"
   },
+  "empty": {
+    "description": "플러그인 스토어에는 다양한 도구가 준비되어 있습니다. 스토어를 방문하여 탐색을 시작하세요.",
+    "search": "일치하는 플러그인을 찾을 수 없습니다.",
+    "title": "플러그인이 없습니다."
+  },
   "error": {
     "fetchError": "manifest 링크 요청 실패. 링크가 유효한지, CORS 허용 여부를 확인하세요",
     "installError": "플러그인 {{name}} 설치 실패",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "플러그인 호출 중...",
     "plugin": "플러그인 실행 중..."
+  },
+  "mcpEmpty": {
+    "deployment": "배포 옵션이 없습니다.",
+    "prompts": "이 플러그인에는 프롬프트가 없습니다.",
+    "resources": "이 플러그인에는 리소스가 없습니다.",
+    "tools": "이 플러그인에는 도구 기능이 없습니다."
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "설치 환경 확인 중...",
@@ -338,6 +445,8 @@
       "installed": "설치됨"
     },
     "config": {
+      "addEnv": "환경 변수 추가",
+      "addHeaders": "요청 헤더 추가",
       "args": "매개변수",
       "command": "명령어",
       "env": "환경 변수",
@@ -358,12 +467,15 @@
       },
       "title": "사용자 정의 플러그인 설치"
     },
+    "install": {
+      "title": "설치 정보"
+    },
     "marketplace": {
       "title": "서드파티 플러그인 설치",
       "trustedBy": "{{name}} 제공",
       "unverified": {
         "title": "검증되지 않은 서드파티 플러그인",
-        "warning": "이 플러그인은 검증되지 않은 서드파티 마켓에서 제공됩니다. 설치 전에 출처를 신뢰할 수 있는지 확인해 주세요."
+        "warning": "이 플러그인은 검증되지 않은 제3자 커뮤니티에서 제공되며, 설치 전에 해당 출처를 신뢰할 수 있는지 확인하십시오."
       },
       "verified": "검증됨"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "이 설정은 MCP 서버 시작 시 환경 변수로 프로세스에 전달됩니다",
     "httpTypeNotice": "HTTP 유형의 MCP 플러그인은 별도의 환경 변수 설정이 필요하지 않습니다",
     "indexUrl": {
-      "title": "마켓 인덱스",
+      "title": "커뮤니티 인덱스",
       "tooltip": "온라인 편집은 지원되지 않으며, 배포 시 환경 변수로 설정해 주세요"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "환경 변수 저장 실패",
       "envUpdateSuccess": "환경 변수 저장 성공"
     },
-    "modalDesc": "플러그인 마켓 주소를 설정하면 사용자 정의 마켓을 사용할 수 있습니다",
+    "modalDesc": "플러그인 커뮤니티의 주소를 설정하면 사용자 정의 커뮤니티를 사용할 수 있습니다.",
     "rules": {
       "argsRequired": "시작 매개변수를 입력해 주세요",
       "commandRequired": "시작 명령어를 입력해 주세요",
       "urlRequired": "서비스 주소를 입력해 주세요"
     },
     "saveSettings": "설정 저장",
-    "title": "플러그인 마켓 설정"
+    "title": "플러그인 커뮤니티 설정"
   },
   "showInPortal": "워크스페이스에서 자세히 보기",
   "store": {

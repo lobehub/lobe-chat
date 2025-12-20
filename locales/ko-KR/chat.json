@@ -3,6 +3,24 @@
     "title": "모델"
   },
   "active": "활성",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "클라우드 MCP 플러그인은 로그인 인증이 필요합니다",
+      "cancel": "취소",
+      "clickApproveToConnect": "‘승인’을 클릭하여 연결하고 이 통합을 승인하세요",
+      "clickApproveToInstall": "「승인」을 클릭하여 이 플러그인을 설치하세요",
+      "connectedAndEnabled": "연결됨 및 활성화됨",
+      "connectionFailed": "연결 실패",
+      "installFailed": "설치 실패",
+      "installPlugin": "플러그인 설치",
+      "installToEnable": "이 플러그인을 설치하여 도우미를 활성화하세요",
+      "installedAndEnabled": "설치됨 및 활성화됨",
+      "requiresAuth": "승인이 필요합니다. ‘승인’을 클릭하여 연결하세요",
+      "retry": "다시 시도"
+    },
+    "title": "도우미 제작 전문가",
+    "welcome": "당신의 필요와 상황을 말씀해 주세요. 전문 파트너가 탄생합니다.\n\n글쓰기, 코딩, 데이터 분석 등 어떤 작업이든 당신만의 맞춤형 도우미를 만들어 드릴게요!"
+  },
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해 봅시다!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "사용 가능한 도우미",
   "backToBottom": "하단으로 이동",
+  "builtinCopilot": "내장 Copilot",
   "chatList": {
     "expandMessage": "메시지 펼치기",
     "longMessageDetail": "자세히 보기"
   },
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
-  "confirmRemoveChatGroupItemAlert": "이 Agent 팀을 삭제하려고 합니다. 팀 구성원에게는 영향이 없습니다. 계속하시겠습니까?",
+  "confirmRemoveChatGroupItemAlert": "이 그룹을 삭제하려고 합니다. 팀 구성원에게는 영향이 없습니다. 계속하시겠습니까?",
   "confirmRemoveGroupItemAlert": "해당 그룹을 삭제하려고 합니다. 삭제하면 해당 그룹의 어시스턴트가 기본 목록으로 이동합니다. 계속 진행하시겠습니까?",
-  "confirmRemoveGroupSuccess": "에이전트 팀이 성공적으로 삭제되었습니다",
+  "confirmRemoveGroupSuccess": "그룹이 성공적으로 삭제되었습니다",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionSuccess": "도우미가 성공적으로 삭제되었습니다",
   "defaultAgent": "기본 도우미",
-  "defaultGroupChat": "에이전트 팀",
+  "defaultGroupChat": "그룹",
   "defaultList": "기본 목록",
   "defaultSession": "기본 도우미",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
+  "emptyAgentAction": "도우미 만들기",
   "extendParams": {
     "disableContextCaching": {
       "desc": "단일 대화 생성 비용을 최대 90%까지 줄이고, 응답 속도를 4배 향상시킵니다 (<1>자세히 알아보기</1>). 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "팀 설명",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "채팅",
+      "model": "모델"
+    },
     "members": {
       "addMember": "멤버 추가",
+      "enableOrchestrator": "오케스트레이터 활성화",
       "memberSettings": "멤버 설정",
       "orchestrator": "주최자",
       "orchestratorThinking": "주최자가 생각 중입니다...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "템플릿에 멤버가 없습니다",
     "noTemplates": "사용 가능한 템플릿이 없습니다",
     "searchTemplates": "템플릿 검색...",
-    "title": "에이전트 팀 생성",
+    "title": "그룹 만들기",
     "useTemplate": "템플릿 사용"
   },
   "hideForYou": "개인 메시지 내용이 숨겨져 있습니다. 설정에서 【개인 메시지 내용 표시】를 켜서 확인하세요.",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "모든 내용",
     "allFiles": "모든 파일",
-    "allKnowledgeBases": "모든 지식 베이스",
-    "disabled": "현재 배포 모드에서는 지식 기반 대화가 지원되지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주십시오.",
+    "allLibraries": "모든 리소스 라이브러리",
+    "disabled": "현재 배포 모드에서는 리소스 라이브러리 대화를 지원하지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주세요.",
     "library": {
       "action": {
         "add": "추가",
         "detail": "상세",
         "remove": "제거"
       },
-      "title": "파일/지식 베이스"
+      "title": "파일/리소스 라이브러리"
     },
-    "relativeFilesOrKnowledgeBases": "관련 파일/지식 베이스",
-    "title": "지식 베이스",
-    "uploadGuide": "업로드한 파일은 '지식 베이스'에서 확인할 수 있습니다.",
+    "relativeFilesOrLibraries": "연관된 파일/리소스 라이브러리",
+    "title": "리소스 라이브러리",
+    "uploadGuide": "업로드한 파일은 '리소스'에서 확인할 수 있어요.",
     "viewMore": "더 보기"
   },
   "memberSelection": {
     "addMember": "멤버 추가",
     "allMembers": "전체 멤버",
-    "createGroup": "Agent 팀 만들기",
+    "createGroup": "그룹 만들기",
     "noAvailableAgents": "초대할 수 있는 에이전트가 없습니다",
     "noSelectedAgents": "선택된 에이전트가 없습니다",
     "searchAgents": "에이전트 검색...",
+    "selectedAgents": "선택됨 ({{count}})",
     "setInitialMembers": "팀 구성원 선택"
   },
   "members": "구성원",
@@ -245,15 +271,20 @@
     "senderAssistant": "에이전트",
     "senderUser": "당신"
   },
-  "newAgent": "새 도우미",
-  "newGroupChat": "새 에이전트 팀",
-  "noAgentsYet": "이 에이전트 팀에는 아직 멤버가 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
+  "newAgent": "도우미 만들기",
+  "newGroupChat": "그룹 채팅 만들기",
+  "newPage": "문서 만들기",
+  "noAgentsYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 도우미를 초대하세요.",
   "noAvailableAgents": "초대할 수 있는 멤버가 없습니다",
   "noMatchingAgents": "일치하는 멤버가 없습니다",
   "noMembersYet": "이 그룹에는 아직 구성원이 없습니다. + 버튼을 눌러 어시스턴트를 초대하세요.",
   "noSelectedAgents": "아직 멤버를 선택하지 않았습니다",
   "openInNewWindow": "새 창에서 열기",
   "owner": "그룹 소유자",
+  "pageCopilot": {
+    "title": "문서 도우미",
+    "welcome": "**모든 문장을 더 완벽하게.**\n\n초안 작성, 문장 수정, 문체 다듬기까지—당신의 글이 더 명확하고 자연스럽고 설득력 있게 바뀌도록 도와드릴게요."
+  },
   "pin": "고정",
   "pinOff": "고정 해제",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "검색 도우미...",
   "searchAgents": "검색 도우미...",
   "selectedAgents": "선택된 도우미",
-  "sendPlaceholder": "채팅 내용 입력...",
+  "sendPlaceholder": "질문하기, 창작하기 또는 작업 시작하기, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "그룹 설정",
     "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "그룹 채팅 생성 성공",
     "createSuccess": "생성 성공",
     "creatingAgent": "에이전트 생성 중...",
+    "groupName": "그룹 이름",
     "inputPlaceholder": "그룹 이름을 입력하세요...",
     "moveGroup": "그룹으로 이동",
     "newGroup": "새 그룹",
+    "noAvailableAgents": "사용 가능한 어시스턴트가 없습니다",
+    "noMatchingAgents": "일치하는 어시스턴트를 찾을 수 없습니다",
+    "noSelectedAgents": "어시스턴트를 선택해 주세요",
     "rename": "그룹 이름 변경",
     "renameSuccess": "이름 변경 성공",
+    "searchAgents": "어시스턴트 검색",
+    "selectedAgents": "선택된 어시스턴트 ({{count}})",
     "sortSuccess": "다시 정렬 성공",
     "sorting": "그룹 정렬 업데이트 중...",
     "tooLong": "그룹 이름은 1-20자여야 합니다"
@@ -361,6 +398,20 @@
       "title": "작업 완료"
     }
   },
+  "tab": {
+    "groupProfile": "그룹 프로필",
+    "profile": "도우미 프로필",
+    "search": "검색"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "단계",
+      "toolCallsShort": "도구 사용 횟수"
+    },
+    "status": {
+      "initializing": "작업 시작 중..."
+    }
+  },
   "thread": {
     "divider": "하위 주제",
     "threadMessageCount": "{{messageCount}}개의 메시지",
@@ -409,10 +460,18 @@
       "toolRejected": "이번 도구 호출이 거부되었습니다"
     }
   },
+  "toolAuth": {
+    "authorize": "권한 부여",
+    "authorizing": "권한 부여 중...",
+    "hint": "권한을 부여하거나 설정하지 않으면 이 도구들을 정상적으로 사용할 수 없으며, 어시스턴트 기능이 누락되거나 오류가 발생할 수 있습니다.",
+    "signIn": "로그인",
+    "title": "이 어시스턴트는 다음과 같은 권한이 필요한 도구들을 사용합니다"
+  },
   "topic": {
     "checkOpenNewTopic": "새 주제를 열까요?",
     "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",
     "openNewTopic": "새 주제 열기",
+    "recent": "최근 화제",
     "saveCurrentMessages": "현재 대화를 주제로 저장"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "음성 삭제"
   },
   "untitledAgent": "이름 없는 에이전트",
+  "untitledGroup": "제목 없는 그룹",
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "비디오 파일 크기는 20MB를 초과할 수 없습니다. 현재 파일 크기: {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "일반",
+    "wideScreen": "와이드스크린"
   },
   "you": "당신",
   "zenMode": "집중 모드"

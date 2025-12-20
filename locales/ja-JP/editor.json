@@ -9,6 +9,11 @@
       "on": "書式ツールバーを表示"
     }
   },
+  "autoSave": {
+    "latest": "最新バージョンを読み込みました",
+    "saved": "保存済み",
+    "saving": "自動保存中..."
+  },
   "cancel": "キャンセル",
   "confirm": "確認",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "リンクを編集",
+    "editLinkTitle": "リンク",
+    "editTextTitle": "タイトル",
     "open": "リンクを開く",
     "placeholder": "リンクの URL を入力",
     "unlink": "リンクを解除"
   },
+  "markdown": {
+    "cancel": "キャンセル",
+    "confirm": "変換",
+    "parseMessage": "Markdown形式に変換すると、現在の内容は上書きされます。よろしいですか？（5秒後に自動的に閉じます）",
+    "parseTitle": "Markdownのフォーマット"
+  },
   "math": {
     "placeholder": "TeX 公式を入力してください"
+  },
+  "modifier": {
+    "accept": "承諾する",
+    "acceptAll": "すべて承諾する",
+    "reject": "拒否する",
+    "rejectedAll": "すべて拒否する"
   },
   "slash": {
     "h1": "見出し1",
@@ -50,13 +69,16 @@
     "bulletList": "番号なしリスト",
     "code": "インラインコード",
     "codeblock": "コードブロック",
+    "image": "画像",
     "italic": "斜体",
     "link": "リンク",
     "numberList": "番号付きリスト",
+    "redo": "やり直し",
     "strikethrough": "取り消し線",
     "table": "表",
     "taskList": "タスクリスト",
     "tex": "TeX 公式",
-    "underline": "下線"
+    "underline": "下線",
+    "undo": "元に戻す"
   }
 }

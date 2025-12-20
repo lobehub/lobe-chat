@@ -1,8 +1,7 @@
 {
   "addFolder": "Klasör Oluştur",
-  "addKnowledge": "Bilgi Ekle",
+  "addLibrary": "Ekle",
   "addPage": "Belge Oluştur",
-  "desc": "Çalışma, öğrenme ve yaşam bilginizi yönetin.",
   "detail": {
     "basic": {
       "createdAt": "Oluşturulma Zamanı",
@@ -24,7 +23,96 @@
       "embeddingStatus": "Vektörleştirme"
     }
   },
-  "documentEditor": {
+  "empty": "Henüz yüklenmiş dosya/klasör yok",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi"
+      },
+      "connect": "Bağlan...",
+      "gitignore": {
+        "apply": "Kuralları Uygula",
+        "cancel": "Kuralları Yoksay",
+        "content": ".gitignore dosyası tespit edildi (toplam {{count}} dosya), yok sayma kurallarını uygulamak ister misiniz?",
+        "filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi",
+        "title": ".gitignore Tespit Edildi"
+      },
+      "newFolder": "Yeni Klasör",
+      "newPage": "Yeni Belge",
+      "notion": {
+        "error": "Notion dosyası içe aktarılamadı",
+        "foundFiles": "{{count}} dosya bulundu",
+        "importing": "Notion dosyası içe aktarılıyor...",
+        "noMarkdownFiles": "ZIP dosyasında Markdown dosyası bulunamadı",
+        "partial": "{{success}} dosya başarıyla içe aktarıldı, {{failed}} dosya başarısız oldu",
+        "success": "{{count}} dosya başarıyla içe aktarıldı"
+      },
+      "notionGuide": {
+        "cancel": "Şimdilik içe aktarılmasın",
+        "desc": "Lütfen önce Notion'da Markdown (ZIP) formatında dışa aktarın. Devam'a tıklayarak ZIP dosyasını seçip tüm sayfaları içe aktarabilirsiniz.",
+        "ok": "Notion ZIP Dosyasını Seç",
+        "title": "Notion İçeriğini İçe Aktar"
+      },
+      "uploadFile": "Dosya Yükle",
+      "uploadFolder": "Klasör Yükle"
+    },
+    "newPageButton": "Yeni Belge Oluştur",
+    "uploadButton": "Yükle"
+  },
+  "home": {
+    "getStarted": "Başlarken",
+    "greeting": "Başla",
+    "quickActions": "Hızlı İşlemler",
+    "recentFiles": "Son Dosyalar",
+    "recentPages": "Son Belgeler",
+    "subtitle": "Kaynak Merkezine hoş geldiniz, belgelerinizi buradan yönetmeye başlayın",
+    "uploadEntries": {
+      "files": {
+        "title": "Dosya Yükle"
+      },
+      "folder": {
+        "title": "Klasör Yükle"
+      },
+      "library": {
+        "title": "Yeni Kitaplık Oluştur"
+      },
+      "newPage": {
+        "title": "Yeni Belge Oluştur"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Bu kitaplık silinmek üzere. İçindeki dosyalar silinmeyecek, Tüm Dosyalar'a taşınacaktır. Kitaplık silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "empty": "<1>+</1> simgesine tıklayarak kitaplık oluşturmaya başlayın"
+    },
+    "new": "Yeni Kütüphane Oluştur",
+    "title": "Kitaplık"
+  },
+  "menu": {
+    "allFiles": "Tüm Dosyalar",
+    "allPages": "Tüm Belgeler"
+  },
+  "networkError": "Kitaplık alınamadı, lütfen ağ bağlantınızı kontrol ettikten sonra tekrar deneyin",
+  "notSupportGuide": {
+    "desc": "Mevcut dağıtım örneği istemci veritabanı modunda, dosya yönetim işlevini kullanamazsınız. Lütfen <1>sunucu veritabanı dağıtım moduna</1> geçin veya doğrudan <3>LobeChat Cloud</3> kullanın.",
+    "features": {
+      "allKind": {
+        "desc": "Word, PPT, Excel, PDF, TXT gibi yaygın belge formatları ve JS, Python gibi popüler kod dosyalarını destekler.",
+        "title": "Çeşitli Dosya Türleri Analizi"
+      },
+      "embeddings": {
+        "desc": "Yüksek performanslı vektör modelleri kullanarak, metin parçalarını vektörleştirir ve dosya içeriğinin anlamsal olarak aranmasını sağlar.",
+        "title": "Vektör Anlamlandırma"
+      },
+      "libraries": {
+        "desc": "Kendi alanınıza ait kaynakları oluşturmak için kitaplıklar oluşturabilir ve farklı türde dosyalar ekleyebilirsiniz",
+        "title": "Kitaplıklar"
+      }
+    },
+    "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
+  },
+  "pageEditor": {
     "addIcon": "Simge Ekle",
     "autoSaveMessage": "Belge otomatik olarak kaydedilir, manuel kaydetmeye gerek yoktur",
     "chooseIcon": "Simge Seç",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Başlıksız",
     "wordCount": "{{wordCount}} kelime"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Tüm İçeriği Kopyala",
-    "duplicate": "Kopyasını Oluştur",
-    "empty": "Henüz bir belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "duplicate": "Kopya Oluştur",
+    "empty": "Henüz belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+    "filter": {
+      "all": "Tümü",
+      "onlyInPages": "Sadece Belgelerde"
+    },
     "noResults": "Eşleşen belge bulunamadı",
     "pageCount": "Toplam {{count}} belge",
     "selectNote": "Düzenlemeye başlamak için bir belge seçin",
+    "title": "Belgeler",
     "untitled": "Başlıksız"
-  },
-  "empty": "Henüz yüklenmiş dosya/klasör yok",
-  "header": {
-    "actions": {
-      "newFolder": "Yeni Klasör",
-      "newPage": "Yeni Belge",
-      "uploadFile": "Dosya Yükle",
-      "uploadFolder": "Klasör Yükle"
-    },
-    "newNoteDialog": {
-      "cancel": "İptal",
-      "editTitle": "Belgeyi Düzenle",
-      "emptyContent": "Belge içeriği boş olamaz",
-      "loadError": "Belge yüklenemedi, lütfen tekrar deneyin",
-      "loading": "Yükleniyor...",
-      "save": "Kaydet",
-      "saveError": "Belge kaydedilemedi, lütfen tekrar deneyin",
-      "saveSuccess": "Belge başarıyla kaydedildi",
-      "title": "Yeni Belge",
-      "updateSuccess": "Belge başarıyla güncellendi"
-    },
-    "newPageButton": "Yeni Belge Oluştur",
-    "uploadButton": "Yükle"
-  },
-  "home": {
-    "getStarted": "Başlarken",
-    "greeting": "Başla",
-    "quickActions": "Hızlı İşlemler",
-    "recentFiles": "Son Dosyalar",
-    "recentPages": "Son Belgeler",
-    "subtitle": "Bilgi tabanına hoş geldiniz, belgelerinizi buradan yönetin",
-    "uploadEntries": {
-      "files": {
-        "title": "Dosya Yükle"
-      },
-      "folder": {
-        "title": "Klasör Yükle"
-      },
-      "knowledgeBase": {
-        "title": "Yeni Bilgi Tabanı"
-      },
-      "newPage": {
-        "title": "Yeni Belge Oluştur"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Bu bilgi tabanı silinecek, içindeki dosyalar silinmeyecek, tüm dosyalar içine taşınacaktır. Bilgi tabanı silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-      "empty": "Bilgi tabanı oluşturmak için <1>+</1> tıklayın"
-    },
-    "new": "Yeni Bilgi Tabanı",
-    "title": "Bilgi Tabanı"
-  },
-  "menu": {
-    "allFiles": "Tüm Dosyalar",
-    "allPages": "Tüm Belgeler"
-  },
-  "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
-  "notSupportGuide": {
-    "desc": "Mevcut dağıtım örneği istemci veritabanı modunda, dosya yönetim işlevini kullanamazsınız. Lütfen <1>sunucu veritabanı dağıtım moduna</1> geçin veya doğrudan <3>LobeChat Cloud</3> kullanın.",
-    "features": {
-      "allKind": {
-        "desc": "Word, PPT, Excel, PDF, TXT gibi yaygın belge formatları ve JS, Python gibi popüler kod dosyalarını destekler.",
-        "title": "Çeşitli Dosya Türleri Analizi"
-      },
-      "embeddings": {
-        "desc": "Yüksek performanslı vektör modelleri kullanarak, metin parçalarını vektörleştirir ve dosya içeriğinin anlamsal olarak aranmasını sağlar.",
-        "title": "Vektör Anlamlandırma"
-      },
-      "repos": {
-        "desc": "Bilgi tabanı oluşturmayı destekler ve farklı türde dosyalar eklemeye izin verir, kendi alan bilginizi oluşturun.",
-        "title": "Bilgi Tabanı"
-      }
-    },
-    "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
   },
   "preview": {
     "downloadFile": "Dosyayı İndir",
@@ -155,7 +172,7 @@
     "videos": "Videolar",
     "websites": "Web Siteleri"
   },
-  "title": "Bilgi Bankası",
+  "title": "Kaynaklar",
   "toggleLeftPanel": "Sol paneli göster/gizle",
   "uploadDock": {
     "body": {

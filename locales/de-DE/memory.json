@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "Löschen",
+      "edit": "Bearbeiten"
+    },
+    "defaultType": "Kontext",
+    "deleteConfirm": "Möchten Sie diesen Kontextspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Kontextspeicher löschen",
+    "description": "Beschreibung",
+    "empty": "Keine Kontextspeicher vorhanden",
+    "source": "Quelle"
+  },
+  "empty": {
+    "description": "Das Abrufen von Erinnerungen ist ein schrittweiser Prozess. Bitte sammeln Sie mehr Themen, um den Inhalt der Erinnerungserfassung zu bereichern. Versuchen Sie, tiefere Gespräche mit dem Assistenten zu führen, um wertvolle Informationen besser erfassen und speichern zu können.",
+    "search": "Keine passenden Erinnerungen gefunden",
+    "title": "Keine Erinnerungen vorhanden"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Löschen",
+      "edit": "Bearbeiten"
+    },
+    "defaultType": "Erfahrung",
+    "deleteConfirm": "Möchten Sie diesen Erfahrungsspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Erfahrungsspeicher löschen",
+    "empty": "Keine Erfahrungsspeicher vorhanden",
+    "keyLearning": "Zentrale Erkenntnis",
+    "situation": "Kontext",
+    "source": "Quelle",
+    "steps": {
+      "action": "Aktion",
+      "result": "Ergebnis",
+      "situation": "Situation",
+      "task": "Aufgabe"
+    }
+  },
+  "filter": {
+    "search": "Suchbegriff oder Beschreibung der Erinnerung suchen...",
+    "sort": {
+      "createdAt": "Erstellungsdatum",
+      "scoreConfidence": "Vertrauenswürdigkeit",
+      "scoreImpact": "Wichtigkeit",
+      "scorePriority": "Präferenzgewichtung",
+      "scoreUrgency": "Dringlichkeit"
+    }
+  },
+  "identity": {
+    "empty": "Keine Identitätserinnerung vorhanden",
+    "filter": {
+      "search": "Suche nach Rolle, Beziehung oder Beschreibung...",
+      "type": {
+        "all": "Alle",
+        "demographic": "Demografisch",
+        "personal": "Rolle",
+        "professional": "Beruflich"
+      }
+    },
+    "list": {
+      "confirmDelete": "Löschen bestätigen",
+      "deleteCancel": "Abbrechen",
+      "deleteContent": "Möchten Sie diese Identitätserinnerung wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "deleteOk": "Löschen",
+      "noResults": "Keine passenden Identitätserinnerungen gefunden",
+      "updated": "Aktualisiert"
+    },
+    "roleCloud": {
+      "collapse": "Weniger anzeigen",
+      "expand": "Mehr anzeigen"
+    },
+    "view": {
+      "list": "Liste",
+      "timeline": "Zeitleiste"
+    }
+  },
+  "loading": "Wird geladen...",
+  "preference": {
+    "actions": {
+      "delete": "Löschen",
+      "edit": "Bearbeiten"
+    },
+    "conclusionDirectives": "Schlussfolgerungsanweisungen",
+    "defaultType": "Präferenz",
+    "deleteConfirm": "Möchten Sie diesen Präferenzspeicher wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteTitle": "Präferenzspeicher löschen",
+    "empty": "Keine Präferenzspeicher vorhanden",
+    "source": "Quelle",
+    "suggestions": "Mögliche Aktionen des Assistenten"
+  },
+  "tab": {
+    "contexts": "Kontexte",
+    "experiences": "Erfahrungen",
+    "home": "Startseite",
+    "identities": "Identitäten",
+    "preferences": "Präferenzen",
+    "search": "Suche"
+  },
+  "viewMode": {
+    "masonry": "Kachelansicht",
+    "timeline": "Zeitstrahl"
+  }
+}

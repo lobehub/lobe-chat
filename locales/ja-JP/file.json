@@ -1,8 +1,7 @@
 {
   "addFolder": "フォルダーを作成",
-  "addKnowledge": "知識を追加",
+  "addLibrary": "追加",
   "addPage": "ドキュメントを作成",
-  "desc": "仕事、学習、生活の知識を管理しましょう。",
   "detail": {
     "basic": {
       "createdAt": "作成日時",
@@ -24,19 +23,108 @@
       "embeddingStatus": "ベクトル化"
     }
   },
-  "documentEditor": {
+  "empty": "アップロードされたファイル/フォルダーはありません",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{total}} 件のファイルのうち {{ignored}} 件がフィルターされました"
+      },
+      "connect": "接続中...",
+      "gitignore": {
+        "apply": "ルールを適用",
+        "cancel": "ルールを無視",
+        "content": ".gitignore ファイルが検出されました（合計 {{count}} 件のファイル）。無視ルールを適用しますか？",
+        "filtered": "{{total}} 件のファイルのうち {{ignored}} 件がフィルターされました",
+        "title": ".gitignore が検出されました"
+      },
+      "newFolder": "新しいフォルダーを作成",
+      "newPage": "新しいドキュメント",
+      "notion": {
+        "error": "Notion ファイルのインポートに失敗しました",
+        "foundFiles": "{{count}} 件のファイルが見つかりました",
+        "importing": "Notion ファイルをインポートしています...",
+        "noMarkdownFiles": "ZIP ファイル内に Markdown ファイルが見つかりませんでした",
+        "partial": "{{success}} 件のファイルを正常にインポートし、{{failed}} 件が失敗しました",
+        "success": "{{count}} 件のファイルを正常にインポートしました"
+      },
+      "notionGuide": {
+        "cancel": "今はインポートしない",
+        "desc": "まず Notion で Markdown（ZIP）形式でエクスポートしてください。「続ける」をクリックしてZIPファイルを選択すると、すべてのページをインポートできます。",
+        "ok": "Notion ZIP を選択",
+        "title": "Notion コンテンツをインポート"
+      },
+      "uploadFile": "ファイルをアップロード",
+      "uploadFolder": "フォルダーをアップロード"
+    },
+    "newPageButton": "新しいドキュメントを作成",
+    "uploadButton": "アップロード"
+  },
+  "home": {
+    "getStarted": "はじめに",
+    "greeting": "はじめに",
+    "quickActions": "クイック操作",
+    "recentFiles": "最近のファイル",
+    "recentPages": "最近のドキュメント",
+    "subtitle": "リソースセンターへようこそ。ここからドキュメントの管理を始めましょう。",
+    "uploadEntries": {
+      "files": {
+        "title": "ファイルをアップロード"
+      },
+      "folder": {
+        "title": "フォルダをアップロード"
+      },
+      "library": {
+        "title": "新しいライブラリを作成"
+      },
+      "newPage": {
+        "title": "新規文書の作成"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "このライブラリを削除しようとしています。中のファイルは削除されず、「すべてのファイル」に移動されます。ライブラリは削除後に復元できませんので、ご注意ください。",
+      "empty": "<1>+</1> をクリックしてライブラリを作成"
+    },
+    "new": "新しいライブラリを作成",
+    "title": "ライブラリ"
+  },
+  "menu": {
+    "allFiles": "すべてのファイル",
+    "allPages": "すべてのドキュメント"
+  },
+  "networkError": "ライブラリの取得に失敗しました。ネットワーク接続を確認してから再試行してください。",
+  "notSupportGuide": {
+    "desc": "現在のデプロイメントインスタンスはクライアントデータベースモードであり、ファイル管理機能を使用できません。<1>サーバーデータベースデプロイメントモード</1>に切り替えるか、直接 <3>LobeChat Cloud</3> を使用してください。",
+    "features": {
+      "allKind": {
+        "desc": "Word、PPT、Excel、PDF、TXTなどの一般的な文書形式や、JS、Pythonなどの主流のコードファイルを含む、主流のファイルタイプをサポートしています。",
+        "title": "多様なファイルタイプの解析"
+      },
+      "embeddings": {
+        "desc": "高性能ベクトルモデルを使用して、テキストチャンクをベクトル化し、ファイル内容の意味的検索を実現します。",
+        "title": "ベクトルの意味化"
+      },
+      "libraries": {
+        "desc": "ライブラリの作成をサポートし、さまざまな種類のファイルを追加して、あなた専用のリソースを構築できます。",
+        "title": "ライブラリ"
+      }
+    },
+    "title": "現在のデプロイメントモードはファイル管理をサポートしていません"
+  },
+  "pageEditor": {
     "addIcon": "アイコンを追加",
     "autoSaveMessage": "ドキュメントは自動的に保存されます。手動で保存する必要はありません。",
     "chooseIcon": "アイコンを選択",
     "deleteConfirm": {
-      "content": "このドキュメントを削除しようとしています。削除後は復元できませんので、ご注意ください。",
+      "content": "このドキュメントを削除しようとしています。削除後は元に戻せませんので、慎重に操作してください。",
       "title": "ドキュメントの削除"
     },
     "deleteError": "ドキュメントの削除に失敗しました",
     "deleteSuccess": "ドキュメントを削除しました",
     "editedAt": "最終編集：{{time}}",
     "editedBy": "最終編集者：{{name}}",
-    "editorPlaceholder": "ドキュメントの内容を入力し、「/」でコマンドメニューを開く",
+    "editorPlaceholder": "ドキュメントの内容を入力し、「/」キーでコマンドメニューを開きます",
     "empty": {
       "createNewDocument": "新しいドキュメントを作成",
       "title": "ドキュメントを選択して開始",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "無題",
     "wordCount": "{{wordCount}} 文字"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "全文をコピー",
     "duplicate": "複製を作成",
-    "empty": "まだ文書がありません。上のボタンをクリックして最初の文書を作成しましょう",
-    "noResults": "一致する文書が見つかりませんでした",
-    "pageCount": "全 {{count}} 件の文書",
-    "selectNote": "編集を始める文書を選択してください",
+    "empty": "ドキュメントがまだありません。上のボタンをクリックして最初のドキュメントを作成しましょう。",
+    "filter": {
+      "all": "すべて",
+      "onlyInPages": "ドキュメント内のみ"
+    },
+    "noResults": "一致するドキュメントが見つかりませんでした",
+    "pageCount": "全 {{count}} 件のドキュメント",
+    "selectNote": "編集を始めるにはドキュメントを選択してください",
+    "title": "ドキュメント",
     "untitled": "無題"
-  },
-  "empty": "アップロードされたファイル/フォルダーはありません",
-  "header": {
-    "actions": {
-      "newFolder": "新しいフォルダーを作成",
-      "newPage": "新しいドキュメント",
-      "uploadFile": "ファイルをアップロード",
-      "uploadFolder": "フォルダーをアップロード"
-    },
-    "newNoteDialog": {
-      "cancel": "キャンセル",
-      "editTitle": "ドキュメントを編集",
-      "emptyContent": "ドキュメントの内容は空にできません",
-      "loadError": "ドキュメントの読み込みに失敗しました。再試行してください。",
-      "loading": "読み込み中...",
-      "save": "保存",
-      "saveError": "ドキュメントの保存に失敗しました。再試行してください。",
-      "saveSuccess": "ドキュメントを保存しました",
-      "title": "新規ドキュメント",
-      "updateSuccess": "ドキュメントを更新しました"
-    },
-    "newPageButton": "新しいドキュメントを作成",
-    "uploadButton": "アップロード"
-  },
-  "home": {
-    "getStarted": "はじめに",
-    "greeting": "はじめに",
-    "quickActions": "クイック操作",
-    "recentFiles": "最近のファイル",
-    "recentPages": "最近のドキュメント",
-    "subtitle": "ナレッジベースへようこそ。ここからドキュメントの管理を始めましょう。",
-    "uploadEntries": {
-      "files": {
-        "title": "ファイルをアップロード"
-      },
-      "folder": {
-        "title": "フォルダをアップロード"
-      },
-      "knowledgeBase": {
-        "title": "新しいナレッジベースを作成"
-      },
-      "newPage": {
-        "title": "新規文書の作成"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "この知識ベースを削除しようとしています。ファイルは削除されず、すべてのファイルに移動されます。知識ベースを削除すると復元できませんので、慎重に操作してください。",
-      "empty": "クリックして <1>+</1> 知識ベースを作成を開始"
-    },
-    "new": "新しい知識ベース",
-    "title": "知識ベース"
-  },
-  "menu": {
-    "allFiles": "すべてのファイル",
-    "allPages": "すべてのドキュメント"
-  },
-  "networkError": "知識ベースの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
-  "notSupportGuide": {
-    "desc": "現在のデプロイメントインスタンスはクライアントデータベースモードであり、ファイル管理機能を使用できません。<1>サーバーデータベースデプロイメントモード</1>に切り替えるか、直接 <3>LobeChat Cloud</3> を使用してください。",
-    "features": {
-      "allKind": {
-        "desc": "Word、PPT、Excel、PDF、TXTなどの一般的な文書形式や、JS、Pythonなどの主流のコードファイルを含む、主流のファイルタイプをサポートしています。",
-        "title": "多様なファイルタイプの解析"
-      },
-      "embeddings": {
-        "desc": "高性能ベクトルモデルを使用して、テキストチャンクをベクトル化し、ファイル内容の意味的検索を実現します。",
-        "title": "ベクトルの意味化"
-      },
-      "repos": {
-        "desc": "知識ベースの作成をサポートし、さまざまなタイプのファイルを追加して、あなたの専門知識を構築できます。",
-        "title": "知識ベース"
-      }
-    },
-    "title": "現在のデプロイメントモードはファイル管理をサポートしていません"
   },
   "preview": {
     "downloadFile": "ファイルをダウンロード",
@@ -155,7 +172,7 @@
     "videos": "動画",
     "websites": "ウェブサイト"
   },
-  "title": "ナレッジベース",
+  "title": "リソース",
   "toggleLeftPanel": "左パネルの表示/非表示を切り替え",
   "uploadDock": {
     "body": {

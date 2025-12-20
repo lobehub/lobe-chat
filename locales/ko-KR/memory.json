@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "defaultType": "상황",
+    "deleteConfirm": "이 상황 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteTitle": "상황 기억 삭제",
+    "description": "설명",
+    "empty": "상황 기억이 없습니다",
+    "source": "출처"
+  },
+  "empty": {
+    "description": "기억은 점진적으로 추출되는 과정입니다. 더 많은 주제를 축적하여 기억을 풍부하게 하고, 어시스턴트와 더 깊이 있는 대화를 시도해 가치 있는 정보를 더 잘 포착하고 저장하세요.",
+    "search": "일치하는 기억을 찾을 수 없습니다",
+    "title": "기억 없음"
+  },
+  "experience": {
+    "actions": {
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "defaultType": "경험",
+    "deleteConfirm": "이 경험 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteTitle": "경험 기억 삭제",
+    "empty": "경험 기억이 없습니다",
+    "keyLearning": "핵심 학습",
+    "situation": "상황",
+    "source": "출처",
+    "steps": {
+      "action": "행동",
+      "result": "결과",
+      "situation": "상황",
+      "task": "과제"
+    }
+  },
+  "filter": {
+    "search": "기억 키워드나 설명 검색...",
+    "sort": {
+      "createdAt": "생성 시간",
+      "scoreConfidence": "신뢰도",
+      "scoreImpact": "중요도",
+      "scorePriority": "선호 가중치",
+      "scoreUrgency": "긴급도"
+    }
+  },
+  "identity": {
+    "empty": "아직 저장된 신원 정보가 없습니다",
+    "filter": {
+      "search": "역할, 관계 또는 설명 검색...",
+      "type": {
+        "all": "전체",
+        "demographic": "속성",
+        "personal": "역할",
+        "professional": "직업"
+      }
+    },
+    "list": {
+      "confirmDelete": "삭제 확인",
+      "deleteCancel": "취소",
+      "deleteContent": "이 신원 정보를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+      "deleteOk": "삭제",
+      "noResults": "일치하는 신원 정보를 찾을 수 없습니다",
+      "updated": "업데이트됨"
+    },
+    "roleCloud": {
+      "collapse": "접기",
+      "expand": "더 보기"
+    },
+    "view": {
+      "list": "목록",
+      "timeline": "타임라인"
+    }
+  },
+  "loading": "로딩 중...",
+  "preference": {
+    "actions": {
+      "delete": "삭제",
+      "edit": "편집"
+    },
+    "conclusionDirectives": "결론 지침",
+    "defaultType": "선호",
+    "deleteConfirm": "이 선호 기억을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "deleteTitle": "선호 기억 삭제",
+    "empty": "선호 기억이 없습니다",
+    "source": "출처",
+    "suggestions": "도우미가 취할 수 있는 행동"
+  },
+  "tab": {
+    "contexts": "상황",
+    "experiences": "경험",
+    "home": "홈",
+    "identities": "정체성",
+    "preferences": "선호",
+    "search": "검색"
+  },
+  "viewMode": {
+    "masonry": "격자 보기",
+    "timeline": "타임라인"
+  }
+}

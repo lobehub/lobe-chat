@@ -49,6 +49,10 @@
     "desc": "重新生成最後一條消息",
     "title": "重新生成消息"
   },
+  "saveDocument": {
+    "desc": "立即儲存目前文件的所有變更",
+    "title": "儲存文件"
+  },
   "saveTopic": {
     "desc": "保存當前話題並打開新話題",
     "title": "開啟新話題"
@@ -66,12 +70,12 @@
     "title": "快捷切換助手"
   },
   "toggleLeftPanel": {
-    "desc": "顯示或隱藏左側助手面板",
-    "title": "顯示/隱藏助手面板"
+    "desc": "顯示或隱藏左側面板",
+    "title": "顯示/隱藏左側面板"
   },
   "toggleRightPanel": {
-    "desc": "顯示或隱藏右側話題面板",
-    "title": "顯示/隱藏話題面板"
+    "desc": "顯示或隱藏右側面板",
+    "title": "顯示/隱藏右側面板"
   },
   "toggleZenMode": {
     "desc": "專注模式下，只顯示當前會話，隱藏其他 UI",

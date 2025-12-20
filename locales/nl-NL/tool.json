@@ -1,6 +1,35 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Agent uitvoeren",
+      "cancelled": "Geannuleerd",
+      "completed": "Taak voltooid",
+      "cost": "Kosten",
+      "failed": "Taak mislukt",
+      "interrupted": "Onderbroken",
+      "intervention": {
+        "taskPlaceholder": "Beschrijf de taak die de Agent moet uitvoeren in detail...",
+        "timeout": "Maximale uitvoeringstijd",
+        "timeoutUnit": "minuten",
+        "unknownAgent": "Onbekende Agent"
+      },
+      "processing": "Bezig met uitvoeren...",
+      "steps": "Aantal stappen",
+      "task": "Taakinhoud",
+      "thread": "Thread-ID",
+      "timeout": "Uitvoeringstijd verstreken",
+      "tokens": "Tokenverbruik"
+    }
+  },
   "codeInterpreter": {
     "error": "Fout bij uitvoering",
+    "executing": "Bezig met uitvoeren...",
+    "files": "Bestanden:",
+    "output": "Uitvoer:",
+    "returnValue": "Retourwaarde:"
+  },
+  "codeInterpreter-legacy": {
+    "error": "Fout bij uitvoeren",
     "executing": "Bezig met uitvoeren...",
     "files": "Bestanden:",
     "output": "Uitvoer:",
@@ -13,6 +42,57 @@
     "generating": "Bezig met genereren...",
     "images": "Afbeeldingen:",
     "prompt": "prompt"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Toevoegen",
+      "clearCompleted": "Voltooide items wissen",
+      "placeholder": "Voer een taak in..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} items gewist",
+      "clearedCompleted": "{{count}} voltooide items gewist",
+      "clearedCompleted_one": "{{count}} voltooid item gewist",
+      "clearedCompleted_other": "{{count}} voltooide items gewist",
+      "cleared_one": "{{count}} item gewist",
+      "cleared_other": "{{count}} items gewist",
+      "noItems": "Geen items om te wissen",
+      "remaining": "{{count}} items over",
+      "remaining_one": "{{count}} item over",
+      "remaining_other": "{{count}} items over"
+    },
+    "completeTodos": {
+      "completed": "{{count}} items voltooid",
+      "completed_one": "{{count}} item voltooid",
+      "completed_other": "{{count}} items voltooid"
+    },
+    "createTodos": {
+      "created": "{{count}} taken aangemaakt",
+      "created_one": "{{count}} taak aangemaakt",
+      "created_other": "{{count}} taken aangemaakt",
+      "total": "Totaal {{count}} items",
+      "total_one": "Totaal {{count}} item",
+      "total_other": "Totaal {{count}} items"
+    },
+    "removeTodos": {
+      "removed": "{{count}} items verwijderd",
+      "removed_one": "{{count}} item verwijderd",
+      "removed_other": "{{count}} items verwijderd"
+    },
+    "status": {
+      "done": "{{count}} voltooid",
+      "pending": "{{count}} in behandeling"
+    },
+    "todoList": {
+      "empty": "De takenlijst is leeg",
+      "items": "{{count}} items",
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items",
+      "title": "Takenlijst"
+    },
+    "updateTodos": {
+      "updated": "Takenlijst bijgewerkt"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

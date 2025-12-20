@@ -58,12 +58,12 @@
       "ready": "Base de données prête"
     },
     "modal": {
-      "desc": "Activez la base de données client PGlite pour stocker de manière persistante les données de discussion dans votre navigateur et utiliser des fonctionnalités avancées telles que la base de connaissances.",
+      "desc": "Activez dès maintenant la base de données client nouvelle génération. Stockez durablement vos données de conversation dans votre navigateur et profitez de fonctionnalités avancées comme la bibliothèque de ressources.",
       "enable": "Activer maintenant",
       "features": {
         "knowledgeBase": {
-          "desc": "Consolidez votre base de connaissances personnelle et engagez facilement des conversations avec votre assistant (bientôt disponible)",
-          "title": "Support des conversations de base de connaissances, activez votre deuxième cerveau"
+          "desc": "Constituez votre propre bibliothèque de ressources et engagez facilement des conversations avec votre assistant à partir de celle-ci (bientôt disponible)",
+          "title": "Prise en charge des conversations avec la bibliothèque, activez votre second cerveau"
         },
         "localFirst": {
           "desc": "Les données de chat sont entièrement stockées dans le navigateur, vos données sont toujours sous votre contrôle.",
@@ -137,14 +137,39 @@
   "close": "Fermer",
   "cmdk": {
     "about": "À propos",
+    "aiModeEmptyState": "Saisissez votre question dans le champ ci-dessus pour commencer à discuter avec l'IA",
+    "aiModePlaceholder": "Posez une question à l'IA...",
+    "community": "Communauté",
     "communitySupport": "Support communautaire",
     "discover": "Découvrir",
-    "knowledgeBase": "Base de connaissances",
+    "memory": "Mémoire",
     "navigate": "Naviguer",
     "newAgent": "Nouvel assistant",
     "noResults": "Aucun résultat trouvé",
     "openSettings": "Ouvrir les paramètres",
-    "painting": "Peinture IA",
+    "pages": "Documents",
+    "painting": "Peinture",
+    "resource": "Ressource",
+    "search": {
+      "agent": "Assistant",
+      "agents": "Assistants",
+      "assistant": "Assistant IA",
+      "assistants": "Assistants IA",
+      "file": "Fichier",
+      "files": "Fichiers",
+      "loading": "Recherche en cours...",
+      "mcp": "Serveur MCP",
+      "mcps": "Serveurs MCP",
+      "message": "Message",
+      "messages": "Messages",
+      "page": "Document",
+      "pages": "Documents",
+      "plugin": "Plugin",
+      "plugins": "Plugins",
+      "searching": "Résultats de recherche",
+      "topic": "Sujet",
+      "topics": "Sujets"
+    },
     "searchPlaceholder": "Entrez une commande ou recherchez...",
     "settings": "Paramètres",
     "starOnGitHub": "Donnez-nous une étoile sur GitHub",
@@ -261,6 +286,7 @@
   "labs": "Laboratoires",
   "lang": {
     "ar": "arabe",
+    "auto": "Suivre la langue du système",
     "bg-BG": "Bulgare",
     "bn": "Bengali",
     "cs-CZ": "Tchèque",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "Partenariats commerciaux",
     "support": "Support par e-mail"
+  },
+  "navPanel": {
+    "agent": "Assistant",
+    "displayItems": "Afficher les éléments",
+    "library": "Bibliothèque",
+    "searchAgent": "Rechercher un assistant...",
+    "searchResultEmpty": "Aucun résultat trouvé"
   },
   "new": "Nouveau",
   "oauth": "Connexion SSO",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "Peinture IA",
+    "aiImage": "Illustration",
+    "audio": "Audio",
     "chat": "Conversation",
+    "community": "Communauté",
     "discover": "Découvrir",
     "files": "Fichiers",
-    "knowledgeBase": "Base de connaissances",
+    "home": "Accueil",
+    "knowledgeBase": "Bibliothèque",
     "me": "moi",
-    "setting": "Paramètre"
+    "memory": "Mémoire",
+    "pages": "Documents",
+    "resource": "Ressources",
+    "search": "Recherche",
+    "setting": "Paramètre",
+    "video": "Vidéo"
   },
   "telemetry": {
     "allow": "Autoriser",

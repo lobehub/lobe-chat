@@ -2,6 +2,7 @@
   "about": {
     "title": "關於"
   },
+  "advancedSettings": "進階設定",
   "agentInfoDescription": {
     "basic": {
       "avatar": "頭像",
@@ -11,7 +12,6 @@
       "title": "助手資訊"
     },
     "chat": {
-      "displayMode": "顯示模式",
       "enableHistoryCount": "啟用歷史訊息計數",
       "historyCount": "歷史訊息數量",
       "no": "否",
@@ -76,6 +76,19 @@
       "title": "重置所有設定"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "建立新 Agent 時使用的預設模型",
+      "title": "模型"
+    },
+    "title": "預設助手設定"
+  },
+  "group": {
+    "aiConfig": "AI 設定",
+    "common": "通用",
+    "profile": "帳號",
+    "system": "系統"
+  },
   "groupTab": {
     "chat": "聊天",
     "members": "成員",
@@ -85,7 +98,7 @@
     "desc": "偏好與模型設定",
     "global": "全域設定",
     "group": "團隊設定",
-    "groupDesc": "管理 Agent 團隊與聊天偏好",
+    "groupDesc": "管理群組與聊天偏好",
     "session": "對話設定",
     "sessionDesc": "角色設定與會話偏好",
     "sessionWithName": "對話設定 · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "版本建立失敗：{{message}}",
         "fetchRemoteFailed": "取得遠端助手資料失敗",
-        "missingIdentifier": "目前助手尚未設定市場識別碼",
-        "notAuthenticated": "請先登入市場帳號",
+        "missingIdentifier": "目前的助手尚未設定社群識別碼",
+        "notAuthenticated": "請先登入社群帳號",
         "publishFailed": "發布失敗：{{message}}"
       },
       "submitButton": "發布",
       "title": {
-        "submit": "分享到助手市集",
+        "submit": "分享到助手社群",
         "upload": "發布新版本"
       }
     },
     "resultModal": {
-      "message": "助手已提交審核，審核通過後將自動上線。點擊「在市集查看」以查看已發布的助手。",
-      "view": "在市集查看"
+      "message": "您創作的助手已提交審核，通過後將自動上線。",
+      "title": "提交成功",
+      "view": "前往社群查看"
     },
     "submit": {
-      "button": "分享到市集",
-      "tooltip": "分享助手到市集"
+      "button": "分享到社群",
+      "tooltip": "分享助手到社群"
     },
     "upload": {
       "button": "發布新版本",
-      "tooltip": "發布新版本到助手市集"
+      "tooltip": "發佈新版本到助手社群"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "啟用後，AI 將會從對話歷史中記住你的偏好，累積記憶並在後續對話中作為參考",
+      "title": "啟用記憶功能"
+    },
+    "title": "記憶設定"
   },
   "message": {
     "success": "更新成功"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "取消",
+      "confirmDeprecate": "確認廢棄",
+      "deprecate": "永久廢棄",
+      "deprecateConfirmContent": "廢棄後該助手將永久從市集移除，且無法重新上架。此操作不可逆，請謹慎操作。",
+      "deprecateConfirmTitle": "確認要廢棄助手？",
+      "deprecateError": "廢棄助手失敗",
+      "deprecateLoading": "正在廢棄助手⋯",
+      "deprecateSuccess": "助手已廢棄",
+      "edit": "前往編輯 Agent",
+      "publish": "上架 Agent",
+      "publishError": "上架助手失敗",
+      "publishLoading": "正在上架助手⋯",
+      "publishSuccess": "助手已上架",
+      "unpublish": "下架 Agent",
+      "unpublishError": "下架助手失敗",
+      "unpublishLoading": "正在下架助手⋯",
+      "unpublishSuccess": "助手已下架",
+      "viewDetail": "查看詳情"
+    },
+    "detail": {
+      "category": "分類",
+      "description": "描述",
+      "identifier": "識別碼",
+      "title": "助手詳情"
+    },
+    "empty": {
+      "description": "你尚未將任何助手發布到市集",
+      "title": "尚無已發布的助手"
+    },
+    "errors": {
+      "editFailed": "編輯助手失敗，請稍後再試",
+      "fetchFailed": "取得助手詳情失敗",
+      "notAuthenticated": "請先登入市集帳號"
+    },
+    "loginRequired": {
+      "button": "登入市集帳號",
+      "description": "請先登入市集帳號以查看你發布的助手",
+      "title": "需要登入"
+    },
+    "status": {
+      "archived": "已封存",
+      "deprecated": "已廢棄",
+      "published": "已上架",
+      "unpublished": "未上架"
+    },
+    "title": "我發布的助手"
   },
   "plugin": {
     "addMCPPlugin": "新增 MCP 外掛",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "圖片大小超過 1MB 限制，請選擇較小的圖片",
       "title": "頭像"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "名稱"
     },
     "prompt": {
-      "placeholder": "請輸入角色 Prompt 提示詞",
-      "title": "角色設定"
+      "placeholder": "輸入助手設定，按 / 開啟指令選單",
+      "title": "助手設定"
     },
     "submit": "更新助手資訊",
     "tag": {
-      "desc": "助手標籤將在助手市場中展示",
+      "desc": "助手標籤將會在助手社群中顯示",
       "placeholder": "請輸入標籤",
       "title": "標籤"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "開啟後將顯示開發者相關的功能與選項",
+      "title": "開發者模式"
+    },
     "lang": {
       "autoMode": "跟隨系統",
       "title": "語言"
+    },
+    "liteMode": {
+      "desc": "開啟後將簡化介面，隱藏進階功能",
+      "title": "精簡模式"
+    },
+    "responseLanguage": {
+      "auto": "依系統設定",
+      "desc": "設定 AI 回覆所使用的語言",
+      "placeholder": "選擇回覆語言",
+      "title": "回覆語言"
     },
     "themeMode": {
       "auto": "自動",
@@ -425,7 +510,7 @@
       "placeholder": "請輸入主持人系統提示詞",
       "title": "主持人系統提示詞"
     },
-    "title": "Agent 團隊資訊"
+    "title": "群組資訊"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "允許助手發送私訊"
     },
     "enableSupervisor": {
-      "desc": "啟用 Agent 團隊主持人功能，主持人將管理團隊對話流程",
+      "desc": "啟用群組主持人功能，主持人將管理團隊對話流程",
       "title": "啟用主持人"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "會話開始時展示的引導性問題",
-      "empty": "暫無問題",
+      "empty": "新增開場問題，協助使用者快速開始對話",
       "placeholder": "請輸入問題",
       "repeat": "問題已存在",
       "title": "開場問題"
@@ -631,6 +716,7 @@
       "title": "語音合成聲源"
     }
   },
+  "startConversation": "開始對話",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "助手識別碼（identifier）",
     "metaMiss": "請補全助手信息後提交，需要包含名稱、描述和標籤",
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
-    "tooltips": "分享到助手市場"
+    "success": "助手提交成功",
+    "tooltips": "分享到助手社群"
   },
   "submitFooter": {
     "reset": "重置",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "助理元數據生成模型",
+      "label": "模型",
       "modelDesc": "指定用於生成助理名稱、描述、頭像、標籤的模型",
-      "title": "自動生成助理資訊"
+      "title": "助理資訊生成助手"
     },
     "customPrompt": {
       "addPrompt": "新增自訂提示",
@@ -723,54 +810,60 @@
       "title": "自訂提示詞"
     },
     "generationTopic": {
-      "label": "AI 繪畫話題命名模型",
+      "label": "模型",
       "modelDesc": "指定用於 AI 繪畫自動命名話題的模型",
-      "title": "AI 繪畫自動命名話題"
+      "title": "AI 繪圖主題命名助手"
     },
     "helpInfo": "當創建新助手時，將以預設助手設定作為預設值。",
     "historyCompress": {
-      "label": "會話歷史模型",
+      "label": "模型",
       "modelDesc": "指定用於壓縮會話歷史的模型",
-      "title": "自動總結會話歷史"
+      "title": "對話歷史壓縮助手"
     },
     "queryRewrite": {
-      "label": "提問重寫模型",
+      "label": "模型",
       "modelDesc": "指定用於優化用戶提問的模型",
-      "title": "知識庫提問重寫"
+      "title": "資源庫提問重寫助手"
     },
     "thread": {
-      "label": "子主題命名模型",
+      "label": "模型",
       "modelDesc": "指定用於子主題自動重命名的模型",
-      "title": "子主題自動命名"
+      "title": "子主題自動命名助手"
     },
     "title": "系統助手",
     "topic": {
-      "label": "話題命名模型",
+      "label": "模型",
       "modelDesc": "指定用於話題自動重命名的模型",
-      "title": "話題自動命名"
+      "title": "主題自動命名助手"
     },
     "translation": {
-      "label": "翻譯模型",
+      "label": "模型",
       "modelDesc": "指定用於翻譯的模型",
-      "title": "翻譯助手設定"
+      "title": "訊息內容翻譯助手"
     }
   },
   "tab": {
     "about": "關於",
     "agent": "默認助手",
-    "common": "通用設置",
+    "apikey": "API Key 管理",
+    "common": "外觀",
     "experiment": "實驗",
     "hotkey": "快速鍵",
-    "image": "AI 繪圖",
+    "image": "繪圖服務",
     "llm": "語言模型",
+    "memory": "記憶設定",
+    "profile": "我的帳號",
     "provider": "AI 服務商",
     "proxy": "網路代理",
+    "security": "安全",
+    "stats": "數據統計",
     "storage": "資料儲存",
     "sync": "雲端同步",
-    "system-agent": "系統助手",
-    "tts": "語音服務"
+    "tts": "語音服務",
+    "usage": "使用量統計"
   },
   "tools": {
+    "add": "整合外掛",
     "builtins": {
       "groupName": "內置"
     },
@@ -796,6 +889,8 @@
       "tools": "個工具",
       "verifyAuth": "我已完成驗證"
     },
+    "notInstalled": "尚未安裝",
+    "notInstalledWarning": "目前外掛尚未安裝，可能會影響助手使用",
     "plugins": {
       "enabled": "已啟用 {{num}}",
       "groupName": "插件",

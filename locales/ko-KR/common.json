@@ -58,12 +58,12 @@
       "ready": "데이터베이스 준비 완료"
     },
     "modal": {
-      "desc": "차세대 클라이언트 데이터베이스를 지금 활성화하세요. 브라우저에 채팅 데이터를 영구 저장하고 지식베이스 등 고급 기능을 사용할 수 있습니다.",
+      "desc": "차세대 클라이언트 데이터베이스를 지금 활성화하세요. 브라우저에 채팅 데이터를 영구 저장하고, 지식 창고 등 고급 기능을 활용할 수 있습니다.",
       "enable": "지금 활성화",
       "features": {
         "knowledgeBase": {
-          "desc": "개인 지식베이스를 구축하고 도우미와 쉽게 지식 기반 대화를 시작하세요 (곧 출시 예정)",
-          "title": "지식 기반 대화 지원, 제2의 두뇌 시작"
+          "desc": "개인 지식 창고를 구축하고, 어시스턴트와 손쉽게 지식 기반 대화를 시작하세요 (곧 출시 예정)",
+          "title": "지식 기반 대화 지원, 제2의 두뇌를 여세요"
         },
         "localFirst": {
           "desc": "채팅 데이터는 브라우저에만 저장되며, 데이터는 항상 당신의 통제 하에 있습니다.",
@@ -137,14 +137,39 @@
   "close": "닫기",
   "cmdk": {
     "about": "정보",
+    "aiModeEmptyState": "위의 입력창에 질문을 입력하여 AI와 대화를 시작하세요",
+    "aiModePlaceholder": "AI에게 질문하기...",
+    "community": "커뮤니티",
     "communitySupport": "커뮤니티 지원",
     "discover": "탐색",
-    "knowledgeBase": "지식 베이스",
+    "memory": "기억",
     "navigate": "탐색",
     "newAgent": "새 에이전트 만들기",
     "noResults": "관련 결과를 찾을 수 없습니다",
     "openSettings": "설정 열기",
-    "painting": "AI 그림",
+    "pages": "문서",
+    "painting": "그림",
+    "resource": "자료",
+    "search": {
+      "agent": "도우미",
+      "agents": "도우미",
+      "assistant": "AI 어시스턴트",
+      "assistants": "AI 어시스턴트",
+      "file": "파일",
+      "files": "파일",
+      "loading": "검색 중...",
+      "mcp": "MCP 서버",
+      "mcps": "MCP 서버",
+      "message": "대화",
+      "messages": "대화",
+      "page": "문서",
+      "pages": "문서",
+      "plugin": "플러그인",
+      "plugins": "플러그인",
+      "searching": "검색 결과",
+      "topic": "주제",
+      "topics": "주제"
+    },
     "searchPlaceholder": "명령어 입력 또는 검색...",
     "settings": "설정",
     "starOnGitHub": "GitHub에서 Star 주기",
@@ -261,6 +286,7 @@
   "labs": "실험실",
   "lang": {
     "ar": "아랍어",
+    "auto": "시스템 언어 설정에 따름",
     "bg-BG": "불가리아어",
     "bn": "벵골어",
     "cs-CZ": "체코어",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "비즈니스 제휴",
     "support": "이메일 지원"
+  },
+  "navPanel": {
+    "agent": "도우미",
+    "displayItems": "항목 표시",
+    "library": "자료실",
+    "searchAgent": "도우미 검색...",
+    "searchResultEmpty": "검색 결과가 없습니다"
   },
   "new": "새로운",
   "oauth": "SSO 로그인",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI 그림",
+    "aiImage": "그림",
+    "audio": "오디오",
     "chat": "채팅",
+    "community": "커뮤니티",
     "discover": "탐색",
     "files": "파일",
-    "knowledgeBase": "지식 베이스",
+    "home": "홈",
+    "knowledgeBase": "지식 창고",
     "me": "내 정보",
-    "setting": "설정"
+    "memory": "기억",
+    "pages": "문서",
+    "resource": "자료",
+    "search": "검색",
+    "setting": "설정",
+    "video": "비디오"
   },
   "telemetry": {
     "allow": "허용",

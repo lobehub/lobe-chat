@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "De assistent bevat de volgende kennisbanken om je te helpen meer vragen te beantwoorden.",
-          "title": "Kennisbank"
+          "desc": "De assistent bevat de volgende kennisbanken om je beter te helpen met je vragen.",
+          "title": "Kennisbanken"
         },
         "plugin": {
           "desc": "De assistent bevat de volgende plugins om je te helpen meer taken uit te voeren.",
@@ -58,11 +58,17 @@
         "title": "Versiegeschiedenis"
       }
     },
+    "downloads": "Aantal downloads",
+    "empty": {
+      "description": "Probeer de filters aan te passen of bezoek de community om meer assistenten te ontdekken",
+      "search": "Geen overeenkomende assistenten gevonden",
+      "title": "Geen assistenten beschikbaar"
+    },
     "list": "Assistentenlijst",
     "marketSource": {
-      "label": "Wissel van marktplaats",
-      "legacy": "Oude marktplaats",
-      "new": "Nieuwe marktplaats"
+      "label": "Wissel van communitybron",
+      "legacy": "Oude community",
+      "new": "Nieuwe community"
     },
     "more": "Meer",
     "plugins": "Geïntegreerde plugins",
@@ -85,7 +91,7 @@
         "subtitle": "De assistent die je probeert te openen is gearchiveerd om een van de volgende redenen:",
         "title": "Assistent is gearchiveerd"
       },
-      "backToMarket": "Terug naar de assistentenmarktplaats",
+      "backToMarket": "Terug naar de assistentcommunity",
       "deprecated": {
         "reasons": {
           "official": "De assistent is verwijderd door officiële instanties vanwege veiligheids- of politieke redenen",
@@ -94,9 +100,9 @@
         "subtitle": "De assistent die je probeert te openen is afgewezen om een van de volgende redenen:",
         "title": "Assistent is afgewezen"
       },
-      "support": "Bij vragen of problemen, kopieer de link en stuur deze naar <1>support@lobehub.com</1> voor ondersteuning.",
+      "support": "Bij vragen, kopieer de link en stuur deze naar <email>support@lobehub.com</email> voor ondersteuning.",
       "unpublished": {
-        "subtitle": "De assistent die je probeert te openen wordt momenteel beoordeeld. Bij vragen, kopieer de link en stuur deze naar <1>support@lobehub.com</1> voor ondersteuning.",
+        "subtitle": "De assistent die je probeert te openen wordt momenteel beoordeeld. Bij vragen, kopieer de link en stuur deze naar <email>support@lobehub.com</email> voor ondersteuning.",
         "title": "Assistent in beoordeling"
       }
     },
@@ -144,7 +150,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Ga naar de instellingenpagina van de assistent die je wilt indienen via de instellingen in de rechterbovenhoek van het gespreksscherm;",
-      "desc2": "Klik op de knop 'Indienen naar assistentmarkt' in de rechterbovenhoek.",
+      "desc2": "Klik rechtsboven op de knop om in te dienen bij de assistentcommunity.",
       "tag": "Methode één",
       "title": "Indienen via LobeChat"
     },
@@ -172,7 +178,7 @@
       "functionCall": "Ondersteunt functie-aanroep",
       "title": "Overige",
       "vision": "Ondersteunt visuele herkenning",
-      "withKnowledge": "Met kennisbank",
+      "withKnowledge": "Bevat kennisbanken",
       "withTool": "Met plugin"
     },
     "pricing": "Modelprijs",
@@ -186,8 +192,10 @@
     }
   },
   "home": {
+    "communityAgents": "Community-assistenten",
     "featuredAssistants": "Aanbevolen assistenten",
     "featuredModels": "Aanbevolen modellen",
+    "featuredPlugins": "Aanbevolen plug-ins",
     "featuredProviders": "Aanbevolen modelproviders",
     "featuredTools": "Aanbevolen plugins",
     "more": "Ontdek meer"
@@ -516,7 +524,7 @@
     "hero": {
       "desc": "Open source, implementeerbaar MCP-servers platform dat AI-systemen helpt eenvoudig toegang te krijgen tot bestandssystemen, databases, API's en andere essentiële bronnen, waarmee je AI-capaciteiten volledig worden uitgebreid.",
       "subTitle": "Open source & direct gebruiksklaar",
-      "title": "Open source MCP-marktplaats voor AI"
+      "title": "Open source MCP-community voor AI"
     },
     "sorts": {
       "createdAt": "Recent toegevoegd",
@@ -529,7 +537,7 @@
       "toolsCount": "Aantal tools",
       "updatedAt": "Laatst bijgewerkt"
     },
-    "title": "MCP-markt",
+    "title": "MCP-community",
     "unvalidated": {
       "desc": "Deze MCP-server is nog niet gevalideerd",
       "title": "Niet gevalideerd"
@@ -539,6 +547,11 @@
       "descWithDate": "Deze MCP-server is op {{date}} gevalideerd om kwaliteit en betrouwbaarheid te waarborgen.",
       "title": "Gevalideerd"
     }
+  },
+  "mcpEmpty": {
+    "description": "Probeer de filters aan te passen of zoek met andere trefwoorden",
+    "search": "Geen overeenkomende MCP-servers gevonden",
+    "title": "Geen MCP-servers beschikbaar"
   },
   "models": {
     "abilities": "Modelmogelijkheden",
@@ -553,6 +566,11 @@
         "more": "Meer bekijken",
         "title": "Aanbevolen"
       }
+    },
+    "empty": {
+      "description": "Probeer de filters aan te passen om meer modellen te bekijken",
+      "search": "Geen overeenkomende modellen gevonden",
+      "title": "Geen modellen beschikbaar"
     },
     "free": "Gratis",
     "guide": "Configuratiegids",
@@ -664,6 +682,11 @@
         "title": "Aanbevolen"
       }
     },
+    "empty": {
+      "description": "Probeer de filters aan te passen om meer providers te bekijken",
+      "search": "Geen overeenkomende providers gevonden",
+      "title": "Geen providers beschikbaar"
+    },
     "list": "Lijst van modelproviders",
     "modelCount": "{{count}} modellen",
     "modelName": "Modelnaam",
@@ -690,6 +713,18 @@
     "home": "Startpagina",
     "model": "Model",
     "plugin": "Plugin",
-    "provider": "Model aanbieder"
+    "provider": "Model aanbieder",
+    "user": "Gebruiker"
+  },
+  "user": {
+    "agents": "Assistenten",
+    "downloads": "Downloads",
+    "editProfile": "Profiel bewerken",
+    "login": "Word een maker",
+    "logout": "Uitloggen",
+    "myProfile": "Mijn profiel",
+    "noAgents": "Deze gebruiker heeft nog geen assistenten gepubliceerd",
+    "publishedAgents": "Gepubliceerde assistenten",
+    "website": "Persoonlijke website"
   }
 }

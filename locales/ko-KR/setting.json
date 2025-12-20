@@ -2,6 +2,7 @@
   "about": {
     "title": "정보"
   },
+  "advancedSettings": "고급 설정",
   "agentInfoDescription": {
     "basic": {
       "avatar": "아바타",
@@ -11,7 +12,6 @@
       "title": "도우미 정보"
     },
     "chat": {
-      "displayMode": "표시 모드",
       "enableHistoryCount": "이전 메시지 수 카운트 활성화",
       "historyCount": "이전 메시지 수",
       "no": "아니오",
@@ -76,6 +76,19 @@
       "title": "모든 설정 초기화"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "새 에이전트를 생성할 때 사용하는 기본 모델",
+      "title": "모델"
+    },
+    "title": "기본 어시스턴트 설정"
+  },
+  "group": {
+    "aiConfig": "AI 설정",
+    "common": "일반",
+    "profile": "계정",
+    "system": "시스템"
+  },
   "groupTab": {
     "chat": "채팅",
     "members": "구성원",
@@ -85,7 +98,7 @@
     "desc": "환경설정 및 모델 설정",
     "global": "전역 설정",
     "group": "팀 설정",
-    "groupDesc": "에이전트 팀 및 채팅 환경 설정 관리",
+    "groupDesc": "그룹 및 채팅 환경 설정 관리",
     "session": "세션 설정",
     "sessionDesc": "역할 프롬프트 및 세션 환경설정",
     "sessionWithName": "세션 설정 · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "버전 생성 실패: {{message}}",
         "fetchRemoteFailed": "원격 도우미 데이터를 가져오는 데 실패했습니다",
-        "missingIdentifier": "현재 도우미에 마켓 식별자가 없습니다",
-        "notAuthenticated": "먼저 마켓 계정에 로그인해 주세요",
+        "missingIdentifier": "현재 어시스턴트에 커뮤니티 식별자가 없습니다",
+        "notAuthenticated": "먼저 커뮤니티 계정에 로그인해 주세요",
         "publishFailed": "게시 실패: {{message}}"
       },
       "submitButton": "게시",
       "title": {
-        "submit": "도우미 마켓에 공유",
+        "submit": "어시스턴트 커뮤니티에 공유",
         "upload": "새 버전 게시"
       }
     },
     "resultModal": {
-      "message": "도우미가 심사 대기 중입니다. 심사 통과 후 자동으로 게시됩니다. '마켓에서 보기'를 클릭하여 게시된 도우미를 확인하세요.",
-      "view": "마켓에서 보기"
+      "message": "작성하신 어시스턴트가 심사에 제출되었습니다. 심사 통과 후 자동으로 게시됩니다.",
+      "title": "제출 완료",
+      "view": "커뮤니티에서 보기"
     },
     "submit": {
-      "button": "마켓에 공유",
-      "tooltip": "도우미를 마켓에 공유합니다"
+      "button": "커뮤니티에 공유",
+      "tooltip": "어시스턴트를 커뮤니티에 공유합니다"
     },
     "upload": {
       "button": "새 버전 게시",
-      "tooltip": "도우미 마켓에 새 버전을 게시합니다"
+      "tooltip": "어시스턴트 커뮤니티에 새 버전 게시"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "이 기능을 활성화하면 AI가 대화 기록에서 사용자의 선호도를 기억하고 누적된 기억을 이후 대화에 참고합니다",
+      "title": "기억 기능 활성화"
+    },
+    "title": "기억 설정"
   },
   "message": {
     "success": "업데이트 성공"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "취소",
+      "confirmDeprecate": "폐기 확인",
+      "deprecate": "영구 폐기",
+      "deprecateConfirmContent": "폐기 후 이 에이전트는 마켓에서 영구적으로 제거되며, 다시 등록할 수 없습니다. 이 작업은 되돌릴 수 없으니 신중히 진행해 주세요.",
+      "deprecateConfirmTitle": "에이전트를 폐기하시겠습니까?",
+      "deprecateError": "에이전트 폐기에 실패했습니다",
+      "deprecateLoading": "에이전트를 폐기하는 중...",
+      "deprecateSuccess": "에이전트가 폐기되었습니다",
+      "edit": "에이전트 편집하기",
+      "publish": "에이전트 등록",
+      "publishError": "에이전트 등록에 실패했습니다",
+      "publishLoading": "에이전트를 등록하는 중...",
+      "publishSuccess": "에이전트가 등록되었습니다",
+      "unpublish": "에이전트 등록 해제",
+      "unpublishError": "에이전트 등록 해제에 실패했습니다",
+      "unpublishLoading": "에이전트 등록 해제 중...",
+      "unpublishSuccess": "에이전트 등록이 해제되었습니다",
+      "viewDetail": "자세히 보기"
+    },
+    "detail": {
+      "category": "카테고리",
+      "description": "설명",
+      "identifier": "식별자",
+      "title": "에이전트 상세 정보"
+    },
+    "empty": {
+      "description": "아직 마켓에 등록한 에이전트가 없습니다",
+      "title": "등록된 에이전트 없음"
+    },
+    "errors": {
+      "editFailed": "에이전트 편집에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+      "fetchFailed": "에이전트 상세 정보를 가져오는 데 실패했습니다",
+      "notAuthenticated": "먼저 마켓 계정에 로그인해 주세요"
+    },
+    "loginRequired": {
+      "button": "마켓 계정 로그인",
+      "description": "등록한 에이전트를 보려면 먼저 마켓 계정에 로그인해 주세요",
+      "title": "로그인이 필요합니다"
+    },
+    "status": {
+      "archived": "보관됨",
+      "deprecated": "폐기됨",
+      "published": "등록됨",
+      "unpublished": "미등록"
+    },
+    "title": "내가 등록한 에이전트"
   },
   "plugin": {
     "addMCPPlugin": "MCP 플러그인 추가",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "이미지 크기가 1MB를 초과했습니다. 더 작은 이미지를 선택해 주세요.",
       "title": "도우미 아바타"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "이름"
     },
     "prompt": {
-      "placeholder": "역할 프롬프트를 입력하세요",
-      "title": "역할 프롬프트"
+      "placeholder": "도우미 설정을 입력하세요. / 키를 눌러 명령 메뉴를 여세요",
+      "title": "도우미 설정"
     },
     "submit": "도우미 정보 업데이트",
     "tag": {
-      "desc": "도우미 마켓에 표시될 태그입니다",
+      "desc": "어시스턴트 태그는 어시스턴트 커뮤니티에 표시됩니다",
       "placeholder": "태그를 입력하세요",
       "title": "태그"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "활성화하면 개발자 관련 기능과 옵션이 표시됩니다",
+      "title": "개발자 모드"
+    },
     "lang": {
       "autoMode": "시스템 따르기",
       "title": "언어"
+    },
+    "liteMode": {
+      "desc": "활성화하면 인터페이스가 간소화되고 고급 기능이 숨겨집니다",
+      "title": "간소화 모드"
+    },
+    "responseLanguage": {
+      "auto": "시스템 설정 따르기",
+      "desc": "AI 응답에 사용할 언어를 설정합니다",
+      "placeholder": "응답 언어 선택",
+      "title": "응답 언어"
     },
     "themeMode": {
       "auto": "자동",
@@ -425,7 +510,7 @@
       "placeholder": "호스트 시스템 프롬프트를 입력하세요",
       "title": "호스트 시스템 프롬프트"
     },
-    "title": "에이전트 팀 정보"
+    "title": "그룹 정보"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "어시스턴트의 DM 허용"
     },
     "enableSupervisor": {
-      "desc": "에이전트 팀 진행자 기능을 활성화하면, 진행자가 팀 대화 흐름을 관리합니다",
+      "desc": "그룹 진행자 기능을 활성화하면 진행자가 팀 대화 흐름을 관리합니다",
       "title": "진행자 활성화"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "대화 시작 시 표시되는 안내 질문",
-      "empty": "질문이 없습니다",
+      "empty": "시작 질문을 추가하여 사용자가 대화를 빠르게 시작할 수 있도록 도와주세요",
       "placeholder": "질문을 입력하세요",
       "repeat": "질문이 이미 존재합니다",
       "title": "오프닝 질문"
@@ -631,6 +716,7 @@
       "title": "음성 합성 음성"
     }
   },
+  "startConversation": "대화를 시작하기",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "도우미 식별자(identifier)",
     "metaMiss": "에이전트 정보를 입력한 후 제출하십시오. 이름, 설명 및 태그를 포함해야 합니다.",
     "placeholder": "에이전트 식별자를 입력하세요. 고유해야 하며, 예: 웹 개발",
-    "tooltips": "에이전트 마켓에 공유"
+    "success": "어시스턴트 제출 완료",
+    "tooltips": "어시스턴트를 어시스턴트 커뮤니티에 공유"
   },
   "submitFooter": {
     "reset": "초기화",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "어시스턴트 메타 생성 모델",
+      "label": "모델",
       "modelDesc": "어시스턴트 이름, 설명, 프로필 이미지, 레이블을 생성하는 데 사용되는 모델을 지정합니다.",
-      "title": "어시스턴트 정보 자동 생성"
+      "title": "어시스턴트 정보 생성 도우미"
     },
     "customPrompt": {
       "addPrompt": "사용자 정의 프롬프트 추가",
@@ -723,54 +810,60 @@
       "title": "사용자 정의 프롬프트"
     },
     "generationTopic": {
-      "label": "AI 그림 주제 명명 모델",
+      "label": "모델",
       "modelDesc": "AI 그림 자동 주제 명명에 사용되는 모델 지정",
-      "title": "AI 그림 자동 주제 명명"
+      "title": "AI 그림 주제 명명 도우미"
     },
     "helpInfo": "새 도우미를 생성할 때 기본 도우미 설정이 기본값으로 사용됩니다.",
     "historyCompress": {
-      "label": "대화 기록 모델",
+      "label": "모델",
       "modelDesc": "대화 기록 압축에 사용되는 모델을 지정합니다",
-      "title": "대화 기록 자동 요약"
+      "title": "대화 기록 압축 도우미"
     },
     "queryRewrite": {
-      "label": "질문 재작성 모델",
+      "label": "모델",
       "modelDesc": "사용자의 질문을 최적화하는 데 사용되는 모델 지정",
-      "title": "지식 베이스 질문 재작성"
+      "title": "리소스 라이브러리 질문 재작성 도우미"
     },
     "thread": {
-      "label": "하위 주제 명명 모델",
+      "label": "모델",
       "modelDesc": "하위 주제 자동 이름 변경에 사용되는 모델 지정",
-      "title": "하위 주제 자동 명명"
+      "title": "하위 주제 자동 명명 도우미"
     },
     "title": "시스템 도우미",
     "topic": {
-      "label": "주제 명명 모델",
+      "label": "모델",
       "modelDesc": "주제 자동 재명명에 사용되는 모델 지정",
-      "title": "주제 자동 명명"
+      "title": "주제 자동 명명 도우미"
     },
     "translation": {
-      "label": "번역 모델",
+      "label": "모델",
       "modelDesc": "번역에 사용되는 모델 지정",
-      "title": "번역 도우미 설정"
+      "title": "메시지 내용 번역 도우미"
     }
   },
   "tab": {
     "about": "소개",
     "agent": "기본 에이전트",
-    "common": "일반 설정",
+    "apikey": "API 키 관리",
+    "common": "외관",
     "experiment": "실험",
     "hotkey": "단축키",
-    "image": "AI 그림",
+    "image": "그림 서비스",
     "llm": "언어 모델",
+    "memory": "기억 설정",
+    "profile": "내 계정",
     "provider": "AI 서비스 제공자",
     "proxy": "네트워크 프록시",
+    "security": "보안",
+    "stats": "데이터 통계",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
-    "system-agent": "시스템 도우미",
-    "tts": "음성 서비스"
+    "tts": "음성 서비스",
+    "usage": "사용량 통계"
   },
   "tools": {
+    "add": "플러그인 통합",
     "builtins": {
       "groupName": "내장"
     },
@@ -796,6 +889,8 @@
       "tools": "개의 도구",
       "verifyAuth": "인증을 완료했습니다"
     },
+    "notInstalled": "설치되지 않음",
+    "notInstalledWarning": "현재 플러그인이 설치되지 않아 어시스턴트 사용에 영향을 줄 수 있습니다",
     "plugins": {
       "enabled": "활성화됨 {{num}}",
       "groupName": "플러그인",

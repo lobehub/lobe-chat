@@ -2,6 +2,7 @@
   "about": {
     "title": "Informazioni"
   },
+  "advancedSettings": "Impostazioni avanzate",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -11,7 +12,6 @@
       "title": "Informazioni sull'assistente"
     },
     "chat": {
-      "displayMode": "Modalità di visualizzazione",
       "enableHistoryCount": "Abilita conteggio messaggi storici",
       "historyCount": "Numero di messaggi storici",
       "no": "No",
@@ -76,6 +76,19 @@
       "title": "Ripristina tutte le impostazioni"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Modello predefinito utilizzato durante la creazione di un nuovo agente",
+      "title": "Modello"
+    },
+    "title": "Impostazioni predefinite dell'assistente"
+  },
+  "group": {
+    "aiConfig": "Configurazione AI",
+    "common": "Generale",
+    "profile": "Account",
+    "system": "Sistema"
+  },
   "groupTab": {
     "chat": "Chat",
     "members": "Membri",
@@ -85,7 +98,7 @@
     "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
     "group": "Impostazioni del Team",
-    "groupDesc": "Gestisci il team di agenti e le preferenze di chat",
+    "groupDesc": "Gestisci gruppi e preferenze di chat",
     "session": "Impostazioni della sessione",
     "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
     "sessionWithName": "Impostazioni della sessione · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "Creazione della versione fallita: {{message}}",
         "fetchRemoteFailed": "Impossibile recuperare i dati dell'assistente remoto",
-        "missingIdentifier": "L'assistente attuale non ha ancora un identificatore di mercato",
-        "notAuthenticated": "Accedi prima al tuo account del mercato",
+        "missingIdentifier": "L'assistente attuale non ha un identificatore della community",
+        "notAuthenticated": "Accedi prima al tuo account della community",
         "publishFailed": "Pubblicazione fallita: {{message}}"
       },
       "submitButton": "Pubblica",
       "title": {
-        "submit": "Condividi nel mercato degli assistenti",
+        "submit": "Condividi nella community degli assistenti",
         "upload": "Pubblica nuova versione"
       }
     },
     "resultModal": {
-      "message": "L'assistente è stato inviato per la revisione. Una volta approvato, sarà pubblicato automaticamente. Clicca su \"Visualizza nel mercato\" per vedere l'assistente pubblicato.",
-      "view": "Visualizza nel mercato"
+      "message": "Il tuo assistente è stato inviato per la revisione. Una volta approvato, sarà pubblicato automaticamente.",
+      "title": "Inviato con successo",
+      "view": "Vai alla community per visualizzare"
     },
     "submit": {
-      "button": "Condividi nel mercato",
-      "tooltip": "Condividi l'assistente nel mercato"
+      "button": "Condividi nella community",
+      "tooltip": "Condividi l'assistente nella community"
     },
     "upload": {
       "button": "Pubblica nuova versione",
-      "tooltip": "Pubblica una nuova versione nel mercato degli assistenti"
+      "tooltip": "Pubblica una nuova versione nella community degli assistenti"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Quando è attivata, l'IA ricorderà le tue preferenze dalla cronologia delle conversazioni, accumulando memoria da utilizzare come riferimento nei dialoghi futuri",
+      "title": "Attiva la funzione di memoria"
+    },
+    "title": "Impostazioni della memoria"
   },
   "message": {
     "success": "Aggiornamento riuscito"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Annulla",
+      "confirmDeprecate": "Conferma obsolescenza",
+      "deprecate": "Rendi obsoleto in modo permanente",
+      "deprecateConfirmContent": "Una volta reso obsoleto, l'assistente sarà rimosso definitivamente dal mercato e non potrà essere ripubblicato. Questa operazione è irreversibile, procedi con cautela.",
+      "deprecateConfirmTitle": "Confermare l'obsolescenza dell'assistente?",
+      "deprecateError": "Impossibile rendere obsoleto l'assistente",
+      "deprecateLoading": "Rendendo obsoleto l'assistente...",
+      "deprecateSuccess": "Assistente reso obsoleto",
+      "edit": "Modifica l'Agent",
+      "publish": "Pubblica l'Agent",
+      "publishError": "Pubblicazione dell'assistente fallita",
+      "publishLoading": "Pubblicazione dell'assistente in corso...",
+      "publishSuccess": "Assistente pubblicato con successo",
+      "unpublish": "Rimuovi l'Agent dal mercato",
+      "unpublishError": "Rimozione dell'assistente fallita",
+      "unpublishLoading": "Rimozione dell'assistente in corso...",
+      "unpublishSuccess": "Assistente rimosso dal mercato",
+      "viewDetail": "Visualizza dettagli"
+    },
+    "detail": {
+      "category": "Categoria",
+      "description": "Descrizione",
+      "identifier": "Identificatore",
+      "title": "Dettagli dell'assistente"
+    },
+    "empty": {
+      "description": "Non hai ancora pubblicato alcun assistente sul mercato",
+      "title": "Nessun assistente pubblicato"
+    },
+    "errors": {
+      "editFailed": "Modifica dell'assistente fallita, riprova più tardi",
+      "fetchFailed": "Impossibile recuperare i dettagli dell'assistente",
+      "notAuthenticated": "Accedi prima al tuo account del mercato"
+    },
+    "loginRequired": {
+      "button": "Accedi al tuo account del mercato",
+      "description": "Accedi al tuo account del mercato per visualizzare gli assistenti che hai pubblicato",
+      "title": "Accesso richiesto"
+    },
+    "status": {
+      "archived": "Archiviato",
+      "deprecated": "Obsoleto",
+      "published": "Pubblicato",
+      "unpublished": "Non pubblicato"
+    },
+    "title": "I miei assistenti pubblicati"
   },
   "plugin": {
     "addMCPPlugin": "Aggiungi plugin MCP",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "La dimensione dell'immagine supera il limite di 1 MB, seleziona un'immagine più piccola.",
       "title": "Avatar"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "Nome"
     },
     "prompt": {
-      "placeholder": "Inserisci la parola di prompt del ruolo",
-      "title": "Impostazione del ruolo"
+      "placeholder": "Inserisci le impostazioni dell'assistente, premi / per aprire il menu dei comandi",
+      "title": "Impostazioni assistente"
     },
     "submit": "Aggiorna informazioni assistente",
     "tag": {
-      "desc": "Le etichette dell'assistente verranno visualizzate nel mercato degli assistenti",
+      "desc": "I tag dell'assistente saranno visibili nella community degli assistenti",
       "placeholder": "Inserisci un'etichetta",
       "title": "Etichetta"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Se attivata, verranno mostrate funzionalità e opzioni per sviluppatori",
+      "title": "Modalità sviluppatore"
+    },
     "lang": {
       "autoMode": "Segui il sistema",
       "title": "Lingua"
+    },
+    "liteMode": {
+      "desc": "Se attivata, l'interfaccia sarà semplificata e le funzioni avanzate saranno nascoste",
+      "title": "Modalità semplificata"
+    },
+    "responseLanguage": {
+      "auto": "Segui sistema",
+      "desc": "Imposta la lingua utilizzata nelle risposte dell'AI",
+      "placeholder": "Seleziona la lingua di risposta",
+      "title": "Lingua di risposta"
     },
     "themeMode": {
       "auto": "Automatico",
@@ -425,7 +510,7 @@
       "placeholder": "Inserisci il prompt di sistema del moderatore",
       "title": "Prompt di sistema del moderatore"
     },
-    "title": "Informazioni sul Team di Agenti"
+    "title": "Informazioni sul gruppo"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "Consenti messaggi privati dall'assistente"
     },
     "enableSupervisor": {
-      "desc": "Abilita la funzione di supervisore del team di agenti. Il supervisore gestirà il flusso delle conversazioni del team",
+      "desc": "Abilita la funzione di moderatore del gruppo; il moderatore gestirà il flusso della conversazione del team",
       "title": "Attiva moderatore"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Domande guida visualizzate all'inizio della conversazione",
-      "empty": "Nessuna domanda disponibile",
+      "empty": "Aggiungi domande introduttive per aiutare gli utenti a iniziare rapidamente la conversazione",
       "placeholder": "Inserisci una domanda",
       "repeat": "La domanda esiste già",
       "title": "Domande di apertura"
@@ -631,6 +716,7 @@
       "title": "Voce di sintesi vocale"
     }
   },
+  "startConversation": "Inizia conversazione",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "Identificatore dell'assistente (identifier)",
     "metaMiss": "Si prega di completare le informazioni dell'assistente prima di inviare, è necessario includere nome, descrizione e tag",
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
-    "tooltips": "Condividi sul mercato degli assistenti"
+    "success": "Assistente inviato con successo",
+    "tooltips": "Condividi nella community degli assistenti"
   },
   "submitFooter": {
     "reset": "Ripristina",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Modello di generazione metadati assistente",
+      "label": "Modello",
       "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
-      "title": "Genera automaticamente informazioni sull'assistente"
+      "title": "Assistente per la generazione delle informazioni dell'assistente"
     },
     "customPrompt": {
       "addPrompt": "Aggiungi suggerimento personalizzato",
@@ -723,54 +810,60 @@
       "title": "Suggerimento personalizzato"
     },
     "generationTopic": {
-      "label": "Modello di denominazione argomenti per disegno AI",
+      "label": "Modello",
       "modelDesc": "Modello specificato per la denominazione automatica degli argomenti nel disegno AI",
-      "title": "Denominazione automatica argomenti per disegno AI"
+      "title": "Assistente per la denominazione dei temi di disegno AI"
     },
     "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {
-      "label": "Modello di storia delle conversazioni",
+      "label": "Modello",
       "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",
-      "title": "Riepilogo automatico della storia delle conversazioni"
+      "title": "Assistente per la compressione della cronologia delle conversazioni"
     },
     "queryRewrite": {
-      "label": "Modello di riscrittura delle domande",
+      "label": "Modello",
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
-      "title": "Riscrittura delle domande del knowledge base"
+      "title": "Assistente di Riformulazione Domande del Centro Risorse"
     },
     "thread": {
-      "label": "Modello di denominazione dei sottoargomenti",
+      "label": "Modello",
       "modelDesc": "Modello designato per la rinominazione automatica dei sottoargomenti",
-      "title": "Rinominazione automatica dei sottoargomenti"
+      "title": "Assistente per la denominazione automatica dei sotto-argomenti"
     },
     "title": "Assistente di sistema",
     "topic": {
-      "label": "Modello di denominazione degli argomenti",
+      "label": "Modello",
       "modelDesc": "Modello designato per la ridenominazione automatica degli argomenti",
-      "title": "Ridenominazione automatica degli argomenti"
+      "title": "Assistente per la denominazione automatica degli argomenti"
     },
     "translation": {
-      "label": "Modello di traduzione",
+      "label": "Modello",
       "modelDesc": "Modello specificato per la traduzione",
-      "title": "Impostazioni dell'assistente di traduzione"
+      "title": "Assistente per la traduzione del contenuto dei messaggi"
     }
   },
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
-    "common": "Impostazioni comuni",
+    "apikey": "Gestione API Key",
+    "common": "Aspetto",
     "experiment": "实验",
     "hotkey": "Scorciatoie",
-    "image": "Disegno AI",
+    "image": "Servizio di disegno",
     "llm": "Modello linguistico",
+    "memory": "Impostazioni della memoria",
+    "profile": "Il mio account",
     "provider": "Fornitore di servizi AI",
     "proxy": "Proxy di rete",
+    "security": "Sicurezza",
+    "stats": "Statistiche",
     "storage": "Storage dati",
     "sync": "云端同步",
-    "system-agent": "Assistente di sistema",
-    "tts": "Servizio vocale"
+    "tts": "Servizio vocale",
+    "usage": "Statistiche di utilizzo"
   },
   "tools": {
+    "add": "Integra plugin",
     "builtins": {
       "groupName": "Predefiniti"
     },
@@ -796,6 +889,8 @@
       "tools": "strumenti",
       "verifyAuth": "Ho completato l'autenticazione"
     },
+    "notInstalled": "Non installato",
+    "notInstalledWarning": "Il plugin attuale non è installato, il che potrebbe influire sull'utilizzo dell'assistente",
     "plugins": {
       "enabled": "Abilitato {{num}}",
       "groupName": "Plugin",

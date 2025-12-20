@@ -2,25 +2,26 @@
   "addToKnowledgeBase": {
     "addSuccess": "ファイルが正常に追加されました。<1>今すぐ確認</1>",
     "confirm": "追加",
+    "error": "ファイルのナレッジベースへの追加に失敗しました",
     "id": {
-      "placeholder": "追加する知識ベースを選択してください",
-      "required": "知識ベースを選択してください",
-      "title": "ターゲット知識ベース"
+      "placeholder": "追加するナレッジベースを選択してください",
+      "required": "ナレッジベースを選択してください",
+      "title": "対象ナレッジベース"
     },
-    "title": "知識ベースに追加",
+    "title": "ナレッジベースに追加",
     "totalFiles": "選択されたファイルは {{count}} 件です"
   },
   "createNew": {
     "confirm": "新規作成",
     "description": {
-      "placeholder": "知識ベースの説明（任意）"
+      "placeholder": "ナレッジベースの説明（任意）"
     },
     "formTitle": "基本情報",
     "name": {
-      "placeholder": "知識ベースの名前",
-      "required": "知識ベースの名前を入力してください"
+      "placeholder": "ナレッジベース名",
+      "required": "ナレッジベース名を入力してください"
     },
-    "title": "新しい知識ベースを作成"
+    "title": "新しいナレッジベースを作成"
   },
   "tab": {
     "evals": "評価",
@@ -28,5 +29,5 @@
     "settings": "設定",
     "testing": "リコールテスト"
   },
-  "title": "知識ベース"
+  "title": "ナレッジベース"
 }

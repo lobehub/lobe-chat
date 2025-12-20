@@ -132,6 +132,7 @@
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
     "ProviderBizError": "Talep {{provider}} hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "QuotaLimitReached": "Üzgünüz, mevcut Token kullanımı veya istek sayısı bu anahtarın kota sınırına ulaştı. Lütfen anahtar kotasını artırın ya da daha sonra tekrar deneyin.",
+    "ServerAgentRuntimeError": "Üzgünüz, şu anda Agent hizmeti kullanılamıyor. Lütfen daha sonra tekrar deneyin veya destek için bize e-posta gönderin.",
     "StreamChunkError": "Akış isteği mesaj parçası çözümleme hatası, lütfen mevcut API arayüzünün standartlara uygun olup olmadığını kontrol edin veya API sağlayıcınızla iletişime geçin.",
     "SubscriptionKeyMismatch": "Üzgünüz, sistemdeki geçici bir arıza nedeniyle mevcut abonelik kullanımınız geçici olarak devre dışı kalmıştır. Lütfen aşağıdaki düğmeye tıklayarak aboneliğinizi geri yükleyin veya destek almak için bizimle iletişime geçin.",
     "SubscriptionPlanLimit": "Abonelik puanlarınız tükenmiştir, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana geçin veya özel model API'sini yapılandırarak devam edin.",
@@ -162,6 +163,7 @@
       "title": "{{name}} kimlik doğrulama bilgilerinizi onaylayın"
     },
     "confirm": "Onayla ve Yeniden Dene",
+    "goToSettings": "Ayarları Aç",
     "oauth": {
       "description": "Yönetici, tek oturum açma kimlik doğrulamasını etkinleştirdi. Aşağıdaki düğmeye tıklayarak giriş yapabilir ve uygulamayı kilidini açabilirsiniz.",
       "success": "Giriş başarılı",

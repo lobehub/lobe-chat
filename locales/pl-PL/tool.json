@@ -1,5 +1,34 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Wykonaj agenta",
+      "cancelled": "Anulowano",
+      "completed": "Zadanie zakończone",
+      "cost": "Koszt",
+      "failed": "Zadanie nie powiodło się",
+      "interrupted": "Przerwano",
+      "intervention": {
+        "taskPlaceholder": "Proszę szczegółowo opisać zadanie do wykonania przez Agenta...",
+        "timeout": "Maksymalny czas wykonania",
+        "timeoutUnit": "minuty",
+        "unknownAgent": "Nieznany Agent"
+      },
+      "processing": "W trakcie wykonywania...",
+      "steps": "Liczba kroków",
+      "task": "Treść zadania",
+      "thread": "ID wątku",
+      "timeout": "Przekroczono limit czasu",
+      "tokens": "Zużycie tokenów"
+    }
+  },
   "codeInterpreter": {
+    "error": "Błąd wykonania",
+    "executing": "Wykonywanie...",
+    "files": "Pliki:",
+    "output": "Wynik:",
+    "returnValue": "Wartość zwracana:"
+  },
+  "codeInterpreter-legacy": {
     "error": "Błąd wykonania",
     "executing": "Wykonywanie...",
     "files": "Pliki:",
@@ -13,6 +42,57 @@
     "generating": "Generowanie...",
     "images": "Obrazy:",
     "prompt": "słowo kluczowe"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Dodaj",
+      "clearCompleted": "Wyczyść ukończone",
+      "placeholder": "Wpisz zadanie do wykonania..."
+    },
+    "clearTodos": {
+      "cleared": "Usunięto {{count}} zadań",
+      "clearedCompleted": "Usunięto {{count}} ukończonych zadań",
+      "clearedCompleted_one": "Usunięto {{count}} ukończone zadanie",
+      "clearedCompleted_other": "Usunięto {{count}} ukończonych zadań",
+      "cleared_one": "Usunięto {{count}} zadanie",
+      "cleared_other": "Usunięto {{count}} zadań",
+      "noItems": "Brak zadań do usunięcia",
+      "remaining": "Pozostało {{count}} zadań",
+      "remaining_one": "Pozostało {{count}} zadanie",
+      "remaining_other": "Pozostało {{count}} zadań"
+    },
+    "completeTodos": {
+      "completed": "Ukończono {{count}} zadań",
+      "completed_one": "Ukończono {{count}} zadanie",
+      "completed_other": "Ukończono {{count}} zadań"
+    },
+    "createTodos": {
+      "created": "Utworzono {{count}} zadań",
+      "created_one": "Utworzono {{count}} zadanie",
+      "created_other": "Utworzono {{count}} zadań",
+      "total": "Łącznie {{count}} zadań",
+      "total_one": "Łącznie {{count}} zadanie",
+      "total_other": "Łącznie {{count}} zadań"
+    },
+    "removeTodos": {
+      "removed": "Usunięto {{count}} zadań",
+      "removed_one": "Usunięto {{count}} zadanie",
+      "removed_other": "Usunięto {{count}} zadań"
+    },
+    "status": {
+      "done": "{{count}} ukończone",
+      "pending": "{{count}} oczekujące"
+    },
+    "todoList": {
+      "empty": "Lista zadań jest pusta",
+      "items": "{{count}} zadań",
+      "items_one": "{{count}} zadanie",
+      "items_other": "{{count}} zadań",
+      "title": "Lista zadań"
+    },
+    "updateTodos": {
+      "updated": "Lista zadań została zaktualizowana"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

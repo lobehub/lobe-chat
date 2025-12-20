@@ -1,0 +1,100 @@
+{
+  "back": "Back",
+  "finish": "Get Started",
+  "interests": {
+    "area": {
+      "business": "Business & Strategy",
+      "coding": "Programming & Development",
+      "design": "Design & Creativity",
+      "education": "Learning & Research",
+      "marketing": "Marketing & Promotion",
+      "other": "Other Fields",
+      "product": "Product & Management",
+      "sales": "Sales & Customer Relations",
+      "writing": "Content Creation"
+    },
+    "hint": "You can change this anytime in settings",
+    "placeholder": "Enter your interests...",
+    "title": "Could you tell me what areas you're interested in?",
+    "title2": "This will help me get a first impression of you~",
+    "title3": "Take your time, I'll get to know you better and better"
+  },
+  "modeSelection": {
+    "desc": "Choose the mode that suits you best",
+    "hint": "You can change this anytime in settings",
+    "lite": {
+      "desc": "Ideal for everyday conversations, Q&A, light productivity, and trying out models",
+      "subtitle": "Lightweight and focused—perfect for efficient collaboration with a single all-in-one assistant. Switch between popular models anytime to stay in your best thinking state.",
+      "title": "Lite"
+    },
+    "pro": {
+      "desc": "Designed for workflow-oriented users seeking deep collaboration and customization",
+      "subtitle": "Professional productivity mode. Run a one-person company, collaborate with multiple assistants, and deeply customize models and workflows to build your own intelligent hub.",
+      "title": "Pro"
+    },
+    "title": "Which work mode do you prefer?",
+    "title2": "Lite or Pro—it's your call!",
+    "title3": "Tell me, so I can tailor it just for you~"
+  },
+  "next": "Next",
+  "proSettings": {
+    "connectors": {
+      "title": "Connect Your Favorite Tools"
+    },
+    "devMode": {
+      "title": "Developer Mode"
+    },
+    "model": {
+      "title": "Default Model Used by the Agent"
+    },
+    "title": "Configure Advanced Options in Advance",
+    "title2": "Try Connecting Some Common Tools~",
+    "title3": "Let's Get Ready for Efficient Work!"
+  },
+  "responseLanguage": {
+    "auto": "Auto (Follow system language)",
+    "desc": "Choose the language AI assistant will use when replying to messages",
+    "hint": "After selecting a language, AI responses will use that language, and the interface language will also sync",
+    "title": "Which language should we use to communicate?",
+    "title2": "Start with language, build true understanding.",
+    "title3": "Let me speak clearly and understand you better~"
+  },
+  "telemetry": {
+    "agreement": "All data collected is anonymous and used solely to improve the product experience. By continuing, you confirm that you understand and agree to the <terms>Terms and Conditions</terms> and <privacy>Privacy Policy</privacy>.",
+    "desc": "I'm your AI assistant and companion, here to help you think, create, and manage your team of Agents anytime.",
+    "helpImprove": "Help improve {{appName}}",
+    "next": "Let's get started",
+    "privacy": "Privacy Policy",
+    "rows": {
+      "collaborate": {
+        "desc": "Here, people and Agents work, learn, and evolve together—letting productivity flow naturally.",
+        "title": "Collaborate · Evolve with Intelligence"
+      },
+      "create": {
+        "desc": "From idea to action. Just think it, and your Agent is born.",
+        "title": "Create · Turn Inspiration into Reality"
+      },
+      "evolve": {
+        "desc": "Every interaction helps me understand you better—not just in response, but in comprehension.",
+        "title": "Evolve · The More You Use, the Better I Know You"
+      },
+      "privacy": {
+        "desc": "We use anonymized data to continuously improve the {{appName}} experience. Of course, you can adjust this setting anytime in your privacy preferences.",
+        "title": "Let's Make {{appName}} Even Better Together"
+      }
+    },
+    "terms": "Terms of Service",
+    "title": "Hey there, I'm {{name}}",
+    "title2": "Nice to meet you~",
+    "title3": "Loooobe! Let's get started!"
+  },
+  "title": "Welcome to {{appName}}",
+  "username": {
+    "desc": "Tell us what we should call you",
+    "hint": "You can change this anytime in settings",
+    "placeholder": "Enter your name...",
+    "title": "By the way, what should I call you?",
+    "title2": "Let’s get to know each other first!",
+    "title3": "That way, we can chat more naturally from now on~"
+  }
+}

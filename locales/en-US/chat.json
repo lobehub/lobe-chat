@@ -3,6 +3,24 @@
     "title": "Model"
   },
   "active": "Active",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Authentication required for cloud MCP plugins",
+      "cancel": "Cancel",
+      "clickApproveToConnect": "Click \"Approve\" to connect and authorize this integration",
+      "clickApproveToInstall": "Click \"Approve\" to install this plugin",
+      "connectedAndEnabled": "Connected and enabled",
+      "connectionFailed": "Connection failed",
+      "installFailed": "Installation failed",
+      "installPlugin": "Install Plugin",
+      "installToEnable": "Install this plugin to enable it for the agent",
+      "installedAndEnabled": "Installed and enabled",
+      "requiresAuth": "Requires authorization. Click \"Approve\" to connect",
+      "retry": "Retry"
+    },
+    "title": "Assistant Builder Expert",
+    "welcome": "Tell me about your needs and scenarios—your professional partner is here to help.\n\nWhether it's writing, coding, or data analysis, I can help you build a personalized assistant!"
+  },
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**. How can I assist you today?",
   "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. How can I assist you today?",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "Available assistants",
   "backToBottom": "Back to bottom",
+  "builtinCopilot": "Built-in Copilot",
   "chatList": {
     "expandMessage": "Expand Message",
     "longMessageDetail": "View Details"
   },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
-  "confirmRemoveChatGroupItemAlert": "This Agent team will be deleted. Team members will not be affected. Please confirm your action.",
+  "confirmRemoveChatGroupItemAlert": "This group will be deleted. Team members will not be affected. Please confirm your action.",
   "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its assistants will be moved to the default list. Please confirm your action.",
-  "confirmRemoveGroupSuccess": "Agent team deleted successfully",
+  "confirmRemoveGroupSuccess": "Group deleted successfully",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionSuccess": "Assistant removed successfully",
   "defaultAgent": "Default Assistant",
-  "defaultGroupChat": "Agent Team",
+  "defaultGroupChat": "Group",
   "defaultList": "Default List",
   "defaultSession": "Default Assistant",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
+  "emptyAgentAction": "Create Assistant",
   "extendParams": {
     "disableContextCaching": {
       "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "Team Description",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Chat",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Add Member",
+      "enableOrchestrator": "Enable Host",
       "memberSettings": "Member Settings",
       "orchestrator": "Host",
       "orchestratorThinking": "The host is thinking...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "No members in the template",
     "noTemplates": "No templates available",
     "searchTemplates": "Search templates...",
-    "title": "Create Agent Team",
+    "title": "Create Group",
     "useTemplate": "Use Template"
   },
   "hideForYou": "Direct message content is hidden. Please enable 'Show Direct Message Content' in settings to view.",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "All Content",
     "allFiles": "All Files",
-    "allKnowledgeBases": "All Knowledge Bases",
-    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server-side database deployment or use the {{cloud}} service.",
+    "allLibraries": "All Libraries",
+    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to a server-side database deployment or use the {{cloud}} service.",
     "library": {
       "action": {
         "add": "Add",
         "detail": "Details",
         "remove": "Remove"
       },
-      "title": "Files/Knowledge Base"
+      "title": "Files/Libraries"
     },
-    "relativeFilesOrKnowledgeBases": "Related Files/Knowledge Bases",
+    "relativeFilesOrLibraries": "Related Files/Libraries",
     "title": "Knowledge Base",
-    "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
+    "uploadGuide": "Uploaded files can be viewed in the 'Resources' section.",
     "viewMore": "View More"
   },
   "memberSelection": {
     "addMember": "Add Member",
     "allMembers": "All members",
-    "createGroup": "Create Agent Team",
+    "createGroup": "Create Group",
     "noAvailableAgents": "No available agents to invite",
     "noSelectedAgents": "No agents selected yet",
     "searchAgents": "Search agents...",
+    "selectedAgents": "Selected ({{count}})",
     "setInitialMembers": "Select Team Members"
   },
   "members": "Members",
@@ -245,15 +271,20 @@
     "senderAssistant": "Agent",
     "senderUser": "You"
   },
-  "newAgent": "New Assistant",
-  "newGroupChat": "New Agent Team",
-  "noAgentsYet": "This Agent Team has no members yet. Click the + button to invite assistants.",
+  "newAgent": "Create Assistant",
+  "newGroupChat": "Create Group Chat",
+  "newPage": "Create Document",
+  "noAgentsYet": "This group has no members yet. Click the + button to invite assistants.",
   "noAvailableAgents": "No members available to invite",
   "noMatchingAgents": "No matching members found",
   "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
   "noSelectedAgents": "No members selected yet",
-  "openInNewWindow": "Open in a new window",
+  "openInNewWindow": "Open in New Window",
   "owner": "Group Owner",
+  "pageCopilot": {
+    "title": "Writing Assistant",
+    "welcome": "**Make every word count.**\n\nWhether you're drafting, rewriting, or polishing, I'll help make your writing clearer, more natural, and more persuasive."
+  },
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "Search assistants...",
   "searchAgents": "Search assistants...",
   "selectedAgents": "Selected agents",
-  "sendPlaceholder": "Type your message here...",
+  "sendPlaceholder": "Ask, create, or start a task, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Group Management",
     "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "Group chat created successfully",
     "createSuccess": "Created successfully",
     "creatingAgent": "Creating assistant...",
+    "groupName": "Group Name",
     "inputPlaceholder": "Please enter group name...",
     "moveGroup": "Move to Group",
     "newGroup": "New Group",
+    "noAvailableAgents": "No available assistants",
+    "noMatchingAgents": "No matching assistants found",
+    "noSelectedAgents": "Please select assistants",
     "rename": "Rename Group",
     "renameSuccess": "Renamed successfully",
+    "searchAgents": "Search assistants",
+    "selectedAgents": "Selected assistants ({{count}})",
     "sortSuccess": "Reorder successful",
     "sorting": "Group sorting updating...",
     "tooLong": "Group name length should be between 1-20"
@@ -361,6 +398,20 @@
       "title": "Tasks Completed"
     }
   },
+  "tab": {
+    "groupProfile": "Group Profile",
+    "profile": "Assistant Profile",
+    "search": "Search"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "steps",
+      "toolCallsShort": "tool uses"
+    },
+    "status": {
+      "initializing": "Initializing task..."
+    }
+  },
   "thread": {
     "divider": "Subtopic",
     "threadMessageCount": "{{messageCount}} messages",
@@ -409,10 +460,18 @@
       "toolRejected": "This tool invocation was actively rejected"
     }
   },
+  "toolAuth": {
+    "authorize": "Authorize",
+    "authorizing": "Authorizing...",
+    "hint": "Without authorization, these tools may not work properly, which could cause the assistant to have limited functionality or errors.",
+    "signIn": "Sign In",
+    "title": "This assistant uses tools that require authorization"
+  },
   "topic": {
     "checkOpenNewTopic": "Enable new topic?",
     "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
     "openNewTopic": "Open New Topic",
+    "recent": "Recent Topics",
     "saveCurrentMessages": "Save current session as topic"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "Clear Speech"
   },
   "untitledAgent": "Untitled Assistant",
+  "untitledGroup": "Untitled Group",
   "updateAgent": "Update Assistant Information",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "Video file size must not exceed 20MB. Current file size is {{actualSize}}."
     }
+  },
+  "viewMode": {
+    "normal": "Standard",
+    "wideScreen": "Widescreen"
   },
   "you": "you",
   "zenMode": "Zen Mode"

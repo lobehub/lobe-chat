@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "Verwijderen",
+      "edit": "Bewerken"
+    },
+    "defaultType": "Context",
+    "deleteConfirm": "Weet je zeker dat je dit contextgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTitle": "Contextgeheugen Verwijderen",
+    "description": "Beschrijving",
+    "empty": "Geen contextgeheugen beschikbaar",
+    "source": "Bron"
+  },
+  "empty": {
+    "description": "Het ophalen van herinneringen is een geleidelijk proces. Probeer meer onderwerpen te verzamelen om de inhoud van het geheugen te verrijken. Voer diepgaandere gesprekken met de assistent om waardevolle informatie beter vast te leggen en op te slaan.",
+    "search": "Geen overeenkomende herinneringen gevonden",
+    "title": "Nog geen herinneringen"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Verwijderen",
+      "edit": "Bewerken"
+    },
+    "defaultType": "Ervaring",
+    "deleteConfirm": "Weet je zeker dat je dit ervaringsgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTitle": "Ervaringsgeheugen Verwijderen",
+    "empty": "Geen ervaringsgeheugen beschikbaar",
+    "keyLearning": "Belangrijkste Leerpunten",
+    "situation": "Situatie",
+    "source": "Bron",
+    "steps": {
+      "action": "Actie",
+      "result": "Resultaat",
+      "situation": "Situatie",
+      "task": "Taak"
+    }
+  },
+  "filter": {
+    "search": "Zoek naar geheugen trefwoorden of beschrijvingen...",
+    "sort": {
+      "createdAt": "Aanmaakdatum",
+      "scoreConfidence": "Vertrouwensscore",
+      "scoreImpact": "Belang",
+      "scorePriority": "Voorkeursgewicht",
+      "scoreUrgency": "Urgentiescore"
+    }
+  },
+  "identity": {
+    "empty": "Geen identiteitsherinneringen beschikbaar",
+    "filter": {
+      "search": "Zoek op rol, relatie of beschrijving...",
+      "type": {
+        "all": "Alles",
+        "demographic": "Demografisch",
+        "personal": "Persoonlijk",
+        "professional": "Professioneel"
+      }
+    },
+    "list": {
+      "confirmDelete": "Verwijdering bevestigen",
+      "deleteCancel": "Annuleren",
+      "deleteContent": "Weet je zeker dat je deze identiteitsherinnering wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "deleteOk": "Verwijderen",
+      "noResults": "Geen overeenkomende identiteitsherinneringen gevonden",
+      "updated": "Bijgewerkt"
+    },
+    "roleCloud": {
+      "collapse": "Inklappen",
+      "expand": "Meer weergeven"
+    },
+    "view": {
+      "list": "Lijst",
+      "timeline": "Tijdlijn"
+    }
+  },
+  "loading": "Bezig met laden...",
+  "preference": {
+    "actions": {
+      "delete": "Verwijderen",
+      "edit": "Bewerken"
+    },
+    "conclusionDirectives": "Conclusierichtlijnen",
+    "defaultType": "Voorkeur",
+    "deleteConfirm": "Weet je zeker dat je dit voorkeurgeheugen wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTitle": "Voorkeurgeheugen Verwijderen",
+    "empty": "Geen voorkeurgeheugen beschikbaar",
+    "source": "Bron",
+    "suggestions": "Acties die de assistent mogelijk onderneemt"
+  },
+  "tab": {
+    "contexts": "Contexten",
+    "experiences": "Ervaringen",
+    "home": "Startpagina",
+    "identities": "Identiteiten",
+    "preferences": "Voorkeuren",
+    "search": "Zoeken"
+  },
+  "viewMode": {
+    "masonry": "Metselwerk",
+    "timeline": "Tijdlijn"
+  }
+}

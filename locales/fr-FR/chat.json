@@ -3,6 +3,24 @@
     "title": "Modèle"
   },
   "active": "Actif",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Le plugin MCP Cloud nécessite une authentification",
+      "cancel": "Annuler",
+      "clickApproveToConnect": "Cliquez sur « Approuver » pour connecter et autoriser cette intégration",
+      "clickApproveToInstall": "Cliquez sur « Approuver » pour installer ce plugin",
+      "connectedAndEnabled": "Connecté et activé",
+      "connectionFailed": "Échec de la connexion",
+      "installFailed": "Échec de l'installation",
+      "installPlugin": "Installer le plugin",
+      "installToEnable": "Installez ce plugin pour activer l'assistant",
+      "installedAndEnabled": "Installé et activé",
+      "requiresAuth": "Autorisation requise, cliquez sur « Approuver » pour connecter",
+      "retry": "Réessayer"
+    },
+    "title": "Expert en création d'assistants",
+    "welcome": "Parlez-moi de votre besoin ou de votre situation : un partenaire sur mesure est à portée de main.\n\nQue ce soit pour l'écriture, la programmation ou l'analyse de données, je peux vous aider à créer un assistant personnalisé !"
+  },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "Assistants disponibles",
   "backToBottom": "Retour en bas",
+  "builtinCopilot": "Copilot intégré",
   "chatList": {
     "expandMessage": "Développer le message",
     "longMessageDetail": "Voir les détails"
   },
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
-  "confirmRemoveChatGroupItemAlert": "Ce groupe d'agents va être supprimé. Les membres du groupe ne seront pas affectés. Veuillez confirmer votre action.",
+  "confirmRemoveChatGroupItemAlert": "Ce groupe va être supprimé, les membres de l'équipe ne seront pas affectés. Veuillez confirmer votre action.",
   "confirmRemoveGroupItemAlert": "Vous êtes sur le point de supprimer ce groupe. Après la suppression, les assistants de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
-  "confirmRemoveGroupSuccess": "Équipe d'agents supprimée avec succès",
+  "confirmRemoveGroupSuccess": "Groupe supprimé avec succès",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionSuccess": "Agent supprimé avec succès",
   "defaultAgent": "Agent par défaut",
-  "defaultGroupChat": "Équipe d'agents",
+  "defaultGroupChat": "Groupe",
   "defaultList": "Liste par défaut",
   "defaultSession": "Session par défaut",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
+  "emptyAgentAction": "Créer un assistant",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Le coût de génération d'une seule conversation peut être réduit de 90 % au maximum, avec une vitesse de réponse augmentée de 4 fois (<1>En savoir plus</1>). Une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "Description de l'équipe",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Discussion",
+      "model": "Modèle"
+    },
     "members": {
       "addMember": "Ajouter un membre",
+      "enableOrchestrator": "Activer l’animateur",
       "memberSettings": "Paramètres des membres",
       "orchestrator": "Animateur",
       "orchestratorThinking": "L'animateur est en train de réfléchir...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "Aucun membre dans le modèle",
     "noTemplates": "Aucun modèle disponible",
     "searchTemplates": "Rechercher des modèles...",
-    "title": "Créer une équipe d'agents",
+    "title": "Créer un groupe",
     "useTemplate": "Utiliser le modèle"
   },
   "hideForYou": "Le contenu du message privé est caché, veuillez activer « Afficher le contenu des messages privés » dans les paramètres pour le voir",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "Tout le contenu",
     "allFiles": "Tous les fichiers",
-    "allKnowledgeBases": "Toutes les bases de connaissances",
-    "disabled": "Le mode de déploiement actuel ne prend pas en charge les dialogues de la base de connaissances. Pour l'utiliser, veuillez passer à un déploiement de base de données sur serveur ou utiliser le service {{cloud}}.",
+    "allLibraries": "Toutes les bibliothèques",
+    "disabled": "Le mode de déploiement actuel ne prend pas en charge les conversations avec la bibliothèque. Pour l'utiliser, veuillez passer à un déploiement avec base de données côté serveur ou utiliser le service {{cloud}}",
     "library": {
       "action": {
         "add": "Ajouter",
         "detail": "Détails",
         "remove": "Supprimer"
       },
-      "title": "Fichiers/Bases de connaissances"
+      "title": "Fichiers/Bibliothèque"
     },
-    "relativeFilesOrKnowledgeBases": "Fichiers/Bases de connaissances associés",
-    "title": "Base de connaissances",
-    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la « Base de connaissances ».",
+    "relativeFilesOrLibraries": "Fichiers/Bibliothèques associés",
+    "title": "Bibliothèque",
+    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la section « Ressources »",
     "viewMore": "Voir plus"
   },
   "memberSelection": {
     "addMember": "Ajouter un membre",
     "allMembers": "Tous les membres",
-    "createGroup": "Créer un groupe d'agents",
+    "createGroup": "Créer un groupe",
     "noAvailableAgents": "Aucun agent disponible à inviter",
     "noSelectedAgents": "Aucun agent sélectionné pour le moment",
     "searchAgents": "Rechercher un agent...",
+    "selectedAgents": "Sélectionné(s) ({{count}})",
     "setInitialMembers": "Sélectionner les membres du groupe"
   },
   "members": "Membres",
@@ -245,15 +271,20 @@
     "senderAssistant": "Agent",
     "senderUser": "Vous"
   },
-  "newAgent": "Nouvel agent",
-  "newGroupChat": "Nouvelle équipe d'agents",
-  "noAgentsYet": "Cette équipe d'agents n'a pas encore de membres. Cliquez sur le bouton + pour inviter des assistants.",
+  "newAgent": "Créer un assistant",
+  "newGroupChat": "Créer un groupe",
+  "newPage": "Créer un document",
+  "noAgentsYet": "Ce groupe n'a pas encore de membres. Cliquez sur le bouton + pour inviter un assistant.",
   "noAvailableAgents": "Aucun membre disponible à inviter",
   "noMatchingAgents": "Aucun membre correspondant trouvé",
   "noMembersYet": "Ce groupe n'a pas encore de membres. Cliquez sur le bouton + pour inviter des assistants.",
   "noSelectedAgents": "Aucun membre sélectionné",
   "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
   "owner": "Propriétaire du groupe",
+  "pageCopilot": {
+    "title": "Assistant de rédaction",
+    "welcome": "**Chaque mot à sa juste place.**\n\nQu'il s'agisse de rédiger, de réécrire ou de peaufiner vos textes, je vous aide à les rendre plus clairs, plus naturels et plus percutants."
+  },
   "pin": "Épingler",
   "pinOff": "Désépingler",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "Assistant de recherche...",
   "searchAgents": "Assistant de recherche...",
   "selectedAgents": "Assistants sélectionnés",
-  "sendPlaceholder": "Saisissez votre message...",
+  "sendPlaceholder": "Posez une question, créez ou commencez une tâche, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Gestion des groupes",
     "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "Groupe de discussion créé avec succès",
     "createSuccess": "Création réussie",
     "creatingAgent": "Création de l'agent en cours...",
+    "groupName": "Nom du groupe",
     "inputPlaceholder": "Veuillez saisir le nom du groupe...",
     "moveGroup": "Déplacer vers un groupe",
     "newGroup": "Nouveau groupe",
+    "noAvailableAgents": "Aucun assistant disponible pour le moment",
+    "noMatchingAgents": "Aucun assistant correspondant trouvé",
+    "noSelectedAgents": "Veuillez sélectionner un assistant",
     "rename": "Renommer le groupe",
     "renameSuccess": "Renommage réussi",
+    "searchAgents": "Rechercher un assistant",
+    "selectedAgents": "Assistant(s) sélectionné(s) ({{count}})",
     "sortSuccess": "Réorganisation réussie",
     "sorting": "Mise à jour de la réorganisation des groupes en cours...",
     "tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères"
@@ -361,6 +398,20 @@
       "title": "Tâches terminées"
     }
   },
+  "tab": {
+    "groupProfile": "Profil du groupe",
+    "profile": "Profil de l'assistant",
+    "search": "Recherche"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "étapes",
+      "toolCallsShort": "utilisations d’outils"
+    },
+    "status": {
+      "initializing": "Initialisation de la tâche..."
+    }
+  },
   "thread": {
     "divider": "Sous-sujet",
     "threadMessageCount": "{{messageCount}} messages",
@@ -409,10 +460,18 @@
       "toolRejected": "Cet appel d'outil a été rejeté volontairement"
     }
   },
+  "toolAuth": {
+    "authorize": "Autoriser",
+    "authorizing": "Autorisation en cours...",
+    "hint": "Sans autorisation ou configuration, ces outils ne fonctionneront pas correctement, ce qui pourrait entraîner des erreurs ou un fonctionnement incomplet de l'assistant.",
+    "signIn": "Se connecter",
+    "title": "Cet assistant utilise les outils suivants nécessitant une autorisation"
+  },
   "topic": {
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
     "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
     "openNewTopic": "Ouvrir un nouveau sujet",
+    "recent": "Sujets récents",
     "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "Effacer la voix"
   },
   "untitledAgent": "Assistant sans nom",
+  "untitledGroup": "Groupe sans nom",
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "La taille du fichier vidéo ne peut pas dépasser 20 Mo, la taille actuelle est de {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normal",
+    "wideScreen": "Écran large"
   },
   "you": "vous",
   "zenMode": "Mode de concentration"

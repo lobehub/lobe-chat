@@ -132,6 +132,7 @@
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
     "QuotaLimitReached": "Désolé, la consommation de jetons ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de la clé ou réessayer plus tard.",
+    "ServerAgentRuntimeError": "Désolé, le service Agent est actuellement indisponible. Veuillez réessayer plus tard ou nous contacter par e-mail pour obtenir de l'aide.",
     "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
     "SubscriptionKeyMismatch": "Nous sommes désolés, en raison d'une défaillance système occasionnelle, l'utilisation actuelle de l'abonnement est temporairement inactive. Veuillez cliquer sur le bouton ci-dessous pour rétablir votre abonnement ou nous contacter par e-mail pour obtenir de l'aide.",
     "SubscriptionPlanLimit": "Votre quota d'abonnement est épuisé, vous ne pouvez pas utiliser cette fonctionnalité. Veuillez passer à un plan supérieur ou configurer l'API du modèle personnalisé pour continuer à l'utiliser.",
@@ -162,6 +163,7 @@
       "title": "Confirmez vos informations d'authentification {{name}}"
     },
     "confirm": "Confirmer et réessayer",
+    "goToSettings": "Aller aux paramètres",
     "oauth": {
       "description": "L'administrateur a activé l'authentification de connexion unique. Cliquez sur le bouton ci-dessous pour vous connecter et déverrouiller l'application.",
       "success": "Connexion réussie",

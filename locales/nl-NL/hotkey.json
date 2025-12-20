@@ -49,6 +49,10 @@
     "desc": "Genereer het laatste bericht opnieuw",
     "title": "Genereer bericht opnieuw"
   },
+  "saveDocument": {
+    "desc": "Sla alle wijzigingen in het huidige document onmiddellijk op",
+    "title": "Document opslaan"
+  },
   "saveTopic": {
     "desc": "Sla het huidige onderwerp op en open een nieuw onderwerp",
     "title": "Start nieuw onderwerp"
@@ -66,12 +70,12 @@
     "title": "Snel wisselen van assistent"
   },
   "toggleLeftPanel": {
-    "desc": "Toon of verberg het linker assistentpaneel",
-    "title": "Toon/verberg assistentpaneel"
+    "desc": "Toon of verberg het linker paneel",
+    "title": "Toon/Verberg linker paneel"
   },
   "toggleRightPanel": {
-    "desc": "Toon of verberg het rechter onderwerp paneel",
-    "title": "Toon/verberg onderwerp paneel"
+    "desc": "Toon of verberg het rechter paneel",
+    "title": "Toon/Verberg rechter paneel"
   },
   "toggleZenMode": {
     "desc": "In de focusmodus wordt alleen de huidige sessie weergegeven, andere UI-elementen worden verborgen",

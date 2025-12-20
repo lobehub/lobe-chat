@@ -1,0 +1,100 @@
+{
+  "back": "Indietro",
+  "finish": "Inizia subito",
+  "interests": {
+    "area": {
+      "business": "Business e Strategia",
+      "coding": "Programmazione e Sviluppo",
+      "design": "Design e Creatività",
+      "education": "Apprendimento e Ricerca",
+      "marketing": "Marketing e Promozione",
+      "other": "Altri Settori",
+      "product": "Prodotto e Gestione",
+      "sales": "Vendite e Clienti",
+      "writing": "Creazione di Contenuti"
+    },
+    "hint": "Puoi modificarlo in qualsiasi momento nelle impostazioni",
+    "placeholder": "Inserisci i settori che ti interessano...",
+    "title": "Mi dici quali sono i tuoi interessi?",
+    "title2": "Aiutami a farmi una prima impressione su di te~",
+    "title3": "Con calma, ti capirò sempre meglio"
+  },
+  "modeSelection": {
+    "desc": "Scegli la modalità d'uso più adatta a te",
+    "hint": "Puoi modificarla in qualsiasi momento nelle impostazioni",
+    "lite": {
+      "desc": "Ideale per conversazioni quotidiane, domande e risposte, supporto leggero al lavoro e per provare i modelli",
+      "subtitle": "Leggero e puro, perfetto per collaborare in modo efficiente con un assistente tuttofare. Passa facilmente tra i modelli più popolari per mantenere la mente al top.",
+      "title": "Lite Leggero"
+    },
+    "pro": {
+      "desc": "Pensato per flussi di lavoro, collaborazione avanzata e personalizzazione",
+      "subtitle": "Modalità produttività professionale. Una vera e propria azienda personale: più assistenti, modelli e flussi di lavoro personalizzati per costruire il tuo centro di intelligenza.",
+      "title": "Pro Professionale"
+    },
+    "title": "Quale modalità di lavoro preferisci?",
+    "title2": "Leggero o Professionale, decidi tu!",
+    "title3": "Dimmi tutto, creerò qualcosa su misura per te～"
+  },
+  "next": "Avanti",
+  "proSettings": {
+    "connectors": {
+      "title": "Collega gli strumenti che usi più spesso"
+    },
+    "devMode": {
+      "title": "Modalità sviluppatore"
+    },
+    "model": {
+      "title": "Modello predefinito utilizzato dall'agente"
+    },
+    "title": "Puoi configurare in anticipo alcune opzioni avanzate",
+    "title2": "Prova a collegare alcuni strumenti comuni～",
+    "title3": "Prepariamoci a lavorare in modo più efficiente!"
+  },
+  "responseLanguage": {
+    "auto": "Automatico (segui la lingua di sistema)",
+    "desc": "Scegli la lingua in cui l'assistente AI risponderà",
+    "hint": "Dopo aver scelto la lingua, le risposte dell'AI saranno in quella lingua e anche l'interfaccia si adatterà",
+    "title": "In quale lingua preferisci comunicare?",
+    "title2": "La comprensione inizia dalla lingua.",
+    "title3": "Lascia che io parli chiaramente e ti capisca bene～"
+  },
+  "telemetry": {
+    "agreement": "Tutti i dati raccolti sono anonimi e servono solo a migliorare l'esperienza del prodotto. Continuando, confermi di aver compreso e accettato i <terms>Termini e Condizioni</terms> e l'<privacy>Informativa sulla Privacy</privacy>.",
+    "desc": "Sono il tuo assistente AI personale, sempre al tuo fianco per pensare, creare e gestire il tuo team di Agent.",
+    "helpImprove": "Aiuta a migliorare {{appName}}",
+    "next": "Iniziamo",
+    "privacy": "Informativa sulla Privacy",
+    "rows": {
+      "collaborate": {
+        "desc": "Qui, persone e Agent lavorano, imparano ed evolvono insieme, facendo fluire la produttività in modo naturale.",
+        "title": "Collaborazione · Crescere con l'intelligenza"
+      },
+      "create": {
+        "desc": "Pensa e realizza. Basta un'idea e un Agent prende vita.",
+        "title": "Creazione · L'ispirazione prende forma"
+      },
+      "evolve": {
+        "desc": "Ogni interazione mi aiuta a conoscerti meglio. Non solo risposte, ma vera comprensione.",
+        "title": "Evoluzione · Più mi usi, meglio ti capisco"
+      },
+      "privacy": {
+        "desc": "Utilizziamo dati anonimi per migliorare costantemente l'esperienza su {{appName}}. Naturalmente, puoi modificare questa opzione in qualsiasi momento nelle impostazioni sulla privacy.",
+        "title": "Rendiamo {{appName}} sempre migliore insieme"
+      }
+    },
+    "terms": "Termini di Servizio",
+    "title": "Ciao, sono {{name}}",
+    "title2": "Piacere di conoscerti～",
+    "title3": "Loooobe! Iniziamo!"
+  },
+  "title": "Benvenuto su {{appName}}",
+  "username": {
+    "desc": "Dicci come vuoi essere chiamato",
+    "hint": "Puoi cambiarlo in qualsiasi momento nelle impostazioni",
+    "placeholder": "Inserisci il tuo nome...",
+    "title": "A proposito, come posso chiamarti?",
+    "title2": "Conosciamoci meglio!",
+    "title3": "Così potremo parlare in modo più familiare～"
+  }
+}

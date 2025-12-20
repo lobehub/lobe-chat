@@ -1,5 +1,34 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Execute Agent",
+      "cancelled": "Cancelled",
+      "completed": "Task Completed",
+      "cost": "Cost",
+      "failed": "Task Failed",
+      "interrupted": "Interrupted",
+      "intervention": {
+        "taskPlaceholder": "Please provide a detailed description of the task for the Agent to perform...",
+        "timeout": "Maximum execution time",
+        "timeoutUnit": "minutes",
+        "unknownAgent": "Unknown Agent"
+      },
+      "processing": "Processing...",
+      "steps": "Execution Steps",
+      "task": "Task Content",
+      "thread": "Thread ID",
+      "timeout": "Execution Timed Out",
+      "tokens": "Token Usage"
+    }
+  },
   "codeInterpreter": {
+    "error": "Execution Error",
+    "executing": "Executing...",
+    "files": "Files:",
+    "output": "Output:",
+    "returnValue": "Return Value:"
+  },
+  "codeInterpreter-legacy": {
     "error": "Execution Error",
     "executing": "Executing...",
     "files": "Files:",
@@ -13,6 +42,57 @@
     "generating": "Generating...",
     "images": "Images:",
     "prompt": "Prompt"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Add",
+      "clearCompleted": "Clear Completed",
+      "placeholder": "Enter a to-do item..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} item(s) cleared",
+      "clearedCompleted": "{{count}} completed item(s) cleared",
+      "clearedCompleted_one": "{{count}} completed item cleared",
+      "clearedCompleted_other": "{{count}} completed items cleared",
+      "cleared_one": "{{count}} item cleared",
+      "cleared_other": "{{count}} items cleared",
+      "noItems": "No items to clear",
+      "remaining": "{{count}} item(s) remaining",
+      "remaining_one": "{{count}} item remaining",
+      "remaining_other": "{{count}} items remaining"
+    },
+    "completeTodos": {
+      "completed": "{{count}} item(s) completed",
+      "completed_one": "{{count}} item completed",
+      "completed_other": "{{count}} items completed"
+    },
+    "createTodos": {
+      "created": "{{count}} to-do item(s) created",
+      "created_one": "{{count}} to-do item created",
+      "created_other": "{{count}} to-do items created",
+      "total": "Total: {{count}} item(s)",
+      "total_one": "Total: {{count}} item",
+      "total_other": "Total: {{count}} items"
+    },
+    "removeTodos": {
+      "removed": "{{count}} item(s) removed",
+      "removed_one": "{{count}} item removed",
+      "removed_other": "{{count}} items removed"
+    },
+    "status": {
+      "done": "{{count}} completed",
+      "pending": "{{count}} pending"
+    },
+    "todoList": {
+      "empty": "To-do list is empty",
+      "items": "{{count}} item(s)",
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items",
+      "title": "To-Do List"
+    },
+    "updateTodos": {
+      "updated": "To-do list updated"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

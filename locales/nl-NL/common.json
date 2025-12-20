@@ -58,12 +58,12 @@
       "ready": "Database is gereed"
     },
     "modal": {
-      "desc": "Schakel de PGlite-clientdatabase in om chatgegevens permanent op te slaan in je browser en gebruik geavanceerde functies zoals de kennisbank.",
+      "desc": "Activeer direct de volgende generatie clientdatabase. Sla chatgegevens permanent op in je browser en gebruik geavanceerde functies zoals de kennisbank.",
       "enable": "Nu inschakelen",
       "features": {
         "knowledgeBase": {
-          "desc": "Bouw je persoonlijke kennisbasis op en start eenvoudig een gesprek met je assistent (binnenkort beschikbaar)",
-          "title": "Ondersteuning voor kennisbasisgesprekken, activeer je tweede brein"
+          "desc": "Bouw je persoonlijke kennisbank op en start eenvoudig gesprekken met je assistent op basis van deze bronnen (binnenkort beschikbaar)",
+          "title": "Ondersteuning voor kennisbankgesprekken, activeer je tweede brein"
         },
         "localFirst": {
           "desc": "Chatgegevens worden volledig in de browser opgeslagen, jouw gegevens zijn altijd in jouw beheer.",
@@ -137,14 +137,39 @@
   "close": "Sluiten",
   "cmdk": {
     "about": "Over",
+    "aiModeEmptyState": "Typ je vraag in het invoerveld hierboven om een gesprek met de AI te starten",
+    "aiModePlaceholder": "Stel een vraag aan de AI...",
+    "community": "Community",
     "communitySupport": "Communityondersteuning",
     "discover": "Ontdekken",
-    "knowledgeBase": "Kennisbank",
+    "memory": "Geheugen",
     "navigate": "Navigeren",
     "newAgent": "Nieuwe Assistent",
     "noResults": "Geen resultaten gevonden",
     "openSettings": "Instellingen openen",
-    "painting": "AI-schilderen",
+    "pages": "Documenten",
+    "painting": "Schilderij",
+    "resource": "Bronnen",
+    "search": {
+      "agent": "Assistent",
+      "agents": "Assistenten",
+      "assistant": "AI-assistent",
+      "assistants": "AI-assistenten",
+      "file": "Bestand",
+      "files": "Bestanden",
+      "loading": "Bezig met zoeken...",
+      "mcp": "MCP-server",
+      "mcps": "MCP-servers",
+      "message": "Gesprek",
+      "messages": "Gesprekken",
+      "page": "Document",
+      "pages": "Documenten",
+      "plugin": "Plug-in",
+      "plugins": "Plug-ins",
+      "searching": "Zoekresultaten",
+      "topic": "Onderwerp",
+      "topics": "Onderwerpen"
+    },
     "searchPlaceholder": "Voer een commando in of zoek...",
     "settings": "Instellingen",
     "starOnGitHub": "Geef ons een ster op GitHub",
@@ -261,6 +286,7 @@
   "labs": "Laboratoria",
   "lang": {
     "ar": "Arabisch",
+    "auto": "Volg de systeemtaalinstelling",
     "bg-BG": "Bulgaars",
     "bn": "Bengaals",
     "cs-CZ": "Tsjechisch",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "Zakelijke samenwerking",
     "support": "E-mailondersteuning"
+  },
+  "navPanel": {
+    "agent": "Assistent",
+    "displayItems": "Toon items",
+    "library": "Bibliotheek",
+    "searchAgent": "Zoekassistent...",
+    "searchResultEmpty": "Geen zoekresultaten"
   },
   "new": "Nieuw",
   "oauth": "SSO inloggen",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI-afbeelding",
+    "aiImage": "Schilderij",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Gemeenschap",
     "discover": "Ontdekken",
     "files": "Bestanden",
+    "home": "Startpagina",
     "knowledgeBase": "Kennisbank",
     "me": "Ik",
-    "setting": "Instellingen"
+    "memory": "Geheugen",
+    "pages": "Documenten",
+    "resource": "Bronnen",
+    "search": "Zoeken",
+    "setting": "Instellingen",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Toestaan",

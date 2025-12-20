@@ -1,5 +1,34 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "اجرای عامل",
+      "cancelled": "لغو شد",
+      "completed": "وظیفه تکمیل شد",
+      "cost": "هزینه",
+      "failed": "وظیفه ناموفق بود",
+      "interrupted": "متوقف شد",
+      "intervention": {
+        "taskPlaceholder": "لطفاً وظیفه‌ای را که باید توسط Agent انجام شود به‌طور دقیق توضیح دهید...",
+        "timeout": "حداکثر زمان اجرا",
+        "timeoutUnit": "دقیقه",
+        "unknownAgent": "Agent ناشناخته"
+      },
+      "processing": "در حال اجرا...",
+      "steps": "تعداد مراحل اجرا",
+      "task": "محتوای وظیفه",
+      "thread": "شناسه Thread",
+      "timeout": "پایان زمان اجرا",
+      "tokens": "مصرف توکن"
+    }
+  },
   "codeInterpreter": {
+    "error": "خطا در اجرا",
+    "executing": "در حال اجرا...",
+    "files": "فایل‌ها:",
+    "output": "خروجی:",
+    "returnValue": "مقدار بازگشتی:"
+  },
+  "codeInterpreter-legacy": {
     "error": "خطا در اجرا",
     "executing": "در حال اجرا...",
     "files": "فایل‌ها:",
@@ -13,6 +42,57 @@
     "generating": "در حال تولید...",
     "images": "تصاویر:",
     "prompt": "کلمات کلیدی"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "افزودن",
+      "clearCompleted": "پاک‌سازی موارد تکمیل‌شده",
+      "placeholder": "یک کار برای انجام وارد کنید..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} مورد پاک شد",
+      "clearedCompleted": "{{count}} مورد تکمیل‌شده پاک شد",
+      "clearedCompleted_one": "{{count}} مورد تکمیل‌شده پاک شد",
+      "clearedCompleted_other": "{{count}} مورد تکمیل‌شده پاک شد",
+      "cleared_one": "{{count}} مورد پاک شد",
+      "cleared_other": "{{count}} مورد پاک شد",
+      "noItems": "موردی برای پاک‌سازی وجود ندارد",
+      "remaining": "{{count}} مورد باقی‌مانده",
+      "remaining_one": "{{count}} مورد باقی‌مانده",
+      "remaining_other": "{{count}} مورد باقی‌مانده"
+    },
+    "completeTodos": {
+      "completed": "{{count}} مورد تکمیل شد",
+      "completed_one": "{{count}} مورد تکمیل شد",
+      "completed_other": "{{count}} مورد تکمیل شد"
+    },
+    "createTodos": {
+      "created": "{{count}} کار جدید ایجاد شد",
+      "created_one": "{{count}} کار جدید ایجاد شد",
+      "created_other": "{{count}} کار جدید ایجاد شد",
+      "total": "مجموعاً {{count}} مورد",
+      "total_one": "مجموعاً {{count}} مورد",
+      "total_other": "مجموعاً {{count}} مورد"
+    },
+    "removeTodos": {
+      "removed": "{{count}} مورد حذف شد",
+      "removed_one": "{{count}} مورد حذف شد",
+      "removed_other": "{{count}} مورد حذف شد"
+    },
+    "status": {
+      "done": "{{count}} مورد انجام‌شده",
+      "pending": "{{count}} مورد در انتظار"
+    },
+    "todoList": {
+      "empty": "فهرست کارها خالی است",
+      "items": "{{count}} مورد",
+      "items_one": "{{count}} مورد",
+      "items_other": "{{count}} مورد",
+      "title": "فهرست کارها"
+    },
+    "updateTodos": {
+      "updated": "فهرست کارها به‌روزرسانی شد"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

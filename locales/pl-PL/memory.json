@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "Usuń",
+      "edit": "Edytuj"
+    },
+    "defaultType": "Kontekst",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę pamięć kontekstową? Tej operacji nie można cofnąć.",
+    "deleteTitle": "Usuń pamięć kontekstową",
+    "description": "Opis",
+    "empty": "Brak zapisanych kontekstów",
+    "source": "Źródło"
+  },
+  "empty": {
+    "description": "Wydobywanie wspomnień to proces stopniowy. Gromadź więcej tematów, aby wzbogacić zawartość pamięci. Spróbuj prowadzić głębsze rozmowy z asystentem, aby lepiej uchwycić i przechować cenne informacje.",
+    "search": "Nie znaleziono pasujących wspomnień",
+    "title": "Brak wspomnień"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Usuń",
+      "edit": "Edytuj"
+    },
+    "defaultType": "Doświadczenie",
+    "deleteConfirm": "Czy na pewno chcesz usunąć to doświadczenie? Tej operacji nie można cofnąć.",
+    "deleteTitle": "Usuń doświadczenie",
+    "empty": "Brak zapisanych doświadczeń",
+    "keyLearning": "Kluczowa lekcja",
+    "situation": "Sytuacja",
+    "source": "Źródło",
+    "steps": {
+      "action": "Działanie",
+      "result": "Rezultat",
+      "situation": "Sytuacja",
+      "task": "Zadanie"
+    }
+  },
+  "filter": {
+    "search": "Szukaj słów kluczowych lub opisu wspomnienia...",
+    "sort": {
+      "createdAt": "Data utworzenia",
+      "scoreConfidence": "Pewność",
+      "scoreImpact": "Ważność",
+      "scorePriority": "Waga preferencji",
+      "scoreUrgency": "Pilność"
+    }
+  },
+  "identity": {
+    "empty": "Brak zapisanych tożsamości",
+    "filter": {
+      "search": "Szukaj roli, relacji lub opisu...",
+      "type": {
+        "all": "Wszystkie",
+        "demographic": "Atrybut",
+        "personal": "Rola",
+        "professional": "Zawodowe"
+      }
+    },
+    "list": {
+      "confirmDelete": "Potwierdź usunięcie",
+      "deleteCancel": "Anuluj",
+      "deleteContent": "Czy na pewno chcesz usunąć tę tożsamość? Tej operacji nie można cofnąć.",
+      "deleteOk": "Usuń",
+      "noResults": "Nie znaleziono pasujących tożsamości",
+      "updated": "Zaktualizowano"
+    },
+    "roleCloud": {
+      "collapse": "Zwiń",
+      "expand": "Pokaż więcej"
+    },
+    "view": {
+      "list": "Lista",
+      "timeline": "Oś czasu"
+    }
+  },
+  "loading": "Ładowanie...",
+  "preference": {
+    "actions": {
+      "delete": "Usuń",
+      "edit": "Edytuj"
+    },
+    "conclusionDirectives": "Wytyczne końcowe",
+    "defaultType": "Preferencja",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę preferencję? Tej operacji nie można cofnąć.",
+    "deleteTitle": "Usuń preferencję",
+    "empty": "Brak zapisanych preferencji",
+    "source": "Źródło",
+    "suggestions": "Możliwe działania asystenta"
+  },
+  "tab": {
+    "contexts": "Konteksty",
+    "experiences": "Doświadczenia",
+    "home": "Strona główna",
+    "identities": "Tożsamości",
+    "preferences": "Preferencje",
+    "search": "Szukaj"
+  },
+  "viewMode": {
+    "masonry": "Układ mozaikowy",
+    "timeline": "Oś czasu"
+  }
+}

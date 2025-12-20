@@ -58,12 +58,12 @@
       "ready": "數據庫已就緒"
     },
     "modal": {
-      "desc": "啟用 PGlite 客戶端數據庫，在你的瀏覽器中持久存儲聊天數據，並使用知識庫等進階特性",
+      "desc": "立即啟用次世代用戶端資料庫。在你的瀏覽器中持久儲存聊天資料，並使用資源庫等進階功能。",
       "enable": "立即啟用",
       "features": {
         "knowledgeBase": {
-          "desc": "沉澱你的個人知識庫，並與你的助手輕鬆開啟知識庫對話（即將上線）",
-          "title": "支持知識庫對話，開啟第二大腦"
+          "desc": "累積你的個人資源庫，並與你的助手輕鬆展開資源庫對話（即將上線）",
+          "title": "支援資源庫對話，啟動第二大腦"
         },
         "localFirst": {
           "desc": "聊天數據完全存儲在瀏覽器中，你的數據始終在你的掌握。",
@@ -137,14 +137,39 @@
   "close": "關閉",
   "cmdk": {
     "about": "關於",
+    "aiModeEmptyState": "在上方輸入框中輸入你的問題，開始與 AI 對話",
+    "aiModePlaceholder": "向 AI 提問...",
+    "community": "社群",
     "communitySupport": "社群支援",
     "discover": "探索",
-    "knowledgeBase": "知識庫",
+    "memory": "記憶",
     "navigate": "導覽",
     "newAgent": "新增助手",
     "noResults": "未找到相關結果",
     "openSettings": "開啟設定",
-    "painting": "AI 繪圖",
+    "pages": "文稿",
+    "painting": "繪畫",
+    "resource": "資源",
+    "search": {
+      "agent": "助理",
+      "agents": "助理",
+      "assistant": "AI 助手",
+      "assistants": "AI 助手",
+      "file": "檔案",
+      "files": "檔案",
+      "loading": "搜尋中...",
+      "mcp": "MCP 伺服器",
+      "mcps": "MCP 伺服器",
+      "message": "對話",
+      "messages": "對話",
+      "page": "文件",
+      "pages": "文件",
+      "plugin": "外掛",
+      "plugins": "外掛",
+      "searching": "搜尋結果",
+      "topic": "主題",
+      "topics": "主題"
+    },
     "searchPlaceholder": "輸入指令或搜尋...",
     "settings": "設定",
     "starOnGitHub": "在 GitHub 上給我們星標",
@@ -261,6 +286,7 @@
   "labs": "實驗室",
   "lang": {
     "ar": "阿拉伯語",
+    "auto": "跟隨系統語言設定",
     "bg-BG": "保加利亞語",
     "bn": "孟加拉語",
     "cs-CZ": "捷克語",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "商務合作",
     "support": "郵件支持"
+  },
+  "navPanel": {
+    "agent": "助理",
+    "displayItems": "顯示項目",
+    "library": "資料庫",
+    "searchAgent": "搜尋助手...",
+    "searchResultEmpty": "暫無搜尋結果"
   },
   "new": "新增",
   "oauth": "單一登錄（SSO）",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI 繪畫",
+    "aiImage": "繪圖",
+    "audio": "音訊",
     "chat": "對話",
+    "community": "社群",
     "discover": "發現",
     "files": "檔案",
-    "knowledgeBase": "知識庫",
+    "home": "首頁",
+    "knowledgeBase": "資源庫",
     "me": "我",
-    "setting": "設定"
+    "memory": "記憶",
+    "pages": "文稿",
+    "resource": "資源",
+    "search": "搜尋",
+    "setting": "設定",
+    "video": "影片"
   },
   "telemetry": {
     "allow": "允許",

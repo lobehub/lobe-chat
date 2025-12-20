@@ -9,6 +9,11 @@
       "on": "Pokaż pasek narzędzi formatowania"
     }
   },
+  "autoSave": {
+    "latest": "Załadowano najnowszą wersję",
+    "saved": "Zapisano",
+    "saving": "Automatyczne zapisywanie..."
+  },
   "cancel": "Anuluj",
   "confirm": "Potwierdź",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Edytuj link",
+    "editLinkTitle": "Link",
+    "editTextTitle": "Tytuł",
     "open": "Otwórz link",
     "placeholder": "Wpisz adres URL linku",
     "unlink": "Usuń link"
   },
+  "markdown": {
+    "cancel": "Anuluj",
+    "confirm": "Konwertuj",
+    "parseMessage": "Konwertować na format Markdown? Istniejąca zawartość zostanie nadpisana. Czy chcesz kontynuować? (Zamknie się automatycznie za 5 sekund)",
+    "parseTitle": "Formatuj jako Markdown"
+  },
   "math": {
     "placeholder": "Wprowadź formułę TeX"
+  },
+  "modifier": {
+    "accept": "Akceptuj",
+    "acceptAll": "Akceptuj wszystkie",
+    "reject": "Odrzuć",
+    "rejectedAll": "Odrzuć wszystkie"
   },
   "slash": {
     "h1": "Nagłówek poziomu 1",
@@ -50,13 +69,16 @@
     "bulletList": "Lista punktowana",
     "code": "Kod w linii",
     "codeblock": "Blok kodu",
+    "image": "Obraz",
     "italic": "Kursywa",
     "link": "Link",
     "numberList": "Lista numerowana",
+    "redo": "Ponów",
     "strikethrough": "Przekreślenie",
     "table": "tabela",
     "taskList": "Lista zadań",
     "tex": "Formuła TeX",
-    "underline": "Podkreślenie"
+    "underline": "Podkreślenie",
+    "undo": "Cofnij"
   }
 }

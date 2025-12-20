@@ -3,6 +3,24 @@
     "title": "النموذج"
   },
   "active": "نشط",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "يتطلب مكون MCP السحابي تسجيل الدخول والمصادقة",
+      "cancel": "إلغاء",
+      "clickApproveToConnect": "انقر على \"الموافقة\" للاتصال وتفويض هذا التكامل",
+      "clickApproveToInstall": "انقر على \"الموافقة\" لتثبيت هذا المكون الإضافي",
+      "connectedAndEnabled": "تم الاتصال والتفعيل",
+      "connectionFailed": "فشل الاتصال",
+      "installFailed": "فشل التثبيت",
+      "installPlugin": "تثبيت المكون الإضافي",
+      "installToEnable": "قم بتثبيت هذا المكون الإضافي لتمكين المساعد",
+      "installedAndEnabled": "تم التثبيت والتفعيل",
+      "requiresAuth": "يتطلب تفويضًا، انقر على \"الموافقة\" للاتصال",
+      "retry": "إعادة المحاولة"
+    },
+    "title": "خبير إنشاء المساعدين",
+    "welcome": "ما هو سيناريو احتياجك؟ شريكك المهني جاهز لخدمتك.\n\nسواء كنت تكتب، تبرمج، أو تحلل البيانات، يمكنني مساعدتك في إنشاء مساعدك الخاص!"
+  },
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
+  "builtinCopilot": "المساعد المدمج",
   "chatList": {
     "expandMessage": "عرض الرسائل",
     "longMessageDetail": "عرض التفاصيل"
   },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
-  "confirmRemoveChatGroupItemAlert": "سيتم حذف فريق الوكيل هذا، ولن يتأثر الأعضاء الآخرون. يرجى تأكيد الإجراء.",
+  "confirmRemoveChatGroupItemAlert": "سيتم حذف هذه المجموعة، ولن يتأثر أعضاء الفريق. يرجى تأكيد الإجراء.",
   "confirmRemoveGroupItemAlert": "سيتم حذف هذه المجموعة قريبًا. بعد الحذف، سيُنتقل المساعدون في هذه المجموعة إلى القائمة الافتراضية. يرجى تأكيد إجراء الحذف.",
-  "confirmRemoveGroupSuccess": "تم حذف فريق الوكلاء بنجاح",
+  "confirmRemoveGroupSuccess": "تم حذف المجموعة بنجاح",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionSuccess": "تم حذف المساعد بنجاح",
   "defaultAgent": "المساعد الافتراضي",
-  "defaultGroupChat": "فريق الوكلاء",
+  "defaultGroupChat": "مجموعة",
   "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
+  "emptyAgentAction": "إنشاء مساعد",
   "extendParams": {
     "disableContextCaching": {
       "desc": "يمكن تقليل تكلفة توليد محادثة واحدة بنسبة تصل إلى 90%، وزيادة سرعة الاستجابة بمقدار 4 مرات (<1>اعرف المزيد</1>). عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "وصف الفريق",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "الدردشة",
+      "model": "النموذج"
+    },
     "members": {
       "addMember": "إضافة عضو",
+      "enableOrchestrator": "تفعيل المنسق",
       "memberSettings": "إعدادات العضو",
       "orchestrator": "المُنسق",
       "orchestratorThinking": "المُنسق يفكر...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "لا يوجد أعضاء في القالب",
     "noTemplates": "لا توجد قوالب متاحة",
     "searchTemplates": "ابحث في القوالب...",
-    "title": "إنشاء فريق وكلاء",
+    "title": "إنشاء مجموعة",
     "useTemplate": "استخدام القالب"
   },
   "hideForYou": "تم إخفاء محتوى الرسائل الخاصة، يرجى تفعيل خيار 【عرض محتوى الرسائل الخاصة】 في الإعدادات للعرض",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "جميع المحتويات",
     "allFiles": "جميع الملفات",
-    "allKnowledgeBases": "جميع قواعد المعرفة",
-    "disabled": "الوضع الحالي للنشر لا يدعم محادثات قاعدة المعرفة. إذا كنت بحاجة إلى استخدامها، يرجى التبديل إلى نشر قاعدة البيانات على الخادم أو استخدام خدمة {{cloud}}.",
+    "allLibraries": "جميع قواعد البيانات",
+    "disabled": "وضع النشر الحالي لا يدعم المحادثة مع قاعدة البيانات. لاستخدام هذه الميزة، يرجى التبديل إلى نشر قاعدة بيانات على الخادم أو استخدام خدمة {{cloud}}",
     "library": {
       "action": {
         "add": "إضافة",
         "detail": "تفاصيل",
         "remove": "إزالة"
       },
-      "title": "الملفات/قاعدة المعرفة"
+      "title": "الملفات / قاعدة البيانات"
     },
-    "relativeFilesOrKnowledgeBases": "ملفات/قواعد معرفة مرتبطة",
-    "title": "قاعدة المعرفة",
-    "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في «قاعدة المعرفة»",
+    "relativeFilesOrLibraries": "الملفات / قواعد البيانات المرتبطة",
+    "title": "قاعدة البيانات",
+    "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في قسم \"الموارد\"",
     "viewMore": "عرض المزيد"
   },
   "memberSelection": {
     "addMember": "إضافة عضو",
     "allMembers": "جميع الأعضاء",
-    "createGroup": "إنشاء فريق وكيل",
+    "createGroup": "إنشاء مجموعة",
     "noAvailableAgents": "لا يوجد وكلاء متاحون للدعوة",
     "noSelectedAgents": "لم يتم اختيار أي وكيل بعد",
     "searchAgents": "ابحث عن وكيل...",
+    "selectedAgents": "تم الاختيار ({{count}})",
     "setInitialMembers": "اختيار أعضاء الفريق"
   },
   "members": "الأعضاء",
@@ -245,15 +271,20 @@
     "senderAssistant": "الوكيل",
     "senderUser": "أنت"
   },
-  "newAgent": "مساعد جديد",
-  "newGroupChat": "إنشاء فريق وكلاء جديد",
-  "noAgentsYet": "لا يوجد أعضاء في هذا الفريق بعد. انقر على زر + لدعوة مساعد.",
+  "newAgent": "إنشاء مساعد",
+  "newGroupChat": "إنشاء مجموعة",
+  "newPage": "إنشاء مستند",
+  "noAgentsYet": "لا يوجد أعضاء في هذه المجموعة بعد. انقر على زر + لدعوة مساعد.",
   "noAvailableAgents": "لا يوجد أعضاء متاحون للدعوة",
   "noMatchingAgents": "لا يوجد أعضاء مطابقون",
   "noMembersYet": "لا يوجد أعضاء في هذه المجموعة بعد. انقر على زر + لدعوة المساعدين.",
   "noSelectedAgents": "لم يتم اختيار أي أعضاء بعد",
-  "openInNewWindow": "افتح الصفحة في نافذة جديدة",
+  "openInNewWindow": "فتح في نافذة مستقلة",
   "owner": "مالك المجموعة",
+  "pageCopilot": {
+    "title": "مساعد النصوص",
+    "welcome": "**لنجعل كل جملة أكثر دقة.**\n\nسواء كنت تكتب مسودة، تعيد الصياغة، أو تقوم بالتحرير، سأساعدك في جعل كلماتك أوضح، أكثر طبيعية، وأكثر إقناعًا."
+  },
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "مساعد البحث...",
   "searchAgents": "مساعد البحث...",
   "selectedAgents": "المساعدون المختارون",
-  "sendPlaceholder": "أدخل محتوى الدردشة...",
+  "sendPlaceholder": "اطرح سؤالًا، أنشئ محتوى، أو ابدأ مهمة، <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "إدارة المجموعات",
     "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "تم إنشاء المحادثة الجماعية بنجاح",
     "createSuccess": "تم الإنشاء بنجاح",
     "creatingAgent": "جاري إنشاء المساعد...",
+    "groupName": "اسم المجموعة",
     "inputPlaceholder": "الرجاء إدخال اسم المجموعة...",
     "moveGroup": "نقل إلى مجموعة",
     "newGroup": "مجموعة جديدة",
+    "noAvailableAgents": "لا يوجد مساعدين متاحين حالياً",
+    "noMatchingAgents": "لم يتم العثور على مساعدين مطابقين",
+    "noSelectedAgents": "يرجى اختيار مساعدين",
     "rename": "إعادة تسمية المجموعة",
     "renameSuccess": "تمت إعادة التسمية بنجاح",
+    "searchAgents": "البحث عن مساعدين",
+    "selectedAgents": "المساعدون المختارون ({{count}})",
     "sortSuccess": "تمت إعادة ترتيب بنجاح",
     "sorting": "جاري تحديث ترتيب المجموعة...",
     "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
@@ -361,6 +398,20 @@
       "title": "المهام المنجزة"
     }
   },
+  "tab": {
+    "groupProfile": "ملف المجموعة",
+    "profile": "ملف المساعد",
+    "search": "بحث"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "خطوة",
+      "toolCallsShort": "مرة استخدام الأداة"
+    },
+    "status": {
+      "initializing": "جارٍ بدء المهمة..."
+    }
+  },
   "thread": {
     "divider": "موضوع فرعي",
     "threadMessageCount": "{{messageCount}} رسالة",
@@ -409,10 +460,18 @@
       "toolRejected": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي"
     }
   },
+  "toolAuth": {
+    "authorize": "تفويض",
+    "authorizing": "جارٍ التفويض...",
+    "hint": "في حال عدم التفويض أو الإعداد، قد لا تعمل هذه الأدوات بشكل صحيح، مما قد يؤدي إلى فقدان بعض وظائف المساعد أو حدوث أخطاء.",
+    "signIn": "تسجيل الدخول",
+    "title": "يستخدم هذا المساعد الأدوات التالية التي تتطلب التفويض"
+  },
   "topic": {
     "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
     "checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",
     "openNewTopic": "فتح موضوع جديد",
+    "recent": "المواضيع الأخيرة",
     "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "مسح الصوت"
   },
   "untitledAgent": "مساعد بدون اسم",
+  "untitledGroup": "مجموعة بدون عنوان",
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "لا يمكن أن يتجاوز حجم ملف الفيديو 20 ميغابايت، حجم الملف الحالي هو {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "عادي",
+    "wideScreen": "شاشة عريضة"
   },
   "you": "أنت",
   "zenMode": "وضع التركيز"

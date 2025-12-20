@@ -1,0 +1,16 @@
+{
+  "agentSelection": {
+    "empty": "Kullanılabilir asistan yok",
+    "noAvailable": "Şu anda eklenebilecek asistan yok",
+    "noSelected": "Henüz herhangi bir asistan seçilmedi",
+    "search": "Eşleşen asistan bulunamadı"
+  },
+  "starter": {
+    "createAgent": "Asistan Oluştur",
+    "createGroup": "Grup Oluştur",
+    "deepResearch": "Derinlemesine Araştırma",
+    "developing": "Geliştiriliyor",
+    "image": "Çizim",
+    "write": "Yazı Yaz"
+  }
+}

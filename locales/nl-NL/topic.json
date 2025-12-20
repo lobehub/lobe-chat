@@ -1,16 +1,18 @@
 {
   "actions": {
+    "addNewTopic": "Nieuw onderwerp starten",
     "autoRename": "Slim hernoemen",
     "confirmRemoveAll": "U staat op het punt om alle onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
     "confirmRemoveTopic": "U staat op het punt om dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld, wees voorzichtig.",
     "confirmRemoveUnstarred": "U staat op het punt om niet-gemarkeerde onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
     "duplicate": "Maak een kopie",
     "export": "Exporteer onderwerp",
-    "openInNewWindow": "Pagina in een nieuw venster openen",
+    "openInNewWindow": "In nieuw venster openen",
     "removeAll": "Verwijder alle onderwerpen",
     "removeUnstarred": "Verwijder niet-gemarkeerde onderwerpen"
   },
   "defaultTitle": "Standaard onderwerp",
+  "displayItems": "Toon items",
   "duplicateLoading": "Onderwerp wordt gekopieerd...",
   "duplicateSuccess": "Onderwerp succesvol gekopieerd",
   "favorite": "Favoriet",
@@ -32,6 +34,7 @@
     "desc": "Klik op de knop aan de linkerkant om de huidige conversatie op te slaan als een historisch onderwerp en een nieuwe conversatie te starten.",
     "title": "Onderwerpenlijst"
   },
+  "loadMore": "Meer laden",
   "searchPlaceholder": "Zoek onderwerpen...",
   "searchResultEmpty": "Geen zoekresultaten gevonden",
   "temp": "Tijdelijk",
