@@ -21,7 +21,7 @@ export interface KnowledgeSliceAction {
   removeKnowledgeBaseFromAgent: (knowledgeBaseId: string) => Promise<void>;
   toggleFile: (id: string, open?: boolean) => Promise<void>;
   toggleKnowledgeBase: (id: string, open?: boolean) => Promise<void>;
-  useFetchFilesAndKnowledgeBases: (agentId: string) => SWRResponse<KnowledgeItem[]>;
+  useFetchFilesAndKnowledgeBases: (agentId?: string) => SWRResponse<KnowledgeItem[]>;
 }
 
 export const createKnowledgeSlice: StateCreator<
