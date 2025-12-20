@@ -1,4 +1,4 @@
-import { ChatToolPayload, ModelUsage } from '@lobechat/types';
+import { ChatToolPayload, ModelUsage, RuntimeStepContext } from '@lobechat/types';
 
 import type { FinishReason } from './event';
 import { AgentState, ToolRegistry } from './state';
@@ -15,6 +15,7 @@ export interface AgentRuntimeContext {
 
   /** Phase-specific payload/context */
   payload?: unknown;
+
   /** Current execution phase */
   phase:
     | 'init'
@@ -25,6 +26,7 @@ export interface AgentRuntimeContext {
     | 'human_response'
     | 'human_approved_tool'
     | 'human_abort'
+    | 'compression_result'
     | 'error';
 
   /** Session info (kept for backward compatibility, will be optional in the future) */
@@ -34,6 +36,14 @@ export interface AgentRuntimeContext {
     status: AgentState['status'];
     stepCount: number;
   };
+
+  /**
+   * Step context computed at the beginning of each step
+   * Contains dynamic state like GTD todos that changes between steps
+   * Computed by AgentRuntime and passed to Context Engine and Tool Executors
+   */
+  stepContext?: RuntimeStepContext;
+
   /** Usage statistics from the current step (if applicable) */
   stepUsage?: ModelUsage | unknown;
 }
@@ -184,6 +194,25 @@ export interface AgentInstructionResolveAbortedTools {
 }
 
 /**
+ * Instruction to execute context compression
+ */
+export interface AgentInstructionCompressContext {
+  payload: {
+    /** Current token count before compression */
+    currentTokenCount: number;
+    /** Existing summary to incorporate (for incremental compression) */
+    existingSummary?: string;
+    /** Number of recent messages to keep uncompressed */
+    keepRecentCount: number;
+    /** Messages to compress */
+    messages: any[];
+    /** Topic ID for the conversation */
+    topicId: string;
+  };
+  type: 'compress_context';
+}
+
+/**
  * A serializable instruction object that the "Agent" (Brain) returns
  * to the "AgentRuntime" (Engine) to execute.
  */
@@ -195,4 +224,5 @@ export type AgentInstruction =
   | AgentInstructionRequestHumanSelect
   | AgentInstructionRequestHumanApprove
   | AgentInstructionResolveAbortedTools
+  | AgentInstructionCompressContext
   | AgentInstructionFinish;
