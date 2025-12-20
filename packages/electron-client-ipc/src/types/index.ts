@@ -1,5 +1,4 @@
 export * from './dataSync';
-export * from './dispatch';
 export * from './localSystem';
 export * from './mcpInstall';
 export * from './notification';

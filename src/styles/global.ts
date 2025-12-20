@@ -51,4 +51,8 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
       background-color: transparent;
     }
   }
+
+  button {
+    -webkit-app-region: no-drag;
+  }
 `;
