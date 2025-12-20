@@ -1,6 +1,6 @@
 import { DESKTOP_USER_ID, isDesktop } from '@lobechat/const';
 import { getModelPropertyWithFallback, resolveImageSinglePrice } from '@lobechat/model-runtime';
-import { uniqBy } from 'lodash-es';
+import { uniqBy } from 'es-toolkit/compat';
 import {
   AIImageModelCard,
   EnabledAiModel,
