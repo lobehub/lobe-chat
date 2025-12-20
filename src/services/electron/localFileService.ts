@@ -50,7 +50,7 @@ class LocalFileService {
   }
 
   async openLocalFolder(params: OpenLocalFolderParams) {
-    return ensureElectronIpc().localSystem.handleOpenLocalFile(params);
+    return ensureElectronIpc().localSystem.handleOpenLocalFolder(params);
   }
 
   async moveLocalFiles(params: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
