@@ -1,0 +1,14 @@
+{
+  "name": "@lobechat/builtin-tool-local-system",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./executionRuntime": "./src/ExecutionRuntime/index.ts"
+  },
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@lobechat/electron-client-ipc": "workspace:*",
+    "@lobechat/types": "workspace:*"
+  }
+}

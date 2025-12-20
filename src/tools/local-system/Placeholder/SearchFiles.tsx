@@ -1,7 +1,6 @@
 import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
 import { BuiltinPlaceholderProps } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Icon, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import React, { memo } from 'react';
@@ -33,11 +32,11 @@ const SearchFiles = memo<BuiltinPlaceholderProps<LocalSearchFilesParams>>(({ arg
           {args.keywords ? (
             args.keywords
           ) : (
-            <Skeleton.Node active style={{ height: 20, width: 40 }} />
+            <Skeleton.Block active style={{ height: 20, width: 40 }} />
           )}
         </Flexbox>
 
-        <Skeleton.Node active style={{ height: 20, width: 40 }} />
+        <Skeleton.Block active style={{ height: 20, width: 40 }} />
       </Flexbox>
       <Center height={140}>
         <Flexbox gap={4} width={'90%'}>
