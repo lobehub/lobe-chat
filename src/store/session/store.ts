@@ -7,17 +7,22 @@ import { isDev } from '@/utils/env';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { SessionStoreState, initialState } from './initialState';
+import { HomeInputAction, createHomeInputSlice } from './slices/homeInput/action';
+import { RecentAction, createRecentSlice } from './slices/recent/action';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 import { SessionGroupAction, createSessionGroupSlice } from './slices/sessionGroup/action';
 
 //  ===============  Aggregate createStoreFn ============ //
 
-export interface SessionStore extends SessionAction, SessionGroupAction, SessionStoreState {}
+export interface SessionStore
+  extends SessionAction, SessionGroupAction, RecentAction, HomeInputAction, SessionStoreState {}
 
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
   ...createSessionSlice(...parameters),
   ...createSessionGroupSlice(...parameters),
+  ...createRecentSlice(...parameters),
+  ...createHomeInputSlice(...parameters),
 });
 
 //  ===============  Implement useStore ============ //

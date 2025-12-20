@@ -3,8 +3,8 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { PluginItem, PluginListResponse } from '@lobehub/market-sdk';
 import { TRPCClientError } from '@trpc/client';
 import debug from 'debug';
+import { uniqBy } from 'es-toolkit/compat';
 import { produce } from 'immer';
-import { uniqBy } from 'lodash-es';
 import { gt, valid } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
@@ -71,7 +71,7 @@ const toNonEmptyStringRecord = (input?: Record<string, any>) => {
  */
 const buildCloudMcpManifest = (params: {
   data: any;
-  plugin: { description?: string, icon?: string; identifier: string; };
+  plugin: { description?: string; icon?: string; identifier: string };
 }): LobeChatPluginManifest => {
   const { data, plugin } = params;
 

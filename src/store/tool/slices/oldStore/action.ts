@@ -1,7 +1,7 @@
 import { LobeTool } from '@lobechat/types';
+import { uniqBy } from 'es-toolkit/compat';
 import { t } from 'i18next';
 import { produce } from 'immer';
-import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 

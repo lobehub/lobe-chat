@@ -30,7 +30,7 @@ const TOOL_PRICING: Record<string, number> = {
  * Creates custom executors for the Chat Agent Runtime
  * These executors wrap existing chat store methods to integrate with agent-runtime
  *
- * @param context.operationId - Operation ID to get business context (sessionId, topicId, etc.)
+ * @param context.operationId - Operation ID to get business context (agentId, topicId, etc.)
  * @param context.get - Store getter function
  * @param context.messageKey - Message map key
  * @param context.parentId - Parent message ID
@@ -47,7 +47,7 @@ export const createAgentExecutors = (context: {
 
   /**
    * Get operation context via closure
-   * Returns the business context (sessionId, topicId, etc.) captured by the operation
+   * Returns the business context (agentId, topicId, etc.) captured by the operation
    */
   const getOperationContext = () => {
     const operation = context.get().operations[context.operationId];
@@ -57,6 +57,16 @@ export const createAgentExecutors = (context: {
     return operation.context;
   };
 
+  /**
+   * Get effective agentId for message creation
+   * In Group Orchestration scenarios, subAgentId is the actual executing agent
+   * Falls back to agentId for normal scenarios
+   */
+  const getEffectiveAgentId = () => {
+    const opContext = getOperationContext();
+    return opContext.subAgentId || opContext.agentId;
+  };
+
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   const executors: Partial<Record<AgentInstruction['type'], InstructionExecutor>> = {
     /**
@@ -64,7 +74,7 @@ export const createAgentExecutors = (context: {
      * Creates assistant message and calls internal_fetchAIChatMessage
      */
     call_llm: async (instruction, state) => {
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
       const stagePrefix = `[${sessionLogId}][call_llm]`;
 
       const llmPayload = (instruction as AgentInstructionCallLlm)
@@ -81,6 +91,8 @@ export const createAgentExecutors = (context: {
       } else {
         // Get context from operation
         const opContext = getOperationContext();
+        // Get effective agentId (subAgentId for group orchestration, agentId otherwise)
+        const effectiveAgentId = getEffectiveAgentId();
 
         // 如果是 userMessage 的第一次 regenerated 创建， llmPayload 不存在 parentMessageId
         // 因此用这种方式做个赋值
@@ -89,14 +101,17 @@ export const createAgentExecutors = (context: {
           llmPayload.parentMessageId = context.parentId;
         }
         // Create assistant message (following server-side pattern)
+        // If isSupervisor is true, add metadata.isSupervisor for UI rendering
         const assistantMessageItem = await context.get().optimisticCreateMessage(
           {
             content: LOADING_FLAT,
+            groupId: opContext.groupId,
+            metadata: opContext.isSupervisor ? { isSupervisor: true } : undefined,
             model: llmPayload.model,
             parentId: llmPayload.parentMessageId,
             provider: llmPayload.provider,
             role: 'assistant',
-            sessionId: opContext.sessionId!,
+            agentId: effectiveAgentId!,
             threadId: opContext.threadId,
             topicId: opContext.topicId ?? undefined,
           },
@@ -172,7 +187,7 @@ export const createAgentExecutors = (context: {
 
       log(
         '[%s:%d] call_llm completed, finishType: %s',
-        state.sessionId,
+        state.operationId,
         state.stepCount,
         finishType,
       );
@@ -198,7 +213,7 @@ export const createAgentExecutors = (context: {
       if (finishType === 'abort') {
         log(
           '[%s:%d] call_llm aborted by user, entering human_abort phase',
-          state.sessionId,
+          state.operationId,
           state.stepCount,
         );
 
@@ -216,7 +231,7 @@ export const createAgentExecutors = (context: {
             phase: 'human_abort',
             session: {
               messageCount: newState.messages.length,
-              sessionId: state.sessionId,
+              sessionId: state.operationId,
               status: 'running',
               stepCount: state.stepCount + 1,
             },
@@ -237,7 +252,7 @@ export const createAgentExecutors = (context: {
           phase: 'llm_result',
           session: {
             messageCount: newState.messages.length,
-            sessionId: state.sessionId,
+            sessionId: state.operationId,
             status: 'running',
             stepCount: state.stepCount + 1,
           },
@@ -251,12 +266,12 @@ export const createAgentExecutors = (context: {
      * Wraps internal_invokeDifferentTypePlugin
      * Follows server-side pattern: always create tool message before execution
      */
-    call_tool: async (instruction, state) => {
+    call_tool: async (instruction, state, runtimeContext) => {
       const payload = (instruction as AgentInstructionCallTool)
         .payload as GeneralAgentCallingToolInstructionPayload;
 
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
 
       log('[%s][call_tool] Executor start, payload: %O', sessionLogId, payload);
 
@@ -274,7 +289,7 @@ export const createAgentExecutors = (context: {
       const { operationId } = context.get().startOperation({
         type: 'toolCalling',
         context: {
-          sessionId: opContext.sessionId!,
+          agentId: opContext.agentId!,
           topicId: opContext.topicId,
         },
         parentOperationId: context.operationId,
@@ -319,7 +334,7 @@ export const createAgentExecutors = (context: {
           const createToolMsgOpId = context.get().startOperation({
             type: 'createToolMessage',
             context: {
-              sessionId: opContext.sessionId!,
+              agentId: opContext.agentId!,
               topicId: opContext.topicId,
             },
             parentOperationId: toolOperationId,
@@ -362,13 +377,15 @@ export const createAgentExecutors = (context: {
           });
 
           // Execute creation and save Promise to metadata
+          // Use effective agentId (subAgentId for group orchestration)
+          const effectiveAgentId = getEffectiveAgentId();
           const toolMessageParams: CreateMessageParams = {
             content: '',
             groupId: assistantMessage?.groupId,
             parentId: payload.parentMessageId,
             plugin: chatToolPayload,
             role: 'tool',
-            sessionId: opContext.sessionId!,
+            agentId: effectiveAgentId!,
             threadId: opContext.threadId,
             tool_call_id: chatToolPayload.id,
             topicId: opContext.topicId ?? undefined,
@@ -453,10 +470,20 @@ export const createAgentExecutors = (context: {
         });
 
         // Execute tool - abort handling is done by cancel handler
-        log('[%s][call_tool] Executing tool %s ...', sessionLogId, toolName);
+        // Pass stepContext from runtimeContext for dynamic state access
+        log(
+          '[%s][call_tool] Executing tool %s (hasTodos=%s) ...',
+          sessionLogId,
+          toolName,
+          !!runtimeContext?.stepContext?.todos,
+        );
         const result = await context
           .get()
-          .internal_invokeDifferentTypePlugin(toolMessageId, chatToolPayload);
+          .internal_invokeDifferentTypePlugin(
+            toolMessageId,
+            chatToolPayload,
+            runtimeContext?.stepContext,
+          );
 
         // Check if operation was cancelled during tool execution
         const executeToolOperation = context.get().operations[executeToolOpId];
@@ -469,7 +496,7 @@ export const createAgentExecutors = (context: {
         context.get().completeOperation(executeToolOpId);
 
         const executionTime = Math.round(performance.now() - startTime);
-        const isSuccess = !result.error;
+        const isSuccess = result && !result.error;
 
         log(
           '[%s][call_tool] Executing %s in %dms, result: %O',
@@ -486,7 +513,7 @@ export const createAgentExecutors = (context: {
           } else {
             context.get().failOperation(toolOperationId, {
               type: 'ToolExecutionError',
-              message: result.error || 'Tool execution failed',
+              message: result?.error || 'Tool execution failed',
             });
           }
         }
@@ -528,6 +555,24 @@ export const createAgentExecutors = (context: {
           toolCost.toFixed(4),
         );
 
+        // Check if tool wants to stop execution flow (e.g., group management tools)
+        if (result?.stop) {
+          log(
+            '[%s][call_tool] Tool returned stop=true, terminating execution. state: %O',
+            sessionLogId,
+            result.state,
+          );
+
+          // Mark state as done and return without nextContext to stop the runtime
+          newState.status = 'done';
+
+          return {
+            events,
+            newState,
+            nextContext: undefined, // No next context means execution stops
+          };
+        }
+
         log('[%s][call_tool] Tool execution completed', sessionLogId);
 
         return {
@@ -546,7 +591,7 @@ export const createAgentExecutors = (context: {
             session: {
               eventCount: events.length,
               messageCount: newState.messages.length,
-              sessionId: state.sessionId,
+              sessionId: state.operationId,
               status: 'running',
               stepCount: state.stepCount + 1,
             },
@@ -576,7 +621,7 @@ export const createAgentExecutors = (context: {
       >;
       const newState = structuredClone(state);
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
 
       log(
         '[%s][request_human_approve] Executor start, pending tools count: %d, reason: %s',
@@ -611,6 +656,8 @@ export const createAgentExecutors = (context: {
       } else {
         // Get context from operation
         const opContext = getOperationContext();
+        // Get effective agentId (subAgentId for group orchestration)
+        const effectiveAgentId = getEffectiveAgentId();
 
         // Create tool messages for each pending tool call with intervention status
         await pMap(pendingToolsCalling, async (toolPayload) => {
@@ -631,7 +678,7 @@ export const createAgentExecutors = (context: {
             },
             pluginIntervention: { status: 'pending' },
             role: 'tool',
-            sessionId: opContext.sessionId!,
+            agentId: effectiveAgentId!,
             threadId: opContext.threadId,
             tool_call_id: toolPayload.id,
             topicId: opContext.topicId ?? undefined,
@@ -665,8 +712,8 @@ export const createAgentExecutors = (context: {
       );
 
       events.push({
+        operationId: newState.operationId,
         pendingToolsCalling,
-        sessionId: newState.sessionId,
         type: 'human_approve_required',
       });
 
@@ -683,7 +730,7 @@ export const createAgentExecutors = (context: {
       ).payload;
 
       const events: AgentEvent[] = [];
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
       const newState = structuredClone(state);
 
       log(
@@ -694,6 +741,8 @@ export const createAgentExecutors = (context: {
 
       // Get context from operation
       const opContext = getOperationContext();
+      // Get effective agentId (subAgentId for group orchestration)
+      const effectiveAgentId = getEffectiveAgentId();
 
       // Create tool messages for each aborted tool
       await pMap(toolsCalling, async (toolPayload) => {
@@ -706,11 +755,12 @@ export const createAgentExecutors = (context: {
 
         const toolMessageParams: CreateMessageParams = {
           content: 'Tool execution was aborted by user.',
+          groupId: opContext.groupId,
           parentId: parentMessageId,
           plugin: toolPayload,
           pluginIntervention: { status: 'aborted' },
           role: 'tool',
-          sessionId: opContext.sessionId!,
+          agentId: effectiveAgentId!,
           threadId: opContext.threadId,
           tool_call_id: toolPayload.id,
           topicId: opContext.topicId ?? undefined,
@@ -752,7 +802,7 @@ export const createAgentExecutors = (context: {
      */
     finish: async (instruction, state) => {
       const { reason, reasonDetail } = instruction as Extract<AgentInstruction, { type: 'finish' }>;
-      const sessionLogId = `${state.sessionId}:${state.stepCount}`;
+      const sessionLogId = `${state.operationId}:${state.stepCount}`;
 
       log(`[${sessionLogId}] Finishing execution: (%s)`, reason);
 

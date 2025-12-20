@@ -1,20 +1,15 @@
 import { UIChatMessage } from '@lobechat/types';
 
-import { ChatGroupAgentItem, ChatGroupItem } from '@/database/schemas/chatGroup';
+import { ChatGroupAgentItem } from '@/database/schemas/chatGroup';
 
 import type { SupervisorTodoItem } from './supervisor';
 
 export interface ChatMessageState {
+  activeAgentId: string;
   /**
-   * @title 当前活动的会话
-   * @description 当前正在编辑或查看的会话
+   * @deprecated
    */
   activeId: string;
-  /**
-   * Type of the currently active session ('agent' | 'group')
-   * Derived from session.type, used for caching to avoid repeated lookups
-   */
-  activeSessionType?: 'agent' | 'group';
   /**
    * Raw messages from database (flat structure)
    */
@@ -23,14 +18,6 @@ export interface ChatMessageState {
    * Group agents maps by group ID
    */
   groupAgentMaps: Record<string, ChatGroupAgentItem[]>;
-  /**
-   * Group data maps by group ID
-   */
-  groupMaps: Record<string, ChatGroupItem>;
-  /**
-   * Groups initialization status
-   */
-  groupsInit: boolean;
   isCreatingMessage: boolean;
   /**
    * is the message is editing
@@ -67,12 +54,10 @@ export interface ChatMessageState {
 }
 
 export const initialMessageState: ChatMessageState = {
+  activeAgentId: '',
   activeId: 'inbox',
-  activeSessionType: undefined,
   dbMessagesMap: {},
   groupAgentMaps: {},
-  groupMaps: {},
-  groupsInit: false,
   isCreatingMessage: false,
   messageEditingIds: [],
   messageLoadingIds: [],
