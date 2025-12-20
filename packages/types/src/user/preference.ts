@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { Plans } from '../subscription';
 import { TopicDisplayMode } from '../topic';
+import { UserOnboarding } from './onboarding';
 import { UserSettings } from './settings';
 
 export interface LobeUser {
@@ -11,6 +12,7 @@ export interface LobeUser {
   firstName?: string | null;
   fullName?: string | null;
   id: string;
+  interests?: string[];
   latestName?: string | null;
   username?: string | null;
 }
@@ -59,7 +61,10 @@ export interface UserPreference {
    * lab experimental features
    */
   lab?: UserLab;
-  telemetry: boolean | null;
+  /**
+   * @deprecated Use settings.general.telemetry instead
+   */
+  telemetry?: boolean | null;
   topicDisplayMode?: TopicDisplayMode;
   /**
    * whether to use cmd + enter to send message
@@ -75,8 +80,11 @@ export interface UserInitializationState {
   firstName?: string;
   fullName?: string;
   hasConversation?: boolean;
+  interests?: string[];
+  /** @deprecated Use onboarding field instead */
   isOnboard?: boolean;
   lastName?: string;
+  onboarding?: UserOnboarding;
   preference: UserPreference;
   settings: PartialDeep<UserSettings>;
   subscriptionPlan?: Plans;

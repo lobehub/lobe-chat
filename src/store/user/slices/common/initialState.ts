@@ -1,6 +1,7 @@
 import { Plans } from '@/types/subscription';
 
 export interface CommonState {
+  /** @deprecated Use onboarding field instead */
   isOnboard: boolean;
   isShowPWAGuide: boolean;
   isUserCanEnableTrace: boolean;

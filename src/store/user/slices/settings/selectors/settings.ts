@@ -3,6 +3,7 @@ import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AGENT_META,
   DEFAULT_HOTKEY_CONFIG,
+  DEFAULT_MEMORY_SETTINGS,
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
 } from '@lobechat/const';
@@ -27,6 +28,9 @@ export const getProviderConfigById = (provider: string) => (s: UserStore) =>
 
 const currentImageSettings = (s: UserStore) => currentSettings(s).image;
 
+const currentMemorySettings = (s: UserStore) =>
+  merge(DEFAULT_MEMORY_SETTINGS, currentSettings(s).memory);
+
 const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
 const defaultAgent = (s: UserStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
@@ -44,6 +48,7 @@ const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
 
 export const settingsSelectors = {
   currentImageSettings,
+  currentMemorySettings,
   currentSettings,
   currentSystemAgent,
   currentTTS,

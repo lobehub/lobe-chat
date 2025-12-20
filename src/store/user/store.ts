@@ -7,6 +7,7 @@ import { createDevtools } from '../middleware/createDevtools';
 import { type UserState, initialState } from './initialState';
 import { type UserAuthAction, createAuthSlice } from './slices/auth/action';
 import { type CommonAction, createCommonSlice } from './slices/common/action';
+import { type OnboardingAction, createOnboardingSlice } from './slices/onboarding/action';
 import { type PreferenceAction, createPreferenceSlice } from './slices/preference/action';
 import { type UserSettingsAction, createSettingsSlice } from './slices/settings/action';
 
@@ -16,7 +17,8 @@ export type UserStore = UserState &
   UserSettingsAction &
   PreferenceAction &
   UserAuthAction &
-  CommonAction;
+  CommonAction &
+  OnboardingAction;
 
 const createStore: StateCreator<UserStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
@@ -24,6 +26,7 @@ const createStore: StateCreator<UserStore, [['zustand/devtools', never]]> = (...
   ...createPreferenceSlice(...parameters),
   ...createAuthSlice(...parameters),
   ...createCommonSlice(...parameters),
+  ...createOnboardingSlice(...parameters),
 });
 
 //  ===============  Implement useStore ============ //
