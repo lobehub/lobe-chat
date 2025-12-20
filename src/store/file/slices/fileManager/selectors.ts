@@ -46,9 +46,12 @@ const isCreatingFileParseTask = (id: string) => (s: FilesStoreState) =>
 const isCreatingChunkEmbeddingTask = (id: string) => (s: FilesStoreState) =>
   s.creatingEmbeddingTaskIds.includes(id);
 
+const fileListHasMore = (s: FilesStoreState) => s.fileListHasMore;
+
 export const fileManagerSelectors = {
   dockFileList,
   dockRawFileList,
+  fileListHasMore,
   getFileById,
   isCreatingChunkEmbeddingTask,
   isCreatingFileParseTask,
