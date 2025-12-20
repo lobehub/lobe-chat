@@ -1,5 +1,34 @@
 export default {
+  'agentGroupManagement': {
+    executeTask: {
+      agent: '执行 Agent',
+      cancelled: '已取消',
+      completed: '任务完成',
+      cost: '费用',
+      failed: '任务失败',
+      interrupted: '已中断',
+      intervention: {
+        taskPlaceholder: '请详细描述需要 Agent 执行的任务...',
+        timeout: '最长执行时间',
+        timeoutUnit: '分钟',
+        unknownAgent: '未知 Agent',
+      },
+      processing: '执行中...',
+      steps: '执行步数',
+      task: '任务内容',
+      thread: 'Thread ID',
+      timeout: '执行超时',
+      tokens: 'Token 消耗',
+    },
+  },
   'codeInterpreter': {
+    error: '执行错误',
+    executing: '执行中...',
+    files: '文件：',
+    output: '输出：',
+    returnValue: '返回值：',
+  },
+  'codeInterpreter-legacy': {
     error: '执行错误',
     executing: '执行中...',
     files: '文件：',
@@ -13,6 +42,57 @@ export default {
     generating: '生成中...',
     images: '图片:',
     prompt: '提示词',
+  },
+  'lobe-gtd': {
+    actions: {
+      add: '添加',
+      clearCompleted: '清除已完成',
+      placeholder: '输入待办项目...',
+    },
+    clearTodos: {
+      cleared: '已清除 {{count}} 个项目',
+      clearedCompleted: '已清除 {{count}} 个已完成项目',
+      clearedCompleted_one: '已清除 {{count}} 个已完成项目',
+      clearedCompleted_other: '已清除 {{count}} 个已完成项目',
+      cleared_one: '已清除 {{count}} 个项目',
+      cleared_other: '已清除 {{count}} 个项目',
+      noItems: '无项目可清除',
+      remaining: '剩余 {{count}} 个项目',
+      remaining_one: '剩余 {{count}} 个项目',
+      remaining_other: '剩余 {{count}} 个项目',
+    },
+    completeTodos: {
+      completed: '已完成 {{count}} 个项目',
+      completed_one: '已完成 {{count}} 个项目',
+      completed_other: '已完成 {{count}} 个项目',
+    },
+    createTodos: {
+      created: '已创建 {{count}} 个待办项目',
+      created_one: '已创建 {{count}} 个待办项目',
+      created_other: '已创建 {{count}} 个待办项目',
+      total: '共 {{count}} 个项目',
+      total_one: '共 {{count}} 个项目',
+      total_other: '共 {{count}} 个项目',
+    },
+    removeTodos: {
+      removed: '已删除 {{count}} 个项目',
+      removed_one: '已删除 {{count}} 个项目',
+      removed_other: '已删除 {{count}} 个项目',
+    },
+    status: {
+      done: '{{count}} 已完成',
+      pending: '{{count}} 待处理',
+    },
+    todoList: {
+      empty: '待办清单为空',
+      items: '{{count}} 个项目',
+      items_one: '{{count}} 个项目',
+      items_other: '{{count}} 个项目',
+      title: '待办清单',
+    },
+    updateTodos: {
+      updated: '待办清单已更新',
+    },
   },
   'lobe-knowledge-base': {
     readKnowledge: {

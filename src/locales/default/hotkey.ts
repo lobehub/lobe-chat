@@ -53,6 +53,10 @@ const hotkey: HotkeyI18nTranslations & {
     desc: '重新生成最后一条消息',
     title: '重新生成消息',
   },
+  saveDocument: {
+    desc: '立即保存当前文档的所有更改',
+    title: '保存文档',
+  },
   saveTopic: {
     desc: '保存当前话题并打开新话题',
     title: '开启新话题',
@@ -70,12 +74,12 @@ const hotkey: HotkeyI18nTranslations & {
     title: '快捷切换助手',
   },
   toggleLeftPanel: {
-    desc: '显示或隐藏左侧助手面板',
-    title: '显示/隐藏助手面板',
+    desc: '显示或隐藏左侧面板',
+    title: '显示/隐藏左侧面板',
   },
   toggleRightPanel: {
-    desc: '显示或隐藏右侧话题面板',
-    title: '显示/隐藏话题面板',
+    desc: '显示或隐藏右侧面板',
+    title: '显示/隐藏右侧面板',
   },
   toggleZenMode: {
     desc: '专注模式下，只显示当前会话，隐藏其他 UI',

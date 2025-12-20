@@ -1,11 +1,72 @@
 export default {
   builtins: {
+    'lobe-agent-builder': {
+      apiName: {
+        getAvailableModels: '获取可用模型',
+        getAvailableTools: '获取可用工具',
+        getConfig: '获取配置',
+        getMeta: '获取元数据',
+        getPrompt: '获取系统提示词',
+        searchMarketTools: '搜索插件市场',
+        searchOfficialTools: '搜索官方工具',
+        setModel: '设置模型',
+        setOpeningMessage: '设置开场消息',
+        setOpeningQuestions: '设置开场问题',
+        togglePlugin: '切换插件',
+        updateChatConfig: '更新对话配置',
+        updateConfig: '更新配置',
+        updateMeta: '更新元数据',
+        updatePrompt: '更新系统提示词',
+      },
+      title: 'Agent Builder',
+    },
+    'lobe-group-agent-builder': {
+      apiName: {
+        getAvailableModels: '获取可用模型',
+        installPlugin: '安装插件',
+        inviteAgent: '邀请成员',
+        removeAgent: '移除成员',
+        searchMarketTools: '搜索插件市场',
+        updateAgentConfig: '更新代理配置',
+        updatePrompt: '更新系统提示词',
+      },
+      title: 'Group Agent Builder',
+    },
+    'lobe-group-management': {
+      apiName: {
+        broadcast: '所有人发言',
+        createAgent: '添加团队成员',
+        createWorkflow: '规划工作流',
+        executeTask: '执行任务',
+        getAgentInfo: '获取成员信息',
+        interrupt: '中断任务',
+        inviteAgent: '邀请成员',
+        removeAgent: '移除成员',
+        searchAgent: '寻找相关专家',
+        speak: '指定成员发言',
+        summarize: '总结对话',
+        vote: '发起投票',
+      },
+      title: '协调团队',
+    },
+    'lobe-gtd': {
+      apiName: {
+        clearTodos: '清除待办',
+        completeTodos: '完成待办',
+        createPlan: '创建计划',
+        createTodos: '创建待办',
+        removeTodos: '删除待办',
+        updatePlan: '更新计划',
+        updateTodos: '更新待办',
+      },
+      title: 'GTD 工具',
+    },
     'lobe-knowledge-base': {
       apiName: {
-        readKnowledge: '读取知识库内容',
-        searchKnowledgeBase: '搜索知识库',
+        readKnowledge: '读取资源库内容',
+        searchKnowledgeBase: '搜索资源库',
       },
-      title: '知识库',
+      title: '资源库',
     },
     'lobe-local-system': {
       apiName: {
@@ -23,6 +84,41 @@ export default {
         writeLocalFile: '写入文件',
       },
       title: '本地系统',
+    },
+    'lobe-page-agent': {
+      apiName: {
+        batchUpdate: '批量更新节点',
+        compareSnapshots: '比较快照',
+        convertToList: '转换为列表',
+        createNode: '创建节点',
+        cropImage: '裁剪图片',
+        deleteNode: '删除节点',
+        deleteSnapshot: '删除快照',
+        deleteTableColumn: '删除表格列',
+        deleteTableRow: '删除表格行',
+        duplicateNode: '复制节点',
+        editTitle: '编辑文档标题',
+        indentListItem: '缩进列表项',
+        initPage: '初始化文档',
+        insertTableColumn: '插入表格列',
+        insertTableRow: '插入表格行',
+        listSnapshots: '列出快照',
+        mergeNodes: '合并节点',
+        moveNode: '移动节点',
+        outdentListItem: '取消缩进列表项',
+        replaceText: '替换文本',
+        resizeImage: '调整图片大小',
+        restoreSnapshot: '恢复快照',
+        rotateImage: '旋转图片',
+        saveSnapshot: '保存快照',
+        setImageAlt: '设置图片替代文本',
+        splitNode: '拆分节点',
+        toggleListType: '切换列表类型',
+        unwrapNode: '解包节点',
+        updateNode: '更新节点',
+        wrapNodes: '包装节点',
+      },
+      title: '文档',
     },
     'lobe-web-browsing': {
       apiName: {
@@ -259,6 +355,11 @@ export default {
     update: '更新',
     updateSuccess: '插件设置更新成功',
   },
+  empty: {
+    description: '插件商店有丰富的工具等你发现，访问商店开始探索',
+    search: '未找到匹配的插件',
+    title: '暂无插件',
+  },
   error: {
     fetchError: '请求该 manifest 链接失败，请确保链接的有效性，并检查链接是否允许跨域访问',
     installError: '插件 {{name}} 安装失败',
@@ -286,6 +387,12 @@ export default {
   loading: {
     content: '调用插件中...',
     plugin: '插件运行中...',
+  },
+  mcpEmpty: {
+    deployment: '暂无部署选项',
+    prompts: '该插件暂无提示词',
+    resources: '该插件暂无资源',
+    tools: '该插件暂无工具能力',
   },
   mcpInstall: {
     CHECKING_INSTALLATION: '检查安装环境...',
@@ -341,6 +448,8 @@ export default {
       installed: '已安装',
     },
     config: {
+      addEnv: '添加环境变量',
+      addHeaders: '添加请求头',
       args: '参数',
       command: '命令',
       env: '环境变量',
@@ -361,12 +470,15 @@ export default {
       },
       title: '安装自定义插件',
     },
+    install: {
+      title: '安装信息',
+    },
     marketplace: {
       title: '安装第三方插件',
       trustedBy: '由 {{name}} 提供',
       unverified: {
         title: '未经验证的第三方插件',
-        warning: '此插件来自未验证的第三方市场，安装前请确认您信任该来源。',
+        warning: '此插件来自未验证的第三方社区，安装前请确认您信任该来源。',
       },
       verified: '已验证',
     },
@@ -444,7 +556,7 @@ export default {
     envConfigDescription: '这些配置将作为环境变量在 MCP 服务器启动时传递给进程',
     httpTypeNotice: 'HTTP 类型的 MCP 插件暂无需要配置的环境变量',
     indexUrl: {
-      title: '市场索引',
+      title: '社区索引',
       tooltip: '暂不支持在线编辑，请通过部署时环境变量进行设置',
     },
     messages: {
@@ -453,14 +565,14 @@ export default {
       envUpdateFailed: '环境变量保存失败',
       envUpdateSuccess: '环境变量保存成功',
     },
-    modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
+    modalDesc: '配置插件社区的地址后，可以使用自定义的插件社区',
     rules: {
       argsRequired: '请输入启动参数',
       commandRequired: '请输入启动命令',
       urlRequired: '请输入服务地址',
     },
     saveSettings: '保存设置',
-    title: '设置插件市场',
+    title: '设置插件社区',
   },
   showInPortal: '请在工作区中查看详情',
   store: {

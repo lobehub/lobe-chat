@@ -104,6 +104,7 @@ export default {
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     SystemTimeNotMatchError: '很抱歉，您的系统时间和服务器不匹配，请检查您的系统时间后重试',
+    ServerAgentRuntimeError: '很抱歉，当前 Agent 服务暂不可用，请稍后再试或邮件联系我们获取支持',
     SubscriptionKeyMismatch:
       '很抱歉，由于系统偶发故障，当前订阅用量暂时失效，请点击下方按钮恢复订阅，或邮件联系我们获取支持',
     CreateMessageError:
@@ -194,6 +195,7 @@ export default {
       title: '确认你的 {{name}} 认证信息',
     },
     confirm: '确认并重试',
+    goToSettings: '前往配置',
     oauth: {
       description: '管理员已开启统一登录认证，点击下方按钮登录，即可解锁应用',
       success: '登录成功',

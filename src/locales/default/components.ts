@@ -10,39 +10,65 @@ export default {
     dragFileTitle: '上传文件',
     dragTitle: '上传图片',
   },
+  EmojiPicker: {
+    delete: '删除头像',
+    draggerDesc: '点击或拖拽图片到此区域上传',
+    emoji: '表情头像',
+    fileTypeError: '请上传有效的图片文件',
+    upload: '上传头像',
+    uploadBtn: '裁剪并上传',
+  },
   FileManager: {
     actions: {
-      addToKnowledgeBase: '添加到知识库',
-      addToOtherKnowledgeBase: '添加到其他知识库',
+      addToKnowledgeBase: '添加到资源库',
+      addToOtherKnowledgeBase: '添加到其他资源库',
       batchChunking: '批量分块',
       chunking: '分块',
       chunkingTooltip: '将文件拆分为多个文本块并向量化后，可用于语义检索和文件对话',
       chunkingUnsupported: '该文件不支持分块',
       confirmDelete: '即将删除该文件，删除后该将无法找回，请确认你的操作',
+      confirmDeleteFolder: '即将删除该文件夹及其所有内容，删除后该将无法找回，请确认你的操作',
       confirmDeleteMultiFiles:
         '即将删除选中的 {{count}} 个文件，删除后该将无法找回，请确认你的操作',
       confirmRemoveFromKnowledgeBase:
-        '即将从知识库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作',
+        '即将从资源库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作',
       copyUrl: '复制链接',
       copyUrlSuccess: '文件地址复制成功',
       createChunkingTask: '准备中...',
       deleteSuccess: '文件删除成功',
       downloading: '文件下载中...',
-      removeFromKnowledgeBase: '从知识库中移除',
+      goBack: '返回上一页',
+      goForward: '前进到下一页',
+      goToParent: '进入父级文件夹',
+      moveError: '移动文件失败',
+      moveHere: '移动到此处',
+      moveSuccess: '文件移动成功',
+      moveToFolder: '移动到...',
+      moveToRoot: '移动到根目录',
+      removeFromKnowledgeBase: '从资源库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
+      rename: '重命名',
+      renameError: '重命名失败',
+      renameSuccess: '重命名成功',
     },
     bottom: '已经到底啦',
     config: {
-      showFilesInKnowledgeBase: '显示知识库中内容',
+      showFilesInKnowledgeBase: '显示资源库中内容',
     },
     emptyStatus: {
       actions: {
         file: '上传文件',
         folder: '上传文件夹',
-        knowledgeBase: '新建知识库',
+        knowledgeBase: '新建资源库',
       },
       or: '或者',
       title: '将文件或文件夹拖到这里',
+    },
+    noFolders: '暂无文件夹',
+    sort: {
+      dateAdded: '添加日期',
+      name: '名称',
+      size: '大小',
     },
     title: {
       createdAt: '创建时间',
@@ -168,7 +194,7 @@ export default {
   OllamaSetupGuide: {
     action: {
       close: '关闭提示',
-      start: '已安装并运行，开始对话',
+      start: '已安装',
     },
     cors: {
       description: '因浏览器安全限制，你需要为 Ollama 进行跨域配置后方可正常使用。',
@@ -199,5 +225,20 @@ export default {
     thinking: '深度思考中...',
     thought: '已深度思考（用时 {{duration}} 秒）',
     thoughtWithDuration: '已深度思考',
+  },
+  devTools: {
+    cache: {
+      empty: '缓存为空',
+    },
+    metadata: {
+      empty: '暂无元数据',
+    },
+  },
+  knowledgeBase: {
+    empty: {
+      description: '创建资源库来组织和管理你的资源',
+      search: '未找到匹配的资源库',
+      title: '暂无资源库',
+    },
   },
 };
