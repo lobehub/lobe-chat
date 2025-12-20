@@ -1,6 +1,17 @@
+import {
+  AgentBuilderInterventions,
+  AgentBuilderManifest,
+} from '@lobechat/builtin-tool-agent-builder/client';
+import {
+  GroupManagementInterventions,
+  GroupManagementManifest,
+} from '@lobechat/builtin-tool-group-management/client';
+import { GTDInterventions, GTDManifest } from '@lobechat/builtin-tool-gtd/client';
+import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinIntervention } from '@lobechat/types';
 
-import { LocalSystemManifest } from './local-system';
+import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
+import { CodeInterpreterInterventions } from './code-interpreter/Intervention';
 import { LocalSystemInterventions } from './local-system/Intervention';
 
 /**
@@ -9,6 +20,10 @@ import { LocalSystemInterventions } from './local-system/Intervention';
  * Only register APIs that have custom intervention UI
  */
 export const BuiltinToolInterventions: Record<string, Record<string, any>> = {
+  [AgentBuilderManifest.identifier]: AgentBuilderInterventions,
+  [CloudCodeInterpreterManifest.identifier]: CodeInterpreterInterventions,
+  [GroupManagementManifest.identifier]: GroupManagementInterventions,
+  [GTDManifest.identifier]: GTDInterventions,
   [LocalSystemManifest.identifier]: LocalSystemInterventions,
 };
 
