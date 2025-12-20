@@ -1,0 +1,49 @@
+import { memo, useEffect, useState } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import type { ActionKeys } from '@/features/ChatInput';
+import { ChatInput, ChatList } from '@/features/Conversation';
+import { useAgentStore } from '@/store/agent';
+import { useChatStore } from '@/store/chat';
+
+import CopilotToolbar from './Toolbar';
+import Welcome from './Welcome';
+
+interface ConversationProps {
+  agentId: string;
+}
+const actions: ActionKeys[] = ['model', 'search'];
+
+const Conversation = memo<ConversationProps>(({ agentId }) => {
+  const [activeAgentId, setActiveAgentId] = useAgentStore((s) => [
+    s.activeAgentId,
+    s.setActiveAgentId,
+  ]);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    setActiveAgentId(agentId);
+    // Also set the chat store's activeAgentId so topic selectors can work correctly
+    useChatStore.setState({ activeAgentId: agentId });
+  }, [agentId, setActiveAgentId]);
+
+  const currentAgentId = activeAgentId || agentId;
+
+  return (
+    <Flexbox
+      flex={1}
+      height={'100%'}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ minWidth: 300 }}
+    >
+      <CopilotToolbar agentId={currentAgentId} isHovered={isHovered} />
+      <Flexbox flex={1} style={{ overflow: 'hidden' }}>
+        <ChatList welcome={<Welcome />} />
+      </Flexbox>
+      <ChatInput leftActions={actions} />
+    </Flexbox>
+  );
+});
+
+export default Conversation;

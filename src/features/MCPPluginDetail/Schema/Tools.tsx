@@ -1,13 +1,12 @@
-import { Block, Collapse, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
-import { Empty } from 'antd';
-import { CheckIcon, MinusIcon } from 'lucide-react';
+import { Block, Collapse, Empty, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
+import { CheckIcon, MinusIcon, Wrench } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InlineTable from '@/components/InlineTable';
 
-import Title from '../../../app/[variants]/(main)/discover/features/Title';
+import Title from '../../../app/[variants]/(main)/community/features/Title';
 import CollapseDesc from '../CollapseDesc';
 import CollapseLayout from '../CollapseLayout';
 import { useDetailContext } from '../DetailProvider';
@@ -21,7 +20,7 @@ interface ToolsProps {
 }
 
 const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'plugin']);
   const { tools } = useDetailContext();
   const { styles, theme } = useStyles();
 
@@ -29,8 +28,10 @@ const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
     return (
       <Block variant={'outlined'}>
         <Empty
-          description={t('mcp.details.schema.tools.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={t('plugin:mcpEmpty.tools')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Wrench}
+          style={{ maxWidth: 400 }}
         />
       </Block>
     );

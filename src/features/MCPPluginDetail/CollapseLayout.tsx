@@ -1,7 +1,7 @@
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Title, { TitleProps } from '../../app/[variants]/(main)/discover/features/Title';
+import Title, { TitleProps } from '../../app/[variants]/(main)/community/features/Title';
 
 export type CollapseItemType = {
   children: ReactNode;

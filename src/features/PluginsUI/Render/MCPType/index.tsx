@@ -2,18 +2,25 @@ import { Image, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Arguments from '@/features/ChatList/Messages/Group/Tool/Render/Arguments';
+import Arguments from '@/features/Conversation/Messages/AssistantGroup/Tool/Render/Arguments';
 import { ToolCallResult } from '@/libs/mcp';
 
 export interface MCPTypeProps {
   apiName?: string;
   arguments?: string;
   content: string;
-  id: string;
   identifier?: string;
   loading?: boolean;
+  /**
+   * The real message ID (tool message ID)
+   */
+  messageId?: string;
   pluginError?: any;
   pluginState?: ToolCallResult;
+  /**
+   * The tool call ID from the assistant message
+   */
+  toolCallId?: string;
 }
 
 const MCPType = memo<MCPTypeProps>(({ pluginState, arguments: args }) => {

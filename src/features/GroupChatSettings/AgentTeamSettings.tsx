@@ -1,4 +1,4 @@
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { ReactNode, Suspense, memo } from 'react';
 
 import { GroupSettingsTabs } from '@/store/global/initialState';

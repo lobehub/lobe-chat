@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import { useChatGroupStore } from '@/store/chatGroup';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession, LobeGroupSession, LobeSessionType } from '@/types/session';
@@ -33,11 +33,11 @@ const AgentTeamMembersSettings = memo(() => {
 
   const activeGroupId = useSessionStore((s) => s.activeId);
   const currentSession = useSessionStore(sessionSelectors.currentSession) as LobeGroupSession;
-  const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
+  const groupConfig = useAgentGroupStore(agentGroupSelectors.currentGroupConfig);
 
-  const addAgentsToGroup = useChatGroupStore((s) => s.addAgentsToGroup);
-  const removeAgentFromGroup = useChatGroupStore((s) => s.removeAgentFromGroup);
-  const updateGroupConfig = useChatGroupStore((s) => s.updateGroupConfig);
+  const addAgentsToGroup = useAgentGroupStore((s) => s.addAgentsToGroup);
+  const removeAgentFromGroup = useAgentGroupStore((s) => s.removeAgentFromGroup);
+  const updateGroupConfig = useAgentGroupStore((s) => s.updateGroupConfig);
   const refreshSessions = useSessionStore((s) => s.refreshSessions);
   const createSession = useSessionStore((s) => s.createSession);
 

@@ -9,8 +9,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { useImgToClipboard } from '@/hooks/useImgToClipboard';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ImageType, imageTypeOptions, useScreenshot } from '@/hooks/useScreenshot';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
@@ -19,20 +19,20 @@ import { FieldType, WidthMode } from './type';
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,
   widthMode: WidthMode.Wide,
-  withBackground: true,
+  withBackground: false,
   withFooter: true,
   withPluginInfo: false,
   withSystemRole: false,
 };
 
 const ShareImage = memo<{ mobile?: boolean }>(() => {
-  const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
+  const currentAgentTitle = useAgentStore(agentSelectors.currentAgentTitle);
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();
   const { loading, onDownload, title } = useScreenshot({
     imageType: fieldValue.imageType,
-    title: currentAgentTitle,
+    title: currentAgentTitle ?? undefined,
   });
   const { loading: copyLoading, onCopy } = useImgToClipboard();
 
@@ -57,14 +57,14 @@ const ShareImage = memo<{ mobile?: boolean }>(() => {
       name: 'withSystemRole',
       valuePropName: 'checked',
     },
-    {
-      children: <Switch />,
-      label: t('shareModal.withBackground'),
-      layout: 'horizontal',
-      minWidth: undefined,
-      name: 'withBackground',
-      valuePropName: 'checked',
-    },
+    // {
+    //   children: <Switch />,
+    //   label: t('shareModal.withBackground'),
+    //   layout: 'horizontal',
+    //   minWidth: undefined,
+    //   name: 'withBackground',
+    //   valuePropName: 'checked',
+    // },
     {
       children: <Switch />,
       label: t('shareModal.withFooter'),

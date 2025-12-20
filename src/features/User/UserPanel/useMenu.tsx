@@ -1,38 +1,17 @@
+import { isDesktop } from '@lobechat/const';
 import { Hotkey, Icon } from '@lobehub/ui';
-import { DiscordIcon } from '@lobehub/ui/icons';
 import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
-import {
-  Book,
-  CircleUserRound,
-  Cloudy,
-  Download,
-  Feather,
-  FileClockIcon,
-  HardDriveDownload,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  Settings2,
-} from 'lucide-react';
+import { Cloudy, Download, HardDriveDownload, LogOut, Settings2 } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import type { MenuProps } from '@/components/Menu';
-import { enableAuth } from '@/const/auth';
-import { BRANDING_EMAIL, LOBE_CHAT_CLOUD, SOCIAL_URL } from '@/const/branding';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
-import {
-  CHANGELOG,
-  DOCUMENTS_REFER_URL,
-  GITHUB_ISSUES,
-  OFFICIAL_URL,
-  UTM_SOURCE,
-  mailTo,
-} from '@/const/url';
-import { isDesktop } from '@/const/version';
+import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -73,14 +52,6 @@ export const useMenu = () => {
     authSelectors.isLoginWithAuth(s),
   ]);
 
-  const profile: MenuProps['items'] = [
-    {
-      icon: <Icon icon={CircleUserRound} />,
-      key: 'profile',
-      label: <Link to="/profile">{t('userPanel.profile')}</Link>,
-    },
-  ];
-
   const settings: MenuProps['items'] = [
     {
       extra: isDesktop ? (
@@ -95,9 +66,6 @@ export const useMenu = () => {
           <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>
         </Link>
       ),
-    },
-    {
-      type: 'divider',
     },
   ];
 
@@ -144,70 +112,13 @@ export const useMenu = () => {
         </a>
       ),
     },
-    {
-      icon: <Icon icon={FileClockIcon} />,
-      key: 'changelog',
-      label: isDesktop ? (
-        <a href={CHANGELOG} rel="noopener noreferrer" target="_blank">
-          {t('changelog')}
-        </a>
-      ) : (
-        <Link to="/changelog">{t('changelog')}</Link>
-      ),
-    },
-    {
-      children: [
-        {
-          icon: <Icon icon={Book} />,
-          key: 'docs',
-          label: (
-            <a href={DOCUMENTS_REFER_URL} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.docs')}
-            </a>
-          ),
-        },
-        {
-          icon: <Icon icon={Feather} />,
-          key: 'feedback',
-          label: (
-            <a href={GITHUB_ISSUES} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.feedback')}
-            </a>
-          ),
-        },
-        {
-          icon: <Icon icon={DiscordIcon} />,
-          key: 'discord',
-          label: (
-            <a href={SOCIAL_URL.discord} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.discord')}
-            </a>
-          ),
-        },
-        {
-          icon: <Icon icon={Mail} />,
-          key: 'email',
-          label: (
-            <a href={mailTo(BRANDING_EMAIL.support)} rel="noopener noreferrer" target="_blank">
-              {t('userPanel.email')}
-            </a>
-          ),
-        },
-      ],
-      icon: <Icon icon={LifeBuoy} />,
-      key: 'help',
-      label: t('userPanel.help'),
-    },
-    {
-      type: 'divider',
-    },
   ].filter(Boolean) as ItemType[];
 
   const mainItems = [
     {
       type: 'divider',
     },
-    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
+
     ...(isLogin ? settings : []),
     /* ↓ cloud slot ↓ */
 
@@ -223,6 +134,9 @@ export const useMenu = () => {
           icon: <Icon icon={LogOut} />,
           key: 'logout',
           label: <span>{t('signout', { ns: 'auth' })}</span>,
+        },
+        {
+          type: 'divider',
         },
       ]
     : [];

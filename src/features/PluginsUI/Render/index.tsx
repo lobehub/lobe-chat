@@ -11,12 +11,19 @@ import Standalone from './StandaloneType';
 export interface PluginRenderProps {
   arguments?: string;
   content: string;
-  id: string;
   identifier?: string;
   loading?: boolean;
+  /**
+   * The real message ID (tool message ID)
+   */
+  messageId?: string;
   payload?: PluginRequestPayload;
   pluginError?: any;
   pluginState?: any;
+  /**
+   * The tool call ID from the assistant message
+   */
+  toolCallId?: string;
   type?: LobeToolRenderType;
 }
 
@@ -24,7 +31,8 @@ const PluginRender = memo<PluginRenderProps>(
   ({
     content,
     arguments: argumentsStr = '',
-    id,
+    toolCallId,
+    messageId,
     payload,
     pluginState,
     identifier,
@@ -34,7 +42,9 @@ const PluginRender = memo<PluginRenderProps>(
   }) => {
     switch (type) {
       case 'standalone': {
-        return <Standalone id={id} name={identifier} payload={payload} />;
+        return (
+          <Standalone id={toolCallId || messageId || ''} name={identifier} payload={payload} />
+        );
       }
 
       case 'builtin': {
@@ -43,11 +53,12 @@ const PluginRender = memo<PluginRenderProps>(
             apiName={payload?.apiName}
             arguments={argumentsStr}
             content={content}
-            id={id}
             identifier={identifier}
             loading={loading}
+            messageId={messageId}
             pluginError={pluginError}
             pluginState={pluginState}
+            toolCallId={toolCallId}
           />
         );
       }
@@ -59,11 +70,12 @@ const PluginRender = memo<PluginRenderProps>(
             apiName={payload?.apiName}
             arguments={argumentsStr}
             content={content}
-            id={id}
             identifier={identifier}
             loading={loading}
+            messageId={messageId}
             pluginError={pluginError}
             pluginState={pluginState}
+            toolCallId={toolCallId}
           />
         );
       }
