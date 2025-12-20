@@ -7,8 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
+
+import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 
 interface SearchEngineIconProps {
   icon?: string;
@@ -32,11 +35,12 @@ const SearchEngineIcon = ({ icon }: SearchEngineIconProps) => {
 
 const ModelBuiltinSearch = memo(() => {
   const { t } = useTranslation('chat');
-  const [model, provider, checked, updateAgentChatConfig] = useAgentStore((s) => [
-    agentSelectors.currentAgentModel(s),
-    agentSelectors.currentAgentModelProvider(s),
-    agentChatConfigSelectors.useModelBuiltinSearch(s),
-    s.updateAgentChatConfig,
+  const agentId = useAgentId();
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const [model, provider, checked] = useAgentStore((s) => [
+    agentByIdSelectors.getAgentModelById(agentId)(s),
+    agentByIdSelectors.getAgentModelProviderById(agentId)(s),
+    chatConfigByIdSelectors.getUseModelBuiltinSearchById(agentId)(s),
   ]);
 
   const [isLoading, setLoading] = useState(false);

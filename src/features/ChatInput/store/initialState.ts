@@ -24,6 +24,7 @@ export const initialSendButtonState: SendButtonProps = {
 };
 
 export interface PublicState {
+  agentId?: string;
   allowExpand?: boolean;
   expand?: boolean;
   leftActions: ActionKeys[];
