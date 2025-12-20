@@ -25,6 +25,30 @@ export interface ThreadItem {
   userId: string;
 }
 
+/**
+ * Metadata for Thread, used for agent task execution
+ */
+export interface ThreadMetadata {
+  /** Task completion time */
+  completedAt?: string;
+  /** Execution duration in milliseconds */
+  duration?: number;
+  /** Error message when task failed */
+  error?: string;
+  /** Operation ID for tracking */
+  operationId?: string;
+  /** Task start time, used to calculate duration */
+  startedAt?: string;
+  /** Total cost in dollars */
+  totalCost?: number;
+  /** Total messages created during execution */
+  totalMessages?: number;
+  /** Total tokens consumed */
+  totalTokens?: number;
+  /** Total tool calls made */
+  totalToolCalls?: number;
+}
+
 export interface CreateThreadParams {
   parentThreadId?: string;
   sourceMessageId?: string;
