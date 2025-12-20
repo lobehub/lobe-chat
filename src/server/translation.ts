@@ -1,6 +1,4 @@
-'use server';
-
-import { get } from 'lodash-es';
+import { get } from 'es-toolkit/compat';
 
 import { DEFAULT_LANG } from '@/const/locale';
 import { Locales, NS, normalizeLocale } from '@/locales/resources';
