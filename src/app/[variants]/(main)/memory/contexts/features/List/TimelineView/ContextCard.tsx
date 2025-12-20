@@ -1,0 +1,28 @@
+import { memo } from 'react';
+
+import TimeLineCard from '@/app/[variants]/(main)/memory/features/TimeLineView/TimeLineCard';
+import { DisplayContextMemory } from '@/database/repositories/userMemory';
+
+import ContextDropdown from '../../ContextDropdown';
+
+interface ContextCardProps {
+  context: DisplayContextMemory;
+  onClick?: () => void;
+}
+
+const ContextCard = memo<ContextCardProps>(({ context, onClick }) => {
+  return (
+    <TimeLineCard
+      actions={<ContextDropdown id={context.id} />}
+      cate={context.type}
+      hashTags={context.tags}
+      onClick={onClick}
+      title={context.title}
+      updatedAt={context.updatedAt || context.createdAt}
+    >
+      {context.description}
+    </TimeLineCard>
+  );
+});
+
+export default ContextCard;

@@ -1,0 +1,46 @@
+import { useTheme } from 'antd-style';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
+import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
+import { DisplayContextMemory } from '@/database/repositories/userMemory';
+
+import ContextDropdown from '../../ContextDropdown';
+
+interface ContextCardProps {
+  context: DisplayContextMemory;
+  onClick?: () => void;
+}
+
+const ContextCard = memo<ContextCardProps>(({ context, onClick }) => {
+  const { t } = useTranslation('memory');
+  const theme = useTheme();
+
+  return (
+    <GridCard
+      actions={<ContextDropdown id={context.id} />}
+      badges={
+        <>
+          <ProgressIcon
+            format={(percent) => `${t('filter.sort.scoreImpact')}: ${percent}%`}
+            percent={(context.scoreImpact ?? 0) * 100}
+          />
+          <ProgressIcon
+            format={(percent) => `${t('filter.sort.scoreUrgency')}: ${percent}%`}
+            percent={(context.scoreUrgency ?? 0) * 100}
+            strokeColor={(context.scoreUrgency ?? 0) >= 0.7 ? theme.colorError : theme.colorWarning}
+          />
+        </>
+      }
+      cate={context.type}
+      onClick={onClick}
+      title={context.title}
+      updatedAt={context.updatedAt || context.createdAt}
+    >
+      {context.description}
+    </GridCard>
+  );
+});
+
+export default ContextCard;
