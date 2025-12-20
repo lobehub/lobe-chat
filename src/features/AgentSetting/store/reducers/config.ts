@@ -25,20 +25,25 @@ export const configReducer = (state: LobeAgentConfig, payload: ConfigDispatch): 
         }
 
         if (typeof state === 'undefined') {
+          // @ts-ignore
           if (config.plugins.includes(id)) {
+            // @ts-ignore
             config.plugins.splice(config.plugins.indexOf(id), 1);
 
             return;
           }
-
+          // @ts-ignore
           config.plugins.push(id);
           return;
         }
 
         if (!state) {
-          config.plugins = config.plugins.filter((pluginId) => pluginId !== id);
-        } else {
-          config.plugins.push(id);
+          // @ts-ignore
+          config.plugins = config?.plugins?.filter?.((pluginId) => pluginId !== id);
+          // @ts-ignore
+        } else if (!config?.plugins?.includes?.(id)) {
+          // @ts-ignore
+          config?.plugins?.push(id);
         }
       });
     }
