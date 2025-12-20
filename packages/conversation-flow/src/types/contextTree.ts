@@ -12,7 +12,7 @@ interface BaseNode {
   /** Unique identifier for this node */
   id: string;
   /** Type discriminator */
-  type: 'message' | 'assistantGroup' | 'compare' | 'branch';
+  type: 'message' | 'assistantGroup' | 'compare' | 'branch' | 'agentCouncil';
 }
 
 /**
@@ -60,6 +60,23 @@ export interface BranchNode extends BaseNode {
 }
 
 /**
+ * Agent Council node - renders multiple agent responses in parallel
+ * Unlike CompareNode, all responses enter LLM context (no selection needed)
+ */
+export interface AgentCouncilNode extends BaseNode {
+  /** Each member represents a single agent's response (simple ContextNode, not array) */
+  members: ContextNode[];
+  /** The message that triggered the council (typically a tool message) */
+  messageId: string;
+  type: 'agentCouncil';
+}
+
+/**
  * Union type of all display nodes
  */
-export type ContextNode = MessageNode | AssistantGroupNode | CompareNode | BranchNode;
+export type ContextNode =
+  | MessageNode
+  | AssistantGroupNode
+  | CompareNode
+  | BranchNode
+  | AgentCouncilNode;

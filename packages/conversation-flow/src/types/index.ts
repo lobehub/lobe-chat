@@ -11,6 +11,7 @@
 
 // Context Tree Types
 export type {
+  AgentCouncilNode,
   AssistantGroupNode,
   BranchNode,
   CompareNode,
