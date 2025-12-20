@@ -4,7 +4,7 @@ import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
 import { Button, Highlighter, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ShieldX } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -71,28 +71,39 @@ const WaitingOAuth = memo<WaitingOAuthProps>(({ setWaiting, setIsOpen }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('electron');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [disconnect, refreshServerConfig, connectRemoteServer] = useElectronStore((s) => [
-    s.disconnectRemoteServer,
-    s.refreshServerConfig,
-    s.connectRemoteServer,
-  ]);
+  const remoteServerSyncError = useElectronStore((s) => s.remoteServerSyncError);
+  const [disconnect, refreshServerConfig, connectRemoteServer, clearRemoteServerSyncError] =
+    useElectronStore((s) => [
+      s.disconnectRemoteServer,
+      s.refreshServerConfig,
+      s.connectRemoteServer,
+      s.clearRemoteServerSyncError,
+    ]);
 
   const handleCancel = async () => {
     await disconnect();
     setWaiting(false);
     setErrorMessage(null);
+    clearRemoteServerSyncError();
   };
 
   const handleRetry = async () => {
     setErrorMessage(null);
+    clearRemoteServerSyncError();
     const { dataSyncConfig } = useElectronStore.getState();
     await connectRemoteServer(dataSyncConfig);
   };
+
+  useEffect(() => {
+    if (!remoteServerSyncError?.message) return;
+    setErrorMessage(remoteServerSyncError.message);
+  }, [remoteServerSyncError?.message]);
 
   useWatchBroadcast('authorizationSuccessful', async () => {
     setIsOpen(false);
     setWaiting(false);
     setErrorMessage(null);
+    clearRemoteServerSyncError();
     await refreshServerConfig();
   });
 
