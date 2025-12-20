@@ -994,5 +994,34 @@
     "bps": true,
     "folderMillis": 1765728439737,
     "hash": "ba6a6beff2ad39419ec4aa7887539c9db0472e13f9242cb8780ff96eec450268"
+  },
+  {
+    "sql": [
+      "DROP INDEX IF EXISTS \"user_memories_contexts_title_vector_index\";",
+      "\nALTER TABLE \"agents\" ALTER COLUMN \"plugins\" DROP DEFAULT;",
+      "\nALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"pinned\" boolean;",
+      "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"type\" text;",
+      "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"content\" text;",
+      "\nALTER TABLE \"message_groups\" ADD COLUMN IF NOT EXISTS \"editor_data\" jsonb;",
+      "\nALTER TABLE \"messages\" ADD COLUMN IF NOT EXISTS \"summary\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"agent_id\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"group_id\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"metadata\" jsonb;",
+      "\nALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"memory\" jsonb;",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"interests\" varchar(64)[];",
+      "\nALTER TABLE \"users\" ADD COLUMN IF NOT EXISTS \"onboarding\" jsonb;",
+      "\nDO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'threads_agent_id_agents_id_fk') THEN\n    ALTER TABLE \"threads\" ADD CONSTRAINT \"threads_agent_id_agents_id_fk\" FOREIGN KEY (\"agent_id\") REFERENCES \"public\".\"agents\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;",
+      "\nDO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'threads_group_id_chat_groups_id_fk') THEN\n    ALTER TABLE \"threads\" ADD CONSTRAINT \"threads_group_id_chat_groups_id_fk\" FOREIGN KEY (\"group_id\") REFERENCES \"public\".\"chat_groups\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;",
+      "\nCREATE INDEX IF NOT EXISTS \"ai_models_user_id_idx\" ON \"ai_models\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"ai_providers_user_id_idx\" ON \"ai_providers\" USING btree (\"user_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"message_groups_type_idx\" ON \"message_groups\" USING btree (\"type\");",
+      "\nCREATE INDEX IF NOT EXISTS \"message_plugins_tool_call_id_idx\" ON \"message_plugins\" USING btree (\"tool_call_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"threads_agent_id_idx\" ON \"threads\" USING btree (\"agent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"threads_group_id_idx\" ON \"threads\" USING btree (\"group_id\");",
+      "\nALTER TABLE \"user_memories_contexts\" DROP COLUMN IF EXISTS \"title_vector\";\n"
+    ],
+    "bps": true,
+    "folderMillis": 1766157362540,
+    "hash": "7a8ee107778222390e676951173baa81bfa09dd47216a8467575fca54915172c"
   }
 ]
