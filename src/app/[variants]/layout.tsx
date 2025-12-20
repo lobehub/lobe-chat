@@ -1,8 +1,8 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { ReactNode } from 'react';
+import Script from 'next/script';
+import { ReactNode, Suspense } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
@@ -33,28 +33,31 @@ const RootLayout = async ({ children, params }: RootLayoutProps) => {
     <html dir={direction} lang={locale}>
       <head>
         {process.env.DEBUG_REACT_SCAN === '1' && (
-          // eslint-disable-next-line @next/next/no-sync-scripts
-          <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
+          <Script
+            crossOrigin={'anonymous'}
+            src={'https://unpkg.com/react-scan/dist/auto.global.js'}
+            strategy={'lazyOnload'}
+          />
         )}
       </head>
       <body>
-        <NuqsAdapter>
-          <GlobalProvider
-            appearance={theme}
-            isMobile={isMobile}
-            locale={locale}
-            neutralColor={neutralColor}
-            primaryColor={primaryColor}
-            variants={variants}
-          >
-            <AuthProvider>
-              {children}
-            </AuthProvider>
+        <GlobalProvider
+          appearance={theme}
+          isMobile={isMobile}
+          locale={locale}
+          neutralColor={neutralColor}
+          primaryColor={primaryColor}
+          variants={variants}
+        >
+          <AuthProvider>{children}</AuthProvider>
+          <Suspense fallback={null}>
             <PWAInstall />
-          </GlobalProvider>
-        </NuqsAdapter>
-        <Analytics />
-        {inVercel && <SpeedInsights />}
+          </Suspense>
+        </GlobalProvider>
+        <Suspense fallback={null}>
+          <Analytics />
+          {inVercel && <SpeedInsights />}
+        </Suspense>
       </body>
     </html>
   );
@@ -95,7 +98,11 @@ export const generateStaticParams = () => {
     for (const theme of themes) {
       for (const isMobile of mobileOptions) {
         variants.push({
-          variants: RouteVariants.serializeVariants({ isMobile, locale, theme }),
+          variants: RouteVariants.serializeVariants({
+            isMobile,
+            locale,
+            theme: theme as 'dark' | 'light',
+          }),
         });
       }
     }
