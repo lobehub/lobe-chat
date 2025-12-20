@@ -258,7 +258,7 @@ const ProviderList = (props: {
   ]);
 
   return (
-    <ScrollShadow gap={4} height={'100%'} paddingInline={12} size={4} style={{ paddingBottom: 32 }}>
+    <ScrollShadow gap={4} height={'100%'} paddingInline={8} size={4} style={{ paddingBottom: 32 }}>
       {!mobile && <All onClick={onProviderSelect} />}
       {open && (
         <SortProviderModal

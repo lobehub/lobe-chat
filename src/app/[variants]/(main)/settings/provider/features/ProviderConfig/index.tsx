@@ -10,8 +10,9 @@ import {
   Icon,
   Tooltip,
 } from '@lobehub/ui';
+import { Skeleton } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
-import { Skeleton, Switch } from 'antd';
+import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';

@@ -1,8 +1,8 @@
 'use client';
 
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
-import { Alert, Block, Text } from '@lobehub/ui';
-import { App, Button, Divider, Form, Input, Radio, Skeleton, Space, Switch } from 'antd';
+import { Alert, Block, Text , Skeleton } from '@lobehub/ui';
+import { App, Button, Divider, Form, Input, Radio, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

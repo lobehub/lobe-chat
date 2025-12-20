@@ -1,12 +1,13 @@
 'use client';
 
 import { Button, Form, type FormGroupItemType, Icon } from '@lobehub/ui';
-import { App } from 'antd';
+import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import DataImporter from '@/features/DataImporter';
@@ -33,7 +34,7 @@ const AdvancedActions = () => {
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [resetSettings] = useUserStore((s) => [s.resetSettings]);
+  const [setSettings, resetSettings] = useUserStore((s) => [s.setSettings, s.resetSettings]);
 
   const handleClear = useCallback(() => {
     modal.confirm({
@@ -67,6 +68,20 @@ const AdvancedActions = () => {
       title: t('danger.reset.confirm'),
     });
   }, []);
+
+  const analytics: FormGroupItemType = {
+    children: [
+      {
+        children: <Switch />,
+        desc: t('analytics.telemetry.desc', { appName: BRANDING_NAME }),
+        label: t('analytics.telemetry.title'),
+        minWidth: undefined,
+        name: ['general', 'telemetry'],
+        valuePropName: 'checked',
+      },
+    ],
+    title: t('analytics.title'),
+  };
 
   const system: FormGroupItemType = {
     children: [
@@ -126,8 +141,9 @@ const AdvancedActions = () => {
     <Form
       form={form}
       initialValues={settings}
-      items={[system]}
+      items={[analytics, system]}
       itemsType={'group'}
+      onValuesChange={setSettings}
       variant={'borderless'}
       {...FORM_STYLE}
     />

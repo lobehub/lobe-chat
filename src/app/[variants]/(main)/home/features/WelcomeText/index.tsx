@@ -1,0 +1,40 @@
+import { TypewriterEffect } from '@lobehub/ui/awesome';
+import { LoadingDots } from '@lobehub/ui/chat';
+import { useTheme } from 'antd-style';
+import { shuffle } from 'es-toolkit/compat';
+import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Center } from 'react-layout-kit';
+
+const WelcomeText = memo(() => {
+  const { t } = useTranslation('welcome');
+  const theme = useTheme();
+
+  const sentences = useMemo(() => {
+    const messages = t('welcomeMessages', { returnObjects: true }) as Record<string, string>;
+    return shuffle(Object.values(messages));
+  }, [t]);
+
+  return (
+    <Center
+      style={{
+        fontSize: 28,
+        fontWeight: 'bold',
+        marginBlock: '36px 24px',
+      }}
+    >
+      <TypewriterEffect
+        cursorCharacter={<LoadingDots color={theme.colorText} size={20} variant={'pulse'} />}
+        cursorFade={false}
+        deletePauseDuration={1000}
+        deletingSpeed={44}
+        hideCursorWhileTyping={'afterTyping'}
+        pauseDuration={16_000}
+        sentences={sentences}
+        typingSpeed={88}
+      />
+    </Center>
+  );
+});
+
+export default WelcomeText;
