@@ -37,7 +37,7 @@ export const agents = pgTable(
     backgroundColor: text('background_color'),
     marketIdentifier: text('market_identifier'),
 
-    plugins: jsonb('plugins').$type<string[]>().default([]),
+    plugins: jsonb('plugins').$type<string[]>(),
 
     clientId: text('client_id'),
 
@@ -55,6 +55,7 @@ export const agents = pgTable(
     tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
 
     virtual: boolean('virtual').default(false),
+    pinned: boolean('pinned'),
 
     openingMessage: text('opening_message'),
     openingQuestions: text('opening_questions').array().default([]),
