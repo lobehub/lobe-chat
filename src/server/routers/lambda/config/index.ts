@@ -15,12 +15,12 @@ export const configRouter = router({
   getGlobalConfig: publicProcedure.query(async ({ ctx }): Promise<GlobalRuntimeConfig> => {
     log('[GlobalConfig] Starting global config retrieval for user:', ctx.userId || 'anonymous');
 
-    const serverConfig = await getServerGlobalConfig();
-    log('[GlobalConfig] Server config retrieved');
+    const [serverConfig, serverFeatureFlags] = await Promise.all([
+      getServerGlobalConfig(),
+      getServerFeatureFlagsStateFromEdgeConfig(ctx.userId || undefined),
+    ]);
 
-    const serverFeatureFlags = await getServerFeatureFlagsStateFromEdgeConfig(
-      ctx.userId || undefined,
-    );
+    log('[GlobalConfig] Server config retrieved');
     log(
       '[GlobalConfig] Final feature flags to return (evaluated booleans only):',
       serverFeatureFlags,
