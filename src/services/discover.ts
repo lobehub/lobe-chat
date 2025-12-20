@@ -4,7 +4,7 @@ import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
 import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import {
   AssistantListResponse,
   AssistantMarketSource,
@@ -14,6 +14,7 @@ import {
   DiscoverModelDetail,
   DiscoverPluginDetail,
   DiscoverProviderDetail,
+  DiscoverUserProfile,
   IdentifiersResponse,
   McpListResponse,
   McpQueryParams,
@@ -158,7 +159,7 @@ class DiscoverService {
     ...params
   }: InstallReportRequest) => {
     // if user don't allow tracing, just not report installation
-    const allow = preferenceSelectors.userAllowTrace(useUserStore.getState());
+    const allow = userGeneralSettingsSelectors.telemetry(useUserStore.getState());
 
     if (!allow) return;
     await this.injectMPToken();
@@ -183,7 +184,7 @@ class DiscoverService {
    */
   reportPluginCall = async (reportData: CallReportRequest) => {
     // if user don't allow tracing , just not report calling
-    const allow = preferenceSelectors.userAllowTrace(useUserStore.getState());
+    const allow = userGeneralSettingsSelectors.telemetry(useUserStore.getState());
 
     if (!allow) return;
 
@@ -191,6 +192,22 @@ class DiscoverService {
 
     lambdaClient.market.reportCall.mutate(cleanObject(reportData)).catch((reportError) => {
       console.warn('Failed to report call:', reportError);
+    });
+  };
+
+  /**
+   * Report agent installation to increase install count
+   */
+  reportAgentInstall = async (identifier: string) => {
+    // if user don't allow tracing, just not report installation
+    const allow = userGeneralSettingsSelectors.telemetry(useUserStore.getState());
+
+    if (!allow) return;
+
+    await this.injectMPToken();
+
+    lambdaClient.market.reportAgentInstall.mutate({ identifier }).catch((reportError) => {
+      console.warn('Failed to report agent installation:', reportError);
     });
   };
 
@@ -286,6 +303,19 @@ class DiscoverService {
       locale,
       page: params.page ? Number(params.page) : 1,
       pageSize: params.pageSize ? Number(params.pageSize) : 20,
+    });
+  };
+
+  // ============================== User Profile ==============================
+
+  getUserInfo = async (params: {
+    locale?: string;
+    username: string;
+  }): Promise<DiscoverUserProfile | undefined> => {
+    const locale = globalHelpers.getCurrentLanguage();
+    return lambdaClient.market.getUserInfo.query({
+      locale,
+      username: params.username,
     });
   };
 

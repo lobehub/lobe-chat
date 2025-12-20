@@ -4,6 +4,8 @@
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 
 import { agentRouter } from './agent';
+import { agentGroupRouter } from './agentGroup';
+import { aiAgentRouter } from './aiAgent';
 import { aiChatRouter } from './aiChat';
 import { aiModelRouter } from './aiModel';
 import { aiProviderRouter } from './aiProvider';
@@ -17,7 +19,7 @@ import { fileRouter } from './file';
 import { generationRouter } from './generation';
 import { generationBatchRouter } from './generationBatch';
 import { generationTopicRouter } from './generationTopic';
-import { groupRouter } from './group';
+import { homeRouter } from './home';
 import { imageRouter } from './image';
 import { importerRouter } from './importer';
 import { klavisRouter } from './klavis';
@@ -26,6 +28,7 @@ import { marketRouter } from './market';
 import { messageRouter } from './message';
 import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
+import { searchRouter } from './search';
 import { sessionRouter } from './session';
 import { sessionGroupRouter } from './sessionGroup';
 import { threadRouter } from './thread';
@@ -33,9 +36,12 @@ import { topicRouter } from './topic';
 import { uploadRouter } from './upload';
 import { usageRouter } from './usage';
 import { userRouter } from './user';
+import { userMemoriesRouter } from './userMemories';
+import { userMemoryRouter } from './userMemory';
 
 export const lambdaRouter = router({
   agent: agentRouter,
+  aiAgent: aiAgentRouter,
   aiChat: aiChatRouter,
   aiModel: aiModelRouter,
   aiProvider: aiProviderRouter,
@@ -49,8 +55,9 @@ export const lambdaRouter = router({
   generation: generationRouter,
   generationBatch: generationBatchRouter,
   generationTopic: generationTopicRouter,
-  group: groupRouter,
+  group: agentGroupRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
+  home: homeRouter,
   image: imageRouter,
   importer: importerRouter,
   klavis: klavisRouter,
@@ -59,6 +66,7 @@ export const lambdaRouter = router({
   message: messageRouter,
   plugin: pluginRouter,
   ragEval: ragEvalRouter,
+  search: searchRouter,
   session: sessionRouter,
   sessionGroup: sessionGroupRouter,
   thread: threadRouter,
@@ -66,6 +74,8 @@ export const lambdaRouter = router({
   upload: uploadRouter,
   usage: usageRouter,
   user: userRouter,
+  userMemories: userMemoriesRouter,
+  userMemory: userMemoryRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;
