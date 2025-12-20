@@ -1,9 +1,9 @@
 'use client';
 
 import { BRANDING_NAME, DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@lobechat/const';
-import { Button, Text } from '@lobehub/ui';
+import { Button, Text , Skeleton } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
-import { Col, Flex, Row, Skeleton } from 'antd';
+import { Col, Flex, Row } from 'antd';
 import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
