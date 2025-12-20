@@ -53,7 +53,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
 
       await createNewAiProvider(finalValues);
       setLoading(false);
-      navigate(`/settings?active=provider&provider=${values.id}`);
+      navigate(`/settings/provider/${values.id}`);
       message.success(t('createNewAiProvider.createSuccess'));
       onClose?.();
     } catch (e) {

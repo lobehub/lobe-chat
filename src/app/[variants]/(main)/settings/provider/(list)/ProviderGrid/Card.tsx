@@ -1,6 +1,6 @@
 import { ProviderCombine, ProviderIcon } from '@lobehub/icons';
-import { Avatar, Text } from '@lobehub/ui';
-import { Divider, Skeleton } from 'antd';
+import { Avatar, Text , Skeleton } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
