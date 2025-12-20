@@ -3,7 +3,7 @@ import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Title from '../../../app/[variants]/(main)/discover/features/Title';
+import Title from '../../../app/[variants]/(main)/community/features/Title';
 import { ModeType } from './types';
 
 interface BlockProps {

@@ -1,15 +1,16 @@
 import { SiApple, SiLinux } from '@icons-pack/react-simple-icons';
 import { Microsoft } from '@lobehub/icons';
-import { ActionIcon, Block, Collapse, Icon, Snippet, Tag } from '@lobehub/ui';
-import { Divider, Empty, Popover, Steps } from 'antd';
+import { ActionIcon, Block, Collapse, Empty, Icon, Snippet, Tag } from '@lobehub/ui';
+import { Divider, Popover, Steps } from 'antd';
 import { createStyles } from 'antd-style';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import {
   CheckIcon,
   CloudIcon,
   CodeIcon,
   DownloadIcon,
   MinusIcon,
+  Package,
   TerminalIcon,
 } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
@@ -20,7 +21,7 @@ import { Flexbox } from 'react-layout-kit';
 import Descriptions from '@/components/Descriptions';
 import InlineTable from '@/components/InlineTable';
 
-import Title from '../../../app/[variants]/(main)/discover/features/Title';
+import Title from '../../../app/[variants]/(main)/community/features/Title';
 import InstallationIcon from '../../../components/MCPDepsIcon';
 import CollapseDesc from '../CollapseDesc';
 import CollapseLayout from '../CollapseLayout';
@@ -37,7 +38,7 @@ const useStyles = createStyles(({ css, token }) => {
 
 const Deployment = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles, theme } = useStyles();
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'plugin']);
   const { deploymentOptions = [], identifier } = useDetailContext();
   const [activeKey, setActiveKey] = useState<string[]>(['0']);
 
@@ -45,8 +46,10 @@ const Deployment = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Block variant="outlined">
         <Empty
-          description={t('mcp.details.deployment.empty')}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={t('plugin:mcpEmpty.deployment')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Package}
+          style={{ maxWidth: 400 }}
         />
       </Block>
     );

@@ -36,6 +36,16 @@ const useStyles = createStyles(({ css, token }) => {
     nav: css`
       border-block-end: 1px solid ${token.colorBorder};
     `,
+    tabs: css`
+      scrollbar-width: none;
+      overflow-x: auto;
+      flex: 1;
+      min-width: 0;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    `,
   };
 });
 
@@ -70,6 +80,7 @@ const Nav = memo<NavProps>(
     const nav = (
       <Tabs
         activeKey={activeTab}
+        className={styles.tabs}
         compact={mobile}
         items={
           [

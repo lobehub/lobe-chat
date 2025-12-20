@@ -27,7 +27,7 @@ interface ModelOption {
   value: string;
 }
 
-interface ModelSelectProps {
+interface ModelSelectProps extends Pick<SelectProps, 'loading' | 'size' | 'style' | 'variant'> {
   defaultValue?: { model: string; provider?: string };
   onChange?: (props: { model: string; provider: string }) => void;
   requiredAbilities?: (keyof EnabledProviderWithModels['children'][number]['abilities'])[];
@@ -36,7 +36,7 @@ interface ModelSelectProps {
 }
 
 const ModelSelect = memo<ModelSelectProps>(
-  ({ value, onChange, showAbility = true, requiredAbilities }) => {
+  ({ value, onChange, showAbility = true, requiredAbilities, loading, size, style, variant }) => {
     const enabledList = useEnabledChatModels();
 
     const { styles } = useStyles();
@@ -83,9 +83,6 @@ const ModelSelect = memo<ModelSelectProps>(
         .filter(Boolean) as SelectProps['options'];
     }, [enabledList, requiredAbilities, showAbility]);
 
-    console.log('options', options);
-    console.log('enabledList', enabledList);
-
     return (
       <Select
         className={styles.select}
@@ -93,13 +90,17 @@ const ModelSelect = memo<ModelSelectProps>(
           popup: { root: styles.popup },
         }}
         defaultValue={`${value?.provider}/${value?.model}`}
+        loading={loading}
         onChange={(value, option) => {
           const model = value.split('/').slice(1).join('/');
           onChange?.({ model, provider: (option as unknown as ModelOption).provider });
         }}
         options={options}
         popupMatchSelectWidth={false}
+        size={size}
+        style={style}
         value={`${value?.provider}/${value?.model}`}
+        variant={variant}
       />
     );
   },

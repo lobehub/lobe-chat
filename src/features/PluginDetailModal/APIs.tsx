@@ -1,5 +1,7 @@
-import { Empty, Table } from 'antd';
+import { Empty } from '@lobehub/ui';
+import { Table } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { Wrench } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -13,7 +15,15 @@ const APIs = memo<{
   const { t } = useTranslation('plugin');
   const pluginManifest = useToolStore(pluginSelectors.getToolManifestById(id), isEqual);
 
-  if (!pluginManifest?.api) return <Empty />;
+  if (!pluginManifest?.api)
+    return (
+      <Empty
+        description={t('detailModal.info.description')}
+        descriptionProps={{ fontSize: 14 }}
+        icon={Wrench}
+        style={{ maxWidth: 400 }}
+      />
+    );
 
   return (
     <Flexbox paddingBlock={16} width={'100%'}>

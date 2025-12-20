@@ -1,7 +1,7 @@
 import { Form, Markdown } from '@lobehub/ui';
 import { Form as AForm, Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { motion } from 'framer-motion';
+import { m as motion } from 'motion/react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

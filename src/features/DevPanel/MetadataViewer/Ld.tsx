@@ -1,17 +1,24 @@
-import { Highlighter } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { Empty, Highlighter } from '@lobehub/ui';
+import { Code } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import { useLd } from './useHead';
 
 const Ld = memo(() => {
+  const { t } = useTranslation('components');
   const ld = useLd();
 
   if (!ld)
     return (
       <Center height={'80%'}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty
+          description={t('devTools.metadata.empty')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Code}
+          style={{ maxWidth: 400 }}
+        />
       </Center>
     );
 

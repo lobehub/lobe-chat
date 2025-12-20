@@ -4,11 +4,11 @@ import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Button, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { CircleIcon, DotIcon, DownloadIcon, ScaleIcon, StarIcon } from 'lucide-react';
-import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import { Link } from 'react-router-dom';
 
 import OfficialIcon from '@/components/OfficialIcon';
 import Scores from '@/features/MCP/Scores';
@@ -80,9 +80,9 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
 
   const cateButton = (
     <Link
-      href={qs.stringifyUrl({
+      to={qs.stringifyUrl({
         query: { category: cate?.key },
-        url: '/discover/mcp',
+        url: '/community/mcp',
       })}
     >
       <Button icon={cate?.icon} size={'middle'} variant={'outlined'}>
@@ -94,7 +94,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
   return (
     <Flexbox gap={12}>
       <Flexbox align={'flex-start'} gap={16} horizontal width={'100%'}>
-        <Avatar avatar={icon} size={mobile ? 48 : 64} />
+        <Avatar avatar={icon} shape={'square'} size={mobile ? 48 : 64} />
         <Flexbox
           flex={1}
           gap={4}
@@ -142,9 +142,14 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
                 <InstallationIcon type={recommendedDeployment.installationMethod} />
               )}
               {github?.url && (
-                <Link href={github.url} onClick={(e) => e.stopPropagation()} target={'_blank'}>
+                <a
+                  href={github.url}
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                  target={'_blank'}
+                >
                   <ActionIcon fill={theme.colorTextDescription} icon={Github} />
-                </Link>
+                </a>
               )}
             </Flexbox>
           </Flexbox>
@@ -152,9 +157,9 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
             <div className={styles.version}>{version}</div>
             <Icon icon={DotIcon} />
             {author?.url ? (
-              <Link href={author?.url} target={'_blank'}>
+              <a href={author?.url} rel="noreferrer" target={'_blank'}>
                 {author?.name}
-              </Link>
+              </a>
             ) : (
               <span>{author?.name}</span>
             )}
