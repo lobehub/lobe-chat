@@ -5,8 +5,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
+import { chatConfigByIdSelectors } from '@/store/agent/selectors';
 
+import { useAgentId } from '../../hooks/useAgentId';
+import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';
 import FunctionCallingModelSelect from './FunctionCallingModelSelect';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -34,10 +36,11 @@ const useStyles = createStyles(({ css, token }) => ({
 const FCSearchModel = memo(() => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
-  const [searchFCModel, updateAgentChatConfig] = useAgentStore((s) => [
-    agentChatConfigSelectors.searchFCModel(s),
-    s.updateAgentChatConfig,
-  ]);
+  const agentId = useAgentId();
+  const { updateAgentChatConfig } = useUpdateAgentConfig();
+  const searchFCModel = useAgentStore((s) =>
+    chatConfigByIdSelectors.getSearchFCModelById(agentId)(s),
+  );
   return (
     <Flexbox distribution={'space-between'} gap={16} horizontal padding={8}>
       <Flexbox align={'center'} gap={4} horizontal>

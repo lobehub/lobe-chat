@@ -63,7 +63,12 @@ const MentionedUserItem = memo<MentionedUserItemProps>(({ agent }) => {
   return (
     <Flexbox align={'center'} className={styles.container} horizontal>
       <Center flex={1} height={64} padding={4} style={{ maxWidth: 64 }}>
-        <Avatar avatar={agent.avatar} background={agent.backgroundColor} shape="circle" size={48} />
+        <Avatar
+          avatar={agent.avatar}
+          background={agent.backgroundColor}
+          shape={'square'}
+          size={48}
+        />
       </Center>
       <Flexbox flex={1} gap={4} style={{ paddingBottom: 4, paddingInline: 4 }}>
         <Text ellipsis={{ tooltip: true }} style={{ fontSize: 12, maxWidth: 100 }}>

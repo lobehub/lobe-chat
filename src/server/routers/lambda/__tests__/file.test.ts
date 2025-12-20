@@ -224,8 +224,9 @@ describe('fileRouter', () => {
 
       const result = await caller.getKnowledgeItems({});
 
-      expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({
+      expect(result.items).toHaveLength(2);
+      expect(result.hasMore).toBe(false);
+      expect(result.items[0]).toMatchObject({
         chunkCount: 10,
         chunkingStatus: AsyncTaskStatus.Success,
         embeddingStatus: AsyncTaskStatus.Success,
@@ -234,7 +235,7 @@ describe('fileRouter', () => {
         sourceType: 'file',
         url: 'https://example.com/test-url',
       });
-      expect(result[1]).toMatchObject({
+      expect(result.items[1]).toMatchObject({
         chunkCount: null,
         chunkingError: null,
         chunkingStatus: null,

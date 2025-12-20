@@ -12,12 +12,12 @@ import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
+import { useAgentGroupStore } from '@/store/agentGroup/store';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { chatGroupSelectors } from '@/store/chatGroup/selectors';
-import { useChatGroupStore } from '@/store/chatGroup/store';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -25,6 +25,7 @@ import { toolSelectors } from '@/store/tool/selectors';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
 
@@ -39,19 +40,22 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
   const input = useChatStore((s) => s.inputMessage);
   const activeTopicId = useChatStore((s) => s.activeTopicId);
 
+  const agentId = useAgentId();
   const [model, provider] = useAgentStore((s) => {
     return [
-      agentSelectors.currentAgentModel(s) as string,
-      agentSelectors.currentAgentModelProvider(s) as string,
+      agentByIdSelectors.getAgentModelById(agentId)(s),
+      agentByIdSelectors.getAgentModelProviderById(agentId)(s),
     ];
   });
 
   // Group chat specific data
   const groupAgents = useSessionStore(sessionSelectors.currentGroupAgents);
   const activeSessionId = useSessionStore((s) => s.activeId);
-  const groupConfig = useChatGroupStore(chatGroupSelectors.currentGroupConfig);
+  const groupConfig = useAgentGroupStore(agentGroupSelectors.currentGroupConfig);
   const supervisorTodos = useChatStore((s) =>
-    activeSessionId ? s.supervisorTodos[messageMapKey(activeSessionId, activeTopicId)] || [] : [],
+    activeSessionId
+      ? s.supervisorTodos[messageMapKey({ agentId: activeSessionId, topicId: activeTopicId })] || []
+      : [],
   );
 
   const maxTokens = useModelContextWindowTokens(model, provider);

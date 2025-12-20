@@ -327,6 +327,7 @@ const KlavisServerItem = memo<KlavisServerItemProps>(
 
     return (
       <Flexbox
+        align={'center'}
         gap={24}
         horizontal
         justify={'space-between'}
