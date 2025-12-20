@@ -10,28 +10,48 @@
     "dragFileTitle": "Dosya Yükle",
     "dragTitle": "Resim Yükle"
   },
+  "EmojiPicker": {
+    "delete": "Avatarı sil",
+    "draggerDesc": "Yüklemek için resme tıklayın veya buraya sürükleyin",
+    "emoji": "Emoji Avatarı",
+    "fileTypeError": "Lütfen geçerli bir resim dosyası yükleyin",
+    "upload": "Avatarı yükle",
+    "uploadBtn": "Kırp ve yükle"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Bilgi tabanına ekle",
-      "addToOtherKnowledgeBase": "Diğer bilgi tabanına ekle",
+      "addToOtherKnowledgeBase": "Başka bir bilgi tabanına ekle",
       "batchChunking": "Toplu parçalara ayırma",
       "chunking": "Parçalara ayırma",
       "chunkingTooltip": "Dosyayı birden fazla metin parçasına ayırıp vektörleştirdikten sonra, anlamsal arama ve dosya diyalogları için kullanılabilir",
       "chunkingUnsupported": "Bu dosya parça parça yüklemeyi desteklemiyor.",
       "confirmDelete": "Bu dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
+      "confirmDeleteFolder": "Bu klasör ve içeriği silinmek üzere. Silme işlemi geri alınamaz, lütfen işleminizi onaylayın.",
       "confirmDeleteMultiFiles": "Seçilen {{count}} dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
-      "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak, kaldırıldıktan sonra dosyalar tüm dosyalar arasında görüntülenebilir, lütfen işleminizi onaylayın",
+      "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak. Kaldırıldıktan sonra dosyalar hâlâ tüm dosyalar arasında görüntülenebilir. Lütfen işleminizi onaylayın.",
       "copyUrl": "Bağlantıyı kopyala",
       "copyUrlSuccess": "Dosya adresi başarıyla kopyalandı",
       "createChunkingTask": "Hazırlanıyor...",
       "deleteSuccess": "Dosya başarıyla silindi",
       "downloading": "Dosya indiriliyor...",
+      "goBack": "Önceki sayfaya dön",
+      "goForward": "Sonraki sayfaya git",
+      "goToParent": "Üst klasöre git",
+      "moveError": "Dosya taşınamadı",
+      "moveHere": "Buraya taşı",
+      "moveSuccess": "Dosya başarıyla taşındı",
+      "moveToFolder": "Şuraya taşı...",
+      "moveToRoot": "Kök dizine taşı",
       "removeFromKnowledgeBase": "Bilgi tabanından kaldır",
-      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı"
+      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı",
+      "rename": "Yeniden Adlandır",
+      "renameError": "Yeniden adlandırma başarısız oldu",
+      "renameSuccess": "Yeniden adlandırma başarılı"
     },
     "bottom": "Artık sona geldik",
     "config": {
-      "showFilesInKnowledgeBase": "Bilgi tabanındaki içeriği göster"
+      "showFilesInKnowledgeBase": "Bilgi tabanındaki içerikleri göster"
     },
     "emptyStatus": {
       "actions": {
@@ -41,6 +61,12 @@
       },
       "or": "veya",
       "title": "Dosyayı veya klasörü buraya sürükleyin"
+    },
+    "noFolders": "Klasör bulunamadı",
+    "sort": {
+      "dateAdded": "Eklenme tarihi",
+      "name": "Ad",
+      "size": "Boyut"
     },
     "title": {
       "createdAt": "Oluşturulma zamanı",
@@ -164,7 +190,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Uyarıyı Kapat",
-      "start": "Yüklendi ve çalışıyor, sohbete başla"
+      "start": "Yüklendi"
     },
     "cors": {
       "description": "Tarayıcı güvenlik kısıtlamaları nedeniyle, Ollama'yı düzgün bir şekilde kullanabilmek için çapraz alan yapılandırması yapmanız gerekmektedir.",
@@ -193,5 +219,20 @@
     "thinking": "Derin düşünme aşamasında...",
     "thought": "Derinlemesine düşündüm (geçen süre {{duration}} saniye)",
     "thoughtWithDuration": "Derinlemesine düşündüm"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Önbellek boş"
+    },
+    "metadata": {
+      "empty": "Henüz meta veri yok"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Kaynaklarınızı düzenlemek ve yönetmek için bir bilgi tabanı oluşturun",
+      "search": "Eşleşen bilgi tabanı bulunamadı",
+      "title": "Henüz bilgi tabanı yok"
+    }
   }
 }

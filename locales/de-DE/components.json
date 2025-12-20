@@ -10,28 +10,48 @@
     "dragFileTitle": "Dateien hochladen",
     "dragTitle": "Bilder hochladen"
   },
+  "EmojiPicker": {
+    "delete": "Avatar löschen",
+    "draggerDesc": "Klicken oder ziehen Sie ein Bild in diesen Bereich, um es hochzuladen",
+    "emoji": "Emoji-Avatar",
+    "fileTypeError": "Bitte laden Sie eine gültige Bilddatei hoch",
+    "upload": "Avatar hochladen",
+    "uploadBtn": "Zuschneiden und hochladen"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Zur Wissensdatenbank hinzufügen",
-      "addToOtherKnowledgeBase": "Zur anderen Wissensdatenbank hinzufügen",
+      "addToOtherKnowledgeBase": "Zu einer anderen Wissensdatenbank hinzufügen",
       "batchChunking": "Batch-Zerteilung",
       "chunking": "Zerteilung",
       "chunkingTooltip": "Teilen Sie die Datei in mehrere Textblöcke und vektorisieren Sie sie, um sie für die semantische Suche und Dateidialoge zu verwenden.",
       "chunkingUnsupported": "Diese Datei unterstützt kein Chunking.",
       "confirmDelete": "Die Datei wird gelöscht. Nach dem Löschen kann sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
+      "confirmDeleteFolder": "Dieser Ordner und sein gesamter Inhalt werden gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden. Bitte bestätigen Sie Ihre Aktion.",
       "confirmDeleteMultiFiles": "Die ausgewählten {{count}} Dateien werden gelöscht. Nach dem Löschen können sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
-      "confirmRemoveFromKnowledgeBase": "Die ausgewählten {{count}} Dateien werden aus der Wissensdatenbank entfernt. Die Dateien sind weiterhin in allen Dateien sichtbar. Bitte bestätigen Sie Ihre Aktion.",
+      "confirmRemoveFromKnowledgeBase": "Die ausgewählten {{count}} Dateien werden aus der Wissensdatenbank entfernt. Die Dateien bleiben weiterhin unter 'Alle Dateien' sichtbar. Bitte bestätige deine Aktion.",
       "copyUrl": "Link kopieren",
       "copyUrlSuccess": "Dateiadresse erfolgreich kopiert",
       "createChunkingTask": "Wird vorbereitet...",
       "deleteSuccess": "Datei erfolgreich gelöscht",
       "downloading": "Datei wird heruntergeladen...",
+      "goBack": "Zurück zur vorherigen Seite",
+      "goForward": "Weiter zur nächsten Seite",
+      "goToParent": "Zum übergeordneten Ordner",
+      "moveError": "Datei konnte nicht verschoben werden",
+      "moveHere": "Hierher verschieben",
+      "moveSuccess": "Datei erfolgreich verschoben",
+      "moveToFolder": "Verschieben nach...",
+      "moveToRoot": "In das Stammverzeichnis verschieben",
       "removeFromKnowledgeBase": "Aus der Wissensdatenbank entfernen",
-      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt"
+      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt",
+      "rename": "Umbenennen",
+      "renameError": "Umbenennen fehlgeschlagen",
+      "renameSuccess": "Erfolgreich umbenannt"
     },
     "bottom": "Das Ende ist erreicht",
     "config": {
-      "showFilesInKnowledgeBase": "In der Wissensdatenbank angezeigte Inhalte"
+      "showFilesInKnowledgeBase": "Inhalte der Wissensdatenbank anzeigen"
     },
     "emptyStatus": {
       "actions": {
@@ -41,6 +61,12 @@
       },
       "or": "oder",
       "title": "Ziehen Sie Dateien oder Ordner hierher"
+    },
+    "noFolders": "Keine Ordner vorhanden",
+    "sort": {
+      "dateAdded": "Hinzugefügt am",
+      "name": "Name",
+      "size": "Größe"
     },
     "title": {
       "createdAt": "Erstellungsdatum",
@@ -164,7 +190,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Hinweis schließen",
-      "start": "Installiert und ausgeführt, beginnen Sie das Gespräch"
+      "start": "Installiert"
     },
     "cors": {
       "description": "Aufgrund von Sicherheitsbeschränkungen im Browser müssen Sie CORS für Ollama konfigurieren, um es ordnungsgemäß nutzen zu können.",
@@ -193,5 +219,20 @@
     "thinking": "Tiefes Nachdenken...",
     "thought": "Tiefgründig nachgedacht (Dauer: {{duration}} Sekunden)",
     "thoughtWithDuration": "Tiefgründig nachgedacht"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Cache ist leer"
+    },
+    "metadata": {
+      "empty": "Keine Metadaten verfügbar"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Erstelle eine Wissensdatenbank, um deine Ressourcen zu organisieren und zu verwalten",
+      "search": "Keine passende Wissensdatenbank gefunden",
+      "title": "Keine Wissensdatenbank vorhanden"
+    }
   }
 }

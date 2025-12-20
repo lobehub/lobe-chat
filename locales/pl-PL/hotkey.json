@@ -49,6 +49,10 @@
     "desc": "Ponownie wygeneruj ostatnią wiadomość",
     "title": "Ponownie wygeneruj wiadomość"
   },
+  "saveDocument": {
+    "desc": "Natychmiast zapisz wszystkie zmiany w bieżącym dokumencie",
+    "title": "Zapisz dokument"
+  },
   "saveTopic": {
     "desc": "Zapisz bieżący temat i otwórz nowy temat",
     "title": "Rozpocznij nowy temat"
@@ -66,12 +70,12 @@
     "title": "Szybkie przełączanie asystenta"
   },
   "toggleLeftPanel": {
-    "desc": "Pokaż lub ukryj lewy panel asystenta",
-    "title": "Pokaż/ukryj panel asystenta"
+    "desc": "Pokaż lub ukryj panel po lewej stronie",
+    "title": "Pokaż/Ukryj panel po lewej stronie"
   },
   "toggleRightPanel": {
-    "desc": "Pokaż lub ukryj prawy panel tematów",
-    "title": "Pokaż/ukryj panel tematów"
+    "desc": "Pokaż lub ukryj panel po prawej stronie",
+    "title": "Pokaż/Ukryj panel po prawej stronie"
   },
   "toggleZenMode": {
     "desc": "W trybie skupienia wyświetlaj tylko bieżącą rozmowę, ukrywając inne interfejsy",

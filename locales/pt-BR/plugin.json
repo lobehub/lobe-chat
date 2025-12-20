@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Obter modelos disponíveis",
+        "getAvailableTools": "Obter ferramentas disponíveis",
+        "getConfig": "Obter configuração",
+        "getMeta": "Obter metadados",
+        "getPrompt": "Obter prompt do sistema",
+        "searchMarketTools": "Pesquisar no mercado de plugins",
+        "searchOfficialTools": "Pesquisar ferramentas oficiais",
+        "setModel": "Definir modelo",
+        "setOpeningMessage": "Definir mensagem de abertura",
+        "setOpeningQuestions": "Definir perguntas iniciais",
+        "togglePlugin": "Alternar plugin",
+        "updateChatConfig": "Atualizar configuração do chat",
+        "updateConfig": "Atualizar configuração",
+        "updateMeta": "Atualizar metadados",
+        "updatePrompt": "Atualizar prompt do sistema"
+      },
+      "title": "Construtor de Agente"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Obter modelos disponíveis",
+        "installPlugin": "Instalar plugin",
+        "inviteAgent": "Convidar membro",
+        "removeAgent": "Remover membro",
+        "searchMarketTools": "Pesquisar no mercado de plugins",
+        "updateAgentConfig": "Atualizar configuração do agente",
+        "updatePrompt": "Atualizar prompt do sistema"
+      },
+      "title": "Construtor de Agente em Grupo"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Falar com todos",
+        "createAgent": "Adicionar membro à equipe",
+        "createWorkflow": "Planejar fluxo de trabalho",
+        "executeTask": "Executar tarefa",
+        "getAgentInfo": "Obter informações do membro",
+        "interrupt": "Interromper tarefa",
+        "inviteAgent": "Convidar membro",
+        "removeAgent": "Remover membro",
+        "searchAgent": "Buscar especialista relevante",
+        "speak": "Designar membro para falar",
+        "summarize": "Resumir conversa",
+        "vote": "Iniciar votação"
+      },
+      "title": "Coordenação da equipe"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Limpar tarefas",
+        "completeTodos": "Concluir tarefas",
+        "createPlan": "Criar plano",
+        "createTodos": "Criar tarefas",
+        "removeTodos": "Remover tarefas",
+        "updatePlan": "Atualizar plano",
+        "updateTodos": "Atualizar tarefas"
+      },
+      "title": "Ferramenta GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Ler conteúdo da base de conhecimento",
@@ -23,6 +84,41 @@
         "writeLocalFile": "Escrever no arquivo"
       },
       "title": "Sistema Local"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Atualização em lote de nós",
+        "compareSnapshots": "Comparar capturas",
+        "convertToList": "Converter para lista",
+        "createNode": "Criar nó",
+        "cropImage": "Cortar imagem",
+        "deleteNode": "Excluir nó",
+        "deleteSnapshot": "Excluir captura",
+        "deleteTableColumn": "Excluir coluna da tabela",
+        "deleteTableRow": "Excluir linha da tabela",
+        "duplicateNode": "Duplicar nó",
+        "editTitle": "Editar título do documento",
+        "indentListItem": "Recuar item da lista",
+        "initPage": "Inicializar documento",
+        "insertTableColumn": "Inserir coluna na tabela",
+        "insertTableRow": "Inserir linha na tabela",
+        "listSnapshots": "Listar capturas",
+        "mergeNodes": "Mesclar nós",
+        "moveNode": "Mover nó",
+        "outdentListItem": "Remover recuo do item da lista",
+        "replaceText": "Substituir texto",
+        "resizeImage": "Redimensionar imagem",
+        "restoreSnapshot": "Restaurar captura",
+        "rotateImage": "Girar imagem",
+        "saveSnapshot": "Salvar captura",
+        "setImageAlt": "Definir texto alternativo da imagem",
+        "splitNode": "Dividir nó",
+        "toggleListType": "Alternar tipo de lista",
+        "unwrapNode": "Desagrupar nó",
+        "updateNode": "Atualizar nó",
+        "wrapNodes": "Agrupar nós"
+      },
+      "title": "Documento"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Atualizar",
     "updateSuccess": "Configurações do plugin atualizadas com sucesso"
   },
+  "empty": {
+    "description": "A loja de plugins está repleta de ferramentas esperando para serem descobertas. Visite a loja e comece a explorar.",
+    "search": "Nenhum plugin correspondente encontrado",
+    "title": "Nenhum plugin disponível"
+  },
   "error": {
     "fetchError": "Falha ao solicitar o link do manifest, por favor verifique a validade do link e se permite acesso cross-origin",
     "installError": "Falha na instalação do plugin {{name}}",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Chamando plugin...",
     "plugin": "Plugin em execução..."
+  },
+  "mcpEmpty": {
+    "deployment": "Nenhuma opção de implantação disponível",
+    "prompts": "Este plugin não possui prompts no momento",
+    "resources": "Este plugin não possui recursos no momento",
+    "tools": "Este plugin não possui funcionalidades no momento"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Verificando ambiente de instalação...",
@@ -338,6 +445,8 @@
       "installed": "Instalado"
     },
     "config": {
+      "addEnv": "Adicionar variável de ambiente",
+      "addHeaders": "Adicionar cabeçalhos de requisição",
       "args": "Parâmetros",
       "command": "Comando",
       "env": "Variáveis de ambiente",
@@ -358,12 +467,15 @@
       },
       "title": "Instalar plugin personalizado"
     },
+    "install": {
+      "title": "Informações de instalação"
+    },
     "marketplace": {
       "title": "Instalar plugins de terceiros",
       "trustedBy": "Fornecido por {{name}}",
       "unverified": {
         "title": "Plugin de terceiros não verificado",
-        "warning": "Este plugin vem de um mercado de terceiros não verificado, por favor confirme que confia na fonte antes de instalar."
+        "warning": "Este plugin é de uma comunidade de terceiros não verificada. Certifique-se de confiar na fonte antes de instalar."
       },
       "verified": "Verificado"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Estas configurações serão passadas como variáveis de ambiente para o processo ao iniciar o servidor MCP",
     "httpTypeNotice": "Plugins MCP do tipo HTTP não requerem variáveis de ambiente para configuração",
     "indexUrl": {
-      "title": "Índice do mercado",
+      "title": "Índice da Comunidade",
       "tooltip": "Edição online não suportada, por favor configure via variável de ambiente durante a implantação"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Falha ao salvar variáveis de ambiente",
       "envUpdateSuccess": "Variáveis de ambiente salvas com sucesso"
     },
-    "modalDesc": "Após configurar o endereço do mercado de plugins, você poderá usar mercados personalizados",
+    "modalDesc": "Após configurar o endereço da comunidade de plugins, você poderá usar uma comunidade personalizada de plugins.",
     "rules": {
       "argsRequired": "Por favor, insira os parâmetros de inicialização",
       "commandRequired": "Por favor, insira o comando de inicialização",
       "urlRequired": "Por favor, insira o endereço do serviço"
     },
     "saveSettings": "Salvar configurações",
-    "title": "Configurar mercado de plugins"
+    "title": "Configurar Comunidade de Plugins"
   },
   "showInPortal": "Por favor, veja os detalhes no workspace",
   "store": {

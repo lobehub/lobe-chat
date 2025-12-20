@@ -10,37 +10,63 @@
     "dragFileTitle": "ファイルをアップロード",
     "dragTitle": "画像をアップロード"
   },
+  "EmojiPicker": {
+    "delete": "アバターを削除",
+    "draggerDesc": "クリックまたは画像をドラッグしてアップロード",
+    "emoji": "絵文字アバター",
+    "fileTypeError": "有効な画像ファイルをアップロードしてください",
+    "upload": "アバターをアップロード",
+    "uploadBtn": "トリミングしてアップロード"
+  },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "知識ベースに追加",
-      "addToOtherKnowledgeBase": "他の知識ベースに追加",
+      "addToKnowledgeBase": "ナレッジベースに追加",
+      "addToOtherKnowledgeBase": "他のナレッジベースに追加",
       "batchChunking": "バッチ分割",
       "chunking": "分割",
       "chunkingTooltip": "ファイルを複数のテキストブロックに分割し、ベクトル化した後、意味検索やファイル対話に使用できます",
       "chunkingUnsupported": "このファイルはチャンク分割をサポートしていません",
       "confirmDelete": "このファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
+      "confirmDeleteFolder": "このフォルダーとそのすべての内容を削除しようとしています。削除後は元に戻せません。本当に実行しますか？",
       "confirmDeleteMultiFiles": "選択した {{count}} 個のファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
-      "confirmRemoveFromKnowledgeBase": "選択した {{count}} 個のファイルを知識ベースから削除しようとしています。削除後もファイルはすべてのファイルで表示できますので、操作を確認してください",
+      "confirmRemoveFromKnowledgeBase": "選択された {{count}} 件のファイルをナレッジベースから削除しようとしています。削除後もすべてのファイル一覧から閲覧可能です。操作を確認してください。",
       "copyUrl": "リンクをコピー",
       "copyUrlSuccess": "ファイルのアドレスがコピーされました",
       "createChunkingTask": "準備中...",
       "deleteSuccess": "ファイルが正常に削除されました",
       "downloading": "ファイルをダウンロード中...",
-      "removeFromKnowledgeBase": "知識ベースから削除",
-      "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました"
+      "goBack": "前のページに戻る",
+      "goForward": "次のページへ進む",
+      "goToParent": "親フォルダへ移動",
+      "moveError": "ファイルの移動に失敗しました",
+      "moveHere": "ここに移動",
+      "moveSuccess": "ファイルを正常に移動しました",
+      "moveToFolder": "フォルダへ移動...",
+      "moveToRoot": "ルートディレクトリへ移動",
+      "removeFromKnowledgeBase": "ナレッジベースから削除",
+      "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました",
+      "rename": "名前を変更",
+      "renameError": "名前の変更に失敗しました",
+      "renameSuccess": "名前の変更に成功しました"
     },
     "bottom": "これ以上ありません",
     "config": {
-      "showFilesInKnowledgeBase": "知識ベースの内容を表示"
+      "showFilesInKnowledgeBase": "ナレッジベースの内容を表示"
     },
     "emptyStatus": {
       "actions": {
         "file": "ファイルをアップロード",
         "folder": "フォルダーをアップロード",
-        "knowledgeBase": "新しい知識ベースを作成"
+        "knowledgeBase": "ナレッジベースを新規作成"
       },
       "or": "または",
       "title": "ここにファイルまたはフォルダーをドラッグしてください"
+    },
+    "noFolders": "フォルダがありません",
+    "sort": {
+      "dateAdded": "追加日",
+      "name": "名前",
+      "size": "サイズ"
     },
     "title": {
       "createdAt": "作成日時",
@@ -164,7 +190,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "ヒントを閉じる",
-      "start": "インストールされ、実行中です。対話を開始します"
+      "start": "インストール済み"
     },
     "cors": {
       "description": "ブラウザのセキュリティ制限により、Ollamaを正常に使用するにはクロスオリジン設定が必要です。",
@@ -193,5 +219,20 @@
     "thinking": "深く考えています...",
     "thought": "深く考えました（所要時間 {{duration}} 秒）",
     "thoughtWithDuration": "深く考えました"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "キャッシュが空です"
+    },
+    "metadata": {
+      "empty": "メタデータはありません"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "ナレッジベースを作成して、リソースを整理・管理しましょう",
+      "search": "一致するナレッジベースが見つかりませんでした",
+      "title": "ナレッジベースがまだありません"
+    }
   }
 }

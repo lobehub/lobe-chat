@@ -1,0 +1,16 @@
+{
+  "agentSelection": {
+    "empty": "Brak dostępnych asystentów",
+    "noAvailable": "Obecnie brak asystentów do dodania",
+    "noSelected": "Nie wybrano żadnego asystenta",
+    "search": "Nie znaleziono pasujących asystentów"
+  },
+  "starter": {
+    "createAgent": "Utwórz Asystenta",
+    "createGroup": "Utwórz grupę",
+    "deepResearch": "Dogłębne Badania",
+    "developing": "W Trakcie Opracowywania",
+    "image": "Ilustracja",
+    "write": "Pisanie"
+  }
+}

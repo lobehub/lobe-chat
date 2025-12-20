@@ -3,6 +3,24 @@
     "title": "Cambiar modelo"
   },
   "active": "Activo",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "El complemento MCP en la nube requiere autenticación",
+      "cancel": "Cancelar",
+      "clickApproveToConnect": "Haz clic en «Aprobar» para conectar y autorizar esta integración",
+      "clickApproveToInstall": "Haz clic en «Aprobar» para instalar este complemento",
+      "connectedAndEnabled": "Conectado y habilitado",
+      "connectionFailed": "Conexión fallida",
+      "installFailed": "Error de instalación",
+      "installPlugin": "Instalar complemento",
+      "installToEnable": "Instala este complemento para habilitar el asistente",
+      "installedAndEnabled": "Instalado y habilitado",
+      "requiresAuth": "Se requiere autorización, haz clic en «Aprobar» para conectar",
+      "retry": "Reintentar"
+    },
+    "title": "Especialista en Creación de Asistentes",
+    "welcome": "¿Cuál es tu escenario de necesidad? Tu compañero profesional está listo para ayudarte.\n\nYa sea para escribir, programar o analizar datos, ¡puedo ayudarte a crear un asistente personalizado!"
+  },
   "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
   "agentDefaultMessageWithoutEdit": "Hola, soy **{{name}}**, ¿en qué puedo ayudarte?",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "Agentes disponibles",
   "backToBottom": "Volver al fondo",
+  "builtinCopilot": "Copilot integrado",
   "chatList": {
     "expandMessage": "Expandir mensaje",
     "longMessageDetail": "Ver detalles"
   },
   "clearCurrentMessages": "Borrar mensajes actuales",
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
-  "confirmRemoveChatGroupItemAlert": "Estás a punto de eliminar este equipo de agentes. Los miembros del equipo no se verán afectados. Por favor, confirma tu acción.",
+  "confirmRemoveChatGroupItemAlert": "Estás a punto de eliminar este grupo. Los miembros del equipo no se verán afectados. Por favor, confirma tu acción.",
   "confirmRemoveGroupItemAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción",
-  "confirmRemoveGroupSuccess": "Equipo de agentes eliminado con éxito",
+  "confirmRemoveGroupSuccess": "Grupo eliminado con éxito",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionSuccess": "Asistente eliminado con éxito",
   "defaultAgent": "Asistente predeterminado",
-  "defaultGroupChat": "Equipo de agentes",
+  "defaultGroupChat": "Grupo",
   "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
+  "emptyAgentAction": "Crear asistente",
   "extendParams": {
     "disableContextCaching": {
       "desc": "El costo de generación de una sola conversación puede reducirse hasta en un 90%, y la velocidad de respuesta se incrementa 4 veces (<1>Más información</1>). Al activarlo, se desactivará automáticamente el límite de mensajes históricos",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "Descripción del equipo",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Chat",
+      "model": "Modelo"
+    },
     "members": {
       "addMember": "Agregar miembro",
+      "enableOrchestrator": "Activar moderador",
       "memberSettings": "Configuración de miembros",
       "orchestrator": "Anfitrión",
       "orchestratorThinking": "El anfitrión está pensando...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "No hay miembros en la plantilla",
     "noTemplates": "No hay plantillas disponibles",
     "searchTemplates": "Buscar plantillas...",
-    "title": "Crear equipo de agentes",
+    "title": "Crear grupo",
     "useTemplate": "Usar plantilla"
   },
   "hideForYou": "El contenido del mensaje privado está oculto, por favor activa 【Mostrar contenido de mensajes privados】 en la configuración para verlo",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "Todo el contenido",
     "allFiles": "Todos los archivos",
-    "allKnowledgeBases": "Todas las bases de conocimiento",
-    "disabled": "El modo de implementación actual no admite conversaciones con la base de conocimientos. Si desea utilizar esta función, cambie a la implementación de base de datos en el servidor o utilice el servicio {{cloud}}.",
+    "allLibraries": "Todas las bibliotecas",
+    "disabled": "El modo de implementación actual no admite conversaciones con bibliotecas. Para utilizarlas, cambia a una base de datos en servidor o usa el servicio {{cloud}}",
     "library": {
       "action": {
         "add": "Agregar",
         "detail": "Detalles",
         "remove": "Eliminar"
       },
-      "title": "Archivos/Bases de conocimiento"
+      "title": "Archivos/Biblioteca"
     },
-    "relativeFilesOrKnowledgeBases": "Archivos/Bases de conocimiento relacionados",
-    "title": "Base de conocimiento",
-    "uploadGuide": "Los archivos subidos se pueden ver en la 'Base de conocimiento'.",
+    "relativeFilesOrLibraries": "Archivos/Bibliotecas relacionadas",
+    "title": "Biblioteca",
+    "uploadGuide": "Puedes ver los archivos subidos en la sección «Recursos»",
     "viewMore": "Ver más"
   },
   "memberSelection": {
     "addMember": "Agregar miembro",
     "allMembers": "Todos los miembros",
-    "createGroup": "Crear equipo de agentes",
+    "createGroup": "Crear grupo",
     "noAvailableAgents": "No hay agentes disponibles para invitar",
     "noSelectedAgents": "Aún no se ha seleccionado ningún agente",
     "searchAgents": "Buscar agentes...",
+    "selectedAgents": "Seleccionado(s) ({{count}})",
     "setInitialMembers": "Seleccionar miembros del equipo"
   },
   "members": "Miembros",
@@ -245,15 +271,20 @@
     "senderAssistant": "Agente",
     "senderUser": "Tú"
   },
-  "newAgent": "Nuevo asistente",
-  "newGroupChat": "Nuevo equipo de agentes",
-  "noAgentsYet": "Este equipo de agentes aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
+  "newAgent": "Crear asistente",
+  "newGroupChat": "Crear grupo",
+  "newPage": "Crear documento",
+  "noAgentsYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
   "noAvailableAgents": "No hay miembros disponibles para invitar",
   "noMatchingAgents": "No se encontraron miembros coincidentes",
   "noMembersYet": "Este grupo aún no tiene miembros. Haz clic en el botón + para invitar asistentes.",
   "noSelectedAgents": "Aún no se han seleccionado miembros",
-  "openInNewWindow": "Abrir en una nueva ventana",
+  "openInNewWindow": "Abrir en una ventana nueva",
   "owner": "Propietario del grupo",
+  "pageCopilot": {
+    "title": "Asistente de Redacción",
+    "welcome": "**Haz que cada frase cuente.**\n\nYa sea redactando, reescribiendo o puliendo textos, te ayudaré a que tus palabras sean más claras, naturales y persuasivas."
+  },
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "Asistente de búsqueda...",
   "searchAgents": "Asistente de búsqueda...",
   "selectedAgents": "Agentes seleccionados",
-  "sendPlaceholder": "Escribe tu mensaje...",
+  "sendPlaceholder": "Haz una pregunta, crea o comienza una tarea, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Gestión de grupos",
     "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "Chat grupal creado con éxito",
     "createSuccess": "Grupo creado con éxito",
     "creatingAgent": "Creando asistente...",
+    "groupName": "Nombre del grupo",
     "inputPlaceholder": "Introduce el nombre del grupo...",
     "moveGroup": "Mover al grupo",
     "newGroup": "Nuevo grupo",
+    "noAvailableAgents": "No hay asistentes disponibles",
+    "noMatchingAgents": "No se encontraron asistentes coincidentes",
+    "noSelectedAgents": "Por favor, selecciona un asistente",
     "rename": "Renombrar grupo",
     "renameSuccess": "Grupo renombrado con éxito",
+    "searchAgents": "Buscar asistentes",
+    "selectedAgents": "Asistentes seleccionados ({{count}})",
     "sortSuccess": "Reordenación exitosa",
     "sorting": "Actualizando orden de grupos...",
     "tooLong": "El nombre del grupo debe tener entre 1 y 20 caracteres"
@@ -361,6 +398,20 @@
       "title": "Tareas completadas"
     }
   },
+  "tab": {
+    "groupProfile": "Perfil del grupo",
+    "profile": "Perfil del asistente",
+    "search": "Buscar"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "pasos",
+      "toolCallsShort": "usos de herramientas"
+    },
+    "status": {
+      "initializing": "Iniciando tarea..."
+    }
+  },
   "thread": {
     "divider": "Subtema",
     "threadMessageCount": "{{messageCount}} mensajes",
@@ -409,10 +460,18 @@
       "toolRejected": "Esta ejecución de herramienta fue rechazada"
     }
   },
+  "toolAuth": {
+    "authorize": "Autorizar",
+    "authorizing": "Autorizando...",
+    "hint": "Si no se autoriza o configura, estas herramientas no funcionarán correctamente, lo que podría causar errores o la falta de funciones del asistente.",
+    "signIn": "Iniciar sesión",
+    "title": "Este asistente utiliza las siguientes herramientas que requieren autorización"
+  },
   "topic": {
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",
     "checkSaveCurrentMessages": "¿Desea guardar la conversación actual como tema?",
     "openNewTopic": "Abrir nuevo tema",
+    "recent": "Temas recientes",
     "saveCurrentMessages": "Guardar la conversación actual como tema"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "Borrar voz"
   },
   "untitledAgent": "Asistente sin título",
+  "untitledGroup": "Grupo sin título",
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "El tamaño del archivo de video no puede superar los 20 MB, el tamaño actual es {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normal",
+    "wideScreen": "Pantalla ancha"
   },
   "you": "tú",
   "zenMode": "Modo de concentración"

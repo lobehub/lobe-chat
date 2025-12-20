@@ -1,8 +1,7 @@
 {
   "addFolder": "Criar pasta",
-  "addKnowledge": "Adicionar conhecimento",
+  "addLibrary": "Adicionar",
   "addPage": "Criar documento",
-  "desc": "Gerencie seus conhecimentos de trabalho, estudo e vida.",
   "detail": {
     "basic": {
       "createdAt": "Data de criação",
@@ -24,7 +23,96 @@
       "embeddingStatus": "Vetorização"
     }
   },
-  "documentEditor": {
+  "empty": "Nenhum arquivo/pasta enviado até o momento",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} arquivos filtrados (de um total de {{total}} arquivos)"
+      },
+      "connect": "Conectar...",
+      "gitignore": {
+        "apply": "Aplicar regras",
+        "cancel": "Ignorar regras",
+        "content": "Arquivo .gitignore detectado ({{count}} arquivos no total). Deseja aplicar as regras de ignorar?",
+        "filtered": "{{ignored}} arquivos foram filtrados (de um total de {{total}} arquivos)",
+        "title": ".gitignore detectado"
+      },
+      "newFolder": "Nova pasta",
+      "newPage": "Novo documento",
+      "notion": {
+        "error": "Falha ao importar arquivos do Notion",
+        "foundFiles": "{{count}} arquivos encontrados",
+        "importing": "Importando arquivos do Notion...",
+        "noMarkdownFiles": "Nenhum arquivo Markdown encontrado no arquivo ZIP",
+        "partial": "{{success}} arquivos importados com sucesso, {{failed}} falharam",
+        "success": "{{count}} arquivos importados com sucesso"
+      },
+      "notionGuide": {
+        "cancel": "Cancelar importação",
+        "desc": "Exporte primeiro em Markdown (ZIP) no Notion. Clique em Continuar para selecionar o arquivo compactado e importar todas as páginas.",
+        "ok": "Selecionar ZIP do Notion",
+        "title": "Importar conteúdo do Notion"
+      },
+      "uploadFile": "Enviar arquivo",
+      "uploadFolder": "Enviar pasta"
+    },
+    "newPageButton": "Novo Documento",
+    "uploadButton": "Enviar"
+  },
+  "home": {
+    "getStarted": "Começar",
+    "greeting": "Início",
+    "quickActions": "Ações Rápidas",
+    "recentFiles": "Arquivos Recentes",
+    "recentPages": "Documentos Recentes",
+    "subtitle": "Bem-vindo ao Centro de Recursos, comece a gerenciar seus documentos e arquivos aqui",
+    "uploadEntries": {
+      "files": {
+        "title": "Enviar Arquivos"
+      },
+      "folder": {
+        "title": "Enviar Pasta"
+      },
+      "library": {
+        "title": "Nova Biblioteca"
+      },
+      "newPage": {
+        "title": "Novo Documento"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Esta biblioteca será excluída. Os arquivos nela contidos não serão apagados, mas movidos para Todos os Arquivos. A exclusão da biblioteca é irreversível, por favor, proceda com cautela.",
+      "empty": "Clique em <1>+</1> para começar a criar uma biblioteca"
+    },
+    "new": "Nova Biblioteca de Recursos",
+    "title": "Bibliotecas"
+  },
+  "menu": {
+    "allFiles": "Todos os arquivos",
+    "allPages": "Todos os Documentos"
+  },
+  "networkError": "Falha ao obter bibliotecas. Verifique sua conexão com a internet e tente novamente.",
+  "notSupportGuide": {
+    "desc": "A instância atual está no modo de banco de dados cliente e não pode usar a funcionalidade de gerenciamento de arquivos. Por favor, mude para <1>modo de banco de dados servidor</1>, ou use diretamente <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Suporta os principais tipos de arquivos, incluindo formatos comuns como Word, PPT, Excel, PDF, TXT, além de arquivos de código como JS, Python",
+        "title": "Análise de vários tipos de arquivos"
+      },
+      "embeddings": {
+        "desc": "Utiliza modelos vetoriais de alto desempenho para vetorização de partes de texto, permitindo a busca semântica do conteúdo dos arquivos",
+        "title": "Semantização vetorial"
+      },
+      "libraries": {
+        "desc": "Suporta a criação de bibliotecas e permite adicionar diferentes tipos de arquivos para construir seus próprios recursos especializados",
+        "title": "Bibliotecas"
+      }
+    },
+    "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
+  },
+  "pageEditor": {
     "addIcon": "Adicionar ícone",
     "autoSaveMessage": "O documento é salvo automaticamente, não é necessário salvar manualmente",
     "chooseIcon": "Escolher ícone",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Sem título",
     "wordCount": "{{wordCount}} palavras"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Copiar conteúdo completo",
     "duplicate": "Criar uma cópia",
-    "empty": "Nenhum documento ainda. Clique no botão acima para criar seu primeiro.",
+    "empty": "Nenhum documento disponível. Clique no botão acima para criar seu primeiro documento",
+    "filter": {
+      "all": "Todos",
+      "onlyInPages": "Apenas nos documentos"
+    },
     "noResults": "Nenhum documento correspondente encontrado",
     "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecione um documento para começar a editar",
+    "title": "Documentos",
     "untitled": "Sem título"
-  },
-  "empty": "Nenhum arquivo/pasta enviado até o momento",
-  "header": {
-    "actions": {
-      "newFolder": "Nova pasta",
-      "newPage": "Novo documento",
-      "uploadFile": "Enviar arquivo",
-      "uploadFolder": "Enviar pasta"
-    },
-    "newNoteDialog": {
-      "cancel": "Cancelar",
-      "editTitle": "Editar documento",
-      "emptyContent": "O conteúdo do documento não pode estar vazio",
-      "loadError": "Falha ao carregar o documento, tente novamente",
-      "loading": "Carregando...",
-      "save": "Salvar",
-      "saveError": "Falha ao salvar o documento, tente novamente",
-      "saveSuccess": "Documento salvo com sucesso",
-      "title": "Novo documento",
-      "updateSuccess": "Documento atualizado com sucesso"
-    },
-    "newPageButton": "Novo Documento",
-    "uploadButton": "Enviar"
-  },
-  "home": {
-    "getStarted": "Começar",
-    "greeting": "Início",
-    "quickActions": "Ações Rápidas",
-    "recentFiles": "Arquivos Recentes",
-    "recentPages": "Documentos Recentes",
-    "subtitle": "Bem-vindo ao seu repositório de conhecimento. Comece a gerenciar seus documentos aqui",
-    "uploadEntries": {
-      "files": {
-        "title": "Enviar Arquivos"
-      },
-      "folder": {
-        "title": "Enviar Pasta"
-      },
-      "knowledgeBase": {
-        "title": "Nova Base de Conhecimento"
-      },
-      "newPage": {
-        "title": "Novo Documento"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Você está prestes a excluir este repositório de conhecimento. Os arquivos não serão excluídos, mas serão movidos para 'Todos os arquivos'. Após a exclusão, o repositório não poderá ser recuperado, por favor, proceda com cautela.",
-      "empty": "Clique em <1>+</1> para começar a criar um repositório de conhecimento"
-    },
-    "new": "Novo repositório de conhecimento",
-    "title": "Repositório de conhecimento"
-  },
-  "menu": {
-    "allFiles": "Todos os arquivos",
-    "allPages": "Todos os Documentos"
-  },
-  "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
-  "notSupportGuide": {
-    "desc": "A instância atual está no modo de banco de dados cliente e não pode usar a funcionalidade de gerenciamento de arquivos. Por favor, mude para <1>modo de banco de dados servidor</1>, ou use diretamente <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Suporta os principais tipos de arquivos, incluindo formatos comuns como Word, PPT, Excel, PDF, TXT, além de arquivos de código como JS, Python",
-        "title": "Análise de vários tipos de arquivos"
-      },
-      "embeddings": {
-        "desc": "Utiliza modelos vetoriais de alto desempenho para vetorização de partes de texto, permitindo a busca semântica do conteúdo dos arquivos",
-        "title": "Semantização vetorial"
-      },
-      "repos": {
-        "desc": "Permite a criação de repositórios de conhecimento e a adição de diferentes tipos de arquivos, construindo seu próprio conhecimento de domínio",
-        "title": "Repositório de conhecimento"
-      }
-    },
-    "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
   },
   "preview": {
     "downloadFile": "Baixar arquivo",
@@ -155,7 +172,7 @@
     "videos": "Vídeos",
     "websites": "Sites"
   },
-  "title": "Base de Conhecimento",
+  "title": "Recursos",
   "toggleLeftPanel": "Mostrar/Ocultar painel esquerdo",
   "uploadDock": {
     "body": {

@@ -3,6 +3,24 @@
     "title": "模型"
   },
   "active": "活躍",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "雲端 MCP 外掛需要登入驗證",
+      "cancel": "取消",
+      "clickApproveToConnect": "點擊「批准」以連接並授權此整合",
+      "clickApproveToInstall": "點擊「批准」以安裝此外掛程式",
+      "connectedAndEnabled": "已連接並啟用",
+      "connectionFailed": "連接失敗",
+      "installFailed": "安裝失敗",
+      "installPlugin": "安裝外掛",
+      "installToEnable": "安裝此外掛以啟用助手功能",
+      "installedAndEnabled": "已安裝並啟用",
+      "requiresAuth": "需要授權，請點擊「批准」以連接",
+      "retry": "重試"
+    },
+    "title": "助手建構專家",
+    "welcome": "說說你的需求場景？專業夥伴應運而生。\n\n無論是寫作、程式設計，還是資料分析，我都能幫你打造專屬助理！"
+  },
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即與我開始對話，也可以前往 [助手設定]({{url}}) 完善我的資訊。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，有什麼我可以幫忙的嗎？",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "可用助理",
   "backToBottom": "返回底部",
+  "builtinCopilot": "內建 Copilot",
   "chatList": {
     "expandMessage": "展開訊息",
     "longMessageDetail": "查看詳情"
   },
   "clearCurrentMessages": "清空當前對話",
   "confirmClearCurrentMessages": "即將清空當前對話，清空後將無法找回，請確認你的操作",
-  "confirmRemoveChatGroupItemAlert": "即將刪除該 Agent 團隊，團隊成員不受影響，請確認你的操作",
+  "confirmRemoveChatGroupItemAlert": "即將刪除該群組，團隊成員不受影響，請確認你的操作",
   "confirmRemoveGroupItemAlert": "即將刪除此分組。刪除後，該分組中的助理將移至預設列表，請確認是否繼續。",
-  "confirmRemoveGroupSuccess": "Agent 團隊刪除成功",
+  "confirmRemoveGroupSuccess": "群組刪除成功",
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",
   "confirmRemoveSessionSuccess": "助手刪除成功",
   "defaultAgent": "自定義助手",
-  "defaultGroupChat": "Agent 團隊",
+  "defaultGroupChat": "群組",
   "defaultList": "預設清單",
   "defaultSession": "自定義助手",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
+  "emptyAgentAction": "建立助手",
   "extendParams": {
     "disableContextCaching": {
       "desc": "單條對話生成成本最高可降低 90%，響應速度提升 4 倍（<1>了解更多</1>）。開啟後將自動禁用歷史消息數限制",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "團隊描述",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "對話",
+      "model": "模型"
+    },
     "members": {
       "addMember": "添加成員",
+      "enableOrchestrator": "啟用主持人",
       "memberSettings": "成員設定",
       "orchestrator": "主持人",
       "orchestratorThinking": "主持人正在思考中...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "模板中沒有成員",
     "noTemplates": "沒有可用的範本",
     "searchTemplates": "搜尋範本...",
-    "title": "建立 Agent 團隊",
+    "title": "建立群組",
     "useTemplate": "使用模板"
   },
   "hideForYou": "私訊內容已經隱藏，請在設定中開啟【顯示私訊內容】以查看",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "所有內容",
     "allFiles": "所有檔案",
-    "allKnowledgeBases": "所有知識庫",
-    "disabled": "目前的部署模式不支援知識庫對話，如需使用，請切換到伺服器端資料庫部署或使用 {{cloud}} 服務",
+    "allLibraries": "所有資源庫",
+    "disabled": "目前的部署模式不支援資源庫對話，如需使用，請切換至伺服器端資料庫部署或使用 {{cloud}} 服務",
     "library": {
       "action": {
         "add": "添加",
         "detail": "詳情",
         "remove": "移除"
       },
-      "title": "檔案/知識庫"
+      "title": "檔案／資源庫"
     },
-    "relativeFilesOrKnowledgeBases": "關聯檔案/知識庫",
-    "title": "知識庫",
-    "uploadGuide": "上傳過的檔案可以在「知識庫」中查看哦",
+    "relativeFilesOrLibraries": "關聯檔案／資源庫",
+    "title": "資源庫",
+    "uploadGuide": "上傳的檔案可在「資源」中查看喔",
     "viewMore": "查看更多"
   },
   "memberSelection": {
     "addMember": "添加成員",
     "allMembers": "所有成員",
-    "createGroup": "建立 Agent 團隊",
+    "createGroup": "建立群組",
     "noAvailableAgents": "沒有可邀請的 Agent",
     "noSelectedAgents": "尚未選擇 Agent",
     "searchAgents": "搜尋 Agent...",
+    "selectedAgents": "已選擇 ({{count}})",
     "setInitialMembers": "選擇團隊成員"
   },
   "members": "成員",
@@ -245,15 +271,20 @@
     "senderAssistant": "Agent",
     "senderUser": "您"
   },
-  "newAgent": "新建助手",
-  "newGroupChat": "新增 Agent 團隊",
-  "noAgentsYet": "此 Agent 團隊尚無成員。點擊 + 按鈕邀請助手。",
+  "newAgent": "建立助手",
+  "newGroupChat": "建立群組",
+  "newPage": "建立文稿",
+  "noAgentsYet": "此群組尚無成員。點擊 + 按鈕邀請助手。",
   "noAvailableAgents": "沒有可邀請的成員",
   "noMatchingAgents": "沒有符合的成員",
   "noMembersYet": "此群組尚未有成員。請點選 + 按鈕邀請助理。",
   "noSelectedAgents": "尚未選擇成員",
-  "openInNewWindow": "在新視窗中開啟",
+  "openInNewWindow": "開啟獨立視窗",
   "owner": "群組擁有者",
+  "pageCopilot": {
+    "title": "文稿助手",
+    "welcome": "**讓每一句話更精準。**\n\n無論是起草、改寫還是潤飾，我都會幫你讓文字更清晰、更自然、更具說服力。"
+  },
   "pin": "置頂",
   "pinOff": "取消置頂",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "搜尋助手...",
   "searchAgents": "搜尋助手...",
   "selectedAgents": "已選擇的助理",
-  "sendPlaceholder": "輸入聊天內容...",
+  "sendPlaceholder": "詢問、創作或開始任務，<hotkey><hotkey/>",
   "sessionGroup": {
     "config": "分組管理",
     "confirmRemoveGroupAlert": "即將刪除該分組，刪除後該分組的助手將移動到預設清單，請確認你的操作",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "群聊建立成功",
     "createSuccess": "創建成功",
     "creatingAgent": "助手建立中...",
+    "groupName": "群組名稱",
     "inputPlaceholder": "請輸入分組名稱...",
     "moveGroup": "移動到分組",
     "newGroup": "新分組",
+    "noAvailableAgents": "暫無可用助理",
+    "noMatchingAgents": "未找到符合的助理",
+    "noSelectedAgents": "請選擇助理",
     "rename": "重新命名分組",
     "renameSuccess": "重新命名成功",
+    "searchAgents": "搜尋助理",
+    "selectedAgents": "已選助理 ({{count}})",
     "sortSuccess": "重新排序成功",
     "sorting": "分組排序更新中...",
     "tooLong": "分組名稱長度需在 1-20 之內"
@@ -361,6 +398,20 @@
       "title": "任務已完成"
     }
   },
+  "tab": {
+    "groupProfile": "群組檔案",
+    "profile": "助手檔案",
+    "search": "搜尋"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "步驟",
+      "toolCallsShort": "次使用工具"
+    },
+    "status": {
+      "initializing": "任務啟動中..."
+    }
+  },
   "thread": {
     "divider": "子話題",
     "threadMessageCount": "{{messageCount}} 條消息",
@@ -409,10 +460,18 @@
       "toolRejected": "本次工具調用被主動拒絕"
     }
   },
+  "toolAuth": {
+    "authorize": "授權",
+    "authorizing": "授權中...",
+    "hint": "若未授權或設定，這些工具將無法正常使用，可能導致助手功能缺失或發生錯誤。",
+    "signIn": "登入",
+    "title": "此助手使用了以下需要授權的工具"
+  },
   "topic": {
     "checkOpenNewTopic": "是否開啟新主題?",
     "checkSaveCurrentMessages": "是否將當前對話保存為話題？",
     "openNewTopic": "開啟新話題",
+    "recent": "最近話題",
     "saveCurrentMessages": "將當前對話保存為話題"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "刪除語音"
   },
   "untitledAgent": "未命名助理",
+  "untitledGroup": "未命名群組",
   "updateAgent": "更新助理信息",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "影片檔案大小不能超過 20MB，當前檔案大小為 {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "一般",
+    "wideScreen": "寬螢幕"
   },
   "you": "你",
   "zenMode": "專注模式"

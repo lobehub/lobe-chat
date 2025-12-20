@@ -10,6 +10,14 @@
     "dragFileTitle": "Bestanden uploaden",
     "dragTitle": "Afbeeldingen uploaden"
   },
+  "EmojiPicker": {
+    "delete": "Verwijder avatar",
+    "draggerDesc": "Klik of sleep een afbeelding naar dit gebied om te uploaden",
+    "emoji": "Emoji-avatar",
+    "fileTypeError": "Upload een geldig afbeeldingsbestand",
+    "upload": "Avatar uploaden",
+    "uploadBtn": "Bijsnijden en uploaden"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Toevoegen aan kennisbank",
@@ -19,19 +27,31 @@
       "chunkingTooltip": "Splits het bestand in meerdere tekstblokken en vectoriseer deze voor semantische zoekopdrachten en bestandsdialoog",
       "chunkingUnsupported": "Dit bestand ondersteunt geen chunking",
       "confirmDelete": "Je staat op het punt dit bestand te verwijderen. Na verwijdering kan het niet meer worden hersteld. Bevestig je actie.",
+      "confirmDeleteFolder": "Deze map en alle inhoud zullen worden verwijderd. Dit kan niet ongedaan worden gemaakt. Weet je zeker dat je wilt doorgaan?",
       "confirmDeleteMultiFiles": "Je staat op het punt de geselecteerde {{count}} bestanden te verwijderen. Na verwijdering kunnen ze niet meer worden hersteld. Bevestig je actie.",
-      "confirmRemoveFromKnowledgeBase": "Je staat op het punt de geselecteerde {{count}} bestanden uit de kennisbank te verwijderen. Na verwijdering zijn de bestanden nog steeds zichtbaar in alle bestanden. Bevestig je actie.",
+      "confirmRemoveFromKnowledgeBase": "Je staat op het punt om {{count}} geselecteerde bestanden uit de kennisbank te verwijderen. De bestanden blijven beschikbaar in 'Alle bestanden'. Bevestig je actie alstublieft.",
       "copyUrl": "Kopieer link",
       "copyUrlSuccess": "Bestandsadres succesvol gekopieerd",
       "createChunkingTask": "Voorbereiden...",
       "deleteSuccess": "Bestand succesvol verwijderd",
       "downloading": "Bestand aan het downloaden...",
+      "goBack": "Ga terug naar de vorige pagina",
+      "goForward": "Ga verder naar de volgende pagina",
+      "goToParent": "Ga naar de bovenliggende map",
+      "moveError": "Verplaatsen van bestand mislukt",
+      "moveHere": "Hierheen verplaatsen",
+      "moveSuccess": "Bestand succesvol verplaatst",
+      "moveToFolder": "Verplaatsen naar...",
+      "moveToRoot": "Verplaatsen naar hoofdmap",
       "removeFromKnowledgeBase": "Verwijderen uit kennisbank",
-      "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd"
+      "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd",
+      "rename": "Hernoemen",
+      "renameError": "Hernoemen mislukt",
+      "renameSuccess": "Hernoemen geslaagd"
     },
     "bottom": "Je bent onderaan aangekomen",
     "config": {
-      "showFilesInKnowledgeBase": "Toon inhoud in kennisbank"
+      "showFilesInKnowledgeBase": "Toon inhoud van kennisbank"
     },
     "emptyStatus": {
       "actions": {
@@ -41,6 +61,12 @@
       },
       "or": "of",
       "title": "Sleep bestanden of mappen hierheen"
+    },
+    "noFolders": "Geen mappen beschikbaar",
+    "sort": {
+      "dateAdded": "Datum toegevoegd",
+      "name": "Naam",
+      "size": "Grootte"
     },
     "title": {
       "createdAt": "Aangemaakt op",
@@ -164,7 +190,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Sluit melding",
-      "start": "Geïnstalleerd en actief, begin gesprek"
+      "start": "Geïnstalleerd"
     },
     "cors": {
       "description": "Vanwege beveiligingsbeperkingen in de browser moet je cross-origin configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
@@ -193,5 +219,20 @@
     "thinking": "Diep in gedachten...",
     "thought": "Diep nagedacht (tijd gebruikt {{duration}} seconden)",
     "thoughtWithDuration": "Diep nagedacht"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Cache is leeg"
+    },
+    "metadata": {
+      "empty": "Geen metadata beschikbaar"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Maak een kennisbank aan om je bronnen te organiseren en beheren",
+      "search": "Geen overeenkomende kennisbank gevonden",
+      "title": "Geen kennisbank beschikbaar"
+    }
   }
 }

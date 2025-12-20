@@ -1,5 +1,34 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "エージェントを実行",
+      "cancelled": "キャンセルされました",
+      "completed": "タスク完了",
+      "cost": "費用",
+      "failed": "タスク失敗",
+      "interrupted": "中断されました",
+      "intervention": {
+        "taskPlaceholder": "Agent に実行してほしいタスクの詳細を入力してください...",
+        "timeout": "最大実行時間",
+        "timeoutUnit": "分",
+        "unknownAgent": "不明な Agent"
+      },
+      "processing": "実行中...",
+      "steps": "実行ステップ数",
+      "task": "タスク内容",
+      "thread": "スレッドID",
+      "timeout": "実行タイムアウト",
+      "tokens": "トークン消費"
+    }
+  },
   "codeInterpreter": {
+    "error": "実行エラー",
+    "executing": "実行中...",
+    "files": "ファイル：",
+    "output": "出力：",
+    "returnValue": "戻り値："
+  },
+  "codeInterpreter-legacy": {
     "error": "実行エラー",
     "executing": "実行中...",
     "files": "ファイル：",
@@ -13,6 +42,57 @@
     "generating": "生成中...",
     "images": "画像:",
     "prompt": "プロンプト"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "追加",
+      "clearCompleted": "完了済みを削除",
+      "placeholder": "タスクを入力してください..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} 件のタスクを削除しました",
+      "clearedCompleted": "{{count}} 件の完了済みタスクを削除しました",
+      "clearedCompleted_one": "{{count}} 件の完了済みタスクを削除しました",
+      "clearedCompleted_other": "{{count}} 件の完了済みタスクを削除しました",
+      "cleared_one": "{{count}} 件のタスクを削除しました",
+      "cleared_other": "{{count}} 件のタスクを削除しました",
+      "noItems": "削除するタスクがありません",
+      "remaining": "残り {{count}} 件のタスク",
+      "remaining_one": "残り {{count}} 件のタスク",
+      "remaining_other": "残り {{count}} 件のタスク"
+    },
+    "completeTodos": {
+      "completed": "{{count}} 件のタスクを完了しました",
+      "completed_one": "{{count}} 件のタスクを完了しました",
+      "completed_other": "{{count}} 件のタスクを完了しました"
+    },
+    "createTodos": {
+      "created": "{{count}} 件のタスクを作成しました",
+      "created_one": "{{count}} 件のタスクを作成しました",
+      "created_other": "{{count}} 件のタスクを作成しました",
+      "total": "合計 {{count}} 件のタスク",
+      "total_one": "合計 {{count}} 件のタスク",
+      "total_other": "合計 {{count}} 件のタスク"
+    },
+    "removeTodos": {
+      "removed": "{{count}} 件のタスクを削除しました",
+      "removed_one": "{{count}} 件のタスクを削除しました",
+      "removed_other": "{{count}} 件のタスクを削除しました"
+    },
+    "status": {
+      "done": "{{count}} 件完了",
+      "pending": "{{count}} 件保留中"
+    },
+    "todoList": {
+      "empty": "タスクリストは空です",
+      "items": "{{count}} 件のタスク",
+      "items_one": "{{count}} 件のタスク",
+      "items_other": "{{count}} 件のタスク",
+      "title": "タスクリスト"
+    },
+    "updateTodos": {
+      "updated": "タスクリストを更新しました"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

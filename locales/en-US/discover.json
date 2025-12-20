@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "The assistant is equipped with the following knowledge bases to help you answer more questions.",
-          "title": "Knowledge Base"
+          "desc": "This assistant includes the following knowledge bases to help answer more questions.",
+          "title": "Knowledge Bases"
         },
         "plugin": {
           "desc": "The assistant is equipped with the following plugins to help you complete more tasks.",
@@ -58,11 +58,17 @@
         "title": "Version History"
       }
     },
+    "downloads": "Downloads",
+    "empty": {
+      "description": "Try adjusting the filters or visit the community to discover more assistants",
+      "search": "No matching assistants found",
+      "title": "No assistants available"
+    },
     "list": "Assistant List",
     "marketSource": {
-      "label": "Market Source",
-      "legacy": "Legacy",
-      "new": "New"
+      "label": "Switch Community Source",
+      "legacy": "Legacy Community",
+      "new": "New Community"
     },
     "more": "More",
     "plugins": "Integrated Plugins",
@@ -85,7 +91,7 @@
         "subtitle": "The assistant you're trying to access has been archived for one of the following reasons:",
         "title": "Assistant Archived"
       },
-      "backToMarket": "Back to Assistant Marketplace",
+      "backToMarket": "Back to Assistant Community",
       "deprecated": {
         "reasons": {
           "official": "The assistant was removed by the platform due to security, political, or other concerns.",
@@ -94,9 +100,9 @@
         "subtitle": "The assistant you're trying to access has been rejected for one of the following reasons:",
         "title": "Assistant Rejected"
       },
-      "support": "If you have any questions, please copy the link and contact us at <1>support@lobehub.com</1>.",
+      "support": "For any questions, please copy the link and send it to <email>support@lobehub.com</email> for assistance.",
       "unpublished": {
-        "subtitle": "The assistant you're trying to access is currently under review. If you have any questions, please copy the link and contact us at <1>support@lobehub.com</1>.",
+        "subtitle": "The assistant you are trying to access is currently under version review. If you have any questions, please copy the link and send it to <email>support@lobehub.com</email> for assistance.",
         "title": "Assistant Under Review"
       }
     },
@@ -144,7 +150,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Access the settings page for the assistant you want to submit through the settings in the upper right corner of the conversation window;",
-      "desc2": "Click the 'Submit to Assistant Marketplace' button in the upper right corner.",
+      "desc2": "Click the submit to Assistant Community button in the top right corner.",
       "tag": "Method One",
       "title": "Submit via LobeChat"
     },
@@ -172,7 +178,7 @@
       "functionCall": "Supports Function Calls",
       "title": "Other",
       "vision": "Supports Visual Recognition",
-      "withKnowledge": "Includes Knowledge Base",
+      "withKnowledge": "Includes Knowledge Bases",
       "withTool": "Includes Plugins"
     },
     "pricing": "Model Pricing",
@@ -186,8 +192,10 @@
     }
   },
   "home": {
+    "communityAgents": "Community Assistants",
     "featuredAssistants": "Featured Assistants",
     "featuredModels": "Featured Models",
+    "featuredPlugins": "Featured Plugins",
     "featuredProviders": "Featured Model Providers",
     "featuredTools": "Featured Plugins",
     "more": "Discover More"
@@ -516,7 +524,7 @@
     "hero": {
       "desc": "An open-source, deployable MCP Servers platform that helps AI systems easily access key resources such as file systems, databases, APIs, and more, comprehensively expanding your AI capabilities.",
       "subTitle": "Open Source & Ready to Use",
-      "title": "Open Source MCP Marketplace for AI"
+      "title": "Open Source MCP Community for AI"
     },
     "sorts": {
       "createdAt": "Recently Added",
@@ -529,7 +537,7 @@
       "toolsCount": "Number of Tools",
       "updatedAt": "Recently Updated"
     },
-    "title": "MCP Marketplace",
+    "title": "MCP Community",
     "unvalidated": {
       "desc": "This MCP Server has not been validated yet",
       "title": "Unvalidated"
@@ -539,6 +547,11 @@
       "descWithDate": "This MCP Server was validated on {{date}} to ensure its quality and reliability.",
       "title": "Validated"
     }
+  },
+  "mcpEmpty": {
+    "description": "Try adjusting the filters or search with different keywords",
+    "search": "No matching MCP servers found",
+    "title": "No MCP servers available"
   },
   "models": {
     "abilities": "Model Capabilities",
@@ -553,6 +566,11 @@
         "more": "View More",
         "title": "Related Recommendations"
       }
+    },
+    "empty": {
+      "description": "Try adjusting the filters to see more models",
+      "search": "No matching models found",
+      "title": "No models available"
     },
     "free": "Free",
     "guide": "Configuration Guide",
@@ -664,6 +682,11 @@
         "title": "Related Recommendations"
       }
     },
+    "empty": {
+      "description": "Try adjusting the filters to see more providers",
+      "search": "No matching providers found",
+      "title": "No providers available"
+    },
     "list": "Model Provider List",
     "modelCount": "{{count}} models",
     "modelName": "Model Name",
@@ -690,6 +713,18 @@
     "home": "Home",
     "model": "Model",
     "plugin": "Plugin",
-    "provider": "Model Provider"
+    "provider": "Model Provider",
+    "user": "User"
+  },
+  "user": {
+    "agents": "Agents",
+    "downloads": "Downloads",
+    "editProfile": "Edit Profile",
+    "login": "Become a Creator",
+    "logout": "Logout",
+    "myProfile": "My Profile",
+    "noAgents": "This user has not published any agents yet",
+    "publishedAgents": "Created Assistants",
+    "website": "Website"
   }
 }

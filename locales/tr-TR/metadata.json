@@ -10,24 +10,24 @@
   "discover": {
     "assistants": {
       "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı Ajan, otomatik iş akışları, size özel AI / GPTs / OLLaMA akıllı asistanınızı özelleştirin.",
-      "title": "Yapay Zeka Asistanları"
+      "title": "Asistan Topluluğu"
     },
     "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı Ajan, otomatik iş akışları, özelleştirilmiş AI uygulamaları, size özel AI uygulama çalışma alanınızı oluşturun.",
     "mcp": {
       "description": "Binlerce MCP Sunucusunu arayın, karşılaştırın ve bağlanın; AI sistemlerinin dosya sistemleri, veritabanları, API'ler ve diğer önemli kaynaklara kolayca erişmesini sağlayarak AI yeteneklerinizi kapsamlı şekilde genişletin",
-      "title": "MCP Sunucuları Pazarı"
+      "title": "MCP Sunucuları Topluluğu"
     },
     "models": {
       "description": "Ana akım AI modellerini keşfedin: OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
-      "title": "Yapay Zeka Modelleri"
+      "title": "Model Topluluğu"
     },
     "plugins": {
       "description": "Grafik oluşturma, akademik, görüntü oluşturma, video oluşturma, ses oluşturma, otomatik iş akışları için asistanınıza zengin eklenti yetenekleri entegre edin.",
-      "title": "Yapay Zeka Eklentileri"
+      "title": "Eklenti Topluluğu"
     },
     "providers": {
       "description": "Ana akım model sağlayıcılarını keşfedin: OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter.",
-      "title": "Yapay Zeka Modeli Sağlayıcıları"
+      "title": "Model Hizmetleri Topluluğu"
     },
     "search": "Ara",
     "title": "Keşfet"
@@ -38,7 +38,7 @@
   },
   "plugins": {
     "description": "Arama, grafik oluşturma, akademik, görsel oluşturma, video oluşturma, ses oluşturma, otomatik iş akışları, ChatGPT / Claude için özel ToolCall eklenti yeteneklerini özelleştirin",
-    "title": "Eklenti Pazarı"
+    "title": "Eklenti Topluluğu"
   },
   "welcome": {
     "description": "{{appName}} size en iyi ChatGPT, Claude, Gemini, OLLaMA WebUI deneyimini sunar",

@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Trợ lý được tích hợp các kho tri thức sau, giúp bạn trả lời nhiều câu hỏi hơn.",
-          "title": "Kho tri thức"
+          "desc": "Trợ lý này được tích hợp các thư viện tài nguyên sau để giúp bạn trả lời nhiều câu hỏi hơn.",
+          "title": "Thư viện tài nguyên"
         },
         "plugin": {
           "desc": "Trợ lý được tích hợp các plugin sau, giúp bạn hoàn thành nhiều nhiệm vụ hơn.",
@@ -58,11 +58,17 @@
         "title": "Lịch sử phiên bản"
       }
     },
+    "downloads": "Lượt tải xuống",
+    "empty": {
+      "description": "Hãy thử điều chỉnh điều kiện lọc hoặc truy cập cộng đồng để khám phá thêm trợ lý",
+      "search": "Không tìm thấy trợ lý phù hợp",
+      "title": "Chưa có trợ lý nào"
+    },
     "list": "Danh sách trợ lý",
     "marketSource": {
-      "label": "Chuyển đổi nguồn thị trường",
-      "legacy": "Thị trường cũ",
-      "new": "Thị trường mới"
+      "label": "Chuyển đổi nguồn cộng đồng",
+      "legacy": "Cộng đồng cũ",
+      "new": "Cộng đồng mới"
     },
     "more": "Thêm",
     "plugins": "Tích hợp plugin",
@@ -70,7 +76,7 @@
     "sorts": {
       "createdAt": "Mới phát hành",
       "identifier": "ID trợ lý",
-      "knowledgeCount": "Số kho tri thức",
+      "knowledgeCount": "Số lượng thư viện tài nguyên",
       "myown": "Xem của tôi",
       "pluginCount": "Số plugin",
       "title": "Tên trợ lý",
@@ -85,7 +91,7 @@
         "subtitle": "Trợ lý bạn đang truy cập đã bị lưu trữ vì một trong các lý do sau:",
         "title": "Trợ lý đã bị lưu trữ"
       },
-      "backToMarket": "Quay lại thị trường trợ lý",
+      "backToMarket": "Quay lại cộng đồng trợ lý",
       "deprecated": {
         "reasons": {
           "official": "Trợ lý bị gỡ bỏ do vấn đề an toàn/chính trị bởi cơ quan chính thức",
@@ -94,9 +100,9 @@
         "subtitle": "Trợ lý bạn đang truy cập đã bị từ chối vì một trong các lý do sau:",
         "title": "Trợ lý đã bị từ chối"
       },
-      "support": "Nếu gặp bất kỳ vấn đề nào, vui lòng sao chép liên kết và gửi đến <1>support@lobehub.com</1> để được hỗ trợ.",
+      "support": "Nếu có bất kỳ vấn đề nào, vui lòng sao chép liên kết và gửi đến <email>support@lobehub.com</email> để được hỗ trợ.",
       "unpublished": {
-        "subtitle": "Trợ lý bạn đang truy cập hiện đang trong quá trình kiểm duyệt phiên bản. Nếu có thắc mắc, vui lòng sao chép liên kết và gửi câu hỏi đến <1>support@lobehub.com</1> để được hỗ trợ.",
+        "subtitle": "Trợ lý bạn đang truy cập hiện đang trong quá trình kiểm duyệt phiên bản. Nếu có thắc mắc, vui lòng sao chép liên kết và gửi câu hỏi đến <email>support@lobehub.com</email> để được tư vấn.",
         "title": "Trợ lý đang chờ duyệt"
       }
     },
@@ -104,7 +110,7 @@
     "systemRole": "Cài đặt trợ lý",
     "tokenUsage": "Lượng Token sử dụng cho lời nhắc trợ lý",
     "try": "Thử ngay",
-    "withKnowledge": "Trợ lý này đi kèm kho tri thức",
+    "withKnowledge": "Trợ lý này đi kèm với thư viện tài nguyên",
     "withPlugin": "Trợ lý này đi kèm plugin"
   },
   "back": "Quay lại khám phá",
@@ -144,7 +150,7 @@
   "createGuide": {
     "func1": {
       "desc1": "Vào trang cài đặt của trợ lý bạn muốn gửi thông qua biểu tượng cài đặt ở góc trên bên phải trong cửa sổ trò chuyện;",
-      "desc2": "Nhấn nút gửi đến thị trường trợ lý ở góc trên bên phải.",
+      "desc2": "Nhấn nút gửi lên cộng đồng trợ lý ở góc trên bên phải.",
       "tag": "Phương pháp một",
       "title": "Gửi qua LobeChat"
     },
@@ -172,7 +178,7 @@
       "functionCall": "Hỗ trợ gọi hàm",
       "title": "Khác",
       "vision": "Hỗ trợ nhận diện hình ảnh",
-      "withKnowledge": "Kèm theo kho kiến thức",
+      "withKnowledge": "Có kèm thư viện tài nguyên",
       "withTool": "Kèm theo plugin"
     },
     "pricing": "Giá mô hình",
@@ -186,8 +192,10 @@
     }
   },
   "home": {
+    "communityAgents": "Trợ lý cộng đồng",
     "featuredAssistants": "Trợ lý nổi bật",
     "featuredModels": "Mô hình nổi bật",
+    "featuredPlugins": "Plugin nổi bật",
     "featuredProviders": "Nhà cung cấp mô hình nổi bật",
     "featuredTools": "Plugin nổi bật",
     "more": "Khám phá thêm"
@@ -516,7 +524,7 @@
     "hero": {
       "desc": "Nền tảng MCP Servers mã nguồn mở, có thể triển khai, giúp hệ thống AI dễ dàng truy cập hệ thống tập tin, cơ sở dữ liệu, API và các tài nguyên quan trọng khác, mở rộng toàn diện khả năng AI của bạn.",
       "subTitle": "Mã nguồn mở & Sẵn sàng sử dụng",
-      "title": "Thị trường MCP mã nguồn mở dành cho AI"
+      "title": "Cộng đồng MCP mã nguồn mở hướng đến AI"
     },
     "sorts": {
       "createdAt": "Mới thêm",
@@ -529,7 +537,7 @@
       "toolsCount": "Số công cụ",
       "updatedAt": "Cập nhật gần nhất"
     },
-    "title": "Thị trường MCP",
+    "title": "Cộng đồng MCP",
     "unvalidated": {
       "desc": "MCP Server này chưa được xác minh",
       "title": "Chưa xác minh"
@@ -539,6 +547,11 @@
       "descWithDate": "MCP Server này đã được xác minh vào {{date}}, đảm bảo chất lượng và độ tin cậy.",
       "title": "Đã xác minh"
     }
+  },
+  "mcpEmpty": {
+    "description": "Hãy thử điều chỉnh điều kiện lọc hoặc tìm kiếm bằng từ khóa",
+    "search": "Không tìm thấy máy chủ MCP phù hợp",
+    "title": "Chưa có máy chủ MCP nào"
   },
   "models": {
     "abilities": "Khả năng mô hình",
@@ -553,6 +566,11 @@
         "more": "Xem thêm",
         "title": "Gợi ý liên quan"
       }
+    },
+    "empty": {
+      "description": "Hãy thử điều chỉnh điều kiện lọc để xem thêm mô hình",
+      "search": "Không tìm thấy mô hình phù hợp",
+      "title": "Chưa có mô hình nào"
     },
     "free": "Miễn phí",
     "guide": "Hướng dẫn cấu hình",
@@ -664,6 +682,11 @@
         "title": "Gợi ý liên quan"
       }
     },
+    "empty": {
+      "description": "Hãy thử điều chỉnh điều kiện lọc để xem thêm nhà cung cấp",
+      "search": "Không tìm thấy nhà cung cấp phù hợp",
+      "title": "Chưa có nhà cung cấp nào"
+    },
     "list": "Danh sách nhà cung cấp mô hình",
     "modelCount": "{{count}} mô hình",
     "modelName": "Tên mô hình",
@@ -690,6 +713,18 @@
     "home": "Trang chủ",
     "model": "Mô hình",
     "plugin": "Plugin",
-    "provider": "Nhà cung cấp mô hình"
+    "provider": "Nhà cung cấp mô hình",
+    "user": "Người dùng"
+  },
+  "user": {
+    "agents": "Trợ lý",
+    "downloads": "Tải xuống",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "login": "Trở thành người sáng tạo",
+    "logout": "Đăng xuất",
+    "myProfile": "Trang cá nhân",
+    "noAgents": "Người dùng này chưa đăng trợ lý nào",
+    "publishedAgents": "Trợ lý đã tạo",
+    "website": "Trang web cá nhân"
   }
 }

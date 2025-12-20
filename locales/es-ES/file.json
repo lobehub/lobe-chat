@@ -1,8 +1,7 @@
 {
   "addFolder": "Crear carpeta",
-  "addKnowledge": "Agregar conocimiento",
+  "addLibrary": "Agregar",
   "addPage": "Crear documento",
-  "desc": "Gestiona tus conocimientos de trabajo, estudio y vida.",
   "detail": {
     "basic": {
       "createdAt": "Fecha de creación",
@@ -24,10 +23,99 @@
       "embeddingStatus": "Vectorización"
     }
   },
-  "documentEditor": {
+  "empty": "No hay archivos/carpetas subidos aún",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} archivos filtrados (de un total de {{total}} archivos)"
+      },
+      "connect": "Conectar...",
+      "gitignore": {
+        "apply": "Aplicar reglas",
+        "cancel": "Ignorar reglas",
+        "content": "Se ha detectado un archivo .gitignore ({{count}} archivos en total), ¿deseas aplicar las reglas de exclusión?",
+        "filtered": "{{ignored}} archivos filtrados (de un total de {{total}} archivos)",
+        "title": "Archivo .gitignore detectado"
+      },
+      "newFolder": "Nueva carpeta",
+      "newPage": "Nuevo documento",
+      "notion": {
+        "error": "Error al importar archivos de Notion",
+        "foundFiles": "Se encontraron {{count}} archivos",
+        "importing": "Importando archivos de Notion...",
+        "noMarkdownFiles": "No se encontraron archivos Markdown en el archivo ZIP",
+        "partial": "Se importaron correctamente {{success}} archivos, fallaron {{failed}}",
+        "success": "Se importaron correctamente {{count}} archivos"
+      },
+      "notionGuide": {
+        "cancel": "No importar por ahora",
+        "desc": "Primero exporta el contenido desde Notion en formato Markdown (ZIP). Luego haz clic en continuar para seleccionar el archivo comprimido e importar todas las páginas.",
+        "ok": "Seleccionar ZIP de Notion",
+        "title": "Importar contenido de Notion"
+      },
+      "uploadFile": "Subir archivo",
+      "uploadFolder": "Subir carpeta"
+    },
+    "newPageButton": "Nuevo documento",
+    "uploadButton": "Subir"
+  },
+  "home": {
+    "getStarted": "Comenzar",
+    "greeting": "Comenzar",
+    "quickActions": "Acciones rápidas",
+    "recentFiles": "Archivos recientes",
+    "recentPages": "Páginas recientes",
+    "subtitle": "Bienvenido al Centro de Recursos, comienza aquí a gestionar tus documentos y archivos",
+    "uploadEntries": {
+      "files": {
+        "title": "Subir archivos"
+      },
+      "folder": {
+        "title": "Subir carpeta"
+      },
+      "library": {
+        "title": "Crear nueva biblioteca"
+      },
+      "newPage": {
+        "title": "Nuevo documento"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Estás a punto de eliminar esta biblioteca. Los archivos no se eliminarán, sino que se moverán a Todos los archivos. Esta acción no se puede deshacer, procede con precaución.",
+      "empty": "Haz clic en <1>+</1> para comenzar a crear una biblioteca"
+    },
+    "new": "Nueva biblioteca de recursos",
+    "title": "Biblioteca"
+  },
+  "menu": {
+    "allFiles": "Todos los archivos",
+    "allPages": "Todos los documentos"
+  },
+  "networkError": "No se pudo obtener la biblioteca. Verifica tu conexión a internet e inténtalo de nuevo.",
+  "notSupportGuide": {
+    "desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Soporta los tipos de archivos más comunes, incluyendo formatos de documentos como Word, PPT, Excel, PDF, TXT, así como archivos de código como JS, Python, etc.",
+        "title": "Análisis de múltiples tipos de archivos"
+      },
+      "embeddings": {
+        "desc": "Utiliza modelos de vectores de alto rendimiento para vectorizar fragmentos de texto, permitiendo la búsqueda semántica del contenido del archivo",
+        "title": "Semantización de vectores"
+      },
+      "libraries": {
+        "desc": "Permite crear bibliotecas y añadir diferentes tipos de archivos para construir tus propios recursos especializados",
+        "title": "Bibliotecas"
+      }
+    },
+    "title": "El modo de despliegue actual no soporta la gestión de archivos"
+  },
+  "pageEditor": {
     "addIcon": "Agregar ícono",
     "autoSaveMessage": "El documento se guarda automáticamente, no es necesario guardarlo manualmente",
-    "chooseIcon": "Elegir ícono",
+    "chooseIcon": "Seleccionar ícono",
     "deleteConfirm": {
       "content": "Estás a punto de eliminar este documento. Una vez eliminado, no se podrá recuperar. Procede con precaución.",
       "title": "Eliminar documento"
@@ -36,7 +124,7 @@
     "deleteSuccess": "Documento eliminado con éxito",
     "editedAt": "Última edición el {{time}}",
     "editedBy": "Editado por última vez por {{name}}",
-    "editorPlaceholder": "Escribe el contenido del documento, pulsa / para abrir el menú de comandos",
+    "editorPlaceholder": "Escribe el contenido del documento, presiona / para abrir el menú de comandos",
     "empty": {
       "createNewDocument": "Crear nuevo documento",
       "title": "Selecciona un documento para comenzar",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Sin título",
     "wordCount": "{{wordCount}} palabras"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Copiar todo el contenido",
     "duplicate": "Crear una copia",
-    "empty": "Aún no hay documentos. Haz clic en el botón de arriba para crear tu primer documento.",
+    "empty": "No hay documentos. Haz clic en el botón de arriba para crear tu primer documento",
+    "filter": {
+      "all": "Todos",
+      "onlyInPages": "Solo en documentos"
+    },
     "noResults": "No se encontraron documentos coincidentes",
     "pageCount": "Total de {{count}} documentos",
     "selectNote": "Selecciona un documento para comenzar a editar",
+    "title": "Documentos",
     "untitled": "Sin título"
-  },
-  "empty": "No hay archivos/carpetas subidos aún",
-  "header": {
-    "actions": {
-      "newFolder": "Nueva carpeta",
-      "newPage": "Nuevo documento",
-      "uploadFile": "Subir archivo",
-      "uploadFolder": "Subir carpeta"
-    },
-    "newNoteDialog": {
-      "cancel": "Cancelar",
-      "editTitle": "Editar documento",
-      "emptyContent": "El contenido del documento no puede estar vacío",
-      "loadError": "Error al cargar el documento, por favor intenta de nuevo",
-      "loading": "Cargando...",
-      "save": "Guardar",
-      "saveError": "Error al guardar el documento, por favor intenta de nuevo",
-      "saveSuccess": "Documento guardado con éxito",
-      "title": "Nuevo documento",
-      "updateSuccess": "Documento actualizado con éxito"
-    },
-    "newPageButton": "Nuevo documento",
-    "uploadButton": "Subir"
-  },
-  "home": {
-    "getStarted": "Comenzar",
-    "greeting": "Comenzar",
-    "quickActions": "Acciones rápidas",
-    "recentFiles": "Archivos recientes",
-    "recentPages": "Páginas recientes",
-    "subtitle": "Bienvenido a tu base de conocimientos. Comienza aquí a gestionar tus documentos y notas",
-    "uploadEntries": {
-      "files": {
-        "title": "Subir archivos"
-      },
-      "folder": {
-        "title": "Subir carpeta"
-      },
-      "knowledgeBase": {
-        "title": "Nueva base de conocimientos"
-      },
-      "newPage": {
-        "title": "Nuevo documento"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Estás a punto de eliminar esta base de conocimientos. Los archivos no se eliminarán, se moverán a Todos los archivos. Una vez eliminada, la base de conocimientos no se podrá recuperar, por favor actúa con precaución.",
-      "empty": "Haz clic en <1>+</1> para comenzar a crear una base de conocimientos"
-    },
-    "new": "Nueva base de conocimientos",
-    "title": "Base de conocimientos"
-  },
-  "menu": {
-    "allFiles": "Todos los archivos",
-    "allPages": "Todos los documentos"
-  },
-  "networkError": "Error al obtener la base de conocimientos, por favor verifica la conexión a internet y vuelve a intentarlo",
-  "notSupportGuide": {
-    "desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Soporta los tipos de archivos más comunes, incluyendo formatos de documentos como Word, PPT, Excel, PDF, TXT, así como archivos de código como JS, Python, etc.",
-        "title": "Análisis de múltiples tipos de archivos"
-      },
-      "embeddings": {
-        "desc": "Utiliza modelos de vectores de alto rendimiento para vectorizar fragmentos de texto, permitiendo la búsqueda semántica del contenido del archivo",
-        "title": "Semantización de vectores"
-      },
-      "repos": {
-        "desc": "Soporta la creación de bases de conocimientos y permite añadir diferentes tipos de archivos, construyendo tu propio conocimiento en el área",
-        "title": "Base de conocimientos"
-      }
-    },
-    "title": "El modo de despliegue actual no soporta la gestión de archivos"
   },
   "preview": {
     "downloadFile": "Descargar archivo",
@@ -155,7 +172,7 @@
     "videos": "Videos",
     "websites": "Sitios web"
   },
-  "title": "Base de conocimientos",
+  "title": "Recursos",
   "toggleLeftPanel": "Mostrar/Ocultar panel izquierdo",
   "uploadDock": {
     "body": {

@@ -1,10 +1,39 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Ejecutar agente",
+      "cancelled": "Cancelado",
+      "completed": "Tarea completada",
+      "cost": "Costo",
+      "failed": "Tarea fallida",
+      "interrupted": "Interrumpido",
+      "intervention": {
+        "taskPlaceholder": "Por favor, describe en detalle la tarea que debe realizar el Agente...",
+        "timeout": "Tiempo máximo de ejecución",
+        "timeoutUnit": "minutos",
+        "unknownAgent": "Agente desconocido"
+      },
+      "processing": "Ejecutando...",
+      "steps": "Pasos ejecutados",
+      "task": "Contenido de la tarea",
+      "thread": "ID del hilo",
+      "timeout": "Tiempo de ejecución agotado",
+      "tokens": "Consumo de tokens"
+    }
+  },
   "codeInterpreter": {
     "error": "Error de ejecución",
     "executing": "Ejecutando...",
     "files": "Archivos:",
     "output": "Salida:",
     "returnValue": "Valor devuelto:"
+  },
+  "codeInterpreter-legacy": {
+    "error": "Error de ejecución",
+    "executing": "Ejecutando...",
+    "files": "Archivos:",
+    "output": "Salida:",
+    "returnValue": "Valor de retorno:"
   },
   "dalle": {
     "autoGenerate": "Auto-generar",
@@ -13,6 +42,57 @@
     "generating": "Generando...",
     "images": "Imágenes:",
     "prompt": "Palabra de aviso"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Agregar",
+      "clearCompleted": "Borrar completados",
+      "placeholder": "Introduce una tarea..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} elementos eliminados",
+      "clearedCompleted": "{{count}} tareas completadas eliminadas",
+      "clearedCompleted_one": "{{count}} tarea completada eliminada",
+      "clearedCompleted_other": "{{count}} tareas completadas eliminadas",
+      "cleared_one": "{{count}} elemento eliminado",
+      "cleared_other": "{{count}} elementos eliminados",
+      "noItems": "No hay elementos para eliminar",
+      "remaining": "{{count}} tareas restantes",
+      "remaining_one": "{{count}} tarea restante",
+      "remaining_other": "{{count}} tareas restantes"
+    },
+    "completeTodos": {
+      "completed": "{{count}} tareas completadas",
+      "completed_one": "{{count}} tarea completada",
+      "completed_other": "{{count}} tareas completadas"
+    },
+    "createTodos": {
+      "created": "{{count}} tareas creadas",
+      "created_one": "{{count}} tarea creada",
+      "created_other": "{{count}} tareas creadas",
+      "total": "Total: {{count}} tareas",
+      "total_one": "Total: {{count}} tarea",
+      "total_other": "Total: {{count}} tareas"
+    },
+    "removeTodos": {
+      "removed": "{{count}} elementos eliminados",
+      "removed_one": "{{count}} elemento eliminado",
+      "removed_other": "{{count}} elementos eliminados"
+    },
+    "status": {
+      "done": "{{count}} completadas",
+      "pending": "{{count}} pendientes"
+    },
+    "todoList": {
+      "empty": "La lista de tareas está vacía",
+      "items": "{{count}} elementos",
+      "items_one": "{{count}} elemento",
+      "items_other": "{{count}} elementos",
+      "title": "Lista de tareas"
+    },
+    "updateTodos": {
+      "updated": "Lista de tareas actualizada"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

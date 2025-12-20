@@ -9,6 +9,11 @@
       "on": "서식 도구 모음 표시"
     }
   },
+  "autoSave": {
+    "latest": "최신 버전이 로드되었습니다",
+    "saved": "저장되었습니다",
+    "saving": "자동 저장 중..."
+  },
   "cancel": "취소",
   "confirm": "확인",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "링크 편집",
+    "editLinkTitle": "링크",
+    "editTextTitle": "제목",
     "open": "링크 열기",
     "placeholder": "링크 URL 입력",
     "unlink": "링크 제거"
   },
+  "markdown": {
+    "cancel": "취소",
+    "confirm": "변환",
+    "parseMessage": "Markdown 형식으로 변환하면 기존 내용이 덮어쓰여집니다. 계속하시겠습니까? (5초 후 자동으로 닫힙니다)",
+    "parseTitle": "Markdown 서식 지정"
+  },
   "math": {
     "placeholder": "TeX 수식을 입력하세요"
+  },
+  "modifier": {
+    "accept": "수락",
+    "acceptAll": "모두 수락",
+    "reject": "거부",
+    "rejectedAll": "모두 거부"
   },
   "slash": {
     "h1": "제목 1",
@@ -50,13 +69,16 @@
     "bulletList": "글머리 기호 목록",
     "code": "인라인 코드",
     "codeblock": "코드 블록",
+    "image": "이미지",
     "italic": "기울임꼴",
     "link": "링크",
     "numberList": "번호 매기기 목록",
+    "redo": "다시 실행",
     "strikethrough": "취소선",
     "table": "표",
     "taskList": "작업 목록",
     "tex": "TeX 수식",
-    "underline": "밑줄"
+    "underline": "밑줄",
+    "undo": "실행 취소"
   }
 }

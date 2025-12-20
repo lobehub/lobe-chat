@@ -1,0 +1,100 @@
+{
+  "back": "Zurück",
+  "finish": "Loslegen",
+  "interests": {
+    "area": {
+      "business": "Geschäft & Strategie",
+      "coding": "Programmierung & Entwicklung",
+      "design": "Design & Kreativität",
+      "education": "Lernen & Forschung",
+      "marketing": "Marketing & Promotion",
+      "other": "Andere Bereiche",
+      "product": "Produkt & Management",
+      "sales": "Vertrieb & Kundenservice",
+      "writing": "Content-Erstellung"
+    },
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "placeholder": "Bitte gib die Bereiche ein, die dich interessieren...",
+    "title": "Kannst du mir sagen, welche Bereiche dich interessieren?",
+    "title2": "Hilf mir, einen ersten Eindruck von dir zu bekommen~",
+    "title3": "Keine Eile, ich werde dich nach und nach besser verstehen"
+  },
+  "modeSelection": {
+    "desc": "Wähle den Modus, der am besten zu dir passt",
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "lite": {
+      "desc": "Ideal für alltägliche Gespräche, einfache Aufgabenunterstützung und erste Erfahrungen mit KI",
+      "subtitle": "Leichtgewichtig und fokussiert – für effiziente Zusammenarbeit mit einem vielseitigen Assistenten. Wechsle jederzeit zwischen beliebten Modellen, um stets klar zu denken.",
+      "title": "Lite Leicht"
+    },
+    "pro": {
+      "desc": "Für tiefgreifende Zusammenarbeit, Workflows und individuelle Anpassung",
+      "subtitle": "Professioneller Produktivitätsmodus. Für Solo-Unternehmen, Zusammenarbeit mit mehreren Assistenten und maßgeschneiderte Workflows – baue dein eigenes intelligentes Zentrum.",
+      "title": "Pro Professionell"
+    },
+    "title": "Welcher Arbeitsmodus passt zu dir?",
+    "title2": "Leicht oder Professionell – du entscheidest!",
+    "title3": "Erzähl mir mehr, damit ich es genau auf dich zuschneiden kann～"
+  },
+  "next": "Weiter",
+  "proSettings": {
+    "connectors": {
+      "title": "Verbinde deine bevorzugten Tools"
+    },
+    "devMode": {
+      "title": "Entwicklermodus"
+    },
+    "model": {
+      "title": "Standardmodell für den Agenten"
+    },
+    "title": "Erweiterte Optionen im Voraus konfigurieren",
+    "title2": "Versuche, einige gängige Tools zu verknüpfen～",
+    "title3": "Lass uns alles für produktives Arbeiten vorbereiten!"
+  },
+  "responseLanguage": {
+    "auto": "Automatisch (Systemsprache folgen)",
+    "desc": "Wähle die Sprache, in der der KI-Assistent antworten soll",
+    "hint": "Nach Auswahl wird die KI in dieser Sprache antworten und die Oberfläche entsprechend angepasst",
+    "title": "In welcher Sprache sollen wir kommunizieren?",
+    "title2": "Verständigung beginnt mit Sprache.",
+    "title3": "Lass mich klar sprechen und dich gut verstehen～"
+  },
+  "telemetry": {
+    "agreement": "Alle gesammelten Daten sind anonymisiert und dienen ausschließlich der Verbesserung des Produkterlebnisses. Mit der Nutzung bestätigst du, dass du die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy> gelesen und akzeptiert hast.",
+    "desc": "Ich bin dein KI-Assistent und stehe dir jederzeit zur Seite – beim Denken, Erschaffen und beim Managen deines Agenten-Teams.",
+    "helpImprove": "Hilf mit, {{appName}} zu verbessern",
+    "next": "Los geht’s",
+    "privacy": "Datenschutzerklärung",
+    "rows": {
+      "collaborate": {
+        "desc": "Hier arbeiten Menschen und Agenten gemeinsam, lernen voneinander und entwickeln sich weiter – für einen natürlichen Fluss der Produktivität.",
+        "title": "Zusammenarbeit · Gemeinsam mit KI"
+      },
+      "create": {
+        "desc": "Ein Gedanke genügt – und ein Agent entsteht.",
+        "title": "Kreation · Inspiration wird Realität"
+      },
+      "evolve": {
+        "desc": "Jede Interaktion bringt mehr Verständnis – nicht nur in der Antwort, sondern im Verstehen.",
+        "title": "Weiterentwicklung · Je mehr du nutzt, desto besser werde ich"
+      },
+      "privacy": {
+        "desc": "Wir verwenden anonymisierte Daten, um das Erlebnis mit {{appName}} kontinuierlich zu verbessern. Du kannst diese Option jederzeit in den Datenschutzeinstellungen anpassen.",
+        "title": "Gemeinsam machen wir {{appName}} besser"
+      }
+    },
+    "terms": "Nutzungsbedingungen",
+    "title": "Hallo, ich bin {{name}}",
+    "title2": "Schön, dich kennenzulernen～",
+    "title3": "Loooobe! Lass uns loslegen!"
+  },
+  "title": "Willkommen bei {{appName}}",
+  "username": {
+    "desc": "Sag uns, wie wir dich nennen dürfen",
+    "hint": "Du kannst dies jederzeit in den Einstellungen ändern",
+    "placeholder": "Bitte gib deinen Namen ein...",
+    "title": "Wie darf ich dich nennen?",
+    "title2": "Lass uns zuerst einander kennenlernen!",
+    "title3": "So können wir uns künftig besser unterhalten～"
+  }
+}

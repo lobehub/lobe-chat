@@ -2,25 +2,26 @@
   "addToKnowledgeBase": {
     "addSuccess": "파일이 성공적으로 추가되었습니다. <1>지금 보기</1>",
     "confirm": "추가",
+    "error": "파일을 지식 베이스에 추가하지 못했습니다",
     "id": {
-      "placeholder": "추가할 지식베이스를 선택하세요",
-      "required": "지식베이스를 선택하세요",
-      "title": "대상 지식베이스"
+      "placeholder": "추가할 지식 베이스를 선택하세요",
+      "required": "지식 베이스를 선택하세요",
+      "title": "대상 지식 베이스"
     },
-    "title": "지식베이스에 추가",
+    "title": "지식 베이스에 추가",
     "totalFiles": "{{count}}개의 파일이 선택되었습니다"
   },
   "createNew": {
     "confirm": "새로 만들기",
     "description": {
-      "placeholder": "지식베이스 설명 (선택 사항)"
+      "placeholder": "지식 베이스 설명 (선택 사항)"
     },
     "formTitle": "기본 정보",
     "name": {
-      "placeholder": "지식베이스 이름",
-      "required": "지식베이스 이름을 입력하세요"
+      "placeholder": "지식 베이스 이름",
+      "required": "지식 베이스 이름을 입력하세요"
     },
-    "title": "새 지식베이스 만들기"
+    "title": "새 지식 베이스 만들기"
   },
   "tab": {
     "evals": "평가",
@@ -28,5 +29,5 @@
     "settings": "설정",
     "testing": "리콜 테스트"
   },
-  "title": "지식베이스"
+  "title": "지식 베이스"
 }

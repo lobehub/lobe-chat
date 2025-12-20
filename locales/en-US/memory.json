@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "defaultType": "Context",
+    "deleteConfirm": "Are you sure you want to delete this contextual memory? This action cannot be undone.",
+    "deleteTitle": "Delete Contextual Memory",
+    "description": "Description",
+    "empty": "No context memories available",
+    "source": "Source"
+  },
+  "empty": {
+    "description": "Memory retrieval is a gradual process. Please engage in more conversations to enrich the content available for recall. Try having deeper interactions with the assistant to better capture and store valuable information.",
+    "search": "No matching memories found",
+    "title": "No Memories Yet"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "defaultType": "Experience",
+    "deleteConfirm": "Are you sure you want to delete this experiential memory? This action cannot be undone.",
+    "deleteTitle": "Delete Experiential Memory",
+    "empty": "No experience memories available",
+    "keyLearning": "Key Learning",
+    "situation": "Situation",
+    "source": "Source",
+    "steps": {
+      "action": "Action",
+      "result": "Result",
+      "situation": "Context",
+      "task": "Task"
+    }
+  },
+  "filter": {
+    "search": "Search memory keywords or descriptions...",
+    "sort": {
+      "createdAt": "Creation Time",
+      "scoreConfidence": "Confidence",
+      "scoreImpact": "Impact",
+      "scorePriority": "Preference Weight",
+      "scoreUrgency": "Urgency"
+    }
+  },
+  "identity": {
+    "empty": "No identity memories available",
+    "filter": {
+      "search": "Search roles, relationships, or descriptions...",
+      "type": {
+        "all": "All",
+        "demographic": "Demographics",
+        "personal": "Role",
+        "professional": "Professional"
+      }
+    },
+    "list": {
+      "confirmDelete": "Confirm Deletion",
+      "deleteCancel": "Cancel",
+      "deleteContent": "Are you sure you want to delete this identity memory? This action cannot be undone.",
+      "deleteOk": "Delete",
+      "noResults": "No matching identity memories found",
+      "updated": "Updated"
+    },
+    "roleCloud": {
+      "collapse": "Collapse",
+      "expand": "Show More"
+    },
+    "view": {
+      "list": "List",
+      "timeline": "Timeline"
+    }
+  },
+  "loading": "Loading...",
+  "preference": {
+    "actions": {
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "conclusionDirectives": "Conclusion Directives",
+    "defaultType": "Preference",
+    "deleteConfirm": "Are you sure you want to delete this preference memory? This action cannot be undone.",
+    "deleteTitle": "Delete Preference Memory",
+    "empty": "No preference memories available",
+    "source": "Source",
+    "suggestions": "Actions the assistant might take"
+  },
+  "tab": {
+    "contexts": "Contexts",
+    "experiences": "Experiences",
+    "home": "Home",
+    "identities": "Identities",
+    "preferences": "Preferences",
+    "search": "Search"
+  },
+  "viewMode": {
+    "masonry": "Masonry",
+    "timeline": "Timeline"
+  }
+}

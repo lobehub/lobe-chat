@@ -49,6 +49,10 @@
     "desc": "Regenerate the last message",
     "title": "Regenerate Message"
   },
+  "saveDocument": {
+    "desc": "Save all changes to the current document immediately",
+    "title": "Save Document"
+  },
   "saveTopic": {
     "desc": "Save the current topic and open a new one",
     "title": "Start a New Topic"
@@ -66,12 +70,12 @@
     "title": "Quick Switch Assistant"
   },
   "toggleLeftPanel": {
-    "desc": "Show or hide the left assistant panel",
-    "title": "Show/Hide Assistant Panel"
+    "desc": "Show or hide the left panel",
+    "title": "Toggle Left Panel"
   },
   "toggleRightPanel": {
-    "desc": "Show or hide the right topics panel",
-    "title": "Show/Hide Topic Panel"
+    "desc": "Show or hide the right panel",
+    "title": "Toggle Right Panel"
   },
   "toggleZenMode": {
     "desc": "In focus mode, only display the current conversation and hide other UI elements",

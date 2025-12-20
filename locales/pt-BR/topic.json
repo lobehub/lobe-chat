@@ -1,5 +1,6 @@
 {
   "actions": {
+    "addNewTopic": "Iniciar novo tópico",
     "autoRename": "Renomeação automática",
     "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
@@ -11,6 +12,7 @@
     "removeUnstarred": "Remover tópicos não favoritos"
   },
   "defaultTitle": "Tópico padrão",
+  "displayItems": "Exibir itens",
   "duplicateLoading": "Copiando tópico...",
   "duplicateSuccess": "Tópico copiado com sucesso",
   "favorite": "Favoritar",
@@ -32,6 +34,7 @@
     "desc": "Clique no botão à esquerda para salvar a conversa atual como um tópico histórico e iniciar uma nova conversa.",
     "title": "Lista de tópicos"
   },
+  "loadMore": "Carregar mais",
   "searchPlaceholder": "Pesquisar tópicos...",
   "searchResultEmpty": "Nenhum resultado encontrado",
   "temp": "Temporário",

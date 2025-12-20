@@ -58,12 +58,12 @@
       "ready": "Database is ready"
     },
     "modal": {
-      "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
+      "desc": "Activate the next-generation client database now. Persistently store your chat data in your browser and unlock advanced features like the Knowledge Base.",
       "enable": "Enable Now",
       "features": {
         "knowledgeBase": {
-          "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
-          "title": "Support for knowledge base conversations"
+          "desc": "Build your personal knowledge base and easily start conversations with your assistant using it (coming soon).",
+          "title": "Knowledge Base Support — Unlock Your Second Brain"
         },
         "localFirst": {
           "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",
@@ -137,14 +137,39 @@
   "close": "Close",
   "cmdk": {
     "about": "About",
+    "aiModeEmptyState": "Type your question above to start chatting with AI",
+    "aiModePlaceholder": "Ask AI anything...",
+    "community": "Community",
     "communitySupport": "Community Support",
     "discover": "Discover",
-    "knowledgeBase": "Knowledge Base",
+    "memory": "Memory",
     "navigate": "Navigate",
     "newAgent": "Create New Assistant",
     "noResults": "No results found",
     "openSettings": "Open Settings",
-    "painting": "AI Painting",
+    "pages": "Documents",
+    "painting": "Artwork",
+    "resource": "Resources",
+    "search": {
+      "agent": "Assistant",
+      "agents": "Assistants",
+      "assistant": "AI Assistant",
+      "assistants": "AI Assistants",
+      "file": "File",
+      "files": "Files",
+      "loading": "Searching...",
+      "mcp": "MCP Server",
+      "mcps": "MCP Servers",
+      "message": "Message",
+      "messages": "Messages",
+      "page": "Document",
+      "pages": "Documents",
+      "plugin": "Plugin",
+      "plugins": "Plugins",
+      "searching": "Search Results",
+      "topic": "Topic",
+      "topics": "Topics"
+    },
     "searchPlaceholder": "Enter a command or search...",
     "settings": "Settings",
     "starOnGitHub": "Star us on GitHub",
@@ -261,6 +286,7 @@
   "labs": "Labs",
   "lang": {
     "ar": "Arabic",
+    "auto": "Follow system language settings",
     "bg-BG": "Bulgarian",
     "bn": "Bengali",
     "cs-CZ": "Czech",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "Business Cooperation",
     "support": "Email Support"
+  },
+  "navPanel": {
+    "agent": "Assistant",
+    "displayItems": "Display Items",
+    "library": "Library",
+    "searchAgent": "Search Assistant...",
+    "searchResultEmpty": "No search results found"
   },
   "new": "NEW",
   "oauth": "SSO Login",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI Painting",
+    "aiImage": "Artwork",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Community",
     "discover": "Discover",
     "files": "Files",
+    "home": "Home",
     "knowledgeBase": "Knowledge Base",
     "me": "Me",
-    "setting": "Settings"
+    "memory": "Memory",
+    "pages": "Documents",
+    "resource": "Resources",
+    "search": "Search",
+    "setting": "Settings",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Allow",

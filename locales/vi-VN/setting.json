@@ -2,6 +2,7 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "advancedSettings": "Cài đặt nâng cao",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Ảnh đại diện",
@@ -11,7 +12,6 @@
       "title": "Thông tin trợ lý"
     },
     "chat": {
-      "displayMode": "Chế độ hiển thị",
       "enableHistoryCount": "Bật đếm tin nhắn lịch sử",
       "historyCount": "Số lượng tin nhắn lịch sử",
       "no": "Không",
@@ -76,6 +76,19 @@
       "title": "Đặt lại tất cả cài đặt"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Mô hình mặc định được sử dụng khi tạo Agent mới",
+      "title": "Mô hình"
+    },
+    "title": "Cài đặt trợ lý mặc định"
+  },
+  "group": {
+    "aiConfig": "Cấu hình AI",
+    "common": "Chung",
+    "profile": "Tài khoản",
+    "system": "Hệ thống"
+  },
   "groupTab": {
     "chat": "Trò chuyện",
     "members": "Thành viên",
@@ -85,7 +98,7 @@
     "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
     "group": "Cài đặt nhóm",
-    "groupDesc": "Quản lý nhóm Agent và tùy chọn trò chuyện",
+    "groupDesc": "Quản lý nhóm và tùy chọn trò chuyện",
     "session": "Cài đặt cuộc trò chuyện",
     "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "Tạo phiên bản thất bại: {{message}}",
         "fetchRemoteFailed": "Không thể lấy dữ liệu trợ lý từ xa",
-        "missingIdentifier": "Trợ lý hiện tại chưa có định danh thị trường",
-        "notAuthenticated": "Vui lòng đăng nhập tài khoản thị trường trước",
+        "missingIdentifier": "Trợ lý hiện tại chưa có định danh cộng đồng",
+        "notAuthenticated": "Vui lòng đăng nhập tài khoản cộng đồng trước",
         "publishFailed": "Phát hành thất bại: {{message}}"
       },
       "submitButton": "Phát hành",
       "title": {
-        "submit": "Chia sẻ lên thị trường trợ lý",
+        "submit": "Chia sẻ lên cộng đồng trợ lý",
         "upload": "Phát hành phiên bản mới"
       }
     },
     "resultModal": {
-      "message": "Trợ lý đã được gửi để kiểm duyệt, sẽ tự động hiển thị sau khi được phê duyệt. Nhấn “Xem trên thị trường” để xem trợ lý đã phát hành.",
-      "view": "Xem trên thị trường"
+      "message": "Trợ lý bạn đã tạo đã được gửi để kiểm duyệt. Sau khi được phê duyệt, nó sẽ tự động được công bố.",
+      "title": "Gửi thành công",
+      "view": "Xem trên cộng đồng"
     },
     "submit": {
-      "button": "Chia sẻ lên thị trường",
-      "tooltip": "Chia sẻ trợ lý lên thị trường"
+      "button": "Chia sẻ lên cộng đồng",
+      "tooltip": "Chia sẻ trợ lý lên cộng đồng"
     },
     "upload": {
       "button": "Phát hành phiên bản mới",
-      "tooltip": "Phát hành phiên bản mới lên thị trường trợ lý"
+      "tooltip": "Phát hành phiên bản mới lên cộng đồng trợ lý"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Khi bật, AI sẽ ghi nhớ sở thích của bạn từ lịch sử trò chuyện, tích lũy trí nhớ và sử dụng làm tham chiếu trong các cuộc trò chuyện sau",
+      "title": "Bật chức năng ghi nhớ"
+    },
+    "title": "Cài đặt ghi nhớ"
   },
   "message": {
     "success": "Cập nhật thành công"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Hủy",
+      "confirmDeprecate": "Xác nhận ngừng sử dụng",
+      "deprecate": "Ngừng sử dụng vĩnh viễn",
+      "deprecateConfirmContent": "Sau khi ngừng sử dụng, trợ lý này sẽ bị xóa vĩnh viễn khỏi thị trường và không thể được đăng lại. Hành động này không thể hoàn tác, vui lòng cẩn trọng.",
+      "deprecateConfirmTitle": "Xác nhận ngừng sử dụng trợ lý?",
+      "deprecateError": "Ngừng sử dụng trợ lý thất bại",
+      "deprecateLoading": "Đang ngừng sử dụng trợ lý...",
+      "deprecateSuccess": "Trợ lý đã được ngừng sử dụng",
+      "edit": "Chỉnh sửa Agent",
+      "publish": "Đăng Agent",
+      "publishError": "Đăng trợ lý thất bại",
+      "publishLoading": "Đang đăng trợ lý...",
+      "publishSuccess": "Trợ lý đã được đăng",
+      "unpublish": "Gỡ Agent",
+      "unpublishError": "Gỡ trợ lý thất bại",
+      "unpublishLoading": "Đang gỡ trợ lý...",
+      "unpublishSuccess": "Trợ lý đã được gỡ",
+      "viewDetail": "Xem chi tiết"
+    },
+    "detail": {
+      "category": "Phân loại",
+      "description": "Mô tả",
+      "identifier": "Định danh",
+      "title": "Chi tiết trợ lý"
+    },
+    "empty": {
+      "description": "Bạn chưa đăng bất kỳ trợ lý nào lên thị trường",
+      "title": "Chưa có trợ lý được đăng"
+    },
+    "errors": {
+      "editFailed": "Chỉnh sửa trợ lý thất bại, vui lòng thử lại sau",
+      "fetchFailed": "Lấy chi tiết trợ lý thất bại",
+      "notAuthenticated": "Vui lòng đăng nhập tài khoản thị trường trước"
+    },
+    "loginRequired": {
+      "button": "Đăng nhập tài khoản thị trường",
+      "description": "Vui lòng đăng nhập tài khoản thị trường để xem các trợ lý bạn đã đăng",
+      "title": "Cần đăng nhập"
+    },
+    "status": {
+      "archived": "Đã lưu trữ",
+      "deprecated": "Đã ngừng sử dụng",
+      "published": "Đã đăng",
+      "unpublished": "Chưa đăng"
+    },
+    "title": "Trợ lý tôi đã đăng"
   },
   "plugin": {
     "addMCPPlugin": "Thêm plugin MCP",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Kích thước hình ảnh vượt quá giới hạn 1MB, vui lòng chọn hình ảnh nhỏ hơn",
       "title": "Hình đại diện"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "Tên"
     },
     "prompt": {
-      "placeholder": "Vui lòng nhập từ khóa Prompt cho vai diễn",
-      "title": "Thiết lập vai diễn"
+      "placeholder": "Nhập cài đặt trợ lý, nhấn / để mở menu lệnh",
+      "title": "Cài đặt Trợ lý"
     },
     "submit": "Cập nhật thông tin trợ lý",
     "tag": {
-      "desc": "Thẻ trợ lý sẽ được hiển thị trong thị trường trợ lý",
+      "desc": "Thẻ trợ lý sẽ được hiển thị trong cộng đồng trợ lý",
       "placeholder": "Vui lòng nhập nhãn",
       "title": "Nhãn"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Khi bật sẽ hiển thị các chức năng và tùy chọn dành cho nhà phát triển",
+      "title": "Chế độ nhà phát triển"
+    },
     "lang": {
       "autoMode": "Theo hệ thống",
       "title": "Ngôn ngữ"
+    },
+    "liteMode": {
+      "desc": "Khi bật sẽ đơn giản hóa giao diện, ẩn các chức năng nâng cao",
+      "title": "Chế độ đơn giản"
+    },
+    "responseLanguage": {
+      "auto": "Theo hệ thống",
+      "desc": "Thiết lập ngôn ngữ mà AI sẽ sử dụng để trả lời",
+      "placeholder": "Chọn ngôn ngữ trả lời",
+      "title": "Ngôn ngữ trả lời"
     },
     "themeMode": {
       "auto": "Tự động",
@@ -425,7 +510,7 @@
       "placeholder": "Vui lòng nhập từ khóa hệ thống cho người dẫn chương trình",
       "title": "Từ khóa hệ thống người dẫn chương trình"
     },
-    "title": "Thông tin nhóm Agent"
+    "title": "Thông tin nhóm"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "Cho phép trợ lý gửi tin nhắn riêng"
     },
     "enableSupervisor": {
-      "desc": "Bật chức năng người điều phối nhóm Agent, người điều phối sẽ quản lý luồng hội thoại của nhóm",
+      "desc": "Bật chức năng người điều phối nhóm, người điều phối sẽ quản lý luồng hội thoại của nhóm",
       "title": "Bật người điều phối"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Câu hỏi hướng dẫn hiển thị khi bắt đầu cuộc trò chuyện",
-      "empty": "Chưa có câu hỏi nào",
+      "empty": "Thêm câu hỏi mở đầu để giúp người dùng bắt đầu cuộc trò chuyện nhanh chóng",
       "placeholder": "Nhập câu hỏi",
       "repeat": "Câu hỏi đã tồn tại",
       "title": "Câu hỏi mở đầu"
@@ -631,6 +716,7 @@
       "title": "Nguồn âm thanh tổng hợp giọng nói"
     }
   },
+  "startConversation": "Bắt đầu cuộc trò chuyện",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "Định danh trợ lý (identifier)",
     "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
-    "tooltips": "Chia sẻ lên thị trường trợ lý"
+    "success": "Gửi trợ lý thành công",
+    "tooltips": "Chia sẻ lên cộng đồng trợ lý"
   },
   "submitFooter": {
     "reset": "Đặt lại",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "label": "Mô hình",
       "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
-      "title": "Tự động tạo thông tin trợ lý"
+      "title": "Trợ lý tạo thông tin trợ lý"
     },
     "customPrompt": {
       "addPrompt": "Thêm gợi ý tùy chỉnh",
@@ -723,54 +810,60 @@
       "title": "Từ gợi ý tùy chỉnh"
     },
     "generationTopic": {
-      "label": "Mô hình đặt tên chủ đề vẽ AI",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề cho vẽ AI",
-      "title": "Tự động đặt tên chủ đề vẽ AI"
+      "title": "Trợ lý đặt tên chủ đề vẽ AI"
     },
     "helpInfo": "Khi tạo trợ lý mới, sẽ sử dụng cài đặt trợ lý mặc định làm giá trị mặc định.",
     "historyCompress": {
-      "label": "Mô hình lịch sử cuộc trò chuyện",
+      "label": "Mô hình",
       "modelDesc": "Chỉ định mô hình được sử dụng để nén lịch sử cuộc trò chuyện",
-      "title": "Tóm tắt tự động lịch sử cuộc trò chuyện"
+      "title": "Trợ lý nén lịch sử hội thoại"
     },
     "queryRewrite": {
-      "label": "Mô hình viết lại câu hỏi",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
-      "title": "Viết lại câu hỏi trong kho kiến thức"
+      "title": "Trợ lý Viết lại Câu hỏi Thư viện Tài nguyên"
     },
     "thread": {
-      "label": "Mô hình đặt tên chủ đề phụ",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tự động đổi tên chủ đề phụ",
-      "title": "Tự động đặt tên chủ đề phụ"
+      "title": "Trợ lý đặt tên tự động cho chủ đề phụ"
     },
     "title": "Trợ lý hệ thống",
     "topic": {
-      "label": "Mô hình đặt tên chủ đề",
+      "label": "Mô hình",
       "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề",
-      "title": "Tự động đặt tên chủ đề"
+      "title": "Trợ lý đặt tên chủ đề tự động"
     },
     "translation": {
-      "label": "Mô hình dịch",
+      "label": "Mô hình",
       "modelDesc": "Chọn mô hình để dịch",
-      "title": "Cài đặt trợ lý dịch"
+      "title": "Trợ lý dịch nội dung tin nhắn"
     }
   },
   "tab": {
     "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
-    "common": "Cài đặt chung",
+    "apikey": "Quản lý API Key",
+    "common": "Giao diện",
     "experiment": "Thử nghiệm",
     "hotkey": "Phím tắt",
-    "image": "Vẽ AI",
+    "image": "Dịch vụ vẽ",
     "llm": "Mô hình ngôn ngữ",
+    "memory": "Cài đặt ghi nhớ",
+    "profile": "Tài khoản của tôi",
     "provider": "Nhà cung cấp AI",
     "proxy": "Mạng proxy",
+    "security": "Bảo mật",
+    "stats": "Thống kê dữ liệu",
     "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
-    "system-agent": "Trợ lý hệ thống",
-    "tts": "Dịch vụ giọng nói"
+    "tts": "Dịch vụ giọng nói",
+    "usage": "Thống kê sử dụng"
   },
   "tools": {
+    "add": "Tích hợp plugin",
     "builtins": {
       "groupName": "Mở rộng tích hợp sẵn"
     },
@@ -796,6 +889,8 @@
       "tools": "công cụ",
       "verifyAuth": "Tôi đã hoàn tất xác thực"
     },
+    "notInstalled": "Chưa cài đặt",
+    "notInstalledWarning": "Plugin hiện tại chưa được cài đặt, có thể ảnh hưởng đến việc sử dụng trợ lý",
     "plugins": {
       "enabled": "Đã kích hoạt {{num}}",
       "groupName": "Tiện ích",

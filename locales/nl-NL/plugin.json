@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Beschikbare modellen ophalen",
+        "getAvailableTools": "Beschikbare tools ophalen",
+        "getConfig": "Configuratie ophalen",
+        "getMeta": "Metadata ophalen",
+        "getPrompt": "Systeemprompt ophalen",
+        "searchMarketTools": "Plug-inmarkt doorzoeken",
+        "searchOfficialTools": "Officiële tools doorzoeken",
+        "setModel": "Model instellen",
+        "setOpeningMessage": "Openingsbericht instellen",
+        "setOpeningQuestions": "Openingsvragen instellen",
+        "togglePlugin": "Plug-in in-/uitschakelen",
+        "updateChatConfig": "Chatconfiguratie bijwerken",
+        "updateConfig": "Configuratie bijwerken",
+        "updateMeta": "Metadata bijwerken",
+        "updatePrompt": "Systeemprompt bijwerken"
+      },
+      "title": "Agent Builder"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Beschikbare modellen ophalen",
+        "installPlugin": "Plug-in installeren",
+        "inviteAgent": "Lid uitnodigen",
+        "removeAgent": "Lid verwijderen",
+        "searchMarketTools": "Plug-inmarkt doorzoeken",
+        "updateAgentConfig": "Agentconfiguratie bijwerken",
+        "updatePrompt": "Systeemprompt bijwerken"
+      },
+      "title": "Groepsagentbouwer"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Tot iedereen spreken",
+        "createAgent": "Teamlid toevoegen",
+        "createWorkflow": "Workflow plannen",
+        "executeTask": "Taak uitvoeren",
+        "getAgentInfo": "Ledinformatie ophalen",
+        "interrupt": "Taak onderbreken",
+        "inviteAgent": "Lid uitnodigen",
+        "removeAgent": "Lid verwijderen",
+        "searchAgent": "Relevante expert zoeken",
+        "speak": "Specifiek lid laten spreken",
+        "summarize": "Gesprek samenvatten",
+        "vote": "Stemronde starten"
+      },
+      "title": "Teamcoördinatie"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Taken wissen",
+        "completeTodos": "Taken voltooien",
+        "createPlan": "Plan maken",
+        "createTodos": "Taken aanmaken",
+        "removeTodos": "Taken verwijderen",
+        "updatePlan": "Plan bijwerken",
+        "updateTodos": "Taken bijwerken"
+      },
+      "title": "GTD-hulpmiddel"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Kennisbankinhoud lezen",
@@ -23,6 +84,41 @@
         "writeLocalFile": "Bestand schrijven"
       },
       "title": "Lokaal systeem"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Batchgewijs knooppunten bijwerken",
+        "compareSnapshots": "Momentopnamen vergelijken",
+        "convertToList": "Converteren naar lijst",
+        "createNode": "Knooppunt aanmaken",
+        "cropImage": "Afbeelding bijsnijden",
+        "deleteNode": "Knooppunt verwijderen",
+        "deleteSnapshot": "Momentopname verwijderen",
+        "deleteTableColumn": "Tabelkolom verwijderen",
+        "deleteTableRow": "Tabelrij verwijderen",
+        "duplicateNode": "Knooppunt dupliceren",
+        "editTitle": "Documenttitel bewerken",
+        "indentListItem": "Lijstitem inspringen",
+        "initPage": "Document initialiseren",
+        "insertTableColumn": "Tabelkolom invoegen",
+        "insertTableRow": "Tabelrij invoegen",
+        "listSnapshots": "Momentopnamen weergeven",
+        "mergeNodes": "Knooppunten samenvoegen",
+        "moveNode": "Knooppunt verplaatsen",
+        "outdentListItem": "Inspringing van lijstitem verwijderen",
+        "replaceText": "Tekst vervangen",
+        "resizeImage": "Afbeelding schalen",
+        "restoreSnapshot": "Momentopname herstellen",
+        "rotateImage": "Afbeelding roteren",
+        "saveSnapshot": "Momentopname opslaan",
+        "setImageAlt": "Alternatieve tekst voor afbeelding instellen",
+        "splitNode": "Knooppunt splitsen",
+        "toggleListType": "Lijsttype wisselen",
+        "unwrapNode": "Knooppunt uitpakken",
+        "updateNode": "Knooppunt bijwerken",
+        "wrapNodes": "Knooppunten verpakken"
+      },
+      "title": "Document"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Bijwerken",
     "updateSuccess": "Plugin-instellingen succesvol bijgewerkt"
   },
+  "empty": {
+    "description": "De plug-inwinkel biedt een scala aan handige tools om te ontdekken. Bezoek de winkel om te beginnen met verkennen.",
+    "search": "Geen overeenkomende plug-ins gevonden",
+    "title": "Geen plug-ins beschikbaar"
+  },
   "error": {
     "fetchError": "Manifest-link ophalen mislukt, controleer de geldigheid van de link en of cross-origin toegang is toegestaan",
     "installError": "Plugin {{name}} installatie mislukt",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Plugin aan het aanroepen...",
     "plugin": "Plugin wordt uitgevoerd..."
+  },
+  "mcpEmpty": {
+    "deployment": "Geen implementatieopties beschikbaar",
+    "prompts": "Deze plug-in heeft geen promptwoorden",
+    "resources": "Deze plug-in heeft geen bronnen",
+    "tools": "Deze plug-in heeft geen toolfunctionaliteit"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
@@ -338,6 +445,8 @@
       "installed": "Geïnstalleerd"
     },
     "config": {
+      "addEnv": "Omgevingsvariabele toevoegen",
+      "addHeaders": "Verzoekheaders toevoegen",
       "args": "Parameters",
       "command": "Commando",
       "env": "Omgevingsvariabelen",
@@ -358,12 +467,15 @@
       },
       "title": "Aangepaste plugin installeren"
     },
+    "install": {
+      "title": "Installatie-informatie"
+    },
     "marketplace": {
       "title": "Derde partij plugins installeren",
       "trustedBy": "Aangeboden door {{name}}",
       "unverified": {
         "title": "Ongeverifieerde derde partij plugin",
-        "warning": "Deze plugin komt uit een niet-geverifieerde derde partij markt, bevestig dat u de bron vertrouwt voor installatie."
+        "warning": "Deze plug-in is afkomstig van een niet-geverifieerde externe community. Zorg ervoor dat u deze bron vertrouwt voordat u installeert."
       },
       "verified": "Geverifieerd"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven bij het starten van de MCP-server",
     "httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen nodig",
     "indexUrl": {
-      "title": "Marktindex",
+      "title": "Community-index",
       "tooltip": "Online bewerken niet ondersteund, stel in via omgevingsvariabelen bij deployment"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
       "envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen"
     },
-    "modalDesc": "Na configuratie van de pluginmarkt kunt u aangepaste pluginmarkten gebruiken",
+    "modalDesc": "Na het configureren van het adres van de plug-incommunity kunt u een aangepaste plug-incommunity gebruiken.",
     "rules": {
       "argsRequired": "Voer opstartparameters in",
       "commandRequired": "Voer opstartcommando in",
       "urlRequired": "Voer serviceadres in"
     },
     "saveSettings": "Instellingen opslaan",
-    "title": "Pluginmarkt instellingen"
+    "title": "Plug-incommunity instellen"
   },
   "showInPortal": "Bekijk details in de werkruimte",
   "store": {

@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Cancel",
-    "confirm": "Authorize",
-    "description": {
-      "and": "and",
-      "prefix": "By clicking Authorize, you agree to",
+    "confirm": "Create Your Profile",
+    "description": "Your community profile is separate from your {{appName}} user account.",
+    "footer": {
+      "agreement": "By continuing, you confirm that you have read and agree to the <terms>Terms and Conditions</terms> and <privacy>Privacy Policy</privacy>.",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
     },
-    "title": "Confirm Authorization"
+    "subtitle": "Create a community profile to submit and manage listings within the community.",
+    "title": "Create Community Profile"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "Authorization successful! You can now publish your assistant.",
       "upload": "Authorization successful! You can now publish a new version."
     }
+  },
+  "profileSetup": {
+    "cancel": "Cancel",
+    "descriptionEdit": "Update your community profile information.",
+    "descriptionFirstTime": "Set up your profile to complete your community profile.",
+    "errors": {
+      "fileTooLarge": "File size cannot exceed 2MB",
+      "notAuthenticated": "Please sign in first",
+      "updateFailed": "Failed to update profile. Please try again",
+      "uploadFailed": "Upload failed. Please try again",
+      "usernameTaken": "This User ID is already taken. Please choose another"
+    },
+    "fields": {
+      "avatar": {
+        "label": "Avatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Click to upload banner image",
+        "label": "Banner Image",
+        "remove": "Remove banner",
+        "tooltip": "Banner image will be displayed at the top of your profile page (16:9 ratio recommended)",
+        "uploading": "Uploading..."
+      },
+      "description": {
+        "label": "Bio",
+        "maxLength": "Bio must be at most 200 characters",
+        "placeholder": "Tell us about yourself..."
+      },
+      "displayName": {
+        "label": "Display Name",
+        "maxLength": "Display name must be at most 50 characters",
+        "placeholder": "Enter your display name",
+        "required": "Please enter a display name"
+      },
+      "github": {
+        "placeholder": "GitHub username"
+      },
+      "twitter": {
+        "placeholder": "X (Twitter) username"
+      },
+      "userName": {
+        "label": "User ID",
+        "maxLength": "User ID must be at most 32 characters",
+        "minLength": "User ID must be at least 3 characters",
+        "pattern": "User ID can only contain letters, numbers, underscores, and hyphens",
+        "placeholder": "Enter your User ID",
+        "required": "Please enter a User ID",
+        "tooltip": "User ID is your unique identifier and will be used for your profile page URL"
+      },
+      "website": {
+        "invalidUrl": "Please enter a valid URL",
+        "placeholder": "Personal website URL"
+      }
+    },
+    "socialLinks": {
+      "title": "Social Links"
+    },
+    "getStarted": "Get Started",
+    "save": "Save",
+    "success": "Profile updated successfully",
+    "titleEdit": "Edit Profile",
+    "titleFirstTime": "Complete Your Profile"
   }
 }

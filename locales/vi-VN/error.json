@@ -132,6 +132,7 @@
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
     "ProviderBizError": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "QuotaLimitReached": "Rất tiếc, số lượng Token sử dụng hoặc số lần yêu cầu hiện tại đã đạt giới hạn hạn ngạch (quota) của khóa này. Vui lòng tăng hạn ngạch của khóa hoặc thử lại sau.",
+    "ServerAgentRuntimeError": "Rất tiếc, dịch vụ Agent hiện không khả dụng. Vui lòng thử lại sau hoặc liên hệ với chúng tôi qua email để được hỗ trợ.",
     "StreamChunkError": "Lỗi phân tích khối tin nhắn yêu cầu luồng, vui lòng kiểm tra xem API hiện tại có tuân thủ tiêu chuẩn hay không, hoặc liên hệ với nhà cung cấp API của bạn để được tư vấn.",
     "SubscriptionKeyMismatch": "Xin lỗi, do sự cố hệ thống tạm thời, lượng sử dụng đăng ký hiện tại đã không còn hiệu lực. Vui lòng nhấp vào nút bên dưới để khôi phục đăng ký hoặc gửi email cho chúng tôi để nhận hỗ trợ.",
     "SubscriptionPlanLimit": "Điểm đăng ký của bạn đã hết, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói cao hơn hoặc cấu hình API mô hình tùy chỉnh để tiếp tục sử dụng.",
@@ -162,6 +163,7 @@
       "title": "Xác nhận thông tin xác thực {{name}} của bạn"
     },
     "confirm": "Xác nhận và thử lại",
+    "goToSettings": "Đi tới cài đặt",
     "oauth": {
       "description": "Quản trị viên đã mở tính năng xác thực đăng nhập thống nhất. Nhấn vào nút bên dưới để đăng nhập và mở khóa ứng dụng",
       "success": "Đăng nhập thành công",

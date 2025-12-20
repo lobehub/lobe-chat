@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "取消",
-    "confirm": "授權使用",
-    "description": {
-      "and": "和",
-      "prefix": "點擊授權使用即視為同意",
-      "privacy": "隱私協議",
+    "confirm": "建立你的檔案",
+    "description": "你的社群個人檔案獨立於 {{appName}} 使用者帳號而存在。",
+    "footer": {
+      "agreement": "繼續操作即表示你確認已理解並同意<terms>服務條款</terms>與<privacy>隱私權政策</privacy>",
+      "privacy": "隱私權政策",
       "terms": "服務條款"
     },
-    "title": "確認授權"
+    "subtitle": "建立社群個人檔案，以便在社群中提交與管理上架資訊。",
+    "title": "建立社群檔案"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "授權成功！現在可以發佈助手了。",
       "upload": "授權成功！現在可以發佈新版本了。"
     }
+  },
+  "profileSetup": {
+    "cancel": "取消",
+    "descriptionEdit": "更新你的社群個人資料資訊。",
+    "descriptionFirstTime": "設定你的個人資料以完成社群檔案建立。",
+    "errors": {
+      "fileTooLarge": "檔案大小不能超過 2MB",
+      "notAuthenticated": "請先登入後再操作",
+      "updateFailed": "更新個人資料失敗，請再試一次",
+      "uploadFailed": "上傳失敗，請重試",
+      "usernameTaken": "該使用者 ID 已被使用，請選擇其他使用者 ID"
+    },
+    "fields": {
+      "avatar": {
+        "label": "大頭貼"
+      },
+      "bannerUrl": {
+        "clickToUpload": "點擊上傳背景圖",
+        "label": "背景圖",
+        "remove": "移除背景圖",
+        "tooltip": "背景圖將顯示在你的個人主頁頂部（建議 16:9 比例）",
+        "uploading": "上傳中..."
+      },
+      "description": {
+        "label": "個人簡介",
+        "maxLength": "個人簡介最多 200 個字元",
+        "placeholder": "簡單介紹一下你自己..."
+      },
+      "displayName": {
+        "label": "暱稱",
+        "maxLength": "暱稱最多 50 個字元",
+        "placeholder": "輸入你的暱稱",
+        "required": "請輸入暱稱"
+      },
+      "github": {
+        "placeholder": "GitHub 使用者名稱"
+      },
+      "twitter": {
+        "placeholder": "X（Twitter）使用者名稱"
+      },
+      "userName": {
+        "label": "使用者 ID",
+        "maxLength": "使用者 ID 最多 32 個字元",
+        "minLength": "使用者 ID 至少 3 個字元",
+        "pattern": "使用者 ID 只能包含英文字母、數字、底線與連字號",
+        "placeholder": "輸入你的使用者 ID",
+        "required": "請輸入使用者 ID",
+        "tooltip": "使用者 ID 是你的唯一識別碼，將用於你的個人主頁連結"
+      },
+      "website": {
+        "invalidUrl": "請輸入有效的網址",
+        "placeholder": "個人網站連結"
+      }
+    },
+    "getStarted": "開始使用",
+    "save": "儲存",
+    "socialLinks": {
+      "title": "社群連結"
+    },
+    "success": "個人資料已更新",
+    "titleEdit": "編輯個人資料",
+    "titleFirstTime": "完善你的檔案"
   }
 }

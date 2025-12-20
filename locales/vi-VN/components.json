@@ -10,37 +10,63 @@
     "dragFileTitle": "Tải lên tệp",
     "dragTitle": "Tải lên hình ảnh"
   },
+  "EmojiPicker": {
+    "delete": "Xóa ảnh đại diện",
+    "draggerDesc": "Nhấp hoặc kéo thả hình ảnh vào khu vực này để tải lên",
+    "emoji": "Biểu tượng cảm xúc",
+    "fileTypeError": "Vui lòng tải lên tệp hình ảnh hợp lệ",
+    "upload": "Tải lên ảnh đại diện",
+    "uploadBtn": "Cắt và tải lên"
+  },
   "FileManager": {
     "actions": {
-      "addToKnowledgeBase": "Thêm vào kho tri thức",
-      "addToOtherKnowledgeBase": "Thêm vào kho tri thức khác",
+      "addToKnowledgeBase": "Thêm vào thư viện tài nguyên",
+      "addToOtherKnowledgeBase": "Thêm vào thư viện tài nguyên khác",
       "batchChunking": "Chia nhỏ theo lô",
       "chunking": "Chia nhỏ",
       "chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
       "chunkingUnsupported": "Tập tin này không hỗ trợ phân mảnh",
       "confirmDelete": "Bạn sắp xóa tệp này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
+      "confirmDeleteFolder": "Thư mục này và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn và không thể khôi phục. Vui lòng xác nhận thao tác của bạn.",
       "confirmDeleteMultiFiles": "Bạn sắp xóa {{count}} tệp đã chọn, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
-      "confirmRemoveFromKnowledgeBase": "Bạn sắp xóa {{count}} tệp đã chọn khỏi kho tri thức, sau khi xóa tệp vẫn có thể xem trong tất cả các tệp, vui lòng xác nhận hành động của bạn",
+      "confirmRemoveFromKnowledgeBase": "Sắp xóa {{count}} tệp đã chọn khỏi thư viện tài nguyên. Sau khi xóa, các tệp này vẫn có thể được xem trong mục Tất cả tệp. Vui lòng xác nhận thao tác của bạn.",
       "copyUrl": "Sao chép liên kết",
       "copyUrlSuccess": "Địa chỉ tệp đã được sao chép thành công",
       "createChunkingTask": "Đang chuẩn bị...",
       "deleteSuccess": "Tệp đã được xóa thành công",
       "downloading": "Đang tải tệp...",
-      "removeFromKnowledgeBase": "Xóa khỏi kho tri thức",
-      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công"
+      "goBack": "Quay lại trang trước",
+      "goForward": "Tiến đến trang sau",
+      "goToParent": "Đi đến thư mục cha",
+      "moveError": "Di chuyển tệp thất bại",
+      "moveHere": "Di chuyển đến đây",
+      "moveSuccess": "Di chuyển tệp thành công",
+      "moveToFolder": "Di chuyển đến...",
+      "moveToRoot": "Di chuyển đến thư mục gốc",
+      "removeFromKnowledgeBase": "Xóa khỏi thư viện tài nguyên",
+      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công",
+      "rename": "Đổi tên",
+      "renameError": "Đổi tên thất bại",
+      "renameSuccess": "Đổi tên thành công"
     },
     "bottom": "Đã đến cuối rồi",
     "config": {
-      "showFilesInKnowledgeBase": "Hiển thị nội dung trong kho tri thức"
+      "showFilesInKnowledgeBase": "Hiển thị nội dung trong thư viện tài nguyên"
     },
     "emptyStatus": {
       "actions": {
         "file": "Tải lên tệp",
         "folder": "Tải lên thư mục",
-        "knowledgeBase": "Tạo kho tri thức mới"
+        "knowledgeBase": "Tạo thư viện tài nguyên mới"
       },
       "or": "hoặc",
       "title": "Kéo tệp hoặc thư mục vào đây"
+    },
+    "noFolders": "Hiện không có thư mục nào",
+    "sort": {
+      "dateAdded": "Ngày thêm",
+      "name": "Tên",
+      "size": "Kích thước"
     },
     "title": {
       "createdAt": "Thời gian tạo",
@@ -164,7 +190,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Đóng thông báo",
-      "start": "Đã cài đặt và chạy, bắt đầu cuộc trò chuyện"
+      "start": "Đã cài đặt"
     },
     "cors": {
       "description": "Do hạn chế bảo mật của trình duyệt, bạn cần cấu hình CORS cho Ollama để có thể sử dụng bình thường.",
@@ -193,5 +219,20 @@
     "thinking": "Đang suy nghĩ sâu sắc...",
     "thought": "Đã suy nghĩ sâu sắc (mất {{duration}} giây)",
     "thoughtWithDuration": "Đã suy nghĩ sâu sắc"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Bộ nhớ đệm trống"
+    },
+    "metadata": {
+      "empty": "Chưa có siêu dữ liệu"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Tạo thư viện tài nguyên để tổ chức và quản lý tài nguyên của bạn",
+      "search": "Không tìm thấy thư viện tài nguyên phù hợp",
+      "title": "Chưa có thư viện tài nguyên nào"
+    }
   }
 }

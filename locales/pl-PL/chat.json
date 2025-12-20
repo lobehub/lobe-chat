@@ -3,6 +3,24 @@
     "title": "Przełącz model"
   },
   "active": "aktywny",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Wtyczka MCP w chmurze wymaga uwierzytelnienia",
+      "cancel": "Anuluj",
+      "clickApproveToConnect": "Kliknij „Zatwierdź”, aby połączyć i autoryzować tę integrację",
+      "clickApproveToInstall": "Kliknij „Zatwierdź”, aby zainstalować tę wtyczkę",
+      "connectedAndEnabled": "Połączono i włączono",
+      "connectionFailed": "Połączenie nie powiodło się",
+      "installFailed": "Instalacja nie powiodła się",
+      "installPlugin": "Zainstaluj wtyczkę",
+      "installToEnable": "Zainstaluj tę wtyczkę, aby włączyć asystenta",
+      "installedAndEnabled": "Zainstalowano i włączono",
+      "requiresAuth": "Wymaga autoryzacji, kliknij „Zatwierdź”, aby połączyć",
+      "retry": "Ponów próbę"
+    },
+    "title": "Ekspert Tworzenia Asystentów",
+    "welcome": "Opowiedz mi o swoim scenariuszu — profesjonalny partner gotowy do działania.\n\nNiezależnie od tego, czy piszesz, programujesz, czy analizujesz dane, pomogę Ci stworzyć spersonalizowanego asystenta!"
+  },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. W czym mogę pomóc?",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "Dostępni asystenci",
   "backToBottom": "Przewiń na dół",
+  "builtinCopilot": "Wbudowany Copilot",
   "chatList": {
     "expandMessage": "Rozwiń wiadomość",
     "longMessageDetail": "Zobacz szczegóły"
   },
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
-  "confirmRemoveChatGroupItemAlert": "Zamierzasz usunąć ten zespół Agentów. Członkowie zespołu nie zostaną usunięci. Proszę potwierdź swoją decyzję.",
+  "confirmRemoveChatGroupItemAlert": "Grupa zostanie usunięta, ale członkowie zespołu pozostaną bez zmian. Proszę potwierdzić swoją decyzję.",
   "confirmRemoveGroupItemAlert": "Zaraz zostanie usunięta ta grupa. Po jej usunięciu asystenci z tej grupy zostaną przeniesieni do listy domyślnej. Potwierdź swoją operację",
-  "confirmRemoveGroupSuccess": "Pomyślnie usunięto zespół Agentów",
+  "confirmRemoveGroupSuccess": "Grupa została pomyślnie usunięta",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionSuccess": "Sesja usunięta pomyślnie",
   "defaultAgent": "Domyślny asystent",
-  "defaultGroupChat": "Zespół Agentów",
+  "defaultGroupChat": "Grupa",
   "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
+  "emptyAgentAction": "Utwórz asystenta",
   "extendParams": {
     "disableContextCaching": {
       "desc": "Koszt generowania pojedynczej rozmowy może zostać obniżony o 90%, a prędkość odpowiedzi wzrośnie czterokrotnie (<1>Dowiedz się więcej</1>). Po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "Opis zespołu",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Czat",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Dodaj członka",
+      "enableOrchestrator": "Włącz prowadzącego",
       "memberSettings": "Ustawienia członka",
       "orchestrator": "Organizator",
       "orchestratorThinking": "Organizator myśli...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "Brak członków w szablonie",
     "noTemplates": "Brak dostępnych szablonów",
     "searchTemplates": "Szukaj szablonów...",
-    "title": "Utwórz zespół Agentów",
+    "title": "Utwórz grupę",
     "useTemplate": "Użyj szablonu"
   },
   "hideForYou": "Treść prywatnej wiadomości została ukryta, włącz opcję 【Pokaż treść prywatnych wiadomości】 w ustawieniach, aby zobaczyć",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "Wszystkie treści",
     "allFiles": "Wszystkie pliki",
-    "allKnowledgeBases": "Wszystkie bazy wiedzy",
-    "disabled": "Obecny tryb wdrożenia nie obsługuje rozmów z bazą wiedzy. Aby z niej skorzystać, przełącz się na wdrożenie z bazą danych serwera lub skorzystaj z usługi {{cloud}}.",
+    "allLibraries": "Wszystkie biblioteki",
+    "disabled": "Obecny tryb wdrożenia nie obsługuje rozmów z biblioteką wiedzy. Aby skorzystać z tej funkcji, przełącz się na wdrożenie z bazą danych po stronie serwera lub skorzystaj z usługi {{cloud}}",
     "library": {
       "action": {
         "add": "Dodaj",
         "detail": "Szczegóły",
         "remove": "Usuń"
       },
-      "title": "Plik/Baza wiedzy"
+      "title": "Pliki/Biblioteka"
     },
-    "relativeFilesOrKnowledgeBases": "Powiązane pliki/bazy wiedzy",
-    "title": "Baza wiedzy",
-    "uploadGuide": "Przesłane pliki można przeglądać w „Bazie wiedzy”",
+    "relativeFilesOrLibraries": "Powiązane pliki/biblioteki",
+    "title": "Biblioteka wiedzy",
+    "uploadGuide": "Przesłane pliki można przeglądać w sekcji „Zasoby”",
     "viewMore": "Zobacz więcej"
   },
   "memberSelection": {
     "addMember": "Dodaj członka",
     "allMembers": "Wszyscy członkowie",
-    "createGroup": "Utwórz zespół Agentów",
+    "createGroup": "Utwórz grupę",
     "noAvailableAgents": "Brak dostępnych Agentów do zaproszenia",
     "noSelectedAgents": "Nie wybrano jeszcze żadnego Agenta",
     "searchAgents": "Szukaj Agenta...",
+    "selectedAgents": "Wybrano ({{count}})",
     "setInitialMembers": "Wybierz członków zespołu"
   },
   "members": "Członkowie",
@@ -245,15 +271,20 @@
     "senderAssistant": "Agent",
     "senderUser": "Ty"
   },
-  "newAgent": "Nowy asystent",
-  "newGroupChat": "Nowy zespół Agentów",
-  "noAgentsYet": "Ten zespół Agentów nie ma jeszcze członków. Kliknij przycisk +, aby zaprosić asystenta.",
+  "newAgent": "Utwórz Asystenta",
+  "newGroupChat": "Utwórz Czat Grupowy",
+  "newPage": "Utwórz Dokument",
+  "noAgentsYet": "Ta grupa nie ma jeszcze członków. Kliknij przycisk +, aby zaprosić asystenta.",
   "noAvailableAgents": "Brak dostępnych członków do zaproszenia",
   "noMatchingAgents": "Brak pasujących członków",
   "noMembersYet": "W tej grupie nie ma jeszcze żadnych członków. Kliknij przycisk +, aby zaprosić asystentów.",
   "noSelectedAgents": "Nie wybrano jeszcze członków",
-  "openInNewWindow": "Otwórz na osobnej stronie",
+  "openInNewWindow": "Otwórz w nowym oknie",
   "owner": "Właściciel grupy",
+  "pageCopilot": {
+    "title": "Asystent Tekstowy",
+    "welcome": "**Spraw, by każde zdanie brzmiało lepiej.**\n\nNiezależnie od tego, czy tworzysz szkic, przepisujesz czy redagujesz, pomogę Ci uczynić tekst jaśniejszym, bardziej naturalnym i przekonującym."
+  },
   "pin": "Przypnij",
   "pinOff": "Odepnij",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "Wyszukaj pomocnika...",
   "searchAgents": "Asystent wyszukiwania...",
   "selectedAgents": "Wybrani asystenci",
-  "sendPlaceholder": "Wpisz treść rozmowy...",
+  "sendPlaceholder": "Zadaj pytanie, twórz lub rozpocznij zadanie, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Zarządzanie grupami",
     "confirmRemoveGroupAlert": "Czy na pewno chcesz usunąć tę grupę? Po usunięciu asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Potwierdź swoje działanie.",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "Grupa czatu została utworzona pomyślnie",
     "createSuccess": "Utworzono pomyślnie",
     "creatingAgent": "Tworzenie asystenta...",
+    "groupName": "Nazwa grupy",
     "inputPlaceholder": "Wprowadź nazwę grupy...",
     "moveGroup": "Przenieś do grupy",
     "newGroup": "Nowa grupa",
+    "noAvailableAgents": "Brak dostępnych asystentów",
+    "noMatchingAgents": "Nie znaleziono pasujących asystentów",
+    "noSelectedAgents": "Wybierz asystenta",
     "rename": "Zmień nazwę grupy",
     "renameSuccess": "Zmiana nazwy pomyślna",
+    "searchAgents": "Szukaj asystenta",
+    "selectedAgents": "Wybrani asystenci ({{count}})",
     "sortSuccess": "Pomyślne ponowne sortowanie",
     "sorting": "Aktualizacja sortowania grupy...",
     "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
@@ -361,6 +398,20 @@
       "title": "Zadania ukończone"
     }
   },
+  "tab": {
+    "groupProfile": "Profil grupy",
+    "profile": "Profil asystenta",
+    "search": "Szukaj"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "krok",
+      "toolCallsShort": "użycie narzędzia"
+    },
+    "status": {
+      "initializing": "Uruchamianie zadania..."
+    }
+  },
   "thread": {
     "divider": "Podwątek",
     "threadMessageCount": "{{messageCount}} wiadomości",
@@ -409,10 +460,18 @@
       "toolRejected": "To wywołanie narzędzia zostało odrzucone"
     }
   },
+  "toolAuth": {
+    "authorize": "Autoryzuj",
+    "authorizing": "Autoryzowanie...",
+    "hint": "Jeśli nie udzielisz autoryzacji lub nie skonfigurujesz narzędzi, mogą one nie działać poprawnie, co może skutkować brakiem funkcji asystenta lub błędami.",
+    "signIn": "Zaloguj się",
+    "title": "Ten asystent korzysta z poniższych narzędzi wymagających autoryzacji"
+  },
   "topic": {
     "checkOpenNewTopic": "Czy otworzyć nowy temat?",
     "checkSaveCurrentMessages": "Czy zapisać bieżącą rozmowę jako temat?",
     "openNewTopic": "Otwórz nowy temat",
+    "recent": "Ostatnie tematy",
     "saveCurrentMessages": "Zapisz bieżącą rozmowę jako temat"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "Wyczyść czytanie"
   },
   "untitledAgent": "Asystent bez nazwy",
+  "untitledGroup": "Grupa bez nazwy",
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "Rozmiar pliku wideo nie może przekraczać 20MB, aktualny rozmiar pliku to {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Zwykły",
+    "wideScreen": "Szeroki ekran"
   },
   "you": "ty",
   "zenMode": "Tryb skupienia"

@@ -49,6 +49,10 @@
     "desc": "Regenerar el último mensaje",
     "title": "Regenerar mensaje"
   },
+  "saveDocument": {
+    "desc": "Guardar todos los cambios del documento actual de inmediato",
+    "title": "Guardar documento"
+  },
   "saveTopic": {
     "desc": "Guardar el tema actual y abrir un nuevo tema",
     "title": "Iniciar un nuevo tema"
@@ -66,12 +70,12 @@
     "title": "Cambio rápido de asistente"
   },
   "toggleLeftPanel": {
-    "desc": "Mostrar u ocultar el panel de asistente a la izquierda",
-    "title": "Mostrar/Ocultar panel de asistente"
+    "desc": "Mostrar u ocultar el panel izquierdo",
+    "title": "Mostrar/Ocultar panel izquierdo"
   },
   "toggleRightPanel": {
-    "desc": "Mostrar u ocultar el panel de temas a la derecha",
-    "title": "Mostrar/Ocultar panel de temas"
+    "desc": "Mostrar u ocultar el panel derecho",
+    "title": "Mostrar/Ocultar panel derecho"
   },
   "toggleZenMode": {
     "desc": "En modo de enfoque, solo se muestra la conversación actual, ocultando otras interfaces",

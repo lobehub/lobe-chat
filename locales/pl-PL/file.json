@@ -1,8 +1,7 @@
 {
   "addFolder": "Utwórz folder",
-  "addKnowledge": "Dodaj wiedzę",
+  "addLibrary": "Dodaj",
   "addPage": "Utwórz dokument",
-  "desc": "Zarządzaj swoją wiedzą z pracy, nauki i życia.",
   "detail": {
     "basic": {
       "createdAt": "Data utworzenia",
@@ -24,7 +23,96 @@
       "embeddingStatus": "Indeksowanie"
     }
   },
-  "documentEditor": {
+  "empty": "Brak przesłanych plików/folderów",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "Odﬁltrowano {{ignored}} plików (z {{total}} wszystkich plików)"
+      },
+      "connect": "Połącz...",
+      "gitignore": {
+        "apply": "Zastosuj reguły",
+        "cancel": "Ignoruj reguły",
+        "content": "Wykryto plik .gitignore (łącznie {{count}} plików). Czy chcesz zastosować reguły ignorowania?",
+        "filtered": "Odﬁltrowano {{ignored}} z {{total}} plików",
+        "title": "Wykryto plik .gitignore"
+      },
+      "newFolder": "Nowy folder",
+      "newPage": "Nowy dokument",
+      "notion": {
+        "error": "Nie udało się zaimportować pliku Notion",
+        "foundFiles": "Znaleziono {{count}} plików",
+        "importing": "Importowanie plików Notion...",
+        "noMarkdownFiles": "Nie znaleziono plików Markdown w archiwum ZIP",
+        "partial": "Pomyślnie zaimportowano {{success}} plików, niepowodzenie: {{failed}}",
+        "success": "Pomyślnie zaimportowano {{count}} plików"
+      },
+      "notionGuide": {
+        "cancel": "Na razie nie importuj",
+        "desc": "Najpierw wyeksportuj pliki Markdown (ZIP) z Notion, a następnie kliknij 'Kontynuuj', aby wybrać archiwum ZIP i zaimportować wszystkie strony.",
+        "ok": "Wybierz plik ZIP z Notion",
+        "title": "Importuj zawartość z Notion"
+      },
+      "uploadFile": "Prześlij plik",
+      "uploadFolder": "Prześlij folder"
+    },
+    "newPageButton": "Nowy dokument",
+    "uploadButton": "Prześlij"
+  },
+  "home": {
+    "getStarted": "Rozpocznij",
+    "greeting": "Zaczynamy",
+    "quickActions": "Szybkie akcje",
+    "recentFiles": "Ostatnie pliki",
+    "recentPages": "Ostatnie dokumenty",
+    "subtitle": "Witamy w Centrum Zasobów — zacznij zarządzać swoimi dokumentami i plikami stąd",
+    "uploadEntries": {
+      "files": {
+        "title": "Prześlij pliki"
+      },
+      "folder": {
+        "title": "Prześlij folder"
+      },
+      "library": {
+        "title": "Utwórz nową bibliotekę"
+      },
+      "newPage": {
+        "title": "Nowy dokument"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Zamierzasz usunąć tę bibliotekę. Pliki w niej zawarte nie zostaną usunięte, lecz przeniesione do folderu Wszystkie pliki. Po usunięciu biblioteki nie będzie można jej przywrócić — proszę zachować ostrożność.",
+      "empty": "Kliknij <1>+</1>, aby rozpocząć tworzenie biblioteki"
+    },
+    "new": "Nowa biblioteka zasobów",
+    "title": "Biblioteka"
+  },
+  "menu": {
+    "allFiles": "Wszystkie pliki",
+    "allPages": "Wszystkie dokumenty"
+  },
+  "networkError": "Nie udało się pobrać biblioteki. Sprawdź połączenie z siecią i spróbuj ponownie.",
+  "notSupportGuide": {
+    "desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Obsługuje popularne typy plików, w tym formaty dokumentów takie jak Word, PPT, Excel, PDF, TXT oraz popularne pliki kodu, takie jak JS, Python",
+        "title": "Analiza różnych typów plików"
+      },
+      "embeddings": {
+        "desc": "Wykorzystuje wysokowydajne modele wektorowe do indeksowania fragmentów tekstu, umożliwiając semantyczne przeszukiwanie treści plików",
+        "title": "Semantyzacja wektorów"
+      },
+      "libraries": {
+        "desc": "Możliwość tworzenia bibliotek i dodawania różnych typów plików, aby zbudować własne zasoby tematyczne",
+        "title": "Biblioteki"
+      }
+    },
+    "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
+  },
+  "pageEditor": {
     "addIcon": "Dodaj ikonę",
     "autoSaveMessage": "Dokument jest zapisywany automatycznie, nie ma potrzeby zapisywania ręcznego",
     "chooseIcon": "Wybierz ikonę",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Bez tytułu",
     "wordCount": "{{wordCount}} słów"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Kopiuj całą treść",
     "duplicate": "Utwórz kopię",
-    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć swój pierwszy dokument.",
+    "empty": "Brak dokumentów. Kliknij przycisk powyżej, aby utworzyć pierwszy dokument",
+    "filter": {
+      "all": "Wszystkie",
+      "onlyInPages": "Tylko w dokumentach"
+    },
     "noResults": "Nie znaleziono pasujących dokumentów",
     "pageCount": "Łącznie {{count}} dokumentów",
     "selectNote": "Wybierz dokument, aby rozpocząć edycję",
+    "title": "Dokumenty",
     "untitled": "Bez tytułu"
-  },
-  "empty": "Brak przesłanych plików/folderów",
-  "header": {
-    "actions": {
-      "newFolder": "Nowy folder",
-      "newPage": "Nowy dokument",
-      "uploadFile": "Prześlij plik",
-      "uploadFolder": "Prześlij folder"
-    },
-    "newNoteDialog": {
-      "cancel": "Anuluj",
-      "editTitle": "Edytuj dokument",
-      "emptyContent": "Treść dokumentu nie może być pusta",
-      "loadError": "Nie udało się załadować dokumentu, spróbuj ponownie",
-      "loading": "Ładowanie...",
-      "save": "Zapisz",
-      "saveError": "Nie udało się zapisać dokumentu, spróbuj ponownie",
-      "saveSuccess": "Dokument został zapisany pomyślnie",
-      "title": "Nowy dokument",
-      "updateSuccess": "Dokument został zaktualizowany pomyślnie"
-    },
-    "newPageButton": "Nowy dokument",
-    "uploadButton": "Prześlij"
-  },
-  "home": {
-    "getStarted": "Rozpocznij",
-    "greeting": "Zaczynamy",
-    "quickActions": "Szybkie akcje",
-    "recentFiles": "Ostatnie pliki",
-    "recentPages": "Ostatnie dokumenty",
-    "subtitle": "Witamy w bazie wiedzy. Zacznij zarządzać swoimi dokumentami już teraz",
-    "uploadEntries": {
-      "files": {
-        "title": "Prześlij pliki"
-      },
-      "folder": {
-        "title": "Prześlij folder"
-      },
-      "knowledgeBase": {
-        "title": "Nowa baza wiedzy"
-      },
-      "newPage": {
-        "title": "Nowy dokument"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Zaraz usuniesz tę bazę wiedzy, pliki w niej zawarte nie zostaną usunięte, a zostaną przeniesione do folderu wszystkich plików. Po usunięciu bazy wiedzy nie będzie można jej przywrócić, proszę działać ostrożnie.",
-      "empty": "Kliknij <1>+</1>, aby rozpocząć tworzenie bazy wiedzy"
-    },
-    "new": "Nowa baza wiedzy",
-    "title": "Baza wiedzy"
-  },
-  "menu": {
-    "allFiles": "Wszystkie pliki",
-    "allPages": "Wszystkie dokumenty"
-  },
-  "networkError": "Nie udało się uzyskać dostępu do bazy wiedzy, proszę sprawdzić połączenie sieciowe i spróbować ponownie",
-  "notSupportGuide": {
-    "desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Obsługuje popularne typy plików, w tym formaty dokumentów takie jak Word, PPT, Excel, PDF, TXT oraz popularne pliki kodu, takie jak JS, Python",
-        "title": "Analiza różnych typów plików"
-      },
-      "embeddings": {
-        "desc": "Wykorzystuje wysokowydajne modele wektorowe do indeksowania fragmentów tekstu, umożliwiając semantyczne przeszukiwanie treści plików",
-        "title": "Semantyzacja wektorów"
-      },
-      "repos": {
-        "desc": "Obsługuje tworzenie bazy wiedzy i pozwala na dodawanie różnych typów plików, budując swoją własną wiedzę w danej dziedzinie",
-        "title": "Baza wiedzy"
-      }
-    },
-    "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
   },
   "preview": {
     "downloadFile": "Pobierz plik",
@@ -155,7 +172,7 @@
     "videos": "Wideo",
     "websites": "Strony internetowe"
   },
-  "title": "Baza wiedzy",
+  "title": "Zasoby",
   "toggleLeftPanel": "Pokaż/Ukryj panel po lewej stronie",
   "uploadDock": {
     "body": {

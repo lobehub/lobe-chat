@@ -9,6 +9,11 @@
       "on": "نمایش نوار ابزار قالب‌بندی"
     }
   },
+  "autoSave": {
+    "latest": "آخرین نسخه بارگذاری شد",
+    "saved": "ذخیره شد",
+    "saving": "در حال ذخیره‌سازی خودکار..."
+  },
   "cancel": "لغو",
   "confirm": "تأیید",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "ویرایش پیوند",
+    "editLinkTitle": "پیوند",
+    "editTextTitle": "عنوان",
     "open": "باز کردن پیوند",
     "placeholder": "آدرس URL پیوند را وارد کنید",
     "unlink": "حذف پیوند"
   },
+  "markdown": {
+    "cancel": "لغو",
+    "confirm": "تبدیل",
+    "parseMessage": "تبدیل به فرمت Markdown، محتوای فعلی بازنویسی خواهد شد. آیا تأیید می‌کنید؟ (به‌طور خودکار پس از ۵ ثانیه بسته می‌شود)",
+    "parseTitle": "قالب‌بندی Markdown"
+  },
   "math": {
     "placeholder": "لطفاً فرمول TeX را وارد کنید"
+  },
+  "modifier": {
+    "accept": "پذیرفتن",
+    "acceptAll": "پذیرفتن همه",
+    "reject": "رد کردن",
+    "rejectedAll": "رد کردن همه"
   },
   "slash": {
     "h1": "عنوان سطح یک",
@@ -50,13 +69,16 @@
     "bulletList": "فهرست نشانه‌دار",
     "code": "کد درون‌خطی",
     "codeblock": "بلوک کد",
+    "image": "تصویر",
     "italic": "ایتالیک",
     "link": "پیوند",
     "numberList": "فهرست شماره‌دار",
+    "redo": "دوباره انجام دادن",
     "strikethrough": "خط خورده",
     "table": "جدول",
     "taskList": "فهرست وظایف",
     "tex": "فرمول TeX",
-    "underline": "زیرخط"
+    "underline": "زیرخط",
+    "undo": "واگردانی"
   }
 }

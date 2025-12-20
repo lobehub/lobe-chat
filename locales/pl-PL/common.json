@@ -58,12 +58,12 @@
       "ready": "Baza danych gotowa"
     },
     "modal": {
-      "desc": "Włącz klienta bazy danych PGlite, aby trwale przechowywać dane czatu w przeglądarce i korzystać z zaawansowanych funkcji, takich jak baza wiedzy",
+      "desc": "Włącz nową generację bazy danych klienta już teraz. Trwale przechowuj dane czatu w swojej przeglądarce i korzystaj z zaawansowanych funkcji, takich jak biblioteka zasobów.",
       "enable": "Włącz teraz",
       "features": {
         "knowledgeBase": {
-          "desc": "Zgromadź swoją osobistą bazę wiedzy i łatwo rozpocznij rozmowę z asystentem (wkrótce dostępne)",
-          "title": "Wsparcie dla rozmów w bazie wiedzy, uruchomienie drugiego mózgu"
+          "desc": "Zbuduj swoją osobistą bibliotekę zasobów i łatwo rozpocznij rozmowę z asystentem opartą na tych zasobach (już wkrótce dostępne)",
+          "title": "Wsparcie dla rozmów opartych na bibliotece zasobów – uruchom swój drugi mózg"
         },
         "localFirst": {
           "desc": "Dane czatu są całkowicie przechowywane w przeglądarce, twoje dane są zawsze pod twoją kontrolą.",
@@ -137,14 +137,39 @@
   "close": "Zamknij",
   "cmdk": {
     "about": "O nas",
+    "aiModeEmptyState": "Wpisz swoje pytanie w polu powyżej, aby rozpocząć rozmowę z AI",
+    "aiModePlaceholder": "Zadaj pytanie AI...",
+    "community": "Społeczność",
     "communitySupport": "Wsparcie społeczności",
     "discover": "Odkrywaj",
-    "knowledgeBase": "Baza wiedzy",
+    "memory": "Pamięć",
     "navigate": "Nawigacja",
     "newAgent": "Nowy asystent",
     "noResults": "Brak wyników",
     "openSettings": "Otwórz ustawienia",
-    "painting": "Sztuka AI",
+    "pages": "Dokumenty",
+    "painting": "Malarstwo",
+    "resource": "Zasoby",
+    "search": {
+      "agent": "Asystent",
+      "agents": "Asystenci",
+      "assistant": "Asystent AI",
+      "assistants": "Asystenci AI",
+      "file": "Plik",
+      "files": "Pliki",
+      "loading": "Wyszukiwanie...",
+      "mcp": "Serwer MCP",
+      "mcps": "Serwery MCP",
+      "message": "Wiadomość",
+      "messages": "Wiadomości",
+      "page": "Dokument",
+      "pages": "Dokumenty",
+      "plugin": "Wtyczka",
+      "plugins": "Wtyczki",
+      "searching": "Wyniki wyszukiwania",
+      "topic": "Temat",
+      "topics": "Tematy"
+    },
     "searchPlaceholder": "Wpisz polecenie lub wyszukaj...",
     "settings": "Ustawienia",
     "starOnGitHub": "Daj nam gwiazdkę na GitHubie",
@@ -261,6 +286,7 @@
   "labs": "Laboratoria",
   "lang": {
     "ar": "arabski",
+    "auto": "Dostosuj do ustawień języka systemu",
     "bg-BG": "bułgarski",
     "bn": "Bengalski",
     "cs-CZ": "Czeski",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "Współpraca biznesowa",
     "support": "Wsparcie mailowe"
+  },
+  "navPanel": {
+    "agent": "Asystent",
+    "displayItems": "Wyświetl elementy",
+    "library": "Biblioteka",
+    "searchAgent": "Szukaj asystenta...",
+    "searchResultEmpty": "Brak wyników wyszukiwania"
   },
   "new": "Nowy",
   "oauth": "Logowanie SSO",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI Rysowanie",
+    "aiImage": "Obraz AI",
+    "audio": "Audio",
     "chat": "Czat",
+    "community": "Społeczność",
     "discover": "Odkryj",
     "files": "Pliki",
-    "knowledgeBase": "Baza wiedzy",
+    "home": "Strona główna",
+    "knowledgeBase": "Biblioteka zasobów",
     "me": "ja",
-    "setting": "Ustawienia"
+    "memory": "Pamięć",
+    "pages": "Dokumenty",
+    "resource": "Zasoby",
+    "search": "Szukaj",
+    "setting": "Ustawienia",
+    "video": "Wideo"
   },
   "telemetry": {
     "allow": "Zezwalaj",

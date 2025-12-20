@@ -2,6 +2,7 @@
   "about": {
     "title": "O nas"
   },
+  "advancedSettings": "Ustawienia zaawansowane",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Awatar",
@@ -11,7 +12,6 @@
       "title": "Informacje o Asystencie"
     },
     "chat": {
-      "displayMode": "Tryb wyświetlania",
       "enableHistoryCount": "Włącz licznik historii wiadomości",
       "historyCount": "Liczba wiadomości w historii",
       "no": "Nie",
@@ -76,6 +76,19 @@
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Domyślny model używany podczas tworzenia nowego Agenta",
+      "title": "Model"
+    },
+    "title": "Ustawienia domyślnego asystenta"
+  },
+  "group": {
+    "aiConfig": "Konfiguracja AI",
+    "common": "Ogólne",
+    "profile": "Konto",
+    "system": "System"
+  },
   "groupTab": {
     "chat": "Czaty",
     "members": "Członkowie",
@@ -85,7 +98,7 @@
     "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
     "group": "Ustawienia zespołu",
-    "groupDesc": "Zarządzaj zespołem Agentów i preferencjami czatu",
+    "groupDesc": "Zarządzaj grupami i preferencjami czatu",
     "session": "Ustawienia sesji",
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "Nie udało się utworzyć wersji: {{message}}",
         "fetchRemoteFailed": "Nie udało się pobrać danych zdalnego asystenta",
-        "missingIdentifier": "Obecny asystent nie ma identyfikatora rynkowego",
-        "notAuthenticated": "Zaloguj się na konto rynkowe",
+        "missingIdentifier": "Ten asystent nie ma jeszcze identyfikatora społeczności",
+        "notAuthenticated": "Zaloguj się na konto społeczności",
         "publishFailed": "Publikacja nie powiodła się: {{message}}"
       },
       "submitButton": "Opublikuj",
       "title": {
-        "submit": "Udostępnij w Rynku Asystentów",
+        "submit": "Udostępnij w społeczności asystentów",
         "upload": "Opublikuj nową wersję"
       }
     },
     "resultModal": {
-      "message": "Asystent został przesłany do weryfikacji. Po zatwierdzeniu zostanie automatycznie opublikowany. Kliknij „Zobacz w Rynku”, aby zobaczyć opublikowanego asystenta.",
-      "view": "Zobacz w Rynku"
+      "message": "Twój asystent został przesłany do weryfikacji. Po zatwierdzeniu zostanie automatycznie opublikowany.",
+      "title": "Przesłano pomyślnie",
+      "view": "Zobacz w społeczności"
     },
     "submit": {
-      "button": "Udostępnij w Rynku",
-      "tooltip": "Udostępnij asystenta w Rynku"
+      "button": "Udostępnij w społeczności",
+      "tooltip": "Udostępnij asystenta w społeczności"
     },
     "upload": {
       "button": "Opublikuj nową wersję",
-      "tooltip": "Opublikuj nową wersję w Rynku Asystentów"
+      "tooltip": "Opublikuj nową wersję w społeczności asystentów"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Po włączeniu AI będzie zapamiętywać Twoje preferencje z historii rozmów, gromadzić je i wykorzystywać jako odniesienie w przyszłych konwersacjach",
+      "title": "Włącz funkcję pamięci"
+    },
+    "title": "Ustawienia pamięci"
   },
   "message": {
     "success": "Pomyślnie zaktualizowano"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "Anuluj",
+      "confirmDeprecate": "Potwierdź wycofanie",
+      "deprecate": "Wycofaj na stałe",
+      "deprecateConfirmContent": "Po wycofaniu asystent zostanie trwale usunięty z rynku i nie będzie można go ponownie opublikować. Ta operacja jest nieodwracalna, proszę postępować ostrożnie.",
+      "deprecateConfirmTitle": "Czy na pewno chcesz wycofać asystenta?",
+      "deprecateError": "Nie udało się wycofać asystenta",
+      "deprecateLoading": "Wycofywanie asystenta...",
+      "deprecateSuccess": "Asystent został wycofany",
+      "edit": "Edytuj agenta",
+      "publish": "Opublikuj agenta",
+      "publishError": "Nie udało się opublikować asystenta",
+      "publishLoading": "Publikowanie asystenta...",
+      "publishSuccess": "Asystent został opublikowany",
+      "unpublish": "Cofnij publikację agenta",
+      "unpublishError": "Nie udało się cofnąć publikacji asystenta",
+      "unpublishLoading": "Cofanie publikacji asystenta...",
+      "unpublishSuccess": "Asystent został usunięty z rynku",
+      "viewDetail": "Zobacz szczegóły"
+    },
+    "detail": {
+      "category": "Kategoria",
+      "description": "Opis",
+      "identifier": "Identyfikator",
+      "title": "Szczegóły asystenta"
+    },
+    "empty": {
+      "description": "Nie opublikowałeś jeszcze żadnych asystentów na rynku",
+      "title": "Brak opublikowanych asystentów"
+    },
+    "errors": {
+      "editFailed": "Nie udało się edytować asystenta, spróbuj ponownie później",
+      "fetchFailed": "Nie udało się pobrać szczegółów asystenta",
+      "notAuthenticated": "Zaloguj się na konto rynku"
+    },
+    "loginRequired": {
+      "button": "Zaloguj się na konto rynku",
+      "description": "Zaloguj się na konto rynku, aby zobaczyć swoich opublikowanych asystentów",
+      "title": "Wymagane logowanie"
+    },
+    "status": {
+      "archived": "Zarchiwizowany",
+      "deprecated": "Wycofany",
+      "published": "Opublikowany",
+      "unpublished": "Nieopublikowany"
+    },
+    "title": "Moi opublikowani asystenci"
   },
   "plugin": {
     "addMCPPlugin": "Dodaj wtyczkę MCP",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Rozmiar obrazu przekracza limit 1 MB, wybierz mniejszy obraz",
       "title": "Awatar"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "Nazwa"
     },
     "prompt": {
-      "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
-      "title": "Ustawienia roli"
+      "placeholder": "Wprowadź ustawienia asystenta, naciśnij /, aby otworzyć menu poleceń",
+      "title": "Ustawienia asystenta"
     },
     "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
-      "desc": "Tagi asystenta będą wyświetlane na rynku asystentów",
+      "desc": "Tagi asystenta będą widoczne w społeczności asystentów",
       "placeholder": "Proszę wprowadzić tag",
       "title": "Tag"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Po włączeniu zostaną wyświetlone funkcje i opcje dla deweloperów",
+      "title": "Tryb deweloperski"
+    },
     "lang": {
       "autoMode": "Podążaj za systemem",
       "title": "Język"
+    },
+    "liteMode": {
+      "desc": "Po włączeniu interfejs zostanie uproszczony, a zaawansowane funkcje ukryte",
+      "title": "Tryb uproszczony"
+    },
+    "responseLanguage": {
+      "auto": "Zgodnie z systemem",
+      "desc": "Ustaw język odpowiedzi AI",
+      "placeholder": "Wybierz język odpowiedzi",
+      "title": "Język odpowiedzi"
     },
     "themeMode": {
       "auto": "Automatyczny",
@@ -425,7 +510,7 @@
       "placeholder": "Wprowadź systemową wskazówkę prowadzącego",
       "title": "Systemowa wskazówka prowadzącego"
     },
-    "title": "Informacje o zespole Agentów"
+    "title": "Informacje o grupie"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "Zezwól asystentowi na wysyłanie wiadomości prywatnych"
     },
     "enableSupervisor": {
-      "desc": "Włącz funkcję moderatora zespołu Agentów — moderator będzie zarządzać przebiegiem rozmowy",
+      "desc": "Włącz funkcję moderatora grupy, aby zarządzać przebiegiem rozmów zespołu",
       "title": "Włącz moderatora"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Pytania wprowadzające wyświetlane na początku rozmowy",
-      "empty": "Brak pytań",
+      "empty": "Dodaj pytania początkowe, aby pomóc użytkownikowi szybko rozpocząć rozmowę",
       "placeholder": "Wprowadź pytanie",
       "repeat": "Pytanie już istnieje",
       "title": "Pytania powitalne"
@@ -631,6 +716,7 @@
       "title": "Głos syntezy mowy"
     }
   },
+  "startConversation": "Rozpocznij rozmowę",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "Identyfikator asystenta (identifier)",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
-    "tooltips": "Udostępnij na rynku asystentów"
+    "success": "Asystent został pomyślnie przesłany",
+    "tooltips": "Udostępnij w społeczności asystentów"
   },
   "submitFooter": {
     "reset": "Resetuj",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Model generowania metadanych asystenta",
+      "label": "Model",
       "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
-      "title": "Automatyczne generowanie informacji o asystencie"
+      "title": "Asystent generowania informacji o asystencie"
     },
     "customPrompt": {
       "addPrompt": "Dodaj niestandardowy podpowiedź",
@@ -723,54 +810,60 @@
       "title": "Niestandardowe słowo podpowiedzi"
     },
     "generationTopic": {
-      "label": "Model nazewnictwa tematów do AI w malarstwie",
+      "label": "Model",
       "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
-      "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+      "title": "Asystent do nadawania nazw tematom AI do rysowania"
     },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
-      "label": "Model historii rozmów",
+      "label": "Model",
       "modelDesc": "Model używany do kompresji historii rozmów",
-      "title": "Automatyczne podsumowanie historii rozmów"
+      "title": "Asystent kompresji historii konwersacji"
     },
     "queryRewrite": {
-      "label": "Model przekształcania zapytań",
+      "label": "Model",
       "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
-      "title": "Przekształcenie zapytań w bazie wiedzy"
+      "title": "Asystent do Przekształcania Pytań w Bazie Wiedzy"
     },
     "thread": {
-      "label": "Model do nazywania podtematów",
+      "label": "Model",
       "modelDesc": "Model używany do automatycznego zmieniania nazw podtematów",
-      "title": "Automatyczne nazywanie podtematów"
+      "title": "Asystent automatycznego nadawania nazw wątkom podrzędnym"
     },
     "title": "Asystent Systemowy",
     "topic": {
-      "label": "Model nazewnictwa tematów",
+      "label": "Model",
       "modelDesc": "Określa model używany do automatycznego zmieniania nazw tematów",
-      "title": "Automatyczne nadawanie nazw tematom"
+      "title": "Asystent automatycznego nadawania nazw tematom"
     },
     "translation": {
-      "label": "Model Tłumaczenia",
+      "label": "Model",
       "modelDesc": "Określ model używany do tłumaczenia",
-      "title": "Ustawienia Asystenta Tłumaczenia"
+      "title": "Asystent tłumaczenia treści wiadomości"
     }
   },
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
-    "common": "Ustawienia ogólne",
+    "apikey": "Zarządzanie kluczami API",
+    "common": "Wygląd",
     "experiment": "Eksperyment",
     "hotkey": "Skróty klawiszowe",
-    "image": "Rysowanie AI",
+    "image": "Usługa rysowania",
     "llm": "Model językowy",
+    "memory": "Ustawienia pamięci",
+    "profile": "Moje konto",
     "provider": "Dostawca usług AI",
     "proxy": "Proxy sieciowy",
+    "security": "Bezpieczeństwo",
+    "stats": "Statystyki danych",
     "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
-    "system-agent": "System Agent",
-    "tts": "Usługa głosowa"
+    "tts": "Usługa głosowa",
+    "usage": "Statystyki użycia"
   },
   "tools": {
+    "add": "Zintegruj wtyczkę",
     "builtins": {
       "groupName": "Wbudowane"
     },
@@ -796,6 +889,8 @@
       "tools": "narzędzia",
       "verifyAuth": "Ukończyłem uwierzytelnianie"
     },
+    "notInstalled": "Nie zainstalowano",
+    "notInstalledWarning": "Ta wtyczka nie została jeszcze zainstalowana, co może wpłynąć na działanie asystenta",
     "plugins": {
       "enabled": "Włączone {{num}}",
       "groupName": "Wtyczki",

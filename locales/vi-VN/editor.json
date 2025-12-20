@@ -9,6 +9,11 @@
       "on": "Hiển thị thanh công cụ định dạng"
     }
   },
+  "autoSave": {
+    "latest": "Đã tải phiên bản mới nhất",
+    "saved": "Đã lưu",
+    "saving": "Đang tự động lưu..."
+  },
   "cancel": "Hủy",
   "confirm": "Xác nhận",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Chỉnh sửa liên kết",
+    "editLinkTitle": "Liên kết",
+    "editTextTitle": "Tiêu đề",
     "open": "Mở liên kết",
     "placeholder": "Nhập URL liên kết",
     "unlink": "Gỡ liên kết"
   },
+  "markdown": {
+    "cancel": "Hủy",
+    "confirm": "Chuyển đổi",
+    "parseMessage": "Chuyển sang định dạng Markdown, nội dung hiện tại sẽ bị ghi đè. Bạn có chắc chắn không? (Tự động đóng sau 5 giây)",
+    "parseTitle": "Định dạng Markdown"
+  },
   "math": {
     "placeholder": "Vui lòng nhập công thức TeX"
+  },
+  "modifier": {
+    "accept": "Chấp nhận",
+    "acceptAll": "Chấp nhận tất cả",
+    "reject": "Từ chối",
+    "rejectedAll": "Từ chối tất cả"
   },
   "slash": {
     "h1": "Tiêu đề cấp 1",
@@ -50,13 +69,16 @@
     "bulletList": "Danh sách gạch đầu dòng",
     "code": "Mã nội tuyến",
     "codeblock": "Khối mã",
+    "image": "Hình ảnh",
     "italic": "Nghiêng",
     "link": "Liên kết",
     "numberList": "Danh sách có thứ tự",
+    "redo": "Làm lại",
     "strikethrough": "Gạch ngang",
     "table": "bảng",
     "taskList": "Danh sách công việc",
     "tex": "Công thức TeX",
-    "underline": "Gạch chân"
+    "underline": "Gạch chân",
+    "undo": "Hoàn tác"
   }
 }

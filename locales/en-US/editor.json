@@ -9,6 +9,11 @@
       "on": "Show formatting toolbar"
     }
   },
+  "autoSave": {
+    "latest": "Latest version loaded",
+    "saved": "Saved",
+    "saving": "Auto-saving..."
+  },
   "cancel": "Cancel",
   "confirm": "Confirm",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Edit link",
+    "editLinkTitle": "Link",
+    "editTextTitle": "Title",
     "open": "Open link",
     "placeholder": "Enter link URL",
     "unlink": "Unlink"
   },
+  "markdown": {
+    "cancel": "Cancel",
+    "confirm": "Convert",
+    "parseMessage": "Convert to Markdown format. Existing content will be overwritten. Are you sure? (Closes automatically in 5 seconds)",
+    "parseTitle": "Format as Markdown"
+  },
   "math": {
     "placeholder": "Please enter a TeX formula"
+  },
+  "modifier": {
+    "accept": "Accept",
+    "acceptAll": "Accept All",
+    "reject": "Reject",
+    "rejectedAll": "Reject All"
   },
   "slash": {
     "h1": "Heading 1",
@@ -50,13 +69,16 @@
     "bulletList": "Bulleted list",
     "code": "Inline code",
     "codeblock": "Code block",
+    "image": "Image",
     "italic": "Italic",
     "link": "Link",
     "numberList": "Numbered list",
+    "redo": "Redo",
     "strikethrough": "Strikethrough",
     "table": "Table",
     "taskList": "Task List",
     "tex": "TeX Formula",
-    "underline": "Underline"
+    "underline": "Underline",
+    "undo": "Undo"
   }
 }

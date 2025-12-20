@@ -1,7 +1,36 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Изпълняващ агент",
+      "cancelled": "Отменено",
+      "completed": "Задачата е завършена",
+      "cost": "Разходи",
+      "failed": "Задачата е неуспешна",
+      "interrupted": "Прекъснато",
+      "intervention": {
+        "taskPlaceholder": "Моля, опишете подробно задачата, която трябва да изпълни агентът...",
+        "timeout": "Максимално време за изпълнение",
+        "timeoutUnit": "минути",
+        "unknownAgent": "Неизвестен агент"
+      },
+      "processing": "Изпълнява се...",
+      "steps": "Брой стъпки",
+      "task": "Съдържание на задачата",
+      "thread": "Идентификатор на нишка",
+      "timeout": "Времето за изпълнение изтече",
+      "tokens": "Изразходвани токени"
+    }
+  },
   "codeInterpreter": {
     "error": "Грешка при изпълнение",
     "executing": "Изпълнение...",
+    "files": "Файлове:",
+    "output": "Изход:",
+    "returnValue": "Върната стойност:"
+  },
+  "codeInterpreter-legacy": {
+    "error": "Грешка при изпълнение",
+    "executing": "Изпълнява се...",
     "files": "Файлове:",
     "output": "Изход:",
     "returnValue": "Върната стойност:"
@@ -13,6 +42,57 @@
     "generating": "Генериране...",
     "images": "Изображения:",
     "prompt": "подсказка"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Добави",
+      "clearCompleted": "Изчисти завършените",
+      "placeholder": "Въведете задача..."
+    },
+    "clearTodos": {
+      "cleared": "Изчистени са {{count}} задачи",
+      "clearedCompleted": "Изчистени са {{count}} завършени задачи",
+      "clearedCompleted_one": "Изчистена е {{count}} завършена задача",
+      "clearedCompleted_other": "Изчистени са {{count}} завършени задачи",
+      "cleared_one": "Изчистена е {{count}} задача",
+      "cleared_other": "Изчистени са {{count}} задачи",
+      "noItems": "Няма задачи за изчистване",
+      "remaining": "Остават {{count}} задачи",
+      "remaining_one": "Остава {{count}} задача",
+      "remaining_other": "Остават {{count}} задачи"
+    },
+    "completeTodos": {
+      "completed": "Завършени са {{count}} задачи",
+      "completed_one": "Завършена е {{count}} задача",
+      "completed_other": "Завършени са {{count}} задачи"
+    },
+    "createTodos": {
+      "created": "Създадени са {{count}} нови задачи",
+      "created_one": "Създадена е {{count}} нова задача",
+      "created_other": "Създадени са {{count}} нови задачи",
+      "total": "Общо {{count}} задачи",
+      "total_one": "Общо {{count}} задача",
+      "total_other": "Общо {{count}} задачи"
+    },
+    "removeTodos": {
+      "removed": "Изтрити са {{count}} задачи",
+      "removed_one": "Изтрита е {{count}} задача",
+      "removed_other": "Изтрити са {{count}} задачи"
+    },
+    "status": {
+      "done": "{{count}} завършени",
+      "pending": "{{count}} чакащи"
+    },
+    "todoList": {
+      "empty": "Списъкът със задачи е празен",
+      "items": "{{count}} задачи",
+      "items_one": "{{count}} задача",
+      "items_other": "{{count}} задачи",
+      "title": "Списък със задачи"
+    },
+    "updateTodos": {
+      "updated": "Списъкът със задачи е обновен"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

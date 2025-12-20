@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "キャンセル",
-    "confirm": "使用を許可する",
-    "description": {
-      "and": "および",
-      "prefix": "「使用を許可する」をクリックすると、以下に同意したものとみなされます：",
+    "confirm": "プロフィールを作成する",
+    "description": "あなたのコミュニティプロフィールは、{{appName}} のユーザーアカウントとは独立しています。",
+    "footer": {
+      "agreement": "続行することで、<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したものとみなされます。",
       "privacy": "プライバシーポリシー",
       "terms": "利用規約"
     },
-    "title": "認証の確認"
+    "subtitle": "コミュニティプロフィールを作成して、投稿や掲載情報の管理を行いましょう。",
+    "title": "コミュニティプロフィールの作成"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "認証に成功しました！アシスタントを公開できます。",
       "upload": "認証に成功しました！新しいバージョンを公開できます。"
     }
+  },
+  "profileSetup": {
+    "cancel": "キャンセル",
+    "descriptionEdit": "コミュニティプロフィール情報を更新してください。",
+    "descriptionFirstTime": "プロフィールを設定して、コミュニティプロフィールの作成を完了しましょう。",
+    "errors": {
+      "fileTooLarge": "ファイルサイズは2MBを超えることはできません",
+      "notAuthenticated": "操作を行う前にログインしてください。",
+      "updateFailed": "プロフィールの更新に失敗しました。もう一度お試しください。",
+      "uploadFailed": "アップロードに失敗しました。もう一度お試しください",
+      "usernameTaken": "このユーザーIDは既に使用されています。別のユーザーIDを選んでください。"
+    },
+    "fields": {
+      "avatar": {
+        "label": "プロフィール画像"
+      },
+      "bannerUrl": {
+        "clickToUpload": "クリックしてバナー画像をアップロード",
+        "label": "バナー画像",
+        "remove": "バナー画像を削除",
+        "tooltip": "バナー画像はあなたのプロフィールページの上部に表示されます（16:9の比率を推奨）",
+        "uploading": "アップロード中..."
+      },
+      "description": {
+        "label": "自己紹介",
+        "maxLength": "自己紹介は最大200文字までです。",
+        "placeholder": "あなた自身について紹介してください..."
+      },
+      "displayName": {
+        "label": "表示名",
+        "maxLength": "表示名は最大50文字までです。",
+        "placeholder": "表示名を入力してください",
+        "required": "表示名を入力してください"
+      },
+      "github": {
+        "placeholder": "GitHub ユーザー名"
+      },
+      "twitter": {
+        "placeholder": "X（旧Twitter）ユーザー名"
+      },
+      "userName": {
+        "label": "ユーザーID",
+        "maxLength": "ユーザーIDは最大32文字までです。",
+        "minLength": "ユーザーIDは最低3文字必要です。",
+        "pattern": "ユーザーIDには英字、数字、アンダースコア、ハイフンのみ使用できます。",
+        "placeholder": "ユーザーIDを入力してください",
+        "required": "ユーザーIDを入力してください",
+        "tooltip": "ユーザーIDはあなたの一意の識別子で、プロフィールページのリンクに使用されます。"
+      },
+      "website": {
+        "invalidUrl": "有効なURLを入力してください",
+        "placeholder": "個人ウェブサイトのリンク"
+      }
+    },
+    "getStarted": "はじめに",
+    "save": "保存",
+    "socialLinks": {
+      "title": "ソーシャルリンク"
+    },
+    "success": "プロフィールが更新されました",
+    "titleEdit": "プロフィールを編集",
+    "titleFirstTime": "プロフィールを完成させましょう"
   }
 }

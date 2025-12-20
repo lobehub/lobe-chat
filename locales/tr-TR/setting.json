@@ -2,6 +2,7 @@
   "about": {
     "title": "Hakkında"
   },
+  "advancedSettings": "Gelişmiş Ayarlar",
   "agentInfoDescription": {
     "basic": {
       "avatar": "Avatar",
@@ -11,7 +12,6 @@
       "title": "Asistan Bilgileri"
     },
     "chat": {
-      "displayMode": "Görüntüleme Modu",
       "enableHistoryCount": "Geçmiş Mesaj Sayısını Etkinleştir",
       "historyCount": "Geçmiş Mesaj Sayısı",
       "no": "Hayır",
@@ -76,6 +76,19 @@
       "title": "Tüm Ayarları Sıfırla"
     }
   },
+  "defaultAgent": {
+    "model": {
+      "desc": "Yeni bir Agent oluşturulurken varsayılan olarak kullanılan model",
+      "title": "Model"
+    },
+    "title": "Varsayılan Asistan Ayarları"
+  },
+  "group": {
+    "aiConfig": "Yapay Zeka Ayarları",
+    "common": "Genel",
+    "profile": "Hesap",
+    "system": "Sistem"
+  },
   "groupTab": {
     "chat": "Sohbet",
     "members": "Üyeler",
@@ -85,7 +98,7 @@
     "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
     "group": "Takım Ayarları",
-    "groupDesc": "Agent takımını ve sohbet tercihlerini yönetin",
+    "groupDesc": "Grupları ve sohbet tercihlerini yönetin",
     "session": "Oturum Ayarları",
     "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
@@ -216,31 +229,88 @@
       "messages": {
         "createVersionFailed": "Sürüm oluşturulamadı: {{message}}",
         "fetchRemoteFailed": "Uzak asistan verileri alınamadı",
-        "missingIdentifier": "Bu asistana henüz bir pazar tanımlayıcısı atanmadı",
-        "notAuthenticated": "Lütfen önce pazar hesabınıza giriş yapın",
+        "missingIdentifier": "Bu asistanın henüz bir topluluk tanımlayıcısı yok",
+        "notAuthenticated": "Lütfen önce topluluk hesabınıza giriş yapın",
         "publishFailed": "Yayımlama başarısız: {{message}}"
       },
       "submitButton": "Yayımla",
       "title": {
-        "submit": "Asistan Pazarında Paylaş",
+        "submit": "Asistan Topluluğunda Paylaş",
         "upload": "Yeni Sürüm Yayımla"
       }
     },
     "resultModal": {
-      "message": "Asistan incelemeye gönderildi, onaylandıktan sonra otomatik olarak yayımlanacaktır. Yayımlanan asistanı görmek için 'Pazarda Görüntüle'ye tıklayın.",
-      "view": "Pazarda Görüntüle"
+      "message": "Oluşturduğunuz asistan incelemeye gönderildi, onaylandıktan sonra otomatik olarak yayınlanacaktır.",
+      "title": "Başarıyla Gönderildi",
+      "view": "Toplulukta Görüntüle"
     },
     "submit": {
-      "button": "Pazarda Paylaş",
-      "tooltip": "Asistanı pazarda paylaş"
+      "button": "Toplulukta Paylaş",
+      "tooltip": "Asistanı toplulukta paylaş"
     },
     "upload": {
       "button": "Yeni Sürüm Yayımla",
-      "tooltip": "Asistan pazarına yeni sürüm yayımla"
+      "tooltip": "Asistan Topluluğuna Yeni Sürüm Yayınla"
     }
+  },
+  "memory": {
+    "enabled": {
+      "desc": "Etkinleştirildiğinde, yapay zeka sohbet geçmişinden tercihlerinizi hatırlar, bu bilgileri biriktirir ve sonraki konuşmalarda referans olarak kullanır",
+      "title": "Hafıza Özelliğini Etkinleştir"
+    },
+    "title": "Hafıza Ayarları"
   },
   "message": {
     "success": "Güncelleme başarılı"
+  },
+  "myAgents": {
+    "actions": {
+      "cancel": "İptal",
+      "confirmDeprecate": "Kaldırmayı Onayla",
+      "deprecate": "Kalıcı Olarak Kaldır",
+      "deprecateConfirmContent": "Kaldırıldıktan sonra bu asistan pazardan kalıcı olarak silinecek ve yeniden yayınlanamayacaktır. Bu işlem geri alınamaz, lütfen dikkatli olun.",
+      "deprecateConfirmTitle": "Asistanı kaldırmak istediğinize emin misiniz?",
+      "deprecateError": "Asistan kaldırılamadı",
+      "deprecateLoading": "Asistan kaldırılıyor...",
+      "deprecateSuccess": "Asistan kaldırıldı",
+      "edit": "Asistanı Düzenle",
+      "publish": "Asistanı Yayınla",
+      "publishError": "Asistan yayınlanamadı",
+      "publishLoading": "Asistan yayınlanıyor...",
+      "publishSuccess": "Asistan yayınlandı",
+      "unpublish": "Asistanı Yayından Kaldır",
+      "unpublishError": "Asistan yayından kaldırılamadı",
+      "unpublishLoading": "Asistan yayından kaldırılıyor...",
+      "unpublishSuccess": "Asistan yayından kaldırıldı",
+      "viewDetail": "Detayları Görüntüle"
+    },
+    "detail": {
+      "category": "Kategori",
+      "description": "Açıklama",
+      "identifier": "Tanımlayıcı",
+      "title": "Asistan Detayları"
+    },
+    "empty": {
+      "description": "Henüz pazarda yayınladığınız bir asistan bulunmuyor",
+      "title": "Yayınlanmış Asistan Yok"
+    },
+    "errors": {
+      "editFailed": "Asistan düzenlenemedi, lütfen daha sonra tekrar deneyin",
+      "fetchFailed": "Asistan detayları alınamadı",
+      "notAuthenticated": "Lütfen önce pazar hesabınıza giriş yapın"
+    },
+    "loginRequired": {
+      "button": "Pazar Hesabına Giriş Yap",
+      "description": "Yayınladığınız asistanları görüntülemek için lütfen pazar hesabınıza giriş yapın",
+      "title": "Giriş Gerekli"
+    },
+    "status": {
+      "archived": "Arşivlendi",
+      "deprecated": "Kaldırıldı",
+      "published": "Yayında",
+      "unpublished": "Yayında Değil"
+    },
+    "title": "Yayınladığım Asistanlar"
   },
   "plugin": {
     "addMCPPlugin": "MCP Eklentisi Ekle",
@@ -259,6 +329,7 @@
   },
   "settingAgent": {
     "avatar": {
+      "sizeExceeded": "Resim boyutu 1MB sınırını aştı, lütfen daha küçük bir resim seçin",
       "title": "Avatar"
     },
     "backgroundColor": {
@@ -274,12 +345,12 @@
       "title": "Ad"
     },
     "prompt": {
-      "placeholder": "Prompt girin",
-      "title": "Rol Ayarı"
+      "placeholder": "Asistan ayarlarını girin, komut menüsünü açmak için / tuşuna basın",
+      "title": "Asistan Ayarları"
     },
     "submit": "Asistan bilgilerini güncelle",
     "tag": {
-      "desc": "Asistan etiketleri, asistan pazarında gösterilecektir",
+      "desc": "Asistan etiketleri, Asistan Topluluğunda görüntülenecektir",
       "placeholder": "Etiket girin",
       "title": "Etiket"
     },
@@ -391,9 +462,23 @@
     }
   },
   "settingCommon": {
+    "devMode": {
+      "desc": "Etkinleştirildiğinde geliştiriciyle ilgili işlevler ve seçenekler gösterilir",
+      "title": "Geliştirici Modu"
+    },
     "lang": {
       "autoMode": "Sistemi Takip Et",
       "title": "Dil"
+    },
+    "liteMode": {
+      "desc": "Etkinleştirildiğinde arayüz sadeleştirilir ve gelişmiş özellikler gizlenir",
+      "title": "Hafif Mod"
+    },
+    "responseLanguage": {
+      "auto": "Sistemle aynı",
+      "desc": "Yapay zekanın yanıt dili ayarlanır",
+      "placeholder": "Yanıt dili seçin",
+      "title": "Yanıt Dili"
     },
     "themeMode": {
       "auto": "Otomatik",
@@ -425,7 +510,7 @@
       "placeholder": "Lütfen moderatör sistem istemini girin",
       "title": "Moderatör Sistem İstemi"
     },
-    "title": "Agent Takım Bilgileri"
+    "title": "Grup Bilgileri"
   },
   "settingGroupChat": {
     "allowDM": {
@@ -433,7 +518,7 @@
       "title": "Asistanların özel mesaj göndermesine izin ver"
     },
     "enableSupervisor": {
-      "desc": "Agent takım moderatörünü etkinleştir, moderatör takım sohbet sürecini yönetecektir",
+      "desc": "Grup moderatörü özelliğini etkinleştirerek, moderatörün ekip sohbet sürecini yönetmesini sağlayın",
       "title": "Moderatörü etkinleştir"
     },
     "maxResponseInRow": {
@@ -561,7 +646,7 @@
     },
     "openingQuestions": {
       "desc": "Sohbetin başlangıcında gösterilecek yönlendirici sorular",
-      "empty": "Henüz soru yok",
+      "empty": "Açılış soruları ekleyin, kullanıcıların sohbete hızlıca başlamasına yardımcı olun",
       "placeholder": "Soruyu girin",
       "repeat": "Soru zaten mevcut",
       "title": "Açılış Soruları"
@@ -631,6 +716,7 @@
       "title": "Metin Seslendirme"
     }
   },
+  "startConversation": "Sohbete Başla",
   "storage": {
     "actions": {
       "export": {
@@ -663,7 +749,8 @@
     "identifier": "Asistan Tanımlayıcısı (identifier)",
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
-    "tooltips": "Asistan pazarına paylaşın"
+    "success": "Asistan başarıyla gönderildi",
+    "tooltips": "Asistanı Asistan Topluluğunda paylaş"
   },
   "submitFooter": {
     "reset": "Sıfırla",
@@ -712,9 +799,9 @@
   },
   "systemAgent": {
     "agentMeta": {
-      "label": "Asistan Meta Veri Oluşturma Modeli",
+      "label": "Model",
       "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
-      "title": "Asistan Bilgilerini Otomatik Oluştur"
+      "title": "Asistan Bilgisi Oluşturma Yardımcısı"
     },
     "customPrompt": {
       "addPrompt": "Özel İpucu Ekle",
@@ -723,54 +810,60 @@
       "title": "Özel İpucu"
     },
     "generationTopic": {
-      "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
+      "label": "Model",
       "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
-      "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+      "title": "Yapay Zeka Resim Konusu Adlandırma Yardımcısı"
     },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
-      "label": "Oturum Geçmişi Modeli",
+      "label": "Model",
       "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",
-      "title": "Oturum Geçmişini Otomatik Olarak Özetle"
+      "title": "Sohbet Geçmişi Sıkıştırma Yardımcısı"
     },
     "queryRewrite": {
-      "label": "Soru Yeniden Yazım Modeli",
+      "label": "Model",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
-      "title": "Bilgi Tabanı Soru Yeniden Yazımı"
+      "title": "Kaynak Merkezi Soru Yeniden Yazma Asistanı"
     },
     "thread": {
-      "label": "Alt konu adlandırma modeli",
+      "label": "Model",
       "modelDesc": "Alt konuların otomatik olarak yeniden adlandırılması için kullanılan model",
-      "title": "Alt konu otomatik adlandırma"
+      "title": "Alt Konu Otomatik Adlandırma Yardımcısı"
     },
     "title": "Sistem Asistanı",
     "topic": {
-      "label": "Konu Adlandırma Modeli",
+      "label": "Model",
       "modelDesc": "Konuların otomatik olarak yeniden adlandırılması için belirlenen model",
-      "title": "Konu Otomatik Adlandırma"
+      "title": "Konu Otomatik Adlandırma Yardımcısı"
     },
     "translation": {
-      "label": "Çeviri Modeli",
+      "label": "Model",
       "modelDesc": "Çeviri için belirlenen model",
-      "title": "Çeviri Asistanı Ayarları"
+      "title": "Mesaj İçeriği Çeviri Yardımcısı"
     }
   },
   "tab": {
     "about": "Hakkında",
     "agent": "Varsayılan Asistan",
-    "common": "Genel Ayarlar",
+    "apikey": "API Anahtarı Yönetimi",
+    "common": "Görünüm",
     "experiment": "Deney",
     "hotkey": "Kısayollar",
-    "image": "AI Çizim",
+    "image": "Görsel Hizmeti",
     "llm": "Modeller",
+    "memory": "Hafıza Ayarları",
+    "profile": "Hesabım",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "proxy": "Ağ Proxy",
+    "security": "Güvenlik",
+    "stats": "İstatistikler",
     "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
-    "system-agent": "Sistem Asistanı",
-    "tts": "Metin Seslendirme"
+    "tts": "Metin Seslendirme",
+    "usage": "Kullanım İstatistikleri"
   },
   "tools": {
+    "add": "Eklenti Entegrasyonu",
     "builtins": {
       "groupName": "Dahili Araçlar"
     },
@@ -796,6 +889,8 @@
       "tools": "araç",
       "verifyAuth": "Kimlik doğrulamayı tamamladım"
     },
+    "notInstalled": "Yüklenmedi",
+    "notInstalledWarning": "Bu eklenti henüz yüklenmedi, bu durum asistanın kullanımını etkileyebilir",
     "plugins": {
       "enabled": "Etkin: {{num}}",
       "groupName": "Eklentiler",
