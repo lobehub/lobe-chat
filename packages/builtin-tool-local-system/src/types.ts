@@ -9,12 +9,28 @@ import {
   RunCommandResult,
 } from '@lobechat/electron-client-ipc';
 
+export const LocalSystemIdentifier = 'lobe-local-system';
+
+export const LocalSystemApiName = {
+  editLocalFile: 'editLocalFile',
+  getCommandOutput: 'getCommandOutput',
+  globLocalFiles: 'globLocalFiles',
+  grepContent: 'grepContent',
+  killCommand: 'killCommand',
+  listLocalFiles: 'listLocalFiles',
+  moveLocalFiles: 'moveLocalFiles',
+  readLocalFile: 'readLocalFile',
+  renameLocalFile: 'renameLocalFile',
+  runCommand: 'runCommand',
+  searchLocalFiles: 'searchLocalFiles',
+  writeLocalFile: 'writeLocalFile',
+};
+
 export interface FileResult {
   contentType?: string;
   createdTime: Date;
   isDirectory: boolean;
   lastAccessTime: Date;
-  // Spotlight specific metadata
   metadata?: {
     [key: string]: any;
   };
@@ -43,7 +59,7 @@ export interface LocalReadFilesState {
 
 export interface LocalMoveFilesState {
   error?: string;
-  results: LocalMoveFilesResultItem[]; // Overall error for the operation if it fails before individual processing
+  results: LocalMoveFilesResultItem[];
   successCount: number;
   totalCount: number;
 }
@@ -55,7 +71,6 @@ export interface LocalRenameFileState {
   success: boolean;
 }
 
-// Shell Command States
 export interface RunCommandState {
   message: string;
   result: RunCommandResult;
@@ -71,7 +86,6 @@ export interface KillCommandState {
   result: KillCommandResult;
 }
 
-// Search & Find States
 export interface GrepContentState {
   message: string;
   result: GrepContentResult;
@@ -82,7 +96,6 @@ export interface GlobFilesState {
   result: GlobFilesResult;
 }
 
-// Edit State
 export interface EditLocalFileState {
   diffText?: string;
   linesAdded?: number;

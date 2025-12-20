@@ -1,5 +1,7 @@
-import { template } from 'lodash-es';
+import { template } from 'es-toolkit/compat';
 
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -111,6 +113,18 @@ export const VARIABLE_GENERATORS = {
   language: () => (typeof navigator !== 'undefined' ? navigator.language : ''),
   platform: () => (typeof navigator !== 'undefined' ? navigator.platform : ''),
   user_agent: () => (typeof navigator !== 'undefined' ? navigator.userAgent : ''),
+
+  /**
+   * Model-related template variables
+   *
+   * | Value | Example |
+   * |-------|---------|
+   * | `{{model}}` | gpt-4o |
+   * | `{{provider}}` | openai |
+   *
+   */
+  model: () => agentSelectors.currentAgentModel(useAgentStore.getState()),
+  provider: () => agentSelectors.currentAgentModelProvider(useAgentStore.getState()),
 } as Record<string, () => string>;
 
 /**
