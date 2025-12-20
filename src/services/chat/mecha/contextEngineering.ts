@@ -1,0 +1,283 @@
+import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
+import { GroupAgentBuilderIdentifier } from '@lobechat/builtin-tool-group-agent-builder';
+import { KLAVIS_SERVER_TYPES, isDesktop } from '@lobechat/const';
+import {
+  AgentBuilderContext,
+  AgentGroupConfig,
+  GroupAgentBuilderContext,
+  GroupOfficialToolItem,
+  MessagesEngine,
+} from '@lobechat/context-engine';
+import { historySummaryPrompt } from '@lobechat/prompts';
+import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
+import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
+import debug from 'debug';
+
+import { isCanUseFC } from '@/helpers/isCanUseFC';
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
+import { getChatGroupStoreState } from '@/store/agentGroup';
+import { agentGroupSelectors } from '@/store/agentGroup/selectors';
+import { getChatStoreState } from '@/store/chat';
+import { getToolStoreState } from '@/store/tool';
+import { builtinToolSelectors, klavisStoreSelectors, toolSelectors } from '@/store/tool/selectors';
+
+import { isCanUseVideo, isCanUseVision } from '../helper';
+import type { UserMemoriesResult } from './memoryManager';
+
+const log = debug('context-engine:contextEngineering');
+
+interface ContextEngineeringContext {
+  /** Agent Builder context for injecting current agent info */
+  agentBuilderContext?: AgentBuilderContext;
+  /** The agent ID that will respond (for group context injection) */
+  agentId?: string;
+  enableHistoryCount?: boolean;
+  /** Group ID for multi-agent scenarios */
+  groupId?: string;
+  historyCount?: number;
+  historySummary?: string;
+  inputTemplate?: string;
+  messages: UIChatMessage[];
+  model: string;
+  provider: string;
+  sessionId?: string;
+  systemRole?: string;
+  tools?: string[];
+  userMemories?: UserMemoriesResult;
+}
+
+// REVIEW：可能这里可以约束一下 identity，preference，exp 的 重新排序或者裁切过的上下文进来而不是全部丢进来
+export const contextEngineering = async ({
+  messages = [],
+  tools,
+  model,
+  provider,
+  systemRole,
+  inputTemplate,
+  userMemories,
+  enableHistoryCount,
+  historyCount,
+  historySummary,
+  agentBuilderContext,
+  agentId,
+  groupId,
+}: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
+  log('tools: %o', tools);
+
+  // Check if Agent Builder tool is enabled
+  const isAgentBuilderEnabled = tools?.includes(AgentBuilderIdentifier) ?? false;
+  // Check if Group Agent Builder tool is enabled
+  const isGroupAgentBuilderEnabled = tools?.includes(GroupAgentBuilderIdentifier) ?? false;
+
+  log('isAgentBuilderEnabled: %s', isAgentBuilderEnabled);
+  log('isGroupAgentBuilderEnabled: %s', isGroupAgentBuilderEnabled);
+
+  // Build agent group configuration if groupId is provided
+  let agentGroup: AgentGroupConfig | undefined;
+  if (groupId) {
+    const groupStoreState = getChatGroupStoreState();
+    const groupDetail = agentGroupSelectors.getGroupById(groupId)(groupStoreState);
+
+    if (groupDetail?.agents && groupDetail.agents.length > 0) {
+      const agentMap: AgentGroupConfig['agentMap'] = {};
+      const members: AgentGroupConfig['members'] = [];
+
+      // Find the responding agent to get its name and role
+      let currentAgentName: string | undefined;
+      let currentAgentRole: 'supervisor' | 'participant' | undefined;
+
+      for (const agent of groupDetail.agents) {
+        const role = agent.isSupervisor ? 'supervisor' : 'participant';
+        const name = agent.title || 'Untitled Agent';
+
+        agentMap[agent.id] = { name, role };
+        members.push({ id: agent.id, name, role });
+
+        // Capture responding agent info
+        if (agentId && agent.id === agentId) {
+          currentAgentName = name;
+          currentAgentRole = role;
+        }
+      }
+
+      agentGroup = {
+        agentMap,
+        currentAgentId: agentId,
+        currentAgentName,
+        currentAgentRole,
+        groupTitle: groupDetail.title || undefined,
+        members,
+        systemPrompt: groupDetail.config?.systemPrompt || undefined,
+      };
+      log('agentGroup built: %o', agentGroup);
+    }
+  }
+
+  // Get agent store state (used for both group agent builder context and file/knowledge base)
+  const agentStoreState = getAgentStoreState();
+
+  // Build group agent builder context if Group Agent Builder is enabled
+  // Note: Uses activeGroupId from chatStore to get the group being edited
+  let groupAgentBuilderContext: GroupAgentBuilderContext | undefined;
+  if (isGroupAgentBuilderEnabled) {
+    const activeGroupId = getChatStoreState().activeGroupId;
+    if (activeGroupId) {
+      const groupStoreState = getChatGroupStoreState();
+      const activeGroupDetail = agentGroupSelectors.getGroupById(activeGroupId)(groupStoreState);
+
+      if (activeGroupDetail) {
+        // Get supervisor agent config if supervisorAgentId exists
+        let supervisorConfig: GroupAgentBuilderContext['supervisorConfig'];
+        let enabledPlugins: string[] = [];
+        if (activeGroupDetail.supervisorAgentId) {
+          const supervisorAgentConfig = agentSelectors.getAgentConfigById(
+            activeGroupDetail.supervisorAgentId,
+          )(agentStoreState);
+          supervisorConfig = {
+            model: supervisorAgentConfig.model,
+            plugins: supervisorAgentConfig.plugins,
+            provider: supervisorAgentConfig.provider,
+          };
+          enabledPlugins = supervisorAgentConfig.plugins || [];
+        }
+
+        // Build official tools list (builtin tools + Klavis tools)
+        const toolState = getToolStoreState();
+        const officialTools: GroupOfficialToolItem[] = [];
+
+        // Get builtin tools (excluding Klavis tools)
+        const builtinTools = builtinToolSelectors.metaList(toolState);
+        const klavisIdentifiers = new Set(KLAVIS_SERVER_TYPES.map((t) => t.identifier));
+
+        for (const tool of builtinTools) {
+          // Skip Klavis tools in builtin list (they'll be shown separately)
+          if (klavisIdentifiers.has(tool.identifier)) continue;
+
+          officialTools.push({
+            description: tool.meta?.description,
+            enabled: enabledPlugins.includes(tool.identifier),
+            identifier: tool.identifier,
+            installed: true,
+            name: tool.meta?.title || tool.identifier,
+            type: 'builtin',
+          });
+        }
+
+        // Get Klavis tools (if enabled)
+        const isKlavisEnabled =
+          typeof window !== 'undefined' &&
+          window.global_serverConfigStore?.getState()?.serverConfig?.enableKlavis;
+
+        if (isKlavisEnabled) {
+          const allKlavisServers = klavisStoreSelectors.getServers(toolState);
+
+          for (const klavisType of KLAVIS_SERVER_TYPES) {
+            const server = allKlavisServers.find((s) => s.identifier === klavisType.identifier);
+
+            officialTools.push({
+              description: `LobeHub Mcp Server: ${klavisType.label}`,
+              enabled: enabledPlugins.includes(klavisType.identifier),
+              identifier: klavisType.identifier,
+              installed: !!server,
+              name: klavisType.label,
+              type: 'klavis',
+            });
+          }
+        }
+
+        groupAgentBuilderContext = {
+          config: {
+            openingMessage: activeGroupDetail.config?.openingMessage || undefined,
+            openingQuestions: activeGroupDetail.config?.openingQuestions,
+            systemPrompt: activeGroupDetail.config?.systemPrompt || undefined,
+          },
+          groupId: activeGroupId,
+          groupTitle: activeGroupDetail.title || undefined,
+          members: activeGroupDetail.agents?.map((agent) => ({
+            description: agent.description || undefined,
+            id: agent.id,
+            isSupervisor: agent.isSupervisor,
+            title: agent.title || 'Untitled Agent',
+          })),
+          officialTools,
+          supervisorConfig,
+        };
+        log('groupAgentBuilderContext built from activeGroupId: %o', groupAgentBuilderContext);
+      }
+    }
+  }
+
+  // Get enabled agent files with content and knowledge bases from agent store
+  const agentFiles = agentSelectors.currentAgentFiles(agentStoreState);
+  const agentKnowledgeBases = agentSelectors.currentAgentKnowledgeBases(agentStoreState);
+
+  const fileContents = agentFiles
+    .filter((file) => file.enabled && file.content)
+    .map((file) => ({ content: file.content!, fileId: file.id, filename: file.name }));
+
+  const knowledgeBases = agentKnowledgeBases
+    .filter((kb) => kb.enabled)
+    .map((kb) => ({ description: kb.description, id: kb.id, name: kb.name }));
+
+  // Create MessagesEngine with injected dependencies
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
+  const engine = new MessagesEngine({
+    // Agent configuration
+    enableHistoryCount,
+    formatHistorySummary: historySummaryPrompt,
+    historyCount,
+    historySummary,
+    inputTemplate,
+    systemRole,
+
+    // Capability injection
+    capabilities: {
+      isCanUseFC,
+      isCanUseVideo,
+      isCanUseVision,
+    },
+
+    // File context configuration
+    fileContext: { enabled: true, includeFileUrl: !isDesktop },
+
+    // Knowledge injection
+    knowledge: {
+      fileContents,
+      knowledgeBases,
+    },
+
+    // Messages
+    messages,
+
+    // Model info
+    model,
+    provider,
+
+    // Tools configuration
+    toolsConfig: {
+      getToolSystemRoles: (tools) => toolSelectors.enabledSystemRoles(tools)(getToolStoreState()),
+      tools,
+    },
+
+    // User memory configuration
+    userMemory: userMemories
+      ? {
+          enabled: !!userMemories.memories,
+          fetchedAt: userMemories.fetchedAt,
+          memories: userMemories.memories,
+        }
+      : undefined,
+
+    // Variable generators
+    variableGenerators: VARIABLE_GENERATORS,
+
+    // Extended contexts - only pass when enabled
+    ...(isAgentBuilderEnabled && { agentBuilderContext }),
+    ...(isGroupAgentBuilderEnabled && { groupAgentBuilderContext }),
+    ...(agentGroup && { agentGroup }),
+  });
+
+  const result = await engine.process();
+  return result.messages;
+};

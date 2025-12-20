@@ -1,3 +1,4 @@
+import { LazyMotion, domMax } from 'motion/react';
 import { ReactNode, Suspense } from 'react';
 
 import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
@@ -10,7 +11,6 @@ import { getAntdLocale } from '@/utils/locale';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
-import CmdkLazy from './CmdkLazy';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
@@ -59,14 +59,15 @@ const GlobalLayout = async ({
             serverConfig={serverConfig}
           >
             <QueryProvider>
-              <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+              <LazyMotion features={domMax}>
+                <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+              </LazyMotion>
             </QueryProvider>
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
-            <CmdkLazy />
           </ServerConfigStoreProvider>
         </AppTheme>
       </Locale>
