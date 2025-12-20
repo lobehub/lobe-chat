@@ -286,7 +286,7 @@ const AgentModal = memo(() => {
         children: (
           <SliderWithInput
             disabled={!enableMaxTokens}
-            max={32_000}
+            max={262_000}
             min={0}
             step={100}
             unlimitedInput
