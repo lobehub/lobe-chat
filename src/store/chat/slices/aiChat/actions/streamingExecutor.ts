@@ -1,11 +1,19 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { AgentRuntime, type AgentRuntimeContext, type AgentState } from '@lobechat/agent-runtime';
+import {
+  AgentRuntime,
+  type AgentRuntimeContext,
+  type AgentState,
+  GeneralChatAgent,
+  computeStepContext,
+} from '@lobechat/agent-runtime';
 import { isDesktop } from '@lobechat/const';
 import {
   ChatImageItem,
   ChatToolPayload,
+  ConversationContext,
   MessageContentPart,
+  MessageMapScope,
   MessageToolCall,
   ModelUsage,
   TraceNameMap,
@@ -13,17 +21,15 @@ import {
 } from '@lobechat/types';
 import { serializePartsForStorage } from '@lobechat/utils';
 import debug from 'debug';
+import { throttle } from 'es-toolkit/compat';
 import { t } from 'i18next';
-import { throttle } from 'lodash-es';
 import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { chatService } from '@/services/chat';
+import { resolveAgentConfig } from '@/services/chat/mecha';
 import { messageService } from '@/services/message';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
-import { getAgentStoreState } from '@/store/agent/store';
-import { GeneralChatAgent } from '@/store/chat/agents/GeneralChatAgent';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
 import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
@@ -31,7 +37,9 @@ import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';
 
 import { topicSelectors } from '../../../selectors';
+import { cleanSpeakerTag } from '../../../utils/cleanSpeakerTag';
 import { messageMapKey } from '../../../utils/messageMapKey';
+import { selectTodosFromMessages } from '../../message/selectors/dbMessage';
 
 const log = debug('lobe-store:streaming-executor');
 
@@ -46,16 +54,22 @@ export interface StreamingExecutorAction {
     messages: UIChatMessage[];
     parentMessageId: string;
     /**
-     * Explicit sessionId for this execution (avoids using global activeId)
+     * Explicit agentId for this execution (avoids using global activeAgentId)
      */
-    sessionId?: string;
+    agentId?: string;
     /**
      * Explicit topicId for this execution (avoids using global activeTopicId)
      */
     topicId?: string | null;
     threadId?: string;
+    operationId?: string;
     initialState?: AgentState;
     initialContext?: AgentRuntimeContext;
+    /**
+     * Sub Agent ID for group orchestration scenarios
+     * Used to get Agent config (model, provider, plugins) instead of agentId
+     */
+    subAgentId?: string;
   }) => {
     state: AgentState;
     context: AgentRuntimeContext;
@@ -85,38 +99,33 @@ export interface StreamingExecutorAction {
    * including preprocessing and postprocessing steps
    */
   internal_execAgentRuntime: (params: {
-    messages: UIChatMessage[];
-    parentMessageId: string;
-    parentMessageType: 'user' | 'assistant' | 'tool';
     /**
-     * Explicit sessionId for this execution (avoids using global activeId)
+     * Full conversation context (required)
+     * Contains agentId, topicId, threadId, groupId, scope, etc.
      */
-    sessionId?: string;
-    /**
-     * Explicit topicId for this execution (avoids using global activeTopicId)
-     */
-    topicId?: string | null;
-    /**
-     * Operation ID for this execution (automatically created if not provided)
-     */
-    operationId?: string;
-    /**
-     * Parent operation ID (creates a child operation if provided)
-     */
-    parentOperationId?: string;
-    inSearchWorkflow?: boolean;
-    threadId?: string;
-    inPortalThread?: boolean;
-    skipCreateFirstMessage?: boolean;
-    traceId?: string;
-    /**
-     * Initial agent state (for resuming execution from a specific point)
-     */
-    initialState?: AgentState;
+    context: ConversationContext;
     /**
      * Initial agent runtime context (for resuming execution from a specific phase)
      */
     initialContext?: AgentRuntimeContext;
+    /**
+     * Initial agent state (for resuming execution from a specific point)
+     */
+    initialState?: AgentState;
+    inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
+    messages: UIChatMessage[];
+    /**
+     * Operation ID for this execution (automatically created if not provided)
+     */
+    operationId?: string;
+    parentMessageId: string;
+    parentMessageType: 'user' | 'assistant' | 'tool';
+    /**
+     * Parent operation ID (creates a child operation if provided)
+     */
+    parentOperationId?: string;
+    skipCreateFirstMessage?: boolean;
   }) => Promise<void>;
 }
 
@@ -129,19 +138,29 @@ export const streamingExecutor: StateCreator<
   internal_createAgentState: ({
     messages,
     parentMessageId,
-    sessionId: paramSessionId,
+    agentId: paramAgentId,
     topicId: paramTopicId,
     threadId,
     initialState,
     initialContext,
+    operationId,
+    subAgentId: paramSubAgentId,
   }) => {
-    // Use provided sessionId/topicId or fallback to global state
-    const { activeId, activeTopicId } = get();
-    const sessionId = paramSessionId ?? activeId;
+    // Use provided agentId/topicId or fallback to global state
+    const { activeAgentId, activeTopicId } = get();
+    const agentId = paramAgentId ?? activeAgentId;
     const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
 
-    const agentStoreState = getAgentStoreState();
-    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
+    // For group orchestration scenarios:
+    // - subAgentId is used for agent config retrieval (model, provider, plugins)
+    // - agentId is used for session ID (message storage location)
+    const effectiveAgentId = paramSubAgentId || agentId;
+
+    // Resolve agent config with builtin agent runtime config merged
+    // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
+    const { agentConfig: agentConfigData, plugins: pluginIds } = resolveAgentConfig({
+      agentId: effectiveAgentId || '',
+    });
 
     // Get tools manifest map
     const toolsEngine = createAgentToolsEngine({
@@ -151,7 +170,7 @@ export const streamingExecutor: StateCreator<
     const { enabledToolIds } = toolsEngine.generateToolsDetailed({
       model: agentConfigData.model,
       provider: agentConfigData.provider!,
-      toolIds: agentConfigData.plugins,
+      toolIds: pluginIds,
     });
     const toolManifestMap = Object.fromEntries(
       toolsEngine.getEnabledPluginManifests(enabledToolIds).entries(),
@@ -168,11 +187,11 @@ export const streamingExecutor: StateCreator<
     const state =
       initialState ||
       AgentRuntime.createInitialState({
-        sessionId,
+        operationId: operationId ?? agentId,
         messages,
         maxSteps: 400,
         metadata: {
-          sessionId,
+          sessionId: agentId,
           topicId,
           threadId,
         },
@@ -189,7 +208,7 @@ export const streamingExecutor: StateCreator<
         parentMessageId,
       },
       session: {
-        sessionId,
+        sessionId: agentId,
         messageCount: messages.length,
         status: state.status,
         stepCount: 0,
@@ -214,9 +233,13 @@ export const streamingExecutor: StateCreator<
       internal_toggleToolCallingStreaming,
     } = get();
 
-    // Get sessionId, topicId, and abortController from operation
-    let sessionId: string;
+    // Get agentId, topicId, groupId and abortController from operation
+    let agentId: string;
+    let subAgentId: string | undefined;
     let topicId: string | null | undefined;
+    let threadId: string | undefined;
+    let groupId: string | undefined;
+    let scope: MessageMapScope | undefined;
     let traceId: string | undefined = traceIdParam;
     let abortController: AbortController;
 
@@ -226,14 +249,20 @@ export const streamingExecutor: StateCreator<
         log('[internal_fetchAIChatMessage] ERROR: Operation not found: %s', operationId);
         throw new Error(`Operation not found: ${operationId}`);
       }
-      sessionId = operation.context.sessionId!;
+      agentId = operation.context.agentId!;
+      subAgentId = operation.context.subAgentId;
       topicId = operation.context.topicId;
+      threadId = operation.context.threadId ?? undefined;
+      groupId = operation.context.groupId;
+      scope = operation.context.scope;
       abortController = operation.abortController; // 👈 Use operation's abortController
       log(
-        '[internal_fetchAIChatMessage] get context from operation %s: sessionId=%s, topicId=%s, aborted=%s',
+        '[internal_fetchAIChatMessage] get context from operation %s: agentId=%s, subAgentId=%s, topicId=%s, groupId=%s, aborted=%s',
         operationId,
-        sessionId,
+        agentId,
+        subAgentId,
         topicId,
+        groupId,
         abortController.signal.aborted,
       );
       // Get traceId from operation metadata if not explicitly provided
@@ -242,32 +271,34 @@ export const streamingExecutor: StateCreator<
       }
     } else {
       // Fallback to global state (for legacy code paths without operation)
-      sessionId = get().activeId;
+      agentId = get().activeAgentId;
       topicId = get().activeTopicId;
+      groupId = get().activeGroupId;
       abortController = new AbortController();
       log(
-        '[internal_fetchAIChatMessage] use global context: sessionId=%s, topicId=%s',
-        sessionId,
+        '[internal_fetchAIChatMessage] use global context: agentId=%s, topicId=%s, groupId=%s',
+        agentId,
         topicId,
+        groupId,
       );
     }
 
-    // Get agent config from params or use current
-    const finalAgentConfig = agentConfig || agentSelectors.currentAgentConfig(getAgentStoreState());
-    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+    // Create base context for child operations and message queries
+    const fetchContext = { agentId, topicId, threadId, groupId, scope };
 
-    // ================================== //
-    //   messages uniformly preprocess    //
-    // ================================== //
-    // 4. handle max_tokens
-    finalAgentConfig.params.max_tokens = chatConfig.enableMaxTokens
-      ? finalAgentConfig.params.max_tokens
-      : undefined;
+    // For group orchestration scenarios:
+    // - subAgentId is used for agent config retrieval (model, provider, plugins)
+    // - agentId is used for session ID (message storage location)
+    const effectiveAgentId = subAgentId || agentId;
 
-    // 5. handle reasoning_effort
-    finalAgentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
-      ? finalAgentConfig.params.reasoning_effort
-      : undefined;
+    // Resolve agent config with params adjusted based on chatConfig
+    // If agentConfig is passed in, use it directly (it's already resolved)
+    // Otherwise, resolve from mecha layer which handles:
+    // - Builtin agent runtime config merging
+    // - max_tokens/reasoning_effort based on chatConfig settings
+    const resolved = resolveAgentConfig({ agentId: effectiveAgentId });
+    const finalAgentConfig = agentConfig || resolved.agentConfig;
+    const chatConfig = resolved.chatConfig;
 
     let isFunctionCall = false;
     let tools: ChatToolPayload[] | undefined;
@@ -312,6 +343,11 @@ export const streamingExecutor: StateCreator<
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
+        // Use effectiveAgentId for agent config resolution (system role, tools, etc.)
+        // In group orchestration: subAgentId for the actual speaking agent
+        // In normal chat: agentId for the main agent
+        agentId: effectiveAgentId || undefined,
+        groupId,
         messages,
         model,
         provider,
@@ -321,7 +357,6 @@ export const streamingExecutor: StateCreator<
       historySummary: historySummary?.content,
       trace: {
         traceId,
-        sessionId,
         topicId: topicId ?? undefined,
         traceName: TraceNameMap.Conversation,
       },
@@ -344,7 +379,7 @@ export const streamingExecutor: StateCreator<
           messageService.updateMessage(
             messageId,
             { traceId, observationId: observationId ?? undefined },
-            { sessionId, topicId },
+            { agentId, groupId, topicId },
           );
         }
 
@@ -516,6 +551,10 @@ export const streamingExecutor: StateCreator<
           case 'text': {
             output += chunk.text;
 
+            // Clean speaker tag that may be reproduced by model in group chat
+            // The tag is injected at message start to identify sender, but models may copy it
+            output = cleanSpeakerTag(output);
+
             // if there is no duration, it means the end of reasoning
             if (!thinkingDuration) {
               thinkingDuration = Date.now() - thinkingStartAt;
@@ -558,7 +597,7 @@ export const streamingExecutor: StateCreator<
               // Create reasoning operation
               const { operationId: reasoningOpId } = get().startOperation({
                 type: 'reasoning',
-                context: { sessionId, topicId, messageId },
+                context: { ...fetchContext, messageId },
                 parentOperationId: operationId,
               });
               reasoningOperationId = reasoningOpId;
@@ -587,7 +626,7 @@ export const streamingExecutor: StateCreator<
 
               const { operationId: reasoningOpId } = get().startOperation({
                 type: 'reasoning',
-                context: { sessionId, topicId, messageId },
+                context: { ...fetchContext, messageId },
                 parentOperationId: operationId,
               });
               reasoningOperationId = reasoningOpId;
@@ -679,6 +718,9 @@ export const streamingExecutor: StateCreator<
                 contentParts = [...contentParts, { type: 'text', text: partContent }];
               }
               output += partContent;
+
+              // Clean speaker tag that may be reproduced by model in group chat
+              output = cleanSpeakerTag(output);
             } else if (partType === 'image') {
               // Image part - create new array to avoid mutation
               const tempImage = `data:${mimeType};base64,${partContent}`;
@@ -793,31 +835,25 @@ export const streamingExecutor: StateCreator<
   },
 
   internal_execAgentRuntime: async (params) => {
-    const {
-      messages: originalMessages,
-      parentMessageId,
-      parentMessageType,
-      sessionId: paramSessionId,
-      topicId: paramTopicId,
-    } = params;
+    const { messages: originalMessages, parentMessageId, parentMessageType, context } = params;
 
-    // Use provided sessionId/topicId or fallback to global state
-    const { activeId, activeTopicId } = get();
-    const sessionId = paramSessionId ?? activeId;
-    const topicId = paramTopicId !== undefined ? paramTopicId : activeTopicId;
-    const messageKey = messageMapKey(sessionId, topicId);
+    // Extract values from context
+    const { agentId, topicId, threadId, subAgentId, groupId } = context;
+
+    // For group orchestration scenarios:
+    // - subAgentId is used for agent config retrieval (model, provider, plugins)
+    // - agentId is used for message storage location (via messageMapKey)
+    const effectiveAgentId = subAgentId || agentId;
+
+    // Generate message key from context
+    const messageKey = messageMapKey(context);
 
     // Create or use provided operation
     let operationId = params.operationId;
     if (!operationId) {
       const { operationId: newOperationId } = get().startOperation({
         type: 'execAgentRuntime',
-        context: {
-          sessionId,
-          topicId,
-          messageId: parentMessageId,
-          threadId: params.threadId,
-        },
+        context: { ...context, messageId: parentMessageId },
         parentOperationId: params.parentOperationId, // Pass parent operation ID
         label: 'AI Generation',
         metadata: {
@@ -833,9 +869,11 @@ export const streamingExecutor: StateCreator<
     }
 
     log(
-      '[internal_execAgentRuntime] start, operationId: %s, sessionId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
+      '[internal_execAgentRuntime] start, operationId: %s, agentId: %s, subAgentId: %s, effectiveAgentId: %s, topicId: %s, messageKey: %s, parentMessageId: %s, parentMessageType: %s, messages count: %d',
       operationId,
-      sessionId,
+      agentId,
+      subAgentId,
+      effectiveAgentId,
       topicId,
       messageKey,
       parentMessageId,
@@ -846,11 +884,15 @@ export const streamingExecutor: StateCreator<
     // Create a new array to avoid modifying the original messages
     let messages = [...originalMessages];
 
-    const agentStoreState = getAgentStoreState();
-    const agentConfigData = agentSelectors.currentAgentConfig(agentStoreState);
-    const { chatConfig } = agentConfigData;
+    // Use effectiveAgentId to get agent config (subAgentId in group orchestration, agentId otherwise)
+    // resolveAgentConfig handles:
+    // - Builtin agent runtime config merging
+    // - max_tokens/reasoning_effort based on chatConfig settings
+    const { agentConfig: agentConfigData, chatConfig } = resolveAgentConfig({
+      agentId: effectiveAgentId || '',
+    });
 
-    // Use current agent config
+    // Use agent config from agentId
     const model = agentConfigData.model;
     const provider = agentConfigData.provider;
 
@@ -871,7 +913,7 @@ export const streamingExecutor: StateCreator<
 
     const agent = new GeneralChatAgent({
       agentConfig: { maxSteps: 1000 },
-      sessionId: `${messageKey}/${params.parentMessageId}`,
+      operationId: `${messageKey}/${params.parentMessageId}`,
       modelRuntimeConfig: {
         model,
         provider: provider!,
@@ -902,11 +944,13 @@ export const streamingExecutor: StateCreator<
       get().internal_createAgentState({
         messages,
         parentMessageId: params.parentMessageId,
-        sessionId,
+        agentId,
         topicId,
-        threadId: params.threadId,
+        threadId: threadId ?? undefined,
         initialState: params.initialState,
         initialContext: params.initialContext,
+        operationId,
+        subAgentId, // Pass subAgentId for agent config retrieval
       });
 
     let state = initialAgentState;
@@ -937,11 +981,26 @@ export const streamingExecutor: StateCreator<
       }
 
       stepCount++;
+
+      // Compute step context from current db messages before each step
+      // Use dbMessagesMap which contains persisted state (including pluginState.todos)
+      const currentDBMessages = get().dbMessagesMap[messageKey] || [];
+      // Use selectTodosFromMessages selector (shared with UI display)
+      const todos = selectTodosFromMessages(currentDBMessages);
+      const stepContext = computeStepContext({ todos });
+
+      // Inject stepContext into the runtime context for this step
+      nextContext = {
+        ...nextContext,
+        stepContext,
+      };
+
       log(
-        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s',
+        '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s, stepContext=%O',
         stepCount,
         nextContext.phase,
         state.status,
+        stepContext,
       );
 
       const result = await runtime.step(state, nextContext);
@@ -968,12 +1027,13 @@ export const streamingExecutor: StateCreator<
             const assistantMessage = currentMessages.findLast((m) => m.role === 'assistant');
             if (assistantMessage) {
               await messageService.updateMessageError(assistantMessage.id, event.error, {
-                sessionId,
+                agentId,
+                groupId,
                 topicId,
               });
             }
             const finalMessages = get().messagesMap[messageKey] || [];
-            get().replaceMessages(finalMessages, { sessionId, topicId });
+            get().replaceMessages(finalMessages, { context });
             break;
           }
         }
@@ -1018,16 +1078,50 @@ export const streamingExecutor: StateCreator<
       stepCount,
     );
 
-    // Complete operation
-    if (state.status === 'done') {
-      get().completeOperation(operationId);
-      log('[internal_execAgentRuntime] Operation completed successfully');
-    } else if (state.status === 'error') {
-      get().failOperation(operationId, {
-        type: 'runtime_error',
-        message: 'Agent runtime execution failed',
-      });
-      log('[internal_execAgentRuntime] Operation failed');
+    // Execute afterCompletion hooks before completing operation
+    // These are registered by tools (e.g., speak/broadcast/delegate) that need to
+    // trigger actions after the AgentRuntime finishes
+    const operation = get().operations[operationId];
+    const afterCompletionCallbacks = operation?.metadata?.runtimeHooks?.afterCompletionCallbacks;
+    if (afterCompletionCallbacks && afterCompletionCallbacks.length > 0) {
+      log(
+        '[internal_execAgentRuntime] Executing %d afterCompletion callbacks',
+        afterCompletionCallbacks.length,
+      );
+
+      for (const callback of afterCompletionCallbacks) {
+        try {
+          await callback();
+        } catch (error) {
+          console.error('[internal_execAgentRuntime] afterCompletion callback error:', error);
+        }
+      }
+
+      log('[internal_execAgentRuntime] afterCompletion callbacks executed');
+    }
+
+    // Complete operation based on final state
+    switch (state.status) {
+      case 'done': {
+        get().completeOperation(operationId);
+        log('[internal_execAgentRuntime] Operation completed successfully');
+        break;
+      }
+      case 'error': {
+        get().failOperation(operationId, {
+          type: 'runtime_error',
+          message: 'Agent runtime execution failed',
+        });
+        log('[internal_execAgentRuntime] Operation failed');
+        break;
+      }
+      case 'waiting_for_human': {
+        // When waiting for human intervention, complete the current operation
+        // A new operation will be created when user approves/rejects
+        get().completeOperation(operationId);
+        log('[internal_execAgentRuntime] Operation paused for human intervention');
+        break;
+      }
     }
 
     log('[internal_execAgentRuntime] completed');
@@ -1035,7 +1129,6 @@ export const streamingExecutor: StateCreator<
     // Desktop notification (if not in tools calling mode)
     if (isDesktop) {
       try {
-        const messageKey = `${activeId}_${activeTopicId ?? null}`;
         const finalMessages = get().messagesMap[messageKey] || [];
         const lastAssistant = finalMessages.findLast((m) => m.role === 'assistant');
 
@@ -1055,10 +1148,10 @@ export const streamingExecutor: StateCreator<
     }
 
     // Summary history if context messages is larger than historyCount
-    const historyCount = agentChatConfigSelectors.historyCount(agentStoreState);
+    const historyCount = chatConfig.historyCount ?? 0;
 
     if (
-      agentChatConfigSelectors.enableHistoryCount(agentStoreState) &&
+      chatConfig.enableHistoryCount &&
       chatConfig.enableCompressHistory &&
       messages.length > historyCount
     ) {
