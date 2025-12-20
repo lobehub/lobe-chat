@@ -7,6 +7,50 @@ const log = debug('context-engine:processor:PlaceholderVariablesProcessor');
 
 const placeholderVariablesRegex = /{{(.*?)}}/g;
 
+export type PlaceholderValue = unknown | (() => unknown);
+export type PlaceholderValueMap = Record<string, PlaceholderValue>;
+
+const formatPlaceholderPrimitive = (value: unknown): string => {
+  if (value === undefined || value === null) return '';
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => formatPlaceholderPrimitive(item))
+      .filter((item) => item.length > 0)
+      .join(', ');
+  }
+
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return '';
+    }
+  }
+
+  return String(value);
+};
+
+const resolvePlaceholderValue = (value: PlaceholderValue): string => {
+  try {
+    const resolved = typeof value === 'function' ? value() : value;
+    return formatPlaceholderPrimitive(resolved);
+  } catch {
+    return '';
+  }
+};
+
+export const buildPlaceholderGenerators = (
+  values: PlaceholderValueMap,
+): Record<string, () => string> =>
+  Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, () => resolvePlaceholderValue(value)]),
+  );
+
+export const formatPlaceholderValues = (values: PlaceholderValueMap): Record<string, string> =>
+  Object.fromEntries(
+    Object.entries(values).map(([key, value]) => [key, resolvePlaceholderValue(value)]),
+  );
+
 export interface PlaceholderVariablesConfig {
   /** Recursive parsing depth, default is 2 */
   depth?: number;
@@ -51,7 +95,7 @@ export const parsePlaceholderVariables = (
       // Only perform replacement when there are available variables
       if (Object.keys(availableVariables).length === 0) break;
 
-      // Replace variables one by one to avoid lodash template's error handling for undefined variables
+      // Replace variables one by one to avoid es-toolkit template's error handling for undefined variables
       let tempResult = result;
       for (const [key, value] of Object.entries(availableVariables)) {
         const regex = new RegExp(
@@ -71,6 +115,18 @@ export const parsePlaceholderVariables = (
 
   return result;
 };
+
+/**
+ * Convenience helper to render a template string with placeholder values
+ * @param template Template string containing {{variable}} tokens
+ * @param values Key-value map or generator map used for replacement
+ * @param depth Recursive depth
+ */
+export const renderPlaceholderTemplate = (
+  template: string,
+  values: PlaceholderValueMap,
+  depth = 2,
+): string => parsePlaceholderVariables(template, buildPlaceholderGenerators(values), depth);
 
 /**
  * Parse message content and replace placeholder variables

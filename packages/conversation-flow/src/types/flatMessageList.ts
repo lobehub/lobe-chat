@@ -21,6 +21,7 @@ import type { UIChatMessage } from '@lobechat/types';
  * - 'assistantGroup': Assistant message + tool calls aggregation
  * - 'messageGroup': Generic message group (manual/summary)
  * - 'compare': Compare mode for parallel model outputs
+ * - 'agentCouncil': Multi-agent parallel responses (all enter context)
  */
 export type FlatMessageRole =
   | 'user'
@@ -30,7 +31,8 @@ export type FlatMessageRole =
   | 'supervisor'
   | 'assistantGroup'
   | 'messageGroup'
-  | 'compare';
+  | 'compare'
+  | 'agentCouncil';
 
 /**
  * Message in flat list
