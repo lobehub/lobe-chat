@@ -1,5 +1,4 @@
 import { Icon } from '@lobehub/ui';
-import { Empty } from 'antd';
 import { ServerCrash } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { Virtuoso } from 'react-virtuoso';
 import { useToolStore } from '@/store/tool';
 
 import SearchLoading from '../../Loading';
+import PluginEmpty from '../../PluginEmpty';
 import VirtuosoLoading from '../../VirtuosoLoading';
 import Item from './Item';
 
@@ -65,13 +65,9 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
     );
 
   const isEmpty = allItems.length === 0;
+  const hasSearchKeywords = Boolean(keywords && keywords.trim());
 
-  if (isEmpty)
-    return (
-      <Center paddingBlock={40}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-      </Center>
-    );
+  if (isEmpty) return <PluginEmpty search={hasSearchKeywords} />;
 
   return (
     <Virtuoso
@@ -80,6 +76,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
       }}
       data={allItems}
       endReached={loadMoreMCPPlugins}
+      increaseViewportBy={typeof window !== 'undefined' ? window.innerHeight : 0}
       itemContent={(_, item) => {
         return (
           <Flexbox key={item.identifier} paddingBlock={2} paddingInline={4}>
@@ -87,7 +84,7 @@ export const List = memo<ListProps>(({ setIdentifier }) => {
           </Flexbox>
         );
       }}
-      overscan={400}
+      overscan={24}
       style={{ height: '100%', width: '100%' }}
       totalCount={totalCount || 0}
     />

@@ -3,7 +3,7 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import { isUndefined } from 'lodash-es';
+import { isUndefined } from 'es-toolkit/compat';
 import { LoaderCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

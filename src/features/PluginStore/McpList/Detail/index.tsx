@@ -1,5 +1,6 @@
-import { Empty } from 'antd';
+import { Empty } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
+import { Boxes } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -47,7 +48,12 @@ const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
         }}
         width={'100%'}
       >
-        <Empty description={t('store.emptySelectHint')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty
+          description={t('store.emptySelectHint')}
+          descriptionProps={{ fontSize: 14 }}
+          icon={Boxes}
+          style={{ maxWidth: 400 }}
+        />
       </Center>
     );
 

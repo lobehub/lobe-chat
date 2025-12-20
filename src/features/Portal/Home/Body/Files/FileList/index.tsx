@@ -31,6 +31,7 @@ const FileList = () => {
       <Avatar
         avatar={<Icon icon={InboxIcon} size={'large'} />}
         background={theme.colorFillTertiary}
+        shape={'square'}
         size={48}
       />
       <Balancer>

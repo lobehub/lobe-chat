@@ -66,7 +66,7 @@ const HostMemberCard = memo<HostMemberCardProps>(({ checked, loading, onToggle }
             <Flexbox align={'center'} flex={1} gap={8} horizontal style={{ minWidth: 0 }}>
               <Avatar
                 avatar={DEFAULT_SUPERVISOR_AVATAR}
-                shape="circle"
+                shape={'square'}
                 size={24}
                 style={{ flexShrink: 0 }}
               />

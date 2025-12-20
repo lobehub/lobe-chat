@@ -1,6 +1,6 @@
 import { Avatar, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { startCase } from 'lodash-es';
+import { startCase } from 'es-toolkit/compat';
 import { CSSProperties, memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -40,6 +40,7 @@ const GroupInfo = memo<GroupInfoProps>(({ style, meta, onAvatarClick }) => {
         background={theme.colorFillTertiary}
         className={styles.avatar}
         onClick={onAvatarClick}
+        shape={'square'}
         size={100}
       />
       {meta.title && <div className={styles.title}>{meta.title}</div>}

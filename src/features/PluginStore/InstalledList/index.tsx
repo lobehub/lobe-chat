@@ -1,6 +1,6 @@
-import { DraggablePanel } from '@lobehub/ui';
-import { Empty } from 'antd';
+import { DraggablePanel, Empty } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
+import { Plug2 } from 'lucide-react';
 import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -9,6 +9,7 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { LobeToolType } from '@/types/tool/tool';
 
+import PluginEmpty from '../PluginEmpty';
 import Detail from './Detail';
 import List from './List';
 
@@ -25,8 +26,8 @@ const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
 
   if (isEmpty)
     return (
-      <Center height={'75vh'} paddingBlock={40}>
-        <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      <Center height={'75vh'}>
+        <PluginEmpty />
       </Center>
     );
 
@@ -75,7 +76,12 @@ const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
           }}
           width={'100%'}
         >
-          <Empty description={t('store.emptySelectHint')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          <Empty
+            description={t('store.emptySelectHint')}
+            descriptionProps={{ fontSize: 14 }}
+            icon={Plug2}
+            style={{ maxWidth: 400 }}
+          />
         </Center>
       )}
     </Flexbox>

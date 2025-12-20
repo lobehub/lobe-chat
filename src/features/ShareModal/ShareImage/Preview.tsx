@@ -8,9 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import { ProductLogo } from '@/components/Branding';
 import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 
 import pkg from '../../../../package.json';
 import { useContainerStyles } from '../style';
@@ -20,23 +18,22 @@ import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
   ({ title, withSystemRole, withBackground, withFooter, widthMode }) => {
-    const [model, plugins, systemRole] = useAgentStore((s) => [
-      agentSelectors.currentAgentModel(s),
-      agentSelectors.displayableAgentPlugins(s),
-      agentSelectors.currentAgentSystemRole(s),
-    ]);
-    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
-      sessionSelectors.isInboxSession(s),
-      sessionMetaSelectors.currentAgentDescription(s),
-      sessionMetaSelectors.currentAgentAvatar(s),
-      sessionMetaSelectors.currentAgentBackgroundColor(s),
-    ]);
+    const [model, plugins, systemRole, isInbox, description, avatar, backgroundColor] =
+      useAgentStore((s) => [
+        agentSelectors.currentAgentModel(s),
+        agentSelectors.displayableAgentPlugins(s),
+        agentSelectors.currentAgentSystemRole(s),
+        builtinAgentSelectors.isInboxAgent(s),
+        agentSelectors.currentAgentDescription(s),
+        agentSelectors.currentAgentAvatar(s),
+        agentSelectors.currentAgentBackgroundColor(s),
+      ]);
 
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
     const { styles: containerStyles } = useContainerStyles(widthMode);
 
-    const displayTitle = isInbox ? t('inbox.title') : title;
+    const displayTitle = isInbox ? 'Lobe AI' : title;
     const displayDesc = isInbox ? t('inbox.desc') : description;
 
     return (
@@ -45,7 +42,13 @@ const Preview = memo<FieldType & { title?: string }>(
           <Flexbox className={styles.container} gap={16}>
             <div className={styles.header}>
               <Flexbox align={'flex-start'} gap={12} horizontal>
-                <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
+                <Avatar
+                  avatar={avatar}
+                  background={backgroundColor}
+                  shape={'square'}
+                  size={40}
+                  title={title}
+                />
                 <ChatHeaderTitle
                   desc={displayDesc}
                   tag={

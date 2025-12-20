@@ -1,4 +1,4 @@
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -9,7 +9,7 @@ const DetailsLoading = memo(() => {
     <Flexbox gap={24}>
       <Flexbox gap={12}>
         <Flexbox align={'center'} gap={16} horizontal width={'100%'}>
-          <Skeleton.Avatar active size={64} />
+          <Skeleton.Avatar active shape={'square'} size={64} />
           <Skeleton.Button active style={{ height: 36, width: 200 }} />
         </Flexbox>
         <Skeleton.Button active size={'small'} style={{ width: 200 }} />
