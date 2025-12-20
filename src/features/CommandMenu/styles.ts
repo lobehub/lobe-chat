@@ -1,0 +1,253 @@
+import { createStyles } from 'antd-style';
+
+export const useStyles = createStyles(({ css, token }) => ({
+  chatContainer: css`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  `,
+  chatMessage: css`
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 12px;
+    border-radius: ${token.borderRadius}px;
+
+    background: ${token.colorBgContainer};
+  `,
+  chatMessageContent: css`
+    font-size: 14px;
+    line-height: 1.6;
+    color: ${token.colorText};
+  `,
+  chatMessageRole: css`
+    font-size: 12px;
+    font-weight: 500;
+    color: ${token.colorTextSecondary};
+    text-transform: uppercase;
+  `,
+  commandContainer: css`
+    display: flex;
+    flex-direction: column;
+  `,
+  commandRoot: css`
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    width: min(640px, 90vw);
+    max-height: min(500px, 70vh);
+    border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorBgElevated};
+    box-shadow: ${token.boxShadowSecondary};
+
+    animation: slide-down 0.12s ease-out;
+
+    @keyframes slide-down {
+      from {
+        transform: translateY(-20px) scale(0.96);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    [cmdk-input] {
+      flex: 1;
+
+      min-width: 0;
+      padding: 0;
+      border: none;
+
+      font-family: inherit;
+      font-size: 16px;
+      color: ${token.colorText};
+
+      background: transparent;
+      outline: none;
+
+      &::placeholder {
+        color: ${token.colorTextPlaceholder};
+      }
+    }
+
+    [cmdk-list] {
+      overflow-y: auto;
+      max-height: 400px;
+      padding: 8px;
+    }
+
+    [cmdk-empty] {
+      padding-block: 32px;
+      padding-inline: 16px;
+
+      font-size: 14px;
+      color: ${token.colorTextTertiary};
+      text-align: center;
+    }
+
+    [cmdk-item] {
+      cursor: pointer;
+      user-select: none;
+
+      display: flex;
+      gap: 12px;
+      align-items: center;
+
+      padding-block: 12px;
+      padding-inline: 16px;
+      border-radius: ${token.borderRadius}px;
+
+      color: ${token.colorText};
+
+      transition: all 0.15s ease;
+
+      &[aria-selected='true'] {
+        background: ${token.colorBgTextHover};
+      }
+
+      &:hover {
+        background: ${token.colorBgTextHover};
+      }
+    }
+
+    [cmdk-group-heading] {
+      user-select: none;
+
+      padding-block: 8px;
+      padding-inline: 16px;
+
+      font-size: 12px;
+      font-weight: 500;
+      color: ${token.colorTextSecondary};
+    }
+
+    [cmdk-separator] {
+      height: 1px;
+      margin-block: 4px;
+      background: ${token.colorBorderSecondary};
+    }
+  `,
+  icon: css`
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: ${token.colorTextSecondary};
+  `,
+  itemContent: css`
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    align-items: center;
+
+    min-width: 0;
+  `,
+  itemDescription: css`
+    overflow: hidden;
+
+    margin-block-start: 2px;
+
+    font-size: 12px;
+    line-height: 1.4;
+    color: ${token.colorTextTertiary};
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  itemDetails: css`
+    flex: 1;
+    min-width: 0;
+  `,
+  itemIcon: css`
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 20px;
+    height: 20px;
+
+    color: ${token.colorTextSecondary};
+  `,
+  itemLabel: css`
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+  `,
+  itemTitle: css`
+    overflow: hidden;
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+  itemType: css`
+    flex-shrink: 0;
+    font-size: 11px;
+    color: ${token.colorTextTertiary};
+    text-transform: capitalize;
+  `,
+  overlay: css`
+    position: fixed;
+    z-index: 9999;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+
+    padding-block-start: 15vh;
+
+    background: ${token.colorBgMask};
+
+    animation: fade-in 0.1s ease-in-out;
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+  `,
+  skeleton: css`
+    height: 16px;
+    border-radius: ${token.borderRadiusSM}px;
+
+    background: linear-gradient(
+      90deg,
+      ${token.colorFillSecondary} 25%,
+      ${token.colorFillTertiary} 50%,
+      ${token.colorFillSecondary} 75%
+    );
+    background-size: 200% 100%;
+
+    animation: pulse 1.5s ease-in-out infinite;
+
+    @keyframes pulse {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  `,
+  skeletonItem: css`
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    padding-block: 12px;
+    padding-inline: 16px;
+  `,
+}));
