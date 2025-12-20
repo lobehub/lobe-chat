@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import { merge } from 'es-toolkit/compat';
 import { t } from 'i18next';
-import { merge } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';

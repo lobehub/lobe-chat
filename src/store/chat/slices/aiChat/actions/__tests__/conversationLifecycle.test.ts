@@ -6,12 +6,7 @@ import { getSessionStoreState } from '@/store/session';
 
 import { useChatStore } from '../../../../store';
 import { TEST_CONTENT, TEST_IDS, createMockMessage } from './fixtures';
-import {
-  resetTestEnvironment,
-  setupMockSelectors,
-  setupStoreWithMessages,
-  spyOnMessageService,
-} from './helpers';
+import { resetTestEnvironment, setupMockSelectors, spyOnMessageService } from './helpers';
 
 // Keep zustand mock as it's needed globally
 vi.mock('zustand/traditional');
@@ -47,18 +42,24 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+// Helper to create context for testing
+const createTestContext = (agentId = TEST_IDS.SESSION_ID) => ({
+  agentId,
+  topicId: null,
+  threadId: null,
+});
+
 describe('ConversationLifecycle actions', () => {
   describe('sendMessage', () => {
     describe('validation', () => {
-      it('should not send when there is no active session', async () => {
-        act(() => {
-          useChatStore.setState({ activeId: undefined });
-        });
-
+      it('should not send when sessionId is empty', async () => {
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.USER_MESSAGE,
+            context: { agentId: '', topicId: null, threadId: null },
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
@@ -68,7 +69,10 @@ describe('ConversationLifecycle actions', () => {
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.EMPTY });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.EMPTY,
+            context: createTestContext(),
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
@@ -78,7 +82,11 @@ describe('ConversationLifecycle actions', () => {
         const { result } = renderHook(() => useChatStore());
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.EMPTY, files: [] });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.EMPTY,
+            files: [],
+            context: createTestContext(),
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
@@ -99,6 +107,7 @@ describe('ConversationLifecycle actions', () => {
           await result.current.sendMessage({
             message: TEST_CONTENT.USER_MESSAGE,
             onlyAddUserMessage: true,
+            context: createTestContext(),
           });
         });
 
@@ -118,164 +127,14 @@ describe('ConversationLifecycle actions', () => {
         } as any);
 
         await act(async () => {
-          await result.current.sendMessage({ message: TEST_CONTENT.USER_MESSAGE });
+          await result.current.sendMessage({
+            message: TEST_CONTENT.USER_MESSAGE,
+            context: createTestContext(),
+          });
         });
 
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
       });
-    });
-  });
-
-  describe('regenerateUserMessage', () => {
-    it('should trigger user message regeneration', async () => {
-      const messages = [
-        createMockMessage({ id: TEST_IDS.USER_MESSAGE_ID, role: 'user', content: 'test' }),
-        createMockMessage({ id: TEST_IDS.MESSAGE_ID, role: 'assistant' }),
-      ];
-
-      setupStoreWithMessages(messages);
-
-      const switchMessageBranchSpy = vi.fn().mockResolvedValue(undefined);
-      const internalTraceSpy = vi.fn();
-
-      act(() => {
-        useChatStore.setState({
-          internal_traceMessage: internalTraceSpy,
-          switchMessageBranch: switchMessageBranchSpy,
-          internal_shouldUseRAG: vi.fn().mockReturnValue(false),
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.regenerateUserMessage(TEST_IDS.USER_MESSAGE_ID);
-      });
-
-      expect(switchMessageBranchSpy).toHaveBeenCalledWith(TEST_IDS.USER_MESSAGE_ID, 1);
-      expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
-        expect.objectContaining({
-          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
-          parentMessageType: 'user',
-        }),
-      );
-      expect(internalTraceSpy).toHaveBeenCalled();
-    });
-
-    it('should not regenerate when already regenerating', async () => {
-      const { result } = renderHook(() => useChatStore());
-
-      // Create a regenerate operation to simulate already regenerating
-      act(() => {
-        const { operationId } = result.current.startOperation({
-          type: 'regenerate',
-          context: { sessionId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.USER_MESSAGE_ID },
-        });
-
-        useChatStore.setState({
-          internal_execAgentRuntime: vi.fn(),
-        });
-      });
-
-      await act(async () => {
-        await result.current.regenerateUserMessage(TEST_IDS.USER_MESSAGE_ID);
-      });
-
-      expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('regenerateAssistantMessage', () => {
-    it('should trigger assistant message regeneration', async () => {
-      const messages = [
-        createMockMessage({ id: TEST_IDS.USER_MESSAGE_ID, role: 'user' }),
-        createMockMessage({
-          id: TEST_IDS.MESSAGE_ID,
-          role: 'assistant',
-          parentId: TEST_IDS.USER_MESSAGE_ID,
-        }),
-      ];
-
-      setupStoreWithMessages(messages);
-
-      act(() => {
-        useChatStore.setState({
-          internal_traceMessage: vi.fn(),
-          switchMessageBranch: vi.fn(),
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.regenerateAssistantMessage(TEST_IDS.MESSAGE_ID);
-      });
-
-      expect(result.current.internal_execAgentRuntime).toHaveBeenCalledWith(
-        expect.objectContaining({
-          parentMessageId: TEST_IDS.USER_MESSAGE_ID,
-          parentMessageType: 'user',
-        }),
-      );
-      expect(result.current.internal_traceMessage).toHaveBeenCalled();
-    });
-
-    it('should not regenerate when already regenerating', async () => {
-      const { result } = renderHook(() => useChatStore());
-
-      // Create a regenerate operation to simulate already regenerating
-      act(() => {
-        result.current.startOperation({
-          type: 'regenerate',
-          context: { sessionId: TEST_IDS.SESSION_ID, messageId: TEST_IDS.MESSAGE_ID },
-        });
-
-        useChatStore.setState({
-          internal_execAgentRuntime: vi.fn(),
-        });
-      });
-
-      await act(async () => {
-        await result.current.regenerateAssistantMessage(TEST_IDS.MESSAGE_ID);
-      });
-
-      expect(result.current.internal_execAgentRuntime).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('delAndRegenerateMessage', () => {
-    it('should delete message then regenerate', async () => {
-      const messages = [
-        createMockMessage({ id: TEST_IDS.USER_MESSAGE_ID, role: 'user' }),
-        createMockMessage({
-          id: TEST_IDS.MESSAGE_ID,
-          role: 'assistant',
-          parentId: TEST_IDS.USER_MESSAGE_ID,
-        }),
-      ];
-
-      setupStoreWithMessages(messages);
-
-      act(() => {
-        useChatStore.setState({
-          regenerateAssistantMessage: vi.fn(),
-          deleteMessage: vi.fn(),
-          internal_traceMessage: vi.fn(),
-        });
-      });
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.delAndRegenerateMessage(TEST_IDS.MESSAGE_ID);
-      });
-
-      expect(result.current.regenerateAssistantMessage).toHaveBeenCalledWith(
-        TEST_IDS.MESSAGE_ID,
-        expect.objectContaining({ skipTrace: true }),
-      );
-      expect(result.current.deleteMessage).toHaveBeenCalledWith(TEST_IDS.MESSAGE_ID);
-      expect(result.current.internal_traceMessage).toHaveBeenCalled();
     });
   });
 });

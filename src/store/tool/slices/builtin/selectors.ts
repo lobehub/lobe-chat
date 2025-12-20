@@ -33,7 +33,7 @@ const metaList = (s: ToolStoreState): LobeToolMeta[] => {
       identifier: server.identifier,
       meta: {
         avatar: '☁️',
-        description: `Klavis MCP Server: ${server.serverName}`,
+        description: `LobeHub Mcp Server: ${server.serverName}`,
         tags: ['klavis', 'mcp'],
         // title 仍然使用 serverName 显示友好名称
         title: server.serverName,
