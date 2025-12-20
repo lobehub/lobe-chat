@@ -7,14 +7,14 @@ import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { omit } from 'lodash-es';
+import { omit } from 'es-toolkit/compat';
 import { CopyIcon, RotateCcwSquareIcon, Trash2 } from 'lucide-react';
 import { RuntimeImageGenParams } from 'model-bank';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import InvalidAPIKey from '@/components/InvalidAPIKey';
+import APIKeyForm from '@/components/InvalidAPIKey';
 import { useImageStore } from '@/store/image';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';
@@ -117,7 +117,7 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
   if (isInvalidApiKey) {
     // Use unified InvalidAPIKey component for all providers (including ComfyUI)
     return (
-      <InvalidAPIKey
+      <APIKeyForm
         bedrockDescription={t('bedrock.unlock.imageGenerationDescription', { ns: 'modelProvider' })}
         description={t('unlock.apiKey.imageGenerationDescription', {
           name: batch.provider,

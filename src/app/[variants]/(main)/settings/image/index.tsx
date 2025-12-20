@@ -2,7 +2,7 @@
 
 import { UserImageConfig } from '@lobechat/types';
 import { Form, type FormGroupItemType, Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Skeleton } from '@lobehub/ui';
 import { Loader2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
