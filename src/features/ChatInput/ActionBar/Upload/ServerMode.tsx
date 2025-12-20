@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { message } from '@/components/AntdStaticMethods';
 import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import Action from '../components/Action';
 
 const hotArea = css`
@@ -28,8 +29,9 @@ const FileUpload = memo(() => {
 
   const upload = useFileStore((s) => s.uploadChatFiles);
 
-  const model = useAgentStore(agentSelectors.currentAgentModel);
-  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
+  const agentId = useAgentId();
+  const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(agentId)(s));
+  const provider = useAgentStore((s) => agentByIdSelectors.getAgentModelProviderById(agentId)(s));
 
   const canUploadImage = useModelSupportVision(model, provider);
 

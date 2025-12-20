@@ -11,12 +11,13 @@ import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
-import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { dbMessageSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
+import { useAgentId } from '../../hooks/useAgentId';
 import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
 
@@ -32,29 +33,30 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
     topicSelectors.currentActiveTopicSummary(s)?.content || '',
   ]);
 
+  const agentId = useAgentId();
   const [systemRole, model, provider] = useAgentStore((s) => {
     return [
-      agentSelectors.currentAgentSystemRole(s),
-      agentSelectors.currentAgentModel(s) as string,
-      agentSelectors.currentAgentModelProvider(s) as string,
+      agentByIdSelectors.getAgentSystemRoleById(agentId)(s),
+      agentByIdSelectors.getAgentModelById(agentId)(s),
+      agentByIdSelectors.getAgentModelProviderById(agentId)(s),
       // add these two params to enable the component to re-render
-      agentChatConfigSelectors.historyCount(s),
-      agentChatConfigSelectors.enableHistoryCount(s),
+      chatConfigByIdSelectors.getHistoryCountById(agentId)(s),
+      chatConfigByIdSelectors.getEnableHistoryCountById(agentId)(s),
     ];
   });
 
   const [historyCount, enableHistoryCount] = useAgentStore((s) => [
-    agentChatConfigSelectors.historyCount(s),
-    agentChatConfigSelectors.enableHistoryCount(s),
+    chatConfigByIdSelectors.getHistoryCountById(agentId)(s),
+    chatConfigByIdSelectors.getEnableHistoryCountById(agentId)(s),
     // need to re-render by search mode
-    agentChatConfigSelectors.isAgentEnableSearch(s),
+    chatConfigByIdSelectors.isEnableSearchById(agentId)(s),
   ]);
 
   const maxTokens = useModelContextWindowTokens(model, provider);
 
   // Tool usage token
   const canUseTool = useModelSupportToolUse(model, provider);
-  const pluginIds = useAgentStore(agentSelectors.currentAgentPlugins);
+  const pluginIds = useAgentStore((s) => agentByIdSelectors.getAgentPluginsById(agentId)(s));
 
   const toolsString = useToolStore((s) => {
     const toolsEngine = createAgentToolsEngine({ model, provider });
