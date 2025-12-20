@@ -573,6 +573,28 @@ export const marketRouter = router({
       }
     }),
 
+  // ============================== User Profile ==============================
+  getUserInfo: marketProcedure
+    .input(
+      z.object({
+        locale: z.string().optional(),
+        username: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      log('getUserInfo input: %O', input);
+
+      try {
+        return await ctx.discoverService.getUserInfo(input);
+      } catch (error) {
+        log('Error fetching user info: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch user info',
+        });
+      }
+    }),
+
   registerClientInMarketplace: marketProcedure.input(z.object({})).mutation(async ({ ctx }) => {
     return ctx.discoverService.registerClient({
       userAgent: ctx.userAgent,
@@ -641,6 +663,23 @@ export const marketRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch M2M token',
         });
+      }
+    }),
+
+  reportAgentInstall: marketProcedure
+    .input(
+      z.object({
+        identifier: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      log('reportAgentInstall input: %O', input);
+      try {
+        await ctx.discoverService.increaseAgentInstallCount(input.identifier);
+        return { success: true };
+      } catch (error) {
+        log('Error reporting agent installation: %O', error);
+        return { success: false };
       }
     }),
 
