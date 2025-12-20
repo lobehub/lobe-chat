@@ -106,7 +106,7 @@ export const klavisStoreSelectors = {
             identifier: server.identifier,
             meta: {
               avatar: '☁️',
-              description: `Klavis MCP Server: ${server.serverName}`,
+              description: `LobeHub Mcp Server: ${server.serverName}`,
               tags: ['klavis', 'mcp'],
               title: server.serverName,
             },
