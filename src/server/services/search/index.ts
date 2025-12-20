@@ -1,5 +1,5 @@
 import { SearchParams, SearchQuery } from '@lobechat/types';
-import { CrawlImplType, Crawler } from '@lobechat/web-crawler';
+import { CrawlImplType } from '@lobechat/web-crawler';
 import pMap from 'p-map';
 
 import { toolsEnv } from '@/envs/tools';
@@ -30,6 +30,7 @@ export class SearchService {
   }
 
   async crawlPages(input: { impls?: CrawlImplType[]; urls: string[] }) {
+    const { Crawler } = await import('@lobechat/web-crawler');
     const crawler = new Crawler({ impls: this.crawlerImpls });
 
     const results = await pMap(
