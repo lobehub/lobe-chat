@@ -136,7 +136,7 @@ export default {
       passwordPlaceholder: '请输入密码',
       signinLink: '立即登录',
       submit: '注册',
-      subtitle: '加入 LobeChat 社区',
+      subtitle: '开启 Agents 协作空间',
       success: '注册成功！请检查您的邮箱验证邮件',
       title: '创建账号',
       usernamePlaceholder: '请输入用户名',
@@ -144,8 +144,7 @@ export default {
     verifyEmail: {
       backToSignIn: '返回登录',
       checkSpam: '如果没有收到邮件，请检查垃圾邮件文件夹',
-      descriptionPrefix: '我们已向',
-      descriptionSuffix: '发送了验证邮件',
+      description: '已向 {{email}} 发送了验证邮件',
       resend: {
         button: '重新发送验证邮件',
         error: '发送失败，请稍后重试',
@@ -158,6 +157,12 @@ export default {
   date: {
     prevMonth: '上个月',
     recent30Days: '最近30天',
+  },
+  footer: {
+    agreement:
+      '继续操作即表示你确认已理解并同意<terms>条款和条件</terms>和<privacy>隐私政策</privacy>',
+    privacy: '隐私政策',
+    terms: '服务条款',
   },
   header: {
     desc: '管理您的账户信息。',
@@ -188,12 +193,25 @@ export default {
   login: '登录',
   loginOrSignup: '登录 / 注册',
   profile: {
+    authorizations: {
+      actions: {
+        revoke: '取消授权',
+      },
+      revoke: {
+        description: '取消授权后，该工具将无法访问您的数据。如需再次使用，需要重新授权。',
+        title: '确认取消授权 {{name}}？',
+      },
+      title: '管理授权',
+    },
     avatar: '头像',
     cancel: '取消',
     changePassword: '重置密码',
     email: '电子邮件地址',
     fullName: '全名',
     fullNameInputHint: '请输入新的全名',
+    interests: '兴趣领域',
+    interestsAdd: '添加',
+    interestsPlaceholder: '输入兴趣领域',
     password: '密码',
     resetPasswordError: '发送密码重置链接失败',
     resetPasswordSent: '密码重置链接已发送，请检查邮箱',
@@ -215,6 +233,7 @@ export default {
     title: '个人资料详情',
     updateAvatar: '更新头像',
     updateFullName: '更新全名',
+    updateInterests: '更新兴趣领域',
     updateUsername: '更新用户名',
     username: '用户名',
     usernameDuplicate: '用户名已被占用',
@@ -223,6 +242,10 @@ export default {
     usernameRequired: '用户名不能为空',
     usernameRule: '用户名仅支持字母、数字或下划线',
     usernameUpdateFailed: '更新用户名失败，请稍后重试',
+  },
+  signin: {
+    subtitle: '注册或登录你的 {{appName}} 账号',
+    title: '你的 Agents 协作空间',
   },
   signout: '退出登录',
   signup: '注册',
@@ -269,7 +292,7 @@ export default {
   },
   tab: {
     apikey: 'API Key 管理',
-    profile: '个人资料',
+    profile: '我的账号',
     security: '安全',
     stats: '数据统计',
     usage: '用量统计',
