@@ -1,0 +1,18 @@
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import MemberCountTag from './MemberCountTag';
+
+/**
+ * TitleTags for Group context - always shows MemberCountTag
+ * since we're always in a group session here
+ */
+const TitleTags = memo(() => {
+  return (
+    <Flexbox align={'center'} gap={12} horizontal>
+      <MemberCountTag />
+    </Flexbox>
+  );
+});
+
+export default TitleTags;
