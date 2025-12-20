@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash-es';
+import { isEqual } from 'es-toolkit/compat';
 import { useRef } from 'react';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand';
