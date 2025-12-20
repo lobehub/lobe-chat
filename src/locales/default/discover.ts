@@ -13,8 +13,8 @@ export default {
     details: {
       capabilities: {
         knowledge: {
-          desc: '助手内置了以下知识库，帮助你回答更多问题。',
-          title: '知识库',
+          desc: '助手内置了以下资源库，帮助你回答更多问题。',
+          title: '资源库',
         },
         plugin: {
           desc: '助手内置了以下插件，帮助你完成更多任务。',
@@ -58,11 +58,17 @@ export default {
         title: '版本历史',
       },
     },
+    downloads: '下载量',
+    empty: {
+      description: '尝试调整筛选条件，或访问社区发现更多助手',
+      search: '未找到匹配的助手',
+      title: '暂无助手',
+    },
     list: '助手列表',
     marketSource: {
-      label: '切换市场源',
-      legacy: '旧市场',
-      new: '新市场',
+      label: '切换社区源',
+      legacy: '旧社区',
+      new: '新社区',
     },
     more: '更多',
     plugins: '集成插件',
@@ -70,7 +76,7 @@ export default {
     sorts: {
       createdAt: '最近发布',
       identifier: '助手 ID',
-      knowledgeCount: '知识库数量',
+      knowledgeCount: '资源库数量',
       myown: '查看我的',
       pluginCount: '插件数量',
       title: '助手名称',
@@ -85,7 +91,7 @@ export default {
         subtitle: '当前访问的助手已经因为以下可能的原因被归档了：',
         title: '助手已被归档',
       },
-      backToMarket: '返回助手市场',
+      backToMarket: '返回助手社区',
       deprecated: {
         reasons: {
           official: '助手有安全/政治等问题，被官方下架',
@@ -94,10 +100,10 @@ export default {
         subtitle: '当前访问的助手已经因为以下可能的原因被拒绝了：',
         title: '助手已被拒绝',
       },
-      support: '有各种问题请复制链接发送到 <1>support@lobehub.com</1> 进行咨询。',
+      support: '有各种问题请复制链接发送到 <email>support@lobehub.com</email> 进行咨询。',
       unpublished: {
         subtitle:
-          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <1>support@lobehub.com</1> 进行咨询。',
+          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <email>support@lobehub.com</email> 进行咨询。',
         title: '助手正在审核中',
       },
     },
@@ -105,7 +111,7 @@ export default {
     systemRole: '助手设定',
     tokenUsage: '助手提示词 Token 使用量',
     try: '试一下',
-    withKnowledge: '该助手附带知识库',
+    withKnowledge: '该助手附带资源库',
     withPlugin: '该助手附带插件',
   },
   back: '返回发现',
@@ -145,7 +151,7 @@ export default {
   createGuide: {
     func1: {
       desc1: '在会话窗口中通过右上角设置进入你想提交助手的设置页面;',
-      desc2: '点击右上角提交到助手市场按钮。',
+      desc2: '点击右上角提交到助手社区按钮。',
       tag: '方法一',
       title: '通过 LobeChat 提交',
     },
@@ -173,7 +179,7 @@ export default {
       functionCall: '支持函数调用',
       title: '其他',
       vision: '支持视觉识别',
-      withKnowledge: '附带知识库',
+      withKnowledge: '附带资源库',
       withTool: '附带插件',
     },
     pricing: '模型价格',
@@ -187,8 +193,10 @@ export default {
     },
   },
   home: {
+    communityAgents: '社区助手',
     featuredAssistants: '推荐助手',
     featuredModels: '推荐模型',
+    featuredPlugins: '精选插件',
     featuredProviders: '推荐模型服务商',
     featuredTools: '推荐插件',
     more: '发现更多',
@@ -523,7 +531,7 @@ export default {
     hero: {
       desc: '开源、可部署的 MCP Servers 平台，帮助 AI 系统轻松访问文件系统、数据库、API 等关键资源，全面扩展你的 AI 能力。',
       subTitle: '开源 & 开箱即用',
-      title: '面向 AI 的开源 MCP 市场',
+      title: '面向 AI 的开源 MCP 社区',
     },
     sorts: {
       createdAt: '最近新增',
@@ -536,7 +544,7 @@ export default {
       toolsCount: '工具数',
       updatedAt: '最近更新',
     },
-    title: 'MCP 市场',
+    title: 'MCP 社区',
     unvalidated: {
       desc: '此 MCP Server 暂未经过验证',
       title: '未验证',
@@ -546,6 +554,11 @@ export default {
       descWithDate: '此 MCP Server 于 {{date}} 经过验证，确保其质量和可靠性。',
       title: '已验证',
     },
+  },
+  mcpEmpty: {
+    description: '尝试调整筛选条件或搜索关键词',
+    search: '未找到匹配的 MCP 服务器',
+    title: '暂无 MCP 服务器',
   },
   models: {
     abilities: '模型能力',
@@ -560,6 +573,11 @@ export default {
         more: '查看更多',
         title: '相关推荐',
       },
+    },
+    empty: {
+      description: '尝试调整筛选条件查看更多模型',
+      search: '未找到匹配的模型',
+      title: '暂无模型',
     },
     free: '免费',
     guide: '配置指南',
@@ -671,6 +689,11 @@ export default {
         title: '相关推荐',
       },
     },
+    empty: {
+      description: '尝试调整筛选条件查看更多服务商',
+      search: '未找到匹配的服务商',
+      title: '暂无服务商',
+    },
     list: '模型服务商列表',
     modelCount: '{{count}} 个模型',
     modelName: '模型名称',
@@ -698,5 +721,17 @@ export default {
     model: '模型',
     plugin: '插件',
     provider: '模型服务商',
+    user: '用户',
+  },
+  user: {
+    agents: '助手',
+    downloads: '下载',
+    editProfile: '编辑个人资料',
+    login: '成为创作者',
+    logout: '退出登录',
+    myProfile: '我的主页',
+    noAgents: '该用户暂未发布助手',
+    publishedAgents: '创作的助手',
+    website: '个人网站',
   },
 };

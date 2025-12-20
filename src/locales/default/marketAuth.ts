@@ -1,14 +1,16 @@
 export default {
   authorize: {
     cancel: '取消',
-    confirm: '授权使用',
-    description: {
-      and: '和',
-      prefix: '点击授权使用即视为同意',
-      privacy: '隐私协议',
+    confirm: '创建你的档案',
+    description: '你的社区个人档案独立于 {{appName}} 用户帐号而存在。',
+    footer: {
+      agreement:
+        '继续操作即表示你确认已理解并同意<terms>条款和条件</terms>和<privacy>隐私政策</privacy>',
+      privacy: '隐私政策',
       terms: '服务条款',
     },
-    title: '确认授权',
+    subtitle: '创建社区个人档案，以便在社区上提交和管理上架信息。',
+    title: '创建社区档案',
   },
   callback: {
     buttons: {
@@ -51,5 +53,67 @@ export default {
       submit: '授权成功！现在可以发布助手了。',
       upload: '授权成功！现在可以发布新版本了。',
     },
+  },
+  profileSetup: {
+    cancel: '取消',
+    descriptionEdit: '更新你的社区个人资料信息。',
+    descriptionFirstTime: '设置你的个人资料以完成社区档案创建。',
+    errors: {
+      fileTooLarge: '文件大小不能超过 2MB',
+      notAuthenticated: '请先登录后再操作',
+      updateFailed: '更新个人资料失败，请重试',
+      uploadFailed: '上传失败，请重试',
+      usernameTaken: '该用户 ID 已被使用，请选择其他用户 ID',
+    },
+    fields: {
+      avatar: {
+        label: '头像',
+      },
+      bannerUrl: {
+        clickToUpload: '点击上传背景图',
+        label: '背景图',
+        remove: '移除背景图',
+        tooltip: '背景图将展示在你的个人主页顶部（建议 16:9 比例）',
+        uploading: '上传中...',
+      },
+      description: {
+        label: '个人简介',
+        maxLength: '个人简介最多 200 个字符',
+        placeholder: '介绍一下你自己...',
+      },
+      displayName: {
+        label: '昵称',
+        maxLength: '昵称最多 50 个字符',
+        placeholder: '输入你的昵称',
+        required: '请输入昵称',
+      },
+      github: {
+        placeholder: 'GitHub 用户名',
+      },
+      twitter: {
+        placeholder: 'X (Twitter) 用户名',
+      },
+      userName: {
+        label: '用户 ID',
+        maxLength: '用户 ID 最多 32 个字符',
+        minLength: '用户 ID 至少 3 个字符',
+        pattern: '用户 ID 只能包含字母、数字、下划线和连字符',
+        placeholder: '输入你的用户 ID',
+        required: '请输入用户 ID',
+        tooltip: '用户 ID 是你的唯一标识符，将用于你的个人主页链接',
+      },
+      website: {
+        invalidUrl: '请输入有效的网址',
+        placeholder: '个人网站链接',
+      },
+    },
+    getStarted: '开始使用',
+    save: '保存',
+    socialLinks: {
+      title: '社交链接',
+    },
+    success: '个人资料已更新',
+    titleEdit: '编辑个人资料',
+    titleFirstTime: '完善你的档案',
   },
 };
