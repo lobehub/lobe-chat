@@ -1,0 +1,119 @@
+'use client';
+
+import { BuiltinRenderProps } from '@lobechat/types';
+import { Block, Highlighter, Text } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
+import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import { ReadLocalFileState } from '../../type';
+
+const useStyles = createStyles(({ css, token }) => ({
+  container: css`
+    overflow: hidden;
+    padding-inline: 8px 0;
+  `,
+  fileInfo: css`
+    font-family: ${token.fontFamilyCode};
+    font-size: 12px;
+    color: ${token.colorTextSecondary};
+  `,
+  path: css`
+    font-family: ${token.fontFamilyCode};
+    font-size: 12px;
+  `,
+}));
+
+interface ReadLocalFileParams {
+  endLine?: number;
+  path: string;
+  startLine?: number;
+}
+
+/**
+ * Get file extension from path
+ */
+const getFileExtension = (path: string): string => {
+  const parts = path.split('.');
+  return parts.length > 1 ? parts.pop()?.toLowerCase() || 'text' : 'text';
+};
+
+/**
+ * Map file extension to Highlighter language
+ */
+const getLanguageFromExtension = (ext: string): string => {
+  const languageMap: Record<string, string> = {
+    css: 'css',
+    go: 'go',
+    html: 'html',
+    java: 'java',
+    js: 'javascript',
+    json: 'json',
+    jsx: 'jsx',
+    md: 'markdown',
+    py: 'python',
+    rs: 'rust',
+    scss: 'scss',
+    sh: 'bash',
+    sql: 'sql',
+    ts: 'typescript',
+    tsx: 'tsx',
+    xml: 'xml',
+    yaml: 'yaml',
+    yml: 'yaml',
+  };
+  return languageMap[ext] || 'text';
+};
+
+const ReadLocalFile = memo<BuiltinRenderProps<ReadLocalFileParams, ReadLocalFileState>>(
+  ({ args, pluginState }) => {
+    const { styles } = useStyles();
+
+    if (!pluginState?.content) {
+      return null;
+    }
+
+    const ext = getFileExtension(args.path);
+    const language = getLanguageFromExtension(ext);
+
+    const lineInfo =
+      pluginState.startLine || pluginState.endLine
+        ? `Lines ${pluginState.startLine || 1}-${pluginState.endLine || pluginState.totalLines || '?'}`
+        : pluginState.totalLines
+          ? `${pluginState.totalLines} lines`
+          : '';
+
+    return (
+      <Flexbox className={styles.container} gap={8}>
+        {/* File path and info */}
+        <Flexbox align={'center'} horizontal justify={'space-between'}>
+          <Text className={styles.path} ellipsis>
+            📄 {args.path}
+          </Text>
+          {lineInfo && (
+            <Text className={styles.fileInfo} type={'secondary'}>
+              {lineInfo}
+            </Text>
+          )}
+        </Flexbox>
+
+        {/* File content */}
+        <Block padding={0} variant={'outlined'}>
+          <Highlighter
+            language={language}
+            showLanguage
+            style={{ maxHeight: 400, overflow: 'auto' }}
+            variant={'borderless'}
+            wrap
+          >
+            {pluginState.content}
+          </Highlighter>
+        </Block>
+      </Flexbox>
+    );
+  },
+);
+
+ReadLocalFile.displayName = 'ReadLocalFile';
+
+export default ReadLocalFile;
