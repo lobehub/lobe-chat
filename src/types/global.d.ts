@@ -12,3 +12,11 @@ declare module 'antd-style' {
 declare module 'styled-components' {
   export interface DefaultTheme extends AntdToken, LobeCustomToken {}
 }
+
+declare global {
+  interface Window {
+    lobeEnv?: {
+      darwinMajorVersion?: number;
+    };
+  }
+}
