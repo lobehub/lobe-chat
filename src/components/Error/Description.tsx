@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Icon , Skeleton } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import dynamic from 'next/dynamic';
