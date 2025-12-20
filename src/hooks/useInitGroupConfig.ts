@@ -1,18 +1,18 @@
-import { useChatGroupStore } from '@/store/chatGroup';
-import { useSessionStore } from '@/store/session';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 export const useInitGroupConfig = () => {
-  const [useFetchGroupDetail] = useChatGroupStore((s) => [s.useFetchGroupDetail]);
+  const [useFetchGroupDetail, activeGroupId] = useAgentGroupStore((s) => [
+    s.useFetchGroupDetail,
+    s.activeGroupId,
+  ]);
 
   const isLogin = useUserStore(authSelectors.isLogin);
 
-  const [sessionId] = useSessionStore((s) => [s.activeId]);
-
-  // Only fetch group detail if we have a valid session ID and user is logged in
-  const shouldFetch = Boolean(isLogin && sessionId && sessionId !== 'inbox');
-  const data = useFetchGroupDetail(shouldFetch, sessionId || '');
+  // Only fetch group detail if we have a valid group ID and user is logged in
+  const shouldFetch = Boolean(isLogin && activeGroupId);
+  const data = useFetchGroupDetail(shouldFetch, activeGroupId || '');
 
   return {
     ...data,
