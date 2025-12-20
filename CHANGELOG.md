@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.174](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.173...v2.0.0-next.174)
+
+<sup>Released on **2025-12-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor database schema.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor database schema, closes [#10860](https://github.com/lobehub/lobe-chat/issues/10860) ([5c489bc](https://github.com/lobehub/lobe-chat/commit/5c489bc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.173](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.172...v2.0.0-next.173)
 
 <sup>Released on **2025-12-16**</sup>
