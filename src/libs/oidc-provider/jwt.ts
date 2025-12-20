@@ -1,6 +1,5 @@
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
-import { importJWK, jwtVerify } from 'jose';
 
 import { oidcEnv } from '@/envs/oidc';
 
@@ -76,6 +75,8 @@ const getVerificationKey = async () => {
       (key) => (publicKeyJwk as any)[key] === undefined && delete (publicKeyJwk as any)[key],
     );
 
+    const { importJWK } = await import('jose');
+
     // 现在，无论在哪个环境下，`importJWK` 都会将这个对象正确地识别为一个公钥。
     return await importJWK(publicKeyJwk, 'RS256');
   } catch (error) {
@@ -97,6 +98,7 @@ export const validateOIDCJWT = async (token: string) => {
     const publicKey = await getVerificationKey();
 
     // 验证 JWT
+    const { jwtVerify } = await import('jose');
     const { payload } = await jwtVerify(token, publicKey, {
       algorithms: ['RS256'],
       // 可以添加其他验证选项，如 issuer、audience 等
