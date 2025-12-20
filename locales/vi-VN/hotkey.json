@@ -49,6 +49,10 @@
     "desc": "Tạo lại tin nhắn cuối cùng",
     "title": "Tạo lại tin nhắn"
   },
+  "saveDocument": {
+    "desc": "Lưu ngay tất cả các thay đổi của tài liệu hiện tại",
+    "title": "Lưu tài liệu"
+  },
   "saveTopic": {
     "desc": "Lưu chủ đề hiện tại và mở chủ đề mới",
     "title": "Mở chủ đề mới"
@@ -66,12 +70,12 @@
     "title": "Chuyển đổi nhanh trợ lý"
   },
   "toggleLeftPanel": {
-    "desc": "Hiện hoặc ẩn bảng trợ giúp bên trái",
-    "title": "Hiện/Ẩn bảng trợ lý"
+    "desc": "Hiển thị hoặc ẩn bảng điều khiển bên trái",
+    "title": "Hiển thị/Ẩn bảng điều khiển bên trái"
   },
   "toggleRightPanel": {
-    "desc": "Hiện hoặc ẩn bảng chủ đề bên phải",
-    "title": "Hiện/Ẩn bảng chủ đề"
+    "desc": "Hiển thị hoặc ẩn bảng điều khiển bên phải",
+    "title": "Hiển thị/Ẩn bảng điều khiển bên phải"
   },
   "toggleZenMode": {
     "desc": "Trong chế độ tập trung, chỉ hiển thị cuộc trò chuyện hiện tại, ẩn các giao diện người dùng khác",

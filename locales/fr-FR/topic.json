@@ -1,5 +1,6 @@
 {
   "actions": {
+    "addNewTopic": "Démarrer une nouvelle discussion",
     "autoRename": "Renommage intelligent",
     "confirmRemoveAll": "Vous allez supprimer tous les sujets. Cette action est irréversible, veuillez agir avec prudence.",
     "confirmRemoveTopic": "Vous allez supprimer ce sujet. Cette action est irréversible, veuillez agir avec prudence.",
@@ -11,6 +12,7 @@
     "removeUnstarred": "Supprimer les sujets non favoris"
   },
   "defaultTitle": "Sujet par défaut",
+  "displayItems": "Afficher les éléments",
   "duplicateLoading": "Copie du sujet en cours...",
   "duplicateSuccess": "Copie du sujet réussie",
   "favorite": "Favori",
@@ -32,6 +34,7 @@
     "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle en tant que sujet historique et commencer une nouvelle conversation.",
     "title": "Liste des sujets"
   },
+  "loadMore": "Voir plus",
   "searchPlaceholder": "Rechercher des sujets...",
   "searchResultEmpty": "Aucun résultat de recherche disponible",
   "temp": "Temporaire",

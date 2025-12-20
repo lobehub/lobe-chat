@@ -58,12 +58,12 @@
       "ready": "Cơ sở dữ liệu đã sẵn sàng"
     },
     "modal": {
-      "desc": "Kích hoạt cơ sở dữ liệu khách hàng PGlite, lưu trữ dữ liệu trò chuyện của bạn trong trình duyệt và sử dụng các tính năng nâng cao như kho kiến thức",
+      "desc": "Kích hoạt ngay cơ sở dữ liệu khách hàng thế hệ mới. Lưu trữ dữ liệu trò chuyện vĩnh viễn trong trình duyệt của bạn và sử dụng các tính năng nâng cao như thư viện tài nguyên.",
       "enable": "Kích hoạt ngay",
       "features": {
         "knowledgeBase": {
-          "desc": "Xây dựng kho kiến thức cá nhân của bạn và dễ dàng bắt đầu cuộc trò chuyện với trợ lý của bạn (sắp ra mắt)",
-          "title": "Hỗ trợ trò chuyện kho kiến thức, mở ra bộ não thứ hai"
+          "desc": "Xây dựng thư viện tài nguyên cá nhân của bạn và dễ dàng bắt đầu cuộc trò chuyện với trợ lý thông qua thư viện (sắp ra mắt)",
+          "title": "Hỗ trợ trò chuyện qua thư viện, kích hoạt bộ não thứ hai"
         },
         "localFirst": {
           "desc": "Dữ liệu trò chuyện hoàn toàn được lưu trữ trên trình duyệt, dữ liệu của bạn luôn nằm trong tầm kiểm soát của bạn.",
@@ -137,14 +137,39 @@
   "close": "Đóng",
   "cmdk": {
     "about": "Giới thiệu",
+    "aiModeEmptyState": "Nhập câu hỏi của bạn vào ô phía trên để bắt đầu trò chuyện với AI",
+    "aiModePlaceholder": "Đặt câu hỏi cho AI...",
+    "community": "Cộng đồng",
     "communitySupport": "Hỗ trợ cộng đồng",
     "discover": "Khám phá",
-    "knowledgeBase": "Cơ sở kiến thức",
+    "memory": "Ký ức",
     "navigate": "Điều hướng",
     "newAgent": "Tạo trợ lý mới",
     "noResults": "Không tìm thấy kết quả phù hợp",
     "openSettings": "Mở cài đặt",
-    "painting": "Vẽ bằng AI",
+    "pages": "Tài liệu",
+    "painting": "Hội họa",
+    "resource": "Tài nguyên",
+    "search": {
+      "agent": "Trợ lý",
+      "agents": "Trợ lý",
+      "assistant": "Trợ lý AI",
+      "assistants": "Trợ lý AI",
+      "file": "Tệp",
+      "files": "Tệp",
+      "loading": "Đang tìm kiếm...",
+      "mcp": "Máy chủ MCP",
+      "mcps": "Máy chủ MCP",
+      "message": "Cuộc trò chuyện",
+      "messages": "Cuộc trò chuyện",
+      "page": "Tài liệu",
+      "pages": "Tài liệu",
+      "plugin": "Plugin",
+      "plugins": "Plugin",
+      "searching": "Kết quả tìm kiếm",
+      "topic": "Chủ đề",
+      "topics": "Chủ đề"
+    },
     "searchPlaceholder": "Nhập lệnh hoặc tìm kiếm...",
     "settings": "Cài đặt",
     "starOnGitHub": "Đánh giá sao trên GitHub",
@@ -261,6 +286,7 @@
   "labs": "Phòng thí nghiệm",
   "lang": {
     "ar": "Tiếng Ả Rập",
+    "auto": "Theo cài đặt ngôn ngữ của hệ thống",
     "bg-BG": "Tiếng Bun-ga-ri",
     "bn": "Tiếng Bengal",
     "cs-CZ": "Tiếng Séc",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "Hợp tác kinh doanh",
     "support": "Hỗ trợ qua email"
+  },
+  "navPanel": {
+    "agent": "Trợ lý",
+    "displayItems": "Hiển thị mục",
+    "library": "Thư viện",
+    "searchAgent": "Tìm kiếm trợ lý...",
+    "searchResultEmpty": "Không có kết quả tìm kiếm"
   },
   "new": "Mới",
   "oauth": "Đăng nhập SSO",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "Vẽ tranh AI",
+    "aiImage": "Vẽ tranh",
+    "audio": "Âm thanh",
     "chat": "Trò chuyện",
+    "community": "Cộng đồng",
     "discover": "Khám phá",
     "files": "Tệp",
-    "knowledgeBase": "Cơ sở tri thức",
+    "home": "Trang chủ",
+    "knowledgeBase": "Thư viện",
     "me": "Tôi",
-    "setting": "Cài đặt"
+    "memory": "Bộ nhớ",
+    "pages": "Tài liệu",
+    "resource": "Tài nguyên",
+    "search": "Tìm kiếm",
+    "setting": "Cài đặt",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Cho phép",

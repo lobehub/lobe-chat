@@ -1,8 +1,7 @@
 {
   "addFolder": "Map aanmaken",
-  "addKnowledge": "Kennis toevoegen",
+  "addLibrary": "Toevoegen",
   "addPage": "Document aanmaken",
-  "desc": "Beheer je kennis over werk, studie en leven.",
   "detail": {
     "basic": {
       "createdAt": "Aanmaakdatum",
@@ -24,19 +23,108 @@
       "embeddingStatus": "Vectorisatie"
     }
   },
-  "documentEditor": {
+  "empty": "Geen bestanden/mappen geüpload",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} bestanden gefilterd (van in totaal {{total}} bestanden)"
+      },
+      "connect": "Verbinden...",
+      "gitignore": {
+        "apply": "Regels toepassen",
+        "cancel": "Regels negeren",
+        "content": ".gitignore-bestand gedetecteerd (totaal {{count}} bestanden). Wil je de negeerregels toepassen?",
+        "filtered": "{{ignored}} bestanden gefilterd (van in totaal {{total}} bestanden)",
+        "title": ".gitignore gedetecteerd"
+      },
+      "newFolder": "Nieuwe map",
+      "newPage": "Nieuw document",
+      "notion": {
+        "error": "Importeren van Notion-bestand mislukt",
+        "foundFiles": "{{count}} bestanden gevonden",
+        "importing": "Bezig met importeren van Notion-bestanden...",
+        "noMarkdownFiles": "Geen Markdown-bestanden gevonden in het ZIP-bestand",
+        "partial": "{{success}} bestanden succesvol geïmporteerd, {{failed}} mislukt",
+        "success": "{{count}} bestanden succesvol geïmporteerd"
+      },
+      "notionGuide": {
+        "cancel": "Nu niet importeren",
+        "desc": "Exporteer eerst Markdown (ZIP) vanuit Notion. Klik op 'Doorgaan' om het ZIP-bestand te selecteren en alle pagina's te importeren.",
+        "ok": "Selecteer Notion ZIP",
+        "title": "Notion-inhoud importeren"
+      },
+      "uploadFile": "Bestand uploaden",
+      "uploadFolder": "Map uploaden"
+    },
+    "newPageButton": "Nieuw document",
+    "uploadButton": "Uploaden"
+  },
+  "home": {
+    "getStarted": "Aan de slag",
+    "greeting": "Aan de slag",
+    "quickActions": "Snelle acties",
+    "recentFiles": "Recente bestanden",
+    "recentPages": "Recente documenten",
+    "subtitle": "Welkom bij het Bronnencentrum. Begin hier met het beheren van je documenten en bestanden.",
+    "uploadEntries": {
+      "files": {
+        "title": "Bestanden uploaden"
+      },
+      "folder": {
+        "title": "Map uploaden"
+      },
+      "library": {
+        "title": "Nieuwe bibliotheek aanmaken"
+      },
+      "newPage": {
+        "title": "Nieuw document aanmaken"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Je staat op het punt deze bibliotheek te verwijderen. De bestanden worden niet verwijderd, maar verplaatst naar 'Alle bestanden'. Deze actie kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+      "empty": "Klik op <1>+</1> om een nieuwe bibliotheek aan te maken"
+    },
+    "new": "Nieuwe bibliotheek",
+    "title": "Bibliotheken"
+  },
+  "menu": {
+    "allFiles": "Alle bestanden",
+    "allPages": "Alle documenten"
+  },
+  "networkError": "Kan de bibliotheek niet ophalen. Controleer je netwerkverbinding en probeer het opnieuw.",
+  "notSupportGuide": {
+    "desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Ondersteunt gangbare bestandstypen, waaronder Word, PPT, Excel, PDF, TXT en andere veelvoorkomende documentformaten, evenals JS, Python en andere gangbare codebestanden",
+        "title": "Meerdere bestandstype-analyse"
+      },
+      "embeddings": {
+        "desc": "Gebruik hoogwaardige vectormodellen om tekstdelen te vectoriseren, waardoor semantische zoekopdrachten in de inhoud van bestanden mogelijk zijn",
+        "title": "Vector-semantisering"
+      },
+      "libraries": {
+        "desc": "Ondersteunt het aanmaken van bibliotheken en het toevoegen van verschillende bestandstypen om je eigen kennisdomein op te bouwen.",
+        "title": "Bibliotheken"
+      }
+    },
+    "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
+  },
+  "pageEditor": {
     "addIcon": "Pictogram toevoegen",
-    "autoSaveMessage": "Documenten worden automatisch opgeslagen, handmatig opslaan is niet nodig",
+    "autoSaveMessage": "Het document wordt automatisch opgeslagen, handmatig opslaan is niet nodig",
     "chooseIcon": "Pictogram kiezen",
     "deleteConfirm": {
-      "content": "Je staat op het punt dit document te verwijderen. Dit kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+      "content": "Je staat op het punt dit document te verwijderen. Dit kan niet ongedaan worden gemaakt, wees voorzichtig.",
       "title": "Document verwijderen"
     },
     "deleteError": "Verwijderen van document mislukt",
     "deleteSuccess": "Document succesvol verwijderd",
     "editedAt": "Laatst bewerkt op {{time}}",
     "editedBy": "Laatst bewerkt door {{name}}",
-    "editorPlaceholder": "Voer documentinhoud in, druk op / om het opdrachtmenu te openen",
+    "editorPlaceholder": "Voer de inhoud van het document in, druk op / om het opdrachtmenu te openen",
     "empty": {
       "createNewDocument": "Nieuw document aanmaken",
       "title": "Selecteer een document om te beginnen",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Zonder titel",
     "wordCount": "{{wordCount}} woorden"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Volledige inhoud kopiëren",
     "duplicate": "Kopie maken",
-    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken.",
+    "empty": "Nog geen documenten. Klik op de knop hierboven om je eerste document aan te maken",
+    "filter": {
+      "all": "Alles",
+      "onlyInPages": "Alleen in documenten"
+    },
     "noResults": "Geen overeenkomende documenten gevonden",
     "pageCount": "Totaal {{count}} documenten",
     "selectNote": "Selecteer een document om te beginnen met bewerken",
+    "title": "Documenten",
     "untitled": "Zonder titel"
-  },
-  "empty": "Geen bestanden/mappen geüpload",
-  "header": {
-    "actions": {
-      "newFolder": "Nieuwe map",
-      "newPage": "Nieuw document",
-      "uploadFile": "Bestand uploaden",
-      "uploadFolder": "Map uploaden"
-    },
-    "newNoteDialog": {
-      "cancel": "Annuleren",
-      "editTitle": "Document bewerken",
-      "emptyContent": "Documentinhoud mag niet leeg zijn",
-      "loadError": "Laden van document mislukt, probeer het opnieuw",
-      "loading": "Bezig met laden...",
-      "save": "Opslaan",
-      "saveError": "Opslaan van document mislukt, probeer het opnieuw",
-      "saveSuccess": "Document succesvol opgeslagen",
-      "title": "Nieuw document",
-      "updateSuccess": "Document succesvol bijgewerkt"
-    },
-    "newPageButton": "Nieuw document",
-    "uploadButton": "Uploaden"
-  },
-  "home": {
-    "getStarted": "Aan de slag",
-    "greeting": "Aan de slag",
-    "quickActions": "Snelle acties",
-    "recentFiles": "Recente bestanden",
-    "recentPages": "Recente documenten",
-    "subtitle": "Welkom bij je kennisbank. Begin hier met het beheren van je documenten",
-    "uploadEntries": {
-      "files": {
-        "title": "Bestanden uploaden"
-      },
-      "folder": {
-        "title": "Map uploaden"
-      },
-      "knowledgeBase": {
-        "title": "Nieuwe kennisbank"
-      },
-      "newPage": {
-        "title": "Nieuw document aanmaken"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Je staat op het punt deze kennisbank te verwijderen. De bestanden hierin worden niet verwijderd, maar verplaatst naar 'Alle bestanden'. Een verwijderde kennisbank kan niet worden hersteld, wees voorzichtig.",
-      "empty": "Klik op <1>+</1> om een kennisbank te maken"
-    },
-    "new": "Nieuwe kennisbank",
-    "title": "Kennisbank"
-  },
-  "menu": {
-    "allFiles": "Alle bestanden",
-    "allPages": "Alle documenten"
-  },
-  "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
-  "notSupportGuide": {
-    "desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Ondersteunt gangbare bestandstypen, waaronder Word, PPT, Excel, PDF, TXT en andere veelvoorkomende documentformaten, evenals JS, Python en andere gangbare codebestanden",
-        "title": "Meerdere bestandstype-analyse"
-      },
-      "embeddings": {
-        "desc": "Gebruik hoogwaardige vectormodellen om tekstdelen te vectoriseren, waardoor semantische zoekopdrachten in de inhoud van bestanden mogelijk zijn",
-        "title": "Vector-semantisering"
-      },
-      "repos": {
-        "desc": "Ondersteunt het maken van kennisbanken en staat het toevoegen van verschillende bestandstypen toe, zodat je jouw eigen domeinkennis kunt opbouwen",
-        "title": "Kennisbank"
-      }
-    },
-    "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
   },
   "preview": {
     "downloadFile": "Bestand downloaden",
@@ -155,7 +172,7 @@
     "videos": "Video's",
     "websites": "Websites"
   },
-  "title": "Kennisbank",
+  "title": "Bronnen",
   "toggleLeftPanel": "Toon/verberg linker paneel",
   "uploadDock": {
     "body": {

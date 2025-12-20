@@ -1,8 +1,7 @@
 {
   "addFolder": "Create Folder",
-  "addKnowledge": "Add Knowledge",
-  "addPage": "Create Document",
-  "desc": "Manage your knowledge for work, study, and life.",
+  "addLibrary": "Add",
+  "addPage": "Create Page",
   "detail": {
     "basic": {
       "createdAt": "Creation Time",
@@ -24,63 +23,38 @@
       "embeddingStatus": "embedding"
     }
   },
-  "documentEditor": {
-    "addIcon": "Add Icon",
-    "autoSaveMessage": "Document auto-saves, no manual save needed",
-    "chooseIcon": "Choose Icon",
-    "deleteConfirm": {
-      "content": "This document will be deleted permanently and cannot be recovered. Please proceed with caution.",
-      "title": "Delete Document"
-    },
-    "deleteError": "Failed to delete document",
-    "deleteSuccess": "Document deleted successfully",
-    "editedAt": "Edited {{time}}",
-    "editedBy": "Edited by {{name}}",
-    "editorPlaceholder": "Type document content, press / to open command menu",
-    "empty": {
-      "createNewDocument": "Create New Page",
-      "title": "Select a page to start",
-      "uploadMarkdown": "Upload Markdown File"
-    },
-    "linkCopied": "Link copied",
-    "menu": {
-      "copyLink": "Copy Link",
-      "exportDocument": "Export Document",
-      "importDocument": "Import Document",
-      "pin": "Pin Document"
-    },
-    "saving": "Saving...",
-    "titlePlaceholder": "Untitled",
-    "wordCount": "{{wordCount}} words"
-  },
-  "documentList": {
-    "copyContent": "Copy All",
-    "duplicate": "Duplicate",
-    "empty": "No documents yet. Click the button above to create your first one.",
-    "noResults": "No matching documents found.",
-    "pageCount": "{{count}} pages in total",
-    "selectNote": "Select a document to start editing",
-    "untitled": "Untitled"
-  },
   "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} files filtered (out of {{total}} total)"
+      },
+      "connect": "Connect...",
+      "gitignore": {
+        "apply": "Apply Rules",
+        "cancel": "Ignore Rules",
+        "content": ".gitignore file detected ({{count}} files in total). Would you like to apply the ignore rules?",
+        "filtered": "{{ignored}} files filtered out ({{total}} files in total)",
+        "title": ".gitignore Detected"
+      },
       "newFolder": "New Folder",
       "newPage": "New Page",
+      "notion": {
+        "error": "Failed to import Notion files",
+        "foundFiles": "found {{count}} files",
+        "importing": "Importing Notion files...",
+        "noMarkdownFiles": "No markdown files found in the ZIP archive",
+        "partial": "Successfully imported {{success}} files, {{failed}} failed",
+        "success": "Successfully imported {{count}} files"
+      },
+      "notionGuide": {
+        "cancel": "Skip Import",
+        "desc": "First, export your content from Notion as a Markdown (ZIP) file. Then click Continue to select the ZIP file and import all pages.",
+        "ok": "Select Notion ZIP",
+        "title": "Import from Notion"
+      },
       "uploadFile": "Upload File",
       "uploadFolder": "Upload Folder"
-    },
-    "newNoteDialog": {
-      "cancel": "Cancel",
-      "editTitle": "Edit Document",
-      "emptyContent": "Document content cannot be empty.",
-      "loadError": "Failed to load the document. Please try again.",
-      "loading": "Loading...",
-      "save": "Save",
-      "saveError": "Failed to save the document. Please try again.",
-      "saveSuccess": "Document saved successfully.",
-      "title": "New Page",
-      "updateSuccess": "Document updated successfully."
     },
     "newPageButton": "New Page",
     "uploadButton": "Upload"
@@ -90,8 +64,8 @@
     "greeting": "Get Started",
     "quickActions": "Quick Actions",
     "recentFiles": "Recent Files",
-    "recentPages": "Recent Documents",
-    "subtitle": "Welcome to your knowledge base. Start managing your documents here.",
+    "recentPages": "Recent Pages",
+    "subtitle": "Welcome to the Resource Center. Start managing your documents and files here.",
     "uploadEntries": {
       "files": {
         "title": "Upload Files"
@@ -99,27 +73,27 @@
       "folder": {
         "title": "Upload Folder"
       },
-      "knowledgeBase": {
-        "title": "Create Knowledge Base"
+      "library": {
+        "title": "Create New Library"
       },
       "newPage": {
         "title": "New Page"
       }
     }
   },
-  "knowledgeBase": {
+  "library": {
     "list": {
-      "confirmRemoveKnowledgeBase": "You are about to delete this knowledge base. The files within will not be deleted and will be moved to All Files. Once deleted, the knowledge base cannot be recovered. Please proceed with caution.",
-      "empty": "Click <1>+</1> to add a knowledge base"
+      "confirmRemoveLibrary": "You are about to delete this library. The files within it will not be deleted but moved to All Files. This action cannot be undone, so please proceed with caution.",
+      "empty": "Click <1>+</1> to create a new library"
     },
-    "new": "New Knowledge Base",
-    "title": "Knowledge Base"
+    "new": "New Library",
+    "title": "Library"
   },
   "menu": {
     "allFiles": "All Files",
-    "allPages": "All Documents"
+    "allPages": "All Pages"
   },
-  "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
+  "networkError": "Failed to retrieve libraries. Please check your network connection and try again.",
   "notSupportGuide": {
     "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
     "features": {
@@ -131,12 +105,55 @@
         "desc": "Utilizes high-performance vector models to vectorize text chunks, enabling semantic search of file content.",
         "title": "Vector Semantics"
       },
-      "repos": {
-        "desc": "Supports the creation of knowledge bases and allows the addition of different types of files, building your domain knowledge.",
-        "title": "Knowledge Base"
+      "libraries": {
+        "desc": "Create libraries and add various types of files to build your own knowledge base.",
+        "title": "Library"
       }
     },
     "title": "The current deployment mode does not support file management"
+  },
+  "pageEditor": {
+    "addIcon": "Add Icon",
+    "autoSaveMessage": "Your document is saved automatically. No need to save manually.",
+    "chooseIcon": "Choose Icon",
+    "deleteConfirm": {
+      "content": "This document will be deleted and cannot be recovered. Please proceed with caution.",
+      "title": "Delete Document"
+    },
+    "deleteError": "Failed to delete the document",
+    "deleteSuccess": "Document deleted successfully",
+    "editedAt": "Last edited on {{time}}",
+    "editedBy": "Last edited by {{name}}",
+    "editorPlaceholder": "Start writing your document. Press / to open the command menu",
+    "empty": {
+      "createNewDocument": "Create New Page",
+      "title": "Select a page to get started",
+      "uploadMarkdown": "Upload Markdown File"
+    },
+    "linkCopied": "Link copied",
+    "menu": {
+      "copyLink": "Copy Link",
+      "exportDocument": "Export Document",
+      "importDocument": "Import Page",
+      "pin": "Pin Page"
+    },
+    "saving": "Saving...",
+    "titlePlaceholder": "Untitled",
+    "wordCount": "{{wordCount}} words"
+  },
+  "pageList": {
+    "copyContent": "Copy Full Text",
+    "duplicate": "Duplicate",
+    "empty": "No pages yet. Click the button above to create your first one.",
+    "filter": {
+      "all": "All",
+      "onlyInPages": "In Pages Only"
+    },
+    "noResults": "No matching pages found",
+    "pageCount": "{{count}} pages in total",
+    "selectNote": "Select a page to start editing",
+    "title": "Pages",
+    "untitled": "Untitled"
   },
   "preview": {
     "downloadFile": "Download File",
@@ -155,7 +172,7 @@
     "videos": "Videos",
     "websites": "Websites"
   },
-  "title": "Knowledge Base",
+  "title": "Resources",
   "toggleLeftPanel": "Show/Hide Left Panel",
   "uploadDock": {
     "body": {

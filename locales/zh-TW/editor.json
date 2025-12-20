@@ -9,6 +9,11 @@
       "on": "顯示格式工具列"
     }
   },
+  "autoSave": {
+    "latest": "已載入最新版本",
+    "saved": "已儲存",
+    "saving": "自動儲存中..."
+  },
   "cancel": "取消",
   "confirm": "確認",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "編輯連結",
+    "editLinkTitle": "連結",
+    "editTextTitle": "標題",
     "open": "開啟連結",
     "placeholder": "輸入連結 URL",
     "unlink": "取消連結"
   },
+  "markdown": {
+    "cancel": "取消",
+    "confirm": "轉換",
+    "parseMessage": "將內容轉換為 Markdown 格式，現有內容將被覆蓋，是否確認？（5 秒後自動關閉）",
+    "parseTitle": "格式化 Markdown"
+  },
   "math": {
     "placeholder": "請輸入 TeX 公式"
+  },
+  "modifier": {
+    "accept": "接受",
+    "acceptAll": "全部接受",
+    "reject": "拒絕",
+    "rejectedAll": "全部拒絕"
   },
   "slash": {
     "h1": "一級標題",
@@ -50,13 +69,16 @@
     "bulletList": "無序清單",
     "code": "行內程式碼",
     "codeblock": "程式碼區塊",
+    "image": "圖片",
     "italic": "斜體",
     "link": "連結",
     "numberList": "有序清單",
+    "redo": "重作",
     "strikethrough": "刪除線",
     "table": "表格",
     "taskList": "任務列表",
     "tex": "TeX 公式",
-    "underline": "底線"
+    "underline": "底線",
+    "undo": "復原"
   }
 }

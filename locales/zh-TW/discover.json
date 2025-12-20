@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "助理內建以下知識庫，幫助你回答更多問題。",
-          "title": "知識庫"
+          "desc": "助手內建了以下資源庫，幫助你解答更多問題。",
+          "title": "資源庫"
         },
         "plugin": {
           "desc": "助理內建以下外掛，幫助你完成更多任務。",
@@ -58,11 +58,17 @@
         "title": "版本歷史"
       }
     },
+    "downloads": "下載次數",
+    "empty": {
+      "description": "嘗試調整篩選條件，或造訪社群探索更多助手",
+      "search": "未找到符合的助手",
+      "title": "暫無助手"
+    },
     "list": "助手列表",
     "marketSource": {
-      "label": "切換市集來源",
-      "legacy": "舊市集",
-      "new": "新市集"
+      "label": "切換社群來源",
+      "legacy": "舊社群",
+      "new": "新社群"
     },
     "more": "更多",
     "plugins": "集成插件",
@@ -70,7 +76,7 @@
     "sorts": {
       "createdAt": "最近發布",
       "identifier": "助理 ID",
-      "knowledgeCount": "知識庫數量",
+      "knowledgeCount": "資源庫數量",
       "myown": "查看我的",
       "pluginCount": "外掛數量",
       "title": "助理名稱",
@@ -85,7 +91,7 @@
         "subtitle": "當前訪問的助手已因以下可能原因被封存：",
         "title": "助手已被封存"
       },
-      "backToMarket": "返回助手市集",
+      "backToMarket": "返回助手社群",
       "deprecated": {
         "reasons": {
           "official": "助手因安全／政治等問題被官方下架",
@@ -94,9 +100,9 @@
         "subtitle": "當前訪問的助手已因以下可能原因被拒絕：",
         "title": "助手已被拒絕"
       },
-      "support": "如有任何問題，請複製連結並發送至 <1>support@lobehub.com</1> 進行諮詢。",
+      "support": "如有任何問題，請複製連結並發送至 <email>support@lobehub.com</email> 進行諮詢。",
       "unpublished": {
-        "subtitle": "當前訪問的助手正在進行版本審核中，如有疑問請複製連結並發送問題至 <1>support@lobehub.com</1> 進行諮詢。",
+        "subtitle": "目前訪問的助手正在進行版本審核，如有疑問請複製連結並發送至 <email>support@lobehub.com</email> 進行諮詢。",
         "title": "助手正在審核中"
       }
     },
@@ -104,7 +110,7 @@
     "systemRole": "助手設定",
     "tokenUsage": "助理提示詞 Token 使用量",
     "try": "試一下",
-    "withKnowledge": "該助理附帶知識庫",
+    "withKnowledge": "此助手附帶資源庫",
     "withPlugin": "該助理附帶外掛"
   },
   "back": "返回發現",
@@ -144,7 +150,7 @@
   "createGuide": {
     "func1": {
       "desc1": "在會話窗口中通過右上角設置進入你想提交助手的設置頁面;",
-      "desc2": "點擊右上角提交到助手市場按鈕。",
+      "desc2": "點擊右上角的提交至助手社群按鈕。",
       "tag": "方法一",
       "title": "通過 LobeChat 提交"
     },
@@ -172,7 +178,7 @@
       "functionCall": "支持函數調用",
       "title": "其他",
       "vision": "支持視覺識別",
-      "withKnowledge": "附帶知識庫",
+      "withKnowledge": "附帶資源庫",
       "withTool": "附帶插件"
     },
     "pricing": "模型價格",
@@ -186,8 +192,10 @@
     }
   },
   "home": {
+    "communityAgents": "社群助手",
     "featuredAssistants": "推薦助手",
     "featuredModels": "推薦模型",
+    "featuredPlugins": "精選外掛",
     "featuredProviders": "推薦模型服務商",
     "featuredTools": "推薦插件",
     "more": "發現更多"
@@ -516,7 +524,7 @@
     "hero": {
       "desc": "開源、可部署的 MCP Servers 平台，幫助 AI 系統輕鬆存取檔案系統、資料庫、API 等關鍵資源，全面擴展你的 AI 能力。",
       "subTitle": "開源 & 開箱即用",
-      "title": "面向 AI 的開源 MCP 市場"
+      "title": "面向 AI 的開源 MCP 社群"
     },
     "sorts": {
       "createdAt": "最近新增",
@@ -529,7 +537,7 @@
       "toolsCount": "工具數",
       "updatedAt": "最近更新"
     },
-    "title": "MCP 市場",
+    "title": "MCP 社群",
     "unvalidated": {
       "desc": "此 MCP Server 暫未經過驗證",
       "title": "未驗證"
@@ -539,6 +547,11 @@
       "descWithDate": "此 MCP Server 於 {{date}} 經過驗證，確保其品質和可靠性。",
       "title": "已驗證"
     }
+  },
+  "mcpEmpty": {
+    "description": "嘗試調整篩選條件或搜尋關鍵字",
+    "search": "未找到符合的 MCP 伺服器",
+    "title": "暫無 MCP 伺服器"
   },
   "models": {
     "abilities": "模型能力",
@@ -553,6 +566,11 @@
         "more": "查看更多",
         "title": "相關推薦"
       }
+    },
+    "empty": {
+      "description": "嘗試調整篩選條件以查看更多模型",
+      "search": "未找到符合的模型",
+      "title": "暫無模型"
     },
     "free": "免費",
     "guide": "配置指南",
@@ -664,6 +682,11 @@
         "title": "相關推薦"
       }
     },
+    "empty": {
+      "description": "嘗試調整篩選條件以查看更多服務商",
+      "search": "未找到符合的服務商",
+      "title": "暫無服務商"
+    },
     "list": "模型服務商列表",
     "modelCount": "{{count}} 個模型",
     "modelName": "模型名稱",
@@ -690,6 +713,18 @@
     "home": "首頁",
     "model": "模型",
     "plugin": "外掛",
-    "provider": "模型服務商"
+    "provider": "模型服務商",
+    "user": "使用者"
+  },
+  "user": {
+    "agents": "助理",
+    "downloads": "下載",
+    "editProfile": "編輯個人資料",
+    "login": "成為創作者",
+    "logout": "登出",
+    "myProfile": "我的主頁",
+    "noAgents": "該使用者尚未發布助理",
+    "publishedAgents": "創作的助手",
+    "website": "個人網站"
   }
 }

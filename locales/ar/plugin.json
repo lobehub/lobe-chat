@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "الحصول على النماذج المتاحة",
+        "getAvailableTools": "الحصول على الأدوات المتاحة",
+        "getConfig": "الحصول على الإعدادات",
+        "getMeta": "الحصول على البيانات الوصفية",
+        "getPrompt": "الحصول على التعليمات النظامية",
+        "searchMarketTools": "البحث في سوق الإضافات",
+        "searchOfficialTools": "البحث عن الأدوات الرسمية",
+        "setModel": "تعيين النموذج",
+        "setOpeningMessage": "تعيين رسالة البداية",
+        "setOpeningQuestions": "تعيين أسئلة البداية",
+        "togglePlugin": "تبديل الإضافة",
+        "updateChatConfig": "تحديث إعدادات المحادثة",
+        "updateConfig": "تحديث الإعدادات",
+        "updateMeta": "تحديث البيانات الوصفية",
+        "updatePrompt": "تحديث التعليمات النظامية"
+      },
+      "title": "منشئ الوكيل"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "الحصول على النماذج المتاحة",
+        "installPlugin": "تثبيت الإضافة",
+        "inviteAgent": "دعوة عضو",
+        "removeAgent": "إزالة العضو",
+        "searchMarketTools": "البحث في سوق الإضافات",
+        "updateAgentConfig": "تحديث إعدادات الوكيل",
+        "updatePrompt": "تحديث التعليمات النظامية"
+      },
+      "title": "منشئ الوكلاء الجماعي"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "إرسال رسالة للجميع",
+        "createAgent": "إضافة عضو إلى الفريق",
+        "createWorkflow": "تخطيط سير العمل",
+        "executeTask": "تنفيذ المهمة",
+        "getAgentInfo": "الحصول على معلومات العضو",
+        "interrupt": "مقاطعة المهمة",
+        "inviteAgent": "دعوة عضو",
+        "removeAgent": "إزالة عضو",
+        "searchAgent": "البحث عن خبير ذي صلة",
+        "speak": "تعيين عضو للتحدث",
+        "summarize": "تلخيص المحادثة",
+        "vote": "بدء تصويت"
+      },
+      "title": "تنسيق الفريق"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "مسح المهام",
+        "completeTodos": "إكمال المهام",
+        "createPlan": "إنشاء خطة",
+        "createTodos": "إنشاء مهام",
+        "removeTodos": "حذف المهام",
+        "updatePlan": "تحديث الخطة",
+        "updateTodos": "تحديث المهام"
+      },
+      "title": "أداة GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "قراءة محتوى قاعدة المعرفة",
@@ -23,6 +84,41 @@
         "writeLocalFile": "كتابة إلى الملف"
       },
       "title": "النظام المحلي"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "تحديث الدُفعة للعُقد",
+        "compareSnapshots": "مقارنة اللقطات",
+        "convertToList": "تحويل إلى قائمة",
+        "createNode": "إنشاء عقدة",
+        "cropImage": "اقتصاص الصورة",
+        "deleteNode": "حذف العقدة",
+        "deleteSnapshot": "حذف اللقطة",
+        "deleteTableColumn": "حذف عمود الجدول",
+        "deleteTableRow": "حذف صف الجدول",
+        "duplicateNode": "نسخ العقدة",
+        "editTitle": "تحرير عنوان المستند",
+        "indentListItem": "زيادة المسافة البادئة لعنصر القائمة",
+        "initPage": "تهيئة المستند",
+        "insertTableColumn": "إدراج عمود في الجدول",
+        "insertTableRow": "إدراج صف في الجدول",
+        "listSnapshots": "عرض اللقطات",
+        "mergeNodes": "دمج العقد",
+        "moveNode": "نقل العقدة",
+        "outdentListItem": "تقليل المسافة البادئة لعنصر القائمة",
+        "replaceText": "استبدال النص",
+        "resizeImage": "تغيير حجم الصورة",
+        "restoreSnapshot": "استعادة اللقطة",
+        "rotateImage": "تدوير الصورة",
+        "saveSnapshot": "حفظ اللقطة",
+        "setImageAlt": "تعيين النص البديل للصورة",
+        "splitNode": "تقسيم العقدة",
+        "toggleListType": "تبديل نوع القائمة",
+        "unwrapNode": "إلغاء تغليف العقدة",
+        "updateNode": "تحديث العقدة",
+        "wrapNodes": "تغليف العقد"
+      },
+      "title": "المستند"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "تحديث",
     "updateSuccess": "تم تحديث إعدادات الإضافة بنجاح"
   },
+  "empty": {
+    "description": "يحتوي متجر الإضافات على العديد من الأدوات في انتظارك لاكتشافها، قم بزيارة المتجر وابدأ الاستكشاف",
+    "search": "لم يتم العثور على إضافات مطابقة",
+    "title": "لا توجد إضافات حالياً"
+  },
   "error": {
     "fetchError": "فشل طلب رابط manifest، يرجى التأكد من صلاحية الرابط وفحص ما إذا كان يسمح بالوصول عبر النطاق",
     "installError": "فشل تثبيت الإضافة {{name}}",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "جارٍ استدعاء الإضافة...",
     "plugin": "تشغيل الإضافة..."
+  },
+  "mcpEmpty": {
+    "deployment": "لا توجد خيارات نشر حالياً",
+    "prompts": "لا توجد مطالبات متاحة لهذه الإضافة حالياً",
+    "resources": "لا توجد موارد متاحة لهذه الإضافة حالياً",
+    "tools": "لا توجد قدرات أدوات متاحة لهذه الإضافة حالياً"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",
@@ -338,6 +445,8 @@
       "installed": "مثبت"
     },
     "config": {
+      "addEnv": "إضافة متغير بيئة",
+      "addHeaders": "إضافة رؤوس الطلب",
       "args": "المعلمات",
       "command": "الأمر",
       "env": "متغيرات البيئة",
@@ -358,12 +467,15 @@
       },
       "title": "تثبيت إضافة مخصصة"
     },
+    "install": {
+      "title": "معلومات التثبيت"
+    },
     "marketplace": {
       "title": "تثبيت إضافات الطرف الثالث",
       "trustedBy": "مقدم من {{name}}",
       "unverified": {
         "title": "إضافات طرف ثالث غير موثوقة",
-        "warning": "هذه الإضافة من سوق طرف ثالث غير موثوق، يرجى التأكد من ثقتك بالمصدر قبل التثبيت."
+        "warning": "هذا المكون الإضافي来自 مجتمع طرف ثالث غير موثوق به. يرجى التأكد من أنك تثق في هذا المصدر قبل التثبيت."
       },
       "verified": "موثوقة"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "سيتم تمرير هذه الإعدادات كمتغيرات بيئة عند بدء تشغيل خادم MCP",
     "httpTypeNotice": "إضافات MCP من نوع HTTP لا تحتاج إلى متغيرات بيئة للتكوين حاليًا",
     "indexUrl": {
-      "title": "فهرس السوق",
+      "title": "فهرس المجتمع",
       "tooltip": "لا يدعم التحرير عبر الإنترنت حاليًا، يرجى التكوين عبر متغيرات البيئة عند النشر"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "فشل حفظ متغيرات البيئة",
       "envUpdateSuccess": "تم حفظ متغيرات البيئة بنجاح"
     },
-    "modalDesc": "بعد تكوين عنوان سوق الإضافات، يمكنك استخدام سوق إضافات مخصص",
+    "modalDesc": "بعد تكوين عنوان مجتمع المكونات الإضافية، يمكنك استخدام مجتمع مكونات إضافية مخصص",
     "rules": {
       "argsRequired": "يرجى إدخال معلمات التشغيل",
       "commandRequired": "يرجى إدخال أمر التشغيل",
       "urlRequired": "يرجى إدخال عنوان الخدمة"
     },
     "saveSettings": "حفظ الإعدادات",
-    "title": "إعدادات سوق الإضافات"
+    "title": "إعداد مجتمع المكونات الإضافية"
   },
   "showInPortal": "يرجى عرض التفاصيل في مساحة العمل",
   "store": {

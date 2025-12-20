@@ -1,8 +1,7 @@
 {
   "addFolder": "Ordner erstellen",
-  "addKnowledge": "Wissen hinzufügen",
+  "addLibrary": "Hinzufügen",
   "addPage": "Dokument erstellen",
-  "desc": "Verwalte dein Wissen für Arbeit, Studium und Alltag.",
   "detail": {
     "basic": {
       "createdAt": "Erstellungszeit",
@@ -24,9 +23,98 @@
       "embeddingStatus": "Vektorisierung"
     }
   },
-  "documentEditor": {
+  "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} Dateien gefiltert (von insgesamt {{total}} Dateien)"
+      },
+      "connect": "Verbinden...",
+      "gitignore": {
+        "apply": "Regeln anwenden",
+        "cancel": "Regeln ignorieren",
+        "content": ".gitignore-Datei erkannt (insgesamt {{count}} Dateien). Möchten Sie die Ignorierregeln anwenden?",
+        "filtered": "{{ignored}} Dateien wurden gefiltert (von insgesamt {{total}} Dateien)",
+        "title": ".gitignore erkannt"
+      },
+      "newFolder": "Neuen Ordner erstellen",
+      "newPage": "Neues Dokument",
+      "notion": {
+        "error": "Fehler beim Importieren der Notion-Datei",
+        "foundFiles": "{{count}} Dateien gefunden",
+        "importing": "Notion-Dateien werden importiert...",
+        "noMarkdownFiles": "Keine Markdown-Dateien in der ZIP-Datei gefunden",
+        "partial": "{{success}} Dateien erfolgreich importiert, {{failed}} fehlgeschlagen",
+        "success": "{{count}} Dateien erfolgreich importiert"
+      },
+      "notionGuide": {
+        "cancel": "Jetzt nicht importieren",
+        "desc": "Bitte exportiere zunächst Markdown (ZIP) aus Notion. Klicke dann auf „Weiter“, um das ZIP-Archiv auszuwählen und alle Seiten zu importieren.",
+        "ok": "Notion-ZIP auswählen",
+        "title": "Notion-Inhalte importieren"
+      },
+      "uploadFile": "Datei hochladen",
+      "uploadFolder": "Ordner hochladen"
+    },
+    "newPageButton": "Neues Dokument erstellen",
+    "uploadButton": "Hochladen"
+  },
+  "home": {
+    "getStarted": "Loslegen",
+    "greeting": "Loslegen",
+    "quickActions": "Schnellaktionen",
+    "recentFiles": "Kürzlich verwendete Dateien",
+    "recentPages": "Kürzlich geöffnete Dokumente",
+    "subtitle": "Willkommen im Ressourcen-Center. Beginne hier mit der Verwaltung deiner Dokumente und Dateien.",
+    "uploadEntries": {
+      "files": {
+        "title": "Dateien hochladen"
+      },
+      "folder": {
+        "title": "Ordner hochladen"
+      },
+      "library": {
+        "title": "Neue Bibliothek erstellen"
+      },
+      "newPage": {
+        "title": "Neues Dokument erstellen"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Diese Bibliothek wird gelöscht. Die darin enthaltenen Dateien bleiben erhalten und werden in 'Alle Dateien' verschoben. Nach dem Löschen kann die Bibliothek nicht wiederhergestellt werden. Bitte gehe vorsichtig vor.",
+      "empty": "Klicke auf <1>+</1>, um eine neue Bibliothek zu erstellen"
+    },
+    "new": "Neue Bibliothek erstellen",
+    "title": "Bibliothek"
+  },
+  "menu": {
+    "allFiles": "Alle Dateien",
+    "allPages": "Alle Dokumente"
+  },
+  "networkError": "Fehler beim Laden der Bibliothek. Bitte überprüfe deine Netzwerkverbindung und versuche es erneut.",
+  "notSupportGuide": {
+    "desc": "Die aktuelle Bereitstellung ist im Client-Datenbankmodus und unterstützt keine Dateiverwaltungsfunktionen. Bitte wechseln Sie zu <1>Server-Datenbank-Bereitstellungsmodus</1> oder verwenden Sie direkt <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Unterstützt gängige Dateitypen, einschließlich Word, PPT, Excel, PDF, TXT und andere gängige Dokumentformate sowie JS, Python und andere gängige Code-Dateien",
+        "title": "Verschiedene Dateitypen analysieren"
+      },
+      "embeddings": {
+        "desc": "Verwendet leistungsstarke Vektormodelle zur Vektorisierung von Textteilen, um eine semantische Suche nach Dateiinhalten zu ermöglichen",
+        "title": "Vektor-Semantisierung"
+      },
+      "libraries": {
+        "desc": "Erstelle Bibliotheken und füge verschiedene Dateitypen hinzu, um deine persönliche Wissenssammlung aufzubauen.",
+        "title": "Bibliotheken"
+      }
+    },
+    "title": "Der aktuelle Bereitstellungsmodus unterstützt keine Dateiverwaltung"
+  },
+  "pageEditor": {
     "addIcon": "Symbol hinzufügen",
-    "autoSaveMessage": "Das Dokument wird automatisch gespeichert, ein manuelles Speichern ist nicht erforderlich.",
+    "autoSaveMessage": "Das Dokument wird automatisch gespeichert, manuelles Speichern ist nicht erforderlich",
     "chooseIcon": "Symbol auswählen",
     "deleteConfirm": {
       "content": "Dieses Dokument wird gelöscht und kann danach nicht wiederhergestellt werden. Bitte seien Sie vorsichtig.",
@@ -36,7 +124,7 @@
     "deleteSuccess": "Dokument erfolgreich gelöscht",
     "editedAt": "Zuletzt bearbeitet am {{time}}",
     "editedBy": "Zuletzt bearbeitet von {{name}}",
-    "editorPlaceholder": "Geben Sie den Dokumentinhalt ein, drücken Sie / für das Befehlsmenü",
+    "editorPlaceholder": "Geben Sie den Inhalt des Dokuments ein, drücken Sie / für das Befehlsmenü",
     "empty": {
       "createNewDocument": "Neues Dokument erstellen",
       "title": "Wählen Sie ein Dokument, um zu beginnen",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Ohne Titel",
     "wordCount": "{{wordCount}} Wörter"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Gesamten Inhalt kopieren",
     "duplicate": "Kopie erstellen",
-    "empty": "Noch keine Dokumente vorhanden. Klicke auf die Schaltfläche oben, um dein erstes Dokument zu erstellen.",
+    "empty": "Noch keine Dokumente vorhanden. Klicken Sie oben, um Ihr erstes Dokument zu erstellen.",
+    "filter": {
+      "all": "Alle",
+      "onlyInPages": "Nur in Dokumenten"
+    },
     "noResults": "Keine passenden Dokumente gefunden",
     "pageCount": "Insgesamt {{count}} Dokumente",
-    "selectNote": "Wähle ein Dokument aus, um mit der Bearbeitung zu beginnen",
+    "selectNote": "Wählen Sie ein Dokument zum Bearbeiten",
+    "title": "Dokumente",
     "untitled": "Ohne Titel"
-  },
-  "empty": "Keine hochgeladenen Dateien/Ordner vorhanden",
-  "header": {
-    "actions": {
-      "newFolder": "Neuen Ordner erstellen",
-      "newPage": "Neues Dokument",
-      "uploadFile": "Datei hochladen",
-      "uploadFolder": "Ordner hochladen"
-    },
-    "newNoteDialog": {
-      "cancel": "Abbrechen",
-      "editTitle": "Dokument bearbeiten",
-      "emptyContent": "Der Dokumentinhalt darf nicht leer sein",
-      "loadError": "Fehler beim Laden des Dokuments. Bitte versuchen Sie es erneut.",
-      "loading": "Wird geladen...",
-      "save": "Speichern",
-      "saveError": "Fehler beim Speichern des Dokuments. Bitte versuchen Sie es erneut.",
-      "saveSuccess": "Dokument erfolgreich gespeichert",
-      "title": "Neues Dokument",
-      "updateSuccess": "Dokument erfolgreich aktualisiert"
-    },
-    "newPageButton": "Neues Dokument erstellen",
-    "uploadButton": "Hochladen"
-  },
-  "home": {
-    "getStarted": "Loslegen",
-    "greeting": "Loslegen",
-    "quickActions": "Schnellaktionen",
-    "recentFiles": "Kürzlich verwendete Dateien",
-    "recentPages": "Kürzlich geöffnete Dokumente",
-    "subtitle": "Willkommen im Wissensspeicher. Beginnen Sie hier mit der Verwaltung Ihrer Dokumente.",
-    "uploadEntries": {
-      "files": {
-        "title": "Dateien hochladen"
-      },
-      "folder": {
-        "title": "Ordner hochladen"
-      },
-      "knowledgeBase": {
-        "title": "Neue Wissensdatenbank"
-      },
-      "newPage": {
-        "title": "Neues Dokument erstellen"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Die Wissensdatenbank wird gelöscht, die darin enthaltenen Dateien werden nicht gelöscht, sondern in den gesamten Dateien verschoben. Nach dem Löschen der Wissensdatenbank kann sie nicht wiederhergestellt werden, bitte vorsichtig vorgehen.",
-      "empty": "Klicken Sie auf <1>+</1>, um eine Wissensdatenbank zu erstellen"
-    },
-    "new": "Neue Wissensdatenbank",
-    "title": "Wissensdatenbank"
-  },
-  "menu": {
-    "allFiles": "Alle Dateien",
-    "allPages": "Alle Dokumente"
-  },
-  "networkError": "Fehler beim Abrufen der Wissensdatenbank. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es erneut.",
-  "notSupportGuide": {
-    "desc": "Die aktuelle Bereitstellung ist im Client-Datenbankmodus und unterstützt keine Dateiverwaltungsfunktionen. Bitte wechseln Sie zu <1>Server-Datenbank-Bereitstellungsmodus</1> oder verwenden Sie direkt <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Unterstützt gängige Dateitypen, einschließlich Word, PPT, Excel, PDF, TXT und andere gängige Dokumentformate sowie JS, Python und andere gängige Code-Dateien",
-        "title": "Verschiedene Dateitypen analysieren"
-      },
-      "embeddings": {
-        "desc": "Verwendet leistungsstarke Vektormodelle zur Vektorisierung von Textteilen, um eine semantische Suche nach Dateiinhalten zu ermöglichen",
-        "title": "Vektor-Semantisierung"
-      },
-      "repos": {
-        "desc": "Unterstützt die Erstellung von Wissensdatenbanken und ermöglicht das Hinzufügen verschiedener Dateitypen, um Ihr Fachwissen aufzubauen",
-        "title": "Wissensdatenbank"
-      }
-    },
-    "title": "Der aktuelle Bereitstellungsmodus unterstützt keine Dateiverwaltung"
   },
   "preview": {
     "downloadFile": "Datei herunterladen",
@@ -155,7 +172,7 @@
     "videos": "Videos",
     "websites": "Webseiten"
   },
-  "title": "Wissensdatenbank",
+  "title": "Ressourcen",
   "toggleLeftPanel": "Seitenleiste ein-/ausblenden",
   "uploadDock": {
     "body": {

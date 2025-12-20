@@ -58,12 +58,12 @@
       "ready": "データベースは準備完了です"
     },
     "modal": {
-      "desc": "PGlite クライアントデータベースを有効にし、ブラウザにチャットデータを永続的に保存し、ナレッジベースなどの高度な機能を使用します。",
+      "desc": "次世代クライアントデータベースを今すぐ有効にしましょう。ブラウザ内にチャットデータを永続的に保存し、リソースライブラリなどの高度な機能を利用できます。",
       "enable": "今すぐ有効にする",
       "features": {
         "knowledgeBase": {
-          "desc": "あなたの個人的な知識ベースを蓄積し、アシスタントと簡単に知識ベースの対話を開始できます（近日公開）",
-          "title": "知識ベースの対話をサポートし、第二の脳を開放する"
+          "desc": "あなた専用のリソースライブラリを構築し、アシスタントと簡単にライブラリ対話を開始できます（近日公開予定）",
+          "title": "リソースライブラリ対話に対応、セカンドブレインを起動"
         },
         "localFirst": {
           "desc": "チャットデータは完全にブラウザに保存され、あなたのデータは常にあなたの手の中にあります。",
@@ -137,14 +137,39 @@
   "close": "閉じる",
   "cmdk": {
     "about": "概要",
+    "aiModeEmptyState": "上の入力欄に質問を入力して、AIとの対話を始めましょう",
+    "aiModePlaceholder": "AIに質問する...",
+    "community": "コミュニティ",
     "communitySupport": "コミュニティサポート",
     "discover": "発見",
-    "knowledgeBase": "ナレッジベース",
+    "memory": "メモリー",
     "navigate": "ナビゲート",
     "newAgent": "新しいエージェントを作成",
     "noResults": "該当する結果が見つかりませんでした",
     "openSettings": "設定を開く",
-    "painting": "AI ペインティング",
+    "pages": "ドキュメント",
+    "painting": "ペインティング",
+    "resource": "リソース",
+    "search": {
+      "agent": "アシスタント",
+      "agents": "アシスタント",
+      "assistant": "AIアシスタント",
+      "assistants": "AIアシスタント",
+      "file": "ファイル",
+      "files": "ファイル",
+      "loading": "検索中...",
+      "mcp": "MCPサーバー",
+      "mcps": "MCPサーバー",
+      "message": "メッセージ",
+      "messages": "メッセージ",
+      "page": "ドキュメント",
+      "pages": "ドキュメント",
+      "plugin": "プラグイン",
+      "plugins": "プラグイン",
+      "searching": "検索結果",
+      "topic": "トピック",
+      "topics": "トピック"
+    },
     "searchPlaceholder": "コマンドを入力または検索...",
     "settings": "設定",
     "starOnGitHub": "GitHub でスターを付ける",
@@ -261,6 +286,7 @@
   "labs": "ラボ",
   "lang": {
     "ar": "アラビア語",
+    "auto": "システムの言語設定に従う",
     "bg-BG": "ブルガリア語",
     "bn": "ベンガル語",
     "cs-CZ": "チェコ語",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "ビジネス提携",
     "support": "メールサポート"
+  },
+  "navPanel": {
+    "agent": "アシスタント",
+    "displayItems": "項目を表示",
+    "library": "ライブラリ",
+    "searchAgent": "アシスタントを検索...",
+    "searchResultEmpty": "検索結果がありません"
   },
   "new": "新規",
   "oauth": "SSO ログイン",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "AI 画像生成",
+    "aiImage": "イラスト",
+    "audio": "オーディオ",
     "chat": "チャット",
+    "community": "コミュニティ",
     "discover": "発見",
     "files": "ファイル",
-    "knowledgeBase": "ナレッジベース",
+    "home": "ホーム",
+    "knowledgeBase": "リソースライブラリ",
     "me": "私",
-    "setting": "設定"
+    "memory": "メモリー",
+    "pages": "ドキュメント",
+    "resource": "リソース",
+    "search": "検索",
+    "setting": "設定",
+    "video": "ビデオ"
   },
   "telemetry": {
     "allow": "許可する",

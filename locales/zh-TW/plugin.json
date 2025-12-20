@@ -1,11 +1,72 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "取得可用模型",
+        "getAvailableTools": "取得可用工具",
+        "getConfig": "取得設定",
+        "getMeta": "取得中繼資料",
+        "getPrompt": "取得系統提示詞",
+        "searchMarketTools": "搜尋外掛市集",
+        "searchOfficialTools": "搜尋官方工具",
+        "setModel": "設定模型",
+        "setOpeningMessage": "設定開場訊息",
+        "setOpeningQuestions": "設定開場問題",
+        "togglePlugin": "切換外掛",
+        "updateChatConfig": "更新對話設定",
+        "updateConfig": "更新設定",
+        "updateMeta": "更新中繼資料",
+        "updatePrompt": "更新系統提示詞"
+      },
+      "title": "Agent 建構器"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "取得可用模型",
+        "installPlugin": "安裝外掛",
+        "inviteAgent": "邀請成員",
+        "removeAgent": "移除成員",
+        "searchMarketTools": "搜尋外掛市集",
+        "updateAgentConfig": "更新代理設定",
+        "updatePrompt": "更新系統提示詞"
+      },
+      "title": "群組代理建構器"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "所有人發言",
+        "createAgent": "新增團隊成員",
+        "createWorkflow": "規劃工作流程",
+        "executeTask": "執行任務",
+        "getAgentInfo": "取得成員資訊",
+        "interrupt": "中斷任務",
+        "inviteAgent": "邀請成員",
+        "removeAgent": "移除成員",
+        "searchAgent": "尋找相關專家",
+        "speak": "指定成員發言",
+        "summarize": "總結對話",
+        "vote": "發起投票"
+      },
+      "title": "協調團隊"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "清除待辦",
+        "completeTodos": "完成待辦",
+        "createPlan": "建立計劃",
+        "createTodos": "建立待辦",
+        "removeTodos": "刪除待辦",
+        "updatePlan": "更新計劃",
+        "updateTodos": "更新待辦"
+      },
+      "title": "GTD 工具"
+    },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "讀取知識庫內容",
-        "searchKnowledgeBase": "搜尋知識庫"
+        "readKnowledge": "讀取資源庫內容",
+        "searchKnowledgeBase": "搜尋資源庫"
       },
-      "title": "知識庫"
+      "title": "資源庫"
     },
     "lobe-local-system": {
       "apiName": {
@@ -23,6 +84,41 @@
         "writeLocalFile": "寫入檔案"
       },
       "title": "本機系統"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "批次更新節點",
+        "compareSnapshots": "比較快照",
+        "convertToList": "轉換為清單",
+        "createNode": "建立節點",
+        "cropImage": "裁剪圖片",
+        "deleteNode": "刪除節點",
+        "deleteSnapshot": "刪除快照",
+        "deleteTableColumn": "刪除表格欄",
+        "deleteTableRow": "刪除表格列",
+        "duplicateNode": "複製節點",
+        "editTitle": "編輯文件標題",
+        "indentListItem": "縮排清單項目",
+        "initPage": "初始化文件",
+        "insertTableColumn": "插入表格欄",
+        "insertTableRow": "插入表格列",
+        "listSnapshots": "列出快照",
+        "mergeNodes": "合併節點",
+        "moveNode": "移動節點",
+        "outdentListItem": "取消縮排清單項目",
+        "replaceText": "取代文字",
+        "resizeImage": "調整圖片大小",
+        "restoreSnapshot": "還原快照",
+        "rotateImage": "旋轉圖片",
+        "saveSnapshot": "儲存快照",
+        "setImageAlt": "設定圖片替代文字",
+        "splitNode": "拆分節點",
+        "toggleListType": "切換清單類型",
+        "unwrapNode": "解開節點",
+        "updateNode": "更新節點",
+        "wrapNodes": "包裝節點"
+      },
+      "title": "文件"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "更新",
     "updateSuccess": "插件設定更新成功"
   },
+  "empty": {
+    "description": "外掛商店有豐富的工具等你發掘，前往商店開始探索",
+    "search": "未找到符合的外掛",
+    "title": "暫無外掛"
+  },
   "error": {
     "fetchError": "請求該 manifest 連結失敗，請確保連結的有效性，並檢查連結是否允許跨域訪問",
     "installError": "插件 {{name}} 安裝失敗",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "調用插件中...",
     "plugin": "插件運行中..."
+  },
+  "mcpEmpty": {
+    "deployment": "暫無部署選項",
+    "prompts": "此外掛暫無提示詞",
+    "resources": "此外掛暫無資源",
+    "tools": "此外掛暫無工具功能"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "檢查安裝環境...",
@@ -338,6 +445,8 @@
       "installed": "已安裝"
     },
     "config": {
+      "addEnv": "新增環境變數",
+      "addHeaders": "新增請求標頭",
       "args": "參數",
       "command": "命令",
       "env": "環境變數",
@@ -358,12 +467,15 @@
       },
       "title": "安裝自定義插件"
     },
+    "install": {
+      "title": "安裝資訊"
+    },
     "marketplace": {
       "title": "安裝第三方插件",
       "trustedBy": "由 {{name}} 提供",
       "unverified": {
         "title": "未經驗證的第三方插件",
-        "warning": "此插件來自未驗證的第三方市場，安裝前請確認您信任該來源。"
+        "warning": "此外掛來自未經驗證的第三方社群，安裝前請確認您信任該來源。"
       },
       "verified": "已驗證"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "這些配置將作為環境變數在 MCP 伺服器啟動時傳遞給進程",
     "httpTypeNotice": "HTTP 類型的 MCP 插件暫無需要配置的環境變數",
     "indexUrl": {
-      "title": "市場索引",
+      "title": "社群索引",
       "tooltip": "暫不支援線上編輯，請透過部署時環境變數進行設定"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "環境變數保存失敗",
       "envUpdateSuccess": "環境變數保存成功"
     },
-    "modalDesc": "配置插件市場的地址後，可以使用自定義的插件市場",
+    "modalDesc": "設定外掛社群的位址後，即可使用自訂的外掛社群",
     "rules": {
       "argsRequired": "請輸入啟動參數",
       "commandRequired": "請輸入啟動命令",
       "urlRequired": "請輸入服務地址"
     },
     "saveSettings": "保存設置",
-    "title": "設置插件市場"
+    "title": "設定外掛社群"
   },
   "showInPortal": "請在工作區中查看詳情",
   "store": {

@@ -1,8 +1,69 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Get Available Models",
+        "getAvailableTools": "Get Available Tools",
+        "getConfig": "Get Configuration",
+        "getMeta": "Get Metadata",
+        "getPrompt": "Get System Prompt",
+        "searchMarketTools": "Search Plugin Market",
+        "searchOfficialTools": "Search Official Tools",
+        "setModel": "Set Model",
+        "setOpeningMessage": "Set Opening Message",
+        "setOpeningQuestions": "Set Opening Questions",
+        "togglePlugin": "Toggle Plugin",
+        "updateChatConfig": "Update Chat Config",
+        "updateConfig": "Update Configuration",
+        "updateMeta": "Update Metadata",
+        "updatePrompt": "Update System Prompt"
+      },
+      "title": "Agent Builder"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Get Available Models",
+        "installPlugin": "Install Plugin",
+        "inviteAgent": "Invite Member",
+        "removeAgent": "Remove Member",
+        "searchMarketTools": "Search Plugin Marketplace",
+        "updateAgentConfig": "Update Agent Configuration",
+        "updatePrompt": "Update System Prompt"
+      },
+      "title": "Group Agent Builder"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Broadcast to All",
+        "createAgent": "Add Team Member",
+        "createWorkflow": "Plan Workflow",
+        "executeTask": "Execute Task",
+        "getAgentInfo": "Get Member Info",
+        "interrupt": "Interrupt Task",
+        "inviteAgent": "Invite Member",
+        "removeAgent": "Remove Member",
+        "searchAgent": "Find Expert",
+        "speak": "Assign Speaker",
+        "summarize": "Summarize Conversation",
+        "vote": "Initiate Vote"
+      },
+      "title": "Team Coordination"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Clear Tasks",
+        "completeTodos": "Complete Tasks",
+        "createPlan": "Create Plan",
+        "createTodos": "Create Tasks",
+        "removeTodos": "Delete Tasks",
+        "updatePlan": "Update Plan",
+        "updateTodos": "Update Tasks"
+      },
+      "title": "GTD Tool"
+    },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Read Knowledge Base Content",
+        "readKnowledge": "Read Knowledge Base",
         "searchKnowledgeBase": "Search Knowledge Base"
       },
       "title": "Knowledge Base"
@@ -23,6 +84,41 @@
         "writeLocalFile": "Write to File"
       },
       "title": "Local System"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Batch Update Nodes",
+        "compareSnapshots": "Compare Snapshots",
+        "convertToList": "Convert to List",
+        "createNode": "Create Node",
+        "cropImage": "Crop Image",
+        "deleteNode": "Delete Node",
+        "deleteSnapshot": "Delete Snapshot",
+        "deleteTableColumn": "Delete Table Column",
+        "deleteTableRow": "Delete Table Row",
+        "duplicateNode": "Duplicate Node",
+        "editTitle": "Edit Document Title",
+        "indentListItem": "Indent List Item",
+        "initPage": "Initialize Document",
+        "insertTableColumn": "Insert Table Column",
+        "insertTableRow": "Insert Table Row",
+        "listSnapshots": "List Snapshots",
+        "mergeNodes": "Merge Nodes",
+        "moveNode": "Move Node",
+        "outdentListItem": "Outdent List Item",
+        "replaceText": "Replace Text",
+        "resizeImage": "Resize Image",
+        "restoreSnapshot": "Restore Snapshot",
+        "rotateImage": "Rotate Image",
+        "saveSnapshot": "Save Snapshot",
+        "setImageAlt": "Set Image Alt Text",
+        "splitNode": "Split Node",
+        "toggleListType": "Toggle List Type",
+        "unwrapNode": "Unwrap Node",
+        "updateNode": "Update Node",
+        "wrapNodes": "Wrap Nodes"
+      },
+      "title": "Document"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Update",
     "updateSuccess": "Plugin settings updated successfully"
   },
+  "empty": {
+    "description": "The plugin store is full of powerful tools waiting to be discovered. Visit the store to start exploring.",
+    "search": "No matching plugins found",
+    "title": "No plugins available"
+  },
   "error": {
     "fetchError": "Failed to request the manifest link, please ensure the link is valid and allows cross-origin access",
     "installError": "Plugin {{name}} installation failed",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Calling plugin...",
     "plugin": "Plugin running..."
+  },
+  "mcpEmpty": {
+    "deployment": "No deployment options available",
+    "prompts": "This plugin has no prompts",
+    "resources": "This plugin has no resources",
+    "tools": "This plugin has no tool capabilities"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Checking installation environment...",
@@ -338,6 +445,8 @@
       "installed": "Installed"
     },
     "config": {
+      "addEnv": "Add Environment Variable",
+      "addHeaders": "Add Request Header",
       "args": "Arguments",
       "command": "Command",
       "env": "Environment Variables",
@@ -358,12 +467,15 @@
       },
       "title": "Install Custom Plugin"
     },
+    "install": {
+      "title": "Installation Information"
+    },
     "marketplace": {
       "title": "Install Third-Party Plugin",
       "trustedBy": "Provided by {{name}}",
       "unverified": {
         "title": "Unverified Third-Party Plugin",
-        "warning": "This plugin comes from an unverified third-party marketplace. Please confirm you trust the source before installation."
+        "warning": "This plugin is from an unverified third-party community. Please ensure you trust the source before installing."
       },
       "verified": "Verified"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "These configurations will be passed as environment variables to the MCP server process at startup",
     "httpTypeNotice": "HTTP type MCP plugins currently have no environment variables to configure",
     "indexUrl": {
-      "title": "Marketplace Index",
+      "title": "Community Index",
       "tooltip": "Online editing is not supported yet, please set via environment variables during deployment"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Failed to save environment variables",
       "envUpdateSuccess": "Environment variables saved successfully"
     },
-    "modalDesc": "After configuring the plugin marketplace address, you can use a custom plugin marketplace",
+    "modalDesc": "After configuring the plugin community address, you can use a custom plugin community.",
     "rules": {
       "argsRequired": "Please enter startup arguments",
       "commandRequired": "Please enter startup command",
       "urlRequired": "Please enter service address"
     },
     "saveSettings": "Save Settings",
-    "title": "Configure Plugin Marketplace"
+    "title": "Plugin Community Settings"
   },
   "showInPortal": "Please view details in the workspace",
   "store": {

@@ -3,6 +3,24 @@
     "title": "Modelen"
   },
   "active": "Actief",
+  "agentBuilder": {
+    "installPlugin": {
+      "authRequired": "Cloud MCP-plug-in vereist aanmelding en verificatie",
+      "cancel": "Annuleren",
+      "clickApproveToConnect": "Klik op 'Goedkeuren' om verbinding te maken en deze integratie te autoriseren",
+      "clickApproveToInstall": "Klik op 'Toestaan' om deze plug-in te installeren",
+      "connectedAndEnabled": "Verbonden en ingeschakeld",
+      "connectionFailed": "Verbinding mislukt",
+      "installFailed": "Installatie mislukt",
+      "installPlugin": "Plug-in installeren",
+      "installToEnable": "Installeer deze plug-in om de assistent in te schakelen",
+      "installedAndEnabled": "Geïnstalleerd en ingeschakeld",
+      "requiresAuth": "Autorisatie vereist, klik op 'Goedkeuren' om verbinding te maken",
+      "retry": "Opnieuw proberen"
+    },
+    "title": "Assistentenbouwer",
+    "welcome": "Vertel me over jouw gebruikssituatie – een professionele partner staat voor je klaar.\n\nOf het nu gaat om schrijven, programmeren of data-analyse, ik help je een persoonlijke assistent te creëren!"
+  },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
@@ -16,19 +34,20 @@
   },
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
+  "builtinCopilot": "Ingebouwde Copilot",
   "chatList": {
     "expandMessage": "Bericht uitvouwen",
     "longMessageDetail": "Bekijk details"
   },
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
-  "confirmRemoveChatGroupItemAlert": "Je staat op het punt dit Agent-team te verwijderen. De teamleden blijven behouden. Bevestig je actie alstublieft.",
+  "confirmRemoveChatGroupItemAlert": "Deze groep wordt verwijderd, maar teamleden blijven onaangetast. Bevestig je actie.",
   "confirmRemoveGroupItemAlert": "Je staat op het punt deze groep te verwijderen. Nadat de groep is verwijderd, worden de assistenten uit deze groep verplaatst naar de standaardlijst. Bevestig je actie.",
-  "confirmRemoveGroupSuccess": "Agentteam succesvol verwijderd",
+  "confirmRemoveGroupSuccess": "Groep succesvol verwijderd",
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
   "confirmRemoveSessionSuccess": "Sessie succesvol verwijderd",
   "defaultAgent": "Standaard assistent",
-  "defaultGroupChat": "Agentteam",
+  "defaultGroupChat": "Groep",
   "defaultList": "Standaardlijst",
   "defaultSession": "Standaard assistent",
   "dm": {
@@ -44,6 +63,7 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
+  "emptyAgentAction": "Assistent aanmaken",
   "extendParams": {
     "disableContextCaching": {
       "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
@@ -89,8 +109,13 @@
   },
   "groupDescription": "Teamomschrijving",
   "groupSidebar": {
+    "agentProfile": {
+      "chat": "Chat",
+      "model": "Model"
+    },
     "members": {
       "addMember": "Lid toevoegen",
+      "enableOrchestrator": "Orkestrator inschakelen",
       "memberSettings": "Lidinstellingen",
       "orchestrator": "Organisator",
       "orchestratorThinking": "De organisator denkt na...",
@@ -120,7 +145,7 @@
     "noTemplateMembers": "Geen leden in de sjabloon",
     "noTemplates": "Geen sjablonen beschikbaar",
     "searchTemplates": "Zoek sjablonen...",
-    "title": "Agentteam aanmaken",
+    "title": "Groep aanmaken",
     "useTemplate": "Sjabloon gebruiken"
   },
   "hideForYou": "Privéberichten zijn verborgen. Schakel 'Toon privéberichten' in de instellingen in om ze te bekijken.",
@@ -154,28 +179,29 @@
   "knowledgeBase": {
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
-    "allKnowledgeBases": "Alle kennisbanken",
-    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Als je dit wilt gebruiken, schakel dan over naar serverdatabase-implementatie of gebruik de {{cloud}}-dienst.",
+    "allLibraries": "Alle bibliotheken",
+    "disabled": "De huidige implementatiemodus ondersteunt geen gesprekken met de kennisbank. Schakel over naar een server-side database-implementatie of gebruik de {{cloud}}-dienst om dit te activeren.",
     "library": {
       "action": {
         "add": "Toevoegen",
         "detail": "Details",
         "remove": "Verwijderen"
       },
-      "title": "Bestand/Kennisbank"
+      "title": "Bestanden/Bibliotheek"
     },
-    "relativeFilesOrKnowledgeBases": "Gerelateerde bestanden/kennisbanken",
+    "relativeFilesOrLibraries": "Gerelateerde bestanden/bibliotheken",
     "title": "Kennisbank",
-    "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
+    "uploadGuide": "Geüploade bestanden kun je terugvinden onder 'Bronnen'.",
     "viewMore": "Bekijk meer"
   },
   "memberSelection": {
     "addMember": "Lid toevoegen",
     "allMembers": "Alle leden",
-    "createGroup": "Agent-team aanmaken",
+    "createGroup": "Groep aanmaken",
     "noAvailableAgents": "Geen beschikbare Agent om uit te nodigen",
     "noSelectedAgents": "Nog geen Agent geselecteerd",
     "searchAgents": "Zoek Agent...",
+    "selectedAgents": "Geselecteerd ({{count}})",
     "setInitialMembers": "Selecteer teamleden"
   },
   "members": "Leden",
@@ -245,15 +271,20 @@
     "senderAssistant": "Agent",
     "senderUser": "Jij"
   },
-  "newAgent": "Nieuwe assistent",
-  "newGroupChat": "Nieuw Agentteam",
-  "noAgentsYet": "Dit agentteam heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
+  "newAgent": "Assistent aanmaken",
+  "newGroupChat": "Groepschat aanmaken",
+  "newPage": "Document aanmaken",
+  "noAgentsYet": "Deze groep heeft nog geen leden. Klik op de + knop om een assistent uit te nodigen.",
   "noAvailableAgents": "Geen beschikbare leden om uit te nodigen",
   "noMatchingAgents": "Geen overeenkomende leden gevonden",
   "noMembersYet": "Deze groep heeft nog geen leden. Klik op de + knop om assistenten uit te nodigen.",
   "noSelectedAgents": "Nog geen leden geselecteerd",
-  "openInNewWindow": "In een nieuw venster openen",
+  "openInNewWindow": "Open in een nieuw venster",
   "owner": "Groepseigenaar",
+  "pageCopilot": {
+    "title": "Schrijfassistent",
+    "welcome": "**Maak elke zin krachtiger.**\n\nOf je nu aan het opstellen, herschrijven of redigeren bent, ik help je om je tekst duidelijker, natuurlijker en overtuigender te maken."
+  },
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
   "rag": {
@@ -296,7 +327,7 @@
   "searchAgentPlaceholder": "Zoekassistent...",
   "searchAgents": "Zoekassistent...",
   "selectedAgents": "Geselecteerde assistenten",
-  "sendPlaceholder": "Voer chatbericht in...",
+  "sendPlaceholder": "Stel een vraag, creëer iets of begin een taak, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Groepsbeheer",
     "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
@@ -306,11 +337,17 @@
     "createGroupSuccess": "Groepschat succesvol aangemaakt",
     "createSuccess": "Succesvol aangemaakt",
     "creatingAgent": "Assistent wordt aangemaakt...",
+    "groupName": "Groepsnaam",
     "inputPlaceholder": "Voer de naam van de groep in...",
     "moveGroup": "Verplaatsen naar groep",
     "newGroup": "Nieuwe groep",
+    "noAvailableAgents": "Geen beschikbare assistenten",
+    "noMatchingAgents": "Geen overeenkomende assistenten gevonden",
+    "noSelectedAgents": "Selecteer een assistent",
     "rename": "Groepsnaam wijzigen",
     "renameSuccess": "Naam succesvol gewijzigd",
+    "searchAgents": "Assistenten zoeken",
+    "selectedAgents": "Geselecteerde assistenten ({{count}})",
     "sortSuccess": "Sorteren succesvol voltooid",
     "sorting": "Groepsordening wordt bijgewerkt...",
     "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
@@ -361,6 +398,20 @@
       "title": "Taken voltooid"
     }
   },
+  "tab": {
+    "groupProfile": "Groepsprofiel",
+    "profile": "Assistentprofiel",
+    "search": "Zoeken"
+  },
+  "task": {
+    "metrics": {
+      "stepsShort": "stap",
+      "toolCallsShort": "keer gereedschap gebruikt"
+    },
+    "status": {
+      "initializing": "Taak wordt gestart..."
+    }
+  },
   "thread": {
     "divider": "Subonderwerp",
     "threadMessageCount": "{{messageCount}} berichten",
@@ -409,10 +460,18 @@
       "toolRejected": "Deze tooloproep is geweigerd"
     }
   },
+  "toolAuth": {
+    "authorize": "Autoriseren",
+    "authorizing": "Bezig met autoriseren...",
+    "hint": "Zonder autorisatie of configuratie kunnen deze tools niet correct functioneren, wat kan leiden tot ontbrekende assistentfuncties of fouten.",
+    "signIn": "Inloggen",
+    "title": "Deze assistent maakt gebruik van de volgende tools die autorisatie vereisen"
+  },
   "topic": {
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
     "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
     "openNewTopic": "Nieuw onderwerp openen",
+    "recent": "Recente onderwerpen",
     "saveCurrentMessages": "Huidig gesprek opslaan als onderwerp"
   },
   "translate": {
@@ -424,6 +483,7 @@
     "clear": "Spraak verwijderen"
   },
   "untitledAgent": "Naamloze assistent",
+  "untitledGroup": "Naamloze groep",
   "updateAgent": "Assistentgegevens bijwerken",
   "upload": {
     "action": {
@@ -450,6 +510,10 @@
     "validation": {
       "videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}"
     }
+  },
+  "viewMode": {
+    "normal": "Normaal",
+    "wideScreen": "Breedbeeld"
   },
   "you": "jij",
   "zenMode": "Focusmodus"

@@ -10,24 +10,24 @@
   "discover": {
     "assistants": {
       "description": "Inhaltserstellung, Textverfassung, Fragen und Antworten, Bildgenerierung, Videoerstellung, Sprachsynthese, intelligente Agenten, automatisierte Workflows, passe deinen eigenen AI / GPTs / OLLaMA intelligenten Assistenten an",
-      "title": "KI-Assistenten"
+      "title": "Intelligente Agenten Community"
     },
     "description": "Inhaltserstellung, Textverfassung, Fragen und Antworten, Bildgenerierung, Videoerstellung, Sprachsynthese, intelligente Agenten, automatisierte Workflows, benutzerdefinierte AI-Anwendungen, passe deine eigene AI-Anwendungsplattform an",
     "mcp": {
       "description": "Durchsuchen, vergleichen und verbinden Sie Tausende von MCP-Servern, um KI-Systemen den einfachen Zugriff auf Dateisysteme, Datenbanken, APIs und andere wichtige Ressourcen zu ermöglichen und Ihre KI-Fähigkeiten umfassend zu erweitern.",
-      "title": "MCP-Server-Marktplatz"
+      "title": "MCP-Server-Community"
     },
     "models": {
       "description": "Entdecke gängige AI-Modelle wie OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
-      "title": "KI-Modelle"
+      "title": "Modell-Community"
     },
     "plugins": {
       "description": "Entdecken Sie die Möglichkeiten zur Erstellung von Diagrammen, wissenschaftlichen Inhalten, Bildgenerierung, Videoerstellung, Sprachsynthese und automatisierten Workflows, um Ihrem Assistenten eine Vielzahl von Plugin-Funktionen zu integrieren.",
-      "title": "KI-Plugins"
+      "title": "Plugin-Community"
     },
     "providers": {
       "description": "Entdecke führende Modellanbieter wie OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
-      "title": "Anbieter von KI-Modellen"
+      "title": "Modellanbieter-Community"
     },
     "search": "Suche",
     "title": "Entdecken"
@@ -38,7 +38,7 @@
   },
   "plugins": {
     "description": "Suche, Diagrammerstellung, akademisch, Bilderzeugung, Videoerzeugung, Spracherzeugung, automatisierte Workflows, passe die ToolCall-Plugin-Funktionen von ChatGPT / Claude an",
-    "title": "Plugin-Markt"
+    "title": "Plugin-Community"
   },
   "welcome": {
     "description": "{{appName}} bietet dir das beste Erlebnis mit ChatGPT, Claude, Gemini und OLLaMA WebUI",

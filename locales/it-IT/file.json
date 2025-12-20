@@ -1,8 +1,7 @@
 {
   "addFolder": "Crea cartella",
-  "addKnowledge": "Aggiungi conoscenza",
+  "addLibrary": "Aggiungi",
   "addPage": "Crea documento",
-  "desc": "Gestisci le tue conoscenze su lavoro, studio e vita.",
   "detail": {
     "basic": {
       "createdAt": "Data di creazione",
@@ -24,7 +23,96 @@
       "embeddingStatus": "Vettorizzazione"
     }
   },
-  "documentEditor": {
+  "empty": "Nessun file/cartella caricato",
+  "header": {
+    "actions": {
+      "builtInBlockList": {
+        "filtered": "{{ignored}} file filtrati (su un totale di {{total}})"
+      },
+      "connect": "Connessione in corso...",
+      "gitignore": {
+        "apply": "Applica regole",
+        "cancel": "Ignora regole",
+        "content": "È stato rilevato un file .gitignore ({{count}} file in totale). Applicare le regole di esclusione?",
+        "filtered": "{{ignored}} file filtrati (su un totale di {{total}})",
+        "title": "File .gitignore rilevato"
+      },
+      "newFolder": "Nuova cartella",
+      "newPage": "Nuovo documento",
+      "notion": {
+        "error": "Importazione del file Notion non riuscita",
+        "foundFiles": "Trovati {{count}} file",
+        "importing": "Importazione dei file Notion in corso...",
+        "noMarkdownFiles": "Nessun file Markdown trovato nel file ZIP",
+        "partial": "Importati con successo {{success}} file, {{failed}} non riusciti",
+        "success": "Importati con successo {{count}} file"
+      },
+      "notionGuide": {
+        "cancel": "Annulla importazione",
+        "desc": "Esporta prima in Markdown (ZIP) da Notion, poi clicca su Continua per selezionare il file ZIP e importare tutte le pagine.",
+        "ok": "Seleziona ZIP di Notion",
+        "title": "Importa contenuti da Notion"
+      },
+      "uploadFile": "Carica file",
+      "uploadFolder": "Carica cartella"
+    },
+    "newPageButton": "Nuovo Documento",
+    "uploadButton": "Carica"
+  },
+  "home": {
+    "getStarted": "Inizia subito",
+    "greeting": "Inizia",
+    "quickActions": "Azioni rapide",
+    "recentFiles": "File recenti",
+    "recentPages": "Documenti recenti",
+    "subtitle": "Benvenuto nel Centro Risorse, inizia da qui a gestire i tuoi documenti e file",
+    "uploadEntries": {
+      "files": {
+        "title": "Carica file"
+      },
+      "folder": {
+        "title": "Carica cartella"
+      },
+      "library": {
+        "title": "Crea nuova libreria"
+      },
+      "newPage": {
+        "title": "Nuovo Documento"
+      }
+    }
+  },
+  "library": {
+    "list": {
+      "confirmRemoveLibrary": "Stai per eliminare questa libreria. I file al suo interno non verranno eliminati, ma spostati in 'Tutti i file'. Una volta eliminata, la libreria non potrà essere recuperata. Procedi con cautela.",
+      "empty": "Fai clic su <1>+</1> per iniziare a creare una libreria"
+    },
+    "new": "Nuova libreria",
+    "title": "Librerie"
+  },
+  "menu": {
+    "allFiles": "Tutti i file",
+    "allPages": "Tutti i documenti"
+  },
+  "networkError": "Impossibile recuperare le librerie. Controlla la connessione di rete e riprova.",
+  "notSupportGuide": {
+    "desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Supporta i formati di file più comuni, inclusi Word, PPT, Excel, PDF, TXT e altri formati di documenti, così come file di codice comuni come JS e Python",
+        "title": "Analisi di vari tipi di file"
+      },
+      "embeddings": {
+        "desc": "Utilizza modelli vettoriali ad alte prestazioni per vettorizzare i blocchi di testo, consentendo la ricerca semantica del contenuto dei file",
+        "title": "Semantizzazione vettoriale"
+      },
+      "libraries": {
+        "desc": "Supporta la creazione di librerie e l'aggiunta di diversi tipi di file per costruire le tue risorse tematiche",
+        "title": "Librerie"
+      }
+    },
+    "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
+  },
+  "pageEditor": {
     "addIcon": "Aggiungi icona",
     "autoSaveMessage": "Il documento viene salvato automaticamente, non è necessario salvarlo manualmente",
     "chooseIcon": "Scegli icona",
@@ -53,90 +141,19 @@
     "titlePlaceholder": "Senza titolo",
     "wordCount": "{{wordCount}} parole"
   },
-  "documentList": {
+  "pageList": {
     "copyContent": "Copia tutto il contenuto",
     "duplicate": "Crea una copia",
-    "empty": "Nessun documento disponibile, clicca sul pulsante in alto per creare il tuo primo documento",
+    "empty": "Nessun documento presente. Clicca sul pulsante in alto per creare il tuo primo documento",
+    "filter": {
+      "all": "Tutti",
+      "onlyInPages": "Solo nei documenti"
+    },
     "noResults": "Nessun documento corrispondente trovato",
     "pageCount": "Totale {{count}} documenti",
     "selectNote": "Seleziona un documento per iniziare a modificare",
+    "title": "Documenti",
     "untitled": "Senza titolo"
-  },
-  "empty": "Nessun file/cartella caricato",
-  "header": {
-    "actions": {
-      "newFolder": "Nuova cartella",
-      "newPage": "Nuovo documento",
-      "uploadFile": "Carica file",
-      "uploadFolder": "Carica cartella"
-    },
-    "newNoteDialog": {
-      "cancel": "Annulla",
-      "editTitle": "Modifica documento",
-      "emptyContent": "Il contenuto del documento non può essere vuoto",
-      "loadError": "Caricamento del documento non riuscito, riprova",
-      "loading": "Caricamento in corso...",
-      "save": "Salva",
-      "saveError": "Salvataggio del documento non riuscito, riprova",
-      "saveSuccess": "Documento salvato con successo",
-      "title": "Nuovo documento",
-      "updateSuccess": "Documento aggiornato con successo"
-    },
-    "newPageButton": "Nuovo Documento",
-    "uploadButton": "Carica"
-  },
-  "home": {
-    "getStarted": "Inizia subito",
-    "greeting": "Inizia",
-    "quickActions": "Azioni rapide",
-    "recentFiles": "File recenti",
-    "recentPages": "Documenti recenti",
-    "subtitle": "Benvenuto nel tuo archivio di conoscenza, inizia a gestire i tuoi documenti da qui",
-    "uploadEntries": {
-      "files": {
-        "title": "Carica file"
-      },
-      "folder": {
-        "title": "Carica cartella"
-      },
-      "knowledgeBase": {
-        "title": "Crea nuova base di conoscenza"
-      },
-      "newPage": {
-        "title": "Nuovo Documento"
-      }
-    }
-  },
-  "knowledgeBase": {
-    "list": {
-      "confirmRemoveKnowledgeBase": "Stai per eliminare questa knowledge base. I file al suo interno non verranno eliminati, ma spostati in 'Tutti i file'. Una volta eliminata, la knowledge base non potrà essere recuperata, procedi con cautela.",
-      "empty": "Clicca <1>+</1> per iniziare a creare una knowledge base"
-    },
-    "new": "Nuova knowledge base",
-    "title": "Knowledge Base"
-  },
-  "menu": {
-    "allFiles": "Tutti i file",
-    "allPages": "Tutti i documenti"
-  },
-  "networkError": "Impossibile ottenere la knowledge base, controlla la connessione di rete e riprova",
-  "notSupportGuide": {
-    "desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Supporta i formati di file più comuni, inclusi Word, PPT, Excel, PDF, TXT e altri formati di documenti, così come file di codice comuni come JS e Python",
-        "title": "Analisi di vari tipi di file"
-      },
-      "embeddings": {
-        "desc": "Utilizza modelli vettoriali ad alte prestazioni per vettorizzare i blocchi di testo, consentendo la ricerca semantica del contenuto dei file",
-        "title": "Semantizzazione vettoriale"
-      },
-      "repos": {
-        "desc": "Supporta la creazione di knowledge base e consente di aggiungere diversi tipi di file, costruendo la tua conoscenza di settore",
-        "title": "Knowledge Base"
-      }
-    },
-    "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
   },
   "preview": {
     "downloadFile": "Scarica file",
@@ -155,7 +172,7 @@
     "videos": "Video",
     "websites": "Siti web"
   },
-  "title": "Archivio di Conoscenza",
+  "title": "Risorse",
   "toggleLeftPanel": "Mostra/Nascondi pannello sinistro",
   "uploadDock": {
     "body": {

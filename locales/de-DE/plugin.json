@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Verfügbare Modelle abrufen",
+        "getAvailableTools": "Verfügbare Werkzeuge abrufen",
+        "getConfig": "Konfiguration abrufen",
+        "getMeta": "Metadaten abrufen",
+        "getPrompt": "System-Prompt abrufen",
+        "searchMarketTools": "Plugin-Marktplatz durchsuchen",
+        "searchOfficialTools": "Offizielle Werkzeuge durchsuchen",
+        "setModel": "Modell festlegen",
+        "setOpeningMessage": "Begrüßungsnachricht festlegen",
+        "setOpeningQuestions": "Einstiegsfragen festlegen",
+        "togglePlugin": "Plugin umschalten",
+        "updateChatConfig": "Chat-Konfiguration aktualisieren",
+        "updateConfig": "Konfiguration aktualisieren",
+        "updateMeta": "Metadaten aktualisieren",
+        "updatePrompt": "System-Prompt aktualisieren"
+      },
+      "title": "Agenten-Builder"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Verfügbare Modelle abrufen",
+        "installPlugin": "Plugin installieren",
+        "inviteAgent": "Mitglied einladen",
+        "removeAgent": "Mitglied entfernen",
+        "searchMarketTools": "Plugin-Marktplatz durchsuchen",
+        "updateAgentConfig": "Agentenkonfiguration aktualisieren",
+        "updatePrompt": "Systemaufforderung aktualisieren"
+      },
+      "title": "Gruppen-Agenten-Builder"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "An alle sprechen",
+        "createAgent": "Teammitglied hinzufügen",
+        "createWorkflow": "Arbeitsablauf planen",
+        "executeTask": "Aufgabe ausführen",
+        "getAgentInfo": "Mitgliedsinformationen abrufen",
+        "interrupt": "Aufgabe unterbrechen",
+        "inviteAgent": "Mitglied einladen",
+        "removeAgent": "Mitglied entfernen",
+        "searchAgent": "Relevante Experten finden",
+        "speak": "Mitglied zum Sprechen auffordern",
+        "summarize": "Gespräch zusammenfassen",
+        "vote": "Abstimmung starten"
+      },
+      "title": "Team koordinieren"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Aufgaben löschen",
+        "completeTodos": "Aufgaben abschließen",
+        "createPlan": "Plan erstellen",
+        "createTodos": "Aufgaben erstellen",
+        "removeTodos": "Aufgaben entfernen",
+        "updatePlan": "Plan aktualisieren",
+        "updateTodos": "Aufgaben aktualisieren"
+      },
+      "title": "GTD-Tool"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Wissensdatenbank lesen",
@@ -23,6 +84,41 @@
         "writeLocalFile": "In Datei schreiben"
       },
       "title": "Lokales System"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Knoten stapelweise aktualisieren",
+        "compareSnapshots": "Schnappschüsse vergleichen",
+        "convertToList": "In Liste umwandeln",
+        "createNode": "Knoten erstellen",
+        "cropImage": "Bild zuschneiden",
+        "deleteNode": "Knoten löschen",
+        "deleteSnapshot": "Schnappschuss löschen",
+        "deleteTableColumn": "Tabellenspalte löschen",
+        "deleteTableRow": "Tabellenzeile löschen",
+        "duplicateNode": "Knoten duplizieren",
+        "editTitle": "Dokumenttitel bearbeiten",
+        "indentListItem": "Listenelement einrücken",
+        "initPage": "Dokument initialisieren",
+        "insertTableColumn": "Tabellenspalte einfügen",
+        "insertTableRow": "Tabellenzeile einfügen",
+        "listSnapshots": "Schnappschüsse auflisten",
+        "mergeNodes": "Knoten zusammenführen",
+        "moveNode": "Knoten verschieben",
+        "outdentListItem": "Einrückung des Listenelements entfernen",
+        "replaceText": "Text ersetzen",
+        "resizeImage": "Bildgröße ändern",
+        "restoreSnapshot": "Schnappschuss wiederherstellen",
+        "rotateImage": "Bild drehen",
+        "saveSnapshot": "Schnappschuss speichern",
+        "setImageAlt": "Alternativtext für Bild festlegen",
+        "splitNode": "Knoten aufteilen",
+        "toggleListType": "Listentyp umschalten",
+        "unwrapNode": "Knoten entpacken",
+        "updateNode": "Knoten aktualisieren",
+        "wrapNodes": "Knoten umschließen"
+      },
+      "title": "Dokument"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Aktualisieren",
     "updateSuccess": "Plugin-Einstellungen erfolgreich aktualisiert"
   },
+  "empty": {
+    "description": "Der Plugin-Store bietet eine Vielzahl von Tools, die darauf warten, entdeckt zu werden. Besuchen Sie den Store, um loszulegen.",
+    "search": "Keine passenden Plugins gefunden",
+    "title": "Keine Plugins verfügbar"
+  },
   "error": {
     "fetchError": "Abruf des Manifest-Links fehlgeschlagen. Bitte überprüfen Sie die Gültigkeit des Links und ob CORS-Zugriff erlaubt ist.",
     "installError": "Installation des Plugins {{name}} fehlgeschlagen",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Plugin wird aufgerufen...",
     "plugin": "Plugin läuft..."
+  },
+  "mcpEmpty": {
+    "deployment": "Keine Bereitstellungsoptionen verfügbar",
+    "prompts": "Dieses Plugin enthält keine Eingabeaufforderungen",
+    "resources": "Dieses Plugin enthält keine Ressourcen",
+    "tools": "Dieses Plugin bietet keine Tool-Funktionen"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Installationsumgebung wird geprüft...",
@@ -338,6 +445,8 @@
       "installed": "Installiert"
     },
     "config": {
+      "addEnv": "Umgebungsvariable hinzufügen",
+      "addHeaders": "Anfrage-Header hinzufügen",
       "args": "Parameter",
       "command": "Befehl",
       "env": "Umgebungsvariablen",
@@ -358,12 +467,15 @@
       },
       "title": "Benutzerdefiniertes Plugin installieren"
     },
+    "install": {
+      "title": "Installationsinformationen"
+    },
     "marketplace": {
       "title": "Drittanbieter-Plugins installieren",
       "trustedBy": "Bereitgestellt von {{name}}",
       "unverified": {
         "title": "Unverifiziertes Drittanbieter-Plugin",
-        "warning": "Dieses Plugin stammt aus einem unverifizierten Drittanbieter-Markt. Bitte stellen Sie vor der Installation sicher, dass Sie der Quelle vertrauen."
+        "warning": "Dieses Plugin stammt aus einer nicht verifizierten Drittanbieter-Community. Bitte stellen Sie vor der Installation sicher, dass Sie dieser Quelle vertrauen."
       },
       "verified": "Verifiziert"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Diese Konfigurationen werden als Umgebungsvariablen beim Start des MCP-Servers an den Prozess übergeben",
     "httpTypeNotice": "HTTP-Typ MCP-Plugins benötigen derzeit keine Umgebungsvariablen-Konfiguration",
     "indexUrl": {
-      "title": "Marktindex",
+      "title": "Community-Index",
       "tooltip": "Online-Bearbeitung wird derzeit nicht unterstützt, bitte konfigurieren Sie über Umgebungsvariablen bei der Bereitstellung"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Umgebungsvariablen konnten nicht gespeichert werden",
       "envUpdateSuccess": "Umgebungsvariablen erfolgreich gespeichert"
     },
-    "modalDesc": "Nach Konfiguration der Plugin-Marktplatz-Adresse können benutzerdefinierte Plugin-Marktplätze verwendet werden",
+    "modalDesc": "Nachdem Sie die Adresse der Plugin-Community konfiguriert haben, können Sie eine benutzerdefinierte Plugin-Community verwenden.",
     "rules": {
       "argsRequired": "Bitte Startparameter eingeben",
       "commandRequired": "Bitte Startbefehl eingeben",
       "urlRequired": "Bitte Serveradresse eingeben"
     },
     "saveSettings": "Einstellungen speichern",
-    "title": "Plugin-Marktplatz konfigurieren"
+    "title": "Plugin-Community einstellen"
   },
   "showInPortal": "Bitte Details im Arbeitsbereich ansehen",
   "store": {

@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Annuler",
-    "confirm": "Autoriser l'utilisation",
-    "description": {
-      "and": "et",
-      "prefix": "En cliquant sur « Autoriser l'utilisation », vous acceptez",
-      "privacy": "la Politique de confidentialité",
-      "terms": "les Conditions d'utilisation"
+    "confirm": "Créer votre profil",
+    "description": "Votre profil communautaire est distinct de votre compte utilisateur {{appName}}.",
+    "footer": {
+      "agreement": "En continuant, vous confirmez avoir lu et accepté les <terms>Conditions générales</terms> et la <privacy>Politique de confidentialité</privacy>",
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions générales"
     },
-    "title": "Confirmer l'autorisation"
+    "subtitle": "Créez un profil communautaire pour soumettre et gérer les informations publiées dans la communauté.",
+    "title": "Créer un profil communautaire"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "Autorisation réussie ! Vous pouvez maintenant publier un assistant.",
       "upload": "Autorisation réussie ! Vous pouvez maintenant publier une nouvelle version."
     }
+  },
+  "profileSetup": {
+    "cancel": "Annuler",
+    "descriptionEdit": "Mettez à jour les informations de votre profil communautaire.",
+    "descriptionFirstTime": "Configurez votre profil pour compléter la création de votre compte communautaire.",
+    "errors": {
+      "fileTooLarge": "La taille du fichier ne doit pas dépasser 2 Mo",
+      "notAuthenticated": "Veuillez vous connecter avant de continuer.",
+      "updateFailed": "Échec de la mise à jour du profil. Veuillez réessayer.",
+      "uploadFailed": "Échec du téléversement, veuillez réessayer",
+      "usernameTaken": "Cet identifiant est déjà utilisé. Veuillez en choisir un autre."
+    },
+    "fields": {
+      "avatar": {
+        "label": "Photo de profil"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Cliquez pour téléverser une bannière",
+        "label": "Bannière",
+        "remove": "Supprimer la bannière",
+        "tooltip": "La bannière s'affichera en haut de votre profil (format recommandé : 16:9)",
+        "uploading": "Téléversement en cours..."
+      },
+      "description": {
+        "label": "Présentation",
+        "maxLength": "La présentation ne peut pas dépasser 200 caractères.",
+        "placeholder": "Parlez un peu de vous..."
+      },
+      "displayName": {
+        "label": "Surnom",
+        "maxLength": "Le surnom ne peut pas dépasser 50 caractères.",
+        "placeholder": "Entrez votre surnom",
+        "required": "Veuillez entrer un surnom."
+      },
+      "github": {
+        "placeholder": "Nom d'utilisateur GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nom d'utilisateur X (Twitter)"
+      },
+      "userName": {
+        "label": "Identifiant",
+        "maxLength": "L’identifiant ne peut pas dépasser 32 caractères.",
+        "minLength": "L’identifiant doit comporter au moins 3 caractères.",
+        "pattern": "L’identifiant ne peut contenir que des lettres, des chiffres, des tirets bas et des tirets.",
+        "placeholder": "Entrez votre identifiant",
+        "required": "Veuillez entrer un identifiant.",
+        "tooltip": "L’identifiant est votre identifiant unique et sera utilisé dans le lien vers votre profil."
+      },
+      "website": {
+        "invalidUrl": "Veuillez entrer une URL valide",
+        "placeholder": "Lien vers votre site personnel"
+      }
+    },
+    "getStarted": "Commencer",
+    "save": "Enregistrer",
+    "socialLinks": {
+      "title": "Liens sociaux"
+    },
+    "success": "Profil mis à jour avec succès",
+    "titleEdit": "Modifier le profil",
+    "titleFirstTime": "Complétez votre profil"
   }
 }

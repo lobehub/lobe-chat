@@ -1,0 +1,100 @@
+{
+  "back": "Wstecz",
+  "finish": "Rozpocznij",
+  "interests": {
+    "area": {
+      "business": "Biznes i strategia",
+      "coding": "Programowanie i rozwój",
+      "design": "Projektowanie i kreatywność",
+      "education": "Nauka i badania",
+      "marketing": "Marketing i promocja",
+      "other": "Inne dziedziny",
+      "product": "Produkt i zarządzanie",
+      "sales": "Sprzedaż i obsługa klienta",
+      "writing": "Tworzenie treści"
+    },
+    "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
+    "placeholder": "Wpisz dziedzinę, która Cię interesuje...",
+    "title": "Czy możesz powiedzieć mi, co Cię interesuje?",
+    "title2": "Pomóż mi zbudować pierwsze wrażenie o Tobie~",
+    "title3": "Spokojnie, z czasem lepiej Cię poznam"
+  },
+  "modeSelection": {
+    "desc": "Wybierz tryb pracy, który najlepiej Ci odpowiada",
+    "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
+    "lite": {
+      "desc": "Idealny do codziennych rozmów, prostych zadań i poznawania możliwości AI",
+      "subtitle": "Lekki, przejrzysty i efektywny. Współpracuj z jednym wszechstronnym asystentem i łatwo przełączaj się między popularnymi modelami, by zachować świeżość umysłu.",
+      "title": "Lite – Lekki"
+    },
+    "pro": {
+      "desc": "Dla tych, którzy potrzebują zaawansowanych przepływów pracy, głębokiej współpracy i personalizacji",
+      "subtitle": "Profesjonalny tryb produktywności. Praca jak jednoosobowa firma, współpraca z wieloma asystentami, głęboka personalizacja modeli i przepływów pracy – stwórz własne centrum dowodzenia.",
+      "title": "Pro – Profesjonalny"
+    },
+    "title": "Jaki tryb pracy preferujesz?",
+    "title2": "Lekki czy Profesjonalny – wybór należy do Ciebie!",
+    "title3": "Powiedz mi, a dostosuję wszystko specjalnie dla Ciebie～"
+  },
+  "next": "Dalej",
+  "proSettings": {
+    "connectors": {
+      "title": "Połącz swoje ulubione narzędzia"
+    },
+    "devMode": {
+      "title": "Tryb deweloperski"
+    },
+    "model": {
+      "title": "Domyślny model używany przez Agenta"
+    },
+    "title": "Możesz wcześniej skonfigurować zaawansowane opcje",
+    "title2": "Spróbuj połączyć kilka popularnych narzędzi～",
+    "title3": "Przygotujmy się do efektywnej pracy!"
+  },
+  "responseLanguage": {
+    "auto": "Automatycznie (zgodnie z językiem systemu)",
+    "desc": "Wybierz język, w którym AI będzie odpowiadać",
+    "hint": "Po wybraniu języka, AI będzie go używać w odpowiedziach, a interfejs również zostanie dostosowany",
+    "title": "W jakim języku będziemy rozmawiać?",
+    "title2": "Zacznijmy od języka, by naprawdę się zrozumieć.",
+    "title3": "Pozwól mi mówić jasno i rozumieć Cię lepiej～"
+  },
+  "telemetry": {
+    "agreement": "Wszystkie zbierane dane są anonimowe i służą wyłącznie poprawie jakości produktu. Korzystając z aplikacji, potwierdzasz, że rozumiesz i akceptujesz <terms>Warunki korzystania</terms> oraz <privacy>Politykę prywatności</privacy>.",
+    "desc": "Jestem Twoim asystentem AI – zawsze gotowym do myślenia, tworzenia i zarządzania Twoim zespołem Agentów.",
+    "helpImprove": "Pomóż ulepszyć {{appName}}",
+    "next": "Zaczynajmy",
+    "privacy": "Polityka prywatności",
+    "rows": {
+      "collaborate": {
+        "desc": "Tutaj ludzie, Agenci i inne AI współpracują, uczą się i rozwijają razem – produktywność płynie naturalnie.",
+        "title": "Współpraca · Razem z inteligencją"
+      },
+      "create": {
+        "desc": "Pomyśl i działaj. Wystarczy impuls, a Agent się narodzi.",
+        "title": "Tworzenie · Inspiracja staje się rzeczywistością"
+      },
+      "evolve": {
+        "desc": "Każda interakcja sprawia, że lepiej Cię rozumiem – nie tylko odpowiadam, ale i pojmuję.",
+        "title": "Ewolucja · Im więcej używasz, tym lepiej Cię znam"
+      },
+      "privacy": {
+        "desc": "Używamy zanonimizowanych danych, by stale ulepszać doświadczenie z {{appName}}. Oczywiście możesz to zmienić w ustawieniach prywatności w każdej chwili.",
+        "title": "Razem sprawmy, by {{appName}} był jeszcze lepszy"
+      }
+    },
+    "terms": "Warunki korzystania",
+    "title": "Hej, cześć! Jestem {{name}}",
+    "title2": "Miło Cię poznać～",
+    "title3": "Loooobe! Zaczynajmy!"
+  },
+  "title": "Witamy w {{appName}}",
+  "username": {
+    "desc": "Powiedz nam, jak mamy się do Ciebie zwracać",
+    "hint": "Możesz to zmienić w ustawieniach w dowolnym momencie",
+    "placeholder": "Wpisz swoje imię lub pseudonim...",
+    "title": "A tak przy okazji – jak mam się do Ciebie zwracać?",
+    "title2": "Poznajmy się najpierw!",
+    "title3": "Dzięki temu nasze rozmowy będą bardziej osobiste～"
+  }
+}

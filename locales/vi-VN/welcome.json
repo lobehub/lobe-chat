@@ -1,73 +1,73 @@
 {
   "guide": {
     "agents": {
-      "replaceBtn": "Thay đổi",
-      "title": "Đề xuất trợ lý mới: "
+      "replaceBtn": "Đổi nhóm khác",
+      "title": "Gợi ý trợ lý mới:"
     },
-    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}. Xin hỏi tôi có thể giúp gì cho bạn ngay bây giờ?<br />Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấp vào <plus /> để tạo trợ lý tùy chỉnh.",
-    "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}. Xin hỏi tôi có thể giúp gì cho bạn ngay bây giờ?",
+    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn hôm nay?<br />Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn vào <plus /> để tạo trợ lý riêng của bạn",
+    "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}, tôi có thể giúp gì cho bạn hôm nay?",
     "groupActivities": {
       "analysis": {
         "codeReview": {
-          "description": "Thảo luận kỹ thuật và đánh giá đồng nghiệp về các thay đổi và triển khai mã nguồn",
+          "description": "Thảo luận kỹ thuật và đánh giá ngang hàng về thay đổi và triển khai mã nguồn",
           "emoji": "💻",
-          "prompt": "Hãy cùng nhau xem xét một số mã nguồn. Bạn có thể giúp chúng tôi phân tích mã này và nhận diện các điểm cần cải thiện không?",
+          "prompt": "Hãy cùng nhau xem xét một số đoạn mã. Bạn có thể giúp chúng tôi phân tích và xác định những điểm cần cải thiện không?",
           "title": "Đánh giá mã nguồn"
         },
         "investment": {
-          "description": "Phân tích thị trường, thảo luận chiến lược đầu tư và chia sẻ những hiểu biết về tài chính",
+          "description": "Phân tích thị trường, thảo luận chiến lược đầu tư và chia sẻ hiểu biết tài chính",
           "emoji": "📈",
-          "prompt": "Hãy cùng phân tích thị trường. Bạn có thể giúp chúng tôi thảo luận chiến lược đầu tư và chia sẻ những hiểu biết về tài chính không?",
+          "prompt": "Hãy cùng nhau phân tích thị trường. Bạn có thể giúp chúng tôi thảo luận chiến lược đầu tư và chia sẻ những hiểu biết tài chính không?",
           "title": "Câu lạc bộ đầu tư"
         },
         "research": {
-          "description": "Khám phá các khái niệm khoa học, tiến hành thí nghiệm và chia sẻ phát hiện",
+          "description": "Khám phá các khái niệm khoa học, thực hiện thí nghiệm và chia sẻ phát hiện",
           "emoji": "🔬",
-          "prompt": "Hãy cùng khám phá khoa học! Bạn có thể giúp chúng tôi tiến hành thí nghiệm và chia sẻ những phát hiện không?",
+          "prompt": "Hãy cùng nhau khám phá khoa học! Bạn có thể giúp chúng tôi thực hiện thí nghiệm và chia sẻ những phát hiện không?",
           "title": "Triển lãm khoa học"
         },
         "study": {
-          "description": "Cuộc họp học tập hợp tác, thảo luận các khái niệm và cùng nhau giải quyết vấn đề",
+          "description": "Buổi học nhóm hợp tác, thảo luận khái niệm và cùng nhau giải quyết vấn đề",
           "emoji": "📚",
-          "prompt": "Hãy thành lập một nhóm học tập. Bạn có thể giúp chúng tôi hiểu các khái niệm này và cùng nhau giải quyết vấn đề không?",
+          "prompt": "Hãy lập một nhóm học tập. Bạn có thể giúp chúng tôi hiểu các khái niệm và cùng nhau giải quyết vấn đề không?",
           "title": "Nhóm học tập"
         }
       },
       "brainstorm": {
         "artWorkshop": {
-          "description": "Sáng tạo, bình luận và thưởng thức các hình thức nghệ thuật thị giác và kỹ thuật số",
+          "description": "Sáng tạo, nhận xét và thưởng thức các hình thức nghệ thuật thị giác và kỹ thuật số",
           "emoji": "🖼️",
-          "prompt": "Hãy tổ chức một workshop nghệ thuật! Bạn có thể giúp chúng tôi sáng tạo, bình luận và thưởng thức các hình thức nghệ thuật không?",
-          "title": "Workshop nghệ thuật"
+          "prompt": "Hãy tổ chức một xưởng nghệ thuật! Bạn có thể giúp chúng tôi sáng tạo, nhận xét và thưởng thức các loại hình nghệ thuật không?",
+          "title": "Xưởng nghệ thuật"
         },
         "debate": {
-          "description": "Thảo luận và tranh luận có cấu trúc về nhiều chủ đề và sự kiện thời sự",
+          "description": "Thảo luận và tranh luận có cấu trúc về các chủ đề và thời sự",
           "emoji": "⚖️",
-          "prompt": "Hãy tổ chức một cuộc tranh luận có cấu trúc. Bạn có thể giúp chúng tôi tổ chức một cuộc thảo luận có lý lẽ về chủ đề này không?",
+          "prompt": "Hãy tổ chức một cuộc tranh luận có cấu trúc. Bạn có thể giúp chúng tôi tổ chức một cuộc thảo luận hợp lý về chủ đề này không?",
           "title": "Câu lạc bộ tranh luận"
         },
         "designReview": {
-          "description": "Cuộc họp phản hồi hợp tác về các khái niệm thiết kế, nguyên mẫu hoặc tác phẩm sáng tạo",
+          "description": "Buổi phản hồi hợp tác về ý tưởng thiết kế, nguyên mẫu hoặc tác phẩm sáng tạo",
           "emoji": "🎨",
-          "prompt": "Chúng tôi cần xem xét một số tác phẩm thiết kế. Bạn có thể giúp chúng tôi cung cấp phản hồi mang tính xây dựng về các khái niệm và nguyên mẫu thiết kế không?",
+          "prompt": "Chúng tôi cần xem xét một số thiết kế. Bạn có thể giúp chúng tôi đưa ra phản hồi mang tính xây dựng về ý tưởng và nguyên mẫu thiết kế không?",
           "title": "Đánh giá thiết kế"
         },
         "ideation": {
-          "description": "Sáng tạo ý tưởng hợp tác đa chiều và giải quyết vấn đề sáng tạo",
+          "description": "Tạo ý tưởng sáng tạo và giải quyết vấn đề từ nhiều góc nhìn",
           "emoji": "🧠",
-          "prompt": "Hãy bắt đầu phiên động não cho dự án. Bạn có thể giúp chúng tôi tạo ra ý tưởng và giải pháp sáng tạo không?",
+          "prompt": "Hãy bắt đầu buổi động não cho dự án. Bạn có thể giúp chúng tôi đưa ra ý tưởng và giải pháp sáng tạo không?",
           "title": "Động não"
         }
       },
       "game": {
         "debateClub": {
-          "description": "Thảo luận và tranh luận có cấu trúc về nhiều chủ đề và sự kiện thời sự",
+          "description": "Thảo luận và tranh luận có cấu trúc về các chủ đề và thời sự",
           "emoji": "⚖️",
-          "prompt": "Hãy tổ chức một cuộc tranh luận có cấu trúc. Bạn có thể giúp chúng tôi tổ chức một cuộc thảo luận có lý lẽ về chủ đề này không?",
+          "prompt": "Hãy tổ chức một cuộc tranh luận có cấu trúc. Bạn có thể giúp chúng tôi tổ chức một cuộc thảo luận hợp lý về chủ đề này không?",
           "title": "Câu lạc bộ tranh luận"
         },
         "gameNight": {
-          "description": "Trò chơi tương tác vui nhộn và hoạt động xây dựng tinh thần đồng đội",
+          "description": "Trò chơi tương tác vui nhộn để xây dựng tinh thần đồng đội và tận hưởng niềm vui",
           "emoji": "🎲",
           "prompt": "Đêm trò chơi bắt đầu rồi! Bạn có thể giúp chúng tôi tổ chức một số trò chơi tương tác vui nhộn để xây dựng tinh thần đồng đội không?",
           "title": "Đêm trò chơi"
@@ -81,33 +81,33 @@
         "werewolf": {
           "description": "Trò chơi suy luận xã hội nơi người chơi tìm ra người sói thông qua chiến lược và thảo luận",
           "emoji": "🐺",
-          "prompt": "Hãy chơi trò chơi Ma Sói! Bạn có thể giúp chúng tôi thiết lập luật chơi và điều hành trò chơi suy luận xã hội này không?",
-          "title": "Trò chơi Ma Sói"
+          "prompt": "Hãy chơi trò Ma Sói! Bạn có thể giúp chúng tôi thiết lập luật chơi và điều hành trò chơi suy luận xã hội này không?",
+          "title": "Ma Sói"
         }
       },
       "general": {
         "brainstorm": {
-          "description": "Sáng tạo ý tưởng hợp tác đa chiều và giải quyết vấn đề sáng tạo",
+          "description": "Tạo ý tưởng sáng tạo và giải quyết vấn đề từ nhiều góc nhìn",
           "emoji": "🧠",
-          "prompt": "Hãy bắt đầu phiên động não cho dự án. Bạn có thể giúp chúng tôi tạo ra ý tưởng và giải pháp sáng tạo không?",
+          "prompt": "Hãy bắt đầu buổi động não cho dự án. Bạn có thể giúp chúng tôi đưa ra ý tưởng và giải pháp sáng tạo không?",
           "title": "Động não"
         },
         "debate": {
-          "description": "Thảo luận và tranh luận có cấu trúc về nhiều chủ đề và sự kiện thời sự",
+          "description": "Thảo luận và tranh luận có cấu trúc về các chủ đề và thời sự",
           "emoji": "⚖️",
-          "prompt": "Hãy tổ chức một cuộc tranh luận có cấu trúc. Bạn có thể giúp chúng tôi tổ chức một cuộc thảo luận có lý lẽ về chủ đề này không?",
+          "prompt": "Hãy tổ chức một cuộc tranh luận có cấu trúc. Bạn có thể giúp chúng tôi tổ chức một cuộc thảo luận hợp lý về chủ đề này không?",
           "title": "Câu lạc bộ tranh luận"
         },
         "languagePractice": {
-          "description": "Luyện nói và học ngôn ngữ mới cùng người bản ngữ",
+          "description": "Luyện nói và học ngôn ngữ mới cùng người bản xứ",
           "emoji": "🗣️",
-          "prompt": "Hãy cùng luyện tập ngôn ngữ mới. Bạn có thể giúp chúng tôi học và luyện nói ngôn ngữ này không?",
+          "prompt": "Hãy cùng nhau luyện tập một ngôn ngữ mới. Bạn có thể giúp chúng tôi học và luyện nói ngôn ngữ này không?",
           "title": "Luyện tập ngôn ngữ"
         },
         "studyGroup": {
-          "description": "Cuộc họp học tập hợp tác, thảo luận các khái niệm và cùng nhau giải quyết vấn đề",
+          "description": "Buổi học nhóm hợp tác, thảo luận khái niệm và cùng nhau giải quyết vấn đề",
           "emoji": "📚",
-          "prompt": "Hãy thành lập một nhóm học tập. Bạn có thể giúp chúng tôi hiểu các khái niệm này và cùng nhau giải quyết vấn đề không?",
+          "prompt": "Hãy lập một nhóm học tập. Bạn có thể giúp chúng tôi hiểu các khái niệm và cùng nhau giải quyết vấn đề không?",
           "title": "Nhóm học tập"
         }
       },
@@ -119,47 +119,47 @@
           "title": "Lớp học nấu ăn"
         },
         "fitnessChallenge": {
-          "description": "Đặt mục tiêu thể dục nhóm, chia sẻ phương pháp tập luyện và động viên nhau",
+          "description": "Đặt mục tiêu thể dục nhóm, chia sẻ bài tập và động viên lẫn nhau",
           "emoji": "💪",
           "prompt": "Hãy bắt đầu thử thách thể dục! Bạn có thể giúp chúng tôi đặt mục tiêu và động viên nhau giữ gìn sức khỏe không?",
           "title": "Thử thách thể dục"
         },
         "planningPoker": {
-          "description": "Kỹ thuật ước lượng dự án sử dụng thẻ bài để đánh giá nhiệm vụ và khối lượng công việc theo Agile",
+          "description": "Kỹ thuật ước lượng linh hoạt sử dụng thẻ để đánh giá nhiệm vụ và khối lượng công việc",
           "emoji": "🃏",
-          "prompt": "Chúng tôi đang tiến hành Planning Poker cho dự án. Bạn có thể giúp chúng tôi sử dụng kỹ thuật Agile để ước lượng khối lượng công việc của các nhiệm vụ này không?",
+          "prompt": "Chúng tôi đang chơi Planning Poker cho dự án. Bạn có thể giúp chúng tôi ước lượng khối lượng công việc bằng kỹ thuật linh hoạt không?",
           "title": "Planning Poker"
         },
         "travelPlanning": {
           "description": "Lên kế hoạch du lịch, chia sẻ trải nghiệm và khám phá điểm đến mới",
           "emoji": "✈️",
-          "prompt": "Hãy cùng lên kế hoạch du lịch! Bạn có thể giúp chúng tôi nghiên cứu điểm đến và lên lịch trình chuyến đi không?",
+          "prompt": "Hãy cùng nhau lên kế hoạch cho chuyến đi! Bạn có thể giúp chúng tôi nghiên cứu điểm đến và lập lịch trình không?",
           "title": "Lên kế hoạch du lịch"
         }
       },
       "product": {
         "codeReview": {
-          "description": "Thảo luận kỹ thuật và đánh giá đồng nghiệp về các thay đổi và triển khai mã nguồn",
+          "description": "Thảo luận kỹ thuật và đánh giá ngang hàng về thay đổi và triển khai mã nguồn",
           "emoji": "💻",
-          "prompt": "Hãy cùng nhau xem xét một số mã nguồn. Bạn có thể giúp chúng tôi phân tích mã này và nhận diện các điểm cần cải thiện không?",
+          "prompt": "Hãy cùng nhau xem xét một số đoạn mã. Bạn có thể giúp chúng tôi phân tích và xác định những điểm cần cải thiện không?",
           "title": "Đánh giá mã nguồn"
         },
         "designReview": {
-          "description": "Cuộc họp phản hồi hợp tác về các khái niệm thiết kế, nguyên mẫu hoặc tác phẩm sáng tạo",
+          "description": "Buổi phản hồi hợp tác về ý tưởng thiết kế, nguyên mẫu hoặc tác phẩm sáng tạo",
           "emoji": "🎨",
-          "prompt": "Chúng tôi cần xem xét một số tác phẩm thiết kế. Bạn có thể giúp chúng tôi cung cấp phản hồi mang tính xây dựng về các khái niệm và nguyên mẫu thiết kế không?",
+          "prompt": "Chúng tôi cần xem xét một số thiết kế. Bạn có thể giúp chúng tôi đưa ra phản hồi mang tính xây dựng về ý tưởng và nguyên mẫu thiết kế không?",
           "title": "Đánh giá thiết kế"
         },
         "sprintPlanning": {
-          "description": "Kỹ thuật ước lượng dự án sử dụng thẻ bài để đánh giá nhiệm vụ và khối lượng công việc theo Agile",
+          "description": "Kỹ thuật ước lượng linh hoạt sử dụng thẻ để đánh giá nhiệm vụ và khối lượng công việc",
           "emoji": "🃏",
-          "prompt": "Chúng tôi đang tiến hành Planning Poker cho dự án. Bạn có thể giúp chúng tôi sử dụng kỹ thuật Agile để ước lượng khối lượng công việc của các nhiệm vụ này không?",
+          "prompt": "Chúng tôi đang chơi Planning Poker cho dự án. Bạn có thể giúp chúng tôi ước lượng khối lượng công việc bằng kỹ thuật linh hoạt không?",
           "title": "Planning Poker"
         },
         "techExchange": {
           "description": "Thảo luận về công nghệ mới nổi, đổi mới và xu hướng ngành",
           "emoji": "🚀",
-          "prompt": "Hãy cùng trao đổi công nghệ! Bạn có thể giúp chúng tôi thảo luận về công nghệ mới nổi và xu hướng ngành không?",
+          "prompt": "Hãy cùng nhau trao đổi công nghệ! Bạn có thể giúp chúng tôi thảo luận về công nghệ mới và xu hướng ngành không?",
           "title": "Trao đổi công nghệ"
         }
       },
@@ -168,45 +168,45 @@
         "bookClub": {
           "description": "Thảo luận và phân tích văn học về sách, truyện và tác phẩm văn học",
           "emoji": "📖",
-          "prompt": "Hãy bắt đầu thảo luận câu lạc bộ sách. Bạn có thể giúp chúng tôi phân tích cuốn sách này và cùng khám phá các chủ đề không?",
+          "prompt": "Hãy bắt đầu buổi thảo luận câu lạc bộ sách. Bạn có thể giúp chúng tôi phân tích cuốn sách này và cùng nhau khám phá chủ đề của nó không?",
           "title": "Câu lạc bộ sách"
         },
         "movieClub": {
-          "description": "Xem và thảo luận phim, phim tài liệu và phương tiện truyền thông hình ảnh cùng nhau",
+          "description": "Cùng xem và thảo luận về phim, tài liệu và phương tiện thị giác",
           "emoji": "🎬",
-          "prompt": "Hãy bắt đầu thảo luận câu lạc bộ phim. Bạn có thể giúp chúng tôi phân tích bộ phim này và cùng khám phá các chủ đề không?",
+          "prompt": "Hãy bắt đầu buổi thảo luận câu lạc bộ phim. Bạn có thể giúp chúng tôi phân tích bộ phim này và cùng nhau khám phá chủ đề của nó không?",
           "title": "Câu lạc bộ phim"
         },
         "musicSession": {
-          "description": "Phiên hợp tác sáng tác, chia sẻ và thưởng thức âm nhạc",
+          "description": "Buổi sáng tác, chia sẻ và thưởng thức âm nhạc hợp tác",
           "emoji": "🎵",
-          "prompt": "Hãy cùng chơi nhạc ngẫu hứng! Bạn có thể giúp chúng tôi sáng tác và thưởng thức âm nhạc cùng nhau không?",
-          "title": "Nhạc ngẫu hứng"
+          "prompt": "Hãy cùng nhau chơi nhạc! Bạn có thể giúp chúng tôi sáng tác và thưởng thức âm nhạc không?",
+          "title": "Jam nhạc"
         },
         "studyGroup": {
-          "description": "Cuộc họp học tập hợp tác, thảo luận các khái niệm và cùng nhau giải quyết vấn đề",
+          "description": "Buổi học nhóm hợp tác, thảo luận khái niệm và cùng nhau giải quyết vấn đề",
           "emoji": "📚",
-          "prompt": "Hãy thành lập một nhóm học tập. Bạn có thể giúp chúng tôi hiểu các khái niệm này và cùng nhau giải quyết vấn đề không?",
+          "prompt": "Hãy lập một nhóm học tập. Bạn có thể giúp chúng tôi hiểu các khái niệm và cùng nhau giải quyết vấn đề không?",
           "title": "Nhóm học tập"
         }
       }
     },
-    "groupMessage": "Chào mừng đến với chat nhóm! Hợp tác với nhiều trợ lý AI trong không gian hội thoại chung。",
+    "groupMessage": "Chào mừng đến với trò chuyện nhóm! Hợp tác với nhiều trợ lý AI trong một không gian đối thoại chung.",
     "groupTemplates": {
       "analysis": {
-        "description": "Phân tích sâu sắc dựa trên dữ liệu, nghiên cứu chuyên sâu",
+        "description": "Phân tích chuyên sâu dựa trên dữ liệu và nghiên cứu",
         "members": [
           {
             "avatar": "📊",
             "backgroundColor": "#E8F8F5",
             "plugins": ["steam"],
-            "systemRole": "Bạn giỏi xử lý và phân tích dữ liệu, khám phá các quy luật và xu hướng ẩn sau dữ liệu thông qua biểu đồ và phân tích thống kê.",
-            "title": "Nhà phân tích dữ liệu"
+            "systemRole": "Bạn giỏi xử lý và diễn giải dữ liệu, khám phá quy luật và xu hướng thông qua biểu đồ và phân tích thống kê.",
+            "title": "Chuyên gia phân tích dữ liệu"
           },
           {
             "avatar": "🧑‍🔬",
             "backgroundColor": "#E8F5FF",
-            "systemRole": "Bạn là chuyên gia nghiên cứu, chịu trách nhiệm thu thập thông tin và nghiên cứu sâu, có khả năng phân tích vấn đề toàn diện từ nhiều góc độ.",
+            "systemRole": "Bạn là chuyên gia nghiên cứu, chuyên thu thập thông tin và phân tích chuyên sâu từ nhiều góc độ.",
             "title": "Chuyên gia nghiên cứu"
           },
           {
@@ -218,126 +218,131 @@
           {
             "avatar": "🧮",
             "backgroundColor": "#F0F8FF",
-            "systemRole": "Bạn là nhà phân tích định lượng, chuyên xây dựng mô hình định lượng và đánh giá rủi ro, sử dụng phương pháp toán học để giải quyết các vấn đề phức tạp.",
-            "title": "Nhà phân tích định lượng"
+            "systemRole": "Bạn là nhà phân tích định lượng, chuyên xây dựng mô hình và đánh giá rủi ro bằng các phương pháp toán học.",
+            "title": "Chuyên gia phân tích định lượng"
           }
         ],
-        "title": "Đội phân tích"
+        "title": "Nhóm phân tích"
       },
       "brainstorm": {
-        "description": "Tư duy sáng tạo đa chiều, kích thích vô hạn khả năng",
+        "description": "Tư duy sáng tạo đa chiều, khơi nguồn ý tưởng vô hạn",
         "members": [
           {
             "avatar": "🧠",
             "backgroundColor": "#E8F5FF",
-            "systemRole": "Bạn là giám đốc sáng tạo, giỏi kiểm soát hướng đi sáng tạo từ góc nhìn tổng thể, có thể biến ý tưởng trừu tượng thành các kế hoạch sáng tạo cụ thể và khả thi.",
+            "systemRole": "Bạn là giám đốc sáng tạo, giỏi định hướng ý tưởng từ góc nhìn tổng thể và biến khái niệm trừu tượng thành kế hoạch cụ thể.",
             "title": "Giám đốc sáng tạo"
           },
           {
             "avatar": "🧑‍🔬",
             "backgroundColor": "#FFF7E8",
-            "systemRole": "Bạn là chuyên gia đổi mới, chuyên tìm kiếm giải pháp mới mẻ và tư duy đột phá, giỏi thoát khỏi khuôn khổ truyền thống để suy nghĩ vấn đề.",
+            "systemRole": "Bạn là chuyên gia đổi mới, chuyên tìm ra giải pháp mới mẻ và tư duy đột phá, giỏi suy nghĩ vượt khuôn mẫu.",
             "title": "Chuyên gia đổi mới"
           },
           {
             "avatar": "🎨",
             "backgroundColor": "#F6E8FF",
-            "systemRole": "Bạn là chuyên gia tư duy thiết kế, suy nghĩ vấn đề từ góc độ trải nghiệm người dùng và trình bày hình ảnh, chú trọng biểu đạt sáng tạo bằng hình ảnh.",
+            "systemRole": "Bạn là chuyên gia tư duy thiết kế, tiếp cận vấn đề từ trải nghiệm người dùng và trình bày trực quan.",
             "title": "Chuyên gia tư duy thiết kế"
           }
         ],
         "title": "Nhóm động não"
       },
       "game": {
-        "description": "Chơi các trò chơi chữ nhiều người như Ma sói và Ai là gián điệp",
+        "description": "Tham gia các trò chơi chữ nhiều người như Ma Sói và Ai là gián điệp",
         "members": [
-          null,
+          {
+            "avatar": "🧠",
+            "backgroundColor": "#E8F5FF",
+            "systemRole": "Bạn là người dẫn chương trình, giỏi tổ chức các trò chơi chữ nhiều người và hướng dẫn người chơi.",
+            "title": "Người dẫn trò chơi"
+          },
           {
             "avatar": "🧑‍🔬",
             "backgroundColor": "#FFF7E8",
-            "systemRole": "Bạn giỏi tham gia các trò chơi chữ nhiều người và có thể chơi theo luật của trò chơi.",
+            "systemRole": "Bạn giỏi tham gia các trò chơi chữ nhiều người và tuân thủ luật chơi.",
             "title": "Người chơi"
           },
           {
             "avatar": "🎨",
             "backgroundColor": "#F6E8FF",
-            "systemRole": "Bạn giỏi tham gia các trò chơi chữ nhiều người và có thể chơi theo luật của trò chơi.",
+            "systemRole": "Bạn giỏi tham gia các trò chơi chữ nhiều người và tuân thủ luật chơi.",
             "title": "Người chơi"
           },
           {
             "avatar": "🧑‍🎨",
             "backgroundColor": "#F6E8FF",
-            "systemRole": "Bạn giỏi tham gia các trò chơi chữ nhiều người và có thể chơi theo luật của trò chơi.",
+            "systemRole": "Bạn giỏi tham gia các trò chơi chữ nhiều người và tuân thủ luật chơi.",
             "title": "Người chơi"
           }
         ],
         "title": "Phòng trò chơi"
       },
       "planning": {
-        "description": "Lập kế hoạch chiến lược và quản lý dự án, điều phối tổng thể",
+        "description": "Lập kế hoạch chiến lược và quản lý dự án toàn diện",
         "members": [
           {
             "avatar": "📋",
             "backgroundColor": "#E8F5FF",
-            "systemRole": "Bạn chịu trách nhiệm lập kế hoạch tổng thể dự án, kiểm soát tiến độ và điều phối nguồn lực để đảm bảo dự án hoàn thành đúng hạn và chất lượng cao.",
+            "systemRole": "Bạn chịu trách nhiệm lập kế hoạch tổng thể, kiểm soát tiến độ và điều phối tài nguyên để đảm bảo dự án hoàn thành đúng hạn và chất lượng.",
             "title": "Đầu bếp"
           },
           {
             "avatar": "🎯",
             "backgroundColor": "#FFF7E8",
-            "systemRole": "Bạn chịu trách nhiệm xây dựng kế hoạch chiến lược dài hạn, phân tích cơ hội thị trường, đặt mục tiêu và lộ trình thực hiện.",
+            "systemRole": "Bạn chịu trách nhiệm xây dựng chiến lược dài hạn, phân tích cơ hội thị trường và xác định mục tiêu cùng lộ trình thực hiện.",
             "title": "Chuyên gia mua nguyên liệu"
           },
           {
             "avatar": "🧑‍🎨",
             "backgroundColor": "#F0F8FF",
-            "systemRole": "Bạn chịu trách nhiệm xây dựng kế hoạch thực thi chi tiết, phối hợp nguồn lực các phòng ban để đảm bảo tính khả thi của kế hoạch.",
-            "title": "Chuyên gia phát triển ẩm thực"
+            "systemRole": "Bạn chịu trách nhiệm lập kế hoạch thực thi chi tiết, điều phối tài nguyên giữa các bộ phận để đảm bảo tính khả thi.",
+            "title": "Chuyên gia phát triển món ăn"
           }
         ],
-        "title": "Đội phát triển ẩm thực"
+        "title": "Nhóm phát triển ẩm thực"
       },
       "product": {
-        "description": "Thiết kế và phát triển sản phẩm, tạo ra sản phẩm chất lượng cao",
+        "description": "Thiết kế và phát triển sản phẩm chất lượng cao",
         "members": [
           {
             "avatar": "🎨",
             "backgroundColor": "#F6E8FF",
-            "systemRole": "Bạn là nhà thiết kế, giỏi thiết kế các loại sản phẩm, có thể thiết kế theo yêu cầu sản phẩm.",
+            "systemRole": "Bạn là nhà thiết kế, giỏi thiết kế nhiều loại sản phẩm theo yêu cầu.",
             "title": "Nhà thiết kế"
           },
           {
             "avatar": "🧑",
             "backgroundColor": "#E8F5FF",
-            "systemRole": "Bạn là quản lý sản phẩm, chịu trách nhiệm lập kế hoạch, thiết kế, phát triển và bảo trì sản phẩm, đảm bảo chất lượng và trải nghiệm người dùng.",
+            "systemRole": "Bạn là quản lý sản phẩm, chịu trách nhiệm lập kế hoạch, thiết kế, phát triển và duy trì sản phẩm, đảm bảo chất lượng và trải nghiệm người dùng.",
             "title": "Quản lý sản phẩm"
           },
           {
             "avatar": "🧑‍💻",
             "backgroundColor": "#E8F8F5",
-            "systemRole": "Bạn là kỹ sư full-stack giàu kinh nghiệm, giỏi phát triển các loại sản phẩm, có thể phát triển theo yêu cầu sản phẩm.",
+            "systemRole": "Bạn là kỹ sư full-stack giàu kinh nghiệm, giỏi phát triển nhiều loại sản phẩm theo yêu cầu.",
             "title": "Kỹ sư full-stack"
           }
         ],
-        "title": "Đội phát triển sản phẩm"
+        "title": "Nhóm phát triển sản phẩm"
       },
       "writing": {
-        "description": "Sáng tạo và biên tập nội dung, tạo ra bản sao chất lượng cao",
+        "description": "Sáng tạo và biên tập nội dung chất lượng cao",
         "members": [
           {
             "avatar": "✍️",
             "backgroundColor": "#F6E8FF",
-            "systemRole": "Bạn giỏi sáng tác nội dung đa thể loại và có thể điều chỉnh phong cách viết phù hợp với các bối cảnh và đối tượng khác nhau.",
+            "systemRole": "Bạn giỏi sáng tác nhiều thể loại nội dung và có thể điều chỉnh phong cách viết theo ngữ cảnh và đối tượng.",
             "title": "Người viết nội dung"
           },
           {
             "avatar": "🧑‍🎨",
             "backgroundColor": "#E8F8F5",
-            "systemRole": "Bạn là biên tập viên, chịu trách nhiệm hiệu đính, chỉnh sửa và tối ưu văn bản, đảm bảo nội dung chính xác, mạch lạc và chuyên nghiệp.",
+            "systemRole": "Bạn là biên tập viên, chịu trách nhiệm hiệu đính, chỉnh sửa và tối ưu văn bản để đảm bảo độ chính xác, mượt mà và chuyên nghiệp.",
             "title": "Biên tập viên"
           }
         ],
-        "title": "Cộng đồng viết"
+        "title": "Câu lạc bộ viết"
       }
     },
     "questions": {
@@ -347,16 +352,57 @@
     "welcome": {
       "afternoon": "Chào buổi chiều",
       "morning": "Chào buổi sáng",
-      "night": "Chào buổi tối",
+      "night": "Chúc ngủ ngon",
       "noon": "Chào buổi trưa"
     }
   },
-  "header": "Chào Mừng",
-  "pickAgent": "Hoặc chọn từ các mẫu đại lý sau",
-  "skip": "Bỏ Qua Tạo",
+  "header": "Chào mừng bạn",
+  "pickAgent": "Hoặc chọn từ các mẫu trợ lý sau",
+  "skip": "Bỏ qua tạo mới",
   "slogan": {
-    "desc1": "Tiên phong trong kỷ nguyên mới của tư duy và sáng tạo. Được xây dựng cho bạn, Siêu Cá Nhân.",
-    "desc2": "Tạo đại lý đầu tiên và bắt đầu nào~",
-    "title": "Khám phá siêu năng lực của bộ não bạn"
+    "desc1": "Kích hoạt trí tuệ tập thể, khơi nguồn sáng tạo. Trợ lý thông minh của bạn luôn sẵn sàng.",
+    "desc2": "Tạo trợ lý đầu tiên của bạn, bắt đầu ngay thôi~",
+    "title": "Trao cho bạn một bộ não thông minh hơn"
+  },
+  "welcomeMessages": {
+    "1": "Chào mừng trở lại 😊",
+    "10": "Hiệu suất tối đa~",
+    "11": "Sẵn sàng nhận lệnh!",
+    "12": "Xin lỗi đã để bạn đợi lâu～☕",
+    "13": "Hãy hành động thôi ✅",
+    "14": "Mang theo câu hỏi mới đến rồi phải không?",
+    "15": "Hôm nay bạn đã vất vả rồi!",
+    "16": "Đang nạp cảm hứng",
+    "17": "Vào mạng là đầy năng lượng ⚡",
+    "18": "Xuất phát! 🚀",
+    "19": "Tư duy của tôi đã bắt kịp nhịp rồi.",
+    "2": "Chào bạn, tôi đang ở đây",
+    "20": "Cảm hứng sắp đến",
+    "21": "Chỉ chờ bạn gọi",
+    "22": "Kích hoạt chế độ hiệu suất cao!",
+    "23": "Đang chờ lệnh",
+    "24": "Sẵn sàng đón nhận thử thách",
+    "25": "Ý tưởng mới đang được tạo ra",
+    "26": "Đường đi đã rõ, lên đường thôi!",
+    "27": "Hệ thống đã sẵn sàng, luôn bên bạn 💡",
+    "28": "Đang cố gắng nạp năng lượng tích cực",
+    "29": "Làm chủ nhịp điệu, bắt đầu từ bây giờ 🎵",
+    "3": "Tôi đã sẵn sàng!",
+    "30": "Đang tăng hiệu suất …",
+    "31": "Mục tiêu hôm nay, tiến từng bước vững chắc 🎯",
+    "32": "Thêm chút lấp lánh cho cảm hứng ✨",
+    "33": "Cập nhật nhiệm vụ hoàn tất",
+    "34": "Mọi thứ đã sẵn sàng",
+    "35": "Kích hoạt chế độ tăng tốc",
+    "36": "Ừm! Bắt đầu thôi 😎",
+    "37": "Tôi đang đợi bạn quay lại",
+    "38": "Tiếp tục giữ phong độ nhé!",
+    "39": "Đừng quên nghỉ ngơi một chút～ 💤",
+    "4": "Rất vui được gặp bạn",
+    "5": "Sẵn sàng bắt đầu chưa?",
+    "6": "Hôm nay để tôi giúp bạn",
+    "7": "Tiếp tục tiến lên nào!",
+    "8": "Cùng nhau cố gắng nhé 💪",
+    "9": "Bắt đầu làm việc thôi 🏃‍♂️"
   }
 }

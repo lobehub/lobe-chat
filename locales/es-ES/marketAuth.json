@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Cancelar",
-    "confirm": "Autorizar uso",
-    "description": {
-      "and": "y",
-      "prefix": "Al hacer clic en autorizar uso, se considera que aceptas",
-      "privacy": "la Política de Privacidad",
-      "terms": "los Términos de Servicio"
+    "confirm": "Crea tu perfil",
+    "description": "Tu perfil de comunidad es independiente de tu cuenta de usuario de {{appName}}.",
+    "footer": {
+      "agreement": "Al continuar, confirmas que has leído y aceptas los <terms>Términos y Condiciones</terms> y la <privacy>Política de Privacidad</privacy>",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos del Servicio"
     },
-    "title": "Confirmar autorización"
+    "subtitle": "Crea un perfil de comunidad para enviar y gestionar tus publicaciones en la comunidad.",
+    "title": "Crear perfil de comunidad"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "¡Autenticación exitosa! Ahora puedes publicar asistentes.",
       "upload": "¡Autenticación exitosa! Ahora puedes publicar una nueva versión."
     }
+  },
+  "profileSetup": {
+    "cancel": "Cancelar",
+    "descriptionEdit": "Actualiza la información de tu perfil de la comunidad.",
+    "descriptionFirstTime": "Configura tu perfil para completar la creación de tu cuenta en la comunidad.",
+    "errors": {
+      "fileTooLarge": "El tamaño del archivo no puede superar los 2 MB",
+      "notAuthenticated": "Por favor, inicia sesión antes de continuar.",
+      "updateFailed": "No se pudo actualizar el perfil. Inténtalo de nuevo.",
+      "uploadFailed": "Error al subir el archivo, por favor inténtalo de nuevo",
+      "usernameTaken": "Este ID de usuario ya está en uso. Por favor, elige otro."
+    },
+    "fields": {
+      "avatar": {
+        "label": "Avatar"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Haz clic para subir la imagen de fondo",
+        "label": "Imagen de fondo",
+        "remove": "Eliminar imagen de fondo",
+        "tooltip": "La imagen de fondo se mostrará en la parte superior de tu perfil (se recomienda una proporción de 16:9)",
+        "uploading": "Subiendo..."
+      },
+      "description": {
+        "label": "Biografía",
+        "maxLength": "La biografía puede tener hasta 200 caracteres.",
+        "placeholder": "Cuéntanos algo sobre ti..."
+      },
+      "displayName": {
+        "label": "Nombre para mostrar",
+        "maxLength": "El nombre para mostrar puede tener hasta 50 caracteres.",
+        "placeholder": "Introduce tu nombre para mostrar",
+        "required": "Por favor, introduce un nombre para mostrar."
+      },
+      "github": {
+        "placeholder": "Nombre de usuario de GitHub"
+      },
+      "twitter": {
+        "placeholder": "Nombre de usuario de X (Twitter)"
+      },
+      "userName": {
+        "label": "ID de usuario",
+        "maxLength": "El ID de usuario puede tener hasta 32 caracteres.",
+        "minLength": "El ID de usuario debe tener al menos 3 caracteres.",
+        "pattern": "El ID de usuario solo puede contener letras, números, guiones bajos y guiones.",
+        "placeholder": "Introduce tu ID de usuario",
+        "required": "Por favor, introduce un ID de usuario.",
+        "tooltip": "El ID de usuario es tu identificador único y se usará en el enlace a tu perfil."
+      },
+      "website": {
+        "invalidUrl": "Por favor, introduce una URL válida",
+        "placeholder": "Enlace a tu sitio web personal"
+      }
+    },
+    "getStarted": "Comenzar",
+    "save": "Guardar",
+    "socialLinks": {
+      "title": "Enlaces sociales"
+    },
+    "success": "Perfil actualizado correctamente",
+    "titleEdit": "Editar perfil",
+    "titleFirstTime": "Completa tu perfil"
   }
 }

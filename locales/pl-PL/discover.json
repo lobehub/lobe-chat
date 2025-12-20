@@ -13,8 +13,8 @@
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "Asystent ma wbudowane następujące bazy wiedzy, które pomogą Ci odpowiedzieć na więcej pytań.",
-          "title": "Baza wiedzy"
+          "desc": "Asystent ma wbudowane następujące zasoby, które pomagają odpowiadać na więcej pytań.",
+          "title": "Zasoby"
         },
         "plugin": {
           "desc": "Asystent ma wbudowane następujące wtyczki, które pomogą Ci wykonać więcej zadań.",
@@ -58,11 +58,17 @@
         "title": "Historia wersji"
       }
     },
+    "downloads": "Liczba pobrań",
+    "empty": {
+      "description": "Spróbuj zmienić filtry lub odwiedź społeczność, aby odkryć więcej asystentów",
+      "search": "Nie znaleziono pasujących asystentów",
+      "title": "Brak dostępnych asystentów"
+    },
     "list": "Lista asystentów",
     "marketSource": {
-      "label": "Przełącz źródło rynku",
-      "legacy": "Stary rynek",
-      "new": "Nowy rynek"
+      "label": "Przełącz źródło społeczności",
+      "legacy": "Stara społeczność",
+      "new": "Nowa społeczność"
     },
     "more": "Więcej",
     "plugins": "Zintegrowane wtyczki",
@@ -70,7 +76,7 @@
     "sorts": {
       "createdAt": "Najnowsze publikacje",
       "identifier": "ID asystenta",
-      "knowledgeCount": "Liczba baz wiedzy",
+      "knowledgeCount": "Liczba zasobów",
       "myown": "Zobacz moje",
       "pluginCount": "Liczba wtyczek",
       "title": "Nazwa asystenta",
@@ -85,7 +91,7 @@
         "subtitle": "Asystent, którego próbujesz odwiedzić, został zarchiwizowany z jednego z poniższych powodów:",
         "title": "Asystent został zarchiwizowany"
       },
-      "backToMarket": "Powrót do rynku asystentów",
+      "backToMarket": "Wróć do społeczności asystenta",
       "deprecated": {
         "reasons": {
           "official": "Asystent został usunięty przez administratorów z powodu problemów z bezpieczeństwem lub polityką",
@@ -94,9 +100,9 @@
         "subtitle": "Asystent, którego próbujesz odwiedzić, został odrzucony z jednego z poniższych powodów:",
         "title": "Asystent został odrzucony"
       },
-      "support": "W przypadku jakichkolwiek problemów skopiuj link i wyślij zapytanie na adres <1>support@lobehub.com</1>.",
+      "support": "W przypadku jakichkolwiek pytań skopiuj link i wyślij go na adres <email>support@lobehub.com</email> w celu uzyskania pomocy.",
       "unpublished": {
-        "subtitle": "Asystent, którego próbujesz odwiedzić, jest obecnie w trakcie przeglądu wersji. W razie pytań skopiuj link i wyślij zapytanie na adres <1>support@lobehub.com</1>.",
+        "subtitle": "Asystent, którego próbujesz odwiedzić, jest obecnie w trakcie przeglądu wersji. W razie wątpliwości skopiuj link i wyślij pytanie na adres <email>support@lobehub.com</email>.",
         "title": "Asystent w trakcie przeglądu"
       }
     },
@@ -104,7 +110,7 @@
     "systemRole": "Ustawienia asystenta",
     "tokenUsage": "Zużycie tokenów w promptach asystenta",
     "try": "Spróbuj",
-    "withKnowledge": "Ten asystent zawiera bazę wiedzy",
+    "withKnowledge": "Ten asystent zawiera zasoby",
     "withPlugin": "Ten asystent zawiera wtyczki"
   },
   "back": "Powrót do odkryć",
@@ -144,7 +150,7 @@
   "createGuide": {
     "func1": {
       "desc1": "W oknie rozmowy przejdź do ustawień w prawym górnym rogu, aby wejść na stronę ustawień asystenta, który chcesz dodać;",
-      "desc2": "Kliknij przycisk 'Wyślij do rynku asystentów' w prawym górnym rogu.",
+      "desc2": "Kliknij przycisk w prawym górnym rogu, aby przesłać do społeczności asystenta.",
       "tag": "Metoda pierwsza",
       "title": "Zgłoś przez LobeChat"
     },
@@ -172,7 +178,7 @@
       "functionCall": "Obsługuje wywołania funkcji",
       "title": "Inne",
       "vision": "Obsługuje rozpoznawanie wizualne",
-      "withKnowledge": "Z dołączoną bazą wiedzy",
+      "withKnowledge": "Z zasobami",
       "withTool": "Z dołączoną wtyczką"
     },
     "pricing": "Cena modelu",
@@ -186,8 +192,10 @@
     }
   },
   "home": {
+    "communityAgents": "Asystenci społeczności",
     "featuredAssistants": "Polecani asystenci",
     "featuredModels": "Polecane modele",
+    "featuredPlugins": "Polecane wtyczki",
     "featuredProviders": "Polecani dostawcy modeli",
     "featuredTools": "Polecane wtyczki",
     "more": "Odkryj więcej"
@@ -516,7 +524,7 @@
     "hero": {
       "desc": "Otwarte, możliwe do wdrożenia platformy serwerów MCP, które pomagają systemom AI łatwo uzyskać dostęp do systemów plików, baz danych, API i innych kluczowych zasobów, znacznie rozszerzając możliwości AI.",
       "subTitle": "Otwarte i gotowe do użycia",
-      "title": "Otwarte rynki MCP dla AI"
+      "title": "Otwarta społeczność MCP dla AI"
     },
     "sorts": {
       "createdAt": "Najnowsze",
@@ -529,7 +537,7 @@
       "toolsCount": "Liczba narzędzi",
       "updatedAt": "Ostatnia aktualizacja"
     },
-    "title": "Rynek MCP",
+    "title": "Społeczność MCP",
     "unvalidated": {
       "desc": "Ten serwer MCP nie został jeszcze zweryfikowany",
       "title": "Niezweryfikowany"
@@ -539,6 +547,11 @@
       "descWithDate": "Ten serwer MCP został zweryfikowany dnia {{date}}, co zapewnia jego jakość i niezawodność.",
       "title": "Zweryfikowany"
     }
+  },
+  "mcpEmpty": {
+    "description": "Spróbuj zmienić filtry lub wyszukać inne słowa kluczowe",
+    "search": "Nie znaleziono pasujących serwerów MCP",
+    "title": "Brak dostępnych serwerów MCP"
   },
   "models": {
     "abilities": "Możliwości modelu",
@@ -553,6 +566,11 @@
         "more": "Zobacz więcej",
         "title": "Powiązane rekomendacje"
       }
+    },
+    "empty": {
+      "description": "Spróbuj zmienić filtry, aby zobaczyć więcej modeli",
+      "search": "Nie znaleziono pasujących modeli",
+      "title": "Brak dostępnych modeli"
     },
     "free": "Darmowe",
     "guide": "Przewodnik konfiguracyjny",
@@ -664,6 +682,11 @@
         "title": "Powiązane rekomendacje"
       }
     },
+    "empty": {
+      "description": "Spróbuj zmienić filtry, aby zobaczyć więcej dostawców usług",
+      "search": "Nie znaleziono pasujących dostawców usług",
+      "title": "Brak dostępnych dostawców usług"
+    },
     "list": "Lista dostawców modeli",
     "modelCount": "{{count}} modeli",
     "modelName": "Nazwa modelu",
@@ -690,6 +713,18 @@
     "home": "Strona główna",
     "model": "Model",
     "plugin": "Wtyczka",
-    "provider": "Dostawca modeli"
+    "provider": "Dostawca modeli",
+    "user": "Użytkownik"
+  },
+  "user": {
+    "agents": "Asystenci",
+    "downloads": "Pobrane",
+    "editProfile": "Edytuj profil",
+    "login": "Zostań twórcą",
+    "logout": "Wyloguj się",
+    "myProfile": "Mój profil",
+    "noAgents": "Ten użytkownik nie opublikował jeszcze żadnych asystentów",
+    "publishedAgents": "Stworzone asystenty",
+    "website": "Strona internetowa"
   }
 }

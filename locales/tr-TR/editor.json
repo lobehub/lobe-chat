@@ -9,6 +9,11 @@
       "on": "Biçim araç çubuğunu göster"
     }
   },
+  "autoSave": {
+    "latest": "En son sürüm yüklendi",
+    "saved": "Kaydedildi",
+    "saving": "Otomatik kaydediliyor..."
+  },
   "cancel": "İptal",
   "confirm": "Onayla",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Bağlantıyı düzenle",
+    "editLinkTitle": "Bağlantı",
+    "editTextTitle": "Başlık",
     "open": "Bağlantıyı aç",
     "placeholder": "Bağlantı URL'si girin",
     "unlink": "Bağlantıyı kaldır"
   },
+  "markdown": {
+    "cancel": "İptal",
+    "confirm": "Dönüştür",
+    "parseMessage": "İçerik Markdown formatına dönüştürülecek ve mevcut içerik üzerine yazılacak. Onaylıyor musunuz? (5 saniye içinde otomatik olarak kapanacaktır)",
+    "parseTitle": "Markdown Biçimlendir"
+  },
   "math": {
     "placeholder": "Lütfen TeX formülünü girin"
+  },
+  "modifier": {
+    "accept": "Kabul Et",
+    "acceptAll": "Hepsini Kabul Et",
+    "reject": "Reddet",
+    "rejectedAll": "Hepsini Reddet"
   },
   "slash": {
     "h1": "Birinci Seviye Başlık",
@@ -50,13 +69,16 @@
     "bulletList": "Sırasız liste",
     "code": "Satır içi kod",
     "codeblock": "Kod bloğu",
+    "image": "Görsel",
     "italic": "İtalik",
     "link": "Bağlantı",
     "numberList": "Numaralı liste",
+    "redo": "Yinele",
     "strikethrough": "Üstü çizili",
     "table": "tablo",
     "taskList": "Görev Listesi",
     "tex": "TeX Formülü",
-    "underline": "Altı çizili"
+    "underline": "Altı çizili",
+    "undo": "Geri Al"
   }
 }

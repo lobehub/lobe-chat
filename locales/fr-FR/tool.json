@@ -1,5 +1,34 @@
 {
+  "agentGroupManagement": {
+    "executeTask": {
+      "agent": "Exécuter l'agent",
+      "cancelled": "Annulé",
+      "completed": "Tâche terminée",
+      "cost": "Coût",
+      "failed": "Échec de la tâche",
+      "interrupted": "Interrompu",
+      "intervention": {
+        "taskPlaceholder": "Veuillez décrire en détail la tâche que l'Agent doit exécuter...",
+        "timeout": "Durée maximale d'exécution",
+        "timeoutUnit": "minutes",
+        "unknownAgent": "Agent inconnu"
+      },
+      "processing": "En cours d'exécution...",
+      "steps": "Nombre d'étapes",
+      "task": "Contenu de la tâche",
+      "thread": "ID du thread",
+      "timeout": "Délai d'exécution dépassé",
+      "tokens": "Consommation de jetons"
+    }
+  },
   "codeInterpreter": {
+    "error": "Erreur d'exécution",
+    "executing": "Exécution en cours...",
+    "files": "Fichiers :",
+    "output": "Sortie :",
+    "returnValue": "Valeur de retour :"
+  },
+  "codeInterpreter-legacy": {
     "error": "Erreur d'exécution",
     "executing": "Exécution en cours...",
     "files": "Fichiers :",
@@ -13,6 +42,57 @@
     "generating": "En cours de génération...",
     "images": "Images :",
     "prompt": "Mot de rappel"
+  },
+  "lobe-gtd": {
+    "actions": {
+      "add": "Ajouter",
+      "clearCompleted": "Effacer les tâches terminées",
+      "placeholder": "Saisissez une tâche à faire..."
+    },
+    "clearTodos": {
+      "cleared": "{{count}} élément(s) supprimé(s)",
+      "clearedCompleted": "{{count}} tâche(s) terminée(s) supprimée(s)",
+      "clearedCompleted_one": "{{count}} tâche terminée supprimée",
+      "clearedCompleted_other": "{{count}} tâches terminées supprimées",
+      "cleared_one": "{{count}} élément supprimé",
+      "cleared_other": "{{count}} éléments supprimés",
+      "noItems": "Aucun élément à supprimer",
+      "remaining": "{{count}} élément(s) restant(s)",
+      "remaining_one": "{{count}} élément restant",
+      "remaining_other": "{{count}} éléments restants"
+    },
+    "completeTodos": {
+      "completed": "{{count}} tâche(s) complétée(s)",
+      "completed_one": "{{count}} tâche complétée",
+      "completed_other": "{{count}} tâches complétées"
+    },
+    "createTodos": {
+      "created": "{{count}} tâche(s) créée(s)",
+      "created_one": "{{count}} tâche créée",
+      "created_other": "{{count}} tâches créées",
+      "total": "Total : {{count}} élément(s)",
+      "total_one": "Total : {{count}} élément",
+      "total_other": "Total : {{count}} éléments"
+    },
+    "removeTodos": {
+      "removed": "{{count}} élément(s) supprimé(s)",
+      "removed_one": "{{count}} élément supprimé",
+      "removed_other": "{{count}} éléments supprimés"
+    },
+    "status": {
+      "done": "{{count}} terminé(s)",
+      "pending": "{{count}} en attente"
+    },
+    "todoList": {
+      "empty": "La liste de tâches est vide",
+      "items": "{{count}} élément(s)",
+      "items_one": "{{count}} élément",
+      "items_other": "{{count}} éléments",
+      "title": "Liste de tâches"
+    },
+    "updateTodos": {
+      "updated": "Liste de tâches mise à jour"
+    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {

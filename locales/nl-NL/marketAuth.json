@@ -1,14 +1,15 @@
 {
   "authorize": {
     "cancel": "Annuleren",
-    "confirm": "Toestemming geven",
-    "description": {
-      "and": "en",
-      "prefix": "Door op 'Toestemming geven' te klikken, ga je akkoord met onze",
+    "confirm": "Maak je profiel aan",
+    "description": "Je communityprofiel staat los van je {{appName}} gebruikersaccount.",
+    "footer": {
+      "agreement": "Door door te gaan bevestig je dat je de <terms>Algemene Voorwaarden</terms> en het <privacy>Privacybeleid</privacy> hebt gelezen en ermee akkoord gaat.",
       "privacy": "Privacybeleid",
-      "terms": "Servicevoorwaarden"
+      "terms": "Algemene Voorwaarden"
     },
-    "title": "Autorisatie bevestigen"
+    "subtitle": "Maak een communityprofiel aan om inzendingen te doen en je bijdragen te beheren.",
+    "title": "Communityprofiel aanmaken"
   },
   "callback": {
     "buttons": {
@@ -51,5 +52,67 @@
       "submit": "Autorisatie geslaagd! Je kunt nu een assistent publiceren.",
       "upload": "Autorisatie geslaagd! Je kunt nu een nieuwe versie publiceren."
     }
+  },
+  "profileSetup": {
+    "cancel": "Annuleren",
+    "descriptionEdit": "Werk je communityprofiel bij.",
+    "descriptionFirstTime": "Stel je profiel in om je communityprofiel aan te maken.",
+    "errors": {
+      "fileTooLarge": "Bestandsgrootte mag niet groter zijn dan 2MB",
+      "notAuthenticated": "Log eerst in voordat je deze actie uitvoert",
+      "updateFailed": "Bijwerken van profiel mislukt, probeer het opnieuw",
+      "uploadFailed": "Upload mislukt, probeer het opnieuw",
+      "usernameTaken": "Deze gebruikers-ID is al in gebruik, kies een andere"
+    },
+    "fields": {
+      "avatar": {
+        "label": "Profielfoto"
+      },
+      "bannerUrl": {
+        "clickToUpload": "Klik om banner te uploaden",
+        "label": "Bannerafbeelding",
+        "remove": "Banner verwijderen",
+        "tooltip": "De banner wordt weergegeven bovenaan je profielpagina (aanbevolen verhouding 16:9)",
+        "uploading": "Bezig met uploaden..."
+      },
+      "description": {
+        "label": "Persoonlijke beschrijving",
+        "maxLength": "De beschrijving mag maximaal 200 tekens bevatten",
+        "placeholder": "Vertel iets over jezelf..."
+      },
+      "displayName": {
+        "label": "Bijnaam",
+        "maxLength": "De bijnaam mag maximaal 50 tekens bevatten",
+        "placeholder": "Voer je bijnaam in",
+        "required": "Voer een bijnaam in"
+      },
+      "github": {
+        "placeholder": "GitHub-gebruikersnaam"
+      },
+      "twitter": {
+        "placeholder": "X (Twitter)-gebruikersnaam"
+      },
+      "userName": {
+        "label": "Gebruikers-ID",
+        "maxLength": "De gebruikers-ID mag maximaal 32 tekens bevatten",
+        "minLength": "De gebruikers-ID moet minimaal 3 tekens bevatten",
+        "pattern": "De gebruikers-ID mag alleen letters, cijfers, underscores en koppeltekens bevatten",
+        "placeholder": "Voer je gebruikers-ID in",
+        "required": "Voer een gebruikers-ID in",
+        "tooltip": "Je gebruikers-ID is je unieke identificatie en wordt gebruikt in de link naar je profielpagina"
+      },
+      "website": {
+        "invalidUrl": "Voer een geldige URL in",
+        "placeholder": "Link naar persoonlijke website"
+      }
+    },
+    "getStarted": "Aan de slag",
+    "save": "Opslaan",
+    "socialLinks": {
+      "title": "Sociale links"
+    },
+    "success": "Profiel succesvol bijgewerkt",
+    "titleEdit": "Profiel bewerken",
+    "titleFirstTime": "Maak je profiel compleet"
   }
 }

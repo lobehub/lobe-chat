@@ -10,24 +10,44 @@
     "dragFileTitle": "Upload Files",
     "dragTitle": "Upload Images"
   },
+  "EmojiPicker": {
+    "delete": "Delete Avatar",
+    "draggerDesc": "Click or drag an image here to upload",
+    "emoji": "Emoji Avatar",
+    "fileTypeError": "Please upload a valid image file",
+    "upload": "Upload Avatar",
+    "uploadBtn": "Crop and Upload"
+  },
   "FileManager": {
     "actions": {
       "addToKnowledgeBase": "Add to Knowledge Base",
-      "addToOtherKnowledgeBase": "Add to Other Knowledge Base",
+      "addToOtherKnowledgeBase": "Add to Another Knowledge Base",
       "batchChunking": "Batch Chunking",
       "chunking": "Chunking",
       "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
       "chunkingUnsupported": "This file does not support chunking.",
       "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
+      "confirmDeleteFolder": "You are about to delete this folder and all of its contents. This action cannot be undone. Please confirm your decision.",
       "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
-      "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",
+      "confirmRemoveFromKnowledgeBase": "You are about to remove {{count}} selected file(s) from the knowledge base. The files will still be accessible in All Files. Please confirm your action.",
       "copyUrl": "Copy Link",
       "copyUrlSuccess": "File url copied successfully.",
       "createChunkingTask": "Preparing...",
       "deleteSuccess": "File deleted successfully.",
       "downloading": "Downloading file...",
+      "goBack": "Go to previous page",
+      "goForward": "Go to next page",
+      "goToParent": "Go to parent folder",
+      "moveError": "Failed to move file",
+      "moveHere": "Move here",
+      "moveSuccess": "File moved successfully",
+      "moveToFolder": "Move to...",
+      "moveToRoot": "Move to root directory",
       "removeFromKnowledgeBase": "Remove from Knowledge Base",
-      "removeFromKnowledgeBaseSuccess": "File removed successfully."
+      "removeFromKnowledgeBaseSuccess": "File removed successfully.",
+      "rename": "Rename",
+      "renameError": "Rename failed",
+      "renameSuccess": "Rename successful"
     },
     "bottom": "You've reached the end.",
     "config": {
@@ -37,10 +57,16 @@
       "actions": {
         "file": "Upload File",
         "folder": "Upload Folder",
-        "knowledgeBase": "Create New Knowledge Base"
+        "knowledgeBase": "Create Knowledge Base"
       },
       "or": "or",
       "title": "Drag files or folders here"
+    },
+    "noFolders": "No folders available",
+    "sort": {
+      "dateAdded": "Date Added",
+      "name": "Name",
+      "size": "Size"
     },
     "title": {
       "createdAt": "Created At",
@@ -164,7 +190,7 @@
   "OllamaSetupGuide": {
     "action": {
       "close": "Close Prompt",
-      "start": "Installed and running, start the conversation"
+      "start": "Installed"
     },
     "cors": {
       "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
@@ -193,5 +219,20 @@
     "thinking": "Deep Thinking...",
     "thought": "Deeply Thought (in {{duration}} seconds)",
     "thoughtWithDuration": "Deeply Thought"
+  },
+  "devTools": {
+    "cache": {
+      "empty": "Cache is empty"
+    },
+    "metadata": {
+      "empty": "No metadata available"
+    }
+  },
+  "knowledgeBase": {
+    "empty": {
+      "description": "Create a knowledge base to organize and manage your resources",
+      "search": "No matching knowledge base found",
+      "title": "No Knowledge Base Available"
+    }
   }
 }

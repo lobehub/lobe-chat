@@ -1,0 +1,102 @@
+{
+  "context": {
+    "actions": {
+      "delete": "Elimina",
+      "edit": "Modifica"
+    },
+    "defaultType": "Contesto",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa memoria contestuale? Questa azione è irreversibile.",
+    "deleteTitle": "Elimina memoria contestuale",
+    "description": "Descrizione",
+    "empty": "Nessuna memoria contestuale disponibile",
+    "source": "Fonte"
+  },
+  "empty": {
+    "description": "L'estrazione della memoria è un processo graduale. Accumula più argomenti per arricchire i contenuti estratti dalla memoria e prova a intrattenere conversazioni più approfondite con l'assistente per catturare e memorizzare meglio le informazioni di valore.",
+    "search": "Nessuna memoria corrispondente trovata",
+    "title": "Nessuna memoria disponibile"
+  },
+  "experience": {
+    "actions": {
+      "delete": "Elimina",
+      "edit": "Modifica"
+    },
+    "defaultType": "Esperienza",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa memoria esperienziale? Questa azione è irreversibile.",
+    "deleteTitle": "Elimina memoria esperienziale",
+    "empty": "Nessuna memoria esperienziale disponibile",
+    "keyLearning": "Apprendimento chiave",
+    "situation": "Contesto",
+    "source": "Fonte",
+    "steps": {
+      "action": "Azione",
+      "result": "Risultato",
+      "situation": "Situazione",
+      "task": "Compito"
+    }
+  },
+  "filter": {
+    "search": "Cerca per parola chiave o descrizione della memoria...",
+    "sort": {
+      "createdAt": "Data di creazione",
+      "scoreConfidence": "Livello di confidenza",
+      "scoreImpact": "Importanza",
+      "scorePriority": "Peso della preferenza",
+      "scoreUrgency": "Urgenza"
+    }
+  },
+  "identity": {
+    "empty": "Nessuna memoria d'identità disponibile",
+    "filter": {
+      "search": "Cerca ruoli, relazioni o descrizioni...",
+      "type": {
+        "all": "Tutti",
+        "demographic": "Demografico",
+        "personal": "Ruolo",
+        "professional": "Professionale"
+      }
+    },
+    "list": {
+      "confirmDelete": "Conferma eliminazione",
+      "deleteCancel": "Annulla",
+      "deleteContent": "Sei sicuro di voler eliminare questa memoria d'identità? Questa operazione è irreversibile.",
+      "deleteOk": "Elimina",
+      "noResults": "Nessuna memoria d'identità trovata",
+      "updated": "Aggiornato"
+    },
+    "roleCloud": {
+      "collapse": "Comprimi",
+      "expand": "Espandi di più"
+    },
+    "view": {
+      "list": "Elenco",
+      "timeline": "Cronologia"
+    }
+  },
+  "loading": "Caricamento in corso...",
+  "preference": {
+    "actions": {
+      "delete": "Elimina",
+      "edit": "Modifica"
+    },
+    "conclusionDirectives": "Direttive conclusive",
+    "defaultType": "Preferenza",
+    "deleteConfirm": "Sei sicuro di voler eliminare questa memoria di preferenza? Questa azione è irreversibile.",
+    "deleteTitle": "Elimina memoria di preferenza",
+    "empty": "Nessuna memoria di preferenza disponibile",
+    "source": "Fonte",
+    "suggestions": "Azioni che l'assistente potrebbe intraprendere"
+  },
+  "tab": {
+    "contexts": "Contesti",
+    "experiences": "Esperienze",
+    "home": "Home",
+    "identities": "Identità",
+    "preferences": "Preferenze",
+    "search": "Cerca"
+  },
+  "viewMode": {
+    "masonry": "Griglia fluida",
+    "timeline": "Cronologia"
+  }
+}

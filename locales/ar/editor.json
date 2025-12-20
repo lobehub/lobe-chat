@@ -9,6 +9,11 @@
       "on": "إظهار شريط أدوات التنسيق"
     }
   },
+  "autoSave": {
+    "latest": "تم تحميل أحدث إصدار",
+    "saved": "تم الحفظ",
+    "saving": "يتم الحفظ تلقائيًا..."
+  },
   "cancel": "إلغاء",
   "confirm": "تأكيد",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "تعديل الرابط",
+    "editLinkTitle": "الرابط",
+    "editTextTitle": "العنوان",
     "open": "فتح الرابط",
     "placeholder": "أدخل عنوان URL للرابط",
     "unlink": "إزالة الرابط"
   },
+  "markdown": {
+    "cancel": "إلغاء",
+    "confirm": "تحويل",
+    "parseMessage": "سيتم تحويل المحتوى إلى تنسيق Markdown، وسيتم استبدال المحتوى الحالي. هل ترغب في المتابعة؟ (سيُغلق تلقائيًا بعد 5 ثوانٍ)",
+    "parseTitle": "تنسيق Markdown"
+  },
   "math": {
     "placeholder": "يرجى إدخال معادلة TeX"
+  },
+  "modifier": {
+    "accept": "قبول",
+    "acceptAll": "قبول الكل",
+    "reject": "رفض",
+    "rejectedAll": "رفض الكل"
   },
   "slash": {
     "h1": "عنوان رئيسي من المستوى الأول",
@@ -50,13 +69,16 @@
     "bulletList": "قائمة نقطية",
     "code": "كود مضمن",
     "codeblock": "كتلة كود",
+    "image": "صورة",
     "italic": "مائل",
     "link": "رابط",
     "numberList": "قائمة مرقمة",
+    "redo": "إعادة",
     "strikethrough": "شطب",
     "table": "جدول",
     "taskList": "قائمة المهام",
     "tex": "معادلة TeX",
-    "underline": "تسطير"
+    "underline": "تسطير",
+    "undo": "تراجع"
   }
 }

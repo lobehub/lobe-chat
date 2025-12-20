@@ -1,11 +1,72 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Lấy mô hình khả dụng",
+        "getAvailableTools": "Lấy công cụ khả dụng",
+        "getConfig": "Lấy cấu hình",
+        "getMeta": "Lấy siêu dữ liệu",
+        "getPrompt": "Lấy lời nhắc hệ thống",
+        "searchMarketTools": "Tìm kiếm công cụ trên chợ",
+        "searchOfficialTools": "Tìm kiếm công cụ chính thức",
+        "setModel": "Thiết lập mô hình",
+        "setOpeningMessage": "Thiết lập tin nhắn mở đầu",
+        "setOpeningQuestions": "Thiết lập câu hỏi mở đầu",
+        "togglePlugin": "Chuyển đổi plugin",
+        "updateChatConfig": "Cập nhật cấu hình trò chuyện",
+        "updateConfig": "Cập nhật cấu hình",
+        "updateMeta": "Cập nhật siêu dữ liệu",
+        "updatePrompt": "Cập nhật lời nhắc hệ thống"
+      },
+      "title": "Trình tạo Tác nhân"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Lấy mô hình khả dụng",
+        "installPlugin": "Cài đặt plugin",
+        "inviteAgent": "Mời thành viên",
+        "removeAgent": "Xóa thành viên",
+        "searchMarketTools": "Tìm kiếm trong chợ plugin",
+        "updateAgentConfig": "Cập nhật cấu hình đại lý",
+        "updatePrompt": "Cập nhật lời nhắc hệ thống"
+      },
+      "title": "Trình xây dựng Đại lý Nhóm"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Phát biểu cho tất cả mọi người",
+        "createAgent": "Thêm thành viên nhóm",
+        "createWorkflow": "Lập kế hoạch quy trình làm việc",
+        "executeTask": "Thực hiện nhiệm vụ",
+        "getAgentInfo": "Lấy thông tin thành viên",
+        "interrupt": "Gián đoạn nhiệm vụ",
+        "inviteAgent": "Mời thành viên",
+        "removeAgent": "Loại bỏ thành viên",
+        "searchAgent": "Tìm kiếm chuyên gia liên quan",
+        "speak": "Chỉ định thành viên phát biểu",
+        "summarize": "Tóm tắt cuộc trò chuyện",
+        "vote": "Khởi xướng cuộc bỏ phiếu"
+      },
+      "title": "Điều phối nhóm"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Xóa việc cần làm",
+        "completeTodos": "Hoàn thành việc cần làm",
+        "createPlan": "Tạo kế hoạch",
+        "createTodos": "Tạo việc cần làm",
+        "removeTodos": "Xóa việc cần làm",
+        "updatePlan": "Cập nhật kế hoạch",
+        "updateTodos": "Cập nhật việc cần làm"
+      },
+      "title": "Công cụ GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
-        "readKnowledge": "Đọc nội dung cơ sở tri thức",
-        "searchKnowledgeBase": "Tìm kiếm trong cơ sở tri thức"
+        "readKnowledge": "Đọc nội dung kho tài nguyên",
+        "searchKnowledgeBase": "Tìm kiếm trong kho tài nguyên"
       },
-      "title": "Cơ sở tri thức"
+      "title": "Kho tài nguyên"
     },
     "lobe-local-system": {
       "apiName": {
@@ -23,6 +84,41 @@
         "writeLocalFile": "Ghi nội dung vào tệp"
       },
       "title": "Hệ thống cục bộ"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Cập nhật hàng loạt nút",
+        "compareSnapshots": "So sánh ảnh chụp nhanh",
+        "convertToList": "Chuyển đổi thành danh sách",
+        "createNode": "Tạo nút",
+        "cropImage": "Cắt ảnh",
+        "deleteNode": "Xóa nút",
+        "deleteSnapshot": "Xóa ảnh chụp nhanh",
+        "deleteTableColumn": "Xóa cột bảng",
+        "deleteTableRow": "Xóa hàng bảng",
+        "duplicateNode": "Nhân bản nút",
+        "editTitle": "Chỉnh sửa tiêu đề tài liệu",
+        "indentListItem": "Thụt lề mục danh sách",
+        "initPage": "Khởi tạo tài liệu",
+        "insertTableColumn": "Chèn cột bảng",
+        "insertTableRow": "Chèn hàng bảng",
+        "listSnapshots": "Liệt kê ảnh chụp nhanh",
+        "mergeNodes": "Gộp các nút",
+        "moveNode": "Di chuyển nút",
+        "outdentListItem": "Bỏ thụt lề mục danh sách",
+        "replaceText": "Thay thế văn bản",
+        "resizeImage": "Thay đổi kích thước ảnh",
+        "restoreSnapshot": "Khôi phục ảnh chụp nhanh",
+        "rotateImage": "Xoay ảnh",
+        "saveSnapshot": "Lưu ảnh chụp nhanh",
+        "setImageAlt": "Thiết lập văn bản thay thế cho ảnh",
+        "splitNode": "Tách nút",
+        "toggleListType": "Chuyển đổi loại danh sách",
+        "unwrapNode": "Gỡ bọc nút",
+        "updateNode": "Cập nhật nút",
+        "wrapNodes": "Bọc các nút"
+      },
+      "title": "Tài liệu"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Cập nhật",
     "updateSuccess": "Cập nhật cấu hình plugin thành công"
   },
+  "empty": {
+    "description": "Cửa hàng plugin có rất nhiều công cụ đang chờ bạn khám phá, hãy truy cập cửa hàng để bắt đầu hành trình",
+    "search": "Không tìm thấy plugin phù hợp",
+    "title": "Chưa có plugin nào"
+  },
   "error": {
     "fetchError": "Yêu cầu lấy liên kết manifest thất bại, vui lòng đảm bảo liên kết hợp lệ và cho phép truy cập chéo",
     "installError": "Cài đặt plugin {{name}} thất bại",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Đang gọi plugin...",
     "plugin": "Plugin đang chạy..."
+  },
+  "mcpEmpty": {
+    "deployment": "Chưa có tùy chọn triển khai",
+    "prompts": "Plugin này hiện chưa có gợi ý",
+    "resources": "Plugin này hiện chưa có tài nguyên",
+    "tools": "Plugin này hiện chưa có chức năng công cụ"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Đang kiểm tra môi trường cài đặt...",
@@ -338,6 +445,8 @@
       "installed": "Đã cài đặt"
     },
     "config": {
+      "addEnv": "Thêm biến môi trường",
+      "addHeaders": "Thêm tiêu đề yêu cầu",
       "args": "Tham số",
       "command": "Lệnh",
       "env": "Biến môi trường",
@@ -358,12 +467,15 @@
       },
       "title": "Cài đặt plugin tùy chỉnh"
     },
+    "install": {
+      "title": "Thông tin cài đặt"
+    },
     "marketplace": {
       "title": "Cài đặt plugin bên thứ ba",
       "trustedBy": "Cung cấp bởi {{name}}",
       "unverified": {
         "title": "Plugin bên thứ ba chưa xác thực",
-        "warning": "Plugin này đến từ thị trường bên thứ ba chưa được xác thực, vui lòng xác nhận bạn tin tưởng nguồn trước khi cài đặt."
+        "warning": "Plugin này đến từ cộng đồng bên thứ ba chưa được xác minh, vui lòng đảm bảo bạn tin tưởng nguồn này trước khi cài đặt."
       },
       "verified": "Đã xác thực"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Các cấu hình này sẽ được truyền dưới dạng biến môi trường khi MCP server khởi động",
     "httpTypeNotice": "Plugin MCP loại HTTP hiện chưa cần cấu hình biến môi trường",
     "indexUrl": {
-      "title": "Chỉ mục thị trường",
+      "title": "Chỉ mục cộng đồng",
       "tooltip": "Hiện chưa hỗ trợ chỉnh sửa trực tuyến, vui lòng cấu hình qua biến môi trường khi triển khai"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Lưu biến môi trường thất bại",
       "envUpdateSuccess": "Lưu biến môi trường thành công"
     },
-    "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
+    "modalDesc": "Sau khi cấu hình địa chỉ cộng đồng plugin, bạn có thể sử dụng cộng đồng plugin tùy chỉnh",
     "rules": {
       "argsRequired": "Vui lòng nhập tham số khởi động",
       "commandRequired": "Vui lòng nhập lệnh khởi động",
       "urlRequired": "Vui lòng nhập địa chỉ dịch vụ"
     },
     "saveSettings": "Lưu cài đặt",
-    "title": "Cài đặt thị trường plugin"
+    "title": "Cài đặt cộng đồng plugin"
   },
   "showInPortal": "Vui lòng xem chi tiết trong không gian làm việc",
   "store": {

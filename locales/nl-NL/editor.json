@@ -9,6 +9,11 @@
       "on": "Toon opmaakwerkbalk"
     }
   },
+  "autoSave": {
+    "latest": "Nieuwste versie geladen",
+    "saved": "Opgeslagen",
+    "saving": "Automatisch opslaan..."
+  },
   "cancel": "Annuleren",
   "confirm": "Bevestigen",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "Link bewerken",
+    "editLinkTitle": "Link",
+    "editTextTitle": "Titel",
     "open": "Link openen",
     "placeholder": "Voer de URL van de link in",
     "unlink": "Link verwijderen"
   },
+  "markdown": {
+    "cancel": "Annuleren",
+    "confirm": "Converteren",
+    "parseMessage": "Converteren naar Markdown-indeling. Bestaande inhoud wordt overschreven. Weet je het zeker? (Sluit automatisch over 5 seconden)",
+    "parseTitle": "Markdown opmaken"
+  },
   "math": {
     "placeholder": "Voer TeX-formule in"
+  },
+  "modifier": {
+    "accept": "Accepteren",
+    "acceptAll": "Alles accepteren",
+    "reject": "Weigeren",
+    "rejectedAll": "Alles weigeren"
   },
   "slash": {
     "h1": "Kop 1",
@@ -50,13 +69,16 @@
     "bulletList": "Opsomming",
     "code": "Inlinecode",
     "codeblock": "Codeblok",
+    "image": "Afbeelding",
     "italic": "Cursief",
     "link": "Link",
     "numberList": "Genummerde lijst",
+    "redo": "Opnieuw uitvoeren",
     "strikethrough": "Doorhalen",
     "table": "tabel",
     "taskList": "Takenlijst",
     "tex": "TeX-formule",
-    "underline": "Onderstrepen"
+    "underline": "Onderstrepen",
+    "undo": "Ongedaan maken"
   }
 }

@@ -58,12 +58,12 @@
       "ready": "Database pronto"
     },
     "modal": {
-      "desc": "Abilita il database client PGlite per memorizzare in modo persistente i dati della chat nel tuo browser e utilizzare funzionalità avanzate come la knowledge base",
+      "desc": "Abilita subito il database client di nuova generazione. Archivia in modo persistente i dati delle chat nel tuo browser e accedi a funzionalità avanzate come la libreria delle risorse.",
       "enable": "Abilita ora",
       "features": {
         "knowledgeBase": {
-          "desc": "Conserva il tuo archivio personale di conoscenze e avvia facilmente conversazioni con il tuo assistente (in arrivo)",
-          "title": "Supporto per conversazioni sull'archivio di conoscenze, attiva il tuo secondo cervello"
+          "desc": "Costruisci la tua libreria personale di risorse e avvia facilmente conversazioni con il tuo assistente utilizzando la libreria (in arrivo a breve)",
+          "title": "Supporto per conversazioni con la libreria, attiva il tuo secondo cervello"
         },
         "localFirst": {
           "desc": "I dati delle chat sono completamente memorizzati nel browser, i tuoi dati sono sempre sotto il tuo controllo.",
@@ -137,14 +137,39 @@
   "close": "Chiudi",
   "cmdk": {
     "about": "Informazioni",
+    "aiModeEmptyState": "Inserisci la tua domanda nel campo sopra per iniziare a conversare con l'AI",
+    "aiModePlaceholder": "Fai una domanda all'AI...",
+    "community": "Comunità",
     "communitySupport": "Supporto della comunità",
     "discover": "Scopri",
-    "knowledgeBase": "Base di conoscenza",
+    "memory": "Memoria",
     "navigate": "Naviga",
     "newAgent": "Nuovo assistente",
     "noResults": "Nessun risultato trovato",
     "openSettings": "Apri impostazioni",
-    "painting": "Disegno AI",
+    "pages": "Documenti",
+    "painting": "Pittura",
+    "resource": "Risorsa",
+    "search": {
+      "agent": "Assistente",
+      "agents": "Assistenti",
+      "assistant": "Assistente AI",
+      "assistants": "Assistenti AI",
+      "file": "File",
+      "files": "File",
+      "loading": "Ricerca in corso...",
+      "mcp": "Server MCP",
+      "mcps": "Server MCP",
+      "message": "Conversazione",
+      "messages": "Conversazioni",
+      "page": "Documento",
+      "pages": "Documenti",
+      "plugin": "Plugin",
+      "plugins": "Plugin",
+      "searching": "Risultati della ricerca",
+      "topic": "Argomento",
+      "topics": "Argomenti"
+    },
     "searchPlaceholder": "Inserisci un comando o cerca...",
     "settings": "Impostazioni",
     "starOnGitHub": "Dacci una stella su GitHub",
@@ -261,6 +286,7 @@
   "labs": "Laboratorio",
   "lang": {
     "ar": "Arabo",
+    "auto": "Segui le impostazioni della lingua di sistema",
     "bg-BG": "bulgaro",
     "bn": "Bengalese",
     "cs-CZ": "Ceco",
@@ -303,6 +329,13 @@
   "mail": {
     "business": "Collaborazioni commerciali",
     "support": "Supporto via email"
+  },
+  "navPanel": {
+    "agent": "Assistente",
+    "displayItems": "Mostra elementi",
+    "library": "Libreria",
+    "searchAgent": "Cerca assistente...",
+    "searchResultEmpty": "Nessun risultato trovato"
   },
   "new": "Nuovo",
   "oauth": "Accesso SSO",
@@ -358,13 +391,21 @@
     }
   },
   "tab": {
-    "aiImage": "Disegno AI",
+    "aiImage": "Disegno",
+    "audio": "Audio",
     "chat": "Chat",
+    "community": "Community",
     "discover": "Scopri",
     "files": "File",
-    "knowledgeBase": "Base di conoscenza",
+    "home": "Home",
+    "knowledgeBase": "Libreria",
     "me": "io",
-    "setting": "Impostazioni"
+    "memory": "Memoria",
+    "pages": "Documenti",
+    "resource": "Risorse",
+    "search": "Cerca",
+    "setting": "Impostazioni",
+    "video": "Video"
   },
   "telemetry": {
     "allow": "Consenti",

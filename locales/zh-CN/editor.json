@@ -9,6 +9,11 @@
       "on": "显示格式工具栏"
     }
   },
+  "autoSave": {
+    "latest": "已加载最新版本",
+    "saved": "已保存",
+    "saving": "自动保存中..."
+  },
   "cancel": "取消",
   "confirm": "确认",
   "file": {
@@ -20,12 +25,26 @@
   },
   "link": {
     "edit": "编辑链接",
+    "editLinkTitle": "链接",
+    "editTextTitle": "标题",
     "open": "打开链接",
     "placeholder": "输入链接 URL",
     "unlink": "取消链接"
   },
+  "markdown": {
+    "cancel": "取消",
+    "confirm": "转换",
+    "parseMessage": "转换为 Markdown 格式，现有内容将被覆盖，是否确认？（5 秒后自动关闭）",
+    "parseTitle": "格式化 Markdown"
+  },
   "math": {
     "placeholder": "请输入 TeX 公式"
+  },
+  "modifier": {
+    "accept": "接受",
+    "acceptAll": "全部接受",
+    "reject": "拒绝",
+    "rejectedAll": "全部拒绝"
   },
   "slash": {
     "h1": "一级标题",
@@ -50,13 +69,16 @@
     "bulletList": "无序列表",
     "code": "行内代码",
     "codeblock": "代码块",
+    "image": "图片",
     "italic": "斜体",
     "link": "链接",
     "numberList": "有序列表",
+    "redo": "重做",
     "strikethrough": "删除线",
     "table": "table",
     "taskList": "任务列表",
     "tex": "TeX 公式",
-    "underline": "下划线"
+    "underline": "下划线",
+    "undo": "撤销"
   }
 }

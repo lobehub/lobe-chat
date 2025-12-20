@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Pobierz dostępne modele",
+        "getAvailableTools": "Pobierz dostępne narzędzia",
+        "getConfig": "Pobierz konfigurację",
+        "getMeta": "Pobierz metadane",
+        "getPrompt": "Pobierz podpowiedź systemową",
+        "searchMarketTools": "Szukaj w sklepie z wtyczkami",
+        "searchOfficialTools": "Szukaj oficjalnych narzędzi",
+        "setModel": "Ustaw model",
+        "setOpeningMessage": "Ustaw wiadomość powitalną",
+        "setOpeningQuestions": "Ustaw pytania początkowe",
+        "togglePlugin": "Przełącz wtyczkę",
+        "updateChatConfig": "Zaktualizuj konfigurację czatu",
+        "updateConfig": "Zaktualizuj konfigurację",
+        "updateMeta": "Zaktualizuj metadane",
+        "updatePrompt": "Zaktualizuj podpowiedź systemową"
+      },
+      "title": "Kreator Agenta"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Pobierz dostępne modele",
+        "installPlugin": "Zainstaluj wtyczkę",
+        "inviteAgent": "Zaproś członka",
+        "removeAgent": "Usuń członka",
+        "searchMarketTools": "Szukaj wtyczek w sklepie",
+        "updateAgentConfig": "Zaktualizuj konfigurację agenta",
+        "updatePrompt": "Zaktualizuj podpowiedź systemową"
+      },
+      "title": "Kreator Agenta Grupowego"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Wypowiedź do wszystkich",
+        "createAgent": "Dodaj członka zespołu",
+        "createWorkflow": "Zaplanuj przepływ pracy",
+        "executeTask": "Wykonaj zadanie",
+        "getAgentInfo": "Pobierz informacje o członku",
+        "interrupt": "Przerwij zadanie",
+        "inviteAgent": "Zaproś członka",
+        "removeAgent": "Usuń członka",
+        "searchAgent": "Znajdź odpowiedniego eksperta",
+        "speak": "Wskaż członka do wypowiedzi",
+        "summarize": "Podsumuj rozmowę",
+        "vote": "Rozpocznij głosowanie"
+      },
+      "title": "Koordynacja zespołu"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Wyczyść zadania",
+        "completeTodos": "Zakończ zadania",
+        "createPlan": "Utwórz plan",
+        "createTodos": "Utwórz zadania",
+        "removeTodos": "Usuń zadania",
+        "updatePlan": "Zaktualizuj plan",
+        "updateTodos": "Zaktualizuj zadania"
+      },
+      "title": "Narzędzie GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Odczytaj zawartość bazy wiedzy",
@@ -23,6 +84,41 @@
         "writeLocalFile": "Zapisz plik"
       },
       "title": "System lokalny"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Zbiorcza aktualizacja węzłów",
+        "compareSnapshots": "Porównaj migawki",
+        "convertToList": "Konwertuj na listę",
+        "createNode": "Utwórz węzeł",
+        "cropImage": "Przytnij obraz",
+        "deleteNode": "Usuń węzeł",
+        "deleteSnapshot": "Usuń migawkę",
+        "deleteTableColumn": "Usuń kolumnę tabeli",
+        "deleteTableRow": "Usuń wiersz tabeli",
+        "duplicateNode": "Duplikuj węzeł",
+        "editTitle": "Edytuj tytuł dokumentu",
+        "indentListItem": "Zwiększ wcięcie elementu listy",
+        "initPage": "Zainicjuj dokument",
+        "insertTableColumn": "Wstaw kolumnę do tabeli",
+        "insertTableRow": "Wstaw wiersz do tabeli",
+        "listSnapshots": "Wyświetl migawki",
+        "mergeNodes": "Scal węzły",
+        "moveNode": "Przenieś węzeł",
+        "outdentListItem": "Zmniejsz wcięcie elementu listy",
+        "replaceText": "Zamień tekst",
+        "resizeImage": "Zmień rozmiar obrazu",
+        "restoreSnapshot": "Przywróć migawkę",
+        "rotateImage": "Obróć obraz",
+        "saveSnapshot": "Zapisz migawkę",
+        "setImageAlt": "Ustaw tekst alternatywny obrazu",
+        "splitNode": "Podziel węzeł",
+        "toggleListType": "Przełącz typ listy",
+        "unwrapNode": "Rozpakuj węzeł",
+        "updateNode": "Zaktualizuj węzeł",
+        "wrapNodes": "Opakuj węzły"
+      },
+      "title": "Dokument"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Aktualizuj",
     "updateSuccess": "Ustawienia wtyczki zostały zaktualizowane pomyślnie"
   },
+  "empty": {
+    "description": "Sklep z wtyczkami oferuje wiele narzędzi do odkrycia — odwiedź sklep i zacznij eksplorować",
+    "search": "Nie znaleziono pasujących wtyczek",
+    "title": "Brak dostępnych wtyczek"
+  },
   "error": {
     "fetchError": "Nie udało się pobrać pliku manifestu, upewnij się, że link jest poprawny i pozwala na dostęp z innych domen",
     "installError": "Instalacja wtyczki {{name}} nie powiodła się",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Wywoływanie wtyczki...",
     "plugin": "Wtyczka działa..."
+  },
+  "mcpEmpty": {
+    "deployment": "Brak dostępnych opcji wdrożenia",
+    "prompts": "Ta wtyczka nie zawiera żadnych podpowiedzi",
+    "resources": "Ta wtyczka nie zawiera żadnych zasobów",
+    "tools": "Ta wtyczka nie oferuje żadnych funkcji narzędziowych"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",
@@ -338,6 +445,8 @@
       "installed": "Zainstalowano"
     },
     "config": {
+      "addEnv": "Dodaj zmienną środowiskową",
+      "addHeaders": "Dodaj nagłówki żądania",
       "args": "Argumenty",
       "command": "Polecenie",
       "env": "Zmienne środowiskowe",
@@ -358,12 +467,15 @@
       },
       "title": "Zainstaluj wtyczkę niestandardową"
     },
+    "install": {
+      "title": "Informacje o instalacji"
+    },
     "marketplace": {
       "title": "Zainstaluj wtyczki zewnętrzne",
       "trustedBy": "Dostarczone przez {{name}}",
       "unverified": {
         "title": "Nieweryfikowane wtyczki zewnętrzne",
-        "warning": "Ta wtyczka pochodzi z nieweryfikowanego rynku zewnętrznego, przed instalacją upewnij się, że ufasz temu źródłu."
+        "warning": "Ta wtyczka pochodzi z niezweryfikowanej społeczności zewnętrznej. Przed instalacją upewnij się, że ufasz temu źródłu."
       },
       "verified": "Zweryfikowane"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Te ustawienia zostaną przekazane jako zmienne środowiskowe podczas uruchamiania serwera MCP",
     "httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają konfiguracji zmiennych środowiskowych",
     "indexUrl": {
-      "title": "Indeks rynku",
+      "title": "Indeks społeczności",
       "tooltip": "Edycja online nie jest obecnie obsługiwana, ustaw przez zmienne środowiskowe podczas wdrażania"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Zapis zmiennych środowiskowych nie powiódł się",
       "envUpdateSuccess": "Zmienna środowiskowa została zapisana pomyślnie"
     },
-    "modalDesc": "Po skonfigurowaniu adresu rynku wtyczek możesz korzystać z niestandardowego rynku wtyczek",
+    "modalDesc": "Po skonfigurowaniu adresu społeczności wtyczek możesz korzystać z niestandardowej społeczności wtyczek",
     "rules": {
       "argsRequired": "Proszę wprowadzić argumenty startowe",
       "commandRequired": "Proszę wprowadzić polecenie startowe",
       "urlRequired": "Proszę wprowadzić adres usługi"
     },
     "saveSettings": "Zapisz ustawienia",
-    "title": "Ustawienia rynku wtyczek"
+    "title": "Ustawienia społeczności wtyczek"
   },
   "showInPortal": "Proszę zobaczyć szczegóły w obszarze roboczym",
   "store": {

@@ -1,5 +1,66 @@
 {
   "builtins": {
+    "lobe-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Obtenir les modèles disponibles",
+        "getAvailableTools": "Obtenir les outils disponibles",
+        "getConfig": "Obtenir la configuration",
+        "getMeta": "Obtenir les métadonnées",
+        "getPrompt": "Obtenir l'invite système",
+        "searchMarketTools": "Rechercher dans le marché des plugins",
+        "searchOfficialTools": "Rechercher les outils officiels",
+        "setModel": "Définir le modèle",
+        "setOpeningMessage": "Définir le message d'ouverture",
+        "setOpeningQuestions": "Définir les questions d'ouverture",
+        "togglePlugin": "Activer/Désactiver le plugin",
+        "updateChatConfig": "Mettre à jour la configuration du chat",
+        "updateConfig": "Mettre à jour la configuration",
+        "updateMeta": "Mettre à jour les métadonnées",
+        "updatePrompt": "Mettre à jour l'invite système"
+      },
+      "title": "Créateur d'Agent"
+    },
+    "lobe-group-agent-builder": {
+      "apiName": {
+        "getAvailableModels": "Obtenir les modèles disponibles",
+        "installPlugin": "Installer le plugin",
+        "inviteAgent": "Inviter un membre",
+        "removeAgent": "Supprimer un membre",
+        "searchMarketTools": "Rechercher dans le marché des plugins",
+        "updateAgentConfig": "Mettre à jour la configuration de l'agent",
+        "updatePrompt": "Mettre à jour l'invite système"
+      },
+      "title": "Créateur d'agents de groupe"
+    },
+    "lobe-group-management": {
+      "apiName": {
+        "broadcast": "Parler à tout le monde",
+        "createAgent": "Ajouter un membre à l'équipe",
+        "createWorkflow": "Planifier le flux de travail",
+        "executeTask": "Exécuter la tâche",
+        "getAgentInfo": "Obtenir les informations du membre",
+        "interrupt": "Interrompre la tâche",
+        "inviteAgent": "Inviter un membre",
+        "removeAgent": "Retirer un membre",
+        "searchAgent": "Rechercher un expert pertinent",
+        "speak": "Désigner un membre pour parler",
+        "summarize": "Résumer la conversation",
+        "vote": "Lancer un vote"
+      },
+      "title": "Coordination d'équipe"
+    },
+    "lobe-gtd": {
+      "apiName": {
+        "clearTodos": "Effacer les tâches",
+        "completeTodos": "Terminer les tâches",
+        "createPlan": "Créer un plan",
+        "createTodos": "Créer des tâches",
+        "removeTodos": "Supprimer les tâches",
+        "updatePlan": "Mettre à jour le plan",
+        "updateTodos": "Mettre à jour les tâches"
+      },
+      "title": "Outil GTD"
+    },
     "lobe-knowledge-base": {
       "apiName": {
         "readKnowledge": "Lire le contenu de la base de connaissances",
@@ -23,6 +84,41 @@
         "writeLocalFile": "Écrire dans le fichier"
       },
       "title": "Système local"
+    },
+    "lobe-page-agent": {
+      "apiName": {
+        "batchUpdate": "Mettre à jour en lot les nœuds",
+        "compareSnapshots": "Comparer les instantanés",
+        "convertToList": "Convertir en liste",
+        "createNode": "Créer un nœud",
+        "cropImage": "Rogner l'image",
+        "deleteNode": "Supprimer le nœud",
+        "deleteSnapshot": "Supprimer l'instantané",
+        "deleteTableColumn": "Supprimer la colonne du tableau",
+        "deleteTableRow": "Supprimer la ligne du tableau",
+        "duplicateNode": "Dupliquer le nœud",
+        "editTitle": "Modifier le titre du document",
+        "indentListItem": "Augmenter le retrait de l'élément de liste",
+        "initPage": "Initialiser le document",
+        "insertTableColumn": "Insérer une colonne dans le tableau",
+        "insertTableRow": "Insérer une ligne dans le tableau",
+        "listSnapshots": "Lister les instantanés",
+        "mergeNodes": "Fusionner les nœuds",
+        "moveNode": "Déplacer le nœud",
+        "outdentListItem": "Réduire le retrait de l'élément de liste",
+        "replaceText": "Remplacer le texte",
+        "resizeImage": "Redimensionner l'image",
+        "restoreSnapshot": "Restaurer l'instantané",
+        "rotateImage": "Faire pivoter l'image",
+        "saveSnapshot": "Enregistrer l'instantané",
+        "setImageAlt": "Définir le texte alternatif de l'image",
+        "splitNode": "Diviser le nœud",
+        "toggleListType": "Changer le type de liste",
+        "unwrapNode": "Désenvelopper le nœud",
+        "updateNode": "Mettre à jour le nœud",
+        "wrapNodes": "Envelopper les nœuds"
+      },
+      "title": "Document"
     },
     "lobe-web-browsing": {
       "apiName": {
@@ -258,6 +354,11 @@
     "update": "Mettre à jour",
     "updateSuccess": "Paramètres du plugin mis à jour avec succès"
   },
+  "empty": {
+    "description": "La boutique de plugins regorge d'outils à découvrir. Visitez la boutique pour commencer l'exploration.",
+    "search": "Aucun plugin correspondant trouvé",
+    "title": "Aucun plugin disponible"
+  },
   "error": {
     "fetchError": "Échec de la requête vers le lien manifest, veuillez vérifier la validité du lien et s'assurer qu'il autorise l'accès cross-origin",
     "installError": "Échec de l'installation du plugin {{name}}",
@@ -284,6 +385,12 @@
   "loading": {
     "content": "Appel du plugin en cours...",
     "plugin": "Plugin en cours d'exécution..."
+  },
+  "mcpEmpty": {
+    "deployment": "Aucune option de déploiement disponible",
+    "prompts": "Ce plugin ne propose aucun message prédéfini",
+    "resources": "Ce plugin ne dispose d'aucune ressource",
+    "tools": "Ce plugin ne propose aucune fonctionnalité"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Vérification de l'environnement d'installation...",
@@ -338,6 +445,8 @@
       "installed": "Installé"
     },
     "config": {
+      "addEnv": "Ajouter une variable d'environnement",
+      "addHeaders": "Ajouter un en-tête de requête",
       "args": "Paramètres",
       "command": "Commande",
       "env": "Variables d'environnement",
@@ -358,12 +467,15 @@
       },
       "title": "Installer un plugin personnalisé"
     },
+    "install": {
+      "title": "Informations d'installation"
+    },
     "marketplace": {
       "title": "Installer un plugin tiers",
       "trustedBy": "Fournit par {{name}}",
       "unverified": {
         "title": "Plugin tiers non vérifié",
-        "warning": "Ce plugin provient d'un marché tiers non vérifié, veuillez confirmer que vous faites confiance à cette source avant l'installation."
+        "warning": "Ce plugin provient d'une communauté tierce non vérifiée. Veuillez vous assurer de faire confiance à cette source avant l'installation."
       },
       "verified": "Vérifié"
     },
@@ -441,7 +553,7 @@
     "envConfigDescription": "Ces configurations seront transmises en tant que variables d'environnement au processus lors du démarrage du serveur MCP",
     "httpTypeNotice": "Les plugins MCP de type HTTP n'ont pas de variables d'environnement à configurer pour le moment",
     "indexUrl": {
-      "title": "Index du marché",
+      "title": "Index de la communauté",
       "tooltip": "L'édition en ligne n'est pas encore supportée, veuillez configurer via les variables d'environnement lors du déploiement"
     },
     "messages": {
@@ -450,14 +562,14 @@
       "envUpdateFailed": "Échec de l'enregistrement des variables d'environnement",
       "envUpdateSuccess": "Variables d'environnement enregistrées avec succès"
     },
-    "modalDesc": "Après avoir configuré l'adresse du marché des plugins, vous pouvez utiliser un marché de plugins personnalisé",
+    "modalDesc": "Après avoir configuré l'adresse de la communauté de plugins, vous pourrez utiliser une communauté personnalisée de plugins.",
     "rules": {
       "argsRequired": "Veuillez saisir les arguments de démarrage",
       "commandRequired": "Veuillez saisir la commande de démarrage",
       "urlRequired": "Veuillez saisir l'adresse du service"
     },
     "saveSettings": "Enregistrer les paramètres",
-    "title": "Configurer le marché des plugins"
+    "title": "Configurer la communauté de plugins"
   },
   "showInPortal": "Veuillez consulter les détails dans l'espace de travail",
   "store": {
