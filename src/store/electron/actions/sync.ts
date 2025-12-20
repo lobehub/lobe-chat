@@ -12,6 +12,7 @@ import type { ElectronStore } from '../store';
  * 设置操作
  */
 export interface ElectronRemoteServerAction {
+  clearRemoteServerSyncError: () => void;
   connectRemoteServer: (params: DataSyncConfig) => Promise<void>;
   disconnectRemoteServer: () => Promise<void>;
   refreshServerConfig: () => Promise<void>;
@@ -27,10 +28,15 @@ export const remoteSyncSlice: StateCreator<
   [],
   ElectronRemoteServerAction
 > = (set, get) => ({
+  clearRemoteServerSyncError: () => {
+    set({ remoteServerSyncError: undefined }, false, 'clearRemoteServerSyncError');
+  },
+
   connectRemoteServer: async (values) => {
     if (values.storageMode === 'selfHost' && !values.remoteServerUrl) return;
 
     set({ isConnectingServer: true });
+    get().clearRemoteServerSyncError();
     try {
       // 获取当前配置
       const config = await remoteServerService.getRemoteServerConfig();
@@ -64,8 +70,9 @@ export const remoteSyncSlice: StateCreator<
 
   disconnectRemoteServer: async () => {
     set({ isConnectingServer: false });
+    get().clearRemoteServerSyncError();
     try {
-      await remoteServerService.setRemoteServerConfig({ active: false, storageMode: 'local' });
+      await remoteServerService.setRemoteServerConfig({ active: false, storageMode: 'cloud' });
       // 更新表单URL为空
       set({ dataSyncConfig: initialState.dataSyncConfig });
       // 刷新状态

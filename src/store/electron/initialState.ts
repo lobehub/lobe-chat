@@ -30,7 +30,7 @@ export interface ElectronState {
 
 export const initialState: ElectronState = {
   appState: {},
-  dataSyncConfig: { storageMode: 'local' },
+  dataSyncConfig: { storageMode: 'cloud' },
   desktopHotkeys: {},
   isAppStateInit: false,
   isConnectingServer: false,
