@@ -1023,5 +1023,15 @@
     "bps": true,
     "folderMillis": 1766157362540,
     "hash": "7a8ee107778222390e676951173baa81bfa09dd47216a8467575fca54915172c"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"session_group_id\" text;",
+      "\nDO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agents_session_group_id_session_groups_id_fk') THEN\n    ALTER TABLE \"agents\" ADD CONSTRAINT \"agents_session_group_id_session_groups_id_fk\" FOREIGN KEY (\"session_group_id\") REFERENCES \"public\".\"session_groups\"(\"id\") ON DELETE set null ON UPDATE no action;\n  END IF;\nEND $$;",
+      "\nCREATE INDEX IF NOT EXISTS \"agents_session_group_id_idx\" ON \"agents\" USING btree (\"session_group_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1766297832021,
+    "hash": "431a620396060130c46d6174d4bef3a517a0872aff8d19f3044bd9e7dec78ba5"
   }
 ]

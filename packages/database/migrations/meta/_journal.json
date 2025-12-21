@@ -448,6 +448,13 @@
       "when": 1766157362540,
       "tag": "0063_add_columns_for_several_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1766297832021,
+      "tag": "0064_add_agents_session_group_id",
+      "breakpoints": true
     }
   ],
   "version": "6"
