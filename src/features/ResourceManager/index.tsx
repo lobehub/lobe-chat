@@ -1,9 +1,9 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { memo, useEffect } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { useSearchParams } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';

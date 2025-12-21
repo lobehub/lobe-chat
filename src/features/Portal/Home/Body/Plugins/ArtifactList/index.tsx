@@ -1,9 +1,8 @@
-import { Avatar, Icon, Text , Skeleton } from '@lobehub/ui';
+import { Avatar, Center, Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Origami } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
 import { useChatStore } from '@/store/chat';

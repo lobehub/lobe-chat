@@ -1,10 +1,9 @@
-import { ActionIcon, Button, Tag } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox, Tag } from '@lobehub/ui';
 import { Badge } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideRotateCw, LucideTrash2, RotateCwIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
 import { useAgentStore } from '@/store/agent';

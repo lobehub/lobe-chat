@@ -1,11 +1,10 @@
-import { Button, Icon , Skeleton } from '@lobehub/ui';
+import { Button, Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { App, Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { BookMinusIcon, BookPlusIcon, FileBoxIcon, Trash2Icon } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 

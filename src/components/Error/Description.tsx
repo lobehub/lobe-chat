@@ -1,12 +1,11 @@
 'use client';
 
-import { Icon , Skeleton } from '@lobehub/ui';
+import { Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 const container = css`
   pre.shiki {

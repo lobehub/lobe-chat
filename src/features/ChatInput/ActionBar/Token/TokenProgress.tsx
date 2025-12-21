@@ -1,8 +1,8 @@
+import { Flexbox } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import numeral from 'numeral';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 interface TokenProgressItem {
   color: string;

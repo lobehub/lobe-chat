@@ -1,12 +1,11 @@
 'use client';
 
-import { ActionIcon, Button, Empty, Input, SortableList } from '@lobehub/ui';
+import { ActionIcon, Button, Empty, Flexbox, Input, SortableList } from '@lobehub/ui';
 import { Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { MessageCircle, PlusIcon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 import { useStore } from '../store';

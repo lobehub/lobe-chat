@@ -1,9 +1,8 @@
 import { ModelIcon } from '@lobehub/icons';
-import { Block, Text } from '@lobehub/ui';
+import { Block, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverModelItem } from '@/types/discover';
 

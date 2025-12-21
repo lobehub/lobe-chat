@@ -1,11 +1,10 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Block, Text } from '@lobehub/ui';
+import { Block, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { File, Folder } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ListLocalFilesState } from '../../type';
 

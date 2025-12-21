@@ -1,13 +1,12 @@
 'use client';
 
 import { CaretDownFilled, LoadingOutlined } from '@ant-design/icons';
-import { ActionIcon, Block, Dropdown, Icon } from '@lobehub/ui';
+import { ActionIcon, Block, Dropdown, Flexbox, Icon } from '@lobehub/ui';
 import { App, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
 import { m as motion } from 'motion/react';
 import React, { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import {

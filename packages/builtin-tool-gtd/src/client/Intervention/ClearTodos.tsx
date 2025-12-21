@@ -1,11 +1,11 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { Radio, RadioChangeEvent } from 'antd';
 import { createStyles } from 'antd-style';
 import { Trash2 } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import type { ClearTodosParams } from '../../types';
 

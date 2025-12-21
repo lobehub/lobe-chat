@@ -1,5 +1,5 @@
+import { Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { ReactNode } from 'react';
-import { Flexbox, type FlexboxProps } from 'react-layout-kit';
 
 interface MobileContentLayoutProps extends FlexboxProps {
   header?: ReactNode;

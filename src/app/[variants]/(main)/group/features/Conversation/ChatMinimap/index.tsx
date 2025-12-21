@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { Popover, Tooltip } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import debug from 'debug';
@@ -9,7 +9,6 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { conversationSelectors, useConversationStore } from '@/features/Conversation';
 

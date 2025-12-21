@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FC, Suspense, useEffect } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { useHomeStore } from '@/store/home';

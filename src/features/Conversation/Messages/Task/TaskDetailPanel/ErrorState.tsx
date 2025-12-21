@@ -1,17 +1,17 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CircleX, MessageSquare, Timer, Wrench } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { TaskDetail, ThreadStatus } from '@/types/index';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     padding-block: 12px;
-padding-inline: 16px;
+    padding-inline: 16px;
   `,
   errorMessage: css`
     font-size: 13px;

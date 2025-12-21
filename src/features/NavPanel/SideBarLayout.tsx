@@ -1,6 +1,5 @@
-import { ScrollShadow } from '@lobehub/ui';
+import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { ReactNode, Suspense, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/app/[variants]/(main)/home/_layout/Footer';
 import SkeletonList, { SkeletonItem } from '@/features/NavPanel/components/SkeletonList';

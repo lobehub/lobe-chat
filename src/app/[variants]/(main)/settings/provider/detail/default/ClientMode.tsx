@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useClientDataSWR } from '@/libs/swr';

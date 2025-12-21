@@ -1,14 +1,13 @@
 'use client';
 
 import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Avatar, Button, Icon, ItemType, Segmented } from '@lobehub/ui';
+import { Avatar, Button, Flexbox, Icon, ItemType, Segmented } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, PlusIcon, Store, ToyBrick } from 'lucide-react';
 import Image from 'next/image';
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import KlavisServerItem from '@/features/ChatInput/ActionBar/Tools/KlavisServerItem';

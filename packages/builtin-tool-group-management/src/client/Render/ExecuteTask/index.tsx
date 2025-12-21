@@ -1,12 +1,11 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Avatar, Text } from '@lobehub/ui';
+import { Avatar, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Clock } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';

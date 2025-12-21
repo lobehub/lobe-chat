@@ -1,10 +1,9 @@
 import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
 import { BuiltinPlaceholderProps } from '@lobechat/types';
-import { Icon, Skeleton } from '@lobehub/ui';
+import { Center, Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import React, { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token, cx }) => ({
   query: cx(css`

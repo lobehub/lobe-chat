@@ -1,8 +1,7 @@
-import { Block } from '@lobehub/ui';
+import { Block, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

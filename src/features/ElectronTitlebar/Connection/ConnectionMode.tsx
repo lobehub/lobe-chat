@@ -1,11 +1,10 @@
 import { StorageMode, StorageModeEnum } from '@lobechat/electron-client-ipc';
-import { Button, Input } from '@lobehub/ui';
+import { Button, Center, Flexbox, Input } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { createStyles } from 'antd-style';
 import { Server } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useElectronStore } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';

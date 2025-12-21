@@ -1,12 +1,11 @@
 'use client';
 
-import { ActionIcon, Avatar, Text } from '@lobehub/ui';
+import { ActionIcon, Avatar, Flexbox, Text } from '@lobehub/ui';
 import { App, Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import { Trash } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';

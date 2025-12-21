@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { Avatar, Block, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { Tag as AntTag, App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import {
@@ -17,7 +17,6 @@ import {
 import qs from 'query-string';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 

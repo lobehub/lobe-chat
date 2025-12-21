@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import { BrainCircuit, LibraryBigIcon, Settings } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import NavItem from '@/features/NavPanel/components/NavItem';

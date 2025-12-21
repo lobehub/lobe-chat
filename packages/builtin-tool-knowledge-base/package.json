@@ -13,12 +13,11 @@
     "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
-    "@lobehub/ui": "*",
-    "antd": "*",
+    "@lobehub/ui": "^3.3.3",
+    "antd": "^6",
     "antd-style": "*",
     "polished": "*",
     "react": "*",
-    "react-i18next": "*",
-    "react-layout-kit": "*"
+    "react-i18next": "*"
   }
 }

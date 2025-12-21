@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { Badge, ConfigProvider } from 'antd';
 import { PropsWithChildren, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const UpgradeBadge = memo(({ children, showBadge }: PropsWithChildren<{ showBadge?: boolean }>) => {
   if (!showBadge) return children;

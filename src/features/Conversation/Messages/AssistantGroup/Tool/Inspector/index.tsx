@@ -1,6 +1,6 @@
 import { ToolIntervention } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 

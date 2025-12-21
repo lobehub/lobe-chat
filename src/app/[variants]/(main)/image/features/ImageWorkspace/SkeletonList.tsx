@@ -1,8 +1,7 @@
 'use client';
 
-import { Block, Grid , Skeleton } from '@lobehub/ui';
+import { Block, Center, Flexbox, Grid, Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import PromptInput from '@/app/[variants]/(main)/image/features/PromptInput';
 

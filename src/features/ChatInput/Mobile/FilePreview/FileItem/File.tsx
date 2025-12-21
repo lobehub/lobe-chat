@@ -1,8 +1,7 @@
-import { ActionIcon, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import UploadDetail from '@/features/ChatInput/components/UploadDetail';

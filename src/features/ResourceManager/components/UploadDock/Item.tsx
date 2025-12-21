@@ -1,8 +1,7 @@
-import { Text } from '@lobehub/ui';
+import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { UploadFileItem } from '@/types/files/upload';

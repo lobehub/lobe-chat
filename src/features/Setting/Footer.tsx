@@ -1,12 +1,11 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquareHeart } from 'lucide-react';
 import Link from 'next/link';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import GuideModal from '@/components/GuideModal';
 import GuideVideo from '@/components/GuideVideo';

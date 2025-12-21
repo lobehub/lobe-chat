@@ -1,10 +1,9 @@
 'use client';
 
-import { Avatar, Markdown, Text } from '@lobehub/ui';
+import { Avatar, Flexbox, Markdown, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { useIsMobile } from '@/hooks/useIsMobile';

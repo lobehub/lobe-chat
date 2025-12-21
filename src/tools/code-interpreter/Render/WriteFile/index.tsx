@@ -2,10 +2,9 @@
 
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Text } from '@lobehub/ui';
+import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { WriteLocalFileState } from '../../type';
 
@@ -38,7 +37,10 @@ const WriteFile = memo<BuiltinRenderProps<WriteLocalFileParams, WriteLocalFileSt
       <Flexbox className={styles.container} gap={8}>
         <Flexbox align={'center'} gap={8} horizontal>
           {pluginState === undefined ? null : isSuccess ? (
-            <CheckCircleFilled className={styles.statusIcon} style={{ color: theme.colorSuccess }} />
+            <CheckCircleFilled
+              className={styles.statusIcon}
+              style={{ color: theme.colorSuccess }}
+            />
           ) : (
             <CloseCircleFilled className={styles.statusIcon} style={{ color: theme.colorError }} />
           )}

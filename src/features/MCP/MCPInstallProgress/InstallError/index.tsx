@@ -1,8 +1,7 @@
-import { Alert } from '@lobehub/ui';
+import { Alert, Flexbox } from '@lobehub/ui';
 import { Button } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { MCPErrorInfo } from '@/types/plugins';

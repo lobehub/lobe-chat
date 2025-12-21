@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { PropsWithChildren } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import ProviderMenu from '../../ProviderMenu';
 import Container from './Container';

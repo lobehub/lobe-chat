@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { LIBRARY_URL } from '@/const/url';

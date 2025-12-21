@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { CheckCircle, ChevronRight } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 interface ConfigDiffViewProps {
   newValues: Record<string, unknown>;

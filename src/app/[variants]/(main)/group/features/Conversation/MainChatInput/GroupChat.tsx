@@ -1,11 +1,10 @@
 'use client';
 
 import { SlashOptions } from '@lobehub/editor';
-import { Alert, Avatar, GroupAvatar } from '@lobehub/ui';
+import { Alert, Avatar, Flexbox, GroupAvatar } from '@lobehub/ui';
 import { isEqual } from 'es-toolkit/compat';
 import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';

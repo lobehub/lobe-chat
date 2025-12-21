@@ -1,8 +1,8 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useQueryState } from '@/hooks/useQueryParam';
 import { ModelNavKey } from '@/types/discover';

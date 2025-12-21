@@ -1,9 +1,8 @@
-import { Alert, FormItem, Input, InputPassword } from '@lobehub/ui';
+import { Alert, Flexbox, FormItem, Input, InputPassword } from '@lobehub/ui';
 import { Button, Divider, Form, FormInstance, Radio } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import KeyValueEditor from '@/components/KeyValueEditor';
 import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';

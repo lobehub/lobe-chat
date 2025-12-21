@@ -1,7 +1,6 @@
-import { Empty } from '@lobehub/ui';
+import { Center, Empty } from '@lobehub/ui';
 import { Database } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import DataTable from './DataTable';
 import { CachePanelContextProvider } from './cacheProvider';

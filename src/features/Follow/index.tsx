@@ -1,12 +1,11 @@
 'use client';
 
 import { SiDiscord, SiGithub, SiMedium, SiX } from '@icons-pack/react-simple-icons';
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { SOCIAL_URL } from '@/const/branding';
 import { GITHUB } from '@/const/url';

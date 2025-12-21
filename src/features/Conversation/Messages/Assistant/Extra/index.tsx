@@ -1,7 +1,7 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { ModelPerformance, ModelUsage } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { messageStateSelectors, useConversationStore } from '../../../store';
 import ExtraContainer from '../../components/Extras/ExtraContainer';

@@ -1,10 +1,9 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Center, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useChatStore } from '@/store/chat';

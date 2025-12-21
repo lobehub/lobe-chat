@@ -1,12 +1,11 @@
 'use client';
 
 import { ChatInput } from '@lobehub/editor/react';
-import { Button, TextArea } from '@lobehub/ui';
+import { Button, Flexbox, TextArea } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Sparkles } from 'lucide-react';
 import type { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { loginRequired } from '@/components/Error/loginRequiredNotification';
 import { useGeminiChineseWarning } from '@/hooks/useGeminiChineseWarning';

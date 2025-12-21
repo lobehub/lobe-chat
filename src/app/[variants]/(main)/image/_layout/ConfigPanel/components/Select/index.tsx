@@ -1,9 +1,8 @@
 'use client';
 
-import { Block, Grid, GridProps, Select, Text } from '@lobehub/ui';
+import { Block, Center, Grid, GridProps, Select, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo } from 'react';
-import { Center } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 export interface SizeSelectProps extends Omit<GridProps, 'children' | 'onChange'> {

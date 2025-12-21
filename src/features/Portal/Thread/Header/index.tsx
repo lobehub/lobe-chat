@@ -1,8 +1,7 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ArrowLeftRight, XIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import SidebarHeader from '@/components/SidebarHeader';
 import { useChatStore } from '@/store/chat';

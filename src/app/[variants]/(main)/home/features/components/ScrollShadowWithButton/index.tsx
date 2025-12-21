@@ -1,8 +1,7 @@
-import { Button, ScrollShadow } from '@lobehub/ui';
+import { Button, Flexbox, FlexboxProps, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { memo, useCallback, useRef, useState } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   button: css`

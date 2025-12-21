@@ -1,13 +1,12 @@
 'use client';
 
-import { ActionIcon, Avatar, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Flexbox, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { List as AntdList, Button, Checkbox, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { type ChangeEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';

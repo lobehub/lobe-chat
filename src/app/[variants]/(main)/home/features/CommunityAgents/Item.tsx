@@ -1,7 +1,6 @@
-import { Avatar, Block, Text } from '@lobehub/ui';
+import { Avatar, Block, Flexbox, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';
 import { DEFAULT_AVATAR } from '@/const/meta';

@@ -1,11 +1,11 @@
 'use client';
 
 import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { DiscordIcon } from '@lobehub/ui/icons';
 import { Book, CircleHelp, Feather, FileClockIcon, FlaskConical, Github, Mail } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import ChangelogModal from '@/components/ChangelogModal';
 import LabsModal from '@/components/LabsModal';

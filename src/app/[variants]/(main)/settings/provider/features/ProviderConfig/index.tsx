@@ -10,7 +10,7 @@ import {
   Icon,
   Tooltip,
 } from '@lobehub/ui';
-import { Skeleton } from '@lobehub/ui';
+import { Center, Flexbox, Skeleton } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
@@ -18,7 +18,6 @@ import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo, useCallback, useLayoutEffect, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 import { z } from 'zod';
 

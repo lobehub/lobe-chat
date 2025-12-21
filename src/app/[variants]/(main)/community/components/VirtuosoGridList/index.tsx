@@ -1,6 +1,5 @@
-import { DivProps, Grid } from '@lobehub/ui';
+import { DivProps, Flexbox, Grid } from '@lobehub/ui';
 import { forwardRef, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { VirtuosoGrid, VirtuosoGridProps } from 'react-virtuoso';
 
 import { useScrollParent } from './useScrollParent';

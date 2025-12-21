@@ -2,10 +2,9 @@
 
 import { CheckCircleFilled, CloseCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { ActionIcon, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useCallback } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ExportFileState } from '../../type';
 

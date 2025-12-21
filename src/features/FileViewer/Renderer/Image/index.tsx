@@ -1,5 +1,5 @@
 import { DocRenderer } from '@cyntler/react-doc-viewer';
-import { Center } from 'react-layout-kit';
+import { Center } from '@lobehub/ui';
 
 const ImageRenderer: DocRenderer = ({ mainState: { currentDocument } }) => {
   const { uri, fileName } = currentDocument || {};

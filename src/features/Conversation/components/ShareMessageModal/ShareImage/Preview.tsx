@@ -1,11 +1,10 @@
 import { OFFICIAL_DOMAIN } from '@lobechat/const';
 import { UIChatMessage } from '@lobechat/types';
 import { ModelTag } from '@lobehub/icons';
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Flexbox } from '@lobehub/ui';
 import { ChatHeaderTitle } from '@lobehub/ui/chat';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import { ChatItem } from '@/features/Conversation/ChatItem';

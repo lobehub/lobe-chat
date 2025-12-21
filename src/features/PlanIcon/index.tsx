@@ -1,10 +1,9 @@
-import { Icon } from '@lobehub/ui';
+import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
 import { createStyles } from 'antd-style';
 import { Atom, Box, CircleSlash, Sparkle, Zap } from 'lucide-react';
 import { CSSProperties, MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { Plans } from '@/types/subscription';
 

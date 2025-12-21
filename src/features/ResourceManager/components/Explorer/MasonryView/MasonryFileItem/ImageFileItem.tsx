@@ -1,11 +1,10 @@
-import { Button, Tooltip } from '@lobehub/ui';
+import { Button, Flexbox, Tooltip } from '@lobehub/ui';
 import { Image } from 'antd';
 import { createStyles } from 'antd-style';
 import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';

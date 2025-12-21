@@ -1,10 +1,9 @@
 import { ModelTag } from '@lobehub/icons';
-import { Icon, Markdown, Text } from '@lobehub/ui';
+import { Center, Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ScrollText } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useAgentStore } from '@/store/agent/store';

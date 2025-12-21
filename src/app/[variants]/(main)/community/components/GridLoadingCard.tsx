@@ -1,9 +1,8 @@
 'use client';
 
-import { Block, Grid, Skeleton } from '@lobehub/ui';
+import { Block, Flexbox, Grid, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   footer: css`

@@ -1,6 +1,5 @@
-import { Tag, Text } from '@lobehub/ui';
+import { Center, Tag, Text } from '@lobehub/ui';
 import { BrandLoading, LobeHubText } from '@lobehub/ui/brand';
-import { Center } from 'react-layout-kit';
 
 import { isCustomBranding } from '@/const/version';
 

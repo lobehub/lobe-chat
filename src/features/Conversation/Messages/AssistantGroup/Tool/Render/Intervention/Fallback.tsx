@@ -1,9 +1,8 @@
 import { safeParseJSON } from '@lobechat/utils';
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { Edit3Icon } from 'lucide-react';
 import { Suspense, memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { toolInterventionSelectors } from '@/store/user/selectors';

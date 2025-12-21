@@ -1,12 +1,11 @@
 import { ProviderCombine } from '@lobehub/icons';
-import { Highlighter, Snippet, Tabs } from '@lobehub/ui';
+import { Flexbox, Highlighter, Snippet, Tabs } from '@lobehub/ui';
 import { Steps } from 'antd';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { readableColor } from 'polished';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => ({
   steps: css`

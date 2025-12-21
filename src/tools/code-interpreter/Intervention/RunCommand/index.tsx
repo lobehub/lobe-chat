@@ -1,9 +1,8 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Highlighter, Text } from '@lobehub/ui';
+import { Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 interface RunCommandParams {
   background?: boolean;
@@ -39,7 +38,13 @@ const RunCommand = memo<BuiltinInterventionProps<RunCommandParams>>(({ args }) =
         </Flexbox>
       </Flexbox>
       {command && (
-        <Highlighter language={'sh'} showLanguage={false} style={{ padding: '4px 8px' }} variant={'outlined'} wrap>
+        <Highlighter
+          language={'sh'}
+          showLanguage={false}
+          style={{ padding: '4px 8px' }}
+          variant={'outlined'}
+          wrap
+        >
           {command}
         </Highlighter>
       )}

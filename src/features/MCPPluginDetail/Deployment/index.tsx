@@ -1,6 +1,6 @@
 import { SiApple, SiLinux } from '@icons-pack/react-simple-icons';
 import { Microsoft } from '@lobehub/icons';
-import { ActionIcon, Block, Collapse, Empty, Icon, Snippet, Tag } from '@lobehub/ui';
+import { ActionIcon, Block, Collapse, Empty, Flexbox, Icon, Snippet, Tag } from '@lobehub/ui';
 import { Divider, Popover, Steps } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
@@ -16,7 +16,6 @@ import {
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Descriptions from '@/components/Descriptions';
 import InlineTable from '@/components/InlineTable';

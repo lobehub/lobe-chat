@@ -1,8 +1,7 @@
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { BanIcon, CircleCheckBigIcon, CircleDashedIcon } from 'lucide-react';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Title from '../../../app/[variants]/(main)/community/features/Title';
 

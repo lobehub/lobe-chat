@@ -1,10 +1,10 @@
 'use client';
 
+import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { ORG_NAME } from '@/const/branding';
 import { UTM_SOURCE } from '@/const/url';

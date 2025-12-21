@@ -1,10 +1,10 @@
+import { Center } from '@lobehub/ui';
 import { TypewriterEffect } from '@lobehub/ui/awesome';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { useTheme } from 'antd-style';
 import { shuffle } from 'es-toolkit/compat';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 const WelcomeText = memo(() => {
   const { t } = useTranslation('welcome');

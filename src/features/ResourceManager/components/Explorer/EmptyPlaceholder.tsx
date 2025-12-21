@@ -1,9 +1,8 @@
-import { FileTypeIcon, Icon, Text } from '@lobehub/ui';
+import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { useCreateNewModal } from '@/features/LibraryModal';

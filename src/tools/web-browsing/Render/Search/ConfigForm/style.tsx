@@ -1,7 +1,6 @@
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Center, CenterProps, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ReactNode, memo } from 'react';
-import { Center, CenterProps, Flexbox } from 'react-layout-kit';
 
 export const useStyles = createStyles(({ css, token }) => ({
   container: css`

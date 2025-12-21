@@ -1,11 +1,10 @@
 import { UpdateInfo, useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Flexbox, Icon } from '@lobehub/ui';
 import { Modal, theme } from 'antd';
 import { createStyles } from 'antd-style';
 import { CircleFadingArrowUp } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { autoUpdateService } from '@/services/electron/autoUpdate';
 

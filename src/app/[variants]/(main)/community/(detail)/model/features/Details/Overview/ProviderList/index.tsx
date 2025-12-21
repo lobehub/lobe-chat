@@ -1,12 +1,11 @@
 'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
-import { ActionIcon, Block, Icon, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Block, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { BadgeCheck, BookIcon, ChevronRightIcon, KeyIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 
@@ -157,7 +156,11 @@ const ProviderList = memo(() => {
                     </Tooltip>
                   )}
                   <Tooltip title={t('models.guide')}>
-                    <a href={urlJoin(BASE_PROVIDER_DOC_URL, record.id)} rel="noreferrer" target={'_blank'}>
+                    <a
+                      href={urlJoin(BASE_PROVIDER_DOC_URL, record.id)}
+                      rel="noreferrer"
+                      target={'_blank'}
+                    >
                       <ActionIcon icon={BookIcon} size={'small'} variant={'filled'} />
                     </a>
                   </Tooltip>

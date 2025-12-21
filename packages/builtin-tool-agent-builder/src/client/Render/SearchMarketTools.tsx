@@ -1,10 +1,9 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Avatar, Button, Tag } from '@lobehub/ui';
+import { Avatar, Button, Tag , Flexbox } from '@lobehub/ui';
 import { CheckCircle, Download, Package, Search } from 'lucide-react';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { useAgentStore } from '@/store/agent';

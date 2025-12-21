@@ -1,11 +1,10 @@
 'use client';
 
-import { ActionIcon, SortableList } from '@lobehub/ui';
+import { ActionIcon, SortableList , Flexbox } from '@lobehub/ui';
 import { Input, InputRef } from 'antd';
 import { createStyles } from 'antd-style';
 import { CheckCircle2, Circle, Trash2 } from 'lucide-react';
 import { ChangeEvent, KeyboardEvent, memo, useCallback, useEffect, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useTodoListStore } from './store';
 

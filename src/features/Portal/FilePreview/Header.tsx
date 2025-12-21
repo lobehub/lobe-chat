@@ -1,6 +1,5 @@
-import { ActionIcon, Text , Skeleton } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import { ArrowLeft } from 'lucide-react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';

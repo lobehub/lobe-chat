@@ -1,11 +1,10 @@
 'use client';
 
-import { CopyButton, Skeleton } from '@lobehub/ui';
+import { CopyButton, Flexbox, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { lineEllipsis } from '@/styles';
 import { shinyTextStylish } from '@/styles/loading';

@@ -1,7 +1,7 @@
 import { BuiltinRenderProps } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { CheckCircle, FileText } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import type { UpdatePromptParams, UpdatePromptState } from '../../types';
 

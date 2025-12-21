@@ -2,11 +2,10 @@
 
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { ActionIcon, Block, Highlighter, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { EditLocalFileState } from '../../type';
 
@@ -69,7 +68,10 @@ const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFile
                 style={{ color: theme.colorSuccess }}
               />
             ) : (
-              <CloseCircleFilled className={styles.statusIcon} style={{ color: theme.colorError }} />
+              <CloseCircleFilled
+                className={styles.statusIcon}
+                style={{ color: theme.colorError }}
+              />
             )}
             <Text className={styles.path}>
               {pluginState?.replacements || 0} replacement(s) in {args.path}

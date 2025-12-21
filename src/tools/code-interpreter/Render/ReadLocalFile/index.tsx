@@ -1,10 +1,9 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Block, Highlighter, Text } from '@lobehub/ui';
+import { Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ReadLocalFileState } from '../../type';
 

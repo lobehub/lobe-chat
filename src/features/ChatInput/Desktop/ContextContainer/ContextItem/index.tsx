@@ -1,7 +1,6 @@
-import { Tag, Tooltip } from '@lobehub/ui';
+import { Flexbox, Tag, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { UploadFileItem } from '@/types/files/upload';

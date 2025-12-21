@@ -1,12 +1,11 @@
 'use client';
 
-import { Avatar, Button, Icon } from '@lobehub/ui';
+import { Avatar, Button, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideArrowUpRightFromSquare, TelescopeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Notification from '@/components/Notification';
 import { BRANDING_NAME } from '@/const/branding';

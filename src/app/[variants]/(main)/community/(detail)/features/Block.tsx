@@ -1,8 +1,7 @@
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Flexbox, FlexboxProps, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 const useStyles = createStyles(({ css, token }) => ({

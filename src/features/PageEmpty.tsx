@@ -1,8 +1,7 @@
-import { Empty, EmptyProps } from '@lobehub/ui';
+import { Center, Empty, EmptyProps } from '@lobehub/ui';
 import { FileText } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 interface PageEmptyProps extends Omit<EmptyProps, 'icon'> {
   search?: boolean;

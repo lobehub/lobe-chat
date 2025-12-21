@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { CSSProperties, ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { MAX_SIZE_DESKTOP, MIN_IMAGE_SIZE, useStyles } from './style';
 

@@ -1,7 +1,6 @@
-import { ActionIcon, Block, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Center, Text } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 interface EmptyStatusProps {
   className?: string;

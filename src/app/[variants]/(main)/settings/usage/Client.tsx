@@ -1,12 +1,11 @@
 'use client';
 
-import { Icon, Segmented } from '@lobehub/ui';
+import { Flexbox, Icon, Segmented } from '@lobehub/ui';
 import { Col, DatePicker, DatePickerProps, Row } from 'antd';
 import dayjs from 'dayjs';
 import { Brain, Codesandbox } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { usageService } from '@/services/usage';

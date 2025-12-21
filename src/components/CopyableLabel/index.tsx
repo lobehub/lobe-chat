@@ -1,6 +1,5 @@
-import { CopyButton, Text } from '@lobehub/ui';
+import { CopyButton, Flexbox, Text } from '@lobehub/ui';
 import { CSSProperties, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const CopyableLabel = memo<{ style?: CSSProperties; value?: string | null }>(
   ({ style, value = '--' }) => {

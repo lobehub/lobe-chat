@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useToolStore } from '@/store/tool';

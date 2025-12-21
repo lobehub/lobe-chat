@@ -1,8 +1,7 @@
 import { KeyEnum } from '@lobechat/types';
-import { Hotkey, combineKeys } from '@lobehub/ui';
+import { Flexbox, Hotkey, combineKeys } from '@lobehub/ui';
 import { memo } from 'react';
 import { Trans } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';

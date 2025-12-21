@@ -1,11 +1,10 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox, FlexboxProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { XIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   cancelIcon: css`

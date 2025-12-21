@@ -1,11 +1,10 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Text } from '@lobehub/ui';
+import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   path: css`
@@ -28,9 +27,13 @@ const MoveLocalFiles = memo<BuiltinInterventionProps<MoveLocalFilesParams>>(({ a
       <Flexbox gap={4}>
         {operations.map((op, i) => (
           <Flexbox align={'center'} gap={8} horizontal key={i}>
-            <Text className={styles.path} ellipsis style={{ maxWidth: 200 }}>{op.source}</Text>
+            <Text className={styles.path} ellipsis style={{ maxWidth: 200 }}>
+              {op.source}
+            </Text>
             <ArrowRight size={12} />
-            <Text className={styles.path} ellipsis style={{ maxWidth: 200 }}>{op.destination}</Text>
+            <Text className={styles.path} ellipsis style={{ maxWidth: 200 }}>
+              {op.destination}
+            </Text>
           </Flexbox>
         ))}
       </Flexbox>

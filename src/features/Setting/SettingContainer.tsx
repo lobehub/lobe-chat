@@ -1,8 +1,8 @@
 'use client';
 
+import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { PropsWithChildren, ReactNode, memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 interface SettingContainerProps extends FlexboxProps {
   addonAfter?: ReactNode;

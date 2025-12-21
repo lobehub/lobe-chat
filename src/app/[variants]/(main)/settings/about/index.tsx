@@ -1,12 +1,11 @@
 'use client';
 
 import { SiDiscord, SiGithub, SiMedium, SiRss, SiX } from '@icons-pack/react-simple-icons';
-import { Form } from '@lobehub/ui';
+import { Flexbox, Form } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@/const/branding';
 import { BLOG, OFFICIAL_SITE, PRIVACY_URL, TERMS_URL, mailTo } from '@/const/url';

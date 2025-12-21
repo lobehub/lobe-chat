@@ -1,10 +1,9 @@
-import { Icon, Tag, Tooltip } from '@lobehub/ui';
+import { Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BoltIcon, RotateCwIcon } from 'lucide-react';
 import { darken, lighten } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { AsyncTaskStatus, FileParsingTask } from '@/types/asyncTask';
 

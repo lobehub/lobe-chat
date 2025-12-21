@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import Footer from '@/features/Setting/Footer';

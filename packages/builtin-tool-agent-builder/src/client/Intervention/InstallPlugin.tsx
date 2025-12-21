@@ -2,12 +2,11 @@
 
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Avatar } from '@lobehub/ui';
+import { Avatar , Flexbox } from '@lobehub/ui';
 import { CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { klavisStoreSelectors, pluginSelectors } from '@/store/tool/selectors';

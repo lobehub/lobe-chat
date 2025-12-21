@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import AgentBuilderWelcome from '@/features/AgentBuilder/AgentBuilderWelcome';
 import type { ActionKeys } from '@/features/ChatInput';

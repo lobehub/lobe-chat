@@ -1,10 +1,9 @@
-import { Block, Icon, Tag } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { CheckIcon, MinusIcon } from 'lucide-react';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Link from '@/app/[variants]/(main)/components/Link';
 import { usePathname } from '@/app/[variants]/(main)/hooks/usePathname';

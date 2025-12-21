@@ -1,4 +1,4 @@
-import { Icon, SearchResultCards, Tag } from '@lobehub/ui';
+import { Flexbox, Icon, SearchResultCards, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight, Globe } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { rgba } from 'polished';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { GroundingSearch } from '@/types/search';
 

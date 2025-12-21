@@ -1,10 +1,9 @@
-import { ActionIcon, Button, Icon, Input } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox, Icon, Input } from '@lobehub/ui';
 import { App, Form, FormInstance } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucidePlus, LucideTrash } from 'lucide-react';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   form: css`

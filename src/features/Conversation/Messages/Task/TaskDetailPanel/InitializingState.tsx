@@ -1,10 +1,10 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, dbMessageSelectors } from '@/store/chat/selectors';

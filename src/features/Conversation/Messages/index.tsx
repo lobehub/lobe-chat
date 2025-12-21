@@ -1,6 +1,7 @@
 'use client';
 
 import { isDesktop } from '@lobechat/const';
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
@@ -13,7 +14,6 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import type { VListHandle } from 'virtua';
 
 import BubblesLoading from '@/components/BubblesLoading';

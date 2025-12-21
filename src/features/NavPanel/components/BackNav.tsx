@@ -1,9 +1,8 @@
-import { ActionIcon, Button } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeftIcon } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';

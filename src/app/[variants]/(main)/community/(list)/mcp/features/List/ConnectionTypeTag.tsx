@@ -1,9 +1,8 @@
-import { Icon, Tooltip } from '@lobehub/ui';
+import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Blend, Cloud, LaptopMinimalIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 interface ConnectionTypeTagProps {
   type?: 'hybrid' | 'local' | 'remote';

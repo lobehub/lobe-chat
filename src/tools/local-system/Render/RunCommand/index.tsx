@@ -1,11 +1,10 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { RunCommandParams, RunCommandResult } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { ActionIcon, Block, Highlighter, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

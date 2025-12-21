@@ -1,9 +1,9 @@
 import { Ollama } from '@lobehub/icons';
+import { Center } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import FormAction from '@/components/FormAction';
 

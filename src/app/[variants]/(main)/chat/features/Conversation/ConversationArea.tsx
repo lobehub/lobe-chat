@@ -1,8 +1,8 @@
 'use client';
 
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
+import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo, useEffect, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ChatList, ConversationProvider } from '@/features/Conversation';
 import { useOperationState } from '@/hooks/useOperationState';

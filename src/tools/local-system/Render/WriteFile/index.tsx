@@ -1,10 +1,9 @@
 import { WriteLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Icon , Skeleton } from '@lobehub/ui';
+import { Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
 

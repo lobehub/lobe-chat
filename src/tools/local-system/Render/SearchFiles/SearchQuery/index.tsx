@@ -1,10 +1,9 @@
 import type { LocalFileSearchState } from '@lobechat/builtin-tool-local-system';
 import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
-import { ActionIcon, Button, Icon, SearchBar } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox, Icon, SearchBar } from '@lobehub/ui';
 import { SearchIcon, XIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';

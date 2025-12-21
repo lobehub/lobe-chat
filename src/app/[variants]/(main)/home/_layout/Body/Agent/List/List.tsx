@@ -1,8 +1,8 @@
 import type { SidebarAgentItem } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { MoreHorizontal } from 'lucide-react';
 import { CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useGlobalStore } from '@/store/global';

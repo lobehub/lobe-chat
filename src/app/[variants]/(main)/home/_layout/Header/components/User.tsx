@@ -1,10 +1,9 @@
 'use client';
 
-import { Block, Icon, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import UserAvatar from '@/features/User/UserAvatar';

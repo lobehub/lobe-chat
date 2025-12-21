@@ -1,6 +1,5 @@
-import { Button, MaskShadow } from '@lobehub/ui';
+import { Button, Flexbox, MaskShadow } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import MarkdownMessage from '@/features/Conversation/Markdown';
 import { useChatStore } from '@/store/chat';

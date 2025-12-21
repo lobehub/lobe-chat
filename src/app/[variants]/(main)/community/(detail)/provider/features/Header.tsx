@@ -1,13 +1,12 @@
 'use client';
 
 import { Github, ProviderCombine } from '@lobehub/icons';
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { GlobeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { useDetailContext } from './DetailProvider';

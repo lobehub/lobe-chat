@@ -1,8 +1,7 @@
-import { Icon, IconProps } from '@lobehub/ui';
+import { Flexbox, Icon, IconProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Divider from './Divider';
 

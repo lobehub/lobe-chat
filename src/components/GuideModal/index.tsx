@@ -1,10 +1,10 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { ConfigProvider, Modal, type ModalProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { lighten } from 'polished';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => {
   return {

@@ -1,12 +1,11 @@
 'use client';
 
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
-import { Alert, Block, Text , Skeleton } from '@lobehub/ui';
+import { Alert, Block, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import { App, Button, Divider, Form, Input, Radio, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { desktopSettingsService } from '@/services/electron/settings';
 import { useElectronStore } from '@/store/electron';

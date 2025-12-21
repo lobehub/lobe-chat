@@ -1,10 +1,9 @@
 import { LocalReadFileResult } from '@lobechat/electron-client-ipc';
-import { ActionIcon, Icon, Markdown, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AlignLeft, Asterisk, ExternalLink, FolderOpen } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { localFileService } from '@/services/electron/localFileService';

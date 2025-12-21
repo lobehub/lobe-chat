@@ -1,10 +1,9 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ArrowLeft } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import StoreSearchBar from '@/app/[variants]/(main)/community/features/Search';

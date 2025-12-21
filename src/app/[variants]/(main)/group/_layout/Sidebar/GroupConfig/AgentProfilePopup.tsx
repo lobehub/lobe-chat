@@ -1,12 +1,11 @@
 'use client';
 
 import type { AgentItem } from '@lobechat/types';
-import { Avatar, Text, Tooltip } from '@lobehub/ui';
+import { Avatar, Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import ModelSelect from '@/features/ModelSelect';

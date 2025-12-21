@@ -1,4 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { CreateBotIcon } from '@lobehub/ui/icons';
 import { Dropdown } from 'antd';
 import { useTheme } from 'antd-style';
@@ -6,7 +6,6 @@ import { ChevronDownIcon } from 'lucide-react';
 import type React from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 

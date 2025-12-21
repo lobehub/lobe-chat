@@ -1,8 +1,7 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Flexbox, FlexboxProps, Text } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 export interface AuthCardProps extends Omit<FlexboxProps, 'title'> {
   footer?: ReactNode;

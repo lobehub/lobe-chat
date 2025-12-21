@@ -1,9 +1,8 @@
 'use client';
 
-import { FormGroup, Grid } from '@lobehub/ui';
+import { Flexbox, FormGroup, Grid } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 

@@ -1,12 +1,11 @@
 'use client';
 
 import { SiDiscord } from '@icons-pack/react-simple-icons';
-import { Alert, Button, Icon } from '@lobehub/ui';
+import { Alert, Button, Flexbox, Icon } from '@lobehub/ui';
 import Link from 'next/link';
 import { parseAsString, useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import AuthCard from '@/features/AuthCard';
 

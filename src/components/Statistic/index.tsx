@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const Statistic = memo<{ title: ReactNode; value: ReactNode }>(({ value, title }) => {
   const theme = useTheme();

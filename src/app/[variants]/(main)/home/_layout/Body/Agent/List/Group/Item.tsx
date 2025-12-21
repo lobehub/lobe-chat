@@ -1,9 +1,8 @@
 import type { SidebarGroup } from '@lobechat/types';
-import { AccordionItem, Dropdown, Icon, Text } from '@lobehub/ui';
+import { AccordionItem, Dropdown, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { HashIcon, Loader2 } from 'lucide-react';
 import React, { memo, useCallback, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useHomeStore } from '@/store/home';
 

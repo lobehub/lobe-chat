@@ -1,11 +1,10 @@
 'use client';
 
-import { Avatar, Block, Icon, Text } from '@lobehub/ui';
+import { Avatar, Block, Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FileTextIcon } from 'lucide-react';
 import markdownToTxt from 'markdown-to-txt';
 import { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import Time from '@/app/[variants]/(main)/home/features/components/Time';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';

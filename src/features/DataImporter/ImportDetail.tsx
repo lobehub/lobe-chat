@@ -1,12 +1,11 @@
 'use client';
 
-import { Button, Modal, Text } from '@lobehub/ui';
+import { Button, Flexbox, Modal, Text } from '@lobehub/ui';
 import { Table } from 'antd';
 import { createStyles } from 'antd-style';
 import { Info } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ImportPgDataStructure } from '@/types/export';
 

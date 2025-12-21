@@ -1,13 +1,12 @@
 'use client';
 
 import { Button, Form, type FormGroupItemType, type FormItemProps, Icon } from '@lobehub/ui';
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { Form as AntForm, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Loader2Icon, PencilIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import TextArea from '@/components/TextArea';
 import { FORM_STYLE } from '@/const/layoutTokens';

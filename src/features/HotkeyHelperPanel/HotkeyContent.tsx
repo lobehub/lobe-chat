@@ -1,9 +1,8 @@
-import { Hotkey } from '@lobehub/ui';
+import { Flexbox, Hotkey } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
 import hotkeyMeta from '@/locales/default/hotkey';

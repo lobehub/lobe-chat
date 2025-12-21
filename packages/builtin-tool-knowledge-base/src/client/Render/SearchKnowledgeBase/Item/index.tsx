@@ -1,9 +1,8 @@
 'use client';
 
 import { FileSearchResult } from '@lobechat/types';
-import { Text, Tooltip } from '@lobehub/ui';
+import { Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { ComponentType, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useStyles } from './style';
 

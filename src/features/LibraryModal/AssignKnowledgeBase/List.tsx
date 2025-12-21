@@ -1,9 +1,8 @@
-import { Empty, Icon } from '@lobehub/ui';
+import { Center, Empty, Flexbox, Icon } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { BookOpen, ServerCrash } from 'lucide-react';
 import React, { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useAgentStore } from '@/store/agent';

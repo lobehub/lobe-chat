@@ -1,10 +1,9 @@
 'use client';
 
-import { SearchBar } from '@lobehub/ui';
+import { Flexbox, SearchBar } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import SideBarDrawer from '@/features/NavPanel/SideBarDrawer';
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';

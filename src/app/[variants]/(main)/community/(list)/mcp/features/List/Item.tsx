@@ -1,13 +1,12 @@
 'use client';
 
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Block, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Block, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { Spotlight } from '@lobehub/ui/awesome';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 

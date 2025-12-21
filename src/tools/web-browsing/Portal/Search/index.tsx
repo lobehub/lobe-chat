@@ -1,8 +1,7 @@
 import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { uniq } from 'es-toolkit/compat';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';

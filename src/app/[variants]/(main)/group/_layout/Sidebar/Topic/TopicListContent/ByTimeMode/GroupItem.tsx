@@ -1,9 +1,8 @@
-import { AccordionItem, Icon, Text } from '@lobehub/ui';
+import { AccordionItem, Flexbox, Icon, Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { HashIcon } from 'lucide-react';
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { GroupedTopic } from '@/types/topic';
 

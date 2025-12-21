@@ -1,7 +1,7 @@
 import { MenuRenderProps } from '@lobehub/editor/es/plugins/slash/react/type';
+import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { MentionListOption } from './types';
 

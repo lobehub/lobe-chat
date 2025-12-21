@@ -1,6 +1,6 @@
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Icon, Skeleton, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import { createPatch } from 'diff';
 import { ChevronRight } from 'lucide-react';
@@ -9,7 +9,6 @@ import React, { memo, useMemo } from 'react';
 import { Diff, Hunk, parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import useSWR from 'swr';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';

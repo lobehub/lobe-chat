@@ -1,9 +1,8 @@
-import { Button, Icon, Tooltip } from '@lobehub/ui';
+import { Button, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Space } from 'antd';
 import { ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { formatShortenNumber } from '@/utils/format';
 

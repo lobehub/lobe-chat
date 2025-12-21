@@ -1,9 +1,8 @@
 'use client';
 
-import { Modal } from '@lobehub/ui';
+import { Flexbox, Modal } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors, preferenceSelectors } from '@/store/user/selectors';

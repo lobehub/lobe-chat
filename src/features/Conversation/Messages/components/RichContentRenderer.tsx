@@ -1,6 +1,5 @@
-import { Image, Markdown } from '@lobehub/ui';
+import { Flexbox, Image, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { MessageContentPart } from '@/types/index';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { ModelIcon } from '@lobehub/icons';
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { OFFICIAL_URL } from '@/const/url';

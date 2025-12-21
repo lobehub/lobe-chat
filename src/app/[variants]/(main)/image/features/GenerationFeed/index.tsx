@@ -1,9 +1,9 @@
 'use client';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { Flexbox } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { Fragment, memo, useEffect, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useImageStore } from '@/store/image';
 import { generationBatchSelectors } from '@/store/image/selectors';

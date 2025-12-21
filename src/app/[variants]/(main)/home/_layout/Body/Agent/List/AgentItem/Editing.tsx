@@ -1,8 +1,7 @@
-import { Avatar, Block, Input } from '@lobehub/ui';
+import { Avatar, Block, Flexbox, Input } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { useThemeMode } from 'antd-style';
 import { memo, useCallback, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import EmojiPicker from '@/components/EmojiPicker';
 import { useAgentStore } from '@/store/agent';

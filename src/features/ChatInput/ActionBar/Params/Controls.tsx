@@ -1,4 +1,5 @@
 import { Form, type FormItemProps, Tag } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { Form as AntdForm, Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'es-toolkit/compat';
@@ -6,7 +7,6 @@ import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
 import {

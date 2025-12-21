@@ -1,9 +1,8 @@
-import { ActionIcon, Dropdown, Icon, Tag , Skeleton } from '@lobehub/ui';
+import { ActionIcon, Dropdown, Flexbox, Icon, Skeleton, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MessageSquareDashed, Star } from 'lucide-react';
 import { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { isDesktop } from '@/const/version';
 import NavItem from '@/features/NavPanel/components/NavItem';

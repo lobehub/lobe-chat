@@ -1,10 +1,9 @@
 'use client';
 
-import { Modal } from '@lobehub/ui';
+import { Flexbox, Modal } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { PortalHeader } from '@/features/Portal/router';
 import { useChatStore } from '@/store/chat';

@@ -1,11 +1,10 @@
 'use client';
 
 import { ChatInput, ChatInputActionBar, ChatInputProps } from '@lobehub/editor/react';
-import { Text } from '@lobehub/ui';
+import { Center, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ReactNode, memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatInputStore } from '@/features/ChatInput/store';
 import { useChatStore } from '@/store/chat';

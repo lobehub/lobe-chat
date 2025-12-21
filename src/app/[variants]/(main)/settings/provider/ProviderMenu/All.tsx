@@ -1,8 +1,7 @@
-import { Icon } from '@lobehub/ui';
+import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { WalletCards } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import { useLocation } from 'react-router-dom';
 
 import { useStyles } from './Item';

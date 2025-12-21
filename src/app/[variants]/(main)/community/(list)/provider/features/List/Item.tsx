@@ -1,10 +1,9 @@
 import { Github, ModelTag, ProviderCombine } from '@lobehub/icons';
-import { ActionIcon, Block, MaskShadow, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Flexbox, MaskShadow, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { GlobeIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 

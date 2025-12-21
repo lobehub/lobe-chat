@@ -1,11 +1,10 @@
 import { CheckCircleFilled } from '@ant-design/icons';
-import { Icon, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Text } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 import { formatSize } from '@/utils/format';

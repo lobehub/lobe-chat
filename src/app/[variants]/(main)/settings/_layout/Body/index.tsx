@@ -1,8 +1,7 @@
 'use client';
 
-import { Accordion, AccordionItem, Text } from '@lobehub/ui';
+import { Accordion, AccordionItem, Flexbox, Text } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import NavItem from '@/features/NavPanel/components/NavItem';

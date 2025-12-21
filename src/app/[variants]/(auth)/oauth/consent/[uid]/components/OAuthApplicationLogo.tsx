@@ -1,8 +1,7 @@
-import { Avatar, FluentEmoji, Icon } from '@lobehub/ui';
+import { Avatar, Center, Flexbox, FluentEmoji, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Link2Icon } from 'lucide-react';
 import React, { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 

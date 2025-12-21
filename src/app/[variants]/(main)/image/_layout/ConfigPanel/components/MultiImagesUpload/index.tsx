@@ -1,12 +1,12 @@
 'use client';
 
 // Removed Image import - using img tags instead
+import { Center } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import { CONFIG_PANEL_WIDTH } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/constants';
 import { useDragAndDrop } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useDragAndDrop';

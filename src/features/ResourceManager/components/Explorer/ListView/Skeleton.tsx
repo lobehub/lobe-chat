@@ -1,5 +1,4 @@
-import { Skeleton } from '@lobehub/ui';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 
 import { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './ListItem';
 

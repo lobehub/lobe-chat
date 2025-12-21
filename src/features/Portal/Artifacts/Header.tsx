@@ -1,10 +1,9 @@
 import { ArtifactType } from '@lobechat/types';
-import { ActionIcon, Icon, Segmented, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Segmented, Text } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { cx } from 'antd-style';
 import { ArrowLeft, CodeIcon, EyeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';

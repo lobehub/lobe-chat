@@ -1,9 +1,8 @@
-import { FluentEmoji , Skeleton } from '@lobehub/ui';
+import { Flexbox, FluentEmoji, Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Clock3Icon, ClockArrowUp } from 'lucide-react';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { useClientDataSWR } from '@/libs/swr';

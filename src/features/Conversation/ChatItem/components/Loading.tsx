@@ -1,7 +1,6 @@
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useStyles } from '../style';
 import type { ChatItemProps } from '../type';

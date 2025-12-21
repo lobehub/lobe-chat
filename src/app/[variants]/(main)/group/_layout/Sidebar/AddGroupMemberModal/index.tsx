@@ -1,11 +1,10 @@
 'use client';
 
-import { Modal } from '@lobehub/ui';
+import { Flexbox, Modal } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import useSWR from 'swr';
 
 import { agentService } from '@/services/agent';

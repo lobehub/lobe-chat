@@ -1,8 +1,8 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import { PropsWithChildren } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const body = css`
   :has(.portal-artifact) {

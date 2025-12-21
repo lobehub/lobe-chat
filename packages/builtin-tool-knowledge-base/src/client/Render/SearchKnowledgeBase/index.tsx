@@ -1,8 +1,8 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { ComponentType, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { SearchKnowledgeBaseArgs, SearchKnowledgeBaseState } from '../../../types';
 import FileItem from './Item';

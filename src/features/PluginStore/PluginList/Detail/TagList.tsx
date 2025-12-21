@@ -1,9 +1,8 @@
 'use client';
 
-import { Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ token, css }) => {
   return {

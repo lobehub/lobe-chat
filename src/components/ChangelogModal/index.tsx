@@ -1,10 +1,9 @@
 'use client';
 
-import { Button, Modal } from '@lobehub/ui';
+import { Button, Flexbox, Modal } from '@lobehub/ui';
 import { ArrowUpRightIcon } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ChangelogService } from '@/server/services/changelog';
 

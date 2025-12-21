@@ -1,10 +1,9 @@
 import { Ollama } from '@lobehub/icons';
-import { Alert, Button, Input } from '@lobehub/ui';
+import { Alert, Button, Center, Flexbox, Input } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import FormAction from '@/components/FormAction';
 import { useActionSWR } from '@/libs/swr';

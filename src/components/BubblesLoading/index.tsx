@@ -1,7 +1,7 @@
+import { Center } from '@lobehub/ui';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 const BubblesLoading = memo(() => {
   const theme = useTheme();

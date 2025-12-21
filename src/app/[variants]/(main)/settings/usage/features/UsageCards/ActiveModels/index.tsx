@@ -1,10 +1,9 @@
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { ActionIcon, Modal } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Modal } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MaximizeIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import StatisticCard from '@/components/StatisticCard';
 import TitleWithPercentage from '@/components/StatisticCard/TitleWithPercentage';

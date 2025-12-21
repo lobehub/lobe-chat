@@ -1,9 +1,8 @@
-import { ActionIcon, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { Popover, type PopoverProps } from 'antd';
 import { Languages } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Menu, { type MenuProps } from '@/components/Menu';
 import { localeOptions } from '@/locales/resources';

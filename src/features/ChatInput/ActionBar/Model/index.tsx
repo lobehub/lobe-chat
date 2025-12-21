@@ -1,9 +1,9 @@
 import { ModelIcon } from '@lobehub/icons';
+import { Center, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Settings2Icon } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import { useAgentStore } from '@/store/agent';

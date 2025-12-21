@@ -1,9 +1,8 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useHomeStore } from '@/store/home';
 

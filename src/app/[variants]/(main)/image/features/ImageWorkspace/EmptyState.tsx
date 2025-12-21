@@ -1,5 +1,5 @@
+import { Center } from '@lobehub/ui';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 import PromptInput from '../PromptInput';
 

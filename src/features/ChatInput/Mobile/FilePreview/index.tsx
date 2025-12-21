@@ -1,8 +1,7 @@
-import { PreviewGroup, ScrollShadow } from '@lobehub/ui';
+import { Flexbox, PreviewGroup, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatInputStore } from '@/features/ChatInput/store';
 import { filesSelectors, useFileStore } from '@/store/file';

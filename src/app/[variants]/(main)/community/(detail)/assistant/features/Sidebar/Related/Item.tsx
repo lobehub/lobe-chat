@@ -1,7 +1,6 @@
-import { Avatar, Block, Text } from '@lobehub/ui';
+import { Avatar, Block, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverAssistantItem } from '@/types/discover';
 

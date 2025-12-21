@@ -1,10 +1,9 @@
 'use client';
 
-import { Block } from '@lobehub/ui';
+import { Block, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 

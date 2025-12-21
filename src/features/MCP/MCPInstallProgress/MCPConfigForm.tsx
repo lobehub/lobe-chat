@@ -1,10 +1,9 @@
-import { Form, Markdown } from '@lobehub/ui';
+import { Flexbox, Form, Markdown } from '@lobehub/ui';
 import { Form as AForm, Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { m as motion } from 'motion/react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import ItemRender from '@/components/JSONSchemaConfig/ItemRender';
 import { transformPluginSettings } from '@/features/PluginSettings';

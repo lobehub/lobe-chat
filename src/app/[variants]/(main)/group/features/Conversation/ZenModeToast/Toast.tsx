@@ -1,10 +1,9 @@
 'use client';
 
-import { Hotkey } from '@lobehub/ui';
+import { Flexbox, Hotkey } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';

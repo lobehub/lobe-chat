@@ -1,10 +1,9 @@
 'use client';
 
-import { Alert, Text } from '@lobehub/ui';
+import { Alert, Flexbox, Text } from '@lobehub/ui';
 import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
 import { ComponentType, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { FileContentDetail } from '../../../types';
 

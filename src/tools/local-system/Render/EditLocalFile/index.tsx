@@ -1,14 +1,13 @@
 import { EditLocalFileState } from '@lobechat/builtin-tool-local-system';
 import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Alert, Icon, Skeleton } from '@lobehub/ui';
+import { Alert, Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';
 import React, { memo, useMemo } from 'react';
 import { Diff, Hunk, parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
-import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile, LocalFolder } from '@/features/LocalFile';
 import '@/styles/react-diff-view.dark.css';

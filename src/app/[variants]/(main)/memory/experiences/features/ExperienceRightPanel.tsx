@@ -1,11 +1,10 @@
 'use client';
 
-import { Avatar, Text } from '@lobehub/ui';
+import { Avatar, Flexbox, Text } from '@lobehub/ui';
 import { Steps } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import CateTag from '@/app/[variants]/(main)/memory/features/CateTag';
 import DetailLoading from '@/app/[variants]/(main)/memory/features/DetailLoading';

@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Dropdown, Icon, ScrollShadow } from '@lobehub/ui';
+import { ActionIcon, Dropdown, Flexbox, Icon, ScrollShadow } from '@lobehub/ui';
 import { Collapse } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
@@ -8,7 +8,6 @@ import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, ChevronDownIcon, LucideCheck } from 'lucide-react';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { aiProviderSelectors } from '@/store/aiInfra';
 import { useAiInfraStore } from '@/store/aiInfra/store';

@@ -1,10 +1,9 @@
-import { Icon, Input, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Input, Text } from '@lobehub/ui';
 import { Form as AForm, App, Button, Space, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { EditIcon, LinkIcon, SaveIcon, Settings2Icon, TerminalIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import KeyValueEditor from '@/components/KeyValueEditor';
 import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';

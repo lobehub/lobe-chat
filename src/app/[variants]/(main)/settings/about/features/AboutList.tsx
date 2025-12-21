@@ -1,8 +1,7 @@
 'use client';
 
-import { Grid } from '@lobehub/ui';
+import { Flexbox, Grid } from '@lobehub/ui';
 import { FC, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ItemCardProps } from './ItemCard';
 

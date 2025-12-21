@@ -1,12 +1,11 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { ActionIcon, Icon, Text } from '@lobehub/ui';
+import { ActionIcon, Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { UploadIcon, XIcon } from 'lucide-react';
 import { lighten } from 'polished';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { convertAlphaToSolid } from '@/utils/colorUtils';

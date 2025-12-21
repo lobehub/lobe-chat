@@ -1,13 +1,21 @@
 import { CrawlResult } from '@lobechat/types';
 import { CrawlSuccessResult } from '@lobechat/web-crawler';
-import { Alert, CopyButton, Highlighter, Icon, Markdown, Segmented, Text } from '@lobehub/ui';
+import {
+  Alert,
+  CopyButton,
+  Flexbox,
+  Highlighter,
+  Icon,
+  Markdown,
+  Segmented,
+  Text,
+} from '@lobehub/ui';
 import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { CRAWL_CONTENT_LIMITED_COUNT } from '../../const';
 

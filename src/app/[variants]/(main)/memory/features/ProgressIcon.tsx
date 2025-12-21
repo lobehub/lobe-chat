@@ -1,8 +1,7 @@
-import { Text, Tooltip } from '@lobehub/ui';
+import { Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Progress, ProgressProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 interface ProgressIconProps extends Omit<ProgressProps, 'percent'> {
   percent?: number | null;

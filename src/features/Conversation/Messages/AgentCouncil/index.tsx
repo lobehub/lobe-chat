@@ -1,12 +1,12 @@
 'use client';
 
 import { UIChatMessage } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { Segmented } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Columns2, Layers, StretchHorizontal } from 'lucide-react';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import WideScreenContainer from '@/features/WideScreenContainer';
 

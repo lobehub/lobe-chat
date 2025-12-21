@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon, Tabs } from '@lobehub/ui';
+import { Flexbox, Icon, Tabs } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';

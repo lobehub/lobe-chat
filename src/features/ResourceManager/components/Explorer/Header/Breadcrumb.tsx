@@ -1,8 +1,7 @@
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';

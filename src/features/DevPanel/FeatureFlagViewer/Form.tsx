@@ -1,12 +1,11 @@
 'use client';
 
-import { Form, Highlighter } from '@lobehub/ui';
+import { Flexbox, Form, Highlighter } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { snakeCase } from 'es-toolkit/compat';
 import { ListRestartIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_FEATURE_FLAGS } from '@/config/featureFlags';
 

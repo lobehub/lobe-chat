@@ -1,10 +1,9 @@
 'use client';
 
-import { SearchBar, Skeleton } from '@lobehub/ui';
+import { Flexbox, SearchBar, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { type ChangeEvent, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';

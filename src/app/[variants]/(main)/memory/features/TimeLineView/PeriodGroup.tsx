@@ -1,10 +1,9 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { GroupBy } from './index';
 

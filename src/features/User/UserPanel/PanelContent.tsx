@@ -1,7 +1,7 @@
 import { enableBetterAuth, enableNextAuth } from '@lobechat/const';
+import { Flexbox } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import BrandWatermark from '@/components/BrandWatermark';

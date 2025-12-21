@@ -1,7 +1,6 @@
-import { Block, Grid } from '@lobehub/ui';
+import { Block, Flexbox, Grid } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import {
   calculateScore,

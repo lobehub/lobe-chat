@@ -1,11 +1,10 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { Drawer } from 'antd';
 import { createStyles } from 'antd-style';
 import { MenuIcon } from 'lucide-react';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import Menu from '@/components/Menu';

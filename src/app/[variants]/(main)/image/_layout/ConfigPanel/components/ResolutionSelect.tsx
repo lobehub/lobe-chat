@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
 

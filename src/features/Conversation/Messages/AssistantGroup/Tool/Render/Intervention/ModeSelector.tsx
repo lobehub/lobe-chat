@@ -1,9 +1,9 @@
 import { Button, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
+import { Center } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, Hand, ListChecks, Zap } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { toolInterventionSelectors } from '@/store/user/selectors';

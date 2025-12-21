@@ -1,8 +1,7 @@
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Center, Flexbox, Icon } from '@lobehub/ui';
 import { KeyRoundIcon, Loader2Icon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { useChatStore } from '@/store/chat';

@@ -1,8 +1,7 @@
-import { Icon } from '@lobehub/ui';
+import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useConversationStore } from '../../store';
 

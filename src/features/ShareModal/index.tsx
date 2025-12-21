@@ -1,7 +1,7 @@
 import { Modal, type ModalProps, Segmented } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 

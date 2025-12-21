@@ -1,11 +1,10 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import fastDeepEqual from 'fast-deep-equal';
 import { LucidePlus, LucideTrash } from 'lucide-react';
 import { CSSProperties, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FormInput } from '@/components/FormInput';

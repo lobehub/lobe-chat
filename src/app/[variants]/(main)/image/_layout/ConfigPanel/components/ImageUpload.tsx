@@ -1,12 +1,12 @@
 'use client';
 
+import { Center } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import { useDragAndDrop } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useDragAndDrop';
 import { useUploadFilesValidation } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useUploadFilesValidation';

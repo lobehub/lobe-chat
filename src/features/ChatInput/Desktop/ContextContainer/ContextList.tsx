@@ -1,7 +1,6 @@
-import { ScrollShadow } from '@lobehub/ui';
+import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useEffect, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { fileChatSelectors, useFileStore } from '@/store/file';
 

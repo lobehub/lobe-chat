@@ -1,12 +1,12 @@
 import { FORM_STYLE } from '@lobechat/const';
 import { exportFile } from '@lobechat/utils/client';
 import { Button, Form, type FormItemProps, copyToClipboard } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { CopyIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';

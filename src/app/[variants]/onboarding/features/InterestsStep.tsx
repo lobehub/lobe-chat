@@ -1,11 +1,10 @@
 'use client';
 
-import { Block, Button, Icon, Input, Text } from '@lobehub/ui';
+import { Block, Button, Flexbox, Icon, Input, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { BriefcaseIcon, Undo2Icon } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';

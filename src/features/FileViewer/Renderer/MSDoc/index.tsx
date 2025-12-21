@@ -1,6 +1,6 @@
 import { DocRenderer } from '@cyntler/react-doc-viewer';
+import { Flexbox } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
-import { Flexbox } from 'react-layout-kit';
 
 const container = css`
   position: relative;

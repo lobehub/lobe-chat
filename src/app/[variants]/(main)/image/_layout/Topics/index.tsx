@@ -1,9 +1,9 @@
 'use client';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { Flexbox } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { memo, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useImageStore } from '@/store/image';
 import { generationTopicSelectors } from '@/store/image/selectors';

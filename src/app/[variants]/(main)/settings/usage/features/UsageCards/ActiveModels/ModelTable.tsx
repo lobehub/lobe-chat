@@ -1,10 +1,9 @@
 import { CategoryBar, useThemeColorRange } from '@lobehub/charts';
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Collapse, Skeleton, Tag } from '@lobehub/ui';
+import { Collapse, Flexbox, Skeleton, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import InlineTable from '@/components/InlineTable';
 import { UsageLog } from '@/types/usage/usageRecord';

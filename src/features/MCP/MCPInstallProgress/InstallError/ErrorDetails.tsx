@@ -1,11 +1,10 @@
-import { Highlighter, Icon } from '@lobehub/ui';
+import { Flexbox, Highlighter, Icon } from '@lobehub/ui';
 import { Button, Tag } from 'antd';
 import { useTheme } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { m as motion } from 'motion/react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { MCPErrorInfoMetadata } from '@/types/plugins';
 

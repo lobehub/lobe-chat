@@ -1,11 +1,10 @@
 'use client';
 
-import { Block, Icon, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BotIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import CateTag from '@/app/[variants]/(main)/memory/features/CateTag';
 import DetailLoading from '@/app/[variants]/(main)/memory/features/DetailLoading';

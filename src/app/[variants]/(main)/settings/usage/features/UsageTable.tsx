@@ -1,10 +1,9 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import { Table, TableColumnType, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { parseAsInteger, useQueryParam } from '@/hooks/useQueryParam';
 import { useClientDataSWR } from '@/libs/swr';

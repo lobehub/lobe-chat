@@ -1,9 +1,8 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { Button } from '@lobehub/ui';
+import { Button, Center, Flexbox } from '@lobehub/ui';
 import { ModelProvider } from 'model-bank';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 

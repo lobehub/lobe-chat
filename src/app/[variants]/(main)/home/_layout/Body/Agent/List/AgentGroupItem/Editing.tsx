@@ -1,7 +1,6 @@
-import { Input } from '@lobehub/ui';
+import { Flexbox, Input } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { memo, useCallback, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useHomeStore } from '@/store/home';
 

@@ -1,10 +1,10 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import type { TodoItem, TodoList as TodoListType } from '../../types';
 

@@ -1,7 +1,6 @@
-import { Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Title from '@/app/[variants]/(main)/community/features/Title';
 

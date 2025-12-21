@@ -1,8 +1,7 @@
 import { ModelTag } from '@lobehub/icons';
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import PluginTag from '@/features/PluginTag';

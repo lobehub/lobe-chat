@@ -1,10 +1,9 @@
 import { MCP } from '@lobehub/icons';
-import { Icon, Tag, Tooltip } from '@lobehub/ui';
+import { Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { formatIntergerNumber } from '@/utils/format';
 

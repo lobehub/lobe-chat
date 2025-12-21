@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 

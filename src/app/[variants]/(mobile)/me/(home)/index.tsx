@@ -1,7 +1,7 @@
 'use client';
 
+import { Center } from '@lobehub/ui';
 import { memo, useState } from 'react';
-import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import ChangelogModal from '@/components/ChangelogModal';

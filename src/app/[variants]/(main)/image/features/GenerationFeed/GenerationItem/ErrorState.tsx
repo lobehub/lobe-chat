@@ -1,12 +1,10 @@
 'use client';
 
-import { Block, Icon, Text } from '@lobehub/ui';
+import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
+import { Block, Center, Icon, Text } from '@lobehub/ui';
 import { ImageOffIcon } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
-
-import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 
 import { ActionButtons } from './ActionButtons';
 import { useStyles } from './styles';

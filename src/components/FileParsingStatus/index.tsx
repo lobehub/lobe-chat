@@ -1,11 +1,10 @@
-import { Button, Icon, Tag, Tooltip } from '@lobehub/ui';
+import { Button, Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
 import { BoltIcon, Loader2Icon, RotateCwIcon } from 'lucide-react';
 import { darken, lighten } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { AsyncTaskStatus, FileParsingTask } from '@/types/asyncTask';
 

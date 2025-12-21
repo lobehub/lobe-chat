@@ -84,7 +84,7 @@ vi.mock('@lobehub/icons', () => ({
   ProviderIcon: vi.fn(() => <div data-testid="provider-icon">Provider Icon</div>),
 }));
 
-vi.mock('react-layout-kit', () => ({
+vi.mock('@lobehub/ui', () => ({
   Center: vi.fn(({ children, ...props }) => (
     <div data-testid="center" {...props}>
       {children}

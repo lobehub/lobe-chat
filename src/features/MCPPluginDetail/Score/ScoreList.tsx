@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { Fragment, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import ScoreItem, { ScoreItemProps } from './ScoreItem';
 

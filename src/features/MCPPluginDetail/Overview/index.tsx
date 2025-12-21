@@ -1,8 +1,7 @@
-import { Collapse, Markdown } from '@lobehub/ui';
+import { Collapse, Flexbox, Markdown } from '@lobehub/ui';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import MarkdownRender from '../../../app/[variants]/(main)/community/(detail)/features/MakedownRender';
 import McpList from '../../../app/[variants]/(main)/community/(list)/mcp/features/List';
