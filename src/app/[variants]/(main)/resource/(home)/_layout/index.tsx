@@ -1,13 +1,13 @@
 'use client';
 
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 
-const HomeLayout = memo(() => {
+const HomeLayout: FC = () => {
   const theme = useTheme();
 
   return (
@@ -26,7 +26,7 @@ const HomeLayout = memo(() => {
       </Flexbox>
     </>
   );
-});
+};
 
 HomeLayout.displayName = 'ResourceHomeLayout';
 

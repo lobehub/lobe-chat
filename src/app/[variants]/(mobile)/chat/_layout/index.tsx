@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import AgentIdSync from '@/app/[variants]/(main)/chat/_layout/AgentIdSync';
@@ -8,7 +8,7 @@ import ChatHeader from '@/app/[variants]/(mobile)/chat/features/ChatHeader';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 
-const Layout = memo(() => {
+const Layout: FC = () => {
   useInitAgentConfig();
 
   return (
@@ -19,7 +19,7 @@ const Layout = memo(() => {
       <AgentIdSync />
     </>
   );
-});
+};
 
 Layout.displayName = 'MobileChatLayout';
 

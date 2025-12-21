@@ -1,6 +1,6 @@
 import { Icon, Tag } from '@lobehub/ui';
 import { BrainCircuitIcon } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import CommonFilterBar from '@/app/[variants]/(main)/memory/features/FilterBar';
@@ -103,7 +103,7 @@ const IdentitiesArea = memo(() => {
   );
 });
 
-const Identities = memo(() => {
+const Identities: FC = () => {
   return (
     <>
       <Flexbox height={'100%'} horizontal width={'100%'}>
@@ -113,6 +113,6 @@ const Identities = memo(() => {
       <EditableModal />
     </>
   );
-});
+};
 
 export default Identities;

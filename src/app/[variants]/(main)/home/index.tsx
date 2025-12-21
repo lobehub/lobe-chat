@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import PageTitle from '@/components/PageTitle';
@@ -8,7 +8,7 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 
 import HomeContent from './features';
 
-const Home = memo(() => {
+const Home: FC = () => {
   return (
     <>
       <PageTitle title="" />
@@ -20,7 +20,7 @@ const Home = memo(() => {
       </Flexbox>
     </>
   );
-});
+};
 
 Home.displayName = 'Home';
 

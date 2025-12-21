@@ -1,6 +1,6 @@
 import { Icon, Tag } from '@lobehub/ui';
 import { BrainCircuitIcon } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -115,7 +115,7 @@ const ExperiencesArea = memo(() => {
   );
 });
 
-const Experiences = memo(() => {
+const Experiences: FC = () => {
   return (
     <>
       <Flexbox height={'100%'} horizontal width={'100%'}>
@@ -125,6 +125,6 @@ const Experiences = memo(() => {
       <EditableModal />
     </>
   );
-});
+};
 
 export default Experiences;

@@ -1,5 +1,5 @@
 import { useTheme } from 'antd-style';
-import { Suspense, memo, useEffect } from 'react';
+import { FC, Suspense, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet, useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import { useHomeStore } from '@/store/home';
 import RecentHydration from './RecentHydration';
 import Sidebar from './Sidebar';
 
-const Layout = memo(() => {
+const Layout: FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const setNavigate = useHomeStore((s) => s.setNavigate);
@@ -37,7 +37,7 @@ const Layout = memo(() => {
       </Suspense>
     </>
   );
-});
+};
 
 Layout.displayName = 'DesktopHomeLayout';
 

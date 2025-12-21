@@ -1,5 +1,5 @@
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import GroupIdSync from './GroupIdSync';
 import RegisterHotkeys from './RegisterHotkeys';
 import Sidebar from './Sidebar';
 
-const Layout = memo(() => {
+const Layout: FC = () => {
   const theme = useTheme();
   useInitGroupConfig();
 
@@ -37,7 +37,7 @@ const Layout = memo(() => {
       <GroupIdSync />
     </>
   );
-});
+};
 
 Layout.displayName = 'DesktopChatLayout';
 
