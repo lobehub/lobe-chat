@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, memo } from 'react';
+import { FC, Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -50,7 +50,7 @@ const ProfileArea = memo(() => {
   );
 });
 
-const GroupProfile = memo(() => {
+const GroupProfile: FC = () => {
   return (
     <Suspense fallback={<Loading debugId="GroupProfile" />}>
       <ProfileProvider>
@@ -61,6 +61,6 @@ const GroupProfile = memo(() => {
       </ProfileProvider>
     </Suspense>
   );
-});
+};
 
 export default GroupProfile;

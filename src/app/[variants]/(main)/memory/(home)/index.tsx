@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import MemoryEmpty from '@/app/[variants]/(main)/memory/features/MemoryEmpty';
@@ -11,7 +11,7 @@ import { useUserMemoryStore } from '@/store/userMemory';
 
 import RoleTagCloud from './features/RoleTagCloud';
 
-const Home = memo(() => {
+const Home: FC = () => {
   const useFetchTags = useUserMemoryStore((s) => s.useFetchTags);
   const roles = useUserMemoryStore((s) => s.roles);
   const { isLoading } = useFetchTags();
@@ -42,6 +42,6 @@ const Home = memo(() => {
       </Flexbox>
     </Flexbox>
   );
-});
+};
 
 export default Home;

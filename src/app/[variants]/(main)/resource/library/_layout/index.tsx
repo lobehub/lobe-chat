@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import RegisterHotkeys from '@/app/[variants]/(main)/resource/library/features/R
 
 import Sidebar from './Sidebar';
 
-const LibraryLayout = memo(() => {
+const LibraryLayout: FC = () => {
   const theme = useTheme();
 
   return (
@@ -29,7 +29,7 @@ const LibraryLayout = memo(() => {
       <RegisterHotkeys />
     </>
   );
-});
+};
 
 LibraryLayout.displayName = 'ResourceLibraryLayout';
 

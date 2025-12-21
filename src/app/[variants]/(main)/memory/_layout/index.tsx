@@ -1,13 +1,13 @@
 'use client';
 
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 
-const DesktopMemoryLayout = memo(() => {
+const DesktopMemoryLayout: FC = () => {
   const theme = useTheme();
 
   return (
@@ -26,7 +26,7 @@ const DesktopMemoryLayout = memo(() => {
       </Flexbox>
     </>
   );
-});
+};
 
 DesktopMemoryLayout.displayName = 'DesktopMemoryLayout';
 

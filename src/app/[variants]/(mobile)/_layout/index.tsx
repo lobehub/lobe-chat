@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Suspense, memo } from 'react';
+import { FC, Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -23,7 +23,7 @@ const MOBILE_NAV_ROUTES = new Set([
   '/me',
 ]);
 
-const MobileMainLayout = memo(() => {
+const MobileMainLayout: FC = () => {
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
   const location = useLocation();
   const pathname = location.pathname;
@@ -40,7 +40,7 @@ const MobileMainLayout = memo(() => {
       </MarketAuthProvider>
     </>
   );
-});
+};
 
 MobileMainLayout.displayName = 'MobileMainLayout';
 

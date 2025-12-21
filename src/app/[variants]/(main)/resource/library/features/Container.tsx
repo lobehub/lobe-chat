@@ -1,10 +1,10 @@
 'use client';
 
 import { useTheme } from 'antd-style';
-import { PropsWithChildren, memo } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const Container = memo<PropsWithChildren>(({ children }) => {
+const Container: FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
 
   return (
@@ -19,7 +19,7 @@ const Container = memo<PropsWithChildren>(({ children }) => {
       {children}
     </Flexbox>
   );
-});
+};
 
 Container.displayName = 'Container';
 

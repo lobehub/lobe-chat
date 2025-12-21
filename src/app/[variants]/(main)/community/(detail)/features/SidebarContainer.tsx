@@ -1,7 +1,7 @@
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-const SidebarContainer = memo<FlexboxProps>(({ children, style, ...rest }) => {
+const SidebarContainer: FC<FlexboxProps> = ({ children, style, ...rest }) => {
   return (
     <Flexbox
       flex={'none'}
@@ -14,6 +14,6 @@ const SidebarContainer = memo<FlexboxProps>(({ children, style, ...rest }) => {
       {children}
     </Flexbox>
   );
-});
+};
 
 export default SidebarContainer;

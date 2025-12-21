@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import SideBar from '@/app/[variants]/(main)/settings/_layout/SideBar';
 
 import SettingsContextProvider from './ContextProvider';
 
-const Layout = memo(() => {
+const Layout: FC = () => {
   const theme = useTheme();
 
   return (
@@ -33,7 +33,7 @@ const Layout = memo(() => {
       </Flexbox>
     </SettingsContextProvider>
   );
-});
+};
 
 Layout.displayName = 'DesktopSettingsWrapper';
 

@@ -1,12 +1,12 @@
 import { useTheme } from 'antd-style';
-import { PropsWithChildren, memo } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { isDesktop } from '@/const/version';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
+const DesktopLayoutContainer: FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
   const [expand] = useGlobalStore((s) => [systemStatusSelectors.showLeftPanel(s)]);
 
@@ -41,5 +41,5 @@ const DesktopLayoutContainer = memo<PropsWithChildren>(({ children }) => {
       </Flexbox>
     </Flexbox>
   );
-});
+};
 export default DesktopLayoutContainer;

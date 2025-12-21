@@ -1,13 +1,13 @@
 'use client';
 
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { FC } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 
-const DesktopPagesLayout = memo(() => {
+const DesktopPagesLayout: FC = () => {
   const theme = useTheme();
 
   return (
@@ -26,7 +26,7 @@ const DesktopPagesLayout = memo(() => {
       </Flexbox>
     </>
   );
-});
+};
 
 DesktopPagesLayout.displayName = 'DesktopPagesLayout';
 

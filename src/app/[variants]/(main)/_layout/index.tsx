@@ -2,7 +2,7 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { Suspense, memo } from 'react';
+import { FC, Suspense } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
@@ -27,7 +27,7 @@ import RegisterHotkeys from './RegisterHotkeys';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 
-const Layout = memo(() => {
+const Layout: FC = () => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
@@ -73,7 +73,7 @@ const Layout = memo(() => {
       </Suspense>
     </HotkeysProvider>
   );
-});
+};
 
 Layout.displayName = 'DesktopMainLayout';
 

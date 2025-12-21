@@ -1,10 +1,10 @@
-import { memo } from 'react';
+import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import MobileLayout from '@/app/[variants]/(mobile)/(home)/_layout/MobileLayout';
 import SessionHydration from '@/app/[variants]/(mobile)/(home)/_layout/SessionHydration';
 
-const Layout = memo(() => {
+const Layout: FC = () => {
   return (
     <>
       <MobileLayout>
@@ -13,7 +13,7 @@ const Layout = memo(() => {
       <SessionHydration />
     </>
   );
-});
+};
 
 Layout.displayName = 'MobileHomeLayout';
 
