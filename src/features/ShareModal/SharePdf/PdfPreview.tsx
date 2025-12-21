@@ -1,11 +1,10 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button } from '@lobehub/ui';
+import { Button, Flexbox } from '@lobehub/ui';
 import { Input, Modal, Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight, Expand, FileText } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 import { useIsMobile } from '@/hooks/useIsMobile';

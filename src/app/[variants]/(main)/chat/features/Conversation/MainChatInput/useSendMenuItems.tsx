@@ -1,10 +1,10 @@
 'use client';
 
 import { Hotkey, Icon, type MenuProps } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { BotMessageSquare, LucideCheck, MessageSquarePlus } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useConversationStore, useConversationStoreApi } from '@/features/Conversation';
 import { useAddUserMessageHotkey } from '@/hooks/useHotkeys';

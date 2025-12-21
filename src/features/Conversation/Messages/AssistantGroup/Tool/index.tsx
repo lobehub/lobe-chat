@@ -1,9 +1,8 @@
 import { ChatToolResult, ToolIntervention } from '@lobechat/types';
-import { AccordionItem, Skeleton } from '@lobehub/ui';
+import { AccordionItem, Flexbox, Skeleton } from '@lobehub/ui';
 import { Divider } from 'antd';
 import dynamic from 'next/dynamic';
 import { memo, useEffect, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Actions from '@/features/Conversation/Messages/AssistantGroup/Tool/Actions';
 import { useToolStore } from '@/store/tool';

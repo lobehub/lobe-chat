@@ -1,10 +1,9 @@
 'use client';
 
-import { Drawer } from '@lobehub/ui';
+import { Drawer, Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import PanelTitle from '@/components/PanelTitle';

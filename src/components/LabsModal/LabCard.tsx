@@ -1,10 +1,10 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import Image from 'next/image';
 import { PropsWithChildren, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { SkeletonSwitch } from '@/components/Skeleton';
 

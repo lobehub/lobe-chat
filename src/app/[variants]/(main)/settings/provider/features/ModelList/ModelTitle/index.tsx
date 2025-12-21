@@ -1,10 +1,9 @@
-import { ActionIcon, Button, Dropdown, Text , Skeleton } from '@lobehub/ui';
+import { ActionIcon, Button, Dropdown, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import { App, Space } from 'antd';
 import { useTheme } from 'antd-style';
 import { CircleX, EllipsisVertical, LucideRefreshCcwDot, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAiInfraStore } from '@/store/aiInfra';

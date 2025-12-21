@@ -1,5 +1,6 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import {
   BrainCircuitIcon,
   BubblesIcon,
@@ -11,7 +12,6 @@ import {
 import { usePathname } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import NavItem, { NavItemProps } from '@/features/NavPanel/components/NavItem';

@@ -1,12 +1,12 @@
 'use client';
 
 import { Avatar, Button, Empty, Form, type FormGroupItemType, Tag, Tooltip } from '@lobehub/ui';
+import { Center, Flexbox } from '@lobehub/ui';
 import { Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Plug2, Store } from 'lucide-react';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';

@@ -1,12 +1,11 @@
 'use client';
 
-import { ActionIcon, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
+import { ActionIcon, Flexbox, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
 import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { ReactNode, memo, useEffect, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
 
 import { BRANDING_NAME } from '@/const/branding';

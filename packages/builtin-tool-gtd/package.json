@@ -12,12 +12,11 @@
     "@lobechat/prompts": "workspace:*",
     "@lobechat/types": "workspace:*",
     "lucide-react": "*",
-    "react": "*",
-    "react-layout-kit": "*"
+    "react": "*"
   },
   "peerDependencies": {
-    "@lobehub/ui": "*",
-    "antd": "*",
+    "@lobehub/ui": "^3.3.3",
+    "antd": "^6",
     "antd-style": "*"
   }
 }

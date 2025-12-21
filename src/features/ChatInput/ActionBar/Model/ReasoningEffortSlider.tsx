@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { Slider } from 'antd';
 import { memo, useCallback } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
 import { chatConfigByIdSelectors } from '@/store/agent/selectors';

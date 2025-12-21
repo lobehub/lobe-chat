@@ -1,9 +1,8 @@
 'use client';
 
-import { Grid, Tag, Text } from '@lobehub/ui';
+import { Flexbox, Grid, Tag, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import AssistantEmpty from '../../../features/AssistantEmpty';
 import { useUserDetailContext } from './DetailProvider';

@@ -1,6 +1,5 @@
-import { ScrollShadow } from '@lobehub/ui';
+import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useQuery } from '@/hooks/useQuery';
 import { ModelNavKey } from '@/types/discover';

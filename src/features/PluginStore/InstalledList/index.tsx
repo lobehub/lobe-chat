@@ -1,9 +1,8 @@
-import { DraggablePanel, Empty } from '@lobehub/ui';
+import { Center, DraggablePanel, Empty, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Plug2 } from 'lucide-react';
 import { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';

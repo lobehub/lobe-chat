@@ -1,8 +1,7 @@
 import { ChatMessageError, ChatPluginPayload } from '@lobechat/types';
-import { Alert, Highlighter } from '@lobehub/ui';
+import { Alert, Flexbox, Highlighter } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import PluginSettings from './PluginSettings';
 

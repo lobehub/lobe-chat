@@ -1,12 +1,11 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { Database, FileImage, Network, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { Trans, useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import FeatureList from '@/components/FeatureList';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';

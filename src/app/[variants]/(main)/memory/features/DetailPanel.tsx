@@ -1,5 +1,5 @@
+import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import NavHeader, { NavHeaderProps } from '@/features/NavHeader';
 import RightPanel from '@/features/RightPanel';

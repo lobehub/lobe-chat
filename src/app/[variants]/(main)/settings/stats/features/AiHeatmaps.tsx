@@ -1,11 +1,10 @@
 import { Heatmaps, HeatmapsProps } from '@lobehub/charts';
-import { FormGroup, Icon, Tag } from '@lobehub/ui';
+import { Flexbox, FormGroup, Icon, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FlameIcon } from 'lucide-react';
 import { readableColor } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useClientDataSWR } from '@/libs/swr';

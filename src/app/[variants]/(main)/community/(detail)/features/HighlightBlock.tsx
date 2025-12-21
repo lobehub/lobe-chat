@@ -1,11 +1,10 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Flexbox, FlexboxProps, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import { ReactNode, memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { useServerConfigStore } from '@/store/serverConfig';
 

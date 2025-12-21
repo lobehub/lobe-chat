@@ -1,8 +1,7 @@
 import { UIChatMessage } from '@lobechat/types';
-import { ActionIconGroup } from '@lobehub/ui';
+import { ActionIconGroup, Flexbox } from '@lobehub/ui';
 import type { ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { memo, useCallback, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES } from '@/const/messageActionPortal';
 

@@ -1,14 +1,13 @@
 'use client';
 
 import { DEFAULT_AVATAR, EDITOR_DEBOUNCE_TIME } from '@lobechat/const';
-import { Block, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Input, Skeleton, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { message } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PaletteIcon } from 'lucide-react';
 import { Suspense, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import SupervisorAvatar from '@/app/[variants]/(main)/group/features/GroupAvatar';
 import EmojiPicker from '@/components/EmojiPicker';

@@ -1,10 +1,9 @@
-import { Alert, Button, Drawer, Icon, Segmented, Tag } from '@lobehub/ui';
+import { Alert, Button, Drawer, Flexbox, Icon, Segmented, Tag } from '@lobehub/ui';
 import { App, Form, Popconfirm } from 'antd';
 import { useResponsive } from 'antd-style';
 import { MoveUpRight } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { WIKI_PLUGIN_GUIDE } from '@/const/url';
 import { isDesktop } from '@/const/version';

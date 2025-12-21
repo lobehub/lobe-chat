@@ -1,6 +1,5 @@
-import { Accordion } from '@lobehub/ui';
+import { Accordion, Flexbox } from '@lobehub/ui';
 import React, { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Topic from './Topic';
 

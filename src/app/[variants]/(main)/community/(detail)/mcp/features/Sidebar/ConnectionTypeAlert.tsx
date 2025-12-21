@@ -1,8 +1,7 @@
-import { Alert, Icon } from '@lobehub/ui';
+import { Alert, Flexbox, Icon } from '@lobehub/ui';
 import { Blend, Cloud, LaptopMinimalIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 

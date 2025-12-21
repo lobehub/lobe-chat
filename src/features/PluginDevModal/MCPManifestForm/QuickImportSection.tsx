@@ -1,8 +1,7 @@
-import { Alert, TextArea } from '@lobehub/ui';
+import { Alert, Flexbox, TextArea } from '@lobehub/ui';
 import { Button, FormInstance } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { isDesktop } from '@/const/version';
 import { useToolStore } from '@/store/tool';

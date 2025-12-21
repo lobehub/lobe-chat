@@ -1,7 +1,6 @@
-import { Tag, Text, Tooltip } from '@lobehub/ui';
+import { Flexbox, Tag, Text, Tooltip } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { EngineAvatarGroup } from '../../../../components/EngineAvatar';
 import CategoryAvatar from './CategoryAvatar';

@@ -1,9 +1,9 @@
 'use client';
 
 import { Dropdown, Icon, type MenuProps, Tag } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { LibraryBig } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import KnowledgeIcon from '@/components/KnowledgeIcon';
 import { oneLineEllipsis } from '@/styles';

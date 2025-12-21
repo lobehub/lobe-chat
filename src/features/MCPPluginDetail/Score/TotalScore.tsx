@@ -1,9 +1,8 @@
-import { Block } from '@lobehub/ui';
+import { Block, Center, Flexbox } from '@lobehub/ui';
 import { Popover, Progress } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { ScoreResult, getGradeColor, sortItemsByPriority } from '../../MCP/calculateScore';
 

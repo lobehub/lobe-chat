@@ -1,10 +1,9 @@
 import { SearchQuery } from '@lobechat/types';
-import { Button, Input, Select, Text, Tooltip } from '@lobehub/ui';
+import { Button, Flexbox, Input, Select, Text, Tooltip } from '@lobehub/ui';
 import { Checkbox, Radio, Space } from 'antd';
 import { SearchIcon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';

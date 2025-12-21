@@ -1,11 +1,10 @@
 import { ChatPluginPayload } from '@lobechat/types';
-import { Avatar, Button } from '@lobehub/ui';
+import { Avatar, Button, Center, Flexbox } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
 import { pluginHelpers, useToolStore } from '@/store/tool';

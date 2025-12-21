@@ -1,5 +1,5 @@
+import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import { CSSProperties, ReactNode, memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import ToggleLeftPanelButton from '@/features/NavPanel/ToggleLeftPanelButton';
 import { useNavPanel } from '@/features/NavPanel/hooks/useNavPanel';

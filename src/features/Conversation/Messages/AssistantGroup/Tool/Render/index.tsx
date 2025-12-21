@@ -1,7 +1,7 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { ChatToolResult, ToolIntervention } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import AbortResponse from './AbortResponse';
 import CustomRender from './CustomRender';

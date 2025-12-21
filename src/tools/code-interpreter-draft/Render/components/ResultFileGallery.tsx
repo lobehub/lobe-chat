@@ -1,7 +1,6 @@
 import { CodeInterpreterFileItem } from '@lobechat/types';
-import { PreviewGroup } from '@lobehub/ui';
+import { Flexbox, PreviewGroup } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import GalleyGrid from '@/components/GalleyGrid';
 

@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { FileChunk } from '@/types/chunk';

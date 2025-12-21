@@ -1,7 +1,6 @@
-import { ActionIcon, Button } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox } from '@lobehub/ui';
 import { LucideNotepadText, PlusSquareIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, operationSelectors } from '@/store/chat/selectors';

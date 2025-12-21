@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Icon } from '@lobehub/ui';
+import { Button, Center, Flexbox, Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { createStyles } from 'antd-style';
 import { ArrowRightIcon } from 'lucide-react';
@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { memo, useEffect, useRef, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';

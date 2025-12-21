@@ -1,11 +1,11 @@
 'use client';
 
 import { TaskCurrentActivity, TaskDetail } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Footprints, Loader2, Timer, Wrench } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 

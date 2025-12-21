@@ -1,10 +1,9 @@
 import { isDesktop } from '@lobechat/const';
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { Dropdown, type MenuProps, Typography } from 'antd';
 import { ArrowRight, Plus, Unlink } from 'lucide-react';
 import { CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { modal, notification } from '@/components/AntdStaticMethods';
 import AuthIcons from '@/components/NextAuth/AuthIcons';

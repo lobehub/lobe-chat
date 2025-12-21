@@ -2,7 +2,7 @@
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ModelTag } from '@lobehub/icons';
-import { ActionIconGroup, Block, Grid, Markdown, Tag, Text } from '@lobehub/ui';
+import { ActionIconGroup, Block, Flexbox, Grid, Markdown, Tag, Text } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
@@ -12,7 +12,6 @@ import { CopyIcon, RotateCcwSquareIcon, Trash2 } from 'lucide-react';
 import { RuntimeImageGenParams } from 'model-bank';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import APIKeyForm from '@/components/InvalidAPIKey';
 import { useImageStore } from '@/store/image';

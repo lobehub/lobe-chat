@@ -1,11 +1,10 @@
 'use client';
 
-import { Icon, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Text } from '@lobehub/ui';
 import { Breadcrumb, BreadcrumbProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronRightIcon, HomeIcon } from 'lucide-react';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import ToggleLeftPanelButton from './ToggleLeftPanelButton';

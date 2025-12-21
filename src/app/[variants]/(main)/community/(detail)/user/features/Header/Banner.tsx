@@ -1,8 +1,8 @@
 'use client';
 
+import { Center } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   banner: css`

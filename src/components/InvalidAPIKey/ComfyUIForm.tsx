@@ -1,12 +1,11 @@
 'use client';
 
 import { ComfyUI } from '@lobehub/icons';
-import { Button, Icon, Select } from '@lobehub/ui';
+import { Button, Center, Flexbox, Icon, Select } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { Loader2Icon, Network } from 'lucide-react';
 import { memo, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import KeyValueEditor from '@/components/KeyValueEditor';

@@ -1,11 +1,10 @@
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { App } from 'antd';
 import { useResponsive, useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import { Link2, PanelLeftRightDashedIcon, SquareChartGanttIcon, Trash2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';

@@ -1,8 +1,8 @@
 import type { LocalFileSearchState } from '@lobechat/builtin-tool-local-system';
 import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import SearchResult from './Result';
 import SearchQuery from './SearchQuery';

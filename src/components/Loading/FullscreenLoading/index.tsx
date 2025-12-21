@@ -1,5 +1,5 @@
+import { Center, Flexbox } from '@lobehub/ui';
 import React, { ReactNode, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import InitProgress, { StageItem } from '@/components/InitProgress';

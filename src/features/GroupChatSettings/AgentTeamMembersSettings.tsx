@@ -1,11 +1,10 @@
 'use client';
 
-import { ActionIcon, Grid, Tag, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Grid, Tag, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Plus } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { useAgentGroupStore } from '@/store/agentGroup';

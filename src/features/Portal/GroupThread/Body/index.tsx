@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 // import ChatInput from '@/app/[variants]/(main)/chat/features/Conversation/ChatInput';
 // import { useChatGroupStore } from '@/store/chatGroup';

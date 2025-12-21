@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import { CSSProperties, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`

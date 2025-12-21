@@ -1,6 +1,6 @@
 'use client';
 
-import { Collapse, Icon, Tag } from '@lobehub/ui';
+import { Collapse, Flexbox, Icon, Tag } from '@lobehub/ui';
 import {
   ChartColumnBig,
   Delete,
@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Title from '@/app/[variants]/(main)/community/features/Title';
 import { formatTokenNumber } from '@/utils/format';

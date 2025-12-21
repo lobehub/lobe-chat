@@ -1,10 +1,9 @@
 'use client';
 
-import { Alert, Block, Modal, Text } from '@lobehub/ui';
+import { Alert, Block, Flexbox, Modal, Text } from '@lobehub/ui';
 import { App } from 'antd';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import PluginTag from '@/components/Plugins/PluginTag';

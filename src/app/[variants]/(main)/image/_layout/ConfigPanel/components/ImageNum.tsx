@@ -1,10 +1,9 @@
 'use client';
 
-import { ActionIcon, InputNumber } from '@lobehub/ui';
+import { ActionIcon, Flexbox, InputNumber } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Check, Plus, X } from 'lucide-react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useImageStore } from '@/store/image';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';

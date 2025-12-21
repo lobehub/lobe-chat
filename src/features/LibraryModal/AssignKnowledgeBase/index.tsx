@@ -1,7 +1,6 @@
-import { Modal } from '@lobehub/ui';
+import { Flexbox, Modal } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useServerConfigStore } from '@/store/serverConfig';
 

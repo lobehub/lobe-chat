@@ -1,8 +1,8 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { VList } from 'virtua';
 
 import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';

@@ -1,12 +1,12 @@
 'use client';
 
 import { ErrorShape, ImportFileUploadState, ImportStage } from '@lobechat/types';
+import { Center } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { ImportIcon } from 'lucide-react';
 import React, { ReactNode, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
 import { importService } from '@/services/import';

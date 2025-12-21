@@ -4,6 +4,7 @@ import {
   Avatar,
   Collapse,
   Empty,
+  Flexbox,
   GroupAvatar,
   List,
   Modal,
@@ -17,7 +18,6 @@ import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';
 import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import ModelSelect from '@/features/ModelSelect';

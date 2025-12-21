@@ -1,9 +1,8 @@
-import { ActionIcon, Avatar } from '@lobehub/ui';
+import { ActionIcon, Avatar, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { t } from 'i18next';
 import { XIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import SidebarHeader from '@/components/SidebarHeader';
 import { DEFAULT_AVATAR } from '@/const/meta';

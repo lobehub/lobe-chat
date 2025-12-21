@@ -1,14 +1,13 @@
 'use client';
 
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Block, Icon, Tag, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ClockIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 

@@ -1,11 +1,10 @@
 'use client';
 
-import { Button, InputNumber, Tooltip } from '@lobehub/ui';
+import { Button, Flexbox, InputNumber, Tooltip } from '@lobehub/ui';
 import { Dices } from 'lucide-react';
 import { MAX_SEED } from 'model-bank';
 import { CSSProperties, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { generateUniqueSeeds } from '@/utils/number';
 

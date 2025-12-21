@@ -1,10 +1,9 @@
-import { ActionIcon, Block } from '@lobehub/ui';
+import { ActionIcon, Block, Flexbox } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronsUpDownIcon, Clock3Icon, PanelRightCloseIcon, PlusIcon } from 'lucide-react';
 import { Suspense, memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import AgentAvatar from '@/app/[variants]/(main)/home/_layout/Body/Agent/List/AgentItem/Avatar';
 import { AgentModalProvider } from '@/app/[variants]/(main)/home/_layout/Body/Agent/ModalProvider';

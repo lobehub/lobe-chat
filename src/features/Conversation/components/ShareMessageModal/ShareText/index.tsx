@@ -1,11 +1,10 @@
 import { UIChatMessage } from '@lobechat/types';
-import { Button, copyToClipboard } from '@lobehub/ui';
+import { Button, Flexbox, copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { CopyIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';

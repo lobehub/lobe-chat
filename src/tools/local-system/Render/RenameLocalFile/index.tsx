@@ -1,12 +1,11 @@
 import type { LocalReadFileState } from '@lobechat/builtin-tool-local-system';
 import { RenameLocalFileParams } from '@lobechat/electron-client-ipc';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRightIcon } from 'lucide-react';
 import path from 'path-browserify-esm';
 import React, { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile } from '@/features/LocalFile';
 

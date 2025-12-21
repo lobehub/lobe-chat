@@ -1,8 +1,7 @@
-import { Hotkey, Text, combineKeys } from '@lobehub/ui';
+import { Flexbox, Hotkey, Text, combineKeys } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';

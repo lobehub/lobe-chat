@@ -1,9 +1,8 @@
 import { ProviderCombine, ProviderIcon } from '@lobehub/icons';
-import { Avatar, Text , Skeleton } from '@lobehub/ui';
+import { Avatar, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { AiProviderListItem } from '@/types/aiProvider';
 

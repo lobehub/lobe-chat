@@ -1,10 +1,9 @@
-import { Alert, Button, Highlighter, Icon } from '@lobehub/ui';
+import { Alert, Button, Flexbox, Highlighter, Icon } from '@lobehub/ui';
 import { Result } from 'antd';
 import { ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import React, { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
 import { GITHUB_ISSUES } from '@/const/url';

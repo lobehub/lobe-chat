@@ -1,9 +1,9 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Avatar from '@/features/Conversation/ChatItem/components/Avatar';
 import Title from '@/features/Conversation/ChatItem/components/Title';

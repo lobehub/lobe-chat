@@ -7,12 +7,12 @@ import {
   Select,
   SliderWithInput,
 } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
 import { Form as AntdForm, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import InfoTooltip from '@/components/InfoTooltip';
 import { FORM_STYLE } from '@/const/layoutTokens';

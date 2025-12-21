@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FC } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import AgentIdSync from '@/app/[variants]/(main)/chat/_layout/AgentIdSync';

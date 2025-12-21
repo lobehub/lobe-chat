@@ -1,12 +1,11 @@
 'use client';
 
 import { SendButton } from '@lobehub/editor/react';
-import { Button, Select, Text } from '@lobehub/ui';
+import { Button, Flexbox, Select, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Undo2Icon } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { Locales, localeOptions, normalizeLocale } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';

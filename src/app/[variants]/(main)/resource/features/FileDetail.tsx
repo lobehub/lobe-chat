@@ -1,13 +1,12 @@
 'use client';
 
-import { ActionIcon, Icon, Tag } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Tag } from '@lobehub/ui';
 import { Descriptions, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import { BoltIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { FileListItem } from '@/types/files';
 import { downloadFile } from '@/utils/client/downloadFile';

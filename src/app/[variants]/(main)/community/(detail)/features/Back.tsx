@@ -1,11 +1,10 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowLeft } from 'lucide-react';
 import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 const useStyles = createStyles(({ css, token }) => {

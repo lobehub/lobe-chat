@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { createModal } from '@/components/FunctionModal';
 

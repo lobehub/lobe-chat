@@ -1,9 +1,8 @@
 'use client';
 
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useEffect, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import EditorCanvas from '../EditorCanvas';
 import { usePageEditorStore } from '../store';

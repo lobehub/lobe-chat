@@ -1,8 +1,7 @@
-import { Avatar, Text } from '@lobehub/ui';
+import { Avatar, Center, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useMentionStore } from '@/store/mention';
 

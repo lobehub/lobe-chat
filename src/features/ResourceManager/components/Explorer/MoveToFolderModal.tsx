@@ -1,8 +1,7 @@
-import { Modal } from '@lobehub/ui';
+import { Flexbox, Modal } from '@lobehub/ui';
 import { App, Button } from 'antd';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import FolderTree, { FolderTreeItem } from '@/features/ResourceManager/components/FolderTree';
 import { clearTreeFolderCache } from '@/features/ResourceManager/components/Tree';

@@ -1,6 +1,5 @@
-import { Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Title from '../../../../../features/Title';
 

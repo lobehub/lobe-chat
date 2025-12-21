@@ -1,10 +1,9 @@
 import { IDocument } from '@cyntler/react-doc-viewer';
-import { Button, FluentEmoji } from '@lobehub/ui';
+import { Button, Center, Flexbox, FluentEmoji } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import React, { ComponentType, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { MORE_FILE_PREVIEW_REQUEST_URL } from '@/const/url';
 import { downloadFile } from '@/utils/client/downloadFile';

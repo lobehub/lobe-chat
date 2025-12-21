@@ -1,10 +1,9 @@
 import { ChatMessageError } from '@lobechat/types';
 import { AudioPlayer, AudioPlayerProps } from '@lobehub/tts/react';
-import { ActionIcon, Alert, Button, Highlighter } from '@lobehub/ui';
+import { ActionIcon, Alert, Button, Flexbox, Highlighter } from '@lobehub/ui';
 import { TrashIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 interface PlayerProps extends AudioPlayerProps {
   error?: ChatMessageError;

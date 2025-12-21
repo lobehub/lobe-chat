@@ -1,10 +1,10 @@
 'use client';
 
+import { Center } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Trans } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import { MORE_MODEL_PROVIDER_REQUEST_URL } from '@/const/url';
 

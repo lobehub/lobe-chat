@@ -1,8 +1,7 @@
 'use client';
 
-import { Accordion } from '@lobehub/ui';
+import { Accordion, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Agent from './Agent';
 import BottomMenu from './BottomMenu';

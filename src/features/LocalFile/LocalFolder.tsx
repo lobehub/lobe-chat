@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import path from 'path-browserify-esm';
 import React from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { localFileService } from '@/services/electron/localFileService';

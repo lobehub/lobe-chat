@@ -1,11 +1,10 @@
 'use client';
 
-import { Icon, Tabs, TabsProps } from '@lobehub/ui';
+import { Flexbox, Icon, Tabs, TabsProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookOpenIcon, HammerIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';

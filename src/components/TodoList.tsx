@@ -1,9 +1,8 @@
-import { Collapse, Icon, Text } from '@lobehub/ui';
+import { Center, Collapse, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { CheckCircle, Circle, ListCheck } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   collapse: css`

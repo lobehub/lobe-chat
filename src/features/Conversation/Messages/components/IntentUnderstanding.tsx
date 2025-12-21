@@ -1,6 +1,6 @@
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import CircleLoader from '@/components/CircleLoader';
 import { shinyTextStylish } from '@/styles/loading';

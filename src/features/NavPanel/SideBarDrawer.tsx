@@ -1,11 +1,10 @@
 'use client';
 
-import { ActionIcon, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { Drawer } from 'antd';
 import { useTheme } from 'antd-style';
 import { XIcon } from 'lucide-react';
 import { ReactNode, Suspense, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 

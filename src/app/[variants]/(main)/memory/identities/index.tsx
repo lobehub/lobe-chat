@@ -1,7 +1,6 @@
-import { Icon, Tag } from '@lobehub/ui';
+import { Flexbox, Icon, Tag } from '@lobehub/ui';
 import { BrainCircuitIcon } from 'lucide-react';
 import { FC, memo, useCallback, useEffect, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import CommonFilterBar from '@/app/[variants]/(main)/memory/features/FilterBar';
 import NavHeader from '@/features/NavHeader';

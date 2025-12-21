@@ -1,12 +1,11 @@
 import { ChatCitationItem } from '@lobechat/types';
-import { CopyButton, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
+import { CopyButton, Flexbox, Icon, Markdown, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AtomIcon } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
 import { rgba } from 'polished';
 import { CSSProperties, ReactNode, RefObject, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

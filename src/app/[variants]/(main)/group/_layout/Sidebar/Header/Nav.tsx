@@ -1,11 +1,11 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { BotPromptIcon } from '@lobehub/ui/icons';
 import { SearchIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { useParams } from 'react-router-dom';
 import urlJoin from 'url-join';
 

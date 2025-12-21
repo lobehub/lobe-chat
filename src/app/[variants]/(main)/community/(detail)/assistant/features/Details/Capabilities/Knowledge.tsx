@@ -1,8 +1,7 @@
-import { Block, Empty } from '@lobehub/ui';
+import { Block, Empty, Flexbox } from '@lobehub/ui';
 import { BookOpen } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useDetailContext } from '../../DetailProvider';
 import KnowledgeItem from './KnowledgeItem';

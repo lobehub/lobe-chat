@@ -1,10 +1,9 @@
-import { Empty } from '@lobehub/ui';
+import { Empty, Flexbox } from '@lobehub/ui';
 import { Table } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Wrench } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';

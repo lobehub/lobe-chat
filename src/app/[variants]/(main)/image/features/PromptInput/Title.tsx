@@ -1,10 +1,9 @@
 'use client';
 
-import { Icon, Text } from '@lobehub/ui';
+import { Center, Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Palette } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 const PromptTitle = () => {
   const { t } = useTranslation('image');

@@ -1,10 +1,9 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Center, Flexbox, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import LangButton from '@/features/User/UserPanel/LangButton';

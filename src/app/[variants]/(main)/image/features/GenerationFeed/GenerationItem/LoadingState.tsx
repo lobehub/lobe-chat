@@ -1,10 +1,9 @@
 'use client';
 
 import { LoadingOutlined } from '@ant-design/icons';
-import { Block } from '@lobehub/ui';
+import { Block, Center } from '@lobehub/ui';
 import { Spin } from 'antd';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 import { AsyncTaskStatus } from '@/types/asyncTask';
 

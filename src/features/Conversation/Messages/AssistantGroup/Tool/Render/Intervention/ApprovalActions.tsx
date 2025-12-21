@@ -1,9 +1,8 @@
-import { Button, Dropdown } from '@lobehub/ui';
+import { Button, Dropdown, Flexbox } from '@lobehub/ui';
 import { Input, Popover, Space } from 'antd';
 import { ChevronDown } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 
@@ -126,12 +125,7 @@ const ApprovalActions = memo<ApprovalActionsProps>(
           placement="bottomRight"
           trigger="click"
         >
-          <Button
-            color={'default'}
-            disabled={isMessageCreating}
-            size="small"
-            variant={'filled'}
-          >
+          <Button color={'default'} disabled={isMessageCreating} size="small" variant={'filled'}>
             {t('tool.intervention.reject')}
           </Button>
         </Popover>

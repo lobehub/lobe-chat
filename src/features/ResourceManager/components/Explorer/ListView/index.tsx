@@ -1,11 +1,11 @@
 'use client';
 
+import { Center, Flexbox } from '@lobehub/ui';
 import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';

@@ -2,11 +2,10 @@
 
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Block, Text } from '@lobehub/ui';
+import { Block, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { MoveLocalFilesState } from '../../type';
 

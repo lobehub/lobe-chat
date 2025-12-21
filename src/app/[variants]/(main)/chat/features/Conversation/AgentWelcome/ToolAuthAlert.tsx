@@ -1,14 +1,13 @@
 'use client';
 
 import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Alert, Button, Icon, Image } from '@lobehub/ui';
+import { Alert, Button, Flexbox, Icon, Image } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Loader2, LogIn, SquareArrowOutUpRight, TriangleAlert } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
 import { useAgentStore } from '@/store/agent';

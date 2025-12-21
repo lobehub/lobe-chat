@@ -1,8 +1,8 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 import { StorageModeEnum } from '@lobechat/electron-client-ipc';
+import { Center, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ComponentType, ReactNode } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ token, css }) => ({
   checked: css`

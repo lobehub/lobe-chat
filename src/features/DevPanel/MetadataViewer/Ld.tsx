@@ -1,8 +1,7 @@
-import { Empty, Highlighter } from '@lobehub/ui';
+import { Center, Empty, Highlighter } from '@lobehub/ui';
 import { Code } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 
 import { useLd } from './useHead';
 

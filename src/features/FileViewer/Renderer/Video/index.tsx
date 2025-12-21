@@ -1,6 +1,6 @@
 import { DocRenderer } from '@cyntler/react-doc-viewer';
+import { Center } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Center } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

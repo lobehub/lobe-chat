@@ -1,12 +1,11 @@
 'use client';
 
 import { ModelIcon } from '@lobehub/icons';
-import { Icon, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import ModelTypeIcon from '@/app/[variants]/(main)/community/(list)/model/features/List/ModelTypeIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';

@@ -1,10 +1,10 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { FC, Suspense } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
-import { Flexbox } from 'react-layout-kit';
 import { Outlet } from 'react-router-dom';
 
 import { DndContextWrapper } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';

@@ -1,9 +1,9 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
+import { Flexbox } from '@lobehub/ui';
 import { CheckCircle, Clock, XCircle } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import type { InstallPluginParams, InstallPluginState } from '../../types';
 

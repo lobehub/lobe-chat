@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo, useCallback, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import {
   ChatInput,

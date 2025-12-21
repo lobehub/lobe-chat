@@ -1,11 +1,10 @@
 import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Icon, Skeleton, Text } from '@lobehub/ui';
+import { Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import { Button } from 'antd';
 import { uniq } from 'es-toolkit/compat';
 import { Edit2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';

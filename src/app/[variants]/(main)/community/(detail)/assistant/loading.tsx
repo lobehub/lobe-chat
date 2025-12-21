@@ -1,9 +1,8 @@
 'use client';
 
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Nav from './features/Details/Nav';
 

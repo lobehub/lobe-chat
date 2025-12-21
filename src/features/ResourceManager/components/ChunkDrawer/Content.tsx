@@ -1,6 +1,5 @@
-import { SearchBar } from '@lobehub/ui';
+import { Flexbox, SearchBar } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { fileChunkSelectors } from '@/store/file/slices/chunk';

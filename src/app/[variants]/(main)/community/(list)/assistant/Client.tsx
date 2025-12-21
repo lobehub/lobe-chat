@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
@@ -13,8 +13,7 @@ import List from './features/List';
 import Loading from './loading';
 
 const Client = memo<{ mobile?: boolean }>(() => {
-  const { q, page, category, sort, order, ownerId, source } =
-    useQuery() as AssistantQueryParams;
+  const { q, page, category, sort, order, ownerId, source } = useQuery() as AssistantQueryParams;
   const marketSource = (source as AssistantMarketSource | undefined) ?? 'new';
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
   const { data, isLoading } = useAssistantList({

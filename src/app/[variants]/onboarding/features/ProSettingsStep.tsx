@@ -1,11 +1,10 @@
 'use client';
 
-import { Button, Text } from '@lobehub/ui';
+import { Button, Flexbox, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Undo2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import LobeMessage from '@/app/[variants]/onboarding/components/LobeMessage';

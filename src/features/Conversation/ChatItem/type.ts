@@ -1,7 +1,6 @@
-import { AlertProps, AvatarProps, DivProps } from '@lobehub/ui';
+import { AlertProps, AvatarProps, DivProps, FlexboxProps } from '@lobehub/ui';
 import { EditableMessageProps, MetaData } from '@lobehub/ui/chat';
 import { ReactNode } from 'react';
-import { FlexboxProps } from 'react-layout-kit';
 
 export interface ChatItemProps extends Omit<FlexboxProps, 'children' | 'onChange'> {
   aboveMessage?: ReactNode;

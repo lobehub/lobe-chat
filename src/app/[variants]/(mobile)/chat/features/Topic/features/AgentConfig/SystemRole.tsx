@@ -1,11 +1,10 @@
 'use client';
 
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { createStyles } from 'antd-style';
 import { MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import AgentInfo from '@/features/AgentInfo';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';

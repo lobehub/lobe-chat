@@ -1,11 +1,10 @@
 'use client';
 
-import { Markdown } from '@lobehub/ui';
+import { Flexbox, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Check, Footprints, Timer, Wrench } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { TaskDetail } from '@/types/index';
 

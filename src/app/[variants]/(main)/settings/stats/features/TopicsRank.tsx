@@ -1,12 +1,11 @@
 import { BarList } from '@lobehub/charts';
-import { ActionIcon, FormGroup, Icon, Modal } from '@lobehub/ui';
+import { ActionIcon, Flexbox, FormGroup, Icon, Modal } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MaximizeIcon, MessageSquareIcon } from 'lucide-react';
 import Link from 'next/link';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { FORM_STYLE } from '@/const/layoutTokens';

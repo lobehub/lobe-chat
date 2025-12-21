@@ -1,9 +1,8 @@
 import { UniformSearchResult } from '@lobechat/types';
-import { Text } from '@lobehub/ui';
+import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import WebFavicon from '@/components/WebFavicon';
 

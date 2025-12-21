@@ -1,11 +1,10 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { Button, ButtonProps } from '@lobehub/ui';
+import { Button, ButtonProps, Center } from '@lobehub/ui';
 import { Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useInitBuiltinAgent } from '@/hooks/useInitBuiltinAgent';

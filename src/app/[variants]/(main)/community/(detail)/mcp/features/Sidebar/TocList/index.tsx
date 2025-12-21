@@ -1,10 +1,10 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { AnchorProps } from 'antd';
 import { startCase } from 'es-toolkit/compat';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useToc } from '@/app/[variants]/(main)/community/(detail)/features/Toc/useToc';
 import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';

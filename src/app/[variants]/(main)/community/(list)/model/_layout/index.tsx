@@ -1,4 +1,4 @@
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox } from '@lobehub/ui';
 import { Outlet } from 'react-router-dom';
 
 import CategoryContainer from '../../../components/CategoryContainer';

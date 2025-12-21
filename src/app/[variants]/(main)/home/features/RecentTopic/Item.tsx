@@ -1,7 +1,6 @@
-import { Avatar, Block, GroupAvatar, Text } from '@lobehub/ui';
+import { Avatar, Block, Center, Flexbox, GroupAvatar, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import Time from '@/app/[variants]/(main)/home/features/components/Time';
 import { RECENT_BLOCK_SIZE } from '@/app/[variants]/(main)/home/features/const';

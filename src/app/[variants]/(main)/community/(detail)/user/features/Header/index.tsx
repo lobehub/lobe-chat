@@ -1,13 +1,12 @@
 'use client';
 
 import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Avatar, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
 import { useTheme } from 'antd-style';
 import { Globe } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserDetailContext } from '../DetailProvider';
 import Banner from './Banner';

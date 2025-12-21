@@ -1,10 +1,9 @@
 'use client';
 
 import { useDroppable } from '@dnd-kit/core';
-import { Text , Skeleton } from '@lobehub/ui';
+import { Center, Flexbox, Skeleton, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useCallback } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
 import { useNavigate } from 'react-router-dom';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';

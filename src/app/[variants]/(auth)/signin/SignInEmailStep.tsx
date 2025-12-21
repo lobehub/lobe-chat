@@ -1,10 +1,9 @@
-import { Button, Icon, Input, Text , Skeleton } from '@lobehub/ui';
+import { Button, Flexbox, Icon, Input, Skeleton, Text } from '@lobehub/ui';
 import { Divider, Form } from 'antd';
 import type { FormInstance, InputRef } from 'antd';
 import { ChevronRight, Mail } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { BRANDING_NAME } from '@/const/branding';

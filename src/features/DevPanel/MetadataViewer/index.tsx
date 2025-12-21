@@ -1,9 +1,8 @@
 'use client';
 
-import { Tabs } from '@lobehub/ui';
+import { Flexbox, Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Header from '../features/Header';
 import Ld from './Ld';

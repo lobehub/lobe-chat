@@ -1,9 +1,9 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import GroupInfo from '@/features/GroupInfo';
 import { useAgentGroupStore } from '@/store/agentGroup';

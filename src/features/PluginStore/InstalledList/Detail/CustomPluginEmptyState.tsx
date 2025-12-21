@@ -1,9 +1,8 @@
-import { Button, Icon, Text } from '@lobehub/ui';
+import { Button, Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Package } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import EditCustomPlugin from '../EditCustomPlugin';
 

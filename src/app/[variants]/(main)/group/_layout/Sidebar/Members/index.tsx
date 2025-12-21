@@ -1,10 +1,9 @@
 'use client';
 
-import { AccordionItem, ActionIcon, Text } from '@lobehub/ui';
+import { AccordionItem, ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { UserPlus } from 'lucide-react';
 import { MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';

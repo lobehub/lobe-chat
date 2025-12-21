@@ -1,9 +1,8 @@
 'use client';
 
-import { SortableList } from '@lobehub/ui';
+import { SortableList , Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useCallback } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import AddItemRow from './AddItemRow';
 import SortableItem from './SortableItem';

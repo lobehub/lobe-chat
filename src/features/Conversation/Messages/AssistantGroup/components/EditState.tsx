@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import { MessageInput } from '@lobehub/ui/chat';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useConversationStore } from '../../../store';
 

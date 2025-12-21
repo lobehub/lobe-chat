@@ -1,11 +1,10 @@
 import { ChatTranslate } from '@lobechat/types';
-import { ActionIcon, Icon, Markdown, Tag, copyToClipboard } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, Markdown, Tag, copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import { ChevronDown, ChevronUp, ChevronsRight, CopyIcon, TrashIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
 

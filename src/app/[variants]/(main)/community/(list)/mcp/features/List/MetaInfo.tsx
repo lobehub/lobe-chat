@@ -1,7 +1,6 @@
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { DownloadIcon, StarIcon } from 'lucide-react';
 import { CSSProperties, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverMcpItem } from '@/types/discover';
 

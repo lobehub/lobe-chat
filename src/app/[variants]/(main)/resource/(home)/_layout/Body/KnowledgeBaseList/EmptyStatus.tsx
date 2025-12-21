@@ -1,8 +1,8 @@
 import type { IconType } from '@lobehub/icons';
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { forwardRef, memo } from 'react';
 import { Trans } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

@@ -2,7 +2,7 @@
 
 import { LoadingOutlined } from '@ant-design/icons';
 import { isDesktop } from '@lobechat/const';
-import { Block, Icon, Skeleton, Tag, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Skeleton, Tag, Text } from '@lobehub/ui';
 import { Button, Divider, Input, Spin, Typography, Upload } from 'antd';
 import { useTheme } from 'antd-style';
 import { BriefcaseIcon } from 'lucide-react';
@@ -18,7 +18,6 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { INTEREST_AREAS } from '@/app/[variants]/onboarding/config';
 import { notification } from '@/components/AntdStaticMethods';

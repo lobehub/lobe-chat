@@ -1,8 +1,7 @@
-import { Icon, SliderWithInput } from '@lobehub/ui';
+import { Flexbox, Icon, SliderWithInput } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { AtomIcon, RepeatIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 interface PresencePenaltyProps {
   disabled?: boolean;

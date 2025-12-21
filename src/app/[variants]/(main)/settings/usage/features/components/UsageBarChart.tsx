@@ -1,6 +1,6 @@
 import { BarChart, type BarChartProps, ChartTooltipFrame, ChartTooltipRow } from '@lobehub/charts';
+import { Flexbox } from '@lobehub/ui';
 import { Divider, Typography } from 'antd';
-import { Flexbox } from 'react-layout-kit';
 
 export const UsageBarChart = ({ ...props }: BarChartProps) => (
   <BarChart

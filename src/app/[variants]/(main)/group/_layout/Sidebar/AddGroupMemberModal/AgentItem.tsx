@@ -1,12 +1,11 @@
 'use client';
 
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Flexbox } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { Checkbox, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { memo, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 

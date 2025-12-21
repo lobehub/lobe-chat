@@ -1,9 +1,8 @@
-import { Block, Icon, Tag } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MessageCircleHeartIcon, MessageCircleQuestionIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import TokenTag from '../../../../../(list)/assistant/features/List/TokenTag';
 import Title from '../../../../../features/Title';

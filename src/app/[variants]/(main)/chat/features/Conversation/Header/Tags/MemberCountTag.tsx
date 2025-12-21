@@ -1,8 +1,7 @@
-import { Icon, Tag, Tooltip } from '@lobehub/ui';
+import { Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
 import { Users } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';

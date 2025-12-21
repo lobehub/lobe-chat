@@ -1,9 +1,8 @@
-import { Alert, Icon, SliderWithInput } from '@lobehub/ui';
+import { Alert, Flexbox, Icon, SliderWithInput } from '@lobehub/ui';
 import { css, cx, useTheme } from 'antd-style';
 import { Sparkle, Sparkles } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

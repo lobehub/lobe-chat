@@ -1,7 +1,6 @@
-import { Button } from '@lobehub/ui';
+import { Button, Center, Flexbox } from '@lobehub/ui';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 

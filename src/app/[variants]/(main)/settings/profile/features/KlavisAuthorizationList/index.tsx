@@ -1,8 +1,7 @@
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
-import { Avatar, Tag } from '@lobehub/ui';
+import { Avatar, Flexbox, Tag } from '@lobehub/ui';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { modal } from '@/components/AntdStaticMethods';
 import { useServerConfigStore } from '@/store/serverConfig';

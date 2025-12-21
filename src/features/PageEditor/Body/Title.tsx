@@ -1,11 +1,10 @@
 'use client';
 
-import { Button, Icon, TextArea } from '@lobehub/ui';
+import { Button, Flexbox, Icon, TextArea } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { SmilePlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import EmojiPicker from '@/components/EmojiPicker';
 import { useGlobalStore } from '@/store/global';

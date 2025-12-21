@@ -1,9 +1,8 @@
 'use client';
 
-import { Block, Text } from '@lobehub/ui';
+import { Block, Flexbox, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { KlavisServerType } from '@/const/index';
 import { KlavisServer, KlavisServerStatus } from '@/store/tool/slices/klavisStore';

@@ -1,7 +1,6 @@
-import { DraggablePanel } from '@lobehub/ui';
+import { DraggablePanel, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Suspense, memo, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Detail from './Detail';
 import DetailLoading from './Detail/Loading';

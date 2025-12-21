@@ -1,11 +1,11 @@
-import { DraggablePanel } from '@lobehub/ui';
+import { DraggablePanel, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { memo, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
-import { useToolStore } from '@/store/tool';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { useToolStore } from '@/store/tool';
+
 import DetailLoading from './Detail/Loading';
 import List from './List';
 

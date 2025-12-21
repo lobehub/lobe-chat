@@ -1,8 +1,7 @@
-import { Icon } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2, LucideIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const TimeLabel = memo<{
   date?: string;

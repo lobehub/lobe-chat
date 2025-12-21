@@ -1,9 +1,8 @@
 'use client';
 
-import { Block, Grid, GridProps, Text } from '@lobehub/ui';
+import { Block, Center, Grid, GridProps, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 export interface AspectRatioSelectProps extends Omit<GridProps, 'children' | 'onChange'> {

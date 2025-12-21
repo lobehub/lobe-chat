@@ -1,9 +1,8 @@
-import { ActionIcon, Block, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Center, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { UploadFileItem } from '@/types/files/upload';

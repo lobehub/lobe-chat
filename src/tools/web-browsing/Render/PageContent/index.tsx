@@ -1,8 +1,7 @@
 import { CrawlPluginState } from '@lobechat/types';
 import { CrawlErrorResult } from '@lobechat/web-crawler';
-import { ScrollShadow } from '@lobehub/ui';
+import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 

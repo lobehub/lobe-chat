@@ -1,11 +1,10 @@
-import { ActionIcon, Icon, TooltipGroup } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon, TooltipGroup } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import { AiModelForSelect } from 'model-bank';
 import { type ReactNode, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
 import { useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';

@@ -1,8 +1,7 @@
 import { FileResult } from '@lobechat/builtin-tool-local-system';
 import { ChatMessagePluginError } from '@lobechat/types';
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, Skeleton } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';

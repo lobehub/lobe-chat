@@ -1,8 +1,7 @@
-import { Block, Icon, Tag, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Link2 } from 'lucide-react';
 import { ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import CateTag from '../CateTag';
 import HashTags from '../HashTags';

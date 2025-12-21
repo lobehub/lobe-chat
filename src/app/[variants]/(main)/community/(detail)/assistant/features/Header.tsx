@@ -1,13 +1,12 @@
 'use client';
 
 import { MCP } from '@lobehub/icons';
-import { Avatar, Button, Icon, Text, Tooltip } from '@lobehub/ui';
+import { Avatar, Button, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DotIcon } from 'lucide-react';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 import urlJoin from 'url-join';
 

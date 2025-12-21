@@ -1,7 +1,7 @@
+import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { lighten } from 'polished';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useMentionStore } from '@/store/mention';
 import { mentionSelectors } from '@/store/mention/selectors';

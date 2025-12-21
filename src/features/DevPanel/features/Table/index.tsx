@@ -1,8 +1,7 @@
-import { Icon } from '@lobehub/ui';
+import { Center, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import React from 'react';
-import { Center } from 'react-layout-kit';
 import { TableVirtuoso } from 'react-virtuoso';
 
 import TableCell from './TableCell';

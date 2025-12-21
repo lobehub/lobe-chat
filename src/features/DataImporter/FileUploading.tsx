@@ -1,8 +1,8 @@
+import { Flexbox } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { formatSpeed, formatTime } from '@/utils/format';
 

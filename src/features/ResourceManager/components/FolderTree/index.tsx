@@ -1,12 +1,11 @@
 'use client';
 
 import { CaretDownFilled } from '@ant-design/icons';
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FolderIcon, FolderOpenIcon } from 'lucide-react';
 import { m as motion } from 'motion/react';
 import { memo, useCallback } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
   folderHeader: css`

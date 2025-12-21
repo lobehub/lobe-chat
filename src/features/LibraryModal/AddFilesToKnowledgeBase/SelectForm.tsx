@@ -1,9 +1,8 @@
-import { Block, Button, Form, MaterialFileTypeIcon, Select } from '@lobehub/ui';
+import { Block, Button, Flexbox, Form, MaterialFileTypeIcon, Select } from '@lobehub/ui';
 import { App } from 'antd';
 import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import RepoIcon from '@/components/LibIcon';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';

@@ -1,8 +1,7 @@
-import { Empty, Markdown } from '@lobehub/ui';
+import { Center, Empty, Markdown } from '@lobehub/ui';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 import { H1, H2, H3, H4, H5 } from './Toc/Heading';
 

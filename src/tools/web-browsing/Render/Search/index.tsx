@@ -1,7 +1,6 @@
 import { BuiltinRenderProps, SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Alert, Highlighter } from '@lobehub/ui';
+import { Alert, Flexbox, Highlighter } from '@lobehub/ui';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import ConfigForm from './ConfigForm';
 import SearchQueryView from './SearchQuery';

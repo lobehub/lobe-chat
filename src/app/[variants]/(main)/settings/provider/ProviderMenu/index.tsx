@@ -1,10 +1,9 @@
 'use client';
 
-import { SearchBar } from '@lobehub/ui';
+import { Flexbox, SearchBar } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useAiInfraStore } from '@/store/aiInfra/store';
 

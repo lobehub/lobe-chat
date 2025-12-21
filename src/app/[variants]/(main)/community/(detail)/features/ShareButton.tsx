@@ -3,7 +3,9 @@ import {
   Avatar,
   Button,
   ButtonProps,
+  Center,
   CopyButton,
+  Flexbox,
   Input,
   Modal,
   Skeleton,
@@ -16,7 +18,6 @@ import { LinkIcon, Share2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useShare } from '@/hooks/useShare';
 

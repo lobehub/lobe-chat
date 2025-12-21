@@ -1,10 +1,9 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { ActionIcon, FormItem, Input } from '@lobehub/ui';
+import { ActionIcon, Flexbox, FormItem, Input } from '@lobehub/ui';
 import { Checkbox, Form, FormInstance } from 'antd';
 import { FileCode, RotateCwIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
 import { BRANDING_NAME } from '@/const/branding';

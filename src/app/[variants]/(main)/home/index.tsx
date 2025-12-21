@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { FC } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import PageTitle from '@/components/PageTitle';
 import NavHeader from '@/features/NavHeader';

@@ -1,9 +1,8 @@
 import { OFFICIAL_URL, imageUrl } from '@lobechat/const';
-import { Grid } from '@lobehub/ui';
+import { Center, Flexbox, Grid } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import UserAvatar from '@/features/User/UserAvatar';

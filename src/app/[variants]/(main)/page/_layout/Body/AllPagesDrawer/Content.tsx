@@ -1,7 +1,7 @@
 'use client';
 
+import { Flexbox } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useRef } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { VList, VListHandle } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';

@@ -1,14 +1,13 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Flexbox } from '@lobehub/ui';
 import { Input, InputNumber, Tooltip } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Clock } from 'lucide-react';
 import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';

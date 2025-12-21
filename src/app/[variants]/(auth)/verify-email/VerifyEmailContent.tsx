@@ -1,7 +1,6 @@
-import { Block, Button, Text } from '@lobehub/ui';
+import { Block, Button, Flexbox, Text } from '@lobehub/ui';
 import { RefreshCw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useVerifyEmail } from './useVerifyEmail';
 

@@ -1,9 +1,8 @@
 import { BuiltinPlaceholderProps, SearchQuery } from '@lobechat/types';
-import { Icon, Skeleton } from '@lobehub/ui';
+import { Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { shinyTextStylish } from '@/styles/loading';

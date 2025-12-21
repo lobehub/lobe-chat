@@ -1,12 +1,11 @@
 'use client';
 
-import { Icon, Tabs } from '@lobehub/ui';
+import { Flexbox, Icon, Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookOpenIcon, ListIcon, Settings2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { SOCIAL_URL } from '@/const/branding';
 import { ModelNavKey } from '@/types/discover';

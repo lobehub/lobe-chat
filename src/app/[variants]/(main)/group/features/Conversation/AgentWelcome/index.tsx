@@ -1,10 +1,9 @@
 'use client';
 
-import { Markdown, Text } from '@lobehub/ui';
+import { Flexbox, Markdown, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import SupervisorAvatar from '@/app/[variants]/(main)/group/features/GroupAvatar';
 import { useIsMobile } from '@/hooks/useIsMobile';

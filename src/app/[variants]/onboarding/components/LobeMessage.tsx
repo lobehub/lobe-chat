@@ -1,8 +1,7 @@
-import { Text } from '@lobehub/ui';
+import { Flexbox, FlexboxProps, Text } from '@lobehub/ui';
 import { TypewriterEffect, TypewriterEffectProps } from '@lobehub/ui/awesome';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 

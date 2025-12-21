@@ -1,13 +1,12 @@
 'use client';
 
-import { Icon, Tooltip } from '@lobehub/ui';
+import { Flexbox, FlexboxProps, Icon, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
 import { isUndefined } from 'es-toolkit/compat';
 import { LoaderCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { messageService } from '@/services/message';

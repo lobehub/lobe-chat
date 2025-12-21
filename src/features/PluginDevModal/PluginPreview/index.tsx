@@ -1,11 +1,10 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { Block, Icon, Text } from '@lobehub/ui';
+import { Block, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Form as AForm, Button, FormInstance } from 'antd';
 import { useTheme } from 'antd-style';
 import { FileCode } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
 import PluginAvatar from '@/components/Plugins/PluginAvatar';

@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { FC } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import MemoryEmpty from '@/app/[variants]/(main)/memory/features/MemoryEmpty';
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';

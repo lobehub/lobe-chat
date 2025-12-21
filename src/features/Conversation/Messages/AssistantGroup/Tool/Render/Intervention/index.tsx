@@ -1,6 +1,6 @@
 import { safeParseJSON } from '@lobechat/utils';
+import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo, useCallback, useRef, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { toolInterventionSelectors } from '@/store/user/selectors';

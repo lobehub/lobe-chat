@@ -1,9 +1,8 @@
 'use client';
 
-import { AccordionItem, Dropdown, Text } from '@lobehub/ui';
+import { AccordionItem, Dropdown, Flexbox, Text } from '@lobehub/ui';
 import React, { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useChatStore } from '@/store/chat';

@@ -1,8 +1,7 @@
-import { Avatar, Tag } from '@lobehub/ui';
+import { Avatar, Center, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
 import { CSSProperties, memo } from 'react';
-import { Center } from 'react-layout-kit';
 
 import { MetaData } from '@/types/meta';
 

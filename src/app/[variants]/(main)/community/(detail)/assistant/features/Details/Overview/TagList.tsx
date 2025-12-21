@@ -1,10 +1,9 @@
 'use client';
 
-import { Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import qs from 'query-string';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 import { Link } from 'react-router-dom';
 
 import { useQuery } from '@/hooks/useQuery';

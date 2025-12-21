@@ -1,9 +1,8 @@
-import { Avatar, Icon, Text } from '@lobehub/ui';
+import { Avatar, Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { InboxIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
 import SkeletonLoading from '@/components/Loading/SkeletonLoading';

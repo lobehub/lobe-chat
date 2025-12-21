@@ -1,14 +1,13 @@
 'use client';
 
 import { CrawlErrorResult, CrawlSuccessResult } from '@lobechat/web-crawler';
-import { Alert, Icon, Text } from '@lobehub/ui';
+import { Alert, Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { WebBrowsingManifest } from '@/tools/web-browsing';

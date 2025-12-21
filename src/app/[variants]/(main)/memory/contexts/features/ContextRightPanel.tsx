@@ -1,11 +1,10 @@
 'use client';
 
-import { Text, Tooltip } from '@lobehub/ui';
+import { Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
 
 import CateTag from '@/app/[variants]/(main)/memory/features/CateTag';
 import DetailLoading from '@/app/[variants]/(main)/memory/features/DetailLoading';

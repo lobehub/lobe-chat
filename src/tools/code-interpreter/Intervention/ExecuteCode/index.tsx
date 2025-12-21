@@ -1,9 +1,8 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Highlighter, Text } from '@lobehub/ui';
+import { Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 interface ExecuteCodeParams {
   code: string;

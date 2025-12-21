@@ -1,11 +1,10 @@
 import { exportFile } from '@lobechat/utils/client';
-import { Block, Button, Highlighter, Segmented } from '@lobehub/ui';
+import { Block, Button, Flexbox, Highlighter, Segmented } from '@lobehub/ui';
 import { Drawer } from 'antd';
 import { createStyles } from 'antd-style';
 import { Code2, Download, Eye } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { isDesktop } from '@/const/version';
 import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';

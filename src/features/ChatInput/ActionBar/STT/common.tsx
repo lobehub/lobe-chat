@@ -1,10 +1,9 @@
 import { ChatMessageError } from '@lobechat/types';
-import { Alert, Button, Highlighter } from '@lobehub/ui';
+import { Alert, Button, Flexbox, Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Mic, MicOff } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import Action from '../components/Action';
 

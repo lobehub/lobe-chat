@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Button, Icon, IconProps, Text } from '@lobehub/ui';
+import { Block, Button, Flexbox, Icon, IconProps, Text } from '@lobehub/ui';
 import { TypewriterEffect } from '@lobehub/ui/awesome';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { Steps, Switch } from 'antd';
@@ -8,7 +8,6 @@ import { useTheme } from 'antd-style';
 import { BrainIcon, HeartHandshakeIcon, PencilRulerIcon, ShieldCheck } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import { BRANDING_NAME } from '@/const/branding';

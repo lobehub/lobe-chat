@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { memo, useMemo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
 import { useChatStore } from '@/store/chat';

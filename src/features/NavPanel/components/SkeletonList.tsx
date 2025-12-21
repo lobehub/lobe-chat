@@ -1,9 +1,8 @@
 'use client';
 
-import { Skeleton } from '@lobehub/ui';
+import { Flexbox, FlexboxProps, Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 export const SkeletonItem = memo<{ avatarSize?: number } & Omit<FlexboxProps, 'children'>>(
   ({ padding = 6, height = 36, style, avatarSize = 28, ...rest }) => {

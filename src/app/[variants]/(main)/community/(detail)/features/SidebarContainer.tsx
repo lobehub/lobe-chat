@@ -1,5 +1,5 @@
+import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import { FC } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 const SidebarContainer: FC<FlexboxProps> = ({ children, style, ...rest }) => {
   return (

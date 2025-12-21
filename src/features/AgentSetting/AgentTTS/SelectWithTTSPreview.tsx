@@ -1,12 +1,11 @@
 import { getMessageError } from '@lobechat/fetch-sse';
 import { ChatMessageError } from '@lobechat/types';
 import { AudioPlayer } from '@lobehub/tts/react';
-import { Alert, Button, Highlighter, Select, SelectProps } from '@lobehub/ui';
+import { Alert, Button, Flexbox, Highlighter, Select, SelectProps } from '@lobehub/ui';
 import { RefSelectProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { forwardRef, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
 import { TTSServer } from '@/types/agent';

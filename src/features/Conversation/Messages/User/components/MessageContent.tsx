@@ -1,5 +1,5 @@
+import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import MarkdownMessage from '@/features/Conversation/Markdown';
 import { UIChatMessage } from '@/types/index';
