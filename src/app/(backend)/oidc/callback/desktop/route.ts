@@ -10,7 +10,7 @@ const log = debug('lobe-oidc:callback:desktop');
 const errorPathname = '/oauth/callback/error';
 
 /**
- * 安全地构建重定向URL
+ * Safely build redirect URL
  */
 const buildRedirectUrl = (req: NextRequest, pathname: string): URL => {
   const forwardedHost = req.headers.get('x-forwarded-host');
@@ -18,7 +18,7 @@ const buildRedirectUrl = (req: NextRequest, pathname: string): URL => {
   const forwardedProto =
     req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol');
 
-  // 确定实际的主机名，提供后备值
+  // Determine the actual hostname with fallback values
   const actualHost = forwardedHost || requestHost;
   const actualProto = forwardedProto || 'https';
 
@@ -29,7 +29,7 @@ const buildRedirectUrl = (req: NextRequest, pathname: string): URL => {
     pathname,
   );
 
-  // 如果主机名仍然无效，使用req.nextUrl作为后备
+  // If hostname is still invalid, use req.nextUrl as fallback
   if (!actualHost) {
     log('Warning: Invalid host detected, using req.nextUrl as fallback');
     const fallbackUrl = req.nextUrl.clone();
@@ -76,7 +76,7 @@ export const GET = async (req: NextRequest) => {
 
     const successUrl = buildRedirectUrl(req, '/oauth/callback/success');
 
-    // 添加调试日志
+    // Add debug logs
     log('Request host header: %s', req.headers.get('host'));
     log('Request x-forwarded-host: %s', req.headers.get('x-forwarded-host'));
     log('Request x-forwarded-proto: %s', req.headers.get('x-forwarded-proto'));
