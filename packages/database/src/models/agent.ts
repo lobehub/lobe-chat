@@ -419,6 +419,19 @@ export class AgentModel {
   };
 
   /**
+   * Update the sessionGroupId for an agent
+   */
+  updateSessionGroupId = async (agentId: string, sessionGroupId: string | null) => {
+    const result = await this.db
+      .update(agents)
+      .set({ sessionGroupId, updatedAt: new Date() })
+      .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)))
+      .returning();
+
+    return result[0];
+  };
+
+  /**
    * Get a builtin agent by slug, creating it if it doesn't exist.
    * Builtin agents are standalone agents not bound to sessions.
    *

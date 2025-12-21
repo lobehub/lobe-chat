@@ -22,6 +22,7 @@ table agents {
   pinned boolean
   opening_message text
   opening_questions text[] [default: `[]`]
+  session_group_id text
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -32,6 +33,7 @@ table agents {
     user_id [name: 'agents_user_id_idx']
     title [name: 'agents_title_idx']
     description [name: 'agents_description_idx']
+    session_group_id [name: 'agents_session_group_id_idx']
   }
 }
 

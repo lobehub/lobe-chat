@@ -3,9 +3,9 @@ import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
-import { INBOX_SESSION_ID } from '@/const/session';
 import { agentService } from '@/services/agent';
 import { chatGroupService } from '@/services/chatGroup';
+import { homeService } from '@/services/home';
 import { sessionService } from '@/services/session';
 import type { HomeStore } from '@/store/home/store';
 import { getSessionStoreState } from '@/store/session';
@@ -122,16 +122,10 @@ export const createSidebarUISlice: StateCreator<
   removeAgent: async (agentId) => {
     await agentService.removeAgent(agentId);
     await get().refreshAgentList();
-
-    // If the active agent is deleted, switch to inbox
-    const sessionStore = getSessionStoreState();
-    if (agentId === sessionStore.activeId) {
-      sessionStore.switchSession(INBOX_SESSION_ID);
-    }
   },
 
   updateAgentGroup: async (agentId, groupId) => {
-    await sessionService.updateSession(agentId, { group: groupId || 'default' });
+    await homeService.updateAgentSessionGroupId(agentId, groupId === 'default' ? null : groupId);
     await get().refreshAgentList();
   },
 
