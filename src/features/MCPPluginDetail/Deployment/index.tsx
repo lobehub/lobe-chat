@@ -88,7 +88,7 @@ const Deployment = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <Collapse
       activeKey={activeKey}
-      expandIconPosition={'end'}
+      expandIconPlacement={'end'}
       gap={24}
       items={deploymentOptions.map((item, index) => {
         let properties: {

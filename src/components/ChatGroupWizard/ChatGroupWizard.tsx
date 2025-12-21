@@ -598,7 +598,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                 accordion
                 activeKey={activePanel}
                 collapsible
-                expandIconPosition="end"
+                expandIconPlacement="end"
                 gap={12}
                 items={[
                   {

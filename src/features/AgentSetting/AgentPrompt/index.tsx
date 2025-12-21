@@ -22,7 +22,7 @@ const AgentPrompt = memo(() => {
   const editButton = !editing && !!systemRole && (
     <Button
       icon={PenLineIcon}
-      iconPosition={'end'}
+      iconPlacement={'end'}
       iconProps={{
         size: 12,
       }}

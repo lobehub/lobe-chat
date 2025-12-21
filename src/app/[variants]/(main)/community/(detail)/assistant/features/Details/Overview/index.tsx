@@ -66,7 +66,7 @@ const Overview = memo(() => {
     <Flexbox gap={16}>
       <Collapse
         defaultActiveKey={['summary']}
-        expandIconPosition={'end'}
+        expandIconPlacement={'end'}
         items={[
           {
             children: summary || description,

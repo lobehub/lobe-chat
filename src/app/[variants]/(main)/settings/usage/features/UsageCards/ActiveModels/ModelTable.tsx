@@ -1,6 +1,6 @@
 import { CategoryBar, useThemeColorRange } from '@lobehub/charts';
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Collapse, Tag , Skeleton } from '@lobehub/ui';
+import { Collapse, Skeleton, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -86,7 +86,7 @@ const ModelTable = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
   ) : (
     <Collapse
       defaultActiveKey={formattedData.map((item) => item.id)}
-      expandIconPosition={'end'}
+      expandIconPlacement={'end'}
       gap={16}
       items={formattedData.map((item) => {
         const key = item.id;

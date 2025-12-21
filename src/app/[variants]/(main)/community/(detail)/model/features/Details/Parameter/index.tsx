@@ -98,7 +98,7 @@ const ParameterList = memo(() => {
       <Title>{t('models.parameterList.title')}</Title>
       <Collapse
         defaultActiveKey={items.map((item) => item.key)}
-        expandIconPosition={'end'}
+        expandIconPlacement={'end'}
         gap={16}
         items={items.map((item) => ({
           children: <ParameterItem {...item} key={item.key} />,
