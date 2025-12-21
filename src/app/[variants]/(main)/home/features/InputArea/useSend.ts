@@ -55,11 +55,7 @@ export const useSend = () => {
           if (!inboxAgentId) return;
 
           sendMessage({
-            context: {
-              agentId: inboxAgentId,
-              threadId: undefined,
-              topicId: undefined,
-            },
+            context: { agentId: inboxAgentId },
             contexts: contextList,
             files: fileList,
             message: inputMessage,

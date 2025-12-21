@@ -20,8 +20,6 @@ import { ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { getSessionStoreState } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { dbMessageSelectors, displayMessageSelectors, topicSelectors } from '../../../selectors';
@@ -120,7 +118,7 @@ export const conversationLifecycle: StateCreator<
     const lastMessage = messages.at(-1);
 
     useUserMemoryStore.getState().setActiveMemoryContext({
-      session: sessionSelectors.currentSession(getSessionStoreState()),
+      agent: agentSelectors.getAgentMetaById(agentId)(getAgentStoreState()),
       topic: topicSelectors.currentActiveTopic(get()),
       latestUserMessage: lastMessage?.content,
       sendingMessage: message,
@@ -203,7 +201,7 @@ export const conversationLifecycle: StateCreator<
 
     let data: SendMessageServerResponse | undefined;
     try {
-      const { model, provider } = agentSelectors.currentAgentConfig(getAgentStoreState());
+      const { model, provider } = agentSelectors.getAgentConfigById(agentId)(getAgentStoreState());
 
       const topicId = operationContext.topicId;
       data = await aiChatService.sendMessageInServer(
@@ -266,6 +264,7 @@ export const conversationLifecycle: StateCreator<
         await get().switchTopic(data.topicId, true);
       }
     } catch (e) {
+      console.error(e);
       // Fail operation on error
       get().failOperation(operationId, {
         type: e instanceof Error ? e.name : 'unknown_error',

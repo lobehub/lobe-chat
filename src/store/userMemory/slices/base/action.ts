@@ -64,10 +64,7 @@ export const createBaseSlice: StateCreator<
     const key = params ? userMemoryCacheKey(params) : undefined;
 
     set(
-      {
-        activeParams: params,
-        activeParamsKey: key,
-      },
+      { activeParams: params, activeParamsKey: key },
       false,
       n('setActiveMemoryContext', { key }),
     );

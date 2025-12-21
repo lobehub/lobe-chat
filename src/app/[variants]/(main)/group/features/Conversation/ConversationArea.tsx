@@ -8,8 +8,6 @@ import { ChatList, ConversationProvider } from '@/features/Conversation';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useAgentGroupStore } from '@/store/agentGroup';
-import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -45,8 +43,8 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
     s.useFetchUserMemory,
     s.setActiveMemoryContext,
   ]);
-  const [currentGroup, activeTopic] = [
-    useAgentGroupStore(agentGroupSelectors.currentGroup),
+  const [currentAgentMeta, activeTopic] = [
+    useAgentStore(agentSelectors.currentAgentMeta),
     useChatStore(topicSelectors.currentActiveTopic),
   ];
 
@@ -62,19 +60,11 @@ const Conversation = memo<ConversationAreaProps>(({ mobile = false }) => {
       return;
     }
 
-    // Convert group to session format for MemorySearchSource compatibility
     setActiveMemoryContext({
-      session: currentGroup
-        ? {
-            meta: {
-              description: currentGroup.description,
-              title: currentGroup.title,
-            },
-          }
-        : undefined,
+      agent: currentAgentMeta,
       topic: activeTopic,
     });
-  }, [activeTopic, currentGroup, isMemoryPluginEnabled, setActiveMemoryContext]);
+  }, [activeTopic, currentAgentMeta, isMemoryPluginEnabled, setActiveMemoryContext]);
 
   useFetchUserMemory(Boolean(isMemoryPluginEnabled && context.agentId));
 

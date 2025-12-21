@@ -11,8 +11,6 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import WelcomeChatItem from './AgentWelcome';
@@ -39,8 +37,8 @@ const Conversation = memo(() => {
     s.useFetchUserMemory,
     s.setActiveMemoryContext,
   ]);
-  const [currentSession, activeTopic] = [
-    useSessionStore(sessionSelectors.currentSession),
+  const [currentAgentMeta, activeTopic] = [
+    useAgentStore(agentSelectors.currentAgentMeta),
     useChatStore(topicSelectors.currentActiveTopic),
   ];
 
@@ -57,10 +55,10 @@ const Conversation = memo(() => {
     }
 
     setActiveMemoryContext({
-      session: currentSession,
+      agent: currentAgentMeta,
       topic: activeTopic,
     });
-  }, [activeTopic, currentSession, isMemoryPluginEnabled, setActiveMemoryContext]);
+  }, [activeTopic, currentAgentMeta, isMemoryPluginEnabled, setActiveMemoryContext]);
 
   useFetchUserMemory(Boolean(isMemoryPluginEnabled && context.agentId));
 
