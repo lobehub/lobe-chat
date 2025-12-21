@@ -46,7 +46,7 @@ const TitleBar = memo(() => {
         </Flexbox>
         {showWinControl && (
           <>
-            <Divider type={'vertical'} />
+            <Divider orientation={'vertical'} />
             <WinControl />
           </>
         )}

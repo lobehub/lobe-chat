@@ -38,7 +38,7 @@ const ActionPopover = memo<ActionPopoverProps>(
     maxWidth,
     minWidth,
     children,
-    classNames,
+    classNames: customClassNames,
     title,
     placement,
     loading,
@@ -47,22 +47,38 @@ const ActionPopover = memo<ActionPopoverProps>(
   }) => {
     const { cx, styles, theme } = useStyles();
     const isMobile = useIsMobile();
+
+    // Properly handle classNames (can be object or function)
+    const resolvedClassNames =
+      typeof customClassNames === 'function' ? customClassNames : customClassNames;
+    const containerClassName =
+      typeof resolvedClassNames === 'object' && resolvedClassNames?.container
+        ? cx(styles.popoverContent, resolvedClassNames.container)
+        : styles.popoverContent;
+
+    // Properly handle styles (can be object or function)
+    const resolvedStyles = typeof customStyles === 'function' ? customStyles : customStyles;
+    const containerStyle =
+      typeof resolvedStyles === 'object' && resolvedStyles?.container
+        ? resolvedStyles.container
+        : {};
+
     return (
       <Popover
         arrow={false}
         classNames={{
-          ...classNames,
-          body: cx(styles.popoverContent, classNames?.body),
+          ...(typeof resolvedClassNames === 'object' ? resolvedClassNames : {}),
+          container: containerClassName,
         }}
         placement={isMobile ? 'top' : placement}
         styles={{
-          ...customStyles,
-          body: {
+          ...(typeof resolvedStyles === 'object' ? resolvedStyles : {}),
+          container: {
             maxHeight,
             maxWidth: isMobile ? undefined : maxWidth,
             minWidth: isMobile ? undefined : minWidth,
             width: isMobile ? '100vw' : undefined,
-            ...customStyles?.body,
+            ...containerStyle,
           },
         }}
         title={

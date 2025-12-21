@@ -70,7 +70,7 @@ const FullscreenModal = ({ children, detail, onClose }: FullscreenModalProps) =>
       <ConfigProvider theme={{ token: { motion: false } }}>
         <Modal
           className={styles.modal}
-          classNames={{ body: styles.body, content: styles.content, header: styles.header }}
+          classNames={{ body: styles.body, header: styles.header, wrapper: styles.content }}
           footer={false}
           onCancel={handleCancel}
           open={open}

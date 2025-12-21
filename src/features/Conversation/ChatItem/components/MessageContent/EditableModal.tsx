@@ -66,7 +66,6 @@ const EditableMessage = memo<EditableMessageProps>(
       <Modal
         cancelText={t('cancel')}
         closable={false}
-        destroyOnClose
         destroyOnHidden
         okText={t('ok')}
         onCancel={() => onEditingChange?.(false)}

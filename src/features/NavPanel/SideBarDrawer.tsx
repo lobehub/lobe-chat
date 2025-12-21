@@ -40,10 +40,8 @@ const SideBarDrawer = memo<SideBarDrawerProps>(
         }}
         styles={{
           body: {
-            padding: 0,
-          },
-          content: {
             background: theme.colorBgLayout,
+            padding: 0,
           },
           header: {
             borderBottom: 'none',

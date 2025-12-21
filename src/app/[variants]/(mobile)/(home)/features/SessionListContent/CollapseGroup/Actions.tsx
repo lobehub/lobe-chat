@@ -142,12 +142,14 @@ const Actions = memo<ActionsProps>(
             domEvent.stopPropagation();
             modal.confirm({
               centered: true,
+              classNames: {
+                root: styles.modalRoot,
+              },
               okButtonProps: { danger: true },
               onOk: async () => {
                 if (!id) return;
                 await removeSessionGroup(id);
               },
-              rootClassName: styles.modalRoot,
               title: t('sessionGroup.confirmRemoveGroupAlert'),
             });
           },

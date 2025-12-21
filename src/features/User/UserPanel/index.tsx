@@ -29,13 +29,15 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
       <UpgradeBadge showBadge={hasNewVersion}>
         <Popover
           arrow={false}
+          classNames={{
+            root: styles.popover,
+          }}
           content={<PanelContent closePopover={() => setOpen(false)} />}
           onOpenChange={setOpen}
           open={open}
           placement={'topRight'}
-          rootClassName={styles.popover}
           styles={{
-            body: { padding: 0 },
+            container: { padding: 0 },
           }}
           trigger={['click']}
         >

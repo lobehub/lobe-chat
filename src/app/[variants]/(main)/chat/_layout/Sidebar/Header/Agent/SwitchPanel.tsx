@@ -30,7 +30,7 @@ const SwitchPanel = memo<PropsWithChildren>(({ children }) => {
       }
       placement={'bottomLeft'}
       styles={{
-        body: {
+        container: {
           padding: 0,
           width: 240,
         },

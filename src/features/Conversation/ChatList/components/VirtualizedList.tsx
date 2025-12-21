@@ -123,7 +123,6 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
         onScroll={handleScroll}
         onScrollEnd={handleScrollEnd}
         ref={virtuaRef}
-        reverse
         style={{ height: '100%', paddingBottom: 24 }}
       >
         {(messageId, index): ReactElement => {

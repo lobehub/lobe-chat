@@ -50,7 +50,11 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   }, [dateStrings]);
 
   const handleDateChange: DatePickerProps['onChange'] = (dates, dateStrings) => {
-    setDateRange(dates);
+    // Handle both single date and array
+    const actualDate = Array.isArray(dates) ? dates[0] : dates;
+    if (actualDate) {
+      setDateRange(actualDate);
+    }
     if (typeof dateStrings === 'string') {
       setDateStrings(dateStrings);
     }

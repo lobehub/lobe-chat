@@ -98,7 +98,7 @@ const Editing = memo<EditingProps>(({ id, title, avatar, toggleEditing }) => {
       open={editing}
       placement={'bottomLeft'}
       styles={{
-        body: {
+        container: {
           padding: 4,
         },
       }}

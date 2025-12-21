@@ -53,7 +53,7 @@ const ThemeButton = memo<{ placement?: PopoverProps['placement']; size?: number 
         content={<Menu items={items} selectable selectedKeys={[themeMode]} />}
         placement={placement}
         styles={{
-          body: {
+          container: {
             padding: 0,
           },
         }}
