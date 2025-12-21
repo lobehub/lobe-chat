@@ -1,4 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import { expo } from '@better-auth/expo';
 import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
@@ -149,6 +150,7 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    expo(),
     emailHarmony({ allowNormalizedSignin: false }),
     admin(),
     ...(genericOAuthProviders.length > 0
