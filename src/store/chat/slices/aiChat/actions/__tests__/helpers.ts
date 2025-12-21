@@ -22,6 +22,10 @@ export const setupMockSelectors = (
     createMockAgentConfig(options.agentConfig),
   );
 
+  // Mock getAgentConfigById to return config for any agentId
+  const getAgentConfig = () => createMockAgentConfig(options.agentConfig);
+  vi.spyOn(agentSelectors, 'getAgentConfigById').mockImplementation(() => getAgentConfig);
+
   vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockImplementation(() =>
     createMockChatConfig(options.chatConfig),
   );

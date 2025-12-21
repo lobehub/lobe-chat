@@ -4,14 +4,12 @@ import { DEFAULT_SEARCH_USER_MEMORY_TOP_K } from '@/const/userMemory';
 import type { RetrieveMemoryParams } from '@/types/userMemory';
 
 interface MemorySearchSource {
+  agent?: {
+    description?: string | null;
+    title?: string | null;
+  } | null;
   latestUserMessage?: string | null;
   sendingMessage?: string | null;
-  session?: {
-    meta?: {
-      description?: string | null;
-      title?: string | null;
-    } | null;
-  } | null;
   topic?: {
     historySummary?: string | null;
     title?: string | null;
@@ -31,7 +29,7 @@ export const createMemorySearchParams = (
 ): RetrieveMemoryParams | undefined => {
   const query = pickFirstNonEmpty([
     source.topic?.historySummary,
-    source.session?.meta?.description,
+    source.agent?.description,
     source.latestUserMessage,
     source.sendingMessage,
   ]);

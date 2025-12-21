@@ -43,7 +43,7 @@ afterEach(() => {
 });
 
 // Helper to create context for testing
-const createTestContext = (agentId = TEST_IDS.SESSION_ID) => ({
+const createTestContext = (agentId: string = TEST_IDS.SESSION_ID) => ({
   agentId,
   topicId: null,
   threadId: null,
@@ -133,6 +133,51 @@ describe('ConversationLifecycle actions', () => {
           });
         });
 
+        expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
+      });
+
+      it('should work when sending from home page (activeAgentId is empty but context.agentId exists)', async () => {
+        const { result } = renderHook(() => useChatStore());
+
+        // Simulate home page state where activeAgentId is empty
+        act(() => {
+          useChatStore.setState({
+            activeAgentId: '',
+            activeTopicId: undefined,
+          });
+        });
+
+        const sendMessageInServerSpy = vi
+          .spyOn(aiChatService, 'sendMessageInServer')
+          .mockResolvedValue({
+            messages: [
+              createMockMessage({ id: TEST_IDS.USER_MESSAGE_ID, role: 'user' }),
+              createMockMessage({ id: TEST_IDS.ASSISTANT_MESSAGE_ID, role: 'assistant' }),
+            ],
+            topics: [],
+            assistantMessageId: TEST_IDS.ASSISTANT_MESSAGE_ID,
+            userMessageId: TEST_IDS.USER_MESSAGE_ID,
+          } as any);
+
+        await act(async () => {
+          await result.current.sendMessage({
+            message: TEST_CONTENT.USER_MESSAGE,
+            // Pass agentId via context (simulating home page sending to inbox)
+            context: createTestContext('inbox-agent-id'),
+          });
+        });
+
+        // Should use agentId from context to get agent config
+        expect(sendMessageInServerSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            agentId: 'inbox-agent-id',
+            newAssistantMessage: expect.objectContaining({
+              model: expect.any(String),
+              provider: expect.any(String),
+            }),
+          }),
+          expect.any(AbortController),
+        );
         expect(result.current.internal_execAgentRuntime).toHaveBeenCalled();
       });
     });
