@@ -93,6 +93,8 @@ export interface AgentItem {
   params?: any;
   plugins?: string[];
   provider?: string | null;
+  /** Session group ID for direct grouping */
+  sessionGroupId?: string | null;
   slug?: string | null;
   systemRole?: string | null;
   tags?: string[];

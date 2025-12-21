@@ -1,6 +1,6 @@
-import { and, eq, inArray, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull } from 'drizzle-orm';
 
-import { agentsToSessions, messages, topics } from '../../schemas';
+import { agents, agentsToSessions, messages, sessions, topics } from '../../schemas';
 import { LobeChatDatabase } from '../../type';
 
 type MigrateBySessionParams = { agentId: string; sessionId: string };
@@ -179,5 +179,48 @@ export class AgentMigrationRepo {
       .limit(1);
 
     return result[0]?.sessionId ?? null;
+  };
+
+  /**
+   * Runtime migration: backfill sessionGroupId for legacy agents
+   *
+   * This method migrates agents that have:
+   * - sessionGroupId IS NULL
+   * - Associated session has groupId NOT NULL
+   *
+   * It copies the session's groupId to the agent's sessionGroupId
+   */
+  migrateSessionGroupId = async () => {
+    // Find all agents that need migration:
+    // - Agent's sessionGroupId is NULL
+    // - Agent's associated session has a groupId
+    const agentsToMigrate = await this.db
+      .select({
+        agentId: agents.id,
+        sessionGroupId: sessions.groupId,
+      })
+      .from(agents)
+      .innerJoin(agentsToSessions, eq(agents.id, agentsToSessions.agentId))
+      .innerJoin(sessions, eq(agentsToSessions.sessionId, sessions.id))
+      .where(
+        and(
+          eq(agents.userId, this.userId),
+          isNull(agents.sessionGroupId),
+          isNotNull(sessions.groupId),
+        ),
+      );
+
+    if (agentsToMigrate.length === 0) return;
+
+    // Update each agent's sessionGroupId
+    // Using individual updates to preserve updatedAt (no auto-update trigger)
+    for (const item of agentsToMigrate) {
+      if (!item.sessionGroupId) continue;
+
+      await this.db
+        .update(agents)
+        .set({ sessionGroupId: item.sessionGroupId, updatedAt: agents.updatedAt })
+        .where(and(eq(agents.id, item.agentId), eq(agents.userId, this.userId)));
+    }
   };
 }

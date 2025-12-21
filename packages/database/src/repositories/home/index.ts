@@ -39,13 +39,16 @@ export class HomeRepository {
     // 1. Query all agents (non-virtual) with their session info
     // Note: We query both agents.pinned and sessions.pinned for backward compatibility
     // agents.pinned takes priority, falling back to sessions.pinned for legacy data
+    // Note: We query both agents.sessionGroupId and sessions.groupId for backward compatibility
+    // agents.sessionGroupId takes priority, falling back to sessions.groupId for legacy data
     const agentList = await this.db
       .select({
+        agentSessionGroupId: agents.sessionGroupId,
         avatar: agents.avatar,
         description: agents.description,
-        groupId: sessions.groupId,
         id: agents.id,
         pinned: agents.pinned,
+        sessionGroupId: sessions.groupId,
         sessionId: sessions.id,
         sessionPinned: sessions.pinned,
         title: agents.title,
@@ -116,11 +119,12 @@ export class HomeRepository {
 
   private processAgentList(
     agentItems: Array<{
+      agentSessionGroupId: string | null;
       avatar: string | null;
       description: string | null;
-      groupId: string | null;
       id: string;
       pinned: boolean | null;
+      sessionGroupId: string | null;
       sessionId: string;
       sessionPinned: boolean | null;
       title: string | null;
@@ -143,11 +147,12 @@ export class HomeRepository {
   ): SidebarAgentListResponse {
     // Convert to unified format
     // For pinned status: agents.pinned takes priority, fallback to sessions.pinned for backward compatibility
+    // For groupId: agents.sessionGroupId takes priority, fallback to sessions.groupId for backward compatibility
     const allItems: Array<SidebarAgentItem & { groupId: string | null }> = [
       ...agentItems.map((a) => ({
         avatar: a.avatar,
         description: a.description,
-        groupId: a.groupId,
+        groupId: a.agentSessionGroupId ?? a.sessionGroupId,
         id: a.id,
         pinned: a.pinned ?? a.sessionPinned ?? false,
         sessionId: a.sessionId,
