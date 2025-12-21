@@ -517,6 +517,8 @@ export class MessageModel {
     if (!sourceMessage) return [];
 
     // Get all main conversation messages up to and including the source message
+    // Use `or` with explicit id match to handle timestamp precision issues
+    // (JavaScript Date has millisecond precision, but PostgreSQL timestamptz has microsecond precision)
     const result = await this.db
       .select()
       .from(messages)
@@ -525,7 +527,10 @@ export class MessageModel {
           eq(messages.userId, this.userId),
           eq(messages.topicId, topicId),
           isNull(messages.threadId), // Only main conversation messages (not in any thread)
-          lte(messages.createdAt, sourceMessage.createdAt),
+          or(
+            lte(messages.createdAt, sourceMessage.createdAt),
+            eq(messages.id, sourceMessageId), // Ensure source message is always included
+          ),
         ),
       )
       .orderBy(asc(messages.createdAt));

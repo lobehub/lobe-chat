@@ -18,7 +18,9 @@ import { systemAgentSelectors } from '@/store/user/selectors';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { displayMessageSelectors } from '../message/selectors';
 import { ThreadDispatch, threadReducer } from './reducer';
+import { genParentMessages } from './selectors';
 
 const n = setNamespace('thd');
 const SWR_USE_FETCH_THREADS = 'SWR_USE_FETCH_THREADS';
@@ -61,6 +63,26 @@ export const chatThreadMessage: StateCreator<
   },
 
   openThreadCreator: (messageId) => {
+    const { activeAgentId, activeTopicId, newThreadMode, replaceMessages } = get();
+
+    // Get parent messages up to and including the source message
+    const displayMessages = displayMessageSelectors.activeDisplayMessages(get());
+    // Filter out messages that have threadId (they belong to other threads)
+    const mainMessages = displayMessages.filter((m) => !m.threadId);
+    const parentMessages = genParentMessages(mainMessages, messageId, newThreadMode);
+
+    // Initialize messages in thread scope for optimistic update
+    // This ensures the UI can display messages immediately
+    if (parentMessages.length > 0) {
+      const context = {
+        agentId: activeAgentId,
+        isNew: true,
+        scope: 'thread' as const,
+        topicId: activeTopicId,
+      };
+      replaceMessages(parentMessages, { action: 'initThreadMessages', context });
+    }
+
     set(
       { threadStartMessageId: messageId, portalThreadId: undefined, startToForkThread: true },
       false,

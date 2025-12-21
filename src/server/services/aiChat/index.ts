@@ -25,6 +25,7 @@ export class AiChatService {
     includeTopic?: boolean;
     pageSize?: number;
     sessionId?: string;
+    threadId?: string;
     topicId?: string;
   }) {
     const [messages, topics] = await Promise.all([
