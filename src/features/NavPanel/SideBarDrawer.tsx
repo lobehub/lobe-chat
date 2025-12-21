@@ -38,6 +38,7 @@ const SideBarDrawer = memo<SideBarDrawerProps>(
         rootStyle={{
           position: 'absolute',
         }}
+        size={280}
         styles={{
           body: {
             background: theme.colorBgLayout,
@@ -78,7 +79,6 @@ const SideBarDrawer = memo<SideBarDrawerProps>(
             {subHeader}
           </>
         }
-        width={280}
       >
         <Suspense
           fallback={

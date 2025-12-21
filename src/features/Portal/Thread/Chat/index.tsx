@@ -14,8 +14,10 @@ import {
   useConversationStore,
 } from '@/features/Conversation';
 import SkeletonList from '@/features/Conversation/components/SkeletonList';
+import { useOperationState } from '@/hooks/useOperationState';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
+import { MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import ThreadDivider from './ThreadDivider';
 import { useThreadActionsBarConfig } from './useThreadActionsBarConfig';
@@ -102,13 +104,8 @@ ThreadChatContent.displayName = 'ThreadChatContent';
  * Thread Chat Component
  *
  * Two modes:
- * 1. With portalThreadId: Uses ConversationProvider to fetch complete thread data from backend
- * 2. Without portalThreadId (creating new thread): Uses main conversation's displayMessages slice
- *
- * Thread context is determined by:
- * - agentId: current active agent
- * - topicId: current active topic
- * - threadId: portal thread ID (optional)
+ * 1. Creating new thread (!portalThreadId): Uses 'thread_xxx_new' key (isNew: true)
+ * 2. Existing thread (portalThreadId): Uses 'thread_xxx_topicId_threadId' key
  */
 const ThreadChat = memo(() => {
   // Get thread context from ChatStore
@@ -121,12 +118,6 @@ const ThreadChat = memo(() => {
       s.newThreadMode,
     ]);
 
-  // When creating new thread (no portalThreadId), get messages from main conversation
-  // Use s.portalThreadId directly to avoid stale closure
-  const messagesFromMain = useChatStore((s) =>
-    !s.portalThreadId ? threadSelectors.portalDisplayChats(s) : undefined,
-  );
-
   // Get thread-specific actionsBar config
   const actionsBarConfig = useThreadActionsBarConfig();
 
@@ -134,6 +125,7 @@ const ThreadChat = memo(() => {
   // When creating new thread (!portalThreadId), use isNew + scope: 'thread'
   const isCreatingNewThread = !portalThreadId && !!threadStartMessageId;
 
+  // Context for ConversationProvider (includes sourceMessageId/threadType for new thread creation)
   const context: ConversationContext = useMemo(
     () => ({
       agentId: activeAgentId,
@@ -155,7 +147,29 @@ const ThreadChat = memo(() => {
       isCreatingNewThread,
     ],
   );
-  console.log('Thread Chat', context);
+
+  // Context for messageMapKey (only needs fields used in key generation)
+  const keyContext = useMemo<MessageMapKeyInput>(
+    () => ({
+      agentId: activeAgentId,
+      isNew: isCreatingNewThread,
+      scope: 'thread',
+      threadId: portalThreadId,
+      topicId: activeTopicId,
+    }),
+    [activeAgentId, activeTopicId, portalThreadId, isCreatingNewThread],
+  );
+
+  // Generate messageMapKey for direct subscription to dbMessagesMap
+  const chatKey = useMemo(() => messageMapKey(keyContext), [keyContext]);
+
+  // Subscribe directly to dbMessagesMap for reactive updates
+  // This ensures optimistic updates work (read/write use same key)
+  const replaceMessages = useChatStore((s) => s.replaceMessages);
+  const messages = useChatStore((s) => s.dbMessagesMap[chatKey]);
+
+  // Get operation state for reactive updates
+  const operationState = useOperationState(context);
 
   // Hooks to handle post-message-creation tasks for new thread
   const hooks: ConversationHooks = useMemo(
@@ -187,9 +201,14 @@ const ThreadChat = memo(() => {
     <ConversationProvider
       actionsBar={actionsBarConfig}
       context={context}
+      hasInitMessages={!!messages}
       hooks={hooks}
-      messages={messagesFromMain}
-      skipFetch={!!messagesFromMain}
+      messages={messages}
+      onMessagesChange={(msgs) => {
+        replaceMessages(msgs, { context });
+      }}
+      operationState={operationState}
+      skipFetch={isCreatingNewThread}
     >
       <ThreadChatContent />
     </ConversationProvider>

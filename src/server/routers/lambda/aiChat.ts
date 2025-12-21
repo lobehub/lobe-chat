@@ -181,6 +181,7 @@ export const aiChatRouter = router({
         groupId: input.groupId,
         includeTopic: isCreateNewTopic,
         sessionId,
+        threadId,
         topicId,
       });
 
