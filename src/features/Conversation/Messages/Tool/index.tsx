@@ -7,14 +7,14 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { dataSelectors, useConversationStore } from '../../store';
-import ToolItem from './ToolItem';
+import Tool from './Tool';
 
 interface ToolMessageProps {
   id: string;
   index: number;
 }
 
-const Tool = memo<ToolMessageProps>(({ id, index }) => {
+const ToolMessage = memo<ToolMessageProps>(({ id, index }) => {
   const { t } = useTranslation('plugin');
   const item = useConversationStore(dataSelectors.getDbMessageById(id), isEqual) as UIChatMessage;
   const deleteToolMessage = useConversationStore((s) => s.deleteToolMessage);
@@ -39,13 +39,12 @@ const Tool = memo<ToolMessageProps>(({ id, index }) => {
         }
         message={t('inspector.orphanedToolCall')}
         type={'secondary'}
-        variant={'borderless'}
       />
       {item.plugin && (
-        <ToolItem {...item.plugin} index={index} messageId={id} toolCallId={item.tool_call_id!} />
+        <Tool {...item.plugin} index={index} messageId={id} toolCallId={item.tool_call_id!} />
       )}
     </Flexbox>
   );
 }, isEqual);
 
-export default Tool;
+export default ToolMessage;

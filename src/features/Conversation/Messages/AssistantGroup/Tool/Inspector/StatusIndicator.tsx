@@ -1,10 +1,11 @@
 import { ToolIntervention } from '@lobechat/types';
-import { Icon, Tooltip } from '@lobehub/ui';
+import { Block, Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { Ban, Check, CircleStop, X } from 'lucide-react';
+import { Ban, Check, CircleStop, Loader2Icon, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+
+import { LOADING_FLAT } from '@/const/message';
 
 interface StatusIndicatorProps {
   intervention?: ToolIntervention;
@@ -16,25 +17,51 @@ const StatusIndicator = memo<StatusIndicatorProps>(({ intervention, result }) =>
   const theme = useTheme();
 
   const hasError = !!result?.error;
+  const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
+  const hasResult = hasSuccessResult || hasError;
   const isReject = intervention?.status === 'rejected';
   const isAbort = intervention?.status === 'aborted';
 
-  return (
-    <Flexbox align={'center'} gap={4} horizontal style={{ fontSize: 12 }}>
-      {isAbort ? (
+  let icon;
+
+  if (hasResult) {
+    if (isAbort) {
+      icon = (
         <Tooltip title={t('tool.intervention.toolAbort')}>
           <Icon color={theme.colorTextTertiary} icon={CircleStop} />
         </Tooltip>
-      ) : isReject ? (
+      );
+    } else if (isReject) {
+      icon = (
         <Tooltip title={t('tool.intervention.toolRejected')}>
           <Icon color={theme.colorTextTertiary} icon={Ban} />
         </Tooltip>
-      ) : hasError ? (
-        <Icon color={theme.colorError} icon={X} />
-      ) : (
-        <Icon color={theme.colorSuccess} icon={Check} />
-      )}
-    </Flexbox>
+      );
+    } else if (hasError) {
+      icon = <Icon color={theme.colorError} icon={X} />;
+    } else {
+      icon = <Icon color={theme.colorSuccess} icon={Check} />;
+    }
+  } else {
+    icon = <Icon color={theme.colorTextDescription} icon={Loader2Icon} spin />;
+  }
+
+  return (
+    <Block
+      align={'center'}
+      flex={'none'}
+      gap={4}
+      height={24}
+      horizontal
+      justify={'center'}
+      style={{
+        fontSize: 12,
+      }}
+      variant={'outlined'}
+      width={24}
+    >
+      {icon}
+    </Block>
   );
 });
 

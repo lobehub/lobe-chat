@@ -1,37 +1,40 @@
 import { ChatToolResult, ToolIntervention } from '@lobechat/types';
-import { CSSProperties, memo, useEffect, useState } from 'react';
+import { AccordionItem, Skeleton } from '@lobehub/ui';
+import { Divider } from 'antd';
+import dynamic from 'next/dynamic';
+import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import AnimatedCollapsed from '@/components/AnimatedCollapsed';
+import Actions from '@/features/Conversation/Messages/AssistantGroup/Tool/Actions';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
 import Inspectors from './Inspector';
-import Render from './Render';
+
+const Debug = dynamic(() => import('./Debug'), {
+  loading: () => <Skeleton.Block active height={300} width={'100%'} />,
+  ssr: false,
+});
+
+const Render = dynamic(() => import('./Render'), {
+  loading: () => <Skeleton.Block active height={120} width={'100%'} />,
+  ssr: false,
+});
 
 export interface GroupToolProps {
   apiName: string;
   arguments?: string;
-  /**
-   * ContentBlock ID (not the group message ID)
-   */
   assistantMessageId: string;
+  expand?: boolean;
+  handleExpand?: (expand?: boolean) => void;
   id: string;
   identifier: string;
-  index: number;
   intervention?: ToolIntervention;
   result?: ChatToolResult;
-  style?: CSSProperties;
   toolMessageId?: string;
   type?: string;
 }
 
-/**
- * Tool component for Group Messages
- *
- * In group messages, all tools are completed (no streaming),
- * so we always show the results directly.
- */
 const Tool = memo<GroupToolProps>(
   ({
     arguments: requestArgs,
@@ -39,48 +42,68 @@ const Tool = memo<GroupToolProps>(
     assistantMessageId,
     id,
     intervention,
-    index,
     identifier,
-    style,
     result,
     type,
     toolMessageId,
+    handleExpand,
   }) => {
     // Get renderDisplayControl from manifest
     const renderDisplayControl = useToolStore(
       toolSelectors.getRenderDisplayControl(identifier, apiName),
     );
+    const [showDebug, setShowDebug] = useState(false);
+    const [showPluginRender, setShowPluginRender] = useState(false);
 
-    // Default to false since group messages are all completed
-    const [showToolContent, setShowToolDetail] = useState(false);
-    const [showCustomPluginUI, setShowCustomPluginUI] = useState(false);
+    const isPending = intervention?.status === 'pending';
+    const isReject = intervention?.status === 'rejected';
+    const isAbort = intervention?.status === 'aborted';
+
+    const showCustomPluginRender = !isPending && !isReject && !isAbort;
 
     useEffect(() => {
-      if (intervention?.status === 'pending') {
-        setShowToolDetail(true);
+      if (renderDisplayControl !== 'collapsed') {
+        handleExpand?.(true);
       }
-    }, [intervention?.status]);
+    }, [renderDisplayControl, handleExpand]);
 
     return (
-      <Flexbox gap={8} style={style}>
-        <Inspectors
-          apiName={apiName}
-          arguments={requestArgs}
-          assistantMessageId={assistantMessageId}
-          id={id}
-          identifier={identifier}
-          index={index}
-          intervention={intervention}
-          renderDisplayControl={renderDisplayControl}
-          result={result}
-          setShowPluginRender={setShowCustomPluginUI}
-          setShowRender={setShowToolDetail}
-          showPluginRender={showCustomPluginUI}
-          showRender={showToolContent}
-          toolMessageId={toolMessageId}
-          type={type}
-        />
-        <AnimatedCollapsed open={showToolContent} width={{ collapsed: 'auto' }}>
+      <AccordionItem
+        action={
+          <Actions
+            assistantMessageId={assistantMessageId}
+            handleExpand={handleExpand}
+            identifier={identifier}
+            setShowDebug={setShowDebug}
+            setShowPluginRender={setShowPluginRender}
+            showCustomPluginRender={showCustomPluginRender}
+            showDebug={showDebug}
+            showPluginRender={showPluginRender}
+          />
+        }
+        itemKey={id}
+        paddingBlock={4}
+        paddingInline={4}
+        title={
+          <Inspectors
+            apiName={apiName}
+            identifier={identifier}
+            intervention={intervention}
+            result={result}
+          />
+        }
+      >
+        <Flexbox gap={8} paddingBlock={8}>
+          {showDebug && (
+            <Debug
+              apiName={apiName}
+              identifier={identifier}
+              requestArgs={requestArgs}
+              result={result}
+              toolCallId={id}
+              type={type}
+            />
+          )}
           <Render
             apiName={apiName}
             arguments={requestArgs}
@@ -88,14 +111,15 @@ const Tool = memo<GroupToolProps>(
             intervention={intervention}
             messageId={assistantMessageId}
             result={result}
-            setShowPluginRender={setShowCustomPluginUI}
-            showPluginRender={showCustomPluginUI}
+            setShowPluginRender={setShowPluginRender}
+            showPluginRender={showPluginRender}
             toolCallId={id}
             toolMessageId={toolMessageId}
             type={type}
           />
-        </AnimatedCollapsed>
-      </Flexbox>
+          <Divider dashed style={{ marginBottom: 0, marginTop: 8 }} />
+        </Flexbox>
+      </AccordionItem>
     );
   },
 );

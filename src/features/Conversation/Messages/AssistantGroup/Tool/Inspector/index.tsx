@@ -1,224 +1,33 @@
-import { RenderDisplayControl, ToolIntervention } from '@lobechat/types';
-import { ActionIcon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff, Trash2 } from 'lucide-react';
-import { CSSProperties, memo, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ToolIntervention } from '@lobechat/types';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
-import { shinyTextStylish } from '@/styles/loading';
 
-import { dataSelectors, useConversationStore } from '../../../../store';
-import Debug from './Debug';
-import Settings from './Settings';
 import StatusIndicator from './StatusIndicator';
 import ToolTitle from './ToolTitle';
 
-export const useStyles = createStyles(({ css, token, cx }) => ({
-  actions: cx(
-    'inspector-container',
-    css`
-      opacity: 0;
-      transition: opacity 300ms ease-in-out;
-    `,
-  ),
-  apiName: css`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-
-    font-family: ${token.fontFamilyCode};
-    font-size: 12px;
-    text-overflow: ellipsis;
-  `,
-  container: css`
-    :hover {
-      .inspector-container {
-        opacity: 1;
-      }
-    }
-  `,
-  plugin: css`
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    width: fit-content;
-  `,
-  shinyText: shinyTextStylish(token),
-  tool: css`
-    cursor: pointer;
-
-    width: fit-content;
-    padding-block: 2px;
-    border-radius: 6px;
-
-    color: ${token.colorTextTertiary};
-
-    &:hover {
-      background: ${token.colorFillTertiary};
-    }
-  `,
-}));
-
 interface InspectorProps {
   apiName: string;
-  arguments?: string;
-  assistantMessageId: string;
-  hidePluginUI?: boolean;
-  id: string;
   identifier: string;
-  index: number;
   intervention?: ToolIntervention;
-  /**
-   * Control the render display behavior
-   * - 'collapsed': Default collapsed, user can expand (default)
-   * - 'expand': Default expanded, user can collapse
-   * - 'alwaysExpand': Always expanded, user cannot collapse
-   */
-  renderDisplayControl?: RenderDisplayControl;
   result?: { content: string | null; error?: any; state?: any };
-  setShowPluginRender: (show: boolean) => void;
-  setShowRender: (show: boolean) => void;
-  showPluginRender: boolean;
-  showPortal?: boolean;
-  showRender: boolean;
-  style?: CSSProperties;
-  toolMessageId?: string;
-  type?: string;
 }
 
-const Inspectors = memo<InspectorProps>(
-  ({
-    assistantMessageId,
-    index,
-    identifier,
-    apiName,
-    id,
-    arguments: requestArgs,
-    result,
-    setShowRender,
-    showPluginRender,
-    setShowPluginRender,
-    type,
-    intervention,
-    toolMessageId,
-    renderDisplayControl = 'collapsed',
-  }) => {
-    const { t } = useTranslation('plugin');
-    const { styles } = useStyles();
+const Inspectors = memo<InspectorProps>(({ identifier, apiName, result, intervention }) => {
+  const hasError = !!result?.error;
+  const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
+  const hasResult = hasSuccessResult || hasError;
 
-    const [showDebug, setShowDebug] = useState(false);
+  const isPending = intervention?.status === 'pending';
+  const isTitleLoading = !hasResult && !isPending;
 
-    // Use ConversationStore for actions
-    const [deleteAssistantMessage, toggleInspectExpanded] = useConversationStore((s) => [
-      s.deleteAssistantMessage,
-      s.toggleInspectExpanded,
-    ]);
-
-    const hasError = !!result?.error;
-    const hasSuccessResult = !!result?.content && result.content !== LOADING_FLAT;
-
-    const hasResult = hasSuccessResult || hasError;
-
-    const isPending = intervention?.status === 'pending';
-    const isReject = intervention?.status === 'rejected';
-    const isAbort = intervention?.status === 'aborted';
-    const isTitleLoading = !hasResult && !isPending;
-
-    // Calculate default expanded state based on renderDisplayControl
-    const defaultExpanded = renderDisplayControl !== 'collapsed';
-
-    // Use ConversationStore for reading message data
-    const isExpanded = useConversationStore((s) => {
-      if (!toolMessageId) return defaultExpanded;
-
-      const message = dataSelectors.getDbMessageById(toolMessageId)(s);
-      // Use metadata value if set, otherwise use default from renderDisplayControl
-      return message?.metadata?.inspectExpanded ?? defaultExpanded;
-    });
-
-    // Check if user can toggle the expand state
-    const canToggle = renderDisplayControl !== 'alwaysExpand';
-
-    // Sync with parent state
-    useEffect(() => {
-      setShowRender(isExpanded);
-    }, [isExpanded, setShowRender]);
-
-    const showCustomPluginRender = isExpanded && !isPending && !isReject && !isAbort;
-    return (
-      <Flexbox className={styles.container} gap={4}>
-        <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
-          <Flexbox
-            align={'center'}
-            className={styles.tool}
-            gap={8}
-            horizontal
-            onClick={() => {
-              if (canToggle && toolMessageId) toggleInspectExpanded(toolMessageId);
-            }}
-            paddingInline={4}
-            style={{ cursor: canToggle ? 'pointer' : 'default' }}
-          >
-            <ToolTitle
-              apiName={apiName}
-              identifier={identifier}
-              index={index}
-              isExpanded={isExpanded}
-              isLoading={isTitleLoading}
-              messageId={assistantMessageId}
-              toolCallId={id}
-            />
-          </Flexbox>
-          <Flexbox align={'center'} gap={8} horizontal>
-            <Flexbox className={styles.actions} horizontal>
-              {showCustomPluginRender && (
-                <ActionIcon
-                  icon={showPluginRender ? LogsIcon : LayoutPanelTop}
-                  onClick={() => {
-                    setShowPluginRender(!showPluginRender);
-                  }}
-                  size={'small'}
-                  title={showPluginRender ? t('inspector.args') : t('inspector.pluginRender')}
-                />
-              )}
-              <ActionIcon
-                icon={showDebug ? LucideBugOff : LucideBug}
-                onClick={() => {
-                  setShowDebug(!showDebug);
-                }}
-                size={'small'}
-                title={t(showDebug ? 'debug.off' : 'debug.on')}
-              />
-              <ActionIcon
-                icon={Trash2}
-                onClick={() => {
-                  deleteAssistantMessage(assistantMessageId);
-                }}
-                size={'small'}
-                title={t('inspector.delete')}
-              />
-
-              <Settings id={identifier} />
-            </Flexbox>
-            {hasResult && <StatusIndicator intervention={intervention} result={result} />}
-          </Flexbox>
-        </Flexbox>
-        {showDebug && (
-          <Debug
-            apiName={apiName}
-            identifier={identifier}
-            requestArgs={requestArgs}
-            result={result}
-            toolCallId={id}
-            type={type}
-          />
-        )}
-      </Flexbox>
-    );
-  },
-);
+  return (
+    <Flexbox align={'center'} gap={6} horizontal>
+      <StatusIndicator intervention={intervention} result={result} />
+      <ToolTitle apiName={apiName} identifier={identifier} isLoading={isTitleLoading} />
+    </Flexbox>
+  );
+});
 
 export default Inspectors;
