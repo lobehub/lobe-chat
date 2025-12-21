@@ -13,10 +13,21 @@ const useStyles = createStyles(
   `,
 );
 
-const SkeletonLoading = memo<SkeletonProps>(({ className, ...rest }) => {
-  const { cx, styles } = useStyles();
+const SkeletonLoading = memo<SkeletonProps>(
+  ({ className, classNames, styles: customStyles, ...rest }) => {
+    const { cx, styles } = useStyles();
 
-  return <Skeleton active className={cx(styles, className)} paragraph={{ rows: 8 }} {...rest} />;
-});
+    return (
+      <Skeleton
+        active
+        className={cx(styles, className)}
+        classNames={classNames as any}
+        paragraph={{ rows: 8 }}
+        styles={customStyles as any}
+        {...rest}
+      />
+    );
+  },
+);
 
 export default SkeletonLoading;

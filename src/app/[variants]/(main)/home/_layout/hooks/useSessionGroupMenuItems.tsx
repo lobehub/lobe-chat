@@ -93,11 +93,13 @@ export const useSessionGroupMenuItems = () => {
           info.domEvent?.stopPropagation();
           modal.confirm({
             centered: true,
+            classNames: {
+              root: styles.modalRoot,
+            },
             okButtonProps: { danger: true },
             onOk: async () => {
               await removeGroup(groupId);
             },
-            rootClassName: styles.modalRoot,
             title: t('sessionGroup.confirmRemoveGroupAlert'),
           });
         },

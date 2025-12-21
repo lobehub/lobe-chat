@@ -175,7 +175,7 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, childr
       open={open}
       placement="right"
       styles={{
-        body: { overflow: 'hidden', padding: 0 },
+        container: { overflow: 'hidden', padding: 0 },
       }}
       trigger={['click']}
     >

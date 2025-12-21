@@ -103,7 +103,7 @@ export const LocalFile = ({ name, path, isDirectory = false }: LocalFileProps) =
       arrow={false}
       content={popoverContent}
       styles={{
-        body: { padding: 0 },
+        container: { padding: 0 },
       }}
       trigger={['hover']}
     >

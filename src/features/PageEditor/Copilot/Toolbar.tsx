@@ -121,7 +121,7 @@ const AgentSelector = memo<AgentSelectorProps>(({ agentId, onAgentChange }) => {
       open={open}
       placement="bottomLeft"
       styles={{
-        body: {
+        container: {
           padding: 0,
           width: 240,
         },
@@ -226,7 +226,7 @@ const CopilotToolbar = memo<CopilotToolbarProps>(({ agentId, isHovered }) => {
                 open={topicPopoverOpen}
                 placement="bottomRight"
                 styles={{
-                  body: {
+                  container: {
                     padding: 0,
                     width: 240,
                   },

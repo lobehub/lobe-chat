@@ -201,6 +201,9 @@ export const useSessionItemMenuItems = () => {
           domEvent.stopPropagation();
           modal.confirm({
             centered: true,
+            classNames: {
+              root: styles.modalRoot,
+            },
             okButtonProps: { danger: true },
             onOk: async () => {
               if (parentType === 'group') {
@@ -211,7 +214,6 @@ export const useSessionItemMenuItems = () => {
                 message.success(t('confirmRemoveSessionSuccess'));
               }
             },
-            rootClassName: styles.modalRoot,
             title:
               sessionType === 'group'
                 ? t('confirmRemoveChatGroupItemAlert')

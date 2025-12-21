@@ -60,7 +60,7 @@ const LangButton = memo<{ placement?: PopoverProps['placement']; size?: number }
         content={<Menu items={items} selectable selectedKeys={[language]} />}
         placement={placement}
         styles={{
-          body: {
+          container: {
             maxHeight: 360,
             minWidth: 240,
             overflow: 'auto',

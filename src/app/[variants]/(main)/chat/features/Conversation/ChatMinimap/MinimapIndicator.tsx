@@ -33,7 +33,7 @@ export const MinimapIndicator = memo<MinimapIndicatorProps>(
         mouseEnterDelay={0.1}
         placement={'left'}
         styles={{
-          body: {
+          container: {
             width: 320,
           },
         }}

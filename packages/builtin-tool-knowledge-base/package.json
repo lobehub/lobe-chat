@@ -14,7 +14,7 @@
   },
   "peerDependencies": {
     "@lobehub/ui": "*",
-    "antd": "^5",
+    "antd": "*",
     "antd-style": "*",
     "polished": "*",
     "react": "*",
