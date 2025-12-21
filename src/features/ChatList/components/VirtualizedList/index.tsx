@@ -7,6 +7,8 @@ import { VList, VListHandle } from 'virtua';
 import WideScreenContainer from '@/features/ChatList/components/WideScreenContainer';
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors } from '@/store/chat/selectors';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
@@ -30,6 +32,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     displayMessageSelectors.currentChatLoadingState(s),
     displayMessageSelectors.isCurrentDisplayChatLoaded(s),
   ]);
+  const disableAutoScrollWhileGenerating = useUserStore(
+    userGeneralSettingsSelectors.disableAutoScrollWhileGenerating,
+  );
 
   const atBottomThreshold = 200 * (mobile ? 2 : 1);
 
@@ -72,11 +77,12 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
   useEffect(() => {
     const shouldScroll = dataSource.length > prevDataLengthRef.current;
     prevDataLengthRef.current = dataSource.length;
+    if (disableAutoScrollWhileGenerating) return;
 
     if (shouldScroll && virtuaRef.current) {
       virtuaRef.current.scrollToIndex(dataSource.length - 2, { align: 'start', smooth: true });
     }
-  }, [dataSource.length]);
+  }, [dataSource.length, disableAutoScrollWhileGenerating]);
 
   const scrollToBottom = useCallback(
     (behavior: 'auto' | 'smooth' = 'smooth') => {

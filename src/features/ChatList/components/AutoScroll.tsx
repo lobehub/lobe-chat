@@ -2,6 +2,8 @@ import { memo, useEffect } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { displayMessageSelectors, operationSelectors } from '@/store/chat/selectors';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import BackBottom from './BackBottom';
 
@@ -14,12 +16,16 @@ const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBot
   const trackVisibility = useChatStore(operationSelectors.isAgentRuntimeRunning);
   const str = useChatStore(displayMessageSelectors.mainAIChatsMessageString);
   const reasoningStr = useChatStore(displayMessageSelectors.mainAILatestMessageReasoningContent);
+  const disableAutoScrollWhileGenerating = useUserStore(
+    userGeneralSettingsSelectors.disableAutoScrollWhileGenerating,
+  );
 
   useEffect(() => {
+    if (disableAutoScrollWhileGenerating) return;
     if (atBottom && trackVisibility && !isScrolling) {
       onScrollToBottom?.('auto');
     }
-  }, [atBottom, trackVisibility, str, reasoningStr]);
+  }, [atBottom, trackVisibility, str, reasoningStr, disableAutoScrollWhileGenerating, isScrolling]);
 
   return <BackBottom onScrollToBottom={() => onScrollToBottom('click')} visible={!atBottom} />;
 });

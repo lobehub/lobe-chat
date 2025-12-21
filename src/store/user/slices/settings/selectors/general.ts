@@ -12,6 +12,8 @@ const highlighterTheme = (s: UserStore) => generalConfig(s).highlighterTheme;
 const mermaidTheme = (s: UserStore) => generalConfig(s).mermaidTheme;
 const transitionMode = (s: UserStore) => generalConfig(s).transitionMode;
 const animationMode = (s: UserStore) => generalConfig(s).animationMode;
+const disableAutoScrollWhileGenerating = (s: UserStore) =>
+  generalConfig(s).disableAutoScrollWhileGenerating ?? false;
 const contextMenuMode = (s: UserStore) => {
   const config = generalConfig(s).contextMenuMode;
   if (config !== undefined) return config;
@@ -22,6 +24,7 @@ export const userGeneralSettingsSelectors = {
   animationMode,
   config: generalConfig,
   contextMenuMode,
+  disableAutoScrollWhileGenerating,
   fontSize,
   highlighterTheme,
   mermaidTheme,

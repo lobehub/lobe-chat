@@ -17,6 +17,7 @@ describe('settingsSelectors', () => {
 
       expect(result).toEqual({
         animationMode: 'agile',
+        disableAutoScrollWhileGenerating: false,
         fontSize: 12,
         highlighterTheme: 'lobe-theme',
         mermaidTheme: 'lobe-theme',
@@ -137,5 +138,27 @@ describe('settingsSelectors', () => {
     const result = userGeneralSettingsSelectors.mermaidTheme(s as UserStore);
 
     expect(result).toBe('lobe-theme');
+  });
+
+  describe('disableAutoScrollWhileGenerating', () => {
+    it('should return false by default', () => {
+      const result = userGeneralSettingsSelectors.disableAutoScrollWhileGenerating(
+        initialState as UserStore,
+      );
+
+      expect(result).toBe(false);
+    });
+
+    it('should return true when configured', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: { disableAutoScrollWhileGenerating: true },
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.disableAutoScrollWhileGenerating(s as UserStore);
+
+      expect(result).toBe(true);
+    });
   });
 });

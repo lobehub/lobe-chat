@@ -9,6 +9,7 @@ export type ContextMenuMode = 'disabled' | 'default';
 export interface UserGeneralConfig {
   animationMode?: AnimationMode;
   contextMenuMode?: ContextMenuMode;
+  disableAutoScrollWhileGenerating?: boolean;
   fontSize: number;
   highlighterTheme?: HighlighterProps['theme'];
   mermaidTheme?: MermaidProps['theme'];
