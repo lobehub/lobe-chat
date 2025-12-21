@@ -1,4 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Icon, TooltipGroup } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
@@ -344,37 +344,39 @@ const ModelSwitchPanel = memo<ModelSwitchPanelProps>(
     );
 
     return (
-      <Dropdown
-        arrow={false}
-        onOpenChange={handleOpenChange}
-        open={isOpen}
-        placement={placement}
-        popupRender={() => (
-          <Rnd
-            className={styles.dropdown}
-            disableDragging
-            enableResizing={ENABLE_RESIZING}
-            maxWidth={MAX_WIDTH}
-            minWidth={MIN_WIDTH}
-            onResizeStop={(_e, _direction, ref) => {
-              const newWidth = ref.offsetWidth;
-              setPanelWidth(newWidth);
-              localStorage.setItem(STORAGE_KEY, String(newWidth));
-            }}
-            position={{ x: 0, y: 0 }}
-            size={{ height: panelHeight, width: panelWidth }}
-            style={{ position: 'relative' }}
-          >
-            <div style={{ height: panelHeight, overflow: 'auto', width: '100%' }}>
-              {(renderAll ? virtualItems : virtualItems.slice(0, INITIAL_RENDER_COUNT)).map(
-                renderVirtualItem,
-              )}
-            </div>
-          </Rnd>
-        )}
-      >
-        <div className={styles.tag}>{children}</div>
-      </Dropdown>
+      <TooltipGroup>
+        <Dropdown
+          arrow={false}
+          onOpenChange={handleOpenChange}
+          open={isOpen}
+          placement={placement}
+          popupRender={() => (
+            <Rnd
+              className={styles.dropdown}
+              disableDragging
+              enableResizing={ENABLE_RESIZING}
+              maxWidth={MAX_WIDTH}
+              minWidth={MIN_WIDTH}
+              onResizeStop={(_e, _direction, ref) => {
+                const newWidth = ref.offsetWidth;
+                setPanelWidth(newWidth);
+                localStorage.setItem(STORAGE_KEY, String(newWidth));
+              }}
+              position={{ x: 0, y: 0 }}
+              size={{ height: panelHeight, width: panelWidth }}
+              style={{ position: 'relative' }}
+            >
+              <div style={{ height: panelHeight, overflow: 'auto', width: '100%' }}>
+                {(renderAll ? virtualItems : virtualItems.slice(0, INITIAL_RENDER_COUNT)).map(
+                  renderVirtualItem,
+                )}
+              </div>
+            </Rnd>
+          )}
+        >
+          <div className={styles.tag}>{children}</div>
+        </Dropdown>
+      </TooltipGroup>
     );
   },
 );
