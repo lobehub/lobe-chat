@@ -1,3 +1,4 @@
+import { TooltipGroup } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -12,7 +13,9 @@ const ChatConversation = memo(() => {
   return (
     <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
       {showHeader && <ChatHeader />}
-      <ConversationArea />
+      <TooltipGroup>
+        <ConversationArea />
+      </TooltipGroup>
     </Flexbox>
   );
 });
