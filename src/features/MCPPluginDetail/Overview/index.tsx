@@ -20,7 +20,7 @@ const Overview = memo<{ inModal?: boolean }>(({ inModal }) => {
     <Flexbox gap={48}>
       <Collapse
         defaultActiveKey={['summary']}
-        expandIconPosition={'end'}
+        expandIconPlacement={'end'}
         items={[
           {
             children: !!summary ? <Markdown>{summary}</Markdown> : summary,

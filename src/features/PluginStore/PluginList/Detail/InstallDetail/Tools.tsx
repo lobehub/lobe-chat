@@ -40,7 +40,7 @@ const Tools = memo<ToolProps>(({ mode }) => {
   return (
     <Collapse
       activeKey={activeKey}
-      expandIconPosition={'end'}
+      expandIconPlacement={'end'}
       gap={8}
       items={manifest.api.map((item) => {
         const parameters = Object.entries(item.parameters?.properties || {}).map(

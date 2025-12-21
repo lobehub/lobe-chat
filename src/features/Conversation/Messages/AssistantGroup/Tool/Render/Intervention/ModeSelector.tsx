@@ -120,7 +120,7 @@ const ModeSelector = memo(() => {
         className={styles.modeButton}
         color={'default'}
         icon={ChevronDown}
-        iconPosition="end"
+        iconPlacement="end"
         size="small"
         variant={'text'}
       >

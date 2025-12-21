@@ -130,7 +130,7 @@ const TodoList = memo<TodoListProps>(({ todos, resolveAssigneeName }) => {
   return (
     <Collapse
       className={styles.collapse}
-      expandIconPosition="end"
+      expandIconPlacement="end"
       items={[
         {
           children: todoItems,

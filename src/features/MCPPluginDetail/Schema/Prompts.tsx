@@ -39,7 +39,7 @@ const Prompts = memo<PromptsProps>(({ mode, activeKey = [], setActiveKey }) => {
   return (
     <Collapse
       activeKey={activeKey}
-      expandIconPosition={'end'}
+      expandIconPlacement={'end'}
       gap={8}
       items={prompts.map((item) => {
         return {

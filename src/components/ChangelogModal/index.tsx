@@ -55,7 +55,7 @@ const ChangelogModal = memo<ChangelogModalProps>(({ open, onClose, shouldLoad })
         <Flexbox align={'center'} gap={8}>
           <Button
             icon={<ArrowUpRightIcon size={16} />}
-            iconPosition="end"
+            iconPlacement="end"
             onClick={onClose}
             type="text"
           >

@@ -12,7 +12,7 @@ const Summary = memo(() => {
   return (
     <Collapse
       defaultActiveKey={['summary']}
-      expandIconPosition={'end'}
+      expandIconPlacement={'end'}
       items={[
         {
           children: (

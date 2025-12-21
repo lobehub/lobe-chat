@@ -42,13 +42,7 @@ const Tool = memo<ToolMessageProps>(({ id, index }) => {
         variant={'borderless'}
       />
       {item.plugin && (
-        <ToolItem
-          {...item.plugin}
-          index={index}
-          messageId={id}
-          payload={item.plugin || {}}
-          toolCallId={item.tool_call_id!}
-        />
+        <ToolItem {...item.plugin} index={index} messageId={id} toolCallId={item.tool_call_id!} />
       )}
     </Flexbox>
   );

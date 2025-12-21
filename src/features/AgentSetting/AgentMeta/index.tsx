@@ -113,7 +113,7 @@ const AgentMeta = memo(() => {
         <Button
           disabled={!hasSystemRole}
           icon={Wand2}
-          iconPosition={'end'}
+          iconPlacement={'end'}
           iconProps={{
             size: 12,
           }}
