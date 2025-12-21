@@ -48,7 +48,7 @@ const Search = memo(() => {
         minWidth: 320,
         placement: 'topLeft',
         styles: {
-          body: {
+          container: {
             padding: 4,
           },
         },

@@ -98,7 +98,7 @@ const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo, style }) => {
       content={tooltipContent}
       placement={'left'}
       styles={{
-        body: {
+        container: {
           width: 200,
         },
       }}

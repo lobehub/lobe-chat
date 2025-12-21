@@ -65,7 +65,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ open, setOpen }) => {
       onCancel={closeModal}
       open={open}
       styles={{
-        content: {
+        body: {
           display: 'flex',
           flexDirection: 'column',
           maxHeight: 'calc(100vh - 150px)',

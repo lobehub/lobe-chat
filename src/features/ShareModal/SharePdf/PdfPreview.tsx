@@ -296,7 +296,6 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
         open={fullscreenOpen}
         styles={{
           body: { padding: 0 },
-          content: { padding: 0 },
         }}
         width="95vw"
       >

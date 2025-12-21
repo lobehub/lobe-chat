@@ -157,6 +157,9 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
               domEvent.stopPropagation();
               modal.confirm({
                 centered: true,
+                classNames: {
+                  root: styles.modalRoot,
+                },
                 okButtonProps: { danger: true },
                 onOk: async () => {
                   if (parentType === 'group') {
@@ -167,7 +170,6 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, parentType
                     message.success(t('confirmRemoveSessionSuccess'));
                   }
                 },
-                rootClassName: styles.modalRoot,
                 title:
                   sessionType === 'group'
                     ? t('confirmRemoveChatGroupItemAlert')
