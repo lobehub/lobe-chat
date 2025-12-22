@@ -9,10 +9,11 @@ export type SearchResultType =
   | 'agent'
   | 'topic'
   | 'file'
+  | 'memory'
   | 'message'
   | 'mcp'
   | 'plugin'
-  | 'assistant';
+  | 'communityAgent';
 
 export interface BaseSearchResult {
   // 1=exact, 2=prefix, 3=contains
@@ -96,7 +97,7 @@ export interface AssistantSearchResult extends BaseSearchResult {
   homepage?: string | null;
   identifier: string;
   tags?: string[] | null;
-  type: 'assistant';
+  type: 'communityAgent';
 }
 
 export type SearchResult =

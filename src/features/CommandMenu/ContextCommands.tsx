@@ -3,20 +3,16 @@ import { ChevronRight } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { CommandItem } from './components';
 import type { Context } from './types';
 import { getContextCommands } from './utils/contextCommands';
 
 interface ContextCommandsProps {
   context: Context;
   onNavigate: (path: string) => void;
-  styles: {
-    icon: string;
-    itemContent: string;
-    itemLabel: string;
-  };
 }
 
-const ContextCommands = memo<ContextCommandsProps>(({ context, onNavigate, styles }) => {
+const ContextCommands = memo<ContextCommandsProps>(({ context, onNavigate }) => {
   const { t } = useTranslation('setting');
   const { t: tAuth } = useTranslation('auth');
   const { t: tCommon } = useTranslation('common');
@@ -70,24 +66,19 @@ const ContextCommands = memo<ContextCommandsProps>(({ context, onNavigate, style
         const searchValue = `${contextName} ${label} ${cmd.keywords.join(' ')}`;
 
         return (
-          <Command.Item key={cmd.path} onSelect={() => onNavigate(cmd.path)} value={searchValue}>
-            <Icon className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>
-                <span style={{ opacity: 0.5 }}>{contextName}</span>
-                <ChevronRight
-                  size={14}
-                  style={{
-                    display: 'inline',
-                    marginInline: '6px',
-                    opacity: 0.5,
-                    verticalAlign: 'middle',
-                  }}
-                />
-                {label}
-              </div>
-            </div>
-          </Command.Item>
+          <CommandItem icon={<Icon />} key={cmd.path} onSelect={() => onNavigate(cmd.path)} value={searchValue}>
+            <span style={{ opacity: 0.5 }}>{contextName}</span>
+            <ChevronRight
+              size={14}
+              style={{
+                display: 'inline',
+                marginInline: '6px',
+                opacity: 0.5,
+                verticalAlign: 'middle',
+              }}
+            />
+            {label}
+          </CommandItem>
         );
       })}
     </Command.Group>

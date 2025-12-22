@@ -15,6 +15,9 @@ import {
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SOCIAL_URL } from '@/const/branding';
+
+import { CommandItem } from './components';
 import ContextCommands from './ContextCommands';
 import type { Context } from './types';
 
@@ -26,127 +29,76 @@ interface MainMenuProps {
   onNavigateToTheme: () => void;
   pathname: string | null;
   showCreateSession?: boolean;
-  styles: {
-    icon: string;
-    itemContent: string;
-    itemLabel: string;
-  };
 }
 
 const MainMenu = memo<MainMenuProps>(
-  ({
-    context,
-    onCreateSession,
-    onExternalLink,
-    onNavigate,
-    onNavigateToTheme,
-    pathname,
-    styles,
-  }) => {
+  ({ context, onCreateSession, onExternalLink, onNavigate, onNavigateToTheme, pathname }) => {
     const { t } = useTranslation('common');
 
     return (
       <>
-        {context && <ContextCommands context={context} onNavigate={onNavigate} styles={styles} />}
+        {context && <ContextCommands context={context} onNavigate={onNavigate} />}
 
         <Command.Group>
-          <Command.Item onSelect={onCreateSession} value="create new agent assistant">
-            <Bot className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.newAgent')}</div>
-            </div>
-          </Command.Item>
+          <CommandItem icon={<Bot />} onSelect={onCreateSession} value="create new agent assistant">
+            {t('cmdk.newAgent')}
+          </CommandItem>
 
           {!pathname?.startsWith('/settings') && (
-            <Command.Item onSelect={() => onNavigate('/settings')} value="settings">
-              <Settings className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.settings')}</div>
-              </div>
-            </Command.Item>
+            <CommandItem icon={<Settings />} onSelect={() => onNavigate('/settings')} value="settings">
+              {t('cmdk.settings')}
+            </CommandItem>
           )}
 
-          <Command.Item onSelect={onNavigateToTheme} value="theme">
-            <Monitor className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.theme')}</div>
-            </div>
-          </Command.Item>
+          <CommandItem icon={<Monitor />} onSelect={onNavigateToTheme} value="theme">
+            {t('cmdk.theme')}
+          </CommandItem>
         </Command.Group>
 
         <Command.Group heading={t('cmdk.navigate')}>
           {!pathname?.startsWith('/community') && (
-            <Command.Item onSelect={() => onNavigate('/community')} value="community">
-              <Shapes className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.community')}</div>
-              </div>
-            </Command.Item>
+            <CommandItem icon={<Shapes />} onSelect={() => onNavigate('/community')} value="community">
+              {t('cmdk.community')}
+            </CommandItem>
           )}
           {!pathname?.startsWith('/image') && (
-            <Command.Item onSelect={() => onNavigate('/image')} value="painting">
-              <Image className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.painting')}</div>
-              </div>
-            </Command.Item>
+            <CommandItem icon={<Image />} onSelect={() => onNavigate('/image')} value="painting">
+              {t('cmdk.painting')}
+            </CommandItem>
           )}
           {!pathname?.startsWith('/knowledge') && (
-            <Command.Item onSelect={() => onNavigate('/resource')} value="resource">
-              <LibraryBig className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.resource')}</div>
-              </div>
-            </Command.Item>
+            <CommandItem icon={<LibraryBig />} onSelect={() => onNavigate('/resource')} value="resource">
+              {t('cmdk.resource')}
+            </CommandItem>
           )}
           {!pathname?.startsWith('/page') && (
-            <Command.Item onSelect={() => onNavigate('/page')} value="page documents write">
-              <FilePen className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.pages')}</div>
-              </div>
-            </Command.Item>
+            <CommandItem icon={<FilePen />} onSelect={() => onNavigate('/page')} value="page documents write">
+              {t('cmdk.pages')}
+            </CommandItem>
           )}
           {!pathname?.startsWith('/memory') && (
-            <Command.Item onSelect={() => onNavigate('/memory')} value="memory">
-              <BrainCircuit className={styles.icon} />
-              <div className={styles.itemContent}>
-                <div className={styles.itemLabel}>{t('cmdk.memory')}</div>
-              </div>
-            </Command.Item>
+            <CommandItem icon={<BrainCircuit />} onSelect={() => onNavigate('/memory')} value="memory">
+              {t('cmdk.memory')}
+            </CommandItem>
           )}
         </Command.Group>
 
         <Command.Group heading={t('cmdk.about')}>
-          <Command.Item
+          <CommandItem
+            icon={<Github />}
             onSelect={() =>
               onExternalLink('https://github.com/lobehub/lobe-chat/issues/new/choose')
             }
             value="submit-issue"
           >
-            <Github className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.submitIssue')}</div>
-            </div>
-          </Command.Item>
-          <Command.Item
-            onSelect={() => onExternalLink('https://github.com/lobehub/lobe-chat')}
-            value="star-github"
-          >
-            <Star className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.starOnGitHub')}</div>
-            </div>
-          </Command.Item>
-          <Command.Item
-            onSelect={() => onExternalLink('https://discord.gg/AYFPHvv2jT')}
-            value="discord"
-          >
-            <DiscordIcon className={styles.icon} />
-            <div className={styles.itemContent}>
-              <div className={styles.itemLabel}>{t('cmdk.communitySupport')}</div>
-            </div>
-          </Command.Item>
+            {t('cmdk.submitIssue')}
+          </CommandItem>
+          <CommandItem icon={<Star />} onSelect={() => onExternalLink(SOCIAL_URL.github)} value="star-github">
+            {t('cmdk.starOnGitHub')}
+          </CommandItem>
+          <CommandItem icon={<DiscordIcon />} onSelect={() => onExternalLink(SOCIAL_URL.discord)} value="discord">
+            {t('cmdk.communitySupport')}
+          </CommandItem>
         </Command.Group>
       </>
     );

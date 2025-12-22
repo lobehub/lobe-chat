@@ -110,7 +110,6 @@ const CommandMenu = memo(() => {
                 onNavigate={handleNavigate}
                 onNavigateToTheme={() => navigateToPage('theme')}
                 pathname={pathname}
-                styles={styles}
               />
             )}
 
@@ -124,7 +123,6 @@ const CommandMenu = memo(() => {
                 onSetTypeFilter={handleSetTypeFilter}
                 results={searchResults}
                 searchQuery={searchQuery}
-                styles={styles}
                 typeFilter={typeFilter}
               />
             )}

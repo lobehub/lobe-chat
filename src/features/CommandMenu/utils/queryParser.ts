@@ -19,7 +19,7 @@ const VALID_TYPES = [
   'page',
   'mcp',
   'plugin',
-  'assistant',
+  'communityAgent',
 ] as const;
 
 export type ValidSearchType = (typeof VALID_TYPES)[number];

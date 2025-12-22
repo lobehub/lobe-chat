@@ -45,7 +45,7 @@ export const searchRouter = router({
         offset: z.number().optional(),
         query: z.string(),
         type: z
-          .enum(['agent', 'topic', 'file', 'message', 'page', 'mcp', 'plugin', 'assistant'])
+          .enum(['agent', 'topic', 'file', 'message', 'page', 'mcp', 'plugin', 'communityAgent'])
           .optional(),
       }),
     )
