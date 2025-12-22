@@ -104,8 +104,8 @@ const OllamaModelDownloader = memo<OllamaModelDownloaderProps>(
             <Alert
               closable
               description={error.message}
-              message={t('ollama.download.failed')}
               showIcon={false}
+              title={t('ollama.download.failed')}
               type={'error'}
             />
           )}

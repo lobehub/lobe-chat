@@ -108,9 +108,9 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
                 </Highlighter>
               )
             }
-            message={error.message}
             onClose={handleCloseError}
             style={{ alignItems: 'center', width: '100%' }}
+            title={error.message}
             type="error"
           />
         )}

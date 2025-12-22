@@ -1,6 +1,5 @@
 import { UIChatMessage } from '@lobechat/types';
-import { Alert, Flexbox } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Alert, Flexbox , Button } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +35,7 @@ const ToolMessage = memo<ToolMessageProps>(({ id, index }) => {
             {t('inspector.delete')}
           </Button>
         }
-        message={t('inspector.orphanedToolCall')}
+        title={t('inspector.orphanedToolCall')}
         type={'secondary'}
       />
       {item.plugin && (

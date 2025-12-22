@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar, Block, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
-import { Tag as AntTag, App, Dropdown } from 'antd';
+import { Avatar, Block, Flexbox, Icon, Tag, Text, Tooltip , Tag as AntTag } from '@lobehub/ui';
+import { App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import {
   AlertTriangle,

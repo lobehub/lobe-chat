@@ -2,8 +2,8 @@
 
 import { LoadingOutlined } from '@ant-design/icons';
 import { isDesktop } from '@lobechat/const';
-import { Block, Flexbox, Icon, Skeleton, Tag, Text } from '@lobehub/ui';
-import { Button, Divider, Input, Spin, Typography, Upload } from 'antd';
+import { Block, Button, Flexbox, Icon, Input, Skeleton, Tag, Text } from '@lobehub/ui';
+import { Divider, Spin, Upload } from 'antd';
 import { useTheme } from 'antd-style';
 import { BriefcaseIcon } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
@@ -56,7 +56,7 @@ const ProfileRow = memo<ProfileRowProps>(({ label, children, action, mobile }) =
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{label}</Typography.Text>
+          <Text strong>{label}</Text>
           {action}
         </Flexbox>
         <Flexbox>{children}</Flexbox>
@@ -67,7 +67,7 @@ const ProfileRow = memo<ProfileRowProps>(({ label, children, action, mobile }) =
   return (
     <Flexbox align="center" gap={24} horizontal justify="space-between" style={rowStyle}>
       <Flexbox align="center" gap={24} horizontal style={{ flex: 1 }}>
-        <Typography.Text style={labelStyle}>{label}</Typography.Text>
+        <Text style={labelStyle}>{label}</Text>
         <Flexbox style={{ flex: 1 }}>{children}</Flexbox>
       </Flexbox>
       {action && <Flexbox>{action}</Flexbox>}
@@ -123,9 +123,9 @@ const AvatarRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const updateAction = canUpload ? (
     <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
-      <Typography.Text style={{ cursor: 'pointer', fontSize: 13 }}>
+      <Text fontSize={13} style={{ cursor: 'pointer' }}>
         {t('profile.updateAvatar')}
-      </Typography.Text>
+      </Text>
     </Upload>
   ) : null;
 
@@ -133,7 +133,7 @@ const AvatarRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{t('profile.avatar')}</Typography.Text>
+          <Text strong>{t('profile.avatar')}</Text>
           {updateAction}
         </Flexbox>
         <Flexbox>{avatarContent}</Flexbox>
@@ -144,7 +144,7 @@ const AvatarRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <Flexbox align="center" gap={24} horizontal justify="space-between" style={rowStyle}>
       <Flexbox align="center" gap={24} horizontal style={{ flex: 1 }}>
-        <Typography.Text style={labelStyle}>{t('profile.avatar')}</Typography.Text>
+        <Text style={labelStyle}>{t('profile.avatar')}</Text>
         <Flexbox style={{ flex: 1 }}>{avatarContent}</Flexbox>
       </Flexbox>
       {updateAction}
@@ -197,7 +197,7 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       <Flexbox gap={12}>
-        {!mobile && <Typography.Text strong>{t('profile.fullNameInputHint')}</Typography.Text>}
+        {!mobile && <Text strong>{t('profile.fullNameInputHint')}</Text>}
         <Input
           autoFocus
           onChange={(e) => setEditValue(e.target.value)}
@@ -226,13 +226,13 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       {mobile ? (
-        <Typography.Text>{fullName || '--'}</Typography.Text>
+        <Text>{fullName || '--'}</Text>
       ) : (
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text>{fullName || '--'}</Typography.Text>
-          <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+          <Text>{fullName || '--'}</Text>
+          <Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
             {t('profile.updateFullName')}
-          </Typography.Text>
+          </Text>
         </Flexbox>
       )}
     </motion.div>
@@ -242,11 +242,11 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{t('profile.fullName')}</Typography.Text>
+          <Text strong>{t('profile.fullName')}</Text>
           {!isEditing && (
-            <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+            <Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
               {t('profile.updateFullName')}
-            </Typography.Text>
+            </Text>
           )}
         </Flexbox>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
@@ -256,7 +256,7 @@ const FullNameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={24} horizontal style={rowStyle}>
-      <Typography.Text style={labelStyle}>{t('profile.fullName')}</Typography.Text>
+      <Text style={labelStyle}>{t('profile.fullName')}</Text>
       <Flexbox style={{ flex: 1 }}>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
       </Flexbox>
@@ -454,7 +454,7 @@ const InterestsRow = memo<{ mobile?: boolean }>(({ mobile }) => {
             ))}
           </Flexbox>
         ) : (
-          <Typography.Text>--</Typography.Text>
+          <Text>--</Text>
         )
       ) : (
         <Flexbox align="center" horizontal justify="space-between">
@@ -465,11 +465,11 @@ const InterestsRow = memo<{ mobile?: boolean }>(({ mobile }) => {
               ))}
             </Flexbox>
           ) : (
-            <Typography.Text>--</Typography.Text>
+            <Text>--</Text>
           )}
-          <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+          <Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
             {t('profile.updateInterests')}
-          </Typography.Text>
+          </Text>
         </Flexbox>
       )}
     </motion.div>
@@ -479,11 +479,11 @@ const InterestsRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{t('profile.interests')}</Typography.Text>
+          <Text strong>{t('profile.interests')}</Text>
           {!isEditing && (
-            <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+            <Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
               {t('profile.updateInterests')}
-            </Typography.Text>
+            </Text>
           )}
         </Flexbox>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
@@ -493,7 +493,7 @@ const InterestsRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={24} horizontal style={rowStyle}>
-      <Typography.Text style={labelStyle}>{t('profile.interests')}</Typography.Text>
+      <Text style={labelStyle}>{t('profile.interests')}</Text>
       <Flexbox style={{ flex: 1 }}>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
       </Flexbox>
@@ -582,7 +582,7 @@ const UsernameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       <Flexbox gap={12}>
-        {!mobile && <Typography.Text strong>{t('profile.usernameInputHint')}</Typography.Text>}
+        {!mobile && <Text strong>{t('profile.usernameInputHint')}</Text>}
         <Input
           autoFocus
           onChange={handleInputChange}
@@ -592,9 +592,9 @@ const UsernameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
           value={editValue}
         />
         {error && (
-          <Typography.Text style={{ fontSize: 12 }} type="danger">
+          <Text style={{ fontSize: 12 }} type="danger">
             {error}
-          </Typography.Text>
+          </Text>
         )}
         <Flexbox gap={8} horizontal justify="flex-end">
           <Button disabled={saving} onClick={handleCancel} size="small">
@@ -617,13 +617,13 @@ const UsernameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
       transition={{ duration: 0.2 }}
     >
       {mobile ? (
-        <Typography.Text>{username || '--'}</Typography.Text>
+        <Text>{username || '--'}</Text>
       ) : (
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text>{username || '--'}</Typography.Text>
-          <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+          <Text>{username || '--'}</Text>
+          <Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
             {t('profile.updateUsername')}
-          </Typography.Text>
+          </Text>
         </Flexbox>
       )}
     </motion.div>
@@ -633,11 +633,11 @@ const UsernameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Flexbox gap={12} style={rowStyle}>
         <Flexbox align="center" horizontal justify="space-between">
-          <Typography.Text strong>{t('profile.username')}</Typography.Text>
+          <Text strong>{t('profile.username')}</Text>
           {!isEditing && (
-            <Typography.Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
+            <Text onClick={handleStartEdit} style={{ cursor: 'pointer', fontSize: 13 }}>
               {t('profile.updateUsername')}
-            </Typography.Text>
+            </Text>
           )}
         </Flexbox>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
@@ -647,7 +647,7 @@ const UsernameRow = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={24} horizontal style={rowStyle}>
-      <Typography.Text style={labelStyle}>{t('profile.username')}</Typography.Text>
+      <Text style={labelStyle}>{t('profile.username')}</Text>
       <Flexbox style={{ flex: 1 }}>
         <AnimatePresence mode="wait">{isEditing ? editingContent : displayContent}</AnimatePresence>
       </Flexbox>
@@ -687,7 +687,7 @@ const PasswordRow = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <ProfileRow
       action={
-        <Typography.Text
+        <Text
           onClick={sending ? undefined : handleChangePassword}
           style={{
             cursor: sending ? 'default' : 'pointer',
@@ -696,12 +696,12 @@ const PasswordRow = memo<{ mobile?: boolean }>(({ mobile }) => {
           }}
         >
           {hasPasswordAccount ? t('profile.changePassword') : t('profile.setPassword')}
-        </Typography.Text>
+        </Text>
       }
       label={t('profile.password')}
       mobile={mobile}
     >
-      <Typography.Text>{hasPasswordAccount ? '••••••' : '--'}</Typography.Text>
+      <Text>{hasPasswordAccount ? '••••••' : '--'}</Text>
     </ProfileRow>
   );
 });
@@ -742,9 +742,9 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Flexbox gap={0} paddingInline={mobile ? 16 : 0} width={'100%'}>
-      <Typography.Title level={4} style={{ marginBottom: 32 }}>
+      <Text fontSize={16} strong style={{ marginBottom: 32 }}>
         {t('profile.title')}
-      </Typography.Title>
+      </Text>
 
       <Divider style={{ marginBlock: 0 }} />
 
@@ -780,7 +780,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       {isLoginWithAuth && userProfile?.email && (
         <>
           <ProfileRow label={t('profile.email')} mobile={mobile}>
-            <Typography.Text>{userProfile.email}</Typography.Text>
+            <Text>{userProfile.email}</Text>
           </ProfileRow>
           <Divider style={{ margin: 0 }} />
         </>

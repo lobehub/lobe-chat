@@ -96,9 +96,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
     return (
       <Flexbox className={styles.footer} gap={8}>
         <Alert
-          message={
-            <div style={{ textAlign: 'start' }}>{result.errorMessage || result.content}</div>
-          }
+          title={<div style={{ textAlign: 'start' }}>{result.errorMessage || result.content}</div>}
           type={'error'}
           variant={'borderless'}
         />

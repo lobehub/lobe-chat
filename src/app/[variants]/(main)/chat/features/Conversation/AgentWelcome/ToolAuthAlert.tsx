@@ -1,10 +1,11 @@
 'use client';
 
 import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Block, Button, Flexbox, Icon, Image, Text } from '@lobehub/ui';
+import { Alert, Avatar, Button, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { Loader2, LogIn, SquareArrowOutUpRight, TriangleAlert } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -193,9 +194,7 @@ const KlavisToolAuthItem = memo<KlavisToolAuthItemProps>(({ tool, onAuthComplete
 
   const renderIcon = () => {
     if (typeof tool.icon === 'string') {
-      return (
-        <Image alt={tool.label} height={20} src={tool.icon} style={{ flex: 'none' }} width={20} />
-      );
+      return <Avatar alt={tool.label} avatar={tool.icon} size={20} style={{ flex: 'none' }} />;
     }
     return <Icon fill={theme.colorText} icon={tool.icon} size={20} />;
   };
@@ -203,17 +202,27 @@ const KlavisToolAuthItem = memo<KlavisToolAuthItemProps>(({ tool, onAuthComplete
   const isLoading = isConnecting || isWaitingAuth;
 
   return (
-    <Flexbox align="center" gap={12} horizontal justify="space-between">
+    <Flexbox
+      align="center"
+      gap={12}
+      horizontal
+      justify="space-between"
+      onClick={handleAuthorize}
+      style={{
+        cursor: 'pointer',
+      }}
+    >
       <Flexbox align="center" gap={8} horizontal>
         {renderIcon()}
-        <span>{tool.label}</span>
+        <Text>{tool.label}</Text>
       </Flexbox>
       <Button
         disabled={isLoading}
-        icon={isLoading ? <Icon icon={Loader2} spin /> : <Icon icon={SquareArrowOutUpRight} />}
+        icon={PlusIcon}
+        loading={isLoading}
         onClick={handleAuthorize}
         size="small"
-        type="primary"
+        type="text"
       >
         {isLoading ? t('toolAuth.authorizing') : t('toolAuth.authorize')}
       </Button>
@@ -240,17 +249,27 @@ const MarketToolAuthItem = memo<MarketToolAuthItemProps>(({ tool }) => {
   };
 
   return (
-    <Flexbox align="center" gap={12} horizontal justify="space-between">
+    <Flexbox
+      align="center"
+      gap={12}
+      horizontal
+      justify="space-between"
+      onClick={handleSignIn}
+      style={{
+        cursor: 'pointer',
+      }}
+    >
       <Flexbox align="center" gap={8} horizontal>
-        <Image alt={tool.label} height={20} src={tool.avatar} style={{ flex: 'none' }} width={20} />
-        <span>{tool.label}</span>
+        <Avatar alt={tool.label} avatar={tool.avatar} size={20} style={{ flex: 'none' }} />
+        <Text>{tool.label}</Text>
       </Flexbox>
       <Button
         disabled={isLoading}
-        icon={isLoading ? <Icon icon={Loader2} spin /> : <Icon icon={LogIn} />}
+        icon={PlusIcon}
+        loading={isLoading}
         onClick={handleSignIn}
         size="small"
-        type="primary"
+        type="text"
       >
         {isLoading ? t('toolAuth.authorizing') : t('toolAuth.signIn')}
       </Button>
@@ -262,7 +281,6 @@ MarketToolAuthItem.displayName = 'MarketToolAuthItem';
 
 const ToolAuthAlert = memo(() => {
   const { t } = useTranslation('chat');
-  const theme = useTheme();
 
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins, isEqual);
   const klavisServers = useToolStore(klavisStoreSelectors.getServers, isEqual);
@@ -300,37 +318,37 @@ const ToolAuthAlert = memo(() => {
   }
 
   return (
-    <Block
-      gap={12}
-      padding={12}
-      style={{
-        width: '100%',
-      }}
-      variant={'filled'}
-    >
-      <Flexbox align="center" gap={6} horizontal style={{ fontWeight: 500 }}>
-        <Icon color={theme.colorWarning} icon={TriangleAlert} size={18} />
-        {t('toolAuth.title')}
-      </Flexbox>
-      <Text style={{ fontSize: 12 }} type="secondary">
-        {t('toolAuth.hint')}
-      </Text>
-      <Block gap={12} padding={12} variant={'outlined'}>
-        {pendingAuthTools.map((tool) =>
-          tool.authType === 'klavis' ? (
-            <KlavisToolAuthItem
-              key={tool.identifier}
-              onAuthComplete={() => {
-                // Component will re-render and tool will be removed from list
-              }}
-              tool={tool}
-            />
-          ) : (
-            <MarketToolAuthItem key={tool.identifier} tool={tool} />
-          ),
-        )}
-      </Block>
-    </Block>
+    <Alert
+      description={
+        <>
+          {t('toolAuth.hint')}
+          <Divider dashed style={{ marginBlock: 12 }} />
+          <Flexbox gap={12} style={{ marginTop: 8 }}>
+            {pendingAuthTools.map((tool) =>
+              tool.authType === 'klavis' ? (
+                <KlavisToolAuthItem
+                  key={tool.identifier}
+                  onAuthComplete={() => {
+                    // Component will re-render and tool will be removed from list
+                  }}
+                  tool={tool}
+                />
+              ) : (
+                <MarketToolAuthItem key={tool.identifier} tool={tool} />
+              ),
+            )}
+          </Flexbox>
+        </>
+      }
+      showIcon={false}
+      style={{ width: '100%' }}
+      title={
+        <Flexbox align="center" gap={6} horizontal>
+          {t('toolAuth.title')}
+        </Flexbox>
+      }
+      type="secondary"
+    />
   );
 });
 

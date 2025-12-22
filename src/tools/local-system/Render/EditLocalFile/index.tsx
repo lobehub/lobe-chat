@@ -42,8 +42,8 @@ const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFile
         {pluginError ? (
           <Alert
             description={pluginError.message || 'Unknown error occurred'}
-            message="Edit Failed"
             showIcon
+            title="Edit Failed"
             type="error"
           />
         ) : (

@@ -1,5 +1,4 @@
-import { ActionIcon, Flexbox, Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, Flexbox, Icon , Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import fastDeepEqual from 'fast-deep-equal';
 import { LucidePlus, LucideTrash } from 'lucide-react';

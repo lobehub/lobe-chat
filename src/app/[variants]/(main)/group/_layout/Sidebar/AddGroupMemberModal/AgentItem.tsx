@@ -1,8 +1,8 @@
 'use client';
 
-import { Avatar, Flexbox } from '@lobehub/ui';
+import { Avatar, Flexbox, Text } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { Checkbox, Typography } from 'antd';
+import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { memo, useRef } from 'react';
@@ -10,8 +10,6 @@ import { memo, useRef } from 'react';
 import { DEFAULT_AVATAR } from '@/const/meta';
 
 import { useAgentSelectionStore } from './store';
-
-const { Text } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   item: css`

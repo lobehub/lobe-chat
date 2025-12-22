@@ -1,5 +1,4 @@
-import { Flexbox, Highlighter, Icon } from '@lobehub/ui';
-import { Button, Tag } from 'antd';
+import { Flexbox, Highlighter, Icon , Tag , Button } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { m as motion } from 'motion/react';

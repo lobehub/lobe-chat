@@ -45,7 +45,7 @@ const AuthErrorPage = memo(() => {
       subtitle={description}
       title={t('title')}
     >
-      <Alert message={error || 'UNKNOWN'} type={'error'} />
+      <Alert title={error || 'UNKNOWN'} type={'error'} />
     </AuthCard>
   );
 });

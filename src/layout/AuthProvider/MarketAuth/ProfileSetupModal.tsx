@@ -1,8 +1,8 @@
 'use client';
 
 import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
-import { Center, Flexbox, Modal, Text } from '@lobehub/ui';
-import { App, Divider, Form, Input, Tooltip, Upload, UploadProps } from 'antd';
+import { Center, Flexbox, Modal, Text , Tooltip } from '@lobehub/ui';
+import { App, Divider, Form, Input, Upload, UploadProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { CircleHelp, Globe, ImagePlus, Trash2 } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';

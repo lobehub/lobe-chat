@@ -98,9 +98,9 @@ const CommonSTT = memo<{
                       </Highlighter>
                     )
                   }
-                  message={error.message}
                   onClose={handleCloseError}
                   style={{ alignItems: 'center' }}
+                  title={error.message}
                   type="error"
                 />
               )

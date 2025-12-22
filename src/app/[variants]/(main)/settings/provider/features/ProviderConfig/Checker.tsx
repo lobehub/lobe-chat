@@ -32,8 +32,8 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
             </Highlighter>
           </Flexbox>
         }
-        message={t(`response.${error.type}` as any, { provider: providerName })}
         showIcon
+        title={t(`response.${error.type}` as any, { provider: providerName })}
         type={'error'}
       />
     </Flexbox>

@@ -1,6 +1,6 @@
 import { BarChart, type BarChartProps, ChartTooltipFrame, ChartTooltipRow } from '@lobehub/charts';
-import { Flexbox } from '@lobehub/ui';
-import { Divider, Typography } from 'antd';
+import { Flexbox, Text } from '@lobehub/ui';
+import { Divider } from 'antd';
 
 export const UsageBarChart = ({ ...props }: BarChartProps) => (
   <BarChart
@@ -10,9 +10,9 @@ export const UsageBarChart = ({ ...props }: BarChartProps) => (
         return (
           <ChartTooltipFrame>
             <Flexbox horizontal justify={'space-between'} paddingBlock={8} paddingInline={16}>
-              <Typography.Paragraph ellipsis style={{ margin: 0 }}>
+              <Text as={'p'} ellipsis style={{ margin: 0 }}>
                 {label}
-              </Typography.Paragraph>
+              </Text>
               <span style={{ fontWeight: 'bold' }}>
                 {payload.reduce((acc: number, cur: any) => acc + cur.value, 0)}
               </span>

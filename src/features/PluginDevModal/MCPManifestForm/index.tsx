@@ -1,5 +1,5 @@
-import { Alert, Flexbox, FormItem, Input, InputPassword } from '@lobehub/ui';
-import { Button, Divider, Form, FormInstance, Radio } from 'antd';
+import { Alert, Flexbox, FormItem, Input, InputPassword , Button } from '@lobehub/ui';
+import { Divider, Form, FormInstance, Radio } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -270,10 +270,10 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           {(connectionError || testState.error) && (
             <Alert
               closable
-              message={connectionError || testState.error}
               onClose={() => setConnectionError(null)}
               showIcon
               style={{ marginBottom: 16 }}
+              title={connectionError || testState.error}
               type="error"
             />
           )}

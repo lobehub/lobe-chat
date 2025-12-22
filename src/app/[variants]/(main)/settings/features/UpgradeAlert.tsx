@@ -17,7 +17,7 @@ const UpgradeAlert = memo(() => {
   return (
     <Alert
       closable
-      message={
+      title={
         <Flexbox gap={8}>
           <p>{t('upgradeVersion.newVersion', { version: `v${latestVersion}` })}</p>
           <Link

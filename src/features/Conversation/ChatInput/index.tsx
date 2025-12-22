@@ -130,8 +130,8 @@ const ChatInput = memo<ChatInputProps>(
           <Flexbox paddingBlock={'0 6px'} paddingInline={12}>
             <Alert
               closable
-              message={t('input.errorMsg', { errorMsg: sendMessageErrorMsg })}
               onClose={clearSendMessageError}
+              title={t('input.errorMsg', { errorMsg: sendMessageErrorMsg })}
               type={'secondary'}
             />
           </Flexbox>

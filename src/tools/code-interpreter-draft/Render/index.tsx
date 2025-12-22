@@ -53,8 +53,8 @@ const CodeInterpreter = memo<
       {!isExecuting && pluginState?.error && (
         <Alert
           description={String(pluginState.error)}
-          message={t('codeInterpreter.error')}
           showIcon
+          title={t('codeInterpreter.error')}
           type="error"
         />
       )}

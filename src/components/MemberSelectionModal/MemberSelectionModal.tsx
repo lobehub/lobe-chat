@@ -1,8 +1,18 @@
 'use client';
 
-import { ActionIcon, Avatar, Flexbox, List, Modal, SearchBar, Text, Tooltip } from '@lobehub/ui';
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Flexbox,
+  List,
+  Modal,
+  SearchBar,
+  Text,
+  Tooltip,
+} from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { List as AntdList, Button, Checkbox, Switch, Typography } from 'antd';
+import { List as AntdList, Checkbox, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { type ChangeEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
@@ -14,8 +24,6 @@ import ModelSelect from '@/features/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
-
-const { Text: AntText } = Typography;
 
 const AvailableAgentItem = memo<{
   agent: LobeAgentSession;
@@ -52,11 +60,13 @@ const AvailableAgentItem = memo<{
           <Avatar animation={isHovering} avatar={avatar} background={avatarBackground} size={40} />
         </Flexbox>
         <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
-          <AntText className={styles.title}>{title}</AntText>
+          <Text className={styles.title} weight={500}>
+            {title}
+          </Text>
           {description && (
-            <AntText className={styles.description} ellipsis>
+            <Text className={styles.description} ellipsis>
               {description}
-            </AntText>
+            </Text>
           )}
         </Flexbox>
       </Flexbox>

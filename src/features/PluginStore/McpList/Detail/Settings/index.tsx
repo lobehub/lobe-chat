@@ -1,5 +1,5 @@
-import { Flexbox, Icon, Input, Text } from '@lobehub/ui';
-import { Form as AForm, App, Button, Space } from 'antd';
+import { Button, Flexbox, Icon, Input, Text } from '@lobehub/ui';
+import { Form as AForm, App, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { EditIcon, LinkIcon, SaveIcon, Settings2Icon, TerminalIcon } from 'lucide-react';
 import { memo, useState } from 'react';

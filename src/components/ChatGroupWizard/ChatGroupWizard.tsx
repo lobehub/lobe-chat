@@ -11,8 +11,8 @@ import {
   SearchBar,
   Text,
   Tooltip,
-} from '@lobehub/ui';
-import { Button, Checkbox, Switch } from 'antd';
+ Button } from '@lobehub/ui';
+import { Checkbox, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';

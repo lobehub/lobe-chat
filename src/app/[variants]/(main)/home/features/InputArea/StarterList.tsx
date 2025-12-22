@@ -1,6 +1,5 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { Button, ButtonProps, Center } from '@lobehub/ui';
-import { Tooltip } from 'antd';
+import { Button, ButtonProps, Center , Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
