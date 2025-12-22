@@ -45,7 +45,7 @@ const FileDetail = memo<FileListItem>((props) => {
   const dataItems = [
     {
       children: (
-        <Tag bordered={false} icon={<Icon icon={BoltIcon} />}>
+        <Tag icon={<Icon icon={BoltIcon} />} variant={'filled'}>
           {' '}
           {chunkCount}
         </Tag>
@@ -55,7 +55,7 @@ const FileDetail = memo<FileListItem>((props) => {
     },
     {
       children: (
-        <Tag bordered={false} color={embeddingStatus || 'default'}>
+        <Tag color={embeddingStatus || 'default'} variant={'filled'}>
           {t(`detail.data.embedding.${embeddingStatus || 'default'}`)}
         </Tag>
       ),

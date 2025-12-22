@@ -53,7 +53,7 @@ const ErrorDetails = memo<{
             {errorInfo.params && (
               <Flexbox gap={4}>
                 <div>
-                  <Tag bordered={false} color="blue">
+                  <Tag color="blue" variant={'filled'}>
                     {t('mcpInstall.errorDetails.connectionParams')}
                   </Tag>
                 </div>
@@ -75,7 +75,7 @@ const ErrorDetails = memo<{
             {errorInfo.errorLog && (
               <Flexbox gap={4}>
                 <div>
-                  <Tag bordered={false} color="red">
+                  <Tag color="red" variant={'filled'}>
                     {t('mcpInstall.errorDetails.errorOutput')}
                   </Tag>
                 </div>

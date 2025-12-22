@@ -113,7 +113,6 @@ const AgentItem = memo<AgentItemProps>(({ agent, defaultTitle, showCheckbox, sho
           avatar={avatar}
           background={avatarBackground}
           emojiScaleWithBackground
-          shape="circle"
           size={28}
         />
         <Text className={styles.title} ellipsis>

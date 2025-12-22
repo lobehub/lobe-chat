@@ -55,12 +55,12 @@ const PluginStatus = memo<PluginStatusProps>(({ title, id, deprecated }) => {
   const tag =
     // 拒绝标签
     deprecated ? (
-      <Tag bordered={false} color={'red'} style={{ marginRight: 0 }}>
+      <Tag color={'red'} style={{ marginRight: 0 }} variant={'filled'}>
         {t('list.item.deprecated.title', { ns: 'plugin' })}
       </Tag>
     ) : // 自定义标签
     isCustom ? (
-      <Tag bordered={false} color={'gold'}>
+      <Tag color={'gold'} variant={'filled'}>
         {t('list.item.local.title', { ns: 'plugin' })}
       </Tag>
     ) : null;

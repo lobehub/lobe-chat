@@ -20,7 +20,7 @@ const TitleExtra = memo<TitleExtraProps>(({ category, score, highlight, engines 
       <EngineAvatarGroup engines={engines} />
       <Tooltip title={t(highlight ? 'search.includedTooltip' : 'search.scoreTooltip')}>
         {highlight ? (
-          <Tag bordered={false} color={'blue'} style={{ marginInlineEnd: 0 }}>
+          <Tag color={'blue'} style={{ marginInlineEnd: 0 }} variant={'filled'}>
             {score.toFixed(1)}
           </Tag>
         ) : (

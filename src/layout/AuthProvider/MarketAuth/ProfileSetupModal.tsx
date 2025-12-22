@@ -274,7 +274,7 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
               onChange={handleAvatarChange}
               onDelete={handleAvatarDelete}
               onUpload={handleAvatarUpload}
-              shape="circle"
+              shape="square"
               size={80}
               value={avatarUrl || undefined}
             />

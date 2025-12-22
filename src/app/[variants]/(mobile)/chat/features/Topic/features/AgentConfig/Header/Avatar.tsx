@@ -31,7 +31,7 @@ const HeaderAvatar = memo(() => {
       variant={'borderless'}
       width={32}
     >
-      <Avatar avatar={avatar} background={backgroundColor} shape={'circle'} size={28} />
+      <Avatar avatar={avatar} background={backgroundColor} size={28} />
     </Block>
   );
 });

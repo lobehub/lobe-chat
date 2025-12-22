@@ -46,13 +46,7 @@ const ListItem = memo<
 
     // For regular sessions, use the regular Avatar component
     return (
-      <Avatar
-        animation={isHovering}
-        avatar={avatar}
-        background={avatarBackground}
-        shape="circle"
-        size={40}
-      />
+      <Avatar animation={isHovering} avatar={avatar} background={avatarBackground} size={40} />
     );
   }, [isHovering, avatar, avatarBackground, type]);
 

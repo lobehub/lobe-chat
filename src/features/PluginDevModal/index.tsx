@@ -152,7 +152,7 @@ const DevModal = memo<DevModalProps>(
                       <Flexbox align={'center'} gap={4} horizontal justify={'center'}>
                         {t('dev.manifest.mode.mcp')}
                         <div>
-                          <Tag bordered={false} color={'warning'}>
+                          <Tag color={'warning'} variant={'filled'}>
                             {t('dev.manifest.mode.mcpExp')}
                           </Tag>
                         </div>
