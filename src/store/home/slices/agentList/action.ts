@@ -4,7 +4,7 @@ import { mutate } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import type { SidebarAgentItem, SidebarAgentListResponse } from '@/database/repositories/home';
-import { useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
 import { homeService } from '@/services/home';
 import type { HomeStore } from '@/store/home/store';
 import { setNamespace } from '@/utils/storeDebug';
@@ -58,11 +58,11 @@ export const createAgentListSlice: StateCreator<
   },
 
   useFetchAgentList: (isLogin) =>
-    useClientDataSWR<SidebarAgentListResponse>(
+    useClientDataSWRWithSync<SidebarAgentListResponse>(
       isLogin === true ? [FETCH_AGENT_LIST_KEY, isLogin] : null,
       () => homeService.getSidebarAgentList(),
       {
-        onSuccess: (data) => {
+        onData: (data) => {
           const state = get();
           const newState = mapResponseToState(data);
 
@@ -82,7 +82,7 @@ export const createAgentListSlice: StateCreator<
               isAgentListInit: true,
             },
             false,
-            n('useFetchAgentList/onSuccess'),
+            n('useFetchAgentList/onData'),
           );
         },
       },

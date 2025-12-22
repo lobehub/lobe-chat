@@ -18,7 +18,13 @@ export const useInitRecentTopic = () => {
 
   const isLogin = useUserStore(authSelectors.isLogin);
 
-  const data = useFetchRecentTopics(isLogin);
+  const { isValidating, data, ...rest } = useFetchRecentTopics(isLogin);
 
-  return { ...data, isLoading: data.isLoading && isLogin };
+  return {
+    ...rest,
+    data,
+    isLoading: rest.isLoading && isLogin,
+    // isRevalidating: 有缓存数据，后台正在更新
+    isRevalidating: isValidating && !!data,
+  };
 };

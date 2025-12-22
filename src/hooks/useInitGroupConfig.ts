@@ -12,11 +12,14 @@ export const useInitGroupConfig = () => {
 
   // Only fetch group detail if we have a valid group ID and user is logged in
   const shouldFetch = Boolean(isLogin && activeGroupId);
-  const data = useFetchGroupDetail(shouldFetch, activeGroupId || '');
+  const { isValidating, data, ...rest } = useFetchGroupDetail(shouldFetch, activeGroupId || '');
 
   return {
-    ...data,
-    error: data.error || (!shouldFetch ? undefined : data.error),
-    isLoading: (data.isLoading && isLogin) || !shouldFetch,
+    ...rest,
+    data,
+    error: rest.error || (!shouldFetch ? undefined : rest.error),
+    isLoading: (rest.isLoading && isLogin) || !shouldFetch,
+    // isRevalidating: 有缓存数据，后台正在更新
+    isRevalidating: isValidating && !!data,
   };
 };

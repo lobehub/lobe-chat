@@ -5,7 +5,7 @@ import { mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
-import { useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWRWithSync } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
 import { getAgentStoreState } from '@/store/agent';
 import { ChatGroupStore } from '@/store/agentGroup/store';
@@ -156,15 +156,15 @@ const chatGroupInternalSlice: StateCreator<
     },
 
     useFetchGroupDetail: (enabled, groupId) =>
-      useClientDataSWR<AgentGroupDetail | null>(
+      useClientDataSWRWithSync<AgentGroupDetail | null>(
         enabled && groupId ? [FETCH_GROUP_DETAIL_KEY, groupId] : null,
-        async ([, id]) => {
-          const groupDetail = await chatGroupService.getGroupDetail(id as string);
-          if (!groupDetail) throw new Error(`Group ${id} not found`);
+        async () => {
+          const groupDetail = await chatGroupService.getGroupDetail(groupId);
+          if (!groupDetail) throw new Error(`Group ${groupId} not found`);
           return groupDetail;
         },
         {
-          onSuccess: (groupDetail) => {
+          onData: (groupDetail) => {
             if (!groupDetail) return;
 
             // Update groupMap with detailed group info including agents
@@ -181,7 +181,7 @@ const chatGroupInternalSlice: StateCreator<
                 groupMap: nextGroupMap,
               },
               false,
-              n('useFetchGroupDetail/onSuccess', { groupId: groupDetail.id }),
+              n('useFetchGroupDetail/onData', { groupId: groupDetail.id }),
             );
 
             // Sync group agents to agentStore for builtin agent resolution (e.g., supervisor slug)
@@ -207,12 +207,12 @@ const chatGroupInternalSlice: StateCreator<
     // SWR Hooks for data fetching
     // This is not used for now, as we are combining group in the session lambda's response
     useFetchGroups: (enabled, isLogin) =>
-      useClientDataSWR<ChatGroupItem[]>(
+      useClientDataSWRWithSync<ChatGroupItem[]>(
         enabled ? [FETCH_GROUPS_KEY, isLogin] : null,
         async () => chatGroupService.getGroups(),
         {
           fallbackData: [],
-          onSuccess: (groups) => {
+          onData: (groups) => {
             // Update both groups list and groupMap
             const currentMap = get().groupMap;
             const nextGroupMap = groups.reduce(
@@ -237,7 +237,7 @@ const chatGroupInternalSlice: StateCreator<
                 groupsInit: true,
               },
               false,
-              n('useFetchGroups/onSuccess'),
+              n('useFetchGroups/onData'),
             );
           },
           suspense: true,

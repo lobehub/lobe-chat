@@ -1,7 +1,9 @@
-import { BotMessageSquareIcon } from 'lucide-react';
+import { ActionIcon } from '@lobehub/ui';
+import { BotMessageSquareIcon, Loader2Icon } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useInitRecentTopic } from '@/hooks/useInitRecentTopic';
 import { useHomeStore } from '@/store/home';
 import { homeRecentSelectors } from '@/store/home/selectors';
 
@@ -15,6 +17,7 @@ const RecentTopic = memo(() => {
   const { t } = useTranslation('chat');
   const recentTopics = useHomeStore(homeRecentSelectors.recentTopics);
   const isInit = useHomeStore(homeRecentSelectors.isRecentTopicsInit);
+  const { isRevalidating } = useInitRecentTopic();
 
   // After loaded, if no data, don't render
   if (isInit && (!recentTopics || recentTopics.length === 0)) {
@@ -22,7 +25,11 @@ const RecentTopic = memo(() => {
   }
 
   return (
-    <GroupBlock icon={BotMessageSquareIcon} title={t('topic.recent')}>
+    <GroupBlock
+      action={isRevalidating && <ActionIcon icon={Loader2Icon} loading size={'small'} />}
+      icon={BotMessageSquareIcon}
+      title={t('topic.recent')}
+    >
       <ScrollShadowWithButton>
         <Suspense
           fallback={
