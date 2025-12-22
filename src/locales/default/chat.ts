@@ -384,6 +384,11 @@ export default {
     downloadFile: '下载文件',
     downloadPdf: '下载 PDF',
     downloadSuccess: '下载成功',
+    exportMode: {
+      full: '默认',
+      label: '导出模式',
+      simple: 'OpenAI 兼容',
+    },
     exportPdf: '导出为 PDF',
     exportTitle: '默认标题',
     generatePdf: '生成 PDF',
@@ -497,7 +502,7 @@ export default {
     authorizing: '授权中...',
     hint: '如不授权或配置，这些工具将无法正常使用，可能导致助手功能缺失或报错。',
     signIn: '登录',
-    title: '该助手使用了以下需要授权的工具',
+    title: '请为助手完成工具的授权',
   },
   topic: {
     checkOpenNewTopic: '是否开启新话题?',

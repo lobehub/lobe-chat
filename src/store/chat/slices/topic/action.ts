@@ -37,6 +37,7 @@ const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
 export interface ChatTopicAction {
   closeAllTopicsDrawer: () => void;
   favoriteTopic: (id: string, favState: boolean) => Promise<void>;
+  importTopic: (data: string) => Promise<string | undefined>;
   loadMoreTopics: () => Promise<void>;
   openAllTopicsDrawer: () => void;
   openNewTopicOrSaveTopic: () => Promise<void>;
@@ -177,6 +178,39 @@ export const chatTopic: StateCreator<
     message.success(t('duplicateSuccess', { ns: 'topic' }));
 
     await switchTopic(newTopicId);
+  },
+
+  importTopic: async (data) => {
+    const { activeAgentId, activeGroupId, refreshTopic, switchTopic } = get();
+
+    if (!activeAgentId) return;
+
+    message.loading({
+      content: t('importLoading', { ns: 'topic' }),
+      duration: 0,
+      key: 'importTopic',
+    });
+
+    try {
+      const result = await topicService.importTopic({
+        agentId: activeAgentId,
+        data,
+        groupId: activeGroupId,
+      });
+
+      await refreshTopic();
+      message.destroy('importTopic');
+      message.success(t('importSuccess', { count: result.messageCount, ns: 'topic' }));
+
+      await switchTopic(result.topicId);
+
+      return result.topicId;
+    } catch (error) {
+      message.destroy('importTopic');
+      message.error(t('importError', { ns: 'topic' }));
+      console.error('[importTopic] Failed:', error);
+      return undefined;
+    }
   },
   // update
   summaryTopicTitle: async (topicId, messages) => {

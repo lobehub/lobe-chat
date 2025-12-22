@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
 import { AgentMigrationRepo } from '@/database/repositories/agentMigration';
+import { TopicImporterRepo } from '@/database/repositories/topicImporter';
 import { agents, chatGroups, chatGroupsAgents } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -23,6 +24,7 @@ const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   return opts.next({
     ctx: {
       agentMigrationRepo: new AgentMigrationRepo(ctx.serverDB, ctx.userId),
+      topicImporterRepo: new TopicImporterRepo(ctx.serverDB, ctx.userId),
       topicModel: new TopicModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -199,6 +201,24 @@ export const topicRouter = router({
   hasTopics: topicProcedure.query(async ({ ctx }) => {
     return (await ctx.topicModel.count()) === 0;
   }),
+
+  importTopic: topicProcedure
+    .input(
+      z.object({
+        agentId: z.string(),
+        data: z.string(),
+        groupId: z.string().nullable().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const result = await ctx.topicImporterRepo.importTopic({
+        agentId: input.agentId,
+        data: input.data,
+        groupId: input.groupId,
+      });
+
+      return result;
+    }),
 
   rankTopics: topicProcedure.input(z.number().optional()).query(async ({ ctx, input }) => {
     return ctx.topicModel.rank(input);

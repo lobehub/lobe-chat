@@ -359,6 +359,11 @@
     "downloadFile": "Download File",
     "downloadPdf": "Download PDF",
     "downloadSuccess": "Download successful",
+    "exportMode": {
+      "full": "Default",
+      "label": "Export Mode",
+      "simple": "OpenAI Compatible"
+    },
     "exportPdf": "Export as PDF",
     "exportTitle": "Default Title",
     "generatePdf": "Generate PDF",
@@ -470,7 +475,7 @@
   "toolAuth": {
     "authorize": "Authorize",
     "authorizing": "Authorizing...",
-    "hint": "Without authorization, these tools may not work properly, which could cause the assistant to have limited functionality or errors.",
+    "hint": "Please complete the tool authorization for the assistant",
     "signIn": "Sign In",
     "title": "This assistant uses tools that require authorization"
   },

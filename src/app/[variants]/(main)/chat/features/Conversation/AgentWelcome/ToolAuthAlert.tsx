@@ -1,8 +1,7 @@
 'use client';
 
 import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Alert, Button, Flexbox, Icon, Image } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Block, Button, Flexbox, Icon, Image, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Loader2, LogIn, SquareArrowOutUpRight, TriangleAlert } from 'lucide-react';
@@ -301,37 +300,37 @@ const ToolAuthAlert = memo(() => {
   }
 
   return (
-    <Alert
-      description={
-        <Flexbox gap={12} style={{ marginTop: 8 }}>
-          {pendingAuthTools.map((tool) =>
-            tool.authType === 'klavis' ? (
-              <KlavisToolAuthItem
-                key={tool.identifier}
-                onAuthComplete={() => {
-                  // Component will re-render and tool will be removed from list
-                }}
-                tool={tool}
-              />
-            ) : (
-              <MarketToolAuthItem key={tool.identifier} tool={tool} />
-            ),
-          )}
-          <Typography.Text style={{ color: theme.colorTextSecondary, fontSize: 12 }}>
-            {t('toolAuth.hint')}
-          </Typography.Text>
-        </Flexbox>
-      }
-      message={
-        <Flexbox align="center" gap={6} horizontal>
-          <Icon icon={TriangleAlert} size={18} />
-          {t('toolAuth.title')}
-        </Flexbox>
-      }
-      showIcon={false}
-      style={{ width: '100%' }}
-      type="warning"
-    />
+    <Block
+      gap={12}
+      padding={12}
+      style={{
+        width: '100%',
+      }}
+      variant={'filled'}
+    >
+      <Flexbox align="center" gap={6} horizontal style={{ fontWeight: 500 }}>
+        <Icon color={theme.colorWarning} icon={TriangleAlert} size={18} />
+        {t('toolAuth.title')}
+      </Flexbox>
+      <Text style={{ fontSize: 12 }} type="secondary">
+        {t('toolAuth.hint')}
+      </Text>
+      <Block gap={12} padding={12} variant={'outlined'}>
+        {pendingAuthTools.map((tool) =>
+          tool.authType === 'klavis' ? (
+            <KlavisToolAuthItem
+              key={tool.identifier}
+              onAuthComplete={() => {
+                // Component will re-render and tool will be removed from list
+              }}
+              tool={tool}
+            />
+          ) : (
+            <MarketToolAuthItem key={tool.identifier} tool={tool} />
+          ),
+        )}
+      </Block>
+    </Block>
   );
 });
 
