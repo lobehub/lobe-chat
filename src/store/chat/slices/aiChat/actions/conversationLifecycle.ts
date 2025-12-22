@@ -251,6 +251,13 @@ export const conversationLifecycle: StateCreator<
       // Record created threadId in operation metadata
       if (data.createdThreadId) {
         get().updateOperationMetadata(operationId, { createdThreadId: data.createdThreadId });
+
+        // Update portalThreadId to switch from "new thread" mode to "existing thread" mode
+        // This ensures the Portal Thread UI displays correctly with the real thread ID
+        get().openThreadInPortal(data.createdThreadId, context.sourceMessageId);
+
+        // Refresh threads list to update the sidebar
+        get().refreshThreads();
       }
 
       // Create final context with updated topicId/threadId from server response
