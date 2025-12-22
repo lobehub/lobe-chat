@@ -1,8 +1,11 @@
 'use client';
 
-import { AccordionItem, Dropdown, Flexbox, Text } from '@lobehub/ui';
+import { AccordionItem, ActionIcon, Dropdown, Flexbox, Text } from '@lobehub/ui';
+import { Loader2Icon } from 'lucide-react';
 import React, { Suspense, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useFetchAgentList } from '@/hooks/useFetchAgentList';
 
 import SkeletonList from '../../../../../../../features/NavPanel/components/SkeletonList';
 import { useCreateMenuItems } from '../../hooks';
@@ -17,6 +20,7 @@ interface AgentProps {
 
 const Agent = memo<AgentProps>(({ itemKey }) => {
   const { t } = useTranslation('common');
+  const { isRevalidating } = useFetchAgentList();
 
   const {
     openGroupWizardModal,
@@ -102,9 +106,12 @@ const Agent = memo<AgentProps>(({ itemKey }) => {
       paddingBlock={4}
       paddingInline={'8px 4px'}
       title={
-        <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {t('navPanel.agent')}
-        </Text>
+        <Flexbox align="center" gap={4} horizontal>
+          <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+            {t('navPanel.agent')}
+          </Text>
+          {isRevalidating && <ActionIcon icon={Loader2Icon} loading size={'small'} />}
+        </Flexbox>
       }
     >
       <Suspense fallback={<SkeletonList rows={6} />}>

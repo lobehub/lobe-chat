@@ -1,10 +1,12 @@
 'use client';
 
-import { AccordionItem, Dropdown, Flexbox, Text } from '@lobehub/ui';
+import { AccordionItem, ActionIcon, Dropdown, Flexbox, Text } from '@lobehub/ui';
+import { Loader2Icon } from 'lucide-react';
 import React, { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
+import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 
@@ -20,6 +22,7 @@ const Topic = memo<TopicProps>(({ itemKey }) => {
   const { t } = useTranslation(['topic', 'common']);
   const [topicCount] = useChatStore((s) => [topicSelectors.currentTopicCount(s)]);
   const dropdownMenu = useTopicActionsDropdownMenu();
+  const { isRevalidating } = useFetchTopics();
 
   return (
     <AccordionItem
@@ -38,9 +41,12 @@ const Topic = memo<TopicProps>(({ itemKey }) => {
       paddingBlock={4}
       paddingInline={'8px 4px'}
       title={
-        <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
-          {`${t('title')} ${topicCount > 0 ? topicCount : ''}`}
-        </Text>
+        <Flexbox align="center" gap={4} horizontal>
+          <Text ellipsis fontSize={12} type={'secondary'} weight={500}>
+            {`${t('title')} ${topicCount > 0 ? topicCount : ''}`}
+          </Text>
+          {isRevalidating && <ActionIcon icon={Loader2Icon} loading size={'small'} />}
+        </Flexbox>
       }
     >
       <Suspense fallback={<SkeletonList />}>

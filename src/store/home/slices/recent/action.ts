@@ -2,7 +2,7 @@ import isEqual from 'fast-deep-equal';
 import type { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWRWithSync } from '@/libs/swr';
 import { fileService } from '@/services/file';
 import { topicService } from '@/services/topic';
 import type { HomeStore } from '@/store/home/store';
@@ -29,54 +29,54 @@ export const createRecentSlice: StateCreator<
   RecentAction
 > = (set, get) => ({
   useFetchRecentPages: (isLogin) =>
-    useClientDataSWR<any[]>(
+    useClientDataSWRWithSync<any[]>(
       // Only fetch when login status is explicitly true (not null/undefined)
       isLogin === true ? [FETCH_RECENT_PAGES_KEY, isLogin] : null,
       async () => fileService.getRecentPages(12),
       {
-        onSuccess: (data) => {
+        onData: (data) => {
           if (get().isRecentPagesInit && isEqual(get().recentPages, data)) return;
 
           set(
             { isRecentPagesInit: true, recentPages: data },
             false,
-            n('useFetchRecentPages/onSuccess'),
+            n('useFetchRecentPages/onData'),
           );
         },
       },
     ),
 
   useFetchRecentResources: (isLogin) =>
-    useClientDataSWR<FileListItem[]>(
+    useClientDataSWRWithSync<FileListItem[]>(
       // Only fetch when login status is explicitly true (not null/undefined)
       isLogin === true ? [FETCH_RECENT_RESOURCES_KEY, isLogin] : null,
       async () => fileService.getRecentFiles(12),
       {
-        onSuccess: (data) => {
+        onData: (data) => {
           if (get().isRecentResourcesInit && isEqual(get().recentResources, data)) return;
 
           set(
             { isRecentResourcesInit: true, recentResources: data },
             false,
-            n('useFetchRecentResources/onSuccess'),
+            n('useFetchRecentResources/onData'),
           );
         },
       },
     ),
 
   useFetchRecentTopics: (isLogin) =>
-    useClientDataSWR<RecentTopic[]>(
+    useClientDataSWRWithSync<RecentTopic[]>(
       // Only fetch when login status is explicitly true (not null/undefined)
       isLogin === true ? [FETCH_RECENT_TOPICS_KEY, isLogin] : null,
       async () => topicService.getRecentTopics(12),
       {
-        onSuccess: (data) => {
+        onData: (data) => {
           if (get().isRecentTopicsInit && isEqual(get().recentTopics, data)) return;
 
           set(
             { isRecentTopicsInit: true, recentTopics: data },
             false,
-            n('useFetchRecentTopics/onSuccess'),
+            n('useFetchRecentTopics/onData'),
           );
         },
       },
