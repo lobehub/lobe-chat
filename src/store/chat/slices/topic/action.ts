@@ -10,7 +10,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { LOADING_FLAT } from '@/const/message';
-import { useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWRWithSync } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -240,16 +240,15 @@ export const chatTopic: StateCreator<
     const containerKey = topicMapKey({ agentId, groupId });
     const hasValidContainer = !!(groupId || agentId);
 
-    return useClientDataSWR<{ items: ChatTopic[]; total: number }>(
+    return useClientDataSWRWithSync<{ items: ChatTopic[]; total: number }>(
       enable && hasValidContainer
         ? [SWR_USE_FETCH_TOPIC, containerKey, { isInbox, pageSize }]
         : null,
-      async ([, key, params]: [string, string, { isInbox?: boolean; pageSize: number }]) => {
-        const { isInbox, pageSize } = params;
-        // agentId and groupId come from the outer scope closure
+      async () => {
+        // agentId, groupId, isInbox, pageSize come from the outer scope closure
         if (!agentId && !groupId) return { items: [], total: 0 };
 
-        const currentData = get().topicDataMap[key];
+        const currentData = get().topicDataMap[containerKey];
         const lastPageSize = currentData?.pageSize;
         const hasExistingItems = (currentData?.items?.length || 0) > 0;
 
@@ -258,7 +257,7 @@ export const chatTopic: StateCreator<
         const isExpanding =
           hasExistingItems && typeof lastPageSize === 'number' && pageSize > lastPageSize;
         if (isExpanding) {
-          get().internal_updateTopicData(key, { isExpandingPageSize: true });
+          get().internal_updateTopicData(containerKey, { isExpandingPageSize: true });
         }
 
         const result = await topicService.getTopics({
@@ -271,14 +270,14 @@ export const chatTopic: StateCreator<
 
         // Reset expanding state after fetch completes
         if (isExpanding) {
-          get().internal_updateTopicData(key, { isExpandingPageSize: false });
+          get().internal_updateTopicData(containerKey, { isExpandingPageSize: false });
         }
 
         return result;
       },
       {
-        // onSuccess: responsible for state updates
-        onSuccess: async (result) => {
+        // onData: responsible for state updates (fires for both cached and fresh data)
+        onData: (result) => {
           if (!hasValidContainer) return;
 
           const { items: topics, total: totalCount } = result;
@@ -304,7 +303,7 @@ export const chatTopic: StateCreator<
               },
             },
             false,
-            n('useFetchTopics(success)', { containerKey }),
+            n('useFetchTopics(onData)', { containerKey }),
           );
         },
       },

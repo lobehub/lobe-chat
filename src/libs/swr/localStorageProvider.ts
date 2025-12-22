@@ -273,12 +273,13 @@ export function clearSWRCache(cacheKey = 'lobechat-swr-cache'): void {
  */
 const SWR_CACHEABLE_PATTERNS = [
   // 首页数据
-  'fetchSessions', // 会话列表
   'fetchAgentList', // 助手列表
   'fetchGroups', // 分组列表
   'fetchRecentTopics', // 最近话题
   'fetchRecentResources', // 最近资源
   'fetchRecentPages', // 最近页面
+  // 聊天页面数据
+  'SWR_USE_FETCH_TOPIC', // 话题列表（按 agentId/groupId 分别缓存）
   // 社区/市场数据
   'assistant-list', // 助手市场列表
   'mcp-list', // MCP 列表

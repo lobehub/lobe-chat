@@ -9,7 +9,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
  */
 export const useFetchTopics = () => {
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
-  const [activeAgentId, activeGroupId, useFetchTopics] = useChatStore((s) => [
+  const [activeAgentId, activeGroupId, useFetchTopicsHook] = useChatStore((s) => [
     s.activeAgentId,
     s.activeGroupId,
     s.useFetchTopics,
@@ -18,10 +18,15 @@ export const useFetchTopics = () => {
   const topicPageSize = useGlobalStore(systemStatusSelectors.topicPageSize);
 
   // If in group session, use groupId; otherwise use agentId
-  useFetchTopics(true, {
+  const { isValidating, data } = useFetchTopicsHook(true, {
     agentId: activeAgentId,
     groupId: activeGroupId,
     isInbox: activeGroupId ? false : isInbox,
     pageSize: topicPageSize,
   });
+
+  return {
+    // isRevalidating: 有缓存数据，后台正在更新
+    isRevalidating: isValidating && !!data,
+  };
 };
