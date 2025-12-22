@@ -16,7 +16,6 @@ import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
-import { DocumentService } from '@/server/services/document';
 import { FileService } from '@/server/services/file';
 import {
   AsyncTaskError,
@@ -36,7 +35,6 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
       chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.serverDB, ctx.userId),
       documentModel: new DocumentModel(ctx.serverDB, ctx.userId),
-      documentService: new DocumentService(ctx.serverDB, ctx.userId),
       embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
@@ -238,10 +236,8 @@ export const fileRouter = router({
           // Create document record if it doesn't exist (needed for direct file content injection)
           // This ensures files uploaded to knowledge base can also be used directly in agent context
           const existingDocument = await ctx.documentModel.findByFileId(input.fileId);
-          if (!existingDocument) {
+          if (!existingDocument && chunkResult.chunks && chunkResult.chunks.length > 0) {
             try {
-              // Use the already parsed chunks to create document record
-              // Combine all chunks into full content (same as what parseFileContent would do)
               const fullContent = chunkResult.chunks.map((chunk) => chunk.text).join('\n\n');
 
               // Extract metadata from chunks if available
