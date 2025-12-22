@@ -404,6 +404,13 @@
     "search": "検索"
   },
   "task": {
+    "activity": {
+      "calling": "ツールを呼び出しています...",
+      "generating": "返信を生成しています...",
+      "gotResult": "ツールの結果を取得しました",
+      "toolCalling": "{{toolName}} を呼び出しています...",
+      "toolResult": "{{toolName}} の結果を取得しました"
+    },
     "metrics": {
       "stepsShort": "歩",
       "toolCallsShort": "回ツール使用"

@@ -404,6 +404,13 @@
     "search": "Ara"
   },
   "task": {
+    "activity": {
+      "calling": "Araç çağrılıyor...",
+      "generating": "Yanıt oluşturuluyor...",
+      "gotResult": "Araç sonucu alındı",
+      "toolCalling": "{{toolName}} çağrılıyor...",
+      "toolResult": "{{toolName}} sonucu alındı"
+    },
     "metrics": {
       "stepsShort": "Adım",
       "toolCallsShort": "Araç Kullanımı"

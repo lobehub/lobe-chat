@@ -136,7 +136,7 @@
     "off": "Disattiva debug",
     "on": "Visualizza informazioni chiamata plugin",
     "payload": "Payload plugin",
-    "pluginState": "Stato plugin",
+    "pluginState": "Stato del plugin",
     "response": "Risultato restituito",
     "title": "Dettagli plugin",
     "tool_call": "Richiesta chiamata strumento"

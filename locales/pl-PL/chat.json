@@ -404,6 +404,13 @@
     "search": "Szukaj"
   },
   "task": {
+    "activity": {
+      "calling": "Wywoływanie narzędzia...",
+      "generating": "Generowanie odpowiedzi...",
+      "gotResult": "Otrzymano wynik narzędzia",
+      "toolCalling": "Wywoływanie {{toolName}}...",
+      "toolResult": "Otrzymano wynik z {{toolName}}"
+    },
     "metrics": {
       "stepsShort": "krok",
       "toolCallsShort": "użycie narzędzia"

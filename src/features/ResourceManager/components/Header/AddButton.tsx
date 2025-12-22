@@ -203,9 +203,13 @@ const AddButton = () => {
 
   return (
     <>
-      <Dropdown menu={{ items }} placement="bottomRight">
+      <Dropdown menu={{ items }} placement="bottomRight" trigger={['hover', 'click']}>
         <Button
           icon={Plus}
+          onClick={(e) => {
+            // Prevent default button behavior that might interfere with dropdown
+            e.stopPropagation();
+          }}
           size={'small'}
           style={{ borderRadius: 8, fontSize: 13, height: 32, paddingRight: 12 }}
           type="primary"

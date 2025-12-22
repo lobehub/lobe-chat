@@ -404,6 +404,13 @@
     "search": "بحث"
   },
   "task": {
+    "activity": {
+      "calling": "جارٍ استدعاء الأداة...",
+      "generating": "جارٍ توليد الرد...",
+      "gotResult": "تم الحصول على نتيجة الأداة",
+      "toolCalling": "جارٍ استدعاء {{toolName}}...",
+      "toolResult": "تم الحصول على نتيجة {{toolName}}"
+    },
     "metrics": {
       "stepsShort": "خطوة",
       "toolCallsShort": "مرة استخدام الأداة"

@@ -136,7 +136,7 @@
     "off": "Turn Off Debug",
     "on": "View Plugin Call Info",
     "payload": "Plugin Payload",
-    "pluginState": "Plugin State",
+    "pluginState": "Plugin Status",
     "response": "Response",
     "title": "Plugin Details",
     "tool_call": "Tool Call Request"

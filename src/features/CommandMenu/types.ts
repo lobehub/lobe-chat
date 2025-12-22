@@ -11,7 +11,18 @@ export type PageType = 'theme' | 'ai-chat' | string;
 export interface Context {
   name: string;
   subPath?: string;
-  type: ContextType;
+  type: MenuContext;
 }
 
-export type ContextType = 'agent' | 'group' | 'painting' | 'settings' | 'resource' | 'page';
+export type MenuContext =
+  | 'general'
+  | 'agent'
+  | 'group'
+  | 'resource'
+  | 'settings'
+  | 'memory'
+  | 'community'
+  | 'page'
+  | 'painting';
+
+export type ContextType = Extract<MenuContext, 'agent' | 'group' | 'resource' | 'settings' | 'page' | 'painting'>;

@@ -136,7 +136,7 @@
     "off": "Debugging ausschalten",
     "on": "Plugin-Aufrufinformationen anzeigen",
     "payload": "Plugin-Nutzlast",
-    "pluginState": "Plugin-Zustand",
+    "pluginState": "Plugin-Status",
     "response": "Antwort",
     "title": "Plugin-Details",
     "tool_call": "Werkzeugaufruf-Anfrage"

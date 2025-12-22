@@ -8,24 +8,29 @@ import { useNavigate } from 'react-router-dom';
 
 import type { SearchResult } from '@/database/repositories/search';
 
-import type { Context } from './types';
+import { CommandItem } from './components';
+import { useCommandMenuContext } from './CommandMenuContext';
+import { useStyles } from './styles';
+import type { ValidSearchType } from './utils/queryParser';
 
 interface SearchResultsProps {
-  context?: Context;
   isLoading: boolean;
   onClose: () => void;
+  onSetTypeFilter: (typeFilter: ValidSearchType | undefined) => void;
   results: SearchResult[];
-  searchQuery?: string;
-  styles: any;
+  searchQuery: string;
+  typeFilter: ValidSearchType | undefined;
 }
 
 /**
  * Search results from unified search index.
  */
 const SearchResults = memo<SearchResultsProps>(
-  ({ results, isLoading, onClose, styles, context, searchQuery = '' }) => {
+  ({ isLoading, onClose, onSetTypeFilter, results, searchQuery, typeFilter }) => {
     const { t } = useTranslation('common');
     const navigate = useNavigate();
+    const { styles } = useStyles();
+    const { menuContext } = useCommandMenuContext();
 
     const handleNavigate = (result: SearchResult) => {
       switch (result.type) {
@@ -76,7 +81,7 @@ const SearchResults = memo<SearchResultsProps>(
           navigate(`/community/plugins/${result.identifier}`);
           break;
         }
-        case 'assistant': {
+        case 'communityAgent': {
           navigate(`/community/assistant/${result.identifier}`);
           break;
         }
@@ -107,7 +112,7 @@ const SearchResults = memo<SearchResultsProps>(
         case 'plugin': {
           return <Plug size={16} />;
         }
-        case 'assistant': {
+        case 'communityAgent': {
           return <Bot size={16} />;
         }
       }
@@ -136,10 +141,19 @@ const SearchResults = memo<SearchResultsProps>(
         case 'plugin': {
           return t('cmdk.search.plugin');
         }
-        case 'assistant': {
+        case 'communityAgent': {
           return t('cmdk.search.assistant');
         }
       }
+    };
+
+    // Get trailing label for search results (shows "Market" for marketplace items)
+    const getTrailingLabel = (type: SearchResult['type']) => {
+      // Marketplace items: MCP, plugins, assistants
+      if (type === 'mcp' || type === 'plugin' || type === 'communityAgent') {
+        return t('cmdk.search.market');
+      }
+      return getTypeLabel(type);
     };
 
     // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -176,6 +190,30 @@ const SearchResults = memo<SearchResultsProps>(
       return description;
     };
 
+    const handleSearchMore = (type: ValidSearchType) => {
+      onSetTypeFilter(type);
+    };
+
+    // Helper to render "Search More" button
+    const renderSearchMore = (type: ValidSearchType, count: number) => {
+      // Don't show if already filtering by this type
+      if (typeFilter) return null;
+
+      // Show if there are results (might have more)
+      if (count === 0) return null;
+
+      return (
+        <CommandItem
+          forceMount
+          icon={getIcon(type)}
+          onSelect={() => handleSearchMore(type)}
+          title={t('cmdk.search.searchMore', { type: getTypeLabel(type) })}
+          value={`action-show-more-results-for-type-${type}`}
+          variant="detailed"
+        />
+      );
+    };
+
     const hasResults = results.length > 0;
 
     // Group results by type
@@ -186,11 +224,11 @@ const SearchResults = memo<SearchResultsProps>(
     const pageResults = results.filter((r) => r.type === 'page');
     const mcpResults = results.filter((r) => r.type === 'mcp');
     const pluginResults = results.filter((r) => r.type === 'plugin');
-    const assistantResults = results.filter((r) => r.type === 'assistant');
+    const assistantResults = results.filter((r) => r.type === 'communityAgent');
 
     // Detect context types
-    const isResourceContext = context?.type === 'resource';
-    const isPageContext = context?.type === 'page';
+    const isResourceContext = menuContext === 'resource';
+    const isPageContext = menuContext === 'page';
 
     // Don't render anything if no results and not loading
     if (!hasResults && !isLoading) {
@@ -203,23 +241,18 @@ const SearchResults = memo<SearchResultsProps>(
         {hasResults && isPageContext && pageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.pages')} key="pages-page-context">
             {pageResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={result.description}
+                icon={getIcon(result.type)}
                 key={`page-page-context-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {result.description && (
-                      <div className={styles.itemDescription}>{result.description}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('page', pageResults.length)}
           </Command.Group>
         )}
 
@@ -227,92 +260,72 @@ const SearchResults = memo<SearchResultsProps>(
         {hasResults && isPageContext && fileResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.files')}>
             {fileResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={result.type === 'file' ? result.fileType : undefined}
+                icon={getIcon(result.type)}
                 key={`file-page-context-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {result.type === 'file' && (
-                      <div className={styles.itemDescription}>{result.fileType}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('file', fileResults.length)}
           </Command.Group>
         )}
 
         {hasResults && isPageContext && agentResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.agents')}>
             {agentResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getDescription(result)}
+                icon={getIcon(result.type)}
                 key={`agent-page-context-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('agent', agentResults.length)}
           </Command.Group>
         )}
 
         {hasResults && isPageContext && topicResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.topics')}>
             {topicResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getSubtitle(result)}
+                icon={getIcon(result.type)}
                 key={`topic-page-context-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getSubtitle(result) && (
-                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('topic', topicResults.length)}
           </Command.Group>
         )}
 
         {hasResults && isPageContext && messageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.messages')}>
             {messageResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getSubtitle(result)}
+                icon={getIcon(result.type)}
                 key={`message-page-context-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getSubtitle(result) && (
-                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('message', messageResults.length)}
           </Command.Group>
         )}
 
@@ -320,23 +333,18 @@ const SearchResults = memo<SearchResultsProps>(
         {hasResults && isResourceContext && pageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.pages')} key="pages-resource">
             {pageResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={result.description}
+                icon={getIcon(result.type)}
                 key={`page-resource-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {result.description && (
-                      <div className={styles.itemDescription}>{result.description}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('page', pageResults.length)}
           </Command.Group>
         )}
 
@@ -344,92 +352,72 @@ const SearchResults = memo<SearchResultsProps>(
         {hasResults && isResourceContext && fileResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.files')}>
             {fileResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={result.type === 'file' ? result.fileType : undefined}
+                icon={getIcon(result.type)}
                 key={`file-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {result.type === 'file' && (
-                      <div className={styles.itemDescription}>{result.fileType}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('file', fileResults.length)}
           </Command.Group>
         )}
 
-        {hasResults && messageResults.length > 0 && (
+        {hasResults && !isPageContext && !isResourceContext && messageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.messages')}>
             {messageResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getSubtitle(result)}
+                icon={getIcon(result.type)}
                 key={`message-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getSubtitle(result) && (
-                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('message', messageResults.length)}
           </Command.Group>
         )}
 
-        {hasResults && agentResults.length > 0 && (
+        {hasResults && !isPageContext && agentResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.agents')}>
             {agentResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getDescription(result)}
+                icon={getIcon(result.type)}
                 key={`agent-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('agent', agentResults.length)}
           </Command.Group>
         )}
 
-        {hasResults && topicResults.length > 0 && (
+        {hasResults && !isPageContext && topicResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.topics')}>
             {topicResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getSubtitle(result)}
+                icon={getIcon(result.type)}
                 key={`topic-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getSubtitle(result) && (
-                      <div className={styles.itemDescription}>{getSubtitle(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('topic', topicResults.length)}
           </Command.Group>
         )}
 
@@ -437,23 +425,18 @@ const SearchResults = memo<SearchResultsProps>(
         {hasResults && !isResourceContext && !isPageContext && pageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.pages')} key="pages-normal">
             {pageResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={result.description}
+                icon={getIcon(result.type)}
                 key={`page-normal-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {result.description && (
-                      <div className={styles.itemDescription}>{result.description}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('page', pageResults.length)}
           </Command.Group>
         )}
 
@@ -461,92 +444,72 @@ const SearchResults = memo<SearchResultsProps>(
         {hasResults && !isResourceContext && !isPageContext && fileResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.files')}>
             {fileResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={result.type === 'file' ? result.fileType : undefined}
+                icon={getIcon(result.type)}
                 key={`file-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {result.type === 'file' && (
-                      <div className={styles.itemDescription}>{result.fileType}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('file', fileResults.length)}
           </Command.Group>
         )}
 
         {hasResults && mcpResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.mcps')}>
             {mcpResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getDescription(result)}
+                icon={getIcon(result.type)}
                 key={`mcp-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('mcp', mcpResults.length)}
           </Command.Group>
         )}
 
         {hasResults && pluginResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.plugins')}>
             {pluginResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getDescription(result)}
+                icon={getIcon(result.type)}
                 key={`plugin-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('plugin', pluginResults.length)}
           </Command.Group>
         )}
 
         {hasResults && assistantResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.assistants')}>
             {assistantResults.map((result) => (
-              <Command.Item
+              <CommandItem
+                description={getDescription(result)}
+                icon={getIcon(result.type)}
                 key={`assistant-${result.id}`}
                 onSelect={() => handleNavigate(result)}
+                title={result.title}
+                trailingLabel={getTrailingLabel(result.type)}
                 value={getItemValue(result)}
-              >
-                <div className={styles.itemContent}>
-                  <div className={styles.itemIcon}>{getIcon(result.type)}</div>
-                  <div className={styles.itemDetails}>
-                    <div className={styles.itemTitle}>{result.title}</div>
-                    {getDescription(result) && (
-                      <div className={styles.itemDescription}>{getDescription(result)}</div>
-                    )}
-                  </div>
-                  <div className={styles.itemType}>{getTypeLabel(result.type)}</div>
-                </div>
-              </Command.Item>
+                variant="detailed"
+              />
             ))}
+            {renderSearchMore('communityAgent', assistantResults.length)}
           </Command.Group>
         )}
 

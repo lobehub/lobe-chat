@@ -1,5 +1,5 @@
 import { useDebounce } from 'ahooks';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -11,33 +11,39 @@ import { useGlobalStore } from '@/store/global';
 import { globalHelpers } from '@/store/global/helpers';
 import { useHomeStore } from '@/store/home';
 
+import { useCommandMenuContext } from './CommandMenuContext';
 import type { ThemeMode } from './types';
-import { detectContext } from './utils/context';
 
+/**
+ * Shared methods for CommandMenu
+ */
 export const useCommandMenu = () => {
   const [open, setOpen] = useGlobalStore((s) => [s.status.showCommandMenu, s.updateSystemStatus]);
-  const [mounted, setMounted] = useState(false);
-  const [search, setSearch] = useState('');
-  const [pages, setPages] = useState<string[]>([]);
+  const {
+    mounted,
+    search,
+    setSearch,
+    pages,
+    setPages,
+    typeFilter,
+    setTypeFilter,
+    page,
+    isAiMode,
+    menuContext: context,
+    pathname,
+  } = useCommandMenuContext();
 
   const navigate = useNavigate();
   const location = useLocation();
-  const pathname = location.pathname;
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
 
-  const page = pages.at(-1);
-  const isAiMode = page === 'ai-chat';
-
-  // Detect context based on current pathname
-  const context = useMemo(() => detectContext(pathname), [pathname]);
-
   // Extract agentId from pathname when in agent context
   const agentId = useMemo(() => {
-    if (context?.type === 'agent') {
-      const match = pathname.match(/^\/agent\/([^/?]+)/);
+    if (context === 'agent') {
+      const match = pathname?.match(/^\/agent\/([^/?]+)/);
       return match?.[1] || undefined;
     }
     return undefined;
@@ -51,21 +57,22 @@ export const useCommandMenu = () => {
   const searchQuery = debouncedSearch.trim();
 
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
-    hasSearch && !isAiMode ? ['search', searchQuery, agentId] : null,
+    hasSearch && !isAiMode ? ['search', searchQuery, agentId, typeFilter] : null,
     async () => {
       const locale = globalHelpers.getCurrentLanguage();
-      return lambdaClient.search.query.query({ agentId, locale, query: searchQuery });
+      return lambdaClient.search.query.query({
+        agentId,
+        limitPerType: typeFilter ? 50 : 5, // Show more results when filtering by type
+        locale,
+        query: searchQuery,
+        type: typeFilter,
+      });
     },
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     },
   );
-
-  // Ensure we're mounted on the client
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Close on Escape key and prevent body scroll
   useEffect(() => {
@@ -76,14 +83,6 @@ export const useCommandMenu = () => {
       return () => {
         document.body.style.overflow = originalStyle;
       };
-    }
-  }, [open]);
-
-  // Reset pages and search when opening/closing
-  useEffect(() => {
-    if (open) {
-      setPages([]);
-      setSearch('');
     }
   }, [open]);
 
@@ -104,11 +103,6 @@ export const useCommandMenu = () => {
   const handleThemeChange = (theme: ThemeMode) => {
     switchThemeMode(theme);
     closeCommandMenu();
-  };
-
-  const handleAskAI = () => {
-    // Enter AI mode without adding messages
-    setPages([...pages, 'ai-chat']);
   };
 
   const handleAskAISubmit = () => {
@@ -136,14 +130,8 @@ export const useCommandMenu = () => {
     closeCommandMenu();
   };
 
-  const navigateToPage = (pageName: string) => {
-    setPages([...pages, pageName]);
-  };
-
   return {
     closeCommandMenu,
-    context,
-    handleAskAI,
     handleAskAISubmit,
     handleBack,
     handleCreateSession,
@@ -154,14 +142,15 @@ export const useCommandMenu = () => {
     isAiMode,
     isSearching,
     mounted,
-    navigateToPage,
     open,
     page,
     pages,
     pathname,
     search,
+    searchQuery,
     searchResults: searchResults || ([] as SearchResult[]),
-    setPages,
     setSearch,
+    setTypeFilter,
+    typeFilter,
   };
 };

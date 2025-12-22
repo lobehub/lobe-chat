@@ -1,4 +1,4 @@
-import type { Context, ContextType } from '../types';
+import type { Context, MenuContext } from '../types';
 
 /**
  * Configuration for context detection
@@ -7,7 +7,7 @@ interface ContextConfig {
   captureSubPath?: boolean;
   matcher: RegExp;
   name: string;
-  type: ContextType;
+  type: MenuContext;
 }
 
 /**
@@ -37,6 +37,12 @@ const CONTEXT_CONFIGS: ContextConfig[] = [
   },
   {
     captureSubPath: true,
+    matcher: /^\/memory(?:\/([^/]+))?/,
+    name: 'Memory',
+    type: 'memory',
+  },
+  {
+    captureSubPath: true,
     matcher: /^\/resource(?:\/([^/]+))?/,
     name: 'Resource',
     type: 'resource',
@@ -54,7 +60,7 @@ const CONTEXT_CONFIGS: ContextConfig[] = [
  * @param pathname - The current pathname from react-router
  * @returns Context object if detected, undefined otherwise
  */
-export const detectContext = (pathname: string): Context | undefined => {
+export const detectContext = (pathname: string): MenuContext => {
   for (const config of CONTEXT_CONFIGS) {
     const match = pathname.match(config.matcher);
 
@@ -69,9 +75,9 @@ export const detectContext = (pathname: string): Context | undefined => {
         context.subPath = match[1];
       }
 
-      return context;
+      return context.type;
     }
   }
 
-  return undefined;
+  return 'general';
 };
