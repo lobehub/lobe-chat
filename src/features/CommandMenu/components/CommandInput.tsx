@@ -5,7 +5,8 @@ import { ArrowLeft, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { Context } from '../types';
+import { useCommandMenuContext } from '../CommandMenuContext';
+import { useCommandMenu } from '../useCommandMenu';
 import type { ValidSearchType } from '../utils/queryParser';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -36,58 +37,40 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface CommandInputProps {
-  context?: Context;
-  hasPages: boolean;
-  isAiMode: boolean;
-  onBack: () => void;
-  onClearTypeFilter?: () => void;
-  onValueChange: (value: string) => void;
-  search: string;
-  typeFilter?: ValidSearchType;
-}
+const CommandInput = memo(() => {
+  const { t } = useTranslation('common');
+  const { t: tSetting } = useTranslation('setting');
+  const { t: tChat } = useTranslation('chat');
+  const { styles } = useStyles();
 
-const CommandInput = memo<CommandInputProps>(
-  ({
-    context,
-    hasPages,
-    isAiMode,
-    onBack,
-    onClearTypeFilter,
-    onValueChange,
-    search,
-    typeFilter,
-  }) => {
-    const { t } = useTranslation('common');
-    const { t: tSetting } = useTranslation('setting');
-    const { t: tChat } = useTranslation('chat');
-    const { styles } = useStyles();
+  const { handleBack } = useCommandMenu();
+  const { menuContext, viewMode, pages, search, setSearch, typeFilter, setTypeFilter } = useCommandMenuContext();
+
+  const hasPages = pages.length > 0;
 
     // Get localized context name
     const getContextName = () => {
-      if (!context) return undefined;
-
-      switch (context.type) {
+      switch (menuContext) {
         case 'settings': {
-          return tSetting('header.title', { defaultValue: context.name });
+          return tSetting('header.title', { defaultValue: menuContext });
         }
         case 'agent': {
-          return t('cmdk.search.agent', { defaultValue: context.name });
+          return t('cmdk.search.agent', { defaultValue: menuContext });
         }
         case 'group': {
-          return tChat('group.title', { defaultValue: context.name });
+          return tChat('group.title', { defaultValue: menuContext });
         }
         case 'page': {
-          return t('cmdk.pages', { defaultValue: context.name });
+          return t('cmdk.pages', { defaultValue: menuContext });
         }
         case 'painting': {
-          return t('cmdk.painting', { defaultValue: context.name });
+          return t('cmdk.painting', { defaultValue: menuContext });
         }
         case 'resource': {
-          return t('cmdk.resource', { defaultValue: context.name });
+          return t('cmdk.resource', { defaultValue: menuContext });
         }
         default: {
-          return context.name;
+          return menuContext;
         }
       }
     };
@@ -100,11 +83,11 @@ const CommandInput = memo<CommandInputProps>(
 
     return (
       <>
-        {(context || typeFilter) && !hasPages && (
+        {(menuContext || typeFilter) && !hasPages && (
           <div className={styles.contextWrapper}>
-            {context && <Tag className={styles.contextTag}>{contextName}</Tag>}
+            {menuContext && <Tag className={styles.contextTag}>{contextName}</Tag>}
             {typeFilter && (
-              <Tag className={styles.backTag} icon={<X size={12} />} onClick={onClearTypeFilter}>
+              <Tag className={styles.backTag} icon={<X size={12} />} onClick={() => setTypeFilter(undefined)}>
                 {getTypeLabel(typeFilter)}
               </Tag>
             )}
@@ -112,15 +95,17 @@ const CommandInput = memo<CommandInputProps>(
         )}
         <div className={styles.inputWrapper}>
           {hasPages && (
-            <Tag className={styles.backTag} icon={<ArrowLeft size={12} />} onClick={onBack} />
+            <Tag className={styles.backTag} icon={<ArrowLeft size={12} />} onClick={handleBack} />
           )}
           <Command.Input
             autoFocus
-            onValueChange={onValueChange}
-            placeholder={isAiMode ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')}
+            onValueChange={setSearch}
+            placeholder={
+              viewMode === 'ai-chat' ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')
+            }
             value={search}
           />
-          {!isAiMode && search.trim() ? (
+          {viewMode !== 'ai-chat' && search.trim() ? (
             <>
               <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
               <Tag>Tab</Tag>
@@ -131,8 +116,7 @@ const CommandInput = memo<CommandInputProps>(
         </div>
       </>
     );
-  },
-);
+});
 
 CommandInput.displayName = 'CommandInput';
 

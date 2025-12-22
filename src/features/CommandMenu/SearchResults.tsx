@@ -9,28 +9,28 @@ import { useNavigate } from 'react-router-dom';
 import type { SearchResult } from '@/database/repositories/search';
 
 import { CommandItem } from './components';
+import { useCommandMenuContext } from './CommandMenuContext';
 import { useStyles } from './styles';
-import type { Context } from './types';
 import type { ValidSearchType } from './utils/queryParser';
 
 interface SearchResultsProps {
-  context?: Context;
   isLoading: boolean;
   onClose: () => void;
-  onSetTypeFilter: (type: ValidSearchType | undefined) => void;
+  onSetTypeFilter: (typeFilter: ValidSearchType | undefined) => void;
   results: SearchResult[];
-  searchQuery?: string;
-  typeFilter?: ValidSearchType;
+  searchQuery: string;
+  typeFilter: ValidSearchType | undefined;
 }
 
 /**
  * Search results from unified search index.
  */
 const SearchResults = memo<SearchResultsProps>(
-  ({ results, isLoading, onClose, onSetTypeFilter, context, searchQuery = '', typeFilter }) => {
+  ({ isLoading, onClose, onSetTypeFilter, results, searchQuery, typeFilter }) => {
     const { t } = useTranslation('common');
     const navigate = useNavigate();
     const { styles } = useStyles();
+    const { menuContext } = useCommandMenuContext();
 
     const handleNavigate = (result: SearchResult) => {
       switch (result.type) {
@@ -227,8 +227,8 @@ const SearchResults = memo<SearchResultsProps>(
     const assistantResults = results.filter((r) => r.type === 'communityAgent');
 
     // Detect context types
-    const isResourceContext = context?.type === 'resource';
-    const isPageContext = context?.type === 'page';
+    const isResourceContext = menuContext === 'resource';
+    const isPageContext = menuContext === 'page';
 
     // Don't render anything if no results and not loading
     if (!hasResults && !isLoading) {

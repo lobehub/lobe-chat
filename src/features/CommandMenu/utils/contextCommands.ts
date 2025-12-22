@@ -11,7 +11,7 @@ import {
   UserCircle,
 } from 'lucide-react';
 
-import type { ContextType } from '../types';
+import type { ContextType, MenuContext } from '../types';
 
 export interface ContextCommand {
   icon: LucideIcon;
@@ -122,10 +122,10 @@ export const CONTEXT_COMMANDS: Record<ContextType, ContextCommand[]> = {
  * Filters out the current page from the list
  */
 export const getContextCommands = (
-  contextType: ContextType,
+  contextType: MenuContext,
   currentSubPath?: string,
 ): ContextCommand[] => {
-  const commands = CONTEXT_COMMANDS[contextType] || [];
+  const commands = CONTEXT_COMMANDS[contextType as ContextType] || [];
 
   // Filter out the current page
   return commands.filter((cmd) => cmd.subPath !== currentSubPath);

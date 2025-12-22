@@ -148,6 +148,7 @@ export default {
     memory: '记忆',
     navigate: '导航',
     newAgent: '新建助手',
+    newLibrary: '新建库',
     noResults: '未找到相关结果',
     openSettings: '打开设置',
     pages: '文稿',

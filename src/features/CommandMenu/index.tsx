@@ -1,10 +1,14 @@
 'use client';
 
 import { Command } from 'cmdk';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+import { useGlobalStore } from '@/store/global';
+
+import { CommandMenuProvider, useCommandMenuContext } from './CommandMenuContext';
 import MainMenu from './MainMenu';
 import SearchResults from './SearchResults';
 import ThemeMenu from './ThemeMenu';
@@ -13,60 +17,42 @@ import CommandInput from './components/CommandInput';
 import { useStyles } from './styles';
 import { useCommandMenu } from './useCommandMenu';
 
-// type MenuViewMode = 'default' | 'search' | 'ai-chat';
-
 /**
- * CMDK Menu.
- *
- * Search everything in LobeHub.
+ * Inner component that uses the context
  */
-const CommandMenu = memo(() => {
+const CommandMenuContent = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const {
     closeCommandMenu,
-    context,
-    handleAskAI,
     handleAskAISubmit,
     handleBack,
-    handleCreateSession,
-    handleExternalLink,
-    handleNavigate,
-    handleSetTypeFilter,
-    handleThemeChange,
     hasSearch,
     isAiMode,
     isSearching,
-    mounted,
-    navigateToPage,
-    open,
-    page,
-    pages,
-    pathname,
-    search,
     searchQuery,
     searchResults,
-    setPages,
-    setSearch,
-    typeFilter,
   } = useCommandMenu();
 
-  if (!mounted || !open) return null;
+  const { viewMode, setPages, page, pages, search, setTypeFilter, typeFilter } =
+    useCommandMenuContext();
 
-  return createPortal(
+  return (
     <div className={styles.overlay} onClick={closeCommandMenu}>
       <div onClick={(e) => e.stopPropagation()}>
         <Command
           className={styles.commandRoot}
           onKeyDown={(e) => {
             // Tab key to ask AI when not in AI mode
-            if (e.key === 'Tab' && !isAiMode) {
+            if (e.key === 'Tab' && viewMode !== 'ai-chat') {
               e.preventDefault();
-              handleAskAI();
+
+              setPages([...pages, 'ai-chat']);
+
               return;
             }
             // Enter key in AI mode to submit
-            if (e.key === 'Enter' && isAiMode) {
+            if (e.key === 'Enter' && viewMode === 'ai-chat') {
               e.preventDefault();
               handleAskAISubmit();
               return;
@@ -86,41 +72,22 @@ const CommandMenu = memo(() => {
               setPages((prev) => prev.slice(0, -1));
             }
           }}
-          shouldFilter={!isAiMode}
+          shouldFilter={viewMode !== 'ai-chat'}
         >
-          <CommandInput
-            context={context}
-            hasPages={pages.length > 0}
-            isAiMode={isAiMode}
-            onBack={handleBack}
-            onClearTypeFilter={() => handleSetTypeFilter(undefined)}
-            onValueChange={setSearch}
-            search={search}
-            typeFilter={typeFilter}
-          />
+          <CommandInput />
 
           <Command.List>
             {!isAiMode && !isSearching && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
 
-            {!page && (
-              <MainMenu
-                context={context}
-                onCreateSession={handleCreateSession}
-                onExternalLink={handleExternalLink}
-                onNavigate={handleNavigate}
-                onNavigateToTheme={() => navigateToPage('theme')}
-                pathname={pathname}
-              />
-            )}
+            {!page && <MainMenu />}
 
-            {page === 'theme' && <ThemeMenu onThemeChange={handleThemeChange} styles={styles} />}
+            {page === 'theme' && <ThemeMenu />}
 
             {!page && hasSearch && !isAiMode && (
               <SearchResults
-                context={context}
                 isLoading={isSearching}
                 onClose={closeCommandMenu}
-                onSetTypeFilter={handleSetTypeFilter}
+                onSetTypeFilter={setTypeFilter}
                 results={searchResults}
                 searchQuery={searchQuery}
                 typeFilter={typeFilter}
@@ -131,7 +98,34 @@ const CommandMenu = memo(() => {
           <CommandFooter />
         </Command>
       </div>
-    </div>,
+    </div>
+  );
+});
+
+CommandMenuContent.displayName = 'CommandMenuContent';
+
+/**
+ * CMDK Menu.
+ *
+ * Search everything in LobeHub.
+ */
+const CommandMenu = memo(() => {
+  const [open] = useGlobalStore((s) => [s.status.showCommandMenu]);
+  const [mounted, setMounted] = useState(false);
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  // Ensure we're mounted on the client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !open) return null;
+
+  return createPortal(
+    <CommandMenuProvider pathname={pathname}>
+      <CommandMenuContent />
+    </CommandMenuProvider>,
     document.body,
   );
 });
