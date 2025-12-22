@@ -44,9 +44,6 @@ export const getServerGlobalConfig = async () => {
       lmstudio: {
         fetchOnClient: isDesktop ? false : undefined,
       },
-      /* ↓ cloud slot ↓ */
-
-      /* ↑ cloud slot ↑ */
       ollama: {
         enabled: isDesktop ? true : undefined,
         fetchOnClient: isDesktop ? false : !process.env.OLLAMA_PROXY_URL,
