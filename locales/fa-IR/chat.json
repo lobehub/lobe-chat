@@ -404,6 +404,13 @@
     "search": "جستجو"
   },
   "task": {
+    "activity": {
+      "calling": "در حال فراخوانی ابزار...",
+      "generating": "در حال تولید پاسخ...",
+      "gotResult": "نتیجه ابزار دریافت شد",
+      "toolCalling": "در حال فراخوانی {{toolName}}...",
+      "toolResult": "نتیجه {{toolName}} دریافت شد"
+    },
     "metrics": {
       "stepsShort": "گام",
       "toolCallsShort": "بار استفاده از ابزار"

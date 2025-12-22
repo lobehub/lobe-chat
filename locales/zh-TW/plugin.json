@@ -136,7 +136,7 @@
     "off": "關閉調試",
     "on": "查看插件調用信息",
     "payload": "插件載荷",
-    "pluginState": "插件 State",
+    "pluginState": "外掛狀態",
     "response": "返回結果",
     "title": "插件詳情",
     "tool_call": "工具調用請求"

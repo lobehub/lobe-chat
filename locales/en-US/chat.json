@@ -404,6 +404,13 @@
     "search": "Search"
   },
   "task": {
+    "activity": {
+      "calling": "Calling tool...",
+      "generating": "Generating response...",
+      "gotResult": "Tool result received",
+      "toolCalling": "Calling {{toolName}}...",
+      "toolResult": "{{toolName}} result received"
+    },
     "metrics": {
       "stepsShort": "steps",
       "toolCallsShort": "tool uses"

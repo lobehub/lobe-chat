@@ -39,8 +39,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const CommandInput = memo(() => {
   const { t } = useTranslation('common');
-  const { t: tSetting } = useTranslation('setting');
-  const { t: tChat } = useTranslation('chat');
   const { styles } = useStyles();
 
   const { handleBack } = useCommandMenu();
@@ -50,33 +48,7 @@ const CommandInput = memo(() => {
   const hasPages = pages.length > 0;
 
   // Get localized context name
-  const getContextName = () => {
-    switch (menuContext) {
-      case 'settings': {
-        return tSetting('header.title', { defaultValue: menuContext });
-      }
-      case 'agent': {
-        return t('cmdk.search.agent', { defaultValue: menuContext });
-      }
-      case 'group': {
-        return tChat('group.title', { defaultValue: menuContext });
-      }
-      case 'page': {
-        return t('cmdk.pages', { defaultValue: menuContext });
-      }
-      case 'painting': {
-        return t('cmdk.painting', { defaultValue: menuContext });
-      }
-      case 'resource': {
-        return t('cmdk.resource', { defaultValue: menuContext });
-      }
-      default: {
-        return menuContext;
-      }
-    }
-  };
-
-  const contextName = getContextName();
+  const contextName = t(`cmdk.context.${menuContext}`, { defaultValue: menuContext });
 
   const getTypeLabel = (type: ValidSearchType) => {
     return t(`cmdk.search.${type}`);

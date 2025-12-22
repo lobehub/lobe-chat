@@ -404,6 +404,13 @@
     "search": "Zoeken"
   },
   "task": {
+    "activity": {
+      "calling": "Hulpmiddel wordt aangeroepen...",
+      "generating": "Antwoord wordt gegenereerd...",
+      "gotResult": "Resultaat van hulpmiddel ontvangen",
+      "toolCalling": "{{toolName}} wordt aangeroepen...",
+      "toolResult": "Resultaat van {{toolName}} ontvangen"
+    },
     "metrics": {
       "stepsShort": "stap",
       "toolCallsShort": "keer gereedschap gebruikt"

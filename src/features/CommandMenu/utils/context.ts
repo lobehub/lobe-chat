@@ -37,6 +37,12 @@ const CONTEXT_CONFIGS: ContextConfig[] = [
   },
   {
     captureSubPath: true,
+    matcher: /^\/memory(?:\/([^/]+))?/,
+    name: 'Memory',
+    type: 'memory',
+  },
+  {
+    captureSubPath: true,
     matcher: /^\/resource(?:\/([^/]+))?/,
     name: 'Resource',
     type: 'resource',

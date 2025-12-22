@@ -404,6 +404,13 @@
     "search": "검색"
   },
   "task": {
+    "activity": {
+      "calling": "도구를 호출하는 중...",
+      "generating": "응답을 생성하는 중...",
+      "gotResult": "도구 결과를 가져왔습니다",
+      "toolCalling": "{{toolName}} 호출 중...",
+      "toolResult": "{{toolName}} 결과를 가져왔습니다"
+    },
     "metrics": {
       "stepsShort": "단계",
       "toolCallsShort": "도구 사용 횟수"
