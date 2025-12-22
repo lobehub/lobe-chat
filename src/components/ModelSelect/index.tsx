@@ -218,8 +218,7 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
       gap={32}
       horizontal
       justify={'space-between'}
-      onMouseEnter={shouldLazyMountTooltip ? () => setHovered(true) : undefined}
-      onMouseLeave={shouldLazyMountTooltip ? () => setHovered(false) : undefined}
+      onMouseEnter={shouldLazyMountTooltip && !hovered ? () => setHovered(true) : undefined}
       style={{
         overflow: 'hidden',
         position: 'relative',
