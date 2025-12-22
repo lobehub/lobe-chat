@@ -7,6 +7,7 @@ import { serverDBEnv } from '@/config/db';
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
+import { DocumentModel } from '@/database/models/document';
 import { EmbeddingModel } from '@/database/models/embedding';
 import { FileModel } from '@/database/models/file';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
@@ -15,6 +16,7 @@ import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
+import { DocumentService } from '@/server/services/document';
 import { FileService } from '@/server/services/file';
 import {
   AsyncTaskError,
@@ -33,6 +35,8 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
       asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
       chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.serverDB, ctx.userId),
+      documentModel: new DocumentModel(ctx.serverDB, ctx.userId),
+      documentService: new DocumentService(ctx.serverDB, ctx.userId),
       embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
@@ -229,6 +233,37 @@ export const fileRouter = router({
               (item): NewChunkItem => ({ ...item, fileId: input.fileId, userId: ctx.userId }),
             );
             await ctx.chunkModel.bulkCreateUnstructuredChunks(unstructuredChunks);
+          }
+
+          // Create document record if it doesn't exist (needed for direct file content injection)
+          // This ensures files uploaded to knowledge base can also be used directly in agent context
+          const existingDocument = await ctx.documentModel.findByFileId(input.fileId);
+          if (!existingDocument) {
+            try {
+              // Use the already parsed chunks to create document record
+              // Combine all chunks into full content (same as what parseFileContent would do)
+              const fullContent = chunkResult.chunks.map((chunk) => chunk.text).join('\n\n');
+
+              // Extract metadata from chunks if available
+              const firstChunk = chunkResult.chunks[0];
+              const metadata = (firstChunk?.metadata || {}) as Record<string, any>;
+
+              await ctx.documentModel.create({
+                content: fullContent,
+                fileId: input.fileId,
+                fileType: file.fileType,
+                metadata,
+                pages: undefined, // Pages are not available from chunking, but that's OK
+                source: file.url,
+                sourceType: 'file',
+                title: metadata?.title || file.name,
+                totalCharCount: fullContent.length,
+                totalLineCount: fullContent.split('\n').length,
+              });
+            } catch (docError) {
+              // Log error but don't fail the chunking task
+              console.error('[parseFileToChunks] Failed to create document record:', docError);
+            }
           }
 
           // update the task status to success
