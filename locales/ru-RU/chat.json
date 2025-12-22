@@ -404,6 +404,13 @@
     "search": "Поиск"
   },
   "task": {
+    "activity": {
+      "calling": "Вызов инструмента...",
+      "generating": "Генерация ответа...",
+      "gotResult": "Результат инструмента получен",
+      "toolCalling": "Вызов {{toolName}}...",
+      "toolResult": "Результат {{toolName}} получен"
+    },
     "metrics": {
       "stepsShort": "шаг",
       "toolCallsShort": "исп. инструм."

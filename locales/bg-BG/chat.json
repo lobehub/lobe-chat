@@ -404,6 +404,13 @@
     "search": "Търсене"
   },
   "task": {
+    "activity": {
+      "calling": "Извикване на инструмента...",
+      "generating": "Генериране на отговор...",
+      "gotResult": "Резултатът от инструмента е получен",
+      "toolCalling": "Извикване на {{toolName}}...",
+      "toolResult": "Резултатът от {{toolName}} е получен"
+    },
     "metrics": {
       "stepsShort": "стъпки",
       "toolCallsShort": "използвания на инструменти"

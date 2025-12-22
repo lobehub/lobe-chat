@@ -404,6 +404,13 @@
     "search": "Cerca"
   },
   "task": {
+    "activity": {
+      "calling": "Chiamata allo strumento in corso...",
+      "generating": "Generazione della risposta in corso...",
+      "gotResult": "Risultato dello strumento ottenuto",
+      "toolCalling": "Chiamata a {{toolName}} in corso...",
+      "toolResult": "Risultato di {{toolName}} ottenuto"
+    },
     "metrics": {
       "stepsShort": "passi",
       "toolCallsShort": "utilizzi strumenti"

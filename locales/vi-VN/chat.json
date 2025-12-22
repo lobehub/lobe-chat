@@ -404,6 +404,13 @@
     "search": "Tìm kiếm"
   },
   "task": {
+    "activity": {
+      "calling": "Đang gọi công cụ...",
+      "generating": "Đang tạo phản hồi...",
+      "gotResult": "Đã nhận kết quả từ công cụ",
+      "toolCalling": "Đang gọi {{toolName}}...",
+      "toolResult": "Đã nhận kết quả từ {{toolName}}"
+    },
     "metrics": {
       "stepsShort": "bước",
       "toolCallsShort": "lượt dùng công cụ"

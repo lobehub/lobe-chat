@@ -136,7 +136,7 @@
     "off": "Desactivar depuración",
     "on": "Ver información de llamadas al plugin",
     "payload": "Carga útil del plugin",
-    "pluginState": "Estado del plugin",
+    "pluginState": "Estado del complemento",
     "response": "Resultado devuelto",
     "title": "Detalles del plugin",
     "tool_call": "Solicitud de llamada a herramienta"

@@ -3,7 +3,7 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { type FC, memo } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import WideScreenContainer from '@/features/WideScreenContainer';
@@ -71,30 +71,35 @@ const PageEditorCanvas = memo(() => {
  *
  * A reusable component. Should NOT depend on context.
  */
-const PageEditor = memo<PageEditorProps>(
-  ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack }) => {
-    const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
-    const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
-    useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
+const PageEditor: FC<PageEditorProps> = ({
+  pageId,
+  knowledgeBaseId,
+  onDocumentIdChange,
+  onSave,
+  onDelete,
+  onBack,
+}) => {
+  const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
+  const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
 
-    if (!pageAgentId) return <Loading debugId="PageEditor > PageAgent Init" />;
+  if (!pageAgentId) return <Loading debugId="PageEditor > PageAgent Init" />;
 
-    return (
-      <PageAgentProvider pageAgentId={pageAgentId}>
-        <PageEditorProvider
-          key={pageId}
-          knowledgeBaseId={knowledgeBaseId}
-          onBack={onBack}
-          onDelete={onDelete}
-          onDocumentIdChange={onDocumentIdChange}
-          onSave={onSave}
-          pageId={pageId}
-        >
-          <PageEditorCanvas />
-        </PageEditorProvider>
-      </PageAgentProvider>
-    );
-  },
-);
+  return (
+    <PageAgentProvider pageAgentId={pageAgentId}>
+      <PageEditorProvider
+        key={pageId}
+        knowledgeBaseId={knowledgeBaseId}
+        onBack={onBack}
+        onDelete={onDelete}
+        onDocumentIdChange={onDocumentIdChange}
+        onSave={onSave}
+        pageId={pageId}
+      >
+        <PageEditorCanvas />
+      </PageEditorProvider>
+    </PageAgentProvider>
+  );
+};
 
 export default PageEditor;

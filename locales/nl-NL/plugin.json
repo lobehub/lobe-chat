@@ -136,7 +136,7 @@
     "off": "Debuggen uitschakelen",
     "on": "Plugin-aanroepinformatie bekijken",
     "payload": "Plugin payload",
-    "pluginState": "Plugin status",
+    "pluginState": "Plug-instatus",
     "response": "Resultaat",
     "title": "Plugin details",
     "tool_call": "Tool-aanroepverzoek"

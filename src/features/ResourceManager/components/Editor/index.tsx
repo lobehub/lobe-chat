@@ -2,7 +2,7 @@
 
 import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { XIcon } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -40,6 +40,14 @@ const FileEditor = memo(() => {
       <NavHeader
         left={
           <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
+            <ActionIcon
+              icon={ArrowLeftIcon}
+              onClick={() => {
+                setMode('explorer');
+                setCurrentViewItemId(undefined);
+              }}
+              title={t('back')}
+            />
             <Flexbox align={'center'} style={{ marginLeft: 8 }}>
               <Breadcrumb
                 category={category}
@@ -47,18 +55,6 @@ const FileEditor = memo(() => {
                 knowledgeBaseId={libraryId}
               />
             </Flexbox>
-          </Flexbox>
-        }
-        right={
-          <Flexbox align={'center'} gap={4} horizontal style={{ minHeight: 32 }}>
-            <ActionIcon
-              icon={XIcon}
-              onClick={() => {
-                setMode('explorer');
-                setCurrentViewItemId(undefined);
-              }}
-              title={t('back')}
-            />
           </Flexbox>
         }
         style={{

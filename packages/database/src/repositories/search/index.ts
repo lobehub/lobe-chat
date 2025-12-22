@@ -9,10 +9,11 @@ export type SearchResultType =
   | 'agent'
   | 'topic'
   | 'file'
+  | 'memory'
   | 'message'
   | 'mcp'
   | 'plugin'
-  | 'assistant';
+  | 'communityAgent';
 
 export interface BaseSearchResult {
   // 1=exact, 2=prefix, 3=contains
@@ -96,7 +97,7 @@ export interface AssistantSearchResult extends BaseSearchResult {
   homepage?: string | null;
   identifier: string;
   tags?: string[] | null;
-  type: 'assistant';
+  type: 'communityAgent';
 }
 
 export type SearchResult =
@@ -150,23 +151,23 @@ export class SearchRepo {
 
     // Build queries based on type filter
     const queries = [];
-    if (!type || type === 'agent') {
+    if ((!type || type === 'agent') && limits.agent > 0) {
       queries.push(this.buildAgentQuery(searchTerm, exactQuery, prefixQuery, limits.agent));
     }
-    if (!type || type === 'topic') {
+    if ((!type || type === 'topic') && limits.topic > 0) {
       queries.push(
         this.buildTopicQuery(searchTerm, exactQuery, prefixQuery, limits.topic, agentId),
       );
     }
-    if (!type || type === 'message') {
+    if ((!type || type === 'message') && limits.message > 0) {
       queries.push(
         this.buildMessageQuery(searchTerm, exactQuery, prefixQuery, limits.message, agentId),
       );
     }
-    if (!type || type === 'file') {
+    if ((!type || type === 'file') && limits.file > 0) {
       queries.push(this.buildFileQuery(searchTerm, exactQuery, prefixQuery, limits.file));
     }
-    if (!type || type === 'page') {
+    if ((!type || type === 'page') && limits.page > 0) {
       queries.push(this.buildPageQuery(searchTerm, exactQuery, prefixQuery, limits.page));
     }
 

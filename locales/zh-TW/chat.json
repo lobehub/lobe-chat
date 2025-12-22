@@ -404,6 +404,13 @@
     "search": "搜尋"
   },
   "task": {
+    "activity": {
+      "calling": "正在呼叫工具...",
+      "generating": "正在產生回覆...",
+      "gotResult": "已取得工具結果",
+      "toolCalling": "正在呼叫 {{toolName}}...",
+      "toolResult": "已取得 {{toolName}} 結果"
+    },
     "metrics": {
       "stepsShort": "步驟",
       "toolCallsShort": "次使用工具"
