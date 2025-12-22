@@ -5,6 +5,9 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
+import { electronStylish } from '@/styles/electron';
+
 import { Navigation } from './Navigation';
 import LightRays from './effects/LightRays';
 import { Screen1 } from './screens/Screen1';
@@ -56,6 +59,16 @@ const useStyles = createStyles(({ css }) => ({
   screenWrapper: css`
     width: 100%;
     height: 100%;
+  `,
+
+  titleBar: css`
+    position: fixed;
+    z-index: 1000;
+    inset-block-start: 0;
+    inset-inline: 0 0;
+
+    width: 100%;
+    height: ${TITLE_BAR_HEIGHT}px;
   `,
 }));
 
@@ -219,6 +232,9 @@ export const OnboardingContainer: React.FC<OnboardingContainerProps> = ({ onComp
 
   return (
     <div className={styles.container}>
+      {/* Title Bar Drag Region */}
+      <div className={`${styles.titleBar} ${electronStylish.draggable}`} />
+
       {/* LightRays Background Layer */}
       {renderBackground()}
 
