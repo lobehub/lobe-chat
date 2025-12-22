@@ -2,24 +2,27 @@ import { DocumentType } from '@lobechat/builtin-tool-notebook';
 
 import { lambdaClient } from '@/libs/trpc/client';
 
+type ExtendedDocumentType = DocumentType | 'agent/plan';
+
 interface CreateDocumentParams {
   content: string;
   description: string;
   title: string;
   topicId: string;
-  type?: DocumentType;
+  type?: ExtendedDocumentType;
 }
 
 interface UpdateDocumentParams {
   append?: boolean;
   content?: string;
+  description?: string;
   id: string;
   title?: string;
 }
 
 interface ListDocumentsParams {
   topicId: string;
-  type?: DocumentType;
+  type?: ExtendedDocumentType;
 }
 
 class NotebookService {

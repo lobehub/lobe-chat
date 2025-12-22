@@ -25,7 +25,10 @@ export const notebookRouter = router({
         description: z.string(),
         title: z.string(),
         topicId: z.string(),
-        type: z.enum(['article', 'markdown', 'note', 'report']).optional().default('markdown'),
+        type: z
+          .enum(['article', 'markdown', 'note', 'report', 'agent/plan'])
+          .optional()
+          .default('markdown'),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -71,7 +74,7 @@ export const notebookRouter = router({
     .input(
       z.object({
         topicId: z.string(),
-        type: z.enum(['article', 'markdown', 'note', 'report']).optional(),
+        type: z.enum(['article', 'markdown', 'note', 'report', 'agent/plan']).optional(),
       }),
     )
     .query(async ({ ctx, input }): Promise<{ data: NotebookDocument[]; total: number }> => {
@@ -101,6 +104,7 @@ export const notebookRouter = router({
       z.object({
         append: z.boolean().optional(),
         content: z.string().optional(),
+        description: z.string().optional(),
         id: z.string(),
         title: z.string().optional(),
       }),
@@ -122,6 +126,7 @@ export const notebookRouter = router({
           totalCharCount: contentToUpdate.length,
           totalLineCount: contentToUpdate.split('\n').length,
         }),
+        ...(input.description !== undefined && { description: input.description }),
         ...(input.title && { title: input.title }),
       });
 

@@ -2,11 +2,11 @@ import { NotebookDocument } from '@lobechat/types';
 
 export interface NotebookState {
   /**
-   * Map of topicId -> documents
+   * Map of topicId -> notebook documents list
    */
-  documentsMap: Record<string, NotebookDocument[]>;
+  notebookMap: Record<string, NotebookDocument[]>;
 }
 
 export const initialNotebookState: NotebookState = {
-  documentsMap: {},
+  notebookMap: {},
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Markdown, Text } from '@lobehub/ui';
+import { Flexbox, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
@@ -37,7 +37,6 @@ const DocumentBody = memo(() => {
 
   return (
     <Flexbox flex={1} height={'100%'} style={{ overflow: 'hidden' }}>
-      {document.description && <Text className={styles.description}>{document.description}</Text>}
       <div className={styles.content}>
         <Markdown>{document.content || ''}</Markdown>
       </div>

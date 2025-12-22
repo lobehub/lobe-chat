@@ -1,3 +1,5 @@
+import { DocumentType } from '@lobechat/builtin-tool-notebook';
+import { DocumentItem } from '@lobechat/database/schemas';
 import { NotebookDocument } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { SWRResponse, mutate } from 'swr';
@@ -14,9 +16,31 @@ const n = setNamespace('notebook');
 
 const SWR_USE_FETCH_NOTEBOOK_DOCUMENTS = 'SWR_USE_FETCH_NOTEBOOK_DOCUMENTS';
 
+type ExtendedDocumentType = DocumentType | 'agent/plan';
+
+interface CreateDocumentParams {
+  content: string;
+  description: string;
+  title: string;
+  topicId: string;
+  type?: ExtendedDocumentType;
+}
+
+interface UpdateDocumentParams {
+  content?: string;
+  description?: string;
+  id: string;
+  title?: string;
+}
+
 export interface NotebookAction {
+  createDocument: (params: CreateDocumentParams) => Promise<DocumentItem>;
   deleteDocument: (id: string, topicId: string) => Promise<void>;
   refreshDocuments: (topicId: string) => Promise<void>;
+  updateDocument: (
+    params: UpdateDocumentParams,
+    topicId: string,
+  ) => Promise<DocumentItem | undefined>;
   useFetchDocuments: (topicId: string | undefined) => SWRResponse<NotebookDocument[]>;
 }
 
@@ -26,14 +50,24 @@ export const createNotebookAction: StateCreator<
   [],
   NotebookAction
 > = (set, get) => ({
-  deleteDocument: async (id, topicId) => {
-    await notebookService.deleteDocument(id);
+  createDocument: async (params) => {
+    const document = await notebookService.createDocument(params);
 
+    // Refresh the documents list
+    await mutate([SWR_USE_FETCH_NOTEBOOK_DOCUMENTS, params.topicId]);
+
+    return document;
+  },
+
+  deleteDocument: async (id, topicId) => {
     // If the deleted document is currently open, close it
     const portalDocumentId = useChatStore.getState().portalDocumentId;
     if (portalDocumentId === id) {
       useChatStore.getState().closeDocument();
     }
+
+    // Call API to delete
+    await notebookService.deleteDocument(id);
 
     // Refresh the documents list
     await mutate([SWR_USE_FETCH_NOTEBOOK_DOCUMENTS, topicId]);
@@ -41,6 +75,15 @@ export const createNotebookAction: StateCreator<
 
   refreshDocuments: async (topicId) => {
     await mutate([SWR_USE_FETCH_NOTEBOOK_DOCUMENTS, topicId]);
+  },
+
+  updateDocument: async (params, topicId) => {
+    const document = await notebookService.updateDocument(params);
+
+    // Refresh the documents list
+    await mutate([SWR_USE_FETCH_NOTEBOOK_DOCUMENTS, topicId]);
+
+    return document;
   },
 
   useFetchDocuments: (topicId) => {
@@ -57,17 +100,17 @@ export const createNotebookAction: StateCreator<
         onSuccess: (documents) => {
           if (!topicId) return;
 
-          const currentDocuments = get().documentsMap[topicId];
+          const currentDocuments = get().notebookMap[topicId];
 
           // Skip update if data is the same
           if (currentDocuments && isEqual(documents, currentDocuments)) return;
 
           set(
             {
-              documentsMap: { ...get().documentsMap, [topicId]: documents },
+              notebookMap: { ...get().notebookMap, [topicId]: documents },
             },
             false,
-            n('useFetchDocuments(onData)', { topicId }),
+            n('useFetchDocuments(onSuccess)', { topicId }),
           );
         },
       },

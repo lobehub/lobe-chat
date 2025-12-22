@@ -1,4 +1,5 @@
 import { GTDApiName } from '../../types';
+import CreatePlan from './CreatePlan';
 import TodoListRender from './TodoList';
 
 /**
@@ -6,15 +7,22 @@ import TodoListRender from './TodoList';
  *
  * All todo operations use the same TodoList render component
  * which displays the current state of the todo list.
+ * Plan operations use the CreatePlan render component.
  */
 export const GTDRenders = {
   // All todo operations render the same TodoList UI
-  [GTDApiName.createTodos]: TodoListRender,
-  [GTDApiName.updateTodos]: TodoListRender,
-  [GTDApiName.completeTodos]: TodoListRender,
-  [GTDApiName.removeTodos]: TodoListRender,
   [GTDApiName.clearTodos]: TodoListRender,
+  [GTDApiName.completeTodos]: TodoListRender,
+  [GTDApiName.createTodos]: TodoListRender,
+  [GTDApiName.removeTodos]: TodoListRender,
+  [GTDApiName.updateTodos]: TodoListRender,
+
+  // Plan operations render the PlanCard UI
+  [GTDApiName.createPlan]: CreatePlan,
+  [GTDApiName.updatePlan]: CreatePlan,
 };
 
+export { default as CreatePlan } from './CreatePlan';
+export { default as PlanCard } from './PlanCard';
 export type { TodoListRenderState } from './TodoList';
 export { default as TodoListRender, TodoListUI } from './TodoList';

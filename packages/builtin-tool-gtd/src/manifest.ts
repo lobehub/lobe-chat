@@ -8,6 +8,65 @@ export const GTDIdentifier = 'lobe-gtd';
 export const GTDManifest: BuiltinToolManifest = {
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   api: [
+    // ==================== Planning ====================
+    {
+      description:
+        'Create a high-level plan document. Plans define the strategic direction (the "what" and "why"), while todos handle the actionable steps.',
+      name: GTDApiName.createPlan,
+      humanIntervention: 'always',
+      renderDisplayControl: 'expand',
+      parameters: {
+        properties: {
+          goal: {
+            description: 'The main goal or objective to achieve (used as document title).',
+            type: 'string',
+          },
+          description: {
+            description: 'A brief summary of the plan (1-2 sentences).',
+            type: 'string',
+          },
+          context: {
+            description:
+              'Detailed context, constraints, background information, or strategic considerations relevant to the goal.',
+            type: 'string',
+          },
+        },
+        required: ['goal', 'description'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Update an existing plan document. Use this to modify the goal, description, context, or mark the plan as completed.',
+      name: GTDApiName.updatePlan,
+      parameters: {
+        properties: {
+          planId: {
+            description: 'The ID of the plan to update.',
+            type: 'string',
+          },
+          goal: {
+            description: 'Updated goal (document title).',
+            type: 'string',
+          },
+          description: {
+            description: 'Updated brief summary.',
+            type: 'string',
+          },
+          context: {
+            description: 'Updated detailed context.',
+            type: 'string',
+          },
+          completed: {
+            description: 'Mark the plan as completed.',
+            type: 'boolean',
+          },
+        },
+        required: ['planId'],
+        type: 'object',
+      },
+    },
+
     // ==================== Quick Todo ====================
     {
       description: 'Create new todo items. Pass an array of text strings.',
@@ -117,55 +176,6 @@ export const GTDManifest: BuiltinToolManifest = {
           },
         },
         required: ['mode'],
-        type: 'object',
-      },
-    },
-
-    // ==================== Planning ====================
-    {
-      description:
-        'Create a high-level plan document describing a goal and its context. Plans define the strategic direction (the "what" and "why"), while todos handle the actionable steps.',
-      name: GTDApiName.createPlan,
-      parameters: {
-        properties: {
-          goal: {
-            description: 'The main goal or objective to achieve.',
-            type: 'string',
-          },
-          context: {
-            description:
-              'Additional context, constraints, background information, or strategic considerations relevant to the goal.',
-            type: 'string',
-          },
-        },
-        required: ['goal'],
-        type: 'object',
-      },
-    },
-    {
-      description:
-        'Update an existing plan document. Use this to modify the goal, context, or mark the plan as completed.',
-      name: GTDApiName.updatePlan,
-      parameters: {
-        properties: {
-          planId: {
-            description: 'The ID of the plan to update.',
-            type: 'string',
-          },
-          goal: {
-            description: 'Updated goal description.',
-            type: 'string',
-          },
-          context: {
-            description: 'Updated context information.',
-            type: 'string',
-          },
-          completed: {
-            description: 'Mark the plan as completed.',
-            type: 'boolean',
-          },
-        },
-        required: ['planId'],
         type: 'object',
       },
     },
