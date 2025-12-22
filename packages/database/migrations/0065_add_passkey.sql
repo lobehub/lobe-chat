@@ -1,4 +1,4 @@
-CREATE TABLE "passkey" (
+CREATE TABLE IF NOT EXISTS "passkey" (
 	"aaguid" text,
 	"backedUp" boolean,
 	"counter" integer,
@@ -13,5 +13,5 @@ CREATE TABLE "passkey" (
 );
 --> statement-breakpoint
 ALTER TABLE "passkey" ADD CONSTRAINT "passkey_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "passkey_credential_id_unique" ON "passkey" USING btree ("credentialID");--> statement-breakpoint
-CREATE INDEX "passkey_user_id_idx" ON "passkey" USING btree ("userId");
+CREATE UNIQUE INDEX IF NOT EXISTS "passkey_credential_id_unique" ON "passkey" USING btree ("credentialID");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "passkey_user_id_idx" ON "passkey" USING btree ("userId");
