@@ -16,7 +16,6 @@ export const useSetMessageItemActionElementPortialContext = () => {
 
 type AssistantMessageActionType = {
   id: string;
-
   index: number;
   type: 'assistant';
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import type { AssistantContentBlock } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { type MouseEventHandler, memo, useCallback, useMemo } from 'react';
 
@@ -46,7 +47,7 @@ const GroupMessage = memo<GroupMessageProps>(({ id, index, disableEditing, isLat
   // Collect fileList from all children blocks
   const aggregatedFileList = useMemo(() => {
     if (!children || children.length === 0) return [];
-    return children.flatMap((child) => child.fileList || []);
+    return children.flatMap((child: AssistantContentBlock) => child.fileList || []);
   }, [children]);
 
   const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);

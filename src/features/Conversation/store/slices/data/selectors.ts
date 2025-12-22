@@ -11,8 +11,21 @@ const dbMessages = (s: State) => s.dbMessages;
 const messagesInit = (s: State) => s.messagesInit;
 const skipFetch = (s: State) => s.skipFetch;
 
-const getDisplayMessageById = (id: string) => (s: State) =>
-  s.displayMessages.find((m) => m.id === id);
+const getDisplayMessageById = (id: string) => (s: State) => {
+  // First, try to find in top-level displayMessages
+  const topLevelMessage = s.displayMessages.find((m) => m.id === id);
+  if (topLevelMessage) return topLevelMessage;
+
+  // If not found, search in agentCouncil members
+  for (const message of s.displayMessages) {
+    if (message.role === 'agentCouncil' && (message as any).members) {
+      const member = (message as any).members.find((m: UIChatMessage) => m.id === id);
+      if (member) return member;
+    }
+  }
+
+  return undefined;
+};
 const getDbMessageById = (id: string) => (s: State) => s.dbMessages.find((m) => m.id === id);
 const getDbMessageByToolCallId = (id: string) => (s: State) =>
   s.dbMessages.find((m) => m.tool_call_id === id);
