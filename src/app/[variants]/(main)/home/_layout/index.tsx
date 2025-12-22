@@ -38,9 +38,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         height={'100%'}
         style={{
           inset: 0,
-          pointerEvents: isHomeRoute ? 'auto' : 'none',
           position: 'absolute',
-          visibility: isHomeRoute ? 'visible' : 'hidden',
         }}
         width={'100%'}
       >
