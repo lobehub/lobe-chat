@@ -52,7 +52,7 @@ const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 11
 
 // ======== Styles ======== //
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ prefixCls, css, token }) => ({
   content: css`
     display: flex;
     height: 480px;
@@ -82,7 +82,7 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorBgContainer};
   `,
   modal: css`
-    .ant-modal-content {
+    .${prefixCls}-modal-container {
       overflow: hidden;
       padding: 0;
     }
