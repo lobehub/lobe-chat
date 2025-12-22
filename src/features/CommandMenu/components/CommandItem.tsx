@@ -29,7 +29,7 @@ const CommandItem = memo<CommandItemProps>((props) => {
   const { styles } = useStyles();
 
   if (props.variant === 'detailed') {
-    const { icon, title, description, trailingLabel, variant, ...itemProps } = props;
+    const { icon, title, description, trailingLabel, ...itemProps } = props;
     return (
       <Command.Item {...itemProps}>
         <div className={styles.itemContent}>
@@ -45,7 +45,7 @@ const CommandItem = memo<CommandItemProps>((props) => {
   }
 
   // Simple variant (default)
-  const { icon, children, variant, ...itemProps } = props;
+  const { icon, children, ...itemProps } = props;
 
   // Clone the icon element and add the icon className if it's a valid React element
   const iconWithClass =
