@@ -25,6 +25,14 @@ export class TopicService {
     return lambdaClient.topic.cloneTopic.mutate({ id, newTitle });
   };
 
+  importTopic = (params: {
+    agentId: string;
+    data: string;
+    groupId?: string | null;
+  }): Promise<{ messageCount: number; topicId: string }> => {
+    return lambdaClient.topic.importTopic.mutate(params);
+  };
+
   getTopics = async (params: QueryTopicParams): Promise<{ items: ChatTopic[]; total: number }> => {
     return lambdaClient.topic.getTopics.query({
       agentId: params.agentId,

@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "You are about to delete unstarred topics. This action cannot be undone, please proceed with caution.",
     "duplicate": "Create Copy",
     "export": "Export Topics",
+    "import": "Import Conversation",
     "openInNewWindow": "Open in a new window",
     "removeAll": "Delete All Topics",
     "removeUnstarred": "Delete Unstarred Topics"
@@ -34,6 +35,10 @@
     "desc": "Click the button on the left to save the current conversation as a historical topic and start a new conversation.",
     "title": "Topic List"
   },
+  "importError": "Import Failed",
+  "importInvalidFormat": "Invalid file format. Please ensure it is a valid JSON file.",
+  "importLoading": "Importing conversation...",
+  "importSuccess": "Successfully imported {{count}} messages",
   "loadMore": "Load More",
   "searchPlaceholder": "Search Topics...",
   "searchResultEmpty": "No search results found.",
