@@ -67,18 +67,17 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean; mobil
         }}
       >
         <Tag
-          bordered={false}
           style={{
             background: theme.colorText,
             color: theme.colorBgLayout,
             fontWeight: 500,
             margin: 0,
           }}
+          variant={'filled'}
         >
           {[days, t('stats.days')].join(' ')}
         </Tag>
         <Tag
-          bordered={false}
           color={'gold'}
           icon={<Icon color={fillColor} fill={fillColor} icon={FlameIcon} />}
           style={{
@@ -87,6 +86,7 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean; mobil
             fontWeight: 500,
             margin: 0,
           }}
+          variant={'filled'}
         >
           {[hotDays, t('stats.days')].join(' ')}
         </Tag>

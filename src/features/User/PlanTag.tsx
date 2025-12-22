@@ -25,8 +25,8 @@ const PlanTag = memo<PlanTagProps>(({ type = PlanType.Preview }) => {
   if (type === PlanType.Preview) {
     return (
       <Tag
-        bordered={false}
         style={{ background: theme.colorFill, borderRadius: 12, cursor: 'pointer' }}
+        variant={'filled'}
       >
         {t('userPanel.community')}
       </Tag>

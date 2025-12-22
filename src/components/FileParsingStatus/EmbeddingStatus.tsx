@@ -41,11 +41,11 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
               title={t('FileParsingStatus.chunks.embeddingStatus.processing')}
             >
               <Tag
-                bordered={false}
                 className={cx('chunk-tag', className)}
                 color={'processing'}
                 icon={<Icon icon={BoltIcon} spin />}
                 style={{ cursor: 'pointer' }}
+                variant={'filled'}
               >
                 {chunkCount}
               </Tag>
@@ -74,7 +74,7 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
               </Flexbox>
             }
           >
-            <Tag bordered={false} className={className} color={'error'}>
+            <Tag className={className} color={'error'} variant={'filled'}>
               {t('FileParsingStatus.chunks.embeddingStatus.error')}{' '}
               <Icon
                 icon={RotateCwIcon}
@@ -97,7 +97,6 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
               title={t('FileParsingStatus.chunks.embeddingStatus.success')}
             >
               <Tag
-                bordered={false}
                 className={cx('chunk-tag', className)}
                 color={'purple'}
                 icon={<Icon icon={BoltIcon} />}
@@ -105,6 +104,7 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
                   onClick?.(AsyncTaskStatus.Success);
                 }}
                 style={{ cursor: 'pointer' }}
+                variant={'filled'}
               >
                 {chunkCount}
               </Tag>

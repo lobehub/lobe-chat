@@ -75,7 +75,6 @@ const PlanIcon = memo<PlanIconProps>(
     if (isTag) {
       return (
         <Tag
-          bordered={false}
           className={className}
           onClick={onClick}
           style={{
@@ -87,6 +86,7 @@ const PlanIcon = memo<PlanIconProps>(
             margin: 0,
             ...style,
           }}
+          variant={'filled'}
         >
           {t(`plans.plan.${plan}.title`)}
         </Tag>

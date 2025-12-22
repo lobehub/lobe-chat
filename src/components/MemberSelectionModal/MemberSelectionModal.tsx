@@ -49,13 +49,7 @@ const AvailableAgentItem = memo<{
           }}
         />
         <Flexbox style={{ flexShrink: 0 }}>
-          <Avatar
-            animation={isHovering}
-            avatar={avatar}
-            background={avatarBackground}
-            shape="circle"
-            size={40}
-          />
+          <Avatar animation={isHovering} avatar={avatar} background={avatarBackground} size={40} />
         </Flexbox>
         <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
           <AntText className={styles.title}>{title}</AntText>

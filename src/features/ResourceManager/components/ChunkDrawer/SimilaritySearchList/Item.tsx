@@ -51,7 +51,7 @@ const SearchItem = memo<ChunkItemProps>(({ text, pageNumber, type, similarity })
       {text}
 
       <Flexbox align={'center'} distribution={'space-between'} horizontal>
-        <Tag bordered={false}>{similarity.toFixed(2)}</Tag>
+        <Tag variant={'filled'}>{similarity.toFixed(2)}</Tag>
         <Flexbox className={styles.pageNumber}>第 {pageNumber} 页</Flexbox>
       </Flexbox>
     </Flexbox>

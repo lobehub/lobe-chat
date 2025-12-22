@@ -97,7 +97,7 @@ const ExistingMemberItem = memo<{
           onChange={() => onToggle(agentId)}
           onClick={(e) => e.stopPropagation()}
         />
-        <Avatar avatar={avatar} background={avatarBackground} shape="circle" size={40} />
+        <Avatar avatar={avatar} background={avatarBackground} size={40} />
         <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
           <Text className={styles.title}>{title}</Text>
           {description && (
@@ -465,9 +465,7 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                   size="small"
                 />
               ),
-              avatar: (
-                <Avatar avatar={avatar} background={avatarBackground} shape="circle" size={40} />
-              ),
+              avatar: <Avatar avatar={avatar} background={avatarBackground} size={40} />,
               description: description ? (
                 <Tooltip title={description}>
                   <Text className={memberDescriptionClass} ellipsis={{ rows: 1 }}>
@@ -732,7 +730,6 @@ const ChatGroupWizard = memo<ChatGroupWizardProps>(
                           <Avatar
                             avatar={member.avatar}
                             background={member.backgroundColor}
-                            shape="circle"
                             size={40}
                           />
                         ),
