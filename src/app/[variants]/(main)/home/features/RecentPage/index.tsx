@@ -1,12 +1,13 @@
 'use client';
 
 import { ActionIcon, Dropdown } from '@lobehub/ui';
-import { FileTextIcon, MoreHorizontal } from 'lucide-react';
+import { FileTextIcon, Loader2Icon, MoreHorizontal } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+import { useInitRecentPage } from '@/hooks/useInitRecentPage';
 import { useHomeStore } from '@/store/home';
 import { homeRecentSelectors } from '@/store/home/selectors';
 import { FilesTabs } from '@/types/files';
@@ -23,6 +24,7 @@ const RecentPage = memo(() => {
   const setCategory = useResourceManagerStore((s) => s.setCategory);
   const recentPages = useHomeStore(homeRecentSelectors.recentPages);
   const isInit = useHomeStore(homeRecentSelectors.isRecentPagesInit);
+  const { isRevalidating } = useInitRecentPage();
 
   // After loaded, if no data, don't render
   if (isInit && (!recentPages || recentPages.length === 0)) {
@@ -32,22 +34,25 @@ const RecentPage = memo(() => {
   return (
     <GroupBlock
       action={
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: 'all-documents',
-                label: t('menu.allPages'),
-                onClick: () => {
-                  setCategory(FilesTabs.Pages);
-                  navigate('/resource');
+        <>
+          {isRevalidating && <ActionIcon icon={Loader2Icon} loading size={'small'} />}
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'all-documents',
+                  label: t('menu.allPages'),
+                  onClick: () => {
+                    setCategory(FilesTabs.Pages);
+                    navigate('/resource');
+                  },
                 },
-              },
-            ],
-          }}
-        >
-          <ActionIcon icon={MoreHorizontal} size="small" />
-        </Dropdown>
+              ],
+            }}
+          >
+            <ActionIcon icon={MoreHorizontal} size="small" />
+          </Dropdown>
+        </>
       }
       icon={FileTextIcon}
       title={t('home.recentPages')}

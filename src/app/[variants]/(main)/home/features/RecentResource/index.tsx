@@ -1,12 +1,13 @@
 'use client';
 
 import { ActionIcon, Dropdown } from '@lobehub/ui';
-import { Clock, MoreHorizontal } from 'lucide-react';
+import { Clock, Loader2Icon, MoreHorizontal } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
+import { useInitRecentResource } from '@/hooks/useInitRecentResource';
 import { useHomeStore } from '@/store/home';
 import { homeRecentSelectors } from '@/store/home/selectors';
 import { FilesTabs } from '@/types/files';
@@ -23,6 +24,7 @@ const RecentResource = memo(() => {
   const setCategory = useResourceManagerStore((s) => s.setCategory);
   const recentResources = useHomeStore(homeRecentSelectors.recentResources);
   const isInit = useHomeStore(homeRecentSelectors.isRecentResourcesInit);
+  const { isRevalidating } = useInitRecentResource();
 
   // After loaded, if no data, don't render
   if (isInit && (!recentResources || recentResources.length === 0)) {
@@ -32,22 +34,25 @@ const RecentResource = memo(() => {
   return (
     <GroupBlock
       action={
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: 'all-files',
-                label: t('menu.allFiles'),
-                onClick: () => {
-                  setCategory(FilesTabs.All);
-                  navigate('/resource');
+        <>
+          {isRevalidating && <ActionIcon icon={Loader2Icon} loading size={'small'} />}
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'all-files',
+                  label: t('menu.allFiles'),
+                  onClick: () => {
+                    setCategory(FilesTabs.All);
+                    navigate('/resource');
+                  },
                 },
-              },
-            ],
-          }}
-        >
-          <ActionIcon icon={MoreHorizontal} size="small" />
-        </Dropdown>
+              ],
+            }}
+          >
+            <ActionIcon icon={MoreHorizontal} size="small" />
+          </Dropdown>
+        </>
       }
       icon={Clock}
       title={t('home.recentFiles')}
