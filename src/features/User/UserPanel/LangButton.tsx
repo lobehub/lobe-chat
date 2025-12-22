@@ -28,9 +28,9 @@ const LangButton = memo<{ placement?: PopoverProps['placement']; size?: number }
         {
           key: 'auto',
           label: (
-            <Flexbox>
-              <Text>{t('settingCommon.lang.autoMode')}</Text>
-              <Text fontSize={12} type={'secondary'}>
+            <Flexbox gap={4}>
+              <Text style={{ lineHeight: 1.2 }}>{t('settingCommon.lang.autoMode')}</Text>
+              <Text fontSize={12} style={{ lineHeight: 1.2 }} type={'secondary'}>
                 {t(`lang.auto` as any, { ns: 'common' })}
               </Text>
             </Flexbox>
@@ -40,9 +40,9 @@ const LangButton = memo<{ placement?: PopoverProps['placement']; size?: number }
         ...localeOptions.map((item) => ({
           key: item.value,
           label: (
-            <Flexbox key={item.value}>
-              <Text>{item.label}</Text>
-              <Text fontSize={12} type={'secondary'}>
+            <Flexbox gap={4} key={item.value}>
+              <Text style={{ lineHeight: 1.2 }}>{item.label}</Text>
+              <Text fontSize={12} style={{ lineHeight: 1.2 }} type={'secondary'}>
                 {t(`lang.${item.value}` as any, { ns: 'common' })}
               </Text>
             </Flexbox>

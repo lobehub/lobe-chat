@@ -157,7 +157,7 @@
   "inactive": "Inaktiv",
   "inbox": {
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
-    "title": "Lass uns plaudern"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Fügen Sie eine AI-Nachricht hinzu",
@@ -359,6 +359,11 @@
     "downloadFile": "Datei herunterladen",
     "downloadPdf": "PDF herunterladen",
     "downloadSuccess": "Download erfolgreich",
+    "exportMode": {
+      "full": "Standard",
+      "label": "Exportmodus",
+      "simple": "OpenAI-kompatibel"
+    },
     "exportPdf": "Als PDF exportieren",
     "exportTitle": "Standardtitel",
     "generatePdf": "PDF erstellen",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Autorisieren",
     "authorizing": "Autorisierung läuft...",
-    "hint": "Ohne Autorisierung oder Konfiguration können diese Tools nicht ordnungsgemäß verwendet werden, was zu eingeschränkter Funktionalität oder Fehlern des Assistenten führen kann.",
+    "hint": "Ohne Autorisierung oder Konfiguration funktionieren diese Tools möglicherweise nicht richtig, was zu eingeschränkten Funktionen oder Fehlern des Assistenten führen kann.",
     "signIn": "Anmelden",
-    "title": "Dieser Assistent verwendet die folgenden Tools, die eine Autorisierung erfordern"
+    "title": "Bitte autorisieren Sie die Tools für den Assistenten"
   },
   "topic": {
     "checkOpenNewTopic": "Soll ein neues Thema eröffnet werden?",

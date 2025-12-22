@@ -50,7 +50,7 @@ export interface UserAvatarProps extends AvatarProps {
 
 const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
   ({ size = 40, background, clickable, className, style, ...rest }, ref) => {
-    const { styles, cx, theme } = useStyles();
+    const { styles, cx } = useStyles();
     const [avatar, nickName, username] = useUserStore((s) => [
       userProfileSelectors.userAvatar(s),
       userProfileSelectors.nickName(s),
@@ -77,7 +77,7 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
       <Avatar
         alt={isSignedIn ? nickName || username || 'User' : BRANDING_NAME}
         avatar={avatarUrl || nickName || username}
-        background={avatarUrl ? background : theme.colorText}
+        background={background}
         className={cx(clickable && styles.clickable, className)}
         ref={ref}
         shape={'square'}

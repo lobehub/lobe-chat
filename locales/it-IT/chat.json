@@ -157,7 +157,7 @@
   "inactive": "Inattivo",
   "inbox": {
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
-    "title": "Chiacchierata casuale"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Aggiungi un messaggio AI",
@@ -359,6 +359,11 @@
     "downloadFile": "Scarica file",
     "downloadPdf": "Scarica PDF",
     "downloadSuccess": "Download riuscito",
+    "exportMode": {
+      "full": "Predefinito",
+      "label": "Modalità di esportazione",
+      "simple": "Compatibile con OpenAI"
+    },
     "exportPdf": "Esporta come PDF",
     "exportTitle": "Titolo predefinito",
     "generatePdf": "Genera PDF",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Autorizza",
     "authorizing": "Autorizzazione in corso...",
-    "hint": "Se non autorizzati o configurati, questi strumenti potrebbero non funzionare correttamente, causando malfunzionamenti o errori dell'assistente.",
+    "hint": "Se non autorizzati o configurati, questi strumenti potrebbero non funzionare correttamente, causando errori o limitazioni nelle funzionalità dell'assistente.",
     "signIn": "Accedi",
-    "title": "Questo assistente utilizza i seguenti strumenti che richiedono autorizzazione"
+    "title": "Autorizza gli strumenti per l'assistente"
   },
   "topic": {
     "checkOpenNewTopic": "Abilitare un nuovo argomento?",

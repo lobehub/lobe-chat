@@ -1,4 +1,7 @@
 {
+  "arguments": {
+    "title": "Danh sách tham số"
+  },
   "builtins": {
     "lobe-agent-builder": {
       "apiName": {

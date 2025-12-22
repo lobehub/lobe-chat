@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "즐겨찾기하지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",
     "duplicate": "복사본 만들기",
     "export": "주제 내보내기",
+    "import": "대화 가져오기",
     "openInNewWindow": "새 창에서 열기",
     "removeAll": "모든 주제 삭제",
     "removeUnstarred": "즐겨찾기하지 않은 주제 삭제"
@@ -34,6 +35,10 @@
     "desc": "왼쪽 버튼을 클릭하여 현재 대화를 역사 주제로 저장하고 새로운 대화를 시작하세요.",
     "title": "주제 목록"
   },
+  "importError": "가져오기 실패",
+  "importInvalidFormat": "파일 형식이 올바르지 않습니다. 유효한 JSON 파일인지 확인하세요.",
+  "importLoading": "대화를 가져오는 중...",
+  "importSuccess": "{{count}}개의 메시지를 성공적으로 가져왔습니다",
   "loadMore": "더 보기",
   "searchPlaceholder": "주제 검색...",
   "searchResultEmpty": "검색 결과가 없습니다.",

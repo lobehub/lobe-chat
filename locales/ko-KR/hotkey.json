@@ -34,7 +34,7 @@
     "title": "메시지 편집"
   },
   "navigateToChat": {
-    "desc": "대화 탭으로 전환하고 자유 대화 시작",
+    "desc": "채팅 탭으로 전환하고 Lobe AI에 진입합니다",
     "title": "기본 대화로 전환"
   },
   "openChatSettings": {

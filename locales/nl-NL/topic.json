@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "U staat op het punt om niet-gemarkeerde onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
     "duplicate": "Maak een kopie",
     "export": "Exporteer onderwerp",
+    "import": "Gesprekken importeren",
     "openInNewWindow": "In nieuw venster openen",
     "removeAll": "Verwijder alle onderwerpen",
     "removeUnstarred": "Verwijder niet-gemarkeerde onderwerpen"
@@ -34,6 +35,10 @@
     "desc": "Klik op de knop aan de linkerkant om de huidige conversatie op te slaan als een historisch onderwerp en een nieuwe conversatie te starten.",
     "title": "Onderwerpenlijst"
   },
+  "importError": "Importeren mislukt",
+  "importInvalidFormat": "Ongeldig bestandsformaat. Zorg ervoor dat het een geldig JSON-bestand is.",
+  "importLoading": "Bezig met importeren van gesprekken...",
+  "importSuccess": "{{count}} berichten succesvol geïmporteerd",
   "loadMore": "Meer laden",
   "searchPlaceholder": "Zoek onderwerpen...",
   "searchResultEmpty": "Geen zoekresultaten gevonden",

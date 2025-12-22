@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "Você está prestes a remover tópicos não favoritos. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
     "duplicate": "Criar cópia",
     "export": "Exportar tópicos",
+    "import": "Importar conversa",
     "openInNewWindow": "Abrir em uma nova janela",
     "removeAll": "Remover todos os tópicos",
     "removeUnstarred": "Remover tópicos não favoritos"
@@ -34,6 +35,10 @@
     "desc": "Clique no botão à esquerda para salvar a conversa atual como um tópico histórico e iniciar uma nova conversa.",
     "title": "Lista de tópicos"
   },
+  "importError": "Falha na importação",
+  "importInvalidFormat": "Formato de arquivo inválido. Certifique-se de que é um arquivo JSON válido.",
+  "importLoading": "Importando conversa...",
+  "importSuccess": "{{count}} mensagens importadas com sucesso",
   "loadMore": "Carregar mais",
   "searchPlaceholder": "Pesquisar tópicos...",
   "searchResultEmpty": "Nenhum resultado encontrado",

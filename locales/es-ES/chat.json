@@ -157,7 +157,7 @@
   "inactive": "inactivo",
   "inbox": {
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
-    "title": "Charla casual"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Agregar un mensaje de IA",
@@ -359,6 +359,11 @@
     "downloadFile": "Descargar archivo",
     "downloadPdf": "Descargar PDF",
     "downloadSuccess": "Descarga exitosa",
+    "exportMode": {
+      "full": "Predeterminado",
+      "label": "Modo de exportación",
+      "simple": "Compatible con OpenAI"
+    },
     "exportPdf": "Exportar como PDF",
     "exportTitle": "Título predeterminado",
     "generatePdf": "Generar PDF",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Autorizar",
     "authorizing": "Autorizando...",
-    "hint": "Si no se autoriza o configura, estas herramientas no funcionarán correctamente, lo que podría causar errores o la falta de funciones del asistente.",
+    "hint": "Si no se autoriza o configura, estas herramientas no funcionarán correctamente, lo que puede causar errores o la falta de funciones del asistente.",
     "signIn": "Iniciar sesión",
-    "title": "Este asistente utiliza las siguientes herramientas que requieren autorización"
+    "title": "Por favor, autoriza las herramientas para el asistente"
   },
   "topic": {
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",

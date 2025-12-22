@@ -157,7 +157,7 @@
   "inactive": "비활성",
   "inbox": {
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
-    "title": "무작위 대화"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "AI 메시지 추가",
@@ -359,6 +359,11 @@
     "downloadFile": "파일 다운로드",
     "downloadPdf": "PDF 다운로드",
     "downloadSuccess": "다운로드 성공",
+    "exportMode": {
+      "full": "기본값",
+      "label": "내보내기 모드",
+      "simple": "OpenAI 호환"
+    },
     "exportPdf": "PDF로 내보내기",
     "exportTitle": "기본 제목",
     "generatePdf": "PDF 생성",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "권한 부여",
     "authorizing": "권한 부여 중...",
-    "hint": "권한을 부여하거나 설정하지 않으면 이 도구들을 정상적으로 사용할 수 없으며, 어시스턴트 기능이 누락되거나 오류가 발생할 수 있습니다.",
+    "hint": "권한을 부여하거나 설정하지 않으면 이 도구들을 정상적으로 사용할 수 없어, 어시스턴트 기능이 누락되거나 오류가 발생할 수 있습니다.",
     "signIn": "로그인",
-    "title": "이 어시스턴트는 다음과 같은 권한이 필요한 도구들을 사용합니다"
+    "title": "어시스턴트를 위해 도구 권한을 완료해 주세요"
   },
   "topic": {
     "checkOpenNewTopic": "새 주제를 열까요?",

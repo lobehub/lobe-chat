@@ -22,7 +22,7 @@ const LoadingPlaceholder = memo<LoadingPlaceholderProps>(
       );
     }
 
-    return <Arguments arguments={requestArgs} shine={loading} />;
+    return <Arguments arguments={requestArgs} loading={loading} />;
   },
 );
 

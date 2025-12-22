@@ -41,9 +41,9 @@
     "placeholder": "يرجى إدخال معادلة TeX"
   },
   "modifier": {
-    "accept": "قبول",
+    "accept": "احتفاظ",
     "acceptAll": "قبول الكل",
-    "reject": "رفض",
+    "reject": "إلغاء",
     "rejectedAll": "رفض الكل"
   },
   "slash": {

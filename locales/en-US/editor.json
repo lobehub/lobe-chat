@@ -41,9 +41,9 @@
     "placeholder": "Please enter a TeX formula"
   },
   "modifier": {
-    "accept": "Accept",
+    "accept": "Keep",
     "acceptAll": "Accept All",
-    "reject": "Reject",
+    "reject": "Revert",
     "rejectedAll": "Reject All"
   },
   "slash": {

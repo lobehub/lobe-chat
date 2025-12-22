@@ -41,9 +41,9 @@
     "placeholder": "請輸入 TeX 公式"
   },
   "modifier": {
-    "accept": "接受",
+    "accept": "保留",
     "acceptAll": "全部接受",
-    "reject": "拒絕",
+    "reject": "撤銷",
     "rejectedAll": "全部拒絕"
   },
   "slash": {

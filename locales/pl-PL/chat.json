@@ -157,7 +157,7 @@
   "inactive": "Nieaktywny",
   "inbox": {
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
-    "title": "Pogadajmy sobie"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Dodaj wiadomość AI",
@@ -359,6 +359,11 @@
     "downloadFile": "Pobierz plik",
     "downloadPdf": "Pobierz PDF",
     "downloadSuccess": "Pobieranie zakończone sukcesem",
+    "exportMode": {
+      "full": "Domyślny",
+      "label": "Tryb eksportu",
+      "simple": "Zgodny z OpenAI"
+    },
     "exportPdf": "Eksportuj jako PDF",
     "exportTitle": "Domyślny tytuł",
     "generatePdf": "Generuj PDF",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Autoryzuj",
     "authorizing": "Autoryzowanie...",
-    "hint": "Jeśli nie udzielisz autoryzacji lub nie skonfigurujesz narzędzi, mogą one nie działać poprawnie, co może skutkować brakiem funkcji asystenta lub błędami.",
+    "hint": "Jeśli nie udzielisz autoryzacji lub nie skonfigurujesz tych narzędzi, mogą one nie działać poprawnie, co może prowadzić do błędów lub ograniczenia funkcji asystenta.",
     "signIn": "Zaloguj się",
-    "title": "Ten asystent korzysta z poniższych narzędzi wymagających autoryzacji"
+    "title": "Proszę autoryzować narzędzia dla asystenta"
   },
   "topic": {
     "checkOpenNewTopic": "Czy otworzyć nowy temat?",

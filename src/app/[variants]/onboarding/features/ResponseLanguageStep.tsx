@@ -67,9 +67,9 @@ const ResponseLanguageStep = memo<ResponseLanguageStepProps>(({ onBack, onNext }
           showSearch
           size="large"
           style={{
-            fontSize: 28,
+            fontSize: 20,
+            fontWeight: 'bold',
             width: '100%',
-            zoom: 1.1,
           }}
           value={value}
         />

@@ -1,73 +1,41 @@
-import { Flexbox, Highlighter } from '@lobehub/ui';
+import { Flexbox, Highlighter, Text } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { parse } from 'partial-json';
+import { rgba } from 'polished';
 import { ReactNode, memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import Descriptions, { DescriptionItem } from '@/components/Descriptions';
 import { useYamlArguments } from '@/hooks/useYamlArguments';
+import { shinyTextStylish } from '@/styles/loading';
 
-import ObjectEntity from './ObjectEntity';
-
-const useStyles = createStyles(({ css, token, cx }) => ({
-  button: css`
-    color: ${token.colorTextSecondary};
-
-    &:hover {
-      color: ${token.colorText};
-    }
-  `,
-  codeContainer: css`
-    border-radius: ${token.borderRadiusLG}px;
-  `,
-  container: css`
-    position: relative;
-
-    overflow: auto;
-
-    max-height: 200px;
-    padding-block: 4px;
-    padding-inline: 12px 64px;
-    border-radius: ${token.borderRadiusLG}px;
-
-    font-family: ${token.fontFamilyCode};
-    font-size: 13px;
-    line-height: 1.5;
-
-    background: ${token.colorFillQuaternary};
-
-    pre {
-      margin: 0 !important;
-      background: none !important;
-    }
-
-    &:hover {
-      .actions {
-        opacity: 1;
-      }
-    }
-  `,
-  editButton: cx(
-    'actions',
-    css`
-      position: absolute;
-      z-index: 10;
-      inset-block-start: 4px;
-      inset-inline-end: 4px;
-
-      opacity: 0;
-
-      transition: opacity 0.2s ${token.motionEaseInOut};
-    `,
-  ),
+const useStyles = createStyles(({ token }) => ({
+  shineText: shinyTextStylish(token),
 }));
+
+const formatValue = (value: any): string => {
+  if (Array.isArray(value)) {
+    return value.map((v) => (typeof v === 'object' ? JSON.stringify(v) : v)).join(', ');
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    return Object.entries(value)
+      .map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`)
+      .join(', ');
+  }
+  return String(value);
+};
 
 export interface ArgumentsProps {
   actions?: ReactNode;
   arguments?: string;
-  shine?: boolean;
+  loading?: boolean;
 }
 
-const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }) => {
-  const { styles } = useStyles();
+const Arguments = memo<ArgumentsProps>(({ arguments: args = '', loading, actions }) => {
+  const { t } = useTranslation('plugin');
+  const { styles, cx, theme } = useStyles();
 
   const displayArgs = useMemo(() => {
     try {
@@ -81,54 +49,60 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
 
   const yaml = useYamlArguments(args);
 
-  const showActions = !!actions;
+  let contentNode;
 
   if (typeof displayArgs === 'string') {
-    return (
-      !!yaml && (
-        <div className={styles.container}>
-          <Highlighter language={'yaml'} showLanguage={false}>
-            {yaml}
-          </Highlighter>
-        </div>
-      )
+    contentNode = !!yaml && (
+      <Highlighter language={'yaml'} showLanguage={false}>
+        {yaml}
+      </Highlighter>
+    );
+  } else if (Object.keys(displayArgs).length === 0) {
+    contentNode = null;
+  } else {
+    const items: DescriptionItem[] = Object.entries(displayArgs).map(([key, value]) => ({
+      copyable: true,
+      key,
+      label: key,
+      value: formatValue(value),
+    }));
+
+    contentNode = (
+      <Flexbox paddingBlock={4} paddingInline={16}>
+        <Descriptions
+          bordered={false}
+          classNames={{
+            label: cx(loading && styles.shineText),
+          }}
+          items={items}
+          labelWidth={140}
+          maxItemWidth={'100%'}
+          styles={{
+            label: loading ? { color: rgba(theme.colorText, 0.33) } : {},
+          }}
+        />
+      </Flexbox>
     );
   }
 
-  // if (args.length > 100) {
-  //   return (
-  //     <Highlighter language={'json'} showLanguage={false} variant={'filled'}>
-  //       {JSON.stringify(displayArgs, null, 2)}
-  //     </Highlighter>
-  //   );
-  // }
-
-  const hasMinWidth = Object.keys(displayArgs).length > 1;
-
-  if (Object.keys(displayArgs).length === 0) return null;
-
   return (
-    <div className={styles.container}>
-      {showActions && (
-        <Flexbox className={styles.editButton} gap={4} horizontal>
+    <>
+      <Flexbox
+        align={'center'}
+        gap={4}
+        horizontal
+        justify={'space-between'}
+        paddingBlock={8}
+        paddingInline={16}
+      >
+        <Text>{t('arguments.title')}</Text>
+        <Flexbox gap={4} horizontal>
           {actions}
         </Flexbox>
-      )}
-      <Flexbox>
-        {Object.entries(displayArgs).map(([key, value]) => {
-          return (
-            <ObjectEntity
-              editable={false}
-              hasMinWidth={hasMinWidth}
-              key={key}
-              objectKey={key}
-              shine={shine}
-              value={value}
-            />
-          );
-        })}
       </Flexbox>
-    </div>
+      <Divider style={{ marginBlock: 0 }} />
+      {contentNode}
+    </>
   );
 });
 

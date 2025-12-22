@@ -64,7 +64,7 @@ const Tool = memo<GroupToolProps>(
       if (renderDisplayControl !== 'collapsed') {
         handleExpand?.(true);
       }
-    }, [renderDisplayControl, handleExpand]);
+    }, [renderDisplayControl]);
 
     return (
       <AccordionItem

@@ -157,7 +157,7 @@
   "inactive": "Không hoạt động",
   "inbox": {
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
-    "title": "Chuyện phiếm"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Thêm một tin nhắn AI",
@@ -359,6 +359,11 @@
     "downloadFile": "Tải tệp",
     "downloadPdf": "Tải xuống PDF",
     "downloadSuccess": "Tải xuống thành công",
+    "exportMode": {
+      "full": "Mặc định",
+      "label": "Chế độ xuất",
+      "simple": "Tương thích với OpenAI"
+    },
     "exportPdf": "Xuất ra PDF",
     "exportTitle": "Tiêu đề mặc định",
     "generatePdf": "Tạo PDF",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Ủy quyền",
     "authorizing": "Đang ủy quyền...",
-    "hint": "Nếu không ủy quyền hoặc cấu hình, các công cụ này sẽ không hoạt động bình thường, có thể dẫn đến thiếu chức năng trợ lý hoặc lỗi.",
+    "hint": "Nếu không cấp quyền hoặc cấu hình, các công cụ này sẽ không hoạt động bình thường, có thể dẫn đến thiếu chức năng trợ lý hoặc lỗi.",
     "signIn": "Đăng nhập",
-    "title": "Trợ lý này sử dụng các công cụ sau cần được ủy quyền"
+    "title": "Vui lòng hoàn tất cấp quyền công cụ cho trợ lý"
   },
   "topic": {
     "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",

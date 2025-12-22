@@ -47,13 +47,10 @@ const useStyles = createStyles(({ css, token }) => ({
       background: transparent !important;
     }
 
-    .ant-collapse-content {
+    .ant-collapse-body {
+      padding: 0 !important;
       border: none !important;
       background: transparent !important;
-    }
-
-    .ant-collapse-content-box {
-      padding: 0 !important;
     }
 
     .ant-collapse-expand-icon {

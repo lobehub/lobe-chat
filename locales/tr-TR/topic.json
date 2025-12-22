@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "Favori olmayan konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
     "duplicate": "Kopya Oluştur",
     "export": "Konuları Dışa Aktar",
+    "import": "Sohbeti içe aktar",
     "openInNewWindow": "Yeni pencerede aç",
     "removeAll": "Tüm Konuları Sil",
     "removeUnstarred": "Favori Olmayan Konuları Sil"
@@ -34,6 +35,10 @@
     "desc": "Mevcut sohbeti tarihsel konu olarak kaydetmek ve yeni bir sohbet başlatmak için sol taraftaki gönder butonuna tıklayın.",
     "title": "Konu Listesi"
   },
+  "importError": "İçe aktarma başarısız oldu",
+  "importInvalidFormat": "Geçersiz dosya formatı, lütfen geçerli bir JSON dosyası olduğundan emin olun",
+  "importLoading": "Sohbet içe aktarılıyor...",
+  "importSuccess": "{{count}} mesaj başarıyla içe aktarıldı",
   "loadMore": "Daha Fazla",
   "searchPlaceholder": "Konuları Ara...",
   "searchResultEmpty": "Hiçbir arama sonucu bulunamadı",

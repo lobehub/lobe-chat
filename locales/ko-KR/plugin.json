@@ -1,4 +1,7 @@
 {
+  "arguments": {
+    "title": "매개변수 목록"
+  },
   "builtins": {
     "lobe-agent-builder": {
       "apiName": {

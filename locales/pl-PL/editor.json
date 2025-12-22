@@ -41,9 +41,9 @@
     "placeholder": "Wprowadź formułę TeX"
   },
   "modifier": {
-    "accept": "Akceptuj",
+    "accept": "Zachowaj",
     "acceptAll": "Akceptuj wszystkie",
-    "reject": "Odrzuć",
+    "reject": "Cofnij",
     "rejectedAll": "Odrzuć wszystkie"
   },
   "slash": {

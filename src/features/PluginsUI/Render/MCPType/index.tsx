@@ -35,11 +35,7 @@ const MCPType = memo<MCPTypeProps>(({ pluginState, arguments: args }) => {
         !hasImage ? { maxHeight: 400, overflow: 'scroll', padding: 8, width: '100%' } : undefined
       }
     >
-      {args && (
-        <div>
-          <Arguments arguments={args} />
-        </div>
-      )}
+      {args && <Arguments arguments={args} />}
       <Flexbox>
         <Flexbox>
           {content.map((item, index) => {
