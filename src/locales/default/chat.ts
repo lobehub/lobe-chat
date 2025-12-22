@@ -500,7 +500,7 @@ export default {
   toolAuth: {
     authorize: '授权',
     authorizing: '授权中...',
-    hint: '如不授权或配置，这些工具将无法正常使用，可能导致助手功能缺失或报错。',
+    hint: '请为助手完成工具的授权',
     signIn: '登录',
     title: '该助手使用了以下需要授权的工具',
   },
