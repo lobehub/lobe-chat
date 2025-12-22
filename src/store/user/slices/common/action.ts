@@ -131,6 +131,7 @@ export const createCommonSlice: StateCreator<
             set(
               {
                 defaultSettings,
+                isFreePlan: data.isFreePlan,
                 isOnboard: data.isOnboard,
                 isShowPWAGuide: data.canEnablePWAGuide,
                 isUserCanEnableTrace: data.canEnableTrace,
@@ -138,6 +139,7 @@ export const createCommonSlice: StateCreator<
                 isUserStateInit: true,
                 onboarding: data.onboarding,
                 preference,
+                referralStatus: data.referralStatus,
                 settings: data.settings || {},
                 subscriptionPlan: data.subscriptionPlan,
                 user,

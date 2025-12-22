@@ -148,7 +148,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
           type: err.name,
         },
         errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
+        provider: this.id,
         region: this.region,
       });
     }
@@ -273,7 +273,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
           type: err.name,
         },
         errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
+        provider: this.id,
         region: this.region,
       });
     }
@@ -320,7 +320,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
           type: err.name,
         },
         errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
+        provider: this.id,
         region: this.region,
       });
     }
