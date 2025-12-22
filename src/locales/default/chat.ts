@@ -384,6 +384,11 @@ export default {
     downloadFile: '下载文件',
     downloadPdf: '下载 PDF',
     downloadSuccess: '下载成功',
+    exportMode: {
+      full: '默认',
+      label: '导出模式',
+      simple: 'OpenAI 兼容',
+    },
     exportPdf: '导出为 PDF',
     exportTitle: '默认标题',
     generatePdf: '生成 PDF',
