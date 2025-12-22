@@ -41,9 +41,9 @@
     "placeholder": "TeX 公式を入力してください"
   },
   "modifier": {
-    "accept": "承諾する",
+    "accept": "保持",
     "acceptAll": "すべて承諾する",
-    "reject": "拒否する",
+    "reject": "取り消し",
     "rejectedAll": "すべて拒否する"
   },
   "slash": {

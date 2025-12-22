@@ -41,9 +41,9 @@
     "placeholder": "Veuillez saisir une formule TeX"
   },
   "modifier": {
-    "accept": "Accepter",
+    "accept": "Conserver",
     "acceptAll": "Tout accepter",
-    "reject": "Refuser",
+    "reject": "Annuler",
     "rejectedAll": "Tout refuser"
   },
   "slash": {

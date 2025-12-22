@@ -41,9 +41,9 @@
     "placeholder": "TeX 수식을 입력하세요"
   },
   "modifier": {
-    "accept": "수락",
+    "accept": "보류",
     "acceptAll": "모두 수락",
-    "reject": "거부",
+    "reject": "취소",
     "rejectedAll": "모두 거부"
   },
   "slash": {

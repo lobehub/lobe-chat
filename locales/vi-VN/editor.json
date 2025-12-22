@@ -41,9 +41,9 @@
     "placeholder": "Vui lòng nhập công thức TeX"
   },
   "modifier": {
-    "accept": "Chấp nhận",
+    "accept": "Giữ lại",
     "acceptAll": "Chấp nhận tất cả",
-    "reject": "Từ chối",
+    "reject": "Hủy bỏ",
     "rejectedAll": "Từ chối tất cả"
   },
   "slash": {

@@ -157,7 +157,7 @@
   "inactive": "inactief",
   "inbox": {
     "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
-    "title": "Praat maar raak"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Voeg een AI-bericht toe",
@@ -359,6 +359,11 @@
     "downloadFile": "Bestand downloaden",
     "downloadPdf": "PDF downloaden",
     "downloadSuccess": "Download geslaagd",
+    "exportMode": {
+      "full": "Standaard",
+      "label": "Exportmodus",
+      "simple": "Compatibel met OpenAI"
+    },
     "exportPdf": "Exporteren als PDF",
     "exportTitle": "Standaardtitel",
     "generatePdf": "PDF genereren",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Autoriseren",
     "authorizing": "Bezig met autoriseren...",
-    "hint": "Zonder autorisatie of configuratie kunnen deze tools niet correct functioneren, wat kan leiden tot ontbrekende assistentfuncties of fouten.",
+    "hint": "Zonder toestemming of configuratie kunnen deze tools niet correct functioneren, wat kan leiden tot ontbrekende functies of fouten in de assistent.",
     "signIn": "Inloggen",
-    "title": "Deze assistent maakt gebruik van de volgende tools die autorisatie vereisen"
+    "title": "Autoriseer de tools voor de assistent"
   },
   "topic": {
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",

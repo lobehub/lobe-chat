@@ -157,7 +157,7 @@
   "inactive": "Inactive",
   "inbox": {
     "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
-    "title": "Just Chat"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Add an AI message",
@@ -475,9 +475,9 @@
   "toolAuth": {
     "authorize": "Authorize",
     "authorizing": "Authorizing...",
-    "hint": "Please complete the tool authorization for the assistant",
+    "hint": "Without authorization or proper configuration, these tools may not function correctly, which could result in missing assistant features or errors.",
     "signIn": "Sign In",
-    "title": "This assistant uses tools that require authorization"
+    "title": "Please authorize the tools for the assistant"
   },
   "topic": {
     "checkOpenNewTopic": "Enable new topic?",

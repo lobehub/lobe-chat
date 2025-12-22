@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "Stai per eliminare i temi non contrassegnati. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
     "duplicate": "Crea una copia",
     "export": "Esporta il tema",
+    "import": "Importa conversazione",
     "openInNewWindow": "Apri in una nuova finestra",
     "removeAll": "Elimina tutti i temi",
     "removeUnstarred": "Elimina i temi non contrassegnati"
@@ -34,6 +35,10 @@
     "desc": "Clicca sul pulsante a sinistra per salvare la conversazione attuale come tema storico e avviare una nuova conversazione.",
     "title": "Elenco dei temi"
   },
+  "importError": "Importazione non riuscita",
+  "importInvalidFormat": "Formato file non valido. Assicurati che sia un file JSON valido",
+  "importLoading": "Importazione della conversazione in corso...",
+  "importSuccess": "Importate con successo {{count}} messaggi",
   "loadMore": "Carica altro",
   "searchPlaceholder": "Cerca temi...",
   "searchResultEmpty": "Nessun risultato trovato",

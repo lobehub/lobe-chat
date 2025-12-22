@@ -41,9 +41,9 @@
     "placeholder": "Bitte TeX-Formel eingeben"
   },
   "modifier": {
-    "accept": "Akzeptieren",
+    "accept": "Beibehalten",
     "acceptAll": "Alle akzeptieren",
-    "reject": "Ablehnen",
+    "reject": "Widerrufen",
     "rejectedAll": "Alle ablehnen"
   },
   "slash": {

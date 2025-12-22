@@ -1,4 +1,7 @@
 {
+  "arguments": {
+    "title": "參數清單"
+  },
   "builtins": {
     "lobe-agent-builder": {
       "apiName": {

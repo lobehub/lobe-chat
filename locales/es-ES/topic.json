@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "Se eliminarán los temas no favoritos. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
     "duplicate": "Crear copia",
     "export": "Exportar tema",
+    "import": "Importar conversación",
     "openInNewWindow": "Abrir en una ventana nueva",
     "removeAll": "Eliminar todos los temas",
     "removeUnstarred": "Eliminar temas no favoritos"
@@ -34,6 +35,10 @@
     "desc": "Haga clic en el botón a la izquierda para guardar la conversación actual como un tema histórico y comenzar una nueva conversación.",
     "title": "Lista de temas"
   },
+  "importError": "Error al importar",
+  "importInvalidFormat": "Formato de archivo no válido. Asegúrate de que sea un archivo JSON válido.",
+  "importLoading": "Importando conversación...",
+  "importSuccess": "Se importaron correctamente {{count}} mensajes",
   "loadMore": "Cargar más",
   "searchPlaceholder": "Buscar temas...",
   "searchResultEmpty": "No hay resultados de búsqueda disponibles",

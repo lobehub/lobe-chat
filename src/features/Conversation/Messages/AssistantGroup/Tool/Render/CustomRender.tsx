@@ -1,5 +1,6 @@
 import { ChatPluginPayload } from '@lobechat/types';
-import { Flexbox, Highlighter } from '@lobehub/ui';
+import { Block, Flexbox, Highlighter } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { memo, useEffect, useMemo } from 'react';
 
 import PluginRender from '@/features/PluginsUI/Render';
@@ -64,6 +65,19 @@ const CustomRender = memo<CustomRenderProps>(
 
     // Show plugin custom UI if applicable
     if (showPluginRender) {
+      console.log(
+        <PluginRender
+          arguments={plugin?.arguments}
+          content={content}
+          identifier={plugin?.identifier}
+          loading={false}
+          messageId={messageId}
+          payload={plugin}
+          pluginState={pluginState}
+          toolCallId={toolCallId}
+          type={plugin?.type}
+        />,
+      );
       return (
         <Flexbox gap={12} id={toolCallId} width={'100%'}>
           <PluginRender
@@ -83,18 +97,26 @@ const CustomRender = memo<CustomRenderProps>(
 
     // Default render: show arguments and result
     return (
-      <Flexbox gap={12} id={toolCallId} width={'100%'}>
+      <Block id={toolCallId} variant={'outlined'} width={'100%'}>
         <Arguments arguments={requestArgs} />
         {content && (
-          <Highlighter
-            language={language}
-            style={{ maxHeight: 200, overflow: 'scroll', width: '100%' }}
-            variant={'outlined'}
-          >
-            {data}
-          </Highlighter>
+          <>
+            <Divider dashed style={{ marginBlock: 0 }} />
+            <Highlighter
+              language={language}
+              style={{
+                background: 'transparent',
+                borderRadius: 0,
+                maxHeight: 300,
+                overflow: 'auto',
+              }}
+              variant={'filled'}
+            >
+              {data}
+            </Highlighter>
+          </>
         )}
-      </Flexbox>
+      </Block>
     );
   },
 );

@@ -41,9 +41,9 @@
     "placeholder": "Voer TeX-formule in"
   },
   "modifier": {
-    "accept": "Accepteren",
+    "accept": "Behouden",
     "acceptAll": "Alles accepteren",
-    "reject": "Weigeren",
+    "reject": "Ongedaan maken",
     "rejectedAll": "Alles weigeren"
   },
   "slash": {

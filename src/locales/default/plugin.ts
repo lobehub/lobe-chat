@@ -1,4 +1,7 @@
 export default {
+  arguments: {
+    title: '参数列表',
+  },
   builtins: {
     'lobe-agent-builder': {
       apiName: {

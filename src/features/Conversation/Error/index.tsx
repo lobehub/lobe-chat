@@ -1,7 +1,7 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { ChatErrorType, ChatMessageError, ErrorType } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-import { AlertProps, Block , Skeleton } from '@lobehub/ui';
+import { AlertProps, Block, Highlighter, Skeleton } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,8 +45,6 @@ const getErrorAlertConfig = (
   // OpenAIBizError / ZhipuBizError / GoogleBizError / ...
   if (typeof errorType === 'string' && (errorType.includes('Biz') || errorType.includes('Invalid')))
     return {
-      extraDefaultExpand: true,
-      extraIsolate: true,
       type: 'secondary',
     };
 
@@ -72,8 +70,6 @@ const getErrorAlertConfig = (
     case AgentRuntimeErrorType.ComfyUIServiceUnavailable:
     case AgentRuntimeErrorType.InvalidComfyUIArgs: {
       return {
-        extraDefaultExpand: true,
-        extraIsolate: true,
         type: 'secondary',
       };
     }
@@ -134,7 +130,24 @@ const ErrorMessageExtra = memo<ErrorExtraProps>(({ error: alertError, data }) =>
     return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
   }
 
-  return <ErrorContent error={alertError} id={data.id} />;
+  return (
+    <ErrorContent
+      error={{
+        ...alertError,
+        extra: data.error?.body ? (
+          <Highlighter
+            actionIconSize={'small'}
+            language={'json'}
+            padding={8}
+            variant={'borderless'}
+          >
+            {JSON.stringify(data.error?.body, null, 2)}
+          </Highlighter>
+        ) : undefined,
+      }}
+      id={data.id}
+    />
+  );
 });
 
 export default ErrorMessageExtra;

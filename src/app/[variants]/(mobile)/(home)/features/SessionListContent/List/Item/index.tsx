@@ -53,7 +53,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
       ];
     });
 
-  // Only hide the model tag for the inbox session itself (随便聊聊)
+  // Only hide the model tag for the inbox session itself (Lobe AI)
   const showModel = sessionType === 'agent' && model && id !== INBOX_SESSION_ID;
 
   const handleDoubleClick = () => {

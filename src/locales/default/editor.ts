@@ -41,9 +41,9 @@ export default {
     placeholder: '请输入 TeX 公式',
   },
   modifier: {
-    accept: '接受',
+    accept: '保留',
     acceptAll: '全部接受',
-    reject: '拒绝',
+    reject: '撤销',
     rejectedAll: '全部拒绝',
   },
   slash: {

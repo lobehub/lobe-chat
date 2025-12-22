@@ -41,9 +41,9 @@
     "placeholder": "Моля, въведете TeX формула"
   },
   "modifier": {
-    "accept": "Приемам",
+    "accept": "Запази",
     "acceptAll": "Приемам всички",
-    "reject": "Отказвам",
+    "reject": "Отмени",
     "rejectedAll": "Отказвам всички"
   },
   "slash": {

@@ -157,7 +157,7 @@
   "inactive": "Inactif",
   "inbox": {
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
-    "title": "Discutons un peu"
+    "title": "Lobe IA"
   },
   "input": {
     "addAi": "Ajouter un message AI",
@@ -359,6 +359,11 @@
     "downloadFile": "Télécharger le fichier",
     "downloadPdf": "Télécharger le PDF",
     "downloadSuccess": "Téléchargement réussi",
+    "exportMode": {
+      "full": "Par défaut",
+      "label": "Mode d’exportation",
+      "simple": "Compatible avec OpenAI"
+    },
     "exportPdf": "Exporter en PDF",
     "exportTitle": "Titre par défaut",
     "generatePdf": "Générer le PDF",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Autoriser",
     "authorizing": "Autorisation en cours...",
-    "hint": "Sans autorisation ou configuration, ces outils ne fonctionneront pas correctement, ce qui pourrait entraîner des erreurs ou un fonctionnement incomplet de l'assistant.",
+    "hint": "Sans autorisation ou configuration, ces outils pourraient ne pas fonctionner correctement, ce qui pourrait entraîner des erreurs ou un fonctionnement incomplet de l’assistant.",
     "signIn": "Se connecter",
-    "title": "Cet assistant utilise les outils suivants nécessitant une autorisation"
+    "title": "Veuillez autoriser les outils pour l’assistant"
   },
   "topic": {
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",

@@ -157,7 +157,7 @@
   "inactive": "不活躍",
   "inbox": {
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
-    "title": "隨便聊聊"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "新增一條 AI 訊息",
@@ -359,6 +359,11 @@
     "downloadFile": "下載檔案",
     "downloadPdf": "下載 PDF",
     "downloadSuccess": "下載成功",
+    "exportMode": {
+      "full": "預設",
+      "label": "匯出模式",
+      "simple": "OpenAI 相容"
+    },
     "exportPdf": "匯出為 PDF",
     "exportTitle": "預設標題",
     "generatePdf": "生成 PDF",
@@ -472,7 +477,7 @@
     "authorizing": "授權中...",
     "hint": "若未授權或設定，這些工具將無法正常使用，可能導致助手功能缺失或發生錯誤。",
     "signIn": "登入",
-    "title": "此助手使用了以下需要授權的工具"
+    "title": "請為助手完成工具的授權"
   },
   "topic": {
     "checkOpenNewTopic": "是否開啟新主題?",

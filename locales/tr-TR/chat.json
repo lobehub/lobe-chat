@@ -157,7 +157,7 @@
   "inactive": "Etkin değil",
   "inbox": {
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
-    "title": "Sohbet Et"
+    "title": "Lobe AI"
   },
   "input": {
     "addAi": "Bir AI mesajı ekleyin",
@@ -359,6 +359,11 @@
     "downloadFile": "Dosyayı İndir",
     "downloadPdf": "PDF İndir",
     "downloadSuccess": "İndirme Başarılı",
+    "exportMode": {
+      "full": "Varsayılan",
+      "label": "Dışa Aktarma Modu",
+      "simple": "OpenAI Uyumlu"
+    },
     "exportPdf": "PDF Olarak Dışa Aktar",
     "exportTitle": "Varsayılan Başlık",
     "generatePdf": "PDF Oluştur",
@@ -470,9 +475,9 @@
   "toolAuth": {
     "authorize": "Yetkilendir",
     "authorizing": "Yetkilendiriliyor...",
-    "hint": "Yetkilendirme veya yapılandırma yapılmazsa, bu araçlar düzgün çalışmayabilir ve asistanın bazı işlevleri eksik olabilir ya da hata verebilir.",
+    "hint": "Yetki verilmez veya yapılandırılmazsa, bu araçlar düzgün çalışmayabilir ve asistanın bazı işlevleri eksik olabilir ya da hata verebilir.",
     "signIn": "Giriş Yap",
-    "title": "Bu asistan, aşağıdaki yetkilendirme gerektiren araçları kullanmaktadır"
+    "title": "Lütfen asistan için araç yetkilendirmesini tamamlayın"
   },
   "topic": {
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",

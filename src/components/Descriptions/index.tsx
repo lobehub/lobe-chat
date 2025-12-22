@@ -28,22 +28,50 @@ const useStyles = createStyles(({ responsive, css, token }) => {
 });
 
 export interface DescriptionItem {
+  className?: string;
+  classNames?: {
+    label?: string;
+    value?: string;
+  };
   copyable?: boolean;
   icon?: IconProps['icon'];
   key: string;
   label: ReactNode;
   style?: CSSProperties;
+  styles?: {
+    label?: CSSProperties;
+    value?: CSSProperties;
+  };
   value: ReactNode;
 }
 
 interface DescriptionsProps extends Omit<GridProps, 'children'> {
   bordered?: boolean;
+  classNames?: {
+    item?: string;
+    label?: string;
+    value?: string;
+  };
   items: DescriptionItem[];
   labelWidth?: number | string;
+  styles?: {
+    item?: CSSProperties;
+    label?: CSSProperties;
+    value?: CSSProperties;
+  };
 }
 
 const Descriptions = memo<DescriptionsProps>(
-  ({ labelWidth = 150, title, bordered, className, items, ...rest }) => {
+  ({
+    labelWidth = 150,
+    title,
+    bordered,
+    className,
+    items,
+    classNames,
+    styles: customStyles,
+    ...rest
+  }) => {
     const { cx, styles, theme } = useStyles();
 
     return (
@@ -58,13 +86,15 @@ const Descriptions = memo<DescriptionsProps>(
           {items.map((item) => (
             <Flexbox
               align={'center'}
-              className={cx(bordered && styles.cell)}
+              className={cx(bordered && styles.cell, item.className, classNames?.item)}
               flex={1}
               horizontal
               key={item.key}
               style={{
                 overflow: 'hidden',
                 position: 'relative',
+                ...customStyles?.item,
+                ...item.style,
               }}
             >
               <Flexbox
@@ -80,9 +110,12 @@ const Descriptions = memo<DescriptionsProps>(
               >
                 {item.icon && <Icon color={theme.colorTextSecondary} icon={item.icon} />}
                 <Text
+                  className={cx(classNames?.label, item.classNames?.label)}
                   ellipsis
                   style={{
                     color: theme.colorTextSecondary,
+                    ...customStyles?.label,
+                    ...item.styles?.label,
                   }}
                 >
                   {item.label}
@@ -99,11 +132,16 @@ const Descriptions = memo<DescriptionsProps>(
               >
                 {item.copyable ? (
                   <CopyableLabel
-                    style={item.style}
+                    className={cx(classNames?.value, item.classNames?.value)}
+                    style={{ ...customStyles?.value, ...item.styles?.value }}
                     value={item.value ? String(item.value) : '--'}
                   />
                 ) : (
-                  <Text ellipsis style={{ ...item.style }}>
+                  <Text
+                    className={cx(classNames?.value, item.classNames?.value)}
+                    ellipsis
+                    style={{ ...customStyles?.value, ...item.styles?.value }}
+                  >
                     {item.value}
                   </Text>
                 )}

@@ -1,4 +1,7 @@
 {
+  "arguments": {
+    "title": "Parameter List"
+  },
   "builtins": {
     "lobe-agent-builder": {
       "apiName": {

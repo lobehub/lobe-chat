@@ -1,4 +1,7 @@
 {
+  "arguments": {
+    "title": "Списък с параметри"
+  },
   "builtins": {
     "lobe-agent-builder": {
       "apiName": {

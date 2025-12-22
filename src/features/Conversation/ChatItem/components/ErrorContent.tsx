@@ -1,4 +1,4 @@
-import { Alert , Skeleton } from '@lobehub/ui';
+import { Alert, Skeleton } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
 
 import { useConversationStore } from '@/features/Conversation';
@@ -24,20 +24,24 @@ const ErrorContent = memo<ErrorContentProps>(({ customErrorRender, error, id }) 
 
   return (
     <Alert
+      closable
+      extraIsolate={false}
+      showIcon
+      type={'secondary'}
+      {...error}
       afterClose={() => {
+        error?.afterClose?.();
         if (id) {
           deleteMessage(id);
         }
       }}
-      closable
-      showIcon
       style={{
         overflow: 'hidden',
         position: 'relative',
         width: '100%',
+        ...error.style,
       }}
-      type={'secondary'}
-      {...error}
+      title={error.message}
     />
   );
 });

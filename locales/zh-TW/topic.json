@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
     "duplicate": "創建副本",
     "export": "匯出話題",
+    "import": "匯入對話",
     "openInNewWindow": "在新視窗中開啟",
     "removeAll": "刪除全部話題",
     "removeUnstarred": "刪除未收藏話題"
@@ -34,6 +35,10 @@
     "desc": "點擊發送左側按鈕可將當前會話保存為歷史話題，並開啟新一輪會話",
     "title": "話題列表"
   },
+  "importError": "匯入失敗",
+  "importInvalidFormat": "檔案格式無效，請確認為有效的 JSON 檔案",
+  "importLoading": "正在匯入對話...",
+  "importSuccess": "成功匯入 {{count}} 則訊息",
   "loadMore": "載入更多",
   "searchPlaceholder": "搜尋話題...",
   "searchResultEmpty": "目前沒有搜尋結果",

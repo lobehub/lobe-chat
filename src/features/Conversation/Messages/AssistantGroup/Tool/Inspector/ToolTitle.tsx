@@ -17,7 +17,6 @@ export const useStyles = createStyles(({ css, token }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 
-    font-family: ${token.fontFamilyCode};
     color: ${token.colorTextDescription};
   `,
   shinyText: shinyTextStylish(token),

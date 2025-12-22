@@ -7,6 +7,7 @@
     "confirmRemoveUnstarred": "Vous allez supprimer les sujets non favoris. Cette action est irréversible, veuillez agir avec prudence.",
     "duplicate": "Créer une copie",
     "export": "Exporter le sujet",
+    "import": "Importer la conversation",
     "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
     "removeAll": "Supprimer tous les sujets",
     "removeUnstarred": "Supprimer les sujets non favoris"
@@ -34,6 +35,10 @@
     "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle en tant que sujet historique et commencer une nouvelle conversation.",
     "title": "Liste des sujets"
   },
+  "importError": "Échec de l'importation",
+  "importInvalidFormat": "Format de fichier invalide. Veuillez vous assurer qu'il s'agit d'un fichier JSON valide.",
+  "importLoading": "Importation de la conversation en cours...",
+  "importSuccess": "{{count}} message(s) importé(s) avec succès",
   "loadMore": "Voir plus",
   "searchPlaceholder": "Rechercher des sujets...",
   "searchResultEmpty": "Aucun résultat de recherche disponible",

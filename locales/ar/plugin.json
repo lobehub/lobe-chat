@@ -1,4 +1,7 @@
 {
+  "arguments": {
+    "title": "قائمة المعلمات"
+  },
   "builtins": {
     "lobe-agent-builder": {
       "apiName": {
