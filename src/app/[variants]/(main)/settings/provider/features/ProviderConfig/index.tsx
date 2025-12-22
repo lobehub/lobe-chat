@@ -122,11 +122,13 @@ const ProviderConfig = memo<ProviderConfigProps>(
     logo,
     className,
     checkErrorRender,
+    canDeactivate = true,
     name,
     showAceGcm = true,
     extra,
     source = AiProviderSourceEnum.Builtin,
     apiKeyUrl,
+    title,
   }) => {
     const {
       proxyUrl,
@@ -363,7 +365,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
           {extra}
 
           {isCustom && <UpdateProviderInfo />}
-          <EnableSwitch id={id} />
+          {canDeactivate && <EnableSwitch id={id} />}
         </Flexbox>
       ),
       title: (
@@ -388,7 +390,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             </Flexbox>
           ) : (
             <>
-              <ProviderCombine provider={id} size={24} />
+              {title ?? <ProviderCombine provider={id} size={24} />}
               <Tooltip title={t('providerModels.config.helpDoc')}>
                 <Link
                   href={urlJoin(BASE_PROVIDER_DOC_URL, id)}

@@ -18,6 +18,19 @@ import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 // Create context logger namespace
 const log = debug('lobe-trpc:lambda:context');
 
+const extractClientIp = (request: NextRequest): string | undefined => {
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    const ip = forwardedFor.split(',')[0]?.trim();
+    if (ip) return ip;
+  }
+
+  const realIp = request.headers.get('x-real-ip')?.trim();
+  if (realIp) return realIp;
+
+  return undefined;
+};
+
 export interface OIDCAuth {
   // Other OIDC information that might be needed (optional, as payload contains all info)
   [key: string]: any;
@@ -30,6 +43,7 @@ export interface OIDCAuth {
 export interface AuthContext {
   authorizationHeader?: string | null;
   clerkAuth?: IClerkAuth;
+  clientIp?: string | null;
   jwtPayload?: ClientSecretPayload | null;
   marketAccessToken?: string;
   nextAuth?: User;
@@ -47,6 +61,7 @@ export interface AuthContext {
 export const createContextInner = async (params?: {
   authorizationHeader?: string | null;
   clerkAuth?: IClerkAuth;
+  clientIp?: string | null;
   marketAccessToken?: string;
   nextAuth?: User;
   oidcAuth?: OIDCAuth | null;
@@ -59,6 +74,7 @@ export const createContextInner = async (params?: {
   return {
     authorizationHeader: params?.authorizationHeader,
     clerkAuth: params?.clerkAuth,
+    clientIp: params?.clientIp,
     marketAccessToken: params?.marketAccessToken,
     nextAuth: params?.nextAuth,
     oidcAuth: params?.oidcAuth,
@@ -92,6 +108,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
 
   const authorization = request.headers.get(LOBE_CHAT_AUTH_HEADER);
   const userAgent = request.headers.get('user-agent') || undefined;
+  const clientIp = extractClientIp(request);
 
   // get marketAccessToken from cookies
   const cookieHeader = request.headers.get('cookie');
@@ -101,6 +118,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   log('marketAccessToken from cookie:', marketAccessToken ? '[HIDDEN]' : 'undefined');
   const commonContext = {
     authorizationHeader: authorization,
+    clientIp,
     marketAccessToken,
     userAgent,
   };

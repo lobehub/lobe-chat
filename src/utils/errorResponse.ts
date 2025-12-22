@@ -6,6 +6,11 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
   if (errorType.toString().includes('Invalid')) return 401;
 
   switch (errorType) {
+    case ChatErrorType.SubscriptionPlanLimit:
+    case ChatErrorType.FreePlanLimit: {
+      return 403;
+    }
+
     // TODO: Need to refactor to Invalid OpenAI API Key
     case AgentRuntimeErrorType.InvalidProviderAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {

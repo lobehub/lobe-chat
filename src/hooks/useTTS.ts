@@ -38,7 +38,7 @@ export const useTTS = (content: string, config?: TTSConfig) => {
       options = {
         api: {
           headers: createHeaderWithOpenAI(),
-          serviceUrl: API_ENDPOINTS.tts,
+          serviceUrl: API_ENDPOINTS.tts('openai'),
         },
         options: {
           model: ttsSettings.openAI.ttsModel,

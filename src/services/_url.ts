@@ -28,7 +28,7 @@ export const API_ENDPOINTS = {
   stt: withElectronProtocolIfElectron('/webapi/stt/openai'),
 
   // TTS
-  tts: withElectronProtocolIfElectron('/webapi/tts/openai'),
+  tts: (provider: string) => withElectronProtocolIfElectron(`/webapi/tts/${provider}`),
   edge: withElectronProtocolIfElectron('/webapi/tts/edge'),
   microsoft: withElectronProtocolIfElectron('/webapi/tts/microsoft'),
 };

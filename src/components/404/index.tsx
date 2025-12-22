@@ -28,11 +28,10 @@ const NotFound = memo(() => {
       <h2 style={{ fontWeight: 'bold', marginTop: '1em', textAlign: 'center' }}>
         {t('notFound.title')}
       </h2>
-      <p style={{ lineHeight: '1.8', marginBottom: '2em' }}>
-        {t('notFound.desc')}
-        <br />
-        <div style={{ textAlign: 'center' }}>{t('notFound.check')}</div>
-      </p>
+      <div style={{ lineHeight: '1.8', marginBottom: '2em', textAlign: 'center' }}>
+        <div>{t('notFound.desc')}</div>
+        <div style={{ marginTop: '0.5em' }}>{t('notFound.check')}</div>
+      </div>
       <Link href="/">
         <Button type={'primary'}>{t('notFound.backHome')}</Button>
       </Link>

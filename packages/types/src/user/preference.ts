@@ -72,6 +72,8 @@ export interface UserPreference {
   useCmdEnterToSend?: boolean;
 }
 
+export type ReferralStatusString = 'registered' | 'suspected' | 'rewarded' | 'revoked';
+
 export interface UserInitializationState {
   avatar?: string;
   canEnablePWAGuide?: boolean;
@@ -81,11 +83,16 @@ export interface UserInitializationState {
   fullName?: string;
   hasConversation?: boolean;
   interests?: string[];
+  isFreePlan?: boolean;
   /** @deprecated Use onboarding field instead */
   isOnboard?: boolean;
   lastName?: string;
   onboarding?: UserOnboarding;
   preference: UserPreference;
+  /**
+   * Referral lifecycle status for the current user (invitee side).
+   */
+  referralStatus?: ReferralStatusString;
   settings: PartialDeep<UserSettings>;
   subscriptionPlan?: Plans;
   userId?: string;
