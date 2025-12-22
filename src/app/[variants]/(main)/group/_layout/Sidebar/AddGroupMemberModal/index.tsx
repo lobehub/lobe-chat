@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox, Modal } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Flexbox, Modal , Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,4 @@
-import { Center, Flexbox, Icon } from '@lobehub/ui';
-import { Tag } from 'antd';
+import { Center, Flexbox, Icon , Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Atom, Box, CircleSlash, Sparkle, Zap } from 'lucide-react';
 import { CSSProperties, MouseEvent, memo } from 'react';

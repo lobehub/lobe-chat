@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { m as motion } from 'motion/react';

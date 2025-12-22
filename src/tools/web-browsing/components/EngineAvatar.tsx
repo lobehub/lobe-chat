@@ -1,4 +1,4 @@
-import { Avatar } from 'antd';
+import { Avatar } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
@@ -19,20 +19,14 @@ export const EngineAvatar = memo<EngineAvatarProps>(({ engine }) => (
 export const EngineAvatarGroup = memo<EngineAvatarGroupProps>(({ engines }) => {
   const theme = useTheme();
   return (
-    <Avatar.Group>
-      {engines.map((engine, index) => (
-        <Avatar
-          key={engine}
-          src={ENGINE_ICON_MAP[engine]}
-          style={{
-            background: theme.colorBgLayout,
-            height: 20,
-            padding: 3,
-            width: 20,
-            zIndex: 100 - index,
-          }}
-        />
-      ))}
-    </Avatar.Group>
+    <Avatar.Group
+      items={engines.map((engine) => ({
+        avatar: ENGINE_ICON_MAP[engine],
+        background: theme.colorBgLayout,
+        key: engine,
+        title: engine,
+      }))}
+      size={20}
+    />
   );
 });

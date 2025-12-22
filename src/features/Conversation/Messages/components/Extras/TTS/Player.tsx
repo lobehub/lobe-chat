@@ -31,9 +31,9 @@ const Player = memo<PlayerProps>(({ onRetry, error, onDelete, audio, isLoading, 
               </Highlighter>
             )
           }
-          message={error.message}
           onClose={onDelete}
           style={{ alignItems: 'center', width: '100%' }}
+          title={error.message}
           type="error"
         />
       ) : (

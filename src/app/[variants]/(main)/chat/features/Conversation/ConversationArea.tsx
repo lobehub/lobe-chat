@@ -4,7 +4,9 @@ import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo, useEffect, useMemo } from 'react';
 
+import ChatMiniMap from '@/features/ChatMiniMap';
 import { ChatList, ConversationProvider } from '@/features/Conversation';
+import ZenModeToast from '@/features/ZenModeToast';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -15,11 +17,9 @@ import { useUserMemoryStore } from '@/store/userMemory';
 
 import WelcomeChatItem from './AgentWelcome';
 import ChatHydration from './ChatHydration';
-import ChatMinimap from './ChatMinimap';
 import MainChatInput from './MainChatInput';
 import MessageFromUrl from './MainChatInput/MessageFromUrl';
 import ThreadHydration from './ThreadHydration';
-import ZenModeToast from './ZenModeToast';
 import { useActionsBarConfig } from './useActionsBarConfig';
 import { useAgentContext } from './useAgentContext';
 
@@ -103,7 +103,7 @@ const Conversation = memo(() => {
       <MainChatInput />
       <ChatHydration />
       <ThreadHydration />
-      <ChatMinimap />
+      <ChatMiniMap />
       <Suspense>
         <MessageFromUrl />
       </Suspense>

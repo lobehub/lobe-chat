@@ -1,6 +1,5 @@
 import { UniformSearchResult } from '@lobechat/types';
-import { Flexbox, Text } from '@lobehub/ui';
-import { Avatar as AntAvatar } from 'antd';
+import { Avatar, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 
@@ -98,20 +97,15 @@ const VideoItem = memo<SearchResultProps>(
             <Flexbox flex={1} gap={8}>
               <Flexbox align={'center'} distribution={'space-between'} gap={12} horizontal>
                 <Flexbox align={'center'} gap={8} horizontal>
-                  <AntAvatar.Group>
-                    {engines.map((engine) => (
-                      <AntAvatar
-                        key={engine}
-                        src={ENGINE_ICON_MAP[engine]}
-                        style={{
-                          background: theme.colorBgLayout,
-                          height: 20,
-                          padding: 3,
-                          width: 20,
-                        }}
-                      />
-                    ))}
-                  </AntAvatar.Group>
+                  <Avatar.Group
+                    items={engines.map((engine) => ({
+                      avatar: ENGINE_ICON_MAP[engine],
+                      background: theme.colorBgLayout,
+                      key: engine,
+                      title: engine,
+                    }))}
+                    size={20}
+                  />
                   <Flexbox className={styles.title}>{title}</Flexbox>
                 </Flexbox>
                 <TitleExtra

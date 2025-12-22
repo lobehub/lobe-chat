@@ -1,5 +1,4 @@
-import { Alert, Flexbox } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Alert, Flexbox , Button } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +34,7 @@ const InstallError = memo<InstallErrorProps>(({ errorInfo, identifier }) => {
             </Button>
           </Flexbox>
         }
-        message={t('mcpInstall.installError', {
+        title={t('mcpInstall.installError', {
           detail: t(`mcpInstall.errorTypes.${errorInfo.type}`),
         })}
         type="error"

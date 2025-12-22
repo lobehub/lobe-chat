@@ -2,8 +2,7 @@
 
 import { ProDescriptions } from '@ant-design/pro-components';
 import { AgentItemDetail } from '@lobehub/market-sdk';
-import { Flexbox } from '@lobehub/ui';
-import { Tag } from 'antd';
+import { Flexbox , Tag } from '@lobehub/ui';
 import Image from 'next/image';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,5 @@
 import { SearchQuery, UniformSearchResponse } from '@lobechat/types';
-import { Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Flexbox, Icon, Skeleton, Text , Button } from '@lobehub/ui';
 import { uniq } from 'es-toolkit/compat';
 import { Edit2Icon } from 'lucide-react';
 import { memo } from 'react';

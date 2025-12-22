@@ -130,7 +130,7 @@ const PageContent = memo<PageContentProps>(({ result }) => {
               <Highlighter language={'json'}>{JSON.stringify(result.data, null, 2)}</Highlighter>
             </div>
           }
-          message={
+          title={
             <div style={{ textAlign: 'start' }}>
               {result.data.errorMessage || result.data.content}
             </div>
@@ -212,7 +212,7 @@ const PageContent = memo<PageContentProps>(({ result }) => {
           </Flexbox>
           {content.length > CRAWL_CONTENT_LIMITED_COUNT && (
             <Alert
-              message={t('search.crawPages.detail.tooLong', {
+              title={t('search.crawPages.detail.tooLong', {
                 characters: CRAWL_CONTENT_LIMITED_COUNT,
               })}
               variant={'borderless'}

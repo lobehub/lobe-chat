@@ -140,8 +140,8 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
       if (!isMarketplace) {
         return (
           <Alert
-            message={t('protocolInstall.custom.security.description')}
             showIcon
+            title={t('protocolInstall.custom.security.description')}
             type="warning"
             variant={'borderless'}
           />
@@ -151,15 +151,15 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
       // marketplace 类型
       return marketplace ? (
         <Alert
-          message={t('protocolInstall.marketplace.trustedBy', { name: marketplace.name })}
           showIcon
+          title={t('protocolInstall.marketplace.trustedBy', { name: marketplace.name })}
           type="success"
           variant={'borderless'}
         />
       ) : (
         <Alert
-          message={t('protocolInstall.marketplace.unverified.warning')}
           showIcon
+          title={t('protocolInstall.marketplace.unverified.warning')}
           type="warning"
           variant={'borderless'}
         />
@@ -209,8 +209,8 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
               <Alert
                 closable
                 description={testState.error}
-                message={t('protocolInstall.messages.connectionTestFailed')}
                 showIcon
+                title={t('protocolInstall.messages.connectionTestFailed')}
                 type="error"
                 variant={'filled'}
               />

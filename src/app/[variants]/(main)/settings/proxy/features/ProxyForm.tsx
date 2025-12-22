@@ -1,8 +1,8 @@
 'use client';
 
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
-import { Alert, Block, Flexbox, Skeleton, Text } from '@lobehub/ui';
-import { App, Button, Divider, Form, Input, Radio, Space, Switch } from 'antd';
+import { Alert, Block, Flexbox, Skeleton, Text , Button } from '@lobehub/ui';
+import { App, Divider, Form, Input, Radio, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -316,7 +316,7 @@ const ProxyForm = () => {
                 {!testResult ? null : testResult.success ? (
                   <Alert
                     closable
-                    message={
+                    title={
                       <Flexbox align="center" gap={8} horizontal>
                         {t('proxy.testSuccessWithTime', { time: testResult.responseTime })}
                       </Flexbox>
@@ -326,7 +326,7 @@ const ProxyForm = () => {
                 ) : (
                   <Alert
                     closable
-                    message={
+                    title={
                       <Flexbox align="center" gap={8} horizontal>
                         {t('proxy.testFailed')}: {testResult.message}
                       </Flexbox>

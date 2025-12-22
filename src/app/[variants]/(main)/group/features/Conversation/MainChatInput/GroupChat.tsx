@@ -107,8 +107,8 @@ const Desktop = memo((props: { targetMemberId?: string }) => {
           <Flexbox paddingBlock={'0 6px'} paddingInline={12}>
             <Alert
               closable
-              message={t('input.errorMsg', { errorMsg: mainInputSendErrorMsg })}
               onClose={clearSendMessageError}
+              title={t('input.errorMsg', { errorMsg: mainInputSendErrorMsg })}
               type={'warning'}
             />
           </Flexbox>

@@ -27,8 +27,8 @@ const Error = memo<ErrorProps>(({ error, onClick }) => {
                 {JSON.stringify(error, null, 2)}
               </Highlighter>
             }
-            message={error?.message}
             style={{ flex: 1 }}
+            title={error?.message}
             type={'error'}
           />
           <Button onClick={onClick}>{t('close')}</Button>

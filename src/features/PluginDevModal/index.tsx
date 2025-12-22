@@ -172,7 +172,8 @@ const DevModal = memo<DevModalProps>(
               {configMode === 'url' && (
                 <>
                   <Alert
-                    message={
+                    showIcon
+                    title={
                       <Trans i18nKey={'dev.modalDesc'} ns={'plugin'}>
                         添加自定义插件后，可用于插件开发验证，也可直接在会话中使用。插件开发文档请参考：
                         <a
@@ -186,7 +187,6 @@ const DevModal = memo<DevModalProps>(
                         <Icon icon={MoveUpRight} />
                       </Trans>
                     }
-                    showIcon
                     type={'info'}
                   />
                   <UrlManifestForm form={form} isEditMode={isEditMode} />

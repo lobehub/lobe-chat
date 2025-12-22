@@ -30,8 +30,8 @@ const Warning = memo(() => {
     temperature >= 1.5 && (
       <Alert
         classNames={{ alert: cx(alertCls) }}
-        message={t('settingModel.temperature.warning')}
         style={{ fontSize: 12 }}
+        title={t('settingModel.temperature.warning')}
         type={'warning'}
         variant={'borderless'}
       />

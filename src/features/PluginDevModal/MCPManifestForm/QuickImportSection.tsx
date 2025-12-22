@@ -1,5 +1,5 @@
-import { Alert, Flexbox, TextArea } from '@lobehub/ui';
-import { Button, FormInstance } from 'antd';
+import { Alert, Flexbox, TextArea , Button } from '@lobehub/ui';
+import { FormInstance } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -112,7 +112,7 @@ const QuickImportSection = ({
   return (
     <Flexbox gap={8}>
       {importError && (
-        <Alert message={importError} showIcon style={{ marginBottom: 8 }} type="error" />
+        <Alert showIcon style={{ marginBottom: 8 }} title={importError} type="error" />
       )}
       <TextArea
         autoSize={{ maxRows: 15, minRows: 10 }}

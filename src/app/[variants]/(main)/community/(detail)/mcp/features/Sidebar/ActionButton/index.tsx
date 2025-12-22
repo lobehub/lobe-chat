@@ -1,7 +1,6 @@
 'use client';
 
-import { Flexbox, Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Flexbox, Icon , Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash2Icon } from 'lucide-react';
 import { memo, useState } from 'react';

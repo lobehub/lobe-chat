@@ -1,7 +1,6 @@
 'use client';
 
-import { Dropdown, DropdownMenuItemType, Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Dropdown, DropdownMenuItemType, Icon , Button } from '@lobehub/ui';
 import { ChevronDown, Store } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

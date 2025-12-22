@@ -1,6 +1,5 @@
 import { isDesktop } from '@lobechat/const';
-import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { Dropdown, type MenuProps, Typography } from 'antd';
+import { ActionIcon, Dropdown, Flexbox, type MenuProps, Text } from '@lobehub/ui';
 import { ArrowRight, Plus, Unlink } from 'lucide-react';
 import { CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -103,9 +102,9 @@ export const SSOProvidersList = memo(() => {
             {AuthIcons(item.provider, 16)}
             <span style={providerNameStyle}>{item.provider}</span>
             {item.email && (
-              <Typography.Text style={{ fontSize: 11 }} type="secondary">
+              <Text fontSize={11} type="secondary">
                 · {item.email}
-              </Typography.Text>
+              </Text>
             )}
           </Flexbox>
           {!(isDesktop && isLoginWithBetterAuth) && (

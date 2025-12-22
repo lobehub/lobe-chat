@@ -24,7 +24,7 @@ const Search = memo<BuiltinRenderProps<SearchQuery, UniformSearchResponse>>(
               </Highlighter>
             </Flexbox>
           }
-          message={pluginError?.message}
+          title={pluginError?.message}
           type={'error'}
         />
       );

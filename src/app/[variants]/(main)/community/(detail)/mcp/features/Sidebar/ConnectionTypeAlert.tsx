@@ -20,13 +20,13 @@ const ConnectionTypeAlert = memo(() => {
   return (
     <Alert
       description={t(`mcp.details.connectionType.${connectionType}.desc`)}
-      message={
+      showIcon={false}
+      title={
         <Flexbox align={'center'} gap={6} horizontal>
           <Icon icon={icons[connectionType]} size={20} />
           {t(`mcp.details.connectionType.${connectionType}.title`)}
         </Flexbox>
       }
-      showIcon={false}
     />
   );
 });

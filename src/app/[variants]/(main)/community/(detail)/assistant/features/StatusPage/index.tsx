@@ -1,8 +1,8 @@
 'use client';
 
 import { ExclamationCircleOutlined, FolderOpenOutlined } from '@ant-design/icons';
-import { FluentEmoji, Text } from '@lobehub/ui';
-import { Button, Result } from 'antd';
+import { FluentEmoji, Text , Button } from '@lobehub/ui';
+import { Result } from 'antd';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
