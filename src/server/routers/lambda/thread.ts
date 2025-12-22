@@ -73,7 +73,7 @@ export const threadRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: insertThreadSchema.partial() as any,
+        value: insertThreadSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

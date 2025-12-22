@@ -71,7 +71,7 @@ export const knowledgeBaseRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: insertKnowledgeBasesSchema.partial() as any,
+        value: insertKnowledgeBasesSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

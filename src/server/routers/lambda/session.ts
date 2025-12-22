@@ -85,13 +85,13 @@ export const sessionRouter = router({
             tts: true,
           })
           .passthrough()
-          .partial() as any,
-        session: insertSessionSchema.omit({ createdAt: true, updatedAt: true }).partial() as any,
+          .partial(),
+        session: insertSessionSchema.omit({ createdAt: true, updatedAt: true }).partial(),
         type: z.enum(['agent', 'group']),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.sessionModel.create(input as any);
+      const data = await ctx.sessionModel.create(input);
 
       return data.id;
     }),
@@ -163,7 +163,7 @@ export const sessionRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: insertSessionSchema.partial() as any,
+        value: insertSessionSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -173,7 +173,7 @@ export const sessionRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: AgentChatConfigSchema.partial() as any,
+        value: AgentChatConfigSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
@@ -185,7 +185,7 @@ export const sessionRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: z.object({}).passthrough().partial() as any,
+        value: z.object({}).passthrough().partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {

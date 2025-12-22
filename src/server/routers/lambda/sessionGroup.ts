@@ -51,7 +51,7 @@ export const sessionGroupRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: insertSessionGroupSchema.partial() as any,
+        value: insertSessionGroupSchema.partial(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
