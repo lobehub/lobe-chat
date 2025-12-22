@@ -5,7 +5,7 @@ import { XIcon } from 'lucide-react';
 export const useStyles = createStyles(({ css, token, prefixCls, isDarkMode, responsive }) => {
   return {
     content: css`
-      .${prefixCls}-modal-content {
+      .${prefixCls}-modal-container {
         overflow: hidden;
 
         width: min(90vw, 450px);
