@@ -8,6 +8,8 @@ import {
 } from '@lobechat/builtin-tool-group-management/client';
 import { GTDInterventions, GTDManifest } from '@lobechat/builtin-tool-gtd/client';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
+import { NotebookManifest } from '@lobechat/builtin-tool-notebook';
+import { NotebookInterventions } from '@lobechat/builtin-tool-notebook/client';
 import { BuiltinIntervention } from '@lobechat/types';
 
 import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
@@ -25,6 +27,7 @@ export const BuiltinToolInterventions: Record<string, Record<string, any>> = {
   [GroupManagementManifest.identifier]: GroupManagementInterventions,
   [GTDManifest.identifier]: GTDInterventions,
   [LocalSystemManifest.identifier]: LocalSystemInterventions,
+  [NotebookManifest.identifier]: NotebookInterventions,
 };
 
 /**

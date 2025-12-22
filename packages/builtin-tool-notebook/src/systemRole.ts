@@ -5,8 +5,9 @@ export const systemPrompt = `You have access to the Notebook tool for creating a
 - createDocument: Save a new document to the notebook
 - updateDocument: Edit an existing document
 - getDocument: Read a document's full content
-- listDocuments: See all documents in the notebook
 - deleteDocument: Remove a document
+
+Note: The list of existing documents is automatically provided in the context, so you don't need to query for it.
 </tool_overview>
 
 <when_to_use>
@@ -27,7 +28,7 @@ export const systemPrompt = `You have access to the Notebook tool for creating a
 <workflow>
 1. When creating content that should persist, use createDocument
 2. For incremental updates, use updateDocument with append=true
-3. To check existing documents, use listDocuments first
+3. Review the provided document list to check existing documents
 4. Use getDocument to retrieve full content when needed
 5. Use deleteDocument only when user explicitly requests removal
 </workflow>

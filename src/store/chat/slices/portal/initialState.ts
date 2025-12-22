@@ -14,10 +14,12 @@ export interface PortalFile {
 export interface ChatPortalState {
   portalArtifact?: PortalArtifact;
   portalArtifactDisplayMode?: ArtifactDisplayMode;
+  portalDocumentId?: string;
   portalFile?: PortalFile;
   portalMessageDetail?: string;
   portalThreadId?: string;
   portalToolMessage?: { id: string; identifier: string };
+  showNotebook?: boolean;
   showPortal: boolean;
 }
 

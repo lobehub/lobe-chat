@@ -8,6 +8,7 @@ import { GroupManagementRenders } from '@lobechat/builtin-tool-group-management/
 import { GTDManifest, GTDRenders } from '@lobechat/builtin-tool-gtd/client';
 // local-system
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
+import { NotebookManifest, NotebookRenders } from '@lobechat/builtin-tool-notebook/client';
 import { BuiltinRender } from '@lobechat/types';
 
 // code-interpreter
@@ -30,6 +31,7 @@ const BuiltinToolsRenders: Record<string, Record<string, BuiltinRender>> = {
   [CodeInterpreterManifest.identifier]: CodeInterpreterRenders as Record<string, BuiltinRender>,
   [GroupManagementManifest.identifier]: GroupManagementRenders as Record<string, BuiltinRender>,
   [GTDManifest.identifier]: GTDRenders as Record<string, BuiltinRender>,
+  [NotebookManifest.identifier]: NotebookRenders as Record<string, BuiltinRender>,
   [KnowledgeBaseManifest.identifier]: KnowledgeBaseRenders as Record<string, BuiltinRender>,
   [LocalSystemManifest.identifier]: LocalSystemRenders as Record<string, BuiltinRender>,
   [WebBrowsingManifest.identifier]: WebBrowsingRenders as Record<string, BuiltinRender>,

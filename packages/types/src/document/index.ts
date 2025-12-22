@@ -187,3 +187,54 @@ export enum DocumentSourceType {
    */
   WEB = 'web',
 }
+
+/**
+ * Notebook document type for topic-associated documents
+ */
+export type NotebookDocumentType = 'article' | 'markdown' | 'note' | 'report';
+
+/**
+ * Notebook document - a document associated with a topic
+ */
+export interface NotebookDocument {
+  /**
+   * When the document was associated with the topic
+   */
+  associatedAt: Date;
+  /**
+   * Document content
+   */
+  content: string | null;
+  /**
+   * Document creation timestamp
+   */
+  createdAt: Date;
+  /**
+   * Brief summary of the document (1-2 sentences)
+   */
+  description: string | null;
+  /**
+   * Document type
+   */
+  fileType: string;
+  /**
+   * Document ID
+   */
+  id: string;
+  /**
+   * Document title
+   */
+  title: string | null;
+  /**
+   * Total character count
+   */
+  totalCharCount: number;
+  /**
+   * Total line count
+   */
+  totalLineCount: number;
+  /**
+   * Document last modified timestamp
+   */
+  updatedAt: Date;
+}

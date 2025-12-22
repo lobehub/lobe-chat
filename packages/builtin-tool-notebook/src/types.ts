@@ -4,7 +4,6 @@ export const NotebookApiName = {
   createDocument: 'createDocument',
   deleteDocument: 'deleteDocument',
   getDocument: 'getDocument',
-  listDocuments: 'listDocuments',
   updateDocument: 'updateDocument',
 } as const;
 
@@ -14,6 +13,7 @@ export type DocumentSourceType = 'ai' | 'file' | 'user' | 'web';
 export interface NotebookDocument {
   content: string;
   createdAt: string;
+  description: string;
   id: string;
   sourceType: DocumentSourceType;
   title: string;
@@ -26,6 +26,7 @@ export interface NotebookDocument {
 
 export interface CreateDocumentArgs {
   content: string;
+  description: string;
   title: string;
   type?: DocumentType;
 }
@@ -45,10 +46,6 @@ export interface DeleteDocumentArgs {
   id: string;
 }
 
-export interface ListDocumentsArgs {
-  type?: DocumentType;
-}
-
 // ==================== API States ====================
 
 export interface CreateDocumentState {
@@ -65,8 +62,4 @@ export interface GetDocumentState {
 
 export interface DeleteDocumentState {
   deletedId: string;
-}
-
-export interface ListDocumentsState {
-  documents: NotebookDocument[];
 }

@@ -13,7 +13,7 @@
     "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
-    "@lobehub/ui": "^3.3.3",
+    "@lobehub/ui": "^3",
     "antd": "^6",
     "antd-style": "*",
     "polished": "*",

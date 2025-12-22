@@ -8,12 +8,15 @@ export const NotebookManifest: BuiltinToolManifest = {
     {
       description:
         'Create a new document in the notebook. Use this to save reports, notes, articles, or any content that should persist in the topic.',
-      humanIntervention: 'always',
       name: NotebookApiName.createDocument,
       parameters: {
         properties: {
           content: {
             description: 'The document content in Markdown format',
+            type: 'string',
+          },
+          description: {
+            description: 'A brief summary of the document (1-2 sentences)',
             type: 'string',
           },
           title: {
@@ -27,7 +30,7 @@ export const NotebookManifest: BuiltinToolManifest = {
             type: 'string',
           },
         },
-        required: ['title', 'content'],
+        required: ['title', 'description', 'content'],
         type: 'object',
       },
       renderDisplayControl: 'expand',
@@ -75,23 +78,7 @@ export const NotebookManifest: BuiltinToolManifest = {
       },
     },
     {
-      description:
-        'List all documents in the current topic notebook. Returns document summaries without full content.',
-      name: NotebookApiName.listDocuments,
-      parameters: {
-        properties: {
-          type: {
-            description: 'Filter by document type',
-            enum: ['markdown', 'note', 'report', 'article'],
-            type: 'string',
-          },
-        },
-        type: 'object',
-      },
-    },
-    {
       description: 'Delete a document from the notebook. This action cannot be undone.',
-      humanIntervention: 'always',
       name: NotebookApiName.deleteDocument,
       parameters: {
         properties: {

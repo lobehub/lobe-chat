@@ -9,11 +9,9 @@ export {
   type DocumentType,
   type GetDocumentArgs,
   type GetDocumentState,
-  type ListDocumentsArgs,
-  type ListDocumentsState,
   NotebookApiName,
-  NotebookIdentifier,
   type NotebookDocument,
+  NotebookIdentifier,
   type UpdateDocumentArgs,
   type UpdateDocumentState,
 } from './types';

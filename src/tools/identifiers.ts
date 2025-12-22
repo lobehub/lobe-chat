@@ -3,6 +3,7 @@ import { GroupAgentBuilderManifest } from '@lobechat/builtin-tool-group-agent-bu
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
 import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
+import { NotebookManifest } from '@lobechat/builtin-tool-notebook';
 
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
@@ -21,4 +22,5 @@ export const builtinToolIdentifiers: string[] = [
   GroupAgentBuilderManifest.identifier,
   GroupManagementManifest.identifier,
   GTDManifest.identifier,
+  NotebookManifest.identifier,
 ];

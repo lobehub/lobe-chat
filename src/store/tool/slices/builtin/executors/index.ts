@@ -10,6 +10,7 @@ import { gtdExecutor } from '@lobechat/builtin-tool-gtd/executor';
 import type { IBuiltinToolExecutor } from '../types';
 // ==================== Import and register all executors ====================
 
+import { notebookExecutor } from './lobe-notebook';
 import { webBrowsing } from './lobe-web-browsing';
 
 /**
@@ -111,4 +112,5 @@ export const invokeExecutor = async (
 // Register all executor instances
 registerExecutor(groupManagementExecutor);
 registerExecutor(gtdExecutor);
+registerExecutor(notebookExecutor);
 registerExecutor(webBrowsing);

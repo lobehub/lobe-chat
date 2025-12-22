@@ -1,5 +1,5 @@
-export { CreateDocumentIntervention, NotebookInterventions } from './Intervention';
-export { CreateDocument, ListDocuments, NotebookRenders } from './Render';
+export { NotebookInterventions } from './Intervention';
+export { CreateDocument, NotebookRenders } from './Render';
 
 // Re-export types and manifest for convenience
 export { NotebookManifest } from '../manifest';

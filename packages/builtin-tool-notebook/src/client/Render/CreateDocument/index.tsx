@@ -1,38 +1,24 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { CreateDocumentArgs, CreateDocumentState } from '../../../types';
 import DocumentCard from './DocumentCard';
 
-export interface CreateDocumentRenderProps
-  extends Pick<BuiltinRenderProps<CreateDocumentArgs, CreateDocumentState>, 'pluginState'> {
-  labels?: {
-    type?: string;
-    words?: string;
-  };
-}
+export type CreateDocumentRenderProps = Pick<
+  BuiltinRenderProps<CreateDocumentArgs, CreateDocumentState>,
+  'pluginState'
+>;
 
-const CreateDocument = memo<CreateDocumentRenderProps>(({ pluginState, labels }) => {
+const CreateDocument = memo<CreateDocumentRenderProps>(({ pluginState }) => {
   const { document } = pluginState || {};
 
   if (!document) {
     return null;
   }
 
-  return (
-    <Flexbox gap={12} horizontal style={{ flexWrap: 'wrap' }}>
-      <DocumentCard
-        document={document}
-        labels={{
-          type: labels?.type || 'Type',
-          words: labels?.words || 'Words',
-        }}
-      />
-    </Flexbox>
-  );
+  return <DocumentCard document={document} />;
 });
 
 export default CreateDocument;

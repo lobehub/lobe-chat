@@ -7,6 +7,7 @@ import { memo } from 'react';
 import NavHeader from '@/features/NavHeader';
 
 import WideScreenButton from '../../../../../../../features/WideScreenContainer/WideScreenButton';
+import NotebookButton from './NotebookButton';
 import ShareButton from './ShareButton';
 import Tags from './Tags';
 
@@ -22,6 +23,7 @@ const Header = memo(() => {
       right={
         <Flexbox horizontal style={{ backgroundColor: theme.colorBgContainer }}>
           <WideScreenButton />
+          <NotebookButton />
           <ShareButton />
         </Flexbox>
       }

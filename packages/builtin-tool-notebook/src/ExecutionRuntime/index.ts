@@ -8,8 +8,6 @@ import {
   DocumentType,
   GetDocumentArgs,
   GetDocumentState,
-  ListDocumentsArgs,
-  ListDocumentsState,
   NotebookDocument,
   UpdateDocumentArgs,
   UpdateDocumentState,
@@ -18,6 +16,7 @@ import {
 interface DocumentServiceResult {
   content: string | null;
   createdAt: Date;
+  description: string | null;
   fileType: string;
   id: string;
   source: string;
@@ -80,6 +79,7 @@ const toNotebookDocument = (doc: DocumentServiceResult): NotebookDocument => {
   return {
     content: doc.content || '',
     createdAt: doc.createdAt.toISOString(),
+    description: doc.description || '',
     id: doc.id,
     sourceType: doc.sourceType === 'api' ? 'ai' : doc.sourceType,
     title: doc.title || 'Untitled',
@@ -235,55 +235,6 @@ export class NotebookExecutionRuntime {
     } catch (e) {
       return {
         content: `Error retrieving document: ${(e as Error).message}`,
-        error: e,
-        success: false,
-      };
-    }
-  }
-
-  /**
-   * List all documents in the notebook
-   */
-  async listDocuments(
-    args: ListDocumentsArgs,
-    options?: { topicId?: string | null },
-  ): Promise<BuiltinServerRuntimeOutput> {
-    try {
-      if (!options?.topicId) {
-        return {
-          content: 'Error: No topic context. Cannot list documents without a topic.',
-          success: false,
-        };
-      }
-
-      const { type } = args;
-
-      const docs = await this.notebookService.getDocumentsByTopicId(options.topicId, { type });
-
-      if (docs.length === 0) {
-        const state: ListDocumentsState = { documents: [] };
-        return {
-          content: '📓 Notebook is empty. No documents found.',
-          state,
-          success: true,
-        };
-      }
-
-      const notebookDocs = docs.map(toNotebookDocument);
-      const state: ListDocumentsState = { documents: notebookDocs };
-
-      const summary = notebookDocs
-        .map((d) => `- **${d.title}** (${d.type}, ${d.wordCount} words) [id: ${d.id}]`)
-        .join('\n');
-
-      return {
-        content: `📓 Notebook (${notebookDocs.length} document${notebookDocs.length > 1 ? 's' : ''}):\n${summary}`,
-        state,
-        success: true,
-      };
-    } catch (e) {
-      return {
-        content: `Error listing documents: ${(e as Error).message}`,
         error: e,
         success: false,
       };
