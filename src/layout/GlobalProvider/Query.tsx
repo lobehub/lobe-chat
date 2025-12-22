@@ -2,7 +2,9 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { PropsWithChildren, useState } from 'react';
+import { SWRConfig } from 'swr';
 
+import { swrCacheProvider } from '@/libs/swr/localStorageProvider';
 import { lambdaQuery, lambdaQueryClient } from '@/libs/trpc/client';
 
 const QueryProvider = ({ children }: PropsWithChildren) => {
@@ -12,10 +14,15 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
     typeof lambdaQuery.Provider
   >['queryClient'];
 
+  // 使用 useState 确保 provider 只创建一次
+  const [provider] = useState(swrCacheProvider);
+
   return (
-    <lambdaQuery.Provider client={lambdaQueryClient} queryClient={providerQueryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </lambdaQuery.Provider>
+    <SWRConfig value={{ provider }}>
+      <lambdaQuery.Provider client={lambdaQueryClient} queryClient={providerQueryClient}>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </lambdaQuery.Provider>
+    </SWRConfig>
   );
 };
 

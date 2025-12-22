@@ -57,7 +57,7 @@ export const useClientDataSWR: SWRHook = (key, fetch, config) =>
  * This type of request method is relatively "dead" request mode, which will only be triggered on the first request.
  * it suitable for first time request like `initUserState`
 
- * 这一类请求方法是相对“死”的请求模式，只会在第一次请求时触发。
+ * 这一类请求方法是相对"死"的请求模式，只会在第一次请求时触发。
  * 适用于第一次请求，例如 `initUserState`
  */
 // @ts-ignore
@@ -93,3 +93,6 @@ export interface SWRRefreshParams<T, A = (...args: any[]) => any> {
 export type SWRefreshMethod<T> = <A extends (...args: any[]) => Promise<any>>(
   params?: SWRRefreshParams<T, A>,
 ) => ReturnType<A>;
+
+// 导出带自动同步功能的 hook
+export { useClientDataSWRWithSync } from './useClientDataSWRWithSync';
