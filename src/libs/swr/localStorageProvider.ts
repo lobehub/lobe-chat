@@ -280,9 +280,7 @@ const SWR_CACHEABLE_PATTERNS = [
   'fetchRecentPages', // 最近页面
   // 聊天页面数据
   'SWR_USE_FETCH_TOPIC', // 话题列表（按 agentId/groupId 分别缓存）
-  // 社区/市场数据
-  'assistant-list', // 助手市场列表
-  'mcp-list', // MCP 列表
+  'fetchGroupDetail', // 群组详情（按 groupId 分别缓存）
 ];
 
 
