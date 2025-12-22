@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
-import Thinking from '@/components/Thinking';
 import { ARTIFACT_THINKING_TAG } from '@/const/index';
+import Thinking from '@/features/Conversation/components/Thinking';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 

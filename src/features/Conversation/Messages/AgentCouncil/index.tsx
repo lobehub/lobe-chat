@@ -1,81 +1,21 @@
 'use client';
 
 import { UIChatMessage } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { Segmented } from 'antd';
-import { createStyles } from 'antd-style';
+import { Flexbox, Icon, ScrollShadow } from '@lobehub/ui';
+import { Divider, Segmented } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { Columns2, Layers, StretchHorizontal } from 'lucide-react';
-import { memo, useState } from 'react';
+import { BotIcon, Columns2, Layers } from 'lucide-react';
+import { Fragment, memo, useState } from 'react';
 
+import { CONVERSATION_MIN_WIDTH } from '@/const/layoutTokens';
 import WideScreenContainer from '@/features/WideScreenContainer';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { dataSelectors, useConversationStore } from '../../store';
 import CouncilMember from './CouncilMember';
 
-export type DisplayMode = 'horizontal' | 'tab' | 'vertical';
-
-const useStyles = createStyles(({ css, token, responsive }) => ({
-  container: css`
-    overflow: visible;
-    width: calc(100% + 32px);
-    margin-inline: -16px;
-    padding-inline: 16px;
-  `,
-  header: css`
-    display: flex;
-    justify-content: flex-end;
-    margin-block-end: 8px;
-  `,
-  horizontalScroll: css`
-    scroll-behavior: smooth;
-    scrollbar-color: ${token.colorBorderSecondary} transparent;
-    scrollbar-width: thin;
-    scroll-snap-type: x mandatory;
-
-    overflow: auto hidden;
-    display: flex;
-    gap: ${token.paddingMD}px;
-
-    padding-block: 4px;
-
-    &::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      background: ${token.colorBorderSecondary};
-
-      &:hover {
-        background: ${token.colorBorder};
-      }
-    }
-
-    ${responsive.mobile} {
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-  `,
-  tabContent: css`
-    width: 100%;
-  `,
-  tabSelector: css`
-    margin-block-end: 12px;
-  `,
-  verticalStack: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${token.paddingMD}px;
-  `,
-}));
+export type DisplayMode = 'horizontal' | 'tab';
 
 interface AgentCouncilMessageProps {
   id: string;
@@ -83,22 +23,12 @@ interface AgentCouncilMessageProps {
   isLatestItem?: boolean;
 }
 
-/**
- * AgentCouncilMessage - Renders multiple agent responses with switchable layouts
- *
- * Display modes:
- * - horizontal: Side by side with horizontal scroll (default)
- * - tab: Tabbed view with one agent per tab
- * - vertical: Stacked vertically for comparison
- */
 const AgentCouncilMessage = memo<AgentCouncilMessageProps>(({ id }) => {
-  const { styles } = useStyles();
   const [displayMode, setDisplayMode] = useState<DisplayMode>('horizontal');
   const [activeTab, setActiveTab] = useState(0);
-
+  const wideScreen = useGlobalStore(systemStatusSelectors.wideScreen);
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
   const members = (item as UIChatMessage)?.members as UIChatMessage[] | undefined;
-
   if (!members || members.length === 0) {
     return null;
   }
@@ -111,72 +41,97 @@ const AgentCouncilMessage = memo<AgentCouncilMessageProps>(({ id }) => {
 
         return (
           <WideScreenContainer>
-            <Flexbox className={styles.tabContent}>
-              <div>
-                <Segmented
-                  className={styles.tabSelector}
-                  onChange={(value) => setActiveTab(Number(value))}
-                  options={members.map((member, idx) => ({
-                    label: `Agent ${idx + 1}`,
-                    value: idx,
-                  }))}
-                  value={activeTab}
-                />
-              </div>
-              <CouncilMember index={activeTab} message={activeMember} mode="tab" />
-            </Flexbox>
-          </WideScreenContainer>
-        );
-      }
-
-      case 'vertical': {
-        return (
-          <WideScreenContainer>
-            <div className={styles.verticalStack}>
-              {members.map((member, idx) => {
-                if (!member) return null;
-                return (
-                  <CouncilMember index={idx} key={member.id} message={member} mode="vertical" />
-                );
-              })}
-            </div>
+            <CouncilMember index={activeTab} item={activeMember} scrollShadow />
           </WideScreenContainer>
         );
       }
 
       default: {
+        if (members.length < 2) {
+          return (
+            <WideScreenContainer gap={16}>
+              {members.map((member, idx) => {
+                if (!member) return null;
+                return <CouncilMember index={idx} item={member} key={member.id} />;
+              })}
+            </WideScreenContainer>
+          );
+        }
+        const MIN_WIDTH = CONVERSATION_MIN_WIDTH / 2;
         return (
-          <div className={styles.horizontalScroll}>
-            {members.map((member, idx) => {
-              if (!member) return null;
-              return (
-                <CouncilMember index={idx} key={member.id} message={member} mode="horizontal" />
-              );
-            })}
-          </div>
+          <ScrollShadow hideScrollBar offset={16} orientation={'horizontal'} size={4}>
+            <Flexbox
+              horizontal
+              justify={wideScreen ? 'flex-start' : 'center'}
+              paddingInline={16}
+              style={{
+                minWidth: MIN_WIDTH * members.length + 32 + 16 * (members.length - 1),
+              }}
+            >
+              {members.map((member, idx) => {
+                if (!member) return null;
+                return (
+                  <Fragment key={member.id}>
+                    <Flexbox
+                      gap={12}
+                      key={member.id}
+                      style={{
+                        minWidth: MIN_WIDTH,
+                        position: 'relative',
+                      }}
+                      width={`min(${MIN_WIDTH}px, 100%)`}
+                    >
+                      <CouncilMember index={idx} item={member} scrollShadow />
+                    </Flexbox>
+                    {idx < members.length - 1 && (
+                      <Divider
+                        dashed
+                        orientation={'vertical'}
+                        style={{ height: 'unset', marginInline: 16 }}
+                      />
+                    )}
+                  </Fragment>
+                );
+              })}
+            </Flexbox>
+          </ScrollShadow>
         );
       }
     }
   };
 
   return (
-    <Flexbox className={styles.container}>
+    <>
       <WideScreenContainer>
-        <div className={styles.header}>
+        <Flexbox align={'center'} height={48} horizontal justify={'space-between'} paddingBlock={8}>
+          {displayMode === 'tab' ? (
+            <Segmented
+              onChange={(value) => setActiveTab(Number(value))}
+              options={members.map((_, idx) => {
+                return {
+                  icon: <Icon icon={BotIcon} size={14} />,
+                  value: idx,
+                };
+              })}
+              size={'small'}
+              value={activeTab}
+            />
+          ) : (
+            <div />
+          )}
           <Segmented
             onChange={(value) => setDisplayMode(value as DisplayMode)}
             options={[
-              { icon: <StretchHorizontal size={14} />, value: 'horizontal' },
-              { icon: <Layers size={14} />, value: 'tab' },
-              { icon: <Columns2 size={14} />, value: 'vertical' },
+              { icon: <Icon icon={Columns2} />, value: 'horizontal' },
+              { icon: <Icon icon={Layers} />, value: 'tab' },
             ]}
             size="small"
             value={displayMode}
           />
-        </div>
+        </Flexbox>
       </WideScreenContainer>
       {renderContent()}
-    </Flexbox>
+    </>
   );
 }, isEqual);
 

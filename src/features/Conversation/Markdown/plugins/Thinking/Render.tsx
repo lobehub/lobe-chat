@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import Thinking from '@/components/Thinking';
+import Thinking from '@/features/Conversation/components/Thinking';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 

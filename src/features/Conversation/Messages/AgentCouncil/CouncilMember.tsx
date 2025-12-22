@@ -1,108 +1,86 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { ScrollShadow } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 
-import Avatar from '@/features/Conversation/ChatItem/components/Avatar';
-import Title from '@/features/Conversation/ChatItem/components/Title';
+import { LOADING_FLAT } from '@/const/message';
+import { ChatItem } from '@/features/Conversation/ChatItem';
+import ErrorMessageExtra, { useErrorContent } from '@/features/Conversation/Error';
+import { actionBarHolder } from '@/features/Conversation/Messages/Assistant';
+import { AssistantMessageExtra } from '@/features/Conversation/Messages/Assistant/Extra';
+import { normalizeThinkTags, processWithArtifact } from '@/features/Conversation/utils/markdown';
 import type { UIChatMessage } from '@/types/index';
 
 import { useAgentMeta } from '../../hooks';
 import { messageStateSelectors, useConversationStore } from '../../store';
 import MessageContent from '../Assistant/components/MessageContent';
-import Usage from '../components/Extras/Usage';
-import type { DisplayMode } from './index';
-
-const useStyles = createStyles(({ css, token, responsive }) => ({
-  cardHorizontal: css`
-    scroll-snap-align: start;
-
-    overflow: hidden;
-    flex: 0 0 auto;
-
-    width: 480px;
-    padding: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-
-    ${responsive.mobile} {
-      width: 85vw;
-      max-width: 360px;
-    }
-  `,
-  // Tab mode: full width, no border
-  cardTab: css`
-    overflow: hidden;
-
-    width: 100%;
-    padding: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-  `,
-  // Vertical mode: full width with border
-  cardVertical: css`
-    overflow: hidden;
-
-    width: 100%;
-    padding: 12px;
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${token.colorBgContainer};
-  `,
-  content: css`
-    overflow: auto;
-    flex: 1;
-  `,
-}));
 
 interface CouncilMemberProps {
   index: number;
-  message: UIChatMessage;
-  mode?: DisplayMode;
+  item: UIChatMessage;
+  scrollShadow?: boolean;
 }
 
-/**
- * CouncilMember - Renders a single agent's response in the council grid
- *
- * Handles both:
- * - assistantGroup: Agent response with tool calls
- * - assistant: Simple agent response without tools
- */
-const CouncilMember = memo<CouncilMemberProps>(({ message, mode = 'horizontal' }) => {
-  const { styles, cx } = useStyles();
-
-  const { agentId, performance, model, provider, usage, createdAt, id } = message;
+const CouncilMember = memo<CouncilMemberProps>(({ scrollShadow, item }) => {
+  const {
+    id,
+    agentId,
+    error,
+    content,
+    createdAt,
+    tools,
+    extra,
+    model,
+    provider,
+    performance,
+    usage,
+    metadata,
+  } = item;
   const avatar = useAgentMeta(agentId);
 
-  const creating = useConversationStore(messageStateSelectors.isMessageCreating(id));
-
-  const cardClassName = cx({
-    [styles.cardHorizontal]: mode === 'horizontal',
-    [styles.cardTab]: mode === 'tab',
-    [styles.cardVertical]: mode === 'vertical',
-  });
-
+  const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
+  const generating = useConversationStore(messageStateSelectors.isMessageGenerating(id));
+  const errorContent = useErrorContent(error);
+  const message = !editing ? normalizeThinkTags(processWithArtifact(content)) : content;
+  const contentNode = <MessageContent {...item} />;
   return (
-    <Flexbox className={cardClassName} gap={12}>
-      <Flexbox align={'center'} gap={4} horizontal>
-        <Avatar avatar={avatar} loading={creating} />
-        <Title avatar={avatar} showTitle time={createdAt} />
-      </Flexbox>
-
-      <Flexbox className={styles.content} gap={8}>
-        <MessageContent {...message} />
-        {model && (
-          <Usage model={model} performance={performance} provider={provider!} usage={usage} />
-        )}
-      </Flexbox>
-    </Flexbox>
+    <ChatItem
+      aboveMessage={null}
+      actions={actionBarHolder}
+      avatar={avatar}
+      customErrorRender={(error) => <ErrorMessageExtra data={item} error={error} />}
+      editing={editing}
+      error={
+        errorContent && error && (message === LOADING_FLAT || !message) ? errorContent : undefined
+      }
+      id={id}
+      loading={generating}
+      message={message}
+      messageExtra={
+        <AssistantMessageExtra
+          content={content}
+          extra={extra}
+          id={id}
+          model={model!}
+          performance={performance! || metadata}
+          provider={provider!}
+          tools={tools}
+          usage={usage! || metadata}
+        />
+      }
+      placement={'left'}
+      showTitle
+      time={createdAt}
+    >
+      {scrollShadow ? (
+        <ScrollShadow height={'max(33vh, 480px)'} hideScrollBar size={8}>
+          {contentNode}
+        </ScrollShadow>
+      ) : (
+        contentNode
+      )}
+    </ChatItem>
   );
 }, isEqual);
 
