@@ -84,11 +84,11 @@ const CommandInput = memo(() => {
         />
         {viewMode !== 'ai-chat' && search.trim() ? (
           <>
-            <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
-            <Tag>Tab</Tag>
+            <span style={{ fontSize: '14px', opacity: 0.6 }}>{t('cmdk.askAI')}</span>
+            <Tag>{t('cmdk.keyboard.Tab')}</Tag>
           </>
         ) : (
-          <Tag>ESC</Tag>
+          <Tag>{t('cmdk.keyboard.ESC')}</Tag>
         )}
       </div>
     </>
