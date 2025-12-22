@@ -20,7 +20,7 @@ import MessageBranch from '../components/MessageBranch';
 import { AssistantMessageExtra } from './Extra';
 import MessageContent from './components/MessageContent';
 
-export const actionBarHolder = (
+const actionBarHolder = (
   <div {...{ [MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES.assistant]: '' }} style={{ height: '28px' }} />
 );
 
@@ -90,7 +90,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
                 messageId={id}
               />
             )}
-
             {actionBarHolder}
           </>
         }

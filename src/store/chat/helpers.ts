@@ -13,6 +13,14 @@ export const getMessageById = (
   const directMatch = messages.find((m) => m.id === id);
   if (directMatch) return directMatch;
 
+  // If not found, search in agentCouncil members
+  for (const message of messages) {
+    if (message.role === 'agentCouncil' && (message as any).members) {
+      const member = (message as any).members.find((m: UIChatMessage) => m.id === id);
+      if (member) return member;
+    }
+  }
+
   return undefined;
 };
 

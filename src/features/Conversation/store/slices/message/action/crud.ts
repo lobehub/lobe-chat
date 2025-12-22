@@ -1,9 +1,11 @@
 import {
+  type AssistantContentBlock,
   ChatErrorType,
   type ChatImageItem,
   type ChatMessageError,
   type ChatMessagePluginError,
   type ChatToolPayload,
+  type ChatToolPayloadWithResult,
   type ChatVideoItem,
   type CreateMessageParams,
   type GroundingSearch,
@@ -275,13 +277,15 @@ export const messageCRUDSlice: StateCreator<
 
     // Handle assistantGroup messages: delete all child blocks and tool results
     if (message.role === 'assistantGroup' && message.children) {
-      const childIds = message.children.map((child) => child.id);
+      const childIds = message.children.map((child: AssistantContentBlock) => child.id);
       ids = ids.concat(childIds);
 
       // Collect all tool result IDs from children
-      const toolResultIds = message.children.flatMap((child) => {
+      const toolResultIds = message.children.flatMap((child: AssistantContentBlock) => {
         if (!child.tools) return [];
-        return child.tools.filter((tool) => tool.result?.id).map((tool) => tool.result!.id);
+        return child.tools
+          .filter((tool: ChatToolPayloadWithResult) => tool.result?.id)
+          .map((tool: ChatToolPayloadWithResult) => tool.result!.id);
       });
       ids = ids.concat(toolResultIds);
     }
