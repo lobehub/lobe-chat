@@ -35,7 +35,9 @@
     "openai": "^4.104.0",
     "replicate": "^1.4.0",
     "type-fest": "^5.2.0",
-    "url-join": "^5.0.0",
+    "url-join": "^5.0.0"
+  },
+  "peerDependencies": {
     "zod": "^3.25.76"
   }
 }

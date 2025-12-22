@@ -4,9 +4,6 @@
   "private": true,
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "dependencies": {
-    "antd-style": "^3.7.1"
-  },
   "devDependencies": {
     "electron": "^34.0.0"
   },
