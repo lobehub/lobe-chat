@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Введите свой вопрос в поле выше, чтобы начать диалог с ИИ",
     "aiModeHint": "Нажмите Enter, чтобы задать вопрос Lobe AI",
     "aiModePlaceholder": "Задайте вопрос ИИ...",
+    "askAI": "Спросить ИИ",
     "community": "Сообщество",
     "communitySupport": "Поддержка сообщества",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Настройки"
     },
     "discover": "Обзор",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Память",
     "navigate": "Навигация",
     "newAgent": "Создать помощника",

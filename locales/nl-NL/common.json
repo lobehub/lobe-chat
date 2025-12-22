@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Typ je vraag in het invoerveld hierboven om een gesprek met de AI te starten",
     "aiModeHint": "Druk op Enter om Lobe AI te vragen",
     "aiModePlaceholder": "Stel een vraag aan de AI...",
+    "askAI": "Vraag het aan AI",
     "community": "Community",
     "communitySupport": "Communityondersteuning",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Instellingen"
     },
     "discover": "Ontdekken",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Geheugen",
     "navigate": "Navigeren",
     "newAgent": "Nieuwe Assistent",

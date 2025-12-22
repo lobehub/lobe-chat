@@ -2,7 +2,7 @@
 
 import { Icon } from '@lobehub/ui';
 import type { MenuProps } from '@lobehub/ui';
-import { Check, Hash, LucideCheck } from 'lucide-react';
+import { Hash, LucideCheck } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -32,21 +32,21 @@ export const useDropdownMenu = (): MenuProps['items'] => {
     }));
 
     return [
-      {
-        icon: <Icon icon={Check} style={{ opacity: !showOnlyPagesNotInLibrary ? 1 : 0 }} />,
-        key: 'all',
-        label: t('pageList.filter.all'),
-        onClick: () => setShowOnlyPagesNotInLibrary(false),
-      },
-      {
-        icon: <Icon icon={Check} style={{ opacity: showOnlyPagesNotInLibrary ? 1 : 0 }} />,
-        key: 'onlyInPages',
-        label: t('pageList.filter.onlyInPages'),
-        onClick: () => setShowOnlyPagesNotInLibrary(true),
-      },
-      {
-        type: 'divider' as const,
-      },
+      // {
+      //   icon: <Icon icon={Check} style={{ opacity: !showOnlyPagesNotInLibrary ? 1 : 0 }} />,
+      //   key: 'all',
+      //   label: t('pageList.filter.all'),
+      //   onClick: () => setShowOnlyPagesNotInLibrary(false),
+      // },
+      // {
+      //   icon: <Icon icon={Check} style={{ opacity: showOnlyPagesNotInLibrary ? 1 : 0 }} />,
+      //   key: 'onlyInPages',
+      //   label: t('pageList.filter.onlyInPages'),
+      //   onClick: () => setShowOnlyPagesNotInLibrary(true),
+      // },
+      // {
+      //   type: 'divider' as const,
+      // },
       {
         children: pageSizeItems,
         icon: <Icon icon={Hash} />,
