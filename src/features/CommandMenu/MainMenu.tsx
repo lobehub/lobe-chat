@@ -16,9 +16,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SOCIAL_URL } from '@/const/branding';
+import { FEEDBACK } from '@/const/url';
 
-import { CommandItem } from './components';
 import ContextCommands from './ContextCommands';
+import { CommandItem } from './components';
 import type { Context } from './types';
 
 interface MainMenuProps {
@@ -45,7 +46,11 @@ const MainMenu = memo<MainMenuProps>(
           </CommandItem>
 
           {!pathname?.startsWith('/settings') && (
-            <CommandItem icon={<Settings />} onSelect={() => onNavigate('/settings')} value="settings">
+            <CommandItem
+              icon={<Settings />}
+              onSelect={() => onNavigate('/settings')}
+              value="settings"
+            >
               {t('cmdk.settings')}
             </CommandItem>
           )}
@@ -57,7 +62,11 @@ const MainMenu = memo<MainMenuProps>(
 
         <Command.Group heading={t('cmdk.navigate')}>
           {!pathname?.startsWith('/community') && (
-            <CommandItem icon={<Shapes />} onSelect={() => onNavigate('/community')} value="community">
+            <CommandItem
+              icon={<Shapes />}
+              onSelect={() => onNavigate('/community')}
+              value="community"
+            >
               {t('cmdk.community')}
             </CommandItem>
           )}
@@ -67,17 +76,29 @@ const MainMenu = memo<MainMenuProps>(
             </CommandItem>
           )}
           {!pathname?.startsWith('/knowledge') && (
-            <CommandItem icon={<LibraryBig />} onSelect={() => onNavigate('/resource')} value="resource">
+            <CommandItem
+              icon={<LibraryBig />}
+              onSelect={() => onNavigate('/resource')}
+              value="resource"
+            >
               {t('cmdk.resource')}
             </CommandItem>
           )}
           {!pathname?.startsWith('/page') && (
-            <CommandItem icon={<FilePen />} onSelect={() => onNavigate('/page')} value="page documents write">
+            <CommandItem
+              icon={<FilePen />}
+              onSelect={() => onNavigate('/page')}
+              value="page documents write"
+            >
               {t('cmdk.pages')}
             </CommandItem>
           )}
           {!pathname?.startsWith('/memory') && (
-            <CommandItem icon={<BrainCircuit />} onSelect={() => onNavigate('/memory')} value="memory">
+            <CommandItem
+              icon={<BrainCircuit />}
+              onSelect={() => onNavigate('/memory')}
+              value="memory"
+            >
               {t('cmdk.memory')}
             </CommandItem>
           )}
@@ -86,17 +107,23 @@ const MainMenu = memo<MainMenuProps>(
         <Command.Group heading={t('cmdk.about')}>
           <CommandItem
             icon={<Github />}
-            onSelect={() =>
-              onExternalLink('https://github.com/lobehub/lobe-chat/issues/new/choose')
-            }
+            onSelect={() => onExternalLink(FEEDBACK)}
             value="submit-issue"
           >
             {t('cmdk.submitIssue')}
           </CommandItem>
-          <CommandItem icon={<Star />} onSelect={() => onExternalLink(SOCIAL_URL.github)} value="star-github">
+          <CommandItem
+            icon={<Star />}
+            onSelect={() => onExternalLink(SOCIAL_URL.github)}
+            value="star-github"
+          >
             {t('cmdk.starOnGitHub')}
           </CommandItem>
-          <CommandItem icon={<DiscordIcon />} onSelect={() => onExternalLink(SOCIAL_URL.discord)} value="discord">
+          <CommandItem
+            icon={<DiscordIcon />}
+            onSelect={() => onExternalLink(SOCIAL_URL.discord)}
+            value="discord"
+          >
             {t('cmdk.communitySupport')}
           </CommandItem>
         </Command.Group>

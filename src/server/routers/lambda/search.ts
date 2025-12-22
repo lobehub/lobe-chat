@@ -132,7 +132,7 @@ export const searchRouter = router({
         );
       }
 
-      if (!type || type === 'assistant') {
+      if (!type || type === 'communityAgent') {
         searchPromises.push(
           ctx.discoverService
             .getAssistantList({
