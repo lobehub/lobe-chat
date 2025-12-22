@@ -5,6 +5,7 @@ import { Breadcrumb, BreadcrumbProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronRightIcon, HomeIcon } from 'lucide-react';
 import { ReactNode, memo } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 import ToggleLeftPanelButton from './ToggleLeftPanelButton';
@@ -109,10 +110,11 @@ const SideBarHeaderLayout = memo<SideBarHeaderLayoutProps>(
           ].map((item) => ({
             ...item,
             onClick: (event) => {
-              if (item.href) {
+              const href = item.href;
+              if (href) {
                 event.preventDefault();
                 event.stopPropagation();
-                return navigate(item.href);
+                flushSync(() => navigate(href));
               }
             },
           }))}
