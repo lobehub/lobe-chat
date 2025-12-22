@@ -40,8 +40,24 @@ export const params = {
         };
       }
 
+      // 适配OpenRouter的reasoning_details，参照 https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#preserving-reasoning-blocks 和 https://docs.cloud.google.com/vertex-ai/generative-ai/docs/thought-signatures#how_to_use_thought_signatures，目前 Gemini 3 Pro 和 Gemini 3 Flash 如果function call没有返回 signature 会直接报错, 其他part虽然推荐返回但是不强制，所以此处修复仅处理有 function call 的情况
+      let messages = payload.messages;
+      if (model.includes('gemini')) {
+        messages = messages.map((message) => {
+          if (
+            Array.isArray(message.tool_calls) &&
+            message.tool_calls.length > 0 &&
+            message.tool_calls[0].thoughtSignature
+          ) {
+            (message as any).reasoning_details = JSON.parse(message.tool_calls[0].thoughtSignature);
+          }
+          return message;
+        });
+      }
+
       return {
         ...payload,
+        messages,
         model: payload.enabledSearch ? `${payload.model}:online` : payload.model,
         reasoning,
         stream: payload.stream ?? true,

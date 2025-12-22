@@ -140,6 +140,10 @@ const transformOpenAIStream = (
       );
 
       if (tool_calls.length > 0) {
+        // 适配OpenRouter的reasoning_details，参照 https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#preserving-reasoning-blocks 和 https://docs.cloud.google.com/vertex-ai/generative-ai/docs/thought-signatures#how_to_use_thought_signatures，目前 Gemini 3 Pro 和 Gemini 3 Flash 如果function call没有返回 signature 会直接报错, 其他part虽然推荐返回但是不强制，所以此处修复仅处理有 function call 的情况
+        const reasoningDetails = (item.delta as { reasoning_details?: unknown[] })
+          .reasoning_details;
+
         return {
           data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
             if (streamContext && !streamContext.tool) {
@@ -159,6 +163,11 @@ const transformOpenAIStream = (
                 value.id ||
                 streamContext?.tool?.id ||
                 generateToolCallId(index, value.function?.name),
+
+              // 如果有则将 reasoning_details 暂存在第一个 tool_call 的 thoughtSignature 中
+              ...(reasoningDetails && index === 0
+                ? { thoughtSignature: JSON.stringify(reasoningDetails) }
+                : {}),
 
               // mistral's tool calling don't have index and function field, it's data like:
               // [{"id":"xbhnmTtY7","function":{"name":"lobe-image-designer____text2image____builtin","arguments":"{\"prompts\": [\"A photo of a small, fluffy dog with a playful expression and wagging tail.\", \"A watercolor painting of a small, energetic dog with a glossy coat and bright eyes.\", \"A vector illustration of a small, adorable dog with a short snout and perky ears.\", \"A drawing of a small, scruffy dog with a mischievous grin and a wagging tail.\"], \"quality\": \"standard\", \"seeds\": [123456, 654321, 111222, 333444], \"size\": \"1024x1024\", \"style\": \"vivid\"}"}}]
