@@ -45,7 +45,7 @@ export const searchRouter = router({
         offset: z.number().optional(),
         query: z.string(),
         type: z
-          .enum(['agent', 'topic', 'file', 'message', 'mcp', 'plugin', 'assistant'])
+          .enum(['agent', 'topic', 'file', 'message', 'page', 'mcp', 'plugin', 'assistant'])
           .optional(),
       }),
     )
@@ -58,8 +58,8 @@ export const searchRouter = router({
       // Build search promises based on type filter
       const searchPromises: Promise<any>[] = [];
 
-      // Database searches (agent, topic, file, message)
-      if (!type || ['agent', 'topic', 'file', 'message'].includes(type)) {
+      // Database searches (agent, topic, file, message, page)
+      if (!type || ['agent', 'topic', 'file', 'message', 'page'].includes(type)) {
         searchPromises.push(ctx.searchRepo.search(input));
       }
 

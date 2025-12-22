@@ -13,12 +13,14 @@ import { useHomeStore } from '@/store/home';
 
 import type { ThemeMode } from './types';
 import { detectContext } from './utils/context';
+import type { ValidSearchType } from './utils/queryParser';
 
 export const useCommandMenu = () => {
   const [open, setOpen] = useGlobalStore((s) => [s.status.showCommandMenu, s.updateSystemStatus]);
   const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState('');
   const [pages, setPages] = useState<string[]>([]);
+  const [typeFilter, setTypeFilter] = useState<ValidSearchType | undefined>(undefined);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,10 +53,16 @@ export const useCommandMenu = () => {
   const searchQuery = debouncedSearch.trim();
 
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
-    hasSearch && !isAiMode ? ['search', searchQuery, agentId] : null,
+    hasSearch && !isAiMode ? ['search', searchQuery, agentId, typeFilter] : null,
     async () => {
       const locale = globalHelpers.getCurrentLanguage();
-      return lambdaClient.search.query.query({ agentId, locale, query: searchQuery });
+      return lambdaClient.search.query.query({
+        agentId,
+        limitPerType: typeFilter ? 50 : 5, // Show more results when filtering by type
+        locale,
+        query: searchQuery,
+        type: typeFilter,
+      });
     },
     {
       revalidateOnFocus: false,
@@ -79,11 +87,12 @@ export const useCommandMenu = () => {
     }
   }, [open]);
 
-  // Reset pages and search when opening/closing
+  // Reset pages, search, and type filter when opening/closing
   useEffect(() => {
     if (open) {
       setPages([]);
       setSearch('');
+      setTypeFilter(undefined);
     }
   }, [open]);
 
@@ -140,6 +149,10 @@ export const useCommandMenu = () => {
     setPages([...pages, pageName]);
   };
 
+  const handleSetTypeFilter = (type: ValidSearchType | undefined) => {
+    setTypeFilter(type);
+  };
+
   return {
     closeCommandMenu,
     context,
@@ -149,6 +162,7 @@ export const useCommandMenu = () => {
     handleCreateSession,
     handleExternalLink,
     handleNavigate,
+    handleSetTypeFilter,
     handleThemeChange,
     hasSearch,
     isAiMode,
@@ -160,8 +174,10 @@ export const useCommandMenu = () => {
     pages,
     pathname,
     search,
+    searchQuery,
     searchResults: searchResults || ([] as SearchResult[]),
     setPages,
     setSearch,
+    typeFilter,
   };
 };

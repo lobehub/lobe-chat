@@ -1,11 +1,12 @@
 import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Command } from 'cmdk';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { Context } from '../types';
+import type { ValidSearchType } from '../utils/queryParser';
 
 const useStyles = createStyles(({ css, token }) => ({
   backTag: css`
@@ -20,6 +21,8 @@ const useStyles = createStyles(({ css, token }) => ({
     user-select: none;
   `,
   contextWrapper: css`
+    display: flex;
+    gap: 8px;
     padding-block: 12px 6px;
     padding-inline: 16px;
   `,
@@ -38,12 +41,23 @@ interface CommandInputProps {
   hasPages: boolean;
   isAiMode: boolean;
   onBack: () => void;
+  onClearTypeFilter?: () => void;
   onValueChange: (value: string) => void;
   search: string;
+  typeFilter?: ValidSearchType;
 }
 
 const CommandInput = memo<CommandInputProps>(
-  ({ context, hasPages, isAiMode, onBack, onValueChange, search }) => {
+  ({
+    context,
+    hasPages,
+    isAiMode,
+    onBack,
+    onClearTypeFilter,
+    onValueChange,
+    search,
+    typeFilter,
+  }) => {
     const { t } = useTranslation('common');
     const { t: tSetting } = useTranslation('setting');
     const { t: tChat } = useTranslation('chat');
@@ -80,11 +94,20 @@ const CommandInput = memo<CommandInputProps>(
 
     const contextName = getContextName();
 
+    const getTypeLabel = (type: ValidSearchType) => {
+      return t(`cmdk.search.${type}`);
+    };
+
     return (
       <>
-        {context && !hasPages && (
+        {(context || typeFilter) && !hasPages && (
           <div className={styles.contextWrapper}>
-            <Tag className={styles.contextTag}>{contextName}</Tag>
+            {context && <Tag className={styles.contextTag}>{contextName}</Tag>}
+            {typeFilter && (
+              <Tag className={styles.backTag} icon={<X size={12} />} onClick={onClearTypeFilter}>
+                {getTypeLabel(typeFilter)}
+              </Tag>
+            )}
           </div>
         )}
         <div className={styles.inputWrapper}>

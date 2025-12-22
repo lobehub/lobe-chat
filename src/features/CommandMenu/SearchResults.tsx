@@ -9,21 +9,33 @@ import { useNavigate } from 'react-router-dom';
 import type { SearchResult } from '@/database/repositories/search';
 
 import type { Context } from './types';
+import type { ValidSearchType } from './utils/queryParser';
 
 interface SearchResultsProps {
   context?: Context;
   isLoading: boolean;
   onClose: () => void;
+  onSetTypeFilter: (type: ValidSearchType | undefined) => void;
   results: SearchResult[];
   searchQuery?: string;
   styles: any;
+  typeFilter?: ValidSearchType;
 }
 
 /**
  * Search results from unified search index.
  */
 const SearchResults = memo<SearchResultsProps>(
-  ({ results, isLoading, onClose, styles, context, searchQuery = '' }) => {
+  ({
+    results,
+    isLoading,
+    onClose,
+    onSetTypeFilter,
+    styles,
+    context,
+    searchQuery = '',
+    typeFilter,
+  }) => {
     const { t } = useTranslation('common');
     const navigate = useNavigate();
 
@@ -176,6 +188,36 @@ const SearchResults = memo<SearchResultsProps>(
       return description;
     };
 
+    const handleSearchMore = (type: ValidSearchType) => {
+      onSetTypeFilter(type);
+    };
+
+    // Helper to render "Search More" button
+    const renderSearchMore = (type: ValidSearchType, count: number) => {
+      // Don't show if already filtering by this type
+      if (typeFilter) return null;
+
+      // Show if there are results (might have more)
+      if (count === 0) return null;
+
+      return (
+        <Command.Item
+          forceMount
+          onSelect={() => handleSearchMore(type)}
+          value={`action-show-more-results-for-type-${type}`}
+        >
+          <div className={styles.itemContent}>
+            <div className={styles.itemIcon}>{getIcon(type)}</div>
+            <div className={styles.itemDetails}>
+              <div className={styles.itemTitle}>
+                {t('cmdk.search.searchMore', { type: getTypeLabel(type) })}
+              </div>
+            </div>
+          </div>
+        </Command.Item>
+      );
+    };
+
     const hasResults = results.length > 0;
 
     // Group results by type
@@ -220,6 +262,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('page', pageResults.length)}
           </Command.Group>
         )}
 
@@ -244,6 +287,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('file', fileResults.length)}
           </Command.Group>
         )}
 
@@ -267,6 +311,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('agent', agentResults.length)}
           </Command.Group>
         )}
 
@@ -290,6 +335,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('topic', topicResults.length)}
           </Command.Group>
         )}
 
@@ -313,6 +359,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('message', messageResults.length)}
           </Command.Group>
         )}
 
@@ -337,6 +384,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('page', pageResults.length)}
           </Command.Group>
         )}
 
@@ -361,10 +409,11 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('file', fileResults.length)}
           </Command.Group>
         )}
 
-        {hasResults && messageResults.length > 0 && (
+        {hasResults && !isPageContext && !isResourceContext && messageResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.messages')}>
             {messageResults.map((result) => (
               <Command.Item
@@ -384,10 +433,11 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('message', messageResults.length)}
           </Command.Group>
         )}
 
-        {hasResults && agentResults.length > 0 && (
+        {hasResults && !isPageContext && agentResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.agents')}>
             {agentResults.map((result) => (
               <Command.Item
@@ -407,10 +457,11 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('agent', agentResults.length)}
           </Command.Group>
         )}
 
-        {hasResults && topicResults.length > 0 && (
+        {hasResults && !isPageContext && topicResults.length > 0 && (
           <Command.Group heading={t('cmdk.search.topics')}>
             {topicResults.map((result) => (
               <Command.Item
@@ -430,6 +481,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('topic', topicResults.length)}
           </Command.Group>
         )}
 
@@ -454,6 +506,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('page', pageResults.length)}
           </Command.Group>
         )}
 
@@ -478,6 +531,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('file', fileResults.length)}
           </Command.Group>
         )}
 
@@ -501,6 +555,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('mcp', mcpResults.length)}
           </Command.Group>
         )}
 
@@ -524,6 +579,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('plugin', pluginResults.length)}
           </Command.Group>
         )}
 
@@ -547,6 +603,7 @@ const SearchResults = memo<SearchResultsProps>(
                 </div>
               </Command.Item>
             ))}
+            {renderSearchMore('assistant', assistantResults.length)}
           </Command.Group>
         )}
 

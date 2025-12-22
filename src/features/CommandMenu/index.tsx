@@ -32,6 +32,7 @@ const CommandMenu = memo(() => {
     handleCreateSession,
     handleExternalLink,
     handleNavigate,
+    handleSetTypeFilter,
     handleThemeChange,
     hasSearch,
     isAiMode,
@@ -43,9 +44,11 @@ const CommandMenu = memo(() => {
     pages,
     pathname,
     search,
+    searchQuery,
     searchResults,
     setPages,
     setSearch,
+    typeFilter,
   } = useCommandMenu();
 
   if (!mounted || !open) return null;
@@ -90,8 +93,10 @@ const CommandMenu = memo(() => {
             hasPages={pages.length > 0}
             isAiMode={isAiMode}
             onBack={handleBack}
+            onClearTypeFilter={() => handleSetTypeFilter(undefined)}
             onValueChange={setSearch}
             search={search}
+            typeFilter={typeFilter}
           />
 
           <Command.List>
@@ -116,9 +121,11 @@ const CommandMenu = memo(() => {
                 context={context}
                 isLoading={isSearching}
                 onClose={closeCommandMenu}
+                onSetTypeFilter={handleSetTypeFilter}
                 results={searchResults}
-                searchQuery={search}
+                searchQuery={searchQuery}
                 styles={styles}
+                typeFilter={typeFilter}
               />
             )}
           </Command.List>

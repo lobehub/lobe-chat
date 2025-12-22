@@ -169,6 +169,7 @@ export default {
       pages: '文稿',
       plugin: '插件',
       plugins: '插件',
+      searchMore: '搜索更多{{type}}',
       searching: '搜索结果',
       topic: '话题',
       topics: '话题',
