@@ -2,12 +2,12 @@ import { MessageContentPart } from '@lobechat/types';
 import { deserializeParts } from '@lobechat/utils';
 import { memo } from 'react';
 
-import Thinking from '@/components/Thinking';
-import { RichContentRenderer } from './RichContentRenderer';
+import Thinking from '@/features/Conversation/components/Thinking';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { messageStateSelectors, useConversationStore } from '../../store';
+import { RichContentRenderer } from './RichContentRenderer';
 
 interface ReasoningProps {
   content?: string;

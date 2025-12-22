@@ -1,23 +1,12 @@
 'use client';
 
 import { LOADING_FLAT } from '@lobechat/const';
-import { Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { type MouseEventHandler, memo, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { type MouseEventHandler, memo, useCallback } from 'react';
 
 import { MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES } from '@/const/messageActionPortal';
 import { ChatItem } from '@/features/Conversation/ChatItem';
 import { useNewScreen } from '@/features/Conversation/Messages/components/useNewScreen';
-import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
-import { useAgentStore } from '@/store/agent';
-import { builtinAgentSelectors } from '@/store/agent/selectors';
-import { agentGroupSelectors, useAgentGroupStore } from '@/store/agentGroup';
-import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
-import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { useAgentMeta, useDoubleClickEdit } from '../../hooks';
@@ -31,9 +20,10 @@ import MessageBranch from '../components/MessageBranch';
 import { AssistantMessageExtra } from './Extra';
 import MessageContent from './components/MessageContent';
 
-const actionBarHolder = (
+export const actionBarHolder = (
   <div {...{ [MESSAGE_ACTION_BAR_PORTAL_ATTRIBUTES.assistant]: '' }} style={{ height: '28px' }} />
 );
+
 interface AssistantMessageProps {
   disableEditing?: boolean;
   id: string;
@@ -57,14 +47,12 @@ const AssistantMessage = memo<AssistantMessageProps>(
       extra,
       model,
       provider,
-      targetId,
       performance,
       usage,
       metadata,
     } = item;
 
     const avatar = useAgentMeta(agentId);
-    const { t } = useTranslation('chat');
 
     // Get editing and generating state from ConversationStore
     const editing = useConversationStore(messageStateSelectors.isMessageEditing(id));
@@ -76,42 +64,6 @@ const AssistantMessage = memo<AssistantMessageProps>(
 
     // remove line breaks in artifact tag to make the ast transform easier
     const message = !editing ? normalizeThinkTags(processWithArtifact(content)) : content;
-
-    const isGroupSession = useSessionStore(sessionSelectors.isCurrentSessionGroupSession);
-    const groupConfig = useAgentGroupStore(agentGroupSelectors.currentGroupConfig);
-
-    const reducted =
-      isGroupSession && targetId !== null && targetId !== 'user' && !groupConfig?.revealDM;
-
-    // Get target name for DM indicator
-    const userName = useUserStore(userProfileSelectors.nickName) || 'User';
-    const agents = useSessionStore(sessionSelectors.currentGroupAgents);
-
-    const dmIndicator = useMemo(() => {
-      if (!targetId) return undefined;
-
-      let targetName = targetId;
-      if (targetId === 'user') {
-        targetName = t('dm.you');
-      } else {
-        const targetAgent = agents?.find((agent) => agent.id === targetId);
-        targetName = targetAgent?.title || targetId;
-      }
-
-      return <Tag>{t('dm.visibleTo', { target: targetName })}</Tag>;
-    }, [targetId, userName, agents, t]);
-
-    const isInbox = useAgentStore(builtinAgentSelectors.isInboxAgent);
-    const [toggleSystemRole] = useGlobalStore((s) => [s.toggleSystemRole]);
-    const openChatSettings = useOpenChatSettings();
-
-    const onAvatarClick = useCallback(() => {
-      if (!isInbox) {
-        toggleSystemRole(true);
-      } else {
-        openChatSettings();
-      }
-    }, [isInbox]);
 
     const onDoubleClick = useDoubleClickEdit({ disableEditing, error, id, role });
     const setMessageItemActionElementPortialContext =
@@ -150,7 +102,7 @@ const AssistantMessage = memo<AssistantMessageProps>(
         }
         id={id}
         loading={generating}
-        message={reducted ? `*${t('hideForYou')}*` : message}
+        message={message}
         messageExtra={
           <AssistantMessageExtra
             content={content}
@@ -164,13 +116,11 @@ const AssistantMessage = memo<AssistantMessageProps>(
           />
         }
         newScreen={newScreen}
-        onAvatarClick={onAvatarClick}
         onDoubleClick={onDoubleClick}
         onMouseEnter={onMouseEnter}
         placement={'left'}
         showTitle
         time={createdAt}
-        titleAddon={dmIndicator}
       >
         <MessageContent {...item} />
       </ChatItem>
