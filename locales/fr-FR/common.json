@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Saisissez votre question dans le champ ci-dessus pour commencer à discuter avec l'IA",
     "aiModeHint": "Appuyez sur Entrée pour interroger Lobe AI",
     "aiModePlaceholder": "Posez une question à l'IA...",
+    "askAI": "Demander à l'IA",
     "community": "Communauté",
     "communitySupport": "Support communautaire",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Paramètres"
     },
     "discover": "Découvrir",
+    "keyboard": {
+      "ESC": "ÉCHAP",
+      "Tab": "Tab"
+    },
     "memory": "Mémoire",
     "navigate": "Naviguer",
     "newAgent": "Nouvel assistant",

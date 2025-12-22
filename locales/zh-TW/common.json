@@ -140,6 +140,7 @@
     "aiModeEmptyState": "在上方輸入框中輸入你的問題，開始與 AI 對話",
     "aiModeHint": "按 Enter 向 Lobe AI 詢問",
     "aiModePlaceholder": "向 AI 提問...",
+    "askAI": "詢問 AI",
     "community": "社群",
     "communitySupport": "社群支援",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "設定"
     },
     "discover": "探索",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "記憶",
     "navigate": "導覽",
     "newAgent": "新增助手",

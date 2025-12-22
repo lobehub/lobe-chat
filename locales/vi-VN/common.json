@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Nhập câu hỏi của bạn vào ô phía trên để bắt đầu trò chuyện với AI",
     "aiModeHint": "Nhấn Enter để hỏi Lobe AI",
     "aiModePlaceholder": "Đặt câu hỏi cho AI...",
+    "askAI": "Hỏi AI",
     "community": "Cộng đồng",
     "communitySupport": "Hỗ trợ cộng đồng",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Cài đặt"
     },
     "discover": "Khám phá",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Ký ức",
     "navigate": "Điều hướng",
     "newAgent": "Tạo trợ lý mới",

@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Wpisz swoje pytanie w polu powyżej, aby rozpocząć rozmowę z AI",
     "aiModeHint": "Naciśnij Enter, aby zapytać Lobe AI",
     "aiModePlaceholder": "Zadaj pytanie AI...",
+    "askAI": "Zapytaj AI",
     "community": "Społeczność",
     "communitySupport": "Wsparcie społeczności",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Ustawienia"
     },
     "discover": "Odkrywaj",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Pamięć",
     "navigate": "Nawigacja",
     "newAgent": "Nowy asystent",

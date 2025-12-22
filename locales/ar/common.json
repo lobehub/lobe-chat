@@ -140,6 +140,7 @@
     "aiModeEmptyState": "أدخل سؤالك في الحقل أعلاه لبدء المحادثة مع الذكاء الاصطناعي",
     "aiModeHint": "اضغط Enter لطرح سؤال على Lobe AI",
     "aiModePlaceholder": "اطرح سؤالاً على الذكاء الاصطناعي...",
+    "askAI": "اسأل الذكاء الاصطناعي",
     "community": "المجتمع",
     "communitySupport": "دعم المجتمع",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "الإعدادات"
     },
     "discover": "استكشاف",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "الذاكرة",
     "navigate": "التنقل",
     "newAgent": "إنشاء مساعد جديد",

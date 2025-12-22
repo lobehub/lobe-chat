@@ -140,6 +140,7 @@
     "aiModeEmptyState": "برای شروع گفتگو با هوش مصنوعی، سوال خود را در کادر بالا وارد کنید",
     "aiModeHint": "Enter را فشار دهید تا از Lobe AI بپرسید",
     "aiModePlaceholder": "سوالی از هوش مصنوعی بپرسید...",
+    "askAI": "پرسیدن از هوش مصنوعی",
     "community": "انجمن",
     "communitySupport": "پشتیبانی جامعه",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "تنظیمات"
     },
     "discover": "کشف",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "حافظه",
     "navigate": "ناوبری",
     "newAgent": "دستیار جدید",
