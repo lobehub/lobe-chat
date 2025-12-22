@@ -44,78 +44,83 @@ const CommandInput = memo(() => {
   const { styles } = useStyles();
 
   const { handleBack } = useCommandMenu();
-  const { menuContext, viewMode, pages, search, setSearch, typeFilter, setTypeFilter } = useCommandMenuContext();
+  const { menuContext, viewMode, pages, search, setSearch, typeFilter, setTypeFilter } =
+    useCommandMenuContext();
 
   const hasPages = pages.length > 0;
 
-    // Get localized context name
-    const getContextName = () => {
-      switch (menuContext) {
-        case 'settings': {
-          return tSetting('header.title', { defaultValue: menuContext });
-        }
-        case 'agent': {
-          return t('cmdk.search.agent', { defaultValue: menuContext });
-        }
-        case 'group': {
-          return tChat('group.title', { defaultValue: menuContext });
-        }
-        case 'page': {
-          return t('cmdk.pages', { defaultValue: menuContext });
-        }
-        case 'painting': {
-          return t('cmdk.painting', { defaultValue: menuContext });
-        }
-        case 'resource': {
-          return t('cmdk.resource', { defaultValue: menuContext });
-        }
-        default: {
-          return menuContext;
-        }
+  // Get localized context name
+  const getContextName = () => {
+    switch (menuContext) {
+      case 'settings': {
+        return tSetting('header.title', { defaultValue: menuContext });
       }
-    };
+      case 'agent': {
+        return t('cmdk.search.agent', { defaultValue: menuContext });
+      }
+      case 'group': {
+        return tChat('group.title', { defaultValue: menuContext });
+      }
+      case 'page': {
+        return t('cmdk.pages', { defaultValue: menuContext });
+      }
+      case 'painting': {
+        return t('cmdk.painting', { defaultValue: menuContext });
+      }
+      case 'resource': {
+        return t('cmdk.resource', { defaultValue: menuContext });
+      }
+      default: {
+        return menuContext;
+      }
+    }
+  };
 
-    const contextName = getContextName();
+  const contextName = getContextName();
 
-    const getTypeLabel = (type: ValidSearchType) => {
-      return t(`cmdk.search.${type}`);
-    };
+  const getTypeLabel = (type: ValidSearchType) => {
+    return t(`cmdk.search.${type}`);
+  };
 
-    return (
-      <>
-        {(menuContext || typeFilter) && !hasPages && (
-          <div className={styles.contextWrapper}>
-            {menuContext && <Tag className={styles.contextTag}>{contextName}</Tag>}
-            {typeFilter && (
-              <Tag className={styles.backTag} icon={<X size={12} />} onClick={() => setTypeFilter(undefined)}>
-                {getTypeLabel(typeFilter)}
-              </Tag>
-            )}
-          </div>
-        )}
-        <div className={styles.inputWrapper}>
-          {hasPages && (
-            <Tag className={styles.backTag} icon={<ArrowLeft size={12} />} onClick={handleBack} />
-          )}
-          <Command.Input
-            autoFocus
-            onValueChange={setSearch}
-            placeholder={
-              viewMode === 'ai-chat' ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')
-            }
-            value={search}
-          />
-          {viewMode !== 'ai-chat' && search.trim() ? (
-            <>
-              <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
-              <Tag>Tab</Tag>
-            </>
-          ) : (
-            <Tag>ESC</Tag>
+  return (
+    <>
+      {(menuContext !== 'general' || typeFilter) && !hasPages && (
+        <div className={styles.contextWrapper}>
+          {menuContext !== 'general' && <Tag className={styles.contextTag}>{contextName}</Tag>}
+          {typeFilter && (
+            <Tag
+              className={styles.backTag}
+              icon={<X size={12} />}
+              onClick={() => setTypeFilter(undefined)}
+            >
+              {getTypeLabel(typeFilter)}
+            </Tag>
           )}
         </div>
-      </>
-    );
+      )}
+      <div className={styles.inputWrapper}>
+        {hasPages && (
+          <Tag className={styles.backTag} icon={<ArrowLeft size={12} />} onClick={handleBack} />
+        )}
+        <Command.Input
+          autoFocus
+          onValueChange={setSearch}
+          placeholder={
+            viewMode === 'ai-chat' ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')
+          }
+          value={search}
+        />
+        {viewMode !== 'ai-chat' && search.trim() ? (
+          <>
+            <span style={{ fontSize: '14px', opacity: 0.6 }}>Ask AI</span>
+            <Tag>Tab</Tag>
+          </>
+        ) : (
+          <Tag>ESC</Tag>
+        )}
+      </div>
+    </>
+  );
 });
 
 CommandInput.displayName = 'CommandInput';

@@ -3,8 +3,8 @@
 import { Command } from 'cmdk';
 import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 import { useGlobalStore } from '@/store/global';
 
@@ -78,6 +78,7 @@ const CommandMenuContent = memo(() => {
 
           <Command.List>
             {!isAiMode && !isSearching && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
+            {isAiMode && <Command.Empty>{t('cmdk.aiModeHint')}</Command.Empty>}
 
             {!page && <MainMenu />}
 
