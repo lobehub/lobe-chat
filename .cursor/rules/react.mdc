@@ -7,7 +7,7 @@ alwaysApply: false
 # React Component Writing Guide
 
 - Use antd-style for complex styles; for simple cases, use the `style` attribute for inline styles
-- Use `Flexbox` and `Center` components from react-layout-kit for flex and centered layouts
+- Use `Flexbox` and `Center` components from `@lobehub/ui` for flex and centered layouts
 - Component selection priority: src/components > installed component packages > lobe-ui > antd
 - Use selectors to access zustand store data instead of accessing the store directly
 
@@ -69,7 +69,9 @@ alwaysApply: false
   - Drawer
   - Modal
 - Layout
+  - Center
   - DraggablePanel
+  - Flexbox
   - Footer
   - Grid
   - Header
