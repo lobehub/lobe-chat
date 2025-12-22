@@ -244,6 +244,16 @@ export class BrowserManager {
     }
   }
 
+  setWindowSize(identifier: string, size: { height?: number; width?: number }) {
+    const browser = this.browsers.get(identifier);
+    browser?.setWindowSize(size);
+  }
+
+  setWindowResizable(identifier: string, resizable: boolean) {
+    const browser = this.browsers.get(identifier);
+    browser?.setWindowResizable(resizable);
+  }
+
   getIdentifierByWebContents(webContents: WebContents): string | null {
     return this.webContentsMap.get(webContents) || null;
   }

@@ -10,3 +10,4 @@ export * from './system';
 export * from './tray';
 export * from './update';
 export * from './upload';
+export * from './window';

@@ -1,4 +1,9 @@
-import { InterceptRouteParams, OpenSettingsWindowOptions } from '@lobechat/electron-client-ipc';
+import type {
+  InterceptRouteParams,
+  OpenSettingsWindowOptions,
+  WindowResizableParams,
+  WindowSizeParams,
+} from '@lobechat/electron-client-ipc';
 import { findMatchingRoute } from '~common/routes';
 
 import { AppBrowsersIdentifiers, WindowTemplateIdentifiers } from '@/appBrowsers';
@@ -65,6 +70,20 @@ export default class BrowserWindowsCtr extends ControllerModule {
   maximizeWindow() {
     this.withSenderIdentifier((identifier) => {
       this.app.browserManager.maximizeWindow(identifier);
+    });
+  }
+
+  @IpcMethod()
+  setWindowSize(params: WindowSizeParams) {
+    this.withSenderIdentifier((identifier) => {
+      this.app.browserManager.setWindowSize(identifier, params);
+    });
+  }
+
+  @IpcMethod()
+  setWindowResizable(params: WindowResizableParams) {
+    this.withSenderIdentifier((identifier) => {
+      this.app.browserManager.setWindowResizable(identifier, params.resizable);
     });
   }
 

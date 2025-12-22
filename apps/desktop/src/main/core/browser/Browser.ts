@@ -473,6 +473,11 @@ export default class Browser {
     });
   }
 
+  setWindowResizable(resizable: boolean) {
+    logger.debug(`[${this.identifier}] Setting window resizable: ${resizable}`);
+    this._browserWindow?.setResizable(resizable);
+  }
+
   broadcast = <T extends MainBroadcastEventKey>(channel: T, data?: MainBroadcastParams<T>) => {
     if (this._browserWindow.isDestroyed()) return;
 
