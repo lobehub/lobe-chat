@@ -1,6 +1,6 @@
 import { useDebounce } from 'ahooks';
 import { useEffect, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import type { SearchResult } from '@/database/repositories/search';
@@ -34,7 +34,6 @@ export const useCommandMenu = () => {
   } = useCommandMenuContext();
 
   const navigate = useNavigate();
-  const location = useLocation();
   const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
