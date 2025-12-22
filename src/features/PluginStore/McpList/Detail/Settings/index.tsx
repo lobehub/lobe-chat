@@ -1,5 +1,5 @@
 import { Flexbox, Icon, Input, Text } from '@lobehub/ui';
-import { Form as AForm, App, Button, Space, Typography } from 'antd';
+import { Form as AForm, App, Button, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { EditIcon, LinkIcon, SaveIcon, Settings2Icon, TerminalIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -371,7 +371,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
               {t('settings.configuration.title')}
             </div>
             <div className={styles.emptyState}>
-              <Typography.Text type="secondary">{t('settings.httpTypeNotice')}</Typography.Text>
+              <Text type="secondary">{t('settings.httpTypeNotice')}</Text>
             </div>
           </div>
         )}
