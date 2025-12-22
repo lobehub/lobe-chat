@@ -169,6 +169,7 @@
     "@lobechat/builtin-tool-knowledge-base": "workspace:*",
     "@lobechat/builtin-tool-local-system": "workspace:*",
     "@lobechat/builtin-tool-memory": "workspace:*",
+    "@lobechat/builtin-tool-notebook": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/conversation-flow": "workspace:*",

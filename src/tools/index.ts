@@ -4,6 +4,7 @@ import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management
 import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
+import { NotebookManifest } from '@lobechat/builtin-tool-notebook';
 import { LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
@@ -76,6 +77,12 @@ export const builtinTools: LobeBuiltinTool[] = [
     hidden: true,
     identifier: GTDManifest.identifier,
     manifest: GTDManifest,
+    type: 'builtin',
+  },
+  {
+    hidden: true,
+    identifier: NotebookManifest.identifier,
+    manifest: NotebookManifest,
     type: 'builtin',
   },
 ];
