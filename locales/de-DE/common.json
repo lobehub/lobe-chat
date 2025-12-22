@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Gib deine Frage oben ein, um mit der KI zu chatten",
     "aiModeHint": "Drücken Sie Enter, um Lobe AI zu fragen",
     "aiModePlaceholder": "Stelle der KI eine Frage...",
+    "askAI": "KI fragen",
     "community": "Community",
     "communitySupport": "Community-Support",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Einstellungen"
     },
     "discover": "Entdecken",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Erinnerung",
     "navigate": "Navigieren",
     "newAgent": "Neuen Assistenten erstellen",

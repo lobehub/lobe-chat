@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Type your question above to start chatting with AI",
     "aiModeHint": "Press Enter to ask Lobe AI",
     "aiModePlaceholder": "Ask AI anything...",
+    "askAI": "Ask AI",
     "community": "Community",
     "communitySupport": "Community Support",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Settings"
     },
     "discover": "Discover",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Memory",
     "navigate": "Navigate",
     "newAgent": "Create New Assistant",

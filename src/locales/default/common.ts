@@ -143,6 +143,7 @@ export default {
     aiModeEmptyState: '在上方输入框中输入你的问题，开始与 AI 对话',
     aiModeHint: 'Enter to ask Lobe AI',
     aiModePlaceholder: '向 AI 提问...',
+    askAI: '问 AI',
     community: '社区',
     communitySupport: '社区支持',
     context: {
@@ -157,6 +158,10 @@ export default {
       settings: '设置',
     },
     discover: '发现',
+    keyboard: {
+      ESC: 'ESC',
+      Tab: 'Tab',
+    },
     memory: '记忆',
     navigate: '导航',
     newAgent: '新建助手',

@@ -140,6 +140,7 @@
     "aiModeEmptyState": "위의 입력창에 질문을 입력하여 AI와 대화를 시작하세요",
     "aiModeHint": "Enter 키를 눌러 Lobe AI에게 질문하세요",
     "aiModePlaceholder": "AI에게 질문하기...",
+    "askAI": "AI에게 질문하기",
     "community": "커뮤니티",
     "communitySupport": "커뮤니티 지원",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "설정"
     },
     "discover": "탐색",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "기억",
     "navigate": "탐색",
     "newAgent": "새 에이전트 만들기",

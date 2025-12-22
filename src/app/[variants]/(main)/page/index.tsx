@@ -15,7 +15,7 @@ const PagesPage = memo(() => {
 
   return (
     <Suspense fallback={<Loading debugId="PagesPage" />}>
-      <PageExplorer pageId={id} />
+      <PageExplorer pageId={`docs_${id}`} />
     </Suspense>
   );
 });

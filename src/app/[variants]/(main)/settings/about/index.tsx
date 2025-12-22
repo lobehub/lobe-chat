@@ -1,6 +1,6 @@
 'use client';
 
-import { SiDiscord, SiGithub, SiMedium, SiRss, SiX } from '@icons-pack/react-simple-icons';
+import { SiDiscord, SiGithub, SiRss, SiX, SiYoutube } from '@icons-pack/react-simple-icons';
 import { Flexbox, Form } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
@@ -92,10 +92,10 @@ const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
               },
 
               {
-                href: SOCIAL_URL.medium,
-                icon: SiMedium,
-                label: 'Medium',
-                value: 'medium',
+                href: SOCIAL_URL.youtube,
+                icon: SiYoutube,
+                label: 'YouTube',
+                value: 'youtube',
               },
             ]}
           />

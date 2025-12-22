@@ -140,6 +140,7 @@
     "aiModeEmptyState": "Yukarıdaki giriş kutusuna sorunuzu yazarak yapay zeka ile sohbet etmeye başlayın",
     "aiModeHint": "Enter tuşuna basarak Lobe AI'ye sor",
     "aiModePlaceholder": "Yapay zekaya soru sor...",
+    "askAI": "Yapay Zekaya Sor",
     "community": "Topluluk",
     "communitySupport": "Topluluk Desteği",
     "context": {
@@ -154,6 +155,10 @@
       "settings": "Ayarlar"
     },
     "discover": "Keşfet",
+    "keyboard": {
+      "ESC": "ESC",
+      "Tab": "Tab"
+    },
     "memory": "Hafıza",
     "navigate": "Gezin",
     "newAgent": "Yeni Asistan Oluştur",
