@@ -1,8 +1,8 @@
 /**
  * SWR localStorage Cache Provider
  *
- * 为选定的 SWR 请求提供 localStorage 持久化缓存。
- * 只有在白名单中的 Key 才会被缓存到 localStorage。
+ * Provides localStorage persistence for selected SWR requests.
+ * Only keys matching the whitelist patterns will be cached to localStorage.
  *
  * @example
  * ```tsx
@@ -12,45 +12,40 @@
  * ```
  */
 
-// ============================================================================
-// 全局缓存实例和配置好的 useSWR
-// ============================================================================
-
-
 interface CacheEntry<T = unknown> {
-  /** 缓存数据 */
+  /** Cached data */
   data: T;
-  /** 缓存时间戳 */
+  /** Cache timestamp */
   timestamp: number;
-  /** 应用版本号 */
+  /** App version */
   version: string;
 }
 
 export interface LocalStorageCacheOptions {
-  /** localStorage 键名，默认 'lobechat-swr-cache' */
+  /** localStorage key name, defaults to 'lobechat-swr-cache' */
   cacheKey?: string;
-  /** 允许缓存的 SWR Key 模式（白名单） */
+  /** Allowed SWR key patterns (whitelist) */
   cacheablePatterns?: string[];
-  /** 最大缓存条目数，默认 50 */
+  /** Maximum cache entries, defaults to 50 */
   maxEntries?: number;
-  /** 错误回调 */
+  /** Error callback */
   onError?: (error: Error) => void;
-  /** 缓存过期时间（毫秒），默认 24 小时 */
+  /** Cache TTL in milliseconds, defaults to 24 hours */
   ttl?: number;
-  /** 应用版本号，版本变化时清空缓存 */
+  /** App version, cache is cleared when version changes */
   version?: string;
 }
 
 /**
- * 默认允许缓存的 SWR Key 模式
- * 只有匹配这些模式的请求才会被持久化
+ * Default cacheable SWR key patterns
+ * Only requests matching these patterns will be persisted
  */
 const DEFAULT_CACHEABLE_PATTERNS: string[] = [
-  // 可根据需要添加
+  // Add patterns as needed
 ];
 
 /**
- * 检查 localStorage 是否可用
+ * Check if localStorage is available
  */
 const isLocalStorageAvailable = (): boolean => {
   if (typeof window === 'undefined') return false;
@@ -66,13 +61,13 @@ const isLocalStorageAvailable = (): boolean => {
 };
 
 /**
- * 检查 key 是否匹配白名单模式
+ * Check if key matches whitelist patterns
  *
- * SWR 的 key 可能是：
- * - 字符串: 'fetchSessions'
- * - 数组序列化后的字符串: '["fetchSessions","user-123"]'
+ * SWR keys can be:
+ * - String: 'fetchSessions'
+ * - Serialized array: '["fetchSessions","user-123"]'
  *
- * 我们检查 key 字符串是否包含任一白名单模式
+ * We check if the key string contains any whitelist pattern
  */
 const matchesCacheablePattern = (key: string, patterns: string[]): boolean => {
   if (patterns.length === 0) return false;
@@ -80,15 +75,15 @@ const matchesCacheablePattern = (key: string, patterns: string[]): boolean => {
 };
 
 /**
- * 创建 localStorage 缓存 Provider
+ * Create localStorage cache provider
  *
- * 特性：
- * - 白名单机制：只缓存指定的 Key
- * - TTL 过期：自动清理过期数据
- * - 版本控制：应用更新时自动清理旧缓存
- * - 容量限制：防止超出 localStorage 限制
- * - SSR 兼容：服务端返回空 Map
- * - 错误恢复：异常时降级到内存缓存
+ * Features:
+ * - Whitelist mechanism: only cache specified keys
+ * - TTL expiration: auto-cleanup expired data
+ * - Version control: auto-cleanup when app version changes
+ * - Capacity limit: prevent exceeding localStorage limit
+ * - SSR compatible: returns empty Map on server
+ * - Error recovery: fallback to memory cache on error
  */
 export function createLocalStorageProvider(options: LocalStorageCacheOptions = {}) {
   const {
@@ -100,14 +95,14 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
     onError = (error) => console.error('[SWR Cache]', error),
   } = options;
 
-  // SSR 或 localStorage 不可用时返回内存缓存
+  // Return memory cache when SSR or localStorage unavailable
   if (!isLocalStorageAvailable()) {
     return () => new Map();
   }
 
   return (): Map<string, unknown> => {
     /**
-     * 从 localStorage 加载缓存
+     * Load cache from localStorage
      */
     const loadCache = (): Map<string, unknown> => {
       try {
@@ -119,7 +114,7 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
         const entries: [string, CacheEntry][] = JSON.parse(stored);
         const now = Date.now();
 
-        // 过滤：过期数据、版本不匹配
+        // Filter: expired data, version mismatch
         const validEntries = entries
           .filter(([, entry]) => {
             const isExpired = now - entry.timestamp > ttl;
@@ -137,14 +132,14 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
 
     const initialData = loadCache();
 
-    // 防抖保存相关变量（放在类外部避免初始化顺序问题）
+    // Debounced save variables (outside class to avoid initialization order issues)
     let saveTimer: ReturnType<typeof setTimeout> | null = null;
     let cacheMapInstance: Map<string, unknown> | null = null;
 
     const saveCache = () => {
       if (!cacheMapInstance) return;
       try {
-        // 只保存白名单中的 key
+        // Only save whitelisted keys
         const entries = Array.from(cacheMapInstance.entries())
           .filter(([key]) => matchesCacheablePattern(key, cacheablePatterns))
           .slice(-maxEntries)
@@ -152,7 +147,7 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
 
         const serialized = JSON.stringify(entries);
 
-        // 检查大小，超过 4MB 时清理一半
+        // Check size, cleanup half when exceeding 4MB
         const sizeInMB = new Blob([serialized]).size / (1024 * 1024);
         if (sizeInMB > 4) {
           const reduced = entries.slice(-Math.floor(maxEntries / 2));
@@ -163,7 +158,7 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
         }
       } catch (error) {
         if ((error as DOMException).name === 'QuotaExceededError') {
-          // 容量超限，清空缓存
+          // Quota exceeded, clear cache
           try {
             localStorage.removeItem(cacheKey);
           } catch {
@@ -181,18 +176,18 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
       saveTimer = setTimeout(saveCache, 2000);
     };
 
-    // 页面卸载时立即保存
+    // Save immediately on page unload
     window.addEventListener('beforeunload', () => {
       if (saveTimer) clearTimeout(saveTimer);
       saveCache();
     });
 
-    // 多标签页同步
+    // Multi-tab sync
     window.addEventListener('storage', (event) => {
       if (event.key === cacheKey && event.newValue && cacheMapInstance) {
         try {
           const parsedEntries: [string, CacheEntry][] = JSON.parse(event.newValue);
-          // 只更新白名单中的 key
+          // Only update whitelisted keys
           parsedEntries.forEach(([key, entry]) => {
             if (matchesCacheablePattern(key, cacheablePatterns)) {
               cacheMapInstance!.set(key, entry.data);
@@ -205,15 +200,15 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
     });
 
     /**
-     * 创建带拦截的 Map
-     * 只有白名单中的 key 才会触发持久化
+     * Create Map with interception
+     * Only whitelisted keys trigger persistence
      */
     class LocalStorageCacheMap extends Map<string, unknown> {
       private initialized = false;
 
       constructor(entries?: readonly (readonly [string, unknown])[] | null) {
         super();
-        // 手动添加初始数据，避免在 super() 中触发 set
+        // Manually add initial data to avoid triggering set in super()
         if (entries) {
           for (const [key, value] of entries) {
             super.set(key, value);
@@ -228,7 +223,7 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
 
       set(key: string, value: unknown): this {
         super.set(key, value);
-        // 只有初始化完成后且在白名单中的 key 才触发保存
+        // Only trigger save after initialization and for whitelisted keys
         if (this.initialized && matchesCacheablePattern(key, cacheablePatterns)) {
           debouncedSave();
         }
@@ -244,7 +239,7 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
       }
     }
 
-    // 创建 Map 实例
+    // Create Map instance
     const cacheMap = new LocalStorageCacheMap(Array.from(initialData.entries()));
     cacheMapInstance = cacheMap;
 
@@ -253,8 +248,8 @@ export function createLocalStorageProvider(options: LocalStorageCacheOptions = {
 }
 
 /**
- * 清除 SWR localStorage 缓存
- * 可用于用户手动清理或版本更新时调用
+ * Clear SWR localStorage cache
+ * Can be used for manual cleanup or when app version changes
  */
 export function clearSWRCache(cacheKey = 'lobechat-swr-cache'): void {
   if (typeof window === 'undefined') return;
@@ -268,24 +263,23 @@ export function clearSWRCache(cacheKey = 'lobechat-swr-cache'): void {
 }
 
 /**
- * SWR localStorage 缓存白名单
- * 只有匹配这些模式的 Key 才会被持久化到 localStorage
+ * SWR localStorage cache whitelist
+ * Only keys matching these patterns will be persisted to localStorage
  */
 const SWR_CACHEABLE_PATTERNS = [
-  // 首页数据
-  'fetchAgentList', // 助手列表
-  'fetchGroups', // 分组列表
-  'fetchRecentTopics', // 最近话题
-  'fetchRecentResources', // 最近资源
-  'fetchRecentPages', // 最近页面
-  // 聊天页面数据
-  'SWR_USE_FETCH_TOPIC', // 话题列表（按 agentId/groupId 分别缓存）
-  'fetchGroupDetail', // 群组详情（按 groupId 分别缓存）
+  // Home page data
+  'fetchAgentList', // Agent list
+  'fetchGroups', // Group list
+  'fetchRecentTopics', // Recent topics
+  'fetchRecentResources', // Recent resources
+  'fetchRecentPages', // Recent pages
+  // Chat page data
+  'SWR_USE_FETCH_TOPIC', // Topic list (cached per agentId/groupId)
+  'fetchGroupDetail', // Group detail (cached per groupId)
 ];
 
-
 /**
- * 导出 provider 工厂函数，用于 SWRConfig
+ * Export provider factory function for SWRConfig
  */
 export const swrCacheProvider = () => {
   return createLocalStorageProvider({
