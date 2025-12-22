@@ -238,6 +238,8 @@ export const fileRouter = router({
           const existingDocument = await ctx.documentModel.findByFileId(input.fileId);
           if (!existingDocument && chunkResult.chunks && chunkResult.chunks.length > 0) {
             try {
+              // Use the already parsed chunks to create document record
+              // Combine all chunks into full content (same as what parseFileContent would do)
               const fullContent = chunkResult.chunks.map((chunk) => chunk.text).join('\n\n');
 
               // Extract metadata from chunks if available
