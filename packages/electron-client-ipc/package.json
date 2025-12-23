@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "devDependencies": {
-    "electron": "^34.0.0"
+    "electron": "^35.7.5"
   },
   "peerDependencies": {
     "react": "^19.2.0"
