@@ -15,7 +15,7 @@ alwaysApply: false
 
 - If unsure how to use `@lobehub/ui` components or what props they accept, search for existing usage in this project instead of guessing. Most components extend antd components with additional props
 - For specific usage, search online. For example, for ActionIcon visit <https://ui.lobehub.com/components/action-icon>
-- Read `node_modules/@lobehub/ui/es/index.js` to see all available components and their props
+- Read `node_modules/@lobehub/ui/es/index.mjs` to see all available components and their props
 
 - General
   - ActionIcon

@@ -1,5 +1,5 @@
 import { Icon } from '@lobehub/ui';
-import { IconSizeType } from '@lobehub/ui/es/Icon';
+import { IconSizeType } from '@lobehub/ui/es/Icon/index.mjs';
 import { Loader2 } from 'lucide-react';
 import { CSSProperties, memo } from 'react';
 

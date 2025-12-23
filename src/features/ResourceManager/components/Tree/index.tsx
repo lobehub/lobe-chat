@@ -5,7 +5,7 @@ import { ActionIcon, Block, Dropdown, Flexbox, Icon } from '@lobehub/ui';
 import { App, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { FileText, FolderIcon, FolderOpenIcon } from 'lucide-react';
-import { m as motion } from 'motion/react';
+import * as motion from 'motion/react-m';
 import React, { memo, useCallback, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

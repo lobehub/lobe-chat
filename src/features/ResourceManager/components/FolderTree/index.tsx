@@ -4,7 +4,7 @@ import { CaretDownFilled } from '@ant-design/icons';
 import { ActionIcon, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FolderIcon, FolderOpenIcon } from 'lucide-react';
-import { m as motion } from 'motion/react';
+import * as motion from 'motion/react-m';
 import { memo, useCallback } from 'react';
 
 const useStyles = createStyles(({ css, token }) => ({

@@ -13,7 +13,7 @@ const container = css`
   }
 `;
 
-const Highlighter = dynamic(() => import('@lobehub/ui/es/Highlighter'), {
+const Highlighter = dynamic(() => import('@lobehub/ui/es/Highlighter/index.mjs'), {
   loading: () => <Skeleton avatar={false} title={false} />,
   ssr: false,
 });
