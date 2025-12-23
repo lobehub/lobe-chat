@@ -6,7 +6,7 @@ export interface ChatMessage {
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
 
-export type PageType = 'theme' | 'ai-chat' | string;
+export type PageType = 'theme' | 'ask-ai' | string;
 
 export interface Context {
   name: string;

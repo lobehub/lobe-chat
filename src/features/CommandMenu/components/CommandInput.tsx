@@ -42,7 +42,7 @@ const CommandInput = memo(() => {
   const { styles } = useStyles();
 
   const { handleBack } = useCommandMenu();
-  const { menuContext, viewMode, pages, search, setSearch, typeFilter, setTypeFilter } =
+  const { menuContext, pages, page, search, setSearch, typeFilter, setTypeFilter } =
     useCommandMenuContext();
 
   const hasPages = pages.length > 0;
@@ -78,11 +78,11 @@ const CommandInput = memo(() => {
           autoFocus
           onValueChange={setSearch}
           placeholder={
-            viewMode === 'ai-chat' ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')
+            page === 'ask-ai' ? t('cmdk.aiModePlaceholder') : t('cmdk.searchPlaceholder')
           }
           value={search}
         />
-        {viewMode !== 'ai-chat' && search.trim() ? (
+        {page !== 'ask-ai' && search.trim() ? (
           <>
             <span style={{ fontSize: '14px', opacity: 0.6 }}>{t('cmdk.askAI')}</span>
             <Tag>{t('cmdk.keyboard.Tab')}</Tag>

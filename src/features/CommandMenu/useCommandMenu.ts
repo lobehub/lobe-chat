@@ -32,7 +32,6 @@ export const useCommandMenu = () => {
     typeFilter,
     setTypeFilter,
     page,
-    isAiMode,
     menuContext: context,
     pathname,
   } = useCommandMenuContext();
@@ -63,7 +62,7 @@ export const useCommandMenu = () => {
   const searchQuery = debouncedSearch.trim();
 
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
-    hasSearch && !isAiMode ? ['search', searchQuery, agentId, typeFilter] : null,
+    hasSearch ? ['search', searchQuery, agentId, typeFilter] : null,
     async () => {
       const locale = globalHelpers.getCurrentLanguage();
       return lambdaClient.search.query.query({
@@ -111,11 +110,20 @@ export const useCommandMenu = () => {
     closeCommandMenu();
   };
 
-  const handleAskAISubmit = () => {
+  const handleAskLobeAI = () => {
     // Navigate to inbox agent with the message query parameter
     if (inboxAgentId && search.trim()) {
       const message = encodeURIComponent(search.trim());
       navigate(`/agent/${inboxAgentId}?message=${message}`);
+      closeCommandMenu();
+    }
+  };
+
+  const handleAIPainting = () => {
+    // Navigate to painting page with search as prompt
+    if (search.trim()) {
+      const prompt = encodeURIComponent(search.trim());
+      navigate(`/image?prompt=${prompt}`);
       closeCommandMenu();
     }
   };
@@ -181,7 +189,8 @@ export const useCommandMenu = () => {
 
   return {
     closeCommandMenu,
-    handleAskAISubmit,
+    handleAIPainting,
+    handleAskLobeAI,
     handleBack,
     handleCreateAgentTeam,
     handleCreateLibrary,
@@ -192,7 +201,6 @@ export const useCommandMenu = () => {
     handleNavigate,
     handleThemeChange,
     hasSearch,
-    isAiMode,
     isSearching,
     mounted,
     open,

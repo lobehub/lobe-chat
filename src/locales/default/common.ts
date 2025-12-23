@@ -143,7 +143,11 @@ export default {
     aiModeEmptyState: '在上方输入框中输入你的问题，开始与 AI 对话',
     aiModeHint: 'Enter to ask Lobe AI',
     aiModePlaceholder: '向 AI 提问...',
+    aiPainting: 'AI 绘画',
     askAI: '问 AI',
+    askAIHeading: '使用以下功能处理 {{query}}',
+    askAIHeadingEmpty: '选择一个 AI 功能',
+    askLobeAI: '问 Lobe AI',
     community: '社区',
     communitySupport: '社区支持',
     context: {
