@@ -2,17 +2,29 @@
 
 import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Button, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
-import { CircleIcon, DotIcon, DownloadIcon, ScaleIcon, StarIcon } from 'lucide-react';
+import {
+  CircleIcon,
+  DotIcon,
+  DownloadIcon,
+  Heart,
+  type LucideProps,
+  ScaleIcon,
+  StarIcon,
+} from 'lucide-react';
 import qs from 'query-string';
-import { memo } from 'react';
+import { useState , memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
 
 import OfficialIcon from '@/components/OfficialIcon';
 import Scores from '@/features/MCP/Scores';
 import { getLanguageColor, getRecommendedDeployment } from '@/features/MCP/utils';
 import { useCategory } from '@/hooks/useMCPCategory';
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { socialService } from '@/services/social';
 
 import InstallationIcon from '../../components/MCPDepsIcon';
 import PublishedTime from '../../components/PublishedTime';
@@ -36,6 +48,7 @@ const useStyles = createStyles(({ css, token }) => {
 
 const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile, inModal }) => {
   const { t } = useTranslation('discover');
+  const { message } = App.useApp();
   const {
     name,
     author,
@@ -58,6 +71,48 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
   } = useDetailContext();
   const { styles, theme } = useStyles();
   const { mobile = isMobile } = useResponsive();
+  const { isAuthenticated, signIn, session } = useMarketAuth();
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+  // Set access token for social service
+  if (session?.accessToken) {
+    socialService.setAccessToken(session.accessToken);
+  }
+
+  // Fetch favorite status
+  const { data: favoriteStatus, mutate: mutateFavorite } = useSWR(
+    identifier && isAuthenticated ? ['favorite-status', 'plugin', identifier] : null,
+    () => socialService.checkFavoriteStatus('plugin', identifier!),
+    { revalidateOnFocus: false },
+  );
+
+  const isFavorited = favoriteStatus?.isFavorited ?? false;
+
+  const handleFavoriteClick = async () => {
+    if (!isAuthenticated) {
+      await signIn();
+      return;
+    }
+
+    if (!identifier) return;
+
+    setFavoriteLoading(true);
+    try {
+      if (isFavorited) {
+        await socialService.removeFavorite('plugin', identifier);
+        message.success(t('assistant.unfavoriteSuccess'));
+      } else {
+        await socialService.addFavorite('plugin', identifier);
+        message.success(t('assistant.favoriteSuccess'));
+      }
+      await mutateFavorite();
+    } catch (error) {
+      console.error('Favorite action failed:', error);
+      message.error(t('assistant.favoriteFailed'));
+    } finally {
+      setFavoriteLoading(false);
+    }
+  };
 
   const recommendedDeployment = getRecommendedDeployment(deploymentOptions);
   const categories = useCategory();
@@ -137,6 +192,16 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
               {!mobile && scores}
             </Flexbox>
             <Flexbox align={'center'} gap={6} horizontal>
+              <Tooltip title={isFavorited ? t('assistant.unfavorite') : t('assistant.favorite')}>
+                <ActionIcon
+                  icon={(props: LucideProps) => (
+                    <Heart {...props} fill={isFavorited ? 'currentColor' : 'none'} />
+                  )}
+                  loading={favoriteLoading}
+                  onClick={handleFavoriteClick}
+                  style={isFavorited ? { color: 'var(--lobe-color-error)' } : undefined}
+                />
+              </Tooltip>
               {recommendedDeployment?.installationMethod && (
                 <InstallationIcon type={recommendedDeployment.installationMethod} />
               )}
