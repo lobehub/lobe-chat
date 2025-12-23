@@ -9,3 +9,4 @@ export * from './messagesToText';
 export * from './plugin';
 export * from './search';
 export * from './systemRole';
+export * from './userMemory';

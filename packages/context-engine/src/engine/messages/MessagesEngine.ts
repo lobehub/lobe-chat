@@ -130,6 +130,7 @@ export class MessagesEngine {
       isAgentGroupEnabled || !!agentGroup?.currentAgentId || !!agentGroup?.members;
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
 
+    console.log('isUserMemoryEnabled:', isUserMemoryEnabled, userMemory);
     return [
       // =============================================
       // Phase 1: History Management
@@ -159,25 +160,38 @@ export class MessagesEngine {
         systemPrompt: agentGroup?.systemPrompt,
       }),
 
-      // 4. Knowledge injection (full content for agent files + metadata for knowledge bases)
+      // =============================================
+      // Phase 2.5: First User Message Context Injection
+      // These providers inject content before the first user message
+      // Order matters: first executed = first in content
+      // =============================================
+
+      // 4. User memory injection (conditionally added, injected first)
+      ...(isUserMemoryEnabled ? [new UserMemoryInjector(userMemory)] : []),
+
+      // 5. Knowledge injection (full content for agent files + metadata for knowledge bases)
       new KnowledgeInjector({
         fileContents: knowledge?.fileContents,
         knowledgeBases: knowledge?.knowledgeBases,
       }),
 
-      // 5. Agent Builder context injection (current agent config/meta for editing)
+      // =============================================
+      // Phase 2.6: Additional System Context
+      // =============================================
+
+      // 6. Agent Builder context injection (current agent config/meta for editing)
       new AgentBuilderContextInjector({
         enabled: isAgentBuilderEnabled,
         agentContext: agentBuilderContext,
       }),
 
-      // 6. Group Agent Builder context injection (current group config/members for editing)
+      // 7. Group Agent Builder context injection (current group config/members for editing)
       new GroupAgentBuilderContextInjector({
         enabled: isGroupAgentBuilderEnabled,
         groupContext: groupAgentBuilderContext,
       }),
 
-      // 7. Tool system role injection (conditionally added)
+      // 8. Tool system role injection (conditionally added)
       ...(toolsConfig?.tools && toolsConfig.tools.length > 0
         ? [
             new ToolSystemRoleProvider({
@@ -190,21 +204,11 @@ export class MessagesEngine {
           ]
         : []),
 
-      // 8. History summary injection
+      // 9. History summary injection
       new HistorySummaryProvider({
         formatHistorySummary,
         historySummary,
       }),
-
-      // 9. User memory injection (conditionally added)
-      ...(isUserMemoryEnabled
-        ? [
-            new UserMemoryInjector({
-              fetchedAt: userMemory.fetchedAt,
-              memories: userMemory.memories,
-            }),
-          ]
-        : []),
 
       // =============================================
       // Phase 3: Message Transformation
