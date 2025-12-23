@@ -1,4 +1,4 @@
-import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@/types/userMemory';
+import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@lobechat/types';
 
 import type { UserMemoryStoreState } from './initialState';
 import { userMemoryCacheKey } from './utils/cacheKey';
@@ -57,3 +57,6 @@ export const userMemorySelectors = {
     return state.memoryFetchedAtMap[key];
   },
 };
+
+export { agentMemorySelectors } from './slices/agent/selectors';
+export { identitySelectors } from './slices/identity/selectors';

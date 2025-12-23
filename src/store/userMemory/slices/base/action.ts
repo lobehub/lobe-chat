@@ -3,13 +3,14 @@ import type { SWRResponse } from 'swr';
 import useSWR from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { mutate, useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
 import { LayersEnum } from '@/types/userMemory';
 import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { UserMemoryStore } from '../../store';
+import type { IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';
 
@@ -33,6 +34,11 @@ export interface BaseAction {
     enable: boolean,
     params?: RetrieveMemoryParams,
   ) => SWRResponse<RetrieveMemoryResult>;
+  /**
+   * Initialize global identities at app startup
+   * Fetches up to 50 most recent identities for chat context injection
+   */
+  useInitIdentities: (isLogin: boolean) => SWRResponse<any>;
 }
 
 export const createBaseSlice: StateCreator<
@@ -83,7 +89,7 @@ export const createBaseSlice: StateCreator<
   },
 
   updateMemory: async (id, content, layer) => {
-    const { memoryCRUDService } = await import('@/services/userMemory/index');
+    const { memoryCRUDService } = await import('@/services/userMemory');
     const { resetContextsList, resetExperiencesList, resetIdentitiesList, resetPreferencesList } =
       get();
 
@@ -241,6 +247,31 @@ export const createBaseSlice: StateCreator<
                 preferences: next.preferences.length,
               },
             }),
+          );
+        },
+      },
+    );
+  },
+
+  useInitIdentities: (isLogin) => {
+    return useClientDataSWRWithSync<IdentityForInjection[]>(
+      isLogin ? 'useInitIdentities' : null,
+      // Use dedicated API that filters for self identities only
+      () => userMemoryService.queryIdentitiesForInjection({ limit: 50 }),
+      {
+        onSuccess: (data) => {
+          if (!data) return;
+
+          const fetchedAt = Date.now();
+
+          set(
+            {
+              globalIdentities: data,
+              globalIdentitiesFetchedAt: fetchedAt,
+              globalIdentitiesInit: true,
+            },
+            false,
+            n('useInitIdentities/success', { count: data.length }),
           );
         },
       },

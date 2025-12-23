@@ -1,36 +1,11 @@
-import { UIChatMessage } from '@lobechat/types';
+import type { UserMemoryData, UserMemoryIdentityItem } from '@lobechat/context-engine';
 import type { RetrieveMemoryResult } from '@lobechat/types';
 
+import { mutate } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
 import { getChatStoreState } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
-import { getSessionStoreState } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
-import {
-  getUserMemoryStoreState,
-  useUserMemoryStore,
-  userMemorySelectors,
-} from '@/store/userMemory';
-import { userMemoryCacheKey } from '@/store/userMemory/utils/cacheKey';
-import { createMemorySearchParams } from '@/store/userMemory/utils/searchParams';
-
-/**
- * User memories with fetch metadata
- */
-export interface UserMemoriesResult {
-  fetchedAt: number;
-  memories: RetrieveMemoryResult;
-}
-
-/**
- * Context for resolving user memories
- */
-export interface MemoryResolverContext {
-  /** Whether memory plugin is enabled */
-  isMemoryPluginEnabled: boolean;
-  /** Chat messages for context extraction */
-  messages: UIChatMessage[];
-}
+import { getUserMemoryStoreState, useUserMemoryStore } from '@/store/userMemory';
+import { agentMemorySelectors, identitySelectors } from '@/store/userMemory/selectors';
 
 const EMPTY_MEMORIES: RetrieveMemoryResult = {
   contexts: [],
@@ -39,90 +14,91 @@ const EMPTY_MEMORIES: RetrieveMemoryResult = {
 };
 
 /**
- * Resolves user memories for context injection
+ * Resolves global identities from user memory store
+ * Returns identities that apply across all topics
+ */
+export const resolveGlobalIdentities = (): UserMemoryIdentityItem[] => {
+  const memoryState = getUserMemoryStoreState();
+  const globalIdentities = identitySelectors.globalIdentities(memoryState);
+
+  return globalIdentities.map((identity) => ({
+    description: identity.description,
+    id: identity.id,
+    role: identity.role,
+    type: identity.type,
+  }));
+};
+
+/**
+ * Context for resolving topic memories
+ */
+export interface TopicMemoryResolverContext {
+  /** Topic ID to retrieve memories for (optional, will use active topic if not provided) */
+  topicId?: string;
+}
+
+/**
+ * Resolves topic-based memories (contexts, experiences, preferences)
  *
  * This function handles:
- * 1. Checking if memories are already cached
- * 2. Building memory context from messages and session
+ * 1. Getting the topic ID from context or active topic
+ * 2. Checking if memories are already cached for the topic
  * 3. Fetching memories from the service if not cached
- * 4. Caching the fetched memories for future use
+ * 4. Caching the fetched memories by topic ID
  */
-export const resolveUserMemories = async (
-  ctx: MemoryResolverContext,
-): Promise<UserMemoriesResult | undefined> => {
-  const { isMemoryPluginEnabled, messages } = ctx;
+export const resolveTopicMemories = async (
+  ctx?: TopicMemoryResolverContext,
+): Promise<RetrieveMemoryResult> => {
+  // Get topic ID from context or active topic
+  const topicId = ctx?.topicId ?? getChatStoreState().activeTopicId;
 
-  // Check if already have cached memories
-  let userMemories =
-    userMemorySelectors.activeUserMemories(isMemoryPluginEnabled)(getUserMemoryStoreState());
-
-  if (userMemories) {
-    return userMemories;
+  // If no topic ID, return empty memories
+  if (!topicId) {
+    return EMPTY_MEMORIES;
   }
 
-  // If memory plugin not enabled, return undefined
-  if (!isMemoryPluginEnabled) {
-    return undefined;
-  }
+  const userMemoryStoreState = getUserMemoryStoreState();
 
-  // Build memory context from messages and session
-  const chatStoreState = getChatStoreState();
-  const sessionStoreState = getSessionStoreState();
+  // Check if already have cached memories for this topic
+  const cachedMemories = agentMemorySelectors.topicMemories(topicId)(userMemoryStoreState);
 
-  const historyMessages = messages.slice(0, -1);
-  const latestHistoryMessage = [...historyMessages]
-    .reverse()
-    .find((item) => typeof item?.content === 'string' && item.content.trim().length > 0);
-  const pendingMessage = messages.at(-1);
-
-  const memoryContext = {
-    latestMessageContent: latestHistoryMessage?.content,
-    pendingMessageContent: pendingMessage?.content,
-    session: sessionSelectors.currentSession(sessionStoreState),
-    topic: topicSelectors.currentActiveTopic(chatStoreState),
-  };
-
-  // Set active memory context in store
-  useUserMemoryStore.getState().setActiveMemoryContext(memoryContext);
-
-  const updatedMemoryState = getUserMemoryStoreState();
-  const memoryParams = updatedMemoryState.activeParams ?? createMemorySearchParams(memoryContext);
-
-  if (!memoryParams) {
-    return undefined;
-  }
-
-  const key = userMemoryCacheKey(memoryParams);
-  const cachedMemories = updatedMemoryState.memoryMap[key];
-
-  // Return cached memories if available
   if (cachedMemories) {
-    const cachedAt = updatedMemoryState.memoryFetchedAtMap[key] ?? Date.now();
-    return {
-      fetchedAt: cachedAt,
-      memories: cachedMemories,
-    };
+    return cachedMemories;
   }
 
-  // Fetch memories from service
-  const result = await userMemoryService.retrieveMemory(memoryParams);
-  const memories = result ?? EMPTY_MEMORIES;
-  const fetchedAt = Date.now();
+  // Fetch memories for this topic
+  try {
+    const result = await userMemoryService.retrieveMemoryForTopic(topicId);
+    const memories = result ?? EMPTY_MEMORIES;
 
-  // Cache the fetched memories
-  useUserMemoryStore.setState((state) => ({
-    memoryFetchedAtMap: {
-      ...state.memoryFetchedAtMap,
-      [key]: fetchedAt,
-    },
-    memoryMap: {
-      ...state.memoryMap,
-      [key]: memories,
-    },
-  }));
+    // Cache the fetched memories by topic ID
+    useUserMemoryStore.setState((state) => ({
+      topicMemoriesMap: {
+        ...state.topicMemoriesMap,
+        [topicId]: memories,
+      },
+    }));
 
-  return {
-    fetchedAt,
-    memories,
-  };
+    // Also trigger SWR mutate to keep in sync
+    await mutate(['useFetchMemoriesForTopic', topicId]);
+
+    return memories;
+  } catch (error) {
+    console.error('Failed to retrieve memories for topic:', error);
+    return EMPTY_MEMORIES;
+  }
 };
+
+/**
+ * Combines topic memories and global identities into UserMemoryData
+ * This is a utility for assembling the final memory data structure
+ */
+export const combineUserMemoryData = (
+  topicMemories: RetrieveMemoryResult,
+  identities: UserMemoryIdentityItem[],
+): UserMemoryData => ({
+  contexts: topicMemories.contexts,
+  experiences: topicMemories.experiences,
+  identities,
+  preferences: topicMemories.preferences,
+});

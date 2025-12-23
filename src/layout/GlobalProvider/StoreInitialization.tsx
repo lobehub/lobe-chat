@@ -16,6 +16,7 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors, onboardingSelectors } from '@/store/user/selectors';
+import { useUserMemoryStore } from '@/store/userMemory';
 
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
@@ -34,6 +35,7 @@ const StoreInitialization = memo(() => {
 
   const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
   const useInitAiProviderKeyVaults = useAiInfraStore((s) => s.useFetchAiProviderRuntimeState);
+  const useInitIdentities = useUserMemoryStore((s) => s.useInitIdentities);
 
   // init the system preference
   useInitSystemStatus();
@@ -64,6 +66,9 @@ const StoreInitialization = memo(() => {
 
   // init user provider key vaults
   useInitAiProviderKeyVaults(isLoginOnInit, isSyncActive);
+
+  // init user memory identities (for chat context injection)
+  useInitIdentities(isLoginOnInit);
 
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {

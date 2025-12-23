@@ -82,6 +82,15 @@ export interface UserMemoryPreferenceItem {
   [key: string]: unknown;
 }
 
+export interface UserMemoryIdentityItem {
+  description?: string | null;
+  id?: string;
+  role?: string | null;
+  /** Identity type: personal (角色), professional (职业), demographic (属性) */
+  type?: 'demographic' | 'personal' | 'professional' | string | null;
+  [key: string]: unknown;
+}
+
 /**
  * User memory data structure
  * Compatible with SearchMemoryResult from @lobechat/types
@@ -89,6 +98,7 @@ export interface UserMemoryPreferenceItem {
 export interface UserMemoryData {
   contexts: UserMemoryContextItem[];
   experiences: UserMemoryExperienceItem[];
+  identities?: UserMemoryIdentityItem[];
   preferences: UserMemoryPreferenceItem[];
 }
 

@@ -17,6 +17,7 @@ export type {
   UserMemoryContextItem,
   UserMemoryData,
   UserMemoryExperienceItem,
+  UserMemoryIdentityItem,
   UserMemoryPreferenceItem,
   VariableGenerators,
 } from './types';

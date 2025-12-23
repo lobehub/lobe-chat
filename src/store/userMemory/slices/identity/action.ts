@@ -1,13 +1,16 @@
-import { NewUserMemoryIdentity, UpdateUserMemoryIdentity } from '@lobechat/types';
+import {
+  LayersEnum,
+  NewUserMemoryIdentity,
+  TypesEnum,
+  UpdateUserMemoryIdentity,
+} from '@lobechat/types';
 import { uniqBy } from 'es-toolkit/compat';
 import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { AddIdentityEntryResult } from '@/database/models/userMemory';
-import { userMemoryService } from '@/services/userMemory';
-import { memoryCRUDService } from '@/services/userMemory/index';
-import { LayersEnum, TypesEnum } from '@/types/userMemory';
+import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { UserMemoryStore } from '../../store';
@@ -99,15 +102,13 @@ export const createIdentitySlice: StateCreator<
     return useSWR(
       swrKey,
       async () => {
-        const result = await userMemoryService.queryMemories({
+        return await userMemoryService.queryMemories({
           layer: LayersEnum.Identity,
           page: params.page,
           pageSize: params.pageSize,
           q: params.q,
           types: params.types,
         });
-
-        return result;
       },
       {
         onSuccess(data: any) {

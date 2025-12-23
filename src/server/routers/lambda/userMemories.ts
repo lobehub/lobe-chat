@@ -1,4 +1,5 @@
 import {
+  DEFAULT_SEARCH_USER_MEMORY_TOP_K,
   DEFAULT_USER_MEMORY_EMBEDDING_DIMENSIONS,
   DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM,
 } from '@lobechat/const';
@@ -10,14 +11,17 @@ import {
   RemoveIdentityActionSchema,
   UpdateIdentityActionSchema,
 } from '@lobechat/memory-user-memory';
+import { LayersEnum, SearchMemoryResult, searchMemorySchema } from '@lobechat/types';
 import { type SQL, and, asc, eq, gte, lte } from 'drizzle-orm';
 import { ModelProvider } from 'model-bank';
 import pMap from 'p-map';
 import { z } from 'zod';
 
+import { TopicModel } from '@/database/models/topic';
 import {
   IdentityEntryBasePayload,
   IdentityEntryPayload,
+  UserMemoryIdentityModel,
   UserMemoryModel,
 } from '@/database/models/userMemory';
 import {
@@ -32,8 +36,6 @@ import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ClientSecretPayload } from '@/types/auth';
-import { SearchMemoryResult, searchMemorySchema } from '@/types/userMemory';
-import { LayersEnum } from '@/types/userMemory/shared';
 
 const EMPTY_SEARCH_RESULT: SearchMemoryResult = {
   contexts: [],
@@ -212,6 +214,19 @@ export const userMemoriesRouter = router({
       } catch (error) {
         console.error('Failed to retrieve memory detail:', error);
         return null;
+      }
+    }),
+
+  queryIdentitiesForInjection: authedProcedure
+    .use(serverDatabase)
+    .input(z.object({ limit: z.coerce.number().int().min(1).max(100).optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      try {
+        const identityModel = new UserMemoryIdentityModel(ctx.serverDB, ctx.userId);
+        return await identityModel.queryForInjection(input?.limit ?? 50);
+      } catch (error) {
+        console.error('Failed to query identities for injection:', error);
+        return [];
       }
     }),
 
@@ -676,6 +691,37 @@ export const userMemoriesRouter = router({
           message: `Failed to re-embed memories: ${(error as Error).message}`,
           success: false,
         };
+      }
+    }),
+
+  /**
+   * Retrieve memories for a specific topic
+   * Uses the topic's historySummary as the search query
+   */
+  retrieveMemoryForTopic: memoryProcedure
+    .input(z.object({ topicId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      try {
+        // Get topic info to use historySummary as query
+        const topicModel = new TopicModel(ctx.serverDB, ctx.userId);
+        const topic = await topicModel.findById(input.topicId);
+
+        if (!topic?.historySummary) {
+          // No summary available, return empty result
+          return EMPTY_SEARCH_RESULT;
+        }
+
+        // Search memories using topic's historySummary
+        const searchParams = {
+          query: topic.historySummary,
+          topK: DEFAULT_SEARCH_USER_MEMORY_TOP_K,
+        };
+
+        const result = await searchUserMemories(ctx, searchParams);
+        return result;
+      } catch (error) {
+        console.error('Failed to retrieve memory for topic:', error);
+        return EMPTY_SEARCH_RESULT;
       }
     }),
 
