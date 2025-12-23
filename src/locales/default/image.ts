@@ -86,7 +86,7 @@ export default {
     },
   },
   notSupportGuide: {
-    desc: '当前部署模式不支持 AI 图像生成功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
+    desc: '当前部署模式不支持 AI 图像生成功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeHub Cloud</3>',
     features: {
       fileIntegration: {
         desc: '与文件管理深度整合。生成的图片自动保存到文件系统，统一管理和组织',

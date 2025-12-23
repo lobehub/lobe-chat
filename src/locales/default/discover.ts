@@ -161,7 +161,7 @@ export default {
       desc1: '在会话窗口中通过右上角设置进入你想提交助理的设置页面；',
       desc2: '点击右上角提交到助理社区按钮',
       tag: '方法一',
-      title: '通过 LobeChat 提交',
+      title: '通过 LobeHub 提交',
     },
     func2: {
       button: '前往 Github 助理仓库',
@@ -320,7 +320,7 @@ export default {
             cursor:
               '- 导航到 **设置**，然后选择 Cursor 设置\n- 在左侧选择 **MCP**\n- 点击右上角的 **添加新的全局 MCP 服务器**\n- 复制并粘贴服务器配置到现有文件中，然后保存',
             lobeChat:
-              '- 打开 **LobeChat 桌面版** 应用\n- 前往 **设置** - **默认助理**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
+              '- 打开 **LobeHub 桌面版** 应用\n- 前往 **设置** - **默认助理**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
             openai:
               '- 打开你的 **OpenAI 应用** 或开发环境\n- 在 **Responses API** 中配置 MCP 工具\n- 在 API 请求的 **tools** 数组中添加 MCP 块\n- 设置 **server_url** 为你的 MCP 服务器端点\n- 包含认证所需的头部信息（API 密钥、令牌等）\n- 使用 `allowed_tools` 参数限制暴露的工具\n- 设置 `require_approval` 来控制工具执行审批',
             vscode:
@@ -623,7 +623,7 @@ export default {
       type: '类型',
     },
     providerInfo: {
-      apiTooltip: 'LobeChat 支持为此提供商使用自定义 API 密钥。',
+      apiTooltip: 'LobeHub 支持为此提供商使用自定义 API 密钥。',
       input: '输入价格',
       inputTooltip: '每百万个 Token 的成本',
       latency: '延迟',

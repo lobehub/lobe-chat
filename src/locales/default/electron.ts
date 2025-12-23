@@ -44,7 +44,7 @@ const electron = {
   remoteServer: {
     authError: '授权失败: {{error}}',
     authPending: '请在浏览器中完成授权',
-    configDesc: '连接到远程LobeChat服务器，启用数据同步',
+    configDesc: '连接到远程 LobeHub 服务器，启用数据同步',
     configError: '配置出错',
     configTitle: '配置云同步',
     connect: '连接并授权',

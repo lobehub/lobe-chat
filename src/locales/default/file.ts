@@ -96,7 +96,7 @@ export default {
   },
   networkError: '获取资源库失败，请检测网络连接后重试',
   notSupportGuide: {
-    desc: '当前部署模式不支持文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
+    desc: '当前部署模式不支持文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeHub Cloud</3>',
     features: {
       allKind: {
         desc: '支持主流文件类型，包括 Word、PPT、Excel、PDF、TXT 等常见文档格式，以及 JS、Python 等主流代码文件',

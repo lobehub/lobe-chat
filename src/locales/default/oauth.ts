@@ -23,7 +23,7 @@ export default {
     scope: {
       'email': '访问你的电子邮件地址',
       'offline_access': '允许客户端访问你的数据',
-      'openid': '使用你的 LobeChat 账户进行身份验证',
+      'openid': '使用你的 LobeHub 账户进行身份验证',
       'profile': '访问你的基本资料信息（名称、头像等）',
       'sync-read': '读取你的同步数据',
       'sync-write': '写入并更新你的同步数据',
