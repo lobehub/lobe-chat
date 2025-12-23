@@ -7,11 +7,13 @@ import {
   PrimaryColors,
   ThemeProvider,
 } from '@lobehub/ui';
+import { message as antdMessage } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
+import { AppConfigContext } from 'antd/es/app/context';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ReactNode, memo, useEffect } from 'react';
+import { ReactNode, memo, useEffect, useMemo } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
 import {
@@ -19,6 +21,8 @@ import {
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
+import { isDesktop } from '@/const/version';
+import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
@@ -109,6 +113,11 @@ const AppTheme = memo<AppThemeProps>(
       userGeneralSettingsSelectors.neutralColor(s),
       userGeneralSettingsSelectors.animationMode(s),
     ]);
+    const messageTop = isDesktop ? TITLE_BAR_HEIGHT + 8 : undefined;
+    const appConfig = useMemo(
+      () => (messageTop === undefined ? {} : { message: { top: messageTop } }),
+      [messageTop],
+    );
 
     useEffect(() => {
       setCookie(LOBE_THEME_PRIMARY_COLOR, primaryColor);
@@ -118,43 +127,50 @@ const AppTheme = memo<AppThemeProps>(
       setCookie(LOBE_THEME_NEUTRAL_COLOR, neutralColor);
     }, [neutralColor]);
 
-    return (
-      <ThemeProvider
-        appearance={themeMode !== 'auto' ? themeMode : undefined}
-        className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
-        customTheme={{
-          neutralColor: neutralColor ?? defaultNeutralColor,
-          primaryColor: primaryColor ?? defaultPrimaryColor,
-        }}
-        defaultAppearance={defaultAppearance}
-        onAppearanceChange={(appearance) => {
-          if (themeMode !== 'auto') return;
+    useEffect(() => {
+      if (messageTop === undefined) return;
+      antdMessage.config({ top: messageTop });
+    }, [messageTop]);
 
-          setCookie(LOBE_THEME_APPEARANCE, appearance);
-        }}
-        theme={{
-          token: {
-            fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
-            motion: animationMode !== 'disabled',
-            motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
-          },
-        }}
-        themeMode={themeMode}
-      >
-        {!!customFontURL && <FontLoader url={customFontURL} />}
-        <GlobalStyle />
-        <AntdStaticMethods />
-        <ConfigProvider
-          config={{
-            aAs: Link,
-            imgAs: Image,
-            imgUnoptimized: true,
-            proxy: globalCDN ? 'unpkg' : undefined,
+    return (
+      <AppConfigContext.Provider value={appConfig}>
+        <ThemeProvider
+          appearance={themeMode !== 'auto' ? themeMode : undefined}
+          className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
+          customTheme={{
+            neutralColor: neutralColor ?? defaultNeutralColor,
+            primaryColor: primaryColor ?? defaultPrimaryColor,
           }}
+          defaultAppearance={defaultAppearance}
+          onAppearanceChange={(appearance) => {
+            if (themeMode !== 'auto') return;
+
+            setCookie(LOBE_THEME_APPEARANCE, appearance);
+          }}
+          theme={{
+            token: {
+              fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
+              motion: animationMode !== 'disabled',
+              motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
+            },
+          }}
+          themeMode={themeMode}
         >
-          {children}
-        </ConfigProvider>
-      </ThemeProvider>
+          {!!customFontURL && <FontLoader url={customFontURL} />}
+          <GlobalStyle />
+          <AntdStaticMethods />
+          <ConfigProvider
+            config={{
+              aAs: Link,
+              imgAs: Image,
+              imgUnoptimized: true,
+              proxy: globalCDN ? 'unpkg' : undefined,
+            }}
+          >
+            {children}
+          </ConfigProvider>
+        </ThemeProvider>
+      </AppConfigContext.Provider>
     );
   },
 );
