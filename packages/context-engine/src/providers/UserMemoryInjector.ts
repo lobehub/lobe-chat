@@ -40,12 +40,13 @@ export class UserMemoryInjector extends BaseFirstUserContentProvider {
       return null;
     }
 
+    const identitiesCount = memories.identities?.length || 0;
     const contextsCount = memories.contexts?.length || 0;
     const experiencesCount = memories.experiences?.length || 0;
     const preferencesCount = memories.preferences?.length || 0;
 
     log(
-      `User memories prepared: ${contextsCount} context(s), ${experiencesCount} experience(s), ${preferencesCount} preference(s)`,
+      `User memories prepared: ${identitiesCount} identity(ies), ${contextsCount} context(s), ${experiencesCount} experience(s), ${preferencesCount} preference(s)`,
     );
 
     return content;

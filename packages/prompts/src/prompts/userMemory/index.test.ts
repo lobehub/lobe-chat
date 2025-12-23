@@ -251,6 +251,128 @@ describe('promptUserMemory', () => {
     });
   });
 
+  describe('identities only', () => {
+    it('should format identities grouped by type', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          identities: [
+            {
+              description: 'User is a father of two children',
+              id: 'id-1',
+              role: 'Father',
+              type: 'personal',
+            },
+            {
+              description: 'User is a senior software engineer',
+              id: 'id-2',
+              role: 'Software Engineer',
+              type: 'professional',
+            },
+            {
+              description: 'User is based in Shanghai',
+              id: 'id-3',
+              type: 'demographic',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should format single type identities (personal only)', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          identities: [
+            {
+              description: 'User is married',
+              id: 'id-1',
+              type: 'personal',
+            },
+            {
+              description: 'User has a pet dog',
+              id: 'id-2',
+              type: 'personal',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should format single type identities (professional only)', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          identities: [
+            {
+              description: 'User works at a tech startup',
+              id: 'id-1',
+              role: 'CTO',
+              type: 'professional',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should format single type identities (demographic only)', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          identities: [
+            {
+              description: 'User is 35 years old',
+              id: 'id-1',
+              type: 'demographic',
+            },
+            {
+              description: 'User speaks Mandarin and English',
+              id: 'id-2',
+              type: 'demographic',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should handle identity without role', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          identities: [
+            {
+              description: 'User enjoys hiking',
+              id: 'id-1',
+              type: 'personal',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should handle identity with null values', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          identities: [
+            {
+              description: null,
+              id: 'id-1',
+              role: null,
+              type: 'personal',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+  });
+
   describe('mixed memory types', () => {
     it('should format all memory types together', () => {
       const result = promptUserMemory({
@@ -270,9 +392,65 @@ describe('promptUserMemory', () => {
               situation: 'System design conversation',
             },
           ],
+          identities: [
+            {
+              description: 'User is a tech lead at a startup',
+              id: 'id-1',
+              role: 'Tech Lead',
+              type: 'professional',
+            },
+          ],
           preferences: [
             {
               conclusionDirectives: 'Use design patterns when appropriate',
+              id: 'pref-1',
+            },
+          ],
+        },
+      });
+      expect(result).toMatchSnapshot();
+    });
+
+    it('should format all memory types with multiple identities', () => {
+      const result = promptUserMemory({
+        fetchedAt: FIXED_TIMESTAMP,
+        memories: {
+          contexts: [
+            {
+              description: 'Working on AI products',
+              id: 'ctx-1',
+              title: 'Current Work',
+            },
+          ],
+          experiences: [
+            {
+              id: 'exp-1',
+              keyLearning: 'Likes practical examples',
+              situation: 'Code review session',
+            },
+          ],
+          identities: [
+            {
+              description: 'User is a father',
+              id: 'id-1',
+              role: 'Father',
+              type: 'personal',
+            },
+            {
+              description: 'User is a senior engineer',
+              id: 'id-2',
+              role: 'Senior Engineer',
+              type: 'professional',
+            },
+            {
+              description: 'User lives in Beijing',
+              id: 'id-3',
+              type: 'demographic',
+            },
+          ],
+          preferences: [
+            {
+              conclusionDirectives: 'Prefer concise responses',
               id: 'pref-1',
             },
           ],

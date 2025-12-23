@@ -1,28 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UserMemoryInjector > XML format > should handle null or undefined values gracefully 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
-<instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
-<contexts count="1">
-<context id="" title=""></context>
-</contexts>
-<experiences count="1">
-<experience id="">
-<situation></situation>
-<key_learning></key_learning>
-</experience>
-</experiences>
-<preferences count="1">
-
-</preferences>
-</user_memory>"
-`;
+exports[`UserMemoryInjector > XML format > should handle null or undefined values gracefully 1`] = `"Hello"`;
 
 exports[`UserMemoryInjector > basic injection > should inject user memories before the first user message 1`] = `
 "<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
-<context id="ctx-1" title="Test Context">Test context description</context>
+  <context id="ctx-1" title="Test Context">Test context description</context>
 </contexts>
 </user_memory>"
 `;
@@ -33,7 +17,7 @@ exports[`UserMemoryInjector > integration with BaseFirstUserContentProvider > sh
 <user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
-<context id="ctx-1" title="Test">Test</context>
+  <context id="ctx-1" title="Test">Test</context>
 </contexts>
 </user_memory>"
 `;
@@ -42,7 +26,7 @@ exports[`UserMemoryInjector > integration with BaseFirstUserContentProvider > sh
 "<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
-<context id="ctx-1" title="Test">Test</context>
+  <context id="ctx-1" title="Test">Test</context>
 </contexts>
 </user_memory>"
 `;
@@ -51,16 +35,16 @@ exports[`UserMemoryInjector > memory types > should inject all memory types toge
 "<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
-<context id="ctx-1" title="Context">Context desc</context>
+  <context id="ctx-1" title="Context">Context desc</context>
 </contexts>
 <experiences count="1">
-<experience id="exp-1">
-<situation>Situation</situation>
-<key_learning>Learning</key_learning>
-</experience>
+  <experience id="exp-1">
+    <situation>Situation</situation>
+    <key_learning>Learning</key_learning>
+  </experience>
 </experiences>
 <preferences count="1">
-<preference id="pref-1">Preference</preference>
+  <preference id="pref-1">Preference</preference>
 </preferences>
 </user_memory>"
 `;
@@ -69,8 +53,8 @@ exports[`UserMemoryInjector > memory types > should inject contexts correctly 1`
 "<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="2">
-<context id="ctx-1" title="Context 1">Context 1 description</context>
-<context id="ctx-2" title="Context 2">Context 2 description</context>
+  <context id="ctx-1" title="Context 1">Context 1 description</context>
+  <context id="ctx-2" title="Context 2">Context 2 description</context>
 </contexts>
 </user_memory>"
 `;
@@ -79,14 +63,14 @@ exports[`UserMemoryInjector > memory types > should inject experiences correctly
 "<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <experiences count="2">
-<experience id="exp-1">
-<situation>Situation 1</situation>
-<key_learning>Learning 1</key_learning>
-</experience>
-<experience id="exp-2">
-<situation>Situation 2</situation>
-<key_learning>Learning 2</key_learning>
-</experience>
+  <experience id="exp-1">
+    <situation>Situation 1</situation>
+    <key_learning>Learning 1</key_learning>
+  </experience>
+  <experience id="exp-2">
+    <situation>Situation 2</situation>
+    <key_learning>Learning 2</key_learning>
+  </experience>
 </experiences>
 </user_memory>"
 `;
@@ -95,8 +79,8 @@ exports[`UserMemoryInjector > memory types > should inject preferences correctly
 "<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <preferences count="2">
-<preference id="pref-1">Prefer TypeScript</preference>
-<preference id="pref-2">Use dark mode</preference>
+  <preference id="pref-1">Prefer TypeScript</preference>
+  <preference id="pref-2">Use dark mode</preference>
 </preferences>
 </user_memory>"
 `;
