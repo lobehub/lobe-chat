@@ -65,10 +65,11 @@ const HotkeySetting = memo(() => {
         value={hotkeys[item.id]}
       />
     ),
-    desc: hotkeyMeta.desktop[item.id]?.desc
-      ? t(`desktop.${item.id}.desc`, { ns: 'hotkey' })
+
+    desc: hotkeyMeta[`desktop.${item.id}.desc` as keyof typeof hotkeyMeta]
+      ? t(`desktop.${item.id}.desc` as keyof typeof hotkeyMeta, { ns: 'hotkey' })
       : undefined,
-    label: t(`desktop.${item.id}.title`, { ns: 'hotkey' }),
+    label: t(`desktop.${item.id}.title` as keyof typeof hotkeyMeta, { ns: 'hotkey' }),
     name: item.id,
   });
 

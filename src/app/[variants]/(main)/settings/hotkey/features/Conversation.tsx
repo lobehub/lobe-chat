@@ -46,7 +46,7 @@ const HotkeySetting = memo(() => {
           }}
         />
       ),
-      desc: hotkeyMeta[item.id].desc ? t(`${item.id}.desc`, { ns: 'hotkey' }) : undefined,
+      desc: hotkeyMeta[`${item.id}.desc`] ? t(`${item.id}.desc`, { ns: 'hotkey' }) : undefined,
       label: t(`${item.id}.title`, { ns: 'hotkey' }),
       name: item.id,
     };

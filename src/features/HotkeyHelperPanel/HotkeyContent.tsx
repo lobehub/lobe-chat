@@ -41,7 +41,7 @@ const HotkeyContent = memo<HotkeyContentProps>(({ groupId }) => {
         <Flexbox align={'flex-start'} gap={16} horizontal key={item.id} width={'100%'}>
           <Flexbox flex={1} gap={4} justify={'space-between'}>
             <span>{t(`${item.id}.title`)}</span>
-            {hotkeyMeta[item.id].desc ? (
+            {hotkeyMeta[`${item.id}.desc`] ? (
               <span className={styles.desc}>{t(`${item.id}.desc`)}</span>
             ) : null}
           </Flexbox>
