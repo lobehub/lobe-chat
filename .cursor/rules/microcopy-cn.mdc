@@ -15,7 +15,7 @@ alwaysApply: false
 + Context：上下文
 + Memory：记忆
 + Integration：连接器
-+ Tool/Skill: 技能
++ Tool/Skill/Plugin/插件/工具: 技能
 + SystemRole: 助理档案
 + Topic: 话题
 + Page: 文稿
