@@ -1,3 +1,4 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Block, Button, Flexbox, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
@@ -5,7 +6,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ProductLogo } from '@/components/Branding';
-import { BRANDING_NAME } from '@/const/branding';
 import { CHANGELOG_URL, MANUAL_UPGRADE_URL, OFFICIAL_SITE } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { useNewVersion } from '@/features/User/UserPanel/useNewVersion';

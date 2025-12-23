@@ -6,6 +6,8 @@ export const OFFICIAL_URL = 'https://lobechat.com';
 export const OFFICIAL_SITE = 'https://lobehub.com';
 export const OFFICIAL_DOMAIN = 'lobehub.com';
 
+export const OG_URL = '/og/cover.png?v=4';
+
 export const GITHUB = 'https://github.com/lobehub/lobe-chat';
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
 export const CHANGELOG = 'https://lobehub.com/changelog';

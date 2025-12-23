@@ -1,10 +1,10 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Block, Collapse, Flexbox } from '@lobehub/ui';
 import { ChatList } from '@lobehub/ui/chat';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';

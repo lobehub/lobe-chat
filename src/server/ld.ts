@@ -1,8 +1,8 @@
+import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@lobechat/business-const';
 import { isString } from 'es-toolkit/compat';
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
-import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
 import { OFFICIAL_SITE, OFFICIAL_URL } from '@/const/url';
 import { Locales } from '@/locales/resources';

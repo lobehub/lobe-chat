@@ -1,5 +1,6 @@
 'use client';
 
+import { SOCIAL_URL } from '@lobechat/business-const';
 import { Flexbox, Icon, Tabs, TabsProps, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import {
@@ -16,7 +17,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import { SOCIAL_URL } from '@/const/branding';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { McpNavKey } from '@/types/discover';

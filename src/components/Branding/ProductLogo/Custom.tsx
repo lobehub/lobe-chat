@@ -1,11 +1,10 @@
+import { BRANDING_LOGO_URL, BRANDING_NAME } from '@lobechat/business-const';
 import type { IconType } from '@lobehub/icons';
 import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import type { LobeChatProps } from '@lobehub/ui/brand';
 import { createStyles, useTheme } from 'antd-style';
 import Image, { ImageProps } from 'next/image';
 import { ReactNode, forwardRef, memo } from 'react';
-
-import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
 
 const useStyles = createStyles(({ css }) => {
   return {

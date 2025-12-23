@@ -1,11 +1,11 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Form, type FormGroupItemType } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';

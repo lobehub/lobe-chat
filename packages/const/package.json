@@ -8,6 +8,8 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
+    "@lobechat/business-config": "workspace:*",
+    "@lobechat/business-const": "workspace:*",
     "model-bank": "workspace:*",
     "query-string": "^9.3.1",
     "url-join": "^5.0.0"

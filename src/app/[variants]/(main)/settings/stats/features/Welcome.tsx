@@ -1,10 +1,10 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Flexbox, FluentEmoji, Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Clock3Icon, ClockArrowUp } from 'lucide-react';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { useClientDataSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';

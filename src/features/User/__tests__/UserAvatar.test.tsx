@@ -1,7 +1,7 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { act, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useUserStore } from '@/store/user';
 

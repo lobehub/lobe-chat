@@ -1,14 +1,12 @@
 'use client';
 
+import { ORG_NAME, UTM_SOURCE } from '@lobechat/business-const';
 import { Flexbox, FlexboxProps } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 
-import { UTM_SOURCE } from '@lobechat/business-config/url';
-
-import { ORG_NAME } from '@/const/branding';
 import { isCustomORG } from '@/const/version';
 
 const useStyles = createStyles(({ token, css }) => ({

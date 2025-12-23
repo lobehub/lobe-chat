@@ -1,3 +1,4 @@
+import { UTM_SOURCE } from '@lobechat/business-const';
 import {
   Book,
   CircleUserRound,
@@ -9,8 +10,6 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-
-import { UTM_SOURCE } from '@lobechat/business-config/url';
 
 import { CellProps } from '@/components/Cell';
 import { DOCUMENTS, FEEDBACK, LOBE_CHAT_CLOUD, OFFICIAL_URL } from '@/const/index';

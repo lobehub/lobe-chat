@@ -1,6 +1,6 @@
+import { BRANDING_LOGO_URL } from '@lobechat/business-const';
 import qs from 'query-string';
 
-import { BRANDING_LOGO_URL } from '@/const/branding';
 import { getCanonicalUrl } from '@/server/utils/url';
 
 const MAX_AGE = 31_536_000;

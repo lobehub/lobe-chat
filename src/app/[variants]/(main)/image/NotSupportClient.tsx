@@ -1,6 +1,6 @@
 'use client';
 
-import { UTM_SOURCE } from '@lobechat/business-config/url';
+import { UTM_SOURCE } from '@lobechat/business-const';
 import { Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { Database, FileImage, Network, Sparkles } from 'lucide-react';

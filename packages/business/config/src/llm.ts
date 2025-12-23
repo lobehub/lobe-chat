@@ -3,7 +3,7 @@ import { ModelProvider } from 'model-bank';
 
 import * as ProviderCards from '@/config/modelProviders';
 
-export const genUserLLMConfig = (specificConfig: Record<any, any>): UserModelProviderConfig => {
+const genUserLLMConfig = (specificConfig: Record<any, any>): UserModelProviderConfig => {
   return Object.keys(ModelProvider).reduce((config, providerKey) => {
     const provider = ModelProvider[providerKey as keyof typeof ModelProvider];
     const providerCard = ProviderCards[
@@ -22,3 +22,19 @@ export const genUserLLMConfig = (specificConfig: Record<any, any>): UserModelPro
     return config;
   }, {} as UserModelProviderConfig);
 };
+
+export const DEFAULT_LLM_CONFIG = genUserLLMConfig({
+  lmstudio: {
+    fetchOnClient: true,
+  },
+  lobehub: {
+    enabled: true,
+  },
+  ollama: {
+    enabled: true,
+    fetchOnClient: true,
+  },
+  openai: {
+    enabled: true,
+  },
+});

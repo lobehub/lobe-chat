@@ -1,7 +1,7 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { t } from 'i18next';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { UserStore } from '@/store/user';
 
 import { authSelectors, userProfileSelectors } from './selectors';

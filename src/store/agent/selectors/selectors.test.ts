@@ -1,8 +1,8 @@
+import { DEFAULT_PROVIDER } from '@lobechat/business-const';
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AVATAR,
   DEFAULT_MODEL,
-  DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
   INBOX_SESSION_ID,
 } from '@lobechat/const';

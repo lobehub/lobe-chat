@@ -1,10 +1,10 @@
+import { DEFAULT_LLM_CONFIG } from '@lobechat/business-config';
 import { UserSettings } from '@lobechat/types';
 
 import { DEFAULT_AGENT } from './agent';
 import { DEFAULT_COMMON_SETTINGS } from './common';
 import { DEFAULT_HOTKEY_CONFIG } from './hotkey';
 import { DEFAULT_IMAGE_CONFIG } from './image';
-import { DEFAULT_LLM_CONFIG } from './llm';
 import { DEFAULT_MEMORY_SETTINGS } from './memory';
 import { DEFAULT_SYSTEM_AGENT_CONFIG } from './systemAgent';
 import { DEFAULT_TOOL_CONFIG } from './tool';

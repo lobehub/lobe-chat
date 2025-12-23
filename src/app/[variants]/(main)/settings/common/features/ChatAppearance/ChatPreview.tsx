@@ -1,10 +1,10 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Block, MarkdownProps } from '@lobehub/ui';
 import { ChatItem } from '@lobehub/ui/chat';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 
 const ChatPreview = memo<Pick<MarkdownProps, 'fontSize'>>(({ fontSize }) => {
