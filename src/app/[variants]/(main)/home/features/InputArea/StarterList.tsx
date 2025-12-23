@@ -1,7 +1,7 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
-import { Button, ButtonProps, Center , Tooltip } from '@lobehub/ui';
+import { Button, ButtonProps, Center, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon } from 'lucide-react';
+import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, UsersIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 type StarterTitleKey =
   | 'starter.createAgent'
+  | 'starter.createGroup'
   | 'starter.write'
   | 'starter.image'
   | 'starter.deepResearch';
@@ -44,6 +45,7 @@ const StarterList = memo(() => {
   const { t } = useTranslation('home');
 
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.agentBuilder);
+  useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.groupAgentBuilder);
 
   const [inputActiveMode, setInputActiveMode] = useHomeStore((s) => [
     s.inputActiveMode,
@@ -56,6 +58,11 @@ const StarterList = memo(() => {
         icon: BotIcon,
         key: 'agent',
         titleKey: 'starter.createAgent',
+      },
+      {
+        icon: UsersIcon,
+        key: 'group',
+        titleKey: 'starter.createGroup',
       },
       {
         icon: PenLineIcon,
