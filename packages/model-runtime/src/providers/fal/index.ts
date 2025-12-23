@@ -85,6 +85,9 @@ export class LobeFalAI implements LobeRuntimeAI {
     log('Calling fal.subscribe with endpoint: %s and input: %O', endpoint, finalInput);
     try {
       const { data } = await fal.subscribe(endpoint, {
+        headers: {
+          'X-Fal-Object-Lifecycle-Preference': '{"expiration_duration_seconds": 600}',
+        },
         input: finalInput,
       });
       const image = (data as FluxDevOutput).images[0];
