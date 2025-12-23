@@ -22,7 +22,7 @@
     "scope": {
       "email": "Access your email address",
       "offline_access": "Allow the client to access your data",
-      "openid": "Authenticate using your LobeChat account",
+      "openid": "Authenticate using your LobeHub account",
       "profile": "Access your basic profile information (name, avatar, etc.)",
       "sync-read": "Read your synchronized data",
       "sync-write": "Write and update your synchronized data"

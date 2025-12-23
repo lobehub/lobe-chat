@@ -8,34 +8,34 @@
     "unfavoriteSuccess": "Removed from favorites"
   },
   "assistants": {
-    "addAgent": "Add Assistant",
-    "addAgentAndConverse": "Add Assistant and Converse",
+    "addAgent": "Add Agent",
+    "addAgentAndConverse": "Add Agent and Converse",
     "addAgentSuccess": "Added Successfully",
     "conversation": {
       "l1": "Hello, I am **{{name}}**, you can ask me any questions, and I will do my best to answer you ~",
       "l2": "Here are my capabilities: ",
       "l3": "Let's start the conversation!"
     },
-    "description": "Assistant Introduction",
+    "description": "Agent Introduction",
     "detail": "Details",
     "details": {
       "capabilities": {
         "knowledge": {
-          "desc": "This assistant includes the following knowledge bases to help answer more questions.",
+          "desc": "This agent includes the following knowledge bases to help answer more questions.",
           "title": "Knowledge Bases"
         },
         "plugin": {
-          "desc": "The assistant is equipped with the following plugins to help you complete more tasks.",
-          "title": "Built-in Plugins"
+          "desc": "The agent is equipped with the following skills to help you complete more tasks.",
+          "title": "Built-in Skills"
         },
-        "title": "Assistant Capabilities"
+        "title": "Agent Capabilities"
       },
       "overview": {
-        "example": "Assistant Demo",
+        "example": "Agent Demo",
         "title": "Overview"
       },
       "related": {
-        "listTitle": "Related Assistants",
+        "listTitle": "Related Agents",
         "more": "View More",
         "title": "Related Recommendations"
       },
@@ -43,12 +43,12 @@
         "toc": "Table of Contents"
       },
       "summary": {
-        "title": "What can you do with this assistant?"
+        "title": "What can you do with this agent?"
       },
       "systemRole": {
         "openingMessage": "Opening Message",
         "openingQuestions": "Opening Questions",
-        "title": "Assistant Settings"
+        "title": "Agent Settings"
       },
       "version": {
         "empty": "No historical versions yet",
@@ -68,58 +68,58 @@
     },
     "downloads": "Downloads",
     "empty": {
-      "description": "Try adjusting the filters or visit the community to discover more assistants",
-      "search": "No matching assistants found",
-      "title": "No assistants available"
+      "description": "Try adjusting the filters or visit the community to discover more agents",
+      "search": "No matching agents found",
+      "title": "No agents available"
     },
-    "list": "Assistant List",
+    "list": "Agent List",
     "marketSource": {
       "label": "Switch Community Source",
       "legacy": "Legacy Community",
       "new": "New Community"
     },
     "more": "More",
-    "plugins": "Integrated Plugins",
+    "plugins": "Integrated Skills",
     "recentSubmits": "Recent Updates",
     "sorts": {
       "createdAt": "Recently Published",
-      "identifier": "Assistant ID",
+      "identifier": "Agent ID",
       "knowledgeCount": "Number of Knowledge Bases",
-      "myown": "View My Assistants",
-      "pluginCount": "Number of Plugins",
-      "title": "Assistant Name",
+      "myown": "View My Agents",
+      "pluginCount": "Number of Skills",
+      "title": "Agent Name",
       "tokenUsage": "Token Usage"
     },
     "status": {
       "archived": {
         "reasons": {
-          "official": "The assistant was removed by the platform due to security, political, or other concerns.",
-          "owner": "The assistant was voluntarily removed or archived by its developer."
+          "official": "The agent was removed by the platform due to security, political, or other concerns.",
+          "owner": "The agent was voluntarily removed or archived by its developer."
         },
-        "subtitle": "The assistant you're trying to access has been archived for one of the following reasons:",
-        "title": "Assistant Archived"
+        "subtitle": "The agent you're trying to access has been archived for one of the following reasons:",
+        "title": "Agent Archived"
       },
-      "backToMarket": "Back to Assistant Community",
+      "backToMarket": "Back to Agent Community",
       "deprecated": {
         "reasons": {
-          "official": "The assistant was removed by the platform due to security, political, or other concerns.",
-          "owner": "The assistant was voluntarily removed or rejected by its developer."
+          "official": "The agent was removed by the platform due to security, political, or other concerns.",
+          "owner": "The agent was voluntarily removed or rejected by its developer."
         },
-        "subtitle": "The assistant you're trying to access has been rejected for one of the following reasons:",
-        "title": "Assistant Rejected"
+        "subtitle": "The agent you're trying to access has been rejected for one of the following reasons:",
+        "title": "Agent Rejected"
       },
       "support": "For any questions, please copy the link and send it to <email>support@lobehub.com</email> for assistance.",
       "unpublished": {
-        "subtitle": "The assistant you are trying to access is currently under version review. If you have any questions, please copy the link and send it to <email>support@lobehub.com</email> for assistance.",
-        "title": "Assistant Under Review"
+        "subtitle": "The agent you are trying to access is currently under version review. If you have any questions, please copy the link and send it to <email>support@lobehub.com</email> for assistance.",
+        "title": "Agent Under Review"
       }
     },
     "suggestions": "Related Recommendations",
-    "systemRole": "Assistant Settings",
-    "tokenUsage": "Assistant Prompt Token Usage",
+    "systemRole": "Agent Settings",
+    "tokenUsage": "Agent Prompt Token Usage",
     "try": "Try It Out",
-    "withKnowledge": "This assistant includes knowledge bases",
-    "withPlugin": "This assistant includes plugins"
+    "withKnowledge": "This agent includes knowledge bases",
+    "withPlugin": "This agent includes skills"
   },
   "back": "Back to Discovery",
   "category": {
@@ -157,14 +157,14 @@
   "create": "Create",
   "createGuide": {
     "func1": {
-      "desc1": "Access the settings page for the assistant you want to submit through the settings in the upper right corner of the conversation window;",
-      "desc2": "Click the submit to Assistant Community button in the top right corner.",
+      "desc1": "Access the settings page for the agent you want to submit through the settings in the upper right corner of the conversation window;",
+      "desc2": "Click the submit to Agent Community button in the top right corner.",
       "tag": "Method One",
-      "title": "Submit via LobeChat"
+      "title": "Submit via LobeHub"
     },
     "func2": {
-      "button": "Go to GitHub Assistant Repository",
-      "desc": "If you want to add the assistant to the index, create an entry using agent-template.json or agent-template-full.json in the plugins directory, write a brief description, tag appropriately, and then create a pull request.",
+      "button": "Go to GitHub Agent Repository",
+      "desc": "If you want to add the agent to the index, create an entry using agent-template.json or agent-template-full.json in the skills directory, write a brief description, tag appropriately, and then create a pull request.",
       "tag": "Method Two",
       "title": "Submit via GitHub"
     }
@@ -187,7 +187,7 @@
       "title": "Other",
       "vision": "Supports Visual Recognition",
       "withKnowledge": "Includes Knowledge Bases",
-      "withTool": "Includes Plugins"
+      "withTool": "Includes Skills"
     },
     "pricing": "Model Pricing",
     "timePeriod": {
@@ -200,12 +200,12 @@
     }
   },
   "home": {
-    "communityAgents": "Community Assistants",
-    "featuredAssistants": "Featured Assistants",
+    "communityAgents": "Community Agents",
+    "featuredAssistants": "Featured Agents",
     "featuredModels": "Featured Models",
-    "featuredPlugins": "Featured Plugins",
+    "featuredPlugins": "Featured Skills",
     "featuredProviders": "Featured Model Providers",
-    "featuredTools": "Featured Plugins",
+    "featuredTools": "Featured Skills",
     "more": "Discover More"
   },
   "isClaimed": "Claimed",
@@ -301,7 +301,7 @@
         "commandLine": "System Dependencies",
         "connection": "Connection Method",
         "connectionType": "Connection Type",
-        "description": "Plugin Installation and Deployment Method",
+        "description": "Skill Installation and Deployment Method",
         "descriptionPlaceholder": "Optional Description",
         "empty": "No Deployment Options Available",
         "env": "Environment Variables",
@@ -315,7 +315,7 @@
             "claude": "- Open the **Claude Desktop** app\n- Go to **Settings**, then select **Developer**\n- Click **Edit Configuration**\n- Open the **claude_desktop_config.json** file\n- Copy and paste the server configuration into the existing file, then save",
             "cline": "- Open VS Code with the Cline extension installed\n- Click the Cline icon in the sidebar\n- Select **MCP Servers** from the dropdown menu\n- In the **Remote Servers** tab, enter the server name and your MCP server URL\n- Click **Add Server** to connect",
             "cursor": "- Navigate to **Settings**, then select Cursor settings\n- Choose **MCP** on the left\n- Click **Add New Global MCP Server** at the top right\n- Copy and paste the server configuration into the existing file, then save",
-            "lobeChat": "- Open the **LobeChat Desktop** app\n- Go to **Settings** - **Default Assistant**\n- Then select **Plugin Settings** - **Custom Plugins**\n- Click **Quick Import JSON Configuration**\n- Copy and paste the server configuration into the text box, then install",
+            "lobeChat": "- Open the **LobeHub Desktop** app\n- Go to **Settings** - **Default Agent**\n- Then select **Skill Settings** - **Custom Skills**\n- Click **Quick Import JSON Configuration**\n- Copy and paste the server configuration into the text box, then install",
             "openai": "- Open your **OpenAI app** or development environment\n- Configure MCP tools in the **Responses API**\n- Add MCP blocks to the **tools** array in API requests\n- Set **server_url** to your MCP server endpoint\n- Include required authentication headers (API key, token, etc.)\n- Use the `allowed_tools` parameter to restrict exposed tools\n- Set `require_approval` to control tool execution approval",
             "vscode": "- Open VS Code\n- Open the command palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- Type **MCP: Add Server** and select it\n- Choose to add to workspace or user settings\n- Copy and paste the server configuration"
           },
@@ -332,7 +332,7 @@
         "title": "Installation Method"
       },
       "githubBadge": {
-        "desc": "LobeHub regularly scans code repositories and documentation to:\n\n- Confirm MCP server operational status.\n- Extract server features such as tools, resources, prompts, and required parameters.\n- Our badge helps users quickly assess MCP server security, feature set, and installation instructions.\n\nPlease copy the following code into your `README.md` file:"
+        "desc": "LobeHub regularly scans code repositories and documentation to: - Confirm MCP server operational status.\n- Extract server features such as tools, resources, prompts, and required parameters.\n- Our badge helps users quickly assess MCP server security, feature set, and installation instructions. Please copy the following code into your `README.md` file:"
       },
       "nav": {
         "needHelp": "Need Help?",
@@ -374,7 +374,7 @@
           },
           "title": "Resource List"
         },
-        "title": "Plugin Features",
+        "title": "Skill Features",
         "tools": {
           "desc": "Functional interfaces exposed to large language models (LLM) to perform operations",
           "empty": "No Tools Available",
@@ -441,7 +441,7 @@
       "scoreLevel": {
         "a": {
           "desc": "This MCP Server has been rigorously validated, providing comprehensive features and a high-quality user experience.",
-          "fullTitle": "Excellent Plugin",
+          "fullTitle": "Excellent Skill",
           "title": "Premium"
         },
         "b": {
@@ -459,11 +459,11 @@
         "capabilities": {
           "prompts": "Prompts",
           "resources": "Resources",
-          "title": "Plugin Capabilities",
+          "title": "Skill Capabilities",
           "tools": "Tools"
         },
         "configuration": {
-          "title": "Plugin Configuration"
+          "title": "Skill Configuration"
         },
         "connection": {
           "args": "Startup Arguments",
@@ -473,7 +473,7 @@
           "url": "Service URL"
         },
         "saveSettings": "Save Settings",
-        "title": "Plugin Settings"
+        "title": "Skill Settings"
       },
       "sidebar": {
         "install": "Install MCP Server",
@@ -537,8 +537,8 @@
     "sorts": {
       "createdAt": "Recently Added",
       "installCount": "Install Count",
-      "isFeatured": "Featured Plugins",
-      "isValidated": "Validated Plugins",
+      "isFeatured": "Featured Skills",
+      "isValidated": "Validated Skills",
       "promptsCount": "Number of Prompts",
       "ratingCount": "Number of Ratings",
       "resourcesCount": "Number of Resources",
@@ -616,7 +616,7 @@
       "type": "Type"
     },
     "providerInfo": {
-      "apiTooltip": "LobeChat supports using a custom API key for this provider.",
+      "apiTooltip": "LobeHub supports using a custom API key for this provider.",
       "input": "Input Price",
       "inputTooltip": "Cost per million tokens",
       "latency": "Latency",
@@ -643,22 +643,22 @@
   },
   "plugins": {
     "builtinTag": "Built-in",
-    "community": "Community Plugins",
+    "community": "Community Skills",
     "details": {
       "settings": {
-        "title": "Plugin Settings"
+        "title": "Skill Settings"
       },
       "summary": {
-        "title": "What can you do with this plugin?"
+        "title": "What can you do with this skill?"
       },
       "tools": {
-        "title": "Plugin Tools"
+        "title": "Skill Tools"
       }
     },
-    "install": "Install Plugin",
+    "install": "Install Skill",
     "installed": "Installed",
     "legacyTag": "Legacy",
-    "list": "Plugin List",
+    "list": "Skill List",
     "meta": {
       "description": "Description",
       "parameter": "Parameter",
@@ -666,12 +666,12 @@
       "type": "Type"
     },
     "more": "More",
-    "official": "Official Plugins",
+    "official": "Official Skills",
     "recentSubmits": "Recently Updated",
     "sorts": {
       "createdAt": "Recently Published",
-      "identifier": "Plugin ID",
-      "title": "Plugin Name"
+      "identifier": "Skill ID",
+      "title": "Skill Name"
     },
     "suggestions": "Related Recommendations"
   },
@@ -717,10 +717,10 @@
     "searching": "Searching..."
   },
   "tab": {
-    "assistant": "Assistant",
+    "assistant": "Agent",
     "home": "Home",
     "model": "Model",
-    "plugin": "Plugin",
+    "plugin": "Skill",
     "provider": "Model Provider",
     "user": "User"
   },
@@ -739,7 +739,7 @@
     "noAgents": "This user has not published any agents yet",
     "noFavoriteAgents": "No favorite agents yet",
     "noFavoritePlugins": "No favorite plugins yet",
-    "publishedAgents": "Created Assistants",
+    "publishedAgents": "Created Agents",
     "tabs": {
       "favorites": "Favorites",
       "publishedAgents": "Created"

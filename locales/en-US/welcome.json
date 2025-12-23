@@ -2,10 +2,10 @@
   "guide": {
     "agents": {
       "replaceBtn": "Refresh",
-      "title": "New Assistant Recommendations:"
+      "title": "New Agent Recommendations:"
     },
-    "defaultMessage": "I'm your personal AI assistant {{appName}}. How can I help you today?<br />If you need a more professional or customized assistant, click <plus /> to create your own.",
-    "defaultMessageWithoutCreate": "I'm your personal AI assistant {{appName}}. How can I help you today?",
+    "defaultMessage": "I'm your personal AI agent {{appName}}. How can I help you today?<br />If you need a more professional or customized agent, click <plus /> to create your own.",
+    "defaultMessageWithoutCreate": "I'm your personal AI agent {{appName}}. How can I help you today?",
     "groupActivities": {
       "analysis": {
         "codeReview": {
@@ -163,7 +163,7 @@
           "title": "Tech Exchange"
         }
       },
-      "title": "Team Chat Use Recommendations",
+      "title": "Group Chat Use Recommendations",
       "writing": {
         "bookClub": {
           "description": "Literary discussions and analysis of books, stories, and literature",
@@ -191,7 +191,7 @@
         }
       }
     },
-    "groupMessage": "Welcome to group chat! Collaborate with multiple AI assistants in a shared conversation space.",
+    "groupMessage": "Welcome to group chat! Collaborate with multiple AI agents in a shared conversation space.",
     "groupTemplates": {
       "analysis": {
         "description": "Data-driven insights and in-depth research analysis",
@@ -357,15 +357,23 @@
     }
   },
   "header": "Welcome",
-  "pickAgent": "Or choose from the assistant templates below",
+  "pickAgent": "Or choose from the agent templates below",
   "skip": "Skip Creation",
   "slogan": {
-    "desc1": "Activate your brain cluster and spark new ideas. Your AI assistant is always here.",
-    "desc2": "Create your first assistant and let's get started~",
+    "desc1": "Activate your brain cluster and spark new ideas. Your AI agent is always here.",
+    "desc2": "Create your first agent and let's get started~",
     "title": "Give yourself a smarter mind"
   },
   "welcomeMessages": {
     "1": "Welcome back 😊",
+    "2": "Hi, I'm here",
+    "3": "All set!",
+    "4": "Great to see you",
+    "5": "Ready to begin?",
+    "6": "Let me help with today’s tasks",
+    "7": "Keep moving forward!",
+    "8": "Let’s do this 💪",
+    "9": "Let’s get to work 🏃‍♂️",
     "10": "Productivity at max~",
     "11": "At your service!",
     "12": "Thanks for waiting ☕",
@@ -376,7 +384,6 @@
     "17": "Fully charged ⚡",
     "18": "Let’s go! 🚀",
     "19": "My thoughts are in sync.",
-    "2": "Hi, I'm here",
     "20": "Inspiration incoming",
     "21": "Just waiting for your call",
     "22": "Back to high-efficiency mode!",
@@ -387,7 +394,6 @@
     "27": "System online, ready to help 💡",
     "28": "Loading good vibes",
     "29": "Take control, starting now 🎵",
-    "3": "All set!",
     "30": "Boosting efficiency …",
     "31": "Today’s goals, on track 🎯",
     "32": "Let your ideas shine ✨",
@@ -397,12 +403,6 @@
     "36": "Alright! Let’s begin 😎",
     "37": "I’m here waiting for you",
     "38": "Keep up the good work!",
-    "39": "Don’t forget to take a break~ 💤",
-    "4": "Great to see you",
-    "5": "Ready to begin?",
-    "6": "Let me help with today’s tasks",
-    "7": "Keep moving forward!",
-    "8": "Let’s do this 💪",
-    "9": "Let’s get to work 🏃‍♂️"
+    "39": "Don’t forget to take a break~ 💤"
   }
 }

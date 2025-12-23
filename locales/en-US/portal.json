@@ -6,7 +6,7 @@
       "file": "File"
     }
   },
-  "Plugins": "Plugins",
+  "Plugins": "Skills",
   "artifacts": {
     "display": {
       "code": "Code",
@@ -22,7 +22,7 @@
       }
     }
   },
-  "emptyArtifactList": "The current Artifacts list is empty. Please use plugins in the session as needed before viewing.",
+  "emptyArtifactList": "The current Artifacts list is empty. Please use skills in the session as needed before viewing.",
   "emptyKnowledgeList": "The current knowledge list is empty. Please enable the knowledge base as needed during the conversation before viewing.",
   "files": "Files",
   "messageDetail": "Message Details",

@@ -5,26 +5,26 @@
   "active": "Active",
   "agentBuilder": {
     "installPlugin": {
-      "authRequired": "Authentication required for cloud MCP plugins",
+      "authRequired": "Authentication required for cloud MCP skills",
       "cancel": "Cancel",
       "clickApproveToConnect": "Click \"Approve\" to connect and authorize this integration",
-      "clickApproveToInstall": "Click \"Approve\" to install this plugin",
+      "clickApproveToInstall": "Click \"Approve\" to install this skill",
       "connectedAndEnabled": "Connected and enabled",
       "connectionFailed": "Connection failed",
       "installFailed": "Installation failed",
-      "installPlugin": "Install Plugin",
-      "installToEnable": "Install this plugin to enable it for the agent",
+      "installPlugin": "Install Skill",
+      "installToEnable": "Install this skill to enable it for the agent",
       "installedAndEnabled": "Installed and enabled",
       "requiresAuth": "Requires authorization. Click \"Approve\" to connect",
       "retry": "Retry"
     },
-    "title": "Assistant Builder Expert",
-    "welcome": "Tell me about your needs and scenarios—your professional partner is here to help.\n\nWhether it's writing, coding, or data analysis, I can help you build a personalized assistant!"
+    "title": "Agent Builder Expert",
+    "welcome": "Tell me about your needs and scenarios—your professional partner is here to help. Whether it's writing, coding, or data analysis, I can help you build a personalized agent!"
   },
-  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
+  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Agent Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I am **{{name}}**. How can I assist you today?",
   "agentDefaultMessageWithoutEdit": "Hello, I am **{{name}}**. How can I assist you today?",
-  "agents": "Assistants",
+  "agents": "Agents",
   "artifact": {
     "generating": "Generating",
     "inThread": "Cannot view in subtopic, please switch to the main conversation area to open",
@@ -32,7 +32,7 @@
     "thought": "Thought",
     "unknownTitle": "Untitled Work"
   },
-  "availableAgents": "Available assistants",
+  "availableAgents": "Available agents",
   "backToBottom": "Back to bottom",
   "builtinCopilot": "Built-in Copilot",
   "chatList": {
@@ -42,14 +42,14 @@
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
   "confirmRemoveChatGroupItemAlert": "This group will be deleted. Team members will not be affected. Please confirm your action.",
-  "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its assistants will be moved to the default list. Please confirm your action.",
+  "confirmRemoveGroupItemAlert": "You are about to delete this group. After deletion, its agents will be moved to the default list. Please confirm your action.",
   "confirmRemoveGroupSuccess": "Group deleted successfully",
-  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
-  "confirmRemoveSessionSuccess": "Assistant removed successfully",
-  "defaultAgent": "Default Assistant",
+  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionSuccess": "Agent removed successfully",
+  "defaultAgent": "Default Agent",
   "defaultGroupChat": "Group",
   "defaultList": "Default List",
-  "defaultSession": "Default Assistant",
+  "defaultSession": "Default Agent",
   "dm": {
     "placeholder": "Your private messages with {{agentTitle}} will appear here.",
     "tooltip": "Send a private message",
@@ -62,8 +62,8 @@
     "title": "{{title}} Copy"
   },
   "duplicateTitle": "{{title}} Copy",
-  "emptyAgent": "No assistant available",
-  "emptyAgentAction": "Create Assistant",
+  "emptyAgent": "No agent available",
+  "emptyAgentAction": "Create Agent",
   "extendParams": {
     "disableContextCaching": {
       "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
@@ -101,7 +101,7 @@
     }
   },
   "group": {
-    "desc": "Collaborate with multiple AI assistants in a shared conversation space.",
+    "desc": "Collaborate with multiple AI agents in a shared conversation space.",
     "memberTooltip": "There are {{count}} members in the group",
     "orchestratorThinking": "The host is thinking...",
     "removeMember": "Remove Member",
@@ -130,10 +130,10 @@
     }
   },
   "groupWizard": {
-    "chooseMembers": "Select existing assistants...",
+    "chooseMembers": "Select existing agents...",
     "createGroup": "Create Team",
     "existingMembers": "Current Agents",
-    "groupMembers": "These assistants will also be added to your list",
+    "groupMembers": "These agents will also be added to your list",
     "host": {
       "description": "Enable the team to operate independently",
       "title": "Enable Host",
@@ -150,13 +150,13 @@
   },
   "hideForYou": "Direct message content is hidden. Please enable 'Show Direct Message Content' in settings to view.",
   "history": {
-    "title": "The assistant will only remember the last {{count}} messages."
+    "title": "The agent will only remember the last {{count}} messages."
   },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",
   "inactive": "Inactive",
   "inbox": {
-    "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
+    "desc": "Activate the brain cluster and spark creative thinking. Your virtual agent is here to communicate with you about everything.",
     "title": "Lobe AI"
   },
   "input": {
@@ -271,18 +271,18 @@
     "senderAssistant": "Agent",
     "senderUser": "You"
   },
-  "newAgent": "Create Assistant",
+  "newAgent": "Create Agent",
   "newGroupChat": "Create Group Chat",
-  "newPage": "Create Document",
-  "noAgentsYet": "This group has no members yet. Click the + button to invite assistants.",
+  "newPage": "Create Page",
+  "noAgentsYet": "This group has no members yet. Click the + button to invite agents.",
   "noAvailableAgents": "No members available to invite",
   "noMatchingAgents": "No matching members found",
-  "noMembersYet": "This group doesn't have any members yet. Click the + button to invite assistants.",
+  "noMembersYet": "This group doesn't have any members yet. Click the + button to invite agents.",
   "noSelectedAgents": "No members selected yet",
   "openInNewWindow": "Open in New Window",
   "owner": "Group Owner",
   "pageCopilot": {
-    "title": "Writing Assistant",
+    "title": "Writing Agent",
     "welcome": "**Make every word count.**\n\nWhether you're drafting, rewriting, or polishing, I'll help make your writing clearer, more natural, and more persuasive."
   },
   "pin": "Pin",
@@ -320,34 +320,34 @@
     },
     "searchModel": {
       "desc": "The current model does not support function calls, so it needs to be paired with a model that does support function calls for online searching.",
-      "title": "Search Assistant Model"
+      "title": "Search Agent Model"
     },
     "title": "Online Search"
   },
-  "searchAgentPlaceholder": "Search assistants...",
-  "searchAgents": "Search assistants...",
+  "searchAgentPlaceholder": "Search agents...",
+  "searchAgents": "Search agents...",
   "selectedAgents": "Selected agents",
   "sendPlaceholder": "Ask, create, or start a task, <hotkey><hotkey/>",
   "sessionGroup": {
     "config": "Group Management",
-    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
-    "createAgentSuccess": "Assistant created successfully",
+    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the agents in this group will be moved to the default list. Please confirm your operation.",
+    "createAgentSuccess": "Agent created successfully",
     "createGroup": "Add New Group",
     "createGroupFailed": "Failed to create group chat",
     "createGroupSuccess": "Group chat created successfully",
     "createSuccess": "Created successfully",
-    "creatingAgent": "Creating assistant...",
+    "creatingAgent": "Creating agent...",
     "groupName": "Group Name",
     "inputPlaceholder": "Please enter group name...",
     "moveGroup": "Move to Group",
     "newGroup": "New Group",
-    "noAvailableAgents": "No available assistants",
-    "noMatchingAgents": "No matching assistants found",
-    "noSelectedAgents": "Please select assistants",
+    "noAvailableAgents": "No available agents",
+    "noMatchingAgents": "No matching agents found",
+    "noSelectedAgents": "Please select agents",
     "rename": "Rename Group",
     "renameSuccess": "Renamed successfully",
-    "searchAgents": "Search assistants",
-    "selectedAgents": "Selected assistants ({{count}})",
+    "searchAgents": "Search agents",
+    "selectedAgents": "Selected agents ({{count}})",
     "sortSuccess": "Reorder successful",
     "sorting": "Group sorting updating...",
     "tooLong": "Group name length should be between 1-20"
@@ -369,7 +369,7 @@
     "generatePdf": "Generate PDF",
     "generatingPdf": "Generating PDF...",
     "imageType": "Image Format",
-    "includeTool": "Include Plugin Messages",
+    "includeTool": "Include Skill Messages",
     "includeUser": "Include User Messages",
     "loadingPdf": "Loading PDF...",
     "noPdfData": "No PDF data available",
@@ -388,9 +388,9 @@
     },
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
-    "withPluginInfo": "Include Plugin Information",
+    "withPluginInfo": "Include Skill Information",
     "withRole": "Include Message Role",
-    "withSystemRole": "Include Assistant Role Setting"
+    "withSystemRole": "Include Agent Role Setting"
   },
   "stt": {
     "action": "Voice Input",
@@ -405,7 +405,7 @@
   },
   "tab": {
     "groupProfile": "Group Profile",
-    "profile": "Assistant Profile",
+    "profile": "Agent Profile",
     "search": "Search"
   },
   "task": {
@@ -440,7 +440,7 @@
     "supervisor": "Group Host",
     "systemRole": "Role Settings",
     "title": "Context Details",
-    "tools": "Plugin Settings",
+    "tools": "Skill Settings",
     "total": "Total Available",
     "used": "Total Used"
   },
@@ -475,9 +475,9 @@
   "toolAuth": {
     "authorize": "Authorize",
     "authorizing": "Authorizing...",
-    "hint": "Without authorization or proper configuration, these tools may not function correctly, which could result in missing assistant features or errors.",
+    "hint": "Without authorization or proper configuration, these tools may not function correctly, which could result in missing agent features or errors.",
     "signIn": "Sign In",
-    "title": "Please authorize the tools for the assistant"
+    "title": "Please authorize the tools for the agent"
   },
   "topic": {
     "checkOpenNewTopic": "Enable new topic?",
@@ -494,9 +494,9 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
-  "untitledAgent": "Untitled Assistant",
+  "untitledAgent": "Untitled Agent",
   "untitledGroup": "Untitled Group",
-  "updateAgent": "Update Assistant Information",
+  "updateAgent": "Update Agent Information",
   "upload": {
     "action": {
       "fileUpload": "Upload File",

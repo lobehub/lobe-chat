@@ -9,8 +9,8 @@
   },
   "discover": {
     "assistants": {
-      "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, customize your own AI / GPTs / OLLaMA intelligent assistant",
-      "title": "AI Assistant Community"
+      "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, customize your own AI / GPTs / OLLaMA intelligent agent",
+      "title": "Agent Community"
     },
     "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, custom AI applications, customize your own AI application workspace",
     "mcp": {
@@ -22,8 +22,8 @@
       "title": "Model Community"
     },
     "plugins": {
-      "description": "Explore chart generation, academic tools, image generation, video generation, voice generation, and automated workflows to integrate rich plugin capabilities into your assistant.",
-      "title": "Plugin Community"
+      "description": "Explore chart generation, academic tools, image generation, video generation, voice generation, and automated workflows to integrate rich skill capabilities into your agent.",
+      "title": "Skill Community"
     },
     "providers": {
       "description": "Explore leading model providers OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
@@ -37,8 +37,8 @@
     "title": "AI Painting"
   },
   "plugins": {
-    "description": "Search, chart generation, academic tools, image generation, video generation, voice generation, automated workflows—customize Tools Calling plugin capabilities for ChatGPT / Claude.",
-    "title": "Plugin Community"
+    "description": "Search, chart generation, academic tools, image generation, video generation, voice generation, automated workflows—customize Tools Calling skill capabilities for ChatGPT / Claude.",
+    "title": "Skill Community"
   },
   "welcome": {
     "description": "{{appName}} brings you the best UI experience for ChatGPT, Claude, Gemini, and OLLaMA.",

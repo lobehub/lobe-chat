@@ -44,7 +44,7 @@
   "remoteServer": {
     "authError": "Authorization failed: {{error}}",
     "authPending": "Please complete the authorization in your browser",
-    "configDesc": "Connect to the remote LobeChat server to enable data synchronization",
+    "configDesc": "Connect to the remote LobeHub server to enable data synchronization",
     "configError": "Configuration error",
     "configTitle": "Configure Cloud Sync",
     "connect": "Connect and authorize",

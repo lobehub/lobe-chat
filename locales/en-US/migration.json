@@ -32,7 +32,7 @@
         "title": "Database Upgrade Failed"
       },
       "success": {
-        "subTitle": "{{appName}}'s database has been successfully upgraded to the latest version. Start experiencing it now!",
+        "subTitle": "The database has been upgraded to the latest version. You can continue now.",
         "title": "Database Upgrade Successful"
       }
     },

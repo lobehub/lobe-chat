@@ -162,16 +162,16 @@
     "description": "The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience."
   },
   "tencentcloud": {
-    "description": "The Knowledge Engine Atomic Power, based on the Knowledge Engine, provides a comprehensive knowledge Q&A capability for enterprises and developers. It offers the ability to flexibly assemble and develop model applications. You can create your own model services using various atomic capabilities, integrating services such as document parsing, splitting, embedding, and multi-turn rewriting to customize AI solutions tailored to your business."
+    "description": "The Knowledge Engine Atomic Power, based on the Knowledge Engine, provides a comprehensive knowledge Q&A capability for enterprises and developers. It offers the ability to flexibly assemble and develop model applications. You can create your own model services using various atomic capabilities, integrating services such as page parsing, splitting, embedding, and multi-turn rewriting to customize AI solutions tailored to your business."
   },
   "togetherai": {
     "description": "Together AI is dedicated to achieving leading performance through innovative AI models, offering extensive customization capabilities, including rapid scaling support and intuitive deployment processes to meet various enterprise needs."
   },
   "upstage": {
-    "description": "Upstage focuses on developing AI models for various business needs, including Solar LLM and document AI, aiming to achieve artificial general intelligence (AGI) for work. It allows for the creation of simple conversational agents through Chat API and supports functional calling, translation, embedding, and domain-specific applications."
+    "description": "Upstage focuses on developing AI models for various business needs, including Solar LLM and page AI, aiming to achieve artificial general intelligence (AGI) for work. It allows for the creation of simple conversational agents through Chat API and supports functional calling, translation, embedding, and domain-specific applications."
   },
   "v0": {
-    "description": "v0 is a pair programming assistant that generates code and user interfaces (UI) for your projects based on your natural language descriptions."
+    "description": "v0 is a pair programming agent that generates code and user interfaces (UI) for your projects based on your natural language descriptions."
   },
   "vercelaigateway": {
     "description": "Vercel AI Gateway provides a unified API to access over 100 models, allowing you to use models from multiple providers such as OpenAI, Anthropic, and Google through a single endpoint. It supports budget settings, usage monitoring, request load balancing, and failover."

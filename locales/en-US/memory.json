@@ -12,7 +12,7 @@
     "source": "Source"
   },
   "empty": {
-    "description": "Memory retrieval is a gradual process. Please engage in more conversations to enrich the content available for recall. Try having deeper interactions with the assistant to better capture and store valuable information.",
+    "description": "Memory retrieval is a gradual process. Please engage in more conversations to enrich the content available for recall. Try having deeper interactions with the agent to better capture and store valuable information.",
     "search": "No matching memories found",
     "title": "No Memories Yet"
   },
@@ -85,7 +85,7 @@
     "deleteTitle": "Delete Preference Memory",
     "empty": "No preference memories available",
     "source": "Source",
-    "suggestions": "Actions the assistant might take"
+    "suggestions": "Actions the agent might take"
   },
   "tab": {
     "contexts": "Contexts",

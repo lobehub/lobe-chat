@@ -50,8 +50,8 @@
     "title": "Regenerate Message"
   },
   "saveDocument": {
-    "desc": "Save all changes to the current document immediately",
-    "title": "Save Document"
+    "desc": "Save all changes to the current page immediately",
+    "title": "Save Page"
   },
   "saveTopic": {
     "desc": "Save the current topic and open a new one",
@@ -66,8 +66,8 @@
     "title": "Show Main Window"
   },
   "switchAgent": {
-    "desc": "Switch between pinned assistants in the sidebar by holding Ctrl and pressing numbers 0-9",
-    "title": "Quick Switch Assistant"
+    "desc": "Switch between pinned agents in the sidebar by holding Ctrl and pressing numbers 0-9",
+    "title": "Quick Switch Agent"
   },
   "toggleLeftPanel": {
     "desc": "Show or hide the left panel",

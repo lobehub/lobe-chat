@@ -1,9 +1,9 @@
 {
   "agentSelection": {
-    "empty": "No assistants available",
-    "noAvailable": "No assistants can be added at the moment",
-    "noSelected": "No assistants selected",
-    "search": "No matching assistants found"
+    "empty": "No agents available",
+    "noAvailable": "No agents can be added at the moment",
+    "noSelected": "No agents selected",
+    "search": "No matching agents found"
   },
   "starter": {
     "createAgent": "Create Agent",

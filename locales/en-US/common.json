@@ -25,7 +25,7 @@
     "showDetail": "View details"
   },
   "autoGenerate": "Auto Generate",
-  "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
+  "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
   "back": "Back",
   "batchDelete": "Batch Delete",
@@ -62,7 +62,7 @@
       "enable": "Enable Now",
       "features": {
         "knowledgeBase": {
-          "desc": "Build your personal knowledge base and easily start conversations with your assistant using it (coming soon).",
+          "desc": "Build your personal knowledge base and easily start conversations with your agent using it (coming soon).",
           "title": "Knowledge Base Support — Unlock Your Second Brain"
         },
         "localFirst": {
@@ -144,12 +144,12 @@
     "community": "Community",
     "communitySupport": "Community Support",
     "context": {
-      "agent": "Assistant",
+      "agent": "Agent",
       "community": "Community",
       "general": "General",
       "group": "Group",
       "memory": "Memory",
-      "page": "Document",
+      "page": "Page",
       "painting": "Painting",
       "resource": "Resource",
       "settings": "Settings"
@@ -161,19 +161,19 @@
     },
     "memory": "Memory",
     "navigate": "Navigate",
-    "newAgent": "Create New Assistant",
+    "newAgent": "Create New Agent",
     "newLibrary": "New Library",
     "noResults": "No results found",
     "openSettings": "Open Settings",
-    "pages": "Documents",
+    "pages": "Pages",
     "painting": "Artwork",
     "resource": "Resources",
     "search": {
-      "agent": "Assistant",
-      "agents": "Assistants",
-      "assistant": "AI Assistant",
-      "assistants": "AI Assistants",
-      "communityAgent": "Community Assistant",
+      "agent": "Agent",
+      "agents": "Agents",
+      "assistant": "Agent",
+      "assistants": "Agents",
+      "communityAgent": "Community Agent",
       "file": "File",
       "files": "Files",
       "loading": "Searching...",
@@ -182,10 +182,10 @@
       "mcps": "MCP Servers",
       "message": "Message",
       "messages": "Messages",
-      "page": "Document",
-      "pages": "Documents",
-      "plugin": "Plugin",
-      "plugins": "Plugins",
+      "page": "Page",
+      "pages": "Pages",
+      "plugin": "Skill",
+      "plugins": "Skills",
       "searchMore": "Search more {{type}}",
       "searching": "Search Results",
       "topic": "Topic",
@@ -209,12 +209,12 @@
   "copySuccess": "Copied successfully",
   "dataStatistics": {
     "messages": "Messages",
-    "sessions": "Assistants",
+    "sessions": "Agents",
     "today": "Today's New",
     "topics": "Topics"
   },
-  "defaultAgent": "Default Assistant",
-  "defaultSession": "Default Assistant",
+  "defaultAgent": "Default Agent",
+  "defaultSession": "Default Agent",
   "delete": "Delete",
   "document": "User Manual",
   "download": "Download",
@@ -222,11 +222,11 @@
   "edit": "Edit",
   "export": "Export Configuration",
   "exportType": {
-    "agent": "Export Assistant Settings",
-    "agentWithMessage": "Export Assistant and Messages",
-    "all": "Export Global Settings and All Assistant Data",
-    "allAgent": "Export All Assistant Settings",
-    "allAgentWithMessage": "Export All Assistants and Messages",
+    "agent": "Export Agent Settings",
+    "agentWithMessage": "Export Agent and Messages",
+    "all": "Export Global Settings and All Agent Data",
+    "allAgent": "Export All Agent Settings",
+    "allAgentWithMessage": "Export All Agents and Messages",
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
@@ -239,7 +239,7 @@
     "and": "and",
     "feedback": {
       "action": "Share Feedback",
-      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make LobeChat even better.",
+      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make {{appName}} even better.",
       "title": "Share Your Valuable Feedback on GitHub"
     },
     "later": "Later",
@@ -279,7 +279,7 @@
       "errors": "Import errors",
       "messages": "Messages",
       "sessionGroups": "Groups",
-      "sessions": "Assistants",
+      "sessions": "Agents",
       "skips": "Duplicates skipped",
       "topics": "Topics",
       "type": "Data Type",
@@ -352,10 +352,10 @@
     "support": "Email Support"
   },
   "navPanel": {
-    "agent": "Assistant",
+    "agent": "Agent",
     "displayItems": "Display Items",
     "library": "Library",
-    "searchAgent": "Search Assistant...",
+    "searchAgent": "Search Agent...",
     "searchResultEmpty": "No search results found"
   },
   "new": "NEW",
@@ -422,7 +422,7 @@
     "knowledgeBase": "Knowledge Base",
     "me": "Me",
     "memory": "Memory",
-    "pages": "Documents",
+    "pages": "Pages",
     "resource": "Resources",
     "search": "Search",
     "setting": "Settings",
@@ -431,14 +431,14 @@
   "telemetry": {
     "allow": "Allow",
     "deny": "Deny",
-    "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
+    "desc": "We would like to anonymously collect usage information to help us improve {{appName}} and provide you with a better product experience. You can disable this at any time in Settings - About.",
     "learnMore": "Learn More",
-    "title": "Help LobeChat be better"
+    "title": "Help {{appName}} be better"
   },
   "temp": "Temporary",
   "terms": "Terms of Service",
   "update": "Update",
-  "updateAgent": "Update Assistant Information",
+  "updateAgent": "Update Agent Information",
   "upgradeVersion": {
     "action": "Upgrade",
     "hasNew": "New update available",

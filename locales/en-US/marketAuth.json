@@ -48,10 +48,12 @@
     "authorized": "LobeHub service authorized successfully",
     "loading": "Starting authorization process...",
     "success": {
-      "cloudMcpInstall": "Authorization successful! You can now install the Cloud MCP plugin.",
-      "submit": "Authorization successful! You can now publish your assistant.",
+      "cloudMcpInstall": "Authorization successful! You can now install the Cloud MCP skill.",
+      "submit": "Authorization successful! You can now publish your agent.",
       "upload": "Authorization successful! You can now publish a new version."
-    }
+    },
+    "authorizationFailed": "Authorization ran into an issue. Retry, or check if you finished signing in in your browser.",
+    "handoffTimeout": "Authorization timed out. Finish it in your browser, then retry."
   },
   "profileSetup": {
     "cancel": "Cancel",

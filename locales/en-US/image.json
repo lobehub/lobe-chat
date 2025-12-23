@@ -90,7 +90,7 @@
     }
   },
   "notSupportGuide": {
-    "desc": "The current deployment instance uses client-side database mode and does not support AI image generation. Please switch to the <1>server-side database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
+    "desc": "The current deployment mode does not support AI image generation. Switch to the <1>server database deployment mode</1>, or use <3>LobeHub Cloud</3>.",
     "features": {
       "fileIntegration": {
         "desc": "Deep integration with the file management system; generated images are automatically saved to the file system for unified management and organization.",

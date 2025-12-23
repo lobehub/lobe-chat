@@ -28,9 +28,9 @@
       "topP": "Top P Value"
     },
     "plugins": {
-      "count": "Plugin Settings ({{count}})",
-      "empty": "No plugins installed yet",
-      "title": "Installed Plugins"
+      "count": "Skill Settings ({{count}})",
+      "empty": "No skills installed yet",
+      "title": "Installed Skills"
     },
     "role": {
       "systemRole": "System Prompt",
@@ -43,10 +43,10 @@
   },
   "agentTab": {
     "chat": "Chat Preferences",
-    "meta": "Assistant Info",
+    "meta": "Agent Info",
     "modal": "Model Settings",
     "opening": "Opening Settings",
-    "plugin": "Plugin Settings",
+    "plugin": "Skill Settings",
     "prompt": "Role Configuration",
     "tts": "Voice Service"
   },
@@ -63,7 +63,7 @@
     "clear": {
       "action": "Clear Now",
       "confirm": "Confirm to clear all chat data?",
-      "desc": "This will clear all session data, including assistant, files, messages, plugins, etc.",
+      "desc": "This will clear all session data, including agent, files, messages, skills, etc.",
       "success": "All session messages have been cleared",
       "title": "Clear All Session Messages"
     },
@@ -81,7 +81,7 @@
       "desc": "Default model used when creating a new Agent",
       "title": "Model"
     },
-    "title": "Default Assistant Settings"
+    "title": "Default Agent Settings"
   },
   "group": {
     "aiConfig": "AI Configuration",
@@ -229,28 +229,28 @@
       "messages": {
         "createVersionFailed": "Failed to create version: {{message}}",
         "fetchRemoteFailed": "Failed to fetch remote agent data",
-        "missingIdentifier": "This assistant does not have a community identifier yet.",
+        "missingIdentifier": "This agent does not have a community identifier yet.",
         "notAuthenticated": "Please log in to your community account first.",
         "publishFailed": "Publish failed: {{message}}"
       },
       "submitButton": "Publish",
       "title": {
-        "submit": "Share to Assistant Community",
+        "submit": "Share to Agent Community",
         "upload": "Publish New Version"
       }
     },
     "resultModal": {
-      "message": "Your assistant has been submitted for review. It will go live automatically once approved.",
+      "message": "Your agent has been submitted for review. It will go live automatically once approved.",
       "title": "Submission Successful",
       "view": "View in Community"
     },
     "submit": {
       "button": "Share to Community",
-      "tooltip": "Share your assistant with the community"
+      "tooltip": "Share your agent with the community"
     },
     "upload": {
       "button": "Publish New Version",
-      "tooltip": "Publish a new version to the Assistant Community"
+      "tooltip": "Publish a new version to the Agent Community"
     }
   },
   "memory": {
@@ -291,8 +291,8 @@
       "title": "Agent Details"
     },
     "empty": {
-      "description": "You haven't published any assistants to the market yet",
-      "title": "No Published Assistants"
+      "description": "You haven't published any agents to the market yet",
+      "title": "No Published Agents"
     },
     "errors": {
       "editFailed": "Failed to edit agent, please try again later",
@@ -301,7 +301,7 @@
     },
     "loginRequired": {
       "button": "Sign in to Market",
-      "description": "Please sign in to your market account to view your published assistants",
+      "description": "Please sign in to your market account to view your published agents",
       "title": "Sign In Required"
     },
     "status": {
@@ -310,22 +310,22 @@
       "published": "Published",
       "unpublished": "Unpublished"
     },
-    "title": "My Published Assistants"
+    "title": "My Published Agents"
   },
   "plugin": {
-    "addMCPPlugin": "Add MCP Plugin",
-    "addTooltip": "Custom Plugin",
-    "clearDeprecated": "Remove Deprecated Plugins",
-    "empty": "No installed plugins yet, feel free to explore the <1>Plugin Store</1>",
+    "addMCPPlugin": "Add MCP Skill",
+    "addTooltip": "Custom Skill",
+    "clearDeprecated": "Remove Deprecated Skills",
+    "empty": "No installed skills yet, feel free to explore the <1>Skill Store</1>",
     "installStatus": {
       "deprecated": "Uninstalled"
     },
     "settings": {
       "hint": "Please fill in the following configurations based on the description",
-      "title": "{{id}} Plugin Configuration",
-      "tooltip": "Plugin Configuration"
+      "title": "{{id}} Skill Configuration",
+      "tooltip": "Skill Configuration"
     },
-    "store": "Plugin Store"
+    "store": "Skill Store"
   },
   "settingAgent": {
     "avatar": {
@@ -336,25 +336,25 @@
       "title": "Background Color"
     },
     "description": {
-      "desc": "A brief introduction to your assistant, not for character setting",
-      "placeholder": "Enter assistant description",
-      "title": "Assistant Description"
+      "desc": "A brief introduction to your agent, not for character setting",
+      "placeholder": "Enter agent description",
+      "title": "Agent Description"
     },
     "name": {
-      "placeholder": "Enter assistant name",
+      "placeholder": "Enter agent name",
       "title": "Name"
     },
     "prompt": {
-      "placeholder": "Enter assistant settings, press / to open the command menu",
-      "title": "Assistant Settings"
+      "placeholder": "Enter agent settings, press / to open the command menu",
+      "title": "Agent Settings"
     },
-    "submit": "Update Assistant Information",
+    "submit": "Update Agent Information",
     "tag": {
-      "desc": "Assistant tags will be displayed in the Assistant Community",
+      "desc": "Agent tags will be displayed in the Agent Community",
       "placeholder": "Enter tag",
       "title": "Tag"
     },
-    "title": "Assistant Information"
+    "title": "Agent Information"
   },
   "settingAppearance": {
     "animationMode": {
@@ -396,7 +396,7 @@
       "title": "Chat Window Style",
       "type": {
         "chat": "Conversation Mode",
-        "docs": "Document Mode"
+        "docs": "Page Mode"
       }
     },
     "compressThreshold": {
@@ -514,8 +514,8 @@
   },
   "settingGroupChat": {
     "allowDM": {
-      "desc": "When turned off, you can still send direct messages to the assistant",
-      "title": "Allow Direct Messages from Assistant"
+      "desc": "When turned off, you can still send direct messages to the agent",
+      "title": "Allow Direct Messages from Agent"
     },
     "enableSupervisor": {
       "desc": "Enable the group moderator feature to manage team conversations",
@@ -563,20 +563,20 @@
   },
   "settingGroupMembers": {
     "addToGroup": "Add to Group",
-    "availableAgents": "Available Assistants",
+    "availableAgents": "Available Agents",
     "createMember": "Create Member",
-    "defaultAgent": "Custom Assistant",
-    "disableHost": "Disable Host Assistant",
+    "defaultAgent": "Custom Agent",
+    "disableHost": "Disable Host Agent",
     "edit": "Edit Member",
     "empty": "There are no members in this team yet. Click the + button to add members.",
-    "enableHost": "Enable Host Assistant",
+    "enableHost": "Enable Host Agent",
     "groupHost": "Group Host",
     "groupMembers": "Group Members",
     "host": {
       "description": "When the host is in the group, the chat runs automatically, suitable for brainstorming tasks.",
       "title": "Host"
     },
-    "noAvailableAgents": "No available assistants",
+    "noAvailableAgents": "No available agents",
     "noDescription": "No description",
     "noMembersInGroup": "No members in the group",
     "owner": "You (Owner)",
@@ -640,8 +640,8 @@
   },
   "settingOpening": {
     "openingMessage": {
-      "desc": "The opening message displayed when the conversation starts, used to introduce the assistant's features",
-      "placeholder": "Hello, I am your Custom Assistant. You can start chatting with me right away, or go to Assistant Settings to complete my information.",
+      "desc": "The opening message displayed when the conversation starts, used to introduce the agent's features",
+      "placeholder": "Hello, I am your Custom Agent. You can start chatting with me right away, or go to Agent Settings to complete my information.",
       "title": "Opening Message"
     },
     "openingQuestions": {
@@ -654,7 +654,7 @@
     "title": "Opening Settings"
   },
   "settingPlugin": {
-    "title": "Plugin List"
+    "title": "Skill List"
   },
   "settingSystem": {
     "accessCode": {
@@ -711,7 +711,7 @@
       "title": "Text-to-Speech Service"
     },
     "voice": {
-      "desc": "Select a voice for the current assistant, different TTS services support different voices",
+      "desc": "Select a voice for the current agent, different TTS services support different voices",
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
@@ -722,11 +722,11 @@
       "export": {
         "button": "Export",
         "exportType": {
-          "agent": "Export Assistant Settings",
-          "agentWithMessage": "Export Assistant and Messages",
-          "all": "Export Global Settings and All Assistant Data",
-          "allAgent": "Export All Assistant Settings",
-          "allAgentWithMessage": "Export All Assistants and Messages",
+          "agent": "Export Agent Settings",
+          "agentWithMessage": "Export Agent and Messages",
+          "all": "Export Global Settings and All Agent Data",
+          "allAgent": "Export All Agent Settings",
+          "allAgentWithMessage": "Export All Agents and Messages",
           "globalSetting": "Export Global Settings"
         },
         "title": "Export Data"
@@ -745,12 +745,12 @@
     "used": "Storage Usage"
   },
   "submitAgentModal": {
-    "button": "Submit Assistant",
+    "button": "Submit Agent",
     "identifier": "Agent Identifier",
-    "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
-    "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
-    "success": "Assistant submitted successfully",
-    "tooltips": "Share to Assistant Community"
+    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags",
+    "placeholder": "Enter a unique identifier for the agent, e.g. web-development",
+    "success": "Agent submitted successfully",
+    "tooltips": "Share to Agent Community"
   },
   "submitFooter": {
     "reset": "Reset",
@@ -800,46 +800,46 @@
   "systemAgent": {
     "agentMeta": {
       "label": "Model",
-      "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
-      "title": "Assistant Info Generation Helper"
+      "modelDesc": "Model designated for generating agent name, description, avatar, and tags",
+      "title": "Agent Info Generation Helper"
     },
     "customPrompt": {
       "addPrompt": "Add Custom Prompt",
-      "desc": "Once filled out, the system assistant will use the custom prompt when generating content",
+      "desc": "Once filled out, the system agent will use the custom prompt when generating content",
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
     "generationTopic": {
       "label": "Model",
       "modelDesc": "Model designated for automatic naming of AI art topics",
-      "title": "AI Art Topic Naming Assistant"
+      "title": "AI Art Topic Naming Agent"
     },
-    "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
+    "helpInfo": "When creating a new agent, the default agent settings will be used as preset values.",
     "historyCompress": {
       "label": "Model",
       "modelDesc": "Specify the model used to compress conversation history",
-      "title": "Conversation History Compression Assistant"
+      "title": "Conversation History Compression Agent"
     },
     "queryRewrite": {
       "label": "Model",
       "modelDesc": "Specify the model used to optimize user inquiries",
-      "title": "Knowledge Base Question Rewriting Assistant"
+      "title": "Knowledge Base Question Rewriting Agent"
     },
     "thread": {
       "label": "Model",
       "modelDesc": "The model designated for automatic renaming of subtopics",
-      "title": "Subtopic Auto-Naming Assistant"
+      "title": "Subtopic Auto-Naming Agent"
     },
-    "title": "System Assistants",
+    "title": "System Agents",
     "topic": {
       "label": "Model",
       "modelDesc": "Model designated for automatic topic renaming",
-      "title": "Topic Auto-Naming Assistant"
+      "title": "Topic Auto-Naming Agent"
     },
     "translation": {
       "label": "Model",
       "modelDesc": "Specific model for translate message",
-      "title": "Message Translation Assistant"
+      "title": "Message Translation Agent"
     }
   },
   "tab": {
@@ -863,11 +863,11 @@
     "usage": "Usage Statistics"
   },
   "tools": {
-    "add": "Add Plugin",
+    "add": "Add Skill",
     "builtins": {
       "groupName": "Built-ins"
     },
-    "disabled": "The current model does not support function calls and cannot use the plugin",
+    "disabled": "The current model does not support function calls and cannot use the skill",
     "klavis": {
       "addServer": "Add Server",
       "authCompleted": "Authentication Completed",
@@ -890,12 +890,12 @@
       "verifyAuth": "I have completed authentication"
     },
     "notInstalled": "Not Installed",
-    "notInstalledWarning": "This plugin is not currently installed, which may affect assistant functionality.",
+    "notInstalledWarning": "This skill is not currently installed, which may affect agent functionality.",
     "plugins": {
       "enabled": "Enabled: {{num}}",
-      "groupName": "Plugins",
-      "noEnabled": "No plugins enabled",
-      "store": "Plugin Store"
+      "groupName": "Skills",
+      "noEnabled": "No skills enabled",
+      "store": "Skill Store"
     },
     "tabs": {
       "all": "All",
