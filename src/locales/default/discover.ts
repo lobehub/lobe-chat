@@ -67,6 +67,11 @@ export default {
       },
     },
     downloads: '下载量',
+    duplicateAdd: {
+      content: '当前已经添加过「{{title}}」助理，是否仍要重复添加？',
+      ok: '确认添加',
+      title: '重复添加确认',
+    },
     empty: {
       description: '可以试试调整筛选条件，或去社区查看更多助理',
       search: '未找到匹配的助理',

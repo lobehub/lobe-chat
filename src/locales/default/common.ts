@@ -231,6 +231,10 @@ export default {
   download: '下载',
   duplicate: '创建副本',
   edit: '编辑',
+  errors: {
+    invalidFileFormat: '文件格式错误',
+    unimplementedType: '暂未实现的 type，请检查 reducer',
+  },
   export: '导出配置',
   exportType: {
     agent: '导出助理设定',
@@ -363,6 +367,7 @@ export default {
     business: '商务合作',
     support: '邮件支持',
   },
+  more: '更多',
   navPanel: {
     agent: '助理',
     displayItems: '显示条目',
@@ -371,10 +376,12 @@ export default {
     searchResultEmpty: '暂无搜索结果',
   },
   new: '新',
+  noContent: '暂无内容',
   oauth: 'SSO 登录',
   officialSite: '官方网站',
   ok: '确认',
   or: '或',
+  pageSizeItem: '{{count}} 个条目',
   password: '密码',
   pin: '置顶',
   pinOff: '取消置顶',
@@ -441,6 +448,7 @@ export default {
   },
   temp: '临时',
   terms: '服务条款',
+  unknownError: '未知错误',
   update: '更新',
   updateAgent: '更新助理信息',
   upgradeVersion: {

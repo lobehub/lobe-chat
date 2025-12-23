@@ -119,7 +119,10 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
       try {
         await marketApiService.createAgentVersion(versionPayload);
       } catch (versionError) {
-        const errorMessage = versionError instanceof Error ? versionError.message : '未知错误';
+        const errorMessage =
+          versionError instanceof Error
+            ? versionError.message
+            : t('unknownError', { ns: 'common' });
         message.error({
           content: t('marketPublish.modal.messages.createVersionFailed', {
             message: errorMessage,
@@ -142,7 +145,8 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
       return { identifier, success: true };
     } catch (error) {
       console.error('Market publish failed:', error);
-      const errorMessage = error instanceof Error ? error.message : '发布失败';
+      const errorMessage =
+        error instanceof Error ? error.message : t('unknownError', { ns: 'common' });
       message.error({
         content: t('marketPublish.modal.messages.publishFailed', {
           message: errorMessage,

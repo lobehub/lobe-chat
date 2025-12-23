@@ -34,6 +34,9 @@
   },
   "availableAgents": "可用助理",
   "backToBottom": "跳转到最新",
+  "beforeUnload": {
+    "confirmLeave": "你有正在生成中的请求，确定要离开吗？"
+  },
   "builtinCopilot": "内置 Copilot",
   "chatList": {
     "expandMessage": "展开消息",
@@ -50,6 +53,12 @@
   "defaultGroupChat": "群组",
   "defaultList": "默认列表",
   "defaultSession": "自定义助理",
+  "desktopNotification": {
+    "aiReplyCompleted": {
+      "body": "AI 回复生成完成",
+      "title": "AI 回复完成"
+    }
+  },
   "dm": {
     "placeholder": "你与 {{agentTitle}} 的私信会显示在这里。",
     "tooltip": "发送私信",
@@ -287,6 +296,9 @@
   },
   "pin": "置顶",
   "pinOff": "取消置顶",
+  "prompts": {
+    "summaryExpert": "作为一名总结专家，请结合以上系统提示词，将以下内容进行总结："
+  },
   "rag": {
     "referenceChunks": "引用源",
     "userQuery": {

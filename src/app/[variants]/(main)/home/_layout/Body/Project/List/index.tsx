@@ -2,6 +2,7 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { LIBRARY_URL } from '@/const/url';
@@ -13,6 +14,7 @@ import { useProjectMenuItems } from '../../../hooks';
 import Item from './Item';
 
 const ProjectList = memo(() => {
+  const { t } = useTranslation('home');
   const navigate = useNavigate();
   const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
   const { data, isLoading } = useFetchKnowledgeBaseList();
@@ -23,7 +25,7 @@ const ProjectList = memo(() => {
   const isEmpty = data.length === 0;
 
   if (isEmpty) {
-    return <EmptyNavItem onClick={createProject} title={'新建项目'} />;
+    return <EmptyNavItem onClick={createProject} title={t('project.create')} />;
   }
 
   return (

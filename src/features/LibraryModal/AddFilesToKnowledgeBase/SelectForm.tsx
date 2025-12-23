@@ -31,9 +31,14 @@ const SelectForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId, fileIds })
       setLoading(false);
       message.success({
         content: (
-          <Trans i18nKey={'addToKnowledgeBase.addSuccess'} ns={'knowledgeBase'}>
-            文件添加成功，<Link href={`/knowledge/library/${values.id}`}>立即查看</Link>
-          </Trans>
+          <Trans
+            components={[
+              <span key="0" />,
+              <Link href={`/knowledge/library/${values.id}`} key="1" />,
+            ]}
+            i18nKey={'addToKnowledgeBase.addSuccess'}
+            ns={'knowledgeBase'}
+          />
         ),
       });
 

@@ -1,16 +1,20 @@
+'use client';
+
 import { Center, Empty, Markdown } from '@lobehub/ui';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { H1, H2, H3, H4, H5 } from './Toc/Heading';
 
 const MarkdownRender = memo<{ children?: string }>(({ children }) => {
+  const { t } = useTranslation('common');
   if (!children)
     return (
       <Center paddingBlock={32} width={'100%'}>
         <Empty
-          description="暂无内容"
+          description={t('noContent')}
           descriptionProps={{ fontSize: 14 }}
           icon={FileText}
           style={{ maxWidth: 400 }}

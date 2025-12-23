@@ -2,6 +2,7 @@ import { Avatar, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { FileTextIcon } from 'lucide-react';
 import { CSSProperties, memo, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { documentSelectors, useFileStore } from '@/store/file';
@@ -17,6 +18,7 @@ interface DocumentItemProps {
 }
 
 const PageListItem = memo<DocumentItemProps>(({ documentId, style, className }) => {
+  const { t } = useTranslation('file');
   const [editing, selectedPageId, document] = useFileStore(
     useCallback(
       (s) => {
@@ -31,7 +33,7 @@ const PageListItem = memo<DocumentItemProps>(({ documentId, style, className }) 
   const setRenamingPageId = useFileStore((s) => s.setRenamingPageId);
 
   const active = selectedPageId === documentId;
-  const title = document?.title || '无标题';
+  const title = document?.title || t('pageList.untitled');
   const emoji = document?.metadata?.emoji;
 
   const toggleEditing = useCallback(

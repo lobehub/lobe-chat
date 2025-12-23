@@ -12,8 +12,11 @@ export default {
         title: '授权会话无效',
       },
       title: '发生错误',
+      unknown: {
+        message: '获取授权详情时发生未知错误',
+      },
       unsupportedInteraction: {
-        message: '不支持的交互类型：{promptName}',
+        message: '不支持的交互类型：{{promptName}}',
         title: '不支持的交互类型',
       },
     },

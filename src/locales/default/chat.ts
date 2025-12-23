@@ -36,6 +36,9 @@ export default {
   },
   availableAgents: '可用助理',
   backToBottom: '跳转到最新',
+  beforeUnload: {
+    confirmLeave: '你有正在生成中的请求，确定要离开吗？',
+  },
   builtinCopilot: '内置 Copilot',
   chatList: {
     expandMessage: '展开消息',
@@ -52,6 +55,12 @@ export default {
   defaultGroupChat: '群组',
   defaultList: '默认列表',
   defaultSession: '自定义助理',
+  desktopNotification: {
+    aiReplyCompleted: {
+      body: 'AI 回复生成完成',
+      title: 'AI 回复完成',
+    },
+  },
   dm: {
     placeholder: '你与 {{agentTitle}} 的私信会显示在这里。',
     tooltip: '发送私信',
@@ -131,6 +140,7 @@ export default {
       role: '设定',
     },
   },
+
   groupWizard: {
     chooseMembers: '选择现有助理…',
     createGroup: '创建群组',
@@ -151,7 +161,6 @@ export default {
     useTemplate: '使用模板',
   },
   hideForYou: '私信内容已隐藏。可在设置中开启「显示私信内容」查看',
-
   history: {
     title: '助理将仅保留最近 {{count}} 条消息',
   },
@@ -162,6 +171,7 @@ export default {
     desc: '在同一空间协作，把想法推进成结果',
     title: 'Lobe AI',
   },
+
   input: {
     addAi: '添加一条助理消息',
     addUser: '添加一条用户消息',
@@ -175,12 +185,12 @@ export default {
     warp: '换行',
     warpWithKey: '按 <key/> 换行',
   },
+
   intentUnderstanding: {
     title: '正在理解你的意图…',
   },
   // Group chat related translations
   inviteMembers: '邀请成员',
-
   knowledgeBase: {
     all: '全部内容',
     allFiles: '全部文件',
@@ -210,9 +220,11 @@ export default {
     setInitialMembers: '选择群组成员',
   },
   members: '成员',
+
   mention: {
     title: '提及成员',
   },
+
   messageAction: {
     collapse: '收起消息',
     continueGeneration: '继续生成',
@@ -279,12 +291,12 @@ export default {
     senderAssistant: '助理',
     senderUser: '你',
   },
-
   newAgent: '创建助理',
-
   newGroupChat: '创建群组',
   newPage: '创建文稿',
+
   noAgentsYet: '这个群组还没有成员。点击「+」邀请助理加入',
+
   noAvailableAgents: '暂无可邀请的成员',
 
   noMatchingAgents: '未找到匹配的成员',
@@ -306,6 +318,10 @@ export default {
 
   pinOff: '取消置顶',
 
+  prompts: {
+    summaryExpert: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
+  },
+
   rag: {
     referenceChunks: '引用源',
     userQuery: {
@@ -315,11 +331,8 @@ export default {
       },
     },
   },
-
   regenerate: '重新生成',
-
   roleAndArchive: '助理档案与记录',
-
   search: {
     grounding: {
       searchQueries: '搜索关键词',

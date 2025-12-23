@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { ChatToolPayload, RuntimeStepContext, UIChatMessage } from '@lobechat/types';
+import i18n from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
@@ -98,7 +99,7 @@ export const pluginPublicApi: StateCreator<
       messages: [
         {
           role: 'assistant',
-          content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
+          content: i18n.t('prompts.summaryExpert', { ns: 'chat' }),
         },
         {
           ...message,

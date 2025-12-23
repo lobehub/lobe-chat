@@ -11,6 +11,11 @@
     "addAgent": "添加助理",
     "addAgentAndConverse": "添加助理并会话",
     "addAgentSuccess": "添加成功",
+    "duplicateAdd": {
+      "content": "当前已经添加过「{{title}}」助理，是否仍要重复添加？",
+      "ok": "确认添加",
+      "title": "重复添加确认"
+    },
     "conversation": {
       "l1": "你好，我是 **{{name}}**。把你的目标或上下文发给我，我们从这里开始协作",
       "l2": "我能帮你做这些：",

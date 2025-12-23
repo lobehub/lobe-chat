@@ -5,6 +5,10 @@
     "noSelected": "还未选择助理",
     "search": "未找到匹配的助理"
   },
+  "project": {
+    "create": "新建项目",
+    "deleteConfirm": "即将删除该项目，删除后将无法找回，请确认你的操作"
+  },
   "starter": {
     "createAgent": "创建助理",
     "createGroup": "创建群组",
