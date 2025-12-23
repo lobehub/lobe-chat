@@ -5,12 +5,12 @@ import { chainSummaryTitle } from '@lobechat/prompts';
 import { TraceNameMap, UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
-import useSWR, { SWRResponse, mutate } from 'swr';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { LOADING_FLAT } from '@/const/message';
-import { useClientDataSWRWithSync } from '@/libs/swr';
+import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';

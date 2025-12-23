@@ -96,3 +96,6 @@ export type SWRefreshMethod<T> = <A extends (...args: any[]) => Promise<any>>(
 
 // 导出带自动同步功能的 hook
 export { useClientDataSWRWithSync } from './useClientDataSWRWithSync';
+
+// 导出 scoped mutate（用于自定义 cache provider 场景）
+export { mutate, setScopedMutate } from './mutate';

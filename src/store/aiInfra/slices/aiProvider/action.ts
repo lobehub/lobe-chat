@@ -9,10 +9,10 @@ import {
   ModelParamsSchema,
   Pricing,
 } from 'model-bank';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
 import { useUserStore } from '@/store/user';

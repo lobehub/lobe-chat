@@ -4,10 +4,10 @@ import { LOADING_FLAT } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
 import { CreateMessageParams, IThreadType, ThreadItem, UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
 import { threadSelectors } from '@/store/chat/selectors';

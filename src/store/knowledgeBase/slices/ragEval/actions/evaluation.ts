@@ -1,8 +1,8 @@
 import { CreateNewEvalEvaluation, RAGEvalDataSetItem } from '@lobechat/types';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { ragEvalService } from '@/services/ragEval';
 import { KnowledgeBaseStore } from '@/store/knowledgeBase/store';
 

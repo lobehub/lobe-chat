@@ -1,9 +1,9 @@
 import isEqual from 'fast-deep-equal';
-import { type SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import useSWR from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
 import { LayersEnum } from '@/types/userMemory';
 import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@/types/userMemory';
