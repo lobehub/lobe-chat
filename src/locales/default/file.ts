@@ -152,6 +152,7 @@ export default {
     },
     noResults: '未找到匹配的文稿',
     pageCount: '共 {{count}} 个文稿',
+    pageSizeItem: '{{count}} 个条目',
     selectNote: '选择一个文稿开始编辑',
     title: '文稿',
     untitled: '无标题',

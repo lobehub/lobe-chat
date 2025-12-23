@@ -17,10 +17,11 @@ const OllamaDesktopSetupGuide = memo(() => {
         avatar={<Ollama color={theme.colorPrimary} size={64} />}
         description={
           <span>
-            <Trans i18nKey={'OllamaSetupGuide.install.description'} ns={'components'}>
-              请确认你已经开启 Ollama ，如果没有安装 Ollama ，请前往官网
-              <Link href={'https://ollama.com/download'}>下载</Link>
-            </Trans>
+            <Trans
+              components={[<span key="0" />, <Link href={'https://ollama.com/download'} key="1" />]}
+              i18nKey={'OllamaSetupGuide.install.description'}
+              ns={'components'}
+            />
           </span>
         }
         title={t('OllamaSetupGuide.install.title')}

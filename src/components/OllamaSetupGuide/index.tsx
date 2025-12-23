@@ -43,10 +43,14 @@ const SetupGuide = memo(() => {
                 items={[
                   {
                     description: (
-                      <Trans i18nKey={'OllamaSetupGuide.install.description'} ns={'components'}>
-                        请确认你已经开启 Ollama ，如果没有安装 Ollama ，请前往官网
-                        <Link href={'https://ollama.com/download'}>下载</Link>
-                      </Trans>
+                      <Trans
+                        components={[
+                          <span key="0" />,
+                          <Link href={'https://ollama.com/download'} key="1" />,
+                        ]}
+                        i18nKey={'OllamaSetupGuide.install.description'}
+                        ns={'components'}
+                      />
                     ),
                     status: 'process',
                     title: t('OllamaSetupGuide.install.title'),
@@ -84,10 +88,14 @@ const SetupGuide = memo(() => {
                 items={[
                   {
                     description: (
-                      <Trans i18nKey={'OllamaSetupGuide.install.description'} ns={'components'}>
-                        请确认你已经开启 Ollama ，如果没有安装 Ollama ，请前往官网
-                        <Link href={'https://ollama.com/download'}>下载</Link>
-                      </Trans>
+                      <Trans
+                        components={[
+                          <span key="0" />,
+                          <Link href={'https://ollama.com/download'} key="1" />,
+                        ]}
+                        i18nKey={'OllamaSetupGuide.install.description'}
+                        ns={'components'}
+                      />
                     ),
                     status: 'process',
                     title: t('OllamaSetupGuide.install.title'),
@@ -125,15 +133,16 @@ const SetupGuide = memo(() => {
                         </Snippet>
                         <div>
                           <Trans
+                            components={[
+                              <span key="0" />,
+                              <Link
+                                href={'https://github.com/ollama/ollama/blob/main/docs/linux.md'}
+                                key="1"
+                              />,
+                            ]}
                             i18nKey={'OllamaSetupGuide.install.linux.manual'}
                             ns={'components'}
-                          >
-                            或者，你也可以参考
-                            <Link href={'https://github.com/ollama/ollama/blob/main/docs/linux.md'}>
-                              Linux 手动安装指南
-                            </Link>
-                            。
-                          </Trans>
+                          />
                         </div>
                       </Flexbox>
                     ),

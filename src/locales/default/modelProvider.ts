@@ -158,6 +158,7 @@ export default {
       title: '服务商 ID',
     },
     logo: {
+      placeholder: 'https://example.com/logo.png',
       required: '请上传正确的服务商 Logo',
       title: '服务商 Logo',
     },
@@ -167,6 +168,7 @@ export default {
       title: '服务商名称',
     },
     proxyUrl: {
+      placeholder: 'https://your-proxy-url.com/v1',
       required: '请填写代理地址',
       title: '代理地址',
     },

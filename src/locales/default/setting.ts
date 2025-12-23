@@ -201,6 +201,7 @@ export default {
       title: 'API 代理地址',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
+    waitingForMoreLinkAriaLabel: '打开模型服务商接入需求表单',
   },
   marketPublish: {
     modal: {

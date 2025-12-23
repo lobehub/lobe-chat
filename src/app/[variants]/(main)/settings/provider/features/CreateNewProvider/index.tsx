@@ -100,7 +100,13 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       name: 'description',
     },
     {
-      children: <Input allowClear placeholder={'https://logo-url'} variant={'filled'} />,
+      children: (
+        <Input
+          allowClear
+          placeholder={t('createNewAiProvider.logo.placeholder')}
+          variant={'filled'}
+        />
+      ),
       label: t('createNewAiProvider.logo.title'),
       minWidth: 400,
       name: 'logo',
@@ -132,7 +138,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       rules: [{ message: t('createNewAiProvider.sdkType.required'), required: true }],
     },
     {
-      children: <Input allowClear placeholder={'https://xxxx-proxy.com/v1'} />,
+      children: <Input allowClear placeholder={t('createNewAiProvider.proxyUrl.placeholder')} />,
       label: t('createNewAiProvider.proxyUrl.title'),
       minWidth: 400,
       name: [KeyVaultsConfigKey, LLMProviderBaseUrlKey],

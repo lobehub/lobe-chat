@@ -211,15 +211,16 @@ const ProviderConfig = memo<ProviderConfigProps>(
             ),
             desc: apiKeyUrl ? (
               <Trans
+                components={[
+                  <span key="0" />,
+                  <span key="1" />,
+                  <span key="2" />,
+                  <Link href={apiKeyUrl} key="3" target={'_blank'} />,
+                ]}
                 i18nKey="providerModels.config.apiKey.descWithUrl"
                 ns={'modelProvider'}
-                value={{ name }}
-              >
-                请填写你的 {{ name }} API Key,
-                <Link href={apiKeyUrl} target={'_blank'}>
-                  点此获取
-                </Link>
-              </Trans>
+                values={{ name }}
+              />
             ) : (
               t(`providerModels.config.apiKey.desc`, { name })
             ),
@@ -232,13 +233,14 @@ const ProviderConfig = memo<ProviderConfigProps>(
       children: (
         <>
           <Icon icon={LockIcon} style={{ marginRight: 4 }} />
-          <Trans i18nKey="providerModels.config.aesGcm" ns={'modelProvider'}>
-            你的秘钥与代理地址等将使用
-            <Link href={AES_GCM_URL} style={{ marginInline: 4 }} target={'_blank'}>
-              AES-GCM
-            </Link>
-            加密算法进行加密
-          </Trans>
+          <Trans
+            components={[
+              <span key="0" />,
+              <Link href={AES_GCM_URL} key="1" style={{ marginInline: 4 }} target={'_blank'} />,
+            ]}
+            i18nKey="providerModels.config.aesGcm"
+            ns={'modelProvider'}
+          />
         </>
       ),
       className: styles.aceGcm,

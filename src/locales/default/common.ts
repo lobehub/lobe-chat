@@ -305,6 +305,7 @@ export default {
   },
   importPreview: {
     confirmImport: '确认导入',
+    hashLabel: 'Hash',
     tables: {
       count: '记录数',
       name: '表名',

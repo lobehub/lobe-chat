@@ -154,7 +154,7 @@ export const UpdateNotification: React.FC = () => {
                 size="small"
                 type="primary"
               >
-                {t('updater.restartAndInstall', '立即安装')}
+                {t('updater.restartAndInstall')}
               </Button>
             </div>
           </Flexbox>
