@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Mobile native better auth support."]
+    },
+    "date": "2025-12-23",
+    "version": "2.0.0-next.176"
+  },
+  {
     "children": {},
     "date": "2025-12-21",
     "version": "2.0.0-next.175"
