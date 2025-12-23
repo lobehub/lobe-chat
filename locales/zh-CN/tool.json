@@ -1,98 +1,20 @@
 {
   "agentGroupManagement": {
     "executeTask": {
-      "agent": "执行 Agent",
-      "cancelled": "已取消",
-      "completed": "任务完成",
-      "cost": "费用",
-      "failed": "任务失败",
-      "interrupted": "已中断",
       "intervention": {
-        "taskPlaceholder": "请详细描述需要 Agent 执行的任务...",
+        "taskPlaceholder": "请详细描述需要助理执行的任务…",
         "timeout": "最长执行时间",
         "timeoutUnit": "分钟",
-        "unknownAgent": "未知 Agent"
-      },
-      "processing": "执行中...",
-      "steps": "执行步数",
-      "task": "任务内容",
-      "thread": "Thread ID",
-      "timeout": "执行超时",
-      "tokens": "Token 消耗"
+        "unknownAgent": "未知助理"
+      }
     }
   },
   "codeInterpreter": {
     "error": "执行错误",
-    "executing": "执行中...",
+    "executing": "执行中…",
     "files": "文件：",
     "output": "输出：",
     "returnValue": "返回值："
-  },
-  "codeInterpreter-legacy": {
-    "error": "执行错误",
-    "executing": "执行中...",
-    "files": "文件：",
-    "output": "输出：",
-    "returnValue": "返回值："
-  },
-  "dalle": {
-    "autoGenerate": "自动生成",
-    "downloading": "DallE3 生成的图片链接有效期仅1小时，正在缓存图片到本地...",
-    "generate": "生成",
-    "generating": "生成中...",
-    "images": "图片:",
-    "prompt": "提示词"
-  },
-  "lobe-gtd": {
-    "actions": {
-      "add": "添加",
-      "clearCompleted": "清除已完成",
-      "placeholder": "输入待办项目..."
-    },
-    "clearTodos": {
-      "cleared": "已清除 {{count}} 个项目",
-      "clearedCompleted": "已清除 {{count}} 个已完成项目",
-      "clearedCompleted_one": "已清除 {{count}} 个已完成项目",
-      "clearedCompleted_other": "已清除 {{count}} 个已完成项目",
-      "cleared_one": "已清除 {{count}} 个项目",
-      "cleared_other": "已清除 {{count}} 个项目",
-      "noItems": "无项目可清除",
-      "remaining": "剩余 {{count}} 个项目",
-      "remaining_one": "剩余 {{count}} 个项目",
-      "remaining_other": "剩余 {{count}} 个项目"
-    },
-    "completeTodos": {
-      "completed": "已完成 {{count}} 个项目",
-      "completed_one": "已完成 {{count}} 个项目",
-      "completed_other": "已完成 {{count}} 个项目"
-    },
-    "createTodos": {
-      "created": "已创建 {{count}} 个待办项目",
-      "created_one": "已创建 {{count}} 个待办项目",
-      "created_other": "已创建 {{count}} 个待办项目",
-      "total": "共 {{count}} 个项目",
-      "total_one": "共 {{count}} 个项目",
-      "total_other": "共 {{count}} 个项目"
-    },
-    "removeTodos": {
-      "removed": "已删除 {{count}} 个项目",
-      "removed_one": "已删除 {{count}} 个项目",
-      "removed_other": "已删除 {{count}} 个项目"
-    },
-    "status": {
-      "done": "{{count}} 已完成",
-      "pending": "{{count}} 待处理"
-    },
-    "todoList": {
-      "empty": "待办清单为空",
-      "items": "{{count}} 个项目",
-      "items_one": "{{count}} 个项目",
-      "items_other": "{{count}} 个项目",
-      "title": "待办清单"
-    },
-    "updateTodos": {
-      "updated": "待办清单已更新"
-    }
   },
   "lobe-knowledge-base": {
     "readKnowledge": {
@@ -104,43 +26,24 @@
   },
   "localFiles": {
     "editFile": {
-      "newString": "替换为",
-      "oldString": "查找内容",
       "replaceAll": "替换全部匹配项",
       "replaceFirst": "仅替换第一个匹配项"
     },
-    "file": "文件",
-    "folder": "文件夹",
     "moveFiles": {
       "itemsMoved": "已移动 {{count}} 个项目：",
-      "itemsMoved_one": "已移动 {{count}} 个项目：",
-      "itemsMoved_other": "已移动 {{count}} 个项目：",
-      "itemsToMove": "{{count}} 个项目待移动：",
-      "itemsToMove_one": "{{count}} 个项目待移动：",
-      "itemsToMove_other": "{{count}} 个项目待移动："
+      "itemsToMove": "{{count}} 个项目待移动："
     },
-    "open": "打开",
     "openFile": "打开文件",
     "openFolder": "打开文件夹",
-    "read": {
-      "more": "查看更多"
-    },
-    "readFile": "读取文件",
-    "readFileError": "读取文件失败，请检查文件路径是否正确",
-    "readFiles": "读取文件",
-    "readFilesError": "读取文件失败，请检查文件路径是否正确",
     "writeFile": {
       "characters": "字符",
-      "preview": "内容预览",
-      "truncated": "已截断"
+      "preview": "内容预览"
     }
   },
   "search": {
     "createNewSearch": "创建新的搜索记录",
-    "emptyResult": "没有搜索到结果，请修改关键词后重试",
-    "genAiMessage": "创建助手消息",
+    "emptyResult": "未找到结果。你可以更换关键词后再试",
     "includedTooltip": "当前搜索结果会进入会话的上下文中",
-    "keywords": "关键词：",
     "scoreTooltip": "相关性分数，该分数越高说明与查询关键词越相关",
     "searchBar": {
       "button": "搜索",
@@ -178,7 +81,6 @@
         "year": "一年内"
       }
     },
-    "summary": "总结",
     "summaryTooltip": "总结当前内容",
     "viewMoreResults": "查看更多 {{results}} 个结果"
   },
@@ -190,7 +92,6 @@
       "value": "字段值"
     },
     "formValidationFailed": "表单验证失败，请检查参数格式",
-    "keyRequired": "字段键不能为空",
-    "stringifyError": "无法序列化参数，请检查参数格式"
+    "keyRequired": "字段键不能为空"
   }
 }

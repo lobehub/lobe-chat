@@ -168,7 +168,7 @@
       "title": "代理地址"
     },
     "sdkType": {
-      "placeholder": "openai/anthropic/azureai/ollama/...",
+      "placeholder": "openai/anthropic/azureai/ollama/…",
       "required": "请选择 SDK 类型",
       "title": "请求格式"
     },
@@ -210,7 +210,7 @@
       "enabled": "已启用"
     },
     "notFound": "未找到搜索结果",
-    "searchProviders": "搜索服务商...",
+    "searchProviders": "搜索服务商…",
     "sort": "自定义排序"
   },
   "newapi": {
@@ -247,7 +247,7 @@
     },
     "download": {
       "desc": "Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续",
-      "failed": "模型下载失败，请检查网络或者 Ollama 设置后重试",
+      "failed": "下载遇到了问题。你可以检查网络或 Ollama 设置后重试；也可以稍后再试",
       "remainingTime": "剩余时间",
       "speed": "下载速度",
       "title": "正在下载模型 {{model}} "
@@ -262,7 +262,7 @@
       "confirm": "下载",
       "description": "输入你的 Ollama 模型标签，完成即可继续会话",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "开始下载...",
+      "starting": "开始下载…",
       "title": "下载指定的 Ollama 模型"
     }
   },
@@ -272,7 +272,7 @@
       "title": "批量选择"
     },
     "config": {
-      "aesGcm": "您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密",
+      "aesGcm": "你的密钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密",
       "apiKey": {
         "desc": "请填写你的 {{name}} API Key",
         "descWithUrl": "请填写你的 {{name}} API Key，<3>点此获取</3>",
@@ -336,8 +336,8 @@
           "title": "支持文件上传"
         },
         "functionCall": {
-          "extra": "此配置将仅开启模型使用工具的能力，进而可以为模型添加工具类的插件。但是否支持真正使用工具完全取决于模型本身，请自行测试的可用性",
-          "title": "支持工具使用"
+          "extra": "此配置将仅开启模型使用技能的能力，进而可以为模型添加技能。但是否支持真正使用技能完全取决于模型本身，请自行测试的可用性",
+          "title": "支持技能使用"
         },
         "id": {
           "extra": "创建后不可修改，调用 AI 时将作为模型 id 使用",
@@ -417,11 +417,11 @@
         "enableAll": "全部启用",
         "sort": "自定义模型排序"
       },
-      "enabledEmpty": "暂无启用模型，请从下方列表中启用心仪的模型吧~",
+      "enabledEmpty": "还没有启用模型。先从下方列表挑一个启用，之后随时可以调整",
       "fetcher": {
         "clear": "清除获取的模型",
         "fetch": "获取模型列表",
-        "fetching": "正在获取模型列表...",
+        "fetching": "正在获取模型列表…",
         "latestTime": "上次更新时间：{{time}}",
         "noLatestTime": "暂未获取列表"
       },
@@ -431,7 +431,7 @@
         "success": "重置成功",
         "title": "重置所有修改"
       },
-      "search": "搜索模型...",
+      "search": "搜索模型…",
       "searchResult": "搜索到 {{count}} 个模型",
       "title": "模型列表",
       "total": "共 {{count}} 个模型可用"
@@ -463,7 +463,7 @@
   "vertexai": {
     "apiKey": {
       "desc": "填入你的 Vertex Ai Keys",
-      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": … }",
       "title": "Vertex AI Keys"
     },
     "region": {

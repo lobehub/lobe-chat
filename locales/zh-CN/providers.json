@@ -39,7 +39,7 @@
     "description": "在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。"
   },
   "cohere": {
-    "description": "Cohere 为您带来最前沿的多语言模型、先进的检索功能以及为现代企业量身定制的 AI 工作空间 — 一切都集成在一个安全的平台中。"
+    "description": "Cohere 为你带来最前沿的多语言模型、先进的检索功能以及为现代企业量身定制的 AI 工作空间 — 一切都集成在一个安全的平台中。"
   },
   "cometapi": {
     "description": "CometAPI 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、Google 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力AI体验的提升。"
@@ -72,7 +72,7 @@
     "description": "Higress 是一款云原生 API 网关，在阿里内部为解决 Tengine reload 对长连接业务有损，以及 gRPC/Dubbo 负载均衡能力不足而诞生。"
   },
   "huggingface": {
-    "description": "HuggingFace Inference API 提供了一种快速且免费的方式，让您可以探索成千上万种模型，适用于各种任务。无论您是在为新应用程序进行原型设计，还是在尝试机器学习的功能，这个 API 都能让您即时访问多个领域的高性能模型。"
+    "description": "HuggingFace Inference API 提供了一种快速且免费的方式，让你可以探索成千上万种模型，适用于各种任务。无论你是在为新应用程序进行原型设计，还是在尝试机器学习的功能，这个 API 都能让你即时访问多个领域的高性能模型。"
   },
   "hunyuan": {
     "description": "由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力"
@@ -87,7 +87,7 @@
     "description": "Jina AI 成立于 2020 年，是一家领先的搜索 AI 公司。我们的搜索底座平台包含了向量模型、重排器和小语言模型，可帮助企业构建可靠且高质量的生成式AI和多模态的搜索应用。"
   },
   "lmstudio": {
-    "description": "LM Studio 是一个用于在您的计算机上开发和实验 LLMs 的桌面应用程序。"
+    "description": "LM Studio 是一个用于在你的计算机上开发和实验 LLMs 的桌面应用程序。"
   },
   "minimax": {
     "description": "MiniMax 是 2021 年成立的通用人工智能科技公司，致力于与用户共创智能。MiniMax 自主研发了不同模态的通用大模型，其中包括万亿参数的 MoE 文本大模型、语音大模型以及图像大模型。并推出了海螺 AI 等应用。"
@@ -162,7 +162,7 @@
     "description": "中科院自动化研究所和武汉人工智能研究院推出新一代多模态大模型，支持多轮问答、文本创作、图像生成、3D理解、信号分析等全面问答任务，拥有更强的认知、理解、创作能力，带来全新互动体验。"
   },
   "tencentcloud": {
-    "description": "知识引擎原子能力（LLM Knowledge Engine Atomic Power）基于知识引擎研发的知识问答全链路能力，面向企业及开发者，提供灵活组建及开发模型应用的能力。您可通过多款原子能力组建您专属的模型服务，调用文档解析、拆分、embedding、多轮改写等服务进行组装，定制企业专属 AI 业务。"
+    "description": "知识引擎原子能力（LLM Knowledge Engine Atomic Power）基于知识引擎研发的知识问答全链路能力，面向企业及开发者，提供灵活组建及开发模型应用的能力。你可通过多款原子能力组建你专属的模型服务，调用文档解析、拆分、embedding、多轮改写等服务进行组装，定制企业专属 AI 业务。"
   },
   "togetherai": {
     "description": "Together AI 致力于通过创新的 AI 模型实现领先的性能，提供广泛的自定义能力，包括快速扩展支持和直观的部署流程，满足企业的各种需求。"
@@ -171,7 +171,7 @@
     "description": "Upstage 专注于为各种商业需求开发AI模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。"
   },
   "v0": {
-    "description": "v0 是一个配对编程助手，你只需用自然语言描述想法，它就能为你的项目生成代码和用户界面（UI）"
+    "description": "v0 是一个配对编程助理，你只需用自然语言描述想法，它就能为你的项目生成代码和用户界面（UI）"
   },
   "vercelaigateway": {
     "description": "Vercel AI Gateway 提供统一的 API 来访问 100+ 模型，通过单一端点即可使用 OpenAI、Anthropic、Google 等多个提供商的模型。支持预算设置、使用监控、请求负载均衡和故障转移。"
@@ -183,7 +183,7 @@
     "description": "vLLM 是一个快速且易于使用的库，用于 LLM 推理和服务。"
   },
   "volcengine": {
-    "description": "字节跳动推出的大模型服务的开发平台，提供功能丰富、安全以及具备价格竞争力的模型调用服务，同时提供模型数据、精调、推理、评测等端到端功能，全方位保障您的 AI 应用开发落地。"
+    "description": "字节跳动推出的大模型服务的开发平台，提供功能丰富、安全以及具备价格竞争力的模型调用服务，同时提供模型数据、精调、推理、评测等端到端功能，全方位保障你的 AI 应用开发落地。"
   },
   "wenxin": {
     "description": "企业级一站式大模型与AI原生应用开发及服务平台，提供最全面易用的生成式人工智能模型开发、应用开发全流程工具链"
@@ -192,10 +192,10 @@
     "description": "xAI 是一家致力于构建人工智能以加速人类科学发现的公司。我们的使命是推动我们对宇宙的共同理解。"
   },
   "xinference": {
-    "description": "Xorbits Inference (Xinference) 是一个开源平台，用于简化各种 AI 模型的运行和集成。借助 Xinference，您可以使用任何开源 LLM、嵌入模型和多模态模型在云端或本地环境中运行推理，并创建强大的 AI 应用。"
+    "description": "Xorbits Inference (Xinference) 是一个开源平台，用于简化各种 AI 模型的运行和集成。借助 Xinference，你可以使用任何开源 LLM、嵌入模型和多模态模型在云端或本地环境中运行推理，并创建强大的 AI 应用。"
   },
   "zenmux": {
-    "description": "ZenMux 是一个统一的 AI 服务聚合平台，支持 OpenAI、Anthropic、Google VertexAI 等多种主流 AI 服务接口。提供灵活的路由能力，让您可以轻松切换和管理不同的 AI 模型。"
+    "description": "ZenMux 是一个统一的 AI 服务聚合平台，支持 OpenAI、Anthropic、Google VertexAI 等多种主流 AI 服务接口。提供灵活的路由能力，让你可以轻松切换和管理不同的 AI 模型。"
   },
   "zeroone": {
     "description": "零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。"

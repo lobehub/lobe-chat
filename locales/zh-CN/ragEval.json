@@ -12,7 +12,7 @@
   },
   "dataset": {
     "addNewButton": "创建数据集",
-    "emptyGuide": "当前数据集为空，请创建一个数据集。",
+    "emptyGuide": "当前数据集为空，请创建一个数据集",
     "list": {
       "table": {
         "actions": {
@@ -53,7 +53,7 @@
       "title": "添加评测任务"
     },
     "addNewButton": "创建评测",
-    "emptyGuide": "当前评测任务为空，开始创建评测。",
+    "emptyGuide": "当前评测任务为空，开始创建评测",
     "table": {
       "columns": {
         "actions": {
