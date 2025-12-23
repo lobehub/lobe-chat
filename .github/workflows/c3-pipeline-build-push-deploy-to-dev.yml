@@ -1,0 +1,41 @@
+name: Build and Push to ECR
+
+
+on:
+  push:
+    branches:
+      - main  
+  workflow_dispatch:  
+
+jobs:
+  build_push:
+    runs-on:
+      labels: toolsEnv
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  
+        with:
+          fetch-depth: 0  # Fetch all history
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Docker build and push
+        run: |
+          ECR_REGISTRY=606191926999.dkr.ecr.us-east-1.amazonaws.com
+          ECR_REPOSITORY=sai-c3-lobechat
+          
+          image="dev-${GITHUB_SHA:0:7}"
+          
+          echo "Building Docker image with tag: ${image}"
+          docker build . -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${image}
+          
+          echo "Pushing Docker image to ECR..."
+          docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${image}
+          
+          echo "Build completed successfully"
+          echo "Image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${image}"
+          echo "Commit: ${GITHUB_SHA}"
+          echo "Short SHA: ${GITHUB_SHA:0:7}"
