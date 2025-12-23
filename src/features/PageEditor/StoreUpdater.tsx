@@ -132,7 +132,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
             const textContent = currentPage.content || '';
             storeApi.setState({ wordCount: calculateWordCount(textContent) });
           } else if (currentPage?.content && currentPage.content.trim()) {
-            console.log('[StoreUpdater] Loading from content (markdown)');
+            log('Loading from content (markdown)');
             // Fallback to markdown content (e.g., from Notion imports)
             editor.setDocument('markdown', currentPage.content);
             storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
@@ -143,17 +143,17 @@ const StoreUpdater = memo<StoreUpdaterProps>(
               .join('\n\n')
               .trim();
             if (pagesContent) {
-              console.log('[StoreUpdater] Loading from pages content');
+              log('Loading from pages content');
               editor.setDocument('markdown', pagesContent);
               storeApi.setState({ wordCount: calculateWordCount(pagesContent) });
             } else {
-              console.log('[StoreUpdater] Clearing editor - empty pages');
+              log('Clearing editor - empty pages');
               editor.setDocument('markdown', ' ');
               storeApi.setState({ wordCount: 0 });
             }
           } else {
             // Empty document or temp page - clear editor with minimal content
-            console.log('[StoreUpdater] Clearing editor - empty/new page');
+            log('Clearing editor - empty/new page');
             editor.setDocument('markdown', ' ');
             storeApi.setState({ wordCount: 0 });
           }
@@ -161,7 +161,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
           setContentInit(true);
           storeApi.setState({ isLoadingContent: false });
         } catch (error) {
-          console.error('[PageEditor] Failed to initialize editor content:', error);
+          log('Failed to initialize editor content:', error);
           storeApi.setState({ isLoadingContent: false });
         }
       });
