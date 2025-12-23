@@ -27,9 +27,17 @@ jobs:
           ECR_REGISTRY=606191926999.dkr.ecr.us-east-1.amazonaws.com
           ECR_REPOSITORY=sai-c3-lobechat
           
-          image="dev-${GITHUB_SHA:0:7}"
+          # Extract version from package.json (like AWS CodePipeline did)
+          VERSION=$(jq -r '.version' package.json)
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          
+          # Tag format: dev-VERSION-SHORT_SHA (e.g., dev-1.143.2-a1b2c3d)
+          image="dev-${VERSION}-${SHORT_SHA}"
           
           echo "Building Docker image with tag: ${image}"
+          echo "Version from package.json: ${VERSION}"
+          echo "Commit SHA: ${SHORT_SHA}"
+          
           docker build . -t ${ECR_REGISTRY}/${ECR_REPOSITORY}:${image}
           
           echo "Pushing Docker image to ECR..."
@@ -37,5 +45,3 @@ jobs:
           
           echo "Build completed successfully"
           echo "Image: ${ECR_REGISTRY}/${ECR_REPOSITORY}:${image}"
-          echo "Commit: ${GITHUB_SHA}"
-          echo "Short SHA: ${GITHUB_SHA:0:7}"
