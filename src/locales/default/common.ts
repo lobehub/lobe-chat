@@ -84,7 +84,7 @@ export default {
     },
     ready: {
       button: '立即使用',
-      desc: '立即想用',
+      desc: '现在就开始用吧',
       title: 'PGlite 数据库已就绪',
     },
 

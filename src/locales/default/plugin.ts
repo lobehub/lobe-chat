@@ -38,7 +38,7 @@ export default {
     'lobe-group-management': {
       apiName: {
         broadcast: '所有人发言',
-        createAgent: '添加团队成员',
+        createAgent: '添加群组成员',
         createWorkflow: '规划工作流',
         executeTask: '执行任务',
         getAgentInfo: '获取成员信息',
@@ -50,7 +50,7 @@ export default {
         summarize: '总结对话',
         vote: '发起投票',
       },
-      title: '协调团队',
+      title: '群组协调',
     },
     'lobe-gtd': {
       apiName: {

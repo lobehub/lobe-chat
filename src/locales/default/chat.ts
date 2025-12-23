@@ -64,7 +64,7 @@ export default {
     title: '{{title}} 副本',
   },
   duplicateTitle: '{{title}} 副本',
-  emptyAgent: '还没有助理。从第一个助理开始，慢慢搭建你的团队',
+  emptyAgent: '还没有助理。从第一个助理开始，慢慢搭建你的助理体系',
   emptyAgentAction: '创建助理',
   extendParams: {
     disableContextCaching: {

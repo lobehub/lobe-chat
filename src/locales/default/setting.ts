@@ -496,22 +496,22 @@ export default {
   },
   settingGroup: {
     description: {
-      placeholder: '请输入团队描述',
-      title: '团队描述',
+      placeholder: '请输入群组描述',
+      title: '群组描述',
     },
     name: {
-      placeholder: '请输入团队名称',
-      title: '团队名称',
+      placeholder: '请输入群组名称',
+      title: '群组名称',
     },
     scene: {
-      desc: '选择团队场景',
+      desc: '选择群组场景',
       options: {
         casual: '休闲',
         productive: '生产力',
       },
-      title: '团队场景',
+      title: '群组场景',
     },
-    submit: '更新团队',
+    submit: '更新群组',
     systemPrompt: {
       placeholder: '请输入主持人系统提示词',
       title: '主持人系统提示词',
@@ -524,7 +524,7 @@ export default {
       title: '允许助理发送私信',
     },
     enableSupervisor: {
-      desc: '启用群组主持人功能，主持人将管理团队对话流程',
+      desc: '启用群组主持人功能，主持人将管理群组对话流程',
       title: '启用主持人',
     },
     maxResponseInRow: {
@@ -574,7 +574,7 @@ export default {
     defaultAgent: '自定义助理',
     disableHost: '关闭主持助理',
     edit: '编辑成员',
-    empty: '该团队中暂无成员。点击 + 按钮添加成员。',
+    empty: '该群组中暂无成员。点击 + 按钮添加成员。',
     enableHost: '启用主持助理',
     groupHost: '群主持',
     groupMembers: '群组成员',

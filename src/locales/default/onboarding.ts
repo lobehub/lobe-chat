@@ -63,7 +63,7 @@ export default {
   telemetry: {
     agreement:
       '我们仅收集匿名数据，用于改进产品体验。继续即表示你已阅读并同意<terms>服务条款</terms>与<privacy>隐私政策</privacy>',
-    desc: '我是你的助理管家。随时陪你思考、创作，帮你管理助理团队',
+    desc: '我是你的助理管家。随时陪你思考、创作，帮你管理助理与群组',
     helpImprove: '帮助改进 {{appName}}',
     next: '开始',
     privacy: '隐私政策',

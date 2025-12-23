@@ -174,7 +174,7 @@ export default {
         },
       },
 
-      title: '团队聊天用法推荐',
+      title: '群组聊天用法推荐',
       // 写作圈专属活动
       writing: {
         bookClub: {
@@ -315,7 +315,7 @@ export default {
             title: '美食研发专家',
           },
         ],
-        title: '美食研发团队',
+        title: '美食研发群组',
       },
       product: {
         description: '产品设计与开发，打造优质产品',
@@ -341,7 +341,7 @@ export default {
             title: '全栈工程师',
           },
         ],
-        title: '产品研发团队',
+        title: '产品研发群组',
       },
       writing: {
         description: '内容创作与编辑，打造优质文案',
