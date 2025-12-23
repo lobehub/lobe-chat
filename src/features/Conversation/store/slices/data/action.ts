@@ -3,7 +3,7 @@ import type { ConversationContext, UIChatMessage } from '@lobechat/types';
 import type { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { useClientDataSWRWithSync } from '@/libs/swr';
 import { messageService } from '@/services/message';
 
 import type { Store as ConversationStore } from '../../action';
@@ -105,14 +105,14 @@ export const dataSlice: StateCreator<
     // This is used when external messages are provided (e.g., creating new thread)
     const shouldFetch = !skipFetch && !!context.agentId;
 
-    return useClientDataSWR<UIChatMessage[]>(
+    return useClientDataSWRWithSync<UIChatMessage[]>(
       shouldFetch ? ['CONVERSATION_FETCH_MESSAGES', context] : null,
 
-      async ([, key]: [string, ConversationContext]) => {
-        return messageService.getMessages(key as any);
+      async () => {
+        return messageService.getMessages(context as any);
       },
       {
-        onSuccess: (data) => {
+        onData: (data) => {
           if (!data) return;
 
           // Parse messages using conversation-flow

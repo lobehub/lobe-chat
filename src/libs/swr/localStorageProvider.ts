@@ -276,6 +276,7 @@ const SWR_CACHEABLE_PATTERNS = [
   // Chat page data
   'SWR_USE_FETCH_TOPIC', // Topic list (cached per agentId/groupId)
   'fetchGroupDetail', // Group detail (cached per groupId)
+  'CONVERSATION_FETCH_MESSAGES', // Messages (cached per agentId/topicId)
 ];
 
 /**
