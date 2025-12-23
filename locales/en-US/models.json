@@ -327,7 +327,7 @@
     "description": "Qwen2 is an advanced general-purpose language model that supports various types of instructions."
   },
   "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2-72B-Instruct is an instruction-tuned large language model in the Qwen2 series, with a parameter size of 72B. This model is based on the Transformer architecture and employs techniques such as the SwiGLU activation function, attention QKV bias, and group query attention. It can handle large-scale inputs. The model excels in language understanding, generation, multilingual capabilities, coding, mathematics, and reasoning across multiple benchmark tests, surpassing most open-source models and demonstrating competitive performance comparable to proprietary models in certain tasks."
+    "description": "Qwen2 is the latest series of the Qwen model, capable of outperforming optimal open-source models of similar size and even larger models. Qwen2 7B has achieved significant advantages in multiple evaluations, especially in coding and Chinese comprehension."
   },
   "Qwen/Qwen2-VL-72B-Instruct": {
     "description": "Qwen2-VL is the latest iteration of the Qwen-VL model, achieving state-of-the-art performance in visual understanding benchmarks."
@@ -342,7 +342,7 @@
     "description": "A large language model developed by the Alibaba Cloud Tongyi Qianwen team"
   },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
-    "description": "Qwen2.5 is a new large language model series with enhanced understanding and generation capabilities."
+    "description": "Qwen2.5-72B-Instruct is one of Alibaba Cloud’s latest large language model series. This 72B model brings significant improvements in coding and mathematics, supports up to 128K input tokens, and can generate long outputs (8K+). It supports over 29 languages and shows notable gains in instruction following, structured data understanding, and structured outputs (especially JSON)."
   },
   "Qwen/Qwen2.5-72B-Instruct-Turbo": {
     "description": "Qwen2.5 is a new large language model series designed to optimize instruction-based task processing."
@@ -1059,7 +1059,7 @@
     "description": "DeepSeek-VL2 is a mixture of experts (MoE) visual language model developed based on DeepSeekMoE-27B, employing a sparsely activated MoE architecture that achieves outstanding performance while activating only 4.5 billion parameters. This model excels in various tasks, including visual question answering, optical character recognition, document/table/chart understanding, and visual localization."
   },
   "deepseek-chat": {
-    "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
+    "description": "DeepSeek V3.2 is DeepSeek’s latest general-purpose model. It supports a hybrid reasoning architecture and offers stronger agent capabilities."
   },
   "deepseek-coder-33B-instruct": {
     "description": "DeepSeek Coder 33B is a code language model trained on 20 trillion data points, of which 87% are code and 13% are in Chinese and English. The model introduces a 16K window size and fill-in-the-blank tasks, providing project-level code completion and snippet filling capabilities."
@@ -2175,7 +2175,7 @@
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
   },
   "internlm2.5-latest": {
-    "description": "Our latest model series, featuring exceptional reasoning performance, supporting a context length of 1M, and enhanced instruction following and tool invocation capabilities."
+    "description": "A legacy model line we continue to maintain. After multiple iterations, it remains highly capable and stable, with 7B and 20B variants available. It supports up to a 1M context window and offers stronger instruction following and tool-calling. By default, it points to our latest InternLM2.5 series model (currently `internlm2.5-20b-chat`)."
   },
   "internlm3-latest": {
     "description": "Our latest model series boasts exceptional inference performance, leading the pack among open-source models of similar scale. It defaults to our most recently released InternLM3 series models."
@@ -2754,13 +2754,13 @@
     "description": "Llama-3.1-Nemotron-70B-Instruct is a custom large language model by NVIDIA designed to enhance the helpfulness of LLM-generated responses."
   },
   "o1": {
-    "description": "Focused on advanced reasoning and solving complex problems, including mathematical and scientific tasks. It is particularly well-suited for applications that require deep contextual understanding and agent workflow."
+    "description": "o1 is OpenAI’s reasoning model with text+image inputs and text output, designed for complex tasks that require broad general knowledge. It has a 200K context window and a knowledge cutoff of October 2023."
   },
   "o1-mini": {
-    "description": "Smaller and faster than o1-preview, with 80% lower cost. Performs well in code generation and tasks involving small context windows."
+    "description": "o1-mini is a fast, cost-effective reasoning model designed for programming, mathematics, and scientific applications. It has a 128K context window and a knowledge cutoff of October 2023."
   },
   "o1-preview": {
-    "description": "Focused on advanced reasoning and solving complex problems, including mathematical and scientific tasks. Ideal for applications that require deep contextual understanding and autonomous workflows."
+    "description": "o1-preview is OpenAI’s reasoning model designed for complex tasks that require broad general knowledge. It has a 128K context window and a knowledge cutoff of October 2023."
   },
   "o1-pro": {
     "description": "The o1 series models are trained with reinforcement learning to think before answering and perform complex reasoning tasks. The o1-pro model uses more computational resources for deeper thinking, consistently delivering higher-quality responses."
@@ -3087,7 +3087,7 @@
     "description": "A powerful medium-sized code model supporting 32K context length, proficient in multilingual programming."
   },
   "qwen/qwen3-14b": {
-    "description": "Qwen3-14B is the 14B version in the Qwen series, suitable for general reasoning and dialogue tasks."
+    "description": "Qwen3-14B is a dense 14.8 billion parameter causal language model in the Qwen3 series, designed for complex reasoning and efficient dialogue. It supports seamless switching between a 'thinking' mode for tasks such as mathematics, programming, and logical reasoning, and a 'non-thinking' mode for general conversation. This model is fine-tuned for instruction following, agent tool usage, creative writing, and multilingual tasks across more than 100 languages and dialects. It natively handles a 32K token context and can be extended to 131K tokens using YaRN."
   },
   "qwen/qwen3-14b:free": {
     "description": "Qwen3-14B is a dense 14.8 billion parameter causal language model in the Qwen3 series, designed for complex reasoning and efficient dialogue. It supports seamless switching between a 'thinking' mode for tasks such as mathematics, programming, and logical reasoning, and a 'non-thinking' mode for general conversation. This model is fine-tuned for instruction following, agent tool usage, creative writing, and multilingual tasks across more than 100 languages and dialects. It natively handles a 32K token context and can be extended to 131K tokens using YaRN."
@@ -3279,7 +3279,7 @@
     "description": "A new generation of non-thinking mode open-source model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Instruct-2507), it offers better Chinese text comprehension, enhanced logical reasoning abilities, and improved performance in text generation tasks."
   },
   "qwen3-next-80b-a3b-thinking": {
-    "description": "Qwen3 Next 80B A3B Thinking, a flagship reasoning model version designed for complex tasks."
+    "description": "A next-generation open-source thinking model based on Qwen3. Compared to the previous version (Tongyi Qianwen 3-235B-A22B-Thinking-2507), it improves instruction following and produces more concise summaries and responses."
   },
   "qwen3-omni-flash": {
     "description": "The Qwen-Omni model accepts multimodal input including text, images, audio, and video, and generates responses in text or speech. It offers a variety of human-like voice tones, supports multilingual and dialectal speech output, and is applicable to scenarios such as text creation, visual recognition, and voice assistants."
