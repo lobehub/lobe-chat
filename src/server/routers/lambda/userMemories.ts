@@ -17,13 +17,13 @@ import { ModelProvider } from 'model-bank';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import { TopicModel } from '@/database/models/topic';
 import {
   IdentityEntryBasePayload,
   IdentityEntryPayload,
   UserMemoryIdentityModel,
   UserMemoryModel,
 } from '@/database/models/userMemory';
+import { UserMemoryTopicRepository } from '@/database/repositories/userMemory';
 import {
   userMemories,
   userMemoriesContexts,
@@ -696,24 +696,24 @@ export const userMemoriesRouter = router({
 
   /**
    * Retrieve memories for a specific topic
-   * Uses the topic's historySummary as the search query
+   * Uses concatenated user messages (first 7000 chars) as the search query
    */
   retrieveMemoryForTopic: memoryProcedure
     .input(z.object({ topicId: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
-        // Get topic info to use historySummary as query
-        const topicModel = new TopicModel(ctx.serverDB, ctx.userId);
-        const topic = await topicModel.findById(input.topicId);
+        // Get concatenated user messages for this topic
+        const userMemoryTopicRepo = new UserMemoryTopicRepository(ctx.serverDB, ctx.userId);
+        const query = await userMemoryTopicRepo.getUserMessagesQueryForTopic(input.topicId);
 
-        if (!topic?.historySummary) {
-          // No summary available, return empty result
+        if (!query) {
+          // No user messages available, return empty result
           return EMPTY_SEARCH_RESULT;
         }
 
-        // Search memories using topic's historySummary
+        // Search memories using concatenated user messages
         const searchParams = {
-          query: topic.historySummary,
+          query,
           topK: DEFAULT_SEARCH_USER_MEMORY_TOP_K,
         };
 
