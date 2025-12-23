@@ -1,6 +1,7 @@
 'use client';
 
 import { BRANDING_NAME } from '@lobechat/business-const';
+import { DEFAULT_SETTINGS } from '@lobechat/config';
 import { Button, Form, type FormGroupItemType, Icon } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -9,7 +10,6 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { DEFAULT_SETTINGS } from '@/const/settings';
 import DataImporter from '@/features/DataImporter';
 import { configService } from '@/services/config';
 import { useChatStore } from '@/store/chat';
