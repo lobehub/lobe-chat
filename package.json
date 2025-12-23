@@ -188,7 +188,7 @@
     "@lobechat/utils": "workspace:*",
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/analytics": "^1.6.0",
-    "@lobehub/charts": "^3.0.2",
+    "@lobehub/charts": "^3.0.4",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/desktop-ipc-typings": "workspace:*",
