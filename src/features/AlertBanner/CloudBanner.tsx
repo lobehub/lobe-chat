@@ -9,8 +9,10 @@ import { memo, useEffect, useRef, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { useTranslation } from 'react-i18next';
 
+import { UTM_SOURCE } from '@lobechat/business-config/url';
+
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
+import { OFFICIAL_URL } from '@/const/url';
 import { isOnServerSide } from '@/utils/env';
 
 export const BANNER_HEIGHT = 40;

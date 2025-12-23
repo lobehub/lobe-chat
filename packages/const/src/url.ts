@@ -2,13 +2,9 @@ import urlJoin from 'url-join';
 
 const isDev = process.env.NODE_ENV === 'development';
 
-export const UTM_SOURCE = 'chat_preview';
-
 export const OFFICIAL_URL = 'https://lobechat.com';
 export const OFFICIAL_SITE = 'https://lobehub.com';
 export const OFFICIAL_DOMAIN = 'lobehub.com';
-
-export const OG_URL = '/og/cover.png?v=1';
 
 export const GITHUB = 'https://github.com/lobehub/lobe-chat';
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
@@ -20,7 +16,7 @@ export const SELF_HOSTING_DOCUMENTS = urlJoin(DOCUMENTS, '/self-hosting');
 export const DATABASE_SELF_HOSTING_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/server-database');
 
 // use this for the link
-export const DOCUMENTS_REFER_URL = `${DOCUMENTS}?utm_source=${UTM_SOURCE}`;
+export const DOCUMENTS_REFER_URL = `${DOCUMENTS}?utm_source=chat_preview`;
 
 export const WIKI_PLUGIN_GUIDE = urlJoin(USAGE_DOCUMENTS, '/plugins/development');
 export const MANUAL_UPGRADE_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/advanced/upstream-sync');
