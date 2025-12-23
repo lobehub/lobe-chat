@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "دستیار در دسترس نیست",
-    "noAvailable": "در حال حاضر هیچ دستیاری برای افزودن وجود ندارد",
-    "noSelected": "هیچ دستیاری انتخاب نشده است",
-    "search": "دستیار مطابقی یافت نشد"
-  },
-  "starter": {
-    "createAgent": "ایجاد دستیار",
-    "createGroup": "ایجاد گروه",
-    "deepResearch": "پژوهش عمیق",
-    "developing": "در حال توسعه",
-    "image": "نقاشی",
-    "write": "نوشتن"
-  }
+  "agentSelection.empty": "دستیار در دسترس نیست",
+  "agentSelection.noAvailable": "در حال حاضر هیچ دستیاری برای افزودن وجود ندارد",
+  "agentSelection.noSelected": "هیچ دستیاری انتخاب نشده است",
+  "agentSelection.search": "دستیار مطابقی یافت نشد",
+  "starter.createAgent": "ایجاد دستیار",
+  "starter.createGroup": "ایجاد گروه",
+  "starter.deepResearch": "پژوهش عمیق",
+  "starter.developing": "در حال توسعه",
+  "starter.image": "نقاشی",
+  "starter.write": "نوشتن"
 }

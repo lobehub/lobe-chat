@@ -1,40 +1,30 @@
 {
-  "actions": {
-    "addNewTopic": "Nieuw onderwerp starten",
-    "autoRename": "Slim hernoemen",
-    "confirmRemoveAll": "U staat op het punt om alle onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
-    "confirmRemoveTopic": "U staat op het punt om dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld, wees voorzichtig.",
-    "confirmRemoveUnstarred": "U staat op het punt om niet-gemarkeerde onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
-    "duplicate": "Maak een kopie",
-    "export": "Exporteer onderwerp",
-    "import": "Gesprekken importeren",
-    "openInNewWindow": "In nieuw venster openen",
-    "removeAll": "Verwijder alle onderwerpen",
-    "removeUnstarred": "Verwijder niet-gemarkeerde onderwerpen"
-  },
+  "actions.addNewTopic": "Nieuw onderwerp starten",
+  "actions.autoRename": "Slim hernoemen",
+  "actions.confirmRemoveAll": "U staat op het punt om alle onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
+  "actions.confirmRemoveTopic": "U staat op het punt om dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld, wees voorzichtig.",
+  "actions.confirmRemoveUnstarred": "U staat op het punt om niet-gemarkeerde onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
+  "actions.duplicate": "Maak een kopie",
+  "actions.export": "Exporteer onderwerp",
+  "actions.import": "Gesprekken importeren",
+  "actions.openInNewWindow": "In nieuw venster openen",
+  "actions.removeAll": "Verwijder alle onderwerpen",
+  "actions.removeUnstarred": "Verwijder niet-gemarkeerde onderwerpen",
   "defaultTitle": "Standaard onderwerp",
   "displayItems": "Toon items",
   "duplicateLoading": "Onderwerp wordt gekopieerd...",
   "duplicateSuccess": "Onderwerp succesvol gekopieerd",
   "favorite": "Favoriet",
-  "groupMode": {
-    "ascMessages": "Op volgorde van totaal aantal berichten",
-    "byTime": "Groeperen op tijd",
-    "descMessages": "Op volgorde van totaal aantal berichten (aflopend)",
-    "flat": "Niet groeperen"
-  },
-  "groupTitle": {
-    "byTime": {
-      "month": "Deze maand",
-      "today": "Vandaag",
-      "week": "Deze week",
-      "yesterday": "Gisteren"
-    }
-  },
-  "guide": {
-    "desc": "Klik op de knop aan de linkerkant om de huidige conversatie op te slaan als een historisch onderwerp en een nieuwe conversatie te starten.",
-    "title": "Onderwerpenlijst"
-  },
+  "groupMode.ascMessages": "Op volgorde van totaal aantal berichten",
+  "groupMode.byTime": "Groeperen op tijd",
+  "groupMode.descMessages": "Op volgorde van totaal aantal berichten (aflopend)",
+  "groupMode.flat": "Niet groeperen",
+  "groupTitle.byTime.month": "Deze maand",
+  "groupTitle.byTime.today": "Vandaag",
+  "groupTitle.byTime.week": "Deze week",
+  "groupTitle.byTime.yesterday": "Gisteren",
+  "guide.desc": "Klik op de knop aan de linkerkant om de huidige conversatie op te slaan als een historisch onderwerp en een nieuwe conversatie te starten.",
+  "guide.title": "Onderwerpenlijst",
   "importError": "Importeren mislukt",
   "importInvalidFormat": "Ongeldig bestandsformaat. Zorg ervoor dat het een geldig JSON-bestand is.",
   "importLoading": "Bezig met importeren van gesprekken...",

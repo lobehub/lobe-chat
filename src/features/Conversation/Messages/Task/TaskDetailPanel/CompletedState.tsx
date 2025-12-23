@@ -120,7 +120,7 @@ const CompletedState = memo<CompletedStateProps>(({ taskDetail, content }) => {
               <div className={styles.metricItem}>
                 <Footprints size={12} />
                 <span className={styles.metricValue}>{totalSteps}</span>
-                <span>{t('task.metrics.stepsShort', { defaultValue: '步' })}</span>
+                <span>{t('task.metrics.stepsShort')}</span>
               </div>
             )}
             {/* Tool Calls */}

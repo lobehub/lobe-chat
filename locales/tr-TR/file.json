@@ -2,197 +2,125 @@
   "addFolder": "Klasör Oluştur",
   "addLibrary": "Ekle",
   "addPage": "Belge Oluştur",
-  "detail": {
-    "basic": {
-      "createdAt": "Oluşturulma Zamanı",
-      "filename": "Dosya Adı",
-      "size": "Dosya Boyutu",
-      "title": "Temel Bilgiler",
-      "type": "Format",
-      "updatedAt": "Güncellenme Zamanı"
-    },
-    "data": {
-      "chunkCount": "Parça Sayısı",
-      "embedding": {
-        "default": "Henüz vektörleştirilmedi",
-        "error": "Başarısız",
-        "pending": "Başlatılmayı Bekliyor",
-        "processing": "İşleniyor",
-        "success": "Tamamlandı"
-      },
-      "embeddingStatus": "Vektörleştirme"
-    }
-  },
+  "detail.basic.createdAt": "Oluşturulma Zamanı",
+  "detail.basic.filename": "Dosya Adı",
+  "detail.basic.size": "Dosya Boyutu",
+  "detail.basic.title": "Temel Bilgiler",
+  "detail.basic.type": "Format",
+  "detail.basic.updatedAt": "Güncellenme Zamanı",
+  "detail.data.chunkCount": "Parça Sayısı",
+  "detail.data.embedding.default": "Henüz vektörleştirilmedi",
+  "detail.data.embedding.error": "Başarısız",
+  "detail.data.embedding.pending": "Başlatılmayı Bekliyor",
+  "detail.data.embedding.processing": "İşleniyor",
+  "detail.data.embedding.success": "Tamamlandı",
+  "detail.data.embeddingStatus": "Vektörleştirme",
   "empty": "Henüz yüklenmiş dosya/klasör yok",
-  "header": {
-    "actions": {
-      "builtInBlockList": {
-        "filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi"
-      },
-      "connect": "Bağlan...",
-      "gitignore": {
-        "apply": "Kuralları Uygula",
-        "cancel": "Kuralları Yoksay",
-        "content": ".gitignore dosyası tespit edildi (toplam {{count}} dosya), yok sayma kurallarını uygulamak ister misiniz?",
-        "filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi",
-        "title": ".gitignore Tespit Edildi"
-      },
-      "newFolder": "Yeni Klasör",
-      "newPage": "Yeni Belge",
-      "notion": {
-        "error": "Notion dosyası içe aktarılamadı",
-        "foundFiles": "{{count}} dosya bulundu",
-        "importing": "Notion dosyası içe aktarılıyor...",
-        "noMarkdownFiles": "ZIP dosyasında Markdown dosyası bulunamadı",
-        "partial": "{{success}} dosya başarıyla içe aktarıldı, {{failed}} dosya başarısız oldu",
-        "success": "{{count}} dosya başarıyla içe aktarıldı"
-      },
-      "notionGuide": {
-        "cancel": "Şimdilik içe aktarılmasın",
-        "desc": "Lütfen önce Notion'da Markdown (ZIP) formatında dışa aktarın. Devam'a tıklayarak ZIP dosyasını seçip tüm sayfaları içe aktarabilirsiniz.",
-        "ok": "Notion ZIP Dosyasını Seç",
-        "title": "Notion İçeriğini İçe Aktar"
-      },
-      "uploadFile": "Dosya Yükle",
-      "uploadFolder": "Klasör Yükle"
-    },
-    "newPageButton": "Yeni Belge Oluştur",
-    "uploadButton": "Yükle"
-  },
-  "home": {
-    "getStarted": "Başlarken",
-    "greeting": "Başla",
-    "quickActions": "Hızlı İşlemler",
-    "recentFiles": "Son Dosyalar",
-    "recentPages": "Son Belgeler",
-    "subtitle": "Kaynak Merkezine hoş geldiniz, belgelerinizi buradan yönetmeye başlayın",
-    "uploadEntries": {
-      "files": {
-        "title": "Dosya Yükle"
-      },
-      "folder": {
-        "title": "Klasör Yükle"
-      },
-      "library": {
-        "title": "Yeni Kitaplık Oluştur"
-      },
-      "newPage": {
-        "title": "Yeni Belge Oluştur"
-      }
-    }
-  },
-  "library": {
-    "list": {
-      "confirmRemoveLibrary": "Bu kitaplık silinmek üzere. İçindeki dosyalar silinmeyecek, Tüm Dosyalar'a taşınacaktır. Kitaplık silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-      "empty": "<1>+</1> simgesine tıklayarak kitaplık oluşturmaya başlayın"
-    },
-    "new": "Yeni Kütüphane Oluştur",
-    "title": "Kitaplık"
-  },
-  "menu": {
-    "allFiles": "Tüm Dosyalar",
-    "allPages": "Tüm Belgeler"
-  },
+  "header.actions.builtInBlockList.filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi",
+  "header.actions.connect": "Bağlan...",
+  "header.actions.gitignore.apply": "Kuralları Uygula",
+  "header.actions.gitignore.cancel": "Kuralları Yoksay",
+  "header.actions.gitignore.content": ".gitignore dosyası tespit edildi (toplam {{count}} dosya), yok sayma kurallarını uygulamak ister misiniz?",
+  "header.actions.gitignore.filtered": "{{total}} dosyadan {{ignored}} tanesi filtrelendi",
+  "header.actions.gitignore.title": ".gitignore Tespit Edildi",
+  "header.actions.newFolder": "Yeni Klasör",
+  "header.actions.newPage": "Yeni Belge",
+  "header.actions.notion.error": "Notion dosyası içe aktarılamadı",
+  "header.actions.notion.foundFiles": "{{count}} dosya bulundu",
+  "header.actions.notion.importing": "Notion dosyası içe aktarılıyor...",
+  "header.actions.notion.noMarkdownFiles": "ZIP dosyasında Markdown dosyası bulunamadı",
+  "header.actions.notion.partial": "{{success}} dosya başarıyla içe aktarıldı, {{failed}} dosya başarısız oldu",
+  "header.actions.notion.success": "{{count}} dosya başarıyla içe aktarıldı",
+  "header.actions.notionGuide.cancel": "Şimdilik içe aktarılmasın",
+  "header.actions.notionGuide.desc": "Lütfen önce Notion'da Markdown (ZIP) formatında dışa aktarın. Devam'a tıklayarak ZIP dosyasını seçip tüm sayfaları içe aktarabilirsiniz.",
+  "header.actions.notionGuide.ok": "Notion ZIP Dosyasını Seç",
+  "header.actions.notionGuide.title": "Notion İçeriğini İçe Aktar",
+  "header.actions.uploadFile": "Dosya Yükle",
+  "header.actions.uploadFolder": "Klasör Yükle",
+  "header.newPageButton": "Yeni Belge Oluştur",
+  "header.uploadButton": "Yükle",
+  "home.getStarted": "Başlarken",
+  "home.greeting": "Başla",
+  "home.quickActions": "Hızlı İşlemler",
+  "home.recentFiles": "Son Dosyalar",
+  "home.recentPages": "Son Belgeler",
+  "home.subtitle": "Kaynak Merkezine hoş geldiniz, belgelerinizi buradan yönetmeye başlayın",
+  "home.uploadEntries.files.title": "Dosya Yükle",
+  "home.uploadEntries.folder.title": "Klasör Yükle",
+  "home.uploadEntries.library.title": "Yeni Kitaplık Oluştur",
+  "home.uploadEntries.newPage.title": "Yeni Belge Oluştur",
+  "library.list.confirmRemoveLibrary": "Bu kitaplık silinmek üzere. İçindeki dosyalar silinmeyecek, Tüm Dosyalar'a taşınacaktır. Kitaplık silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+  "library.list.empty": "<1>+</1> simgesine tıklayarak kitaplık oluşturmaya başlayın",
+  "library.new": "Yeni Kütüphane Oluştur",
+  "library.title": "Kitaplık",
+  "menu.allFiles": "Tüm Dosyalar",
+  "menu.allPages": "Tüm Belgeler",
   "networkError": "Kitaplık alınamadı, lütfen ağ bağlantınızı kontrol ettikten sonra tekrar deneyin",
-  "notSupportGuide": {
-    "desc": "Mevcut dağıtım örneği istemci veritabanı modunda, dosya yönetim işlevini kullanamazsınız. Lütfen <1>sunucu veritabanı dağıtım moduna</1> geçin veya doğrudan <3>LobeChat Cloud</3> kullanın.",
-    "features": {
-      "allKind": {
-        "desc": "Word, PPT, Excel, PDF, TXT gibi yaygın belge formatları ve JS, Python gibi popüler kod dosyalarını destekler.",
-        "title": "Çeşitli Dosya Türleri Analizi"
-      },
-      "embeddings": {
-        "desc": "Yüksek performanslı vektör modelleri kullanarak, metin parçalarını vektörleştirir ve dosya içeriğinin anlamsal olarak aranmasını sağlar.",
-        "title": "Vektör Anlamlandırma"
-      },
-      "libraries": {
-        "desc": "Kendi alanınıza ait kaynakları oluşturmak için kitaplıklar oluşturabilir ve farklı türde dosyalar ekleyebilirsiniz",
-        "title": "Kitaplıklar"
-      }
-    },
-    "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
-  },
-  "pageEditor": {
-    "addIcon": "Simge Ekle",
-    "autoSaveMessage": "Belge otomatik olarak kaydedilir, manuel kaydetmeye gerek yoktur",
-    "chooseIcon": "Simge Seç",
-    "deleteConfirm": {
-      "content": "Bu belge silinmek üzere. Silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-      "title": "Belgeyi Sil"
-    },
-    "deleteError": "Belge silinemedi",
-    "deleteSuccess": "Belge başarıyla silindi",
-    "editedAt": "Son düzenleme: {{time}}",
-    "editedBy": "Son düzenleyen: {{name}}",
-    "editorPlaceholder": "Belge içeriğini girin, komut menüsünü açmak için / tuşuna basın",
-    "empty": {
-      "createNewDocument": "Yeni Belge Oluştur",
-      "title": "Başlamak için bir belge seçin",
-      "uploadMarkdown": "Markdown Dosyası Yükle"
-    },
-    "linkCopied": "Bağlantı kopyalandı",
-    "menu": {
-      "copyLink": "Bağlantıyı Kopyala",
-      "exportDocument": "Belgeyi Dışa Aktar",
-      "importDocument": "Belgeyi İçe Aktar",
-      "pin": "Belgeyi Sabitle"
-    },
-    "saving": "Kaydediliyor...",
-    "titlePlaceholder": "Başlıksız",
-    "wordCount": "{{wordCount}} kelime"
-  },
-  "pageList": {
-    "copyContent": "Tüm İçeriği Kopyala",
-    "duplicate": "Kopya Oluştur",
-    "empty": "Henüz belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
-    "filter": {
-      "all": "Tümü",
-      "onlyInPages": "Sadece Belgelerde"
-    },
-    "noResults": "Eşleşen belge bulunamadı",
-    "pageCount": "Toplam {{count}} belge",
-    "selectNote": "Düzenlemeye başlamak için bir belge seçin",
-    "title": "Belgeler",
-    "untitled": "Başlıksız"
-  },
-  "preview": {
-    "downloadFile": "Dosyayı İndir",
-    "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
-  },
+  "notSupportGuide.desc": "Mevcut dağıtım örneği istemci veritabanı modunda, dosya yönetim işlevini kullanamazsınız. Lütfen <1>sunucu veritabanı dağıtım moduna</1> geçin veya doğrudan <3>LobeChat Cloud</3> kullanın.",
+  "notSupportGuide.features.allKind.desc": "Word, PPT, Excel, PDF, TXT gibi yaygın belge formatları ve JS, Python gibi popüler kod dosyalarını destekler.",
+  "notSupportGuide.features.allKind.title": "Çeşitli Dosya Türleri Analizi",
+  "notSupportGuide.features.embeddings.desc": "Yüksek performanslı vektör modelleri kullanarak, metin parçalarını vektörleştirir ve dosya içeriğinin anlamsal olarak aranmasını sağlar.",
+  "notSupportGuide.features.embeddings.title": "Vektör Anlamlandırma",
+  "notSupportGuide.features.libraries.desc": "Kendi alanınıza ait kaynakları oluşturmak için kitaplıklar oluşturabilir ve farklı türde dosyalar ekleyebilirsiniz",
+  "notSupportGuide.features.libraries.title": "Kitaplıklar",
+  "notSupportGuide.title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor",
+  "pageEditor.addIcon": "Simge Ekle",
+  "pageEditor.autoSaveMessage": "Belge otomatik olarak kaydedilir, manuel kaydetmeye gerek yoktur",
+  "pageEditor.chooseIcon": "Simge Seç",
+  "pageEditor.deleteConfirm.content": "Bu belge silinmek üzere. Silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+  "pageEditor.deleteConfirm.title": "Belgeyi Sil",
+  "pageEditor.deleteError": "Belge silinemedi",
+  "pageEditor.deleteSuccess": "Belge başarıyla silindi",
+  "pageEditor.editedAt": "Son düzenleme: {{time}}",
+  "pageEditor.editedBy": "Son düzenleyen: {{name}}",
+  "pageEditor.editorPlaceholder": "Belge içeriğini girin, komut menüsünü açmak için / tuşuna basın",
+  "pageEditor.empty.createNewDocument": "Yeni Belge Oluştur",
+  "pageEditor.empty.title": "Başlamak için bir belge seçin",
+  "pageEditor.empty.uploadMarkdown": "Markdown Dosyası Yükle",
+  "pageEditor.linkCopied": "Bağlantı kopyalandı",
+  "pageEditor.menu.copyLink": "Bağlantıyı Kopyala",
+  "pageEditor.menu.exportDocument": "Belgeyi Dışa Aktar",
+  "pageEditor.menu.importDocument": "Belgeyi İçe Aktar",
+  "pageEditor.menu.pin": "Belgeyi Sabitle",
+  "pageEditor.saving": "Kaydediliyor...",
+  "pageEditor.titlePlaceholder": "Başlıksız",
+  "pageEditor.wordCount": "{{wordCount}} kelime",
+  "pageList.copyContent": "Tüm İçeriği Kopyala",
+  "pageList.duplicate": "Kopya Oluştur",
+  "pageList.empty": "Henüz belge yok, ilk belgenizi oluşturmak için yukarıdaki butona tıklayın",
+  "pageList.filter.all": "Tümü",
+  "pageList.filter.onlyInPages": "Sadece Belgelerde",
+  "pageList.noResults": "Eşleşen belge bulunamadı",
+  "pageList.pageCount": "Toplam {{count}} belge",
+  "pageList.selectNote": "Düzenlemeye başlamak için bir belge seçin",
+  "pageList.title": "Belgeler",
+  "pageList.untitled": "Başlıksız",
+  "preview.downloadFile": "Dosyayı İndir",
+  "preview.unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>.",
   "searchFilePlaceholder": "Dosya Ara",
   "searchPagePlaceholder": "Belge ara",
-  "tab": {
-    "all": "Tümü",
-    "audios": "Sesler",
-    "documents": "Belgeler",
-    "home": "Ana Sayfa",
-    "images": "Görseller",
-    "moreTypes": "Daha Fazla Tür",
-    "pages": "Belgeler",
-    "videos": "Videolar",
-    "websites": "Web Siteleri"
-  },
+  "tab.all": "Tümü",
+  "tab.audios": "Sesler",
+  "tab.documents": "Belgeler",
+  "tab.home": "Ana Sayfa",
+  "tab.images": "Görseller",
+  "tab.moreTypes": "Daha Fazla Tür",
+  "tab.pages": "Belgeler",
+  "tab.videos": "Videolar",
+  "tab.websites": "Web Siteleri",
   "title": "Kaynaklar",
   "toggleLeftPanel": "Sol paneli göster/gizle",
-  "uploadDock": {
-    "body": {
-      "collapse": "Kapat",
-      "item": {
-        "done": "Yüklendi",
-        "error": "Yükleme başarısız, lütfen tekrar deneyin",
-        "pending": "Yüklenmek için hazırlanıyor...",
-        "processing": "Dosya işleniyor...",
-        "restTime": "Kalan {{time}}"
-      }
-    },
-    "fileQueueInfo": "{{count}} dosya yükleniyor, kalan {{remaining}} dosya sıraya alınacak",
-    "totalCount": "Toplam {{count}} öğe",
-    "uploadStatus": {
-      "error": "Yükleme hatası",
-      "pending": "Yükleme bekleniyor",
-      "processing": "Yükleniyor",
-      "success": "Yükleme tamamlandı",
-      "uploading": "Yükleniyor"
-    }
-  }
+  "uploadDock.body.collapse": "Kapat",
+  "uploadDock.body.item.done": "Yüklendi",
+  "uploadDock.body.item.error": "Yükleme başarısız, lütfen tekrar deneyin",
+  "uploadDock.body.item.pending": "Yüklenmek için hazırlanıyor...",
+  "uploadDock.body.item.processing": "Dosya işleniyor...",
+  "uploadDock.body.item.restTime": "Kalan {{time}}",
+  "uploadDock.fileQueueInfo": "{{count}} dosya yükleniyor, kalan {{remaining}} dosya sıraya alınacak",
+  "uploadDock.totalCount": "Toplam {{count}} öğe",
+  "uploadDock.uploadStatus.error": "Yükleme hatası",
+  "uploadDock.uploadStatus.pending": "Yükleme bekleniyor",
+  "uploadDock.uploadStatus.processing": "Yükleniyor",
+  "uploadDock.uploadStatus.success": "Yükleme tamamlandı",
+  "uploadDock.uploadStatus.uploading": "Yükleniyor"
 }

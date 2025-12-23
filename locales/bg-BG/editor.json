@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Сгъни",
-      "on": "Разгъни"
-    },
-    "typobar": {
-      "off": "Скрий лентата за форматиране",
-      "on": "Покажи лентата за форматиране"
-    }
-  },
-  "autoSave": {
-    "latest": "Заредена е най-новата версия",
-    "saved": "Запазено",
-    "saving": "Автоматично запазване..."
-  },
+  "actions.expand.off": "Сгъни",
+  "actions.expand.on": "Разгъни",
+  "actions.typobar.off": "Скрий лентата за форматиране",
+  "actions.typobar.on": "Покажи лентата за форматиране",
+  "autoSave.latest": "Заредена е най-новата версия",
+  "autoSave.saved": "Запазено",
+  "autoSave.saving": "Автоматично запазване...",
   "cancel": "Отказ",
   "confirm": "Потвърждение",
-  "file": {
-    "error": "Грешка: {{message}}",
-    "uploading": "Качване на файл..."
-  },
-  "image": {
-    "broken": "Изображението е повредено"
-  },
-  "link": {
-    "edit": "Редактирай връзката",
-    "editLinkTitle": "Връзка",
-    "editTextTitle": "Заглавие",
-    "open": "Отвори връзката",
-    "placeholder": "Въведете URL адрес на връзката",
-    "unlink": "Премахни връзката"
-  },
-  "markdown": {
-    "cancel": "Отказ",
-    "confirm": "Преобразуване",
-    "parseMessage": "Съдържанието ще бъде преобразувано във формат Markdown и съществуващото съдържание ще бъде заменено. Сигурни ли сте? (Автоматично затваряне след 5 секунди)",
-    "parseTitle": "Форматиране в Markdown"
-  },
-  "math": {
-    "placeholder": "Моля, въведете TeX формула"
-  },
-  "modifier": {
-    "accept": "Запази",
-    "acceptAll": "Приемам всички",
-    "reject": "Отмени",
-    "rejectedAll": "Отказвам всички"
-  },
-  "slash": {
-    "h1": "Заглавие ниво 1",
-    "h2": "Заглавие ниво 2",
-    "h3": "Заглавие ниво 3",
-    "hr": "Разделителна линия",
-    "table": "Таблица",
-    "tex": "TeX формула"
-  },
-  "table": {
-    "delete": "Премахни таблицата",
-    "deleteColumn": "Премахни колоната",
-    "deleteRow": "Премахни реда",
-    "insertColumnLeft": "Вмъкни {{count}} колони отляво",
-    "insertColumnRight": "Вмъкни {{count}} колони отдясно",
-    "insertRowAbove": "Вмъкни {{count}} реда отгоре",
-    "insertRowBelow": "Вмъкни {{count}} реда отдолу"
-  },
-  "typobar": {
-    "blockquote": "Цитат",
-    "bold": "Удебели",
-    "bulletList": "Маркиран списък",
-    "code": "Код в реда",
-    "codeblock": "Блок с код",
-    "image": "Изображение",
-    "italic": "Курсив",
-    "link": "Връзка",
-    "numberList": "Номериран списък",
-    "redo": "Повтори",
-    "strikethrough": "Зачеркване",
-    "table": "таблица",
-    "taskList": "Списък със задачи",
-    "tex": "TeX формула",
-    "underline": "Подчертаване",
-    "undo": "Отмени"
-  }
+  "file.error": "Грешка: {{message}}",
+  "file.uploading": "Качване на файл...",
+  "image.broken": "Изображението е повредено",
+  "link.edit": "Редактирай връзката",
+  "link.editLinkTitle": "Връзка",
+  "link.editTextTitle": "Заглавие",
+  "link.open": "Отвори връзката",
+  "link.placeholder": "Въведете URL адрес на връзката",
+  "link.unlink": "Премахни връзката",
+  "markdown.cancel": "Отказ",
+  "markdown.confirm": "Преобразуване",
+  "markdown.parseMessage": "Съдържанието ще бъде преобразувано във формат Markdown и съществуващото съдържание ще бъде заменено. Сигурни ли сте? (Автоматично затваряне след 5 секунди)",
+  "markdown.parseTitle": "Форматиране в Markdown",
+  "math.placeholder": "Моля, въведете TeX формула",
+  "modifier.accept": "Запази",
+  "modifier.acceptAll": "Приемам всички",
+  "modifier.reject": "Отмени",
+  "modifier.rejectedAll": "Отказвам всички",
+  "slash.h1": "Заглавие ниво 1",
+  "slash.h2": "Заглавие ниво 2",
+  "slash.h3": "Заглавие ниво 3",
+  "slash.hr": "Разделителна линия",
+  "slash.table": "Таблица",
+  "slash.tex": "TeX формула",
+  "table.delete": "Премахни таблицата",
+  "table.deleteColumn": "Премахни колоната",
+  "table.deleteRow": "Премахни реда",
+  "table.insertColumnLeft": "Вмъкни {{count}} колони отляво",
+  "table.insertColumnRight": "Вмъкни {{count}} колони отдясно",
+  "table.insertRowAbove": "Вмъкни {{count}} реда отгоре",
+  "table.insertRowBelow": "Вмъкни {{count}} реда отдолу",
+  "typobar.blockquote": "Цитат",
+  "typobar.bold": "Удебели",
+  "typobar.bulletList": "Маркиран списък",
+  "typobar.code": "Код в реда",
+  "typobar.codeblock": "Блок с код",
+  "typobar.image": "Изображение",
+  "typobar.italic": "Курсив",
+  "typobar.link": "Връзка",
+  "typobar.numberList": "Номериран списък",
+  "typobar.redo": "Повтори",
+  "typobar.strikethrough": "Зачеркване",
+  "typobar.table": "таблица",
+  "typobar.taskList": "Списък със задачи",
+  "typobar.tex": "TeX формула",
+  "typobar.underline": "Подчертаване",
+  "typobar.undo": "Отмени"
 }

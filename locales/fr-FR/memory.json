@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "Supprimer",
-      "edit": "Modifier"
-    },
-    "defaultType": "Contexte",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir contextuel ? Cette action est irréversible.",
-    "deleteTitle": "Supprimer le souvenir contextuel",
-    "description": "Description",
-    "empty": "Aucun souvenir contextuel pour le moment",
-    "source": "Source"
-  },
-  "empty": {
-    "description": "L'extraction de la mémoire est un processus progressif. Veuillez accumuler davantage de sujets pour enrichir le contenu extrait. Essayez d'engager une conversation plus approfondie avec l'assistant afin de mieux capter et stocker des informations précieuses.",
-    "search": "Aucun souvenir correspondant trouvé",
-    "title": "Aucun souvenir pour le moment"
-  },
-  "experience": {
-    "actions": {
-      "delete": "Supprimer",
-      "edit": "Modifier"
-    },
-    "defaultType": "Expérience",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir d'expérience ? Cette action est irréversible.",
-    "deleteTitle": "Supprimer le souvenir d'expérience",
-    "empty": "Aucun souvenir d'expérience pour le moment",
-    "keyLearning": "Apprentissage clé",
-    "situation": "Contexte",
-    "source": "Source",
-    "steps": {
-      "action": "Action",
-      "result": "Résultat",
-      "situation": "Situation",
-      "task": "Tâche"
-    }
-  },
-  "filter": {
-    "search": "Rechercher par mot-clé ou description de mémoire...",
-    "sort": {
-      "createdAt": "Date de création",
-      "scoreConfidence": "Niveau de confiance",
-      "scoreImpact": "Importance",
-      "scorePriority": "Poids de préférence",
-      "scoreUrgency": "Urgence"
-    }
-  },
-  "identity": {
-    "empty": "Aucun souvenir d'identité pour le moment",
-    "filter": {
-      "search": "Rechercher un rôle, une relation ou une description...",
-      "type": {
-        "all": "Tous",
-        "demographic": "Démographique",
-        "personal": "Rôle",
-        "professional": "Professionnel"
-      }
-    },
-    "list": {
-      "confirmDelete": "Confirmer la suppression",
-      "deleteCancel": "Annuler",
-      "deleteContent": "Êtes-vous sûr de vouloir supprimer ce souvenir d'identité ? Cette action est irréversible.",
-      "deleteOk": "Supprimer",
-      "noResults": "Aucun souvenir d'identité correspondant trouvé",
-      "updated": "Mis à jour"
-    },
-    "roleCloud": {
-      "collapse": "Réduire",
-      "expand": "Voir plus"
-    },
-    "view": {
-      "list": "Liste",
-      "timeline": "Chronologie"
-    }
-  },
+  "context.actions.delete": "Supprimer",
+  "context.actions.edit": "Modifier",
+  "context.defaultType": "Contexte",
+  "context.deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir contextuel ? Cette action est irréversible.",
+  "context.deleteTitle": "Supprimer le souvenir contextuel",
+  "context.description": "Description",
+  "context.empty": "Aucun souvenir contextuel pour le moment",
+  "context.source": "Source",
+  "empty.description": "L'extraction de la mémoire est un processus progressif. Veuillez accumuler davantage de sujets pour enrichir le contenu extrait. Essayez d'engager une conversation plus approfondie avec l'assistant afin de mieux capter et stocker des informations précieuses.",
+  "empty.search": "Aucun souvenir correspondant trouvé",
+  "empty.title": "Aucun souvenir pour le moment",
+  "experience.actions.delete": "Supprimer",
+  "experience.actions.edit": "Modifier",
+  "experience.defaultType": "Expérience",
+  "experience.deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir d'expérience ? Cette action est irréversible.",
+  "experience.deleteTitle": "Supprimer le souvenir d'expérience",
+  "experience.empty": "Aucun souvenir d'expérience pour le moment",
+  "experience.keyLearning": "Apprentissage clé",
+  "experience.situation": "Contexte",
+  "experience.source": "Source",
+  "experience.steps.action": "Action",
+  "experience.steps.result": "Résultat",
+  "experience.steps.situation": "Situation",
+  "experience.steps.task": "Tâche",
+  "filter.search": "Rechercher par mot-clé ou description de mémoire...",
+  "filter.sort.createdAt": "Date de création",
+  "filter.sort.scoreConfidence": "Niveau de confiance",
+  "filter.sort.scoreImpact": "Importance",
+  "filter.sort.scorePriority": "Poids de préférence",
+  "filter.sort.scoreUrgency": "Urgence",
+  "identity.empty": "Aucun souvenir d'identité pour le moment",
+  "identity.filter.search": "Rechercher un rôle, une relation ou une description...",
+  "identity.filter.type.all": "Tous",
+  "identity.filter.type.demographic": "Démographique",
+  "identity.filter.type.personal": "Rôle",
+  "identity.filter.type.professional": "Professionnel",
+  "identity.list.confirmDelete": "Confirmer la suppression",
+  "identity.list.deleteCancel": "Annuler",
+  "identity.list.deleteContent": "Êtes-vous sûr de vouloir supprimer ce souvenir d'identité ? Cette action est irréversible.",
+  "identity.list.deleteOk": "Supprimer",
+  "identity.list.noResults": "Aucun souvenir d'identité correspondant trouvé",
+  "identity.list.updated": "Mis à jour",
+  "identity.roleCloud.collapse": "Réduire",
+  "identity.roleCloud.expand": "Voir plus",
+  "identity.view.list": "Liste",
+  "identity.view.timeline": "Chronologie",
   "loading": "Chargement...",
-  "preference": {
-    "actions": {
-      "delete": "Supprimer",
-      "edit": "Modifier"
-    },
-    "conclusionDirectives": "Directives de conclusion",
-    "defaultType": "Préférence",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir de préférence ? Cette action est irréversible.",
-    "deleteTitle": "Supprimer le souvenir de préférence",
-    "empty": "Aucun souvenir de préférence pour le moment",
-    "source": "Source",
-    "suggestions": "Actions possibles de l’assistant"
-  },
-  "tab": {
-    "contexts": "Contextes",
-    "experiences": "Expériences",
-    "home": "Accueil",
-    "identities": "Identités",
-    "preferences": "Préférences",
-    "search": "Recherche"
-  },
-  "viewMode": {
-    "masonry": "Grille",
-    "timeline": "Chronologie"
-  }
+  "preference.actions.delete": "Supprimer",
+  "preference.actions.edit": "Modifier",
+  "preference.conclusionDirectives": "Directives de conclusion",
+  "preference.defaultType": "Préférence",
+  "preference.deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce souvenir de préférence ? Cette action est irréversible.",
+  "preference.deleteTitle": "Supprimer le souvenir de préférence",
+  "preference.empty": "Aucun souvenir de préférence pour le moment",
+  "preference.source": "Source",
+  "preference.suggestions": "Actions possibles de l’assistant",
+  "tab.contexts": "Contextes",
+  "tab.experiences": "Expériences",
+  "tab.home": "Accueil",
+  "tab.identities": "Identités",
+  "tab.preferences": "Préférences",
+  "tab.search": "Recherche",
+  "viewMode.masonry": "Grille",
+  "viewMode.timeline": "Chronologie"
 }

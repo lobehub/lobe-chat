@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "엔터프라이즈"
-      },
-      "free": {
-        "title": "무료"
-      },
-      "hobby": {
-        "title": "셀프 서비스"
-      },
-      "premium": {
-        "title": "프리미엄"
-      },
-      "starter": {
-        "title": "스타터"
-      },
-      "ultimate": {
-        "title": "얼티메이트"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "엔터프라이즈",
+  "plans.plan.free.title": "무료",
+  "plans.plan.hobby.title": "셀프 서비스",
+  "plans.plan.premium.title": "프리미엄",
+  "plans.plan.starter.title": "스타터",
+  "plans.plan.ultimate.title": "얼티메이트"
 }

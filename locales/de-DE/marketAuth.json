@@ -1,118 +1,76 @@
 {
-  "authorize": {
-    "cancel": "Abbrechen",
-    "confirm": "Erstelle dein Profil",
-    "description": "Dein Community-Profil ist unabhängig von deinem {{appName}}-Benutzerkonto.",
-    "footer": {
-      "agreement": "Mit dem Fortfahren bestätigst du, dass du die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy> gelesen und akzeptiert hast.",
-      "privacy": "Datenschutzerklärung",
-      "terms": "Nutzungsbedingungen"
-    },
-    "subtitle": "Erstelle ein Community-Profil, um Inhalte einzureichen und deine Einreichungen zu verwalten.",
-    "title": "Community-Profil erstellen"
-  },
-  "callback": {
-    "buttons": {
-      "close": "Fenster schließen"
-    },
-    "messages": {
-      "authFailed": "Autorisierung fehlgeschlagen: {{error}}",
-      "missingParams": "Autorisierungsparameter fehlen",
-      "processing": "Autorisierung wird verarbeitet...",
-      "successWithCountdown": "{{message}} Das Fenster wird in {{countdown}} Sekunden automatisch geschlossen",
-      "successWithRedirect": "Autorisierung erfolgreich! Weiterleitung läuft..."
-    },
-    "titles": {
-      "error": "Autorisierung fehlgeschlagen",
-      "loading": "LobeHub Market Autorisierung",
-      "success": "Autorisierung erfolgreich"
-    }
-  },
-  "errors": {
-    "authorizationFailed": "Autorisierung fehlgeschlagen, bitte erneut versuchen.",
-    "browserOnly": "Der Autorisierungsvorgang kann nur im Browser gestartet werden.",
-    "codeConsumed": "Autorisierungscode wurde bereits verwendet, bitte erneut versuchen.",
-    "codeVerifierMissing": "Autorisierungssitzung ungültig, bitte den Anmeldevorgang erneut starten.",
-    "general": "Ein Fehler ist bei der Autorisierung aufgetreten, bitte erneut versuchen.",
-    "handoffFailed": "Autorisierungsergebnis konnte nicht abgerufen werden, bitte erneut versuchen.",
-    "handoffTimeout": "Autorisierung zeitüberschritten, bitte nach Abschluss im Browser erneut versuchen.",
-    "oidcNotReady": "Autorisierungsdienst ist noch nicht bereit, bitte später erneut versuchen.",
-    "openBrowserFailed": "Systembrowser konnte nicht geöffnet werden, bitte erneut versuchen.",
-    "openPopupFailed": "Autorisierungs-Popup konnte nicht geöffnet werden, bitte die Popup-Blocker-Einstellungen im Browser überprüfen.",
-    "popupClosed": "Autorisierungsfenster wurde geschlossen, bevor der Vorgang abgeschlossen war.",
-    "sessionExpired": "Autorisierungssitzung ist abgelaufen, bitte erneut anmelden.",
-    "stateMismatch": "Autorisierungsstatus stimmt nicht überein, bitte erneut versuchen.",
-    "stateMissing": "Autorisierungsstatus nicht gefunden, bitte erneut versuchen."
-  },
-  "messages": {
-    "authorized": "LobeHub-Dienst erfolgreich autorisiert",
-    "loading": "Autorisierungsvorgang wird gestartet...",
-    "success": {
-      "cloudMcpInstall": "Autorisierung erfolgreich! Sie können jetzt das Cloud MCP-Plugin installieren.",
-      "submit": "Autorisierung erfolgreich! Du kannst jetzt einen Assistenten veröffentlichen.",
-      "upload": "Autorisierung erfolgreich! Du kannst jetzt eine neue Version veröffentlichen."
-    }
-  },
-  "profileSetup": {
-    "cancel": "Abbrechen",
-    "descriptionEdit": "Aktualisiere deine Community-Profilinformationen.",
-    "descriptionFirstTime": "Richte dein Profil ein, um dein Community-Konto zu vervollständigen.",
-    "errors": {
-      "fileTooLarge": "Dateigröße darf 2 MB nicht überschreiten",
-      "notAuthenticated": "Bitte melde dich an, um fortzufahren.",
-      "updateFailed": "Profilaktualisierung fehlgeschlagen. Bitte versuche es erneut.",
-      "uploadFailed": "Hochladen fehlgeschlagen, bitte versuche es erneut",
-      "usernameTaken": "Diese Benutzer-ID ist bereits vergeben. Bitte wähle eine andere."
-    },
-    "fields": {
-      "avatar": {
-        "label": "Profilbild"
-      },
-      "bannerUrl": {
-        "clickToUpload": "Zum Hochladen des Banners klicken",
-        "label": "Bannerbild",
-        "remove": "Bannerbild entfernen",
-        "tooltip": "Das Bannerbild wird oben auf deinem Profil angezeigt (empfohlenes Seitenverhältnis 16:9)",
-        "uploading": "Wird hochgeladen..."
-      },
-      "description": {
-        "label": "Über mich",
-        "maxLength": "Die Beschreibung darf maximal 200 Zeichen enthalten.",
-        "placeholder": "Erzähle etwas über dich..."
-      },
-      "displayName": {
-        "label": "Spitzname",
-        "maxLength": "Der Spitzname darf maximal 50 Zeichen enthalten.",
-        "placeholder": "Gib deinen Spitznamen ein",
-        "required": "Bitte gib einen Spitznamen ein"
-      },
-      "github": {
-        "placeholder": "GitHub-Benutzername"
-      },
-      "twitter": {
-        "placeholder": "X (Twitter)-Benutzername"
-      },
-      "userName": {
-        "label": "Benutzer-ID",
-        "maxLength": "Die Benutzer-ID darf maximal 32 Zeichen enthalten.",
-        "minLength": "Die Benutzer-ID muss mindestens 3 Zeichen lang sein.",
-        "pattern": "Die Benutzer-ID darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten.",
-        "placeholder": "Gib deine Benutzer-ID ein",
-        "required": "Bitte gib eine Benutzer-ID ein",
-        "tooltip": "Die Benutzer-ID ist dein eindeutiger Identifikator und wird in deinem Profil-Link verwendet."
-      },
-      "website": {
-        "invalidUrl": "Bitte gib eine gültige URL ein",
-        "placeholder": "Link zur persönlichen Website"
-      }
-    },
-    "getStarted": "Loslegen",
-    "save": "Speichern",
-    "socialLinks": {
-      "title": "Soziale Netzwerke"
-    },
-    "success": "Profil erfolgreich aktualisiert",
-    "titleEdit": "Profil bearbeiten",
-    "titleFirstTime": "Vervollständige dein Profil"
-  }
+  "authorize.cancel": "Abbrechen",
+  "authorize.confirm": "Erstelle dein Profil",
+  "authorize.description": "Dein Community-Profil ist unabhängig von deinem {{appName}}-Benutzerkonto.",
+  "authorize.footer.agreement": "Mit dem Fortfahren bestätigst du, dass du die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy> gelesen und akzeptiert hast.",
+  "authorize.footer.privacy": "Datenschutzerklärung",
+  "authorize.footer.terms": "Nutzungsbedingungen",
+  "authorize.subtitle": "Erstelle ein Community-Profil, um Inhalte einzureichen und deine Einreichungen zu verwalten.",
+  "authorize.title": "Community-Profil erstellen",
+  "callback.buttons.close": "Fenster schließen",
+  "callback.messages.authFailed": "Autorisierung fehlgeschlagen: {{error}}",
+  "callback.messages.missingParams": "Autorisierungsparameter fehlen",
+  "callback.messages.processing": "Autorisierung wird verarbeitet...",
+  "callback.messages.successWithCountdown": "{{message}} Das Fenster wird in {{countdown}} Sekunden automatisch geschlossen",
+  "callback.messages.successWithRedirect": "Autorisierung erfolgreich! Weiterleitung läuft...",
+  "callback.titles.error": "Autorisierung fehlgeschlagen",
+  "callback.titles.loading": "LobeHub Market Autorisierung",
+  "callback.titles.success": "Autorisierung erfolgreich",
+  "errors.authorizationFailed": "Autorisierung fehlgeschlagen, bitte erneut versuchen.",
+  "errors.browserOnly": "Der Autorisierungsvorgang kann nur im Browser gestartet werden.",
+  "errors.codeConsumed": "Autorisierungscode wurde bereits verwendet, bitte erneut versuchen.",
+  "errors.codeVerifierMissing": "Autorisierungssitzung ungültig, bitte den Anmeldevorgang erneut starten.",
+  "errors.general": "Ein Fehler ist bei der Autorisierung aufgetreten, bitte erneut versuchen.",
+  "errors.handoffFailed": "Autorisierungsergebnis konnte nicht abgerufen werden, bitte erneut versuchen.",
+  "errors.handoffTimeout": "Autorisierung zeitüberschritten, bitte nach Abschluss im Browser erneut versuchen.",
+  "errors.oidcNotReady": "Autorisierungsdienst ist noch nicht bereit, bitte später erneut versuchen.",
+  "errors.openBrowserFailed": "Systembrowser konnte nicht geöffnet werden, bitte erneut versuchen.",
+  "errors.openPopupFailed": "Autorisierungs-Popup konnte nicht geöffnet werden, bitte die Popup-Blocker-Einstellungen im Browser überprüfen.",
+  "errors.popupClosed": "Autorisierungsfenster wurde geschlossen, bevor der Vorgang abgeschlossen war.",
+  "errors.sessionExpired": "Autorisierungssitzung ist abgelaufen, bitte erneut anmelden.",
+  "errors.stateMismatch": "Autorisierungsstatus stimmt nicht überein, bitte erneut versuchen.",
+  "errors.stateMissing": "Autorisierungsstatus nicht gefunden, bitte erneut versuchen.",
+  "messages.authorized": "LobeHub-Dienst erfolgreich autorisiert",
+  "messages.loading": "Autorisierungsvorgang wird gestartet...",
+  "messages.success.cloudMcpInstall": "Autorisierung erfolgreich! Sie können jetzt das Cloud MCP-Plugin installieren.",
+  "messages.success.submit": "Autorisierung erfolgreich! Du kannst jetzt einen Assistenten veröffentlichen.",
+  "messages.success.upload": "Autorisierung erfolgreich! Du kannst jetzt eine neue Version veröffentlichen.",
+  "profileSetup.cancel": "Abbrechen",
+  "profileSetup.descriptionEdit": "Aktualisiere deine Community-Profilinformationen.",
+  "profileSetup.descriptionFirstTime": "Richte dein Profil ein, um dein Community-Konto zu vervollständigen.",
+  "profileSetup.errors.fileTooLarge": "Dateigröße darf 2 MB nicht überschreiten",
+  "profileSetup.errors.notAuthenticated": "Bitte melde dich an, um fortzufahren.",
+  "profileSetup.errors.updateFailed": "Profilaktualisierung fehlgeschlagen. Bitte versuche es erneut.",
+  "profileSetup.errors.uploadFailed": "Hochladen fehlgeschlagen, bitte versuche es erneut",
+  "profileSetup.errors.usernameTaken": "Diese Benutzer-ID ist bereits vergeben. Bitte wähle eine andere.",
+  "profileSetup.fields.avatar.label": "Profilbild",
+  "profileSetup.fields.bannerUrl.clickToUpload": "Zum Hochladen des Banners klicken",
+  "profileSetup.fields.bannerUrl.label": "Bannerbild",
+  "profileSetup.fields.bannerUrl.remove": "Bannerbild entfernen",
+  "profileSetup.fields.bannerUrl.tooltip": "Das Bannerbild wird oben auf deinem Profil angezeigt (empfohlenes Seitenverhältnis 16:9)",
+  "profileSetup.fields.bannerUrl.uploading": "Wird hochgeladen...",
+  "profileSetup.fields.description.label": "Über mich",
+  "profileSetup.fields.description.maxLength": "Die Beschreibung darf maximal 200 Zeichen enthalten.",
+  "profileSetup.fields.description.placeholder": "Erzähle etwas über dich...",
+  "profileSetup.fields.displayName.label": "Spitzname",
+  "profileSetup.fields.displayName.maxLength": "Der Spitzname darf maximal 50 Zeichen enthalten.",
+  "profileSetup.fields.displayName.placeholder": "Gib deinen Spitznamen ein",
+  "profileSetup.fields.displayName.required": "Bitte gib einen Spitznamen ein",
+  "profileSetup.fields.github.placeholder": "GitHub-Benutzername",
+  "profileSetup.fields.twitter.placeholder": "X (Twitter)-Benutzername",
+  "profileSetup.fields.userName.label": "Benutzer-ID",
+  "profileSetup.fields.userName.maxLength": "Die Benutzer-ID darf maximal 32 Zeichen enthalten.",
+  "profileSetup.fields.userName.minLength": "Die Benutzer-ID muss mindestens 3 Zeichen lang sein.",
+  "profileSetup.fields.userName.pattern": "Die Benutzer-ID darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten.",
+  "profileSetup.fields.userName.placeholder": "Gib deine Benutzer-ID ein",
+  "profileSetup.fields.userName.required": "Bitte gib eine Benutzer-ID ein",
+  "profileSetup.fields.userName.tooltip": "Die Benutzer-ID ist dein eindeutiger Identifikator und wird in deinem Profil-Link verwendet.",
+  "profileSetup.fields.website.invalidUrl": "Bitte gib eine gültige URL ein",
+  "profileSetup.fields.website.placeholder": "Link zur persönlichen Website",
+  "profileSetup.getStarted": "Loslegen",
+  "profileSetup.save": "Speichern",
+  "profileSetup.socialLinks.title": "Soziale Netzwerke",
+  "profileSetup.success": "Profil erfolgreich aktualisiert",
+  "profileSetup.titleEdit": "Profil bearbeiten",
+  "profileSetup.titleFirstTime": "Vervollständige dein Profil"
 }

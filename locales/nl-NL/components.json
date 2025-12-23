@@ -1,238 +1,142 @@
 {
-  "ArgsInput": {
-    "addArgument": "Argument toevoegen",
-    "argumentPlaceholder": "Argument {{index}}",
-    "enterFirstArgument": "Voer het eerste argument in..."
-  },
-  "DragUpload": {
-    "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden.",
-    "dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om meerdere afbeeldingen en bestanden te uploaden.",
-    "dragFileTitle": "Bestanden uploaden",
-    "dragTitle": "Afbeeldingen uploaden"
-  },
-  "EmojiPicker": {
-    "delete": "Verwijder avatar",
-    "draggerDesc": "Klik of sleep een afbeelding naar dit gebied om te uploaden",
-    "emoji": "Emoji-avatar",
-    "fileTypeError": "Upload een geldig afbeeldingsbestand",
-    "upload": "Avatar uploaden",
-    "uploadBtn": "Bijsnijden en uploaden"
-  },
-  "FileManager": {
-    "actions": {
-      "addToKnowledgeBase": "Toevoegen aan kennisbank",
-      "addToOtherKnowledgeBase": "Toevoegen aan andere kennisbank",
-      "batchChunking": "Batchverdeling",
-      "chunking": "Verdeling",
-      "chunkingTooltip": "Splits het bestand in meerdere tekstblokken en vectoriseer deze voor semantische zoekopdrachten en bestandsdialoog",
-      "chunkingUnsupported": "Dit bestand ondersteunt geen chunking",
-      "confirmDelete": "Je staat op het punt dit bestand te verwijderen. Na verwijdering kan het niet meer worden hersteld. Bevestig je actie.",
-      "confirmDeleteFolder": "Deze map en alle inhoud zullen worden verwijderd. Dit kan niet ongedaan worden gemaakt. Weet je zeker dat je wilt doorgaan?",
-      "confirmDeleteMultiFiles": "Je staat op het punt de geselecteerde {{count}} bestanden te verwijderen. Na verwijdering kunnen ze niet meer worden hersteld. Bevestig je actie.",
-      "confirmRemoveFromKnowledgeBase": "Je staat op het punt om {{count}} geselecteerde bestanden uit de kennisbank te verwijderen. De bestanden blijven beschikbaar in 'Alle bestanden'. Bevestig je actie alstublieft.",
-      "copyUrl": "Kopieer link",
-      "copyUrlSuccess": "Bestandsadres succesvol gekopieerd",
-      "createChunkingTask": "Voorbereiden...",
-      "deleteSuccess": "Bestand succesvol verwijderd",
-      "downloading": "Bestand aan het downloaden...",
-      "goBack": "Ga terug naar de vorige pagina",
-      "goForward": "Ga verder naar de volgende pagina",
-      "goToParent": "Ga naar de bovenliggende map",
-      "moveError": "Verplaatsen van bestand mislukt",
-      "moveHere": "Hierheen verplaatsen",
-      "moveSuccess": "Bestand succesvol verplaatst",
-      "moveToFolder": "Verplaatsen naar...",
-      "moveToRoot": "Verplaatsen naar hoofdmap",
-      "removeFromKnowledgeBase": "Verwijderen uit kennisbank",
-      "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd",
-      "rename": "Hernoemen",
-      "renameError": "Hernoemen mislukt",
-      "renameSuccess": "Hernoemen geslaagd"
-    },
-    "bottom": "Je bent onderaan aangekomen",
-    "config": {
-      "showFilesInKnowledgeBase": "Toon inhoud van kennisbank"
-    },
-    "emptyStatus": {
-      "actions": {
-        "file": "Bestand uploaden",
-        "folder": "Map uploaden",
-        "knowledgeBase": "Nieuwe kennisbank aanmaken"
-      },
-      "or": "of",
-      "title": "Sleep bestanden of mappen hierheen"
-    },
-    "noFolders": "Geen mappen beschikbaar",
-    "sort": {
-      "dateAdded": "Datum toegevoegd",
-      "name": "Naam",
-      "size": "Grootte"
-    },
-    "title": {
-      "createdAt": "Aangemaakt op",
-      "size": "Grootte",
-      "title": "Bestand"
-    },
-    "total": {
-      "fileCount": "Totaal {{count}} items",
-      "selectedCount": "Geselecteerd {{count}} items"
-    },
-    "view": {
-      "list": "Lijstweergave",
-      "masonry": "Rasterweergave"
-    }
-  },
-  "FileParsingStatus": {
-    "chunks": {
-      "embeddingStatus": {
-        "empty": "Tekstblokken zijn nog niet volledig gevectoriseerd, wat de semantische zoekfunctie kan uitschakelen. Om de zoekkwaliteit te verbeteren, vectoriseer de tekstblokken.",
-        "error": "Vectorisatie mislukt",
-        "errorResult": "Vectorisatie mislukt, controleer en probeer het opnieuw. Reden van falen:",
-        "processing": "Tekstblokken worden gevectoriseerd, graag even geduld.",
-        "success": "Huidige tekstblokken zijn allemaal gevectoriseerd"
-      },
-      "embeddings": "Vectorisatie",
-      "status": {
-        "error": "Verdeling mislukt",
-        "errorResult": "Verdeling mislukt, controleer en probeer het opnieuw. Reden van falen:",
-        "processing": "Bezig met verdelen",
-        "processingTip": "De server is bezig met het splitsen van tekstblokken, het sluiten van de pagina heeft geen invloed op de voortgang van de verdeling."
-      }
-    }
-  },
-  "GoBack": {
-    "back": "Terug"
-  },
-  "HtmlPreview": {
-    "actions": {
-      "download": "Downloaden",
-      "preview": "Voorbeeld"
-    },
-    "iframeTitle": "HTML Voorbeeld",
-    "mode": {
-      "code": "Code",
-      "preview": "Voorbeeld"
-    },
-    "title": "HTML Voorbeeld"
-  },
-  "ImageUpload": {
-    "actions": {
-      "changeImage": "Klik om afbeelding te wijzigen",
-      "dropMultipleFiles": "Meerdere bestanden uploaden wordt niet ondersteund, alleen het eerste bestand wordt gebruikt"
-    },
-    "placeholder": {
-      "primary": "Afbeelding toevoegen",
-      "secondary": "Klik of sleep om te uploaden"
-    }
-  },
-  "KeyValueEditor": {
-    "addButton": "Voeg een regel toe",
-    "deleteTooltip": "Verwijderen",
-    "duplicateKeyError": "Sleutelnaam moet uniek zijn",
-    "keyPlaceholder": "Sleutel",
-    "valuePlaceholder": "Waarde"
-  },
-  "LocalFile": {
-    "action": {
-      "open": "Openen",
-      "showInFolder": "In map weergeven"
-    }
-  },
-  "MaxTokenSlider": {
-    "unlimited": "Onbeperkt"
-  },
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",
-      "file": "This model supports file upload for reading and recognition.",
-      "functionCall": "This model supports function call.",
-      "imageOutput": "Dit model ondersteunt het genereren van afbeeldingen",
-      "reasoning": "Dit model ondersteunt diepgaand denken",
-      "search": "Dit model ondersteunt online zoeken",
-      "tokens": "This model supports up to {{tokens}} tokens in a single session.",
-      "video": "Dit model ondersteunt videoherkenning",
-      "vision": "This model supports visual recognition."
-    },
-    "removed": "Dit model staat niet meer in de lijst. Als je het deselecteert, wordt het automatisch verwijderd."
-  },
-  "ModelSwitchPanel": {
-    "emptyModel": "No enabled model, please go to settings to enable.",
-    "emptyProvider": "Geen ingeschakelde provider, ga naar instellingen om deze in te schakelen",
-    "goToSettings": "Ga naar instellingen",
-    "provider": "Provider",
-    "title": "Model"
-  },
-  "MultiImagesUpload": {
-    "actions": {
-      "uploadMore": "Klik of sleep om meer te uploaden"
-    },
-    "modal": {
-      "complete": "Voltooien",
-      "newFileIndicator": "Nieuw",
-      "selectImageToPreview": "Selecteer een afbeelding om te bekijken",
-      "title": "Beheer afbeeldingen ({{count}})",
-      "upload": "Afbeeldingen uploaden"
-    },
-    "placeholder": {
-      "primary": "Klik of sleep om een afbeelding te uploaden",
-      "secondary": "Meerdere afbeeldingen selecteren ondersteund"
-    },
-    "progress": {
-      "uploadingWithCount": "{{completed}}/{{total}} geüpload"
-    },
-    "validation": {
-      "fileSizeExceeded": "Bestandsgrootte overschrijdt de limiet",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) overschrijdt de maximale grootte van {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} bestanden overschrijden de maximale grootte van {{maxSize}}: {{fileList}}",
-      "imageCountExceeded": "Het aantal afbeeldingen overschrijdt de limiet"
-    }
-  },
-  "OllamaSetupGuide": {
-    "action": {
-      "close": "Sluit melding",
-      "start": "Geïnstalleerd"
-    },
-    "cors": {
-      "description": "Vanwege beveiligingsbeperkingen in de browser moet je cross-origin configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
-      "linux": {
-        "env": "Voeg `Environment` toe onder de [Service] sectie en voeg de OLLAMA_ORIGINS omgevingsvariabele toe:",
-        "reboot": "Herlaad systemd en herstart Ollama",
-        "systemd": "Roep systemd aan om de ollama service te bewerken:"
-      },
-      "macos": "Open de 'Terminal' applicatie, plak de volgende opdracht en druk op enter om uit te voeren",
-      "reboot": "Herstart de Ollama service na het voltooien van de uitvoering",
-      "title": "Configureer Ollama voor cross-origin toegang",
-      "windows": "Op Windows, klik op 'Configuratiescherm', ga naar systeemomgevingsvariabelen bewerken. Maak een nieuwe omgevingsvariabele aan met de naam 'OLLAMA_ORIGINS' voor je gebruikersaccount, met de waarde * en klik op 'OK/Toepassen' om op te slaan"
-    },
-    "install": {
-      "description": "Zorg ervoor dat je Ollama hebt ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website <1>om te downloaden</1>",
-      "docker": "Als je de voorkeur geeft aan het gebruik van Docker, biedt Ollama ook een officiële Docker-image aan die je kunt ophalen met de volgende opdracht:",
-      "linux": {
-        "command": "Installeer met de volgende opdracht:",
-        "manual": "Of je kunt de <1>Linux handmatige installatiehandleiding</1> raadplegen voor een handmatige installatie"
-      },
-      "title": "Installeer en start de Ollama applicatie lokaal",
-      "windowsTab": "Windows (previewversie)"
-    }
-  },
-  "Thinking": {
-    "thinking": "Diep in gedachten...",
-    "thought": "Diep nagedacht (tijd gebruikt {{duration}} seconden)",
-    "thoughtWithDuration": "Diep nagedacht"
-  },
-  "devTools": {
-    "cache": {
-      "empty": "Cache is leeg"
-    },
-    "metadata": {
-      "empty": "Geen metadata beschikbaar"
-    }
-  },
-  "knowledgeBase": {
-    "empty": {
-      "description": "Maak een kennisbank aan om je bronnen te organiseren en beheren",
-      "search": "Geen overeenkomende kennisbank gevonden",
-      "title": "Geen kennisbank beschikbaar"
-    }
-  }
+  "ArgsInput.addArgument": "Argument toevoegen",
+  "ArgsInput.argumentPlaceholder": "Argument {{index}}",
+  "ArgsInput.enterFirstArgument": "Voer het eerste argument in...",
+  "DragUpload.dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden.",
+  "DragUpload.dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om meerdere afbeeldingen en bestanden te uploaden.",
+  "DragUpload.dragFileTitle": "Bestanden uploaden",
+  "DragUpload.dragTitle": "Afbeeldingen uploaden",
+  "EmojiPicker.delete": "Verwijder avatar",
+  "EmojiPicker.draggerDesc": "Klik of sleep een afbeelding naar dit gebied om te uploaden",
+  "EmojiPicker.emoji": "Emoji-avatar",
+  "EmojiPicker.fileTypeError": "Upload een geldig afbeeldingsbestand",
+  "EmojiPicker.upload": "Avatar uploaden",
+  "EmojiPicker.uploadBtn": "Bijsnijden en uploaden",
+  "FileManager.actions.addToKnowledgeBase": "Toevoegen aan kennisbank",
+  "FileManager.actions.addToOtherKnowledgeBase": "Toevoegen aan andere kennisbank",
+  "FileManager.actions.batchChunking": "Batchverdeling",
+  "FileManager.actions.chunking": "Verdeling",
+  "FileManager.actions.chunkingTooltip": "Splits het bestand in meerdere tekstblokken en vectoriseer deze voor semantische zoekopdrachten en bestandsdialoog",
+  "FileManager.actions.chunkingUnsupported": "Dit bestand ondersteunt geen chunking",
+  "FileManager.actions.confirmDelete": "Je staat op het punt dit bestand te verwijderen. Na verwijdering kan het niet meer worden hersteld. Bevestig je actie.",
+  "FileManager.actions.confirmDeleteFolder": "Deze map en alle inhoud zullen worden verwijderd. Dit kan niet ongedaan worden gemaakt. Weet je zeker dat je wilt doorgaan?",
+  "FileManager.actions.confirmDeleteMultiFiles": "Je staat op het punt de geselecteerde {{count}} bestanden te verwijderen. Na verwijdering kunnen ze niet meer worden hersteld. Bevestig je actie.",
+  "FileManager.actions.confirmRemoveFromKnowledgeBase": "Je staat op het punt om {{count}} geselecteerde bestanden uit de kennisbank te verwijderen. De bestanden blijven beschikbaar in 'Alle bestanden'. Bevestig je actie alstublieft.",
+  "FileManager.actions.copyUrl": "Kopieer link",
+  "FileManager.actions.copyUrlSuccess": "Bestandsadres succesvol gekopieerd",
+  "FileManager.actions.createChunkingTask": "Voorbereiden...",
+  "FileManager.actions.deleteSuccess": "Bestand succesvol verwijderd",
+  "FileManager.actions.downloading": "Bestand aan het downloaden...",
+  "FileManager.actions.goBack": "Ga terug naar de vorige pagina",
+  "FileManager.actions.goForward": "Ga verder naar de volgende pagina",
+  "FileManager.actions.goToParent": "Ga naar de bovenliggende map",
+  "FileManager.actions.moveError": "Verplaatsen van bestand mislukt",
+  "FileManager.actions.moveHere": "Hierheen verplaatsen",
+  "FileManager.actions.moveSuccess": "Bestand succesvol verplaatst",
+  "FileManager.actions.moveToFolder": "Verplaatsen naar...",
+  "FileManager.actions.moveToRoot": "Verplaatsen naar hoofdmap",
+  "FileManager.actions.removeFromKnowledgeBase": "Verwijderen uit kennisbank",
+  "FileManager.actions.removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd",
+  "FileManager.actions.rename": "Hernoemen",
+  "FileManager.actions.renameError": "Hernoemen mislukt",
+  "FileManager.actions.renameSuccess": "Hernoemen geslaagd",
+  "FileManager.bottom": "Je bent onderaan aangekomen",
+  "FileManager.config.showFilesInKnowledgeBase": "Toon inhoud van kennisbank",
+  "FileManager.emptyStatus.actions.file": "Bestand uploaden",
+  "FileManager.emptyStatus.actions.folder": "Map uploaden",
+  "FileManager.emptyStatus.actions.knowledgeBase": "Nieuwe kennisbank aanmaken",
+  "FileManager.emptyStatus.or": "of",
+  "FileManager.emptyStatus.title": "Sleep bestanden of mappen hierheen",
+  "FileManager.noFolders": "Geen mappen beschikbaar",
+  "FileManager.sort.dateAdded": "Datum toegevoegd",
+  "FileManager.sort.name": "Naam",
+  "FileManager.sort.size": "Grootte",
+  "FileManager.title.createdAt": "Aangemaakt op",
+  "FileManager.title.size": "Grootte",
+  "FileManager.title.title": "Bestand",
+  "FileManager.total.fileCount": "Totaal {{count}} items",
+  "FileManager.total.selectedCount": "Geselecteerd {{count}} items",
+  "FileManager.view.list": "Lijstweergave",
+  "FileManager.view.masonry": "Rasterweergave",
+  "FileParsingStatus.chunks.embeddingStatus.empty": "Tekstblokken zijn nog niet volledig gevectoriseerd, wat de semantische zoekfunctie kan uitschakelen. Om de zoekkwaliteit te verbeteren, vectoriseer de tekstblokken.",
+  "FileParsingStatus.chunks.embeddingStatus.error": "Vectorisatie mislukt",
+  "FileParsingStatus.chunks.embeddingStatus.errorResult": "Vectorisatie mislukt, controleer en probeer het opnieuw. Reden van falen:",
+  "FileParsingStatus.chunks.embeddingStatus.processing": "Tekstblokken worden gevectoriseerd, graag even geduld.",
+  "FileParsingStatus.chunks.embeddingStatus.success": "Huidige tekstblokken zijn allemaal gevectoriseerd",
+  "FileParsingStatus.chunks.embeddings": "Vectorisatie",
+  "FileParsingStatus.chunks.status.error": "Verdeling mislukt",
+  "FileParsingStatus.chunks.status.errorResult": "Verdeling mislukt, controleer en probeer het opnieuw. Reden van falen:",
+  "FileParsingStatus.chunks.status.processing": "Bezig met verdelen",
+  "FileParsingStatus.chunks.status.processingTip": "De server is bezig met het splitsen van tekstblokken, het sluiten van de pagina heeft geen invloed op de voortgang van de verdeling.",
+  "GoBack.back": "Terug",
+  "HtmlPreview.actions.download": "Downloaden",
+  "HtmlPreview.actions.preview": "Voorbeeld",
+  "HtmlPreview.iframeTitle": "HTML Voorbeeld",
+  "HtmlPreview.mode.code": "Code",
+  "HtmlPreview.mode.preview": "Voorbeeld",
+  "HtmlPreview.title": "HTML Voorbeeld",
+  "ImageUpload.actions.changeImage": "Klik om afbeelding te wijzigen",
+  "ImageUpload.actions.dropMultipleFiles": "Meerdere bestanden uploaden wordt niet ondersteund, alleen het eerste bestand wordt gebruikt",
+  "ImageUpload.placeholder.primary": "Afbeelding toevoegen",
+  "ImageUpload.placeholder.secondary": "Klik of sleep om te uploaden",
+  "KeyValueEditor.addButton": "Voeg een regel toe",
+  "KeyValueEditor.deleteTooltip": "Verwijderen",
+  "KeyValueEditor.duplicateKeyError": "Sleutelnaam moet uniek zijn",
+  "KeyValueEditor.keyPlaceholder": "Sleutel",
+  "KeyValueEditor.valuePlaceholder": "Waarde",
+  "LocalFile.action.open": "Openen",
+  "LocalFile.action.showInFolder": "In map weergeven",
+  "MaxTokenSlider.unlimited": "Onbeperkt",
+  "ModelSelect.featureTag.custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",
+  "ModelSelect.featureTag.file": "This model supports file upload for reading and recognition.",
+  "ModelSelect.featureTag.functionCall": "This model supports function call.",
+  "ModelSelect.featureTag.imageOutput": "Dit model ondersteunt het genereren van afbeeldingen",
+  "ModelSelect.featureTag.reasoning": "Dit model ondersteunt diepgaand denken",
+  "ModelSelect.featureTag.search": "Dit model ondersteunt online zoeken",
+  "ModelSelect.featureTag.tokens": "This model supports up to {{tokens}} tokens in a single session.",
+  "ModelSelect.featureTag.video": "Dit model ondersteunt videoherkenning",
+  "ModelSelect.featureTag.vision": "This model supports visual recognition.",
+  "ModelSelect.removed": "Dit model staat niet meer in de lijst. Als je het deselecteert, wordt het automatisch verwijderd.",
+  "ModelSwitchPanel.emptyModel": "No enabled model, please go to settings to enable.",
+  "ModelSwitchPanel.emptyProvider": "Geen ingeschakelde provider, ga naar instellingen om deze in te schakelen",
+  "ModelSwitchPanel.goToSettings": "Ga naar instellingen",
+  "ModelSwitchPanel.provider": "Provider",
+  "ModelSwitchPanel.title": "Model",
+  "MultiImagesUpload.actions.uploadMore": "Klik of sleep om meer te uploaden",
+  "MultiImagesUpload.modal.complete": "Voltooien",
+  "MultiImagesUpload.modal.newFileIndicator": "Nieuw",
+  "MultiImagesUpload.modal.selectImageToPreview": "Selecteer een afbeelding om te bekijken",
+  "MultiImagesUpload.modal.title": "Beheer afbeeldingen ({{count}})",
+  "MultiImagesUpload.modal.upload": "Afbeeldingen uploaden",
+  "MultiImagesUpload.placeholder.primary": "Klik of sleep om een afbeelding te uploaden",
+  "MultiImagesUpload.placeholder.secondary": "Meerdere afbeeldingen selecteren ondersteund",
+  "MultiImagesUpload.progress.uploadingWithCount": "{{completed}}/{{total}} geüpload",
+  "MultiImagesUpload.validation.fileSizeExceeded": "Bestandsgrootte overschrijdt de limiet",
+  "MultiImagesUpload.validation.fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) overschrijdt de maximale grootte van {{maxSize}}",
+  "MultiImagesUpload.validation.fileSizeExceededMultiple": "{{count}} bestanden overschrijden de maximale grootte van {{maxSize}}: {{fileList}}",
+  "MultiImagesUpload.validation.imageCountExceeded": "Het aantal afbeeldingen overschrijdt de limiet",
+  "OllamaSetupGuide.action.close": "Sluit melding",
+  "OllamaSetupGuide.action.start": "Geïnstalleerd",
+  "OllamaSetupGuide.cors.description": "Vanwege beveiligingsbeperkingen in de browser moet je cross-origin configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
+  "OllamaSetupGuide.cors.linux.env": "Voeg `Environment` toe onder de [Service] sectie en voeg de OLLAMA_ORIGINS omgevingsvariabele toe:",
+  "OllamaSetupGuide.cors.linux.reboot": "Herlaad systemd en herstart Ollama",
+  "OllamaSetupGuide.cors.linux.systemd": "Roep systemd aan om de ollama service te bewerken:",
+  "OllamaSetupGuide.cors.macos": "Open de 'Terminal' applicatie, plak de volgende opdracht en druk op enter om uit te voeren",
+  "OllamaSetupGuide.cors.reboot": "Herstart de Ollama service na het voltooien van de uitvoering",
+  "OllamaSetupGuide.cors.title": "Configureer Ollama voor cross-origin toegang",
+  "OllamaSetupGuide.cors.windows": "Op Windows, klik op 'Configuratiescherm', ga naar systeemomgevingsvariabelen bewerken. Maak een nieuwe omgevingsvariabele aan met de naam 'OLLAMA_ORIGINS' voor je gebruikersaccount, met de waarde * en klik op 'OK/Toepassen' om op te slaan",
+  "OllamaSetupGuide.install.description": "Zorg ervoor dat je Ollama hebt ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website <1>om te downloaden</1>",
+  "OllamaSetupGuide.install.docker": "Als je de voorkeur geeft aan het gebruik van Docker, biedt Ollama ook een officiële Docker-image aan die je kunt ophalen met de volgende opdracht:",
+  "OllamaSetupGuide.install.linux.command": "Installeer met de volgende opdracht:",
+  "OllamaSetupGuide.install.linux.manual": "Of je kunt de <1>Linux handmatige installatiehandleiding</1> raadplegen voor een handmatige installatie",
+  "OllamaSetupGuide.install.title": "Installeer en start de Ollama applicatie lokaal",
+  "OllamaSetupGuide.install.windowsTab": "Windows (previewversie)",
+  "Thinking.thinking": "Diep in gedachten...",
+  "Thinking.thought": "Diep nagedacht (tijd gebruikt {{duration}} seconden)",
+  "Thinking.thoughtWithDuration": "Diep nagedacht",
+  "devTools.cache.empty": "Cache is leeg",
+  "devTools.metadata.empty": "Geen metadata beschikbaar",
+  "knowledgeBase.empty.description": "Maak een kennisbank aan om je bronnen te organiseren en beheren",
+  "knowledgeBase.empty.search": "Geen overeenkomende kennisbank gevonden",
+  "knowledgeBase.empty.title": "Geen kennisbank beschikbaar"
 }

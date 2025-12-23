@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Comprimi",
-      "on": "Espandi"
-    },
-    "typobar": {
-      "off": "Nascondi barra degli strumenti di formattazione",
-      "on": "Mostra barra degli strumenti di formattazione"
-    }
-  },
-  "autoSave": {
-    "latest": "Ultima versione caricata",
-    "saved": "Salvato",
-    "saving": "Salvataggio automatico in corso..."
-  },
+  "actions.expand.off": "Comprimi",
+  "actions.expand.on": "Espandi",
+  "actions.typobar.off": "Nascondi barra degli strumenti di formattazione",
+  "actions.typobar.on": "Mostra barra degli strumenti di formattazione",
+  "autoSave.latest": "Ultima versione caricata",
+  "autoSave.saved": "Salvato",
+  "autoSave.saving": "Salvataggio automatico in corso...",
   "cancel": "Annulla",
   "confirm": "Conferma",
-  "file": {
-    "error": "Errore: {{message}}",
-    "uploading": "Caricamento file in corso..."
-  },
-  "image": {
-    "broken": "Immagine danneggiata"
-  },
-  "link": {
-    "edit": "Modifica link",
-    "editLinkTitle": "Collegamento",
-    "editTextTitle": "Titolo",
-    "open": "Apri link",
-    "placeholder": "Inserisci URL del link",
-    "unlink": "Rimuovi link"
-  },
-  "markdown": {
-    "cancel": "Annulla",
-    "confirm": "Converti",
-    "parseMessage": "Convertire in formato Markdown. Il contenuto esistente verrà sovrascritto. Confermi? (Chiusura automatica tra 5 secondi)",
-    "parseTitle": "Formatta in Markdown"
-  },
-  "math": {
-    "placeholder": "Inserisci la formula TeX"
-  },
-  "modifier": {
-    "accept": "Conferma",
-    "acceptAll": "Accetta tutto",
-    "reject": "Annulla",
-    "rejectedAll": "Rifiuta tutto"
-  },
-  "slash": {
-    "h1": "Titolo di primo livello",
-    "h2": "Titolo di secondo livello",
-    "h3": "Titolo di terzo livello",
-    "hr": "Linea di separazione",
-    "table": "Tabella",
-    "tex": "Formula TeX"
-  },
-  "table": {
-    "delete": "Elimina tabella",
-    "deleteColumn": "Elimina colonna",
-    "deleteRow": "Elimina riga",
-    "insertColumnLeft": "Inserisci {{count}} colonne a sinistra",
-    "insertColumnRight": "Inserisci {{count}} colonne a destra",
-    "insertRowAbove": "Inserisci {{count}} righe sopra",
-    "insertRowBelow": "Inserisci {{count}} righe sotto"
-  },
-  "typobar": {
-    "blockquote": "Citazione",
-    "bold": "Grassetto",
-    "bulletList": "Elenco puntato",
-    "code": "Codice in linea",
-    "codeblock": "Blocco di codice",
-    "image": "Immagine",
-    "italic": "Corsivo",
-    "link": "Collegamento",
-    "numberList": "Elenco numerato",
-    "redo": "Ripeti",
-    "strikethrough": "Testo barrato",
-    "table": "tabella",
-    "taskList": "Elenco attività",
-    "tex": "Formula TeX",
-    "underline": "Sottolineato",
-    "undo": "Annulla"
-  }
+  "file.error": "Errore: {{message}}",
+  "file.uploading": "Caricamento file in corso...",
+  "image.broken": "Immagine danneggiata",
+  "link.edit": "Modifica link",
+  "link.editLinkTitle": "Collegamento",
+  "link.editTextTitle": "Titolo",
+  "link.open": "Apri link",
+  "link.placeholder": "Inserisci URL del link",
+  "link.unlink": "Rimuovi link",
+  "markdown.cancel": "Annulla",
+  "markdown.confirm": "Converti",
+  "markdown.parseMessage": "Convertire in formato Markdown. Il contenuto esistente verrà sovrascritto. Confermi? (Chiusura automatica tra 5 secondi)",
+  "markdown.parseTitle": "Formatta in Markdown",
+  "math.placeholder": "Inserisci la formula TeX",
+  "modifier.accept": "Conferma",
+  "modifier.acceptAll": "Accetta tutto",
+  "modifier.reject": "Annulla",
+  "modifier.rejectedAll": "Rifiuta tutto",
+  "slash.h1": "Titolo di primo livello",
+  "slash.h2": "Titolo di secondo livello",
+  "slash.h3": "Titolo di terzo livello",
+  "slash.hr": "Linea di separazione",
+  "slash.table": "Tabella",
+  "slash.tex": "Formula TeX",
+  "table.delete": "Elimina tabella",
+  "table.deleteColumn": "Elimina colonna",
+  "table.deleteRow": "Elimina riga",
+  "table.insertColumnLeft": "Inserisci {{count}} colonne a sinistra",
+  "table.insertColumnRight": "Inserisci {{count}} colonne a destra",
+  "table.insertRowAbove": "Inserisci {{count}} righe sopra",
+  "table.insertRowBelow": "Inserisci {{count}} righe sotto",
+  "typobar.blockquote": "Citazione",
+  "typobar.bold": "Grassetto",
+  "typobar.bulletList": "Elenco puntato",
+  "typobar.code": "Codice in linea",
+  "typobar.codeblock": "Blocco di codice",
+  "typobar.image": "Immagine",
+  "typobar.italic": "Corsivo",
+  "typobar.link": "Collegamento",
+  "typobar.numberList": "Elenco numerato",
+  "typobar.redo": "Ripeti",
+  "typobar.strikethrough": "Testo barrato",
+  "typobar.table": "tabella",
+  "typobar.taskList": "Elenco attività",
+  "typobar.tex": "Formula TeX",
+  "typobar.underline": "Sottolineato",
+  "typobar.undo": "Annulla"
 }

@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Zwiń",
-      "on": "Rozwiń"
-    },
-    "typobar": {
-      "off": "Ukryj pasek narzędzi formatowania",
-      "on": "Pokaż pasek narzędzi formatowania"
-    }
-  },
-  "autoSave": {
-    "latest": "Załadowano najnowszą wersję",
-    "saved": "Zapisano",
-    "saving": "Automatyczne zapisywanie..."
-  },
+  "actions.expand.off": "Zwiń",
+  "actions.expand.on": "Rozwiń",
+  "actions.typobar.off": "Ukryj pasek narzędzi formatowania",
+  "actions.typobar.on": "Pokaż pasek narzędzi formatowania",
+  "autoSave.latest": "Załadowano najnowszą wersję",
+  "autoSave.saved": "Zapisano",
+  "autoSave.saving": "Automatyczne zapisywanie...",
   "cancel": "Anuluj",
   "confirm": "Potwierdź",
-  "file": {
-    "error": "Błąd: {{message}}",
-    "uploading": "Przesyłanie pliku..."
-  },
-  "image": {
-    "broken": "Obraz uszkodzony"
-  },
-  "link": {
-    "edit": "Edytuj link",
-    "editLinkTitle": "Link",
-    "editTextTitle": "Tytuł",
-    "open": "Otwórz link",
-    "placeholder": "Wpisz adres URL linku",
-    "unlink": "Usuń link"
-  },
-  "markdown": {
-    "cancel": "Anuluj",
-    "confirm": "Konwertuj",
-    "parseMessage": "Konwertować na format Markdown? Istniejąca zawartość zostanie nadpisana. Czy chcesz kontynuować? (Zamknie się automatycznie za 5 sekund)",
-    "parseTitle": "Formatuj jako Markdown"
-  },
-  "math": {
-    "placeholder": "Wprowadź formułę TeX"
-  },
-  "modifier": {
-    "accept": "Zachowaj",
-    "acceptAll": "Akceptuj wszystkie",
-    "reject": "Cofnij",
-    "rejectedAll": "Odrzuć wszystkie"
-  },
-  "slash": {
-    "h1": "Nagłówek poziomu 1",
-    "h2": "Nagłówek poziomu 2",
-    "h3": "Nagłówek poziomu 3",
-    "hr": "Linia pozioma",
-    "table": "Tabela",
-    "tex": "Formuła TeX"
-  },
-  "table": {
-    "delete": "Usuń tabelę",
-    "deleteColumn": "Usuń kolumnę",
-    "deleteRow": "Usuń wiersz",
-    "insertColumnLeft": "Wstaw {{count}} kolumn po lewej",
-    "insertColumnRight": "Wstaw {{count}} kolumn po prawej",
-    "insertRowAbove": "Wstaw {{count}} wierszy powyżej",
-    "insertRowBelow": "Wstaw {{count}} wierszy poniżej"
-  },
-  "typobar": {
-    "blockquote": "Cytat",
-    "bold": "Pogrubienie",
-    "bulletList": "Lista punktowana",
-    "code": "Kod w linii",
-    "codeblock": "Blok kodu",
-    "image": "Obraz",
-    "italic": "Kursywa",
-    "link": "Link",
-    "numberList": "Lista numerowana",
-    "redo": "Ponów",
-    "strikethrough": "Przekreślenie",
-    "table": "tabela",
-    "taskList": "Lista zadań",
-    "tex": "Formuła TeX",
-    "underline": "Podkreślenie",
-    "undo": "Cofnij"
-  }
+  "file.error": "Błąd: {{message}}",
+  "file.uploading": "Przesyłanie pliku...",
+  "image.broken": "Obraz uszkodzony",
+  "link.edit": "Edytuj link",
+  "link.editLinkTitle": "Link",
+  "link.editTextTitle": "Tytuł",
+  "link.open": "Otwórz link",
+  "link.placeholder": "Wpisz adres URL linku",
+  "link.unlink": "Usuń link",
+  "markdown.cancel": "Anuluj",
+  "markdown.confirm": "Konwertuj",
+  "markdown.parseMessage": "Konwertować na format Markdown? Istniejąca zawartość zostanie nadpisana. Czy chcesz kontynuować? (Zamknie się automatycznie za 5 sekund)",
+  "markdown.parseTitle": "Formatuj jako Markdown",
+  "math.placeholder": "Wprowadź formułę TeX",
+  "modifier.accept": "Zachowaj",
+  "modifier.acceptAll": "Akceptuj wszystkie",
+  "modifier.reject": "Cofnij",
+  "modifier.rejectedAll": "Odrzuć wszystkie",
+  "slash.h1": "Nagłówek poziomu 1",
+  "slash.h2": "Nagłówek poziomu 2",
+  "slash.h3": "Nagłówek poziomu 3",
+  "slash.hr": "Linia pozioma",
+  "slash.table": "Tabela",
+  "slash.tex": "Formuła TeX",
+  "table.delete": "Usuń tabelę",
+  "table.deleteColumn": "Usuń kolumnę",
+  "table.deleteRow": "Usuń wiersz",
+  "table.insertColumnLeft": "Wstaw {{count}} kolumn po lewej",
+  "table.insertColumnRight": "Wstaw {{count}} kolumn po prawej",
+  "table.insertRowAbove": "Wstaw {{count}} wierszy powyżej",
+  "table.insertRowBelow": "Wstaw {{count}} wierszy poniżej",
+  "typobar.blockquote": "Cytat",
+  "typobar.bold": "Pogrubienie",
+  "typobar.bulletList": "Lista punktowana",
+  "typobar.code": "Kod w linii",
+  "typobar.codeblock": "Blok kodu",
+  "typobar.image": "Obraz",
+  "typobar.italic": "Kursywa",
+  "typobar.link": "Link",
+  "typobar.numberList": "Lista numerowana",
+  "typobar.redo": "Ponów",
+  "typobar.strikethrough": "Przekreślenie",
+  "typobar.table": "tabela",
+  "typobar.taskList": "Lista zadań",
+  "typobar.tex": "Formuła TeX",
+  "typobar.underline": "Podkreślenie",
+  "typobar.undo": "Cofnij"
 }

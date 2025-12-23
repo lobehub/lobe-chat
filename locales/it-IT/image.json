@@ -1,118 +1,62 @@
 {
-  "config": {
-    "aspectRatio": {
-      "label": "Rapporto",
-      "lock": "Blocca rapporto d'aspetto",
-      "unlock": "Sblocca rapporto d'aspetto"
-    },
-    "cfg": {
-      "label": "Intensità guida"
-    },
-    "header": {
-      "desc": "Descrizione semplice, crea subito",
-      "title": "Pittura"
-    },
-    "height": {
-      "label": "Altezza"
-    },
-    "imageNum": {
-      "label": "Numero di immagini"
-    },
-    "imageUrl": {
-      "label": "Immagine di riferimento"
-    },
-    "imageUrls": {
-      "label": "Immagini di riferimento"
-    },
-    "model": {
-      "label": "Modello"
-    },
-    "prompt": {
-      "placeholder": "Descrivi ciò che desideri generare"
-    },
-    "quality": {
-      "label": "Qualità immagine",
-      "options": {
-        "hd": "Alta definizione",
-        "standard": "Standard"
-      }
-    },
-    "resolution": {
-      "label": "Risoluzione",
-      "options": {
-        "1K": "1K",
-        "2K": "2K",
-        "4K": "4K"
-      }
-    },
-    "seed": {
-      "label": "Seed",
-      "random": "Seme casuale"
-    },
-    "size": {
-      "label": "Dimensione"
-    },
-    "steps": {
-      "label": "Passaggi"
-    },
-    "title": "Disegno AI",
-    "width": {
-      "label": "Larghezza"
-    }
-  },
-  "generation": {
-    "actions": {
-      "applySeed": "Applica seme",
-      "copyError": "Copia errore",
-      "copyPrompt": "Copia suggerimento",
-      "copySeed": "Copia seed",
-      "delete": "Elimina",
-      "deleteBatch": "Elimina batch",
-      "download": "Scarica",
-      "downloadFailed": "Download immagine fallito",
-      "errorCopied": "Messaggio di errore copiato negli appunti",
-      "errorCopyFailed": "Copia messaggio di errore fallita",
-      "generate": "Genera",
-      "promptCopied": "Prompt copiato negli appunti",
-      "promptCopyFailed": "Copia prompt fallita",
-      "reuseSettings": "Riutilizza impostazioni",
-      "seedApplied": "Seme applicato alla configurazione",
-      "seedApplyFailed": "Applicazione del seme fallita",
-      "seedCopied": "Seed copiato negli appunti",
-      "seedCopyFailed": "Copia seed fallita"
-    },
-    "metadata": {
-      "count": "{{count}} immagini"
-    },
-    "status": {
-      "failed": "Generazione fallita",
-      "generating": "Generazione in corso..."
-    }
-  },
-  "notSupportGuide": {
-    "desc": "L'istanza attuale è in modalità database client e non supporta la generazione di immagini AI. Passa alla <1>modalità di distribuzione database server</1> o usa direttamente <3>LobeChat Cloud</3>",
-    "features": {
-      "fileIntegration": {
-        "desc": "Integrazione profonda con il sistema di gestione file, le immagini generate vengono salvate automaticamente nel file system per una gestione e organizzazione unificata",
-        "title": "Integrazione con file system"
-      },
-      "llmAssisted": {
-        "desc": "Combina le capacità dei grandi modelli linguistici per ottimizzare e ampliare intelligentemente i prompt, migliorando la qualità della generazione delle immagini (Prossimamente)",
-        "title": "Generazione assistita da LLM"
-      },
-      "multiProviders": {
-        "desc": "Supporta diversi fornitori di servizi di disegno AI, inclusi OpenAI gpt-image-1, Google Imagen, FAL.ai, offrendo una vasta scelta di modelli",
-        "title": "Supporto multi-fornitori"
-      }
-    },
-    "title": "La modalità di distribuzione attuale non supporta il disegno AI"
-  },
-  "topic": {
-    "createNew": "Crea nuovo argomento",
-    "deleteConfirm": "Elimina argomento generato",
-    "deleteConfirmDesc": "Stai per eliminare questo argomento generato. L'eliminazione è irreversibile, procedi con cautela.",
-    "empty": "Nessun argomento generato",
-    "title": "Tema della pittura",
-    "untitled": "Argomento predefinito"
-  }
+  "config.aspectRatio.label": "Rapporto",
+  "config.aspectRatio.lock": "Blocca rapporto d'aspetto",
+  "config.aspectRatio.unlock": "Sblocca rapporto d'aspetto",
+  "config.cfg.label": "Intensità guida",
+  "config.header.desc": "Descrizione semplice, crea subito",
+  "config.header.title": "Pittura",
+  "config.height.label": "Altezza",
+  "config.imageNum.label": "Numero di immagini",
+  "config.imageUrl.label": "Immagine di riferimento",
+  "config.imageUrls.label": "Immagini di riferimento",
+  "config.model.label": "Modello",
+  "config.prompt.placeholder": "Descrivi ciò che desideri generare",
+  "config.quality.label": "Qualità immagine",
+  "config.quality.options.hd": "Alta definizione",
+  "config.quality.options.standard": "Standard",
+  "config.resolution.label": "Risoluzione",
+  "config.resolution.options.1K": "1K",
+  "config.resolution.options.2K": "2K",
+  "config.resolution.options.4K": "4K",
+  "config.seed.label": "Seed",
+  "config.seed.random": "Seme casuale",
+  "config.size.label": "Dimensione",
+  "config.steps.label": "Passaggi",
+  "config.title": "Disegno AI",
+  "config.width.label": "Larghezza",
+  "generation.actions.applySeed": "Applica seme",
+  "generation.actions.copyError": "Copia errore",
+  "generation.actions.copyPrompt": "Copia suggerimento",
+  "generation.actions.copySeed": "Copia seed",
+  "generation.actions.delete": "Elimina",
+  "generation.actions.deleteBatch": "Elimina batch",
+  "generation.actions.download": "Scarica",
+  "generation.actions.downloadFailed": "Download immagine fallito",
+  "generation.actions.errorCopied": "Messaggio di errore copiato negli appunti",
+  "generation.actions.errorCopyFailed": "Copia messaggio di errore fallita",
+  "generation.actions.generate": "Genera",
+  "generation.actions.promptCopied": "Prompt copiato negli appunti",
+  "generation.actions.promptCopyFailed": "Copia prompt fallita",
+  "generation.actions.reuseSettings": "Riutilizza impostazioni",
+  "generation.actions.seedApplied": "Seme applicato alla configurazione",
+  "generation.actions.seedApplyFailed": "Applicazione del seme fallita",
+  "generation.actions.seedCopied": "Seed copiato negli appunti",
+  "generation.actions.seedCopyFailed": "Copia seed fallita",
+  "generation.metadata.count": "{{count}} immagini",
+  "generation.status.failed": "Generazione fallita",
+  "generation.status.generating": "Generazione in corso...",
+  "notSupportGuide.desc": "L'istanza attuale è in modalità database client e non supporta la generazione di immagini AI. Passa alla <1>modalità di distribuzione database server</1> o usa direttamente <3>LobeChat Cloud</3>",
+  "notSupportGuide.features.fileIntegration.desc": "Integrazione profonda con il sistema di gestione file, le immagini generate vengono salvate automaticamente nel file system per una gestione e organizzazione unificata",
+  "notSupportGuide.features.fileIntegration.title": "Integrazione con file system",
+  "notSupportGuide.features.llmAssisted.desc": "Combina le capacità dei grandi modelli linguistici per ottimizzare e ampliare intelligentemente i prompt, migliorando la qualità della generazione delle immagini (Prossimamente)",
+  "notSupportGuide.features.llmAssisted.title": "Generazione assistita da LLM",
+  "notSupportGuide.features.multiProviders.desc": "Supporta diversi fornitori di servizi di disegno AI, inclusi OpenAI gpt-image-1, Google Imagen, FAL.ai, offrendo una vasta scelta di modelli",
+  "notSupportGuide.features.multiProviders.title": "Supporto multi-fornitori",
+  "notSupportGuide.title": "La modalità di distribuzione attuale non supporta il disegno AI",
+  "topic.createNew": "Crea nuovo argomento",
+  "topic.deleteConfirm": "Elimina argomento generato",
+  "topic.deleteConfirmDesc": "Stai per eliminare questo argomento generato. L'eliminazione è irreversibile, procedi con cautela.",
+  "topic.empty": "Nessun argomento generato",
+  "topic.title": "Tema della pittura",
+  "topic.untitled": "Argomento predefinito"
 }

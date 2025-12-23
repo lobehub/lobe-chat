@@ -52,11 +52,11 @@ const AddAgent = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const showDuplicateConfirmation = (callback: () => void) => {
     modal.confirm({
-      cancelText: '取消',
-      content: `当前已经添加过「${title}」Agent，是否需要重复添加？`,
-      okText: '确认添加',
+      cancelText: t('cancel', { ns: 'common' }),
+      content: t('assistants.duplicateAdd.content', { title }),
+      okText: t('assistants.duplicateAdd.ok'),
       onOk: callback,
-      title: '重复添加确认',
+      title: t('assistants.duplicateAdd.title'),
     });
   };
 

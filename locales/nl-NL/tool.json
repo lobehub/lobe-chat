@@ -1,196 +1,132 @@
 {
-  "agentGroupManagement": {
-    "executeTask": {
-      "agent": "Agent uitvoeren",
-      "cancelled": "Geannuleerd",
-      "completed": "Taak voltooid",
-      "cost": "Kosten",
-      "failed": "Taak mislukt",
-      "interrupted": "Onderbroken",
-      "intervention": {
-        "taskPlaceholder": "Beschrijf de taak die de Agent moet uitvoeren in detail...",
-        "timeout": "Maximale uitvoeringstijd",
-        "timeoutUnit": "minuten",
-        "unknownAgent": "Onbekende Agent"
-      },
-      "processing": "Bezig met uitvoeren...",
-      "steps": "Aantal stappen",
-      "task": "Taakinhoud",
-      "thread": "Thread-ID",
-      "timeout": "Uitvoeringstijd verstreken",
-      "tokens": "Tokenverbruik"
-    }
-  },
-  "codeInterpreter": {
-    "error": "Fout bij uitvoering",
-    "executing": "Bezig met uitvoeren...",
-    "files": "Bestanden:",
-    "output": "Uitvoer:",
-    "returnValue": "Retourwaarde:"
-  },
-  "codeInterpreter-legacy": {
-    "error": "Fout bij uitvoeren",
-    "executing": "Bezig met uitvoeren...",
-    "files": "Bestanden:",
-    "output": "Uitvoer:",
-    "returnValue": "Retourwaarde:"
-  },
-  "dalle": {
-    "autoGenerate": "Automatisch genereren",
-    "downloading": "De link naar de afbeelding gegenereerd door DallE3 is slechts 1 uur geldig. De afbeelding wordt lokaal in de cache opgeslagen...",
-    "generate": "Genereren",
-    "generating": "Bezig met genereren...",
-    "images": "Afbeeldingen:",
-    "prompt": "prompt"
-  },
-  "lobe-gtd": {
-    "actions": {
-      "add": "Toevoegen",
-      "clearCompleted": "Voltooide items wissen",
-      "placeholder": "Voer een taak in..."
-    },
-    "clearTodos": {
-      "cleared": "{{count}} items gewist",
-      "clearedCompleted": "{{count}} voltooide items gewist",
-      "clearedCompleted_one": "{{count}} voltooid item gewist",
-      "clearedCompleted_other": "{{count}} voltooide items gewist",
-      "cleared_one": "{{count}} item gewist",
-      "cleared_other": "{{count}} items gewist",
-      "noItems": "Geen items om te wissen",
-      "remaining": "{{count}} items over",
-      "remaining_one": "{{count}} item over",
-      "remaining_other": "{{count}} items over"
-    },
-    "completeTodos": {
-      "completed": "{{count}} items voltooid",
-      "completed_one": "{{count}} item voltooid",
-      "completed_other": "{{count}} items voltooid"
-    },
-    "createTodos": {
-      "created": "{{count}} taken aangemaakt",
-      "created_one": "{{count}} taak aangemaakt",
-      "created_other": "{{count}} taken aangemaakt",
-      "total": "Totaal {{count}} items",
-      "total_one": "Totaal {{count}} item",
-      "total_other": "Totaal {{count}} items"
-    },
-    "removeTodos": {
-      "removed": "{{count}} items verwijderd",
-      "removed_one": "{{count}} item verwijderd",
-      "removed_other": "{{count}} items verwijderd"
-    },
-    "status": {
-      "done": "{{count}} voltooid",
-      "pending": "{{count}} in behandeling"
-    },
-    "todoList": {
-      "empty": "De takenlijst is leeg",
-      "items": "{{count}} items",
-      "items_one": "{{count}} item",
-      "items_other": "{{count}} items",
-      "title": "Takenlijst"
-    },
-    "updateTodos": {
-      "updated": "Takenlijst bijgewerkt"
-    }
-  },
-  "lobe-knowledge-base": {
-    "readKnowledge": {
-      "meta": {
-        "chars": "Aantal tekens",
-        "lines": "Aantal regels"
-      }
-    }
-  },
-  "localFiles": {
-    "editFile": {
-      "newString": "Vervangen door",
-      "oldString": "Zoekterm",
-      "replaceAll": "Alles vervangen",
-      "replaceFirst": "Alleen eerste vervangen"
-    },
-    "file": "Bestand",
-    "folder": "Map",
-    "moveFiles": {
-      "itemsMoved": "{{count}} items verplaatst:",
-      "itemsMoved_one": "{{count}} item verplaatst:",
-      "itemsMoved_other": "{{count}} items verplaatst:",
-      "itemsToMove": "{{count}} items te verplaatsen:",
-      "itemsToMove_one": "{{count}} item te verplaatsen:",
-      "itemsToMove_other": "{{count}} items te verplaatsen:"
-    },
-    "open": "Openen",
-    "openFile": "Bestand openen",
-    "openFolder": "Map openen",
-    "read": {
-      "more": "Meer weergeven"
-    },
-    "readFile": "Bestand lezen",
-    "readFileError": "Fout bij het lezen van het bestand, controleer of het bestandspad correct is",
-    "readFiles": "Bestanden lezen",
-    "readFilesError": "Fout bij het lezen van bestanden, controleer of het bestandspad correct is",
-    "writeFile": {
-      "characters": "Tekens",
-      "preview": "Voorbeeld van inhoud",
-      "truncated": "Afgekapt"
-    }
-  },
-  "search": {
-    "createNewSearch": "Maak een nieuwe zoekopdracht",
-    "emptyResult": "Geen resultaten gevonden, pas alstublieft uw zoekwoorden aan en probeer het opnieuw",
-    "genAiMessage": "Maak assistentbericht",
-    "includedTooltip": "De huidige zoekresultaten worden opgenomen in de context van de sessie",
-    "keywords": "Zoekwoorden:",
-    "scoreTooltip": "Relevantie score, hoe hoger de score, hoe relevanter het is voor de zoekwoorden",
-    "searchBar": {
-      "button": "Zoeken",
-      "placeholder": "Zoekwoorden",
-      "tooltip": "De zoekresultaten worden opnieuw opgehaald en er wordt een nieuwe samenvattingsbericht aangemaakt"
-    },
-    "searchCategory": {
-      "placeholder": "Zoekcategorie",
-      "title": "Zoekcategorie:",
-      "value": {
-        "files": "Bestanden",
-        "general": "Algemeen",
-        "images": "Afbeeldingen",
-        "it": "Informatietechnologie",
-        "map": "Kaart",
-        "music": "Muziek",
-        "news": "Nieuws",
-        "science": "Wetenschap",
-        "social_media": "Sociale media",
-        "videos": "Video's"
-      }
-    },
-    "searchEngine": {
-      "placeholder": "Zoekmachine",
-      "title": "Zoekmachine:"
-    },
-    "searchResult": "Aantal zoekresultaten:",
-    "searchTimeRange": {
-      "title": "Tijdspanne:",
-      "value": {
-        "anytime": "Geen tijdslimiet",
-        "day": "Binnen een dag",
-        "month": "Binnen een maand",
-        "week": "Binnen een week",
-        "year": "Binnen een jaar"
-      }
-    },
-    "summary": "Samenvatting",
-    "summaryTooltip": "Samenvatting van de huidige inhoud",
-    "viewMoreResults": "Bekijk meer {{results}} resultaten"
-  },
-  "updateArgs": {
-    "duplicateKeyError": "Veldsleutel moet uniek zijn",
-    "form": {
-      "add": "Een item toevoegen",
-      "key": "Veldsleutel",
-      "value": "Veldwaarde"
-    },
-    "formValidationFailed": "Formuliervalidatie is mislukt, controleer het parameterformaat",
-    "keyRequired": "Veldsleutel mag niet leeg zijn",
-    "stringifyError": "Kan parameters niet serialiseren, controleer het parameterformaat"
-  }
+  "agentGroupManagement.executeTask.agent": "Agent uitvoeren",
+  "agentGroupManagement.executeTask.cancelled": "Geannuleerd",
+  "agentGroupManagement.executeTask.completed": "Taak voltooid",
+  "agentGroupManagement.executeTask.cost": "Kosten",
+  "agentGroupManagement.executeTask.failed": "Taak mislukt",
+  "agentGroupManagement.executeTask.interrupted": "Onderbroken",
+  "agentGroupManagement.executeTask.intervention.taskPlaceholder": "Beschrijf de taak die de Agent moet uitvoeren in detail...",
+  "agentGroupManagement.executeTask.intervention.timeout": "Maximale uitvoeringstijd",
+  "agentGroupManagement.executeTask.intervention.timeoutUnit": "minuten",
+  "agentGroupManagement.executeTask.intervention.unknownAgent": "Onbekende Agent",
+  "agentGroupManagement.executeTask.processing": "Bezig met uitvoeren...",
+  "agentGroupManagement.executeTask.steps": "Aantal stappen",
+  "agentGroupManagement.executeTask.task": "Taakinhoud",
+  "agentGroupManagement.executeTask.thread": "Thread-ID",
+  "agentGroupManagement.executeTask.timeout": "Uitvoeringstijd verstreken",
+  "agentGroupManagement.executeTask.tokens": "Tokenverbruik",
+  "codeInterpreter-legacy.error": "Fout bij uitvoeren",
+  "codeInterpreter-legacy.executing": "Bezig met uitvoeren...",
+  "codeInterpreter-legacy.files": "Bestanden:",
+  "codeInterpreter-legacy.output": "Uitvoer:",
+  "codeInterpreter-legacy.returnValue": "Retourwaarde:",
+  "codeInterpreter.error": "Fout bij uitvoering",
+  "codeInterpreter.executing": "Bezig met uitvoeren...",
+  "codeInterpreter.files": "Bestanden:",
+  "codeInterpreter.output": "Uitvoer:",
+  "codeInterpreter.returnValue": "Retourwaarde:",
+  "dalle.autoGenerate": "Automatisch genereren",
+  "dalle.downloading": "De link naar de afbeelding gegenereerd door DallE3 is slechts 1 uur geldig. De afbeelding wordt lokaal in de cache opgeslagen...",
+  "dalle.generate": "Genereren",
+  "dalle.generating": "Bezig met genereren...",
+  "dalle.images": "Afbeeldingen:",
+  "dalle.prompt": "prompt",
+  "lobe-gtd.actions.add": "Toevoegen",
+  "lobe-gtd.actions.clearCompleted": "Voltooide items wissen",
+  "lobe-gtd.actions.placeholder": "Voer een taak in...",
+  "lobe-gtd.clearTodos.cleared": "{{count}} items gewist",
+  "lobe-gtd.clearTodos.clearedCompleted": "{{count}} voltooide items gewist",
+  "lobe-gtd.clearTodos.clearedCompleted_one": "{{count}} voltooid item gewist",
+  "lobe-gtd.clearTodos.clearedCompleted_other": "{{count}} voltooide items gewist",
+  "lobe-gtd.clearTodos.cleared_one": "{{count}} item gewist",
+  "lobe-gtd.clearTodos.cleared_other": "{{count}} items gewist",
+  "lobe-gtd.clearTodos.noItems": "Geen items om te wissen",
+  "lobe-gtd.clearTodos.remaining": "{{count}} items over",
+  "lobe-gtd.clearTodos.remaining_one": "{{count}} item over",
+  "lobe-gtd.clearTodos.remaining_other": "{{count}} items over",
+  "lobe-gtd.completeTodos.completed": "{{count}} items voltooid",
+  "lobe-gtd.completeTodos.completed_one": "{{count}} item voltooid",
+  "lobe-gtd.completeTodos.completed_other": "{{count}} items voltooid",
+  "lobe-gtd.createTodos.created": "{{count}} taken aangemaakt",
+  "lobe-gtd.createTodos.created_one": "{{count}} taak aangemaakt",
+  "lobe-gtd.createTodos.created_other": "{{count}} taken aangemaakt",
+  "lobe-gtd.createTodos.total": "Totaal {{count}} items",
+  "lobe-gtd.createTodos.total_one": "Totaal {{count}} item",
+  "lobe-gtd.createTodos.total_other": "Totaal {{count}} items",
+  "lobe-gtd.removeTodos.removed": "{{count}} items verwijderd",
+  "lobe-gtd.removeTodos.removed_one": "{{count}} item verwijderd",
+  "lobe-gtd.removeTodos.removed_other": "{{count}} items verwijderd",
+  "lobe-gtd.status.done": "{{count}} voltooid",
+  "lobe-gtd.status.pending": "{{count}} in behandeling",
+  "lobe-gtd.todoList.empty": "De takenlijst is leeg",
+  "lobe-gtd.todoList.items": "{{count}} items",
+  "lobe-gtd.todoList.items_one": "{{count}} item",
+  "lobe-gtd.todoList.items_other": "{{count}} items",
+  "lobe-gtd.todoList.title": "Takenlijst",
+  "lobe-gtd.updateTodos.updated": "Takenlijst bijgewerkt",
+  "lobe-knowledge-base.readKnowledge.meta.chars": "Aantal tekens",
+  "lobe-knowledge-base.readKnowledge.meta.lines": "Aantal regels",
+  "localFiles.editFile.newString": "Vervangen door",
+  "localFiles.editFile.oldString": "Zoekterm",
+  "localFiles.editFile.replaceAll": "Alles vervangen",
+  "localFiles.editFile.replaceFirst": "Alleen eerste vervangen",
+  "localFiles.file": "Bestand",
+  "localFiles.folder": "Map",
+  "localFiles.moveFiles.itemsMoved": "{{count}} items verplaatst:",
+  "localFiles.moveFiles.itemsMoved_one": "{{count}} item verplaatst:",
+  "localFiles.moveFiles.itemsMoved_other": "{{count}} items verplaatst:",
+  "localFiles.moveFiles.itemsToMove": "{{count}} items te verplaatsen:",
+  "localFiles.moveFiles.itemsToMove_one": "{{count}} item te verplaatsen:",
+  "localFiles.moveFiles.itemsToMove_other": "{{count}} items te verplaatsen:",
+  "localFiles.open": "Openen",
+  "localFiles.openFile": "Bestand openen",
+  "localFiles.openFolder": "Map openen",
+  "localFiles.read.more": "Meer weergeven",
+  "localFiles.readFile": "Bestand lezen",
+  "localFiles.readFileError": "Fout bij het lezen van het bestand, controleer of het bestandspad correct is",
+  "localFiles.readFiles": "Bestanden lezen",
+  "localFiles.readFilesError": "Fout bij het lezen van bestanden, controleer of het bestandspad correct is",
+  "localFiles.writeFile.characters": "Tekens",
+  "localFiles.writeFile.preview": "Voorbeeld van inhoud",
+  "localFiles.writeFile.truncated": "Afgekapt",
+  "search.createNewSearch": "Maak een nieuwe zoekopdracht",
+  "search.emptyResult": "Geen resultaten gevonden, pas alstublieft uw zoekwoorden aan en probeer het opnieuw",
+  "search.genAiMessage": "Maak assistentbericht",
+  "search.includedTooltip": "De huidige zoekresultaten worden opgenomen in de context van de sessie",
+  "search.keywords": "Zoekwoorden:",
+  "search.scoreTooltip": "Relevantie score, hoe hoger de score, hoe relevanter het is voor de zoekwoorden",
+  "search.searchBar.button": "Zoeken",
+  "search.searchBar.placeholder": "Zoekwoorden",
+  "search.searchBar.tooltip": "De zoekresultaten worden opnieuw opgehaald en er wordt een nieuwe samenvattingsbericht aangemaakt",
+  "search.searchCategory.placeholder": "Zoekcategorie",
+  "search.searchCategory.title": "Zoekcategorie:",
+  "search.searchCategory.value.files": "Bestanden",
+  "search.searchCategory.value.general": "Algemeen",
+  "search.searchCategory.value.images": "Afbeeldingen",
+  "search.searchCategory.value.it": "Informatietechnologie",
+  "search.searchCategory.value.map": "Kaart",
+  "search.searchCategory.value.music": "Muziek",
+  "search.searchCategory.value.news": "Nieuws",
+  "search.searchCategory.value.science": "Wetenschap",
+  "search.searchCategory.value.social_media": "Sociale media",
+  "search.searchCategory.value.videos": "Video's",
+  "search.searchEngine.placeholder": "Zoekmachine",
+  "search.searchEngine.title": "Zoekmachine:",
+  "search.searchResult": "Aantal zoekresultaten:",
+  "search.searchTimeRange.title": "Tijdspanne:",
+  "search.searchTimeRange.value.anytime": "Geen tijdslimiet",
+  "search.searchTimeRange.value.day": "Binnen een dag",
+  "search.searchTimeRange.value.month": "Binnen een maand",
+  "search.searchTimeRange.value.week": "Binnen een week",
+  "search.searchTimeRange.value.year": "Binnen een jaar",
+  "search.summary": "Samenvatting",
+  "search.summaryTooltip": "Samenvatting van de huidige inhoud",
+  "search.viewMoreResults": "Bekijk meer {{results}} resultaten",
+  "updateArgs.duplicateKeyError": "Veldsleutel moet uniek zijn",
+  "updateArgs.form.add": "Een item toevoegen",
+  "updateArgs.form.key": "Veldsleutel",
+  "updateArgs.form.value": "Veldwaarde",
+  "updateArgs.formValidationFailed": "Formuliervalidatie is mislukt, controleer het parameterformaat",
+  "updateArgs.keyRequired": "Veldsleutel mag niet leeg zijn",
+  "updateArgs.stringifyError": "Kan parameters niet serialiseren, controleer het parameterformaat"
 }

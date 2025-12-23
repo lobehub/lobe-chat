@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "Sil",
-      "edit": "Düzenle"
-    },
-    "defaultType": "Bağlam",
-    "deleteConfirm": "Bu bağlam hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-    "deleteTitle": "Bağlam Hafızasını Sil",
-    "description": "Açıklama",
-    "empty": "Henüz bağlam hafızası yok",
-    "source": "Kaynak"
-  },
-  "empty": {
-    "description": "Anıların çıkarılması aşamalı bir süreçtir. Daha fazla konu biriktirerek hafıza çıkarımını zenginleştirin, asistanla daha derinlemesine sohbetler yaparak değerli bilgilerin daha iyi yakalanıp saklanmasını sağlayın.",
-    "search": "Eşleşen hafıza bulunamadı",
-    "title": "Henüz hafıza yok"
-  },
-  "experience": {
-    "actions": {
-      "delete": "Sil",
-      "edit": "Düzenle"
-    },
-    "defaultType": "Deneyim",
-    "deleteConfirm": "Bu deneyim hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-    "deleteTitle": "Deneyim Hafızasını Sil",
-    "empty": "Henüz deneyim hafızası yok",
-    "keyLearning": "Temel Öğrenim",
-    "situation": "Durum",
-    "source": "Kaynak",
-    "steps": {
-      "action": "Eylem",
-      "result": "Sonuç",
-      "situation": "Durum",
-      "task": "Görev"
-    }
-  },
-  "filter": {
-    "search": "Hafıza anahtar kelimelerini veya açıklamaları ara...",
-    "sort": {
-      "createdAt": "Oluşturulma Zamanı",
-      "scoreConfidence": "Güven Skoru",
-      "scoreImpact": "Önem Derecesi",
-      "scorePriority": "Tercih Ağırlığı",
-      "scoreUrgency": "Aciliyet Skoru"
-    }
-  },
-  "identity": {
-    "empty": "Henüz kimlik bilgisi yok",
-    "filter": {
-      "search": "Rol, ilişki veya açıklama ara...",
-      "type": {
-        "all": "Tümü",
-        "demographic": "Demografik",
-        "personal": "Rol",
-        "professional": "Mesleki"
-      }
-    },
-    "list": {
-      "confirmDelete": "Silme işlemini onayla",
-      "deleteCancel": "İptal",
-      "deleteContent": "Bu kimlik bilgisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-      "deleteOk": "Sil",
-      "noResults": "Eşleşen kimlik bilgisi bulunamadı",
-      "updated": "Güncellendi"
-    },
-    "roleCloud": {
-      "collapse": "Daralt",
-      "expand": "Daha fazla göster"
-    },
-    "view": {
-      "list": "Liste",
-      "timeline": "Zaman çizelgesi"
-    }
-  },
+  "context.actions.delete": "Sil",
+  "context.actions.edit": "Düzenle",
+  "context.defaultType": "Bağlam",
+  "context.deleteConfirm": "Bu bağlam hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "context.deleteTitle": "Bağlam Hafızasını Sil",
+  "context.description": "Açıklama",
+  "context.empty": "Henüz bağlam hafızası yok",
+  "context.source": "Kaynak",
+  "empty.description": "Anıların çıkarılması aşamalı bir süreçtir. Daha fazla konu biriktirerek hafıza çıkarımını zenginleştirin, asistanla daha derinlemesine sohbetler yaparak değerli bilgilerin daha iyi yakalanıp saklanmasını sağlayın.",
+  "empty.search": "Eşleşen hafıza bulunamadı",
+  "empty.title": "Henüz hafıza yok",
+  "experience.actions.delete": "Sil",
+  "experience.actions.edit": "Düzenle",
+  "experience.defaultType": "Deneyim",
+  "experience.deleteConfirm": "Bu deneyim hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "experience.deleteTitle": "Deneyim Hafızasını Sil",
+  "experience.empty": "Henüz deneyim hafızası yok",
+  "experience.keyLearning": "Temel Öğrenim",
+  "experience.situation": "Durum",
+  "experience.source": "Kaynak",
+  "experience.steps.action": "Eylem",
+  "experience.steps.result": "Sonuç",
+  "experience.steps.situation": "Durum",
+  "experience.steps.task": "Görev",
+  "filter.search": "Hafıza anahtar kelimelerini veya açıklamaları ara...",
+  "filter.sort.createdAt": "Oluşturulma Zamanı",
+  "filter.sort.scoreConfidence": "Güven Skoru",
+  "filter.sort.scoreImpact": "Önem Derecesi",
+  "filter.sort.scorePriority": "Tercih Ağırlığı",
+  "filter.sort.scoreUrgency": "Aciliyet Skoru",
+  "identity.empty": "Henüz kimlik bilgisi yok",
+  "identity.filter.search": "Rol, ilişki veya açıklama ara...",
+  "identity.filter.type.all": "Tümü",
+  "identity.filter.type.demographic": "Demografik",
+  "identity.filter.type.personal": "Rol",
+  "identity.filter.type.professional": "Mesleki",
+  "identity.list.confirmDelete": "Silme işlemini onayla",
+  "identity.list.deleteCancel": "İptal",
+  "identity.list.deleteContent": "Bu kimlik bilgisini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "identity.list.deleteOk": "Sil",
+  "identity.list.noResults": "Eşleşen kimlik bilgisi bulunamadı",
+  "identity.list.updated": "Güncellendi",
+  "identity.roleCloud.collapse": "Daralt",
+  "identity.roleCloud.expand": "Daha fazla göster",
+  "identity.view.list": "Liste",
+  "identity.view.timeline": "Zaman çizelgesi",
   "loading": "Yükleniyor...",
-  "preference": {
-    "actions": {
-      "delete": "Sil",
-      "edit": "Düzenle"
-    },
-    "conclusionDirectives": "Sonuç Yönergeleri",
-    "defaultType": "Tercih",
-    "deleteConfirm": "Bu tercih hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
-    "deleteTitle": "Tercih Hafızasını Sil",
-    "empty": "Henüz tercih hafızası yok",
-    "source": "Kaynak",
-    "suggestions": "Asistanın gerçekleştirebileceği eylemler"
-  },
-  "tab": {
-    "contexts": "Bağlamlar",
-    "experiences": "Deneyimler",
-    "home": "Ana Sayfa",
-    "identities": "Kimlikler",
-    "preferences": "Tercihler",
-    "search": "Ara"
-  },
-  "viewMode": {
-    "masonry": "Mozaik",
-    "timeline": "Zaman Çizelgesi"
-  }
+  "preference.actions.delete": "Sil",
+  "preference.actions.edit": "Düzenle",
+  "preference.conclusionDirectives": "Sonuç Yönergeleri",
+  "preference.defaultType": "Tercih",
+  "preference.deleteConfirm": "Bu tercih hafızasını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+  "preference.deleteTitle": "Tercih Hafızasını Sil",
+  "preference.empty": "Henüz tercih hafızası yok",
+  "preference.source": "Kaynak",
+  "preference.suggestions": "Asistanın gerçekleştirebileceği eylemler",
+  "tab.contexts": "Bağlamlar",
+  "tab.experiences": "Deneyimler",
+  "tab.home": "Ana Sayfa",
+  "tab.identities": "Kimlikler",
+  "tab.preferences": "Tercihler",
+  "tab.search": "Ara",
+  "viewMode.masonry": "Mozaik",
+  "viewMode.timeline": "Zaman Çizelgesi"
 }

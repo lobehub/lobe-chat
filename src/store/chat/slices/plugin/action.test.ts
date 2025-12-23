@@ -6,6 +6,7 @@ import {
 import { ToolNameResolver } from '@lobechat/context-engine';
 import { ChatToolPayload, MessageToolCall, UIChatMessage } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
+import i18n from 'i18next';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { chatService } from '@/services/chat';
@@ -66,7 +67,7 @@ describe('ChatPluginAction', () => {
           messages: [
             {
               role: 'assistant',
-              content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
+              content: i18n.t('prompts.summaryExpert', { ns: 'chat' }),
             },
             expect.objectContaining({
               id: toolMessage.id,

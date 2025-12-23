@@ -1,91 +1,43 @@
 {
-  "addDataset": {
-    "confirm": "إنشاء جديد",
-    "description": {
-      "placeholder": "وصف مجموعة البيانات (اختياري)"
-    },
-    "name": {
-      "placeholder": "اسم مجموعة البيانات",
-      "required": "يرجى إدخال اسم مجموعة البيانات"
-    },
-    "title": "إضافة مجموعة بيانات"
-  },
-  "dataset": {
-    "addNewButton": "إنشاء مجموعة بيانات",
-    "emptyGuide": "مجموعة البيانات الحالية فارغة، يرجى إنشاء مجموعة بيانات.",
-    "list": {
-      "table": {
-        "actions": {
-          "importData": "استيراد البيانات"
-        },
-        "columns": {
-          "actions": "الإجراءات",
-          "ideal": {
-            "title": "الإجابة المثالية"
-          },
-          "question": {
-            "title": "السؤال"
-          },
-          "referenceFiles": {
-            "title": "ملفات مرجعية"
-          }
-        },
-        "notSelected": "يرجى اختيار مجموعة بيانات من اليسار",
-        "title": "تفاصيل مجموعة البيانات"
-      },
-      "title": "مجموعة البيانات"
-    }
-  },
-  "evaluation": {
-    "addEvaluation": {
-      "confirm": "إنشاء جديد",
-      "datasetId": {
-        "placeholder": "يرجى اختيار مجموعة بيانات التقييم الخاصة بك",
-        "required": "يرجى اختيار مجموعة بيانات التقييم"
-      },
-      "description": {
-        "placeholder": "وصف مهمة التقييم (اختياري)"
-      },
-      "name": {
-        "placeholder": "اسم مهمة التقييم",
-        "required": "يرجى إدخال اسم مهمة التقييم"
-      },
-      "title": "إضافة مهمة تقييم"
-    },
-    "addNewButton": "إنشاء تقييم",
-    "emptyGuide": "مهمة التقييم الحالية فارغة، ابدأ بإنشاء تقييم.",
-    "table": {
-      "columns": {
-        "actions": {
-          "checkStatus": "تحقق من الحالة",
-          "confirmDelete": "هل تريد حذف هذه المهمة من التقييم؟",
-          "confirmRun": "هل تريد بدء التشغيل؟ بعد بدء التشغيل، سيتم تنفيذ مهمة التقييم في الخلفية بشكل غير متزامن، وإغلاق الصفحة لن يؤثر على تنفيذ المهمة غير المتزامنة.",
-          "downloadRecords": "تنزيل السجلات",
-          "retry": "إعادة المحاولة",
-          "run": "تشغيل",
-          "title": "الإجراءات"
-        },
-        "datasetId": {
-          "title": "مجموعة البيانات"
-        },
-        "name": {
-          "title": "اسم مهمة التقييم"
-        },
-        "records": {
-          "title": "عدد سجلات التقييم"
-        },
-        "referenceFiles": {
-          "title": "ملفات مرجعية"
-        },
-        "status": {
-          "error": "حدث خطأ أثناء التنفيذ",
-          "pending": "في انتظار التشغيل",
-          "processing": "جارٍ التشغيل",
-          "success": "تم التنفيذ بنجاح",
-          "title": "الحالة"
-        }
-      },
-      "title": "قائمة مهام التقييم"
-    }
-  }
+  "addDataset.confirm": "إنشاء جديد",
+  "addDataset.description.placeholder": "وصف مجموعة البيانات (اختياري)",
+  "addDataset.name.placeholder": "اسم مجموعة البيانات",
+  "addDataset.name.required": "يرجى إدخال اسم مجموعة البيانات",
+  "addDataset.title": "إضافة مجموعة بيانات",
+  "dataset.addNewButton": "إنشاء مجموعة بيانات",
+  "dataset.emptyGuide": "مجموعة البيانات الحالية فارغة، يرجى إنشاء مجموعة بيانات.",
+  "dataset.list.table.actions.importData": "استيراد البيانات",
+  "dataset.list.table.columns.actions": "الإجراءات",
+  "dataset.list.table.columns.ideal.title": "الإجابة المثالية",
+  "dataset.list.table.columns.question.title": "السؤال",
+  "dataset.list.table.columns.referenceFiles.title": "ملفات مرجعية",
+  "dataset.list.table.notSelected": "يرجى اختيار مجموعة بيانات من اليسار",
+  "dataset.list.table.title": "تفاصيل مجموعة البيانات",
+  "dataset.list.title": "مجموعة البيانات",
+  "evaluation.addEvaluation.confirm": "إنشاء جديد",
+  "evaluation.addEvaluation.datasetId.placeholder": "يرجى اختيار مجموعة بيانات التقييم الخاصة بك",
+  "evaluation.addEvaluation.datasetId.required": "يرجى اختيار مجموعة بيانات التقييم",
+  "evaluation.addEvaluation.description.placeholder": "وصف مهمة التقييم (اختياري)",
+  "evaluation.addEvaluation.name.placeholder": "اسم مهمة التقييم",
+  "evaluation.addEvaluation.name.required": "يرجى إدخال اسم مهمة التقييم",
+  "evaluation.addEvaluation.title": "إضافة مهمة تقييم",
+  "evaluation.addNewButton": "إنشاء تقييم",
+  "evaluation.emptyGuide": "مهمة التقييم الحالية فارغة، ابدأ بإنشاء تقييم.",
+  "evaluation.table.columns.actions.checkStatus": "تحقق من الحالة",
+  "evaluation.table.columns.actions.confirmDelete": "هل تريد حذف هذه المهمة من التقييم؟",
+  "evaluation.table.columns.actions.confirmRun": "هل تريد بدء التشغيل؟ بعد بدء التشغيل، سيتم تنفيذ مهمة التقييم في الخلفية بشكل غير متزامن، وإغلاق الصفحة لن يؤثر على تنفيذ المهمة غير المتزامنة.",
+  "evaluation.table.columns.actions.downloadRecords": "تنزيل السجلات",
+  "evaluation.table.columns.actions.retry": "إعادة المحاولة",
+  "evaluation.table.columns.actions.run": "تشغيل",
+  "evaluation.table.columns.actions.title": "الإجراءات",
+  "evaluation.table.columns.datasetId.title": "مجموعة البيانات",
+  "evaluation.table.columns.name.title": "اسم مهمة التقييم",
+  "evaluation.table.columns.records.title": "عدد سجلات التقييم",
+  "evaluation.table.columns.referenceFiles.title": "ملفات مرجعية",
+  "evaluation.table.columns.status.error": "حدث خطأ أثناء التنفيذ",
+  "evaluation.table.columns.status.pending": "في انتظار التشغيل",
+  "evaluation.table.columns.status.processing": "جارٍ التشغيل",
+  "evaluation.table.columns.status.success": "تم التنفيذ بنجاح",
+  "evaluation.table.columns.status.title": "الحالة",
+  "evaluation.table.title": "قائمة مهام التقييم"
 }

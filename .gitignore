@@ -113,7 +113,6 @@ CLAUDE.local.md
 *.ppt*
 *.doc*
 *.xls*
-
 e2e/reports
-
 out
+i18n-unused-keys-report.json

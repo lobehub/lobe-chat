@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "Excluir",
-      "edit": "Editar"
-    },
-    "defaultType": "Contexto",
-    "deleteConfirm": "Tem certeza de que deseja excluir esta memória de contexto? Esta ação não pode ser desfeita.",
-    "deleteTitle": "Excluir Memória de Contexto",
-    "description": "Descrição",
-    "empty": "Nenhuma memória de contexto disponível",
-    "source": "Fonte"
-  },
-  "empty": {
-    "description": "A recuperação de memórias é um processo gradual. Acumule mais tópicos para enriquecer o conteúdo extraído da memória e tente ter conversas mais profundas com o assistente para capturar e armazenar melhor informações valiosas.",
-    "search": "Nenhuma memória correspondente encontrada",
-    "title": "Nenhuma memória disponível"
-  },
-  "experience": {
-    "actions": {
-      "delete": "Excluir",
-      "edit": "Editar"
-    },
-    "defaultType": "Experiência",
-    "deleteConfirm": "Tem certeza de que deseja excluir esta memória de experiência? Esta ação não pode ser desfeita.",
-    "deleteTitle": "Excluir Memória de Experiência",
-    "empty": "Nenhuma memória de experiência disponível",
-    "keyLearning": "Aprendizado principal",
-    "situation": "Contexto",
-    "source": "Fonte",
-    "steps": {
-      "action": "Ação",
-      "result": "Resultado",
-      "situation": "Situação",
-      "task": "Tarefa"
-    }
-  },
-  "filter": {
-    "search": "Pesquisar palavras-chave ou descrições da memória...",
-    "sort": {
-      "createdAt": "Data de criação",
-      "scoreConfidence": "Confiança",
-      "scoreImpact": "Importância",
-      "scorePriority": "Peso da preferência",
-      "scoreUrgency": "Urgência"
-    }
-  },
-  "identity": {
-    "empty": "Nenhuma memória de identidade disponível",
-    "filter": {
-      "search": "Pesquisar por papel, relação ou descrição...",
-      "type": {
-        "all": "Todos",
-        "demographic": "Atributo",
-        "personal": "Papel",
-        "professional": "Profissional"
-      }
-    },
-    "list": {
-      "confirmDelete": "Confirmar exclusão",
-      "deleteCancel": "Cancelar",
-      "deleteContent": "Tem certeza de que deseja excluir esta memória de identidade? Esta ação não pode ser desfeita.",
-      "deleteOk": "Excluir",
-      "noResults": "Nenhuma memória de identidade correspondente encontrada",
-      "updated": "Atualizado"
-    },
-    "roleCloud": {
-      "collapse": "Recolher",
-      "expand": "Mostrar mais"
-    },
-    "view": {
-      "list": "Lista",
-      "timeline": "Linha do tempo"
-    }
-  },
+  "context.actions.delete": "Excluir",
+  "context.actions.edit": "Editar",
+  "context.defaultType": "Contexto",
+  "context.deleteConfirm": "Tem certeza de que deseja excluir esta memória de contexto? Esta ação não pode ser desfeita.",
+  "context.deleteTitle": "Excluir Memória de Contexto",
+  "context.description": "Descrição",
+  "context.empty": "Nenhuma memória de contexto disponível",
+  "context.source": "Fonte",
+  "empty.description": "A recuperação de memórias é um processo gradual. Acumule mais tópicos para enriquecer o conteúdo extraído da memória e tente ter conversas mais profundas com o assistente para capturar e armazenar melhor informações valiosas.",
+  "empty.search": "Nenhuma memória correspondente encontrada",
+  "empty.title": "Nenhuma memória disponível",
+  "experience.actions.delete": "Excluir",
+  "experience.actions.edit": "Editar",
+  "experience.defaultType": "Experiência",
+  "experience.deleteConfirm": "Tem certeza de que deseja excluir esta memória de experiência? Esta ação não pode ser desfeita.",
+  "experience.deleteTitle": "Excluir Memória de Experiência",
+  "experience.empty": "Nenhuma memória de experiência disponível",
+  "experience.keyLearning": "Aprendizado principal",
+  "experience.situation": "Contexto",
+  "experience.source": "Fonte",
+  "experience.steps.action": "Ação",
+  "experience.steps.result": "Resultado",
+  "experience.steps.situation": "Situação",
+  "experience.steps.task": "Tarefa",
+  "filter.search": "Pesquisar palavras-chave ou descrições da memória...",
+  "filter.sort.createdAt": "Data de criação",
+  "filter.sort.scoreConfidence": "Confiança",
+  "filter.sort.scoreImpact": "Importância",
+  "filter.sort.scorePriority": "Peso da preferência",
+  "filter.sort.scoreUrgency": "Urgência",
+  "identity.empty": "Nenhuma memória de identidade disponível",
+  "identity.filter.search": "Pesquisar por papel, relação ou descrição...",
+  "identity.filter.type.all": "Todos",
+  "identity.filter.type.demographic": "Atributo",
+  "identity.filter.type.personal": "Papel",
+  "identity.filter.type.professional": "Profissional",
+  "identity.list.confirmDelete": "Confirmar exclusão",
+  "identity.list.deleteCancel": "Cancelar",
+  "identity.list.deleteContent": "Tem certeza de que deseja excluir esta memória de identidade? Esta ação não pode ser desfeita.",
+  "identity.list.deleteOk": "Excluir",
+  "identity.list.noResults": "Nenhuma memória de identidade correspondente encontrada",
+  "identity.list.updated": "Atualizado",
+  "identity.roleCloud.collapse": "Recolher",
+  "identity.roleCloud.expand": "Mostrar mais",
+  "identity.view.list": "Lista",
+  "identity.view.timeline": "Linha do tempo",
   "loading": "Carregando...",
-  "preference": {
-    "actions": {
-      "delete": "Excluir",
-      "edit": "Editar"
-    },
-    "conclusionDirectives": "Diretivas de conclusão",
-    "defaultType": "Preferência",
-    "deleteConfirm": "Tem certeza de que deseja excluir esta memória de preferência? Esta ação não pode ser desfeita.",
-    "deleteTitle": "Excluir Memória de Preferência",
-    "empty": "Nenhuma memória de preferência disponível",
-    "source": "Fonte",
-    "suggestions": "Ações que o assistente pode realizar"
-  },
-  "tab": {
-    "contexts": "Contextos",
-    "experiences": "Experiências",
-    "home": "Início",
-    "identities": "Identidades",
-    "preferences": "Preferências",
-    "search": "Pesquisar"
-  },
-  "viewMode": {
-    "masonry": "Grade",
-    "timeline": "Linha do tempo"
-  }
+  "preference.actions.delete": "Excluir",
+  "preference.actions.edit": "Editar",
+  "preference.conclusionDirectives": "Diretivas de conclusão",
+  "preference.defaultType": "Preferência",
+  "preference.deleteConfirm": "Tem certeza de que deseja excluir esta memória de preferência? Esta ação não pode ser desfeita.",
+  "preference.deleteTitle": "Excluir Memória de Preferência",
+  "preference.empty": "Nenhuma memória de preferência disponível",
+  "preference.source": "Fonte",
+  "preference.suggestions": "Ações que o assistente pode realizar",
+  "tab.contexts": "Contextos",
+  "tab.experiences": "Experiências",
+  "tab.home": "Início",
+  "tab.identities": "Identidades",
+  "tab.preferences": "Preferências",
+  "tab.search": "Pesquisar",
+  "viewMode.masonry": "Grade",
+  "viewMode.timeline": "Linha do tempo"
 }

@@ -1,45 +1,23 @@
 {
-  "dbV1": {
-    "action": {
-      "clearDB": "Lokale Daten löschen",
-      "downloadBackup": "Datenbackup herunterladen",
-      "reUpgrade": "Erneut aktualisieren",
-      "start": "Starten",
-      "upgrade": "Upgrade durchführen"
-    },
-    "clear": {
-      "confirm": "Lokale Daten werden gelöscht (Globale Einstellungen bleiben unberührt). Bitte bestätigen Sie, dass Sie ein Datenbackup heruntergeladen haben."
-    },
-    "description": "In der neuen Version hat die Datenspeicherung von {{appName}} einen riesigen Sprung gemacht. Daher müssen wir die alten Daten aktualisieren, um dir ein besseres Nutzungserlebnis zu bieten.",
-    "features": {
-      "capability": {
-        "desc": "Basierend auf der IndexedDB-Technologie, die genug Platz für alle deine Lebensnachrichten bietet.",
-        "title": "Großer Speicher"
-      },
-      "performance": {
-        "desc": "Millionen von Nachrichten werden automatisch indiziert, Abfragen reagieren in Millisekunden.",
-        "title": "Hohe Leistung"
-      },
-      "use": {
-        "desc": "Unterstützt die Suche nach Titel, Beschreibung, Tags, Nachrichteninhalt und sogar übersetzten Texten, wodurch die Effizienz der täglichen Suche erheblich gesteigert wird.",
-        "title": "Benutzerfreundlicher"
-      }
-    },
-    "title": "Datenentwicklung von {{appName}}",
-    "upgrade": {
-      "error": {
-        "subTitle": "Es tut uns leid, während des Datenbank-Upgrades ist ein Fehler aufgetreten. Bitte versuche die folgenden Lösungen: A. Leere die lokalen Daten und importiere die Sicherungsdaten erneut; B. Klicke auf die Schaltfläche „Erneut upgraden“. <br><br> Wenn der Fehler weiterhin besteht, bitte <1>ein Problem melden</1>, wir werden dir umgehend helfen.",
-        "title": "Datenbank-Upgrade fehlgeschlagen"
-      },
-      "success": {
-        "subTitle": "Die Datenbank von {{appName}} wurde auf die neueste Version aktualisiert, beginne sofort mit dem Erlebnis.",
-        "title": "Datenbank-Upgrade erfolgreich"
-      }
-    },
-    "upgradeTip": "Das Upgrade dauert etwa 10 bis 20 Sekunden. Bitte schließe {{appName}} während des Upgrade-Vorgangs nicht."
-  },
-  "migrateError": {
-    "missVersion": "Die importierten Daten enthalten keine Versionsnummer. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.",
-    "noMigration": "Es wurde kein Migrationsplan für die aktuelle Version gefunden. Bitte überprüfen Sie die Versionsnummer und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, reichen Sie bitte eine Problemmeldung ein."
-  }
+  "dbV1.action.clearDB": "Lokale Daten löschen",
+  "dbV1.action.downloadBackup": "Datenbackup herunterladen",
+  "dbV1.action.reUpgrade": "Erneut aktualisieren",
+  "dbV1.action.start": "Starten",
+  "dbV1.action.upgrade": "Upgrade durchführen",
+  "dbV1.clear.confirm": "Lokale Daten werden gelöscht (Globale Einstellungen bleiben unberührt). Bitte bestätigen Sie, dass Sie ein Datenbackup heruntergeladen haben.",
+  "dbV1.description": "In der neuen Version hat die Datenspeicherung von {{appName}} einen riesigen Sprung gemacht. Daher müssen wir die alten Daten aktualisieren, um dir ein besseres Nutzungserlebnis zu bieten.",
+  "dbV1.features.capability.desc": "Basierend auf der IndexedDB-Technologie, die genug Platz für alle deine Lebensnachrichten bietet.",
+  "dbV1.features.capability.title": "Großer Speicher",
+  "dbV1.features.performance.desc": "Millionen von Nachrichten werden automatisch indiziert, Abfragen reagieren in Millisekunden.",
+  "dbV1.features.performance.title": "Hohe Leistung",
+  "dbV1.features.use.desc": "Unterstützt die Suche nach Titel, Beschreibung, Tags, Nachrichteninhalt und sogar übersetzten Texten, wodurch die Effizienz der täglichen Suche erheblich gesteigert wird.",
+  "dbV1.features.use.title": "Benutzerfreundlicher",
+  "dbV1.title": "Datenentwicklung von {{appName}}",
+  "dbV1.upgrade.error.subTitle": "Es tut uns leid, während des Datenbank-Upgrades ist ein Fehler aufgetreten. Bitte versuche die folgenden Lösungen: A. Leere die lokalen Daten und importiere die Sicherungsdaten erneut; B. Klicke auf die Schaltfläche „Erneut upgraden“. <br><br> Wenn der Fehler weiterhin besteht, bitte <1>ein Problem melden</1>, wir werden dir umgehend helfen.",
+  "dbV1.upgrade.error.title": "Datenbank-Upgrade fehlgeschlagen",
+  "dbV1.upgrade.success.subTitle": "Die Datenbank von {{appName}} wurde auf die neueste Version aktualisiert, beginne sofort mit dem Erlebnis.",
+  "dbV1.upgrade.success.title": "Datenbank-Upgrade erfolgreich",
+  "dbV1.upgradeTip": "Das Upgrade dauert etwa 10 bis 20 Sekunden. Bitte schließe {{appName}} während des Upgrade-Vorgangs nicht.",
+  "migrateError.missVersion": "Die importierten Daten enthalten keine Versionsnummer. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.",
+  "migrateError.noMigration": "Es wurde kein Migrationsplan für die aktuelle Version gefunden. Bitte überprüfen Sie die Versionsnummer und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, reichen Sie bitte eine Problemmeldung ein."
 }

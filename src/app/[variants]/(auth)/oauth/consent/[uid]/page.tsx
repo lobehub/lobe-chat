@@ -25,8 +25,9 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
       return (
         <ConsentClientError
           error={{
-            message: `不支持的交互类型: ${details.prompt.name}`,
-            title: '不支持的交互类型',
+            messageKey: 'consent.error.unsupportedInteraction.message',
+            titleKey: 'consent.error.unsupportedInteraction.title',
+            values: { promptName: details.prompt.name },
           }}
         />
       );
@@ -59,17 +60,28 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
   } catch (error) {
     console.error('Error handling OIDC interaction:', error);
     // 确保错误处理能正确显示
-    const errorMessage = error instanceof Error ? error.message : '获取授权详情时发生未知错误';
+    const errorMessage = error instanceof Error ? error.message : undefined;
     // 检查是否是 'interaction session not found' 错误，可以给用户更友好的提示
-    if (errorMessage.includes('interaction session not found')) {
+    if (errorMessage?.includes('interaction session not found')) {
       return (
         <ConsentClientError
-          error={{ message: '授权会话已过期或无效，请重新发起授权流程。', title: '授权会话无效' }}
+          error={{
+            messageKey: 'consent.error.sessionInvalid.message',
+            titleKey: 'consent.error.sessionInvalid.title',
+          }}
         />
       );
     }
 
-    return <ConsentClientError error={{ message: errorMessage, title: '发生错误' }} />;
+    return (
+      <ConsentClientError
+        error={{
+          message: errorMessage,
+          messageKey: errorMessage ? undefined : 'consent.error.unknown.message',
+          titleKey: 'consent.error.title',
+        }}
+      />
+    );
   }
 };
 

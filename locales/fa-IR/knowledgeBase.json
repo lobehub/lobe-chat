@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "فایل با موفقیت اضافه شد، <1>همین حالا مشاهده کنید</1>",
-    "confirm": "اضافه کردن",
-    "error": "افزودن فایل به پایگاه دانش ناموفق بود",
-    "id": {
-      "placeholder": "لطفاً پایگاه دانش مورد نظر را انتخاب کنید",
-      "required": "لطفاً پایگاه دانش را انتخاب کنید",
-      "title": "پایگاه دانش مقصد"
-    },
-    "title": "افزودن به پایگاه دانش",
-    "totalFiles": "{{count}} فایل انتخاب شده است"
-  },
-  "createNew": {
-    "confirm": "ایجاد جدید",
-    "description": {
-      "placeholder": "توضیحی درباره پایگاه دانش (اختیاری)"
-    },
-    "formTitle": "اطلاعات پایه",
-    "name": {
-      "placeholder": "نام پایگاه دانش",
-      "required": "لطفاً نام پایگاه دانش را وارد کنید"
-    },
-    "title": "ایجاد پایگاه دانش جدید"
-  },
-  "tab": {
-    "evals": "ارزیابی‌ها",
-    "files": "اسناد",
-    "settings": "تنظیمات",
-    "testing": "آزمون فراخوانی"
-  },
+  "addToKnowledgeBase.addSuccess": "فایل با موفقیت اضافه شد، <1>همین حالا مشاهده کنید</1>",
+  "addToKnowledgeBase.confirm": "اضافه کردن",
+  "addToKnowledgeBase.error": "افزودن فایل به پایگاه دانش ناموفق بود",
+  "addToKnowledgeBase.id.placeholder": "لطفاً پایگاه دانش مورد نظر را انتخاب کنید",
+  "addToKnowledgeBase.id.required": "لطفاً پایگاه دانش را انتخاب کنید",
+  "addToKnowledgeBase.id.title": "پایگاه دانش مقصد",
+  "addToKnowledgeBase.title": "افزودن به پایگاه دانش",
+  "addToKnowledgeBase.totalFiles": "{{count}} فایل انتخاب شده است",
+  "createNew.confirm": "ایجاد جدید",
+  "createNew.description.placeholder": "توضیحی درباره پایگاه دانش (اختیاری)",
+  "createNew.formTitle": "اطلاعات پایه",
+  "createNew.name.placeholder": "نام پایگاه دانش",
+  "createNew.name.required": "لطفاً نام پایگاه دانش را وارد کنید",
+  "createNew.title": "ایجاد پایگاه دانش جدید",
+  "tab.evals": "ارزیابی‌ها",
+  "tab.files": "اسناد",
+  "tab.settings": "تنظیمات",
+  "tab.testing": "آزمون فراخوانی",
   "title": "پایگاه دانش"
 }

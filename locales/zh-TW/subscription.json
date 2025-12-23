@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "企業版"
-      },
-      "free": {
-        "title": "免費版"
-      },
-      "hobby": {
-        "title": "自助版"
-      },
-      "premium": {
-        "title": "進階版"
-      },
-      "starter": {
-        "title": "基礎版"
-      },
-      "ultimate": {
-        "title": "專業版"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "企業版",
+  "plans.plan.free.title": "免費版",
+  "plans.plan.hobby.title": "自助版",
+  "plans.plan.premium.title": "進階版",
+  "plans.plan.starter.title": "基礎版",
+  "plans.plan.ultimate.title": "專業版"
 }

@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "Phiên bản doanh nghiệp"
-      },
-      "free": {
-        "title": "Phiên bản miễn phí"
-      },
-      "hobby": {
-        "title": "Phiên bản tự phục vụ"
-      },
-      "premium": {
-        "title": "Phiên bản Nâng cao"
-      },
-      "starter": {
-        "title": "Phiên bản cơ bản"
-      },
-      "ultimate": {
-        "title": "Phiên bản Chuyên nghiệp"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "Phiên bản doanh nghiệp",
+  "plans.plan.free.title": "Phiên bản miễn phí",
+  "plans.plan.hobby.title": "Phiên bản tự phục vụ",
+  "plans.plan.premium.title": "Phiên bản Nâng cao",
+  "plans.plan.starter.title": "Phiên bản cơ bản",
+  "plans.plan.ultimate.title": "Phiên bản Chuyên nghiệp"
 }

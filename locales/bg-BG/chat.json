@@ -1,44 +1,34 @@
 {
-  "ModelSwitch": {
-    "title": "Модел"
-  },
+  "ModelSwitch.title": "Модел",
   "active": "Активен",
-  "agentBuilder": {
-    "installPlugin": {
-      "authRequired": "Облачното MCP разширение изисква удостоверяване",
-      "cancel": "Отказ",
-      "clickApproveToConnect": "Щракнете върху „Одобряване“, за да се свържете и упълномощите тази интеграция",
-      "clickApproveToInstall": "Щракнете върху „Одобряване“, за да инсталирате този плъгин",
-      "connectedAndEnabled": "Свързано и активирано",
-      "connectionFailed": "Свързването не бе успешно",
-      "installFailed": "Инсталацията не бе успешна",
-      "installPlugin": "Инсталиране на разширение",
-      "installToEnable": "Инсталирайте това разширение, за да активирате помощника",
-      "installedAndEnabled": "Инсталирано и активирано",
-      "requiresAuth": "Изисква упълномощаване, щракнете върху „Одобряване“, за да се свържете",
-      "retry": "Опитай отново"
-    },
-    "title": "Експерт по създаване на асистенти",
-    "welcome": "Разкажи ми за своята ситуация и нужди – професионалният ти партньор е на път!\n\nНезависимо дали става дума за писане, програмиране или анализ на данни, мога да ти помогна да създадеш персонален асистент!"
-  },
+  "agentBuilder.installPlugin.authRequired": "Облачното MCP разширение изисква удостоверяване",
+  "agentBuilder.installPlugin.cancel": "Отказ",
+  "agentBuilder.installPlugin.clickApproveToConnect": "Щракнете върху „Одобряване“, за да се свържете и упълномощите тази интеграция",
+  "agentBuilder.installPlugin.clickApproveToInstall": "Щракнете върху „Одобряване“, за да инсталирате този плъгин",
+  "agentBuilder.installPlugin.connectedAndEnabled": "Свързано и активирано",
+  "agentBuilder.installPlugin.connectionFailed": "Свързването не бе успешно",
+  "agentBuilder.installPlugin.installFailed": "Инсталацията не бе успешна",
+  "agentBuilder.installPlugin.installPlugin": "Инсталиране на разширение",
+  "agentBuilder.installPlugin.installToEnable": "Инсталирайте това разширение, за да активирате помощника",
+  "agentBuilder.installPlugin.installedAndEnabled": "Инсталирано и активирано",
+  "agentBuilder.installPlugin.requiresAuth": "Изисква упълномощаване, щракнете върху „Одобряване“, за да се свържете",
+  "agentBuilder.installPlugin.retry": "Опитай отново",
+  "agentBuilder.title": "Експерт по създаване на асистенти",
+  "agentBuilder.welcome": "Разкажи ми за своята ситуация и нужди – професионалният ти партньор е на път!\n\nНезависимо дали става дума за писане, програмиране или анализ на данни, мога да ти помогна да създадеш персонален асистент!",
   "agentDefaultMessage": "Здравейте, аз съм **{{name}}**, можете да започнете разговор с мен веднага или да отидете на [Настройки на асистента]({{url}}), за да попълните информацията ми.",
   "agentDefaultMessageWithSystemRole": "Здравейте, аз съм **{{name}}**. Как мога да ви помогна?",
   "agentDefaultMessageWithoutEdit": "Здравейте, аз съм **{{name}}**. Как мога да ви помогна?",
   "agents": "Асистент",
-  "artifact": {
-    "generating": "Генериране",
-    "inThread": "Не можете да видите в подтемата, моля, превключете към основната дискусия.",
-    "thinking": "В процес на мислене",
-    "thought": "Процес на мислене",
-    "unknownTitle": "Неназован артефакт"
-  },
+  "artifact.generating": "Генериране",
+  "artifact.inThread": "Не можете да видите в подтемата, моля, превключете към основната дискусия.",
+  "artifact.thinking": "В процес на мислене",
+  "artifact.thought": "Процес на мислене",
+  "artifact.unknownTitle": "Неназован артефакт",
   "availableAgents": "Налични асистенти",
   "backToBottom": "Върни се в началото",
   "builtinCopilot": "Вграден Copilot",
-  "chatList": {
-    "expandMessage": "Разгъни съобщението",
-    "longMessageDetail": "Вижте детайлите"
-  },
+  "chatList.expandMessage": "Разгъни съобщението",
+  "chatList.longMessageDetail": "Вижте детайлите",
   "clearCurrentMessages": "Изчисти съобщенията от текущата сесия",
   "confirmClearCurrentMessages": "На път си да изчистиш съобщенията от текущата сесия. След като бъдат изчистени, те не могат да бъдат възстановени. Моля, потвърди действието си.",
   "confirmRemoveChatGroupItemAlert": "Тази група ще бъде изтрита, но членовете на екипа няма да бъдат засегнати. Моля, потвърдете действието си.",
@@ -50,227 +40,149 @@
   "defaultGroupChat": "Група",
   "defaultList": "Списък по подразбиране",
   "defaultSession": "Агент по подразбиране",
-  "dm": {
-    "placeholder": "Вашите лични съобщения с {{agentTitle}} ще се показват тук.",
-    "tooltip": "Изпрати лично съобщение",
-    "visibleTo": "Видимо само за {{target}}",
-    "you": "ти"
-  },
-  "duplicateSession": {
-    "loading": "Копиране...",
-    "success": "Копирането е успешно",
-    "title": "{{title}} Копие"
-  },
+  "dm.placeholder": "Вашите лични съобщения с {{agentTitle}} ще се показват тук.",
+  "dm.tooltip": "Изпрати лично съобщение",
+  "dm.visibleTo": "Видимо само за {{target}}",
+  "dm.you": "ти",
+  "duplicateSession.loading": "Копиране...",
+  "duplicateSession.success": "Копирането е успешно",
+  "duplicateSession.title": "{{title}} Копие",
   "duplicateTitle": "{{title}} Копие",
   "emptyAgent": "Няма наличен асистент",
   "emptyAgentAction": "Създаване на асистент",
-  "extendParams": {
-    "disableContextCaching": {
-      "desc": "Разходите за генериране на единичен разговор могат да бъдат намалени с до 90%, а скоростта на отговорите да се увеличи 4 пъти (<1>Научете повече</1>). При активиране автоматично ще се деактивира ограничението на броя на историческите съобщения",
-      "title": "Активиране на кеширане на контекста"
-    },
-    "enableReasoning": {
-      "desc": "Ограничения на механизма Claude Thinking (<1>Научете повече</1>), при активиране автоматично ще се деактивира ограничението на броя на историческите съобщения",
-      "title": "Активиране на дълбочинно мислене"
-    },
-    "imageAspectRatio": {
-      "title": "Съотношение на ширина и височина на изображението"
-    },
-    "imageResolution": {
-      "title": "Разделителна способност на изображението"
-    },
-    "reasoningBudgetToken": {
-      "title": "Токени за разходи при мислене"
-    },
-    "reasoningEffort": {
-      "title": "Интензитет на разсъждение"
-    },
-    "textVerbosity": {
-      "title": "Ниво на подробност на изходния текст"
-    },
-    "thinking": {
-      "title": "Превключвател за дълбоко мислене"
-    },
-    "thinkingLevel": {
-      "title": "Ниво на мислене"
-    },
-    "title": "Разширени функции на модела",
-    "urlContext": {
-      "desc": "Когато е включено, автоматично ще се анализират уеб връзки, за да се получи реалното съдържание на уеб страницата",
-      "title": "Извличане на съдържание от уеб връзки"
-    }
-  },
-  "group": {
-    "desc": "Сътрудничете с няколко асистента с изкуствен интелект в споделено пространство за разговор.",
-    "memberTooltip": "В групата има {{count}} членове",
-    "orchestratorThinking": "Водещият мисли...",
-    "removeMember": "Премахване на член",
-    "title": "Група"
-  },
+  "extendParams.disableContextCaching.desc": "Разходите за генериране на единичен разговор могат да бъдат намалени с до 90%, а скоростта на отговорите да се увеличи 4 пъти (<1>Научете повече</1>). При активиране автоматично ще се деактивира ограничението на броя на историческите съобщения",
+  "extendParams.disableContextCaching.title": "Активиране на кеширане на контекста",
+  "extendParams.enableReasoning.desc": "Ограничения на механизма Claude Thinking (<1>Научете повече</1>), при активиране автоматично ще се деактивира ограничението на броя на историческите съобщения",
+  "extendParams.enableReasoning.title": "Активиране на дълбочинно мислене",
+  "extendParams.imageAspectRatio.title": "Съотношение на ширина и височина на изображението",
+  "extendParams.imageResolution.title": "Разделителна способност на изображението",
+  "extendParams.reasoningBudgetToken.title": "Токени за разходи при мислене",
+  "extendParams.reasoningEffort.title": "Интензитет на разсъждение",
+  "extendParams.textVerbosity.title": "Ниво на подробност на изходния текст",
+  "extendParams.thinking.title": "Превключвател за дълбоко мислене",
+  "extendParams.thinkingLevel.title": "Ниво на мислене",
+  "extendParams.title": "Разширени функции на модела",
+  "extendParams.urlContext.desc": "Когато е включено, автоматично ще се анализират уеб връзки, за да се получи реалното съдържание на уеб страницата",
+  "extendParams.urlContext.title": "Извличане на съдържание от уеб връзки",
+  "group.desc": "Сътрудничете с няколко асистента с изкуствен интелект в споделено пространство за разговор.",
+  "group.memberTooltip": "В групата има {{count}} членове",
+  "group.orchestratorThinking": "Водещият мисли...",
+  "group.removeMember": "Премахване на член",
+  "group.title": "Група",
   "groupDescription": "Описание на екипа",
-  "groupSidebar": {
-    "agentProfile": {
-      "chat": "Чат",
-      "model": "Модел"
-    },
-    "members": {
-      "addMember": "Добавяне на член",
-      "enableOrchestrator": "Активирай модератор",
-      "memberSettings": "Настройки на член",
-      "orchestrator": "Водещ",
-      "orchestratorThinking": "Водещият мисли...",
-      "removeMember": "Премахване на член",
-      "stopOrchestrator": "Спиране на мисленето",
-      "triggerOrchestrator": "Започване на групов чат"
-    },
-    "tabs": {
-      "host": "Водещ",
-      "members": "Членове",
-      "role": "Настройка"
-    }
-  },
-  "groupWizard": {
-    "chooseMembers": "Изберете съществуващи асистенти...",
-    "createGroup": "Създаване на екип",
-    "existingMembers": "Съществуващи агенти",
-    "groupMembers": "Тези асистенти също ще бъдат добавени към вашия списък",
-    "host": {
-      "description": "Позволява на екипа да работи самостоятелно",
-      "title": "Активиране на модератор",
-      "tooltip": "Ако деактивирате модератора на екипа, ще трябва ръчно да използвате @ за споменаване на членове, за да могат да отговорят"
-    },
-    "memberCount": "{{count}} членове",
-    "noMatchingTemplates": "Няма съвпадащи шаблони",
-    "noSelectedTemplates": "Не са избрани шаблони",
-    "noTemplateMembers": "В шаблона няма членове",
-    "noTemplates": "Няма налични шаблони",
-    "searchTemplates": "Търсене на шаблони...",
-    "title": "Създаване на група",
-    "useTemplate": "Използвай шаблон"
-  },
+  "groupSidebar.agentProfile.chat": "Чат",
+  "groupSidebar.agentProfile.model": "Модел",
+  "groupSidebar.members.addMember": "Добавяне на член",
+  "groupSidebar.members.enableOrchestrator": "Активирай модератор",
+  "groupSidebar.members.memberSettings": "Настройки на член",
+  "groupSidebar.members.orchestrator": "Водещ",
+  "groupSidebar.members.orchestratorThinking": "Водещият мисли...",
+  "groupSidebar.members.removeMember": "Премахване на член",
+  "groupSidebar.members.stopOrchestrator": "Спиране на мисленето",
+  "groupSidebar.members.triggerOrchestrator": "Започване на групов чат",
+  "groupSidebar.tabs.host": "Водещ",
+  "groupSidebar.tabs.members": "Членове",
+  "groupSidebar.tabs.role": "Настройка",
+  "groupWizard.chooseMembers": "Изберете съществуващи асистенти...",
+  "groupWizard.createGroup": "Създаване на екип",
+  "groupWizard.existingMembers": "Съществуващи агенти",
+  "groupWizard.groupMembers": "Тези асистенти също ще бъдат добавени към вашия списък",
+  "groupWizard.host.description": "Позволява на екипа да работи самостоятелно",
+  "groupWizard.host.title": "Активиране на модератор",
+  "groupWizard.host.tooltip": "Ако деактивирате модератора на екипа, ще трябва ръчно да използвате @ за споменаване на членове, за да могат да отговорят",
+  "groupWizard.memberCount": "{{count}} членове",
+  "groupWizard.noMatchingTemplates": "Няма съвпадащи шаблони",
+  "groupWizard.noSelectedTemplates": "Не са избрани шаблони",
+  "groupWizard.noTemplateMembers": "В шаблона няма членове",
+  "groupWizard.noTemplates": "Няма налични шаблони",
+  "groupWizard.searchTemplates": "Търсене на шаблони...",
+  "groupWizard.title": "Създаване на група",
+  "groupWizard.useTemplate": "Използвай шаблон",
   "hideForYou": "Съдържанието на личните съобщения е скрито. Моля, активирайте „Показване на съдържанието на личните съобщения“ в настройките, за да го видите.",
-  "history": {
-    "title": "Асистентът ще запомни само последните {{count}} съобщения"
-  },
+  "history.title": "Асистентът ще запомни само последните {{count}} съобщения",
   "historyRange": "Диапазон на историята",
   "historySummary": "Исторически обобщение на съобщения",
   "inactive": "Неактивен",
-  "inbox": {
-    "desc": "Активирай мозъчния клъстер и събуди креативното мислене. Твоят виртуален агент е тук, за да общува с теб за всичко.",
-    "title": "Lobe AI"
-  },
-  "input": {
-    "addAi": "Добави AI съобщение",
-    "addUser": "Добави потребителско съобщение",
-    "disclaimer": "Изкуственият интелект също може да греши, моля проверете важната информация",
-    "errorMsg": "Неуспешно изпращане на съобщението, моля, проверете мрежата и опитайте отново: {{errorMsg}}",
-    "more": "още",
-    "send": "Изпрати",
-    "sendWithCmdEnter": "Натиснете <key/> за изпращане",
-    "sendWithEnter": "Натиснете <key/> за изпращане",
-    "stop": "Спри",
-    "warp": "Нов ред",
-    "warpWithKey": "Натиснете <key/> за нов ред"
-  },
-  "intentUnderstanding": {
-    "title": "Разбирам и анализирам вашето намерение..."
-  },
+  "inbox.desc": "Активирай мозъчния клъстер и събуди креативното мислене. Твоят виртуален агент е тук, за да общува с теб за всичко.",
+  "inbox.title": "Lobe AI",
+  "input.addAi": "Добави AI съобщение",
+  "input.addUser": "Добави потребителско съобщение",
+  "input.disclaimer": "Изкуственият интелект също може да греши, моля проверете важната информация",
+  "input.errorMsg": "Неуспешно изпращане на съобщението, моля, проверете мрежата и опитайте отново: {{errorMsg}}",
+  "input.more": "още",
+  "input.send": "Изпрати",
+  "input.sendWithCmdEnter": "Натиснете <key/> за изпращане",
+  "input.sendWithEnter": "Натиснете <key/> за изпращане",
+  "input.stop": "Спри",
+  "input.warp": "Нов ред",
+  "input.warpWithKey": "Натиснете <key/> за нов ред",
+  "intentUnderstanding.title": "Разбирам и анализирам вашето намерение...",
   "inviteMembers": "Поканете членове",
-  "knowledgeBase": {
-    "all": "Всички съдържания",
-    "allFiles": "Всички файлове",
-    "allLibraries": "Всички ресурси",
-    "disabled": "Текущият режим на внедряване не поддържа диалог с ресурсната база. За да използвате тази функция, моля, преминете към внедряване със сървърна база данни или използвайте услугата {{cloud}}",
-    "library": {
-      "action": {
-        "add": "Добави",
-        "detail": "Детайли",
-        "remove": "Премахни"
-      },
-      "title": "Файлове/Ресурсна база"
-    },
-    "relativeFilesOrLibraries": "Свързани файлове/ресурси",
-    "title": "Ресурсна база",
-    "uploadGuide": "Качените файлове могат да бъдат прегледани в раздела „Ресурси“",
-    "viewMore": "Вижте още"
-  },
-  "memberSelection": {
-    "addMember": "Добавяне на член",
-    "allMembers": "Всички членове",
-    "createGroup": "Създаване на група",
-    "noAvailableAgents": "Няма налични агенти за покана",
-    "noSelectedAgents": "Все още не са избрани агенти",
-    "searchAgents": "Търсене на агент...",
-    "selectedAgents": "Избрани ({{count}})",
-    "setInitialMembers": "Избор на членове на екипа"
-  },
+  "knowledgeBase.all": "Всички съдържания",
+  "knowledgeBase.allFiles": "Всички файлове",
+  "knowledgeBase.allLibraries": "Всички ресурси",
+  "knowledgeBase.disabled": "Текущият режим на внедряване не поддържа диалог с ресурсната база. За да използвате тази функция, моля, преминете към внедряване със сървърна база данни или използвайте услугата {{cloud}}",
+  "knowledgeBase.library.action.add": "Добави",
+  "knowledgeBase.library.action.detail": "Детайли",
+  "knowledgeBase.library.action.remove": "Премахни",
+  "knowledgeBase.library.title": "Файлове/Ресурсна база",
+  "knowledgeBase.relativeFilesOrLibraries": "Свързани файлове/ресурси",
+  "knowledgeBase.title": "Ресурсна база",
+  "knowledgeBase.uploadGuide": "Качените файлове могат да бъдат прегледани в раздела „Ресурси“",
+  "knowledgeBase.viewMore": "Вижте още",
+  "memberSelection.addMember": "Добавяне на член",
+  "memberSelection.allMembers": "Всички членове",
+  "memberSelection.createGroup": "Създаване на група",
+  "memberSelection.noAvailableAgents": "Няма налични агенти за покана",
+  "memberSelection.noSelectedAgents": "Все още не са избрани агенти",
+  "memberSelection.searchAgents": "Търсене на агент...",
+  "memberSelection.selectedAgents": "Избрани ({{count}})",
+  "memberSelection.setInitialMembers": "Избор на членове на екипа",
   "members": "Членове",
-  "mention": {
-    "title": "Споменаване на членове"
-  },
-  "messageAction": {
-    "collapse": "Скрий съобщението",
-    "continueGeneration": "Продължи генерирането",
-    "delAndRegenerate": "Изтрий и прегенерирай",
-    "deleteDisabledByThreads": "Съществуват подтеми, не можете да изтриете.",
-    "expand": "Разгъни съобщението",
-    "regenerate": "Прегенерирай"
-  },
-  "messages": {
-    "dm": {
-      "sentTo": "Видимо само за {{name}}",
-      "title": "Лично съобщение"
-    },
-    "modelCard": {
-      "credit": "Кредити",
-      "creditPricing": "Ценообразуване",
-      "creditTooltip": "За удобство при броенето, 1$ се преобразува в 1M кредити, например $3/M токени се преобразува в 3 кредита/token",
-      "pricing": {
-        "inputCachedTokens": "Кеширани входящи {{amount}}/кредити · ${{amount}}/M",
-        "inputCharts": "${{amount}}/M символи",
-        "inputMinutes": "${{amount}}/минута",
-        "inputTokens": "Входящи {{amount}}/кредити · ${{amount}}/M",
-        "outputTokens": "Изходящи {{amount}}/кредити · ${{amount}}/M",
-        "writeCacheInputTokens": "Кеширане на входящи данни {{amount}}/точки · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "average": "Средна цена",
-      "input": "Вход",
-      "inputAudio": "Аудио вход",
-      "inputCached": "Кеширан вход",
-      "inputCitation": "Цитиране на входящи данни",
-      "inputText": "Текстов вход",
-      "inputTitle": "Детайли за входа",
-      "inputUncached": "Некеширан вход",
-      "inputWriteCached": "Входящи кеширани данни",
-      "output": "Изход",
-      "outputAudio": "Аудио изход",
-      "outputImage": "Изходно изображение",
-      "outputText": "Текстов изход",
-      "outputTitle": "Детайли за изхода",
-      "reasoning": "Дълбочинно разсъждение",
-      "speed": {
-        "tps": {
-          "title": "TPS",
-          "tooltip": "Токени на секунда, TPS. Отнася се до средната скорост на генериране на съдържание от AI (Токен/секунда), започвайки да се изчислява след получаване на първия токен."
-        },
-        "ttft": {
-          "title": "TTFT",
-          "tooltip": "Време до първия токен, TTFT. Отнася се до времевия интервал от изпращането на съобщението до получаването на първия токен от клиента."
-        }
-      },
-      "title": "Детайли за генериране",
-      "total": "Общо разходи"
-    }
-  },
-  "minimap": {
-    "jumpToMessage": "Отиди до съобщение № {{index}}",
-    "nextMessage": "Следващо съобщение",
-    "previousMessage": "Предишно съобщение",
-    "senderAssistant": "Агент",
-    "senderUser": "Ти"
-  },
+  "mention.title": "Споменаване на членове",
+  "messageAction.collapse": "Скрий съобщението",
+  "messageAction.continueGeneration": "Продължи генерирането",
+  "messageAction.delAndRegenerate": "Изтрий и прегенерирай",
+  "messageAction.deleteDisabledByThreads": "Съществуват подтеми, не можете да изтриете.",
+  "messageAction.expand": "Разгъни съобщението",
+  "messageAction.regenerate": "Прегенерирай",
+  "messages.dm.sentTo": "Видимо само за {{name}}",
+  "messages.dm.title": "Лично съобщение",
+  "messages.modelCard.credit": "Кредити",
+  "messages.modelCard.creditPricing": "Ценообразуване",
+  "messages.modelCard.creditTooltip": "За удобство при броенето, 1$ се преобразува в 1M кредити, например $3/M токени се преобразува в 3 кредита/token",
+  "messages.modelCard.pricing.inputCachedTokens": "Кеширани входящи {{amount}}/кредити · ${{amount}}/M",
+  "messages.modelCard.pricing.inputCharts": "${{amount}}/M символи",
+  "messages.modelCard.pricing.inputMinutes": "${{amount}}/минута",
+  "messages.modelCard.pricing.inputTokens": "Входящи {{amount}}/кредити · ${{amount}}/M",
+  "messages.modelCard.pricing.outputTokens": "Изходящи {{amount}}/кредити · ${{amount}}/M",
+  "messages.modelCard.pricing.writeCacheInputTokens": "Кеширане на входящи данни {{amount}}/точки · ${{amount}}/M",
+  "messages.tokenDetails.average": "Средна цена",
+  "messages.tokenDetails.input": "Вход",
+  "messages.tokenDetails.inputAudio": "Аудио вход",
+  "messages.tokenDetails.inputCached": "Кеширан вход",
+  "messages.tokenDetails.inputCitation": "Цитиране на входящи данни",
+  "messages.tokenDetails.inputText": "Текстов вход",
+  "messages.tokenDetails.inputTitle": "Детайли за входа",
+  "messages.tokenDetails.inputUncached": "Некеширан вход",
+  "messages.tokenDetails.inputWriteCached": "Входящи кеширани данни",
+  "messages.tokenDetails.output": "Изход",
+  "messages.tokenDetails.outputAudio": "Аудио изход",
+  "messages.tokenDetails.outputImage": "Изходно изображение",
+  "messages.tokenDetails.outputText": "Текстов изход",
+  "messages.tokenDetails.outputTitle": "Детайли за изхода",
+  "messages.tokenDetails.reasoning": "Дълбочинно разсъждение",
+  "messages.tokenDetails.speed.tps.title": "TPS",
+  "messages.tokenDetails.speed.tps.tooltip": "Токени на секунда, TPS. Отнася се до средната скорост на генериране на съдържание от AI (Токен/секунда), започвайки да се изчислява след получаване на първия токен.",
+  "messages.tokenDetails.speed.ttft.title": "TTFT",
+  "messages.tokenDetails.speed.ttft.tooltip": "Време до първия токен, TTFT. Отнася се до времевия интервал от изпращането на съобщението до получаването на първия токен от клиента.",
+  "messages.tokenDetails.title": "Детайли за генериране",
+  "messages.tokenDetails.total": "Общо разходи",
+  "minimap.jumpToMessage": "Отиди до съобщение № {{index}}",
+  "minimap.nextMessage": "Следващо съобщение",
+  "minimap.previousMessage": "Предишно съобщение",
+  "minimap.senderAssistant": "Агент",
+  "minimap.senderUser": "Ти",
   "newAgent": "Създаване на асистент",
   "newGroupChat": "Създаване на групов чат",
   "newPage": "Създаване на документ",
@@ -281,252 +193,170 @@
   "noSelectedAgents": "Все още не са избрани членове",
   "openInNewWindow": "Отвори в нов прозорец",
   "owner": "Собственик на групата",
-  "pageCopilot": {
-    "title": "Асистент за текстове",
-    "welcome": "**Направи всяко изречение по-точно.**\n\nНезависимо дали черновиш, пренаписваш или редактираш, ще ти помогна да направиш текста по-ясен, по-естествен и по-убедителен."
-  },
+  "pageCopilot.title": "Асистент за текстове",
+  "pageCopilot.welcome": "**Направи всяко изречение по-точно.**\n\nНезависимо дали черновиш, пренаписваш или редактираш, ще ти помогна да направиш текста по-ясен, по-естествен и по-убедителен.",
   "pin": "Закачи",
   "pinOff": "Откачи",
-  "rag": {
-    "referenceChunks": "Цитирани източници",
-    "userQuery": {
-      "actions": {
-        "delete": "Изтрий Query",
-        "regenerate": "Прегенерирай Query"
-      }
-    }
-  },
+  "rag.referenceChunks": "Цитирани източници",
+  "rag.userQuery.actions.delete": "Изтрий Query",
+  "rag.userQuery.actions.regenerate": "Прегенерирай Query",
   "regenerate": "Прегенерирай",
   "roleAndArchive": "Роля и архив",
-  "search": {
-    "grounding": {
-      "searchQueries": "Търсене на ключови думи",
-      "title": "Намерени са {{count}} резултата"
-    },
-    "mode": {
-      "auto": {
-        "desc": "Интелигентно определяне на необходимостта от търсене въз основа на съдържанието на разговора",
-        "title": "Интелигентно свързване"
-      },
-      "off": {
-        "desc": "Използва само основните знания на модела, без интернет търсене",
-        "title": "Изключване на свързването"
-      },
-      "on": {
-        "desc": "Постоянно извършва интернет търсене за получаване на най-новата информация",
-        "title": "Винаги свързано"
-      },
-      "useModelBuiltin": "Използване на вградената търсачка на модела"
-    },
-    "searchModel": {
-      "desc": "Текущият модел не поддържа извикване на функции, затова е необходимо да се комбинира с модел, който поддържа извикване на функции, за да се извърши търсене в интернет",
-      "title": "Модел за търсене на помощ"
-    },
-    "title": "Търсене в интернет"
-  },
+  "search.grounding.searchQueries": "Търсене на ключови думи",
+  "search.grounding.title": "Намерени са {{count}} резултата",
+  "search.mode.auto.desc": "Интелигентно определяне на необходимостта от търсене въз основа на съдържанието на разговора",
+  "search.mode.auto.title": "Интелигентно свързване",
+  "search.mode.off.desc": "Използва само основните знания на модела, без интернет търсене",
+  "search.mode.off.title": "Изключване на свързването",
+  "search.mode.on.desc": "Постоянно извършва интернет търсене за получаване на най-новата информация",
+  "search.mode.on.title": "Винаги свързано",
+  "search.mode.useModelBuiltin": "Използване на вградената търсачка на модела",
+  "search.searchModel.desc": "Текущият модел не поддържа извикване на функции, затова е необходимо да се комбинира с модел, който поддържа извикване на функции, за да се извърши търсене в интернет",
+  "search.searchModel.title": "Модел за търсене на помощ",
+  "search.title": "Търсене в интернет",
   "searchAgentPlaceholder": "Търсач на помощ...",
   "searchAgents": "Асистент за търсене...",
   "selectedAgents": "Избрани помощници",
   "sendPlaceholder": "Задайте въпрос, създайте нещо или започнете задача, <hotkey><hotkey/>",
-  "sessionGroup": {
-    "config": "Управление на групи",
-    "confirmRemoveGroupAlert": "Тази група е на път да бъде изтрита. След изтриването, агентите в тази група ще бъдат преместени в списъка по подразбиране. Моля, потвърди действието си.",
-    "createAgentSuccess": "Асистентът е създаден успешно",
-    "createGroup": "Добави нова група",
-    "createGroupFailed": "Създаването на груповия чат не бе успешно",
-    "createGroupSuccess": "Груповият чат бе създаден успешно",
-    "createSuccess": "Създадена успешно",
-    "creatingAgent": "Създаване на асистент...",
-    "groupName": "Име на групата",
-    "inputPlaceholder": "Моля, въведете име на групата...",
-    "moveGroup": "Премести в група",
-    "newGroup": "Нова група",
-    "noAvailableAgents": "Няма налични асистенти",
-    "noMatchingAgents": "Няма намерени съвпадащи асистенти",
-    "noSelectedAgents": "Моля, изберете асистент",
-    "rename": "Преименувай група",
-    "renameSuccess": "Преименувана успешно",
-    "searchAgents": "Търсене на асистент",
-    "selectedAgents": "Избрани асистенти ({{count}})",
-    "sortSuccess": "Пренареждането е успешно",
-    "sorting": "Актуализиране на подредбата на групата...",
-    "tooLong": "Дължината на името на групата трябва да бъде между 1-20 символа"
-  },
-  "shareModal": {
-    "copy": "Копирай",
-    "download": "Изтегли екранна снимка",
-    "downloadError": "Грешка при изтегляне",
-    "downloadFile": "Изтегли файла",
-    "downloadPdf": "Изтегляне на PDF",
-    "downloadSuccess": "Изтеглянето е успешно",
-    "exportMode": {
-      "full": "По подразбиране",
-      "label": "Режим на експортиране",
-      "simple": "Съвместим с OpenAI"
-    },
-    "exportPdf": "Експортиране като PDF",
-    "exportTitle": "По подразбиране заглавие",
-    "generatePdf": "Генериране на PDF",
-    "generatingPdf": "Генериране на PDF...",
-    "imageType": "Формат на изображението",
-    "includeTool": "Включи съобщения от инструмента",
-    "includeUser": "Включи съобщения от потребителя",
-    "loadingPdf": "Зареждане на PDF...",
-    "noPdfData": "Няма налични PDF данни",
-    "pdf": "PDF",
-    "pdfErrorDescription": "Възникна грешка при генерирането на PDF, моля опитайте отново",
-    "pdfGenerationError": "Грешка при генериране на PDF",
-    "pdfReady": "PDF е готов",
-    "regeneratePdf": "Генериране на PDF отново",
-    "screenshot": "Екранна снимка",
-    "settings": "Настройки за експортиране",
-    "text": "Текст",
-    "widthMode": {
-      "label": "Режим на ширина",
-      "narrow": "Режим за тесен екран",
-      "wide": "Режим за широк екран"
-    },
-    "withBackground": "Включи фоново изображение",
-    "withFooter": "Включи долен колонтитул",
-    "withPluginInfo": "Включи информация за плъгина",
-    "withRole": "Включи роля на съобщението",
-    "withSystemRole": "Включи настройката за роля на агента"
-  },
-  "stt": {
-    "action": "Гласов вход",
-    "loading": "Разпознаване...",
-    "prettifying": "Изглаждане..."
-  },
-  "supervisor": {
-    "todoList": {
-      "allComplete": "Всички задачи са изпълнени",
-      "title": "Задачите са изпълнени"
-    }
-  },
-  "tab": {
-    "groupProfile": "Профил на групата",
-    "profile": "Профил на асистента",
-    "search": "Търсене"
-  },
-  "task": {
-    "activity": {
-      "calling": "Извикване на инструмента...",
-      "generating": "Генериране на отговор...",
-      "gotResult": "Резултатът от инструмента е получен",
-      "toolCalling": "Извикване на {{toolName}}...",
-      "toolResult": "Резултатът от {{toolName}} е получен"
-    },
-    "metrics": {
-      "stepsShort": "стъпки",
-      "toolCallsShort": "използвания на инструменти"
-    },
-    "status": {
-      "initializing": "Задачата се стартира..."
-    }
-  },
-  "thread": {
-    "divider": "Подтема",
-    "threadMessageCount": "{{messageCount}} съобщения",
-    "title": "Подтема"
-  },
-  "toggleWideScreen": {
-    "off": "Изключване на широк екран",
-    "on": "Включване на широк екран"
-  },
-  "tokenDetails": {
-    "chats": "Чат съобщения",
-    "historySummary": "Историческо резюме",
-    "rest": "Оставащи",
-    "supervisor": "Водещ на групата",
-    "systemRole": "Настройки на ролята",
-    "title": "Детайли на токена",
-    "tools": "Настройки на плъгина",
-    "total": "Общо налични",
-    "used": "Общо използвани"
-  },
-  "tokenTag": {
-    "overload": "Превишен лимит",
-    "remained": "Оставащи",
-    "used": "Използвани"
-  },
-  "tool": {
-    "intervention": {
-      "approve": "Одобряване",
-      "approveAndRemember": "Одобряване и запомняне",
-      "approveOnce": "Одобряване само този път",
-      "mode": {
-        "allowList": "Бял списък",
-        "allowListDesc": "Автоматично се изпълняват само одобрените инструменти",
-        "autoRun": "Автоматично одобрение",
-        "autoRunDesc": "Автоматично одобряване на всички изпълнения на инструменти",
-        "manual": "Ръчно",
-        "manualDesc": "Необходимо е ръчно одобрение при всяко извикване"
-      },
-      "reject": "Отхвърляне",
-      "rejectAndContinue": "Откажи и опитай отново",
-      "rejectOnly": "Откажи",
-      "rejectReasonPlaceholder": "Въведете причина за отхвърляне, за да помогнете на агента да разбере и подобри бъдещите действия",
-      "rejectTitle": "Отхвърляне на това извикване на инструмент",
-      "rejectedWithReason": "Това извикване на инструмент беше умишлено отхвърлено: {{reason}}",
-      "toolAbort": "Този инструмент беше отменен от потребителя",
-      "toolRejected": "Това извикване на инструмент беше умишлено отхвърлено"
-    }
-  },
-  "toolAuth": {
-    "authorize": "Упълномощаване",
-    "authorizing": "Упълномощаване...",
-    "hint": "Ако не бъде предоставено разрешение или конфигурация, тези инструменти няма да функционират правилно, което може да доведе до липсващи функции или грешки в асистента.",
-    "signIn": "Вход",
-    "title": "Моля, завършете упълномощаването на инструментите за асистента"
-  },
-  "topic": {
-    "checkOpenNewTopic": "Да се отвори ли нова тема?",
-    "checkSaveCurrentMessages": "Искате ли да запазите текущата сесия като тема?",
-    "openNewTopic": "Отвори нова тема",
-    "recent": "Последни теми",
-    "saveCurrentMessages": "Запази текущата сесия като тема"
-  },
-  "translate": {
-    "action": "Превод",
-    "clear": "Изчисти превода"
-  },
-  "tts": {
-    "action": "Текст към говор",
-    "clear": "Изчисти речта"
-  },
+  "sessionGroup.config": "Управление на групи",
+  "sessionGroup.confirmRemoveGroupAlert": "Тази група е на път да бъде изтрита. След изтриването, агентите в тази група ще бъдат преместени в списъка по подразбиране. Моля, потвърди действието си.",
+  "sessionGroup.createAgentSuccess": "Асистентът е създаден успешно",
+  "sessionGroup.createGroup": "Добави нова група",
+  "sessionGroup.createGroupFailed": "Създаването на груповия чат не бе успешно",
+  "sessionGroup.createGroupSuccess": "Груповият чат бе създаден успешно",
+  "sessionGroup.createSuccess": "Създадена успешно",
+  "sessionGroup.creatingAgent": "Създаване на асистент...",
+  "sessionGroup.groupName": "Име на групата",
+  "sessionGroup.inputPlaceholder": "Моля, въведете име на групата...",
+  "sessionGroup.moveGroup": "Премести в група",
+  "sessionGroup.newGroup": "Нова група",
+  "sessionGroup.noAvailableAgents": "Няма налични асистенти",
+  "sessionGroup.noMatchingAgents": "Няма намерени съвпадащи асистенти",
+  "sessionGroup.noSelectedAgents": "Моля, изберете асистент",
+  "sessionGroup.rename": "Преименувай група",
+  "sessionGroup.renameSuccess": "Преименувана успешно",
+  "sessionGroup.searchAgents": "Търсене на асистент",
+  "sessionGroup.selectedAgents": "Избрани асистенти ({{count}})",
+  "sessionGroup.sortSuccess": "Пренареждането е успешно",
+  "sessionGroup.sorting": "Актуализиране на подредбата на групата...",
+  "sessionGroup.tooLong": "Дължината на името на групата трябва да бъде между 1-20 символа",
+  "shareModal.copy": "Копирай",
+  "shareModal.download": "Изтегли екранна снимка",
+  "shareModal.downloadError": "Грешка при изтегляне",
+  "shareModal.downloadFile": "Изтегли файла",
+  "shareModal.downloadPdf": "Изтегляне на PDF",
+  "shareModal.downloadSuccess": "Изтеглянето е успешно",
+  "shareModal.exportMode.full": "По подразбиране",
+  "shareModal.exportMode.label": "Режим на експортиране",
+  "shareModal.exportMode.simple": "Съвместим с OpenAI",
+  "shareModal.exportPdf": "Експортиране като PDF",
+  "shareModal.exportTitle": "По подразбиране заглавие",
+  "shareModal.generatePdf": "Генериране на PDF",
+  "shareModal.generatingPdf": "Генериране на PDF...",
+  "shareModal.imageType": "Формат на изображението",
+  "shareModal.includeTool": "Включи съобщения от инструмента",
+  "shareModal.includeUser": "Включи съобщения от потребителя",
+  "shareModal.loadingPdf": "Зареждане на PDF...",
+  "shareModal.noPdfData": "Няма налични PDF данни",
+  "shareModal.pdf": "PDF",
+  "shareModal.pdfErrorDescription": "Възникна грешка при генерирането на PDF, моля опитайте отново",
+  "shareModal.pdfGenerationError": "Грешка при генериране на PDF",
+  "shareModal.pdfReady": "PDF е готов",
+  "shareModal.regeneratePdf": "Генериране на PDF отново",
+  "shareModal.screenshot": "Екранна снимка",
+  "shareModal.settings": "Настройки за експортиране",
+  "shareModal.text": "Текст",
+  "shareModal.widthMode.label": "Режим на ширина",
+  "shareModal.widthMode.narrow": "Режим за тесен екран",
+  "shareModal.widthMode.wide": "Режим за широк екран",
+  "shareModal.withBackground": "Включи фоново изображение",
+  "shareModal.withFooter": "Включи долен колонтитул",
+  "shareModal.withPluginInfo": "Включи информация за плъгина",
+  "shareModal.withRole": "Включи роля на съобщението",
+  "shareModal.withSystemRole": "Включи настройката за роля на агента",
+  "stt.action": "Гласов вход",
+  "stt.loading": "Разпознаване...",
+  "stt.prettifying": "Изглаждане...",
+  "supervisor.todoList.allComplete": "Всички задачи са изпълнени",
+  "supervisor.todoList.title": "Задачите са изпълнени",
+  "tab.groupProfile": "Профил на групата",
+  "tab.profile": "Профил на асистента",
+  "tab.search": "Търсене",
+  "task.activity.calling": "Извикване на инструмента...",
+  "task.activity.generating": "Генериране на отговор...",
+  "task.activity.gotResult": "Резултатът от инструмента е получен",
+  "task.activity.toolCalling": "Извикване на {{toolName}}...",
+  "task.activity.toolResult": "Резултатът от {{toolName}} е получен",
+  "task.metrics.stepsShort": "стъпки",
+  "task.metrics.toolCallsShort": "използвания на инструменти",
+  "task.status.initializing": "Задачата се стартира...",
+  "thread.divider": "Подтема",
+  "thread.threadMessageCount": "{{messageCount}} съобщения",
+  "thread.title": "Подтема",
+  "toggleWideScreen.off": "Изключване на широк екран",
+  "toggleWideScreen.on": "Включване на широк екран",
+  "tokenDetails.chats": "Чат съобщения",
+  "tokenDetails.historySummary": "Историческо резюме",
+  "tokenDetails.rest": "Оставащи",
+  "tokenDetails.supervisor": "Водещ на групата",
+  "tokenDetails.systemRole": "Настройки на ролята",
+  "tokenDetails.title": "Детайли на токена",
+  "tokenDetails.tools": "Настройки на плъгина",
+  "tokenDetails.total": "Общо налични",
+  "tokenDetails.used": "Общо използвани",
+  "tokenTag.overload": "Превишен лимит",
+  "tokenTag.remained": "Оставащи",
+  "tokenTag.used": "Използвани",
+  "tool.intervention.approve": "Одобряване",
+  "tool.intervention.approveAndRemember": "Одобряване и запомняне",
+  "tool.intervention.approveOnce": "Одобряване само този път",
+  "tool.intervention.mode.allowList": "Бял списък",
+  "tool.intervention.mode.allowListDesc": "Автоматично се изпълняват само одобрените инструменти",
+  "tool.intervention.mode.autoRun": "Автоматично одобрение",
+  "tool.intervention.mode.autoRunDesc": "Автоматично одобряване на всички изпълнения на инструменти",
+  "tool.intervention.mode.manual": "Ръчно",
+  "tool.intervention.mode.manualDesc": "Необходимо е ръчно одобрение при всяко извикване",
+  "tool.intervention.reject": "Отхвърляне",
+  "tool.intervention.rejectAndContinue": "Откажи и опитай отново",
+  "tool.intervention.rejectOnly": "Откажи",
+  "tool.intervention.rejectReasonPlaceholder": "Въведете причина за отхвърляне, за да помогнете на агента да разбере и подобри бъдещите действия",
+  "tool.intervention.rejectTitle": "Отхвърляне на това извикване на инструмент",
+  "tool.intervention.rejectedWithReason": "Това извикване на инструмент беше умишлено отхвърлено: {{reason}}",
+  "tool.intervention.toolAbort": "Този инструмент беше отменен от потребителя",
+  "tool.intervention.toolRejected": "Това извикване на инструмент беше умишлено отхвърлено",
+  "toolAuth.authorize": "Упълномощаване",
+  "toolAuth.authorizing": "Упълномощаване...",
+  "toolAuth.hint": "Ако не бъде предоставено разрешение или конфигурация, тези инструменти няма да функционират правилно, което може да доведе до липсващи функции или грешки в асистента.",
+  "toolAuth.signIn": "Вход",
+  "toolAuth.title": "Моля, завършете упълномощаването на инструментите за асистента",
+  "topic.checkOpenNewTopic": "Да се отвори ли нова тема?",
+  "topic.checkSaveCurrentMessages": "Искате ли да запазите текущата сесия като тема?",
+  "topic.openNewTopic": "Отвори нова тема",
+  "topic.recent": "Последни теми",
+  "topic.saveCurrentMessages": "Запази текущата сесия като тема",
+  "translate.action": "Превод",
+  "translate.clear": "Изчисти превода",
+  "tts.action": "Текст към говор",
+  "tts.clear": "Изчисти речта",
   "untitledAgent": "Безименен асистент",
   "untitledGroup": "Група без име",
   "updateAgent": "Актуализирай информацията за агента",
-  "upload": {
-    "action": {
-      "fileUpload": "Качване на файл",
-      "folderUpload": "Качване на папка",
-      "imageDisabled": "Текущият модел не поддържа визуално разпознаване, моля, превключете модела и опитайте отново",
-      "imageUpload": "Качване на изображение",
-      "tooltip": "Качване"
-    },
-    "clientMode": {
-      "actionFiletip": "Качване на файл",
-      "actionTooltip": "Качване",
-      "disabled": "Текущият модел не поддържа визуално разпознаване и анализ на файлове, моля, превключете модела и опитайте отново",
-      "fileNotSupported": "Режимът на браузъра не поддържа качване на файлове, поддържат се само изображения",
-      "visionNotSupported": "Текущият модел не поддържа визуално разпознаване, моля, превключете на друг модел, за да използвате тази функция"
-    },
-    "preview": {
-      "prepareTasks": "Подготовка на парчета...",
-      "status": {
-        "pending": "Подготовка за качване...",
-        "processing": "Обработка на файла..."
-      }
-    },
-    "validation": {
-      "videoSizeExceeded": "Размерът на видео файла не може да надвишава 20MB, текущият размер е {{actualSize}}"
-    }
-  },
-  "viewMode": {
-    "normal": "Стандартен",
-    "wideScreen": "Широк екран"
-  },
+  "upload.action.fileUpload": "Качване на файл",
+  "upload.action.folderUpload": "Качване на папка",
+  "upload.action.imageDisabled": "Текущият модел не поддържа визуално разпознаване, моля, превключете модела и опитайте отново",
+  "upload.action.imageUpload": "Качване на изображение",
+  "upload.action.tooltip": "Качване",
+  "upload.clientMode.actionFiletip": "Качване на файл",
+  "upload.clientMode.actionTooltip": "Качване",
+  "upload.clientMode.disabled": "Текущият модел не поддържа визуално разпознаване и анализ на файлове, моля, превключете модела и опитайте отново",
+  "upload.clientMode.fileNotSupported": "Режимът на браузъра не поддържа качване на файлове, поддържат се само изображения",
+  "upload.clientMode.visionNotSupported": "Текущият модел не поддържа визуално разпознаване, моля, превключете на друг модел, за да използвате тази функция",
+  "upload.preview.prepareTasks": "Подготовка на парчета...",
+  "upload.preview.status.pending": "Подготовка за качване...",
+  "upload.preview.status.processing": "Обработка на файла...",
+  "upload.validation.videoSizeExceeded": "Размерът на видео файла не може да надвишава 20MB, текущият размер е {{actualSize}}",
+  "viewMode.normal": "Стандартен",
+  "viewMode.wideScreen": "Широк екран",
   "you": "ти",
   "zenMode": "Режим на фокус"
 }

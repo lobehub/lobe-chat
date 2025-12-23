@@ -1,118 +1,76 @@
 {
-  "authorize": {
-    "cancel": "Cancelar",
-    "confirm": "Crea tu perfil",
-    "description": "Tu perfil de comunidad es independiente de tu cuenta de usuario de {{appName}}.",
-    "footer": {
-      "agreement": "Al continuar, confirmas que has leído y aceptas los <terms>Términos y Condiciones</terms> y la <privacy>Política de Privacidad</privacy>",
-      "privacy": "Política de Privacidad",
-      "terms": "Términos del Servicio"
-    },
-    "subtitle": "Crea un perfil de comunidad para enviar y gestionar tus publicaciones en la comunidad.",
-    "title": "Crear perfil de comunidad"
-  },
-  "callback": {
-    "buttons": {
-      "close": "Cerrar ventana"
-    },
-    "messages": {
-      "authFailed": "Autenticación fallida: {{error}}",
-      "missingParams": "Faltan parámetros de autenticación",
-      "processing": "Procesando autenticación...",
-      "successWithCountdown": "{{message}} La ventana se cerrará automáticamente en {{countdown}} segundos",
-      "successWithRedirect": "¡Autenticación exitosa! Redirigiendo..."
-    },
-    "titles": {
-      "error": "Error de autenticación",
-      "loading": "Autenticación de LobeHub Market",
-      "success": "Autenticación exitosa"
-    }
-  },
-  "errors": {
-    "authorizationFailed": "La autenticación ha fallado, por favor inténtalo de nuevo.",
-    "browserOnly": "El proceso de autenticación solo puede iniciarse en un navegador.",
-    "codeConsumed": "El código de autenticación ya ha sido utilizado, por favor inténtalo de nuevo.",
-    "codeVerifierMissing": "Sesión de autenticación no válida, por favor inicia sesión nuevamente.",
-    "general": "Se produjo un error durante la autenticación, por favor inténtalo de nuevo.",
-    "handoffFailed": "No se pudo obtener el resultado de la autenticación, por favor inténtalo de nuevo.",
-    "handoffTimeout": "Tiempo de espera de autenticación agotado, por favor completa la operación en el navegador e inténtalo de nuevo.",
-    "oidcNotReady": "El servicio de autenticación aún no está listo, por favor inténtalo más tarde.",
-    "openBrowserFailed": "No se pudo abrir el navegador del sistema, por favor inténtalo de nuevo.",
-    "openPopupFailed": "No se pudo abrir la ventana emergente de autenticación, por favor revisa la configuración del bloqueador de ventanas emergentes del navegador.",
-    "popupClosed": "La ventana de autenticación se cerró antes de completarse.",
-    "sessionExpired": "La sesión de autenticación ha expirado, por favor inicia sesión nuevamente.",
-    "stateMismatch": "Estado de autenticación no coincide, por favor inténtalo de nuevo.",
-    "stateMissing": "No se encontró el estado de autenticación, por favor inténtalo de nuevo."
-  },
-  "messages": {
-    "authorized": "Autorización del servicio LobeHub realizada con éxito",
-    "loading": "Iniciando el proceso de autenticación...",
-    "success": {
-      "cloudMcpInstall": "¡Autorización exitosa! Ahora puedes instalar el complemento Cloud MCP.",
-      "submit": "¡Autenticación exitosa! Ahora puedes publicar asistentes.",
-      "upload": "¡Autenticación exitosa! Ahora puedes publicar una nueva versión."
-    }
-  },
-  "profileSetup": {
-    "cancel": "Cancelar",
-    "descriptionEdit": "Actualiza la información de tu perfil de la comunidad.",
-    "descriptionFirstTime": "Configura tu perfil para completar la creación de tu cuenta en la comunidad.",
-    "errors": {
-      "fileTooLarge": "El tamaño del archivo no puede superar los 2 MB",
-      "notAuthenticated": "Por favor, inicia sesión antes de continuar.",
-      "updateFailed": "No se pudo actualizar el perfil. Inténtalo de nuevo.",
-      "uploadFailed": "Error al subir el archivo, por favor inténtalo de nuevo",
-      "usernameTaken": "Este ID de usuario ya está en uso. Por favor, elige otro."
-    },
-    "fields": {
-      "avatar": {
-        "label": "Avatar"
-      },
-      "bannerUrl": {
-        "clickToUpload": "Haz clic para subir la imagen de fondo",
-        "label": "Imagen de fondo",
-        "remove": "Eliminar imagen de fondo",
-        "tooltip": "La imagen de fondo se mostrará en la parte superior de tu perfil (se recomienda una proporción de 16:9)",
-        "uploading": "Subiendo..."
-      },
-      "description": {
-        "label": "Biografía",
-        "maxLength": "La biografía puede tener hasta 200 caracteres.",
-        "placeholder": "Cuéntanos algo sobre ti..."
-      },
-      "displayName": {
-        "label": "Nombre para mostrar",
-        "maxLength": "El nombre para mostrar puede tener hasta 50 caracteres.",
-        "placeholder": "Introduce tu nombre para mostrar",
-        "required": "Por favor, introduce un nombre para mostrar."
-      },
-      "github": {
-        "placeholder": "Nombre de usuario de GitHub"
-      },
-      "twitter": {
-        "placeholder": "Nombre de usuario de X (Twitter)"
-      },
-      "userName": {
-        "label": "ID de usuario",
-        "maxLength": "El ID de usuario puede tener hasta 32 caracteres.",
-        "minLength": "El ID de usuario debe tener al menos 3 caracteres.",
-        "pattern": "El ID de usuario solo puede contener letras, números, guiones bajos y guiones.",
-        "placeholder": "Introduce tu ID de usuario",
-        "required": "Por favor, introduce un ID de usuario.",
-        "tooltip": "El ID de usuario es tu identificador único y se usará en el enlace a tu perfil."
-      },
-      "website": {
-        "invalidUrl": "Por favor, introduce una URL válida",
-        "placeholder": "Enlace a tu sitio web personal"
-      }
-    },
-    "getStarted": "Comenzar",
-    "save": "Guardar",
-    "socialLinks": {
-      "title": "Enlaces sociales"
-    },
-    "success": "Perfil actualizado correctamente",
-    "titleEdit": "Editar perfil",
-    "titleFirstTime": "Completa tu perfil"
-  }
+  "authorize.cancel": "Cancelar",
+  "authorize.confirm": "Crea tu perfil",
+  "authorize.description": "Tu perfil de comunidad es independiente de tu cuenta de usuario de {{appName}}.",
+  "authorize.footer.agreement": "Al continuar, confirmas que has leído y aceptas los <terms>Términos y Condiciones</terms> y la <privacy>Política de Privacidad</privacy>",
+  "authorize.footer.privacy": "Política de Privacidad",
+  "authorize.footer.terms": "Términos del Servicio",
+  "authorize.subtitle": "Crea un perfil de comunidad para enviar y gestionar tus publicaciones en la comunidad.",
+  "authorize.title": "Crear perfil de comunidad",
+  "callback.buttons.close": "Cerrar ventana",
+  "callback.messages.authFailed": "Autenticación fallida: {{error}}",
+  "callback.messages.missingParams": "Faltan parámetros de autenticación",
+  "callback.messages.processing": "Procesando autenticación...",
+  "callback.messages.successWithCountdown": "{{message}} La ventana se cerrará automáticamente en {{countdown}} segundos",
+  "callback.messages.successWithRedirect": "¡Autenticación exitosa! Redirigiendo...",
+  "callback.titles.error": "Error de autenticación",
+  "callback.titles.loading": "Autenticación de LobeHub Market",
+  "callback.titles.success": "Autenticación exitosa",
+  "errors.authorizationFailed": "La autenticación ha fallado, por favor inténtalo de nuevo.",
+  "errors.browserOnly": "El proceso de autenticación solo puede iniciarse en un navegador.",
+  "errors.codeConsumed": "El código de autenticación ya ha sido utilizado, por favor inténtalo de nuevo.",
+  "errors.codeVerifierMissing": "Sesión de autenticación no válida, por favor inicia sesión nuevamente.",
+  "errors.general": "Se produjo un error durante la autenticación, por favor inténtalo de nuevo.",
+  "errors.handoffFailed": "No se pudo obtener el resultado de la autenticación, por favor inténtalo de nuevo.",
+  "errors.handoffTimeout": "Tiempo de espera de autenticación agotado, por favor completa la operación en el navegador e inténtalo de nuevo.",
+  "errors.oidcNotReady": "El servicio de autenticación aún no está listo, por favor inténtalo más tarde.",
+  "errors.openBrowserFailed": "No se pudo abrir el navegador del sistema, por favor inténtalo de nuevo.",
+  "errors.openPopupFailed": "No se pudo abrir la ventana emergente de autenticación, por favor revisa la configuración del bloqueador de ventanas emergentes del navegador.",
+  "errors.popupClosed": "La ventana de autenticación se cerró antes de completarse.",
+  "errors.sessionExpired": "La sesión de autenticación ha expirado, por favor inicia sesión nuevamente.",
+  "errors.stateMismatch": "Estado de autenticación no coincide, por favor inténtalo de nuevo.",
+  "errors.stateMissing": "No se encontró el estado de autenticación, por favor inténtalo de nuevo.",
+  "messages.authorized": "Autorización del servicio LobeHub realizada con éxito",
+  "messages.loading": "Iniciando el proceso de autenticación...",
+  "messages.success.cloudMcpInstall": "¡Autorización exitosa! Ahora puedes instalar el complemento Cloud MCP.",
+  "messages.success.submit": "¡Autenticación exitosa! Ahora puedes publicar asistentes.",
+  "messages.success.upload": "¡Autenticación exitosa! Ahora puedes publicar una nueva versión.",
+  "profileSetup.cancel": "Cancelar",
+  "profileSetup.descriptionEdit": "Actualiza la información de tu perfil de la comunidad.",
+  "profileSetup.descriptionFirstTime": "Configura tu perfil para completar la creación de tu cuenta en la comunidad.",
+  "profileSetup.errors.fileTooLarge": "El tamaño del archivo no puede superar los 2 MB",
+  "profileSetup.errors.notAuthenticated": "Por favor, inicia sesión antes de continuar.",
+  "profileSetup.errors.updateFailed": "No se pudo actualizar el perfil. Inténtalo de nuevo.",
+  "profileSetup.errors.uploadFailed": "Error al subir el archivo, por favor inténtalo de nuevo",
+  "profileSetup.errors.usernameTaken": "Este ID de usuario ya está en uso. Por favor, elige otro.",
+  "profileSetup.fields.avatar.label": "Avatar",
+  "profileSetup.fields.bannerUrl.clickToUpload": "Haz clic para subir la imagen de fondo",
+  "profileSetup.fields.bannerUrl.label": "Imagen de fondo",
+  "profileSetup.fields.bannerUrl.remove": "Eliminar imagen de fondo",
+  "profileSetup.fields.bannerUrl.tooltip": "La imagen de fondo se mostrará en la parte superior de tu perfil (se recomienda una proporción de 16:9)",
+  "profileSetup.fields.bannerUrl.uploading": "Subiendo...",
+  "profileSetup.fields.description.label": "Biografía",
+  "profileSetup.fields.description.maxLength": "La biografía puede tener hasta 200 caracteres.",
+  "profileSetup.fields.description.placeholder": "Cuéntanos algo sobre ti...",
+  "profileSetup.fields.displayName.label": "Nombre para mostrar",
+  "profileSetup.fields.displayName.maxLength": "El nombre para mostrar puede tener hasta 50 caracteres.",
+  "profileSetup.fields.displayName.placeholder": "Introduce tu nombre para mostrar",
+  "profileSetup.fields.displayName.required": "Por favor, introduce un nombre para mostrar.",
+  "profileSetup.fields.github.placeholder": "Nombre de usuario de GitHub",
+  "profileSetup.fields.twitter.placeholder": "Nombre de usuario de X (Twitter)",
+  "profileSetup.fields.userName.label": "ID de usuario",
+  "profileSetup.fields.userName.maxLength": "El ID de usuario puede tener hasta 32 caracteres.",
+  "profileSetup.fields.userName.minLength": "El ID de usuario debe tener al menos 3 caracteres.",
+  "profileSetup.fields.userName.pattern": "El ID de usuario solo puede contener letras, números, guiones bajos y guiones.",
+  "profileSetup.fields.userName.placeholder": "Introduce tu ID de usuario",
+  "profileSetup.fields.userName.required": "Por favor, introduce un ID de usuario.",
+  "profileSetup.fields.userName.tooltip": "El ID de usuario es tu identificador único y se usará en el enlace a tu perfil.",
+  "profileSetup.fields.website.invalidUrl": "Por favor, introduce una URL válida",
+  "profileSetup.fields.website.placeholder": "Enlace a tu sitio web personal",
+  "profileSetup.getStarted": "Comenzar",
+  "profileSetup.save": "Guardar",
+  "profileSetup.socialLinks.title": "Enlaces sociales",
+  "profileSetup.success": "Perfil actualizado correctamente",
+  "profileSetup.titleEdit": "Editar perfil",
+  "profileSetup.titleFirstTime": "Completa tu perfil"
 }

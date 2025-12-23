@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "لا يوجد مساعدون متاحون حاليًا",
-    "noAvailable": "لا يوجد مساعدون يمكن إضافتهم في الوقت الحالي",
-    "noSelected": "لم يتم اختيار أي مساعد بعد",
-    "search": "لم يتم العثور على مساعد مطابق"
-  },
-  "starter": {
-    "createAgent": "إنشاء مساعد",
-    "createGroup": "إنشاء مجموعة",
-    "deepResearch": "بحث معمق",
-    "developing": "قيد التطوير",
-    "image": "رسم",
-    "write": "كتابة"
-  }
+  "agentSelection.empty": "لا يوجد مساعدون متاحون حاليًا",
+  "agentSelection.noAvailable": "لا يوجد مساعدون يمكن إضافتهم في الوقت الحالي",
+  "agentSelection.noSelected": "لم يتم اختيار أي مساعد بعد",
+  "agentSelection.search": "لم يتم العثور على مساعد مطابق",
+  "starter.createAgent": "إنشاء مساعد",
+  "starter.createGroup": "إنشاء مجموعة",
+  "starter.deepResearch": "بحث معمق",
+  "starter.developing": "قيد التطوير",
+  "starter.image": "رسم",
+  "starter.write": "كتابة"
 }

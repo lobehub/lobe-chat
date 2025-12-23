@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Bestand succesvol toegevoegd, <1>direct bekijken</1>",
-    "confirm": "Toevoegen",
-    "error": "Bestand toevoegen aan kennisbank mislukt",
-    "id": {
-      "placeholder": "Selecteer de kennisbank om toe te voegen",
-      "required": "Selecteer een kennisbank",
-      "title": "Doelkennisbank"
-    },
-    "title": "Toevoegen aan kennisbank",
-    "totalFiles": "{{count}} bestanden geselecteerd"
-  },
-  "createNew": {
-    "confirm": "Nieuw aanmaken",
-    "description": {
-      "placeholder": "Beschrijving van de kennisbank (optioneel)"
-    },
-    "formTitle": "Basisinformatie",
-    "name": {
-      "placeholder": "Naam van de kennisbank",
-      "required": "Voer een naam in voor de kennisbank"
-    },
-    "title": "Nieuwe kennisbank aanmaken"
-  },
-  "tab": {
-    "evals": "Beoordelingen",
-    "files": "Documenten",
-    "settings": "Instellingen",
-    "testing": "Herinneringstest"
-  },
+  "addToKnowledgeBase.addSuccess": "Bestand succesvol toegevoegd, <1>direct bekijken</1>",
+  "addToKnowledgeBase.confirm": "Toevoegen",
+  "addToKnowledgeBase.error": "Bestand toevoegen aan kennisbank mislukt",
+  "addToKnowledgeBase.id.placeholder": "Selecteer de kennisbank om toe te voegen",
+  "addToKnowledgeBase.id.required": "Selecteer een kennisbank",
+  "addToKnowledgeBase.id.title": "Doelkennisbank",
+  "addToKnowledgeBase.title": "Toevoegen aan kennisbank",
+  "addToKnowledgeBase.totalFiles": "{{count}} bestanden geselecteerd",
+  "createNew.confirm": "Nieuw aanmaken",
+  "createNew.description.placeholder": "Beschrijving van de kennisbank (optioneel)",
+  "createNew.formTitle": "Basisinformatie",
+  "createNew.name.placeholder": "Naam van de kennisbank",
+  "createNew.name.required": "Voer een naam in voor de kennisbank",
+  "createNew.title": "Nieuwe kennisbank aanmaken",
+  "tab.evals": "Beoordelingen",
+  "tab.files": "Documenten",
+  "tab.settings": "Instellingen",
+  "tab.testing": "Herinneringstest",
   "title": "Kennisbank"
 }

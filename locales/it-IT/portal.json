@@ -1,27 +1,15 @@
 {
   "Artifacts": "Artefatti",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "Blocco",
-      "file": "File"
-    }
-  },
+  "FilePreview.tabs.chunk": "Blocco",
+  "FilePreview.tabs.file": "File",
   "Plugins": "Plugin",
-  "artifacts": {
-    "display": {
-      "code": "Codice",
-      "preview": "Anteprima"
-    },
-    "svg": {
-      "copyAsImage": "Copia come immagine",
-      "copyFail": "Copia fallita, motivo dell'errore: {{error}}",
-      "copySuccess": "Immagine copiata con successo",
-      "download": {
-        "png": "Scarica come PNG",
-        "svg": "Scarica come SVG"
-      }
-    }
-  },
+  "artifacts.display.code": "Codice",
+  "artifacts.display.preview": "Anteprima",
+  "artifacts.svg.copyAsImage": "Copia come immagine",
+  "artifacts.svg.copyFail": "Copia fallita, motivo dell'errore: {{error}}",
+  "artifacts.svg.copySuccess": "Immagine copiata con successo",
+  "artifacts.svg.download.png": "Scarica come PNG",
+  "artifacts.svg.download.svg": "Scarica come SVG",
   "emptyArtifactList": "La lista degli Artefatti attuale è vuota, si prega di utilizzare i plugin necessari durante la sessione e poi controllare di nuovo",
   "emptyKnowledgeList": "L'elenco delle conoscenze attuale è vuoto. Si prega di attivare il database delle conoscenze durante la conversazione per visualizzarlo.",
   "files": "File",

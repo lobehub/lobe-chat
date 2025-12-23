@@ -3,7 +3,7 @@ import { ModelProviderCard } from '@/types/llm';
 // ref: https://ollama.com/library
 const LMStudio: ModelProviderCard = {
   chatModels: [],
-  description: 'LM Studio 是一个用于在您的计算机上开发和实验 LLMs 的桌面应用程序。',
+  description: 'LM Studio 是一个用于在你的计算机上开发和实验 LLMs 的桌面应用程序。',
   id: 'lmstudio',
   modelsUrl: 'https://lmstudio.ai/models',
   name: 'LM Studio',

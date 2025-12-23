@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "حذف",
-      "edit": "تعديل"
-    },
-    "defaultType": "سياق",
-    "deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذه الذاكرة السياقية؟ لا يمكن التراجع عن هذا الإجراء.",
-    "deleteTitle": "حذف الذاكرة السياقية",
-    "description": "الوصف",
-    "empty": "لا توجد ذكريات سياقية حالياً",
-    "source": "المصدر"
-  },
-  "empty": {
-    "description": "استخراج الذكريات هو عملية تدريجية، يُرجى التفاعل في مواضيع أكثر لتغذية محتوى الذكريات المستخرجة. حاول إجراء محادثات أعمق مع المساعد لالتقاط وتخزين معلومات ذات قيمة بشكل أفضل.",
-    "search": "لم يتم العثور على ذكريات مطابقة",
-    "title": "لا توجد ذكريات حالياً"
-  },
-  "experience": {
-    "actions": {
-      "delete": "حذف",
-      "edit": "تعديل"
-    },
-    "defaultType": "تجربة",
-    "deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذه الذاكرة التجريبية؟ لا يمكن التراجع عن هذا الإجراء.",
-    "deleteTitle": "حذف الذاكرة التجريبية",
-    "empty": "لا توجد ذكريات تجريبية حالياً",
-    "keyLearning": "التعلم الرئيسي",
-    "situation": "السياق",
-    "source": "المصدر",
-    "steps": {
-      "action": "الإجراء",
-      "result": "النتيجة",
-      "situation": "الوضع",
-      "task": "المهمة"
-    }
-  },
-  "filter": {
-    "search": "ابحث عن كلمات مفتاحية أو وصف للذاكرة...",
-    "sort": {
-      "createdAt": "تاريخ الإنشاء",
-      "scoreConfidence": "درجة الثقة",
-      "scoreImpact": "الأهمية",
-      "scorePriority": "أولوية التفضيل",
-      "scoreUrgency": "درجة الإلحاح"
-    }
-  },
-  "identity": {
-    "empty": "لا توجد ذاكرة هوية حالياً",
-    "filter": {
-      "search": "ابحث عن دور أو علاقة أو وصف...",
-      "type": {
-        "all": "الكل",
-        "demographic": "السمات",
-        "personal": "الدور",
-        "professional": "مهني"
-      }
-    },
-    "list": {
-      "confirmDelete": "تأكيد الحذف",
-      "deleteCancel": "إلغاء",
-      "deleteContent": "هل أنت متأكد من أنك تريد حذف ذاكرة الهوية هذه؟ لا يمكن التراجع عن هذا الإجراء.",
-      "deleteOk": "حذف",
-      "noResults": "لم يتم العثور على أي ذاكرة هوية مطابقة",
-      "updated": "تم التحديث"
-    },
-    "roleCloud": {
-      "collapse": "إخفاء",
-      "expand": "عرض المزيد"
-    },
-    "view": {
-      "list": "قائمة",
-      "timeline": "الجدول الزمني"
-    }
-  },
+  "context.actions.delete": "حذف",
+  "context.actions.edit": "تعديل",
+  "context.defaultType": "سياق",
+  "context.deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذه الذاكرة السياقية؟ لا يمكن التراجع عن هذا الإجراء.",
+  "context.deleteTitle": "حذف الذاكرة السياقية",
+  "context.description": "الوصف",
+  "context.empty": "لا توجد ذكريات سياقية حالياً",
+  "context.source": "المصدر",
+  "empty.description": "استخراج الذكريات هو عملية تدريجية، يُرجى التفاعل في مواضيع أكثر لتغذية محتوى الذكريات المستخرجة. حاول إجراء محادثات أعمق مع المساعد لالتقاط وتخزين معلومات ذات قيمة بشكل أفضل.",
+  "empty.search": "لم يتم العثور على ذكريات مطابقة",
+  "empty.title": "لا توجد ذكريات حالياً",
+  "experience.actions.delete": "حذف",
+  "experience.actions.edit": "تعديل",
+  "experience.defaultType": "تجربة",
+  "experience.deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذه الذاكرة التجريبية؟ لا يمكن التراجع عن هذا الإجراء.",
+  "experience.deleteTitle": "حذف الذاكرة التجريبية",
+  "experience.empty": "لا توجد ذكريات تجريبية حالياً",
+  "experience.keyLearning": "التعلم الرئيسي",
+  "experience.situation": "السياق",
+  "experience.source": "المصدر",
+  "experience.steps.action": "الإجراء",
+  "experience.steps.result": "النتيجة",
+  "experience.steps.situation": "الوضع",
+  "experience.steps.task": "المهمة",
+  "filter.search": "ابحث عن كلمات مفتاحية أو وصف للذاكرة...",
+  "filter.sort.createdAt": "تاريخ الإنشاء",
+  "filter.sort.scoreConfidence": "درجة الثقة",
+  "filter.sort.scoreImpact": "الأهمية",
+  "filter.sort.scorePriority": "أولوية التفضيل",
+  "filter.sort.scoreUrgency": "درجة الإلحاح",
+  "identity.empty": "لا توجد ذاكرة هوية حالياً",
+  "identity.filter.search": "ابحث عن دور أو علاقة أو وصف...",
+  "identity.filter.type.all": "الكل",
+  "identity.filter.type.demographic": "السمات",
+  "identity.filter.type.personal": "الدور",
+  "identity.filter.type.professional": "مهني",
+  "identity.list.confirmDelete": "تأكيد الحذف",
+  "identity.list.deleteCancel": "إلغاء",
+  "identity.list.deleteContent": "هل أنت متأكد من أنك تريد حذف ذاكرة الهوية هذه؟ لا يمكن التراجع عن هذا الإجراء.",
+  "identity.list.deleteOk": "حذف",
+  "identity.list.noResults": "لم يتم العثور على أي ذاكرة هوية مطابقة",
+  "identity.list.updated": "تم التحديث",
+  "identity.roleCloud.collapse": "إخفاء",
+  "identity.roleCloud.expand": "عرض المزيد",
+  "identity.view.list": "قائمة",
+  "identity.view.timeline": "الجدول الزمني",
   "loading": "جارٍ التحميل...",
-  "preference": {
-    "actions": {
-      "delete": "حذف",
-      "edit": "تعديل"
-    },
-    "conclusionDirectives": "توجيهات الاستنتاج",
-    "defaultType": "تفضيل",
-    "deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذه الذاكرة التفضيلية؟ لا يمكن التراجع عن هذا الإجراء.",
-    "deleteTitle": "حذف الذاكرة التفضيلية",
-    "empty": "لا توجد ذكريات تفضيلية حالياً",
-    "source": "المصدر",
-    "suggestions": "الإجراءات التي قد يتخذها المساعد"
-  },
-  "tab": {
-    "contexts": "السياقات",
-    "experiences": "التجارب",
-    "home": "الرئيسية",
-    "identities": "الهويات",
-    "preferences": "التفضيلات",
-    "search": "بحث"
-  },
-  "viewMode": {
-    "masonry": "عرض متدرج",
-    "timeline": "الجدول الزمني"
-  }
+  "preference.actions.delete": "حذف",
+  "preference.actions.edit": "تعديل",
+  "preference.conclusionDirectives": "توجيهات الاستنتاج",
+  "preference.defaultType": "تفضيل",
+  "preference.deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذه الذاكرة التفضيلية؟ لا يمكن التراجع عن هذا الإجراء.",
+  "preference.deleteTitle": "حذف الذاكرة التفضيلية",
+  "preference.empty": "لا توجد ذكريات تفضيلية حالياً",
+  "preference.source": "المصدر",
+  "preference.suggestions": "الإجراءات التي قد يتخذها المساعد",
+  "tab.contexts": "السياقات",
+  "tab.experiences": "التجارب",
+  "tab.home": "الرئيسية",
+  "tab.identities": "الهويات",
+  "tab.preferences": "التفضيلات",
+  "tab.search": "بحث",
+  "viewMode.masonry": "عرض متدرج",
+  "viewMode.timeline": "الجدول الزمني"
 }

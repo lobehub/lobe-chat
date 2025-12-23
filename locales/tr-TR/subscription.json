@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "Kurumsal"
-      },
-      "free": {
-        "title": "Ücretsiz"
-      },
-      "hobby": {
-        "title": "Kendi Kendine Hizmet Versiyonu"
-      },
-      "premium": {
-        "title": "Gelişmiş"
-      },
-      "starter": {
-        "title": "Temel"
-      },
-      "ultimate": {
-        "title": "Profesyonel"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "Kurumsal",
+  "plans.plan.free.title": "Ücretsiz",
+  "plans.plan.hobby.title": "Kendi Kendine Hizmet Versiyonu",
+  "plans.plan.premium.title": "Gelişmiş",
+  "plans.plan.starter.title": "Temel",
+  "plans.plan.ultimate.title": "Profesyonel"
 }

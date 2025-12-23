@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Свернуть",
-      "on": "Развернуть"
-    },
-    "typobar": {
-      "off": "Скрыть панель форматирования",
-      "on": "Показать панель форматирования"
-    }
-  },
-  "autoSave": {
-    "latest": "Загружена последняя версия",
-    "saved": "Сохранено",
-    "saving": "Автосохранение..."
-  },
+  "actions.expand.off": "Свернуть",
+  "actions.expand.on": "Развернуть",
+  "actions.typobar.off": "Скрыть панель форматирования",
+  "actions.typobar.on": "Показать панель форматирования",
+  "autoSave.latest": "Загружена последняя версия",
+  "autoSave.saved": "Сохранено",
+  "autoSave.saving": "Автосохранение...",
   "cancel": "Отмена",
   "confirm": "Подтвердить",
-  "file": {
-    "error": "Ошибка: {{message}}",
-    "uploading": "Загрузка файла..."
-  },
-  "image": {
-    "broken": "Изображение повреждено"
-  },
-  "link": {
-    "edit": "Редактировать ссылку",
-    "editLinkTitle": "Ссылка",
-    "editTextTitle": "Заголовок",
-    "open": "Открыть ссылку",
-    "placeholder": "Введите URL ссылки",
-    "unlink": "Удалить ссылку"
-  },
-  "markdown": {
-    "cancel": "Отмена",
-    "confirm": "Преобразовать",
-    "parseMessage": "Преобразовать в формат Markdown. Существующее содержимое будет перезаписано. Подтвердить? (Автоматическое закрытие через 5 секунд)",
-    "parseTitle": "Форматировать в Markdown"
-  },
-  "math": {
-    "placeholder": "Введите формулу TeX"
-  },
-  "modifier": {
-    "accept": "Принять",
-    "acceptAll": "Принять все",
-    "reject": "Отклонить",
-    "rejectedAll": "Отклонить все"
-  },
-  "slash": {
-    "h1": "Заголовок первого уровня",
-    "h2": "Заголовок второго уровня",
-    "h3": "Заголовок третьего уровня",
-    "hr": "Разделитель",
-    "table": "Таблица",
-    "tex": "Формула TeX"
-  },
-  "table": {
-    "delete": "Удалить таблицу",
-    "deleteColumn": "Удалить столбец",
-    "deleteRow": "Удалить строку",
-    "insertColumnLeft": "{count, plural, one {Вставить # столбец слева} few {Вставить # столбца слева} many {Вставить # столбцов слева} other {Вставить # столбца слева}}",
-    "insertColumnRight": "{count, plural, one {Вставить # столбец справа} few {Вставить # столбца справа} many {Вставить # столбцов справа} other {Вставить # столбца справа}}",
-    "insertRowAbove": "{count, plural, one {Вставить # строку сверху} few {Вставить # строки сверху} many {Вставить # строк сверху} other {Вставить # строки сверху}}",
-    "insertRowBelow": "{count, plural, one {Вставить # строку снизу} few {Вставить # строки снизу} many {Вставить # строк снизу} other {Вставить # строки снизу}}"
-  },
-  "typobar": {
-    "blockquote": "Цитата",
-    "bold": "Жирный",
-    "bulletList": "Маркированный список",
-    "code": "Встроенный код",
-    "codeblock": "Блок кода",
-    "image": "Изображение",
-    "italic": "Курсив",
-    "link": "Ссылка",
-    "numberList": "Нумерованный список",
-    "redo": "Повторить",
-    "strikethrough": "Зачёркнутый",
-    "table": "таблица",
-    "taskList": "Список задач",
-    "tex": "Формула TeX",
-    "underline": "Подчёркнутый",
-    "undo": "Отменить"
-  }
+  "file.error": "Ошибка: {{message}}",
+  "file.uploading": "Загрузка файла...",
+  "image.broken": "Изображение повреждено",
+  "link.edit": "Редактировать ссылку",
+  "link.editLinkTitle": "Ссылка",
+  "link.editTextTitle": "Заголовок",
+  "link.open": "Открыть ссылку",
+  "link.placeholder": "Введите URL ссылки",
+  "link.unlink": "Удалить ссылку",
+  "markdown.cancel": "Отмена",
+  "markdown.confirm": "Преобразовать",
+  "markdown.parseMessage": "Преобразовать в формат Markdown. Существующее содержимое будет перезаписано. Подтвердить? (Автоматическое закрытие через 5 секунд)",
+  "markdown.parseTitle": "Форматировать в Markdown",
+  "math.placeholder": "Введите формулу TeX",
+  "modifier.accept": "Принять",
+  "modifier.acceptAll": "Принять все",
+  "modifier.reject": "Отклонить",
+  "modifier.rejectedAll": "Отклонить все",
+  "slash.h1": "Заголовок первого уровня",
+  "slash.h2": "Заголовок второго уровня",
+  "slash.h3": "Заголовок третьего уровня",
+  "slash.hr": "Разделитель",
+  "slash.table": "Таблица",
+  "slash.tex": "Формула TeX",
+  "table.delete": "Удалить таблицу",
+  "table.deleteColumn": "Удалить столбец",
+  "table.deleteRow": "Удалить строку",
+  "table.insertColumnLeft": "{count, plural, one {Вставить # столбец слева} few {Вставить # столбца слева} many {Вставить # столбцов слева} other {Вставить # столбца слева}}",
+  "table.insertColumnRight": "{count, plural, one {Вставить # столбец справа} few {Вставить # столбца справа} many {Вставить # столбцов справа} other {Вставить # столбца справа}}",
+  "table.insertRowAbove": "{count, plural, one {Вставить # строку сверху} few {Вставить # строки сверху} many {Вставить # строк сверху} other {Вставить # строки сверху}}",
+  "table.insertRowBelow": "{count, plural, one {Вставить # строку снизу} few {Вставить # строки снизу} many {Вставить # строк снизу} other {Вставить # строки снизу}}",
+  "typobar.blockquote": "Цитата",
+  "typobar.bold": "Жирный",
+  "typobar.bulletList": "Маркированный список",
+  "typobar.code": "Встроенный код",
+  "typobar.codeblock": "Блок кода",
+  "typobar.image": "Изображение",
+  "typobar.italic": "Курсив",
+  "typobar.link": "Ссылка",
+  "typobar.numberList": "Нумерованный список",
+  "typobar.redo": "Повторить",
+  "typobar.strikethrough": "Зачёркнутый",
+  "typobar.table": "таблица",
+  "typobar.taskList": "Список задач",
+  "typobar.tex": "Формула TeX",
+  "typobar.underline": "Подчёркнутый",
+  "typobar.undo": "Отменить"
 }

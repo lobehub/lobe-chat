@@ -2,197 +2,125 @@
   "addFolder": "Tạo thư mục",
   "addLibrary": "Thêm",
   "addPage": "Tạo tài liệu",
-  "detail": {
-    "basic": {
-      "createdAt": "Thời gian tạo",
-      "filename": "Tên tệp",
-      "size": "Kích thước tệp",
-      "title": "Thông tin cơ bản",
-      "type": "Định dạng",
-      "updatedAt": "Thời gian cập nhật"
-    },
-    "data": {
-      "chunkCount": "Số lượng phân đoạn",
-      "embedding": {
-        "default": "Chưa được vector hóa",
-        "error": "Thất bại",
-        "pending": "Đang chờ khởi động",
-        "processing": "Đang xử lý",
-        "success": "Đã hoàn thành"
-      },
-      "embeddingStatus": "Trạng thái vector hóa"
-    }
-  },
+  "detail.basic.createdAt": "Thời gian tạo",
+  "detail.basic.filename": "Tên tệp",
+  "detail.basic.size": "Kích thước tệp",
+  "detail.basic.title": "Thông tin cơ bản",
+  "detail.basic.type": "Định dạng",
+  "detail.basic.updatedAt": "Thời gian cập nhật",
+  "detail.data.chunkCount": "Số lượng phân đoạn",
+  "detail.data.embedding.default": "Chưa được vector hóa",
+  "detail.data.embedding.error": "Thất bại",
+  "detail.data.embedding.pending": "Đang chờ khởi động",
+  "detail.data.embedding.processing": "Đang xử lý",
+  "detail.data.embedding.success": "Đã hoàn thành",
+  "detail.data.embeddingStatus": "Trạng thái vector hóa",
   "empty": "Chưa có tệp/tệp tin nào được tải lên",
-  "header": {
-    "actions": {
-      "builtInBlockList": {
-        "filtered": "Đã lọc {{ignored}} tệp (trong tổng số {{total}} tệp)"
-      },
-      "connect": "Kết nối...",
-      "gitignore": {
-        "apply": "Áp dụng quy tắc",
-        "cancel": "Bỏ qua quy tắc",
-        "content": "Phát hiện tệp .gitignore (tổng cộng {{count}} tệp), bạn có muốn áp dụng quy tắc bỏ qua không?",
-        "filtered": "Đã lọc {{ignored}} tệp (trong tổng số {{total}} tệp)",
-        "title": "Phát hiện tệp .gitignore"
-      },
-      "newFolder": "Tạo thư mục mới",
-      "newPage": "Tạo tài liệu mới",
-      "notion": {
-        "error": "Không thể nhập tệp Notion",
-        "foundFiles": "Đã tìm thấy {{count}} tệp",
-        "importing": "Đang nhập tệp Notion...",
-        "noMarkdownFiles": "Không tìm thấy tệp Markdown nào trong tệp ZIP",
-        "partial": "Đã nhập thành công {{success}} tệp, thất bại {{failed}} tệp",
-        "success": "Đã nhập thành công {{count}} tệp"
-      },
-      "notionGuide": {
-        "cancel": "Tạm thời không nhập",
-        "desc": "Vui lòng xuất Markdown (ZIP) từ Notion trước, sau đó nhấp Tiếp tục để chọn tệp nén và nhập tất cả các trang.",
-        "ok": "Chọn tệp ZIP từ Notion",
-        "title": "Nhập nội dung từ Notion"
-      },
-      "uploadFile": "Tải tệp lên",
-      "uploadFolder": "Tải thư mục lên"
-    },
-    "newPageButton": "Tạo tài liệu mới",
-    "uploadButton": "Tải lên"
-  },
-  "home": {
-    "getStarted": "Bắt đầu",
-    "greeting": "Bắt đầu",
-    "quickActions": "Hành động nhanh",
-    "recentFiles": "Tệp gần đây",
-    "recentPages": "Tài liệu gần đây",
-    "subtitle": "Chào mừng đến với Trung tâm Tài nguyên, bắt đầu quản lý tài liệu của bạn từ đây",
-    "uploadEntries": {
-      "files": {
-        "title": "Tải lên tệp"
-      },
-      "folder": {
-        "title": "Tải lên thư mục"
-      },
-      "library": {
-        "title": "Tạo thư viện mới"
-      },
-      "newPage": {
-        "title": "Tạo tài liệu mới"
-      }
-    }
-  },
-  "library": {
-    "list": {
-      "confirmRemoveLibrary": "Thư viện này sẽ bị xóa, các tệp bên trong sẽ không bị xóa mà sẽ được chuyển vào mục Tất cả tệp. Sau khi xóa, thư viện sẽ không thể khôi phục, vui lòng cẩn thận.",
-      "empty": "Nhấn <1>+</1> để bắt đầu tạo thư viện"
-    },
-    "new": "Tạo thư viện mới",
-    "title": "Thư viện"
-  },
-  "menu": {
-    "allFiles": "Tất cả tệp",
-    "allPages": "Tất cả tài liệu"
-  },
+  "header.actions.builtInBlockList.filtered": "Đã lọc {{ignored}} tệp (trong tổng số {{total}} tệp)",
+  "header.actions.connect": "Kết nối...",
+  "header.actions.gitignore.apply": "Áp dụng quy tắc",
+  "header.actions.gitignore.cancel": "Bỏ qua quy tắc",
+  "header.actions.gitignore.content": "Phát hiện tệp .gitignore (tổng cộng {{count}} tệp), bạn có muốn áp dụng quy tắc bỏ qua không?",
+  "header.actions.gitignore.filtered": "Đã lọc {{ignored}} tệp (trong tổng số {{total}} tệp)",
+  "header.actions.gitignore.title": "Phát hiện tệp .gitignore",
+  "header.actions.newFolder": "Tạo thư mục mới",
+  "header.actions.newPage": "Tạo tài liệu mới",
+  "header.actions.notion.error": "Không thể nhập tệp Notion",
+  "header.actions.notion.foundFiles": "Đã tìm thấy {{count}} tệp",
+  "header.actions.notion.importing": "Đang nhập tệp Notion...",
+  "header.actions.notion.noMarkdownFiles": "Không tìm thấy tệp Markdown nào trong tệp ZIP",
+  "header.actions.notion.partial": "Đã nhập thành công {{success}} tệp, thất bại {{failed}} tệp",
+  "header.actions.notion.success": "Đã nhập thành công {{count}} tệp",
+  "header.actions.notionGuide.cancel": "Tạm thời không nhập",
+  "header.actions.notionGuide.desc": "Vui lòng xuất Markdown (ZIP) từ Notion trước, sau đó nhấp Tiếp tục để chọn tệp nén và nhập tất cả các trang.",
+  "header.actions.notionGuide.ok": "Chọn tệp ZIP từ Notion",
+  "header.actions.notionGuide.title": "Nhập nội dung từ Notion",
+  "header.actions.uploadFile": "Tải tệp lên",
+  "header.actions.uploadFolder": "Tải thư mục lên",
+  "header.newPageButton": "Tạo tài liệu mới",
+  "header.uploadButton": "Tải lên",
+  "home.getStarted": "Bắt đầu",
+  "home.greeting": "Bắt đầu",
+  "home.quickActions": "Hành động nhanh",
+  "home.recentFiles": "Tệp gần đây",
+  "home.recentPages": "Tài liệu gần đây",
+  "home.subtitle": "Chào mừng đến với Trung tâm Tài nguyên, bắt đầu quản lý tài liệu của bạn từ đây",
+  "home.uploadEntries.files.title": "Tải lên tệp",
+  "home.uploadEntries.folder.title": "Tải lên thư mục",
+  "home.uploadEntries.library.title": "Tạo thư viện mới",
+  "home.uploadEntries.newPage.title": "Tạo tài liệu mới",
+  "library.list.confirmRemoveLibrary": "Thư viện này sẽ bị xóa, các tệp bên trong sẽ không bị xóa mà sẽ được chuyển vào mục Tất cả tệp. Sau khi xóa, thư viện sẽ không thể khôi phục, vui lòng cẩn thận.",
+  "library.list.empty": "Nhấn <1>+</1> để bắt đầu tạo thư viện",
+  "library.new": "Tạo thư viện mới",
+  "library.title": "Thư viện",
+  "menu.allFiles": "Tất cả tệp",
+  "menu.allPages": "Tất cả tài liệu",
   "networkError": "Không thể tải thư viện, vui lòng kiểm tra kết nối mạng và thử lại",
-  "notSupportGuide": {
-    "desc": "Phiên bản triển khai hiện tại là chế độ cơ sở dữ liệu khách hàng, không thể sử dụng chức năng quản lý tệp. Vui lòng chuyển sang <1>chế độ triển khai cơ sở dữ liệu máy chủ</1>, hoặc sử dụng trực tiếp <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Hỗ trợ các loại tệp phổ biến, bao gồm các định dạng tài liệu như Word, PPT, Excel, PDF, TXT, cũng như các tệp mã nguồn phổ biến như JS, Python",
-        "title": "Phân tích nhiều loại tệp"
-      },
-      "embeddings": {
-        "desc": "Sử dụng mô hình vector hiệu suất cao để vector hóa các phân đoạn văn bản, thực hiện tìm kiếm ngữ nghĩa nội dung tệp",
-        "title": "Ngữ nghĩa hóa vector"
-      },
-      "libraries": {
-        "desc": "Hỗ trợ tạo thư viện và cho phép thêm các loại tệp khác nhau, xây dựng kho tài nguyên theo lĩnh vực của bạn",
-        "title": "Thư viện"
-      }
-    },
-    "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
-  },
-  "pageEditor": {
-    "addIcon": "Thêm biểu tượng",
-    "autoSaveMessage": "Tài liệu sẽ được lưu tự động, không cần lưu thủ công",
-    "chooseIcon": "Chọn biểu tượng",
-    "deleteConfirm": {
-      "content": "Tài liệu này sẽ bị xóa và không thể khôi phục. Vui lòng cẩn trọng.",
-      "title": "Xóa tài liệu"
-    },
-    "deleteError": "Xóa tài liệu thất bại",
-    "deleteSuccess": "Xóa tài liệu thành công",
-    "editedAt": "Chỉnh sửa lần cuối vào {{time}}",
-    "editedBy": "Người chỉnh sửa cuối cùng: {{name}}",
-    "editorPlaceholder": "Nhập nội dung tài liệu, nhấn / để mở menu lệnh",
-    "empty": {
-      "createNewDocument": "Tạo tài liệu mới",
-      "title": "Chọn một tài liệu để bắt đầu",
-      "uploadMarkdown": "Tải lên tệp Markdown"
-    },
-    "linkCopied": "Đã sao chép liên kết",
-    "menu": {
-      "copyLink": "Sao chép liên kết",
-      "exportDocument": "Xuất tài liệu",
-      "importDocument": "Nhập tài liệu",
-      "pin": "Ghim tài liệu"
-    },
-    "saving": "Đang lưu...",
-    "titlePlaceholder": "Không có tiêu đề",
-    "wordCount": "{{wordCount}} từ"
-  },
-  "pageList": {
-    "copyContent": "Sao chép toàn bộ nội dung",
-    "duplicate": "Tạo bản sao",
-    "empty": "Chưa có tài liệu nào, nhấn nút phía trên để tạo tài liệu đầu tiên của bạn",
-    "filter": {
-      "all": "Tất cả",
-      "onlyInPages": "Chỉ trong tài liệu"
-    },
-    "noResults": "Không tìm thấy tài liệu phù hợp",
-    "pageCount": "Tổng cộng {{count}} tài liệu",
-    "selectNote": "Chọn một tài liệu để bắt đầu chỉnh sửa",
-    "title": "Tài liệu",
-    "untitled": "Không có tiêu đề"
-  },
-  "preview": {
-    "downloadFile": "Tải tệp",
-    "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
-  },
+  "notSupportGuide.desc": "Phiên bản triển khai hiện tại là chế độ cơ sở dữ liệu khách hàng, không thể sử dụng chức năng quản lý tệp. Vui lòng chuyển sang <1>chế độ triển khai cơ sở dữ liệu máy chủ</1>, hoặc sử dụng trực tiếp <3>LobeChat Cloud</3>",
+  "notSupportGuide.features.allKind.desc": "Hỗ trợ các loại tệp phổ biến, bao gồm các định dạng tài liệu như Word, PPT, Excel, PDF, TXT, cũng như các tệp mã nguồn phổ biến như JS, Python",
+  "notSupportGuide.features.allKind.title": "Phân tích nhiều loại tệp",
+  "notSupportGuide.features.embeddings.desc": "Sử dụng mô hình vector hiệu suất cao để vector hóa các phân đoạn văn bản, thực hiện tìm kiếm ngữ nghĩa nội dung tệp",
+  "notSupportGuide.features.embeddings.title": "Ngữ nghĩa hóa vector",
+  "notSupportGuide.features.libraries.desc": "Hỗ trợ tạo thư viện và cho phép thêm các loại tệp khác nhau, xây dựng kho tài nguyên theo lĩnh vực của bạn",
+  "notSupportGuide.features.libraries.title": "Thư viện",
+  "notSupportGuide.title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp",
+  "pageEditor.addIcon": "Thêm biểu tượng",
+  "pageEditor.autoSaveMessage": "Tài liệu sẽ được lưu tự động, không cần lưu thủ công",
+  "pageEditor.chooseIcon": "Chọn biểu tượng",
+  "pageEditor.deleteConfirm.content": "Tài liệu này sẽ bị xóa và không thể khôi phục. Vui lòng cẩn trọng.",
+  "pageEditor.deleteConfirm.title": "Xóa tài liệu",
+  "pageEditor.deleteError": "Xóa tài liệu thất bại",
+  "pageEditor.deleteSuccess": "Xóa tài liệu thành công",
+  "pageEditor.editedAt": "Chỉnh sửa lần cuối vào {{time}}",
+  "pageEditor.editedBy": "Người chỉnh sửa cuối cùng: {{name}}",
+  "pageEditor.editorPlaceholder": "Nhập nội dung tài liệu, nhấn / để mở menu lệnh",
+  "pageEditor.empty.createNewDocument": "Tạo tài liệu mới",
+  "pageEditor.empty.title": "Chọn một tài liệu để bắt đầu",
+  "pageEditor.empty.uploadMarkdown": "Tải lên tệp Markdown",
+  "pageEditor.linkCopied": "Đã sao chép liên kết",
+  "pageEditor.menu.copyLink": "Sao chép liên kết",
+  "pageEditor.menu.exportDocument": "Xuất tài liệu",
+  "pageEditor.menu.importDocument": "Nhập tài liệu",
+  "pageEditor.menu.pin": "Ghim tài liệu",
+  "pageEditor.saving": "Đang lưu...",
+  "pageEditor.titlePlaceholder": "Không có tiêu đề",
+  "pageEditor.wordCount": "{{wordCount}} từ",
+  "pageList.copyContent": "Sao chép toàn bộ nội dung",
+  "pageList.duplicate": "Tạo bản sao",
+  "pageList.empty": "Chưa có tài liệu nào, nhấn nút phía trên để tạo tài liệu đầu tiên của bạn",
+  "pageList.filter.all": "Tất cả",
+  "pageList.filter.onlyInPages": "Chỉ trong tài liệu",
+  "pageList.noResults": "Không tìm thấy tài liệu phù hợp",
+  "pageList.pageCount": "Tổng cộng {{count}} tài liệu",
+  "pageList.selectNote": "Chọn một tài liệu để bắt đầu chỉnh sửa",
+  "pageList.title": "Tài liệu",
+  "pageList.untitled": "Không có tiêu đề",
+  "preview.downloadFile": "Tải tệp",
+  "preview.unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>",
   "searchFilePlaceholder": "Tìm kiếm tệp",
   "searchPagePlaceholder": "Tìm kiếm bản thảo",
-  "tab": {
-    "all": "Tất cả",
-    "audios": "Âm thanh",
-    "documents": "Tài liệu",
-    "home": "Trang chủ",
-    "images": "Hình ảnh",
-    "moreTypes": "Thêm loại",
-    "pages": "Bản thảo",
-    "videos": "Video",
-    "websites": "Trang web"
-  },
+  "tab.all": "Tất cả",
+  "tab.audios": "Âm thanh",
+  "tab.documents": "Tài liệu",
+  "tab.home": "Trang chủ",
+  "tab.images": "Hình ảnh",
+  "tab.moreTypes": "Thêm loại",
+  "tab.pages": "Bản thảo",
+  "tab.videos": "Video",
+  "tab.websites": "Trang web",
   "title": "Tài nguyên",
   "toggleLeftPanel": "Hiển thị/Ẩn bảng điều khiển bên trái",
-  "uploadDock": {
-    "body": {
-      "collapse": "Thu gọn",
-      "item": {
-        "done": "Đã tải lên",
-        "error": "Tải lên thất bại, vui lòng thử lại",
-        "pending": "Chuẩn bị tải lên...",
-        "processing": "Đang xử lý tệp...",
-        "restTime": "Thời gian còn lại {{time}}"
-      }
-    },
-    "fileQueueInfo": "Đang tải lên {{count}} tệp đầu tiên, còn lại {{remaining}} tệp sẽ được xếp hàng để tải lên",
-    "totalCount": "Tổng cộng {{count}} mục",
-    "uploadStatus": {
-      "error": "Lỗi tải lên",
-      "pending": "Đang chờ tải lên",
-      "processing": "Đang tải lên",
-      "success": "Tải lên hoàn tất",
-      "uploading": "Đang tải lên"
-    }
-  }
+  "uploadDock.body.collapse": "Thu gọn",
+  "uploadDock.body.item.done": "Đã tải lên",
+  "uploadDock.body.item.error": "Tải lên thất bại, vui lòng thử lại",
+  "uploadDock.body.item.pending": "Chuẩn bị tải lên...",
+  "uploadDock.body.item.processing": "Đang xử lý tệp...",
+  "uploadDock.body.item.restTime": "Thời gian còn lại {{time}}",
+  "uploadDock.fileQueueInfo": "Đang tải lên {{count}} tệp đầu tiên, còn lại {{remaining}} tệp sẽ được xếp hàng để tải lên",
+  "uploadDock.totalCount": "Tổng cộng {{count}} mục",
+  "uploadDock.uploadStatus.error": "Lỗi tải lên",
+  "uploadDock.uploadStatus.pending": "Đang chờ tải lên",
+  "uploadDock.uploadStatus.processing": "Đang tải lên",
+  "uploadDock.uploadStatus.success": "Tải lên hoàn tất",
+  "uploadDock.uploadStatus.uploading": "Đang tải lên"
 }

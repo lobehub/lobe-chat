@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Archivo añadido con éxito, <1>ver ahora</1>",
-    "confirm": "Añadir",
-    "error": "Error al añadir el archivo a la base de conocimientos",
-    "id": {
-      "placeholder": "Por favor, selecciona la base de conocimientos a la que deseas añadir",
-      "required": "Por favor, selecciona una base de conocimientos",
-      "title": "Base de conocimientos de destino"
-    },
-    "title": "Añadir a la base de conocimientos",
-    "totalFiles": "Se han seleccionado {{count}} archivos"
-  },
-  "createNew": {
-    "confirm": "Crear nuevo",
-    "description": {
-      "placeholder": "Descripción de la base de conocimientos (opcional)"
-    },
-    "formTitle": "Información básica",
-    "name": {
-      "placeholder": "Nombre de la base de conocimientos",
-      "required": "Por favor, introduce el nombre de la base de conocimientos"
-    },
-    "title": "Crear nueva base de conocimientos"
-  },
-  "tab": {
-    "evals": "Evaluaciones",
-    "files": "Documentos",
-    "settings": "Configuraciones",
-    "testing": "Prueba de recuperación"
-  },
+  "addToKnowledgeBase.addSuccess": "Archivo añadido con éxito, <1>ver ahora</1>",
+  "addToKnowledgeBase.confirm": "Añadir",
+  "addToKnowledgeBase.error": "Error al añadir el archivo a la base de conocimientos",
+  "addToKnowledgeBase.id.placeholder": "Por favor, selecciona la base de conocimientos a la que deseas añadir",
+  "addToKnowledgeBase.id.required": "Por favor, selecciona una base de conocimientos",
+  "addToKnowledgeBase.id.title": "Base de conocimientos de destino",
+  "addToKnowledgeBase.title": "Añadir a la base de conocimientos",
+  "addToKnowledgeBase.totalFiles": "Se han seleccionado {{count}} archivos",
+  "createNew.confirm": "Crear nuevo",
+  "createNew.description.placeholder": "Descripción de la base de conocimientos (opcional)",
+  "createNew.formTitle": "Información básica",
+  "createNew.name.placeholder": "Nombre de la base de conocimientos",
+  "createNew.name.required": "Por favor, introduce el nombre de la base de conocimientos",
+  "createNew.title": "Crear nueva base de conocimientos",
+  "tab.evals": "Evaluaciones",
+  "tab.files": "Documentos",
+  "tab.settings": "Configuraciones",
+  "tab.testing": "Prueba de recuperación",
   "title": "Base de conocimientos"
 }

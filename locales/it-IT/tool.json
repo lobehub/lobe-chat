@@ -1,196 +1,132 @@
 {
-  "agentGroupManagement": {
-    "executeTask": {
-      "agent": "Esegui Agente",
-      "cancelled": "Annullato",
-      "completed": "Attività completata",
-      "cost": "Costo",
-      "failed": "Attività fallita",
-      "interrupted": "Interrotto",
-      "intervention": {
-        "taskPlaceholder": "Descrivi in dettaglio il compito che l'Agent deve eseguire...",
-        "timeout": "Tempo massimo di esecuzione",
-        "timeoutUnit": "minuti",
-        "unknownAgent": "Agent sconosciuto"
-      },
-      "processing": "In esecuzione...",
-      "steps": "Numero di passaggi",
-      "task": "Contenuto dell'attività",
-      "thread": "ID Thread",
-      "timeout": "Tempo di esecuzione scaduto",
-      "tokens": "Token utilizzati"
-    }
-  },
-  "codeInterpreter": {
-    "error": "Errore di esecuzione",
-    "executing": "In esecuzione...",
-    "files": "File:",
-    "output": "Output:",
-    "returnValue": "Valore di ritorno:"
-  },
-  "codeInterpreter-legacy": {
-    "error": "Errore di esecuzione",
-    "executing": "Esecuzione in corso...",
-    "files": "File:",
-    "output": "Output:",
-    "returnValue": "Valore restituito:"
-  },
-  "dalle": {
-    "autoGenerate": "Auto-generato",
-    "downloading": "Il link dell'immagine generata da DALL·E3 è valido solo per 1 ora, sta scaricando l'immagine in locale...",
-    "generate": "Genera",
-    "generating": "Generazione in corso...",
-    "images": "Immagini:",
-    "prompt": "parola chiave"
-  },
-  "lobe-gtd": {
-    "actions": {
-      "add": "Aggiungi",
-      "clearCompleted": "Cancella completati",
-      "placeholder": "Inserisci un'attività..."
-    },
-    "clearTodos": {
-      "cleared": "{{count}} attività cancellate",
-      "clearedCompleted": "{{count}} attività completate cancellate",
-      "clearedCompleted_one": "{{count}} attività completata cancellata",
-      "clearedCompleted_other": "{{count}} attività completate cancellate",
-      "cleared_one": "{{count}} attività cancellata",
-      "cleared_other": "{{count}} attività cancellate",
-      "noItems": "Nessuna attività da cancellare",
-      "remaining": "{{count}} attività rimanenti",
-      "remaining_one": "{{count}} attività rimanente",
-      "remaining_other": "{{count}} attività rimanenti"
-    },
-    "completeTodos": {
-      "completed": "{{count}} attività completate",
-      "completed_one": "{{count}} attività completata",
-      "completed_other": "{{count}} attività completate"
-    },
-    "createTodos": {
-      "created": "{{count}} attività create",
-      "created_one": "{{count}} attività creata",
-      "created_other": "{{count}} attività create",
-      "total": "Totale: {{count}} attività",
-      "total_one": "Totale: {{count}} attività",
-      "total_other": "Totale: {{count}} attività"
-    },
-    "removeTodos": {
-      "removed": "{{count}} attività eliminate",
-      "removed_one": "{{count}} attività eliminata",
-      "removed_other": "{{count}} attività eliminate"
-    },
-    "status": {
-      "done": "{{count}} completate",
-      "pending": "{{count}} in sospeso"
-    },
-    "todoList": {
-      "empty": "La lista delle attività è vuota",
-      "items": "{{count}} attività",
-      "items_one": "{{count}} attività",
-      "items_other": "{{count}} attività",
-      "title": "Lista delle attività"
-    },
-    "updateTodos": {
-      "updated": "Lista delle attività aggiornata"
-    }
-  },
-  "lobe-knowledge-base": {
-    "readKnowledge": {
-      "meta": {
-        "chars": "Numero di caratteri",
-        "lines": "Numero di righe"
-      }
-    }
-  },
-  "localFiles": {
-    "editFile": {
-      "newString": "Sostituisci con",
-      "oldString": "Trova",
-      "replaceAll": "Sostituisci tutte le occorrenze",
-      "replaceFirst": "Sostituisci solo la prima occorrenza"
-    },
-    "file": "File",
-    "folder": "Cartella",
-    "moveFiles": {
-      "itemsMoved": "{{count}} elementi spostati:",
-      "itemsMoved_one": "{{count}} elemento spostato:",
-      "itemsMoved_other": "{{count}} elementi spostati:",
-      "itemsToMove": "{{count}} elementi da spostare:",
-      "itemsToMove_one": "{{count}} elemento da spostare:",
-      "itemsToMove_other": "{{count}} elementi da spostare:"
-    },
-    "open": "Apri",
-    "openFile": "Apri file",
-    "openFolder": "Apri cartella",
-    "read": {
-      "more": "Mostra di più"
-    },
-    "readFile": "Leggi file",
-    "readFileError": "Impossibile leggere il file, controlla se il percorso del file è corretto",
-    "readFiles": "Leggi file",
-    "readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto",
-    "writeFile": {
-      "characters": "Caratteri",
-      "preview": "Anteprima contenuto",
-      "truncated": "Troncato"
-    }
-  },
-  "search": {
-    "createNewSearch": "Crea una nuova registrazione di ricerca",
-    "emptyResult": "Nessun risultato trovato, per favore modifica le parole chiave e riprova",
-    "genAiMessage": "Crea messaggio assistente",
-    "includedTooltip": "I risultati della ricerca attuale entreranno nel contesto della conversazione",
-    "keywords": "Parole chiave:",
-    "scoreTooltip": "Punteggio di rilevanza, un punteggio più alto indica una maggiore pertinenza rispetto alle parole chiave di ricerca",
-    "searchBar": {
-      "button": "Cerca",
-      "placeholder": "Parole chiave",
-      "tooltip": "Ricaricherà i risultati di ricerca e creerà un nuovo messaggio di sintesi"
-    },
-    "searchCategory": {
-      "placeholder": "Cerca categoria",
-      "title": "Categoria di ricerca:",
-      "value": {
-        "files": "File",
-        "general": "Generale",
-        "images": "Immagini",
-        "it": "Tecnologia dell'informazione",
-        "map": "Mappa",
-        "music": "Musica",
-        "news": "Notizie",
-        "science": "Scienza",
-        "social_media": "Social media",
-        "videos": "Video"
-      }
-    },
-    "searchEngine": {
-      "placeholder": "Motore di ricerca",
-      "title": "Motore di ricerca:"
-    },
-    "searchResult": "Numero di ricerche:",
-    "searchTimeRange": {
-      "title": "Intervallo di tempo:",
-      "value": {
-        "anytime": "Nessun limite di tempo",
-        "day": "Entro un giorno",
-        "month": "Entro un mese",
-        "week": "Entro una settimana",
-        "year": "Entro un anno"
-      }
-    },
-    "summary": "Riepilogo",
-    "summaryTooltip": "Riepiloga il contenuto attuale",
-    "viewMoreResults": "Visualizza altri {{results}} risultati"
-  },
-  "updateArgs": {
-    "duplicateKeyError": "La chiave del campo deve essere unica",
-    "form": {
-      "add": "Aggiungi un elemento",
-      "key": "Chiave del campo",
-      "value": "Valore del campo"
-    },
-    "formValidationFailed": "La convalida del modulo è fallita, controlla il formato dei parametri",
-    "keyRequired": "La chiave del campo non può essere vuota",
-    "stringifyError": "Impossibile serializzare i parametri, controlla il formato dei parametri"
-  }
+  "agentGroupManagement.executeTask.agent": "Esegui Agente",
+  "agentGroupManagement.executeTask.cancelled": "Annullato",
+  "agentGroupManagement.executeTask.completed": "Attività completata",
+  "agentGroupManagement.executeTask.cost": "Costo",
+  "agentGroupManagement.executeTask.failed": "Attività fallita",
+  "agentGroupManagement.executeTask.interrupted": "Interrotto",
+  "agentGroupManagement.executeTask.intervention.taskPlaceholder": "Descrivi in dettaglio il compito che l'Agent deve eseguire...",
+  "agentGroupManagement.executeTask.intervention.timeout": "Tempo massimo di esecuzione",
+  "agentGroupManagement.executeTask.intervention.timeoutUnit": "minuti",
+  "agentGroupManagement.executeTask.intervention.unknownAgent": "Agent sconosciuto",
+  "agentGroupManagement.executeTask.processing": "In esecuzione...",
+  "agentGroupManagement.executeTask.steps": "Numero di passaggi",
+  "agentGroupManagement.executeTask.task": "Contenuto dell'attività",
+  "agentGroupManagement.executeTask.thread": "ID Thread",
+  "agentGroupManagement.executeTask.timeout": "Tempo di esecuzione scaduto",
+  "agentGroupManagement.executeTask.tokens": "Token utilizzati",
+  "codeInterpreter-legacy.error": "Errore di esecuzione",
+  "codeInterpreter-legacy.executing": "Esecuzione in corso...",
+  "codeInterpreter-legacy.files": "File:",
+  "codeInterpreter-legacy.output": "Output:",
+  "codeInterpreter-legacy.returnValue": "Valore restituito:",
+  "codeInterpreter.error": "Errore di esecuzione",
+  "codeInterpreter.executing": "In esecuzione...",
+  "codeInterpreter.files": "File:",
+  "codeInterpreter.output": "Output:",
+  "codeInterpreter.returnValue": "Valore di ritorno:",
+  "dalle.autoGenerate": "Auto-generato",
+  "dalle.downloading": "Il link dell'immagine generata da DALL·E3 è valido solo per 1 ora, sta scaricando l'immagine in locale...",
+  "dalle.generate": "Genera",
+  "dalle.generating": "Generazione in corso...",
+  "dalle.images": "Immagini:",
+  "dalle.prompt": "parola chiave",
+  "lobe-gtd.actions.add": "Aggiungi",
+  "lobe-gtd.actions.clearCompleted": "Cancella completati",
+  "lobe-gtd.actions.placeholder": "Inserisci un'attività...",
+  "lobe-gtd.clearTodos.cleared": "{{count}} attività cancellate",
+  "lobe-gtd.clearTodos.clearedCompleted": "{{count}} attività completate cancellate",
+  "lobe-gtd.clearTodos.clearedCompleted_one": "{{count}} attività completata cancellata",
+  "lobe-gtd.clearTodos.clearedCompleted_other": "{{count}} attività completate cancellate",
+  "lobe-gtd.clearTodos.cleared_one": "{{count}} attività cancellata",
+  "lobe-gtd.clearTodos.cleared_other": "{{count}} attività cancellate",
+  "lobe-gtd.clearTodos.noItems": "Nessuna attività da cancellare",
+  "lobe-gtd.clearTodos.remaining": "{{count}} attività rimanenti",
+  "lobe-gtd.clearTodos.remaining_one": "{{count}} attività rimanente",
+  "lobe-gtd.clearTodos.remaining_other": "{{count}} attività rimanenti",
+  "lobe-gtd.completeTodos.completed": "{{count}} attività completate",
+  "lobe-gtd.completeTodos.completed_one": "{{count}} attività completata",
+  "lobe-gtd.completeTodos.completed_other": "{{count}} attività completate",
+  "lobe-gtd.createTodos.created": "{{count}} attività create",
+  "lobe-gtd.createTodos.created_one": "{{count}} attività creata",
+  "lobe-gtd.createTodos.created_other": "{{count}} attività create",
+  "lobe-gtd.createTodos.total": "Totale: {{count}} attività",
+  "lobe-gtd.createTodos.total_one": "Totale: {{count}} attività",
+  "lobe-gtd.createTodos.total_other": "Totale: {{count}} attività",
+  "lobe-gtd.removeTodos.removed": "{{count}} attività eliminate",
+  "lobe-gtd.removeTodos.removed_one": "{{count}} attività eliminata",
+  "lobe-gtd.removeTodos.removed_other": "{{count}} attività eliminate",
+  "lobe-gtd.status.done": "{{count}} completate",
+  "lobe-gtd.status.pending": "{{count}} in sospeso",
+  "lobe-gtd.todoList.empty": "La lista delle attività è vuota",
+  "lobe-gtd.todoList.items": "{{count}} attività",
+  "lobe-gtd.todoList.items_one": "{{count}} attività",
+  "lobe-gtd.todoList.items_other": "{{count}} attività",
+  "lobe-gtd.todoList.title": "Lista delle attività",
+  "lobe-gtd.updateTodos.updated": "Lista delle attività aggiornata",
+  "lobe-knowledge-base.readKnowledge.meta.chars": "Numero di caratteri",
+  "lobe-knowledge-base.readKnowledge.meta.lines": "Numero di righe",
+  "localFiles.editFile.newString": "Sostituisci con",
+  "localFiles.editFile.oldString": "Trova",
+  "localFiles.editFile.replaceAll": "Sostituisci tutte le occorrenze",
+  "localFiles.editFile.replaceFirst": "Sostituisci solo la prima occorrenza",
+  "localFiles.file": "File",
+  "localFiles.folder": "Cartella",
+  "localFiles.moveFiles.itemsMoved": "{{count}} elementi spostati:",
+  "localFiles.moveFiles.itemsMoved_one": "{{count}} elemento spostato:",
+  "localFiles.moveFiles.itemsMoved_other": "{{count}} elementi spostati:",
+  "localFiles.moveFiles.itemsToMove": "{{count}} elementi da spostare:",
+  "localFiles.moveFiles.itemsToMove_one": "{{count}} elemento da spostare:",
+  "localFiles.moveFiles.itemsToMove_other": "{{count}} elementi da spostare:",
+  "localFiles.open": "Apri",
+  "localFiles.openFile": "Apri file",
+  "localFiles.openFolder": "Apri cartella",
+  "localFiles.read.more": "Mostra di più",
+  "localFiles.readFile": "Leggi file",
+  "localFiles.readFileError": "Impossibile leggere il file, controlla se il percorso del file è corretto",
+  "localFiles.readFiles": "Leggi file",
+  "localFiles.readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto",
+  "localFiles.writeFile.characters": "Caratteri",
+  "localFiles.writeFile.preview": "Anteprima contenuto",
+  "localFiles.writeFile.truncated": "Troncato",
+  "search.createNewSearch": "Crea una nuova registrazione di ricerca",
+  "search.emptyResult": "Nessun risultato trovato, per favore modifica le parole chiave e riprova",
+  "search.genAiMessage": "Crea messaggio assistente",
+  "search.includedTooltip": "I risultati della ricerca attuale entreranno nel contesto della conversazione",
+  "search.keywords": "Parole chiave:",
+  "search.scoreTooltip": "Punteggio di rilevanza, un punteggio più alto indica una maggiore pertinenza rispetto alle parole chiave di ricerca",
+  "search.searchBar.button": "Cerca",
+  "search.searchBar.placeholder": "Parole chiave",
+  "search.searchBar.tooltip": "Ricaricherà i risultati di ricerca e creerà un nuovo messaggio di sintesi",
+  "search.searchCategory.placeholder": "Cerca categoria",
+  "search.searchCategory.title": "Categoria di ricerca:",
+  "search.searchCategory.value.files": "File",
+  "search.searchCategory.value.general": "Generale",
+  "search.searchCategory.value.images": "Immagini",
+  "search.searchCategory.value.it": "Tecnologia dell'informazione",
+  "search.searchCategory.value.map": "Mappa",
+  "search.searchCategory.value.music": "Musica",
+  "search.searchCategory.value.news": "Notizie",
+  "search.searchCategory.value.science": "Scienza",
+  "search.searchCategory.value.social_media": "Social media",
+  "search.searchCategory.value.videos": "Video",
+  "search.searchEngine.placeholder": "Motore di ricerca",
+  "search.searchEngine.title": "Motore di ricerca:",
+  "search.searchResult": "Numero di ricerche:",
+  "search.searchTimeRange.title": "Intervallo di tempo:",
+  "search.searchTimeRange.value.anytime": "Nessun limite di tempo",
+  "search.searchTimeRange.value.day": "Entro un giorno",
+  "search.searchTimeRange.value.month": "Entro un mese",
+  "search.searchTimeRange.value.week": "Entro una settimana",
+  "search.searchTimeRange.value.year": "Entro un anno",
+  "search.summary": "Riepilogo",
+  "search.summaryTooltip": "Riepiloga il contenuto attuale",
+  "search.viewMoreResults": "Visualizza altri {{results}} risultati",
+  "updateArgs.duplicateKeyError": "La chiave del campo deve essere unica",
+  "updateArgs.form.add": "Aggiungi un elemento",
+  "updateArgs.form.key": "Chiave del campo",
+  "updateArgs.form.value": "Valore del campo",
+  "updateArgs.formValidationFailed": "La convalida del modulo è fallita, controlla il formato dei parametri",
+  "updateArgs.keyRequired": "La chiave del campo non può essere vuota",
+  "updateArgs.stringifyError": "Impossibile serializzare i parametri, controlla il formato dei parametri"
 }

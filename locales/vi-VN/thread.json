@@ -1,10 +1,6 @@
 {
-  "actions": {
-    "confirmRemoveThread": "Bạn sắp xóa chủ đề con này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận khi thực hiện."
-  },
-  "newPortalThread": {
-    "includeContext": "Bao gồm ngữ cảnh chủ đề",
-    "title": "Mở chủ đề con mới"
-  },
+  "actions.confirmRemoveThread": "Bạn sắp xóa chủ đề con này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận khi thực hiện.",
+  "newPortalThread.includeContext": "Bao gồm ngữ cảnh chủ đề",
+  "newPortalThread.title": "Mở chủ đề con mới",
   "notSupportMultiModals": "Chủ đề con hiện không hỗ trợ tải lên tệp/hình ảnh, nếu có nhu cầu, xin vui lòng để lại tin nhắn: <1>💬 Diễn đàn thảo luận</1>"
 }

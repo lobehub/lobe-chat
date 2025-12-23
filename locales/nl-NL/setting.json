@@ -1,906 +1,538 @@
 {
-  "about": {
-    "title": "Over"
-  },
+  "about.title": "Over",
   "advancedSettings": "Geavanceerde instellingen",
-  "agentInfoDescription": {
-    "basic": {
-      "avatar": "Profielfoto",
-      "description": "Beschrijving",
-      "name": "Naam",
-      "tags": "Tags",
-      "title": "Assistentinformatie"
-    },
-    "chat": {
-      "enableHistoryCount": "Aantal berichten in geschiedenis inschakelen",
-      "historyCount": "Aantal berichten in geschiedenis",
-      "no": "Nee",
-      "searchMode": "Zoekmodus",
-      "title": "Chatvoorkeuren",
-      "yes": "Ja"
-    },
-    "model": {
-      "maxTokens": "Maximaal aantal tokens",
-      "model": "Model",
-      "provider": "Aanbieder",
-      "temperature": "Temperatuur",
-      "title": "Modelinstellingen",
-      "topP": "Top P-waarde"
-    },
-    "plugins": {
-      "count": "Plugin-instellingen ({{count}})",
-      "empty": "Nog geen plugins geïnstalleerd",
-      "title": "Geïnstalleerde plugins"
-    },
-    "role": {
-      "systemRole": "Systeemprompt",
-      "title": "Rolinstellingen"
-    },
-    "value": {
-      "unset": "Niet ingesteld",
-      "untitled": "Naamloze assistent"
-    }
-  },
-  "agentTab": {
-    "chat": "Chatvoorkeur",
-    "meta": "Assistentinformatie",
-    "modal": "Modelinstellingen",
-    "opening": "Openingsinstellingen",
-    "plugin": "Plugin-instellingen",
-    "prompt": "Rolinstelling",
-    "tts": "Tekst-naar-spraakdienst"
-  },
-  "analytics": {
-    "telemetry": {
-      "desc": "Door te kiezen voor het verzenden van telemetriegegevens, kun je ons helpen de algehele gebruikerservaring van {{appName}} te verbeteren.",
-      "title": "Anonieme gebruiksgegevens verzenden"
-    },
-    "title": "Analytics"
-  },
+  "agentInfoDescription.basic.avatar": "Profielfoto",
+  "agentInfoDescription.basic.description": "Beschrijving",
+  "agentInfoDescription.basic.name": "Naam",
+  "agentInfoDescription.basic.tags": "Tags",
+  "agentInfoDescription.basic.title": "Assistentinformatie",
+  "agentInfoDescription.chat.enableHistoryCount": "Aantal berichten in geschiedenis inschakelen",
+  "agentInfoDescription.chat.historyCount": "Aantal berichten in geschiedenis",
+  "agentInfoDescription.chat.no": "Nee",
+  "agentInfoDescription.chat.searchMode": "Zoekmodus",
+  "agentInfoDescription.chat.title": "Chatvoorkeuren",
+  "agentInfoDescription.chat.yes": "Ja",
+  "agentInfoDescription.model.maxTokens": "Maximaal aantal tokens",
+  "agentInfoDescription.model.model": "Model",
+  "agentInfoDescription.model.provider": "Aanbieder",
+  "agentInfoDescription.model.temperature": "Temperatuur",
+  "agentInfoDescription.model.title": "Modelinstellingen",
+  "agentInfoDescription.model.topP": "Top P-waarde",
+  "agentInfoDescription.plugins.count": "Plugin-instellingen ({{count}})",
+  "agentInfoDescription.plugins.empty": "Nog geen plugins geïnstalleerd",
+  "agentInfoDescription.plugins.title": "Geïnstalleerde plugins",
+  "agentInfoDescription.role.systemRole": "Systeemprompt",
+  "agentInfoDescription.role.title": "Rolinstellingen",
+  "agentInfoDescription.value.unset": "Niet ingesteld",
+  "agentInfoDescription.value.untitled": "Naamloze assistent",
+  "agentTab.chat": "Chatvoorkeur",
+  "agentTab.meta": "Assistentinformatie",
+  "agentTab.modal": "Modelinstellingen",
+  "agentTab.opening": "Openingsinstellingen",
+  "agentTab.plugin": "Plugin-instellingen",
+  "agentTab.prompt": "Rolinstelling",
+  "agentTab.tts": "Tekst-naar-spraakdienst",
+  "analytics.telemetry.desc": "Door te kiezen voor het verzenden van telemetriegegevens, kun je ons helpen de algehele gebruikerservaring van {{appName}} te verbeteren.",
+  "analytics.telemetry.title": "Anonieme gebruiksgegevens verzenden",
+  "analytics.title": "Analytics",
   "checking": "Bezig met controleren...",
   "checkingPermissions": "Bezig met controleren van rechten...",
-  "danger": {
-    "clear": {
-      "action": "Direct verwijderen",
-      "confirm": "Alle chatgegevens wissen bevestigen?",
-      "desc": "Alle gespreksgegevens worden gewist, inclusief assistenten, bestanden, berichten, plug-ins, enz.",
-      "success": "Alle gespreksberichten zijn gewist",
-      "title": "Alle gespreksberichten wissen"
-    },
-    "reset": {
-      "action": "Direct resetten",
-      "confirm": "Alle instellingen resetten bevestigen?",
-      "currentVersion": "Huidige versie",
-      "desc": "Alle instellingen worden teruggezet naar de standaardwaarden",
-      "success": "Alle instellingen zijn succesvol gereset",
-      "title": "Alle instellingen resetten"
-    }
-  },
-  "defaultAgent": {
-    "model": {
-      "desc": "Standaardmodel dat wordt gebruikt bij het aanmaken van een nieuwe Agent",
-      "title": "Model"
-    },
-    "title": "Standaard Assistent Instellingen"
-  },
-  "group": {
-    "aiConfig": "AI-configuratie",
-    "common": "Algemeen",
-    "profile": "Account",
-    "system": "Systeem"
-  },
-  "groupTab": {
-    "chat": "Chat",
-    "members": "Leden",
-    "meta": "Basisinformatie"
-  },
-  "header": {
-    "desc": "Voorkeuren en modelinstellingen.",
-    "global": "Algemene instellingen",
-    "group": "Teaminstellingen",
-    "groupDesc": "Beheer groeps- en chatvoorkeuren",
-    "session": "Sessie-instellingen",
-    "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
-    "sessionWithName": "Sessie-instellingen · {{name}}",
-    "title": "Instellingen"
-  },
-  "hotkey": {
-    "conflicts": "Conflict met bestaande sneltoetsen",
-    "errors": {
-      "CONFLICT": "Sneltoetsconflict: deze sneltoets wordt al door een andere functie gebruikt",
-      "INVALID_FORMAT": "Ongeldig sneltoetsformaat: gebruik het juiste formaat (bijv. CommandOrControl+E)",
-      "INVALID_ID": "Ongeldige sneltoets-ID",
-      "NO_MODIFIER": "Sneltoets moet een modificatortoets bevatten (Ctrl, Alt, Shift, enz.)",
-      "SYSTEM_OCCUPIED": "Sneltoets wordt al door het systeem of een andere applicatie gebruikt",
-      "UNKNOWN": "Bijwerken mislukt: onbekende fout"
-    },
-    "group": {
-      "conversation": "Gesprek",
-      "desktop": "Desktop",
-      "essential": "Essentieel"
-    },
-    "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
-    "record": "Druk op een toets om de sneltoets op te nemen",
-    "reset": "Reset naar standaard sneltoetsen",
-    "title": "Sneltoetsen",
-    "updateError": "Sneltoets bijwerken mislukt: netwerk- of systeemfout",
-    "updateSuccess": "Sneltoets succesvol bijgewerkt"
-  },
-  "llm": {
-    "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
-    "apiKey": {
-      "desc": "Vul je {{name}} API-sleutel in",
-      "placeholder": "{{name}} API-sleutel",
-      "title": "API-sleutel"
-    },
-    "checker": {
-      "button": "Controleren",
-      "desc": "Test of de API-sleutel en proxyadres correct zijn ingevuld",
-      "pass": "Succesvol gecontroleerd",
-      "title": "Connectiviteitscontrole"
-    },
-    "customModelCards": {
-      "addNew": "Maak en voeg het {{id}} model toe",
-      "config": "Model configureren",
-      "confirmDelete": "U staat op het punt om dit aangepaste model te verwijderen. Deze actie kan niet ongedaan worden gemaakt. Wees voorzichtig.",
-      "modelConfig": {
-        "azureDeployName": {
-          "extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
-          "placeholder": "Voer de modelimplementatienaam in Azure in",
-          "title": "Naam van modelimplementatie"
-        },
-        "displayName": {
-          "placeholder": "Voer de weergavenaam van het model in, bijv. ChatGPT, GPT-4, enz.",
-          "title": "Model weergavenaam"
-        },
-        "files": {
-          "extra": "De huidige implementatie van het uploaden van bestanden is slechts een hackoplossing en is alleen bedoeld voor eigen gebruik. Volledige bestandsuploadmogelijkheden zijn in de toekomst te verwachten.",
-          "title": "Ondersteuning voor het uploaden van bestanden"
-        },
-        "functionCall": {
-          "extra": "Deze configuratie zal alleen de functie-aanroepmogelijkheden in de applicatie inschakelen. Of functie-aanroepen worden ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van functie-aanroepen van dit model zelf.",
-          "title": "Ondersteuningsfunctie Oproep"
-        },
-        "id": {
-          "extra": "Wordt weergegeven als de modeltag",
-          "placeholder": "Voer de model ID in, bijvoorbeeld gpt-4-turbo-preview of claude-2.1",
-          "title": "Model ID"
-        },
-        "modalTitle": "Aangepaste modelconfiguratie",
-        "tokens": {
-          "title": "Maximaal tokenaantal"
-        },
-        "vision": {
-          "extra": "Deze configuratie zal alleen de mogelijkheid voor het uploaden van afbeeldingen in de applicatie inschakelen. Of herkenning wordt ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van visuele herkenning van dit model zelf.",
-          "title": "Ondersteuning van visuele herkenning"
-        }
-      }
-    },
-    "fetchOnClient": {
-      "desc": "De ophaalmodus aan de clientzijde initieert sessieverzoeken rechtstreeks vanuit de browser, waardoor de reactiesnelheid wordt verbeterd.",
-      "title": "Gebruik de ophaalmodus aan de clientzijde"
-    },
-    "fetcher": {
-      "clear": "Verwijder opgehaalde model",
-      "fetch": "Haal model lijst op",
-      "fetching": "Model lijst wordt opgehaald...",
-      "latestTime": "Laatst bijgewerkt: {{time}}",
-      "noLatestTime": "Geen lijst beschikbaar op dit moment"
-    },
-    "helpDoc": "configuratiehandleiding",
-    "modelList": {
-      "desc": "Selecteer het model dat in de sessie moet worden weergegeven. Het geselecteerde model wordt weergegeven in de modellijst.",
-      "placeholder": "Selecteer een model uit de lijst",
-      "title": "Modellijst",
-      "total": "In totaal {{count}} modellen beschikbaar"
-    },
-    "proxyUrl": {
-      "desc": "Moet http(s):// bevatten, naast het standaardadres",
-      "title": "API Proxy Adres"
-    },
-    "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte"
-  },
-  "marketPublish": {
-    "modal": {
-      "changelog": {
-        "extra": "Beschrijf de belangrijkste wijzigingen en verbeteringen in deze versie",
-        "label": "Wijzigingslogboek",
-        "maxLengthError": "Het wijzigingslogboek mag niet meer dan 500 tekens bevatten",
-        "placeholder": "Voer het wijzigingslogboek in",
-        "required": "Voer het wijzigingslogboek in"
-      },
-      "comparison": {
-        "local": "Huidige lokale versie",
-        "remote": "Huidige gepubliceerde versie"
-      },
-      "identifier": {
-        "extra": "De identifier dient als unieke identificatie van de assistent. Gebruik bij voorkeur kleine letters, cijfers en koppeltekens",
-        "label": "Assistentidentifier",
-        "lengthError": "De identifier moet tussen 3 en 50 tekens lang zijn",
-        "patternError": "De identifier mag alleen kleine letters, cijfers en koppeltekens bevatten",
-        "placeholder": "Voer een unieke identifier in, bijv.: web-development",
-        "required": "Voer een assistentidentifier in"
-      },
-      "loading": {
-        "fetchingRemote": "Bezig met laden van externe gegevens...",
-        "submit": "Bezig met publiceren van assistent...",
-        "upload": "Bezig met publiceren van nieuwe versie..."
-      },
-      "messages": {
-        "createVersionFailed": "Versie aanmaken mislukt: {{message}}",
-        "fetchRemoteFailed": "Ophalen van externe assistentgegevens mislukt",
-        "missingIdentifier": "Deze assistent heeft nog geen community-identificatie",
-        "notAuthenticated": "Log eerst in op je community-account",
-        "publishFailed": "Publicatie mislukt: {{message}}"
-      },
-      "submitButton": "Publiceren",
-      "title": {
-        "submit": "Delen met de assistentengemeenschap",
-        "upload": "Nieuwe versie publiceren"
-      }
-    },
-    "resultModal": {
-      "message": "Je assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd.",
-      "title": "Succesvol ingediend",
-      "view": "Bekijk in de community"
-    },
-    "submit": {
-      "button": "Delen met de community",
-      "tooltip": "Deel je assistent met de community"
-    },
-    "upload": {
-      "button": "Nieuwe versie publiceren",
-      "tooltip": "Publiceer een nieuwe versie naar de assistentengemeenschap"
-    }
-  },
-  "memory": {
-    "enabled": {
-      "desc": "Wanneer ingeschakeld, onthoudt de AI je voorkeuren uit eerdere gesprekken, bouwt geheugen op en gebruikt dit als referentie in toekomstige gesprekken",
-      "title": "Geheugenfunctie inschakelen"
-    },
-    "title": "Geheugeninstellingen"
-  },
-  "message": {
-    "success": "Succesvol bijgewerkt"
-  },
-  "myAgents": {
-    "actions": {
-      "cancel": "Annuleren",
-      "confirmDeprecate": "Veroudering bevestigen",
-      "deprecate": "Permanent verwijderen",
-      "deprecateConfirmContent": "Na veroudering wordt deze assistent permanent uit de marktplaats verwijderd en kan niet opnieuw worden gepubliceerd. Deze actie is onomkeerbaar, wees voorzichtig.",
-      "deprecateConfirmTitle": "Weet je zeker dat je deze assistent wilt verouderd maken?",
-      "deprecateError": "Veroudering van assistent mislukt",
-      "deprecateLoading": "Assistent wordt verouderd...",
-      "deprecateSuccess": "Assistent is verouderd",
-      "edit": "Agent bewerken",
-      "publish": "Agent publiceren",
-      "publishError": "Publiceren van assistent mislukt",
-      "publishLoading": "Assistent wordt gepubliceerd...",
-      "publishSuccess": "Assistent is gepubliceerd",
-      "unpublish": "Agent depubliceren",
-      "unpublishError": "Depubliceren van assistent mislukt",
-      "unpublishLoading": "Assistent wordt gedepubliceerd...",
-      "unpublishSuccess": "Assistent is gedepubliceerd",
-      "viewDetail": "Details bekijken"
-    },
-    "detail": {
-      "category": "Categorie",
-      "description": "Beschrijving",
-      "identifier": "Identificatie",
-      "title": "Assistentdetails"
-    },
-    "empty": {
-      "description": "Je hebt nog geen assistenten gepubliceerd op de marktplaats",
-      "title": "Nog geen gepubliceerde assistenten"
-    },
-    "errors": {
-      "editFailed": "Bewerken van assistent mislukt, probeer het later opnieuw",
-      "fetchFailed": "Ophalen van assistentdetails mislukt",
-      "notAuthenticated": "Log eerst in op je marktplaatsaccount"
-    },
-    "loginRequired": {
-      "button": "Inloggen op marktplaatsaccount",
-      "description": "Log eerst in op je marktplaatsaccount om je gepubliceerde assistenten te bekijken",
-      "title": "Inloggen vereist"
-    },
-    "status": {
-      "archived": "Gearchiveerd",
-      "deprecated": "Verouderd",
-      "published": "Gepubliceerd",
-      "unpublished": "Niet gepubliceerd"
-    },
-    "title": "Mijn gepubliceerde assistenten"
-  },
-  "plugin": {
-    "addMCPPlugin": "MCP-plug-in toevoegen",
-    "addTooltip": "Voeg aangepaste plug-in toe",
-    "clearDeprecated": "Verwijder verouderde plug-ins",
-    "empty": "Geen geïnstalleerde plug-ins, ga naar de <1>plug-in store</1> om te verkennen",
-    "installStatus": {
-      "deprecated": "Verwijderd"
-    },
-    "settings": {
-      "hint": "Vul de volgende configuratie in op basis van de beschrijving",
-      "title": "{{id}} Plug-inconfiguratie",
-      "tooltip": "Plug-inconfiguratie"
-    },
-    "store": "Plug-in store"
-  },
-  "settingAgent": {
-    "avatar": {
-      "sizeExceeded": "De afbeeldingsgrootte overschrijdt de limiet van 1 MB. Kies een kleinere afbeelding.",
-      "title": "Avatar"
-    },
-    "backgroundColor": {
-      "title": "Achtergrondkleur"
-    },
-    "description": {
-      "desc": "Een korte introductie van je assistent, niet als karakterinstelling",
-      "placeholder": "Voer assistentbeschrijving in",
-      "title": "Assistentbeschrijving"
-    },
-    "name": {
-      "placeholder": "Voer assistentnaam in",
-      "title": "Naam"
-    },
-    "prompt": {
-      "placeholder": "Voer assistentinstellingen in, druk op / om het opdrachtmenu te openen",
-      "title": "Assistentinstellingen"
-    },
-    "submit": "Assistentinformatie bijwerken",
-    "tag": {
-      "desc": "Assistent-tags worden weergegeven in de assistentengemeenschap",
-      "placeholder": "Voer tag in",
-      "title": "Tag"
-    },
-    "title": "Assistentinformatie"
-  },
-  "settingAppearance": {
-    "animationMode": {
-      "agile": "Behendig",
-      "desc": "Kies de animatiesnelheid voor de reactietijd van de applicatie",
-      "disabled": "Uitgeschakeld",
-      "elegant": "Elegant",
-      "title": "Reactie-animatie"
-    },
-    "contextMenuMode": {
-      "default": "Standaard",
-      "desc": "Kies de weergaveoptie voor het contextmenu van chatberichten",
-      "disabled": "Niet gebruiken",
-      "title": "Contextmenu-optie"
-    },
-    "neutralColor": {
-      "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
-      "title": "Neutrale kleur"
-    },
-    "noAnimation": {
-      "desc": "Schakel alle animatie-effecten in de applicatie uit",
-      "title": "Animatie uit modus"
-    },
-    "preview": {
-      "title": "Kleurpalet"
-    },
-    "primaryColor": {
-      "desc": "Aangepaste themakleur",
-      "title": "Themakleur"
-    },
-    "title": "Toepassing uiterlijk"
-  },
-  "settingChat": {
-    "autoCreateTopicThreshold": {
-      "desc": "Automatisch een onderwerp maken wanneer het aantal berichten de ingestelde waarde overschrijdt",
-      "title": "Berichtdrempel"
-    },
-    "chatStyleType": {
-      "title": "Chatvensterstijl",
-      "type": {
-        "chat": "Gespreksmodus",
-        "docs": "Documentmodus"
-      }
-    },
-    "compressThreshold": {
-      "desc": "Comprimeren wanneer het aantal ongecomprimeerde berichten de ingestelde waarde overschrijdt",
-      "title": "Compressiedrempel voor berichtlengte"
-    },
-    "enableAutoCreateTopic": {
-      "desc": "Automatisch een onderwerp maken tijdens het gesprek, alleen van toepassing op tijdelijke onderwerpen",
-      "title": "Automatisch onderwerp maken"
-    },
-    "enableCompressHistory": {
-      "title": "Automatisch samenvatten van historische berichten inschakelen"
-    },
-    "enableHistoryCount": {
-      "alias": "Onbeperkt",
-      "limited": "Bevat alleen {{number}} berichten",
-      "setlimited": "Stel berichtengeschiedenis in",
-      "title": "Berichtgeschiedenis beperken",
-      "unlimited": "Onbeperkt aantal berichten in de geschiedenis"
-    },
-    "enableStreaming": {
-      "desc": "Schakel streaming-uitvoer in om reacties in realtime weer te geven. Als dit is uitgeschakeld, wordt alleen de volledige reactie weergegeven.",
-      "title": "Streaming-uitvoer inschakelen"
-    },
-    "historyCount": {
-      "desc": "Aantal berichten dat bij elke aanvraag wordt meegenomen (inclusief de meest recente vraag. Elke vraag en antwoord tellen als 1)",
-      "title": "Berichtaantal meenemen"
-    },
-    "inputTemplate": {
-      "desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
-      "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
-      "title": "Voorbewerking van gebruikersinvoer"
-    },
-    "submit": "Chatvoorkeuren bijwerken",
-    "title": "Chatinstellingen"
-  },
-  "settingChatAppearance": {
-    "fontSize": {
-      "desc": "De lettergrootte van de chatinhoud",
-      "marks": {
-        "normal": "Standaard"
-      },
-      "title": "Lettergrootte"
-    },
-    "highlighterTheme": {
-      "title": "Code markeer thema"
-    },
-    "mermaidTheme": {
-      "title": "Mermaid-thema"
-    },
-    "title": "Chat uiterlijk",
-    "transitionMode": {
-      "desc": "Overgangsanimatie van chatberichten",
-      "options": {
-        "fadeIn": "Vervagen",
-        "none": {
-          "desc": "Dit hangt af van de manier waarop het model reageert; test dit zelf.",
-          "value": "Geen"
-        },
-        "smooth": "Vloeiend"
-      },
-      "title": "Overgangsanimatie"
-    }
-  },
-  "settingCommon": {
-    "devMode": {
-      "desc": "Wanneer ingeschakeld, worden ontwikkelaarsfuncties en -opties weergegeven",
-      "title": "Ontwikkelaarsmodus"
-    },
-    "lang": {
-      "autoMode": "Volg systeem",
-      "title": "Taal"
-    },
-    "liteMode": {
-      "desc": "Wanneer ingeschakeld, wordt de interface vereenvoudigd en worden geavanceerde functies verborgen",
-      "title": "Lichte modus"
-    },
-    "responseLanguage": {
-      "auto": "Volg systeeminstellingen",
-      "desc": "Stel de taal in die AI gebruikt voor antwoorden",
-      "placeholder": "Kies antwoordtaal",
-      "title": "Antwoordtaal"
-    },
-    "themeMode": {
-      "auto": "Automatisch",
-      "dark": "Donker",
-      "light": "Licht",
-      "title": "Thema"
-    },
-    "title": "Algemene instellingen"
-  },
-  "settingGroup": {
-    "description": {
-      "placeholder": "Voer een teamomschrijving in",
-      "title": "Teamomschrijving"
-    },
-    "name": {
-      "placeholder": "Voer een teamnaam in",
-      "title": "Teamnaam"
-    },
-    "scene": {
-      "desc": "Selecteer de teamsituatie",
-      "options": {
-        "casual": "Informeel",
-        "productive": "Productief"
-      },
-      "title": "Teamsituatie"
-    },
-    "submit": "Team bijwerken",
-    "systemPrompt": {
-      "placeholder": "Voer de systeemopdracht van de host in",
-      "title": "Systeemopdracht van de host"
-    },
-    "title": "Groepsinformatie"
-  },
-  "settingGroupChat": {
-    "allowDM": {
-      "desc": "Wanneer uitgeschakeld, kun je nog steeds zelf privéberichten naar de assistent sturen",
-      "title": "Sta privéberichten van assistent toe"
-    },
-    "enableSupervisor": {
-      "desc": "Schakel de functie voor groepsmoderator in; de moderator beheert het verloop van teamgesprekken",
-      "title": "Moderator inschakelen"
-    },
-    "maxResponseInRow": {
-      "desc": "Kies hoeveel berichten een lid achter elkaar kan beantwoorden. Stel in op 0 om deze beperking uit te schakelen.",
-      "title": "Aantal opeenvolgende antwoorden"
-    },
-    "model": {
-      "desc": "De bijdragen van groepsleden worden niet beïnvloed. Sommige modellen kunnen niet als moderator worden gebruikt.",
-      "title": "Hostmodel"
-    },
-    "orchestratorTitle": "Hostinstellingen",
-    "responseOrder": {
-      "desc": "Agenten reageren in de volgorde die is ingesteld in de chat",
-      "options": {
-        "natural": "Natuurlijk",
-        "sequential": "Opeenvolgend"
-      },
-      "placeholder": "Kies de antwoordvolgorde",
-      "title": "Antwoordvolgorde"
-    },
-    "responseSpeed": {
-      "desc": "Beheer de algemene snelheid van het gesprek",
-      "options": {
-        "fast": "Snel",
-        "medium": "Gemiddeld",
-        "slow": "Langzaam"
-      },
-      "placeholder": "Kies de reactiesnelheid",
-      "title": "Reactiesnelheid"
-    },
-    "revealDM": {
-      "desc": "Maak privéberichten die naar andere leden zijn gestuurd zichtbaar voor jou.",
-      "title": "Privéberichten tonen"
-    },
-    "submit": "Instellingen bijwerken",
-    "systemPrompt": {
-      "desc": "Aangepaste systeemopdracht voor de host van de groepschat. Dit kan het standaardgedrag van de host beïnvloeden.",
-      "placeholder": "Voer een aangepaste systeemopdracht voor de host in...",
-      "title": "Systeemopdracht van de host"
-    },
-    "title": "Chatinstellingen"
-  },
-  "settingGroupMembers": {
-    "addToGroup": "Toevoegen aan groep",
-    "availableAgents": "Beschikbare assistenten",
-    "createMember": "Lid aanmaken",
-    "defaultAgent": "Aangepaste assistent",
-    "disableHost": "Host-assistent uitschakelen",
-    "edit": "Lid bewerken",
-    "empty": "Er zijn momenteel geen leden in dit team. Klik op de + knop om leden toe te voegen.",
-    "enableHost": "Host-assistent inschakelen",
-    "groupHost": "Groepshost",
-    "groupMembers": "Groepsleden",
-    "host": {
-      "description": "Wanneer de host in de groep is, wordt de groepschat automatisch beheerd, geschikt voor creatieve taken.",
-      "title": "Host"
-    },
-    "noAvailableAgents": "Geen beschikbare assistenten",
-    "noDescription": "Geen beschrijving",
-    "noMembersInGroup": "Geen leden in de groep",
-    "owner": "Jij (eigenaar)",
-    "remove": "Lid verwijderen",
-    "removeFromGroup": "Verwijderen uit groep",
-    "you": "Jij"
-  },
-  "settingImage": {
-    "defaultCount": {
-      "desc": "Stel het standaard aantal afbeeldingen in dat wordt gegenereerd wanneer een nieuwe taak wordt aangemaakt.",
-      "label": "Standaard aantal afbeeldingen",
-      "title": "AI Tekeninstellingen"
-    }
-  },
-  "settingModel": {
-    "enableMaxTokens": {
-      "title": "Limiet voor enkele reacties inschakelen"
-    },
-    "enableReasoningEffort": {
-      "title": "Schakel redeneerkracht aanpassing in"
-    },
-    "frequencyPenalty": {
-      "desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
-      "title": "Woordenschat diversiteit"
-    },
-    "maxTokens": {
-      "desc": "Het maximale aantal tokens dat wordt gebruikt voor een enkele interactie",
-      "title": "Limiet voor enkele reacties"
-    },
-    "model": {
-      "desc": "{{provider}} model",
-      "title": "Model"
-    },
-    "params": {
-      "title": "Geavanceerde parameters"
-    },
-    "presencePenalty": {
-      "desc": "Hoe hoger de waarde, hoe meer de neiging om verschillende uitdrukkingen te gebruiken en herhaling van concepten te vermijden; hoe lager de waarde, hoe meer de neiging om herhalende concepten of verhalen te gebruiken, wat zorgt voor meer consistentie in de uitdrukking",
-      "title": "Uitdrukkingsdiversiteit"
-    },
-    "reasoningEffort": {
-      "desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de reactietijd en het tokenverbruik verhogen",
-      "options": {
-        "high": "Hoog",
-        "low": "Laag",
-        "medium": "Gemiddeld"
-      },
-      "title": "Redeneerkracht"
-    },
-    "submit": "Modelinstellingen bijwerken",
-    "temperature": {
-      "desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord.",
-      "title": "Creativiteit Activiteit",
-      "warning": "Een te hoge waarde voor creativiteit activiteit kan leiden tot onleesbare output."
-    },
-    "title": "Modelinstellingen",
-    "topP": {
-      "desc": "Hoeveel mogelijkheden er in overweging worden genomen; hoe hoger de waarde, hoe meer mogelijke antwoorden worden geaccepteerd; hoe lager de waarde, hoe meer de voorkeur uitgaat naar het meest waarschijnlijke antwoord. Het wordt niet aanbevolen om dit samen met creativiteit activiteit te wijzigen.",
-      "title": "Openheid van Denken"
-    }
-  },
-  "settingOpening": {
-    "openingMessage": {
-      "desc": "De openingsboodschap bij het starten van een gesprek, bedoeld om de functies van de assistent voor te stellen",
-      "placeholder": "Hallo, ik ben de aangepaste assistent. Je kunt direct met me beginnen praten of naar de assistentinstellingen gaan om mijn informatie aan te vullen.",
-      "title": "Openingsboodschap"
-    },
-    "openingQuestions": {
-      "desc": "Leidende vragen die worden weergegeven aan het begin van het gesprek",
-      "empty": "Voeg openingsvragen toe om gebruikers te helpen snel een gesprek te beginnen",
-      "placeholder": "Voer een vraag in",
-      "repeat": "Vraag bestaat al",
-      "title": "Openingsvragen"
-    },
-    "title": "Openingsinstellingen"
-  },
-  "settingPlugin": {
-    "title": "Plugin-lijst"
-  },
-  "settingSystem": {
-    "accessCode": {
-      "desc": "Beheerder heeft versleutelde toegang ingeschakeld",
-      "placeholder": "Voer toegangswachtwoord in",
-      "title": "Toegangswachtwoord"
-    },
-    "oauth": {
-      "info": {
-        "desc": "已登录",
-        "title": "Account Information"
-      },
-      "signin": {
-        "action": "Sign In",
-        "desc": "Sign in using SSO to unlock the app",
-        "title": "Sign In to Your Account"
-      },
-      "signout": {
-        "action": "Sign Out",
-        "confirm": "Confirm sign out?",
-        "success": "Sign out successful"
-      }
-    },
-    "title": "Systeeminstellingen"
-  },
-  "settingTTS": {
-    "openai": {
-      "sttModel": "OpenAI spraakherkenningsmodel",
-      "title": "OpenAI",
-      "ttsModel": "OpenAI spraaksynthesemodel"
-    },
-    "showAllLocaleVoice": {
-      "desc": "Als dit is uitgeschakeld, worden alleen stemmen in de huidige taal weergegeven",
-      "title": "Alle taalstemmen weergeven"
-    },
-    "stt": "Spraakherkenning instellingen",
-    "sttAutoStop": {
-      "desc": "Als dit is uitgeschakeld, stopt de spraakherkenning niet automatisch en moet je handmatig op de stopknop klikken",
-      "title": "Automatisch stoppen van spraakherkenning"
-    },
-    "sttLocale": {
-      "desc": "De taal van de gesproken invoer, deze optie kan de nauwkeurigheid van spraakherkenning verbeteren",
-      "title": "Taal voor spraakherkenning"
-    },
-    "sttService": {
-      "desc": "Browser staat voor de native spraakherkenningsservice van de browser",
-      "title": "Spraakherkenningsservice"
-    },
-    "submit": "Spraakdienst bijwerken",
-    "title": "Spraakdienst",
-    "tts": "Spraaksynthese-instellingen",
-    "ttsService": {
-      "desc": "Als je gebruikmaakt van de spraaksynthese-service van OpenAI, zorg er dan voor dat de OpenAI-modelservice is ingeschakeld",
-      "title": "Spraaksynthese-service"
-    },
-    "voice": {
-      "desc": "Kies een stem voor de huidige assistent, verschillende TTS-services ondersteunen verschillende stemmen",
-      "preview": "Stem voorbeluisteren",
-      "title": "Spraaksynthese stem"
-    }
-  },
+  "danger.clear.action": "Direct verwijderen",
+  "danger.clear.confirm": "Alle chatgegevens wissen bevestigen?",
+  "danger.clear.desc": "Alle gespreksgegevens worden gewist, inclusief assistenten, bestanden, berichten, plug-ins, enz.",
+  "danger.clear.success": "Alle gespreksberichten zijn gewist",
+  "danger.clear.title": "Alle gespreksberichten wissen",
+  "danger.reset.action": "Direct resetten",
+  "danger.reset.confirm": "Alle instellingen resetten bevestigen?",
+  "danger.reset.currentVersion": "Huidige versie",
+  "danger.reset.desc": "Alle instellingen worden teruggezet naar de standaardwaarden",
+  "danger.reset.success": "Alle instellingen zijn succesvol gereset",
+  "danger.reset.title": "Alle instellingen resetten",
+  "defaultAgent.model.desc": "Standaardmodel dat wordt gebruikt bij het aanmaken van een nieuwe Agent",
+  "defaultAgent.model.title": "Model",
+  "defaultAgent.title": "Standaard Assistent Instellingen",
+  "group.aiConfig": "AI-configuratie",
+  "group.common": "Algemeen",
+  "group.profile": "Account",
+  "group.system": "Systeem",
+  "groupTab.chat": "Chat",
+  "groupTab.members": "Leden",
+  "groupTab.meta": "Basisinformatie",
+  "header.desc": "Voorkeuren en modelinstellingen.",
+  "header.global": "Algemene instellingen",
+  "header.group": "Teaminstellingen",
+  "header.groupDesc": "Beheer groeps- en chatvoorkeuren",
+  "header.session": "Sessie-instellingen",
+  "header.sessionDesc": "Rolinstellingen en sessievoorkeuren.",
+  "header.sessionWithName": "Sessie-instellingen · {{name}}",
+  "header.title": "Instellingen",
+  "hotkey.conflicts": "Conflict met bestaande sneltoetsen",
+  "hotkey.errors.CONFLICT": "Sneltoetsconflict: deze sneltoets wordt al door een andere functie gebruikt",
+  "hotkey.errors.INVALID_FORMAT": "Ongeldig sneltoetsformaat: gebruik het juiste formaat (bijv. CommandOrControl+E)",
+  "hotkey.errors.INVALID_ID": "Ongeldige sneltoets-ID",
+  "hotkey.errors.NO_MODIFIER": "Sneltoets moet een modificatortoets bevatten (Ctrl, Alt, Shift, enz.)",
+  "hotkey.errors.SYSTEM_OCCUPIED": "Sneltoets wordt al door het systeem of een andere applicatie gebruikt",
+  "hotkey.errors.UNKNOWN": "Bijwerken mislukt: onbekende fout",
+  "hotkey.group.conversation": "Gesprek",
+  "hotkey.group.desktop": "Desktop",
+  "hotkey.group.essential": "Essentieel",
+  "hotkey.invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
+  "hotkey.record": "Druk op een toets om de sneltoets op te nemen",
+  "hotkey.reset": "Reset naar standaard sneltoetsen",
+  "hotkey.title": "Sneltoetsen",
+  "hotkey.updateError": "Sneltoets bijwerken mislukt: netwerk- of systeemfout",
+  "hotkey.updateSuccess": "Sneltoets succesvol bijgewerkt",
+  "llm.aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
+  "llm.apiKey.desc": "Vul je {{name}} API-sleutel in",
+  "llm.apiKey.placeholder": "{{name}} API-sleutel",
+  "llm.apiKey.title": "API-sleutel",
+  "llm.checker.button": "Controleren",
+  "llm.checker.desc": "Test of de API-sleutel en proxyadres correct zijn ingevuld",
+  "llm.checker.pass": "Succesvol gecontroleerd",
+  "llm.checker.title": "Connectiviteitscontrole",
+  "llm.customModelCards.addNew": "Maak en voeg het {{id}} model toe",
+  "llm.customModelCards.config": "Model configureren",
+  "llm.customModelCards.confirmDelete": "U staat op het punt om dit aangepaste model te verwijderen. Deze actie kan niet ongedaan worden gemaakt. Wees voorzichtig.",
+  "llm.customModelCards.modelConfig.azureDeployName.extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
+  "llm.customModelCards.modelConfig.azureDeployName.placeholder": "Voer de modelimplementatienaam in Azure in",
+  "llm.customModelCards.modelConfig.azureDeployName.title": "Naam van modelimplementatie",
+  "llm.customModelCards.modelConfig.displayName.placeholder": "Voer de weergavenaam van het model in, bijv. ChatGPT, GPT-4, enz.",
+  "llm.customModelCards.modelConfig.displayName.title": "Model weergavenaam",
+  "llm.customModelCards.modelConfig.files.extra": "De huidige implementatie van het uploaden van bestanden is slechts een hackoplossing en is alleen bedoeld voor eigen gebruik. Volledige bestandsuploadmogelijkheden zijn in de toekomst te verwachten.",
+  "llm.customModelCards.modelConfig.files.title": "Ondersteuning voor het uploaden van bestanden",
+  "llm.customModelCards.modelConfig.functionCall.extra": "Deze configuratie zal alleen de functie-aanroepmogelijkheden in de applicatie inschakelen. Of functie-aanroepen worden ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van functie-aanroepen van dit model zelf.",
+  "llm.customModelCards.modelConfig.functionCall.title": "Ondersteuningsfunctie Oproep",
+  "llm.customModelCards.modelConfig.id.extra": "Wordt weergegeven als de modeltag",
+  "llm.customModelCards.modelConfig.id.placeholder": "Voer de model ID in, bijvoorbeeld gpt-4-turbo-preview of claude-2.1",
+  "llm.customModelCards.modelConfig.id.title": "Model ID",
+  "llm.customModelCards.modelConfig.modalTitle": "Aangepaste modelconfiguratie",
+  "llm.customModelCards.modelConfig.tokens.title": "Maximaal tokenaantal",
+  "llm.customModelCards.modelConfig.vision.extra": "Deze configuratie zal alleen de mogelijkheid voor het uploaden van afbeeldingen in de applicatie inschakelen. Of herkenning wordt ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van visuele herkenning van dit model zelf.",
+  "llm.customModelCards.modelConfig.vision.title": "Ondersteuning van visuele herkenning",
+  "llm.fetchOnClient.desc": "De ophaalmodus aan de clientzijde initieert sessieverzoeken rechtstreeks vanuit de browser, waardoor de reactiesnelheid wordt verbeterd.",
+  "llm.fetchOnClient.title": "Gebruik de ophaalmodus aan de clientzijde",
+  "llm.fetcher.clear": "Verwijder opgehaalde model",
+  "llm.fetcher.fetch": "Haal model lijst op",
+  "llm.fetcher.fetching": "Model lijst wordt opgehaald...",
+  "llm.fetcher.latestTime": "Laatst bijgewerkt: {{time}}",
+  "llm.fetcher.noLatestTime": "Geen lijst beschikbaar op dit moment",
+  "llm.helpDoc": "configuratiehandleiding",
+  "llm.modelList.desc": "Selecteer het model dat in de sessie moet worden weergegeven. Het geselecteerde model wordt weergegeven in de modellijst.",
+  "llm.modelList.placeholder": "Selecteer een model uit de lijst",
+  "llm.modelList.title": "Modellijst",
+  "llm.modelList.total": "In totaal {{count}} modellen beschikbaar",
+  "llm.proxyUrl.desc": "Moet http(s):// bevatten, naast het standaardadres",
+  "llm.proxyUrl.title": "API Proxy Adres",
+  "llm.waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte",
+  "marketPublish.modal.changelog.extra": "Beschrijf de belangrijkste wijzigingen en verbeteringen in deze versie",
+  "marketPublish.modal.changelog.label": "Wijzigingslogboek",
+  "marketPublish.modal.changelog.maxLengthError": "Het wijzigingslogboek mag niet meer dan 500 tekens bevatten",
+  "marketPublish.modal.changelog.placeholder": "Voer het wijzigingslogboek in",
+  "marketPublish.modal.changelog.required": "Voer het wijzigingslogboek in",
+  "marketPublish.modal.comparison.local": "Huidige lokale versie",
+  "marketPublish.modal.comparison.remote": "Huidige gepubliceerde versie",
+  "marketPublish.modal.identifier.extra": "De identifier dient als unieke identificatie van de assistent. Gebruik bij voorkeur kleine letters, cijfers en koppeltekens",
+  "marketPublish.modal.identifier.label": "Assistentidentifier",
+  "marketPublish.modal.identifier.lengthError": "De identifier moet tussen 3 en 50 tekens lang zijn",
+  "marketPublish.modal.identifier.patternError": "De identifier mag alleen kleine letters, cijfers en koppeltekens bevatten",
+  "marketPublish.modal.identifier.placeholder": "Voer een unieke identifier in, bijv.: web-development",
+  "marketPublish.modal.identifier.required": "Voer een assistentidentifier in",
+  "marketPublish.modal.loading.fetchingRemote": "Bezig met laden van externe gegevens...",
+  "marketPublish.modal.loading.submit": "Bezig met publiceren van assistent...",
+  "marketPublish.modal.loading.upload": "Bezig met publiceren van nieuwe versie...",
+  "marketPublish.modal.messages.createVersionFailed": "Versie aanmaken mislukt: {{message}}",
+  "marketPublish.modal.messages.fetchRemoteFailed": "Ophalen van externe assistentgegevens mislukt",
+  "marketPublish.modal.messages.missingIdentifier": "Deze assistent heeft nog geen community-identificatie",
+  "marketPublish.modal.messages.notAuthenticated": "Log eerst in op je community-account",
+  "marketPublish.modal.messages.publishFailed": "Publicatie mislukt: {{message}}",
+  "marketPublish.modal.submitButton": "Publiceren",
+  "marketPublish.modal.title.submit": "Delen met de assistentengemeenschap",
+  "marketPublish.modal.title.upload": "Nieuwe versie publiceren",
+  "marketPublish.resultModal.message": "Je assistent is ter beoordeling ingediend. Na goedkeuring wordt deze automatisch gepubliceerd.",
+  "marketPublish.resultModal.title": "Succesvol ingediend",
+  "marketPublish.resultModal.view": "Bekijk in de community",
+  "marketPublish.submit.button": "Delen met de community",
+  "marketPublish.submit.tooltip": "Deel je assistent met de community",
+  "marketPublish.upload.button": "Nieuwe versie publiceren",
+  "marketPublish.upload.tooltip": "Publiceer een nieuwe versie naar de assistentengemeenschap",
+  "memory.enabled.desc": "Wanneer ingeschakeld, onthoudt de AI je voorkeuren uit eerdere gesprekken, bouwt geheugen op en gebruikt dit als referentie in toekomstige gesprekken",
+  "memory.enabled.title": "Geheugenfunctie inschakelen",
+  "memory.title": "Geheugeninstellingen",
+  "message.success": "Succesvol bijgewerkt",
+  "myAgents.actions.cancel": "Annuleren",
+  "myAgents.actions.confirmDeprecate": "Veroudering bevestigen",
+  "myAgents.actions.deprecate": "Permanent verwijderen",
+  "myAgents.actions.deprecateConfirmContent": "Na veroudering wordt deze assistent permanent uit de marktplaats verwijderd en kan niet opnieuw worden gepubliceerd. Deze actie is onomkeerbaar, wees voorzichtig.",
+  "myAgents.actions.deprecateConfirmTitle": "Weet je zeker dat je deze assistent wilt verouderd maken?",
+  "myAgents.actions.deprecateError": "Veroudering van assistent mislukt",
+  "myAgents.actions.deprecateLoading": "Assistent wordt verouderd...",
+  "myAgents.actions.deprecateSuccess": "Assistent is verouderd",
+  "myAgents.actions.edit": "Agent bewerken",
+  "myAgents.actions.publish": "Agent publiceren",
+  "myAgents.actions.publishError": "Publiceren van assistent mislukt",
+  "myAgents.actions.publishLoading": "Assistent wordt gepubliceerd...",
+  "myAgents.actions.publishSuccess": "Assistent is gepubliceerd",
+  "myAgents.actions.unpublish": "Agent depubliceren",
+  "myAgents.actions.unpublishError": "Depubliceren van assistent mislukt",
+  "myAgents.actions.unpublishLoading": "Assistent wordt gedepubliceerd...",
+  "myAgents.actions.unpublishSuccess": "Assistent is gedepubliceerd",
+  "myAgents.actions.viewDetail": "Details bekijken",
+  "myAgents.detail.category": "Categorie",
+  "myAgents.detail.description": "Beschrijving",
+  "myAgents.detail.identifier": "Identificatie",
+  "myAgents.detail.title": "Assistentdetails",
+  "myAgents.empty.description": "Je hebt nog geen assistenten gepubliceerd op de marktplaats",
+  "myAgents.empty.title": "Nog geen gepubliceerde assistenten",
+  "myAgents.errors.editFailed": "Bewerken van assistent mislukt, probeer het later opnieuw",
+  "myAgents.errors.fetchFailed": "Ophalen van assistentdetails mislukt",
+  "myAgents.errors.notAuthenticated": "Log eerst in op je marktplaatsaccount",
+  "myAgents.loginRequired.button": "Inloggen op marktplaatsaccount",
+  "myAgents.loginRequired.description": "Log eerst in op je marktplaatsaccount om je gepubliceerde assistenten te bekijken",
+  "myAgents.loginRequired.title": "Inloggen vereist",
+  "myAgents.status.archived": "Gearchiveerd",
+  "myAgents.status.deprecated": "Verouderd",
+  "myAgents.status.published": "Gepubliceerd",
+  "myAgents.status.unpublished": "Niet gepubliceerd",
+  "myAgents.title": "Mijn gepubliceerde assistenten",
+  "plugin.addMCPPlugin": "MCP-plug-in toevoegen",
+  "plugin.addTooltip": "Voeg aangepaste plug-in toe",
+  "plugin.clearDeprecated": "Verwijder verouderde plug-ins",
+  "plugin.empty": "Geen geïnstalleerde plug-ins, ga naar de <1>plug-in store</1> om te verkennen",
+  "plugin.installStatus.deprecated": "Verwijderd",
+  "plugin.settings.hint": "Vul de volgende configuratie in op basis van de beschrijving",
+  "plugin.settings.title": "{{id}} Plug-inconfiguratie",
+  "plugin.settings.tooltip": "Plug-inconfiguratie",
+  "plugin.store": "Plug-in store",
+  "settingAgent.avatar.sizeExceeded": "De afbeeldingsgrootte overschrijdt de limiet van 1 MB. Kies een kleinere afbeelding.",
+  "settingAgent.avatar.title": "Avatar",
+  "settingAgent.backgroundColor.title": "Achtergrondkleur",
+  "settingAgent.description.desc": "Een korte introductie van je assistent, niet als karakterinstelling",
+  "settingAgent.description.placeholder": "Voer assistentbeschrijving in",
+  "settingAgent.description.title": "Assistentbeschrijving",
+  "settingAgent.name.placeholder": "Voer assistentnaam in",
+  "settingAgent.name.title": "Naam",
+  "settingAgent.prompt.placeholder": "Voer assistentinstellingen in, druk op / om het opdrachtmenu te openen",
+  "settingAgent.prompt.title": "Assistentinstellingen",
+  "settingAgent.submit": "Assistentinformatie bijwerken",
+  "settingAgent.tag.desc": "Assistent-tags worden weergegeven in de assistentengemeenschap",
+  "settingAgent.tag.placeholder": "Voer tag in",
+  "settingAgent.tag.title": "Tag",
+  "settingAgent.title": "Assistentinformatie",
+  "settingAppearance.animationMode.agile": "Behendig",
+  "settingAppearance.animationMode.desc": "Kies de animatiesnelheid voor de reactietijd van de applicatie",
+  "settingAppearance.animationMode.disabled": "Uitgeschakeld",
+  "settingAppearance.animationMode.elegant": "Elegant",
+  "settingAppearance.animationMode.title": "Reactie-animatie",
+  "settingAppearance.contextMenuMode.default": "Standaard",
+  "settingAppearance.contextMenuMode.desc": "Kies de weergaveoptie voor het contextmenu van chatberichten",
+  "settingAppearance.contextMenuMode.disabled": "Niet gebruiken",
+  "settingAppearance.contextMenuMode.title": "Contextmenu-optie",
+  "settingAppearance.neutralColor.desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
+  "settingAppearance.neutralColor.title": "Neutrale kleur",
+  "settingAppearance.noAnimation.desc": "Schakel alle animatie-effecten in de applicatie uit",
+  "settingAppearance.noAnimation.title": "Animatie uit modus",
+  "settingAppearance.preview.title": "Kleurpalet",
+  "settingAppearance.primaryColor.desc": "Aangepaste themakleur",
+  "settingAppearance.primaryColor.title": "Themakleur",
+  "settingAppearance.title": "Toepassing uiterlijk",
+  "settingChat.autoCreateTopicThreshold.desc": "Automatisch een onderwerp maken wanneer het aantal berichten de ingestelde waarde overschrijdt",
+  "settingChat.autoCreateTopicThreshold.title": "Berichtdrempel",
+  "settingChat.chatStyleType.title": "Chatvensterstijl",
+  "settingChat.chatStyleType.type.chat": "Gespreksmodus",
+  "settingChat.chatStyleType.type.docs": "Documentmodus",
+  "settingChat.compressThreshold.desc": "Comprimeren wanneer het aantal ongecomprimeerde berichten de ingestelde waarde overschrijdt",
+  "settingChat.compressThreshold.title": "Compressiedrempel voor berichtlengte",
+  "settingChat.enableAutoCreateTopic.desc": "Automatisch een onderwerp maken tijdens het gesprek, alleen van toepassing op tijdelijke onderwerpen",
+  "settingChat.enableAutoCreateTopic.title": "Automatisch onderwerp maken",
+  "settingChat.enableCompressHistory.title": "Automatisch samenvatten van historische berichten inschakelen",
+  "settingChat.enableHistoryCount.alias": "Onbeperkt",
+  "settingChat.enableHistoryCount.limited": "Bevat alleen {{number}} berichten",
+  "settingChat.enableHistoryCount.setlimited": "Stel berichtengeschiedenis in",
+  "settingChat.enableHistoryCount.title": "Berichtgeschiedenis beperken",
+  "settingChat.enableHistoryCount.unlimited": "Onbeperkt aantal berichten in de geschiedenis",
+  "settingChat.enableStreaming.desc": "Schakel streaming-uitvoer in om reacties in realtime weer te geven. Als dit is uitgeschakeld, wordt alleen de volledige reactie weergegeven.",
+  "settingChat.enableStreaming.title": "Streaming-uitvoer inschakelen",
+  "settingChat.historyCount.desc": "Aantal berichten dat bij elke aanvraag wordt meegenomen (inclusief de meest recente vraag. Elke vraag en antwoord tellen als 1)",
+  "settingChat.historyCount.title": "Berichtaantal meenemen",
+  "settingChat.inputTemplate.desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
+  "settingChat.inputTemplate.placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
+  "settingChat.inputTemplate.title": "Voorbewerking van gebruikersinvoer",
+  "settingChat.submit": "Chatvoorkeuren bijwerken",
+  "settingChat.title": "Chatinstellingen",
+  "settingChatAppearance.fontSize.desc": "De lettergrootte van de chatinhoud",
+  "settingChatAppearance.fontSize.marks.normal": "Standaard",
+  "settingChatAppearance.fontSize.title": "Lettergrootte",
+  "settingChatAppearance.highlighterTheme.title": "Code markeer thema",
+  "settingChatAppearance.mermaidTheme.title": "Mermaid-thema",
+  "settingChatAppearance.title": "Chat uiterlijk",
+  "settingChatAppearance.transitionMode.desc": "Overgangsanimatie van chatberichten",
+  "settingChatAppearance.transitionMode.options.fadeIn": "Vervagen",
+  "settingChatAppearance.transitionMode.options.none.desc": "Dit hangt af van de manier waarop het model reageert; test dit zelf.",
+  "settingChatAppearance.transitionMode.options.none.value": "Geen",
+  "settingChatAppearance.transitionMode.options.smooth": "Vloeiend",
+  "settingChatAppearance.transitionMode.title": "Overgangsanimatie",
+  "settingCommon.devMode.desc": "Wanneer ingeschakeld, worden ontwikkelaarsfuncties en -opties weergegeven",
+  "settingCommon.devMode.title": "Ontwikkelaarsmodus",
+  "settingCommon.lang.autoMode": "Volg systeem",
+  "settingCommon.lang.title": "Taal",
+  "settingCommon.liteMode.desc": "Wanneer ingeschakeld, wordt de interface vereenvoudigd en worden geavanceerde functies verborgen",
+  "settingCommon.liteMode.title": "Lichte modus",
+  "settingCommon.responseLanguage.auto": "Volg systeeminstellingen",
+  "settingCommon.responseLanguage.desc": "Stel de taal in die AI gebruikt voor antwoorden",
+  "settingCommon.responseLanguage.placeholder": "Kies antwoordtaal",
+  "settingCommon.responseLanguage.title": "Antwoordtaal",
+  "settingCommon.themeMode.auto": "Automatisch",
+  "settingCommon.themeMode.dark": "Donker",
+  "settingCommon.themeMode.light": "Licht",
+  "settingCommon.themeMode.title": "Thema",
+  "settingCommon.title": "Algemene instellingen",
+  "settingGroup.description.placeholder": "Voer een teamomschrijving in",
+  "settingGroup.description.title": "Teamomschrijving",
+  "settingGroup.name.placeholder": "Voer een teamnaam in",
+  "settingGroup.name.title": "Teamnaam",
+  "settingGroup.scene.desc": "Selecteer de teamsituatie",
+  "settingGroup.scene.options.casual": "Informeel",
+  "settingGroup.scene.options.productive": "Productief",
+  "settingGroup.scene.title": "Teamsituatie",
+  "settingGroup.submit": "Team bijwerken",
+  "settingGroup.systemPrompt.placeholder": "Voer de systeemopdracht van de host in",
+  "settingGroup.systemPrompt.title": "Systeemopdracht van de host",
+  "settingGroup.title": "Groepsinformatie",
+  "settingGroupChat.allowDM.desc": "Wanneer uitgeschakeld, kun je nog steeds zelf privéberichten naar de assistent sturen",
+  "settingGroupChat.allowDM.title": "Sta privéberichten van assistent toe",
+  "settingGroupChat.enableSupervisor.desc": "Schakel de functie voor groepsmoderator in; de moderator beheert het verloop van teamgesprekken",
+  "settingGroupChat.enableSupervisor.title": "Moderator inschakelen",
+  "settingGroupChat.maxResponseInRow.desc": "Kies hoeveel berichten een lid achter elkaar kan beantwoorden. Stel in op 0 om deze beperking uit te schakelen.",
+  "settingGroupChat.maxResponseInRow.title": "Aantal opeenvolgende antwoorden",
+  "settingGroupChat.model.desc": "De bijdragen van groepsleden worden niet beïnvloed. Sommige modellen kunnen niet als moderator worden gebruikt.",
+  "settingGroupChat.model.title": "Hostmodel",
+  "settingGroupChat.orchestratorTitle": "Hostinstellingen",
+  "settingGroupChat.responseOrder.desc": "Agenten reageren in de volgorde die is ingesteld in de chat",
+  "settingGroupChat.responseOrder.options.natural": "Natuurlijk",
+  "settingGroupChat.responseOrder.options.sequential": "Opeenvolgend",
+  "settingGroupChat.responseOrder.placeholder": "Kies de antwoordvolgorde",
+  "settingGroupChat.responseOrder.title": "Antwoordvolgorde",
+  "settingGroupChat.responseSpeed.desc": "Beheer de algemene snelheid van het gesprek",
+  "settingGroupChat.responseSpeed.options.fast": "Snel",
+  "settingGroupChat.responseSpeed.options.medium": "Gemiddeld",
+  "settingGroupChat.responseSpeed.options.slow": "Langzaam",
+  "settingGroupChat.responseSpeed.placeholder": "Kies de reactiesnelheid",
+  "settingGroupChat.responseSpeed.title": "Reactiesnelheid",
+  "settingGroupChat.revealDM.desc": "Maak privéberichten die naar andere leden zijn gestuurd zichtbaar voor jou.",
+  "settingGroupChat.revealDM.title": "Privéberichten tonen",
+  "settingGroupChat.submit": "Instellingen bijwerken",
+  "settingGroupChat.systemPrompt.desc": "Aangepaste systeemopdracht voor de host van de groepschat. Dit kan het standaardgedrag van de host beïnvloeden.",
+  "settingGroupChat.systemPrompt.placeholder": "Voer een aangepaste systeemopdracht voor de host in...",
+  "settingGroupChat.systemPrompt.title": "Systeemopdracht van de host",
+  "settingGroupChat.title": "Chatinstellingen",
+  "settingGroupMembers.addToGroup": "Toevoegen aan groep",
+  "settingGroupMembers.availableAgents": "Beschikbare assistenten",
+  "settingGroupMembers.createMember": "Lid aanmaken",
+  "settingGroupMembers.defaultAgent": "Aangepaste assistent",
+  "settingGroupMembers.disableHost": "Host-assistent uitschakelen",
+  "settingGroupMembers.edit": "Lid bewerken",
+  "settingGroupMembers.empty": "Er zijn momenteel geen leden in dit team. Klik op de + knop om leden toe te voegen.",
+  "settingGroupMembers.enableHost": "Host-assistent inschakelen",
+  "settingGroupMembers.groupHost": "Groepshost",
+  "settingGroupMembers.groupMembers": "Groepsleden",
+  "settingGroupMembers.host.description": "Wanneer de host in de groep is, wordt de groepschat automatisch beheerd, geschikt voor creatieve taken.",
+  "settingGroupMembers.host.title": "Host",
+  "settingGroupMembers.noAvailableAgents": "Geen beschikbare assistenten",
+  "settingGroupMembers.noDescription": "Geen beschrijving",
+  "settingGroupMembers.noMembersInGroup": "Geen leden in de groep",
+  "settingGroupMembers.owner": "Jij (eigenaar)",
+  "settingGroupMembers.remove": "Lid verwijderen",
+  "settingGroupMembers.removeFromGroup": "Verwijderen uit groep",
+  "settingGroupMembers.you": "Jij",
+  "settingImage.defaultCount.desc": "Stel het standaard aantal afbeeldingen in dat wordt gegenereerd wanneer een nieuwe taak wordt aangemaakt.",
+  "settingImage.defaultCount.label": "Standaard aantal afbeeldingen",
+  "settingImage.defaultCount.title": "AI Tekeninstellingen",
+  "settingModel.enableMaxTokens.title": "Limiet voor enkele reacties inschakelen",
+  "settingModel.enableReasoningEffort.title": "Schakel redeneerkracht aanpassing in",
+  "settingModel.frequencyPenalty.desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
+  "settingModel.frequencyPenalty.title": "Woordenschat diversiteit",
+  "settingModel.maxTokens.desc": "Het maximale aantal tokens dat wordt gebruikt voor een enkele interactie",
+  "settingModel.maxTokens.title": "Limiet voor enkele reacties",
+  "settingModel.model.desc": "{{provider}} model",
+  "settingModel.model.title": "Model",
+  "settingModel.params.title": "Geavanceerde parameters",
+  "settingModel.presencePenalty.desc": "Hoe hoger de waarde, hoe meer de neiging om verschillende uitdrukkingen te gebruiken en herhaling van concepten te vermijden; hoe lager de waarde, hoe meer de neiging om herhalende concepten of verhalen te gebruiken, wat zorgt voor meer consistentie in de uitdrukking",
+  "settingModel.presencePenalty.title": "Uitdrukkingsdiversiteit",
+  "settingModel.reasoningEffort.desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de reactietijd en het tokenverbruik verhogen",
+  "settingModel.reasoningEffort.options.high": "Hoog",
+  "settingModel.reasoningEffort.options.low": "Laag",
+  "settingModel.reasoningEffort.options.medium": "Gemiddeld",
+  "settingModel.reasoningEffort.title": "Redeneerkracht",
+  "settingModel.submit": "Modelinstellingen bijwerken",
+  "settingModel.temperature.desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord.",
+  "settingModel.temperature.title": "Creativiteit Activiteit",
+  "settingModel.temperature.warning": "Een te hoge waarde voor creativiteit activiteit kan leiden tot onleesbare output.",
+  "settingModel.title": "Modelinstellingen",
+  "settingModel.topP.desc": "Hoeveel mogelijkheden er in overweging worden genomen; hoe hoger de waarde, hoe meer mogelijke antwoorden worden geaccepteerd; hoe lager de waarde, hoe meer de voorkeur uitgaat naar het meest waarschijnlijke antwoord. Het wordt niet aanbevolen om dit samen met creativiteit activiteit te wijzigen.",
+  "settingModel.topP.title": "Openheid van Denken",
+  "settingOpening.openingMessage.desc": "De openingsboodschap bij het starten van een gesprek, bedoeld om de functies van de assistent voor te stellen",
+  "settingOpening.openingMessage.placeholder": "Hallo, ik ben de aangepaste assistent. Je kunt direct met me beginnen praten of naar de assistentinstellingen gaan om mijn informatie aan te vullen.",
+  "settingOpening.openingMessage.title": "Openingsboodschap",
+  "settingOpening.openingQuestions.desc": "Leidende vragen die worden weergegeven aan het begin van het gesprek",
+  "settingOpening.openingQuestions.empty": "Voeg openingsvragen toe om gebruikers te helpen snel een gesprek te beginnen",
+  "settingOpening.openingQuestions.placeholder": "Voer een vraag in",
+  "settingOpening.openingQuestions.repeat": "Vraag bestaat al",
+  "settingOpening.openingQuestions.title": "Openingsvragen",
+  "settingOpening.title": "Openingsinstellingen",
+  "settingPlugin.title": "Plugin-lijst",
+  "settingSystem.accessCode.desc": "Beheerder heeft versleutelde toegang ingeschakeld",
+  "settingSystem.accessCode.placeholder": "Voer toegangswachtwoord in",
+  "settingSystem.accessCode.title": "Toegangswachtwoord",
+  "settingSystem.oauth.info.desc": "已登录",
+  "settingSystem.oauth.info.title": "Account Information",
+  "settingSystem.oauth.signin.action": "Sign In",
+  "settingSystem.oauth.signin.desc": "Sign in using SSO to unlock the app",
+  "settingSystem.oauth.signin.title": "Sign In to Your Account",
+  "settingSystem.oauth.signout.action": "Sign Out",
+  "settingSystem.oauth.signout.confirm": "Confirm sign out?",
+  "settingSystem.oauth.signout.success": "Sign out successful",
+  "settingSystem.title": "Systeeminstellingen",
+  "settingTTS.openai.sttModel": "OpenAI spraakherkenningsmodel",
+  "settingTTS.openai.title": "OpenAI",
+  "settingTTS.openai.ttsModel": "OpenAI spraaksynthesemodel",
+  "settingTTS.showAllLocaleVoice.desc": "Als dit is uitgeschakeld, worden alleen stemmen in de huidige taal weergegeven",
+  "settingTTS.showAllLocaleVoice.title": "Alle taalstemmen weergeven",
+  "settingTTS.stt": "Spraakherkenning instellingen",
+  "settingTTS.sttAutoStop.desc": "Als dit is uitgeschakeld, stopt de spraakherkenning niet automatisch en moet je handmatig op de stopknop klikken",
+  "settingTTS.sttAutoStop.title": "Automatisch stoppen van spraakherkenning",
+  "settingTTS.sttLocale.desc": "De taal van de gesproken invoer, deze optie kan de nauwkeurigheid van spraakherkenning verbeteren",
+  "settingTTS.sttLocale.title": "Taal voor spraakherkenning",
+  "settingTTS.sttService.desc": "Browser staat voor de native spraakherkenningsservice van de browser",
+  "settingTTS.sttService.title": "Spraakherkenningsservice",
+  "settingTTS.submit": "Spraakdienst bijwerken",
+  "settingTTS.title": "Spraakdienst",
+  "settingTTS.tts": "Spraaksynthese-instellingen",
+  "settingTTS.ttsService.desc": "Als je gebruikmaakt van de spraaksynthese-service van OpenAI, zorg er dan voor dat de OpenAI-modelservice is ingeschakeld",
+  "settingTTS.ttsService.title": "Spraaksynthese-service",
+  "settingTTS.voice.desc": "Kies een stem voor de huidige assistent, verschillende TTS-services ondersteunen verschillende stemmen",
+  "settingTTS.voice.preview": "Stem voorbeluisteren",
+  "settingTTS.voice.title": "Spraaksynthese stem",
   "startConversation": "Gesprek starten",
-  "storage": {
-    "actions": {
-      "export": {
-        "button": "Exporteren",
-        "exportType": {
-          "agent": "Exporteren assistentinstellingen",
-          "agentWithMessage": "Exporteren assistent en berichten",
-          "all": "Exporteren globale instellingen en alle assistentgegevens",
-          "allAgent": "Exporteren alle assistentinstellingen",
-          "allAgentWithMessage": "Exporteren alle assistenten en berichten",
-          "globalSetting": "Exporteren globale instellingen"
-        },
-        "title": "Gegevens exporteren"
-      },
-      "import": {
-        "button": "Importeren",
-        "title": "Gegevens importeren"
-      },
-      "title": "Geavanceerde acties"
-    },
-    "desc": "Huidig opslaggebruik in de browser",
-    "embeddings": {
-      "used": "Vectoropslag"
-    },
-    "title": "Gegevensopslag",
-    "used": "Opslaggebruik"
-  },
-  "submitAgentModal": {
-    "button": "Assistent indienen",
-    "identifier": "Assistentidentifier (identifier)",
-    "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
-    "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
-    "success": "Assistent succesvol ingediend",
-    "tooltips": "Delen met de assistentengemeenschap"
-  },
-  "submitFooter": {
-    "reset": "Resetten",
-    "submit": "Opslaan",
-    "unSaved": "Onopgeslagen wijzigingen",
-    "unSavedWarning": "Er zijn momenteel onopgeslagen wijzigingen"
-  },
-  "sync": {
-    "device": {
-      "deviceName": {
-        "hint": "Voeg een naam toe om het apparaat te identificeren",
-        "placeholder": "Voer de apparaatnaam in",
-        "title": "Apparaatnaam"
-      },
-      "title": "Apparaatinformatie",
-      "unknownBrowser": "Onbekende browser",
-      "unknownOS": "Onbekend besturingssysteem"
-    },
-    "warning": {
-      "tip": "Na een lange periode van openbare tests in de community, kan WebRTC-synchronisatie mogelijk niet stabiel voldoen aan algemene synchronisatiebehoeften. Gelieve zelf een <1>signaleringsserver implementeren</1> voordat u het gebruikt."
-    },
-    "webrtc": {
-      "channelName": {
-        "desc": "WebRTC zal deze naam gebruiken om een synchronisatiekanaal te maken, zorg ervoor dat de kanaalnaam uniek is",
-        "placeholder": "Voer de synchronisatiekanaalnaam in",
-        "shuffle": "Willekeurig genereren",
-        "title": "Synchronisatiekanaalnaam"
-      },
-      "channelPassword": {
-        "desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen, alleen apparaten met het juiste wachtwoord kunnen het kanaal betreden",
-        "placeholder": "Voer het synchronisatiekanaalwachtwoord in",
-        "title": "Synchronisatiekanaalwachtwoord"
-      },
-      "desc": "Realtime, point-to-point datacommunicatie, apparaten moeten tegelijkertijd online zijn om te synchroniseren",
-      "enabled": {
-        "invalid": "Vul eerst de signaleringsserver en synchronisatiekanaalnaam in voordat u deze inschakelt",
-        "title": "Synchronisatie inschakelen"
-      },
-      "signaling": {
-        "desc": "WebRTC zal dit adres gebruiken voor synchronisatie",
-        "placeholder": "Voer het adres van de signaleringsserver in",
-        "title": "Signaleringsserver"
-      },
-      "title": "WebRTC Synchronisatie"
-    }
-  },
-  "systemAgent": {
-    "agentMeta": {
-      "label": "Model",
-      "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
-      "title": "Assistent voor het genereren van assistentinformatie"
-    },
-    "customPrompt": {
-      "addPrompt": "Voeg aangepaste prompt toe",
-      "desc": "Vul dit in, zodat de systeemassistent de aangepaste prompt gebruikt bij het genereren van inhoud",
-      "placeholder": "Voer aangepaste prompt in",
-      "title": "Aangepaste prompt"
-    },
-    "generationTopic": {
-      "label": "Model",
-      "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
-      "title": "AI-hulpmiddel voor het benoemen van tekentopics"
-    },
-    "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
-    "historyCompress": {
-      "label": "Model",
-      "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",
-      "title": "Assistent voor het comprimeren van gespreksgeschiedenis"
-    },
-    "queryRewrite": {
-      "label": "Model",
-      "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
-      "title": "Herschrijfassistent voor vragen in de kennisbank"
-    },
-    "thread": {
-      "label": "Model",
-      "modelDesc": "Model dat wordt gebruikt voor het automatisch hernoemen van subonderwerpen",
-      "title": "Assistent voor het automatisch benoemen van subonderwerpen"
-    },
-    "title": "Systeemassistent",
-    "topic": {
-      "label": "Model",
-      "modelDesc": "Specificeer het model dat wordt gebruikt voor automatische hernoeming van onderwerpen",
-      "title": "Assistent voor het automatisch benoemen van onderwerpen"
-    },
-    "translation": {
-      "label": "Model",
-      "modelDesc": "Specificeer het model voor vertaling",
-      "title": "Assistent voor het vertalen van berichtinhoud"
-    }
-  },
-  "tab": {
-    "about": "Over",
-    "agent": "Standaardassistent",
-    "apikey": "API-sleutelbeheer",
-    "common": "Uiterlijk",
-    "experiment": "Experiment",
-    "hotkey": "Sneltoetsen",
-    "image": "Tekenservice",
-    "llm": "Taalmodel",
-    "memory": "Geheugeninstellingen",
-    "profile": "Mijn account",
-    "provider": "AI-dienstverlener",
-    "proxy": "Netwerkproxy",
-    "security": "Beveiliging",
-    "stats": "Statistieken",
-    "storage": "Gegevensopslag",
-    "sync": "Cloudsynchronisatie",
-    "tts": "Spraakdienst",
-    "usage": "Gebruiksoverzicht"
-  },
-  "tools": {
-    "add": "Plug-in integreren",
-    "builtins": {
-      "groupName": "Ingebouwd"
-    },
-    "disabled": "Dit model ondersteunt momenteel geen functieaanroepen en kan geen plug-ins gebruiken",
-    "klavis": {
-      "addServer": "Server toevoegen",
-      "authCompleted": "Authenticatie voltooid",
-      "authFailed": "Authenticatie mislukt",
-      "authRequired": "Authenticatie vereist",
-      "connected": "Verbonden",
-      "error": "Fout",
-      "groupName": "Klavis Tools",
-      "manage": "Beheer Klavis",
-      "manageTitle": "Beheer Klavis-integratie",
-      "noServers": "Geen verbonden servers",
-      "notEnabled": "Klavis-service is niet ingeschakeld",
-      "oauthRequired": "Voltooi de OAuth-authenticatie in een nieuw venster",
-      "pendingAuth": "Authenticatie in behandeling",
-      "serverCreated": "Server succesvol aangemaakt",
-      "serverCreatedFailed": "Server aanmaken mislukt",
-      "serverRemoved": "Server verwijderd",
-      "servers": "servers",
-      "tools": "tools",
-      "verifyAuth": "Ik heb de authenticatie voltooid"
-    },
-    "notInstalled": "Niet geïnstalleerd",
-    "notInstalledWarning": "Deze plug-in is momenteel niet geïnstalleerd, wat de werking van de assistent kan beïnvloeden",
-    "plugins": {
-      "enabled": "Ingeschakeld {{num}}",
-      "groupName": "Plug-ins",
-      "noEnabled": "Geen plug-ins ingeschakeld",
-      "store": "Plug-in store"
-    },
-    "tabs": {
-      "all": "Alles",
-      "installed": "Ingeschakeld"
-    },
-    "title": "Uitbreidingsgereedschap"
-  }
+  "storage.actions.export.button": "Exporteren",
+  "storage.actions.export.exportType.agent": "Exporteren assistentinstellingen",
+  "storage.actions.export.exportType.agentWithMessage": "Exporteren assistent en berichten",
+  "storage.actions.export.exportType.all": "Exporteren globale instellingen en alle assistentgegevens",
+  "storage.actions.export.exportType.allAgent": "Exporteren alle assistentinstellingen",
+  "storage.actions.export.exportType.allAgentWithMessage": "Exporteren alle assistenten en berichten",
+  "storage.actions.export.exportType.globalSetting": "Exporteren globale instellingen",
+  "storage.actions.export.title": "Gegevens exporteren",
+  "storage.actions.import.button": "Importeren",
+  "storage.actions.import.title": "Gegevens importeren",
+  "storage.actions.title": "Geavanceerde acties",
+  "storage.desc": "Huidig opslaggebruik in de browser",
+  "storage.embeddings.used": "Vectoropslag",
+  "storage.title": "Gegevensopslag",
+  "storage.used": "Opslaggebruik",
+  "submitAgentModal.button": "Assistent indienen",
+  "submitAgentModal.identifier": "Assistentidentifier (identifier)",
+  "submitAgentModal.metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
+  "submitAgentModal.placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
+  "submitAgentModal.success": "Assistent succesvol ingediend",
+  "submitAgentModal.tooltips": "Delen met de assistentengemeenschap",
+  "submitFooter.reset": "Resetten",
+  "submitFooter.submit": "Opslaan",
+  "submitFooter.unSaved": "Onopgeslagen wijzigingen",
+  "submitFooter.unSavedWarning": "Er zijn momenteel onopgeslagen wijzigingen",
+  "sync.device.deviceName.hint": "Voeg een naam toe om het apparaat te identificeren",
+  "sync.device.deviceName.placeholder": "Voer de apparaatnaam in",
+  "sync.device.deviceName.title": "Apparaatnaam",
+  "sync.device.title": "Apparaatinformatie",
+  "sync.device.unknownBrowser": "Onbekende browser",
+  "sync.device.unknownOS": "Onbekend besturingssysteem",
+  "sync.warning.tip": "Na een lange periode van openbare tests in de community, kan WebRTC-synchronisatie mogelijk niet stabiel voldoen aan algemene synchronisatiebehoeften. Gelieve zelf een <1>signaleringsserver implementeren</1> voordat u het gebruikt.",
+  "sync.webrtc.channelName.desc": "WebRTC zal deze naam gebruiken om een synchronisatiekanaal te maken, zorg ervoor dat de kanaalnaam uniek is",
+  "sync.webrtc.channelName.placeholder": "Voer de synchronisatiekanaalnaam in",
+  "sync.webrtc.channelName.shuffle": "Willekeurig genereren",
+  "sync.webrtc.channelName.title": "Synchronisatiekanaalnaam",
+  "sync.webrtc.channelPassword.desc": "Voeg een wachtwoord toe om de privacy van het kanaal te waarborgen, alleen apparaten met het juiste wachtwoord kunnen het kanaal betreden",
+  "sync.webrtc.channelPassword.placeholder": "Voer het synchronisatiekanaalwachtwoord in",
+  "sync.webrtc.channelPassword.title": "Synchronisatiekanaalwachtwoord",
+  "sync.webrtc.desc": "Realtime, point-to-point datacommunicatie, apparaten moeten tegelijkertijd online zijn om te synchroniseren",
+  "sync.webrtc.enabled.invalid": "Vul eerst de signaleringsserver en synchronisatiekanaalnaam in voordat u deze inschakelt",
+  "sync.webrtc.enabled.title": "Synchronisatie inschakelen",
+  "sync.webrtc.signaling.desc": "WebRTC zal dit adres gebruiken voor synchronisatie",
+  "sync.webrtc.signaling.placeholder": "Voer het adres van de signaleringsserver in",
+  "sync.webrtc.signaling.title": "Signaleringsserver",
+  "sync.webrtc.title": "WebRTC Synchronisatie",
+  "systemAgent.agentMeta.label": "Model",
+  "systemAgent.agentMeta.modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
+  "systemAgent.agentMeta.title": "Assistent voor het genereren van assistentinformatie",
+  "systemAgent.customPrompt.addPrompt": "Voeg aangepaste prompt toe",
+  "systemAgent.customPrompt.desc": "Vul dit in, zodat de systeemassistent de aangepaste prompt gebruikt bij het genereren van inhoud",
+  "systemAgent.customPrompt.placeholder": "Voer aangepaste prompt in",
+  "systemAgent.customPrompt.title": "Aangepaste prompt",
+  "systemAgent.generationTopic.label": "Model",
+  "systemAgent.generationTopic.modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
+  "systemAgent.generationTopic.title": "AI-hulpmiddel voor het benoemen van tekentopics",
+  "systemAgent.helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
+  "systemAgent.historyCompress.label": "Model",
+  "systemAgent.historyCompress.modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",
+  "systemAgent.historyCompress.title": "Assistent voor het comprimeren van gespreksgeschiedenis",
+  "systemAgent.queryRewrite.label": "Model",
+  "systemAgent.queryRewrite.modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
+  "systemAgent.queryRewrite.title": "Herschrijfassistent voor vragen in de kennisbank",
+  "systemAgent.thread.label": "Model",
+  "systemAgent.thread.modelDesc": "Model dat wordt gebruikt voor het automatisch hernoemen van subonderwerpen",
+  "systemAgent.thread.title": "Assistent voor het automatisch benoemen van subonderwerpen",
+  "systemAgent.title": "Systeemassistent",
+  "systemAgent.topic.label": "Model",
+  "systemAgent.topic.modelDesc": "Specificeer het model dat wordt gebruikt voor automatische hernoeming van onderwerpen",
+  "systemAgent.topic.title": "Assistent voor het automatisch benoemen van onderwerpen",
+  "systemAgent.translation.label": "Model",
+  "systemAgent.translation.modelDesc": "Specificeer het model voor vertaling",
+  "systemAgent.translation.title": "Assistent voor het vertalen van berichtinhoud",
+  "tab.about": "Over",
+  "tab.agent": "Standaardassistent",
+  "tab.apikey": "API-sleutelbeheer",
+  "tab.common": "Uiterlijk",
+  "tab.experiment": "Experiment",
+  "tab.hotkey": "Sneltoetsen",
+  "tab.image": "Tekenservice",
+  "tab.llm": "Taalmodel",
+  "tab.memory": "Geheugeninstellingen",
+  "tab.profile": "Mijn account",
+  "tab.provider": "AI-dienstverlener",
+  "tab.proxy": "Netwerkproxy",
+  "tab.security": "Beveiliging",
+  "tab.stats": "Statistieken",
+  "tab.storage": "Gegevensopslag",
+  "tab.sync": "Cloudsynchronisatie",
+  "tab.tts": "Spraakdienst",
+  "tab.usage": "Gebruiksoverzicht",
+  "tools.add": "Plug-in integreren",
+  "tools.builtins.groupName": "Ingebouwd",
+  "tools.disabled": "Dit model ondersteunt momenteel geen functieaanroepen en kan geen plug-ins gebruiken",
+  "tools.klavis.addServer": "Server toevoegen",
+  "tools.klavis.authCompleted": "Authenticatie voltooid",
+  "tools.klavis.authFailed": "Authenticatie mislukt",
+  "tools.klavis.authRequired": "Authenticatie vereist",
+  "tools.klavis.connected": "Verbonden",
+  "tools.klavis.error": "Fout",
+  "tools.klavis.groupName": "Klavis Tools",
+  "tools.klavis.manage": "Beheer Klavis",
+  "tools.klavis.manageTitle": "Beheer Klavis-integratie",
+  "tools.klavis.noServers": "Geen verbonden servers",
+  "tools.klavis.notEnabled": "Klavis-service is niet ingeschakeld",
+  "tools.klavis.oauthRequired": "Voltooi de OAuth-authenticatie in een nieuw venster",
+  "tools.klavis.pendingAuth": "Authenticatie in behandeling",
+  "tools.klavis.serverCreated": "Server succesvol aangemaakt",
+  "tools.klavis.serverCreatedFailed": "Server aanmaken mislukt",
+  "tools.klavis.serverRemoved": "Server verwijderd",
+  "tools.klavis.servers": "servers",
+  "tools.klavis.tools": "tools",
+  "tools.klavis.verifyAuth": "Ik heb de authenticatie voltooid",
+  "tools.notInstalled": "Niet geïnstalleerd",
+  "tools.notInstalledWarning": "Deze plug-in is momenteel niet geïnstalleerd, wat de werking van de assistent kan beïnvloeden",
+  "tools.plugins.enabled": "Ingeschakeld {{num}}",
+  "tools.plugins.groupName": "Plug-ins",
+  "tools.plugins.noEnabled": "Geen plug-ins ingeschakeld",
+  "tools.plugins.store": "Plug-in store",
+  "tools.tabs.all": "Alles",
+  "tools.tabs.installed": "Ingeschakeld",
+  "tools.title": "Uitbreidingsgereedschap"
 }

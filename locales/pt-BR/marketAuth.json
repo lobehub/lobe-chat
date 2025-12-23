@@ -1,118 +1,76 @@
 {
-  "authorize": {
-    "cancel": "Cancelar",
-    "confirm": "Criar seu perfil",
-    "description": "Seu perfil da comunidade é independente da conta de usuário do {{appName}}.",
-    "footer": {
-      "agreement": "Ao continuar, você confirma que leu e concorda com os <terms>Termos e Condições</terms> e a <privacy>Política de Privacidade</privacy>",
-      "privacy": "Política de Privacidade",
-      "terms": "Termos de Serviço"
-    },
-    "subtitle": "Crie um perfil da comunidade para enviar e gerenciar informações publicadas.",
-    "title": "Criar perfil da comunidade"
-  },
-  "callback": {
-    "buttons": {
-      "close": "Fechar janela"
-    },
-    "messages": {
-      "authFailed": "Falha na autorização: {{error}}",
-      "missingParams": "Parâmetros de autorização ausentes",
-      "processing": "Processando autorização...",
-      "successWithCountdown": "{{message}} A janela será fechada automaticamente em {{countdown}} segundos",
-      "successWithRedirect": "Autorização bem-sucedida! Redirecionando..."
-    },
-    "titles": {
-      "error": "Falha na autorização",
-      "loading": "Autorização do LobeHub Market",
-      "success": "Autorização bem-sucedida"
-    }
-  },
-  "errors": {
-    "authorizationFailed": "Falha na autorização, tente novamente.",
-    "browserOnly": "O processo de autorização só pode ser iniciado em um navegador.",
-    "codeConsumed": "O código de autorização já foi utilizado, tente novamente.",
-    "codeVerifierMissing": "Sessão de autorização inválida, inicie o login novamente.",
-    "general": "Ocorreu um erro na autorização, tente novamente.",
-    "handoffFailed": "Não foi possível obter o resultado da autorização, tente novamente.",
-    "handoffTimeout": "Tempo de autorização esgotado, conclua a operação no navegador e tente novamente.",
-    "oidcNotReady": "O serviço de autorização ainda não está pronto, tente novamente mais tarde.",
-    "openBrowserFailed": "Não foi possível abrir o navegador do sistema, tente novamente.",
-    "openPopupFailed": "Não foi possível abrir a janela de autorização, verifique as configurações de bloqueio de pop-ups do navegador.",
-    "popupClosed": "A janela de autorização foi fechada antes da conclusão.",
-    "sessionExpired": "A sessão de autorização expirou, faça login novamente.",
-    "stateMismatch": "Estado de autorização incompatível, tente novamente.",
-    "stateMissing": "Estado de autorização não encontrado, tente novamente."
-  },
-  "messages": {
-    "authorized": "Autorização do serviço LobeHub realizada com sucesso",
-    "loading": "Iniciando o processo de autorização...",
-    "success": {
-      "cloudMcpInstall": "Autorização bem-sucedida! Agora você pode instalar o plugin Cloud MCP.",
-      "submit": "Autorização bem-sucedida! Agora você pode publicar o assistente.",
-      "upload": "Autorização bem-sucedida! Agora você pode publicar uma nova versão."
-    }
-  },
-  "profileSetup": {
-    "cancel": "Cancelar",
-    "descriptionEdit": "Atualize as informações do seu perfil da comunidade.",
-    "descriptionFirstTime": "Configure seu perfil para concluir a criação do seu perfil na comunidade.",
-    "errors": {
-      "fileTooLarge": "O tamanho do arquivo não pode exceder 2MB",
-      "notAuthenticated": "Por favor, faça login antes de continuar.",
-      "updateFailed": "Falha ao atualizar o perfil. Tente novamente.",
-      "uploadFailed": "Falha no upload, tente novamente",
-      "usernameTaken": "Este ID de usuário já está em uso. Escolha outro."
-    },
-    "fields": {
-      "avatar": {
-        "label": "Avatar"
-      },
-      "bannerUrl": {
-        "clickToUpload": "Clique para enviar imagem de fundo",
-        "label": "Imagem de fundo",
-        "remove": "Remover imagem de fundo",
-        "tooltip": "A imagem de fundo será exibida no topo do seu perfil (recomendado proporção 16:9)",
-        "uploading": "Enviando..."
-      },
-      "description": {
-        "label": "Biografia",
-        "maxLength": "A biografia pode ter no máximo 200 caracteres.",
-        "placeholder": "Fale um pouco sobre você..."
-      },
-      "displayName": {
-        "label": "Apelido",
-        "maxLength": "O apelido pode ter no máximo 50 caracteres.",
-        "placeholder": "Digite seu apelido",
-        "required": "Por favor, insira um apelido."
-      },
-      "github": {
-        "placeholder": "Nome de usuário do GitHub"
-      },
-      "twitter": {
-        "placeholder": "Nome de usuário do X (Twitter)"
-      },
-      "userName": {
-        "label": "ID de Usuário",
-        "maxLength": "O ID de usuário pode ter no máximo 32 caracteres.",
-        "minLength": "O ID de usuário deve ter pelo menos 3 caracteres.",
-        "pattern": "O ID de usuário pode conter apenas letras, números, sublinhados e hífens.",
-        "placeholder": "Digite seu ID de usuário",
-        "required": "Por favor, insira um ID de usuário.",
-        "tooltip": "O ID de usuário é seu identificador único e será usado no link do seu perfil."
-      },
-      "website": {
-        "invalidUrl": "Por favor, insira uma URL válida",
-        "placeholder": "Link do site pessoal"
-      }
-    },
-    "getStarted": "Começar",
-    "save": "Salvar",
-    "socialLinks": {
-      "title": "Links sociais"
-    },
-    "success": "Perfil atualizado com sucesso.",
-    "titleEdit": "Editar Perfil",
-    "titleFirstTime": "Complete seu perfil"
-  }
+  "authorize.cancel": "Cancelar",
+  "authorize.confirm": "Criar seu perfil",
+  "authorize.description": "Seu perfil da comunidade é independente da conta de usuário do {{appName}}.",
+  "authorize.footer.agreement": "Ao continuar, você confirma que leu e concorda com os <terms>Termos e Condições</terms> e a <privacy>Política de Privacidade</privacy>",
+  "authorize.footer.privacy": "Política de Privacidade",
+  "authorize.footer.terms": "Termos de Serviço",
+  "authorize.subtitle": "Crie um perfil da comunidade para enviar e gerenciar informações publicadas.",
+  "authorize.title": "Criar perfil da comunidade",
+  "callback.buttons.close": "Fechar janela",
+  "callback.messages.authFailed": "Falha na autorização: {{error}}",
+  "callback.messages.missingParams": "Parâmetros de autorização ausentes",
+  "callback.messages.processing": "Processando autorização...",
+  "callback.messages.successWithCountdown": "{{message}} A janela será fechada automaticamente em {{countdown}} segundos",
+  "callback.messages.successWithRedirect": "Autorização bem-sucedida! Redirecionando...",
+  "callback.titles.error": "Falha na autorização",
+  "callback.titles.loading": "Autorização do LobeHub Market",
+  "callback.titles.success": "Autorização bem-sucedida",
+  "errors.authorizationFailed": "Falha na autorização, tente novamente.",
+  "errors.browserOnly": "O processo de autorização só pode ser iniciado em um navegador.",
+  "errors.codeConsumed": "O código de autorização já foi utilizado, tente novamente.",
+  "errors.codeVerifierMissing": "Sessão de autorização inválida, inicie o login novamente.",
+  "errors.general": "Ocorreu um erro na autorização, tente novamente.",
+  "errors.handoffFailed": "Não foi possível obter o resultado da autorização, tente novamente.",
+  "errors.handoffTimeout": "Tempo de autorização esgotado, conclua a operação no navegador e tente novamente.",
+  "errors.oidcNotReady": "O serviço de autorização ainda não está pronto, tente novamente mais tarde.",
+  "errors.openBrowserFailed": "Não foi possível abrir o navegador do sistema, tente novamente.",
+  "errors.openPopupFailed": "Não foi possível abrir a janela de autorização, verifique as configurações de bloqueio de pop-ups do navegador.",
+  "errors.popupClosed": "A janela de autorização foi fechada antes da conclusão.",
+  "errors.sessionExpired": "A sessão de autorização expirou, faça login novamente.",
+  "errors.stateMismatch": "Estado de autorização incompatível, tente novamente.",
+  "errors.stateMissing": "Estado de autorização não encontrado, tente novamente.",
+  "messages.authorized": "Autorização do serviço LobeHub realizada com sucesso",
+  "messages.loading": "Iniciando o processo de autorização...",
+  "messages.success.cloudMcpInstall": "Autorização bem-sucedida! Agora você pode instalar o plugin Cloud MCP.",
+  "messages.success.submit": "Autorização bem-sucedida! Agora você pode publicar o assistente.",
+  "messages.success.upload": "Autorização bem-sucedida! Agora você pode publicar uma nova versão.",
+  "profileSetup.cancel": "Cancelar",
+  "profileSetup.descriptionEdit": "Atualize as informações do seu perfil da comunidade.",
+  "profileSetup.descriptionFirstTime": "Configure seu perfil para concluir a criação do seu perfil na comunidade.",
+  "profileSetup.errors.fileTooLarge": "O tamanho do arquivo não pode exceder 2MB",
+  "profileSetup.errors.notAuthenticated": "Por favor, faça login antes de continuar.",
+  "profileSetup.errors.updateFailed": "Falha ao atualizar o perfil. Tente novamente.",
+  "profileSetup.errors.uploadFailed": "Falha no upload, tente novamente",
+  "profileSetup.errors.usernameTaken": "Este ID de usuário já está em uso. Escolha outro.",
+  "profileSetup.fields.avatar.label": "Avatar",
+  "profileSetup.fields.bannerUrl.clickToUpload": "Clique para enviar imagem de fundo",
+  "profileSetup.fields.bannerUrl.label": "Imagem de fundo",
+  "profileSetup.fields.bannerUrl.remove": "Remover imagem de fundo",
+  "profileSetup.fields.bannerUrl.tooltip": "A imagem de fundo será exibida no topo do seu perfil (recomendado proporção 16:9)",
+  "profileSetup.fields.bannerUrl.uploading": "Enviando...",
+  "profileSetup.fields.description.label": "Biografia",
+  "profileSetup.fields.description.maxLength": "A biografia pode ter no máximo 200 caracteres.",
+  "profileSetup.fields.description.placeholder": "Fale um pouco sobre você...",
+  "profileSetup.fields.displayName.label": "Apelido",
+  "profileSetup.fields.displayName.maxLength": "O apelido pode ter no máximo 50 caracteres.",
+  "profileSetup.fields.displayName.placeholder": "Digite seu apelido",
+  "profileSetup.fields.displayName.required": "Por favor, insira um apelido.",
+  "profileSetup.fields.github.placeholder": "Nome de usuário do GitHub",
+  "profileSetup.fields.twitter.placeholder": "Nome de usuário do X (Twitter)",
+  "profileSetup.fields.userName.label": "ID de Usuário",
+  "profileSetup.fields.userName.maxLength": "O ID de usuário pode ter no máximo 32 caracteres.",
+  "profileSetup.fields.userName.minLength": "O ID de usuário deve ter pelo menos 3 caracteres.",
+  "profileSetup.fields.userName.pattern": "O ID de usuário pode conter apenas letras, números, sublinhados e hífens.",
+  "profileSetup.fields.userName.placeholder": "Digite seu ID de usuário",
+  "profileSetup.fields.userName.required": "Por favor, insira um ID de usuário.",
+  "profileSetup.fields.userName.tooltip": "O ID de usuário é seu identificador único e será usado no link do seu perfil.",
+  "profileSetup.fields.website.invalidUrl": "Por favor, insira uma URL válida",
+  "profileSetup.fields.website.placeholder": "Link do site pessoal",
+  "profileSetup.getStarted": "Começar",
+  "profileSetup.save": "Salvar",
+  "profileSetup.socialLinks.title": "Links sociais",
+  "profileSetup.success": "Perfil atualizado com sucesso.",
+  "profileSetup.titleEdit": "Editar Perfil",
+  "profileSetup.titleFirstTime": "Complete seu perfil"
 }

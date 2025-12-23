@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "Изтриване",
-      "edit": "Редактиране"
-    },
-    "defaultType": "Контекст",
-    "deleteConfirm": "Сигурни ли сте, че искате да изтриете тази контекстна памет? Това действие не може да бъде отменено.",
-    "deleteTitle": "Изтриване на контекстна памет",
-    "description": "Описание",
-    "empty": "Няма налична контекстна памет",
-    "source": "Източник"
-  },
-  "empty": {
-    "description": "Извличането на спомени е постепенен процес. Моля, натрупайте повече теми, за да обогатите съдържанието на извлечените спомени. Опитайте се да водите по-задълбочени разговори с асистента, за да уловите и съхраните по-ценна информация.",
-    "search": "Няма намерени съвпадащи спомени",
-    "title": "Няма налични спомени"
-  },
-  "experience": {
-    "actions": {
-      "delete": "Изтриване",
-      "edit": "Редактиране"
-    },
-    "defaultType": "Опит",
-    "deleteConfirm": "Сигурни ли сте, че искате да изтриете тази памет за опит? Това действие не може да бъде отменено.",
-    "deleteTitle": "Изтриване на памет за опит",
-    "empty": "Няма налична памет за опит",
-    "keyLearning": "Ключово знание",
-    "situation": "Контекст",
-    "source": "Източник",
-    "steps": {
-      "action": "Действие",
-      "result": "Резултат",
-      "situation": "Ситуация",
-      "task": "Задача"
-    }
-  },
-  "filter": {
-    "search": "Търсене на ключови думи или описание на спомени...",
-    "sort": {
-      "createdAt": "Дата на създаване",
-      "scoreConfidence": "Ниво на увереност",
-      "scoreImpact": "Значимост",
-      "scorePriority": "Тежест на предпочитание",
-      "scoreUrgency": "Спешност"
-    }
-  },
-  "identity": {
-    "empty": "Няма запаметени самоличности",
-    "filter": {
-      "search": "Търсене на роля, връзка или описание...",
-      "type": {
-        "all": "Всички",
-        "demographic": "Демографски",
-        "personal": "Роля",
-        "professional": "Професионални"
-      }
-    },
-    "list": {
-      "confirmDelete": "Потвърдете изтриването",
-      "deleteCancel": "Отказ",
-      "deleteContent": "Сигурни ли сте, че искате да изтриете тази самоличност? Това действие не може да бъде отменено.",
-      "deleteOk": "Изтрий",
-      "noResults": "Няма намерени съвпадащи самоличности",
-      "updated": "Актуализирано"
-    },
-    "roleCloud": {
-      "collapse": "Скрий",
-      "expand": "Покажи още"
-    },
-    "view": {
-      "list": "Списък",
-      "timeline": "Хронология"
-    }
-  },
+  "context.actions.delete": "Изтриване",
+  "context.actions.edit": "Редактиране",
+  "context.defaultType": "Контекст",
+  "context.deleteConfirm": "Сигурни ли сте, че искате да изтриете тази контекстна памет? Това действие не може да бъде отменено.",
+  "context.deleteTitle": "Изтриване на контекстна памет",
+  "context.description": "Описание",
+  "context.empty": "Няма налична контекстна памет",
+  "context.source": "Източник",
+  "empty.description": "Извличането на спомени е постепенен процес. Моля, натрупайте повече теми, за да обогатите съдържанието на извлечените спомени. Опитайте се да водите по-задълбочени разговори с асистента, за да уловите и съхраните по-ценна информация.",
+  "empty.search": "Няма намерени съвпадащи спомени",
+  "empty.title": "Няма налични спомени",
+  "experience.actions.delete": "Изтриване",
+  "experience.actions.edit": "Редактиране",
+  "experience.defaultType": "Опит",
+  "experience.deleteConfirm": "Сигурни ли сте, че искате да изтриете тази памет за опит? Това действие не може да бъде отменено.",
+  "experience.deleteTitle": "Изтриване на памет за опит",
+  "experience.empty": "Няма налична памет за опит",
+  "experience.keyLearning": "Ключово знание",
+  "experience.situation": "Контекст",
+  "experience.source": "Източник",
+  "experience.steps.action": "Действие",
+  "experience.steps.result": "Резултат",
+  "experience.steps.situation": "Ситуация",
+  "experience.steps.task": "Задача",
+  "filter.search": "Търсене на ключови думи или описание на спомени...",
+  "filter.sort.createdAt": "Дата на създаване",
+  "filter.sort.scoreConfidence": "Ниво на увереност",
+  "filter.sort.scoreImpact": "Значимост",
+  "filter.sort.scorePriority": "Тежест на предпочитание",
+  "filter.sort.scoreUrgency": "Спешност",
+  "identity.empty": "Няма запаметени самоличности",
+  "identity.filter.search": "Търсене на роля, връзка или описание...",
+  "identity.filter.type.all": "Всички",
+  "identity.filter.type.demographic": "Демографски",
+  "identity.filter.type.personal": "Роля",
+  "identity.filter.type.professional": "Професионални",
+  "identity.list.confirmDelete": "Потвърдете изтриването",
+  "identity.list.deleteCancel": "Отказ",
+  "identity.list.deleteContent": "Сигурни ли сте, че искате да изтриете тази самоличност? Това действие не може да бъде отменено.",
+  "identity.list.deleteOk": "Изтрий",
+  "identity.list.noResults": "Няма намерени съвпадащи самоличности",
+  "identity.list.updated": "Актуализирано",
+  "identity.roleCloud.collapse": "Скрий",
+  "identity.roleCloud.expand": "Покажи още",
+  "identity.view.list": "Списък",
+  "identity.view.timeline": "Хронология",
   "loading": "Зареждане...",
-  "preference": {
-    "actions": {
-      "delete": "Изтриване",
-      "edit": "Редактиране"
-    },
-    "conclusionDirectives": "Насоки за заключение",
-    "defaultType": "Предпочитание",
-    "deleteConfirm": "Сигурни ли сте, че искате да изтриете тази памет за предпочитание? Това действие не може да бъде отменено.",
-    "deleteTitle": "Изтриване на памет за предпочитание",
-    "empty": "Няма налична памет за предпочитание",
-    "source": "Източник",
-    "suggestions": "Възможни действия от асистента"
-  },
-  "tab": {
-    "contexts": "Контексти",
-    "experiences": "Опит",
-    "home": "Начало",
-    "identities": "Идентичности",
-    "preferences": "Предпочитания",
-    "search": "Търсене"
-  },
-  "viewMode": {
-    "masonry": "Мозайка",
-    "timeline": "Хронология"
-  }
+  "preference.actions.delete": "Изтриване",
+  "preference.actions.edit": "Редактиране",
+  "preference.conclusionDirectives": "Насоки за заключение",
+  "preference.defaultType": "Предпочитание",
+  "preference.deleteConfirm": "Сигурни ли сте, че искате да изтриете тази памет за предпочитание? Това действие не може да бъде отменено.",
+  "preference.deleteTitle": "Изтриване на памет за предпочитание",
+  "preference.empty": "Няма налична памет за предпочитание",
+  "preference.source": "Източник",
+  "preference.suggestions": "Възможни действия от асистента",
+  "tab.contexts": "Контексти",
+  "tab.experiences": "Опит",
+  "tab.home": "Начало",
+  "tab.identities": "Идентичности",
+  "tab.preferences": "Предпочитания",
+  "tab.search": "Търсене",
+  "viewMode.masonry": "Мозайка",
+  "viewMode.timeline": "Хронология"
 }

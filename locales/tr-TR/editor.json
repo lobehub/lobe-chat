@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Daralt",
-      "on": "Genişlet"
-    },
-    "typobar": {
-      "off": "Biçim araç çubuğunu gizle",
-      "on": "Biçim araç çubuğunu göster"
-    }
-  },
-  "autoSave": {
-    "latest": "En son sürüm yüklendi",
-    "saved": "Kaydedildi",
-    "saving": "Otomatik kaydediliyor..."
-  },
+  "actions.expand.off": "Daralt",
+  "actions.expand.on": "Genişlet",
+  "actions.typobar.off": "Biçim araç çubuğunu gizle",
+  "actions.typobar.on": "Biçim araç çubuğunu göster",
+  "autoSave.latest": "En son sürüm yüklendi",
+  "autoSave.saved": "Kaydedildi",
+  "autoSave.saving": "Otomatik kaydediliyor...",
   "cancel": "İptal",
   "confirm": "Onayla",
-  "file": {
-    "error": "Hata: {{message}}",
-    "uploading": "Dosya yükleniyor..."
-  },
-  "image": {
-    "broken": "Resim bozuk"
-  },
-  "link": {
-    "edit": "Bağlantıyı düzenle",
-    "editLinkTitle": "Bağlantı",
-    "editTextTitle": "Başlık",
-    "open": "Bağlantıyı aç",
-    "placeholder": "Bağlantı URL'si girin",
-    "unlink": "Bağlantıyı kaldır"
-  },
-  "markdown": {
-    "cancel": "İptal",
-    "confirm": "Dönüştür",
-    "parseMessage": "İçerik Markdown formatına dönüştürülecek ve mevcut içerik üzerine yazılacak. Onaylıyor musunuz? (5 saniye içinde otomatik olarak kapanacaktır)",
-    "parseTitle": "Markdown Biçimlendir"
-  },
-  "math": {
-    "placeholder": "Lütfen TeX formülünü girin"
-  },
-  "modifier": {
-    "accept": "Kabul Et",
-    "acceptAll": "Hepsini Kabul Et",
-    "reject": "Reddet",
-    "rejectedAll": "Hepsini Reddet"
-  },
-  "slash": {
-    "h1": "Birinci Seviye Başlık",
-    "h2": "İkinci Seviye Başlık",
-    "h3": "Üçüncü Seviye Başlık",
-    "hr": "Ayırıcı Çizgi",
-    "table": "Tablo",
-    "tex": "TeX Formülü"
-  },
-  "table": {
-    "delete": "Tabloyu sil",
-    "deleteColumn": "Sütunu sil",
-    "deleteRow": "Satırı sil",
-    "insertColumnLeft": "Sol tarafa {{count}} sütun ekle",
-    "insertColumnRight": "Sağ tarafa {{count}} sütun ekle",
-    "insertRowAbove": "Üst tarafa {{count}} satır ekle",
-    "insertRowBelow": "Alt tarafa {{count}} satır ekle"
-  },
-  "typobar": {
-    "blockquote": "Alıntı",
-    "bold": "Kalın",
-    "bulletList": "Sırasız liste",
-    "code": "Satır içi kod",
-    "codeblock": "Kod bloğu",
-    "image": "Görsel",
-    "italic": "İtalik",
-    "link": "Bağlantı",
-    "numberList": "Numaralı liste",
-    "redo": "Yinele",
-    "strikethrough": "Üstü çizili",
-    "table": "tablo",
-    "taskList": "Görev Listesi",
-    "tex": "TeX Formülü",
-    "underline": "Altı çizili",
-    "undo": "Geri Al"
-  }
+  "file.error": "Hata: {{message}}",
+  "file.uploading": "Dosya yükleniyor...",
+  "image.broken": "Resim bozuk",
+  "link.edit": "Bağlantıyı düzenle",
+  "link.editLinkTitle": "Bağlantı",
+  "link.editTextTitle": "Başlık",
+  "link.open": "Bağlantıyı aç",
+  "link.placeholder": "Bağlantı URL'si girin",
+  "link.unlink": "Bağlantıyı kaldır",
+  "markdown.cancel": "İptal",
+  "markdown.confirm": "Dönüştür",
+  "markdown.parseMessage": "İçerik Markdown formatına dönüştürülecek ve mevcut içerik üzerine yazılacak. Onaylıyor musunuz? (5 saniye içinde otomatik olarak kapanacaktır)",
+  "markdown.parseTitle": "Markdown Biçimlendir",
+  "math.placeholder": "Lütfen TeX formülünü girin",
+  "modifier.accept": "Kabul Et",
+  "modifier.acceptAll": "Hepsini Kabul Et",
+  "modifier.reject": "Reddet",
+  "modifier.rejectedAll": "Hepsini Reddet",
+  "slash.h1": "Birinci Seviye Başlık",
+  "slash.h2": "İkinci Seviye Başlık",
+  "slash.h3": "Üçüncü Seviye Başlık",
+  "slash.hr": "Ayırıcı Çizgi",
+  "slash.table": "Tablo",
+  "slash.tex": "TeX Formülü",
+  "table.delete": "Tabloyu sil",
+  "table.deleteColumn": "Sütunu sil",
+  "table.deleteRow": "Satırı sil",
+  "table.insertColumnLeft": "Sol tarafa {{count}} sütun ekle",
+  "table.insertColumnRight": "Sağ tarafa {{count}} sütun ekle",
+  "table.insertRowAbove": "Üst tarafa {{count}} satır ekle",
+  "table.insertRowBelow": "Alt tarafa {{count}} satır ekle",
+  "typobar.blockquote": "Alıntı",
+  "typobar.bold": "Kalın",
+  "typobar.bulletList": "Sırasız liste",
+  "typobar.code": "Satır içi kod",
+  "typobar.codeblock": "Kod bloğu",
+  "typobar.image": "Görsel",
+  "typobar.italic": "İtalik",
+  "typobar.link": "Bağlantı",
+  "typobar.numberList": "Numaralı liste",
+  "typobar.redo": "Yinele",
+  "typobar.strikethrough": "Üstü çizili",
+  "typobar.table": "tablo",
+  "typobar.taskList": "Görev Listesi",
+  "typobar.tex": "TeX Formülü",
+  "typobar.underline": "Altı çizili",
+  "typobar.undo": "Geri Al"
 }

@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Recolher",
-      "on": "Expandir"
-    },
-    "typobar": {
-      "off": "Ocultar barra de formatação",
-      "on": "Mostrar barra de formatação"
-    }
-  },
-  "autoSave": {
-    "latest": "Última versão carregada",
-    "saved": "Salvo",
-    "saving": "Salvando automaticamente..."
-  },
+  "actions.expand.off": "Recolher",
+  "actions.expand.on": "Expandir",
+  "actions.typobar.off": "Ocultar barra de formatação",
+  "actions.typobar.on": "Mostrar barra de formatação",
+  "autoSave.latest": "Última versão carregada",
+  "autoSave.saved": "Salvo",
+  "autoSave.saving": "Salvando automaticamente...",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
-  "file": {
-    "error": "Erro: {{message}}",
-    "uploading": "Enviando arquivo..."
-  },
-  "image": {
-    "broken": "Imagem corrompida"
-  },
-  "link": {
-    "edit": "Editar link",
-    "editLinkTitle": "Link",
-    "editTextTitle": "Título",
-    "open": "Abrir link",
-    "placeholder": "Digite a URL do link",
-    "unlink": "Remover link"
-  },
-  "markdown": {
-    "cancel": "Cancelar",
-    "confirm": "Converter",
-    "parseMessage": "Converter para o formato Markdown. O conteúdo atual será substituído. Deseja continuar? (Fechará automaticamente em 5 segundos)",
-    "parseTitle": "Formatar como Markdown"
-  },
-  "math": {
-    "placeholder": "Por favor, insira a fórmula TeX"
-  },
-  "modifier": {
-    "accept": "Manter",
-    "acceptAll": "Aceitar tudo",
-    "reject": "Cancelar",
-    "rejectedAll": "Rejeitar tudo"
-  },
-  "slash": {
-    "h1": "Título de Nível 1",
-    "h2": "Título de Nível 2",
-    "h3": "Título de Nível 3",
-    "hr": "Linha Divisória",
-    "table": "Tabela",
-    "tex": "Fórmula TeX"
-  },
-  "table": {
-    "delete": "Excluir tabela",
-    "deleteColumn": "Excluir coluna",
-    "deleteRow": "Excluir linha",
-    "insertColumnLeft": "Inserir {{count}} coluna(s) à esquerda",
-    "insertColumnRight": "Inserir {{count}} coluna(s) à direita",
-    "insertRowAbove": "Inserir {{count}} linha(s) acima",
-    "insertRowBelow": "Inserir {{count}} linha(s) abaixo"
-  },
-  "typobar": {
-    "blockquote": "Citação",
-    "bold": "Negrito",
-    "bulletList": "Lista não ordenada",
-    "code": "Código inline",
-    "codeblock": "Bloco de código",
-    "image": "Imagem",
-    "italic": "Itálico",
-    "link": "Link",
-    "numberList": "Lista numerada",
-    "redo": "Refazer",
-    "strikethrough": "Tachado",
-    "table": "tabela",
-    "taskList": "Lista de Tarefas",
-    "tex": "Fórmula TeX",
-    "underline": "Sublinhado",
-    "undo": "Desfazer"
-  }
+  "file.error": "Erro: {{message}}",
+  "file.uploading": "Enviando arquivo...",
+  "image.broken": "Imagem corrompida",
+  "link.edit": "Editar link",
+  "link.editLinkTitle": "Link",
+  "link.editTextTitle": "Título",
+  "link.open": "Abrir link",
+  "link.placeholder": "Digite a URL do link",
+  "link.unlink": "Remover link",
+  "markdown.cancel": "Cancelar",
+  "markdown.confirm": "Converter",
+  "markdown.parseMessage": "Converter para o formato Markdown. O conteúdo atual será substituído. Deseja continuar? (Fechará automaticamente em 5 segundos)",
+  "markdown.parseTitle": "Formatar como Markdown",
+  "math.placeholder": "Por favor, insira a fórmula TeX",
+  "modifier.accept": "Manter",
+  "modifier.acceptAll": "Aceitar tudo",
+  "modifier.reject": "Cancelar",
+  "modifier.rejectedAll": "Rejeitar tudo",
+  "slash.h1": "Título de Nível 1",
+  "slash.h2": "Título de Nível 2",
+  "slash.h3": "Título de Nível 3",
+  "slash.hr": "Linha Divisória",
+  "slash.table": "Tabela",
+  "slash.tex": "Fórmula TeX",
+  "table.delete": "Excluir tabela",
+  "table.deleteColumn": "Excluir coluna",
+  "table.deleteRow": "Excluir linha",
+  "table.insertColumnLeft": "Inserir {{count}} coluna(s) à esquerda",
+  "table.insertColumnRight": "Inserir {{count}} coluna(s) à direita",
+  "table.insertRowAbove": "Inserir {{count}} linha(s) acima",
+  "table.insertRowBelow": "Inserir {{count}} linha(s) abaixo",
+  "typobar.blockquote": "Citação",
+  "typobar.bold": "Negrito",
+  "typobar.bulletList": "Lista não ordenada",
+  "typobar.code": "Código inline",
+  "typobar.codeblock": "Bloco de código",
+  "typobar.image": "Imagem",
+  "typobar.italic": "Itálico",
+  "typobar.link": "Link",
+  "typobar.numberList": "Lista numerada",
+  "typobar.redo": "Refazer",
+  "typobar.strikethrough": "Tachado",
+  "typobar.table": "tabela",
+  "typobar.taskList": "Lista de Tarefas",
+  "typobar.tex": "Fórmula TeX",
+  "typobar.underline": "Sublinhado",
+  "typobar.undo": "Desfazer"
 }

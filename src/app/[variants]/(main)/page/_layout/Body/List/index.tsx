@@ -15,7 +15,7 @@ import Item from './Item';
  * Show pages filtered by knowledge base
  */
 const PageList = memo(() => {
-  const { t } = useTranslation('file');
+  const { t } = useTranslation(['file', 'common']);
 
   const filteredPages = useFileStore(documentSelectors.getFilteredPagesLimited);
   const hasMore = useFileStore(documentSelectors.hasMoreFilteredPages);
@@ -32,7 +32,7 @@ const PageList = memo(() => {
         <NavItem
           icon={MoreHorizontal}
           onClick={openAllPagesDrawer}
-          title={t('more', { defaultValue: '更多', ns: 'common' })}
+          title={t('more', { ns: 'common' })}
         />
       )}
     </Flexbox>

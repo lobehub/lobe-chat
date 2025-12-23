@@ -1,27 +1,15 @@
 {
   "Artifacts": "Tác Phẩm",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "Phân đoạn",
-      "file": "Tập tin"
-    }
-  },
+  "FilePreview.tabs.chunk": "Phân đoạn",
+  "FilePreview.tabs.file": "Tập tin",
   "Plugins": "Tiện ích",
-  "artifacts": {
-    "display": {
-      "code": "Mã",
-      "preview": "Xem trước"
-    },
-    "svg": {
-      "copyAsImage": "Sao chép dưới dạng hình ảnh",
-      "copyFail": "Sao chép thất bại, lý do lỗi: {{error}}",
-      "copySuccess": "Sao chép hình ảnh thành công",
-      "download": {
-        "png": "Tải xuống dưới dạng PNG",
-        "svg": "Tải xuống dưới dạng SVG"
-      }
-    }
-  },
+  "artifacts.display.code": "Mã",
+  "artifacts.display.preview": "Xem trước",
+  "artifacts.svg.copyAsImage": "Sao chép dưới dạng hình ảnh",
+  "artifacts.svg.copyFail": "Sao chép thất bại, lý do lỗi: {{error}}",
+  "artifacts.svg.copySuccess": "Sao chép hình ảnh thành công",
+  "artifacts.svg.download.png": "Tải xuống dưới dạng PNG",
+  "artifacts.svg.download.svg": "Tải xuống dưới dạng SVG",
   "emptyArtifactList": "Danh sách Tác Phẩm hiện tại đang trống, vui lòng sử dụng các plugin trong cuộc trò chuyện trước khi xem lại",
   "emptyKnowledgeList": "Danh sách kiến thức hiện tại trống, vui lòng mở kho kiến thức khi cần trong cuộc trò chuyện trước khi xem",
   "files": "Tập tin",

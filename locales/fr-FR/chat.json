@@ -1,44 +1,34 @@
 {
-  "ModelSwitch": {
-    "title": "Modèle"
-  },
+  "ModelSwitch.title": "Modèle",
   "active": "Actif",
-  "agentBuilder": {
-    "installPlugin": {
-      "authRequired": "Le plugin MCP Cloud nécessite une authentification",
-      "cancel": "Annuler",
-      "clickApproveToConnect": "Cliquez sur « Approuver » pour connecter et autoriser cette intégration",
-      "clickApproveToInstall": "Cliquez sur « Approuver » pour installer ce plugin",
-      "connectedAndEnabled": "Connecté et activé",
-      "connectionFailed": "Échec de la connexion",
-      "installFailed": "Échec de l'installation",
-      "installPlugin": "Installer le plugin",
-      "installToEnable": "Installez ce plugin pour activer l'assistant",
-      "installedAndEnabled": "Installé et activé",
-      "requiresAuth": "Autorisation requise, cliquez sur « Approuver » pour connecter",
-      "retry": "Réessayer"
-    },
-    "title": "Expert en création d'assistants",
-    "welcome": "Parlez-moi de votre besoin ou de votre situation : un partenaire sur mesure est à portée de main.\n\nQue ce soit pour l'écriture, la programmation ou l'analyse de données, je peux vous aider à créer un assistant personnalisé !"
-  },
+  "agentBuilder.installPlugin.authRequired": "Le plugin MCP Cloud nécessite une authentification",
+  "agentBuilder.installPlugin.cancel": "Annuler",
+  "agentBuilder.installPlugin.clickApproveToConnect": "Cliquez sur « Approuver » pour connecter et autoriser cette intégration",
+  "agentBuilder.installPlugin.clickApproveToInstall": "Cliquez sur « Approuver » pour installer ce plugin",
+  "agentBuilder.installPlugin.connectedAndEnabled": "Connecté et activé",
+  "agentBuilder.installPlugin.connectionFailed": "Échec de la connexion",
+  "agentBuilder.installPlugin.installFailed": "Échec de l'installation",
+  "agentBuilder.installPlugin.installPlugin": "Installer le plugin",
+  "agentBuilder.installPlugin.installToEnable": "Installez ce plugin pour activer l'assistant",
+  "agentBuilder.installPlugin.installedAndEnabled": "Installé et activé",
+  "agentBuilder.installPlugin.requiresAuth": "Autorisation requise, cliquez sur « Approuver » pour connecter",
+  "agentBuilder.installPlugin.retry": "Réessayer",
+  "agentBuilder.title": "Expert en création d'assistants",
+  "agentBuilder.welcome": "Parlez-moi de votre besoin ou de votre situation : un partenaire sur mesure est à portée de main.\n\nQue ce soit pour l'écriture, la programmation ou l'analyse de données, je peux vous aider à créer un assistant personnalisé !",
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**, comment puis-je vous aider ?",
   "agents": "Assistant",
-  "artifact": {
-    "generating": "Génération en cours",
-    "inThread": "Impossible de voir dans le sous-sujet, veuillez passer à la zone de discussion principale.",
-    "thinking": "En réflexion",
-    "thought": "Processus de pensée",
-    "unknownTitle": "Œuvre sans nom"
-  },
+  "artifact.generating": "Génération en cours",
+  "artifact.inThread": "Impossible de voir dans le sous-sujet, veuillez passer à la zone de discussion principale.",
+  "artifact.thinking": "En réflexion",
+  "artifact.thought": "Processus de pensée",
+  "artifact.unknownTitle": "Œuvre sans nom",
   "availableAgents": "Assistants disponibles",
   "backToBottom": "Retour en bas",
   "builtinCopilot": "Copilot intégré",
-  "chatList": {
-    "expandMessage": "Développer le message",
-    "longMessageDetail": "Voir les détails"
-  },
+  "chatList.expandMessage": "Développer le message",
+  "chatList.longMessageDetail": "Voir les détails",
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveChatGroupItemAlert": "Ce groupe va être supprimé, les membres de l'équipe ne seront pas affectés. Veuillez confirmer votre action.",
@@ -50,227 +40,149 @@
   "defaultGroupChat": "Groupe",
   "defaultList": "Liste par défaut",
   "defaultSession": "Session par défaut",
-  "dm": {
-    "placeholder": "Vos messages privés avec {{agentTitle}} s'afficheront ici.",
-    "tooltip": "Envoyer un message privé",
-    "visibleTo": "Visible uniquement par {{target}}",
-    "you": "vous"
-  },
-  "duplicateSession": {
-    "loading": "Copie en cours...",
-    "success": "Copie réussie",
-    "title": "{{title}} Copie"
-  },
+  "dm.placeholder": "Vos messages privés avec {{agentTitle}} s'afficheront ici.",
+  "dm.tooltip": "Envoyer un message privé",
+  "dm.visibleTo": "Visible uniquement par {{target}}",
+  "dm.you": "vous",
+  "duplicateSession.loading": "Copie en cours...",
+  "duplicateSession.success": "Copie réussie",
+  "duplicateSession.title": "{{title}} Copie",
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
   "emptyAgentAction": "Créer un assistant",
-  "extendParams": {
-    "disableContextCaching": {
-      "desc": "Le coût de génération d'une seule conversation peut être réduit de 90 % au maximum, avec une vitesse de réponse augmentée de 4 fois (<1>En savoir plus</1>). Une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
-      "title": "Activer le cache de contexte"
-    },
-    "enableReasoning": {
-      "desc": "Basé sur les restrictions du mécanisme Claude Thinking (<1>En savoir plus</1>), une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
-      "title": "Activer la réflexion approfondie"
-    },
-    "imageAspectRatio": {
-      "title": "Rapport largeur/hauteur de l'image"
-    },
-    "imageResolution": {
-      "title": "Résolution de l'image"
-    },
-    "reasoningBudgetToken": {
-      "title": "Token de consommation de réflexion"
-    },
-    "reasoningEffort": {
-      "title": "Intensité du raisonnement"
-    },
-    "textVerbosity": {
-      "title": "Niveau de détail du texte de sortie"
-    },
-    "thinking": {
-      "title": "Interrupteur de réflexion approfondie"
-    },
-    "thinkingLevel": {
-      "title": "Niveau de réflexion"
-    },
-    "title": "Fonctionnalités d'extension du modèle",
-    "urlContext": {
-      "desc": "Une fois activé, il analysera automatiquement les liens web pour obtenir le contenu contextuel réel de la page web",
-      "title": "Extraction du contenu des liens web"
-    }
-  },
-  "group": {
-    "desc": "Collaborez avec plusieurs assistants IA dans un espace de conversation partagé.",
-    "memberTooltip": "Le groupe contient {{count}} membre(s)",
-    "orchestratorThinking": "L'animateur est en train de réfléchir...",
-    "removeMember": "Retirer un membre",
-    "title": "Groupe"
-  },
+  "extendParams.disableContextCaching.desc": "Le coût de génération d'une seule conversation peut être réduit de 90 % au maximum, avec une vitesse de réponse augmentée de 4 fois (<1>En savoir plus</1>). Une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
+  "extendParams.disableContextCaching.title": "Activer le cache de contexte",
+  "extendParams.enableReasoning.desc": "Basé sur les restrictions du mécanisme Claude Thinking (<1>En savoir plus</1>), une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
+  "extendParams.enableReasoning.title": "Activer la réflexion approfondie",
+  "extendParams.imageAspectRatio.title": "Rapport largeur/hauteur de l'image",
+  "extendParams.imageResolution.title": "Résolution de l'image",
+  "extendParams.reasoningBudgetToken.title": "Token de consommation de réflexion",
+  "extendParams.reasoningEffort.title": "Intensité du raisonnement",
+  "extendParams.textVerbosity.title": "Niveau de détail du texte de sortie",
+  "extendParams.thinking.title": "Interrupteur de réflexion approfondie",
+  "extendParams.thinkingLevel.title": "Niveau de réflexion",
+  "extendParams.title": "Fonctionnalités d'extension du modèle",
+  "extendParams.urlContext.desc": "Une fois activé, il analysera automatiquement les liens web pour obtenir le contenu contextuel réel de la page web",
+  "extendParams.urlContext.title": "Extraction du contenu des liens web",
+  "group.desc": "Collaborez avec plusieurs assistants IA dans un espace de conversation partagé.",
+  "group.memberTooltip": "Le groupe contient {{count}} membre(s)",
+  "group.orchestratorThinking": "L'animateur est en train de réfléchir...",
+  "group.removeMember": "Retirer un membre",
+  "group.title": "Groupe",
   "groupDescription": "Description de l'équipe",
-  "groupSidebar": {
-    "agentProfile": {
-      "chat": "Discussion",
-      "model": "Modèle"
-    },
-    "members": {
-      "addMember": "Ajouter un membre",
-      "enableOrchestrator": "Activer l’animateur",
-      "memberSettings": "Paramètres des membres",
-      "orchestrator": "Animateur",
-      "orchestratorThinking": "L'animateur est en train de réfléchir...",
-      "removeMember": "Retirer un membre",
-      "stopOrchestrator": "Arrêter la réflexion",
-      "triggerOrchestrator": "Démarrer la discussion de groupe"
-    },
-    "tabs": {
-      "host": "Hôte",
-      "members": "Membres",
-      "role": "Paramètres"
-    }
-  },
-  "groupWizard": {
-    "chooseMembers": "Choisir des assistants existants...",
-    "createGroup": "Créer une équipe",
-    "existingMembers": "Agents existants",
-    "groupMembers": "Ces assistants seront également ajoutés à votre liste",
-    "host": {
-      "description": "Permet au groupe de fonctionner de manière autonome",
-      "title": "Activer l'hôte",
-      "tooltip": "Si vous désactivez l'hôte de l'équipe, vous devrez mentionner manuellement les membres avec @ pour qu'ils puissent répondre"
-    },
-    "memberCount": "{{count}} membres",
-    "noMatchingTemplates": "Aucun modèle correspondant",
-    "noSelectedTemplates": "Aucun modèle sélectionné",
-    "noTemplateMembers": "Aucun membre dans le modèle",
-    "noTemplates": "Aucun modèle disponible",
-    "searchTemplates": "Rechercher des modèles...",
-    "title": "Créer un groupe",
-    "useTemplate": "Utiliser le modèle"
-  },
+  "groupSidebar.agentProfile.chat": "Discussion",
+  "groupSidebar.agentProfile.model": "Modèle",
+  "groupSidebar.members.addMember": "Ajouter un membre",
+  "groupSidebar.members.enableOrchestrator": "Activer l’animateur",
+  "groupSidebar.members.memberSettings": "Paramètres des membres",
+  "groupSidebar.members.orchestrator": "Animateur",
+  "groupSidebar.members.orchestratorThinking": "L'animateur est en train de réfléchir...",
+  "groupSidebar.members.removeMember": "Retirer un membre",
+  "groupSidebar.members.stopOrchestrator": "Arrêter la réflexion",
+  "groupSidebar.members.triggerOrchestrator": "Démarrer la discussion de groupe",
+  "groupSidebar.tabs.host": "Hôte",
+  "groupSidebar.tabs.members": "Membres",
+  "groupSidebar.tabs.role": "Paramètres",
+  "groupWizard.chooseMembers": "Choisir des assistants existants...",
+  "groupWizard.createGroup": "Créer une équipe",
+  "groupWizard.existingMembers": "Agents existants",
+  "groupWizard.groupMembers": "Ces assistants seront également ajoutés à votre liste",
+  "groupWizard.host.description": "Permet au groupe de fonctionner de manière autonome",
+  "groupWizard.host.title": "Activer l'hôte",
+  "groupWizard.host.tooltip": "Si vous désactivez l'hôte de l'équipe, vous devrez mentionner manuellement les membres avec @ pour qu'ils puissent répondre",
+  "groupWizard.memberCount": "{{count}} membres",
+  "groupWizard.noMatchingTemplates": "Aucun modèle correspondant",
+  "groupWizard.noSelectedTemplates": "Aucun modèle sélectionné",
+  "groupWizard.noTemplateMembers": "Aucun membre dans le modèle",
+  "groupWizard.noTemplates": "Aucun modèle disponible",
+  "groupWizard.searchTemplates": "Rechercher des modèles...",
+  "groupWizard.title": "Créer un groupe",
+  "groupWizard.useTemplate": "Utiliser le modèle",
   "hideForYou": "Le contenu du message privé est caché, veuillez activer « Afficher le contenu des messages privés » dans les paramètres pour le voir",
-  "history": {
-    "title": "L'assistant ne se souviendra que des {{count}} derniers messages"
-  },
+  "history.title": "L'assistant ne se souviendra que des {{count}} derniers messages",
   "historyRange": "Plage d'historique",
   "historySummary": "Résumé des messages historiques",
   "inactive": "Inactif",
-  "inbox": {
-    "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
-    "title": "Lobe IA"
-  },
-  "input": {
-    "addAi": "Ajouter un message AI",
-    "addUser": "Ajouter un message utilisateur",
-    "disclaimer": "L'IA peut également faire des erreurs, veuillez vérifier les informations importantes",
-    "errorMsg": "Échec de l'envoi du message, veuillez vérifier votre connexion réseau et réessayer : {{errorMsg}}",
-    "more": "Plus",
-    "send": "Envoyer",
-    "sendWithCmdEnter": "Appuyez sur <key/> pour envoyer",
-    "sendWithEnter": "Appuyez sur <key/> pour envoyer",
-    "stop": "Arrêter",
-    "warp": "Saut de ligne",
-    "warpWithKey": "Appuyez sur la touche <key/> pour un retour à la ligne"
-  },
-  "intentUnderstanding": {
-    "title": "En train de comprendre et d'analyser votre intention..."
-  },
+  "inbox.desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
+  "inbox.title": "Lobe IA",
+  "input.addAi": "Ajouter un message AI",
+  "input.addUser": "Ajouter un message utilisateur",
+  "input.disclaimer": "L'IA peut également faire des erreurs, veuillez vérifier les informations importantes",
+  "input.errorMsg": "Échec de l'envoi du message, veuillez vérifier votre connexion réseau et réessayer : {{errorMsg}}",
+  "input.more": "Plus",
+  "input.send": "Envoyer",
+  "input.sendWithCmdEnter": "Appuyez sur <key/> pour envoyer",
+  "input.sendWithEnter": "Appuyez sur <key/> pour envoyer",
+  "input.stop": "Arrêter",
+  "input.warp": "Saut de ligne",
+  "input.warpWithKey": "Appuyez sur la touche <key/> pour un retour à la ligne",
+  "intentUnderstanding.title": "En train de comprendre et d'analyser votre intention...",
   "inviteMembers": "Inviter des membres",
-  "knowledgeBase": {
-    "all": "Tout le contenu",
-    "allFiles": "Tous les fichiers",
-    "allLibraries": "Toutes les bibliothèques",
-    "disabled": "Le mode de déploiement actuel ne prend pas en charge les conversations avec la bibliothèque. Pour l'utiliser, veuillez passer à un déploiement avec base de données côté serveur ou utiliser le service {{cloud}}",
-    "library": {
-      "action": {
-        "add": "Ajouter",
-        "detail": "Détails",
-        "remove": "Supprimer"
-      },
-      "title": "Fichiers/Bibliothèque"
-    },
-    "relativeFilesOrLibraries": "Fichiers/Bibliothèques associés",
-    "title": "Bibliothèque",
-    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la section « Ressources »",
-    "viewMore": "Voir plus"
-  },
-  "memberSelection": {
-    "addMember": "Ajouter un membre",
-    "allMembers": "Tous les membres",
-    "createGroup": "Créer un groupe",
-    "noAvailableAgents": "Aucun agent disponible à inviter",
-    "noSelectedAgents": "Aucun agent sélectionné pour le moment",
-    "searchAgents": "Rechercher un agent...",
-    "selectedAgents": "Sélectionné(s) ({{count}})",
-    "setInitialMembers": "Sélectionner les membres du groupe"
-  },
+  "knowledgeBase.all": "Tout le contenu",
+  "knowledgeBase.allFiles": "Tous les fichiers",
+  "knowledgeBase.allLibraries": "Toutes les bibliothèques",
+  "knowledgeBase.disabled": "Le mode de déploiement actuel ne prend pas en charge les conversations avec la bibliothèque. Pour l'utiliser, veuillez passer à un déploiement avec base de données côté serveur ou utiliser le service {{cloud}}",
+  "knowledgeBase.library.action.add": "Ajouter",
+  "knowledgeBase.library.action.detail": "Détails",
+  "knowledgeBase.library.action.remove": "Supprimer",
+  "knowledgeBase.library.title": "Fichiers/Bibliothèque",
+  "knowledgeBase.relativeFilesOrLibraries": "Fichiers/Bibliothèques associés",
+  "knowledgeBase.title": "Bibliothèque",
+  "knowledgeBase.uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la section « Ressources »",
+  "knowledgeBase.viewMore": "Voir plus",
+  "memberSelection.addMember": "Ajouter un membre",
+  "memberSelection.allMembers": "Tous les membres",
+  "memberSelection.createGroup": "Créer un groupe",
+  "memberSelection.noAvailableAgents": "Aucun agent disponible à inviter",
+  "memberSelection.noSelectedAgents": "Aucun agent sélectionné pour le moment",
+  "memberSelection.searchAgents": "Rechercher un agent...",
+  "memberSelection.selectedAgents": "Sélectionné(s) ({{count}})",
+  "memberSelection.setInitialMembers": "Sélectionner les membres du groupe",
   "members": "Membres",
-  "mention": {
-    "title": "Mentionner un membre"
-  },
-  "messageAction": {
-    "collapse": "Réduire le message",
-    "continueGeneration": "Continuer la génération",
-    "delAndRegenerate": "Supprimer et régénérer",
-    "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
-    "expand": "Développer le message",
-    "regenerate": "Régénérer"
-  },
-  "messages": {
-    "dm": {
-      "sentTo": "Visible uniquement par {{name}}",
-      "title": "Message privé"
-    },
-    "modelCard": {
-      "credit": "Crédit",
-      "creditPricing": "Tarification",
-      "creditTooltip": "Pour faciliter le comptage, nous convertissons 1 $ en 1M de crédits, par exemple, 3 $/M tokens équivaut à 3 crédits/token",
-      "pricing": {
-        "inputCachedTokens": "Entrée mise en cache {{amount}}/crédit · ${{amount}}/M",
-        "inputCharts": "${{amount}}/M caractères",
-        "inputMinutes": "${{amount}}/minute",
-        "inputTokens": "Entrée {{amount}}/crédit · ${{amount}}/M",
-        "outputTokens": "Sortie {{amount}}/crédit · ${{amount}}/M",
-        "writeCacheInputTokens": "Écriture de cache d'entrée {{amount}}/points · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "average": "Prix moyen",
-      "input": "Entrée",
-      "inputAudio": "Entrée audio",
-      "inputCached": "Entrée mise en cache",
-      "inputCitation": "Citation d'entrée",
-      "inputText": "Entrée texte",
-      "inputTitle": "Détails de l'entrée",
-      "inputUncached": "Entrée non mise en cache",
-      "inputWriteCached": "Écriture de cache d'entrée",
-      "output": "Sortie",
-      "outputAudio": "Sortie audio",
-      "outputImage": "Sortie d'image",
-      "outputText": "Sortie texte",
-      "outputTitle": "Détails de la sortie",
-      "reasoning": "Raisonnement approfondi",
-      "speed": {
-        "tps": {
-          "title": "TPS",
-          "tooltip": "Tokens Par Seconde, TPS. Indique la vitesse moyenne de génération de contenu par l'IA (Token/seconde), calculée à partir de la réception du premier Token."
-        },
-        "ttft": {
-          "title": "TTFT",
-          "tooltip": "Temps Jusqu'au Premier Token, TTFT. Indique l'intervalle de temps entre l'envoi de votre message et la réception du premier Token par le client."
-        }
-      },
-      "title": "Détails de génération",
-      "total": "Total consommé"
-    }
-  },
-  "minimap": {
-    "jumpToMessage": "Aller au message n° {{index}}",
-    "nextMessage": "Message suivant",
-    "previousMessage": "Message précédent",
-    "senderAssistant": "Agent",
-    "senderUser": "Vous"
-  },
+  "mention.title": "Mentionner un membre",
+  "messageAction.collapse": "Réduire le message",
+  "messageAction.continueGeneration": "Continuer la génération",
+  "messageAction.delAndRegenerate": "Supprimer et régénérer",
+  "messageAction.deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
+  "messageAction.expand": "Développer le message",
+  "messageAction.regenerate": "Régénérer",
+  "messages.dm.sentTo": "Visible uniquement par {{name}}",
+  "messages.dm.title": "Message privé",
+  "messages.modelCard.credit": "Crédit",
+  "messages.modelCard.creditPricing": "Tarification",
+  "messages.modelCard.creditTooltip": "Pour faciliter le comptage, nous convertissons 1 $ en 1M de crédits, par exemple, 3 $/M tokens équivaut à 3 crédits/token",
+  "messages.modelCard.pricing.inputCachedTokens": "Entrée mise en cache {{amount}}/crédit · ${{amount}}/M",
+  "messages.modelCard.pricing.inputCharts": "${{amount}}/M caractères",
+  "messages.modelCard.pricing.inputMinutes": "${{amount}}/minute",
+  "messages.modelCard.pricing.inputTokens": "Entrée {{amount}}/crédit · ${{amount}}/M",
+  "messages.modelCard.pricing.outputTokens": "Sortie {{amount}}/crédit · ${{amount}}/M",
+  "messages.modelCard.pricing.writeCacheInputTokens": "Écriture de cache d'entrée {{amount}}/points · ${{amount}}/M",
+  "messages.tokenDetails.average": "Prix moyen",
+  "messages.tokenDetails.input": "Entrée",
+  "messages.tokenDetails.inputAudio": "Entrée audio",
+  "messages.tokenDetails.inputCached": "Entrée mise en cache",
+  "messages.tokenDetails.inputCitation": "Citation d'entrée",
+  "messages.tokenDetails.inputText": "Entrée texte",
+  "messages.tokenDetails.inputTitle": "Détails de l'entrée",
+  "messages.tokenDetails.inputUncached": "Entrée non mise en cache",
+  "messages.tokenDetails.inputWriteCached": "Écriture de cache d'entrée",
+  "messages.tokenDetails.output": "Sortie",
+  "messages.tokenDetails.outputAudio": "Sortie audio",
+  "messages.tokenDetails.outputImage": "Sortie d'image",
+  "messages.tokenDetails.outputText": "Sortie texte",
+  "messages.tokenDetails.outputTitle": "Détails de la sortie",
+  "messages.tokenDetails.reasoning": "Raisonnement approfondi",
+  "messages.tokenDetails.speed.tps.title": "TPS",
+  "messages.tokenDetails.speed.tps.tooltip": "Tokens Par Seconde, TPS. Indique la vitesse moyenne de génération de contenu par l'IA (Token/seconde), calculée à partir de la réception du premier Token.",
+  "messages.tokenDetails.speed.ttft.title": "TTFT",
+  "messages.tokenDetails.speed.ttft.tooltip": "Temps Jusqu'au Premier Token, TTFT. Indique l'intervalle de temps entre l'envoi de votre message et la réception du premier Token par le client.",
+  "messages.tokenDetails.title": "Détails de génération",
+  "messages.tokenDetails.total": "Total consommé",
+  "minimap.jumpToMessage": "Aller au message n° {{index}}",
+  "minimap.nextMessage": "Message suivant",
+  "minimap.previousMessage": "Message précédent",
+  "minimap.senderAssistant": "Agent",
+  "minimap.senderUser": "Vous",
   "newAgent": "Créer un assistant",
   "newGroupChat": "Créer un groupe",
   "newPage": "Créer un document",
@@ -281,252 +193,170 @@
   "noSelectedAgents": "Aucun membre sélectionné",
   "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
   "owner": "Propriétaire du groupe",
-  "pageCopilot": {
-    "title": "Assistant de rédaction",
-    "welcome": "**Chaque mot à sa juste place.**\n\nQu'il s'agisse de rédiger, de réécrire ou de peaufiner vos textes, je vous aide à les rendre plus clairs, plus naturels et plus percutants."
-  },
+  "pageCopilot.title": "Assistant de rédaction",
+  "pageCopilot.welcome": "**Chaque mot à sa juste place.**\n\nQu'il s'agisse de rédiger, de réécrire ou de peaufiner vos textes, je vous aide à les rendre plus clairs, plus naturels et plus percutants.",
   "pin": "Épingler",
   "pinOff": "Désépingler",
-  "rag": {
-    "referenceChunks": "Références",
-    "userQuery": {
-      "actions": {
-        "delete": "Supprimer la réécriture de la requête",
-        "regenerate": "Régénérer la requête"
-      }
-    }
-  },
+  "rag.referenceChunks": "Références",
+  "rag.userQuery.actions.delete": "Supprimer la réécriture de la requête",
+  "rag.userQuery.actions.regenerate": "Régénérer la requête",
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
-  "search": {
-    "grounding": {
-      "searchQueries": "Mots-clés de recherche",
-      "title": "{{count}} résultats trouvés"
-    },
-    "mode": {
-      "auto": {
-        "desc": "Détermine intelligemment si une recherche est nécessaire en fonction du contenu de la conversation",
-        "title": "Connexion intelligente"
-      },
-      "off": {
-        "desc": "Utilise uniquement les connaissances de base du modèle, sans recherche en ligne",
-        "title": "Déconnexion"
-      },
-      "on": {
-        "desc": "Effectue en continu des recherches en ligne pour obtenir les informations les plus récentes",
-        "title": "Toujours connecté"
-      },
-      "useModelBuiltin": "Utiliser le moteur de recherche intégré du modèle"
-    },
-    "searchModel": {
-      "desc": "Le modèle actuel ne prend pas en charge les appels de fonction, il doit donc être associé à un modèle prenant en charge les appels de fonction pour effectuer une recherche en ligne",
-      "title": "Modèle d'assistance à la recherche"
-    },
-    "title": "Recherche en ligne"
-  },
+  "search.grounding.searchQueries": "Mots-clés de recherche",
+  "search.grounding.title": "{{count}} résultats trouvés",
+  "search.mode.auto.desc": "Détermine intelligemment si une recherche est nécessaire en fonction du contenu de la conversation",
+  "search.mode.auto.title": "Connexion intelligente",
+  "search.mode.off.desc": "Utilise uniquement les connaissances de base du modèle, sans recherche en ligne",
+  "search.mode.off.title": "Déconnexion",
+  "search.mode.on.desc": "Effectue en continu des recherches en ligne pour obtenir les informations les plus récentes",
+  "search.mode.on.title": "Toujours connecté",
+  "search.mode.useModelBuiltin": "Utiliser le moteur de recherche intégré du modèle",
+  "search.searchModel.desc": "Le modèle actuel ne prend pas en charge les appels de fonction, il doit donc être associé à un modèle prenant en charge les appels de fonction pour effectuer une recherche en ligne",
+  "search.searchModel.title": "Modèle d'assistance à la recherche",
+  "search.title": "Recherche en ligne",
   "searchAgentPlaceholder": "Assistant de recherche...",
   "searchAgents": "Assistant de recherche...",
   "selectedAgents": "Assistants sélectionnés",
   "sendPlaceholder": "Posez une question, créez ou commencez une tâche, <hotkey><hotkey/>",
-  "sessionGroup": {
-    "config": "Gestion des groupes",
-    "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
-    "createAgentSuccess": "Création de l'agent réussie",
-    "createGroup": "Créer un nouveau groupe",
-    "createGroupFailed": "Échec de la création du groupe de discussion",
-    "createGroupSuccess": "Groupe de discussion créé avec succès",
-    "createSuccess": "Création réussie",
-    "creatingAgent": "Création de l'agent en cours...",
-    "groupName": "Nom du groupe",
-    "inputPlaceholder": "Veuillez saisir le nom du groupe...",
-    "moveGroup": "Déplacer vers un groupe",
-    "newGroup": "Nouveau groupe",
-    "noAvailableAgents": "Aucun assistant disponible pour le moment",
-    "noMatchingAgents": "Aucun assistant correspondant trouvé",
-    "noSelectedAgents": "Veuillez sélectionner un assistant",
-    "rename": "Renommer le groupe",
-    "renameSuccess": "Renommage réussi",
-    "searchAgents": "Rechercher un assistant",
-    "selectedAgents": "Assistant(s) sélectionné(s) ({{count}})",
-    "sortSuccess": "Réorganisation réussie",
-    "sorting": "Mise à jour de la réorganisation des groupes en cours...",
-    "tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères"
-  },
-  "shareModal": {
-    "copy": "Copier",
-    "download": "Télécharger la capture d'écran",
-    "downloadError": "Échec du téléchargement",
-    "downloadFile": "Télécharger le fichier",
-    "downloadPdf": "Télécharger le PDF",
-    "downloadSuccess": "Téléchargement réussi",
-    "exportMode": {
-      "full": "Par défaut",
-      "label": "Mode d’exportation",
-      "simple": "Compatible avec OpenAI"
-    },
-    "exportPdf": "Exporter en PDF",
-    "exportTitle": "Titre par défaut",
-    "generatePdf": "Générer le PDF",
-    "generatingPdf": "Génération du PDF en cours...",
-    "imageType": "Type d'image",
-    "includeTool": "Inclure les messages de l'outil",
-    "includeUser": "Inclure les messages de l'utilisateur",
-    "loadingPdf": "Chargement du PDF...",
-    "noPdfData": "Aucune donnée PDF disponible",
-    "pdf": "PDF",
-    "pdfErrorDescription": "Une erreur est survenue lors de la génération du PDF, veuillez réessayer",
-    "pdfGenerationError": "Échec de la génération du PDF",
-    "pdfReady": "Le PDF est prêt",
-    "regeneratePdf": "Régénérer le PDF",
-    "screenshot": "Capture d'écran",
-    "settings": "Paramètres d'exportation",
-    "text": "Texte",
-    "widthMode": {
-      "label": "Mode de largeur",
-      "narrow": "Mode écran étroit",
-      "wide": "Mode écran large"
-    },
-    "withBackground": "Avec image de fond",
-    "withFooter": "Avec pied de page",
-    "withPluginInfo": "Avec informations sur le plugin",
-    "withRole": "Inclure le rôle du message",
-    "withSystemRole": "Avec rôle de l'agent"
-  },
-  "stt": {
-    "action": "Entrée vocale",
-    "loading": "En cours de reconnaissance...",
-    "prettifying": "En cours d'embellissement..."
-  },
-  "supervisor": {
-    "todoList": {
-      "allComplete": "Toutes les tâches sont terminées",
-      "title": "Tâches terminées"
-    }
-  },
-  "tab": {
-    "groupProfile": "Profil du groupe",
-    "profile": "Profil de l'assistant",
-    "search": "Recherche"
-  },
-  "task": {
-    "activity": {
-      "calling": "Appel de l'outil en cours...",
-      "generating": "Génération de la réponse en cours...",
-      "gotResult": "Résultat de l'outil obtenu",
-      "toolCalling": "Appel de {{toolName}} en cours...",
-      "toolResult": "Résultat de {{toolName}} obtenu"
-    },
-    "metrics": {
-      "stepsShort": "étapes",
-      "toolCallsShort": "utilisations d’outils"
-    },
-    "status": {
-      "initializing": "Initialisation de la tâche..."
-    }
-  },
-  "thread": {
-    "divider": "Sous-sujet",
-    "threadMessageCount": "{{messageCount}} messages",
-    "title": "Sous-sujet"
-  },
-  "toggleWideScreen": {
-    "off": "Désactiver le mode écran large",
-    "on": "Activer le mode écran large"
-  },
-  "tokenDetails": {
-    "chats": "Messages de discussion",
-    "historySummary": "Résumé historique",
-    "rest": "Restant disponible",
-    "supervisor": "Animateur du groupe",
-    "systemRole": "Rôle système",
-    "title": "Détails du jeton",
-    "tools": "Paramètres du plugin",
-    "total": "Total disponible",
-    "used": "Total utilisé"
-  },
-  "tokenTag": {
-    "overload": "Dépassement de limite",
-    "remained": "Restant",
-    "used": "Utilisé"
-  },
-  "tool": {
-    "intervention": {
-      "approve": "Approuver",
-      "approveAndRemember": "Approuver et mémoriser",
-      "approveOnce": "Approuver une seule fois",
-      "mode": {
-        "allowList": "Liste blanche",
-        "allowListDesc": "Exécuter automatiquement uniquement les outils approuvés",
-        "autoRun": "Exécution automatique",
-        "autoRunDesc": "Approuver automatiquement l'exécution de tous les outils",
-        "manual": "Manuel",
-        "manualDesc": "Chaque appel nécessite une approbation manuelle"
-      },
-      "reject": "Rejeter",
-      "rejectAndContinue": "Rejeter et réessayer",
-      "rejectOnly": "Rejeter",
-      "rejectReasonPlaceholder": "Saisir une raison de rejet aidera l'agent à comprendre et à améliorer ses actions futures",
-      "rejectTitle": "Rejeter cet appel d'outil",
-      "rejectedWithReason": "Cet appel d'outil a été rejeté volontairement : {{reason}}",
-      "toolAbort": "L'appel de l'outil a été annulé par l'utilisateur",
-      "toolRejected": "Cet appel d'outil a été rejeté volontairement"
-    }
-  },
-  "toolAuth": {
-    "authorize": "Autoriser",
-    "authorizing": "Autorisation en cours...",
-    "hint": "Sans autorisation ou configuration, ces outils pourraient ne pas fonctionner correctement, ce qui pourrait entraîner des erreurs ou un fonctionnement incomplet de l’assistant.",
-    "signIn": "Se connecter",
-    "title": "Veuillez autoriser les outils pour l’assistant"
-  },
-  "topic": {
-    "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
-    "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
-    "openNewTopic": "Ouvrir un nouveau sujet",
-    "recent": "Sujets récents",
-    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
-  },
-  "translate": {
-    "action": "Traduire",
-    "clear": "Effacer la traduction"
-  },
-  "tts": {
-    "action": "Lecture vocale",
-    "clear": "Effacer la voix"
-  },
+  "sessionGroup.config": "Gestion des groupes",
+  "sessionGroup.confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
+  "sessionGroup.createAgentSuccess": "Création de l'agent réussie",
+  "sessionGroup.createGroup": "Créer un nouveau groupe",
+  "sessionGroup.createGroupFailed": "Échec de la création du groupe de discussion",
+  "sessionGroup.createGroupSuccess": "Groupe de discussion créé avec succès",
+  "sessionGroup.createSuccess": "Création réussie",
+  "sessionGroup.creatingAgent": "Création de l'agent en cours...",
+  "sessionGroup.groupName": "Nom du groupe",
+  "sessionGroup.inputPlaceholder": "Veuillez saisir le nom du groupe...",
+  "sessionGroup.moveGroup": "Déplacer vers un groupe",
+  "sessionGroup.newGroup": "Nouveau groupe",
+  "sessionGroup.noAvailableAgents": "Aucun assistant disponible pour le moment",
+  "sessionGroup.noMatchingAgents": "Aucun assistant correspondant trouvé",
+  "sessionGroup.noSelectedAgents": "Veuillez sélectionner un assistant",
+  "sessionGroup.rename": "Renommer le groupe",
+  "sessionGroup.renameSuccess": "Renommage réussi",
+  "sessionGroup.searchAgents": "Rechercher un assistant",
+  "sessionGroup.selectedAgents": "Assistant(s) sélectionné(s) ({{count}})",
+  "sessionGroup.sortSuccess": "Réorganisation réussie",
+  "sessionGroup.sorting": "Mise à jour de la réorganisation des groupes en cours...",
+  "sessionGroup.tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères",
+  "shareModal.copy": "Copier",
+  "shareModal.download": "Télécharger la capture d'écran",
+  "shareModal.downloadError": "Échec du téléchargement",
+  "shareModal.downloadFile": "Télécharger le fichier",
+  "shareModal.downloadPdf": "Télécharger le PDF",
+  "shareModal.downloadSuccess": "Téléchargement réussi",
+  "shareModal.exportMode.full": "Par défaut",
+  "shareModal.exportMode.label": "Mode d’exportation",
+  "shareModal.exportMode.simple": "Compatible avec OpenAI",
+  "shareModal.exportPdf": "Exporter en PDF",
+  "shareModal.exportTitle": "Titre par défaut",
+  "shareModal.generatePdf": "Générer le PDF",
+  "shareModal.generatingPdf": "Génération du PDF en cours...",
+  "shareModal.imageType": "Type d'image",
+  "shareModal.includeTool": "Inclure les messages de l'outil",
+  "shareModal.includeUser": "Inclure les messages de l'utilisateur",
+  "shareModal.loadingPdf": "Chargement du PDF...",
+  "shareModal.noPdfData": "Aucune donnée PDF disponible",
+  "shareModal.pdf": "PDF",
+  "shareModal.pdfErrorDescription": "Une erreur est survenue lors de la génération du PDF, veuillez réessayer",
+  "shareModal.pdfGenerationError": "Échec de la génération du PDF",
+  "shareModal.pdfReady": "Le PDF est prêt",
+  "shareModal.regeneratePdf": "Régénérer le PDF",
+  "shareModal.screenshot": "Capture d'écran",
+  "shareModal.settings": "Paramètres d'exportation",
+  "shareModal.text": "Texte",
+  "shareModal.widthMode.label": "Mode de largeur",
+  "shareModal.widthMode.narrow": "Mode écran étroit",
+  "shareModal.widthMode.wide": "Mode écran large",
+  "shareModal.withBackground": "Avec image de fond",
+  "shareModal.withFooter": "Avec pied de page",
+  "shareModal.withPluginInfo": "Avec informations sur le plugin",
+  "shareModal.withRole": "Inclure le rôle du message",
+  "shareModal.withSystemRole": "Avec rôle de l'agent",
+  "stt.action": "Entrée vocale",
+  "stt.loading": "En cours de reconnaissance...",
+  "stt.prettifying": "En cours d'embellissement...",
+  "supervisor.todoList.allComplete": "Toutes les tâches sont terminées",
+  "supervisor.todoList.title": "Tâches terminées",
+  "tab.groupProfile": "Profil du groupe",
+  "tab.profile": "Profil de l'assistant",
+  "tab.search": "Recherche",
+  "task.activity.calling": "Appel de l'outil en cours...",
+  "task.activity.generating": "Génération de la réponse en cours...",
+  "task.activity.gotResult": "Résultat de l'outil obtenu",
+  "task.activity.toolCalling": "Appel de {{toolName}} en cours...",
+  "task.activity.toolResult": "Résultat de {{toolName}} obtenu",
+  "task.metrics.stepsShort": "étapes",
+  "task.metrics.toolCallsShort": "utilisations d’outils",
+  "task.status.initializing": "Initialisation de la tâche...",
+  "thread.divider": "Sous-sujet",
+  "thread.threadMessageCount": "{{messageCount}} messages",
+  "thread.title": "Sous-sujet",
+  "toggleWideScreen.off": "Désactiver le mode écran large",
+  "toggleWideScreen.on": "Activer le mode écran large",
+  "tokenDetails.chats": "Messages de discussion",
+  "tokenDetails.historySummary": "Résumé historique",
+  "tokenDetails.rest": "Restant disponible",
+  "tokenDetails.supervisor": "Animateur du groupe",
+  "tokenDetails.systemRole": "Rôle système",
+  "tokenDetails.title": "Détails du jeton",
+  "tokenDetails.tools": "Paramètres du plugin",
+  "tokenDetails.total": "Total disponible",
+  "tokenDetails.used": "Total utilisé",
+  "tokenTag.overload": "Dépassement de limite",
+  "tokenTag.remained": "Restant",
+  "tokenTag.used": "Utilisé",
+  "tool.intervention.approve": "Approuver",
+  "tool.intervention.approveAndRemember": "Approuver et mémoriser",
+  "tool.intervention.approveOnce": "Approuver une seule fois",
+  "tool.intervention.mode.allowList": "Liste blanche",
+  "tool.intervention.mode.allowListDesc": "Exécuter automatiquement uniquement les outils approuvés",
+  "tool.intervention.mode.autoRun": "Exécution automatique",
+  "tool.intervention.mode.autoRunDesc": "Approuver automatiquement l'exécution de tous les outils",
+  "tool.intervention.mode.manual": "Manuel",
+  "tool.intervention.mode.manualDesc": "Chaque appel nécessite une approbation manuelle",
+  "tool.intervention.reject": "Rejeter",
+  "tool.intervention.rejectAndContinue": "Rejeter et réessayer",
+  "tool.intervention.rejectOnly": "Rejeter",
+  "tool.intervention.rejectReasonPlaceholder": "Saisir une raison de rejet aidera l'agent à comprendre et à améliorer ses actions futures",
+  "tool.intervention.rejectTitle": "Rejeter cet appel d'outil",
+  "tool.intervention.rejectedWithReason": "Cet appel d'outil a été rejeté volontairement : {{reason}}",
+  "tool.intervention.toolAbort": "L'appel de l'outil a été annulé par l'utilisateur",
+  "tool.intervention.toolRejected": "Cet appel d'outil a été rejeté volontairement",
+  "toolAuth.authorize": "Autoriser",
+  "toolAuth.authorizing": "Autorisation en cours...",
+  "toolAuth.hint": "Sans autorisation ou configuration, ces outils pourraient ne pas fonctionner correctement, ce qui pourrait entraîner des erreurs ou un fonctionnement incomplet de l’assistant.",
+  "toolAuth.signIn": "Se connecter",
+  "toolAuth.title": "Veuillez autoriser les outils pour l’assistant",
+  "topic.checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
+  "topic.checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
+  "topic.openNewTopic": "Ouvrir un nouveau sujet",
+  "topic.recent": "Sujets récents",
+  "topic.saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet",
+  "translate.action": "Traduire",
+  "translate.clear": "Effacer la traduction",
+  "tts.action": "Lecture vocale",
+  "tts.clear": "Effacer la voix",
   "untitledAgent": "Assistant sans nom",
   "untitledGroup": "Groupe sans nom",
   "updateAgent": "Mettre à jour les informations de l'agent",
-  "upload": {
-    "action": {
-      "fileUpload": "Télécharger un fichier",
-      "folderUpload": "Télécharger un dossier",
-      "imageDisabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
-      "imageUpload": "Télécharger une image",
-      "tooltip": "Télécharger"
-    },
-    "clientMode": {
-      "actionFiletip": "Télécharger un fichier",
-      "actionTooltip": "Télécharger",
-      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser",
-      "fileNotSupported": "Le mode navigateur ne prend pas en charge le téléchargement de fichiers, seules les images sont autorisées",
-      "visionNotSupported": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser"
-    },
-    "preview": {
-      "prepareTasks": "Préparation des morceaux...",
-      "status": {
-        "pending": "Préparation du téléchargement...",
-        "processing": "Traitement du fichier..."
-      }
-    },
-    "validation": {
-      "videoSizeExceeded": "La taille du fichier vidéo ne peut pas dépasser 20 Mo, la taille actuelle est de {{actualSize}}"
-    }
-  },
-  "viewMode": {
-    "normal": "Normal",
-    "wideScreen": "Écran large"
-  },
+  "upload.action.fileUpload": "Télécharger un fichier",
+  "upload.action.folderUpload": "Télécharger un dossier",
+  "upload.action.imageDisabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
+  "upload.action.imageUpload": "Télécharger une image",
+  "upload.action.tooltip": "Télécharger",
+  "upload.clientMode.actionFiletip": "Télécharger un fichier",
+  "upload.clientMode.actionTooltip": "Télécharger",
+  "upload.clientMode.disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser",
+  "upload.clientMode.fileNotSupported": "Le mode navigateur ne prend pas en charge le téléchargement de fichiers, seules les images sont autorisées",
+  "upload.clientMode.visionNotSupported": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
+  "upload.preview.prepareTasks": "Préparation des morceaux...",
+  "upload.preview.status.pending": "Préparation du téléchargement...",
+  "upload.preview.status.processing": "Traitement du fichier...",
+  "upload.validation.videoSizeExceeded": "La taille du fichier vidéo ne peut pas dépasser 20 Mo, la taille actuelle est de {{actualSize}}",
+  "viewMode.normal": "Normal",
+  "viewMode.wideScreen": "Écran large",
   "you": "vous",
   "zenMode": "Mode de concentration"
 }

@@ -1,33 +1,15 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "文件添加成功，<1>立即查看</1>",
-    "confirm": "添加",
-    "error": "添加文件到资源库失败",
-    "id": {
-      "placeholder": "请选择要添加的资源库",
-      "required": "请选择资源库",
-      "title": "目标资源库"
-    },
-    "title": "添加到资源库",
-    "totalFiles": "已选择 {{count}} 个文件"
-  },
-  "createNew": {
-    "confirm": "新建",
-    "description": {
-      "placeholder": "资源库简介（选填）"
-    },
-    "formTitle": "基本信息",
-    "name": {
-      "placeholder": "资源库名称",
-      "required": "请填写资源库名称"
-    },
-    "title": "新建资源库"
-  },
-  "tab": {
-    "evals": "评测",
-    "files": "文档",
-    "settings": "设置",
-    "testing": "召回测试"
-  },
-  "title": "资源库"
+  "addToKnowledgeBase.addSuccess": "文件添加成功，<1>立即查看</1>",
+  "addToKnowledgeBase.confirm": "添加",
+  "addToKnowledgeBase.error": "添加文件到资源库失败",
+  "addToKnowledgeBase.id.placeholder": "请选择要添加的资源库",
+  "addToKnowledgeBase.id.required": "请选择资源库",
+  "addToKnowledgeBase.id.title": "目标资源库",
+  "addToKnowledgeBase.title": "添加到资源库",
+  "addToKnowledgeBase.totalFiles": "已选择 {{count}} 个文件",
+  "createNew.confirm": "新建",
+  "createNew.description.placeholder": "资源库简介（选填）",
+  "createNew.name.placeholder": "资源库名称",
+  "createNew.name.required": "请填写资源库名称",
+  "createNew.title": "新建资源库"
 }
