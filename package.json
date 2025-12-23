@@ -450,9 +450,6 @@
     "overrides": {
       "jose": "^6.1.3",
       "stylelint-config-clean-order": "7.0.0"
-    },
-    "patchedDependencies": {
-      "@swagger-api/apidom-reference": "patches/@swagger-api__apidom-reference.patch"
     }
   }
 }
