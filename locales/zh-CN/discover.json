@@ -1,4 +1,12 @@
 {
+  "assistant": {
+    "favorite": "收藏",
+    "favoriteFailed": "收藏失败",
+    "favoriteSuccess": "已收藏",
+    "unfavorite": "取消收藏",
+    "unfavoriteFailed": "取消收藏失败",
+    "unfavoriteSuccess": "已取消收藏"
+  },
   "assistants": {
     "addAgent": "添加助手",
     "addAgentAndConverse": "添加助手并会话",
@@ -720,11 +728,26 @@
     "agents": "助手",
     "downloads": "下载",
     "editProfile": "编辑个人资料",
+    "favoriteAgents": "收藏的助手",
+    "favoritePlugins": "收藏的插件",
+    "follow": "关注",
+    "followers": "粉丝",
+    "following": "关注",
     "login": "成为创作者",
     "logout": "退出登录",
     "myProfile": "我的主页",
     "noAgents": "该用户暂未发布助手",
+    "noFavoriteAgents": "暂无收藏的助手",
+    "noFavoritePlugins": "暂无收藏的插件",
     "publishedAgents": "创作的助手",
+    "tabs": {
+      "favorites": "收藏",
+      "publishedAgents": "创作"
+    },
+    "unfollow": "取消关注",
+    "unfavorite": "取消收藏",
+    "unfavoriteFailed": "取消收藏失败",
+    "unfavoriteSuccess": "已取消收藏",
     "website": "个人网站"
   }
 }

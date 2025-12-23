@@ -8,6 +8,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserDetailContext } from '../DetailProvider';
+import FollowButton from '../FollowButton';
+import FollowStats from '../FollowStats';
 import Banner from './Banner';
 
 const UserHeader = memo(() => {
@@ -42,12 +44,18 @@ const UserHeader = memo(() => {
               @{username}
             </Text>
           </Flexbox>
-          {isOwner && onEditProfile && (
-            <Button onClick={() => onEditProfile()} shape={'round'}>
-              {t('user.editProfile')}
-            </Button>
+          {isOwner ? (
+            onEditProfile && (
+              <Button onClick={() => onEditProfile()} shape={'round'}>
+                {t('user.editProfile')}
+              </Button>
+            )
+          ) : (
+            <FollowButton userId={user.id} />
           )}
         </Flexbox>
+
+        <FollowStats />
 
         {user.description && <Text as={'p'}>{user.description}</Text>}
 

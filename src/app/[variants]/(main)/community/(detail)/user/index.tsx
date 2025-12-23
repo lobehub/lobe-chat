@@ -10,7 +10,7 @@ import { useDiscoverStore } from '@/store/discover';
 import NotFound from '../components/NotFound';
 import { UserDetailProvider } from './features/DetailProvider';
 import UserHeader from './features/Header';
-import UserAgentList from './features/UserAgentList';
+import UserContent from './features/UserContent';
 import { useUserDetail } from './features/useUserDetail';
 import Loading from './loading';
 
@@ -78,7 +78,7 @@ const UserDetailPage = memo<UserDetailPageProps>(({ mobile }) => {
   return (
     <UserDetailProvider config={contextConfig}>
       <UserHeader />
-      <UserAgentList />
+      <UserContent />
     </UserDetailProvider>
   );
 });

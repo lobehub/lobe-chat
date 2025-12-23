@@ -64,4 +64,40 @@ export const MARKET_ENDPOINTS = {
   getUserProfile: (username: string) =>
     withElectronProtocolIfElectron(`/market/user/${encodeURIComponent(username)}`),
   updateUserProfile: withElectronProtocolIfElectron('/market/user/me'),
+
+  // Social - Follow
+  follow: withElectronProtocolIfElectron('/market/social/follow'),
+  unfollow: withElectronProtocolIfElectron('/market/social/unfollow'),
+  followStatus: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/follow-status/${userId}`),
+  following: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/following/${userId}`),
+  followers: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/followers/${userId}`),
+  followCounts: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/follow-counts/${userId}`),
+
+  // Social - Favorite
+  favorite: withElectronProtocolIfElectron('/market/social/favorite'),
+  unfavorite: withElectronProtocolIfElectron('/market/social/unfavorite'),
+  favoriteStatus: (targetType: 'agent' | 'plugin', targetIdOrIdentifier: number | string) =>
+    withElectronProtocolIfElectron(
+      `/market/social/favorite-status/${targetType}/${encodeURIComponent(targetIdOrIdentifier)}`,
+    ),
+  myFavorites: withElectronProtocolIfElectron('/market/social/favorites'),
+  userFavorites: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/user-favorites/${userId}`),
+  favoriteAgents: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/favorite-agents/${userId}`),
+  favoritePlugins: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/favorite-plugins/${userId}`),
+
+  // Social - Like
+  like: withElectronProtocolIfElectron('/market/social/like'),
+  unlike: withElectronProtocolIfElectron('/market/social/unlike'),
+  toggleLike: withElectronProtocolIfElectron('/market/social/toggle-like'),
+  likedAgents: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/liked-agents/${userId}`),
+  likedPlugins: (userId: number) =>
+    withElectronProtocolIfElectron(`/market/social/liked-plugins/${userId}`),
 };

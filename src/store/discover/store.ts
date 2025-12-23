@@ -8,6 +8,7 @@ import { MCPAction, createMCPSlice } from './slices/mcp';
 import { ModelAction, createModelSlice } from './slices/model/action';
 import { PluginAction, createPluginSlice } from './slices/plugin/action';
 import { ProviderAction, createProviderSlice } from './slices/provider/action';
+import { SocialAction, createSocialSlice } from './slices/social';
 import { UserAction, createUserSlice } from './slices/user';
 
 //  ===============  Aggregate createStoreFn ============ //
@@ -17,6 +18,7 @@ export type DiscoverStore = MCPAction &
   ProviderAction &
   ModelAction &
   PluginAction &
+  SocialAction &
   UserAction;
 
 const createStore: StateCreator<DiscoverStore, [['zustand/devtools', never]]> = (
@@ -27,6 +29,7 @@ const createStore: StateCreator<DiscoverStore, [['zustand/devtools', never]]> = 
   ...createProviderSlice(...parameters),
   ...createModelSlice(...parameters),
   ...createPluginSlice(...parameters),
+  ...createSocialSlice(...parameters),
   ...createUserSlice(...parameters),
 });
 

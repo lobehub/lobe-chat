@@ -1719,6 +1719,8 @@ export class DiscoverService {
           createdAt: user.createdAt,
           description: user.meta?.description || null,
           displayName: user.displayName || null,
+          followersCount: user.followerCount ?? 0,
+          followingCount: user.followingCount ?? 0,
           id: user.id,
           namespace: user.namespace,
           socialLinks: user.meta?.socialLinks || null,

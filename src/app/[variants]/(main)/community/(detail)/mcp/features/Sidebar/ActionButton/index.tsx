@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Icon , Button } from '@lobehub/ui';
+import { Button, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -59,8 +59,6 @@ const ActionButton = memo(() => {
   };
 
   const buttonLoading = isLoading || isAuthLoading;
-
-  console.log('installed', isLoading, isAuthLoading, installed);
 
   return installed ? (
     <Flexbox gap={8} horizontal>
