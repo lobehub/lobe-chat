@@ -13,16 +13,7 @@ import { PublicState, usePageEditorStore, useStoreApi } from './store';
 export type StoreUpdaterProps = Partial<PublicState>;
 
 const StoreUpdater = memo<StoreUpdaterProps>(
-  ({
-    pageId,
-    knowledgeBaseId,
-    autoSave,
-    onDocumentIdChange,
-    onSave,
-    onDelete,
-    onBack,
-    parentId,
-  }) => {
+  ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack, parentId }) => {
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
 
@@ -46,7 +37,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Update store with props
     useStoreUpdater('pageId', pageId);
     useStoreUpdater('knowledgeBaseId', knowledgeBaseId);
-    useStoreUpdater('autoSave', autoSave ?? true);
     useStoreUpdater('onDocumentIdChange', onDocumentIdChange);
     useStoreUpdater('onSave', onSave);
     useStoreUpdater('onDelete', onDelete);

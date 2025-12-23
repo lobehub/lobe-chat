@@ -1,4 +1,5 @@
 import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
+import debug from 'debug';
 import { debounce } from 'es-toolkit/compat';
 import { StateCreator } from 'zustand';
 
@@ -8,6 +9,8 @@ import { useFileStore } from '@/store/file';
 import { DocumentSourceType, LobeDocument } from '@/types/document';
 
 import { State, initialState } from './initialState';
+
+const log = debug('page-editor');
 
 export interface Action {
   flushSave: () => void;
@@ -35,7 +38,7 @@ const createDebouncedSave = (get: () => Store) =>
       try {
         await get().performSave();
       } catch (error) {
-        console.error('[PageEditor] Failed to auto-save:', error);
+        log('Failed to auto-save:', error);
       }
     },
     EDITOR_DEBOUNCE_TIME,
@@ -73,7 +76,7 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
             debouncedSave();
           }
         } catch (error) {
-          console.error('[PageEditor] Failed to update content:', error);
+          log('Failed to update content:', error);
         }
       },
 
@@ -104,7 +107,7 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
                 onDeleteCallback?.();
                 resolve();
               } catch (error) {
-                console.error('Failed to delete page:', error);
+                log('Failed to delete page:', error);
                 message.error(t('pageEditor.deleteError'));
                 reject(error);
               }
@@ -134,7 +137,7 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
             () => currentTitle,
           );
 
-          console.log('[PageEditor] Connected editor to page agent runtime');
+          log('Connected editor to page agent runtime');
         }
       },
 
@@ -251,7 +254,7 @@ export const store: (initState?: Partial<State>) => StateCreator<Store> =
           });
           onSave?.();
         } catch (error) {
-          console.error('[PageEditor] Failed to save:', error);
+          log('Failed to save:', error);
           set({ saveStatus: 'idle' });
         }
       },
