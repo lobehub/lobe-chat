@@ -1,7 +1,7 @@
-import { DEFAULT_AVATAR } from '@lobechat/const';
+import { DEFAULT_AVATAR, DEFAULT_INBOX_AVATAR } from '@lobechat/const';
 import { Avatar } from '@lobehub/ui';
 import { Command } from 'cmdk';
-import { Image, MessageSquare } from 'lucide-react';
+import { Image } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -40,10 +40,15 @@ const AskAIMenu = memo(() => {
 
   return (
     <Command.Group heading={heading}>
-      <Command.Item onSelect={handleAskLobeAI} value="ask-lobe-ai">
-        <MessageSquare className={styles.icon} />
+      <Command.Item onSelect={handleAskLobeAI} value="lobe-ai">
+        <Avatar
+          avatar={DEFAULT_INBOX_AVATAR}
+          emojiScaleWithBackground
+          shape="square"
+          size={18}
+        />
         <div className={styles.itemContent}>
-          <div className={styles.itemLabel}>{t('cmdk.askLobeAI')}</div>
+          <div className={styles.itemLabel}>Lobe AI</div>
         </div>
       </Command.Item>
       <Command.Item onSelect={handleAIPainting} value="ai-painting">
