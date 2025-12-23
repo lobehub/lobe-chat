@@ -250,7 +250,7 @@ export default {
     },
     download: {
       desc: 'Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续',
-      failed: '模型下载失败，请检查网络或者 Ollama 设置后重试',
+      failed: '下载遇到了问题。你可以检查网络或 Ollama 设置后重试；也可以稍后再试',
       remainingTime: '剩余时间',
       speed: '下载速度',
       title: '正在下载模型 {{model}} ',
@@ -426,7 +426,7 @@ export default {
         enableAll: '全部启用',
         sort: '自定义模型排序',
       },
-      enabledEmpty: '暂无启用模型，请从下方列表中启用心仪的模型吧~',
+      enabledEmpty: '还没有启用模型。先从下方列表挑一个启用，之后随时可以调整',
       fetcher: {
         clear: '清除获取的模型',
         fetch: '获取模型列表',

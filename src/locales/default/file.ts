@@ -23,7 +23,7 @@ export default {
       embeddingStatus: '向量化',
     },
   },
-  empty: '暂无已上传文件/文件夹',
+  empty: '这里还没有文件或文件夹。先上传一个文件，或创建文稿开始整理',
   header: {
     actions: {
       builtInBlockList: {
@@ -40,7 +40,7 @@ export default {
       newFolder: '新建文件夹',
       newPage: '新建文稿',
       notion: {
-        error: '导入 Notion 文件失败',
+        error: '导入遇到了问题。你可以检查文件格式后重试',
         foundFiles: '找到 {{count}} 个文件',
         importing: '正在导入 Notion 文件…',
         noMarkdownFiles: '未在 ZIP 文件中找到 Markdown 文件',
@@ -49,7 +49,7 @@ export default {
       },
       notionGuide: {
         cancel: '暂不导入',
-        desc: '请先在 Notion 中导出 Markdown（ZIP），点击继续选择压缩包即可导入其中所有页面',
+        desc: '先在 Notion 导出 Markdown（ZIP）。点击继续后选择压缩包，即可导入其中的页面',
         ok: '选择 Notion ZIP',
         title: '导入 Notion 内容',
       },
@@ -84,8 +84,8 @@ export default {
   library: {
     list: {
       confirmRemoveLibrary:
-        '确认删除该资源库吗？其中的文件不会删除，将移入全部文件中。资源库删除后无法恢复',
-      empty: '点击 <1>+</1> 开始创建资源库',
+        '将删除该资源库（其中的文件不会删除，会移入「全部文件」）。删除后不可恢复，建议确认无误再继续',
+      empty: '点击 <1>+</1> 创建第一个资源库',
     },
     new: '新建资源库',
     title: '库',
@@ -118,10 +118,10 @@ export default {
     autoSaveMessage: '文稿会自动保存，无需手动保存',
     chooseIcon: '选择图标',
     deleteConfirm: {
-      content: '确认删除该文稿吗？删除后无法恢复',
+      content: '确认删除该文稿吗？删除后不可恢复。建议先导出或复制重要内容',
       title: '删除文稿',
     },
-    deleteError: '删除文稿失败',
+    deleteError: '删除遇到了问题。你可以重试',
     deleteSuccess: '文稿删除成功',
     editedAt: '最后编辑于 {{time}}',
     editedBy: '最后编辑者 {{name}}',
@@ -138,14 +138,14 @@ export default {
       importDocument: '导入文稿',
       pin: '置顶文稿',
     },
-    saving: '保存中…',
+    saving: '正在保存…',
     titlePlaceholder: '无标题',
     wordCount: '{{wordCount}} 字',
   },
   pageList: {
     copyContent: '复制全文',
     duplicate: '创建副本',
-    empty: '暂无文稿，点击上方按钮创建你的第一篇文稿',
+    empty: '还没有文稿。点击上方按钮创建第一篇',
     filter: {
       all: '全部',
       onlyInPages: '仅在文稿中',
@@ -180,7 +180,7 @@ export default {
       collapse: '收起',
       item: {
         done: '已上传',
-        error: '上传失败，请重试',
+        error: '上传遇到了问题，请重试',
         pending: '准备上传…',
         processing: '文件处理中…',
         restTime: '剩余 {{time}}',

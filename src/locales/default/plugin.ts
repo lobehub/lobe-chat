@@ -359,7 +359,7 @@ export default {
     updateSuccess: '技能设置更新成功',
   },
   empty: {
-    description: '技能商店有丰富的技能等你发现，访问商店开始探索',
+    description: '技能商店里有很多能力可选。你可以先挑一个常用技能安装，之后再按需补齐',
     search: '未找到匹配的技能',
     title: '暂无技能',
   },
@@ -471,8 +471,8 @@ export default {
     custom: {
       badge: '自定义技能',
       security: {
-        description: '此技能未经过官方验证，安装可能存在安全风险！请确保你信任技能来源',
-        title: '⚠️ 安全风险提示',
+        description: '该技能尚未经过官方验证，可能存在安全风险。建议先确认来源可信，再继续安装',
+        title: '安全提示',
       },
       title: '安装自定义技能',
     },
@@ -491,8 +491,8 @@ export default {
     messages: {
       connectionTestFailed: '连接测试失败',
       installError: '技能安装失败，请重试',
-      installSuccess: '技能 {{name}} 安装成功！',
-      manifestError: '获取技能详情失败，请检查网络连接后重试',
+      installSuccess: '技能 {{name}} 已安装。你可以现在启用，或稍后再配置',
+      manifestError: '获取技能信息遇到了问题。你可以检查网络后重试，或稍后再试',
       manifestNotFound: '未能获取技能描述文件',
     },
     meta: {
@@ -510,7 +510,7 @@ export default {
       title: '安装官方技能',
     },
     title: '安装 MCP',
-    warning: '⚠️ 请确认你信任此技能的来源，恶意技能可能会危害你的系统安全',
+    warning: '安装前请确认你信任此技能的来源。你随时可以在设置中禁用或移除',
   },
   search: {
     config: {

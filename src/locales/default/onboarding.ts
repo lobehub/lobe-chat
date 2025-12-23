@@ -87,8 +87,8 @@ export default {
     },
     terms: '服务条款',
     title: '嘿，你好，我是 {{name}}',
-    title2: '很高兴认识你',
-    title3: 'Loooobe! 让我们开始吧',
+    title2: '很高兴见到你',
+    title3: '准备好了就开始吧',
   },
   title: '欢迎使用 {{appName}}',
   username: {
@@ -96,7 +96,7 @@ export default {
     hint: '可随时在设置中修改',
     placeholder: '输入你的称呼…',
     title: '对了，我该如何称呼你？',
-    title2: '让我们先认识一下吧！',
-    title3: '以后我们就能更熟悉地聊天',
+    title2: '让我们先认识一下',
+    title3: '以后就能更流畅地交流了',
   },
 };

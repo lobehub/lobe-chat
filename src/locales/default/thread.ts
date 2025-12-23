@@ -1,6 +1,6 @@
 export default {
   actions: {
-    confirmRemoveThread: '即将删除该子话题，删除后将不可恢复。请谨慎操作',
+    confirmRemoveThread: '将删除该子话题，删除后不可恢复。建议先复制需要保留的内容，再确认继续',
   },
   newPortalThread: {
     includeContext: '包含话题上下文',

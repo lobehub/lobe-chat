@@ -34,7 +34,8 @@ export default {
   markdown: {
     cancel: '取消',
     confirm: '转换',
-    parseMessage: '转换为 Markdown 格式，现有内容将被覆盖，是否确认？（5 秒后自动关闭）',
+    parseMessage:
+      '将内容转换为 Markdown 格式，会覆盖当前内容且不可撤销。确认继续吗？（5 秒后自动关闭）',
     parseTitle: '格式化 Markdown',
   },
   math: {
@@ -75,7 +76,7 @@ export default {
     numberList: '有序列表',
     redo: '重做',
     strikethrough: '删除线',
-    table: 'table',
+    table: '表格',
     taskList: '任务列表',
     tex: 'TeX 公式',
     underline: '下划线',

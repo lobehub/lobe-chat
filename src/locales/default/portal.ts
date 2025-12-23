@@ -13,7 +13,7 @@ export default {
     },
     svg: {
       copyAsImage: '复制为图片',
-      copyFail: '复制失败，错误原因：{{error}}',
+      copyFail: '复制遇到了问题：{{error}}。你可以再试一次',
       copySuccess: '图片复制成功',
       download: {
         png: '下载为 PNG',

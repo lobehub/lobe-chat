@@ -26,10 +26,9 @@ export default {
       chunking: '分块',
       chunkingTooltip: '将文件拆分为多个文本块并向量化后，可用于语义检索和文件对话',
       chunkingUnsupported: '该文件不支持分块',
-      confirmDelete: '即将删除该文件，删除后该将无法找回，请确认你的操作',
-      confirmDeleteFolder: '即将删除该文件夹及其所有内容，删除后该将无法找回，请确认你的操作',
-      confirmDeleteMultiFiles:
-        '即将删除选中的 {{count}} 个文件，删除后该将无法找回，请确认你的操作',
+      confirmDelete: '将删除该文件，删除后不可恢复。建议确认无误再继续',
+      confirmDeleteFolder: '将删除该文件夹及其内容，删除后不可恢复。建议确认无误再继续',
+      confirmDeleteMultiFiles: '将删除选中的 {{count}} 个文件，删除后不可恢复。建议确认无误再继续',
       confirmRemoveFromKnowledgeBase:
         '即将从资源库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作',
       copyUrl: '复制链接',
@@ -37,7 +36,7 @@ export default {
       createChunkingTask: '准备中…',
       deleteSuccess: '文件删除成功',
       downloading: '文件下载中…',
-      moveError: '移动文件失败',
+      moveError: '移动遇到了问题。你可以重试',
       moveHere: '移动到此处',
       moveSuccess: '文件移动成功',
       moveToFolder: '移动到…',
@@ -45,7 +44,7 @@ export default {
       removeFromKnowledgeBase: '从资源库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
       rename: '重命名',
-      renameError: '重命名失败',
+      renameError: '重命名遇到了问题。你可以重试',
       renameSuccess: '重命名成功',
     },
     config: {
@@ -58,9 +57,9 @@ export default {
         knowledgeBase: '新建资源库',
       },
       or: '或者',
-      title: '将文件或文件夹拖到这里',
+      title: '把文件或文件夹拖到这里',
     },
-    noFolders: '暂无文件夹',
+    noFolders: '还没有文件夹',
     sort: {
       dateAdded: '添加日期',
       name: '名称',
@@ -83,18 +82,18 @@ export default {
   FileParsingStatus: {
     chunks: {
       embeddingStatus: {
-        empty: '文本块尚未完全向量化，将导致语义检索功能不可用，为提升检索质量，请对文本块向量化',
+        empty: '文本块尚未完全向量化，语义检索将不可用。你可以先完成向量化，再开始检索或对话',
         error: '向量化失败',
         errorResult: '向量化失败，请检查后重试。失败原因：',
-        processing: '文本块正在向量化，请耐心等待',
+        processing: '文本块正在向量化，请稍等',
         success: '当前文本块均已向量化',
       },
       embeddings: '向量化',
       status: {
         error: '分块失败',
         errorResult: '分块失败，请检查后重试。失败原因：',
-        processing: '分块中',
-        processingTip: '服务端正在拆分文本块，关闭页面不影响分块进度',
+        processing: '分块中…',
+        processingTip: '服务端正在拆分文本块。关闭页面不会影响进度',
       },
     },
   },
@@ -153,8 +152,8 @@ export default {
     removed: '该模型不在列表中，若取消选中将会自动移除',
   },
   ModelSwitchPanel: {
-    emptyModel: '没有启用的模型，请前往设置开启',
-    emptyProvider: '没有启用的服务商，请前往设置开启',
+    emptyModel: '还没有启用模型。去设置启用后再试',
+    emptyProvider: '还没有启用模型服务商。去设置启用后再试',
     goToSettings: '前往设置',
   },
   MultiImagesUpload: {
@@ -180,7 +179,7 @@ export default {
         '{{fileName}} ({{actualSize}}) exceeds the maximum size limit of {{maxSize}}',
       fileSizeExceededMultiple:
         '{{count}} files exceed the maximum size limit of {{maxSize}}: {{fileList}}',
-      imageCountExceeded: 'Image count exceeded limit',
+      imageCountExceeded: '图片数量超出上限',
     },
   },
   OllamaSetupGuide: {

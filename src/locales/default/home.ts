@@ -1,8 +1,8 @@
 export default {
   agentSelection: {
-    empty: '暂无可用助理',
+    empty: '还没有可用助理。先创建一个起步',
     noAvailable: '当前没有可添加的助理',
-    noSelected: '尚未选择任何助理',
+    noSelected: '还未选择助理',
     search: '未找到匹配的助理',
   },
   starter: {

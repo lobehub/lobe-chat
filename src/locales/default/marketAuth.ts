@@ -46,7 +46,9 @@ export default {
     stateMissing: '未找到授权状态，请重试。',
   },
   messages: {
+    authorizationFailed: '授权遇到了问题。你可以重试，或检查是否已在浏览器完成登录',
     authorized: 'LobeHub 服务授权成功',
+    handoffTimeout: '授权等待超时。请回到浏览器完成操作后再重试',
     loading: '正在启动授权流程…',
     success: {
       cloudMcpInstall: '授权成功！现在可以安装 Cloud MCP 了。',

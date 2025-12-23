@@ -8,12 +8,12 @@ export default {
 
     error: {
       sessionInvalid: {
-        message: '授权会话已过期或无效，请重新发起授权流程。',
+        message: '授权会话已过期或无效。请返回并重新发起授权流程',
         title: '授权会话无效',
       },
       title: '发生错误',
       unsupportedInteraction: {
-        message: '不支持的交互类型: {promptName}',
+        message: '不支持的交互类型：{promptName}',
         title: '不支持的交互类型',
       },
     },
@@ -32,17 +32,17 @@ export default {
   },
   error: {
     backToHome: '返回首页',
-    desc: 'OAuth 授权失败，失败原因：{{reason}}',
+    desc: 'OAuth 授权未完成：{{reason}}。你可以返回首页后重试',
     reason: {
       internal_error: '服务端错误',
       invalid_request: '无效的请求参数',
     },
-    title: '授权失败',
+    title: '授权遇到了问题',
   },
   handoff: {
     desc: {
-      processing: '应用正在处理授权，即将跳转下一个页面…',
-      success: '已尝试打开桌面应用。如果应用未自动打开，请手动切换。你可以稍后关闭此浏览器窗口',
+      processing: '正在处理授权，即将跳转到下一步…',
+      success: '已尝试打开桌面端。若未自动打开，请手动切换到桌面端；之后可关闭此窗口',
     },
     title: {
       processing: '授权处理中…',
@@ -56,7 +56,7 @@ export default {
     userWelcome: '欢迎回来，',
   },
   success: {
-    subTitle: '你已成功授权应用访问你的账户，可以关闭该页面了',
-    title: '授权成功',
+    subTitle: '应用已获得授权。你可以关闭此页面了',
+    title: '授权完成',
   },
 };

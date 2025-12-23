@@ -8,7 +8,7 @@ export default {
   },
   error: {
     backHome: '返回首页',
-    desc: '页面暂时不可用。你可以返回首页，或稍后重试',
+    desc: '页面暂时不可用。你可以返回首页，或稍后重试（你的设置不会因此丢失）',
     retry: '重新加载',
     title: '页面暂时不可用',
   },
@@ -19,7 +19,7 @@ export default {
   import: {
     importConfigFile: {
       description: '原因：{{reason}}',
-      title: '导入未能完成',
+      title: '导入遇到了问题',
     },
     incompatible: {
       description: '该文件由更高版本导出。请升级到最新版后再导入',
@@ -27,8 +27,8 @@ export default {
     },
   },
   loginRequired: {
-    desc: '将为你跳转到登录页',
-    title: '登录后即可继续',
+    desc: '将为你跳转到登录页。登录后即可继续',
+    title: '需要登录后继续',
   },
   notFound: {
     backHome: '返回首页',
