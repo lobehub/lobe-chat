@@ -6,8 +6,9 @@ import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 
+import { UTM_SOURCE } from '@lobechat/business-config/url';
+
 import { ORG_NAME } from '@/const/branding';
-import { UTM_SOURCE } from '@/const/url';
 import { isCustomORG } from '@/const/version';
 
 const useStyles = createStyles(({ token, css }) => ({

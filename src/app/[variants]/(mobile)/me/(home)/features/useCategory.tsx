@@ -10,8 +10,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { UTM_SOURCE } from '@lobechat/business-config/url';
+
 import { CellProps } from '@/components/Cell';
-import { DOCUMENTS, FEEDBACK, LOBE_CHAT_CLOUD, OFFICIAL_URL, UTM_SOURCE } from '@/const/index';
+import { DOCUMENTS, FEEDBACK, LOBE_CHAT_CLOUD, OFFICIAL_URL } from '@/const/index';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
