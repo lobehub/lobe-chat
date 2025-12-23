@@ -233,11 +233,15 @@ export const createDocumentSlice: StateCreator<
       replaceTempDocumentWithReal(tempPageId, realPage);
       set({ isCreatingNew: false, selectedPageId: newPage.id }, false, n('createNewPage/success'));
 
+      // Update URL to navigate to the new page
+      updateUrl(newPage.id);
+
       return newPage.id;
     } catch (error) {
       console.error('Failed to create page:', error);
       get().removeTempDocument(tempPageId);
       set({ isCreatingNew: false, selectedPageId: null }, false, n('createNewPage/error'));
+      updateUrl(null);
       throw error;
     }
   },

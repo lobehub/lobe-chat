@@ -7,7 +7,6 @@ import { MenuContext, PageType } from './types';
 import { detectContext } from './utils/context';
 
 interface CommandMenuContextValue {
-  isAiMode: boolean;
   menuContext: MenuContext;
   mounted: boolean;
   page: PageType | undefined;
@@ -22,7 +21,7 @@ interface CommandMenuContextValue {
   viewMode: MenuViewMode;
 }
 
-type MenuViewMode = 'default' | 'search' | 'ai-chat';
+type MenuViewMode = 'default' | 'search';
 
 const CommandMenuContext = createContext<CommandMenuContextValue | undefined>(undefined);
 
@@ -41,7 +40,6 @@ export const CommandMenuProvider = ({ children, pathname }: CommandMenuProviderP
 
   // Derived values
   const page = pages.at(-1);
-  const isAiMode = page === 'ai-chat';
 
   // Ensure we're mounted on the client
   useEffect(() => {
@@ -49,19 +47,16 @@ export const CommandMenuProvider = ({ children, pathname }: CommandMenuProviderP
   }, []);
 
   useEffect(() => {
-    if (pages.at(-1) === 'ai-chat') {
-      setViewMode('ai-chat');
-    } else if (search.trim().length > 0) {
+    if (search.trim().length > 0) {
       setViewMode('search');
     } else {
       setViewMode('default');
     }
-  }, [pages, search]);
+  }, [search]);
 
   return (
     <CommandMenuContext.Provider
       value={{
-        isAiMode,
         menuContext,
         mounted,
         page,

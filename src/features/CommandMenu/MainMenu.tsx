@@ -7,6 +7,8 @@ import {
   Github,
   Image,
   LibraryBig,
+  MailIcon,
+  MessageSquarePlusIcon,
   Monitor,
   Settings,
   Shapes,
@@ -27,7 +29,15 @@ const MainMenu = memo(() => {
   const { pathname, menuContext, setPages, pages } = useCommandMenuContext();
   const { t } = useTranslation('common');
 
-  const { handleCreateSession, handleNavigate, handleExternalLink } = useCommandMenu();
+  const {
+    handleCreateSession,
+    handleCreateTopic,
+    handleCreateLibrary,
+    handleCreatePage,
+    handleNavigate,
+    handleExternalLink,
+    handleCreateAgentTeam,
+  } = useCommandMenu();
 
   return (
     <>
@@ -37,20 +47,49 @@ const MainMenu = memo(() => {
         <CommandItem
           icon={<Bot />}
           onSelect={handleCreateSession}
+          unpinned={menuContext === 'agent' || menuContext === 'page'}
           value="create new agent assistant"
         >
           {t('cmdk.newAgent')}
         </CommandItem>
 
-        {menuContext === 'resource' && (
-          <CommandItem icon={<Bot />} onSelect={handleCreateSession} value="create new library">
-            {t('cmdk.newLibrary')}
+        <CommandItem
+          icon={<Bot />}
+          onSelect={handleCreateAgentTeam}
+          unpinned={menuContext === 'agent' || menuContext === 'page'}
+          value="create new agent team"
+        >
+          {t('cmdk.newAgentTeam')}
+        </CommandItem>
+
+        {menuContext === 'agent' && (
+          <CommandItem
+            icon={<MessageSquarePlusIcon />}
+            onSelect={handleCreateTopic}
+            unpinned={menuContext !== 'agent'}
+            value="create new topic"
+          >
+            {t('cmdk.newTopic')}
           </CommandItem>
         )}
+
+        <CommandItem icon={<FilePen />} onSelect={handleCreatePage} value="create new page">
+          {t('cmdk.newPage')}
+        </CommandItem>
+
+        <CommandItem
+          icon={<LibraryBig />}
+          onSelect={handleCreateLibrary}
+          unpinned={menuContext !== 'resource'}
+          value="create new library"
+        >
+          {t('cmdk.newLibrary')}
+        </CommandItem>
 
         {menuContext !== 'settings' && (
           <CommandItem
             icon={<Settings />}
+            keywords={['settings', 'preferences', 'configuration', 'options']}
             onSelect={() => handleNavigate('/settings')}
             value="settings"
           >
@@ -58,7 +97,11 @@ const MainMenu = memo(() => {
           </CommandItem>
         )}
 
-        <CommandItem icon={<Monitor />} onSelect={() => setPages([...pages, 'theme'])} value="theme">
+        <CommandItem
+          icon={<Monitor />}
+          onSelect={() => setPages([...pages, 'theme'])}
+          value="theme"
+        >
           {t('cmdk.theme')}
         </CommandItem>
       </Command.Group>
@@ -109,7 +152,16 @@ const MainMenu = memo(() => {
 
       <Command.Group heading={t('cmdk.about')}>
         <CommandItem
+          icon={<MailIcon />}
+          keywords={['feedback', 'issue', 'bug', 'problem']}
+          onSelect={() => handleExternalLink(FEEDBACK)}
+          value="contact-via-email"
+        >
+          {t('cmdk.contactViaEmail')}
+        </CommandItem>
+        <CommandItem
           icon={<Github />}
+          keywords={['issue', 'bug', 'problem', 'feedback']}
           onSelect={() => handleExternalLink(FEEDBACK)}
           value="submit-issue"
         >
@@ -117,6 +169,7 @@ const MainMenu = memo(() => {
         </CommandItem>
         <CommandItem
           icon={<Star />}
+          keywords={['github', 'star', 'favorite', 'like']}
           onSelect={() => handleExternalLink(SOCIAL_URL.github)}
           value="star-github"
         >
@@ -124,6 +177,7 @@ const MainMenu = memo(() => {
         </CommandItem>
         <CommandItem
           icon={<DiscordIcon />}
+          keywords={['discord', 'help', 'support', 'customer service']}
           onSelect={() => handleExternalLink(SOCIAL_URL.discord)}
           value="discord"
         >

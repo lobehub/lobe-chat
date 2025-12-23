@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import NavHeader from '@/features/NavHeader';
 import { useFileStore } from '@/store/file';
+import { DocumentSourceType } from '@/types/document';
 
 const ICON_SIZE = 80;
 
@@ -72,19 +73,70 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
     const theme = useTheme();
     const { styles } = useStyles();
     const [isUploading, setIsUploading] = useState(false);
-    const [createDocument, setSelectedPageId] = useFileStore((s) => [
+    const [
+      createNewPage,
+      createDocument,
+      createOptimisticDocument,
+      replaceTempDocumentWithReal,
+      setSelectedPageId,
+    ] = useFileStore((s) => [
+      s.createNewPage,
       s.createDocument,
+      s.createOptimisticDocument,
+      s.replaceTempDocumentWithReal,
       s.setSelectedPageId,
     ]);
 
     const handleCreateDocument = async (content: string, title: string) => {
-      const newDoc = await createDocument({
-        content,
-        knowledgeBaseId,
-        title,
-      });
-      // Navigate to the newly created page
-      setSelectedPageId(newDoc.id);
+      if (!content) {
+        // For empty pages, use createNewPage which handles optimistic updates
+        await createNewPage(title);
+        return;
+      }
+
+      // For markdown uploads with content, use optimistic pattern similar to createNewPage
+      const tempPageId = createOptimisticDocument(title);
+      // Set selected page to temp ID immediately (with URL update disabled for temp IDs)
+      setSelectedPageId(tempPageId, false);
+
+      try {
+        const newDoc = await createDocument({
+          content,
+          knowledgeBaseId,
+          title,
+        });
+
+        // Convert to LobeDocument format
+        const realPage = {
+          content: newDoc.content || '',
+          createdAt: newDoc.createdAt ? new Date(newDoc.createdAt) : new Date(),
+          editorData:
+            typeof newDoc.editorData === 'string'
+              ? JSON.parse(newDoc.editorData)
+              : newDoc.editorData || null,
+          fileType: 'custom/document' as const,
+          filename: newDoc.title || title,
+          id: newDoc.id,
+          metadata: newDoc.metadata || {},
+          source: 'document' as const,
+          sourceType: DocumentSourceType.EDITOR,
+          title: newDoc.title || title,
+          totalCharCount: newDoc.content?.length || 0,
+          totalLineCount: 0,
+          updatedAt: newDoc.updatedAt ? new Date(newDoc.updatedAt) : new Date(),
+        };
+
+        // Replace optimistic with real
+        replaceTempDocumentWithReal(tempPageId, realPage);
+        // Update selected page ID and URL to the real page
+        setSelectedPageId(newDoc.id);
+      } catch (error) {
+        console.error('Failed to create page:', error);
+        // Remove temp document on error
+        useFileStore.getState().removeTempDocument(tempPageId);
+        setSelectedPageId(null);
+        throw error;
+      }
     };
 
     const handleUploadMarkdown = async (file: File) => {

@@ -3,10 +3,14 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
+import { useCreateMenuItems } from '@/app/[variants]/(main)/home/_layout/hooks';
 import type { SearchResult } from '@/database/repositories/search';
+import { useCreateNewModal } from '@/features/LibraryModal';
+import { useGroupWizard } from '@/layout/GlobalProvider/GroupWizardProvider';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors/builtinAgentSelectors';
+import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { globalHelpers } from '@/store/global/helpers';
 import { useHomeStore } from '@/store/home';
@@ -28,7 +32,6 @@ export const useCommandMenu = () => {
     typeFilter,
     setTypeFilter,
     page,
-    isAiMode,
     menuContext: context,
     pathname,
   } = useCommandMenuContext();
@@ -38,6 +41,9 @@ export const useCommandMenu = () => {
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
+  const { openGroupWizard } = useGroupWizard();
+  const { createGroupWithMembers, createGroupFromTemplate, createPage } = useCreateMenuItems();
+  const { open: openCreateLibraryModal } = useCreateNewModal();
 
   // Extract agentId from pathname when in agent context
   const agentId = useMemo(() => {
@@ -56,7 +62,7 @@ export const useCommandMenu = () => {
   const searchQuery = debouncedSearch.trim();
 
   const { data: searchResults, isLoading: isSearching } = useSWR<SearchResult[]>(
-    hasSearch && !isAiMode ? ['search', searchQuery, agentId, typeFilter] : null,
+    hasSearch ? ['search', searchQuery, agentId, typeFilter] : null,
     async () => {
       const locale = globalHelpers.getCurrentLanguage();
       return lambdaClient.search.query.query({
@@ -104,11 +110,20 @@ export const useCommandMenu = () => {
     closeCommandMenu();
   };
 
-  const handleAskAISubmit = () => {
+  const handleAskLobeAI = () => {
     // Navigate to inbox agent with the message query parameter
     if (inboxAgentId && search.trim()) {
       const message = encodeURIComponent(search.trim());
       navigate(`/agent/${inboxAgentId}?message=${message}`);
+      closeCommandMenu();
+    }
+  };
+
+  const handleAIPainting = () => {
+    // Navigate to painting page with search as prompt
+    if (search.trim()) {
+      const prompt = encodeURIComponent(search.trim());
+      navigate(`/image?prompt=${prompt}`);
       closeCommandMenu();
     }
   };
@@ -129,16 +144,63 @@ export const useCommandMenu = () => {
     closeCommandMenu();
   };
 
+  const [openNewTopicOrSaveTopic] = useChatStore((s) => [s.openNewTopicOrSaveTopic]);
+
+  const handleCreateTopic = async () => {
+    openNewTopicOrSaveTopic();
+    closeCommandMenu();
+  };
+
+  const handleCreateLibrary = async () => {
+    closeCommandMenu();
+    openCreateLibraryModal({
+      onSuccess: (id) => {
+        navigate(`/resource/library/${id}`);
+      },
+    });
+  };
+
+  const handleCreatePage = async () => {
+    await createPage();
+    closeCommandMenu();
+  };
+
+  const handleCreateAgentTeam = async () => {
+    closeCommandMenu();
+    openGroupWizard({
+      onCreateCustom: async (selectedAgents, hostConfig, enableSupervisor) => {
+        await createGroupWithMembers(selectedAgents, undefined, hostConfig, enableSupervisor);
+      },
+      onCreateFromTemplate: async (
+        templateId,
+        hostConfig,
+        enableSupervisor,
+        selectedMemberTitles,
+      ) => {
+        await createGroupFromTemplate(
+          templateId,
+          hostConfig,
+          enableSupervisor,
+          selectedMemberTitles,
+        );
+      },
+    });
+  };
+
   return {
     closeCommandMenu,
-    handleAskAISubmit,
+    handleAIPainting,
+    handleAskLobeAI,
     handleBack,
+    handleCreateAgentTeam,
+    handleCreateLibrary,
+    handleCreatePage,
     handleCreateSession,
+    handleCreateTopic,
     handleExternalLink,
     handleNavigate,
     handleThemeChange,
     hasSearch,
-    isAiMode,
     isSearching,
     mounted,
     open,

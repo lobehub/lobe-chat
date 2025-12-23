@@ -1,6 +1,7 @@
 'use client';
 
 import { useEditorState } from '@lobehub/editor/react';
+import debug from 'debug';
 import React, { memo, useEffect, useRef } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
@@ -10,19 +11,12 @@ import { documentSelectors } from '@/store/file/slices/document/selectors';
 
 import { PublicState, usePageEditorStore, useStoreApi } from './store';
 
+const log = debug('page:store-updater');
+
 export type StoreUpdaterProps = Partial<PublicState>;
 
 const StoreUpdater = memo<StoreUpdaterProps>(
-  ({
-    pageId,
-    knowledgeBaseId,
-    autoSave,
-    onDocumentIdChange,
-    onSave,
-    onDelete,
-    onBack,
-    parentId,
-  }) => {
+  ({ pageId, knowledgeBaseId, onDocumentIdChange, onSave, onDelete, onBack, parentId }) => {
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
 
@@ -46,7 +40,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Update store with props
     useStoreUpdater('pageId', pageId);
     useStoreUpdater('knowledgeBaseId', knowledgeBaseId);
-    useStoreUpdater('autoSave', autoSave ?? true);
     useStoreUpdater('onDocumentIdChange', onDocumentIdChange);
     useStoreUpdater('onSave', onSave);
     useStoreUpdater('onDelete', onDelete);
@@ -56,7 +49,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Fetch full document detail when pageId changes
     useEffect(() => {
       if (pageId && pageId !== lastLoadedDocIdRef.current) {
-        console.log('[StoreUpdater] PageId changed, fetching detail:', pageId);
+        log('PageId changed, fetching detail:', pageId);
         // Immediately show loading state and reset for better UX
         setIsLoadingDetail(true);
         setContentInit(false);
@@ -69,10 +62,10 @@ const StoreUpdater = memo<StoreUpdaterProps>(
         // Fetch the full document detail
         fetchDocumentDetail(pageId)
           .then(() => {
-            console.log('[StoreUpdater] Document detail fetched successfully for:', pageId);
+            log('Document detail fetched successfully for:', pageId);
           })
           .finally(() => {
-            console.log('[StoreUpdater] Setting isLoadingDetail to false');
+            log('Setting isLoadingDetail to false');
             setIsLoadingDetail(false);
           });
       }
@@ -81,7 +74,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Initialize currentDocId and document metadata after fetch completes
     useEffect(() => {
       if (pageId !== lastLoadedDocIdRef.current && !isLoadingDetail) {
-        console.log('[StoreUpdater] Initializing metadata for pageId:', pageId, {
+        log('Initializing metadata for pageId:', pageId, {
           hasEditorData: !!currentPage?.editorData,
           title: currentPage?.title,
         });
@@ -98,7 +91,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
     // Load content into editor after initialization
     useEffect(() => {
-      console.log('[StoreUpdater] Content loading effect check:', {
+      log('Content loading effect check:', {
         contentInit,
         editorInit,
         hasCurrentPage: !!currentPage,
@@ -113,13 +106,13 @@ const StoreUpdater = memo<StoreUpdaterProps>(
       // Defer editor content loading to avoid flushSync warning
       queueMicrotask(() => {
         try {
-          console.log('[StoreUpdater] Loading content for page:', pageId);
+          log('Loading content for page:', pageId);
 
           // Safety check: ensure we're loading content for the current page
           // This prevents loading old content when currentPage has stale data
           const currentState = storeApi.getState();
           if (currentState.currentDocId && currentState.currentDocId !== pageId) {
-            console.log('[StoreUpdater] Skipping content load - currentDocId mismatch', {
+            log('Skipping content load - currentDocId mismatch', {
               currentDocId: currentState.currentDocId,
               pageId,
             });
@@ -134,12 +127,12 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
           // Load from editorData if available
           if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
-            console.log('[StoreUpdater] Loading from editorData');
+            log('Loading from editorData');
             editor.setDocument('json', JSON.stringify(currentPage.editorData));
             const textContent = currentPage.content || '';
             storeApi.setState({ wordCount: calculateWordCount(textContent) });
           } else if (currentPage?.content && currentPage.content.trim()) {
-            console.log('[StoreUpdater] Loading from content (markdown)');
+            log('Loading from content (markdown)');
             // Fallback to markdown content (e.g., from Notion imports)
             editor.setDocument('markdown', currentPage.content);
             storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
@@ -150,17 +143,17 @@ const StoreUpdater = memo<StoreUpdaterProps>(
               .join('\n\n')
               .trim();
             if (pagesContent) {
-              console.log('[StoreUpdater] Loading from pages content');
+              log('Loading from pages content');
               editor.setDocument('markdown', pagesContent);
               storeApi.setState({ wordCount: calculateWordCount(pagesContent) });
             } else {
-              console.log('[StoreUpdater] Clearing editor - empty pages');
+              log('Clearing editor - empty pages');
               editor.setDocument('markdown', ' ');
               storeApi.setState({ wordCount: 0 });
             }
           } else {
             // Empty document or temp page - clear editor with minimal content
-            console.log('[StoreUpdater] Clearing editor - empty/new page');
+            log('Clearing editor - empty/new page');
             editor.setDocument('markdown', ' ');
             storeApi.setState({ wordCount: 0 });
           }
@@ -168,7 +161,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
           setContentInit(true);
           storeApi.setState({ isLoadingContent: false });
         } catch (error) {
-          console.error('[PageEditor] Failed to initialize editor content:', error);
+          log('Failed to initialize editor content:', error);
           storeApi.setState({ isLoadingContent: false });
         }
       });
@@ -221,12 +214,11 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     useEffect(() => {
       // Use currentDocId (which includes temp docs) or fallback to pageId
       const activeId = currentDocId || pageId;
-      console.log('[StoreUpdater] Updating currentDocId in page agent runtime:', activeId);
+      log('Updating currentDocId in page agent runtime:', activeId);
       pageAgentRuntime.setCurrentDocId(activeId);
 
-      // Cleanup: clear currentDocId when unmounting
       return () => {
-        console.log('[StoreUpdater] Clearing currentDocId on unmount');
+        log('Clearing currentDocId on unmount');
         pageAgentRuntime.setCurrentDocId(undefined);
       };
     }, [currentDocId, pageId]);
