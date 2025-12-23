@@ -1,40 +1,30 @@
 {
-  "actions": {
-    "addNewTopic": "شروع موضوع جدید",
-    "autoRename": "نام‌گذاری هوشمند",
-    "confirmRemoveAll": "در حال حذف تمام موضوعات، پس از حذف قابل بازیابی نخواهد بود، لطفاً با احتیاط عمل کنید.",
-    "confirmRemoveTopic": "در حال حذف این موضوع، پس از حذف قابل بازیابی نخواهد بود، لطفاً با احتیاط عمل کنید.",
-    "confirmRemoveUnstarred": "در حال حذف موضوعات بدون علامت، پس از حذف قابل بازیابی نخواهد بود، لطفاً با احتیاط عمل کنید.",
-    "duplicate": "ایجاد نسخه",
-    "export": "صادرات موضوع",
-    "import": "وارد کردن گفتگو",
-    "openInNewWindow": "در پنجره‌ای جدید باز کن",
-    "removeAll": "حذف تمام موضوعات",
-    "removeUnstarred": "حذف موضوعات بدون علامت"
-  },
+  "actions.addNewTopic": "شروع موضوع جدید",
+  "actions.autoRename": "نام‌گذاری هوشمند",
+  "actions.confirmRemoveAll": "در حال حذف تمام موضوعات، پس از حذف قابل بازیابی نخواهد بود، لطفاً با احتیاط عمل کنید.",
+  "actions.confirmRemoveTopic": "در حال حذف این موضوع، پس از حذف قابل بازیابی نخواهد بود، لطفاً با احتیاط عمل کنید.",
+  "actions.confirmRemoveUnstarred": "در حال حذف موضوعات بدون علامت، پس از حذف قابل بازیابی نخواهد بود، لطفاً با احتیاط عمل کنید.",
+  "actions.duplicate": "ایجاد نسخه",
+  "actions.export": "صادرات موضوع",
+  "actions.import": "وارد کردن گفتگو",
+  "actions.openInNewWindow": "در پنجره‌ای جدید باز کن",
+  "actions.removeAll": "حذف تمام موضوعات",
+  "actions.removeUnstarred": "حذف موضوعات بدون علامت",
   "defaultTitle": "موضوع پیش‌فرض",
   "displayItems": "نمایش آیتم‌ها",
   "duplicateLoading": "در حال کپی موضوع...",
   "duplicateSuccess": "کپی موضوع با موفقیت انجام شد",
   "favorite": "علاقه‌مندی",
-  "groupMode": {
-    "ascMessages": "بر اساس تعداد پیام‌ها به ترتیب صعودی",
-    "byTime": "بر اساس زمان گروه‌بندی",
-    "descMessages": "بر اساس تعداد پیام‌ها به ترتیب نزولی",
-    "flat": "بدون گروه‌بندی"
-  },
-  "groupTitle": {
-    "byTime": {
-      "month": "این ماه",
-      "today": "امروز",
-      "week": "این هفته",
-      "yesterday": "دیروز"
-    }
-  },
-  "guide": {
-    "desc": "برای ذخیره مکالمه فعلی به عنوان موضوع تاریخی و شروع یک دور جدید مکالمه، دکمه سمت چپ ارسال را کلیک کنید.",
-    "title": "لیست موضوعات"
-  },
+  "groupMode.ascMessages": "بر اساس تعداد پیام‌ها به ترتیب صعودی",
+  "groupMode.byTime": "بر اساس زمان گروه‌بندی",
+  "groupMode.descMessages": "بر اساس تعداد پیام‌ها به ترتیب نزولی",
+  "groupMode.flat": "بدون گروه‌بندی",
+  "groupTitle.byTime.month": "این ماه",
+  "groupTitle.byTime.today": "امروز",
+  "groupTitle.byTime.week": "این هفته",
+  "groupTitle.byTime.yesterday": "دیروز",
+  "guide.desc": "برای ذخیره مکالمه فعلی به عنوان موضوع تاریخی و شروع یک دور جدید مکالمه، دکمه سمت چپ ارسال را کلیک کنید.",
+  "guide.title": "لیست موضوعات",
   "importError": "وارد کردن ناموفق بود",
   "importInvalidFormat": "فرمت فایل نامعتبر است، لطفاً مطمئن شوید که یک فایل JSON معتبر است",
   "importLoading": "در حال وارد کردن گفتگو...",

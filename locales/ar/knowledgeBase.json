@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "تم إضافة الملف بنجاح، <1>عرض الآن</1>",
-    "confirm": "إضافة",
-    "error": "فشل في إضافة الملف إلى قاعدة المعرفة",
-    "id": {
-      "placeholder": "يرجى اختيار قاعدة المعرفة المراد الإضافة إليها",
-      "required": "يرجى اختيار قاعدة المعرفة",
-      "title": "قاعدة المعرفة المستهدفة"
-    },
-    "title": "إضافة إلى قاعدة المعرفة",
-    "totalFiles": "تم اختيار {{count}} ملف"
-  },
-  "createNew": {
-    "confirm": "إنشاء جديد",
-    "description": {
-      "placeholder": "وصف قاعدة المعرفة (اختياري)"
-    },
-    "formTitle": "المعلومات الأساسية",
-    "name": {
-      "placeholder": "اسم قاعدة المعرفة",
-      "required": "يرجى إدخال اسم قاعدة المعرفة"
-    },
-    "title": "إنشاء قاعدة معرفة جديدة"
-  },
-  "tab": {
-    "evals": "تقييمات",
-    "files": "المستندات",
-    "settings": "الإعدادات",
-    "testing": "اختبار الاسترجاع"
-  },
+  "addToKnowledgeBase.addSuccess": "تم إضافة الملف بنجاح، <1>عرض الآن</1>",
+  "addToKnowledgeBase.confirm": "إضافة",
+  "addToKnowledgeBase.error": "فشل في إضافة الملف إلى قاعدة المعرفة",
+  "addToKnowledgeBase.id.placeholder": "يرجى اختيار قاعدة المعرفة المراد الإضافة إليها",
+  "addToKnowledgeBase.id.required": "يرجى اختيار قاعدة المعرفة",
+  "addToKnowledgeBase.id.title": "قاعدة المعرفة المستهدفة",
+  "addToKnowledgeBase.title": "إضافة إلى قاعدة المعرفة",
+  "addToKnowledgeBase.totalFiles": "تم اختيار {{count}} ملف",
+  "createNew.confirm": "إنشاء جديد",
+  "createNew.description.placeholder": "وصف قاعدة المعرفة (اختياري)",
+  "createNew.formTitle": "المعلومات الأساسية",
+  "createNew.name.placeholder": "اسم قاعدة المعرفة",
+  "createNew.name.required": "يرجى إدخال اسم قاعدة المعرفة",
+  "createNew.title": "إنشاء قاعدة معرفة جديدة",
+  "tab.evals": "تقييمات",
+  "tab.files": "المستندات",
+  "tab.settings": "الإعدادات",
+  "tab.testing": "اختبار الاسترجاع",
   "title": "قاعدة المعرفة"
 }

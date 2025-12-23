@@ -2,31 +2,19 @@
   "addAgent": "Asistan Ekle",
   "addAgentAndConverse": "Asistan Ekle ve Konuşma Başlat",
   "addAgentSuccess": "Ekleme Başarılı",
-  "guide": {
-    "func1": {
-      "desc1": "Sohbet penceresinin sağ üst köşesindeki ayarlar simgesine tıklayarak asistana göndermek istediğiniz ayarlar sayfasına girin.",
-      "desc2": "Sağ üst köşedeki 'Asistan Pazarına Gönder' düğmesine tıklayın.",
-      "tag": "Method 1",
-      "title": "LobeChat üzerinden Gönder"
-    },
-    "func2": {
-      "button": "Github Asistan Repositorisine Git",
-      "desc": "Asistanı dizine eklemek istiyorsanız, plugins dizininde agent-template.json veya agent-template-full.json kullanarak bir giriş oluşturun, kısa bir açıklama ve uygun etiketler yazın, ardından bir çekme isteği oluşturun.",
-      "tag": "Method 2",
-      "title": "Github üzerinden Gönder"
-    }
-  },
-  "search": {
-    "placeholder": "Asistanadı, açıklama veya anahtar kelimeleri ara..."
-  },
-  "sidebar": {
-    "comment": "Yorumlar",
-    "prompt": "Prompts",
-    "title": "Asistan Detay"
-  },
+  "guide.func1.desc1": "Sohbet penceresinin sağ üst köşesindeki ayarlar simgesine tıklayarak asistana göndermek istediğiniz ayarlar sayfasına girin.",
+  "guide.func1.desc2": "Sağ üst köşedeki 'Asistan Pazarına Gönder' düğmesine tıklayın.",
+  "guide.func1.tag": "Method 1",
+  "guide.func1.title": "LobeChat üzerinden Gönder",
+  "guide.func2.button": "Github Asistan Repositorisine Git",
+  "guide.func2.desc": "Asistanı dizine eklemek istiyorsanız, plugins dizininde agent-template.json veya agent-template-full.json kullanarak bir giriş oluşturun, kısa bir açıklama ve uygun etiketler yazın, ardından bir çekme isteği oluşturun.",
+  "guide.func2.tag": "Method 2",
+  "guide.func2.title": "Github üzerinden Gönder",
+  "search.placeholder": "Asistanadı, açıklama veya anahtar kelimeleri ara...",
+  "sidebar.comment": "Yorumlar",
+  "sidebar.prompt": "Prompts",
+  "sidebar.title": "Asistan Detay",
   "submitAgent": "Asistan Ekle",
-  "title": {
-    "allAgents": "Tüm Asistanlar",
-    "recentSubmits": "Son Eklenenler"
-  }
+  "title.allAgents": "Tüm Asistanlar",
+  "title.recentSubmits": "Son Eklenenler"
 }

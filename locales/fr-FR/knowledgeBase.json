@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Fichier ajouté avec succès, <1>voir immédiatement</1>",
-    "confirm": "Ajouter",
-    "error": "Échec de l'ajout du fichier à la base de connaissances",
-    "id": {
-      "placeholder": "Veuillez sélectionner une base de connaissances",
-      "required": "Veuillez sélectionner une base de connaissances",
-      "title": "Base de connaissances cible"
-    },
-    "title": "Ajouter à la base de connaissances",
-    "totalFiles": "{{count}} fichier(s) sélectionné(s)"
-  },
-  "createNew": {
-    "confirm": "Créer",
-    "description": {
-      "placeholder": "Description de la base de connaissances (optionnel)"
-    },
-    "formTitle": "Informations de base",
-    "name": {
-      "placeholder": "Nom de la base de connaissances",
-      "required": "Veuillez saisir le nom de la base de connaissances"
-    },
-    "title": "Créer une nouvelle base de connaissances"
-  },
-  "tab": {
-    "evals": "Évaluations",
-    "files": "Documents",
-    "settings": "Paramètres",
-    "testing": "Test de rappel"
-  },
+  "addToKnowledgeBase.addSuccess": "Fichier ajouté avec succès, <1>voir immédiatement</1>",
+  "addToKnowledgeBase.confirm": "Ajouter",
+  "addToKnowledgeBase.error": "Échec de l'ajout du fichier à la base de connaissances",
+  "addToKnowledgeBase.id.placeholder": "Veuillez sélectionner une base de connaissances",
+  "addToKnowledgeBase.id.required": "Veuillez sélectionner une base de connaissances",
+  "addToKnowledgeBase.id.title": "Base de connaissances cible",
+  "addToKnowledgeBase.title": "Ajouter à la base de connaissances",
+  "addToKnowledgeBase.totalFiles": "{{count}} fichier(s) sélectionné(s)",
+  "createNew.confirm": "Créer",
+  "createNew.description.placeholder": "Description de la base de connaissances (optionnel)",
+  "createNew.formTitle": "Informations de base",
+  "createNew.name.placeholder": "Nom de la base de connaissances",
+  "createNew.name.required": "Veuillez saisir le nom de la base de connaissances",
+  "createNew.title": "Créer une nouvelle base de connaissances",
+  "tab.evals": "Évaluations",
+  "tab.files": "Documents",
+  "tab.settings": "Paramètres",
+  "tab.testing": "Test de rappel",
   "title": "Base de connaissances"
 }

@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Plik dodany pomyślnie, <1>zobacz teraz</1>",
-    "confirm": "Dodaj",
-    "error": "Nie udało się dodać pliku do bazy wiedzy",
-    "id": {
-      "placeholder": "Wybierz bazę wiedzy, do której chcesz dodać",
-      "required": "Proszę wybrać bazę wiedzy",
-      "title": "Docelowa baza wiedzy"
-    },
-    "title": "Dodaj do bazy wiedzy",
-    "totalFiles": "Wybrano {{count}} plików"
-  },
-  "createNew": {
-    "confirm": "Utwórz",
-    "description": {
-      "placeholder": "Opis bazy wiedzy (opcjonalnie)"
-    },
-    "formTitle": "Podstawowe informacje",
-    "name": {
-      "placeholder": "Nazwa bazy wiedzy",
-      "required": "Proszę podać nazwę bazy wiedzy"
-    },
-    "title": "Utwórz nową bazę wiedzy"
-  },
-  "tab": {
-    "evals": "Oceny",
-    "files": "Dokumenty",
-    "settings": "Ustawienia",
-    "testing": "Testowanie przypomnienia"
-  },
+  "addToKnowledgeBase.addSuccess": "Plik dodany pomyślnie, <1>zobacz teraz</1>",
+  "addToKnowledgeBase.confirm": "Dodaj",
+  "addToKnowledgeBase.error": "Nie udało się dodać pliku do bazy wiedzy",
+  "addToKnowledgeBase.id.placeholder": "Wybierz bazę wiedzy, do której chcesz dodać",
+  "addToKnowledgeBase.id.required": "Proszę wybrać bazę wiedzy",
+  "addToKnowledgeBase.id.title": "Docelowa baza wiedzy",
+  "addToKnowledgeBase.title": "Dodaj do bazy wiedzy",
+  "addToKnowledgeBase.totalFiles": "Wybrano {{count}} plików",
+  "createNew.confirm": "Utwórz",
+  "createNew.description.placeholder": "Opis bazy wiedzy (opcjonalnie)",
+  "createNew.formTitle": "Podstawowe informacje",
+  "createNew.name.placeholder": "Nazwa bazy wiedzy",
+  "createNew.name.required": "Proszę podać nazwę bazy wiedzy",
+  "createNew.title": "Utwórz nową bazę wiedzy",
+  "tab.evals": "Oceny",
+  "tab.files": "Dokumenty",
+  "tab.settings": "Ustawienia",
+  "tab.testing": "Testowanie przypomnienia",
   "title": "Baza wiedzy"
 }

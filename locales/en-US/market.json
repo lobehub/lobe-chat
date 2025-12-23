@@ -2,31 +2,19 @@
   "addAgent": "Add Agent",
   "addAgentAndConverse": "Add Agent and Converse",
   "addAgentSuccess": "Successfully Added",
-  "guide": {
-    "func1": {
-      "desc1": "Enter the settings page you want to submit to the agent by clicking on the settings icon in the upper right corner of the chat window.",
-      "desc2": "Click on the 'Submit to Agent Market' button in the upper right corner.",
-      "tag": "Method 1",
-      "title": "Submit via {{appName}}"
-    },
-    "func2": {
-      "button": "Go to Github Agent Repository",
-      "desc": "If you want to add the agent to the index, create an entry in the skills directory using agent-template.json or agent-template-full.json, write a brief description and appropriate tags, and then create a pull request.",
-      "tag": "Method 2",
-      "title": "Submit via Github"
-    }
-  },
-  "search": {
-    "placeholder": "Search agent name, description or keywords..."
-  },
-  "sidebar": {
-    "comment": "Comments",
-    "prompt": "Prompts",
-    "title": "Agent Details"
-  },
+  "guide.func1.desc1": "Enter the settings page you want to submit to the agent by clicking on the settings icon in the upper right corner of the chat window.",
+  "guide.func1.desc2": "Click on the 'Submit to Agent Market' button in the upper right corner.",
+  "guide.func1.tag": "Method 1",
+  "guide.func1.title": "Submit via {{appName}}",
+  "guide.func2.button": "Go to Github Agent Repository",
+  "guide.func2.desc": "If you want to add the agent to the index, create an entry in the skills directory using agent-template.json or agent-template-full.json, write a brief description and appropriate tags, and then create a pull request.",
+  "guide.func2.tag": "Method 2",
+  "guide.func2.title": "Submit via Github",
+  "search.placeholder": "Search agent name, description or keywords...",
+  "sidebar.comment": "Comments",
+  "sidebar.prompt": "Prompts",
+  "sidebar.title": "Agent Details",
   "submitAgent": "Submit Agent",
-  "title": {
-    "allAgents": "All Agents",
-    "recentSubmits": "Recent Submits"
-  }
+  "title.allAgents": "All Agents",
+  "title.recentSubmits": "Recent Submits"
 }

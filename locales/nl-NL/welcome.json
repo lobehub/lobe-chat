@@ -1,371 +1,283 @@
 {
-  "guide": {
-    "agents": {
-      "replaceBtn": "Vervang groep",
-      "title": "Nieuwe assistentaanbevelingen:"
+  "guide.agents.replaceBtn": "Vervang groep",
+  "guide.agents.title": "Nieuwe assistentaanbevelingen:",
+  "guide.defaultMessage": "Ik ben je persoonlijke slimme assistent {{appName}}. Waarmee kan ik je vandaag helpen?<br />Wil je een meer gespecialiseerde of aangepaste assistent, klik dan op <plus /> om je eigen assistent te maken.",
+  "guide.defaultMessageWithoutCreate": "Ik ben je persoonlijke slimme assistent {{appName}}. Waarmee kan ik je vandaag helpen？",
+  "guide.groupActivities.analysis.codeReview.description": "Technische discussies en peer reviews van codewijzigingen en implementaties",
+  "guide.groupActivities.analysis.codeReview.emoji": "💻",
+  "guide.groupActivities.analysis.codeReview.prompt": "Laten we samen wat code reviewen. Kun je ons helpen de code te analyseren en verbeterpunten te vinden?",
+  "guide.groupActivities.analysis.codeReview.title": "Code Review",
+  "guide.groupActivities.analysis.investment.description": "Marktanalyse, investeringsstrategieën bespreken en financiële inzichten delen",
+  "guide.groupActivities.analysis.investment.emoji": "📈",
+  "guide.groupActivities.analysis.investment.prompt": "Laten we samen de markt analyseren. Kun je ons helpen met investeringsstrategieën en inzichten?",
+  "guide.groupActivities.analysis.investment.title": "Beleggingsclub",
+  "guide.groupActivities.analysis.research.description": "Wetenschappelijke concepten verkennen, experimenten uitvoeren en bevindingen delen",
+  "guide.groupActivities.analysis.research.emoji": "🔬",
+  "guide.groupActivities.analysis.research.prompt": "Laten we samen wetenschap verkennen! Kun je ons helpen met experimenten en het delen van ontdekkingen?",
+  "guide.groupActivities.analysis.research.title": "Wetenschapsbeurs",
+  "guide.groupActivities.analysis.study.description": "Samen leren, concepten bespreken en problemen oplossen",
+  "guide.groupActivities.analysis.study.emoji": "📚",
+  "guide.groupActivities.analysis.study.prompt": "Laten we een studiegroep vormen. Kun je ons helpen concepten te begrijpen en problemen op te lossen?",
+  "guide.groupActivities.analysis.study.title": "Studiegroep",
+  "guide.groupActivities.brainstorm.artWorkshop.description": "Creëren, bespreken en waarderen van visuele en digitale kunst",
+  "guide.groupActivities.brainstorm.artWorkshop.emoji": "🖼️",
+  "guide.groupActivities.brainstorm.artWorkshop.prompt": "Laten we een kunstworkshop houden! Kun je ons helpen kunst te maken, bespreken en waarderen?",
+  "guide.groupActivities.brainstorm.artWorkshop.title": "Kunstworkshop",
+  "guide.groupActivities.brainstorm.debate.description": "Gestructureerde discussies en debatten over diverse onderwerpen en actualiteiten",
+  "guide.groupActivities.brainstorm.debate.emoji": "⚖️",
+  "guide.groupActivities.brainstorm.debate.prompt": "Laten we een gestructureerd debat houden. Kun je ons helpen een goed onderbouwde discussie te voeren?",
+  "guide.groupActivities.brainstorm.debate.title": "Debatclub",
+  "guide.groupActivities.brainstorm.designReview.description": "Feedbacksessies over ontwerpconcepten, prototypes of creatieve werken",
+  "guide.groupActivities.brainstorm.designReview.emoji": "🎨",
+  "guide.groupActivities.brainstorm.designReview.prompt": "We moeten wat ontwerpen beoordelen. Kun je ons helpen met constructieve feedback op concepten en prototypes?",
+  "guide.groupActivities.brainstorm.designReview.title": "Ontwerpbeoordeling",
+  "guide.groupActivities.brainstorm.ideation.description": "Samen ideeën genereren en creatieve problemen oplossen vanuit meerdere perspectieven",
+  "guide.groupActivities.brainstorm.ideation.emoji": "🧠",
+  "guide.groupActivities.brainstorm.ideation.prompt": "Laten we brainstormen voor een project. Kun je ons helpen met ideeën en oplossingen?",
+  "guide.groupActivities.brainstorm.ideation.title": "Brainstorm",
+  "guide.groupActivities.game.debateClub.description": "Gestructureerde discussies en debatten over diverse onderwerpen en actualiteiten",
+  "guide.groupActivities.game.debateClub.emoji": "⚖️",
+  "guide.groupActivities.game.debateClub.prompt": "Laten we een gestructureerd debat houden. Kun je ons helpen een goed onderbouwde discussie te voeren?",
+  "guide.groupActivities.game.debateClub.title": "Debatclub",
+  "guide.groupActivities.game.gameNight.description": "Leuke interactieve spellen en activiteiten om teamgeest te versterken",
+  "guide.groupActivities.game.gameNight.emoji": "🎲",
+  "guide.groupActivities.game.gameNight.prompt": "Het is spelletjesavond! Kun je ons helpen leuke interactieve spellen te organiseren?",
+  "guide.groupActivities.game.gameNight.title": "Spelletjesavond",
+  "guide.groupActivities.game.modelUN.description": "Simulatie van VN-debatten en diplomatieke onderhandelingen over wereldkwesties",
+  "guide.groupActivities.game.modelUN.emoji": "🌍",
+  "guide.groupActivities.game.modelUN.prompt": "Laten we een VN-debat simuleren. Kun je ons helpen een diplomatieke onderhandeling over wereldkwesties op te zetten?",
+  "guide.groupActivities.game.modelUN.title": "Model-VN",
+  "guide.groupActivities.game.werewolf.description": "Een sociaal deductiespel waarin spelers de weerwolven proberen te ontmaskeren",
+  "guide.groupActivities.game.werewolf.emoji": "🐺",
+  "guide.groupActivities.game.werewolf.prompt": "Laten we Weerwolven spelen! Kun je ons helpen met de regels en het leiden van het spel?",
+  "guide.groupActivities.game.werewolf.title": "Weerwolvenspel",
+  "guide.groupActivities.general.brainstorm.description": "Samen ideeën genereren en creatieve problemen oplossen vanuit meerdere perspectieven",
+  "guide.groupActivities.general.brainstorm.emoji": "🧠",
+  "guide.groupActivities.general.brainstorm.prompt": "Laten we brainstormen voor een project. Kun je ons helpen met ideeën en oplossingen?",
+  "guide.groupActivities.general.brainstorm.title": "Brainstorm",
+  "guide.groupActivities.general.debate.description": "Gestructureerde discussies en debatten over diverse onderwerpen en actualiteiten",
+  "guide.groupActivities.general.debate.emoji": "⚖️",
+  "guide.groupActivities.general.debate.prompt": "Laten we een gestructureerd debat houden. Kun je ons helpen een goed onderbouwde discussie te voeren?",
+  "guide.groupActivities.general.debate.title": "Debatclub",
+  "guide.groupActivities.general.languagePractice.description": "Oefen spreekvaardigheid en leer nieuwe talen met moedertaalsprekers",
+  "guide.groupActivities.general.languagePractice.emoji": "🗣️",
+  "guide.groupActivities.general.languagePractice.prompt": "Laten we een nieuwe taal oefenen. Kun je ons helpen met leren en spreken?",
+  "guide.groupActivities.general.languagePractice.title": "Taalpraktijk",
+  "guide.groupActivities.general.studyGroup.description": "Samen leren, concepten bespreken en problemen oplossen",
+  "guide.groupActivities.general.studyGroup.emoji": "📚",
+  "guide.groupActivities.general.studyGroup.prompt": "Laten we een studiegroep vormen. Kun je ons helpen concepten te begrijpen en problemen op te lossen?",
+  "guide.groupActivities.general.studyGroup.title": "Studiegroep",
+  "guide.groupActivities.planning.cookingClass.description": "Leer en deel kooktechnieken, recepten en culinaire tradities",
+  "guide.groupActivities.planning.cookingClass.emoji": "👨‍🍳",
+  "guide.groupActivities.planning.cookingClass.prompt": "Laten we een kookles volgen! Kun je ons helpen nieuwe recepten en technieken te leren?",
+  "guide.groupActivities.planning.cookingClass.title": "Kookles",
+  "guide.groupActivities.planning.fitnessChallenge.description": "Stel groepsfitnessdoelen, deel workouts en motiveer elkaar",
+  "guide.groupActivities.planning.fitnessChallenge.emoji": "💪",
+  "guide.groupActivities.planning.fitnessChallenge.prompt": "Laten we een fitnessuitdaging starten! Kun je ons helpen doelen te stellen en elkaar te motiveren?",
+  "guide.groupActivities.planning.fitnessChallenge.title": "Fitnessuitdaging",
+  "guide.groupActivities.planning.planningPoker.description": "Agile schattingstechniek met kaarten voor projecttaken en werkbelasting",
+  "guide.groupActivities.planning.planningPoker.emoji": "🃏",
+  "guide.groupActivities.planning.planningPoker.prompt": "We doen aan planning poker voor een project. Kun je ons helpen met agile schattingen?",
+  "guide.groupActivities.planning.planningPoker.title": "Planning Poker",
+  "guide.groupActivities.planning.travelPlanning.description": "Reizen plannen, ervaringen delen en nieuwe bestemmingen ontdekken",
+  "guide.groupActivities.planning.travelPlanning.emoji": "✈️",
+  "guide.groupActivities.planning.travelPlanning.prompt": "Laten we samen een reis plannen! Kun je ons helpen met het onderzoeken van bestemmingen en het maken van een reisschema?",
+  "guide.groupActivities.planning.travelPlanning.title": "Reisplanning",
+  "guide.groupActivities.product.codeReview.description": "Technische discussies en peer reviews van codewijzigingen en implementaties",
+  "guide.groupActivities.product.codeReview.emoji": "💻",
+  "guide.groupActivities.product.codeReview.prompt": "Laten we samen wat code reviewen. Kun je ons helpen de code te analyseren en verbeterpunten te vinden?",
+  "guide.groupActivities.product.codeReview.title": "Code Review",
+  "guide.groupActivities.product.designReview.description": "Feedbacksessies over ontwerpconcepten, prototypes of creatieve werken",
+  "guide.groupActivities.product.designReview.emoji": "🎨",
+  "guide.groupActivities.product.designReview.prompt": "We moeten wat ontwerpen beoordelen. Kun je ons helpen met constructieve feedback op concepten en prototypes?",
+  "guide.groupActivities.product.designReview.title": "Ontwerpbeoordeling",
+  "guide.groupActivities.product.sprintPlanning.description": "Agile schattingstechniek met kaarten voor projecttaken en werkbelasting",
+  "guide.groupActivities.product.sprintPlanning.emoji": "🃏",
+  "guide.groupActivities.product.sprintPlanning.prompt": "We doen aan planning poker voor een project. Kun je ons helpen met agile schattingen?",
+  "guide.groupActivities.product.sprintPlanning.title": "Planning Poker",
+  "guide.groupActivities.product.techExchange.description": "Discussies over opkomende technologieën, innovaties en trends in de sector",
+  "guide.groupActivities.product.techExchange.emoji": "🚀",
+  "guide.groupActivities.product.techExchange.prompt": "Laten we een tech-uitwisseling houden! Kun je ons helpen met het bespreken van nieuwe technologieën en trends?",
+  "guide.groupActivities.product.techExchange.title": "Technologie-uitwisseling",
+  "guide.groupActivities.title": "Aanbevolen gebruik voor teamchats",
+  "guide.groupActivities.writing.bookClub.description": "Literaire discussies en analyses van boeken, verhalen en literatuur",
+  "guide.groupActivities.writing.bookClub.emoji": "📖",
+  "guide.groupActivities.writing.bookClub.prompt": "Laten we een boekenclubdiscussie starten. Kun je ons helpen het boek te analyseren en de thema’s te bespreken?",
+  "guide.groupActivities.writing.bookClub.title": "Boekenclub",
+  "guide.groupActivities.writing.movieClub.description": "Samen films, documentaires en visuele media bekijken en bespreken",
+  "guide.groupActivities.writing.movieClub.emoji": "🎬",
+  "guide.groupActivities.writing.movieClub.prompt": "Laten we een filmclubdiscussie starten. Kun je ons helpen de film te analyseren en de thema’s te bespreken?",
+  "guide.groupActivities.writing.movieClub.title": "Filmclub",
+  "guide.groupActivities.writing.musicSession.description": "Samen muziek maken, delen en waarderen",
+  "guide.groupActivities.writing.musicSession.emoji": "🎵",
+  "guide.groupActivities.writing.musicSession.prompt": "Laten we een muzieksessie houden! Kun je ons helpen muziek te maken en ervan te genieten?",
+  "guide.groupActivities.writing.musicSession.title": "Muzieksessie",
+  "guide.groupActivities.writing.studyGroup.description": "Samen leren, concepten bespreken en problemen oplossen",
+  "guide.groupActivities.writing.studyGroup.emoji": "📚",
+  "guide.groupActivities.writing.studyGroup.prompt": "Laten we een studiegroep vormen. Kun je ons helpen concepten te begrijpen en problemen op te lossen?",
+  "guide.groupActivities.writing.studyGroup.title": "Studiegroep",
+  "guide.groupMessage": "Welkom bij groepschat! Werk samen met meerdere AI-assistenten in een gedeelde gespreksomgeving.",
+  "guide.groupTemplates.analysis.description": "Data-gedreven inzichten en diepgaande analyses",
+  "guide.groupTemplates.analysis.members": [
+    {
+      "avatar": "📊",
+      "backgroundColor": "#E8F8F5",
+      "plugins": ["steam"],
+      "systemRole": "Je bent een expert in het verwerken en interpreteren van data, en onthult patronen en trends via grafieken en statistieken.",
+      "title": "Data-analist"
     },
-    "defaultMessage": "Ik ben je persoonlijke slimme assistent {{appName}}. Waarmee kan ik je vandaag helpen?<br />Wil je een meer gespecialiseerde of aangepaste assistent, klik dan op <plus /> om je eigen assistent te maken.",
-    "defaultMessageWithoutCreate": "Ik ben je persoonlijke slimme assistent {{appName}}. Waarmee kan ik je vandaag helpen？",
-    "groupActivities": {
-      "analysis": {
-        "codeReview": {
-          "description": "Technische discussies en peer reviews van codewijzigingen en implementaties",
-          "emoji": "💻",
-          "prompt": "Laten we samen wat code reviewen. Kun je ons helpen de code te analyseren en verbeterpunten te vinden?",
-          "title": "Code Review"
-        },
-        "investment": {
-          "description": "Marktanalyse, investeringsstrategieën bespreken en financiële inzichten delen",
-          "emoji": "📈",
-          "prompt": "Laten we samen de markt analyseren. Kun je ons helpen met investeringsstrategieën en inzichten?",
-          "title": "Beleggingsclub"
-        },
-        "research": {
-          "description": "Wetenschappelijke concepten verkennen, experimenten uitvoeren en bevindingen delen",
-          "emoji": "🔬",
-          "prompt": "Laten we samen wetenschap verkennen! Kun je ons helpen met experimenten en het delen van ontdekkingen?",
-          "title": "Wetenschapsbeurs"
-        },
-        "study": {
-          "description": "Samen leren, concepten bespreken en problemen oplossen",
-          "emoji": "📚",
-          "prompt": "Laten we een studiegroep vormen. Kun je ons helpen concepten te begrijpen en problemen op te lossen?",
-          "title": "Studiegroep"
-        }
-      },
-      "brainstorm": {
-        "artWorkshop": {
-          "description": "Creëren, bespreken en waarderen van visuele en digitale kunst",
-          "emoji": "🖼️",
-          "prompt": "Laten we een kunstworkshop houden! Kun je ons helpen kunst te maken, bespreken en waarderen?",
-          "title": "Kunstworkshop"
-        },
-        "debate": {
-          "description": "Gestructureerde discussies en debatten over diverse onderwerpen en actualiteiten",
-          "emoji": "⚖️",
-          "prompt": "Laten we een gestructureerd debat houden. Kun je ons helpen een goed onderbouwde discussie te voeren?",
-          "title": "Debatclub"
-        },
-        "designReview": {
-          "description": "Feedbacksessies over ontwerpconcepten, prototypes of creatieve werken",
-          "emoji": "🎨",
-          "prompt": "We moeten wat ontwerpen beoordelen. Kun je ons helpen met constructieve feedback op concepten en prototypes?",
-          "title": "Ontwerpbeoordeling"
-        },
-        "ideation": {
-          "description": "Samen ideeën genereren en creatieve problemen oplossen vanuit meerdere perspectieven",
-          "emoji": "🧠",
-          "prompt": "Laten we brainstormen voor een project. Kun je ons helpen met ideeën en oplossingen?",
-          "title": "Brainstorm"
-        }
-      },
-      "game": {
-        "debateClub": {
-          "description": "Gestructureerde discussies en debatten over diverse onderwerpen en actualiteiten",
-          "emoji": "⚖️",
-          "prompt": "Laten we een gestructureerd debat houden. Kun je ons helpen een goed onderbouwde discussie te voeren?",
-          "title": "Debatclub"
-        },
-        "gameNight": {
-          "description": "Leuke interactieve spellen en activiteiten om teamgeest te versterken",
-          "emoji": "🎲",
-          "prompt": "Het is spelletjesavond! Kun je ons helpen leuke interactieve spellen te organiseren?",
-          "title": "Spelletjesavond"
-        },
-        "modelUN": {
-          "description": "Simulatie van VN-debatten en diplomatieke onderhandelingen over wereldkwesties",
-          "emoji": "🌍",
-          "prompt": "Laten we een VN-debat simuleren. Kun je ons helpen een diplomatieke onderhandeling over wereldkwesties op te zetten?",
-          "title": "Model-VN"
-        },
-        "werewolf": {
-          "description": "Een sociaal deductiespel waarin spelers de weerwolven proberen te ontmaskeren",
-          "emoji": "🐺",
-          "prompt": "Laten we Weerwolven spelen! Kun je ons helpen met de regels en het leiden van het spel?",
-          "title": "Weerwolvenspel"
-        }
-      },
-      "general": {
-        "brainstorm": {
-          "description": "Samen ideeën genereren en creatieve problemen oplossen vanuit meerdere perspectieven",
-          "emoji": "🧠",
-          "prompt": "Laten we brainstormen voor een project. Kun je ons helpen met ideeën en oplossingen?",
-          "title": "Brainstorm"
-        },
-        "debate": {
-          "description": "Gestructureerde discussies en debatten over diverse onderwerpen en actualiteiten",
-          "emoji": "⚖️",
-          "prompt": "Laten we een gestructureerd debat houden. Kun je ons helpen een goed onderbouwde discussie te voeren?",
-          "title": "Debatclub"
-        },
-        "languagePractice": {
-          "description": "Oefen spreekvaardigheid en leer nieuwe talen met moedertaalsprekers",
-          "emoji": "🗣️",
-          "prompt": "Laten we een nieuwe taal oefenen. Kun je ons helpen met leren en spreken?",
-          "title": "Taalpraktijk"
-        },
-        "studyGroup": {
-          "description": "Samen leren, concepten bespreken en problemen oplossen",
-          "emoji": "📚",
-          "prompt": "Laten we een studiegroep vormen. Kun je ons helpen concepten te begrijpen en problemen op te lossen?",
-          "title": "Studiegroep"
-        }
-      },
-      "planning": {
-        "cookingClass": {
-          "description": "Leer en deel kooktechnieken, recepten en culinaire tradities",
-          "emoji": "👨‍🍳",
-          "prompt": "Laten we een kookles volgen! Kun je ons helpen nieuwe recepten en technieken te leren?",
-          "title": "Kookles"
-        },
-        "fitnessChallenge": {
-          "description": "Stel groepsfitnessdoelen, deel workouts en motiveer elkaar",
-          "emoji": "💪",
-          "prompt": "Laten we een fitnessuitdaging starten! Kun je ons helpen doelen te stellen en elkaar te motiveren?",
-          "title": "Fitnessuitdaging"
-        },
-        "planningPoker": {
-          "description": "Agile schattingstechniek met kaarten voor projecttaken en werkbelasting",
-          "emoji": "🃏",
-          "prompt": "We doen aan planning poker voor een project. Kun je ons helpen met agile schattingen?",
-          "title": "Planning Poker"
-        },
-        "travelPlanning": {
-          "description": "Reizen plannen, ervaringen delen en nieuwe bestemmingen ontdekken",
-          "emoji": "✈️",
-          "prompt": "Laten we samen een reis plannen! Kun je ons helpen met het onderzoeken van bestemmingen en het maken van een reisschema?",
-          "title": "Reisplanning"
-        }
-      },
-      "product": {
-        "codeReview": {
-          "description": "Technische discussies en peer reviews van codewijzigingen en implementaties",
-          "emoji": "💻",
-          "prompt": "Laten we samen wat code reviewen. Kun je ons helpen de code te analyseren en verbeterpunten te vinden?",
-          "title": "Code Review"
-        },
-        "designReview": {
-          "description": "Feedbacksessies over ontwerpconcepten, prototypes of creatieve werken",
-          "emoji": "🎨",
-          "prompt": "We moeten wat ontwerpen beoordelen. Kun je ons helpen met constructieve feedback op concepten en prototypes?",
-          "title": "Ontwerpbeoordeling"
-        },
-        "sprintPlanning": {
-          "description": "Agile schattingstechniek met kaarten voor projecttaken en werkbelasting",
-          "emoji": "🃏",
-          "prompt": "We doen aan planning poker voor een project. Kun je ons helpen met agile schattingen?",
-          "title": "Planning Poker"
-        },
-        "techExchange": {
-          "description": "Discussies over opkomende technologieën, innovaties en trends in de sector",
-          "emoji": "🚀",
-          "prompt": "Laten we een tech-uitwisseling houden! Kun je ons helpen met het bespreken van nieuwe technologieën en trends?",
-          "title": "Technologie-uitwisseling"
-        }
-      },
-      "title": "Aanbevolen gebruik voor teamchats",
-      "writing": {
-        "bookClub": {
-          "description": "Literaire discussies en analyses van boeken, verhalen en literatuur",
-          "emoji": "📖",
-          "prompt": "Laten we een boekenclubdiscussie starten. Kun je ons helpen het boek te analyseren en de thema’s te bespreken?",
-          "title": "Boekenclub"
-        },
-        "movieClub": {
-          "description": "Samen films, documentaires en visuele media bekijken en bespreken",
-          "emoji": "🎬",
-          "prompt": "Laten we een filmclubdiscussie starten. Kun je ons helpen de film te analyseren en de thema’s te bespreken?",
-          "title": "Filmclub"
-        },
-        "musicSession": {
-          "description": "Samen muziek maken, delen en waarderen",
-          "emoji": "🎵",
-          "prompt": "Laten we een muzieksessie houden! Kun je ons helpen muziek te maken en ervan te genieten?",
-          "title": "Muzieksessie"
-        },
-        "studyGroup": {
-          "description": "Samen leren, concepten bespreken en problemen oplossen",
-          "emoji": "📚",
-          "prompt": "Laten we een studiegroep vormen. Kun je ons helpen concepten te begrijpen en problemen op te lossen?",
-          "title": "Studiegroep"
-        }
-      }
+    {
+      "avatar": "🧑‍🔬",
+      "backgroundColor": "#E8F5FF",
+      "systemRole": "Je bent een onderzoeksdeskundige, gespecialiseerd in informatieverzameling en diepgaande analyse vanuit meerdere invalshoeken.",
+      "title": "Onderzoeksexpert"
     },
-    "groupMessage": "Welkom bij groepschat! Werk samen met meerdere AI-assistenten in een gedeelde gespreksomgeving.",
-    "groupTemplates": {
-      "analysis": {
-        "description": "Data-gedreven inzichten en diepgaande analyses",
-        "members": [
-          {
-            "avatar": "📊",
-            "backgroundColor": "#E8F8F5",
-            "plugins": ["steam"],
-            "systemRole": "Je bent een expert in het verwerken en interpreteren van data, en onthult patronen en trends via grafieken en statistieken.",
-            "title": "Data-analist"
-          },
-          {
-            "avatar": "🧑‍🔬",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Je bent een onderzoeksdeskundige, gespecialiseerd in informatieverzameling en diepgaande analyse vanuit meerdere invalshoeken.",
-            "title": "Onderzoeksexpert"
-          },
-          {
-            "avatar": "📈",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Je bent een statistisch expert, bedreven in diverse methoden en modellen om waardevolle zakelijke inzichten uit data te halen.",
-            "title": "Statistisch expert"
-          },
-          {
-            "avatar": "🧮",
-            "backgroundColor": "#F0F8FF",
-            "systemRole": "Je bent een kwantitatieve analist, gespecialiseerd in modellering en risicobeoordeling met wiskundige methoden.",
-            "title": "Kwantitatief analist"
-          }
-        ],
-        "title": "Analyseteam"
-      },
-      "brainstorm": {
-        "description": "Creatief denken vanuit meerdere perspectieven, boordevol inspiratie",
-        "members": [
-          {
-            "avatar": "🧠",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Je bent een creatief directeur, goed in het vertalen van abstracte ideeën naar uitvoerbare concepten.",
-            "title": "Creatief directeur"
-          },
-          {
-            "avatar": "🧑‍🔬",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Je bent een innovatiespecialist, altijd op zoek naar nieuwe oplossingen en doorbrekend denken.",
-            "title": "Innovatiespecialist"
-          },
-          {
-            "avatar": "🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Je bent een design thinking expert, met focus op gebruikerservaring en visuele expressie.",
-            "title": "Design Thinker"
-          }
-        ],
-        "title": "Brainstormgroep"
-      },
-      "game": {
-        "description": "Speel samen tekstgebaseerde spellen zoals Weerwolven en Undercover",
-        "members": [
-          {
-            "avatar": "🧠",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Je bent een spelleider, goed in het organiseren van tekstgebaseerde groepsspellen.",
-            "title": "Spelleider"
-          },
-          {
-            "avatar": "🧑‍🔬",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Je bent een actieve speler in tekstgebaseerde spellen en volgt de spelregels nauwgezet.",
-            "title": "Speler"
-          },
-          {
-            "avatar": "🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Je bent een actieve speler in tekstgebaseerde spellen en volgt de spelregels nauwgezet.",
-            "title": "Speler"
-          },
-          {
-            "avatar": "🧑‍🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Je bent een actieve speler in tekstgebaseerde spellen en volgt de spelregels nauwgezet.",
-            "title": "Speler"
-          }
-        ],
-        "title": "Spelkamer"
-      },
-      "planning": {
-        "description": "Strategische planning en projectbeheer met overzicht",
-        "members": [
-          {
-            "avatar": "📋",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Je bent verantwoordelijk voor de algemene projectplanning, voortgangsbewaking en resourcecoördinatie.",
-            "title": "Chef-kok"
-          },
-          {
-            "avatar": "🎯",
-            "backgroundColor": "#FFF7E8",
-            "systemRole": "Je stelt langetermijnstrategieën op, analyseert marktkansen en bepaalt doelen en routes.",
-            "title": "Inkoopexpert"
-          },
-          {
-            "avatar": "🧑‍🎨",
-            "backgroundColor": "#F0F8FF",
-            "systemRole": "Je stelt gedetailleerde uitvoeringsplannen op en coördineert middelen tussen afdelingen.",
-            "title": "Culinair ontwikkelaar"
-          }
-        ],
-        "title": "Culinair Ontwikkelteam"
-      },
-      "product": {
-        "description": "Productontwerp en -ontwikkeling voor hoogwaardige producten",
-        "members": [
-          {
-            "avatar": "🎨",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Je bent een ontwerper, gespecialiseerd in het ontwerpen van diverse producten op basis van behoeften.",
-            "title": "Ontwerper"
-          },
-          {
-            "avatar": "🧑",
-            "backgroundColor": "#E8F5FF",
-            "systemRole": "Je bent een productmanager, verantwoordelijk voor planning, ontwerp, ontwikkeling en onderhoud.",
-            "title": "Productmanager"
-          },
-          {
-            "avatar": "🧑‍💻",
-            "backgroundColor": "#E8F8F5",
-            "systemRole": "Je bent een ervaren full-stack ontwikkelaar, bedreven in het bouwen van diverse producten.",
-            "title": "Full-stack ontwikkelaar"
-          }
-        ],
-        "title": "Productontwikkelingsteam"
-      },
-      "writing": {
-        "description": "Contentcreatie en redactie voor hoogwaardige teksten",
-        "members": [
-          {
-            "avatar": "✍️",
-            "backgroundColor": "#F6E8FF",
-            "systemRole": "Je bent bedreven in het schrijven van verschillende tekstsoorten en past je stijl aan op doelgroep en context.",
-            "title": "Contentauteur"
-          },
-          {
-            "avatar": "🧑‍🎨",
-            "backgroundColor": "#E8F8F5",
-            "systemRole": "Je bent redacteur, verantwoordelijk voor proeflezen, redigeren en optimaliseren van teksten.",
-            "title": "Redacteur"
-          }
-        ],
-        "title": "Schrijverskring"
-      }
+    {
+      "avatar": "📈",
+      "backgroundColor": "#FFF7E8",
+      "systemRole": "Je bent een statistisch expert, bedreven in diverse methoden en modellen om waardevolle zakelijke inzichten uit data te halen.",
+      "title": "Statistisch expert"
     },
-    "questions": {
-      "moreBtn": "Meer ontdekken",
-      "title": "Probeer te vragen:"
-    },
-    "welcome": {
-      "afternoon": "Goedemiddag",
-      "morning": "Goedemorgen",
-      "night": "Goedenavond",
-      "noon": "Goedemiddag"
+    {
+      "avatar": "🧮",
+      "backgroundColor": "#F0F8FF",
+      "systemRole": "Je bent een kwantitatieve analist, gespecialiseerd in modellering en risicobeoordeling met wiskundige methoden.",
+      "title": "Kwantitatief analist"
     }
-  },
+  ],
+  "guide.groupTemplates.analysis.title": "Analyseteam",
+  "guide.groupTemplates.brainstorm.description": "Creatief denken vanuit meerdere perspectieven, boordevol inspiratie",
+  "guide.groupTemplates.brainstorm.members": [
+    {
+      "avatar": "🧠",
+      "backgroundColor": "#E8F5FF",
+      "systemRole": "Je bent een creatief directeur, goed in het vertalen van abstracte ideeën naar uitvoerbare concepten.",
+      "title": "Creatief directeur"
+    },
+    {
+      "avatar": "🧑‍🔬",
+      "backgroundColor": "#FFF7E8",
+      "systemRole": "Je bent een innovatiespecialist, altijd op zoek naar nieuwe oplossingen en doorbrekend denken.",
+      "title": "Innovatiespecialist"
+    },
+    {
+      "avatar": "🎨",
+      "backgroundColor": "#F6E8FF",
+      "systemRole": "Je bent een design thinking expert, met focus op gebruikerservaring en visuele expressie.",
+      "title": "Design Thinker"
+    }
+  ],
+  "guide.groupTemplates.brainstorm.title": "Brainstormgroep",
+  "guide.groupTemplates.game.description": "Speel samen tekstgebaseerde spellen zoals Weerwolven en Undercover",
+  "guide.groupTemplates.game.members": [
+    {
+      "avatar": "🧠",
+      "backgroundColor": "#E8F5FF",
+      "systemRole": "Je bent een spelleider, goed in het organiseren van tekstgebaseerde groepsspellen.",
+      "title": "Spelleider"
+    },
+    {
+      "avatar": "🧑‍🔬",
+      "backgroundColor": "#FFF7E8",
+      "systemRole": "Je bent een actieve speler in tekstgebaseerde spellen en volgt de spelregels nauwgezet.",
+      "title": "Speler"
+    },
+    {
+      "avatar": "🎨",
+      "backgroundColor": "#F6E8FF",
+      "systemRole": "Je bent een actieve speler in tekstgebaseerde spellen en volgt de spelregels nauwgezet.",
+      "title": "Speler"
+    },
+    {
+      "avatar": "🧑‍🎨",
+      "backgroundColor": "#F6E8FF",
+      "systemRole": "Je bent een actieve speler in tekstgebaseerde spellen en volgt de spelregels nauwgezet.",
+      "title": "Speler"
+    }
+  ],
+  "guide.groupTemplates.game.title": "Spelkamer",
+  "guide.groupTemplates.planning.description": "Strategische planning en projectbeheer met overzicht",
+  "guide.groupTemplates.planning.members": [
+    {
+      "avatar": "📋",
+      "backgroundColor": "#E8F5FF",
+      "systemRole": "Je bent verantwoordelijk voor de algemene projectplanning, voortgangsbewaking en resourcecoördinatie.",
+      "title": "Chef-kok"
+    },
+    {
+      "avatar": "🎯",
+      "backgroundColor": "#FFF7E8",
+      "systemRole": "Je stelt langetermijnstrategieën op, analyseert marktkansen en bepaalt doelen en routes.",
+      "title": "Inkoopexpert"
+    },
+    {
+      "avatar": "🧑‍🎨",
+      "backgroundColor": "#F0F8FF",
+      "systemRole": "Je stelt gedetailleerde uitvoeringsplannen op en coördineert middelen tussen afdelingen.",
+      "title": "Culinair ontwikkelaar"
+    }
+  ],
+  "guide.groupTemplates.planning.title": "Culinair Ontwikkelteam",
+  "guide.groupTemplates.product.description": "Productontwerp en -ontwikkeling voor hoogwaardige producten",
+  "guide.groupTemplates.product.members": [
+    {
+      "avatar": "🎨",
+      "backgroundColor": "#F6E8FF",
+      "systemRole": "Je bent een ontwerper, gespecialiseerd in het ontwerpen van diverse producten op basis van behoeften.",
+      "title": "Ontwerper"
+    },
+    {
+      "avatar": "🧑",
+      "backgroundColor": "#E8F5FF",
+      "systemRole": "Je bent een productmanager, verantwoordelijk voor planning, ontwerp, ontwikkeling en onderhoud.",
+      "title": "Productmanager"
+    },
+    {
+      "avatar": "🧑‍💻",
+      "backgroundColor": "#E8F8F5",
+      "systemRole": "Je bent een ervaren full-stack ontwikkelaar, bedreven in het bouwen van diverse producten.",
+      "title": "Full-stack ontwikkelaar"
+    }
+  ],
+  "guide.groupTemplates.product.title": "Productontwikkelingsteam",
+  "guide.groupTemplates.writing.description": "Contentcreatie en redactie voor hoogwaardige teksten",
+  "guide.groupTemplates.writing.members": [
+    {
+      "avatar": "✍️",
+      "backgroundColor": "#F6E8FF",
+      "systemRole": "Je bent bedreven in het schrijven van verschillende tekstsoorten en past je stijl aan op doelgroep en context.",
+      "title": "Contentauteur"
+    },
+    {
+      "avatar": "🧑‍🎨",
+      "backgroundColor": "#E8F8F5",
+      "systemRole": "Je bent redacteur, verantwoordelijk voor proeflezen, redigeren en optimaliseren van teksten.",
+      "title": "Redacteur"
+    }
+  ],
+  "guide.groupTemplates.writing.title": "Schrijverskring",
+  "guide.questions.moreBtn": "Meer ontdekken",
+  "guide.questions.title": "Probeer te vragen:",
+  "guide.welcome.afternoon": "Goedemiddag",
+  "guide.welcome.morning": "Goedemorgen",
+  "guide.welcome.night": "Goedenavond",
+  "guide.welcome.noon": "Goedemiddag",
   "header": "Welkom",
   "pickAgent": "Of kies een assistentsjabloon hieronder",
   "skip": "Overslaan",
-  "slogan": {
-    "desc1": "Ontgrendel collectieve intelligentie en laat ideeën vonken. Je slimme assistent is er altijd.",
-    "desc2": "Maak je eerste assistent aan en laten we beginnen~",
-    "title": "Geef jezelf een slimmer brein"
-  },
+  "slogan.desc1": "Ontgrendel collectieve intelligentie en laat ideeën vonken. Je slimme assistent is er altijd.",
+  "slogan.desc2": "Maak je eerste assistent aan en laten we beginnen~",
+  "slogan.title": "Geef jezelf een slimmer brein",
   "welcomeMessages": {
     "1": "Welkom terug 😊",
+    "2": "Hoi, ik ben er",
+    "3": "Ik ben er klaar voor!",
+    "4": "Leuk je te zien",
+    "5": "Klaar om te beginnen?",
+    "6": "Laat mij je vandaag helpen",
+    "7": "Laten we doorgaan!",
+    "8": "Samen aan de slag 💪",
+    "9": "Aan het werk 🏃‍♂️",
     "10": "Productiviteit op volle toeren～",
     "11": "Tot uw dienst!",
     "12": "Bedankt voor het wachten～☕",
@@ -376,7 +288,6 @@
     "17": "Vol energie online ⚡",
     "18": "Op naar de start! 🚀",
     "19": "Mijn gedachten zijn op snelheid.",
-    "2": "Hoi, ik ben er",
     "20": "Inspiratie komt eraan",
     "21": "Wacht op jouw signaal",
     "22": "Efficiëntiemodus opnieuw geactiveerd!",
@@ -387,7 +298,6 @@
     "27": "Systeem online, klaar om te helpen 💡",
     "28": "Laad positieve energie",
     "29": "Neem de leiding vanaf nu 🎵",
-    "3": "Ik ben er klaar voor!",
     "30": "Efficiëntie wordt verhoogd …",
     "31": "Doelen van vandaag worden bereikt 🎯",
     "32": "Laat inspiratie schitteren ✨",
@@ -397,12 +307,6 @@
     "36": "Yes! Laten we beginnen 😎",
     "37": "Ik wacht hier op je terugkomst",
     "38": "Blijf in de flow!",
-    "39": "Vergeet niet even pauze te nemen～ 💤",
-    "4": "Leuk je te zien",
-    "5": "Klaar om te beginnen?",
-    "6": "Laat mij je vandaag helpen",
-    "7": "Laten we doorgaan!",
-    "8": "Samen aan de slag 💪",
-    "9": "Aan het werk 🏃‍♂️"
+    "39": "Vergeet niet even pauze te nemen～ 💤"
   }
 }

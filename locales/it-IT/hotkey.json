@@ -1,84 +1,42 @@
 {
-  "addUserMessage": {
-    "desc": "Aggiungi il contenuto attuale come messaggio utente, senza attivare la generazione",
-    "title": "Aggiungi un messaggio utente"
-  },
-  "clearCurrentMessages": {
-    "desc": "Cancella i messaggi e i file caricati della conversazione attuale",
-    "title": "Cancella messaggi della conversazione"
-  },
-  "commandPalette": {
-    "desc": "Apri il pannello comandi globale per accedere rapidamente alle funzioni",
-    "title": "Pannello comandi"
-  },
-  "deleteAndRegenerateMessage": {
-    "desc": "Elimina l'ultimo messaggio e rigeneralo",
-    "title": "Elimina e rigenera"
-  },
-  "deleteLastMessage": {
-    "desc": "Elimina l'ultimo messaggio",
-    "title": "Elimina l'ultimo messaggio"
-  },
-  "desktop": {
-    "openSettings": {
-      "desc": "Apri la pagina delle impostazioni dell'app",
-      "title": "Impostazioni dell'app"
-    },
-    "showApp": {
-      "desc": "Mostra o nascondi la finestra principale con una scorciatoia globale",
-      "title": "Mostra/Nascondi finestra principale"
-    }
-  },
-  "editMessage": {
-    "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
-    "title": "Modifica messaggio"
-  },
-  "navigateToChat": {
-    "desc": "Passa alla scheda delle conversazioni ed entra in Lobe AI",
-    "title": "Passa alla conversazione predefinita"
-  },
-  "openChatSettings": {
-    "desc": "Visualizza e modifica le impostazioni della conversazione attuale",
-    "title": "Apri impostazioni chat"
-  },
-  "openHotkeyHelper": {
-    "desc": "Visualizza le istruzioni per l'uso di tutte le scorciatoie da tastiera",
-    "title": "Apri aiuto scorciatoie"
-  },
-  "regenerateMessage": {
-    "desc": "Rigenera l'ultimo messaggio",
-    "title": "Rigenera messaggio"
-  },
-  "saveDocument": {
-    "desc": "Salva immediatamente tutte le modifiche al documento corrente",
-    "title": "Salva documento"
-  },
-  "saveTopic": {
-    "desc": "Salva l'argomento attuale e apri un nuovo argomento",
-    "title": "Inizia un nuovo argomento"
-  },
-  "search": {
-    "desc": "Attiva la barra di ricerca principale della pagina corrente",
-    "title": "Cerca"
-  },
-  "showApp": {
-    "desc": "Apri rapidamente la finestra principale dell'applicazione",
-    "title": "Mostra finestra principale"
-  },
-  "switchAgent": {
-    "desc": "Cambia l'assistente fissato nella barra laterale tenendo premuto Ctrl e premendo un numero da 0 a 9",
-    "title": "Cambia assistente rapidamente"
-  },
-  "toggleLeftPanel": {
-    "desc": "Mostra o nasconde il pannello di sinistra",
-    "title": "Mostra/Nascondi pannello di sinistra"
-  },
-  "toggleRightPanel": {
-    "desc": "Mostra o nasconde il pannello di destra",
-    "title": "Mostra/Nascondi pannello di destra"
-  },
-  "toggleZenMode": {
-    "desc": "In modalità concentrazione, mostra solo la conversazione attuale, nascondendo altre interfacce",
-    "title": "Attiva/disattiva modalità di concentrazione"
-  }
+  "addUserMessage.desc": "Aggiungi il contenuto attuale come messaggio utente, senza attivare la generazione",
+  "addUserMessage.title": "Aggiungi un messaggio utente",
+  "clearCurrentMessages.desc": "Cancella i messaggi e i file caricati della conversazione attuale",
+  "clearCurrentMessages.title": "Cancella messaggi della conversazione",
+  "commandPalette.desc": "Apri il pannello comandi globale per accedere rapidamente alle funzioni",
+  "commandPalette.title": "Pannello comandi",
+  "deleteAndRegenerateMessage.desc": "Elimina l'ultimo messaggio e rigeneralo",
+  "deleteAndRegenerateMessage.title": "Elimina e rigenera",
+  "deleteLastMessage.desc": "Elimina l'ultimo messaggio",
+  "deleteLastMessage.title": "Elimina l'ultimo messaggio",
+  "desktop.openSettings.desc": "Apri la pagina delle impostazioni dell'app",
+  "desktop.openSettings.title": "Impostazioni dell'app",
+  "desktop.showApp.desc": "Mostra o nascondi la finestra principale con una scorciatoia globale",
+  "desktop.showApp.title": "Mostra/Nascondi finestra principale",
+  "editMessage.desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
+  "editMessage.title": "Modifica messaggio",
+  "navigateToChat.desc": "Passa alla scheda delle conversazioni ed entra in Lobe AI",
+  "navigateToChat.title": "Passa alla conversazione predefinita",
+  "openChatSettings.desc": "Visualizza e modifica le impostazioni della conversazione attuale",
+  "openChatSettings.title": "Apri impostazioni chat",
+  "openHotkeyHelper.desc": "Visualizza le istruzioni per l'uso di tutte le scorciatoie da tastiera",
+  "openHotkeyHelper.title": "Apri aiuto scorciatoie",
+  "regenerateMessage.desc": "Rigenera l'ultimo messaggio",
+  "regenerateMessage.title": "Rigenera messaggio",
+  "saveDocument.desc": "Salva immediatamente tutte le modifiche al documento corrente",
+  "saveDocument.title": "Salva documento",
+  "saveTopic.desc": "Salva l'argomento attuale e apri un nuovo argomento",
+  "saveTopic.title": "Inizia un nuovo argomento",
+  "search.desc": "Attiva la barra di ricerca principale della pagina corrente",
+  "search.title": "Cerca",
+  "showApp.desc": "Apri rapidamente la finestra principale dell'applicazione",
+  "showApp.title": "Mostra finestra principale",
+  "switchAgent.desc": "Cambia l'assistente fissato nella barra laterale tenendo premuto Ctrl e premendo un numero da 0 a 9",
+  "switchAgent.title": "Cambia assistente rapidamente",
+  "toggleLeftPanel.desc": "Mostra o nasconde il pannello di sinistra",
+  "toggleLeftPanel.title": "Mostra/Nascondi pannello di sinistra",
+  "toggleRightPanel.desc": "Mostra o nasconde il pannello di destra",
+  "toggleRightPanel.title": "Mostra/Nascondi pannello di destra",
+  "toggleZenMode.desc": "In modalità concentrazione, mostra solo la conversazione attuale, nascondendo altre interfacce",
+  "toggleZenMode.title": "Attiva/disattiva modalità di concentrazione"
 }

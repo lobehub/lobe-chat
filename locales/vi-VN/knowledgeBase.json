@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Tài liệu đã được thêm thành công, <1>xem ngay</1>",
-    "confirm": "Thêm",
-    "error": "Thêm tệp vào kho tri thức thất bại",
-    "id": {
-      "placeholder": "Vui lòng chọn kho tri thức để thêm vào",
-      "required": "Vui lòng chọn kho tri thức",
-      "title": "Kho tri thức đích"
-    },
-    "title": "Thêm vào kho tri thức",
-    "totalFiles": "Đã chọn {{count}} tệp"
-  },
-  "createNew": {
-    "confirm": "Tạo mới",
-    "description": {
-      "placeholder": "Mô tả kho tri thức (không bắt buộc)"
-    },
-    "formTitle": "Thông tin cơ bản",
-    "name": {
-      "placeholder": "Tên kho tri thức",
-      "required": "Vui lòng nhập tên kho tri thức"
-    },
-    "title": "Tạo kho tri thức mới"
-  },
-  "tab": {
-    "evals": "Đánh giá",
-    "files": "Tài liệu",
-    "settings": "Cài đặt",
-    "testing": "Kiểm tra hồi phục"
-  },
+  "addToKnowledgeBase.addSuccess": "Tài liệu đã được thêm thành công, <1>xem ngay</1>",
+  "addToKnowledgeBase.confirm": "Thêm",
+  "addToKnowledgeBase.error": "Thêm tệp vào kho tri thức thất bại",
+  "addToKnowledgeBase.id.placeholder": "Vui lòng chọn kho tri thức để thêm vào",
+  "addToKnowledgeBase.id.required": "Vui lòng chọn kho tri thức",
+  "addToKnowledgeBase.id.title": "Kho tri thức đích",
+  "addToKnowledgeBase.title": "Thêm vào kho tri thức",
+  "addToKnowledgeBase.totalFiles": "Đã chọn {{count}} tệp",
+  "createNew.confirm": "Tạo mới",
+  "createNew.description.placeholder": "Mô tả kho tri thức (không bắt buộc)",
+  "createNew.formTitle": "Thông tin cơ bản",
+  "createNew.name.placeholder": "Tên kho tri thức",
+  "createNew.name.required": "Vui lòng nhập tên kho tri thức",
+  "createNew.title": "Tạo kho tri thức mới",
+  "tab.evals": "Đánh giá",
+  "tab.files": "Tài liệu",
+  "tab.settings": "Cài đặt",
+  "tab.testing": "Kiểm tra hồi phục",
   "title": "Kho tri thức"
 }

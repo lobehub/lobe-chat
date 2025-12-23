@@ -1,27 +1,15 @@
 {
   "Artifacts": "Artifacts",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "Chunk",
-      "file": "File"
-    }
-  },
+  "FilePreview.tabs.chunk": "Chunk",
+  "FilePreview.tabs.file": "File",
   "Plugins": "Skills",
-  "artifacts": {
-    "display": {
-      "code": "Code",
-      "preview": "Preview"
-    },
-    "svg": {
-      "copyAsImage": "Copy as Image",
-      "copyFail": "Copy failed, reason: {{error}}",
-      "copySuccess": "Image copied successfully",
-      "download": {
-        "png": "Download as PNG",
-        "svg": "Download as SVG"
-      }
-    }
-  },
+  "artifacts.display.code": "Code",
+  "artifacts.display.preview": "Preview",
+  "artifacts.svg.copyAsImage": "Copy as Image",
+  "artifacts.svg.copyFail": "Copy failed, reason: {{error}}",
+  "artifacts.svg.copySuccess": "Image copied successfully",
+  "artifacts.svg.download.png": "Download as PNG",
+  "artifacts.svg.download.svg": "Download as SVG",
   "emptyArtifactList": "The current Artifacts list is empty. Please use skills in the session as needed before viewing.",
   "emptyKnowledgeList": "The current knowledge list is empty. Please enable the knowledge base as needed during the conversation before viewing.",
   "files": "Files",

@@ -1,27 +1,15 @@
 {
   "Artifacts": "Artifacts",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "Chunk",
-      "file": "Bestand"
-    }
-  },
+  "FilePreview.tabs.chunk": "Chunk",
+  "FilePreview.tabs.file": "Bestand",
   "Plugins": "Plugins",
-  "artifacts": {
-    "display": {
-      "code": "Code",
-      "preview": "Voorbeeld"
-    },
-    "svg": {
-      "copyAsImage": "Kopieer als afbeelding",
-      "copyFail": "Kopiëren mislukt, foutmelding: {{error}}",
-      "copySuccess": "Afbeelding succesvol gekopieerd",
-      "download": {
-        "png": "Download als PNG",
-        "svg": "Download als SVG"
-      }
-    }
-  },
+  "artifacts.display.code": "Code",
+  "artifacts.display.preview": "Voorbeeld",
+  "artifacts.svg.copyAsImage": "Kopieer als afbeelding",
+  "artifacts.svg.copyFail": "Kopiëren mislukt, foutmelding: {{error}}",
+  "artifacts.svg.copySuccess": "Afbeelding succesvol gekopieerd",
+  "artifacts.svg.download.png": "Download als PNG",
+  "artifacts.svg.download.svg": "Download als SVG",
   "emptyArtifactList": "De huidige lijst met Artifacts is leeg. Gebruik plugins in de sessie en bekijk deze later opnieuw.",
   "emptyKnowledgeList": "De huidige kennislijst is leeg. Gelieve de kennisbank in de sessie te openen voordat u deze bekijkt.",
   "files": "Bestanden",

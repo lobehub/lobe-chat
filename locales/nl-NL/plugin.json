@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "Parameterlijst"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Beschikbare modellen ophalen",
-        "getAvailableTools": "Beschikbare tools ophalen",
-        "getConfig": "Configuratie ophalen",
-        "getMeta": "Metadata ophalen",
-        "getPrompt": "Systeemprompt ophalen",
-        "searchMarketTools": "Plug-inmarkt doorzoeken",
-        "searchOfficialTools": "Officiële tools doorzoeken",
-        "setModel": "Model instellen",
-        "setOpeningMessage": "Openingsbericht instellen",
-        "setOpeningQuestions": "Openingsvragen instellen",
-        "togglePlugin": "Plug-in in-/uitschakelen",
-        "updateChatConfig": "Chatconfiguratie bijwerken",
-        "updateConfig": "Configuratie bijwerken",
-        "updateMeta": "Metadata bijwerken",
-        "updatePrompt": "Systeemprompt bijwerken"
-      },
-      "title": "Agent Builder"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Beschikbare modellen ophalen",
-        "installPlugin": "Plug-in installeren",
-        "inviteAgent": "Lid uitnodigen",
-        "removeAgent": "Lid verwijderen",
-        "searchMarketTools": "Plug-inmarkt doorzoeken",
-        "updateAgentConfig": "Agentconfiguratie bijwerken",
-        "updatePrompt": "Systeemprompt bijwerken"
-      },
-      "title": "Groepsagentbouwer"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "Tot iedereen spreken",
-        "createAgent": "Teamlid toevoegen",
-        "createWorkflow": "Workflow plannen",
-        "executeTask": "Taak uitvoeren",
-        "getAgentInfo": "Ledinformatie ophalen",
-        "interrupt": "Taak onderbreken",
-        "inviteAgent": "Lid uitnodigen",
-        "removeAgent": "Lid verwijderen",
-        "searchAgent": "Relevante expert zoeken",
-        "speak": "Specifiek lid laten spreken",
-        "summarize": "Gesprek samenvatten",
-        "vote": "Stemronde starten"
-      },
-      "title": "Teamcoördinatie"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "Taken wissen",
-        "completeTodos": "Taken voltooien",
-        "createPlan": "Plan maken",
-        "createTodos": "Taken aanmaken",
-        "removeTodos": "Taken verwijderen",
-        "updatePlan": "Plan bijwerken",
-        "updateTodos": "Taken bijwerken"
-      },
-      "title": "GTD-hulpmiddel"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "Kennisbankinhoud lezen",
-        "searchKnowledgeBase": "Kennisbank doorzoeken"
-      },
-      "title": "Kennisbank"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "Bestand bewerken",
-        "getCommandOutput": "Code-uitvoer ophalen",
-        "globLocalFiles": "Bestanden zoeken met patroon",
-        "grepContent": "Inhoud doorzoeken",
-        "killCommand": "Code-uitvoering beëindigen",
-        "listLocalFiles": "Bestandenlijst bekijken",
-        "moveLocalFiles": "Bestanden verplaatsen",
-        "readLocalFile": "Bestandsinhoud lezen",
-        "renameLocalFile": "Bestand hernoemen",
-        "runCommand": "Code uitvoeren",
-        "searchLocalFiles": "Bestanden doorzoeken",
-        "writeLocalFile": "Bestand schrijven"
-      },
-      "title": "Lokaal systeem"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "Batchgewijs knooppunten bijwerken",
-        "compareSnapshots": "Momentopnamen vergelijken",
-        "convertToList": "Converteren naar lijst",
-        "createNode": "Knooppunt aanmaken",
-        "cropImage": "Afbeelding bijsnijden",
-        "deleteNode": "Knooppunt verwijderen",
-        "deleteSnapshot": "Momentopname verwijderen",
-        "deleteTableColumn": "Tabelkolom verwijderen",
-        "deleteTableRow": "Tabelrij verwijderen",
-        "duplicateNode": "Knooppunt dupliceren",
-        "editTitle": "Documenttitel bewerken",
-        "indentListItem": "Lijstitem inspringen",
-        "initPage": "Document initialiseren",
-        "insertTableColumn": "Tabelkolom invoegen",
-        "insertTableRow": "Tabelrij invoegen",
-        "listSnapshots": "Momentopnamen weergeven",
-        "mergeNodes": "Knooppunten samenvoegen",
-        "moveNode": "Knooppunt verplaatsen",
-        "outdentListItem": "Inspringing van lijstitem verwijderen",
-        "replaceText": "Tekst vervangen",
-        "resizeImage": "Afbeelding schalen",
-        "restoreSnapshot": "Momentopname herstellen",
-        "rotateImage": "Afbeelding roteren",
-        "saveSnapshot": "Momentopname opslaan",
-        "setImageAlt": "Alternatieve tekst voor afbeelding instellen",
-        "splitNode": "Knooppunt splitsen",
-        "toggleListType": "Lijsttype wisselen",
-        "unwrapNode": "Knooppunt uitpakken",
-        "updateNode": "Knooppunt bijwerken",
-        "wrapNodes": "Knooppunten verpakken"
-      },
-      "title": "Document"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "Inhoud van meerdere pagina's lezen",
-        "crawlSinglePage": "Pagina-inhoud lezen",
-        "search": "Webpagina's doorzoeken"
-      },
-      "title": "Online zoeken"
-    }
-  },
+  "arguments.title": "Parameterlijst",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "Beschikbare modellen ophalen",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "Beschikbare tools ophalen",
+  "builtins.lobe-agent-builder.apiName.getConfig": "Configuratie ophalen",
+  "builtins.lobe-agent-builder.apiName.getMeta": "Metadata ophalen",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "Systeemprompt ophalen",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "Plug-inmarkt doorzoeken",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "Officiële tools doorzoeken",
+  "builtins.lobe-agent-builder.apiName.setModel": "Model instellen",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "Openingsbericht instellen",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "Openingsvragen instellen",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "Plug-in in-/uitschakelen",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "Chatconfiguratie bijwerken",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "Configuratie bijwerken",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "Metadata bijwerken",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "Systeemprompt bijwerken",
+  "builtins.lobe-agent-builder.title": "Agent Builder",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "Beschikbare modellen ophalen",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "Plug-in installeren",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "Lid uitnodigen",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "Lid verwijderen",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "Plug-inmarkt doorzoeken",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "Agentconfiguratie bijwerken",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "Systeemprompt bijwerken",
+  "builtins.lobe-group-agent-builder.title": "Groepsagentbouwer",
+  "builtins.lobe-group-management.apiName.broadcast": "Tot iedereen spreken",
+  "builtins.lobe-group-management.apiName.createAgent": "Teamlid toevoegen",
+  "builtins.lobe-group-management.apiName.createWorkflow": "Workflow plannen",
+  "builtins.lobe-group-management.apiName.executeTask": "Taak uitvoeren",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "Ledinformatie ophalen",
+  "builtins.lobe-group-management.apiName.interrupt": "Taak onderbreken",
+  "builtins.lobe-group-management.apiName.inviteAgent": "Lid uitnodigen",
+  "builtins.lobe-group-management.apiName.removeAgent": "Lid verwijderen",
+  "builtins.lobe-group-management.apiName.searchAgent": "Relevante expert zoeken",
+  "builtins.lobe-group-management.apiName.speak": "Specifiek lid laten spreken",
+  "builtins.lobe-group-management.apiName.summarize": "Gesprek samenvatten",
+  "builtins.lobe-group-management.apiName.vote": "Stemronde starten",
+  "builtins.lobe-group-management.title": "Teamcoördinatie",
+  "builtins.lobe-gtd.apiName.clearTodos": "Taken wissen",
+  "builtins.lobe-gtd.apiName.completeTodos": "Taken voltooien",
+  "builtins.lobe-gtd.apiName.createPlan": "Plan maken",
+  "builtins.lobe-gtd.apiName.createTodos": "Taken aanmaken",
+  "builtins.lobe-gtd.apiName.removeTodos": "Taken verwijderen",
+  "builtins.lobe-gtd.apiName.updatePlan": "Plan bijwerken",
+  "builtins.lobe-gtd.apiName.updateTodos": "Taken bijwerken",
+  "builtins.lobe-gtd.title": "GTD-hulpmiddel",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "Kennisbankinhoud lezen",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "Kennisbank doorzoeken",
+  "builtins.lobe-knowledge-base.title": "Kennisbank",
+  "builtins.lobe-local-system.apiName.editLocalFile": "Bestand bewerken",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "Code-uitvoer ophalen",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "Bestanden zoeken met patroon",
+  "builtins.lobe-local-system.apiName.grepContent": "Inhoud doorzoeken",
+  "builtins.lobe-local-system.apiName.killCommand": "Code-uitvoering beëindigen",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "Bestandenlijst bekijken",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "Bestanden verplaatsen",
+  "builtins.lobe-local-system.apiName.readLocalFile": "Bestandsinhoud lezen",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "Bestand hernoemen",
+  "builtins.lobe-local-system.apiName.runCommand": "Code uitvoeren",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "Bestanden doorzoeken",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "Bestand schrijven",
+  "builtins.lobe-local-system.title": "Lokaal systeem",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "Batchgewijs knooppunten bijwerken",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "Momentopnamen vergelijken",
+  "builtins.lobe-page-agent.apiName.convertToList": "Converteren naar lijst",
+  "builtins.lobe-page-agent.apiName.createNode": "Knooppunt aanmaken",
+  "builtins.lobe-page-agent.apiName.cropImage": "Afbeelding bijsnijden",
+  "builtins.lobe-page-agent.apiName.deleteNode": "Knooppunt verwijderen",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "Momentopname verwijderen",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "Tabelkolom verwijderen",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "Tabelrij verwijderen",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "Knooppunt dupliceren",
+  "builtins.lobe-page-agent.apiName.editTitle": "Documenttitel bewerken",
+  "builtins.lobe-page-agent.apiName.indentListItem": "Lijstitem inspringen",
+  "builtins.lobe-page-agent.apiName.initPage": "Document initialiseren",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "Tabelkolom invoegen",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "Tabelrij invoegen",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "Momentopnamen weergeven",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "Knooppunten samenvoegen",
+  "builtins.lobe-page-agent.apiName.moveNode": "Knooppunt verplaatsen",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "Inspringing van lijstitem verwijderen",
+  "builtins.lobe-page-agent.apiName.replaceText": "Tekst vervangen",
+  "builtins.lobe-page-agent.apiName.resizeImage": "Afbeelding schalen",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "Momentopname herstellen",
+  "builtins.lobe-page-agent.apiName.rotateImage": "Afbeelding roteren",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "Momentopname opslaan",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "Alternatieve tekst voor afbeelding instellen",
+  "builtins.lobe-page-agent.apiName.splitNode": "Knooppunt splitsen",
+  "builtins.lobe-page-agent.apiName.toggleListType": "Lijsttype wisselen",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "Knooppunt uitpakken",
+  "builtins.lobe-page-agent.apiName.updateNode": "Knooppunt bijwerken",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "Knooppunten verpakken",
+  "builtins.lobe-page-agent.title": "Document",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "Inhoud van meerdere pagina's lezen",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "Pagina-inhoud lezen",
+  "builtins.lobe-web-browsing.apiName.search": "Webpagina's doorzoeken",
+  "builtins.lobe-web-browsing.title": "Online zoeken",
   "confirm": "Bevestigen",
-  "debug": {
-    "arguments": "Aanroepparameters",
-    "function_call": "Functieaanroep",
-    "off": "Debuggen uitschakelen",
-    "on": "Plugin-aanroepinformatie bekijken",
-    "payload": "Plugin payload",
-    "pluginState": "Plug-instatus",
-    "response": "Resultaat",
-    "title": "Plugin details",
-    "tool_call": "Tool-aanroepverzoek"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "Ga naar de bewerkingspagina voor details",
-      "editBtn": "Nu bewerken",
-      "title": "Dit is een aangepaste plugin"
-    },
-    "emptyState": {
-      "description": "Installeer deze plugin eerst om de mogelijkheden en configuratieopties te bekijken",
-      "title": "Bekijk plugindetails na installatie"
-    },
-    "info": {
-      "description": "API-beschrijving",
-      "name": "API-naam"
-    },
-    "tabs": {
-      "info": "Pluginmogelijkheden",
-      "manifest": "Installatiebestand",
-      "settings": "Instellingen"
-    },
-    "title": "Plugindetails"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "Deze lokale plugin wordt verwijderd en kan niet worden hersteld. Weet u zeker dat u deze plugin wilt verwijderen?",
-    "customParams": {
-      "useProxy": {
-        "label": "Installeren via proxy (schakel dit in bij CORS-fouten en probeer opnieuw te installeren)"
-      }
-    },
-    "deleteSuccess": "Plugin succesvol verwijderd",
-    "manifest": {
-      "identifier": {
-        "desc": "Unieke identificatie van de plugin",
-        "label": "Identificator"
-      },
-      "mode": {
-        "mcp": "MCP-plugin",
-        "mcpExp": "Experimenteel",
-        "url": "Online link"
-      },
-      "name": {
-        "desc": "Plugin titel",
-        "label": "Titel",
-        "placeholder": "Zoekmachine"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "Geavanceerde instellingen"
-      },
-      "args": {
-        "desc": "Parameters doorgeven aan het uitvoeringscommando, meestal hier de MCP-servernaam of het pad naar het opstartscript invoeren",
-        "label": "Commando-argumenten",
-        "placeholder": "Bijv.: mcp-hello-world",
-        "required": "Voer opstartparameters in"
-      },
-      "auth": {
-        "bear": "API-sleutel",
-        "desc": "Kies de authenticatiemethode voor de MCP-server",
-        "label": "Authenticatietype",
-        "none": "Geen authenticatie nodig",
-        "placeholder": "Selecteer authenticatietype",
-        "token": {
-          "desc": "Voer je API-sleutel of Bearer-token in",
-          "label": "API-sleutel",
-          "placeholder": "sk-xxxxx",
-          "required": "Voer authenticatietoken in"
-        }
-      },
-      "avatar": {
-        "label": "Plugin-icoon"
-      },
-      "command": {
-        "desc": "Uitvoerbaar bestand of script om MCP STDIO-server te starten",
-        "label": "Commando",
-        "placeholder": "Bijv.: npx / uv / docker enz.",
-        "required": "Voer opstartcommando in"
-      },
-      "desc": {
-        "desc": "Voeg een beschrijving toe voor de plugin",
-        "label": "Pluginbeschrijving",
-        "placeholder": "Voeg gebruiks- en scenario-informatie toe"
-      },
-      "endpoint": {
-        "desc": "Voer het adres van je MCP Streamable HTTP-server in",
-        "label": "MCP Endpoint URL"
-      },
-      "env": {
-        "add": "Voeg een regel toe",
-        "desc": "Voer de omgevingsvariabelen in die de MCP-server nodig heeft",
-        "duplicateKeyError": "Sleutel moet uniek zijn",
-        "formValidationFailed": "Formuliervalidatie mislukt, controleer parameterindeling",
-        "keyRequired": "Sleutel mag niet leeg zijn",
-        "label": "MCP Server omgevingsvariabelen",
-        "stringifyError": "Kan parameters niet serialiseren, controleer parameterindeling"
-      },
-      "headers": {
-        "add": "Voeg een regel toe",
-        "desc": "Voer HTTP-headers in",
-        "label": "HTTP-headers"
-      },
-      "identifier": {
-        "desc": "Geef je MCP-plugin een naam, alleen Engelse tekens toegestaan",
-        "invalid": "Identificator mag alleen letters, cijfers, koppeltekens en underscores bevatten",
-        "label": "MCP-pluginnaam",
-        "placeholder": "Bijv.: my-mcp-plugin",
-        "required": "Voer MCP-service-identificator in"
-      },
-      "previewManifest": "Plugin manifest bekijken",
-      "quickImport": "Snelle import van JSON-configuratie",
-      "quickImportError": {
-        "empty": "Inhoud mag niet leeg zijn",
-        "invalidJson": "Ongeldige JSON-indeling",
-        "invalidStructure": "Ongeldige JSON-structuur"
-      },
-      "stdioNotSupported": "Huidige omgeving ondersteunt geen stdio-type MCP-plugins",
-      "testConnection": "Verbinding testen",
-      "testConnectionTip": "MCP-plugin kan pas normaal worden gebruikt na succesvolle verbindingstest",
-      "type": {
-        "desc": "Kies het communicatieprotocol van de MCP-plugin, webversie ondersteunt alleen Streamable HTTP",
-        "httpFeature1": "Compatibel met web- en desktopversies",
-        "httpFeature2": "Verbind met externe MCP-server zonder extra installatie",
-        "httpShortDesc": "Communicatieprotocol gebaseerd op gestreamde HTTP",
-        "label": "MCP-plugin type",
-        "stdioFeature1": "Lagere communicatielatentie, geschikt voor lokaal gebruik",
-        "stdioFeature2": "MCP-server moet lokaal geïnstalleerd en uitgevoerd worden",
-        "stdioNotAvailable": "STDIO-modus alleen beschikbaar in desktopversie",
-        "stdioShortDesc": "Communicatieprotocol gebaseerd op standaardinvoer/-uitvoer",
-        "title": "MCP-plugin type"
-      },
-      "url": {
-        "desc": "Voer het Streamable HTTP-adres van je MCP-server in, SSE-modus wordt niet ondersteund",
-        "invalid": "Voer een geldige URL in",
-        "label": "Streamable HTTP Endpoint URL",
-        "required": "Voer MCP-service-URL in"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "Auteur van de plugin",
-        "label": "Auteur"
-      },
-      "avatar": {
-        "desc": "Plugin-icoon, kan een emoji of URL zijn",
-        "label": "Icoon"
-      },
-      "description": {
-        "desc": "Pluginbeschrijving",
-        "label": "Beschrijving",
-        "placeholder": "Zoek informatie via zoekmachine"
-      },
-      "formFieldRequired": "Dit veld is verplicht",
-      "homepage": {
-        "desc": "Startpagina van de plugin",
-        "label": "Startpagina"
-      },
-      "identifier": {
-        "desc": "Unieke identificatie van de plugin, wordt automatisch herkend uit manifest",
-        "errorDuplicate": "Identificator is al in gebruik, wijzig deze",
-        "label": "Identificator",
-        "pattenErrorMessage": "Alleen Engelse letters, cijfers, - en _ zijn toegestaan"
-      },
-      "lobe": "{{appName}} plugin",
-      "manifest": {
-        "desc": "{{appName}} installeert de plugin via deze link",
-        "label": "Plugin manifest URL",
-        "preview": "Manifest bekijken",
-        "refresh": "Vernieuwen"
-      },
-      "openai": "OpenAI-plugin",
-      "title": {
-        "desc": "Plugin titel",
-        "label": "Titel",
-        "placeholder": "Zoekmachine"
-      }
-    },
-    "metaConfig": "Plugin meta-informatie configuratie",
-    "modalDesc": "Na toevoegen van een aangepaste plugin kan deze gebruikt worden voor ontwikkelvalidatie of direct in gesprekken. Raadpleeg de <1>ontwikkelaarsdocumentatie↗</> voor pluginontwikkeling.",
-    "openai": {
-      "importUrl": "Importeren via URL",
-      "schema": "Schema"
-    },
-    "preview": {
-      "api": {
-        "noParams": "Deze tool heeft geen parameters",
-        "noResults": "Geen API gevonden die aan de zoekcriteria voldoet",
-        "params": "Parameters:",
-        "searchPlaceholder": "Zoek tool..."
-      },
-      "card": "Plugin preview weergave",
-      "desc": "Plugin beschrijving preview",
-      "empty": {
-        "desc": "Na configuratie kunt u hier de ondersteunde toolmogelijkheden van de plugin bekijken",
-        "title": "Begin met preview na configuratie"
-      },
-      "title": "Plugin naam preview"
-    },
-    "save": "Plugin installeren",
-    "saveSuccess": "Plugin-instellingen succesvol opgeslagen",
-    "tabs": {
-      "manifest": "Functionaliteitsmanifest",
-      "meta": "Plugin meta-informatie"
-    },
-    "title": {
-      "create": "Aangepaste plugin toevoegen",
-      "edit": "Aangepaste plugin bewerken"
-    },
-    "type": {
-      "lobe": "{{appName}} plugin",
-      "openai": "OpenAI-plugin"
-    },
-    "update": "Bijwerken",
-    "updateSuccess": "Plugin-instellingen succesvol bijgewerkt"
-  },
-  "empty": {
-    "description": "De plug-inwinkel biedt een scala aan handige tools om te ontdekken. Bezoek de winkel om te beginnen met verkennen.",
-    "search": "Geen overeenkomende plug-ins gevonden",
-    "title": "Geen plug-ins beschikbaar"
-  },
-  "error": {
-    "fetchError": "Manifest-link ophalen mislukt, controleer de geldigheid van de link en of cross-origin toegang is toegestaan",
-    "installError": "Plugin {{name}} installatie mislukt",
-    "manifestInvalid": "Manifest voldoet niet aan de specificaties, validatiefout: \n\n {{error}}",
-    "noManifest": "Manifestbestand bestaat niet",
-    "openAPIInvalid": "OpenAPI parsing mislukt, fout: \n\n {{error}}",
-    "reinstallError": "Plugin {{name}} verversen mislukt",
-    "testConnectionFailed": "Manifest ophalen mislukt: {{error}}",
-    "urlError": "De link retourneert geen JSON-inhoud, zorg dat het een geldige link is"
-  },
-  "inspector": {
-    "args": "Bekijk parameterlijst",
-    "delete": "Hulpoproep verwijderen",
-    "orphanedToolCall": "Dit hulpoproepbericht is mogelijk geïsoleerd geraakt door een onverwachte fout, wat de normale werking van de agent kan beïnvloeden. Verwijder het alstublieft.",
-    "pluginRender": "Bekijk plugin-interface"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "Verwijderd",
-      "local.config": "Configuratie",
-      "local.title": "Aangepast"
-    }
-  },
-  "loading": {
-    "content": "Plugin aan het aanroepen...",
-    "plugin": "Plugin wordt uitgevoerd..."
-  },
-  "mcpEmpty": {
-    "deployment": "Geen implementatieopties beschikbaar",
-    "prompts": "Deze plug-in heeft geen promptwoorden",
-    "resources": "Deze plug-in heeft geen bronnen",
-    "tools": "Deze plug-in heeft geen toolfunctionaliteit"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
-    "COMPLETED": "Installatie voltooid",
-    "CONFIGURATION_REQUIRED": "Voltooi de configuratie om door te gaan met installatie",
-    "ERROR": "Installatiefout",
-    "FETCHING_MANIFEST": "Plugin manifest ophalen...",
-    "GETTING_SERVER_MANIFEST": "MCP-server initialiseren...",
-    "INSTALLING_PLUGIN": "Plugin aan het installeren...",
-    "configurationDescription": "Deze MCP-plugin vereist configuratieparameters om correct te functioneren, vul de benodigde informatie in",
-    "configurationRequired": "Pluginparameters configureren",
-    "continueInstall": "Installatie voortzetten",
-    "dependenciesDescription": "Deze plugin vereist de installatie van de volgende systeemafhankelijkheden. Installeer de ontbrekende afhankelijkheden volgens de instructies en klik op 'Opnieuw controleren' om door te gaan.",
-    "dependenciesRequired": "Installeer de systeemafhankelijkheden van de plugin",
-    "dependencyStatus": {
-      "installed": "Geïnstalleerd",
-      "notInstalled": "Niet geïnstalleerd",
-      "requiredVersion": "Vereiste versie: {{version}}"
-    },
-    "errorDetails": {
-      "args": "Parameters",
-      "command": "Commando",
-      "connectionParams": "Verbindingsparameters",
-      "env": "Omgevingsvariabelen",
-      "errorOutput": "Foutlog",
-      "exitCode": "Exitcode",
-      "hideDetails": "Details verbergen",
-      "originalError": "Oorspronkelijke fout",
-      "showDetails": "Details bekijken"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "Autorisatiefout",
-      "CONNECTION_FAILED": "Verbinding mislukt",
-      "INITIALIZATION_TIMEOUT": "Initialisatie time-out",
-      "PROCESS_SPAWN_ERROR": "Proces starten mislukt",
-      "UNKNOWN_ERROR": "Onbekende fout",
-      "VALIDATION_ERROR": "Parametervalidatie mislukt"
-    },
-    "installError": "MCP-plugin installatie mislukt, reden: {{detail}}",
-    "installMethods": {
-      "manual": "Handmatige installatie:",
-      "recommended": "Aanbevolen installatie:"
-    },
-    "recheckDependencies": "Opnieuw controleren",
-    "skipDependencies": "Controle overslaan"
-  },
+  "debug.arguments": "Aanroepparameters",
+  "debug.function_call": "Functieaanroep",
+  "debug.off": "Debuggen uitschakelen",
+  "debug.on": "Plugin-aanroepinformatie bekijken",
+  "debug.payload": "Plugin payload",
+  "debug.pluginState": "Plug-instatus",
+  "debug.response": "Resultaat",
+  "debug.title": "Plugin details",
+  "debug.tool_call": "Tool-aanroepverzoek",
+  "detailModal.customPlugin.description": "Ga naar de bewerkingspagina voor details",
+  "detailModal.customPlugin.editBtn": "Nu bewerken",
+  "detailModal.customPlugin.title": "Dit is een aangepaste plugin",
+  "detailModal.emptyState.description": "Installeer deze plugin eerst om de mogelijkheden en configuratieopties te bekijken",
+  "detailModal.emptyState.title": "Bekijk plugindetails na installatie",
+  "detailModal.info.description": "API-beschrijving",
+  "detailModal.info.name": "API-naam",
+  "detailModal.tabs.info": "Pluginmogelijkheden",
+  "detailModal.tabs.manifest": "Installatiebestand",
+  "detailModal.tabs.settings": "Instellingen",
+  "detailModal.title": "Plugindetails",
+  "dev.confirmDeleteDevPlugin": "Deze lokale plugin wordt verwijderd en kan niet worden hersteld. Weet u zeker dat u deze plugin wilt verwijderen?",
+  "dev.customParams.useProxy.label": "Installeren via proxy (schakel dit in bij CORS-fouten en probeer opnieuw te installeren)",
+  "dev.deleteSuccess": "Plugin succesvol verwijderd",
+  "dev.manifest.identifier.desc": "Unieke identificatie van de plugin",
+  "dev.manifest.identifier.label": "Identificator",
+  "dev.manifest.mode.mcp": "MCP-plugin",
+  "dev.manifest.mode.mcpExp": "Experimenteel",
+  "dev.manifest.mode.url": "Online link",
+  "dev.manifest.name.desc": "Plugin titel",
+  "dev.manifest.name.label": "Titel",
+  "dev.manifest.name.placeholder": "Zoekmachine",
+  "dev.mcp.advanced.title": "Geavanceerde instellingen",
+  "dev.mcp.args.desc": "Parameters doorgeven aan het uitvoeringscommando, meestal hier de MCP-servernaam of het pad naar het opstartscript invoeren",
+  "dev.mcp.args.label": "Commando-argumenten",
+  "dev.mcp.args.placeholder": "Bijv.: mcp-hello-world",
+  "dev.mcp.args.required": "Voer opstartparameters in",
+  "dev.mcp.auth.bear": "API-sleutel",
+  "dev.mcp.auth.desc": "Kies de authenticatiemethode voor de MCP-server",
+  "dev.mcp.auth.label": "Authenticatietype",
+  "dev.mcp.auth.none": "Geen authenticatie nodig",
+  "dev.mcp.auth.placeholder": "Selecteer authenticatietype",
+  "dev.mcp.auth.token.desc": "Voer je API-sleutel of Bearer-token in",
+  "dev.mcp.auth.token.label": "API-sleutel",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "Voer authenticatietoken in",
+  "dev.mcp.avatar.label": "Plugin-icoon",
+  "dev.mcp.command.desc": "Uitvoerbaar bestand of script om MCP STDIO-server te starten",
+  "dev.mcp.command.label": "Commando",
+  "dev.mcp.command.placeholder": "Bijv.: npx / uv / docker enz.",
+  "dev.mcp.command.required": "Voer opstartcommando in",
+  "dev.mcp.desc.desc": "Voeg een beschrijving toe voor de plugin",
+  "dev.mcp.desc.label": "Pluginbeschrijving",
+  "dev.mcp.desc.placeholder": "Voeg gebruiks- en scenario-informatie toe",
+  "dev.mcp.endpoint.desc": "Voer het adres van je MCP Streamable HTTP-server in",
+  "dev.mcp.endpoint.label": "MCP Endpoint URL",
+  "dev.mcp.env.add": "Voeg een regel toe",
+  "dev.mcp.env.desc": "Voer de omgevingsvariabelen in die de MCP-server nodig heeft",
+  "dev.mcp.env.duplicateKeyError": "Sleutel moet uniek zijn",
+  "dev.mcp.env.formValidationFailed": "Formuliervalidatie mislukt, controleer parameterindeling",
+  "dev.mcp.env.keyRequired": "Sleutel mag niet leeg zijn",
+  "dev.mcp.env.label": "MCP Server omgevingsvariabelen",
+  "dev.mcp.env.stringifyError": "Kan parameters niet serialiseren, controleer parameterindeling",
+  "dev.mcp.headers.add": "Voeg een regel toe",
+  "dev.mcp.headers.desc": "Voer HTTP-headers in",
+  "dev.mcp.headers.label": "HTTP-headers",
+  "dev.mcp.identifier.desc": "Geef je MCP-plugin een naam, alleen Engelse tekens toegestaan",
+  "dev.mcp.identifier.invalid": "Identificator mag alleen letters, cijfers, koppeltekens en underscores bevatten",
+  "dev.mcp.identifier.label": "MCP-pluginnaam",
+  "dev.mcp.identifier.placeholder": "Bijv.: my-mcp-plugin",
+  "dev.mcp.identifier.required": "Voer MCP-service-identificator in",
+  "dev.mcp.previewManifest": "Plugin manifest bekijken",
+  "dev.mcp.quickImport": "Snelle import van JSON-configuratie",
+  "dev.mcp.quickImportError.empty": "Inhoud mag niet leeg zijn",
+  "dev.mcp.quickImportError.invalidJson": "Ongeldige JSON-indeling",
+  "dev.mcp.quickImportError.invalidStructure": "Ongeldige JSON-structuur",
+  "dev.mcp.stdioNotSupported": "Huidige omgeving ondersteunt geen stdio-type MCP-plugins",
+  "dev.mcp.testConnection": "Verbinding testen",
+  "dev.mcp.testConnectionTip": "MCP-plugin kan pas normaal worden gebruikt na succesvolle verbindingstest",
+  "dev.mcp.type.desc": "Kies het communicatieprotocol van de MCP-plugin, webversie ondersteunt alleen Streamable HTTP",
+  "dev.mcp.type.httpFeature1": "Compatibel met web- en desktopversies",
+  "dev.mcp.type.httpFeature2": "Verbind met externe MCP-server zonder extra installatie",
+  "dev.mcp.type.httpShortDesc": "Communicatieprotocol gebaseerd op gestreamde HTTP",
+  "dev.mcp.type.label": "MCP-plugin type",
+  "dev.mcp.type.stdioFeature1": "Lagere communicatielatentie, geschikt voor lokaal gebruik",
+  "dev.mcp.type.stdioFeature2": "MCP-server moet lokaal geïnstalleerd en uitgevoerd worden",
+  "dev.mcp.type.stdioNotAvailable": "STDIO-modus alleen beschikbaar in desktopversie",
+  "dev.mcp.type.stdioShortDesc": "Communicatieprotocol gebaseerd op standaardinvoer/-uitvoer",
+  "dev.mcp.type.title": "MCP-plugin type",
+  "dev.mcp.url.desc": "Voer het Streamable HTTP-adres van je MCP-server in, SSE-modus wordt niet ondersteund",
+  "dev.mcp.url.invalid": "Voer een geldige URL in",
+  "dev.mcp.url.label": "Streamable HTTP Endpoint URL",
+  "dev.mcp.url.required": "Voer MCP-service-URL in",
+  "dev.meta.author.desc": "Auteur van de plugin",
+  "dev.meta.author.label": "Auteur",
+  "dev.meta.avatar.desc": "Plugin-icoon, kan een emoji of URL zijn",
+  "dev.meta.avatar.label": "Icoon",
+  "dev.meta.description.desc": "Pluginbeschrijving",
+  "dev.meta.description.label": "Beschrijving",
+  "dev.meta.description.placeholder": "Zoek informatie via zoekmachine",
+  "dev.meta.formFieldRequired": "Dit veld is verplicht",
+  "dev.meta.homepage.desc": "Startpagina van de plugin",
+  "dev.meta.homepage.label": "Startpagina",
+  "dev.meta.identifier.desc": "Unieke identificatie van de plugin, wordt automatisch herkend uit manifest",
+  "dev.meta.identifier.errorDuplicate": "Identificator is al in gebruik, wijzig deze",
+  "dev.meta.identifier.label": "Identificator",
+  "dev.meta.identifier.pattenErrorMessage": "Alleen Engelse letters, cijfers, - en _ zijn toegestaan",
+  "dev.meta.lobe": "{{appName}} plugin",
+  "dev.meta.manifest.desc": "{{appName}} installeert de plugin via deze link",
+  "dev.meta.manifest.label": "Plugin manifest URL",
+  "dev.meta.manifest.preview": "Manifest bekijken",
+  "dev.meta.manifest.refresh": "Vernieuwen",
+  "dev.meta.openai": "OpenAI-plugin",
+  "dev.meta.title.desc": "Plugin titel",
+  "dev.meta.title.label": "Titel",
+  "dev.meta.title.placeholder": "Zoekmachine",
+  "dev.metaConfig": "Plugin meta-informatie configuratie",
+  "dev.modalDesc": "Na toevoegen van een aangepaste plugin kan deze gebruikt worden voor ontwikkelvalidatie of direct in gesprekken. Raadpleeg de <1>ontwikkelaarsdocumentatie↗</> voor pluginontwikkeling.",
+  "dev.openai.importUrl": "Importeren via URL",
+  "dev.openai.schema": "Schema",
+  "dev.preview.api.noParams": "Deze tool heeft geen parameters",
+  "dev.preview.api.noResults": "Geen API gevonden die aan de zoekcriteria voldoet",
+  "dev.preview.api.params": "Parameters:",
+  "dev.preview.api.searchPlaceholder": "Zoek tool...",
+  "dev.preview.card": "Plugin preview weergave",
+  "dev.preview.desc": "Plugin beschrijving preview",
+  "dev.preview.empty.desc": "Na configuratie kunt u hier de ondersteunde toolmogelijkheden van de plugin bekijken",
+  "dev.preview.empty.title": "Begin met preview na configuratie",
+  "dev.preview.title": "Plugin naam preview",
+  "dev.save": "Plugin installeren",
+  "dev.saveSuccess": "Plugin-instellingen succesvol opgeslagen",
+  "dev.tabs.manifest": "Functionaliteitsmanifest",
+  "dev.tabs.meta": "Plugin meta-informatie",
+  "dev.title.create": "Aangepaste plugin toevoegen",
+  "dev.title.edit": "Aangepaste plugin bewerken",
+  "dev.type.lobe": "{{appName}} plugin",
+  "dev.type.openai": "OpenAI-plugin",
+  "dev.update": "Bijwerken",
+  "dev.updateSuccess": "Plugin-instellingen succesvol bijgewerkt",
+  "empty.description": "De plug-inwinkel biedt een scala aan handige tools om te ontdekken. Bezoek de winkel om te beginnen met verkennen.",
+  "empty.search": "Geen overeenkomende plug-ins gevonden",
+  "empty.title": "Geen plug-ins beschikbaar",
+  "error.fetchError": "Manifest-link ophalen mislukt, controleer de geldigheid van de link en of cross-origin toegang is toegestaan",
+  "error.installError": "Plugin {{name}} installatie mislukt",
+  "error.manifestInvalid": "Manifest voldoet niet aan de specificaties, validatiefout: \n\n {{error}}",
+  "error.noManifest": "Manifestbestand bestaat niet",
+  "error.openAPIInvalid": "OpenAPI parsing mislukt, fout: \n\n {{error}}",
+  "error.reinstallError": "Plugin {{name}} verversen mislukt",
+  "error.testConnectionFailed": "Manifest ophalen mislukt: {{error}}",
+  "error.urlError": "De link retourneert geen JSON-inhoud, zorg dat het een geldige link is",
+  "inspector.args": "Bekijk parameterlijst",
+  "inspector.delete": "Hulpoproep verwijderen",
+  "inspector.orphanedToolCall": "Dit hulpoproepbericht is mogelijk geïsoleerd geraakt door een onverwachte fout, wat de normale werking van de agent kan beïnvloeden. Verwijder het alstublieft.",
+  "inspector.pluginRender": "Bekijk plugin-interface",
+  "list.item[\"deprecated.title\"]": "Verwijderd",
+  "list.item[\"local.config\"]": "Configuratie",
+  "list.item[\"local.title\"]": "Aangepast",
+  "loading.content": "Plugin aan het aanroepen...",
+  "loading.plugin": "Plugin wordt uitgevoerd...",
+  "mcpEmpty.deployment": "Geen implementatieopties beschikbaar",
+  "mcpEmpty.prompts": "Deze plug-in heeft geen promptwoorden",
+  "mcpEmpty.resources": "Deze plug-in heeft geen bronnen",
+  "mcpEmpty.tools": "Deze plug-in heeft geen toolfunctionaliteit",
+  "mcpInstall.CHECKING_INSTALLATION": "Installatieomgeving controleren...",
+  "mcpInstall.COMPLETED": "Installatie voltooid",
+  "mcpInstall.CONFIGURATION_REQUIRED": "Voltooi de configuratie om door te gaan met installatie",
+  "mcpInstall.ERROR": "Installatiefout",
+  "mcpInstall.FETCHING_MANIFEST": "Plugin manifest ophalen...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "MCP-server initialiseren...",
+  "mcpInstall.INSTALLING_PLUGIN": "Plugin aan het installeren...",
+  "mcpInstall.configurationDescription": "Deze MCP-plugin vereist configuratieparameters om correct te functioneren, vul de benodigde informatie in",
+  "mcpInstall.configurationRequired": "Pluginparameters configureren",
+  "mcpInstall.continueInstall": "Installatie voortzetten",
+  "mcpInstall.dependenciesDescription": "Deze plugin vereist de installatie van de volgende systeemafhankelijkheden. Installeer de ontbrekende afhankelijkheden volgens de instructies en klik op 'Opnieuw controleren' om door te gaan.",
+  "mcpInstall.dependenciesRequired": "Installeer de systeemafhankelijkheden van de plugin",
+  "mcpInstall.dependencyStatus.installed": "Geïnstalleerd",
+  "mcpInstall.dependencyStatus.notInstalled": "Niet geïnstalleerd",
+  "mcpInstall.dependencyStatus.requiredVersion": "Vereiste versie: {{version}}",
+  "mcpInstall.errorDetails.args": "Parameters",
+  "mcpInstall.errorDetails.command": "Commando",
+  "mcpInstall.errorDetails.connectionParams": "Verbindingsparameters",
+  "mcpInstall.errorDetails.env": "Omgevingsvariabelen",
+  "mcpInstall.errorDetails.errorOutput": "Foutlog",
+  "mcpInstall.errorDetails.exitCode": "Exitcode",
+  "mcpInstall.errorDetails.hideDetails": "Details verbergen",
+  "mcpInstall.errorDetails.originalError": "Oorspronkelijke fout",
+  "mcpInstall.errorDetails.showDetails": "Details bekijken",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "Autorisatiefout",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "Verbinding mislukt",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "Initialisatie time-out",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "Proces starten mislukt",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "Onbekende fout",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "Parametervalidatie mislukt",
+  "mcpInstall.installError": "MCP-plugin installatie mislukt, reden: {{detail}}",
+  "mcpInstall.installMethods.manual": "Handmatige installatie:",
+  "mcpInstall.installMethods.recommended": "Aanbevolen installatie:",
+  "mcpInstall.recheckDependencies": "Opnieuw controleren",
+  "mcpInstall.skipDependencies": "Controle overslaan",
   "pluginList": "Pluginlijst",
-  "protocolInstall": {
-    "actions": {
-      "install": "Installeren",
-      "installAnyway": "Toch installeren",
-      "installed": "Geïnstalleerd"
-    },
-    "config": {
-      "addEnv": "Omgevingsvariabele toevoegen",
-      "addHeaders": "Verzoekheaders toevoegen",
-      "args": "Parameters",
-      "command": "Commando",
-      "env": "Omgevingsvariabelen",
-      "headers": "Headers",
-      "title": "Configuratie-informatie",
-      "type": {
-        "http": "Type: HTTP",
-        "label": "Type",
-        "stdio": "Type: Stdio"
-      },
-      "url": "Serviceadres"
-    },
-    "custom": {
-      "badge": "Aangepaste plugin",
-      "security": {
-        "description": "Deze plugin is niet officieel geverifieerd, installatie kan veiligheidsrisico's met zich meebrengen! Zorg dat u de bron vertrouwt.",
-        "title": "⚠️ Veiligheidswaarschuwing"
-      },
-      "title": "Aangepaste plugin installeren"
-    },
-    "install": {
-      "title": "Installatie-informatie"
-    },
-    "marketplace": {
-      "title": "Derde partij plugins installeren",
-      "trustedBy": "Aangeboden door {{name}}",
-      "unverified": {
-        "title": "Ongeverifieerde derde partij plugin",
-        "warning": "Deze plug-in is afkomstig van een niet-geverifieerde externe community. Zorg ervoor dat u deze bron vertrouwt voordat u installeert."
-      },
-      "verified": "Geverifieerd"
-    },
-    "messages": {
-      "connectionTestFailed": "Verbindingstest mislukt",
-      "installError": "Plugin-installatie mislukt, probeer opnieuw",
-      "installSuccess": "Plugin {{name}} succesvol geïnstalleerd!",
-      "manifestError": "Plugin details ophalen mislukt, controleer netwerkverbinding en probeer opnieuw",
-      "manifestNotFound": "Plugin manifest niet gevonden"
-    },
-    "meta": {
-      "author": "Auteur",
-      "homepage": "Startpagina",
-      "identifier": "Identificator",
-      "source": "Bron",
-      "version": "Versie"
-    },
-    "official": {
-      "badge": "LobeHub officiële plugin",
-      "description": "Deze plugin is ontwikkeld en onderhouden door LobeHub, grondig beveiligd en veilig in gebruik.",
-      "loadingMessage": "Plugin details ophalen...",
-      "loadingTitle": "Bezig met laden",
-      "title": "Officiële plugin installeren"
-    },
-    "title": "MCP-plugin installeren",
-    "warning": "⚠️ Bevestig dat u deze pluginbron vertrouwt, kwaadaardige plugins kunnen uw systeem in gevaar brengen."
-  },
-  "search": {
-    "config": {
-      "addKey": "Sleutel toevoegen",
-      "close": "Verwijderen",
-      "confirm": "Configuratie voltooid en opnieuw geprobeerd"
-    },
-    "crawPages": {
-      "crawling": "Linkherkenning bezig",
-      "detail": {
-        "preview": "Voorbeeld",
-        "raw": "Ruwe tekst",
-        "tooLong": "Tekst is te lang, alleen de eerste {{characters}} tekens worden in de context opgenomen"
-      },
-      "meta": {
-        "crawler": "Crawling modus",
-        "words": "Aantal tekens"
-      }
-    },
-    "searchxng": {
-      "baseURL": "Voer in",
-      "description": "Voer de URL van SearchXNG in om te beginnen met online zoeken",
-      "keyPlaceholder": "Voer sleutel in",
-      "title": "SearchXNG zoekmachine configureren",
-      "unconfiguredDesc": "Neem contact op met de beheerder om SearchXNG zoekmachine te configureren en online zoeken te starten",
-      "unconfiguredTitle": "SearchXNG zoekmachine niet geconfigureerd"
-    },
-    "title": "Online zoeken"
-  },
+  "protocolInstall.actions.install": "Installeren",
+  "protocolInstall.actions.installAnyway": "Toch installeren",
+  "protocolInstall.actions.installed": "Geïnstalleerd",
+  "protocolInstall.config.addEnv": "Omgevingsvariabele toevoegen",
+  "protocolInstall.config.addHeaders": "Verzoekheaders toevoegen",
+  "protocolInstall.config.args": "Parameters",
+  "protocolInstall.config.command": "Commando",
+  "protocolInstall.config.env": "Omgevingsvariabelen",
+  "protocolInstall.config.headers": "Headers",
+  "protocolInstall.config.title": "Configuratie-informatie",
+  "protocolInstall.config.type.http": "Type: HTTP",
+  "protocolInstall.config.type.label": "Type",
+  "protocolInstall.config.type.stdio": "Type: Stdio",
+  "protocolInstall.config.url": "Serviceadres",
+  "protocolInstall.custom.badge": "Aangepaste plugin",
+  "protocolInstall.custom.security.description": "Deze plugin is niet officieel geverifieerd, installatie kan veiligheidsrisico's met zich meebrengen! Zorg dat u de bron vertrouwt.",
+  "protocolInstall.custom.security.title": "⚠️ Veiligheidswaarschuwing",
+  "protocolInstall.custom.title": "Aangepaste plugin installeren",
+  "protocolInstall.install.title": "Installatie-informatie",
+  "protocolInstall.marketplace.title": "Derde partij plugins installeren",
+  "protocolInstall.marketplace.trustedBy": "Aangeboden door {{name}}",
+  "protocolInstall.marketplace.unverified.title": "Ongeverifieerde derde partij plugin",
+  "protocolInstall.marketplace.unverified.warning": "Deze plug-in is afkomstig van een niet-geverifieerde externe community. Zorg ervoor dat u deze bron vertrouwt voordat u installeert.",
+  "protocolInstall.marketplace.verified": "Geverifieerd",
+  "protocolInstall.messages.connectionTestFailed": "Verbindingstest mislukt",
+  "protocolInstall.messages.installError": "Plugin-installatie mislukt, probeer opnieuw",
+  "protocolInstall.messages.installSuccess": "Plugin {{name}} succesvol geïnstalleerd!",
+  "protocolInstall.messages.manifestError": "Plugin details ophalen mislukt, controleer netwerkverbinding en probeer opnieuw",
+  "protocolInstall.messages.manifestNotFound": "Plugin manifest niet gevonden",
+  "protocolInstall.meta.author": "Auteur",
+  "protocolInstall.meta.homepage": "Startpagina",
+  "protocolInstall.meta.identifier": "Identificator",
+  "protocolInstall.meta.source": "Bron",
+  "protocolInstall.meta.version": "Versie",
+  "protocolInstall.official.badge": "LobeHub officiële plugin",
+  "protocolInstall.official.description": "Deze plugin is ontwikkeld en onderhouden door LobeHub, grondig beveiligd en veilig in gebruik.",
+  "protocolInstall.official.loadingMessage": "Plugin details ophalen...",
+  "protocolInstall.official.loadingTitle": "Bezig met laden",
+  "protocolInstall.official.title": "Officiële plugin installeren",
+  "protocolInstall.title": "MCP-plugin installeren",
+  "protocolInstall.warning": "⚠️ Bevestig dat u deze pluginbron vertrouwt, kwaadaardige plugins kunnen uw systeem in gevaar brengen.",
+  "search.config.addKey": "Sleutel toevoegen",
+  "search.config.close": "Verwijderen",
+  "search.config.confirm": "Configuratie voltooid en opnieuw geprobeerd",
+  "search.crawPages.crawling": "Linkherkenning bezig",
+  "search.crawPages.detail.preview": "Voorbeeld",
+  "search.crawPages.detail.raw": "Ruwe tekst",
+  "search.crawPages.detail.tooLong": "Tekst is te lang, alleen de eerste {{characters}} tekens worden in de context opgenomen",
+  "search.crawPages.meta.crawler": "Crawling modus",
+  "search.crawPages.meta.words": "Aantal tekens",
+  "search.searchxng.baseURL": "Voer in",
+  "search.searchxng.description": "Voer de URL van SearchXNG in om te beginnen met online zoeken",
+  "search.searchxng.keyPlaceholder": "Voer sleutel in",
+  "search.searchxng.title": "SearchXNG zoekmachine configureren",
+  "search.searchxng.unconfiguredDesc": "Neem contact op met de beheerder om SearchXNG zoekmachine te configureren en online zoeken te starten",
+  "search.searchxng.unconfiguredTitle": "SearchXNG zoekmachine niet geconfigureerd",
+  "search.title": "Online zoeken",
   "setting": "Plugin-instellingen",
-  "settings": {
-    "capabilities": {
-      "prompts": "Promptwoorden",
-      "resources": "Middelen",
-      "title": "Pluginmogelijkheden",
-      "tools": "Tools"
-    },
-    "configuration": {
-      "title": "Pluginconfiguratie"
-    },
-    "connection": {
-      "args": "Opstartparameters",
-      "command": "Opstartcommando",
-      "title": "Verbindingsinformatie",
-      "type": "Verbindingstype",
-      "url": "Serviceadres"
-    },
-    "edit": "Bewerken",
-    "envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven bij het starten van de MCP-server",
-    "httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen nodig",
-    "indexUrl": {
-      "title": "Community-index",
-      "tooltip": "Online bewerken niet ondersteund, stel in via omgevingsvariabelen bij deployment"
-    },
-    "messages": {
-      "connectionUpdateFailed": "Verbindingsinformatie bijwerken mislukt",
-      "connectionUpdateSuccess": "Verbindingsinformatie succesvol bijgewerkt",
-      "envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
-      "envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen"
-    },
-    "modalDesc": "Na het configureren van het adres van de plug-incommunity kunt u een aangepaste plug-incommunity gebruiken.",
-    "rules": {
-      "argsRequired": "Voer opstartparameters in",
-      "commandRequired": "Voer opstartcommando in",
-      "urlRequired": "Voer serviceadres in"
-    },
-    "saveSettings": "Instellingen opslaan",
-    "title": "Plug-incommunity instellen"
-  },
+  "settings.capabilities.prompts": "Promptwoorden",
+  "settings.capabilities.resources": "Middelen",
+  "settings.capabilities.title": "Pluginmogelijkheden",
+  "settings.capabilities.tools": "Tools",
+  "settings.configuration.title": "Pluginconfiguratie",
+  "settings.connection.args": "Opstartparameters",
+  "settings.connection.command": "Opstartcommando",
+  "settings.connection.title": "Verbindingsinformatie",
+  "settings.connection.type": "Verbindingstype",
+  "settings.connection.url": "Serviceadres",
+  "settings.edit": "Bewerken",
+  "settings.envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven bij het starten van de MCP-server",
+  "settings.httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen nodig",
+  "settings.indexUrl.title": "Community-index",
+  "settings.indexUrl.tooltip": "Online bewerken niet ondersteund, stel in via omgevingsvariabelen bij deployment",
+  "settings.messages.connectionUpdateFailed": "Verbindingsinformatie bijwerken mislukt",
+  "settings.messages.connectionUpdateSuccess": "Verbindingsinformatie succesvol bijgewerkt",
+  "settings.messages.envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
+  "settings.messages.envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen",
+  "settings.modalDesc": "Na het configureren van het adres van de plug-incommunity kunt u een aangepaste plug-incommunity gebruiken.",
+  "settings.rules.argsRequired": "Voer opstartparameters in",
+  "settings.rules.commandRequired": "Voer opstartcommando in",
+  "settings.rules.urlRequired": "Voer serviceadres in",
+  "settings.saveSettings": "Instellingen opslaan",
+  "settings.title": "Plug-incommunity instellen",
   "showInPortal": "Bekijk details in de werkruimte",
-  "store": {
-    "actions": {
-      "cancel": "Installatie annuleren",
-      "confirmUninstall": "Deze plugin wordt verwijderd en de configuratie wordt gewist. Bevestig uw actie.",
-      "detail": "Details",
-      "install": "Installeren",
-      "manifest": "Installatiebestand bewerken",
-      "settings": "Instellingen",
-      "uninstall": "Verwijderen"
-    },
-    "communityPlugin": "Derde partij community",
-    "customPlugin": "Aangepast",
-    "empty": "Geen geïnstalleerde plugins",
-    "emptySelectHint": "Selecteer een plugin om details te bekijken",
-    "installAllPlugins": "Alles installeren",
-    "networkError": "Pluginwinkel ophalen mislukt, controleer netwerkverbinding en probeer opnieuw",
-    "placeholder": "Zoek pluginnaam, beschrijving of trefwoorden...",
-    "releasedAt": "Uitgebracht op {{createdAt}}",
-    "tabs": {
-      "installed": "Geïnstalleerd",
-      "mcp": "MCP-plugins",
-      "old": "LobeHub Plug-ins"
-    },
-    "title": "Pluginwinkel"
-  },
+  "store.actions.cancel": "Installatie annuleren",
+  "store.actions.confirmUninstall": "Deze plugin wordt verwijderd en de configuratie wordt gewist. Bevestig uw actie.",
+  "store.actions.detail": "Details",
+  "store.actions.install": "Installeren",
+  "store.actions.manifest": "Installatiebestand bewerken",
+  "store.actions.settings": "Instellingen",
+  "store.actions.uninstall": "Verwijderen",
+  "store.communityPlugin": "Derde partij community",
+  "store.customPlugin": "Aangepast",
+  "store.empty": "Geen geïnstalleerde plugins",
+  "store.emptySelectHint": "Selecteer een plugin om details te bekijken",
+  "store.installAllPlugins": "Alles installeren",
+  "store.networkError": "Pluginwinkel ophalen mislukt, controleer netwerkverbinding en probeer opnieuw",
+  "store.placeholder": "Zoek pluginnaam, beschrijving of trefwoorden...",
+  "store.releasedAt": "Uitgebracht op {{createdAt}}",
+  "store.tabs.installed": "Geïnstalleerd",
+  "store.tabs.mcp": "MCP-plugins",
+  "store.tabs.old": "LobeHub Plug-ins",
+  "store.title": "Pluginwinkel",
   "unknownError": "Onbekende fout",
   "unknownPlugin": "Onbekende plugin"
 }

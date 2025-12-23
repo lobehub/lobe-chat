@@ -1,118 +1,76 @@
 {
-  "authorize": {
-    "cancel": "Отказ",
-    "confirm": "Създай своя профил",
-    "description": "Твоят общностен профил съществува независимо от потребителския акаунт в {{appName}}.",
-    "footer": {
-      "agreement": "Продължавайки, потвърждаваш, че си запознат и приемаш <terms>Условията за ползване</terms> и <privacy>Политиката за поверителност</privacy>",
-      "privacy": "Политика за поверителност",
-      "terms": "Условия за ползване"
-    },
-    "subtitle": "Създай общностен профил, за да подаваш и управляваш информация за публикуване в общността.",
-    "title": "Създаване на общностен профил"
-  },
-  "callback": {
-    "buttons": {
-      "close": "Затвори прозореца"
-    },
-    "messages": {
-      "authFailed": "Неуспешно упълномощаване: {{error}}",
-      "missingParams": "Липсват параметри за упълномощаване",
-      "processing": "Обработва се упълномощаването...",
-      "successWithCountdown": "{{message}} Прозорецът ще се затвори автоматично след {{countdown}} секунди",
-      "successWithRedirect": "Упълномощаването е успешно! Пренасочване..."
-    },
-    "titles": {
-      "error": "Неуспешно упълномощаване",
-      "loading": "Упълномощаване в LobeHub Market",
-      "success": "Упълномощаването е успешно"
-    }
-  },
-  "errors": {
-    "authorizationFailed": "Упълномощаването не бе успешно, моля опитайте отново.",
-    "browserOnly": "Процесът на упълномощаване може да бъде стартиран само в браузър.",
-    "codeConsumed": "Кодът за упълномощаване вече е използван, моля опитайте отново.",
-    "codeVerifierMissing": "Сесията за упълномощаване е невалидна, моля започнете отново процеса на вход.",
-    "general": "Възникна грешка при упълномощаването, моля опитайте отново.",
-    "handoffFailed": "Неуспешно получаване на резултат от упълномощаването, моля опитайте отново.",
-    "handoffTimeout": "Времето за упълномощаване изтече, моля завършете процеса в браузъра и опитайте отново.",
-    "oidcNotReady": "Услугата за упълномощаване все още не е готова, моля опитайте по-късно.",
-    "openBrowserFailed": "Неуспешно отваряне на системния браузър, моля опитайте отново.",
-    "openPopupFailed": "Неуспешно отваряне на изскачащ прозорец за упълномощаване, моля проверете настройките за блокиране на изскачащи прозорци в браузъра.",
-    "popupClosed": "Прозорецът за упълномощаване бе затворен преди завършване на процеса.",
-    "sessionExpired": "Сесията за упълномощаване е изтекла, моля влезте отново.",
-    "stateMismatch": "Несъответствие в състоянието на упълномощаване, моля опитайте отново.",
-    "stateMissing": "Състоянието на упълномощаване не бе намерено, моля опитайте отново."
-  },
-  "messages": {
-    "authorized": "Успешно упълномощаване на услугата LobeHub",
-    "loading": "Стартиране на процеса по упълномощаване...",
-    "success": {
-      "cloudMcpInstall": "Успешно разрешение! Вече можете да инсталирате приставката Cloud MCP.",
-      "submit": "Упълномощаването е успешно! Вече можете да публикувате помощник.",
-      "upload": "Упълномощаването е успешно! Вече можете да публикувате нова версия."
-    }
-  },
-  "profileSetup": {
-    "cancel": "Отказ",
-    "descriptionEdit": "Актуализирайте информацията във вашия профил в общността.",
-    "descriptionFirstTime": "Настройте своя профил, за да завършите създаването на профила в общността.",
-    "errors": {
-      "fileTooLarge": "Размерът на файла не трябва да надвишава 2MB",
-      "notAuthenticated": "Моля, влезте в системата, преди да продължите",
-      "updateFailed": "Неуспешно обновяване на профила. Моля, опитайте отново",
-      "uploadFailed": "Качването не бе успешно, моля опитайте отново",
-      "usernameTaken": "Този потребителски ID вече е зает. Моля, изберете друг"
-    },
-    "fields": {
-      "avatar": {
-        "label": "Профилна снимка"
-      },
-      "bannerUrl": {
-        "clickToUpload": "Кликнете, за да качите банер",
-        "label": "Банер",
-        "remove": "Премахни банера",
-        "tooltip": "Банерът ще се показва в горната част на вашия профил (препоръчително съотношение 16:9)",
-        "uploading": "Качване..."
-      },
-      "description": {
-        "label": "Лично представяне",
-        "maxLength": "Личното представяне може да бъде до 200 знака",
-        "placeholder": "Разкажете ни малко за себе си..."
-      },
-      "displayName": {
-        "label": "Псевдоним",
-        "maxLength": "Псевдонимът може да бъде до 50 знака",
-        "placeholder": "Въведете вашия псевдоним",
-        "required": "Моля, въведете псевдоним"
-      },
-      "github": {
-        "placeholder": "Потребителско име в GitHub"
-      },
-      "twitter": {
-        "placeholder": "Потребителско име в X (Twitter)"
-      },
-      "userName": {
-        "label": "Потребителски ID",
-        "maxLength": "Потребителският ID може да бъде до 32 знака",
-        "minLength": "Потребителският ID трябва да бъде поне 3 знака",
-        "pattern": "Потребителският ID може да съдържа само букви, цифри, долни черти и тирета",
-        "placeholder": "Въведете вашия потребителски ID",
-        "required": "Моля, въведете потребителски ID",
-        "tooltip": "Потребителският ID е вашият уникален идентификатор и ще се използва в линка към вашия профил"
-      },
-      "website": {
-        "invalidUrl": "Моля, въведете валиден уеб адрес",
-        "placeholder": "Линк към личния уебсайт"
-      }
-    },
-    "getStarted": "Започнете",
-    "save": "Запази",
-    "socialLinks": {
-      "title": "Социални връзки"
-    },
-    "success": "Профилът е обновен успешно",
-    "titleEdit": "Редактиране на профил",
-    "titleFirstTime": "Завършете своя профил"
-  }
+  "authorize.cancel": "Отказ",
+  "authorize.confirm": "Създай своя профил",
+  "authorize.description": "Твоят общностен профил съществува независимо от потребителския акаунт в {{appName}}.",
+  "authorize.footer.agreement": "Продължавайки, потвърждаваш, че си запознат и приемаш <terms>Условията за ползване</terms> и <privacy>Политиката за поверителност</privacy>",
+  "authorize.footer.privacy": "Политика за поверителност",
+  "authorize.footer.terms": "Условия за ползване",
+  "authorize.subtitle": "Създай общностен профил, за да подаваш и управляваш информация за публикуване в общността.",
+  "authorize.title": "Създаване на общностен профил",
+  "callback.buttons.close": "Затвори прозореца",
+  "callback.messages.authFailed": "Неуспешно упълномощаване: {{error}}",
+  "callback.messages.missingParams": "Липсват параметри за упълномощаване",
+  "callback.messages.processing": "Обработва се упълномощаването...",
+  "callback.messages.successWithCountdown": "{{message}} Прозорецът ще се затвори автоматично след {{countdown}} секунди",
+  "callback.messages.successWithRedirect": "Упълномощаването е успешно! Пренасочване...",
+  "callback.titles.error": "Неуспешно упълномощаване",
+  "callback.titles.loading": "Упълномощаване в LobeHub Market",
+  "callback.titles.success": "Упълномощаването е успешно",
+  "errors.authorizationFailed": "Упълномощаването не бе успешно, моля опитайте отново.",
+  "errors.browserOnly": "Процесът на упълномощаване може да бъде стартиран само в браузър.",
+  "errors.codeConsumed": "Кодът за упълномощаване вече е използван, моля опитайте отново.",
+  "errors.codeVerifierMissing": "Сесията за упълномощаване е невалидна, моля започнете отново процеса на вход.",
+  "errors.general": "Възникна грешка при упълномощаването, моля опитайте отново.",
+  "errors.handoffFailed": "Неуспешно получаване на резултат от упълномощаването, моля опитайте отново.",
+  "errors.handoffTimeout": "Времето за упълномощаване изтече, моля завършете процеса в браузъра и опитайте отново.",
+  "errors.oidcNotReady": "Услугата за упълномощаване все още не е готова, моля опитайте по-късно.",
+  "errors.openBrowserFailed": "Неуспешно отваряне на системния браузър, моля опитайте отново.",
+  "errors.openPopupFailed": "Неуспешно отваряне на изскачащ прозорец за упълномощаване, моля проверете настройките за блокиране на изскачащи прозорци в браузъра.",
+  "errors.popupClosed": "Прозорецът за упълномощаване бе затворен преди завършване на процеса.",
+  "errors.sessionExpired": "Сесията за упълномощаване е изтекла, моля влезте отново.",
+  "errors.stateMismatch": "Несъответствие в състоянието на упълномощаване, моля опитайте отново.",
+  "errors.stateMissing": "Състоянието на упълномощаване не бе намерено, моля опитайте отново.",
+  "messages.authorized": "Успешно упълномощаване на услугата LobeHub",
+  "messages.loading": "Стартиране на процеса по упълномощаване...",
+  "messages.success.cloudMcpInstall": "Успешно разрешение! Вече можете да инсталирате приставката Cloud MCP.",
+  "messages.success.submit": "Упълномощаването е успешно! Вече можете да публикувате помощник.",
+  "messages.success.upload": "Упълномощаването е успешно! Вече можете да публикувате нова версия.",
+  "profileSetup.cancel": "Отказ",
+  "profileSetup.descriptionEdit": "Актуализирайте информацията във вашия профил в общността.",
+  "profileSetup.descriptionFirstTime": "Настройте своя профил, за да завършите създаването на профила в общността.",
+  "profileSetup.errors.fileTooLarge": "Размерът на файла не трябва да надвишава 2MB",
+  "profileSetup.errors.notAuthenticated": "Моля, влезте в системата, преди да продължите",
+  "profileSetup.errors.updateFailed": "Неуспешно обновяване на профила. Моля, опитайте отново",
+  "profileSetup.errors.uploadFailed": "Качването не бе успешно, моля опитайте отново",
+  "profileSetup.errors.usernameTaken": "Този потребителски ID вече е зает. Моля, изберете друг",
+  "profileSetup.fields.avatar.label": "Профилна снимка",
+  "profileSetup.fields.bannerUrl.clickToUpload": "Кликнете, за да качите банер",
+  "profileSetup.fields.bannerUrl.label": "Банер",
+  "profileSetup.fields.bannerUrl.remove": "Премахни банера",
+  "profileSetup.fields.bannerUrl.tooltip": "Банерът ще се показва в горната част на вашия профил (препоръчително съотношение 16:9)",
+  "profileSetup.fields.bannerUrl.uploading": "Качване...",
+  "profileSetup.fields.description.label": "Лично представяне",
+  "profileSetup.fields.description.maxLength": "Личното представяне може да бъде до 200 знака",
+  "profileSetup.fields.description.placeholder": "Разкажете ни малко за себе си...",
+  "profileSetup.fields.displayName.label": "Псевдоним",
+  "profileSetup.fields.displayName.maxLength": "Псевдонимът може да бъде до 50 знака",
+  "profileSetup.fields.displayName.placeholder": "Въведете вашия псевдоним",
+  "profileSetup.fields.displayName.required": "Моля, въведете псевдоним",
+  "profileSetup.fields.github.placeholder": "Потребителско име в GitHub",
+  "profileSetup.fields.twitter.placeholder": "Потребителско име в X (Twitter)",
+  "profileSetup.fields.userName.label": "Потребителски ID",
+  "profileSetup.fields.userName.maxLength": "Потребителският ID може да бъде до 32 знака",
+  "profileSetup.fields.userName.minLength": "Потребителският ID трябва да бъде поне 3 знака",
+  "profileSetup.fields.userName.pattern": "Потребителският ID може да съдържа само букви, цифри, долни черти и тирета",
+  "profileSetup.fields.userName.placeholder": "Въведете вашия потребителски ID",
+  "profileSetup.fields.userName.required": "Моля, въведете потребителски ID",
+  "profileSetup.fields.userName.tooltip": "Потребителският ID е вашият уникален идентификатор и ще се използва в линка към вашия профил",
+  "profileSetup.fields.website.invalidUrl": "Моля, въведете валиден уеб адрес",
+  "profileSetup.fields.website.placeholder": "Линк към личния уебсайт",
+  "profileSetup.getStarted": "Започнете",
+  "profileSetup.save": "Запази",
+  "profileSetup.socialLinks.title": "Социални връзки",
+  "profileSetup.success": "Профилът е обновен успешно",
+  "profileSetup.titleEdit": "Редактиране на профил",
+  "profileSetup.titleFirstTime": "Завършете своя профил"
 }

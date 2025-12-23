@@ -1,238 +1,142 @@
 {
-  "ArgsInput": {
-    "addArgument": "Añadir argumento",
-    "argumentPlaceholder": "Parámetro {{index}}",
-    "enterFirstArgument": "Introduce el primer parámetro..."
-  },
-  "DragUpload": {
-    "dragDesc": "Arrastra los archivos aquí, se admite la carga de múltiples imágenes.",
-    "dragFileDesc": "Arrastra imágenes y archivos aquí, se admite la carga de múltiples imágenes y archivos.",
-    "dragFileTitle": "Subir archivo",
-    "dragTitle": "Subir imagen"
-  },
-  "EmojiPicker": {
-    "delete": "Eliminar avatar",
-    "draggerDesc": "Haz clic o arrastra una imagen a esta área para subirla",
-    "emoji": "Avatar de emoji",
-    "fileTypeError": "Por favor, sube un archivo de imagen válido",
-    "upload": "Subir avatar",
-    "uploadBtn": "Recortar y subir"
-  },
-  "FileManager": {
-    "actions": {
-      "addToKnowledgeBase": "Agregar a la base de recursos",
-      "addToOtherKnowledgeBase": "Agregar a otra base de recursos",
-      "batchChunking": "División por lotes",
-      "chunking": "División",
-      "chunkingTooltip": "Divida el archivo en múltiples bloques de texto y vectorícelos para su uso en búsqueda semántica y diálogo de archivos",
-      "chunkingUnsupported": "Este archivo no admite la fragmentación",
-      "confirmDelete": "Está a punto de eliminar este archivo. Una vez eliminado, no podrá recuperarlo. Por favor, confirme su acción.",
-      "confirmDeleteFolder": "Estás a punto de eliminar esta carpeta y todo su contenido. Esta acción no se puede deshacer. Por favor, confirma tu decisión.",
-      "confirmDeleteMultiFiles": "Está a punto de eliminar los {{count}} archivos seleccionados. Una vez eliminados, no podrá recuperarlos. Por favor, confirme su acción.",
-      "confirmRemoveFromKnowledgeBase": "Estás a punto de eliminar {{count}} archivos seleccionados de la base de recursos. Los archivos seguirán estando disponibles en 'Todos los archivos' después de ser eliminados. Por favor, confirma tu acción.",
-      "copyUrl": "Copiar enlace",
-      "copyUrlSuccess": "Dirección del archivo copiada con éxito",
-      "createChunkingTask": "Preparando...",
-      "deleteSuccess": "Archivo eliminado con éxito",
-      "downloading": "Descargando archivo...",
-      "goBack": "Volver a la página anterior",
-      "goForward": "Avanzar a la siguiente página",
-      "goToParent": "Ir a la carpeta superior",
-      "moveError": "Error al mover el archivo",
-      "moveHere": "Mover aquí",
-      "moveSuccess": "Archivo movido con éxito",
-      "moveToFolder": "Mover a...",
-      "moveToRoot": "Mover a la carpeta raíz",
-      "removeFromKnowledgeBase": "Eliminar de la base de recursos",
-      "removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito",
-      "rename": "Renombrar",
-      "renameError": "Error al renombrar",
-      "renameSuccess": "Renombrado con éxito"
-    },
-    "bottom": "Ya has llegado al final",
-    "config": {
-      "showFilesInKnowledgeBase": "Mostrar contenido en la base de recursos"
-    },
-    "emptyStatus": {
-      "actions": {
-        "file": "Subir archivo",
-        "folder": "Subir carpeta",
-        "knowledgeBase": "Crear nueva base de recursos"
-      },
-      "or": "o",
-      "title": "Arrastra archivos o carpetas aquí"
-    },
-    "noFolders": "No hay carpetas disponibles",
-    "sort": {
-      "dateAdded": "Fecha de añadido",
-      "name": "Nombre",
-      "size": "Tamaño"
-    },
-    "title": {
-      "createdAt": "Fecha de creación",
-      "size": "Tamaño",
-      "title": "Archivo"
-    },
-    "total": {
-      "fileCount": "Total {{count}} elementos",
-      "selectedCount": "Seleccionados {{count}} elementos"
-    },
-    "view": {
-      "list": "Vista de lista",
-      "masonry": "Vista de cuadrícula"
-    }
-  },
-  "FileParsingStatus": {
-    "chunks": {
-      "embeddingStatus": {
-        "empty": "Los bloques de texto aún no están completamente vectorizados, lo que hará que la función de búsqueda semántica no esté disponible. Para mejorar la calidad de búsqueda, por favor vectorice los bloques de texto.",
-        "error": "Error de vectorización",
-        "errorResult": "Error de vectorización, por favor verifica y vuelve a intentarlo. Motivo del fallo:",
-        "processing": "Los bloques de texto están siendo vectorizados, por favor, tenga paciencia.",
-        "success": "Todos los bloques de texto actuales han sido vectorizados."
-      },
-      "embeddings": "Vectorización",
-      "status": {
-        "error": "Error en la división",
-        "errorResult": "Error en la división, por favor revise y vuelva a intentarlo. Razón del fallo:",
-        "processing": "Dividiendo",
-        "processingTip": "El servidor está dividiendo los bloques de texto, cerrar la página no afectará el progreso de la división."
-      }
-    }
-  },
-  "GoBack": {
-    "back": "Regresar"
-  },
-  "HtmlPreview": {
-    "actions": {
-      "download": "Descargar",
-      "preview": "Vista previa"
-    },
-    "iframeTitle": "Vista previa HTML",
-    "mode": {
-      "code": "Código",
-      "preview": "Vista previa"
-    },
-    "title": "Vista previa HTML"
-  },
-  "ImageUpload": {
-    "actions": {
-      "changeImage": "Haz clic para cambiar la imagen",
-      "dropMultipleFiles": "No se admite la carga múltiple de archivos, solo se utilizará el primer archivo"
-    },
-    "placeholder": {
-      "primary": "Agregar imagen",
-      "secondary": "Haga clic o arrastre para subir"
-    }
-  },
-  "KeyValueEditor": {
-    "addButton": "Agregar una fila",
-    "deleteTooltip": "Eliminar",
-    "duplicateKeyError": "El nombre de la clave debe ser único",
-    "keyPlaceholder": "Clave",
-    "valuePlaceholder": "Valor"
-  },
-  "LocalFile": {
-    "action": {
-      "open": "Abrir",
-      "showInFolder": "Mostrar en la carpeta"
-    }
-  },
-  "MaxTokenSlider": {
-    "unlimited": "Sin límite"
-  },
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modelo personalizado: admite llamadas de función y reconocimiento visual. Verifique la disponibilidad de estas capacidades según sea necesario.",
-      "file": "Este modelo admite la carga y reconocimiento de archivos.",
-      "functionCall": "Este modelo admite llamadas de función.",
-      "imageOutput": "Este modelo admite la generación de imágenes",
-      "reasoning": "Este modelo admite un pensamiento profundo",
-      "search": "Este modelo admite búsqueda en línea",
-      "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
-      "video": "Este modelo admite reconocimiento de video",
-      "vision": "Este modelo admite el reconocimiento visual."
-    },
-    "removed": "El modelo no está en la lista, se eliminará automáticamente si se cancela la selección"
-  },
-  "ModelSwitchPanel": {
-    "emptyModel": "No hay modelos habilitados. Vaya a la configuración para habilitarlos.",
-    "emptyProvider": "No hay proveedores habilitados, por favor ve a la configuración para activarlos",
-    "goToSettings": "Ir a la configuración",
-    "provider": "Proveedor",
-    "title": "Modelo"
-  },
-  "MultiImagesUpload": {
-    "actions": {
-      "uploadMore": "Haz clic o arrastra para subir más"
-    },
-    "modal": {
-      "complete": "Completar",
-      "newFileIndicator": "Nuevo",
-      "selectImageToPreview": "Por favor, selecciona una imagen para previsualizar",
-      "title": "Gestionar imágenes ({{count}})",
-      "upload": "Subir imágenes"
-    },
-    "placeholder": {
-      "primary": "Haz clic o arrastra para subir imágenes",
-      "secondary": "Se admite la selección de múltiples imágenes"
-    },
-    "progress": {
-      "uploadingWithCount": "{{completed}}/{{total}} subidas"
-    },
-    "validation": {
-      "fileSizeExceeded": "El tamaño del archivo excede el límite",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) supera el tamaño máximo permitido de {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} archivos superan el tamaño máximo permitido de {{maxSize}}: {{fileList}}",
-      "imageCountExceeded": "Se ha excedido el límite de imágenes"
-    }
-  },
-  "OllamaSetupGuide": {
-    "action": {
-      "close": "Cerrar aviso",
-      "start": "Instalado"
-    },
-    "cors": {
-      "description": "Debido a las restricciones de seguridad del navegador, necesitas configurar CORS para Ollama antes de poder usarlo correctamente.",
-      "linux": {
-        "env": "Agrega `Environment` en la sección [Service] y añade la variable de entorno OLLAMA_ORIGINS:",
-        "reboot": "Recarga systemd y reinicia Ollama",
-        "systemd": "Usa systemd para editar el servicio de ollama:"
-      },
-      "macos": "Abre la aplicación 'Terminal', pega el siguiente comando y presiona Enter para ejecutarlo",
-      "reboot": "Reinicia el servicio de Ollama después de completar la ejecución",
-      "title": "Configura Ollama para permitir el acceso CORS",
-      "windows": "En Windows, haz clic en 'Panel de control' y entra en la edición de variables de entorno del sistema. Crea una nueva variable de entorno llamada 'OLLAMA_ORIGINS' para tu cuenta de usuario, con el valor * y haz clic en 'OK/Aplicar' para guardar."
-    },
-    "install": {
-      "description": "Asegúrate de que has iniciado Ollama. Si no has descargado Ollama, visita el sitio web oficial <1>para descargar</1>.",
-      "docker": "Si prefieres usar Docker, Ollama también ofrece una imagen oficial de Docker que puedes descargar con el siguiente comando:",
-      "linux": {
-        "command": "Instala con el siguiente comando:",
-        "manual": "O también puedes consultar la <1>guía de instalación manual de Linux</1> para instalarlo tú mismo."
-      },
-      "title": "Instala y ejecuta la aplicación Ollama localmente",
-      "windowsTab": "Windows (versión preliminar)"
-    }
-  },
-  "Thinking": {
-    "thinking": "Pensando profundamente...",
-    "thought": "He pensado profundamente (durante {{duration}} segundos)",
-    "thoughtWithDuration": "He pensado profundamente"
-  },
-  "devTools": {
-    "cache": {
-      "empty": "La caché está vacía"
-    },
-    "metadata": {
-      "empty": "No hay metadatos disponibles"
-    }
-  },
-  "knowledgeBase": {
-    "empty": {
-      "description": "Crea una base de recursos para organizar y gestionar tus materiales",
-      "search": "No se encontró ninguna base de recursos coincidente",
-      "title": "Aún no hay bases de recursos"
-    }
-  }
+  "ArgsInput.addArgument": "Añadir argumento",
+  "ArgsInput.argumentPlaceholder": "Parámetro {{index}}",
+  "ArgsInput.enterFirstArgument": "Introduce el primer parámetro...",
+  "DragUpload.dragDesc": "Arrastra los archivos aquí, se admite la carga de múltiples imágenes.",
+  "DragUpload.dragFileDesc": "Arrastra imágenes y archivos aquí, se admite la carga de múltiples imágenes y archivos.",
+  "DragUpload.dragFileTitle": "Subir archivo",
+  "DragUpload.dragTitle": "Subir imagen",
+  "EmojiPicker.delete": "Eliminar avatar",
+  "EmojiPicker.draggerDesc": "Haz clic o arrastra una imagen a esta área para subirla",
+  "EmojiPicker.emoji": "Avatar de emoji",
+  "EmojiPicker.fileTypeError": "Por favor, sube un archivo de imagen válido",
+  "EmojiPicker.upload": "Subir avatar",
+  "EmojiPicker.uploadBtn": "Recortar y subir",
+  "FileManager.actions.addToKnowledgeBase": "Agregar a la base de recursos",
+  "FileManager.actions.addToOtherKnowledgeBase": "Agregar a otra base de recursos",
+  "FileManager.actions.batchChunking": "División por lotes",
+  "FileManager.actions.chunking": "División",
+  "FileManager.actions.chunkingTooltip": "Divida el archivo en múltiples bloques de texto y vectorícelos para su uso en búsqueda semántica y diálogo de archivos",
+  "FileManager.actions.chunkingUnsupported": "Este archivo no admite la fragmentación",
+  "FileManager.actions.confirmDelete": "Está a punto de eliminar este archivo. Una vez eliminado, no podrá recuperarlo. Por favor, confirme su acción.",
+  "FileManager.actions.confirmDeleteFolder": "Estás a punto de eliminar esta carpeta y todo su contenido. Esta acción no se puede deshacer. Por favor, confirma tu decisión.",
+  "FileManager.actions.confirmDeleteMultiFiles": "Está a punto de eliminar los {{count}} archivos seleccionados. Una vez eliminados, no podrá recuperarlos. Por favor, confirme su acción.",
+  "FileManager.actions.confirmRemoveFromKnowledgeBase": "Estás a punto de eliminar {{count}} archivos seleccionados de la base de recursos. Los archivos seguirán estando disponibles en 'Todos los archivos' después de ser eliminados. Por favor, confirma tu acción.",
+  "FileManager.actions.copyUrl": "Copiar enlace",
+  "FileManager.actions.copyUrlSuccess": "Dirección del archivo copiada con éxito",
+  "FileManager.actions.createChunkingTask": "Preparando...",
+  "FileManager.actions.deleteSuccess": "Archivo eliminado con éxito",
+  "FileManager.actions.downloading": "Descargando archivo...",
+  "FileManager.actions.goBack": "Volver a la página anterior",
+  "FileManager.actions.goForward": "Avanzar a la siguiente página",
+  "FileManager.actions.goToParent": "Ir a la carpeta superior",
+  "FileManager.actions.moveError": "Error al mover el archivo",
+  "FileManager.actions.moveHere": "Mover aquí",
+  "FileManager.actions.moveSuccess": "Archivo movido con éxito",
+  "FileManager.actions.moveToFolder": "Mover a...",
+  "FileManager.actions.moveToRoot": "Mover a la carpeta raíz",
+  "FileManager.actions.removeFromKnowledgeBase": "Eliminar de la base de recursos",
+  "FileManager.actions.removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito",
+  "FileManager.actions.rename": "Renombrar",
+  "FileManager.actions.renameError": "Error al renombrar",
+  "FileManager.actions.renameSuccess": "Renombrado con éxito",
+  "FileManager.bottom": "Ya has llegado al final",
+  "FileManager.config.showFilesInKnowledgeBase": "Mostrar contenido en la base de recursos",
+  "FileManager.emptyStatus.actions.file": "Subir archivo",
+  "FileManager.emptyStatus.actions.folder": "Subir carpeta",
+  "FileManager.emptyStatus.actions.knowledgeBase": "Crear nueva base de recursos",
+  "FileManager.emptyStatus.or": "o",
+  "FileManager.emptyStatus.title": "Arrastra archivos o carpetas aquí",
+  "FileManager.noFolders": "No hay carpetas disponibles",
+  "FileManager.sort.dateAdded": "Fecha de añadido",
+  "FileManager.sort.name": "Nombre",
+  "FileManager.sort.size": "Tamaño",
+  "FileManager.title.createdAt": "Fecha de creación",
+  "FileManager.title.size": "Tamaño",
+  "FileManager.title.title": "Archivo",
+  "FileManager.total.fileCount": "Total {{count}} elementos",
+  "FileManager.total.selectedCount": "Seleccionados {{count}} elementos",
+  "FileManager.view.list": "Vista de lista",
+  "FileManager.view.masonry": "Vista de cuadrícula",
+  "FileParsingStatus.chunks.embeddingStatus.empty": "Los bloques de texto aún no están completamente vectorizados, lo que hará que la función de búsqueda semántica no esté disponible. Para mejorar la calidad de búsqueda, por favor vectorice los bloques de texto.",
+  "FileParsingStatus.chunks.embeddingStatus.error": "Error de vectorización",
+  "FileParsingStatus.chunks.embeddingStatus.errorResult": "Error de vectorización, por favor verifica y vuelve a intentarlo. Motivo del fallo:",
+  "FileParsingStatus.chunks.embeddingStatus.processing": "Los bloques de texto están siendo vectorizados, por favor, tenga paciencia.",
+  "FileParsingStatus.chunks.embeddingStatus.success": "Todos los bloques de texto actuales han sido vectorizados.",
+  "FileParsingStatus.chunks.embeddings": "Vectorización",
+  "FileParsingStatus.chunks.status.error": "Error en la división",
+  "FileParsingStatus.chunks.status.errorResult": "Error en la división, por favor revise y vuelva a intentarlo. Razón del fallo:",
+  "FileParsingStatus.chunks.status.processing": "Dividiendo",
+  "FileParsingStatus.chunks.status.processingTip": "El servidor está dividiendo los bloques de texto, cerrar la página no afectará el progreso de la división.",
+  "GoBack.back": "Regresar",
+  "HtmlPreview.actions.download": "Descargar",
+  "HtmlPreview.actions.preview": "Vista previa",
+  "HtmlPreview.iframeTitle": "Vista previa HTML",
+  "HtmlPreview.mode.code": "Código",
+  "HtmlPreview.mode.preview": "Vista previa",
+  "HtmlPreview.title": "Vista previa HTML",
+  "ImageUpload.actions.changeImage": "Haz clic para cambiar la imagen",
+  "ImageUpload.actions.dropMultipleFiles": "No se admite la carga múltiple de archivos, solo se utilizará el primer archivo",
+  "ImageUpload.placeholder.primary": "Agregar imagen",
+  "ImageUpload.placeholder.secondary": "Haga clic o arrastre para subir",
+  "KeyValueEditor.addButton": "Agregar una fila",
+  "KeyValueEditor.deleteTooltip": "Eliminar",
+  "KeyValueEditor.duplicateKeyError": "El nombre de la clave debe ser único",
+  "KeyValueEditor.keyPlaceholder": "Clave",
+  "KeyValueEditor.valuePlaceholder": "Valor",
+  "LocalFile.action.open": "Abrir",
+  "LocalFile.action.showInFolder": "Mostrar en la carpeta",
+  "MaxTokenSlider.unlimited": "Sin límite",
+  "ModelSelect.featureTag.custom": "Modelo personalizado: admite llamadas de función y reconocimiento visual. Verifique la disponibilidad de estas capacidades según sea necesario.",
+  "ModelSelect.featureTag.file": "Este modelo admite la carga y reconocimiento de archivos.",
+  "ModelSelect.featureTag.functionCall": "Este modelo admite llamadas de función.",
+  "ModelSelect.featureTag.imageOutput": "Este modelo admite la generación de imágenes",
+  "ModelSelect.featureTag.reasoning": "Este modelo admite un pensamiento profundo",
+  "ModelSelect.featureTag.search": "Este modelo admite búsqueda en línea",
+  "ModelSelect.featureTag.tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
+  "ModelSelect.featureTag.video": "Este modelo admite reconocimiento de video",
+  "ModelSelect.featureTag.vision": "Este modelo admite el reconocimiento visual.",
+  "ModelSelect.removed": "El modelo no está en la lista, se eliminará automáticamente si se cancela la selección",
+  "ModelSwitchPanel.emptyModel": "No hay modelos habilitados. Vaya a la configuración para habilitarlos.",
+  "ModelSwitchPanel.emptyProvider": "No hay proveedores habilitados, por favor ve a la configuración para activarlos",
+  "ModelSwitchPanel.goToSettings": "Ir a la configuración",
+  "ModelSwitchPanel.provider": "Proveedor",
+  "ModelSwitchPanel.title": "Modelo",
+  "MultiImagesUpload.actions.uploadMore": "Haz clic o arrastra para subir más",
+  "MultiImagesUpload.modal.complete": "Completar",
+  "MultiImagesUpload.modal.newFileIndicator": "Nuevo",
+  "MultiImagesUpload.modal.selectImageToPreview": "Por favor, selecciona una imagen para previsualizar",
+  "MultiImagesUpload.modal.title": "Gestionar imágenes ({{count}})",
+  "MultiImagesUpload.modal.upload": "Subir imágenes",
+  "MultiImagesUpload.placeholder.primary": "Haz clic o arrastra para subir imágenes",
+  "MultiImagesUpload.placeholder.secondary": "Se admite la selección de múltiples imágenes",
+  "MultiImagesUpload.progress.uploadingWithCount": "{{completed}}/{{total}} subidas",
+  "MultiImagesUpload.validation.fileSizeExceeded": "El tamaño del archivo excede el límite",
+  "MultiImagesUpload.validation.fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) supera el tamaño máximo permitido de {{maxSize}}",
+  "MultiImagesUpload.validation.fileSizeExceededMultiple": "{{count}} archivos superan el tamaño máximo permitido de {{maxSize}}: {{fileList}}",
+  "MultiImagesUpload.validation.imageCountExceeded": "Se ha excedido el límite de imágenes",
+  "OllamaSetupGuide.action.close": "Cerrar aviso",
+  "OllamaSetupGuide.action.start": "Instalado",
+  "OllamaSetupGuide.cors.description": "Debido a las restricciones de seguridad del navegador, necesitas configurar CORS para Ollama antes de poder usarlo correctamente.",
+  "OllamaSetupGuide.cors.linux.env": "Agrega `Environment` en la sección [Service] y añade la variable de entorno OLLAMA_ORIGINS:",
+  "OllamaSetupGuide.cors.linux.reboot": "Recarga systemd y reinicia Ollama",
+  "OllamaSetupGuide.cors.linux.systemd": "Usa systemd para editar el servicio de ollama:",
+  "OllamaSetupGuide.cors.macos": "Abre la aplicación 'Terminal', pega el siguiente comando y presiona Enter para ejecutarlo",
+  "OllamaSetupGuide.cors.reboot": "Reinicia el servicio de Ollama después de completar la ejecución",
+  "OllamaSetupGuide.cors.title": "Configura Ollama para permitir el acceso CORS",
+  "OllamaSetupGuide.cors.windows": "En Windows, haz clic en 'Panel de control' y entra en la edición de variables de entorno del sistema. Crea una nueva variable de entorno llamada 'OLLAMA_ORIGINS' para tu cuenta de usuario, con el valor * y haz clic en 'OK/Aplicar' para guardar.",
+  "OllamaSetupGuide.install.description": "Asegúrate de que has iniciado Ollama. Si no has descargado Ollama, visita el sitio web oficial <1>para descargar</1>.",
+  "OllamaSetupGuide.install.docker": "Si prefieres usar Docker, Ollama también ofrece una imagen oficial de Docker que puedes descargar con el siguiente comando:",
+  "OllamaSetupGuide.install.linux.command": "Instala con el siguiente comando:",
+  "OllamaSetupGuide.install.linux.manual": "O también puedes consultar la <1>guía de instalación manual de Linux</1> para instalarlo tú mismo.",
+  "OllamaSetupGuide.install.title": "Instala y ejecuta la aplicación Ollama localmente",
+  "OllamaSetupGuide.install.windowsTab": "Windows (versión preliminar)",
+  "Thinking.thinking": "Pensando profundamente...",
+  "Thinking.thought": "He pensado profundamente (durante {{duration}} segundos)",
+  "Thinking.thoughtWithDuration": "He pensado profundamente",
+  "devTools.cache.empty": "La caché está vacía",
+  "devTools.metadata.empty": "No hay metadatos disponibles",
+  "knowledgeBase.empty.description": "Crea una base de recursos para organizar y gestionar tus materiales",
+  "knowledgeBase.empty.search": "No se encontró ninguna base de recursos coincidente",
+  "knowledgeBase.empty.title": "Aún no hay bases de recursos"
 }

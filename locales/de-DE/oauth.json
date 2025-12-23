@@ -1,61 +1,35 @@
 {
-  "consent": {
-    "buttons": {
-      "accept": "Zustimmen",
-      "deny": "Ablehnen"
-    },
-    "description": "Die Anwendung {{clientName}} beantragt die Autorisierung Ihres Kontos",
-    "error": {
-      "sessionInvalid": {
-        "message": "Die Autorisierungssitzung ist abgelaufen oder ungültig. Bitte starten Sie den Autorisierungsprozess erneut.",
-        "title": "Ungültige Autorisierungssitzung"
-      },
-      "title": "Ein Fehler ist aufgetreten",
-      "unsupportedInteraction": {
-        "message": "Nicht unterstützter Interaktionstyp: {promptName}",
-        "title": "Nicht unterstützter Interaktionstyp"
-      }
-    },
-    "permissionsTitle": "Anforderung der folgenden Berechtigungen:",
-    "redirectUri": "Nach erfolgreicher Autorisierung werden Sie umgeleitet zu",
-    "redirecting": "Autorisierung erfolgreich, Weiterleitung...",
-    "scope": {
-      "email": "Zugriff auf Ihre E-Mail-Adresse",
-      "offline_access": "Erlauben Sie dem Client, auf Ihre Daten zuzugreifen",
-      "openid": "Authentifizierung mit Ihrem LobeChat-Konto",
-      "profile": "Zugriff auf Ihre Profilinformationen (Name, Avatar usw.)",
-      "sync-read": "Lesen Sie Ihre synchronisierten Daten",
-      "sync-write": "Schreiben und Aktualisieren Sie Ihre synchronisierten Daten"
-    },
-    "title": "Autorisierung von {{clientName}}"
-  },
-  "error": {
-    "backToHome": "Zur Startseite zurückkehren",
-    "desc": "OAuth-Autorisierung fehlgeschlagen, Grund: {{reason}}",
-    "reason": {
-      "internal_error": "Serverfehler",
-      "invalid_request": "Ungültige Anfrageparameter"
-    },
-    "title": "Autorisierung fehlgeschlagen"
-  },
-  "handoff": {
-    "desc": {
-      "processing": "Die Anwendung verarbeitet die Autorisierung und wird gleich zur nächsten Seite weitergeleitet...",
-      "success": "Es wurde versucht, die Desktop-Anwendung zu öffnen. Wenn die Anwendung nicht automatisch geöffnet wird, wechseln Sie bitte manuell. Sie können dieses Browserfenster später schließen."
-    },
-    "title": {
-      "processing": "Autorisation wird bearbeitet...",
-      "success": "Autorisation abgeschlossen"
-    }
-  },
-  "login": {
-    "button": "Login bestätigen",
-    "description": "Die Anwendung {{clientName}} beantragt die Nutzung Ihres Kontos für den Login",
-    "title": "Login bei {{clientName}}",
-    "userWelcome": "Willkommen zurück, "
-  },
-  "success": {
-    "subTitle": "Sie haben der Anwendung erfolgreich Zugriff auf Ihr Konto gewährt. Sie können diese Seite jetzt schließen.",
-    "title": "Autorisierung erfolgreich"
-  }
+  "consent.buttons.accept": "Zustimmen",
+  "consent.buttons.deny": "Ablehnen",
+  "consent.description": "Die Anwendung {{clientName}} beantragt die Autorisierung Ihres Kontos",
+  "consent.error.sessionInvalid.message": "Die Autorisierungssitzung ist abgelaufen oder ungültig. Bitte starten Sie den Autorisierungsprozess erneut.",
+  "consent.error.sessionInvalid.title": "Ungültige Autorisierungssitzung",
+  "consent.error.title": "Ein Fehler ist aufgetreten",
+  "consent.error.unsupportedInteraction.message": "Nicht unterstützter Interaktionstyp: {promptName}",
+  "consent.error.unsupportedInteraction.title": "Nicht unterstützter Interaktionstyp",
+  "consent.permissionsTitle": "Anforderung der folgenden Berechtigungen:",
+  "consent.redirectUri": "Nach erfolgreicher Autorisierung werden Sie umgeleitet zu",
+  "consent.redirecting": "Autorisierung erfolgreich, Weiterleitung...",
+  "consent.scope.email": "Zugriff auf Ihre E-Mail-Adresse",
+  "consent.scope.offline_access": "Erlauben Sie dem Client, auf Ihre Daten zuzugreifen",
+  "consent.scope.openid": "Authentifizierung mit Ihrem LobeChat-Konto",
+  "consent.scope.profile": "Zugriff auf Ihre Profilinformationen (Name, Avatar usw.)",
+  "consent.scope.sync-read": "Lesen Sie Ihre synchronisierten Daten",
+  "consent.scope.sync-write": "Schreiben und Aktualisieren Sie Ihre synchronisierten Daten",
+  "consent.title": "Autorisierung von {{clientName}}",
+  "error.backToHome": "Zur Startseite zurückkehren",
+  "error.desc": "OAuth-Autorisierung fehlgeschlagen, Grund: {{reason}}",
+  "error.reason.internal_error": "Serverfehler",
+  "error.reason.invalid_request": "Ungültige Anfrageparameter",
+  "error.title": "Autorisierung fehlgeschlagen",
+  "handoff.desc.processing": "Die Anwendung verarbeitet die Autorisierung und wird gleich zur nächsten Seite weitergeleitet...",
+  "handoff.desc.success": "Es wurde versucht, die Desktop-Anwendung zu öffnen. Wenn die Anwendung nicht automatisch geöffnet wird, wechseln Sie bitte manuell. Sie können dieses Browserfenster später schließen.",
+  "handoff.title.processing": "Autorisation wird bearbeitet...",
+  "handoff.title.success": "Autorisation abgeschlossen",
+  "login.button": "Login bestätigen",
+  "login.description": "Die Anwendung {{clientName}} beantragt die Nutzung Ihres Kontos für den Login",
+  "login.title": "Login bei {{clientName}}",
+  "login.userWelcome": "Willkommen zurück, ",
+  "success.subTitle": "Sie haben der Anwendung erfolgreich Zugriff auf Ihr Konto gewährt. Sie können diese Seite jetzt schließen.",
+  "success.title": "Autorisierung erfolgreich"
 }

@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "File aggiunto con successo, <1>visualizza subito</1>",
-    "confirm": "Aggiungi",
-    "error": "Aggiunta del file alla base di conoscenza non riuscita",
-    "id": {
-      "placeholder": "Seleziona la base di conoscenza di destinazione",
-      "required": "Seleziona una base di conoscenza",
-      "title": "Base di conoscenza di destinazione"
-    },
-    "title": "Aggiungi alla base di conoscenza",
-    "totalFiles": "Hai selezionato {{count}} file"
-  },
-  "createNew": {
-    "confirm": "Crea nuovo",
-    "description": {
-      "placeholder": "Descrizione della base di conoscenza (facoltativa)"
-    },
-    "formTitle": "Informazioni di base",
-    "name": {
-      "placeholder": "Nome della base di conoscenza",
-      "required": "Inserisci il nome della base di conoscenza"
-    },
-    "title": "Crea nuova base di conoscenza"
-  },
-  "tab": {
-    "evals": "Valutazioni",
-    "files": "Documenti",
-    "settings": "Impostazioni",
-    "testing": "Test di richiamo"
-  },
+  "addToKnowledgeBase.addSuccess": "File aggiunto con successo, <1>visualizza subito</1>",
+  "addToKnowledgeBase.confirm": "Aggiungi",
+  "addToKnowledgeBase.error": "Aggiunta del file alla base di conoscenza non riuscita",
+  "addToKnowledgeBase.id.placeholder": "Seleziona la base di conoscenza di destinazione",
+  "addToKnowledgeBase.id.required": "Seleziona una base di conoscenza",
+  "addToKnowledgeBase.id.title": "Base di conoscenza di destinazione",
+  "addToKnowledgeBase.title": "Aggiungi alla base di conoscenza",
+  "addToKnowledgeBase.totalFiles": "Hai selezionato {{count}} file",
+  "createNew.confirm": "Crea nuovo",
+  "createNew.description.placeholder": "Descrizione della base di conoscenza (facoltativa)",
+  "createNew.formTitle": "Informazioni di base",
+  "createNew.name.placeholder": "Nome della base di conoscenza",
+  "createNew.name.required": "Inserisci il nome della base di conoscenza",
+  "createNew.title": "Crea nuova base di conoscenza",
+  "tab.evals": "Valutazioni",
+  "tab.files": "Documenti",
+  "tab.settings": "Impostazioni",
+  "tab.testing": "Test di richiamo",
   "title": "Base di conoscenza"
 }

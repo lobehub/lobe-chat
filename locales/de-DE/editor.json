@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Einklappen",
-      "on": "Ausklappen"
-    },
-    "typobar": {
-      "off": "Formatierungsleiste ausblenden",
-      "on": "Formatierungsleiste anzeigen"
-    }
-  },
-  "autoSave": {
-    "latest": "Neueste Version geladen",
-    "saved": "Gespeichert",
-    "saving": "Automatisches Speichern..."
-  },
+  "actions.expand.off": "Einklappen",
+  "actions.expand.on": "Ausklappen",
+  "actions.typobar.off": "Formatierungsleiste ausblenden",
+  "actions.typobar.on": "Formatierungsleiste anzeigen",
+  "autoSave.latest": "Neueste Version geladen",
+  "autoSave.saved": "Gespeichert",
+  "autoSave.saving": "Automatisches Speichern...",
   "cancel": "Abbrechen",
   "confirm": "Bestätigen",
-  "file": {
-    "error": "Fehler: {{message}}",
-    "uploading": "Datei wird hochgeladen..."
-  },
-  "image": {
-    "broken": "Bild beschädigt"
-  },
-  "link": {
-    "edit": "Link bearbeiten",
-    "editLinkTitle": "Link",
-    "editTextTitle": "Titel",
-    "open": "Link öffnen",
-    "placeholder": "Link-URL eingeben",
-    "unlink": "Link entfernen"
-  },
-  "markdown": {
-    "cancel": "Abbrechen",
-    "confirm": "Konvertieren",
-    "parseMessage": "In Markdown-Format konvertieren. Der vorhandene Inhalt wird überschrieben. Möchten Sie fortfahren? (Automatisches Schließen in 5 Sekunden)",
-    "parseTitle": "Markdown formatieren"
-  },
-  "math": {
-    "placeholder": "Bitte TeX-Formel eingeben"
-  },
-  "modifier": {
-    "accept": "Beibehalten",
-    "acceptAll": "Alle akzeptieren",
-    "reject": "Widerrufen",
-    "rejectedAll": "Alle ablehnen"
-  },
-  "slash": {
-    "h1": "Überschrift 1. Ordnung",
-    "h2": "Überschrift 2. Ordnung",
-    "h3": "Überschrift 3. Ordnung",
-    "hr": "Trennlinie",
-    "table": "Tabelle",
-    "tex": "TeX-Formel"
-  },
-  "table": {
-    "delete": "Tabelle löschen",
-    "deleteColumn": "Spalte löschen",
-    "deleteRow": "Zeile löschen",
-    "insertColumnLeft": "Links {{count}} Spalten einfügen",
-    "insertColumnRight": "Rechts {{count}} Spalten einfügen",
-    "insertRowAbove": "Oben {{count}} Zeilen einfügen",
-    "insertRowBelow": "Unten {{count}} Zeilen einfügen"
-  },
-  "typobar": {
-    "blockquote": "Zitat",
-    "bold": "Fett",
-    "bulletList": "Ungeordnete Liste",
-    "code": "Inline-Code",
-    "codeblock": "Codeblock",
-    "image": "Bild",
-    "italic": "Kursiv",
-    "link": "Link",
-    "numberList": "Nummerierte Liste",
-    "redo": "Wiederholen",
-    "strikethrough": "Durchgestrichen",
-    "table": "Tabelle",
-    "taskList": "Aufgabenliste",
-    "tex": "TeX-Formel",
-    "underline": "Unterstrichen",
-    "undo": "Rückgängig"
-  }
+  "file.error": "Fehler: {{message}}",
+  "file.uploading": "Datei wird hochgeladen...",
+  "image.broken": "Bild beschädigt",
+  "link.edit": "Link bearbeiten",
+  "link.editLinkTitle": "Link",
+  "link.editTextTitle": "Titel",
+  "link.open": "Link öffnen",
+  "link.placeholder": "Link-URL eingeben",
+  "link.unlink": "Link entfernen",
+  "markdown.cancel": "Abbrechen",
+  "markdown.confirm": "Konvertieren",
+  "markdown.parseMessage": "In Markdown-Format konvertieren. Der vorhandene Inhalt wird überschrieben. Möchten Sie fortfahren? (Automatisches Schließen in 5 Sekunden)",
+  "markdown.parseTitle": "Markdown formatieren",
+  "math.placeholder": "Bitte TeX-Formel eingeben",
+  "modifier.accept": "Beibehalten",
+  "modifier.acceptAll": "Alle akzeptieren",
+  "modifier.reject": "Widerrufen",
+  "modifier.rejectedAll": "Alle ablehnen",
+  "slash.h1": "Überschrift 1. Ordnung",
+  "slash.h2": "Überschrift 2. Ordnung",
+  "slash.h3": "Überschrift 3. Ordnung",
+  "slash.hr": "Trennlinie",
+  "slash.table": "Tabelle",
+  "slash.tex": "TeX-Formel",
+  "table.delete": "Tabelle löschen",
+  "table.deleteColumn": "Spalte löschen",
+  "table.deleteRow": "Zeile löschen",
+  "table.insertColumnLeft": "Links {{count}} Spalten einfügen",
+  "table.insertColumnRight": "Rechts {{count}} Spalten einfügen",
+  "table.insertRowAbove": "Oben {{count}} Zeilen einfügen",
+  "table.insertRowBelow": "Unten {{count}} Zeilen einfügen",
+  "typobar.blockquote": "Zitat",
+  "typobar.bold": "Fett",
+  "typobar.bulletList": "Ungeordnete Liste",
+  "typobar.code": "Inline-Code",
+  "typobar.codeblock": "Codeblock",
+  "typobar.image": "Bild",
+  "typobar.italic": "Kursiv",
+  "typobar.link": "Link",
+  "typobar.numberList": "Nummerierte Liste",
+  "typobar.redo": "Wiederholen",
+  "typobar.strikethrough": "Durchgestrichen",
+  "typobar.table": "Tabelle",
+  "typobar.taskList": "Aufgabenliste",
+  "typobar.tex": "TeX-Formel",
+  "typobar.underline": "Unterstrichen",
+  "typobar.undo": "Rückgängig"
 }

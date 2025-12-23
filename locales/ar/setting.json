@@ -1,906 +1,538 @@
 {
-  "about": {
-    "title": "حول"
-  },
+  "about.title": "حول",
   "advancedSettings": "الإعدادات المتقدمة",
-  "agentInfoDescription": {
-    "basic": {
-      "avatar": "الصورة الرمزية",
-      "description": "الوصف",
-      "name": "الاسم",
-      "tags": "الوسوم",
-      "title": "معلومات المساعد"
-    },
-    "chat": {
-      "enableHistoryCount": "تمكين عداد الرسائل السابقة",
-      "historyCount": "عدد الرسائل السابقة",
-      "no": "لا",
-      "searchMode": "وضع البحث",
-      "title": "تفضيلات الدردشة",
-      "yes": "نعم"
-    },
-    "model": {
-      "maxTokens": "الحد الأقصى للرموز",
-      "model": "النموذج",
-      "provider": "المزود",
-      "temperature": "درجة الحرارة",
-      "title": "إعدادات النموذج",
-      "topP": "قيمة Top P"
-    },
-    "plugins": {
-      "count": "إعدادات الإضافات ({{count}})",
-      "empty": "لم يتم تثبيت أي إضافات بعد",
-      "title": "الإضافات المثبتة"
-    },
-    "role": {
-      "systemRole": "تعليمات النظام",
-      "title": "إعدادات الدور"
-    },
-    "value": {
-      "unset": "غير مُعيّن",
-      "untitled": "مساعد بدون عنوان"
-    }
-  },
-  "agentTab": {
-    "chat": "تفضيلات الدردشة",
-    "meta": "معلومات المساعد",
-    "modal": "إعدادات النموذج",
-    "opening": "إعداد الافتتاح",
-    "plugin": "إعدادات الإضافة",
-    "prompt": "تعيين الشخصية",
-    "tts": "خدمة النص إلى كلام"
-  },
-  "analytics": {
-    "telemetry": {
-      "desc": "من خلال اختيار إرسال بيانات القياس عن بُعد، يمكنك مساعدتنا في تحسين تجربة المستخدم العامة لـ {{appName}}",
-      "title": "إرسال بيانات الاستخدام المجهولة"
-    },
-    "title": "تحليلات"
-  },
+  "agentInfoDescription.basic.avatar": "الصورة الرمزية",
+  "agentInfoDescription.basic.description": "الوصف",
+  "agentInfoDescription.basic.name": "الاسم",
+  "agentInfoDescription.basic.tags": "الوسوم",
+  "agentInfoDescription.basic.title": "معلومات المساعد",
+  "agentInfoDescription.chat.enableHistoryCount": "تمكين عداد الرسائل السابقة",
+  "agentInfoDescription.chat.historyCount": "عدد الرسائل السابقة",
+  "agentInfoDescription.chat.no": "لا",
+  "agentInfoDescription.chat.searchMode": "وضع البحث",
+  "agentInfoDescription.chat.title": "تفضيلات الدردشة",
+  "agentInfoDescription.chat.yes": "نعم",
+  "agentInfoDescription.model.maxTokens": "الحد الأقصى للرموز",
+  "agentInfoDescription.model.model": "النموذج",
+  "agentInfoDescription.model.provider": "المزود",
+  "agentInfoDescription.model.temperature": "درجة الحرارة",
+  "agentInfoDescription.model.title": "إعدادات النموذج",
+  "agentInfoDescription.model.topP": "قيمة Top P",
+  "agentInfoDescription.plugins.count": "إعدادات الإضافات ({{count}})",
+  "agentInfoDescription.plugins.empty": "لم يتم تثبيت أي إضافات بعد",
+  "agentInfoDescription.plugins.title": "الإضافات المثبتة",
+  "agentInfoDescription.role.systemRole": "تعليمات النظام",
+  "agentInfoDescription.role.title": "إعدادات الدور",
+  "agentInfoDescription.value.unset": "غير مُعيّن",
+  "agentInfoDescription.value.untitled": "مساعد بدون عنوان",
+  "agentTab.chat": "تفضيلات الدردشة",
+  "agentTab.meta": "معلومات المساعد",
+  "agentTab.modal": "إعدادات النموذج",
+  "agentTab.opening": "إعداد الافتتاح",
+  "agentTab.plugin": "إعدادات الإضافة",
+  "agentTab.prompt": "تعيين الشخصية",
+  "agentTab.tts": "خدمة النص إلى كلام",
+  "analytics.telemetry.desc": "من خلال اختيار إرسال بيانات القياس عن بُعد، يمكنك مساعدتنا في تحسين تجربة المستخدم العامة لـ {{appName}}",
+  "analytics.telemetry.title": "إرسال بيانات الاستخدام المجهولة",
+  "analytics.title": "تحليلات",
   "checking": "جارٍ التحقق...",
   "checkingPermissions": "جارٍ التحقق من الأذونات...",
-  "danger": {
-    "clear": {
-      "action": "مسح الآن",
-      "confirm": "هل تؤكد مسح جميع بيانات المحادثات؟",
-      "desc": "سيتم مسح جميع بيانات الجلسة بما في ذلك المساعد والملفات والرسائل والإضافات",
-      "success": "تم مسح جميع رسائل الجلسة",
-      "title": "مسح جميع رسائل الجلسة"
-    },
-    "reset": {
-      "action": "إعادة تعيين الآن",
-      "confirm": "هل تؤكد إعادة تعيين جميع الإعدادات؟",
-      "currentVersion": "الإصدار الحالي",
-      "desc": "إعادة تعيين جميع عناصر الإعدادات إلى القيم الافتراضية",
-      "success": "تمت إعادة ضبط جميع الإعدادات",
-      "title": "إعادة تعيين جميع الإعدادات"
-    }
-  },
-  "defaultAgent": {
-    "model": {
-      "desc": "النموذج الافتراضي المستخدم عند إنشاء وكيل جديد",
-      "title": "النموذج"
-    },
-    "title": "إعدادات المساعد الافتراضي"
-  },
-  "group": {
-    "aiConfig": "إعدادات الذكاء الاصطناعي",
-    "common": "عام",
-    "profile": "الحساب",
-    "system": "النظام"
-  },
-  "groupTab": {
-    "chat": "الدردشة",
-    "members": "الأعضاء",
-    "meta": "المعلومات الأساسية"
-  },
-  "header": {
-    "desc": "إعدادات التفضيلات والنماذج.",
-    "global": "إعدادات عامة",
-    "group": "إعدادات الفريق",
-    "groupDesc": "إدارة المجموعات وتفضيلات الدردشة",
-    "session": "إعدادات الجلسة",
-    "sessionDesc": "إعداد الشخصية وتفضيلات الجلسة.",
-    "sessionWithName": "إعدادات الجلسة · {{name}}",
-    "title": "إعدادات"
-  },
-  "hotkey": {
-    "conflicts": "يتعارض مع اختصارات لوحة المفاتيح الحالية",
-    "errors": {
-      "CONFLICT": "تعارض في اختصار لوحة المفاتيح: هذا الاختصار مستخدم بالفعل من قبل وظيفة أخرى",
-      "INVALID_FORMAT": "تنسيق اختصار لوحة المفاتيح غير صالح: يرجى استخدام التنسيق الصحيح (مثل CommandOrControl+E)",
-      "INVALID_ID": "معرف اختصار لوحة المفاتيح غير صالح",
-      "NO_MODIFIER": "يجب أن يحتوي اختصار لوحة المفاتيح على مفتاح تعديل (Ctrl، Alt، Shift، إلخ)",
-      "SYSTEM_OCCUPIED": "اختصار لوحة المفاتيح مستخدم من قبل النظام أو تطبيقات أخرى",
-      "UNKNOWN": "فشل التحديث: خطأ غير معروف"
-    },
-    "group": {
-      "conversation": "المحادثة",
-      "desktop": "سطح المكتب",
-      "essential": "أساسي"
-    },
-    "invalidCombination": "يجب أن تحتوي اختصارات لوحة المفاتيح على مفتاح تعديل واحد على الأقل (Ctrl، Alt، Shift) ومفتاح عادي واحد",
-    "record": "اضغط على المفتاح لتسجيل اختصار لوحة المفاتيح",
-    "reset": "إعادة تعيين إلى اختصارات لوحة المفاتيح الافتراضية",
-    "title": "اختصارات لوحة المفاتيح",
-    "updateError": "فشل تحديث اختصار لوحة المفاتيح: خطأ في الشبكة أو النظام",
-    "updateSuccess": "تم تحديث اختصار لوحة المفاتيح بنجاح"
-  },
-  "llm": {
-    "aesGcm": "سيتم استخدام خوارزمية التشفير <1>AES-GCM</1> لتشفير مفتاحك وعنوان الوكيل",
-    "apiKey": {
-      "desc": "يرجى ملء مفتاح API الخاص بك {{name}}",
-      "placeholder": "{{name}} مفتاح API",
-      "title": "مفتاح API"
-    },
-    "checker": {
-      "button": "فحص",
-      "desc": "اختبار ما إذا كان مفتاح واجهة البرمجة وعنوان الوكيل مملوء بشكل صحيح",
-      "pass": "تمت المراقبة",
-      "title": "فحص الاتصال"
-    },
-    "customModelCards": {
-      "addNew": "إنشاء وإضافة نموذج {{id}}",
-      "config": "تكوين النموذج",
-      "confirmDelete": "سيتم حذف النموذج المخصص هذا، وبمجرد الحذف لا يمكن استعادته، يرجى التحلي بالحذر.",
-      "modelConfig": {
-        "azureDeployName": {
-          "extra": "الحقل الفعلي المطلوب في طلب Azure OpenAI",
-          "placeholder": "الرجاء إدخال اسم نشر النموذج في Azure",
-          "title": "اسم نشر النموذج"
-        },
-        "displayName": {
-          "placeholder": "الرجاء إدخال اسم العرض للنموذج، مثل ChatGPT، GPT-4، إلخ",
-          "title": "اسم العرض للنموذج"
-        },
-        "files": {
-          "extra": "تنفيذ تحميل الملفات الحالي هو مجرد حل Hack، ومخصص للتجربة الذاتية فقط. يرجى الانتظار حتى يتم تنفيذ القدرة الكاملة على تحميل الملفات لاحقًا",
-          "title": "دعم تحميل الملفات"
-        },
-        "functionCall": {
-          "extra": "ستفتح هذه الإعدادات فقط القدرة على استدعاء الوظائف داخل التطبيق، وما إذا كانت الوظائف مدعومة يعتمد تمامًا على النموذج نفسه، يرجى اختبار قابلية استخدام استدعاء الوظائف لهذا النموذج بنفسك",
-          "title": "دعم استدعاء الوظائف"
-        },
-        "id": {
-          "extra": "سيتم عرضه كعلامة للنموذج",
-          "placeholder": "الرجاء إدخال معرف النموذج، مثل gpt-4-turbo-preview أو claude-2.1",
-          "title": "معرف النموذج"
-        },
-        "modalTitle": "تكوين النموذج المخصص",
-        "tokens": {
-          "title": "أقصى عدد من الرموز"
-        },
-        "vision": {
-          "extra": "ستفتح هذه الإعدادات فقط القدرة على تحميل الصور داخل التطبيق، وما إذا كانت القدرة على التعرف مدعومة يعتمد تمامًا على النموذج نفسه، يرجى اختبار قابلية استخدام التعرف البصري لهذا النموذج بنفسك",
-          "title": "دعم التعرف على الصور"
-        }
-      }
-    },
-    "fetchOnClient": {
-      "desc": "طريقة طلب العميل ستبدأ طلب الجلسة مباشرة من المتصفح، مما يمكن أن يعزز سرعة الاستجابة",
-      "title": "استخدام طريقة طلب العميل"
-    },
-    "fetcher": {
-      "clear": "مسح النموذج المستخرج",
-      "fetch": "احصل على قائمة النماذج",
-      "fetching": "جاري الحصول على قائمة النماذج...",
-      "latestTime": "آخر تحديث: {{time}}",
-      "noLatestTime": "لم يتم الحصول على قائمة بعد"
-    },
-    "helpDoc": "دليل التكوين",
-    "modelList": {
-      "desc": "اختيار النموذج الذي سيتم عرضه في الجلسة، سيتم عرض النموذج المحدد في قائمة النماذج",
-      "placeholder": "الرجاء اختيار نموذج من القائمة",
-      "title": "قائمة النماذج",
-      "total": "متاح {{count}} نموذج"
-    },
-    "proxyUrl": {
-      "desc": "يجب أن يتضمن عنوان الوكيل API بالإضافة إلى العنوان الافتراضي http(s)://",
-      "title": "عنوان وكيل API"
-    },
-    "waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد"
-  },
-  "marketPublish": {
-    "modal": {
-      "changelog": {
-        "extra": "صف التغييرات والتحسينات الرئيسية في هذا الإصدار",
-        "label": "سجل التغييرات",
-        "maxLengthError": "لا يمكن أن يتجاوز سجل التغييرات 500 حرف",
-        "placeholder": "يرجى إدخال سجل التغييرات",
-        "required": "يرجى إدخال سجل التغييرات"
-      },
-      "comparison": {
-        "local": "الإصدار المحلي الحالي",
-        "remote": "الإصدار المنشور الحالي"
-      },
-      "identifier": {
-        "extra": "سيكون المعرف هو الهوية الفريدة للمساعد، يُفضل استخدام أحرف صغيرة وأرقام وشرطات",
-        "label": "معرف المساعد",
-        "lengthError": "يجب أن يتراوح طول المعرف بين 3 و50 حرفًا",
-        "patternError": "يمكن أن يحتوي المعرف فقط على أحرف صغيرة وأرقام وشرطات",
-        "placeholder": "يرجى إدخال معرف فريد للمساعد، مثل: web-development",
-        "required": "يرجى إدخال معرف المساعد"
-      },
-      "loading": {
-        "fetchingRemote": "جارٍ تحميل البيانات البعيدة...",
-        "submit": "جارٍ نشر المساعد...",
-        "upload": "جارٍ نشر الإصدار الجديد..."
-      },
-      "messages": {
-        "createVersionFailed": "فشل إنشاء الإصدار: {{message}}",
-        "fetchRemoteFailed": "فشل في جلب بيانات المساعد من السوق",
-        "missingIdentifier": "لا يحتوي هذا المساعد على معرف المجتمع حتى الآن",
-        "notAuthenticated": "يرجى تسجيل الدخول إلى حساب المجتمع أولاً",
-        "publishFailed": "فشل النشر: {{message}}"
-      },
-      "submitButton": "نشر",
-      "title": {
-        "submit": "مشاركة في مجتمع المساعدين",
-        "upload": "نشر إصدار جديد"
-      }
-    },
-    "resultModal": {
-      "message": "تم إرسال المساعد الذي أنشأته للمراجعة، وسيتم نشره تلقائيًا بعد الموافقة.",
-      "title": "تم الإرسال بنجاح",
-      "view": "عرض في المجتمع"
-    },
-    "submit": {
-      "button": "مشاركة في المجتمع",
-      "tooltip": "شارك المساعد في مجتمع المساعدين"
-    },
-    "upload": {
-      "button": "نشر إصدار جديد",
-      "tooltip": "نشر إصدار جديد في مجتمع المساعدين"
-    }
-  },
-  "memory": {
-    "enabled": {
-      "desc": "عند التفعيل، سيتذكر الذكاء الاصطناعي تفضيلاتك من سجل المحادثات، ويجمع الذكريات لاستخدامها كمرجع في المحادثات المستقبلية",
-      "title": "تفعيل ميزة الذاكرة"
-    },
-    "title": "إعدادات الذاكرة"
-  },
-  "message": {
-    "success": "تم التحديث بنجاح"
-  },
-  "myAgents": {
-    "actions": {
-      "cancel": "إلغاء",
-      "confirmDeprecate": "تأكيد الإهمال",
-      "deprecate": "إهمال دائم",
-      "deprecateConfirmContent": "بعد الإهمال، سيتم إزالة هذا المساعد نهائيًا من السوق ولن يكون من الممكن إعادة نشره. هذا الإجراء لا يمكن التراجع عنه، يرجى الحذر.",
-      "deprecateConfirmTitle": "هل تريد تأكيد إهمال المساعد؟",
-      "deprecateError": "فشل في إهمال المساعد",
-      "deprecateLoading": "جارٍ إهمال المساعد...",
-      "deprecateSuccess": "تم إهمال المساعد",
-      "edit": "تحرير المساعد",
-      "publish": "نشر المساعد",
-      "publishError": "فشل في نشر المساعد",
-      "publishLoading": "جارٍ نشر المساعد...",
-      "publishSuccess": "تم نشر المساعد",
-      "unpublish": "إلغاء نشر المساعد",
-      "unpublishError": "فشل في إلغاء نشر المساعد",
-      "unpublishLoading": "جارٍ إلغاء نشر المساعد...",
-      "unpublishSuccess": "تم إلغاء نشر المساعد",
-      "viewDetail": "عرض التفاصيل"
-    },
-    "detail": {
-      "category": "الفئة",
-      "description": "الوصف",
-      "identifier": "المعرّف",
-      "title": "تفاصيل المساعد"
-    },
-    "empty": {
-      "description": "لم تقم بنشر أي مساعد في السوق بعد",
-      "title": "لا يوجد مساعدين منشورين"
-    },
-    "errors": {
-      "editFailed": "فشل في تحرير المساعد، يرجى المحاولة لاحقًا",
-      "fetchFailed": "فشل في جلب تفاصيل المساعد",
-      "notAuthenticated": "يرجى تسجيل الدخول إلى حساب السوق أولاً"
-    },
-    "loginRequired": {
-      "button": "تسجيل الدخول إلى حساب السوق",
-      "description": "يرجى تسجيل الدخول إلى حساب السوق لعرض المساعدين الذين قمت بنشرهم",
-      "title": "تسجيل الدخول مطلوب"
-    },
-    "status": {
-      "archived": "مؤرشف",
-      "deprecated": "مهمل",
-      "published": "منشور",
-      "unpublished": "غير منشور"
-    },
-    "title": "مساعدي المنشور"
-  },
-  "plugin": {
-    "addMCPPlugin": "إضافة مكون MCP",
-    "addTooltip": "إضافة البرنامج المساعد",
-    "clearDeprecated": "مسح البرامج المساعدة الغير صالحة",
-    "empty": "لا توجد برامج مساعدة مثبتة حاليًا، نرحب بك لزيارة <1>متجر البرامج المساعدة</1> للاستكشاف",
-    "installStatus": {
-      "deprecated": "تم إلغاء التثبيت"
-    },
-    "settings": {
-      "hint": "يرجى ملء الإعدادات التالية وفقًا للوصف",
-      "title": "إعدادات البرنامج المساعد {{id}}",
-      "tooltip": "إعدادات البرنامج المساعد"
-    },
-    "store": "متجر البرامج المساعد"
-  },
-  "settingAgent": {
-    "avatar": {
-      "sizeExceeded": "تجاوز حجم الصورة الحد الأقصى المسموح به وهو 1 ميغابايت، يرجى اختيار صورة أصغر.",
-      "title": "الصورة الرمزية"
-    },
-    "backgroundColor": {
-      "title": "لون الخلفية"
-    },
-    "description": {
-      "desc": "مقدمة بسيطة عن مساعدك، لا تستخدم كإعداد شخصية",
-      "placeholder": "الرجاء إدخال وصف المساعد",
-      "title": "وصف المساعد"
-    },
-    "name": {
-      "placeholder": "الرجاء إدخال اسم المساعد",
-      "title": "الاسم"
-    },
-    "prompt": {
-      "placeholder": "أدخل إعدادات المساعد، اضغط / لفتح قائمة الأوامر",
-      "title": "إعدادات المساعد"
-    },
-    "submit": "تحديث معلومات المساعد",
-    "tag": {
-      "desc": "سيتم عرض وسم المساعد في مجتمع المساعدين",
-      "placeholder": "الرجاء إدخال العلامة",
-      "title": "العلامة"
-    },
-    "title": "معلومات المساعد"
-  },
-  "settingAppearance": {
-    "animationMode": {
-      "agile": "سريع",
-      "desc": "اختر سرعة استجابة حركة التطبيق",
-      "disabled": "إيقاف",
-      "elegant": "أنيق",
-      "title": "حركة الاستجابة"
-    },
-    "contextMenuMode": {
-      "default": "افتراضي",
-      "desc": "اختر طريقة عرض قائمة النقر بزر الماوس الأيمن لرسائل الدردشة",
-      "disabled": "عدم الاستخدام",
-      "title": "خطة قائمة النقر بزر الماوس الأيمن"
-    },
-    "neutralColor": {
-      "desc": "تخصيص تدرجات الرمادي ذات الاتجاهات اللونية المختلفة",
-      "title": "لون محايد"
-    },
-    "noAnimation": {
-      "desc": "تعطيل جميع تأثيرات الحركة في التطبيق",
-      "title": "وضع بدون حركة"
-    },
-    "preview": {
-      "title": "لوحة الألوان"
-    },
-    "primaryColor": {
-      "desc": "تخصيص لون الموضوع",
-      "title": "لون الموضوع"
-    },
-    "title": "مظهر التطبيق"
-  },
-  "settingChat": {
-    "autoCreateTopicThreshold": {
-      "desc": "عند تجاوز عدد الرسائل الحالي هذا القيمة، سيتم إنشاء موضوع تلقائيًا",
-      "title": "عتبة إنشاء الموضوع التلقائي"
-    },
-    "chatStyleType": {
-      "title": "نوع نافذة الدردشة",
-      "type": {
-        "chat": "نمط المحادثة",
-        "docs": "نمط الوثائق"
-      }
-    },
-    "compressThreshold": {
-      "desc": "عندما يتجاوز عدد الرسائل التاريخية غير المضغوطة هذه القيمة، سيتم ضغطها",
-      "title": "عتبة ضغط طول الرسائل التاريخية"
-    },
-    "enableAutoCreateTopic": {
-      "desc": "هل يجب إنشاء موضوع تلقائيًا أثناء الدردشة، يسري ذلك فقط في المواضيع المؤقتة",
-      "title": "تمكين إنشاء الموضوع تلقائيًا"
-    },
-    "enableCompressHistory": {
-      "title": "تفعيل تلخيص الرسائل التاريخية تلقائيًا"
-    },
-    "enableHistoryCount": {
-      "alias": "غير محدود",
-      "limited": "يحتوي فقط على {{number}} رسالة محادثة",
-      "setlimited": "تعيين عدد الرسائل التاريخية",
-      "title": "تحديد عدد الرسائل التاريخية",
-      "unlimited": "غير محدود"
-    },
-    "enableStreaming": {
-      "desc": "تمكين الإخراج المتدفق لعرض الاستجابات في الوقت الفعلي. عند التعطيل، يتم عرض الاستجابة الكاملة فقط.",
-      "title": "تمكين الإخراج المتدفق"
-    },
-    "historyCount": {
-      "desc": "عدد الرسائل التي يتم إرفاقها في كل طلب (تشمل الأسئلة والأجوبة الجديدة. يُحسب كل سؤال وجواب كرسالة واحدة)",
-      "title": "عدد الرسائل المرفقة"
-    },
-    "inputTemplate": {
-      "desc": "سيتم ملء أحدث رسالة من المستخدم في هذا القالب",
-      "placeholder": "القالب المُعالج مسبقًا {{text}} سيتم استبداله بالمعلومات المُدخلة في الوقت الحقيقي",
-      "title": "معالجة مُدخلات المستخدم"
-    },
-    "submit": "تحديث تفضيلات الدردشة",
-    "title": "إعدادات الدردشة"
-  },
-  "settingChatAppearance": {
-    "fontSize": {
-      "desc": "حجم خط محتوى الدردشة",
-      "marks": {
-        "normal": "عادي"
-      },
-      "title": "حجم الخط"
-    },
-    "highlighterTheme": {
-      "title": "موضوع تمييز الكود"
-    },
-    "mermaidTheme": {
-      "title": "موضوع حورية البحر"
-    },
-    "title": "مظهر الدردشة",
-    "transitionMode": {
-      "desc": "رسوم انتقال رسائل الدردشة",
-      "options": {
-        "fadeIn": "تلاشي",
-        "none": {
-          "desc": "يعتمد هذا على طريقة إخراج استجابة النموذج، يرجى الاختبار بنفسك.",
-          "value": "بدون"
-        },
-        "smooth": "سلس"
-      },
-      "title": "رسوم الانتقال"
-    }
-  },
-  "settingCommon": {
-    "devMode": {
-      "desc": "عند التفعيل، ستظهر الميزات والخيارات الخاصة بالمطورين",
-      "title": "وضع المطور"
-    },
-    "lang": {
-      "autoMode": "اتباع النظام",
-      "title": "اللغة"
-    },
-    "liteMode": {
-      "desc": "عند التفعيل، سيتم تبسيط الواجهة وإخفاء الميزات المتقدمة",
-      "title": "الوضع المبسط"
-    },
-    "responseLanguage": {
-      "auto": "اتباع إعدادات النظام",
-      "desc": "تحديد اللغة التي يستخدمها الذكاء الاصطناعي في الردود",
-      "placeholder": "اختر لغة الرد",
-      "title": "لغة الرد"
-    },
-    "themeMode": {
-      "auto": "تلقائي",
-      "dark": "داكن",
-      "light": "فاتح",
-      "title": "الموضوع"
-    },
-    "title": "الإعدادات العامة"
-  },
-  "settingGroup": {
-    "description": {
-      "placeholder": "يرجى إدخال وصف الفريق",
-      "title": "وصف الفريق"
-    },
-    "name": {
-      "placeholder": "يرجى إدخال اسم الفريق",
-      "title": "اسم الفريق"
-    },
-    "scene": {
-      "desc": "اختر سيناريو الفريق",
-      "options": {
-        "casual": "غير رسمي",
-        "productive": "إنتاجي"
-      },
-      "title": "سيناريو الفريق"
-    },
-    "submit": "تحديث الفريق",
-    "systemPrompt": {
-      "placeholder": "يرجى إدخال كلمة تلميح نظام المضيف",
-      "title": "كلمة تلميح نظام المضيف"
-    },
-    "title": "معلومات المجموعة"
-  },
-  "settingGroupChat": {
-    "allowDM": {
-      "desc": "عند الإيقاف، لا يزال بإمكانك إرسال رسائل خاصة إلى المساعد يدويًا",
-      "title": "السماح للمساعد بإرسال رسائل خاصة"
-    },
-    "enableSupervisor": {
-      "desc": "تفعيل ميزة المشرف على المجموعة، حيث يتولى المشرف إدارة سير المحادثات داخل الفريق",
-      "title": "تفعيل المشرف"
-    },
-    "maxResponseInRow": {
-      "desc": "اختر عدد الرسائل التي يمكن للأعضاء الرد عليها بشكل متتالي. تعيين القيمة إلى 0 لتعطيل هذا القيد.",
-      "title": "عدد الردود المتتالية"
-    },
-    "model": {
-      "desc": "لن يتأثر حديث أعضاء المجموعة. بعض النماذج لا يمكن استخدامها كنماذج مشرف.",
-      "title": "نموذج المضيف"
-    },
-    "orchestratorTitle": "إعدادات المضيف",
-    "responseOrder": {
-      "desc": "سيقوم الوكلاء بالرد وفقًا للترتيب المحدد في المحادثة",
-      "options": {
-        "natural": "طبيعي",
-        "sequential": "تتابعي"
-      },
-      "placeholder": "اختر ترتيب الردود",
-      "title": "ترتيب الردود"
-    },
-    "responseSpeed": {
-      "desc": "التحكم في سرعة سير المحادثة بشكل عام",
-      "options": {
-        "fast": "سريع",
-        "medium": "متوسط",
-        "slow": "بطيء"
-      },
-      "placeholder": "اختر سرعة الرد",
-      "title": "سرعة الرد"
-    },
-    "revealDM": {
-      "desc": "اجعل محتوى الرسائل الخاصة المرسلة إلى الأعضاء الآخرين مرئيًا لك.",
-      "title": "عرض محتوى الرسائل الخاصة"
-    },
-    "submit": "تحديث الإعدادات",
-    "systemPrompt": {
-      "desc": "كلمة تلميح نظام مخصصة لمضيف محادثة الدردشة الجماعية. قد تؤثر على سلوك المضيف الافتراضي.",
-      "placeholder": "يرجى إدخال كلمة تلميح نظام المضيف المخصصة...",
-      "title": "كلمة تلميح نظام المضيف"
-    },
-    "title": "إعدادات الدردشة"
-  },
-  "settingGroupMembers": {
-    "addToGroup": "انضم إلى المجموعة",
-    "availableAgents": "المساعدون المتاحون",
-    "createMember": "إنشاء عضو",
-    "defaultAgent": "المساعد المخصص",
-    "disableHost": "تعطيل مساعد المضيف",
-    "edit": "تعديل الأعضاء",
-    "empty": "لا يوجد أعضاء في هذا الفريق حاليًا. انقر على زر + لإضافة أعضاء.",
-    "enableHost": "تمكين مساعد المضيف",
-    "groupHost": "مضيف المجموعة",
-    "groupMembers": "أعضاء المجموعة",
-    "host": {
-      "description": "عندما يكون المضيف في المجموعة، ستعمل الدردشة الجماعية بشكل تلقائي، مناسب للمهام الإبداعية.",
-      "title": "المضيف"
-    },
-    "noAvailableAgents": "لا يوجد مساعدين متاحين",
-    "noDescription": "لا يوجد وصف",
-    "noMembersInGroup": "لا يوجد أعضاء في المجموعة",
-    "owner": "أنت (المالك)",
-    "remove": "إزالة العضو",
-    "removeFromGroup": "إخراج من المجموعة",
-    "you": "أنت"
-  },
-  "settingImage": {
-    "defaultCount": {
-      "desc": "اضبط عدد الصور الافتراضي عند إنشاء مهمة جديدة في لوحة توليد الصور.",
-      "label": "عدد الصور الافتراضي",
-      "title": "إعدادات الرسم بالذكاء الاصطناعي"
-    }
-  },
-  "settingModel": {
-    "enableMaxTokens": {
-      "title": "تمكين الحد الأقصى للردود"
-    },
-    "enableReasoningEffort": {
-      "title": "تمكين ضبط قوة الاستدلال"
-    },
-    "frequencyPenalty": {
-      "desc": "كلما زادت القيمة، كانت المفردات أكثر تنوعًا؛ وكلما انخفضت القيمة، كانت المفردات أكثر بساطة ووضوحًا",
-      "title": "تنوع المفردات"
-    },
-    "maxTokens": {
-      "desc": "عدد الرموز الأقصى المستخدمة في التفاعل الواحد",
-      "title": "الحد الأقصى للردود"
-    },
-    "model": {
-      "desc": "{{provider}} نموذج",
-      "title": "النموذج"
-    },
-    "params": {
-      "title": "إعدادات متقدمة"
-    },
-    "presencePenalty": {
-      "desc": "كلما زادت القيمة، زادت الميل إلى استخدام تعبيرات مختلفة، مما يتجنب تكرار المفاهيم؛ وكلما انخفضت القيمة، زادت الميل إلى استخدام المفاهيم أو السرد المتكرر، مما يجعل التعبير أكثر اتساقًا",
-      "title": "تنوع التعبير"
-    },
-    "reasoningEffort": {
-      "desc": "كلما زادت القيمة، زادت قوة الاستدلال، ولكن قد يؤدي ذلك إلى زيادة وقت الاستجابة واستهلاك الرموز",
-      "options": {
-        "high": "عالي",
-        "low": "منخفض",
-        "medium": "متوسط"
-      },
-      "title": "قوة الاستدلال"
-    },
-    "submit": "تحديث إعدادات النموذج",
-    "temperature": {
-      "desc": "كلما زادت القيمة، كانت الإجابات أكثر إبداعًا وخيالًا؛ وكلما انخفضت القيمة، كانت الإجابات أكثر دقة",
-      "title": "مستوى الإبداع",
-      "warning": "إذا كانت قيمة مستوى الإبداع مرتفعة جدًا، قد تحتوي المخرجات على تشويش"
-    },
-    "title": "إعدادات النموذج",
-    "topP": {
-      "desc": "عدد الاحتمالات التي يتم أخذها في الاعتبار، كلما زادت القيمة، زادت احتمالية قبول إجابات متعددة؛ وكلما انخفضت القيمة، زادت الميل لاختيار الإجابة الأكثر احتمالًا. لا يُنصح بتغييرها مع مستوى الإبداع",
-      "title": "مستوى الانفتاح الفكري"
-    }
-  },
-  "settingOpening": {
-    "openingMessage": {
-      "desc": "رسالة الافتتاح عند بدء المحادثة، تستخدم لتعريف وظائف المساعد",
-      "placeholder": "مرحبًا، أنا المساعد المخصص، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى إعدادات المساعد لإكمال معلوماتي.",
-      "title": "رسالة الافتتاح"
-    },
-    "openingQuestions": {
-      "desc": "الأسئلة الإرشادية المعروضة عند بدء المحادثة",
-      "empty": "أضف أسئلة افتتاحية لمساعدة المستخدمين على بدء المحادثة بسرعة",
-      "placeholder": "أدخل السؤال",
-      "repeat": "السؤال موجود بالفعل",
-      "title": "أسئلة الافتتاح"
-    },
-    "title": "إعداد الافتتاح"
-  },
-  "settingPlugin": {
-    "title": "قائمة الإضافات"
-  },
-  "settingSystem": {
-    "accessCode": {
-      "desc": "قام المسؤول بتمكين الوصول المشفر",
-      "placeholder": "الرجاء إدخال كلمة المرور",
-      "title": "كلمة المرور"
-    },
-    "oauth": {
-      "info": {
-        "desc": "تم تسجيل الدخول",
-        "title": "معلومات الحساب"
-      },
-      "signin": {
-        "action": "تسجيل الدخول",
-        "desc": "قم بتسجيل الدخول باستخدام SSO لفتح التطبيق",
-        "title": "تسجيل الدخول إلى الحساب"
-      },
-      "signout": {
-        "action": "تسجيل الخروج",
-        "confirm": "هل ترغب في تأكيد الخروج؟",
-        "success": "تم تسجيل الخروج بنجاح"
-      }
-    },
-    "title": "إعدادات النظام"
-  },
-  "settingTTS": {
-    "openai": {
-      "sttModel": "نموذج تحويل النص إلى كلام من OpenAI",
-      "title": "OpenAI",
-      "ttsModel": "نموذج توليد الكلام من OpenAI"
-    },
-    "showAllLocaleVoice": {
-      "desc": "إذا تم إيقافه، سيتم عرض مصادر الصوت الخاصة باللغة الحالية فقط",
-      "title": "عرض جميع مصادر الصوت للغات"
-    },
-    "stt": "إعدادات التحويل من الصوت إلى نص",
-    "sttAutoStop": {
-      "desc": "عند الإيقاف، لن يتم إيقاف تحويل الصوت إلى نص تلقائيًا، وسيتطلب الأمر النقر على زر الإيقاف يدويًا",
-      "title": "إيقاف تحويل الصوت إلى نص تلقائيًا"
-    },
-    "sttLocale": {
-      "desc": "لغة الصوت المدخلة، يمكن أن يساعد هذا الخيار في زيادة دقة تحويل الصوت إلى نص",
-      "title": "لغة تحويل الصوت إلى نص"
-    },
-    "sttService": {
-      "desc": "حيث يكون المتصفح هو خدمة التحويل الصوتي الأصلية",
-      "title": "خدمة تحويل الصوت إلى نص"
-    },
-    "submit": "تحديث خدمة الصوت",
-    "title": "خدمة الصوت",
-    "tts": "إعدادات توليد الكلام",
-    "ttsService": {
-      "desc": "إذا كنت تستخدم خدمة توليد الكلام من OpenAI، يجب التأكد من تمكين خدمة نموذج OpenAI",
-      "title": "خدمة توليد الكلام"
-    },
-    "voice": {
-      "desc": "حدد صوتًا للمساعد الحالي، تختلف مصادر الصوت المدعومة بحسب خدمة توليد الكلام",
-      "preview": "معاينة الصوت",
-      "title": "مصدر توليد الكلام"
-    }
-  },
+  "danger.clear.action": "مسح الآن",
+  "danger.clear.confirm": "هل تؤكد مسح جميع بيانات المحادثات؟",
+  "danger.clear.desc": "سيتم مسح جميع بيانات الجلسة بما في ذلك المساعد والملفات والرسائل والإضافات",
+  "danger.clear.success": "تم مسح جميع رسائل الجلسة",
+  "danger.clear.title": "مسح جميع رسائل الجلسة",
+  "danger.reset.action": "إعادة تعيين الآن",
+  "danger.reset.confirm": "هل تؤكد إعادة تعيين جميع الإعدادات؟",
+  "danger.reset.currentVersion": "الإصدار الحالي",
+  "danger.reset.desc": "إعادة تعيين جميع عناصر الإعدادات إلى القيم الافتراضية",
+  "danger.reset.success": "تمت إعادة ضبط جميع الإعدادات",
+  "danger.reset.title": "إعادة تعيين جميع الإعدادات",
+  "defaultAgent.model.desc": "النموذج الافتراضي المستخدم عند إنشاء وكيل جديد",
+  "defaultAgent.model.title": "النموذج",
+  "defaultAgent.title": "إعدادات المساعد الافتراضي",
+  "group.aiConfig": "إعدادات الذكاء الاصطناعي",
+  "group.common": "عام",
+  "group.profile": "الحساب",
+  "group.system": "النظام",
+  "groupTab.chat": "الدردشة",
+  "groupTab.members": "الأعضاء",
+  "groupTab.meta": "المعلومات الأساسية",
+  "header.desc": "إعدادات التفضيلات والنماذج.",
+  "header.global": "إعدادات عامة",
+  "header.group": "إعدادات الفريق",
+  "header.groupDesc": "إدارة المجموعات وتفضيلات الدردشة",
+  "header.session": "إعدادات الجلسة",
+  "header.sessionDesc": "إعداد الشخصية وتفضيلات الجلسة.",
+  "header.sessionWithName": "إعدادات الجلسة · {{name}}",
+  "header.title": "إعدادات",
+  "hotkey.conflicts": "يتعارض مع اختصارات لوحة المفاتيح الحالية",
+  "hotkey.errors.CONFLICT": "تعارض في اختصار لوحة المفاتيح: هذا الاختصار مستخدم بالفعل من قبل وظيفة أخرى",
+  "hotkey.errors.INVALID_FORMAT": "تنسيق اختصار لوحة المفاتيح غير صالح: يرجى استخدام التنسيق الصحيح (مثل CommandOrControl+E)",
+  "hotkey.errors.INVALID_ID": "معرف اختصار لوحة المفاتيح غير صالح",
+  "hotkey.errors.NO_MODIFIER": "يجب أن يحتوي اختصار لوحة المفاتيح على مفتاح تعديل (Ctrl، Alt، Shift، إلخ)",
+  "hotkey.errors.SYSTEM_OCCUPIED": "اختصار لوحة المفاتيح مستخدم من قبل النظام أو تطبيقات أخرى",
+  "hotkey.errors.UNKNOWN": "فشل التحديث: خطأ غير معروف",
+  "hotkey.group.conversation": "المحادثة",
+  "hotkey.group.desktop": "سطح المكتب",
+  "hotkey.group.essential": "أساسي",
+  "hotkey.invalidCombination": "يجب أن تحتوي اختصارات لوحة المفاتيح على مفتاح تعديل واحد على الأقل (Ctrl، Alt، Shift) ومفتاح عادي واحد",
+  "hotkey.record": "اضغط على المفتاح لتسجيل اختصار لوحة المفاتيح",
+  "hotkey.reset": "إعادة تعيين إلى اختصارات لوحة المفاتيح الافتراضية",
+  "hotkey.title": "اختصارات لوحة المفاتيح",
+  "hotkey.updateError": "فشل تحديث اختصار لوحة المفاتيح: خطأ في الشبكة أو النظام",
+  "hotkey.updateSuccess": "تم تحديث اختصار لوحة المفاتيح بنجاح",
+  "llm.aesGcm": "سيتم استخدام خوارزمية التشفير <1>AES-GCM</1> لتشفير مفتاحك وعنوان الوكيل",
+  "llm.apiKey.desc": "يرجى ملء مفتاح API الخاص بك {{name}}",
+  "llm.apiKey.placeholder": "{{name}} مفتاح API",
+  "llm.apiKey.title": "مفتاح API",
+  "llm.checker.button": "فحص",
+  "llm.checker.desc": "اختبار ما إذا كان مفتاح واجهة البرمجة وعنوان الوكيل مملوء بشكل صحيح",
+  "llm.checker.pass": "تمت المراقبة",
+  "llm.checker.title": "فحص الاتصال",
+  "llm.customModelCards.addNew": "إنشاء وإضافة نموذج {{id}}",
+  "llm.customModelCards.config": "تكوين النموذج",
+  "llm.customModelCards.confirmDelete": "سيتم حذف النموذج المخصص هذا، وبمجرد الحذف لا يمكن استعادته، يرجى التحلي بالحذر.",
+  "llm.customModelCards.modelConfig.azureDeployName.extra": "الحقل الفعلي المطلوب في طلب Azure OpenAI",
+  "llm.customModelCards.modelConfig.azureDeployName.placeholder": "الرجاء إدخال اسم نشر النموذج في Azure",
+  "llm.customModelCards.modelConfig.azureDeployName.title": "اسم نشر النموذج",
+  "llm.customModelCards.modelConfig.displayName.placeholder": "الرجاء إدخال اسم العرض للنموذج، مثل ChatGPT، GPT-4، إلخ",
+  "llm.customModelCards.modelConfig.displayName.title": "اسم العرض للنموذج",
+  "llm.customModelCards.modelConfig.files.extra": "تنفيذ تحميل الملفات الحالي هو مجرد حل Hack، ومخصص للتجربة الذاتية فقط. يرجى الانتظار حتى يتم تنفيذ القدرة الكاملة على تحميل الملفات لاحقًا",
+  "llm.customModelCards.modelConfig.files.title": "دعم تحميل الملفات",
+  "llm.customModelCards.modelConfig.functionCall.extra": "ستفتح هذه الإعدادات فقط القدرة على استدعاء الوظائف داخل التطبيق، وما إذا كانت الوظائف مدعومة يعتمد تمامًا على النموذج نفسه، يرجى اختبار قابلية استخدام استدعاء الوظائف لهذا النموذج بنفسك",
+  "llm.customModelCards.modelConfig.functionCall.title": "دعم استدعاء الوظائف",
+  "llm.customModelCards.modelConfig.id.extra": "سيتم عرضه كعلامة للنموذج",
+  "llm.customModelCards.modelConfig.id.placeholder": "الرجاء إدخال معرف النموذج، مثل gpt-4-turbo-preview أو claude-2.1",
+  "llm.customModelCards.modelConfig.id.title": "معرف النموذج",
+  "llm.customModelCards.modelConfig.modalTitle": "تكوين النموذج المخصص",
+  "llm.customModelCards.modelConfig.tokens.title": "أقصى عدد من الرموز",
+  "llm.customModelCards.modelConfig.vision.extra": "ستفتح هذه الإعدادات فقط القدرة على تحميل الصور داخل التطبيق، وما إذا كانت القدرة على التعرف مدعومة يعتمد تمامًا على النموذج نفسه، يرجى اختبار قابلية استخدام التعرف البصري لهذا النموذج بنفسك",
+  "llm.customModelCards.modelConfig.vision.title": "دعم التعرف على الصور",
+  "llm.fetchOnClient.desc": "طريقة طلب العميل ستبدأ طلب الجلسة مباشرة من المتصفح، مما يمكن أن يعزز سرعة الاستجابة",
+  "llm.fetchOnClient.title": "استخدام طريقة طلب العميل",
+  "llm.fetcher.clear": "مسح النموذج المستخرج",
+  "llm.fetcher.fetch": "احصل على قائمة النماذج",
+  "llm.fetcher.fetching": "جاري الحصول على قائمة النماذج...",
+  "llm.fetcher.latestTime": "آخر تحديث: {{time}}",
+  "llm.fetcher.noLatestTime": "لم يتم الحصول على قائمة بعد",
+  "llm.helpDoc": "دليل التكوين",
+  "llm.modelList.desc": "اختيار النموذج الذي سيتم عرضه في الجلسة، سيتم عرض النموذج المحدد في قائمة النماذج",
+  "llm.modelList.placeholder": "الرجاء اختيار نموذج من القائمة",
+  "llm.modelList.title": "قائمة النماذج",
+  "llm.modelList.total": "متاح {{count}} نموذج",
+  "llm.proxyUrl.desc": "يجب أن يتضمن عنوان الوكيل API بالإضافة إلى العنوان الافتراضي http(s)://",
+  "llm.proxyUrl.title": "عنوان وكيل API",
+  "llm.waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد",
+  "marketPublish.modal.changelog.extra": "صف التغييرات والتحسينات الرئيسية في هذا الإصدار",
+  "marketPublish.modal.changelog.label": "سجل التغييرات",
+  "marketPublish.modal.changelog.maxLengthError": "لا يمكن أن يتجاوز سجل التغييرات 500 حرف",
+  "marketPublish.modal.changelog.placeholder": "يرجى إدخال سجل التغييرات",
+  "marketPublish.modal.changelog.required": "يرجى إدخال سجل التغييرات",
+  "marketPublish.modal.comparison.local": "الإصدار المحلي الحالي",
+  "marketPublish.modal.comparison.remote": "الإصدار المنشور الحالي",
+  "marketPublish.modal.identifier.extra": "سيكون المعرف هو الهوية الفريدة للمساعد، يُفضل استخدام أحرف صغيرة وأرقام وشرطات",
+  "marketPublish.modal.identifier.label": "معرف المساعد",
+  "marketPublish.modal.identifier.lengthError": "يجب أن يتراوح طول المعرف بين 3 و50 حرفًا",
+  "marketPublish.modal.identifier.patternError": "يمكن أن يحتوي المعرف فقط على أحرف صغيرة وأرقام وشرطات",
+  "marketPublish.modal.identifier.placeholder": "يرجى إدخال معرف فريد للمساعد، مثل: web-development",
+  "marketPublish.modal.identifier.required": "يرجى إدخال معرف المساعد",
+  "marketPublish.modal.loading.fetchingRemote": "جارٍ تحميل البيانات البعيدة...",
+  "marketPublish.modal.loading.submit": "جارٍ نشر المساعد...",
+  "marketPublish.modal.loading.upload": "جارٍ نشر الإصدار الجديد...",
+  "marketPublish.modal.messages.createVersionFailed": "فشل إنشاء الإصدار: {{message}}",
+  "marketPublish.modal.messages.fetchRemoteFailed": "فشل في جلب بيانات المساعد من السوق",
+  "marketPublish.modal.messages.missingIdentifier": "لا يحتوي هذا المساعد على معرف المجتمع حتى الآن",
+  "marketPublish.modal.messages.notAuthenticated": "يرجى تسجيل الدخول إلى حساب المجتمع أولاً",
+  "marketPublish.modal.messages.publishFailed": "فشل النشر: {{message}}",
+  "marketPublish.modal.submitButton": "نشر",
+  "marketPublish.modal.title.submit": "مشاركة في مجتمع المساعدين",
+  "marketPublish.modal.title.upload": "نشر إصدار جديد",
+  "marketPublish.resultModal.message": "تم إرسال المساعد الذي أنشأته للمراجعة، وسيتم نشره تلقائيًا بعد الموافقة.",
+  "marketPublish.resultModal.title": "تم الإرسال بنجاح",
+  "marketPublish.resultModal.view": "عرض في المجتمع",
+  "marketPublish.submit.button": "مشاركة في المجتمع",
+  "marketPublish.submit.tooltip": "شارك المساعد في مجتمع المساعدين",
+  "marketPublish.upload.button": "نشر إصدار جديد",
+  "marketPublish.upload.tooltip": "نشر إصدار جديد في مجتمع المساعدين",
+  "memory.enabled.desc": "عند التفعيل، سيتذكر الذكاء الاصطناعي تفضيلاتك من سجل المحادثات، ويجمع الذكريات لاستخدامها كمرجع في المحادثات المستقبلية",
+  "memory.enabled.title": "تفعيل ميزة الذاكرة",
+  "memory.title": "إعدادات الذاكرة",
+  "message.success": "تم التحديث بنجاح",
+  "myAgents.actions.cancel": "إلغاء",
+  "myAgents.actions.confirmDeprecate": "تأكيد الإهمال",
+  "myAgents.actions.deprecate": "إهمال دائم",
+  "myAgents.actions.deprecateConfirmContent": "بعد الإهمال، سيتم إزالة هذا المساعد نهائيًا من السوق ولن يكون من الممكن إعادة نشره. هذا الإجراء لا يمكن التراجع عنه، يرجى الحذر.",
+  "myAgents.actions.deprecateConfirmTitle": "هل تريد تأكيد إهمال المساعد؟",
+  "myAgents.actions.deprecateError": "فشل في إهمال المساعد",
+  "myAgents.actions.deprecateLoading": "جارٍ إهمال المساعد...",
+  "myAgents.actions.deprecateSuccess": "تم إهمال المساعد",
+  "myAgents.actions.edit": "تحرير المساعد",
+  "myAgents.actions.publish": "نشر المساعد",
+  "myAgents.actions.publishError": "فشل في نشر المساعد",
+  "myAgents.actions.publishLoading": "جارٍ نشر المساعد...",
+  "myAgents.actions.publishSuccess": "تم نشر المساعد",
+  "myAgents.actions.unpublish": "إلغاء نشر المساعد",
+  "myAgents.actions.unpublishError": "فشل في إلغاء نشر المساعد",
+  "myAgents.actions.unpublishLoading": "جارٍ إلغاء نشر المساعد...",
+  "myAgents.actions.unpublishSuccess": "تم إلغاء نشر المساعد",
+  "myAgents.actions.viewDetail": "عرض التفاصيل",
+  "myAgents.detail.category": "الفئة",
+  "myAgents.detail.description": "الوصف",
+  "myAgents.detail.identifier": "المعرّف",
+  "myAgents.detail.title": "تفاصيل المساعد",
+  "myAgents.empty.description": "لم تقم بنشر أي مساعد في السوق بعد",
+  "myAgents.empty.title": "لا يوجد مساعدين منشورين",
+  "myAgents.errors.editFailed": "فشل في تحرير المساعد، يرجى المحاولة لاحقًا",
+  "myAgents.errors.fetchFailed": "فشل في جلب تفاصيل المساعد",
+  "myAgents.errors.notAuthenticated": "يرجى تسجيل الدخول إلى حساب السوق أولاً",
+  "myAgents.loginRequired.button": "تسجيل الدخول إلى حساب السوق",
+  "myAgents.loginRequired.description": "يرجى تسجيل الدخول إلى حساب السوق لعرض المساعدين الذين قمت بنشرهم",
+  "myAgents.loginRequired.title": "تسجيل الدخول مطلوب",
+  "myAgents.status.archived": "مؤرشف",
+  "myAgents.status.deprecated": "مهمل",
+  "myAgents.status.published": "منشور",
+  "myAgents.status.unpublished": "غير منشور",
+  "myAgents.title": "مساعدي المنشور",
+  "plugin.addMCPPlugin": "إضافة مكون MCP",
+  "plugin.addTooltip": "إضافة البرنامج المساعد",
+  "plugin.clearDeprecated": "مسح البرامج المساعدة الغير صالحة",
+  "plugin.empty": "لا توجد برامج مساعدة مثبتة حاليًا، نرحب بك لزيارة <1>متجر البرامج المساعدة</1> للاستكشاف",
+  "plugin.installStatus.deprecated": "تم إلغاء التثبيت",
+  "plugin.settings.hint": "يرجى ملء الإعدادات التالية وفقًا للوصف",
+  "plugin.settings.title": "إعدادات البرنامج المساعد {{id}}",
+  "plugin.settings.tooltip": "إعدادات البرنامج المساعد",
+  "plugin.store": "متجر البرامج المساعد",
+  "settingAgent.avatar.sizeExceeded": "تجاوز حجم الصورة الحد الأقصى المسموح به وهو 1 ميغابايت، يرجى اختيار صورة أصغر.",
+  "settingAgent.avatar.title": "الصورة الرمزية",
+  "settingAgent.backgroundColor.title": "لون الخلفية",
+  "settingAgent.description.desc": "مقدمة بسيطة عن مساعدك، لا تستخدم كإعداد شخصية",
+  "settingAgent.description.placeholder": "الرجاء إدخال وصف المساعد",
+  "settingAgent.description.title": "وصف المساعد",
+  "settingAgent.name.placeholder": "الرجاء إدخال اسم المساعد",
+  "settingAgent.name.title": "الاسم",
+  "settingAgent.prompt.placeholder": "أدخل إعدادات المساعد، اضغط / لفتح قائمة الأوامر",
+  "settingAgent.prompt.title": "إعدادات المساعد",
+  "settingAgent.submit": "تحديث معلومات المساعد",
+  "settingAgent.tag.desc": "سيتم عرض وسم المساعد في مجتمع المساعدين",
+  "settingAgent.tag.placeholder": "الرجاء إدخال العلامة",
+  "settingAgent.tag.title": "العلامة",
+  "settingAgent.title": "معلومات المساعد",
+  "settingAppearance.animationMode.agile": "سريع",
+  "settingAppearance.animationMode.desc": "اختر سرعة استجابة حركة التطبيق",
+  "settingAppearance.animationMode.disabled": "إيقاف",
+  "settingAppearance.animationMode.elegant": "أنيق",
+  "settingAppearance.animationMode.title": "حركة الاستجابة",
+  "settingAppearance.contextMenuMode.default": "افتراضي",
+  "settingAppearance.contextMenuMode.desc": "اختر طريقة عرض قائمة النقر بزر الماوس الأيمن لرسائل الدردشة",
+  "settingAppearance.contextMenuMode.disabled": "عدم الاستخدام",
+  "settingAppearance.contextMenuMode.title": "خطة قائمة النقر بزر الماوس الأيمن",
+  "settingAppearance.neutralColor.desc": "تخصيص تدرجات الرمادي ذات الاتجاهات اللونية المختلفة",
+  "settingAppearance.neutralColor.title": "لون محايد",
+  "settingAppearance.noAnimation.desc": "تعطيل جميع تأثيرات الحركة في التطبيق",
+  "settingAppearance.noAnimation.title": "وضع بدون حركة",
+  "settingAppearance.preview.title": "لوحة الألوان",
+  "settingAppearance.primaryColor.desc": "تخصيص لون الموضوع",
+  "settingAppearance.primaryColor.title": "لون الموضوع",
+  "settingAppearance.title": "مظهر التطبيق",
+  "settingChat.autoCreateTopicThreshold.desc": "عند تجاوز عدد الرسائل الحالي هذا القيمة، سيتم إنشاء موضوع تلقائيًا",
+  "settingChat.autoCreateTopicThreshold.title": "عتبة إنشاء الموضوع التلقائي",
+  "settingChat.chatStyleType.title": "نوع نافذة الدردشة",
+  "settingChat.chatStyleType.type.chat": "نمط المحادثة",
+  "settingChat.chatStyleType.type.docs": "نمط الوثائق",
+  "settingChat.compressThreshold.desc": "عندما يتجاوز عدد الرسائل التاريخية غير المضغوطة هذه القيمة، سيتم ضغطها",
+  "settingChat.compressThreshold.title": "عتبة ضغط طول الرسائل التاريخية",
+  "settingChat.enableAutoCreateTopic.desc": "هل يجب إنشاء موضوع تلقائيًا أثناء الدردشة، يسري ذلك فقط في المواضيع المؤقتة",
+  "settingChat.enableAutoCreateTopic.title": "تمكين إنشاء الموضوع تلقائيًا",
+  "settingChat.enableCompressHistory.title": "تفعيل تلخيص الرسائل التاريخية تلقائيًا",
+  "settingChat.enableHistoryCount.alias": "غير محدود",
+  "settingChat.enableHistoryCount.limited": "يحتوي فقط على {{number}} رسالة محادثة",
+  "settingChat.enableHistoryCount.setlimited": "تعيين عدد الرسائل التاريخية",
+  "settingChat.enableHistoryCount.title": "تحديد عدد الرسائل التاريخية",
+  "settingChat.enableHistoryCount.unlimited": "غير محدود",
+  "settingChat.enableStreaming.desc": "تمكين الإخراج المتدفق لعرض الاستجابات في الوقت الفعلي. عند التعطيل، يتم عرض الاستجابة الكاملة فقط.",
+  "settingChat.enableStreaming.title": "تمكين الإخراج المتدفق",
+  "settingChat.historyCount.desc": "عدد الرسائل التي يتم إرفاقها في كل طلب (تشمل الأسئلة والأجوبة الجديدة. يُحسب كل سؤال وجواب كرسالة واحدة)",
+  "settingChat.historyCount.title": "عدد الرسائل المرفقة",
+  "settingChat.inputTemplate.desc": "سيتم ملء أحدث رسالة من المستخدم في هذا القالب",
+  "settingChat.inputTemplate.placeholder": "القالب المُعالج مسبقًا {{text}} سيتم استبداله بالمعلومات المُدخلة في الوقت الحقيقي",
+  "settingChat.inputTemplate.title": "معالجة مُدخلات المستخدم",
+  "settingChat.submit": "تحديث تفضيلات الدردشة",
+  "settingChat.title": "إعدادات الدردشة",
+  "settingChatAppearance.fontSize.desc": "حجم خط محتوى الدردشة",
+  "settingChatAppearance.fontSize.marks.normal": "عادي",
+  "settingChatAppearance.fontSize.title": "حجم الخط",
+  "settingChatAppearance.highlighterTheme.title": "موضوع تمييز الكود",
+  "settingChatAppearance.mermaidTheme.title": "موضوع حورية البحر",
+  "settingChatAppearance.title": "مظهر الدردشة",
+  "settingChatAppearance.transitionMode.desc": "رسوم انتقال رسائل الدردشة",
+  "settingChatAppearance.transitionMode.options.fadeIn": "تلاشي",
+  "settingChatAppearance.transitionMode.options.none.desc": "يعتمد هذا على طريقة إخراج استجابة النموذج، يرجى الاختبار بنفسك.",
+  "settingChatAppearance.transitionMode.options.none.value": "بدون",
+  "settingChatAppearance.transitionMode.options.smooth": "سلس",
+  "settingChatAppearance.transitionMode.title": "رسوم الانتقال",
+  "settingCommon.devMode.desc": "عند التفعيل، ستظهر الميزات والخيارات الخاصة بالمطورين",
+  "settingCommon.devMode.title": "وضع المطور",
+  "settingCommon.lang.autoMode": "اتباع النظام",
+  "settingCommon.lang.title": "اللغة",
+  "settingCommon.liteMode.desc": "عند التفعيل، سيتم تبسيط الواجهة وإخفاء الميزات المتقدمة",
+  "settingCommon.liteMode.title": "الوضع المبسط",
+  "settingCommon.responseLanguage.auto": "اتباع إعدادات النظام",
+  "settingCommon.responseLanguage.desc": "تحديد اللغة التي يستخدمها الذكاء الاصطناعي في الردود",
+  "settingCommon.responseLanguage.placeholder": "اختر لغة الرد",
+  "settingCommon.responseLanguage.title": "لغة الرد",
+  "settingCommon.themeMode.auto": "تلقائي",
+  "settingCommon.themeMode.dark": "داكن",
+  "settingCommon.themeMode.light": "فاتح",
+  "settingCommon.themeMode.title": "الموضوع",
+  "settingCommon.title": "الإعدادات العامة",
+  "settingGroup.description.placeholder": "يرجى إدخال وصف الفريق",
+  "settingGroup.description.title": "وصف الفريق",
+  "settingGroup.name.placeholder": "يرجى إدخال اسم الفريق",
+  "settingGroup.name.title": "اسم الفريق",
+  "settingGroup.scene.desc": "اختر سيناريو الفريق",
+  "settingGroup.scene.options.casual": "غير رسمي",
+  "settingGroup.scene.options.productive": "إنتاجي",
+  "settingGroup.scene.title": "سيناريو الفريق",
+  "settingGroup.submit": "تحديث الفريق",
+  "settingGroup.systemPrompt.placeholder": "يرجى إدخال كلمة تلميح نظام المضيف",
+  "settingGroup.systemPrompt.title": "كلمة تلميح نظام المضيف",
+  "settingGroup.title": "معلومات المجموعة",
+  "settingGroupChat.allowDM.desc": "عند الإيقاف، لا يزال بإمكانك إرسال رسائل خاصة إلى المساعد يدويًا",
+  "settingGroupChat.allowDM.title": "السماح للمساعد بإرسال رسائل خاصة",
+  "settingGroupChat.enableSupervisor.desc": "تفعيل ميزة المشرف على المجموعة، حيث يتولى المشرف إدارة سير المحادثات داخل الفريق",
+  "settingGroupChat.enableSupervisor.title": "تفعيل المشرف",
+  "settingGroupChat.maxResponseInRow.desc": "اختر عدد الرسائل التي يمكن للأعضاء الرد عليها بشكل متتالي. تعيين القيمة إلى 0 لتعطيل هذا القيد.",
+  "settingGroupChat.maxResponseInRow.title": "عدد الردود المتتالية",
+  "settingGroupChat.model.desc": "لن يتأثر حديث أعضاء المجموعة. بعض النماذج لا يمكن استخدامها كنماذج مشرف.",
+  "settingGroupChat.model.title": "نموذج المضيف",
+  "settingGroupChat.orchestratorTitle": "إعدادات المضيف",
+  "settingGroupChat.responseOrder.desc": "سيقوم الوكلاء بالرد وفقًا للترتيب المحدد في المحادثة",
+  "settingGroupChat.responseOrder.options.natural": "طبيعي",
+  "settingGroupChat.responseOrder.options.sequential": "تتابعي",
+  "settingGroupChat.responseOrder.placeholder": "اختر ترتيب الردود",
+  "settingGroupChat.responseOrder.title": "ترتيب الردود",
+  "settingGroupChat.responseSpeed.desc": "التحكم في سرعة سير المحادثة بشكل عام",
+  "settingGroupChat.responseSpeed.options.fast": "سريع",
+  "settingGroupChat.responseSpeed.options.medium": "متوسط",
+  "settingGroupChat.responseSpeed.options.slow": "بطيء",
+  "settingGroupChat.responseSpeed.placeholder": "اختر سرعة الرد",
+  "settingGroupChat.responseSpeed.title": "سرعة الرد",
+  "settingGroupChat.revealDM.desc": "اجعل محتوى الرسائل الخاصة المرسلة إلى الأعضاء الآخرين مرئيًا لك.",
+  "settingGroupChat.revealDM.title": "عرض محتوى الرسائل الخاصة",
+  "settingGroupChat.submit": "تحديث الإعدادات",
+  "settingGroupChat.systemPrompt.desc": "كلمة تلميح نظام مخصصة لمضيف محادثة الدردشة الجماعية. قد تؤثر على سلوك المضيف الافتراضي.",
+  "settingGroupChat.systemPrompt.placeholder": "يرجى إدخال كلمة تلميح نظام المضيف المخصصة...",
+  "settingGroupChat.systemPrompt.title": "كلمة تلميح نظام المضيف",
+  "settingGroupChat.title": "إعدادات الدردشة",
+  "settingGroupMembers.addToGroup": "انضم إلى المجموعة",
+  "settingGroupMembers.availableAgents": "المساعدون المتاحون",
+  "settingGroupMembers.createMember": "إنشاء عضو",
+  "settingGroupMembers.defaultAgent": "المساعد المخصص",
+  "settingGroupMembers.disableHost": "تعطيل مساعد المضيف",
+  "settingGroupMembers.edit": "تعديل الأعضاء",
+  "settingGroupMembers.empty": "لا يوجد أعضاء في هذا الفريق حاليًا. انقر على زر + لإضافة أعضاء.",
+  "settingGroupMembers.enableHost": "تمكين مساعد المضيف",
+  "settingGroupMembers.groupHost": "مضيف المجموعة",
+  "settingGroupMembers.groupMembers": "أعضاء المجموعة",
+  "settingGroupMembers.host.description": "عندما يكون المضيف في المجموعة، ستعمل الدردشة الجماعية بشكل تلقائي، مناسب للمهام الإبداعية.",
+  "settingGroupMembers.host.title": "المضيف",
+  "settingGroupMembers.noAvailableAgents": "لا يوجد مساعدين متاحين",
+  "settingGroupMembers.noDescription": "لا يوجد وصف",
+  "settingGroupMembers.noMembersInGroup": "لا يوجد أعضاء في المجموعة",
+  "settingGroupMembers.owner": "أنت (المالك)",
+  "settingGroupMembers.remove": "إزالة العضو",
+  "settingGroupMembers.removeFromGroup": "إخراج من المجموعة",
+  "settingGroupMembers.you": "أنت",
+  "settingImage.defaultCount.desc": "اضبط عدد الصور الافتراضي عند إنشاء مهمة جديدة في لوحة توليد الصور.",
+  "settingImage.defaultCount.label": "عدد الصور الافتراضي",
+  "settingImage.defaultCount.title": "إعدادات الرسم بالذكاء الاصطناعي",
+  "settingModel.enableMaxTokens.title": "تمكين الحد الأقصى للردود",
+  "settingModel.enableReasoningEffort.title": "تمكين ضبط قوة الاستدلال",
+  "settingModel.frequencyPenalty.desc": "كلما زادت القيمة، كانت المفردات أكثر تنوعًا؛ وكلما انخفضت القيمة، كانت المفردات أكثر بساطة ووضوحًا",
+  "settingModel.frequencyPenalty.title": "تنوع المفردات",
+  "settingModel.maxTokens.desc": "عدد الرموز الأقصى المستخدمة في التفاعل الواحد",
+  "settingModel.maxTokens.title": "الحد الأقصى للردود",
+  "settingModel.model.desc": "{{provider}} نموذج",
+  "settingModel.model.title": "النموذج",
+  "settingModel.params.title": "إعدادات متقدمة",
+  "settingModel.presencePenalty.desc": "كلما زادت القيمة، زادت الميل إلى استخدام تعبيرات مختلفة، مما يتجنب تكرار المفاهيم؛ وكلما انخفضت القيمة، زادت الميل إلى استخدام المفاهيم أو السرد المتكرر، مما يجعل التعبير أكثر اتساقًا",
+  "settingModel.presencePenalty.title": "تنوع التعبير",
+  "settingModel.reasoningEffort.desc": "كلما زادت القيمة، زادت قوة الاستدلال، ولكن قد يؤدي ذلك إلى زيادة وقت الاستجابة واستهلاك الرموز",
+  "settingModel.reasoningEffort.options.high": "عالي",
+  "settingModel.reasoningEffort.options.low": "منخفض",
+  "settingModel.reasoningEffort.options.medium": "متوسط",
+  "settingModel.reasoningEffort.title": "قوة الاستدلال",
+  "settingModel.submit": "تحديث إعدادات النموذج",
+  "settingModel.temperature.desc": "كلما زادت القيمة، كانت الإجابات أكثر إبداعًا وخيالًا؛ وكلما انخفضت القيمة، كانت الإجابات أكثر دقة",
+  "settingModel.temperature.title": "مستوى الإبداع",
+  "settingModel.temperature.warning": "إذا كانت قيمة مستوى الإبداع مرتفعة جدًا، قد تحتوي المخرجات على تشويش",
+  "settingModel.title": "إعدادات النموذج",
+  "settingModel.topP.desc": "عدد الاحتمالات التي يتم أخذها في الاعتبار، كلما زادت القيمة، زادت احتمالية قبول إجابات متعددة؛ وكلما انخفضت القيمة، زادت الميل لاختيار الإجابة الأكثر احتمالًا. لا يُنصح بتغييرها مع مستوى الإبداع",
+  "settingModel.topP.title": "مستوى الانفتاح الفكري",
+  "settingOpening.openingMessage.desc": "رسالة الافتتاح عند بدء المحادثة، تستخدم لتعريف وظائف المساعد",
+  "settingOpening.openingMessage.placeholder": "مرحبًا، أنا المساعد المخصص، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى إعدادات المساعد لإكمال معلوماتي.",
+  "settingOpening.openingMessage.title": "رسالة الافتتاح",
+  "settingOpening.openingQuestions.desc": "الأسئلة الإرشادية المعروضة عند بدء المحادثة",
+  "settingOpening.openingQuestions.empty": "أضف أسئلة افتتاحية لمساعدة المستخدمين على بدء المحادثة بسرعة",
+  "settingOpening.openingQuestions.placeholder": "أدخل السؤال",
+  "settingOpening.openingQuestions.repeat": "السؤال موجود بالفعل",
+  "settingOpening.openingQuestions.title": "أسئلة الافتتاح",
+  "settingOpening.title": "إعداد الافتتاح",
+  "settingPlugin.title": "قائمة الإضافات",
+  "settingSystem.accessCode.desc": "قام المسؤول بتمكين الوصول المشفر",
+  "settingSystem.accessCode.placeholder": "الرجاء إدخال كلمة المرور",
+  "settingSystem.accessCode.title": "كلمة المرور",
+  "settingSystem.oauth.info.desc": "تم تسجيل الدخول",
+  "settingSystem.oauth.info.title": "معلومات الحساب",
+  "settingSystem.oauth.signin.action": "تسجيل الدخول",
+  "settingSystem.oauth.signin.desc": "قم بتسجيل الدخول باستخدام SSO لفتح التطبيق",
+  "settingSystem.oauth.signin.title": "تسجيل الدخول إلى الحساب",
+  "settingSystem.oauth.signout.action": "تسجيل الخروج",
+  "settingSystem.oauth.signout.confirm": "هل ترغب في تأكيد الخروج؟",
+  "settingSystem.oauth.signout.success": "تم تسجيل الخروج بنجاح",
+  "settingSystem.title": "إعدادات النظام",
+  "settingTTS.openai.sttModel": "نموذج تحويل النص إلى كلام من OpenAI",
+  "settingTTS.openai.title": "OpenAI",
+  "settingTTS.openai.ttsModel": "نموذج توليد الكلام من OpenAI",
+  "settingTTS.showAllLocaleVoice.desc": "إذا تم إيقافه، سيتم عرض مصادر الصوت الخاصة باللغة الحالية فقط",
+  "settingTTS.showAllLocaleVoice.title": "عرض جميع مصادر الصوت للغات",
+  "settingTTS.stt": "إعدادات التحويل من الصوت إلى نص",
+  "settingTTS.sttAutoStop.desc": "عند الإيقاف، لن يتم إيقاف تحويل الصوت إلى نص تلقائيًا، وسيتطلب الأمر النقر على زر الإيقاف يدويًا",
+  "settingTTS.sttAutoStop.title": "إيقاف تحويل الصوت إلى نص تلقائيًا",
+  "settingTTS.sttLocale.desc": "لغة الصوت المدخلة، يمكن أن يساعد هذا الخيار في زيادة دقة تحويل الصوت إلى نص",
+  "settingTTS.sttLocale.title": "لغة تحويل الصوت إلى نص",
+  "settingTTS.sttService.desc": "حيث يكون المتصفح هو خدمة التحويل الصوتي الأصلية",
+  "settingTTS.sttService.title": "خدمة تحويل الصوت إلى نص",
+  "settingTTS.submit": "تحديث خدمة الصوت",
+  "settingTTS.title": "خدمة الصوت",
+  "settingTTS.tts": "إعدادات توليد الكلام",
+  "settingTTS.ttsService.desc": "إذا كنت تستخدم خدمة توليد الكلام من OpenAI، يجب التأكد من تمكين خدمة نموذج OpenAI",
+  "settingTTS.ttsService.title": "خدمة توليد الكلام",
+  "settingTTS.voice.desc": "حدد صوتًا للمساعد الحالي، تختلف مصادر الصوت المدعومة بحسب خدمة توليد الكلام",
+  "settingTTS.voice.preview": "معاينة الصوت",
+  "settingTTS.voice.title": "مصدر توليد الكلام",
   "startConversation": "ابدأ المحادثة",
-  "storage": {
-    "actions": {
-      "export": {
-        "button": "تصدير",
-        "exportType": {
-          "agent": "تصدير إعدادات المساعد",
-          "agentWithMessage": "تصدير المساعد والرسائل",
-          "all": "تصدير الإعدادات العالمية وجميع بيانات المساعدين",
-          "allAgent": "تصدير جميع إعدادات المساعدين",
-          "allAgentWithMessage": "تصدير جميع المساعدين والرسائل",
-          "globalSetting": "تصدير الإعدادات العالمية"
-        },
-        "title": "تصدير البيانات"
-      },
-      "import": {
-        "button": "استيراد",
-        "title": "استيراد البيانات"
-      },
-      "title": "عمليات متقدمة"
-    },
-    "desc": "حجم التخزين في المتصفح الحالي",
-    "embeddings": {
-      "used": "تخزين المتجهات"
-    },
-    "title": "تخزين البيانات",
-    "used": "حجم التخزين"
-  },
-  "submitAgentModal": {
-    "button": "تقديم المساعد",
-    "identifier": "معرف المساعد (identifier)",
-    "metaMiss": "يرجى استكمال معلومات المساعد قبل التقديم، يجب أن تتضمن الاسم والوصف والعلامة",
-    "placeholder": "الرجاء إدخال معرف المساعد، يجب أن يكون فريدًا، مثل تطوير الويب",
-    "success": "تم إرسال المساعد بنجاح",
-    "tooltips": "مشاركة في مجتمع المساعدين"
-  },
-  "submitFooter": {
-    "reset": "إعادة تعيين",
-    "submit": "حفظ",
-    "unSaved": "تغييرات غير محفوظة",
-    "unSavedWarning": "هناك تغييرات غير محفوظة حالياً"
-  },
-  "sync": {
-    "device": {
-      "deviceName": {
-        "hint": "أضف اسمًا للتعرف بشكل أفضل",
-        "placeholder": "الرجاء إدخال اسم الجهاز",
-        "title": "اسم الجهاز"
-      },
-      "title": "معلومات الجهاز",
-      "unknownBrowser": "متصفح غير معروف",
-      "unknownOS": "نظام التشغيل غير معروف"
-    },
-    "warning": {
-      "tip": "بعد فترة اختبار عامة طويلة، قد لا يكون تزامن WebRTC مستقرًا بما يكفي لتلبية احتياجات التزامن العامة. يرجى <1>نشر خادم الإشارة</1> بنفسك قبل الاستخدام."
-    },
-    "webrtc": {
-      "channelName": {
-        "desc": "سيستخدم WebRTC هذا الاسم لإنشاء قناة مزامنة، يرجى التأكد من فرادة اسم القناة",
-        "placeholder": "الرجاء إدخال اسم قناة المزامنة",
-        "shuffle": "توليف عشوائي",
-        "title": "اسم قناة المزامنة"
-      },
-      "channelPassword": {
-        "desc": "إضافة كلمة مرور لضمان خصوصية القناة، يمكن للأجهزة الانضمام إلى القناة فقط عند إدخال كلمة المرور الصحيحة",
-        "placeholder": "الرجاء إدخال كلمة مرور قناة المزامنة",
-        "title": "كلمة مرور قناة المزامنة"
-      },
-      "desc": "اتصال البيانات النقطي الفوري يتطلب تواجد الأجهزة معًا للمزامنة",
-      "enabled": {
-        "invalid": "الرجاء ملء اسم خادم الإشارة واسم القناة المتزامنة قبل تمكينها",
-        "title": "تمكين المزامنة"
-      },
-      "signaling": {
-        "desc": "سيستخدم WebRTC هذا العنوان للتزامن",
-        "placeholder": "الرجاء إدخال عنوان خادم الإشارة",
-        "title": "خادم الإشارة"
-      },
-      "title": "WebRTC مزامنة"
-    }
-  },
-  "systemAgent": {
-    "agentMeta": {
-      "label": "النموذج",
-      "modelDesc": "يحدد النموذج المستخدم لإنشاء اسم المساعد ووصفه وصورته وعلامته",
-      "title": "مساعد إنشاء معلومات المساعد"
-    },
-    "customPrompt": {
-      "addPrompt": "إضافة موجه مخصص",
-      "desc": "بعد ملئه، سيستخدم المساعد النظامي الموجه المخصص عند إنشاء المحتوى",
-      "placeholder": "أدخل كلمة الموجه المخصصة",
-      "title": "كلمة الموجه المخصصة"
-    },
-    "generationTopic": {
-      "label": "النموذج",
-      "modelDesc": "نموذج مخصص لتسمية موضوعات الرسم بالذكاء الاصطناعي تلقائيًا",
-      "title": "مساعد تسمية مواضيع الرسم بالذكاء الاصطناعي"
-    },
-    "helpInfo": "عند إنشاء مساعد جديد، سيتم استخدام إعدادات المساعد الافتراضية كقيم افتراضية.",
-    "historyCompress": {
-      "label": "النموذج",
-      "modelDesc": "حدد النموذج المستخدم لضغط تاريخ المحادثة",
-      "title": "مساعد ضغط سجل المحادثة"
-    },
-    "queryRewrite": {
-      "label": "النموذج",
-      "modelDesc": "نموذج مخصص لتحسين أسئلة المستخدمين",
-      "title": "مساعد إعادة صياغة الأسئلة في مركز الموارد"
-    },
-    "thread": {
-      "label": "النموذج",
-      "modelDesc": "نموذج مخصص لإعادة تسمية الموضوعات الفرعية تلقائيًا",
-      "title": "مساعد التسمية التلقائية للمواضيع الفرعية"
-    },
-    "title": "مساعد النظام",
-    "topic": {
-      "label": "النموذج",
-      "modelDesc": "يحدد النموذج المستخدم لإعادة تسمية الموضوع تلقائيًا",
-      "title": "مساعد التسمية التلقائية للمواضيع"
-    },
-    "translation": {
-      "label": "النموذج",
-      "modelDesc": "النموذج المحدد للاستخدام في الترجمة",
-      "title": "مساعد ترجمة محتوى الرسائل"
-    }
-  },
-  "tab": {
-    "about": "حول",
-    "agent": "المساعد الافتراضي",
-    "apikey": "إدارة مفاتيح API",
-    "common": "المظهر",
-    "experiment": "تجربة",
-    "hotkey": "اختصارات لوحة المفاتيح",
-    "image": "خدمة الرسم",
-    "llm": "نموذج اللغة",
-    "memory": "إعدادات الذاكرة",
-    "profile": "حسابي",
-    "provider": "مزود خدمة الذكاء الاصطناعي",
-    "proxy": "وكيل الشبكة",
-    "security": "الأمان",
-    "stats": "إحصائيات البيانات",
-    "storage": "تخزين البيانات",
-    "sync": "مزامنة السحابة",
-    "tts": "خدمة الكلام",
-    "usage": "إحصائيات الاستخدام"
-  },
-  "tools": {
-    "add": "إضافة مكون إضافي",
-    "builtins": {
-      "groupName": "الامتدادات المدمجة"
-    },
-    "disabled": "النموذج الحالي لا يدعم استدعاء الوظائف، ولا يمكن استخدام الإضافة",
-    "klavis": {
-      "addServer": "إضافة خادم",
-      "authCompleted": "اكتملت المصادقة",
-      "authFailed": "فشلت المصادقة",
-      "authRequired": "المصادقة مطلوبة",
-      "connected": "متصل",
-      "error": "خطأ",
-      "groupName": "أدوات Klavis",
-      "manage": "إدارة Klavis",
-      "manageTitle": "إدارة تكامل Klavis",
-      "noServers": "لا توجد خوادم متصلة حاليًا",
-      "notEnabled": "خدمة Klavis غير مفعّلة",
-      "oauthRequired": "يرجى إكمال مصادقة OAuth في نافذة جديدة",
-      "pendingAuth": "في انتظار المصادقة",
-      "serverCreated": "تم إنشاء الخادم بنجاح",
-      "serverCreatedFailed": "فشل في إنشاء الخادم",
-      "serverRemoved": "تم حذف الخادم",
-      "servers": "خوادم",
-      "tools": "أدوات",
-      "verifyAuth": "لقد أكملت المصادقة"
-    },
-    "notInstalled": "غير مثبت",
-    "notInstalledWarning": "المكون الإضافي غير مثبت حاليًا، وقد يؤثر ذلك على استخدام المساعد",
-    "plugins": {
-      "enabled": "ممكّنة {{num}}",
-      "groupName": "الإضافات",
-      "noEnabled": "لا توجد إضافات ممكّنة حاليًا",
-      "store": "متجر الإضافات"
-    },
-    "tabs": {
-      "all": "الكل",
-      "installed": "مفعّلة"
-    },
-    "title": "أدوات الامتداد"
-  }
+  "storage.actions.export.button": "تصدير",
+  "storage.actions.export.exportType.agent": "تصدير إعدادات المساعد",
+  "storage.actions.export.exportType.agentWithMessage": "تصدير المساعد والرسائل",
+  "storage.actions.export.exportType.all": "تصدير الإعدادات العالمية وجميع بيانات المساعدين",
+  "storage.actions.export.exportType.allAgent": "تصدير جميع إعدادات المساعدين",
+  "storage.actions.export.exportType.allAgentWithMessage": "تصدير جميع المساعدين والرسائل",
+  "storage.actions.export.exportType.globalSetting": "تصدير الإعدادات العالمية",
+  "storage.actions.export.title": "تصدير البيانات",
+  "storage.actions.import.button": "استيراد",
+  "storage.actions.import.title": "استيراد البيانات",
+  "storage.actions.title": "عمليات متقدمة",
+  "storage.desc": "حجم التخزين في المتصفح الحالي",
+  "storage.embeddings.used": "تخزين المتجهات",
+  "storage.title": "تخزين البيانات",
+  "storage.used": "حجم التخزين",
+  "submitAgentModal.button": "تقديم المساعد",
+  "submitAgentModal.identifier": "معرف المساعد (identifier)",
+  "submitAgentModal.metaMiss": "يرجى استكمال معلومات المساعد قبل التقديم، يجب أن تتضمن الاسم والوصف والعلامة",
+  "submitAgentModal.placeholder": "الرجاء إدخال معرف المساعد، يجب أن يكون فريدًا، مثل تطوير الويب",
+  "submitAgentModal.success": "تم إرسال المساعد بنجاح",
+  "submitAgentModal.tooltips": "مشاركة في مجتمع المساعدين",
+  "submitFooter.reset": "إعادة تعيين",
+  "submitFooter.submit": "حفظ",
+  "submitFooter.unSaved": "تغييرات غير محفوظة",
+  "submitFooter.unSavedWarning": "هناك تغييرات غير محفوظة حالياً",
+  "sync.device.deviceName.hint": "أضف اسمًا للتعرف بشكل أفضل",
+  "sync.device.deviceName.placeholder": "الرجاء إدخال اسم الجهاز",
+  "sync.device.deviceName.title": "اسم الجهاز",
+  "sync.device.title": "معلومات الجهاز",
+  "sync.device.unknownBrowser": "متصفح غير معروف",
+  "sync.device.unknownOS": "نظام التشغيل غير معروف",
+  "sync.warning.tip": "بعد فترة اختبار عامة طويلة، قد لا يكون تزامن WebRTC مستقرًا بما يكفي لتلبية احتياجات التزامن العامة. يرجى <1>نشر خادم الإشارة</1> بنفسك قبل الاستخدام.",
+  "sync.webrtc.channelName.desc": "سيستخدم WebRTC هذا الاسم لإنشاء قناة مزامنة، يرجى التأكد من فرادة اسم القناة",
+  "sync.webrtc.channelName.placeholder": "الرجاء إدخال اسم قناة المزامنة",
+  "sync.webrtc.channelName.shuffle": "توليف عشوائي",
+  "sync.webrtc.channelName.title": "اسم قناة المزامنة",
+  "sync.webrtc.channelPassword.desc": "إضافة كلمة مرور لضمان خصوصية القناة، يمكن للأجهزة الانضمام إلى القناة فقط عند إدخال كلمة المرور الصحيحة",
+  "sync.webrtc.channelPassword.placeholder": "الرجاء إدخال كلمة مرور قناة المزامنة",
+  "sync.webrtc.channelPassword.title": "كلمة مرور قناة المزامنة",
+  "sync.webrtc.desc": "اتصال البيانات النقطي الفوري يتطلب تواجد الأجهزة معًا للمزامنة",
+  "sync.webrtc.enabled.invalid": "الرجاء ملء اسم خادم الإشارة واسم القناة المتزامنة قبل تمكينها",
+  "sync.webrtc.enabled.title": "تمكين المزامنة",
+  "sync.webrtc.signaling.desc": "سيستخدم WebRTC هذا العنوان للتزامن",
+  "sync.webrtc.signaling.placeholder": "الرجاء إدخال عنوان خادم الإشارة",
+  "sync.webrtc.signaling.title": "خادم الإشارة",
+  "sync.webrtc.title": "WebRTC مزامنة",
+  "systemAgent.agentMeta.label": "النموذج",
+  "systemAgent.agentMeta.modelDesc": "يحدد النموذج المستخدم لإنشاء اسم المساعد ووصفه وصورته وعلامته",
+  "systemAgent.agentMeta.title": "مساعد إنشاء معلومات المساعد",
+  "systemAgent.customPrompt.addPrompt": "إضافة موجه مخصص",
+  "systemAgent.customPrompt.desc": "بعد ملئه، سيستخدم المساعد النظامي الموجه المخصص عند إنشاء المحتوى",
+  "systemAgent.customPrompt.placeholder": "أدخل كلمة الموجه المخصصة",
+  "systemAgent.customPrompt.title": "كلمة الموجه المخصصة",
+  "systemAgent.generationTopic.label": "النموذج",
+  "systemAgent.generationTopic.modelDesc": "نموذج مخصص لتسمية موضوعات الرسم بالذكاء الاصطناعي تلقائيًا",
+  "systemAgent.generationTopic.title": "مساعد تسمية مواضيع الرسم بالذكاء الاصطناعي",
+  "systemAgent.helpInfo": "عند إنشاء مساعد جديد، سيتم استخدام إعدادات المساعد الافتراضية كقيم افتراضية.",
+  "systemAgent.historyCompress.label": "النموذج",
+  "systemAgent.historyCompress.modelDesc": "حدد النموذج المستخدم لضغط تاريخ المحادثة",
+  "systemAgent.historyCompress.title": "مساعد ضغط سجل المحادثة",
+  "systemAgent.queryRewrite.label": "النموذج",
+  "systemAgent.queryRewrite.modelDesc": "نموذج مخصص لتحسين أسئلة المستخدمين",
+  "systemAgent.queryRewrite.title": "مساعد إعادة صياغة الأسئلة في مركز الموارد",
+  "systemAgent.thread.label": "النموذج",
+  "systemAgent.thread.modelDesc": "نموذج مخصص لإعادة تسمية الموضوعات الفرعية تلقائيًا",
+  "systemAgent.thread.title": "مساعد التسمية التلقائية للمواضيع الفرعية",
+  "systemAgent.title": "مساعد النظام",
+  "systemAgent.topic.label": "النموذج",
+  "systemAgent.topic.modelDesc": "يحدد النموذج المستخدم لإعادة تسمية الموضوع تلقائيًا",
+  "systemAgent.topic.title": "مساعد التسمية التلقائية للمواضيع",
+  "systemAgent.translation.label": "النموذج",
+  "systemAgent.translation.modelDesc": "النموذج المحدد للاستخدام في الترجمة",
+  "systemAgent.translation.title": "مساعد ترجمة محتوى الرسائل",
+  "tab.about": "حول",
+  "tab.agent": "المساعد الافتراضي",
+  "tab.apikey": "إدارة مفاتيح API",
+  "tab.common": "المظهر",
+  "tab.experiment": "تجربة",
+  "tab.hotkey": "اختصارات لوحة المفاتيح",
+  "tab.image": "خدمة الرسم",
+  "tab.llm": "نموذج اللغة",
+  "tab.memory": "إعدادات الذاكرة",
+  "tab.profile": "حسابي",
+  "tab.provider": "مزود خدمة الذكاء الاصطناعي",
+  "tab.proxy": "وكيل الشبكة",
+  "tab.security": "الأمان",
+  "tab.stats": "إحصائيات البيانات",
+  "tab.storage": "تخزين البيانات",
+  "tab.sync": "مزامنة السحابة",
+  "tab.tts": "خدمة الكلام",
+  "tab.usage": "إحصائيات الاستخدام",
+  "tools.add": "إضافة مكون إضافي",
+  "tools.builtins.groupName": "الامتدادات المدمجة",
+  "tools.disabled": "النموذج الحالي لا يدعم استدعاء الوظائف، ولا يمكن استخدام الإضافة",
+  "tools.klavis.addServer": "إضافة خادم",
+  "tools.klavis.authCompleted": "اكتملت المصادقة",
+  "tools.klavis.authFailed": "فشلت المصادقة",
+  "tools.klavis.authRequired": "المصادقة مطلوبة",
+  "tools.klavis.connected": "متصل",
+  "tools.klavis.error": "خطأ",
+  "tools.klavis.groupName": "أدوات Klavis",
+  "tools.klavis.manage": "إدارة Klavis",
+  "tools.klavis.manageTitle": "إدارة تكامل Klavis",
+  "tools.klavis.noServers": "لا توجد خوادم متصلة حاليًا",
+  "tools.klavis.notEnabled": "خدمة Klavis غير مفعّلة",
+  "tools.klavis.oauthRequired": "يرجى إكمال مصادقة OAuth في نافذة جديدة",
+  "tools.klavis.pendingAuth": "في انتظار المصادقة",
+  "tools.klavis.serverCreated": "تم إنشاء الخادم بنجاح",
+  "tools.klavis.serverCreatedFailed": "فشل في إنشاء الخادم",
+  "tools.klavis.serverRemoved": "تم حذف الخادم",
+  "tools.klavis.servers": "خوادم",
+  "tools.klavis.tools": "أدوات",
+  "tools.klavis.verifyAuth": "لقد أكملت المصادقة",
+  "tools.notInstalled": "غير مثبت",
+  "tools.notInstalledWarning": "المكون الإضافي غير مثبت حاليًا، وقد يؤثر ذلك على استخدام المساعد",
+  "tools.plugins.enabled": "ممكّنة {{num}}",
+  "tools.plugins.groupName": "الإضافات",
+  "tools.plugins.noEnabled": "لا توجد إضافات ممكّنة حاليًا",
+  "tools.plugins.store": "متجر الإضافات",
+  "tools.tabs.all": "الكل",
+  "tools.tabs.installed": "مفعّلة",
+  "tools.title": "أدوات الامتداد"
 }

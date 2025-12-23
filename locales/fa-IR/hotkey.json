@@ -1,84 +1,42 @@
 {
-  "addUserMessage": {
-    "desc": "محتوای ورودی فعلی را به عنوان پیام کاربر اضافه کنید، اما تولید را فعال نکنید",
-    "title": "اضافه کردن یک پیام کاربر"
-  },
-  "clearCurrentMessages": {
-    "desc": "حذف پیام‌ها و فایل‌های بارگذاری شده در جلسه جاری",
-    "title": "حذف پیام‌های جلسه"
-  },
-  "commandPalette": {
-    "desc": "باز کردن پنل فرمان جهانی برای دسترسی سریع به قابلیت‌ها",
-    "title": "پنل فرمان"
-  },
-  "deleteAndRegenerateMessage": {
-    "desc": "آخرین پیام را حذف کرده و دوباره تولید کن",
-    "title": "حذف و تولید مجدد"
-  },
-  "deleteLastMessage": {
-    "desc": "آخرین پیام را حذف کن",
-    "title": "حذف آخرین پیام"
-  },
-  "desktop": {
-    "openSettings": {
-      "desc": "باز کردن صفحه تنظیمات برنامه",
-      "title": "تنظیمات برنامه"
-    },
-    "showApp": {
-      "desc": "نمایش یا پنهان کردن پنجره اصلی با کلید میانبر جهانی",
-      "title": "نمایش/پنهان کردن پنجره اصلی"
-    }
-  },
-  "editMessage": {
-    "desc": "با نگه داشتن کلید Alt و دوبار کلیک بر روی پیام وارد حالت ویرایش شوید",
-    "title": "ویرایش پیام"
-  },
-  "navigateToChat": {
-    "desc": "به برگه گفتگو برو و وارد Lobe AI شو",
-    "title": "تغییر به گفتگو پیش‌فرض"
-  },
-  "openChatSettings": {
-    "desc": "مشاهده و ویرایش تنظیمات کنونی گفتگو",
-    "title": "باز کردن تنظیمات گفتگو"
-  },
-  "openHotkeyHelper": {
-    "desc": "مشاهده تمام توضیحات استفاده از کلیدهای میانبر",
-    "title": "باز کردن راهنمای کلیدهای میانبر"
-  },
-  "regenerateMessage": {
-    "desc": "آخرین پیام را دوباره تولید کنید",
-    "title": "تولید مجدد پیام"
-  },
-  "saveDocument": {
-    "desc": "تمام تغییرات سند جاری را فوراً ذخیره کنید",
-    "title": "ذخیره سند"
-  },
-  "saveTopic": {
-    "desc": "موضوع فعلی را ذخیره کرده و یک موضوع جدید باز کنید",
-    "title": "باز کردن موضوع جدید"
-  },
-  "search": {
-    "desc": "فعال کردن جعبه جستجوی اصلی صفحه کنونی",
-    "title": "جستجو"
-  },
-  "showApp": {
-    "desc": "باز کردن سریع پنجره اصلی برنامه",
-    "title": "نمایش پنجره اصلی"
-  },
-  "switchAgent": {
-    "desc": "با نگه داشتن Ctrl و زدن عدد 0~9، دستیار ثابت در نوار کناری را تغییر دهید",
-    "title": "تغییر سریع دستیار"
-  },
-  "toggleLeftPanel": {
-    "desc": "نمایش یا پنهان کردن پنل سمت چپ",
-    "title": "نمایش/پنهان‌سازی پنل سمت چپ"
-  },
-  "toggleRightPanel": {
-    "desc": "نمایش یا پنهان کردن پنل سمت راست",
-    "title": "نمایش/پنهان‌سازی پنل سمت راست"
-  },
-  "toggleZenMode": {
-    "desc": "در حالت تمرکز، فقط گفتگو کنونی نمایش داده می‌شود و سایر رابط‌های کاربری پنهان می‌شوند",
-    "title": "تغییر حالت تمرکز"
-  }
+  "addUserMessage.desc": "محتوای ورودی فعلی را به عنوان پیام کاربر اضافه کنید، اما تولید را فعال نکنید",
+  "addUserMessage.title": "اضافه کردن یک پیام کاربر",
+  "clearCurrentMessages.desc": "حذف پیام‌ها و فایل‌های بارگذاری شده در جلسه جاری",
+  "clearCurrentMessages.title": "حذف پیام‌های جلسه",
+  "commandPalette.desc": "باز کردن پنل فرمان جهانی برای دسترسی سریع به قابلیت‌ها",
+  "commandPalette.title": "پنل فرمان",
+  "deleteAndRegenerateMessage.desc": "آخرین پیام را حذف کرده و دوباره تولید کن",
+  "deleteAndRegenerateMessage.title": "حذف و تولید مجدد",
+  "deleteLastMessage.desc": "آخرین پیام را حذف کن",
+  "deleteLastMessage.title": "حذف آخرین پیام",
+  "desktop.openSettings.desc": "باز کردن صفحه تنظیمات برنامه",
+  "desktop.openSettings.title": "تنظیمات برنامه",
+  "desktop.showApp.desc": "نمایش یا پنهان کردن پنجره اصلی با کلید میانبر جهانی",
+  "desktop.showApp.title": "نمایش/پنهان کردن پنجره اصلی",
+  "editMessage.desc": "با نگه داشتن کلید Alt و دوبار کلیک بر روی پیام وارد حالت ویرایش شوید",
+  "editMessage.title": "ویرایش پیام",
+  "navigateToChat.desc": "به برگه گفتگو برو و وارد Lobe AI شو",
+  "navigateToChat.title": "تغییر به گفتگو پیش‌فرض",
+  "openChatSettings.desc": "مشاهده و ویرایش تنظیمات کنونی گفتگو",
+  "openChatSettings.title": "باز کردن تنظیمات گفتگو",
+  "openHotkeyHelper.desc": "مشاهده تمام توضیحات استفاده از کلیدهای میانبر",
+  "openHotkeyHelper.title": "باز کردن راهنمای کلیدهای میانبر",
+  "regenerateMessage.desc": "آخرین پیام را دوباره تولید کنید",
+  "regenerateMessage.title": "تولید مجدد پیام",
+  "saveDocument.desc": "تمام تغییرات سند جاری را فوراً ذخیره کنید",
+  "saveDocument.title": "ذخیره سند",
+  "saveTopic.desc": "موضوع فعلی را ذخیره کرده و یک موضوع جدید باز کنید",
+  "saveTopic.title": "باز کردن موضوع جدید",
+  "search.desc": "فعال کردن جعبه جستجوی اصلی صفحه کنونی",
+  "search.title": "جستجو",
+  "showApp.desc": "باز کردن سریع پنجره اصلی برنامه",
+  "showApp.title": "نمایش پنجره اصلی",
+  "switchAgent.desc": "با نگه داشتن Ctrl و زدن عدد 0~9، دستیار ثابت در نوار کناری را تغییر دهید",
+  "switchAgent.title": "تغییر سریع دستیار",
+  "toggleLeftPanel.desc": "نمایش یا پنهان کردن پنل سمت چپ",
+  "toggleLeftPanel.title": "نمایش/پنهان‌سازی پنل سمت چپ",
+  "toggleRightPanel.desc": "نمایش یا پنهان کردن پنل سمت راست",
+  "toggleRightPanel.title": "نمایش/پنهان‌سازی پنل سمت راست",
+  "toggleZenMode.desc": "در حالت تمرکز، فقط گفتگو کنونی نمایش داده می‌شود و سایر رابط‌های کاربری پنهان می‌شوند",
+  "toggleZenMode.title": "تغییر حالت تمرکز"
 }

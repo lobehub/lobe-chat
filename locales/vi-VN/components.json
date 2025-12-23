@@ -1,238 +1,142 @@
 {
-  "ArgsInput": {
-    "addArgument": "Thêm tham số",
-    "argumentPlaceholder": "Tham số {{index}}",
-    "enterFirstArgument": "Nhập tham số đầu tiên..."
-  },
-  "DragUpload": {
-    "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh.",
-    "dragFileDesc": "Kéo và thả hình ảnh và tệp vào đây, hỗ trợ tải lên nhiều hình ảnh và tệp.",
-    "dragFileTitle": "Tải lên tệp",
-    "dragTitle": "Tải lên hình ảnh"
-  },
-  "EmojiPicker": {
-    "delete": "Xóa ảnh đại diện",
-    "draggerDesc": "Nhấp hoặc kéo thả hình ảnh vào khu vực này để tải lên",
-    "emoji": "Biểu tượng cảm xúc",
-    "fileTypeError": "Vui lòng tải lên tệp hình ảnh hợp lệ",
-    "upload": "Tải lên ảnh đại diện",
-    "uploadBtn": "Cắt và tải lên"
-  },
-  "FileManager": {
-    "actions": {
-      "addToKnowledgeBase": "Thêm vào thư viện tài nguyên",
-      "addToOtherKnowledgeBase": "Thêm vào thư viện tài nguyên khác",
-      "batchChunking": "Chia nhỏ theo lô",
-      "chunking": "Chia nhỏ",
-      "chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
-      "chunkingUnsupported": "Tập tin này không hỗ trợ phân mảnh",
-      "confirmDelete": "Bạn sắp xóa tệp này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
-      "confirmDeleteFolder": "Thư mục này và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn và không thể khôi phục. Vui lòng xác nhận thao tác của bạn.",
-      "confirmDeleteMultiFiles": "Bạn sắp xóa {{count}} tệp đã chọn, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
-      "confirmRemoveFromKnowledgeBase": "Sắp xóa {{count}} tệp đã chọn khỏi thư viện tài nguyên. Sau khi xóa, các tệp này vẫn có thể được xem trong mục Tất cả tệp. Vui lòng xác nhận thao tác của bạn.",
-      "copyUrl": "Sao chép liên kết",
-      "copyUrlSuccess": "Địa chỉ tệp đã được sao chép thành công",
-      "createChunkingTask": "Đang chuẩn bị...",
-      "deleteSuccess": "Tệp đã được xóa thành công",
-      "downloading": "Đang tải tệp...",
-      "goBack": "Quay lại trang trước",
-      "goForward": "Tiến đến trang sau",
-      "goToParent": "Đi đến thư mục cha",
-      "moveError": "Di chuyển tệp thất bại",
-      "moveHere": "Di chuyển đến đây",
-      "moveSuccess": "Di chuyển tệp thành công",
-      "moveToFolder": "Di chuyển đến...",
-      "moveToRoot": "Di chuyển đến thư mục gốc",
-      "removeFromKnowledgeBase": "Xóa khỏi thư viện tài nguyên",
-      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công",
-      "rename": "Đổi tên",
-      "renameError": "Đổi tên thất bại",
-      "renameSuccess": "Đổi tên thành công"
-    },
-    "bottom": "Đã đến cuối rồi",
-    "config": {
-      "showFilesInKnowledgeBase": "Hiển thị nội dung trong thư viện tài nguyên"
-    },
-    "emptyStatus": {
-      "actions": {
-        "file": "Tải lên tệp",
-        "folder": "Tải lên thư mục",
-        "knowledgeBase": "Tạo thư viện tài nguyên mới"
-      },
-      "or": "hoặc",
-      "title": "Kéo tệp hoặc thư mục vào đây"
-    },
-    "noFolders": "Hiện không có thư mục nào",
-    "sort": {
-      "dateAdded": "Ngày thêm",
-      "name": "Tên",
-      "size": "Kích thước"
-    },
-    "title": {
-      "createdAt": "Thời gian tạo",
-      "size": "Kích thước",
-      "title": "Tệp"
-    },
-    "total": {
-      "fileCount": "Tổng cộng {{count}} mục",
-      "selectedCount": "Đã chọn {{count}} mục"
-    },
-    "view": {
-      "list": "Chế độ danh sách",
-      "masonry": "Chế độ lưới"
-    }
-  },
-  "FileParsingStatus": {
-    "chunks": {
-      "embeddingStatus": {
-        "empty": "Các khối văn bản chưa được vector hóa hoàn toàn, sẽ dẫn đến chức năng tìm kiếm ngữ nghĩa không khả dụng, để nâng cao chất lượng tìm kiếm, vui lòng vector hóa các khối văn bản",
-        "error": "Lỗi vector hóa",
-        "errorResult": "Lỗi vector hóa, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
-        "processing": "Các khối văn bản đang được vector hóa, vui lòng chờ",
-        "success": "Hiện tại tất cả các khối văn bản đã được vector hóa"
-      },
-      "embeddings": "Vector hóa",
-      "status": {
-        "error": "Chia nhỏ thất bại",
-        "errorResult": "Chia nhỏ thất bại, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
-        "processing": "Đang chia nhỏ",
-        "processingTip": "Máy chủ đang chia tách các khối văn bản, đóng trang không ảnh hưởng đến tiến trình chia nhỏ"
-      }
-    }
-  },
-  "GoBack": {
-    "back": "Quay lại"
-  },
-  "HtmlPreview": {
-    "actions": {
-      "download": "Tải xuống",
-      "preview": "Xem trước"
-    },
-    "iframeTitle": "Xem trước HTML",
-    "mode": {
-      "code": "Mã",
-      "preview": "Xem trước"
-    },
-    "title": "Xem trước HTML"
-  },
-  "ImageUpload": {
-    "actions": {
-      "changeImage": "Nhấn để thay đổi hình ảnh",
-      "dropMultipleFiles": "Không hỗ trợ tải lên nhiều tệp cùng lúc, chỉ sử dụng tệp đầu tiên"
-    },
-    "placeholder": {
-      "primary": "Thêm hình ảnh",
-      "secondary": "Nhấn hoặc kéo thả để tải lên"
-    }
-  },
-  "KeyValueEditor": {
-    "addButton": "Thêm một dòng",
-    "deleteTooltip": "Xóa",
-    "duplicateKeyError": "Tên khóa phải duy nhất",
-    "keyPlaceholder": "Khóa",
-    "valuePlaceholder": "Giá trị"
-  },
-  "LocalFile": {
-    "action": {
-      "open": "Mở",
-      "showInFolder": "Hiển thị trong thư mục"
-    }
-  },
-  "MaxTokenSlider": {
-    "unlimited": "Không giới hạn"
-  },
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện hình ảnh, vui lòng xác minh khả năng sử dụng của chúng theo tình hình cụ thể",
-      "file": "Mô hình này hỗ trợ tải lên và nhận diện tệp",
-      "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
-      "imageOutput": "Mô hình này hỗ trợ tạo ra hình ảnh",
-      "reasoning": "Mô hình này hỗ trợ tư duy sâu sắc",
-      "search": "Mô hình này hỗ trợ tìm kiếm trực tuyến",
-      "tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
-      "video": "Mô hình này hỗ trợ nhận dạng video",
-      "vision": "Mô hình này hỗ trợ nhận diện hình ảnh"
-    },
-    "removed": "Mô hình này không còn trong danh sách, nếu bỏ chọn sẽ tự động xóa"
-  },
-  "ModelSwitchPanel": {
-    "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
-    "emptyProvider": "Không có nhà cung cấp nào được kích hoạt, vui lòng vào cài đặt để bật",
-    "goToSettings": "Đi đến cài đặt",
-    "provider": "Nhà cung cấp",
-    "title": "Mô hình"
-  },
-  "MultiImagesUpload": {
-    "actions": {
-      "uploadMore": "Nhấn hoặc kéo thả để tải lên thêm"
-    },
-    "modal": {
-      "complete": "Hoàn thành",
-      "newFileIndicator": "Mới thêm",
-      "selectImageToPreview": "Vui lòng chọn hình ảnh để xem trước",
-      "title": "Quản lý hình ảnh ({{count}})",
-      "upload": "Tải lên hình ảnh"
-    },
-    "placeholder": {
-      "primary": "Nhấn hoặc kéo thả để tải lên hình ảnh",
-      "secondary": "Hỗ trợ chọn nhiều hình ảnh"
-    },
-    "progress": {
-      "uploadingWithCount": "Đã tải lên {{completed}}/{{total}}"
-    },
-    "validation": {
-      "fileSizeExceeded": "Kích thước tệp vượt quá giới hạn",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) vượt quá kích thước tối đa cho phép là {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} tệp vượt quá kích thước tối đa cho phép là {{maxSize}}: {{fileList}}",
-      "imageCountExceeded": "Số lượng hình ảnh vượt quá giới hạn"
-    }
-  },
-  "OllamaSetupGuide": {
-    "action": {
-      "close": "Đóng thông báo",
-      "start": "Đã cài đặt"
-    },
-    "cors": {
-      "description": "Do hạn chế bảo mật của trình duyệt, bạn cần cấu hình CORS cho Ollama để có thể sử dụng bình thường.",
-      "linux": {
-        "env": "Thêm `Environment` trong phần [Service], thêm biến môi trường OLLAMA_ORIGINS:",
-        "reboot": "Tải lại systemd và khởi động lại Ollama",
-        "systemd": "Gọi systemd để chỉnh sửa dịch vụ ollama:"
-      },
-      "macos": "Vui lòng mở ứng dụng «Terminal» và dán lệnh sau, sau đó nhấn Enter để chạy",
-      "reboot": "Vui lòng khởi động lại dịch vụ Ollama sau khi hoàn thành",
-      "title": "Cấu hình Ollama cho phép truy cập CORS",
-      "windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo một biến môi trường mới có tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là *, nhấp «OK/Apply» để lưu"
-    },
-    "install": {
-      "description": "Vui lòng xác nhận rằng bạn đã mở Ollama, nếu chưa tải Ollama, hãy truy cập trang web chính thức <1>tải xuống</1>",
-      "docker": "Nếu bạn thích sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo xuống bằng lệnh sau:",
-      "linux": {
-        "command": "Cài đặt bằng lệnh sau:",
-        "manual": "Hoặc, bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt"
-      },
-      "title": "Cài đặt và khởi động ứng dụng Ollama trên máy tính",
-      "windowsTab": "Windows (phiên bản xem trước)"
-    }
-  },
-  "Thinking": {
-    "thinking": "Đang suy nghĩ sâu sắc...",
-    "thought": "Đã suy nghĩ sâu sắc (mất {{duration}} giây)",
-    "thoughtWithDuration": "Đã suy nghĩ sâu sắc"
-  },
-  "devTools": {
-    "cache": {
-      "empty": "Bộ nhớ đệm trống"
-    },
-    "metadata": {
-      "empty": "Chưa có siêu dữ liệu"
-    }
-  },
-  "knowledgeBase": {
-    "empty": {
-      "description": "Tạo thư viện tài nguyên để tổ chức và quản lý tài nguyên của bạn",
-      "search": "Không tìm thấy thư viện tài nguyên phù hợp",
-      "title": "Chưa có thư viện tài nguyên nào"
-    }
-  }
+  "ArgsInput.addArgument": "Thêm tham số",
+  "ArgsInput.argumentPlaceholder": "Tham số {{index}}",
+  "ArgsInput.enterFirstArgument": "Nhập tham số đầu tiên...",
+  "DragUpload.dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh.",
+  "DragUpload.dragFileDesc": "Kéo và thả hình ảnh và tệp vào đây, hỗ trợ tải lên nhiều hình ảnh và tệp.",
+  "DragUpload.dragFileTitle": "Tải lên tệp",
+  "DragUpload.dragTitle": "Tải lên hình ảnh",
+  "EmojiPicker.delete": "Xóa ảnh đại diện",
+  "EmojiPicker.draggerDesc": "Nhấp hoặc kéo thả hình ảnh vào khu vực này để tải lên",
+  "EmojiPicker.emoji": "Biểu tượng cảm xúc",
+  "EmojiPicker.fileTypeError": "Vui lòng tải lên tệp hình ảnh hợp lệ",
+  "EmojiPicker.upload": "Tải lên ảnh đại diện",
+  "EmojiPicker.uploadBtn": "Cắt và tải lên",
+  "FileManager.actions.addToKnowledgeBase": "Thêm vào thư viện tài nguyên",
+  "FileManager.actions.addToOtherKnowledgeBase": "Thêm vào thư viện tài nguyên khác",
+  "FileManager.actions.batchChunking": "Chia nhỏ theo lô",
+  "FileManager.actions.chunking": "Chia nhỏ",
+  "FileManager.actions.chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
+  "FileManager.actions.chunkingUnsupported": "Tập tin này không hỗ trợ phân mảnh",
+  "FileManager.actions.confirmDelete": "Bạn sắp xóa tệp này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
+  "FileManager.actions.confirmDeleteFolder": "Thư mục này và toàn bộ nội dung bên trong sẽ bị xóa vĩnh viễn và không thể khôi phục. Vui lòng xác nhận thao tác của bạn.",
+  "FileManager.actions.confirmDeleteMultiFiles": "Bạn sắp xóa {{count}} tệp đã chọn, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
+  "FileManager.actions.confirmRemoveFromKnowledgeBase": "Sắp xóa {{count}} tệp đã chọn khỏi thư viện tài nguyên. Sau khi xóa, các tệp này vẫn có thể được xem trong mục Tất cả tệp. Vui lòng xác nhận thao tác của bạn.",
+  "FileManager.actions.copyUrl": "Sao chép liên kết",
+  "FileManager.actions.copyUrlSuccess": "Địa chỉ tệp đã được sao chép thành công",
+  "FileManager.actions.createChunkingTask": "Đang chuẩn bị...",
+  "FileManager.actions.deleteSuccess": "Tệp đã được xóa thành công",
+  "FileManager.actions.downloading": "Đang tải tệp...",
+  "FileManager.actions.goBack": "Quay lại trang trước",
+  "FileManager.actions.goForward": "Tiến đến trang sau",
+  "FileManager.actions.goToParent": "Đi đến thư mục cha",
+  "FileManager.actions.moveError": "Di chuyển tệp thất bại",
+  "FileManager.actions.moveHere": "Di chuyển đến đây",
+  "FileManager.actions.moveSuccess": "Di chuyển tệp thành công",
+  "FileManager.actions.moveToFolder": "Di chuyển đến...",
+  "FileManager.actions.moveToRoot": "Di chuyển đến thư mục gốc",
+  "FileManager.actions.removeFromKnowledgeBase": "Xóa khỏi thư viện tài nguyên",
+  "FileManager.actions.removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công",
+  "FileManager.actions.rename": "Đổi tên",
+  "FileManager.actions.renameError": "Đổi tên thất bại",
+  "FileManager.actions.renameSuccess": "Đổi tên thành công",
+  "FileManager.bottom": "Đã đến cuối rồi",
+  "FileManager.config.showFilesInKnowledgeBase": "Hiển thị nội dung trong thư viện tài nguyên",
+  "FileManager.emptyStatus.actions.file": "Tải lên tệp",
+  "FileManager.emptyStatus.actions.folder": "Tải lên thư mục",
+  "FileManager.emptyStatus.actions.knowledgeBase": "Tạo thư viện tài nguyên mới",
+  "FileManager.emptyStatus.or": "hoặc",
+  "FileManager.emptyStatus.title": "Kéo tệp hoặc thư mục vào đây",
+  "FileManager.noFolders": "Hiện không có thư mục nào",
+  "FileManager.sort.dateAdded": "Ngày thêm",
+  "FileManager.sort.name": "Tên",
+  "FileManager.sort.size": "Kích thước",
+  "FileManager.title.createdAt": "Thời gian tạo",
+  "FileManager.title.size": "Kích thước",
+  "FileManager.title.title": "Tệp",
+  "FileManager.total.fileCount": "Tổng cộng {{count}} mục",
+  "FileManager.total.selectedCount": "Đã chọn {{count}} mục",
+  "FileManager.view.list": "Chế độ danh sách",
+  "FileManager.view.masonry": "Chế độ lưới",
+  "FileParsingStatus.chunks.embeddingStatus.empty": "Các khối văn bản chưa được vector hóa hoàn toàn, sẽ dẫn đến chức năng tìm kiếm ngữ nghĩa không khả dụng, để nâng cao chất lượng tìm kiếm, vui lòng vector hóa các khối văn bản",
+  "FileParsingStatus.chunks.embeddingStatus.error": "Lỗi vector hóa",
+  "FileParsingStatus.chunks.embeddingStatus.errorResult": "Lỗi vector hóa, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
+  "FileParsingStatus.chunks.embeddingStatus.processing": "Các khối văn bản đang được vector hóa, vui lòng chờ",
+  "FileParsingStatus.chunks.embeddingStatus.success": "Hiện tại tất cả các khối văn bản đã được vector hóa",
+  "FileParsingStatus.chunks.embeddings": "Vector hóa",
+  "FileParsingStatus.chunks.status.error": "Chia nhỏ thất bại",
+  "FileParsingStatus.chunks.status.errorResult": "Chia nhỏ thất bại, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
+  "FileParsingStatus.chunks.status.processing": "Đang chia nhỏ",
+  "FileParsingStatus.chunks.status.processingTip": "Máy chủ đang chia tách các khối văn bản, đóng trang không ảnh hưởng đến tiến trình chia nhỏ",
+  "GoBack.back": "Quay lại",
+  "HtmlPreview.actions.download": "Tải xuống",
+  "HtmlPreview.actions.preview": "Xem trước",
+  "HtmlPreview.iframeTitle": "Xem trước HTML",
+  "HtmlPreview.mode.code": "Mã",
+  "HtmlPreview.mode.preview": "Xem trước",
+  "HtmlPreview.title": "Xem trước HTML",
+  "ImageUpload.actions.changeImage": "Nhấn để thay đổi hình ảnh",
+  "ImageUpload.actions.dropMultipleFiles": "Không hỗ trợ tải lên nhiều tệp cùng lúc, chỉ sử dụng tệp đầu tiên",
+  "ImageUpload.placeholder.primary": "Thêm hình ảnh",
+  "ImageUpload.placeholder.secondary": "Nhấn hoặc kéo thả để tải lên",
+  "KeyValueEditor.addButton": "Thêm một dòng",
+  "KeyValueEditor.deleteTooltip": "Xóa",
+  "KeyValueEditor.duplicateKeyError": "Tên khóa phải duy nhất",
+  "KeyValueEditor.keyPlaceholder": "Khóa",
+  "KeyValueEditor.valuePlaceholder": "Giá trị",
+  "LocalFile.action.open": "Mở",
+  "LocalFile.action.showInFolder": "Hiển thị trong thư mục",
+  "MaxTokenSlider.unlimited": "Không giới hạn",
+  "ModelSelect.featureTag.custom": "Mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện hình ảnh, vui lòng xác minh khả năng sử dụng của chúng theo tình hình cụ thể",
+  "ModelSelect.featureTag.file": "Mô hình này hỗ trợ tải lên và nhận diện tệp",
+  "ModelSelect.featureTag.functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
+  "ModelSelect.featureTag.imageOutput": "Mô hình này hỗ trợ tạo ra hình ảnh",
+  "ModelSelect.featureTag.reasoning": "Mô hình này hỗ trợ tư duy sâu sắc",
+  "ModelSelect.featureTag.search": "Mô hình này hỗ trợ tìm kiếm trực tuyến",
+  "ModelSelect.featureTag.tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
+  "ModelSelect.featureTag.video": "Mô hình này hỗ trợ nhận dạng video",
+  "ModelSelect.featureTag.vision": "Mô hình này hỗ trợ nhận diện hình ảnh",
+  "ModelSelect.removed": "Mô hình này không còn trong danh sách, nếu bỏ chọn sẽ tự động xóa",
+  "ModelSwitchPanel.emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
+  "ModelSwitchPanel.emptyProvider": "Không có nhà cung cấp nào được kích hoạt, vui lòng vào cài đặt để bật",
+  "ModelSwitchPanel.goToSettings": "Đi đến cài đặt",
+  "ModelSwitchPanel.provider": "Nhà cung cấp",
+  "ModelSwitchPanel.title": "Mô hình",
+  "MultiImagesUpload.actions.uploadMore": "Nhấn hoặc kéo thả để tải lên thêm",
+  "MultiImagesUpload.modal.complete": "Hoàn thành",
+  "MultiImagesUpload.modal.newFileIndicator": "Mới thêm",
+  "MultiImagesUpload.modal.selectImageToPreview": "Vui lòng chọn hình ảnh để xem trước",
+  "MultiImagesUpload.modal.title": "Quản lý hình ảnh ({{count}})",
+  "MultiImagesUpload.modal.upload": "Tải lên hình ảnh",
+  "MultiImagesUpload.placeholder.primary": "Nhấn hoặc kéo thả để tải lên hình ảnh",
+  "MultiImagesUpload.placeholder.secondary": "Hỗ trợ chọn nhiều hình ảnh",
+  "MultiImagesUpload.progress.uploadingWithCount": "Đã tải lên {{completed}}/{{total}}",
+  "MultiImagesUpload.validation.fileSizeExceeded": "Kích thước tệp vượt quá giới hạn",
+  "MultiImagesUpload.validation.fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) vượt quá kích thước tối đa cho phép là {{maxSize}}",
+  "MultiImagesUpload.validation.fileSizeExceededMultiple": "{{count}} tệp vượt quá kích thước tối đa cho phép là {{maxSize}}: {{fileList}}",
+  "MultiImagesUpload.validation.imageCountExceeded": "Số lượng hình ảnh vượt quá giới hạn",
+  "OllamaSetupGuide.action.close": "Đóng thông báo",
+  "OllamaSetupGuide.action.start": "Đã cài đặt",
+  "OllamaSetupGuide.cors.description": "Do hạn chế bảo mật của trình duyệt, bạn cần cấu hình CORS cho Ollama để có thể sử dụng bình thường.",
+  "OllamaSetupGuide.cors.linux.env": "Thêm `Environment` trong phần [Service], thêm biến môi trường OLLAMA_ORIGINS:",
+  "OllamaSetupGuide.cors.linux.reboot": "Tải lại systemd và khởi động lại Ollama",
+  "OllamaSetupGuide.cors.linux.systemd": "Gọi systemd để chỉnh sửa dịch vụ ollama:",
+  "OllamaSetupGuide.cors.macos": "Vui lòng mở ứng dụng «Terminal» và dán lệnh sau, sau đó nhấn Enter để chạy",
+  "OllamaSetupGuide.cors.reboot": "Vui lòng khởi động lại dịch vụ Ollama sau khi hoàn thành",
+  "OllamaSetupGuide.cors.title": "Cấu hình Ollama cho phép truy cập CORS",
+  "OllamaSetupGuide.cors.windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo một biến môi trường mới có tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là *, nhấp «OK/Apply» để lưu",
+  "OllamaSetupGuide.install.description": "Vui lòng xác nhận rằng bạn đã mở Ollama, nếu chưa tải Ollama, hãy truy cập trang web chính thức <1>tải xuống</1>",
+  "OllamaSetupGuide.install.docker": "Nếu bạn thích sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo xuống bằng lệnh sau:",
+  "OllamaSetupGuide.install.linux.command": "Cài đặt bằng lệnh sau:",
+  "OllamaSetupGuide.install.linux.manual": "Hoặc, bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt",
+  "OllamaSetupGuide.install.title": "Cài đặt và khởi động ứng dụng Ollama trên máy tính",
+  "OllamaSetupGuide.install.windowsTab": "Windows (phiên bản xem trước)",
+  "Thinking.thinking": "Đang suy nghĩ sâu sắc...",
+  "Thinking.thought": "Đã suy nghĩ sâu sắc (mất {{duration}} giây)",
+  "Thinking.thoughtWithDuration": "Đã suy nghĩ sâu sắc",
+  "devTools.cache.empty": "Bộ nhớ đệm trống",
+  "devTools.metadata.empty": "Chưa có siêu dữ liệu",
+  "knowledgeBase.empty.description": "Tạo thư viện tài nguyên để tổ chức và quản lý tài nguyên của bạn",
+  "knowledgeBase.empty.search": "Không tìm thấy thư viện tài nguyên phù hợp",
+  "knowledgeBase.empty.title": "Chưa có thư viện tài nguyên nào"
 }

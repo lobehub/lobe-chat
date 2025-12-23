@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "Elenco dei parametri"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Ottieni modelli disponibili",
-        "getAvailableTools": "Ottieni strumenti disponibili",
-        "getConfig": "Ottieni configurazione",
-        "getMeta": "Ottieni metadati",
-        "getPrompt": "Ottieni prompt di sistema",
-        "searchMarketTools": "Cerca nel marketplace dei plugin",
-        "searchOfficialTools": "Cerca strumenti ufficiali",
-        "setModel": "Imposta modello",
-        "setOpeningMessage": "Imposta messaggio di apertura",
-        "setOpeningQuestions": "Imposta domande iniziali",
-        "togglePlugin": "Attiva/disattiva plugin",
-        "updateChatConfig": "Aggiorna configurazione chat",
-        "updateConfig": "Aggiorna configurazione",
-        "updateMeta": "Aggiorna metadati",
-        "updatePrompt": "Aggiorna prompt di sistema"
-      },
-      "title": "Costruttore di Agenti"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Ottieni modelli disponibili",
-        "installPlugin": "Installa plugin",
-        "inviteAgent": "Invita membro",
-        "removeAgent": "Rimuovi membro",
-        "searchMarketTools": "Cerca nel marketplace dei plugin",
-        "updateAgentConfig": "Aggiorna configurazione agente",
-        "updatePrompt": "Aggiorna prompt di sistema"
-      },
-      "title": "Costruttore di Agenti di Gruppo"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "Parla a tutti",
-        "createAgent": "Aggiungi membro del team",
-        "createWorkflow": "Pianifica il flusso di lavoro",
-        "executeTask": "Esegui attività",
-        "getAgentInfo": "Ottieni informazioni sul membro",
-        "interrupt": "Interrompi attività",
-        "inviteAgent": "Invita membro",
-        "removeAgent": "Rimuovi membro",
-        "searchAgent": "Cerca esperto",
-        "speak": "Assegna la parola a un membro",
-        "summarize": "Riepiloga la conversazione",
-        "vote": "Avvia una votazione"
-      },
-      "title": "Coordinamento del team"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "Cancella attività",
-        "completeTodos": "Completa attività",
-        "createPlan": "Crea piano",
-        "createTodos": "Crea attività",
-        "removeTodos": "Elimina attività",
-        "updatePlan": "Aggiorna piano",
-        "updateTodos": "Aggiorna attività"
-      },
-      "title": "Strumento GTD"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "Leggi contenuto della base di conoscenza",
-        "searchKnowledgeBase": "Cerca nella base di conoscenza"
-      },
-      "title": "Base di conoscenza"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "Modifica file",
-        "getCommandOutput": "Ottieni output del codice",
-        "globLocalFiles": "Cerca file corrispondenti",
-        "grepContent": "Cerca contenuto",
-        "killCommand": "Termina esecuzione del codice",
-        "listLocalFiles": "Visualizza elenco file",
-        "moveLocalFiles": "Sposta file",
-        "readLocalFile": "Leggi contenuto del file",
-        "renameLocalFile": "Rinomina",
-        "runCommand": "Esegui codice",
-        "searchLocalFiles": "Cerca file",
-        "writeLocalFile": "Scrivi nel file"
-      },
-      "title": "Sistema locale"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "Aggiornamento in batch dei nodi",
-        "compareSnapshots": "Confronta istantanee",
-        "convertToList": "Converti in elenco",
-        "createNode": "Crea nodo",
-        "cropImage": "Ritaglia immagine",
-        "deleteNode": "Elimina nodo",
-        "deleteSnapshot": "Elimina istantanea",
-        "deleteTableColumn": "Elimina colonna della tabella",
-        "deleteTableRow": "Elimina riga della tabella",
-        "duplicateNode": "Duplica nodo",
-        "editTitle": "Modifica titolo del documento",
-        "indentListItem": "Aumenta rientro elemento elenco",
-        "initPage": "Inizializza documento",
-        "insertTableColumn": "Inserisci colonna nella tabella",
-        "insertTableRow": "Inserisci riga nella tabella",
-        "listSnapshots": "Elenca istantanee",
-        "mergeNodes": "Unisci nodi",
-        "moveNode": "Sposta nodo",
-        "outdentListItem": "Riduci rientro elemento elenco",
-        "replaceText": "Sostituisci testo",
-        "resizeImage": "Ridimensiona immagine",
-        "restoreSnapshot": "Ripristina istantanea",
-        "rotateImage": "Ruota immagine",
-        "saveSnapshot": "Salva istantanea",
-        "setImageAlt": "Imposta testo alternativo immagine",
-        "splitNode": "Dividi nodo",
-        "toggleListType": "Cambia tipo di elenco",
-        "unwrapNode": "Rimuovi contenitore nodo",
-        "updateNode": "Aggiorna nodo",
-        "wrapNodes": "Raggruppa nodi"
-      },
-      "title": "Documento"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "Leggi contenuti da più pagine",
-        "crawlSinglePage": "Leggi contenuto della pagina",
-        "search": "Cerca nella pagina"
-      },
-      "title": "Ricerca online"
-    }
-  },
+  "arguments.title": "Elenco dei parametri",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "Ottieni modelli disponibili",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "Ottieni strumenti disponibili",
+  "builtins.lobe-agent-builder.apiName.getConfig": "Ottieni configurazione",
+  "builtins.lobe-agent-builder.apiName.getMeta": "Ottieni metadati",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "Ottieni prompt di sistema",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "Cerca nel marketplace dei plugin",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "Cerca strumenti ufficiali",
+  "builtins.lobe-agent-builder.apiName.setModel": "Imposta modello",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "Imposta messaggio di apertura",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "Imposta domande iniziali",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "Attiva/disattiva plugin",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "Aggiorna configurazione chat",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "Aggiorna configurazione",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "Aggiorna metadati",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "Aggiorna prompt di sistema",
+  "builtins.lobe-agent-builder.title": "Costruttore di Agenti",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "Ottieni modelli disponibili",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "Installa plugin",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "Invita membro",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "Rimuovi membro",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "Cerca nel marketplace dei plugin",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "Aggiorna configurazione agente",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "Aggiorna prompt di sistema",
+  "builtins.lobe-group-agent-builder.title": "Costruttore di Agenti di Gruppo",
+  "builtins.lobe-group-management.apiName.broadcast": "Parla a tutti",
+  "builtins.lobe-group-management.apiName.createAgent": "Aggiungi membro del team",
+  "builtins.lobe-group-management.apiName.createWorkflow": "Pianifica il flusso di lavoro",
+  "builtins.lobe-group-management.apiName.executeTask": "Esegui attività",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "Ottieni informazioni sul membro",
+  "builtins.lobe-group-management.apiName.interrupt": "Interrompi attività",
+  "builtins.lobe-group-management.apiName.inviteAgent": "Invita membro",
+  "builtins.lobe-group-management.apiName.removeAgent": "Rimuovi membro",
+  "builtins.lobe-group-management.apiName.searchAgent": "Cerca esperto",
+  "builtins.lobe-group-management.apiName.speak": "Assegna la parola a un membro",
+  "builtins.lobe-group-management.apiName.summarize": "Riepiloga la conversazione",
+  "builtins.lobe-group-management.apiName.vote": "Avvia una votazione",
+  "builtins.lobe-group-management.title": "Coordinamento del team",
+  "builtins.lobe-gtd.apiName.clearTodos": "Cancella attività",
+  "builtins.lobe-gtd.apiName.completeTodos": "Completa attività",
+  "builtins.lobe-gtd.apiName.createPlan": "Crea piano",
+  "builtins.lobe-gtd.apiName.createTodos": "Crea attività",
+  "builtins.lobe-gtd.apiName.removeTodos": "Elimina attività",
+  "builtins.lobe-gtd.apiName.updatePlan": "Aggiorna piano",
+  "builtins.lobe-gtd.apiName.updateTodos": "Aggiorna attività",
+  "builtins.lobe-gtd.title": "Strumento GTD",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "Leggi contenuto della base di conoscenza",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "Cerca nella base di conoscenza",
+  "builtins.lobe-knowledge-base.title": "Base di conoscenza",
+  "builtins.lobe-local-system.apiName.editLocalFile": "Modifica file",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "Ottieni output del codice",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "Cerca file corrispondenti",
+  "builtins.lobe-local-system.apiName.grepContent": "Cerca contenuto",
+  "builtins.lobe-local-system.apiName.killCommand": "Termina esecuzione del codice",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "Visualizza elenco file",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "Sposta file",
+  "builtins.lobe-local-system.apiName.readLocalFile": "Leggi contenuto del file",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "Rinomina",
+  "builtins.lobe-local-system.apiName.runCommand": "Esegui codice",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "Cerca file",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "Scrivi nel file",
+  "builtins.lobe-local-system.title": "Sistema locale",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "Aggiornamento in batch dei nodi",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "Confronta istantanee",
+  "builtins.lobe-page-agent.apiName.convertToList": "Converti in elenco",
+  "builtins.lobe-page-agent.apiName.createNode": "Crea nodo",
+  "builtins.lobe-page-agent.apiName.cropImage": "Ritaglia immagine",
+  "builtins.lobe-page-agent.apiName.deleteNode": "Elimina nodo",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "Elimina istantanea",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "Elimina colonna della tabella",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "Elimina riga della tabella",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "Duplica nodo",
+  "builtins.lobe-page-agent.apiName.editTitle": "Modifica titolo del documento",
+  "builtins.lobe-page-agent.apiName.indentListItem": "Aumenta rientro elemento elenco",
+  "builtins.lobe-page-agent.apiName.initPage": "Inizializza documento",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "Inserisci colonna nella tabella",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "Inserisci riga nella tabella",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "Elenca istantanee",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "Unisci nodi",
+  "builtins.lobe-page-agent.apiName.moveNode": "Sposta nodo",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "Riduci rientro elemento elenco",
+  "builtins.lobe-page-agent.apiName.replaceText": "Sostituisci testo",
+  "builtins.lobe-page-agent.apiName.resizeImage": "Ridimensiona immagine",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "Ripristina istantanea",
+  "builtins.lobe-page-agent.apiName.rotateImage": "Ruota immagine",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "Salva istantanea",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "Imposta testo alternativo immagine",
+  "builtins.lobe-page-agent.apiName.splitNode": "Dividi nodo",
+  "builtins.lobe-page-agent.apiName.toggleListType": "Cambia tipo di elenco",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "Rimuovi contenitore nodo",
+  "builtins.lobe-page-agent.apiName.updateNode": "Aggiorna nodo",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "Raggruppa nodi",
+  "builtins.lobe-page-agent.title": "Documento",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "Leggi contenuti da più pagine",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "Leggi contenuto della pagina",
+  "builtins.lobe-web-browsing.apiName.search": "Cerca nella pagina",
+  "builtins.lobe-web-browsing.title": "Ricerca online",
   "confirm": "Conferma",
-  "debug": {
-    "arguments": "Parametri di chiamata",
-    "function_call": "Chiamata funzione",
-    "off": "Disattiva debug",
-    "on": "Visualizza informazioni chiamata plugin",
-    "payload": "Payload plugin",
-    "pluginState": "Stato del plugin",
-    "response": "Risultato restituito",
-    "title": "Dettagli plugin",
-    "tool_call": "Richiesta chiamata strumento"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "Per favore visita la pagina di modifica per vedere i dettagli",
-      "editBtn": "Modifica ora",
-      "title": "Questo è un plugin personalizzato"
-    },
-    "emptyState": {
-      "description": "Installa prima questo plugin per vedere le capacità e le opzioni di configurazione",
-      "title": "Visualizza dettagli plugin dopo l'installazione"
-    },
-    "info": {
-      "description": "Descrizione API",
-      "name": "Nome API"
-    },
-    "tabs": {
-      "info": "Capacità plugin",
-      "manifest": "File di installazione",
-      "settings": "Impostazioni"
-    },
-    "title": "Dettagli plugin"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "Stai per eliminare questo plugin locale, l'operazione è irreversibile. Vuoi procedere?",
-    "customParams": {
-      "useProxy": {
-        "label": "Installa tramite proxy (se si verificano errori di accesso cross-origin, prova ad attivare questa opzione e reinstallare)"
-      }
-    },
-    "deleteSuccess": "Plugin eliminato con successo",
-    "manifest": {
-      "identifier": {
-        "desc": "Identificatore univoco del plugin",
-        "label": "Identificatore"
-      },
-      "mode": {
-        "mcp": "Plugin MCP",
-        "mcpExp": "Sperimentale",
-        "url": "Link online"
-      },
-      "name": {
-        "desc": "Titolo del plugin",
-        "label": "Titolo",
-        "placeholder": "Motore di ricerca"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "Impostazioni avanzate"
-      },
-      "args": {
-        "desc": "Lista dei parametri passati al comando di esecuzione, solitamente qui si inserisce il nome del server MCP o il percorso dello script di avvio",
-        "label": "Parametri comando",
-        "placeholder": "esempio: mcp-hello-world",
-        "required": "Inserisci i parametri di avvio"
-      },
-      "auth": {
-        "bear": "API Key",
-        "desc": "Seleziona il metodo di autenticazione del server MCP",
-        "label": "Tipo di autenticazione",
-        "none": "Nessuna autenticazione richiesta",
-        "placeholder": "Seleziona tipo di autenticazione",
-        "token": {
-          "desc": "Inserisci la tua API Key o Bearer Token",
-          "label": "API Key",
-          "placeholder": "sk-xxxxx",
-          "required": "Inserisci il token di autenticazione"
-        }
-      },
-      "avatar": {
-        "label": "Icona plugin"
-      },
-      "command": {
-        "desc": "File eseguibile o script per avviare MCP STDIO Server",
-        "label": "Comando",
-        "placeholder": "esempio: npx / uv / docker ecc.",
-        "required": "Inserisci il comando di avvio"
-      },
-      "desc": {
-        "desc": "Aggiungi una descrizione del plugin",
-        "label": "Descrizione plugin",
-        "placeholder": "Aggiungi informazioni sull'uso e gli scenari del plugin"
-      },
-      "endpoint": {
-        "desc": "Inserisci l'indirizzo del tuo MCP Streamable HTTP Server",
-        "label": "URL Endpoint MCP"
-      },
-      "env": {
-        "add": "Aggiungi una riga",
-        "desc": "Inserisci le variabili d'ambiente necessarie per il server MCP",
-        "duplicateKeyError": "La chiave del campo deve essere unica",
-        "formValidationFailed": "Validazione del modulo fallita, controlla il formato dei parametri",
-        "keyRequired": "La chiave del campo non può essere vuota",
-        "label": "Variabili d'ambiente server MCP",
-        "stringifyError": "Impossibile serializzare i parametri, controlla il formato"
-      },
-      "headers": {
-        "add": "Aggiungi una riga",
-        "desc": "Inserisci gli header della richiesta",
-        "label": "HTTP Headers"
-      },
-      "identifier": {
-        "desc": "Assegna un nome al tuo plugin MCP, deve essere in caratteri inglesi",
-        "invalid": "L'identificatore può contenere solo lettere, numeri, trattini e underscore",
-        "label": "Nome plugin MCP",
-        "placeholder": "esempio: my-mcp-plugin",
-        "required": "Inserisci l'identificatore del servizio MCP"
-      },
-      "previewManifest": "Anteprima file descrizione plugin",
-      "quickImport": "Importazione rapida configurazione JSON",
-      "quickImportError": {
-        "empty": "Il contenuto non può essere vuoto",
-        "invalidJson": "Formato JSON non valido",
-        "invalidStructure": "Struttura JSON non valida"
-      },
-      "stdioNotSupported": "L'ambiente attuale non supporta plugin MCP di tipo stdio",
-      "testConnection": "Test connessione",
-      "testConnectionTip": "Il plugin MCP può essere usato normalmente solo dopo un test di connessione riuscito",
-      "type": {
-        "desc": "Seleziona il tipo di comunicazione del plugin MCP, la versione web supporta solo Streamable HTTP",
-        "httpFeature1": "Compatibile con versione web e desktop",
-        "httpFeature2": "Connessione a server MCP remoto senza installazioni aggiuntive",
-        "httpShortDesc": "Protocollo di comunicazione basato su HTTP streaming",
-        "label": "Tipo plugin MCP",
-        "stdioFeature1": "Minore latenza di comunicazione, adatto per esecuzione locale",
-        "stdioFeature2": "Richiede installazione locale del server MCP",
-        "stdioNotAvailable": "La modalità STDIO è disponibile solo nella versione desktop",
-        "stdioShortDesc": "Protocollo di comunicazione basato su input/output standard",
-        "title": "Tipo plugin MCP"
-      },
-      "url": {
-        "desc": "Inserisci l'indirizzo Streamable HTTP del tuo server MCP, la modalità SSE non è supportata",
-        "invalid": "Inserisci un URL valido",
-        "label": "URL Endpoint Streamable HTTP",
-        "required": "Inserisci l'URL del servizio MCP"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "Autore del plugin",
-        "label": "Autore"
-      },
-      "avatar": {
-        "desc": "Icona del plugin, può essere un'emoji o un URL",
-        "label": "Icona"
-      },
-      "description": {
-        "desc": "Descrizione del plugin",
-        "label": "Descrizione",
-        "placeholder": "Cerca informazioni tramite motore di ricerca"
-      },
-      "formFieldRequired": "Questo campo è obbligatorio",
-      "homepage": {
-        "desc": "Homepage del plugin",
-        "label": "Homepage"
-      },
-      "identifier": {
-        "desc": "Identificatore univoco del plugin, rilevato automaticamente dal manifest",
-        "errorDuplicate": "Identificatore duplicato con un plugin esistente, modifica l'identificatore",
-        "label": "Identificatore",
-        "pattenErrorMessage": "Sono ammessi solo caratteri inglesi, numeri, - e _"
-      },
-      "lobe": "{{appName}} Plugin",
-      "manifest": {
-        "desc": "{{appName}} installerà il plugin tramite questo link",
-        "label": "URL file descrizione plugin (Manifest)",
-        "preview": "Anteprima Manifest",
-        "refresh": "Aggiorna"
-      },
-      "openai": "Plugin OpenAI",
-      "title": {
-        "desc": "Titolo del plugin",
-        "label": "Titolo",
-        "placeholder": "Motore di ricerca"
-      }
-    },
-    "metaConfig": "Configurazione metadati plugin",
-    "modalDesc": "Dopo aver aggiunto un plugin personalizzato, può essere usato per sviluppo e verifica, o direttamente in conversazione. Per lo sviluppo consulta la <1>documentazione↗</1>",
-    "openai": {
-      "importUrl": "Importa da URL",
-      "schema": "Schema"
-    },
-    "preview": {
-      "api": {
-        "noParams": "Questo strumento non ha parametri",
-        "noResults": "Nessuna API trovata corrispondente ai criteri di ricerca",
-        "params": "Parametri:",
-        "searchPlaceholder": "Cerca strumento..."
-      },
-      "card": "Anteprima visualizzazione plugin",
-      "desc": "Anteprima descrizione plugin",
-      "empty": {
-        "desc": "Dopo la configurazione, qui potrai vedere le capacità degli strumenti supportati dal plugin",
-        "title": "Inizia l'anteprima dopo la configurazione"
-      },
-      "title": "Anteprima nome plugin"
-    },
-    "save": "Installa plugin",
-    "saveSuccess": "Impostazioni plugin salvate con successo",
-    "tabs": {
-      "manifest": "Elenco funzionalità (Manifest)",
-      "meta": "Metadati plugin"
-    },
-    "title": {
-      "create": "Aggiungi plugin personalizzato",
-      "edit": "Modifica plugin personalizzato"
-    },
-    "type": {
-      "lobe": "{{appName}} Plugin",
-      "openai": "Plugin OpenAI"
-    },
-    "update": "Aggiorna",
-    "updateSuccess": "Impostazioni plugin aggiornate con successo"
-  },
-  "empty": {
-    "description": "Il negozio dei plugin è ricco di strumenti da scoprire. Visita il negozio per iniziare l'esplorazione.",
-    "search": "Nessun plugin corrispondente trovato",
-    "title": "Nessun plugin disponibile"
-  },
-  "error": {
-    "fetchError": "Richiesta al link manifest fallita, verifica la validità del link e che consenta accessi cross-origin",
-    "installError": "Installazione plugin {{name}} fallita",
-    "manifestInvalid": "Manifest non conforme, risultato della validazione: \n\n {{error}}",
-    "noManifest": "File descrizione non trovato",
-    "openAPIInvalid": "Parsing OpenAPI fallito, errore: \n\n {{error}}",
-    "reinstallError": "Aggiornamento plugin {{name}} fallito",
-    "testConnectionFailed": "Recupero Manifest fallito: {{error}}",
-    "urlError": "Il link non ha restituito contenuto in formato JSON, assicurati che sia un link valido"
-  },
-  "inspector": {
-    "args": "Visualizza lista parametri",
-    "delete": "Elimina chiamata allo strumento",
-    "orphanedToolCall": "Questo messaggio di chiamata allo strumento potrebbe essere diventato orfano a causa di un'anomalia, il che potrebbe compromettere il corretto funzionamento dell'agente. Si consiglia di rimuoverlo.",
-    "pluginRender": "Visualizza interfaccia plugin"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "Eliminato",
-      "local.config": "Configurazione",
-      "local.title": "Personalizzato"
-    }
-  },
-  "loading": {
-    "content": "Chiamata plugin in corso...",
-    "plugin": "Plugin in esecuzione..."
-  },
-  "mcpEmpty": {
-    "deployment": "Nessuna opzione di distribuzione disponibile",
-    "prompts": "Questo plugin non ha prompt disponibili",
-    "resources": "Questo plugin non ha risorse disponibili",
-    "tools": "Questo plugin non offre funzionalità"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "Verifica ambiente di installazione...",
-    "COMPLETED": "Installazione completata",
-    "CONFIGURATION_REQUIRED": "Completa la configurazione richiesta per continuare l'installazione",
-    "ERROR": "Errore di installazione",
-    "FETCHING_MANIFEST": "Recupero file descrizione plugin...",
-    "GETTING_SERVER_MANIFEST": "Inizializzazione server MCP...",
-    "INSTALLING_PLUGIN": "Installazione plugin in corso...",
-    "configurationDescription": "Questo plugin MCP richiede parametri di configurazione per funzionare correttamente, inserisci le informazioni necessarie",
-    "configurationRequired": "Configura parametri plugin",
-    "continueInstall": "Continua installazione",
-    "dependenciesDescription": "Questo plugin necessita delle seguenti dipendenze di sistema per funzionare correttamente. Installa le dipendenze mancanti seguendo le istruzioni, poi clicca per ricontrollare e continuare l'installazione.",
-    "dependenciesRequired": "Installa le dipendenze di sistema del plugin",
-    "dependencyStatus": {
-      "installed": "Installato",
-      "notInstalled": "Non installato",
-      "requiredVersion": "Versione richiesta: {{version}}"
-    },
-    "errorDetails": {
-      "args": "Parametri",
-      "command": "Comando",
-      "connectionParams": "Parametri di connessione",
-      "env": "Variabili d'ambiente",
-      "errorOutput": "Log errori",
-      "exitCode": "Codice di uscita",
-      "hideDetails": "Nascondi dettagli",
-      "originalError": "Errore originale",
-      "showDetails": "Mostra dettagli"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "Errore di autorizzazione",
-      "CONNECTION_FAILED": "Connessione fallita",
-      "INITIALIZATION_TIMEOUT": "Timeout di inizializzazione",
-      "PROCESS_SPAWN_ERROR": "Errore avvio processo",
-      "UNKNOWN_ERROR": "Errore sconosciuto",
-      "VALIDATION_ERROR": "Validazione parametri fallita"
-    },
-    "installError": "Installazione plugin MCP fallita, motivo: {{detail}}",
-    "installMethods": {
-      "manual": "Installazione manuale:",
-      "recommended": "Metodo di installazione consigliato:"
-    },
-    "recheckDependencies": "Ricontrolla",
-    "skipDependencies": "Salta controllo"
-  },
+  "debug.arguments": "Parametri di chiamata",
+  "debug.function_call": "Chiamata funzione",
+  "debug.off": "Disattiva debug",
+  "debug.on": "Visualizza informazioni chiamata plugin",
+  "debug.payload": "Payload plugin",
+  "debug.pluginState": "Stato del plugin",
+  "debug.response": "Risultato restituito",
+  "debug.title": "Dettagli plugin",
+  "debug.tool_call": "Richiesta chiamata strumento",
+  "detailModal.customPlugin.description": "Per favore visita la pagina di modifica per vedere i dettagli",
+  "detailModal.customPlugin.editBtn": "Modifica ora",
+  "detailModal.customPlugin.title": "Questo è un plugin personalizzato",
+  "detailModal.emptyState.description": "Installa prima questo plugin per vedere le capacità e le opzioni di configurazione",
+  "detailModal.emptyState.title": "Visualizza dettagli plugin dopo l'installazione",
+  "detailModal.info.description": "Descrizione API",
+  "detailModal.info.name": "Nome API",
+  "detailModal.tabs.info": "Capacità plugin",
+  "detailModal.tabs.manifest": "File di installazione",
+  "detailModal.tabs.settings": "Impostazioni",
+  "detailModal.title": "Dettagli plugin",
+  "dev.confirmDeleteDevPlugin": "Stai per eliminare questo plugin locale, l'operazione è irreversibile. Vuoi procedere?",
+  "dev.customParams.useProxy.label": "Installa tramite proxy (se si verificano errori di accesso cross-origin, prova ad attivare questa opzione e reinstallare)",
+  "dev.deleteSuccess": "Plugin eliminato con successo",
+  "dev.manifest.identifier.desc": "Identificatore univoco del plugin",
+  "dev.manifest.identifier.label": "Identificatore",
+  "dev.manifest.mode.mcp": "Plugin MCP",
+  "dev.manifest.mode.mcpExp": "Sperimentale",
+  "dev.manifest.mode.url": "Link online",
+  "dev.manifest.name.desc": "Titolo del plugin",
+  "dev.manifest.name.label": "Titolo",
+  "dev.manifest.name.placeholder": "Motore di ricerca",
+  "dev.mcp.advanced.title": "Impostazioni avanzate",
+  "dev.mcp.args.desc": "Lista dei parametri passati al comando di esecuzione, solitamente qui si inserisce il nome del server MCP o il percorso dello script di avvio",
+  "dev.mcp.args.label": "Parametri comando",
+  "dev.mcp.args.placeholder": "esempio: mcp-hello-world",
+  "dev.mcp.args.required": "Inserisci i parametri di avvio",
+  "dev.mcp.auth.bear": "API Key",
+  "dev.mcp.auth.desc": "Seleziona il metodo di autenticazione del server MCP",
+  "dev.mcp.auth.label": "Tipo di autenticazione",
+  "dev.mcp.auth.none": "Nessuna autenticazione richiesta",
+  "dev.mcp.auth.placeholder": "Seleziona tipo di autenticazione",
+  "dev.mcp.auth.token.desc": "Inserisci la tua API Key o Bearer Token",
+  "dev.mcp.auth.token.label": "API Key",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "Inserisci il token di autenticazione",
+  "dev.mcp.avatar.label": "Icona plugin",
+  "dev.mcp.command.desc": "File eseguibile o script per avviare MCP STDIO Server",
+  "dev.mcp.command.label": "Comando",
+  "dev.mcp.command.placeholder": "esempio: npx / uv / docker ecc.",
+  "dev.mcp.command.required": "Inserisci il comando di avvio",
+  "dev.mcp.desc.desc": "Aggiungi una descrizione del plugin",
+  "dev.mcp.desc.label": "Descrizione plugin",
+  "dev.mcp.desc.placeholder": "Aggiungi informazioni sull'uso e gli scenari del plugin",
+  "dev.mcp.endpoint.desc": "Inserisci l'indirizzo del tuo MCP Streamable HTTP Server",
+  "dev.mcp.endpoint.label": "URL Endpoint MCP",
+  "dev.mcp.env.add": "Aggiungi una riga",
+  "dev.mcp.env.desc": "Inserisci le variabili d'ambiente necessarie per il server MCP",
+  "dev.mcp.env.duplicateKeyError": "La chiave del campo deve essere unica",
+  "dev.mcp.env.formValidationFailed": "Validazione del modulo fallita, controlla il formato dei parametri",
+  "dev.mcp.env.keyRequired": "La chiave del campo non può essere vuota",
+  "dev.mcp.env.label": "Variabili d'ambiente server MCP",
+  "dev.mcp.env.stringifyError": "Impossibile serializzare i parametri, controlla il formato",
+  "dev.mcp.headers.add": "Aggiungi una riga",
+  "dev.mcp.headers.desc": "Inserisci gli header della richiesta",
+  "dev.mcp.headers.label": "HTTP Headers",
+  "dev.mcp.identifier.desc": "Assegna un nome al tuo plugin MCP, deve essere in caratteri inglesi",
+  "dev.mcp.identifier.invalid": "L'identificatore può contenere solo lettere, numeri, trattini e underscore",
+  "dev.mcp.identifier.label": "Nome plugin MCP",
+  "dev.mcp.identifier.placeholder": "esempio: my-mcp-plugin",
+  "dev.mcp.identifier.required": "Inserisci l'identificatore del servizio MCP",
+  "dev.mcp.previewManifest": "Anteprima file descrizione plugin",
+  "dev.mcp.quickImport": "Importazione rapida configurazione JSON",
+  "dev.mcp.quickImportError.empty": "Il contenuto non può essere vuoto",
+  "dev.mcp.quickImportError.invalidJson": "Formato JSON non valido",
+  "dev.mcp.quickImportError.invalidStructure": "Struttura JSON non valida",
+  "dev.mcp.stdioNotSupported": "L'ambiente attuale non supporta plugin MCP di tipo stdio",
+  "dev.mcp.testConnection": "Test connessione",
+  "dev.mcp.testConnectionTip": "Il plugin MCP può essere usato normalmente solo dopo un test di connessione riuscito",
+  "dev.mcp.type.desc": "Seleziona il tipo di comunicazione del plugin MCP, la versione web supporta solo Streamable HTTP",
+  "dev.mcp.type.httpFeature1": "Compatibile con versione web e desktop",
+  "dev.mcp.type.httpFeature2": "Connessione a server MCP remoto senza installazioni aggiuntive",
+  "dev.mcp.type.httpShortDesc": "Protocollo di comunicazione basato su HTTP streaming",
+  "dev.mcp.type.label": "Tipo plugin MCP",
+  "dev.mcp.type.stdioFeature1": "Minore latenza di comunicazione, adatto per esecuzione locale",
+  "dev.mcp.type.stdioFeature2": "Richiede installazione locale del server MCP",
+  "dev.mcp.type.stdioNotAvailable": "La modalità STDIO è disponibile solo nella versione desktop",
+  "dev.mcp.type.stdioShortDesc": "Protocollo di comunicazione basato su input/output standard",
+  "dev.mcp.type.title": "Tipo plugin MCP",
+  "dev.mcp.url.desc": "Inserisci l'indirizzo Streamable HTTP del tuo server MCP, la modalità SSE non è supportata",
+  "dev.mcp.url.invalid": "Inserisci un URL valido",
+  "dev.mcp.url.label": "URL Endpoint Streamable HTTP",
+  "dev.mcp.url.required": "Inserisci l'URL del servizio MCP",
+  "dev.meta.author.desc": "Autore del plugin",
+  "dev.meta.author.label": "Autore",
+  "dev.meta.avatar.desc": "Icona del plugin, può essere un'emoji o un URL",
+  "dev.meta.avatar.label": "Icona",
+  "dev.meta.description.desc": "Descrizione del plugin",
+  "dev.meta.description.label": "Descrizione",
+  "dev.meta.description.placeholder": "Cerca informazioni tramite motore di ricerca",
+  "dev.meta.formFieldRequired": "Questo campo è obbligatorio",
+  "dev.meta.homepage.desc": "Homepage del plugin",
+  "dev.meta.homepage.label": "Homepage",
+  "dev.meta.identifier.desc": "Identificatore univoco del plugin, rilevato automaticamente dal manifest",
+  "dev.meta.identifier.errorDuplicate": "Identificatore duplicato con un plugin esistente, modifica l'identificatore",
+  "dev.meta.identifier.label": "Identificatore",
+  "dev.meta.identifier.pattenErrorMessage": "Sono ammessi solo caratteri inglesi, numeri, - e _",
+  "dev.meta.lobe": "{{appName}} Plugin",
+  "dev.meta.manifest.desc": "{{appName}} installerà il plugin tramite questo link",
+  "dev.meta.manifest.label": "URL file descrizione plugin (Manifest)",
+  "dev.meta.manifest.preview": "Anteprima Manifest",
+  "dev.meta.manifest.refresh": "Aggiorna",
+  "dev.meta.openai": "Plugin OpenAI",
+  "dev.meta.title.desc": "Titolo del plugin",
+  "dev.meta.title.label": "Titolo",
+  "dev.meta.title.placeholder": "Motore di ricerca",
+  "dev.metaConfig": "Configurazione metadati plugin",
+  "dev.modalDesc": "Dopo aver aggiunto un plugin personalizzato, può essere usato per sviluppo e verifica, o direttamente in conversazione. Per lo sviluppo consulta la <1>documentazione↗</1>",
+  "dev.openai.importUrl": "Importa da URL",
+  "dev.openai.schema": "Schema",
+  "dev.preview.api.noParams": "Questo strumento non ha parametri",
+  "dev.preview.api.noResults": "Nessuna API trovata corrispondente ai criteri di ricerca",
+  "dev.preview.api.params": "Parametri:",
+  "dev.preview.api.searchPlaceholder": "Cerca strumento...",
+  "dev.preview.card": "Anteprima visualizzazione plugin",
+  "dev.preview.desc": "Anteprima descrizione plugin",
+  "dev.preview.empty.desc": "Dopo la configurazione, qui potrai vedere le capacità degli strumenti supportati dal plugin",
+  "dev.preview.empty.title": "Inizia l'anteprima dopo la configurazione",
+  "dev.preview.title": "Anteprima nome plugin",
+  "dev.save": "Installa plugin",
+  "dev.saveSuccess": "Impostazioni plugin salvate con successo",
+  "dev.tabs.manifest": "Elenco funzionalità (Manifest)",
+  "dev.tabs.meta": "Metadati plugin",
+  "dev.title.create": "Aggiungi plugin personalizzato",
+  "dev.title.edit": "Modifica plugin personalizzato",
+  "dev.type.lobe": "{{appName}} Plugin",
+  "dev.type.openai": "Plugin OpenAI",
+  "dev.update": "Aggiorna",
+  "dev.updateSuccess": "Impostazioni plugin aggiornate con successo",
+  "empty.description": "Il negozio dei plugin è ricco di strumenti da scoprire. Visita il negozio per iniziare l'esplorazione.",
+  "empty.search": "Nessun plugin corrispondente trovato",
+  "empty.title": "Nessun plugin disponibile",
+  "error.fetchError": "Richiesta al link manifest fallita, verifica la validità del link e che consenta accessi cross-origin",
+  "error.installError": "Installazione plugin {{name}} fallita",
+  "error.manifestInvalid": "Manifest non conforme, risultato della validazione: \n\n {{error}}",
+  "error.noManifest": "File descrizione non trovato",
+  "error.openAPIInvalid": "Parsing OpenAPI fallito, errore: \n\n {{error}}",
+  "error.reinstallError": "Aggiornamento plugin {{name}} fallito",
+  "error.testConnectionFailed": "Recupero Manifest fallito: {{error}}",
+  "error.urlError": "Il link non ha restituito contenuto in formato JSON, assicurati che sia un link valido",
+  "inspector.args": "Visualizza lista parametri",
+  "inspector.delete": "Elimina chiamata allo strumento",
+  "inspector.orphanedToolCall": "Questo messaggio di chiamata allo strumento potrebbe essere diventato orfano a causa di un'anomalia, il che potrebbe compromettere il corretto funzionamento dell'agente. Si consiglia di rimuoverlo.",
+  "inspector.pluginRender": "Visualizza interfaccia plugin",
+  "list.item[\"deprecated.title\"]": "Eliminato",
+  "list.item[\"local.config\"]": "Configurazione",
+  "list.item[\"local.title\"]": "Personalizzato",
+  "loading.content": "Chiamata plugin in corso...",
+  "loading.plugin": "Plugin in esecuzione...",
+  "mcpEmpty.deployment": "Nessuna opzione di distribuzione disponibile",
+  "mcpEmpty.prompts": "Questo plugin non ha prompt disponibili",
+  "mcpEmpty.resources": "Questo plugin non ha risorse disponibili",
+  "mcpEmpty.tools": "Questo plugin non offre funzionalità",
+  "mcpInstall.CHECKING_INSTALLATION": "Verifica ambiente di installazione...",
+  "mcpInstall.COMPLETED": "Installazione completata",
+  "mcpInstall.CONFIGURATION_REQUIRED": "Completa la configurazione richiesta per continuare l'installazione",
+  "mcpInstall.ERROR": "Errore di installazione",
+  "mcpInstall.FETCHING_MANIFEST": "Recupero file descrizione plugin...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "Inizializzazione server MCP...",
+  "mcpInstall.INSTALLING_PLUGIN": "Installazione plugin in corso...",
+  "mcpInstall.configurationDescription": "Questo plugin MCP richiede parametri di configurazione per funzionare correttamente, inserisci le informazioni necessarie",
+  "mcpInstall.configurationRequired": "Configura parametri plugin",
+  "mcpInstall.continueInstall": "Continua installazione",
+  "mcpInstall.dependenciesDescription": "Questo plugin necessita delle seguenti dipendenze di sistema per funzionare correttamente. Installa le dipendenze mancanti seguendo le istruzioni, poi clicca per ricontrollare e continuare l'installazione.",
+  "mcpInstall.dependenciesRequired": "Installa le dipendenze di sistema del plugin",
+  "mcpInstall.dependencyStatus.installed": "Installato",
+  "mcpInstall.dependencyStatus.notInstalled": "Non installato",
+  "mcpInstall.dependencyStatus.requiredVersion": "Versione richiesta: {{version}}",
+  "mcpInstall.errorDetails.args": "Parametri",
+  "mcpInstall.errorDetails.command": "Comando",
+  "mcpInstall.errorDetails.connectionParams": "Parametri di connessione",
+  "mcpInstall.errorDetails.env": "Variabili d'ambiente",
+  "mcpInstall.errorDetails.errorOutput": "Log errori",
+  "mcpInstall.errorDetails.exitCode": "Codice di uscita",
+  "mcpInstall.errorDetails.hideDetails": "Nascondi dettagli",
+  "mcpInstall.errorDetails.originalError": "Errore originale",
+  "mcpInstall.errorDetails.showDetails": "Mostra dettagli",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "Errore di autorizzazione",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "Connessione fallita",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "Timeout di inizializzazione",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "Errore avvio processo",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "Errore sconosciuto",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "Validazione parametri fallita",
+  "mcpInstall.installError": "Installazione plugin MCP fallita, motivo: {{detail}}",
+  "mcpInstall.installMethods.manual": "Installazione manuale:",
+  "mcpInstall.installMethods.recommended": "Metodo di installazione consigliato:",
+  "mcpInstall.recheckDependencies": "Ricontrolla",
+  "mcpInstall.skipDependencies": "Salta controllo",
   "pluginList": "Lista plugin",
-  "protocolInstall": {
-    "actions": {
-      "install": "Installa",
-      "installAnyway": "Installa comunque",
-      "installed": "Installato"
-    },
-    "config": {
-      "addEnv": "Aggiungi variabile d'ambiente",
-      "addHeaders": "Aggiungi intestazioni della richiesta",
-      "args": "Parametri",
-      "command": "Comando",
-      "env": "Variabili d'ambiente",
-      "headers": "Header richiesta",
-      "title": "Informazioni configurazione",
-      "type": {
-        "http": "Tipo: HTTP",
-        "label": "Tipo",
-        "stdio": "Tipo: Stdio"
-      },
-      "url": "Indirizzo servizio"
-    },
-    "custom": {
-      "badge": "Plugin personalizzato",
-      "security": {
-        "description": "Questo plugin non è stato verificato ufficialmente, l'installazione potrebbe comportare rischi di sicurezza! Assicurati di fidarti della fonte del plugin.",
-        "title": "⚠️ Avviso di rischio sicurezza"
-      },
-      "title": "Installa plugin personalizzato"
-    },
-    "install": {
-      "title": "Informazioni di installazione"
-    },
-    "marketplace": {
-      "title": "Installa plugin di terze parti",
-      "trustedBy": "Fornito da {{name}}",
-      "unverified": {
-        "title": "Plugin di terze parti non verificato",
-        "warning": "Questo plugin proviene da una comunità di terze parti non verificata. Assicurati di fidarti della fonte prima di installarlo."
-      },
-      "verified": "Verificato"
-    },
-    "messages": {
-      "connectionTestFailed": "Test di connessione fallito",
-      "installError": "Installazione plugin fallita, riprova",
-      "installSuccess": "Plugin {{name}} installato con successo!",
-      "manifestError": "Recupero dettagli plugin fallito, controlla la connessione e riprova",
-      "manifestNotFound": "File descrizione plugin non trovato"
-    },
-    "meta": {
-      "author": "Autore",
-      "homepage": "Homepage",
-      "identifier": "Identificatore",
-      "source": "Fonte",
-      "version": "Versione"
-    },
-    "official": {
-      "badge": "Plugin ufficiale LobeHub",
-      "description": "Questo plugin è sviluppato e mantenuto ufficialmente da LobeHub, sottoposto a rigorosi controlli di sicurezza, può essere usato con fiducia.",
-      "loadingMessage": "Recupero dettagli plugin in corso...",
-      "loadingTitle": "Caricamento",
-      "title": "Installa plugin ufficiale"
-    },
-    "title": "Installa plugin MCP",
-    "warning": "⚠️ Assicurati di fidarti della fonte di questo plugin, plugin malevoli possono compromettere la sicurezza del sistema."
-  },
-  "search": {
-    "config": {
-      "addKey": "Aggiungi chiave",
-      "close": "Elimina",
-      "confirm": "Configurazione completata e riprova"
-    },
-    "crawPages": {
-      "crawling": "Riconoscimento link in corso",
-      "detail": {
-        "preview": "Anteprima",
-        "raw": "Testo originale",
-        "tooLong": "Il contenuto è troppo lungo, il contesto della conversazione manterrà solo i primi {{characters}} caratteri, la parte eccedente non sarà considerata."
-      },
-      "meta": {
-        "crawler": "Modalità crawling",
-        "words": "Numero caratteri"
-      }
-    },
-    "searchxng": {
-      "baseURL": "Inserisci",
-      "description": "Inserisci l'URL di SearchXNG per iniziare la ricerca online",
-      "keyPlaceholder": "Inserisci la chiave",
-      "title": "Configura motore di ricerca SearchXNG",
-      "unconfiguredDesc": "Contatta l'amministratore per completare la configurazione di SearchXNG e iniziare la ricerca online",
-      "unconfiguredTitle": "SearchXNG non configurato"
-    },
-    "title": "Ricerca online"
-  },
+  "protocolInstall.actions.install": "Installa",
+  "protocolInstall.actions.installAnyway": "Installa comunque",
+  "protocolInstall.actions.installed": "Installato",
+  "protocolInstall.config.addEnv": "Aggiungi variabile d'ambiente",
+  "protocolInstall.config.addHeaders": "Aggiungi intestazioni della richiesta",
+  "protocolInstall.config.args": "Parametri",
+  "protocolInstall.config.command": "Comando",
+  "protocolInstall.config.env": "Variabili d'ambiente",
+  "protocolInstall.config.headers": "Header richiesta",
+  "protocolInstall.config.title": "Informazioni configurazione",
+  "protocolInstall.config.type.http": "Tipo: HTTP",
+  "protocolInstall.config.type.label": "Tipo",
+  "protocolInstall.config.type.stdio": "Tipo: Stdio",
+  "protocolInstall.config.url": "Indirizzo servizio",
+  "protocolInstall.custom.badge": "Plugin personalizzato",
+  "protocolInstall.custom.security.description": "Questo plugin non è stato verificato ufficialmente, l'installazione potrebbe comportare rischi di sicurezza! Assicurati di fidarti della fonte del plugin.",
+  "protocolInstall.custom.security.title": "⚠️ Avviso di rischio sicurezza",
+  "protocolInstall.custom.title": "Installa plugin personalizzato",
+  "protocolInstall.install.title": "Informazioni di installazione",
+  "protocolInstall.marketplace.title": "Installa plugin di terze parti",
+  "protocolInstall.marketplace.trustedBy": "Fornito da {{name}}",
+  "protocolInstall.marketplace.unverified.title": "Plugin di terze parti non verificato",
+  "protocolInstall.marketplace.unverified.warning": "Questo plugin proviene da una comunità di terze parti non verificata. Assicurati di fidarti della fonte prima di installarlo.",
+  "protocolInstall.marketplace.verified": "Verificato",
+  "protocolInstall.messages.connectionTestFailed": "Test di connessione fallito",
+  "protocolInstall.messages.installError": "Installazione plugin fallita, riprova",
+  "protocolInstall.messages.installSuccess": "Plugin {{name}} installato con successo!",
+  "protocolInstall.messages.manifestError": "Recupero dettagli plugin fallito, controlla la connessione e riprova",
+  "protocolInstall.messages.manifestNotFound": "File descrizione plugin non trovato",
+  "protocolInstall.meta.author": "Autore",
+  "protocolInstall.meta.homepage": "Homepage",
+  "protocolInstall.meta.identifier": "Identificatore",
+  "protocolInstall.meta.source": "Fonte",
+  "protocolInstall.meta.version": "Versione",
+  "protocolInstall.official.badge": "Plugin ufficiale LobeHub",
+  "protocolInstall.official.description": "Questo plugin è sviluppato e mantenuto ufficialmente da LobeHub, sottoposto a rigorosi controlli di sicurezza, può essere usato con fiducia.",
+  "protocolInstall.official.loadingMessage": "Recupero dettagli plugin in corso...",
+  "protocolInstall.official.loadingTitle": "Caricamento",
+  "protocolInstall.official.title": "Installa plugin ufficiale",
+  "protocolInstall.title": "Installa plugin MCP",
+  "protocolInstall.warning": "⚠️ Assicurati di fidarti della fonte di questo plugin, plugin malevoli possono compromettere la sicurezza del sistema.",
+  "search.config.addKey": "Aggiungi chiave",
+  "search.config.close": "Elimina",
+  "search.config.confirm": "Configurazione completata e riprova",
+  "search.crawPages.crawling": "Riconoscimento link in corso",
+  "search.crawPages.detail.preview": "Anteprima",
+  "search.crawPages.detail.raw": "Testo originale",
+  "search.crawPages.detail.tooLong": "Il contenuto è troppo lungo, il contesto della conversazione manterrà solo i primi {{characters}} caratteri, la parte eccedente non sarà considerata.",
+  "search.crawPages.meta.crawler": "Modalità crawling",
+  "search.crawPages.meta.words": "Numero caratteri",
+  "search.searchxng.baseURL": "Inserisci",
+  "search.searchxng.description": "Inserisci l'URL di SearchXNG per iniziare la ricerca online",
+  "search.searchxng.keyPlaceholder": "Inserisci la chiave",
+  "search.searchxng.title": "Configura motore di ricerca SearchXNG",
+  "search.searchxng.unconfiguredDesc": "Contatta l'amministratore per completare la configurazione di SearchXNG e iniziare la ricerca online",
+  "search.searchxng.unconfiguredTitle": "SearchXNG non configurato",
+  "search.title": "Ricerca online",
   "setting": "Impostazioni plugin",
-  "settings": {
-    "capabilities": {
-      "prompts": "Prompt",
-      "resources": "Risorse",
-      "title": "Capacità plugin",
-      "tools": "Strumenti"
-    },
-    "configuration": {
-      "title": "Configurazione plugin"
-    },
-    "connection": {
-      "args": "Parametri di avvio",
-      "command": "Comando di avvio",
-      "title": "Informazioni di connessione",
-      "type": "Tipo di connessione",
-      "url": "Indirizzo servizio"
-    },
-    "edit": "Modifica",
-    "envConfigDescription": "Queste configurazioni saranno passate come variabili d'ambiente al processo all'avvio del server MCP",
-    "httpTypeNotice": "I plugin MCP di tipo HTTP non richiedono variabili d'ambiente da configurare",
-    "indexUrl": {
-      "title": "Indice della Comunità",
-      "tooltip": "Modifica online non supportata, configura tramite variabili d'ambiente in fase di deploy"
-    },
-    "messages": {
-      "connectionUpdateFailed": "Aggiornamento informazioni di connessione fallito",
-      "connectionUpdateSuccess": "Informazioni di connessione aggiornate con successo",
-      "envUpdateFailed": "Salvataggio variabili d'ambiente fallito",
-      "envUpdateSuccess": "Variabili d'ambiente salvate con successo"
-    },
-    "modalDesc": "Dopo aver configurato l'indirizzo della comunità dei plugin, potrai utilizzare una comunità personalizzata di plugin.",
-    "rules": {
-      "argsRequired": "Inserisci i parametri di avvio",
-      "commandRequired": "Inserisci il comando di avvio",
-      "urlRequired": "Inserisci l'indirizzo del servizio"
-    },
-    "saveSettings": "Salva impostazioni",
-    "title": "Imposta la Comunità dei Plugin"
-  },
+  "settings.capabilities.prompts": "Prompt",
+  "settings.capabilities.resources": "Risorse",
+  "settings.capabilities.title": "Capacità plugin",
+  "settings.capabilities.tools": "Strumenti",
+  "settings.configuration.title": "Configurazione plugin",
+  "settings.connection.args": "Parametri di avvio",
+  "settings.connection.command": "Comando di avvio",
+  "settings.connection.title": "Informazioni di connessione",
+  "settings.connection.type": "Tipo di connessione",
+  "settings.connection.url": "Indirizzo servizio",
+  "settings.edit": "Modifica",
+  "settings.envConfigDescription": "Queste configurazioni saranno passate come variabili d'ambiente al processo all'avvio del server MCP",
+  "settings.httpTypeNotice": "I plugin MCP di tipo HTTP non richiedono variabili d'ambiente da configurare",
+  "settings.indexUrl.title": "Indice della Comunità",
+  "settings.indexUrl.tooltip": "Modifica online non supportata, configura tramite variabili d'ambiente in fase di deploy",
+  "settings.messages.connectionUpdateFailed": "Aggiornamento informazioni di connessione fallito",
+  "settings.messages.connectionUpdateSuccess": "Informazioni di connessione aggiornate con successo",
+  "settings.messages.envUpdateFailed": "Salvataggio variabili d'ambiente fallito",
+  "settings.messages.envUpdateSuccess": "Variabili d'ambiente salvate con successo",
+  "settings.modalDesc": "Dopo aver configurato l'indirizzo della comunità dei plugin, potrai utilizzare una comunità personalizzata di plugin.",
+  "settings.rules.argsRequired": "Inserisci i parametri di avvio",
+  "settings.rules.commandRequired": "Inserisci il comando di avvio",
+  "settings.rules.urlRequired": "Inserisci l'indirizzo del servizio",
+  "settings.saveSettings": "Salva impostazioni",
+  "settings.title": "Imposta la Comunità dei Plugin",
   "showInPortal": "Visualizza i dettagli nell'area di lavoro",
-  "store": {
-    "actions": {
-      "cancel": "Annulla installazione",
-      "confirmUninstall": "Stai per disinstallare questo plugin, la configurazione sarà rimossa. Confermi?",
-      "detail": "Dettagli",
-      "install": "Installa",
-      "manifest": "Modifica file di installazione",
-      "settings": "Impostazioni",
-      "uninstall": "Disinstalla"
-    },
-    "communityPlugin": "Community di terze parti",
-    "customPlugin": "Personalizzato",
-    "empty": "Nessun plugin installato",
-    "emptySelectHint": "Seleziona un plugin per vedere i dettagli",
-    "installAllPlugins": "Installa tutto",
-    "networkError": "Recupero marketplace plugin fallito, controlla la connessione e riprova",
-    "placeholder": "Cerca nome, descrizione o parole chiave del plugin...",
-    "releasedAt": "Pubblicato il {{createdAt}}",
-    "tabs": {
-      "installed": "Installati",
-      "mcp": "Plugin MCP",
-      "old": "Plugin LobeHub"
-    },
-    "title": "Marketplace plugin"
-  },
+  "store.actions.cancel": "Annulla installazione",
+  "store.actions.confirmUninstall": "Stai per disinstallare questo plugin, la configurazione sarà rimossa. Confermi?",
+  "store.actions.detail": "Dettagli",
+  "store.actions.install": "Installa",
+  "store.actions.manifest": "Modifica file di installazione",
+  "store.actions.settings": "Impostazioni",
+  "store.actions.uninstall": "Disinstalla",
+  "store.communityPlugin": "Community di terze parti",
+  "store.customPlugin": "Personalizzato",
+  "store.empty": "Nessun plugin installato",
+  "store.emptySelectHint": "Seleziona un plugin per vedere i dettagli",
+  "store.installAllPlugins": "Installa tutto",
+  "store.networkError": "Recupero marketplace plugin fallito, controlla la connessione e riprova",
+  "store.placeholder": "Cerca nome, descrizione o parole chiave del plugin...",
+  "store.releasedAt": "Pubblicato il {{createdAt}}",
+  "store.tabs.installed": "Installati",
+  "store.tabs.mcp": "Plugin MCP",
+  "store.tabs.old": "Plugin LobeHub",
+  "store.title": "Marketplace plugin",
   "unknownError": "Errore sconosciuto",
   "unknownPlugin": "Plugin sconosciuto"
 }

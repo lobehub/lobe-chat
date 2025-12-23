@@ -1,91 +1,43 @@
 {
-  "addDataset": {
-    "confirm": "Nieuw aanmaken",
-    "description": {
-      "placeholder": "Beschrijving van de dataset (optioneel)"
-    },
-    "name": {
-      "placeholder": "Naam van de dataset",
-      "required": "Vul alstublieft de naam van de dataset in"
-    },
-    "title": "Dataset toevoegen"
-  },
-  "dataset": {
-    "addNewButton": "Dataset aanmaken",
-    "emptyGuide": "De huidige dataset is leeg, maak alstublieft een dataset aan.",
-    "list": {
-      "table": {
-        "actions": {
-          "importData": "Gegevens importeren"
-        },
-        "columns": {
-          "actions": "Acties",
-          "ideal": {
-            "title": "Gewenst antwoord"
-          },
-          "question": {
-            "title": "Vraag"
-          },
-          "referenceFiles": {
-            "title": "Referentiebestanden"
-          }
-        },
-        "notSelected": "Selecteer alstublieft een dataset aan de linkerkant",
-        "title": "Details van de dataset"
-      },
-      "title": "Dataset"
-    }
-  },
-  "evaluation": {
-    "addEvaluation": {
-      "confirm": "Nieuw aanmaken",
-      "datasetId": {
-        "placeholder": "Selecteer uw evaluatiedataset",
-        "required": "Selecteer alstublieft een evaluatiedataset"
-      },
-      "description": {
-        "placeholder": "Beschrijving van de evaluatietaak (optioneel)"
-      },
-      "name": {
-        "placeholder": "Naam van de evaluatietaak",
-        "required": "Vul alstublieft de naam van de evaluatietaak in"
-      },
-      "title": "Evaluatietaak toevoegen"
-    },
-    "addNewButton": "Evaluatie aanmaken",
-    "emptyGuide": "De huidige evaluatietaak is leeg, begin met het aanmaken van een evaluatie.",
-    "table": {
-      "columns": {
-        "actions": {
-          "checkStatus": "Controleer status",
-          "confirmDelete": "Weet u zeker dat u deze evaluatie wilt verwijderen?",
-          "confirmRun": "Weet u zeker dat u wilt starten? Na het starten wordt de evaluatietaak asynchroon op de achtergrond uitgevoerd, het sluiten van de pagina heeft geen invloed op de uitvoering van de asynchrone taak.",
-          "downloadRecords": "Evaluatie downloaden",
-          "retry": "Opnieuw proberen",
-          "run": "Uitvoeren",
-          "title": "Acties"
-        },
-        "datasetId": {
-          "title": "Dataset"
-        },
-        "name": {
-          "title": "Naam van de evaluatietaak"
-        },
-        "records": {
-          "title": "Aantal evaluatieregisters"
-        },
-        "referenceFiles": {
-          "title": "Referentiebestanden"
-        },
-        "status": {
-          "error": "Uitvoering fout",
-          "pending": "Te uitvoeren",
-          "processing": "Bezig met uitvoeren",
-          "success": "Uitvoering succesvol",
-          "title": "Status"
-        }
-      },
-      "title": "Lijst van evaluatietaken"
-    }
-  }
+  "addDataset.confirm": "Nieuw aanmaken",
+  "addDataset.description.placeholder": "Beschrijving van de dataset (optioneel)",
+  "addDataset.name.placeholder": "Naam van de dataset",
+  "addDataset.name.required": "Vul alstublieft de naam van de dataset in",
+  "addDataset.title": "Dataset toevoegen",
+  "dataset.addNewButton": "Dataset aanmaken",
+  "dataset.emptyGuide": "De huidige dataset is leeg, maak alstublieft een dataset aan.",
+  "dataset.list.table.actions.importData": "Gegevens importeren",
+  "dataset.list.table.columns.actions": "Acties",
+  "dataset.list.table.columns.ideal.title": "Gewenst antwoord",
+  "dataset.list.table.columns.question.title": "Vraag",
+  "dataset.list.table.columns.referenceFiles.title": "Referentiebestanden",
+  "dataset.list.table.notSelected": "Selecteer alstublieft een dataset aan de linkerkant",
+  "dataset.list.table.title": "Details van de dataset",
+  "dataset.list.title": "Dataset",
+  "evaluation.addEvaluation.confirm": "Nieuw aanmaken",
+  "evaluation.addEvaluation.datasetId.placeholder": "Selecteer uw evaluatiedataset",
+  "evaluation.addEvaluation.datasetId.required": "Selecteer alstublieft een evaluatiedataset",
+  "evaluation.addEvaluation.description.placeholder": "Beschrijving van de evaluatietaak (optioneel)",
+  "evaluation.addEvaluation.name.placeholder": "Naam van de evaluatietaak",
+  "evaluation.addEvaluation.name.required": "Vul alstublieft de naam van de evaluatietaak in",
+  "evaluation.addEvaluation.title": "Evaluatietaak toevoegen",
+  "evaluation.addNewButton": "Evaluatie aanmaken",
+  "evaluation.emptyGuide": "De huidige evaluatietaak is leeg, begin met het aanmaken van een evaluatie.",
+  "evaluation.table.columns.actions.checkStatus": "Controleer status",
+  "evaluation.table.columns.actions.confirmDelete": "Weet u zeker dat u deze evaluatie wilt verwijderen?",
+  "evaluation.table.columns.actions.confirmRun": "Weet u zeker dat u wilt starten? Na het starten wordt de evaluatietaak asynchroon op de achtergrond uitgevoerd, het sluiten van de pagina heeft geen invloed op de uitvoering van de asynchrone taak.",
+  "evaluation.table.columns.actions.downloadRecords": "Evaluatie downloaden",
+  "evaluation.table.columns.actions.retry": "Opnieuw proberen",
+  "evaluation.table.columns.actions.run": "Uitvoeren",
+  "evaluation.table.columns.actions.title": "Acties",
+  "evaluation.table.columns.datasetId.title": "Dataset",
+  "evaluation.table.columns.name.title": "Naam van de evaluatietaak",
+  "evaluation.table.columns.records.title": "Aantal evaluatieregisters",
+  "evaluation.table.columns.referenceFiles.title": "Referentiebestanden",
+  "evaluation.table.columns.status.error": "Uitvoering fout",
+  "evaluation.table.columns.status.pending": "Te uitvoeren",
+  "evaluation.table.columns.status.processing": "Bezig met uitvoeren",
+  "evaluation.table.columns.status.success": "Uitvoering succesvol",
+  "evaluation.table.columns.status.title": "Status",
+  "evaluation.table.title": "Lijst van evaluatietaken"
 }

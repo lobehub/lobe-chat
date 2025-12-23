@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Contraer",
-      "on": "Expandir"
-    },
-    "typobar": {
-      "off": "Ocultar barra de herramientas de formato",
-      "on": "Mostrar barra de herramientas de formato"
-    }
-  },
-  "autoSave": {
-    "latest": "Última versión cargada",
-    "saved": "Guardado",
-    "saving": "Guardando automáticamente..."
-  },
+  "actions.expand.off": "Contraer",
+  "actions.expand.on": "Expandir",
+  "actions.typobar.off": "Ocultar barra de herramientas de formato",
+  "actions.typobar.on": "Mostrar barra de herramientas de formato",
+  "autoSave.latest": "Última versión cargada",
+  "autoSave.saved": "Guardado",
+  "autoSave.saving": "Guardando automáticamente...",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
-  "file": {
-    "error": "Error: {{message}}",
-    "uploading": "Subiendo archivo..."
-  },
-  "image": {
-    "broken": "Imagen dañada"
-  },
-  "link": {
-    "edit": "Editar enlace",
-    "editLinkTitle": "Enlace",
-    "editTextTitle": "Título",
-    "open": "Abrir enlace",
-    "placeholder": "Introduce la URL del enlace",
-    "unlink": "Quitar enlace"
-  },
-  "markdown": {
-    "cancel": "Cancelar",
-    "confirm": "Convertir",
-    "parseMessage": "Se convertirá al formato Markdown y se sobrescribirá el contenido existente. ¿Desea continuar? (Se cerrará automáticamente en 5 segundos)",
-    "parseTitle": "Formatear como Markdown"
-  },
-  "math": {
-    "placeholder": "Por favor, introduzca la fórmula TeX"
-  },
-  "modifier": {
-    "accept": "Aceptar",
-    "acceptAll": "Aceptar todo",
-    "reject": "Rechazar",
-    "rejectedAll": "Rechazar todo"
-  },
-  "slash": {
-    "h1": "Título de nivel 1",
-    "h2": "Título de nivel 2",
-    "h3": "Título de nivel 3",
-    "hr": "Línea divisoria",
-    "table": "Tabla",
-    "tex": "Fórmula TeX"
-  },
-  "table": {
-    "delete": "Eliminar tabla",
-    "deleteColumn": "Eliminar columna",
-    "deleteRow": "Eliminar fila",
-    "insertColumnLeft": "Insertar {{count}} columna(s) a la izquierda",
-    "insertColumnRight": "Insertar {{count}} columna(s) a la derecha",
-    "insertRowAbove": "Insertar {{count}} fila(s) encima",
-    "insertRowBelow": "Insertar {{count}} fila(s) debajo"
-  },
-  "typobar": {
-    "blockquote": "Cita",
-    "bold": "Negrita",
-    "bulletList": "Lista desordenada",
-    "code": "Código en línea",
-    "codeblock": "Bloque de código",
-    "image": "Imagen",
-    "italic": "Cursiva",
-    "link": "Enlace",
-    "numberList": "Lista ordenada",
-    "redo": "Rehacer",
-    "strikethrough": "Tachado",
-    "table": "tabla",
-    "taskList": "Lista de tareas",
-    "tex": "Fórmula TeX",
-    "underline": "Subrayado",
-    "undo": "Deshacer"
-  }
+  "file.error": "Error: {{message}}",
+  "file.uploading": "Subiendo archivo...",
+  "image.broken": "Imagen dañada",
+  "link.edit": "Editar enlace",
+  "link.editLinkTitle": "Enlace",
+  "link.editTextTitle": "Título",
+  "link.open": "Abrir enlace",
+  "link.placeholder": "Introduce la URL del enlace",
+  "link.unlink": "Quitar enlace",
+  "markdown.cancel": "Cancelar",
+  "markdown.confirm": "Convertir",
+  "markdown.parseMessage": "Se convertirá al formato Markdown y se sobrescribirá el contenido existente. ¿Desea continuar? (Se cerrará automáticamente en 5 segundos)",
+  "markdown.parseTitle": "Formatear como Markdown",
+  "math.placeholder": "Por favor, introduzca la fórmula TeX",
+  "modifier.accept": "Aceptar",
+  "modifier.acceptAll": "Aceptar todo",
+  "modifier.reject": "Rechazar",
+  "modifier.rejectedAll": "Rechazar todo",
+  "slash.h1": "Título de nivel 1",
+  "slash.h2": "Título de nivel 2",
+  "slash.h3": "Título de nivel 3",
+  "slash.hr": "Línea divisoria",
+  "slash.table": "Tabla",
+  "slash.tex": "Fórmula TeX",
+  "table.delete": "Eliminar tabla",
+  "table.deleteColumn": "Eliminar columna",
+  "table.deleteRow": "Eliminar fila",
+  "table.insertColumnLeft": "Insertar {{count}} columna(s) a la izquierda",
+  "table.insertColumnRight": "Insertar {{count}} columna(s) a la derecha",
+  "table.insertRowAbove": "Insertar {{count}} fila(s) encima",
+  "table.insertRowBelow": "Insertar {{count}} fila(s) debajo",
+  "typobar.blockquote": "Cita",
+  "typobar.bold": "Negrita",
+  "typobar.bulletList": "Lista desordenada",
+  "typobar.code": "Código en línea",
+  "typobar.codeblock": "Bloque de código",
+  "typobar.image": "Imagen",
+  "typobar.italic": "Cursiva",
+  "typobar.link": "Enlace",
+  "typobar.numberList": "Lista ordenada",
+  "typobar.redo": "Rehacer",
+  "typobar.strikethrough": "Tachado",
+  "typobar.table": "tabla",
+  "typobar.taskList": "Lista de tareas",
+  "typobar.tex": "Fórmula TeX",
+  "typobar.underline": "Subrayado",
+  "typobar.undo": "Deshacer"
 }

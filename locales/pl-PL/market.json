@@ -2,31 +2,19 @@
   "addAgent": "Dodaj asystenta",
   "addAgentAndConverse": "Dodaj asystenta i rozpocznij rozmowę",
   "addAgentSuccess": "Dodano pomyślnie",
-  "guide": {
-    "func1": {
-      "desc1": "Przejdź do strony ustawień, klikając prawy górny róg okna rozmowy, aby przejść do strony ustawień asystenta, którego chcesz złożyć.",
-      "desc2": "Kliknij przycisk Zatwierdź na rynku asystentów w prawym górnym rogu.",
-      "tag": "Metoda pierwsza",
-      "title": "Złożenie przez LobeChat"
-    },
-    "func2": {
-      "button": "Przejdź do repozytorium asystentów na Githubie",
-      "desc": "Jeśli chcesz dodać asystenta do indeksu, użyj pliku agent-template.json lub agent-template-full.json, aby utworzyć wpis w katalogu wtyczek, napisz krótki opis i odpowiednio oznacz, a następnie utwórz żądanie ściągnięcia.",
-      "tag": "Metoda druga",
-      "title": "Złożenie przez Github"
-    }
-  },
-  "search": {
-    "placeholder": "Wyszukaj nazwę asystenta, opis lub słowa kluczowe..."
-  },
-  "sidebar": {
-    "comment": "Komentarze",
-    "prompt": "Podpowiedź",
-    "title": "Szczegóły asystenta"
-  },
+  "guide.func1.desc1": "Przejdź do strony ustawień, klikając prawy górny róg okna rozmowy, aby przejść do strony ustawień asystenta, którego chcesz złożyć.",
+  "guide.func1.desc2": "Kliknij przycisk Zatwierdź na rynku asystentów w prawym górnym rogu.",
+  "guide.func1.tag": "Metoda pierwsza",
+  "guide.func1.title": "Złożenie przez LobeChat",
+  "guide.func2.button": "Przejdź do repozytorium asystentów na Githubie",
+  "guide.func2.desc": "Jeśli chcesz dodać asystenta do indeksu, użyj pliku agent-template.json lub agent-template-full.json, aby utworzyć wpis w katalogu wtyczek, napisz krótki opis i odpowiednio oznacz, a następnie utwórz żądanie ściągnięcia.",
+  "guide.func2.tag": "Metoda druga",
+  "guide.func2.title": "Złożenie przez Github",
+  "search.placeholder": "Wyszukaj nazwę asystenta, opis lub słowa kluczowe...",
+  "sidebar.comment": "Komentarze",
+  "sidebar.prompt": "Podpowiedź",
+  "sidebar.title": "Szczegóły asystenta",
   "submitAgent": "Zatwierdź asystenta",
-  "title": {
-    "allAgents": "Wszyscy asystenci",
-    "recentSubmits": "Ostatnie dodane"
-  }
+  "title.allAgents": "Wszyscy asystenci",
+  "title.recentSubmits": "Ostatnie dodane"
 }

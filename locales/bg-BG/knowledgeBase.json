@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Файлът беше добавен успешно, <1>прегледайте веднага</1>",
-    "confirm": "Добави",
-    "error": "Неуспешно добавяне на файл към базата знания",
-    "id": {
-      "placeholder": "Моля, изберете база знания за добавяне",
-      "required": "Моля, изберете база знания",
-      "title": "Целева база знания"
-    },
-    "title": "Добавяне към база знания",
-    "totalFiles": "Избрани са {{count}} файла"
-  },
-  "createNew": {
-    "confirm": "Създай нов",
-    "description": {
-      "placeholder": "Описание на базата знания (незадължително)"
-    },
-    "formTitle": "Основна информация",
-    "name": {
-      "placeholder": "Име на базата знания",
-      "required": "Моля, въведете име на базата знания"
-    },
-    "title": "Създаване на нова база знания"
-  },
-  "tab": {
-    "evals": "Оценки",
-    "files": "Документи",
-    "settings": "Настройки",
-    "testing": "Тест за извикване"
-  },
+  "addToKnowledgeBase.addSuccess": "Файлът беше добавен успешно, <1>прегледайте веднага</1>",
+  "addToKnowledgeBase.confirm": "Добави",
+  "addToKnowledgeBase.error": "Неуспешно добавяне на файл към базата знания",
+  "addToKnowledgeBase.id.placeholder": "Моля, изберете база знания за добавяне",
+  "addToKnowledgeBase.id.required": "Моля, изберете база знания",
+  "addToKnowledgeBase.id.title": "Целева база знания",
+  "addToKnowledgeBase.title": "Добавяне към база знания",
+  "addToKnowledgeBase.totalFiles": "Избрани са {{count}} файла",
+  "createNew.confirm": "Създай нов",
+  "createNew.description.placeholder": "Описание на базата знания (незадължително)",
+  "createNew.formTitle": "Основна информация",
+  "createNew.name.placeholder": "Име на базата знания",
+  "createNew.name.required": "Моля, въведете име на базата знания",
+  "createNew.title": "Създаване на нова база знания",
+  "tab.evals": "Оценки",
+  "tab.files": "Документи",
+  "tab.settings": "Настройки",
+  "tab.testing": "Тест за извикване",
   "title": "База знания"
 }

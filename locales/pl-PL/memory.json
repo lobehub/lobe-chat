@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "Usuń",
-      "edit": "Edytuj"
-    },
-    "defaultType": "Kontekst",
-    "deleteConfirm": "Czy na pewno chcesz usunąć tę pamięć kontekstową? Tej operacji nie można cofnąć.",
-    "deleteTitle": "Usuń pamięć kontekstową",
-    "description": "Opis",
-    "empty": "Brak zapisanych kontekstów",
-    "source": "Źródło"
-  },
-  "empty": {
-    "description": "Wydobywanie wspomnień to proces stopniowy. Gromadź więcej tematów, aby wzbogacić zawartość pamięci. Spróbuj prowadzić głębsze rozmowy z asystentem, aby lepiej uchwycić i przechować cenne informacje.",
-    "search": "Nie znaleziono pasujących wspomnień",
-    "title": "Brak wspomnień"
-  },
-  "experience": {
-    "actions": {
-      "delete": "Usuń",
-      "edit": "Edytuj"
-    },
-    "defaultType": "Doświadczenie",
-    "deleteConfirm": "Czy na pewno chcesz usunąć to doświadczenie? Tej operacji nie można cofnąć.",
-    "deleteTitle": "Usuń doświadczenie",
-    "empty": "Brak zapisanych doświadczeń",
-    "keyLearning": "Kluczowa lekcja",
-    "situation": "Sytuacja",
-    "source": "Źródło",
-    "steps": {
-      "action": "Działanie",
-      "result": "Rezultat",
-      "situation": "Sytuacja",
-      "task": "Zadanie"
-    }
-  },
-  "filter": {
-    "search": "Szukaj słów kluczowych lub opisu wspomnienia...",
-    "sort": {
-      "createdAt": "Data utworzenia",
-      "scoreConfidence": "Pewność",
-      "scoreImpact": "Ważność",
-      "scorePriority": "Waga preferencji",
-      "scoreUrgency": "Pilność"
-    }
-  },
-  "identity": {
-    "empty": "Brak zapisanych tożsamości",
-    "filter": {
-      "search": "Szukaj roli, relacji lub opisu...",
-      "type": {
-        "all": "Wszystkie",
-        "demographic": "Atrybut",
-        "personal": "Rola",
-        "professional": "Zawodowe"
-      }
-    },
-    "list": {
-      "confirmDelete": "Potwierdź usunięcie",
-      "deleteCancel": "Anuluj",
-      "deleteContent": "Czy na pewno chcesz usunąć tę tożsamość? Tej operacji nie można cofnąć.",
-      "deleteOk": "Usuń",
-      "noResults": "Nie znaleziono pasujących tożsamości",
-      "updated": "Zaktualizowano"
-    },
-    "roleCloud": {
-      "collapse": "Zwiń",
-      "expand": "Pokaż więcej"
-    },
-    "view": {
-      "list": "Lista",
-      "timeline": "Oś czasu"
-    }
-  },
+  "context.actions.delete": "Usuń",
+  "context.actions.edit": "Edytuj",
+  "context.defaultType": "Kontekst",
+  "context.deleteConfirm": "Czy na pewno chcesz usunąć tę pamięć kontekstową? Tej operacji nie można cofnąć.",
+  "context.deleteTitle": "Usuń pamięć kontekstową",
+  "context.description": "Opis",
+  "context.empty": "Brak zapisanych kontekstów",
+  "context.source": "Źródło",
+  "empty.description": "Wydobywanie wspomnień to proces stopniowy. Gromadź więcej tematów, aby wzbogacić zawartość pamięci. Spróbuj prowadzić głębsze rozmowy z asystentem, aby lepiej uchwycić i przechować cenne informacje.",
+  "empty.search": "Nie znaleziono pasujących wspomnień",
+  "empty.title": "Brak wspomnień",
+  "experience.actions.delete": "Usuń",
+  "experience.actions.edit": "Edytuj",
+  "experience.defaultType": "Doświadczenie",
+  "experience.deleteConfirm": "Czy na pewno chcesz usunąć to doświadczenie? Tej operacji nie można cofnąć.",
+  "experience.deleteTitle": "Usuń doświadczenie",
+  "experience.empty": "Brak zapisanych doświadczeń",
+  "experience.keyLearning": "Kluczowa lekcja",
+  "experience.situation": "Sytuacja",
+  "experience.source": "Źródło",
+  "experience.steps.action": "Działanie",
+  "experience.steps.result": "Rezultat",
+  "experience.steps.situation": "Sytuacja",
+  "experience.steps.task": "Zadanie",
+  "filter.search": "Szukaj słów kluczowych lub opisu wspomnienia...",
+  "filter.sort.createdAt": "Data utworzenia",
+  "filter.sort.scoreConfidence": "Pewność",
+  "filter.sort.scoreImpact": "Ważność",
+  "filter.sort.scorePriority": "Waga preferencji",
+  "filter.sort.scoreUrgency": "Pilność",
+  "identity.empty": "Brak zapisanych tożsamości",
+  "identity.filter.search": "Szukaj roli, relacji lub opisu...",
+  "identity.filter.type.all": "Wszystkie",
+  "identity.filter.type.demographic": "Atrybut",
+  "identity.filter.type.personal": "Rola",
+  "identity.filter.type.professional": "Zawodowe",
+  "identity.list.confirmDelete": "Potwierdź usunięcie",
+  "identity.list.deleteCancel": "Anuluj",
+  "identity.list.deleteContent": "Czy na pewno chcesz usunąć tę tożsamość? Tej operacji nie można cofnąć.",
+  "identity.list.deleteOk": "Usuń",
+  "identity.list.noResults": "Nie znaleziono pasujących tożsamości",
+  "identity.list.updated": "Zaktualizowano",
+  "identity.roleCloud.collapse": "Zwiń",
+  "identity.roleCloud.expand": "Pokaż więcej",
+  "identity.view.list": "Lista",
+  "identity.view.timeline": "Oś czasu",
   "loading": "Ładowanie...",
-  "preference": {
-    "actions": {
-      "delete": "Usuń",
-      "edit": "Edytuj"
-    },
-    "conclusionDirectives": "Wytyczne końcowe",
-    "defaultType": "Preferencja",
-    "deleteConfirm": "Czy na pewno chcesz usunąć tę preferencję? Tej operacji nie można cofnąć.",
-    "deleteTitle": "Usuń preferencję",
-    "empty": "Brak zapisanych preferencji",
-    "source": "Źródło",
-    "suggestions": "Możliwe działania asystenta"
-  },
-  "tab": {
-    "contexts": "Konteksty",
-    "experiences": "Doświadczenia",
-    "home": "Strona główna",
-    "identities": "Tożsamości",
-    "preferences": "Preferencje",
-    "search": "Szukaj"
-  },
-  "viewMode": {
-    "masonry": "Układ mozaikowy",
-    "timeline": "Oś czasu"
-  }
+  "preference.actions.delete": "Usuń",
+  "preference.actions.edit": "Edytuj",
+  "preference.conclusionDirectives": "Wytyczne końcowe",
+  "preference.defaultType": "Preferencja",
+  "preference.deleteConfirm": "Czy na pewno chcesz usunąć tę preferencję? Tej operacji nie można cofnąć.",
+  "preference.deleteTitle": "Usuń preferencję",
+  "preference.empty": "Brak zapisanych preferencji",
+  "preference.source": "Źródło",
+  "preference.suggestions": "Możliwe działania asystenta",
+  "tab.contexts": "Konteksty",
+  "tab.experiences": "Doświadczenia",
+  "tab.home": "Strona główna",
+  "tab.identities": "Tożsamości",
+  "tab.preferences": "Preferencje",
+  "tab.search": "Szukaj",
+  "viewMode.masonry": "Układ mozaikowy",
+  "viewMode.timeline": "Oś czasu"
 }

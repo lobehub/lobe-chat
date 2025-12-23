@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "Inklappen",
-      "on": "Uitklappen"
-    },
-    "typobar": {
-      "off": "Verberg opmaakwerkbalk",
-      "on": "Toon opmaakwerkbalk"
-    }
-  },
-  "autoSave": {
-    "latest": "Nieuwste versie geladen",
-    "saved": "Opgeslagen",
-    "saving": "Automatisch opslaan..."
-  },
+  "actions.expand.off": "Inklappen",
+  "actions.expand.on": "Uitklappen",
+  "actions.typobar.off": "Verberg opmaakwerkbalk",
+  "actions.typobar.on": "Toon opmaakwerkbalk",
+  "autoSave.latest": "Nieuwste versie geladen",
+  "autoSave.saved": "Opgeslagen",
+  "autoSave.saving": "Automatisch opslaan...",
   "cancel": "Annuleren",
   "confirm": "Bevestigen",
-  "file": {
-    "error": "Fout: {{message}}",
-    "uploading": "Bestand wordt geüpload..."
-  },
-  "image": {
-    "broken": "Afbeelding beschadigd"
-  },
-  "link": {
-    "edit": "Link bewerken",
-    "editLinkTitle": "Link",
-    "editTextTitle": "Titel",
-    "open": "Link openen",
-    "placeholder": "Voer de URL van de link in",
-    "unlink": "Link verwijderen"
-  },
-  "markdown": {
-    "cancel": "Annuleren",
-    "confirm": "Converteren",
-    "parseMessage": "Converteren naar Markdown-indeling. Bestaande inhoud wordt overschreven. Weet je het zeker? (Sluit automatisch over 5 seconden)",
-    "parseTitle": "Markdown opmaken"
-  },
-  "math": {
-    "placeholder": "Voer TeX-formule in"
-  },
-  "modifier": {
-    "accept": "Behouden",
-    "acceptAll": "Alles accepteren",
-    "reject": "Ongedaan maken",
-    "rejectedAll": "Alles weigeren"
-  },
-  "slash": {
-    "h1": "Kop 1",
-    "h2": "Kop 2",
-    "h3": "Kop 3",
-    "hr": "Scheidingslijn",
-    "table": "Tabel",
-    "tex": "TeX-formule"
-  },
-  "table": {
-    "delete": "Tabel verwijderen",
-    "deleteColumn": "Kolom verwijderen",
-    "deleteRow": "Rij verwijderen",
-    "insertColumnLeft": "Voeg {{count}} kolommen links in",
-    "insertColumnRight": "Voeg {{count}} kolommen rechts in",
-    "insertRowAbove": "Voeg {{count}} rijen hierboven in",
-    "insertRowBelow": "Voeg {{count}} rijen hieronder in"
-  },
-  "typobar": {
-    "blockquote": "Citaat",
-    "bold": "Vet",
-    "bulletList": "Opsomming",
-    "code": "Inlinecode",
-    "codeblock": "Codeblok",
-    "image": "Afbeelding",
-    "italic": "Cursief",
-    "link": "Link",
-    "numberList": "Genummerde lijst",
-    "redo": "Opnieuw uitvoeren",
-    "strikethrough": "Doorhalen",
-    "table": "tabel",
-    "taskList": "Takenlijst",
-    "tex": "TeX-formule",
-    "underline": "Onderstrepen",
-    "undo": "Ongedaan maken"
-  }
+  "file.error": "Fout: {{message}}",
+  "file.uploading": "Bestand wordt geüpload...",
+  "image.broken": "Afbeelding beschadigd",
+  "link.edit": "Link bewerken",
+  "link.editLinkTitle": "Link",
+  "link.editTextTitle": "Titel",
+  "link.open": "Link openen",
+  "link.placeholder": "Voer de URL van de link in",
+  "link.unlink": "Link verwijderen",
+  "markdown.cancel": "Annuleren",
+  "markdown.confirm": "Converteren",
+  "markdown.parseMessage": "Converteren naar Markdown-indeling. Bestaande inhoud wordt overschreven. Weet je het zeker? (Sluit automatisch over 5 seconden)",
+  "markdown.parseTitle": "Markdown opmaken",
+  "math.placeholder": "Voer TeX-formule in",
+  "modifier.accept": "Behouden",
+  "modifier.acceptAll": "Alles accepteren",
+  "modifier.reject": "Ongedaan maken",
+  "modifier.rejectedAll": "Alles weigeren",
+  "slash.h1": "Kop 1",
+  "slash.h2": "Kop 2",
+  "slash.h3": "Kop 3",
+  "slash.hr": "Scheidingslijn",
+  "slash.table": "Tabel",
+  "slash.tex": "TeX-formule",
+  "table.delete": "Tabel verwijderen",
+  "table.deleteColumn": "Kolom verwijderen",
+  "table.deleteRow": "Rij verwijderen",
+  "table.insertColumnLeft": "Voeg {{count}} kolommen links in",
+  "table.insertColumnRight": "Voeg {{count}} kolommen rechts in",
+  "table.insertRowAbove": "Voeg {{count}} rijen hierboven in",
+  "table.insertRowBelow": "Voeg {{count}} rijen hieronder in",
+  "typobar.blockquote": "Citaat",
+  "typobar.bold": "Vet",
+  "typobar.bulletList": "Opsomming",
+  "typobar.code": "Inlinecode",
+  "typobar.codeblock": "Codeblok",
+  "typobar.image": "Afbeelding",
+  "typobar.italic": "Cursief",
+  "typobar.link": "Link",
+  "typobar.numberList": "Genummerde lijst",
+  "typobar.redo": "Opnieuw uitvoeren",
+  "typobar.strikethrough": "Doorhalen",
+  "typobar.table": "tabel",
+  "typobar.taskList": "Takenlijst",
+  "typobar.tex": "TeX-formule",
+  "typobar.underline": "Onderstrepen",
+  "typobar.undo": "Ongedaan maken"
 }

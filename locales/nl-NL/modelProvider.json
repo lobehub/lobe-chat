@@ -1,481 +1,285 @@
 {
-  "azure": {
-    "azureApiVersion": {
-      "desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
-      "fetch": "Lijst ophalen",
-      "title": "Azure API Versie"
-    },
-    "empty": "Voer een model-ID in om het eerste model toe te voegen",
-    "endpoint": {
-      "desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert",
-      "placeholder": "https://docs-test-001.openai.azure.com",
-      "title": "Azure API Adres"
-    },
-    "modelListPlaceholder": "Selecteer of voeg het OpenAI-model toe dat u hebt ingezet",
-    "title": "Azure OpenAI",
-    "token": {
-      "desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert. Je kunt KEY1 of KEY2 gebruiken",
-      "placeholder": "Azure API Key",
-      "title": "API Key"
-    }
-  },
-  "azureai": {
-    "azureApiVersion": {
-      "desc": "De API-versie van Azure, volgens het formaat YYYY-MM-DD. Raadpleeg de [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
-      "fetch": "Lijst ophalen",
-      "title": "Azure API-versie"
-    },
-    "endpoint": {
-      "desc": "Vind het Azure AI-model inferentie-eindpunt in het overzicht van het Azure AI-project",
-      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
-      "title": "Azure AI-eindpunt"
-    },
-    "title": "Azure OpenAI",
-    "token": {
-      "desc": "Vind de API-sleutel in het overzicht van het Azure AI-project",
-      "placeholder": "Azure-sleutel",
-      "title": "Sleutel"
-    }
-  },
-  "bedrock": {
-    "accessKeyId": {
-      "desc": "Voer AWS Access Key Id in",
-      "placeholder": "AWS Access Key Id",
-      "title": "AWS Access Key Id"
-    },
-    "checker": {
-      "desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld"
-    },
-    "region": {
-      "desc": "Voer AWS Region in",
-      "placeholder": "AWS Region",
-      "title": "AWS Region"
-    },
-    "secretAccessKey": {
-      "desc": "Voer AWS Secret Access Key in",
-      "placeholder": "AWS Secret Access Key",
-      "title": "AWS Secret Access Key"
-    },
-    "sessionToken": {
-      "desc": "Als je AWS SSO/STS gebruikt, voer dan je AWS Sessie Token in",
-      "placeholder": "AWS Sessie Token",
-      "title": "AWS Sessie Token (optioneel)"
-    },
-    "title": "Bedrock",
-    "unlock": {
-      "customRegion": "Aangepaste regio",
-      "customSessionToken": "Aangepaste sessietoken",
-      "description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
-      "imageGenerationDescription": "Voer je AWS AccessKeyId / SecretAccessKey in om te beginnen met genereren. De applicatie slaat je authenticatiegegevens niet op",
-      "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
-    }
-  },
-  "cloudflare": {
-    "apiKey": {
-      "desc": "Voer Cloudflare API Key in",
-      "placeholder": "Cloudflare API Key",
-      "title": "Cloudflare API Key"
-    },
-    "baseURLOrAccountID": {
-      "desc": "Voer uw Cloudflare-account ID of een custom API-URL in",
-      "placeholder": "Cloudflare-account ID / custom API-URL",
-      "title": "Cloudflare-account ID / API-URL"
-    }
-  },
-  "comfyui": {
-    "apiKey": {
-      "desc": "API-sleutel vereist voor Bearer Token-authenticatie",
-      "placeholder": "Voer API-sleutel in",
-      "required": "Voer API-sleutel in",
-      "title": "API-sleutel"
-    },
-    "authType": {
-      "desc": "Selecteer de authenticatiemethode voor verbinding met de ComfyUI-server",
-      "options": {
-        "basic": "Gebruikersnaam/Wachtwoord",
-        "bearer": "Bearer (API-sleutel)",
-        "custom": "Aangepaste request headers",
-        "none": "Geen authenticatie vereist"
-      },
-      "placeholder": "Selecteer authenticatietype",
-      "title": "Authenticatietype"
-    },
-    "baseURL": {
-      "desc": "Webadres voor toegang tot ComfyUI",
-      "placeholder": "http://127.0.0.1:8000",
-      "required": "Voer het ComfyUI-serviceadres in",
-      "title": "ComfyUI-serviceadres"
-    },
-    "checker": {
-      "desc": "Test of de verbinding correct is geconfigureerd",
-      "title": "Connectiviteitscontrole"
-    },
-    "customHeaders": {
-      "addButton": "Request header toevoegen",
-      "deleteTooltip": "Verwijder deze request header",
-      "desc": "Request headers vereist voor aangepaste authenticatie, in key-value formaat",
-      "duplicateKeyError": "Header-sleutels mogen niet worden herhaald",
-      "keyPlaceholder": "Sleutel",
-      "required": "Voer aangepaste request headers in",
-      "title": "Aangepaste request headers",
-      "valuePlaceholder": "Waarde"
-    },
-    "password": {
-      "desc": "Wachtwoord vereist voor basisauthenticatie",
-      "placeholder": "Voer wachtwoord in",
-      "required": "Voer wachtwoord in",
-      "title": "Wachtwoord"
-    },
-    "title": "ComfyUI",
-    "username": {
-      "desc": "Gebruikersnaam vereist voor basisauthenticatie",
-      "placeholder": "Voer gebruikersnaam in",
-      "required": "Voer gebruikersnaam in",
-      "title": "Gebruikersnaam"
-    }
-  },
-  "createNewAiProvider": {
-    "apiKey": {
-      "placeholder": "Vul je API-sleutel in",
-      "title": "API-sleutel"
-    },
-    "basicTitle": "Basisinformatie",
-    "configTitle": "Configuratie-informatie",
-    "confirm": "Nieuw aanmaken",
-    "createSuccess": "Succesvol aangemaakt",
-    "description": {
-      "placeholder": "Beschrijving van de provider (optioneel)",
-      "title": "Beschrijving van de provider"
-    },
-    "id": {
-      "desc": "Een unieke identificatie voor de dienstverlener, kan na creatie niet meer worden gewijzigd",
-      "format": "Mag alleen cijfers, kleine letters, koppeltekens (-) en onderstrepingstekens (_) bevatten",
-      "placeholder": "Gebruik alleen kleine letters, bijvoorbeeld openai, kan niet worden gewijzigd na aanmaak",
-      "required": "Vul de provider ID in",
-      "title": "Provider ID"
-    },
-    "logo": {
-      "required": "Upload een correcte provider-logo",
-      "title": "Provider-logo"
-    },
-    "name": {
-      "placeholder": "Voer de weergavenaam van de provider in",
-      "required": "Vul de naam van de provider in",
-      "title": "Naam van de provider"
-    },
-    "proxyUrl": {
-      "required": "Vul het proxyadres in",
-      "title": "Proxy-adres"
-    },
-    "sdkType": {
-      "placeholder": "openai/anthropic/azureai/ollama/...",
-      "required": "Selecteer het SDK-type",
-      "title": "Aanvraagformaat"
-    },
-    "title": "Maak een aangepaste AI-provider"
-  },
-  "github": {
-    "personalAccessToken": {
-      "desc": "Vul je Github PAT in, klik [hier](https://github.com/settings/tokens) om er een te maken",
-      "placeholder": "ghp_xxxxxx",
-      "title": "GitHub PAT"
-    }
-  },
-  "huggingface": {
-    "accessToken": {
-      "desc": "Vul je HuggingFace Token in, klik [hier](https://huggingface.co/settings/tokens) om er een te maken",
-      "placeholder": "hf_xxxxxxxxx",
-      "title": "HuggingFace Token"
-    }
-  },
-  "list": {
-    "title": {
-      "custom": "Aangepaste provider niet ingeschakeld",
-      "disabled": "Dienstverlener niet ingeschakeld",
-      "enabled": "Dienstverlener ingeschakeld"
-    }
-  },
-  "menu": {
-    "addCustomProvider": "Voeg aangepaste provider toe",
-    "all": "Alles",
-    "list": {
-      "custom": "Aangepaste provider niet ingeschakeld",
-      "disabled": "Niet ingeschakeld",
-      "disabledActions": {
-        "sort": "Sorteervolgorde",
-        "sortAlphabetical": "Alfabetisch sorteren",
-        "sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
-        "sortDefault": "Standaard sortering"
-      },
-      "enabled": "Ingeschakeld"
-    },
-    "notFound": "Geen zoekresultaten gevonden",
-    "searchProviders": "Zoek providers...",
-    "sort": "Aangepaste sortering"
-  },
-  "newapi": {
-    "apiKey": {
-      "desc": "API-sleutel geleverd door het New API-platform",
-      "placeholder": "New API API-sleutel",
-      "required": "API-sleutel is verplicht",
-      "title": "API-sleutel"
-    },
-    "apiUrl": {
-      "desc": "API-adres van de New API-service, meestal met /v1",
-      "title": "API-adres"
-    },
-    "enabled": {
-      "title": "New API inschakelen"
-    },
-    "models": {
-      "batchSelect": "Modellen in batch selecteren ({{count}})",
-      "fetch": "Modelijst ophalen",
-      "selected": "Geselecteerde modellen",
-      "title": "Beschikbare modellen"
-    },
-    "title": "New API"
-  },
-  "ollama": {
-    "checker": {
-      "desc": "Test of het proxyadres correct is ingevuld",
-      "title": "Connectiviteitscontrole"
-    },
-    "customModelName": {
-      "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
-      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-      "title": "Aangepaste Modelnamen"
-    },
-    "download": {
-      "desc": "Ollama is het model aan het downloaden, sluit deze pagina alstublieft niet af. Bij een herstart zal het downloaden op de onderbroken plaats verdergaan.",
-      "failed": "Het downloaden van het model is mislukt. Controleer uw netwerk of de Ollama-instellingen en probeer het opnieuw.",
-      "remainingTime": "Overgebleven tijd",
-      "speed": "Downloadsnelheid",
-      "title": "Model {{model}} wordt gedownload"
-    },
-    "endpoint": {
-      "desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
-      "title": "Interface Proxyadres"
-    },
-    "title": "Ollama",
-    "unlock": {
-      "cancel": "Annuleer download",
-      "confirm": "Downloaden",
-      "description": "Voer je Ollama model label in om door te gaan met de sessie",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Downloaden starten...",
-      "title": "Download het opgegeven Ollama model"
-    }
-  },
-  "providerModels": {
-    "batchSelect": {
-      "selected": "{{count}} modellen geselecteerd",
-      "title": "Batchselectie"
-    },
-    "config": {
-      "aesGcm": "Je sleutel en proxy-adres worden versleuteld met <1>AES-GCM</1> encryptie-algoritme",
-      "apiKey": {
-        "desc": "Vul je {{name}} API-sleutel in",
-        "descWithUrl": "Vul je {{name}} API-sleutel in, <3>klik hier om deze te verkrijgen</3>",
-        "placeholder": "{{name}} API-sleutel",
-        "title": "API-sleutel"
-      },
-      "baseURL": {
-        "desc": "Moet http(s):// bevatten",
-        "invalid": "Voer een geldige URL in",
-        "placeholder": "https://your-proxy-url.com/v1",
-        "title": "API-proxy-adres"
-      },
-      "checker": {
-        "button": "Controleer",
-        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
-        "pass": "Controle geslaagd",
-        "title": "Connectiviteitstest"
-      },
-      "fetchOnClient": {
-        "desc": "Clientaanvraagmodus zal sessieaanvragen rechtstreeks vanuit de browser initiëren, wat de responssnelheid kan verbeteren",
-        "title": "Gebruik clientaanvraagmodus"
-      },
-      "helpDoc": "Configuratiehandleiding",
-      "responsesApi": {
-        "desc": "Maakt gebruik van het nieuwe generatie aanvraagformaat van OpenAI om geavanceerde functies zoals Chain of Thought te ontgrendelen (alleen ondersteund door OpenAI-modellen)",
-        "title": "Gebruik Responses API-standaard"
-      },
-      "waitingForMore": "Meer modellen zijn in <1>planning voor integratie</1>, blijf op de hoogte"
-    },
-    "createNew": {
-      "title": "Maak een aangepast AI-model"
-    },
-    "item": {
-      "config": "Configureer model",
-      "customModelCards": {
-        "addNew": "Maak en voeg {{id}} model toe",
-        "confirmDelete": "Je staat op het punt dit aangepaste model te verwijderen, na verwijdering kan het niet worden hersteld, wees voorzichtig."
-      },
-      "delete": {
-        "confirm": "Bevestig verwijdering van model {{displayName}}?",
-        "success": "Verwijdering geslaagd",
-        "title": "Verwijder model"
-      },
-      "modelConfig": {
-        "azureDeployName": {
-          "extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
-          "placeholder": "Voer de modelimplementatienaam in Azure in",
-          "title": "Modelimplementatienaam"
-        },
-        "deployName": {
-          "extra": "Dit veld wordt als model-ID verzonden bij het indienen van een verzoek",
-          "placeholder": "Voer de naam of ID van het daadwerkelijk gedeployde model in",
-          "title": "Modeldeploynaam"
-        },
-        "displayName": {
-          "placeholder": "Voer de weergavenaam van het model in, bijvoorbeeld ChatGPT, GPT-4, enz.",
-          "title": "Weergavenaam van het model"
-        },
-        "files": {
-          "extra": "De huidige bestandsuploadimplementatie is slechts een hackoplossing, alleen voor eigen gebruik. Volledige bestandsuploadcapaciteit komt later beschikbaar.",
-          "title": "Ondersteuning voor bestandsupload"
-        },
-        "functionCall": {
-          "extra": "Deze configuratie schakelt alleen de mogelijkheid in voor het model om tools te gebruiken, waardoor het mogelijk is om plug-ins voor tools aan het model toe te voegen. Of het model daadwerkelijk tools kan gebruiken, hangt echter volledig af van het model zelf; test de bruikbaarheid zelf.",
-          "title": "Ondersteuning voor het gebruik van tools"
-        },
-        "id": {
-          "extra": "Kan niet worden gewijzigd na creatie, wordt gebruikt als model-id bij het aanroepen van AI",
-          "placeholder": "Voer model-id in, bijvoorbeeld gpt-4o of claude-3.5-sonnet",
-          "title": "Model ID"
-        },
-        "imageOutput": {
-          "extra": "Deze configuratie schakelt alleen de mogelijkheid van het model in om afbeeldingen te genereren. Het daadwerkelijke resultaat hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare afbeeldingen te genereren.",
-          "title": "Ondersteunt afbeeldingsgeneratie"
-        },
-        "modalTitle": "Configuratie van aangepast model",
-        "reasoning": {
-          "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
-          "title": "Ondersteuning voor diepgaand denken"
-        },
-        "search": {
-          "extra": "Deze configuratie schakelt alleen de mogelijkheid van het ingebouwde zoekmechanisme van het model in om verbinding te maken met het internet. Of het ingebouwde zoekmechanisme wordt ondersteund, hangt af van het model zelf. Test zelf of het ingebouwde zoekmechanisme van het model bruikbaar is.",
-          "title": "Ondersteunt zoeken via internet"
-        },
-        "tokens": {
-          "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
-          "title": "Maximale contextvenster",
-          "unlimited": "Onbeperkt"
-        },
-        "type": {
-          "extra": "Verschillende modeltypen hebben verschillende toepassingsscenario's en mogelijkheden",
-          "options": {
-            "chat": "Gesprek",
-            "embedding": "Vectorisatie",
-            "image": "Afbeeldingsgeneratie",
-            "realtime": "Realtime gesprek",
-            "stt": "Spraak naar tekst",
-            "text2music": "Tekst naar muziek",
-            "text2video": "Tekst naar video",
-            "tts": "Spraaksynthese"
-          },
-          "placeholder": "Selecteer een modeltype",
-          "title": "Modeltype"
-        },
-        "video": {
-          "extra": "Deze configuratie schakelt alleen de videodetectie-instellingen in de applicatie in. Of videodetectie wordt ondersteund, hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare videodetectie uit te voeren.",
-          "title": "Ondersteunt videodetectie"
-        },
-        "vision": {
-          "extra": "Deze configuratie zal alleen de afbeeldinguploadcapaciteit in de applicatie inschakelen, of herkenning wordt ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de visuele herkenningscapaciteit van dit model zelf.",
-          "title": "Ondersteuning voor visuele herkenning"
-        }
-      },
-      "pricing": {
-        "image": "${{amount}}/Afbeelding",
-        "inputCharts": "${{amount}}/M Tekens",
-        "inputMinutes": "${{amount}}/Minuten",
-        "inputTokens": "Invoer ${{amount}}/M",
-        "outputTokens": "Uitvoer ${{amount}}/M"
-      },
-      "releasedAt": "Uitgebracht op {{releasedAt}}"
-    },
-    "list": {
-      "addNew": "Model toevoegen",
-      "disabled": "Niet ingeschakeld",
-      "disabledActions": {
-        "showMore": "Toon alles",
-        "sort": "Sorteervolgorde",
-        "sortAlphabetical": "Alfabetisch sorteren",
-        "sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
-        "sortDefault": "Standaard sortering",
-        "sortReleasedAt": "Sorteren op oudste publicatiedatum",
-        "sortReleasedAtDesc": "Sorteren op nieuwste publicatiedatum"
-      },
-      "empty": {
-        "desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",
-        "title": "Geen beschikbare modellen"
-      },
-      "enabled": "Ingeschakeld",
-      "enabledActions": {
-        "disableAll": "Alle uitschakelen",
-        "enableAll": "Alle inschakelen",
-        "sort": "Aangepaste model sortering"
-      },
-      "enabledEmpty": "Geen ingeschakelde modellen, schakel de modellen hieronder in die je leuk vindt~",
-      "fetcher": {
-        "clear": "Verwijder de opgehaalde modellen",
-        "fetch": "Haal modellenlijst op",
-        "fetching": "Bezig met het ophalen van de modellenlijst...",
-        "latestTime": "Laatste update tijd: {{time}}",
-        "noLatestTime": "Lijst nog niet opgehaald"
-      },
-      "noModelsInCategory": "Er zijn geen ingeschakelde modellen in deze categorie",
-      "resetAll": {
-        "conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
-        "success": "Resetten geslaagd",
-        "title": "Reset alle wijzigingen"
-      },
-      "search": "Zoek modellen...",
-      "searchResult": "Gevonden {{count}} modellen",
-      "title": "Modellenlijst",
-      "total": "In totaal {{count}} modellen beschikbaar"
-    },
-    "searchNotFound": "Geen zoekresultaten gevonden",
-    "tabs": {
-      "all": "Alles",
-      "chat": "Chat",
-      "embedding": "Inbedding",
-      "image": "Afbeelding",
-      "stt": "ASR",
-      "tts": "TTS"
-    }
-  },
-  "sortModal": {
-    "success": "Sortering succesvol bijgewerkt",
-    "title": "Aangepaste sortering",
-    "update": "Bijwerken"
-  },
-  "updateAiProvider": {
-    "confirmDelete": "Je staat op het punt deze AI-provider te verwijderen, na verwijdering kan deze niet worden hersteld, bevestig je verwijdering?",
-    "deleteSuccess": "Verwijdering geslaagd",
-    "tooltip": "Werk basisconfiguratie van provider bij",
-    "updateSuccess": "Bijwerking geslaagd"
-  },
-  "updateCustomAiProvider": {
-    "title": "Bijwerken van de configuratie van de aangepaste AI-provider"
-  },
-  "vertexai": {
-    "apiKey": {
-      "desc": "Vul je Vertex AI-sleutels in",
-      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
-      "title": "Vertex AI-sleutels"
-    },
-    "region": {
-      "desc": "Selecteer de regio voor de Vertex AI-service. Sommige modellen, zoals Gemini 2.5, zijn alleen beschikbaar in specifieke regio's (zoals global).",
-      "placeholder": "Selecteer een regio",
-      "title": "Vertex AI-regio"
-    }
-  },
-  "zeroone": {
-    "title": "01.AI Nul Een Alles"
-  },
-  "zhipu": {
-    "title": "Intelligent Spectrum"
-  }
+  "azure.azureApiVersion.desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
+  "azure.azureApiVersion.fetch": "Lijst ophalen",
+  "azure.azureApiVersion.title": "Azure API Versie",
+  "azure.empty": "Voer een model-ID in om het eerste model toe te voegen",
+  "azure.endpoint.desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert",
+  "azure.endpoint.placeholder": "https://docs-test-001.openai.azure.com",
+  "azure.endpoint.title": "Azure API Adres",
+  "azure.modelListPlaceholder": "Selecteer of voeg het OpenAI-model toe dat u hebt ingezet",
+  "azure.title": "Azure OpenAI",
+  "azure.token.desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert. Je kunt KEY1 of KEY2 gebruiken",
+  "azure.token.placeholder": "Azure API Key",
+  "azure.token.title": "API Key",
+  "azureai.azureApiVersion.desc": "De API-versie van Azure, volgens het formaat YYYY-MM-DD. Raadpleeg de [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+  "azureai.azureApiVersion.fetch": "Lijst ophalen",
+  "azureai.azureApiVersion.title": "Azure API-versie",
+  "azureai.endpoint.desc": "Vind het Azure AI-model inferentie-eindpunt in het overzicht van het Azure AI-project",
+  "azureai.endpoint.placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+  "azureai.endpoint.title": "Azure AI-eindpunt",
+  "azureai.title": "Azure OpenAI",
+  "azureai.token.desc": "Vind de API-sleutel in het overzicht van het Azure AI-project",
+  "azureai.token.placeholder": "Azure-sleutel",
+  "azureai.token.title": "Sleutel",
+  "bedrock.accessKeyId.desc": "Voer AWS Access Key Id in",
+  "bedrock.accessKeyId.placeholder": "AWS Access Key Id",
+  "bedrock.accessKeyId.title": "AWS Access Key Id",
+  "bedrock.checker.desc": "Test of AccessKeyId / SecretAccessKey correct zijn ingevuld",
+  "bedrock.region.desc": "Voer AWS Region in",
+  "bedrock.region.placeholder": "AWS Region",
+  "bedrock.region.title": "AWS Region",
+  "bedrock.secretAccessKey.desc": "Voer AWS Secret Access Key in",
+  "bedrock.secretAccessKey.placeholder": "AWS Secret Access Key",
+  "bedrock.secretAccessKey.title": "AWS Secret Access Key",
+  "bedrock.sessionToken.desc": "Als je AWS SSO/STS gebruikt, voer dan je AWS Sessie Token in",
+  "bedrock.sessionToken.placeholder": "AWS Sessie Token",
+  "bedrock.sessionToken.title": "AWS Sessie Token (optioneel)",
+  "bedrock.title": "Bedrock",
+  "bedrock.unlock.customRegion": "Aangepaste regio",
+  "bedrock.unlock.customSessionToken": "Aangepaste sessietoken",
+  "bedrock.unlock.description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
+  "bedrock.unlock.imageGenerationDescription": "Voer je AWS AccessKeyId / SecretAccessKey in om te beginnen met genereren. De applicatie slaat je authenticatiegegevens niet op",
+  "bedrock.unlock.title": "Gebruik aangepaste Bedrock-verificatiegegevens",
+  "cloudflare.apiKey.desc": "Voer Cloudflare API Key in",
+  "cloudflare.apiKey.placeholder": "Cloudflare API Key",
+  "cloudflare.apiKey.title": "Cloudflare API Key",
+  "cloudflare.baseURLOrAccountID.desc": "Voer uw Cloudflare-account ID of een custom API-URL in",
+  "cloudflare.baseURLOrAccountID.placeholder": "Cloudflare-account ID / custom API-URL",
+  "cloudflare.baseURLOrAccountID.title": "Cloudflare-account ID / API-URL",
+  "comfyui.apiKey.desc": "API-sleutel vereist voor Bearer Token-authenticatie",
+  "comfyui.apiKey.placeholder": "Voer API-sleutel in",
+  "comfyui.apiKey.required": "Voer API-sleutel in",
+  "comfyui.apiKey.title": "API-sleutel",
+  "comfyui.authType.desc": "Selecteer de authenticatiemethode voor verbinding met de ComfyUI-server",
+  "comfyui.authType.options.basic": "Gebruikersnaam/Wachtwoord",
+  "comfyui.authType.options.bearer": "Bearer (API-sleutel)",
+  "comfyui.authType.options.custom": "Aangepaste request headers",
+  "comfyui.authType.options.none": "Geen authenticatie vereist",
+  "comfyui.authType.placeholder": "Selecteer authenticatietype",
+  "comfyui.authType.title": "Authenticatietype",
+  "comfyui.baseURL.desc": "Webadres voor toegang tot ComfyUI",
+  "comfyui.baseURL.placeholder": "http://127.0.0.1:8000",
+  "comfyui.baseURL.required": "Voer het ComfyUI-serviceadres in",
+  "comfyui.baseURL.title": "ComfyUI-serviceadres",
+  "comfyui.checker.desc": "Test of de verbinding correct is geconfigureerd",
+  "comfyui.checker.title": "Connectiviteitscontrole",
+  "comfyui.customHeaders.addButton": "Request header toevoegen",
+  "comfyui.customHeaders.deleteTooltip": "Verwijder deze request header",
+  "comfyui.customHeaders.desc": "Request headers vereist voor aangepaste authenticatie, in key-value formaat",
+  "comfyui.customHeaders.duplicateKeyError": "Header-sleutels mogen niet worden herhaald",
+  "comfyui.customHeaders.keyPlaceholder": "Sleutel",
+  "comfyui.customHeaders.required": "Voer aangepaste request headers in",
+  "comfyui.customHeaders.title": "Aangepaste request headers",
+  "comfyui.customHeaders.valuePlaceholder": "Waarde",
+  "comfyui.password.desc": "Wachtwoord vereist voor basisauthenticatie",
+  "comfyui.password.placeholder": "Voer wachtwoord in",
+  "comfyui.password.required": "Voer wachtwoord in",
+  "comfyui.password.title": "Wachtwoord",
+  "comfyui.title": "ComfyUI",
+  "comfyui.username.desc": "Gebruikersnaam vereist voor basisauthenticatie",
+  "comfyui.username.placeholder": "Voer gebruikersnaam in",
+  "comfyui.username.required": "Voer gebruikersnaam in",
+  "comfyui.username.title": "Gebruikersnaam",
+  "createNewAiProvider.apiKey.placeholder": "Vul je API-sleutel in",
+  "createNewAiProvider.apiKey.title": "API-sleutel",
+  "createNewAiProvider.basicTitle": "Basisinformatie",
+  "createNewAiProvider.configTitle": "Configuratie-informatie",
+  "createNewAiProvider.confirm": "Nieuw aanmaken",
+  "createNewAiProvider.createSuccess": "Succesvol aangemaakt",
+  "createNewAiProvider.description.placeholder": "Beschrijving van de provider (optioneel)",
+  "createNewAiProvider.description.title": "Beschrijving van de provider",
+  "createNewAiProvider.id.desc": "Een unieke identificatie voor de dienstverlener, kan na creatie niet meer worden gewijzigd",
+  "createNewAiProvider.id.format": "Mag alleen cijfers, kleine letters, koppeltekens (-) en onderstrepingstekens (_) bevatten",
+  "createNewAiProvider.id.placeholder": "Gebruik alleen kleine letters, bijvoorbeeld openai, kan niet worden gewijzigd na aanmaak",
+  "createNewAiProvider.id.required": "Vul de provider ID in",
+  "createNewAiProvider.id.title": "Provider ID",
+  "createNewAiProvider.logo.required": "Upload een correcte provider-logo",
+  "createNewAiProvider.logo.title": "Provider-logo",
+  "createNewAiProvider.name.placeholder": "Voer de weergavenaam van de provider in",
+  "createNewAiProvider.name.required": "Vul de naam van de provider in",
+  "createNewAiProvider.name.title": "Naam van de provider",
+  "createNewAiProvider.proxyUrl.required": "Vul het proxyadres in",
+  "createNewAiProvider.proxyUrl.title": "Proxy-adres",
+  "createNewAiProvider.sdkType.placeholder": "openai/anthropic/azureai/ollama/...",
+  "createNewAiProvider.sdkType.required": "Selecteer het SDK-type",
+  "createNewAiProvider.sdkType.title": "Aanvraagformaat",
+  "createNewAiProvider.title": "Maak een aangepaste AI-provider",
+  "github.personalAccessToken.desc": "Vul je Github PAT in, klik [hier](https://github.com/settings/tokens) om er een te maken",
+  "github.personalAccessToken.placeholder": "ghp_xxxxxx",
+  "github.personalAccessToken.title": "GitHub PAT",
+  "huggingface.accessToken.desc": "Vul je HuggingFace Token in, klik [hier](https://huggingface.co/settings/tokens) om er een te maken",
+  "huggingface.accessToken.placeholder": "hf_xxxxxxxxx",
+  "huggingface.accessToken.title": "HuggingFace Token",
+  "list.title.custom": "Aangepaste provider niet ingeschakeld",
+  "list.title.disabled": "Dienstverlener niet ingeschakeld",
+  "list.title.enabled": "Dienstverlener ingeschakeld",
+  "menu.addCustomProvider": "Voeg aangepaste provider toe",
+  "menu.all": "Alles",
+  "menu.list.custom": "Aangepaste provider niet ingeschakeld",
+  "menu.list.disabled": "Niet ingeschakeld",
+  "menu.list.disabledActions.sort": "Sorteervolgorde",
+  "menu.list.disabledActions.sortAlphabetical": "Alfabetisch sorteren",
+  "menu.list.disabledActions.sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
+  "menu.list.disabledActions.sortDefault": "Standaard sortering",
+  "menu.list.enabled": "Ingeschakeld",
+  "menu.notFound": "Geen zoekresultaten gevonden",
+  "menu.searchProviders": "Zoek providers...",
+  "menu.sort": "Aangepaste sortering",
+  "newapi.apiKey.desc": "API-sleutel geleverd door het New API-platform",
+  "newapi.apiKey.placeholder": "New API API-sleutel",
+  "newapi.apiKey.required": "API-sleutel is verplicht",
+  "newapi.apiKey.title": "API-sleutel",
+  "newapi.apiUrl.desc": "API-adres van de New API-service, meestal met /v1",
+  "newapi.apiUrl.title": "API-adres",
+  "newapi.enabled.title": "New API inschakelen",
+  "newapi.models.batchSelect": "Modellen in batch selecteren ({{count}})",
+  "newapi.models.fetch": "Modelijst ophalen",
+  "newapi.models.selected": "Geselecteerde modellen",
+  "newapi.models.title": "Beschikbare modellen",
+  "newapi.title": "New API",
+  "ollama.checker.desc": "Test of het proxyadres correct is ingevuld",
+  "ollama.checker.title": "Connectiviteitscontrole",
+  "ollama.customModelName.desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
+  "ollama.customModelName.placeholder": "vicuna,llava,codellama,llama2:13b-text",
+  "ollama.customModelName.title": "Aangepaste Modelnamen",
+  "ollama.download.desc": "Ollama is het model aan het downloaden, sluit deze pagina alstublieft niet af. Bij een herstart zal het downloaden op de onderbroken plaats verdergaan.",
+  "ollama.download.failed": "Het downloaden van het model is mislukt. Controleer uw netwerk of de Ollama-instellingen en probeer het opnieuw.",
+  "ollama.download.remainingTime": "Overgebleven tijd",
+  "ollama.download.speed": "Downloadsnelheid",
+  "ollama.download.title": "Model {{model}} wordt gedownload",
+  "ollama.endpoint.desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
+  "ollama.endpoint.title": "Interface Proxyadres",
+  "ollama.title": "Ollama",
+  "ollama.unlock.cancel": "Annuleer download",
+  "ollama.unlock.confirm": "Downloaden",
+  "ollama.unlock.description": "Voer je Ollama model label in om door te gaan met de sessie",
+  "ollama.unlock.downloaded": "{{completed}} / {{total}}",
+  "ollama.unlock.starting": "Downloaden starten...",
+  "ollama.unlock.title": "Download het opgegeven Ollama model",
+  "providerModels.batchSelect.selected": "{{count}} modellen geselecteerd",
+  "providerModels.batchSelect.title": "Batchselectie",
+  "providerModels.config.aesGcm": "Je sleutel en proxy-adres worden versleuteld met <1>AES-GCM</1> encryptie-algoritme",
+  "providerModels.config.apiKey.desc": "Vul je {{name}} API-sleutel in",
+  "providerModels.config.apiKey.descWithUrl": "Vul je {{name}} API-sleutel in, <3>klik hier om deze te verkrijgen</3>",
+  "providerModels.config.apiKey.placeholder": "{{name}} API-sleutel",
+  "providerModels.config.apiKey.title": "API-sleutel",
+  "providerModels.config.baseURL.desc": "Moet http(s):// bevatten",
+  "providerModels.config.baseURL.invalid": "Voer een geldige URL in",
+  "providerModels.config.baseURL.placeholder": "https://your-proxy-url.com/v1",
+  "providerModels.config.baseURL.title": "API-proxy-adres",
+  "providerModels.config.checker.button": "Controleer",
+  "providerModels.config.checker.desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
+  "providerModels.config.checker.pass": "Controle geslaagd",
+  "providerModels.config.checker.title": "Connectiviteitstest",
+  "providerModels.config.fetchOnClient.desc": "Clientaanvraagmodus zal sessieaanvragen rechtstreeks vanuit de browser initiëren, wat de responssnelheid kan verbeteren",
+  "providerModels.config.fetchOnClient.title": "Gebruik clientaanvraagmodus",
+  "providerModels.config.helpDoc": "Configuratiehandleiding",
+  "providerModels.config.responsesApi.desc": "Maakt gebruik van het nieuwe generatie aanvraagformaat van OpenAI om geavanceerde functies zoals Chain of Thought te ontgrendelen (alleen ondersteund door OpenAI-modellen)",
+  "providerModels.config.responsesApi.title": "Gebruik Responses API-standaard",
+  "providerModels.config.waitingForMore": "Meer modellen zijn in <1>planning voor integratie</1>, blijf op de hoogte",
+  "providerModels.createNew.title": "Maak een aangepast AI-model",
+  "providerModels.item.config": "Configureer model",
+  "providerModels.item.customModelCards.addNew": "Maak en voeg {{id}} model toe",
+  "providerModels.item.customModelCards.confirmDelete": "Je staat op het punt dit aangepaste model te verwijderen, na verwijdering kan het niet worden hersteld, wees voorzichtig.",
+  "providerModels.item.delete.confirm": "Bevestig verwijdering van model {{displayName}}?",
+  "providerModels.item.delete.success": "Verwijdering geslaagd",
+  "providerModels.item.delete.title": "Verwijder model",
+  "providerModels.item.modelConfig.azureDeployName.extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
+  "providerModels.item.modelConfig.azureDeployName.placeholder": "Voer de modelimplementatienaam in Azure in",
+  "providerModels.item.modelConfig.azureDeployName.title": "Modelimplementatienaam",
+  "providerModels.item.modelConfig.deployName.extra": "Dit veld wordt als model-ID verzonden bij het indienen van een verzoek",
+  "providerModels.item.modelConfig.deployName.placeholder": "Voer de naam of ID van het daadwerkelijk gedeployde model in",
+  "providerModels.item.modelConfig.deployName.title": "Modeldeploynaam",
+  "providerModels.item.modelConfig.displayName.placeholder": "Voer de weergavenaam van het model in, bijvoorbeeld ChatGPT, GPT-4, enz.",
+  "providerModels.item.modelConfig.displayName.title": "Weergavenaam van het model",
+  "providerModels.item.modelConfig.files.extra": "De huidige bestandsuploadimplementatie is slechts een hackoplossing, alleen voor eigen gebruik. Volledige bestandsuploadcapaciteit komt later beschikbaar.",
+  "providerModels.item.modelConfig.files.title": "Ondersteuning voor bestandsupload",
+  "providerModels.item.modelConfig.functionCall.extra": "Deze configuratie schakelt alleen de mogelijkheid in voor het model om tools te gebruiken, waardoor het mogelijk is om plug-ins voor tools aan het model toe te voegen. Of het model daadwerkelijk tools kan gebruiken, hangt echter volledig af van het model zelf; test de bruikbaarheid zelf.",
+  "providerModels.item.modelConfig.functionCall.title": "Ondersteuning voor het gebruik van tools",
+  "providerModels.item.modelConfig.id.extra": "Kan niet worden gewijzigd na creatie, wordt gebruikt als model-id bij het aanroepen van AI",
+  "providerModels.item.modelConfig.id.placeholder": "Voer model-id in, bijvoorbeeld gpt-4o of claude-3.5-sonnet",
+  "providerModels.item.modelConfig.id.title": "Model ID",
+  "providerModels.item.modelConfig.imageOutput.extra": "Deze configuratie schakelt alleen de mogelijkheid van het model in om afbeeldingen te genereren. Het daadwerkelijke resultaat hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare afbeeldingen te genereren.",
+  "providerModels.item.modelConfig.imageOutput.title": "Ondersteunt afbeeldingsgeneratie",
+  "providerModels.item.modelConfig.modalTitle": "Configuratie van aangepast model",
+  "providerModels.item.modelConfig.reasoning.extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
+  "providerModels.item.modelConfig.reasoning.title": "Ondersteuning voor diepgaand denken",
+  "providerModels.item.modelConfig.search.extra": "Deze configuratie schakelt alleen de mogelijkheid van het ingebouwde zoekmechanisme van het model in om verbinding te maken met het internet. Of het ingebouwde zoekmechanisme wordt ondersteund, hangt af van het model zelf. Test zelf of het ingebouwde zoekmechanisme van het model bruikbaar is.",
+  "providerModels.item.modelConfig.search.title": "Ondersteunt zoeken via internet",
+  "providerModels.item.modelConfig.tokens.extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
+  "providerModels.item.modelConfig.tokens.title": "Maximale contextvenster",
+  "providerModels.item.modelConfig.tokens.unlimited": "Onbeperkt",
+  "providerModels.item.modelConfig.type.extra": "Verschillende modeltypen hebben verschillende toepassingsscenario's en mogelijkheden",
+  "providerModels.item.modelConfig.type.options.chat": "Gesprek",
+  "providerModels.item.modelConfig.type.options.embedding": "Vectorisatie",
+  "providerModels.item.modelConfig.type.options.image": "Afbeeldingsgeneratie",
+  "providerModels.item.modelConfig.type.options.realtime": "Realtime gesprek",
+  "providerModels.item.modelConfig.type.options.stt": "Spraak naar tekst",
+  "providerModels.item.modelConfig.type.options.text2music": "Tekst naar muziek",
+  "providerModels.item.modelConfig.type.options.text2video": "Tekst naar video",
+  "providerModels.item.modelConfig.type.options.tts": "Spraaksynthese",
+  "providerModels.item.modelConfig.type.placeholder": "Selecteer een modeltype",
+  "providerModels.item.modelConfig.type.title": "Modeltype",
+  "providerModels.item.modelConfig.video.extra": "Deze configuratie schakelt alleen de videodetectie-instellingen in de applicatie in. Of videodetectie wordt ondersteund, hangt volledig af van het model zelf. Test zelf of het model in staat is bruikbare videodetectie uit te voeren.",
+  "providerModels.item.modelConfig.video.title": "Ondersteunt videodetectie",
+  "providerModels.item.modelConfig.vision.extra": "Deze configuratie zal alleen de afbeeldinguploadcapaciteit in de applicatie inschakelen, of herkenning wordt ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de visuele herkenningscapaciteit van dit model zelf.",
+  "providerModels.item.modelConfig.vision.title": "Ondersteuning voor visuele herkenning",
+  "providerModels.item.pricing.image": "${{amount}}/Afbeelding",
+  "providerModels.item.pricing.inputCharts": "${{amount}}/M Tekens",
+  "providerModels.item.pricing.inputMinutes": "${{amount}}/Minuten",
+  "providerModels.item.pricing.inputTokens": "Invoer ${{amount}}/M",
+  "providerModels.item.pricing.outputTokens": "Uitvoer ${{amount}}/M",
+  "providerModels.item.releasedAt": "Uitgebracht op {{releasedAt}}",
+  "providerModels.list.addNew": "Model toevoegen",
+  "providerModels.list.disabled": "Niet ingeschakeld",
+  "providerModels.list.disabledActions.showMore": "Toon alles",
+  "providerModels.list.disabledActions.sort": "Sorteervolgorde",
+  "providerModels.list.disabledActions.sortAlphabetical": "Alfabetisch sorteren",
+  "providerModels.list.disabledActions.sortAlphabeticalDesc": "Omgekeerd alfabetisch sorteren",
+  "providerModels.list.disabledActions.sortDefault": "Standaard sortering",
+  "providerModels.list.disabledActions.sortReleasedAt": "Sorteren op oudste publicatiedatum",
+  "providerModels.list.disabledActions.sortReleasedAtDesc": "Sorteren op nieuwste publicatiedatum",
+  "providerModels.list.empty.desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",
+  "providerModels.list.empty.title": "Geen beschikbare modellen",
+  "providerModels.list.enabled": "Ingeschakeld",
+  "providerModels.list.enabledActions.disableAll": "Alle uitschakelen",
+  "providerModels.list.enabledActions.enableAll": "Alle inschakelen",
+  "providerModels.list.enabledActions.sort": "Aangepaste model sortering",
+  "providerModels.list.enabledEmpty": "Geen ingeschakelde modellen, schakel de modellen hieronder in die je leuk vindt~",
+  "providerModels.list.fetcher.clear": "Verwijder de opgehaalde modellen",
+  "providerModels.list.fetcher.fetch": "Haal modellenlijst op",
+  "providerModels.list.fetcher.fetching": "Bezig met het ophalen van de modellenlijst...",
+  "providerModels.list.fetcher.latestTime": "Laatste update tijd: {{time}}",
+  "providerModels.list.fetcher.noLatestTime": "Lijst nog niet opgehaald",
+  "providerModels.list.noModelsInCategory": "Er zijn geen ingeschakelde modellen in deze categorie",
+  "providerModels.list.resetAll.conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
+  "providerModels.list.resetAll.success": "Resetten geslaagd",
+  "providerModels.list.resetAll.title": "Reset alle wijzigingen",
+  "providerModels.list.search": "Zoek modellen...",
+  "providerModels.list.searchResult": "Gevonden {{count}} modellen",
+  "providerModels.list.title": "Modellenlijst",
+  "providerModels.list.total": "In totaal {{count}} modellen beschikbaar",
+  "providerModels.searchNotFound": "Geen zoekresultaten gevonden",
+  "providerModels.tabs.all": "Alles",
+  "providerModels.tabs.chat": "Chat",
+  "providerModels.tabs.embedding": "Inbedding",
+  "providerModels.tabs.image": "Afbeelding",
+  "providerModels.tabs.stt": "ASR",
+  "providerModels.tabs.tts": "TTS",
+  "sortModal.success": "Sortering succesvol bijgewerkt",
+  "sortModal.title": "Aangepaste sortering",
+  "sortModal.update": "Bijwerken",
+  "updateAiProvider.confirmDelete": "Je staat op het punt deze AI-provider te verwijderen, na verwijdering kan deze niet worden hersteld, bevestig je verwijdering?",
+  "updateAiProvider.deleteSuccess": "Verwijdering geslaagd",
+  "updateAiProvider.tooltip": "Werk basisconfiguratie van provider bij",
+  "updateAiProvider.updateSuccess": "Bijwerking geslaagd",
+  "updateCustomAiProvider.title": "Bijwerken van de configuratie van de aangepaste AI-provider",
+  "vertexai.apiKey.desc": "Vul je Vertex AI-sleutels in",
+  "vertexai.apiKey.placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+  "vertexai.apiKey.title": "Vertex AI-sleutels",
+  "vertexai.region.desc": "Selecteer de regio voor de Vertex AI-service. Sommige modellen, zoals Gemini 2.5, zijn alleen beschikbaar in specifieke regio's (zoals global).",
+  "vertexai.region.placeholder": "Selecteer een regio",
+  "vertexai.region.title": "Vertex AI-regio",
+  "zeroone.title": "01.AI Nul Een Alles",
+  "zhipu.title": "Intelligent Spectrum"
 }

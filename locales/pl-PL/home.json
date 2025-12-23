@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "Brak dostępnych asystentów",
-    "noAvailable": "Obecnie brak asystentów do dodania",
-    "noSelected": "Nie wybrano żadnego asystenta",
-    "search": "Nie znaleziono pasujących asystentów"
-  },
-  "starter": {
-    "createAgent": "Utwórz Asystenta",
-    "createGroup": "Utwórz grupę",
-    "deepResearch": "Dogłębne Badania",
-    "developing": "W Trakcie Opracowywania",
-    "image": "Ilustracja",
-    "write": "Pisanie"
-  }
+  "agentSelection.empty": "Brak dostępnych asystentów",
+  "agentSelection.noAvailable": "Obecnie brak asystentów do dodania",
+  "agentSelection.noSelected": "Nie wybrano żadnego asystenta",
+  "agentSelection.search": "Nie znaleziono pasujących asystentów",
+  "starter.createAgent": "Utwórz Asystenta",
+  "starter.createGroup": "Utwórz grupę",
+  "starter.deepResearch": "Dogłębne Badania",
+  "starter.developing": "W Trakcie Opracowywania",
+  "starter.image": "Ilustracja",
+  "starter.write": "Pisanie"
 }

@@ -1,16 +1,12 @@
 {
-  "actions": {
-    "followOnX": "Подписывайтесь на нас в X",
-    "subscribeToUpdates": "Подписаться на обновления",
-    "versions": "Детали версий"
-  },
+  "actions.followOnX": "Подписывайтесь на нас в X",
+  "actions.subscribeToUpdates": "Подписаться на обновления",
+  "actions.versions": "Детали версий",
   "addedWhileAway": "Мы добавили новые функции, пока вы отсутствовали.",
   "allChangelog": "Просмотреть все журналы изменений",
   "description": "Постоянно следите за новыми функциями и улучшениями {{appName}}",
-  "pagination": {
-    "next": "Следующая страница",
-    "older": "Посмотреть историю изменений"
-  },
+  "pagination.next": "Следующая страница",
+  "pagination.older": "Посмотреть историю изменений",
   "readDetails": "Читать детали",
   "title": "Журнал изменений",
   "versionDetails": "Детали версий",

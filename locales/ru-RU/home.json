@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "Нет доступных помощников",
-    "noAvailable": "В данный момент нет помощников для добавления",
-    "noSelected": "Помощники ещё не выбраны",
-    "search": "Совпадающих помощников не найдено"
-  },
-  "starter": {
-    "createAgent": "Создать помощника",
-    "createGroup": "Создать группу",
-    "deepResearch": "Исследование",
-    "developing": "В разработке",
-    "image": "Рисование",
-    "write": "Письмо"
-  }
+  "agentSelection.empty": "Нет доступных помощников",
+  "agentSelection.noAvailable": "В данный момент нет помощников для добавления",
+  "agentSelection.noSelected": "Помощники ещё не выбраны",
+  "agentSelection.search": "Совпадающих помощников не найдено",
+  "starter.createAgent": "Создать помощника",
+  "starter.createGroup": "Создать группу",
+  "starter.deepResearch": "Исследование",
+  "starter.developing": "В разработке",
+  "starter.image": "Рисование",
+  "starter.write": "Письмо"
 }

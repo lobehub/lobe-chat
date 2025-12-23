@@ -1,730 +1,454 @@
 {
-  "assistants": {
-    "addAgent": "Asistan Ekle",
-    "addAgentAndConverse": "Asistan Ekle ve Sohbet Et",
-    "addAgentSuccess": "Başarıyla Eklendi",
-    "conversation": {
-      "l1": "Merhaba, ben **{{name}}**. Bana her türlü soruyu sorabilirsin, elimden gelenin en iyisini yapacağım ~",
-      "l2": "İşte yeteneklerimin tanıtımı: ",
-      "l3": "Haydi sohbete başlayalım!"
-    },
-    "description": "Asistan Tanıtımı",
-    "detail": "Detaylar",
-    "details": {
-      "capabilities": {
-        "knowledge": {
-          "desc": "Asistan, daha fazla soruyu yanıtlamanıza yardımcı olmak için aşağıdaki bilgi kaynaklarıyla donatılmıştır.",
-          "title": "Bilgi Kaynakları"
-        },
-        "plugin": {
-          "desc": "Asistan, daha fazla görevi tamamlamanıza yardımcı olmak için aşağıdaki eklentileri içerir.",
-          "title": "Yerleşik Eklentiler"
-        },
-        "title": "Asistan Yetenekleri"
-      },
-      "overview": {
-        "example": "Asistan Demo",
-        "title": "Genel Bakış"
-      },
-      "related": {
-        "listTitle": "İlgili Asistanlar",
-        "more": "Daha Fazla Görüntüle",
-        "title": "İlgili Öneriler"
-      },
-      "sidebar": {
-        "toc": "İçindekiler"
-      },
-      "summary": {
-        "title": "Bu asistanla neler yapabilirsiniz?"
-      },
-      "systemRole": {
-        "openingMessage": "Açılış Mesajı",
-        "openingQuestions": "Açılış Soruları",
-        "title": "Asistan Ayarları"
-      },
-      "version": {
-        "empty": "Henüz geçmiş sürüm yok",
-        "status": {
-          "archived": "Arşivlendi",
-          "deprecated": "Reddedildi",
-          "unpublished": "İnceleniyor"
-        },
-        "table": {
-          "isLatest": "En Son Sürüm",
-          "isValidated": "Doğrulandı",
-          "publishAt": "Yayın Tarihi",
-          "version": "Sürüm Numarası"
-        },
-        "title": "Sürüm Geçmişi"
-      }
-    },
-    "downloads": "İndirme Sayısı",
-    "empty": {
-      "description": "Filtreleri ayarlamayı deneyin veya daha fazla asistan keşfetmek için topluluğu ziyaret edin",
-      "search": "Eşleşen asistan bulunamadı",
-      "title": "Asistan yok"
-    },
-    "list": "Asistan Listesi",
-    "marketSource": {
-      "label": "Topluluk Kaynağını Değiştir",
-      "legacy": "Eski Topluluk",
-      "new": "Yeni Topluluk"
-    },
-    "more": "Daha Fazla",
-    "plugins": "Entegre Eklentiler",
-    "recentSubmits": "Son Güncellemeler",
-    "sorts": {
-      "createdAt": "En Son Yayınlanan",
-      "identifier": "Asistan ID",
-      "knowledgeCount": "Bilgi Kaynağı Sayısı",
-      "myown": "Benimkileri Görüntüle",
-      "pluginCount": "Eklenti Sayısı",
-      "title": "Asistan Adı",
-      "tokenUsage": "Token Kullanımı"
-    },
-    "status": {
-      "archived": {
-        "reasons": {
-          "official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
-          "owner": "Asistanın geliştiricisi tarafından isteğe bağlı olarak yayından kaldırıldı/arşivlendi"
-        },
-        "subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı arşivlenmiştir:",
-        "title": "Asistan Arşivlendi"
-      },
-      "backToMarket": "Asistan Topluluğuna Geri Dön",
-      "deprecated": {
-        "reasons": {
-          "official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
-          "owner": "Asistanın geliştiricisi tarafından isteğe bağlı olarak yayından kaldırıldı/reddedildi"
-        },
-        "subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı reddedilmiştir:",
-        "title": "Asistan Reddedildi"
-      },
-      "support": "Herhangi bir sorunuz varsa, lütfen bağlantıyı kopyalayarak <email>support@lobehub.com</email> adresine gönderin.",
-      "unpublished": {
-        "subtitle": "Erişmeye çalıştığınız asistan şu anda sürüm onay sürecindedir. Sorularınız varsa bağlantıyı kopyalayarak <email>support@lobehub.com</email> adresine gönderin.",
-        "title": "Asistan İnceleniyor"
-      }
-    },
-    "suggestions": "İlgili Öneriler",
-    "systemRole": "Asistan Ayarları",
-    "tokenUsage": "Asistan İpucu Token Kullanımı",
-    "try": "Deneyin",
-    "withKnowledge": "Bu asistan bilgi kaynaklarıyla birlikte gelir",
-    "withPlugin": "Bu asistan eklenti içerir"
-  },
+  "assistants.addAgent": "Asistan Ekle",
+  "assistants.addAgentAndConverse": "Asistan Ekle ve Sohbet Et",
+  "assistants.addAgentSuccess": "Başarıyla Eklendi",
+  "assistants.conversation.l1": "Merhaba, ben **{{name}}**. Bana her türlü soruyu sorabilirsin, elimden gelenin en iyisini yapacağım ~",
+  "assistants.conversation.l2": "İşte yeteneklerimin tanıtımı: ",
+  "assistants.conversation.l3": "Haydi sohbete başlayalım!",
+  "assistants.description": "Asistan Tanıtımı",
+  "assistants.detail": "Detaylar",
+  "assistants.details.capabilities.knowledge.desc": "Asistan, daha fazla soruyu yanıtlamanıza yardımcı olmak için aşağıdaki bilgi kaynaklarıyla donatılmıştır.",
+  "assistants.details.capabilities.knowledge.title": "Bilgi Kaynakları",
+  "assistants.details.capabilities.plugin.desc": "Asistan, daha fazla görevi tamamlamanıza yardımcı olmak için aşağıdaki eklentileri içerir.",
+  "assistants.details.capabilities.plugin.title": "Yerleşik Eklentiler",
+  "assistants.details.capabilities.title": "Asistan Yetenekleri",
+  "assistants.details.overview.example": "Asistan Demo",
+  "assistants.details.overview.title": "Genel Bakış",
+  "assistants.details.related.listTitle": "İlgili Asistanlar",
+  "assistants.details.related.more": "Daha Fazla Görüntüle",
+  "assistants.details.related.title": "İlgili Öneriler",
+  "assistants.details.sidebar.toc": "İçindekiler",
+  "assistants.details.summary.title": "Bu asistanla neler yapabilirsiniz?",
+  "assistants.details.systemRole.openingMessage": "Açılış Mesajı",
+  "assistants.details.systemRole.openingQuestions": "Açılış Soruları",
+  "assistants.details.systemRole.title": "Asistan Ayarları",
+  "assistants.details.version.empty": "Henüz geçmiş sürüm yok",
+  "assistants.details.version.status.archived": "Arşivlendi",
+  "assistants.details.version.status.deprecated": "Reddedildi",
+  "assistants.details.version.status.unpublished": "İnceleniyor",
+  "assistants.details.version.table.isLatest": "En Son Sürüm",
+  "assistants.details.version.table.isValidated": "Doğrulandı",
+  "assistants.details.version.table.publishAt": "Yayın Tarihi",
+  "assistants.details.version.table.version": "Sürüm Numarası",
+  "assistants.details.version.title": "Sürüm Geçmişi",
+  "assistants.downloads": "İndirme Sayısı",
+  "assistants.empty.description": "Filtreleri ayarlamayı deneyin veya daha fazla asistan keşfetmek için topluluğu ziyaret edin",
+  "assistants.empty.search": "Eşleşen asistan bulunamadı",
+  "assistants.empty.title": "Asistan yok",
+  "assistants.list": "Asistan Listesi",
+  "assistants.marketSource.label": "Topluluk Kaynağını Değiştir",
+  "assistants.marketSource.legacy": "Eski Topluluk",
+  "assistants.marketSource.new": "Yeni Topluluk",
+  "assistants.more": "Daha Fazla",
+  "assistants.plugins": "Entegre Eklentiler",
+  "assistants.recentSubmits": "Son Güncellemeler",
+  "assistants.sorts.createdAt": "En Son Yayınlanan",
+  "assistants.sorts.identifier": "Asistan ID",
+  "assistants.sorts.knowledgeCount": "Bilgi Kaynağı Sayısı",
+  "assistants.sorts.myown": "Benimkileri Görüntüle",
+  "assistants.sorts.pluginCount": "Eklenti Sayısı",
+  "assistants.sorts.title": "Asistan Adı",
+  "assistants.sorts.tokenUsage": "Token Kullanımı",
+  "assistants.status.archived.reasons.official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
+  "assistants.status.archived.reasons.owner": "Asistanın geliştiricisi tarafından isteğe bağlı olarak yayından kaldırıldı/arşivlendi",
+  "assistants.status.archived.subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı arşivlenmiştir:",
+  "assistants.status.archived.title": "Asistan Arşivlendi",
+  "assistants.status.backToMarket": "Asistan Topluluğuna Geri Dön",
+  "assistants.status.deprecated.reasons.official": "Asistan güvenlik/siyasi nedenlerle resmi olarak yayından kaldırıldı",
+  "assistants.status.deprecated.reasons.owner": "Asistanın geliştiricisi tarafından isteğe bağlı olarak yayından kaldırıldı/reddedildi",
+  "assistants.status.deprecated.subtitle": "Erişmeye çalıştığınız asistan aşağıdaki olası nedenlerden dolayı reddedilmiştir:",
+  "assistants.status.deprecated.title": "Asistan Reddedildi",
+  "assistants.status.support": "Herhangi bir sorunuz varsa, lütfen bağlantıyı kopyalayarak <email>support@lobehub.com</email> adresine gönderin.",
+  "assistants.status.unpublished.subtitle": "Erişmeye çalıştığınız asistan şu anda sürüm onay sürecindedir. Sorularınız varsa bağlantıyı kopyalayarak <email>support@lobehub.com</email> adresine gönderin.",
+  "assistants.status.unpublished.title": "Asistan İnceleniyor",
+  "assistants.suggestions": "İlgili Öneriler",
+  "assistants.systemRole": "Asistan Ayarları",
+  "assistants.tokenUsage": "Asistan İpucu Token Kullanımı",
+  "assistants.try": "Deneyin",
+  "assistants.withKnowledge": "Bu asistan bilgi kaynaklarıyla birlikte gelir",
+  "assistants.withPlugin": "Bu asistan eklenti içerir",
   "back": "Geri Dön",
-  "category": {
-    "assistant": {
-      "academic": "Akademik",
-      "all": "Hepsi",
-      "career": "Kariyer",
-      "copywriting": "Metin Yazarlığı",
-      "design": "Tasarım",
-      "education": "Eğitim",
-      "emotions": "Duygular",
-      "entertainment": "Eğlence",
-      "games": "Oyunlar",
-      "general": "Genel",
-      "life": "Hayat",
-      "marketing": "Pazarlama",
-      "office": "Ofis",
-      "programming": "Programlama",
-      "translation": "Çeviri"
-    },
-    "plugin": {
-      "all": "Hepsi",
-      "gaming-entertainment": "Oyun Eğlencesi",
-      "life-style": "Yaşam Tarzı",
-      "lifestyle": "Yaşam Tarzı",
-      "media-generate": "Medya Üretimi",
-      "science-education": "Bilim ve Eğitim",
-      "social": "Sosyal Medya",
-      "stocks-finance": "Hisse Senedi ve Finans",
-      "tools": "Pratik Araçlar",
-      "web-search": "Web Arama"
-    }
-  },
+  "category.assistant.academic": "Akademik",
+  "category.assistant.all": "Hepsi",
+  "category.assistant.career": "Kariyer",
+  "category.assistant.copywriting": "Metin Yazarlığı",
+  "category.assistant.design": "Tasarım",
+  "category.assistant.education": "Eğitim",
+  "category.assistant.emotions": "Duygular",
+  "category.assistant.entertainment": "Eğlence",
+  "category.assistant.games": "Oyunlar",
+  "category.assistant.general": "Genel",
+  "category.assistant.life": "Hayat",
+  "category.assistant.marketing": "Pazarlama",
+  "category.assistant.office": "Ofis",
+  "category.assistant.programming": "Programlama",
+  "category.assistant.translation": "Çeviri",
+  "category.plugin.all": "Hepsi",
+  "category.plugin.gaming-entertainment": "Oyun Eğlencesi",
+  "category.plugin.life-style": "Yaşam Tarzı",
+  "category.plugin.lifestyle": "Yaşam Tarzı",
+  "category.plugin.media-generate": "Medya Üretimi",
+  "category.plugin.science-education": "Bilim ve Eğitim",
+  "category.plugin.social": "Sosyal Medya",
+  "category.plugin.stocks-finance": "Hisse Senedi ve Finans",
+  "category.plugin.tools": "Pratik Araçlar",
+  "category.plugin.web-search": "Web Arama",
   "cleanFilter": "Filtreyi Temizle",
   "create": "Oluştur",
-  "createGuide": {
-    "func1": {
-      "desc1": "Sohbet penceresinde sağ üst köşedeki ayarlar üzerinden eklemek istediğin asistanın ayar sayfasına git;",
-      "desc2": "Sağ üst köşedeki 'Asistan Topluluğuna Gönder' düğmesine tıklayın.",
-      "tag": "Yöntem 1",
-      "title": "LobeChat ile Gönder"
-    },
-    "func2": {
-      "button": "Github Asistan Deposu'na Git",
-      "desc": "Asistanı dizine eklemek istiyorsanız, plugins dizininde agent-template.json veya agent-template-full.json kullanarak bir giriş oluşturun, kısa bir açıklama yazın ve uygun şekilde etiketleyin, ardından bir çekme isteği oluşturun.",
-      "tag": "Yöntem 2",
-      "title": "Github ile Gönder"
-    }
-  },
+  "createGuide.func1.desc1": "Sohbet penceresinde sağ üst köşedeki ayarlar üzerinden eklemek istediğin asistanın ayar sayfasına git;",
+  "createGuide.func1.desc2": "Sağ üst köşedeki 'Asistan Topluluğuna Gönder' düğmesine tıklayın.",
+  "createGuide.func1.tag": "Yöntem 1",
+  "createGuide.func1.title": "LobeChat ile Gönder",
+  "createGuide.func2.button": "Github Asistan Deposu'na Git",
+  "createGuide.func2.desc": "Asistanı dizine eklemek istiyorsanız, plugins dizininde agent-template.json veya agent-template-full.json kullanarak bir giriş oluşturun, kısa bir açıklama yazın ve uygun şekilde etiketleyin, ardından bir çekme isteği oluşturun.",
+  "createGuide.func2.tag": "Yöntem 2",
+  "createGuide.func2.title": "Github ile Gönder",
   "dislike": "Beğenmedim",
   "filter": "Filtrele",
-  "filterBy": {
-    "authorRange": {
-      "everyone": "Tüm Yazarlar",
-      "followed": "Takip Edilen Yazarlar",
-      "title": "Yazar Aralığı"
-    },
-    "contentLength": "Minimum Bağlam Uzunluğu",
-    "maxToken": {
-      "title": "Maksimum Uzunluğu Belirle (Token)",
-      "unlimited": "Sınırsız"
-    },
-    "other": {
-      "functionCall": "Fonksiyon Çağrısını Destekle",
-      "title": "Diğer",
-      "vision": "Görsel Tanımayı Destekle",
-      "withKnowledge": "Bilgi kaynaklarıyla birlikte",
-      "withTool": "Araç ile"
-    },
-    "pricing": "Model Fiyatı",
-    "timePeriod": {
-      "all": "Tüm Zamanlar",
-      "day": "Son 24 Saat",
-      "month": "Son 30 Gün",
-      "title": "Zaman Aralığı",
-      "week": "Son 7 Gün",
-      "year": "Son 1 Yıl"
-    }
-  },
-  "home": {
-    "communityAgents": "Topluluk Asistanları",
-    "featuredAssistants": "Öne Çıkan Asistanlar",
-    "featuredModels": "Öne Çıkan Modeller",
-    "featuredPlugins": "Öne Çıkan Eklentiler",
-    "featuredProviders": "Öne Çıkan Model Sağlayıcıları",
-    "featuredTools": "Öne Çıkan Araçlar",
-    "more": "Daha Fazla Keşfet"
-  },
+  "filterBy.authorRange.everyone": "Tüm Yazarlar",
+  "filterBy.authorRange.followed": "Takip Edilen Yazarlar",
+  "filterBy.authorRange.title": "Yazar Aralığı",
+  "filterBy.contentLength": "Minimum Bağlam Uzunluğu",
+  "filterBy.maxToken.title": "Maksimum Uzunluğu Belirle (Token)",
+  "filterBy.maxToken.unlimited": "Sınırsız",
+  "filterBy.other.functionCall": "Fonksiyon Çağrısını Destekle",
+  "filterBy.other.title": "Diğer",
+  "filterBy.other.vision": "Görsel Tanımayı Destekle",
+  "filterBy.other.withKnowledge": "Bilgi kaynaklarıyla birlikte",
+  "filterBy.other.withTool": "Araç ile",
+  "filterBy.pricing": "Model Fiyatı",
+  "filterBy.timePeriod.all": "Tüm Zamanlar",
+  "filterBy.timePeriod.day": "Son 24 Saat",
+  "filterBy.timePeriod.month": "Son 30 Gün",
+  "filterBy.timePeriod.title": "Zaman Aralığı",
+  "filterBy.timePeriod.week": "Son 7 Gün",
+  "filterBy.timePeriod.year": "Son 1 Yıl",
+  "home.communityAgents": "Topluluk Asistanları",
+  "home.featuredAssistants": "Öne Çıkan Asistanlar",
+  "home.featuredModels": "Öne Çıkan Modeller",
+  "home.featuredPlugins": "Öne Çıkan Eklentiler",
+  "home.featuredProviders": "Öne Çıkan Model Sağlayıcıları",
+  "home.featuredTools": "Öne Çıkan Araçlar",
+  "home.more": "Daha Fazla Keşfet",
   "isClaimed": "Talep Edildi",
   "isFeatured": "Öne Çıkan",
   "isOfficial": "Resmi Onaylı",
   "like": "Beğendim",
-  "mcp": {
-    "categories": {
-      "all": {
-        "description": "Tüm MCP Sunucuları",
-        "name": "Tümü"
-      },
-      "business": {
-        "description": "Ticari ve Kurumsal Hizmetler",
-        "name": "Ticari Hizmetler"
-      },
-      "developer": {
-        "description": "Geliştirici ile ilgili araçlar ve hizmetler",
-        "name": "Geliştirme Araçları"
-      },
-      "gaming-entertainment": {
-        "description": "Oyun, eğlence ve boş zaman aktiviteleri",
-        "name": "Oyun ve Eğlence"
-      },
-      "health-wellness": {
-        "description": "Sağlık, fitness ve zihinsel-ruhsal bakım",
-        "name": "Sağlık ve Wellness"
-      },
-      "lifestyle": {
-        "description": "Kişisel yaşam tarzı, alışkanlıklar ve günlük aktiviteler",
-        "name": "Yaşam Tarzı"
-      },
-      "media-generate": {
-        "description": "Medya oluşturma, düzenleme ve işleme",
-        "name": "Medya Oluşturma"
-      },
-      "news": {
-        "description": "Haber toplama, raporlama ve bilgi hizmetleri",
-        "name": "Haber ve Bilgi"
-      },
-      "productivity": {
-        "description": "Görev yönetimi, notlar ve verimlilik araçları",
-        "name": "Verimlilik Araçları"
-      },
-      "science-education": {
-        "description": "Bilimsel araştırma, öğrenme ve eğitim araçları",
-        "name": "Bilim ve Eğitim"
-      },
-      "social": {
-        "description": "Sosyal ağlar ve iletişim",
-        "name": "Sosyal Medya"
-      },
-      "stocks-finance": {
-        "description": "Finansal piyasalar, ticaret ve yatırım",
-        "name": "Hisse Senetleri ve Finans"
-      },
-      "tools": {
-        "description": "Genel amaçlı pratik araçlar ve hizmetler",
-        "name": "Pratik Araçlar"
-      },
-      "travel-transport": {
-        "description": "Seyahat planlama ve ulaşım",
-        "name": "Seyahat ve Ulaşım"
-      },
-      "weather": {
-        "description": "Hava durumu tahmini ve meteoroloji hizmetleri",
-        "name": "Hava Durumu"
-      },
-      "web-search": {
-        "description": "Web arama ve bilgi tarama",
-        "name": "Bilgi Tarama"
-      }
-    },
-    "details": {
-      "connectionType": {
-        "hybrid": {
-          "desc": "Bu hizmet, yapılandırmaya veya kullanım senaryosuna bağlı olarak yerel veya bulutta çalışabilir, çift çalışma yeteneğine sahiptir.",
-          "title": "Hibrit Hizmet"
-        },
-        "local": {
-          "desc": "Bu sunucu yalnızca istemci cihazında yerel olarak çalışır, kurulması ve yerel kaynaklara bağımlıdır.",
-          "title": "Yerel Hizmet"
-        },
-        "remote": {
-          "desc": "Bu sunucu uzaktan barındırılır ve çalıştırılır, çünkü esas olarak uzak hizmetlere dayanır, yerel ortama bağlı değildir.",
-          "title": "Bulut Hizmeti"
-        }
-      },
-      "deployment": {
-        "args": "Parametreler",
-        "checkCommand": "Kontrol Komutu",
-        "command": "Komut",
-        "commandLine": "Sistem Bağımlılıkları",
-        "connection": "Bağlantı Yöntemi",
-        "connectionType": "Bağlantı Türü",
-        "description": "Eklentinin kurulumu ve dağıtımı",
-        "descriptionPlaceholder": "İsteğe bağlı açıklama",
-        "empty": "Dağıtım seçeneği yok",
-        "env": "Ortam Değişkenleri",
-        "guide": "Kurulum Talimatları",
-        "installation": "{{method}} ile kurulum",
-        "installationMethod": "Kurulum Yöntemi",
-        "other": "Diğer Ayarlar",
-        "packageName": "Paket Adı",
-        "platform": {
-          "steps": {
-            "claude": "- **Claude Desktop** uygulamasını açın\n- **Ayarlar** bölümüne gidin ve **Geliştirici** seçeneğini seçin\n- **Yapılandırmayı Düzenle**ye tıklayın\n- **claude_desktop_config.json** dosyasını açın\n- Sunucu yapılandırmasını mevcut dosyaya kopyalayıp yapıştırın ve kaydedin",
-            "cline": "- Cline eklentisi yüklü VS Code'u açın\n- Yan menüdeki Cline simgesine tıklayın\n- Açılır menüden **MCP Sunucuları**nı seçin\n- **Uzak Sunucular** sekmesinde sunucu adınızı ve MCP sunucu URL'nizi girin\n- Bağlanmak için **Sunucu Ekle**ye tıklayın",
-            "cursor": "- **Ayarlar** menüsüne gidin ve Cursor ayarlarını seçin\n- Sol taraftan **MCP**yi seçin\n- Sağ üst köşeden **Yeni global MCP sunucusu ekle**ye tıklayın\n- Sunucu yapılandırmasını mevcut dosyaya kopyalayıp yapıştırın ve kaydedin",
-            "lobeChat": "- **LobeChat masaüstü** uygulamasını açın\n- **Ayarlar** - **Varsayılan Asistan** bölümüne gidin\n- Ardından **Eklenti Ayarları** - **Özel Eklentiler**i seçin\n- **JSON Yapılandırmasını Hızlı İçe Aktar**a tıklayın\n- Sunucu yapılandırmasını metin kutusuna yapıştırın ve yükleyin",
-            "openai": "- **OpenAI uygulamanızı** veya geliştirme ortamınızı açın\n- **Responses API** içinde MCP araçlarını yapılandırın\n- API isteğindeki **tools** dizisine MCP bloğu ekleyin\n- **server_url** değerini MCP sunucu uç noktanız olarak ayarlayın\n- Kimlik doğrulama için gerekli başlıkları (API anahtarı, token vb.) ekleyin\n- Açık araçları sınırlamak için `allowed_tools` parametresini kullanın\n- Araç yürütme onayını kontrol etmek için `require_approval` ayarını yapın",
-            "vscode": "- VS Code'u açın\n- Komut paletini açın (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- **MCP: Sunucu Ekle** yazın ve seçin\n- Çalışma alanı veya kullanıcı ayarlarına eklemeyi seçin\n- Sunucu yapılandırmasını yapıştırın"
-          },
-          "title": "{{platform}} içinde kurulum"
-        },
-        "recommended": "Önerilen",
-        "systemDependencies": "Sistem Bağımlılıkları",
-        "table": {
-          "description": "Açıklama",
-          "name": "Ad",
-          "required": "Gerekli",
-          "type": "Tür"
-        },
-        "title": "Kurulum Yöntemi"
-      },
-      "githubBadge": {
-        "desc": "LobeHub, MCP sunucularının düzgün çalışmasını sağlamak için düzenli olarak kod tabanlarını ve belgeleri tarar:\n\n- MCP sunucusunun çalıştığını doğrular.\n- Araçlar, kaynaklar, ipuçları ve gerekli parametreler gibi sunucu özelliklerini çıkarır.\n- Rozetimiz, kullanıcıların MCP sunucusunun güvenliği, özellikleri ve kurulum talimatlarını hızlıca değerlendirmesine yardımcı olur.\n\nLütfen aşağıdaki kodu `README.md` dosyanıza yapıştırın:"
-      },
-      "nav": {
-        "needHelp": "Yardıma mı ihtiyacınız var?",
-        "reportIssue": "Sorun Bildir",
-        "viewSourceCode": "Kaynak Kodu Görüntüle"
-      },
-      "overview": {
-        "title": "Genel Bakış"
-      },
-      "related": {
-        "listTitle": "İlgili MCP Sunucuları",
-        "more": "Daha Fazla Görüntüle",
-        "title": "İlgili Öneriler"
-      },
-      "schema": {
-        "mode": {
-          "docs": "Belgeler"
-        },
-        "prompts": {
-          "arguments": "Parametre Ayarları",
-          "desc": "Kullanıcı tarafından seçilen etkileşimli şablonlar",
-          "empty": "İpucu yok",
-          "instructions": "Talimatlar",
-          "table": {
-            "description": "Açıklama",
-            "name": "Ad",
-            "required": "Gerekli"
-          },
-          "title": "İpucu Listesi"
-        },
-        "resources": {
-          "desc": "İstemci tarafından eklenen ve yönetilen bağlam verileri",
-          "empty": "Kaynak yok",
-          "table": {
-            "description": "Açıklama",
-            "mineType": "MIME Türü",
-            "name": "Ad",
-            "uri": "URI"
-          },
-          "title": "Kaynak Listesi"
-        },
-        "title": "Eklenti Özellikleri",
-        "tools": {
-          "desc": "Büyük dil modeli (LLM) tarafından erişilen işlevsel arayüzler",
-          "empty": "Araç yok",
-          "inputSchema": "Girdi Açıklaması",
-          "instructions": "Talimatlar",
-          "table": {
-            "description": "Açıklama",
-            "name": "Ad",
-            "required": "Gerekli",
-            "type": "Tür"
-          },
-          "title": "Araç Listesi"
-        }
-      },
-      "score": {
-        "claimed": {
-          "desc": "Bu MCP Sunucusu sahibi tarafından talep edilmiştir, sahiplik ve yönetim garantilidir.",
-          "title": "Sahip Tarafından Talep Edildi"
-        },
-        "deployMoreThanManual": {
-          "desc": "Bu MCP Sunucusu, Manual dışındaki daha kullanıcı dostu kurulum yöntemleri sunar, böylece kullanıcılar kolayca kurulum yapabilir ve kullanabilir.",
-          "title": "Kullanıcı Dostu Kurulum Yöntemleri Sunar"
-        },
-        "deployment": {
-          "desc": "Bu MCP Sunucusu en az bir kurulum yöntemi sunar, kullanıcıların kurulum ve kullanımına olanak tanır.",
-          "descWithCount": "Bu MCP Sunucusu {{number}} kurulum yöntemi sunar, kullanıcıların kurulum ve kullanımına olanak tanır.",
-          "title": "En Az Bir Kurulum Yöntemi Sunar"
-        },
-        "license": {
-          "desc": "Bu depo bir LICENSE dosyası içerir.",
-          "descWithlicense": "Bu deponun lisansı {{license}}.",
-          "title": "Lisans Sahibi"
-        },
-        "listTitle": "Puan Detayları",
-        "notClaimed": {
-          "desc": "Eğer bu MCP Sunucusunun sahibiyseniz, aşağıdaki yöntemlerle talep edebilirsiniz.",
-          "title": "Sahip Tarafından Talep Edilmemiş"
-        },
-        "prompts": {
-          "desc": "Bu MCP Sunucusu, kullanıcıların hizmetle etkileşim kurmasını sağlayan ipuçları sunar.",
-          "descWithCount": "Bu MCP Sunucusu {{number}} ipucu sunar, kullanıcıların hizmetle etkileşim kurmasını sağlar.",
-          "title": "İpucu İçerir"
-        },
-        "readme": {
-          "desc": "Bu depo bir README.md dosyası içerir.",
-          "title": "README Sahibi"
-        },
-        "resources": {
-          "desc": "Bu MCP Sunucusu, kullanıcıların bağlam verilerini eklemesine ve yönetmesine olanak tanıyan kaynaklar sunar.",
-          "descWithCount": "Bu MCP Sunucusu {{number}} kaynak sunar, kullanıcıların bağlam verilerini eklemesine ve yönetmesine olanak tanır.",
-          "title": "Kaynak İçerir"
-        },
-        "title": "Puanlama",
-        "tools": {
-          "desc": "Hizmet, kullanıcıların belirli işlemleri gerçekleştirmesine izin veren en az bir araç sağlamalıdır.",
-          "descWithCount": "Bu MCP Sunucusu {{number}} araç fonksiyonu sunar, kullanıcıların belirli işlemleri gerçekleştirmesine olanak tanır.",
-          "title": "En Az Bir Araç İçerir"
-        },
-        "validated": {
-          "desc": "Bu MCP Sunucusu kurulum doğrulamasından geçmiştir, kalite ve güvenilirlik garantilidir.",
-          "title": "Doğrulanmış"
-        }
-      },
-      "scoreLevel": {
-        "a": {
-          "desc": "Bu MCP Sunucusu titiz doğrulamadan geçmiş, kapsamlı özellikler ve yüksek kaliteli kullanıcı deneyimi sunar.",
-          "fullTitle": "Mükemmel Eklenti",
-          "title": "Üstün"
-        },
-        "b": {
-          "desc": "Bu MCP Sunucusu iyi özellikler ve kullanıcı deneyimi sunar, ancak bazı alanlarda geliştirme gerekebilir.",
-          "fullTitle": "İyi Fonksiyonlar",
-          "title": "İyi"
-        },
-        "f": {
-          "desc": "Bu MCP Sunucusu eksik özelliklere veya düşük kaliteye sahiptir, kullanıcıların dikkatli kullanması önerilir.",
-          "fullTitle": "Düşük Kalite",
-          "title": "Zayıf"
-        }
-      },
-      "settings": {
-        "capabilities": {
-          "prompts": "İstekler",
-          "resources": "Kaynaklar",
-          "title": "Eklenti Yetkinlikleri",
-          "tools": "Araçlar"
-        },
-        "configuration": {
-          "title": "Eklenti Yapılandırması"
-        },
-        "connection": {
-          "args": "Başlatma Parametreleri",
-          "command": "Başlatma Komutu",
-          "title": "Bağlantı Bilgileri",
-          "type": "Bağlantı Türü",
-          "url": "Hizmet Adresi"
-        },
-        "saveSettings": "Ayarları Kaydet",
-        "title": "Eklenti Ayarları"
-      },
-      "sidebar": {
-        "install": "MCP Sunucusunu Kur",
-        "meta": {
-          "homepage": "Resmi Web Sitesi",
-          "installCount": "Kurulum Sayısı",
-          "language": "Kaynak Kodu Dili",
-          "license": "Lisans",
-          "published": "Yayın Tarihi",
-          "repo": "Kaynak Kodu Deposu",
-          "stars": "Yıldız Sayısı",
-          "title": "Detaylar",
-          "updated": "Son Güncelleme"
-        },
-        "moreServerConfig": "Detayları Görüntüle",
-        "recommendServers": "İlgili MCP",
-        "serverConfig": "Kurulum Yapılandırması",
-        "toc": "İçindekiler"
-      },
-      "summary": {
-        "title": "Bu MCP Sunucusuyla neler yapabilirsiniz?"
-      },
-      "totalScore": {
-        "description": "Çeşitli göstergelere göre hesaplanan toplam puan",
-        "legend": {
-          "aGrade": "A Sınıfı ({{minPercent}}-100%)",
-          "bGrade": "B Sınıfı ({{minPercent}}-{{maxPercent}}%)",
-          "fGrade": "F Sınıfı (0-{{maxPercent}}%)"
-        },
-        "pointsFormat": "{{score}}/{{total}} Puan",
-        "popover": {
-          "completedOptional": "✅ Tamamlanan isteğe bağlı öğeler ({{count}} adet)",
-          "completedRequired": "✅ Tamamlanan zorunlu öğeler ({{count}} adet)",
-          "incompleteOptional": "⏸️ Tamamlanmamış isteğe bağlı öğeler ({{count}} adet)",
-          "incompleteRequired": "❌ Tamamlanmamış zorunlu öğeler ({{count}} adet)",
-          "title": "Puan Detayları"
-        },
-        "ratingFormat": "Değerlendirme: {{level}}",
-        "scoreInfo": {
-          "items": "Öğe",
-          "points": "Puan",
-          "requiredItems": "Zorunlu Öğeler"
-        },
-        "title": "Toplam Puan"
-      },
-      "versions": {
-        "table": {
-          "isLatest": "En Son Sürüm",
-          "isValidated": "Doğrulandı",
-          "publishAt": "Yayın Tarihi",
-          "version": "Sürüm"
-        },
-        "title": "Sürüm Geçmişi"
-      }
-    },
-    "hero": {
-      "desc": "Açık kaynaklı, dağıtılabilir MCP Sunucuları platformu; AI sistemlerinin dosya sistemi, veritabanları, API'ler ve diğer kritik kaynaklara kolay erişimini sağlar, AI yeteneklerinizi kapsamlı şekilde genişletir.",
-      "subTitle": "Açık Kaynak & Kutudan Çıkar Çalışır",
-      "title": "Yapay Zekâ Odaklı Açık Kaynak MCP Topluluğu"
-    },
-    "sorts": {
-      "createdAt": "En Son Eklendi",
-      "installCount": "Kurulum Sayısı",
-      "isFeatured": "Önerilen Eklenti",
-      "isValidated": "Doğrulanmış Eklenti",
-      "promptsCount": "İpucu Sayısı",
-      "ratingCount": "Puan Sayısı",
-      "resourcesCount": "Kaynak Sayısı",
-      "toolsCount": "Araç Sayısı",
-      "updatedAt": "Son Güncelleme"
-    },
-    "title": "MCP Topluluğu",
-    "unvalidated": {
-      "desc": "Bu MCP Sunucusu henüz doğrulanmamıştır",
-      "title": "Doğrulanmamış"
-    },
-    "validated": {
-      "desc": "Bu MCP Sunucusu doğrulanmıştır, kalite ve güvenilirlik garantilidir.",
-      "descWithDate": "Bu MCP Sunucusu {{date}} tarihinde doğrulanmıştır, kalite ve güvenilirlik garantilidir.",
-      "title": "Doğrulanmış"
-    }
-  },
-  "mcpEmpty": {
-    "description": "Filtreleri ayarlamayı veya anahtar kelimeleri aramayı deneyin",
-    "search": "Eşleşen MCP sunucusu bulunamadı",
-    "title": "MCP sunucusu yok"
-  },
-  "models": {
-    "abilities": "Model Yetenekleri",
-    "chat": "Sohbete Başla",
-    "contentLength": "Maksimum Bağlam Uzunluğu",
-    "details": {
-      "overview": {
-        "title": "Genel Bakış"
-      },
-      "related": {
-        "listTitle": "İlgili Modeller",
-        "more": "Daha Fazla Görüntüle",
-        "title": "İlgili Öneriler"
-      }
-    },
-    "empty": {
-      "description": "Daha fazla modeli görmek için filtreleri ayarlamayı deneyin",
-      "search": "Eşleşen model bulunamadı",
-      "title": "Model yok"
-    },
-    "free": "Ücretsiz",
-    "guide": "Yapılandırma Kılavuzu",
-    "list": "Model Listesi",
-    "more": "Daha Fazla",
-    "parameterList": {
-      "defaultValue": "Varsayılan Değer",
-      "docs": "Belgeleri Görüntüle",
-      "frequency_penalty": {
-        "desc": "Bu ayar, modelin girdi içinde zaten bulunan belirli kelimelerin tekrar kullanım sıklığını ayarlamak için kullanılır. Daha yüksek değerler, bu tekrarların olasılığını azaltırken, negatif değerler ters etki yaratır. Kelime cezası, tekrar sayısına göre artmaz. Negatif değerler, kelimelerin tekrar kullanımını teşvik eder.",
-        "title": "Frekans Cezası"
-      },
-      "max_tokens": {
-        "desc": "Bu ayar, modelin tek bir yanıtında üretebileceği maksimum uzunluğu tanımlar. Daha yüksek bir değer ayarlamak, modelin daha uzun yanıtlar üretmesine izin verirken, daha düşük bir değer yanıtın uzunluğunu kısıtlayarak daha özlü hale getirir. Farklı uygulama senaryolarına göre bu değeri makul bir şekilde ayarlamak, beklenen yanıt uzunluğuna ve ayrıntı seviyesine ulaşmaya yardımcı olabilir.",
-        "title": "Tek Yanıt Sınırı"
-      },
-      "presence_penalty": {
-        "desc": "Bu ayar, kelimelerin girdi içinde görünme sıklığına göre tekrar kullanımını kontrol etmeyi amaçlar. Girdi içinde daha fazla bulunan kelimeleri daha az kullanmaya çalışır, kullanma sıklığı görünme sıklığı ile orantılıdır. Kelime cezası, tekrar sayısına göre artar. Negatif değerler, kelimelerin tekrar kullanımını teşvik eder.",
-        "title": "Konu Tazeliği"
-      },
-      "range": "Aralık",
-      "reasoning_effort": {
-        "desc": "Bu ayar, modelin yanıt üretmeden önceki akıl yürütme gücünü kontrol etmek için kullanılır. Düşük güç, yanıt hızını önceliklendirir ve Token tasarrufu sağlar; yüksek güç ise daha kapsamlı bir akıl yürütme sunar, ancak daha fazla Token tüketir ve yanıt hızını düşürür. Varsayılan değer orta seviyedir, akıl yürütme doğruluğu ile yanıt hızı arasında bir denge sağlar.",
-        "title": "Akıl Yürütme Gücü"
-      },
-      "temperature": {
-        "desc": "Bu ayar, modelin yanıtlarının çeşitliliğini etkiler. Daha düşük değerler daha öngörülebilir ve tipik yanıtlar verirken, daha yüksek değerler daha çeşitli ve nadir yanıtları teşvik eder. Değer 0 olarak ayarlandığında, model belirli bir girdi için her zaman aynı yanıtı verir.",
-        "title": "Rastgelelik"
-      },
-      "title": "Model Parametreleri",
-      "top_p": {
-        "desc": "Bu ayar, modelin seçimlerini olasılığı en yüksek olan belirli bir oranla sınırlamak için kullanılır: yalnızca P'ye ulaşan toplam olasılığa sahip en iyi kelimeleri seçer. Daha düşük değerler, modelin yanıtlarını daha öngörülebilir hale getirirken, varsayılan ayar modelin tüm kelime yelpazesinden seçim yapmasına izin verir.",
-        "title": "Nükleer Örnekleme"
-      },
-      "type": "Tür"
-    },
-    "providerInfo": {
-      "apiTooltip": "LobeChat, bu sağlayıcı için özel API anahtarları kullanmayı destekler.",
-      "input": "Girdi Fiyatı",
-      "inputTooltip": "Her milyon Token için maliyet",
-      "latency": "Gecikme",
-      "latencyTooltip": "Sağlayıcının ilk Token'ı gönderme ortalama süresi",
-      "maxOutput": "Maksimum Çıktı Uzunluğu",
-      "maxOutputTooltip": "Bu uç noktanın üretebileceği maksimum Token sayısı",
-      "officialTooltip": "LobeHub Resmi Hizmeti",
-      "output": "Çıktı Fiyatı",
-      "outputTooltip": "Her milyon Token için maliyet",
-      "streamCancellationTooltip": "Bu sağlayıcı akış iptal işlevini destekler.",
-      "throughput": "Verim",
-      "throughputTooltip": "Akış talepleri başına saniyede iletilen ortalama Token sayısı"
-    },
-    "sorts": {
-      "contextWindowTokens": "Bağlam Penceresi Uzunluğu",
-      "identifier": "Model ID",
-      "inputPrice": "Girdi Fiyatı",
-      "outputPrice": "Çıktı Fiyatı",
-      "providerCount": "Sağlayıcı Sayısı",
-      "releasedAt": "En Son Yayınlanan"
-    },
-    "suggestions": "İlgili Modeller",
-    "supportedProviders": "Bu modeli destekleyen sağlayıcılar"
-  },
-  "plugins": {
-    "builtinTag": "Yerleşik Eklenti",
-    "community": "Topluluk Eklentisi",
-    "details": {
-      "settings": {
-        "title": "Eklenti Ayarları"
-      },
-      "summary": {
-        "title": "Bu eklenti ile neler yapabilirsiniz?"
-      },
-      "tools": {
-        "title": "Eklenti Araçları"
-      }
-    },
-    "install": "Eklenti Yükle",
-    "installed": "Yüklü",
-    "legacyTag": "Eski Sürüm Eklenti",
-    "list": "Eklenti Listesi",
-    "meta": {
-      "description": "Açıklama",
-      "parameter": "Parametre",
-      "title": "Araç Parametreleri",
-      "type": "Tür"
-    },
-    "more": "Daha Fazla",
-    "official": "Resmi Eklenti",
-    "recentSubmits": "Son Güncellemeler",
-    "sorts": {
-      "createdAt": "En Son Yayınlanan",
-      "identifier": "Eklenti ID",
-      "title": "Eklenti Adı"
-    },
-    "suggestions": "İlgili Öneriler"
-  },
-  "providers": {
-    "config": "Sağlayıcıyı Yapılandır",
-    "details": {
-      "guide": {
-        "title": "Entegrasyon Kılavuzu"
-      },
-      "overview": {
-        "title": "Genel Bakış"
-      },
-      "related": {
-        "listTitle": "İlgili Sağlayıcılar",
-        "more": "Daha Fazla Görüntüle",
-        "title": "İlgili Öneriler"
-      }
-    },
-    "empty": {
-      "description": "Daha fazla hizmet sağlayıcısı görmek için filtreleri ayarlamayı deneyin",
-      "search": "Eşleşen hizmet sağlayıcısı bulunamadı",
-      "title": "Hizmet sağlayıcısı yok"
-    },
-    "list": "Model Sağlayıcıları Listesi",
-    "modelCount": "{{count}} model",
-    "modelName": "Model Adı",
-    "modelSite": "Model belgeleri",
-    "more": "Daha Fazla",
-    "officialSite": "Resmi site",
-    "showAllModels": "Tüm modelleri göster",
-    "sorts": {
-      "default": "Varsayılan Sıralama",
-      "identifier": "Sağlayıcı ID",
-      "modelCount": "Model Sayısı"
-    },
-    "suggestions": "İlgili Sağlayıcılar",
-    "supportedModels": "Desteklenen Modeller"
-  },
+  "mcp.categories.all.description": "Tüm MCP Sunucuları",
+  "mcp.categories.all.name": "Tümü",
+  "mcp.categories.business.description": "Ticari ve Kurumsal Hizmetler",
+  "mcp.categories.business.name": "Ticari Hizmetler",
+  "mcp.categories.developer.description": "Geliştirici ile ilgili araçlar ve hizmetler",
+  "mcp.categories.developer.name": "Geliştirme Araçları",
+  "mcp.categories.gaming-entertainment.description": "Oyun, eğlence ve boş zaman aktiviteleri",
+  "mcp.categories.gaming-entertainment.name": "Oyun ve Eğlence",
+  "mcp.categories.health-wellness.description": "Sağlık, fitness ve zihinsel-ruhsal bakım",
+  "mcp.categories.health-wellness.name": "Sağlık ve Wellness",
+  "mcp.categories.lifestyle.description": "Kişisel yaşam tarzı, alışkanlıklar ve günlük aktiviteler",
+  "mcp.categories.lifestyle.name": "Yaşam Tarzı",
+  "mcp.categories.media-generate.description": "Medya oluşturma, düzenleme ve işleme",
+  "mcp.categories.media-generate.name": "Medya Oluşturma",
+  "mcp.categories.news.description": "Haber toplama, raporlama ve bilgi hizmetleri",
+  "mcp.categories.news.name": "Haber ve Bilgi",
+  "mcp.categories.productivity.description": "Görev yönetimi, notlar ve verimlilik araçları",
+  "mcp.categories.productivity.name": "Verimlilik Araçları",
+  "mcp.categories.science-education.description": "Bilimsel araştırma, öğrenme ve eğitim araçları",
+  "mcp.categories.science-education.name": "Bilim ve Eğitim",
+  "mcp.categories.social.description": "Sosyal ağlar ve iletişim",
+  "mcp.categories.social.name": "Sosyal Medya",
+  "mcp.categories.stocks-finance.description": "Finansal piyasalar, ticaret ve yatırım",
+  "mcp.categories.stocks-finance.name": "Hisse Senetleri ve Finans",
+  "mcp.categories.tools.description": "Genel amaçlı pratik araçlar ve hizmetler",
+  "mcp.categories.tools.name": "Pratik Araçlar",
+  "mcp.categories.travel-transport.description": "Seyahat planlama ve ulaşım",
+  "mcp.categories.travel-transport.name": "Seyahat ve Ulaşım",
+  "mcp.categories.weather.description": "Hava durumu tahmini ve meteoroloji hizmetleri",
+  "mcp.categories.weather.name": "Hava Durumu",
+  "mcp.categories.web-search.description": "Web arama ve bilgi tarama",
+  "mcp.categories.web-search.name": "Bilgi Tarama",
+  "mcp.details.connectionType.hybrid.desc": "Bu hizmet, yapılandırmaya veya kullanım senaryosuna bağlı olarak yerel veya bulutta çalışabilir, çift çalışma yeteneğine sahiptir.",
+  "mcp.details.connectionType.hybrid.title": "Hibrit Hizmet",
+  "mcp.details.connectionType.local.desc": "Bu sunucu yalnızca istemci cihazında yerel olarak çalışır, kurulması ve yerel kaynaklara bağımlıdır.",
+  "mcp.details.connectionType.local.title": "Yerel Hizmet",
+  "mcp.details.connectionType.remote.desc": "Bu sunucu uzaktan barındırılır ve çalıştırılır, çünkü esas olarak uzak hizmetlere dayanır, yerel ortama bağlı değildir.",
+  "mcp.details.connectionType.remote.title": "Bulut Hizmeti",
+  "mcp.details.deployment.args": "Parametreler",
+  "mcp.details.deployment.checkCommand": "Kontrol Komutu",
+  "mcp.details.deployment.command": "Komut",
+  "mcp.details.deployment.commandLine": "Sistem Bağımlılıkları",
+  "mcp.details.deployment.connection": "Bağlantı Yöntemi",
+  "mcp.details.deployment.connectionType": "Bağlantı Türü",
+  "mcp.details.deployment.description": "Eklentinin kurulumu ve dağıtımı",
+  "mcp.details.deployment.descriptionPlaceholder": "İsteğe bağlı açıklama",
+  "mcp.details.deployment.empty": "Dağıtım seçeneği yok",
+  "mcp.details.deployment.env": "Ortam Değişkenleri",
+  "mcp.details.deployment.guide": "Kurulum Talimatları",
+  "mcp.details.deployment.installation": "{{method}} ile kurulum",
+  "mcp.details.deployment.installationMethod": "Kurulum Yöntemi",
+  "mcp.details.deployment.other": "Diğer Ayarlar",
+  "mcp.details.deployment.packageName": "Paket Adı",
+  "mcp.details.deployment.platform.steps.claude": "- **Claude Desktop** uygulamasını açın\n- **Ayarlar** bölümüne gidin ve **Geliştirici** seçeneğini seçin\n- **Yapılandırmayı Düzenle**ye tıklayın\n- **claude_desktop_config.json** dosyasını açın\n- Sunucu yapılandırmasını mevcut dosyaya kopyalayıp yapıştırın ve kaydedin",
+  "mcp.details.deployment.platform.steps.cline": "- Cline eklentisi yüklü VS Code'u açın\n- Yan menüdeki Cline simgesine tıklayın\n- Açılır menüden **MCP Sunucuları**nı seçin\n- **Uzak Sunucular** sekmesinde sunucu adınızı ve MCP sunucu URL'nizi girin\n- Bağlanmak için **Sunucu Ekle**ye tıklayın",
+  "mcp.details.deployment.platform.steps.cursor": "- **Ayarlar** menüsüne gidin ve Cursor ayarlarını seçin\n- Sol taraftan **MCP**yi seçin\n- Sağ üst köşeden **Yeni global MCP sunucusu ekle**ye tıklayın\n- Sunucu yapılandırmasını mevcut dosyaya kopyalayıp yapıştırın ve kaydedin",
+  "mcp.details.deployment.platform.steps.lobeChat": "- **LobeChat masaüstü** uygulamasını açın\n- **Ayarlar** - **Varsayılan Asistan** bölümüne gidin\n- Ardından **Eklenti Ayarları** - **Özel Eklentiler**i seçin\n- **JSON Yapılandırmasını Hızlı İçe Aktar**a tıklayın\n- Sunucu yapılandırmasını metin kutusuna yapıştırın ve yükleyin",
+  "mcp.details.deployment.platform.steps.openai": "- **OpenAI uygulamanızı** veya geliştirme ortamınızı açın\n- **Responses API** içinde MCP araçlarını yapılandırın\n- API isteğindeki **tools** dizisine MCP bloğu ekleyin\n- **server_url** değerini MCP sunucu uç noktanız olarak ayarlayın\n- Kimlik doğrulama için gerekli başlıkları (API anahtarı, token vb.) ekleyin\n- Açık araçları sınırlamak için `allowed_tools` parametresini kullanın\n- Araç yürütme onayını kontrol etmek için `require_approval` ayarını yapın",
+  "mcp.details.deployment.platform.steps.vscode": "- VS Code'u açın\n- Komut paletini açın (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- **MCP: Sunucu Ekle** yazın ve seçin\n- Çalışma alanı veya kullanıcı ayarlarına eklemeyi seçin\n- Sunucu yapılandırmasını yapıştırın",
+  "mcp.details.deployment.platform.title": "{{platform}} içinde kurulum",
+  "mcp.details.deployment.recommended": "Önerilen",
+  "mcp.details.deployment.systemDependencies": "Sistem Bağımlılıkları",
+  "mcp.details.deployment.table.description": "Açıklama",
+  "mcp.details.deployment.table.name": "Ad",
+  "mcp.details.deployment.table.required": "Gerekli",
+  "mcp.details.deployment.table.type": "Tür",
+  "mcp.details.deployment.title": "Kurulum Yöntemi",
+  "mcp.details.githubBadge.desc": "LobeHub, MCP sunucularının düzgün çalışmasını sağlamak için düzenli olarak kod tabanlarını ve belgeleri tarar:\n\n- MCP sunucusunun çalıştığını doğrular.\n- Araçlar, kaynaklar, ipuçları ve gerekli parametreler gibi sunucu özelliklerini çıkarır.\n- Rozetimiz, kullanıcıların MCP sunucusunun güvenliği, özellikleri ve kurulum talimatlarını hızlıca değerlendirmesine yardımcı olur.\n\nLütfen aşağıdaki kodu `README.md` dosyanıza yapıştırın:",
+  "mcp.details.nav.needHelp": "Yardıma mı ihtiyacınız var?",
+  "mcp.details.nav.reportIssue": "Sorun Bildir",
+  "mcp.details.nav.viewSourceCode": "Kaynak Kodu Görüntüle",
+  "mcp.details.overview.title": "Genel Bakış",
+  "mcp.details.related.listTitle": "İlgili MCP Sunucuları",
+  "mcp.details.related.more": "Daha Fazla Görüntüle",
+  "mcp.details.related.title": "İlgili Öneriler",
+  "mcp.details.schema.mode.docs": "Belgeler",
+  "mcp.details.schema.prompts.arguments": "Parametre Ayarları",
+  "mcp.details.schema.prompts.desc": "Kullanıcı tarafından seçilen etkileşimli şablonlar",
+  "mcp.details.schema.prompts.empty": "İpucu yok",
+  "mcp.details.schema.prompts.instructions": "Talimatlar",
+  "mcp.details.schema.prompts.table.description": "Açıklama",
+  "mcp.details.schema.prompts.table.name": "Ad",
+  "mcp.details.schema.prompts.table.required": "Gerekli",
+  "mcp.details.schema.prompts.title": "İpucu Listesi",
+  "mcp.details.schema.resources.desc": "İstemci tarafından eklenen ve yönetilen bağlam verileri",
+  "mcp.details.schema.resources.empty": "Kaynak yok",
+  "mcp.details.schema.resources.table.description": "Açıklama",
+  "mcp.details.schema.resources.table.mineType": "MIME Türü",
+  "mcp.details.schema.resources.table.name": "Ad",
+  "mcp.details.schema.resources.table.uri": "URI",
+  "mcp.details.schema.resources.title": "Kaynak Listesi",
+  "mcp.details.schema.title": "Eklenti Özellikleri",
+  "mcp.details.schema.tools.desc": "Büyük dil modeli (LLM) tarafından erişilen işlevsel arayüzler",
+  "mcp.details.schema.tools.empty": "Araç yok",
+  "mcp.details.schema.tools.inputSchema": "Girdi Açıklaması",
+  "mcp.details.schema.tools.instructions": "Talimatlar",
+  "mcp.details.schema.tools.table.description": "Açıklama",
+  "mcp.details.schema.tools.table.name": "Ad",
+  "mcp.details.schema.tools.table.required": "Gerekli",
+  "mcp.details.schema.tools.table.type": "Tür",
+  "mcp.details.schema.tools.title": "Araç Listesi",
+  "mcp.details.score.claimed.desc": "Bu MCP Sunucusu sahibi tarafından talep edilmiştir, sahiplik ve yönetim garantilidir.",
+  "mcp.details.score.claimed.title": "Sahip Tarafından Talep Edildi",
+  "mcp.details.score.deployMoreThanManual.desc": "Bu MCP Sunucusu, Manual dışındaki daha kullanıcı dostu kurulum yöntemleri sunar, böylece kullanıcılar kolayca kurulum yapabilir ve kullanabilir.",
+  "mcp.details.score.deployMoreThanManual.title": "Kullanıcı Dostu Kurulum Yöntemleri Sunar",
+  "mcp.details.score.deployment.desc": "Bu MCP Sunucusu en az bir kurulum yöntemi sunar, kullanıcıların kurulum ve kullanımına olanak tanır.",
+  "mcp.details.score.deployment.descWithCount": "Bu MCP Sunucusu {{number}} kurulum yöntemi sunar, kullanıcıların kurulum ve kullanımına olanak tanır.",
+  "mcp.details.score.deployment.title": "En Az Bir Kurulum Yöntemi Sunar",
+  "mcp.details.score.license.desc": "Bu depo bir LICENSE dosyası içerir.",
+  "mcp.details.score.license.descWithlicense": "Bu deponun lisansı {{license}}.",
+  "mcp.details.score.license.title": "Lisans Sahibi",
+  "mcp.details.score.listTitle": "Puan Detayları",
+  "mcp.details.score.notClaimed.desc": "Eğer bu MCP Sunucusunun sahibiyseniz, aşağıdaki yöntemlerle talep edebilirsiniz.",
+  "mcp.details.score.notClaimed.title": "Sahip Tarafından Talep Edilmemiş",
+  "mcp.details.score.prompts.desc": "Bu MCP Sunucusu, kullanıcıların hizmetle etkileşim kurmasını sağlayan ipuçları sunar.",
+  "mcp.details.score.prompts.descWithCount": "Bu MCP Sunucusu {{number}} ipucu sunar, kullanıcıların hizmetle etkileşim kurmasını sağlar.",
+  "mcp.details.score.prompts.title": "İpucu İçerir",
+  "mcp.details.score.readme.desc": "Bu depo bir README.md dosyası içerir.",
+  "mcp.details.score.readme.title": "README Sahibi",
+  "mcp.details.score.resources.desc": "Bu MCP Sunucusu, kullanıcıların bağlam verilerini eklemesine ve yönetmesine olanak tanıyan kaynaklar sunar.",
+  "mcp.details.score.resources.descWithCount": "Bu MCP Sunucusu {{number}} kaynak sunar, kullanıcıların bağlam verilerini eklemesine ve yönetmesine olanak tanır.",
+  "mcp.details.score.resources.title": "Kaynak İçerir",
+  "mcp.details.score.title": "Puanlama",
+  "mcp.details.score.tools.desc": "Hizmet, kullanıcıların belirli işlemleri gerçekleştirmesine izin veren en az bir araç sağlamalıdır.",
+  "mcp.details.score.tools.descWithCount": "Bu MCP Sunucusu {{number}} araç fonksiyonu sunar, kullanıcıların belirli işlemleri gerçekleştirmesine olanak tanır.",
+  "mcp.details.score.tools.title": "En Az Bir Araç İçerir",
+  "mcp.details.score.validated.desc": "Bu MCP Sunucusu kurulum doğrulamasından geçmiştir, kalite ve güvenilirlik garantilidir.",
+  "mcp.details.score.validated.title": "Doğrulanmış",
+  "mcp.details.scoreLevel.a.desc": "Bu MCP Sunucusu titiz doğrulamadan geçmiş, kapsamlı özellikler ve yüksek kaliteli kullanıcı deneyimi sunar.",
+  "mcp.details.scoreLevel.a.fullTitle": "Mükemmel Eklenti",
+  "mcp.details.scoreLevel.a.title": "Üstün",
+  "mcp.details.scoreLevel.b.desc": "Bu MCP Sunucusu iyi özellikler ve kullanıcı deneyimi sunar, ancak bazı alanlarda geliştirme gerekebilir.",
+  "mcp.details.scoreLevel.b.fullTitle": "İyi Fonksiyonlar",
+  "mcp.details.scoreLevel.b.title": "İyi",
+  "mcp.details.scoreLevel.f.desc": "Bu MCP Sunucusu eksik özelliklere veya düşük kaliteye sahiptir, kullanıcıların dikkatli kullanması önerilir.",
+  "mcp.details.scoreLevel.f.fullTitle": "Düşük Kalite",
+  "mcp.details.scoreLevel.f.title": "Zayıf",
+  "mcp.details.settings.capabilities.prompts": "İstekler",
+  "mcp.details.settings.capabilities.resources": "Kaynaklar",
+  "mcp.details.settings.capabilities.title": "Eklenti Yetkinlikleri",
+  "mcp.details.settings.capabilities.tools": "Araçlar",
+  "mcp.details.settings.configuration.title": "Eklenti Yapılandırması",
+  "mcp.details.settings.connection.args": "Başlatma Parametreleri",
+  "mcp.details.settings.connection.command": "Başlatma Komutu",
+  "mcp.details.settings.connection.title": "Bağlantı Bilgileri",
+  "mcp.details.settings.connection.type": "Bağlantı Türü",
+  "mcp.details.settings.connection.url": "Hizmet Adresi",
+  "mcp.details.settings.saveSettings": "Ayarları Kaydet",
+  "mcp.details.settings.title": "Eklenti Ayarları",
+  "mcp.details.sidebar.install": "MCP Sunucusunu Kur",
+  "mcp.details.sidebar.meta.homepage": "Resmi Web Sitesi",
+  "mcp.details.sidebar.meta.installCount": "Kurulum Sayısı",
+  "mcp.details.sidebar.meta.language": "Kaynak Kodu Dili",
+  "mcp.details.sidebar.meta.license": "Lisans",
+  "mcp.details.sidebar.meta.published": "Yayın Tarihi",
+  "mcp.details.sidebar.meta.repo": "Kaynak Kodu Deposu",
+  "mcp.details.sidebar.meta.stars": "Yıldız Sayısı",
+  "mcp.details.sidebar.meta.title": "Detaylar",
+  "mcp.details.sidebar.meta.updated": "Son Güncelleme",
+  "mcp.details.sidebar.moreServerConfig": "Detayları Görüntüle",
+  "mcp.details.sidebar.recommendServers": "İlgili MCP",
+  "mcp.details.sidebar.serverConfig": "Kurulum Yapılandırması",
+  "mcp.details.sidebar.toc": "İçindekiler",
+  "mcp.details.summary.title": "Bu MCP Sunucusuyla neler yapabilirsiniz?",
+  "mcp.details.totalScore.description": "Çeşitli göstergelere göre hesaplanan toplam puan",
+  "mcp.details.totalScore.legend.aGrade": "A Sınıfı ({{minPercent}}-100%)",
+  "mcp.details.totalScore.legend.bGrade": "B Sınıfı ({{minPercent}}-{{maxPercent}}%)",
+  "mcp.details.totalScore.legend.fGrade": "F Sınıfı (0-{{maxPercent}}%)",
+  "mcp.details.totalScore.pointsFormat": "{{score}}/{{total}} Puan",
+  "mcp.details.totalScore.popover.completedOptional": "✅ Tamamlanan isteğe bağlı öğeler ({{count}} adet)",
+  "mcp.details.totalScore.popover.completedRequired": "✅ Tamamlanan zorunlu öğeler ({{count}} adet)",
+  "mcp.details.totalScore.popover.incompleteOptional": "⏸️ Tamamlanmamış isteğe bağlı öğeler ({{count}} adet)",
+  "mcp.details.totalScore.popover.incompleteRequired": "❌ Tamamlanmamış zorunlu öğeler ({{count}} adet)",
+  "mcp.details.totalScore.popover.title": "Puan Detayları",
+  "mcp.details.totalScore.ratingFormat": "Değerlendirme: {{level}}",
+  "mcp.details.totalScore.scoreInfo.items": "Öğe",
+  "mcp.details.totalScore.scoreInfo.points": "Puan",
+  "mcp.details.totalScore.scoreInfo.requiredItems": "Zorunlu Öğeler",
+  "mcp.details.totalScore.title": "Toplam Puan",
+  "mcp.details.versions.table.isLatest": "En Son Sürüm",
+  "mcp.details.versions.table.isValidated": "Doğrulandı",
+  "mcp.details.versions.table.publishAt": "Yayın Tarihi",
+  "mcp.details.versions.table.version": "Sürüm",
+  "mcp.details.versions.title": "Sürüm Geçmişi",
+  "mcp.hero.desc": "Açık kaynaklı, dağıtılabilir MCP Sunucuları platformu; AI sistemlerinin dosya sistemi, veritabanları, API'ler ve diğer kritik kaynaklara kolay erişimini sağlar, AI yeteneklerinizi kapsamlı şekilde genişletir.",
+  "mcp.hero.subTitle": "Açık Kaynak & Kutudan Çıkar Çalışır",
+  "mcp.hero.title": "Yapay Zekâ Odaklı Açık Kaynak MCP Topluluğu",
+  "mcp.sorts.createdAt": "En Son Eklendi",
+  "mcp.sorts.installCount": "Kurulum Sayısı",
+  "mcp.sorts.isFeatured": "Önerilen Eklenti",
+  "mcp.sorts.isValidated": "Doğrulanmış Eklenti",
+  "mcp.sorts.promptsCount": "İpucu Sayısı",
+  "mcp.sorts.ratingCount": "Puan Sayısı",
+  "mcp.sorts.resourcesCount": "Kaynak Sayısı",
+  "mcp.sorts.toolsCount": "Araç Sayısı",
+  "mcp.sorts.updatedAt": "Son Güncelleme",
+  "mcp.title": "MCP Topluluğu",
+  "mcp.unvalidated.desc": "Bu MCP Sunucusu henüz doğrulanmamıştır",
+  "mcp.unvalidated.title": "Doğrulanmamış",
+  "mcp.validated.desc": "Bu MCP Sunucusu doğrulanmıştır, kalite ve güvenilirlik garantilidir.",
+  "mcp.validated.descWithDate": "Bu MCP Sunucusu {{date}} tarihinde doğrulanmıştır, kalite ve güvenilirlik garantilidir.",
+  "mcp.validated.title": "Doğrulanmış",
+  "mcpEmpty.description": "Filtreleri ayarlamayı veya anahtar kelimeleri aramayı deneyin",
+  "mcpEmpty.search": "Eşleşen MCP sunucusu bulunamadı",
+  "mcpEmpty.title": "MCP sunucusu yok",
+  "models.abilities": "Model Yetenekleri",
+  "models.chat": "Sohbete Başla",
+  "models.contentLength": "Maksimum Bağlam Uzunluğu",
+  "models.details.overview.title": "Genel Bakış",
+  "models.details.related.listTitle": "İlgili Modeller",
+  "models.details.related.more": "Daha Fazla Görüntüle",
+  "models.details.related.title": "İlgili Öneriler",
+  "models.empty.description": "Daha fazla modeli görmek için filtreleri ayarlamayı deneyin",
+  "models.empty.search": "Eşleşen model bulunamadı",
+  "models.empty.title": "Model yok",
+  "models.free": "Ücretsiz",
+  "models.guide": "Yapılandırma Kılavuzu",
+  "models.list": "Model Listesi",
+  "models.more": "Daha Fazla",
+  "models.parameterList.defaultValue": "Varsayılan Değer",
+  "models.parameterList.docs": "Belgeleri Görüntüle",
+  "models.parameterList.frequency_penalty.desc": "Bu ayar, modelin girdi içinde zaten bulunan belirli kelimelerin tekrar kullanım sıklığını ayarlamak için kullanılır. Daha yüksek değerler, bu tekrarların olasılığını azaltırken, negatif değerler ters etki yaratır. Kelime cezası, tekrar sayısına göre artmaz. Negatif değerler, kelimelerin tekrar kullanımını teşvik eder.",
+  "models.parameterList.frequency_penalty.title": "Frekans Cezası",
+  "models.parameterList.max_tokens.desc": "Bu ayar, modelin tek bir yanıtında üretebileceği maksimum uzunluğu tanımlar. Daha yüksek bir değer ayarlamak, modelin daha uzun yanıtlar üretmesine izin verirken, daha düşük bir değer yanıtın uzunluğunu kısıtlayarak daha özlü hale getirir. Farklı uygulama senaryolarına göre bu değeri makul bir şekilde ayarlamak, beklenen yanıt uzunluğuna ve ayrıntı seviyesine ulaşmaya yardımcı olabilir.",
+  "models.parameterList.max_tokens.title": "Tek Yanıt Sınırı",
+  "models.parameterList.presence_penalty.desc": "Bu ayar, kelimelerin girdi içinde görünme sıklığına göre tekrar kullanımını kontrol etmeyi amaçlar. Girdi içinde daha fazla bulunan kelimeleri daha az kullanmaya çalışır, kullanma sıklığı görünme sıklığı ile orantılıdır. Kelime cezası, tekrar sayısına göre artar. Negatif değerler, kelimelerin tekrar kullanımını teşvik eder.",
+  "models.parameterList.presence_penalty.title": "Konu Tazeliği",
+  "models.parameterList.range": "Aralık",
+  "models.parameterList.reasoning_effort.desc": "Bu ayar, modelin yanıt üretmeden önceki akıl yürütme gücünü kontrol etmek için kullanılır. Düşük güç, yanıt hızını önceliklendirir ve Token tasarrufu sağlar; yüksek güç ise daha kapsamlı bir akıl yürütme sunar, ancak daha fazla Token tüketir ve yanıt hızını düşürür. Varsayılan değer orta seviyedir, akıl yürütme doğruluğu ile yanıt hızı arasında bir denge sağlar.",
+  "models.parameterList.reasoning_effort.title": "Akıl Yürütme Gücü",
+  "models.parameterList.temperature.desc": "Bu ayar, modelin yanıtlarının çeşitliliğini etkiler. Daha düşük değerler daha öngörülebilir ve tipik yanıtlar verirken, daha yüksek değerler daha çeşitli ve nadir yanıtları teşvik eder. Değer 0 olarak ayarlandığında, model belirli bir girdi için her zaman aynı yanıtı verir.",
+  "models.parameterList.temperature.title": "Rastgelelik",
+  "models.parameterList.title": "Model Parametreleri",
+  "models.parameterList.top_p.desc": "Bu ayar, modelin seçimlerini olasılığı en yüksek olan belirli bir oranla sınırlamak için kullanılır: yalnızca P'ye ulaşan toplam olasılığa sahip en iyi kelimeleri seçer. Daha düşük değerler, modelin yanıtlarını daha öngörülebilir hale getirirken, varsayılan ayar modelin tüm kelime yelpazesinden seçim yapmasına izin verir.",
+  "models.parameterList.top_p.title": "Nükleer Örnekleme",
+  "models.parameterList.type": "Tür",
+  "models.providerInfo.apiTooltip": "LobeChat, bu sağlayıcı için özel API anahtarları kullanmayı destekler.",
+  "models.providerInfo.input": "Girdi Fiyatı",
+  "models.providerInfo.inputTooltip": "Her milyon Token için maliyet",
+  "models.providerInfo.latency": "Gecikme",
+  "models.providerInfo.latencyTooltip": "Sağlayıcının ilk Token'ı gönderme ortalama süresi",
+  "models.providerInfo.maxOutput": "Maksimum Çıktı Uzunluğu",
+  "models.providerInfo.maxOutputTooltip": "Bu uç noktanın üretebileceği maksimum Token sayısı",
+  "models.providerInfo.officialTooltip": "LobeHub Resmi Hizmeti",
+  "models.providerInfo.output": "Çıktı Fiyatı",
+  "models.providerInfo.outputTooltip": "Her milyon Token için maliyet",
+  "models.providerInfo.streamCancellationTooltip": "Bu sağlayıcı akış iptal işlevini destekler.",
+  "models.providerInfo.throughput": "Verim",
+  "models.providerInfo.throughputTooltip": "Akış talepleri başına saniyede iletilen ortalama Token sayısı",
+  "models.sorts.contextWindowTokens": "Bağlam Penceresi Uzunluğu",
+  "models.sorts.identifier": "Model ID",
+  "models.sorts.inputPrice": "Girdi Fiyatı",
+  "models.sorts.outputPrice": "Çıktı Fiyatı",
+  "models.sorts.providerCount": "Sağlayıcı Sayısı",
+  "models.sorts.releasedAt": "En Son Yayınlanan",
+  "models.suggestions": "İlgili Modeller",
+  "models.supportedProviders": "Bu modeli destekleyen sağlayıcılar",
+  "plugins.builtinTag": "Yerleşik Eklenti",
+  "plugins.community": "Topluluk Eklentisi",
+  "plugins.details.settings.title": "Eklenti Ayarları",
+  "plugins.details.summary.title": "Bu eklenti ile neler yapabilirsiniz?",
+  "plugins.details.tools.title": "Eklenti Araçları",
+  "plugins.install": "Eklenti Yükle",
+  "plugins.installed": "Yüklü",
+  "plugins.legacyTag": "Eski Sürüm Eklenti",
+  "plugins.list": "Eklenti Listesi",
+  "plugins.meta.description": "Açıklama",
+  "plugins.meta.parameter": "Parametre",
+  "plugins.meta.title": "Araç Parametreleri",
+  "plugins.meta.type": "Tür",
+  "plugins.more": "Daha Fazla",
+  "plugins.official": "Resmi Eklenti",
+  "plugins.recentSubmits": "Son Güncellemeler",
+  "plugins.sorts.createdAt": "En Son Yayınlanan",
+  "plugins.sorts.identifier": "Eklenti ID",
+  "plugins.sorts.title": "Eklenti Adı",
+  "plugins.suggestions": "İlgili Öneriler",
+  "providers.config": "Sağlayıcıyı Yapılandır",
+  "providers.details.guide.title": "Entegrasyon Kılavuzu",
+  "providers.details.overview.title": "Genel Bakış",
+  "providers.details.related.listTitle": "İlgili Sağlayıcılar",
+  "providers.details.related.more": "Daha Fazla Görüntüle",
+  "providers.details.related.title": "İlgili Öneriler",
+  "providers.empty.description": "Daha fazla hizmet sağlayıcısı görmek için filtreleri ayarlamayı deneyin",
+  "providers.empty.search": "Eşleşen hizmet sağlayıcısı bulunamadı",
+  "providers.empty.title": "Hizmet sağlayıcısı yok",
+  "providers.list": "Model Sağlayıcıları Listesi",
+  "providers.modelCount": "{{count}} model",
+  "providers.modelName": "Model Adı",
+  "providers.modelSite": "Model belgeleri",
+  "providers.more": "Daha Fazla",
+  "providers.officialSite": "Resmi site",
+  "providers.showAllModels": "Tüm modelleri göster",
+  "providers.sorts.default": "Varsayılan Sıralama",
+  "providers.sorts.identifier": "Sağlayıcı ID",
+  "providers.sorts.modelCount": "Model Sayısı",
+  "providers.suggestions": "İlgili Sağlayıcılar",
+  "providers.supportedModels": "Desteklenen Modeller",
   "publishedTime": "Yayınlandı",
-  "search": {
-    "placeholder": "İsim, tanım veya anahtar kelime ara...",
-    "result": "{{count}} adet <highlight>{{keyword}}</highlight> ile ilgili arama sonucu",
-    "searching": "Aranıyor..."
-  },
-  "tab": {
-    "assistant": "Asistan",
-    "home": "Ana Sayfa",
-    "model": "Model",
-    "plugin": "Eklenti",
-    "provider": "Model Sağlayıcısı",
-    "user": "Kullanıcı"
-  },
-  "user": {
-    "agents": "Asistanlar",
-    "downloads": "İndirmeler",
-    "editProfile": "Profili Düzenle",
-    "login": "Yaratıcı Ol",
-    "logout": "Çıkış Yap",
-    "myProfile": "Profilim",
-    "noAgents": "Bu kullanıcı henüz asistan yayınlamadı",
-    "publishedAgents": "Oluşturulan Asistanlar",
-    "website": "Kişisel Web Sitesi"
-  }
+  "search.placeholder": "İsim, tanım veya anahtar kelime ara...",
+  "search.result": "{{count}} adet <highlight>{{keyword}}</highlight> ile ilgili arama sonucu",
+  "search.searching": "Aranıyor...",
+  "tab.assistant": "Asistan",
+  "tab.home": "Ana Sayfa",
+  "tab.model": "Model",
+  "tab.plugin": "Eklenti",
+  "tab.provider": "Model Sağlayıcısı",
+  "tab.user": "Kullanıcı",
+  "user.agents": "Asistanlar",
+  "user.downloads": "İndirmeler",
+  "user.editProfile": "Profili Düzenle",
+  "user.login": "Yaratıcı Ol",
+  "user.logout": "Çıkış Yap",
+  "user.myProfile": "Profilim",
+  "user.noAgents": "Bu kullanıcı henüz asistan yayınlamadı",
+  "user.publishedAgents": "Oluşturulan Asistanlar",
+  "user.website": "Kişisel Web Sitesi"
 }

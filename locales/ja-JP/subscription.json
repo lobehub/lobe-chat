@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "エンタープライズ版"
-      },
-      "free": {
-        "title": "無料版"
-      },
-      "hobby": {
-        "title": "セルフサービス版"
-      },
-      "premium": {
-        "title": "アドバンス版"
-      },
-      "starter": {
-        "title": "基本版"
-      },
-      "ultimate": {
-        "title": "プロ版"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "エンタープライズ版",
+  "plans.plan.free.title": "無料版",
+  "plans.plan.hobby.title": "セルフサービス版",
+  "plans.plan.premium.title": "アドバンス版",
+  "plans.plan.starter.title": "基本版",
+  "plans.plan.ultimate.title": "プロ版"
 }

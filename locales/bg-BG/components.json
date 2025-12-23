@@ -1,238 +1,142 @@
 {
-  "ArgsInput": {
-    "addArgument": "Добави параметър",
-    "argumentPlaceholder": "Параметър {{index}}",
-    "enterFirstArgument": "Въведете първия параметър..."
-  },
-  "DragUpload": {
-    "dragDesc": "Плъзнете файлове тук, поддържа качване на множество изображения.",
-    "dragFileDesc": "Плъзнете изображения и файлове тук, поддържа качване на множество изображения и файлове.",
-    "dragFileTitle": "Качване на файл",
-    "dragTitle": "Качване на изображение"
-  },
-  "EmojiPicker": {
-    "delete": "Изтриване на аватара",
-    "draggerDesc": "Кликнете или плъзнете изображение в тази зона, за да го качите",
-    "emoji": "Емоджи аватар",
-    "fileTypeError": "Моля, качете валиден файлов формат на изображение",
-    "upload": "Качване на аватар",
-    "uploadBtn": "Изрязване и качване"
-  },
-  "FileManager": {
-    "actions": {
-      "addToKnowledgeBase": "Добавяне към ресурсната база",
-      "addToOtherKnowledgeBase": "Добавяне към друга ресурсна база",
-      "batchChunking": "Партидно разделяне",
-      "chunking": "Разделяне",
-      "chunkingTooltip": "Разделете файла на множество текстови блокове и ги векторизирайте, за да се използват за семантично търсене и диалог с файла",
-      "chunkingUnsupported": "Този файл не поддържа разделяне на части.",
-      "confirmDelete": "Ще изтриете този файл. След изтриването му няма да може да бъде възстановен. Моля, потвърдете действието си.",
-      "confirmDeleteFolder": "Папката и цялото ѝ съдържание ще бъдат изтрити. След изтриването няма да могат да бъдат възстановени. Моля, потвърдете действието си.",
-      "confirmDeleteMultiFiles": "Ще изтриете избраните {{count}} файла. След изтриването им няма да могат да бъдат възстановени. Моля, потвърдете действието си.",
-      "confirmRemoveFromKnowledgeBase": "Ще бъдат премахнати {{count}} избрани файла от ресурсната база. След премахването файловете ще останат достъпни в раздела с всички файлове. Моля, потвърдете действието си.",
-      "copyUrl": "Копирай линк",
-      "copyUrlSuccess": "Адресът на файла е копиран успешно",
-      "createChunkingTask": "Подготовка...",
-      "deleteSuccess": "Файлът е изтрит успешно",
-      "downloading": "Изтегляне на файла...",
-      "goBack": "Назад към предишната страница",
-      "goForward": "Напред към следващата страница",
-      "goToParent": "Влизане в родителската папка",
-      "moveError": "Неуспешно преместване на файла",
-      "moveHere": "Премести тук",
-      "moveSuccess": "Файлът беше преместен успешно",
-      "moveToFolder": "Премести в...",
-      "moveToRoot": "Премести в основната директория",
-      "removeFromKnowledgeBase": "Премахване от ресурсната база",
-      "removeFromKnowledgeBaseSuccess": "Файлът е премахнат успешно",
-      "rename": "Преименуване",
-      "renameError": "Неуспешно преименуване",
-      "renameSuccess": "Успешно преименуване"
-    },
-    "bottom": "Достигнахте края",
-    "config": {
-      "showFilesInKnowledgeBase": "Показване на съдържанието в ресурсната база"
-    },
-    "emptyStatus": {
-      "actions": {
-        "file": "Качи файл",
-        "folder": "Качи папка",
-        "knowledgeBase": "Създаване на нова ресурсна база"
-      },
-      "or": "или",
-      "title": "Плъзнете файл или папка тук"
-    },
-    "noFolders": "Няма налични папки",
-    "sort": {
-      "dateAdded": "Дата на добавяне",
-      "name": "Име",
-      "size": "Размер"
-    },
-    "title": {
-      "createdAt": "Дата на създаване",
-      "size": "Размер",
-      "title": "Файл"
-    },
-    "total": {
-      "fileCount": "Общо {{count}} елемента",
-      "selectedCount": "Избрани {{count}} елемента"
-    },
-    "view": {
-      "list": "Изглед като списък",
-      "masonry": "Изглед като мрежа"
-    }
-  },
-  "FileParsingStatus": {
-    "chunks": {
-      "embeddingStatus": {
-        "empty": "Текстовите блокове все още не са напълно векторизирани, което ще доведе до недостъпност на семантичното търсене. За подобряване на качеството на търсенето, моля, векторизирайте текстовите блокове.",
-        "error": "Неуспешна векторизация",
-        "errorResult": "Неуспешна векторизация, моля проверете и опитайте отново. Причина за неуспеха:",
-        "processing": "Текстовите блокове се векторизират, моля, бъдете търпеливи.",
-        "success": "Текущите текстови блокове са напълно векторизирани."
-      },
-      "embeddings": "Векторизация",
-      "status": {
-        "error": "Разделянето е неуспешно",
-        "errorResult": "Разделянето е неуспешно, моля, проверете и опитайте отново. Причина за неуспеха:",
-        "processing": "Разделяне на блокове",
-        "processingTip": "Сървърът в момента разделя текстовите блокове, затварянето на страницата не влияе на напредъка на разделянето."
-      }
-    }
-  },
-  "GoBack": {
-    "back": "Назад"
-  },
-  "HtmlPreview": {
-    "actions": {
-      "download": "Изтегляне",
-      "preview": "Преглед"
-    },
-    "iframeTitle": "HTML Преглед",
-    "mode": {
-      "code": "Код",
-      "preview": "Преглед"
-    },
-    "title": "HTML Преглед"
-  },
-  "ImageUpload": {
-    "actions": {
-      "changeImage": "Кликнете, за да смените изображението",
-      "dropMultipleFiles": "Не се поддържа качване на няколко файла едновременно, ще бъде използван само първият файл"
-    },
-    "placeholder": {
-      "primary": "Добавяне на изображение",
-      "secondary": "Кликнете или плъзнете, за да качите"
-    }
-  },
-  "KeyValueEditor": {
-    "addButton": "Добавяне на ред",
-    "deleteTooltip": "Изтриване",
-    "duplicateKeyError": "Името на ключа трябва да е уникално",
-    "keyPlaceholder": "Ключ",
-    "valuePlaceholder": "Стойност"
-  },
-  "LocalFile": {
-    "action": {
-      "open": "Отвори",
-      "showInFolder": "Показване в папката"
-    }
-  },
-  "MaxTokenSlider": {
-    "unlimited": "Неограничено"
-  },
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Потребителски модел, по подразбиране поддържа функционалност за функционални обаждания и визуално разпознаване, моля, потвърдете наличието на тези възможности спрямо реалните условия",
-      "file": "Този модел поддържа качване на файлове и разпознаване",
-      "functionCall": "Този модел поддържа функционални обаждания (Function Call)",
-      "imageOutput": "Този модел поддържа генериране на изображения",
-      "reasoning": "Този модел поддържа дълбочинно мислене",
-      "search": "Този модел поддържа търсене в мрежата",
-      "tokens": "Този модел поддържа до {{tokens}} токена за една сесия",
-      "video": "Този модел поддържа разпознаване на видео",
-      "vision": "Този модел поддържа визуално разпознаване"
-    },
-    "removed": "Този модел не се намира в списъка. Ако бъде отменен изборът, той ще бъде автоматично премахнат."
-  },
-  "ModelSwitchPanel": {
-    "emptyModel": "Няма активирани модели, моля, посетете настройките и ги активирайте",
-    "emptyProvider": "Няма активиран доставчик на услуги, моля, отидете в настройките, за да го активирате",
-    "goToSettings": "Отидете в настройките",
-    "provider": "Доставчик",
-    "title": "Модел"
-  },
-  "MultiImagesUpload": {
-    "actions": {
-      "uploadMore": "Кликнете или плъзнете, за да качите още"
-    },
-    "modal": {
-      "complete": "Готово",
-      "newFileIndicator": "Нов",
-      "selectImageToPreview": "Моля, изберете изображение за преглед",
-      "title": "Управление на изображенията ({{count}})",
-      "upload": "Качване на изображение"
-    },
-    "placeholder": {
-      "primary": "Кликнете или плъзнете, за да качите изображение",
-      "secondary": "Поддържа избор на няколко изображения"
-    },
-    "progress": {
-      "uploadingWithCount": "{{completed}}/{{total}} качени"
-    },
-    "validation": {
-      "fileSizeExceeded": "Превишен допустим размер на файла",
-      "fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) надвишава максимално допустимия размер {{maxSize}}",
-      "fileSizeExceededMultiple": "{{count}} файла надвишават максимално допустимия размер {{maxSize}}: {{fileList}}",
-      "imageCountExceeded": "Надвишен е допустимият брой изображения"
-    }
-  },
-  "OllamaSetupGuide": {
-    "action": {
-      "close": "Затвори提示",
-      "start": "Инсталирано"
-    },
-    "cors": {
-      "description": "Поради ограниченията на сигурността на браузъра, трябва да конфигурирате крос-домейн достъп за Ollama, за да можете да го използвате нормално.",
-      "linux": {
-        "env": "Добавете `Environment` в секцията [Service] и добавете променливата на средата OLLAMA_ORIGINS:",
-        "reboot": "Презаредете systemd и рестартирайте Ollama",
-        "systemd": "Извикайте systemd, за да редактирате услугата ollama:"
-      },
-      "macos": "Моля, отворете приложението „Терминал“ и поставете следната команда, след което натиснете Enter, за да я изпълните",
-      "reboot": "Моля, рестартирайте услугата Ollama след завършване на изпълнението",
-      "title": "Конфигуриране на Ollama за разрешаване на крос-домейн достъп",
-      "windows": "На Windows, кликнете върху „Контролен панел“, за да редактирате системните променливи на средата. Създайте нова променлива на средата с име „OLLAMA_ORIGINS“ за вашия потребителски акаунт, със стойност * и кликнете „OK/Приложи“, за да запазите"
-    },
-    "install": {
-      "description": "Моля, уверете се, че сте стартирали Ollama. Ако не сте изтеглили Ollama, моля, посетете официалния сайт <1>за изтегляне</1>",
-      "docker": "Ако предпочитате да използвате Docker, Ollama предлага и официален Docker образ, който можете да изтеглите с следната команда:",
-      "linux": {
-        "command": "Инсталирайте с следната команда:",
-        "manual": "Или можете да се запознаете с <1>Ръководството за ръчна инсталация на Linux</1> и да инсталирате сами"
-      },
-      "title": "Инсталиране и стартиране на приложението Ollama локално",
-      "windowsTab": "Windows (предварителна версия)"
-    }
-  },
-  "Thinking": {
-    "thinking": "В процес на дълбочинно размисъл...",
-    "thought": "Дълбоко размислих (отне ми {{duration}} секунди)",
-    "thoughtWithDuration": "Дълбоко размислих"
-  },
-  "devTools": {
-    "cache": {
-      "empty": "Кешът е празен"
-    },
-    "metadata": {
-      "empty": "Няма налични метаданни"
-    }
-  },
-  "knowledgeBase": {
-    "empty": {
-      "description": "Създайте ресурсна база, за да организирате и управлявате своите ресурси",
-      "search": "Няма намерени съвпадащи ресурсни бази",
-      "title": "Няма налични ресурсни бази"
-    }
-  }
+  "ArgsInput.addArgument": "Добави параметър",
+  "ArgsInput.argumentPlaceholder": "Параметър {{index}}",
+  "ArgsInput.enterFirstArgument": "Въведете първия параметър...",
+  "DragUpload.dragDesc": "Плъзнете файлове тук, поддържа качване на множество изображения.",
+  "DragUpload.dragFileDesc": "Плъзнете изображения и файлове тук, поддържа качване на множество изображения и файлове.",
+  "DragUpload.dragFileTitle": "Качване на файл",
+  "DragUpload.dragTitle": "Качване на изображение",
+  "EmojiPicker.delete": "Изтриване на аватара",
+  "EmojiPicker.draggerDesc": "Кликнете или плъзнете изображение в тази зона, за да го качите",
+  "EmojiPicker.emoji": "Емоджи аватар",
+  "EmojiPicker.fileTypeError": "Моля, качете валиден файлов формат на изображение",
+  "EmojiPicker.upload": "Качване на аватар",
+  "EmojiPicker.uploadBtn": "Изрязване и качване",
+  "FileManager.actions.addToKnowledgeBase": "Добавяне към ресурсната база",
+  "FileManager.actions.addToOtherKnowledgeBase": "Добавяне към друга ресурсна база",
+  "FileManager.actions.batchChunking": "Партидно разделяне",
+  "FileManager.actions.chunking": "Разделяне",
+  "FileManager.actions.chunkingTooltip": "Разделете файла на множество текстови блокове и ги векторизирайте, за да се използват за семантично търсене и диалог с файла",
+  "FileManager.actions.chunkingUnsupported": "Този файл не поддържа разделяне на части.",
+  "FileManager.actions.confirmDelete": "Ще изтриете този файл. След изтриването му няма да може да бъде възстановен. Моля, потвърдете действието си.",
+  "FileManager.actions.confirmDeleteFolder": "Папката и цялото ѝ съдържание ще бъдат изтрити. След изтриването няма да могат да бъдат възстановени. Моля, потвърдете действието си.",
+  "FileManager.actions.confirmDeleteMultiFiles": "Ще изтриете избраните {{count}} файла. След изтриването им няма да могат да бъдат възстановени. Моля, потвърдете действието си.",
+  "FileManager.actions.confirmRemoveFromKnowledgeBase": "Ще бъдат премахнати {{count}} избрани файла от ресурсната база. След премахването файловете ще останат достъпни в раздела с всички файлове. Моля, потвърдете действието си.",
+  "FileManager.actions.copyUrl": "Копирай линк",
+  "FileManager.actions.copyUrlSuccess": "Адресът на файла е копиран успешно",
+  "FileManager.actions.createChunkingTask": "Подготовка...",
+  "FileManager.actions.deleteSuccess": "Файлът е изтрит успешно",
+  "FileManager.actions.downloading": "Изтегляне на файла...",
+  "FileManager.actions.goBack": "Назад към предишната страница",
+  "FileManager.actions.goForward": "Напред към следващата страница",
+  "FileManager.actions.goToParent": "Влизане в родителската папка",
+  "FileManager.actions.moveError": "Неуспешно преместване на файла",
+  "FileManager.actions.moveHere": "Премести тук",
+  "FileManager.actions.moveSuccess": "Файлът беше преместен успешно",
+  "FileManager.actions.moveToFolder": "Премести в...",
+  "FileManager.actions.moveToRoot": "Премести в основната директория",
+  "FileManager.actions.removeFromKnowledgeBase": "Премахване от ресурсната база",
+  "FileManager.actions.removeFromKnowledgeBaseSuccess": "Файлът е премахнат успешно",
+  "FileManager.actions.rename": "Преименуване",
+  "FileManager.actions.renameError": "Неуспешно преименуване",
+  "FileManager.actions.renameSuccess": "Успешно преименуване",
+  "FileManager.bottom": "Достигнахте края",
+  "FileManager.config.showFilesInKnowledgeBase": "Показване на съдържанието в ресурсната база",
+  "FileManager.emptyStatus.actions.file": "Качи файл",
+  "FileManager.emptyStatus.actions.folder": "Качи папка",
+  "FileManager.emptyStatus.actions.knowledgeBase": "Създаване на нова ресурсна база",
+  "FileManager.emptyStatus.or": "или",
+  "FileManager.emptyStatus.title": "Плъзнете файл или папка тук",
+  "FileManager.noFolders": "Няма налични папки",
+  "FileManager.sort.dateAdded": "Дата на добавяне",
+  "FileManager.sort.name": "Име",
+  "FileManager.sort.size": "Размер",
+  "FileManager.title.createdAt": "Дата на създаване",
+  "FileManager.title.size": "Размер",
+  "FileManager.title.title": "Файл",
+  "FileManager.total.fileCount": "Общо {{count}} елемента",
+  "FileManager.total.selectedCount": "Избрани {{count}} елемента",
+  "FileManager.view.list": "Изглед като списък",
+  "FileManager.view.masonry": "Изглед като мрежа",
+  "FileParsingStatus.chunks.embeddingStatus.empty": "Текстовите блокове все още не са напълно векторизирани, което ще доведе до недостъпност на семантичното търсене. За подобряване на качеството на търсенето, моля, векторизирайте текстовите блокове.",
+  "FileParsingStatus.chunks.embeddingStatus.error": "Неуспешна векторизация",
+  "FileParsingStatus.chunks.embeddingStatus.errorResult": "Неуспешна векторизация, моля проверете и опитайте отново. Причина за неуспеха:",
+  "FileParsingStatus.chunks.embeddingStatus.processing": "Текстовите блокове се векторизират, моля, бъдете търпеливи.",
+  "FileParsingStatus.chunks.embeddingStatus.success": "Текущите текстови блокове са напълно векторизирани.",
+  "FileParsingStatus.chunks.embeddings": "Векторизация",
+  "FileParsingStatus.chunks.status.error": "Разделянето е неуспешно",
+  "FileParsingStatus.chunks.status.errorResult": "Разделянето е неуспешно, моля, проверете и опитайте отново. Причина за неуспеха:",
+  "FileParsingStatus.chunks.status.processing": "Разделяне на блокове",
+  "FileParsingStatus.chunks.status.processingTip": "Сървърът в момента разделя текстовите блокове, затварянето на страницата не влияе на напредъка на разделянето.",
+  "GoBack.back": "Назад",
+  "HtmlPreview.actions.download": "Изтегляне",
+  "HtmlPreview.actions.preview": "Преглед",
+  "HtmlPreview.iframeTitle": "HTML Преглед",
+  "HtmlPreview.mode.code": "Код",
+  "HtmlPreview.mode.preview": "Преглед",
+  "HtmlPreview.title": "HTML Преглед",
+  "ImageUpload.actions.changeImage": "Кликнете, за да смените изображението",
+  "ImageUpload.actions.dropMultipleFiles": "Не се поддържа качване на няколко файла едновременно, ще бъде използван само първият файл",
+  "ImageUpload.placeholder.primary": "Добавяне на изображение",
+  "ImageUpload.placeholder.secondary": "Кликнете или плъзнете, за да качите",
+  "KeyValueEditor.addButton": "Добавяне на ред",
+  "KeyValueEditor.deleteTooltip": "Изтриване",
+  "KeyValueEditor.duplicateKeyError": "Името на ключа трябва да е уникално",
+  "KeyValueEditor.keyPlaceholder": "Ключ",
+  "KeyValueEditor.valuePlaceholder": "Стойност",
+  "LocalFile.action.open": "Отвори",
+  "LocalFile.action.showInFolder": "Показване в папката",
+  "MaxTokenSlider.unlimited": "Неограничено",
+  "ModelSelect.featureTag.custom": "Потребителски модел, по подразбиране поддържа функционалност за функционални обаждания и визуално разпознаване, моля, потвърдете наличието на тези възможности спрямо реалните условия",
+  "ModelSelect.featureTag.file": "Този модел поддържа качване на файлове и разпознаване",
+  "ModelSelect.featureTag.functionCall": "Този модел поддържа функционални обаждания (Function Call)",
+  "ModelSelect.featureTag.imageOutput": "Този модел поддържа генериране на изображения",
+  "ModelSelect.featureTag.reasoning": "Този модел поддържа дълбочинно мислене",
+  "ModelSelect.featureTag.search": "Този модел поддържа търсене в мрежата",
+  "ModelSelect.featureTag.tokens": "Този модел поддържа до {{tokens}} токена за една сесия",
+  "ModelSelect.featureTag.video": "Този модел поддържа разпознаване на видео",
+  "ModelSelect.featureTag.vision": "Този модел поддържа визуално разпознаване",
+  "ModelSelect.removed": "Този модел не се намира в списъка. Ако бъде отменен изборът, той ще бъде автоматично премахнат.",
+  "ModelSwitchPanel.emptyModel": "Няма активирани модели, моля, посетете настройките и ги активирайте",
+  "ModelSwitchPanel.emptyProvider": "Няма активиран доставчик на услуги, моля, отидете в настройките, за да го активирате",
+  "ModelSwitchPanel.goToSettings": "Отидете в настройките",
+  "ModelSwitchPanel.provider": "Доставчик",
+  "ModelSwitchPanel.title": "Модел",
+  "MultiImagesUpload.actions.uploadMore": "Кликнете или плъзнете, за да качите още",
+  "MultiImagesUpload.modal.complete": "Готово",
+  "MultiImagesUpload.modal.newFileIndicator": "Нов",
+  "MultiImagesUpload.modal.selectImageToPreview": "Моля, изберете изображение за преглед",
+  "MultiImagesUpload.modal.title": "Управление на изображенията ({{count}})",
+  "MultiImagesUpload.modal.upload": "Качване на изображение",
+  "MultiImagesUpload.placeholder.primary": "Кликнете или плъзнете, за да качите изображение",
+  "MultiImagesUpload.placeholder.secondary": "Поддържа избор на няколко изображения",
+  "MultiImagesUpload.progress.uploadingWithCount": "{{completed}}/{{total}} качени",
+  "MultiImagesUpload.validation.fileSizeExceeded": "Превишен допустим размер на файла",
+  "MultiImagesUpload.validation.fileSizeExceededDetail": "{{fileName}} ({{actualSize}}) надвишава максимално допустимия размер {{maxSize}}",
+  "MultiImagesUpload.validation.fileSizeExceededMultiple": "{{count}} файла надвишават максимално допустимия размер {{maxSize}}: {{fileList}}",
+  "MultiImagesUpload.validation.imageCountExceeded": "Надвишен е допустимият брой изображения",
+  "OllamaSetupGuide.action.close": "Затвори提示",
+  "OllamaSetupGuide.action.start": "Инсталирано",
+  "OllamaSetupGuide.cors.description": "Поради ограниченията на сигурността на браузъра, трябва да конфигурирате крос-домейн достъп за Ollama, за да можете да го използвате нормално.",
+  "OllamaSetupGuide.cors.linux.env": "Добавете `Environment` в секцията [Service] и добавете променливата на средата OLLAMA_ORIGINS:",
+  "OllamaSetupGuide.cors.linux.reboot": "Презаредете systemd и рестартирайте Ollama",
+  "OllamaSetupGuide.cors.linux.systemd": "Извикайте systemd, за да редактирате услугата ollama:",
+  "OllamaSetupGuide.cors.macos": "Моля, отворете приложението „Терминал“ и поставете следната команда, след което натиснете Enter, за да я изпълните",
+  "OllamaSetupGuide.cors.reboot": "Моля, рестартирайте услугата Ollama след завършване на изпълнението",
+  "OllamaSetupGuide.cors.title": "Конфигуриране на Ollama за разрешаване на крос-домейн достъп",
+  "OllamaSetupGuide.cors.windows": "На Windows, кликнете върху „Контролен панел“, за да редактирате системните променливи на средата. Създайте нова променлива на средата с име „OLLAMA_ORIGINS“ за вашия потребителски акаунт, със стойност * и кликнете „OK/Приложи“, за да запазите",
+  "OllamaSetupGuide.install.description": "Моля, уверете се, че сте стартирали Ollama. Ако не сте изтеглили Ollama, моля, посетете официалния сайт <1>за изтегляне</1>",
+  "OllamaSetupGuide.install.docker": "Ако предпочитате да използвате Docker, Ollama предлага и официален Docker образ, който можете да изтеглите с следната команда:",
+  "OllamaSetupGuide.install.linux.command": "Инсталирайте с следната команда:",
+  "OllamaSetupGuide.install.linux.manual": "Или можете да се запознаете с <1>Ръководството за ръчна инсталация на Linux</1> и да инсталирате сами",
+  "OllamaSetupGuide.install.title": "Инсталиране и стартиране на приложението Ollama локално",
+  "OllamaSetupGuide.install.windowsTab": "Windows (предварителна версия)",
+  "Thinking.thinking": "В процес на дълбочинно размисъл...",
+  "Thinking.thought": "Дълбоко размислих (отне ми {{duration}} секунди)",
+  "Thinking.thoughtWithDuration": "Дълбоко размислих",
+  "devTools.cache.empty": "Кешът е празен",
+  "devTools.metadata.empty": "Няма налични метаданни",
+  "knowledgeBase.empty.description": "Създайте ресурсна база, за да организирате и управлявате своите ресурси",
+  "knowledgeBase.empty.search": "Няма намерени съвпадащи ресурсни бази",
+  "knowledgeBase.empty.title": "Няма налични ресурсни бази"
 }

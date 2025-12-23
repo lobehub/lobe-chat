@@ -2,197 +2,125 @@
   "addFolder": "Создать папку",
   "addLibrary": "Добавить",
   "addPage": "Создать документ",
-  "detail": {
-    "basic": {
-      "createdAt": "Дата создания",
-      "filename": "Имя файла",
-      "size": "Размер файла",
-      "title": "Основная информация",
-      "type": "Формат",
-      "updatedAt": "Дата обновления"
-    },
-    "data": {
-      "chunkCount": "Количество частей",
-      "embedding": {
-        "default": "Векторизация не выполнена",
-        "error": "Ошибка",
-        "pending": "Ожидание запуска",
-        "processing": "В процессе",
-        "success": "Завершено"
-      },
-      "embeddingStatus": "Векторизация"
-    }
-  },
+  "detail.basic.createdAt": "Дата создания",
+  "detail.basic.filename": "Имя файла",
+  "detail.basic.size": "Размер файла",
+  "detail.basic.title": "Основная информация",
+  "detail.basic.type": "Формат",
+  "detail.basic.updatedAt": "Дата обновления",
+  "detail.data.chunkCount": "Количество частей",
+  "detail.data.embedding.default": "Векторизация не выполнена",
+  "detail.data.embedding.error": "Ошибка",
+  "detail.data.embedding.pending": "Ожидание запуска",
+  "detail.data.embedding.processing": "В процессе",
+  "detail.data.embedding.success": "Завершено",
+  "detail.data.embeddingStatus": "Векторизация",
   "empty": "Нет загруженных файлов/папок",
-  "header": {
-    "actions": {
-      "builtInBlockList": {
-        "filtered": "Отфильтровано {{ignored}} файлов (из {{total}} файлов)"
-      },
-      "connect": "Подключение...",
-      "gitignore": {
-        "apply": "Применить правила",
-        "cancel": "Игнорировать правила",
-        "content": "Обнаружен файл .gitignore (всего {{count}} файлов). Применить правила игнорирования?",
-        "filtered": "Отфильтровано {{ignored}} файлов (из {{total}} файлов)",
-        "title": "Обнаружен .gitignore"
-      },
-      "newFolder": "Создать папку",
-      "newPage": "Создать документ",
-      "notion": {
-        "error": "Не удалось импортировать файл Notion",
-        "foundFiles": "Найдено файлов: {{count}}",
-        "importing": "Импорт файлов Notion...",
-        "noMarkdownFiles": "В ZIP-файле не найдено файлов Markdown",
-        "partial": "Успешно импортировано: {{success}}, не удалось: {{failed}}",
-        "success": "Успешно импортировано файлов: {{count}}"
-      },
-      "notionGuide": {
-        "cancel": "Пока не импортировать",
-        "desc": "Сначала экспортируйте Markdown (ZIP) из Notion, затем нажмите «Продолжить» и выберите архив, чтобы импортировать все страницы.",
-        "ok": "Выбрать ZIP-файл Notion",
-        "title": "Импортировать содержимое из Notion"
-      },
-      "uploadFile": "Загрузить файл",
-      "uploadFolder": "Загрузить папку"
-    },
-    "newPageButton": "Создать документ",
-    "uploadButton": "Загрузить"
-  },
-  "home": {
-    "getStarted": "Начать",
-    "greeting": "Начало",
-    "quickActions": "Быстрые действия",
-    "recentFiles": "Недавние файлы",
-    "recentPages": "Недавние документы",
-    "subtitle": "Добро пожаловать в Центр ресурсов. Начните управление своими документами и материалами отсюда.",
-    "uploadEntries": {
-      "files": {
-        "title": "Загрузить файлы"
-      },
-      "folder": {
-        "title": "Загрузить папку"
-      },
-      "library": {
-        "title": "Создать новую библиотеку"
-      },
-      "newPage": {
-        "title": "Создать новый документ"
-      }
-    }
-  },
-  "library": {
-    "list": {
-      "confirmRemoveLibrary": "Вы собираетесь удалить эту библиотеку. Файлы не будут удалены, а перемещены во 'Все файлы'. После удаления восстановление невозможно. Пожалуйста, будьте осторожны.",
-      "empty": "Нажмите <1>+</1>, чтобы создать библиотеку"
-    },
-    "new": "Создать библиотеку",
-    "title": "Библиотека"
-  },
-  "menu": {
-    "allFiles": "Все файлы",
-    "allPages": "Все документы"
-  },
+  "header.actions.builtInBlockList.filtered": "Отфильтровано {{ignored}} файлов (из {{total}} файлов)",
+  "header.actions.connect": "Подключение...",
+  "header.actions.gitignore.apply": "Применить правила",
+  "header.actions.gitignore.cancel": "Игнорировать правила",
+  "header.actions.gitignore.content": "Обнаружен файл .gitignore (всего {{count}} файлов). Применить правила игнорирования?",
+  "header.actions.gitignore.filtered": "Отфильтровано {{ignored}} файлов (из {{total}} файлов)",
+  "header.actions.gitignore.title": "Обнаружен .gitignore",
+  "header.actions.newFolder": "Создать папку",
+  "header.actions.newPage": "Создать документ",
+  "header.actions.notion.error": "Не удалось импортировать файл Notion",
+  "header.actions.notion.foundFiles": "Найдено файлов: {{count}}",
+  "header.actions.notion.importing": "Импорт файлов Notion...",
+  "header.actions.notion.noMarkdownFiles": "В ZIP-файле не найдено файлов Markdown",
+  "header.actions.notion.partial": "Успешно импортировано: {{success}}, не удалось: {{failed}}",
+  "header.actions.notion.success": "Успешно импортировано файлов: {{count}}",
+  "header.actions.notionGuide.cancel": "Пока не импортировать",
+  "header.actions.notionGuide.desc": "Сначала экспортируйте Markdown (ZIP) из Notion, затем нажмите «Продолжить» и выберите архив, чтобы импортировать все страницы.",
+  "header.actions.notionGuide.ok": "Выбрать ZIP-файл Notion",
+  "header.actions.notionGuide.title": "Импортировать содержимое из Notion",
+  "header.actions.uploadFile": "Загрузить файл",
+  "header.actions.uploadFolder": "Загрузить папку",
+  "header.newPageButton": "Создать документ",
+  "header.uploadButton": "Загрузить",
+  "home.getStarted": "Начать",
+  "home.greeting": "Начало",
+  "home.quickActions": "Быстрые действия",
+  "home.recentFiles": "Недавние файлы",
+  "home.recentPages": "Недавние документы",
+  "home.subtitle": "Добро пожаловать в Центр ресурсов. Начните управление своими документами и материалами отсюда.",
+  "home.uploadEntries.files.title": "Загрузить файлы",
+  "home.uploadEntries.folder.title": "Загрузить папку",
+  "home.uploadEntries.library.title": "Создать новую библиотеку",
+  "home.uploadEntries.newPage.title": "Создать новый документ",
+  "library.list.confirmRemoveLibrary": "Вы собираетесь удалить эту библиотеку. Файлы не будут удалены, а перемещены во 'Все файлы'. После удаления восстановление невозможно. Пожалуйста, будьте осторожны.",
+  "library.list.empty": "Нажмите <1>+</1>, чтобы создать библиотеку",
+  "library.new": "Создать библиотеку",
+  "library.title": "Библиотека",
+  "menu.allFiles": "Все файлы",
+  "menu.allPages": "Все документы",
   "networkError": "Не удалось загрузить библиотеку. Проверьте подключение к сети и попробуйте снова.",
-  "notSupportGuide": {
-    "desc": "Текущий развертываемый экземпляр находится в режиме клиентской базы данных, функции управления файлами недоступны. Пожалуйста, переключитесь на <1>режим серверной базы данных</1> или используйте <3>LobeChat Cloud</3> напрямую.",
-    "features": {
-      "allKind": {
-        "desc": "Поддержка основных типов файлов, включая Word, PPT, Excel, PDF, TXT и другие распространенные форматы документов, а также JS, Python и другие популярные файлы кода.",
-        "title": "Разнообразие форматов файлов"
-      },
-      "embeddings": {
-        "desc": "Использование высокопроизводительных векторных моделей для векторизации текстовых частей, что позволяет осуществлять семантический поиск по содержимому файлов.",
-        "title": "Семантическая векторизация"
-      },
-      "libraries": {
-        "desc": "Поддержка создания библиотек с возможностью добавления различных типов файлов для формирования собственной базы знаний.",
-        "title": "Библиотеки"
-      }
-    },
-    "title": "Текущий режим развертывания не поддерживает управление файлами"
-  },
-  "pageEditor": {
-    "addIcon": "Добавить значок",
-    "autoSaveMessage": "Документ сохраняется автоматически, ручное сохранение не требуется",
-    "chooseIcon": "Выбрать значок",
-    "deleteConfirm": {
-      "content": "Вы собираетесь удалить этот документ. После удаления восстановление будет невозможно. Пожалуйста, будьте осторожны.",
-      "title": "Удалить документ"
-    },
-    "deleteError": "Не удалось удалить документ",
-    "deleteSuccess": "Документ успешно удалён",
-    "editedAt": "Последнее редактирование: {{time}}",
-    "editedBy": "Последний редактор: {{name}}",
-    "editorPlaceholder": "Введите содержимое документа, нажмите / для открытия меню команд",
-    "empty": {
-      "createNewDocument": "Создать новый документ",
-      "title": "Выберите документ, чтобы начать",
-      "uploadMarkdown": "Загрузить файл Markdown"
-    },
-    "linkCopied": "Ссылка скопирована",
-    "menu": {
-      "copyLink": "Скопировать ссылку",
-      "exportDocument": "Экспортировать документ",
-      "importDocument": "Импортировать документ",
-      "pin": "Закрепить документ"
-    },
-    "saving": "Сохранение...",
-    "titlePlaceholder": "Без названия",
-    "wordCount": "{{wordCount}} слов"
-  },
-  "pageList": {
-    "copyContent": "Скопировать весь текст",
-    "duplicate": "Создать копию",
-    "empty": "Документов пока нет. Нажмите на кнопку выше, чтобы создать первый документ",
-    "filter": {
-      "all": "Все",
-      "onlyInPages": "Только в документах"
-    },
-    "noResults": "Совпадающих документов не найдено",
-    "pageCount": "Всего {{count}} документов",
-    "selectNote": "Выберите документ для редактирования",
-    "title": "Документы",
-    "untitled": "Без названия"
-  },
-  "preview": {
-    "downloadFile": "Скачать файл",
-    "unsupportedFileAndContact": "Этот формат файла в настоящее время не поддерживает онлайн-просмотр. Если у вас есть запрос на просмотр, пожалуйста, <1>сообщите нам</1>."
-  },
+  "notSupportGuide.desc": "Текущий развертываемый экземпляр находится в режиме клиентской базы данных, функции управления файлами недоступны. Пожалуйста, переключитесь на <1>режим серверной базы данных</1> или используйте <3>LobeChat Cloud</3> напрямую.",
+  "notSupportGuide.features.allKind.desc": "Поддержка основных типов файлов, включая Word, PPT, Excel, PDF, TXT и другие распространенные форматы документов, а также JS, Python и другие популярные файлы кода.",
+  "notSupportGuide.features.allKind.title": "Разнообразие форматов файлов",
+  "notSupportGuide.features.embeddings.desc": "Использование высокопроизводительных векторных моделей для векторизации текстовых частей, что позволяет осуществлять семантический поиск по содержимому файлов.",
+  "notSupportGuide.features.embeddings.title": "Семантическая векторизация",
+  "notSupportGuide.features.libraries.desc": "Поддержка создания библиотек с возможностью добавления различных типов файлов для формирования собственной базы знаний.",
+  "notSupportGuide.features.libraries.title": "Библиотеки",
+  "notSupportGuide.title": "Текущий режим развертывания не поддерживает управление файлами",
+  "pageEditor.addIcon": "Добавить значок",
+  "pageEditor.autoSaveMessage": "Документ сохраняется автоматически, ручное сохранение не требуется",
+  "pageEditor.chooseIcon": "Выбрать значок",
+  "pageEditor.deleteConfirm.content": "Вы собираетесь удалить этот документ. После удаления восстановление будет невозможно. Пожалуйста, будьте осторожны.",
+  "pageEditor.deleteConfirm.title": "Удалить документ",
+  "pageEditor.deleteError": "Не удалось удалить документ",
+  "pageEditor.deleteSuccess": "Документ успешно удалён",
+  "pageEditor.editedAt": "Последнее редактирование: {{time}}",
+  "pageEditor.editedBy": "Последний редактор: {{name}}",
+  "pageEditor.editorPlaceholder": "Введите содержимое документа, нажмите / для открытия меню команд",
+  "pageEditor.empty.createNewDocument": "Создать новый документ",
+  "pageEditor.empty.title": "Выберите документ, чтобы начать",
+  "pageEditor.empty.uploadMarkdown": "Загрузить файл Markdown",
+  "pageEditor.linkCopied": "Ссылка скопирована",
+  "pageEditor.menu.copyLink": "Скопировать ссылку",
+  "pageEditor.menu.exportDocument": "Экспортировать документ",
+  "pageEditor.menu.importDocument": "Импортировать документ",
+  "pageEditor.menu.pin": "Закрепить документ",
+  "pageEditor.saving": "Сохранение...",
+  "pageEditor.titlePlaceholder": "Без названия",
+  "pageEditor.wordCount": "{{wordCount}} слов",
+  "pageList.copyContent": "Скопировать весь текст",
+  "pageList.duplicate": "Создать копию",
+  "pageList.empty": "Документов пока нет. Нажмите на кнопку выше, чтобы создать первый документ",
+  "pageList.filter.all": "Все",
+  "pageList.filter.onlyInPages": "Только в документах",
+  "pageList.noResults": "Совпадающих документов не найдено",
+  "pageList.pageCount": "Всего {{count}} документов",
+  "pageList.selectNote": "Выберите документ для редактирования",
+  "pageList.title": "Документы",
+  "pageList.untitled": "Без названия",
+  "preview.downloadFile": "Скачать файл",
+  "preview.unsupportedFileAndContact": "Этот формат файла в настоящее время не поддерживает онлайн-просмотр. Если у вас есть запрос на просмотр, пожалуйста, <1>сообщите нам</1>.",
   "searchFilePlaceholder": "Поиск файла",
   "searchPagePlaceholder": "Поиск документов",
-  "tab": {
-    "all": "Все",
-    "audios": "Аудио",
-    "documents": "Документы",
-    "home": "Главная",
-    "images": "Изображения",
-    "moreTypes": "Больше типов",
-    "pages": "Документы",
-    "videos": "Видео",
-    "websites": "Веб-сайты"
-  },
+  "tab.all": "Все",
+  "tab.audios": "Аудио",
+  "tab.documents": "Документы",
+  "tab.home": "Главная",
+  "tab.images": "Изображения",
+  "tab.moreTypes": "Больше типов",
+  "tab.pages": "Документы",
+  "tab.videos": "Видео",
+  "tab.websites": "Веб-сайты",
   "title": "Ресурсы",
   "toggleLeftPanel": "Показать/скрыть левую панель",
-  "uploadDock": {
-    "body": {
-      "collapse": "Свернуть",
-      "item": {
-        "done": "Загружено",
-        "error": "Ошибка загрузки, попробуйте снова",
-        "pending": "Подготовка к загрузке...",
-        "processing": "Обработка файла...",
-        "restTime": "Осталось {{time}}"
-      }
-    },
-    "fileQueueInfo": "Загружаются первые {{count}} файлов, оставшиеся {{remaining}} будут поставлены в очередь",
-    "totalCount": "Всего {{count}} элементов",
-    "uploadStatus": {
-      "error": "Ошибка загрузки",
-      "pending": "Ожидание загрузки",
-      "processing": "Загрузка",
-      "success": "Загрузка завершена",
-      "uploading": "Загрузка..."
-    }
-  }
+  "uploadDock.body.collapse": "Свернуть",
+  "uploadDock.body.item.done": "Загружено",
+  "uploadDock.body.item.error": "Ошибка загрузки, попробуйте снова",
+  "uploadDock.body.item.pending": "Подготовка к загрузке...",
+  "uploadDock.body.item.processing": "Обработка файла...",
+  "uploadDock.body.item.restTime": "Осталось {{time}}",
+  "uploadDock.fileQueueInfo": "Загружаются первые {{count}} файлов, оставшиеся {{remaining}} будут поставлены в очередь",
+  "uploadDock.totalCount": "Всего {{count}} элементов",
+  "uploadDock.uploadStatus.error": "Ошибка загрузки",
+  "uploadDock.uploadStatus.pending": "Ожидание загрузки",
+  "uploadDock.uploadStatus.processing": "Загрузка",
+  "uploadDock.uploadStatus.success": "Загрузка завершена",
+  "uploadDock.uploadStatus.uploading": "Загрузка..."
 }

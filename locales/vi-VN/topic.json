@@ -1,40 +1,30 @@
 {
-  "actions": {
-    "addNewTopic": "Bắt đầu chủ đề mới",
-    "autoRename": "Đặt tên tự động",
-    "confirmRemoveAll": "Sắp xóa tất cả các chủ đề, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
-    "confirmRemoveTopic": "Sắp xóa chủ đề này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
-    "confirmRemoveUnstarred": "Sắp xóa các chủ đề chưa được đánh dấu, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
-    "duplicate": "Tạo bản sao",
-    "export": "Xuất chủ đề",
-    "import": "Nhập cuộc trò chuyện",
-    "openInNewWindow": "Mở trong cửa sổ mới",
-    "removeAll": "Xóa tất cả các chủ đề",
-    "removeUnstarred": "Xóa các chủ đề chưa được đánh dấu"
-  },
+  "actions.addNewTopic": "Bắt đầu chủ đề mới",
+  "actions.autoRename": "Đặt tên tự động",
+  "actions.confirmRemoveAll": "Sắp xóa tất cả các chủ đề, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
+  "actions.confirmRemoveTopic": "Sắp xóa chủ đề này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
+  "actions.confirmRemoveUnstarred": "Sắp xóa các chủ đề chưa được đánh dấu, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
+  "actions.duplicate": "Tạo bản sao",
+  "actions.export": "Xuất chủ đề",
+  "actions.import": "Nhập cuộc trò chuyện",
+  "actions.openInNewWindow": "Mở trong cửa sổ mới",
+  "actions.removeAll": "Xóa tất cả các chủ đề",
+  "actions.removeUnstarred": "Xóa các chủ đề chưa được đánh dấu",
   "defaultTitle": "Chủ đề mặc định",
   "displayItems": "Hiển thị mục",
   "duplicateLoading": "Đang sao chép chủ đề...",
   "duplicateSuccess": "Sao chép chủ đề thành công",
   "favorite": "Yêu thích",
-  "groupMode": {
-    "ascMessages": "Theo thứ tự tổng số tin nhắn",
-    "byTime": "Theo thời gian",
-    "descMessages": "Theo thứ tự tổng số tin nhắn giảm dần",
-    "flat": "Không phân nhóm"
-  },
-  "groupTitle": {
-    "byTime": {
-      "month": "Tháng này",
-      "today": "Hôm nay",
-      "week": "Tuần này",
-      "yesterday": "Hôm qua"
-    }
-  },
-  "guide": {
-    "desc": "Nhấn nút bên trái để lưu cuộc trò chuyện hiện tại thành chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới.",
-    "title": "Danh sách chủ đề"
-  },
+  "groupMode.ascMessages": "Theo thứ tự tổng số tin nhắn",
+  "groupMode.byTime": "Theo thời gian",
+  "groupMode.descMessages": "Theo thứ tự tổng số tin nhắn giảm dần",
+  "groupMode.flat": "Không phân nhóm",
+  "groupTitle.byTime.month": "Tháng này",
+  "groupTitle.byTime.today": "Hôm nay",
+  "groupTitle.byTime.week": "Tuần này",
+  "groupTitle.byTime.yesterday": "Hôm qua",
+  "guide.desc": "Nhấn nút bên trái để lưu cuộc trò chuyện hiện tại thành chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới.",
+  "guide.title": "Danh sách chủ đề",
   "importError": "Nhập thất bại",
   "importInvalidFormat": "Định dạng tệp không hợp lệ, vui lòng đảm bảo đó là tệp JSON hợp lệ",
   "importLoading": "Đang nhập cuộc trò chuyện...",

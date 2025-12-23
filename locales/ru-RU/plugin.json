@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "Список параметров"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Получить доступные модели",
-        "getAvailableTools": "Получить доступные инструменты",
-        "getConfig": "Получить конфигурацию",
-        "getMeta": "Получить метаданные",
-        "getPrompt": "Получить системную подсказку",
-        "searchMarketTools": "Поиск в магазине плагинов",
-        "searchOfficialTools": "Поиск официальных инструментов",
-        "setModel": "Установить модель",
-        "setOpeningMessage": "Установить приветственное сообщение",
-        "setOpeningQuestions": "Установить вступительные вопросы",
-        "togglePlugin": "Переключить плагин",
-        "updateChatConfig": "Обновить настройки чата",
-        "updateConfig": "Обновить конфигурацию",
-        "updateMeta": "Обновить метаданные",
-        "updatePrompt": "Обновить системную подсказку"
-      },
-      "title": "Конструктор агентов"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Получить доступные модели",
-        "installPlugin": "Установить плагин",
-        "inviteAgent": "Пригласить участника",
-        "removeAgent": "Удалить участника",
-        "searchMarketTools": "Поиск в магазине плагинов",
-        "updateAgentConfig": "Обновить конфигурацию агента",
-        "updatePrompt": "Обновить системную подсказку"
-      },
-      "title": "Конструктор группового агента"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "Общее сообщение",
-        "createAgent": "Добавить участника команды",
-        "createWorkflow": "Планирование рабочего процесса",
-        "executeTask": "Выполнить задачу",
-        "getAgentInfo": "Получить информацию об участнике",
-        "interrupt": "Прервать задачу",
-        "inviteAgent": "Пригласить участника",
-        "removeAgent": "Удалить участника",
-        "searchAgent": "Найти подходящего эксперта",
-        "speak": "Назначить выступающего",
-        "summarize": "Подвести итоги беседы",
-        "vote": "Инициировать голосование"
-      },
-      "title": "Координация команды"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "Очистить задачи",
-        "completeTodos": "Завершить задачи",
-        "createPlan": "Создать план",
-        "createTodos": "Создать задачи",
-        "removeTodos": "Удалить задачи",
-        "updatePlan": "Обновить план",
-        "updateTodos": "Обновить задачи"
-      },
-      "title": "Инструмент GTD"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "Чтение содержимого базы знаний",
-        "searchKnowledgeBase": "Поиск по базе знаний"
-      },
-      "title": "База знаний"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "Редактировать файл",
-        "getCommandOutput": "Получить вывод команды",
-        "globLocalFiles": "Поиск файлов по шаблону",
-        "grepContent": "Поиск по содержимому",
-        "killCommand": "Остановить выполнение кода",
-        "listLocalFiles": "Просмотр списка файлов",
-        "moveLocalFiles": "Переместить файлы",
-        "readLocalFile": "Чтение содержимого файла",
-        "renameLocalFile": "Переименовать",
-        "runCommand": "Выполнить код",
-        "searchLocalFiles": "Поиск файлов",
-        "writeLocalFile": "Запись в файл"
-      },
-      "title": "Локальная система"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "Пакетное обновление узлов",
-        "compareSnapshots": "Сравнить снимки",
-        "convertToList": "Преобразовать в список",
-        "createNode": "Создать узел",
-        "cropImage": "Обрезать изображение",
-        "deleteNode": "Удалить узел",
-        "deleteSnapshot": "Удалить снимок",
-        "deleteTableColumn": "Удалить столбец таблицы",
-        "deleteTableRow": "Удалить строку таблицы",
-        "duplicateNode": "Дублировать узел",
-        "editTitle": "Редактировать заголовок документа",
-        "indentListItem": "Увеличить отступ элемента списка",
-        "initPage": "Инициализировать документ",
-        "insertTableColumn": "Вставить столбец в таблицу",
-        "insertTableRow": "Вставить строку в таблицу",
-        "listSnapshots": "Список снимков",
-        "mergeNodes": "Объединить узлы",
-        "moveNode": "Переместить узел",
-        "outdentListItem": "Уменьшить отступ элемента списка",
-        "replaceText": "Заменить текст",
-        "resizeImage": "Изменить размер изображения",
-        "restoreSnapshot": "Восстановить снимок",
-        "rotateImage": "Повернуть изображение",
-        "saveSnapshot": "Сохранить снимок",
-        "setImageAlt": "Установить альтернативный текст изображения",
-        "splitNode": "Разделить узел",
-        "toggleListType": "Переключить тип списка",
-        "unwrapNode": "Развернуть узел",
-        "updateNode": "Обновить узел",
-        "wrapNodes": "Объединить узлы в группу"
-      },
-      "title": "Документ"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "Чтение содержимого нескольких страниц",
-        "crawlSinglePage": "Чтение содержимого страницы",
-        "search": "Поиск по страницам"
-      },
-      "title": "Поиск в интернете"
-    }
-  },
+  "arguments.title": "Список параметров",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "Получить доступные модели",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "Получить доступные инструменты",
+  "builtins.lobe-agent-builder.apiName.getConfig": "Получить конфигурацию",
+  "builtins.lobe-agent-builder.apiName.getMeta": "Получить метаданные",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "Получить системную подсказку",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "Поиск в магазине плагинов",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "Поиск официальных инструментов",
+  "builtins.lobe-agent-builder.apiName.setModel": "Установить модель",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "Установить приветственное сообщение",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "Установить вступительные вопросы",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "Переключить плагин",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "Обновить настройки чата",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "Обновить конфигурацию",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "Обновить метаданные",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "Обновить системную подсказку",
+  "builtins.lobe-agent-builder.title": "Конструктор агентов",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "Получить доступные модели",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "Установить плагин",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "Пригласить участника",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "Удалить участника",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "Поиск в магазине плагинов",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "Обновить конфигурацию агента",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "Обновить системную подсказку",
+  "builtins.lobe-group-agent-builder.title": "Конструктор группового агента",
+  "builtins.lobe-group-management.apiName.broadcast": "Общее сообщение",
+  "builtins.lobe-group-management.apiName.createAgent": "Добавить участника команды",
+  "builtins.lobe-group-management.apiName.createWorkflow": "Планирование рабочего процесса",
+  "builtins.lobe-group-management.apiName.executeTask": "Выполнить задачу",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "Получить информацию об участнике",
+  "builtins.lobe-group-management.apiName.interrupt": "Прервать задачу",
+  "builtins.lobe-group-management.apiName.inviteAgent": "Пригласить участника",
+  "builtins.lobe-group-management.apiName.removeAgent": "Удалить участника",
+  "builtins.lobe-group-management.apiName.searchAgent": "Найти подходящего эксперта",
+  "builtins.lobe-group-management.apiName.speak": "Назначить выступающего",
+  "builtins.lobe-group-management.apiName.summarize": "Подвести итоги беседы",
+  "builtins.lobe-group-management.apiName.vote": "Инициировать голосование",
+  "builtins.lobe-group-management.title": "Координация команды",
+  "builtins.lobe-gtd.apiName.clearTodos": "Очистить задачи",
+  "builtins.lobe-gtd.apiName.completeTodos": "Завершить задачи",
+  "builtins.lobe-gtd.apiName.createPlan": "Создать план",
+  "builtins.lobe-gtd.apiName.createTodos": "Создать задачи",
+  "builtins.lobe-gtd.apiName.removeTodos": "Удалить задачи",
+  "builtins.lobe-gtd.apiName.updatePlan": "Обновить план",
+  "builtins.lobe-gtd.apiName.updateTodos": "Обновить задачи",
+  "builtins.lobe-gtd.title": "Инструмент GTD",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "Чтение содержимого базы знаний",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "Поиск по базе знаний",
+  "builtins.lobe-knowledge-base.title": "База знаний",
+  "builtins.lobe-local-system.apiName.editLocalFile": "Редактировать файл",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "Получить вывод команды",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "Поиск файлов по шаблону",
+  "builtins.lobe-local-system.apiName.grepContent": "Поиск по содержимому",
+  "builtins.lobe-local-system.apiName.killCommand": "Остановить выполнение кода",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "Просмотр списка файлов",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "Переместить файлы",
+  "builtins.lobe-local-system.apiName.readLocalFile": "Чтение содержимого файла",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "Переименовать",
+  "builtins.lobe-local-system.apiName.runCommand": "Выполнить код",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "Поиск файлов",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "Запись в файл",
+  "builtins.lobe-local-system.title": "Локальная система",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "Пакетное обновление узлов",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "Сравнить снимки",
+  "builtins.lobe-page-agent.apiName.convertToList": "Преобразовать в список",
+  "builtins.lobe-page-agent.apiName.createNode": "Создать узел",
+  "builtins.lobe-page-agent.apiName.cropImage": "Обрезать изображение",
+  "builtins.lobe-page-agent.apiName.deleteNode": "Удалить узел",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "Удалить снимок",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "Удалить столбец таблицы",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "Удалить строку таблицы",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "Дублировать узел",
+  "builtins.lobe-page-agent.apiName.editTitle": "Редактировать заголовок документа",
+  "builtins.lobe-page-agent.apiName.indentListItem": "Увеличить отступ элемента списка",
+  "builtins.lobe-page-agent.apiName.initPage": "Инициализировать документ",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "Вставить столбец в таблицу",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "Вставить строку в таблицу",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "Список снимков",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "Объединить узлы",
+  "builtins.lobe-page-agent.apiName.moveNode": "Переместить узел",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "Уменьшить отступ элемента списка",
+  "builtins.lobe-page-agent.apiName.replaceText": "Заменить текст",
+  "builtins.lobe-page-agent.apiName.resizeImage": "Изменить размер изображения",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "Восстановить снимок",
+  "builtins.lobe-page-agent.apiName.rotateImage": "Повернуть изображение",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "Сохранить снимок",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "Установить альтернативный текст изображения",
+  "builtins.lobe-page-agent.apiName.splitNode": "Разделить узел",
+  "builtins.lobe-page-agent.apiName.toggleListType": "Переключить тип списка",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "Развернуть узел",
+  "builtins.lobe-page-agent.apiName.updateNode": "Обновить узел",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "Объединить узлы в группу",
+  "builtins.lobe-page-agent.title": "Документ",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "Чтение содержимого нескольких страниц",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "Чтение содержимого страницы",
+  "builtins.lobe-web-browsing.apiName.search": "Поиск по страницам",
+  "builtins.lobe-web-browsing.title": "Поиск в интернете",
   "confirm": "Подтвердить",
-  "debug": {
-    "arguments": "Аргументы вызова",
-    "function_call": "Вызов функции",
-    "off": "Отключить отладку",
-    "on": "Просмотр информации о вызове плагина",
-    "payload": "Полезная нагрузка плагина",
-    "pluginState": "Состояние плагина",
-    "response": "Результат",
-    "title": "Детали плагина",
-    "tool_call": "Запрос вызова инструмента"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "Пожалуйста, перейдите на страницу редактирования для просмотра деталей",
-      "editBtn": "Редактировать сейчас",
-      "title": "Это пользовательский плагин"
-    },
-    "emptyState": {
-      "description": "Пожалуйста, сначала установите этот плагин, чтобы просмотреть его возможности и параметры настройки",
-      "title": "Просмотр деталей плагина после установки"
-    },
-    "info": {
-      "description": "Описание API",
-      "name": "Название API"
-    },
-    "tabs": {
-      "info": "Возможности плагина",
-      "manifest": "Файл установки",
-      "settings": "Настройки"
-    },
-    "title": "Детали плагина"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "Вы собираетесь удалить этот локальный плагин. После удаления его нельзя будет восстановить. Удалить плагин?",
-    "customParams": {
-      "useProxy": {
-        "label": "Установка через прокси (если возникают ошибки доступа из-за CORS, попробуйте включить эту опцию и переустановить)"
-      }
-    },
-    "deleteSuccess": "Плагин успешно удалён",
-    "manifest": {
-      "identifier": {
-        "desc": "Уникальный идентификатор плагина",
-        "label": "Идентификатор"
-      },
-      "mode": {
-        "mcp": "MCP плагин",
-        "mcpExp": "Экспериментальный",
-        "url": "Онлайн-ссылка"
-      },
-      "name": {
-        "desc": "Название плагина",
-        "label": "Заголовок",
-        "placeholder": "Поисковая система"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "Расширенные настройки"
-      },
-      "args": {
-        "desc": "Список аргументов для команды запуска, обычно здесь указывается имя MCP сервера или путь к скрипту запуска",
-        "label": "Аргументы команды",
-        "placeholder": "Например: mcp-hello-world",
-        "required": "Пожалуйста, введите аргументы запуска"
-      },
-      "auth": {
-        "bear": "API ключ",
-        "desc": "Выберите способ аутентификации MCP сервера",
-        "label": "Тип аутентификации",
-        "none": "Аутентификация не требуется",
-        "placeholder": "Пожалуйста, выберите тип аутентификации",
-        "token": {
-          "desc": "Введите ваш API ключ или Bearer токен",
-          "label": "API ключ",
-          "placeholder": "sk-xxxxx",
-          "required": "Пожалуйста, введите токен аутентификации"
-        }
-      },
-      "avatar": {
-        "label": "Иконка плагина"
-      },
-      "command": {
-        "desc": "Исполняемый файл или скрипт для запуска MCP STDIO сервера",
-        "label": "Команда",
-        "placeholder": "Например: npx / uv / docker и т.д.",
-        "required": "Пожалуйста, введите команду запуска"
-      },
-      "desc": {
-        "desc": "Добавьте описание плагина",
-        "label": "Описание плагина",
-        "placeholder": "Дополните информацию об использовании и сценариях"
-      },
-      "endpoint": {
-        "desc": "Введите адрес вашего MCP Streamable HTTP сервера",
-        "label": "URL MCP Endpoint"
-      },
-      "env": {
-        "add": "Добавить строку",
-        "desc": "Введите переменные окружения, необходимые для MCP сервера",
-        "duplicateKeyError": "Ключ поля должен быть уникальным",
-        "formValidationFailed": "Ошибка проверки формы, пожалуйста, проверьте формат параметров",
-        "keyRequired": "Ключ поля не может быть пустым",
-        "label": "Переменные окружения MCP сервера",
-        "stringifyError": "Не удалось сериализовать параметры, проверьте формат"
-      },
-      "headers": {
-        "add": "Добавить строку",
-        "desc": "Введите заголовки запроса",
-        "label": "HTTP заголовки"
-      },
-      "identifier": {
-        "desc": "Укажите имя для вашего MCP плагина, используйте английские символы",
-        "invalid": "Идентификатор может содержать только буквы, цифры, дефисы и подчеркивания",
-        "label": "Имя MCP плагина",
-        "placeholder": "Например: my-mcp-plugin",
-        "required": "Пожалуйста, введите идентификатор MCP сервиса"
-      },
-      "previewManifest": "Предварительный просмотр файла описания плагина",
-      "quickImport": "Быстрый импорт JSON конфигурации",
-      "quickImportError": {
-        "empty": "Ввод не может быть пустым",
-        "invalidJson": "Неверный формат JSON",
-        "invalidStructure": "Неверная структура JSON"
-      },
-      "stdioNotSupported": "Текущая среда не поддерживает MCP плагины типа stdio",
-      "testConnection": "Проверить соединение",
-      "testConnectionTip": "MCP плагин можно использовать только после успешного теста соединения",
-      "type": {
-        "desc": "Выберите способ связи MCP плагина, веб-версия поддерживает только Streamable HTTP",
-        "httpFeature1": "Совместимость с веб и десктоп версиями",
-        "httpFeature2": "Подключение к удалённому MCP серверу без дополнительной установки",
-        "httpShortDesc": "Протокол связи на основе потокового HTTP",
-        "label": "Тип MCP плагина",
-        "stdioFeature1": "Низкая задержка связи, подходит для локального выполнения",
-        "stdioFeature2": "Требуется локальная установка MCP сервера",
-        "stdioNotAvailable": "Режим STDIO доступен только в десктоп версии",
-        "stdioShortDesc": "Протокол связи на основе стандартного ввода-вывода",
-        "title": "Тип MCP плагина"
-      },
-      "url": {
-        "desc": "Введите адрес Streamable HTTP MCP сервера, SSE режим не поддерживается",
-        "invalid": "Пожалуйста, введите корректный URL",
-        "label": "URL Streamable HTTP Endpoint",
-        "required": "Пожалуйста, введите URL MCP сервиса"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "Автор плагина",
-        "label": "Автор"
-      },
-      "avatar": {
-        "desc": "Иконка плагина, можно использовать Emoji или URL",
-        "label": "Иконка"
-      },
-      "description": {
-        "desc": "Описание плагина",
-        "label": "Описание",
-        "placeholder": "Поиск информации через поисковую систему"
-      },
-      "formFieldRequired": "Это поле обязательно для заполнения",
-      "homepage": {
-        "desc": "Домашняя страница плагина",
-        "label": "Домашняя страница"
-      },
-      "identifier": {
-        "desc": "Уникальный идентификатор плагина, автоматически определяется из manifest",
-        "errorDuplicate": "Идентификатор совпадает с уже существующим плагином, пожалуйста, измените его",
-        "label": "Идентификатор",
-        "pattenErrorMessage": "Допустимы только английские буквы, цифры, дефис и подчеркивание"
-      },
-      "lobe": "{{appName}} плагин",
-      "manifest": {
-        "desc": "{{appName}} установит плагин по этой ссылке",
-        "label": "URL файла описания плагина (Manifest)",
-        "preview": "Предварительный просмотр Manifest",
-        "refresh": "Обновить"
-      },
-      "openai": "OpenAI плагин",
-      "title": {
-        "desc": "Заголовок плагина",
-        "label": "Заголовок",
-        "placeholder": "Поисковая система"
-      }
-    },
-    "metaConfig": "Конфигурация метаданных плагина",
-    "modalDesc": "После добавления пользовательского плагина его можно использовать для разработки и тестирования, а также напрямую в диалогах. Для разработки плагинов смотрите <1>документацию по разработке↗</>",
-    "openai": {
-      "importUrl": "Импорт из URL",
-      "schema": "Схема"
-    },
-    "preview": {
-      "api": {
-        "noParams": "У этого инструмента нет параметров",
-        "noResults": "API, соответствующие условиям поиска, не найдены",
-        "params": "Параметры:",
-        "searchPlaceholder": "Поиск инструмента..."
-      },
-      "card": "Предварительный просмотр отображения плагина",
-      "desc": "Предварительный просмотр описания плагина",
-      "empty": {
-        "desc": "После настройки здесь можно будет просмотреть поддерживаемые возможности плагина",
-        "title": "Начните предварительный просмотр после настройки плагина"
-      },
-      "title": "Предварительный просмотр названия плагина"
-    },
-    "save": "Установить плагин",
-    "saveSuccess": "Настройки плагина успешно сохранены",
-    "tabs": {
-      "manifest": "Функциональный манифест (Manifest)",
-      "meta": "Метаданные плагина"
-    },
-    "title": {
-      "create": "Добавить пользовательский плагин",
-      "edit": "Редактировать пользовательский плагин"
-    },
-    "type": {
-      "lobe": "{{appName}} плагин",
-      "openai": "OpenAI плагин"
-    },
-    "update": "Обновить",
-    "updateSuccess": "Настройки плагина успешно обновлены"
-  },
-  "empty": {
-    "description": "В магазине плагинов вы найдёте множество полезных инструментов — начните исследовать прямо сейчас",
-    "search": "Совпадений среди плагинов не найдено",
-    "title": "Плагины отсутствуют"
-  },
-  "error": {
-    "fetchError": "Не удалось получить manifest по ссылке, пожалуйста, убедитесь в её корректности и проверьте разрешения CORS",
-    "installError": "Ошибка установки плагина {{name}}",
-    "manifestInvalid": "Manifest не соответствует стандартам, результат проверки: \n\n {{error}}",
-    "noManifest": "Файл описания отсутствует",
-    "openAPIInvalid": "Ошибка разбора OpenAPI, ошибка: \n\n {{error}}",
-    "reinstallError": "Ошибка обновления плагина {{name}}",
-    "testConnectionFailed": "Не удалось получить Manifest: {{error}}",
-    "urlError": "По этой ссылке не возвращается содержимое в формате JSON, пожалуйста, убедитесь, что ссылка действительна"
-  },
-  "inspector": {
-    "args": "Просмотр списка параметров",
-    "delete": "Удалить вызов инструмента",
-    "orphanedToolCall": "Этот вызов инструмента, возможно, стал изолированным из-за непредвиденных обстоятельств, что может повлиять на корректную работу агента. Пожалуйста, удалите его.",
-    "pluginRender": "Просмотр интерфейса плагина"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "Удалён",
-      "local.config": "Настройки",
-      "local.title": "Пользовательский"
-    }
-  },
-  "loading": {
-    "content": "Вызов плагина...",
-    "plugin": "Плагин работает..."
-  },
-  "mcpEmpty": {
-    "deployment": "Нет доступных вариантов развертывания",
-    "prompts": "У этого плагина нет подсказок",
-    "resources": "У этого плагина нет ресурсов",
-    "tools": "У этого плагина нет инструментов"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "Проверка среды установки...",
-    "COMPLETED": "Установка завершена",
-    "CONFIGURATION_REQUIRED": "Пожалуйста, завершите настройку перед продолжением установки",
-    "ERROR": "Ошибка установки",
-    "FETCHING_MANIFEST": "Получение файла описания плагина...",
-    "GETTING_SERVER_MANIFEST": "Инициализация MCP сервера...",
-    "INSTALLING_PLUGIN": "Установка плагина...",
-    "configurationDescription": "Для корректной работы MCP плагина необходимо настроить параметры, пожалуйста, заполните обязательные поля",
-    "configurationRequired": "Настройка параметров плагина",
-    "continueInstall": "Продолжить установку",
-    "dependenciesDescription": "Для работы этого плагина необходимо установить системные зависимости. Пожалуйста, установите отсутствующие зависимости согласно инструкции, затем нажмите 'Проверить снова' для продолжения установки.",
-    "dependenciesRequired": "Пожалуйста, установите системные зависимости плагина",
-    "dependencyStatus": {
-      "installed": "Установлено",
-      "notInstalled": "Не установлено",
-      "requiredVersion": "Требуемая версия: {{version}}"
-    },
-    "errorDetails": {
-      "args": "Аргументы",
-      "command": "Команда",
-      "connectionParams": "Параметры подключения",
-      "env": "Переменные окружения",
-      "errorOutput": "Лог ошибок",
-      "exitCode": "Код выхода",
-      "hideDetails": "Скрыть детали",
-      "originalError": "Исходная ошибка",
-      "showDetails": "Показать детали"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "Ошибка авторизации",
-      "CONNECTION_FAILED": "Ошибка подключения",
-      "INITIALIZATION_TIMEOUT": "Превышено время инициализации",
-      "PROCESS_SPAWN_ERROR": "Ошибка запуска процесса",
-      "UNKNOWN_ERROR": "Неизвестная ошибка",
-      "VALIDATION_ERROR": "Ошибка проверки параметров"
-    },
-    "installError": "Ошибка установки MCP плагина, причина: {{detail}}",
-    "installMethods": {
-      "manual": "Ручная установка:",
-      "recommended": "Рекомендуемый способ установки:"
-    },
-    "recheckDependencies": "Проверить зависимости снова",
-    "skipDependencies": "Пропустить проверку"
-  },
+  "debug.arguments": "Аргументы вызова",
+  "debug.function_call": "Вызов функции",
+  "debug.off": "Отключить отладку",
+  "debug.on": "Просмотр информации о вызове плагина",
+  "debug.payload": "Полезная нагрузка плагина",
+  "debug.pluginState": "Состояние плагина",
+  "debug.response": "Результат",
+  "debug.title": "Детали плагина",
+  "debug.tool_call": "Запрос вызова инструмента",
+  "detailModal.customPlugin.description": "Пожалуйста, перейдите на страницу редактирования для просмотра деталей",
+  "detailModal.customPlugin.editBtn": "Редактировать сейчас",
+  "detailModal.customPlugin.title": "Это пользовательский плагин",
+  "detailModal.emptyState.description": "Пожалуйста, сначала установите этот плагин, чтобы просмотреть его возможности и параметры настройки",
+  "detailModal.emptyState.title": "Просмотр деталей плагина после установки",
+  "detailModal.info.description": "Описание API",
+  "detailModal.info.name": "Название API",
+  "detailModal.tabs.info": "Возможности плагина",
+  "detailModal.tabs.manifest": "Файл установки",
+  "detailModal.tabs.settings": "Настройки",
+  "detailModal.title": "Детали плагина",
+  "dev.confirmDeleteDevPlugin": "Вы собираетесь удалить этот локальный плагин. После удаления его нельзя будет восстановить. Удалить плагин?",
+  "dev.customParams.useProxy.label": "Установка через прокси (если возникают ошибки доступа из-за CORS, попробуйте включить эту опцию и переустановить)",
+  "dev.deleteSuccess": "Плагин успешно удалён",
+  "dev.manifest.identifier.desc": "Уникальный идентификатор плагина",
+  "dev.manifest.identifier.label": "Идентификатор",
+  "dev.manifest.mode.mcp": "MCP плагин",
+  "dev.manifest.mode.mcpExp": "Экспериментальный",
+  "dev.manifest.mode.url": "Онлайн-ссылка",
+  "dev.manifest.name.desc": "Название плагина",
+  "dev.manifest.name.label": "Заголовок",
+  "dev.manifest.name.placeholder": "Поисковая система",
+  "dev.mcp.advanced.title": "Расширенные настройки",
+  "dev.mcp.args.desc": "Список аргументов для команды запуска, обычно здесь указывается имя MCP сервера или путь к скрипту запуска",
+  "dev.mcp.args.label": "Аргументы команды",
+  "dev.mcp.args.placeholder": "Например: mcp-hello-world",
+  "dev.mcp.args.required": "Пожалуйста, введите аргументы запуска",
+  "dev.mcp.auth.bear": "API ключ",
+  "dev.mcp.auth.desc": "Выберите способ аутентификации MCP сервера",
+  "dev.mcp.auth.label": "Тип аутентификации",
+  "dev.mcp.auth.none": "Аутентификация не требуется",
+  "dev.mcp.auth.placeholder": "Пожалуйста, выберите тип аутентификации",
+  "dev.mcp.auth.token.desc": "Введите ваш API ключ или Bearer токен",
+  "dev.mcp.auth.token.label": "API ключ",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "Пожалуйста, введите токен аутентификации",
+  "dev.mcp.avatar.label": "Иконка плагина",
+  "dev.mcp.command.desc": "Исполняемый файл или скрипт для запуска MCP STDIO сервера",
+  "dev.mcp.command.label": "Команда",
+  "dev.mcp.command.placeholder": "Например: npx / uv / docker и т.д.",
+  "dev.mcp.command.required": "Пожалуйста, введите команду запуска",
+  "dev.mcp.desc.desc": "Добавьте описание плагина",
+  "dev.mcp.desc.label": "Описание плагина",
+  "dev.mcp.desc.placeholder": "Дополните информацию об использовании и сценариях",
+  "dev.mcp.endpoint.desc": "Введите адрес вашего MCP Streamable HTTP сервера",
+  "dev.mcp.endpoint.label": "URL MCP Endpoint",
+  "dev.mcp.env.add": "Добавить строку",
+  "dev.mcp.env.desc": "Введите переменные окружения, необходимые для MCP сервера",
+  "dev.mcp.env.duplicateKeyError": "Ключ поля должен быть уникальным",
+  "dev.mcp.env.formValidationFailed": "Ошибка проверки формы, пожалуйста, проверьте формат параметров",
+  "dev.mcp.env.keyRequired": "Ключ поля не может быть пустым",
+  "dev.mcp.env.label": "Переменные окружения MCP сервера",
+  "dev.mcp.env.stringifyError": "Не удалось сериализовать параметры, проверьте формат",
+  "dev.mcp.headers.add": "Добавить строку",
+  "dev.mcp.headers.desc": "Введите заголовки запроса",
+  "dev.mcp.headers.label": "HTTP заголовки",
+  "dev.mcp.identifier.desc": "Укажите имя для вашего MCP плагина, используйте английские символы",
+  "dev.mcp.identifier.invalid": "Идентификатор может содержать только буквы, цифры, дефисы и подчеркивания",
+  "dev.mcp.identifier.label": "Имя MCP плагина",
+  "dev.mcp.identifier.placeholder": "Например: my-mcp-plugin",
+  "dev.mcp.identifier.required": "Пожалуйста, введите идентификатор MCP сервиса",
+  "dev.mcp.previewManifest": "Предварительный просмотр файла описания плагина",
+  "dev.mcp.quickImport": "Быстрый импорт JSON конфигурации",
+  "dev.mcp.quickImportError.empty": "Ввод не может быть пустым",
+  "dev.mcp.quickImportError.invalidJson": "Неверный формат JSON",
+  "dev.mcp.quickImportError.invalidStructure": "Неверная структура JSON",
+  "dev.mcp.stdioNotSupported": "Текущая среда не поддерживает MCP плагины типа stdio",
+  "dev.mcp.testConnection": "Проверить соединение",
+  "dev.mcp.testConnectionTip": "MCP плагин можно использовать только после успешного теста соединения",
+  "dev.mcp.type.desc": "Выберите способ связи MCP плагина, веб-версия поддерживает только Streamable HTTP",
+  "dev.mcp.type.httpFeature1": "Совместимость с веб и десктоп версиями",
+  "dev.mcp.type.httpFeature2": "Подключение к удалённому MCP серверу без дополнительной установки",
+  "dev.mcp.type.httpShortDesc": "Протокол связи на основе потокового HTTP",
+  "dev.mcp.type.label": "Тип MCP плагина",
+  "dev.mcp.type.stdioFeature1": "Низкая задержка связи, подходит для локального выполнения",
+  "dev.mcp.type.stdioFeature2": "Требуется локальная установка MCP сервера",
+  "dev.mcp.type.stdioNotAvailable": "Режим STDIO доступен только в десктоп версии",
+  "dev.mcp.type.stdioShortDesc": "Протокол связи на основе стандартного ввода-вывода",
+  "dev.mcp.type.title": "Тип MCP плагина",
+  "dev.mcp.url.desc": "Введите адрес Streamable HTTP MCP сервера, SSE режим не поддерживается",
+  "dev.mcp.url.invalid": "Пожалуйста, введите корректный URL",
+  "dev.mcp.url.label": "URL Streamable HTTP Endpoint",
+  "dev.mcp.url.required": "Пожалуйста, введите URL MCP сервиса",
+  "dev.meta.author.desc": "Автор плагина",
+  "dev.meta.author.label": "Автор",
+  "dev.meta.avatar.desc": "Иконка плагина, можно использовать Emoji или URL",
+  "dev.meta.avatar.label": "Иконка",
+  "dev.meta.description.desc": "Описание плагина",
+  "dev.meta.description.label": "Описание",
+  "dev.meta.description.placeholder": "Поиск информации через поисковую систему",
+  "dev.meta.formFieldRequired": "Это поле обязательно для заполнения",
+  "dev.meta.homepage.desc": "Домашняя страница плагина",
+  "dev.meta.homepage.label": "Домашняя страница",
+  "dev.meta.identifier.desc": "Уникальный идентификатор плагина, автоматически определяется из manifest",
+  "dev.meta.identifier.errorDuplicate": "Идентификатор совпадает с уже существующим плагином, пожалуйста, измените его",
+  "dev.meta.identifier.label": "Идентификатор",
+  "dev.meta.identifier.pattenErrorMessage": "Допустимы только английские буквы, цифры, дефис и подчеркивание",
+  "dev.meta.lobe": "{{appName}} плагин",
+  "dev.meta.manifest.desc": "{{appName}} установит плагин по этой ссылке",
+  "dev.meta.manifest.label": "URL файла описания плагина (Manifest)",
+  "dev.meta.manifest.preview": "Предварительный просмотр Manifest",
+  "dev.meta.manifest.refresh": "Обновить",
+  "dev.meta.openai": "OpenAI плагин",
+  "dev.meta.title.desc": "Заголовок плагина",
+  "dev.meta.title.label": "Заголовок",
+  "dev.meta.title.placeholder": "Поисковая система",
+  "dev.metaConfig": "Конфигурация метаданных плагина",
+  "dev.modalDesc": "После добавления пользовательского плагина его можно использовать для разработки и тестирования, а также напрямую в диалогах. Для разработки плагинов смотрите <1>документацию по разработке↗</>",
+  "dev.openai.importUrl": "Импорт из URL",
+  "dev.openai.schema": "Схема",
+  "dev.preview.api.noParams": "У этого инструмента нет параметров",
+  "dev.preview.api.noResults": "API, соответствующие условиям поиска, не найдены",
+  "dev.preview.api.params": "Параметры:",
+  "dev.preview.api.searchPlaceholder": "Поиск инструмента...",
+  "dev.preview.card": "Предварительный просмотр отображения плагина",
+  "dev.preview.desc": "Предварительный просмотр описания плагина",
+  "dev.preview.empty.desc": "После настройки здесь можно будет просмотреть поддерживаемые возможности плагина",
+  "dev.preview.empty.title": "Начните предварительный просмотр после настройки плагина",
+  "dev.preview.title": "Предварительный просмотр названия плагина",
+  "dev.save": "Установить плагин",
+  "dev.saveSuccess": "Настройки плагина успешно сохранены",
+  "dev.tabs.manifest": "Функциональный манифест (Manifest)",
+  "dev.tabs.meta": "Метаданные плагина",
+  "dev.title.create": "Добавить пользовательский плагин",
+  "dev.title.edit": "Редактировать пользовательский плагин",
+  "dev.type.lobe": "{{appName}} плагин",
+  "dev.type.openai": "OpenAI плагин",
+  "dev.update": "Обновить",
+  "dev.updateSuccess": "Настройки плагина успешно обновлены",
+  "empty.description": "В магазине плагинов вы найдёте множество полезных инструментов — начните исследовать прямо сейчас",
+  "empty.search": "Совпадений среди плагинов не найдено",
+  "empty.title": "Плагины отсутствуют",
+  "error.fetchError": "Не удалось получить manifest по ссылке, пожалуйста, убедитесь в её корректности и проверьте разрешения CORS",
+  "error.installError": "Ошибка установки плагина {{name}}",
+  "error.manifestInvalid": "Manifest не соответствует стандартам, результат проверки: \n\n {{error}}",
+  "error.noManifest": "Файл описания отсутствует",
+  "error.openAPIInvalid": "Ошибка разбора OpenAPI, ошибка: \n\n {{error}}",
+  "error.reinstallError": "Ошибка обновления плагина {{name}}",
+  "error.testConnectionFailed": "Не удалось получить Manifest: {{error}}",
+  "error.urlError": "По этой ссылке не возвращается содержимое в формате JSON, пожалуйста, убедитесь, что ссылка действительна",
+  "inspector.args": "Просмотр списка параметров",
+  "inspector.delete": "Удалить вызов инструмента",
+  "inspector.orphanedToolCall": "Этот вызов инструмента, возможно, стал изолированным из-за непредвиденных обстоятельств, что может повлиять на корректную работу агента. Пожалуйста, удалите его.",
+  "inspector.pluginRender": "Просмотр интерфейса плагина",
+  "list.item[\"deprecated.title\"]": "Удалён",
+  "list.item[\"local.config\"]": "Настройки",
+  "list.item[\"local.title\"]": "Пользовательский",
+  "loading.content": "Вызов плагина...",
+  "loading.plugin": "Плагин работает...",
+  "mcpEmpty.deployment": "Нет доступных вариантов развертывания",
+  "mcpEmpty.prompts": "У этого плагина нет подсказок",
+  "mcpEmpty.resources": "У этого плагина нет ресурсов",
+  "mcpEmpty.tools": "У этого плагина нет инструментов",
+  "mcpInstall.CHECKING_INSTALLATION": "Проверка среды установки...",
+  "mcpInstall.COMPLETED": "Установка завершена",
+  "mcpInstall.CONFIGURATION_REQUIRED": "Пожалуйста, завершите настройку перед продолжением установки",
+  "mcpInstall.ERROR": "Ошибка установки",
+  "mcpInstall.FETCHING_MANIFEST": "Получение файла описания плагина...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "Инициализация MCP сервера...",
+  "mcpInstall.INSTALLING_PLUGIN": "Установка плагина...",
+  "mcpInstall.configurationDescription": "Для корректной работы MCP плагина необходимо настроить параметры, пожалуйста, заполните обязательные поля",
+  "mcpInstall.configurationRequired": "Настройка параметров плагина",
+  "mcpInstall.continueInstall": "Продолжить установку",
+  "mcpInstall.dependenciesDescription": "Для работы этого плагина необходимо установить системные зависимости. Пожалуйста, установите отсутствующие зависимости согласно инструкции, затем нажмите 'Проверить снова' для продолжения установки.",
+  "mcpInstall.dependenciesRequired": "Пожалуйста, установите системные зависимости плагина",
+  "mcpInstall.dependencyStatus.installed": "Установлено",
+  "mcpInstall.dependencyStatus.notInstalled": "Не установлено",
+  "mcpInstall.dependencyStatus.requiredVersion": "Требуемая версия: {{version}}",
+  "mcpInstall.errorDetails.args": "Аргументы",
+  "mcpInstall.errorDetails.command": "Команда",
+  "mcpInstall.errorDetails.connectionParams": "Параметры подключения",
+  "mcpInstall.errorDetails.env": "Переменные окружения",
+  "mcpInstall.errorDetails.errorOutput": "Лог ошибок",
+  "mcpInstall.errorDetails.exitCode": "Код выхода",
+  "mcpInstall.errorDetails.hideDetails": "Скрыть детали",
+  "mcpInstall.errorDetails.originalError": "Исходная ошибка",
+  "mcpInstall.errorDetails.showDetails": "Показать детали",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "Ошибка авторизации",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "Ошибка подключения",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "Превышено время инициализации",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "Ошибка запуска процесса",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "Неизвестная ошибка",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "Ошибка проверки параметров",
+  "mcpInstall.installError": "Ошибка установки MCP плагина, причина: {{detail}}",
+  "mcpInstall.installMethods.manual": "Ручная установка:",
+  "mcpInstall.installMethods.recommended": "Рекомендуемый способ установки:",
+  "mcpInstall.recheckDependencies": "Проверить зависимости снова",
+  "mcpInstall.skipDependencies": "Пропустить проверку",
   "pluginList": "Список плагинов",
-  "protocolInstall": {
-    "actions": {
-      "install": "Установить",
-      "installAnyway": "Установить в любом случае",
-      "installed": "Установлено"
-    },
-    "config": {
-      "addEnv": "Добавить переменную окружения",
-      "addHeaders": "Добавить заголовки запроса",
-      "args": "Аргументы",
-      "command": "Команда",
-      "env": "Переменные окружения",
-      "headers": "Заголовки запроса",
-      "title": "Информация о конфигурации",
-      "type": {
-        "http": "Тип: HTTP",
-        "label": "Тип",
-        "stdio": "Тип: Stdio"
-      },
-      "url": "Адрес сервиса"
-    },
-    "custom": {
-      "badge": "Пользовательский плагин",
-      "security": {
-        "description": "Этот плагин не прошёл официальную проверку, установка может быть небезопасной! Пожалуйста, убедитесь, что вы доверяете источнику плагина.",
-        "title": "⚠️ Предупреждение о безопасности"
-      },
-      "title": "Установка пользовательского плагина"
-    },
-    "install": {
-      "title": "Информация об установке"
-    },
-    "marketplace": {
-      "title": "Установка сторонних плагинов",
-      "trustedBy": "Предоставлено {{name}}",
-      "unverified": {
-        "title": "Непроверенные сторонние плагины",
-        "warning": "Этот плагин поступил из непроверенного стороннего сообщества. Перед установкой убедитесь, что вы доверяете этому источнику."
-      },
-      "verified": "Проверено"
-    },
-    "messages": {
-      "connectionTestFailed": "Тест соединения не удался",
-      "installError": "Ошибка установки плагина, попробуйте снова",
-      "installSuccess": "Плагин {{name}} успешно установлен!",
-      "manifestError": "Не удалось получить детали плагина, проверьте подключение к сети и попробуйте снова",
-      "manifestNotFound": "Не удалось получить файл описания плагина"
-    },
-    "meta": {
-      "author": "Автор",
-      "homepage": "Домашняя страница",
-      "identifier": "Идентификатор",
-      "source": "Источник",
-      "version": "Версия"
-    },
-    "official": {
-      "badge": "Официальный плагин LobeHub",
-      "description": "Этот плагин разработан и поддерживается официальной командой LobeHub, прошёл строгую проверку безопасности и безопасен для использования.",
-      "loadingMessage": "Получение деталей плагина...",
-      "loadingTitle": "Загрузка",
-      "title": "Установка официального плагина"
-    },
-    "title": "Установка MCP плагина",
-    "warning": "⚠️ Пожалуйста, убедитесь, что вы доверяете источнику этого плагина, вредоносные плагины могут угрожать безопасности вашей системы."
-  },
-  "search": {
-    "config": {
-      "addKey": "Добавить ключ",
-      "close": "Удалить",
-      "confirm": "Конфигурация завершена, повторить попытку"
-    },
-    "crawPages": {
-      "crawling": "Определение ссылок...",
-      "detail": {
-        "preview": "Предварительный просмотр",
-        "raw": "Исходный текст",
-        "tooLong": "Текст слишком длинный, в контекст диалога включено только первые {{characters}} символов, остальное не учитывается"
-      },
-      "meta": {
-        "crawler": "Режим сканирования",
-        "words": "Количество символов"
-      }
-    },
-    "searchxng": {
-      "baseURL": "Пожалуйста, введите",
-      "description": "Введите URL SearchXNG для начала сетевого поиска",
-      "keyPlaceholder": "Пожалуйста, введите ключ",
-      "title": "Настройка поисковой системы SearchXNG",
-      "unconfiguredDesc": "Пожалуйста, обратитесь к администратору для настройки SearchXNG, чтобы начать сетевой поиск",
-      "unconfiguredTitle": "SearchXNG не настроен"
-    },
-    "title": "Сетевой поиск"
-  },
+  "protocolInstall.actions.install": "Установить",
+  "protocolInstall.actions.installAnyway": "Установить в любом случае",
+  "protocolInstall.actions.installed": "Установлено",
+  "protocolInstall.config.addEnv": "Добавить переменную окружения",
+  "protocolInstall.config.addHeaders": "Добавить заголовки запроса",
+  "protocolInstall.config.args": "Аргументы",
+  "protocolInstall.config.command": "Команда",
+  "protocolInstall.config.env": "Переменные окружения",
+  "protocolInstall.config.headers": "Заголовки запроса",
+  "protocolInstall.config.title": "Информация о конфигурации",
+  "protocolInstall.config.type.http": "Тип: HTTP",
+  "protocolInstall.config.type.label": "Тип",
+  "protocolInstall.config.type.stdio": "Тип: Stdio",
+  "protocolInstall.config.url": "Адрес сервиса",
+  "protocolInstall.custom.badge": "Пользовательский плагин",
+  "protocolInstall.custom.security.description": "Этот плагин не прошёл официальную проверку, установка может быть небезопасной! Пожалуйста, убедитесь, что вы доверяете источнику плагина.",
+  "protocolInstall.custom.security.title": "⚠️ Предупреждение о безопасности",
+  "protocolInstall.custom.title": "Установка пользовательского плагина",
+  "protocolInstall.install.title": "Информация об установке",
+  "protocolInstall.marketplace.title": "Установка сторонних плагинов",
+  "protocolInstall.marketplace.trustedBy": "Предоставлено {{name}}",
+  "protocolInstall.marketplace.unverified.title": "Непроверенные сторонние плагины",
+  "protocolInstall.marketplace.unverified.warning": "Этот плагин поступил из непроверенного стороннего сообщества. Перед установкой убедитесь, что вы доверяете этому источнику.",
+  "protocolInstall.marketplace.verified": "Проверено",
+  "protocolInstall.messages.connectionTestFailed": "Тест соединения не удался",
+  "protocolInstall.messages.installError": "Ошибка установки плагина, попробуйте снова",
+  "protocolInstall.messages.installSuccess": "Плагин {{name}} успешно установлен!",
+  "protocolInstall.messages.manifestError": "Не удалось получить детали плагина, проверьте подключение к сети и попробуйте снова",
+  "protocolInstall.messages.manifestNotFound": "Не удалось получить файл описания плагина",
+  "protocolInstall.meta.author": "Автор",
+  "protocolInstall.meta.homepage": "Домашняя страница",
+  "protocolInstall.meta.identifier": "Идентификатор",
+  "protocolInstall.meta.source": "Источник",
+  "protocolInstall.meta.version": "Версия",
+  "protocolInstall.official.badge": "Официальный плагин LobeHub",
+  "protocolInstall.official.description": "Этот плагин разработан и поддерживается официальной командой LobeHub, прошёл строгую проверку безопасности и безопасен для использования.",
+  "protocolInstall.official.loadingMessage": "Получение деталей плагина...",
+  "protocolInstall.official.loadingTitle": "Загрузка",
+  "protocolInstall.official.title": "Установка официального плагина",
+  "protocolInstall.title": "Установка MCP плагина",
+  "protocolInstall.warning": "⚠️ Пожалуйста, убедитесь, что вы доверяете источнику этого плагина, вредоносные плагины могут угрожать безопасности вашей системы.",
+  "search.config.addKey": "Добавить ключ",
+  "search.config.close": "Удалить",
+  "search.config.confirm": "Конфигурация завершена, повторить попытку",
+  "search.crawPages.crawling": "Определение ссылок...",
+  "search.crawPages.detail.preview": "Предварительный просмотр",
+  "search.crawPages.detail.raw": "Исходный текст",
+  "search.crawPages.detail.tooLong": "Текст слишком длинный, в контекст диалога включено только первые {{characters}} символов, остальное не учитывается",
+  "search.crawPages.meta.crawler": "Режим сканирования",
+  "search.crawPages.meta.words": "Количество символов",
+  "search.searchxng.baseURL": "Пожалуйста, введите",
+  "search.searchxng.description": "Введите URL SearchXNG для начала сетевого поиска",
+  "search.searchxng.keyPlaceholder": "Пожалуйста, введите ключ",
+  "search.searchxng.title": "Настройка поисковой системы SearchXNG",
+  "search.searchxng.unconfiguredDesc": "Пожалуйста, обратитесь к администратору для настройки SearchXNG, чтобы начать сетевой поиск",
+  "search.searchxng.unconfiguredTitle": "SearchXNG не настроен",
+  "search.title": "Сетевой поиск",
   "setting": "Настройки плагина",
-  "settings": {
-    "capabilities": {
-      "prompts": "Подсказки",
-      "resources": "Ресурсы",
-      "title": "Возможности плагина",
-      "tools": "Инструменты"
-    },
-    "configuration": {
-      "title": "Конфигурация плагина"
-    },
-    "connection": {
-      "args": "Аргументы запуска",
-      "command": "Команда запуска",
-      "title": "Информация о подключении",
-      "type": "Тип подключения",
-      "url": "Адрес сервиса"
-    },
-    "edit": "Редактировать",
-    "envConfigDescription": "Эти настройки будут переданы как переменные окружения при запуске MCP сервера",
-    "httpTypeNotice": "HTTP тип MCP плагина не требует настройки переменных окружения",
-    "indexUrl": {
-      "title": "Индекс сообщества",
-      "tooltip": "Онлайн-редактирование пока не поддерживается, настройте через переменные окружения при развертывании"
-    },
-    "messages": {
-      "connectionUpdateFailed": "Не удалось обновить информацию о подключении",
-      "connectionUpdateSuccess": "Информация о подключении успешно обновлена",
-      "envUpdateFailed": "Не удалось сохранить переменные окружения",
-      "envUpdateSuccess": "Переменные окружения успешно сохранены"
-    },
-    "modalDesc": "После настройки адреса сообщества плагинов вы сможете использовать собственное сообщество плагинов",
-    "rules": {
-      "argsRequired": "Пожалуйста, введите аргументы запуска",
-      "commandRequired": "Пожалуйста, введите команду запуска",
-      "urlRequired": "Пожалуйста, введите адрес сервиса"
-    },
-    "saveSettings": "Сохранить настройки",
-    "title": "Настройки сообщества плагинов"
-  },
+  "settings.capabilities.prompts": "Подсказки",
+  "settings.capabilities.resources": "Ресурсы",
+  "settings.capabilities.title": "Возможности плагина",
+  "settings.capabilities.tools": "Инструменты",
+  "settings.configuration.title": "Конфигурация плагина",
+  "settings.connection.args": "Аргументы запуска",
+  "settings.connection.command": "Команда запуска",
+  "settings.connection.title": "Информация о подключении",
+  "settings.connection.type": "Тип подключения",
+  "settings.connection.url": "Адрес сервиса",
+  "settings.edit": "Редактировать",
+  "settings.envConfigDescription": "Эти настройки будут переданы как переменные окружения при запуске MCP сервера",
+  "settings.httpTypeNotice": "HTTP тип MCP плагина не требует настройки переменных окружения",
+  "settings.indexUrl.title": "Индекс сообщества",
+  "settings.indexUrl.tooltip": "Онлайн-редактирование пока не поддерживается, настройте через переменные окружения при развертывании",
+  "settings.messages.connectionUpdateFailed": "Не удалось обновить информацию о подключении",
+  "settings.messages.connectionUpdateSuccess": "Информация о подключении успешно обновлена",
+  "settings.messages.envUpdateFailed": "Не удалось сохранить переменные окружения",
+  "settings.messages.envUpdateSuccess": "Переменные окружения успешно сохранены",
+  "settings.modalDesc": "После настройки адреса сообщества плагинов вы сможете использовать собственное сообщество плагинов",
+  "settings.rules.argsRequired": "Пожалуйста, введите аргументы запуска",
+  "settings.rules.commandRequired": "Пожалуйста, введите команду запуска",
+  "settings.rules.urlRequired": "Пожалуйста, введите адрес сервиса",
+  "settings.saveSettings": "Сохранить настройки",
+  "settings.title": "Настройки сообщества плагинов",
   "showInPortal": "Пожалуйста, просмотрите детали в рабочей области",
-  "store": {
-    "actions": {
-      "cancel": "Отменить установку",
-      "confirmUninstall": "Вы собираетесь удалить этот плагин, после удаления все его настройки будут удалены. Подтвердите действие.",
-      "detail": "Детали",
-      "install": "Установить",
-      "manifest": "Редактировать файл установки",
-      "settings": "Настройки",
-      "uninstall": "Удалить"
-    },
-    "communityPlugin": "Стороннее сообщество",
-    "customPlugin": "Пользовательский",
-    "empty": "Нет установленных плагинов",
-    "emptySelectHint": "Выберите плагин для просмотра подробной информации",
-    "installAllPlugins": "Установить все",
-    "networkError": "Не удалось получить магазин плагинов, проверьте подключение к сети и попробуйте снова",
-    "placeholder": "Поиск по названию, описанию или ключевым словам...",
-    "releasedAt": "Опубликовано {{createdAt}}",
-    "tabs": {
-      "installed": "Установленные",
-      "mcp": "MCP плагины",
-      "old": "Плагины LobeHub"
-    },
-    "title": "Магазин плагинов"
-  },
+  "store.actions.cancel": "Отменить установку",
+  "store.actions.confirmUninstall": "Вы собираетесь удалить этот плагин, после удаления все его настройки будут удалены. Подтвердите действие.",
+  "store.actions.detail": "Детали",
+  "store.actions.install": "Установить",
+  "store.actions.manifest": "Редактировать файл установки",
+  "store.actions.settings": "Настройки",
+  "store.actions.uninstall": "Удалить",
+  "store.communityPlugin": "Стороннее сообщество",
+  "store.customPlugin": "Пользовательский",
+  "store.empty": "Нет установленных плагинов",
+  "store.emptySelectHint": "Выберите плагин для просмотра подробной информации",
+  "store.installAllPlugins": "Установить все",
+  "store.networkError": "Не удалось получить магазин плагинов, проверьте подключение к сети и попробуйте снова",
+  "store.placeholder": "Поиск по названию, описанию или ключевым словам...",
+  "store.releasedAt": "Опубликовано {{createdAt}}",
+  "store.tabs.installed": "Установленные",
+  "store.tabs.mcp": "MCP плагины",
+  "store.tabs.old": "Плагины LobeHub",
+  "store.title": "Магазин плагинов",
   "unknownError": "Неизвестная ошибка",
   "unknownPlugin": "Неизвестный плагин"
 }

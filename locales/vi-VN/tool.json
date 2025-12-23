@@ -1,196 +1,132 @@
 {
-  "agentGroupManagement": {
-    "executeTask": {
-      "agent": "Thực thi Agent",
-      "cancelled": "Đã hủy",
-      "completed": "Hoàn thành nhiệm vụ",
-      "cost": "Chi phí",
-      "failed": "Nhiệm vụ thất bại",
-      "interrupted": "Đã bị gián đoạn",
-      "intervention": {
-        "taskPlaceholder": "Vui lòng mô tả chi tiết nhiệm vụ mà Agent cần thực hiện...",
-        "timeout": "Thời gian thực hiện tối đa",
-        "timeoutUnit": "phút",
-        "unknownAgent": "Agent không xác định"
-      },
-      "processing": "Đang thực thi...",
-      "steps": "Số bước thực hiện",
-      "task": "Nội dung nhiệm vụ",
-      "thread": "ID luồng",
-      "timeout": "Hết thời gian thực thi",
-      "tokens": "Tiêu tốn Token"
-    }
-  },
-  "codeInterpreter": {
-    "error": "Lỗi thực thi",
-    "executing": "Đang thực thi...",
-    "files": "Tệp:",
-    "output": "Đầu ra:",
-    "returnValue": "Giá trị trả về:"
-  },
-  "codeInterpreter-legacy": {
-    "error": "Lỗi thực thi",
-    "executing": "Đang thực thi...",
-    "files": "Tệp:",
-    "output": "Đầu ra:",
-    "returnValue": "Giá trị trả về:"
-  },
-  "dalle": {
-    "autoGenerate": "Tự động tạo",
-    "downloading": "Liên kết hình ảnh được tạo bởi DallE3 chỉ có hiệu lực trong 1 giờ, đang tải hình ảnh xuống máy...",
-    "generate": "Tạo",
-    "generating": "Đang tạo...",
-    "images": "Hình ảnh:",
-    "prompt": "Từ khóa"
-  },
-  "lobe-gtd": {
-    "actions": {
-      "add": "Thêm",
-      "clearCompleted": "Xóa các mục đã hoàn thành",
-      "placeholder": "Nhập công việc cần làm..."
-    },
-    "clearTodos": {
-      "cleared": "Đã xóa {{count}} mục",
-      "clearedCompleted": "Đã xóa {{count}} mục đã hoàn thành",
-      "clearedCompleted_one": "Đã xóa {{count}} mục đã hoàn thành",
-      "clearedCompleted_other": "Đã xóa {{count}} mục đã hoàn thành",
-      "cleared_one": "Đã xóa {{count}} mục",
-      "cleared_other": "Đã xóa {{count}} mục",
-      "noItems": "Không có mục nào để xóa",
-      "remaining": "Còn lại {{count}} mục",
-      "remaining_one": "Còn lại {{count}} mục",
-      "remaining_other": "Còn lại {{count}} mục"
-    },
-    "completeTodos": {
-      "completed": "Đã hoàn thành {{count}} mục",
-      "completed_one": "Đã hoàn thành {{count}} mục",
-      "completed_other": "Đã hoàn thành {{count}} mục"
-    },
-    "createTodos": {
-      "created": "Đã tạo {{count}} công việc cần làm",
-      "created_one": "Đã tạo {{count}} công việc cần làm",
-      "created_other": "Đã tạo {{count}} công việc cần làm",
-      "total": "Tổng cộng {{count}} mục",
-      "total_one": "Tổng cộng {{count}} mục",
-      "total_other": "Tổng cộng {{count}} mục"
-    },
-    "removeTodos": {
-      "removed": "Đã xóa {{count}} mục",
-      "removed_one": "Đã xóa {{count}} mục",
-      "removed_other": "Đã xóa {{count}} mục"
-    },
-    "status": {
-      "done": "{{count}} đã hoàn thành",
-      "pending": "{{count}} đang chờ xử lý"
-    },
-    "todoList": {
-      "empty": "Danh sách công việc trống",
-      "items": "{{count}} mục",
-      "items_one": "{{count}} mục",
-      "items_other": "{{count}} mục",
-      "title": "Danh sách công việc"
-    },
-    "updateTodos": {
-      "updated": "Danh sách công việc đã được cập nhật"
-    }
-  },
-  "lobe-knowledge-base": {
-    "readKnowledge": {
-      "meta": {
-        "chars": "Số ký tự",
-        "lines": "Số dòng"
-      }
-    }
-  },
-  "localFiles": {
-    "editFile": {
-      "newString": "Thay thế bằng",
-      "oldString": "Nội dung tìm kiếm",
-      "replaceAll": "Thay thế tất cả các mục khớp",
-      "replaceFirst": "Chỉ thay thế mục khớp đầu tiên"
-    },
-    "file": "Tệp",
-    "folder": "Thư mục",
-    "moveFiles": {
-      "itemsMoved": "Đã di chuyển {{count}} mục:",
-      "itemsMoved_one": "Đã di chuyển {{count}} mục:",
-      "itemsMoved_other": "Đã di chuyển {{count}} mục:",
-      "itemsToMove": "{{count}} mục cần di chuyển:",
-      "itemsToMove_one": "{{count}} mục cần di chuyển:",
-      "itemsToMove_other": "{{count}} mục cần di chuyển:"
-    },
-    "open": "Mở",
-    "openFile": "Mở tệp",
-    "openFolder": "Mở thư mục",
-    "read": {
-      "more": "Xem thêm"
-    },
-    "readFile": "Đọc tệp",
-    "readFileError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
-    "readFiles": "Đọc tệp",
-    "readFilesError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
-    "writeFile": {
-      "characters": "Ký tự",
-      "preview": "Xem trước nội dung",
-      "truncated": "Đã bị cắt bớt"
-    }
-  },
-  "search": {
-    "createNewSearch": "Tạo mới tìm kiếm",
-    "emptyResult": "Không tìm thấy kết quả, vui lòng sửa đổi từ khóa và thử lại",
-    "genAiMessage": "Tạo tin nhắn trợ lý",
-    "includedTooltip": "Kết quả tìm kiếm hiện tại sẽ được đưa vào ngữ cảnh của cuộc hội thoại",
-    "keywords": "Từ khóa:",
-    "scoreTooltip": "Điểm liên quan, điểm số càng cao thì càng liên quan đến từ khóa tìm kiếm",
-    "searchBar": {
-      "button": "Tìm kiếm",
-      "placeholder": "Từ khóa",
-      "tooltip": "Sẽ lấy lại kết quả tìm kiếm và tạo một tin nhắn tóm tắt mới"
-    },
-    "searchCategory": {
-      "placeholder": "Tìm kiếm danh mục",
-      "title": "Danh mục tìm kiếm:",
-      "value": {
-        "files": "Tài liệu",
-        "general": "Chung",
-        "images": "Hình ảnh",
-        "it": "Công nghệ thông tin",
-        "map": "Bản đồ",
-        "music": "Âm nhạc",
-        "news": "Tin tức",
-        "science": "Khoa học",
-        "social_media": "Mạng xã hội",
-        "videos": "Video"
-      }
-    },
-    "searchEngine": {
-      "placeholder": "Công cụ tìm kiếm",
-      "title": "Công cụ tìm kiếm:"
-    },
-    "searchResult": "Số lượng tìm kiếm:",
-    "searchTimeRange": {
-      "title": "Khoảng thời gian:",
-      "value": {
-        "anytime": "Không giới hạn thời gian",
-        "day": "Trong một ngày",
-        "month": "Trong một tháng",
-        "week": "Trong một tuần",
-        "year": "Trong một năm"
-      }
-    },
-    "summary": "Tóm tắt",
-    "summaryTooltip": "Tóm tắt nội dung hiện tại",
-    "viewMoreResults": "Xem thêm {{results}} kết quả"
-  },
-  "updateArgs": {
-    "duplicateKeyError": "Khóa trường phải là duy nhất",
-    "form": {
-      "add": "Thêm một mục",
-      "key": "Khóa trường",
-      "value": "Giá trị trường"
-    },
-    "formValidationFailed": "Xác thực biểu mẫu thất bại, vui lòng kiểm tra định dạng tham số",
-    "keyRequired": "Khóa trường không được để trống",
-    "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
-  }
+  "agentGroupManagement.executeTask.agent": "Thực thi Agent",
+  "agentGroupManagement.executeTask.cancelled": "Đã hủy",
+  "agentGroupManagement.executeTask.completed": "Hoàn thành nhiệm vụ",
+  "agentGroupManagement.executeTask.cost": "Chi phí",
+  "agentGroupManagement.executeTask.failed": "Nhiệm vụ thất bại",
+  "agentGroupManagement.executeTask.interrupted": "Đã bị gián đoạn",
+  "agentGroupManagement.executeTask.intervention.taskPlaceholder": "Vui lòng mô tả chi tiết nhiệm vụ mà Agent cần thực hiện...",
+  "agentGroupManagement.executeTask.intervention.timeout": "Thời gian thực hiện tối đa",
+  "agentGroupManagement.executeTask.intervention.timeoutUnit": "phút",
+  "agentGroupManagement.executeTask.intervention.unknownAgent": "Agent không xác định",
+  "agentGroupManagement.executeTask.processing": "Đang thực thi...",
+  "agentGroupManagement.executeTask.steps": "Số bước thực hiện",
+  "agentGroupManagement.executeTask.task": "Nội dung nhiệm vụ",
+  "agentGroupManagement.executeTask.thread": "ID luồng",
+  "agentGroupManagement.executeTask.timeout": "Hết thời gian thực thi",
+  "agentGroupManagement.executeTask.tokens": "Tiêu tốn Token",
+  "codeInterpreter-legacy.error": "Lỗi thực thi",
+  "codeInterpreter-legacy.executing": "Đang thực thi...",
+  "codeInterpreter-legacy.files": "Tệp:",
+  "codeInterpreter-legacy.output": "Đầu ra:",
+  "codeInterpreter-legacy.returnValue": "Giá trị trả về:",
+  "codeInterpreter.error": "Lỗi thực thi",
+  "codeInterpreter.executing": "Đang thực thi...",
+  "codeInterpreter.files": "Tệp:",
+  "codeInterpreter.output": "Đầu ra:",
+  "codeInterpreter.returnValue": "Giá trị trả về:",
+  "dalle.autoGenerate": "Tự động tạo",
+  "dalle.downloading": "Liên kết hình ảnh được tạo bởi DallE3 chỉ có hiệu lực trong 1 giờ, đang tải hình ảnh xuống máy...",
+  "dalle.generate": "Tạo",
+  "dalle.generating": "Đang tạo...",
+  "dalle.images": "Hình ảnh:",
+  "dalle.prompt": "Từ khóa",
+  "lobe-gtd.actions.add": "Thêm",
+  "lobe-gtd.actions.clearCompleted": "Xóa các mục đã hoàn thành",
+  "lobe-gtd.actions.placeholder": "Nhập công việc cần làm...",
+  "lobe-gtd.clearTodos.cleared": "Đã xóa {{count}} mục",
+  "lobe-gtd.clearTodos.clearedCompleted": "Đã xóa {{count}} mục đã hoàn thành",
+  "lobe-gtd.clearTodos.clearedCompleted_one": "Đã xóa {{count}} mục đã hoàn thành",
+  "lobe-gtd.clearTodos.clearedCompleted_other": "Đã xóa {{count}} mục đã hoàn thành",
+  "lobe-gtd.clearTodos.cleared_one": "Đã xóa {{count}} mục",
+  "lobe-gtd.clearTodos.cleared_other": "Đã xóa {{count}} mục",
+  "lobe-gtd.clearTodos.noItems": "Không có mục nào để xóa",
+  "lobe-gtd.clearTodos.remaining": "Còn lại {{count}} mục",
+  "lobe-gtd.clearTodos.remaining_one": "Còn lại {{count}} mục",
+  "lobe-gtd.clearTodos.remaining_other": "Còn lại {{count}} mục",
+  "lobe-gtd.completeTodos.completed": "Đã hoàn thành {{count}} mục",
+  "lobe-gtd.completeTodos.completed_one": "Đã hoàn thành {{count}} mục",
+  "lobe-gtd.completeTodos.completed_other": "Đã hoàn thành {{count}} mục",
+  "lobe-gtd.createTodos.created": "Đã tạo {{count}} công việc cần làm",
+  "lobe-gtd.createTodos.created_one": "Đã tạo {{count}} công việc cần làm",
+  "lobe-gtd.createTodos.created_other": "Đã tạo {{count}} công việc cần làm",
+  "lobe-gtd.createTodos.total": "Tổng cộng {{count}} mục",
+  "lobe-gtd.createTodos.total_one": "Tổng cộng {{count}} mục",
+  "lobe-gtd.createTodos.total_other": "Tổng cộng {{count}} mục",
+  "lobe-gtd.removeTodos.removed": "Đã xóa {{count}} mục",
+  "lobe-gtd.removeTodos.removed_one": "Đã xóa {{count}} mục",
+  "lobe-gtd.removeTodos.removed_other": "Đã xóa {{count}} mục",
+  "lobe-gtd.status.done": "{{count}} đã hoàn thành",
+  "lobe-gtd.status.pending": "{{count}} đang chờ xử lý",
+  "lobe-gtd.todoList.empty": "Danh sách công việc trống",
+  "lobe-gtd.todoList.items": "{{count}} mục",
+  "lobe-gtd.todoList.items_one": "{{count}} mục",
+  "lobe-gtd.todoList.items_other": "{{count}} mục",
+  "lobe-gtd.todoList.title": "Danh sách công việc",
+  "lobe-gtd.updateTodos.updated": "Danh sách công việc đã được cập nhật",
+  "lobe-knowledge-base.readKnowledge.meta.chars": "Số ký tự",
+  "lobe-knowledge-base.readKnowledge.meta.lines": "Số dòng",
+  "localFiles.editFile.newString": "Thay thế bằng",
+  "localFiles.editFile.oldString": "Nội dung tìm kiếm",
+  "localFiles.editFile.replaceAll": "Thay thế tất cả các mục khớp",
+  "localFiles.editFile.replaceFirst": "Chỉ thay thế mục khớp đầu tiên",
+  "localFiles.file": "Tệp",
+  "localFiles.folder": "Thư mục",
+  "localFiles.moveFiles.itemsMoved": "Đã di chuyển {{count}} mục:",
+  "localFiles.moveFiles.itemsMoved_one": "Đã di chuyển {{count}} mục:",
+  "localFiles.moveFiles.itemsMoved_other": "Đã di chuyển {{count}} mục:",
+  "localFiles.moveFiles.itemsToMove": "{{count}} mục cần di chuyển:",
+  "localFiles.moveFiles.itemsToMove_one": "{{count}} mục cần di chuyển:",
+  "localFiles.moveFiles.itemsToMove_other": "{{count}} mục cần di chuyển:",
+  "localFiles.open": "Mở",
+  "localFiles.openFile": "Mở tệp",
+  "localFiles.openFolder": "Mở thư mục",
+  "localFiles.read.more": "Xem thêm",
+  "localFiles.readFile": "Đọc tệp",
+  "localFiles.readFileError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
+  "localFiles.readFiles": "Đọc tệp",
+  "localFiles.readFilesError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
+  "localFiles.writeFile.characters": "Ký tự",
+  "localFiles.writeFile.preview": "Xem trước nội dung",
+  "localFiles.writeFile.truncated": "Đã bị cắt bớt",
+  "search.createNewSearch": "Tạo mới tìm kiếm",
+  "search.emptyResult": "Không tìm thấy kết quả, vui lòng sửa đổi từ khóa và thử lại",
+  "search.genAiMessage": "Tạo tin nhắn trợ lý",
+  "search.includedTooltip": "Kết quả tìm kiếm hiện tại sẽ được đưa vào ngữ cảnh của cuộc hội thoại",
+  "search.keywords": "Từ khóa:",
+  "search.scoreTooltip": "Điểm liên quan, điểm số càng cao thì càng liên quan đến từ khóa tìm kiếm",
+  "search.searchBar.button": "Tìm kiếm",
+  "search.searchBar.placeholder": "Từ khóa",
+  "search.searchBar.tooltip": "Sẽ lấy lại kết quả tìm kiếm và tạo một tin nhắn tóm tắt mới",
+  "search.searchCategory.placeholder": "Tìm kiếm danh mục",
+  "search.searchCategory.title": "Danh mục tìm kiếm:",
+  "search.searchCategory.value.files": "Tài liệu",
+  "search.searchCategory.value.general": "Chung",
+  "search.searchCategory.value.images": "Hình ảnh",
+  "search.searchCategory.value.it": "Công nghệ thông tin",
+  "search.searchCategory.value.map": "Bản đồ",
+  "search.searchCategory.value.music": "Âm nhạc",
+  "search.searchCategory.value.news": "Tin tức",
+  "search.searchCategory.value.science": "Khoa học",
+  "search.searchCategory.value.social_media": "Mạng xã hội",
+  "search.searchCategory.value.videos": "Video",
+  "search.searchEngine.placeholder": "Công cụ tìm kiếm",
+  "search.searchEngine.title": "Công cụ tìm kiếm:",
+  "search.searchResult": "Số lượng tìm kiếm:",
+  "search.searchTimeRange.title": "Khoảng thời gian:",
+  "search.searchTimeRange.value.anytime": "Không giới hạn thời gian",
+  "search.searchTimeRange.value.day": "Trong một ngày",
+  "search.searchTimeRange.value.month": "Trong một tháng",
+  "search.searchTimeRange.value.week": "Trong một tuần",
+  "search.searchTimeRange.value.year": "Trong một năm",
+  "search.summary": "Tóm tắt",
+  "search.summaryTooltip": "Tóm tắt nội dung hiện tại",
+  "search.viewMoreResults": "Xem thêm {{results}} kết quả",
+  "updateArgs.duplicateKeyError": "Khóa trường phải là duy nhất",
+  "updateArgs.form.add": "Thêm một mục",
+  "updateArgs.form.key": "Khóa trường",
+  "updateArgs.form.value": "Giá trị trường",
+  "updateArgs.formValidationFailed": "Xác thực biểu mẫu thất bại, vui lòng kiểm tra định dạng tham số",
+  "updateArgs.keyRequired": "Khóa trường không được để trống",
+  "updateArgs.stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
 }

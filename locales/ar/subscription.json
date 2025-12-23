@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "النسخة التجارية"
-      },
-      "free": {
-        "title": "النسخة المجانية"
-      },
-      "hobby": {
-        "title": "نسخة الخدمة الذاتية"
-      },
-      "premium": {
-        "title": "النسخة المتقدمة"
-      },
-      "starter": {
-        "title": "النسخة الأساسية"
-      },
-      "ultimate": {
-        "title": "النسخة الاحترافية"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "النسخة التجارية",
+  "plans.plan.free.title": "النسخة المجانية",
+  "plans.plan.hobby.title": "نسخة الخدمة الذاتية",
+  "plans.plan.premium.title": "النسخة المتقدمة",
+  "plans.plan.starter.title": "النسخة الأساسية",
+  "plans.plan.ultimate.title": "النسخة الاحترافية"
 }

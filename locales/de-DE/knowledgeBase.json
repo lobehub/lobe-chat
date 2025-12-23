@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Datei erfolgreich hinzugefügt, <1>jetzt ansehen</1>",
-    "confirm": "Hinzufügen",
-    "error": "Datei konnte nicht zur Wissensdatenbank hinzugefügt werden",
-    "id": {
-      "placeholder": "Bitte wählen Sie die Ziel-Wissensdatenbank aus",
-      "required": "Bitte wählen Sie eine Wissensdatenbank aus",
-      "title": "Ziel-Wissensdatenbank"
-    },
-    "title": "Zur Wissensdatenbank hinzufügen",
-    "totalFiles": "{{count}} Datei(en) ausgewählt"
-  },
-  "createNew": {
-    "confirm": "Neu erstellen",
-    "description": {
-      "placeholder": "Beschreibung der Wissensdatenbank (optional)"
-    },
-    "formTitle": "Grundinformationen",
-    "name": {
-      "placeholder": "Name der Wissensdatenbank",
-      "required": "Bitte geben Sie einen Namen für die Wissensdatenbank ein"
-    },
-    "title": "Neue Wissensdatenbank erstellen"
-  },
-  "tab": {
-    "evals": "Bewertungen",
-    "files": "Dokumente",
-    "settings": "Einstellungen",
-    "testing": "Rückruf-Test"
-  },
+  "addToKnowledgeBase.addSuccess": "Datei erfolgreich hinzugefügt, <1>jetzt ansehen</1>",
+  "addToKnowledgeBase.confirm": "Hinzufügen",
+  "addToKnowledgeBase.error": "Datei konnte nicht zur Wissensdatenbank hinzugefügt werden",
+  "addToKnowledgeBase.id.placeholder": "Bitte wählen Sie die Ziel-Wissensdatenbank aus",
+  "addToKnowledgeBase.id.required": "Bitte wählen Sie eine Wissensdatenbank aus",
+  "addToKnowledgeBase.id.title": "Ziel-Wissensdatenbank",
+  "addToKnowledgeBase.title": "Zur Wissensdatenbank hinzufügen",
+  "addToKnowledgeBase.totalFiles": "{{count}} Datei(en) ausgewählt",
+  "createNew.confirm": "Neu erstellen",
+  "createNew.description.placeholder": "Beschreibung der Wissensdatenbank (optional)",
+  "createNew.formTitle": "Grundinformationen",
+  "createNew.name.placeholder": "Name der Wissensdatenbank",
+  "createNew.name.required": "Bitte geben Sie einen Namen für die Wissensdatenbank ein",
+  "createNew.title": "Neue Wissensdatenbank erstellen",
+  "tab.evals": "Bewertungen",
+  "tab.files": "Dokumente",
+  "tab.settings": "Einstellungen",
+  "tab.testing": "Rückruf-Test",
   "title": "Wissensdatenbank"
 }

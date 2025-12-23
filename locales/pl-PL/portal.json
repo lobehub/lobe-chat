@@ -1,27 +1,15 @@
 {
   "Artifacts": "Artefakty",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "Część",
-      "file": "Plik"
-    }
-  },
+  "FilePreview.tabs.chunk": "Część",
+  "FilePreview.tabs.file": "Plik",
   "Plugins": "Wtyczki",
-  "artifacts": {
-    "display": {
-      "code": "Kod",
-      "preview": "Podgląd"
-    },
-    "svg": {
-      "copyAsImage": "Skopiuj jako obraz",
-      "copyFail": "Kopiowanie nie powiodło się, powód błędu: {{error}}",
-      "copySuccess": "Obraz skopiowany pomyślnie",
-      "download": {
-        "png": "Pobierz jako PNG",
-        "svg": "Pobierz jako SVG"
-      }
-    }
-  },
+  "artifacts.display.code": "Kod",
+  "artifacts.display.preview": "Podgląd",
+  "artifacts.svg.copyAsImage": "Skopiuj jako obraz",
+  "artifacts.svg.copyFail": "Kopiowanie nie powiodło się, powód błędu: {{error}}",
+  "artifacts.svg.copySuccess": "Obraz skopiowany pomyślnie",
+  "artifacts.svg.download.png": "Pobierz jako PNG",
+  "artifacts.svg.download.svg": "Pobierz jako SVG",
   "emptyArtifactList": "Obecna lista Artefaktów jest pusta. Proszę użyć wtyczek w trakcie sesji, a następnie sprawdzić ponownie.",
   "emptyKnowledgeList": "Aktualna lista wiedzy jest pusta. Proszę otworzyć bazę wiedzy w trakcie rozmowy, aby ją przeglądać.",
   "files": "Pliki",

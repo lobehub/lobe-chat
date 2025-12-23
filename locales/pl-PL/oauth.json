@@ -1,61 +1,35 @@
 {
-  "consent": {
-    "buttons": {
-      "accept": "Zgoda",
-      "deny": "Odmowa"
-    },
-    "description": "Aplikacja {{clientName}} prosi o autoryzację Twojego konta",
-    "error": {
-      "sessionInvalid": {
-        "message": "Sesja autoryzacyjna wygasła lub jest nieprawidłowa, proszę ponownie rozpocząć proces autoryzacji.",
-        "title": "Sesja autoryzacyjna nieprawidłowa"
-      },
-      "title": "Wystąpił błąd",
-      "unsupportedInteraction": {
-        "message": "Nieobsługiwany typ interakcji: {promptName}",
-        "title": "Nieobsługiwany typ interakcji"
-      }
-    },
-    "permissionsTitle": "Proszę o następujące uprawnienia:",
-    "redirectUri": "Zostaniesz przekierowany po pomyślnym autoryzowaniu",
-    "redirecting": "Autoryzacja zakończona pomyślnie, przekierowywanie...",
-    "scope": {
-      "email": "Dostęp do Twojego adresu e-mail",
-      "offline_access": "Zezwól klientowi na dostęp do Twoich danych",
-      "openid": "Uwierzytelnienie za pomocą Twojego konta LobeChat",
-      "profile": "Dostęp do Twoich podstawowych informacji (imię, zdjęcie profilowe itp.)",
-      "sync-read": "Odczytaj swoje dane synchronizacyjne",
-      "sync-write": "Zapisz i zaktualizuj swoje dane synchronizacyjne"
-    },
-    "title": "Autoryzacja {{clientName}}"
-  },
-  "error": {
-    "backToHome": "Powrót do strony głównej",
-    "desc": "Błąd autoryzacji OAuth, powód: {{reason}}",
-    "reason": {
-      "internal_error": "Błąd serwera",
-      "invalid_request": "Nieprawidłowe parametry żądania"
-    },
-    "title": "Autoryzacja nie powiodła się"
-  },
-  "handoff": {
-    "desc": {
-      "processing": "Aplikacja przetwarza autoryzację, wkrótce przejdzie do następnej strony...",
-      "success": "Próbowano otworzyć aplikację desktopową. Jeśli aplikacja nie otworzyła się automatycznie, przełącz się ręcznie. Możesz zamknąć to okno przeglądarki później."
-    },
-    "title": {
-      "processing": "Przetwarzanie autoryzacji...",
-      "success": "Autoryzacja zakończona"
-    }
-  },
-  "login": {
-    "button": "Potwierdź logowanie",
-    "description": "Aplikacja {{clientName}} prosi o użycie Twojego konta do logowania",
-    "title": "Logowanie do {{clientName}}",
-    "userWelcome": "Witaj z powrotem, "
-  },
-  "success": {
-    "subTitle": "Pomyślnie autoryzowano aplikację do dostępu do Twojego konta, możesz teraz zamknąć tę stronę",
-    "title": "Autoryzacja zakończona sukcesem"
-  }
+  "consent.buttons.accept": "Zgoda",
+  "consent.buttons.deny": "Odmowa",
+  "consent.description": "Aplikacja {{clientName}} prosi o autoryzację Twojego konta",
+  "consent.error.sessionInvalid.message": "Sesja autoryzacyjna wygasła lub jest nieprawidłowa, proszę ponownie rozpocząć proces autoryzacji.",
+  "consent.error.sessionInvalid.title": "Sesja autoryzacyjna nieprawidłowa",
+  "consent.error.title": "Wystąpił błąd",
+  "consent.error.unsupportedInteraction.message": "Nieobsługiwany typ interakcji: {promptName}",
+  "consent.error.unsupportedInteraction.title": "Nieobsługiwany typ interakcji",
+  "consent.permissionsTitle": "Proszę o następujące uprawnienia:",
+  "consent.redirectUri": "Zostaniesz przekierowany po pomyślnym autoryzowaniu",
+  "consent.redirecting": "Autoryzacja zakończona pomyślnie, przekierowywanie...",
+  "consent.scope.email": "Dostęp do Twojego adresu e-mail",
+  "consent.scope.offline_access": "Zezwól klientowi na dostęp do Twoich danych",
+  "consent.scope.openid": "Uwierzytelnienie za pomocą Twojego konta LobeChat",
+  "consent.scope.profile": "Dostęp do Twoich podstawowych informacji (imię, zdjęcie profilowe itp.)",
+  "consent.scope.sync-read": "Odczytaj swoje dane synchronizacyjne",
+  "consent.scope.sync-write": "Zapisz i zaktualizuj swoje dane synchronizacyjne",
+  "consent.title": "Autoryzacja {{clientName}}",
+  "error.backToHome": "Powrót do strony głównej",
+  "error.desc": "Błąd autoryzacji OAuth, powód: {{reason}}",
+  "error.reason.internal_error": "Błąd serwera",
+  "error.reason.invalid_request": "Nieprawidłowe parametry żądania",
+  "error.title": "Autoryzacja nie powiodła się",
+  "handoff.desc.processing": "Aplikacja przetwarza autoryzację, wkrótce przejdzie do następnej strony...",
+  "handoff.desc.success": "Próbowano otworzyć aplikację desktopową. Jeśli aplikacja nie otworzyła się automatycznie, przełącz się ręcznie. Możesz zamknąć to okno przeglądarki później.",
+  "handoff.title.processing": "Przetwarzanie autoryzacji...",
+  "handoff.title.success": "Autoryzacja zakończona",
+  "login.button": "Potwierdź logowanie",
+  "login.description": "Aplikacja {{clientName}} prosi o użycie Twojego konta do logowania",
+  "login.title": "Logowanie do {{clientName}}",
+  "login.userWelcome": "Witaj z powrotem, ",
+  "success.subTitle": "Pomyślnie autoryzowano aplikację do dostępu do Twojego konta, możesz teraz zamknąć tę stronę",
+  "success.title": "Autoryzacja zakończona sukcesem"
 }

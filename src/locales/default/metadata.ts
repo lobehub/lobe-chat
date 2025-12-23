@@ -1,5 +1,3 @@
 export default {
-  chat: {
-    description: '{{appName}} 带给你最好的 ChatGPT, Claude , Gemini, OLLaMA WebUI 使用体验',
-  },
+  'chat.description': '{{appName}} 带给你最好的 ChatGPT, Claude , Gemini, OLLaMA WebUI 使用体验',
 };

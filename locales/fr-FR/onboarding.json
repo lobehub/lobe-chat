@@ -1,100 +1,66 @@
 {
   "back": "Précédent",
   "finish": "Commencer",
-  "interests": {
-    "area": {
-      "business": "Affaires et stratégie",
-      "coding": "Programmation et développement",
-      "design": "Design et créativité",
-      "education": "Apprentissage et recherche",
-      "marketing": "Marketing et promotion",
-      "other": "Autres domaines",
-      "product": "Produit et gestion",
-      "sales": "Ventes et relation client",
-      "writing": "Création de contenu"
-    },
-    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
-    "placeholder": "Veuillez saisir les domaines qui vous intéressent...",
-    "title": "Pouvez-vous me dire quels domaines vous intéressent ?",
-    "title2": "Aidez-moi à me faire une première idée de vous~",
-    "title3": "Prenez votre temps, j’apprendrai à mieux vous connaître"
-  },
-  "modeSelection": {
-    "desc": "Choisissez le mode qui vous convient le mieux",
-    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
-    "lite": {
-      "desc": "Idéal pour les conversations quotidiennes, les questions-réponses, une assistance légère au travail et la découverte des modèles",
-      "subtitle": "Léger et épuré, parfait pour collaborer efficacement avec un assistant polyvalent unique. Changez de modèle à tout moment pour rester au top de vos idées.",
-      "title": "Lite Léger"
-    },
-    "pro": {
-      "desc": "Conçu pour les flux de travail, la collaboration approfondie et la personnalisation",
-      "subtitle": "Mode productivité professionnelle. Une entreprise à vous seul, collaboration multi-assistants, personnalisation poussée des modèles et des flux de travail : construisez votre centre d’intelligence personnel.",
-      "title": "Pro Professionnel"
-    },
-    "title": "Quel mode de travail préférez-vous ?",
-    "title2": "Léger ou Professionnel, à vous de choisir !",
-    "title3": "Dis-moi tout, je vais te créer quelque chose sur mesure~"
-  },
+  "interests.area.business": "Affaires et stratégie",
+  "interests.area.coding": "Programmation et développement",
+  "interests.area.design": "Design et créativité",
+  "interests.area.education": "Apprentissage et recherche",
+  "interests.area.marketing": "Marketing et promotion",
+  "interests.area.other": "Autres domaines",
+  "interests.area.product": "Produit et gestion",
+  "interests.area.sales": "Ventes et relation client",
+  "interests.area.writing": "Création de contenu",
+  "interests.hint": "Vous pouvez le modifier à tout moment dans les paramètres",
+  "interests.placeholder": "Veuillez saisir les domaines qui vous intéressent...",
+  "interests.title": "Pouvez-vous me dire quels domaines vous intéressent ?",
+  "interests.title2": "Aidez-moi à me faire une première idée de vous~",
+  "interests.title3": "Prenez votre temps, j’apprendrai à mieux vous connaître",
+  "modeSelection.desc": "Choisissez le mode qui vous convient le mieux",
+  "modeSelection.hint": "Vous pouvez le modifier à tout moment dans les paramètres",
+  "modeSelection.lite.desc": "Idéal pour les conversations quotidiennes, les questions-réponses, une assistance légère au travail et la découverte des modèles",
+  "modeSelection.lite.subtitle": "Léger et épuré, parfait pour collaborer efficacement avec un assistant polyvalent unique. Changez de modèle à tout moment pour rester au top de vos idées.",
+  "modeSelection.lite.title": "Lite Léger",
+  "modeSelection.pro.desc": "Conçu pour les flux de travail, la collaboration approfondie et la personnalisation",
+  "modeSelection.pro.subtitle": "Mode productivité professionnelle. Une entreprise à vous seul, collaboration multi-assistants, personnalisation poussée des modèles et des flux de travail : construisez votre centre d’intelligence personnel.",
+  "modeSelection.pro.title": "Pro Professionnel",
+  "modeSelection.title": "Quel mode de travail préférez-vous ?",
+  "modeSelection.title2": "Léger ou Professionnel, à vous de choisir !",
+  "modeSelection.title3": "Dis-moi tout, je vais te créer quelque chose sur mesure~",
   "next": "Suivant",
-  "proSettings": {
-    "connectors": {
-      "title": "Connectez vos outils préférés"
-    },
-    "devMode": {
-      "title": "Mode développeur"
-    },
-    "model": {
-      "title": "Modèle par défaut utilisé par l'Agent"
-    },
-    "title": "Configurez à l'avance des options avancées",
-    "title2": "Essayez de connecter quelques outils courants ~",
-    "title3": "Préparons-nous à travailler efficacement !"
-  },
-  "responseLanguage": {
-    "auto": "Automatique (suivre la langue du système)",
-    "desc": "Choisissez la langue utilisée par l’assistant IA pour répondre",
-    "hint": "Une fois la langue choisie, l’IA répondra dans cette langue et l’interface s’adaptera également",
-    "title": "Dans quelle langue souhaites-tu que nous communiquions ?",
-    "title2": "La compréhension commence par la langue.",
-    "title3": "Laisse-moi m’exprimer clairement et te comprendre parfaitement ~"
-  },
-  "telemetry": {
-    "agreement": "Toutes les données collectées sont anonymes et utilisées uniquement pour améliorer l’expérience produit. En continuant, vous confirmez avoir lu et accepté les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>.",
-    "desc": "Je suis ton assistant IA personnel, toujours là pour t’aider à réfléchir, créer et gérer ton équipe d’Agents.",
-    "helpImprove": "Aidez à améliorer {{appName}}",
-    "next": "C’est parti",
-    "privacy": "Politique de confidentialité",
-    "rows": {
-      "collaborate": {
-        "desc": "Ici, humains et Agents travaillent, apprennent et évoluent ensemble, pour une productivité fluide et naturelle.",
-        "title": "Collaborer · Avancer avec l’intelligence"
-      },
-      "create": {
-        "desc": "Une idée ? Elle prend vie. Il suffit d’y penser, et un Agent naît instantanément.",
-        "title": "Créer · L’inspiration devient réalité"
-      },
-      "evolve": {
-        "desc": "Chaque interaction permet de mieux vous comprendre. Pas seulement répondre, mais vraiment saisir.",
-        "title": "Évoluer · Plus vous l’utilisez, mieux il vous comprend"
-      },
-      "privacy": {
-        "desc": "Nous utilisons des données anonymisées pour améliorer continuellement l’expérience {{appName}}. Bien sûr, vous pouvez modifier ce paramètre à tout moment dans les options de confidentialité.",
-        "title": "Améliorons {{appName}} ensemble"
-      }
-    },
-    "terms": "Conditions d’utilisation",
-    "title": "Salut, je suis {{name}}",
-    "title2": "Ravi de faire votre connaissance ~",
-    "title3": "Loooobe ! C’est parti !"
-  },
+  "proSettings.connectors.title": "Connectez vos outils préférés",
+  "proSettings.devMode.title": "Mode développeur",
+  "proSettings.model.title": "Modèle par défaut utilisé par l'Agent",
+  "proSettings.title": "Configurez à l'avance des options avancées",
+  "proSettings.title2": "Essayez de connecter quelques outils courants ~",
+  "proSettings.title3": "Préparons-nous à travailler efficacement !",
+  "responseLanguage.auto": "Automatique (suivre la langue du système)",
+  "responseLanguage.desc": "Choisissez la langue utilisée par l’assistant IA pour répondre",
+  "responseLanguage.hint": "Une fois la langue choisie, l’IA répondra dans cette langue et l’interface s’adaptera également",
+  "responseLanguage.title": "Dans quelle langue souhaites-tu que nous communiquions ?",
+  "responseLanguage.title2": "La compréhension commence par la langue.",
+  "responseLanguage.title3": "Laisse-moi m’exprimer clairement et te comprendre parfaitement ~",
+  "telemetry.agreement": "Toutes les données collectées sont anonymes et utilisées uniquement pour améliorer l’expérience produit. En continuant, vous confirmez avoir lu et accepté les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>.",
+  "telemetry.desc": "Je suis ton assistant IA personnel, toujours là pour t’aider à réfléchir, créer et gérer ton équipe d’Agents.",
+  "telemetry.helpImprove": "Aidez à améliorer {{appName}}",
+  "telemetry.next": "C’est parti",
+  "telemetry.privacy": "Politique de confidentialité",
+  "telemetry.rows.collaborate.desc": "Ici, humains et Agents travaillent, apprennent et évoluent ensemble, pour une productivité fluide et naturelle.",
+  "telemetry.rows.collaborate.title": "Collaborer · Avancer avec l’intelligence",
+  "telemetry.rows.create.desc": "Une idée ? Elle prend vie. Il suffit d’y penser, et un Agent naît instantanément.",
+  "telemetry.rows.create.title": "Créer · L’inspiration devient réalité",
+  "telemetry.rows.evolve.desc": "Chaque interaction permet de mieux vous comprendre. Pas seulement répondre, mais vraiment saisir.",
+  "telemetry.rows.evolve.title": "Évoluer · Plus vous l’utilisez, mieux il vous comprend",
+  "telemetry.rows.privacy.desc": "Nous utilisons des données anonymisées pour améliorer continuellement l’expérience {{appName}}. Bien sûr, vous pouvez modifier ce paramètre à tout moment dans les options de confidentialité.",
+  "telemetry.rows.privacy.title": "Améliorons {{appName}} ensemble",
+  "telemetry.terms": "Conditions d’utilisation",
+  "telemetry.title": "Salut, je suis {{name}}",
+  "telemetry.title2": "Ravi de faire votre connaissance ~",
+  "telemetry.title3": "Loooobe ! C’est parti !",
   "title": "Bienvenue sur {{appName}}",
-  "username": {
-    "desc": "Dites-nous comment vous appeler",
-    "hint": "Vous pouvez le modifier à tout moment dans les paramètres",
-    "placeholder": "Entrez votre nom ou surnom...",
-    "title": "Au fait, comment dois-je vous appeler ?",
-    "title2": "Faisons d’abord connaissance !",
-    "title3": "Comme ça, on pourra discuter plus familièrement ~"
-  }
+  "username.desc": "Dites-nous comment vous appeler",
+  "username.hint": "Vous pouvez le modifier à tout moment dans les paramètres",
+  "username.placeholder": "Entrez votre nom ou surnom...",
+  "username.title": "Au fait, comment dois-je vous appeler ?",
+  "username.title2": "Faisons d’abord connaissance !",
+  "username.title3": "Comme ça, on pourra discuter plus familièrement ~"
 }

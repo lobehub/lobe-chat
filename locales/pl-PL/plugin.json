@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "Lista parametrów"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Pobierz dostępne modele",
-        "getAvailableTools": "Pobierz dostępne narzędzia",
-        "getConfig": "Pobierz konfigurację",
-        "getMeta": "Pobierz metadane",
-        "getPrompt": "Pobierz podpowiedź systemową",
-        "searchMarketTools": "Szukaj w sklepie z wtyczkami",
-        "searchOfficialTools": "Szukaj oficjalnych narzędzi",
-        "setModel": "Ustaw model",
-        "setOpeningMessage": "Ustaw wiadomość powitalną",
-        "setOpeningQuestions": "Ustaw pytania początkowe",
-        "togglePlugin": "Przełącz wtyczkę",
-        "updateChatConfig": "Zaktualizuj konfigurację czatu",
-        "updateConfig": "Zaktualizuj konfigurację",
-        "updateMeta": "Zaktualizuj metadane",
-        "updatePrompt": "Zaktualizuj podpowiedź systemową"
-      },
-      "title": "Kreator Agenta"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Pobierz dostępne modele",
-        "installPlugin": "Zainstaluj wtyczkę",
-        "inviteAgent": "Zaproś członka",
-        "removeAgent": "Usuń członka",
-        "searchMarketTools": "Szukaj wtyczek w sklepie",
-        "updateAgentConfig": "Zaktualizuj konfigurację agenta",
-        "updatePrompt": "Zaktualizuj podpowiedź systemową"
-      },
-      "title": "Kreator Agenta Grupowego"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "Wypowiedź do wszystkich",
-        "createAgent": "Dodaj członka zespołu",
-        "createWorkflow": "Zaplanuj przepływ pracy",
-        "executeTask": "Wykonaj zadanie",
-        "getAgentInfo": "Pobierz informacje o członku",
-        "interrupt": "Przerwij zadanie",
-        "inviteAgent": "Zaproś członka",
-        "removeAgent": "Usuń członka",
-        "searchAgent": "Znajdź odpowiedniego eksperta",
-        "speak": "Wskaż członka do wypowiedzi",
-        "summarize": "Podsumuj rozmowę",
-        "vote": "Rozpocznij głosowanie"
-      },
-      "title": "Koordynacja zespołu"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "Wyczyść zadania",
-        "completeTodos": "Zakończ zadania",
-        "createPlan": "Utwórz plan",
-        "createTodos": "Utwórz zadania",
-        "removeTodos": "Usuń zadania",
-        "updatePlan": "Zaktualizuj plan",
-        "updateTodos": "Zaktualizuj zadania"
-      },
-      "title": "Narzędzie GTD"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "Odczytaj zawartość bazy wiedzy",
-        "searchKnowledgeBase": "Przeszukaj bazę wiedzy"
-      },
-      "title": "Baza wiedzy"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "Edytuj plik",
-        "getCommandOutput": "Pobierz wynik polecenia",
-        "globLocalFiles": "Wyszukaj pliki",
-        "grepContent": "Przeszukaj zawartość",
-        "killCommand": "Zatrzymaj wykonywanie kodu",
-        "listLocalFiles": "Wyświetl listę plików",
-        "moveLocalFiles": "Przenieś pliki",
-        "readLocalFile": "Odczytaj zawartość pliku",
-        "renameLocalFile": "Zmień nazwę",
-        "runCommand": "Wykonaj kod",
-        "searchLocalFiles": "Wyszukaj pliki",
-        "writeLocalFile": "Zapisz plik"
-      },
-      "title": "System lokalny"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "Zbiorcza aktualizacja węzłów",
-        "compareSnapshots": "Porównaj migawki",
-        "convertToList": "Konwertuj na listę",
-        "createNode": "Utwórz węzeł",
-        "cropImage": "Przytnij obraz",
-        "deleteNode": "Usuń węzeł",
-        "deleteSnapshot": "Usuń migawkę",
-        "deleteTableColumn": "Usuń kolumnę tabeli",
-        "deleteTableRow": "Usuń wiersz tabeli",
-        "duplicateNode": "Duplikuj węzeł",
-        "editTitle": "Edytuj tytuł dokumentu",
-        "indentListItem": "Zwiększ wcięcie elementu listy",
-        "initPage": "Zainicjuj dokument",
-        "insertTableColumn": "Wstaw kolumnę do tabeli",
-        "insertTableRow": "Wstaw wiersz do tabeli",
-        "listSnapshots": "Wyświetl migawki",
-        "mergeNodes": "Scal węzły",
-        "moveNode": "Przenieś węzeł",
-        "outdentListItem": "Zmniejsz wcięcie elementu listy",
-        "replaceText": "Zamień tekst",
-        "resizeImage": "Zmień rozmiar obrazu",
-        "restoreSnapshot": "Przywróć migawkę",
-        "rotateImage": "Obróć obraz",
-        "saveSnapshot": "Zapisz migawkę",
-        "setImageAlt": "Ustaw tekst alternatywny obrazu",
-        "splitNode": "Podziel węzeł",
-        "toggleListType": "Przełącz typ listy",
-        "unwrapNode": "Rozpakuj węzeł",
-        "updateNode": "Zaktualizuj węzeł",
-        "wrapNodes": "Opakuj węzły"
-      },
-      "title": "Dokument"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "Odczytaj zawartość wielu stron",
-        "crawlSinglePage": "Odczytaj zawartość strony",
-        "search": "Wyszukaj stronę"
-      },
-      "title": "Wyszukiwanie online"
-    }
-  },
+  "arguments.title": "Lista parametrów",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "Pobierz dostępne modele",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "Pobierz dostępne narzędzia",
+  "builtins.lobe-agent-builder.apiName.getConfig": "Pobierz konfigurację",
+  "builtins.lobe-agent-builder.apiName.getMeta": "Pobierz metadane",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "Pobierz podpowiedź systemową",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "Szukaj w sklepie z wtyczkami",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "Szukaj oficjalnych narzędzi",
+  "builtins.lobe-agent-builder.apiName.setModel": "Ustaw model",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "Ustaw wiadomość powitalną",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "Ustaw pytania początkowe",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "Przełącz wtyczkę",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "Zaktualizuj konfigurację czatu",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "Zaktualizuj konfigurację",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "Zaktualizuj metadane",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "Zaktualizuj podpowiedź systemową",
+  "builtins.lobe-agent-builder.title": "Kreator Agenta",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "Pobierz dostępne modele",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "Zainstaluj wtyczkę",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "Zaproś członka",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "Usuń członka",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "Szukaj wtyczek w sklepie",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "Zaktualizuj konfigurację agenta",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "Zaktualizuj podpowiedź systemową",
+  "builtins.lobe-group-agent-builder.title": "Kreator Agenta Grupowego",
+  "builtins.lobe-group-management.apiName.broadcast": "Wypowiedź do wszystkich",
+  "builtins.lobe-group-management.apiName.createAgent": "Dodaj członka zespołu",
+  "builtins.lobe-group-management.apiName.createWorkflow": "Zaplanuj przepływ pracy",
+  "builtins.lobe-group-management.apiName.executeTask": "Wykonaj zadanie",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "Pobierz informacje o członku",
+  "builtins.lobe-group-management.apiName.interrupt": "Przerwij zadanie",
+  "builtins.lobe-group-management.apiName.inviteAgent": "Zaproś członka",
+  "builtins.lobe-group-management.apiName.removeAgent": "Usuń członka",
+  "builtins.lobe-group-management.apiName.searchAgent": "Znajdź odpowiedniego eksperta",
+  "builtins.lobe-group-management.apiName.speak": "Wskaż członka do wypowiedzi",
+  "builtins.lobe-group-management.apiName.summarize": "Podsumuj rozmowę",
+  "builtins.lobe-group-management.apiName.vote": "Rozpocznij głosowanie",
+  "builtins.lobe-group-management.title": "Koordynacja zespołu",
+  "builtins.lobe-gtd.apiName.clearTodos": "Wyczyść zadania",
+  "builtins.lobe-gtd.apiName.completeTodos": "Zakończ zadania",
+  "builtins.lobe-gtd.apiName.createPlan": "Utwórz plan",
+  "builtins.lobe-gtd.apiName.createTodos": "Utwórz zadania",
+  "builtins.lobe-gtd.apiName.removeTodos": "Usuń zadania",
+  "builtins.lobe-gtd.apiName.updatePlan": "Zaktualizuj plan",
+  "builtins.lobe-gtd.apiName.updateTodos": "Zaktualizuj zadania",
+  "builtins.lobe-gtd.title": "Narzędzie GTD",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "Odczytaj zawartość bazy wiedzy",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "Przeszukaj bazę wiedzy",
+  "builtins.lobe-knowledge-base.title": "Baza wiedzy",
+  "builtins.lobe-local-system.apiName.editLocalFile": "Edytuj plik",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "Pobierz wynik polecenia",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "Wyszukaj pliki",
+  "builtins.lobe-local-system.apiName.grepContent": "Przeszukaj zawartość",
+  "builtins.lobe-local-system.apiName.killCommand": "Zatrzymaj wykonywanie kodu",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "Wyświetl listę plików",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "Przenieś pliki",
+  "builtins.lobe-local-system.apiName.readLocalFile": "Odczytaj zawartość pliku",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "Zmień nazwę",
+  "builtins.lobe-local-system.apiName.runCommand": "Wykonaj kod",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "Wyszukaj pliki",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "Zapisz plik",
+  "builtins.lobe-local-system.title": "System lokalny",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "Zbiorcza aktualizacja węzłów",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "Porównaj migawki",
+  "builtins.lobe-page-agent.apiName.convertToList": "Konwertuj na listę",
+  "builtins.lobe-page-agent.apiName.createNode": "Utwórz węzeł",
+  "builtins.lobe-page-agent.apiName.cropImage": "Przytnij obraz",
+  "builtins.lobe-page-agent.apiName.deleteNode": "Usuń węzeł",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "Usuń migawkę",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "Usuń kolumnę tabeli",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "Usuń wiersz tabeli",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "Duplikuj węzeł",
+  "builtins.lobe-page-agent.apiName.editTitle": "Edytuj tytuł dokumentu",
+  "builtins.lobe-page-agent.apiName.indentListItem": "Zwiększ wcięcie elementu listy",
+  "builtins.lobe-page-agent.apiName.initPage": "Zainicjuj dokument",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "Wstaw kolumnę do tabeli",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "Wstaw wiersz do tabeli",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "Wyświetl migawki",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "Scal węzły",
+  "builtins.lobe-page-agent.apiName.moveNode": "Przenieś węzeł",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "Zmniejsz wcięcie elementu listy",
+  "builtins.lobe-page-agent.apiName.replaceText": "Zamień tekst",
+  "builtins.lobe-page-agent.apiName.resizeImage": "Zmień rozmiar obrazu",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "Przywróć migawkę",
+  "builtins.lobe-page-agent.apiName.rotateImage": "Obróć obraz",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "Zapisz migawkę",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "Ustaw tekst alternatywny obrazu",
+  "builtins.lobe-page-agent.apiName.splitNode": "Podziel węzeł",
+  "builtins.lobe-page-agent.apiName.toggleListType": "Przełącz typ listy",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "Rozpakuj węzeł",
+  "builtins.lobe-page-agent.apiName.updateNode": "Zaktualizuj węzeł",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "Opakuj węzły",
+  "builtins.lobe-page-agent.title": "Dokument",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "Odczytaj zawartość wielu stron",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "Odczytaj zawartość strony",
+  "builtins.lobe-web-browsing.apiName.search": "Wyszukaj stronę",
+  "builtins.lobe-web-browsing.title": "Wyszukiwanie online",
   "confirm": "Potwierdź",
-  "debug": {
-    "arguments": "Argumenty wywołania",
-    "function_call": "Wywołanie funkcji",
-    "off": "Wyłącz debugowanie",
-    "on": "Wyświetl informacje o wywołaniu wtyczki",
-    "payload": "Ładunek wtyczki",
-    "pluginState": "Stan wtyczki",
-    "response": "Wynik zwrotny",
-    "title": "Szczegóły wtyczki",
-    "tool_call": "Żądanie wywołania narzędzia"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "Proszę przejść do strony edycji, aby zobaczyć szczegóły",
-      "editBtn": "Edytuj teraz",
-      "title": "To jest wtyczka niestandardowa"
-    },
-    "emptyState": {
-      "description": "Proszę najpierw zainstalować tę wtyczkę, aby zobaczyć jej możliwości i opcje konfiguracji",
-      "title": "Zobacz szczegóły wtyczki po instalacji"
-    },
-    "info": {
-      "description": "Opis API",
-      "name": "Nazwa API"
-    },
-    "tabs": {
-      "info": "Możliwości wtyczki",
-      "manifest": "Plik instalacyjny",
-      "settings": "Ustawienia"
-    },
-    "title": "Szczegóły wtyczki"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "Właśnie usuniesz tę lokalną wtyczkę. Po usunięciu nie będzie można jej odzyskać. Czy na pewno chcesz usunąć tę wtyczkę?",
-    "customParams": {
-      "useProxy": {
-        "label": "Instaluj przez proxy (jeśli wystąpi błąd CORS, spróbuj włączyć tę opcję i ponownie zainstalować)"
-      }
-    },
-    "deleteSuccess": "Wtyczka została pomyślnie usunięta",
-    "manifest": {
-      "identifier": {
-        "desc": "Unikalny identyfikator wtyczki",
-        "label": "Identyfikator"
-      },
-      "mode": {
-        "mcp": "Wtyczka MCP",
-        "mcpExp": "Eksperymentalna MCP",
-        "url": "Link online"
-      },
-      "name": {
-        "desc": "Tytuł wtyczki",
-        "label": "Tytuł",
-        "placeholder": "Wyszukiwarka"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "Ustawienia zaawansowane"
-      },
-      "args": {
-        "desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zwykle tutaj wpisz nazwę serwera MCP lub ścieżkę do skryptu startowego",
-        "label": "Argumenty polecenia",
-        "placeholder": "np.: mcp-hello-world",
-        "required": "Proszę wprowadzić argumenty startowe"
-      },
-      "auth": {
-        "bear": "Klucz API",
-        "desc": "Wybierz sposób uwierzytelniania serwera MCP",
-        "label": "Typ uwierzytelniania",
-        "none": "Brak uwierzytelniania",
-        "placeholder": "Wybierz typ uwierzytelniania",
-        "token": {
-          "desc": "Wprowadź swój klucz API lub token Bearer",
-          "label": "Klucz API",
-          "placeholder": "sk-xxxxx",
-          "required": "Proszę wprowadzić token uwierzytelniający"
-        }
-      },
-      "avatar": {
-        "label": "Ikona wtyczki"
-      },
-      "command": {
-        "desc": "Wykonywalny plik lub skrypt do uruchomienia MCP STDIO Server",
-        "label": "Polecenie",
-        "placeholder": "np.: npx / uv / docker itp.",
-        "required": "Proszę wprowadzić polecenie startowe"
-      },
-      "desc": {
-        "desc": "Dodaj opis wtyczki",
-        "label": "Opis wtyczki",
-        "placeholder": "Dodaj informacje o zastosowaniu i scenariuszach użycia"
-      },
-      "endpoint": {
-        "desc": "Wprowadź adres swojego MCP Streamable HTTP Server",
-        "label": "URL punktu końcowego MCP"
-      },
-      "env": {
-        "add": "Dodaj nowy wiersz",
-        "desc": "Wprowadź zmienne środowiskowe wymagane przez serwer MCP",
-        "duplicateKeyError": "Klucz pola musi być unikalny",
-        "formValidationFailed": "Weryfikacja formularza nie powiodła się, sprawdź format parametrów",
-        "keyRequired": "Klucz pola nie może być pusty",
-        "label": "Zmienne środowiskowe serwera MCP",
-        "stringifyError": "Nie można zserializować parametrów, sprawdź format"
-      },
-      "headers": {
-        "add": "Dodaj nowy wiersz",
-        "desc": "Wprowadź nagłówki żądania",
-        "label": "Nagłówki HTTP"
-      },
-      "identifier": {
-        "desc": "Nadaj nazwę swojej wtyczce MCP, musi zawierać znaki angielskie",
-        "invalid": "Identyfikator może zawierać tylko litery, cyfry, myślniki i podkreślenia",
-        "label": "Nazwa wtyczki MCP",
-        "placeholder": "np.: my-mcp-plugin",
-        "required": "Proszę wprowadzić identyfikator usługi MCP"
-      },
-      "previewManifest": "Podgląd pliku manifestu wtyczki",
-      "quickImport": "Szybki import konfiguracji JSON",
-      "quickImportError": {
-        "empty": "Wprowadzone dane nie mogą być puste",
-        "invalidJson": "Nieprawidłowy format JSON",
-        "invalidStructure": "Nieprawidłowa struktura JSON"
-      },
-      "stdioNotSupported": "Aktualne środowisko nie obsługuje wtyczek MCP typu stdio",
-      "testConnection": "Testuj połączenie",
-      "testConnectionTip": "Wtyczka MCP może być używana tylko po pomyślnym teście połączenia",
-      "type": {
-        "desc": "Wybierz sposób komunikacji wtyczki MCP, wersja webowa obsługuje tylko Streamable HTTP",
-        "httpFeature1": "Kompatybilne z wersją webową i desktopową",
-        "httpFeature2": "Łączy się zdalnie z serwerem MCP, bez potrzeby dodatkowej instalacji",
-        "httpShortDesc": "Protokół komunikacji oparty na strumieniowym HTTP",
-        "label": "Typ wtyczki MCP",
-        "stdioFeature1": "Niższe opóźnienia komunikacji, odpowiednie do lokalnego uruchomienia",
-        "stdioFeature2": "Wymaga lokalnej instalacji i uruchomienia serwera MCP",
-        "stdioNotAvailable": "Tryb STDIO dostępny tylko w wersji desktopowej",
-        "stdioShortDesc": "Protokół komunikacji oparty na standardowym wejściu i wyjściu",
-        "title": "Typ wtyczki MCP"
-      },
-      "url": {
-        "desc": "Wprowadź adres Streamable HTTP swojego serwera MCP, tryb SSE nie jest obsługiwany",
-        "invalid": "Proszę wprowadzić poprawny adres URL",
-        "label": "URL punktu końcowego Streamable HTTP",
-        "required": "Proszę wprowadzić URL usługi MCP"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "Autor wtyczki",
-        "label": "Autor"
-      },
-      "avatar": {
-        "desc": "Ikona wtyczki, można użyć emoji lub URL",
-        "label": "Ikona"
-      },
-      "description": {
-        "desc": "Opis wtyczki",
-        "label": "Opis",
-        "placeholder": "Wyszukaj informacje w wyszukiwarce"
-      },
-      "formFieldRequired": "To pole jest wymagane",
-      "homepage": {
-        "desc": "Strona główna wtyczki",
-        "label": "Strona główna"
-      },
-      "identifier": {
-        "desc": "Unikalny identyfikator wtyczki, automatycznie rozpoznawany z manifestu",
-        "errorDuplicate": "Identyfikator jest już używany przez inną wtyczkę, zmień go",
-        "label": "Identyfikator",
-        "pattenErrorMessage": "Dozwolone są tylko litery angielskie, cyfry, - i _"
-      },
-      "lobe": "Wtyczka {{appName}}",
-      "manifest": {
-        "desc": "{{appName}} zainstaluje wtyczkę za pomocą tego linku",
-        "label": "Plik manifestu wtyczki (Manifest) URL",
-        "preview": "Podgląd manifestu",
-        "refresh": "Odśwież"
-      },
-      "openai": "Wtyczka OpenAI",
-      "title": {
-        "desc": "Tytuł wtyczki",
-        "label": "Tytuł",
-        "placeholder": "Wyszukiwarka"
-      }
-    },
-    "metaConfig": "Konfiguracja metadanych wtyczki",
-    "modalDesc": "Po dodaniu wtyczki niestandardowej można jej używać do testów i weryfikacji podczas tworzenia wtyczek, a także bezpośrednio w rozmowach. Dokumentacja dla twórców wtyczek: <1>Dokumentacja deweloperska↗</>",
-    "openai": {
-      "importUrl": "Importuj z linku URL",
-      "schema": "Schemat"
-    },
-    "preview": {
-      "api": {
-        "noParams": "To narzędzie nie ma parametrów",
-        "noResults": "Nie znaleziono API spełniającego kryteria wyszukiwania",
-        "params": "Parametry:",
-        "searchPlaceholder": "Szukaj narzędzi..."
-      },
-      "card": "Podgląd wyglądu wtyczki",
-      "desc": "Podgląd opisu wtyczki",
-      "empty": {
-        "desc": "Po skonfigurowaniu możesz tutaj zobaczyć obsługiwane funkcje wtyczki",
-        "title": "Rozpocznij podgląd po konfiguracji wtyczki"
-      },
-      "title": "Podgląd nazwy wtyczki"
-    },
-    "save": "Zainstaluj wtyczkę",
-    "saveSuccess": "Ustawienia wtyczki zostały zapisane pomyślnie",
-    "tabs": {
-      "manifest": "Lista funkcji (Manifest)",
-      "meta": "Metadane wtyczki"
-    },
-    "title": {
-      "create": "Dodaj wtyczkę niestandardową",
-      "edit": "Edytuj wtyczkę niestandardową"
-    },
-    "type": {
-      "lobe": "Wtyczka {{appName}}",
-      "openai": "Wtyczka OpenAI"
-    },
-    "update": "Aktualizuj",
-    "updateSuccess": "Ustawienia wtyczki zostały zaktualizowane pomyślnie"
-  },
-  "empty": {
-    "description": "Sklep z wtyczkami oferuje wiele narzędzi do odkrycia — odwiedź sklep i zacznij eksplorować",
-    "search": "Nie znaleziono pasujących wtyczek",
-    "title": "Brak dostępnych wtyczek"
-  },
-  "error": {
-    "fetchError": "Nie udało się pobrać pliku manifestu, upewnij się, że link jest poprawny i pozwala na dostęp z innych domen",
-    "installError": "Instalacja wtyczki {{name}} nie powiodła się",
-    "manifestInvalid": "Manifest nie spełnia wymagań, wynik walidacji: \n\n {{error}}",
-    "noManifest": "Plik manifestu nie istnieje",
-    "openAPIInvalid": "Błąd parsowania OpenAPI: \n\n {{error}}",
-    "reinstallError": "Odświeżenie wtyczki {{name}} nie powiodło się",
-    "testConnectionFailed": "Nie udało się pobrać manifestu: {{error}}",
-    "urlError": "Link nie zwraca zawartości w formacie JSON, upewnij się, że jest to poprawny link"
-  },
-  "inspector": {
-    "args": "Zobacz listę argumentów",
-    "delete": "Usuń wywołanie narzędzia",
-    "orphanedToolCall": "To wywołanie narzędzia mogło zostać osierocone z powodu nieoczekiwanych okoliczności, co może zakłócić prawidłowe działanie Agenta. Proszę je usunąć.",
-    "pluginRender": "Zobacz interfejs wtyczki"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "Usunięte",
-      "local.config": "Konfiguracja",
-      "local.title": "Niestandardowe"
-    }
-  },
-  "loading": {
-    "content": "Wywoływanie wtyczki...",
-    "plugin": "Wtyczka działa..."
-  },
-  "mcpEmpty": {
-    "deployment": "Brak dostępnych opcji wdrożenia",
-    "prompts": "Ta wtyczka nie zawiera żadnych podpowiedzi",
-    "resources": "Ta wtyczka nie zawiera żadnych zasobów",
-    "tools": "Ta wtyczka nie oferuje żadnych funkcji narzędziowych"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",
-    "COMPLETED": "Instalacja zakończona",
-    "CONFIGURATION_REQUIRED": "Proszę ukończyć konfigurację, aby kontynuować instalację",
-    "ERROR": "Błąd instalacji",
-    "FETCHING_MANIFEST": "Pobieranie pliku manifestu wtyczki...",
-    "GETTING_SERVER_MANIFEST": "Inicjalizacja serwera MCP...",
-    "INSTALLING_PLUGIN": "Instalowanie wtyczki...",
-    "configurationDescription": "Ta wtyczka MCP wymaga konfiguracji parametrów, aby działać poprawnie. Proszę wypełnić wymagane informacje konfiguracyjne",
-    "configurationRequired": "Konfiguracja parametrów wtyczki",
-    "continueInstall": "Kontynuuj instalację",
-    "dependenciesDescription": "Ta wtyczka wymaga instalacji następujących zależności systemowych, aby działać poprawnie. Proszę zainstalować brakujące zależności zgodnie z instrukcjami, a następnie kliknąć, aby ponownie sprawdzić i kontynuować instalację.",
-    "dependenciesRequired": "Proszę zainstalować zależności systemowe wtyczki",
-    "dependencyStatus": {
-      "installed": "Zainstalowano",
-      "notInstalled": "Nie zainstalowano",
-      "requiredVersion": "Wymagana wersja: {{version}}"
-    },
-    "errorDetails": {
-      "args": "Argumenty",
-      "command": "Polecenie",
-      "connectionParams": "Parametry połączenia",
-      "env": "Zmienne środowiskowe",
-      "errorOutput": "Log błędów",
-      "exitCode": "Kod wyjścia",
-      "hideDetails": "Ukryj szczegóły",
-      "originalError": "Oryginalny błąd",
-      "showDetails": "Pokaż szczegóły"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "Błąd autoryzacji",
-      "CONNECTION_FAILED": "Nieudane połączenie",
-      "INITIALIZATION_TIMEOUT": "Przekroczono czas inicjalizacji",
-      "PROCESS_SPAWN_ERROR": "Błąd uruchomienia procesu",
-      "UNKNOWN_ERROR": "Nieznany błąd",
-      "VALIDATION_ERROR": "Błąd walidacji parametrów"
-    },
-    "installError": "Instalacja wtyczki MCP nie powiodła się, powód: {{detail}}",
-    "installMethods": {
-      "manual": "Instalacja ręczna:",
-      "recommended": "Zalecany sposób instalacji:"
-    },
-    "recheckDependencies": "Sprawdź ponownie",
-    "skipDependencies": "Pomiń sprawdzanie"
-  },
+  "debug.arguments": "Argumenty wywołania",
+  "debug.function_call": "Wywołanie funkcji",
+  "debug.off": "Wyłącz debugowanie",
+  "debug.on": "Wyświetl informacje o wywołaniu wtyczki",
+  "debug.payload": "Ładunek wtyczki",
+  "debug.pluginState": "Stan wtyczki",
+  "debug.response": "Wynik zwrotny",
+  "debug.title": "Szczegóły wtyczki",
+  "debug.tool_call": "Żądanie wywołania narzędzia",
+  "detailModal.customPlugin.description": "Proszę przejść do strony edycji, aby zobaczyć szczegóły",
+  "detailModal.customPlugin.editBtn": "Edytuj teraz",
+  "detailModal.customPlugin.title": "To jest wtyczka niestandardowa",
+  "detailModal.emptyState.description": "Proszę najpierw zainstalować tę wtyczkę, aby zobaczyć jej możliwości i opcje konfiguracji",
+  "detailModal.emptyState.title": "Zobacz szczegóły wtyczki po instalacji",
+  "detailModal.info.description": "Opis API",
+  "detailModal.info.name": "Nazwa API",
+  "detailModal.tabs.info": "Możliwości wtyczki",
+  "detailModal.tabs.manifest": "Plik instalacyjny",
+  "detailModal.tabs.settings": "Ustawienia",
+  "detailModal.title": "Szczegóły wtyczki",
+  "dev.confirmDeleteDevPlugin": "Właśnie usuniesz tę lokalną wtyczkę. Po usunięciu nie będzie można jej odzyskać. Czy na pewno chcesz usunąć tę wtyczkę?",
+  "dev.customParams.useProxy.label": "Instaluj przez proxy (jeśli wystąpi błąd CORS, spróbuj włączyć tę opcję i ponownie zainstalować)",
+  "dev.deleteSuccess": "Wtyczka została pomyślnie usunięta",
+  "dev.manifest.identifier.desc": "Unikalny identyfikator wtyczki",
+  "dev.manifest.identifier.label": "Identyfikator",
+  "dev.manifest.mode.mcp": "Wtyczka MCP",
+  "dev.manifest.mode.mcpExp": "Eksperymentalna MCP",
+  "dev.manifest.mode.url": "Link online",
+  "dev.manifest.name.desc": "Tytuł wtyczki",
+  "dev.manifest.name.label": "Tytuł",
+  "dev.manifest.name.placeholder": "Wyszukiwarka",
+  "dev.mcp.advanced.title": "Ustawienia zaawansowane",
+  "dev.mcp.args.desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zwykle tutaj wpisz nazwę serwera MCP lub ścieżkę do skryptu startowego",
+  "dev.mcp.args.label": "Argumenty polecenia",
+  "dev.mcp.args.placeholder": "np.: mcp-hello-world",
+  "dev.mcp.args.required": "Proszę wprowadzić argumenty startowe",
+  "dev.mcp.auth.bear": "Klucz API",
+  "dev.mcp.auth.desc": "Wybierz sposób uwierzytelniania serwera MCP",
+  "dev.mcp.auth.label": "Typ uwierzytelniania",
+  "dev.mcp.auth.none": "Brak uwierzytelniania",
+  "dev.mcp.auth.placeholder": "Wybierz typ uwierzytelniania",
+  "dev.mcp.auth.token.desc": "Wprowadź swój klucz API lub token Bearer",
+  "dev.mcp.auth.token.label": "Klucz API",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "Proszę wprowadzić token uwierzytelniający",
+  "dev.mcp.avatar.label": "Ikona wtyczki",
+  "dev.mcp.command.desc": "Wykonywalny plik lub skrypt do uruchomienia MCP STDIO Server",
+  "dev.mcp.command.label": "Polecenie",
+  "dev.mcp.command.placeholder": "np.: npx / uv / docker itp.",
+  "dev.mcp.command.required": "Proszę wprowadzić polecenie startowe",
+  "dev.mcp.desc.desc": "Dodaj opis wtyczki",
+  "dev.mcp.desc.label": "Opis wtyczki",
+  "dev.mcp.desc.placeholder": "Dodaj informacje o zastosowaniu i scenariuszach użycia",
+  "dev.mcp.endpoint.desc": "Wprowadź adres swojego MCP Streamable HTTP Server",
+  "dev.mcp.endpoint.label": "URL punktu końcowego MCP",
+  "dev.mcp.env.add": "Dodaj nowy wiersz",
+  "dev.mcp.env.desc": "Wprowadź zmienne środowiskowe wymagane przez serwer MCP",
+  "dev.mcp.env.duplicateKeyError": "Klucz pola musi być unikalny",
+  "dev.mcp.env.formValidationFailed": "Weryfikacja formularza nie powiodła się, sprawdź format parametrów",
+  "dev.mcp.env.keyRequired": "Klucz pola nie może być pusty",
+  "dev.mcp.env.label": "Zmienne środowiskowe serwera MCP",
+  "dev.mcp.env.stringifyError": "Nie można zserializować parametrów, sprawdź format",
+  "dev.mcp.headers.add": "Dodaj nowy wiersz",
+  "dev.mcp.headers.desc": "Wprowadź nagłówki żądania",
+  "dev.mcp.headers.label": "Nagłówki HTTP",
+  "dev.mcp.identifier.desc": "Nadaj nazwę swojej wtyczce MCP, musi zawierać znaki angielskie",
+  "dev.mcp.identifier.invalid": "Identyfikator może zawierać tylko litery, cyfry, myślniki i podkreślenia",
+  "dev.mcp.identifier.label": "Nazwa wtyczki MCP",
+  "dev.mcp.identifier.placeholder": "np.: my-mcp-plugin",
+  "dev.mcp.identifier.required": "Proszę wprowadzić identyfikator usługi MCP",
+  "dev.mcp.previewManifest": "Podgląd pliku manifestu wtyczki",
+  "dev.mcp.quickImport": "Szybki import konfiguracji JSON",
+  "dev.mcp.quickImportError.empty": "Wprowadzone dane nie mogą być puste",
+  "dev.mcp.quickImportError.invalidJson": "Nieprawidłowy format JSON",
+  "dev.mcp.quickImportError.invalidStructure": "Nieprawidłowa struktura JSON",
+  "dev.mcp.stdioNotSupported": "Aktualne środowisko nie obsługuje wtyczek MCP typu stdio",
+  "dev.mcp.testConnection": "Testuj połączenie",
+  "dev.mcp.testConnectionTip": "Wtyczka MCP może być używana tylko po pomyślnym teście połączenia",
+  "dev.mcp.type.desc": "Wybierz sposób komunikacji wtyczki MCP, wersja webowa obsługuje tylko Streamable HTTP",
+  "dev.mcp.type.httpFeature1": "Kompatybilne z wersją webową i desktopową",
+  "dev.mcp.type.httpFeature2": "Łączy się zdalnie z serwerem MCP, bez potrzeby dodatkowej instalacji",
+  "dev.mcp.type.httpShortDesc": "Protokół komunikacji oparty na strumieniowym HTTP",
+  "dev.mcp.type.label": "Typ wtyczki MCP",
+  "dev.mcp.type.stdioFeature1": "Niższe opóźnienia komunikacji, odpowiednie do lokalnego uruchomienia",
+  "dev.mcp.type.stdioFeature2": "Wymaga lokalnej instalacji i uruchomienia serwera MCP",
+  "dev.mcp.type.stdioNotAvailable": "Tryb STDIO dostępny tylko w wersji desktopowej",
+  "dev.mcp.type.stdioShortDesc": "Protokół komunikacji oparty na standardowym wejściu i wyjściu",
+  "dev.mcp.type.title": "Typ wtyczki MCP",
+  "dev.mcp.url.desc": "Wprowadź adres Streamable HTTP swojego serwera MCP, tryb SSE nie jest obsługiwany",
+  "dev.mcp.url.invalid": "Proszę wprowadzić poprawny adres URL",
+  "dev.mcp.url.label": "URL punktu końcowego Streamable HTTP",
+  "dev.mcp.url.required": "Proszę wprowadzić URL usługi MCP",
+  "dev.meta.author.desc": "Autor wtyczki",
+  "dev.meta.author.label": "Autor",
+  "dev.meta.avatar.desc": "Ikona wtyczki, można użyć emoji lub URL",
+  "dev.meta.avatar.label": "Ikona",
+  "dev.meta.description.desc": "Opis wtyczki",
+  "dev.meta.description.label": "Opis",
+  "dev.meta.description.placeholder": "Wyszukaj informacje w wyszukiwarce",
+  "dev.meta.formFieldRequired": "To pole jest wymagane",
+  "dev.meta.homepage.desc": "Strona główna wtyczki",
+  "dev.meta.homepage.label": "Strona główna",
+  "dev.meta.identifier.desc": "Unikalny identyfikator wtyczki, automatycznie rozpoznawany z manifestu",
+  "dev.meta.identifier.errorDuplicate": "Identyfikator jest już używany przez inną wtyczkę, zmień go",
+  "dev.meta.identifier.label": "Identyfikator",
+  "dev.meta.identifier.pattenErrorMessage": "Dozwolone są tylko litery angielskie, cyfry, - i _",
+  "dev.meta.lobe": "Wtyczka {{appName}}",
+  "dev.meta.manifest.desc": "{{appName}} zainstaluje wtyczkę za pomocą tego linku",
+  "dev.meta.manifest.label": "Plik manifestu wtyczki (Manifest) URL",
+  "dev.meta.manifest.preview": "Podgląd manifestu",
+  "dev.meta.manifest.refresh": "Odśwież",
+  "dev.meta.openai": "Wtyczka OpenAI",
+  "dev.meta.title.desc": "Tytuł wtyczki",
+  "dev.meta.title.label": "Tytuł",
+  "dev.meta.title.placeholder": "Wyszukiwarka",
+  "dev.metaConfig": "Konfiguracja metadanych wtyczki",
+  "dev.modalDesc": "Po dodaniu wtyczki niestandardowej można jej używać do testów i weryfikacji podczas tworzenia wtyczek, a także bezpośrednio w rozmowach. Dokumentacja dla twórców wtyczek: <1>Dokumentacja deweloperska↗</>",
+  "dev.openai.importUrl": "Importuj z linku URL",
+  "dev.openai.schema": "Schemat",
+  "dev.preview.api.noParams": "To narzędzie nie ma parametrów",
+  "dev.preview.api.noResults": "Nie znaleziono API spełniającego kryteria wyszukiwania",
+  "dev.preview.api.params": "Parametry:",
+  "dev.preview.api.searchPlaceholder": "Szukaj narzędzi...",
+  "dev.preview.card": "Podgląd wyglądu wtyczki",
+  "dev.preview.desc": "Podgląd opisu wtyczki",
+  "dev.preview.empty.desc": "Po skonfigurowaniu możesz tutaj zobaczyć obsługiwane funkcje wtyczki",
+  "dev.preview.empty.title": "Rozpocznij podgląd po konfiguracji wtyczki",
+  "dev.preview.title": "Podgląd nazwy wtyczki",
+  "dev.save": "Zainstaluj wtyczkę",
+  "dev.saveSuccess": "Ustawienia wtyczki zostały zapisane pomyślnie",
+  "dev.tabs.manifest": "Lista funkcji (Manifest)",
+  "dev.tabs.meta": "Metadane wtyczki",
+  "dev.title.create": "Dodaj wtyczkę niestandardową",
+  "dev.title.edit": "Edytuj wtyczkę niestandardową",
+  "dev.type.lobe": "Wtyczka {{appName}}",
+  "dev.type.openai": "Wtyczka OpenAI",
+  "dev.update": "Aktualizuj",
+  "dev.updateSuccess": "Ustawienia wtyczki zostały zaktualizowane pomyślnie",
+  "empty.description": "Sklep z wtyczkami oferuje wiele narzędzi do odkrycia — odwiedź sklep i zacznij eksplorować",
+  "empty.search": "Nie znaleziono pasujących wtyczek",
+  "empty.title": "Brak dostępnych wtyczek",
+  "error.fetchError": "Nie udało się pobrać pliku manifestu, upewnij się, że link jest poprawny i pozwala na dostęp z innych domen",
+  "error.installError": "Instalacja wtyczki {{name}} nie powiodła się",
+  "error.manifestInvalid": "Manifest nie spełnia wymagań, wynik walidacji: \n\n {{error}}",
+  "error.noManifest": "Plik manifestu nie istnieje",
+  "error.openAPIInvalid": "Błąd parsowania OpenAPI: \n\n {{error}}",
+  "error.reinstallError": "Odświeżenie wtyczki {{name}} nie powiodło się",
+  "error.testConnectionFailed": "Nie udało się pobrać manifestu: {{error}}",
+  "error.urlError": "Link nie zwraca zawartości w formacie JSON, upewnij się, że jest to poprawny link",
+  "inspector.args": "Zobacz listę argumentów",
+  "inspector.delete": "Usuń wywołanie narzędzia",
+  "inspector.orphanedToolCall": "To wywołanie narzędzia mogło zostać osierocone z powodu nieoczekiwanych okoliczności, co może zakłócić prawidłowe działanie Agenta. Proszę je usunąć.",
+  "inspector.pluginRender": "Zobacz interfejs wtyczki",
+  "list.item[\"deprecated.title\"]": "Usunięte",
+  "list.item[\"local.config\"]": "Konfiguracja",
+  "list.item[\"local.title\"]": "Niestandardowe",
+  "loading.content": "Wywoływanie wtyczki...",
+  "loading.plugin": "Wtyczka działa...",
+  "mcpEmpty.deployment": "Brak dostępnych opcji wdrożenia",
+  "mcpEmpty.prompts": "Ta wtyczka nie zawiera żadnych podpowiedzi",
+  "mcpEmpty.resources": "Ta wtyczka nie zawiera żadnych zasobów",
+  "mcpEmpty.tools": "Ta wtyczka nie oferuje żadnych funkcji narzędziowych",
+  "mcpInstall.CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",
+  "mcpInstall.COMPLETED": "Instalacja zakończona",
+  "mcpInstall.CONFIGURATION_REQUIRED": "Proszę ukończyć konfigurację, aby kontynuować instalację",
+  "mcpInstall.ERROR": "Błąd instalacji",
+  "mcpInstall.FETCHING_MANIFEST": "Pobieranie pliku manifestu wtyczki...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "Inicjalizacja serwera MCP...",
+  "mcpInstall.INSTALLING_PLUGIN": "Instalowanie wtyczki...",
+  "mcpInstall.configurationDescription": "Ta wtyczka MCP wymaga konfiguracji parametrów, aby działać poprawnie. Proszę wypełnić wymagane informacje konfiguracyjne",
+  "mcpInstall.configurationRequired": "Konfiguracja parametrów wtyczki",
+  "mcpInstall.continueInstall": "Kontynuuj instalację",
+  "mcpInstall.dependenciesDescription": "Ta wtyczka wymaga instalacji następujących zależności systemowych, aby działać poprawnie. Proszę zainstalować brakujące zależności zgodnie z instrukcjami, a następnie kliknąć, aby ponownie sprawdzić i kontynuować instalację.",
+  "mcpInstall.dependenciesRequired": "Proszę zainstalować zależności systemowe wtyczki",
+  "mcpInstall.dependencyStatus.installed": "Zainstalowano",
+  "mcpInstall.dependencyStatus.notInstalled": "Nie zainstalowano",
+  "mcpInstall.dependencyStatus.requiredVersion": "Wymagana wersja: {{version}}",
+  "mcpInstall.errorDetails.args": "Argumenty",
+  "mcpInstall.errorDetails.command": "Polecenie",
+  "mcpInstall.errorDetails.connectionParams": "Parametry połączenia",
+  "mcpInstall.errorDetails.env": "Zmienne środowiskowe",
+  "mcpInstall.errorDetails.errorOutput": "Log błędów",
+  "mcpInstall.errorDetails.exitCode": "Kod wyjścia",
+  "mcpInstall.errorDetails.hideDetails": "Ukryj szczegóły",
+  "mcpInstall.errorDetails.originalError": "Oryginalny błąd",
+  "mcpInstall.errorDetails.showDetails": "Pokaż szczegóły",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "Błąd autoryzacji",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "Nieudane połączenie",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "Przekroczono czas inicjalizacji",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "Błąd uruchomienia procesu",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "Nieznany błąd",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "Błąd walidacji parametrów",
+  "mcpInstall.installError": "Instalacja wtyczki MCP nie powiodła się, powód: {{detail}}",
+  "mcpInstall.installMethods.manual": "Instalacja ręczna:",
+  "mcpInstall.installMethods.recommended": "Zalecany sposób instalacji:",
+  "mcpInstall.recheckDependencies": "Sprawdź ponownie",
+  "mcpInstall.skipDependencies": "Pomiń sprawdzanie",
   "pluginList": "Lista wtyczek",
-  "protocolInstall": {
-    "actions": {
-      "install": "Zainstaluj",
-      "installAnyway": "Zainstaluj mimo to",
-      "installed": "Zainstalowano"
-    },
-    "config": {
-      "addEnv": "Dodaj zmienną środowiskową",
-      "addHeaders": "Dodaj nagłówki żądania",
-      "args": "Argumenty",
-      "command": "Polecenie",
-      "env": "Zmienne środowiskowe",
-      "headers": "Nagłówki",
-      "title": "Informacje konfiguracyjne",
-      "type": {
-        "http": "Typ: HTTP",
-        "label": "Typ",
-        "stdio": "Typ: Stdio"
-      },
-      "url": "Adres usługi"
-    },
-    "custom": {
-      "badge": "Wtyczka niestandardowa",
-      "security": {
-        "description": "Ta wtyczka nie została oficjalnie zweryfikowana, instalacja może wiązać się z ryzykiem bezpieczeństwa! Upewnij się, że ufasz źródłu wtyczki.",
-        "title": "⚠️ Ostrzeżenie o ryzyku bezpieczeństwa"
-      },
-      "title": "Zainstaluj wtyczkę niestandardową"
-    },
-    "install": {
-      "title": "Informacje o instalacji"
-    },
-    "marketplace": {
-      "title": "Zainstaluj wtyczki zewnętrzne",
-      "trustedBy": "Dostarczone przez {{name}}",
-      "unverified": {
-        "title": "Nieweryfikowane wtyczki zewnętrzne",
-        "warning": "Ta wtyczka pochodzi z niezweryfikowanej społeczności zewnętrznej. Przed instalacją upewnij się, że ufasz temu źródłu."
-      },
-      "verified": "Zweryfikowane"
-    },
-    "messages": {
-      "connectionTestFailed": "Test połączenia nie powiódł się",
-      "installError": "Instalacja wtyczki nie powiodła się, spróbuj ponownie",
-      "installSuccess": "Wtyczka {{name}} została pomyślnie zainstalowana!",
-      "manifestError": "Nie udało się pobrać szczegółów wtyczki, sprawdź połączenie sieciowe i spróbuj ponownie",
-      "manifestNotFound": "Nie udało się pobrać pliku manifestu wtyczki"
-    },
-    "meta": {
-      "author": "Autor",
-      "homepage": "Strona główna",
-      "identifier": "Identyfikator",
-      "source": "Źródło",
-      "version": "Wersja"
-    },
-    "official": {
-      "badge": "Oficjalna wtyczka LobeHub",
-      "description": "Ta wtyczka jest rozwijana i utrzymywana przez LobeHub, przeszła rygorystyczne kontrole bezpieczeństwa i jest bezpieczna w użyciu.",
-      "loadingMessage": "Pobieranie szczegółów wtyczki...",
-      "loadingTitle": "Ładowanie",
-      "title": "Zainstaluj oficjalną wtyczkę"
-    },
-    "title": "Instaluj wtyczkę MCP",
-    "warning": "⚠️ Upewnij się, że ufasz źródłu tej wtyczki, złośliwe wtyczki mogą zagrozić bezpieczeństwu Twojego systemu."
-  },
-  "search": {
-    "config": {
-      "addKey": "Dodaj klucz",
-      "close": "Usuń",
-      "confirm": "Konfiguracja zakończona, spróbuj ponownie"
-    },
-    "crawPages": {
-      "crawling": "Rozpoznawanie linków",
-      "detail": {
-        "preview": "Podgląd",
-        "raw": "Tekst źródłowy",
-        "tooLong": "Zawartość tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze {{characters}} znaków, reszta nie jest uwzględniana"
-      },
-      "meta": {
-        "crawler": "Tryb pobierania",
-        "words": "Liczba znaków"
-      }
-    },
-    "searchxng": {
-      "baseURL": "Wprowadź adres",
-      "description": "Wprowadź adres SearchXNG, aby rozpocząć wyszukiwanie online",
-      "keyPlaceholder": "Wprowadź klucz",
-      "title": "Konfiguracja wyszukiwarki SearchXNG",
-      "unconfiguredDesc": "Skontaktuj się z administratorem, aby skonfigurować wyszukiwarkę SearchXNG i rozpocząć wyszukiwanie online",
-      "unconfiguredTitle": "SearchXNG nie jest skonfigurowany"
-    },
-    "title": "Wyszukiwanie online"
-  },
+  "protocolInstall.actions.install": "Zainstaluj",
+  "protocolInstall.actions.installAnyway": "Zainstaluj mimo to",
+  "protocolInstall.actions.installed": "Zainstalowano",
+  "protocolInstall.config.addEnv": "Dodaj zmienną środowiskową",
+  "protocolInstall.config.addHeaders": "Dodaj nagłówki żądania",
+  "protocolInstall.config.args": "Argumenty",
+  "protocolInstall.config.command": "Polecenie",
+  "protocolInstall.config.env": "Zmienne środowiskowe",
+  "protocolInstall.config.headers": "Nagłówki",
+  "protocolInstall.config.title": "Informacje konfiguracyjne",
+  "protocolInstall.config.type.http": "Typ: HTTP",
+  "protocolInstall.config.type.label": "Typ",
+  "protocolInstall.config.type.stdio": "Typ: Stdio",
+  "protocolInstall.config.url": "Adres usługi",
+  "protocolInstall.custom.badge": "Wtyczka niestandardowa",
+  "protocolInstall.custom.security.description": "Ta wtyczka nie została oficjalnie zweryfikowana, instalacja może wiązać się z ryzykiem bezpieczeństwa! Upewnij się, że ufasz źródłu wtyczki.",
+  "protocolInstall.custom.security.title": "⚠️ Ostrzeżenie o ryzyku bezpieczeństwa",
+  "protocolInstall.custom.title": "Zainstaluj wtyczkę niestandardową",
+  "protocolInstall.install.title": "Informacje o instalacji",
+  "protocolInstall.marketplace.title": "Zainstaluj wtyczki zewnętrzne",
+  "protocolInstall.marketplace.trustedBy": "Dostarczone przez {{name}}",
+  "protocolInstall.marketplace.unverified.title": "Nieweryfikowane wtyczki zewnętrzne",
+  "protocolInstall.marketplace.unverified.warning": "Ta wtyczka pochodzi z niezweryfikowanej społeczności zewnętrznej. Przed instalacją upewnij się, że ufasz temu źródłu.",
+  "protocolInstall.marketplace.verified": "Zweryfikowane",
+  "protocolInstall.messages.connectionTestFailed": "Test połączenia nie powiódł się",
+  "protocolInstall.messages.installError": "Instalacja wtyczki nie powiodła się, spróbuj ponownie",
+  "protocolInstall.messages.installSuccess": "Wtyczka {{name}} została pomyślnie zainstalowana!",
+  "protocolInstall.messages.manifestError": "Nie udało się pobrać szczegółów wtyczki, sprawdź połączenie sieciowe i spróbuj ponownie",
+  "protocolInstall.messages.manifestNotFound": "Nie udało się pobrać pliku manifestu wtyczki",
+  "protocolInstall.meta.author": "Autor",
+  "protocolInstall.meta.homepage": "Strona główna",
+  "protocolInstall.meta.identifier": "Identyfikator",
+  "protocolInstall.meta.source": "Źródło",
+  "protocolInstall.meta.version": "Wersja",
+  "protocolInstall.official.badge": "Oficjalna wtyczka LobeHub",
+  "protocolInstall.official.description": "Ta wtyczka jest rozwijana i utrzymywana przez LobeHub, przeszła rygorystyczne kontrole bezpieczeństwa i jest bezpieczna w użyciu.",
+  "protocolInstall.official.loadingMessage": "Pobieranie szczegółów wtyczki...",
+  "protocolInstall.official.loadingTitle": "Ładowanie",
+  "protocolInstall.official.title": "Zainstaluj oficjalną wtyczkę",
+  "protocolInstall.title": "Instaluj wtyczkę MCP",
+  "protocolInstall.warning": "⚠️ Upewnij się, że ufasz źródłu tej wtyczki, złośliwe wtyczki mogą zagrozić bezpieczeństwu Twojego systemu.",
+  "search.config.addKey": "Dodaj klucz",
+  "search.config.close": "Usuń",
+  "search.config.confirm": "Konfiguracja zakończona, spróbuj ponownie",
+  "search.crawPages.crawling": "Rozpoznawanie linków",
+  "search.crawPages.detail.preview": "Podgląd",
+  "search.crawPages.detail.raw": "Tekst źródłowy",
+  "search.crawPages.detail.tooLong": "Zawartość tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze {{characters}} znaków, reszta nie jest uwzględniana",
+  "search.crawPages.meta.crawler": "Tryb pobierania",
+  "search.crawPages.meta.words": "Liczba znaków",
+  "search.searchxng.baseURL": "Wprowadź adres",
+  "search.searchxng.description": "Wprowadź adres SearchXNG, aby rozpocząć wyszukiwanie online",
+  "search.searchxng.keyPlaceholder": "Wprowadź klucz",
+  "search.searchxng.title": "Konfiguracja wyszukiwarki SearchXNG",
+  "search.searchxng.unconfiguredDesc": "Skontaktuj się z administratorem, aby skonfigurować wyszukiwarkę SearchXNG i rozpocząć wyszukiwanie online",
+  "search.searchxng.unconfiguredTitle": "SearchXNG nie jest skonfigurowany",
+  "search.title": "Wyszukiwanie online",
   "setting": "Ustawienia wtyczki",
-  "settings": {
-    "capabilities": {
-      "prompts": "Podpowiedzi",
-      "resources": "Zasoby",
-      "title": "Możliwości wtyczki",
-      "tools": "Narzędzia"
-    },
-    "configuration": {
-      "title": "Konfiguracja wtyczki"
-    },
-    "connection": {
-      "args": "Argumenty startowe",
-      "command": "Polecenie startowe",
-      "title": "Informacje o połączeniu",
-      "type": "Typ połączenia",
-      "url": "Adres usługi"
-    },
-    "edit": "Edytuj",
-    "envConfigDescription": "Te ustawienia zostaną przekazane jako zmienne środowiskowe podczas uruchamiania serwera MCP",
-    "httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają konfiguracji zmiennych środowiskowych",
-    "indexUrl": {
-      "title": "Indeks społeczności",
-      "tooltip": "Edycja online nie jest obecnie obsługiwana, ustaw przez zmienne środowiskowe podczas wdrażania"
-    },
-    "messages": {
-      "connectionUpdateFailed": "Aktualizacja informacji o połączeniu nie powiodła się",
-      "connectionUpdateSuccess": "Informacje o połączeniu zostały zaktualizowane",
-      "envUpdateFailed": "Zapis zmiennych środowiskowych nie powiódł się",
-      "envUpdateSuccess": "Zmienna środowiskowa została zapisana pomyślnie"
-    },
-    "modalDesc": "Po skonfigurowaniu adresu społeczności wtyczek możesz korzystać z niestandardowej społeczności wtyczek",
-    "rules": {
-      "argsRequired": "Proszę wprowadzić argumenty startowe",
-      "commandRequired": "Proszę wprowadzić polecenie startowe",
-      "urlRequired": "Proszę wprowadzić adres usługi"
-    },
-    "saveSettings": "Zapisz ustawienia",
-    "title": "Ustawienia społeczności wtyczek"
-  },
+  "settings.capabilities.prompts": "Podpowiedzi",
+  "settings.capabilities.resources": "Zasoby",
+  "settings.capabilities.title": "Możliwości wtyczki",
+  "settings.capabilities.tools": "Narzędzia",
+  "settings.configuration.title": "Konfiguracja wtyczki",
+  "settings.connection.args": "Argumenty startowe",
+  "settings.connection.command": "Polecenie startowe",
+  "settings.connection.title": "Informacje o połączeniu",
+  "settings.connection.type": "Typ połączenia",
+  "settings.connection.url": "Adres usługi",
+  "settings.edit": "Edytuj",
+  "settings.envConfigDescription": "Te ustawienia zostaną przekazane jako zmienne środowiskowe podczas uruchamiania serwera MCP",
+  "settings.httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają konfiguracji zmiennych środowiskowych",
+  "settings.indexUrl.title": "Indeks społeczności",
+  "settings.indexUrl.tooltip": "Edycja online nie jest obecnie obsługiwana, ustaw przez zmienne środowiskowe podczas wdrażania",
+  "settings.messages.connectionUpdateFailed": "Aktualizacja informacji o połączeniu nie powiodła się",
+  "settings.messages.connectionUpdateSuccess": "Informacje o połączeniu zostały zaktualizowane",
+  "settings.messages.envUpdateFailed": "Zapis zmiennych środowiskowych nie powiódł się",
+  "settings.messages.envUpdateSuccess": "Zmienna środowiskowa została zapisana pomyślnie",
+  "settings.modalDesc": "Po skonfigurowaniu adresu społeczności wtyczek możesz korzystać z niestandardowej społeczności wtyczek",
+  "settings.rules.argsRequired": "Proszę wprowadzić argumenty startowe",
+  "settings.rules.commandRequired": "Proszę wprowadzić polecenie startowe",
+  "settings.rules.urlRequired": "Proszę wprowadzić adres usługi",
+  "settings.saveSettings": "Zapisz ustawienia",
+  "settings.title": "Ustawienia społeczności wtyczek",
   "showInPortal": "Proszę zobaczyć szczegóły w obszarze roboczym",
-  "store": {
-    "actions": {
-      "cancel": "Anuluj instalację",
-      "confirmUninstall": "Wtyczka zostanie odinstalowana, a jej konfiguracja usunięta. Potwierdź operację",
-      "detail": "Szczegóły",
-      "install": "Zainstaluj",
-      "manifest": "Edytuj plik instalacyjny",
-      "settings": "Ustawienia",
-      "uninstall": "Odinstaluj"
-    },
-    "communityPlugin": "Społeczność zewnętrzna",
-    "customPlugin": "Niestandardowa",
-    "empty": "Brak zainstalowanych wtyczek",
-    "emptySelectHint": "Wybierz wtyczkę, aby zobaczyć szczegóły",
-    "installAllPlugins": "Zainstaluj wszystkie",
-    "networkError": "Nie udało się pobrać sklepu z wtyczkami, sprawdź połączenie sieciowe i spróbuj ponownie",
-    "placeholder": "Wyszukaj nazwę, opis lub słowa kluczowe wtyczki...",
-    "releasedAt": "Opublikowano {{createdAt}}",
-    "tabs": {
-      "installed": "Zainstalowane",
-      "mcp": "Wtyczki MCP",
-      "old": "Wtyczki LobeHub"
-    },
-    "title": "Sklep z wtyczkami"
-  },
+  "store.actions.cancel": "Anuluj instalację",
+  "store.actions.confirmUninstall": "Wtyczka zostanie odinstalowana, a jej konfiguracja usunięta. Potwierdź operację",
+  "store.actions.detail": "Szczegóły",
+  "store.actions.install": "Zainstaluj",
+  "store.actions.manifest": "Edytuj plik instalacyjny",
+  "store.actions.settings": "Ustawienia",
+  "store.actions.uninstall": "Odinstaluj",
+  "store.communityPlugin": "Społeczność zewnętrzna",
+  "store.customPlugin": "Niestandardowa",
+  "store.empty": "Brak zainstalowanych wtyczek",
+  "store.emptySelectHint": "Wybierz wtyczkę, aby zobaczyć szczegóły",
+  "store.installAllPlugins": "Zainstaluj wszystkie",
+  "store.networkError": "Nie udało się pobrać sklepu z wtyczkami, sprawdź połączenie sieciowe i spróbuj ponownie",
+  "store.placeholder": "Wyszukaj nazwę, opis lub słowa kluczowe wtyczki...",
+  "store.releasedAt": "Opublikowano {{createdAt}}",
+  "store.tabs.installed": "Zainstalowane",
+  "store.tabs.mcp": "Wtyczki MCP",
+  "store.tabs.old": "Wtyczki LobeHub",
+  "store.title": "Sklep z wtyczkami",
   "unknownError": "Nieznany błąd",
   "unknownPlugin": "Nieznana wtyczka"
 }

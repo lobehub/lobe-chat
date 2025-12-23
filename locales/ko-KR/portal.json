@@ -1,27 +1,15 @@
 {
   "Artifacts": "아티팩트",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "청크",
-      "file": "파일"
-    }
-  },
+  "FilePreview.tabs.chunk": "청크",
+  "FilePreview.tabs.file": "파일",
   "Plugins": "플러그인",
-  "artifacts": {
-    "display": {
-      "code": "코드",
-      "preview": "미리보기"
-    },
-    "svg": {
-      "copyAsImage": "이미지로 복사",
-      "copyFail": "복사 실패, 오류 원인:{{error}}",
-      "copySuccess": "이미지 복사 성공",
-      "download": {
-        "png": "PNG로 다운로드",
-        "svg": "SVG로 다운로드"
-      }
-    }
-  },
+  "artifacts.display.code": "코드",
+  "artifacts.display.preview": "미리보기",
+  "artifacts.svg.copyAsImage": "이미지로 복사",
+  "artifacts.svg.copyFail": "복사 실패, 오류 원인:{{error}}",
+  "artifacts.svg.copySuccess": "이미지 복사 성공",
+  "artifacts.svg.download.png": "PNG로 다운로드",
+  "artifacts.svg.download.svg": "SVG로 다운로드",
   "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 세션에서 플러그인을 사용한 후 다시 확인해 주세요.",
   "emptyKnowledgeList": "현재 지식 목록이 비어 있습니다. 지식 베이스를 활성화한 후 다시 확인해 주세요.",
   "files": "파일",

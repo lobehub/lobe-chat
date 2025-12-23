@@ -1,730 +1,454 @@
 {
-  "assistants": {
-    "addAgent": "افزودن دستیار",
-    "addAgentAndConverse": "افزودن دستیار و گفتگو",
-    "addAgentSuccess": "افزودن موفقیت‌آمیز بود",
-    "conversation": {
-      "l1": "سلام، من **{{name}}** هستم، می‌توانید هر سوالی از من بپرسید و من تمام تلاشم را برای پاسخ دادن به شما خواهم کرد ~",
-      "l2": "در اینجا توانایی‌های من معرفی شده است: ",
-      "l3": "بیایید گفتگو را شروع کنیم!"
-    },
-    "description": "معرفی دستیار",
-    "detail": "جزئیات",
-    "details": {
-      "capabilities": {
-        "knowledge": {
-          "desc": "دستیار دارای منابع داخلی زیر است که به شما در پاسخگویی به سوالات بیشتر کمک می‌کند.",
-          "title": "منابع"
-        },
-        "plugin": {
-          "desc": "دستیار شامل افزونه‌های زیر است که به شما در انجام وظایف بیشتر کمک می‌کند.",
-          "title": "افزونه‌های داخلی"
-        },
-        "title": "قابلیت‌های دستیار"
-      },
-      "overview": {
-        "example": "نمایش دستیار",
-        "title": "بررسی اجمالی"
-      },
-      "related": {
-        "listTitle": "دستیارهای مرتبط",
-        "more": "مشاهده بیشتر",
-        "title": "مطالب مرتبط"
-      },
-      "sidebar": {
-        "toc": "فهرست مطالب"
-      },
-      "summary": {
-        "title": "شما با این دستیار چه کارهایی می‌توانید انجام دهید؟"
-      },
-      "systemRole": {
-        "openingMessage": "پیام آغازین",
-        "openingQuestions": "سوالات آغازین",
-        "title": "تنظیمات دستیار"
-      },
-      "version": {
-        "empty": "هیچ نسخه‌ای در دسترس نیست",
-        "status": {
-          "archived": "بایگانی شده",
-          "deprecated": "رد شده",
-          "unpublished": "در حال بررسی"
-        },
-        "table": {
-          "isLatest": "آخرین نسخه",
-          "isValidated": "تأیید شده",
-          "publishAt": "تاریخ انتشار",
-          "version": "شماره نسخه"
-        },
-        "title": "تاریخچه نسخه‌ها"
-      }
-    },
-    "downloads": "تعداد دانلود",
-    "empty": {
-      "description": "سعی کنید فیلترها را تغییر دهید یا به انجمن مراجعه کنید تا دستیارهای بیشتری پیدا کنید",
-      "search": "دستیار مطابقی یافت نشد",
-      "title": "هیچ دستیاری موجود نیست"
-    },
-    "list": "فهرست دستیاران",
-    "marketSource": {
-      "label": "تغییر منبع انجمن",
-      "legacy": "انجمن قدیمی",
-      "new": "انجمن جدید"
-    },
-    "more": "بیشتر",
-    "plugins": "افزونه‌های یکپارچه",
-    "recentSubmits": "آخرین به‌روزرسانی‌ها",
-    "sorts": {
-      "createdAt": "تازه‌ترین انتشار",
-      "identifier": "شناسه دستیار",
-      "knowledgeCount": "تعداد منابع",
-      "myown": "مشاهده دستیارهای من",
-      "pluginCount": "تعداد افزونه‌ها",
-      "title": "نام دستیار",
-      "tokenUsage": "میزان استفاده از توکن"
-    },
-    "status": {
-      "archived": {
-        "reasons": {
-          "official": "به دلیل مسائل امنیتی/سیاسی توسط تیم رسمی از دسترس خارج شده است",
-          "owner": "مالک توسعه‌دهنده دستیار به‌صورت داوطلبانه آن را از دسترس خارج یا بایگانی کرده است"
-        },
-        "subtitle": "دستیار مورد نظر به دلایل زیر ممکن است بایگانی شده باشد:",
-        "title": "دستیار بایگانی شده است"
-      },
-      "backToMarket": "بازگشت به انجمن دستیار",
-      "deprecated": {
-        "reasons": {
-          "official": "به دلیل مسائل امنیتی/سیاسی توسط تیم رسمی از دسترس خارج شده است",
-          "owner": "مالک توسعه‌دهنده دستیار به‌صورت داوطلبانه آن را رد یا از دسترس خارج کرده است"
-        },
-        "subtitle": "دستیار مورد نظر به دلایل زیر ممکن است رد شده باشد:",
-        "title": "دستیار رد شده است"
-      },
-      "support": "در صورت وجود هرگونه مشکل، لطفاً لینک را کپی کرده و به <email>support@lobehub.com</email> ارسال نمایید.",
-      "unpublished": {
-        "subtitle": "دستیار مورد نظر در حال بررسی نسخه می‌باشد. در صورت داشتن سوال، لینک را کپی کرده و به <email>support@lobehub.com</email> ارسال نمایید.",
-        "title": "دستیار در حال بررسی است"
-      }
-    },
-    "suggestions": "پیشنهادات مرتبط",
-    "systemRole": "تنظیمات دستیار",
-    "tokenUsage": "میزان استفاده از توکن‌های راهنمای دستیار",
-    "try": "امتحان کنید",
-    "withKnowledge": "این دستیار دارای منابع است",
-    "withPlugin": "این دستیار دارای افزونه است"
-  },
+  "assistants.addAgent": "افزودن دستیار",
+  "assistants.addAgentAndConverse": "افزودن دستیار و گفتگو",
+  "assistants.addAgentSuccess": "افزودن موفقیت‌آمیز بود",
+  "assistants.conversation.l1": "سلام، من **{{name}}** هستم، می‌توانید هر سوالی از من بپرسید و من تمام تلاشم را برای پاسخ دادن به شما خواهم کرد ~",
+  "assistants.conversation.l2": "در اینجا توانایی‌های من معرفی شده است: ",
+  "assistants.conversation.l3": "بیایید گفتگو را شروع کنیم!",
+  "assistants.description": "معرفی دستیار",
+  "assistants.detail": "جزئیات",
+  "assistants.details.capabilities.knowledge.desc": "دستیار دارای منابع داخلی زیر است که به شما در پاسخگویی به سوالات بیشتر کمک می‌کند.",
+  "assistants.details.capabilities.knowledge.title": "منابع",
+  "assistants.details.capabilities.plugin.desc": "دستیار شامل افزونه‌های زیر است که به شما در انجام وظایف بیشتر کمک می‌کند.",
+  "assistants.details.capabilities.plugin.title": "افزونه‌های داخلی",
+  "assistants.details.capabilities.title": "قابلیت‌های دستیار",
+  "assistants.details.overview.example": "نمایش دستیار",
+  "assistants.details.overview.title": "بررسی اجمالی",
+  "assistants.details.related.listTitle": "دستیارهای مرتبط",
+  "assistants.details.related.more": "مشاهده بیشتر",
+  "assistants.details.related.title": "مطالب مرتبط",
+  "assistants.details.sidebar.toc": "فهرست مطالب",
+  "assistants.details.summary.title": "شما با این دستیار چه کارهایی می‌توانید انجام دهید؟",
+  "assistants.details.systemRole.openingMessage": "پیام آغازین",
+  "assistants.details.systemRole.openingQuestions": "سوالات آغازین",
+  "assistants.details.systemRole.title": "تنظیمات دستیار",
+  "assistants.details.version.empty": "هیچ نسخه‌ای در دسترس نیست",
+  "assistants.details.version.status.archived": "بایگانی شده",
+  "assistants.details.version.status.deprecated": "رد شده",
+  "assistants.details.version.status.unpublished": "در حال بررسی",
+  "assistants.details.version.table.isLatest": "آخرین نسخه",
+  "assistants.details.version.table.isValidated": "تأیید شده",
+  "assistants.details.version.table.publishAt": "تاریخ انتشار",
+  "assistants.details.version.table.version": "شماره نسخه",
+  "assistants.details.version.title": "تاریخچه نسخه‌ها",
+  "assistants.downloads": "تعداد دانلود",
+  "assistants.empty.description": "سعی کنید فیلترها را تغییر دهید یا به انجمن مراجعه کنید تا دستیارهای بیشتری پیدا کنید",
+  "assistants.empty.search": "دستیار مطابقی یافت نشد",
+  "assistants.empty.title": "هیچ دستیاری موجود نیست",
+  "assistants.list": "فهرست دستیاران",
+  "assistants.marketSource.label": "تغییر منبع انجمن",
+  "assistants.marketSource.legacy": "انجمن قدیمی",
+  "assistants.marketSource.new": "انجمن جدید",
+  "assistants.more": "بیشتر",
+  "assistants.plugins": "افزونه‌های یکپارچه",
+  "assistants.recentSubmits": "آخرین به‌روزرسانی‌ها",
+  "assistants.sorts.createdAt": "تازه‌ترین انتشار",
+  "assistants.sorts.identifier": "شناسه دستیار",
+  "assistants.sorts.knowledgeCount": "تعداد منابع",
+  "assistants.sorts.myown": "مشاهده دستیارهای من",
+  "assistants.sorts.pluginCount": "تعداد افزونه‌ها",
+  "assistants.sorts.title": "نام دستیار",
+  "assistants.sorts.tokenUsage": "میزان استفاده از توکن",
+  "assistants.status.archived.reasons.official": "به دلیل مسائل امنیتی/سیاسی توسط تیم رسمی از دسترس خارج شده است",
+  "assistants.status.archived.reasons.owner": "مالک توسعه‌دهنده دستیار به‌صورت داوطلبانه آن را از دسترس خارج یا بایگانی کرده است",
+  "assistants.status.archived.subtitle": "دستیار مورد نظر به دلایل زیر ممکن است بایگانی شده باشد:",
+  "assistants.status.archived.title": "دستیار بایگانی شده است",
+  "assistants.status.backToMarket": "بازگشت به انجمن دستیار",
+  "assistants.status.deprecated.reasons.official": "به دلیل مسائل امنیتی/سیاسی توسط تیم رسمی از دسترس خارج شده است",
+  "assistants.status.deprecated.reasons.owner": "مالک توسعه‌دهنده دستیار به‌صورت داوطلبانه آن را رد یا از دسترس خارج کرده است",
+  "assistants.status.deprecated.subtitle": "دستیار مورد نظر به دلایل زیر ممکن است رد شده باشد:",
+  "assistants.status.deprecated.title": "دستیار رد شده است",
+  "assistants.status.support": "در صورت وجود هرگونه مشکل، لطفاً لینک را کپی کرده و به <email>support@lobehub.com</email> ارسال نمایید.",
+  "assistants.status.unpublished.subtitle": "دستیار مورد نظر در حال بررسی نسخه می‌باشد. در صورت داشتن سوال، لینک را کپی کرده و به <email>support@lobehub.com</email> ارسال نمایید.",
+  "assistants.status.unpublished.title": "دستیار در حال بررسی است",
+  "assistants.suggestions": "پیشنهادات مرتبط",
+  "assistants.systemRole": "تنظیمات دستیار",
+  "assistants.tokenUsage": "میزان استفاده از توکن‌های راهنمای دستیار",
+  "assistants.try": "امتحان کنید",
+  "assistants.withKnowledge": "این دستیار دارای منابع است",
+  "assistants.withPlugin": "این دستیار دارای افزونه است",
   "back": "بازگشت به اکتشاف",
-  "category": {
-    "assistant": {
-      "academic": "تحصیلی",
-      "all": "همه",
-      "career": "شغلی",
-      "copywriting": "کپی‌نویسی",
-      "design": "طراحی",
-      "education": "آموزش",
-      "emotions": "احساسات",
-      "entertainment": "سرگرمی",
-      "games": "بازی‌ها",
-      "general": "عمومی",
-      "life": "زندگی",
-      "marketing": "بازاریابی",
-      "office": "اداری",
-      "programming": "برنامه‌نویسی",
-      "translation": "ترجمه"
-    },
-    "plugin": {
-      "all": "همه",
-      "gaming-entertainment": "بازی و سرگرمی",
-      "life-style": "سبک زندگی",
-      "lifestyle": "سبک زندگی",
-      "media-generate": "تولید رسانه",
-      "science-education": "علم و آموزش",
-      "social": "رسانه‌های اجتماعی",
-      "stocks-finance": "سهام و مالی",
-      "tools": "ابزارهای کاربردی",
-      "web-search": "جستجوی وب"
-    }
-  },
+  "category.assistant.academic": "تحصیلی",
+  "category.assistant.all": "همه",
+  "category.assistant.career": "شغلی",
+  "category.assistant.copywriting": "کپی‌نویسی",
+  "category.assistant.design": "طراحی",
+  "category.assistant.education": "آموزش",
+  "category.assistant.emotions": "احساسات",
+  "category.assistant.entertainment": "سرگرمی",
+  "category.assistant.games": "بازی‌ها",
+  "category.assistant.general": "عمومی",
+  "category.assistant.life": "زندگی",
+  "category.assistant.marketing": "بازاریابی",
+  "category.assistant.office": "اداری",
+  "category.assistant.programming": "برنامه‌نویسی",
+  "category.assistant.translation": "ترجمه",
+  "category.plugin.all": "همه",
+  "category.plugin.gaming-entertainment": "بازی و سرگرمی",
+  "category.plugin.life-style": "سبک زندگی",
+  "category.plugin.lifestyle": "سبک زندگی",
+  "category.plugin.media-generate": "تولید رسانه",
+  "category.plugin.science-education": "علم و آموزش",
+  "category.plugin.social": "رسانه‌های اجتماعی",
+  "category.plugin.stocks-finance": "سهام و مالی",
+  "category.plugin.tools": "ابزارهای کاربردی",
+  "category.plugin.web-search": "جستجوی وب",
   "cleanFilter": "پاک کردن فیلتر",
   "create": "ایجاد",
-  "createGuide": {
-    "func1": {
-      "desc1": "در پنجره گفتگو از طریق تنظیمات در گوشه بالا سمت راست به صفحه تنظیماتی که می‌خواهید دستیار را ارسال کنید، وارد شوید؛",
-      "desc2": "روی دکمه ارسال به انجمن دستیار در بالا سمت راست کلیک کنید.",
-      "tag": "روش اول",
-      "title": "ارسال از طریق LobeChat"
-    },
-    "func2": {
-      "button": "رفتن به مخزن دستیار در Github",
-      "desc": "اگر می‌خواهید دستیار را به فهرست اضافه کنید، از agent-template.json یا agent-template-full.json استفاده کنید تا یک ورودی در دایرکتوری plugins ایجاد کنید، توضیح کوتاهی بنویسید و به‌طور مناسب برچسب‌گذاری کنید، سپس یک درخواست کششی (Pull Request) ایجاد کنید.",
-      "tag": "روش دوم",
-      "title": "ارسال از طریق Github"
-    }
-  },
+  "createGuide.func1.desc1": "در پنجره گفتگو از طریق تنظیمات در گوشه بالا سمت راست به صفحه تنظیماتی که می‌خواهید دستیار را ارسال کنید، وارد شوید؛",
+  "createGuide.func1.desc2": "روی دکمه ارسال به انجمن دستیار در بالا سمت راست کلیک کنید.",
+  "createGuide.func1.tag": "روش اول",
+  "createGuide.func1.title": "ارسال از طریق LobeChat",
+  "createGuide.func2.button": "رفتن به مخزن دستیار در Github",
+  "createGuide.func2.desc": "اگر می‌خواهید دستیار را به فهرست اضافه کنید، از agent-template.json یا agent-template-full.json استفاده کنید تا یک ورودی در دایرکتوری plugins ایجاد کنید، توضیح کوتاهی بنویسید و به‌طور مناسب برچسب‌گذاری کنید، سپس یک درخواست کششی (Pull Request) ایجاد کنید.",
+  "createGuide.func2.tag": "روش دوم",
+  "createGuide.func2.title": "ارسال از طریق Github",
   "dislike": "دوست ندارم",
   "filter": "فیلتر",
-  "filterBy": {
-    "authorRange": {
-      "everyone": "همه نویسندگان",
-      "followed": "نویسندگان دنبال‌شده",
-      "title": "محدوده نویسنده"
-    },
-    "contentLength": "حداقل طول محتوا",
-    "maxToken": {
-      "title": "تنظیم حداکثر طول (توکن)",
-      "unlimited": "نامحدود"
-    },
-    "other": {
-      "functionCall": "پشتیبانی از فراخوانی تابع",
-      "title": "سایر",
-      "vision": "پشتیبانی از تشخیص بصری",
-      "withKnowledge": "دارای منابع",
-      "withTool": "همراه با افزونه"
-    },
-    "pricing": "قیمت مدل",
-    "timePeriod": {
-      "all": "تمام زمان‌ها",
-      "day": "24 ساعت گذشته",
-      "month": "30 روز گذشته",
-      "title": "بازه زمانی",
-      "week": "7 روز گذشته",
-      "year": "یک سال گذشته"
-    }
-  },
-  "home": {
-    "communityAgents": "دستیاران جامعه",
-    "featuredAssistants": "دستیارهای پیشنهادی",
-    "featuredModels": "مدل‌های پیشنهادی",
-    "featuredPlugins": "افزونه‌های ویژه",
-    "featuredProviders": "ارائه‌دهندگان مدل پیشنهادی",
-    "featuredTools": "افزونه‌های پیشنهادی",
-    "more": "کشف بیشتر"
-  },
+  "filterBy.authorRange.everyone": "همه نویسندگان",
+  "filterBy.authorRange.followed": "نویسندگان دنبال‌شده",
+  "filterBy.authorRange.title": "محدوده نویسنده",
+  "filterBy.contentLength": "حداقل طول محتوا",
+  "filterBy.maxToken.title": "تنظیم حداکثر طول (توکن)",
+  "filterBy.maxToken.unlimited": "نامحدود",
+  "filterBy.other.functionCall": "پشتیبانی از فراخوانی تابع",
+  "filterBy.other.title": "سایر",
+  "filterBy.other.vision": "پشتیبانی از تشخیص بصری",
+  "filterBy.other.withKnowledge": "دارای منابع",
+  "filterBy.other.withTool": "همراه با افزونه",
+  "filterBy.pricing": "قیمت مدل",
+  "filterBy.timePeriod.all": "تمام زمان‌ها",
+  "filterBy.timePeriod.day": "24 ساعت گذشته",
+  "filterBy.timePeriod.month": "30 روز گذشته",
+  "filterBy.timePeriod.title": "بازه زمانی",
+  "filterBy.timePeriod.week": "7 روز گذشته",
+  "filterBy.timePeriod.year": "یک سال گذشته",
+  "home.communityAgents": "دستیاران جامعه",
+  "home.featuredAssistants": "دستیارهای پیشنهادی",
+  "home.featuredModels": "مدل‌های پیشنهادی",
+  "home.featuredPlugins": "افزونه‌های ویژه",
+  "home.featuredProviders": "ارائه‌دهندگان مدل پیشنهادی",
+  "home.featuredTools": "افزونه‌های پیشنهادی",
+  "home.more": "کشف بیشتر",
   "isClaimed": "ادعا شده",
   "isFeatured": "پیشنهاد شده",
   "isOfficial": "تأیید شده رسمی",
   "like": "دوست داشتن",
-  "mcp": {
-    "categories": {
-      "all": {
-        "description": "تمام سرورهای MCP",
-        "name": "همه"
-      },
-      "business": {
-        "description": "خدمات تجاری و سازمانی",
-        "name": "خدمات تجاری"
-      },
-      "developer": {
-        "description": "ابزارها و خدمات مرتبط با توسعه",
-        "name": "ابزارهای توسعه"
-      },
-      "gaming-entertainment": {
-        "description": "بازی، سرگرمی و فعالیت‌های تفریحی",
-        "name": "بازی و سرگرمی"
-      },
-      "health-wellness": {
-        "description": "سلامت، تناسب اندام و مراقبت‌های جسمی و روانی",
-        "name": "سلامت و تندرستی"
-      },
-      "lifestyle": {
-        "description": "سبک زندگی شخصی، عادات و فعالیت‌های روزمره",
-        "name": "سبک زندگی"
-      },
-      "media-generate": {
-        "description": "تولید، ویرایش و پردازش رسانه",
-        "name": "تولید رسانه"
-      },
-      "news": {
-        "description": "خدمات جمع‌آوری اخبار، گزارش و اطلاعات",
-        "name": "اخبار و اطلاعات"
-      },
-      "productivity": {
-        "description": "مدیریت وظایف، یادداشت‌ها و ابزارهای بهره‌وری",
-        "name": "ابزارهای بهره‌وری"
-      },
-      "science-education": {
-        "description": "ابزارهای تحقیق علمی، یادگیری و آموزش",
-        "name": "علم و آموزش"
-      },
-      "social": {
-        "description": "شبکه‌های اجتماعی و ارتباطات",
-        "name": "رسانه‌های اجتماعی"
-      },
-      "stocks-finance": {
-        "description": "بازارهای مالی، معاملات و سرمایه‌گذاری",
-        "name": "بورس و مالی"
-      },
-      "tools": {
-        "description": "ابزارها و خدمات عمومی و کاربردی",
-        "name": "ابزارهای کاربردی"
-      },
-      "travel-transport": {
-        "description": "برنامه‌ریزی سفر و حمل و نقل",
-        "name": "سفر و حمل و نقل"
-      },
-      "weather": {
-        "description": "پیش‌بینی هوا و خدمات هواشناسی",
-        "name": "هواشناسی"
-      },
-      "web-search": {
-        "description": "جستجوی وب و بازیابی اطلاعات",
-        "name": "بازیابی اطلاعات"
-      }
-    },
-    "details": {
-      "connectionType": {
-        "hybrid": {
-          "desc": "این سرویس می‌تواند بر اساس پیکربندی یا سناریوی استفاده، به صورت محلی یا ابری اجرا شود و دارای قابلیت اجرای دوگانه است.",
-          "title": "سرویس ترکیبی"
-        },
-        "local": {
-          "desc": "این سرور فقط روی دستگاه محلی کلاینت اجرا می‌شود و نیاز به نصب و منابع محلی دارد.",
-          "title": "سرویس محلی"
-        },
-        "remote": {
-          "desc": "این سرور به صورت راه دور میزبانی می‌شود زیرا عمدتاً به سرویس‌های راه دور وابسته است و به محیط محلی وابسته نیست.",
-          "title": "سرویس ابری"
-        }
-      },
-      "deployment": {
-        "args": "پارامترها",
-        "checkCommand": "دستور بررسی",
-        "command": "دستور",
-        "commandLine": "وابستگی‌های سیستم",
-        "connection": "نوع اتصال",
-        "connectionType": "نوع اتصال",
-        "description": "روش نصب و استقرار افزونه",
-        "descriptionPlaceholder": "توضیحات اختیاری",
-        "empty": "گزینه استقرار موجود نیست",
-        "env": "متغیرهای محیطی",
-        "guide": "راهنمای نصب",
-        "installation": "نصب از طریق {{method}}",
-        "installationMethod": "روش نصب",
-        "other": "تنظیمات دیگر",
-        "packageName": "نام بسته",
-        "platform": {
-          "steps": {
-            "claude": "- برنامه **Claude Desktop** را باز کنید\n- به **تنظیمات** بروید و سپس **توسعه‌دهنده** را انتخاب کنید\n- روی **ویرایش پیکربندی** کلیک کنید\n- فایل **claude_desktop_config.json** را باز کنید\n- پیکربندی سرور را کپی و در فایل موجود جای‌گذاری کرده و ذخیره کنید",
-            "cline": "- VS Code با افزونه Cline را باز کنید\n- روی آیکون Cline در نوار کناری کلیک کنید\n- از منوی کشویی **MCP Servers** را انتخاب کنید\n- در برگه **Remote Servers** نام سرور و URL سرور MCP خود را وارد کنید\n- روی **Add Server** کلیک کنید تا متصل شوید",
-            "cursor": "- به **تنظیمات** بروید و تنظیمات Cursor را انتخاب کنید\n- در سمت چپ **MCP** را انتخاب کنید\n- روی **افزودن سرور جهانی جدید MCP** در بالا سمت راست کلیک کنید\n- پیکربندی سرور را کپی و در فایل موجود جای‌گذاری کرده و ذخیره کنید",
-            "lobeChat": "- برنامه **LobeChat دسکتاپ** را باز کنید\n- به **تنظیمات** - **دستیار پیش‌فرض** بروید\n- سپس **تنظیمات افزونه** - **افزونه سفارشی** را انتخاب کنید\n- روی **وارد کردن سریع پیکربندی JSON** کلیک کنید\n- پیکربندی سرور را در کادر متن جای‌گذاری کرده و نصب کنید",
-            "openai": "- برنامه **OpenAI** یا محیط توسعه خود را باز کنید\n- در API پاسخ‌ها MCP را پیکربندی کنید\n- بلوک MCP را به آرایه **tools** در درخواست API اضافه کنید\n- مقدار **server_url** را به نقطه پایانی سرور MCP خود تنظیم کنید\n- هدرهای مورد نیاز برای احراز هویت (کلید API، توکن و غیره) را شامل کنید\n- با پارامتر `allowed_tools` ابزارهای قابل دسترس را محدود کنید\n- با `require_approval` کنترل تایید اجرای ابزارها را تنظیم کنید",
-            "vscode": "- VS Code را باز کنید\n- پنل فرمان را باز کنید (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- عبارت **MCP: Add Server** را وارد کرده و انتخاب کنید\n- انتخاب کنید که به تنظیمات فضای کاری یا کاربر اضافه شود\n- پیکربندی سرور را کپی و جای‌گذاری کنید"
-          },
-          "title": "نصب در {{platform}}"
-        },
-        "recommended": "توصیه شده",
-        "systemDependencies": "وابستگی‌های سیستم",
-        "table": {
-          "description": "توضیحات",
-          "name": "نام",
-          "required": "الزامی",
-          "type": "نوع"
-        },
-        "title": "روش نصب"
-      },
-      "githubBadge": {
-        "desc": "LobeHub به طور منظم مخزن کد و مستندات را اسکن می‌کند تا:\n\n- اطمینان حاصل کند سرور MCP به درستی کار می‌کند.\n- ویژگی‌های سرور مانند ابزارها، منابع، پیام‌های راهنما و پارامترهای مورد نیاز را استخراج کند.\n- نشان ما به کاربران کمک می‌کند تا امنیت، ویژگی‌ها و راهنمای نصب سرور MCP را سریع ارزیابی کنند.\n\nلطفاً کد زیر را در فایل `README.md` خود کپی کنید:"
-      },
-      "nav": {
-        "needHelp": "نیاز به کمک؟",
-        "reportIssue": "گزارش مشکل",
-        "viewSourceCode": "مشاهده کد منبع"
-      },
-      "overview": {
-        "title": "بررسی اجمالی"
-      },
-      "related": {
-        "listTitle": "سرورهای MCP مرتبط",
-        "more": "مشاهده بیشتر",
-        "title": "مطالب مرتبط"
-      },
-      "schema": {
-        "mode": {
-          "docs": "مستندات"
-        },
-        "prompts": {
-          "arguments": "پیکربندی پارامترها",
-          "desc": "قالب‌های تعاملی که توسط کاربر برای راه‌اندازی انتخاب می‌شوند",
-          "empty": "هیچ راهنمایی موجود نیست",
-          "instructions": "دستورالعمل‌ها",
-          "table": {
-            "description": "توضیحات",
-            "name": "نام",
-            "required": "الزامی"
-          },
-          "title": "فهرست راهنمایی‌ها"
-        },
-        "resources": {
-          "desc": "داده‌های زمینه‌ای که توسط کلاینت اضافه و مدیریت می‌شوند",
-          "empty": "منبعی موجود نیست",
-          "table": {
-            "description": "توضیحات",
-            "mineType": "نوع MIME",
-            "name": "نام",
-            "uri": "آدرس URI"
-          },
-          "title": "فهرست منابع"
-        },
-        "title": "قابلیت‌های افزونه",
-        "tools": {
-          "desc": "رابط‌های عملکردی که به مدل زبان بزرگ (LLM) برای انجام عملیات ارائه می‌شود",
-          "empty": "ابزاری موجود نیست",
-          "inputSchema": "توضیح ورودی",
-          "instructions": "دستورالعمل‌ها",
-          "table": {
-            "description": "توضیحات",
-            "name": "نام",
-            "required": "الزامی",
-            "type": "نوع"
-          },
-          "title": "فهرست ابزارها"
-        }
-      },
-      "score": {
-        "claimed": {
-          "desc": "این سرور MCP توسط مالک آن تصدیق شده است تا مالکیت و مدیریت آن تضمین شود.",
-          "title": "توسط مالک تصدیق شده"
-        },
-        "deployMoreThanManual": {
-          "desc": "این سرور MCP روش‌های نصب دوستانه‌تری نسبت به Manual ارائه می‌دهد که به کاربران اجازه می‌دهد به آسانی نصب و استفاده کنند.",
-          "title": "روش‌های نصب دوستانه ارائه شده"
-        },
-        "deployment": {
-          "desc": "این سرور MCP حداقل یک روش نصب ارائه می‌دهد که به کاربران اجازه می‌دهد آن را نصب و استفاده کنند.",
-          "descWithCount": "این سرور MCP {{number}} روش نصب ارائه می‌دهد که به کاربران اجازه می‌دهد آن را نصب و استفاده کنند.",
-          "title": "حداقل یک روش نصب ارائه شده"
-        },
-        "license": {
-          "desc": "این مخزن شامل یک فایل LICENSE است.",
-          "descWithlicense": "مجوز این مخزن {{license}} است.",
-          "title": "دارای مجوز"
-        },
-        "listTitle": "جزئیات امتیاز",
-        "notClaimed": {
-          "desc": "اگر شما مالک این سرور MCP هستید، می‌توانید از طریق روش‌های زیر آن را تصدیق کنید.",
-          "title": "تصدیق نشده توسط مالک"
-        },
-        "prompts": {
-          "desc": "این سرور MCP راهنمایی‌هایی ارائه می‌دهد که به کاربران اجازه می‌دهد با سرویس تعامل داشته باشند.",
-          "descWithCount": "این سرور MCP {{number}} راهنمایی ارائه می‌دهد که به کاربران اجازه می‌دهد با سرویس تعامل داشته باشند.",
-          "title": "شامل راهنمایی‌ها"
-        },
-        "readme": {
-          "desc": "این مخزن شامل یک فایل README.md است.",
-          "title": "دارای README"
-        },
-        "resources": {
-          "desc": "این سرور MCP منابعی ارائه می‌دهد که به کاربران اجازه می‌دهد داده‌های زمینه‌ای را اضافه و مدیریت کنند.",
-          "descWithCount": "این سرور MCP {{number}} منبع ارائه می‌دهد که به کاربران اجازه می‌دهد داده‌های زمینه‌ای را اضافه و مدیریت کنند.",
-          "title": "شامل منابع"
-        },
-        "title": "امتیاز",
-        "tools": {
-          "desc": "سرویس باید حداقل یک ابزار ارائه دهد که به کاربران اجازه می‌دهد عملیات خاصی را انجام دهند.",
-          "descWithCount": "این سرور MCP {{number}} ابزار ارائه می‌دهد که به کاربران اجازه می‌دهد عملیات خاصی را انجام دهند.",
-          "title": "شامل حداقل یک ابزار"
-        },
-        "validated": {
-          "desc": "این سرور MCP از طریق نصب تایید شده است تا کیفیت و قابلیت اطمینان آن تضمین شود.",
-          "title": "تایید شده"
-        }
-      },
-      "scoreLevel": {
-        "a": {
-          "desc": "این سرور MCP به طور دقیق تایید شده و امکانات کامل و تجربه کاربری با کیفیت بالا ارائه می‌دهد.",
-          "fullTitle": "افزونه عالی",
-          "title": "عالی"
-        },
-        "b": {
-          "desc": "این سرور MCP امکانات و تجربه کاربری خوبی ارائه می‌دهد اما ممکن است در برخی جنبه‌ها نیاز به بهبود داشته باشد.",
-          "fullTitle": "عملکرد خوب",
-          "title": "خوب"
-        },
-        "f": {
-          "desc": "این سرور MCP ناقص یا کیفیت پایین دارد و به کاربران توصیه می‌شود با احتیاط استفاده کنند.",
-          "fullTitle": "کیفیت پایین",
-          "title": "ضعیف"
-        }
-      },
-      "settings": {
-        "capabilities": {
-          "prompts": "عبارات راهنما",
-          "resources": "منابع",
-          "title": "قابلیت‌های افزونه",
-          "tools": "ابزارها"
-        },
-        "configuration": {
-          "title": "پیکربندی افزونه"
-        },
-        "connection": {
-          "args": "پارامترهای راه‌اندازی",
-          "command": "دستور راه‌اندازی",
-          "title": "اطلاعات اتصال",
-          "type": "نوع اتصال",
-          "url": "آدرس سرویس"
-        },
-        "saveSettings": "ذخیره تنظیمات",
-        "title": "تنظیمات افزونه"
-      },
-      "sidebar": {
-        "install": "نصب سرور MCP",
-        "meta": {
-          "homepage": "صفحه اصلی",
-          "installCount": "تعداد نصب",
-          "language": "زبان منبع",
-          "license": "مجوز",
-          "published": "تاریخ انتشار",
-          "repo": "مخزن کد",
-          "stars": "تعداد ستاره",
-          "title": "اطلاعات جزئی",
-          "updated": "آخرین به‌روزرسانی"
-        },
-        "moreServerConfig": "مشاهده جزئیات",
-        "recommendServers": "سرورهای MCP مرتبط",
-        "serverConfig": "پیکربندی نصب",
-        "toc": "فهرست مطالب"
-      },
-      "summary": {
-        "title": "شما با این سرور MCP چه کارهایی می‌توانید انجام دهید؟"
-      },
-      "totalScore": {
-        "description": "امتیاز کلی محاسبه شده بر اساس شاخص‌های مختلف",
-        "legend": {
-          "aGrade": "رده A ({{minPercent}}-100%)",
-          "bGrade": "رده B ({{minPercent}}-{{maxPercent}}%)",
-          "fGrade": "رده F (0-{{maxPercent}}%)"
-        },
-        "pointsFormat": "{{score}}/{{total}} امتیاز",
-        "popover": {
-          "completedOptional": "✅ موارد اختیاری تکمیل شده ({{count}} مورد)",
-          "completedRequired": "✅ موارد الزامی تکمیل شده ({{count}} مورد)",
-          "incompleteOptional": "⏸️ موارد اختیاری تکمیل نشده ({{count}} مورد)",
-          "incompleteRequired": "❌ موارد الزامی تکمیل نشده ({{count}} مورد)",
-          "title": "جزئیات امتیاز"
-        },
-        "ratingFormat": "رتبه‌بندی: {{level}}",
-        "scoreInfo": {
-          "items": "موارد",
-          "points": "امتیاز",
-          "requiredItems": "موارد الزامی"
-        },
-        "title": "امتیاز کل"
-      },
-      "versions": {
-        "table": {
-          "isLatest": "آخرین نسخه",
-          "isValidated": "تایید شده",
-          "publishAt": "تاریخ انتشار",
-          "version": "نسخه"
-        },
-        "title": "تاریخچه نسخه‌ها"
-      }
-    },
-    "hero": {
-      "desc": "پلتفرم متن‌باز و قابل استقرار سرورهای MCP که به سیستم‌های هوش مصنوعی کمک می‌کند به آسانی به سیستم فایل، پایگاه داده، API و منابع کلیدی دیگر دسترسی داشته باشند و توانایی‌های هوش مصنوعی شما را به طور کامل گسترش دهند.",
-      "subTitle": "متن‌باز و آماده استفاده",
-      "title": "انجمن متن‌باز MCP برای هوش مصنوعی"
-    },
-    "sorts": {
-      "createdAt": "تازه‌ترین اضافه شده",
-      "installCount": "تعداد نصب",
-      "isFeatured": "افزونه‌های پیشنهادی",
-      "isValidated": "افزونه‌های تایید شده",
-      "promptsCount": "تعداد راهنمایی‌ها",
-      "ratingCount": "تعداد امتیازها",
-      "resourcesCount": "تعداد منابع",
-      "toolsCount": "تعداد ابزارها",
-      "updatedAt": "آخرین به‌روزرسانی"
-    },
-    "title": "انجمن MCP",
-    "unvalidated": {
-      "desc": "این سرور MCP هنوز تایید نشده است",
-      "title": "تایید نشده"
-    },
-    "validated": {
-      "desc": "این سرور MCP تایید شده است و کیفیت و قابلیت اطمینان آن تضمین شده است.",
-      "descWithDate": "این سرور MCP در تاریخ {{date}} تایید شده است و کیفیت و قابلیت اطمینان آن تضمین شده است.",
-      "title": "تایید شده"
-    }
-  },
-  "mcpEmpty": {
-    "description": "سعی کنید فیلترها را تغییر دهید یا کلمات کلیدی را جستجو کنید",
-    "search": "هیچ سرور MCP مطابقی یافت نشد",
-    "title": "هیچ سرور MCP موجود نیست"
-  },
-  "models": {
-    "abilities": "قابلیت‌های مدل",
-    "chat": "شروع گفتگو",
-    "contentLength": "حداکثر طول محتوا",
-    "details": {
-      "overview": {
-        "title": "بررسی اجمالی"
-      },
-      "related": {
-        "listTitle": "مدل‌های مرتبط",
-        "more": "مشاهده بیشتر",
-        "title": "مطالب مرتبط"
-      }
-    },
-    "empty": {
-      "description": "سعی کنید فیلترها را تغییر دهید تا مدل‌های بیشتری ببینید",
-      "search": "مدل مطابقی یافت نشد",
-      "title": "هیچ مدلی موجود نیست"
-    },
-    "free": "رایگان",
-    "guide": "راهنمای پیکربندی",
-    "list": "فهرست مدل‌ها",
-    "more": "بیشتر",
-    "parameterList": {
-      "defaultValue": "مقدار پیش‌فرض",
-      "docs": "مشاهده مستندات",
-      "frequency_penalty": {
-        "desc": "این تنظیمات فرکانس استفاده مجدد از کلمات خاصی که در ورودی ظاهر شده‌اند را تنظیم می‌کند. مقادیر بالاتر احتمال تکرار این کلمات را کاهش می‌دهد، در حالی که مقادیر منفی اثر معکوس دارند. جریمه کلمات با افزایش تعداد تکرار افزایش نمی‌یابد. مقادیر منفی استفاده مجدد از کلمات را تشویق می‌کند.",
-        "title": "جریمه فرکانس"
-      },
-      "max_tokens": {
-        "desc": "این تنظیمات حداکثر طولی که مدل می‌تواند در یک پاسخ واحد تولید کند را تعریف می‌کند. مقادیر بالاتر به مدل اجازه می‌دهد پاسخ‌های طولانی‌تری تولید کند، در حالی که مقادیر پایین‌تر طول پاسخ را محدود کرده و آن را مختصرتر می‌کند. با توجه به سناریوهای مختلف، تنظیم مناسب این مقدار می‌تواند به دستیابی به طول و جزئیات مورد انتظار پاسخ کمک کند.",
-        "title": "محدودیت پاسخ واحد"
-      },
-      "presence_penalty": {
-        "desc": "این تنظیمات به منظور کنترل استفاده مجدد از کلمات بر اساس فرکانس ظاهر شدن آن‌ها در ورودی طراحی شده است. این تنظیمات تلاش می‌کند تا از استفاده مکرر از کلماتی که بیشتر در ورودی ظاهر شده‌اند جلوگیری کند و فرکانس استفاده از آن‌ها را متناسب با فرکانس ظاهر شدنشان تنظیم می‌کند. جریمه کلمات با افزایش تعداد تکرار افزایش می‌یابد. مقادیر منفی استفاده مجدد از کلمات را تشویق می‌کند.",
-        "title": "تازگی موضوع"
-      },
-      "range": "محدوده",
-      "reasoning_effort": {
-        "desc": "این تنظیم برای کنترل شدت استدلال مدل قبل از تولید پاسخ استفاده می‌شود. شدت پایین به سرعت پاسخ‌دهی اولویت می‌دهد و توکن را صرفه‌جویی می‌کند، در حالی که شدت بالا استدلال کامل‌تری ارائه می‌دهد اما توکن بیشتری مصرف کرده و سرعت پاسخ‌دهی را کاهش می‌دهد. مقدار پیش‌فرض متوسط است که تعادل بین دقت استدلال و سرعت پاسخ‌دهی را برقرار می‌کند.",
-        "title": "شدت استدلال"
-      },
-      "temperature": {
-        "desc": "این تنظیمات بر تنوع پاسخ‌های مدل تأثیر می‌گذارد. مقادیر پایین‌تر منجر به پاسخ‌های قابل پیش‌بینی‌تر و معمولی‌تر می‌شود، در حالی که مقادیر بالاتر تنوع و پاسخ‌های غیرمعمول‌تر را تشویق می‌کند. وقتی مقدار به 0 تنظیم شود، مدل همیشه برای ورودی داده شده یک پاسخ یکسان ارائه می‌دهد.",
-        "title": "تصادفی بودن"
-      },
-      "title": "پارامترهای مدل",
-      "top_p": {
-        "desc": "این تنظیمات انتخاب مدل را به درصدی از کلماتی که بالاترین احتمال را دارند محدود می‌کند: فقط کلماتی که احتمال تجمعی آن‌ها به P می‌رسد انتخاب می‌شوند. مقادیر پایین‌تر پاسخ‌های مدل را قابل پیش‌بینی‌تر می‌کند، در حالی که تنظیمات پیش‌فرض به مدل اجازه می‌دهد از کل دامنه کلمات انتخاب کند.",
-        "title": "نمونه‌گیری هسته‌ای"
-      },
-      "type": "نوع"
-    },
-    "providerInfo": {
-      "apiTooltip": "LobeChat از کلید API سفارشی برای این ارائه‌دهنده پشتیبانی می‌کند.",
-      "input": "قیمت ورودی",
-      "inputTooltip": "هزینه به ازای هر یک میلیون توکن",
-      "latency": "تأخیر",
-      "latencyTooltip": "میانگین زمان پاسخ برای ارسال اولین توکن توسط ارائه‌دهنده",
-      "maxOutput": "حداکثر طول خروجی",
-      "maxOutputTooltip": "حداکثر تعداد توکن‌هایی که این نقطه انتهایی می‌تواند تولید کند",
-      "officialTooltip": "خدمات رسمی LobeHub",
-      "output": "قیمت خروجی",
-      "outputTooltip": "هزینه به ازای هر یک میلیون توکن",
-      "streamCancellationTooltip": "این ارائه‌دهنده از قابلیت لغو جریان پشتیبانی می‌کند.",
-      "throughput": "توان عملیاتی",
-      "throughputTooltip": "میانگین تعداد توکن‌های منتقل شده در هر ثانیه در درخواست‌های جریانی"
-    },
-    "sorts": {
-      "contextWindowTokens": "طول پنجره متنی",
-      "identifier": "شناسه مدل",
-      "inputPrice": "قیمت ورودی",
-      "outputPrice": "قیمت خروجی",
-      "providerCount": "تعداد ارائه‌دهندگان",
-      "releasedAt": "تازه‌ترین انتشار"
-    },
-    "suggestions": "مدل‌های مرتبط",
-    "supportedProviders": "ارائه‌دهندگان پشتیبانی شده برای این مدل"
-  },
-  "plugins": {
-    "builtinTag": "افزونه داخلی",
-    "community": "پلاگین‌های انجمن",
-    "details": {
-      "settings": {
-        "title": "تنظیمات افزونه"
-      },
-      "summary": {
-        "title": "شما با این افزونه چه کارهایی می‌توانید انجام دهید؟"
-      },
-      "tools": {
-        "title": "ابزارهای افزونه"
-      }
-    },
-    "install": "نصب پلاگین",
-    "installed": "نصب شده",
-    "legacyTag": "افزونه قدیمی",
-    "list": "فهرست پلاگین‌ها",
-    "meta": {
-      "description": "توضیحات",
-      "parameter": "پارامتر",
-      "title": "پارامترهای ابزار",
-      "type": "نوع"
-    },
-    "more": "بیشتر",
-    "official": "پلاگین‌های رسمی",
-    "recentSubmits": "آخرین به‌روزرسانی‌ها",
-    "sorts": {
-      "createdAt": "تازه‌ترین انتشار",
-      "identifier": "شناسه افزونه",
-      "title": "نام افزونه"
-    },
-    "suggestions": "پیشنهادات مرتبط"
-  },
-  "providers": {
-    "config": "پیکربندی ارائه‌دهنده",
-    "details": {
-      "guide": {
-        "title": "راهنمای اتصال"
-      },
-      "overview": {
-        "title": "بررسی اجمالی"
-      },
-      "related": {
-        "listTitle": "ارائه‌دهندگان مرتبط",
-        "more": "مشاهده بیشتر",
-        "title": "مطالب مرتبط"
-      }
-    },
-    "empty": {
-      "description": "سعی کنید فیلترها را تغییر دهید تا ارائه‌دهندگان بیشتری ببینید",
-      "search": "ارائه‌دهنده مطابقی یافت نشد",
-      "title": "هیچ ارائه‌دهنده‌ای موجود نیست"
-    },
-    "list": "فهرست ارائه‌دهندگان مدل",
-    "modelCount": "{{count}} مدل",
-    "modelName": "نام مدل",
-    "modelSite": "مستندات مدل",
-    "more": "بیشتر",
-    "officialSite": "وب‌سایت رسمی",
-    "showAllModels": "نمایش همه مدل‌ها",
-    "sorts": {
-      "default": "مرتب‌سازی پیش‌فرض",
-      "identifier": "شناسه ارائه‌دهنده",
-      "modelCount": "تعداد مدل‌ها"
-    },
-    "suggestions": "ارائه‌دهندگان مرتبط",
-    "supportedModels": "مدل‌های پشتیبانی‌شده"
-  },
+  "mcp.categories.all.description": "تمام سرورهای MCP",
+  "mcp.categories.all.name": "همه",
+  "mcp.categories.business.description": "خدمات تجاری و سازمانی",
+  "mcp.categories.business.name": "خدمات تجاری",
+  "mcp.categories.developer.description": "ابزارها و خدمات مرتبط با توسعه",
+  "mcp.categories.developer.name": "ابزارهای توسعه",
+  "mcp.categories.gaming-entertainment.description": "بازی، سرگرمی و فعالیت‌های تفریحی",
+  "mcp.categories.gaming-entertainment.name": "بازی و سرگرمی",
+  "mcp.categories.health-wellness.description": "سلامت، تناسب اندام و مراقبت‌های جسمی و روانی",
+  "mcp.categories.health-wellness.name": "سلامت و تندرستی",
+  "mcp.categories.lifestyle.description": "سبک زندگی شخصی، عادات و فعالیت‌های روزمره",
+  "mcp.categories.lifestyle.name": "سبک زندگی",
+  "mcp.categories.media-generate.description": "تولید، ویرایش و پردازش رسانه",
+  "mcp.categories.media-generate.name": "تولید رسانه",
+  "mcp.categories.news.description": "خدمات جمع‌آوری اخبار، گزارش و اطلاعات",
+  "mcp.categories.news.name": "اخبار و اطلاعات",
+  "mcp.categories.productivity.description": "مدیریت وظایف، یادداشت‌ها و ابزارهای بهره‌وری",
+  "mcp.categories.productivity.name": "ابزارهای بهره‌وری",
+  "mcp.categories.science-education.description": "ابزارهای تحقیق علمی، یادگیری و آموزش",
+  "mcp.categories.science-education.name": "علم و آموزش",
+  "mcp.categories.social.description": "شبکه‌های اجتماعی و ارتباطات",
+  "mcp.categories.social.name": "رسانه‌های اجتماعی",
+  "mcp.categories.stocks-finance.description": "بازارهای مالی، معاملات و سرمایه‌گذاری",
+  "mcp.categories.stocks-finance.name": "بورس و مالی",
+  "mcp.categories.tools.description": "ابزارها و خدمات عمومی و کاربردی",
+  "mcp.categories.tools.name": "ابزارهای کاربردی",
+  "mcp.categories.travel-transport.description": "برنامه‌ریزی سفر و حمل و نقل",
+  "mcp.categories.travel-transport.name": "سفر و حمل و نقل",
+  "mcp.categories.weather.description": "پیش‌بینی هوا و خدمات هواشناسی",
+  "mcp.categories.weather.name": "هواشناسی",
+  "mcp.categories.web-search.description": "جستجوی وب و بازیابی اطلاعات",
+  "mcp.categories.web-search.name": "بازیابی اطلاعات",
+  "mcp.details.connectionType.hybrid.desc": "این سرویس می‌تواند بر اساس پیکربندی یا سناریوی استفاده، به صورت محلی یا ابری اجرا شود و دارای قابلیت اجرای دوگانه است.",
+  "mcp.details.connectionType.hybrid.title": "سرویس ترکیبی",
+  "mcp.details.connectionType.local.desc": "این سرور فقط روی دستگاه محلی کلاینت اجرا می‌شود و نیاز به نصب و منابع محلی دارد.",
+  "mcp.details.connectionType.local.title": "سرویس محلی",
+  "mcp.details.connectionType.remote.desc": "این سرور به صورت راه دور میزبانی می‌شود زیرا عمدتاً به سرویس‌های راه دور وابسته است و به محیط محلی وابسته نیست.",
+  "mcp.details.connectionType.remote.title": "سرویس ابری",
+  "mcp.details.deployment.args": "پارامترها",
+  "mcp.details.deployment.checkCommand": "دستور بررسی",
+  "mcp.details.deployment.command": "دستور",
+  "mcp.details.deployment.commandLine": "وابستگی‌های سیستم",
+  "mcp.details.deployment.connection": "نوع اتصال",
+  "mcp.details.deployment.connectionType": "نوع اتصال",
+  "mcp.details.deployment.description": "روش نصب و استقرار افزونه",
+  "mcp.details.deployment.descriptionPlaceholder": "توضیحات اختیاری",
+  "mcp.details.deployment.empty": "گزینه استقرار موجود نیست",
+  "mcp.details.deployment.env": "متغیرهای محیطی",
+  "mcp.details.deployment.guide": "راهنمای نصب",
+  "mcp.details.deployment.installation": "نصب از طریق {{method}}",
+  "mcp.details.deployment.installationMethod": "روش نصب",
+  "mcp.details.deployment.other": "تنظیمات دیگر",
+  "mcp.details.deployment.packageName": "نام بسته",
+  "mcp.details.deployment.platform.steps.claude": "- برنامه **Claude Desktop** را باز کنید\n- به **تنظیمات** بروید و سپس **توسعه‌دهنده** را انتخاب کنید\n- روی **ویرایش پیکربندی** کلیک کنید\n- فایل **claude_desktop_config.json** را باز کنید\n- پیکربندی سرور را کپی و در فایل موجود جای‌گذاری کرده و ذخیره کنید",
+  "mcp.details.deployment.platform.steps.cline": "- VS Code با افزونه Cline را باز کنید\n- روی آیکون Cline در نوار کناری کلیک کنید\n- از منوی کشویی **MCP Servers** را انتخاب کنید\n- در برگه **Remote Servers** نام سرور و URL سرور MCP خود را وارد کنید\n- روی **Add Server** کلیک کنید تا متصل شوید",
+  "mcp.details.deployment.platform.steps.cursor": "- به **تنظیمات** بروید و تنظیمات Cursor را انتخاب کنید\n- در سمت چپ **MCP** را انتخاب کنید\n- روی **افزودن سرور جهانی جدید MCP** در بالا سمت راست کلیک کنید\n- پیکربندی سرور را کپی و در فایل موجود جای‌گذاری کرده و ذخیره کنید",
+  "mcp.details.deployment.platform.steps.lobeChat": "- برنامه **LobeChat دسکتاپ** را باز کنید\n- به **تنظیمات** - **دستیار پیش‌فرض** بروید\n- سپس **تنظیمات افزونه** - **افزونه سفارشی** را انتخاب کنید\n- روی **وارد کردن سریع پیکربندی JSON** کلیک کنید\n- پیکربندی سرور را در کادر متن جای‌گذاری کرده و نصب کنید",
+  "mcp.details.deployment.platform.steps.openai": "- برنامه **OpenAI** یا محیط توسعه خود را باز کنید\n- در API پاسخ‌ها MCP را پیکربندی کنید\n- بلوک MCP را به آرایه **tools** در درخواست API اضافه کنید\n- مقدار **server_url** را به نقطه پایانی سرور MCP خود تنظیم کنید\n- هدرهای مورد نیاز برای احراز هویت (کلید API، توکن و غیره) را شامل کنید\n- با پارامتر `allowed_tools` ابزارهای قابل دسترس را محدود کنید\n- با `require_approval` کنترل تایید اجرای ابزارها را تنظیم کنید",
+  "mcp.details.deployment.platform.steps.vscode": "- VS Code را باز کنید\n- پنل فرمان را باز کنید (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- عبارت **MCP: Add Server** را وارد کرده و انتخاب کنید\n- انتخاب کنید که به تنظیمات فضای کاری یا کاربر اضافه شود\n- پیکربندی سرور را کپی و جای‌گذاری کنید",
+  "mcp.details.deployment.platform.title": "نصب در {{platform}}",
+  "mcp.details.deployment.recommended": "توصیه شده",
+  "mcp.details.deployment.systemDependencies": "وابستگی‌های سیستم",
+  "mcp.details.deployment.table.description": "توضیحات",
+  "mcp.details.deployment.table.name": "نام",
+  "mcp.details.deployment.table.required": "الزامی",
+  "mcp.details.deployment.table.type": "نوع",
+  "mcp.details.deployment.title": "روش نصب",
+  "mcp.details.githubBadge.desc": "LobeHub به طور منظم مخزن کد و مستندات را اسکن می‌کند تا:\n\n- اطمینان حاصل کند سرور MCP به درستی کار می‌کند.\n- ویژگی‌های سرور مانند ابزارها، منابع، پیام‌های راهنما و پارامترهای مورد نیاز را استخراج کند.\n- نشان ما به کاربران کمک می‌کند تا امنیت، ویژگی‌ها و راهنمای نصب سرور MCP را سریع ارزیابی کنند.\n\nلطفاً کد زیر را در فایل `README.md` خود کپی کنید:",
+  "mcp.details.nav.needHelp": "نیاز به کمک؟",
+  "mcp.details.nav.reportIssue": "گزارش مشکل",
+  "mcp.details.nav.viewSourceCode": "مشاهده کد منبع",
+  "mcp.details.overview.title": "بررسی اجمالی",
+  "mcp.details.related.listTitle": "سرورهای MCP مرتبط",
+  "mcp.details.related.more": "مشاهده بیشتر",
+  "mcp.details.related.title": "مطالب مرتبط",
+  "mcp.details.schema.mode.docs": "مستندات",
+  "mcp.details.schema.prompts.arguments": "پیکربندی پارامترها",
+  "mcp.details.schema.prompts.desc": "قالب‌های تعاملی که توسط کاربر برای راه‌اندازی انتخاب می‌شوند",
+  "mcp.details.schema.prompts.empty": "هیچ راهنمایی موجود نیست",
+  "mcp.details.schema.prompts.instructions": "دستورالعمل‌ها",
+  "mcp.details.schema.prompts.table.description": "توضیحات",
+  "mcp.details.schema.prompts.table.name": "نام",
+  "mcp.details.schema.prompts.table.required": "الزامی",
+  "mcp.details.schema.prompts.title": "فهرست راهنمایی‌ها",
+  "mcp.details.schema.resources.desc": "داده‌های زمینه‌ای که توسط کلاینت اضافه و مدیریت می‌شوند",
+  "mcp.details.schema.resources.empty": "منبعی موجود نیست",
+  "mcp.details.schema.resources.table.description": "توضیحات",
+  "mcp.details.schema.resources.table.mineType": "نوع MIME",
+  "mcp.details.schema.resources.table.name": "نام",
+  "mcp.details.schema.resources.table.uri": "آدرس URI",
+  "mcp.details.schema.resources.title": "فهرست منابع",
+  "mcp.details.schema.title": "قابلیت‌های افزونه",
+  "mcp.details.schema.tools.desc": "رابط‌های عملکردی که به مدل زبان بزرگ (LLM) برای انجام عملیات ارائه می‌شود",
+  "mcp.details.schema.tools.empty": "ابزاری موجود نیست",
+  "mcp.details.schema.tools.inputSchema": "توضیح ورودی",
+  "mcp.details.schema.tools.instructions": "دستورالعمل‌ها",
+  "mcp.details.schema.tools.table.description": "توضیحات",
+  "mcp.details.schema.tools.table.name": "نام",
+  "mcp.details.schema.tools.table.required": "الزامی",
+  "mcp.details.schema.tools.table.type": "نوع",
+  "mcp.details.schema.tools.title": "فهرست ابزارها",
+  "mcp.details.score.claimed.desc": "این سرور MCP توسط مالک آن تصدیق شده است تا مالکیت و مدیریت آن تضمین شود.",
+  "mcp.details.score.claimed.title": "توسط مالک تصدیق شده",
+  "mcp.details.score.deployMoreThanManual.desc": "این سرور MCP روش‌های نصب دوستانه‌تری نسبت به Manual ارائه می‌دهد که به کاربران اجازه می‌دهد به آسانی نصب و استفاده کنند.",
+  "mcp.details.score.deployMoreThanManual.title": "روش‌های نصب دوستانه ارائه شده",
+  "mcp.details.score.deployment.desc": "این سرور MCP حداقل یک روش نصب ارائه می‌دهد که به کاربران اجازه می‌دهد آن را نصب و استفاده کنند.",
+  "mcp.details.score.deployment.descWithCount": "این سرور MCP {{number}} روش نصب ارائه می‌دهد که به کاربران اجازه می‌دهد آن را نصب و استفاده کنند.",
+  "mcp.details.score.deployment.title": "حداقل یک روش نصب ارائه شده",
+  "mcp.details.score.license.desc": "این مخزن شامل یک فایل LICENSE است.",
+  "mcp.details.score.license.descWithlicense": "مجوز این مخزن {{license}} است.",
+  "mcp.details.score.license.title": "دارای مجوز",
+  "mcp.details.score.listTitle": "جزئیات امتیاز",
+  "mcp.details.score.notClaimed.desc": "اگر شما مالک این سرور MCP هستید، می‌توانید از طریق روش‌های زیر آن را تصدیق کنید.",
+  "mcp.details.score.notClaimed.title": "تصدیق نشده توسط مالک",
+  "mcp.details.score.prompts.desc": "این سرور MCP راهنمایی‌هایی ارائه می‌دهد که به کاربران اجازه می‌دهد با سرویس تعامل داشته باشند.",
+  "mcp.details.score.prompts.descWithCount": "این سرور MCP {{number}} راهنمایی ارائه می‌دهد که به کاربران اجازه می‌دهد با سرویس تعامل داشته باشند.",
+  "mcp.details.score.prompts.title": "شامل راهنمایی‌ها",
+  "mcp.details.score.readme.desc": "این مخزن شامل یک فایل README.md است.",
+  "mcp.details.score.readme.title": "دارای README",
+  "mcp.details.score.resources.desc": "این سرور MCP منابعی ارائه می‌دهد که به کاربران اجازه می‌دهد داده‌های زمینه‌ای را اضافه و مدیریت کنند.",
+  "mcp.details.score.resources.descWithCount": "این سرور MCP {{number}} منبع ارائه می‌دهد که به کاربران اجازه می‌دهد داده‌های زمینه‌ای را اضافه و مدیریت کنند.",
+  "mcp.details.score.resources.title": "شامل منابع",
+  "mcp.details.score.title": "امتیاز",
+  "mcp.details.score.tools.desc": "سرویس باید حداقل یک ابزار ارائه دهد که به کاربران اجازه می‌دهد عملیات خاصی را انجام دهند.",
+  "mcp.details.score.tools.descWithCount": "این سرور MCP {{number}} ابزار ارائه می‌دهد که به کاربران اجازه می‌دهد عملیات خاصی را انجام دهند.",
+  "mcp.details.score.tools.title": "شامل حداقل یک ابزار",
+  "mcp.details.score.validated.desc": "این سرور MCP از طریق نصب تایید شده است تا کیفیت و قابلیت اطمینان آن تضمین شود.",
+  "mcp.details.score.validated.title": "تایید شده",
+  "mcp.details.scoreLevel.a.desc": "این سرور MCP به طور دقیق تایید شده و امکانات کامل و تجربه کاربری با کیفیت بالا ارائه می‌دهد.",
+  "mcp.details.scoreLevel.a.fullTitle": "افزونه عالی",
+  "mcp.details.scoreLevel.a.title": "عالی",
+  "mcp.details.scoreLevel.b.desc": "این سرور MCP امکانات و تجربه کاربری خوبی ارائه می‌دهد اما ممکن است در برخی جنبه‌ها نیاز به بهبود داشته باشد.",
+  "mcp.details.scoreLevel.b.fullTitle": "عملکرد خوب",
+  "mcp.details.scoreLevel.b.title": "خوب",
+  "mcp.details.scoreLevel.f.desc": "این سرور MCP ناقص یا کیفیت پایین دارد و به کاربران توصیه می‌شود با احتیاط استفاده کنند.",
+  "mcp.details.scoreLevel.f.fullTitle": "کیفیت پایین",
+  "mcp.details.scoreLevel.f.title": "ضعیف",
+  "mcp.details.settings.capabilities.prompts": "عبارات راهنما",
+  "mcp.details.settings.capabilities.resources": "منابع",
+  "mcp.details.settings.capabilities.title": "قابلیت‌های افزونه",
+  "mcp.details.settings.capabilities.tools": "ابزارها",
+  "mcp.details.settings.configuration.title": "پیکربندی افزونه",
+  "mcp.details.settings.connection.args": "پارامترهای راه‌اندازی",
+  "mcp.details.settings.connection.command": "دستور راه‌اندازی",
+  "mcp.details.settings.connection.title": "اطلاعات اتصال",
+  "mcp.details.settings.connection.type": "نوع اتصال",
+  "mcp.details.settings.connection.url": "آدرس سرویس",
+  "mcp.details.settings.saveSettings": "ذخیره تنظیمات",
+  "mcp.details.settings.title": "تنظیمات افزونه",
+  "mcp.details.sidebar.install": "نصب سرور MCP",
+  "mcp.details.sidebar.meta.homepage": "صفحه اصلی",
+  "mcp.details.sidebar.meta.installCount": "تعداد نصب",
+  "mcp.details.sidebar.meta.language": "زبان منبع",
+  "mcp.details.sidebar.meta.license": "مجوز",
+  "mcp.details.sidebar.meta.published": "تاریخ انتشار",
+  "mcp.details.sidebar.meta.repo": "مخزن کد",
+  "mcp.details.sidebar.meta.stars": "تعداد ستاره",
+  "mcp.details.sidebar.meta.title": "اطلاعات جزئی",
+  "mcp.details.sidebar.meta.updated": "آخرین به‌روزرسانی",
+  "mcp.details.sidebar.moreServerConfig": "مشاهده جزئیات",
+  "mcp.details.sidebar.recommendServers": "سرورهای MCP مرتبط",
+  "mcp.details.sidebar.serverConfig": "پیکربندی نصب",
+  "mcp.details.sidebar.toc": "فهرست مطالب",
+  "mcp.details.summary.title": "شما با این سرور MCP چه کارهایی می‌توانید انجام دهید؟",
+  "mcp.details.totalScore.description": "امتیاز کلی محاسبه شده بر اساس شاخص‌های مختلف",
+  "mcp.details.totalScore.legend.aGrade": "رده A ({{minPercent}}-100%)",
+  "mcp.details.totalScore.legend.bGrade": "رده B ({{minPercent}}-{{maxPercent}}%)",
+  "mcp.details.totalScore.legend.fGrade": "رده F (0-{{maxPercent}}%)",
+  "mcp.details.totalScore.pointsFormat": "{{score}}/{{total}} امتیاز",
+  "mcp.details.totalScore.popover.completedOptional": "✅ موارد اختیاری تکمیل شده ({{count}} مورد)",
+  "mcp.details.totalScore.popover.completedRequired": "✅ موارد الزامی تکمیل شده ({{count}} مورد)",
+  "mcp.details.totalScore.popover.incompleteOptional": "⏸️ موارد اختیاری تکمیل نشده ({{count}} مورد)",
+  "mcp.details.totalScore.popover.incompleteRequired": "❌ موارد الزامی تکمیل نشده ({{count}} مورد)",
+  "mcp.details.totalScore.popover.title": "جزئیات امتیاز",
+  "mcp.details.totalScore.ratingFormat": "رتبه‌بندی: {{level}}",
+  "mcp.details.totalScore.scoreInfo.items": "موارد",
+  "mcp.details.totalScore.scoreInfo.points": "امتیاز",
+  "mcp.details.totalScore.scoreInfo.requiredItems": "موارد الزامی",
+  "mcp.details.totalScore.title": "امتیاز کل",
+  "mcp.details.versions.table.isLatest": "آخرین نسخه",
+  "mcp.details.versions.table.isValidated": "تایید شده",
+  "mcp.details.versions.table.publishAt": "تاریخ انتشار",
+  "mcp.details.versions.table.version": "نسخه",
+  "mcp.details.versions.title": "تاریخچه نسخه‌ها",
+  "mcp.hero.desc": "پلتفرم متن‌باز و قابل استقرار سرورهای MCP که به سیستم‌های هوش مصنوعی کمک می‌کند به آسانی به سیستم فایل، پایگاه داده، API و منابع کلیدی دیگر دسترسی داشته باشند و توانایی‌های هوش مصنوعی شما را به طور کامل گسترش دهند.",
+  "mcp.hero.subTitle": "متن‌باز و آماده استفاده",
+  "mcp.hero.title": "انجمن متن‌باز MCP برای هوش مصنوعی",
+  "mcp.sorts.createdAt": "تازه‌ترین اضافه شده",
+  "mcp.sorts.installCount": "تعداد نصب",
+  "mcp.sorts.isFeatured": "افزونه‌های پیشنهادی",
+  "mcp.sorts.isValidated": "افزونه‌های تایید شده",
+  "mcp.sorts.promptsCount": "تعداد راهنمایی‌ها",
+  "mcp.sorts.ratingCount": "تعداد امتیازها",
+  "mcp.sorts.resourcesCount": "تعداد منابع",
+  "mcp.sorts.toolsCount": "تعداد ابزارها",
+  "mcp.sorts.updatedAt": "آخرین به‌روزرسانی",
+  "mcp.title": "انجمن MCP",
+  "mcp.unvalidated.desc": "این سرور MCP هنوز تایید نشده است",
+  "mcp.unvalidated.title": "تایید نشده",
+  "mcp.validated.desc": "این سرور MCP تایید شده است و کیفیت و قابلیت اطمینان آن تضمین شده است.",
+  "mcp.validated.descWithDate": "این سرور MCP در تاریخ {{date}} تایید شده است و کیفیت و قابلیت اطمینان آن تضمین شده است.",
+  "mcp.validated.title": "تایید شده",
+  "mcpEmpty.description": "سعی کنید فیلترها را تغییر دهید یا کلمات کلیدی را جستجو کنید",
+  "mcpEmpty.search": "هیچ سرور MCP مطابقی یافت نشد",
+  "mcpEmpty.title": "هیچ سرور MCP موجود نیست",
+  "models.abilities": "قابلیت‌های مدل",
+  "models.chat": "شروع گفتگو",
+  "models.contentLength": "حداکثر طول محتوا",
+  "models.details.overview.title": "بررسی اجمالی",
+  "models.details.related.listTitle": "مدل‌های مرتبط",
+  "models.details.related.more": "مشاهده بیشتر",
+  "models.details.related.title": "مطالب مرتبط",
+  "models.empty.description": "سعی کنید فیلترها را تغییر دهید تا مدل‌های بیشتری ببینید",
+  "models.empty.search": "مدل مطابقی یافت نشد",
+  "models.empty.title": "هیچ مدلی موجود نیست",
+  "models.free": "رایگان",
+  "models.guide": "راهنمای پیکربندی",
+  "models.list": "فهرست مدل‌ها",
+  "models.more": "بیشتر",
+  "models.parameterList.defaultValue": "مقدار پیش‌فرض",
+  "models.parameterList.docs": "مشاهده مستندات",
+  "models.parameterList.frequency_penalty.desc": "این تنظیمات فرکانس استفاده مجدد از کلمات خاصی که در ورودی ظاهر شده‌اند را تنظیم می‌کند. مقادیر بالاتر احتمال تکرار این کلمات را کاهش می‌دهد، در حالی که مقادیر منفی اثر معکوس دارند. جریمه کلمات با افزایش تعداد تکرار افزایش نمی‌یابد. مقادیر منفی استفاده مجدد از کلمات را تشویق می‌کند.",
+  "models.parameterList.frequency_penalty.title": "جریمه فرکانس",
+  "models.parameterList.max_tokens.desc": "این تنظیمات حداکثر طولی که مدل می‌تواند در یک پاسخ واحد تولید کند را تعریف می‌کند. مقادیر بالاتر به مدل اجازه می‌دهد پاسخ‌های طولانی‌تری تولید کند، در حالی که مقادیر پایین‌تر طول پاسخ را محدود کرده و آن را مختصرتر می‌کند. با توجه به سناریوهای مختلف، تنظیم مناسب این مقدار می‌تواند به دستیابی به طول و جزئیات مورد انتظار پاسخ کمک کند.",
+  "models.parameterList.max_tokens.title": "محدودیت پاسخ واحد",
+  "models.parameterList.presence_penalty.desc": "این تنظیمات به منظور کنترل استفاده مجدد از کلمات بر اساس فرکانس ظاهر شدن آن‌ها در ورودی طراحی شده است. این تنظیمات تلاش می‌کند تا از استفاده مکرر از کلماتی که بیشتر در ورودی ظاهر شده‌اند جلوگیری کند و فرکانس استفاده از آن‌ها را متناسب با فرکانس ظاهر شدنشان تنظیم می‌کند. جریمه کلمات با افزایش تعداد تکرار افزایش می‌یابد. مقادیر منفی استفاده مجدد از کلمات را تشویق می‌کند.",
+  "models.parameterList.presence_penalty.title": "تازگی موضوع",
+  "models.parameterList.range": "محدوده",
+  "models.parameterList.reasoning_effort.desc": "این تنظیم برای کنترل شدت استدلال مدل قبل از تولید پاسخ استفاده می‌شود. شدت پایین به سرعت پاسخ‌دهی اولویت می‌دهد و توکن را صرفه‌جویی می‌کند، در حالی که شدت بالا استدلال کامل‌تری ارائه می‌دهد اما توکن بیشتری مصرف کرده و سرعت پاسخ‌دهی را کاهش می‌دهد. مقدار پیش‌فرض متوسط است که تعادل بین دقت استدلال و سرعت پاسخ‌دهی را برقرار می‌کند.",
+  "models.parameterList.reasoning_effort.title": "شدت استدلال",
+  "models.parameterList.temperature.desc": "این تنظیمات بر تنوع پاسخ‌های مدل تأثیر می‌گذارد. مقادیر پایین‌تر منجر به پاسخ‌های قابل پیش‌بینی‌تر و معمولی‌تر می‌شود، در حالی که مقادیر بالاتر تنوع و پاسخ‌های غیرمعمول‌تر را تشویق می‌کند. وقتی مقدار به 0 تنظیم شود، مدل همیشه برای ورودی داده شده یک پاسخ یکسان ارائه می‌دهد.",
+  "models.parameterList.temperature.title": "تصادفی بودن",
+  "models.parameterList.title": "پارامترهای مدل",
+  "models.parameterList.top_p.desc": "این تنظیمات انتخاب مدل را به درصدی از کلماتی که بالاترین احتمال را دارند محدود می‌کند: فقط کلماتی که احتمال تجمعی آن‌ها به P می‌رسد انتخاب می‌شوند. مقادیر پایین‌تر پاسخ‌های مدل را قابل پیش‌بینی‌تر می‌کند، در حالی که تنظیمات پیش‌فرض به مدل اجازه می‌دهد از کل دامنه کلمات انتخاب کند.",
+  "models.parameterList.top_p.title": "نمونه‌گیری هسته‌ای",
+  "models.parameterList.type": "نوع",
+  "models.providerInfo.apiTooltip": "LobeChat از کلید API سفارشی برای این ارائه‌دهنده پشتیبانی می‌کند.",
+  "models.providerInfo.input": "قیمت ورودی",
+  "models.providerInfo.inputTooltip": "هزینه به ازای هر یک میلیون توکن",
+  "models.providerInfo.latency": "تأخیر",
+  "models.providerInfo.latencyTooltip": "میانگین زمان پاسخ برای ارسال اولین توکن توسط ارائه‌دهنده",
+  "models.providerInfo.maxOutput": "حداکثر طول خروجی",
+  "models.providerInfo.maxOutputTooltip": "حداکثر تعداد توکن‌هایی که این نقطه انتهایی می‌تواند تولید کند",
+  "models.providerInfo.officialTooltip": "خدمات رسمی LobeHub",
+  "models.providerInfo.output": "قیمت خروجی",
+  "models.providerInfo.outputTooltip": "هزینه به ازای هر یک میلیون توکن",
+  "models.providerInfo.streamCancellationTooltip": "این ارائه‌دهنده از قابلیت لغو جریان پشتیبانی می‌کند.",
+  "models.providerInfo.throughput": "توان عملیاتی",
+  "models.providerInfo.throughputTooltip": "میانگین تعداد توکن‌های منتقل شده در هر ثانیه در درخواست‌های جریانی",
+  "models.sorts.contextWindowTokens": "طول پنجره متنی",
+  "models.sorts.identifier": "شناسه مدل",
+  "models.sorts.inputPrice": "قیمت ورودی",
+  "models.sorts.outputPrice": "قیمت خروجی",
+  "models.sorts.providerCount": "تعداد ارائه‌دهندگان",
+  "models.sorts.releasedAt": "تازه‌ترین انتشار",
+  "models.suggestions": "مدل‌های مرتبط",
+  "models.supportedProviders": "ارائه‌دهندگان پشتیبانی شده برای این مدل",
+  "plugins.builtinTag": "افزونه داخلی",
+  "plugins.community": "پلاگین‌های انجمن",
+  "plugins.details.settings.title": "تنظیمات افزونه",
+  "plugins.details.summary.title": "شما با این افزونه چه کارهایی می‌توانید انجام دهید؟",
+  "plugins.details.tools.title": "ابزارهای افزونه",
+  "plugins.install": "نصب پلاگین",
+  "plugins.installed": "نصب شده",
+  "plugins.legacyTag": "افزونه قدیمی",
+  "plugins.list": "فهرست پلاگین‌ها",
+  "plugins.meta.description": "توضیحات",
+  "plugins.meta.parameter": "پارامتر",
+  "plugins.meta.title": "پارامترهای ابزار",
+  "plugins.meta.type": "نوع",
+  "plugins.more": "بیشتر",
+  "plugins.official": "پلاگین‌های رسمی",
+  "plugins.recentSubmits": "آخرین به‌روزرسانی‌ها",
+  "plugins.sorts.createdAt": "تازه‌ترین انتشار",
+  "plugins.sorts.identifier": "شناسه افزونه",
+  "plugins.sorts.title": "نام افزونه",
+  "plugins.suggestions": "پیشنهادات مرتبط",
+  "providers.config": "پیکربندی ارائه‌دهنده",
+  "providers.details.guide.title": "راهنمای اتصال",
+  "providers.details.overview.title": "بررسی اجمالی",
+  "providers.details.related.listTitle": "ارائه‌دهندگان مرتبط",
+  "providers.details.related.more": "مشاهده بیشتر",
+  "providers.details.related.title": "مطالب مرتبط",
+  "providers.empty.description": "سعی کنید فیلترها را تغییر دهید تا ارائه‌دهندگان بیشتری ببینید",
+  "providers.empty.search": "ارائه‌دهنده مطابقی یافت نشد",
+  "providers.empty.title": "هیچ ارائه‌دهنده‌ای موجود نیست",
+  "providers.list": "فهرست ارائه‌دهندگان مدل",
+  "providers.modelCount": "{{count}} مدل",
+  "providers.modelName": "نام مدل",
+  "providers.modelSite": "مستندات مدل",
+  "providers.more": "بیشتر",
+  "providers.officialSite": "وب‌سایت رسمی",
+  "providers.showAllModels": "نمایش همه مدل‌ها",
+  "providers.sorts.default": "مرتب‌سازی پیش‌فرض",
+  "providers.sorts.identifier": "شناسه ارائه‌دهنده",
+  "providers.sorts.modelCount": "تعداد مدل‌ها",
+  "providers.suggestions": "ارائه‌دهندگان مرتبط",
+  "providers.supportedModels": "مدل‌های پشتیبانی‌شده",
   "publishedTime": "منتشر شده در",
-  "search": {
-    "placeholder": "جستجوی نام، توضیحات یا کلمات کلیدی...",
-    "result": "{{count}} نتیجه برای <highlight>{{keyword}}</highlight> یافت شد",
-    "searching": "در حال جستجو..."
-  },
-  "tab": {
-    "assistant": "دستیار",
-    "home": "صفحه اصلی",
-    "model": "مدل",
-    "plugin": "افزونه",
-    "provider": "ارائه‌دهنده مدل",
-    "user": "کاربر"
-  },
-  "user": {
-    "agents": "دستیارها",
-    "downloads": "دانلودها",
-    "editProfile": "ویرایش پروفایل",
-    "login": "تبدیل شدن به یک خالق",
-    "logout": "خروج",
-    "myProfile": "پروفایل من",
-    "noAgents": "این کاربر هنوز دستیاری منتشر نکرده است",
-    "publishedAgents": "دستیاران ساخته‌شده",
-    "website": "وب‌سایت شخصی"
-  }
+  "search.placeholder": "جستجوی نام، توضیحات یا کلمات کلیدی...",
+  "search.result": "{{count}} نتیجه برای <highlight>{{keyword}}</highlight> یافت شد",
+  "search.searching": "در حال جستجو...",
+  "tab.assistant": "دستیار",
+  "tab.home": "صفحه اصلی",
+  "tab.model": "مدل",
+  "tab.plugin": "افزونه",
+  "tab.provider": "ارائه‌دهنده مدل",
+  "tab.user": "کاربر",
+  "user.agents": "دستیارها",
+  "user.downloads": "دانلودها",
+  "user.editProfile": "ویرایش پروفایل",
+  "user.login": "تبدیل شدن به یک خالق",
+  "user.logout": "خروج",
+  "user.myProfile": "پروفایل من",
+  "user.noAgents": "این کاربر هنوز دستیاری منتشر نکرده است",
+  "user.publishedAgents": "دستیاران ساخته‌شده",
+  "user.website": "وب‌سایت شخصی"
 }

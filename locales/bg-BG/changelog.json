@@ -1,16 +1,12 @@
 {
-  "actions": {
-    "followOnX": "Последвайте ни в X",
-    "subscribeToUpdates": "Абонирайте се за актуализации",
-    "versions": "Детайли за версиите"
-  },
+  "actions.followOnX": "Последвайте ни в X",
+  "actions.subscribeToUpdates": "Абонирайте се за актуализации",
+  "actions.versions": "Детайли за версиите",
   "addedWhileAway": "Докато ви нямаше, добавихме нови функции.",
   "allChangelog": "Вижте всички актуализации",
   "description": "Следете новите функции и подобрения на {{appName}}",
-  "pagination": {
-    "next": "Следваща страница",
-    "older": "Преглед на историческите промени"
-  },
+  "pagination.next": "Следваща страница",
+  "pagination.older": "Преглед на историческите промени",
   "readDetails": "Прочетете подробности",
   "title": "Актуализации",
   "versionDetails": "Детайли за версиите",

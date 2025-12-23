@@ -1,44 +1,34 @@
 {
-  "ModelSwitch": {
-    "title": "Модель"
-  },
+  "ModelSwitch.title": "Модель",
   "active": "Активный",
-  "agentBuilder": {
-    "installPlugin": {
-      "authRequired": "Плагин облачного MCP требует аутентификации",
-      "cancel": "Отмена",
-      "clickApproveToConnect": "Нажмите «Одобрить» для подключения и авторизации этой интеграции",
-      "clickApproveToInstall": "Нажмите «Одобрить», чтобы установить этот плагин",
-      "connectedAndEnabled": "Подключено и включено",
-      "connectionFailed": "Не удалось подключиться",
-      "installFailed": "Ошибка установки",
-      "installPlugin": "Установить плагин",
-      "installToEnable": "Установите этот плагин, чтобы активировать помощника",
-      "installedAndEnabled": "Установлено и включено",
-      "requiresAuth": "Требуется авторизация, нажмите «Одобрить» для подключения",
-      "retry": "Повторить"
-    },
-    "title": "Эксперт по созданию помощников",
-    "welcome": "Расскажите о своей задаче — и профессиональный помощник будет готов.\n\nБудь то написание текстов, программирование или анализ данных — я помогу вам создать персонального ассистента!"
-  },
+  "agentBuilder.installPlugin.authRequired": "Плагин облачного MCP требует аутентификации",
+  "agentBuilder.installPlugin.cancel": "Отмена",
+  "agentBuilder.installPlugin.clickApproveToConnect": "Нажмите «Одобрить» для подключения и авторизации этой интеграции",
+  "agentBuilder.installPlugin.clickApproveToInstall": "Нажмите «Одобрить», чтобы установить этот плагин",
+  "agentBuilder.installPlugin.connectedAndEnabled": "Подключено и включено",
+  "agentBuilder.installPlugin.connectionFailed": "Не удалось подключиться",
+  "agentBuilder.installPlugin.installFailed": "Ошибка установки",
+  "agentBuilder.installPlugin.installPlugin": "Установить плагин",
+  "agentBuilder.installPlugin.installToEnable": "Установите этот плагин, чтобы активировать помощника",
+  "agentBuilder.installPlugin.installedAndEnabled": "Установлено и включено",
+  "agentBuilder.installPlugin.requiresAuth": "Требуется авторизация, нажмите «Одобрить» для подключения",
+  "agentBuilder.installPlugin.retry": "Повторить",
+  "agentBuilder.title": "Эксперт по созданию помощников",
+  "agentBuilder.welcome": "Расскажите о своей задаче — и профессиональный помощник будет готов.\n\nБудь то написание текстов, программирование или анализ данных — я помогу вам создать персонального ассистента!",
   "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете сразу начать со мной разговор или перейти в [настройки помощника]({{url}}), чтобы дополнить мою информацию.",
   "agentDefaultMessageWithSystemRole": "Здравствуйте, я **{{name}}**, чем могу помочь?",
   "agentDefaultMessageWithoutEdit": "Здравствуйте, я **{{name}}**, чем могу помочь?",
   "agents": "Ассистент",
-  "artifact": {
-    "generating": "Генерация",
-    "inThread": "Невозможно просмотреть в подтеме, переключитесь на основную область диалога",
-    "thinking": "В процессе размышлений",
-    "thought": "Процесс мышления",
-    "unknownTitle": "Безымянное произведение"
-  },
+  "artifact.generating": "Генерация",
+  "artifact.inThread": "Невозможно просмотреть в подтеме, переключитесь на основную область диалога",
+  "artifact.thinking": "В процессе размышлений",
+  "artifact.thought": "Процесс мышления",
+  "artifact.unknownTitle": "Безымянное произведение",
   "availableAgents": "Доступные помощники",
   "backToBottom": "Вернуться вниз",
   "builtinCopilot": "Встроенный Copilot",
-  "chatList": {
-    "expandMessage": "Развернуть сообщение",
-    "longMessageDetail": "Посмотреть детали"
-  },
+  "chatList.expandMessage": "Развернуть сообщение",
+  "chatList.longMessageDetail": "Посмотреть детали",
   "clearCurrentMessages": "Очистить текущий разговор",
   "confirmClearCurrentMessages": "Вы уверены, что хотите очистить текущий разговор? После этого его нельзя будет восстановить.",
   "confirmRemoveChatGroupItemAlert": "Группа будет удалена, но это не повлияет на участников команды. Пожалуйста, подтвердите своё действие.",
@@ -50,227 +40,149 @@
   "defaultGroupChat": "Группа",
   "defaultList": "Список по умолчанию",
   "defaultSession": "Пользовательский помощник",
-  "dm": {
-    "placeholder": "Ваши личные сообщения с {{agentTitle}} будут отображаться здесь.",
-    "tooltip": "Отправить личное сообщение",
-    "visibleTo": "Видно только для {{target}}",
-    "you": "вы"
-  },
-  "duplicateSession": {
-    "loading": "Копирование...",
-    "success": "Копирование завершено",
-    "title": "{{title}} Копия"
-  },
+  "dm.placeholder": "Ваши личные сообщения с {{agentTitle}} будут отображаться здесь.",
+  "dm.tooltip": "Отправить личное сообщение",
+  "dm.visibleTo": "Видно только для {{target}}",
+  "dm.you": "вы",
+  "duplicateSession.loading": "Копирование...",
+  "duplicateSession.success": "Копирование завершено",
+  "duplicateSession.title": "{{title}} Копия",
   "duplicateTitle": "{{title}} Копия",
   "emptyAgent": "Нет ассистента",
   "emptyAgentAction": "Создать помощника",
-  "extendParams": {
-    "disableContextCaching": {
-      "desc": "Стоимость генерации одного диалога может быть снижена до 90%, скорость ответа увеличивается в 4 раза (<1>Узнать больше</1>). При включении автоматически отключается ограничение на количество исторических сообщений",
-      "title": "Включить кэширование контекста"
-    },
-    "enableReasoning": {
-      "desc": "Ограничение на основе механизма Claude Thinking (<1>Узнать больше</1>), при включении автоматически отключается ограничение на количество исторических сообщений",
-      "title": "Включить глубокое мышление"
-    },
-    "imageAspectRatio": {
-      "title": "Соотношение сторон изображения"
-    },
-    "imageResolution": {
-      "title": "Разрешение изображения"
-    },
-    "reasoningBudgetToken": {
-      "title": "Токены на размышления"
-    },
-    "reasoningEffort": {
-      "title": "Интенсивность рассуждений"
-    },
-    "textVerbosity": {
-      "title": "Уровень подробности выводимого текста"
-    },
-    "thinking": {
-      "title": "Переключатель глубокого мышления"
-    },
-    "thinkingLevel": {
-      "title": "Уровень мышления"
-    },
-    "title": "Расширенные функции модели",
-    "urlContext": {
-      "desc": "При включении автоматически будет анализироваться ссылка на веб-страницу для получения фактического содержимого контекста страницы",
-      "title": "Извлечение содержимого веб-ссылки"
-    }
-  },
-  "group": {
-    "desc": "Сотрудничайте с несколькими ассистентами ИИ в общем пространстве диалога.",
-    "memberTooltip": "В группе {{count}} участников",
-    "orchestratorThinking": "Ведущий обдумывает...",
-    "removeMember": "Удалить участника",
-    "title": "Группа"
-  },
+  "extendParams.disableContextCaching.desc": "Стоимость генерации одного диалога может быть снижена до 90%, скорость ответа увеличивается в 4 раза (<1>Узнать больше</1>). При включении автоматически отключается ограничение на количество исторических сообщений",
+  "extendParams.disableContextCaching.title": "Включить кэширование контекста",
+  "extendParams.enableReasoning.desc": "Ограничение на основе механизма Claude Thinking (<1>Узнать больше</1>), при включении автоматически отключается ограничение на количество исторических сообщений",
+  "extendParams.enableReasoning.title": "Включить глубокое мышление",
+  "extendParams.imageAspectRatio.title": "Соотношение сторон изображения",
+  "extendParams.imageResolution.title": "Разрешение изображения",
+  "extendParams.reasoningBudgetToken.title": "Токены на размышления",
+  "extendParams.reasoningEffort.title": "Интенсивность рассуждений",
+  "extendParams.textVerbosity.title": "Уровень подробности выводимого текста",
+  "extendParams.thinking.title": "Переключатель глубокого мышления",
+  "extendParams.thinkingLevel.title": "Уровень мышления",
+  "extendParams.title": "Расширенные функции модели",
+  "extendParams.urlContext.desc": "При включении автоматически будет анализироваться ссылка на веб-страницу для получения фактического содержимого контекста страницы",
+  "extendParams.urlContext.title": "Извлечение содержимого веб-ссылки",
+  "group.desc": "Сотрудничайте с несколькими ассистентами ИИ в общем пространстве диалога.",
+  "group.memberTooltip": "В группе {{count}} участников",
+  "group.orchestratorThinking": "Ведущий обдумывает...",
+  "group.removeMember": "Удалить участника",
+  "group.title": "Группа",
   "groupDescription": "Описание команды",
-  "groupSidebar": {
-    "agentProfile": {
-      "chat": "Чат",
-      "model": "Модель"
-    },
-    "members": {
-      "addMember": "Добавить участника",
-      "enableOrchestrator": "Включить модератора",
-      "memberSettings": "Настройки участника",
-      "orchestrator": "Ведущий",
-      "orchestratorThinking": "Ведущий обдумывает...",
-      "removeMember": "Удалить участника",
-      "stopOrchestrator": "Прекратить размышления",
-      "triggerOrchestrator": "Начать групповой чат"
-    },
-    "tabs": {
-      "host": "Ведущий",
-      "members": "Участники",
-      "role": "Настройка"
-    }
-  },
-  "groupWizard": {
-    "chooseMembers": "Выберите существующих помощников...",
-    "createGroup": "Создать команду",
-    "existingMembers": "Существующие агенты",
-    "groupMembers": "Эти помощники также будут добавлены в ваш список",
-    "host": {
-      "description": "Позвольте команде работать автономно",
-      "title": "Включить ведущего",
-      "tooltip": "Если ведущий команды отключён, вам нужно будет вручную упоминать участников с помощью @, чтобы они могли ответить"
-    },
-    "memberCount": "{{count}} участников",
-    "noMatchingTemplates": "Нет подходящих шаблонов",
-    "noSelectedTemplates": "Шаблоны не выбраны",
-    "noTemplateMembers": "В шаблоне нет участников",
-    "noTemplates": "Шаблоны недоступны",
-    "searchTemplates": "Поиск шаблонов...",
-    "title": "Создать группу",
-    "useTemplate": "Использовать шаблон"
-  },
+  "groupSidebar.agentProfile.chat": "Чат",
+  "groupSidebar.agentProfile.model": "Модель",
+  "groupSidebar.members.addMember": "Добавить участника",
+  "groupSidebar.members.enableOrchestrator": "Включить модератора",
+  "groupSidebar.members.memberSettings": "Настройки участника",
+  "groupSidebar.members.orchestrator": "Ведущий",
+  "groupSidebar.members.orchestratorThinking": "Ведущий обдумывает...",
+  "groupSidebar.members.removeMember": "Удалить участника",
+  "groupSidebar.members.stopOrchestrator": "Прекратить размышления",
+  "groupSidebar.members.triggerOrchestrator": "Начать групповой чат",
+  "groupSidebar.tabs.host": "Ведущий",
+  "groupSidebar.tabs.members": "Участники",
+  "groupSidebar.tabs.role": "Настройка",
+  "groupWizard.chooseMembers": "Выберите существующих помощников...",
+  "groupWizard.createGroup": "Создать команду",
+  "groupWizard.existingMembers": "Существующие агенты",
+  "groupWizard.groupMembers": "Эти помощники также будут добавлены в ваш список",
+  "groupWizard.host.description": "Позвольте команде работать автономно",
+  "groupWizard.host.title": "Включить ведущего",
+  "groupWizard.host.tooltip": "Если ведущий команды отключён, вам нужно будет вручную упоминать участников с помощью @, чтобы они могли ответить",
+  "groupWizard.memberCount": "{{count}} участников",
+  "groupWizard.noMatchingTemplates": "Нет подходящих шаблонов",
+  "groupWizard.noSelectedTemplates": "Шаблоны не выбраны",
+  "groupWizard.noTemplateMembers": "В шаблоне нет участников",
+  "groupWizard.noTemplates": "Шаблоны недоступны",
+  "groupWizard.searchTemplates": "Поиск шаблонов...",
+  "groupWizard.title": "Создать группу",
+  "groupWizard.useTemplate": "Использовать шаблон",
   "hideForYou": "Содержимое личных сообщений скрыто, включите «Показывать содержимое личных сообщений» в настройках для просмотра",
-  "history": {
-    "title": "Ассистент будет помнить только последние {{count}} сообщений"
-  },
+  "history.title": "Ассистент будет помнить только последние {{count}} сообщений",
   "historyRange": "История сообщений",
   "historySummary": "Сводка исторических сообщений",
   "inactive": "Неактивен",
-  "inbox": {
-    "desc": "Зажги искру мысли, открой кластер мозгов. Твой виртуальный ассистент, готовый обсудить все с тобой.",
-    "title": "Lobe AI"
-  },
-  "input": {
-    "addAi": "Добавить сообщение AI",
-    "addUser": "Добавить сообщение пользователя",
-    "disclaimer": "ИИ также может ошибаться, пожалуйста, проверяйте важную информацию",
-    "errorMsg": "Не удалось отправить сообщение, проверьте подключение к сети и попробуйте снова: {{errorMsg}}",
-    "more": "больше",
-    "send": "Отправить",
-    "sendWithCmdEnter": "Нажмите <key/> для отправки",
-    "sendWithEnter": "Нажмите <key/> для отправки",
-    "stop": "Остановить",
-    "warp": "Перенос строки",
-    "warpWithKey": "Нажмите клавишу <key/> для переноса строки"
-  },
-  "intentUnderstanding": {
-    "title": "Мы понимаем и анализируем ваше намерение..."
-  },
+  "inbox.desc": "Зажги искру мысли, открой кластер мозгов. Твой виртуальный ассистент, готовый обсудить все с тобой.",
+  "inbox.title": "Lobe AI",
+  "input.addAi": "Добавить сообщение AI",
+  "input.addUser": "Добавить сообщение пользователя",
+  "input.disclaimer": "ИИ также может ошибаться, пожалуйста, проверяйте важную информацию",
+  "input.errorMsg": "Не удалось отправить сообщение, проверьте подключение к сети и попробуйте снова: {{errorMsg}}",
+  "input.more": "больше",
+  "input.send": "Отправить",
+  "input.sendWithCmdEnter": "Нажмите <key/> для отправки",
+  "input.sendWithEnter": "Нажмите <key/> для отправки",
+  "input.stop": "Остановить",
+  "input.warp": "Перенос строки",
+  "input.warpWithKey": "Нажмите клавишу <key/> для переноса строки",
+  "intentUnderstanding.title": "Мы понимаем и анализируем ваше намерение...",
   "inviteMembers": "Пригласить участников",
-  "knowledgeBase": {
-    "all": "Все содержимое",
-    "allFiles": "Все файлы",
-    "allLibraries": "Все библиотеки",
-    "disabled": "Текущий режим развертывания не поддерживает диалог с библиотекой. Чтобы использовать эту функцию, переключитесь на серверную базу данных или воспользуйтесь сервисом {{cloud}}",
-    "library": {
-      "action": {
-        "add": "Добавить",
-        "detail": "Детали",
-        "remove": "Удалить"
-      },
-      "title": "Файлы/Библиотека"
-    },
-    "relativeFilesOrLibraries": "Связанные файлы/библиотеки",
-    "title": "Библиотека",
-    "uploadGuide": "Загруженные файлы можно просмотреть в разделе «Ресурсы»",
-    "viewMore": "Посмотреть больше"
-  },
-  "memberSelection": {
-    "addMember": "Добавить участника",
-    "allMembers": "Все участники",
-    "createGroup": "Создать группу",
-    "noAvailableAgents": "Нет доступных агентов для приглашения",
-    "noSelectedAgents": "Агенты ещё не выбраны",
-    "searchAgents": "Поиск агентов...",
-    "selectedAgents": "Выбрано ({{count}})",
-    "setInitialMembers": "Выберите участников команды"
-  },
+  "knowledgeBase.all": "Все содержимое",
+  "knowledgeBase.allFiles": "Все файлы",
+  "knowledgeBase.allLibraries": "Все библиотеки",
+  "knowledgeBase.disabled": "Текущий режим развертывания не поддерживает диалог с библиотекой. Чтобы использовать эту функцию, переключитесь на серверную базу данных или воспользуйтесь сервисом {{cloud}}",
+  "knowledgeBase.library.action.add": "Добавить",
+  "knowledgeBase.library.action.detail": "Детали",
+  "knowledgeBase.library.action.remove": "Удалить",
+  "knowledgeBase.library.title": "Файлы/Библиотека",
+  "knowledgeBase.relativeFilesOrLibraries": "Связанные файлы/библиотеки",
+  "knowledgeBase.title": "Библиотека",
+  "knowledgeBase.uploadGuide": "Загруженные файлы можно просмотреть в разделе «Ресурсы»",
+  "knowledgeBase.viewMore": "Посмотреть больше",
+  "memberSelection.addMember": "Добавить участника",
+  "memberSelection.allMembers": "Все участники",
+  "memberSelection.createGroup": "Создать группу",
+  "memberSelection.noAvailableAgents": "Нет доступных агентов для приглашения",
+  "memberSelection.noSelectedAgents": "Агенты ещё не выбраны",
+  "memberSelection.searchAgents": "Поиск агентов...",
+  "memberSelection.selectedAgents": "Выбрано ({{count}})",
+  "memberSelection.setInitialMembers": "Выберите участников команды",
   "members": "Участники",
-  "mention": {
-    "title": "Упомянуть участника"
-  },
-  "messageAction": {
-    "collapse": "Свернуть сообщение",
-    "continueGeneration": "Продолжить генерацию",
-    "delAndRegenerate": "Удалить и пересоздать",
-    "deleteDisabledByThreads": "Существуют подтемы, удаление невозможно",
-    "expand": "Развернуть сообщение",
-    "regenerate": "Пересоздать"
-  },
-  "messages": {
-    "dm": {
-      "sentTo": "Видно только {{name}}",
-      "title": "Личное сообщение"
-    },
-    "modelCard": {
-      "credit": "Кредиты",
-      "creditPricing": "Ценообразование",
-      "creditTooltip": "Для удобства подсчета мы приравниваем 1$ к 1M кредитов, например, $3/M токенов эквивалентно 3 кредитам/токен",
-      "pricing": {
-        "inputCachedTokens": "Кэшированные входные {{amount}}/кредиты · ${{amount}}/M",
-        "inputCharts": "${{amount}}/M символов",
-        "inputMinutes": "${{amount}}/минуту",
-        "inputTokens": "Входные {{amount}}/кредиты · ${{amount}}/M",
-        "outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M",
-        "writeCacheInputTokens": "Кэширование ввода записи {{amount}}/баллов · ${{amount}}/М"
-      }
-    },
-    "tokenDetails": {
-      "average": "Средняя цена",
-      "input": "Вход",
-      "inputAudio": "Аудиовход",
-      "inputCached": "Кэшированный вход",
-      "inputCitation": "Цитирование ввода",
-      "inputText": "Текстовый вход",
-      "inputTitle": "Детали входа",
-      "inputUncached": "Некэшированный вход",
-      "inputWriteCached": "Запись кэшированного ввода",
-      "output": "Выход",
-      "outputAudio": "Аудиовыход",
-      "outputImage": "Вывод изображения",
-      "outputText": "Текстовый выход",
-      "outputTitle": "Детали выхода",
-      "reasoning": "Глубокое мышление",
-      "speed": {
-        "tps": {
-          "title": "TPS",
-          "tooltip": "Токены в секунду (TPS). Средняя скорость генерации контента ИИ (Токенов/сек), начинается с момента получения первого токена."
-        },
-        "ttft": {
-          "title": "TTFT",
-          "tooltip": "Время до первого токена (TTFT). Время, прошедшее с момента отправки вами сообщения до получения первого токена клиентом."
-        }
-      },
-      "title": "Детали генерации",
-      "total": "Общее потребление"
-    }
-  },
-  "minimap": {
-    "jumpToMessage": "Перейти к сообщению № {{index}}",
-    "nextMessage": "Следующее сообщение",
-    "previousMessage": "Предыдущее сообщение",
-    "senderAssistant": "Агент",
-    "senderUser": "Вы"
-  },
+  "mention.title": "Упомянуть участника",
+  "messageAction.collapse": "Свернуть сообщение",
+  "messageAction.continueGeneration": "Продолжить генерацию",
+  "messageAction.delAndRegenerate": "Удалить и пересоздать",
+  "messageAction.deleteDisabledByThreads": "Существуют подтемы, удаление невозможно",
+  "messageAction.expand": "Развернуть сообщение",
+  "messageAction.regenerate": "Пересоздать",
+  "messages.dm.sentTo": "Видно только {{name}}",
+  "messages.dm.title": "Личное сообщение",
+  "messages.modelCard.credit": "Кредиты",
+  "messages.modelCard.creditPricing": "Ценообразование",
+  "messages.modelCard.creditTooltip": "Для удобства подсчета мы приравниваем 1$ к 1M кредитов, например, $3/M токенов эквивалентно 3 кредитам/токен",
+  "messages.modelCard.pricing.inputCachedTokens": "Кэшированные входные {{amount}}/кредиты · ${{amount}}/M",
+  "messages.modelCard.pricing.inputCharts": "${{amount}}/M символов",
+  "messages.modelCard.pricing.inputMinutes": "${{amount}}/минуту",
+  "messages.modelCard.pricing.inputTokens": "Входные {{amount}}/кредиты · ${{amount}}/M",
+  "messages.modelCard.pricing.outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M",
+  "messages.modelCard.pricing.writeCacheInputTokens": "Кэширование ввода записи {{amount}}/баллов · ${{amount}}/М",
+  "messages.tokenDetails.average": "Средняя цена",
+  "messages.tokenDetails.input": "Вход",
+  "messages.tokenDetails.inputAudio": "Аудиовход",
+  "messages.tokenDetails.inputCached": "Кэшированный вход",
+  "messages.tokenDetails.inputCitation": "Цитирование ввода",
+  "messages.tokenDetails.inputText": "Текстовый вход",
+  "messages.tokenDetails.inputTitle": "Детали входа",
+  "messages.tokenDetails.inputUncached": "Некэшированный вход",
+  "messages.tokenDetails.inputWriteCached": "Запись кэшированного ввода",
+  "messages.tokenDetails.output": "Выход",
+  "messages.tokenDetails.outputAudio": "Аудиовыход",
+  "messages.tokenDetails.outputImage": "Вывод изображения",
+  "messages.tokenDetails.outputText": "Текстовый выход",
+  "messages.tokenDetails.outputTitle": "Детали выхода",
+  "messages.tokenDetails.reasoning": "Глубокое мышление",
+  "messages.tokenDetails.speed.tps.title": "TPS",
+  "messages.tokenDetails.speed.tps.tooltip": "Токены в секунду (TPS). Средняя скорость генерации контента ИИ (Токенов/сек), начинается с момента получения первого токена.",
+  "messages.tokenDetails.speed.ttft.title": "TTFT",
+  "messages.tokenDetails.speed.ttft.tooltip": "Время до первого токена (TTFT). Время, прошедшее с момента отправки вами сообщения до получения первого токена клиентом.",
+  "messages.tokenDetails.title": "Детали генерации",
+  "messages.tokenDetails.total": "Общее потребление",
+  "minimap.jumpToMessage": "Перейти к сообщению № {{index}}",
+  "minimap.nextMessage": "Следующее сообщение",
+  "minimap.previousMessage": "Предыдущее сообщение",
+  "minimap.senderAssistant": "Агент",
+  "minimap.senderUser": "Вы",
   "newAgent": "Создать помощника",
   "newGroupChat": "Создать группу",
   "newPage": "Создать документ",
@@ -281,252 +193,170 @@
   "noSelectedAgents": "Участники ещё не выбраны",
   "openInNewWindow": "Открыть в новом окне",
   "owner": "Владелец группы",
-  "pageCopilot": {
-    "title": "Ассистент по работе с текстом",
-    "welcome": "**Сделаем каждую фразу точнее.**\n\nНезависимо от того, нужно ли вам составить черновик, переписать или отредактировать текст — я помогу сделать его яснее, естественнее и убедительнее."
-  },
+  "pageCopilot.title": "Ассистент по работе с текстом",
+  "pageCopilot.welcome": "**Сделаем каждую фразу точнее.**\n\nНезависимо от того, нужно ли вам составить черновик, переписать или отредактировать текст — я помогу сделать его яснее, естественнее и убедительнее.",
   "pin": "Закрепить",
   "pinOff": "Открепить",
-  "rag": {
-    "referenceChunks": "Цитируемые источники",
-    "userQuery": {
-      "actions": {
-        "delete": "Удалить переписанный запрос",
-        "regenerate": "Перегенерировать запрос"
-      }
-    }
-  },
+  "rag.referenceChunks": "Цитируемые источники",
+  "rag.userQuery.actions.delete": "Удалить переписанный запрос",
+  "rag.userQuery.actions.regenerate": "Перегенерировать запрос",
   "regenerate": "Сгенерировать заново",
   "roleAndArchive": "Роль и архив",
-  "search": {
-    "grounding": {
-      "searchQueries": "Поисковые ключевые слова",
-      "title": "Найдено {{count}} результатов"
-    },
-    "mode": {
-      "auto": {
-        "desc": "Интеллектуально определяет необходимость поиска на основе содержания диалога",
-        "title": "Интеллектуальное подключение к сети"
-      },
-      "off": {
-        "desc": "Использует только базовые знания модели, без сетевого поиска",
-        "title": "Отключить подключение к сети"
-      },
-      "on": {
-        "desc": "Постоянно выполняет сетевой поиск для получения актуальной информации",
-        "title": "Всегда подключен к сети"
-      },
-      "useModelBuiltin": "Использовать встроенный поисковый движок модели"
-    },
-    "searchModel": {
-      "desc": "Текущая модель не поддерживает вызов функций, поэтому необходимо использовать модель, поддерживающую вызов функций, для поиска в интернете",
-      "title": "Модель поиска"
-    },
-    "title": "Поиск в сети"
-  },
+  "search.grounding.searchQueries": "Поисковые ключевые слова",
+  "search.grounding.title": "Найдено {{count}} результатов",
+  "search.mode.auto.desc": "Интеллектуально определяет необходимость поиска на основе содержания диалога",
+  "search.mode.auto.title": "Интеллектуальное подключение к сети",
+  "search.mode.off.desc": "Использует только базовые знания модели, без сетевого поиска",
+  "search.mode.off.title": "Отключить подключение к сети",
+  "search.mode.on.desc": "Постоянно выполняет сетевой поиск для получения актуальной информации",
+  "search.mode.on.title": "Всегда подключен к сети",
+  "search.mode.useModelBuiltin": "Использовать встроенный поисковый движок модели",
+  "search.searchModel.desc": "Текущая модель не поддерживает вызов функций, поэтому необходимо использовать модель, поддерживающую вызов функций, для поиска в интернете",
+  "search.searchModel.title": "Модель поиска",
+  "search.title": "Поиск в сети",
   "searchAgentPlaceholder": "Поиск помощника...",
   "searchAgents": "Помощник поиска...",
   "selectedAgents": "Выбранные помощники",
   "sendPlaceholder": "Задайте вопрос, создайте что-то или начните задание, <hotkey><hotkey/>",
-  "sessionGroup": {
-    "config": "Управление группами",
-    "confirmRemoveGroupAlert": "Вы уверены, что хотите удалить эту группу? После удаления помощники из этой группы будут перемещены в список по умолчанию.",
-    "createAgentSuccess": "Агент успешно создан",
-    "createGroup": "Создать новую группу",
-    "createGroupFailed": "Не удалось создать групповой чат",
-    "createGroupSuccess": "Групповой чат успешно создан",
-    "createSuccess": "Создание успешно",
-    "creatingAgent": "Создание агента...",
-    "groupName": "Название группы",
-    "inputPlaceholder": "Введите название группы...",
-    "moveGroup": "Переместить в группу",
-    "newGroup": "Новая группа",
-    "noAvailableAgents": "Нет доступных ассистентов",
-    "noMatchingAgents": "Совпадений не найдено",
-    "noSelectedAgents": "Пожалуйста, выберите ассистента",
-    "rename": "Переименовать группу",
-    "renameSuccess": "Переименование успешно",
-    "searchAgents": "Поиск ассистента",
-    "selectedAgents": "Выбранные ассистенты ({{count}})",
-    "sortSuccess": "Успешно отсортировано",
-    "sorting": "Обновление сортировки группы...",
-    "tooLong": "Название группы должно содержать от 1 до 20 символов"
-  },
-  "shareModal": {
-    "copy": "Копировать",
-    "download": "Скачать скриншот",
-    "downloadError": "Ошибка загрузки",
-    "downloadFile": "Скачать файл",
-    "downloadPdf": "Скачать PDF",
-    "downloadSuccess": "Загрузка успешна",
-    "exportMode": {
-      "full": "По умолчанию",
-      "label": "Режим экспорта",
-      "simple": "Совместим с OpenAI"
-    },
-    "exportPdf": "Экспорт в PDF",
-    "exportTitle": "Заголовок по умолчанию",
-    "generatePdf": "Создать PDF",
-    "generatingPdf": "Генерация PDF...",
-    "imageType": "Тип изображения",
-    "includeTool": "Включить сообщения плагина",
-    "includeUser": "Включить сообщения пользователя",
-    "loadingPdf": "Загрузка PDF...",
-    "noPdfData": "Данные PDF отсутствуют",
-    "pdf": "PDF",
-    "pdfErrorDescription": "Произошла ошибка при создании PDF, попробуйте снова",
-    "pdfGenerationError": "Не удалось создать PDF",
-    "pdfReady": "PDF готов",
-    "regeneratePdf": "Перегенерировать PDF",
-    "screenshot": "Скриншот",
-    "settings": "Настройки экспорта",
-    "text": "Текст",
-    "widthMode": {
-      "label": "Режим ширины",
-      "narrow": "Режим узкого экрана",
-      "wide": "Режим широкого экрана"
-    },
-    "withBackground": "С фоном",
-    "withFooter": "С нижним колонтитулом",
-    "withPluginInfo": "С информацией о плагинах",
-    "withRole": "Включить роль сообщения",
-    "withSystemRole": "С ролью помощника"
-  },
-  "stt": {
-    "action": "Голосовой ввод",
-    "loading": "Распознавание...",
-    "prettifying": "Форматирование..."
-  },
-  "supervisor": {
-    "todoList": {
-      "allComplete": "Все задачи выполнены",
-      "title": "Задачи выполнены"
-    }
-  },
-  "tab": {
-    "groupProfile": "Профиль группы",
-    "profile": "Профиль помощника",
-    "search": "Поиск"
-  },
-  "task": {
-    "activity": {
-      "calling": "Вызов инструмента...",
-      "generating": "Генерация ответа...",
-      "gotResult": "Результат инструмента получен",
-      "toolCalling": "Вызов {{toolName}}...",
-      "toolResult": "Результат {{toolName}} получен"
-    },
-    "metrics": {
-      "stepsShort": "шаг",
-      "toolCallsShort": "исп. инструм."
-    },
-    "status": {
-      "initializing": "Запуск задачи..."
-    }
-  },
-  "thread": {
-    "divider": "Подтема",
-    "threadMessageCount": "{{messageCount}} сообщений",
-    "title": "Подтема"
-  },
-  "toggleWideScreen": {
-    "off": "Отключить режим широкого экрана",
-    "on": "Включить режим широкого экрана"
-  },
-  "tokenDetails": {
-    "chats": "Чаты",
-    "historySummary": "Историческое резюме",
-    "rest": "Остаток",
-    "supervisor": "Ведущий группы",
-    "systemRole": "Роль системы",
-    "title": "Детали контекста",
-    "tools": "Инструменты",
-    "total": "Всего",
-    "used": "Использовано"
-  },
-  "tokenTag": {
-    "overload": "Превышение лимита",
-    "remained": "Осталось",
-    "used": "Использовано"
-  },
-  "tool": {
-    "intervention": {
-      "approve": "Одобрить",
-      "approveAndRemember": "Одобрить и запомнить",
-      "approveOnce": "Одобрить только один раз",
-      "mode": {
-        "allowList": "Белый список",
-        "allowListDesc": "Автоматически выполнять только одобренные инструменты",
-        "autoRun": "Автоматическое одобрение",
-        "autoRunDesc": "Автоматически одобрять выполнение всех инструментов",
-        "manual": "Вручную",
-        "manualDesc": "Каждый вызов требует ручного одобрения"
-      },
-      "reject": "Отклонить",
-      "rejectAndContinue": "Отклонить и повторить выполнение",
-      "rejectOnly": "Отклонить",
-      "rejectReasonPlaceholder": "Указание причины отклонения поможет агенту лучше понять и улучшить последующие действия",
-      "rejectTitle": "Отклонить вызов инструмента",
-      "rejectedWithReason": "Вызов инструмента был отклонён по следующей причине: {{reason}}",
-      "toolAbort": "Вызов инструмента был отменён пользователем",
-      "toolRejected": "Вызов инструмента был отклонён"
-    }
-  },
-  "toolAuth": {
-    "authorize": "Авторизовать",
-    "authorizing": "Авторизация...",
-    "hint": "Без авторизации или настройки эти инструменты могут работать некорректно, что может привести к ошибкам или ограниченной функциональности помощника.",
-    "signIn": "Войти",
-    "title": "Пожалуйста, авторизуйте инструменты для помощника"
-  },
-  "topic": {
-    "checkOpenNewTopic": "Открыть новую тему?",
-    "checkSaveCurrentMessages": "Сохранить текущий разговор как тему?",
-    "openNewTopic": "Создать новую тему",
-    "recent": "Недавние темы",
-    "saveCurrentMessages": "Сохранить текущий разговор как тему"
-  },
-  "translate": {
-    "action": "Перевести",
-    "clear": "Удалить перевод"
-  },
-  "tts": {
-    "action": "Озвучить текст",
-    "clear": "Удалить озвучку"
-  },
+  "sessionGroup.config": "Управление группами",
+  "sessionGroup.confirmRemoveGroupAlert": "Вы уверены, что хотите удалить эту группу? После удаления помощники из этой группы будут перемещены в список по умолчанию.",
+  "sessionGroup.createAgentSuccess": "Агент успешно создан",
+  "sessionGroup.createGroup": "Создать новую группу",
+  "sessionGroup.createGroupFailed": "Не удалось создать групповой чат",
+  "sessionGroup.createGroupSuccess": "Групповой чат успешно создан",
+  "sessionGroup.createSuccess": "Создание успешно",
+  "sessionGroup.creatingAgent": "Создание агента...",
+  "sessionGroup.groupName": "Название группы",
+  "sessionGroup.inputPlaceholder": "Введите название группы...",
+  "sessionGroup.moveGroup": "Переместить в группу",
+  "sessionGroup.newGroup": "Новая группа",
+  "sessionGroup.noAvailableAgents": "Нет доступных ассистентов",
+  "sessionGroup.noMatchingAgents": "Совпадений не найдено",
+  "sessionGroup.noSelectedAgents": "Пожалуйста, выберите ассистента",
+  "sessionGroup.rename": "Переименовать группу",
+  "sessionGroup.renameSuccess": "Переименование успешно",
+  "sessionGroup.searchAgents": "Поиск ассистента",
+  "sessionGroup.selectedAgents": "Выбранные ассистенты ({{count}})",
+  "sessionGroup.sortSuccess": "Успешно отсортировано",
+  "sessionGroup.sorting": "Обновление сортировки группы...",
+  "sessionGroup.tooLong": "Название группы должно содержать от 1 до 20 символов",
+  "shareModal.copy": "Копировать",
+  "shareModal.download": "Скачать скриншот",
+  "shareModal.downloadError": "Ошибка загрузки",
+  "shareModal.downloadFile": "Скачать файл",
+  "shareModal.downloadPdf": "Скачать PDF",
+  "shareModal.downloadSuccess": "Загрузка успешна",
+  "shareModal.exportMode.full": "По умолчанию",
+  "shareModal.exportMode.label": "Режим экспорта",
+  "shareModal.exportMode.simple": "Совместим с OpenAI",
+  "shareModal.exportPdf": "Экспорт в PDF",
+  "shareModal.exportTitle": "Заголовок по умолчанию",
+  "shareModal.generatePdf": "Создать PDF",
+  "shareModal.generatingPdf": "Генерация PDF...",
+  "shareModal.imageType": "Тип изображения",
+  "shareModal.includeTool": "Включить сообщения плагина",
+  "shareModal.includeUser": "Включить сообщения пользователя",
+  "shareModal.loadingPdf": "Загрузка PDF...",
+  "shareModal.noPdfData": "Данные PDF отсутствуют",
+  "shareModal.pdf": "PDF",
+  "shareModal.pdfErrorDescription": "Произошла ошибка при создании PDF, попробуйте снова",
+  "shareModal.pdfGenerationError": "Не удалось создать PDF",
+  "shareModal.pdfReady": "PDF готов",
+  "shareModal.regeneratePdf": "Перегенерировать PDF",
+  "shareModal.screenshot": "Скриншот",
+  "shareModal.settings": "Настройки экспорта",
+  "shareModal.text": "Текст",
+  "shareModal.widthMode.label": "Режим ширины",
+  "shareModal.widthMode.narrow": "Режим узкого экрана",
+  "shareModal.widthMode.wide": "Режим широкого экрана",
+  "shareModal.withBackground": "С фоном",
+  "shareModal.withFooter": "С нижним колонтитулом",
+  "shareModal.withPluginInfo": "С информацией о плагинах",
+  "shareModal.withRole": "Включить роль сообщения",
+  "shareModal.withSystemRole": "С ролью помощника",
+  "stt.action": "Голосовой ввод",
+  "stt.loading": "Распознавание...",
+  "stt.prettifying": "Форматирование...",
+  "supervisor.todoList.allComplete": "Все задачи выполнены",
+  "supervisor.todoList.title": "Задачи выполнены",
+  "tab.groupProfile": "Профиль группы",
+  "tab.profile": "Профиль помощника",
+  "tab.search": "Поиск",
+  "task.activity.calling": "Вызов инструмента...",
+  "task.activity.generating": "Генерация ответа...",
+  "task.activity.gotResult": "Результат инструмента получен",
+  "task.activity.toolCalling": "Вызов {{toolName}}...",
+  "task.activity.toolResult": "Результат {{toolName}} получен",
+  "task.metrics.stepsShort": "шаг",
+  "task.metrics.toolCallsShort": "исп. инструм.",
+  "task.status.initializing": "Запуск задачи...",
+  "thread.divider": "Подтема",
+  "thread.threadMessageCount": "{{messageCount}} сообщений",
+  "thread.title": "Подтема",
+  "toggleWideScreen.off": "Отключить режим широкого экрана",
+  "toggleWideScreen.on": "Включить режим широкого экрана",
+  "tokenDetails.chats": "Чаты",
+  "tokenDetails.historySummary": "Историческое резюме",
+  "tokenDetails.rest": "Остаток",
+  "tokenDetails.supervisor": "Ведущий группы",
+  "tokenDetails.systemRole": "Роль системы",
+  "tokenDetails.title": "Детали контекста",
+  "tokenDetails.tools": "Инструменты",
+  "tokenDetails.total": "Всего",
+  "tokenDetails.used": "Использовано",
+  "tokenTag.overload": "Превышение лимита",
+  "tokenTag.remained": "Осталось",
+  "tokenTag.used": "Использовано",
+  "tool.intervention.approve": "Одобрить",
+  "tool.intervention.approveAndRemember": "Одобрить и запомнить",
+  "tool.intervention.approveOnce": "Одобрить только один раз",
+  "tool.intervention.mode.allowList": "Белый список",
+  "tool.intervention.mode.allowListDesc": "Автоматически выполнять только одобренные инструменты",
+  "tool.intervention.mode.autoRun": "Автоматическое одобрение",
+  "tool.intervention.mode.autoRunDesc": "Автоматически одобрять выполнение всех инструментов",
+  "tool.intervention.mode.manual": "Вручную",
+  "tool.intervention.mode.manualDesc": "Каждый вызов требует ручного одобрения",
+  "tool.intervention.reject": "Отклонить",
+  "tool.intervention.rejectAndContinue": "Отклонить и повторить выполнение",
+  "tool.intervention.rejectOnly": "Отклонить",
+  "tool.intervention.rejectReasonPlaceholder": "Указание причины отклонения поможет агенту лучше понять и улучшить последующие действия",
+  "tool.intervention.rejectTitle": "Отклонить вызов инструмента",
+  "tool.intervention.rejectedWithReason": "Вызов инструмента был отклонён по следующей причине: {{reason}}",
+  "tool.intervention.toolAbort": "Вызов инструмента был отменён пользователем",
+  "tool.intervention.toolRejected": "Вызов инструмента был отклонён",
+  "toolAuth.authorize": "Авторизовать",
+  "toolAuth.authorizing": "Авторизация...",
+  "toolAuth.hint": "Без авторизации или настройки эти инструменты могут работать некорректно, что может привести к ошибкам или ограниченной функциональности помощника.",
+  "toolAuth.signIn": "Войти",
+  "toolAuth.title": "Пожалуйста, авторизуйте инструменты для помощника",
+  "topic.checkOpenNewTopic": "Открыть новую тему?",
+  "topic.checkSaveCurrentMessages": "Сохранить текущий разговор как тему?",
+  "topic.openNewTopic": "Создать новую тему",
+  "topic.recent": "Недавние темы",
+  "topic.saveCurrentMessages": "Сохранить текущий разговор как тему",
+  "translate.action": "Перевести",
+  "translate.clear": "Удалить перевод",
+  "tts.action": "Озвучить текст",
+  "tts.clear": "Удалить озвучку",
   "untitledAgent": "Безымянный помощник",
   "untitledGroup": "Безымянная группа",
   "updateAgent": "Обновить информацию помощника",
-  "upload": {
-    "action": {
-      "fileUpload": "Загрузить файл",
-      "folderUpload": "Загрузить папку",
-      "imageDisabled": "Текущая модель не поддерживает визуальное распознавание, пожалуйста, переключитесь на другую модель",
-      "imageUpload": "Загрузить изображение",
-      "tooltip": "Загрузить"
-    },
-    "clientMode": {
-      "actionFiletip": "Загрузить файл",
-      "actionTooltip": "Загрузить",
-      "disabled": "Текущая модель не поддерживает визуальное распознавание и анализ файлов, пожалуйста, переключитесь на другую модель",
-      "fileNotSupported": "В режиме браузера загрузка файлов не поддерживается, разрешена только загрузка изображений",
-      "visionNotSupported": "Текущая модель не поддерживает визуальное распознавание, пожалуйста, переключитесь на другую модель для использования"
-    },
-    "preview": {
-      "prepareTasks": "Подготовка блоков...",
-      "status": {
-        "pending": "Подготовка к загрузке...",
-        "processing": "Обработка файла..."
-      }
-    },
-    "validation": {
-      "videoSizeExceeded": "Размер видеофайла не должен превышать 20 МБ, текущий размер файла: {{actualSize}}"
-    }
-  },
-  "viewMode": {
-    "normal": "Обычный",
-    "wideScreen": "Широкий экран"
-  },
+  "upload.action.fileUpload": "Загрузить файл",
+  "upload.action.folderUpload": "Загрузить папку",
+  "upload.action.imageDisabled": "Текущая модель не поддерживает визуальное распознавание, пожалуйста, переключитесь на другую модель",
+  "upload.action.imageUpload": "Загрузить изображение",
+  "upload.action.tooltip": "Загрузить",
+  "upload.clientMode.actionFiletip": "Загрузить файл",
+  "upload.clientMode.actionTooltip": "Загрузить",
+  "upload.clientMode.disabled": "Текущая модель не поддерживает визуальное распознавание и анализ файлов, пожалуйста, переключитесь на другую модель",
+  "upload.clientMode.fileNotSupported": "В режиме браузера загрузка файлов не поддерживается, разрешена только загрузка изображений",
+  "upload.clientMode.visionNotSupported": "Текущая модель не поддерживает визуальное распознавание, пожалуйста, переключитесь на другую модель для использования",
+  "upload.preview.prepareTasks": "Подготовка блоков...",
+  "upload.preview.status.pending": "Подготовка к загрузке...",
+  "upload.preview.status.processing": "Обработка файла...",
+  "upload.validation.videoSizeExceeded": "Размер видеофайла не должен превышать 20 МБ, текущий размер файла: {{actualSize}}",
+  "viewMode.normal": "Обычный",
+  "viewMode.wideScreen": "Широкий экран",
   "you": "ты",
   "zenMode": "Режим концентрации"
 }

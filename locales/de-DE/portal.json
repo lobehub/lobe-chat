@@ -1,27 +1,15 @@
 {
   "Artifacts": "Artefakte",
-  "FilePreview": {
-    "tabs": {
-      "chunk": "Chunk",
-      "file": "Datei"
-    }
-  },
+  "FilePreview.tabs.chunk": "Chunk",
+  "FilePreview.tabs.file": "Datei",
   "Plugins": "Plugins",
-  "artifacts": {
-    "display": {
-      "code": "Code",
-      "preview": "Vorschau"
-    },
-    "svg": {
-      "copyAsImage": "Als Bild kopieren",
-      "copyFail": "Kopieren fehlgeschlagen, Fehlerursache: {{error}}",
-      "copySuccess": "Bild erfolgreich kopiert",
-      "download": {
-        "png": "Als PNG herunterladen",
-        "svg": "Als SVG herunterladen"
-      }
-    }
-  },
+  "artifacts.display.code": "Code",
+  "artifacts.display.preview": "Vorschau",
+  "artifacts.svg.copyAsImage": "Als Bild kopieren",
+  "artifacts.svg.copyFail": "Kopieren fehlgeschlagen, Fehlerursache: {{error}}",
+  "artifacts.svg.copySuccess": "Bild erfolgreich kopiert",
+  "artifacts.svg.download.png": "Als PNG herunterladen",
+  "artifacts.svg.download.svg": "Als SVG herunterladen",
   "emptyArtifactList": "Die Liste der Artefakte ist derzeit leer. Bitte verwenden Sie Plugins in der Sitzung und überprüfen Sie sie erneut.",
   "emptyKnowledgeList": "Die aktuelle Wissensliste ist leer. Bitte aktivieren Sie die Wissensdatenbank nach Bedarf in der Sitzung, um sie anzuzeigen.",
   "files": "Dateien",

@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "Списък с параметри"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Извличане на налични модели",
-        "getAvailableTools": "Извличане на налични инструменти",
-        "getConfig": "Извличане на конфигурация",
-        "getMeta": "Извличане на метаданни",
-        "getPrompt": "Извличане на системен подкана",
-        "searchMarketTools": "Търсене в магазина за плъгини",
-        "searchOfficialTools": "Търсене на официални инструменти",
-        "setModel": "Задаване на модел",
-        "setOpeningMessage": "Задаване на начално съобщение",
-        "setOpeningQuestions": "Задаване на начални въпроси",
-        "togglePlugin": "Превключване на плъгин",
-        "updateChatConfig": "Актуализиране на конфигурацията на чата",
-        "updateConfig": "Актуализиране на конфигурацията",
-        "updateMeta": "Актуализиране на метаданните",
-        "updatePrompt": "Актуализиране на системния подкана"
-      },
-      "title": "Създател на агент"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Извличане на налични модели",
-        "installPlugin": "Инсталиране на плъгин",
-        "inviteAgent": "Покани член",
-        "removeAgent": "Премахни член",
-        "searchMarketTools": "Търсене в магазина за плъгини",
-        "updateAgentConfig": "Актуализиране на конфигурацията на агента",
-        "updatePrompt": "Актуализиране на системния подканващ текст"
-      },
-      "title": "Създател на групов агент"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "Изказване пред всички",
-        "createAgent": "Добавяне на член на екипа",
-        "createWorkflow": "Планиране на работен процес",
-        "executeTask": "Изпълнение на задача",
-        "getAgentInfo": "Получаване на информация за член",
-        "interrupt": "Прекъсване на задача",
-        "inviteAgent": "Покана за членство",
-        "removeAgent": "Премахване на член",
-        "searchAgent": "Търсене на експерт",
-        "speak": "Назначаване на говорител",
-        "summarize": "Обобщаване на разговора",
-        "vote": "Иницииране на гласуване"
-      },
-      "title": "Координиране на екипа"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "Изчистване на задачите",
-        "completeTodos": "Завършване на задачите",
-        "createPlan": "Създаване на план",
-        "createTodos": "Създаване на задачи",
-        "removeTodos": "Премахване на задачите",
-        "updatePlan": "Актуализиране на плана",
-        "updateTodos": "Актуализиране на задачите"
-      },
-      "title": "GTD инструмент"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "Прочет на съдържанието на базата знания",
-        "searchKnowledgeBase": "Търсене в базата знания"
-      },
-      "title": "База знания"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "Редактирай файл",
-        "getCommandOutput": "Вземи изхода от кода",
-        "globLocalFiles": "Търси съвпадащи файлове",
-        "grepContent": "Търси съдържание",
-        "killCommand": "Прекрати изпълнението на кода",
-        "listLocalFiles": "Преглед на списъка с файлове",
-        "moveLocalFiles": "Премести файлове",
-        "readLocalFile": "Прочети съдържанието на файла",
-        "renameLocalFile": "Преименувай",
-        "runCommand": "Изпълни код",
-        "searchLocalFiles": "Търси файлове",
-        "writeLocalFile": "Запиши файл"
-      },
-      "title": "Локална система"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "Партидно актуализиране на възли",
-        "compareSnapshots": "Сравняване на моментни снимки",
-        "convertToList": "Преобразуване в списък",
-        "createNode": "Създаване на възел",
-        "cropImage": "Изрязване на изображение",
-        "deleteNode": "Изтриване на възел",
-        "deleteSnapshot": "Изтриване на моментна снимка",
-        "deleteTableColumn": "Изтриване на колона от таблица",
-        "deleteTableRow": "Изтриване на ред от таблица",
-        "duplicateNode": "Дублиране на възел",
-        "editTitle": "Редактиране на заглавието на документа",
-        "indentListItem": "Увеличаване на отстъпа на елемент от списък",
-        "initPage": "Инициализиране на документа",
-        "insertTableColumn": "Вмъкване на колона в таблица",
-        "insertTableRow": "Вмъкване на ред в таблица",
-        "listSnapshots": "Списък с моментни снимки",
-        "mergeNodes": "Сливане на възли",
-        "moveNode": "Преместване на възел",
-        "outdentListItem": "Намаляване на отстъпа на елемент от списък",
-        "replaceText": "Замяна на текст",
-        "resizeImage": "Преоразмеряване на изображение",
-        "restoreSnapshot": "Възстановяване на моментна снимка",
-        "rotateImage": "Завъртане на изображение",
-        "saveSnapshot": "Запазване на моментна снимка",
-        "setImageAlt": "Задаване на алтернативен текст на изображение",
-        "splitNode": "Разделяне на възел",
-        "toggleListType": "Превключване на тип списък",
-        "unwrapNode": "Разопаковане на възел",
-        "updateNode": "Актуализиране на възел",
-        "wrapNodes": "Опаковане на възли"
-      },
-      "title": "Документ"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "Прочети съдържание от няколко страници",
-        "crawlSinglePage": "Прочети съдържание от страница",
-        "search": "Търси страница"
-      },
-      "title": "Търсене в интернет"
-    }
-  },
+  "arguments.title": "Списък с параметри",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "Извличане на налични модели",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "Извличане на налични инструменти",
+  "builtins.lobe-agent-builder.apiName.getConfig": "Извличане на конфигурация",
+  "builtins.lobe-agent-builder.apiName.getMeta": "Извличане на метаданни",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "Извличане на системен подкана",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "Търсене в магазина за плъгини",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "Търсене на официални инструменти",
+  "builtins.lobe-agent-builder.apiName.setModel": "Задаване на модел",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "Задаване на начално съобщение",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "Задаване на начални въпроси",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "Превключване на плъгин",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "Актуализиране на конфигурацията на чата",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "Актуализиране на конфигурацията",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "Актуализиране на метаданните",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "Актуализиране на системния подкана",
+  "builtins.lobe-agent-builder.title": "Създател на агент",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "Извличане на налични модели",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "Инсталиране на плъгин",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "Покани член",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "Премахни член",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "Търсене в магазина за плъгини",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "Актуализиране на конфигурацията на агента",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "Актуализиране на системния подканващ текст",
+  "builtins.lobe-group-agent-builder.title": "Създател на групов агент",
+  "builtins.lobe-group-management.apiName.broadcast": "Изказване пред всички",
+  "builtins.lobe-group-management.apiName.createAgent": "Добавяне на член на екипа",
+  "builtins.lobe-group-management.apiName.createWorkflow": "Планиране на работен процес",
+  "builtins.lobe-group-management.apiName.executeTask": "Изпълнение на задача",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "Получаване на информация за член",
+  "builtins.lobe-group-management.apiName.interrupt": "Прекъсване на задача",
+  "builtins.lobe-group-management.apiName.inviteAgent": "Покана за членство",
+  "builtins.lobe-group-management.apiName.removeAgent": "Премахване на член",
+  "builtins.lobe-group-management.apiName.searchAgent": "Търсене на експерт",
+  "builtins.lobe-group-management.apiName.speak": "Назначаване на говорител",
+  "builtins.lobe-group-management.apiName.summarize": "Обобщаване на разговора",
+  "builtins.lobe-group-management.apiName.vote": "Иницииране на гласуване",
+  "builtins.lobe-group-management.title": "Координиране на екипа",
+  "builtins.lobe-gtd.apiName.clearTodos": "Изчистване на задачите",
+  "builtins.lobe-gtd.apiName.completeTodos": "Завършване на задачите",
+  "builtins.lobe-gtd.apiName.createPlan": "Създаване на план",
+  "builtins.lobe-gtd.apiName.createTodos": "Създаване на задачи",
+  "builtins.lobe-gtd.apiName.removeTodos": "Премахване на задачите",
+  "builtins.lobe-gtd.apiName.updatePlan": "Актуализиране на плана",
+  "builtins.lobe-gtd.apiName.updateTodos": "Актуализиране на задачите",
+  "builtins.lobe-gtd.title": "GTD инструмент",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "Прочет на съдържанието на базата знания",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "Търсене в базата знания",
+  "builtins.lobe-knowledge-base.title": "База знания",
+  "builtins.lobe-local-system.apiName.editLocalFile": "Редактирай файл",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "Вземи изхода от кода",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "Търси съвпадащи файлове",
+  "builtins.lobe-local-system.apiName.grepContent": "Търси съдържание",
+  "builtins.lobe-local-system.apiName.killCommand": "Прекрати изпълнението на кода",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "Преглед на списъка с файлове",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "Премести файлове",
+  "builtins.lobe-local-system.apiName.readLocalFile": "Прочети съдържанието на файла",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "Преименувай",
+  "builtins.lobe-local-system.apiName.runCommand": "Изпълни код",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "Търси файлове",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "Запиши файл",
+  "builtins.lobe-local-system.title": "Локална система",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "Партидно актуализиране на възли",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "Сравняване на моментни снимки",
+  "builtins.lobe-page-agent.apiName.convertToList": "Преобразуване в списък",
+  "builtins.lobe-page-agent.apiName.createNode": "Създаване на възел",
+  "builtins.lobe-page-agent.apiName.cropImage": "Изрязване на изображение",
+  "builtins.lobe-page-agent.apiName.deleteNode": "Изтриване на възел",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "Изтриване на моментна снимка",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "Изтриване на колона от таблица",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "Изтриване на ред от таблица",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "Дублиране на възел",
+  "builtins.lobe-page-agent.apiName.editTitle": "Редактиране на заглавието на документа",
+  "builtins.lobe-page-agent.apiName.indentListItem": "Увеличаване на отстъпа на елемент от списък",
+  "builtins.lobe-page-agent.apiName.initPage": "Инициализиране на документа",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "Вмъкване на колона в таблица",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "Вмъкване на ред в таблица",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "Списък с моментни снимки",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "Сливане на възли",
+  "builtins.lobe-page-agent.apiName.moveNode": "Преместване на възел",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "Намаляване на отстъпа на елемент от списък",
+  "builtins.lobe-page-agent.apiName.replaceText": "Замяна на текст",
+  "builtins.lobe-page-agent.apiName.resizeImage": "Преоразмеряване на изображение",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "Възстановяване на моментна снимка",
+  "builtins.lobe-page-agent.apiName.rotateImage": "Завъртане на изображение",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "Запазване на моментна снимка",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "Задаване на алтернативен текст на изображение",
+  "builtins.lobe-page-agent.apiName.splitNode": "Разделяне на възел",
+  "builtins.lobe-page-agent.apiName.toggleListType": "Превключване на тип списък",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "Разопаковане на възел",
+  "builtins.lobe-page-agent.apiName.updateNode": "Актуализиране на възел",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "Опаковане на възли",
+  "builtins.lobe-page-agent.title": "Документ",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "Прочети съдържание от няколко страници",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "Прочети съдържание от страница",
+  "builtins.lobe-web-browsing.apiName.search": "Търси страница",
+  "builtins.lobe-web-browsing.title": "Търсене в интернет",
   "confirm": "Потвърждавам",
-  "debug": {
-    "arguments": "Параметри на извикване",
-    "function_call": "Извикване на функция",
-    "off": "Изключване на отстраняване на грешки",
-    "on": "Преглед на информация за извикване на плъгин",
-    "payload": "Товар на плъгина",
-    "pluginState": "Състояние на приставката",
-    "response": "Резултат",
-    "title": "Детайли за плъгина",
-    "tool_call": "Заявка за извикване на инструмент"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "Моля, посетете страницата за редактиране за подробности",
-      "editBtn": "Редактирай сега",
-      "title": "Това е персонализиран плъгин"
-    },
-    "emptyState": {
-      "description": "Моля, инсталирайте този плъгин, за да видите възможностите и опциите за конфигурация",
-      "title": "Вижте детайли за плъгина след инсталация"
-    },
-    "info": {
-      "description": "Описание на API",
-      "name": "Име на API"
-    },
-    "tabs": {
-      "info": "Възможности на плъгина",
-      "manifest": "Инсталационен файл",
-      "settings": "Настройки"
-    },
-    "title": "Детайли за плъгина"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "Ще изтриете този локален плъгин. След изтриване той не може да бъде възстановен. Сигурни ли сте, че искате да изтриете плъгина?",
-    "customParams": {
-      "useProxy": {
-        "label": "Инсталиране чрез прокси (ако срещнете грешки с достъп през различен домейн, опитайте да активирате тази опция и да инсталирате отново)"
-      }
-    },
-    "deleteSuccess": "Плъгинът е изтрит успешно",
-    "manifest": {
-      "identifier": {
-        "desc": "Уникален идентификатор на плъгина",
-        "label": "Идентификатор"
-      },
-      "mode": {
-        "mcp": "MCP плъгин",
-        "mcpExp": "Експериментален",
-        "url": "Онлайн връзка"
-      },
-      "name": {
-        "desc": "Заглавие на плъгина",
-        "label": "Заглавие",
-        "placeholder": "Търсачка"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "Разширени настройки"
-      },
-      "args": {
-        "desc": "Списък с параметри, предавани на командата за изпълнение, обикновено тук се въвежда името на MCP сървъра или пътят към стартовия скрипт",
-        "label": "Параметри на командата",
-        "placeholder": "Например: mcp-hello-world",
-        "required": "Моля, въведете стартови параметри"
-      },
-      "auth": {
-        "bear": "API ключ",
-        "desc": "Изберете метод за удостоверяване на MCP сървъра",
-        "label": "Тип удостоверяване",
-        "none": "Не се изисква удостоверяване",
-        "placeholder": "Моля, изберете тип удостоверяване",
-        "token": {
-          "desc": "Въведете вашия API ключ или Bearer токен",
-          "label": "API ключ",
-          "placeholder": "sk-xxxxx",
-          "required": "Моля, въведете удостоверителен токен"
-        }
-      },
-      "avatar": {
-        "label": "Икона на плъгина"
-      },
-      "command": {
-        "desc": "Изпълним файл или скрипт за стартиране на MCP STDIO сървъра",
-        "label": "Команда",
-        "placeholder": "Например: npx / uv / docker и др.",
-        "required": "Моля, въведете команда за стартиране"
-      },
-      "desc": {
-        "desc": "Добавете описание на плъгина",
-        "label": "Описание на плъгина",
-        "placeholder": "Допълнете информация за употреба и сценарии"
-      },
-      "endpoint": {
-        "desc": "Въведете адреса на вашия MCP Streamable HTTP сървър",
-        "label": "MCP Endpoint URL"
-      },
-      "env": {
-        "add": "Добави ред",
-        "desc": "Въведете необходимите за MCP сървъра променливи на средата",
-        "duplicateKeyError": "Ключът на полето трябва да е уникален",
-        "formValidationFailed": "Валидирането на формата не бе успешно, моля проверете формата на параметрите",
-        "keyRequired": "Ключът на полето не може да бъде празен",
-        "label": "Променливи на средата за MCP сървъра",
-        "stringifyError": "Не може да се сериализират параметрите, моля проверете формата"
-      },
-      "headers": {
-        "add": "Добави ред",
-        "desc": "Въведете HTTP заглавки",
-        "label": "HTTP заглавки"
-      },
-      "identifier": {
-        "desc": "Задайте име на вашия MCP плъгин, трябва да използвате английски символи",
-        "invalid": "Идентификаторът може да съдържа само букви, цифри, тирета и долни черти",
-        "label": "Име на MCP плъгина",
-        "placeholder": "Например: my-mcp-plugin",
-        "required": "Моля, въведете идентификатор на MCP услугата"
-      },
-      "previewManifest": "Преглед на описателния файл на плъгина",
-      "quickImport": "Бърз импорт на JSON конфигурация",
-      "quickImportError": {
-        "empty": "Въведеният текст не може да бъде празен",
-        "invalidJson": "Невалиден JSON формат",
-        "invalidStructure": "Невалидна JSON структура"
-      },
-      "stdioNotSupported": "Текущата среда не поддържа stdio тип MCP плъгини",
-      "testConnection": "Тествай връзката",
-      "testConnectionTip": "MCP плъгинът може да се използва нормално само след успешен тест на връзката",
-      "type": {
-        "desc": "Изберете комуникационния тип на MCP плъгина, уеб версията поддържа само Streamable HTTP",
-        "httpFeature1": "Съвместим с уеб и десктоп версия",
-        "httpFeature2": "Свързва се с отдалечен MCP сървър без нужда от допълнителна инсталация и конфигурация",
-        "httpShortDesc": "Комуникационен протокол базиран на потоков HTTP",
-        "label": "Тип MCP плъгин",
-        "stdioFeature1": "По-ниска комуникационна латентност, подходящ за локално изпълнение",
-        "stdioFeature2": "Изисква локална инсталация и стартиране на MCP сървър",
-        "stdioNotAvailable": "STDIO режимът е наличен само в десктоп версията",
-        "stdioShortDesc": "Комуникационен протокол базиран на стандартен вход/изход",
-        "title": "Тип MCP плъгин"
-      },
-      "url": {
-        "desc": "Въведете Streamable HTTP адреса на вашия MCP сървър, SSE режим не се поддържа",
-        "invalid": "Моля, въведете валиден URL адрес",
-        "label": "Streamable HTTP Endpoint URL",
-        "required": "Моля, въведете URL на MCP услугата"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "Автор на плъгина",
-        "label": "Автор"
-      },
-      "avatar": {
-        "desc": "Икона на плъгина, може да използвате Emoji или URL",
-        "label": "Икона"
-      },
-      "description": {
-        "desc": "Описание на плъгина",
-        "label": "Описание",
-        "placeholder": "Търсене в търсачка за информация"
-      },
-      "formFieldRequired": "Това поле е задължително",
-      "homepage": {
-        "desc": "Начална страница на плъгина",
-        "label": "Начална страница"
-      },
-      "identifier": {
-        "desc": "Уникален идентификатор на плъгина, автоматично разпознат от manifest",
-        "errorDuplicate": "Идентификаторът се повтаря с вече съществуващ плъгин, моля променете идентификатора",
-        "label": "Идентификатор",
-        "pattenErrorMessage": "Може да съдържа само английски букви, цифри, тирета и долни черти"
-      },
-      "lobe": "{{appName}} плъгин",
-      "manifest": {
-        "desc": "{{appName}} ще инсталира плъгина чрез този линк",
-        "label": "Описателен файл на плъгина (Manifest) URL",
-        "preview": "Преглед на Manifest",
-        "refresh": "Обнови"
-      },
-      "openai": "OpenAI плъгин",
-      "title": {
-        "desc": "Заглавие на плъгина",
-        "label": "Заглавие",
-        "placeholder": "Търсачка"
-      }
-    },
-    "metaConfig": "Конфигурация на мета информацията на плъгина",
-    "modalDesc": "След добавяне на персонализиран плъгин, той може да се използва за разработка и тестване на плъгини, както и директно в разговори. За разработка на плъгини вижте <1>документацията за разработчици↗</>",
-    "openai": {
-      "importUrl": "Импортиране от URL линк",
-      "schema": "Схема"
-    },
-    "preview": {
-      "api": {
-        "noParams": "Този инструмент няма параметри",
-        "noResults": "Не са намерени API-та, отговарящи на търсенето",
-        "params": "Параметри:",
-        "searchPlaceholder": "Търсене на инструменти..."
-      },
-      "card": "Преглед на визуализацията на плъгина",
-      "desc": "Преглед на описанието на плъгина",
-      "empty": {
-        "desc": "След конфигурация тук ще можете да преглеждате поддържаните възможности на плъгина",
-        "title": "Започнете преглед след конфигуриране на плъгина"
-      },
-      "title": "Преглед на името на плъгина"
-    },
-    "save": "Инсталирай плъгина",
-    "saveSuccess": "Настройките на плъгина са запазени успешно",
-    "tabs": {
-      "manifest": "Функционален описателен файл (Manifest)",
-      "meta": "Мета информация за плъгина"
-    },
-    "title": {
-      "create": "Добавяне на персонализиран плъгин",
-      "edit": "Редактиране на персонализиран плъгин"
-    },
-    "type": {
-      "lobe": "{{appName}} плъгин",
-      "openai": "OpenAI плъгин"
-    },
-    "update": "Обновяване",
-    "updateSuccess": "Настройките на плъгина са обновени успешно"
-  },
-  "empty": {
-    "description": "Магазинът за плъгини предлага богат избор от инструменти, които те очакват – посети магазина и започни да изследваш.",
-    "search": "Няма намерени съвпадащи плъгини",
-    "title": "Няма налични плъгини"
-  },
-  "error": {
-    "fetchError": "Неуспешно заявяване на manifest линка, моля уверете се в валидността на линка и проверете дали е разрешен достъп от различен домейн",
-    "installError": "Инсталацията на плъгина {{name}} не бе успешна",
-    "manifestInvalid": "manifest не отговаря на стандарта, резултат от проверката: \n\n {{error}}",
-    "noManifest": "Описателният файл не съществува",
-    "openAPIInvalid": "Грешка при парсване на OpenAPI, грешка: \n\n {{error}}",
-    "reinstallError": "Обновяването на плъгина {{name}} не бе успешно",
-    "testConnectionFailed": "Неуспешно получаване на Manifest: {{error}}",
-    "urlError": "Линкът не връща съдържание във формат JSON, моля уверете се, че е валиден линк"
-  },
-  "inspector": {
-    "args": "Преглед на списъка с параметри",
-    "delete": "Изтриване на извикване на инструмент",
-    "orphanedToolCall": "Това извикване на инструмент може да е станало изолирано поради необичайни причини, което може да повлияе на нормалното изпълнение на агента. Моля, премахнете го.",
-    "pluginRender": "Преглед на интерфейса на плъгина"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "Премахнат",
-      "local.config": "Конфигурация",
-      "local.title": "Персонализиран"
-    }
-  },
-  "loading": {
-    "content": "Извикване на плъгина...",
-    "plugin": "Плъгинът работи..."
-  },
-  "mcpEmpty": {
-    "deployment": "Няма налични опции за внедряване",
-    "prompts": "Този плъгин няма налични подсказки",
-    "resources": "Този плъгин няма налични ресурси",
-    "tools": "Този плъгин няма налични инструментални възможности"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "Проверка на инсталационната среда...",
-    "COMPLETED": "Инсталацията е завършена",
-    "CONFIGURATION_REQUIRED": "Моля, завършете необходимата конфигурация, за да продължите инсталацията",
-    "ERROR": "Грешка при инсталация",
-    "FETCHING_MANIFEST": "Извличане на описателния файл на плъгина...",
-    "GETTING_SERVER_MANIFEST": "Инициализация на MCP сървъра...",
-    "INSTALLING_PLUGIN": "Инсталиране на плъгина...",
-    "configurationDescription": "Този MCP плъгин изисква конфигурационни параметри за нормална работа, моля попълнете необходимата информация",
-    "configurationRequired": "Конфигуриране на параметрите на плъгина",
-    "continueInstall": "Продължи инсталацията",
-    "dependenciesDescription": "Този плъгин изисква инсталиране на следните системни зависимости за нормална работа, моля инсталирайте липсващите зависимости според инструкциите и след това натиснете за повторна проверка и продължаване на инсталацията.",
-    "dependenciesRequired": "Моля, инсталирайте системните зависимости на плъгина",
-    "dependencyStatus": {
-      "installed": "Инсталирано",
-      "notInstalled": "Не е инсталирано",
-      "requiredVersion": "Изисквана версия: {{version}}"
-    },
-    "errorDetails": {
-      "args": "Параметри",
-      "command": "Команда",
-      "connectionParams": "Параметри за връзка",
-      "env": "Променливи на средата",
-      "errorOutput": "Лог на грешки",
-      "exitCode": "Код на изход",
-      "hideDetails": "Скрий детайли",
-      "originalError": "Първоначална грешка",
-      "showDetails": "Покажи детайли"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "Грешка при удостоверяване",
-      "CONNECTION_FAILED": "Неуспешна връзка",
-      "INITIALIZATION_TIMEOUT": "Времето за инициализация изтече",
-      "PROCESS_SPAWN_ERROR": "Грешка при стартиране на процес",
-      "UNKNOWN_ERROR": "Неизвестна грешка",
-      "VALIDATION_ERROR": "Грешка при валидация на параметрите"
-    },
-    "installError": "Инсталацията на MCP плъгина не бе успешна, причина: {{detail}}",
-    "installMethods": {
-      "manual": "Ръчна инсталация:",
-      "recommended": "Препоръчителен метод за инсталация:"
-    },
-    "recheckDependencies": "Проверка отново на зависимостите",
-    "skipDependencies": "Пропусни проверката"
-  },
+  "debug.arguments": "Параметри на извикване",
+  "debug.function_call": "Извикване на функция",
+  "debug.off": "Изключване на отстраняване на грешки",
+  "debug.on": "Преглед на информация за извикване на плъгин",
+  "debug.payload": "Товар на плъгина",
+  "debug.pluginState": "Състояние на приставката",
+  "debug.response": "Резултат",
+  "debug.title": "Детайли за плъгина",
+  "debug.tool_call": "Заявка за извикване на инструмент",
+  "detailModal.customPlugin.description": "Моля, посетете страницата за редактиране за подробности",
+  "detailModal.customPlugin.editBtn": "Редактирай сега",
+  "detailModal.customPlugin.title": "Това е персонализиран плъгин",
+  "detailModal.emptyState.description": "Моля, инсталирайте този плъгин, за да видите възможностите и опциите за конфигурация",
+  "detailModal.emptyState.title": "Вижте детайли за плъгина след инсталация",
+  "detailModal.info.description": "Описание на API",
+  "detailModal.info.name": "Име на API",
+  "detailModal.tabs.info": "Възможности на плъгина",
+  "detailModal.tabs.manifest": "Инсталационен файл",
+  "detailModal.tabs.settings": "Настройки",
+  "detailModal.title": "Детайли за плъгина",
+  "dev.confirmDeleteDevPlugin": "Ще изтриете този локален плъгин. След изтриване той не може да бъде възстановен. Сигурни ли сте, че искате да изтриете плъгина?",
+  "dev.customParams.useProxy.label": "Инсталиране чрез прокси (ако срещнете грешки с достъп през различен домейн, опитайте да активирате тази опция и да инсталирате отново)",
+  "dev.deleteSuccess": "Плъгинът е изтрит успешно",
+  "dev.manifest.identifier.desc": "Уникален идентификатор на плъгина",
+  "dev.manifest.identifier.label": "Идентификатор",
+  "dev.manifest.mode.mcp": "MCP плъгин",
+  "dev.manifest.mode.mcpExp": "Експериментален",
+  "dev.manifest.mode.url": "Онлайн връзка",
+  "dev.manifest.name.desc": "Заглавие на плъгина",
+  "dev.manifest.name.label": "Заглавие",
+  "dev.manifest.name.placeholder": "Търсачка",
+  "dev.mcp.advanced.title": "Разширени настройки",
+  "dev.mcp.args.desc": "Списък с параметри, предавани на командата за изпълнение, обикновено тук се въвежда името на MCP сървъра или пътят към стартовия скрипт",
+  "dev.mcp.args.label": "Параметри на командата",
+  "dev.mcp.args.placeholder": "Например: mcp-hello-world",
+  "dev.mcp.args.required": "Моля, въведете стартови параметри",
+  "dev.mcp.auth.bear": "API ключ",
+  "dev.mcp.auth.desc": "Изберете метод за удостоверяване на MCP сървъра",
+  "dev.mcp.auth.label": "Тип удостоверяване",
+  "dev.mcp.auth.none": "Не се изисква удостоверяване",
+  "dev.mcp.auth.placeholder": "Моля, изберете тип удостоверяване",
+  "dev.mcp.auth.token.desc": "Въведете вашия API ключ или Bearer токен",
+  "dev.mcp.auth.token.label": "API ключ",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "Моля, въведете удостоверителен токен",
+  "dev.mcp.avatar.label": "Икона на плъгина",
+  "dev.mcp.command.desc": "Изпълним файл или скрипт за стартиране на MCP STDIO сървъра",
+  "dev.mcp.command.label": "Команда",
+  "dev.mcp.command.placeholder": "Например: npx / uv / docker и др.",
+  "dev.mcp.command.required": "Моля, въведете команда за стартиране",
+  "dev.mcp.desc.desc": "Добавете описание на плъгина",
+  "dev.mcp.desc.label": "Описание на плъгина",
+  "dev.mcp.desc.placeholder": "Допълнете информация за употреба и сценарии",
+  "dev.mcp.endpoint.desc": "Въведете адреса на вашия MCP Streamable HTTP сървър",
+  "dev.mcp.endpoint.label": "MCP Endpoint URL",
+  "dev.mcp.env.add": "Добави ред",
+  "dev.mcp.env.desc": "Въведете необходимите за MCP сървъра променливи на средата",
+  "dev.mcp.env.duplicateKeyError": "Ключът на полето трябва да е уникален",
+  "dev.mcp.env.formValidationFailed": "Валидирането на формата не бе успешно, моля проверете формата на параметрите",
+  "dev.mcp.env.keyRequired": "Ключът на полето не може да бъде празен",
+  "dev.mcp.env.label": "Променливи на средата за MCP сървъра",
+  "dev.mcp.env.stringifyError": "Не може да се сериализират параметрите, моля проверете формата",
+  "dev.mcp.headers.add": "Добави ред",
+  "dev.mcp.headers.desc": "Въведете HTTP заглавки",
+  "dev.mcp.headers.label": "HTTP заглавки",
+  "dev.mcp.identifier.desc": "Задайте име на вашия MCP плъгин, трябва да използвате английски символи",
+  "dev.mcp.identifier.invalid": "Идентификаторът може да съдържа само букви, цифри, тирета и долни черти",
+  "dev.mcp.identifier.label": "Име на MCP плъгина",
+  "dev.mcp.identifier.placeholder": "Например: my-mcp-plugin",
+  "dev.mcp.identifier.required": "Моля, въведете идентификатор на MCP услугата",
+  "dev.mcp.previewManifest": "Преглед на описателния файл на плъгина",
+  "dev.mcp.quickImport": "Бърз импорт на JSON конфигурация",
+  "dev.mcp.quickImportError.empty": "Въведеният текст не може да бъде празен",
+  "dev.mcp.quickImportError.invalidJson": "Невалиден JSON формат",
+  "dev.mcp.quickImportError.invalidStructure": "Невалидна JSON структура",
+  "dev.mcp.stdioNotSupported": "Текущата среда не поддържа stdio тип MCP плъгини",
+  "dev.mcp.testConnection": "Тествай връзката",
+  "dev.mcp.testConnectionTip": "MCP плъгинът може да се използва нормално само след успешен тест на връзката",
+  "dev.mcp.type.desc": "Изберете комуникационния тип на MCP плъгина, уеб версията поддържа само Streamable HTTP",
+  "dev.mcp.type.httpFeature1": "Съвместим с уеб и десктоп версия",
+  "dev.mcp.type.httpFeature2": "Свързва се с отдалечен MCP сървър без нужда от допълнителна инсталация и конфигурация",
+  "dev.mcp.type.httpShortDesc": "Комуникационен протокол базиран на потоков HTTP",
+  "dev.mcp.type.label": "Тип MCP плъгин",
+  "dev.mcp.type.stdioFeature1": "По-ниска комуникационна латентност, подходящ за локално изпълнение",
+  "dev.mcp.type.stdioFeature2": "Изисква локална инсталация и стартиране на MCP сървър",
+  "dev.mcp.type.stdioNotAvailable": "STDIO режимът е наличен само в десктоп версията",
+  "dev.mcp.type.stdioShortDesc": "Комуникационен протокол базиран на стандартен вход/изход",
+  "dev.mcp.type.title": "Тип MCP плъгин",
+  "dev.mcp.url.desc": "Въведете Streamable HTTP адреса на вашия MCP сървър, SSE режим не се поддържа",
+  "dev.mcp.url.invalid": "Моля, въведете валиден URL адрес",
+  "dev.mcp.url.label": "Streamable HTTP Endpoint URL",
+  "dev.mcp.url.required": "Моля, въведете URL на MCP услугата",
+  "dev.meta.author.desc": "Автор на плъгина",
+  "dev.meta.author.label": "Автор",
+  "dev.meta.avatar.desc": "Икона на плъгина, може да използвате Emoji или URL",
+  "dev.meta.avatar.label": "Икона",
+  "dev.meta.description.desc": "Описание на плъгина",
+  "dev.meta.description.label": "Описание",
+  "dev.meta.description.placeholder": "Търсене в търсачка за информация",
+  "dev.meta.formFieldRequired": "Това поле е задължително",
+  "dev.meta.homepage.desc": "Начална страница на плъгина",
+  "dev.meta.homepage.label": "Начална страница",
+  "dev.meta.identifier.desc": "Уникален идентификатор на плъгина, автоматично разпознат от manifest",
+  "dev.meta.identifier.errorDuplicate": "Идентификаторът се повтаря с вече съществуващ плъгин, моля променете идентификатора",
+  "dev.meta.identifier.label": "Идентификатор",
+  "dev.meta.identifier.pattenErrorMessage": "Може да съдържа само английски букви, цифри, тирета и долни черти",
+  "dev.meta.lobe": "{{appName}} плъгин",
+  "dev.meta.manifest.desc": "{{appName}} ще инсталира плъгина чрез този линк",
+  "dev.meta.manifest.label": "Описателен файл на плъгина (Manifest) URL",
+  "dev.meta.manifest.preview": "Преглед на Manifest",
+  "dev.meta.manifest.refresh": "Обнови",
+  "dev.meta.openai": "OpenAI плъгин",
+  "dev.meta.title.desc": "Заглавие на плъгина",
+  "dev.meta.title.label": "Заглавие",
+  "dev.meta.title.placeholder": "Търсачка",
+  "dev.metaConfig": "Конфигурация на мета информацията на плъгина",
+  "dev.modalDesc": "След добавяне на персонализиран плъгин, той може да се използва за разработка и тестване на плъгини, както и директно в разговори. За разработка на плъгини вижте <1>документацията за разработчици↗</>",
+  "dev.openai.importUrl": "Импортиране от URL линк",
+  "dev.openai.schema": "Схема",
+  "dev.preview.api.noParams": "Този инструмент няма параметри",
+  "dev.preview.api.noResults": "Не са намерени API-та, отговарящи на търсенето",
+  "dev.preview.api.params": "Параметри:",
+  "dev.preview.api.searchPlaceholder": "Търсене на инструменти...",
+  "dev.preview.card": "Преглед на визуализацията на плъгина",
+  "dev.preview.desc": "Преглед на описанието на плъгина",
+  "dev.preview.empty.desc": "След конфигурация тук ще можете да преглеждате поддържаните възможности на плъгина",
+  "dev.preview.empty.title": "Започнете преглед след конфигуриране на плъгина",
+  "dev.preview.title": "Преглед на името на плъгина",
+  "dev.save": "Инсталирай плъгина",
+  "dev.saveSuccess": "Настройките на плъгина са запазени успешно",
+  "dev.tabs.manifest": "Функционален описателен файл (Manifest)",
+  "dev.tabs.meta": "Мета информация за плъгина",
+  "dev.title.create": "Добавяне на персонализиран плъгин",
+  "dev.title.edit": "Редактиране на персонализиран плъгин",
+  "dev.type.lobe": "{{appName}} плъгин",
+  "dev.type.openai": "OpenAI плъгин",
+  "dev.update": "Обновяване",
+  "dev.updateSuccess": "Настройките на плъгина са обновени успешно",
+  "empty.description": "Магазинът за плъгини предлага богат избор от инструменти, които те очакват – посети магазина и започни да изследваш.",
+  "empty.search": "Няма намерени съвпадащи плъгини",
+  "empty.title": "Няма налични плъгини",
+  "error.fetchError": "Неуспешно заявяване на manifest линка, моля уверете се в валидността на линка и проверете дали е разрешен достъп от различен домейн",
+  "error.installError": "Инсталацията на плъгина {{name}} не бе успешна",
+  "error.manifestInvalid": "manifest не отговаря на стандарта, резултат от проверката: \n\n {{error}}",
+  "error.noManifest": "Описателният файл не съществува",
+  "error.openAPIInvalid": "Грешка при парсване на OpenAPI, грешка: \n\n {{error}}",
+  "error.reinstallError": "Обновяването на плъгина {{name}} не бе успешно",
+  "error.testConnectionFailed": "Неуспешно получаване на Manifest: {{error}}",
+  "error.urlError": "Линкът не връща съдържание във формат JSON, моля уверете се, че е валиден линк",
+  "inspector.args": "Преглед на списъка с параметри",
+  "inspector.delete": "Изтриване на извикване на инструмент",
+  "inspector.orphanedToolCall": "Това извикване на инструмент може да е станало изолирано поради необичайни причини, което може да повлияе на нормалното изпълнение на агента. Моля, премахнете го.",
+  "inspector.pluginRender": "Преглед на интерфейса на плъгина",
+  "list.item[\"deprecated.title\"]": "Премахнат",
+  "list.item[\"local.config\"]": "Конфигурация",
+  "list.item[\"local.title\"]": "Персонализиран",
+  "loading.content": "Извикване на плъгина...",
+  "loading.plugin": "Плъгинът работи...",
+  "mcpEmpty.deployment": "Няма налични опции за внедряване",
+  "mcpEmpty.prompts": "Този плъгин няма налични подсказки",
+  "mcpEmpty.resources": "Този плъгин няма налични ресурси",
+  "mcpEmpty.tools": "Този плъгин няма налични инструментални възможности",
+  "mcpInstall.CHECKING_INSTALLATION": "Проверка на инсталационната среда...",
+  "mcpInstall.COMPLETED": "Инсталацията е завършена",
+  "mcpInstall.CONFIGURATION_REQUIRED": "Моля, завършете необходимата конфигурация, за да продължите инсталацията",
+  "mcpInstall.ERROR": "Грешка при инсталация",
+  "mcpInstall.FETCHING_MANIFEST": "Извличане на описателния файл на плъгина...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "Инициализация на MCP сървъра...",
+  "mcpInstall.INSTALLING_PLUGIN": "Инсталиране на плъгина...",
+  "mcpInstall.configurationDescription": "Този MCP плъгин изисква конфигурационни параметри за нормална работа, моля попълнете необходимата информация",
+  "mcpInstall.configurationRequired": "Конфигуриране на параметрите на плъгина",
+  "mcpInstall.continueInstall": "Продължи инсталацията",
+  "mcpInstall.dependenciesDescription": "Този плъгин изисква инсталиране на следните системни зависимости за нормална работа, моля инсталирайте липсващите зависимости според инструкциите и след това натиснете за повторна проверка и продължаване на инсталацията.",
+  "mcpInstall.dependenciesRequired": "Моля, инсталирайте системните зависимости на плъгина",
+  "mcpInstall.dependencyStatus.installed": "Инсталирано",
+  "mcpInstall.dependencyStatus.notInstalled": "Не е инсталирано",
+  "mcpInstall.dependencyStatus.requiredVersion": "Изисквана версия: {{version}}",
+  "mcpInstall.errorDetails.args": "Параметри",
+  "mcpInstall.errorDetails.command": "Команда",
+  "mcpInstall.errorDetails.connectionParams": "Параметри за връзка",
+  "mcpInstall.errorDetails.env": "Променливи на средата",
+  "mcpInstall.errorDetails.errorOutput": "Лог на грешки",
+  "mcpInstall.errorDetails.exitCode": "Код на изход",
+  "mcpInstall.errorDetails.hideDetails": "Скрий детайли",
+  "mcpInstall.errorDetails.originalError": "Първоначална грешка",
+  "mcpInstall.errorDetails.showDetails": "Покажи детайли",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "Грешка при удостоверяване",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "Неуспешна връзка",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "Времето за инициализация изтече",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "Грешка при стартиране на процес",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "Неизвестна грешка",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "Грешка при валидация на параметрите",
+  "mcpInstall.installError": "Инсталацията на MCP плъгина не бе успешна, причина: {{detail}}",
+  "mcpInstall.installMethods.manual": "Ръчна инсталация:",
+  "mcpInstall.installMethods.recommended": "Препоръчителен метод за инсталация:",
+  "mcpInstall.recheckDependencies": "Проверка отново на зависимостите",
+  "mcpInstall.skipDependencies": "Пропусни проверката",
   "pluginList": "Списък с плъгини",
-  "protocolInstall": {
-    "actions": {
-      "install": "Инсталирай",
-      "installAnyway": "Инсталирай въпреки това",
-      "installed": "Инсталиран"
-    },
-    "config": {
-      "addEnv": "Добавяне на променлива на средата",
-      "addHeaders": "Добавяне на заглавки на заявката",
-      "args": "Параметри",
-      "command": "Команда",
-      "env": "Променливи на средата",
-      "headers": "Заглавки на заявката",
-      "title": "Информация за конфигурация",
-      "type": {
-        "http": "Тип: HTTP",
-        "label": "Тип",
-        "stdio": "Тип: Stdio"
-      },
-      "url": "Адрес на услугата"
-    },
-    "custom": {
-      "badge": "Персонализиран плъгин",
-      "security": {
-        "description": "Този плъгин не е официално проверен, инсталирането може да крие рискове за сигурността! Моля, уверете се, че имате доверие на източника на плъгина.",
-        "title": "⚠️ Предупреждение за сигурност"
-      },
-      "title": "Инсталиране на персонализиран плъгин"
-    },
-    "install": {
-      "title": "Информация за инсталацията"
-    },
-    "marketplace": {
-      "title": "Инсталиране на трети плъгини",
-      "trustedBy": "Предоставено от {{name}}",
-      "unverified": {
-        "title": "Непроверени трети плъгини",
-        "warning": "Този плъгин е от непроверена общност на трета страна. Моля, уверете се, че имате доверие на източника, преди да го инсталирате."
-      },
-      "verified": "Проверен"
-    },
-    "messages": {
-      "connectionTestFailed": "Тестът на връзката не бе успешен",
-      "installError": "Инсталацията на плъгина не бе успешна, моля опитайте отново",
-      "installSuccess": "Плъгинът {{name}} е инсталиран успешно!",
-      "manifestError": "Неуспешно получаване на детайли за плъгина, моля проверете мрежовата връзка и опитайте отново",
-      "manifestNotFound": "Не бе намерен описателен файл на плъгина"
-    },
-    "meta": {
-      "author": "Автор",
-      "homepage": "Начална страница",
-      "identifier": "Идентификатор",
-      "source": "Източник",
-      "version": "Версия"
-    },
-    "official": {
-      "badge": "Официален плъгин на LobeHub",
-      "description": "Този плъгин е разработен и поддържан от LobeHub, преминал е строг контрол за сигурност и може да се използва с доверие.",
-      "loadingMessage": "Зареждане на детайли за плъгина...",
-      "loadingTitle": "Зареждане",
-      "title": "Инсталиране на официален плъгин"
-    },
-    "title": "Инсталиране на MCP плъгин",
-    "warning": "⚠️ Моля, уверете се, че имате доверие на източника на този плъгин, злонамерени плъгини могат да застрашат сигурността на вашата система."
-  },
-  "search": {
-    "config": {
-      "addKey": "Добавяне на ключ",
-      "close": "Изтриване",
-      "confirm": "Конфигурацията е завършена и опитайте отново"
-    },
-    "crawPages": {
-      "crawling": "Разпознаване на връзки",
-      "detail": {
-        "preview": "Преглед",
-        "raw": "Суров текст",
-        "tooLong": "Текстът е твърде дълъг, в контекста на разговора се запазват само първите {{characters}} символа, останалата част не се включва в контекста"
-      },
-      "meta": {
-        "crawler": "Режим на обхождане",
-        "words": "Брой символи"
-      }
-    },
-    "searchxng": {
-      "baseURL": "Моля, въведете",
-      "description": "Въведете URL на SearchXNG, за да започнете търсене в мрежата",
-      "keyPlaceholder": "Моля, въведете ключ",
-      "title": "Конфигурация на търсачката SearchXNG",
-      "unconfiguredDesc": "Моля, свържете се с администратора за конфигуриране на SearchXNG, за да започнете търсене в мрежата",
-      "unconfiguredTitle": "SearchXNG не е конфигурирана"
-    },
-    "title": "Търсене в мрежата"
-  },
+  "protocolInstall.actions.install": "Инсталирай",
+  "protocolInstall.actions.installAnyway": "Инсталирай въпреки това",
+  "protocolInstall.actions.installed": "Инсталиран",
+  "protocolInstall.config.addEnv": "Добавяне на променлива на средата",
+  "protocolInstall.config.addHeaders": "Добавяне на заглавки на заявката",
+  "protocolInstall.config.args": "Параметри",
+  "protocolInstall.config.command": "Команда",
+  "protocolInstall.config.env": "Променливи на средата",
+  "protocolInstall.config.headers": "Заглавки на заявката",
+  "protocolInstall.config.title": "Информация за конфигурация",
+  "protocolInstall.config.type.http": "Тип: HTTP",
+  "protocolInstall.config.type.label": "Тип",
+  "protocolInstall.config.type.stdio": "Тип: Stdio",
+  "protocolInstall.config.url": "Адрес на услугата",
+  "protocolInstall.custom.badge": "Персонализиран плъгин",
+  "protocolInstall.custom.security.description": "Този плъгин не е официално проверен, инсталирането може да крие рискове за сигурността! Моля, уверете се, че имате доверие на източника на плъгина.",
+  "protocolInstall.custom.security.title": "⚠️ Предупреждение за сигурност",
+  "protocolInstall.custom.title": "Инсталиране на персонализиран плъгин",
+  "protocolInstall.install.title": "Информация за инсталацията",
+  "protocolInstall.marketplace.title": "Инсталиране на трети плъгини",
+  "protocolInstall.marketplace.trustedBy": "Предоставено от {{name}}",
+  "protocolInstall.marketplace.unverified.title": "Непроверени трети плъгини",
+  "protocolInstall.marketplace.unverified.warning": "Този плъгин е от непроверена общност на трета страна. Моля, уверете се, че имате доверие на източника, преди да го инсталирате.",
+  "protocolInstall.marketplace.verified": "Проверен",
+  "protocolInstall.messages.connectionTestFailed": "Тестът на връзката не бе успешен",
+  "protocolInstall.messages.installError": "Инсталацията на плъгина не бе успешна, моля опитайте отново",
+  "protocolInstall.messages.installSuccess": "Плъгинът {{name}} е инсталиран успешно!",
+  "protocolInstall.messages.manifestError": "Неуспешно получаване на детайли за плъгина, моля проверете мрежовата връзка и опитайте отново",
+  "protocolInstall.messages.manifestNotFound": "Не бе намерен описателен файл на плъгина",
+  "protocolInstall.meta.author": "Автор",
+  "protocolInstall.meta.homepage": "Начална страница",
+  "protocolInstall.meta.identifier": "Идентификатор",
+  "protocolInstall.meta.source": "Източник",
+  "protocolInstall.meta.version": "Версия",
+  "protocolInstall.official.badge": "Официален плъгин на LobeHub",
+  "protocolInstall.official.description": "Този плъгин е разработен и поддържан от LobeHub, преминал е строг контрол за сигурност и може да се използва с доверие.",
+  "protocolInstall.official.loadingMessage": "Зареждане на детайли за плъгина...",
+  "protocolInstall.official.loadingTitle": "Зареждане",
+  "protocolInstall.official.title": "Инсталиране на официален плъгин",
+  "protocolInstall.title": "Инсталиране на MCP плъгин",
+  "protocolInstall.warning": "⚠️ Моля, уверете се, че имате доверие на източника на този плъгин, злонамерени плъгини могат да застрашат сигурността на вашата система.",
+  "search.config.addKey": "Добавяне на ключ",
+  "search.config.close": "Изтриване",
+  "search.config.confirm": "Конфигурацията е завършена и опитайте отново",
+  "search.crawPages.crawling": "Разпознаване на връзки",
+  "search.crawPages.detail.preview": "Преглед",
+  "search.crawPages.detail.raw": "Суров текст",
+  "search.crawPages.detail.tooLong": "Текстът е твърде дълъг, в контекста на разговора се запазват само първите {{characters}} символа, останалата част не се включва в контекста",
+  "search.crawPages.meta.crawler": "Режим на обхождане",
+  "search.crawPages.meta.words": "Брой символи",
+  "search.searchxng.baseURL": "Моля, въведете",
+  "search.searchxng.description": "Въведете URL на SearchXNG, за да започнете търсене в мрежата",
+  "search.searchxng.keyPlaceholder": "Моля, въведете ключ",
+  "search.searchxng.title": "Конфигурация на търсачката SearchXNG",
+  "search.searchxng.unconfiguredDesc": "Моля, свържете се с администратора за конфигуриране на SearchXNG, за да започнете търсене в мрежата",
+  "search.searchxng.unconfiguredTitle": "SearchXNG не е конфигурирана",
+  "search.title": "Търсене в мрежата",
   "setting": "Настройки на плъгина",
-  "settings": {
-    "capabilities": {
-      "prompts": "Подсказки",
-      "resources": "Ресурси",
-      "title": "Възможности на плъгина",
-      "tools": "Инструменти"
-    },
-    "configuration": {
-      "title": "Конфигурация на плъгина"
-    },
-    "connection": {
-      "args": "Стартови параметри",
-      "command": "Команда за стартиране",
-      "title": "Информация за връзка",
-      "type": "Тип на връзката",
-      "url": "Адрес на услугата"
-    },
-    "edit": "Редактиране",
-    "envConfigDescription": "Тези настройки ще бъдат предадени като променливи на средата при стартиране на MCP сървъра",
-    "httpTypeNotice": "HTTP тип MCP плъгини в момента не изискват конфигуриране на променливи на средата",
-    "indexUrl": {
-      "title": "Индекс на общността",
-      "tooltip": "В момента не се поддържа онлайн редактиране, моля настройте чрез променливи на средата при разгръщане"
-    },
-    "messages": {
-      "connectionUpdateFailed": "Актуализацията на информацията за връзка не бе успешна",
-      "connectionUpdateSuccess": "Информацията за връзка е актуализирана успешно",
-      "envUpdateFailed": "Записът на променливите на средата не бе успешен",
-      "envUpdateSuccess": "Променливите на средата са записани успешно"
-    },
-    "modalDesc": "След като конфигурирате адреса на общността за плъгини, можете да използвате персонализирана общност за плъгини",
-    "rules": {
-      "argsRequired": "Моля, въведете стартови параметри",
-      "commandRequired": "Моля, въведете команда за стартиране",
-      "urlRequired": "Моля, въведете адрес на услугата"
-    },
-    "saveSettings": "Запази настройките",
-    "title": "Настройки на общността за плъгини"
-  },
+  "settings.capabilities.prompts": "Подсказки",
+  "settings.capabilities.resources": "Ресурси",
+  "settings.capabilities.title": "Възможности на плъгина",
+  "settings.capabilities.tools": "Инструменти",
+  "settings.configuration.title": "Конфигурация на плъгина",
+  "settings.connection.args": "Стартови параметри",
+  "settings.connection.command": "Команда за стартиране",
+  "settings.connection.title": "Информация за връзка",
+  "settings.connection.type": "Тип на връзката",
+  "settings.connection.url": "Адрес на услугата",
+  "settings.edit": "Редактиране",
+  "settings.envConfigDescription": "Тези настройки ще бъдат предадени като променливи на средата при стартиране на MCP сървъра",
+  "settings.httpTypeNotice": "HTTP тип MCP плъгини в момента не изискват конфигуриране на променливи на средата",
+  "settings.indexUrl.title": "Индекс на общността",
+  "settings.indexUrl.tooltip": "В момента не се поддържа онлайн редактиране, моля настройте чрез променливи на средата при разгръщане",
+  "settings.messages.connectionUpdateFailed": "Актуализацията на информацията за връзка не бе успешна",
+  "settings.messages.connectionUpdateSuccess": "Информацията за връзка е актуализирана успешно",
+  "settings.messages.envUpdateFailed": "Записът на променливите на средата не бе успешен",
+  "settings.messages.envUpdateSuccess": "Променливите на средата са записани успешно",
+  "settings.modalDesc": "След като конфигурирате адреса на общността за плъгини, можете да използвате персонализирана общност за плъгини",
+  "settings.rules.argsRequired": "Моля, въведете стартови параметри",
+  "settings.rules.commandRequired": "Моля, въведете команда за стартиране",
+  "settings.rules.urlRequired": "Моля, въведете адрес на услугата",
+  "settings.saveSettings": "Запази настройките",
+  "settings.title": "Настройки на общността за плъгини",
   "showInPortal": "Моля, прегледайте детайлите в работната област",
-  "store": {
-    "actions": {
-      "cancel": "Отказ на инсталация",
-      "confirmUninstall": "Ще деинсталирате този плъгин, след деинсталация конфигурацията му ще бъде изтрита, моля потвърдете действието си",
-      "detail": "Детайли",
-      "install": "Инсталирай",
-      "manifest": "Редактиране на инсталационния файл",
-      "settings": "Настройки",
-      "uninstall": "Деинсталирай"
-    },
-    "communityPlugin": "Общностен плъгин",
-    "customPlugin": "Персонализиран",
-    "empty": "Няма инсталирани плъгини",
-    "emptySelectHint": "Изберете плъгин за преглед на подробна информация",
-    "installAllPlugins": "Инсталирай всички",
-    "networkError": "Неуспешно зареждане на магазина за плъгини, моля проверете мрежовата връзка и опитайте отново",
-    "placeholder": "Търсене по име, описание или ключови думи...",
-    "releasedAt": "Публикуван на {{createdAt}}",
-    "tabs": {
-      "installed": "Инсталирани",
-      "mcp": "MCP плъгини",
-      "old": "Разширения на LobeHub"
-    },
-    "title": "Магазин за плъгини"
-  },
+  "store.actions.cancel": "Отказ на инсталация",
+  "store.actions.confirmUninstall": "Ще деинсталирате този плъгин, след деинсталация конфигурацията му ще бъде изтрита, моля потвърдете действието си",
+  "store.actions.detail": "Детайли",
+  "store.actions.install": "Инсталирай",
+  "store.actions.manifest": "Редактиране на инсталационния файл",
+  "store.actions.settings": "Настройки",
+  "store.actions.uninstall": "Деинсталирай",
+  "store.communityPlugin": "Общностен плъгин",
+  "store.customPlugin": "Персонализиран",
+  "store.empty": "Няма инсталирани плъгини",
+  "store.emptySelectHint": "Изберете плъгин за преглед на подробна информация",
+  "store.installAllPlugins": "Инсталирай всички",
+  "store.networkError": "Неуспешно зареждане на магазина за плъгини, моля проверете мрежовата връзка и опитайте отново",
+  "store.placeholder": "Търсене по име, описание или ключови думи...",
+  "store.releasedAt": "Публикуван на {{createdAt}}",
+  "store.tabs.installed": "Инсталирани",
+  "store.tabs.mcp": "MCP плъгини",
+  "store.tabs.old": "Разширения на LobeHub",
+  "store.title": "Магазин за плъгини",
   "unknownError": "Неизвестна грешка",
   "unknownPlugin": "Неизвестен плъгин"
 }

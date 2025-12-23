@@ -1,40 +1,30 @@
 {
-  "actions": {
-    "addNewTopic": "Avvia una nuova conversazione",
-    "autoRename": "Rinomina automaticamente",
-    "confirmRemoveAll": "Stai per eliminare tutti i temi. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
-    "confirmRemoveTopic": "Stai per eliminare questo tema. Dopo l'eliminazione, non sarà possibile recuperarlo. Procedi con cautela.",
-    "confirmRemoveUnstarred": "Stai per eliminare i temi non contrassegnati. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
-    "duplicate": "Crea una copia",
-    "export": "Esporta il tema",
-    "import": "Importa conversazione",
-    "openInNewWindow": "Apri in una nuova finestra",
-    "removeAll": "Elimina tutti i temi",
-    "removeUnstarred": "Elimina i temi non contrassegnati"
-  },
+  "actions.addNewTopic": "Avvia una nuova conversazione",
+  "actions.autoRename": "Rinomina automaticamente",
+  "actions.confirmRemoveAll": "Stai per eliminare tutti i temi. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
+  "actions.confirmRemoveTopic": "Stai per eliminare questo tema. Dopo l'eliminazione, non sarà possibile recuperarlo. Procedi con cautela.",
+  "actions.confirmRemoveUnstarred": "Stai per eliminare i temi non contrassegnati. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
+  "actions.duplicate": "Crea una copia",
+  "actions.export": "Esporta il tema",
+  "actions.import": "Importa conversazione",
+  "actions.openInNewWindow": "Apri in una nuova finestra",
+  "actions.removeAll": "Elimina tutti i temi",
+  "actions.removeUnstarred": "Elimina i temi non contrassegnati",
   "defaultTitle": "Tema predefinito",
   "displayItems": "Mostra elementi",
   "duplicateLoading": "Copia del tema in corso...",
   "duplicateSuccess": "Copia del tema riuscita",
   "favorite": "Preferito",
-  "groupMode": {
-    "ascMessages": "In ordine crescente per numero di messaggi",
-    "byTime": "Raggruppa per tempo",
-    "descMessages": "In ordine decrescente per numero di messaggi",
-    "flat": "Non raggruppare"
-  },
-  "groupTitle": {
-    "byTime": {
-      "month": "Questo mese",
-      "today": "Oggi",
-      "week": "Questa settimana",
-      "yesterday": "Ieri"
-    }
-  },
-  "guide": {
-    "desc": "Clicca sul pulsante a sinistra per salvare la conversazione attuale come tema storico e avviare una nuova conversazione.",
-    "title": "Elenco dei temi"
-  },
+  "groupMode.ascMessages": "In ordine crescente per numero di messaggi",
+  "groupMode.byTime": "Raggruppa per tempo",
+  "groupMode.descMessages": "In ordine decrescente per numero di messaggi",
+  "groupMode.flat": "Non raggruppare",
+  "groupTitle.byTime.month": "Questo mese",
+  "groupTitle.byTime.today": "Oggi",
+  "groupTitle.byTime.week": "Questa settimana",
+  "groupTitle.byTime.yesterday": "Ieri",
+  "guide.desc": "Clicca sul pulsante a sinistra per salvare la conversazione attuale come tema storico e avviare una nuova conversazione.",
+  "guide.title": "Elenco dei temi",
   "importError": "Importazione non riuscita",
   "importInvalidFormat": "Formato file non valido. Assicurati che sia un file JSON valido",
   "importLoading": "Importazione della conversazione in corso...",

@@ -57,6 +57,7 @@ export const createI18nNext = (lang?: string) => {
         interpolation: {
           escapeValue: false,
         },
+
         lng: lang,
       });
     },
