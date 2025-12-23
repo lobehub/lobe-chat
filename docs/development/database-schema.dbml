@@ -270,6 +270,7 @@ table chat_groups_agents {
 table documents {
   id varchar(255) [pk, not null]
   title text
+  description text
   content text
   file_type varchar(255) [not null]
   filename text
@@ -280,6 +281,7 @@ table documents {
   source_type text [not null]
   source text [not null]
   file_id text
+  knowledge_base_id text
   parent_id varchar(255)
   user_id text [not null]
   client_id text
@@ -296,6 +298,7 @@ table documents {
     user_id [name: 'documents_user_id_idx']
     file_id [name: 'documents_file_id_idx']
     parent_id [name: 'documents_parent_id_idx']
+    knowledge_base_id [name: 'documents_knowledge_base_id_idx']
     (client_id, user_id) [name: 'documents_client_id_user_id_unique', unique]
     (slug, user_id) [name: 'documents_slug_user_id_unique', unique]
   }
