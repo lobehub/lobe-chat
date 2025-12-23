@@ -5,7 +5,7 @@ export default {
       file: '文件',
     },
   },
-  Plugins: '插件',
+  Plugins: '技能',
   artifacts: {
     display: {
       code: '代码',
@@ -21,7 +21,7 @@ export default {
       },
     },
   },
-  emptyArtifactList: '当前 Artifacts 列表为空，请在会话中按需使用插件后再查看',
+  emptyArtifactList: '当前 Artifacts 列表为空，请在会话中按需使用技能后再查看',
   emptyKnowledgeList: '当前知识列表为空',
   files: '文件',
   messageDetail: '消息详情',

@@ -28,9 +28,9 @@ export default {
       topP: 'Top P 值',
     },
     plugins: {
-      count: '插件设置（{{count}}）',
-      empty: '尚未安装插件',
-      title: '已安装插件',
+      count: '技能设置（{{count}}）',
+      empty: '尚未安装技能',
+      title: '已安装技能',
     },
     role: {
       systemRole: '助理档案',
@@ -46,7 +46,7 @@ export default {
     meta: '助理信息',
     modal: '模型设置',
     opening: '开场设置',
-    plugin: '插件设置',
+    plugin: '技能设置',
     prompt: '助理档案',
     tts: '语音服务',
   },
@@ -63,7 +63,7 @@ export default {
     clear: {
       action: '立即清除',
       confirm: '确认清除所有聊天数据？',
-      desc: '将会清除所有会话数据，包括助理、文件、消息、插件等',
+      desc: '将会清除所有会话数据，包括助理、文件、消息、技能等',
       success: '已清除所有会话消息',
       title: '清除所有会话消息',
     },
@@ -316,19 +316,19 @@ export default {
     title: '我发布的助理',
   },
   plugin: {
-    addMCPPlugin: '添加 MCP 插件',
-    addTooltip: '自定义插件',
-    clearDeprecated: '移除无效插件',
-    empty: '暂无已安装插件，欢迎前往 <1>插件商店</1> 探索',
+    addMCPPlugin: '添加 MCP',
+    addTooltip: '自定义技能',
+    clearDeprecated: '移除无效技能',
+    empty: '暂无已安装技能，欢迎前往 <1>技能商店</1> 探索',
     installStatus: {
       deprecated: '已卸载',
     },
     settings: {
       hint: '请根据描述填写以下配置',
-      title: '{{id}} 插件配置',
-      tooltip: '插件配置',
+      title: '{{id}} 技能配置',
+      tooltip: '技能配置',
     },
-    store: '插件商店',
+    store: '技能商店',
   },
 
   settingAgent: {
@@ -659,7 +659,7 @@ export default {
     title: '开场设置',
   },
   settingPlugin: {
-    title: '插件列表',
+    title: '技能列表',
   },
   settingSystem: {
     accessCode: {
@@ -868,11 +868,11 @@ export default {
     usage: '用量统计',
   },
   tools: {
-    add: '集成插件',
+    add: '集成技能',
     builtins: {
-      groupName: '内置插件',
+      groupName: '内置技能',
     },
-    disabled: '当前模型不支持函数调用，无法使用插件',
+    disabled: '当前模型不支持函数调用，无法使用技能',
     klavis: {
       addServer: '添加服务器',
       authCompleted: '认证完成',
@@ -895,18 +895,18 @@ export default {
       verifyAuth: '我已完成认证',
     },
     notInstalled: '未安装',
-    notInstalledWarning: '当前插件暂未安装，可能会影响助理使用',
+    notInstalledWarning: '当前技能暂未安装，可能会影响助理使用',
     plugins: {
       enabled: '已启用 {{num}}',
-      groupName: '三方插件',
-      noEnabled: '暂无启用插件',
-      store: '插件商店',
+      groupName: '三方技能',
+      noEnabled: '暂无启用技能',
+      store: '技能商店',
     },
 
     tabs: {
       all: '全部',
       installed: '已启用',
     },
-    title: '扩展插件',
+    title: '扩展技能',
   },
 };

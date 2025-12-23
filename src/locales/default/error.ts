@@ -37,8 +37,8 @@ export default {
     title: '页面不存在',
   },
   pluginSettings: {
-    desc: '请完成以下配置，即可启用该插件',
-    title: '{{name}} 插件配置',
+    desc: '请完成以下配置，即可启用该技能',
+    title: '{{name}} 技能配置',
   },
   response: {
     400: '请求参数有误，请检查后重试',
@@ -82,21 +82,21 @@ export default {
     524: '等待上游响应超时，请稍后再试',
 
     /* eslint-disable sort-keys-fix/sort-keys-fix */
-    PluginMarketIndexNotFound: '未找到插件索引，请检查索引地址是否正确',
-    PluginMarketIndexInvalid: '插件索引校验未通过，请检查索引文件格式是否正确',
-    PluginMetaNotFound: '索引中未找到该插件，请检查插件在索引中的配置',
-    PluginMetaInvalid: '插件元信息校验未通过，请检查元信息格式是否正确',
-    PluginManifestNotFound: '未找到插件描述清单（manifest.json），请检查描述文件地址是否正确',
-    PluginManifestInvalid: '插件描述清单校验未通过，请检查清单格式是否正确',
-    PluginApiNotFound: '插件清单中未定义该 API，请检查请求方法与清单配置是否一致',
-    PluginApiParamsError: '插件入参校验未通过，请检查入参与 API 描述是否一致',
-    PluginSettingsInvalid: '该插件需要完成配置后才能使用，请检查插件配置',
-    PluginServerError: '插件服务端返回错误，请根据下方信息检查插件描述、配置或服务端实现',
-    PluginGatewayError: '插件网关出错，请检查网关配置是否正确',
+    PluginMarketIndexNotFound: '未找到技能索引，请检查索引地址是否正确',
+    PluginMarketIndexInvalid: '技能索引校验未通过，请检查索引文件格式是否正确',
+    PluginMetaNotFound: '索引中未找到该技能，请检查技能在索引中的配置',
+    PluginMetaInvalid: '技能元信息校验未通过，请检查元信息格式是否正确',
+    PluginManifestNotFound: '未找到技能描述清单（manifest.json），请检查描述文件地址是否正确',
+    PluginManifestInvalid: '技能描述清单校验未通过，请检查清单格式是否正确',
+    PluginApiNotFound: '技能清单中未定义该 API，请检查请求方法与清单配置是否一致',
+    PluginApiParamsError: '技能入参校验未通过，请检查入参与 API 描述是否一致',
+    PluginSettingsInvalid: '该技能需要完成配置后才能使用，请检查技能配置',
+    PluginServerError: '技能服务端返回错误，请根据下方信息检查技能描述、配置或服务端实现',
+    PluginGatewayError: '技能网关出错，请检查网关配置是否正确',
     PluginOpenApiInitError: 'OpenAPI 客户端初始化失败，请检查 OpenAPI 配置',
 
     PluginFailToTransformArguments:
-      '插件参数解析失败。你可以重试，或切换到技能调用能力更强的模型后再试',
+      '技能参数解析失败。你可以重试，或切换到技能调用能力更强的模型后再试',
 
     InvalidAccessCode: '访问密码为空或不正确。请重新输入，或改用自定义 API Key',
     InvalidClerkUser: '需要登录后继续。请先登录或注册',

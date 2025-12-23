@@ -25,8 +25,8 @@ export default {
           title: '资源库',
         },
         plugin: {
-          desc: '助理内置了以下插件，帮助你完成更多任务。',
-          title: '内置插件',
+          desc: '助理内置了以下技能，帮助你完成更多任务。',
+          title: '内置技能',
         },
         title: '助理能力',
       },
@@ -79,14 +79,14 @@ export default {
       new: '新社区',
     },
     more: '更多',
-    plugins: '集成插件',
+    plugins: '集成技能',
     recentSubmits: '最近更新',
     sorts: {
       createdAt: '最近发布',
       identifier: '助理 ID',
       knowledgeCount: '资源库数量',
       myown: '查看我的',
-      pluginCount: '插件数量',
+      pluginCount: '技能数量',
       title: '助理名称',
       tokenUsage: 'Token 使用量',
     },
@@ -120,7 +120,7 @@ export default {
     tokenUsage: '助理提示词 Token 使用量',
     try: '试一下',
     withKnowledge: '该助理附带资源库',
-    withPlugin: '该助理附带插件',
+    withPlugin: '该助理附带技能',
   },
   back: '返回发现',
   category: {
@@ -150,7 +150,7 @@ export default {
       'science-education': '科学教育',
       'social': '社交媒体',
       'stocks-finance': '股票金融',
-      'tools': '实用工具',
+      'tools': '实用技能',
       'web-search': '网络搜索',
     },
   },
@@ -188,7 +188,7 @@ export default {
       title: '其他',
       vision: '支持视觉识别',
       withKnowledge: '附带资源库',
-      withTool: '附带插件',
+      withTool: '附带技能',
     },
     pricing: '模型价格',
     timePeriod: {
@@ -204,9 +204,9 @@ export default {
     communityAgents: '社区助理',
     featuredAssistants: '推荐助理',
     featuredModels: '推荐模型',
-    featuredPlugins: '精选插件',
+    featuredPlugins: '精选技能',
     featuredProviders: '推荐模型服务商',
-    featuredTools: '推荐插件',
+    featuredTools: '推荐技能',
     more: '发现更多',
   },
   isClaimed: '已认领',
@@ -224,8 +224,8 @@ export default {
         name: '商业服务',
       },
       'developer': {
-        description: '开发相关的工具与服务',
-        name: '开发工具',
+        description: '开发相关的技能与服务',
+        name: '开发技能',
       },
       'gaming-entertainment': {
         description: '游戏、娱乐和休闲活动',
@@ -248,8 +248,8 @@ export default {
         name: '新闻咨询',
       },
       'productivity': {
-        description: '任务管理、笔记与效率工具',
-        name: '效率工具',
+        description: '任务管理、笔记与效率技能',
+        name: '效率技能',
       },
       'science-education': {
         description: '科学研究、学习与教育工具',
@@ -302,7 +302,7 @@ export default {
         commandLine: '系统依赖',
         connection: '连接方式',
         connectionType: '连接类型',
-        description: '插件的安装和部署方式',
+        description: '技能的安装和部署方式',
         descriptionPlaceholder: '可选的描述信息',
         empty: '暂无部署选项',
         env: '环境变量',
@@ -320,9 +320,9 @@ export default {
             cursor:
               '- 导航到 **设置**，然后选择 Cursor 设置\n- 在左侧选择 **MCP**\n- 点击右上角的 **添加新的全局 MCP 服务器**\n- 复制并粘贴服务器配置到现有文件中，然后保存',
             lobeChat:
-              '- 打开 **LobeHub 桌面版** 应用\n- 前往 **设置** - **默认助理**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
+              '- 打开 **LobeHub 桌面版** 应用\n- 前往 **设置** - **默认助理**\n- 然后选择 **技能设置** - **自定义技能**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
             openai:
-              '- 打开你的 **OpenAI 应用** 或开发环境\n- 在 **Responses API** 中配置 MCP 工具\n- 在 API 请求的 **tools** 数组中添加 MCP 块\n- 设置 **server_url** 为你的 MCP 服务器端点\n- 包含认证所需的头部信息（API 密钥、令牌等）\n- 使用 `allowed_tools` 参数限制暴露的工具\n- 设置 `require_approval` 来控制工具执行审批',
+              '- 打开你的 **OpenAI 应用** 或开发环境\n- 在 **Responses API** 中配置 MCP\n- 在 API 请求的 **tools** 数组中添加 MCP 块\n- 设置 **server_url** 为你的 MCP 服务器端点\n- 包含认证所需的头部信息（API 密钥、令牌等）\n- 使用 `allowed_tools` 参数限制暴露的工具\n- 设置 `require_approval` 来控制工具执行审批',
             vscode:
               '- 打开 VS Code\n- 打开命令面板（`Ctrl+Shift+P` / `Cmd+Shift+P`）\n- 输入 **MCP: Add Server** 并选择它\n- 选择添加到工作区或用户设置\n- 复制并粘贴服务器配置',
           },
@@ -381,10 +381,10 @@ export default {
           },
           title: '资源列表',
         },
-        title: '插件功能',
+        title: '技能功能',
         tools: {
           desc: '向大语言模型（LLM）暴露的功能接口以执行操作',
-          empty: '暂无工具',
+          empty: '暂无技能',
           inputSchema: '输入描述',
           instructions: '指令说明',
           table: {
@@ -393,7 +393,7 @@ export default {
             required: '必填',
             type: '类型',
           },
-          title: '工具列表',
+          title: '技能列表',
         },
       },
       score: {
@@ -436,8 +436,8 @@ export default {
         },
         title: '评分',
         tools: {
-          desc: '服务需提供至少一个工具，允许用户执行特定操作。',
-          descWithCount: '该 MCP Server 提供了 {{number}} 个工具功能，允许用户执行特定操作。',
+          desc: '服务需提供至少一个技能，允许用户执行特定操作。',
+          descWithCount: '该 MCP Server 提供了 {{number}} 个功能，允许用户执行特定操作。',
           title: '包含至少一个工具',
         },
         validated: {
@@ -448,7 +448,7 @@ export default {
       scoreLevel: {
         a: {
           desc: '该 MCP Server 经过严格验证，提供了全面的功能和高质量的用户体验。',
-          fullTitle: '优秀插件',
+          fullTitle: '优秀技能',
           title: '优质',
         },
         b: {
@@ -466,11 +466,11 @@ export default {
         capabilities: {
           prompts: '提示词',
           resources: '资源',
-          title: '插件能力',
-          tools: '工具',
+          title: '技能能力',
+          tools: '技能',
         },
         configuration: {
-          title: '插件配置',
+          title: '技能配置',
         },
         connection: {
           args: '启动参数',
@@ -480,7 +480,7 @@ export default {
           url: '服务地址',
         },
         saveSettings: '保存设置',
-        title: '插件设置',
+        title: '技能设置',
       },
       sidebar: {
         install: '安装 MCP Server',
@@ -544,12 +544,12 @@ export default {
     sorts: {
       createdAt: '最近新增',
       installCount: '安装数',
-      isFeatured: '推荐插件',
-      isValidated: '已验证插件',
+      isFeatured: '推荐技能',
+      isValidated: '已验证技能',
       promptsCount: '提示词数',
       ratingCount: '评分数',
       resourcesCount: '资源数',
-      toolsCount: '工具数',
+      toolsCount: '技能数',
       updatedAt: '最近更新',
     },
     title: 'MCP 社区',
@@ -649,36 +649,36 @@ export default {
     supportedProviders: '支持该模型的服务商',
   },
   plugins: {
-    builtinTag: '内置插件',
-    community: '社区插件',
+    builtinTag: '内置技能',
+    community: '社区技能',
     details: {
       settings: {
-        title: '插件设置',
+        title: '技能设置',
       },
       summary: {
-        title: '你可以使用该插件做什么？',
+        title: '你可以使用该技能做什么？',
       },
       tools: {
-        title: '插件工具',
+        title: '技能',
       },
     },
-    install: '安装插件',
+    install: '安装技能',
     installed: '已安装',
-    legacyTag: '旧版插件',
-    list: '插件列表',
+    legacyTag: '旧版技能',
+    list: '技能列表',
     meta: {
       description: '描述',
       parameter: '参数',
-      title: '工具参数',
+      title: '技能参数',
       type: '类型',
     },
     more: '更多',
-    official: '官方插件',
+    official: '官方技能',
     recentSubmits: '最近更新',
     sorts: {
       createdAt: '最近发布',
-      identifier: '插件 ID',
-      title: '插件名称',
+      identifier: '技能 ID',
+      title: '技能名称',
     },
     suggestions: '相关推荐',
   },
@@ -727,7 +727,7 @@ export default {
     assistant: '助理',
     home: '首页',
     model: '模型',
-    plugin: '插件',
+    plugin: '技能',
     provider: '模型服务商',
     user: '用户',
   },
