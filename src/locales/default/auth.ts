@@ -136,7 +136,7 @@ export default {
       passwordPlaceholder: '请输入密码',
       signinLink: '立即登录',
       submit: '注册',
-      subtitle: '开启 Agents 协作空间',
+      subtitle: '开启 AI 助手协作空间',
       success: '注册成功！请检查您的邮箱验证邮件',
       title: '创建账号',
       usernamePlaceholder: '请输入用户名',
@@ -269,7 +269,7 @@ export default {
       f2: '多端同步消息',
       f3: '拥有丰富助手',
       f4: '探索强大插件',
-      title: '登陆后你可以：',
+      title: '登录后你可以：',
     },
     messages: '消息数',
     modelsRank: {

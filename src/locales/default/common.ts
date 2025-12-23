@@ -84,7 +84,7 @@ export default {
     },
     ready: {
       button: '立即使用',
-      desc: '立即想用',
+      desc: '立即启用',
       title: 'PGlite 数据库已就绪',
     },
 
@@ -310,7 +310,7 @@ export default {
   labs: '实验室',
   lang: {
     'ar': '阿拉伯语',
-    'auto': '更随系统语言设置',
+    'auto': '跟随系统语言设置',
     'bg-BG': '保加利亚语',
     'bn': '孟加拉语',
     'cs-CZ': '捷克语',
