@@ -21,7 +21,7 @@ export const useSend = () => {
     const { inputMessage, mainInputEditor } = useChatStore.getState();
     const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
     const contextList = fileChatSelectors.chatContextSelections(useFileStore.getState());
-    const { sendAsAgent, sendAsWrite, sendAsImage, sendAsResearch, inputActiveMode } =
+    const { sendAsAgent, sendAsGroup, sendAsWrite, sendAsImage, sendAsResearch, inputActiveMode } =
       useHomeStore.getState();
 
     // Image mode: no input content required
@@ -37,6 +37,11 @@ export const useSend = () => {
       switch (inputActiveMode) {
         case 'agent': {
           await sendAsAgent(inputMessage);
+          break;
+        }
+
+        case 'group': {
+          await sendAsGroup(inputMessage);
           break;
         }
 

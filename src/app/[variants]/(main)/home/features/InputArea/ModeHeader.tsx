@@ -1,6 +1,6 @@
 import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, X } from 'lucide-react';
+import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, UsersIcon, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +22,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const modeConfig = {
   agent: { icon: BotIcon, titleKey: 'starter.createAgent' },
+  group: { icon: UsersIcon, titleKey: 'starter.createGroup' },
   image: { icon: ImageIcon, titleKey: 'starter.image' },
   research: { icon: MicroscopeIcon, titleKey: 'starter.deepResearch' },
   write: { icon: PenLineIcon, titleKey: 'starter.write' },
