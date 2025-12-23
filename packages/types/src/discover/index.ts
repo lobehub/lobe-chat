@@ -44,6 +44,8 @@ export interface DiscoverUserInfo {
   createdAt: string;
   description: string | null;
   displayName: string | null;
+  followersCount?: number;
+  followingCount?: number;
   id: number;
   namespace: string;
   socialLinks: {
