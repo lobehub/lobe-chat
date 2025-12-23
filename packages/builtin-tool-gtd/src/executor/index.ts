@@ -1,35 +1,32 @@
-/**
- * Lobe GTD (Getting Things Done) Executor
- *
- * Handles GTD tool calls for task management.
- * MVP: Only implements Todo functionality.
- *
- * Todo data flow:
- * - Todo items are stored in messagePlugins.state.todos
- * - The executor receives current state via ctx and returns updated state in result
- * - The framework handles persisting state to the database
- */
 import { formatTodoStateSummary } from '@lobechat/prompts';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
+
+import { notebookService } from '@/services/notebook';
+import { useNotebookStore } from '@/store/notebook';
 
 import { GTDIdentifier } from '../manifest';
 import {
   type ClearTodosParams,
   type CompleteTodosParams,
+  type CreatePlanParams,
   type CreateTodosParams,
   GTDApiName,
+  type Plan,
   type RemoveTodosParams,
   type TodoItem,
+  type UpdatePlanParams,
   type UpdateTodosParams,
 } from '../types';
 import { getTodosFromContext } from './helper';
 
-// API enum for MVP (Todo only)
+// API enum for MVP (Todo + Plan)
 const GTDApiNameMVP = {
   clearTodos: GTDApiName.clearTodos,
   completeTodos: GTDApiName.completeTodos,
+  createPlan: GTDApiName.createPlan,
   createTodos: GTDApiName.createTodos,
   removeTodos: GTDApiName.removeTodos,
+  updatePlan: GTDApiName.updatePlan,
   updateTodos: GTDApiName.updateTodos,
 } as const;
 
@@ -352,6 +349,133 @@ class GTDExecutor extends BaseExecutor<typeof GTDApiNameMVP> {
       },
       success: true,
     };
+  };
+
+  // ==================== Plan APIs ====================
+
+  /**
+   * Create a new plan document
+   */
+  createPlan = async (
+    params: CreatePlanParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
+    try {
+      if (ctx.signal?.aborted) {
+        return { stop: true, success: false };
+      }
+
+      if (!ctx.topicId) {
+        return {
+          content: 'Cannot create plan: no topic selected',
+          success: false,
+        };
+      }
+
+      const { goal, description, context } = params;
+
+      // Create document with type 'agent/plan'
+      // Field mapping: goal -> title, description -> description, context -> content
+      const document = await useNotebookStore.getState().createDocument({
+        content: context || '',
+        description,
+        title: goal,
+        topicId: ctx.topicId,
+        type: 'agent/plan',
+      });
+
+      const plan: Plan = {
+        completed: false,
+        context,
+        createdAt: document.createdAt.toISOString(),
+        description: document.description || '',
+        goal: document.title || '',
+        id: document.id,
+        updatedAt: document.updatedAt.toISOString(),
+      };
+
+      return {
+        content: `📋 Created plan: "${plan.goal}"\n\nYou can view this plan in the Portal sidebar.`,
+        state: { plan },
+        success: true,
+      };
+    } catch (e) {
+      const err = e as Error;
+      return {
+        error: {
+          body: e,
+          message: err.message,
+          type: 'PluginServerError',
+        },
+        success: false,
+      };
+    }
+  };
+
+  /**
+   * Update an existing plan document
+   */
+  updatePlan = async (
+    params: UpdatePlanParams,
+    ctx: BuiltinToolContext,
+  ): Promise<BuiltinToolResult> => {
+    try {
+      if (ctx.signal?.aborted) {
+        return { stop: true, success: false };
+      }
+
+      const { planId, goal, description, context, completed } = params;
+
+      if (!ctx.topicId) {
+        return {
+          content: 'Cannot update plan: no topic selected',
+          success: false,
+        };
+      }
+
+      // Get existing document
+      const existingDoc = await notebookService.getDocument(planId);
+      if (!existingDoc) {
+        return {
+          content: `Plan not found: ${planId}`,
+          success: false,
+        };
+      }
+
+      // Update document using store (triggers refresh)
+      // Field mapping: goal -> title, description -> description, context -> content
+      const document = await useNotebookStore.getState().updateDocument(
+        {
+          content: context,
+          description,
+          id: planId,
+          title: goal,
+        },
+        ctx.topicId,
+      );
+
+      const plan: Plan = {
+        completed: completed ?? false,
+        context: context ?? existingDoc.content ?? undefined,
+        createdAt: document?.createdAt.toISOString() || '',
+        description: document?.description || existingDoc.description || '',
+        goal: document?.title || existingDoc.title || '',
+        id: planId,
+        updatedAt: document?.updatedAt.toISOString() || '',
+      };
+
+      return {
+        content: `📝 Updated plan: "${plan.goal}"`,
+        state: { plan },
+        success: true,
+      };
+    } catch (e) {
+      const err = e as Error;
+      return {
+        error: { body: e, message: err.message, type: 'PluginServerError' },
+        success: false,
+      };
+    }
   };
 }
 

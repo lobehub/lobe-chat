@@ -2,6 +2,8 @@ import { LobeToolRenderType } from '@lobechat/types';
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { memo } from 'react';
 
+import { ToolErrorBoundary } from '@/features/Conversation/Messages/Tool/ErrorBoundary';
+
 import BuiltinType from './BuiltinType';
 import DefaultType from './DefaultType';
 import MCP from './MCPType';
@@ -40,54 +42,65 @@ const PluginRender = memo<PluginRenderProps>(
     loading,
     pluginError,
   }) => {
-    switch (type) {
-      case 'standalone': {
-        return (
-          <Standalone id={toolCallId || messageId || ''} name={identifier} payload={payload} />
-        );
-      }
+    const renderContent = () => {
+      switch (type) {
+        case 'standalone': {
+          return (
+            <Standalone id={toolCallId || messageId || ''} name={identifier} payload={payload} />
+          );
+        }
 
-      case 'builtin': {
-        return (
-          <BuiltinType
-            apiName={payload?.apiName}
-            arguments={argumentsStr}
-            content={content}
-            identifier={identifier}
-            loading={loading}
-            messageId={messageId}
-            pluginError={pluginError}
-            pluginState={pluginState}
-            toolCallId={toolCallId}
-          />
-        );
-      }
+        case 'builtin': {
+          return (
+            <BuiltinType
+              apiName={payload?.apiName}
+              arguments={argumentsStr}
+              content={content}
+              identifier={identifier}
+              loading={loading}
+              messageId={messageId}
+              pluginError={pluginError}
+              pluginState={pluginState}
+              toolCallId={toolCallId}
+            />
+          );
+        }
 
-      // @ts-expect-error need to update types
-      case 'mcp': {
-        return (
-          <MCP
-            apiName={payload?.apiName}
-            arguments={argumentsStr}
-            content={content}
-            identifier={identifier}
-            loading={loading}
-            messageId={messageId}
-            pluginError={pluginError}
-            pluginState={pluginState}
-            toolCallId={toolCallId}
-          />
-        );
-      }
+        // @ts-expect-error need to update types
+        case 'mcp': {
+          return (
+            <MCP
+              apiName={payload?.apiName}
+              arguments={argumentsStr}
+              content={content}
+              identifier={identifier}
+              loading={loading}
+              messageId={messageId}
+              pluginError={pluginError}
+              pluginState={pluginState}
+              toolCallId={toolCallId}
+            />
+          );
+        }
 
-      case 'markdown': {
-        return <Markdown content={content} loading={loading} />;
-      }
+        case 'markdown': {
+          return <Markdown content={content} loading={loading} />;
+        }
 
-      default: {
-        return <DefaultType content={content} loading={loading} name={identifier} />;
+        default: {
+          return <DefaultType content={content} loading={loading} name={identifier} />;
+        }
       }
-    }
+    };
+
+    // Use stable key to prevent ErrorBoundary from resetting on parent re-renders
+    const boundaryKey = `${identifier}-${payload?.apiName}-${toolCallId || messageId}`;
+
+    return (
+      <ToolErrorBoundary apiName={payload?.apiName} identifier={identifier} key={boundaryKey}>
+        {renderContent()}
+      </ToolErrorBoundary>
+    );
   },
 );
 

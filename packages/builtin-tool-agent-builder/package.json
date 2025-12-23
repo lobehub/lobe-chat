@@ -15,7 +15,7 @@
     "type-fest": "^4.18.3"
   },
   "peerDependencies": {
-    "@lobehub/ui": "^3.3.3",
+    "@lobehub/ui": "^3",
     "antd": "^6",
     "lucide-react": "*",
     "next": "*",

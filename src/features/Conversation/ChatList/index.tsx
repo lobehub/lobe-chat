@@ -2,6 +2,8 @@
 
 import { type ReactNode, memo, useCallback } from 'react';
 
+import { useFetchNotebookDocuments } from '@/hooks/useFetchNotebookDocuments';
+
 import WideScreenContainer from '../../WideScreenContainer';
 import MessageItem from '../Messages';
 import { MessageActionProvider } from '../Messages/Contexts/MessageActionProvider';
@@ -32,6 +34,9 @@ const ChatList = memo<ChatListProps>(({ welcome, itemContent }) => {
     s.useFetchMessages,
   ]);
   useFetchMessages(context, skipFetch);
+
+  // Fetch notebook documents when topic is selected
+  useFetchNotebookDocuments(context.topicId!);
 
   // Use selectors for data
 

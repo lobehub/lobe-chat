@@ -1,0 +1,24 @@
+{
+  "name": "@lobechat/builtin-tool-notebook",
+  "version": "1.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client/index.ts",
+    "./executionRuntime": "./src/ExecutionRuntime/index.ts"
+  },
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@lobechat/prompts": "workspace:*",
+    "@lobechat/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "@lobehub/ui": "^3.3.3",
+    "antd": "^6",
+    "antd-style": "*",
+    "lucide-react": "*",
+    "polished": "*",
+    "react": "*",
+    "react-i18next": "*"
+  }
+}
