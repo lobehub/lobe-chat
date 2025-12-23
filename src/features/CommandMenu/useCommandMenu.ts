@@ -7,6 +7,7 @@ import type { SearchResult } from '@/database/repositories/search';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors/builtinAgentSelectors';
+import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 import { globalHelpers } from '@/store/global/helpers';
 import { useHomeStore } from '@/store/home';
@@ -129,11 +130,25 @@ export const useCommandMenu = () => {
     closeCommandMenu();
   };
 
+  const [openNewTopicOrSaveTopic] = useChatStore((s) => [s.openNewTopicOrSaveTopic]);
+
+  const handleCreateTopic = async () => {
+    openNewTopicOrSaveTopic();
+    closeCommandMenu();
+  };
+
+  const handleCreateLibrary = async () => {
+    navigate('/resource');
+    closeCommandMenu();
+  };
+
   return {
     closeCommandMenu,
     handleAskAISubmit,
     handleBack,
+    handleCreateLibrary,
     handleCreateSession,
+    handleCreateTopic,
     handleExternalLink,
     handleNavigate,
     handleThemeChange,

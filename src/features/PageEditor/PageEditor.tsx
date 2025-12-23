@@ -10,6 +10,7 @@ import WideScreenContainer from '@/features/WideScreenContainer';
 import { useRegisterFilesHotkeys, useSaveDocumentHotkey } from '@/hooks/useHotkeys';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors';
+import { useFileStore } from '@/store/file';
 
 import Body from './Body';
 import Copilot from './Copilot';
@@ -76,12 +77,14 @@ const PageEditor: FC<PageEditorProps> = ({
   knowledgeBaseId,
   onDocumentIdChange,
   onSave,
-  onDelete,
   onBack,
 }) => {
   const useInitBuiltinAgent = useAgentStore((s) => s.useInitBuiltinAgent);
   const pageAgentId = useAgentStore(builtinAgentSelectors.pageAgentId);
+
   useInitBuiltinAgent(BUILTIN_AGENT_SLUGS.pageAgent);
+
+  const [deletePage] = useFileStore((s) => [s.deletePage]);
 
   if (!pageAgentId) return <Loading debugId="PageEditor > PageAgent Init" />;
 
@@ -91,7 +94,7 @@ const PageEditor: FC<PageEditorProps> = ({
         key={pageId}
         knowledgeBaseId={knowledgeBaseId}
         onBack={onBack}
-        onDelete={onDelete}
+        onDelete={() => deletePage(pageId || '')}
         onDocumentIdChange={onDocumentIdChange}
         onSave={onSave}
         pageId={pageId}

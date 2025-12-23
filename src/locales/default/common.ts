@@ -166,6 +166,7 @@ export default {
     navigate: '导航',
     newAgent: '新建助手',
     newLibrary: '新建库',
+    newTopic: '在当前助手新建话题',
     noResults: '未找到相关结果',
     openSettings: '打开设置',
     pages: '文稿',
