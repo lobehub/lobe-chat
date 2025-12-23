@@ -176,6 +176,7 @@
     "@lobechat/builtin-tool-notebook": "workspace:*",
     "@lobechat/business-config": "workspace:*",
     "@lobechat/business-const": "workspace:*",
+    "@lobechat/config": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/conversation-flow": "workspace:*",

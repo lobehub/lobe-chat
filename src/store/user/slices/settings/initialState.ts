@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS } from '@lobechat/const';
+import { DEFAULT_SETTINGS } from '@lobechat/config';
 import { UserSettings } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
