@@ -1,7 +1,7 @@
-import { Flexbox, Highlighter, Icon , Tag , Button } from '@lobehub/ui';
+import { Button, Flexbox, Highlighter, Icon, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { m as motion } from 'motion/react';
+import * as motion from 'motion/react-m';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

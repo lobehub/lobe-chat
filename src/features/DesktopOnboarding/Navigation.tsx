@@ -1,7 +1,7 @@
 import { Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { m as motion } from 'motion/react';
+import * as motion from 'motion/react-m';
 import React from 'react';
 
 import { getThemeToken } from './styles/theme';
