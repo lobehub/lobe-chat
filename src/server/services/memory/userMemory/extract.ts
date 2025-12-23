@@ -1549,9 +1549,9 @@ export class MemoryExtractionExecutor {
 }
 
 const WORKFLOW_PATHS = {
-  topicBatch: '/api/workflows/memory-user-memory/pipelines/process-topic',
-  userTopics: '/api/workflows/memory-user-memory/pipelines/process-user-topics',
-  users: '/api/workflows/memory-user-memory/pipelines/process-users',
+  topicBatch: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-topic',
+  userTopics: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-user-topics',
+  users: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-users',
 } as const;
 
 const getWorkflowUrl = (path: string, baseUrl: string) => {
