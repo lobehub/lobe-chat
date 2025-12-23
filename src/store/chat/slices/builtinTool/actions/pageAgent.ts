@@ -1,7 +1,10 @@
+import debug from 'debug';
 import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
 import { PageAgentExecutionRuntime } from '@/tools/page-agent/ExecutionRuntime';
+
+const log = debug('page:page-agent');
 
 export interface PageAgentAction {
   // ============ Batch Operations ============
@@ -74,19 +77,19 @@ export const pageAgentSlice: StateCreator<
 > = (set, get) => ({
   // ============ Batch Operations ============
   batchUpdate: async (id, params) => {
-    console.log('batchUpdate', id, params);
+    log('batchUpdate', id, params);
     return true;
   },
 
   // ============ Snapshot Operations ============
   compareSnapshots: async (id, params) => {
-    console.log('compareSnapshots', id, params);
+    log('compareSnapshots', id, params);
     return true;
   },
 
   // ============ List Operations ============
   convertToList: async (id, params) => {
-    console.log('convertToList', id, params);
+    log('convertToList', id, params);
     return true;
   },
 
@@ -157,7 +160,7 @@ export const pageAgentSlice: StateCreator<
 
   // ============ Image Operations ============
   cropImage: async (id, params) => {
-    console.log('cropImage', id, params);
+    log('cropImage', id, params);
     return true;
   },
 
@@ -226,23 +229,23 @@ export const pageAgentSlice: StateCreator<
   },
 
   deleteSnapshot: async (id, params) => {
-    console.log('deleteSnapshot', id, params);
+    log('deleteSnapshot', id, params);
     return true;
   },
 
   // ============ Table Operations ============
   deleteTableColumn: async (id, params) => {
-    console.log('deleteTableColumn', id, params);
+    log('deleteTableColumn', id, params);
     return true;
   },
 
   deleteTableRow: async (id, params) => {
-    console.log('deleteTableRow', id, params);
+    log('deleteTableRow', id, params);
     return true;
   },
 
   duplicateNode: async (id, params) => {
-    console.log('duplicateNode', id, params);
+    log('duplicateNode', id, params);
     return true;
   },
 
@@ -377,7 +380,7 @@ export const pageAgentSlice: StateCreator<
   },
 
   indentListItem: async (id, params) => {
-    console.log('indentListItem', id, params);
+    log('indentListItem', id, params);
     return true;
   },
 
@@ -447,23 +450,23 @@ export const pageAgentSlice: StateCreator<
   },
 
   insertTableColumn: async (id, params) => {
-    console.log('insertTableColumn', id, params);
+    log('insertTableColumn', id, params);
     return true;
   },
 
   insertTableRow: async (id, params) => {
-    console.log('insertTableRow', id, params);
+    log('insertTableRow', id, params);
     return true;
   },
 
   listSnapshots: async (id, params) => {
-    console.log('listSnapshots', id, params);
+    log('listSnapshots', id, params);
     return true;
   },
 
   // ============ Structure Operations ============
   mergeNodes: async (id, params) => {
-    console.log('mergeNodes', id, params);
+    log('mergeNodes', id, params);
     return true;
   },
 
@@ -533,12 +536,12 @@ export const pageAgentSlice: StateCreator<
   },
 
   moveNode: async (id, params) => {
-    console.log('moveNode', id, params);
+    log('moveNode', id, params);
     return true;
   },
 
   outdentListItem: async (id, params) => {
-    console.log('outdentListItem', id, params);
+    log('outdentListItem', id, params);
     return true;
   },
 
@@ -608,42 +611,42 @@ export const pageAgentSlice: StateCreator<
   },
 
   resizeImage: async (id, params) => {
-    console.log('resizeImage', id, params);
+    log('resizeImage', id, params);
     return true;
   },
 
   restoreSnapshot: async (id, params) => {
-    console.log('restoreSnapshot', id, params);
+    log('restoreSnapshot', id, params);
     return true;
   },
 
   rotateImage: async (id, params) => {
-    console.log('rotateImage', id, params);
+    log('rotateImage', id, params);
     return true;
   },
 
   saveSnapshot: async (id, params) => {
-    console.log('saveSnapshot', id, params);
+    log('saveSnapshot', id, params);
     return true;
   },
 
   setImageAlt: async (id, params) => {
-    console.log('setImageAlt', id, params);
+    log('setImageAlt', id, params);
     return true;
   },
 
   splitNode: async (id, params) => {
-    console.log('splitNode', id, params);
+    log('splitNode', id, params);
     return true;
   },
 
   toggleListType: async (id, params) => {
-    console.log('toggleListType', id, params);
+    log('toggleListType', id, params);
     return true;
   },
 
   unwrapNode: async (id, params) => {
-    console.log('unwrapNode', id, params);
+    log('unwrapNode', id, params);
     return true;
   },
 
@@ -712,7 +715,7 @@ export const pageAgentSlice: StateCreator<
   },
 
   wrapNodes: async (id, params) => {
-    console.log('wrapNodes', id, params);
+    log('wrapNodes', id, params);
     return true;
   },
 });

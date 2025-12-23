@@ -251,14 +251,6 @@ const defaultFormatPageContext = (context: PageEditorContext): string => {
       // Convert Lexical JSON to XML format with node IDs
       const xmlStructure = convertLexicalToXml(context.editorData.root);
 
-      // Log the conversion for debugging
-      const nodeCount = context.editorData.root?.children?.length || 0;
-      console.log(
-        '[PageEditorContextInjector] Converted Lexical to XML, root children count:',
-        nodeCount,
-      );
-      console.log('[PageEditorContextInjector] XML preview:', xmlStructure.slice(0, 500));
-
       // Don't escape the XML since it's already properly formatted XML
       // Just include it directly (not escaped) so the model can parse the structure
       parts.push(`<document_structure>\n${xmlStructure}\n</document_structure>`);

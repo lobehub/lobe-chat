@@ -8,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 
 import type { SearchResult } from '@/database/repositories/search';
 
-import { CommandItem } from './components';
 import { useCommandMenuContext } from './CommandMenuContext';
+import { CommandItem } from './components';
 import { useStyles } from './styles';
 import type { ValidSearchType } from './utils/queryParser';
 
@@ -70,7 +70,7 @@ const SearchResults = memo<SearchResultsProps>(
           break;
         }
         case 'page': {
-          navigate(`/page/${result.id}`);
+          navigate(`/page/${result.id.split('_')[1]}`);
           break;
         }
         case 'mcp': {

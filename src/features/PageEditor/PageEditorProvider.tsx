@@ -18,7 +18,6 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
     children,
     pageId,
     knowledgeBaseId,
-    autoSave,
     onDocumentIdChange,
     onSave,
     onDelete,
@@ -31,7 +30,6 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
       <Provider
         createStore={() =>
           createStore({
-            autoSave,
             editor,
             knowledgeBaseId,
             onBack,
@@ -44,7 +42,6 @@ export const PageEditorProvider = memo<PageEditorProviderProps>(
         }
       >
         <StoreUpdater
-          autoSave={autoSave}
           knowledgeBaseId={knowledgeBaseId}
           onBack={onBack}
           onDelete={onDelete}

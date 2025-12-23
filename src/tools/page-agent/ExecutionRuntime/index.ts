@@ -7,6 +7,7 @@ import {
   LITEXML_MODIFY_COMMAND,
   LITEXML_REMOVE_COMMAND,
 } from '@lobehub/editor';
+import debug from 'debug';
 
 import type {
   BatchUpdateArgs,
@@ -79,6 +80,8 @@ import type {
   WrapNodesState,
 } from '../type';
 
+const log = debug('page:page-agent');
+
 /**
  * Page Agent Execution Runtime
  * Handles the execution logic for all Page Agent (Document) APIs
@@ -102,7 +105,7 @@ export class PageAgentExecutionRuntime {
    * Set the current document ID
    */
   setCurrentDocId(docId: string | undefined) {
-    console.log('[PageAgentRuntime] Setting current doc ID:', docId);
+    log('Setting current doc ID:', docId);
     this.currentDocId = docId;
   }
 
@@ -249,7 +252,7 @@ export class PageAgentExecutionRuntime {
       // Get document in JSON format
       const docJson = editor.getDocument('json') as any;
       const pageXML = editor.getDocument('litexml') as any;
-      console.log('[getPageContent] docJson:', JSON.stringify(docJson, null, 2));
+      log('docJson:', JSON.stringify(docJson, null, 2));
 
       // Prepare state object
       const state: GetPageContentState = {
@@ -262,7 +265,7 @@ export class PageAgentExecutionRuntime {
       // Get markdown format if requested
       if (format === 'markdown' || format === 'both') {
         const markdownRaw = editor.getDocument('markdown');
-        console.log('[getPageContent] markdownRaw:', markdownRaw);
+        log('markdownRaw:', markdownRaw);
         const markdown = String(markdownRaw || '');
         state.markdown = markdown;
       }
@@ -600,8 +603,8 @@ export class PageAgentExecutionRuntime {
         ? (args as { nodes: NodeCreate[] }).nodes
         : [args as NodeCreate];
 
-      console.log(
-        '[createNode] Creating nodes:',
+      log(
+        'Creating nodes:',
         nodeCreates.map((n) => n.type),
       );
 
@@ -614,11 +617,11 @@ export class PageAgentExecutionRuntime {
         try {
           const { commandPayload, litexml } = this.buildNodeCreatePayload(nodeCreate);
 
-          console.log('[createNode] Generated LiteXML for', nodeCreate.type, ':', litexml);
+          log('Generated LiteXML for', nodeCreate.type, ':', litexml);
 
           const success = editor.dispatchCommand(LITEXML_INSERT_COMMAND, commandPayload);
 
-          console.log('[createNode] Command dispatched, success:', success);
+          log('Command dispatched, success:', success);
 
           // Node ID will be assigned by the editor, we track it as 'pending'
           const createdNodeId = 'pending';
@@ -632,7 +635,7 @@ export class PageAgentExecutionRuntime {
           });
         } catch (error) {
           const err = error as Error;
-          console.error('[createNode] Error creating node:', nodeCreate.type, err.message);
+          log('Error creating node:', nodeCreate.type, err.message);
           errors.push(`${nodeCreate.type}: ${err.message}`);
 
           results.push({
@@ -742,13 +745,13 @@ export class PageAgentExecutionRuntime {
         ? (args as { nodes: NodeUpdate[] }).nodes
         : [args as NodeUpdate];
 
-      console.log(
-        '[updateNode] Attempting to update nodes:',
+      log(
+        'Attempting to update nodes:',
         nodeUpdates.map((n) => n.nodeId),
       );
 
       const pageXML = editor.getDocument('litexml') as unknown as string;
-      console.log('[updateNode] pageXML:', pageXML);
+      log('pageXML:', pageXML);
 
       const litexmlList: string[] = [];
       const updatedNodeIds: string[] = [];
@@ -771,7 +774,7 @@ export class PageAgentExecutionRuntime {
           continue;
         }
 
-        console.log('[updateNode] Generated LiteXML for', nodeUpdate.nodeId, ':', result.litexml);
+        log('Generated LiteXML for', nodeUpdate.nodeId, ':', result.litexml);
         litexmlList.push(result.litexml);
         updatedNodeIds.push(nodeUpdate.nodeId);
         allUpdates.push(...result.updates);
@@ -795,7 +798,7 @@ export class PageAgentExecutionRuntime {
         litexml: litexmlList,
       });
 
-      console.log('[updateNode] Command dispatched, success:', success);
+      log('Command dispatched, success:', success);
 
       const updateSummary = allUpdates.length > 0 ? ` (${allUpdates.join(', ')})` : '';
       const nodesSummary =
@@ -878,7 +881,7 @@ export class PageAgentExecutionRuntime {
     try {
       const editor = this.getEditor();
 
-      console.log('[deleteNode] Deleting node:', args.nodeId);
+      log('Deleting node:', args.nodeId);
 
       // First verify the node exists in the XML
       const pageXML = editor.getDocument('litexml') as unknown as string;
@@ -889,14 +892,14 @@ export class PageAgentExecutionRuntime {
         throw new Error(`Node ${args.nodeId} not found`);
       }
 
-      console.log('[deleteNode] Found node to delete:', xmlNode.tagName);
+      log('Found node to delete:', xmlNode.tagName);
 
       // Use LITEXML_REMOVE_COMMAND to remove the node
       const success = editor.dispatchCommand(LITEXML_REMOVE_COMMAND, {
         id: args.nodeId,
       });
 
-      console.log('[deleteNode] Command dispatched, success:', success);
+      log('Command dispatched, success:', success);
 
       return {
         content: `Successfully deleted ${xmlNode.tagName} node ${args.nodeId}.`,
@@ -932,11 +935,11 @@ export class PageAgentExecutionRuntime {
       }
 
       if (!Array.isArray(operations)) {
-        console.log('[modifyNodes] Converting single operation to array');
+        log('Converting single operation to array');
         operations = [operations as any];
       }
 
-      console.log('[modifyNodes] Processing operations:', operations.length);
+      log('Processing operations:', operations.length);
 
       // Build the command payload for LITEXML_MODIFY_COMMAND
       const commandPayload: Array<
@@ -995,9 +998,9 @@ export class PageAgentExecutionRuntime {
       }
 
       // Dispatch all operations at once
-      console.log('[modifyNodes] Dispatching LITEXML_MODIFY_COMMAND with payload:', commandPayload);
+      log('Dispatching LITEXML_MODIFY_COMMAND with payload:', commandPayload);
       const success = editor.dispatchCommand(LITEXML_MODIFY_COMMAND, commandPayload);
-      console.log('[modifyNodes] Command dispatched, success:', success);
+      log('Command dispatched, success:', success);
 
       const successCount = results.filter((r) => r.success).length;
       const totalCount = results.length;
@@ -1269,7 +1272,7 @@ export class PageAgentExecutionRuntime {
       const editor = this.getEditor();
       const { searchText, newText, useRegex = false, replaceAll = true, nodeIds } = args;
 
-      console.log('[replaceText] Starting replacement:', {
+      log('Starting replacement:', {
         newText,
         nodeIds,
         replaceAll,
@@ -1298,7 +1301,7 @@ export class PageAgentExecutionRuntime {
 
       // Extract nodes from LiteXML
       const nodes = this.extractNodesFromLiteXML(pageXML);
-      console.log('[replaceText] Found nodes:', nodes.length);
+      log('Found nodes:', nodes.length);
 
       // Filter nodes if nodeIds is specified and non-empty
       // Treat empty array as "search all nodes"
@@ -1306,7 +1309,7 @@ export class PageAgentExecutionRuntime {
       const targetNodes = hasNodeFilter ? nodes.filter((node) => nodeIds.includes(node.id)) : nodes;
 
       if (hasNodeFilter && targetNodes.length === 0) {
-        console.log(
+        log(
           '[replaceText] Node IDs requested:',
           nodeIds,
           'Available IDs:',
@@ -1355,7 +1358,7 @@ export class PageAgentExecutionRuntime {
           const updatedLitexml = `<${node.tagName} ${attributes}>${newContent}</${node.tagName}>`;
           litexmlUpdates.push(updatedLitexml);
 
-          console.log('[replaceText] Updated node:', node.id, 'count:', count);
+          log('Updated node:', node.id, 'count:', count);
 
           // If not replacing all, stop after first replacement
           if (!replaceAll) {
@@ -1366,11 +1369,11 @@ export class PageAgentExecutionRuntime {
 
       // Apply updates if any replacements were made
       if (litexmlUpdates.length > 0) {
-        console.log('[replaceText] Applying updates:', litexmlUpdates.length);
+        log('Applying updates:', litexmlUpdates.length);
         const success = editor.dispatchCommand(LITEXML_APPLY_COMMAND, {
           litexml: litexmlUpdates,
         });
-        console.log('[replaceText] Command dispatched, success:', success);
+        log('Command dispatched, success:', success);
       }
 
       // Build response message

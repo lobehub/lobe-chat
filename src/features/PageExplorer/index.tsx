@@ -24,7 +24,6 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
     pages,
     fetchDocuments,
     fetchDocumentDetail,
-    deletePage,
     isDocumentListLoading,
   ] = useFileStore((s) => [
     s.selectedPageId,
@@ -57,10 +56,6 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
 
   const currentPageId = selectedPageId || pageId;
 
-  const handleDelete = (docId: string) => {
-    deletePage(docId);
-  };
-
   // Check if the current page exists in the pages list
   const currentPageExists = currentPageId && pages.some((page) => page.id === currentPageId);
 
@@ -75,13 +70,7 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
     return <PageExplorerPlaceholder hasPages={pages?.length > 0} />;
   }
 
-  return (
-    <PageEditor
-      // knowledgeBaseId={knowledgeBaseId}
-      onDelete={() => handleDelete(currentPageId)}
-      pageId={currentPageId}
-    />
-  );
+  return <PageEditor pageId={currentPageId} />;
 });
 
 export default PageExplorer;

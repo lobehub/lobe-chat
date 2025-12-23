@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useGlobalStore } from '@/store/global';
 
+import AskAIMenu from './AskAIMenu';
 import { CommandMenuProvider, useCommandMenuContext } from './CommandMenuContext';
 import MainMenu from './MainMenu';
 import SearchResults from './SearchResults';
@@ -25,10 +26,8 @@ const CommandMenuContent = memo(() => {
   const { styles } = useStyles();
   const {
     closeCommandMenu,
-    handleAskAISubmit,
     handleBack,
     hasSearch,
-    isAiMode,
     isSearching,
     searchQuery,
     searchResults,
@@ -43,18 +42,10 @@ const CommandMenuContent = memo(() => {
         <Command
           className={styles.commandRoot}
           onKeyDown={(e) => {
-            // Tab key to ask AI when not in AI mode
-            if (e.key === 'Tab' && viewMode !== 'ai-chat') {
+            // Tab key to ask AI
+            if (e.key === 'Tab' && page !== 'ask-ai') {
               e.preventDefault();
-
-              setPages([...pages, 'ai-chat']);
-
-              return;
-            }
-            // Enter key in AI mode to submit
-            if (e.key === 'Enter' && viewMode === 'ai-chat') {
-              e.preventDefault();
-              handleAskAISubmit();
+              setPages([...pages, 'ask-ai']);
               return;
             }
             // Escape goes to previous page or closes
@@ -72,19 +63,19 @@ const CommandMenuContent = memo(() => {
               setPages((prev) => prev.slice(0, -1));
             }
           }}
-          shouldFilter={viewMode !== 'ai-chat'}
+          shouldFilter={page !== 'ask-ai'}
         >
           <CommandInput />
 
           <Command.List>
-            {!isAiMode && !isSearching && <Command.Empty>{t('cmdk.noResults')}</Command.Empty>}
-            {isAiMode && <Command.Empty>{t('cmdk.aiModeHint')}</Command.Empty>}
+            <Command.Empty>{t('cmdk.noResults')}</Command.Empty>
 
             {!page && <MainMenu />}
 
             {page === 'theme' && <ThemeMenu />}
+            {page === 'ask-ai' && <AskAIMenu />}
 
-            {!page && hasSearch && !isAiMode && (
+            {!page && hasSearch && (
               <SearchResults
                 isLoading={isSearching}
                 onClose={closeCommandMenu}

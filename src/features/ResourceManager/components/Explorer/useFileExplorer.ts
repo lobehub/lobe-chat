@@ -301,17 +301,15 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
 
     isFilePreviewMode,
 
-    
     isLoading,
 
     // State
-isMasonryReady,
+    isMasonryReady,
 
-    
     isTransitioning,
 
     // Pagination
-loadMoreKnowledgeItems,
+    loadMoreKnowledgeItems,
 
     onActionClick,
 
