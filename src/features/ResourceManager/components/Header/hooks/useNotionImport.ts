@@ -1,8 +1,11 @@
+import debug from 'debug';
 import type { TFunction } from 'i18next';
 import { type ChangeEvent, useCallback, useRef, useState } from 'react';
 
 import type { DocumentAction } from '@/store/file/slices/document/action';
 import { unzipFile } from '@/utils/unzipFile';
+
+const log = debug('resource:notion-import');
 
 interface UseNotionImportOptions {
   createDocument: DocumentAction['createDocument'];
@@ -54,7 +57,7 @@ const useNotionImport = ({
         // Unzip the file
         let files = await unzipFile(file);
 
-        console.log(
+        log(
           'Extracted files (level 1):',
           files.map((f) => ({ name: f.name, type: f.type })),
         );
@@ -63,7 +66,7 @@ const useNotionImport = ({
         const nestedZips = files.filter((f) => f.name.toLowerCase().endsWith('.zip'));
 
         if (nestedZips.length > 0) {
-          console.log(
+          log(
             'Found nested ZIPs, extracting...',
             nestedZips.map((z) => z.name),
           );
@@ -72,7 +75,7 @@ const useNotionImport = ({
           for (const zipFile of nestedZips) {
             try {
               const nestedFiles = await unzipFile(zipFile);
-              console.log(
+              log(
                 `Extracted from ${zipFile.name}:`,
                 nestedFiles.map((f) => ({ name: f.name, type: f.type })),
               );
@@ -86,7 +89,7 @@ const useNotionImport = ({
           files = allNestedFiles;
         }
 
-        console.log(
+        log(
           'All extracted files:',
           files.map((f) => ({ name: f.name, type: f.type })),
         );
@@ -103,7 +106,7 @@ const useNotionImport = ({
             t('header.actions.notion.noMarkdownFiles') +
               ` (${t('header.actions.notion.foundFiles', { count: files.length })})`,
           );
-          console.warn(
+          log(
             'No markdown files found. All files:',
             files.map((f) => f.name),
           );
