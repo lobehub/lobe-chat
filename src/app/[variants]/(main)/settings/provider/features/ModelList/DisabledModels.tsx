@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Dropdown, Flexbox, Icon, Text } from '@lobehub/ui';
+import { ActionIcon, Button, Dropdown, Flexbox, Icon, Text, TooltipGroup } from '@lobehub/ui';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, ChevronDown, LucideCheck } from 'lucide-react';
@@ -169,9 +169,11 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
             </Dropdown>
           )}
         </Flexbox>
-        {displayModels.map((item) => (
-          <ModelItem {...item} key={item.id} />
-        ))}
+        <TooltipGroup>
+          {displayModels.map((item) => (
+            <ModelItem {...item} key={item.id} />
+          ))}
+        </TooltipGroup>
         {!showMore && sortedDisabledModels.length > 10 && (
           <Button
             block

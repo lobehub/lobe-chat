@@ -1,6 +1,16 @@
 'use client';
 
-import { Avatar, Block, Flexbox, Icon, Tag, Text, Tooltip , Tag as AntTag } from '@lobehub/ui';
+import {
+  Tag as AntTag,
+  Avatar,
+  Block,
+  Flexbox,
+  Icon,
+  Tag,
+  Text,
+  Tooltip,
+  TooltipGroup,
+} from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import {
@@ -316,28 +326,30 @@ const UserAgentCard = memo<UserAgentCardProps>(
           >
             {description}
           </Text>
-          <Flexbox align={'center'} gap={4} horizontal>
-            <Tooltip
-              placement={'top'}
-              styles={{ root: { pointerEvents: 'none' } }}
-              title={t('assistants.tokenUsage')}
-            >
-              <Tag className={styles.statTag} icon={<Icon icon={CoinsIcon} />}>
-                {formatIntergerNumber(tokenUsage)}
-              </Tag>
-            </Tooltip>
-            {installCount !== undefined && (
+          <TooltipGroup>
+            <Flexbox align={'center'} gap={4} horizontal>
               <Tooltip
                 placement={'top'}
                 styles={{ root: { pointerEvents: 'none' } }}
-                title={t('assistants.downloads')}
+                title={t('assistants.tokenUsage')}
               >
-                <Tag className={styles.statTag} icon={<Icon icon={DownloadIcon} />}>
-                  {formatIntergerNumber(installCount)}
+                <Tag className={styles.statTag} icon={<Icon icon={CoinsIcon} />}>
+                  {formatIntergerNumber(tokenUsage)}
                 </Tag>
               </Tooltip>
-            )}
-          </Flexbox>
+              {installCount !== undefined && (
+                <Tooltip
+                  placement={'top'}
+                  styles={{ root: { pointerEvents: 'none' } }}
+                  title={t('assistants.downloads')}
+                >
+                  <Tag className={styles.statTag} icon={<Icon icon={DownloadIcon} />}>
+                    {formatIntergerNumber(installCount)}
+                  </Tag>
+                </Tooltip>
+              )}
+            </Flexbox>
+          </TooltipGroup>
         </Flexbox>
         <Flexbox
           align={'center'}
