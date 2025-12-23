@@ -1,5 +1,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { FC } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import PageTitle from '@/components/PageTitle';
 import NavHeader from '@/features/NavHeader';
@@ -9,9 +10,12 @@ import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import HomeContent from './features';
 
 const Home: FC = () => {
+  const { pathname } = useLocation();
+  const isHomeRoute = pathname === '/';
+
   return (
     <>
-      <PageTitle title="" />
+      {isHomeRoute && <PageTitle title="" />}
       <NavHeader right={<WideScreenButton />} />
       <Flexbox height={'100%'} style={{ overflowY: 'auto', paddingBottom: '16vh' }} width={'100%'}>
         <WideScreenContainer>

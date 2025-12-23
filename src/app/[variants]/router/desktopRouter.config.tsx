@@ -7,8 +7,6 @@ import DesktopMainLayout from '../(main)/_layout';
 import DesktopChatLayout from '../(main)/chat/_layout';
 import DesktopOnboarding from '../(main)/desktop-onboarding';
 import DesktopGroupLayout from '../(main)/group/_layout';
-import DesktopHome from '../(main)/home';
-import DesktopHomeLayout from '../(main)/home/_layout';
 import DesktopImageLayout from '../(main)/image/_layout';
 import DesktopMemoryLayout from '../(main)/memory/_layout';
 import DesktopPageLayout from '../(main)/page/_layout';
@@ -370,15 +368,9 @@ export const desktopRoutes: RouteConfig[] = [
         path: 'page',
       },
 
-      // Default route - home page
+      // Default route - home page (handled by persistent layout)
       {
-        children: [
-          {
-            element: <DesktopHome />,
-            index: true,
-          },
-        ],
-        element: <DesktopHomeLayout />,
+        index: true,
       },
       // Catch-all route
       {
