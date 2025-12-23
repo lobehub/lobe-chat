@@ -21,6 +21,8 @@ import CmdkLazy from '@/layout/GlobalProvider/CmdkLazy';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { HotkeyScopeEnum } from '@/types/hotkey';
 
+import DesktopHome from '../home';
+import DesktopHomeLayout from '../home/_layout';
 import DesktopAutoOidcOnFirstOpen from './DesktopAutoOidcOnFirstOpen';
 import DesktopLayoutContainer from './DesktopLayoutContainer';
 import RegisterHotkeys from './RegisterHotkeys';
@@ -59,6 +61,9 @@ const Layout: FC = () => {
           <NavPanel />
           <DesktopLayoutContainer>
             <MarketAuthProvider isDesktop={isDesktop}>
+              <DesktopHomeLayout>
+                <DesktopHome />
+              </DesktopHomeLayout>
               <Suspense fallback={<Loading debugId="DesktopMainLayout > Outlet" />}>
                 <Outlet />
               </Suspense>
