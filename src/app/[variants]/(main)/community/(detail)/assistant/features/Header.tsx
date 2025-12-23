@@ -1,7 +1,7 @@
 'use client';
 
 import { MCP } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, Flexbox, Icon, Text, Tooltip, TooltipGroup } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DotIcon, Heart, type LucideProps } from 'lucide-react';
@@ -180,43 +180,51 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
           </Flexbox>
         </Flexbox>
       </Flexbox>
-      <Flexbox
-        align={'center'}
-        gap={mobile ? 12 : 24}
-        horizontal
-        style={{
-          color: theme.colorTextSecondary,
-        }}
-      >
-        {!mobile && cateButton}
-        {Boolean(tokenUsage) && (
-          <Tooltip styles={{ root: { pointerEvents: 'none' } }} title={t('assistants.tokenUsage')}>
-            <Flexbox align={'center'} gap={6} horizontal>
-              <Icon icon={CoinsIcon} />
-              {formatIntergerNumber(tokenUsage)}
-            </Flexbox>
-          </Tooltip>
-        )}
-        {Boolean(pluginCount) && (
-          <Tooltip styles={{ root: { pointerEvents: 'none' } }} title={t('assistants.withPlugin')}>
-            <Flexbox align={'center'} gap={6} horizontal>
-              <Icon fill={theme.colorTextSecondary} icon={MCP} />
-              {pluginCount}
-            </Flexbox>
-          </Tooltip>
-        )}
-        {Boolean(knowledgeCount) && (
-          <Tooltip
-            styles={{ root: { pointerEvents: 'none' } }}
-            title={t('assistants.withKnowledge')}
-          >
-            <Flexbox align={'center'} gap={6} horizontal>
-              <Icon icon={BookTextIcon} />
-              {knowledgeCount}
-            </Flexbox>
-          </Tooltip>
-        )}
-      </Flexbox>
+      <TooltipGroup>
+        <Flexbox
+          align={'center'}
+          gap={mobile ? 12 : 24}
+          horizontal
+          style={{
+            color: theme.colorTextSecondary,
+          }}
+        >
+          {!mobile && cateButton}
+          {Boolean(tokenUsage) && (
+            <Tooltip
+              styles={{ root: { pointerEvents: 'none' } }}
+              title={t('assistants.tokenUsage')}
+            >
+              <Flexbox align={'center'} gap={6} horizontal>
+                <Icon icon={CoinsIcon} />
+                {formatIntergerNumber(tokenUsage)}
+              </Flexbox>
+            </Tooltip>
+          )}
+          {Boolean(pluginCount) && (
+            <Tooltip
+              styles={{ root: { pointerEvents: 'none' } }}
+              title={t('assistants.withPlugin')}
+            >
+              <Flexbox align={'center'} gap={6} horizontal>
+                <Icon fill={theme.colorTextSecondary} icon={MCP} />
+                {pluginCount}
+              </Flexbox>
+            </Tooltip>
+          )}
+          {Boolean(knowledgeCount) && (
+            <Tooltip
+              styles={{ root: { pointerEvents: 'none' } }}
+              title={t('assistants.withKnowledge')}
+            >
+              <Flexbox align={'center'} gap={6} horizontal>
+                <Icon icon={BookTextIcon} />
+                {knowledgeCount}
+              </Flexbox>
+            </Tooltip>
+          )}
+        </Flexbox>
+      </TooltipGroup>
     </Flexbox>
   );
 });

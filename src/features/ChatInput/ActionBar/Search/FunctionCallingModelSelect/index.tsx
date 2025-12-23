@@ -1,4 +1,4 @@
-import { Select, type SelectProps } from '@lobehub/ui';
+import { Select, SelectProps, TooltipGroup } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 
@@ -68,18 +68,20 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, ...rest }) => {
   }, [enabledList]);
 
   return (
-    <Select
-      onChange={(value, option) => {
-        const model = value.split('/').slice(1).join('/');
-        onChange?.({ model, provider: (option as unknown as ModelOption).provider });
-      }}
-      options={options}
-      popupClassName={styles.select}
-      popupMatchSelectWidth={false}
-      value={`${value?.provider}/${value?.model}`}
-      variant={'filled'}
-      {...rest}
-    />
+    <TooltipGroup>
+      <Select
+        onChange={(value, option) => {
+          const model = value.split('/').slice(1).join('/');
+          onChange?.({ model, provider: (option as unknown as ModelOption).provider });
+        }}
+        options={options}
+        popupClassName={styles.select}
+        popupMatchSelectWidth={false}
+        value={`${value?.provider}/${value?.model}`}
+        variant={'filled'}
+        {...rest}
+      />
+    </TooltipGroup>
   );
 });
 

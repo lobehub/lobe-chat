@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
+import { ActionIcon, Flexbox, Text, TooltipGroup } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ToggleRightIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -52,11 +52,13 @@ const SearchResult = memo(() => {
           {t('providerModels.searchNotFound')}
         </Flexbox>
       ) : (
-        <Flexbox gap={4}>
-          {filteredModels.map((item) => (
-            <ModelItem {...item} key={`${item.id}-${item.enabled}`} />
-          ))}
-        </Flexbox>
+        <TooltipGroup>
+          <Flexbox gap={4}>
+            {filteredModels.map((item) => (
+              <ModelItem {...item} key={`${item.id}-${item.enabled}`} />
+            ))}
+          </Flexbox>
+        </TooltipGroup>
       )}
     </>
   );
