@@ -71,16 +71,38 @@ const infiniaiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
+    description: 'GLM-4.7 是智谱AI推出的最新大语言模型，具备更强的推理和生成能力。',
+    displayName: 'GLM-4.7',
+    enabled: true,
+    id: 'glm-4.7',
+    maxOutput: 4096,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 14, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
     description: 'GLM-4.6 是智谱AI推出的最新大语言模型，具备更强的推理和生成能力。',
     displayName: 'GLM-4.6',
-    enabled: true,
     id: 'glm-4.6',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 14, strategy: 'fixed', unit: 'millionTokens' },
       ],
     },
     settings: {
@@ -96,7 +118,6 @@ const infiniaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'DeepSeek-V3.2-Exp 是深度求索推出的实验性大语言模型，具有更强的推理和生成能力。',
     displayName: 'DeepSeek V3.2 Exp',
-    enabled: true,
     id: 'deepseek-v3.2-exp',
     maxOutput: 65_536,
     pricing: {
