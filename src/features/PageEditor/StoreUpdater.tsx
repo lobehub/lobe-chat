@@ -1,6 +1,7 @@
 'use client';
 
 import { useEditorState } from '@lobehub/editor/react';
+import debug from 'debug';
 import React, { memo, useEffect, useRef } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
@@ -9,6 +10,8 @@ import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 
 import { PublicState, usePageEditorStore, useStoreApi } from './store';
+
+const log = debug('page:store-updater');
 
 export type StoreUpdaterProps = Partial<PublicState>;
 
@@ -46,7 +49,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Fetch full document detail when pageId changes
     useEffect(() => {
       if (pageId && pageId !== lastLoadedDocIdRef.current) {
-        console.log('[StoreUpdater] PageId changed, fetching detail:', pageId);
+        log('PageId changed, fetching detail:', pageId);
         // Immediately show loading state and reset for better UX
         setIsLoadingDetail(true);
         setContentInit(false);
@@ -59,10 +62,10 @@ const StoreUpdater = memo<StoreUpdaterProps>(
         // Fetch the full document detail
         fetchDocumentDetail(pageId)
           .then(() => {
-            console.log('[StoreUpdater] Document detail fetched successfully for:', pageId);
+            log('Document detail fetched successfully for:', pageId);
           })
           .finally(() => {
-            console.log('[StoreUpdater] Setting isLoadingDetail to false');
+            log('Setting isLoadingDetail to false');
             setIsLoadingDetail(false);
           });
       }
@@ -71,7 +74,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     // Initialize currentDocId and document metadata after fetch completes
     useEffect(() => {
       if (pageId !== lastLoadedDocIdRef.current && !isLoadingDetail) {
-        console.log('[StoreUpdater] Initializing metadata for pageId:', pageId, {
+        log('Initializing metadata for pageId:', pageId, {
           hasEditorData: !!currentPage?.editorData,
           title: currentPage?.title,
         });
@@ -88,7 +91,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
     // Load content into editor after initialization
     useEffect(() => {
-      console.log('[StoreUpdater] Content loading effect check:', {
+      log('Content loading effect check:', {
         contentInit,
         editorInit,
         hasCurrentPage: !!currentPage,
@@ -103,13 +106,13 @@ const StoreUpdater = memo<StoreUpdaterProps>(
       // Defer editor content loading to avoid flushSync warning
       queueMicrotask(() => {
         try {
-          console.log('[StoreUpdater] Loading content for page:', pageId);
+          log('Loading content for page:', pageId);
 
           // Safety check: ensure we're loading content for the current page
           // This prevents loading old content when currentPage has stale data
           const currentState = storeApi.getState();
           if (currentState.currentDocId && currentState.currentDocId !== pageId) {
-            console.log('[StoreUpdater] Skipping content load - currentDocId mismatch', {
+            log('Skipping content load - currentDocId mismatch', {
               currentDocId: currentState.currentDocId,
               pageId,
             });
@@ -124,7 +127,7 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
           // Load from editorData if available
           if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
-            console.log('[StoreUpdater] Loading from editorData');
+            log('Loading from editorData');
             editor.setDocument('json', JSON.stringify(currentPage.editorData));
             const textContent = currentPage.content || '';
             storeApi.setState({ wordCount: calculateWordCount(textContent) });
@@ -211,12 +214,11 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     useEffect(() => {
       // Use currentDocId (which includes temp docs) or fallback to pageId
       const activeId = currentDocId || pageId;
-      console.log('[StoreUpdater] Updating currentDocId in page agent runtime:', activeId);
+      log('Updating currentDocId in page agent runtime:', activeId);
       pageAgentRuntime.setCurrentDocId(activeId);
 
-      // Cleanup: clear currentDocId when unmounting
       return () => {
-        console.log('[StoreUpdater] Clearing currentDocId on unmount');
+        log('Clearing currentDocId on unmount');
         pageAgentRuntime.setCurrentDocId(undefined);
       };
     }, [currentDocId, pageId]);

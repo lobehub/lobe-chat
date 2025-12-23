@@ -10,7 +10,7 @@ import { DocumentSourceType, LobeDocument } from '@/types/document';
 
 import { State, initialState } from './initialState';
 
-const log = debug('page-editor');
+const log = debug('page:editor');
 
 export interface Action {
   flushSave: () => void;
