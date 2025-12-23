@@ -36,10 +36,11 @@ export const setScopedMutate = (m: ScopedMutator) => {
  *
  * Use this instead of `import { mutate } from 'swr'` when using localStorage cache provider
  */
-export const mutate: ScopedMutator = ((key: any, data?: any, opts?: any) => {
+export const mutate: ScopedMutator = (async (key: any, data?: any, opts?: any) => {
   if (!scopedMutate) {
     console.warn('[SWR] Scoped mutate not initialized, this may cause cache sync issues');
-    return Promise.resolve([]);
+    return [];
   }
-  return scopedMutate(key, data, opts);
+
+  return await scopedMutate(key, data, opts);
 }) as ScopedMutator;

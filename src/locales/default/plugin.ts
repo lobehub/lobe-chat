@@ -364,13 +364,16 @@ export default {
     title: '暂无插件',
   },
   error: {
+    details: '错误详情',
     fetchError: '请求该 manifest 链接失败，请确保链接的有效性，并检查链接是否允许跨域访问',
     installError: '插件 {{name}} 安装失败',
     manifestInvalid: 'manifest 不符合规范，校验结果: \n\n {{error}}',
     noManifest: '描述文件不存在',
     openAPIInvalid: 'OpenAPI 解析失败，错误: \n\n {{error}}',
     reinstallError: '插件 {{name}} 刷新失败',
+    renderError: '工具渲染错误',
     testConnectionFailed: '获取 Manifest 失败: {{error}}',
+    unknownError: '发生未知错误',
     urlError: '该链接没有返回 JSON 格式的内容, 请确保是有效的链接',
   },
   inspector: {
