@@ -32,6 +32,7 @@ const MainMenu = memo(() => {
     handleCreateSession,
     handleCreateTopic,
     handleCreateLibrary,
+    handleCreatePage,
     handleNavigate,
     handleExternalLink,
     handleCreateAgentTeam,
@@ -42,47 +43,49 @@ const MainMenu = memo(() => {
       <ContextCommands />
 
       <Command.Group>
-        {menuContext !== 'agent' && (
-          <CommandItem
-            icon={<Bot />}
-            onSelect={handleCreateSession}
-            value="create new agent assistant"
-          >
-            {t('cmdk.newAgent')}
-          </CommandItem>
-        )}
+        <CommandItem
+          icon={<Bot />}
+          onSelect={handleCreateSession}
+          unpinned={menuContext === 'agent' || menuContext === 'page'}
+          value="create new agent assistant"
+        >
+          {t('cmdk.newAgent')}
+        </CommandItem>
 
-        {menuContext !== 'agent' && (
-          <CommandItem
-            icon={<Bot />}
-            onSelect={handleCreateAgentTeam}
-            value="create new agent team"
-          >
-            Create New Agent Team
-          </CommandItem>
-        )}
+        <CommandItem
+          icon={<Bot />}
+          onSelect={handleCreateAgentTeam}
+          unpinned={menuContext === 'agent' || menuContext === 'page'}
+          value="create new agent team"
+        >
+          {t('cmdk.newAgentTeam')}
+        </CommandItem>
 
-        {menuContext !== 'page' && (
-          <CommandItem icon={<Bot />} onSelect={handleCreateSession} value="create new page">
-            Create New Page
-          </CommandItem>
-        )}
+        <CommandItem
+          icon={<MessageSquarePlusIcon />}
+          onSelect={handleCreateTopic}
+          unpinned={menuContext !== 'agent'}
+          value="create new topic"
+        >
+          {t('cmdk.newTopic')}
+        </CommandItem>
 
-        {menuContext !== 'resource' && (
-          <CommandItem icon={<Bot />} onSelect={handleCreateLibrary} value="create new library">
-            {t('cmdk.newLibrary')}
-          </CommandItem>
-        )}
+        <CommandItem
+          icon={<FilePen />}
+          onSelect={handleCreatePage}
+          value="create new page"
+        >
+          {t('cmdk.newPage')}
+        </CommandItem>
 
-        {menuContext === 'agent' && (
-          <CommandItem
-            icon={<MessageSquarePlusIcon />}
-            onSelect={handleCreateTopic}
-            value="create new topic"
-          >
-            {t('cmdk.newTopic')}
-          </CommandItem>
-        )}
+        <CommandItem
+          icon={<LibraryBig />}
+          onSelect={handleCreateLibrary}
+          unpinned={menuContext !== 'resource'}
+          value="create new library"
+        >
+          {t('cmdk.newLibrary')}
+        </CommandItem>
 
         {menuContext !== 'settings' && (
           <CommandItem

@@ -165,6 +165,8 @@ export default {
     memory: '记忆',
     navigate: '导航',
     newAgent: '新建助手',
+    newPage: '新建文稿',
+    newAgentTeam: '新建助手团队',
     newLibrary: '新建库',
     newTopic: '在当前助手新建话题',
     noResults: '未找到相关结果',

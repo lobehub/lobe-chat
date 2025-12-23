@@ -5,6 +5,7 @@ import useSWR from 'swr';
 
 import { useCreateMenuItems } from '@/app/[variants]/(main)/home/_layout/hooks';
 import type { SearchResult } from '@/database/repositories/search';
+import { useCreateNewModal } from '@/features/LibraryModal';
 import { useGroupWizard } from '@/layout/GlobalProvider/GroupWizardProvider';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
@@ -42,7 +43,8 @@ export const useCommandMenu = () => {
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
   const { openGroupWizard } = useGroupWizard();
-  const { createGroupWithMembers, createGroupFromTemplate } = useCreateMenuItems();
+  const { createGroupWithMembers, createGroupFromTemplate, createPage } = useCreateMenuItems();
+  const { open: openCreateLibraryModal } = useCreateNewModal();
 
   // Extract agentId from pathname when in agent context
   const agentId = useMemo(() => {
@@ -142,7 +144,16 @@ export const useCommandMenu = () => {
   };
 
   const handleCreateLibrary = async () => {
-    // TODO: Implement library creation
+    closeCommandMenu();
+    openCreateLibraryModal({
+      onSuccess: (id) => {
+        navigate(`/resource/library/${id}`);
+      },
+    });
+  };
+
+  const handleCreatePage = async () => {
+    await createPage();
     closeCommandMenu();
   };
 
@@ -174,6 +185,7 @@ export const useCommandMenu = () => {
     handleBack,
     handleCreateAgentTeam,
     handleCreateLibrary,
+    handleCreatePage,
     handleCreateSession,
     handleCreateTopic,
     handleExternalLink,

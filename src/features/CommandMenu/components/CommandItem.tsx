@@ -2,9 +2,16 @@ import { Command } from 'cmdk';
 import type { ComponentProps, ReactNode } from 'react';
 import { cloneElement, isValidElement, memo } from 'react';
 
+import { useCommandMenuContext } from '../CommandMenuContext';
 import { useStyles } from '../styles';
 
-type BaseCommandItemProps = Omit<ComponentProps<typeof Command.Item>, 'children'>;
+type BaseCommandItemProps = Omit<ComponentProps<typeof Command.Item>, 'children'> & {
+  /**
+   * Hide the item from default view but keep it searchable
+   * When true, the item won't show in the default list but will appear in search results
+   */
+  unpinned?: boolean;
+};
 
 type SimpleCommandItemProps = BaseCommandItemProps & {
   children: ReactNode;
@@ -27,9 +34,18 @@ type CommandItemProps = SimpleCommandItemProps | DetailedCommandItemProps;
  */
 const CommandItem = memo<CommandItemProps>((props) => {
   const { styles } = useStyles();
+  const { search } = useCommandMenuContext();
+
+  // Check if item should be rendered
+  // Unpinned items are only rendered when there's an active search
+  const shouldRender = props.unpinned ? !!search : true;
+
+  if (!shouldRender) {
+    return null;
+  }
 
   if (props.variant === 'detailed') {
-    const { icon, title, description, trailingLabel, ...itemProps } = props;
+    const { icon, title, description, trailingLabel, unpinned: _unpinned, ...itemProps } = props;
     return (
       <Command.Item {...itemProps}>
         <div className={styles.itemContent}>
@@ -45,7 +61,7 @@ const CommandItem = memo<CommandItemProps>((props) => {
   }
 
   // Simple variant (default)
-  const { icon, children, ...itemProps } = props;
+  const { icon, children, unpinned: _unpinned, ...itemProps } = props;
 
   // Clone the icon element and add the icon className if it's a valid React element
   const iconWithClass =
