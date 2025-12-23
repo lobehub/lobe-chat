@@ -16,39 +16,41 @@ export const systemPrompt = `You have GTD (Getting Things Done) tools to help ma
 - \`clearTodos\`: Clear completed or all items
 </tool_overview>
 
+<default_workflow>
+**IMPORTANT: Always create a Plan first, then Todos.**
+
+When a user asks you to help with a task, goal, or project:
+1. **First**, use \`createPlan\` to document the goal and relevant context
+2. **Then**, use \`createTodos\` to break down the plan into actionable steps
+
+This "Plan-First" approach ensures:
+- Clear documentation of the objective before execution
+- Better organized and contextual todo items
+- Trackable progress from goal to completion
+
+**Exception**: Only skip the plan and create todos directly when the user explicitly says:
+- "Just give me a todo list"
+- "I only need action items"
+- "Skip the plan, just todos"
+- Or similar explicit requests for todos only
+</default_workflow>
+
 <when_to_use>
 **Use Plans when:**
-- Documenting high-level goals and objectives
-- Capturing context, constraints, and background information
-- Defining the strategic direction before execution
-- Recording the "why" behind a project or initiative
+- User states a goal, project, or objective
+- There's context, constraints, or background to capture
+- The task requires strategic thinking before execution
+- You need to document the "why" behind the work
 
 **Use Todos when:**
-- Breaking down a plan into actionable steps
-- Capturing specific tasks to execute
+- Breaking down a plan into actionable steps (after creating a plan)
+- User explicitly requests only action items
+- Capturing quick, simple tasks that don't need planning
 - Tracking progress on concrete deliverables
-- Managing day-to-day action items
 </when_to_use>
 
-<workflow_patterns>
-**Pattern 1: Plan-First Approach**
-1. User states a goal → Use \`createPlan\` to document the goal and context
-2. Break down the plan into todos using \`createTodos\`
-3. Execute and track with \`completeTodos\`
-4. Mark plan completed with \`updatePlan\` when all todos are done
-
-**Pattern 2: Quick Capture**
-1. Capture action items directly with \`createTodos\`
-2. Track progress with \`completeTodos\`
-3. Clean up with \`clearTodos\` mode: "completed"
-
-**Pattern 3: Plan + Todo Combined**
-1. Create a plan to document the high-level goal and context
-2. Use todos as the execution checklist derived from the plan
-3. Update plan status when execution is complete
-</workflow_patterns>
-
 <best_practices>
+- **Plan first, then todos**: Always start with a plan unless explicitly told otherwise
 - **Separate concerns**: Plans describe goals; Todos list actions
 - **Actionable todos**: Each todo should be a concrete, completable task
 - **Context in plans**: Use plan's context field to capture constraints and background

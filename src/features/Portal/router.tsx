@@ -3,17 +3,29 @@
 import { memo } from 'react';
 
 import { Artifacts } from './Artifacts';
+import { Document } from './Document';
 import { FilePreview } from './FilePreview';
 import { GroupThread } from './GroupThread';
 import { HomeBody, HomeTitle } from './Home';
 import { MessageDetail } from './MessageDetail';
+import { Notebook } from './Notebook';
 import { Plugins } from './Plugins';
 import { Thread } from './Thread';
 import Header from './components/Header';
 import { PortalImpl } from './type';
 
 // Keep GroupThread before Thread so group DM threads take precedence when enabled
-const items: PortalImpl[] = [GroupThread, Thread, MessageDetail, Artifacts, Plugins, FilePreview];
+// Document should be before Notebook so detail view takes precedence
+const items: PortalImpl[] = [
+  GroupThread,
+  Thread,
+  MessageDetail,
+  Artifacts,
+  Plugins,
+  FilePreview,
+  Document,
+  Notebook,
+];
 
 export const PortalTitle = memo(() => {
   const enabledList: boolean[] = [];

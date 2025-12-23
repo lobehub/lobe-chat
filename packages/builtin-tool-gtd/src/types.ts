@@ -162,20 +162,29 @@ export interface ClearTodosState {
 /**
  * Create a high-level plan document
  * Plans define the strategic direction (what and why), not actionable steps
+ *
+ * Field mapping to Document:
+ * - goal -> document.title
+ * - description -> document.description
+ * - context -> document.content
  */
 export interface CreatePlanParams {
-  /** Additional context, constraints, or strategic considerations */
+  /** Detailed context, background, constraints (maps to document.content) */
   context?: string;
-  /** The main goal or objective to achieve */
+  /** Brief summary of the plan (maps to document.description) */
+  description: string;
+  /** The main goal or objective to achieve (maps to document.title) */
   goal: string;
 }
 
 export interface UpdatePlanParams {
   /** Mark plan as completed */
   completed?: boolean;
-  /** Updated context information */
+  /** Updated context (maps to document.content) */
   context?: string;
-  /** Updated goal */
+  /** Updated description (maps to document.description) */
+  description?: string;
+  /** Updated goal (maps to document.title) */
   goal?: string;
   /** Plan ID to update */
   planId: string;
@@ -186,18 +195,37 @@ export interface UpdatePlanParams {
 /**
  * A high-level plan document
  * Contains goal and context, but no steps (steps are managed via Todos)
+ *
+ * Field mapping to Document:
+ * - goal -> document.title
+ * - description -> document.description
+ * - context -> document.content
  */
 export interface Plan {
   /** Whether the plan is completed */
   completed: boolean;
-  /** Additional context and strategic information */
+  /** Detailed context, background, constraints (maps to document.content) */
   context?: string;
   /** Creation timestamp */
   createdAt: string;
-  /** The main goal or objective */
+  /** Brief summary of the plan (maps to document.description) */
+  description: string;
+  /** The main goal or objective (maps to document.title) */
   goal: string;
   /** Unique plan identifier */
   id: string;
   /** Last update timestamp */
   updatedAt: string;
+}
+
+// ==================== Plan State Types for Render ====================
+
+export interface CreatePlanState {
+  /** The created plan document */
+  plan: Plan;
+}
+
+export interface UpdatePlanState {
+  /** The updated plan document */
+  plan: Plan;
 }

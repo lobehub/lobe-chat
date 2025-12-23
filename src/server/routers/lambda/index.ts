@@ -26,6 +26,7 @@ import { klavisRouter } from './klavis';
 import { knowledgeBaseRouter } from './knowledgeBase';
 import { marketRouter } from './market';
 import { messageRouter } from './message';
+import { notebookRouter } from './notebook';
 import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
 import { searchRouter } from './search';
@@ -64,6 +65,7 @@ export const lambdaRouter = router({
   knowledgeBase: knowledgeBaseRouter,
   market: marketRouter,
   message: messageRouter,
+  notebook: notebookRouter,
   plugin: pluginRouter,
   ragEval: ragEvalRouter,
   search: searchRouter,

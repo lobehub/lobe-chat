@@ -363,13 +363,16 @@
     "title": "No plugins available"
   },
   "error": {
+    "details": "Error Details",
     "fetchError": "Failed to request the manifest link, please ensure the link is valid and allows cross-origin access",
     "installError": "Plugin {{name}} installation failed",
     "manifestInvalid": "Manifest does not comply with specifications, validation result: \n\n {{error}}",
     "noManifest": "Manifest file does not exist",
     "openAPIInvalid": "OpenAPI parsing failed, error: \n\n {{error}}",
     "reinstallError": "Plugin {{name}} refresh failed",
+    "renderError": "Tool Render Error",
     "testConnectionFailed": "Failed to get Manifest: {{error}}",
+    "unknownError": "An unknown error occurred",
     "urlError": "The link did not return JSON content, please ensure it is a valid link"
   },
   "inspector": {

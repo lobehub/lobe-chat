@@ -1033,5 +1033,16 @@
     "bps": true,
     "folderMillis": 1766297832021,
     "hash": "431a620396060130c46d6174d4bef3a517a0872aff8d19f3044bd9e7dec78ba5"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"description\" text;",
+      "\nALTER TABLE \"documents\" ADD COLUMN IF NOT EXISTS \"knowledge_base_id\" text;",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_knowledge_base_id_knowledge_bases_id_fk\" FOREIGN KEY (\"knowledge_base_id\") REFERENCES \"public\".\"knowledge_bases\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX IF NOT EXISTS \"documents_knowledge_base_id_idx\" ON \"documents\" USING btree (\"knowledge_base_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1766422327136,
+    "hash": "1625fde057292bb0405685ade57ec33e800ed34628d40016c39cd3c26c014a01"
   }
 ]

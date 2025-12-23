@@ -26,5 +26,11 @@ export default {
   emptyKnowledgeList: '当前知识列表为空',
   files: '文件',
   messageDetail: '消息详情',
+  notebook: {
+    confirmDelete: '确定要删除这个文档吗？',
+    delete: '删除',
+    empty: '暂无文档，当前话题关联的文档将会显示在这里',
+    title: 'Notebook',
+  },
   title: '工作区',
 };
