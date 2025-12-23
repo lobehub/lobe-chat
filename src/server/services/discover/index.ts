@@ -1719,9 +1719,7 @@ export class DiscoverService {
           createdAt: user.createdAt,
           description: user.meta?.description || null,
           displayName: user.displayName || null,
-          // @ts-ignore - SDK type doesn't include these fields but API returns them
-          followersCount: user.followersCount ?? 0,
-          // @ts-ignore - SDK type doesn't include these fields but API returns them
+          followersCount: user.followerCount ?? 0,
           followingCount: user.followingCount ?? 0,
           id: user.id,
           namespace: user.namespace,
