@@ -47,15 +47,6 @@ const getPasskeyOrigins = (): string[] | undefined => {
   return [
     // Web origin
     authEnv.NEXT_PUBLIC_AUTH_URL,
-    // Android APK key hashes (SHA256 fingerprints in base64url format)
-    // Production: D7:54:DB:A3:78:D5:8B:8F:20:01:ED:7B:9B:18:D3:B0:5B:D1:22:AA:97:2B:59:E1:A6:8E:31:24:21:44:0D:2B
-    'android:apk-key-hash:11TbozjVi48gAe17mxjTsFvRIqqXK1nhpo4xJCFEDSs',
-    // Debug: FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C
-    'android:apk-key-hash:-sYXRdwJA3hvue3mKpYrOZ9zSPC7b4mbgzJmdZEDO5w',
-    // EAS Build: 1B:21:38:5D:72:40:65:F5:16:20:1D:C9:D2:6B:04:63:C3:33:F1:97:AB:6A:06:66:0E:3E:F0:7E:60:82:7E:E7
-    'android:apk-key-hash:GyE4XXJAZfUWIB3J0msEY8Mz8ZerageGDj7wfmCCfuc',
-    // EAS Build 2: 1B:BE:D4:A0:AE:43:56:E5:58:01:74:C4:B9:A0:0B:0E:5A:B9:5E:0F:A9:C0:65:18:68:CF:1F:AA:3E:8F:4F:DB
-    'android:apk-key-hash:G77UoK5DVuVYAXTEuaALDlq5Xg-pwGUYaM8fqj6PT9s',
   ];
 };
 const MAGIC_LINK_EXPIRES_IN = 900;
