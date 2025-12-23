@@ -36,7 +36,7 @@ export default {
       createChunkingTask: '准备中…',
       deleteSuccess: '文件删除成功',
       downloading: '文件下载中…',
-      moveError: '移动遇到了问题。你可以重试',
+      moveError: '移动遇到了问题，请重试',
       moveHere: '移动到此处',
       moveSuccess: '文件移动成功',
       moveToFolder: '移动到…',
@@ -44,7 +44,7 @@ export default {
       removeFromKnowledgeBase: '从资源库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
       rename: '重命名',
-      renameError: '重命名遇到了问题。你可以重试',
+      renameError: '重命名遇到了问题，请重试',
       renameSuccess: '重命名成功',
     },
     config: {
@@ -93,7 +93,7 @@ export default {
         error: '分块失败',
         errorResult: '分块失败，请检查后重试。失败原因：',
         processing: '分块中…',
-        processingTip: '服务端正在拆分文本块。关闭页面不会影响进度',
+        processingTip: '服务端正在拆分文本块，关闭页面不会影响进度',
       },
     },
   },
@@ -175,11 +175,9 @@ export default {
       uploadingWithCount: '{{completed}}/{{total}} 已上传',
     },
     validation: {
-      fileSizeExceededDetail:
-        '{{fileName}} ({{actualSize}}) exceeds the maximum size limit of {{maxSize}}',
-      fileSizeExceededMultiple:
-        '{{count}} files exceed the maximum size limit of {{maxSize}}: {{fileList}}',
-      imageCountExceeded: '图片数量超出上限',
+      fileSizeExceededDetail: '文件 {{fileName}} ({{actualSize}}) 超过大小限制 {{maxSize}}',
+      fileSizeExceededMultiple: '{{count}} 个文件超过大小限制 {{maxSize}}：{{fileList}}',
+      imageCountExceeded: '图片数量超过限制',
     },
   },
   OllamaSetupGuide: {

@@ -141,7 +141,7 @@ export default {
   cmdk: {
     about: '关于',
     aiModeEmptyState: '在上方输入你的问题，开始与助理对话',
-    aiModeHint: 'Enter to ask Lobe AI',
+    aiModeHint: '按 Enter 键向助理提问',
     aiModePlaceholder: '向助理提问…',
     aiPainting: 'AI 绘画',
     askAI: '问助理',
@@ -318,7 +318,7 @@ export default {
   labs: '实验室',
   lang: {
     'ar': '阿拉伯语',
-    'auto': '更随系统语言设置',
+    'auto': '跟随系统语言设置',
     'bg-BG': '保加利亚语',
     'bn': '孟加拉语',
     'cs-CZ': '捷克语',
