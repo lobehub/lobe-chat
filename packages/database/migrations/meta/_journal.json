@@ -462,6 +462,13 @@
       "when": 1766408202688,
       "tag": "0065_add_passkey",
       "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1766474494249,
+      "tag": "0066_add_document_fields",
+      "breakpoints": true
     }
   ],
   "version": "6"

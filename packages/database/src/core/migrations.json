@@ -1037,12 +1037,23 @@
   {
     "sql": [
       "CREATE TABLE IF NOT EXISTS \"passkey\" (\n\t\"aaguid\" text,\n\t\"backedUp\" boolean,\n\t\"counter\" integer,\n\t\"createdAt\" timestamp DEFAULT now(),\n\t\"credentialID\" text NOT NULL,\n\t\"deviceType\" text,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"name\" text,\n\t\"publicKey\" text NOT NULL,\n\t\"transports\" text,\n\t\"userId\" text NOT NULL\n);\n",
-      "\nALTER TABLE \"passkey\" ADD CONSTRAINT \"passkey_userId_users_id_fk\" FOREIGN KEY (\"userId\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
-      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"passkey_credential_id_unique\" ON \"passkey\" USING btree (\"credentialID\");",
+      "\nDO $$ BEGIN\n  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'passkey_userId_users_id_fk') THEN\n    ALTER TABLE \"passkey\" ADD CONSTRAINT \"passkey_userId_users_id_fk\" FOREIGN KEY (\"userId\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n  END IF;\nEND $$;\n",
+      "\t\nCREATE UNIQUE INDEX IF NOT EXISTS \"passkey_credential_id_unique\" ON \"passkey\" USING btree (\"credentialID\");",
       "\nCREATE INDEX IF NOT EXISTS \"passkey_user_id_idx\" ON \"passkey\" USING btree (\"userId\");"
     ],
     "bps": true,
     "folderMillis": 1766408202688,
-    "hash": "6ca80d3a8c326e30e2a778515ff80e801726894e5b57da29c00f81e1983e4172"
+    "hash": "1ae24d25f4b0ee7f38353b6d7fc6be4ae1171c105eb329d8aa97888abc85373b"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"documents\" ADD COLUMN \"description\" text;",
+      "\nALTER TABLE \"documents\" ADD COLUMN \"knowledge_base_id\" text;",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_knowledge_base_id_knowledge_bases_id_fk\" FOREIGN KEY (\"knowledge_base_id\") REFERENCES \"public\".\"knowledge_bases\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nCREATE INDEX \"documents_knowledge_base_id_idx\" ON \"documents\" USING btree (\"knowledge_base_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1766474494249,
+    "hash": "b9e396c22636c8d480325b7f22ad43e93b04d117219fb7f5c65738b092126ef6"
   }
 ]
