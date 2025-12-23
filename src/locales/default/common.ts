@@ -150,6 +150,7 @@ export default {
     askLobeAI: '问 Lobe AI',
     community: '社区',
     communitySupport: '社区支持',
+    contactViaEmail: '通过邮件联系我们',
     context: {
       agent: '助手',
       community: '社区',

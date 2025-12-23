@@ -7,6 +7,7 @@ import {
   Github,
   Image,
   LibraryBig,
+  MailIcon,
   MessageSquarePlusIcon,
   Monitor,
   Settings,
@@ -150,6 +151,14 @@ const MainMenu = memo(() => {
       </Command.Group>
 
       <Command.Group heading={t('cmdk.about')}>
+        <CommandItem
+          icon={<MailIcon />}
+          keywords={['feedback', 'issue', 'bug', 'problem']}
+          onSelect={() => handleExternalLink(FEEDBACK)}
+          value="contact-via-email"
+        >
+          {t('cmdk.contactViaEmail')}
+        </CommandItem>
         <CommandItem
           icon={<Github />}
           keywords={['issue', 'bug', 'problem', 'feedback']}
