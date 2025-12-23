@@ -1,118 +1,76 @@
 {
-  "authorize": {
-    "cancel": "İptal",
-    "confirm": "Profilinizi Oluşturun",
-    "description": "Topluluk profiliniz, {{appName}} kullanıcı hesabınızdan bağımsız olarak var olur.",
-    "footer": {
-      "agreement": "Devam ederek <terms>Hizmet Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'nı anladığınızı ve kabul ettiğinizi onaylamış olursunuz.",
-      "privacy": "Gizlilik Politikası",
-      "terms": "Hizmet Şartları"
-    },
-    "subtitle": "Toplulukta içerik göndermek ve listelemeleri yönetmek için bir topluluk profili oluşturun.",
-    "title": "Topluluk Profilinizi Oluşturun"
-  },
-  "callback": {
-    "buttons": {
-      "close": "Pencereyi Kapat"
-    },
-    "messages": {
-      "authFailed": "Yetkilendirme başarısız: {{error}}",
-      "missingParams": "Yetkilendirme parametreleri eksik",
-      "processing": "Yetkilendirme işleniyor...",
-      "successWithCountdown": "{{message}} Pencere {{countdown}} saniye içinde otomatik olarak kapanacak",
-      "successWithRedirect": "Yetkilendirme başarılı! Yönlendiriliyor..."
-    },
-    "titles": {
-      "error": "Yetkilendirme Başarısız",
-      "loading": "LobeHub Market Yetkilendirmesi",
-      "success": "Yetkilendirme Başarılı"
-    }
-  },
-  "errors": {
-    "authorizationFailed": "Yetkilendirme başarısız, lütfen tekrar deneyin.",
-    "browserOnly": "Yetkilendirme süreci yalnızca tarayıcıda başlatılabilir.",
-    "codeConsumed": "Yetkilendirme kodu zaten kullanılmış, lütfen tekrar deneyin.",
-    "codeVerifierMissing": "Yetkilendirme oturumu geçersiz, lütfen giriş sürecini yeniden başlatın.",
-    "general": "Yetkilendirme sırasında bir hata oluştu, lütfen tekrar deneyin.",
-    "handoffFailed": "Yetkilendirme sonucu alınamadı, lütfen tekrar deneyin.",
-    "handoffTimeout": "Yetkilendirme zaman aşımına uğradı, lütfen tarayıcıda işlemi tamamladıktan sonra tekrar deneyin.",
-    "oidcNotReady": "Yetkilendirme hizmeti henüz hazır değil, lütfen daha sonra tekrar deneyin.",
-    "openBrowserFailed": "Sistem tarayıcısı açılamadı, lütfen tekrar deneyin.",
-    "openPopupFailed": "Yetkilendirme penceresi açılamadı, lütfen tarayıcınızın açılır pencere engelleme ayarlarını kontrol edin.",
-    "popupClosed": "Yetkilendirme penceresi tamamlanmadan kapatıldı.",
-    "sessionExpired": "Yetkilendirme oturumu sona erdi, lütfen tekrar giriş yapın.",
-    "stateMismatch": "Yetkilendirme durumu uyuşmuyor, lütfen tekrar deneyin.",
-    "stateMissing": "Yetkilendirme durumu bulunamadı, lütfen tekrar deneyin."
-  },
-  "messages": {
-    "authorized": "LobeHub hizmet yetkilendirmesi başarıyla tamamlandı",
-    "loading": "Yetkilendirme süreci başlatılıyor...",
-    "success": {
-      "cloudMcpInstall": "Yetkilendirme başarılı! Artık Cloud MCP eklentisini yükleyebilirsiniz.",
-      "submit": "Yetkilendirme başarılı! Artık asistan yayınlayabilirsiniz.",
-      "upload": "Yetkilendirme başarılı! Artık yeni bir sürüm yayınlayabilirsiniz."
-    }
-  },
-  "profileSetup": {
-    "cancel": "İptal",
-    "descriptionEdit": "Topluluk profil bilgilerini güncelle.",
-    "descriptionFirstTime": "Topluluk profilini tamamlamak için bilgilerini ayarla.",
-    "errors": {
-      "fileTooLarge": "Dosya boyutu 2MB'ı geçemez",
-      "notAuthenticated": "Lütfen önce giriş yap.",
-      "updateFailed": "Profil güncellenemedi, lütfen tekrar dene.",
-      "uploadFailed": "Yükleme başarısız oldu, lütfen tekrar deneyin",
-      "usernameTaken": "Bu kullanıcı kimliği zaten kullanılıyor, lütfen başka bir tane seç."
-    },
-    "fields": {
-      "avatar": {
-        "label": "Profil Fotoğrafı"
-      },
-      "bannerUrl": {
-        "clickToUpload": "Arka plan görseli yüklemek için tıklayın",
-        "label": "Arka Plan Görseli",
-        "remove": "Arka plan görselini kaldır",
-        "tooltip": "Arka plan görseli profil sayfanızın üst kısmında gösterilecektir (16:9 oranı önerilir)",
-        "uploading": "Yükleniyor..."
-      },
-      "description": {
-        "label": "Kısa Biyografi",
-        "maxLength": "Kısa biyografi en fazla 200 karakter olabilir",
-        "placeholder": "Kendinden biraz bahset..."
-      },
-      "displayName": {
-        "label": "Görünen Ad",
-        "maxLength": "Görünen ad en fazla 50 karakter olabilir",
-        "placeholder": "Görünen adını gir",
-        "required": "Lütfen görünen adını gir"
-      },
-      "github": {
-        "placeholder": "GitHub kullanıcı adı"
-      },
-      "twitter": {
-        "placeholder": "X (Twitter) kullanıcı adı"
-      },
-      "userName": {
-        "label": "Kullanıcı Kimliği",
-        "maxLength": "Kullanıcı kimliği en fazla 32 karakter olabilir",
-        "minLength": "Kullanıcı kimliği en az 3 karakter olmalıdır",
-        "pattern": "Kullanıcı kimliği yalnızca harf, rakam, alt çizgi ve tire içerebilir",
-        "placeholder": "Kullanıcı kimliğini gir",
-        "required": "Lütfen kullanıcı kimliğini gir",
-        "tooltip": "Kullanıcı kimliği senin benzersiz tanımlayıcındır ve profil bağlantında kullanılacaktır"
-      },
-      "website": {
-        "invalidUrl": "Lütfen geçerli bir web sitesi adresi girin",
-        "placeholder": "Kişisel web sitesi bağlantısı"
-      }
-    },
-    "getStarted": "Başla",
-    "save": "Kaydet",
-    "socialLinks": {
-      "title": "Sosyal Medya Bağlantıları"
-    },
-    "success": "Profil başarıyla güncellendi",
-    "titleEdit": "Profili Düzenle",
-    "titleFirstTime": "Profilini Tamamla"
-  }
+  "authorize.cancel": "İptal",
+  "authorize.confirm": "Profilinizi Oluşturun",
+  "authorize.description": "Topluluk profiliniz, {{appName}} kullanıcı hesabınızdan bağımsız olarak var olur.",
+  "authorize.footer.agreement": "Devam ederek <terms>Hizmet Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'nı anladığınızı ve kabul ettiğinizi onaylamış olursunuz.",
+  "authorize.footer.privacy": "Gizlilik Politikası",
+  "authorize.footer.terms": "Hizmet Şartları",
+  "authorize.subtitle": "Toplulukta içerik göndermek ve listelemeleri yönetmek için bir topluluk profili oluşturun.",
+  "authorize.title": "Topluluk Profilinizi Oluşturun",
+  "callback.buttons.close": "Pencereyi Kapat",
+  "callback.messages.authFailed": "Yetkilendirme başarısız: {{error}}",
+  "callback.messages.missingParams": "Yetkilendirme parametreleri eksik",
+  "callback.messages.processing": "Yetkilendirme işleniyor...",
+  "callback.messages.successWithCountdown": "{{message}} Pencere {{countdown}} saniye içinde otomatik olarak kapanacak",
+  "callback.messages.successWithRedirect": "Yetkilendirme başarılı! Yönlendiriliyor...",
+  "callback.titles.error": "Yetkilendirme Başarısız",
+  "callback.titles.loading": "LobeHub Market Yetkilendirmesi",
+  "callback.titles.success": "Yetkilendirme Başarılı",
+  "errors.authorizationFailed": "Yetkilendirme başarısız, lütfen tekrar deneyin.",
+  "errors.browserOnly": "Yetkilendirme süreci yalnızca tarayıcıda başlatılabilir.",
+  "errors.codeConsumed": "Yetkilendirme kodu zaten kullanılmış, lütfen tekrar deneyin.",
+  "errors.codeVerifierMissing": "Yetkilendirme oturumu geçersiz, lütfen giriş sürecini yeniden başlatın.",
+  "errors.general": "Yetkilendirme sırasında bir hata oluştu, lütfen tekrar deneyin.",
+  "errors.handoffFailed": "Yetkilendirme sonucu alınamadı, lütfen tekrar deneyin.",
+  "errors.handoffTimeout": "Yetkilendirme zaman aşımına uğradı, lütfen tarayıcıda işlemi tamamladıktan sonra tekrar deneyin.",
+  "errors.oidcNotReady": "Yetkilendirme hizmeti henüz hazır değil, lütfen daha sonra tekrar deneyin.",
+  "errors.openBrowserFailed": "Sistem tarayıcısı açılamadı, lütfen tekrar deneyin.",
+  "errors.openPopupFailed": "Yetkilendirme penceresi açılamadı, lütfen tarayıcınızın açılır pencere engelleme ayarlarını kontrol edin.",
+  "errors.popupClosed": "Yetkilendirme penceresi tamamlanmadan kapatıldı.",
+  "errors.sessionExpired": "Yetkilendirme oturumu sona erdi, lütfen tekrar giriş yapın.",
+  "errors.stateMismatch": "Yetkilendirme durumu uyuşmuyor, lütfen tekrar deneyin.",
+  "errors.stateMissing": "Yetkilendirme durumu bulunamadı, lütfen tekrar deneyin.",
+  "messages.authorized": "LobeHub hizmet yetkilendirmesi başarıyla tamamlandı",
+  "messages.loading": "Yetkilendirme süreci başlatılıyor...",
+  "messages.success.cloudMcpInstall": "Yetkilendirme başarılı! Artık Cloud MCP eklentisini yükleyebilirsiniz.",
+  "messages.success.submit": "Yetkilendirme başarılı! Artık asistan yayınlayabilirsiniz.",
+  "messages.success.upload": "Yetkilendirme başarılı! Artık yeni bir sürüm yayınlayabilirsiniz.",
+  "profileSetup.cancel": "İptal",
+  "profileSetup.descriptionEdit": "Topluluk profil bilgilerini güncelle.",
+  "profileSetup.descriptionFirstTime": "Topluluk profilini tamamlamak için bilgilerini ayarla.",
+  "profileSetup.errors.fileTooLarge": "Dosya boyutu 2MB'ı geçemez",
+  "profileSetup.errors.notAuthenticated": "Lütfen önce giriş yap.",
+  "profileSetup.errors.updateFailed": "Profil güncellenemedi, lütfen tekrar dene.",
+  "profileSetup.errors.uploadFailed": "Yükleme başarısız oldu, lütfen tekrar deneyin",
+  "profileSetup.errors.usernameTaken": "Bu kullanıcı kimliği zaten kullanılıyor, lütfen başka bir tane seç.",
+  "profileSetup.fields.avatar.label": "Profil Fotoğrafı",
+  "profileSetup.fields.bannerUrl.clickToUpload": "Arka plan görseli yüklemek için tıklayın",
+  "profileSetup.fields.bannerUrl.label": "Arka Plan Görseli",
+  "profileSetup.fields.bannerUrl.remove": "Arka plan görselini kaldır",
+  "profileSetup.fields.bannerUrl.tooltip": "Arka plan görseli profil sayfanızın üst kısmında gösterilecektir (16:9 oranı önerilir)",
+  "profileSetup.fields.bannerUrl.uploading": "Yükleniyor...",
+  "profileSetup.fields.description.label": "Kısa Biyografi",
+  "profileSetup.fields.description.maxLength": "Kısa biyografi en fazla 200 karakter olabilir",
+  "profileSetup.fields.description.placeholder": "Kendinden biraz bahset...",
+  "profileSetup.fields.displayName.label": "Görünen Ad",
+  "profileSetup.fields.displayName.maxLength": "Görünen ad en fazla 50 karakter olabilir",
+  "profileSetup.fields.displayName.placeholder": "Görünen adını gir",
+  "profileSetup.fields.displayName.required": "Lütfen görünen adını gir",
+  "profileSetup.fields.github.placeholder": "GitHub kullanıcı adı",
+  "profileSetup.fields.twitter.placeholder": "X (Twitter) kullanıcı adı",
+  "profileSetup.fields.userName.label": "Kullanıcı Kimliği",
+  "profileSetup.fields.userName.maxLength": "Kullanıcı kimliği en fazla 32 karakter olabilir",
+  "profileSetup.fields.userName.minLength": "Kullanıcı kimliği en az 3 karakter olmalıdır",
+  "profileSetup.fields.userName.pattern": "Kullanıcı kimliği yalnızca harf, rakam, alt çizgi ve tire içerebilir",
+  "profileSetup.fields.userName.placeholder": "Kullanıcı kimliğini gir",
+  "profileSetup.fields.userName.required": "Lütfen kullanıcı kimliğini gir",
+  "profileSetup.fields.userName.tooltip": "Kullanıcı kimliği senin benzersiz tanımlayıcındır ve profil bağlantında kullanılacaktır",
+  "profileSetup.fields.website.invalidUrl": "Lütfen geçerli bir web sitesi adresi girin",
+  "profileSetup.fields.website.placeholder": "Kişisel web sitesi bağlantısı",
+  "profileSetup.getStarted": "Başla",
+  "profileSetup.save": "Kaydet",
+  "profileSetup.socialLinks.title": "Sosyal Medya Bağlantıları",
+  "profileSetup.success": "Profil başarıyla güncellendi",
+  "profileSetup.titleEdit": "Profili Düzenle",
+  "profileSetup.titleFirstTime": "Profilini Tamamla"
 }

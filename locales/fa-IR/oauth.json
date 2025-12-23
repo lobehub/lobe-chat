@@ -1,61 +1,35 @@
 {
-  "consent": {
-    "buttons": {
-      "accept": "اجازه",
-      "deny": "رد"
-    },
-    "description": "برنامه {{clientName}} درخواست مجوز حساب شما را دارد",
-    "error": {
-      "sessionInvalid": {
-        "message": "جلسه مجوز منقضی یا نامعتبر است، لطفاً فرآیند مجوز را دوباره آغاز کنید.",
-        "title": "جلسه مجوز نامعتبر"
-      },
-      "title": "خطا رخ داده است",
-      "unsupportedInteraction": {
-        "message": "نوع تعامل پشتیبانی نمی‌شود: {promptName}",
-        "title": "نوع تعامل پشتیبانی نمی‌شود"
-      }
-    },
-    "permissionsTitle": "درخواست مجوزهای زیر:",
-    "redirectUri": "پس از موفقیت در مجوز، به آدرس زیر هدایت می‌شوید",
-    "redirecting": "دسترسی با موفقیت انجام شد، در حال انتقال...",
-    "scope": {
-      "email": "دسترسی به آدرس ایمیل شما",
-      "offline_access": "اجازه دسترسی به داده‌های شما توسط کلاینت",
-      "openid": "احراز هویت با حساب LobeChat شما",
-      "profile": "دسترسی به اطلاعات پروفایل شما (نام، تصویر پروفایل و غیره)",
-      "sync-read": "خواندن داده‌های همگام‌سازی شده شما",
-      "sync-write": "نوشتن و به‌روزرسانی داده‌های همگام‌سازی شده شما"
-    },
-    "title": "مجوز {{clientName}}"
-  },
-  "error": {
-    "backToHome": "بازگشت به صفحه اصلی",
-    "desc": "احراز هویت OAuth ناموفق بود، دلیل شکست: {{reason}}",
-    "reason": {
-      "internal_error": "خطای سرور",
-      "invalid_request": "پارامترهای درخواست نامعتبر"
-    },
-    "title": "احراز هویت ناموفق"
-  },
-  "handoff": {
-    "desc": {
-      "processing": "در حال پردازش مجوز، به زودی به صفحه بعدی منتقل می‌شوید...",
-      "success": "سعی شده است که برنامه دسکتاپ باز شود. اگر برنامه به‌طور خودکار باز نشد، لطفاً به‌صورت دستی تغییر دهید. می‌توانید این پنجره مرورگر را بعداً ببندید."
-    },
-    "title": {
-      "processing": "در حال پردازش مجوز...",
-      "success": "مجوز تکمیل شد"
-    }
-  },
-  "login": {
-    "button": "تأیید ورود",
-    "description": "برنامه {{clientName}} درخواست استفاده از حساب شما برای ورود را دارد",
-    "title": "ورود به {{clientName}}",
-    "userWelcome": "خوش آمدید، دوباره به شما خوش آمد می‌گوییم،"
-  },
-  "success": {
-    "subTitle": "شما با موفقیت اجازه دسترسی برنامه به حساب خود را داده‌اید، می‌توانید این صفحه را ببندید",
-    "title": "دسترسی موفقیت‌آمیز"
-  }
+  "consent.buttons.accept": "اجازه",
+  "consent.buttons.deny": "رد",
+  "consent.description": "برنامه {{clientName}} درخواست مجوز حساب شما را دارد",
+  "consent.error.sessionInvalid.message": "جلسه مجوز منقضی یا نامعتبر است، لطفاً فرآیند مجوز را دوباره آغاز کنید.",
+  "consent.error.sessionInvalid.title": "جلسه مجوز نامعتبر",
+  "consent.error.title": "خطا رخ داده است",
+  "consent.error.unsupportedInteraction.message": "نوع تعامل پشتیبانی نمی‌شود: {promptName}",
+  "consent.error.unsupportedInteraction.title": "نوع تعامل پشتیبانی نمی‌شود",
+  "consent.permissionsTitle": "درخواست مجوزهای زیر:",
+  "consent.redirectUri": "پس از موفقیت در مجوز، به آدرس زیر هدایت می‌شوید",
+  "consent.redirecting": "دسترسی با موفقیت انجام شد، در حال انتقال...",
+  "consent.scope.email": "دسترسی به آدرس ایمیل شما",
+  "consent.scope.offline_access": "اجازه دسترسی به داده‌های شما توسط کلاینت",
+  "consent.scope.openid": "احراز هویت با حساب LobeChat شما",
+  "consent.scope.profile": "دسترسی به اطلاعات پروفایل شما (نام، تصویر پروفایل و غیره)",
+  "consent.scope.sync-read": "خواندن داده‌های همگام‌سازی شده شما",
+  "consent.scope.sync-write": "نوشتن و به‌روزرسانی داده‌های همگام‌سازی شده شما",
+  "consent.title": "مجوز {{clientName}}",
+  "error.backToHome": "بازگشت به صفحه اصلی",
+  "error.desc": "احراز هویت OAuth ناموفق بود، دلیل شکست: {{reason}}",
+  "error.reason.internal_error": "خطای سرور",
+  "error.reason.invalid_request": "پارامترهای درخواست نامعتبر",
+  "error.title": "احراز هویت ناموفق",
+  "handoff.desc.processing": "در حال پردازش مجوز، به زودی به صفحه بعدی منتقل می‌شوید...",
+  "handoff.desc.success": "سعی شده است که برنامه دسکتاپ باز شود. اگر برنامه به‌طور خودکار باز نشد، لطفاً به‌صورت دستی تغییر دهید. می‌توانید این پنجره مرورگر را بعداً ببندید.",
+  "handoff.title.processing": "در حال پردازش مجوز...",
+  "handoff.title.success": "مجوز تکمیل شد",
+  "login.button": "تأیید ورود",
+  "login.description": "برنامه {{clientName}} درخواست استفاده از حساب شما برای ورود را دارد",
+  "login.title": "ورود به {{clientName}}",
+  "login.userWelcome": "خوش آمدید، دوباره به شما خوش آمد می‌گوییم،",
+  "success.subTitle": "شما با موفقیت اجازه دسترسی برنامه به حساب خود را داده‌اید، می‌توانید این صفحه را ببندید",
+  "success.title": "دسترسی موفقیت‌آمیز"
 }

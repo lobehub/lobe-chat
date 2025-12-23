@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "قائمة المعلمات"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "الحصول على النماذج المتاحة",
-        "getAvailableTools": "الحصول على الأدوات المتاحة",
-        "getConfig": "الحصول على الإعدادات",
-        "getMeta": "الحصول على البيانات الوصفية",
-        "getPrompt": "الحصول على التعليمات النظامية",
-        "searchMarketTools": "البحث في سوق الإضافات",
-        "searchOfficialTools": "البحث عن الأدوات الرسمية",
-        "setModel": "تعيين النموذج",
-        "setOpeningMessage": "تعيين رسالة البداية",
-        "setOpeningQuestions": "تعيين أسئلة البداية",
-        "togglePlugin": "تبديل الإضافة",
-        "updateChatConfig": "تحديث إعدادات المحادثة",
-        "updateConfig": "تحديث الإعدادات",
-        "updateMeta": "تحديث البيانات الوصفية",
-        "updatePrompt": "تحديث التعليمات النظامية"
-      },
-      "title": "منشئ الوكيل"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "الحصول على النماذج المتاحة",
-        "installPlugin": "تثبيت الإضافة",
-        "inviteAgent": "دعوة عضو",
-        "removeAgent": "إزالة العضو",
-        "searchMarketTools": "البحث في سوق الإضافات",
-        "updateAgentConfig": "تحديث إعدادات الوكيل",
-        "updatePrompt": "تحديث التعليمات النظامية"
-      },
-      "title": "منشئ الوكلاء الجماعي"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "إرسال رسالة للجميع",
-        "createAgent": "إضافة عضو إلى الفريق",
-        "createWorkflow": "تخطيط سير العمل",
-        "executeTask": "تنفيذ المهمة",
-        "getAgentInfo": "الحصول على معلومات العضو",
-        "interrupt": "مقاطعة المهمة",
-        "inviteAgent": "دعوة عضو",
-        "removeAgent": "إزالة عضو",
-        "searchAgent": "البحث عن خبير ذي صلة",
-        "speak": "تعيين عضو للتحدث",
-        "summarize": "تلخيص المحادثة",
-        "vote": "بدء تصويت"
-      },
-      "title": "تنسيق الفريق"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "مسح المهام",
-        "completeTodos": "إكمال المهام",
-        "createPlan": "إنشاء خطة",
-        "createTodos": "إنشاء مهام",
-        "removeTodos": "حذف المهام",
-        "updatePlan": "تحديث الخطة",
-        "updateTodos": "تحديث المهام"
-      },
-      "title": "أداة GTD"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "قراءة محتوى قاعدة المعرفة",
-        "searchKnowledgeBase": "البحث في قاعدة المعرفة"
-      },
-      "title": "قاعدة المعرفة"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "تحرير الملف",
-        "getCommandOutput": "الحصول على مخرجات الكود",
-        "globLocalFiles": "البحث عن الملفات",
-        "grepContent": "البحث في المحتوى",
-        "killCommand": "إيقاف تنفيذ الكود",
-        "listLocalFiles": "عرض قائمة الملفات",
-        "moveLocalFiles": "نقل الملفات",
-        "readLocalFile": "قراءة محتوى الملف",
-        "renameLocalFile": "إعادة تسمية",
-        "runCommand": "تنفيذ الكود",
-        "searchLocalFiles": "البحث في الملفات",
-        "writeLocalFile": "كتابة إلى الملف"
-      },
-      "title": "النظام المحلي"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "تحديث الدُفعة للعُقد",
-        "compareSnapshots": "مقارنة اللقطات",
-        "convertToList": "تحويل إلى قائمة",
-        "createNode": "إنشاء عقدة",
-        "cropImage": "اقتصاص الصورة",
-        "deleteNode": "حذف العقدة",
-        "deleteSnapshot": "حذف اللقطة",
-        "deleteTableColumn": "حذف عمود الجدول",
-        "deleteTableRow": "حذف صف الجدول",
-        "duplicateNode": "نسخ العقدة",
-        "editTitle": "تحرير عنوان المستند",
-        "indentListItem": "زيادة المسافة البادئة لعنصر القائمة",
-        "initPage": "تهيئة المستند",
-        "insertTableColumn": "إدراج عمود في الجدول",
-        "insertTableRow": "إدراج صف في الجدول",
-        "listSnapshots": "عرض اللقطات",
-        "mergeNodes": "دمج العقد",
-        "moveNode": "نقل العقدة",
-        "outdentListItem": "تقليل المسافة البادئة لعنصر القائمة",
-        "replaceText": "استبدال النص",
-        "resizeImage": "تغيير حجم الصورة",
-        "restoreSnapshot": "استعادة اللقطة",
-        "rotateImage": "تدوير الصورة",
-        "saveSnapshot": "حفظ اللقطة",
-        "setImageAlt": "تعيين النص البديل للصورة",
-        "splitNode": "تقسيم العقدة",
-        "toggleListType": "تبديل نوع القائمة",
-        "unwrapNode": "إلغاء تغليف العقدة",
-        "updateNode": "تحديث العقدة",
-        "wrapNodes": "تغليف العقد"
-      },
-      "title": "المستند"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "قراءة محتوى عدة صفحات",
-        "crawlSinglePage": "قراءة محتوى الصفحة",
-        "search": "البحث في الصفحات"
-      },
-      "title": "البحث عبر الإنترنت"
-    }
-  },
+  "arguments.title": "قائمة المعلمات",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "الحصول على النماذج المتاحة",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "الحصول على الأدوات المتاحة",
+  "builtins.lobe-agent-builder.apiName.getConfig": "الحصول على الإعدادات",
+  "builtins.lobe-agent-builder.apiName.getMeta": "الحصول على البيانات الوصفية",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "الحصول على التعليمات النظامية",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "البحث في سوق الإضافات",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "البحث عن الأدوات الرسمية",
+  "builtins.lobe-agent-builder.apiName.setModel": "تعيين النموذج",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "تعيين رسالة البداية",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "تعيين أسئلة البداية",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "تبديل الإضافة",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "تحديث إعدادات المحادثة",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "تحديث الإعدادات",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "تحديث البيانات الوصفية",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "تحديث التعليمات النظامية",
+  "builtins.lobe-agent-builder.title": "منشئ الوكيل",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "الحصول على النماذج المتاحة",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "تثبيت الإضافة",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "دعوة عضو",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "إزالة العضو",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "البحث في سوق الإضافات",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "تحديث إعدادات الوكيل",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "تحديث التعليمات النظامية",
+  "builtins.lobe-group-agent-builder.title": "منشئ الوكلاء الجماعي",
+  "builtins.lobe-group-management.apiName.broadcast": "إرسال رسالة للجميع",
+  "builtins.lobe-group-management.apiName.createAgent": "إضافة عضو إلى الفريق",
+  "builtins.lobe-group-management.apiName.createWorkflow": "تخطيط سير العمل",
+  "builtins.lobe-group-management.apiName.executeTask": "تنفيذ المهمة",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "الحصول على معلومات العضو",
+  "builtins.lobe-group-management.apiName.interrupt": "مقاطعة المهمة",
+  "builtins.lobe-group-management.apiName.inviteAgent": "دعوة عضو",
+  "builtins.lobe-group-management.apiName.removeAgent": "إزالة عضو",
+  "builtins.lobe-group-management.apiName.searchAgent": "البحث عن خبير ذي صلة",
+  "builtins.lobe-group-management.apiName.speak": "تعيين عضو للتحدث",
+  "builtins.lobe-group-management.apiName.summarize": "تلخيص المحادثة",
+  "builtins.lobe-group-management.apiName.vote": "بدء تصويت",
+  "builtins.lobe-group-management.title": "تنسيق الفريق",
+  "builtins.lobe-gtd.apiName.clearTodos": "مسح المهام",
+  "builtins.lobe-gtd.apiName.completeTodos": "إكمال المهام",
+  "builtins.lobe-gtd.apiName.createPlan": "إنشاء خطة",
+  "builtins.lobe-gtd.apiName.createTodos": "إنشاء مهام",
+  "builtins.lobe-gtd.apiName.removeTodos": "حذف المهام",
+  "builtins.lobe-gtd.apiName.updatePlan": "تحديث الخطة",
+  "builtins.lobe-gtd.apiName.updateTodos": "تحديث المهام",
+  "builtins.lobe-gtd.title": "أداة GTD",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "قراءة محتوى قاعدة المعرفة",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "البحث في قاعدة المعرفة",
+  "builtins.lobe-knowledge-base.title": "قاعدة المعرفة",
+  "builtins.lobe-local-system.apiName.editLocalFile": "تحرير الملف",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "الحصول على مخرجات الكود",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "البحث عن الملفات",
+  "builtins.lobe-local-system.apiName.grepContent": "البحث في المحتوى",
+  "builtins.lobe-local-system.apiName.killCommand": "إيقاف تنفيذ الكود",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "عرض قائمة الملفات",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "نقل الملفات",
+  "builtins.lobe-local-system.apiName.readLocalFile": "قراءة محتوى الملف",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "إعادة تسمية",
+  "builtins.lobe-local-system.apiName.runCommand": "تنفيذ الكود",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "البحث في الملفات",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "كتابة إلى الملف",
+  "builtins.lobe-local-system.title": "النظام المحلي",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "تحديث الدُفعة للعُقد",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "مقارنة اللقطات",
+  "builtins.lobe-page-agent.apiName.convertToList": "تحويل إلى قائمة",
+  "builtins.lobe-page-agent.apiName.createNode": "إنشاء عقدة",
+  "builtins.lobe-page-agent.apiName.cropImage": "اقتصاص الصورة",
+  "builtins.lobe-page-agent.apiName.deleteNode": "حذف العقدة",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "حذف اللقطة",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "حذف عمود الجدول",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "حذف صف الجدول",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "نسخ العقدة",
+  "builtins.lobe-page-agent.apiName.editTitle": "تحرير عنوان المستند",
+  "builtins.lobe-page-agent.apiName.indentListItem": "زيادة المسافة البادئة لعنصر القائمة",
+  "builtins.lobe-page-agent.apiName.initPage": "تهيئة المستند",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "إدراج عمود في الجدول",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "إدراج صف في الجدول",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "عرض اللقطات",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "دمج العقد",
+  "builtins.lobe-page-agent.apiName.moveNode": "نقل العقدة",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "تقليل المسافة البادئة لعنصر القائمة",
+  "builtins.lobe-page-agent.apiName.replaceText": "استبدال النص",
+  "builtins.lobe-page-agent.apiName.resizeImage": "تغيير حجم الصورة",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "استعادة اللقطة",
+  "builtins.lobe-page-agent.apiName.rotateImage": "تدوير الصورة",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "حفظ اللقطة",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "تعيين النص البديل للصورة",
+  "builtins.lobe-page-agent.apiName.splitNode": "تقسيم العقدة",
+  "builtins.lobe-page-agent.apiName.toggleListType": "تبديل نوع القائمة",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "إلغاء تغليف العقدة",
+  "builtins.lobe-page-agent.apiName.updateNode": "تحديث العقدة",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "تغليف العقد",
+  "builtins.lobe-page-agent.title": "المستند",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "قراءة محتوى عدة صفحات",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "قراءة محتوى الصفحة",
+  "builtins.lobe-web-browsing.apiName.search": "البحث في الصفحات",
+  "builtins.lobe-web-browsing.title": "البحث عبر الإنترنت",
   "confirm": "تأكيد",
-  "debug": {
-    "arguments": "معلمات الاستدعاء",
-    "function_call": "استدعاء الدالة",
-    "off": "إيقاف التصحيح",
-    "on": "عرض معلومات استدعاء الإضافة",
-    "payload": "حمولة الإضافة",
-    "pluginState": "حالة المكون الإضافي",
-    "response": "النتيجة المرجعة",
-    "title": "تفاصيل الإضافة",
-    "tool_call": "طلب استدعاء الأداة"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "يرجى الانتقال إلى صفحة التحرير لمشاهدة التفاصيل",
-      "editBtn": "تحرير الآن",
-      "title": "هذه إضافة مخصصة"
-    },
-    "emptyState": {
-      "description": "يرجى تثبيت هذه الإضافة أولاً لعرض قدرات الإضافة وخيارات التكوين",
-      "title": "عرض تفاصيل الإضافة بعد التثبيت"
-    },
-    "info": {
-      "description": "وصف API",
-      "name": "اسم API"
-    },
-    "tabs": {
-      "info": "قدرات الإضافة",
-      "manifest": "ملف التثبيت",
-      "settings": "الإعدادات"
-    },
-    "title": "تفاصيل الإضافة"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "سيتم حذف هذه الإضافة المحلية ولن يمكن استعادتها، هل تريد حذف هذه الإضافة؟",
-    "customParams": {
-      "useProxy": {
-        "label": "التثبيت عبر الوكيل (إذا واجهت خطأ وصول عبر النطاق، جرب تفعيل هذا الخيار ثم أعد التثبيت)"
-      }
-    },
-    "deleteSuccess": "تم حذف الإضافة بنجاح",
-    "manifest": {
-      "identifier": {
-        "desc": "المعرف الفريد للإضافة",
-        "label": "المعرف"
-      },
-      "mode": {
-        "mcp": "إضافة MCP",
-        "mcpExp": "تجريبي",
-        "url": "رابط مباشر"
-      },
-      "name": {
-        "desc": "عنوان الإضافة",
-        "label": "العنوان",
-        "placeholder": "محرك البحث"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "إعدادات متقدمة"
-      },
-      "args": {
-        "desc": "قائمة المعلمات الممررة لأمر التنفيذ، عادةً هنا يتم إدخال اسم خادم MCP أو مسار سكريبت التشغيل",
-        "label": "معلمات الأمر",
-        "placeholder": "مثال: mcp-hello-world",
-        "required": "يرجى إدخال معلمات التشغيل"
-      },
-      "auth": {
-        "bear": "مفتاح API",
-        "desc": "اختر طريقة التوثيق لخادم MCP",
-        "label": "نوع التوثيق",
-        "none": "لا حاجة للتوثيق",
-        "placeholder": "يرجى اختيار نوع التوثيق",
-        "token": {
-          "desc": "أدخل مفتاح API أو رمز الحامل الخاص بك",
-          "label": "مفتاح API",
-          "placeholder": "sk-xxxxx",
-          "required": "يرجى إدخال رمز التوثيق"
-        }
-      },
-      "avatar": {
-        "label": "أيقونة الإضافة"
-      },
-      "command": {
-        "desc": "الملف التنفيذي أو السكريبت المستخدم لتشغيل خادم MCP STDIO",
-        "label": "الأمر",
-        "placeholder": "مثال: npx / uv / docker إلخ",
-        "required": "يرجى إدخال أمر التشغيل"
-      },
-      "desc": {
-        "desc": "أضف وصفًا للإضافة",
-        "label": "وصف الإضافة",
-        "placeholder": "أضف معلومات عن استخدام الإضافة وسيناريوهاتها"
-      },
-      "endpoint": {
-        "desc": "أدخل عنوان خادم MCP Streamable HTTP الخاص بك",
-        "label": "رابط نقطة نهاية MCP"
-      },
-      "env": {
-        "add": "أضف سطرًا جديدًا",
-        "desc": "أدخل متغيرات البيئة المطلوبة لخادم MCP",
-        "duplicateKeyError": "مفتاح الحقل يجب أن يكون فريدًا",
-        "formValidationFailed": "فشل التحقق من النموذج، يرجى مراجعة تنسيق المعلمات",
-        "keyRequired": "مفتاح الحقل لا يمكن أن يكون فارغًا",
-        "label": "متغيرات بيئة خادم MCP",
-        "stringifyError": "تعذر تسلسل المعلمات، يرجى مراجعة التنسيق"
-      },
-      "headers": {
-        "add": "أضف سطرًا جديدًا",
-        "desc": "أدخل رؤوس الطلب",
-        "label": "رؤوس HTTP"
-      },
-      "identifier": {
-        "desc": "حدد اسمًا لإضافة MCP الخاصة بك، يجب أن يكون بالأحرف الإنجليزية",
-        "invalid": "المعرف يمكن أن يحتوي فقط على أحرف، أرقام، شرطات وشرطات سفلية",
-        "label": "اسم إضافة MCP",
-        "placeholder": "مثال: my-mcp-plugin",
-        "required": "يرجى إدخال معرف خدمة MCP"
-      },
-      "previewManifest": "معاينة ملف وصف الإضافة",
-      "quickImport": "استيراد سريع لتكوين JSON",
-      "quickImportError": {
-        "empty": "لا يمكن أن يكون المحتوى فارغًا",
-        "invalidJson": "تنسيق JSON غير صالح",
-        "invalidStructure": "هيكل JSON غير صالح"
-      },
-      "stdioNotSupported": "البيئة الحالية لا تدعم إضافات MCP من نوع stdio",
-      "testConnection": "اختبار الاتصال",
-      "testConnectionTip": "يجب أن ينجح اختبار الاتصال لكي تعمل إضافة MCP بشكل صحيح",
-      "type": {
-        "desc": "اختر طريقة اتصال إضافة MCP، النسخة الويب تدعم فقط Streamable HTTP",
-        "httpFeature1": "متوافق مع الويب وسطح المكتب",
-        "httpFeature2": "اتصال بخادم MCP عن بعد، لا حاجة لتثبيت إضافي",
-        "httpShortDesc": "بروتوكول اتصال HTTP متدفق",
-        "label": "نوع إضافة MCP",
-        "stdioFeature1": "تأخير اتصال أقل، مناسب للتنفيذ المحلي",
-        "stdioFeature2": "يجب تثبيت وتشغيل خادم MCP محليًا",
-        "stdioNotAvailable": "وضع STDIO متاح فقط في نسخة سطح المكتب",
-        "stdioShortDesc": "بروتوكول اتصال يعتمد على الإدخال والإخراج القياسي",
-        "title": "نوع إضافة MCP"
-      },
-      "url": {
-        "desc": "أدخل عنوان MCP Server Streamable HTTP الخاص بك، لا يدعم وضع SSE",
-        "invalid": "يرجى إدخال عنوان URL صالح",
-        "label": "رابط نقطة نهاية HTTP المتدفق",
-        "required": "يرجى إدخال عنوان URL لخدمة MCP"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "مؤلف الإضافة",
-        "label": "المؤلف"
-      },
-      "avatar": {
-        "desc": "أيقونة الإضافة، يمكن استخدام إيموجي أو رابط URL",
-        "label": "الأيقونة"
-      },
-      "description": {
-        "desc": "وصف الإضافة",
-        "label": "الوصف",
-        "placeholder": "ابحث في محرك البحث للحصول على معلومات"
-      },
-      "formFieldRequired": "هذا الحقل مطلوب",
-      "homepage": {
-        "desc": "الصفحة الرئيسية للإضافة",
-        "label": "الصفحة الرئيسية"
-      },
-      "identifier": {
-        "desc": "المعرف الفريد للإضافة، سيتم التعرف عليه تلقائيًا من ملف manifest",
-        "errorDuplicate": "المعرف مكرر مع إضافة موجودة، يرجى تغييره",
-        "label": "المعرف",
-        "pattenErrorMessage": "يمكن إدخال أحرف إنجليزية، أرقام، - و _ فقط"
-      },
-      "lobe": "إضافة {{appName}}",
-      "manifest": {
-        "desc": "سيتم تثبيت {{appName}} عبر هذا الرابط",
-        "label": "رابط ملف وصف الإضافة (Manifest)",
-        "preview": "معاينة Manifest",
-        "refresh": "تحديث"
-      },
-      "openai": "إضافة OpenAI",
-      "title": {
-        "desc": "عنوان الإضافة",
-        "label": "العنوان",
-        "placeholder": "محرك البحث"
-      }
-    },
-    "metaConfig": "تكوين معلومات الإضافة الأساسية",
-    "modalDesc": "بعد إضافة إضافة مخصصة، يمكن استخدامها للتحقق من تطوير الإضافة أو استخدامها مباشرة في المحادثة. يرجى الرجوع إلى <1>وثائق التطوير↗</> لتطوير الإضافات.",
-    "openai": {
-      "importUrl": "استيراد من رابط URL",
-      "schema": "المخطط"
-    },
-    "preview": {
-      "api": {
-        "noParams": "هذه الأداة لا تحتوي على معلمات",
-        "noResults": "لم يتم العثور على API تطابق شروط البحث",
-        "params": "المعلمات:",
-        "searchPlaceholder": "ابحث عن أداة..."
-      },
-      "card": "معاينة عرض الإضافة",
-      "desc": "معاينة وصف الإضافة",
-      "empty": {
-        "desc": "بعد إكمال التكوين، يمكنك معاينة قدرات الأدوات المدعومة هنا",
-        "title": "ابدأ المعاينة بعد تكوين الإضافة"
-      },
-      "title": "معاينة اسم الإضافة"
-    },
-    "save": "تثبيت الإضافة",
-    "saveSuccess": "تم حفظ إعدادات الإضافة بنجاح",
-    "tabs": {
-      "manifest": "قائمة وصف الوظائف (Manifest)",
-      "meta": "معلومات الإضافة الأساسية"
-    },
-    "title": {
-      "create": "إضافة إضافة مخصصة",
-      "edit": "تحرير إضافة مخصصة"
-    },
-    "type": {
-      "lobe": "إضافة {{appName}}",
-      "openai": "إضافة OpenAI"
-    },
-    "update": "تحديث",
-    "updateSuccess": "تم تحديث إعدادات الإضافة بنجاح"
-  },
-  "empty": {
-    "description": "يحتوي متجر الإضافات على العديد من الأدوات في انتظارك لاكتشافها، قم بزيارة المتجر وابدأ الاستكشاف",
-    "search": "لم يتم العثور على إضافات مطابقة",
-    "title": "لا توجد إضافات حالياً"
-  },
-  "error": {
-    "fetchError": "فشل طلب رابط manifest، يرجى التأكد من صلاحية الرابط وفحص ما إذا كان يسمح بالوصول عبر النطاق",
-    "installError": "فشل تثبيت الإضافة {{name}}",
-    "manifestInvalid": "الملف manifest غير مطابق للمواصفات، نتيجة التحقق: \n\n {{error}}",
-    "noManifest": "ملف الوصف غير موجود",
-    "openAPIInvalid": "فشل تحليل OpenAPI، الخطأ: \n\n {{error}}",
-    "reinstallError": "فشل تحديث الإضافة {{name}}",
-    "testConnectionFailed": "فشل الحصول على Manifest: {{error}}",
-    "urlError": "الرابط لم يرجع محتوى بصيغة JSON، يرجى التأكد من صحة الرابط"
-  },
-  "inspector": {
-    "args": "عرض قائمة المعلمات",
-    "delete": "حذف استدعاء الأداة",
-    "orphanedToolCall": "قد تكون رسالة استدعاء الأداة هذه معزولة بسبب ظروف غير طبيعية، مما قد يؤثر على تنفيذ الوكيل بشكل صحيح. يُرجى إزالتها.",
-    "pluginRender": "عرض واجهة الإضافة"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "تم الحذف",
-      "local.config": "الإعدادات",
-      "local.title": "مخصص"
-    }
-  },
-  "loading": {
-    "content": "جارٍ استدعاء الإضافة...",
-    "plugin": "تشغيل الإضافة..."
-  },
-  "mcpEmpty": {
-    "deployment": "لا توجد خيارات نشر حالياً",
-    "prompts": "لا توجد مطالبات متاحة لهذه الإضافة حالياً",
-    "resources": "لا توجد موارد متاحة لهذه الإضافة حالياً",
-    "tools": "لا توجد قدرات أدوات متاحة لهذه الإضافة حالياً"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",
-    "COMPLETED": "اكتمل التثبيت",
-    "CONFIGURATION_REQUIRED": "يرجى إكمال التكوين المطلوب للمتابعة بالتثبيت",
-    "ERROR": "خطأ في التثبيت",
-    "FETCHING_MANIFEST": "جارٍ الحصول على ملف وصف الإضافة...",
-    "GETTING_SERVER_MANIFEST": "جارٍ تهيئة خادم MCP...",
-    "INSTALLING_PLUGIN": "جارٍ تثبيت الإضافة...",
-    "configurationDescription": "تتطلب هذه الإضافة MCP إعداد معلمات لتعمل بشكل صحيح، يرجى ملء المعلومات اللازمة",
-    "configurationRequired": "تكوين معلمات الإضافة",
-    "continueInstall": "متابعة التثبيت",
-    "dependenciesDescription": "تتطلب هذه الإضافة تثبيت تبعيات نظامية لتعمل بشكل صحيح، يرجى تثبيت التبعيات المفقودة حسب التعليمات ثم اضغط إعادة الفحص للمتابعة بالتثبيت.",
-    "dependenciesRequired": "يرجى تثبيت تبعيات النظام للإضافة",
-    "dependencyStatus": {
-      "installed": "مثبت",
-      "notInstalled": "غير مثبت",
-      "requiredVersion": "الإصدار المطلوب: {{version}}"
-    },
-    "errorDetails": {
-      "args": "المعلمات",
-      "command": "الأمر",
-      "connectionParams": "معلمات الاتصال",
-      "env": "متغيرات البيئة",
-      "errorOutput": "سجل الأخطاء",
-      "exitCode": "رمز الخروج",
-      "hideDetails": "إخفاء التفاصيل",
-      "originalError": "الخطأ الأصلي",
-      "showDetails": "عرض التفاصيل"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "خطأ في التحقق من التفويض",
-      "CONNECTION_FAILED": "فشل الاتصال",
-      "INITIALIZATION_TIMEOUT": "انتهت مهلة التهيئة",
-      "PROCESS_SPAWN_ERROR": "فشل بدء العملية",
-      "UNKNOWN_ERROR": "خطأ غير معروف",
-      "VALIDATION_ERROR": "فشل التحقق من المعلمات"
-    },
-    "installError": "فشل تثبيت إضافة MCP، السبب: {{detail}}",
-    "installMethods": {
-      "manual": "تثبيت يدوي:",
-      "recommended": "طريقة التثبيت الموصى بها:"
-    },
-    "recheckDependencies": "إعادة فحص",
-    "skipDependencies": "تخطي الفحص"
-  },
+  "debug.arguments": "معلمات الاستدعاء",
+  "debug.function_call": "استدعاء الدالة",
+  "debug.off": "إيقاف التصحيح",
+  "debug.on": "عرض معلومات استدعاء الإضافة",
+  "debug.payload": "حمولة الإضافة",
+  "debug.pluginState": "حالة المكون الإضافي",
+  "debug.response": "النتيجة المرجعة",
+  "debug.title": "تفاصيل الإضافة",
+  "debug.tool_call": "طلب استدعاء الأداة",
+  "detailModal.customPlugin.description": "يرجى الانتقال إلى صفحة التحرير لمشاهدة التفاصيل",
+  "detailModal.customPlugin.editBtn": "تحرير الآن",
+  "detailModal.customPlugin.title": "هذه إضافة مخصصة",
+  "detailModal.emptyState.description": "يرجى تثبيت هذه الإضافة أولاً لعرض قدرات الإضافة وخيارات التكوين",
+  "detailModal.emptyState.title": "عرض تفاصيل الإضافة بعد التثبيت",
+  "detailModal.info.description": "وصف API",
+  "detailModal.info.name": "اسم API",
+  "detailModal.tabs.info": "قدرات الإضافة",
+  "detailModal.tabs.manifest": "ملف التثبيت",
+  "detailModal.tabs.settings": "الإعدادات",
+  "detailModal.title": "تفاصيل الإضافة",
+  "dev.confirmDeleteDevPlugin": "سيتم حذف هذه الإضافة المحلية ولن يمكن استعادتها، هل تريد حذف هذه الإضافة؟",
+  "dev.customParams.useProxy.label": "التثبيت عبر الوكيل (إذا واجهت خطأ وصول عبر النطاق، جرب تفعيل هذا الخيار ثم أعد التثبيت)",
+  "dev.deleteSuccess": "تم حذف الإضافة بنجاح",
+  "dev.manifest.identifier.desc": "المعرف الفريد للإضافة",
+  "dev.manifest.identifier.label": "المعرف",
+  "dev.manifest.mode.mcp": "إضافة MCP",
+  "dev.manifest.mode.mcpExp": "تجريبي",
+  "dev.manifest.mode.url": "رابط مباشر",
+  "dev.manifest.name.desc": "عنوان الإضافة",
+  "dev.manifest.name.label": "العنوان",
+  "dev.manifest.name.placeholder": "محرك البحث",
+  "dev.mcp.advanced.title": "إعدادات متقدمة",
+  "dev.mcp.args.desc": "قائمة المعلمات الممررة لأمر التنفيذ، عادةً هنا يتم إدخال اسم خادم MCP أو مسار سكريبت التشغيل",
+  "dev.mcp.args.label": "معلمات الأمر",
+  "dev.mcp.args.placeholder": "مثال: mcp-hello-world",
+  "dev.mcp.args.required": "يرجى إدخال معلمات التشغيل",
+  "dev.mcp.auth.bear": "مفتاح API",
+  "dev.mcp.auth.desc": "اختر طريقة التوثيق لخادم MCP",
+  "dev.mcp.auth.label": "نوع التوثيق",
+  "dev.mcp.auth.none": "لا حاجة للتوثيق",
+  "dev.mcp.auth.placeholder": "يرجى اختيار نوع التوثيق",
+  "dev.mcp.auth.token.desc": "أدخل مفتاح API أو رمز الحامل الخاص بك",
+  "dev.mcp.auth.token.label": "مفتاح API",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "يرجى إدخال رمز التوثيق",
+  "dev.mcp.avatar.label": "أيقونة الإضافة",
+  "dev.mcp.command.desc": "الملف التنفيذي أو السكريبت المستخدم لتشغيل خادم MCP STDIO",
+  "dev.mcp.command.label": "الأمر",
+  "dev.mcp.command.placeholder": "مثال: npx / uv / docker إلخ",
+  "dev.mcp.command.required": "يرجى إدخال أمر التشغيل",
+  "dev.mcp.desc.desc": "أضف وصفًا للإضافة",
+  "dev.mcp.desc.label": "وصف الإضافة",
+  "dev.mcp.desc.placeholder": "أضف معلومات عن استخدام الإضافة وسيناريوهاتها",
+  "dev.mcp.endpoint.desc": "أدخل عنوان خادم MCP Streamable HTTP الخاص بك",
+  "dev.mcp.endpoint.label": "رابط نقطة نهاية MCP",
+  "dev.mcp.env.add": "أضف سطرًا جديدًا",
+  "dev.mcp.env.desc": "أدخل متغيرات البيئة المطلوبة لخادم MCP",
+  "dev.mcp.env.duplicateKeyError": "مفتاح الحقل يجب أن يكون فريدًا",
+  "dev.mcp.env.formValidationFailed": "فشل التحقق من النموذج، يرجى مراجعة تنسيق المعلمات",
+  "dev.mcp.env.keyRequired": "مفتاح الحقل لا يمكن أن يكون فارغًا",
+  "dev.mcp.env.label": "متغيرات بيئة خادم MCP",
+  "dev.mcp.env.stringifyError": "تعذر تسلسل المعلمات، يرجى مراجعة التنسيق",
+  "dev.mcp.headers.add": "أضف سطرًا جديدًا",
+  "dev.mcp.headers.desc": "أدخل رؤوس الطلب",
+  "dev.mcp.headers.label": "رؤوس HTTP",
+  "dev.mcp.identifier.desc": "حدد اسمًا لإضافة MCP الخاصة بك، يجب أن يكون بالأحرف الإنجليزية",
+  "dev.mcp.identifier.invalid": "المعرف يمكن أن يحتوي فقط على أحرف، أرقام، شرطات وشرطات سفلية",
+  "dev.mcp.identifier.label": "اسم إضافة MCP",
+  "dev.mcp.identifier.placeholder": "مثال: my-mcp-plugin",
+  "dev.mcp.identifier.required": "يرجى إدخال معرف خدمة MCP",
+  "dev.mcp.previewManifest": "معاينة ملف وصف الإضافة",
+  "dev.mcp.quickImport": "استيراد سريع لتكوين JSON",
+  "dev.mcp.quickImportError.empty": "لا يمكن أن يكون المحتوى فارغًا",
+  "dev.mcp.quickImportError.invalidJson": "تنسيق JSON غير صالح",
+  "dev.mcp.quickImportError.invalidStructure": "هيكل JSON غير صالح",
+  "dev.mcp.stdioNotSupported": "البيئة الحالية لا تدعم إضافات MCP من نوع stdio",
+  "dev.mcp.testConnection": "اختبار الاتصال",
+  "dev.mcp.testConnectionTip": "يجب أن ينجح اختبار الاتصال لكي تعمل إضافة MCP بشكل صحيح",
+  "dev.mcp.type.desc": "اختر طريقة اتصال إضافة MCP، النسخة الويب تدعم فقط Streamable HTTP",
+  "dev.mcp.type.httpFeature1": "متوافق مع الويب وسطح المكتب",
+  "dev.mcp.type.httpFeature2": "اتصال بخادم MCP عن بعد، لا حاجة لتثبيت إضافي",
+  "dev.mcp.type.httpShortDesc": "بروتوكول اتصال HTTP متدفق",
+  "dev.mcp.type.label": "نوع إضافة MCP",
+  "dev.mcp.type.stdioFeature1": "تأخير اتصال أقل، مناسب للتنفيذ المحلي",
+  "dev.mcp.type.stdioFeature2": "يجب تثبيت وتشغيل خادم MCP محليًا",
+  "dev.mcp.type.stdioNotAvailable": "وضع STDIO متاح فقط في نسخة سطح المكتب",
+  "dev.mcp.type.stdioShortDesc": "بروتوكول اتصال يعتمد على الإدخال والإخراج القياسي",
+  "dev.mcp.type.title": "نوع إضافة MCP",
+  "dev.mcp.url.desc": "أدخل عنوان MCP Server Streamable HTTP الخاص بك، لا يدعم وضع SSE",
+  "dev.mcp.url.invalid": "يرجى إدخال عنوان URL صالح",
+  "dev.mcp.url.label": "رابط نقطة نهاية HTTP المتدفق",
+  "dev.mcp.url.required": "يرجى إدخال عنوان URL لخدمة MCP",
+  "dev.meta.author.desc": "مؤلف الإضافة",
+  "dev.meta.author.label": "المؤلف",
+  "dev.meta.avatar.desc": "أيقونة الإضافة، يمكن استخدام إيموجي أو رابط URL",
+  "dev.meta.avatar.label": "الأيقونة",
+  "dev.meta.description.desc": "وصف الإضافة",
+  "dev.meta.description.label": "الوصف",
+  "dev.meta.description.placeholder": "ابحث في محرك البحث للحصول على معلومات",
+  "dev.meta.formFieldRequired": "هذا الحقل مطلوب",
+  "dev.meta.homepage.desc": "الصفحة الرئيسية للإضافة",
+  "dev.meta.homepage.label": "الصفحة الرئيسية",
+  "dev.meta.identifier.desc": "المعرف الفريد للإضافة، سيتم التعرف عليه تلقائيًا من ملف manifest",
+  "dev.meta.identifier.errorDuplicate": "المعرف مكرر مع إضافة موجودة، يرجى تغييره",
+  "dev.meta.identifier.label": "المعرف",
+  "dev.meta.identifier.pattenErrorMessage": "يمكن إدخال أحرف إنجليزية، أرقام، - و _ فقط",
+  "dev.meta.lobe": "إضافة {{appName}}",
+  "dev.meta.manifest.desc": "سيتم تثبيت {{appName}} عبر هذا الرابط",
+  "dev.meta.manifest.label": "رابط ملف وصف الإضافة (Manifest)",
+  "dev.meta.manifest.preview": "معاينة Manifest",
+  "dev.meta.manifest.refresh": "تحديث",
+  "dev.meta.openai": "إضافة OpenAI",
+  "dev.meta.title.desc": "عنوان الإضافة",
+  "dev.meta.title.label": "العنوان",
+  "dev.meta.title.placeholder": "محرك البحث",
+  "dev.metaConfig": "تكوين معلومات الإضافة الأساسية",
+  "dev.modalDesc": "بعد إضافة إضافة مخصصة، يمكن استخدامها للتحقق من تطوير الإضافة أو استخدامها مباشرة في المحادثة. يرجى الرجوع إلى <1>وثائق التطوير↗</> لتطوير الإضافات.",
+  "dev.openai.importUrl": "استيراد من رابط URL",
+  "dev.openai.schema": "المخطط",
+  "dev.preview.api.noParams": "هذه الأداة لا تحتوي على معلمات",
+  "dev.preview.api.noResults": "لم يتم العثور على API تطابق شروط البحث",
+  "dev.preview.api.params": "المعلمات:",
+  "dev.preview.api.searchPlaceholder": "ابحث عن أداة...",
+  "dev.preview.card": "معاينة عرض الإضافة",
+  "dev.preview.desc": "معاينة وصف الإضافة",
+  "dev.preview.empty.desc": "بعد إكمال التكوين، يمكنك معاينة قدرات الأدوات المدعومة هنا",
+  "dev.preview.empty.title": "ابدأ المعاينة بعد تكوين الإضافة",
+  "dev.preview.title": "معاينة اسم الإضافة",
+  "dev.save": "تثبيت الإضافة",
+  "dev.saveSuccess": "تم حفظ إعدادات الإضافة بنجاح",
+  "dev.tabs.manifest": "قائمة وصف الوظائف (Manifest)",
+  "dev.tabs.meta": "معلومات الإضافة الأساسية",
+  "dev.title.create": "إضافة إضافة مخصصة",
+  "dev.title.edit": "تحرير إضافة مخصصة",
+  "dev.type.lobe": "إضافة {{appName}}",
+  "dev.type.openai": "إضافة OpenAI",
+  "dev.update": "تحديث",
+  "dev.updateSuccess": "تم تحديث إعدادات الإضافة بنجاح",
+  "empty.description": "يحتوي متجر الإضافات على العديد من الأدوات في انتظارك لاكتشافها، قم بزيارة المتجر وابدأ الاستكشاف",
+  "empty.search": "لم يتم العثور على إضافات مطابقة",
+  "empty.title": "لا توجد إضافات حالياً",
+  "error.fetchError": "فشل طلب رابط manifest، يرجى التأكد من صلاحية الرابط وفحص ما إذا كان يسمح بالوصول عبر النطاق",
+  "error.installError": "فشل تثبيت الإضافة {{name}}",
+  "error.manifestInvalid": "الملف manifest غير مطابق للمواصفات، نتيجة التحقق: \n\n {{error}}",
+  "error.noManifest": "ملف الوصف غير موجود",
+  "error.openAPIInvalid": "فشل تحليل OpenAPI، الخطأ: \n\n {{error}}",
+  "error.reinstallError": "فشل تحديث الإضافة {{name}}",
+  "error.testConnectionFailed": "فشل الحصول على Manifest: {{error}}",
+  "error.urlError": "الرابط لم يرجع محتوى بصيغة JSON، يرجى التأكد من صحة الرابط",
+  "inspector.args": "عرض قائمة المعلمات",
+  "inspector.delete": "حذف استدعاء الأداة",
+  "inspector.orphanedToolCall": "قد تكون رسالة استدعاء الأداة هذه معزولة بسبب ظروف غير طبيعية، مما قد يؤثر على تنفيذ الوكيل بشكل صحيح. يُرجى إزالتها.",
+  "inspector.pluginRender": "عرض واجهة الإضافة",
+  "list.item.deprecated.title": "تم الحذف",
+  "list.item.local.config": "الإعدادات",
+  "list.item.local.title": "مخصص",
+  "loading.content": "جارٍ استدعاء الإضافة...",
+  "loading.plugin": "تشغيل الإضافة...",
+  "mcpEmpty.deployment": "لا توجد خيارات نشر حالياً",
+  "mcpEmpty.prompts": "لا توجد مطالبات متاحة لهذه الإضافة حالياً",
+  "mcpEmpty.resources": "لا توجد موارد متاحة لهذه الإضافة حالياً",
+  "mcpEmpty.tools": "لا توجد قدرات أدوات متاحة لهذه الإضافة حالياً",
+  "mcpInstall.CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",
+  "mcpInstall.COMPLETED": "اكتمل التثبيت",
+  "mcpInstall.CONFIGURATION_REQUIRED": "يرجى إكمال التكوين المطلوب للمتابعة بالتثبيت",
+  "mcpInstall.ERROR": "خطأ في التثبيت",
+  "mcpInstall.FETCHING_MANIFEST": "جارٍ الحصول على ملف وصف الإضافة...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "جارٍ تهيئة خادم MCP...",
+  "mcpInstall.INSTALLING_PLUGIN": "جارٍ تثبيت الإضافة...",
+  "mcpInstall.configurationDescription": "تتطلب هذه الإضافة MCP إعداد معلمات لتعمل بشكل صحيح، يرجى ملء المعلومات اللازمة",
+  "mcpInstall.configurationRequired": "تكوين معلمات الإضافة",
+  "mcpInstall.continueInstall": "متابعة التثبيت",
+  "mcpInstall.dependenciesDescription": "تتطلب هذه الإضافة تثبيت تبعيات نظامية لتعمل بشكل صحيح، يرجى تثبيت التبعيات المفقودة حسب التعليمات ثم اضغط إعادة الفحص للمتابعة بالتثبيت.",
+  "mcpInstall.dependenciesRequired": "يرجى تثبيت تبعيات النظام للإضافة",
+  "mcpInstall.dependencyStatus.installed": "مثبت",
+  "mcpInstall.dependencyStatus.notInstalled": "غير مثبت",
+  "mcpInstall.dependencyStatus.requiredVersion": "الإصدار المطلوب: {{version}}",
+  "mcpInstall.errorDetails.args": "المعلمات",
+  "mcpInstall.errorDetails.command": "الأمر",
+  "mcpInstall.errorDetails.connectionParams": "معلمات الاتصال",
+  "mcpInstall.errorDetails.env": "متغيرات البيئة",
+  "mcpInstall.errorDetails.errorOutput": "سجل الأخطاء",
+  "mcpInstall.errorDetails.exitCode": "رمز الخروج",
+  "mcpInstall.errorDetails.hideDetails": "إخفاء التفاصيل",
+  "mcpInstall.errorDetails.originalError": "الخطأ الأصلي",
+  "mcpInstall.errorDetails.showDetails": "عرض التفاصيل",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "خطأ في التحقق من التفويض",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "فشل الاتصال",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "انتهت مهلة التهيئة",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "فشل بدء العملية",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "خطأ غير معروف",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "فشل التحقق من المعلمات",
+  "mcpInstall.installError": "فشل تثبيت إضافة MCP، السبب: {{detail}}",
+  "mcpInstall.installMethods.manual": "تثبيت يدوي:",
+  "mcpInstall.installMethods.recommended": "طريقة التثبيت الموصى بها:",
+  "mcpInstall.recheckDependencies": "إعادة فحص",
+  "mcpInstall.skipDependencies": "تخطي الفحص",
   "pluginList": "قائمة الإضافات",
-  "protocolInstall": {
-    "actions": {
-      "install": "تثبيت",
-      "installAnyway": "تثبيت على أي حال",
-      "installed": "مثبت"
-    },
-    "config": {
-      "addEnv": "إضافة متغير بيئة",
-      "addHeaders": "إضافة رؤوس الطلب",
-      "args": "المعلمات",
-      "command": "الأمر",
-      "env": "متغيرات البيئة",
-      "headers": "رؤوس الطلب",
-      "title": "معلومات التكوين",
-      "type": {
-        "http": "النوع: HTTP",
-        "label": "النوع",
-        "stdio": "النوع: Stdio"
-      },
-      "url": "عنوان الخدمة"
-    },
-    "custom": {
-      "badge": "إضافة مخصصة",
-      "security": {
-        "description": "هذه الإضافة لم يتم التحقق منها رسميًا، قد تحمل مخاطر أمنية! يرجى التأكد من ثقتك بمصدر الإضافة.",
-        "title": "⚠️ تحذير أمني"
-      },
-      "title": "تثبيت إضافة مخصصة"
-    },
-    "install": {
-      "title": "معلومات التثبيت"
-    },
-    "marketplace": {
-      "title": "تثبيت إضافات الطرف الثالث",
-      "trustedBy": "مقدم من {{name}}",
-      "unverified": {
-        "title": "إضافات طرف ثالث غير موثوقة",
-        "warning": "هذا المكون الإضافي来自 مجتمع طرف ثالث غير موثوق به. يرجى التأكد من أنك تثق في هذا المصدر قبل التثبيت."
-      },
-      "verified": "موثوقة"
-    },
-    "messages": {
-      "connectionTestFailed": "فشل اختبار الاتصال",
-      "installError": "فشل تثبيت الإضافة، يرجى المحاولة مجددًا",
-      "installSuccess": "تم تثبيت الإضافة {{name}} بنجاح!",
-      "manifestError": "فشل الحصول على تفاصيل الإضافة، يرجى التحقق من الاتصال بالشبكة والمحاولة مجددًا",
-      "manifestNotFound": "تعذر الحصول على ملف وصف الإضافة"
-    },
-    "meta": {
-      "author": "المؤلف",
-      "homepage": "الصفحة الرئيسية",
-      "identifier": "المعرف",
-      "source": "المصدر",
-      "version": "الإصدار"
-    },
-    "official": {
-      "badge": "إضافة رسمية من LobeHub",
-      "description": "تم تطوير هذه الإضافة وصيانتها رسميًا من قبل LobeHub، وتمت مراجعتها أمنيًا بدقة، يمكن استخدامها بأمان.",
-      "loadingMessage": "جارٍ الحصول على تفاصيل الإضافة...",
-      "loadingTitle": "جارٍ التحميل",
-      "title": "تثبيت إضافة رسمية"
-    },
-    "title": "تثبيت إضافة MCP",
-    "warning": "⚠️ يرجى التأكد من ثقتك بمصدر هذه الإضافة، الإضافات الخبيثة قد تضر بأمان نظامك."
-  },
-  "search": {
-    "config": {
-      "addKey": "إضافة مفتاح",
-      "close": "حذف",
-      "confirm": "تم إكمال التكوين وأعيد المحاولة"
-    },
-    "crawPages": {
-      "crawling": "جارٍ التعرف على الروابط",
-      "detail": {
-        "preview": "معاينة",
-        "raw": "نص خام",
-        "tooLong": "النص طويل جدًا، يحتفظ سياق المحادثة فقط بأول {{characters}} حرفًا، الجزء الزائد غير مدرج في السياق"
-      },
-      "meta": {
-        "crawler": "وضع الزحف",
-        "words": "عدد الأحرف"
-      }
-    },
-    "searchxng": {
-      "baseURL": "يرجى الإدخال",
-      "description": "يرجى إدخال عنوان SearchXNG للبدء في البحث عبر الإنترنت",
-      "keyPlaceholder": "يرجى إدخال المفتاح",
-      "title": "تكوين محرك البحث SearchXNG",
-      "unconfiguredDesc": "يرجى الاتصال بالمسؤول لإكمال تكوين محرك البحث SearchXNG للبدء في البحث عبر الإنترنت",
-      "unconfiguredTitle": "لم يتم تكوين محرك البحث SearchXNG بعد"
-    },
-    "title": "البحث عبر الإنترنت"
-  },
+  "protocolInstall.actions.install": "تثبيت",
+  "protocolInstall.actions.installAnyway": "تثبيت على أي حال",
+  "protocolInstall.actions.installed": "مثبت",
+  "protocolInstall.config.addEnv": "إضافة متغير بيئة",
+  "protocolInstall.config.addHeaders": "إضافة رؤوس الطلب",
+  "protocolInstall.config.args": "المعلمات",
+  "protocolInstall.config.command": "الأمر",
+  "protocolInstall.config.env": "متغيرات البيئة",
+  "protocolInstall.config.headers": "رؤوس الطلب",
+  "protocolInstall.config.title": "معلومات التكوين",
+  "protocolInstall.config.type.http": "النوع: HTTP",
+  "protocolInstall.config.type.label": "النوع",
+  "protocolInstall.config.type.stdio": "النوع: Stdio",
+  "protocolInstall.config.url": "عنوان الخدمة",
+  "protocolInstall.custom.badge": "إضافة مخصصة",
+  "protocolInstall.custom.security.description": "هذه الإضافة لم يتم التحقق منها رسميًا، قد تحمل مخاطر أمنية! يرجى التأكد من ثقتك بمصدر الإضافة.",
+  "protocolInstall.custom.security.title": "⚠️ تحذير أمني",
+  "protocolInstall.custom.title": "تثبيت إضافة مخصصة",
+  "protocolInstall.install.title": "معلومات التثبيت",
+  "protocolInstall.marketplace.title": "تثبيت إضافات الطرف الثالث",
+  "protocolInstall.marketplace.trustedBy": "مقدم من {{name}}",
+  "protocolInstall.marketplace.unverified.title": "إضافات طرف ثالث غير موثوقة",
+  "protocolInstall.marketplace.unverified.warning": "هذا المكون الإضافي来自 مجتمع طرف ثالث غير موثوق به. يرجى التأكد من أنك تثق في هذا المصدر قبل التثبيت.",
+  "protocolInstall.marketplace.verified": "موثوقة",
+  "protocolInstall.messages.connectionTestFailed": "فشل اختبار الاتصال",
+  "protocolInstall.messages.installError": "فشل تثبيت الإضافة، يرجى المحاولة مجددًا",
+  "protocolInstall.messages.installSuccess": "تم تثبيت الإضافة {{name}} بنجاح!",
+  "protocolInstall.messages.manifestError": "فشل الحصول على تفاصيل الإضافة، يرجى التحقق من الاتصال بالشبكة والمحاولة مجددًا",
+  "protocolInstall.messages.manifestNotFound": "تعذر الحصول على ملف وصف الإضافة",
+  "protocolInstall.meta.author": "المؤلف",
+  "protocolInstall.meta.homepage": "الصفحة الرئيسية",
+  "protocolInstall.meta.identifier": "المعرف",
+  "protocolInstall.meta.source": "المصدر",
+  "protocolInstall.meta.version": "الإصدار",
+  "protocolInstall.official.badge": "إضافة رسمية من LobeHub",
+  "protocolInstall.official.description": "تم تطوير هذه الإضافة وصيانتها رسميًا من قبل LobeHub، وتمت مراجعتها أمنيًا بدقة، يمكن استخدامها بأمان.",
+  "protocolInstall.official.loadingMessage": "جارٍ الحصول على تفاصيل الإضافة...",
+  "protocolInstall.official.loadingTitle": "جارٍ التحميل",
+  "protocolInstall.official.title": "تثبيت إضافة رسمية",
+  "protocolInstall.title": "تثبيت إضافة MCP",
+  "protocolInstall.warning": "⚠️ يرجى التأكد من ثقتك بمصدر هذه الإضافة، الإضافات الخبيثة قد تضر بأمان نظامك.",
+  "search.config.addKey": "إضافة مفتاح",
+  "search.config.close": "حذف",
+  "search.config.confirm": "تم إكمال التكوين وأعيد المحاولة",
+  "search.crawPages.crawling": "جارٍ التعرف على الروابط",
+  "search.crawPages.detail.preview": "معاينة",
+  "search.crawPages.detail.raw": "نص خام",
+  "search.crawPages.detail.tooLong": "النص طويل جدًا، يحتفظ سياق المحادثة فقط بأول {{characters}} حرفًا، الجزء الزائد غير مدرج في السياق",
+  "search.crawPages.meta.crawler": "وضع الزحف",
+  "search.crawPages.meta.words": "عدد الأحرف",
+  "search.searchxng.baseURL": "يرجى الإدخال",
+  "search.searchxng.description": "يرجى إدخال عنوان SearchXNG للبدء في البحث عبر الإنترنت",
+  "search.searchxng.keyPlaceholder": "يرجى إدخال المفتاح",
+  "search.searchxng.title": "تكوين محرك البحث SearchXNG",
+  "search.searchxng.unconfiguredDesc": "يرجى الاتصال بالمسؤول لإكمال تكوين محرك البحث SearchXNG للبدء في البحث عبر الإنترنت",
+  "search.searchxng.unconfiguredTitle": "لم يتم تكوين محرك البحث SearchXNG بعد",
+  "search.title": "البحث عبر الإنترنت",
   "setting": "إعدادات الإضافة",
-  "settings": {
-    "capabilities": {
-      "prompts": "عبارات التوجيه",
-      "resources": "الموارد",
-      "title": "قدرات الإضافة",
-      "tools": "الأدوات"
-    },
-    "configuration": {
-      "title": "تكوين الإضافة"
-    },
-    "connection": {
-      "args": "معلمات التشغيل",
-      "command": "أمر التشغيل",
-      "title": "معلومات الاتصال",
-      "type": "نوع الاتصال",
-      "url": "عنوان الخدمة"
-    },
-    "edit": "تحرير",
-    "envConfigDescription": "سيتم تمرير هذه الإعدادات كمتغيرات بيئة عند بدء تشغيل خادم MCP",
-    "httpTypeNotice": "إضافات MCP من نوع HTTP لا تحتاج إلى متغيرات بيئة للتكوين حاليًا",
-    "indexUrl": {
-      "title": "فهرس المجتمع",
-      "tooltip": "لا يدعم التحرير عبر الإنترنت حاليًا، يرجى التكوين عبر متغيرات البيئة عند النشر"
-    },
-    "messages": {
-      "connectionUpdateFailed": "فشل تحديث معلومات الاتصال",
-      "connectionUpdateSuccess": "تم تحديث معلومات الاتصال بنجاح",
-      "envUpdateFailed": "فشل حفظ متغيرات البيئة",
-      "envUpdateSuccess": "تم حفظ متغيرات البيئة بنجاح"
-    },
-    "modalDesc": "بعد تكوين عنوان مجتمع المكونات الإضافية، يمكنك استخدام مجتمع مكونات إضافية مخصص",
-    "rules": {
-      "argsRequired": "يرجى إدخال معلمات التشغيل",
-      "commandRequired": "يرجى إدخال أمر التشغيل",
-      "urlRequired": "يرجى إدخال عنوان الخدمة"
-    },
-    "saveSettings": "حفظ الإعدادات",
-    "title": "إعداد مجتمع المكونات الإضافية"
-  },
+  "settings.capabilities.prompts": "عبارات التوجيه",
+  "settings.capabilities.resources": "الموارد",
+  "settings.capabilities.title": "قدرات الإضافة",
+  "settings.capabilities.tools": "الأدوات",
+  "settings.configuration.title": "تكوين الإضافة",
+  "settings.connection.args": "معلمات التشغيل",
+  "settings.connection.command": "أمر التشغيل",
+  "settings.connection.title": "معلومات الاتصال",
+  "settings.connection.type": "نوع الاتصال",
+  "settings.connection.url": "عنوان الخدمة",
+  "settings.edit": "تحرير",
+  "settings.envConfigDescription": "سيتم تمرير هذه الإعدادات كمتغيرات بيئة عند بدء تشغيل خادم MCP",
+  "settings.httpTypeNotice": "إضافات MCP من نوع HTTP لا تحتاج إلى متغيرات بيئة للتكوين حاليًا",
+  "settings.indexUrl.title": "فهرس المجتمع",
+  "settings.indexUrl.tooltip": "لا يدعم التحرير عبر الإنترنت حاليًا، يرجى التكوين عبر متغيرات البيئة عند النشر",
+  "settings.messages.connectionUpdateFailed": "فشل تحديث معلومات الاتصال",
+  "settings.messages.connectionUpdateSuccess": "تم تحديث معلومات الاتصال بنجاح",
+  "settings.messages.envUpdateFailed": "فشل حفظ متغيرات البيئة",
+  "settings.messages.envUpdateSuccess": "تم حفظ متغيرات البيئة بنجاح",
+  "settings.modalDesc": "بعد تكوين عنوان مجتمع المكونات الإضافية، يمكنك استخدام مجتمع مكونات إضافية مخصص",
+  "settings.rules.argsRequired": "يرجى إدخال معلمات التشغيل",
+  "settings.rules.commandRequired": "يرجى إدخال أمر التشغيل",
+  "settings.rules.urlRequired": "يرجى إدخال عنوان الخدمة",
+  "settings.saveSettings": "حفظ الإعدادات",
+  "settings.title": "إعداد مجتمع المكونات الإضافية",
   "showInPortal": "يرجى عرض التفاصيل في مساحة العمل",
-  "store": {
-    "actions": {
-      "cancel": "إلغاء التثبيت",
-      "confirmUninstall": "سيتم إلغاء تثبيت هذه الإضافة وسيتم حذف إعداداتها، يرجى تأكيد العملية",
-      "detail": "التفاصيل",
-      "install": "تثبيت",
-      "manifest": "تحرير ملف التثبيت",
-      "settings": "الإعدادات",
-      "uninstall": "إلغاء التثبيت"
-    },
-    "communityPlugin": "مجتمع الطرف الثالث",
-    "customPlugin": "مخصص",
-    "empty": "لا توجد إضافات مثبتة",
-    "emptySelectHint": "اختر إضافة لمعاينة التفاصيل",
-    "installAllPlugins": "تثبيت الكل",
-    "networkError": "فشل الحصول على متجر الإضافات، يرجى التحقق من الاتصال بالشبكة والمحاولة مجددًا",
-    "placeholder": "ابحث عن اسم الإضافة أو الوصف أو الكلمات المفتاحية...",
-    "releasedAt": "نُشر في {{createdAt}}",
-    "tabs": {
-      "installed": "مثبت",
-      "mcp": "إضافات MCP",
-      "old": "ملحقات LobeHub"
-    },
-    "title": "متجر الإضافات"
-  },
+  "store.actions.cancel": "إلغاء التثبيت",
+  "store.actions.confirmUninstall": "سيتم إلغاء تثبيت هذه الإضافة وسيتم حذف إعداداتها، يرجى تأكيد العملية",
+  "store.actions.detail": "التفاصيل",
+  "store.actions.install": "تثبيت",
+  "store.actions.manifest": "تحرير ملف التثبيت",
+  "store.actions.settings": "الإعدادات",
+  "store.actions.uninstall": "إلغاء التثبيت",
+  "store.communityPlugin": "مجتمع الطرف الثالث",
+  "store.customPlugin": "مخصص",
+  "store.empty": "لا توجد إضافات مثبتة",
+  "store.emptySelectHint": "اختر إضافة لمعاينة التفاصيل",
+  "store.installAllPlugins": "تثبيت الكل",
+  "store.networkError": "فشل الحصول على متجر الإضافات، يرجى التحقق من الاتصال بالشبكة والمحاولة مجددًا",
+  "store.placeholder": "ابحث عن اسم الإضافة أو الوصف أو الكلمات المفتاحية...",
+  "store.releasedAt": "نُشر في {{createdAt}}",
+  "store.tabs.installed": "مثبت",
+  "store.tabs.mcp": "إضافات MCP",
+  "store.tabs.old": "ملحقات LobeHub",
+  "store.title": "متجر الإضافات",
   "unknownError": "خطأ غير معروف",
   "unknownPlugin": "إضافة غير معروفة"
 }

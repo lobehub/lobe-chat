@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "Arquivo adicionado com sucesso, <1>ver agora</1>",
-    "confirm": "Adicionar",
-    "error": "Falha ao adicionar o arquivo à base de conhecimento",
-    "id": {
-      "placeholder": "Selecione a base de conhecimento de destino",
-      "required": "Por favor, selecione uma base de conhecimento",
-      "title": "Base de conhecimento de destino"
-    },
-    "title": "Adicionar à base de conhecimento",
-    "totalFiles": "Foram selecionados {{count}} arquivos"
-  },
-  "createNew": {
-    "confirm": "Criar novo",
-    "description": {
-      "placeholder": "Descrição da base de conhecimento (opcional)"
-    },
-    "formTitle": "Informações básicas",
-    "name": {
-      "placeholder": "Nome da base de conhecimento",
-      "required": "Por favor, insira o nome da base de conhecimento"
-    },
-    "title": "Criar nova base de conhecimento"
-  },
-  "tab": {
-    "evals": "Avaliações",
-    "files": "Documentos",
-    "settings": "Configurações",
-    "testing": "Teste de recuperação"
-  },
+  "addToKnowledgeBase.addSuccess": "Arquivo adicionado com sucesso, <1>ver agora</1>",
+  "addToKnowledgeBase.confirm": "Adicionar",
+  "addToKnowledgeBase.error": "Falha ao adicionar o arquivo à base de conhecimento",
+  "addToKnowledgeBase.id.placeholder": "Selecione a base de conhecimento de destino",
+  "addToKnowledgeBase.id.required": "Por favor, selecione uma base de conhecimento",
+  "addToKnowledgeBase.id.title": "Base de conhecimento de destino",
+  "addToKnowledgeBase.title": "Adicionar à base de conhecimento",
+  "addToKnowledgeBase.totalFiles": "Foram selecionados {{count}} arquivos",
+  "createNew.confirm": "Criar novo",
+  "createNew.description.placeholder": "Descrição da base de conhecimento (opcional)",
+  "createNew.formTitle": "Informações básicas",
+  "createNew.name.placeholder": "Nome da base de conhecimento",
+  "createNew.name.required": "Por favor, insira o nome da base de conhecimento",
+  "createNew.title": "Criar nova base de conhecimento",
+  "tab.evals": "Avaliações",
+  "tab.files": "Documentos",
+  "tab.settings": "Configurações",
+  "tab.testing": "Teste de recuperação",
   "title": "Base de conhecimento"
 }

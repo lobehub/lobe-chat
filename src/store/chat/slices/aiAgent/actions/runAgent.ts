@@ -1,6 +1,7 @@
 import { isDesktop } from '@lobechat/const';
 import { ChatToolPayload } from '@lobechat/types';
 import debug from 'debug';
+import i18n from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
 import { StreamEvent, agentRuntimeService } from '@/services/agentRuntime';
@@ -243,8 +244,8 @@ export const agentSlice: StateCreator<ChatStore, [['zustand/devtools', never]], 
             const { desktopNotificationService } =
               await import('@/services/electron/desktopNotification');
             await desktopNotificationService.showNotification({
-              body: 'AI 回复生成完成',
-              title: 'AI 回复完成', // TODO: 使用 i18n
+              body: i18n.t('desktopNotification.aiReplyCompleted.body', { ns: 'chat' }),
+              title: i18n.t('desktopNotification.aiReplyCompleted.title', { ns: 'chat' }),
             });
           } catch (error) {
             console.error('Desktop notification error:', error);

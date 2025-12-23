@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "Versión empresarial"
-      },
-      "free": {
-        "title": "Versión gratuita"
-      },
-      "hobby": {
-        "title": "Versión de autoservicio"
-      },
-      "premium": {
-        "title": "Premium"
-      },
-      "starter": {
-        "title": "Versión básica"
-      },
-      "ultimate": {
-        "title": "Ultimate"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "Versión empresarial",
+  "plans.plan.free.title": "Versión gratuita",
+  "plans.plan.hobby.title": "Versión de autoservicio",
+  "plans.plan.premium.title": "Premium",
+  "plans.plan.starter.title": "Versión básica",
+  "plans.plan.ultimate.title": "Ultimate"
 }

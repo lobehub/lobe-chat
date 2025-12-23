@@ -157,7 +157,7 @@ const ImportPreviewModal = ({
               </Flexbox>
             </Flexbox>
             <Flexbox className={styles.hash} gap={4} horizontal>
-              Hash: <span>{importData.schemaHash}</span>
+              {t('importPreview.hashLabel')}: <span>{importData.schemaHash}</span>
             </Flexbox>
           </Flexbox>
 

@@ -2,197 +2,125 @@
   "addFolder": "إنشاء مجلد",
   "addLibrary": "إضافة",
   "addPage": "إنشاء مستند",
-  "detail": {
-    "basic": {
-      "createdAt": "تاريخ الإنشاء",
-      "filename": "اسم الملف",
-      "size": "حجم الملف",
-      "title": "معلومات أساسية",
-      "type": "الصيغة",
-      "updatedAt": "تاريخ التحديث"
-    },
-    "data": {
-      "chunkCount": "عدد الأجزاء",
-      "embedding": {
-        "default": "لم يتم تحويله إلى متجهات بعد",
-        "error": "فشل",
-        "pending": "في انتظار البدء",
-        "processing": "جارٍ المعالجة",
-        "success": "اكتمل"
-      },
-      "embeddingStatus": "تحويل إلى متجهات"
-    }
-  },
+  "detail.basic.createdAt": "تاريخ الإنشاء",
+  "detail.basic.filename": "اسم الملف",
+  "detail.basic.size": "حجم الملف",
+  "detail.basic.title": "معلومات أساسية",
+  "detail.basic.type": "الصيغة",
+  "detail.basic.updatedAt": "تاريخ التحديث",
+  "detail.data.chunkCount": "عدد الأجزاء",
+  "detail.data.embedding.default": "لم يتم تحويله إلى متجهات بعد",
+  "detail.data.embedding.error": "فشل",
+  "detail.data.embedding.pending": "في انتظار البدء",
+  "detail.data.embedding.processing": "جارٍ المعالجة",
+  "detail.data.embedding.success": "اكتمل",
+  "detail.data.embeddingStatus": "تحويل إلى متجهات",
   "empty": "لا توجد ملفات/مجلدات تم تحميلها بعد",
-  "header": {
-    "actions": {
-      "builtInBlockList": {
-        "filtered": "تم تصفية {{ignored}} ملفًا من أصل {{total}} ملف"
-      },
-      "connect": "اتصال...",
-      "gitignore": {
-        "apply": "تطبيق القواعد",
-        "cancel": "تجاهل القواعد",
-        "content": "تم اكتشاف ملف ‎.gitignore (عدد {{count}} من الملفات)، هل ترغب في تطبيق قواعد التجاهل؟",
-        "filtered": "{{ignored}} ملفًا تم تجاهله من أصل {{total}} ملفًا",
-        "title": "تم اكتشاف ‎.gitignore"
-      },
-      "newFolder": "إنشاء مجلد جديد",
-      "newPage": "مستند جديد",
-      "notion": {
-        "error": "فشل في استيراد ملف Notion",
-        "foundFiles": "تم العثور على {{count}} ملف",
-        "importing": "جارٍ استيراد ملفات Notion...",
-        "noMarkdownFiles": "لم يتم العثور على ملفات Markdown في ملف ZIP",
-        "partial": "تم استيراد {{success}} ملفًا بنجاح، وفشل {{failed}} ملفًا",
-        "success": "تم استيراد {{count}} ملفًا بنجاح"
-      },
-      "notionGuide": {
-        "cancel": "إلغاء الاستيراد الآن",
-        "desc": "يرجى أولاً تصدير ملفات Markdown (بصيغة ZIP) من Notion، ثم النقر على متابعة لاختيار ملف الضغط واستيراد جميع الصفحات.",
-        "ok": "اختر ملف ZIP من Notion",
-        "title": "استيراد محتوى Notion"
-      },
-      "uploadFile": "رفع ملف",
-      "uploadFolder": "رفع مجلد"
-    },
-    "newPageButton": "إنشاء مستند جديد",
-    "uploadButton": "رفع"
-  },
-  "home": {
-    "getStarted": "ابدأ الآن",
-    "greeting": "ابدأ",
-    "quickActions": "إجراءات سريعة",
-    "recentFiles": "الملفات الأخيرة",
-    "recentPages": "الصفحات الأخيرة",
-    "subtitle": "مرحبًا بك في مركز الموارد، ابدأ من هنا لإدارة مستنداتك وملفاتك.",
-    "uploadEntries": {
-      "files": {
-        "title": "رفع ملفات"
-      },
-      "folder": {
-        "title": "رفع مجلد"
-      },
-      "library": {
-        "title": "إنشاء مكتبة جديدة"
-      },
-      "newPage": {
-        "title": "إنشاء مستند جديد"
-      }
-    }
-  },
-  "library": {
-    "list": {
-      "confirmRemoveLibrary": "سيتم حذف هذه المكتبة، لكن الملفات بداخلها لن تُحذف، بل سيتم نقلها إلى جميع الملفات. لا يمكن استعادة المكتبة بعد حذفها، يرجى الحذر.",
-      "empty": "انقر <1>+</1> لبدء إنشاء مكتبة"
-    },
-    "new": "إنشاء مكتبة جديدة",
-    "title": "المكتبة"
-  },
-  "menu": {
-    "allFiles": "جميع الملفات",
-    "allPages": "جميع المستندات"
-  },
+  "header.actions.builtInBlockList.filtered": "تم تصفية {{ignored}} ملفًا من أصل {{total}} ملف",
+  "header.actions.connect": "اتصال...",
+  "header.actions.gitignore.apply": "تطبيق القواعد",
+  "header.actions.gitignore.cancel": "تجاهل القواعد",
+  "header.actions.gitignore.content": "تم اكتشاف ملف ‎.gitignore (عدد {{count}} من الملفات)، هل ترغب في تطبيق قواعد التجاهل؟",
+  "header.actions.gitignore.filtered": "{{ignored}} ملفًا تم تجاهله من أصل {{total}} ملفًا",
+  "header.actions.gitignore.title": "تم اكتشاف ‎.gitignore",
+  "header.actions.newFolder": "إنشاء مجلد جديد",
+  "header.actions.newPage": "مستند جديد",
+  "header.actions.notion.error": "فشل في استيراد ملف Notion",
+  "header.actions.notion.foundFiles": "تم العثور على {{count}} ملف",
+  "header.actions.notion.importing": "جارٍ استيراد ملفات Notion...",
+  "header.actions.notion.noMarkdownFiles": "لم يتم العثور على ملفات Markdown في ملف ZIP",
+  "header.actions.notion.partial": "تم استيراد {{success}} ملفًا بنجاح، وفشل {{failed}} ملفًا",
+  "header.actions.notion.success": "تم استيراد {{count}} ملفًا بنجاح",
+  "header.actions.notionGuide.cancel": "إلغاء الاستيراد الآن",
+  "header.actions.notionGuide.desc": "يرجى أولاً تصدير ملفات Markdown (بصيغة ZIP) من Notion، ثم النقر على متابعة لاختيار ملف الضغط واستيراد جميع الصفحات.",
+  "header.actions.notionGuide.ok": "اختر ملف ZIP من Notion",
+  "header.actions.notionGuide.title": "استيراد محتوى Notion",
+  "header.actions.uploadFile": "رفع ملف",
+  "header.actions.uploadFolder": "رفع مجلد",
+  "header.newPageButton": "إنشاء مستند جديد",
+  "header.uploadButton": "رفع",
+  "home.getStarted": "ابدأ الآن",
+  "home.greeting": "ابدأ",
+  "home.quickActions": "إجراءات سريعة",
+  "home.recentFiles": "الملفات الأخيرة",
+  "home.recentPages": "الصفحات الأخيرة",
+  "home.subtitle": "مرحبًا بك في مركز الموارد، ابدأ من هنا لإدارة مستنداتك وملفاتك.",
+  "home.uploadEntries.files.title": "رفع ملفات",
+  "home.uploadEntries.folder.title": "رفع مجلد",
+  "home.uploadEntries.library.title": "إنشاء مكتبة جديدة",
+  "home.uploadEntries.newPage.title": "إنشاء مستند جديد",
+  "library.list.confirmRemoveLibrary": "سيتم حذف هذه المكتبة، لكن الملفات بداخلها لن تُحذف، بل سيتم نقلها إلى جميع الملفات. لا يمكن استعادة المكتبة بعد حذفها، يرجى الحذر.",
+  "library.list.empty": "انقر <1>+</1> لبدء إنشاء مكتبة",
+  "library.new": "إنشاء مكتبة جديدة",
+  "library.title": "المكتبة",
+  "menu.allFiles": "جميع الملفات",
+  "menu.allPages": "جميع المستندات",
   "networkError": "فشل في تحميل المكتبة، يرجى التحقق من اتصال الشبكة والمحاولة مرة أخرى",
-  "notSupportGuide": {
-    "desc": "الوضع الحالي للنشر هو وضع قاعدة بيانات العميل، ولا يمكن استخدام وظيفة إدارة الملفات. يرجى التبديل إلى <1>وضع نشر قاعدة بيانات الخادم</1>، أو استخدام <3>LobeChat Cloud</3> مباشرة.",
-    "features": {
-      "allKind": {
-        "desc": "يدعم أنواع الملفات الشائعة، بما في ذلك تنسيقات المستندات الشائعة مثل Word وPPT وExcel وPDF وTXT، بالإضافة إلى ملفات الشيفرة الشائعة مثل JS وPython.",
-        "title": "تحليل أنواع متعددة من الملفات"
-      },
-      "embeddings": {
-        "desc": "استخدام نماذج متجهات عالية الأداء لتحويل النصوص إلى متجهات، مما يتيح البحث الدلالي في محتوى الملفات.",
-        "title": "تحويل دلالي إلى متجهات"
-      },
-      "libraries": {
-        "desc": "يدعم إنشاء مكتبات ويسمح بإضافة أنواع مختلفة من الملفات لبناء مواردك المتخصصة",
-        "title": "المكتبة"
-      }
-    },
-    "title": "الوضع الحالي للنشر لا يدعم إدارة الملفات"
-  },
-  "pageEditor": {
-    "addIcon": "إضافة أيقونة",
-    "autoSaveMessage": "يتم حفظ المستند تلقائيًا، لا حاجة للحفظ اليدوي",
-    "chooseIcon": "اختر أيقونة",
-    "deleteConfirm": {
-      "content": "سيتم حذف هذا المستند، ولا يمكن استعادته بعد الحذف. يرجى توخي الحذر.",
-      "title": "حذف المستند"
-    },
-    "deleteError": "فشل في حذف المستند",
-    "deleteSuccess": "تم حذف المستند بنجاح",
-    "editedAt": "آخر تعديل في {{time}}",
-    "editedBy": "آخر من عدّل: {{name}}",
-    "editorPlaceholder": "أدخل محتوى المستند، اضغط / لفتح قائمة الأوامر",
-    "empty": {
-      "createNewDocument": "إنشاء مستند جديد",
-      "title": "اختر مستندًا للبدء",
-      "uploadMarkdown": "رفع ملف Markdown"
-    },
-    "linkCopied": "تم نسخ الرابط",
-    "menu": {
-      "copyLink": "نسخ الرابط",
-      "exportDocument": "تصدير المستند",
-      "importDocument": "استيراد مستند",
-      "pin": "تثبيت المستند"
-    },
-    "saving": "جارٍ الحفظ...",
-    "titlePlaceholder": "بدون عنوان",
-    "wordCount": "{{wordCount}} كلمة"
-  },
-  "pageList": {
-    "copyContent": "نسخ المحتوى الكامل",
-    "duplicate": "إنشاء نسخة",
-    "empty": "لا توجد مستندات حاليًا، انقر على الزر أعلاه لإنشاء أول مستند لك",
-    "filter": {
-      "all": "الكل",
-      "onlyInPages": "فقط في المستندات"
-    },
-    "noResults": "لم يتم العثور على مستندات مطابقة",
-    "pageCount": "عدد المستندات: {{count}}",
-    "selectNote": "اختر مستندًا للبدء في التحرير",
-    "title": "المستندات",
-    "untitled": "بدون عنوان"
-  },
-  "preview": {
-    "downloadFile": "تحميل الملف",
-    "unsupportedFileAndContact": "هذا التنسيق من الملفات غير مدعوم للمعاينة عبر الإنترنت، إذا كان لديك طلب للمعاينة، فلا تتردد في <1>إبلاغنا</1>"
-  },
+  "notSupportGuide.desc": "الوضع الحالي للنشر هو وضع قاعدة بيانات العميل، ولا يمكن استخدام وظيفة إدارة الملفات. يرجى التبديل إلى <1>وضع نشر قاعدة بيانات الخادم</1>، أو استخدام <3>LobeChat Cloud</3> مباشرة.",
+  "notSupportGuide.features.allKind.desc": "يدعم أنواع الملفات الشائعة، بما في ذلك تنسيقات المستندات الشائعة مثل Word وPPT وExcel وPDF وTXT، بالإضافة إلى ملفات الشيفرة الشائعة مثل JS وPython.",
+  "notSupportGuide.features.allKind.title": "تحليل أنواع متعددة من الملفات",
+  "notSupportGuide.features.embeddings.desc": "استخدام نماذج متجهات عالية الأداء لتحويل النصوص إلى متجهات، مما يتيح البحث الدلالي في محتوى الملفات.",
+  "notSupportGuide.features.embeddings.title": "تحويل دلالي إلى متجهات",
+  "notSupportGuide.features.libraries.desc": "يدعم إنشاء مكتبات ويسمح بإضافة أنواع مختلفة من الملفات لبناء مواردك المتخصصة",
+  "notSupportGuide.features.libraries.title": "المكتبة",
+  "notSupportGuide.title": "الوضع الحالي للنشر لا يدعم إدارة الملفات",
+  "pageEditor.addIcon": "إضافة أيقونة",
+  "pageEditor.autoSaveMessage": "يتم حفظ المستند تلقائيًا، لا حاجة للحفظ اليدوي",
+  "pageEditor.chooseIcon": "اختر أيقونة",
+  "pageEditor.deleteConfirm.content": "سيتم حذف هذا المستند، ولا يمكن استعادته بعد الحذف. يرجى توخي الحذر.",
+  "pageEditor.deleteConfirm.title": "حذف المستند",
+  "pageEditor.deleteError": "فشل في حذف المستند",
+  "pageEditor.deleteSuccess": "تم حذف المستند بنجاح",
+  "pageEditor.editedAt": "آخر تعديل في {{time}}",
+  "pageEditor.editedBy": "آخر من عدّل: {{name}}",
+  "pageEditor.editorPlaceholder": "أدخل محتوى المستند، اضغط / لفتح قائمة الأوامر",
+  "pageEditor.empty.createNewDocument": "إنشاء مستند جديد",
+  "pageEditor.empty.title": "اختر مستندًا للبدء",
+  "pageEditor.empty.uploadMarkdown": "رفع ملف Markdown",
+  "pageEditor.linkCopied": "تم نسخ الرابط",
+  "pageEditor.menu.copyLink": "نسخ الرابط",
+  "pageEditor.menu.exportDocument": "تصدير المستند",
+  "pageEditor.menu.importDocument": "استيراد مستند",
+  "pageEditor.menu.pin": "تثبيت المستند",
+  "pageEditor.saving": "جارٍ الحفظ...",
+  "pageEditor.titlePlaceholder": "بدون عنوان",
+  "pageEditor.wordCount": "{{wordCount}} كلمة",
+  "pageList.copyContent": "نسخ المحتوى الكامل",
+  "pageList.duplicate": "إنشاء نسخة",
+  "pageList.empty": "لا توجد مستندات حاليًا، انقر على الزر أعلاه لإنشاء أول مستند لك",
+  "pageList.filter.all": "الكل",
+  "pageList.filter.onlyInPages": "فقط في المستندات",
+  "pageList.noResults": "لم يتم العثور على مستندات مطابقة",
+  "pageList.pageCount": "عدد المستندات: {{count}}",
+  "pageList.selectNote": "اختر مستندًا للبدء في التحرير",
+  "pageList.title": "المستندات",
+  "pageList.untitled": "بدون عنوان",
+  "preview.downloadFile": "تحميل الملف",
+  "preview.unsupportedFileAndContact": "هذا التنسيق من الملفات غير مدعوم للمعاينة عبر الإنترنت، إذا كان لديك طلب للمعاينة، فلا تتردد في <1>إبلاغنا</1>",
   "searchFilePlaceholder": "بحث عن ملف",
   "searchPagePlaceholder": "ابحث في المستندات",
-  "tab": {
-    "all": "الكل",
-    "audios": "الصوتيات",
-    "documents": "المستندات",
-    "home": "الرئيسية",
-    "images": "الصور",
-    "moreTypes": "أنواع أخرى",
-    "pages": "المستندات",
-    "videos": "الفيديوهات",
-    "websites": "المواقع"
-  },
+  "tab.all": "الكل",
+  "tab.audios": "الصوتيات",
+  "tab.documents": "المستندات",
+  "tab.home": "الرئيسية",
+  "tab.images": "الصور",
+  "tab.moreTypes": "أنواع أخرى",
+  "tab.pages": "المستندات",
+  "tab.videos": "الفيديوهات",
+  "tab.websites": "المواقع",
   "title": "الموارد",
   "toggleLeftPanel": "إظهار/إخفاء اللوحة الجانبية اليسرى",
-  "uploadDock": {
-    "body": {
-      "collapse": "طي",
-      "item": {
-        "done": "تم الرفع",
-        "error": "فشل الرفع، يرجى المحاولة مرة أخرى",
-        "pending": "جاهز للرفع...",
-        "processing": "جارٍ معالجة الملف...",
-        "restTime": "الوقت المتبقي {{time}}"
-      }
-    },
-    "fileQueueInfo": "يتم حاليًا تحميل {{count}} ملفًا، وسيتم وضع {{remaining}} ملفًا في قائمة الانتظار للتحميل",
-    "totalCount": "إجمالي {{count}} عنصر",
-    "uploadStatus": {
-      "error": "حدث خطأ أثناء الرفع",
-      "pending": "في انتظار الرفع",
-      "processing": "جارٍ الرفع",
-      "success": "اكتمل الرفع",
-      "uploading": "جارٍ الرفع"
-    }
-  }
+  "uploadDock.body.collapse": "طي",
+  "uploadDock.body.item.done": "تم الرفع",
+  "uploadDock.body.item.error": "فشل الرفع، يرجى المحاولة مرة أخرى",
+  "uploadDock.body.item.pending": "جاهز للرفع...",
+  "uploadDock.body.item.processing": "جارٍ معالجة الملف...",
+  "uploadDock.body.item.restTime": "الوقت المتبقي {{time}}",
+  "uploadDock.fileQueueInfo": "يتم حاليًا تحميل {{count}} ملفًا، وسيتم وضع {{remaining}} ملفًا في قائمة الانتظار للتحميل",
+  "uploadDock.totalCount": "إجمالي {{count}} عنصر",
+  "uploadDock.uploadStatus.error": "حدث خطأ أثناء الرفع",
+  "uploadDock.uploadStatus.pending": "في انتظار الرفع",
+  "uploadDock.uploadStatus.processing": "جارٍ الرفع",
+  "uploadDock.uploadStatus.success": "اكتمل الرفع",
+  "uploadDock.uploadStatus.uploading": "جارٍ الرفع"
 }

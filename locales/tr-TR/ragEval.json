@@ -1,91 +1,43 @@
 {
-  "addDataset": {
-    "confirm": "Yeni Oluştur",
-    "description": {
-      "placeholder": "Veri seti açıklaması (isteğe bağlı)"
-    },
-    "name": {
-      "placeholder": "Veri seti adı",
-      "required": "Lütfen veri seti adını girin"
-    },
-    "title": "Veri Seti Ekle"
-  },
-  "dataset": {
-    "addNewButton": "Veri Seti Oluştur",
-    "emptyGuide": "Mevcut veri seti boş, lütfen bir veri seti oluşturun.",
-    "list": {
-      "table": {
-        "actions": {
-          "importData": "Veri İçe Aktar"
-        },
-        "columns": {
-          "actions": "İşlemler",
-          "ideal": {
-            "title": "Beklenen Yanıt"
-          },
-          "question": {
-            "title": "Soru"
-          },
-          "referenceFiles": {
-            "title": "Referans Dosyaları"
-          }
-        },
-        "notSelected": "Lütfen soldan bir veri seti seçin",
-        "title": "Veri Seti Detayları"
-      },
-      "title": "Veri Seti"
-    }
-  },
-  "evaluation": {
-    "addEvaluation": {
-      "confirm": "Yeni Oluştur",
-      "datasetId": {
-        "placeholder": "Lütfen değerlendirme veri setinizi seçin",
-        "required": "Lütfen değerlendirme veri setini seçin"
-      },
-      "description": {
-        "placeholder": "Değerlendirme görevi açıklaması (isteğe bağlı)"
-      },
-      "name": {
-        "placeholder": "Değerlendirme görevi adı",
-        "required": "Lütfen değerlendirme görevi adını girin"
-      },
-      "title": "Değerlendirme Görevi Ekle"
-    },
-    "addNewButton": "Değerlendirme Oluştur",
-    "emptyGuide": "Mevcut değerlendirme görevi boş, değerlendirme oluşturmaya başlayın.",
-    "table": {
-      "columns": {
-        "actions": {
-          "checkStatus": "Durumu Kontrol Et",
-          "confirmDelete": "Bu değerlendirmeyi silmek istiyor musunuz?",
-          "confirmRun": "Çalıştırmaya başlamak istiyor musunuz? Çalıştırmaya başladıktan sonra arka planda asenkron olarak değerlendirme görevi yürütülecek, sayfayı kapatmak asenkron görevin yürütülmesini etkilemeyecektir.",
-          "downloadRecords": "Değerlendirmeyi İndir",
-          "retry": "Tekrar Dene",
-          "run": "Çalıştır",
-          "title": "İşlemler"
-        },
-        "datasetId": {
-          "title": "Veri Seti"
-        },
-        "name": {
-          "title": "Değerlendirme Görevi Adı"
-        },
-        "records": {
-          "title": "Değerlendirme Kayıt Sayısı"
-        },
-        "referenceFiles": {
-          "title": "Referans Dosyaları"
-        },
-        "status": {
-          "error": "Yürütme Hatası",
-          "pending": "Çalıştırmayı Bekliyor",
-          "processing": "Yürütülüyor",
-          "success": "Yürütme Başarılı",
-          "title": "Durum"
-        }
-      },
-      "title": "Değerlendirme Görevleri Listesi"
-    }
-  }
+  "addDataset.confirm": "Yeni Oluştur",
+  "addDataset.description.placeholder": "Veri seti açıklaması (isteğe bağlı)",
+  "addDataset.name.placeholder": "Veri seti adı",
+  "addDataset.name.required": "Lütfen veri seti adını girin",
+  "addDataset.title": "Veri Seti Ekle",
+  "dataset.addNewButton": "Veri Seti Oluştur",
+  "dataset.emptyGuide": "Mevcut veri seti boş, lütfen bir veri seti oluşturun.",
+  "dataset.list.table.actions.importData": "Veri İçe Aktar",
+  "dataset.list.table.columns.actions": "İşlemler",
+  "dataset.list.table.columns.ideal.title": "Beklenen Yanıt",
+  "dataset.list.table.columns.question.title": "Soru",
+  "dataset.list.table.columns.referenceFiles.title": "Referans Dosyaları",
+  "dataset.list.table.notSelected": "Lütfen soldan bir veri seti seçin",
+  "dataset.list.table.title": "Veri Seti Detayları",
+  "dataset.list.title": "Veri Seti",
+  "evaluation.addEvaluation.confirm": "Yeni Oluştur",
+  "evaluation.addEvaluation.datasetId.placeholder": "Lütfen değerlendirme veri setinizi seçin",
+  "evaluation.addEvaluation.datasetId.required": "Lütfen değerlendirme veri setini seçin",
+  "evaluation.addEvaluation.description.placeholder": "Değerlendirme görevi açıklaması (isteğe bağlı)",
+  "evaluation.addEvaluation.name.placeholder": "Değerlendirme görevi adı",
+  "evaluation.addEvaluation.name.required": "Lütfen değerlendirme görevi adını girin",
+  "evaluation.addEvaluation.title": "Değerlendirme Görevi Ekle",
+  "evaluation.addNewButton": "Değerlendirme Oluştur",
+  "evaluation.emptyGuide": "Mevcut değerlendirme görevi boş, değerlendirme oluşturmaya başlayın.",
+  "evaluation.table.columns.actions.checkStatus": "Durumu Kontrol Et",
+  "evaluation.table.columns.actions.confirmDelete": "Bu değerlendirmeyi silmek istiyor musunuz?",
+  "evaluation.table.columns.actions.confirmRun": "Çalıştırmaya başlamak istiyor musunuz? Çalıştırmaya başladıktan sonra arka planda asenkron olarak değerlendirme görevi yürütülecek, sayfayı kapatmak asenkron görevin yürütülmesini etkilemeyecektir.",
+  "evaluation.table.columns.actions.downloadRecords": "Değerlendirmeyi İndir",
+  "evaluation.table.columns.actions.retry": "Tekrar Dene",
+  "evaluation.table.columns.actions.run": "Çalıştır",
+  "evaluation.table.columns.actions.title": "İşlemler",
+  "evaluation.table.columns.datasetId.title": "Veri Seti",
+  "evaluation.table.columns.name.title": "Değerlendirme Görevi Adı",
+  "evaluation.table.columns.records.title": "Değerlendirme Kayıt Sayısı",
+  "evaluation.table.columns.referenceFiles.title": "Referans Dosyaları",
+  "evaluation.table.columns.status.error": "Yürütme Hatası",
+  "evaluation.table.columns.status.pending": "Çalıştırmayı Bekliyor",
+  "evaluation.table.columns.status.processing": "Yürütülüyor",
+  "evaluation.table.columns.status.success": "Yürütme Başarılı",
+  "evaluation.table.columns.status.title": "Durum",
+  "evaluation.table.title": "Değerlendirme Görevleri Listesi"
 }

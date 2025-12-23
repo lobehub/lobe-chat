@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "Geen beschikbare assistenten",
-    "noAvailable": "Er zijn momenteel geen assistenten toe te voegen",
-    "noSelected": "Er is nog geen assistent geselecteerd",
-    "search": "Geen overeenkomende assistenten gevonden"
-  },
-  "starter": {
-    "createAgent": "Assistent aanmaken",
-    "createGroup": "Groep aanmaken",
-    "deepResearch": "Diepgaand onderzoek",
-    "developing": "In ontwikkeling",
-    "image": "Afbeelding maken",
-    "write": "Schrijven"
-  }
+  "agentSelection.empty": "Geen beschikbare assistenten",
+  "agentSelection.noAvailable": "Er zijn momenteel geen assistenten toe te voegen",
+  "agentSelection.noSelected": "Er is nog geen assistent geselecteerd",
+  "agentSelection.search": "Geen overeenkomende assistenten gevonden",
+  "starter.createAgent": "Assistent aanmaken",
+  "starter.createGroup": "Groep aanmaken",
+  "starter.deepResearch": "Diepgaand onderzoek",
+  "starter.developing": "In ontwikkeling",
+  "starter.image": "Afbeelding maken",
+  "starter.write": "Schrijven"
 }

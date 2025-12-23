@@ -1,33 +1,21 @@
 {
-  "addToKnowledgeBase": {
-    "addSuccess": "File added successfully, <1>view now</1>",
-    "confirm": "Add",
-    "error": "Failed to add file to knowledge base",
-    "id": {
-      "placeholder": "Please select a library to add to",
-      "required": "Please select a library",
-      "title": "Target Library"
-    },
-    "title": "Add to Library",
-    "totalFiles": "{{count}} files selected"
-  },
-  "createNew": {
-    "confirm": "Create New",
-    "description": {
-      "placeholder": "Library description (optional)"
-    },
-    "formTitle": "Basic Information",
-    "name": {
-      "placeholder": "Library name",
-      "required": "Please enter a library name"
-    },
-    "title": "Create New Library"
-  },
-  "tab": {
-    "evals": "Evaluations",
-    "files": "Documents",
-    "settings": "Settings",
-    "testing": "Recall Testing"
-  },
+  "addToKnowledgeBase.addSuccess": "File added successfully, <1>view now</1>",
+  "addToKnowledgeBase.confirm": "Add",
+  "addToKnowledgeBase.error": "Failed to add file to knowledge base",
+  "addToKnowledgeBase.id.placeholder": "Please select a library to add to",
+  "addToKnowledgeBase.id.required": "Please select a library",
+  "addToKnowledgeBase.id.title": "Target Library",
+  "addToKnowledgeBase.title": "Add to Library",
+  "addToKnowledgeBase.totalFiles": "{{count}} files selected",
+  "createNew.confirm": "Create New",
+  "createNew.description.placeholder": "Library description (optional)",
+  "createNew.formTitle": "Basic Information",
+  "createNew.name.placeholder": "Library name",
+  "createNew.name.required": "Please enter a library name",
+  "createNew.title": "Create New Library",
+  "tab.evals": "Evaluations",
+  "tab.files": "Pages",
+  "tab.settings": "Settings",
+  "tab.testing": "Recall Testing",
   "title": "Library"
 }

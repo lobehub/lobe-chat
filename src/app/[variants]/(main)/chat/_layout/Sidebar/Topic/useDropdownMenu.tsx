@@ -73,7 +73,7 @@ export const useTopicActionsDropdownMenu = (): MenuProps['items'] => {
     const pageSizeItems = pageSizeOptions.map((size) => ({
       icon: topicPageSize === size ? <Icon icon={LucideCheck} /> : <div />,
       key: `pageSize-${size}`,
-      label: `${size} 个条目`,
+      label: t('pageSizeItem', { count: size, ns: 'common' }),
       onClick: () => {
         updateSystemStatus({ topicPageSize: size });
       },

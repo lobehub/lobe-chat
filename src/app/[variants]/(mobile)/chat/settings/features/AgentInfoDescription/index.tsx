@@ -2,7 +2,7 @@
 
 import { ProDescriptions } from '@ant-design/pro-components';
 import { AgentItemDetail } from '@lobehub/market-sdk';
-import { Flexbox , Tag } from '@lobehub/ui';
+import { Flexbox, Tag } from '@lobehub/ui';
 import Image from 'next/image';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -123,10 +123,11 @@ const AgentInfoDescription = memo<AgentInfoDescriptionProps>(
       systemRole: processedSystemRole,
     } = getProcessedData();
     const unsetText = t('agentInfoDescription.value.unset');
+
     const unnamedText = t('agentInfoDescription.value.untitled');
     const pluginEmptyText = t('agentInfoDescription.plugins.empty');
     const renderAvatar = (avatar: string | undefined) => {
-      if (!avatar || avatar === '未设置') return unsetText;
+      if (!avatar) return unsetText;
 
       // 如果是 http 或 https 链接，显示图片
       if (avatar.startsWith('http://') || avatar.startsWith('https://')) {

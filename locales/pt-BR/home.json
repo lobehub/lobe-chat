@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "Nenhum assistente disponível no momento",
-    "noAvailable": "Atualmente não há assistentes para adicionar",
-    "noSelected": "Nenhum assistente selecionado ainda",
-    "search": "Nenhum assistente correspondente encontrado"
-  },
-  "starter": {
-    "createAgent": "Criar Assistente",
-    "createGroup": "Criar grupo",
-    "deepResearch": "Pesquisa Aprofundada",
-    "developing": "Em Desenvolvimento",
-    "image": "Ilustração",
-    "write": "Escrita"
-  }
+  "agentSelection.empty": "Nenhum assistente disponível no momento",
+  "agentSelection.noAvailable": "Atualmente não há assistentes para adicionar",
+  "agentSelection.noSelected": "Nenhum assistente selecionado ainda",
+  "agentSelection.search": "Nenhum assistente correspondente encontrado",
+  "starter.createAgent": "Criar Assistente",
+  "starter.createGroup": "Criar grupo",
+  "starter.deepResearch": "Pesquisa Aprofundada",
+  "starter.developing": "Em Desenvolvimento",
+  "starter.image": "Ilustração",
+  "starter.write": "Escrita"
 }

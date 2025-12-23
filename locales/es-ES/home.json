@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "No hay asistentes disponibles",
-    "noAvailable": "Actualmente no hay asistentes que se puedan añadir",
-    "noSelected": "Aún no se ha seleccionado ningún asistente",
-    "search": "No se encontraron asistentes coincidentes"
-  },
-  "starter": {
-    "createAgent": "Crear asistente",
-    "createGroup": "Crear grupo",
-    "deepResearch": "Investigación profunda",
-    "developing": "En desarrollo",
-    "image": "Dibujo",
-    "write": "Escritura"
-  }
+  "agentSelection.empty": "No hay asistentes disponibles",
+  "agentSelection.noAvailable": "Actualmente no hay asistentes que se puedan añadir",
+  "agentSelection.noSelected": "Aún no se ha seleccionado ningún asistente",
+  "agentSelection.search": "No se encontraron asistentes coincidentes",
+  "starter.createAgent": "Crear asistente",
+  "starter.createGroup": "Crear grupo",
+  "starter.deepResearch": "Investigación profunda",
+  "starter.developing": "En desarrollo",
+  "starter.image": "Dibujo",
+  "starter.write": "Escritura"
 }

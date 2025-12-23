@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "Kullanılabilir asistan yok",
-    "noAvailable": "Şu anda eklenebilecek asistan yok",
-    "noSelected": "Henüz herhangi bir asistan seçilmedi",
-    "search": "Eşleşen asistan bulunamadı"
-  },
-  "starter": {
-    "createAgent": "Asistan Oluştur",
-    "createGroup": "Grup Oluştur",
-    "deepResearch": "Derinlemesine Araştırma",
-    "developing": "Geliştiriliyor",
-    "image": "Çizim",
-    "write": "Yazı Yaz"
-  }
+  "agentSelection.empty": "Kullanılabilir asistan yok",
+  "agentSelection.noAvailable": "Şu anda eklenebilecek asistan yok",
+  "agentSelection.noSelected": "Henüz herhangi bir asistan seçilmedi",
+  "agentSelection.search": "Eşleşen asistan bulunamadı",
+  "starter.createAgent": "Asistan Oluştur",
+  "starter.createGroup": "Grup Oluştur",
+  "starter.deepResearch": "Derinlemesine Araştırma",
+  "starter.developing": "Geliştiriliyor",
+  "starter.image": "Çizim",
+  "starter.write": "Yazı Yaz"
 }

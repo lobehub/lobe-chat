@@ -4,6 +4,7 @@ import {
   RAGEvalDataSetItem,
   insertEvalDatasetRecordSchema,
 } from '@lobechat/types';
+import i18n from 'i18next';
 import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -54,7 +55,10 @@ export const createRagEvalDatasetSlice: StateCreator<
         // if valid, send to backend
         await ragEvalService.importDatasetRecords(datasetId, file);
       } catch (e) {
-        notification.error({ description: (e as Error).message, message: '文件格式错误' });
+        notification.error({
+          description: (e as Error).message,
+          message: i18n.t('errors.invalidFileFormat', { ns: 'common' }),
+        });
       }
     }
 

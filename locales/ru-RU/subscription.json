@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "Предприятие"
-      },
-      "free": {
-        "title": "Бесплатно"
-      },
-      "hobby": {
-        "title": "Самостоятельная версия"
-      },
-      "premium": {
-        "title": "Продвинутый"
-      },
-      "starter": {
-        "title": "Базовый"
-      },
-      "ultimate": {
-        "title": "Профессиональный"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "Предприятие",
+  "plans.plan.free.title": "Бесплатно",
+  "plans.plan.hobby.title": "Самостоятельная версия",
+  "plans.plan.premium.title": "Продвинутый",
+  "plans.plan.starter.title": "Базовый",
+  "plans.plan.ultimate.title": "Профессиональный"
 }

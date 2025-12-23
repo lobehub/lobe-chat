@@ -1,91 +1,43 @@
 {
-  "addDataset": {
-    "confirm": "Nowy",
-    "description": {
-      "placeholder": "Opis zestawu danych (opcjonalnie)"
-    },
-    "name": {
-      "placeholder": "Nazwa zestawu danych",
-      "required": "Proszę wpisać nazwę zestawu danych"
-    },
-    "title": "Dodaj zestaw danych"
-  },
-  "dataset": {
-    "addNewButton": "Utwórz zestaw danych",
-    "emptyGuide": "Aktualny zestaw danych jest pusty, proszę utworzyć nowy zestaw danych.",
-    "list": {
-      "table": {
-        "actions": {
-          "importData": "Importuj dane"
-        },
-        "columns": {
-          "actions": "Operacje",
-          "ideal": {
-            "title": "Oczekiwana odpowiedź"
-          },
-          "question": {
-            "title": "Pytanie"
-          },
-          "referenceFiles": {
-            "title": "Pliki referencyjne"
-          }
-        },
-        "notSelected": "Proszę wybrać zestaw danych po lewej stronie",
-        "title": "Szczegóły zestawu danych"
-      },
-      "title": "Zestaw danych"
-    }
-  },
-  "evaluation": {
-    "addEvaluation": {
-      "confirm": "Nowy",
-      "datasetId": {
-        "placeholder": "Wybierz swój zestaw danych do oceny",
-        "required": "Proszę wybrać zestaw danych do oceny"
-      },
-      "description": {
-        "placeholder": "Opis zadania oceny (opcjonalnie)"
-      },
-      "name": {
-        "placeholder": "Nazwa zadania oceny",
-        "required": "Proszę wpisać nazwę zadania oceny"
-      },
-      "title": "Dodaj zadanie oceny"
-    },
-    "addNewButton": "Utwórz ocenę",
-    "emptyGuide": "Aktualne zadania oceny są puste, rozpocznij tworzenie oceny.",
-    "table": {
-      "columns": {
-        "actions": {
-          "checkStatus": "Sprawdź status",
-          "confirmDelete": "Czy na pewno chcesz usunąć to zadanie oceny?",
-          "confirmRun": "Czy chcesz rozpocząć wykonanie? Po rozpoczęciu zadanie oceny będzie wykonywane asynchronicznie w tle, zamknięcie strony nie wpłynie na wykonanie asynchroniczne.",
-          "downloadRecords": "Pobierz oceny",
-          "retry": "Spróbuj ponownie",
-          "run": "Uruchom",
-          "title": "Operacje"
-        },
-        "datasetId": {
-          "title": "Zestaw danych"
-        },
-        "name": {
-          "title": "Nazwa zadania oceny"
-        },
-        "records": {
-          "title": "Liczba rekordów oceny"
-        },
-        "referenceFiles": {
-          "title": "Pliki referencyjne"
-        },
-        "status": {
-          "error": "Wystąpił błąd podczas wykonania",
-          "pending": "Oczekuje na wykonanie",
-          "processing": "W trakcie wykonywania",
-          "success": "Wykonanie zakończone sukcesem",
-          "title": "Status"
-        }
-      },
-      "title": "Lista zadań oceny"
-    }
-  }
+  "addDataset.confirm": "Nowy",
+  "addDataset.description.placeholder": "Opis zestawu danych (opcjonalnie)",
+  "addDataset.name.placeholder": "Nazwa zestawu danych",
+  "addDataset.name.required": "Proszę wpisać nazwę zestawu danych",
+  "addDataset.title": "Dodaj zestaw danych",
+  "dataset.addNewButton": "Utwórz zestaw danych",
+  "dataset.emptyGuide": "Aktualny zestaw danych jest pusty, proszę utworzyć nowy zestaw danych.",
+  "dataset.list.table.actions.importData": "Importuj dane",
+  "dataset.list.table.columns.actions": "Operacje",
+  "dataset.list.table.columns.ideal.title": "Oczekiwana odpowiedź",
+  "dataset.list.table.columns.question.title": "Pytanie",
+  "dataset.list.table.columns.referenceFiles.title": "Pliki referencyjne",
+  "dataset.list.table.notSelected": "Proszę wybrać zestaw danych po lewej stronie",
+  "dataset.list.table.title": "Szczegóły zestawu danych",
+  "dataset.list.title": "Zestaw danych",
+  "evaluation.addEvaluation.confirm": "Nowy",
+  "evaluation.addEvaluation.datasetId.placeholder": "Wybierz swój zestaw danych do oceny",
+  "evaluation.addEvaluation.datasetId.required": "Proszę wybrać zestaw danych do oceny",
+  "evaluation.addEvaluation.description.placeholder": "Opis zadania oceny (opcjonalnie)",
+  "evaluation.addEvaluation.name.placeholder": "Nazwa zadania oceny",
+  "evaluation.addEvaluation.name.required": "Proszę wpisać nazwę zadania oceny",
+  "evaluation.addEvaluation.title": "Dodaj zadanie oceny",
+  "evaluation.addNewButton": "Utwórz ocenę",
+  "evaluation.emptyGuide": "Aktualne zadania oceny są puste, rozpocznij tworzenie oceny.",
+  "evaluation.table.columns.actions.checkStatus": "Sprawdź status",
+  "evaluation.table.columns.actions.confirmDelete": "Czy na pewno chcesz usunąć to zadanie oceny?",
+  "evaluation.table.columns.actions.confirmRun": "Czy chcesz rozpocząć wykonanie? Po rozpoczęciu zadanie oceny będzie wykonywane asynchronicznie w tle, zamknięcie strony nie wpłynie na wykonanie asynchroniczne.",
+  "evaluation.table.columns.actions.downloadRecords": "Pobierz oceny",
+  "evaluation.table.columns.actions.retry": "Spróbuj ponownie",
+  "evaluation.table.columns.actions.run": "Uruchom",
+  "evaluation.table.columns.actions.title": "Operacje",
+  "evaluation.table.columns.datasetId.title": "Zestaw danych",
+  "evaluation.table.columns.name.title": "Nazwa zadania oceny",
+  "evaluation.table.columns.records.title": "Liczba rekordów oceny",
+  "evaluation.table.columns.referenceFiles.title": "Pliki referencyjne",
+  "evaluation.table.columns.status.error": "Wystąpił błąd podczas wykonania",
+  "evaluation.table.columns.status.pending": "Oczekuje na wykonanie",
+  "evaluation.table.columns.status.processing": "W trakcie wykonywania",
+  "evaluation.table.columns.status.success": "Wykonanie zakończone sukcesem",
+  "evaluation.table.columns.status.title": "Status",
+  "evaluation.table.title": "Lista zadań oceny"
 }

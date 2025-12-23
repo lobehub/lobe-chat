@@ -1,84 +1,42 @@
 {
-  "addUserMessage": {
-    "desc": "Thêm nội dung hiện tại vào tin nhắn của người dùng mà không kích hoạt việc tạo mới",
-    "title": "Thêm một tin nhắn người dùng"
-  },
-  "clearCurrentMessages": {
-    "desc": "Xóa tất cả tin nhắn và tệp đã tải lên trong cuộc trò chuyện hiện tại",
-    "title": "Xóa tin nhắn cuộc trò chuyện"
-  },
-  "commandPalette": {
-    "desc": "Mở bảng lệnh toàn cục để truy cập nhanh các chức năng",
-    "title": "Bảng lệnh"
-  },
-  "deleteAndRegenerateMessage": {
-    "desc": "Xoá tin nhắn cuối cùng và tạo lại",
-    "title": "Xoá và tạo lại"
-  },
-  "deleteLastMessage": {
-    "desc": "Xoá tin nhắn cuối cùng",
-    "title": "Xoá tin nhắn cuối cùng"
-  },
-  "desktop": {
-    "openSettings": {
-      "desc": "Mở trang cài đặt ứng dụng",
-      "title": "Cài đặt ứng dụng"
-    },
-    "showApp": {
-      "desc": "Phím tắt toàn cục để hiển thị hoặc ẩn cửa sổ chính",
-      "title": "Hiển thị/Ẩn cửa sổ chính"
-    }
-  },
-  "editMessage": {
-    "desc": "Vào chế độ chỉnh sửa bằng cách giữ phím Alt và nhấp đúp vào tin nhắn",
-    "title": "Chỉnh sửa tin nhắn"
-  },
-  "navigateToChat": {
-    "desc": "Chuyển sang thẻ trò chuyện và vào Lobe AI",
-    "title": "Chuyển sang cuộc trò chuyện mặc định"
-  },
-  "openChatSettings": {
-    "desc": "Xem và chỉnh sửa cài đặt của cuộc trò chuyện hiện tại",
-    "title": "Mở cài đặt cuộc trò chuyện"
-  },
-  "openHotkeyHelper": {
-    "desc": "Xem hướng dẫn sử dụng tất cả các phím tắt",
-    "title": "Mở trợ giúp phím tắt"
-  },
-  "regenerateMessage": {
-    "desc": "Tạo lại tin nhắn cuối cùng",
-    "title": "Tạo lại tin nhắn"
-  },
-  "saveDocument": {
-    "desc": "Lưu ngay tất cả các thay đổi của tài liệu hiện tại",
-    "title": "Lưu tài liệu"
-  },
-  "saveTopic": {
-    "desc": "Lưu chủ đề hiện tại và mở chủ đề mới",
-    "title": "Mở chủ đề mới"
-  },
-  "search": {
-    "desc": "Kích hoạt hộp tìm kiếm chính của trang hiện tại",
-    "title": "Tìm kiếm"
-  },
-  "showApp": {
-    "desc": "Mở nhanh cửa sổ chính của ứng dụng",
-    "title": "Hiển thị cửa sổ chính"
-  },
-  "switchAgent": {
-    "desc": "Chuyển đổi giữa các trợ lý cố định ở thanh bên bằng cách giữ phím Ctrl và nhấn số 0~9",
-    "title": "Chuyển đổi nhanh trợ lý"
-  },
-  "toggleLeftPanel": {
-    "desc": "Hiển thị hoặc ẩn bảng điều khiển bên trái",
-    "title": "Hiển thị/Ẩn bảng điều khiển bên trái"
-  },
-  "toggleRightPanel": {
-    "desc": "Hiển thị hoặc ẩn bảng điều khiển bên phải",
-    "title": "Hiển thị/Ẩn bảng điều khiển bên phải"
-  },
-  "toggleZenMode": {
-    "desc": "Trong chế độ tập trung, chỉ hiển thị cuộc trò chuyện hiện tại, ẩn các giao diện người dùng khác",
-    "title": "Chuyển đổi chế độ tập trung"
-  }
+  "addUserMessage.desc": "Thêm nội dung hiện tại vào tin nhắn của người dùng mà không kích hoạt việc tạo mới",
+  "addUserMessage.title": "Thêm một tin nhắn người dùng",
+  "clearCurrentMessages.desc": "Xóa tất cả tin nhắn và tệp đã tải lên trong cuộc trò chuyện hiện tại",
+  "clearCurrentMessages.title": "Xóa tin nhắn cuộc trò chuyện",
+  "commandPalette.desc": "Mở bảng lệnh toàn cục để truy cập nhanh các chức năng",
+  "commandPalette.title": "Bảng lệnh",
+  "deleteAndRegenerateMessage.desc": "Xoá tin nhắn cuối cùng và tạo lại",
+  "deleteAndRegenerateMessage.title": "Xoá và tạo lại",
+  "deleteLastMessage.desc": "Xoá tin nhắn cuối cùng",
+  "deleteLastMessage.title": "Xoá tin nhắn cuối cùng",
+  "desktop.openSettings.desc": "Mở trang cài đặt ứng dụng",
+  "desktop.openSettings.title": "Cài đặt ứng dụng",
+  "desktop.showApp.desc": "Phím tắt toàn cục để hiển thị hoặc ẩn cửa sổ chính",
+  "desktop.showApp.title": "Hiển thị/Ẩn cửa sổ chính",
+  "editMessage.desc": "Vào chế độ chỉnh sửa bằng cách giữ phím Alt và nhấp đúp vào tin nhắn",
+  "editMessage.title": "Chỉnh sửa tin nhắn",
+  "navigateToChat.desc": "Chuyển sang thẻ trò chuyện và vào Lobe AI",
+  "navigateToChat.title": "Chuyển sang cuộc trò chuyện mặc định",
+  "openChatSettings.desc": "Xem và chỉnh sửa cài đặt của cuộc trò chuyện hiện tại",
+  "openChatSettings.title": "Mở cài đặt cuộc trò chuyện",
+  "openHotkeyHelper.desc": "Xem hướng dẫn sử dụng tất cả các phím tắt",
+  "openHotkeyHelper.title": "Mở trợ giúp phím tắt",
+  "regenerateMessage.desc": "Tạo lại tin nhắn cuối cùng",
+  "regenerateMessage.title": "Tạo lại tin nhắn",
+  "saveDocument.desc": "Lưu ngay tất cả các thay đổi của tài liệu hiện tại",
+  "saveDocument.title": "Lưu tài liệu",
+  "saveTopic.desc": "Lưu chủ đề hiện tại và mở chủ đề mới",
+  "saveTopic.title": "Mở chủ đề mới",
+  "search.desc": "Kích hoạt hộp tìm kiếm chính của trang hiện tại",
+  "search.title": "Tìm kiếm",
+  "showApp.desc": "Mở nhanh cửa sổ chính của ứng dụng",
+  "showApp.title": "Hiển thị cửa sổ chính",
+  "switchAgent.desc": "Chuyển đổi giữa các trợ lý cố định ở thanh bên bằng cách giữ phím Ctrl và nhấn số 0~9",
+  "switchAgent.title": "Chuyển đổi nhanh trợ lý",
+  "toggleLeftPanel.desc": "Hiển thị hoặc ẩn bảng điều khiển bên trái",
+  "toggleLeftPanel.title": "Hiển thị/Ẩn bảng điều khiển bên trái",
+  "toggleRightPanel.desc": "Hiển thị hoặc ẩn bảng điều khiển bên phải",
+  "toggleRightPanel.title": "Hiển thị/Ẩn bảng điều khiển bên phải",
+  "toggleZenMode.desc": "Trong chế độ tập trung, chỉ hiển thị cuộc trò chuyện hiện tại, ẩn các giao diện người dùng khác",
+  "toggleZenMode.title": "Chuyển đổi chế độ tập trung"
 }

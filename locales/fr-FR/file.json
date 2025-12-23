@@ -2,197 +2,125 @@
   "addFolder": "Créer un dossier",
   "addLibrary": "Ajouter",
   "addPage": "Créer un document",
-  "detail": {
-    "basic": {
-      "createdAt": "Date de création",
-      "filename": "Nom du fichier",
-      "size": "Taille du fichier",
-      "title": "Informations de base",
-      "type": "Format",
-      "updatedAt": "Date de mise à jour"
-    },
-    "data": {
-      "chunkCount": "Nombre de segments",
-      "embedding": {
-        "default": "Non vectorisé",
-        "error": "Échec",
-        "pending": "En attente de démarrage",
-        "processing": "En cours",
-        "success": "Terminé"
-      },
-      "embeddingStatus": "Vectorisation"
-    }
-  },
+  "detail.basic.createdAt": "Date de création",
+  "detail.basic.filename": "Nom du fichier",
+  "detail.basic.size": "Taille du fichier",
+  "detail.basic.title": "Informations de base",
+  "detail.basic.type": "Format",
+  "detail.basic.updatedAt": "Date de mise à jour",
+  "detail.data.chunkCount": "Nombre de segments",
+  "detail.data.embedding.default": "Non vectorisé",
+  "detail.data.embedding.error": "Échec",
+  "detail.data.embedding.pending": "En attente de démarrage",
+  "detail.data.embedding.processing": "En cours",
+  "detail.data.embedding.success": "Terminé",
+  "detail.data.embeddingStatus": "Vectorisation",
   "empty": "Aucun fichier/dossier téléchargé pour le moment",
-  "header": {
-    "actions": {
-      "builtInBlockList": {
-        "filtered": "{{ignored}} fichiers filtrés (sur un total de {{total}} fichiers)"
-      },
-      "connect": "Connexion...",
-      "gitignore": {
-        "apply": "Appliquer les règles",
-        "cancel": "Ignorer les règles",
-        "content": "Fichier .gitignore détecté ({{count}} fichiers au total), souhaitez-vous appliquer les règles d'exclusion ?",
-        "filtered": "{{ignored}} fichiers filtrés (sur {{total}} fichiers au total)",
-        "title": ".gitignore détecté"
-      },
-      "newFolder": "Nouveau dossier",
-      "newPage": "Nouveau document",
-      "notion": {
-        "error": "Échec de l'importation du fichier Notion",
-        "foundFiles": "{{count}} fichiers trouvés",
-        "importing": "Importation des fichiers Notion en cours...",
-        "noMarkdownFiles": "Aucun fichier Markdown trouvé dans l'archive ZIP",
-        "partial": "{{success}} fichiers importés avec succès, {{failed}} échecs",
-        "success": "{{count}} fichiers importés avec succès"
-      },
-      "notionGuide": {
-        "cancel": "Importer plus tard",
-        "desc": "Veuillez d'abord exporter en Markdown (ZIP) depuis Notion, puis cliquez sur Continuer pour sélectionner l'archive et importer toutes les pages.",
-        "ok": "Sélectionner le fichier ZIP Notion",
-        "title": "Importer du contenu depuis Notion"
-      },
-      "uploadFile": "Télécharger un fichier",
-      "uploadFolder": "Télécharger un dossier"
-    },
-    "newPageButton": "Nouveau document",
-    "uploadButton": "Télécharger"
-  },
-  "home": {
-    "getStarted": "Commencer",
-    "greeting": "Commencer",
-    "quickActions": "Actions rapides",
-    "recentFiles": "Fichiers récents",
-    "recentPages": "Pages récentes",
-    "subtitle": "Bienvenue dans le Centre de ressources, commencez ici à gérer vos documents et fichiers.",
-    "uploadEntries": {
-      "files": {
-        "title": "Téléverser des fichiers"
-      },
-      "folder": {
-        "title": "Téléverser un dossier"
-      },
-      "library": {
-        "title": "Nouvelle bibliothèque"
-      },
-      "newPage": {
-        "title": "Nouveau document"
-      }
-    }
-  },
-  "library": {
-    "list": {
-      "confirmRemoveLibrary": "Vous êtes sur le point de supprimer cette bibliothèque. Les fichiers qu'elle contient ne seront pas supprimés, mais déplacés vers Tous les fichiers. Cette action est irréversible, veuillez procéder avec prudence.",
-      "empty": "Cliquez sur <1>+</1> pour commencer à créer une bibliothèque"
-    },
-    "new": "Nouvelle bibliothèque de ressources",
-    "title": "Bibliothèques"
-  },
-  "menu": {
-    "allFiles": "Tous les fichiers",
-    "allPages": "Tous les documents"
-  },
+  "header.actions.builtInBlockList.filtered": "{{ignored}} fichiers filtrés (sur un total de {{total}} fichiers)",
+  "header.actions.connect": "Connexion...",
+  "header.actions.gitignore.apply": "Appliquer les règles",
+  "header.actions.gitignore.cancel": "Ignorer les règles",
+  "header.actions.gitignore.content": "Fichier .gitignore détecté ({{count}} fichiers au total), souhaitez-vous appliquer les règles d'exclusion ?",
+  "header.actions.gitignore.filtered": "{{ignored}} fichiers filtrés (sur {{total}} fichiers au total)",
+  "header.actions.gitignore.title": ".gitignore détecté",
+  "header.actions.newFolder": "Nouveau dossier",
+  "header.actions.newPage": "Nouveau document",
+  "header.actions.notion.error": "Échec de l'importation du fichier Notion",
+  "header.actions.notion.foundFiles": "{{count}} fichiers trouvés",
+  "header.actions.notion.importing": "Importation des fichiers Notion en cours...",
+  "header.actions.notion.noMarkdownFiles": "Aucun fichier Markdown trouvé dans l'archive ZIP",
+  "header.actions.notion.partial": "{{success}} fichiers importés avec succès, {{failed}} échecs",
+  "header.actions.notion.success": "{{count}} fichiers importés avec succès",
+  "header.actions.notionGuide.cancel": "Importer plus tard",
+  "header.actions.notionGuide.desc": "Veuillez d'abord exporter en Markdown (ZIP) depuis Notion, puis cliquez sur Continuer pour sélectionner l'archive et importer toutes les pages.",
+  "header.actions.notionGuide.ok": "Sélectionner le fichier ZIP Notion",
+  "header.actions.notionGuide.title": "Importer du contenu depuis Notion",
+  "header.actions.uploadFile": "Télécharger un fichier",
+  "header.actions.uploadFolder": "Télécharger un dossier",
+  "header.newPageButton": "Nouveau document",
+  "header.uploadButton": "Télécharger",
+  "home.getStarted": "Commencer",
+  "home.greeting": "Commencer",
+  "home.quickActions": "Actions rapides",
+  "home.recentFiles": "Fichiers récents",
+  "home.recentPages": "Pages récentes",
+  "home.subtitle": "Bienvenue dans le Centre de ressources, commencez ici à gérer vos documents et fichiers.",
+  "home.uploadEntries.files.title": "Téléverser des fichiers",
+  "home.uploadEntries.folder.title": "Téléverser un dossier",
+  "home.uploadEntries.library.title": "Nouvelle bibliothèque",
+  "home.uploadEntries.newPage.title": "Nouveau document",
+  "library.list.confirmRemoveLibrary": "Vous êtes sur le point de supprimer cette bibliothèque. Les fichiers qu'elle contient ne seront pas supprimés, mais déplacés vers Tous les fichiers. Cette action est irréversible, veuillez procéder avec prudence.",
+  "library.list.empty": "Cliquez sur <1>+</1> pour commencer à créer une bibliothèque",
+  "library.new": "Nouvelle bibliothèque de ressources",
+  "library.title": "Bibliothèques",
+  "menu.allFiles": "Tous les fichiers",
+  "menu.allPages": "Tous les documents",
   "networkError": "Échec de la récupération des bibliothèques. Veuillez vérifier votre connexion réseau et réessayer.",
-  "notSupportGuide": {
-    "desc": "L'instance déployée actuellement est en mode base de données client, la fonction de gestion des fichiers n'est pas disponible. Veuillez passer en <1>mode de déploiement de base de données serveur</1>, ou utilisez directement <3>LobeChat Cloud</3>",
-    "features": {
-      "allKind": {
-        "desc": "Prend en charge les types de fichiers courants, y compris Word, PPT, Excel, PDF, TXT et d'autres formats de documents courants, ainsi que des fichiers de code populaires comme JS et Python",
-        "title": "Analyse de divers types de fichiers"
-      },
-      "embeddings": {
-        "desc": "Utilise des modèles vectoriels haute performance pour vectoriser les segments de texte, permettant une recherche sémantique du contenu des fichiers",
-        "title": "Sémantisation vectorielle"
-      },
-      "libraries": {
-        "desc": "Permet de créer des bibliothèques et d’y ajouter différents types de fichiers pour construire vos propres ressources spécialisées.",
-        "title": "Bibliothèques"
-      }
-    },
-    "title": "Le mode de déploiement actuel ne prend pas en charge la gestion des fichiers"
-  },
-  "pageEditor": {
-    "addIcon": "Ajouter une icône",
-    "autoSaveMessage": "Le document est enregistré automatiquement, aucune action manuelle requise",
-    "chooseIcon": "Choisir une icône",
-    "deleteConfirm": {
-      "content": "Ce document va être supprimé. Cette action est irréversible, veuillez procéder avec prudence.",
-      "title": "Supprimer le document"
-    },
-    "deleteError": "Échec de la suppression du document",
-    "deleteSuccess": "Document supprimé avec succès",
-    "editedAt": "Dernière modification le {{time}}",
-    "editedBy": "Dernière modification par {{name}}",
-    "editorPlaceholder": "Saisissez le contenu du document, appuyez sur / pour ouvrir le menu de commandes",
-    "empty": {
-      "createNewDocument": "Créer un nouveau document",
-      "title": "Sélectionnez un document pour commencer",
-      "uploadMarkdown": "Importer un fichier Markdown"
-    },
-    "linkCopied": "Lien copié",
-    "menu": {
-      "copyLink": "Copier le lien",
-      "exportDocument": "Exporter le document",
-      "importDocument": "Importer un document",
-      "pin": "Épingler le document"
-    },
-    "saving": "Enregistrement en cours...",
-    "titlePlaceholder": "Sans titre",
-    "wordCount": "{{wordCount}} mots"
-  },
-  "pageList": {
-    "copyContent": "Copier le contenu complet",
-    "duplicate": "Créer une copie",
-    "empty": "Aucun document pour le moment, cliquez sur le bouton ci-dessus pour créer votre premier document",
-    "filter": {
-      "all": "Tous",
-      "onlyInPages": "Uniquement dans les documents"
-    },
-    "noResults": "Aucun document correspondant trouvé",
-    "pageCount": "{{count}} documents au total",
-    "selectNote": "Sélectionnez un document pour commencer l’édition",
-    "title": "Documents",
-    "untitled": "Sans titre"
-  },
-  "preview": {
-    "downloadFile": "Télécharger le fichier",
-    "unsupportedFileAndContact": "Ce format de fichier n'est pas encore pris en charge pour l'aperçu en ligne. Si vous souhaitez un aperçu, n'hésitez pas à <1>nous contacter</1>."
-  },
+  "notSupportGuide.desc": "L'instance déployée actuellement est en mode base de données client, la fonction de gestion des fichiers n'est pas disponible. Veuillez passer en <1>mode de déploiement de base de données serveur</1>, ou utilisez directement <3>LobeChat Cloud</3>",
+  "notSupportGuide.features.allKind.desc": "Prend en charge les types de fichiers courants, y compris Word, PPT, Excel, PDF, TXT et d'autres formats de documents courants, ainsi que des fichiers de code populaires comme JS et Python",
+  "notSupportGuide.features.allKind.title": "Analyse de divers types de fichiers",
+  "notSupportGuide.features.embeddings.desc": "Utilise des modèles vectoriels haute performance pour vectoriser les segments de texte, permettant une recherche sémantique du contenu des fichiers",
+  "notSupportGuide.features.embeddings.title": "Sémantisation vectorielle",
+  "notSupportGuide.features.libraries.desc": "Permet de créer des bibliothèques et d’y ajouter différents types de fichiers pour construire vos propres ressources spécialisées.",
+  "notSupportGuide.features.libraries.title": "Bibliothèques",
+  "notSupportGuide.title": "Le mode de déploiement actuel ne prend pas en charge la gestion des fichiers",
+  "pageEditor.addIcon": "Ajouter une icône",
+  "pageEditor.autoSaveMessage": "Le document est enregistré automatiquement, aucune action manuelle requise",
+  "pageEditor.chooseIcon": "Choisir une icône",
+  "pageEditor.deleteConfirm.content": "Ce document va être supprimé. Cette action est irréversible, veuillez procéder avec prudence.",
+  "pageEditor.deleteConfirm.title": "Supprimer le document",
+  "pageEditor.deleteError": "Échec de la suppression du document",
+  "pageEditor.deleteSuccess": "Document supprimé avec succès",
+  "pageEditor.editedAt": "Dernière modification le {{time}}",
+  "pageEditor.editedBy": "Dernière modification par {{name}}",
+  "pageEditor.editorPlaceholder": "Saisissez le contenu du document, appuyez sur / pour ouvrir le menu de commandes",
+  "pageEditor.empty.createNewDocument": "Créer un nouveau document",
+  "pageEditor.empty.title": "Sélectionnez un document pour commencer",
+  "pageEditor.empty.uploadMarkdown": "Importer un fichier Markdown",
+  "pageEditor.linkCopied": "Lien copié",
+  "pageEditor.menu.copyLink": "Copier le lien",
+  "pageEditor.menu.exportDocument": "Exporter le document",
+  "pageEditor.menu.importDocument": "Importer un document",
+  "pageEditor.menu.pin": "Épingler le document",
+  "pageEditor.saving": "Enregistrement en cours...",
+  "pageEditor.titlePlaceholder": "Sans titre",
+  "pageEditor.wordCount": "{{wordCount}} mots",
+  "pageList.copyContent": "Copier le contenu complet",
+  "pageList.duplicate": "Créer une copie",
+  "pageList.empty": "Aucun document pour le moment, cliquez sur le bouton ci-dessus pour créer votre premier document",
+  "pageList.filter.all": "Tous",
+  "pageList.filter.onlyInPages": "Uniquement dans les documents",
+  "pageList.noResults": "Aucun document correspondant trouvé",
+  "pageList.pageCount": "{{count}} documents au total",
+  "pageList.selectNote": "Sélectionnez un document pour commencer l’édition",
+  "pageList.title": "Documents",
+  "pageList.untitled": "Sans titre",
+  "preview.downloadFile": "Télécharger le fichier",
+  "preview.unsupportedFileAndContact": "Ce format de fichier n'est pas encore pris en charge pour l'aperçu en ligne. Si vous souhaitez un aperçu, n'hésitez pas à <1>nous contacter</1>.",
   "searchFilePlaceholder": "Rechercher un fichier",
   "searchPagePlaceholder": "Rechercher un document",
-  "tab": {
-    "all": "Tout",
-    "audios": "Audio",
-    "documents": "Documents",
-    "home": "Accueil",
-    "images": "Images",
-    "moreTypes": "Plus de types",
-    "pages": "Documents",
-    "videos": "Vidéos",
-    "websites": "Sites web"
-  },
+  "tab.all": "Tout",
+  "tab.audios": "Audio",
+  "tab.documents": "Documents",
+  "tab.home": "Accueil",
+  "tab.images": "Images",
+  "tab.moreTypes": "Plus de types",
+  "tab.pages": "Documents",
+  "tab.videos": "Vidéos",
+  "tab.websites": "Sites web",
   "title": "Ressources",
   "toggleLeftPanel": "Afficher/Masquer le panneau de gauche",
-  "uploadDock": {
-    "body": {
-      "collapse": "Réduire",
-      "item": {
-        "done": "Téléchargé",
-        "error": "Échec du téléchargement, veuillez réessayer",
-        "pending": "Préparation au téléchargement...",
-        "processing": "Traitement du fichier...",
-        "restTime": "Temps restant {{time}}"
-      }
-    },
-    "fileQueueInfo": "Téléversement des {{count}} premiers fichiers en cours, les {{remaining}} fichiers restants seront mis en file d’attente",
-    "totalCount": "Total {{count}} éléments",
-    "uploadStatus": {
-      "error": "Erreur de téléchargement",
-      "pending": "En attente de téléchargement",
-      "processing": "Téléchargement en cours",
-      "success": "Téléchargement terminé",
-      "uploading": "Téléchargement en cours"
-    }
-  }
+  "uploadDock.body.collapse": "Réduire",
+  "uploadDock.body.item.done": "Téléchargé",
+  "uploadDock.body.item.error": "Échec du téléchargement, veuillez réessayer",
+  "uploadDock.body.item.pending": "Préparation au téléchargement...",
+  "uploadDock.body.item.processing": "Traitement du fichier...",
+  "uploadDock.body.item.restTime": "Temps restant {{time}}",
+  "uploadDock.fileQueueInfo": "Téléversement des {{count}} premiers fichiers en cours, les {{remaining}} fichiers restants seront mis en file d’attente",
+  "uploadDock.totalCount": "Total {{count}} éléments",
+  "uploadDock.uploadStatus.error": "Erreur de téléchargement",
+  "uploadDock.uploadStatus.pending": "En attente de téléchargement",
+  "uploadDock.uploadStatus.processing": "Téléchargement en cours",
+  "uploadDock.uploadStatus.success": "Téléchargement terminé",
+  "uploadDock.uploadStatus.uploading": "Téléchargement en cours"
 }

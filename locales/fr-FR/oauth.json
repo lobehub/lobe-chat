@@ -1,61 +1,35 @@
 {
-  "consent": {
-    "buttons": {
-      "accept": "Autoriser",
-      "deny": "Refuser"
-    },
-    "description": "L'application {{clientName}} demande l'autorisation de votre compte",
-    "error": {
-      "sessionInvalid": {
-        "message": "La session d'autorisation a expiré ou est invalide, veuillez relancer le processus d'autorisation.",
-        "title": "Session d'autorisation invalide"
-      },
-      "title": "Une erreur s'est produite",
-      "unsupportedInteraction": {
-        "message": "Type d'interaction non pris en charge : {promptName}",
-        "title": "Type d'interaction non pris en charge"
-      }
-    },
-    "permissionsTitle": "Demander les autorisations suivantes :",
-    "redirectUri": "Vous serez redirigé vers après une autorisation réussie",
-    "redirecting": "Autorisation réussie, redirection en cours...",
-    "scope": {
-      "email": "Accéder à votre adresse e-mail",
-      "offline_access": "Autoriser le client à accéder à vos données",
-      "openid": "S'authentifier avec votre compte LobeChat",
-      "profile": "Accéder à vos informations de profil (nom, photo, etc.)",
-      "sync-read": "Lire vos données synchronisées",
-      "sync-write": "Écrire et mettre à jour vos données synchronisées"
-    },
-    "title": "Autoriser {{clientName}}"
-  },
-  "error": {
-    "backToHome": "Retour à l'accueil",
-    "desc": "Échec de l'autorisation OAuth, raison de l'échec : {{reason}}",
-    "reason": {
-      "internal_error": "Erreur serveur",
-      "invalid_request": "Paramètre de requête invalide"
-    },
-    "title": "Échec de l'autorisation"
-  },
-  "handoff": {
-    "desc": {
-      "processing": "L'application est en train de traiter l'autorisation, vous serez redirigé vers la prochaine page...",
-      "success": "Une tentative d'ouverture de l'application de bureau a été effectuée. Si l'application ne s'ouvre pas automatiquement, veuillez changer manuellement. Vous pouvez fermer cette fenêtre de navigateur plus tard."
-    },
-    "title": {
-      "processing": "Traitement de l'autorisation...",
-      "success": "Autorisation terminée"
-    }
-  },
-  "login": {
-    "button": "Confirmer la connexion",
-    "description": "L'application {{clientName}} demande à utiliser votre compte pour se connecter",
-    "title": "Connexion à {{clientName}}",
-    "userWelcome": "Bienvenue de nouveau, "
-  },
-  "success": {
-    "subTitle": "Vous avez autorisé avec succès l'application à accéder à votre compte, vous pouvez fermer cette page.",
-    "title": "Autorisation réussie"
-  }
+  "consent.buttons.accept": "Autoriser",
+  "consent.buttons.deny": "Refuser",
+  "consent.description": "L'application {{clientName}} demande l'autorisation de votre compte",
+  "consent.error.sessionInvalid.message": "La session d'autorisation a expiré ou est invalide, veuillez relancer le processus d'autorisation.",
+  "consent.error.sessionInvalid.title": "Session d'autorisation invalide",
+  "consent.error.title": "Une erreur s'est produite",
+  "consent.error.unsupportedInteraction.message": "Type d'interaction non pris en charge : {promptName}",
+  "consent.error.unsupportedInteraction.title": "Type d'interaction non pris en charge",
+  "consent.permissionsTitle": "Demander les autorisations suivantes :",
+  "consent.redirectUri": "Vous serez redirigé vers après une autorisation réussie",
+  "consent.redirecting": "Autorisation réussie, redirection en cours...",
+  "consent.scope.email": "Accéder à votre adresse e-mail",
+  "consent.scope.offline_access": "Autoriser le client à accéder à vos données",
+  "consent.scope.openid": "S'authentifier avec votre compte LobeChat",
+  "consent.scope.profile": "Accéder à vos informations de profil (nom, photo, etc.)",
+  "consent.scope.sync-read": "Lire vos données synchronisées",
+  "consent.scope.sync-write": "Écrire et mettre à jour vos données synchronisées",
+  "consent.title": "Autoriser {{clientName}}",
+  "error.backToHome": "Retour à l'accueil",
+  "error.desc": "Échec de l'autorisation OAuth, raison de l'échec : {{reason}}",
+  "error.reason.internal_error": "Erreur serveur",
+  "error.reason.invalid_request": "Paramètre de requête invalide",
+  "error.title": "Échec de l'autorisation",
+  "handoff.desc.processing": "L'application est en train de traiter l'autorisation, vous serez redirigé vers la prochaine page...",
+  "handoff.desc.success": "Une tentative d'ouverture de l'application de bureau a été effectuée. Si l'application ne s'ouvre pas automatiquement, veuillez changer manuellement. Vous pouvez fermer cette fenêtre de navigateur plus tard.",
+  "handoff.title.processing": "Traitement de l'autorisation...",
+  "handoff.title.success": "Autorisation terminée",
+  "login.button": "Confirmer la connexion",
+  "login.description": "L'application {{clientName}} demande à utiliser votre compte pour se connecter",
+  "login.title": "Connexion à {{clientName}}",
+  "login.userWelcome": "Bienvenue de nouveau, ",
+  "success.subTitle": "Vous avez autorisé avec succès l'application à accéder à votre compte, vous pouvez fermer cette page.",
+  "success.title": "Autorisation réussie"
 }

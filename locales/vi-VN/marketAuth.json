@@ -1,118 +1,76 @@
 {
-  "authorize": {
-    "cancel": "Hủy",
-    "confirm": "Tạo hồ sơ của bạn",
-    "description": "Hồ sơ cộng đồng của bạn tồn tại độc lập với tài khoản người dùng {{appName}}.",
-    "footer": {
-      "agreement": "Bằng cách tiếp tục, bạn xác nhận rằng bạn đã hiểu và đồng ý với <terms>Điều khoản và Điều kiện</terms> và <privacy>Chính sách quyền riêng tư</privacy>",
-      "privacy": "Chính sách quyền riêng tư",
-      "terms": "Điều khoản dịch vụ"
-    },
-    "subtitle": "Tạo hồ sơ cộng đồng để gửi và quản lý thông tin niêm yết trên cộng đồng.",
-    "title": "Tạo hồ sơ cộng đồng"
-  },
-  "callback": {
-    "buttons": {
-      "close": "Đóng cửa sổ"
-    },
-    "messages": {
-      "authFailed": "Xác thực thất bại: {{error}}",
-      "missingParams": "Thiếu tham số xác thực",
-      "processing": "Đang xử lý xác thực...",
-      "successWithCountdown": "{{message}} Cửa sổ sẽ tự động đóng sau {{countdown}} giây",
-      "successWithRedirect": "Xác thực thành công! Đang chuyển hướng..."
-    },
-    "titles": {
-      "error": "Xác thực thất bại",
-      "loading": "Xác thực LobeHub Market",
-      "success": "Xác thực thành công"
-    }
-  },
-  "errors": {
-    "authorizationFailed": "Xác thực thất bại, vui lòng thử lại.",
-    "browserOnly": "Quy trình xác thực chỉ có thể bắt đầu trong trình duyệt.",
-    "codeConsumed": "Mã xác thực đã được sử dụng, vui lòng thử lại.",
-    "codeVerifierMissing": "Phiên xác thực không hợp lệ, vui lòng đăng nhập lại.",
-    "general": "Đã xảy ra lỗi xác thực, vui lòng thử lại.",
-    "handoffFailed": "Không thể lấy kết quả xác thực, vui lòng thử lại.",
-    "handoffTimeout": "Hết thời gian xác thực, vui lòng hoàn tất thao tác trong trình duyệt rồi thử lại.",
-    "oidcNotReady": "Dịch vụ xác thực chưa sẵn sàng, vui lòng thử lại sau.",
-    "openBrowserFailed": "Không thể mở trình duyệt hệ thống, vui lòng thử lại.",
-    "openPopupFailed": "Không thể mở cửa sổ xác thực, vui lòng kiểm tra cài đặt chặn cửa sổ bật lên của trình duyệt.",
-    "popupClosed": "Cửa sổ xác thực đã bị đóng trước khi hoàn tất.",
-    "sessionExpired": "Phiên xác thực đã hết hạn, vui lòng đăng nhập lại.",
-    "stateMismatch": "Trạng thái xác thực không khớp, vui lòng thử lại.",
-    "stateMissing": "Không tìm thấy trạng thái xác thực, vui lòng thử lại."
-  },
-  "messages": {
-    "authorized": "Dịch vụ LobeHub đã được cấp quyền thành công",
-    "loading": "Đang khởi động quy trình xác thực...",
-    "success": {
-      "cloudMcpInstall": "Ủy quyền thành công! Bây giờ bạn có thể cài đặt plugin Cloud MCP.",
-      "submit": "Xác thực thành công! Bây giờ bạn có thể xuất bản trợ lý.",
-      "upload": "Xác thực thành công! Bây giờ bạn có thể xuất bản phiên bản mới."
-    }
-  },
-  "profileSetup": {
-    "cancel": "Hủy",
-    "descriptionEdit": "Cập nhật thông tin hồ sơ cộng đồng của bạn.",
-    "descriptionFirstTime": "Thiết lập hồ sơ của bạn để hoàn tất việc tạo hồ sơ cộng đồng.",
-    "errors": {
-      "fileTooLarge": "Kích thước tệp không được vượt quá 2MB",
-      "notAuthenticated": "Vui lòng đăng nhập trước khi thực hiện thao tác",
-      "updateFailed": "Cập nhật hồ sơ thất bại, vui lòng thử lại",
-      "uploadFailed": "Tải lên thất bại, vui lòng thử lại",
-      "usernameTaken": "ID người dùng này đã được sử dụng, vui lòng chọn ID khác"
-    },
-    "fields": {
-      "avatar": {
-        "label": "Ảnh đại diện"
-      },
-      "bannerUrl": {
-        "clickToUpload": "Nhấn để tải lên ảnh bìa",
-        "label": "Ảnh bìa",
-        "remove": "Gỡ ảnh bìa",
-        "tooltip": "Ảnh bìa sẽ hiển thị ở đầu trang cá nhân của bạn (tỷ lệ khuyên dùng 16:9)",
-        "uploading": "Đang tải lên..."
-      },
-      "description": {
-        "label": "Giới thiệu bản thân",
-        "maxLength": "Giới thiệu bản thân tối đa 200 ký tự",
-        "placeholder": "Hãy giới thiệu về bạn..."
-      },
-      "displayName": {
-        "label": "Biệt danh",
-        "maxLength": "Biệt danh tối đa 50 ký tự",
-        "placeholder": "Nhập biệt danh của bạn",
-        "required": "Vui lòng nhập biệt danh"
-      },
-      "github": {
-        "placeholder": "Tên người dùng GitHub"
-      },
-      "twitter": {
-        "placeholder": "Tên người dùng X (Twitter)"
-      },
-      "userName": {
-        "label": "ID người dùng",
-        "maxLength": "ID người dùng tối đa 32 ký tự",
-        "minLength": "ID người dùng tối thiểu 3 ký tự",
-        "pattern": "ID người dùng chỉ được chứa chữ cái, số, dấu gạch dưới và dấu gạch ngang",
-        "placeholder": "Nhập ID người dùng của bạn",
-        "required": "Vui lòng nhập ID người dùng",
-        "tooltip": "ID người dùng là định danh duy nhất của bạn, sẽ được sử dụng trong liên kết trang cá nhân của bạn"
-      },
-      "website": {
-        "invalidUrl": "Vui lòng nhập một liên kết hợp lệ",
-        "placeholder": "Liên kết trang cá nhân"
-      }
-    },
-    "getStarted": "Bắt đầu",
-    "save": "Lưu",
-    "socialLinks": {
-      "title": "Liên kết mạng xã hội"
-    },
-    "success": "Hồ sơ đã được cập nhật",
-    "titleEdit": "Chỉnh sửa hồ sơ",
-    "titleFirstTime": "Hoàn thiện hồ sơ của bạn"
-  }
+  "authorize.cancel": "Hủy",
+  "authorize.confirm": "Tạo hồ sơ của bạn",
+  "authorize.description": "Hồ sơ cộng đồng của bạn tồn tại độc lập với tài khoản người dùng {{appName}}.",
+  "authorize.footer.agreement": "Bằng cách tiếp tục, bạn xác nhận rằng bạn đã hiểu và đồng ý với <terms>Điều khoản và Điều kiện</terms> và <privacy>Chính sách quyền riêng tư</privacy>",
+  "authorize.footer.privacy": "Chính sách quyền riêng tư",
+  "authorize.footer.terms": "Điều khoản dịch vụ",
+  "authorize.subtitle": "Tạo hồ sơ cộng đồng để gửi và quản lý thông tin niêm yết trên cộng đồng.",
+  "authorize.title": "Tạo hồ sơ cộng đồng",
+  "callback.buttons.close": "Đóng cửa sổ",
+  "callback.messages.authFailed": "Xác thực thất bại: {{error}}",
+  "callback.messages.missingParams": "Thiếu tham số xác thực",
+  "callback.messages.processing": "Đang xử lý xác thực...",
+  "callback.messages.successWithCountdown": "{{message}} Cửa sổ sẽ tự động đóng sau {{countdown}} giây",
+  "callback.messages.successWithRedirect": "Xác thực thành công! Đang chuyển hướng...",
+  "callback.titles.error": "Xác thực thất bại",
+  "callback.titles.loading": "Xác thực LobeHub Market",
+  "callback.titles.success": "Xác thực thành công",
+  "errors.authorizationFailed": "Xác thực thất bại, vui lòng thử lại.",
+  "errors.browserOnly": "Quy trình xác thực chỉ có thể bắt đầu trong trình duyệt.",
+  "errors.codeConsumed": "Mã xác thực đã được sử dụng, vui lòng thử lại.",
+  "errors.codeVerifierMissing": "Phiên xác thực không hợp lệ, vui lòng đăng nhập lại.",
+  "errors.general": "Đã xảy ra lỗi xác thực, vui lòng thử lại.",
+  "errors.handoffFailed": "Không thể lấy kết quả xác thực, vui lòng thử lại.",
+  "errors.handoffTimeout": "Hết thời gian xác thực, vui lòng hoàn tất thao tác trong trình duyệt rồi thử lại.",
+  "errors.oidcNotReady": "Dịch vụ xác thực chưa sẵn sàng, vui lòng thử lại sau.",
+  "errors.openBrowserFailed": "Không thể mở trình duyệt hệ thống, vui lòng thử lại.",
+  "errors.openPopupFailed": "Không thể mở cửa sổ xác thực, vui lòng kiểm tra cài đặt chặn cửa sổ bật lên của trình duyệt.",
+  "errors.popupClosed": "Cửa sổ xác thực đã bị đóng trước khi hoàn tất.",
+  "errors.sessionExpired": "Phiên xác thực đã hết hạn, vui lòng đăng nhập lại.",
+  "errors.stateMismatch": "Trạng thái xác thực không khớp, vui lòng thử lại.",
+  "errors.stateMissing": "Không tìm thấy trạng thái xác thực, vui lòng thử lại.",
+  "messages.authorized": "Dịch vụ LobeHub đã được cấp quyền thành công",
+  "messages.loading": "Đang khởi động quy trình xác thực...",
+  "messages.success.cloudMcpInstall": "Ủy quyền thành công! Bây giờ bạn có thể cài đặt plugin Cloud MCP.",
+  "messages.success.submit": "Xác thực thành công! Bây giờ bạn có thể xuất bản trợ lý.",
+  "messages.success.upload": "Xác thực thành công! Bây giờ bạn có thể xuất bản phiên bản mới.",
+  "profileSetup.cancel": "Hủy",
+  "profileSetup.descriptionEdit": "Cập nhật thông tin hồ sơ cộng đồng của bạn.",
+  "profileSetup.descriptionFirstTime": "Thiết lập hồ sơ của bạn để hoàn tất việc tạo hồ sơ cộng đồng.",
+  "profileSetup.errors.fileTooLarge": "Kích thước tệp không được vượt quá 2MB",
+  "profileSetup.errors.notAuthenticated": "Vui lòng đăng nhập trước khi thực hiện thao tác",
+  "profileSetup.errors.updateFailed": "Cập nhật hồ sơ thất bại, vui lòng thử lại",
+  "profileSetup.errors.uploadFailed": "Tải lên thất bại, vui lòng thử lại",
+  "profileSetup.errors.usernameTaken": "ID người dùng này đã được sử dụng, vui lòng chọn ID khác",
+  "profileSetup.fields.avatar.label": "Ảnh đại diện",
+  "profileSetup.fields.bannerUrl.clickToUpload": "Nhấn để tải lên ảnh bìa",
+  "profileSetup.fields.bannerUrl.label": "Ảnh bìa",
+  "profileSetup.fields.bannerUrl.remove": "Gỡ ảnh bìa",
+  "profileSetup.fields.bannerUrl.tooltip": "Ảnh bìa sẽ hiển thị ở đầu trang cá nhân của bạn (tỷ lệ khuyên dùng 16:9)",
+  "profileSetup.fields.bannerUrl.uploading": "Đang tải lên...",
+  "profileSetup.fields.description.label": "Giới thiệu bản thân",
+  "profileSetup.fields.description.maxLength": "Giới thiệu bản thân tối đa 200 ký tự",
+  "profileSetup.fields.description.placeholder": "Hãy giới thiệu về bạn...",
+  "profileSetup.fields.displayName.label": "Biệt danh",
+  "profileSetup.fields.displayName.maxLength": "Biệt danh tối đa 50 ký tự",
+  "profileSetup.fields.displayName.placeholder": "Nhập biệt danh của bạn",
+  "profileSetup.fields.displayName.required": "Vui lòng nhập biệt danh",
+  "profileSetup.fields.github.placeholder": "Tên người dùng GitHub",
+  "profileSetup.fields.twitter.placeholder": "Tên người dùng X (Twitter)",
+  "profileSetup.fields.userName.label": "ID người dùng",
+  "profileSetup.fields.userName.maxLength": "ID người dùng tối đa 32 ký tự",
+  "profileSetup.fields.userName.minLength": "ID người dùng tối thiểu 3 ký tự",
+  "profileSetup.fields.userName.pattern": "ID người dùng chỉ được chứa chữ cái, số, dấu gạch dưới và dấu gạch ngang",
+  "profileSetup.fields.userName.placeholder": "Nhập ID người dùng của bạn",
+  "profileSetup.fields.userName.required": "Vui lòng nhập ID người dùng",
+  "profileSetup.fields.userName.tooltip": "ID người dùng là định danh duy nhất của bạn, sẽ được sử dụng trong liên kết trang cá nhân của bạn",
+  "profileSetup.fields.website.invalidUrl": "Vui lòng nhập một liên kết hợp lệ",
+  "profileSetup.fields.website.placeholder": "Liên kết trang cá nhân",
+  "profileSetup.getStarted": "Bắt đầu",
+  "profileSetup.save": "Lưu",
+  "profileSetup.socialLinks.title": "Liên kết mạng xã hội",
+  "profileSetup.success": "Hồ sơ đã được cập nhật",
+  "profileSetup.titleEdit": "Chỉnh sửa hồ sơ",
+  "profileSetup.titleFirstTime": "Hoàn thiện hồ sơ của bạn"
 }

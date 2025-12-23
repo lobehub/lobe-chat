@@ -1,10 +1,6 @@
 {
-  "actions": {
-    "confirmRemoveThread": "Sie sind dabei, dieses Unterthema zu löschen. Nach dem Löschen kann es nicht wiederhergestellt werden. Bitte seien Sie vorsichtig."
-  },
-  "newPortalThread": {
-    "includeContext": "Themenkontext einbeziehen",
-    "title": "Neues Unterthema eröffnen"
-  },
+  "actions.confirmRemoveThread": "Sie sind dabei, dieses Unterthema zu löschen. Nach dem Löschen kann es nicht wiederhergestellt werden. Bitte seien Sie vorsichtig.",
+  "newPortalThread.includeContext": "Themenkontext einbeziehen",
+  "newPortalThread.title": "Neues Unterthema eröffnen",
   "notSupportMultiModals": "Unterthemen unterstützen derzeit keinen Datei-/Bilderupload. Bei Bedarf freuen wir uns über Nachrichten: <1>💬 Diskussionsbereich</1>"
 }

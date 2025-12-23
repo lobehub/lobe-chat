@@ -1,16 +1,12 @@
 {
-  "agentSelection": {
-    "empty": "Няма налични асистенти",
-    "noAvailable": "Понастоящем няма асистенти за добавяне",
-    "noSelected": "Все още не е избран асистент",
-    "search": "Няма намерени съвпадащи асистенти"
-  },
-  "starter": {
-    "createAgent": "Създаване на асистент",
-    "createGroup": "Създаване на група",
-    "deepResearch": "Задълбочено проучване",
-    "developing": "В процес на разработка",
-    "image": "Рисуване",
-    "write": "Писане"
-  }
+  "agentSelection.empty": "Няма налични асистенти",
+  "agentSelection.noAvailable": "Понастоящем няма асистенти за добавяне",
+  "agentSelection.noSelected": "Все още не е избран асистент",
+  "agentSelection.search": "Няма намерени съвпадащи асистенти",
+  "starter.createAgent": "Създаване на асистент",
+  "starter.createGroup": "Създаване на група",
+  "starter.deepResearch": "Задълбочено проучване",
+  "starter.developing": "В процес на разработка",
+  "starter.image": "Рисуване",
+  "starter.write": "Писане"
 }

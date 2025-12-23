@@ -11,7 +11,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 export const useDropdownMenu = (): MenuProps['items'] => {
-  const { t } = useTranslation('file');
+  const { t } = useTranslation();
   const showOnlyPagesNotInLibrary = useFileStore((s) => s.showOnlyPagesNotInLibrary);
   const setShowOnlyPagesNotInLibrary = useFileStore((s) => s.setShowOnlyPagesNotInLibrary);
 
@@ -25,7 +25,7 @@ export const useDropdownMenu = (): MenuProps['items'] => {
     const pageSizeItems = pageSizeOptions.map((size) => ({
       icon: pagePageSize === size ? <Icon icon={LucideCheck} /> : <div />,
       key: `pageSize-${size}`,
-      label: `${size} 个条目`,
+      label: t('pageList.pageSizeItem', { count: size, ns: 'file' }),
       onClick: () => {
         updateSystemStatus({ pagePageSize: size });
       },
@@ -51,7 +51,7 @@ export const useDropdownMenu = (): MenuProps['items'] => {
         children: pageSizeItems,
         icon: <Icon icon={Hash} />,
         key: 'displayItems',
-        label: t('displayItems', { defaultValue: '显示条目', ns: 'common' }),
+        label: t('common:navPanel.displayItems'),
       },
     ];
   }, [

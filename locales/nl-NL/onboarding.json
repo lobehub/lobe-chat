@@ -1,100 +1,66 @@
 {
   "back": "Vorige stap",
   "finish": "Aan de slag",
-  "interests": {
-    "area": {
-      "business": "Zakelijk en Strategie",
-      "coding": "Programmeren en Ontwikkeling",
-      "design": "Design en Creativiteit",
-      "education": "Leren en Onderzoek",
-      "marketing": "Marketing en Promotie",
-      "other": "Overige Gebieden",
-      "product": "Product en Management",
-      "sales": "Verkoop en Klanten",
-      "writing": "Contentcreatie"
-    },
-    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
-    "placeholder": "Voer een interessegebied in...",
-    "title": "Kun je me vertellen waar je in geïnteresseerd bent?",
-    "title2": "Help me een eerste indruk van je te krijgen~",
-    "title3": "Neem je tijd, ik leer je steeds beter kennen"
-  },
-  "modeSelection": {
-    "desc": "Kies de gebruiksmodus die bij je past",
-    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
-    "lite": {
-      "desc": "Geschikt voor dagelijkse gesprekken, vraag-en-antwoord, lichte werkondersteuning en kennismaking met modellen",
-      "subtitle": "Lichtgewicht en puur, ideaal voor efficiënte samenwerking met één alleskunner. Wissel eenvoudig tussen populaire modellen en blijf scherp.",
-      "title": "Lite Lichtgewicht"
-    },
-    "pro": {
-      "desc": "Voor workflows, diepgaande samenwerking en maatwerk",
-      "subtitle": "Professionele productiviteitsmodus. Voor solopreneurs, samenwerking met meerdere assistenten en diepgaande aanpassing van modellen en workflows. Bouw jouw slimme kern.",
-      "title": "Pro Professioneel"
-    },
-    "title": "Welke werkmodus heeft jouw voorkeur?",
-    "title2": "Lichtgewicht of Professioneel, jij beslist!",
-    "title3": "Vertel het me, speciaal voor jou op maat gemaakt～"
-  },
+  "interests.area.business": "Zakelijk en Strategie",
+  "interests.area.coding": "Programmeren en Ontwikkeling",
+  "interests.area.design": "Design en Creativiteit",
+  "interests.area.education": "Leren en Onderzoek",
+  "interests.area.marketing": "Marketing en Promotie",
+  "interests.area.other": "Overige Gebieden",
+  "interests.area.product": "Product en Management",
+  "interests.area.sales": "Verkoop en Klanten",
+  "interests.area.writing": "Contentcreatie",
+  "interests.hint": "Je kunt dit later altijd aanpassen in de instellingen",
+  "interests.placeholder": "Voer een interessegebied in...",
+  "interests.title": "Kun je me vertellen waar je in geïnteresseerd bent?",
+  "interests.title2": "Help me een eerste indruk van je te krijgen~",
+  "interests.title3": "Neem je tijd, ik leer je steeds beter kennen",
+  "modeSelection.desc": "Kies de gebruiksmodus die bij je past",
+  "modeSelection.hint": "Je kunt dit later altijd aanpassen in de instellingen",
+  "modeSelection.lite.desc": "Geschikt voor dagelijkse gesprekken, vraag-en-antwoord, lichte werkondersteuning en kennismaking met modellen",
+  "modeSelection.lite.subtitle": "Lichtgewicht en puur, ideaal voor efficiënte samenwerking met één alleskunner. Wissel eenvoudig tussen populaire modellen en blijf scherp.",
+  "modeSelection.lite.title": "Lite Lichtgewicht",
+  "modeSelection.pro.desc": "Voor workflows, diepgaande samenwerking en maatwerk",
+  "modeSelection.pro.subtitle": "Professionele productiviteitsmodus. Voor solopreneurs, samenwerking met meerdere assistenten en diepgaande aanpassing van modellen en workflows. Bouw jouw slimme kern.",
+  "modeSelection.pro.title": "Pro Professioneel",
+  "modeSelection.title": "Welke werkmodus heeft jouw voorkeur?",
+  "modeSelection.title2": "Lichtgewicht of Professioneel, jij beslist!",
+  "modeSelection.title3": "Vertel het me, speciaal voor jou op maat gemaakt～",
   "next": "Volgende stap",
-  "proSettings": {
-    "connectors": {
-      "title": "Verbind je favoriete tools"
-    },
-    "devMode": {
-      "title": "Ontwikkelaarsmodus"
-    },
-    "model": {
-      "title": "Standaardmodel gebruikt door de Agent"
-    },
-    "title": "Configureer geavanceerde opties vooraf",
-    "title2": "Probeer een aantal veelgebruikte tools te koppelen～",
-    "title3": "Laten we ons voorbereiden op efficiënt werken!"
-  },
-  "responseLanguage": {
-    "auto": "Automatisch (volgt systeemtaal)",
-    "desc": "Kies de taal waarin de AI-assistent reageert",
-    "hint": "Na het kiezen van een taal zal de AI in die taal antwoorden en wordt de interface ook aangepast",
-    "title": "In welke taal zullen we communiceren?",
-    "title2": "Begrip begint met taal.",
-    "title3": "Laat me duidelijk spreken en goed luisteren～"
-  },
-  "telemetry": {
-    "agreement": "Alle verzamelde gegevens zijn anoniem en worden uitsluitend gebruikt om de gebruikerservaring te verbeteren. Door verder te gaan bevestig je dat je de <terms>algemene voorwaarden</terms> en het <privacy>privacybeleid</privacy> hebt begrepen en ermee akkoord gaat.",
-    "desc": "Ik ben je AI-assistent en sta altijd klaar om met je mee te denken, te creëren en je Agent-team te beheren.",
-    "helpImprove": "Help {{appName}} verbeteren",
-    "next": "Laten we beginnen",
-    "privacy": "Privacybeleid",
-    "rows": {
-      "collaborate": {
-        "desc": "Hier werken mensen, Agents en Agents samen, leren ze van elkaar en evolueren ze. Zo stroomt productiviteit op de meest natuurlijke manier.",
-        "title": "Samenwerken · Groeien met intelligentie"
-      },
-      "create": {
-        "desc": "Een idee? Maak het waar. Eén gedachte en je Agent is geboren.",
-        "title": "Creëren · Inspiratie wordt realiteit"
-      },
-      "evolve": {
-        "desc": "Elke interactie leert mij meer over jou. Niet alleen in antwoorden, maar in echt begrip.",
-        "title": "Evolueren · Hoe meer je gebruikt, hoe beter ik je begrijp"
-      },
-      "privacy": {
-        "desc": "We gebruiken geanonimiseerde gegevens om de ervaring met {{appName}} continu te verbeteren. Uiteraard kun je dit altijd aanpassen in de privacy-instellingen.",
-        "title": "Samen maken we {{appName}} beter"
-      }
-    },
-    "terms": "Gebruiksvoorwaarden",
-    "title": "Hoi, ik ben {{name}}",
-    "title2": "Leuk je te ontmoeten～",
-    "title3": "Loooobe! Laten we beginnen!"
-  },
+  "proSettings.connectors.title": "Verbind je favoriete tools",
+  "proSettings.devMode.title": "Ontwikkelaarsmodus",
+  "proSettings.model.title": "Standaardmodel gebruikt door de Agent",
+  "proSettings.title": "Configureer geavanceerde opties vooraf",
+  "proSettings.title2": "Probeer een aantal veelgebruikte tools te koppelen～",
+  "proSettings.title3": "Laten we ons voorbereiden op efficiënt werken!",
+  "responseLanguage.auto": "Automatisch (volgt systeemtaal)",
+  "responseLanguage.desc": "Kies de taal waarin de AI-assistent reageert",
+  "responseLanguage.hint": "Na het kiezen van een taal zal de AI in die taal antwoorden en wordt de interface ook aangepast",
+  "responseLanguage.title": "In welke taal zullen we communiceren?",
+  "responseLanguage.title2": "Begrip begint met taal.",
+  "responseLanguage.title3": "Laat me duidelijk spreken en goed luisteren～",
+  "telemetry.agreement": "Alle verzamelde gegevens zijn anoniem en worden uitsluitend gebruikt om de gebruikerservaring te verbeteren. Door verder te gaan bevestig je dat je de <terms>algemene voorwaarden</terms> en het <privacy>privacybeleid</privacy> hebt begrepen en ermee akkoord gaat.",
+  "telemetry.desc": "Ik ben je AI-assistent en sta altijd klaar om met je mee te denken, te creëren en je Agent-team te beheren.",
+  "telemetry.helpImprove": "Help {{appName}} verbeteren",
+  "telemetry.next": "Laten we beginnen",
+  "telemetry.privacy": "Privacybeleid",
+  "telemetry.rows.collaborate.desc": "Hier werken mensen, Agents en Agents samen, leren ze van elkaar en evolueren ze. Zo stroomt productiviteit op de meest natuurlijke manier.",
+  "telemetry.rows.collaborate.title": "Samenwerken · Groeien met intelligentie",
+  "telemetry.rows.create.desc": "Een idee? Maak het waar. Eén gedachte en je Agent is geboren.",
+  "telemetry.rows.create.title": "Creëren · Inspiratie wordt realiteit",
+  "telemetry.rows.evolve.desc": "Elke interactie leert mij meer over jou. Niet alleen in antwoorden, maar in echt begrip.",
+  "telemetry.rows.evolve.title": "Evolueren · Hoe meer je gebruikt, hoe beter ik je begrijp",
+  "telemetry.rows.privacy.desc": "We gebruiken geanonimiseerde gegevens om de ervaring met {{appName}} continu te verbeteren. Uiteraard kun je dit altijd aanpassen in de privacy-instellingen.",
+  "telemetry.rows.privacy.title": "Samen maken we {{appName}} beter",
+  "telemetry.terms": "Gebruiksvoorwaarden",
+  "telemetry.title": "Hoi, ik ben {{name}}",
+  "telemetry.title2": "Leuk je te ontmoeten～",
+  "telemetry.title3": "Loooobe! Laten we beginnen!",
   "title": "Welkom bij {{appName}}",
-  "username": {
-    "desc": "Vertel ons hoe we je mogen noemen",
-    "hint": "Je kunt dit later altijd aanpassen in de instellingen",
-    "placeholder": "Voer je naam in...",
-    "title": "Hoe mag ik je noemen?",
-    "title2": "Laten we elkaar eerst leren kennen!",
-    "title3": "Zo kunnen we straks nog beter met elkaar praten～"
-  }
+  "username.desc": "Vertel ons hoe we je mogen noemen",
+  "username.hint": "Je kunt dit later altijd aanpassen in de instellingen",
+  "username.placeholder": "Voer je naam in...",
+  "username.title": "Hoe mag ik je noemen?",
+  "username.title2": "Laten we elkaar eerst leren kennen!",
+  "username.title3": "Zo kunnen we straks nog beter met elkaar praten～"
 }

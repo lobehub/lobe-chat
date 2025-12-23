@@ -1,196 +1,132 @@
 {
-  "agentGroupManagement": {
-    "executeTask": {
-      "agent": "تنفيذ الوكيل",
-      "cancelled": "تم الإلغاء",
-      "completed": "اكتمل المهمة",
-      "cost": "التكلفة",
-      "failed": "فشل المهمة",
-      "interrupted": "تمت المقاطعة",
-      "intervention": {
-        "taskPlaceholder": "يرجى وصف المهمة التي يحتاج الوكيل إلى تنفيذها بالتفصيل...",
-        "timeout": "الحد الأقصى لمدة التنفيذ",
-        "timeoutUnit": "دقائق",
-        "unknownAgent": "وكيل غير معروف"
-      },
-      "processing": "جارٍ التنفيذ...",
-      "steps": "عدد خطوات التنفيذ",
-      "task": "محتوى المهمة",
-      "thread": "معرّف الخيط",
-      "timeout": "انتهت مهلة التنفيذ",
-      "tokens": "استهلاك الرموز"
-    }
-  },
-  "codeInterpreter": {
-    "error": "خطأ في التنفيذ",
-    "executing": "جارٍ التنفيذ...",
-    "files": "الملفات:",
-    "output": "الإخراج:",
-    "returnValue": "قيمة الإرجاع:"
-  },
-  "codeInterpreter-legacy": {
-    "error": "خطأ في التنفيذ",
-    "executing": "جارٍ التنفيذ...",
-    "files": "الملفات:",
-    "output": "المخرجات:",
-    "returnValue": "قيمة الإرجاع:"
-  },
-  "dalle": {
-    "autoGenerate": "توليد تلقائي",
-    "downloading": "صلاحية روابط الصور المُولَّدة بواسطة DallE3 تدوم ساعة واحدة فقط، يتم تحميل الصور إلى الجهاز المحلي...",
-    "generate": "توليد",
-    "generating": "جارٍ التوليد...",
-    "images": "الصور:",
-    "prompt": "كلمة تلميح"
-  },
-  "lobe-gtd": {
-    "actions": {
-      "add": "إضافة",
-      "clearCompleted": "مسح المكتمل",
-      "placeholder": "أدخل مهمة للقيام بها..."
-    },
-    "clearTodos": {
-      "cleared": "تم مسح {{count}} عنصرًا",
-      "clearedCompleted": "تم مسح {{count}} من العناصر المكتملة",
-      "clearedCompleted_one": "تم مسح {{count}} من العناصر المكتملة",
-      "clearedCompleted_other": "تم مسح {{count}} من العناصر المكتملة",
-      "cleared_one": "تم مسح {{count}} عنصرًا",
-      "cleared_other": "تم مسح {{count}} عنصرًا",
-      "noItems": "لا توجد عناصر للمسح",
-      "remaining": "تبقّى {{count}} عنصرًا",
-      "remaining_one": "تبقّى {{count}} عنصرًا",
-      "remaining_other": "تبقّى {{count}} عنصرًا"
-    },
-    "completeTodos": {
-      "completed": "تم إكمال {{count}} عنصرًا",
-      "completed_one": "تم إكمال {{count}} عنصرًا",
-      "completed_other": "تم إكمال {{count}} عنصرًا"
-    },
-    "createTodos": {
-      "created": "تم إنشاء {{count}} مهمة",
-      "created_one": "تم إنشاء {{count}} مهمة",
-      "created_other": "تم إنشاء {{count}} مهمة",
-      "total": "المجموع: {{count}} عنصرًا",
-      "total_one": "المجموع: {{count}} عنصرًا",
-      "total_other": "المجموع: {{count}} عنصرًا"
-    },
-    "removeTodos": {
-      "removed": "تم حذف {{count}} عنصرًا",
-      "removed_one": "تم حذف {{count}} عنصرًا",
-      "removed_other": "تم حذف {{count}} عنصرًا"
-    },
-    "status": {
-      "done": "{{count}} مكتمل",
-      "pending": "{{count}} قيد الانتظار"
-    },
-    "todoList": {
-      "empty": "قائمة المهام فارغة",
-      "items": "{{count}} عنصرًا",
-      "items_one": "{{count}} عنصرًا",
-      "items_other": "{{count}} عنصرًا",
-      "title": "قائمة المهام"
-    },
-    "updateTodos": {
-      "updated": "تم تحديث قائمة المهام"
-    }
-  },
-  "lobe-knowledge-base": {
-    "readKnowledge": {
-      "meta": {
-        "chars": "عدد الأحرف",
-        "lines": "عدد السطور"
-      }
-    }
-  },
-  "localFiles": {
-    "editFile": {
-      "newString": "استبدال بـ",
-      "oldString": "البحث عن",
-      "replaceAll": "استبدال جميع المطابقات",
-      "replaceFirst": "استبدال أول مطابقة فقط"
-    },
-    "file": "ملف",
-    "folder": "مجلد",
-    "moveFiles": {
-      "itemsMoved": "تم نقل {{count}} عنصر:",
-      "itemsMoved_one": "تم نقل {{count}} عنصر:",
-      "itemsMoved_other": "تم نقل {{count}} عنصر:",
-      "itemsToMove": "{{count}} عنصر في انتظار النقل:",
-      "itemsToMove_one": "{{count}} عنصر في انتظار النقل:",
-      "itemsToMove_other": "{{count}} عنصر في انتظار النقل:"
-    },
-    "open": "فتح",
-    "openFile": "فتح ملف",
-    "openFolder": "فتح مجلد",
-    "read": {
-      "more": "عرض المزيد"
-    },
-    "readFile": "قراءة الملف",
-    "readFileError": "فشل في قراءة الملف، يرجى التحقق من صحة مسار الملف",
-    "readFiles": "قراءة الملفات",
-    "readFilesError": "فشل في قراءة الملفات، يرجى التحقق من صحة مسار الملف",
-    "writeFile": {
-      "characters": "أحرف",
-      "preview": "معاينة المحتوى",
-      "truncated": "تم الاقتطاع"
-    }
-  },
-  "search": {
-    "createNewSearch": "إنشاء سجل بحث جديد",
-    "emptyResult": "لم يتم العثور على نتائج، يرجى تعديل الكلمات الرئيسية والمحاولة مرة أخرى",
-    "genAiMessage": "إنشاء رسالة مساعد",
-    "includedTooltip": "ستدخل نتائج البحث الحالية في سياق المحادثة",
-    "keywords": "الكلمات الرئيسية:",
-    "scoreTooltip": "درجة الصلة، كلما كانت هذه الدرجة أعلى، كانت أكثر ارتباطًا بكلمات البحث",
-    "searchBar": {
-      "button": "بحث",
-      "placeholder": "الكلمات الرئيسية",
-      "tooltip": "سيتم إعادة الحصول على نتائج البحث، وإنشاء رسالة ملخص جديدة"
-    },
-    "searchCategory": {
-      "placeholder": "ابحث عن الفئة",
-      "title": "فئة البحث:",
-      "value": {
-        "files": "ملفات",
-        "general": "عام",
-        "images": "صور",
-        "it": "تكنولوجيا المعلومات",
-        "map": "خريطة",
-        "music": "موسيقى",
-        "news": "أخبار",
-        "science": "علوم",
-        "social_media": "وسائل التواصل الاجتماعي",
-        "videos": "فيديوهات"
-      }
-    },
-    "searchEngine": {
-      "placeholder": "محرك البحث",
-      "title": "محرك البحث:"
-    },
-    "searchResult": "عدد النتائج:",
-    "searchTimeRange": {
-      "title": "نطاق الوقت:",
-      "value": {
-        "anytime": "في أي وقت",
-        "day": "خلال يوم واحد",
-        "month": "خلال شهر واحد",
-        "week": "خلال أسبوع واحد",
-        "year": "خلال سنة واحدة"
-      }
-    },
-    "summary": "ملخص",
-    "summaryTooltip": "تلخيص المحتوى الحالي",
-    "viewMoreResults": "عرض المزيد من {{results}} نتيجة"
-  },
-  "updateArgs": {
-    "duplicateKeyError": "يجب أن يكون مفتاح الحقل فريدًا",
-    "form": {
-      "add": "إضافة عنصر",
-      "key": "مفتاح الحقل",
-      "value": "قيمة الحقل"
-    },
-    "formValidationFailed": "فشل التحقق من صحة النموذج، يرجى التحقق من تنسيق المعلمات",
-    "keyRequired": "لا يمكن أن يكون مفتاح الحقل فارغًا",
-    "stringifyError": "تعذر تسلسل المعلمات، يرجى التحقق من تنسيق المعلمات"
-  }
+  "agentGroupManagement.executeTask.agent": "تنفيذ الوكيل",
+  "agentGroupManagement.executeTask.cancelled": "تم الإلغاء",
+  "agentGroupManagement.executeTask.completed": "اكتمل المهمة",
+  "agentGroupManagement.executeTask.cost": "التكلفة",
+  "agentGroupManagement.executeTask.failed": "فشل المهمة",
+  "agentGroupManagement.executeTask.interrupted": "تمت المقاطعة",
+  "agentGroupManagement.executeTask.intervention.taskPlaceholder": "يرجى وصف المهمة التي يحتاج الوكيل إلى تنفيذها بالتفصيل...",
+  "agentGroupManagement.executeTask.intervention.timeout": "الحد الأقصى لمدة التنفيذ",
+  "agentGroupManagement.executeTask.intervention.timeoutUnit": "دقائق",
+  "agentGroupManagement.executeTask.intervention.unknownAgent": "وكيل غير معروف",
+  "agentGroupManagement.executeTask.processing": "جارٍ التنفيذ...",
+  "agentGroupManagement.executeTask.steps": "عدد خطوات التنفيذ",
+  "agentGroupManagement.executeTask.task": "محتوى المهمة",
+  "agentGroupManagement.executeTask.thread": "معرّف الخيط",
+  "agentGroupManagement.executeTask.timeout": "انتهت مهلة التنفيذ",
+  "agentGroupManagement.executeTask.tokens": "استهلاك الرموز",
+  "codeInterpreter-legacy.error": "خطأ في التنفيذ",
+  "codeInterpreter-legacy.executing": "جارٍ التنفيذ...",
+  "codeInterpreter-legacy.files": "الملفات:",
+  "codeInterpreter-legacy.output": "المخرجات:",
+  "codeInterpreter-legacy.returnValue": "قيمة الإرجاع:",
+  "codeInterpreter.error": "خطأ في التنفيذ",
+  "codeInterpreter.executing": "جارٍ التنفيذ...",
+  "codeInterpreter.files": "الملفات:",
+  "codeInterpreter.output": "الإخراج:",
+  "codeInterpreter.returnValue": "قيمة الإرجاع:",
+  "dalle.autoGenerate": "توليد تلقائي",
+  "dalle.downloading": "صلاحية روابط الصور المُولَّدة بواسطة DallE3 تدوم ساعة واحدة فقط، يتم تحميل الصور إلى الجهاز المحلي...",
+  "dalle.generate": "توليد",
+  "dalle.generating": "جارٍ التوليد...",
+  "dalle.images": "الصور:",
+  "dalle.prompt": "كلمة تلميح",
+  "lobe-gtd.actions.add": "إضافة",
+  "lobe-gtd.actions.clearCompleted": "مسح المكتمل",
+  "lobe-gtd.actions.placeholder": "أدخل مهمة للقيام بها...",
+  "lobe-gtd.clearTodos.cleared": "تم مسح {{count}} عنصرًا",
+  "lobe-gtd.clearTodos.clearedCompleted": "تم مسح {{count}} من العناصر المكتملة",
+  "lobe-gtd.clearTodos.clearedCompleted_one": "تم مسح {{count}} من العناصر المكتملة",
+  "lobe-gtd.clearTodos.clearedCompleted_other": "تم مسح {{count}} من العناصر المكتملة",
+  "lobe-gtd.clearTodos.cleared_one": "تم مسح {{count}} عنصرًا",
+  "lobe-gtd.clearTodos.cleared_other": "تم مسح {{count}} عنصرًا",
+  "lobe-gtd.clearTodos.noItems": "لا توجد عناصر للمسح",
+  "lobe-gtd.clearTodos.remaining": "تبقّى {{count}} عنصرًا",
+  "lobe-gtd.clearTodos.remaining_one": "تبقّى {{count}} عنصرًا",
+  "lobe-gtd.clearTodos.remaining_other": "تبقّى {{count}} عنصرًا",
+  "lobe-gtd.completeTodos.completed": "تم إكمال {{count}} عنصرًا",
+  "lobe-gtd.completeTodos.completed_one": "تم إكمال {{count}} عنصرًا",
+  "lobe-gtd.completeTodos.completed_other": "تم إكمال {{count}} عنصرًا",
+  "lobe-gtd.createTodos.created": "تم إنشاء {{count}} مهمة",
+  "lobe-gtd.createTodos.created_one": "تم إنشاء {{count}} مهمة",
+  "lobe-gtd.createTodos.created_other": "تم إنشاء {{count}} مهمة",
+  "lobe-gtd.createTodos.total": "المجموع: {{count}} عنصرًا",
+  "lobe-gtd.createTodos.total_one": "المجموع: {{count}} عنصرًا",
+  "lobe-gtd.createTodos.total_other": "المجموع: {{count}} عنصرًا",
+  "lobe-gtd.removeTodos.removed": "تم حذف {{count}} عنصرًا",
+  "lobe-gtd.removeTodos.removed_one": "تم حذف {{count}} عنصرًا",
+  "lobe-gtd.removeTodos.removed_other": "تم حذف {{count}} عنصرًا",
+  "lobe-gtd.status.done": "{{count}} مكتمل",
+  "lobe-gtd.status.pending": "{{count}} قيد الانتظار",
+  "lobe-gtd.todoList.empty": "قائمة المهام فارغة",
+  "lobe-gtd.todoList.items": "{{count}} عنصرًا",
+  "lobe-gtd.todoList.items_one": "{{count}} عنصرًا",
+  "lobe-gtd.todoList.items_other": "{{count}} عنصرًا",
+  "lobe-gtd.todoList.title": "قائمة المهام",
+  "lobe-gtd.updateTodos.updated": "تم تحديث قائمة المهام",
+  "lobe-knowledge-base.readKnowledge.meta.chars": "عدد الأحرف",
+  "lobe-knowledge-base.readKnowledge.meta.lines": "عدد السطور",
+  "localFiles.editFile.newString": "استبدال بـ",
+  "localFiles.editFile.oldString": "البحث عن",
+  "localFiles.editFile.replaceAll": "استبدال جميع المطابقات",
+  "localFiles.editFile.replaceFirst": "استبدال أول مطابقة فقط",
+  "localFiles.file": "ملف",
+  "localFiles.folder": "مجلد",
+  "localFiles.moveFiles.itemsMoved": "تم نقل {{count}} عنصر:",
+  "localFiles.moveFiles.itemsMoved_one": "تم نقل {{count}} عنصر:",
+  "localFiles.moveFiles.itemsMoved_other": "تم نقل {{count}} عنصر:",
+  "localFiles.moveFiles.itemsToMove": "{{count}} عنصر في انتظار النقل:",
+  "localFiles.moveFiles.itemsToMove_one": "{{count}} عنصر في انتظار النقل:",
+  "localFiles.moveFiles.itemsToMove_other": "{{count}} عنصر في انتظار النقل:",
+  "localFiles.open": "فتح",
+  "localFiles.openFile": "فتح ملف",
+  "localFiles.openFolder": "فتح مجلد",
+  "localFiles.read.more": "عرض المزيد",
+  "localFiles.readFile": "قراءة الملف",
+  "localFiles.readFileError": "فشل في قراءة الملف، يرجى التحقق من صحة مسار الملف",
+  "localFiles.readFiles": "قراءة الملفات",
+  "localFiles.readFilesError": "فشل في قراءة الملفات، يرجى التحقق من صحة مسار الملف",
+  "localFiles.writeFile.characters": "أحرف",
+  "localFiles.writeFile.preview": "معاينة المحتوى",
+  "localFiles.writeFile.truncated": "تم الاقتطاع",
+  "search.createNewSearch": "إنشاء سجل بحث جديد",
+  "search.emptyResult": "لم يتم العثور على نتائج، يرجى تعديل الكلمات الرئيسية والمحاولة مرة أخرى",
+  "search.genAiMessage": "إنشاء رسالة مساعد",
+  "search.includedTooltip": "ستدخل نتائج البحث الحالية في سياق المحادثة",
+  "search.keywords": "الكلمات الرئيسية:",
+  "search.scoreTooltip": "درجة الصلة، كلما كانت هذه الدرجة أعلى، كانت أكثر ارتباطًا بكلمات البحث",
+  "search.searchBar.button": "بحث",
+  "search.searchBar.placeholder": "الكلمات الرئيسية",
+  "search.searchBar.tooltip": "سيتم إعادة الحصول على نتائج البحث، وإنشاء رسالة ملخص جديدة",
+  "search.searchCategory.placeholder": "ابحث عن الفئة",
+  "search.searchCategory.title": "فئة البحث:",
+  "search.searchCategory.value.files": "ملفات",
+  "search.searchCategory.value.general": "عام",
+  "search.searchCategory.value.images": "صور",
+  "search.searchCategory.value.it": "تكنولوجيا المعلومات",
+  "search.searchCategory.value.map": "خريطة",
+  "search.searchCategory.value.music": "موسيقى",
+  "search.searchCategory.value.news": "أخبار",
+  "search.searchCategory.value.science": "علوم",
+  "search.searchCategory.value.social_media": "وسائل التواصل الاجتماعي",
+  "search.searchCategory.value.videos": "فيديوهات",
+  "search.searchEngine.placeholder": "محرك البحث",
+  "search.searchEngine.title": "محرك البحث:",
+  "search.searchResult": "عدد النتائج:",
+  "search.searchTimeRange.title": "نطاق الوقت:",
+  "search.searchTimeRange.value.anytime": "في أي وقت",
+  "search.searchTimeRange.value.day": "خلال يوم واحد",
+  "search.searchTimeRange.value.month": "خلال شهر واحد",
+  "search.searchTimeRange.value.week": "خلال أسبوع واحد",
+  "search.searchTimeRange.value.year": "خلال سنة واحدة",
+  "search.summary": "ملخص",
+  "search.summaryTooltip": "تلخيص المحتوى الحالي",
+  "search.viewMoreResults": "عرض المزيد من {{results}} نتيجة",
+  "updateArgs.duplicateKeyError": "يجب أن يكون مفتاح الحقل فريدًا",
+  "updateArgs.form.add": "إضافة عنصر",
+  "updateArgs.form.key": "مفتاح الحقل",
+  "updateArgs.form.value": "قيمة الحقل",
+  "updateArgs.formValidationFailed": "فشل التحقق من صحة النموذج، يرجى التحقق من تنسيق المعلمات",
+  "updateArgs.keyRequired": "لا يمكن أن يكون مفتاح الحقل فارغًا",
+  "updateArgs.stringifyError": "تعذر تسلسل المعلمات، يرجى التحقق من تنسيق المعلمات"
 }

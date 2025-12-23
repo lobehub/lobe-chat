@@ -1,118 +1,62 @@
 {
-  "config": {
-    "aspectRatio": {
-      "label": "Seitenverhältnis",
-      "lock": "Seitenverhältnis sperren",
-      "unlock": "Seitenverhältnis entsperren"
-    },
-    "cfg": {
-      "label": "Führungsstärke"
-    },
-    "header": {
-      "desc": "Einfache Beschreibung, sofortige Kreation",
-      "title": "Malerei"
-    },
-    "height": {
-      "label": "Höhe"
-    },
-    "imageNum": {
-      "label": "Anzahl der Bilder"
-    },
-    "imageUrl": {
-      "label": "Referenzbild"
-    },
-    "imageUrls": {
-      "label": "Referenzbilder"
-    },
-    "model": {
-      "label": "Modell"
-    },
-    "prompt": {
-      "placeholder": "Beschreiben Sie den Inhalt, den Sie generieren möchten"
-    },
-    "quality": {
-      "label": "Bildqualität",
-      "options": {
-        "hd": "Hohe Auflösung",
-        "standard": "Standard"
-      }
-    },
-    "resolution": {
-      "label": "Auflösung",
-      "options": {
-        "1K": "1K",
-        "2K": "2K",
-        "4K": "4K"
-      }
-    },
-    "seed": {
-      "label": "Seed",
-      "random": "Zufälliger Seed"
-    },
-    "size": {
-      "label": "Größe"
-    },
-    "steps": {
-      "label": "Schritte"
-    },
-    "title": "KI-Malerei",
-    "width": {
-      "label": "Breite"
-    }
-  },
-  "generation": {
-    "actions": {
-      "applySeed": "Saatgut anwenden",
-      "copyError": "Fehlermeldung kopieren",
-      "copyPrompt": "Prompt kopieren",
-      "copySeed": "Seed kopieren",
-      "delete": "Löschen",
-      "deleteBatch": "Batch löschen",
-      "download": "Herunterladen",
-      "downloadFailed": "Bild-Download fehlgeschlagen",
-      "errorCopied": "Fehlermeldung wurde in die Zwischenablage kopiert",
-      "errorCopyFailed": "Fehlermeldung kopieren fehlgeschlagen",
-      "generate": "Generieren",
-      "promptCopied": "Prompt wurde in die Zwischenablage kopiert",
-      "promptCopyFailed": "Prompt-Kopieren fehlgeschlagen",
-      "reuseSettings": "Einstellungen wiederverwenden",
-      "seedApplied": "Saatgut wurde auf die Konfiguration angewendet",
-      "seedApplyFailed": "Anwenden des Saatguts fehlgeschlagen",
-      "seedCopied": "Seed wurde in die Zwischenablage kopiert",
-      "seedCopyFailed": "Seed-Kopieren fehlgeschlagen"
-    },
-    "metadata": {
-      "count": "{{count}} Bilder"
-    },
-    "status": {
-      "failed": "Generierung fehlgeschlagen",
-      "generating": "Wird generiert..."
-    }
-  },
-  "notSupportGuide": {
-    "desc": "Die aktuell eingesetzte Instanz verwendet den Client-Datenbankmodus und unterstützt die KI-Bilderzeugung nicht. Bitte wechseln Sie zum <1>Server-Datenbankmodus</1> oder nutzen Sie direkt <3>LobeChat Cloud</3>.",
-    "features": {
-      "fileIntegration": {
-        "desc": "Tiefgreifende Integration mit dem Dateimanagementsystem, generierte Bilder werden automatisch im Dateisystem gespeichert und können zentral verwaltet und organisiert werden.",
-        "title": "Dateisystem-Integration"
-      },
-      "llmAssisted": {
-        "desc": "Kombiniert die Fähigkeiten großer Sprachmodelle zur intelligenten Optimierung und Erweiterung von Prompts, um die Bildqualität zu verbessern (bald verfügbar).",
-        "title": "LLM-unterstützte Bildgenerierung"
-      },
-      "multiProviders": {
-        "desc": "Unterstützt verschiedene KI-Malservice-Anbieter, darunter OpenAI gpt-image-1, Google Imagen, FAL.ai und weitere, und bietet eine breite Modellauswahl.",
-        "title": "Unterstützung mehrerer Anbieter"
-      }
-    },
-    "title": "Der aktuell eingesetzte Modus unterstützt keine KI-Malerei"
-  },
-  "topic": {
-    "createNew": "Neues Thema erstellen",
-    "deleteConfirm": "Generiertes Thema löschen",
-    "deleteConfirmDesc": "Das generierte Thema wird gelöscht und kann nicht wiederhergestellt werden. Bitte vorsichtig vorgehen.",
-    "empty": "Keine generierten Themen vorhanden",
-    "title": "Malthema",
-    "untitled": "Standardthema"
-  }
+  "config.aspectRatio.label": "Seitenverhältnis",
+  "config.aspectRatio.lock": "Seitenverhältnis sperren",
+  "config.aspectRatio.unlock": "Seitenverhältnis entsperren",
+  "config.cfg.label": "Führungsstärke",
+  "config.header.desc": "Einfache Beschreibung, sofortige Kreation",
+  "config.header.title": "Malerei",
+  "config.height.label": "Höhe",
+  "config.imageNum.label": "Anzahl der Bilder",
+  "config.imageUrl.label": "Referenzbild",
+  "config.imageUrls.label": "Referenzbilder",
+  "config.model.label": "Modell",
+  "config.prompt.placeholder": "Beschreiben Sie den Inhalt, den Sie generieren möchten",
+  "config.quality.label": "Bildqualität",
+  "config.quality.options.hd": "Hohe Auflösung",
+  "config.quality.options.standard": "Standard",
+  "config.resolution.label": "Auflösung",
+  "config.resolution.options.1K": "1K",
+  "config.resolution.options.2K": "2K",
+  "config.resolution.options.4K": "4K",
+  "config.seed.label": "Seed",
+  "config.seed.random": "Zufälliger Seed",
+  "config.size.label": "Größe",
+  "config.steps.label": "Schritte",
+  "config.title": "KI-Malerei",
+  "config.width.label": "Breite",
+  "generation.actions.applySeed": "Saatgut anwenden",
+  "generation.actions.copyError": "Fehlermeldung kopieren",
+  "generation.actions.copyPrompt": "Prompt kopieren",
+  "generation.actions.copySeed": "Seed kopieren",
+  "generation.actions.delete": "Löschen",
+  "generation.actions.deleteBatch": "Batch löschen",
+  "generation.actions.download": "Herunterladen",
+  "generation.actions.downloadFailed": "Bild-Download fehlgeschlagen",
+  "generation.actions.errorCopied": "Fehlermeldung wurde in die Zwischenablage kopiert",
+  "generation.actions.errorCopyFailed": "Fehlermeldung kopieren fehlgeschlagen",
+  "generation.actions.generate": "Generieren",
+  "generation.actions.promptCopied": "Prompt wurde in die Zwischenablage kopiert",
+  "generation.actions.promptCopyFailed": "Prompt-Kopieren fehlgeschlagen",
+  "generation.actions.reuseSettings": "Einstellungen wiederverwenden",
+  "generation.actions.seedApplied": "Saatgut wurde auf die Konfiguration angewendet",
+  "generation.actions.seedApplyFailed": "Anwenden des Saatguts fehlgeschlagen",
+  "generation.actions.seedCopied": "Seed wurde in die Zwischenablage kopiert",
+  "generation.actions.seedCopyFailed": "Seed-Kopieren fehlgeschlagen",
+  "generation.metadata.count": "{{count}} Bilder",
+  "generation.status.failed": "Generierung fehlgeschlagen",
+  "generation.status.generating": "Wird generiert...",
+  "notSupportGuide.desc": "Die aktuell eingesetzte Instanz verwendet den Client-Datenbankmodus und unterstützt die KI-Bilderzeugung nicht. Bitte wechseln Sie zum <1>Server-Datenbankmodus</1> oder nutzen Sie direkt <3>LobeChat Cloud</3>.",
+  "notSupportGuide.features.fileIntegration.desc": "Tiefgreifende Integration mit dem Dateimanagementsystem, generierte Bilder werden automatisch im Dateisystem gespeichert und können zentral verwaltet und organisiert werden.",
+  "notSupportGuide.features.fileIntegration.title": "Dateisystem-Integration",
+  "notSupportGuide.features.llmAssisted.desc": "Kombiniert die Fähigkeiten großer Sprachmodelle zur intelligenten Optimierung und Erweiterung von Prompts, um die Bildqualität zu verbessern (bald verfügbar).",
+  "notSupportGuide.features.llmAssisted.title": "LLM-unterstützte Bildgenerierung",
+  "notSupportGuide.features.multiProviders.desc": "Unterstützt verschiedene KI-Malservice-Anbieter, darunter OpenAI gpt-image-1, Google Imagen, FAL.ai und weitere, und bietet eine breite Modellauswahl.",
+  "notSupportGuide.features.multiProviders.title": "Unterstützung mehrerer Anbieter",
+  "notSupportGuide.title": "Der aktuell eingesetzte Modus unterstützt keine KI-Malerei",
+  "topic.createNew": "Neues Thema erstellen",
+  "topic.deleteConfirm": "Generiertes Thema löschen",
+  "topic.deleteConfirmDesc": "Das generierte Thema wird gelöscht und kann nicht wiederhergestellt werden. Bitte vorsichtig vorgehen.",
+  "topic.empty": "Keine generierten Themen vorhanden",
+  "topic.title": "Malthema",
+  "topic.untitled": "Standardthema"
 }

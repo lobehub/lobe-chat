@@ -1,47 +1,25 @@
 {
-  "changelog": {
-    "description": "Suivez les nouvelles fonctionnalités et améliorations de {{appName}}",
-    "title": "Journal des mises à jour"
-  },
-  "chat": {
-    "description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
-    "title": "{{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent"
-  },
-  "discover": {
-    "assistants": {
-      "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération de voix, agents intelligents, flux de travail automatisés, personnalisez votre assistant intelligent AI / GPTs / OLLaMA.",
-      "title": "Communauté des Agents Intelligents"
-    },
-    "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération de voix, agents intelligents, flux de travail automatisés, applications AI personnalisées, personnalisez votre espace de travail AI.",
-    "mcp": {
-      "description": "Recherchez, comparez et connectez des milliers de serveurs MCP, aidant les systèmes d'IA à accéder facilement aux systèmes de fichiers, bases de données, API et autres ressources clés, étendant ainsi pleinement vos capacités d'IA",
-      "title": "Communauté des Serveurs MCP"
-    },
-    "models": {
-      "description": "Explorez les modèles AI populaires OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
-      "title": "Communauté des Modèles"
-    },
-    "plugins": {
-      "description": "Découvrez des capacités enrichies pour votre assistant avec des plugins pour la génération de graphiques, la recherche académique, la génération d'images, la génération de vidéos, la génération de voix et l'automatisation des flux de travail.",
-      "title": "Communauté des Plugins"
-    },
-    "providers": {
-      "description": "Explorez les principaux fournisseurs de modèles OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter.",
-      "title": "Communauté des Fournisseurs de Modèles"
-    },
-    "search": "Recherche",
-    "title": "Découvrir"
-  },
-  "image": {
-    "description": "{{appName}} vous offre la meilleure expérience d'utilisation de GPT Image, Flux, Midjourney, Stable Diffusion",
-    "title": "Peinture IA"
-  },
-  "plugins": {
-    "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération de voix, flux de travail automatisés, personnalisez les capacités de plugins ToolCall pour ChatGPT / Claude",
-    "title": "Communauté des Plugins"
-  },
-  "welcome": {
-    "description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
-    "title": "Bienvenue sur {{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent"
-  }
+  "changelog.description": "Suivez les nouvelles fonctionnalités et améliorations de {{appName}}",
+  "changelog.title": "Journal des mises à jour",
+  "chat.description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
+  "chat.title": "{{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent",
+  "discover.assistants.description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération de voix, agents intelligents, flux de travail automatisés, personnalisez votre assistant intelligent AI / GPTs / OLLaMA.",
+  "discover.assistants.title": "Communauté des Agents Intelligents",
+  "discover.description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération de voix, agents intelligents, flux de travail automatisés, applications AI personnalisées, personnalisez votre espace de travail AI.",
+  "discover.mcp.description": "Recherchez, comparez et connectez des milliers de serveurs MCP, aidant les systèmes d'IA à accéder facilement aux systèmes de fichiers, bases de données, API et autres ressources clés, étendant ainsi pleinement vos capacités d'IA",
+  "discover.mcp.title": "Communauté des Serveurs MCP",
+  "discover.models.description": "Explorez les modèles AI populaires OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
+  "discover.models.title": "Communauté des Modèles",
+  "discover.plugins.description": "Découvrez des capacités enrichies pour votre assistant avec des plugins pour la génération de graphiques, la recherche académique, la génération d'images, la génération de vidéos, la génération de voix et l'automatisation des flux de travail.",
+  "discover.plugins.title": "Communauté des Plugins",
+  "discover.providers.description": "Explorez les principaux fournisseurs de modèles OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter.",
+  "discover.providers.title": "Communauté des Fournisseurs de Modèles",
+  "discover.search": "Recherche",
+  "discover.title": "Découvrir",
+  "image.description": "{{appName}} vous offre la meilleure expérience d'utilisation de GPT Image, Flux, Midjourney, Stable Diffusion",
+  "image.title": "Peinture IA",
+  "plugins.description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération de voix, flux de travail automatisés, personnalisez les capacités de plugins ToolCall pour ChatGPT / Claude",
+  "plugins.title": "Communauté des Plugins",
+  "welcome.description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
+  "welcome.title": "Bienvenue sur {{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent"
 }

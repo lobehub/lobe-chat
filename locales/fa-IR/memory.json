@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "حذف",
-      "edit": "ویرایش"
-    },
-    "defaultType": "زمینه",
-    "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه زمینه‌ای را حذف کنید؟ این عملیات قابل بازگشت نیست.",
-    "deleteTitle": "حذف حافظه زمینه‌ای",
-    "description": "توضیحات",
-    "empty": "هیچ حافظه زمینه‌ای موجود نیست",
-    "source": "منبع"
-  },
-  "empty": {
-    "description": "بازیابی حافظه یک فرایند تدریجی است. لطفاً با افزودن موضوعات بیشتر، محتوای بازیابی حافظه را غنی‌تر کنید و سعی کنید گفت‌وگوهای عمیق‌تری با دستیار داشته باشید تا اطلاعات ارزشمند بهتر ثبت و ذخیره شوند.",
-    "search": "هیچ حافظه‌ای مطابق با جستجو یافت نشد",
-    "title": "حافظه‌ای موجود نیست"
-  },
-  "experience": {
-    "actions": {
-      "delete": "حذف",
-      "edit": "ویرایش"
-    },
-    "defaultType": "تجربه",
-    "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه تجربی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
-    "deleteTitle": "حذف حافظه تجربی",
-    "empty": "هیچ حافظه تجربی موجود نیست",
-    "keyLearning": "یادگیری کلیدی",
-    "situation": "وضعیت",
-    "source": "منبع",
-    "steps": {
-      "action": "اقدام",
-      "result": "نتیجه",
-      "situation": "وضعیت",
-      "task": "وظیفه"
-    }
-  },
-  "filter": {
-    "search": "جستجوی کلیدواژه یا توضیح حافظه...",
-    "sort": {
-      "createdAt": "زمان ایجاد",
-      "scoreConfidence": "درجه اطمینان",
-      "scoreImpact": "اهمیت",
-      "scorePriority": "وزن ترجیح",
-      "scoreUrgency": "درجه فوریت"
-    }
-  },
-  "identity": {
-    "empty": "هیچ حافظه هویتی موجود نیست",
-    "filter": {
-      "search": "جستجوی نقش، رابطه یا توضیح...",
-      "type": {
-        "all": "همه",
-        "demographic": "ویژگی‌ها",
-        "personal": "نقش‌ها",
-        "professional": "حرفه‌ای"
-      }
-    },
-    "list": {
-      "confirmDelete": "تأیید حذف",
-      "deleteCancel": "لغو",
-      "deleteContent": "آیا مطمئن هستید که می‌خواهید این حافظه هویتی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
-      "deleteOk": "حذف",
-      "noResults": "هیچ حافظه هویتی مطابقی یافت نشد",
-      "updated": "به‌روزرسانی شد"
-    },
-    "roleCloud": {
-      "collapse": "بستن",
-      "expand": "نمایش بیشتر"
-    },
-    "view": {
-      "list": "فهرست",
-      "timeline": "خط زمانی"
-    }
-  },
+  "context.actions.delete": "حذف",
+  "context.actions.edit": "ویرایش",
+  "context.defaultType": "زمینه",
+  "context.deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه زمینه‌ای را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+  "context.deleteTitle": "حذف حافظه زمینه‌ای",
+  "context.description": "توضیحات",
+  "context.empty": "هیچ حافظه زمینه‌ای موجود نیست",
+  "context.source": "منبع",
+  "empty.description": "بازیابی حافظه یک فرایند تدریجی است. لطفاً با افزودن موضوعات بیشتر، محتوای بازیابی حافظه را غنی‌تر کنید و سعی کنید گفت‌وگوهای عمیق‌تری با دستیار داشته باشید تا اطلاعات ارزشمند بهتر ثبت و ذخیره شوند.",
+  "empty.search": "هیچ حافظه‌ای مطابق با جستجو یافت نشد",
+  "empty.title": "حافظه‌ای موجود نیست",
+  "experience.actions.delete": "حذف",
+  "experience.actions.edit": "ویرایش",
+  "experience.defaultType": "تجربه",
+  "experience.deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه تجربی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+  "experience.deleteTitle": "حذف حافظه تجربی",
+  "experience.empty": "هیچ حافظه تجربی موجود نیست",
+  "experience.keyLearning": "یادگیری کلیدی",
+  "experience.situation": "وضعیت",
+  "experience.source": "منبع",
+  "experience.steps.action": "اقدام",
+  "experience.steps.result": "نتیجه",
+  "experience.steps.situation": "وضعیت",
+  "experience.steps.task": "وظیفه",
+  "filter.search": "جستجوی کلیدواژه یا توضیح حافظه...",
+  "filter.sort.createdAt": "زمان ایجاد",
+  "filter.sort.scoreConfidence": "درجه اطمینان",
+  "filter.sort.scoreImpact": "اهمیت",
+  "filter.sort.scorePriority": "وزن ترجیح",
+  "filter.sort.scoreUrgency": "درجه فوریت",
+  "identity.empty": "هیچ حافظه هویتی موجود نیست",
+  "identity.filter.search": "جستجوی نقش، رابطه یا توضیح...",
+  "identity.filter.type.all": "همه",
+  "identity.filter.type.demographic": "ویژگی‌ها",
+  "identity.filter.type.personal": "نقش‌ها",
+  "identity.filter.type.professional": "حرفه‌ای",
+  "identity.list.confirmDelete": "تأیید حذف",
+  "identity.list.deleteCancel": "لغو",
+  "identity.list.deleteContent": "آیا مطمئن هستید که می‌خواهید این حافظه هویتی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+  "identity.list.deleteOk": "حذف",
+  "identity.list.noResults": "هیچ حافظه هویتی مطابقی یافت نشد",
+  "identity.list.updated": "به‌روزرسانی شد",
+  "identity.roleCloud.collapse": "بستن",
+  "identity.roleCloud.expand": "نمایش بیشتر",
+  "identity.view.list": "فهرست",
+  "identity.view.timeline": "خط زمانی",
   "loading": "در حال بارگذاری...",
-  "preference": {
-    "actions": {
-      "delete": "حذف",
-      "edit": "ویرایش"
-    },
-    "conclusionDirectives": "دستورالعمل‌های نتیجه‌گیری",
-    "defaultType": "ترجیحات",
-    "deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه ترجیحی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
-    "deleteTitle": "حذف حافظه ترجیحی",
-    "empty": "هیچ حافظه ترجیحی موجود نیست",
-    "source": "منبع",
-    "suggestions": "اقداماتی که دستیار ممکن است انجام دهد"
-  },
-  "tab": {
-    "contexts": "زمینه‌ها",
-    "experiences": "تجربه‌ها",
-    "home": "خانه",
-    "identities": "هویت‌ها",
-    "preferences": "ترجیحات",
-    "search": "جستجو"
-  },
-  "viewMode": {
-    "masonry": "نمای آبشاری",
-    "timeline": "خط زمانی"
-  }
+  "preference.actions.delete": "حذف",
+  "preference.actions.edit": "ویرایش",
+  "preference.conclusionDirectives": "دستورالعمل‌های نتیجه‌گیری",
+  "preference.defaultType": "ترجیحات",
+  "preference.deleteConfirm": "آیا مطمئن هستید که می‌خواهید این حافظه ترجیحی را حذف کنید؟ این عملیات قابل بازگشت نیست.",
+  "preference.deleteTitle": "حذف حافظه ترجیحی",
+  "preference.empty": "هیچ حافظه ترجیحی موجود نیست",
+  "preference.source": "منبع",
+  "preference.suggestions": "اقداماتی که دستیار ممکن است انجام دهد",
+  "tab.contexts": "زمینه‌ها",
+  "tab.experiences": "تجربه‌ها",
+  "tab.home": "خانه",
+  "tab.identities": "هویت‌ها",
+  "tab.preferences": "ترجیحات",
+  "tab.search": "جستجو",
+  "viewMode.masonry": "نمای آبشاری",
+  "viewMode.timeline": "خط زمانی"
 }

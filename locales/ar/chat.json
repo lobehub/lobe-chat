@@ -1,44 +1,34 @@
 {
-  "ModelSwitch": {
-    "title": "النموذج"
-  },
+  "ModelSwitch.title": "النموذج",
   "active": "نشط",
-  "agentBuilder": {
-    "installPlugin": {
-      "authRequired": "يتطلب مكون MCP السحابي تسجيل الدخول والمصادقة",
-      "cancel": "إلغاء",
-      "clickApproveToConnect": "انقر على \"الموافقة\" للاتصال وتفويض هذا التكامل",
-      "clickApproveToInstall": "انقر على \"الموافقة\" لتثبيت هذا المكون الإضافي",
-      "connectedAndEnabled": "تم الاتصال والتفعيل",
-      "connectionFailed": "فشل الاتصال",
-      "installFailed": "فشل التثبيت",
-      "installPlugin": "تثبيت المكون الإضافي",
-      "installToEnable": "قم بتثبيت هذا المكون الإضافي لتمكين المساعد",
-      "installedAndEnabled": "تم التثبيت والتفعيل",
-      "requiresAuth": "يتطلب تفويضًا، انقر على \"الموافقة\" للاتصال",
-      "retry": "إعادة المحاولة"
-    },
-    "title": "خبير إنشاء المساعدين",
-    "welcome": "ما هو سيناريو احتياجك؟ شريكك المهني جاهز لخدمتك.\n\nسواء كنت تكتب، تبرمج، أو تحلل البيانات، يمكنني مساعدتك في إنشاء مساعدك الخاص!"
-  },
+  "agentBuilder.installPlugin.authRequired": "يتطلب مكون MCP السحابي تسجيل الدخول والمصادقة",
+  "agentBuilder.installPlugin.cancel": "إلغاء",
+  "agentBuilder.installPlugin.clickApproveToConnect": "انقر على \"الموافقة\" للاتصال وتفويض هذا التكامل",
+  "agentBuilder.installPlugin.clickApproveToInstall": "انقر على \"الموافقة\" لتثبيت هذا المكون الإضافي",
+  "agentBuilder.installPlugin.connectedAndEnabled": "تم الاتصال والتفعيل",
+  "agentBuilder.installPlugin.connectionFailed": "فشل الاتصال",
+  "agentBuilder.installPlugin.installFailed": "فشل التثبيت",
+  "agentBuilder.installPlugin.installPlugin": "تثبيت المكون الإضافي",
+  "agentBuilder.installPlugin.installToEnable": "قم بتثبيت هذا المكون الإضافي لتمكين المساعد",
+  "agentBuilder.installPlugin.installedAndEnabled": "تم التثبيت والتفعيل",
+  "agentBuilder.installPlugin.requiresAuth": "يتطلب تفويضًا، انقر على \"الموافقة\" للاتصال",
+  "agentBuilder.installPlugin.retry": "إعادة المحاولة",
+  "agentBuilder.title": "خبير إنشاء المساعدين",
+  "agentBuilder.welcome": "ما هو سيناريو احتياجك؟ شريكك المهني جاهز لخدمتك.\n\nسواء كنت تكتب، تبرمج، أو تحلل البيانات، يمكنني مساعدتك في إنشاء مساعدك الخاص!",
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، كيف يمكنني مساعدتك؟",
   "agents": "مساعد",
-  "artifact": {
-    "generating": "جاري الإنشاء",
-    "inThread": "لا يمكن عرض الموضوعات الفرعية، يرجى التبديل إلى منطقة المحادثة الرئيسية لفتحها",
-    "thinking": "جاري التفكير",
-    "thought": "عملية التفكير",
-    "unknownTitle": "عمل غير مسمى"
-  },
+  "artifact.generating": "جاري الإنشاء",
+  "artifact.inThread": "لا يمكن عرض الموضوعات الفرعية، يرجى التبديل إلى منطقة المحادثة الرئيسية لفتحها",
+  "artifact.thinking": "جاري التفكير",
+  "artifact.thought": "عملية التفكير",
+  "artifact.unknownTitle": "عمل غير مسمى",
   "availableAgents": "المساعدون المتاحون",
   "backToBottom": "العودة إلى الأسفل",
   "builtinCopilot": "المساعد المدمج",
-  "chatList": {
-    "expandMessage": "عرض الرسائل",
-    "longMessageDetail": "عرض التفاصيل"
-  },
+  "chatList.expandMessage": "عرض الرسائل",
+  "chatList.longMessageDetail": "عرض التفاصيل",
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveChatGroupItemAlert": "سيتم حذف هذه المجموعة، ولن يتأثر أعضاء الفريق. يرجى تأكيد الإجراء.",
@@ -50,227 +40,149 @@
   "defaultGroupChat": "مجموعة",
   "defaultList": "القائمة الافتراضية",
   "defaultSession": "المساعد الافتراضي",
-  "dm": {
-    "placeholder": "ستظهر رسائلك الخاصة مع {{agentTitle}} هنا.",
-    "tooltip": "أرسل رسالة خاصة",
-    "visibleTo": "مرئي فقط لـ {{target}}",
-    "you": "أنت"
-  },
-  "duplicateSession": {
-    "loading": "جاري النسخ...",
-    "success": "تم النسخ بنجاح",
-    "title": "{{title}} نسخة"
-  },
+  "dm.placeholder": "ستظهر رسائلك الخاصة مع {{agentTitle}} هنا.",
+  "dm.tooltip": "أرسل رسالة خاصة",
+  "dm.visibleTo": "مرئي فقط لـ {{target}}",
+  "dm.you": "أنت",
+  "duplicateSession.loading": "جاري النسخ...",
+  "duplicateSession.success": "تم النسخ بنجاح",
+  "duplicateSession.title": "{{title}} نسخة",
   "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
   "emptyAgentAction": "إنشاء مساعد",
-  "extendParams": {
-    "disableContextCaching": {
-      "desc": "يمكن تقليل تكلفة توليد محادثة واحدة بنسبة تصل إلى 90%، وزيادة سرعة الاستجابة بمقدار 4 مرات (<1>اعرف المزيد</1>). عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
-      "title": "تفعيل تخزين السياق"
-    },
-    "enableReasoning": {
-      "desc": "استنادًا إلى آلية تفكير كلود (Claude Thinking) المحدودة (<1>اعرف المزيد</1>)، عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
-      "title": "تفعيل التفكير العميق"
-    },
-    "imageAspectRatio": {
-      "title": "نسبة العرض إلى الارتفاع للصورة"
-    },
-    "imageResolution": {
-      "title": "دقة الصورة"
-    },
-    "reasoningBudgetToken": {
-      "title": "استهلاك توكن التفكير"
-    },
-    "reasoningEffort": {
-      "title": "شدة الاستدلال"
-    },
-    "textVerbosity": {
-      "title": "مستوى تفصيل المخرجات النصية"
-    },
-    "thinking": {
-      "title": "مفتاح التفكير العميق"
-    },
-    "thinkingLevel": {
-      "title": "مستوى التفكير"
-    },
-    "title": "وظائف توسيع النموذج",
-    "urlContext": {
-      "desc": "عند التفعيل، سيتم تحليل روابط الويب تلقائيًا للحصول على محتوى السياق الفعلي للصفحة",
-      "title": "استخراج محتوى رابط الويب"
-    }
-  },
-  "group": {
-    "desc": "التعاون مع عدة مساعدين للذكاء الاصطناعي في مساحة محادثة مشتركة.",
-    "memberTooltip": "هناك {{count}} عضوًا في المجموعة",
-    "orchestratorThinking": "المُنسق يفكر...",
-    "removeMember": "إزالة عضو",
-    "title": "مجموعة"
-  },
+  "extendParams.disableContextCaching.desc": "يمكن تقليل تكلفة توليد محادثة واحدة بنسبة تصل إلى 90%، وزيادة سرعة الاستجابة بمقدار 4 مرات (<1>اعرف المزيد</1>). عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
+  "extendParams.disableContextCaching.title": "تفعيل تخزين السياق",
+  "extendParams.enableReasoning.desc": "استنادًا إلى آلية تفكير كلود (Claude Thinking) المحدودة (<1>اعرف المزيد</1>)، عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
+  "extendParams.enableReasoning.title": "تفعيل التفكير العميق",
+  "extendParams.imageAspectRatio.title": "نسبة العرض إلى الارتفاع للصورة",
+  "extendParams.imageResolution.title": "دقة الصورة",
+  "extendParams.reasoningBudgetToken.title": "استهلاك توكن التفكير",
+  "extendParams.reasoningEffort.title": "شدة الاستدلال",
+  "extendParams.textVerbosity.title": "مستوى تفصيل المخرجات النصية",
+  "extendParams.thinking.title": "مفتاح التفكير العميق",
+  "extendParams.thinkingLevel.title": "مستوى التفكير",
+  "extendParams.title": "وظائف توسيع النموذج",
+  "extendParams.urlContext.desc": "عند التفعيل، سيتم تحليل روابط الويب تلقائيًا للحصول على محتوى السياق الفعلي للصفحة",
+  "extendParams.urlContext.title": "استخراج محتوى رابط الويب",
+  "group.desc": "التعاون مع عدة مساعدين للذكاء الاصطناعي في مساحة محادثة مشتركة.",
+  "group.memberTooltip": "هناك {{count}} عضوًا في المجموعة",
+  "group.orchestratorThinking": "المُنسق يفكر...",
+  "group.removeMember": "إزالة عضو",
+  "group.title": "مجموعة",
   "groupDescription": "وصف الفريق",
-  "groupSidebar": {
-    "agentProfile": {
-      "chat": "الدردشة",
-      "model": "النموذج"
-    },
-    "members": {
-      "addMember": "إضافة عضو",
-      "enableOrchestrator": "تفعيل المنسق",
-      "memberSettings": "إعدادات العضو",
-      "orchestrator": "المُنسق",
-      "orchestratorThinking": "المُنسق يفكر...",
-      "removeMember": "إزالة عضو",
-      "stopOrchestrator": "إيقاف التفكير",
-      "triggerOrchestrator": "بدء المحادثة الجماعية"
-    },
-    "tabs": {
-      "host": "المضيف",
-      "members": "الأعضاء",
-      "role": "الإعداد"
-    }
-  },
-  "groupWizard": {
-    "chooseMembers": "اختر المساعدين الحاليين...",
-    "createGroup": "إنشاء فريق",
-    "existingMembers": "الوكلاء الحاليون",
-    "groupMembers": "سيتم أيضًا إضافة هؤلاء المساعدين إلى قائمتك",
-    "host": {
-      "description": "تمكين الفريق من العمل بشكل مستقل",
-      "title": "تفعيل المضيف",
-      "tooltip": "إذا قمت بتعطيل المضيف، فستحتاج إلى الإشارة إلى الأعضاء يدويًا باستخدام @ لكي يتمكنوا من الرد"
-    },
-    "memberCount": "{{count}} عضو",
-    "noMatchingTemplates": "لا توجد قوالب مطابقة",
-    "noSelectedTemplates": "لم يتم اختيار أي قالب",
-    "noTemplateMembers": "لا يوجد أعضاء في القالب",
-    "noTemplates": "لا توجد قوالب متاحة",
-    "searchTemplates": "ابحث في القوالب...",
-    "title": "إنشاء مجموعة",
-    "useTemplate": "استخدام القالب"
-  },
+  "groupSidebar.agentProfile.chat": "الدردشة",
+  "groupSidebar.agentProfile.model": "النموذج",
+  "groupSidebar.members.addMember": "إضافة عضو",
+  "groupSidebar.members.enableOrchestrator": "تفعيل المنسق",
+  "groupSidebar.members.memberSettings": "إعدادات العضو",
+  "groupSidebar.members.orchestrator": "المُنسق",
+  "groupSidebar.members.orchestratorThinking": "المُنسق يفكر...",
+  "groupSidebar.members.removeMember": "إزالة عضو",
+  "groupSidebar.members.stopOrchestrator": "إيقاف التفكير",
+  "groupSidebar.members.triggerOrchestrator": "بدء المحادثة الجماعية",
+  "groupSidebar.tabs.host": "المضيف",
+  "groupSidebar.tabs.members": "الأعضاء",
+  "groupSidebar.tabs.role": "الإعداد",
+  "groupWizard.chooseMembers": "اختر المساعدين الحاليين...",
+  "groupWizard.createGroup": "إنشاء فريق",
+  "groupWizard.existingMembers": "الوكلاء الحاليون",
+  "groupWizard.groupMembers": "سيتم أيضًا إضافة هؤلاء المساعدين إلى قائمتك",
+  "groupWizard.host.description": "تمكين الفريق من العمل بشكل مستقل",
+  "groupWizard.host.title": "تفعيل المضيف",
+  "groupWizard.host.tooltip": "إذا قمت بتعطيل المضيف، فستحتاج إلى الإشارة إلى الأعضاء يدويًا باستخدام @ لكي يتمكنوا من الرد",
+  "groupWizard.memberCount": "{{count}} عضو",
+  "groupWizard.noMatchingTemplates": "لا توجد قوالب مطابقة",
+  "groupWizard.noSelectedTemplates": "لم يتم اختيار أي قالب",
+  "groupWizard.noTemplateMembers": "لا يوجد أعضاء في القالب",
+  "groupWizard.noTemplates": "لا توجد قوالب متاحة",
+  "groupWizard.searchTemplates": "ابحث في القوالب...",
+  "groupWizard.title": "إنشاء مجموعة",
+  "groupWizard.useTemplate": "استخدام القالب",
   "hideForYou": "تم إخفاء محتوى الرسائل الخاصة، يرجى تفعيل خيار 【عرض محتوى الرسائل الخاصة】 في الإعدادات للعرض",
-  "history": {
-    "title": "سيتذكر المساعد آخر {{count}} رسالة فقط"
-  },
+  "history.title": "سيتذكر المساعد آخر {{count}} رسالة فقط",
   "historyRange": "نطاق التاريخ",
   "historySummary": "ملخص الرسائل التاريخية",
   "inactive": "غير نشط",
-  "inbox": {
-    "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
-    "title": "Lobe AI"
-  },
-  "input": {
-    "addAi": "إضافة رسالة AI",
-    "addUser": "إضافة رسالة مستخدم",
-    "disclaimer": "قد يرتكب الذكاء الاصطناعي أخطاءً أيضًا، يرجى التحقق من المعلومات الهامة",
-    "errorMsg": "فشل إرسال الرسالة، يرجى التحقق من الشبكة والمحاولة مرة أخرى: {{errorMsg}}",
-    "more": "المزيد",
-    "send": "إرسال",
-    "sendWithCmdEnter": "اضغط <key/> للإرسال",
-    "sendWithEnter": "اضغط <key/> للإرسال",
-    "stop": "توقف",
-    "warp": "تغيير السطر",
-    "warpWithKey": "اضغط على مفتاح <key/> للانتقال إلى السطر"
-  },
-  "intentUnderstanding": {
-    "title": "جارٍ فهم وتحليل نواياك..."
-  },
+  "inbox.desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
+  "inbox.title": "Lobe AI",
+  "input.addAi": "إضافة رسالة AI",
+  "input.addUser": "إضافة رسالة مستخدم",
+  "input.disclaimer": "قد يرتكب الذكاء الاصطناعي أخطاءً أيضًا، يرجى التحقق من المعلومات الهامة",
+  "input.errorMsg": "فشل إرسال الرسالة، يرجى التحقق من الشبكة والمحاولة مرة أخرى: {{errorMsg}}",
+  "input.more": "المزيد",
+  "input.send": "إرسال",
+  "input.sendWithCmdEnter": "اضغط <key/> للإرسال",
+  "input.sendWithEnter": "اضغط <key/> للإرسال",
+  "input.stop": "توقف",
+  "input.warp": "تغيير السطر",
+  "input.warpWithKey": "اضغط على مفتاح <key/> للانتقال إلى السطر",
+  "intentUnderstanding.title": "جارٍ فهم وتحليل نواياك...",
   "inviteMembers": "دعوة الأعضاء",
-  "knowledgeBase": {
-    "all": "جميع المحتويات",
-    "allFiles": "جميع الملفات",
-    "allLibraries": "جميع قواعد البيانات",
-    "disabled": "وضع النشر الحالي لا يدعم المحادثة مع قاعدة البيانات. لاستخدام هذه الميزة، يرجى التبديل إلى نشر قاعدة بيانات على الخادم أو استخدام خدمة {{cloud}}",
-    "library": {
-      "action": {
-        "add": "إضافة",
-        "detail": "تفاصيل",
-        "remove": "إزالة"
-      },
-      "title": "الملفات / قاعدة البيانات"
-    },
-    "relativeFilesOrLibraries": "الملفات / قواعد البيانات المرتبطة",
-    "title": "قاعدة البيانات",
-    "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في قسم \"الموارد\"",
-    "viewMore": "عرض المزيد"
-  },
-  "memberSelection": {
-    "addMember": "إضافة عضو",
-    "allMembers": "جميع الأعضاء",
-    "createGroup": "إنشاء مجموعة",
-    "noAvailableAgents": "لا يوجد وكلاء متاحون للدعوة",
-    "noSelectedAgents": "لم يتم اختيار أي وكيل بعد",
-    "searchAgents": "ابحث عن وكيل...",
-    "selectedAgents": "تم الاختيار ({{count}})",
-    "setInitialMembers": "اختيار أعضاء الفريق"
-  },
+  "knowledgeBase.all": "جميع المحتويات",
+  "knowledgeBase.allFiles": "جميع الملفات",
+  "knowledgeBase.allLibraries": "جميع قواعد البيانات",
+  "knowledgeBase.disabled": "وضع النشر الحالي لا يدعم المحادثة مع قاعدة البيانات. لاستخدام هذه الميزة، يرجى التبديل إلى نشر قاعدة بيانات على الخادم أو استخدام خدمة {{cloud}}",
+  "knowledgeBase.library.action.add": "إضافة",
+  "knowledgeBase.library.action.detail": "تفاصيل",
+  "knowledgeBase.library.action.remove": "إزالة",
+  "knowledgeBase.library.title": "الملفات / قاعدة البيانات",
+  "knowledgeBase.relativeFilesOrLibraries": "الملفات / قواعد البيانات المرتبطة",
+  "knowledgeBase.title": "قاعدة البيانات",
+  "knowledgeBase.uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في قسم \"الموارد\"",
+  "knowledgeBase.viewMore": "عرض المزيد",
+  "memberSelection.addMember": "إضافة عضو",
+  "memberSelection.allMembers": "جميع الأعضاء",
+  "memberSelection.createGroup": "إنشاء مجموعة",
+  "memberSelection.noAvailableAgents": "لا يوجد وكلاء متاحون للدعوة",
+  "memberSelection.noSelectedAgents": "لم يتم اختيار أي وكيل بعد",
+  "memberSelection.searchAgents": "ابحث عن وكيل...",
+  "memberSelection.selectedAgents": "تم الاختيار ({{count}})",
+  "memberSelection.setInitialMembers": "اختيار أعضاء الفريق",
   "members": "الأعضاء",
-  "mention": {
-    "title": "الإشارة إلى الأعضاء"
-  },
-  "messageAction": {
-    "collapse": "إخفاء الرسائل",
-    "continueGeneration": "متابعة التوليد",
-    "delAndRegenerate": "حذف وإعادة الإنشاء",
-    "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
-    "expand": "عرض الرسائل",
-    "regenerate": "إعادة الإنشاء"
-  },
-  "messages": {
-    "dm": {
-      "sentTo": "مرئي فقط لـ {{name}}",
-      "title": "الرسائل الخاصة"
-    },
-    "modelCard": {
-      "credit": "نقاط",
-      "creditPricing": "التسعير",
-      "creditTooltip": "لتسهيل العد، نقوم بتحويل 1$ إلى 1M نقطة، على سبيل المثال، 3$/M رموز تعني 3 نقاط/رمز",
-      "pricing": {
-        "inputCachedTokens": "مدخلات مخزنة {{amount}}/نقطة · ${{amount}}/M",
-        "inputCharts": "${{amount}}/M حرف",
-        "inputMinutes": "${{amount}}/دقيقة",
-        "inputTokens": "مدخلات {{amount}}/نقطة · ${{amount}}/M",
-        "outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M",
-        "writeCacheInputTokens": "تخزين إدخال الكتابة {{amount}}/نقطة · ${{amount}}/ميغابايت"
-      }
-    },
-    "tokenDetails": {
-      "average": "متوسط السعر",
-      "input": "مدخلات",
-      "inputAudio": "مدخلات صوتية",
-      "inputCached": "مدخلات مخزنة",
-      "inputCitation": "اقتباس الإدخال",
-      "inputText": "مدخلات نصية",
-      "inputTitle": "تفاصيل المدخلات",
-      "inputUncached": "مدخلات غير مخزنة",
-      "inputWriteCached": "تخزين إدخال الكتابة",
-      "output": "مخرجات",
-      "outputAudio": "مخرجات صوتية",
-      "outputImage": "إخراج الصورة",
-      "outputText": "مخرجات نصية",
-      "outputTitle": "تفاصيل المخرجات",
-      "reasoning": "تفكير عميق",
-      "speed": {
-        "tps": {
-          "title": "TPS",
-          "tooltip": "عدد الرموز في الثانية، TPS. يشير إلى متوسط سرعة توليد المحتوى بواسطة الذكاء الاصطناعي (رمز/ثانية)، ويبدأ الحساب عند استلام أول رمز."
-        },
-        "ttft": {
-          "title": "TTFT",
-          "tooltip": "الوقت حتى أول رمز، TTFT. يشير إلى الفارق الزمني من لحظة إرسال الرسالة حتى استلام أول رمز في العميل."
-        }
-      },
-      "title": "تفاصيل التوليد",
-      "total": "الإجمالي المستهلك"
-    }
-  },
-  "minimap": {
-    "jumpToMessage": "الانتقال إلى الرسالة رقم {{index}}",
-    "nextMessage": "الرسالة التالية",
-    "previousMessage": "الرسالة السابقة",
-    "senderAssistant": "الوكيل",
-    "senderUser": "أنت"
-  },
+  "mention.title": "الإشارة إلى الأعضاء",
+  "messageAction.collapse": "إخفاء الرسائل",
+  "messageAction.continueGeneration": "متابعة التوليد",
+  "messageAction.delAndRegenerate": "حذف وإعادة الإنشاء",
+  "messageAction.deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
+  "messageAction.expand": "عرض الرسائل",
+  "messageAction.regenerate": "إعادة الإنشاء",
+  "messages.dm.sentTo": "مرئي فقط لـ {{name}}",
+  "messages.dm.title": "الرسائل الخاصة",
+  "messages.modelCard.credit": "نقاط",
+  "messages.modelCard.creditPricing": "التسعير",
+  "messages.modelCard.creditTooltip": "لتسهيل العد، نقوم بتحويل 1$ إلى 1M نقطة، على سبيل المثال، 3$/M رموز تعني 3 نقاط/رمز",
+  "messages.modelCard.pricing.inputCachedTokens": "مدخلات مخزنة {{amount}}/نقطة · ${{amount}}/M",
+  "messages.modelCard.pricing.inputCharts": "${{amount}}/M حرف",
+  "messages.modelCard.pricing.inputMinutes": "${{amount}}/دقيقة",
+  "messages.modelCard.pricing.inputTokens": "مدخلات {{amount}}/نقطة · ${{amount}}/M",
+  "messages.modelCard.pricing.outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M",
+  "messages.modelCard.pricing.writeCacheInputTokens": "تخزين إدخال الكتابة {{amount}}/نقطة · ${{amount}}/ميغابايت",
+  "messages.tokenDetails.average": "متوسط السعر",
+  "messages.tokenDetails.input": "مدخلات",
+  "messages.tokenDetails.inputAudio": "مدخلات صوتية",
+  "messages.tokenDetails.inputCached": "مدخلات مخزنة",
+  "messages.tokenDetails.inputCitation": "اقتباس الإدخال",
+  "messages.tokenDetails.inputText": "مدخلات نصية",
+  "messages.tokenDetails.inputTitle": "تفاصيل المدخلات",
+  "messages.tokenDetails.inputUncached": "مدخلات غير مخزنة",
+  "messages.tokenDetails.inputWriteCached": "تخزين إدخال الكتابة",
+  "messages.tokenDetails.output": "مخرجات",
+  "messages.tokenDetails.outputAudio": "مخرجات صوتية",
+  "messages.tokenDetails.outputImage": "إخراج الصورة",
+  "messages.tokenDetails.outputText": "مخرجات نصية",
+  "messages.tokenDetails.outputTitle": "تفاصيل المخرجات",
+  "messages.tokenDetails.reasoning": "تفكير عميق",
+  "messages.tokenDetails.speed.tps.title": "TPS",
+  "messages.tokenDetails.speed.tps.tooltip": "عدد الرموز في الثانية، TPS. يشير إلى متوسط سرعة توليد المحتوى بواسطة الذكاء الاصطناعي (رمز/ثانية)، ويبدأ الحساب عند استلام أول رمز.",
+  "messages.tokenDetails.speed.ttft.title": "TTFT",
+  "messages.tokenDetails.speed.ttft.tooltip": "الوقت حتى أول رمز، TTFT. يشير إلى الفارق الزمني من لحظة إرسال الرسالة حتى استلام أول رمز في العميل.",
+  "messages.tokenDetails.title": "تفاصيل التوليد",
+  "messages.tokenDetails.total": "الإجمالي المستهلك",
+  "minimap.jumpToMessage": "الانتقال إلى الرسالة رقم {{index}}",
+  "minimap.nextMessage": "الرسالة التالية",
+  "minimap.previousMessage": "الرسالة السابقة",
+  "minimap.senderAssistant": "الوكيل",
+  "minimap.senderUser": "أنت",
   "newAgent": "إنشاء مساعد",
   "newGroupChat": "إنشاء مجموعة",
   "newPage": "إنشاء مستند",
@@ -281,252 +193,170 @@
   "noSelectedAgents": "لم يتم اختيار أي أعضاء بعد",
   "openInNewWindow": "فتح في نافذة مستقلة",
   "owner": "مالك المجموعة",
-  "pageCopilot": {
-    "title": "مساعد النصوص",
-    "welcome": "**لنجعل كل جملة أكثر دقة.**\n\nسواء كنت تكتب مسودة، تعيد الصياغة، أو تقوم بالتحرير، سأساعدك في جعل كلماتك أوضح، أكثر طبيعية، وأكثر إقناعًا."
-  },
+  "pageCopilot.title": "مساعد النصوص",
+  "pageCopilot.welcome": "**لنجعل كل جملة أكثر دقة.**\n\nسواء كنت تكتب مسودة، تعيد الصياغة، أو تقوم بالتحرير، سأساعدك في جعل كلماتك أوضح، أكثر طبيعية، وأكثر إقناعًا.",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
-  "rag": {
-    "referenceChunks": "مراجع",
-    "userQuery": {
-      "actions": {
-        "delete": "حذف الاستعلام",
-        "regenerate": "إعادة توليد الاستعلام"
-      }
-    }
-  },
+  "rag.referenceChunks": "مراجع",
+  "rag.userQuery.actions.delete": "حذف الاستعلام",
+  "rag.userQuery.actions.regenerate": "إعادة توليد الاستعلام",
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
-  "search": {
-    "grounding": {
-      "searchQueries": "كلمات البحث",
-      "title": "تم العثور على {{count}} نتيجة"
-    },
-    "mode": {
-      "auto": {
-        "desc": "تحديد ما إذا كان من الضروري البحث بناءً على محتوى المحادثة",
-        "title": "الاتصال الذكي"
-      },
-      "off": {
-        "desc": "استخدام المعرفة الأساسية للنموذج فقط، دون إجراء بحث عبر الإنترنت",
-        "title": "إيقاف الاتصال"
-      },
-      "on": {
-        "desc": "الاستمرار في البحث عبر الإنترنت للحصول على أحدث المعلومات",
-        "title": "الاتصال دائمًا"
-      },
-      "useModelBuiltin": "استخدام محرك البحث المدمج في النموذج"
-    },
-    "searchModel": {
-      "desc": "النموذج الحالي لا يدعم استدعاء الدوال، لذا يجب استخدام نموذج يدعم استدعاء الدوال للبحث عبر الإنترنت",
-      "title": "نموذج البحث المساعد"
-    },
-    "title": "بحث عبر الإنترنت"
-  },
+  "search.grounding.searchQueries": "كلمات البحث",
+  "search.grounding.title": "تم العثور على {{count}} نتيجة",
+  "search.mode.auto.desc": "تحديد ما إذا كان من الضروري البحث بناءً على محتوى المحادثة",
+  "search.mode.auto.title": "الاتصال الذكي",
+  "search.mode.off.desc": "استخدام المعرفة الأساسية للنموذج فقط، دون إجراء بحث عبر الإنترنت",
+  "search.mode.off.title": "إيقاف الاتصال",
+  "search.mode.on.desc": "الاستمرار في البحث عبر الإنترنت للحصول على أحدث المعلومات",
+  "search.mode.on.title": "الاتصال دائمًا",
+  "search.mode.useModelBuiltin": "استخدام محرك البحث المدمج في النموذج",
+  "search.searchModel.desc": "النموذج الحالي لا يدعم استدعاء الدوال، لذا يجب استخدام نموذج يدعم استدعاء الدوال للبحث عبر الإنترنت",
+  "search.searchModel.title": "نموذج البحث المساعد",
+  "search.title": "بحث عبر الإنترنت",
   "searchAgentPlaceholder": "مساعد البحث...",
   "searchAgents": "مساعد البحث...",
   "selectedAgents": "المساعدون المختارون",
   "sendPlaceholder": "اطرح سؤالًا، أنشئ محتوى، أو ابدأ مهمة، <hotkey><hotkey/>",
-  "sessionGroup": {
-    "config": "إدارة المجموعات",
-    "confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
-    "createAgentSuccess": "تم إنشاء المساعد بنجاح",
-    "createGroup": "إضافة مجموعة جديدة",
-    "createGroupFailed": "فشل إنشاء المحادثة الجماعية",
-    "createGroupSuccess": "تم إنشاء المحادثة الجماعية بنجاح",
-    "createSuccess": "تم الإنشاء بنجاح",
-    "creatingAgent": "جاري إنشاء المساعد...",
-    "groupName": "اسم المجموعة",
-    "inputPlaceholder": "الرجاء إدخال اسم المجموعة...",
-    "moveGroup": "نقل إلى مجموعة",
-    "newGroup": "مجموعة جديدة",
-    "noAvailableAgents": "لا يوجد مساعدين متاحين حالياً",
-    "noMatchingAgents": "لم يتم العثور على مساعدين مطابقين",
-    "noSelectedAgents": "يرجى اختيار مساعدين",
-    "rename": "إعادة تسمية المجموعة",
-    "renameSuccess": "تمت إعادة التسمية بنجاح",
-    "searchAgents": "البحث عن مساعدين",
-    "selectedAgents": "المساعدون المختارون ({{count}})",
-    "sortSuccess": "تمت إعادة ترتيب بنجاح",
-    "sorting": "جاري تحديث ترتيب المجموعة...",
-    "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
-  },
-  "shareModal": {
-    "copy": "نسخ",
-    "download": "تحميل اللقطة",
-    "downloadError": "فشل التنزيل",
-    "downloadFile": "تحميل الملف",
-    "downloadPdf": "تنزيل PDF",
-    "downloadSuccess": "تم التنزيل بنجاح",
-    "exportMode": {
-      "full": "افتراضي",
-      "label": "وضع التصدير",
-      "simple": "متوافق مع OpenAI"
-    },
-    "exportPdf": "تصدير إلى PDF",
-    "exportTitle": "العنوان الافتراضي",
-    "generatePdf": "إنشاء ملف PDF",
-    "generatingPdf": "جارٍ إنشاء PDF...",
-    "imageType": "نوع الصورة",
-    "includeTool": "تضمين رسالة الأداة",
-    "includeUser": "تضمين رسالة المستخدم",
-    "loadingPdf": "جارٍ تحميل ملف PDF...",
-    "noPdfData": "لا توجد بيانات PDF",
-    "pdf": "PDF",
-    "pdfErrorDescription": "حدث خطأ أثناء إنشاء PDF، يرجى المحاولة مرة أخرى",
-    "pdfGenerationError": "فشل إنشاء PDF",
-    "pdfReady": "تم تجهيز PDF",
-    "regeneratePdf": "إعادة إنشاء ملف PDF",
-    "screenshot": "لقطة شاشة",
-    "settings": "إعدادات التصدير",
-    "text": "نص",
-    "widthMode": {
-      "label": "وضع العرض",
-      "narrow": "وضع الشاشة الضيقة",
-      "wide": "وضع الشاشة الواسعة"
-    },
-    "withBackground": "تضمين صورة الخلفية",
-    "withFooter": "تضمين تذييل",
-    "withPluginInfo": "تضمين معلومات البرنامج المساعد",
-    "withRole": "تضمين رسالة الدور",
-    "withSystemRole": "تضمين دور المساعد"
-  },
-  "stt": {
-    "action": "إدخال صوتي",
-    "loading": "جارٍ التعرف...",
-    "prettifying": "جارٍ التجميل..."
-  },
-  "supervisor": {
-    "todoList": {
-      "allComplete": "تم إنجاز جميع المهام",
-      "title": "المهام المنجزة"
-    }
-  },
-  "tab": {
-    "groupProfile": "ملف المجموعة",
-    "profile": "ملف المساعد",
-    "search": "بحث"
-  },
-  "task": {
-    "activity": {
-      "calling": "جارٍ استدعاء الأداة...",
-      "generating": "جارٍ توليد الرد...",
-      "gotResult": "تم الحصول على نتيجة الأداة",
-      "toolCalling": "جارٍ استدعاء {{toolName}}...",
-      "toolResult": "تم الحصول على نتيجة {{toolName}}"
-    },
-    "metrics": {
-      "stepsShort": "خطوة",
-      "toolCallsShort": "مرة استخدام الأداة"
-    },
-    "status": {
-      "initializing": "جارٍ بدء المهمة..."
-    }
-  },
-  "thread": {
-    "divider": "موضوع فرعي",
-    "threadMessageCount": "{{messageCount}} رسالة",
-    "title": "موضوع فرعي"
-  },
-  "toggleWideScreen": {
-    "off": "إيقاف وضع الشاشة العريضة",
-    "on": "تشغيل وضع الشاشة العريضة"
-  },
-  "tokenDetails": {
-    "chats": "رسائل المحادثة",
-    "historySummary": "ملخص التاريخ",
-    "rest": "المتبقي",
-    "supervisor": "مُنسق المجموعة",
-    "systemRole": "تعيين الدور",
-    "title": "تفاصيل الرمز",
-    "tools": "تعيين الإضافات",
-    "total": "الإجمالي",
-    "used": "المستخدم"
-  },
-  "tokenTag": {
-    "overload": "تجاوز الحد",
-    "remained": "متبقي",
-    "used": "مستخدم"
-  },
-  "tool": {
-    "intervention": {
-      "approve": "الموافقة",
-      "approveAndRemember": "الموافقة والتذكر",
-      "approveOnce": "الموافقة لمرة واحدة فقط",
-      "mode": {
-        "allowList": "قائمة السماح",
-        "allowListDesc": "تنفيذ الأدوات المعتمدة فقط تلقائيًا",
-        "autoRun": "الموافقة التلقائية",
-        "autoRunDesc": "الموافقة تلقائيًا على تنفيذ جميع الأدوات",
-        "manual": "يدوي",
-        "manualDesc": "يتطلب الموافقة اليدوية في كل مرة يتم فيها الاستدعاء"
-      },
-      "reject": "رفض",
-      "rejectAndContinue": "رفض ثم إعادة المحاولة",
-      "rejectOnly": "رفض",
-      "rejectReasonPlaceholder": "إدخال سبب الرفض سيساعد الوكيل على الفهم وتحسين الإجراءات المستقبلية",
-      "rejectTitle": "رفض استدعاء الأداة هذه المرة",
-      "rejectedWithReason": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي: {{reason}}",
-      "toolAbort": "تم إلغاء استدعاء الأداة من قبل المستخدم",
-      "toolRejected": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي"
-    }
-  },
-  "toolAuth": {
-    "authorize": "تفويض",
-    "authorizing": "جارٍ التفويض...",
-    "hint": "إذا لم يتم التفويض أو التكوين، فقد لا تعمل هذه الأدوات بشكل صحيح، مما قد يؤدي إلى فقدان وظائف المساعد أو ظهور أخطاء.",
-    "signIn": "تسجيل الدخول",
-    "title": "يرجى إكمال تفويض الأدوات للمساعد"
-  },
-  "topic": {
-    "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
-    "checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",
-    "openNewTopic": "فتح موضوع جديد",
-    "recent": "المواضيع الأخيرة",
-    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع"
-  },
-  "translate": {
-    "action": "ترجمة",
-    "clear": "مسح الترجمة"
-  },
-  "tts": {
-    "action": "قراءة صوتية",
-    "clear": "مسح الصوت"
-  },
+  "sessionGroup.config": "إدارة المجموعات",
+  "sessionGroup.confirmRemoveGroupAlert": "سيتم حذف هذه المجموعة قريبًا، وبعد الحذف، سيتم نقل مساعدي هذه المجموعة إلى القائمة الافتراضية، يرجى تأكيد إجراءك",
+  "sessionGroup.createAgentSuccess": "تم إنشاء المساعد بنجاح",
+  "sessionGroup.createGroup": "إضافة مجموعة جديدة",
+  "sessionGroup.createGroupFailed": "فشل إنشاء المحادثة الجماعية",
+  "sessionGroup.createGroupSuccess": "تم إنشاء المحادثة الجماعية بنجاح",
+  "sessionGroup.createSuccess": "تم الإنشاء بنجاح",
+  "sessionGroup.creatingAgent": "جاري إنشاء المساعد...",
+  "sessionGroup.groupName": "اسم المجموعة",
+  "sessionGroup.inputPlaceholder": "الرجاء إدخال اسم المجموعة...",
+  "sessionGroup.moveGroup": "نقل إلى مجموعة",
+  "sessionGroup.newGroup": "مجموعة جديدة",
+  "sessionGroup.noAvailableAgents": "لا يوجد مساعدين متاحين حالياً",
+  "sessionGroup.noMatchingAgents": "لم يتم العثور على مساعدين مطابقين",
+  "sessionGroup.noSelectedAgents": "يرجى اختيار مساعدين",
+  "sessionGroup.rename": "إعادة تسمية المجموعة",
+  "sessionGroup.renameSuccess": "تمت إعادة التسمية بنجاح",
+  "sessionGroup.searchAgents": "البحث عن مساعدين",
+  "sessionGroup.selectedAgents": "المساعدون المختارون ({{count}})",
+  "sessionGroup.sortSuccess": "تمت إعادة ترتيب بنجاح",
+  "sessionGroup.sorting": "جاري تحديث ترتيب المجموعة...",
+  "sessionGroup.tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20",
+  "shareModal.copy": "نسخ",
+  "shareModal.download": "تحميل اللقطة",
+  "shareModal.downloadError": "فشل التنزيل",
+  "shareModal.downloadFile": "تحميل الملف",
+  "shareModal.downloadPdf": "تنزيل PDF",
+  "shareModal.downloadSuccess": "تم التنزيل بنجاح",
+  "shareModal.exportMode.full": "افتراضي",
+  "shareModal.exportMode.label": "وضع التصدير",
+  "shareModal.exportMode.simple": "متوافق مع OpenAI",
+  "shareModal.exportPdf": "تصدير إلى PDF",
+  "shareModal.exportTitle": "العنوان الافتراضي",
+  "shareModal.generatePdf": "إنشاء ملف PDF",
+  "shareModal.generatingPdf": "جارٍ إنشاء PDF...",
+  "shareModal.imageType": "نوع الصورة",
+  "shareModal.includeTool": "تضمين رسالة الأداة",
+  "shareModal.includeUser": "تضمين رسالة المستخدم",
+  "shareModal.loadingPdf": "جارٍ تحميل ملف PDF...",
+  "shareModal.noPdfData": "لا توجد بيانات PDF",
+  "shareModal.pdf": "PDF",
+  "shareModal.pdfErrorDescription": "حدث خطأ أثناء إنشاء PDF، يرجى المحاولة مرة أخرى",
+  "shareModal.pdfGenerationError": "فشل إنشاء PDF",
+  "shareModal.pdfReady": "تم تجهيز PDF",
+  "shareModal.regeneratePdf": "إعادة إنشاء ملف PDF",
+  "shareModal.screenshot": "لقطة شاشة",
+  "shareModal.settings": "إعدادات التصدير",
+  "shareModal.text": "نص",
+  "shareModal.widthMode.label": "وضع العرض",
+  "shareModal.widthMode.narrow": "وضع الشاشة الضيقة",
+  "shareModal.widthMode.wide": "وضع الشاشة الواسعة",
+  "shareModal.withBackground": "تضمين صورة الخلفية",
+  "shareModal.withFooter": "تضمين تذييل",
+  "shareModal.withPluginInfo": "تضمين معلومات البرنامج المساعد",
+  "shareModal.withRole": "تضمين رسالة الدور",
+  "shareModal.withSystemRole": "تضمين دور المساعد",
+  "stt.action": "إدخال صوتي",
+  "stt.loading": "جارٍ التعرف...",
+  "stt.prettifying": "جارٍ التجميل...",
+  "supervisor.todoList.allComplete": "تم إنجاز جميع المهام",
+  "supervisor.todoList.title": "المهام المنجزة",
+  "tab.groupProfile": "ملف المجموعة",
+  "tab.profile": "ملف المساعد",
+  "tab.search": "بحث",
+  "task.activity.calling": "جارٍ استدعاء الأداة...",
+  "task.activity.generating": "جارٍ توليد الرد...",
+  "task.activity.gotResult": "تم الحصول على نتيجة الأداة",
+  "task.activity.toolCalling": "جارٍ استدعاء {{toolName}}...",
+  "task.activity.toolResult": "تم الحصول على نتيجة {{toolName}}",
+  "task.metrics.stepsShort": "خطوة",
+  "task.metrics.toolCallsShort": "مرة استخدام الأداة",
+  "task.status.initializing": "جارٍ بدء المهمة...",
+  "thread.divider": "موضوع فرعي",
+  "thread.threadMessageCount": "{{messageCount}} رسالة",
+  "thread.title": "موضوع فرعي",
+  "toggleWideScreen.off": "إيقاف وضع الشاشة العريضة",
+  "toggleWideScreen.on": "تشغيل وضع الشاشة العريضة",
+  "tokenDetails.chats": "رسائل المحادثة",
+  "tokenDetails.historySummary": "ملخص التاريخ",
+  "tokenDetails.rest": "المتبقي",
+  "tokenDetails.supervisor": "مُنسق المجموعة",
+  "tokenDetails.systemRole": "تعيين الدور",
+  "tokenDetails.title": "تفاصيل الرمز",
+  "tokenDetails.tools": "تعيين الإضافات",
+  "tokenDetails.total": "الإجمالي",
+  "tokenDetails.used": "المستخدم",
+  "tokenTag.overload": "تجاوز الحد",
+  "tokenTag.remained": "متبقي",
+  "tokenTag.used": "مستخدم",
+  "tool.intervention.approve": "الموافقة",
+  "tool.intervention.approveAndRemember": "الموافقة والتذكر",
+  "tool.intervention.approveOnce": "الموافقة لمرة واحدة فقط",
+  "tool.intervention.mode.allowList": "قائمة السماح",
+  "tool.intervention.mode.allowListDesc": "تنفيذ الأدوات المعتمدة فقط تلقائيًا",
+  "tool.intervention.mode.autoRun": "الموافقة التلقائية",
+  "tool.intervention.mode.autoRunDesc": "الموافقة تلقائيًا على تنفيذ جميع الأدوات",
+  "tool.intervention.mode.manual": "يدوي",
+  "tool.intervention.mode.manualDesc": "يتطلب الموافقة اليدوية في كل مرة يتم فيها الاستدعاء",
+  "tool.intervention.reject": "رفض",
+  "tool.intervention.rejectAndContinue": "رفض ثم إعادة المحاولة",
+  "tool.intervention.rejectOnly": "رفض",
+  "tool.intervention.rejectReasonPlaceholder": "إدخال سبب الرفض سيساعد الوكيل على الفهم وتحسين الإجراءات المستقبلية",
+  "tool.intervention.rejectTitle": "رفض استدعاء الأداة هذه المرة",
+  "tool.intervention.rejectedWithReason": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي: {{reason}}",
+  "tool.intervention.toolAbort": "تم إلغاء استدعاء الأداة من قبل المستخدم",
+  "tool.intervention.toolRejected": "تم رفض استدعاء الأداة هذه المرة بشكل يدوي",
+  "toolAuth.authorize": "تفويض",
+  "toolAuth.authorizing": "جارٍ التفويض...",
+  "toolAuth.hint": "إذا لم يتم التفويض أو التكوين، فقد لا تعمل هذه الأدوات بشكل صحيح، مما قد يؤدي إلى فقدان وظائف المساعد أو ظهور أخطاء.",
+  "toolAuth.signIn": "تسجيل الدخول",
+  "toolAuth.title": "يرجى إكمال تفويض الأدوات للمساعد",
+  "topic.checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
+  "topic.checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",
+  "topic.openNewTopic": "فتح موضوع جديد",
+  "topic.recent": "المواضيع الأخيرة",
+  "topic.saveCurrentMessages": "حفظ الجلسة الحالية كموضوع",
+  "translate.action": "ترجمة",
+  "translate.clear": "مسح الترجمة",
+  "tts.action": "قراءة صوتية",
+  "tts.clear": "مسح الصوت",
   "untitledAgent": "مساعد بدون اسم",
   "untitledGroup": "مجموعة بدون عنوان",
   "updateAgent": "تحديث معلومات المساعد",
-  "upload": {
-    "action": {
-      "fileUpload": "رفع ملف",
-      "folderUpload": "رفع مجلد",
-      "imageDisabled": "النموذج الحالي لا يدعم التعرف على الصور، يرجى تغيير النموذج لاستخدامه",
-      "imageUpload": "رفع صورة",
-      "tooltip": "رفع"
-    },
-    "clientMode": {
-      "actionFiletip": "رفع ملف",
-      "actionTooltip": "رفع",
-      "disabled": "النموذج الحالي لا يدعم التعرف على الصور وتحليل الملفات، يرجى تغيير النموذج لاستخدامه",
-      "fileNotSupported": "وضع المتصفح لا يدعم تحميل الملفات حاليًا، يدعم الصور فقط",
-      "visionNotSupported": "النموذج الحالي لا يدعم التعرف البصري، يرجى تبديل النموذج لاستخدام هذه الميزة"
-    },
-    "preview": {
-      "prepareTasks": "تحضير الأجزاء...",
-      "status": {
-        "pending": "يتم التحضير للتحميل...",
-        "processing": "يتم معالجة الملف..."
-      }
-    },
-    "validation": {
-      "videoSizeExceeded": "لا يمكن أن يتجاوز حجم ملف الفيديو 20 ميغابايت، حجم الملف الحالي هو {{actualSize}}"
-    }
-  },
-  "viewMode": {
-    "normal": "عادي",
-    "wideScreen": "شاشة عريضة"
-  },
+  "upload.action.fileUpload": "رفع ملف",
+  "upload.action.folderUpload": "رفع مجلد",
+  "upload.action.imageDisabled": "النموذج الحالي لا يدعم التعرف على الصور، يرجى تغيير النموذج لاستخدامه",
+  "upload.action.imageUpload": "رفع صورة",
+  "upload.action.tooltip": "رفع",
+  "upload.clientMode.actionFiletip": "رفع ملف",
+  "upload.clientMode.actionTooltip": "رفع",
+  "upload.clientMode.disabled": "النموذج الحالي لا يدعم التعرف على الصور وتحليل الملفات، يرجى تغيير النموذج لاستخدامه",
+  "upload.clientMode.fileNotSupported": "وضع المتصفح لا يدعم تحميل الملفات حاليًا، يدعم الصور فقط",
+  "upload.clientMode.visionNotSupported": "النموذج الحالي لا يدعم التعرف البصري، يرجى تبديل النموذج لاستخدام هذه الميزة",
+  "upload.preview.prepareTasks": "تحضير الأجزاء...",
+  "upload.preview.status.pending": "يتم التحضير للتحميل...",
+  "upload.preview.status.processing": "يتم معالجة الملف...",
+  "upload.validation.videoSizeExceeded": "لا يمكن أن يتجاوز حجم ملف الفيديو 20 ميغابايت، حجم الملف الحالي هو {{actualSize}}",
+  "viewMode.normal": "عادي",
+  "viewMode.wideScreen": "شاشة عريضة",
   "you": "أنت",
   "zenMode": "وضع التركيز"
 }

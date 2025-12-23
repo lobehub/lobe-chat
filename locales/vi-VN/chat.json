@@ -1,44 +1,34 @@
 {
-  "ModelSwitch": {
-    "title": "Mô hình"
-  },
+  "ModelSwitch.title": "Mô hình",
   "active": "Hoạt động",
-  "agentBuilder": {
-    "installPlugin": {
-      "authRequired": "Plugin MCP đám mây yêu cầu đăng nhập xác thực",
-      "cancel": "Hủy",
-      "clickApproveToConnect": "Nhấp vào 'Phê duyệt' để kết nối và cấp quyền tích hợp này",
-      "clickApproveToInstall": "Nhấp vào 'Phê duyệt' để cài đặt plugin này",
-      "connectedAndEnabled": "Đã kết nối và kích hoạt",
-      "connectionFailed": "Kết nối thất bại",
-      "installFailed": "Cài đặt thất bại",
-      "installPlugin": "Cài đặt plugin",
-      "installToEnable": "Cài đặt plugin này để kích hoạt cho trợ lý",
-      "installedAndEnabled": "Đã cài đặt và kích hoạt",
-      "requiresAuth": "Yêu cầu ủy quyền, nhấp vào 'Phê duyệt' để kết nối",
-      "retry": "Thử lại"
-    },
-    "title": "Chuyên Gia Xây Dựng Trợ Lý",
-    "welcome": "Hãy chia sẻ nhu cầu của bạn nhé? Người cộng sự chuyên nghiệp sẽ xuất hiện.\n\nDù là viết lách, lập trình hay phân tích dữ liệu, tôi đều có thể giúp bạn tạo ra một trợ lý cá nhân hóa!"
-  },
+  "agentBuilder.installPlugin.authRequired": "Plugin MCP đám mây yêu cầu đăng nhập xác thực",
+  "agentBuilder.installPlugin.cancel": "Hủy",
+  "agentBuilder.installPlugin.clickApproveToConnect": "Nhấp vào 'Phê duyệt' để kết nối và cấp quyền tích hợp này",
+  "agentBuilder.installPlugin.clickApproveToInstall": "Nhấp vào 'Phê duyệt' để cài đặt plugin này",
+  "agentBuilder.installPlugin.connectedAndEnabled": "Đã kết nối và kích hoạt",
+  "agentBuilder.installPlugin.connectionFailed": "Kết nối thất bại",
+  "agentBuilder.installPlugin.installFailed": "Cài đặt thất bại",
+  "agentBuilder.installPlugin.installPlugin": "Cài đặt plugin",
+  "agentBuilder.installPlugin.installToEnable": "Cài đặt plugin này để kích hoạt cho trợ lý",
+  "agentBuilder.installPlugin.installedAndEnabled": "Đã cài đặt và kích hoạt",
+  "agentBuilder.installPlugin.requiresAuth": "Yêu cầu ủy quyền, nhấp vào 'Phê duyệt' để kết nối",
+  "agentBuilder.installPlugin.retry": "Thử lại",
+  "agentBuilder.title": "Chuyên Gia Xây Dựng Trợ Lý",
+  "agentBuilder.welcome": "Hãy chia sẻ nhu cầu của bạn nhé? Người cộng sự chuyên nghiệp sẽ xuất hiện.\n\nDù là viết lách, lập trình hay phân tích dữ liệu, tôi đều có thể giúp bạn tạo ra một trợ lý cá nhân hóa!",
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay bây giờ, hoặc bạn có thể đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, tôi có thể giúp gì cho bạn?",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, tôi có thể giúp gì cho bạn?",
   "agents": "Trợ lý",
-  "artifact": {
-    "generating": "Đang tạo",
-    "inThread": "Không thể xem trong chủ đề con, vui lòng chuyển sang khu vực đối thoại chính để mở",
-    "thinking": "Đang suy nghĩ",
-    "thought": "Quá trình suy nghĩ",
-    "unknownTitle": "Tác phẩm chưa được đặt tên"
-  },
+  "artifact.generating": "Đang tạo",
+  "artifact.inThread": "Không thể xem trong chủ đề con, vui lòng chuyển sang khu vực đối thoại chính để mở",
+  "artifact.thinking": "Đang suy nghĩ",
+  "artifact.thought": "Quá trình suy nghĩ",
+  "artifact.unknownTitle": "Tác phẩm chưa được đặt tên",
   "availableAgents": "Trợ lý có sẵn",
   "backToBottom": "Quay về dưới cùng",
   "builtinCopilot": "Copilot tích hợp",
-  "chatList": {
-    "expandMessage": "Mở rộng tin nhắn",
-    "longMessageDetail": "Xem chi tiết"
-  },
+  "chatList.expandMessage": "Mở rộng tin nhắn",
+  "chatList.longMessageDetail": "Xem chi tiết",
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveChatGroupItemAlert": "Sắp xóa nhóm này, các thành viên trong nhóm sẽ không bị ảnh hưởng. Vui lòng xác nhận thao tác của bạn.",
@@ -50,227 +40,149 @@
   "defaultGroupChat": "Nhóm",
   "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
-  "dm": {
-    "placeholder": "Tin nhắn riêng tư giữa bạn và {{agentTitle}} sẽ được hiển thị ở đây.",
-    "tooltip": "Gửi tin nhắn riêng",
-    "visibleTo": "Chỉ hiển thị với {{target}}",
-    "you": "bạn"
-  },
-  "duplicateSession": {
-    "loading": "Đang sao chép...",
-    "success": "Sao chép thành công",
-    "title": "{{title}} Bản sao"
-  },
+  "dm.placeholder": "Tin nhắn riêng tư giữa bạn và {{agentTitle}} sẽ được hiển thị ở đây.",
+  "dm.tooltip": "Gửi tin nhắn riêng",
+  "dm.visibleTo": "Chỉ hiển thị với {{target}}",
+  "dm.you": "bạn",
+  "duplicateSession.loading": "Đang sao chép...",
+  "duplicateSession.success": "Sao chép thành công",
+  "duplicateSession.title": "{{title}} Bản sao",
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
   "emptyAgentAction": "Tạo trợ lý",
-  "extendParams": {
-    "disableContextCaching": {
-      "desc": "Chi phí tạo ra một cuộc hội thoại đơn lẻ có thể giảm tới 90%, tốc độ phản hồi tăng gấp 4 lần (<1>Tìm hiểu thêm</1>). Khi bật, sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
-      "title": "Bật bộ nhớ ngữ cảnh"
-    },
-    "enableReasoning": {
-      "desc": "Giới hạn dựa trên cơ chế Claude Thinking (<1>Tìm hiểu thêm</1>), khi bật sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
-      "title": "Bật tư duy sâu sắc"
-    },
-    "imageAspectRatio": {
-      "title": "Tỷ lệ khung hình ảnh"
-    },
-    "imageResolution": {
-      "title": "Độ phân giải hình ảnh"
-    },
-    "reasoningBudgetToken": {
-      "title": "Token tiêu tốn cho tư duy"
-    },
-    "reasoningEffort": {
-      "title": "Cường độ suy luận"
-    },
-    "textVerbosity": {
-      "title": "Mức độ chi tiết của văn bản đầu ra"
-    },
-    "thinking": {
-      "title": "Công tắc suy nghĩ sâu"
-    },
-    "thinkingLevel": {
-      "title": "Mức độ tư duy"
-    },
-    "title": "Chức năng mở rộng mô hình",
-    "urlContext": {
-      "desc": "Bật tính năng này sẽ tự động phân tích liên kết trang web để lấy nội dung ngữ cảnh thực tế của trang web",
-      "title": "Trích xuất nội dung liên kết trang web"
-    }
-  },
-  "group": {
-    "desc": "Cộng tác với nhiều trợ lý AI trong không gian hội thoại chung。",
-    "memberTooltip": "Nhóm có {{count}} thành viên",
-    "orchestratorThinking": "Người điều phối đang suy nghĩ...",
-    "removeMember": "Xóa thành viên",
-    "title": "Nhóm"
-  },
+  "extendParams.disableContextCaching.desc": "Chi phí tạo ra một cuộc hội thoại đơn lẻ có thể giảm tới 90%, tốc độ phản hồi tăng gấp 4 lần (<1>Tìm hiểu thêm</1>). Khi bật, sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
+  "extendParams.disableContextCaching.title": "Bật bộ nhớ ngữ cảnh",
+  "extendParams.enableReasoning.desc": "Giới hạn dựa trên cơ chế Claude Thinking (<1>Tìm hiểu thêm</1>), khi bật sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
+  "extendParams.enableReasoning.title": "Bật tư duy sâu sắc",
+  "extendParams.imageAspectRatio.title": "Tỷ lệ khung hình ảnh",
+  "extendParams.imageResolution.title": "Độ phân giải hình ảnh",
+  "extendParams.reasoningBudgetToken.title": "Token tiêu tốn cho tư duy",
+  "extendParams.reasoningEffort.title": "Cường độ suy luận",
+  "extendParams.textVerbosity.title": "Mức độ chi tiết của văn bản đầu ra",
+  "extendParams.thinking.title": "Công tắc suy nghĩ sâu",
+  "extendParams.thinkingLevel.title": "Mức độ tư duy",
+  "extendParams.title": "Chức năng mở rộng mô hình",
+  "extendParams.urlContext.desc": "Bật tính năng này sẽ tự động phân tích liên kết trang web để lấy nội dung ngữ cảnh thực tế của trang web",
+  "extendParams.urlContext.title": "Trích xuất nội dung liên kết trang web",
+  "group.desc": "Cộng tác với nhiều trợ lý AI trong không gian hội thoại chung。",
+  "group.memberTooltip": "Nhóm có {{count}} thành viên",
+  "group.orchestratorThinking": "Người điều phối đang suy nghĩ...",
+  "group.removeMember": "Xóa thành viên",
+  "group.title": "Nhóm",
   "groupDescription": "Mô tả nhóm",
-  "groupSidebar": {
-    "agentProfile": {
-      "chat": "Trò chuyện",
-      "model": "Mô hình"
-    },
-    "members": {
-      "addMember": "Thêm thành viên",
-      "enableOrchestrator": "Bật người điều phối",
-      "memberSettings": "Cài đặt thành viên",
-      "orchestrator": "Người điều phối",
-      "orchestratorThinking": "Người điều phối đang suy nghĩ...",
-      "removeMember": "Xóa thành viên",
-      "stopOrchestrator": "Dừng suy nghĩ",
-      "triggerOrchestrator": "Bắt đầu nhóm trò chuyện"
-    },
-    "tabs": {
-      "host": "Người chủ trì",
-      "members": "Thành viên",
-      "role": "Thiết lập"
-    }
-  },
-  "groupWizard": {
-    "chooseMembers": "Chọn trợ lý hiện có...",
-    "createGroup": "Tạo nhóm",
-    "existingMembers": "Agent hiện có",
-    "groupMembers": "Những trợ lý này cũng sẽ được thêm vào danh sách của bạn",
-    "host": {
-      "description": "Giúp nhóm hoạt động độc lập",
-      "title": "Bật người điều phối",
-      "tooltip": "Nếu tắt người điều phối nhóm, bạn cần @đề cập thành viên thủ công để họ có thể phản hồi"
-    },
-    "memberCount": "{{count}} thành viên",
-    "noMatchingTemplates": "Không có mẫu phù hợp",
-    "noSelectedTemplates": "Chưa chọn mẫu nào",
-    "noTemplateMembers": "Không có thành viên trong mẫu",
-    "noTemplates": "Không có mẫu nào khả dụng",
-    "searchTemplates": "Tìm kiếm mẫu...",
-    "title": "Tạo nhóm",
-    "useTemplate": "Sử dụng mẫu"
-  },
+  "groupSidebar.agentProfile.chat": "Trò chuyện",
+  "groupSidebar.agentProfile.model": "Mô hình",
+  "groupSidebar.members.addMember": "Thêm thành viên",
+  "groupSidebar.members.enableOrchestrator": "Bật người điều phối",
+  "groupSidebar.members.memberSettings": "Cài đặt thành viên",
+  "groupSidebar.members.orchestrator": "Người điều phối",
+  "groupSidebar.members.orchestratorThinking": "Người điều phối đang suy nghĩ...",
+  "groupSidebar.members.removeMember": "Xóa thành viên",
+  "groupSidebar.members.stopOrchestrator": "Dừng suy nghĩ",
+  "groupSidebar.members.triggerOrchestrator": "Bắt đầu nhóm trò chuyện",
+  "groupSidebar.tabs.host": "Người chủ trì",
+  "groupSidebar.tabs.members": "Thành viên",
+  "groupSidebar.tabs.role": "Thiết lập",
+  "groupWizard.chooseMembers": "Chọn trợ lý hiện có...",
+  "groupWizard.createGroup": "Tạo nhóm",
+  "groupWizard.existingMembers": "Agent hiện có",
+  "groupWizard.groupMembers": "Những trợ lý này cũng sẽ được thêm vào danh sách của bạn",
+  "groupWizard.host.description": "Giúp nhóm hoạt động độc lập",
+  "groupWizard.host.title": "Bật người điều phối",
+  "groupWizard.host.tooltip": "Nếu tắt người điều phối nhóm, bạn cần @đề cập thành viên thủ công để họ có thể phản hồi",
+  "groupWizard.memberCount": "{{count}} thành viên",
+  "groupWizard.noMatchingTemplates": "Không có mẫu phù hợp",
+  "groupWizard.noSelectedTemplates": "Chưa chọn mẫu nào",
+  "groupWizard.noTemplateMembers": "Không có thành viên trong mẫu",
+  "groupWizard.noTemplates": "Không có mẫu nào khả dụng",
+  "groupWizard.searchTemplates": "Tìm kiếm mẫu...",
+  "groupWizard.title": "Tạo nhóm",
+  "groupWizard.useTemplate": "Sử dụng mẫu",
   "hideForYou": "Nội dung tin nhắn riêng tư đã bị ẩn, vui lòng bật 【Hiển thị nội dung tin nhắn riêng tư】 trong cài đặt để xem",
-  "history": {
-    "title": "Trợ lý sẽ chỉ nhớ {{count}} tin nhắn cuối cùng"
-  },
+  "history.title": "Trợ lý sẽ chỉ nhớ {{count}} tin nhắn cuối cùng",
   "historyRange": "Phạm vi lịch sử",
   "historySummary": "Tóm tắt tin tức lịch sử",
   "inactive": "Không hoạt động",
-  "inbox": {
-    "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
-    "title": "Lobe AI"
-  },
-  "input": {
-    "addAi": "Thêm một tin nhắn AI",
-    "addUser": "Thêm một tin nhắn người dùng",
-    "disclaimer": "AI cũng có thể mắc lỗi, vui lòng kiểm tra kỹ thông tin quan trọng",
-    "errorMsg": "Gửi tin nhắn thất bại, vui lòng kiểm tra mạng và thử lại: {{errorMsg}}",
-    "more": "Thêm",
-    "send": "Gửi",
-    "sendWithCmdEnter": "Nhấn <key/> để gửi",
-    "sendWithEnter": "Nhấn <key/> để gửi",
-    "stop": "Dừng",
-    "warp": "Xuống dòng",
-    "warpWithKey": "Nhấn phím <key/> để xuống dòng"
-  },
-  "intentUnderstanding": {
-    "title": "Đang hiểu và phân tích ý định của bạn..."
-  },
+  "inbox.desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
+  "inbox.title": "Lobe AI",
+  "input.addAi": "Thêm một tin nhắn AI",
+  "input.addUser": "Thêm một tin nhắn người dùng",
+  "input.disclaimer": "AI cũng có thể mắc lỗi, vui lòng kiểm tra kỹ thông tin quan trọng",
+  "input.errorMsg": "Gửi tin nhắn thất bại, vui lòng kiểm tra mạng và thử lại: {{errorMsg}}",
+  "input.more": "Thêm",
+  "input.send": "Gửi",
+  "input.sendWithCmdEnter": "Nhấn <key/> để gửi",
+  "input.sendWithEnter": "Nhấn <key/> để gửi",
+  "input.stop": "Dừng",
+  "input.warp": "Xuống dòng",
+  "input.warpWithKey": "Nhấn phím <key/> để xuống dòng",
+  "intentUnderstanding.title": "Đang hiểu và phân tích ý định của bạn...",
   "inviteMembers": "Mời thành viên",
-  "knowledgeBase": {
-    "all": "Tất cả nội dung",
-    "allFiles": "Tất cả tệp",
-    "allLibraries": "Tất cả thư viện",
-    "disabled": "Chế độ triển khai hiện tại không hỗ trợ hội thoại với thư viện. Để sử dụng, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}",
-    "library": {
-      "action": {
-        "add": "Thêm",
-        "detail": "Chi tiết",
-        "remove": "Xóa"
-      },
-      "title": "Tệp/Thư viện"
-    },
-    "relativeFilesOrLibraries": "Tệp/Thư viện liên quan",
-    "title": "Thư viện",
-    "uploadGuide": "Các tệp đã tải lên có thể được xem trong mục \"Tài nguyên\"",
-    "viewMore": "Xem thêm"
-  },
-  "memberSelection": {
-    "addMember": "Thêm thành viên",
-    "allMembers": "Tất cả thành viên",
-    "createGroup": "Tạo nhóm",
-    "noAvailableAgents": "Không có Agent nào để mời",
-    "noSelectedAgents": "Chưa chọn Agent nào",
-    "searchAgents": "Tìm kiếm Agent...",
-    "selectedAgents": "Đã chọn ({{count}})",
-    "setInitialMembers": "Chọn thành viên nhóm"
-  },
+  "knowledgeBase.all": "Tất cả nội dung",
+  "knowledgeBase.allFiles": "Tất cả tệp",
+  "knowledgeBase.allLibraries": "Tất cả thư viện",
+  "knowledgeBase.disabled": "Chế độ triển khai hiện tại không hỗ trợ hội thoại với thư viện. Để sử dụng, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}",
+  "knowledgeBase.library.action.add": "Thêm",
+  "knowledgeBase.library.action.detail": "Chi tiết",
+  "knowledgeBase.library.action.remove": "Xóa",
+  "knowledgeBase.library.title": "Tệp/Thư viện",
+  "knowledgeBase.relativeFilesOrLibraries": "Tệp/Thư viện liên quan",
+  "knowledgeBase.title": "Thư viện",
+  "knowledgeBase.uploadGuide": "Các tệp đã tải lên có thể được xem trong mục \"Tài nguyên\"",
+  "knowledgeBase.viewMore": "Xem thêm",
+  "memberSelection.addMember": "Thêm thành viên",
+  "memberSelection.allMembers": "Tất cả thành viên",
+  "memberSelection.createGroup": "Tạo nhóm",
+  "memberSelection.noAvailableAgents": "Không có Agent nào để mời",
+  "memberSelection.noSelectedAgents": "Chưa chọn Agent nào",
+  "memberSelection.searchAgents": "Tìm kiếm Agent...",
+  "memberSelection.selectedAgents": "Đã chọn ({{count}})",
+  "memberSelection.setInitialMembers": "Chọn thành viên nhóm",
   "members": "Thành viên",
-  "mention": {
-    "title": "Nhắc đến thành viên"
-  },
-  "messageAction": {
-    "collapse": "Thu gọn tin nhắn",
-    "continueGeneration": "Tiếp tục tạo",
-    "delAndRegenerate": "Xóa và tạo lại",
-    "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
-    "expand": "Mở rộng tin nhắn",
-    "regenerate": "Tạo lại"
-  },
-  "messages": {
-    "dm": {
-      "sentTo": "Chỉ hiển thị với {{name}}",
-      "title": "Tin nhắn riêng"
-    },
-    "modelCard": {
-      "credit": "Điểm",
-      "creditPricing": "Định giá",
-      "creditTooltip": "Để thuận tiện cho việc tính toán, chúng tôi quy đổi 1$ thành 1M điểm, ví dụ $3/M token sẽ được quy đổi thành 3 điểm/token",
-      "pricing": {
-        "inputCachedTokens": "Nhập cached {{amount}}/điểm · ${{amount}}/M",
-        "inputCharts": "${{amount}}/M ký tự",
-        "inputMinutes": "${{amount}}/phút",
-        "inputTokens": "Nhập {{amount}}/điểm · ${{amount}}/M",
-        "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M",
-        "writeCacheInputTokens": "Ghi vào bộ nhớ đệm đầu vào {{amount}}/điểm · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "average": "Giá trung bình",
-      "input": "Nhập",
-      "inputAudio": "Âm thanh nhập",
-      "inputCached": "Nhập cached",
-      "inputCitation": "Trích dẫn đầu vào",
-      "inputText": "Văn bản nhập",
-      "inputTitle": "Chi tiết nhập",
-      "inputUncached": "Nhập chưa cached",
-      "inputWriteCached": "Ghi vào bộ nhớ đệm đầu vào",
-      "output": "Xuất",
-      "outputAudio": "Âm thanh xuất",
-      "outputImage": "Xuất hình ảnh",
-      "outputText": "Văn bản xuất",
-      "outputTitle": "Chi tiết xuất",
-      "reasoning": "Suy nghĩ sâu sắc",
-      "speed": {
-        "tps": {
-          "title": "TPS",
-          "tooltip": "Tokens Mỗi Giây, TPS. Chỉ tốc độ trung bình của nội dung do AI tạo ra (Token/giây), bắt đầu tính từ khi nhận được Token đầu tiên."
-        },
-        "ttft": {
-          "title": "TTFT",
-          "tooltip": "Thời Gian Đến Token Đầu Tiên, TTFT. Chỉ khoảng thời gian từ khi bạn gửi tin nhắn đến khi khách hàng nhận được Token đầu tiên."
-        }
-      },
-      "title": "Chi tiết tạo ra",
-      "total": "Tổng tiêu thụ"
-    }
-  },
-  "minimap": {
-    "jumpToMessage": "Chuyển đến tin nhắn thứ {{index}}",
-    "nextMessage": "Tin nhắn tiếp theo",
-    "previousMessage": "Tin nhắn trước",
-    "senderAssistant": "Agent",
-    "senderUser": "Bạn"
-  },
+  "mention.title": "Nhắc đến thành viên",
+  "messageAction.collapse": "Thu gọn tin nhắn",
+  "messageAction.continueGeneration": "Tiếp tục tạo",
+  "messageAction.delAndRegenerate": "Xóa và tạo lại",
+  "messageAction.deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
+  "messageAction.expand": "Mở rộng tin nhắn",
+  "messageAction.regenerate": "Tạo lại",
+  "messages.dm.sentTo": "Chỉ hiển thị với {{name}}",
+  "messages.dm.title": "Tin nhắn riêng",
+  "messages.modelCard.credit": "Điểm",
+  "messages.modelCard.creditPricing": "Định giá",
+  "messages.modelCard.creditTooltip": "Để thuận tiện cho việc tính toán, chúng tôi quy đổi 1$ thành 1M điểm, ví dụ $3/M token sẽ được quy đổi thành 3 điểm/token",
+  "messages.modelCard.pricing.inputCachedTokens": "Nhập cached {{amount}}/điểm · ${{amount}}/M",
+  "messages.modelCard.pricing.inputCharts": "${{amount}}/M ký tự",
+  "messages.modelCard.pricing.inputMinutes": "${{amount}}/phút",
+  "messages.modelCard.pricing.inputTokens": "Nhập {{amount}}/điểm · ${{amount}}/M",
+  "messages.modelCard.pricing.outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M",
+  "messages.modelCard.pricing.writeCacheInputTokens": "Ghi vào bộ nhớ đệm đầu vào {{amount}}/điểm · ${{amount}}/M",
+  "messages.tokenDetails.average": "Giá trung bình",
+  "messages.tokenDetails.input": "Nhập",
+  "messages.tokenDetails.inputAudio": "Âm thanh nhập",
+  "messages.tokenDetails.inputCached": "Nhập cached",
+  "messages.tokenDetails.inputCitation": "Trích dẫn đầu vào",
+  "messages.tokenDetails.inputText": "Văn bản nhập",
+  "messages.tokenDetails.inputTitle": "Chi tiết nhập",
+  "messages.tokenDetails.inputUncached": "Nhập chưa cached",
+  "messages.tokenDetails.inputWriteCached": "Ghi vào bộ nhớ đệm đầu vào",
+  "messages.tokenDetails.output": "Xuất",
+  "messages.tokenDetails.outputAudio": "Âm thanh xuất",
+  "messages.tokenDetails.outputImage": "Xuất hình ảnh",
+  "messages.tokenDetails.outputText": "Văn bản xuất",
+  "messages.tokenDetails.outputTitle": "Chi tiết xuất",
+  "messages.tokenDetails.reasoning": "Suy nghĩ sâu sắc",
+  "messages.tokenDetails.speed.tps.title": "TPS",
+  "messages.tokenDetails.speed.tps.tooltip": "Tokens Mỗi Giây, TPS. Chỉ tốc độ trung bình của nội dung do AI tạo ra (Token/giây), bắt đầu tính từ khi nhận được Token đầu tiên.",
+  "messages.tokenDetails.speed.ttft.title": "TTFT",
+  "messages.tokenDetails.speed.ttft.tooltip": "Thời Gian Đến Token Đầu Tiên, TTFT. Chỉ khoảng thời gian từ khi bạn gửi tin nhắn đến khi khách hàng nhận được Token đầu tiên.",
+  "messages.tokenDetails.title": "Chi tiết tạo ra",
+  "messages.tokenDetails.total": "Tổng tiêu thụ",
+  "minimap.jumpToMessage": "Chuyển đến tin nhắn thứ {{index}}",
+  "minimap.nextMessage": "Tin nhắn tiếp theo",
+  "minimap.previousMessage": "Tin nhắn trước",
+  "minimap.senderAssistant": "Agent",
+  "minimap.senderUser": "Bạn",
   "newAgent": "Tạo trợ lý",
   "newGroupChat": "Tạo nhóm trò chuyện",
   "newPage": "Tạo tài liệu",
@@ -281,252 +193,170 @@
   "noSelectedAgents": "Chưa chọn thành viên nào",
   "openInNewWindow": "Mở trong cửa sổ mới",
   "owner": "Chủ nhóm",
-  "pageCopilot": {
-    "title": "Trợ Lý Soạn Thảo",
-    "welcome": "**Giúp từng câu chữ trở nên hoàn hảo hơn.**\n\nDù là phác thảo, viết lại hay chỉnh sửa, tôi sẽ giúp bạn làm cho văn bản rõ ràng hơn, tự nhiên hơn và thuyết phục hơn."
-  },
+  "pageCopilot.title": "Trợ Lý Soạn Thảo",
+  "pageCopilot.welcome": "**Giúp từng câu chữ trở nên hoàn hảo hơn.**\n\nDù là phác thảo, viết lại hay chỉnh sửa, tôi sẽ giúp bạn làm cho văn bản rõ ràng hơn, tự nhiên hơn và thuyết phục hơn.",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
-  "rag": {
-    "referenceChunks": "Trích dẫn nguồn",
-    "userQuery": {
-      "actions": {
-        "delete": "Xóa truy vấn",
-        "regenerate": "Tạo lại truy vấn"
-      }
-    }
-  },
+  "rag.referenceChunks": "Trích dẫn nguồn",
+  "rag.userQuery.actions.delete": "Xóa truy vấn",
+  "rag.userQuery.actions.regenerate": "Tạo lại truy vấn",
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
-  "search": {
-    "grounding": {
-      "searchQueries": "Từ khóa tìm kiếm",
-      "title": "Đã tìm thấy {{count}} kết quả"
-    },
-    "mode": {
-      "auto": {
-        "desc": "Thông minh xác định xem có cần tìm kiếm dựa trên nội dung cuộc trò chuyện",
-        "title": "Kết nối thông minh"
-      },
-      "off": {
-        "desc": "Chỉ sử dụng kiến thức cơ bản của mô hình, không thực hiện tìm kiếm trên mạng",
-        "title": "Tắt kết nối"
-      },
-      "on": {
-        "desc": "Tiếp tục tìm kiếm trên mạng để có thông tin mới nhất",
-        "title": "Luôn kết nối"
-      },
-      "useModelBuiltin": "Sử dụng công cụ tìm kiếm tích hợp của mô hình"
-    },
-    "searchModel": {
-      "desc": "Mô hình hiện tại không hỗ trợ gọi hàm, vì vậy cần kết hợp với mô hình hỗ trợ gọi hàm để tìm kiếm trực tuyến",
-      "title": "Mô hình hỗ trợ tìm kiếm"
-    },
-    "title": "Tìm kiếm trực tuyến"
-  },
+  "search.grounding.searchQueries": "Từ khóa tìm kiếm",
+  "search.grounding.title": "Đã tìm thấy {{count}} kết quả",
+  "search.mode.auto.desc": "Thông minh xác định xem có cần tìm kiếm dựa trên nội dung cuộc trò chuyện",
+  "search.mode.auto.title": "Kết nối thông minh",
+  "search.mode.off.desc": "Chỉ sử dụng kiến thức cơ bản của mô hình, không thực hiện tìm kiếm trên mạng",
+  "search.mode.off.title": "Tắt kết nối",
+  "search.mode.on.desc": "Tiếp tục tìm kiếm trên mạng để có thông tin mới nhất",
+  "search.mode.on.title": "Luôn kết nối",
+  "search.mode.useModelBuiltin": "Sử dụng công cụ tìm kiếm tích hợp của mô hình",
+  "search.searchModel.desc": "Mô hình hiện tại không hỗ trợ gọi hàm, vì vậy cần kết hợp với mô hình hỗ trợ gọi hàm để tìm kiếm trực tuyến",
+  "search.searchModel.title": "Mô hình hỗ trợ tìm kiếm",
+  "search.title": "Tìm kiếm trực tuyến",
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
   "searchAgents": "Trợ lý tìm kiếm...",
   "selectedAgents": "Trợ lý đã chọn",
   "sendPlaceholder": "Đặt câu hỏi, sáng tạo hoặc bắt đầu nhiệm vụ, <hotkey><hotkey/>",
-  "sessionGroup": {
-    "config": "Quản lý nhóm",
-    "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
-    "createAgentSuccess": "Tạo trợ lý thành công",
-    "createGroup": "Thêm nhóm mới",
-    "createGroupFailed": "Tạo nhóm trò chuyện thất bại",
-    "createGroupSuccess": "Tạo nhóm trò chuyện thành công",
-    "createSuccess": "Tạo thành công",
-    "creatingAgent": "Đang tạo trợ lý...",
-    "groupName": "Tên nhóm",
-    "inputPlaceholder": "Vui lòng nhập tên nhóm...",
-    "moveGroup": "Di chuyển vào nhóm",
-    "newGroup": "Nhóm mới",
-    "noAvailableAgents": "Hiện không có trợ lý nào",
-    "noMatchingAgents": "Không tìm thấy trợ lý phù hợp",
-    "noSelectedAgents": "Vui lòng chọn trợ lý",
-    "rename": "Đổi tên nhóm",
-    "renameSuccess": "Đổi tên thành công",
-    "searchAgents": "Tìm kiếm trợ lý",
-    "selectedAgents": "Trợ lý đã chọn ({{count}})",
-    "sortSuccess": "Sắp xếp lại thành công",
-    "sorting": "Đang cập nhật sắp xếp nhóm...",
-    "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
-  },
-  "shareModal": {
-    "copy": "Sao chép",
-    "download": "Tải xuống ảnh chụp màn hình",
-    "downloadError": "Tải xuống thất bại",
-    "downloadFile": "Tải tệp",
-    "downloadPdf": "Tải xuống PDF",
-    "downloadSuccess": "Tải xuống thành công",
-    "exportMode": {
-      "full": "Mặc định",
-      "label": "Chế độ xuất",
-      "simple": "Tương thích với OpenAI"
-    },
-    "exportPdf": "Xuất ra PDF",
-    "exportTitle": "Tiêu đề mặc định",
-    "generatePdf": "Tạo PDF",
-    "generatingPdf": "Đang tạo PDF...",
-    "imageType": "Định dạng ảnh",
-    "includeTool": "Bao gồm thông điệp công cụ",
-    "includeUser": "Bao gồm thông điệp người dùng",
-    "loadingPdf": "Đang tải PDF...",
-    "noPdfData": "Chưa có dữ liệu PDF",
-    "pdf": "PDF",
-    "pdfErrorDescription": "Đã xảy ra lỗi khi tạo PDF, vui lòng thử lại",
-    "pdfGenerationError": "Tạo PDF thất bại",
-    "pdfReady": "PDF đã sẵn sàng",
-    "regeneratePdf": "Tạo lại PDF",
-    "screenshot": "Ảnh chụp màn hình",
-    "settings": "Cài đặt xuất",
-    "text": "Văn bản",
-    "widthMode": {
-      "label": "Chế độ chiều rộng",
-      "narrow": "Chế độ màn hình hẹp",
-      "wide": "Chế độ màn hình rộng"
-    },
-    "withBackground": "Bao gồm hình nền",
-    "withFooter": "Bao gồm chân trang",
-    "withPluginInfo": "Bao gồm thông tin plugin",
-    "withRole": "Bao gồm vai trò thông điệp",
-    "withSystemRole": "Bao gồm thiết lập vai trò trợ lý"
-  },
-  "stt": {
-    "action": "Nhập bằng giọng nói",
-    "loading": "Đang nhận dạng...",
-    "prettifying": "Đang tinh chỉnh..."
-  },
-  "supervisor": {
-    "todoList": {
-      "allComplete": "Tất cả nhiệm vụ đã hoàn thành",
-      "title": "Nhiệm vụ đã hoàn thành"
-    }
-  },
-  "tab": {
-    "groupProfile": "Hồ sơ nhóm",
-    "profile": "Hồ sơ trợ lý",
-    "search": "Tìm kiếm"
-  },
-  "task": {
-    "activity": {
-      "calling": "Đang gọi công cụ...",
-      "generating": "Đang tạo phản hồi...",
-      "gotResult": "Đã nhận kết quả từ công cụ",
-      "toolCalling": "Đang gọi {{toolName}}...",
-      "toolResult": "Đã nhận kết quả từ {{toolName}}"
-    },
-    "metrics": {
-      "stepsShort": "bước",
-      "toolCallsShort": "lượt dùng công cụ"
-    },
-    "status": {
-      "initializing": "Đang khởi động nhiệm vụ..."
-    }
-  },
-  "thread": {
-    "divider": "Chủ đề con",
-    "threadMessageCount": "{{messageCount}} tin nhắn",
-    "title": "Chủ đề con"
-  },
-  "toggleWideScreen": {
-    "off": "Tắt chế độ màn hình rộng",
-    "on": "Bật chế độ màn hình rộng"
-  },
-  "tokenDetails": {
-    "chats": "Tin nhắn trò chuyện",
-    "historySummary": "Tóm tắt lịch sử",
-    "rest": "Còn lại",
-    "supervisor": "Người điều phối nhóm",
-    "systemRole": "Vai trò hệ thống",
-    "title": "Chi tiết Ngữ cảnh",
-    "tools": "Công cụ",
-    "total": "Tổng cộng",
-    "used": "Đã sử dụng"
-  },
-  "tokenTag": {
-    "overload": "Vượt quá giới hạn",
-    "remained": "Còn lại",
-    "used": "Đã sử dụng"
-  },
-  "tool": {
-    "intervention": {
-      "approve": "Phê duyệt",
-      "approveAndRemember": "Phê duyệt và ghi nhớ",
-      "approveOnce": "Chỉ phê duyệt lần này",
-      "mode": {
-        "allowList": "Danh sách cho phép",
-        "allowListDesc": "Chỉ tự động thực thi các công cụ đã được phê duyệt",
-        "autoRun": "Tự động phê duyệt",
-        "autoRunDesc": "Tự động phê duyệt tất cả các công cụ thực thi",
-        "manual": "Thủ công",
-        "manualDesc": "Mỗi lần gọi đều cần phê duyệt thủ công"
-      },
-      "reject": "Từ chối",
-      "rejectAndContinue": "Từ chối và thử lại",
-      "rejectOnly": "Từ chối",
-      "rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
-      "rejectTitle": "Từ chối lần gọi công cụ này",
-      "rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",
-      "toolAbort": "Lần gọi công cụ này đã bị người dùng hủy",
-      "toolRejected": "Lần gọi công cụ này đã bị từ chối"
-    }
-  },
-  "toolAuth": {
-    "authorize": "Ủy quyền",
-    "authorizing": "Đang ủy quyền...",
-    "hint": "Nếu không cấp quyền hoặc cấu hình, các công cụ này sẽ không hoạt động bình thường, có thể dẫn đến thiếu chức năng trợ lý hoặc lỗi.",
-    "signIn": "Đăng nhập",
-    "title": "Vui lòng hoàn tất cấp quyền công cụ cho trợ lý"
-  },
-  "topic": {
-    "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
-    "checkSaveCurrentMessages": "Bạn có muốn lưu cuộc trò chuyện hiện tại thành chủ đề không?",
-    "openNewTopic": "Mở chủ đề mới",
-    "recent": "Chủ đề gần đây",
-    "saveCurrentMessages": "Lưu cuộc trò chuyện hiện tại thành chủ đề"
-  },
-  "translate": {
-    "action": "Dịch",
-    "clear": "Xóa dịch"
-  },
-  "tts": {
-    "action": "Đọc bằng giọng nói",
-    "clear": "Xóa giọng nói"
-  },
+  "sessionGroup.config": "Quản lý nhóm",
+  "sessionGroup.confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
+  "sessionGroup.createAgentSuccess": "Tạo trợ lý thành công",
+  "sessionGroup.createGroup": "Thêm nhóm mới",
+  "sessionGroup.createGroupFailed": "Tạo nhóm trò chuyện thất bại",
+  "sessionGroup.createGroupSuccess": "Tạo nhóm trò chuyện thành công",
+  "sessionGroup.createSuccess": "Tạo thành công",
+  "sessionGroup.creatingAgent": "Đang tạo trợ lý...",
+  "sessionGroup.groupName": "Tên nhóm",
+  "sessionGroup.inputPlaceholder": "Vui lòng nhập tên nhóm...",
+  "sessionGroup.moveGroup": "Di chuyển vào nhóm",
+  "sessionGroup.newGroup": "Nhóm mới",
+  "sessionGroup.noAvailableAgents": "Hiện không có trợ lý nào",
+  "sessionGroup.noMatchingAgents": "Không tìm thấy trợ lý phù hợp",
+  "sessionGroup.noSelectedAgents": "Vui lòng chọn trợ lý",
+  "sessionGroup.rename": "Đổi tên nhóm",
+  "sessionGroup.renameSuccess": "Đổi tên thành công",
+  "sessionGroup.searchAgents": "Tìm kiếm trợ lý",
+  "sessionGroup.selectedAgents": "Trợ lý đã chọn ({{count}})",
+  "sessionGroup.sortSuccess": "Sắp xếp lại thành công",
+  "sessionGroup.sorting": "Đang cập nhật sắp xếp nhóm...",
+  "sessionGroup.tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự",
+  "shareModal.copy": "Sao chép",
+  "shareModal.download": "Tải xuống ảnh chụp màn hình",
+  "shareModal.downloadError": "Tải xuống thất bại",
+  "shareModal.downloadFile": "Tải tệp",
+  "shareModal.downloadPdf": "Tải xuống PDF",
+  "shareModal.downloadSuccess": "Tải xuống thành công",
+  "shareModal.exportMode.full": "Mặc định",
+  "shareModal.exportMode.label": "Chế độ xuất",
+  "shareModal.exportMode.simple": "Tương thích với OpenAI",
+  "shareModal.exportPdf": "Xuất ra PDF",
+  "shareModal.exportTitle": "Tiêu đề mặc định",
+  "shareModal.generatePdf": "Tạo PDF",
+  "shareModal.generatingPdf": "Đang tạo PDF...",
+  "shareModal.imageType": "Định dạng ảnh",
+  "shareModal.includeTool": "Bao gồm thông điệp công cụ",
+  "shareModal.includeUser": "Bao gồm thông điệp người dùng",
+  "shareModal.loadingPdf": "Đang tải PDF...",
+  "shareModal.noPdfData": "Chưa có dữ liệu PDF",
+  "shareModal.pdf": "PDF",
+  "shareModal.pdfErrorDescription": "Đã xảy ra lỗi khi tạo PDF, vui lòng thử lại",
+  "shareModal.pdfGenerationError": "Tạo PDF thất bại",
+  "shareModal.pdfReady": "PDF đã sẵn sàng",
+  "shareModal.regeneratePdf": "Tạo lại PDF",
+  "shareModal.screenshot": "Ảnh chụp màn hình",
+  "shareModal.settings": "Cài đặt xuất",
+  "shareModal.text": "Văn bản",
+  "shareModal.widthMode.label": "Chế độ chiều rộng",
+  "shareModal.widthMode.narrow": "Chế độ màn hình hẹp",
+  "shareModal.widthMode.wide": "Chế độ màn hình rộng",
+  "shareModal.withBackground": "Bao gồm hình nền",
+  "shareModal.withFooter": "Bao gồm chân trang",
+  "shareModal.withPluginInfo": "Bao gồm thông tin plugin",
+  "shareModal.withRole": "Bao gồm vai trò thông điệp",
+  "shareModal.withSystemRole": "Bao gồm thiết lập vai trò trợ lý",
+  "stt.action": "Nhập bằng giọng nói",
+  "stt.loading": "Đang nhận dạng...",
+  "stt.prettifying": "Đang tinh chỉnh...",
+  "supervisor.todoList.allComplete": "Tất cả nhiệm vụ đã hoàn thành",
+  "supervisor.todoList.title": "Nhiệm vụ đã hoàn thành",
+  "tab.groupProfile": "Hồ sơ nhóm",
+  "tab.profile": "Hồ sơ trợ lý",
+  "tab.search": "Tìm kiếm",
+  "task.activity.calling": "Đang gọi công cụ...",
+  "task.activity.generating": "Đang tạo phản hồi...",
+  "task.activity.gotResult": "Đã nhận kết quả từ công cụ",
+  "task.activity.toolCalling": "Đang gọi {{toolName}}...",
+  "task.activity.toolResult": "Đã nhận kết quả từ {{toolName}}",
+  "task.metrics.stepsShort": "bước",
+  "task.metrics.toolCallsShort": "lượt dùng công cụ",
+  "task.status.initializing": "Đang khởi động nhiệm vụ...",
+  "thread.divider": "Chủ đề con",
+  "thread.threadMessageCount": "{{messageCount}} tin nhắn",
+  "thread.title": "Chủ đề con",
+  "toggleWideScreen.off": "Tắt chế độ màn hình rộng",
+  "toggleWideScreen.on": "Bật chế độ màn hình rộng",
+  "tokenDetails.chats": "Tin nhắn trò chuyện",
+  "tokenDetails.historySummary": "Tóm tắt lịch sử",
+  "tokenDetails.rest": "Còn lại",
+  "tokenDetails.supervisor": "Người điều phối nhóm",
+  "tokenDetails.systemRole": "Vai trò hệ thống",
+  "tokenDetails.title": "Chi tiết Ngữ cảnh",
+  "tokenDetails.tools": "Công cụ",
+  "tokenDetails.total": "Tổng cộng",
+  "tokenDetails.used": "Đã sử dụng",
+  "tokenTag.overload": "Vượt quá giới hạn",
+  "tokenTag.remained": "Còn lại",
+  "tokenTag.used": "Đã sử dụng",
+  "tool.intervention.approve": "Phê duyệt",
+  "tool.intervention.approveAndRemember": "Phê duyệt và ghi nhớ",
+  "tool.intervention.approveOnce": "Chỉ phê duyệt lần này",
+  "tool.intervention.mode.allowList": "Danh sách cho phép",
+  "tool.intervention.mode.allowListDesc": "Chỉ tự động thực thi các công cụ đã được phê duyệt",
+  "tool.intervention.mode.autoRun": "Tự động phê duyệt",
+  "tool.intervention.mode.autoRunDesc": "Tự động phê duyệt tất cả các công cụ thực thi",
+  "tool.intervention.mode.manual": "Thủ công",
+  "tool.intervention.mode.manualDesc": "Mỗi lần gọi đều cần phê duyệt thủ công",
+  "tool.intervention.reject": "Từ chối",
+  "tool.intervention.rejectAndContinue": "Từ chối và thử lại",
+  "tool.intervention.rejectOnly": "Từ chối",
+  "tool.intervention.rejectReasonPlaceholder": "Nhập lý do từ chối sẽ giúp Agent hiểu và cải thiện hành động sau này",
+  "tool.intervention.rejectTitle": "Từ chối lần gọi công cụ này",
+  "tool.intervention.rejectedWithReason": "Lần gọi công cụ này đã bị từ chối: {{reason}}",
+  "tool.intervention.toolAbort": "Lần gọi công cụ này đã bị người dùng hủy",
+  "tool.intervention.toolRejected": "Lần gọi công cụ này đã bị từ chối",
+  "toolAuth.authorize": "Ủy quyền",
+  "toolAuth.authorizing": "Đang ủy quyền...",
+  "toolAuth.hint": "Nếu không cấp quyền hoặc cấu hình, các công cụ này sẽ không hoạt động bình thường, có thể dẫn đến thiếu chức năng trợ lý hoặc lỗi.",
+  "toolAuth.signIn": "Đăng nhập",
+  "toolAuth.title": "Vui lòng hoàn tất cấp quyền công cụ cho trợ lý",
+  "topic.checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
+  "topic.checkSaveCurrentMessages": "Bạn có muốn lưu cuộc trò chuyện hiện tại thành chủ đề không?",
+  "topic.openNewTopic": "Mở chủ đề mới",
+  "topic.recent": "Chủ đề gần đây",
+  "topic.saveCurrentMessages": "Lưu cuộc trò chuyện hiện tại thành chủ đề",
+  "translate.action": "Dịch",
+  "translate.clear": "Xóa dịch",
+  "tts.action": "Đọc bằng giọng nói",
+  "tts.clear": "Xóa giọng nói",
   "untitledAgent": "Trợ lý chưa đặt tên",
   "untitledGroup": "Nhóm chưa đặt tên",
   "updateAgent": "Cập nhật thông tin trợ lý",
-  "upload": {
-    "action": {
-      "fileUpload": "Tải lên tệp",
-      "folderUpload": "Tải lên thư mục",
-      "imageDisabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình để sử dụng",
-      "imageUpload": "Tải lên hình ảnh",
-      "tooltip": "Tải lên"
-    },
-    "clientMode": {
-      "actionFiletip": "Tải lên tệp",
-      "actionTooltip": "Tải lên",
-      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng",
-      "fileNotSupported": "Chế độ trình duyệt hiện không hỗ trợ tải lên tệp, chỉ hỗ trợ hình ảnh",
-      "visionNotSupported": "Mô hình hiện tại không hỗ trợ nhận dạng hình ảnh, vui lòng chuyển sang mô hình khác để sử dụng"
-    },
-    "preview": {
-      "prepareTasks": "Chuẩn bị phân đoạn...",
-      "status": {
-        "pending": "Đang chuẩn bị tải lên...",
-        "processing": "Đang xử lý tệp..."
-      }
-    },
-    "validation": {
-      "videoSizeExceeded": "Kích thước tệp video không được vượt quá 20MB, kích thước tệp hiện tại là {{actualSize}}"
-    }
-  },
-  "viewMode": {
-    "normal": "Bình thường",
-    "wideScreen": "Toàn màn hình"
-  },
+  "upload.action.fileUpload": "Tải lên tệp",
+  "upload.action.folderUpload": "Tải lên thư mục",
+  "upload.action.imageDisabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình để sử dụng",
+  "upload.action.imageUpload": "Tải lên hình ảnh",
+  "upload.action.tooltip": "Tải lên",
+  "upload.clientMode.actionFiletip": "Tải lên tệp",
+  "upload.clientMode.actionTooltip": "Tải lên",
+  "upload.clientMode.disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng",
+  "upload.clientMode.fileNotSupported": "Chế độ trình duyệt hiện không hỗ trợ tải lên tệp, chỉ hỗ trợ hình ảnh",
+  "upload.clientMode.visionNotSupported": "Mô hình hiện tại không hỗ trợ nhận dạng hình ảnh, vui lòng chuyển sang mô hình khác để sử dụng",
+  "upload.preview.prepareTasks": "Chuẩn bị phân đoạn...",
+  "upload.preview.status.pending": "Đang chuẩn bị tải lên...",
+  "upload.preview.status.processing": "Đang xử lý tệp...",
+  "upload.validation.videoSizeExceeded": "Kích thước tệp video không được vượt quá 20MB, kích thước tệp hiện tại là {{actualSize}}",
+  "viewMode.normal": "Bình thường",
+  "viewMode.wideScreen": "Toàn màn hình",
   "you": "bạn",
   "zenMode": "Chế độ tập trung"
 }

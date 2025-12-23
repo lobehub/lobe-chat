@@ -1,84 +1,42 @@
 {
-  "addUserMessage": {
-    "desc": "Dodaj bieżącą treść jako wiadomość użytkownika, ale nie wyzwalaj generowania",
-    "title": "Dodaj wiadomość użytkownika"
-  },
-  "clearCurrentMessages": {
-    "desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
-    "title": "Wyczyść wiadomości rozmowy"
-  },
-  "commandPalette": {
-    "desc": "Otwórz globalny panel poleceń, aby szybko uzyskać dostęp do funkcji",
-    "title": "Panel poleceń"
-  },
-  "deleteAndRegenerateMessage": {
-    "desc": "Usuń ostatnią wiadomość i wygeneruj ponownie",
-    "title": "Usuń i wygeneruj ponownie"
-  },
-  "deleteLastMessage": {
-    "desc": "Usuń ostatnią wiadomość",
-    "title": "Usuń ostatnią wiadomość"
-  },
-  "desktop": {
-    "openSettings": {
-      "desc": "Otwórz stronę ustawień aplikacji",
-      "title": "Ustawienia aplikacji"
-    },
-    "showApp": {
-      "desc": "Globalny skrót klawiszowy do wyświetlania lub ukrywania głównego okna",
-      "title": "Pokaż/Ukryj główne okno"
-    }
-  },
-  "editMessage": {
-    "desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
-    "title": "Edytuj wiadomość"
-  },
-  "navigateToChat": {
-    "desc": "Przełącz na kartę czatu i przejdź do Lobe AI",
-    "title": "Przełącz na domyślną rozmowę"
-  },
-  "openChatSettings": {
-    "desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
-    "title": "Otwórz ustawienia czatu"
-  },
-  "openHotkeyHelper": {
-    "desc": "Zobacz wszystkie instrukcje dotyczące skrótów klawiszowych",
-    "title": "Otwórz pomoc dotyczącą skrótów klawiszowych"
-  },
-  "regenerateMessage": {
-    "desc": "Ponownie wygeneruj ostatnią wiadomość",
-    "title": "Ponownie wygeneruj wiadomość"
-  },
-  "saveDocument": {
-    "desc": "Natychmiast zapisz wszystkie zmiany w bieżącym dokumencie",
-    "title": "Zapisz dokument"
-  },
-  "saveTopic": {
-    "desc": "Zapisz bieżący temat i otwórz nowy temat",
-    "title": "Rozpocznij nowy temat"
-  },
-  "search": {
-    "desc": "Wywołaj główne pole wyszukiwania na bieżącej stronie",
-    "title": "Szukaj"
-  },
-  "showApp": {
-    "desc": "Szybkie otwarcie głównego okna aplikacji",
-    "title": "Pokaż główne okno"
-  },
-  "switchAgent": {
-    "desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",
-    "title": "Szybkie przełączanie asystenta"
-  },
-  "toggleLeftPanel": {
-    "desc": "Pokaż lub ukryj panel po lewej stronie",
-    "title": "Pokaż/Ukryj panel po lewej stronie"
-  },
-  "toggleRightPanel": {
-    "desc": "Pokaż lub ukryj panel po prawej stronie",
-    "title": "Pokaż/Ukryj panel po prawej stronie"
-  },
-  "toggleZenMode": {
-    "desc": "W trybie skupienia wyświetlaj tylko bieżącą rozmowę, ukrywając inne interfejsy",
-    "title": "Przełącz tryb skupienia"
-  }
+  "addUserMessage.desc": "Dodaj bieżącą treść jako wiadomość użytkownika, ale nie wyzwalaj generowania",
+  "addUserMessage.title": "Dodaj wiadomość użytkownika",
+  "clearCurrentMessages.desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
+  "clearCurrentMessages.title": "Wyczyść wiadomości rozmowy",
+  "commandPalette.desc": "Otwórz globalny panel poleceń, aby szybko uzyskać dostęp do funkcji",
+  "commandPalette.title": "Panel poleceń",
+  "deleteAndRegenerateMessage.desc": "Usuń ostatnią wiadomość i wygeneruj ponownie",
+  "deleteAndRegenerateMessage.title": "Usuń i wygeneruj ponownie",
+  "deleteLastMessage.desc": "Usuń ostatnią wiadomość",
+  "deleteLastMessage.title": "Usuń ostatnią wiadomość",
+  "desktop.openSettings.desc": "Otwórz stronę ustawień aplikacji",
+  "desktop.openSettings.title": "Ustawienia aplikacji",
+  "desktop.showApp.desc": "Globalny skrót klawiszowy do wyświetlania lub ukrywania głównego okna",
+  "desktop.showApp.title": "Pokaż/Ukryj główne okno",
+  "editMessage.desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
+  "editMessage.title": "Edytuj wiadomość",
+  "navigateToChat.desc": "Przełącz na kartę czatu i przejdź do Lobe AI",
+  "navigateToChat.title": "Przełącz na domyślną rozmowę",
+  "openChatSettings.desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
+  "openChatSettings.title": "Otwórz ustawienia czatu",
+  "openHotkeyHelper.desc": "Zobacz wszystkie instrukcje dotyczące skrótów klawiszowych",
+  "openHotkeyHelper.title": "Otwórz pomoc dotyczącą skrótów klawiszowych",
+  "regenerateMessage.desc": "Ponownie wygeneruj ostatnią wiadomość",
+  "regenerateMessage.title": "Ponownie wygeneruj wiadomość",
+  "saveDocument.desc": "Natychmiast zapisz wszystkie zmiany w bieżącym dokumencie",
+  "saveDocument.title": "Zapisz dokument",
+  "saveTopic.desc": "Zapisz bieżący temat i otwórz nowy temat",
+  "saveTopic.title": "Rozpocznij nowy temat",
+  "search.desc": "Wywołaj główne pole wyszukiwania na bieżącej stronie",
+  "search.title": "Szukaj",
+  "showApp.desc": "Szybkie otwarcie głównego okna aplikacji",
+  "showApp.title": "Pokaż główne okno",
+  "switchAgent.desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",
+  "switchAgent.title": "Szybkie przełączanie asystenta",
+  "toggleLeftPanel.desc": "Pokaż lub ukryj panel po lewej stronie",
+  "toggleLeftPanel.title": "Pokaż/Ukryj panel po lewej stronie",
+  "toggleRightPanel.desc": "Pokaż lub ukryj panel po prawej stronie",
+  "toggleRightPanel.title": "Pokaż/Ukryj panel po prawej stronie",
+  "toggleZenMode.desc": "W trybie skupienia wyświetlaj tylko bieżącą rozmowę, ukrywając inne interfejsy",
+  "toggleZenMode.title": "Przełącz tryb skupienia"
 }

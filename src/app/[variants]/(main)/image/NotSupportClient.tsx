@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FeatureList from '@/components/FeatureList';
-import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DATABASE_SELF_HOSTING_URL, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 
 const BLOCK_SIZE = 100;
@@ -130,16 +129,19 @@ const NotSupportClient = () => {
           {t('notSupportGuide.title')}
         </Text>
         <Text type={'secondary'}>
-          <Trans i18nKey={'notSupportGuide.desc'} ns={'image'}>
-            当前部署实例为客户端数据库模式，无法使用 AI 图像生成功能。请切换到
-            <Link href={DATABASE_SELF_HOSTING_URL}>服务端数据库部署模式</Link>
-            ，或直接使用官方的
-            <Link
-              href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}&utm_medium=client_not_support_image`}
-            >
-              {LOBE_CHAT_CLOUD}
-            </Link>
-          </Trans>
+          <Trans
+            components={[
+              <span key="0" />,
+              <Link href={DATABASE_SELF_HOSTING_URL} key="1" />,
+              <span key="2" />,
+              <Link
+                href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}&utm_medium=client_not_support_image`}
+                key="3"
+               />,
+            ]}
+            i18nKey={'notSupportGuide.desc'}
+            ns={'image'}
+          />
         </Text>
       </Flexbox>
 

@@ -1,102 +1,66 @@
 {
-  "context": {
-    "actions": {
-      "delete": "Удалить",
-      "edit": "Редактировать"
-    },
-    "defaultType": "Контекст",
-    "deleteConfirm": "Вы уверены, что хотите удалить эту контекстную память? Это действие необратимо.",
-    "deleteTitle": "Удалить контекстную память",
-    "description": "Описание",
-    "empty": "Нет контекстной памяти",
-    "source": "Источник"
-  },
-  "empty": {
-    "description": "Извлечение воспоминаний — это постепенный процесс. Пожалуйста, накапливайте больше тем, чтобы обогатить содержание воспоминаний. Попробуйте вести более глубокие беседы с помощником, чтобы лучше улавливать и сохранять ценную информацию.",
-    "search": "Совпадающих воспоминаний не найдено",
-    "title": "Воспоминания отсутствуют"
-  },
-  "experience": {
-    "actions": {
-      "delete": "Удалить",
-      "edit": "Редактировать"
-    },
-    "defaultType": "Опыт",
-    "deleteConfirm": "Вы уверены, что хотите удалить эту память об опыте? Это действие необратимо.",
-    "deleteTitle": "Удалить память об опыте",
-    "empty": "Нет памяти об опыте",
-    "keyLearning": "Ключевые выводы",
-    "situation": "Ситуация",
-    "source": "Источник",
-    "steps": {
-      "action": "Действие",
-      "result": "Результат",
-      "situation": "Ситуация",
-      "task": "Задача"
-    }
-  },
-  "filter": {
-    "search": "Поиск по ключевым словам или описанию памяти...",
-    "sort": {
-      "createdAt": "Время создания",
-      "scoreConfidence": "Уверенность",
-      "scoreImpact": "Важность",
-      "scorePriority": "Приоритет по предпочтениям",
-      "scoreUrgency": "Срочность"
-    }
-  },
-  "identity": {
-    "empty": "Нет сохранённых идентичностей",
-    "filter": {
-      "search": "Поиск по ролям, отношениям или описаниям...",
-      "type": {
-        "all": "Все",
-        "demographic": "Демографические данные",
-        "personal": "Роль",
-        "professional": "Профессиональные"
-      }
-    },
-    "list": {
-      "confirmDelete": "Подтвердить удаление",
-      "deleteCancel": "Отмена",
-      "deleteContent": "Вы уверены, что хотите удалить эту идентичность? Это действие необратимо.",
-      "deleteOk": "Удалить",
-      "noResults": "Совпадений не найдено",
-      "updated": "Обновлено"
-    },
-    "roleCloud": {
-      "collapse": "Свернуть",
-      "expand": "Показать больше"
-    },
-    "view": {
-      "list": "Список",
-      "timeline": "Хронология"
-    }
-  },
+  "context.actions.delete": "Удалить",
+  "context.actions.edit": "Редактировать",
+  "context.defaultType": "Контекст",
+  "context.deleteConfirm": "Вы уверены, что хотите удалить эту контекстную память? Это действие необратимо.",
+  "context.deleteTitle": "Удалить контекстную память",
+  "context.description": "Описание",
+  "context.empty": "Нет контекстной памяти",
+  "context.source": "Источник",
+  "empty.description": "Извлечение воспоминаний — это постепенный процесс. Пожалуйста, накапливайте больше тем, чтобы обогатить содержание воспоминаний. Попробуйте вести более глубокие беседы с помощником, чтобы лучше улавливать и сохранять ценную информацию.",
+  "empty.search": "Совпадающих воспоминаний не найдено",
+  "empty.title": "Воспоминания отсутствуют",
+  "experience.actions.delete": "Удалить",
+  "experience.actions.edit": "Редактировать",
+  "experience.defaultType": "Опыт",
+  "experience.deleteConfirm": "Вы уверены, что хотите удалить эту память об опыте? Это действие необратимо.",
+  "experience.deleteTitle": "Удалить память об опыте",
+  "experience.empty": "Нет памяти об опыте",
+  "experience.keyLearning": "Ключевые выводы",
+  "experience.situation": "Ситуация",
+  "experience.source": "Источник",
+  "experience.steps.action": "Действие",
+  "experience.steps.result": "Результат",
+  "experience.steps.situation": "Ситуация",
+  "experience.steps.task": "Задача",
+  "filter.search": "Поиск по ключевым словам или описанию памяти...",
+  "filter.sort.createdAt": "Время создания",
+  "filter.sort.scoreConfidence": "Уверенность",
+  "filter.sort.scoreImpact": "Важность",
+  "filter.sort.scorePriority": "Приоритет по предпочтениям",
+  "filter.sort.scoreUrgency": "Срочность",
+  "identity.empty": "Нет сохранённых идентичностей",
+  "identity.filter.search": "Поиск по ролям, отношениям или описаниям...",
+  "identity.filter.type.all": "Все",
+  "identity.filter.type.demographic": "Демографические данные",
+  "identity.filter.type.personal": "Роль",
+  "identity.filter.type.professional": "Профессиональные",
+  "identity.list.confirmDelete": "Подтвердить удаление",
+  "identity.list.deleteCancel": "Отмена",
+  "identity.list.deleteContent": "Вы уверены, что хотите удалить эту идентичность? Это действие необратимо.",
+  "identity.list.deleteOk": "Удалить",
+  "identity.list.noResults": "Совпадений не найдено",
+  "identity.list.updated": "Обновлено",
+  "identity.roleCloud.collapse": "Свернуть",
+  "identity.roleCloud.expand": "Показать больше",
+  "identity.view.list": "Список",
+  "identity.view.timeline": "Хронология",
   "loading": "Загрузка...",
-  "preference": {
-    "actions": {
-      "delete": "Удалить",
-      "edit": "Редактировать"
-    },
-    "conclusionDirectives": "Заключительные указания",
-    "defaultType": "Предпочтение",
-    "deleteConfirm": "Вы уверены, что хотите удалить эту память о предпочтении? Это действие необратимо.",
-    "deleteTitle": "Удалить память о предпочтении",
-    "empty": "Нет памяти о предпочтениях",
-    "source": "Источник",
-    "suggestions": "Возможные действия помощника"
-  },
-  "tab": {
-    "contexts": "Контексты",
-    "experiences": "Опыты",
-    "home": "Главная",
-    "identities": "Идентичности",
-    "preferences": "Предпочтения",
-    "search": "Поиск"
-  },
-  "viewMode": {
-    "masonry": "Плитка",
-    "timeline": "Хронология"
-  }
+  "preference.actions.delete": "Удалить",
+  "preference.actions.edit": "Редактировать",
+  "preference.conclusionDirectives": "Заключительные указания",
+  "preference.defaultType": "Предпочтение",
+  "preference.deleteConfirm": "Вы уверены, что хотите удалить эту память о предпочтении? Это действие необратимо.",
+  "preference.deleteTitle": "Удалить память о предпочтении",
+  "preference.empty": "Нет памяти о предпочтениях",
+  "preference.source": "Источник",
+  "preference.suggestions": "Возможные действия помощника",
+  "tab.contexts": "Контексты",
+  "tab.experiences": "Опыты",
+  "tab.home": "Главная",
+  "tab.identities": "Идентичности",
+  "tab.preferences": "Предпочтения",
+  "tab.search": "Поиск",
+  "viewMode.masonry": "Плитка",
+  "viewMode.timeline": "Хронология"
 }

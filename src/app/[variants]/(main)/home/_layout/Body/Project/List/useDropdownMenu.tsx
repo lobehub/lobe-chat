@@ -15,7 +15,7 @@ export const useProjectItemDropdownMenu = ({
   id,
   toggleEditing,
 }: ProjectItemDropdownMenuProps): MenuProps['items'] => {
-  const { t } = useTranslation(['file', 'common']);
+  const { t } = useTranslation(['home', 'common']);
   const [removeKnowledgeBase] = useKnowledgeBaseStore((s) => [s.removeKnowledgeBase]);
   const { modal } = App.useApp();
 
@@ -45,7 +45,7 @@ export const useProjectItemDropdownMenu = ({
             onOk: async () => {
               await removeKnowledgeBase(id);
             },
-            title: '即将删除该项目，删除后该将无法找回，请确认你的操作',
+            title: t('project.deleteConfirm'),
           });
         },
       },

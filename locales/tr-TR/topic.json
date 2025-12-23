@@ -1,40 +1,30 @@
 {
-  "actions": {
-    "addNewTopic": "Yeni Konu Başlat",
-    "autoRename": "Akıllı Yeniden Adlandırma",
-    "confirmRemoveAll": "Tüm konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-    "confirmRemoveTopic": "Bu konu silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-    "confirmRemoveUnstarred": "Favori olmayan konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
-    "duplicate": "Kopya Oluştur",
-    "export": "Konuları Dışa Aktar",
-    "import": "Sohbeti içe aktar",
-    "openInNewWindow": "Yeni pencerede aç",
-    "removeAll": "Tüm Konuları Sil",
-    "removeUnstarred": "Favori Olmayan Konuları Sil"
-  },
+  "actions.addNewTopic": "Yeni Konu Başlat",
+  "actions.autoRename": "Akıllı Yeniden Adlandırma",
+  "actions.confirmRemoveAll": "Tüm konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+  "actions.confirmRemoveTopic": "Bu konu silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+  "actions.confirmRemoveUnstarred": "Favori olmayan konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+  "actions.duplicate": "Kopya Oluştur",
+  "actions.export": "Konuları Dışa Aktar",
+  "actions.import": "Sohbeti içe aktar",
+  "actions.openInNewWindow": "Yeni pencerede aç",
+  "actions.removeAll": "Tüm Konuları Sil",
+  "actions.removeUnstarred": "Favori Olmayan Konuları Sil",
   "defaultTitle": "Varsayılan Konu",
   "displayItems": "Öğeleri Göster",
   "duplicateLoading": "Konu Kopyalanıyor...",
   "duplicateSuccess": "Konu Başarıyla Kopyalandı",
   "favorite": "Favori",
-  "groupMode": {
-    "ascMessages": "Mesaj Sayısına Göre Artan Sıra",
-    "byTime": "Zamana Göre Grupla",
-    "descMessages": "Mesaj Sayısına Göre Azalan Sıra",
-    "flat": "Gruplandırma Yok"
-  },
-  "groupTitle": {
-    "byTime": {
-      "month": "Bu Ay",
-      "today": "Bugün",
-      "week": "Bu Hafta",
-      "yesterday": "Dün"
-    }
-  },
-  "guide": {
-    "desc": "Mevcut sohbeti tarihsel konu olarak kaydetmek ve yeni bir sohbet başlatmak için sol taraftaki gönder butonuna tıklayın.",
-    "title": "Konu Listesi"
-  },
+  "groupMode.ascMessages": "Mesaj Sayısına Göre Artan Sıra",
+  "groupMode.byTime": "Zamana Göre Grupla",
+  "groupMode.descMessages": "Mesaj Sayısına Göre Azalan Sıra",
+  "groupMode.flat": "Gruplandırma Yok",
+  "groupTitle.byTime.month": "Bu Ay",
+  "groupTitle.byTime.today": "Bugün",
+  "groupTitle.byTime.week": "Bu Hafta",
+  "groupTitle.byTime.yesterday": "Dün",
+  "guide.desc": "Mevcut sohbeti tarihsel konu olarak kaydetmek ve yeni bir sohbet başlatmak için sol taraftaki gönder butonuna tıklayın.",
+  "guide.title": "Konu Listesi",
   "importError": "İçe aktarma başarısız oldu",
   "importInvalidFormat": "Geçersiz dosya formatı, lütfen geçerli bir JSON dosyası olduğundan emin olun",
   "importLoading": "Sohbet içe aktarılıyor...",

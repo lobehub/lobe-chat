@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "Parametre Listesi"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Kullanılabilir modelleri al",
-        "getAvailableTools": "Kullanılabilir araçları al",
-        "getConfig": "Yapılandırmayı al",
-        "getMeta": "Meta verileri al",
-        "getPrompt": "Sistem istemini al",
-        "searchMarketTools": "Eklenti pazarında ara",
-        "searchOfficialTools": "Resmi araçları ara",
-        "setModel": "Modeli ayarla",
-        "setOpeningMessage": "Açılış mesajını ayarla",
-        "setOpeningQuestions": "Açılış sorularını ayarla",
-        "togglePlugin": "Eklentiyi değiştir",
-        "updateChatConfig": "Sohbet yapılandırmasını güncelle",
-        "updateConfig": "Yapılandırmayı güncelle",
-        "updateMeta": "Meta verileri güncelle",
-        "updatePrompt": "Sistem istemini güncelle"
-      },
-      "title": "Temsilci Oluşturucu"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "Kullanılabilir Modelleri Al",
-        "installPlugin": "Eklenti Yükle",
-        "inviteAgent": "Üye Davet Et",
-        "removeAgent": "Üyeyi Kaldır",
-        "searchMarketTools": "Eklenti Pazarında Ara",
-        "updateAgentConfig": "Aracı Yapılandırmasını Güncelle",
-        "updatePrompt": "Sistem Komutunu Güncelle"
-      },
-      "title": "Grup Aracı Oluşturucu"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "Herkese konuşma",
-        "createAgent": "Ekip üyesi ekle",
-        "createWorkflow": "İş akışı planla",
-        "executeTask": "Görevi yürüt",
-        "getAgentInfo": "Üye bilgilerini al",
-        "interrupt": "Görevi durdur",
-        "inviteAgent": "Üye davet et",
-        "removeAgent": "Üyeyi kaldır",
-        "searchAgent": "Uzman ara",
-        "speak": "Belirli üyeyi konuştur",
-        "summarize": "Konuşmayı özetle",
-        "vote": "Oylama başlat"
-      },
-      "title": "Ekibi Koordine Et"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "Yapılacakları Temizle",
-        "completeTodos": "Yapılacakları Tamamla",
-        "createPlan": "Plan Oluştur",
-        "createTodos": "Yapılacak Oluştur",
-        "removeTodos": "Yapılacakları Sil",
-        "updatePlan": "Planı Güncelle",
-        "updateTodos": "Yapılacakları Güncelle"
-      },
-      "title": "GTD Aracı"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "Bilgi kaynağını oku",
-        "searchKnowledgeBase": "Bilgi kaynağında ara"
-      },
-      "title": "Bilgi Kaynağı"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "Dosyayı düzenle",
-        "getCommandOutput": "Komut çıktısını al",
-        "globLocalFiles": "Dosyaları desenle ara",
-        "grepContent": "İçerikte ara",
-        "killCommand": "Komut çalışmasını durdur",
-        "listLocalFiles": "Dosya listesini görüntüle",
-        "moveLocalFiles": "Dosyaları taşı",
-        "readLocalFile": "Dosya içeriğini oku",
-        "renameLocalFile": "Yeniden adlandır",
-        "runCommand": "Komut çalıştır",
-        "searchLocalFiles": "Dosyalarda ara",
-        "writeLocalFile": "Dosyaya yaz"
-      },
-      "title": "Yerel Sistem"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "Düğümleri toplu güncelle",
-        "compareSnapshots": "Anlık görüntüleri karşılaştır",
-        "convertToList": "Listeye dönüştür",
-        "createNode": "Düğüm oluştur",
-        "cropImage": "Görseli kırp",
-        "deleteNode": "Düğümü sil",
-        "deleteSnapshot": "Anlık görüntüyü sil",
-        "deleteTableColumn": "Tablo sütununu sil",
-        "deleteTableRow": "Tablo satırını sil",
-        "duplicateNode": "Düğümü kopyala",
-        "editTitle": "Belge başlığını düzenle",
-        "indentListItem": "Liste öğesini girintile",
-        "initPage": "Belgeyi başlat",
-        "insertTableColumn": "Tablo sütunu ekle",
-        "insertTableRow": "Tablo satırı ekle",
-        "listSnapshots": "Anlık görüntüleri listele",
-        "mergeNodes": "Düğümleri birleştir",
-        "moveNode": "Düğümü taşı",
-        "outdentListItem": "Liste öğesinin girintisini kaldır",
-        "replaceText": "Metni değiştir",
-        "resizeImage": "Görseli yeniden boyutlandır",
-        "restoreSnapshot": "Anlık görüntüyü geri yükle",
-        "rotateImage": "Görseli döndür",
-        "saveSnapshot": "Anlık görüntüyü kaydet",
-        "setImageAlt": "Görsel alternatif metnini ayarla",
-        "splitNode": "Düğümü böl",
-        "toggleListType": "Liste türünü değiştir",
-        "unwrapNode": "Düğümün paketini aç",
-        "updateNode": "Düğümü güncelle",
-        "wrapNodes": "Düğümleri paketle"
-      },
-      "title": "Belge"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "Birden fazla sayfanın içeriğini oku",
-        "crawlSinglePage": "Sayfa içeriğini oku",
-        "search": "Sayfada ara"
-      },
-      "title": "İnternette Arama"
-    }
-  },
+  "arguments.title": "Parametre Listesi",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "Kullanılabilir modelleri al",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "Kullanılabilir araçları al",
+  "builtins.lobe-agent-builder.apiName.getConfig": "Yapılandırmayı al",
+  "builtins.lobe-agent-builder.apiName.getMeta": "Meta verileri al",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "Sistem istemini al",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "Eklenti pazarında ara",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "Resmi araçları ara",
+  "builtins.lobe-agent-builder.apiName.setModel": "Modeli ayarla",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "Açılış mesajını ayarla",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "Açılış sorularını ayarla",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "Eklentiyi değiştir",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "Sohbet yapılandırmasını güncelle",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "Yapılandırmayı güncelle",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "Meta verileri güncelle",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "Sistem istemini güncelle",
+  "builtins.lobe-agent-builder.title": "Temsilci Oluşturucu",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "Kullanılabilir Modelleri Al",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "Eklenti Yükle",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "Üye Davet Et",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "Üyeyi Kaldır",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "Eklenti Pazarında Ara",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "Aracı Yapılandırmasını Güncelle",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "Sistem Komutunu Güncelle",
+  "builtins.lobe-group-agent-builder.title": "Grup Aracı Oluşturucu",
+  "builtins.lobe-group-management.apiName.broadcast": "Herkese konuşma",
+  "builtins.lobe-group-management.apiName.createAgent": "Ekip üyesi ekle",
+  "builtins.lobe-group-management.apiName.createWorkflow": "İş akışı planla",
+  "builtins.lobe-group-management.apiName.executeTask": "Görevi yürüt",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "Üye bilgilerini al",
+  "builtins.lobe-group-management.apiName.interrupt": "Görevi durdur",
+  "builtins.lobe-group-management.apiName.inviteAgent": "Üye davet et",
+  "builtins.lobe-group-management.apiName.removeAgent": "Üyeyi kaldır",
+  "builtins.lobe-group-management.apiName.searchAgent": "Uzman ara",
+  "builtins.lobe-group-management.apiName.speak": "Belirli üyeyi konuştur",
+  "builtins.lobe-group-management.apiName.summarize": "Konuşmayı özetle",
+  "builtins.lobe-group-management.apiName.vote": "Oylama başlat",
+  "builtins.lobe-group-management.title": "Ekibi Koordine Et",
+  "builtins.lobe-gtd.apiName.clearTodos": "Yapılacakları Temizle",
+  "builtins.lobe-gtd.apiName.completeTodos": "Yapılacakları Tamamla",
+  "builtins.lobe-gtd.apiName.createPlan": "Plan Oluştur",
+  "builtins.lobe-gtd.apiName.createTodos": "Yapılacak Oluştur",
+  "builtins.lobe-gtd.apiName.removeTodos": "Yapılacakları Sil",
+  "builtins.lobe-gtd.apiName.updatePlan": "Planı Güncelle",
+  "builtins.lobe-gtd.apiName.updateTodos": "Yapılacakları Güncelle",
+  "builtins.lobe-gtd.title": "GTD Aracı",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "Bilgi kaynağını oku",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "Bilgi kaynağında ara",
+  "builtins.lobe-knowledge-base.title": "Bilgi Kaynağı",
+  "builtins.lobe-local-system.apiName.editLocalFile": "Dosyayı düzenle",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "Komut çıktısını al",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "Dosyaları desenle ara",
+  "builtins.lobe-local-system.apiName.grepContent": "İçerikte ara",
+  "builtins.lobe-local-system.apiName.killCommand": "Komut çalışmasını durdur",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "Dosya listesini görüntüle",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "Dosyaları taşı",
+  "builtins.lobe-local-system.apiName.readLocalFile": "Dosya içeriğini oku",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "Yeniden adlandır",
+  "builtins.lobe-local-system.apiName.runCommand": "Komut çalıştır",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "Dosyalarda ara",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "Dosyaya yaz",
+  "builtins.lobe-local-system.title": "Yerel Sistem",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "Düğümleri toplu güncelle",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "Anlık görüntüleri karşılaştır",
+  "builtins.lobe-page-agent.apiName.convertToList": "Listeye dönüştür",
+  "builtins.lobe-page-agent.apiName.createNode": "Düğüm oluştur",
+  "builtins.lobe-page-agent.apiName.cropImage": "Görseli kırp",
+  "builtins.lobe-page-agent.apiName.deleteNode": "Düğümü sil",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "Anlık görüntüyü sil",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "Tablo sütununu sil",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "Tablo satırını sil",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "Düğümü kopyala",
+  "builtins.lobe-page-agent.apiName.editTitle": "Belge başlığını düzenle",
+  "builtins.lobe-page-agent.apiName.indentListItem": "Liste öğesini girintile",
+  "builtins.lobe-page-agent.apiName.initPage": "Belgeyi başlat",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "Tablo sütunu ekle",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "Tablo satırı ekle",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "Anlık görüntüleri listele",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "Düğümleri birleştir",
+  "builtins.lobe-page-agent.apiName.moveNode": "Düğümü taşı",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "Liste öğesinin girintisini kaldır",
+  "builtins.lobe-page-agent.apiName.replaceText": "Metni değiştir",
+  "builtins.lobe-page-agent.apiName.resizeImage": "Görseli yeniden boyutlandır",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "Anlık görüntüyü geri yükle",
+  "builtins.lobe-page-agent.apiName.rotateImage": "Görseli döndür",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "Anlık görüntüyü kaydet",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "Görsel alternatif metnini ayarla",
+  "builtins.lobe-page-agent.apiName.splitNode": "Düğümü böl",
+  "builtins.lobe-page-agent.apiName.toggleListType": "Liste türünü değiştir",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "Düğümün paketini aç",
+  "builtins.lobe-page-agent.apiName.updateNode": "Düğümü güncelle",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "Düğümleri paketle",
+  "builtins.lobe-page-agent.title": "Belge",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "Birden fazla sayfanın içeriğini oku",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "Sayfa içeriğini oku",
+  "builtins.lobe-web-browsing.apiName.search": "Sayfada ara",
+  "builtins.lobe-web-browsing.title": "İnternette Arama",
   "confirm": "Onayla",
-  "debug": {
-    "arguments": "Çağrı parametreleri",
-    "function_call": "Fonksiyon çağrısı",
-    "off": "Hata ayıklamayı kapat",
-    "on": "Eklenti çağrı bilgilerini görüntüle",
-    "payload": "Eklenti yükü",
-    "pluginState": "Eklenti Durumu",
-    "response": "Dönüş sonucu",
-    "title": "Eklenti Detayları",
-    "tool_call": "Araç çağrısı isteği"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "Detaylar için lütfen düzenleme sayfasına gidin",
-      "editBtn": "Hemen Düzenle",
-      "title": "Bu bir özel eklentidir"
-    },
-    "emptyState": {
-      "description": "Eklenti yeteneklerini ve yapılandırma seçeneklerini görmek için lütfen önce bu eklentiyi yükleyin",
-      "title": "Yükledikten sonra eklenti detaylarını görüntüleyin"
-    },
-    "info": {
-      "description": "API Açıklaması",
-      "name": "API Adı"
-    },
-    "tabs": {
-      "info": "Eklenti Yetenekleri",
-      "manifest": "Kurulum Dosyası",
-      "settings": "Ayarlar"
-    },
-    "title": "Eklenti Detayları"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "Bu yerel eklenti silinecek, silindikten sonra geri alınamaz. Eklentiyi silmek istiyor musunuz?",
-    "customParams": {
-      "useProxy": {
-        "label": "Proxy üzerinden yükle (CORS hatası alırsanız bu seçeneği açıp tekrar deneyin)"
-      }
-    },
-    "deleteSuccess": "Eklenti başarıyla silindi",
-    "manifest": {
-      "identifier": {
-        "desc": "Eklentinin benzersiz tanımlayıcısı",
-        "label": "Tanımlayıcı"
-      },
-      "mode": {
-        "mcp": "MCP Eklentisi",
-        "mcpExp": "Deneysel",
-        "url": "Çevrimiçi Bağlantı"
-      },
-      "name": {
-        "desc": "Eklenti başlığı",
-        "label": "Başlık",
-        "placeholder": "Arama motoru"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "Gelişmiş Ayarlar"
-      },
-      "args": {
-        "desc": "Çalıştırma komutuna iletilen parametre listesi, genellikle MCP sunucu adı veya başlatma betiği yolu buraya girilir",
-        "label": "Komut Parametreleri",
-        "placeholder": "Örneğin: mcp-hello-world",
-        "required": "Lütfen başlatma parametresi girin"
-      },
-      "auth": {
-        "bear": "API Anahtarı",
-        "desc": "MCP sunucusunun kimlik doğrulama yöntemini seçin",
-        "label": "Kimlik Doğrulama Türü",
-        "none": "Kimlik doğrulama gerekmiyor",
-        "placeholder": "Lütfen kimlik doğrulama türünü seçin",
-        "token": {
-          "desc": "API Anahtarınızı veya Bearer Token'ınızı girin",
-          "label": "API Anahtarı",
-          "placeholder": "sk-xxxxx",
-          "required": "Lütfen kimlik doğrulama jetonu girin"
-        }
-      },
-      "avatar": {
-        "label": "Eklenti Simgesi"
-      },
-      "command": {
-        "desc": "MCP STDIO Sunucusunu başlatmak için yürütülebilir dosya veya betik",
-        "label": "Komut",
-        "placeholder": "Örneğin: npx / uv / docker vb.",
-        "required": "Lütfen başlatma komutunu girin"
-      },
-      "desc": {
-        "desc": "Eklenti açıklaması ekleyin",
-        "label": "Eklenti Açıklaması",
-        "placeholder": "Eklentinin kullanım talimatları ve senaryoları gibi bilgileri ekleyin"
-      },
-      "endpoint": {
-        "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
-        "label": "MCP Endpoint URL"
-      },
-      "env": {
-        "add": "Yeni satır ekle",
-        "desc": "MCP Sunucunuzun ihtiyaç duyduğu ortam değişkenlerini girin",
-        "duplicateKeyError": "Alan anahtarı benzersiz olmalıdır",
-        "formValidationFailed": "Form doğrulaması başarısız, lütfen parametre formatını kontrol edin",
-        "keyRequired": "Alan anahtarı boş olamaz",
-        "label": "MCP Sunucu Ortam Değişkenleri",
-        "stringifyError": "Parametreler serileştirilemiyor, lütfen formatı kontrol edin"
-      },
-      "headers": {
-        "add": "Yeni satır ekle",
-        "desc": "İstek başlıklarını girin",
-        "label": "HTTP Başlıkları"
-      },
-      "identifier": {
-        "desc": "MCP eklentiniz için İngilizce karakterler kullanarak bir isim belirleyin",
-        "invalid": "Tanımlayıcı sadece harf, rakam, tire ve alt çizgi içerebilir",
-        "label": "MCP Eklenti Adı",
-        "placeholder": "Örneğin: my-mcp-plugin",
-        "required": "Lütfen MCP servis tanımlayıcısını girin"
-      },
-      "previewManifest": "Eklenti tanımlama dosyasını önizle",
-      "quickImport": "JSON yapılandırmasını hızlıca içe aktar",
-      "quickImportError": {
-        "empty": "Girdi boş olamaz",
-        "invalidJson": "Geçersiz JSON formatı",
-        "invalidStructure": "JSON formatı geçersiz"
-      },
-      "stdioNotSupported": "Mevcut ortam stdio türündeki MCP eklentilerini desteklemiyor",
-      "testConnection": "Bağlantıyı test et",
-      "testConnectionTip": "Bağlantı testi başarılı olursa MCP eklentisi düzgün çalışabilir",
-      "type": {
-        "desc": "MCP eklentisinin iletişim türünü seçin, web sürümü sadece Streamable HTTP destekler",
-        "httpFeature1": "Web ve masaüstü sürümleriyle uyumlu",
-        "httpFeature2": "Uzak MCP sunucusuna bağlanır, ek kurulum gerekmez",
-        "httpShortDesc": "Akış tabanlı HTTP iletişim protokolü",
-        "label": "MCP Eklenti Türü",
-        "stdioFeature1": "Daha düşük iletişim gecikmesi, yerel çalıştırma için uygun",
-        "stdioFeature2": "Yerel MCP sunucusunun kurulması ve çalıştırılması gerekir",
-        "stdioNotAvailable": "STDIO modu sadece masaüstü sürümde kullanılabilir",
-        "stdioShortDesc": "Standart giriş çıkış tabanlı iletişim protokolü",
-        "title": "MCP Eklenti Türü"
-      },
-      "url": {
-        "desc": "MCP Sunucunuzun Streamable HTTP adresini girin, SSE modu desteklenmez",
-        "invalid": "Geçerli bir URL adresi girin",
-        "label": "Streamable HTTP Endpoint URL",
-        "required": "Lütfen MCP servis URL'sini girin"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "Eklentinin yazarı",
-        "label": "Yazar"
-      },
-      "avatar": {
-        "desc": "Eklenti simgesi, Emoji veya URL olabilir",
-        "label": "Simge"
-      },
-      "description": {
-        "desc": "Eklenti açıklaması",
-        "label": "Açıklama",
-        "placeholder": "Bilgi almak için arama motorunu kullanın"
-      },
-      "formFieldRequired": "Bu alan zorunludur",
-      "homepage": {
-        "desc": "Eklentinin ana sayfası",
-        "label": "Ana Sayfa"
-      },
-      "identifier": {
-        "desc": "Eklentinin benzersiz tanımlayıcısı, manifest dosyasından otomatik algılanır",
-        "errorDuplicate": "Tanımlayıcı mevcut eklentiyle çakışıyor, lütfen değiştirin",
-        "label": "Tanımlayıcı",
-        "pattenErrorMessage": "Sadece İngilizce harf, rakam, - ve _ karakterleri girilebilir"
-      },
-      "lobe": "{{appName}} Eklentisi",
-      "manifest": {
-        "desc": "{{appName}} bu bağlantı üzerinden eklentiyi yükleyecek",
-        "label": "Eklenti Tanımlama Dosyası (Manifest) URL",
-        "preview": "Manifest Önizle",
-        "refresh": "Yenile"
-      },
-      "openai": "OpenAI Eklentisi",
-      "title": {
-        "desc": "Eklenti başlığı",
-        "label": "Başlık",
-        "placeholder": "Arama motoru"
-      }
-    },
-    "metaConfig": "Eklenti meta bilgi yapılandırması",
-    "modalDesc": "Özel eklenti ekledikten sonra, eklenti geliştirme doğrulaması için veya doğrudan sohbet içinde kullanılabilir. Eklenti geliştirme için <1>geliştirici dokümanlarına↗</> bakınız.",
-    "openai": {
-      "importUrl": "URL bağlantısından içe aktar",
-      "schema": "Şema"
-    },
-    "preview": {
-      "api": {
-        "noParams": "Bu araç parametre gerektirmez",
-        "noResults": "Arama kriterlerine uygun API bulunamadı",
-        "params": "Parametreler:",
-        "searchPlaceholder": "Araç ara..."
-      },
-      "card": "Eklenti gösterim önizlemesi",
-      "desc": "Eklenti açıklamasını önizle",
-      "empty": {
-        "desc": "Yapılandırma tamamlandıktan sonra, desteklenen araç yeteneklerini burada önizleyebilirsiniz",
-        "title": "Eklentiyi yapılandırdıktan sonra önizlemeye başlayın"
-      },
-      "title": "Eklenti Adı Önizlemesi"
-    },
-    "save": "Eklentiyi Yükle",
-    "saveSuccess": "Eklenti ayarları başarıyla kaydedildi",
-    "tabs": {
-      "manifest": "Fonksiyon Tanımlama Listesi (Manifest)",
-      "meta": "Eklenti Meta Bilgileri"
-    },
-    "title": {
-      "create": "Özel Eklenti Ekle",
-      "edit": "Özel Eklentiyi Düzenle"
-    },
-    "type": {
-      "lobe": "{{appName}} Eklentisi",
-      "openai": "OpenAI Eklentisi"
-    },
-    "update": "Güncelle",
-    "updateSuccess": "Eklenti ayarları başarıyla güncellendi"
-  },
-  "empty": {
-    "description": "Eklenti mağazasında keşfetmeniz için birçok araç sizi bekliyor, mağazayı ziyaret ederek keşfe başlayın",
-    "search": "Eşleşen eklenti bulunamadı",
-    "title": "Henüz eklenti yok"
-  },
-  "error": {
-    "fetchError": "Manifest bağlantısı isteği başarısız oldu, lütfen bağlantının geçerli olduğundan ve CORS erişimine izin verdiğinden emin olun",
-    "installError": "{{name}} eklentisi yüklenemedi",
-    "manifestInvalid": "Manifest standartlara uymuyor, doğrulama sonucu: \n\n {{error}}",
-    "noManifest": "Tanımlama dosyası bulunamadı",
-    "openAPIInvalid": "OpenAPI ayrıştırma başarısız, hata: \n\n {{error}}",
-    "reinstallError": "{{name}} eklentisi yenilenemedi",
-    "testConnectionFailed": "Manifest alınamadı: {{error}}",
-    "urlError": "Bu bağlantı JSON formatında içerik döndürmüyor, lütfen geçerli bir bağlantı olduğundan emin olun"
-  },
-  "inspector": {
-    "args": "Parametre listesini görüntüle",
-    "delete": "Araç çağrısını sil",
-    "orphanedToolCall": "Bu araç çağrısı mesajı, beklenmeyen bir nedenle yetim kalmış olabilir ve bu durum Ajansın düzgün çalışmasını etkileyebilir. Lütfen bunu kaldırın.",
-    "pluginRender": "Eklenti arayüzünü görüntüle"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "Silindi",
-      "local.config": "Yapılandırma",
-      "local.title": "Özel"
-    }
-  },
-  "loading": {
-    "content": "Eklenti çağrılıyor...",
-    "plugin": "Eklenti çalışıyor..."
-  },
-  "mcpEmpty": {
-    "deployment": "Henüz dağıtım seçeneği yok",
-    "prompts": "Bu eklenti için henüz bir komut bulunmamaktadır",
-    "resources": "Bu eklenti için henüz kaynak yok",
-    "tools": "Bu eklenti için henüz araç yeteneği yok"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "Kurulum ortamı kontrol ediliyor...",
-    "COMPLETED": "Kurulum tamamlandı",
-    "CONFIGURATION_REQUIRED": "Devam etmek için gerekli yapılandırmayı tamamlayın",
-    "ERROR": "Kurulum hatası",
-    "FETCHING_MANIFEST": "Eklenti tanımlama dosyası alınıyor...",
-    "GETTING_SERVER_MANIFEST": "MCP sunucusu başlatılıyor...",
-    "INSTALLING_PLUGIN": "Eklenti yükleniyor...",
-    "configurationDescription": "Bu MCP eklentisi düzgün çalışması için yapılandırma parametreleri gerektirir, lütfen gerekli bilgileri doldurun",
-    "configurationRequired": "Eklenti parametrelerini yapılandır",
-    "continueInstall": "Kuruluma devam et",
-    "dependenciesDescription": "Bu eklentinin düzgün çalışması için aşağıdaki sistem bağımlılıkları gereklidir, lütfen eksik bağımlılıkları kurduktan sonra tekrar kontrol edip kuruluma devam edin.",
-    "dependenciesRequired": "Eklentinin sistem bağımlılıklarını yükleyin",
-    "dependencyStatus": {
-      "installed": "Yüklendi",
-      "notInstalled": "Yüklenmedi",
-      "requiredVersion": "Gerekli sürüm: {{version}}"
-    },
-    "errorDetails": {
-      "args": "Parametreler",
-      "command": "Komut",
-      "connectionParams": "Bağlantı parametreleri",
-      "env": "Ortam değişkenleri",
-      "errorOutput": "Hata günlükleri",
-      "exitCode": "Çıkış kodu",
-      "hideDetails": "Detayları gizle",
-      "originalError": "Orijinal hata",
-      "showDetails": "Detayları göster"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "Yetkilendirme hatası",
-      "CONNECTION_FAILED": "Bağlantı başarısız",
-      "INITIALIZATION_TIMEOUT": "Başlatma zaman aşımı",
-      "PROCESS_SPAWN_ERROR": "İşlem başlatılamadı",
-      "UNKNOWN_ERROR": "Bilinmeyen hata",
-      "VALIDATION_ERROR": "Parametre doğrulama hatası"
-    },
-    "installError": "MCP eklentisi yüklenemedi, hata nedeni: {{detail}}",
-    "installMethods": {
-      "manual": "Manuel kurulum:",
-      "recommended": "Önerilen kurulum yöntemi:"
-    },
-    "recheckDependencies": "Bağımlılıkları tekrar kontrol et",
-    "skipDependencies": "Kontrolü atla"
-  },
+  "debug.arguments": "Çağrı parametreleri",
+  "debug.function_call": "Fonksiyon çağrısı",
+  "debug.off": "Hata ayıklamayı kapat",
+  "debug.on": "Eklenti çağrı bilgilerini görüntüle",
+  "debug.payload": "Eklenti yükü",
+  "debug.pluginState": "Eklenti Durumu",
+  "debug.response": "Dönüş sonucu",
+  "debug.title": "Eklenti Detayları",
+  "debug.tool_call": "Araç çağrısı isteği",
+  "detailModal.customPlugin.description": "Detaylar için lütfen düzenleme sayfasına gidin",
+  "detailModal.customPlugin.editBtn": "Hemen Düzenle",
+  "detailModal.customPlugin.title": "Bu bir özel eklentidir",
+  "detailModal.emptyState.description": "Eklenti yeteneklerini ve yapılandırma seçeneklerini görmek için lütfen önce bu eklentiyi yükleyin",
+  "detailModal.emptyState.title": "Yükledikten sonra eklenti detaylarını görüntüleyin",
+  "detailModal.info.description": "API Açıklaması",
+  "detailModal.info.name": "API Adı",
+  "detailModal.tabs.info": "Eklenti Yetenekleri",
+  "detailModal.tabs.manifest": "Kurulum Dosyası",
+  "detailModal.tabs.settings": "Ayarlar",
+  "detailModal.title": "Eklenti Detayları",
+  "dev.confirmDeleteDevPlugin": "Bu yerel eklenti silinecek, silindikten sonra geri alınamaz. Eklentiyi silmek istiyor musunuz?",
+  "dev.customParams.useProxy.label": "Proxy üzerinden yükle (CORS hatası alırsanız bu seçeneği açıp tekrar deneyin)",
+  "dev.deleteSuccess": "Eklenti başarıyla silindi",
+  "dev.manifest.identifier.desc": "Eklentinin benzersiz tanımlayıcısı",
+  "dev.manifest.identifier.label": "Tanımlayıcı",
+  "dev.manifest.mode.mcp": "MCP Eklentisi",
+  "dev.manifest.mode.mcpExp": "Deneysel",
+  "dev.manifest.mode.url": "Çevrimiçi Bağlantı",
+  "dev.manifest.name.desc": "Eklenti başlığı",
+  "dev.manifest.name.label": "Başlık",
+  "dev.manifest.name.placeholder": "Arama motoru",
+  "dev.mcp.advanced.title": "Gelişmiş Ayarlar",
+  "dev.mcp.args.desc": "Çalıştırma komutuna iletilen parametre listesi, genellikle MCP sunucu adı veya başlatma betiği yolu buraya girilir",
+  "dev.mcp.args.label": "Komut Parametreleri",
+  "dev.mcp.args.placeholder": "Örneğin: mcp-hello-world",
+  "dev.mcp.args.required": "Lütfen başlatma parametresi girin",
+  "dev.mcp.auth.bear": "API Anahtarı",
+  "dev.mcp.auth.desc": "MCP sunucusunun kimlik doğrulama yöntemini seçin",
+  "dev.mcp.auth.label": "Kimlik Doğrulama Türü",
+  "dev.mcp.auth.none": "Kimlik doğrulama gerekmiyor",
+  "dev.mcp.auth.placeholder": "Lütfen kimlik doğrulama türünü seçin",
+  "dev.mcp.auth.token.desc": "API Anahtarınızı veya Bearer Token'ınızı girin",
+  "dev.mcp.auth.token.label": "API Anahtarı",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "Lütfen kimlik doğrulama jetonu girin",
+  "dev.mcp.avatar.label": "Eklenti Simgesi",
+  "dev.mcp.command.desc": "MCP STDIO Sunucusunu başlatmak için yürütülebilir dosya veya betik",
+  "dev.mcp.command.label": "Komut",
+  "dev.mcp.command.placeholder": "Örneğin: npx / uv / docker vb.",
+  "dev.mcp.command.required": "Lütfen başlatma komutunu girin",
+  "dev.mcp.desc.desc": "Eklenti açıklaması ekleyin",
+  "dev.mcp.desc.label": "Eklenti Açıklaması",
+  "dev.mcp.desc.placeholder": "Eklentinin kullanım talimatları ve senaryoları gibi bilgileri ekleyin",
+  "dev.mcp.endpoint.desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
+  "dev.mcp.endpoint.label": "MCP Endpoint URL",
+  "dev.mcp.env.add": "Yeni satır ekle",
+  "dev.mcp.env.desc": "MCP Sunucunuzun ihtiyaç duyduğu ortam değişkenlerini girin",
+  "dev.mcp.env.duplicateKeyError": "Alan anahtarı benzersiz olmalıdır",
+  "dev.mcp.env.formValidationFailed": "Form doğrulaması başarısız, lütfen parametre formatını kontrol edin",
+  "dev.mcp.env.keyRequired": "Alan anahtarı boş olamaz",
+  "dev.mcp.env.label": "MCP Sunucu Ortam Değişkenleri",
+  "dev.mcp.env.stringifyError": "Parametreler serileştirilemiyor, lütfen formatı kontrol edin",
+  "dev.mcp.headers.add": "Yeni satır ekle",
+  "dev.mcp.headers.desc": "İstek başlıklarını girin",
+  "dev.mcp.headers.label": "HTTP Başlıkları",
+  "dev.mcp.identifier.desc": "MCP eklentiniz için İngilizce karakterler kullanarak bir isim belirleyin",
+  "dev.mcp.identifier.invalid": "Tanımlayıcı sadece harf, rakam, tire ve alt çizgi içerebilir",
+  "dev.mcp.identifier.label": "MCP Eklenti Adı",
+  "dev.mcp.identifier.placeholder": "Örneğin: my-mcp-plugin",
+  "dev.mcp.identifier.required": "Lütfen MCP servis tanımlayıcısını girin",
+  "dev.mcp.previewManifest": "Eklenti tanımlama dosyasını önizle",
+  "dev.mcp.quickImport": "JSON yapılandırmasını hızlıca içe aktar",
+  "dev.mcp.quickImportError.empty": "Girdi boş olamaz",
+  "dev.mcp.quickImportError.invalidJson": "Geçersiz JSON formatı",
+  "dev.mcp.quickImportError.invalidStructure": "JSON formatı geçersiz",
+  "dev.mcp.stdioNotSupported": "Mevcut ortam stdio türündeki MCP eklentilerini desteklemiyor",
+  "dev.mcp.testConnection": "Bağlantıyı test et",
+  "dev.mcp.testConnectionTip": "Bağlantı testi başarılı olursa MCP eklentisi düzgün çalışabilir",
+  "dev.mcp.type.desc": "MCP eklentisinin iletişim türünü seçin, web sürümü sadece Streamable HTTP destekler",
+  "dev.mcp.type.httpFeature1": "Web ve masaüstü sürümleriyle uyumlu",
+  "dev.mcp.type.httpFeature2": "Uzak MCP sunucusuna bağlanır, ek kurulum gerekmez",
+  "dev.mcp.type.httpShortDesc": "Akış tabanlı HTTP iletişim protokolü",
+  "dev.mcp.type.label": "MCP Eklenti Türü",
+  "dev.mcp.type.stdioFeature1": "Daha düşük iletişim gecikmesi, yerel çalıştırma için uygun",
+  "dev.mcp.type.stdioFeature2": "Yerel MCP sunucusunun kurulması ve çalıştırılması gerekir",
+  "dev.mcp.type.stdioNotAvailable": "STDIO modu sadece masaüstü sürümde kullanılabilir",
+  "dev.mcp.type.stdioShortDesc": "Standart giriş çıkış tabanlı iletişim protokolü",
+  "dev.mcp.type.title": "MCP Eklenti Türü",
+  "dev.mcp.url.desc": "MCP Sunucunuzun Streamable HTTP adresini girin, SSE modu desteklenmez",
+  "dev.mcp.url.invalid": "Geçerli bir URL adresi girin",
+  "dev.mcp.url.label": "Streamable HTTP Endpoint URL",
+  "dev.mcp.url.required": "Lütfen MCP servis URL'sini girin",
+  "dev.meta.author.desc": "Eklentinin yazarı",
+  "dev.meta.author.label": "Yazar",
+  "dev.meta.avatar.desc": "Eklenti simgesi, Emoji veya URL olabilir",
+  "dev.meta.avatar.label": "Simge",
+  "dev.meta.description.desc": "Eklenti açıklaması",
+  "dev.meta.description.label": "Açıklama",
+  "dev.meta.description.placeholder": "Bilgi almak için arama motorunu kullanın",
+  "dev.meta.formFieldRequired": "Bu alan zorunludur",
+  "dev.meta.homepage.desc": "Eklentinin ana sayfası",
+  "dev.meta.homepage.label": "Ana Sayfa",
+  "dev.meta.identifier.desc": "Eklentinin benzersiz tanımlayıcısı, manifest dosyasından otomatik algılanır",
+  "dev.meta.identifier.errorDuplicate": "Tanımlayıcı mevcut eklentiyle çakışıyor, lütfen değiştirin",
+  "dev.meta.identifier.label": "Tanımlayıcı",
+  "dev.meta.identifier.pattenErrorMessage": "Sadece İngilizce harf, rakam, - ve _ karakterleri girilebilir",
+  "dev.meta.lobe": "{{appName}} Eklentisi",
+  "dev.meta.manifest.desc": "{{appName}} bu bağlantı üzerinden eklentiyi yükleyecek",
+  "dev.meta.manifest.label": "Eklenti Tanımlama Dosyası (Manifest) URL",
+  "dev.meta.manifest.preview": "Manifest Önizle",
+  "dev.meta.manifest.refresh": "Yenile",
+  "dev.meta.openai": "OpenAI Eklentisi",
+  "dev.meta.title.desc": "Eklenti başlığı",
+  "dev.meta.title.label": "Başlık",
+  "dev.meta.title.placeholder": "Arama motoru",
+  "dev.metaConfig": "Eklenti meta bilgi yapılandırması",
+  "dev.modalDesc": "Özel eklenti ekledikten sonra, eklenti geliştirme doğrulaması için veya doğrudan sohbet içinde kullanılabilir. Eklenti geliştirme için <1>geliştirici dokümanlarına↗</> bakınız.",
+  "dev.openai.importUrl": "URL bağlantısından içe aktar",
+  "dev.openai.schema": "Şema",
+  "dev.preview.api.noParams": "Bu araç parametre gerektirmez",
+  "dev.preview.api.noResults": "Arama kriterlerine uygun API bulunamadı",
+  "dev.preview.api.params": "Parametreler:",
+  "dev.preview.api.searchPlaceholder": "Araç ara...",
+  "dev.preview.card": "Eklenti gösterim önizlemesi",
+  "dev.preview.desc": "Eklenti açıklamasını önizle",
+  "dev.preview.empty.desc": "Yapılandırma tamamlandıktan sonra, desteklenen araç yeteneklerini burada önizleyebilirsiniz",
+  "dev.preview.empty.title": "Eklentiyi yapılandırdıktan sonra önizlemeye başlayın",
+  "dev.preview.title": "Eklenti Adı Önizlemesi",
+  "dev.save": "Eklentiyi Yükle",
+  "dev.saveSuccess": "Eklenti ayarları başarıyla kaydedildi",
+  "dev.tabs.manifest": "Fonksiyon Tanımlama Listesi (Manifest)",
+  "dev.tabs.meta": "Eklenti Meta Bilgileri",
+  "dev.title.create": "Özel Eklenti Ekle",
+  "dev.title.edit": "Özel Eklentiyi Düzenle",
+  "dev.type.lobe": "{{appName}} Eklentisi",
+  "dev.type.openai": "OpenAI Eklentisi",
+  "dev.update": "Güncelle",
+  "dev.updateSuccess": "Eklenti ayarları başarıyla güncellendi",
+  "empty.description": "Eklenti mağazasında keşfetmeniz için birçok araç sizi bekliyor, mağazayı ziyaret ederek keşfe başlayın",
+  "empty.search": "Eşleşen eklenti bulunamadı",
+  "empty.title": "Henüz eklenti yok",
+  "error.fetchError": "Manifest bağlantısı isteği başarısız oldu, lütfen bağlantının geçerli olduğundan ve CORS erişimine izin verdiğinden emin olun",
+  "error.installError": "{{name}} eklentisi yüklenemedi",
+  "error.manifestInvalid": "Manifest standartlara uymuyor, doğrulama sonucu: \n\n {{error}}",
+  "error.noManifest": "Tanımlama dosyası bulunamadı",
+  "error.openAPIInvalid": "OpenAPI ayrıştırma başarısız, hata: \n\n {{error}}",
+  "error.reinstallError": "{{name}} eklentisi yenilenemedi",
+  "error.testConnectionFailed": "Manifest alınamadı: {{error}}",
+  "error.urlError": "Bu bağlantı JSON formatında içerik döndürmüyor, lütfen geçerli bir bağlantı olduğundan emin olun",
+  "inspector.args": "Parametre listesini görüntüle",
+  "inspector.delete": "Araç çağrısını sil",
+  "inspector.orphanedToolCall": "Bu araç çağrısı mesajı, beklenmeyen bir nedenle yetim kalmış olabilir ve bu durum Ajansın düzgün çalışmasını etkileyebilir. Lütfen bunu kaldırın.",
+  "inspector.pluginRender": "Eklenti arayüzünü görüntüle",
+  "list.item.deprecated.title": "Silindi",
+  "list.item.local.config": "Yapılandırma",
+  "list.item.local.title": "Özel",
+  "loading.content": "Eklenti çağrılıyor...",
+  "loading.plugin": "Eklenti çalışıyor...",
+  "mcpEmpty.deployment": "Henüz dağıtım seçeneği yok",
+  "mcpEmpty.prompts": "Bu eklenti için henüz bir komut bulunmamaktadır",
+  "mcpEmpty.resources": "Bu eklenti için henüz kaynak yok",
+  "mcpEmpty.tools": "Bu eklenti için henüz araç yeteneği yok",
+  "mcpInstall.CHECKING_INSTALLATION": "Kurulum ortamı kontrol ediliyor...",
+  "mcpInstall.COMPLETED": "Kurulum tamamlandı",
+  "mcpInstall.CONFIGURATION_REQUIRED": "Devam etmek için gerekli yapılandırmayı tamamlayın",
+  "mcpInstall.ERROR": "Kurulum hatası",
+  "mcpInstall.FETCHING_MANIFEST": "Eklenti tanımlama dosyası alınıyor...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "MCP sunucusu başlatılıyor...",
+  "mcpInstall.INSTALLING_PLUGIN": "Eklenti yükleniyor...",
+  "mcpInstall.configurationDescription": "Bu MCP eklentisi düzgün çalışması için yapılandırma parametreleri gerektirir, lütfen gerekli bilgileri doldurun",
+  "mcpInstall.configurationRequired": "Eklenti parametrelerini yapılandır",
+  "mcpInstall.continueInstall": "Kuruluma devam et",
+  "mcpInstall.dependenciesDescription": "Bu eklentinin düzgün çalışması için aşağıdaki sistem bağımlılıkları gereklidir, lütfen eksik bağımlılıkları kurduktan sonra tekrar kontrol edip kuruluma devam edin.",
+  "mcpInstall.dependenciesRequired": "Eklentinin sistem bağımlılıklarını yükleyin",
+  "mcpInstall.dependencyStatus.installed": "Yüklendi",
+  "mcpInstall.dependencyStatus.notInstalled": "Yüklenmedi",
+  "mcpInstall.dependencyStatus.requiredVersion": "Gerekli sürüm: {{version}}",
+  "mcpInstall.errorDetails.args": "Parametreler",
+  "mcpInstall.errorDetails.command": "Komut",
+  "mcpInstall.errorDetails.connectionParams": "Bağlantı parametreleri",
+  "mcpInstall.errorDetails.env": "Ortam değişkenleri",
+  "mcpInstall.errorDetails.errorOutput": "Hata günlükleri",
+  "mcpInstall.errorDetails.exitCode": "Çıkış kodu",
+  "mcpInstall.errorDetails.hideDetails": "Detayları gizle",
+  "mcpInstall.errorDetails.originalError": "Orijinal hata",
+  "mcpInstall.errorDetails.showDetails": "Detayları göster",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "Yetkilendirme hatası",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "Bağlantı başarısız",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "Başlatma zaman aşımı",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "İşlem başlatılamadı",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "Bilinmeyen hata",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "Parametre doğrulama hatası",
+  "mcpInstall.installError": "MCP eklentisi yüklenemedi, hata nedeni: {{detail}}",
+  "mcpInstall.installMethods.manual": "Manuel kurulum:",
+  "mcpInstall.installMethods.recommended": "Önerilen kurulum yöntemi:",
+  "mcpInstall.recheckDependencies": "Bağımlılıkları tekrar kontrol et",
+  "mcpInstall.skipDependencies": "Kontrolü atla",
   "pluginList": "Eklenti Listesi",
-  "protocolInstall": {
-    "actions": {
-      "install": "Yükle",
-      "installAnyway": "Yine de yükle",
-      "installed": "Yüklendi"
-    },
-    "config": {
-      "addEnv": "Ortam Değişkeni Ekle",
-      "addHeaders": "İstek Başlığı Ekle",
-      "args": "Parametreler",
-      "command": "Komut",
-      "env": "Ortam değişkenleri",
-      "headers": "İstek başlıkları",
-      "title": "Yapılandırma Bilgileri",
-      "type": {
-        "http": "Tür: HTTP",
-        "label": "Tür",
-        "stdio": "Tür: Stdio"
-      },
-      "url": "Sunucu Adresi"
-    },
-    "custom": {
-      "badge": "Özel Eklenti",
-      "security": {
-        "description": "Bu eklenti resmi olarak doğrulanmamıştır, yükleme güvenlik riski taşıyabilir! Lütfen eklenti kaynağına güvendiğinizden emin olun.",
-        "title": "⚠️ Güvenlik Uyarısı"
-      },
-      "title": "Özel Eklenti Yükle"
-    },
-    "install": {
-      "title": "Kurulum Bilgisi"
-    },
-    "marketplace": {
-      "title": "Üçüncü Taraf Eklenti Yükle",
-      "trustedBy": "{{name}} tarafından sağlanmaktadır",
-      "unverified": {
-        "title": "Doğrulanmamış Üçüncü Taraf Eklenti",
-        "warning": "Bu eklenti doğrulanmamış üçüncü taraf bir topluluktan gelmektedir, yüklemeden önce bu kaynağa güvenip güvenmediğinizi lütfen doğrulayın."
-      },
-      "verified": "Doğrulanmış"
-    },
-    "messages": {
-      "connectionTestFailed": "Bağlantı testi başarısız",
-      "installError": "Eklenti yüklenemedi, lütfen tekrar deneyin",
-      "installSuccess": "{{name}} eklentisi başarıyla yüklendi!",
-      "manifestError": "Eklenti detayları alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
-      "manifestNotFound": "Eklenti tanımlama dosyası alınamadı"
-    },
-    "meta": {
-      "author": "Yazar",
-      "homepage": "Ana Sayfa",
-      "identifier": "Tanımlayıcı",
-      "source": "Kaynak",
-      "version": "Sürüm"
-    },
-    "official": {
-      "badge": "LobeHub Resmi Eklentisi",
-      "description": "Bu eklenti LobeHub tarafından resmi olarak geliştirilmiş ve bakımı yapılmaktadır, sıkı güvenlik denetiminden geçmiştir, güvenle kullanabilirsiniz.",
-      "loadingMessage": "Eklenti detayları alınıyor...",
-      "loadingTitle": "Yükleniyor",
-      "title": "Resmi Eklenti Yükle"
-    },
-    "title": "MCP Eklentisi Yükle",
-    "warning": "⚠️ Lütfen bu eklentinin kaynağına güvendiğinizden emin olun, kötü amaçlı eklentiler sistem güvenliğinizi tehlikeye atabilir."
-  },
-  "search": {
-    "config": {
-      "addKey": "Anahtar ekle",
-      "close": "Sil",
-      "confirm": "Yapılandırma tamamlandı ve tekrar denendi"
-    },
-    "crawPages": {
-      "crawling": "Bağlantı tanımlanıyor",
-      "detail": {
-        "preview": "Önizle",
-        "raw": "Ham metin",
-        "tooLong": "Metin çok uzun, sohbet bağlamı sadece ilk {{characters}} karakteri içerir, geri kalanı sohbet bağlamına dahil edilmez"
-      },
-      "meta": {
-        "crawler": "Tarama modu",
-        "words": "Karakter sayısı"
-      }
-    },
-    "searchxng": {
-      "baseURL": "Lütfen girin",
-      "description": "SearchXNG web sitesini girin, internet üzerinden aramaya başlayabilirsiniz",
-      "keyPlaceholder": "Lütfen anahtarı girin",
-      "title": "SearchXNG Arama Motoru Yapılandırması",
-      "unconfiguredDesc": "Lütfen internet aramasına başlamak için yöneticinizle iletişime geçip SearchXNG arama motoru yapılandırmasını tamamlayın",
-      "unconfiguredTitle": "SearchXNG Arama Motoru Henüz Yapılandırılmadı"
-    },
-    "title": "İnternet Araması"
-  },
+  "protocolInstall.actions.install": "Yükle",
+  "protocolInstall.actions.installAnyway": "Yine de yükle",
+  "protocolInstall.actions.installed": "Yüklendi",
+  "protocolInstall.config.addEnv": "Ortam Değişkeni Ekle",
+  "protocolInstall.config.addHeaders": "İstek Başlığı Ekle",
+  "protocolInstall.config.args": "Parametreler",
+  "protocolInstall.config.command": "Komut",
+  "protocolInstall.config.env": "Ortam değişkenleri",
+  "protocolInstall.config.headers": "İstek başlıkları",
+  "protocolInstall.config.title": "Yapılandırma Bilgileri",
+  "protocolInstall.config.type.http": "Tür: HTTP",
+  "protocolInstall.config.type.label": "Tür",
+  "protocolInstall.config.type.stdio": "Tür: Stdio",
+  "protocolInstall.config.url": "Sunucu Adresi",
+  "protocolInstall.custom.badge": "Özel Eklenti",
+  "protocolInstall.custom.security.description": "Bu eklenti resmi olarak doğrulanmamıştır, yükleme güvenlik riski taşıyabilir! Lütfen eklenti kaynağına güvendiğinizden emin olun.",
+  "protocolInstall.custom.security.title": "⚠️ Güvenlik Uyarısı",
+  "protocolInstall.custom.title": "Özel Eklenti Yükle",
+  "protocolInstall.install.title": "Kurulum Bilgisi",
+  "protocolInstall.marketplace.title": "Üçüncü Taraf Eklenti Yükle",
+  "protocolInstall.marketplace.trustedBy": "{{name}} tarafından sağlanmaktadır",
+  "protocolInstall.marketplace.unverified.title": "Doğrulanmamış Üçüncü Taraf Eklenti",
+  "protocolInstall.marketplace.unverified.warning": "Bu eklenti doğrulanmamış üçüncü taraf bir topluluktan gelmektedir, yüklemeden önce bu kaynağa güvenip güvenmediğinizi lütfen doğrulayın.",
+  "protocolInstall.marketplace.verified": "Doğrulanmış",
+  "protocolInstall.messages.connectionTestFailed": "Bağlantı testi başarısız",
+  "protocolInstall.messages.installError": "Eklenti yüklenemedi, lütfen tekrar deneyin",
+  "protocolInstall.messages.installSuccess": "{{name}} eklentisi başarıyla yüklendi!",
+  "protocolInstall.messages.manifestError": "Eklenti detayları alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
+  "protocolInstall.messages.manifestNotFound": "Eklenti tanımlama dosyası alınamadı",
+  "protocolInstall.meta.author": "Yazar",
+  "protocolInstall.meta.homepage": "Ana Sayfa",
+  "protocolInstall.meta.identifier": "Tanımlayıcı",
+  "protocolInstall.meta.source": "Kaynak",
+  "protocolInstall.meta.version": "Sürüm",
+  "protocolInstall.official.badge": "LobeHub Resmi Eklentisi",
+  "protocolInstall.official.description": "Bu eklenti LobeHub tarafından resmi olarak geliştirilmiş ve bakımı yapılmaktadır, sıkı güvenlik denetiminden geçmiştir, güvenle kullanabilirsiniz.",
+  "protocolInstall.official.loadingMessage": "Eklenti detayları alınıyor...",
+  "protocolInstall.official.loadingTitle": "Yükleniyor",
+  "protocolInstall.official.title": "Resmi Eklenti Yükle",
+  "protocolInstall.title": "MCP Eklentisi Yükle",
+  "protocolInstall.warning": "⚠️ Lütfen bu eklentinin kaynağına güvendiğinizden emin olun, kötü amaçlı eklentiler sistem güvenliğinizi tehlikeye atabilir.",
+  "search.config.addKey": "Anahtar ekle",
+  "search.config.close": "Sil",
+  "search.config.confirm": "Yapılandırma tamamlandı ve tekrar denendi",
+  "search.crawPages.crawling": "Bağlantı tanımlanıyor",
+  "search.crawPages.detail.preview": "Önizle",
+  "search.crawPages.detail.raw": "Ham metin",
+  "search.crawPages.detail.tooLong": "Metin çok uzun, sohbet bağlamı sadece ilk {{characters}} karakteri içerir, geri kalanı sohbet bağlamına dahil edilmez",
+  "search.crawPages.meta.crawler": "Tarama modu",
+  "search.crawPages.meta.words": "Karakter sayısı",
+  "search.searchxng.baseURL": "Lütfen girin",
+  "search.searchxng.description": "SearchXNG web sitesini girin, internet üzerinden aramaya başlayabilirsiniz",
+  "search.searchxng.keyPlaceholder": "Lütfen anahtarı girin",
+  "search.searchxng.title": "SearchXNG Arama Motoru Yapılandırması",
+  "search.searchxng.unconfiguredDesc": "Lütfen internet aramasına başlamak için yöneticinizle iletişime geçip SearchXNG arama motoru yapılandırmasını tamamlayın",
+  "search.searchxng.unconfiguredTitle": "SearchXNG Arama Motoru Henüz Yapılandırılmadı",
+  "search.title": "İnternet Araması",
   "setting": "Eklenti Ayarları",
-  "settings": {
-    "capabilities": {
-      "prompts": "İstemler",
-      "resources": "Kaynaklar",
-      "title": "Eklenti Yetenekleri",
-      "tools": "Araçlar"
-    },
-    "configuration": {
-      "title": "Eklenti Yapılandırması"
-    },
-    "connection": {
-      "args": "Başlatma Parametreleri",
-      "command": "Başlatma Komutu",
-      "title": "Bağlantı Bilgileri",
-      "type": "Bağlantı Türü",
-      "url": "Sunucu Adresi"
-    },
-    "edit": "Düzenle",
-    "envConfigDescription": "Bu yapılandırmalar MCP sunucusu başlatılırken ortam değişkenleri olarak sürece iletilecektir",
-    "httpTypeNotice": "HTTP türündeki MCP eklentileri için yapılandırılacak ortam değişkeni yoktur",
-    "indexUrl": {
-      "title": "Topluluk Dizini",
-      "tooltip": "Çevrimiçi düzenleme desteklenmiyor, lütfen dağıtım ortam değişkenleri ile ayarlayın"
-    },
-    "messages": {
-      "connectionUpdateFailed": "Bağlantı bilgisi güncellemesi başarısız",
-      "connectionUpdateSuccess": "Bağlantı bilgisi başarıyla güncellendi",
-      "envUpdateFailed": "Ortam değişkeni kaydedilemedi",
-      "envUpdateSuccess": "Ortam değişkeni başarıyla kaydedildi"
-    },
-    "modalDesc": "Eklenti topluluğunun adresini yapılandırdıktan sonra, özel eklenti topluluklarını kullanabilirsiniz.",
-    "rules": {
-      "argsRequired": "Lütfen başlatma parametrelerini girin",
-      "commandRequired": "Lütfen başlatma komutunu girin",
-      "urlRequired": "Lütfen sunucu adresini girin"
-    },
-    "saveSettings": "Ayarları Kaydet",
-    "title": "Eklenti Topluluğunu Ayarla"
-  },
+  "settings.capabilities.prompts": "İstemler",
+  "settings.capabilities.resources": "Kaynaklar",
+  "settings.capabilities.title": "Eklenti Yetenekleri",
+  "settings.capabilities.tools": "Araçlar",
+  "settings.configuration.title": "Eklenti Yapılandırması",
+  "settings.connection.args": "Başlatma Parametreleri",
+  "settings.connection.command": "Başlatma Komutu",
+  "settings.connection.title": "Bağlantı Bilgileri",
+  "settings.connection.type": "Bağlantı Türü",
+  "settings.connection.url": "Sunucu Adresi",
+  "settings.edit": "Düzenle",
+  "settings.envConfigDescription": "Bu yapılandırmalar MCP sunucusu başlatılırken ortam değişkenleri olarak sürece iletilecektir",
+  "settings.httpTypeNotice": "HTTP türündeki MCP eklentileri için yapılandırılacak ortam değişkeni yoktur",
+  "settings.indexUrl.title": "Topluluk Dizini",
+  "settings.indexUrl.tooltip": "Çevrimiçi düzenleme desteklenmiyor, lütfen dağıtım ortam değişkenleri ile ayarlayın",
+  "settings.messages.connectionUpdateFailed": "Bağlantı bilgisi güncellemesi başarısız",
+  "settings.messages.connectionUpdateSuccess": "Bağlantı bilgisi başarıyla güncellendi",
+  "settings.messages.envUpdateFailed": "Ortam değişkeni kaydedilemedi",
+  "settings.messages.envUpdateSuccess": "Ortam değişkeni başarıyla kaydedildi",
+  "settings.modalDesc": "Eklenti topluluğunun adresini yapılandırdıktan sonra, özel eklenti topluluklarını kullanabilirsiniz.",
+  "settings.rules.argsRequired": "Lütfen başlatma parametrelerini girin",
+  "settings.rules.commandRequired": "Lütfen başlatma komutunu girin",
+  "settings.rules.urlRequired": "Lütfen sunucu adresini girin",
+  "settings.saveSettings": "Ayarları Kaydet",
+  "settings.title": "Eklenti Topluluğunu Ayarla",
   "showInPortal": "Detayları çalışma alanında görüntüleyin",
-  "store": {
-    "actions": {
-      "cancel": "Yüklemeyi iptal et",
-      "confirmUninstall": "Bu eklenti kaldırılacak, kaldırma sonrası eklenti yapılandırması silinecektir, işlemi onaylıyor musunuz?",
-      "detail": "Detaylar",
-      "install": "Yükle",
-      "manifest": "Kurulum dosyasını düzenle",
-      "settings": "Ayarlar",
-      "uninstall": "Kaldır"
-    },
-    "communityPlugin": "Üçüncü Taraf Topluluk",
-    "customPlugin": "Özel",
-    "empty": "Yüklü eklenti yok",
-    "emptySelectHint": "Detayları önizlemek için eklenti seçin",
-    "installAllPlugins": "Tümünü Yükle",
-    "networkError": "Eklenti mağazası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
-    "placeholder": "Eklenti adı, açıklaması veya anahtar kelimede ara...",
-    "releasedAt": "{{createdAt}} tarihinde yayınlandı",
-    "tabs": {
-      "installed": "Yüklü",
-      "mcp": "MCP Eklentileri",
-      "old": "LobeHub Eklentileri"
-    },
-    "title": "Eklenti Mağazası"
-  },
+  "store.actions.cancel": "Yüklemeyi iptal et",
+  "store.actions.confirmUninstall": "Bu eklenti kaldırılacak, kaldırma sonrası eklenti yapılandırması silinecektir, işlemi onaylıyor musunuz?",
+  "store.actions.detail": "Detaylar",
+  "store.actions.install": "Yükle",
+  "store.actions.manifest": "Kurulum dosyasını düzenle",
+  "store.actions.settings": "Ayarlar",
+  "store.actions.uninstall": "Kaldır",
+  "store.communityPlugin": "Üçüncü Taraf Topluluk",
+  "store.customPlugin": "Özel",
+  "store.empty": "Yüklü eklenti yok",
+  "store.emptySelectHint": "Detayları önizlemek için eklenti seçin",
+  "store.installAllPlugins": "Tümünü Yükle",
+  "store.networkError": "Eklenti mağazası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
+  "store.placeholder": "Eklenti adı, açıklaması veya anahtar kelimede ara...",
+  "store.releasedAt": "{{createdAt}} tarihinde yayınlandı",
+  "store.tabs.installed": "Yüklü",
+  "store.tabs.mcp": "MCP Eklentileri",
+  "store.tabs.old": "LobeHub Eklentileri",
+  "store.title": "Eklenti Mağazası",
   "unknownError": "Bilinmeyen hata",
   "unknownPlugin": "Bilinmeyen eklenti"
 }

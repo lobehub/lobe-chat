@@ -1,605 +1,403 @@
 {
-  "arguments": {
-    "title": "فهرست پارامترها"
-  },
-  "builtins": {
-    "lobe-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "دریافت مدل‌های در دسترس",
-        "getAvailableTools": "دریافت ابزارهای در دسترس",
-        "getConfig": "دریافت پیکربندی",
-        "getMeta": "دریافت فراداده",
-        "getPrompt": "دریافت پیام سیستم",
-        "searchMarketTools": "جستجوی افزونه‌ها در بازار",
-        "searchOfficialTools": "جستجوی ابزارهای رسمی",
-        "setModel": "تنظیم مدل",
-        "setOpeningMessage": "تنظیم پیام آغازین",
-        "setOpeningQuestions": "تنظیم سوالات آغازین",
-        "togglePlugin": "تغییر وضعیت افزونه",
-        "updateChatConfig": "به‌روزرسانی پیکربندی گفتگو",
-        "updateConfig": "به‌روزرسانی پیکربندی",
-        "updateMeta": "به‌روزرسانی فراداده",
-        "updatePrompt": "به‌روزرسانی پیام سیستم"
-      },
-      "title": "سازنده عامل"
-    },
-    "lobe-group-agent-builder": {
-      "apiName": {
-        "getAvailableModels": "دریافت مدل‌های در دسترس",
-        "installPlugin": "نصب افزونه",
-        "inviteAgent": "دعوت از عضو",
-        "removeAgent": "حذف عضو",
-        "searchMarketTools": "جستجوی بازار افزونه‌ها",
-        "updateAgentConfig": "به‌روزرسانی تنظیمات نماینده",
-        "updatePrompt": "به‌روزرسانی پیام سیستم"
-      },
-      "title": "سازنده نماینده گروهی"
-    },
-    "lobe-group-management": {
-      "apiName": {
-        "broadcast": "ارسال پیام به همه",
-        "createAgent": "افزودن عضو تیم",
-        "createWorkflow": "برنامه‌ریزی جریان کار",
-        "executeTask": "انجام وظیفه",
-        "getAgentInfo": "دریافت اطلاعات عضو",
-        "interrupt": "وقفه در وظیفه",
-        "inviteAgent": "دعوت از عضو",
-        "removeAgent": "حذف عضو",
-        "searchAgent": "جستجوی متخصص مرتبط",
-        "speak": "تعیین عضو برای صحبت",
-        "summarize": "خلاصه‌سازی گفتگو",
-        "vote": "آغاز رأی‌گیری"
-      },
-      "title": "هماهنگی تیم"
-    },
-    "lobe-gtd": {
-      "apiName": {
-        "clearTodos": "پاک‌سازی کارهای در انتظار",
-        "completeTodos": "تکمیل کارهای در انتظار",
-        "createPlan": "ایجاد برنامه",
-        "createTodos": "ایجاد کارهای در انتظار",
-        "removeTodos": "حذف کارهای در انتظار",
-        "updatePlan": "به‌روزرسانی برنامه",
-        "updateTodos": "به‌روزرسانی کارهای در انتظار"
-      },
-      "title": "ابزار GTD"
-    },
-    "lobe-knowledge-base": {
-      "apiName": {
-        "readKnowledge": "خواندن محتوای پایگاه دانش",
-        "searchKnowledgeBase": "جستجوی پایگاه دانش"
-      },
-      "title": "پایگاه دانش"
-    },
-    "lobe-local-system": {
-      "apiName": {
-        "editLocalFile": "ویرایش فایل",
-        "getCommandOutput": "دریافت خروجی کد",
-        "globLocalFiles": "جستجوی فایل‌ها با الگو",
-        "grepContent": "جستجوی محتوا",
-        "killCommand": "توقف اجرای کد",
-        "listLocalFiles": "مشاهده فهرست فایل‌ها",
-        "moveLocalFiles": "انتقال فایل‌ها",
-        "readLocalFile": "خواندن محتوای فایل",
-        "renameLocalFile": "تغییر نام فایل",
-        "runCommand": "اجرای کد",
-        "searchLocalFiles": "جستجوی فایل‌ها",
-        "writeLocalFile": "نوشتن در فایل"
-      },
-      "title": "سیستم محلی"
-    },
-    "lobe-page-agent": {
-      "apiName": {
-        "batchUpdate": "به‌روزرسانی گروهی گره‌ها",
-        "compareSnapshots": "مقایسه عکس‌های فوری",
-        "convertToList": "تبدیل به فهرست",
-        "createNode": "ایجاد گره",
-        "cropImage": "برش تصویر",
-        "deleteNode": "حذف گره",
-        "deleteSnapshot": "حذف عکس فوری",
-        "deleteTableColumn": "حذف ستون جدول",
-        "deleteTableRow": "حذف ردیف جدول",
-        "duplicateNode": "تکثیر گره",
-        "editTitle": "ویرایش عنوان سند",
-        "indentListItem": "افزایش تورفتگی مورد فهرست",
-        "initPage": "راه‌اندازی سند",
-        "insertTableColumn": "درج ستون جدول",
-        "insertTableRow": "درج ردیف جدول",
-        "listSnapshots": "فهرست عکس‌های فوری",
-        "mergeNodes": "ادغام گره‌ها",
-        "moveNode": "جابجایی گره",
-        "outdentListItem": "کاهش تورفتگی مورد فهرست",
-        "replaceText": "جایگزینی متن",
-        "resizeImage": "تغییر اندازه تصویر",
-        "restoreSnapshot": "بازیابی عکس فوری",
-        "rotateImage": "چرخش تصویر",
-        "saveSnapshot": "ذخیره عکس فوری",
-        "setImageAlt": "تنظیم متن جایگزین تصویر",
-        "splitNode": "تقسیم گره",
-        "toggleListType": "تغییر نوع فهرست",
-        "unwrapNode": "باز کردن گره",
-        "updateNode": "به‌روزرسانی گره",
-        "wrapNodes": "بسته‌بندی گره‌ها"
-      },
-      "title": "سند"
-    },
-    "lobe-web-browsing": {
-      "apiName": {
-        "crawlMultiPages": "خواندن محتوای چندین صفحه",
-        "crawlSinglePage": "خواندن محتوای صفحه",
-        "search": "جستجوی صفحات"
-      },
-      "title": "جستجوی آنلاین"
-    }
-  },
+  "arguments.title": "فهرست پارامترها",
+  "builtins.lobe-agent-builder.apiName.getAvailableModels": "دریافت مدل‌های در دسترس",
+  "builtins.lobe-agent-builder.apiName.getAvailableTools": "دریافت ابزارهای در دسترس",
+  "builtins.lobe-agent-builder.apiName.getConfig": "دریافت پیکربندی",
+  "builtins.lobe-agent-builder.apiName.getMeta": "دریافت فراداده",
+  "builtins.lobe-agent-builder.apiName.getPrompt": "دریافت پیام سیستم",
+  "builtins.lobe-agent-builder.apiName.searchMarketTools": "جستجوی افزونه‌ها در بازار",
+  "builtins.lobe-agent-builder.apiName.searchOfficialTools": "جستجوی ابزارهای رسمی",
+  "builtins.lobe-agent-builder.apiName.setModel": "تنظیم مدل",
+  "builtins.lobe-agent-builder.apiName.setOpeningMessage": "تنظیم پیام آغازین",
+  "builtins.lobe-agent-builder.apiName.setOpeningQuestions": "تنظیم سوالات آغازین",
+  "builtins.lobe-agent-builder.apiName.togglePlugin": "تغییر وضعیت افزونه",
+  "builtins.lobe-agent-builder.apiName.updateChatConfig": "به‌روزرسانی پیکربندی گفتگو",
+  "builtins.lobe-agent-builder.apiName.updateConfig": "به‌روزرسانی پیکربندی",
+  "builtins.lobe-agent-builder.apiName.updateMeta": "به‌روزرسانی فراداده",
+  "builtins.lobe-agent-builder.apiName.updatePrompt": "به‌روزرسانی پیام سیستم",
+  "builtins.lobe-agent-builder.title": "سازنده عامل",
+  "builtins.lobe-group-agent-builder.apiName.getAvailableModels": "دریافت مدل‌های در دسترس",
+  "builtins.lobe-group-agent-builder.apiName.installPlugin": "نصب افزونه",
+  "builtins.lobe-group-agent-builder.apiName.inviteAgent": "دعوت از عضو",
+  "builtins.lobe-group-agent-builder.apiName.removeAgent": "حذف عضو",
+  "builtins.lobe-group-agent-builder.apiName.searchMarketTools": "جستجوی بازار افزونه‌ها",
+  "builtins.lobe-group-agent-builder.apiName.updateAgentConfig": "به‌روزرسانی تنظیمات نماینده",
+  "builtins.lobe-group-agent-builder.apiName.updatePrompt": "به‌روزرسانی پیام سیستم",
+  "builtins.lobe-group-agent-builder.title": "سازنده نماینده گروهی",
+  "builtins.lobe-group-management.apiName.broadcast": "ارسال پیام به همه",
+  "builtins.lobe-group-management.apiName.createAgent": "افزودن عضو تیم",
+  "builtins.lobe-group-management.apiName.createWorkflow": "برنامه‌ریزی جریان کار",
+  "builtins.lobe-group-management.apiName.executeTask": "انجام وظیفه",
+  "builtins.lobe-group-management.apiName.getAgentInfo": "دریافت اطلاعات عضو",
+  "builtins.lobe-group-management.apiName.interrupt": "وقفه در وظیفه",
+  "builtins.lobe-group-management.apiName.inviteAgent": "دعوت از عضو",
+  "builtins.lobe-group-management.apiName.removeAgent": "حذف عضو",
+  "builtins.lobe-group-management.apiName.searchAgent": "جستجوی متخصص مرتبط",
+  "builtins.lobe-group-management.apiName.speak": "تعیین عضو برای صحبت",
+  "builtins.lobe-group-management.apiName.summarize": "خلاصه‌سازی گفتگو",
+  "builtins.lobe-group-management.apiName.vote": "آغاز رأی‌گیری",
+  "builtins.lobe-group-management.title": "هماهنگی تیم",
+  "builtins.lobe-gtd.apiName.clearTodos": "پاک‌سازی کارهای در انتظار",
+  "builtins.lobe-gtd.apiName.completeTodos": "تکمیل کارهای در انتظار",
+  "builtins.lobe-gtd.apiName.createPlan": "ایجاد برنامه",
+  "builtins.lobe-gtd.apiName.createTodos": "ایجاد کارهای در انتظار",
+  "builtins.lobe-gtd.apiName.removeTodos": "حذف کارهای در انتظار",
+  "builtins.lobe-gtd.apiName.updatePlan": "به‌روزرسانی برنامه",
+  "builtins.lobe-gtd.apiName.updateTodos": "به‌روزرسانی کارهای در انتظار",
+  "builtins.lobe-gtd.title": "ابزار GTD",
+  "builtins.lobe-knowledge-base.apiName.readKnowledge": "خواندن محتوای پایگاه دانش",
+  "builtins.lobe-knowledge-base.apiName.searchKnowledgeBase": "جستجوی پایگاه دانش",
+  "builtins.lobe-knowledge-base.title": "پایگاه دانش",
+  "builtins.lobe-local-system.apiName.editLocalFile": "ویرایش فایل",
+  "builtins.lobe-local-system.apiName.getCommandOutput": "دریافت خروجی کد",
+  "builtins.lobe-local-system.apiName.globLocalFiles": "جستجوی فایل‌ها با الگو",
+  "builtins.lobe-local-system.apiName.grepContent": "جستجوی محتوا",
+  "builtins.lobe-local-system.apiName.killCommand": "توقف اجرای کد",
+  "builtins.lobe-local-system.apiName.listLocalFiles": "مشاهده فهرست فایل‌ها",
+  "builtins.lobe-local-system.apiName.moveLocalFiles": "انتقال فایل‌ها",
+  "builtins.lobe-local-system.apiName.readLocalFile": "خواندن محتوای فایل",
+  "builtins.lobe-local-system.apiName.renameLocalFile": "تغییر نام فایل",
+  "builtins.lobe-local-system.apiName.runCommand": "اجرای کد",
+  "builtins.lobe-local-system.apiName.searchLocalFiles": "جستجوی فایل‌ها",
+  "builtins.lobe-local-system.apiName.writeLocalFile": "نوشتن در فایل",
+  "builtins.lobe-local-system.title": "سیستم محلی",
+  "builtins.lobe-page-agent.apiName.batchUpdate": "به‌روزرسانی گروهی گره‌ها",
+  "builtins.lobe-page-agent.apiName.compareSnapshots": "مقایسه عکس‌های فوری",
+  "builtins.lobe-page-agent.apiName.convertToList": "تبدیل به فهرست",
+  "builtins.lobe-page-agent.apiName.createNode": "ایجاد گره",
+  "builtins.lobe-page-agent.apiName.cropImage": "برش تصویر",
+  "builtins.lobe-page-agent.apiName.deleteNode": "حذف گره",
+  "builtins.lobe-page-agent.apiName.deleteSnapshot": "حذف عکس فوری",
+  "builtins.lobe-page-agent.apiName.deleteTableColumn": "حذف ستون جدول",
+  "builtins.lobe-page-agent.apiName.deleteTableRow": "حذف ردیف جدول",
+  "builtins.lobe-page-agent.apiName.duplicateNode": "تکثیر گره",
+  "builtins.lobe-page-agent.apiName.editTitle": "ویرایش عنوان سند",
+  "builtins.lobe-page-agent.apiName.indentListItem": "افزایش تورفتگی مورد فهرست",
+  "builtins.lobe-page-agent.apiName.initPage": "راه‌اندازی سند",
+  "builtins.lobe-page-agent.apiName.insertTableColumn": "درج ستون جدول",
+  "builtins.lobe-page-agent.apiName.insertTableRow": "درج ردیف جدول",
+  "builtins.lobe-page-agent.apiName.listSnapshots": "فهرست عکس‌های فوری",
+  "builtins.lobe-page-agent.apiName.mergeNodes": "ادغام گره‌ها",
+  "builtins.lobe-page-agent.apiName.moveNode": "جابجایی گره",
+  "builtins.lobe-page-agent.apiName.outdentListItem": "کاهش تورفتگی مورد فهرست",
+  "builtins.lobe-page-agent.apiName.replaceText": "جایگزینی متن",
+  "builtins.lobe-page-agent.apiName.resizeImage": "تغییر اندازه تصویر",
+  "builtins.lobe-page-agent.apiName.restoreSnapshot": "بازیابی عکس فوری",
+  "builtins.lobe-page-agent.apiName.rotateImage": "چرخش تصویر",
+  "builtins.lobe-page-agent.apiName.saveSnapshot": "ذخیره عکس فوری",
+  "builtins.lobe-page-agent.apiName.setImageAlt": "تنظیم متن جایگزین تصویر",
+  "builtins.lobe-page-agent.apiName.splitNode": "تقسیم گره",
+  "builtins.lobe-page-agent.apiName.toggleListType": "تغییر نوع فهرست",
+  "builtins.lobe-page-agent.apiName.unwrapNode": "باز کردن گره",
+  "builtins.lobe-page-agent.apiName.updateNode": "به‌روزرسانی گره",
+  "builtins.lobe-page-agent.apiName.wrapNodes": "بسته‌بندی گره‌ها",
+  "builtins.lobe-page-agent.title": "سند",
+  "builtins.lobe-web-browsing.apiName.crawlMultiPages": "خواندن محتوای چندین صفحه",
+  "builtins.lobe-web-browsing.apiName.crawlSinglePage": "خواندن محتوای صفحه",
+  "builtins.lobe-web-browsing.apiName.search": "جستجوی صفحات",
+  "builtins.lobe-web-browsing.title": "جستجوی آنلاین",
   "confirm": "تأیید",
-  "debug": {
-    "arguments": "پارامترهای فراخوانی",
-    "function_call": "فراخوانی تابع",
-    "off": "غیرفعال کردن اشکال‌زدایی",
-    "on": "مشاهده اطلاعات فراخوانی افزونه",
-    "payload": "بار افزونه",
-    "pluginState": "وضعیت افزونه",
-    "response": "نتیجه بازگشتی",
-    "title": "جزئیات افزونه",
-    "tool_call": "درخواست فراخوانی ابزار"
-  },
-  "detailModal": {
-    "customPlugin": {
-      "description": "لطفاً برای مشاهده جزئیات به صفحه ویرایش مراجعه کنید",
-      "editBtn": "ویرایش اکنون",
-      "title": "این یک افزونه سفارشی است"
-    },
-    "emptyState": {
-      "description": "لطفاً ابتدا این افزونه را نصب کنید تا قابلیت‌ها و گزینه‌های پیکربندی آن را مشاهده کنید",
-      "title": "پس از نصب، جزئیات افزونه را مشاهده کنید"
-    },
-    "info": {
-      "description": "توضیحات API",
-      "name": "نام API"
-    },
-    "tabs": {
-      "info": "قابلیت‌های افزونه",
-      "manifest": "فایل نصب",
-      "settings": "تنظیمات"
-    },
-    "title": "جزئیات افزونه"
-  },
-  "dev": {
-    "confirmDeleteDevPlugin": "در حال حذف این افزونه محلی هستید، پس از حذف قابل بازیابی نخواهد بود. آیا مطمئن به حذف افزونه هستید؟",
-    "customParams": {
-      "useProxy": {
-        "label": "نصب از طریق پراکسی (در صورت بروز خطای دسترسی متقاطع، این گزینه را فعال کرده و مجدداً نصب کنید)"
-      }
-    },
-    "deleteSuccess": "افزونه با موفقیت حذف شد",
-    "manifest": {
-      "identifier": {
-        "desc": "شناسه یکتا افزونه",
-        "label": "شناسه"
-      },
-      "mode": {
-        "mcp": "افزونه MCP",
-        "mcpExp": "آزمایشی",
-        "url": "لینک آنلاین"
-      },
-      "name": {
-        "desc": "عنوان افزونه",
-        "label": "عنوان",
-        "placeholder": "موتور جستجو"
-      }
-    },
-    "mcp": {
-      "advanced": {
-        "title": "تنظیمات پیشرفته"
-      },
-      "args": {
-        "desc": "لیست پارامترهای ارسال شده به فرمان اجرا، معمولاً نام سرور MCP یا مسیر اسکریپت راه‌اندازی وارد می‌شود",
-        "label": "پارامترهای فرمان",
-        "placeholder": "مثال: mcp-hello-world",
-        "required": "لطفاً پارامتر راه‌اندازی را وارد کنید"
-      },
-      "auth": {
-        "bear": "کلید API",
-        "desc": "روش احراز هویت سرور MCP را انتخاب کنید",
-        "label": "نوع احراز هویت",
-        "none": "نیازی به احراز هویت نیست",
-        "placeholder": "لطفاً نوع احراز هویت را انتخاب کنید",
-        "token": {
-          "desc": "کلید API یا توکن Bearer خود را وارد کنید",
-          "label": "کلید API",
-          "placeholder": "sk-xxxxx",
-          "required": "لطفاً توکن احراز هویت را وارد کنید"
-        }
-      },
-      "avatar": {
-        "label": "آیکون افزونه"
-      },
-      "command": {
-        "desc": "فایل اجرایی یا اسکریپتی که برای راه‌اندازی MCP STDIO Server استفاده می‌شود",
-        "label": "فرمان",
-        "placeholder": "مثال: npx / uv / docker و غیره",
-        "required": "لطفاً فرمان راه‌اندازی را وارد کنید"
-      },
-      "desc": {
-        "desc": "توضیحی برای افزونه اضافه کنید",
-        "label": "توضیحات افزونه",
-        "placeholder": "اطلاعات استفاده و سناریوهای افزونه را تکمیل کنید"
-      },
-      "endpoint": {
-        "desc": "آدرس MCP Streamable HTTP Server خود را وارد کنید",
-        "label": "آدرس Endpoint MCP"
-      },
-      "env": {
-        "add": "افزودن یک خط جدید",
-        "desc": "متغیرهای محیطی مورد نیاز سرور MCP خود را وارد کنید",
-        "duplicateKeyError": "کلید فیلد باید یکتا باشد",
-        "formValidationFailed": "اعتبارسنجی فرم ناموفق بود، لطفاً فرمت پارامترها را بررسی کنید",
-        "keyRequired": "کلید فیلد نمی‌تواند خالی باشد",
-        "label": "متغیرهای محیطی سرور MCP",
-        "stringifyError": "امکان سریال‌سازی پارامترها وجود ندارد، لطفاً فرمت پارامترها را بررسی کنید"
-      },
-      "headers": {
-        "add": "افزودن یک خط جدید",
-        "desc": "هدرهای درخواست را وارد کنید",
-        "label": "هدرهای HTTP"
-      },
-      "identifier": {
-        "desc": "یک نام برای افزونه MCP خود تعیین کنید، باید از حروف انگلیسی استفاده شود",
-        "invalid": "شناسه فقط می‌تواند شامل حروف، اعداد، خط تیره و زیرخط باشد",
-        "label": "نام افزونه MCP",
-        "placeholder": "مثال: my-mcp-plugin",
-        "required": "لطفاً شناسه سرویس MCP را وارد کنید"
-      },
-      "previewManifest": "پیش‌نمایش فایل توصیف افزونه",
-      "quickImport": "وارد کردن سریع پیکربندی JSON",
-      "quickImportError": {
-        "empty": "محتوا نمی‌تواند خالی باشد",
-        "invalidJson": "فرمت JSON نامعتبر است",
-        "invalidStructure": "فرمت JSON نامعتبر است"
-      },
-      "stdioNotSupported": "محیط فعلی از افزونه MCP نوع stdio پشتیبانی نمی‌کند",
-      "testConnection": "آزمایش اتصال",
-      "testConnectionTip": "پس از موفقیت در آزمایش اتصال، افزونه MCP قابل استفاده خواهد بود",
-      "type": {
-        "desc": "نوع ارتباط افزونه MCP را انتخاب کنید، نسخه وب فقط از Streamable HTTP پشتیبانی می‌کند",
-        "httpFeature1": "سازگار با نسخه وب و دسکتاپ",
-        "httpFeature2": "اتصال به سرور MCP از راه دور بدون نیاز به نصب و پیکربندی اضافی",
-        "httpShortDesc": "پروتکل ارتباطی مبتنی بر HTTP جریان‌پذیر",
-        "label": "نوع افزونه MCP",
-        "stdioFeature1": "تاخیر ارتباطی کمتر، مناسب برای اجرا محلی",
-        "stdioFeature2": "نیاز به نصب و اجرای سرور MCP به صورت محلی",
-        "stdioNotAvailable": "حالت STDIO فقط در نسخه دسکتاپ در دسترس است",
-        "stdioShortDesc": "پروتکل ارتباطی مبتنی بر ورودی و خروجی استاندارد",
-        "title": "نوع افزونه MCP"
-      },
-      "url": {
-        "desc": "آدرس Streamable HTTP سرور MCP خود را وارد کنید، حالت SSE پشتیبانی نمی‌شود",
-        "invalid": "لطفاً یک آدرس URL معتبر وارد کنید",
-        "label": "آدرس Endpoint HTTP جریان‌پذیر",
-        "required": "لطفاً آدرس سرویس MCP را وارد کنید"
-      }
-    },
-    "meta": {
-      "author": {
-        "desc": "نویسنده افزونه",
-        "label": "نویسنده"
-      },
-      "avatar": {
-        "desc": "آیکون افزونه، می‌توانید از ایموجی یا URL استفاده کنید",
-        "label": "آیکون"
-      },
-      "description": {
-        "desc": "توضیحات افزونه",
-        "label": "توضیح",
-        "placeholder": "برای دریافت اطلاعات، موتور جستجو را جستجو کنید"
-      },
-      "formFieldRequired": "این فیلد الزامی است",
-      "homepage": {
-        "desc": "صفحه اصلی افزونه",
-        "label": "صفحه اصلی"
-      },
-      "identifier": {
-        "desc": "شناسه یکتا افزونه که به طور خودکار از manifest شناسایی می‌شود",
-        "errorDuplicate": "شناسه با افزونه موجود تکراری است، لطفاً شناسه را تغییر دهید",
-        "label": "شناسه",
-        "pattenErrorMessage": "فقط می‌توانید حروف انگلیسی، اعداد، - و _ وارد کنید"
-      },
-      "lobe": "{{appName}} افزونه",
-      "manifest": {
-        "desc": "{{appName}} از این لینک برای نصب افزونه استفاده خواهد کرد",
-        "label": "فایل توصیف افزونه (Manifest) URL",
-        "preview": "پیش‌نمایش Manifest",
-        "refresh": "تازه‌سازی"
-      },
-      "openai": "افزونه OpenAI",
-      "title": {
-        "desc": "عنوان افزونه",
-        "label": "عنوان",
-        "placeholder": "موتور جستجو"
-      }
-    },
-    "metaConfig": "پیکربندی اطلاعات متا افزونه",
-    "modalDesc": "پس از افزودن افزونه سفارشی، می‌توانید برای توسعه و اعتبارسنجی افزونه استفاده کنید یا مستقیماً در گفتگوها به کار ببرید. برای توسعه افزونه به <1>مستندات توسعه↗</> مراجعه کنید.",
-    "openai": {
-      "importUrl": "وارد کردن از لینک URL",
-      "schema": "طرح‌واره"
-    },
-    "preview": {
-      "api": {
-        "noParams": "این ابزار پارامتری ندارد",
-        "noResults": "هیچ API مطابق با شرایط جستجو یافت نشد",
-        "params": "پارامترها:",
-        "searchPlaceholder": "جستجوی ابزار..."
-      },
-      "card": "پیش‌نمایش نمایش افزونه",
-      "desc": "پیش‌نمایش توضیحات افزونه",
-      "empty": {
-        "desc": "پس از پیکربندی، می‌توانید قابلیت‌های ابزار پشتیبانی شده توسط افزونه را در اینجا پیش‌نمایش کنید",
-        "title": "پس از پیکربندی افزونه، پیش‌نمایش را شروع کنید"
-      },
-      "title": "پیش‌نمایش نام افزونه"
-    },
-    "save": "نصب افزونه",
-    "saveSuccess": "تنظیمات افزونه با موفقیت ذخیره شد",
-    "tabs": {
-      "manifest": "فهرست توصیف عملکرد (Manifest)",
-      "meta": "اطلاعات متا افزونه"
-    },
-    "title": {
-      "create": "افزودن افزونه سفارشی",
-      "edit": "ویرایش افزونه سفارشی"
-    },
-    "type": {
-      "lobe": "{{appName}} افزونه",
-      "openai": "افزونه OpenAI"
-    },
-    "update": "به‌روزرسانی",
-    "updateSuccess": "تنظیمات افزونه با موفقیت به‌روزرسانی شد"
-  },
-  "empty": {
-    "description": "فروشگاه افزونه‌ها پر از ابزارهای متنوع برای کشف شماست، برای شروع کاوش به فروشگاه مراجعه کنید",
-    "search": "افزونه‌ای مطابق با جستجوی شما یافت نشد",
-    "title": "هیچ افزونه‌ای موجود نیست"
-  },
-  "error": {
-    "fetchError": "درخواست لینک manifest ناموفق بود، لطفاً از اعتبار لینک و اجازه دسترسی متقاطع آن اطمینان حاصل کنید",
-    "installError": "نصب افزونه {{name}} ناموفق بود",
-    "manifestInvalid": "manifest با استانداردها مطابقت ندارد، نتیجه اعتبارسنجی: \n\n {{error}}",
-    "noManifest": "فایل توصیف وجود ندارد",
-    "openAPIInvalid": "تجزیه OpenAPI ناموفق بود، خطا: \n\n {{error}}",
-    "reinstallError": "تازه‌سازی افزونه {{name}} ناموفق بود",
-    "testConnectionFailed": "دریافت Manifest ناموفق بود: {{error}}",
-    "urlError": "این لینک محتوای فرمت JSON بازنگردانده است، لطفاً از معتبر بودن لینک اطمینان حاصل کنید"
-  },
-  "inspector": {
-    "args": "مشاهده لیست پارامترها",
-    "delete": "حذف فراخوانی ابزار",
-    "orphanedToolCall": "این پیام فراخوانی ابزار ممکن است به دلایل غیرعادی به یک پیام یتیم تبدیل شده باشد که می‌تواند عملکرد عادی عامل را مختل کند. لطفاً آن را حذف کنید.",
-    "pluginRender": "مشاهده رابط افزونه"
-  },
-  "list": {
-    "item": {
-      "deprecated.title": "حذف شده",
-      "local.config": "پیکربندی",
-      "local.title": "سفارشی"
-    }
-  },
-  "loading": {
-    "content": "در حال فراخوانی افزونه...",
-    "plugin": "افزونه در حال اجرا..."
-  },
-  "mcpEmpty": {
-    "deployment": "هیچ گزینه‌ای برای استقرار موجود نیست",
-    "prompts": "این افزونه هیچ واژه راهنمایی ندارد",
-    "resources": "این افزونه هیچ منبعی ندارد",
-    "tools": "این افزونه هیچ قابلیت ابزاری ندارد"
-  },
-  "mcpInstall": {
-    "CHECKING_INSTALLATION": "در حال بررسی محیط نصب...",
-    "COMPLETED": "نصب کامل شد",
-    "CONFIGURATION_REQUIRED": "لطفاً پیکربندی‌های لازم را انجام داده و سپس نصب را ادامه دهید",
-    "ERROR": "خطای نصب",
-    "FETCHING_MANIFEST": "دریافت فایل توصیف افزونه...",
-    "GETTING_SERVER_MANIFEST": "راه‌اندازی سرور MCP...",
-    "INSTALLING_PLUGIN": "در حال نصب افزونه...",
-    "configurationDescription": "این افزونه MCP نیاز به پیکربندی پارامترها برای عملکرد صحیح دارد، لطفاً اطلاعات لازم را وارد کنید",
-    "configurationRequired": "پیکربندی پارامترهای افزونه",
-    "continueInstall": "ادامه نصب",
-    "dependenciesDescription": "این افزونه نیاز به نصب وابستگی‌های سیستمی زیر دارد تا به درستی کار کند، لطفاً وابستگی‌های گمشده را طبق راهنما نصب کرده و سپس برای ادامه نصب دوباره بررسی کنید.",
-    "dependenciesRequired": "لطفاً وابستگی‌های سیستمی افزونه را نصب کنید",
-    "dependencyStatus": {
-      "installed": "نصب شده",
-      "notInstalled": "نصب نشده",
-      "requiredVersion": "نسخه مورد نیاز: {{version}}"
-    },
-    "errorDetails": {
-      "args": "پارامترها",
-      "command": "فرمان",
-      "connectionParams": "پارامترهای اتصال",
-      "env": "متغیرهای محیطی",
-      "errorOutput": "گزارش خطا",
-      "exitCode": "کد خروج",
-      "hideDetails": "پنهان کردن جزئیات",
-      "originalError": "خطای اصلی",
-      "showDetails": "نمایش جزئیات"
-    },
-    "errorTypes": {
-      "AUTHORIZATION_ERROR": "خطای احراز هویت",
-      "CONNECTION_FAILED": "اتصال ناموفق",
-      "INITIALIZATION_TIMEOUT": "زمان راه‌اندازی به پایان رسید",
-      "PROCESS_SPAWN_ERROR": "خطای راه‌اندازی فرآیند",
-      "UNKNOWN_ERROR": "خطای ناشناخته",
-      "VALIDATION_ERROR": "اعتبارسنجی پارامترها ناموفق بود"
-    },
-    "installError": "نصب افزونه MCP ناموفق بود، دلیل شکست: {{detail}}",
-    "installMethods": {
-      "manual": "نصب دستی:",
-      "recommended": "روش نصب پیشنهادی:"
-    },
-    "recheckDependencies": "بررسی مجدد",
-    "skipDependencies": "رد بررسی"
-  },
+  "debug.arguments": "پارامترهای فراخوانی",
+  "debug.function_call": "فراخوانی تابع",
+  "debug.off": "غیرفعال کردن اشکال‌زدایی",
+  "debug.on": "مشاهده اطلاعات فراخوانی افزونه",
+  "debug.payload": "بار افزونه",
+  "debug.pluginState": "وضعیت افزونه",
+  "debug.response": "نتیجه بازگشتی",
+  "debug.title": "جزئیات افزونه",
+  "debug.tool_call": "درخواست فراخوانی ابزار",
+  "detailModal.customPlugin.description": "لطفاً برای مشاهده جزئیات به صفحه ویرایش مراجعه کنید",
+  "detailModal.customPlugin.editBtn": "ویرایش اکنون",
+  "detailModal.customPlugin.title": "این یک افزونه سفارشی است",
+  "detailModal.emptyState.description": "لطفاً ابتدا این افزونه را نصب کنید تا قابلیت‌ها و گزینه‌های پیکربندی آن را مشاهده کنید",
+  "detailModal.emptyState.title": "پس از نصب، جزئیات افزونه را مشاهده کنید",
+  "detailModal.info.description": "توضیحات API",
+  "detailModal.info.name": "نام API",
+  "detailModal.tabs.info": "قابلیت‌های افزونه",
+  "detailModal.tabs.manifest": "فایل نصب",
+  "detailModal.tabs.settings": "تنظیمات",
+  "detailModal.title": "جزئیات افزونه",
+  "dev.confirmDeleteDevPlugin": "در حال حذف این افزونه محلی هستید، پس از حذف قابل بازیابی نخواهد بود. آیا مطمئن به حذف افزونه هستید؟",
+  "dev.customParams.useProxy.label": "نصب از طریق پراکسی (در صورت بروز خطای دسترسی متقاطع، این گزینه را فعال کرده و مجدداً نصب کنید)",
+  "dev.deleteSuccess": "افزونه با موفقیت حذف شد",
+  "dev.manifest.identifier.desc": "شناسه یکتا افزونه",
+  "dev.manifest.identifier.label": "شناسه",
+  "dev.manifest.mode.mcp": "افزونه MCP",
+  "dev.manifest.mode.mcpExp": "آزمایشی",
+  "dev.manifest.mode.url": "لینک آنلاین",
+  "dev.manifest.name.desc": "عنوان افزونه",
+  "dev.manifest.name.label": "عنوان",
+  "dev.manifest.name.placeholder": "موتور جستجو",
+  "dev.mcp.advanced.title": "تنظیمات پیشرفته",
+  "dev.mcp.args.desc": "لیست پارامترهای ارسال شده به فرمان اجرا، معمولاً نام سرور MCP یا مسیر اسکریپت راه‌اندازی وارد می‌شود",
+  "dev.mcp.args.label": "پارامترهای فرمان",
+  "dev.mcp.args.placeholder": "مثال: mcp-hello-world",
+  "dev.mcp.args.required": "لطفاً پارامتر راه‌اندازی را وارد کنید",
+  "dev.mcp.auth.bear": "کلید API",
+  "dev.mcp.auth.desc": "روش احراز هویت سرور MCP را انتخاب کنید",
+  "dev.mcp.auth.label": "نوع احراز هویت",
+  "dev.mcp.auth.none": "نیازی به احراز هویت نیست",
+  "dev.mcp.auth.placeholder": "لطفاً نوع احراز هویت را انتخاب کنید",
+  "dev.mcp.auth.token.desc": "کلید API یا توکن Bearer خود را وارد کنید",
+  "dev.mcp.auth.token.label": "کلید API",
+  "dev.mcp.auth.token.placeholder": "sk-xxxxx",
+  "dev.mcp.auth.token.required": "لطفاً توکن احراز هویت را وارد کنید",
+  "dev.mcp.avatar.label": "آیکون افزونه",
+  "dev.mcp.command.desc": "فایل اجرایی یا اسکریپتی که برای راه‌اندازی MCP STDIO Server استفاده می‌شود",
+  "dev.mcp.command.label": "فرمان",
+  "dev.mcp.command.placeholder": "مثال: npx / uv / docker و غیره",
+  "dev.mcp.command.required": "لطفاً فرمان راه‌اندازی را وارد کنید",
+  "dev.mcp.desc.desc": "توضیحی برای افزونه اضافه کنید",
+  "dev.mcp.desc.label": "توضیحات افزونه",
+  "dev.mcp.desc.placeholder": "اطلاعات استفاده و سناریوهای افزونه را تکمیل کنید",
+  "dev.mcp.endpoint.desc": "آدرس MCP Streamable HTTP Server خود را وارد کنید",
+  "dev.mcp.endpoint.label": "آدرس Endpoint MCP",
+  "dev.mcp.env.add": "افزودن یک خط جدید",
+  "dev.mcp.env.desc": "متغیرهای محیطی مورد نیاز سرور MCP خود را وارد کنید",
+  "dev.mcp.env.duplicateKeyError": "کلید فیلد باید یکتا باشد",
+  "dev.mcp.env.formValidationFailed": "اعتبارسنجی فرم ناموفق بود، لطفاً فرمت پارامترها را بررسی کنید",
+  "dev.mcp.env.keyRequired": "کلید فیلد نمی‌تواند خالی باشد",
+  "dev.mcp.env.label": "متغیرهای محیطی سرور MCP",
+  "dev.mcp.env.stringifyError": "امکان سریال‌سازی پارامترها وجود ندارد، لطفاً فرمت پارامترها را بررسی کنید",
+  "dev.mcp.headers.add": "افزودن یک خط جدید",
+  "dev.mcp.headers.desc": "هدرهای درخواست را وارد کنید",
+  "dev.mcp.headers.label": "هدرهای HTTP",
+  "dev.mcp.identifier.desc": "یک نام برای افزونه MCP خود تعیین کنید، باید از حروف انگلیسی استفاده شود",
+  "dev.mcp.identifier.invalid": "شناسه فقط می‌تواند شامل حروف، اعداد، خط تیره و زیرخط باشد",
+  "dev.mcp.identifier.label": "نام افزونه MCP",
+  "dev.mcp.identifier.placeholder": "مثال: my-mcp-plugin",
+  "dev.mcp.identifier.required": "لطفاً شناسه سرویس MCP را وارد کنید",
+  "dev.mcp.previewManifest": "پیش‌نمایش فایل توصیف افزونه",
+  "dev.mcp.quickImport": "وارد کردن سریع پیکربندی JSON",
+  "dev.mcp.quickImportError.empty": "محتوا نمی‌تواند خالی باشد",
+  "dev.mcp.quickImportError.invalidJson": "فرمت JSON نامعتبر است",
+  "dev.mcp.quickImportError.invalidStructure": "فرمت JSON نامعتبر است",
+  "dev.mcp.stdioNotSupported": "محیط فعلی از افزونه MCP نوع stdio پشتیبانی نمی‌کند",
+  "dev.mcp.testConnection": "آزمایش اتصال",
+  "dev.mcp.testConnectionTip": "پس از موفقیت در آزمایش اتصال، افزونه MCP قابل استفاده خواهد بود",
+  "dev.mcp.type.desc": "نوع ارتباط افزونه MCP را انتخاب کنید، نسخه وب فقط از Streamable HTTP پشتیبانی می‌کند",
+  "dev.mcp.type.httpFeature1": "سازگار با نسخه وب و دسکتاپ",
+  "dev.mcp.type.httpFeature2": "اتصال به سرور MCP از راه دور بدون نیاز به نصب و پیکربندی اضافی",
+  "dev.mcp.type.httpShortDesc": "پروتکل ارتباطی مبتنی بر HTTP جریان‌پذیر",
+  "dev.mcp.type.label": "نوع افزونه MCP",
+  "dev.mcp.type.stdioFeature1": "تاخیر ارتباطی کمتر، مناسب برای اجرا محلی",
+  "dev.mcp.type.stdioFeature2": "نیاز به نصب و اجرای سرور MCP به صورت محلی",
+  "dev.mcp.type.stdioNotAvailable": "حالت STDIO فقط در نسخه دسکتاپ در دسترس است",
+  "dev.mcp.type.stdioShortDesc": "پروتکل ارتباطی مبتنی بر ورودی و خروجی استاندارد",
+  "dev.mcp.type.title": "نوع افزونه MCP",
+  "dev.mcp.url.desc": "آدرس Streamable HTTP سرور MCP خود را وارد کنید، حالت SSE پشتیبانی نمی‌شود",
+  "dev.mcp.url.invalid": "لطفاً یک آدرس URL معتبر وارد کنید",
+  "dev.mcp.url.label": "آدرس Endpoint HTTP جریان‌پذیر",
+  "dev.mcp.url.required": "لطفاً آدرس سرویس MCP را وارد کنید",
+  "dev.meta.author.desc": "نویسنده افزونه",
+  "dev.meta.author.label": "نویسنده",
+  "dev.meta.avatar.desc": "آیکون افزونه، می‌توانید از ایموجی یا URL استفاده کنید",
+  "dev.meta.avatar.label": "آیکون",
+  "dev.meta.description.desc": "توضیحات افزونه",
+  "dev.meta.description.label": "توضیح",
+  "dev.meta.description.placeholder": "برای دریافت اطلاعات، موتور جستجو را جستجو کنید",
+  "dev.meta.formFieldRequired": "این فیلد الزامی است",
+  "dev.meta.homepage.desc": "صفحه اصلی افزونه",
+  "dev.meta.homepage.label": "صفحه اصلی",
+  "dev.meta.identifier.desc": "شناسه یکتا افزونه که به طور خودکار از manifest شناسایی می‌شود",
+  "dev.meta.identifier.errorDuplicate": "شناسه با افزونه موجود تکراری است، لطفاً شناسه را تغییر دهید",
+  "dev.meta.identifier.label": "شناسه",
+  "dev.meta.identifier.pattenErrorMessage": "فقط می‌توانید حروف انگلیسی، اعداد، - و _ وارد کنید",
+  "dev.meta.lobe": "{{appName}} افزونه",
+  "dev.meta.manifest.desc": "{{appName}} از این لینک برای نصب افزونه استفاده خواهد کرد",
+  "dev.meta.manifest.label": "فایل توصیف افزونه (Manifest) URL",
+  "dev.meta.manifest.preview": "پیش‌نمایش Manifest",
+  "dev.meta.manifest.refresh": "تازه‌سازی",
+  "dev.meta.openai": "افزونه OpenAI",
+  "dev.meta.title.desc": "عنوان افزونه",
+  "dev.meta.title.label": "عنوان",
+  "dev.meta.title.placeholder": "موتور جستجو",
+  "dev.metaConfig": "پیکربندی اطلاعات متا افزونه",
+  "dev.modalDesc": "پس از افزودن افزونه سفارشی، می‌توانید برای توسعه و اعتبارسنجی افزونه استفاده کنید یا مستقیماً در گفتگوها به کار ببرید. برای توسعه افزونه به <1>مستندات توسعه↗</> مراجعه کنید.",
+  "dev.openai.importUrl": "وارد کردن از لینک URL",
+  "dev.openai.schema": "طرح‌واره",
+  "dev.preview.api.noParams": "این ابزار پارامتری ندارد",
+  "dev.preview.api.noResults": "هیچ API مطابق با شرایط جستجو یافت نشد",
+  "dev.preview.api.params": "پارامترها:",
+  "dev.preview.api.searchPlaceholder": "جستجوی ابزار...",
+  "dev.preview.card": "پیش‌نمایش نمایش افزونه",
+  "dev.preview.desc": "پیش‌نمایش توضیحات افزونه",
+  "dev.preview.empty.desc": "پس از پیکربندی، می‌توانید قابلیت‌های ابزار پشتیبانی شده توسط افزونه را در اینجا پیش‌نمایش کنید",
+  "dev.preview.empty.title": "پس از پیکربندی افزونه، پیش‌نمایش را شروع کنید",
+  "dev.preview.title": "پیش‌نمایش نام افزونه",
+  "dev.save": "نصب افزونه",
+  "dev.saveSuccess": "تنظیمات افزونه با موفقیت ذخیره شد",
+  "dev.tabs.manifest": "فهرست توصیف عملکرد (Manifest)",
+  "dev.tabs.meta": "اطلاعات متا افزونه",
+  "dev.title.create": "افزودن افزونه سفارشی",
+  "dev.title.edit": "ویرایش افزونه سفارشی",
+  "dev.type.lobe": "{{appName}} افزونه",
+  "dev.type.openai": "افزونه OpenAI",
+  "dev.update": "به‌روزرسانی",
+  "dev.updateSuccess": "تنظیمات افزونه با موفقیت به‌روزرسانی شد",
+  "empty.description": "فروشگاه افزونه‌ها پر از ابزارهای متنوع برای کشف شماست، برای شروع کاوش به فروشگاه مراجعه کنید",
+  "empty.search": "افزونه‌ای مطابق با جستجوی شما یافت نشد",
+  "empty.title": "هیچ افزونه‌ای موجود نیست",
+  "error.fetchError": "درخواست لینک manifest ناموفق بود، لطفاً از اعتبار لینک و اجازه دسترسی متقاطع آن اطمینان حاصل کنید",
+  "error.installError": "نصب افزونه {{name}} ناموفق بود",
+  "error.manifestInvalid": "manifest با استانداردها مطابقت ندارد، نتیجه اعتبارسنجی: \n\n {{error}}",
+  "error.noManifest": "فایل توصیف وجود ندارد",
+  "error.openAPIInvalid": "تجزیه OpenAPI ناموفق بود، خطا: \n\n {{error}}",
+  "error.reinstallError": "تازه‌سازی افزونه {{name}} ناموفق بود",
+  "error.testConnectionFailed": "دریافت Manifest ناموفق بود: {{error}}",
+  "error.urlError": "این لینک محتوای فرمت JSON بازنگردانده است، لطفاً از معتبر بودن لینک اطمینان حاصل کنید",
+  "inspector.args": "مشاهده لیست پارامترها",
+  "inspector.delete": "حذف فراخوانی ابزار",
+  "inspector.orphanedToolCall": "این پیام فراخوانی ابزار ممکن است به دلایل غیرعادی به یک پیام یتیم تبدیل شده باشد که می‌تواند عملکرد عادی عامل را مختل کند. لطفاً آن را حذف کنید.",
+  "inspector.pluginRender": "مشاهده رابط افزونه",
+  "list.item.deprecated.title": "حذف شده",
+  "list.item.local.config": "پیکربندی",
+  "list.item.local.title": "سفارشی",
+  "loading.content": "در حال فراخوانی افزونه...",
+  "loading.plugin": "افزونه در حال اجرا...",
+  "mcpEmpty.deployment": "هیچ گزینه‌ای برای استقرار موجود نیست",
+  "mcpEmpty.prompts": "این افزونه هیچ واژه راهنمایی ندارد",
+  "mcpEmpty.resources": "این افزونه هیچ منبعی ندارد",
+  "mcpEmpty.tools": "این افزونه هیچ قابلیت ابزاری ندارد",
+  "mcpInstall.CHECKING_INSTALLATION": "در حال بررسی محیط نصب...",
+  "mcpInstall.COMPLETED": "نصب کامل شد",
+  "mcpInstall.CONFIGURATION_REQUIRED": "لطفاً پیکربندی‌های لازم را انجام داده و سپس نصب را ادامه دهید",
+  "mcpInstall.ERROR": "خطای نصب",
+  "mcpInstall.FETCHING_MANIFEST": "دریافت فایل توصیف افزونه...",
+  "mcpInstall.GETTING_SERVER_MANIFEST": "راه‌اندازی سرور MCP...",
+  "mcpInstall.INSTALLING_PLUGIN": "در حال نصب افزونه...",
+  "mcpInstall.configurationDescription": "این افزونه MCP نیاز به پیکربندی پارامترها برای عملکرد صحیح دارد، لطفاً اطلاعات لازم را وارد کنید",
+  "mcpInstall.configurationRequired": "پیکربندی پارامترهای افزونه",
+  "mcpInstall.continueInstall": "ادامه نصب",
+  "mcpInstall.dependenciesDescription": "این افزونه نیاز به نصب وابستگی‌های سیستمی زیر دارد تا به درستی کار کند، لطفاً وابستگی‌های گمشده را طبق راهنما نصب کرده و سپس برای ادامه نصب دوباره بررسی کنید.",
+  "mcpInstall.dependenciesRequired": "لطفاً وابستگی‌های سیستمی افزونه را نصب کنید",
+  "mcpInstall.dependencyStatus.installed": "نصب شده",
+  "mcpInstall.dependencyStatus.notInstalled": "نصب نشده",
+  "mcpInstall.dependencyStatus.requiredVersion": "نسخه مورد نیاز: {{version}}",
+  "mcpInstall.errorDetails.args": "پارامترها",
+  "mcpInstall.errorDetails.command": "فرمان",
+  "mcpInstall.errorDetails.connectionParams": "پارامترهای اتصال",
+  "mcpInstall.errorDetails.env": "متغیرهای محیطی",
+  "mcpInstall.errorDetails.errorOutput": "گزارش خطا",
+  "mcpInstall.errorDetails.exitCode": "کد خروج",
+  "mcpInstall.errorDetails.hideDetails": "پنهان کردن جزئیات",
+  "mcpInstall.errorDetails.originalError": "خطای اصلی",
+  "mcpInstall.errorDetails.showDetails": "نمایش جزئیات",
+  "mcpInstall.errorTypes.AUTHORIZATION_ERROR": "خطای احراز هویت",
+  "mcpInstall.errorTypes.CONNECTION_FAILED": "اتصال ناموفق",
+  "mcpInstall.errorTypes.INITIALIZATION_TIMEOUT": "زمان راه‌اندازی به پایان رسید",
+  "mcpInstall.errorTypes.PROCESS_SPAWN_ERROR": "خطای راه‌اندازی فرآیند",
+  "mcpInstall.errorTypes.UNKNOWN_ERROR": "خطای ناشناخته",
+  "mcpInstall.errorTypes.VALIDATION_ERROR": "اعتبارسنجی پارامترها ناموفق بود",
+  "mcpInstall.installError": "نصب افزونه MCP ناموفق بود، دلیل شکست: {{detail}}",
+  "mcpInstall.installMethods.manual": "نصب دستی:",
+  "mcpInstall.installMethods.recommended": "روش نصب پیشنهادی:",
+  "mcpInstall.recheckDependencies": "بررسی مجدد",
+  "mcpInstall.skipDependencies": "رد بررسی",
   "pluginList": "فهرست افزونه‌ها",
-  "protocolInstall": {
-    "actions": {
-      "install": "نصب",
-      "installAnyway": "با این حال نصب کن",
-      "installed": "نصب شده"
-    },
-    "config": {
-      "addEnv": "افزودن متغیر محیطی",
-      "addHeaders": "افزودن هدر درخواست",
-      "args": "پارامترها",
-      "command": "فرمان",
-      "env": "متغیرهای محیطی",
-      "headers": "هدرها",
-      "title": "اطلاعات پیکربندی",
-      "type": {
-        "http": "نوع: HTTP",
-        "label": "نوع",
-        "stdio": "نوع: Stdio"
-      },
-      "url": "آدرس سرویس"
-    },
-    "custom": {
-      "badge": "افزونه سفارشی",
-      "security": {
-        "description": "این افزونه توسط منابع رسمی تأیید نشده است، نصب ممکن است خطرات امنیتی داشته باشد! لطفاً از اعتماد به منبع افزونه اطمینان حاصل کنید.",
-        "title": "⚠️ هشدار ریسک امنیتی"
-      },
-      "title": "نصب افزونه سفارشی"
-    },
-    "install": {
-      "title": "اطلاعات نصب"
-    },
-    "marketplace": {
-      "title": "نصب افزونه‌های شخص ثالث",
-      "trustedBy": "تأمین شده توسط {{name}}",
-      "unverified": {
-        "title": "افزونه‌های شخص ثالث تأیید نشده",
-        "warning": "این افزونه از یک جامعه شخص ثالث تأییدنشده می‌آید. پیش از نصب، اطمینان حاصل کنید که به این منبع اعتماد دارید."
-      },
-      "verified": "تأیید شده"
-    },
-    "messages": {
-      "connectionTestFailed": "آزمایش اتصال ناموفق بود",
-      "installError": "نصب افزونه ناموفق بود، لطفاً دوباره تلاش کنید",
-      "installSuccess": "افزونه {{name}} با موفقیت نصب شد!",
-      "manifestError": "دریافت جزئیات افزونه ناموفق بود، لطفاً اتصال شبکه را بررسی و دوباره تلاش کنید",
-      "manifestNotFound": "فایل توصیف افزونه یافت نشد"
-    },
-    "meta": {
-      "author": "نویسنده",
-      "homepage": "صفحه اصلی",
-      "identifier": "شناسه",
-      "source": "منبع",
-      "version": "نسخه"
-    },
-    "official": {
-      "badge": "افزونه رسمی LobeHub",
-      "description": "این افزونه توسط تیم رسمی LobeHub توسعه و نگهداری می‌شود و پس از بررسی‌های امنیتی دقیق، قابل استفاده مطمئن است.",
-      "loadingMessage": "در حال دریافت جزئیات افزونه...",
-      "loadingTitle": "در حال بارگذاری",
-      "title": "نصب افزونه رسمی"
-    },
-    "title": "نصب افزونه MCP",
-    "warning": "⚠️ لطفاً اطمینان حاصل کنید که به منبع این افزونه اعتماد دارید، افزونه‌های مخرب ممکن است امنیت سیستم شما را به خطر بیندازند."
-  },
-  "search": {
-    "config": {
-      "addKey": "افزودن کلید",
-      "close": "حذف",
-      "confirm": "پیکربندی انجام شده و دوباره تلاش کنید"
-    },
-    "crawPages": {
-      "crawling": "شناسایی لینک‌ها در حال انجام است",
-      "detail": {
-        "preview": "پیش‌نمایش",
-        "raw": "متن خام",
-        "tooLong": "محتوای متن بسیار طولانی است، فقط {{characters}} کاراکتر اول در زمینه گفتگو حفظ شده و بخش اضافی لحاظ نمی‌شود"
-      },
-      "meta": {
-        "crawler": "حالت خزیدن",
-        "words": "تعداد کاراکترها"
-      }
-    },
-    "searchxng": {
-      "baseURL": "لطفاً وارد کنید",
-      "description": "آدرس SearchXNG را وارد کنید تا جستجوی آنلاین آغاز شود",
-      "keyPlaceholder": "لطفاً کلید را وارد کنید",
-      "title": "پیکربندی موتور جستجوی SearchXNG",
-      "unconfiguredDesc": "لطفاً با مدیر تماس بگیرید تا پیکربندی موتور جستجوی SearchXNG انجام شود و سپس جستجوی آنلاین را شروع کنید",
-      "unconfiguredTitle": "موتور جستجوی SearchXNG هنوز پیکربندی نشده است"
-    },
-    "title": "جستجوی آنلاین"
-  },
+  "protocolInstall.actions.install": "نصب",
+  "protocolInstall.actions.installAnyway": "با این حال نصب کن",
+  "protocolInstall.actions.installed": "نصب شده",
+  "protocolInstall.config.addEnv": "افزودن متغیر محیطی",
+  "protocolInstall.config.addHeaders": "افزودن هدر درخواست",
+  "protocolInstall.config.args": "پارامترها",
+  "protocolInstall.config.command": "فرمان",
+  "protocolInstall.config.env": "متغیرهای محیطی",
+  "protocolInstall.config.headers": "هدرها",
+  "protocolInstall.config.title": "اطلاعات پیکربندی",
+  "protocolInstall.config.type.http": "نوع: HTTP",
+  "protocolInstall.config.type.label": "نوع",
+  "protocolInstall.config.type.stdio": "نوع: Stdio",
+  "protocolInstall.config.url": "آدرس سرویس",
+  "protocolInstall.custom.badge": "افزونه سفارشی",
+  "protocolInstall.custom.security.description": "این افزونه توسط منابع رسمی تأیید نشده است، نصب ممکن است خطرات امنیتی داشته باشد! لطفاً از اعتماد به منبع افزونه اطمینان حاصل کنید.",
+  "protocolInstall.custom.security.title": "⚠️ هشدار ریسک امنیتی",
+  "protocolInstall.custom.title": "نصب افزونه سفارشی",
+  "protocolInstall.install.title": "اطلاعات نصب",
+  "protocolInstall.marketplace.title": "نصب افزونه‌های شخص ثالث",
+  "protocolInstall.marketplace.trustedBy": "تأمین شده توسط {{name}}",
+  "protocolInstall.marketplace.unverified.title": "افزونه‌های شخص ثالث تأیید نشده",
+  "protocolInstall.marketplace.unverified.warning": "این افزونه از یک جامعه شخص ثالث تأییدنشده می‌آید. پیش از نصب، اطمینان حاصل کنید که به این منبع اعتماد دارید.",
+  "protocolInstall.marketplace.verified": "تأیید شده",
+  "protocolInstall.messages.connectionTestFailed": "آزمایش اتصال ناموفق بود",
+  "protocolInstall.messages.installError": "نصب افزونه ناموفق بود، لطفاً دوباره تلاش کنید",
+  "protocolInstall.messages.installSuccess": "افزونه {{name}} با موفقیت نصب شد!",
+  "protocolInstall.messages.manifestError": "دریافت جزئیات افزونه ناموفق بود، لطفاً اتصال شبکه را بررسی و دوباره تلاش کنید",
+  "protocolInstall.messages.manifestNotFound": "فایل توصیف افزونه یافت نشد",
+  "protocolInstall.meta.author": "نویسنده",
+  "protocolInstall.meta.homepage": "صفحه اصلی",
+  "protocolInstall.meta.identifier": "شناسه",
+  "protocolInstall.meta.source": "منبع",
+  "protocolInstall.meta.version": "نسخه",
+  "protocolInstall.official.badge": "افزونه رسمی LobeHub",
+  "protocolInstall.official.description": "این افزونه توسط تیم رسمی LobeHub توسعه و نگهداری می‌شود و پس از بررسی‌های امنیتی دقیق، قابل استفاده مطمئن است.",
+  "protocolInstall.official.loadingMessage": "در حال دریافت جزئیات افزونه...",
+  "protocolInstall.official.loadingTitle": "در حال بارگذاری",
+  "protocolInstall.official.title": "نصب افزونه رسمی",
+  "protocolInstall.title": "نصب افزونه MCP",
+  "protocolInstall.warning": "⚠️ لطفاً اطمینان حاصل کنید که به منبع این افزونه اعتماد دارید، افزونه‌های مخرب ممکن است امنیت سیستم شما را به خطر بیندازند.",
+  "search.config.addKey": "افزودن کلید",
+  "search.config.close": "حذف",
+  "search.config.confirm": "پیکربندی انجام شده و دوباره تلاش کنید",
+  "search.crawPages.crawling": "شناسایی لینک‌ها در حال انجام است",
+  "search.crawPages.detail.preview": "پیش‌نمایش",
+  "search.crawPages.detail.raw": "متن خام",
+  "search.crawPages.detail.tooLong": "محتوای متن بسیار طولانی است، فقط {{characters}} کاراکتر اول در زمینه گفتگو حفظ شده و بخش اضافی لحاظ نمی‌شود",
+  "search.crawPages.meta.crawler": "حالت خزیدن",
+  "search.crawPages.meta.words": "تعداد کاراکترها",
+  "search.searchxng.baseURL": "لطفاً وارد کنید",
+  "search.searchxng.description": "آدرس SearchXNG را وارد کنید تا جستجوی آنلاین آغاز شود",
+  "search.searchxng.keyPlaceholder": "لطفاً کلید را وارد کنید",
+  "search.searchxng.title": "پیکربندی موتور جستجوی SearchXNG",
+  "search.searchxng.unconfiguredDesc": "لطفاً با مدیر تماس بگیرید تا پیکربندی موتور جستجوی SearchXNG انجام شود و سپس جستجوی آنلاین را شروع کنید",
+  "search.searchxng.unconfiguredTitle": "موتور جستجوی SearchXNG هنوز پیکربندی نشده است",
+  "search.title": "جستجوی آنلاین",
   "setting": "تنظیمات افزونه",
-  "settings": {
-    "capabilities": {
-      "prompts": "عبارات راهنما",
-      "resources": "منابع",
-      "title": "قابلیت‌های افزونه",
-      "tools": "ابزارها"
-    },
-    "configuration": {
-      "title": "پیکربندی افزونه"
-    },
-    "connection": {
-      "args": "پارامترهای راه‌اندازی",
-      "command": "فرمان راه‌اندازی",
-      "title": "اطلاعات اتصال",
-      "type": "نوع اتصال",
-      "url": "آدرس سرویس"
-    },
-    "edit": "ویرایش",
-    "envConfigDescription": "این پیکربندی‌ها به عنوان متغیرهای محیطی هنگام راه‌اندازی سرور MCP به فرآیند منتقل می‌شوند",
-    "httpTypeNotice": "افزونه‌های MCP نوع HTTP نیازی به پیکربندی متغیرهای محیطی ندارند",
-    "indexUrl": {
-      "title": "فهرست جامعه",
-      "tooltip": "ویرایش آنلاین پشتیبانی نمی‌شود، لطفاً از طریق متغیرهای محیطی هنگام استقرار تنظیم کنید"
-    },
-    "messages": {
-      "connectionUpdateFailed": "به‌روزرسانی اطلاعات اتصال ناموفق بود",
-      "connectionUpdateSuccess": "اطلاعات اتصال با موفقیت به‌روزرسانی شد",
-      "envUpdateFailed": "ذخیره متغیرهای محیطی ناموفق بود",
-      "envUpdateSuccess": "متغیرهای محیطی با موفقیت ذخیره شدند"
-    },
-    "modalDesc": "با پیکربندی آدرس جامعه افزونه، می‌توانید از جامعه افزونه سفارشی استفاده کنید.",
-    "rules": {
-      "argsRequired": "لطفاً پارامترهای راه‌اندازی را وارد کنید",
-      "commandRequired": "لطفاً فرمان راه‌اندازی را وارد کنید",
-      "urlRequired": "لطفاً آدرس سرویس را وارد کنید"
-    },
-    "saveSettings": "ذخیره تنظیمات",
-    "title": "تنظیمات جامعه افزونه"
-  },
+  "settings.capabilities.prompts": "عبارات راهنما",
+  "settings.capabilities.resources": "منابع",
+  "settings.capabilities.title": "قابلیت‌های افزونه",
+  "settings.capabilities.tools": "ابزارها",
+  "settings.configuration.title": "پیکربندی افزونه",
+  "settings.connection.args": "پارامترهای راه‌اندازی",
+  "settings.connection.command": "فرمان راه‌اندازی",
+  "settings.connection.title": "اطلاعات اتصال",
+  "settings.connection.type": "نوع اتصال",
+  "settings.connection.url": "آدرس سرویس",
+  "settings.edit": "ویرایش",
+  "settings.envConfigDescription": "این پیکربندی‌ها به عنوان متغیرهای محیطی هنگام راه‌اندازی سرور MCP به فرآیند منتقل می‌شوند",
+  "settings.httpTypeNotice": "افزونه‌های MCP نوع HTTP نیازی به پیکربندی متغیرهای محیطی ندارند",
+  "settings.indexUrl.title": "فهرست جامعه",
+  "settings.indexUrl.tooltip": "ویرایش آنلاین پشتیبانی نمی‌شود، لطفاً از طریق متغیرهای محیطی هنگام استقرار تنظیم کنید",
+  "settings.messages.connectionUpdateFailed": "به‌روزرسانی اطلاعات اتصال ناموفق بود",
+  "settings.messages.connectionUpdateSuccess": "اطلاعات اتصال با موفقیت به‌روزرسانی شد",
+  "settings.messages.envUpdateFailed": "ذخیره متغیرهای محیطی ناموفق بود",
+  "settings.messages.envUpdateSuccess": "متغیرهای محیطی با موفقیت ذخیره شدند",
+  "settings.modalDesc": "با پیکربندی آدرس جامعه افزونه، می‌توانید از جامعه افزونه سفارشی استفاده کنید.",
+  "settings.rules.argsRequired": "لطفاً پارامترهای راه‌اندازی را وارد کنید",
+  "settings.rules.commandRequired": "لطفاً فرمان راه‌اندازی را وارد کنید",
+  "settings.rules.urlRequired": "لطفاً آدرس سرویس را وارد کنید",
+  "settings.saveSettings": "ذخیره تنظیمات",
+  "settings.title": "تنظیمات جامعه افزونه",
   "showInPortal": "لطفاً جزئیات را در فضای کاری مشاهده کنید",
-  "store": {
-    "actions": {
-      "cancel": "لغو نصب",
-      "confirmUninstall": "در حال حذف این افزونه هستید، پس از حذف پیکربندی‌های افزونه پاک خواهد شد، لطفاً عملیات خود را تأیید کنید",
-      "detail": "جزئیات",
-      "install": "نصب",
-      "manifest": "ویرایش فایل نصب",
-      "settings": "تنظیمات",
-      "uninstall": "حذف نصب"
-    },
-    "communityPlugin": "جامعه شخص ثالث",
-    "customPlugin": "سفارشی",
-    "empty": "هیچ افزونه نصب شده‌ای وجود ندارد",
-    "emptySelectHint": "برای مشاهده جزئیات، افزونه‌ای را انتخاب کنید",
-    "installAllPlugins": "نصب همه",
-    "networkError": "دریافت فروشگاه افزونه ناموفق بود، لطفاً اتصال شبکه را بررسی و دوباره تلاش کنید",
-    "placeholder": "جستجوی نام، توضیحات یا کلمات کلیدی افزونه...",
-    "releasedAt": "منتشر شده در {{createdAt}}",
-    "tabs": {
-      "installed": "نصب شده",
-      "mcp": "افزونه MCP",
-      "old": "افزونه‌های LobeHub"
-    },
-    "title": "فروشگاه افزونه"
-  },
+  "store.actions.cancel": "لغو نصب",
+  "store.actions.confirmUninstall": "در حال حذف این افزونه هستید، پس از حذف پیکربندی‌های افزونه پاک خواهد شد، لطفاً عملیات خود را تأیید کنید",
+  "store.actions.detail": "جزئیات",
+  "store.actions.install": "نصب",
+  "store.actions.manifest": "ویرایش فایل نصب",
+  "store.actions.settings": "تنظیمات",
+  "store.actions.uninstall": "حذف نصب",
+  "store.communityPlugin": "جامعه شخص ثالث",
+  "store.customPlugin": "سفارشی",
+  "store.empty": "هیچ افزونه نصب شده‌ای وجود ندارد",
+  "store.emptySelectHint": "برای مشاهده جزئیات، افزونه‌ای را انتخاب کنید",
+  "store.installAllPlugins": "نصب همه",
+  "store.networkError": "دریافت فروشگاه افزونه ناموفق بود، لطفاً اتصال شبکه را بررسی و دوباره تلاش کنید",
+  "store.placeholder": "جستجوی نام، توضیحات یا کلمات کلیدی افزونه...",
+  "store.releasedAt": "منتشر شده در {{createdAt}}",
+  "store.tabs.installed": "نصب شده",
+  "store.tabs.mcp": "افزونه MCP",
+  "store.tabs.old": "افزونه‌های LobeHub",
+  "store.title": "فروشگاه افزونه",
   "unknownError": "خطای ناشناخته",
   "unknownPlugin": "افزونه ناشناخته"
 }

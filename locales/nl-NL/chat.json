@@ -1,44 +1,34 @@
 {
-  "ModelSwitch": {
-    "title": "Modelen"
-  },
+  "ModelSwitch.title": "Modelen",
   "active": "Actief",
-  "agentBuilder": {
-    "installPlugin": {
-      "authRequired": "Cloud MCP-plug-in vereist aanmelding en verificatie",
-      "cancel": "Annuleren",
-      "clickApproveToConnect": "Klik op 'Goedkeuren' om verbinding te maken en deze integratie te autoriseren",
-      "clickApproveToInstall": "Klik op 'Toestaan' om deze plug-in te installeren",
-      "connectedAndEnabled": "Verbonden en ingeschakeld",
-      "connectionFailed": "Verbinding mislukt",
-      "installFailed": "Installatie mislukt",
-      "installPlugin": "Plug-in installeren",
-      "installToEnable": "Installeer deze plug-in om de assistent in te schakelen",
-      "installedAndEnabled": "Geïnstalleerd en ingeschakeld",
-      "requiresAuth": "Autorisatie vereist, klik op 'Goedkeuren' om verbinding te maken",
-      "retry": "Opnieuw proberen"
-    },
-    "title": "Assistentenbouwer",
-    "welcome": "Vertel me over jouw gebruikssituatie – een professionele partner staat voor je klaar.\n\nOf het nu gaat om schrijven, programmeren of data-analyse, ik help je een persoonlijke assistent te creëren!"
-  },
+  "agentBuilder.installPlugin.authRequired": "Cloud MCP-plug-in vereist aanmelding en verificatie",
+  "agentBuilder.installPlugin.cancel": "Annuleren",
+  "agentBuilder.installPlugin.clickApproveToConnect": "Klik op 'Goedkeuren' om verbinding te maken en deze integratie te autoriseren",
+  "agentBuilder.installPlugin.clickApproveToInstall": "Klik op 'Toestaan' om deze plug-in te installeren",
+  "agentBuilder.installPlugin.connectedAndEnabled": "Verbonden en ingeschakeld",
+  "agentBuilder.installPlugin.connectionFailed": "Verbinding mislukt",
+  "agentBuilder.installPlugin.installFailed": "Installatie mislukt",
+  "agentBuilder.installPlugin.installPlugin": "Plug-in installeren",
+  "agentBuilder.installPlugin.installToEnable": "Installeer deze plug-in om de assistent in te schakelen",
+  "agentBuilder.installPlugin.installedAndEnabled": "Geïnstalleerd en ingeschakeld",
+  "agentBuilder.installPlugin.requiresAuth": "Autorisatie vereist, klik op 'Goedkeuren' om verbinding te maken",
+  "agentBuilder.installPlugin.retry": "Opnieuw proberen",
+  "agentBuilder.title": "Assistentenbouwer",
+  "agentBuilder.welcome": "Vertel me over jouw gebruikssituatie – een professionele partner staat voor je klaar.\n\nOf het nu gaat om schrijven, programmeren of data-analyse, ik help je een persoonlijke assistent te creëren!",
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Waarmee kan ik u van dienst zijn?",
   "agents": "Assistent",
-  "artifact": {
-    "generating": "Genereren",
-    "inThread": "Je kunt het niet bekijken in het subonderwerp, schakel over naar het hoofdgesprek om het te openen.",
-    "thinking": "Denken",
-    "thought": "Denken proces",
-    "unknownTitle": "Onbenoemd werk"
-  },
+  "artifact.generating": "Genereren",
+  "artifact.inThread": "Je kunt het niet bekijken in het subonderwerp, schakel over naar het hoofdgesprek om het te openen.",
+  "artifact.thinking": "Denken",
+  "artifact.thought": "Denken proces",
+  "artifact.unknownTitle": "Onbenoemd werk",
   "availableAgents": "Beschikbare assistenten",
   "backToBottom": "Terug naar onderen",
   "builtinCopilot": "Ingebouwde Copilot",
-  "chatList": {
-    "expandMessage": "Bericht uitvouwen",
-    "longMessageDetail": "Bekijk details"
-  },
+  "chatList.expandMessage": "Bericht uitvouwen",
+  "chatList.longMessageDetail": "Bekijk details",
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
   "confirmRemoveChatGroupItemAlert": "Deze groep wordt verwijderd, maar teamleden blijven onaangetast. Bevestig je actie.",
@@ -50,227 +40,149 @@
   "defaultGroupChat": "Groep",
   "defaultList": "Standaardlijst",
   "defaultSession": "Standaard assistent",
-  "dm": {
-    "placeholder": "Je privéberichten met {{agentTitle}} worden hier weergegeven.",
-    "tooltip": "Stuur privébericht",
-    "visibleTo": "Alleen zichtbaar voor {{target}}",
-    "you": "jij"
-  },
-  "duplicateSession": {
-    "loading": "Bezig met kopiëren...",
-    "success": "Kopiëren gelukt",
-    "title": "{{title}} Kopie"
-  },
+  "dm.placeholder": "Je privéberichten met {{agentTitle}} worden hier weergegeven.",
+  "dm.tooltip": "Stuur privébericht",
+  "dm.visibleTo": "Alleen zichtbaar voor {{target}}",
+  "dm.you": "jij",
+  "duplicateSession.loading": "Bezig met kopiëren...",
+  "duplicateSession.success": "Kopiëren gelukt",
+  "duplicateSession.title": "{{title}} Kopie",
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
   "emptyAgentAction": "Assistent aanmaken",
-  "extendParams": {
-    "disableContextCaching": {
-      "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
-      "title": "Contextcaching inschakelen"
-    },
-    "enableReasoning": {
-      "desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
-      "title": "Diepe denkwijze inschakelen"
-    },
-    "imageAspectRatio": {
-      "title": "Beeldverhouding"
-    },
-    "imageResolution": {
-      "title": "Beeldresolutie"
-    },
-    "reasoningBudgetToken": {
-      "title": "Denken verbruik Token"
-    },
-    "reasoningEffort": {
-      "title": "Redeneringsinspanning"
-    },
-    "textVerbosity": {
-      "title": "Gedetailleerdheid van de uitvoer"
-    },
-    "thinking": {
-      "title": "Diepdenkschakelaar"
-    },
-    "thinkingLevel": {
-      "title": "Denkniveau"
-    },
-    "title": "Modeluitbreidingsfunctie",
-    "urlContext": {
-      "desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
-      "title": "Inhoud van webkoppeling extraheren"
-    }
-  },
-  "group": {
-    "desc": "Samenwerken met meerdere AI-assistenten in een gedeelde gespreksruimte.",
-    "memberTooltip": "De groep heeft {{count}} leden",
-    "orchestratorThinking": "De organisator denkt na...",
-    "removeMember": "Lid verwijderen",
-    "title": "Groep"
-  },
+  "extendParams.disableContextCaching.desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+  "extendParams.disableContextCaching.title": "Contextcaching inschakelen",
+  "extendParams.enableReasoning.desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+  "extendParams.enableReasoning.title": "Diepe denkwijze inschakelen",
+  "extendParams.imageAspectRatio.title": "Beeldverhouding",
+  "extendParams.imageResolution.title": "Beeldresolutie",
+  "extendParams.reasoningBudgetToken.title": "Denken verbruik Token",
+  "extendParams.reasoningEffort.title": "Redeneringsinspanning",
+  "extendParams.textVerbosity.title": "Gedetailleerdheid van de uitvoer",
+  "extendParams.thinking.title": "Diepdenkschakelaar",
+  "extendParams.thinkingLevel.title": "Denkniveau",
+  "extendParams.title": "Modeluitbreidingsfunctie",
+  "extendParams.urlContext.desc": "Na inschakeling worden webkoppelingen automatisch geanalyseerd om de daadwerkelijke inhoud van de webpagina te verkrijgen",
+  "extendParams.urlContext.title": "Inhoud van webkoppeling extraheren",
+  "group.desc": "Samenwerken met meerdere AI-assistenten in een gedeelde gespreksruimte.",
+  "group.memberTooltip": "De groep heeft {{count}} leden",
+  "group.orchestratorThinking": "De organisator denkt na...",
+  "group.removeMember": "Lid verwijderen",
+  "group.title": "Groep",
   "groupDescription": "Teamomschrijving",
-  "groupSidebar": {
-    "agentProfile": {
-      "chat": "Chat",
-      "model": "Model"
-    },
-    "members": {
-      "addMember": "Lid toevoegen",
-      "enableOrchestrator": "Orkestrator inschakelen",
-      "memberSettings": "Lidinstellingen",
-      "orchestrator": "Organisator",
-      "orchestratorThinking": "De organisator denkt na...",
-      "removeMember": "Lid verwijderen",
-      "stopOrchestrator": "Stop met nadenken",
-      "triggerOrchestrator": "Start groepschat"
-    },
-    "tabs": {
-      "host": "Gastheer",
-      "members": "Leden",
-      "role": "Instellingen"
-    }
-  },
-  "groupWizard": {
-    "chooseMembers": "Kies bestaande assistenten...",
-    "createGroup": "Team aanmaken",
-    "existingMembers": "Bestaande Agents",
-    "groupMembers": "Deze assistenten worden ook aan uw lijst toegevoegd",
-    "host": {
-      "description": "Laat het team zelfstandig functioneren",
-      "title": "Host inschakelen",
-      "tooltip": "Als de teamhost is uitgeschakeld, moet je handmatig leden @vermelden om een reactie te krijgen"
-    },
-    "memberCount": "{{count}} leden",
-    "noMatchingTemplates": "Geen overeenkomende sjablonen",
-    "noSelectedTemplates": "Geen sjablonen geselecteerd",
-    "noTemplateMembers": "Geen leden in de sjabloon",
-    "noTemplates": "Geen sjablonen beschikbaar",
-    "searchTemplates": "Zoek sjablonen...",
-    "title": "Groep aanmaken",
-    "useTemplate": "Sjabloon gebruiken"
-  },
+  "groupSidebar.agentProfile.chat": "Chat",
+  "groupSidebar.agentProfile.model": "Model",
+  "groupSidebar.members.addMember": "Lid toevoegen",
+  "groupSidebar.members.enableOrchestrator": "Orkestrator inschakelen",
+  "groupSidebar.members.memberSettings": "Lidinstellingen",
+  "groupSidebar.members.orchestrator": "Organisator",
+  "groupSidebar.members.orchestratorThinking": "De organisator denkt na...",
+  "groupSidebar.members.removeMember": "Lid verwijderen",
+  "groupSidebar.members.stopOrchestrator": "Stop met nadenken",
+  "groupSidebar.members.triggerOrchestrator": "Start groepschat",
+  "groupSidebar.tabs.host": "Gastheer",
+  "groupSidebar.tabs.members": "Leden",
+  "groupSidebar.tabs.role": "Instellingen",
+  "groupWizard.chooseMembers": "Kies bestaande assistenten...",
+  "groupWizard.createGroup": "Team aanmaken",
+  "groupWizard.existingMembers": "Bestaande Agents",
+  "groupWizard.groupMembers": "Deze assistenten worden ook aan uw lijst toegevoegd",
+  "groupWizard.host.description": "Laat het team zelfstandig functioneren",
+  "groupWizard.host.title": "Host inschakelen",
+  "groupWizard.host.tooltip": "Als de teamhost is uitgeschakeld, moet je handmatig leden @vermelden om een reactie te krijgen",
+  "groupWizard.memberCount": "{{count}} leden",
+  "groupWizard.noMatchingTemplates": "Geen overeenkomende sjablonen",
+  "groupWizard.noSelectedTemplates": "Geen sjablonen geselecteerd",
+  "groupWizard.noTemplateMembers": "Geen leden in de sjabloon",
+  "groupWizard.noTemplates": "Geen sjablonen beschikbaar",
+  "groupWizard.searchTemplates": "Zoek sjablonen...",
+  "groupWizard.title": "Groep aanmaken",
+  "groupWizard.useTemplate": "Sjabloon gebruiken",
   "hideForYou": "Privéberichten zijn verborgen. Schakel 'Toon privéberichten' in de instellingen in om ze te bekijken.",
-  "history": {
-    "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
-  },
+  "history.title": "De assistent onthoudt alleen de laatste {{count}} berichten",
   "historyRange": "Geschiedenisbereik",
   "historySummary": "Geschiedenis samenvatting",
   "inactive": "inactief",
-  "inbox": {
-    "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
-    "title": "Lobe AI"
-  },
-  "input": {
-    "addAi": "Voeg een AI-bericht toe",
-    "addUser": "Voeg een gebruikersbericht toe",
-    "disclaimer": "AI kan ook fouten maken, controleer belangrijke informatie alstublieft",
-    "errorMsg": "Bericht verzenden mislukt, controleer uw netwerk en probeer het opnieuw: {{errorMsg}}",
-    "more": "Meer",
-    "send": "Verzenden",
-    "sendWithCmdEnter": "Druk op <key/> om te verzenden",
-    "sendWithEnter": "Druk op <key/> om te verzenden",
-    "stop": "Stoppen",
-    "warp": "Nieuwe regel",
-    "warpWithKey": "Druk op <key/> om een nieuwe regel te beginnen"
-  },
-  "intentUnderstanding": {
-    "title": "Bezig met het begrijpen en analyseren van uw intentie..."
-  },
+  "inbox.desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
+  "inbox.title": "Lobe AI",
+  "input.addAi": "Voeg een AI-bericht toe",
+  "input.addUser": "Voeg een gebruikersbericht toe",
+  "input.disclaimer": "AI kan ook fouten maken, controleer belangrijke informatie alstublieft",
+  "input.errorMsg": "Bericht verzenden mislukt, controleer uw netwerk en probeer het opnieuw: {{errorMsg}}",
+  "input.more": "Meer",
+  "input.send": "Verzenden",
+  "input.sendWithCmdEnter": "Druk op <key/> om te verzenden",
+  "input.sendWithEnter": "Druk op <key/> om te verzenden",
+  "input.stop": "Stoppen",
+  "input.warp": "Nieuwe regel",
+  "input.warpWithKey": "Druk op <key/> om een nieuwe regel te beginnen",
+  "intentUnderstanding.title": "Bezig met het begrijpen en analyseren van uw intentie...",
   "inviteMembers": "Leden uitnodigen",
-  "knowledgeBase": {
-    "all": "Alle inhoud",
-    "allFiles": "Alle bestanden",
-    "allLibraries": "Alle bibliotheken",
-    "disabled": "De huidige implementatiemodus ondersteunt geen gesprekken met de kennisbank. Schakel over naar een server-side database-implementatie of gebruik de {{cloud}}-dienst om dit te activeren.",
-    "library": {
-      "action": {
-        "add": "Toevoegen",
-        "detail": "Details",
-        "remove": "Verwijderen"
-      },
-      "title": "Bestanden/Bibliotheek"
-    },
-    "relativeFilesOrLibraries": "Gerelateerde bestanden/bibliotheken",
-    "title": "Kennisbank",
-    "uploadGuide": "Geüploade bestanden kun je terugvinden onder 'Bronnen'.",
-    "viewMore": "Bekijk meer"
-  },
-  "memberSelection": {
-    "addMember": "Lid toevoegen",
-    "allMembers": "Alle leden",
-    "createGroup": "Groep aanmaken",
-    "noAvailableAgents": "Geen beschikbare Agent om uit te nodigen",
-    "noSelectedAgents": "Nog geen Agent geselecteerd",
-    "searchAgents": "Zoek Agent...",
-    "selectedAgents": "Geselecteerd ({{count}})",
-    "setInitialMembers": "Selecteer teamleden"
-  },
+  "knowledgeBase.all": "Alle inhoud",
+  "knowledgeBase.allFiles": "Alle bestanden",
+  "knowledgeBase.allLibraries": "Alle bibliotheken",
+  "knowledgeBase.disabled": "De huidige implementatiemodus ondersteunt geen gesprekken met de kennisbank. Schakel over naar een server-side database-implementatie of gebruik de {{cloud}}-dienst om dit te activeren.",
+  "knowledgeBase.library.action.add": "Toevoegen",
+  "knowledgeBase.library.action.detail": "Details",
+  "knowledgeBase.library.action.remove": "Verwijderen",
+  "knowledgeBase.library.title": "Bestanden/Bibliotheek",
+  "knowledgeBase.relativeFilesOrLibraries": "Gerelateerde bestanden/bibliotheken",
+  "knowledgeBase.title": "Kennisbank",
+  "knowledgeBase.uploadGuide": "Geüploade bestanden kun je terugvinden onder 'Bronnen'.",
+  "knowledgeBase.viewMore": "Bekijk meer",
+  "memberSelection.addMember": "Lid toevoegen",
+  "memberSelection.allMembers": "Alle leden",
+  "memberSelection.createGroup": "Groep aanmaken",
+  "memberSelection.noAvailableAgents": "Geen beschikbare Agent om uit te nodigen",
+  "memberSelection.noSelectedAgents": "Nog geen Agent geselecteerd",
+  "memberSelection.searchAgents": "Zoek Agent...",
+  "memberSelection.selectedAgents": "Geselecteerd ({{count}})",
+  "memberSelection.setInitialMembers": "Selecteer teamleden",
   "members": "Leden",
-  "mention": {
-    "title": "Leden vermelden"
-  },
-  "messageAction": {
-    "collapse": "Bericht samenvouwen",
-    "continueGeneration": "Doorgaan met genereren",
-    "delAndRegenerate": "Verwijderen en opnieuw genereren",
-    "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
-    "expand": "Bericht uitvouwen",
-    "regenerate": "Opnieuw genereren"
-  },
-  "messages": {
-    "dm": {
-      "sentTo": "Alleen zichtbaar voor {{name}}",
-      "title": "Privébericht"
-    },
-    "modelCard": {
-      "credit": "Credits",
-      "creditPricing": "Prijsstelling",
-      "creditTooltip": "Voor de eenvoud van de berekening beschouwen we $1 als 1M credits, bijvoorbeeld $3/M tokens wordt omgezet naar 3 credits/token",
-      "pricing": {
-        "inputCachedTokens": "Gecacheerde invoer {{amount}}/credits · ${{amount}}/M",
-        "inputCharts": "${{amount}}/M tekens",
-        "inputMinutes": "${{amount}}/minuut",
-        "inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
-        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
-        "writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "average": "Gemiddelde prijs",
-      "input": "Invoer",
-      "inputAudio": "Audio-invoer",
-      "inputCached": "Gecacheerde invoer",
-      "inputCitation": "Invoer citeren",
-      "inputText": "Tekstinvoer",
-      "inputTitle": "Invoerdetails",
-      "inputUncached": "Ongecacheerde invoer",
-      "inputWriteCached": "Invoer cache schrijven",
-      "output": "Uitvoer",
-      "outputAudio": "Audio-uitvoer",
-      "outputImage": "Afbeelding uitvoer",
-      "outputText": "Tekstuitvoer",
-      "outputTitle": "Uitvoerdetails",
-      "reasoning": "Diep nadenken",
-      "speed": {
-        "tps": {
-          "title": "TPS",
-          "tooltip": "Tokens Per Second, TPS. Dit verwijst naar de gemiddelde snelheid van AI-gegenereerde inhoud (Token/seconde), die begint te tellen vanaf het moment dat het eerste Token is ontvangen."
-        },
-        "ttft": {
-          "title": "TTFT",
-          "tooltip": "Time To First Token, TTFT. Dit verwijst naar de tijdsduur van het moment dat u een bericht verzendt tot het moment dat de client het eerste Token ontvangt."
-        }
-      },
-      "title": "Genereren van details",
-      "total": "Totaal verbruik"
-    }
-  },
-  "minimap": {
-    "jumpToMessage": "Ga naar bericht {{index}}",
-    "nextMessage": "Volgend bericht",
-    "previousMessage": "Vorig bericht",
-    "senderAssistant": "Agent",
-    "senderUser": "Jij"
-  },
+  "mention.title": "Leden vermelden",
+  "messageAction.collapse": "Bericht samenvouwen",
+  "messageAction.continueGeneration": "Doorgaan met genereren",
+  "messageAction.delAndRegenerate": "Verwijderen en opnieuw genereren",
+  "messageAction.deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
+  "messageAction.expand": "Bericht uitvouwen",
+  "messageAction.regenerate": "Opnieuw genereren",
+  "messages.dm.sentTo": "Alleen zichtbaar voor {{name}}",
+  "messages.dm.title": "Privébericht",
+  "messages.modelCard.credit": "Credits",
+  "messages.modelCard.creditPricing": "Prijsstelling",
+  "messages.modelCard.creditTooltip": "Voor de eenvoud van de berekening beschouwen we $1 als 1M credits, bijvoorbeeld $3/M tokens wordt omgezet naar 3 credits/token",
+  "messages.modelCard.pricing.inputCachedTokens": "Gecacheerde invoer {{amount}}/credits · ${{amount}}/M",
+  "messages.modelCard.pricing.inputCharts": "${{amount}}/M tekens",
+  "messages.modelCard.pricing.inputMinutes": "${{amount}}/minuut",
+  "messages.modelCard.pricing.inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
+  "messages.modelCard.pricing.outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
+  "messages.modelCard.pricing.writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M",
+  "messages.tokenDetails.average": "Gemiddelde prijs",
+  "messages.tokenDetails.input": "Invoer",
+  "messages.tokenDetails.inputAudio": "Audio-invoer",
+  "messages.tokenDetails.inputCached": "Gecacheerde invoer",
+  "messages.tokenDetails.inputCitation": "Invoer citeren",
+  "messages.tokenDetails.inputText": "Tekstinvoer",
+  "messages.tokenDetails.inputTitle": "Invoerdetails",
+  "messages.tokenDetails.inputUncached": "Ongecacheerde invoer",
+  "messages.tokenDetails.inputWriteCached": "Invoer cache schrijven",
+  "messages.tokenDetails.output": "Uitvoer",
+  "messages.tokenDetails.outputAudio": "Audio-uitvoer",
+  "messages.tokenDetails.outputImage": "Afbeelding uitvoer",
+  "messages.tokenDetails.outputText": "Tekstuitvoer",
+  "messages.tokenDetails.outputTitle": "Uitvoerdetails",
+  "messages.tokenDetails.reasoning": "Diep nadenken",
+  "messages.tokenDetails.speed.tps.title": "TPS",
+  "messages.tokenDetails.speed.tps.tooltip": "Tokens Per Second, TPS. Dit verwijst naar de gemiddelde snelheid van AI-gegenereerde inhoud (Token/seconde), die begint te tellen vanaf het moment dat het eerste Token is ontvangen.",
+  "messages.tokenDetails.speed.ttft.title": "TTFT",
+  "messages.tokenDetails.speed.ttft.tooltip": "Time To First Token, TTFT. Dit verwijst naar de tijdsduur van het moment dat u een bericht verzendt tot het moment dat de client het eerste Token ontvangt.",
+  "messages.tokenDetails.title": "Genereren van details",
+  "messages.tokenDetails.total": "Totaal verbruik",
+  "minimap.jumpToMessage": "Ga naar bericht {{index}}",
+  "minimap.nextMessage": "Volgend bericht",
+  "minimap.previousMessage": "Vorig bericht",
+  "minimap.senderAssistant": "Agent",
+  "minimap.senderUser": "Jij",
   "newAgent": "Assistent aanmaken",
   "newGroupChat": "Groepschat aanmaken",
   "newPage": "Document aanmaken",
@@ -281,252 +193,170 @@
   "noSelectedAgents": "Nog geen leden geselecteerd",
   "openInNewWindow": "Open in een nieuw venster",
   "owner": "Groepseigenaar",
-  "pageCopilot": {
-    "title": "Schrijfassistent",
-    "welcome": "**Maak elke zin krachtiger.**\n\nOf je nu aan het opstellen, herschrijven of redigeren bent, ik help je om je tekst duidelijker, natuurlijker en overtuigender te maken."
-  },
+  "pageCopilot.title": "Schrijfassistent",
+  "pageCopilot.welcome": "**Maak elke zin krachtiger.**\n\nOf je nu aan het opstellen, herschrijven of redigeren bent, ik help je om je tekst duidelijker, natuurlijker en overtuigender te maken.",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
-  "rag": {
-    "referenceChunks": "Referentiestukken",
-    "userQuery": {
-      "actions": {
-        "delete": "Verwijder Query herschrijving",
-        "regenerate": "Genereer Query opnieuw"
-      }
-    }
-  },
+  "rag.referenceChunks": "Referentiestukken",
+  "rag.userQuery.actions.delete": "Verwijder Query herschrijving",
+  "rag.userQuery.actions.regenerate": "Genereer Query opnieuw",
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
-  "search": {
-    "grounding": {
-      "searchQueries": "Zoekwoorden",
-      "title": "Er zijn {{count}} resultaten gevonden"
-    },
-    "mode": {
-      "auto": {
-        "desc": "Intelligente beoordeling of er gezocht moet worden op basis van de gesprekinhoud",
-        "title": "Slimme verbinding"
-      },
-      "off": {
-        "desc": "Gebruik alleen de basiskennis van het model, zonder online zoekopdrachten",
-        "title": "Verbinding uitschakelen"
-      },
-      "on": {
-        "desc": "Voortdurend online zoeken voor de nieuwste informatie",
-        "title": "Altijd verbonden"
-      },
-      "useModelBuiltin": "Gebruik de ingebouwde zoekmachine van het model"
-    },
-    "searchModel": {
-      "desc": "Het huidige model ondersteunt geen functieaanroepen, dus het moet worden gecombineerd met een model dat functieaanroepen ondersteunt om online te zoeken",
-      "title": "Zoekhulpmiddel model"
-    },
-    "title": "Online zoeken"
-  },
+  "search.grounding.searchQueries": "Zoekwoorden",
+  "search.grounding.title": "Er zijn {{count}} resultaten gevonden",
+  "search.mode.auto.desc": "Intelligente beoordeling of er gezocht moet worden op basis van de gesprekinhoud",
+  "search.mode.auto.title": "Slimme verbinding",
+  "search.mode.off.desc": "Gebruik alleen de basiskennis van het model, zonder online zoekopdrachten",
+  "search.mode.off.title": "Verbinding uitschakelen",
+  "search.mode.on.desc": "Voortdurend online zoeken voor de nieuwste informatie",
+  "search.mode.on.title": "Altijd verbonden",
+  "search.mode.useModelBuiltin": "Gebruik de ingebouwde zoekmachine van het model",
+  "search.searchModel.desc": "Het huidige model ondersteunt geen functieaanroepen, dus het moet worden gecombineerd met een model dat functieaanroepen ondersteunt om online te zoeken",
+  "search.searchModel.title": "Zoekhulpmiddel model",
+  "search.title": "Online zoeken",
   "searchAgentPlaceholder": "Zoekassistent...",
   "searchAgents": "Zoekassistent...",
   "selectedAgents": "Geselecteerde assistenten",
   "sendPlaceholder": "Stel een vraag, creëer iets of begin een taak, <hotkey><hotkey/>",
-  "sessionGroup": {
-    "config": "Groepsbeheer",
-    "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
-    "createAgentSuccess": "Assistent succesvol aangemaakt",
-    "createGroup": "Nieuwe groep toevoegen",
-    "createGroupFailed": "Het aanmaken van de groepschat is mislukt",
-    "createGroupSuccess": "Groepschat succesvol aangemaakt",
-    "createSuccess": "Succesvol aangemaakt",
-    "creatingAgent": "Assistent wordt aangemaakt...",
-    "groupName": "Groepsnaam",
-    "inputPlaceholder": "Voer de naam van de groep in...",
-    "moveGroup": "Verplaatsen naar groep",
-    "newGroup": "Nieuwe groep",
-    "noAvailableAgents": "Geen beschikbare assistenten",
-    "noMatchingAgents": "Geen overeenkomende assistenten gevonden",
-    "noSelectedAgents": "Selecteer een assistent",
-    "rename": "Groepsnaam wijzigen",
-    "renameSuccess": "Naam succesvol gewijzigd",
-    "searchAgents": "Assistenten zoeken",
-    "selectedAgents": "Geselecteerde assistenten ({{count}})",
-    "sortSuccess": "Sorteren succesvol voltooid",
-    "sorting": "Groepsordening wordt bijgewerkt...",
-    "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
-  },
-  "shareModal": {
-    "copy": "Kopiëren",
-    "download": "Screenshot downloaden",
-    "downloadError": "Download mislukt",
-    "downloadFile": "Bestand downloaden",
-    "downloadPdf": "PDF downloaden",
-    "downloadSuccess": "Download geslaagd",
-    "exportMode": {
-      "full": "Standaard",
-      "label": "Exportmodus",
-      "simple": "Compatibel met OpenAI"
-    },
-    "exportPdf": "Exporteren als PDF",
-    "exportTitle": "Standaardtitel",
-    "generatePdf": "PDF genereren",
-    "generatingPdf": "PDF wordt gegenereerd...",
-    "imageType": "Afbeeldingstype",
-    "includeTool": "Inclusief pluginbericht",
-    "includeUser": "Inclusief gebruikersbericht",
-    "loadingPdf": "PDF laden...",
-    "noPdfData": "Geen PDF-gegevens beschikbaar",
-    "pdf": "PDF",
-    "pdfErrorDescription": "Er is een fout opgetreden bij het genereren van de PDF, probeer het opnieuw",
-    "pdfGenerationError": "PDF-generatie mislukt",
-    "pdfReady": "PDF is klaar",
-    "regeneratePdf": "PDF opnieuw genereren",
-    "screenshot": "Screenshot",
-    "settings": "Exportinstellingen",
-    "text": "Tekst",
-    "widthMode": {
-      "label": "Breedtemodus",
-      "narrow": "Smalle schermmodus",
-      "wide": "Brede schermmodus"
-    },
-    "withBackground": "Met achtergrondafbeelding",
-    "withFooter": "Met voettekst",
-    "withPluginInfo": "Met plug-in informatie",
-    "withRole": "Inclusief berichtrol",
-    "withSystemRole": "Met assistentrolinstelling"
-  },
-  "stt": {
-    "action": "Spraakinvoer",
-    "loading": "Bezig met herkennen...",
-    "prettifying": "Aan het verfraaien..."
-  },
-  "supervisor": {
-    "todoList": {
-      "allComplete": "Alle taken zijn voltooid",
-      "title": "Taken voltooid"
-    }
-  },
-  "tab": {
-    "groupProfile": "Groepsprofiel",
-    "profile": "Assistentprofiel",
-    "search": "Zoeken"
-  },
-  "task": {
-    "activity": {
-      "calling": "Hulpmiddel wordt aangeroepen...",
-      "generating": "Antwoord wordt gegenereerd...",
-      "gotResult": "Resultaat van hulpmiddel ontvangen",
-      "toolCalling": "{{toolName}} wordt aangeroepen...",
-      "toolResult": "Resultaat van {{toolName}} ontvangen"
-    },
-    "metrics": {
-      "stepsShort": "stap",
-      "toolCallsShort": "keer gereedschap gebruikt"
-    },
-    "status": {
-      "initializing": "Taak wordt gestart..."
-    }
-  },
-  "thread": {
-    "divider": "Subonderwerp",
-    "threadMessageCount": "{{messageCount}} berichten",
-    "title": "Subonderwerp"
-  },
-  "toggleWideScreen": {
-    "off": "Schakel breedbeeldmodus uit",
-    "on": "Schakel breedbeeldmodus in"
-  },
-  "tokenDetails": {
-    "chats": "Chats",
-    "historySummary": "Geschiedenis samenvatting",
-    "rest": "Rust",
-    "supervisor": "Groepsorganisator",
-    "systemRole": "Systeemrol",
-    "title": "Contextuele details",
-    "tools": "Tools",
-    "total": "Totaal",
-    "used": "Gebruikt"
-  },
-  "tokenTag": {
-    "overload": "Overschrijding van limiet",
-    "remained": "Resterend",
-    "used": "Gebruikt"
-  },
-  "tool": {
-    "intervention": {
-      "approve": "Goedkeuren",
-      "approveAndRemember": "Goedkeuren en onthouden",
-      "approveOnce": "Alleen deze keer goedkeuren",
-      "mode": {
-        "allowList": "Toegestane lijst",
-        "allowListDesc": "Voer alleen automatisch goedgekeurde tools uit",
-        "autoRun": "Automatisch goedkeuren",
-        "autoRunDesc": "Keur automatisch alle tooluitvoeringen goed",
-        "manual": "Handmatig",
-        "manualDesc": "Handmatige goedkeuring vereist bij elke oproep"
-      },
-      "reject": "Weigeren",
-      "rejectAndContinue": "Weigeren en opnieuw proberen",
-      "rejectOnly": "Weigeren",
-      "rejectReasonPlaceholder": "Het opgeven van een reden helpt de agent om toekomstige acties te verbeteren",
-      "rejectTitle": "Huidige tooloproep weigeren",
-      "rejectedWithReason": "Deze tooloproep is geweigerd met reden: {{reason}}",
-      "toolAbort": "Deze hulpmiddeloproep is door de gebruiker geannuleerd",
-      "toolRejected": "Deze tooloproep is geweigerd"
-    }
-  },
-  "toolAuth": {
-    "authorize": "Autoriseren",
-    "authorizing": "Bezig met autoriseren...",
-    "hint": "Zonder toestemming of configuratie kunnen deze tools niet correct functioneren, wat kan leiden tot ontbrekende functies of fouten in de assistent.",
-    "signIn": "Inloggen",
-    "title": "Autoriseer de tools voor de assistent"
-  },
-  "topic": {
-    "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
-    "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
-    "openNewTopic": "Nieuw onderwerp openen",
-    "recent": "Recente onderwerpen",
-    "saveCurrentMessages": "Huidig gesprek opslaan als onderwerp"
-  },
-  "translate": {
-    "action": "Vertalen",
-    "clear": "Vertaling verwijderen"
-  },
-  "tts": {
-    "action": "Tekst-naar-spraak",
-    "clear": "Spraak verwijderen"
-  },
+  "sessionGroup.config": "Groepsbeheer",
+  "sessionGroup.confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
+  "sessionGroup.createAgentSuccess": "Assistent succesvol aangemaakt",
+  "sessionGroup.createGroup": "Nieuwe groep toevoegen",
+  "sessionGroup.createGroupFailed": "Het aanmaken van de groepschat is mislukt",
+  "sessionGroup.createGroupSuccess": "Groepschat succesvol aangemaakt",
+  "sessionGroup.createSuccess": "Succesvol aangemaakt",
+  "sessionGroup.creatingAgent": "Assistent wordt aangemaakt...",
+  "sessionGroup.groupName": "Groepsnaam",
+  "sessionGroup.inputPlaceholder": "Voer de naam van de groep in...",
+  "sessionGroup.moveGroup": "Verplaatsen naar groep",
+  "sessionGroup.newGroup": "Nieuwe groep",
+  "sessionGroup.noAvailableAgents": "Geen beschikbare assistenten",
+  "sessionGroup.noMatchingAgents": "Geen overeenkomende assistenten gevonden",
+  "sessionGroup.noSelectedAgents": "Selecteer een assistent",
+  "sessionGroup.rename": "Groepsnaam wijzigen",
+  "sessionGroup.renameSuccess": "Naam succesvol gewijzigd",
+  "sessionGroup.searchAgents": "Assistenten zoeken",
+  "sessionGroup.selectedAgents": "Geselecteerde assistenten ({{count}})",
+  "sessionGroup.sortSuccess": "Sorteren succesvol voltooid",
+  "sessionGroup.sorting": "Groepsordening wordt bijgewerkt...",
+  "sessionGroup.tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn",
+  "shareModal.copy": "Kopiëren",
+  "shareModal.download": "Screenshot downloaden",
+  "shareModal.downloadError": "Download mislukt",
+  "shareModal.downloadFile": "Bestand downloaden",
+  "shareModal.downloadPdf": "PDF downloaden",
+  "shareModal.downloadSuccess": "Download geslaagd",
+  "shareModal.exportMode.full": "Standaard",
+  "shareModal.exportMode.label": "Exportmodus",
+  "shareModal.exportMode.simple": "Compatibel met OpenAI",
+  "shareModal.exportPdf": "Exporteren als PDF",
+  "shareModal.exportTitle": "Standaardtitel",
+  "shareModal.generatePdf": "PDF genereren",
+  "shareModal.generatingPdf": "PDF wordt gegenereerd...",
+  "shareModal.imageType": "Afbeeldingstype",
+  "shareModal.includeTool": "Inclusief pluginbericht",
+  "shareModal.includeUser": "Inclusief gebruikersbericht",
+  "shareModal.loadingPdf": "PDF laden...",
+  "shareModal.noPdfData": "Geen PDF-gegevens beschikbaar",
+  "shareModal.pdf": "PDF",
+  "shareModal.pdfErrorDescription": "Er is een fout opgetreden bij het genereren van de PDF, probeer het opnieuw",
+  "shareModal.pdfGenerationError": "PDF-generatie mislukt",
+  "shareModal.pdfReady": "PDF is klaar",
+  "shareModal.regeneratePdf": "PDF opnieuw genereren",
+  "shareModal.screenshot": "Screenshot",
+  "shareModal.settings": "Exportinstellingen",
+  "shareModal.text": "Tekst",
+  "shareModal.widthMode.label": "Breedtemodus",
+  "shareModal.widthMode.narrow": "Smalle schermmodus",
+  "shareModal.widthMode.wide": "Brede schermmodus",
+  "shareModal.withBackground": "Met achtergrondafbeelding",
+  "shareModal.withFooter": "Met voettekst",
+  "shareModal.withPluginInfo": "Met plug-in informatie",
+  "shareModal.withRole": "Inclusief berichtrol",
+  "shareModal.withSystemRole": "Met assistentrolinstelling",
+  "stt.action": "Spraakinvoer",
+  "stt.loading": "Bezig met herkennen...",
+  "stt.prettifying": "Aan het verfraaien...",
+  "supervisor.todoList.allComplete": "Alle taken zijn voltooid",
+  "supervisor.todoList.title": "Taken voltooid",
+  "tab.groupProfile": "Groepsprofiel",
+  "tab.profile": "Assistentprofiel",
+  "tab.search": "Zoeken",
+  "task.activity.calling": "Hulpmiddel wordt aangeroepen...",
+  "task.activity.generating": "Antwoord wordt gegenereerd...",
+  "task.activity.gotResult": "Resultaat van hulpmiddel ontvangen",
+  "task.activity.toolCalling": "{{toolName}} wordt aangeroepen...",
+  "task.activity.toolResult": "Resultaat van {{toolName}} ontvangen",
+  "task.metrics.stepsShort": "stap",
+  "task.metrics.toolCallsShort": "keer gereedschap gebruikt",
+  "task.status.initializing": "Taak wordt gestart...",
+  "thread.divider": "Subonderwerp",
+  "thread.threadMessageCount": "{{messageCount}} berichten",
+  "thread.title": "Subonderwerp",
+  "toggleWideScreen.off": "Schakel breedbeeldmodus uit",
+  "toggleWideScreen.on": "Schakel breedbeeldmodus in",
+  "tokenDetails.chats": "Chats",
+  "tokenDetails.historySummary": "Geschiedenis samenvatting",
+  "tokenDetails.rest": "Rust",
+  "tokenDetails.supervisor": "Groepsorganisator",
+  "tokenDetails.systemRole": "Systeemrol",
+  "tokenDetails.title": "Contextuele details",
+  "tokenDetails.tools": "Tools",
+  "tokenDetails.total": "Totaal",
+  "tokenDetails.used": "Gebruikt",
+  "tokenTag.overload": "Overschrijding van limiet",
+  "tokenTag.remained": "Resterend",
+  "tokenTag.used": "Gebruikt",
+  "tool.intervention.approve": "Goedkeuren",
+  "tool.intervention.approveAndRemember": "Goedkeuren en onthouden",
+  "tool.intervention.approveOnce": "Alleen deze keer goedkeuren",
+  "tool.intervention.mode.allowList": "Toegestane lijst",
+  "tool.intervention.mode.allowListDesc": "Voer alleen automatisch goedgekeurde tools uit",
+  "tool.intervention.mode.autoRun": "Automatisch goedkeuren",
+  "tool.intervention.mode.autoRunDesc": "Keur automatisch alle tooluitvoeringen goed",
+  "tool.intervention.mode.manual": "Handmatig",
+  "tool.intervention.mode.manualDesc": "Handmatige goedkeuring vereist bij elke oproep",
+  "tool.intervention.reject": "Weigeren",
+  "tool.intervention.rejectAndContinue": "Weigeren en opnieuw proberen",
+  "tool.intervention.rejectOnly": "Weigeren",
+  "tool.intervention.rejectReasonPlaceholder": "Het opgeven van een reden helpt de agent om toekomstige acties te verbeteren",
+  "tool.intervention.rejectTitle": "Huidige tooloproep weigeren",
+  "tool.intervention.rejectedWithReason": "Deze tooloproep is geweigerd met reden: {{reason}}",
+  "tool.intervention.toolAbort": "Deze hulpmiddeloproep is door de gebruiker geannuleerd",
+  "tool.intervention.toolRejected": "Deze tooloproep is geweigerd",
+  "toolAuth.authorize": "Autoriseren",
+  "toolAuth.authorizing": "Bezig met autoriseren...",
+  "toolAuth.hint": "Zonder toestemming of configuratie kunnen deze tools niet correct functioneren, wat kan leiden tot ontbrekende functies of fouten in de assistent.",
+  "toolAuth.signIn": "Inloggen",
+  "toolAuth.title": "Autoriseer de tools voor de assistent",
+  "topic.checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
+  "topic.checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
+  "topic.openNewTopic": "Nieuw onderwerp openen",
+  "topic.recent": "Recente onderwerpen",
+  "topic.saveCurrentMessages": "Huidig gesprek opslaan als onderwerp",
+  "translate.action": "Vertalen",
+  "translate.clear": "Vertaling verwijderen",
+  "tts.action": "Tekst-naar-spraak",
+  "tts.clear": "Spraak verwijderen",
   "untitledAgent": "Naamloze assistent",
   "untitledGroup": "Naamloze groep",
   "updateAgent": "Assistentgegevens bijwerken",
-  "upload": {
-    "action": {
-      "fileUpload": "Bestand uploaden",
-      "folderUpload": "Map uploaden",
-      "imageDisabled": "Dit model ondersteunt momenteel geen visuele herkenning, schakel alstublieft naar een ander model.",
-      "imageUpload": "Afbeelding uploaden",
-      "tooltip": "Uploaden"
-    },
-    "clientMode": {
-      "actionFiletip": "Bestand uploaden",
-      "actionTooltip": "Uploaden",
-      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
-      "fileNotSupported": "Bestand uploaden wordt momenteel niet ondersteund in de browsermodus, alleen afbeeldingen zijn toegestaan",
-      "visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken"
-    },
-    "preview": {
-      "prepareTasks": "Voorbereiden van blokken...",
-      "status": {
-        "pending": "Voorbereiden om te uploaden...",
-        "processing": "Bestand wordt verwerkt..."
-      }
-    },
-    "validation": {
-      "videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}"
-    }
-  },
-  "viewMode": {
-    "normal": "Normaal",
-    "wideScreen": "Breedbeeld"
-  },
+  "upload.action.fileUpload": "Bestand uploaden",
+  "upload.action.folderUpload": "Map uploaden",
+  "upload.action.imageDisabled": "Dit model ondersteunt momenteel geen visuele herkenning, schakel alstublieft naar een ander model.",
+  "upload.action.imageUpload": "Afbeelding uploaden",
+  "upload.action.tooltip": "Uploaden",
+  "upload.clientMode.actionFiletip": "Bestand uploaden",
+  "upload.clientMode.actionTooltip": "Uploaden",
+  "upload.clientMode.disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model.",
+  "upload.clientMode.fileNotSupported": "Bestand uploaden wordt momenteel niet ondersteund in de browsermodus, alleen afbeeldingen zijn toegestaan",
+  "upload.clientMode.visionNotSupported": "Het huidige model ondersteunt geen visuele herkenning, schakel over naar een ander model om deze functie te gebruiken",
+  "upload.preview.prepareTasks": "Voorbereiden van blokken...",
+  "upload.preview.status.pending": "Voorbereiden om te uploaden...",
+  "upload.preview.status.processing": "Bestand wordt verwerkt...",
+  "upload.validation.videoSizeExceeded": "De grootte van het videobestand mag niet groter zijn dan 20MB, de huidige bestandsgrootte is {{actualSize}}",
+  "viewMode.normal": "Normaal",
+  "viewMode.wideScreen": "Breedbeeld",
   "you": "jij",
   "zenMode": "Focusmodus"
 }

@@ -1,24 +1,8 @@
 {
-  "plans": {
-    "plan": {
-      "enterprise": {
-        "title": "نسخه سازمانی"
-      },
-      "free": {
-        "title": "نسخه رایگان"
-      },
-      "hobby": {
-        "title": "نسخه خودکار"
-      },
-      "premium": {
-        "title": "نسخه پیشرفته"
-      },
-      "starter": {
-        "title": "نسخه پایه"
-      },
-      "ultimate": {
-        "title": "نسخه حرفه‌ای"
-      }
-    }
-  }
+  "plans.plan.enterprise.title": "نسخه سازمانی",
+  "plans.plan.free.title": "نسخه رایگان",
+  "plans.plan.hobby.title": "نسخه خودکار",
+  "plans.plan.premium.title": "نسخه پیشرفته",
+  "plans.plan.starter.title": "نسخه پایه",
+  "plans.plan.ultimate.title": "نسخه حرفه‌ای"
 }

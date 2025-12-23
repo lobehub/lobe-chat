@@ -42,7 +42,7 @@ export const useAgentActionsDropdownMenu = ({
     const pageSizeItems = pageSizeOptions.map((size) => ({
       icon: agentPageSize === size ? <Icon icon={LucideCheck} /> : <div />,
       key: `pageSize-${size}`,
-      label: `${size} 个条目`,
+      label: t('pageSizeItem', { count: size }),
       onClick: () => {
         updateSystemStatus({ agentPageSize: size });
       },

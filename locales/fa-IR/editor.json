@@ -1,84 +1,58 @@
 {
-  "actions": {
-    "expand": {
-      "off": "جمع کردن",
-      "on": "باز کردن"
-    },
-    "typobar": {
-      "off": "مخفی کردن نوار ابزار قالب‌بندی",
-      "on": "نمایش نوار ابزار قالب‌بندی"
-    }
-  },
-  "autoSave": {
-    "latest": "آخرین نسخه بارگذاری شد",
-    "saved": "ذخیره شد",
-    "saving": "در حال ذخیره‌سازی خودکار..."
-  },
+  "actions.expand.off": "جمع کردن",
+  "actions.expand.on": "باز کردن",
+  "actions.typobar.off": "مخفی کردن نوار ابزار قالب‌بندی",
+  "actions.typobar.on": "نمایش نوار ابزار قالب‌بندی",
+  "autoSave.latest": "آخرین نسخه بارگذاری شد",
+  "autoSave.saved": "ذخیره شد",
+  "autoSave.saving": "در حال ذخیره‌سازی خودکار...",
   "cancel": "لغو",
   "confirm": "تأیید",
-  "file": {
-    "error": "خطا: {{message}}",
-    "uploading": "در حال بارگذاری فایل..."
-  },
-  "image": {
-    "broken": "تصویر خراب است"
-  },
-  "link": {
-    "edit": "ویرایش پیوند",
-    "editLinkTitle": "پیوند",
-    "editTextTitle": "عنوان",
-    "open": "باز کردن پیوند",
-    "placeholder": "آدرس URL پیوند را وارد کنید",
-    "unlink": "حذف پیوند"
-  },
-  "markdown": {
-    "cancel": "لغو",
-    "confirm": "تبدیل",
-    "parseMessage": "تبدیل به فرمت Markdown، محتوای فعلی بازنویسی خواهد شد. آیا تأیید می‌کنید؟ (به‌طور خودکار پس از ۵ ثانیه بسته می‌شود)",
-    "parseTitle": "قالب‌بندی Markdown"
-  },
-  "math": {
-    "placeholder": "لطفاً فرمول TeX را وارد کنید"
-  },
-  "modifier": {
-    "accept": "پذیرفتن",
-    "acceptAll": "پذیرفتن همه",
-    "reject": "رد کردن",
-    "rejectedAll": "رد کردن همه"
-  },
-  "slash": {
-    "h1": "عنوان سطح یک",
-    "h2": "عنوان سطح دو",
-    "h3": "عنوان سطح سه",
-    "hr": "خط جداکننده",
-    "table": "جدول",
-    "tex": "فرمول TeX"
-  },
-  "table": {
-    "delete": "حذف جدول",
-    "deleteColumn": "حذف ستون",
-    "deleteRow": "حذف ردیف",
-    "insertColumnLeft": "درج {{count}} ستون در سمت چپ",
-    "insertColumnRight": "درج {{count}} ستون در سمت راست",
-    "insertRowAbove": "درج {{count}} ردیف در بالا",
-    "insertRowBelow": "درج {{count}} ردیف در پایین"
-  },
-  "typobar": {
-    "blockquote": "نقل قول",
-    "bold": "پررنگ",
-    "bulletList": "فهرست نشانه‌دار",
-    "code": "کد درون‌خطی",
-    "codeblock": "بلوک کد",
-    "image": "تصویر",
-    "italic": "ایتالیک",
-    "link": "پیوند",
-    "numberList": "فهرست شماره‌دار",
-    "redo": "دوباره انجام دادن",
-    "strikethrough": "خط خورده",
-    "table": "جدول",
-    "taskList": "فهرست وظایف",
-    "tex": "فرمول TeX",
-    "underline": "زیرخط",
-    "undo": "واگردانی"
-  }
+  "file.error": "خطا: {{message}}",
+  "file.uploading": "در حال بارگذاری فایل...",
+  "image.broken": "تصویر خراب است",
+  "link.edit": "ویرایش پیوند",
+  "link.editLinkTitle": "پیوند",
+  "link.editTextTitle": "عنوان",
+  "link.open": "باز کردن پیوند",
+  "link.placeholder": "آدرس URL پیوند را وارد کنید",
+  "link.unlink": "حذف پیوند",
+  "markdown.cancel": "لغو",
+  "markdown.confirm": "تبدیل",
+  "markdown.parseMessage": "تبدیل به فرمت Markdown، محتوای فعلی بازنویسی خواهد شد. آیا تأیید می‌کنید؟ (به‌طور خودکار پس از ۵ ثانیه بسته می‌شود)",
+  "markdown.parseTitle": "قالب‌بندی Markdown",
+  "math.placeholder": "لطفاً فرمول TeX را وارد کنید",
+  "modifier.accept": "پذیرفتن",
+  "modifier.acceptAll": "پذیرفتن همه",
+  "modifier.reject": "رد کردن",
+  "modifier.rejectedAll": "رد کردن همه",
+  "slash.h1": "عنوان سطح یک",
+  "slash.h2": "عنوان سطح دو",
+  "slash.h3": "عنوان سطح سه",
+  "slash.hr": "خط جداکننده",
+  "slash.table": "جدول",
+  "slash.tex": "فرمول TeX",
+  "table.delete": "حذف جدول",
+  "table.deleteColumn": "حذف ستون",
+  "table.deleteRow": "حذف ردیف",
+  "table.insertColumnLeft": "درج {{count}} ستون در سمت چپ",
+  "table.insertColumnRight": "درج {{count}} ستون در سمت راست",
+  "table.insertRowAbove": "درج {{count}} ردیف در بالا",
+  "table.insertRowBelow": "درج {{count}} ردیف در پایین",
+  "typobar.blockquote": "نقل قول",
+  "typobar.bold": "پررنگ",
+  "typobar.bulletList": "فهرست نشانه‌دار",
+  "typobar.code": "کد درون‌خطی",
+  "typobar.codeblock": "بلوک کد",
+  "typobar.image": "تصویر",
+  "typobar.italic": "ایتالیک",
+  "typobar.link": "پیوند",
+  "typobar.numberList": "فهرست شماره‌دار",
+  "typobar.redo": "دوباره انجام دادن",
+  "typobar.strikethrough": "خط خورده",
+  "typobar.table": "جدول",
+  "typobar.taskList": "فهرست وظایف",
+  "typobar.tex": "فرمول TeX",
+  "typobar.underline": "زیرخط",
+  "typobar.undo": "واگردانی"
 }
