@@ -1,11 +1,10 @@
 import type { AgentGroupDetail } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
-import { mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
-import { useClientDataSWRWithSync } from '@/libs/swr';
+import { mutate, useClientDataSWRWithSync } from '@/libs/swr';
 import { chatGroupService } from '@/services/chatGroup';
 import { getAgentStoreState } from '@/store/agent';
 import { ChatGroupStore } from '@/store/agentGroup/store';

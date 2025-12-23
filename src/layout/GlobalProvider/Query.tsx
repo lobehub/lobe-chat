@@ -1,11 +1,27 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { PropsWithChildren, useState } from 'react';
-import { SWRConfig } from 'swr';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { SWRConfig, useSWRConfig } from 'swr';
 
+import { setScopedMutate } from '@/libs/swr';
 import { swrCacheProvider } from '@/libs/swr/localStorageProvider';
 import { lambdaQuery, lambdaQueryClient } from '@/libs/trpc/client';
+
+/**
+ * Initialize scoped mutate for use outside React components (e.g., Zustand stores)
+ * This component must be rendered inside SWRConfig to access the scoped mutate
+ */
+const SWRMutateInitializer = ({ children }: PropsWithChildren) => {
+  const { mutate } = useSWRConfig();
+
+  useEffect(() => {
+    setScopedMutate(mutate);
+  }, [mutate]);
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{children}</>;
+};
 
 const QueryProvider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(() => new QueryClient());
@@ -19,9 +35,11 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <SWRConfig value={{ provider }}>
-      <lambdaQuery.Provider client={lambdaQueryClient} queryClient={providerQueryClient}>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </lambdaQuery.Provider>
+      <SWRMutateInitializer>
+        <lambdaQuery.Provider client={lambdaQueryClient} queryClient={providerQueryClient}>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </lambdaQuery.Provider>
+      </SWRMutateInitializer>
     </SWRConfig>
   );
 };
