@@ -1,7 +1,7 @@
 'use client';
 
 import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
-import { ActionIcon, Avatar, Flexbox, Text, Tooltip , Button } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, Flexbox, Text, Tooltip, TooltipGroup } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Globe } from 'lucide-react';
 import { memo } from 'react';
@@ -51,37 +51,39 @@ const UserHeader = memo(() => {
 
         {user.description && <Text as={'p'}>{user.description}</Text>}
 
-        <Flexbox align={'center'} gap={8} horizontal>
-          {user.socialLinks?.github && (
-            <Tooltip title="GitHub">
-              <a
-                href={`https://github.com/${user?.socialLinks?.github}`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <ActionIcon icon={<SiGithub size={16} />} size={20} variant={'outlined'} />
-              </a>
-            </Tooltip>
-          )}
-          {user.socialLinks?.twitter && (
-            <Tooltip title="Twitter">
-              <a
-                href={`https://twitter.com/${user?.socialLinks?.twitter}`}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <ActionIcon icon={<SiX size={16} />} size={20} variant={'outlined'} />
-              </a>
-            </Tooltip>
-          )}
-          {user.socialLinks?.website && (
-            <Tooltip title={t('user.website')}>
-              <a href={user?.socialLinks?.website} rel="noopener noreferrer" target="_blank">
-                <ActionIcon icon={Globe} size={20} variant={'outlined'} />
-              </a>
-            </Tooltip>
-          )}
-        </Flexbox>
+        <TooltipGroup>
+          <Flexbox align={'center'} gap={8} horizontal>
+            {user.socialLinks?.github && (
+              <Tooltip title="GitHub">
+                <a
+                  href={`https://github.com/${user?.socialLinks?.github}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <ActionIcon icon={<SiGithub size={16} />} size={20} variant={'outlined'} />
+                </a>
+              </Tooltip>
+            )}
+            {user.socialLinks?.twitter && (
+              <Tooltip title="Twitter">
+                <a
+                  href={`https://twitter.com/${user?.socialLinks?.twitter}`}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <ActionIcon icon={<SiX size={16} />} size={20} variant={'outlined'} />
+                </a>
+              </Tooltip>
+            )}
+            {user.socialLinks?.website && (
+              <Tooltip title={t('user.website')}>
+                <a href={user?.socialLinks?.website} rel="noopener noreferrer" target="_blank">
+                  <ActionIcon icon={Globe} size={20} variant={'outlined'} />
+                </a>
+              </Tooltip>
+            )}
+          </Flexbox>
+        </TooltipGroup>
       </Flexbox>
     </>
   );

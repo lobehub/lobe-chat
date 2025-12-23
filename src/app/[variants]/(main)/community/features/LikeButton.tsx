@@ -1,4 +1,4 @@
-import { Button, Flexbox, Icon, Tooltip } from '@lobehub/ui';
+import { Button, Flexbox, Icon, Tooltip, TooltipGroup } from '@lobehub/ui';
 import { Space } from 'antd';
 import { ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -24,31 +24,33 @@ const LikeButton = memo<LikeButtonProps>(
 
     if (showDislike)
       return (
-        <Space.Compact style={{ flex: 1.75 }}>
-          <Tooltip title={t('like')}>
-            <Button
-              block
-              className={styles.number}
-              icon={ThumbsUpIcon}
-              onClick={() => onLikeClick?.(!isLiked)}
-              size={'large'}
-              style={{ flex: 1 }}
-              type={isLiked ? 'primary' : undefined}
-            >
-              {formatShortenNumber(count)}
-            </Button>
-          </Tooltip>
-          <Tooltip title={t('dislike')}>
-            <Button
-              className={styles.number}
-              icon={<Icon icon={ThumbsDownIcon} />}
-              onClick={() => onDislikeClick?.(!isDisliked)}
-              size={'large'}
-              style={{ flex: 'none' }}
-              type={isDisliked ? 'primary' : 'default'}
-            />
-          </Tooltip>
-        </Space.Compact>
+        <TooltipGroup>
+          <Space.Compact style={{ flex: 1.75 }}>
+            <Tooltip title={t('like')}>
+              <Button
+                block
+                className={styles.number}
+                icon={ThumbsUpIcon}
+                onClick={() => onLikeClick?.(!isLiked)}
+                size={'large'}
+                style={{ flex: 1 }}
+                type={isLiked ? 'primary' : undefined}
+              >
+                {formatShortenNumber(count)}
+              </Button>
+            </Tooltip>
+            <Tooltip title={t('dislike')}>
+              <Button
+                className={styles.number}
+                icon={<Icon icon={ThumbsDownIcon} />}
+                onClick={() => onDislikeClick?.(!isDisliked)}
+                size={'large'}
+                style={{ flex: 'none' }}
+                type={isDisliked ? 'primary' : 'default'}
+              />
+            </Tooltip>
+          </Space.Compact>
+        </TooltipGroup>
       );
 
     return (
