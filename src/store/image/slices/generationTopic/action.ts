@@ -1,10 +1,10 @@
 import { chainSummaryGenerationTitle } from '@lobechat/prompts';
 import isEqual from 'fast-deep-equal';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { UpdateTopicValue } from '@/server/routers/lambda/generationTopic';
 import { chatService } from '@/services/chat';
 import { generationTopicService } from '@/services/generationTopic';

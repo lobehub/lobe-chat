@@ -1,10 +1,10 @@
 import { buildFolderTree, sanitizeFolderName, topologicalSortFolders } from '@lobechat/utils';
 import pMap from 'p-map';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { FileService, fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import {

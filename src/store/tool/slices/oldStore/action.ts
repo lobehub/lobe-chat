@@ -2,10 +2,11 @@ import { LobeTool } from '@lobechat/types';
 import { uniqBy } from 'es-toolkit/compat';
 import { t } from 'i18next';
 import { produce } from 'immer';
-import useSWR, { SWRResponse, mutate } from 'swr';
+import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
+import { mutate } from '@/libs/swr';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
 import { globalHelpers } from '@/store/global/helpers';

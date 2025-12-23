@@ -1,9 +1,9 @@
 import { parse } from '@lobechat/conversation-flow';
 import { ConversationContext, UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
-import { mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { mutate } from '@/libs/swr';
 import { ChatStore } from '@/store/chat/store';
 
 import { MessageMapKeyInput, messageMapKey } from '../../../utils/messageMapKey';

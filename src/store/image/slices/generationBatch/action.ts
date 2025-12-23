@@ -1,9 +1,9 @@
 import { isEqual } from 'es-toolkit/compat';
 import { useRef } from 'react';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { GetGenerationStatusResult } from '@/server/routers/lambda/generation';
 import { generationService } from '@/services/generation';
 import { generationBatchService } from '@/services/generationBatch';

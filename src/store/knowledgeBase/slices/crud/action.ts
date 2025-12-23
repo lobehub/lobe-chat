@@ -1,7 +1,7 @@
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { knowledgeBaseService } from '@/services/knowledgeBase';
 import { KnowledgeBaseStore } from '@/store/knowledgeBase/store';
 import { CreateKnowledgeBaseParams, KnowledgeBaseItem } from '@/types/knowledgeBase';

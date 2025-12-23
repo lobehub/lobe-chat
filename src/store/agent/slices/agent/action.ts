@@ -1,12 +1,12 @@
 import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
-import { SWRResponse, mutate } from 'swr';
+import type { SWRResponse } from 'swr';
 import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { useClientDataSWR } from '@/libs/swr';
+import { mutate, useClientDataSWR } from '@/libs/swr';
 import { CreateAgentParams, CreateAgentResult, agentService } from '@/services/agent';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
