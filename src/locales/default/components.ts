@@ -2,7 +2,7 @@ export default {
   ArgsInput: {
     addArgument: '添加参数',
     argumentPlaceholder: '参数 {{index}}',
-    enterFirstArgument: '输入第一个参数...',
+    enterFirstArgument: '输入第一个参数…',
   },
   DragUpload: {
     dragDesc: '拖拽文件到这里，支持上传多个图片。',
@@ -34,16 +34,13 @@ export default {
         '即将从资源库中移除选中的 {{count}} 个文件，移除后文件仍然可以在全部文件中查看，请确认你的操作',
       copyUrl: '复制链接',
       copyUrlSuccess: '文件地址复制成功',
-      createChunkingTask: '准备中...',
+      createChunkingTask: '准备中…',
       deleteSuccess: '文件删除成功',
-      downloading: '文件下载中...',
-      goBack: '返回上一页',
-      goForward: '前进到下一页',
-      goToParent: '进入父级文件夹',
+      downloading: '文件下载中…',
       moveError: '移动文件失败',
       moveHere: '移动到此处',
       moveSuccess: '文件移动成功',
-      moveToFolder: '移动到...',
+      moveToFolder: '移动到…',
       moveToRoot: '移动到根目录',
       removeFromKnowledgeBase: '从资源库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
@@ -51,7 +48,6 @@ export default {
       renameError: '重命名失败',
       renameSuccess: '重命名成功',
     },
-    bottom: '已经到底啦',
     config: {
       showFilesInKnowledgeBase: '显示资源库中内容',
     },
@@ -145,7 +141,6 @@ export default {
   },
   ModelSelect: {
     featureTag: {
-      custom: '自定义模型，默认设定同时支持函数调用与视觉识别，请根据实际情况验证上述能力的可用性',
       file: '该模型支持上传文件读取与识别',
       functionCall: '该模型支持函数调用（Function Call）',
       imageOutput: '该模型支持生成图片',
@@ -161,8 +156,6 @@ export default {
     emptyModel: '没有启用的模型，请前往设置开启',
     emptyProvider: '没有启用的服务商，请前往设置开启',
     goToSettings: '前往设置',
-    provider: '服务商',
-    title: '模型',
   },
   MultiImagesUpload: {
     actions: {
@@ -183,7 +176,6 @@ export default {
       uploadingWithCount: '{{completed}}/{{total}} 已上传',
     },
     validation: {
-      fileSizeExceeded: 'File size exceeded limit',
       fileSizeExceededDetail:
         '{{fileName}} ({{actualSize}}) exceeds the maximum size limit of {{maxSize}}',
       fileSizeExceededMultiple:
@@ -193,7 +185,6 @@ export default {
   },
   OllamaSetupGuide: {
     action: {
-      close: '关闭提示',
       start: '已安装',
     },
     cors: {
@@ -207,7 +198,7 @@ export default {
       reboot: '请在执行完成后重启 Ollama 服务',
       title: '配置 Ollama 允许跨域访问',
       windows:
-        '在 Windows 上，点击「控制面板」，进入编辑系统环境变量。为您的用户账户新建名为 「OLLAMA_ORIGINS」 的环境变量，值为 * ，点击 「OK/应用」 保存',
+        '在 Windows 上，点击「控制面板」，进入编辑系统环境变量。为你的用户账户新建名为「OLLAMA_ORIGINS」的环境变量，值为 * ，点击「OK/应用」保存',
     },
     install: {
       description: '请确认你已经开启 Ollama ，如果没有下载 Ollama ，请前往官网<1>下载</1>',
@@ -222,7 +213,7 @@ export default {
     },
   },
   Thinking: {
-    thinking: '深度思考中...',
+    thinking: '深度思考中…',
     thought: '已深度思考（用时 {{duration}} 秒）',
     thoughtWithDuration: '已深度思考',
   },
@@ -232,13 +223,6 @@ export default {
     },
     metadata: {
       empty: '暂无元数据',
-    },
-  },
-  knowledgeBase: {
-    empty: {
-      description: '创建资源库来组织和管理你的资源',
-      search: '未找到匹配的资源库',
-      title: '暂无资源库',
     },
   },
 };

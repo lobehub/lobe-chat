@@ -4,16 +4,13 @@ export default {
       delete: '删除',
       edit: '编辑',
     },
-    defaultType: '情境',
-    deleteConfirm: '确定要删除这条情境记忆吗？此操作不可恢复。',
+    deleteConfirm: '确认删除这条情境记忆？删除后将无法恢复',
     deleteTitle: '删除情境记忆',
-    description: '描述',
     empty: '暂无情境记忆',
-    source: '来源',
   },
   empty: {
     description:
-      '记忆的提取是渐进式的过程，请积累更多话题以丰富记忆提取内容，尝试与助手进行更深入的对话，以便更好地捕捉和存储有价值的信息。',
+      '记忆的提取是渐进式的。积累更多对话，助理会更懂你。试着聊得更深入，让助理捕捉和存储有价值的信息',
     search: '未找到匹配的记忆',
     title: '暂无记忆',
   },
@@ -22,13 +19,9 @@ export default {
       delete: '删除',
       edit: '编辑',
     },
-    defaultType: '经验',
-    deleteConfirm: '确定要删除这条经验记忆吗？此操作不可恢复。',
+    deleteConfirm: '确认删除这条经验记忆？删除后将无法恢复',
     deleteTitle: '删除经验记忆',
     empty: '暂无经验记忆',
-    keyLearning: '关键学习',
-    situation: '情境',
-    source: '来源',
     steps: {
       action: '行动',
       result: '结果',
@@ -37,7 +30,7 @@ export default {
     },
   },
   filter: {
-    search: '搜索记忆关键词或描述...',
+    search: '搜索记忆关键词或描述…',
     sort: {
       createdAt: '创建时间',
       scoreConfidence: '置信度',
@@ -49,7 +42,6 @@ export default {
   identity: {
     empty: '暂无身份记忆',
     filter: {
-      search: '搜索角色、关系或描述...',
       type: {
         all: '全部',
         demographic: '属性',
@@ -59,34 +51,19 @@ export default {
     },
     list: {
       confirmDelete: '确认删除',
-      deleteCancel: '取消',
-      deleteContent: '确定要删除这条身份记忆吗？此操作不可恢复。',
-      deleteOk: '删除',
-      noResults: '没有找到匹配的身份记忆',
-      updated: '已更新',
-    },
-    roleCloud: {
-      collapse: '收起',
-      expand: '展开更多',
-    },
-    view: {
-      list: '列表',
-      timeline: '时间线',
+      deleteContent: '确认删除这条身份记忆？删除后将无法恢复',
     },
   },
-  loading: '加载中...',
   preference: {
     actions: {
       delete: '删除',
       edit: '编辑',
     },
-    conclusionDirectives: '结论指令',
     defaultType: '偏好',
-    deleteConfirm: '确定要删除这条偏好记忆吗？此操作不可恢复。',
+    deleteConfirm: '确认删除这条偏好记忆？删除后将无法恢复',
     deleteTitle: '删除偏好记忆',
     empty: '暂无偏好记忆',
-    source: '来源',
-    suggestions: '助手可能会采取的行动',
+    suggestions: '助理可能会采取的行动',
   },
   tab: {
     contexts: '情境',

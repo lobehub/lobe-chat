@@ -46,7 +46,7 @@ export class Sitemap {
     return Math.ceil(list.length / ITEMS_PER_PAGE);
   }
 
-  // 获取助手总页数
+  // 获取助理总页数
   async getAssistantPageCount(): Promise<number> {
     const list = await this.discoverService.getAssistantIdentifiers();
     return Math.ceil(list.length / ITEMS_PER_PAGE);

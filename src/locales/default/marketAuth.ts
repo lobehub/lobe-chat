@@ -19,9 +19,9 @@ export default {
     messages: {
       authFailed: '授权失败: {{error}}',
       missingParams: '授权参数缺失',
-      processing: '正在处理授权...',
+      processing: '正在处理授权…',
       successWithCountdown: '{{message}} 窗口将在 {{countdown}} 秒后自动关闭',
-      successWithRedirect: '授权成功！正在跳转...',
+      successWithRedirect: '授权成功！正在跳转…',
     },
     titles: {
       error: '授权失败',
@@ -47,10 +47,10 @@ export default {
   },
   messages: {
     authorized: 'LobeHub 服务授权成功',
-    loading: '正在启动授权流程...',
+    loading: '正在启动授权流程…',
     success: {
       cloudMcpInstall: '授权成功！现在可以安装 Cloud MCP 插件了。',
-      submit: '授权成功！现在可以发布助手了。',
+      submit: '授权成功！现在可以发布助理了。',
       upload: '授权成功！现在可以发布新版本了。',
     },
   },
@@ -74,12 +74,12 @@ export default {
         label: '背景图',
         remove: '移除背景图',
         tooltip: '背景图将展示在你的个人主页顶部（建议 16:9 比例）',
-        uploading: '上传中...',
+        uploading: '上传中…',
       },
       description: {
         label: '个人简介',
         maxLength: '个人简介最多 200 个字符',
-        placeholder: '介绍一下你自己...',
+        placeholder: '介绍一下你自己…',
       },
       displayName: {
         label: '昵称',

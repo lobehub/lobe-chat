@@ -12,13 +12,13 @@ export default {
   autoSave: {
     latest: '已加载最新版本',
     saved: '已保存',
-    saving: '自动保存中...',
+    saving: '自动保存中…',
   },
   cancel: '取消',
   confirm: '确认',
   file: {
     error: '错误：{{message}}',
-    uploading: '正在上传文件...',
+    uploading: '正在上传文件…',
   },
   image: {
     broken: '图片损坏',

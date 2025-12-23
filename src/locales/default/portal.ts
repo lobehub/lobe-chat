@@ -1,5 +1,4 @@
 export default {
-  Artifacts: 'Artifacts',
   FilePreview: {
     tabs: {
       chunk: '分块',
@@ -14,7 +13,7 @@ export default {
     },
     svg: {
       copyAsImage: '复制为图片',
-      copyFail: '复制失败，错误原因:{{error}}',
+      copyFail: '复制失败，错误原因：{{error}}',
       copySuccess: '图片复制成功',
       download: {
         png: '下载为 PNG',

@@ -233,7 +233,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         <>
           <Icon icon={LockIcon} style={{ marginRight: 4 }} />
           <Trans i18nKey="providerModels.config.aesGcm" ns={'modelProvider'}>
-            您的秘钥与代理地址等将使用
+            你的秘钥与代理地址等将使用
             <Link href={AES_GCM_URL} style={{ marginInline: 4 }} target={'_blank'}>
               AES-GCM
             </Link>

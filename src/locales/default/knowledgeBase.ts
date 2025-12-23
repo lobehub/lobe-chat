@@ -16,18 +16,10 @@ export default {
     description: {
       placeholder: '资源库简介（选填）',
     },
-    formTitle: '基本信息',
     name: {
       placeholder: '资源库名称',
       required: '请填写资源库名称',
     },
     title: '新建资源库',
   },
-  tab: {
-    evals: '评测',
-    files: '文档',
-    settings: '设置',
-    testing: '召回测试',
-  },
-  title: '资源库',
 };

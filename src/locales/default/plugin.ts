@@ -21,7 +21,7 @@ export default {
         updateMeta: '更新元数据',
         updatePrompt: '更新系统提示词',
       },
-      title: 'Agent Builder',
+      title: '助理构建专家',
     },
     'lobe-group-agent-builder': {
       apiName: {
@@ -33,7 +33,7 @@ export default {
         updateAgentConfig: '更新代理配置',
         updatePrompt: '更新系统提示词',
       },
-      title: 'Group Agent Builder',
+      title: '群组构建专家',
     },
     'lobe-group-management': {
       apiName: {
@@ -132,7 +132,7 @@ export default {
       title: '联网搜索',
     },
   },
-  confirm: '确定',
+  confirm: '确认',
   debug: {
     arguments: '调用参数',
     function_call: '函数调用',
@@ -331,7 +331,7 @@ export default {
         noParams: '该工具没有参数',
         noResults: '未找到符合搜索条件的 API',
         params: '参数:',
-        searchPlaceholder: '搜索工具...',
+        searchPlaceholder: '搜索工具…',
       },
       card: '预览插件展示效果',
       desc: '预览插件描述',
@@ -380,7 +380,7 @@ export default {
     args: '查看参数列表',
     delete: '删除工具调用',
     orphanedToolCall:
-      '该工具调用消息可能因异常原因成为孤立消息，这会影响 Agent 的正常执行，请将其移除',
+      '该工具调用消息可能因异常原因成为孤立消息，这会影响助理的正常执行，请将其移除',
     pluginRender: '查看插件界面',
   },
   list: {
@@ -391,8 +391,8 @@ export default {
     },
   },
   loading: {
-    content: '调用插件中...',
-    plugin: '插件运行中...',
+    content: '调用插件中…',
+    plugin: '插件运行中…',
   },
   mcpEmpty: {
     deployment: '暂无部署选项',
@@ -401,13 +401,13 @@ export default {
     tools: '该插件暂无工具能力',
   },
   mcpInstall: {
-    CHECKING_INSTALLATION: '检查安装环境...',
+    CHECKING_INSTALLATION: '检查安装环境…',
     COMPLETED: '安装完成',
     CONFIGURATION_REQUIRED: '请完成相关配置后继续安装',
     ERROR: '安装错误',
-    FETCHING_MANIFEST: '获取插件描述文件...',
-    GETTING_SERVER_MANIFEST: '初始化 MCP 服务器...',
-    INSTALLING_PLUGIN: '正在安装插件...',
+    FETCHING_MANIFEST: '获取插件描述文件…',
+    GETTING_SERVER_MANIFEST: '初始化 MCP 服务器…',
+    INSTALLING_PLUGIN: '正在安装插件…',
     configurationDescription: '该 MCP 插件需要配置参数才能正常使用，请填写必要的配置信息',
     configurationRequired: '配置插件参数',
     continueInstall: '继续安装',
@@ -471,7 +471,7 @@ export default {
     custom: {
       badge: '自定义插件',
       security: {
-        description: '此插件未经过官方验证，安装可能存在安全风险！请确保您信任插件来源。',
+        description: '此插件未经过官方验证，安装可能存在安全风险！请确保你信任插件来源',
         title: '⚠️ 安全风险提示',
       },
       title: '安装自定义插件',
@@ -484,7 +484,7 @@ export default {
       trustedBy: '由 {{name}} 提供',
       unverified: {
         title: '未经验证的第三方插件',
-        warning: '此插件来自未验证的第三方社区，安装前请确认您信任该来源。',
+        warning: '此插件来自未验证的第三方社区，安装前请确认你信任该来源',
       },
       verified: '已验证',
     },
@@ -505,12 +505,12 @@ export default {
     official: {
       badge: 'LobeHub 官方插件',
       description: '此插件由 LobeHub 官方开发和维护，经过严格的安全审核，可放心使用。',
-      loadingMessage: '正在获取插件详情...',
+      loadingMessage: '正在获取插件详情…',
       loadingTitle: '加载中',
       title: '安装官方插件',
     },
     title: '安装 MCP 插件',
-    warning: '⚠️ 请确认您信任此插件的来源，恶意插件可能会危害您的系统安全。',
+    warning: '⚠️ 请确认你信任此插件的来源，恶意插件可能会危害你的系统安全',
   },
   search: {
     config: {
@@ -597,7 +597,7 @@ export default {
     emptySelectHint: '选择插件以预览详细信息',
     installAllPlugins: '安装全部',
     networkError: '获取插件商店失败，请检测网络连接后重试',
-    placeholder: '搜索插件名称介绍或关键词...',
+    placeholder: '搜索插件名称介绍或关键词…',
     releasedAt: '发布于 {{createdAt}}',
     tabs: {
       installed: '已安装',

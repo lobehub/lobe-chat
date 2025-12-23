@@ -29,7 +29,7 @@ export default {
       builtInBlockList: {
         filtered: '已过滤 {{ignored}} 个文件（共 {{total}} 个文件）',
       },
-      connect: '连接...',
+      connect: '连接…',
       gitignore: {
         apply: '应用规则',
         cancel: '忽略规则',
@@ -42,14 +42,14 @@ export default {
       notion: {
         error: '导入 Notion 文件失败',
         foundFiles: '找到 {{count}} 个文件',
-        importing: '正在导入 Notion 文件...',
+        importing: '正在导入 Notion 文件…',
         noMarkdownFiles: '未在 ZIP 文件中找到 Markdown 文件',
         partial: '已成功导入 {{success}} 个文件，失败 {{failed}} 个',
         success: '成功导入 {{count}} 个文件',
       },
       notionGuide: {
         cancel: '暂不导入',
-        desc: '请先在 Notion 中导出 Markdown（ZIP），点击继续选择压缩包即可导入其中所有页面。',
+        desc: '请先在 Notion 中导出 Markdown（ZIP），点击继续选择压缩包即可导入其中所有页面',
         ok: '选择 Notion ZIP',
         title: '导入 Notion 内容',
       },
@@ -84,7 +84,7 @@ export default {
   library: {
     list: {
       confirmRemoveLibrary:
-        '即将删除该资源库，其中的文件不会删除，将移入全部文件中。资源库删除后将不可恢复，请谨慎操作。',
+        '确认删除该资源库吗？其中的文件不会删除，将移入全部文件中。资源库删除后无法恢复',
       empty: '点击 <1>+</1> 开始创建资源库',
     },
     new: '新建资源库',
@@ -96,10 +96,10 @@ export default {
   },
   networkError: '获取资源库失败，请检测网络连接后重试',
   notSupportGuide: {
-    desc: '当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
+    desc: '当前部署模式不支持文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>',
     features: {
       allKind: {
-        desc: '支持主流文件类型，包括 Word、PPT、Excel、PDF、TXT 等常见文档格式，以及JS、Python 等主流代码文件',
+        desc: '支持主流文件类型，包括 Word、PPT、Excel、PDF、TXT 等常见文档格式，以及 JS、Python 等主流代码文件',
         title: '多种文件类型解析',
       },
       embeddings: {
@@ -107,7 +107,7 @@ export default {
         title: '向量语义化',
       },
       libraries: {
-        desc: '支持创建资源库，并允许添加不同类型的文件，构建属于你的领域资源',
+        desc: '支持创建资源库，允许添加不同类型的文件，构建属于你的领域资源',
         title: '资源库',
       },
     },
@@ -118,7 +118,7 @@ export default {
     autoSaveMessage: '文稿会自动保存，无需手动保存',
     chooseIcon: '选择图标',
     deleteConfirm: {
-      content: '即将删除该文稿，删除后将不可恢复，请谨慎操作。',
+      content: '确认删除该文稿吗？删除后无法恢复',
       title: '删除文稿',
     },
     deleteError: '删除文稿失败',
@@ -138,7 +138,7 @@ export default {
       importDocument: '导入文稿',
       pin: '置顶文稿',
     },
-    saving: '保存中...',
+    saving: '保存中…',
     titlePlaceholder: '无标题',
     wordCount: '{{wordCount}} 字',
   },
@@ -181,8 +181,8 @@ export default {
       item: {
         done: '已上传',
         error: '上传失败，请重试',
-        pending: '准备上传...',
-        processing: '文件处理中...',
+        pending: '准备上传…',
+        processing: '文件处理中…',
         restTime: '剩余 {{time}}',
       },
     },

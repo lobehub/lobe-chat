@@ -143,7 +143,7 @@ export const userRouter = router({
       firstName: state.firstName,
       fullName: state.fullName,
 
-      // 有消息，或者创建过助手，则认为有 conversation
+      // 有消息，或者创建过助理，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
 
       interests: state.interests,

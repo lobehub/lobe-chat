@@ -2,11 +2,11 @@ export default {
   guide: {
     agents: {
       replaceBtn: '换一批',
-      title: '新增助手推荐：',
+      title: '新增助理推荐：',
     },
     defaultMessage:
-      '我是您的私人智能助理 {{appName}} ，请问现在能帮您做什么？<br />如果需要获得更加专业或定制的助手，可以点击 <plus /> 创建自定义助手',
-    defaultMessageWithoutCreate: '我是您的私人智能助理 {{appName}} ，请问现在能帮您做什么？',
+      '我是你的智能助理 {{appName}}。从任何想法开始都可以。<br />如需更专业的助理，可以点击 <plus /> 创建',
+    defaultMessageWithoutCreate: '我是你的智能助理 {{appName}}。从任何想法开始都可以',
     groupActivities: {
       // 分析小队专属活动
       analysis: {
@@ -203,7 +203,7 @@ export default {
         },
       },
     },
-    groupMessage: '欢迎使用群聊！与多个 AI 助手在共享的对话空间中协作。',
+    groupMessage: '欢迎使用群组。在同一对话空间里，让助理们一起推进任务',
     groupTemplates: {
       analysis: {
         description: '数据驱动洞察，深度研究分析',
@@ -374,12 +374,12 @@ export default {
     },
   },
   header: '欢迎使用',
-  pickAgent: '或从下列助手模板选择',
+  pickAgent: '或从下列助理模板选择',
   skip: '跳过创建',
   slogan: {
-    desc1: '开启大脑集群，激发思维火花。你的智能助理，一直都在。',
-    desc2: '创建你的第一个助手，让我们开始吧~',
-    title: '给自己一个更聪明的大脑',
+    desc1: '在这里，助理随叫随到。想法可以协作、沉淀、演进',
+    desc2: '创建你的第一个助理，从这里开始',
+    title: '把时间用在重要的事上',
   },
   welcomeMessages: {
     '1': '欢迎回来 😊',

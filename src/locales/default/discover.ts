@@ -8,34 +8,34 @@ export default {
     unfavoriteSuccess: '已取消收藏',
   },
   assistants: {
-    addAgent: '添加助手',
-    addAgentAndConverse: '添加助手并会话',
+    addAgent: '添加助理',
+    addAgentAndConverse: '添加助理并会话',
     addAgentSuccess: '添加成功',
     conversation: {
-      l1: '你好，我是 **{{name}}**，你可以问我任何问题，我会尽力回答你 ~',
-      l2: '以下是我的能力介绍: ',
-      l3: '让我们开始对话吧！',
+      l1: '你好，我是 **{{name}}**。你可以问我任何问题，我会尽力回答',
+      l2: '以下是我的能力介绍：',
+      l3: '让我们开始对话',
     },
-    description: '助手介绍',
+    description: '助理介绍',
     detail: '详情',
     details: {
       capabilities: {
         knowledge: {
-          desc: '助手内置了以下资源库，帮助你回答更多问题。',
+          desc: '助理内置了以下资源库，帮助你回答更多问题。',
           title: '资源库',
         },
         plugin: {
-          desc: '助手内置了以下插件，帮助你完成更多任务。',
+          desc: '助理内置了以下插件，帮助你完成更多任务。',
           title: '内置插件',
         },
-        title: '助手能力',
+        title: '助理能力',
       },
       overview: {
-        example: '助手演示',
+        example: '助理演示',
         title: '概览',
       },
       related: {
-        listTitle: '相关助手',
+        listTitle: '相关助理',
         more: '查看更多',
         title: '相关推荐',
       },
@@ -43,12 +43,12 @@ export default {
         toc: '目录',
       },
       summary: {
-        title: '你可以使用该助手做什么？',
+        title: '你可以使用该助理做什么？',
       },
       systemRole: {
         openingMessage: '开场消息',
         openingQuestions: '开场问题',
-        title: '助手设定',
+        title: '助理设定',
       },
       version: {
         empty: '暂无历史版本',
@@ -68,11 +68,11 @@ export default {
     },
     downloads: '下载量',
     empty: {
-      description: '尝试调整筛选条件，或访问社区发现更多助手',
-      search: '未找到匹配的助手',
-      title: '暂无助手',
+      description: '尝试调整筛选条件，或访问社区发现更多助理',
+      search: '未找到匹配的助理',
+      title: '暂无助理',
     },
-    list: '助手列表',
+    list: '助理列表',
     marketSource: {
       label: '切换社区源',
       legacy: '旧社区',
@@ -83,44 +83,44 @@ export default {
     recentSubmits: '最近更新',
     sorts: {
       createdAt: '最近发布',
-      identifier: '助手 ID',
+      identifier: '助理 ID',
       knowledgeCount: '资源库数量',
       myown: '查看我的',
       pluginCount: '插件数量',
-      title: '助手名称',
+      title: '助理名称',
       tokenUsage: 'Token 使用量',
     },
     status: {
       archived: {
         reasons: {
-          official: '助手有安全/政治等问题，被官方下架',
-          owner: '开发助手的 owner 主动下架/归档该助手',
+          official: '助理有安全/政治等问题，被官方下架',
+          owner: '开发助理的 owner 主动下架/归档该助理',
         },
-        subtitle: '当前访问的助手已经因为以下可能的原因被归档了：',
-        title: '助手已被归档',
+        subtitle: '当前访问的助理已经因为以下可能的原因被归档了：',
+        title: '助理已被归档',
       },
-      backToMarket: '返回助手社区',
+      backToMarket: '返回助理社区',
       deprecated: {
         reasons: {
-          official: '助手有安全/政治等问题，被官方下架',
-          owner: '开发助手的 owner 主动下架/拒绝该助手',
+          official: '助理有安全/政治等问题，被官方下架',
+          owner: '开发助理的 owner 主动下架/拒绝该助理',
         },
-        subtitle: '当前访问的助手已经因为以下可能的原因被拒绝了：',
-        title: '助手已被拒绝',
+        subtitle: '当前访问的助理已因以下可能的原因被拒绝：',
+        title: '助理已被拒绝',
       },
-      support: '有各种问题请复制链接发送到 <email>support@lobehub.com</email> 进行咨询。',
+      support: '有问题请复制链接发送到 <email>support@lobehub.com</email> 咨询',
       unpublished: {
         subtitle:
-          '当前访问的助手正在进行版本审核中，如果有疑问复制链接发送问题到 <email>support@lobehub.com</email> 进行咨询。',
-        title: '助手正在审核中',
+          '当前访问的助理正在审核中。如有疑问，复制链接发送到 <email>support@lobehub.com</email> 咨询',
+        title: '助理正在审核中',
       },
     },
     suggestions: '相关推荐',
-    systemRole: '助手设定',
-    tokenUsage: '助手提示词 Token 使用量',
+    systemRole: '助理设定',
+    tokenUsage: '助理提示词 Token 使用量',
     try: '试一下',
-    withKnowledge: '该助手附带资源库',
-    withPlugin: '该助手附带插件',
+    withKnowledge: '该助理附带资源库',
+    withPlugin: '该助理附带插件',
   },
   back: '返回发现',
   category: {
@@ -158,14 +158,14 @@ export default {
   create: '创作',
   createGuide: {
     func1: {
-      desc1: '在会话窗口中通过右上角设置进入你想提交助手的设置页面;',
-      desc2: '点击右上角提交到助手社区按钮。',
+      desc1: '在会话窗口中通过右上角设置进入你想提交助理的设置页面；',
+      desc2: '点击右上角提交到助理社区按钮',
       tag: '方法一',
       title: '通过 LobeChat 提交',
     },
     func2: {
-      button: '前往 Github 助手仓库',
-      desc: '如果您想将助手添加到索引中，请使用 agent-template.json 或 agent-template-full.json 在 plugins 目录中创建一个条目，编写简短的描述并适当标记，然后创建一个拉取请求。',
+      button: '前往 Github 助理仓库',
+      desc: '如果你想将助理添加到索引中，请使用 agent-template.json 或 agent-template-full.json 在 plugins 目录中创建条目，编写简短的描述并适当标记，然后创建拉取请求',
       tag: '方法二',
       title: '通过 Github 提交',
     },
@@ -201,8 +201,8 @@ export default {
     },
   },
   home: {
-    communityAgents: '社区助手',
-    featuredAssistants: '推荐助手',
+    communityAgents: '社区助理',
+    featuredAssistants: '推荐助理',
     featuredModels: '推荐模型',
     featuredPlugins: '精选插件',
     featuredProviders: '推荐模型服务商',
@@ -316,13 +316,13 @@ export default {
             claude:
               '- 打开 **Claude Desktop** 应用\n- 前往 **设置**，然后选择 **开发者**\n- 点击 **编辑配置**\n- 打开 **claude_desktop_config.json** 文件\n- 复制并粘贴服务器配置到现有文件中，然后保存',
             cline:
-              '- 打开安装了 Cline 扩展的 VS Code\n- 点击侧边栏中的 Cline 图标\n- 从下拉菜单中选择 **MCP Servers**\n- 在 **Remote Servers** 标签页中，输入服务器名称和您的 MCP 服务器 URL\n- 点击 **Add Server** 进行连接',
+              '- 打开安装了 Cline 扩展的 VS Code\n- 点击侧边栏中的 Cline 图标\n- 从下拉菜单中选择 **MCP Servers**\n- 在 **Remote Servers** 标签页中，输入服务器名称和你的 MCP 服务器 URL\n- 点击 **Add Server** 进行连接',
             cursor:
               '- 导航到 **设置**，然后选择 Cursor 设置\n- 在左侧选择 **MCP**\n- 点击右上角的 **添加新的全局 MCP 服务器**\n- 复制并粘贴服务器配置到现有文件中，然后保存',
             lobeChat:
-              '- 打开 **LobeChat 桌面版** 应用\n- 前往 **设置** - **默认助手**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
+              '- 打开 **LobeChat 桌面版** 应用\n- 前往 **设置** - **默认助理**\n- 然后选择 **插件设置** - **自定义插件**\n- 点击 **快速导入 JSON 配置**\n- 复制并粘贴服务器配置到文本框，然后安装',
             openai:
-              '- 打开您的 **OpenAI 应用** 或开发环境\n- 在 **Responses API** 中配置 MCP 工具\n- 在 API 请求的 **tools** 数组中添加 MCP 块\n- 设置 **server_url** 为您的 MCP 服务器端点\n- 包含认证所需的头部信息（API 密钥、令牌等）\n- 使用 `allowed_tools` 参数限制暴露的工具\n- 设置 `require_approval` 来控制工具执行审批',
+              '- 打开你的 **OpenAI 应用** 或开发环境\n- 在 **Responses API** 中配置 MCP 工具\n- 在 API 请求的 **tools** 数组中添加 MCP 块\n- 设置 **server_url** 为你的 MCP 服务器端点\n- 包含认证所需的头部信息（API 密钥、令牌等）\n- 使用 `allowed_tools` 参数限制暴露的工具\n- 设置 `require_approval` 来控制工具执行审批',
             vscode:
               '- 打开 VS Code\n- 打开命令面板（`Ctrl+Shift+P` / `Cmd+Shift+P`）\n- 输入 **MCP: Add Server** 并选择它\n- 选择添加到工作区或用户设置\n- 复制并粘贴服务器配置',
           },
@@ -417,7 +417,7 @@ export default {
         },
         listTitle: '评分明细',
         notClaimed: {
-          desc: '如果您是此 MCP Server 所有者，可通过以下方式认领。',
+          desc: '如果你是此 MCP Server 所有者，可通过以下方式认领',
           title: '未被所有者认领',
         },
         prompts: {
@@ -719,12 +719,12 @@ export default {
   },
   publishedTime: '发布于',
   search: {
-    placeholder: '搜索名称介绍或关键词...',
+    placeholder: '搜索名称介绍或关键词…',
     result: '{{count}} 个关于 <highlight>{{keyword}}</highlight> 的搜索结果',
-    searching: '搜索中...',
+    searching: '搜索中…',
   },
   tab: {
-    assistant: '助手',
+    assistant: '助理',
     home: '首页',
     model: '模型',
     plugin: '插件',
@@ -732,7 +732,7 @@ export default {
     user: '用户',
   },
   user: {
-    agents: '助手',
+    agents: '助理',
     downloads: '下载',
     editProfile: '编辑个人资料',
     favoriteAgents: '收藏的助手',
@@ -743,10 +743,10 @@ export default {
     login: '成为创作者',
     logout: '退出登录',
     myProfile: '我的主页',
-    noAgents: '该用户暂未发布助手',
-    noFavoriteAgents: '暂无收藏的助手',
+    noAgents: '该用户暂未发布助理',
+    noFavoriteAgents: '暂无收藏的助理',
     noFavoritePlugins: '暂无收藏的插件',
-    publishedAgents: '创作的助手',
+    publishedAgents: '创作的助理',
     tabs: {
       favorites: '收藏',
       publishedAgents: '创作',

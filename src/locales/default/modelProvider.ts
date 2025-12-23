@@ -171,7 +171,7 @@ export default {
       title: '代理地址',
     },
     sdkType: {
-      placeholder: 'openai/anthropic/azureai/ollama/...',
+      placeholder: 'openai/anthropic/azureai/ollama/…',
       required: '请选择 SDK 类型',
       title: '请求格式',
     },
@@ -213,7 +213,7 @@ export default {
       enabled: '已启用',
     },
     notFound: '未找到搜索结果',
-    searchProviders: '搜索服务商...',
+    searchProviders: '搜索服务商…',
     sort: '自定义排序',
   },
   newapi: {
@@ -265,7 +265,7 @@ export default {
       confirm: '下载',
       description: '输入你的 Ollama 模型标签，完成即可继续会话',
       downloaded: '{{completed}} / {{total}}',
-      starting: '开始下载...',
+      starting: '开始下载…',
       title: '下载指定的 Ollama 模型',
     },
   },
@@ -275,7 +275,7 @@ export default {
       title: '批量选择',
     },
     config: {
-      aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
+      aesGcm: '你的密钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
       apiKey: {
         desc: '请填写你的 {{name}} API Key',
         descWithUrl: '请填写你的 {{name}} API Key，<3>点此获取</3>',
@@ -430,7 +430,7 @@ export default {
       fetcher: {
         clear: '清除获取的模型',
         fetch: '获取模型列表',
-        fetching: '正在获取模型列表...',
+        fetching: '正在获取模型列表…',
         latestTime: '上次更新时间：{{time}}',
         noLatestTime: '暂未获取列表',
       },
@@ -440,7 +440,7 @@ export default {
         success: '重置成功',
         title: '重置所有修改',
       },
-      search: '搜索模型...',
+      search: '搜索模型…',
       searchResult: '搜索到 {{count}} 个模型',
       title: '模型列表',
       total: '共 {{count}} 个模型可用',
@@ -472,7 +472,7 @@ export default {
   vertexai: {
     apiKey: {
       desc: '填入你的 Vertex Ai Keys',
-      placeholder: `{ "type": "service_account", "project_id": "xxx", "private_key_id": ... }`,
+      placeholder: `{ "type": "service_account", "project_id": "xxx", "private_key_id": … }`,
       title: 'Vertex AI Keys',
     },
     region: {
