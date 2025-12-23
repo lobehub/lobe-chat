@@ -8,8 +8,6 @@ import type { PipelineContext, ProcessorOptions } from '../types';
 const log = debug('context-engine:provider:UserMemoryInjector');
 
 export interface UserMemoryInjectorConfig {
-  /** When the memories were fetched */
-  fetchedAt?: number;
   /** User memories data */
   memories?: UserMemoryData;
 }
@@ -30,10 +28,10 @@ export class UserMemoryInjector extends BaseFirstUserContentProvider {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected buildContent(_context: PipelineContext): string | null {
-    const { memories, fetchedAt } = this.config;
+    const { memories } = this.config;
     if (!memories) return null;
 
-    const content = promptUserMemory({ fetchedAt, memories });
+    const content = promptUserMemory({ memories });
 
     if (!content) {
       log('No user memories to inject');

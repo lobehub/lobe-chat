@@ -20,9 +20,7 @@ describe('UserMemoryInjector', () => {
 
   describe('basic injection', () => {
     it('should inject user memories before the first user message', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [
             { description: 'Test context description', id: 'ctx-1', title: 'Test Context' },
@@ -96,9 +94,7 @@ describe('UserMemoryInjector', () => {
 
   describe('memory types', () => {
     it('should inject contexts correctly', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [
             { description: 'Context 1 description', id: 'ctx-1', title: 'Context 1' },
@@ -117,9 +113,7 @@ describe('UserMemoryInjector', () => {
     });
 
     it('should inject experiences correctly', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [],
           experiences: [
@@ -138,9 +132,7 @@ describe('UserMemoryInjector', () => {
     });
 
     it('should inject preferences correctly', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [],
           experiences: [],
@@ -159,9 +151,7 @@ describe('UserMemoryInjector', () => {
     });
 
     it('should inject all memory types together', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [{ description: 'Context desc', id: 'ctx-1', title: 'Context' }],
           experiences: [{ id: 'exp-1', keyLearning: 'Learning', situation: 'Situation' }],
@@ -179,9 +169,7 @@ describe('UserMemoryInjector', () => {
 
   describe('XML format', () => {
     it('should handle null or undefined values gracefully', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [{ description: null, id: undefined, title: null }],
           experiences: [{ id: undefined, keyLearning: null, situation: null }],
@@ -199,9 +187,7 @@ describe('UserMemoryInjector', () => {
 
   describe('integration with BaseFirstUserContentProvider', () => {
     it('should append to existing system injection message', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [{ description: 'Test', id: 'ctx-1', title: 'Test' }],
           experiences: [],
@@ -227,9 +213,7 @@ describe('UserMemoryInjector', () => {
     });
 
     it('should work with multimodal messages', async () => {
-      const fetchedAt = new Date('2024-01-15T10:30:00.000Z').getTime();
       const provider = new UserMemoryInjector({
-        fetchedAt,
         memories: {
           contexts: [{ description: 'Test', id: 'ctx-1', title: 'Test' }],
           experiences: [],

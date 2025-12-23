@@ -35,8 +35,6 @@ export interface UserMemoryData {
 }
 
 export interface PromptUserMemoryOptions {
-  /** When the memories were fetched */
-  fetchedAt?: number;
   /** User memories data */
   memories: UserMemoryData;
 }
@@ -98,9 +96,8 @@ const isValidIdentityItem = (item: UserMemoryIdentityItem): boolean => {
  * Formats a single identity memory item
  */
 const formatIdentityItem = (item: UserMemoryIdentityItem): string => {
-  const attrs = [`id="${item.id || ''}"`];
-  if (item.role) attrs.push(`role="${item.role}"`);
-  return `    <identity ${attrs.join(' ')}>${item.description || ''}</identity>`;
+  const roleAttr = item.role ? ` role="${item.role}"` : '';
+  return `    <identity${roleAttr}>${item.description || ''}</identity>`;
 };
 
 /**
@@ -133,7 +130,7 @@ const formatIdentitiesSection = (identities: UserMemoryIdentityItem[]): string =
  * - experiences: Past interactions and learnings
  * - preferences: User's stated preferences and directives
  */
-export const promptUserMemory = ({ memories, fetchedAt }: PromptUserMemoryOptions): string => {
+export const promptUserMemory = ({ memories }: PromptUserMemoryOptions): string => {
   // Filter out empty/invalid items
   const identities = (memories.identities || []).filter(isValidIdentityItem);
   const contexts = (memories.contexts || []).filter(isValidContextItem);
@@ -189,31 +186,7 @@ ${preferencesXml}
 </preferences>`);
   }
 
-  // Format timestamp in natural readable format with timezone (e.g., "Jan 15, 2024, 10:00 AM UTC")
-  const date = fetchedAt ? new Date(fetchedAt) : new Date();
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  const month = months[date.getUTCMonth()];
-  const day = date.getUTCDate();
-  const year = date.getUTCFullYear();
-  const hours = date.getUTCHours();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const hour12 = hours % 12 || 12;
-  const timestamp = `${month} ${day}, ${year}, ${hour12}:00 ${ampm} UTC`;
-
-  return `<user_memory retrieved_at="${timestamp}">
+  return `<user_memory>
 ${contentParts.join('\n')}
 </user_memory>`;
 };

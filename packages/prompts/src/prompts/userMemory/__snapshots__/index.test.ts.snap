@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`promptUserMemory > contexts only > should format multiple contexts 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="3">
   <context id="ctx-1" title="Language Preference">User prefers TypeScript over JavaScript</context>
@@ -12,7 +12,7 @@ exports[`promptUserMemory > contexts only > should format multiple contexts 1`] 
 `;
 
 exports[`promptUserMemory > contexts only > should format single context 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="Professional Background">User is a software engineer working on web applications</context>
@@ -21,7 +21,7 @@ exports[`promptUserMemory > contexts only > should format single context 1`] = `
 `;
 
 exports[`promptUserMemory > contexts only > should handle context with null/undefined values 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title=""></context>
@@ -30,7 +30,7 @@ exports[`promptUserMemory > contexts only > should handle context with null/unde
 `;
 
 exports[`promptUserMemory > contexts only > should handle context without id 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="" title="Some Title">Some context description</context>
@@ -39,7 +39,7 @@ exports[`promptUserMemory > contexts only > should handle context without id 1`]
 `;
 
 exports[`promptUserMemory > edge cases > should handle multiline content 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="Multi-line Context">Line 1: First point
@@ -50,7 +50,7 @@ Line 3: Third point</context>
 `;
 
 exports[`promptUserMemory > edge cases > should handle special characters in content 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="Tech Stack & Tools">Uses <React/> & Vue.js frameworks with "strict" mode</context>
@@ -59,7 +59,7 @@ exports[`promptUserMemory > edge cases > should handle special characters in con
 `;
 
 exports[`promptUserMemory > edge cases > should handle unicode characters 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="语言偏好 🌍">用户偏好中文回复 🚀 with émojis and spëcial chàracters</context>
@@ -68,7 +68,7 @@ exports[`promptUserMemory > edge cases > should handle unicode characters 1`] = 
 `;
 
 exports[`promptUserMemory > edge cases > should handle very long content 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="Long Content Test">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</context>
@@ -77,7 +77,7 @@ exports[`promptUserMemory > edge cases > should handle very long content 1`] = `
 `;
 
 exports[`promptUserMemory > experiences only > should format multiple experiences 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <experiences count="2">
   <experience id="exp-1">
@@ -93,7 +93,7 @@ exports[`promptUserMemory > experiences only > should format multiple experience
 `;
 
 exports[`promptUserMemory > experiences only > should format single experience 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <experiences count="1">
   <experience id="exp-1">
@@ -105,7 +105,7 @@ exports[`promptUserMemory > experiences only > should format single experience 1
 `;
 
 exports[`promptUserMemory > experiences only > should handle experience with null/undefined values 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <experiences count="1">
   <experience id="exp-1">
@@ -117,85 +117,85 @@ exports[`promptUserMemory > experiences only > should handle experience with nul
 `;
 
 exports[`promptUserMemory > identities only > should format identities grouped by type 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="3">
   <personal count="1">
-    <identity id="id-1" role="Father">User is a father of two children</identity>
+    <identity role="Father">User is a father of two children</identity>
   </personal>
   <professional count="1">
-    <identity id="id-2" role="Software Engineer">User is a senior software engineer</identity>
+    <identity role="Software Engineer">User is a senior software engineer</identity>
   </professional>
   <demographic count="1">
-    <identity id="id-3">User is based in Shanghai</identity>
+    <identity>User is based in Shanghai</identity>
   </demographic>
 </identities>
 </user_memory>"
 `;
 
 exports[`promptUserMemory > identities only > should format single type identities (demographic only) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="2">
   <demographic count="2">
-    <identity id="id-1">User is 35 years old</identity>
-    <identity id="id-2">User speaks Mandarin and English</identity>
+    <identity>User is 35 years old</identity>
+    <identity>User speaks Mandarin and English</identity>
   </demographic>
 </identities>
 </user_memory>"
 `;
 
 exports[`promptUserMemory > identities only > should format single type identities (personal only) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="2">
   <personal count="2">
-    <identity id="id-1">User is married</identity>
-    <identity id="id-2">User has a pet dog</identity>
+    <identity>User is married</identity>
+    <identity>User has a pet dog</identity>
   </personal>
 </identities>
 </user_memory>"
 `;
 
 exports[`promptUserMemory > identities only > should format single type identities (professional only) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="1">
   <professional count="1">
-    <identity id="id-1" role="CTO">User works at a tech startup</identity>
+    <identity role="CTO">User works at a tech startup</identity>
   </professional>
 </identities>
 </user_memory>"
 `;
 
 exports[`promptUserMemory > identities only > should handle identity with null values 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="1">
   <personal count="1">
-    <identity id="id-1"></identity>
+    <identity></identity>
   </personal>
 </identities>
 </user_memory>"
 `;
 
 exports[`promptUserMemory > identities only > should handle identity without role 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="1">
   <personal count="1">
-    <identity id="id-1">User enjoys hiking</identity>
+    <identity>User enjoys hiking</identity>
   </personal>
 </identities>
 </user_memory>"
 `;
 
 exports[`promptUserMemory > mixed memory types > should format all memory types together 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="1">
   <professional count="1">
-    <identity id="id-1" role="Tech Lead">User is a tech lead at a startup</identity>
+    <identity role="Tech Lead">User is a tech lead at a startup</identity>
   </professional>
 </identities>
 <contexts count="1">
@@ -214,17 +214,17 @@ exports[`promptUserMemory > mixed memory types > should format all memory types 
 `;
 
 exports[`promptUserMemory > mixed memory types > should format all memory types with multiple identities 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <identities count="3">
   <personal count="1">
-    <identity id="id-1" role="Father">User is a father</identity>
+    <identity role="Father">User is a father</identity>
   </personal>
   <professional count="1">
-    <identity id="id-2" role="Senior Engineer">User is a senior engineer</identity>
+    <identity role="Senior Engineer">User is a senior engineer</identity>
   </professional>
   <demographic count="1">
-    <identity id="id-3">User lives in Beijing</identity>
+    <identity>User lives in Beijing</identity>
   </demographic>
 </identities>
 <contexts count="1">
@@ -243,7 +243,7 @@ exports[`promptUserMemory > mixed memory types > should format all memory types 
 `;
 
 exports[`promptUserMemory > mixed memory types > should format contexts and experiences without preferences 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="Current Focus">Working on mobile app development</context>
@@ -258,7 +258,7 @@ exports[`promptUserMemory > mixed memory types > should format contexts and expe
 `;
 
 exports[`promptUserMemory > mixed memory types > should format contexts and preferences without experiences 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <contexts count="1">
   <context id="ctx-1" title="Specialization">Backend developer specializing in APIs</context>
@@ -270,7 +270,7 @@ exports[`promptUserMemory > mixed memory types > should format contexts and pref
 `;
 
 exports[`promptUserMemory > mixed memory types > should format experiences and preferences without contexts 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <experiences count="1">
   <experience id="exp-1">
@@ -285,7 +285,7 @@ exports[`promptUserMemory > mixed memory types > should format experiences and p
 `;
 
 exports[`promptUserMemory > preferences only > should filter out empty preferences and keep valid ones 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <preferences count="1">
   <preference id="pref-2">Valid preference</preference>
@@ -294,7 +294,7 @@ exports[`promptUserMemory > preferences only > should filter out empty preferenc
 `;
 
 exports[`promptUserMemory > preferences only > should format multiple preferences 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <preferences count="3">
   <preference id="pref-1">Prefer functional programming patterns</preference>
@@ -305,7 +305,7 @@ exports[`promptUserMemory > preferences only > should format multiple preference
 `;
 
 exports[`promptUserMemory > preferences only > should format single preference 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 10:00 AM UTC">
+"<user_memory>
 <instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
 <preferences count="1">
   <preference id="pref-1">Always use TypeScript strict mode</preference>
@@ -316,39 +316,3 @@ exports[`promptUserMemory > preferences only > should format single preference 1
 exports[`promptUserMemory > preferences only > should skip preference with empty conclusionDirectives 1`] = `""`;
 
 exports[`promptUserMemory > preferences only > should skip preference with null conclusionDirectives 1`] = `""`;
-
-exports[`promptUserMemory > timestamp formatting > should format timestamp for afternoon hours (PM) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 3:00 PM UTC">
-<instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
-<contexts count="1">
-  <context id="ctx-1" title="Test">Test</context>
-</contexts>
-</user_memory>"
-`;
-
-exports[`promptUserMemory > timestamp formatting > should format timestamp for midnight (12:00 AM) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 12:00 AM UTC">
-<instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
-<contexts count="1">
-  <context id="ctx-1" title="Test">Test</context>
-</contexts>
-</user_memory>"
-`;
-
-exports[`promptUserMemory > timestamp formatting > should format timestamp for morning hours (AM) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 3:00 AM UTC">
-<instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
-<contexts count="1">
-  <context id="ctx-1" title="Test">Test</context>
-</contexts>
-</user_memory>"
-`;
-
-exports[`promptUserMemory > timestamp formatting > should format timestamp for noon (12:00 PM) 1`] = `
-"<user_memory retrieved_at="Jan 15, 2024, 12:00 PM UTC">
-<instruction>The following are memories about this user retrieved from previous conversations. Use this information to personalize your responses and maintain continuity.</instruction>
-<contexts count="1">
-  <context id="ctx-1" title="Test">Test</context>
-</contexts>
-</user_memory>"
-`;

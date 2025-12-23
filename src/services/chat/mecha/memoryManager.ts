@@ -22,6 +22,7 @@ export const resolveGlobalIdentities = (): UserMemoryIdentityItem[] => {
   const globalIdentities = identitySelectors.globalIdentities(memoryState);
 
   return globalIdentities.map((identity) => ({
+    capturedAt: identity.capturedAt,
     description: identity.description,
     id: identity.id,
     role: identity.role,

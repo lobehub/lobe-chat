@@ -2,14 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import { promptUserMemory } from './index';
 
-// Fixed timestamp for consistent snapshots: Jan 15, 2024, 10:00 AM UTC
-const FIXED_TIMESTAMP = 1705312800000;
-
 describe('promptUserMemory', () => {
   describe('empty cases', () => {
     it('should return empty string when no memories at all', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {},
       });
       expect(result).toBe('');
@@ -17,7 +13,6 @@ describe('promptUserMemory', () => {
 
     it('should return empty string when all memory arrays are empty', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [],
           experiences: [],
@@ -31,7 +26,6 @@ describe('promptUserMemory', () => {
   describe('contexts only', () => {
     it('should format single context', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -47,7 +41,6 @@ describe('promptUserMemory', () => {
 
     it('should format multiple contexts', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -73,7 +66,6 @@ describe('promptUserMemory', () => {
 
     it('should handle context with null/undefined values', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -89,7 +81,6 @@ describe('promptUserMemory', () => {
 
     it('should handle context without id', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -106,7 +97,6 @@ describe('promptUserMemory', () => {
   describe('experiences only', () => {
     it('should format single experience', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           experiences: [
             {
@@ -122,7 +112,6 @@ describe('promptUserMemory', () => {
 
     it('should format multiple experiences', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           experiences: [
             {
@@ -143,7 +132,6 @@ describe('promptUserMemory', () => {
 
     it('should handle experience with null/undefined values', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           experiences: [
             {
@@ -161,7 +149,6 @@ describe('promptUserMemory', () => {
   describe('preferences only', () => {
     it('should format single preference', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           preferences: [
             {
@@ -176,7 +163,6 @@ describe('promptUserMemory', () => {
 
     it('should format multiple preferences', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           preferences: [
             {
@@ -199,7 +185,6 @@ describe('promptUserMemory', () => {
 
     it('should skip preference with null conclusionDirectives', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           preferences: [
             {
@@ -214,7 +199,6 @@ describe('promptUserMemory', () => {
 
     it('should skip preference with empty conclusionDirectives', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           preferences: [
             {
@@ -229,7 +213,6 @@ describe('promptUserMemory', () => {
 
     it('should filter out empty preferences and keep valid ones', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           preferences: [
             {
@@ -254,7 +237,6 @@ describe('promptUserMemory', () => {
   describe('identities only', () => {
     it('should format identities grouped by type', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           identities: [
             {
@@ -282,7 +264,6 @@ describe('promptUserMemory', () => {
 
     it('should format single type identities (personal only)', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           identities: [
             {
@@ -303,7 +284,6 @@ describe('promptUserMemory', () => {
 
     it('should format single type identities (professional only)', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           identities: [
             {
@@ -320,7 +300,6 @@ describe('promptUserMemory', () => {
 
     it('should format single type identities (demographic only)', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           identities: [
             {
@@ -341,7 +320,6 @@ describe('promptUserMemory', () => {
 
     it('should handle identity without role', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           identities: [
             {
@@ -357,7 +335,6 @@ describe('promptUserMemory', () => {
 
     it('should handle identity with null values', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           identities: [
             {
@@ -376,7 +353,6 @@ describe('promptUserMemory', () => {
   describe('mixed memory types', () => {
     it('should format all memory types together', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -413,7 +389,6 @@ describe('promptUserMemory', () => {
 
     it('should format all memory types with multiple identities', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -461,7 +436,6 @@ describe('promptUserMemory', () => {
 
     it('should format contexts and experiences without preferences', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -484,7 +458,6 @@ describe('promptUserMemory', () => {
 
     it('should format contexts and preferences without experiences', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -506,7 +479,6 @@ describe('promptUserMemory', () => {
 
     it('should format experiences and preferences without contexts', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           experiences: [
             {
@@ -527,60 +499,9 @@ describe('promptUserMemory', () => {
     });
   });
 
-  describe('timestamp formatting', () => {
-    it('should format timestamp for morning hours (AM)', () => {
-      // Jan 15, 2024, 3:00 AM UTC
-      const morningTimestamp = 1705287600000;
-      const result = promptUserMemory({
-        fetchedAt: morningTimestamp,
-        memories: {
-          contexts: [{ description: 'Test', id: 'ctx-1', title: 'Test' }],
-        },
-      });
-      expect(result).toMatchSnapshot();
-    });
-
-    it('should format timestamp for afternoon hours (PM)', () => {
-      // Jan 15, 2024, 3:00 PM UTC
-      const afternoonTimestamp = 1705330800000;
-      const result = promptUserMemory({
-        fetchedAt: afternoonTimestamp,
-        memories: {
-          contexts: [{ description: 'Test', id: 'ctx-1', title: 'Test' }],
-        },
-      });
-      expect(result).toMatchSnapshot();
-    });
-
-    it('should format timestamp for noon (12:00 PM)', () => {
-      // Jan 15, 2024, 12:00 PM UTC
-      const noonTimestamp = 1705320000000;
-      const result = promptUserMemory({
-        fetchedAt: noonTimestamp,
-        memories: {
-          contexts: [{ description: 'Test', id: 'ctx-1', title: 'Test' }],
-        },
-      });
-      expect(result).toMatchSnapshot();
-    });
-
-    it('should format timestamp for midnight (12:00 AM)', () => {
-      // Jan 15, 2024, 12:00 AM UTC
-      const midnightTimestamp = 1705276800000;
-      const result = promptUserMemory({
-        fetchedAt: midnightTimestamp,
-        memories: {
-          contexts: [{ description: 'Test', id: 'ctx-1', title: 'Test' }],
-        },
-      });
-      expect(result).toMatchSnapshot();
-    });
-  });
-
   describe('edge cases', () => {
     it('should handle special characters in content', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -596,7 +517,6 @@ describe('promptUserMemory', () => {
 
     it('should handle multiline content', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -615,7 +535,6 @@ Line 3: Third point`,
     it('should handle very long content', () => {
       const longDescription = 'A'.repeat(500);
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
@@ -631,7 +550,6 @@ Line 3: Third point`,
 
     it('should handle unicode characters', () => {
       const result = promptUserMemory({
-        fetchedAt: FIXED_TIMESTAMP,
         memories: {
           contexts: [
             {
