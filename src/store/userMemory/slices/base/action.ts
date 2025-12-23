@@ -257,7 +257,7 @@ export const createBaseSlice: StateCreator<
     return useClientDataSWRWithSync<IdentityForInjection[]>(
       isLogin ? 'useInitIdentities' : null,
       // Use dedicated API that filters for self identities only
-      () => userMemoryService.queryIdentitiesForInjection({ limit: 50 }),
+      () => userMemoryService.queryIdentitiesForInjection({ limit: 25 }),
       {
         onSuccess: (data) => {
           if (!data) return;

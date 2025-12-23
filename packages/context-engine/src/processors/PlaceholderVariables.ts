@@ -86,11 +86,28 @@ export const parsePlaceholderVariables = (
   for (let i = 0; i < depth; i++) {
     try {
       const extractedVariables = extractPlaceholderVariables(result);
+
+      log('Extracted variables from text: %o', extractedVariables);
+      log('Available generator keys: %o', Object.keys(variableGenerators));
+
+      // Debug: check if text contains {{username}} pattern
+      if (result.includes('username') || result.includes('{{')) {
+        const matches = result.match(/{{[^}]*}}/g);
+        log('All {{...}} patterns found in text: %o', matches);
+      }
+
       const availableVariables = Object.fromEntries(
         extractedVariables
-          .map((key) => [key, variableGenerators[key]?.()])
+          .map((key) => {
+            const generator = variableGenerators[key];
+            const value = generator?.();
+            log('Variable "%s": generator=%s, value=%s', key, !!generator, value);
+            return [key, value];
+          })
           .filter(([, value]) => value !== undefined),
       );
+
+      log('Available variables after filtering: %o', availableVariables);
 
       // Only perform replacement when there are available variables
       if (Object.keys(availableVariables).length === 0) break;
@@ -188,10 +205,21 @@ export class PlaceholderVariablesProcessor extends BaseProcessor {
     log(
       `Starting placeholder variables processing with ${Object.keys(this.config.variableGenerators).length} generators`,
     );
+    log('Generator keys: %o', Object.keys(this.config.variableGenerators));
 
     // Process placeholder variables for each message
     for (let i = 0; i < clonedContext.messages.length; i++) {
       const message = clonedContext.messages[i];
+
+      log(
+        'Processing message %d: role=%s, contentType=%s, contentPreview=%s',
+        i,
+        message.role,
+        typeof message.content,
+        typeof message.content === 'string'
+          ? message.content.slice(0, 200)
+          : JSON.stringify(message.content).slice(0, 200),
+      );
 
       try {
         const originalMessage = JSON.stringify(message);
@@ -201,6 +229,8 @@ export class PlaceholderVariablesProcessor extends BaseProcessor {
           clonedContext.messages[i] = processedMessage;
           processedCount++;
           log(`Processed placeholders in message ${message.id}, role: ${message.role}`);
+        } else {
+          log(`No placeholders found/replaced in message ${message.id}, role: ${message.role}`);
         }
       } catch (error) {
         log.extend('error')(`Error processing placeholders in message ${message.id}: ${error}`);

@@ -130,7 +130,6 @@ export class MessagesEngine {
       isAgentGroupEnabled || !!agentGroup?.currentAgentId || !!agentGroup?.members;
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
 
-    console.log('isUserMemoryEnabled:', isUserMemoryEnabled, userMemory);
     return [
       // =============================================
       // Phase 1: History Management
