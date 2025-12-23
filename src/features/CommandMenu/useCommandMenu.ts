@@ -3,7 +3,9 @@ import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
+import { useCreateMenuItems } from '@/app/[variants]/(main)/home/_layout/hooks';
 import type { SearchResult } from '@/database/repositories/search';
+import { useGroupWizard } from '@/layout/GlobalProvider/GroupWizardProvider';
 import { lambdaClient } from '@/libs/trpc/client';
 import { useAgentStore } from '@/store/agent';
 import { builtinAgentSelectors } from '@/store/agent/selectors/builtinAgentSelectors';
@@ -39,6 +41,8 @@ export const useCommandMenu = () => {
   const createAgent = useAgentStore((s) => s.createAgent);
   const refreshAgentList = useHomeStore((s) => s.refreshAgentList);
   const inboxAgentId = useAgentStore(builtinAgentSelectors.inboxAgentId);
+  const { openGroupWizard } = useGroupWizard();
+  const { createGroupWithMembers, createGroupFromTemplate } = useCreateMenuItems();
 
   // Extract agentId from pathname when in agent context
   const agentId = useMemo(() => {
@@ -138,14 +142,37 @@ export const useCommandMenu = () => {
   };
 
   const handleCreateLibrary = async () => {
-    navigate('/resource');
+    // TODO: Implement library creation
     closeCommandMenu();
+  };
+
+  const handleCreateAgentTeam = async () => {
+    closeCommandMenu();
+    openGroupWizard({
+      onCreateCustom: async (selectedAgents, hostConfig, enableSupervisor) => {
+        await createGroupWithMembers(selectedAgents, undefined, hostConfig, enableSupervisor);
+      },
+      onCreateFromTemplate: async (
+        templateId,
+        hostConfig,
+        enableSupervisor,
+        selectedMemberTitles,
+      ) => {
+        await createGroupFromTemplate(
+          templateId,
+          hostConfig,
+          enableSupervisor,
+          selectedMemberTitles,
+        );
+      },
+    });
   };
 
   return {
     closeCommandMenu,
     handleAskAISubmit,
     handleBack,
+    handleCreateAgentTeam,
     handleCreateLibrary,
     handleCreateSession,
     handleCreateTopic,

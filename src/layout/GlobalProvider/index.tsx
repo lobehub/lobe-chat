@@ -10,6 +10,7 @@ import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { getAntdLocale } from '@/utils/locale';
 
 import AppTheme from './AppTheme';
+import { GroupWizardProvider } from './GroupWizardProvider';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
@@ -58,9 +59,11 @@ const GlobalLayout = async ({
             serverConfig={serverConfig}
           >
             <QueryProvider>
-              <LazyMotion features={domMax}>
-                <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
-              </LazyMotion>
+              <GroupWizardProvider>
+                <LazyMotion features={domMax}>
+                  <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+                </LazyMotion>
+              </GroupWizardProvider>
             </QueryProvider>
             <StoreInitialization />
             <Suspense>

@@ -34,6 +34,7 @@ const MainMenu = memo(() => {
     handleCreateLibrary,
     handleNavigate,
     handleExternalLink,
+    handleCreateAgentTeam,
   } = useCommandMenu();
 
   return (
@@ -52,7 +53,11 @@ const MainMenu = memo(() => {
         )}
 
         {menuContext !== 'agent' && (
-          <CommandItem icon={<Bot />} onSelect={handleCreateSession} value="create new agent team">
+          <CommandItem
+            icon={<Bot />}
+            onSelect={handleCreateAgentTeam}
+            value="create new agent team"
+          >
             Create New Agent Team
           </CommandItem>
         )}
