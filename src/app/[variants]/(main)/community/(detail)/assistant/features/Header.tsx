@@ -1,15 +1,19 @@
 'use client';
 
 import { MCP } from '@lobehub/icons';
-import { Avatar, Button, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, Flexbox, Icon, Text, Tooltip } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
-import { BookTextIcon, CoinsIcon, DotIcon } from 'lucide-react';
+import { BookTextIcon, CoinsIcon, DotIcon, Heart, type LucideProps } from 'lucide-react';
 import qs from 'query-string';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import useSWR from 'swr';
 import urlJoin from 'url-join';
 
+import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
+import { socialService } from '@/services/social';
 import { formatIntergerNumber } from '@/utils/format';
 
 import { useCategory } from '../../../(list)/assistant/features/Category/useCategory';
@@ -34,6 +38,7 @@ const useStyles = createStyles(({ css, token }) => {
 
 const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { t } = useTranslation('discover');
+  const { message } = App.useApp();
   const {
     author,
     identifier,
@@ -48,6 +53,49 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   } = useDetailContext();
   const { styles, theme } = useStyles();
   const { mobile = isMobile } = useResponsive();
+  const { isAuthenticated, signIn, session } = useMarketAuth();
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+  // Set access token for social service
+  if (session?.accessToken) {
+    socialService.setAccessToken(session.accessToken);
+  }
+
+  // Fetch favorite status
+  const { data: favoriteStatus, mutate: mutateFavorite } = useSWR(
+    identifier && isAuthenticated ? ['favorite-status', 'agent', identifier] : null,
+    () => socialService.checkFavoriteStatus('agent', identifier!),
+    { revalidateOnFocus: false },
+  );
+
+  const isFavorited = favoriteStatus?.isFavorited ?? false;
+
+  const handleFavoriteClick = async () => {
+    if (!isAuthenticated) {
+      await signIn();
+      return;
+    }
+
+    if (!identifier) return;
+
+    setFavoriteLoading(true);
+    try {
+      if (isFavorited) {
+        await socialService.removeFavorite('agent', identifier);
+        message.success(t('assistant.unfavoriteSuccess'));
+      } else {
+        await socialService.addFavorite('agent', identifier);
+        message.success(t('assistant.favoriteSuccess'));
+      }
+      await mutateFavorite();
+    } catch (error) {
+      console.error('Favorite action failed:', error);
+      message.error(t('assistant.favoriteFailed'));
+    } finally {
+      setFavoriteLoading(false);
+    }
+  };
+
   const categories = useCategory();
   const cate = categories.find((c) => c.key === category);
 
@@ -104,6 +152,16 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
                 {title}
               </Text>
             </Flexbox>
+            <Tooltip title={isFavorited ? t('assistant.unfavorite') : t('assistant.favorite')}>
+              <ActionIcon
+                icon={(props: LucideProps) => (
+                  <Heart {...props} fill={isFavorited ? 'currentColor' : 'none'} />
+                )}
+                loading={favoriteLoading}
+                onClick={handleFavoriteClick}
+                style={isFavorited ? { color: 'var(--lobe-color-error)' } : undefined}
+              />
+            </Tooltip>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
             {author && userName ? (
