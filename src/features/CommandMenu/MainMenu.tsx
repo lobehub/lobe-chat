@@ -61,20 +61,18 @@ const MainMenu = memo(() => {
           {t('cmdk.newAgentTeam')}
         </CommandItem>
 
-        <CommandItem
-          icon={<MessageSquarePlusIcon />}
-          onSelect={handleCreateTopic}
-          unpinned={menuContext !== 'agent'}
-          value="create new topic"
-        >
-          {t('cmdk.newTopic')}
-        </CommandItem>
+        {menuContext === 'agent' && (
+          <CommandItem
+            icon={<MessageSquarePlusIcon />}
+            onSelect={handleCreateTopic}
+            unpinned={menuContext !== 'agent'}
+            value="create new topic"
+          >
+            {t('cmdk.newTopic')}
+          </CommandItem>
+        )}
 
-        <CommandItem
-          icon={<FilePen />}
-          onSelect={handleCreatePage}
-          value="create new page"
-        >
+        <CommandItem icon={<FilePen />} onSelect={handleCreatePage} value="create new page">
           {t('cmdk.newPage')}
         </CommandItem>
 
