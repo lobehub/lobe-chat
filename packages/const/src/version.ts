@@ -1,6 +1,6 @@
 import pkg from '@/../package.json';
 
-import { BRANDING_NAME, ORG_NAME } from './branding';
+import { BRANDING_NAME, ORG_NAME } from '../../business/const/src/branding';
 
 export const CURRENT_VERSION = pkg.version;
 

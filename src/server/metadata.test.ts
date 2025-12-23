@@ -1,9 +1,7 @@
 // @vitest-environment node
+import { BRANDING_NAME } from '@lobechat/business-const';
+import { OG_URL } from '@lobechat/const';
 import { describe, expect, it } from 'vitest';
-
-import { OG_URL } from '@lobechat/business-config/url';
-
-import { BRANDING_NAME } from '@/const/branding';
 
 import { Meta } from './metadata';
 

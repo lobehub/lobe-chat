@@ -1,5 +1,5 @@
+export * from '../../business/const/src/branding';
 export * from './auth';
-export * from './branding';
 export * from './currency';
 export * from './desktop';
 export * from './discover';

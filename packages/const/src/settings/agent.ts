@@ -1,3 +1,4 @@
+import { DEFAULT_PROVIDER } from '@lobechat/business-const';
 import {
   LobeAgentChatConfig,
   LobeAgentConfig,
@@ -6,7 +7,7 @@ import {
 } from '@lobechat/types';
 
 import { DEFAULT_AGENT_META } from '../meta';
-import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './llm';
+import { DEFAULT_MODEL } from './llm';
 
 export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
   showAllLocaleVoice: false,

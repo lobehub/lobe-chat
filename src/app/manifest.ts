@@ -1,7 +1,7 @@
+import { BRANDING_LOGO_URL, BRANDING_NAME } from '@lobechat/business-const';
 import { kebabCase } from 'es-toolkit/compat';
 import type { MetadataRoute } from 'next';
 
-import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
 import { manifestModule } from '@/server/manifest';
 
 const manifest = (): MetadataRoute.Manifest | any => {

@@ -9,6 +9,8 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.8.0",
+    "@lobechat/business-config": "workspace:*",
+    "@lobechat/business-const": "workspace:*",
     "@lobechat/types": "workspace:*",
     "@lobehub/ui": "^2.13.8",
     "klavis": "^2.15.0",

@@ -1,5 +1,6 @@
 'use client';
 
+import { SOCIAL_URL } from '@lobechat/business-const';
 import { Flexbox, Icon, Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookOpenIcon, ListIcon, Settings2Icon } from 'lucide-react';
@@ -7,7 +8,6 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SOCIAL_URL } from '@/const/branding';
 import { ModelNavKey } from '@/types/discover';
 
 const useStyles = createStyles(({ css, token }) => {

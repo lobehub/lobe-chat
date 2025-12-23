@@ -1,3 +1,4 @@
+import { SOCIAL_URL } from '@lobechat/business-const';
 import { DiscordIcon } from '@lobehub/ui/icons';
 import { Command } from 'cmdk';
 import {
@@ -17,7 +18,6 @@ import {
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SOCIAL_URL } from '@/const/branding';
 import { FEEDBACK } from '@/const/url';
 
 import { useCommandMenuContext } from './CommandMenuContext';

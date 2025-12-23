@@ -1,10 +1,10 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Block, Modal, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 import AuthCard from '@/features/AuthCard';
 
