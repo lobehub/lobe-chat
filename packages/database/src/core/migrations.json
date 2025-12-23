@@ -1033,5 +1033,16 @@
     "bps": true,
     "folderMillis": 1766297832021,
     "hash": "431a620396060130c46d6174d4bef3a517a0872aff8d19f3044bd9e7dec78ba5"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"passkey\" (\n\t\"aaguid\" text,\n\t\"backedUp\" boolean,\n\t\"counter\" integer,\n\t\"createdAt\" timestamp DEFAULT now(),\n\t\"credentialID\" text NOT NULL,\n\t\"deviceType\" text,\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"name\" text,\n\t\"publicKey\" text NOT NULL,\n\t\"transports\" text,\n\t\"userId\" text NOT NULL\n);\n",
+      "\nALTER TABLE \"passkey\" ADD CONSTRAINT \"passkey_userId_users_id_fk\" FOREIGN KEY (\"userId\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"passkey_credential_id_unique\" ON \"passkey\" USING btree (\"credentialID\");",
+      "\nCREATE INDEX IF NOT EXISTS \"passkey_user_id_idx\" ON \"passkey\" USING btree (\"userId\");"
+    ],
+    "bps": true,
+    "folderMillis": 1766408202688,
+    "hash": "6ca80d3a8c326e30e2a778515ff80e801726894e5b57da29c00f81e1983e4172"
   }
 ]
