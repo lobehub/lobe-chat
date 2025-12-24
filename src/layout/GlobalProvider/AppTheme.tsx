@@ -11,6 +11,7 @@ import { message as antdMessage } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
 import { AppConfigContext } from 'antd/es/app/context';
+import * as m from 'motion/react-m';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode, memo, useEffect, useMemo } from 'react';
@@ -135,6 +136,7 @@ const AppTheme = memo<AppThemeProps>(
     return (
       <AppConfigContext.Provider value={appConfig}>
         <ThemeProvider
+          motion={m as any}
           appearance={themeMode !== 'auto' ? themeMode : undefined}
           className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
           customTheme={{
@@ -160,6 +162,7 @@ const AppTheme = memo<AppThemeProps>(
           <GlobalStyle />
           <AntdStaticMethods />
           <ConfigProvider
+            motion={m as any}
             config={{
               aAs: Link,
               imgAs: Image,

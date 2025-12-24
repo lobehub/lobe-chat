@@ -199,7 +199,7 @@
     "@lobehub/icons": "^3.0.0",
     "@lobehub/market-sdk": "^0.24.0",
     "@lobehub/tts": "^3.0.2",
-    "@lobehub/ui": "^3.4.5",
+    "@lobehub/ui": "^4.0.0",
     "@modelcontextprotocol/sdk": "^1.25.1",
     "@neondatabase/serverless": "^1.0.2",
     "@next/third-parties": "^16.1.0",
