@@ -106,7 +106,7 @@ export const createGenerationTopicSlice: StateCreator<
         .split(/\s+/) // Split by whitespace
         .slice(0, 3) // Take first 3 words
         .join(' ')
-        .slice(0, 10); // Limit to 10 characters
+        .slice(0, 20); // Limit to 20 characters
 
       return title;
     };

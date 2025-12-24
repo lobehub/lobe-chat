@@ -9,6 +9,7 @@ import {
   CreateMessageParams,
   DBMessageItem,
   IThreadType,
+  MessageGroupType,
   MessagePluginItem,
   ModelRankItem,
   NewMessageQueryParams,
@@ -30,6 +31,7 @@ import {
   desc,
   eq,
   gt,
+  gte,
   inArray,
   isNotNull,
   isNull,
@@ -50,6 +52,7 @@ import {
   embeddings,
   fileChunks,
   files,
+  messageGroups,
   messagePlugins,
   messageQueries,
   messageQueryChunks,
@@ -79,6 +82,10 @@ export interface QueryMessagesOptions {
    * Post-process function for file URLs
    */
   postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+  /**
+   * Topic ID for MessageGroup aggregation queries
+   */
+  topicId?: string;
   /**
    * Custom where condition for message filtering
    */
@@ -150,6 +157,7 @@ export class MessageModel {
         current,
         pageSize,
         postProcessUrl: options.postProcessUrl,
+        topicId: topicId ?? undefined,
         where: whereCondition,
       });
     }
@@ -166,6 +174,7 @@ export class MessageModel {
       current,
       pageSize,
       postProcessUrl: options.postProcessUrl,
+      topicId: topicId ?? undefined,
       where: whereCondition,
     });
   };
@@ -176,14 +185,20 @@ export class MessageModel {
    * This is the low-level query method that accepts a custom where condition.
    * Use this for building custom query scenarios.
    *
+   * Features:
+   * - Filters out messages that belong to MessageGroups (compression/parallel)
+   * - Includes MessageGroup nodes (compressedGroup/compareGroup) in the result
+   * - compressedGroup nodes include pinnedMessages array (favorite=true messages)
+   * - compareGroup nodes include children array (parallel messages)
+   *
    * @param options - Query options including where condition and pagination
-   * @returns Messages with all related data
+   * @returns Messages with all related data, including MessageGroup nodes
    */
   queryWithWhere = async (options: QueryMessagesOptions = {}): Promise<UIChatMessage[]> => {
-    const { where, current = 0, pageSize = 1000, postProcessUrl } = options;
+    const { where, current = 0, pageSize = 1000, postProcessUrl, topicId } = options;
     const offset = current * pageSize;
 
-    // 1. get basic messages with joins
+    // 1. get basic messages with joins, excluding messages that belong to MessageGroups
     const result = await this.db
       .select({
         /* eslint-disable sort-keys-fix/sort-keys-fix*/
@@ -236,7 +251,14 @@ export class MessageModel {
         /* eslint-enable */
       })
       .from(messages)
-      .where(and(eq(messages.userId, this.userId), where))
+      .where(
+        and(
+          eq(messages.userId, this.userId),
+          // Filter out messages that belong to MessageGroups
+          isNull(messages.messageGroupId),
+          where,
+        ),
+      )
       .leftJoin(messagePlugins, eq(messagePlugins.id, messages.id))
       .leftJoin(messageTranslates, eq(messageTranslates.id, messages.id))
       .leftJoin(messageTTS, eq(messageTTS.id, messages.id))
@@ -246,28 +268,63 @@ export class MessageModel {
 
     const messageIds = result.map((message) => message.id as string);
 
-    if (messageIds.length === 0) return [];
+    // 2. Query MessageGroups for this topic (if topicId is available)
+    // For pagination support:
+    // - First page (current === 0): fetch all MessageGroup nodes (no time filter)
+    // - Subsequent pages: only fetch groups within the current page's time range
+    let messageGroupNodes: UIChatMessage[] = [];
+    if (topicId && result.length > 0) {
+      if (current === 0) {
+        // First page: fetch all groups to include compressed history
+        messageGroupNodes = await this.queryMessageGroupNodes(topicId);
+      } else {
+        // Subsequent pages: filter by time range to avoid duplicates
+        const firstMessageTime = result[0].createdAt;
+        const lastMessageTime = result.at(-1)!.createdAt;
+        messageGroupNodes = await this.queryMessageGroupNodes(topicId, {
+          endTime: lastMessageTime,
+          startTime: firstMessageTime,
+        });
+      }
+    } else if (topicId && current === 0) {
+      // First page with no messages: still fetch all groups
+      messageGroupNodes = await this.queryMessageGroupNodes(topicId);
+    }
 
-    // 2. get relative files
-    const rawRelatedFileList = await this.db
-      .select({
-        fileType: files.fileType,
-        id: messagesFiles.fileId,
-        messageId: messagesFiles.messageId,
-        name: files.name,
-        size: files.size,
-        url: files.url,
-      })
-      .from(messagesFiles)
-      .leftJoin(files, eq(files.id, messagesFiles.fileId))
-      .where(inArray(messagesFiles.messageId, messageIds));
+    // If no messages and no group nodes, return empty
+    if (messageIds.length === 0 && messageGroupNodes.length === 0) return [];
 
-    const relatedFileList = await Promise.all(
-      rawRelatedFileList.map(async (file) => ({
-        ...file,
-        url: postProcessUrl ? await postProcessUrl(file.url, file as any) : (file.url as string),
-      })),
-    );
+    // 3. get relative files (only if we have messages)
+    let relatedFileList: {
+      fileType: string | null;
+      id: string;
+      messageId: string;
+      name: string | null;
+      size: number | null;
+      url: string;
+    }[] = [];
+
+    if (messageIds.length > 0) {
+      const rawRelatedFileList = await this.db
+        .select({
+          fileType: files.fileType,
+          id: messagesFiles.fileId,
+          messageId: messagesFiles.messageId,
+          name: files.name,
+          size: files.size,
+          url: files.url,
+        })
+        .from(messagesFiles)
+        .leftJoin(files, eq(files.id, messagesFiles.fileId))
+        .where(inArray(messagesFiles.messageId, messageIds));
+
+      relatedFileList = await Promise.all(
+        rawRelatedFileList.map(async (file) => ({
+          ...file,
+          url: postProcessUrl ? await postProcessUrl(file.url, file as any) : (file.url as string),
+        })),
+      );
+    }
 
     // Get associated document content
     const fileIds = relatedFileList.map((file) => file.id).filter(Boolean);
@@ -298,34 +355,56 @@ export class MessageModel {
       (i) => !(i.fileType || '').startsWith('image') && !(i.fileType || '').startsWith('video'),
     );
 
-    // 3. get relative file chunks
-    const chunksList = await this.db
-      .select({
-        fileId: files.id,
-        fileType: files.fileType,
-        fileUrl: files.url,
-        filename: files.name,
-        id: chunks.id,
-        messageId: messageQueryChunks.messageId,
-        similarity: messageQueryChunks.similarity,
-        text: chunks.text,
-      })
-      .from(messageQueryChunks)
-      .leftJoin(chunks, eq(chunks.id, messageQueryChunks.chunkId))
-      .leftJoin(fileChunks, eq(fileChunks.chunkId, chunks.id))
-      .innerJoin(files, eq(fileChunks.fileId, files.id))
-      .where(inArray(messageQueryChunks.messageId, messageIds));
+    // 4. get relative file chunks
+    let chunksList: {
+      fileId: string;
+      fileType: string | null;
+      fileUrl: string | null;
+      filename: string | null;
+      id: string | null;
+      messageId: string | null;
+      similarity: string | null;
+      text: string | null;
+    }[] = [];
 
-    // 4. get relative message query
-    const messageQueriesList = await this.db
-      .select({
-        id: messageQueries.id,
-        messageId: messageQueries.messageId,
-        rewriteQuery: messageQueries.rewriteQuery,
-        userQuery: messageQueries.userQuery,
-      })
-      .from(messageQueries)
-      .where(inArray(messageQueries.messageId, messageIds));
+    if (messageIds.length > 0) {
+      chunksList = await this.db
+        .select({
+          fileId: files.id,
+          fileType: files.fileType,
+          fileUrl: files.url,
+          filename: files.name,
+          id: chunks.id,
+          messageId: messageQueryChunks.messageId,
+          similarity: messageQueryChunks.similarity,
+          text: chunks.text,
+        })
+        .from(messageQueryChunks)
+        .leftJoin(chunks, eq(chunks.id, messageQueryChunks.chunkId))
+        .leftJoin(fileChunks, eq(fileChunks.chunkId, chunks.id))
+        .innerJoin(files, eq(fileChunks.fileId, files.id))
+        .where(inArray(messageQueryChunks.messageId, messageIds));
+    }
+
+    // 5. get relative message query
+    let messageQueriesList: {
+      id: string;
+      messageId: string;
+      rewriteQuery: string | null;
+      userQuery: string | null;
+    }[] = [];
+
+    if (messageIds.length > 0) {
+      messageQueriesList = await this.db
+        .select({
+          id: messageQueries.id,
+          messageId: messageQueries.messageId,
+          rewriteQuery: messageQueries.rewriteQuery,
+          userQuery: messageQueries.userQuery,
+        })
+        .from(messageQueries)
+        .where(inArray(messageQueries.messageId, messageIds));
+    }
 
     // 5. get thread info for task messages
     const taskMessageIds = result.filter((m) => m.role === 'task').map((m) => m.id as string);
@@ -366,7 +445,8 @@ export class MessageModel {
       );
     }
 
-    return result.map(
+    // 6. Transform regular messages
+    const transformedMessages = result.map(
       ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
@@ -422,6 +502,117 @@ export class MessageModel {
         } as unknown as UIChatMessage;
       },
     );
+
+    // 7. Merge regular messages with MessageGroup nodes and sort by createdAt
+    const allItems = [...transformedMessages, ...messageGroupNodes];
+    allItems.sort((a, b) => {
+      const aTime = new Date(a.createdAt).getTime();
+      const bTime = new Date(b.createdAt).getTime();
+      return aTime - bTime;
+    });
+
+    return allItems;
+  };
+
+  /**
+   * Query MessageGroup nodes for a topic
+   * - compressedGroup: includes pinnedMessages array
+   * - compareGroup: includes children array
+   *
+   * @param topicId - The topic ID to query groups for
+   * @param timeRange - Optional time range to filter groups (for pagination support)
+   */
+  private queryMessageGroupNodes = async (
+    topicId: string,
+    timeRange?: { endTime: Date; startTime: Date },
+  ): Promise<UIChatMessage[]> => {
+    // 1. Query MessageGroups for this topic, optionally filtered by time range
+    const whereConditions = [
+      eq(messageGroups.userId, this.userId),
+      eq(messageGroups.topicId, topicId),
+    ];
+
+    // Add time range filter if provided (for pagination)
+    if (timeRange) {
+      whereConditions.push(
+        gte(messageGroups.createdAt, timeRange.startTime),
+        lte(messageGroups.createdAt, timeRange.endTime),
+      );
+    }
+
+    const groups = await this.db
+      .select()
+      .from(messageGroups)
+      .where(and(...whereConditions))
+      .orderBy(asc(messageGroups.createdAt));
+
+    if (groups.length === 0) return [];
+
+    const groupIds = groups.map((g) => g.id);
+
+    // 2. Query all messages that belong to these groups (for pinnedMessages and children)
+    const groupMessages = await this.db
+      .select({
+        content: messages.content,
+        createdAt: messages.createdAt,
+        favorite: messages.favorite,
+        id: messages.id,
+        messageGroupId: messages.messageGroupId,
+        model: messages.model,
+        provider: messages.provider,
+        role: messages.role,
+      })
+      .from(messages)
+      .where(and(eq(messages.userId, this.userId), inArray(messages.messageGroupId, groupIds)))
+      .orderBy(asc(messages.createdAt));
+
+    // 3. Build MessageGroup nodes
+    return groups.map((group) => {
+      const groupMsgs = groupMessages.filter((m) => m.messageGroupId === group.id);
+
+      if (group.type === MessageGroupType.Compression) {
+        // compressedGroup: extract pinnedMessages (favorite=true)
+        const pinnedMessages = groupMsgs
+          .filter((m) => m.favorite === true)
+          .map((m) => ({
+            content: m.content,
+            createdAt: m.createdAt,
+            id: m.id,
+            model: m.model,
+            provider: m.provider,
+            role: m.role,
+          }));
+
+        return {
+          content: group.content,
+          createdAt: group.createdAt,
+          id: group.id,
+          pinnedMessages,
+          role: 'compressedGroup',
+          topicId: group.topicId,
+          updatedAt: group.updatedAt,
+        } as unknown as UIChatMessage;
+      } else {
+        // compareGroup (parallel): include children
+        const children = groupMsgs.map((m) => ({
+          content: m.content,
+          createdAt: m.createdAt,
+          id: m.id,
+          model: m.model,
+          provider: m.provider,
+          role: m.role,
+        }));
+
+        return {
+          children,
+          createdAt: group.createdAt,
+          id: group.id,
+          role: 'compareGroup',
+          topicId: group.topicId,
+          updatedAt: group.updatedAt,
+        } as unknown as UIChatMessage;
+      }
+    });
   };
 
   /**

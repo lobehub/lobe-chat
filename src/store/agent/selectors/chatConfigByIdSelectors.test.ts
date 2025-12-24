@@ -37,26 +37,24 @@ describe('chatConfigByIdSelectors', () => {
       });
     });
 
-    it('should return default chatConfig when agent has no chatConfig', () => {
+    it('should return empty chatConfig when agent has no chatConfig', () => {
       const state = createState({
         agentMap: { 'agent-1': {} },
       });
 
-      // Returns merged default config from defaultAgentConfig
-      expect(chatConfigByIdSelectors.getChatConfigById('agent-1')(state)).toMatchObject({
-        historyCount: DEFAULT_AGENT_CHAT_CONFIG.historyCount,
-      });
+      // Returns empty object when no chatConfig exists
+      // Individual selectors (like getHistoryCountById) apply defaults via ?? operator
+      expect(chatConfigByIdSelectors.getChatConfigById('agent-1')(state)).toEqual({});
     });
 
-    it('should return default chatConfig for non-existent agent', () => {
+    it('should return empty chatConfig for non-existent agent', () => {
       const state = createState({
         agentMap: {},
       });
 
-      // Returns merged default config from defaultAgentConfig
-      expect(chatConfigByIdSelectors.getChatConfigById('non-existent')(state)).toMatchObject({
-        historyCount: DEFAULT_AGENT_CHAT_CONFIG.historyCount,
-      });
+      // Returns empty object for non-existent agent
+      // Individual selectors (like getHistoryCountById) apply defaults via ?? operator
+      expect(chatConfigByIdSelectors.getChatConfigById('non-existent')(state)).toEqual({});
     });
   });
 

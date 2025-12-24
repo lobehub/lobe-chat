@@ -1356,6 +1356,10 @@ export class UserMemoryModel {
       where: and(eq(userMemories.id, id), eq(userMemories.userId, this.userId)),
     });
 
+    if (result) {
+      await this.updateAccessMetrics([id]);
+    }
+
     return result;
   };
 
