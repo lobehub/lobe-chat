@@ -75,6 +75,7 @@ export default {
   "pageEditor.editedBy": "Last edited by {{name}}",
   "pageEditor.editorPlaceholder": "Start writing your page. Press / to open the command menu",
   "pageEditor.empty.createNewDocument": "Create New Page",
+  "pageEditor.empty.importNotion": "Import from Notion",
   "pageEditor.empty.title": "Select a page to get started",
   "pageEditor.empty.uploadMarkdown": "Upload Markdown File",
   "pageEditor.linkCopied": "Link copied",

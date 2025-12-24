@@ -1,3 +1,4 @@
+import { Notion } from '@lobehub/icons';
 import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
@@ -5,11 +6,15 @@ import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import GuideModal from '@/components/GuideModal';
+import GuideVideo from '@/components/GuideVideo';
 import NavHeader from '@/features/NavHeader';
+import useNotionImport from '@/features/ResourceManager/components/Header/hooks/useNotionImport';
 import { useFileStore } from '@/store/file';
 import { DocumentSourceType } from '@/types/document';
 
 const ICON_SIZE = 80;
+const NOTION_GUIDE_VIDEO_SRC = 'https://hub-apac-1.lobeobjects.space/assets/notion.mp4';
 
 const useStyles = createStyles(({ css, token }) => ({
   actionTitle: css`
@@ -79,13 +84,36 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
       createOptimisticDocument,
       replaceTempDocumentWithReal,
       setSelectedPageId,
+      refreshFileList,
+      fetchDocuments,
     ] = useFileStore((s) => [
       s.createNewPage,
       s.createDocument,
       s.createOptimisticDocument,
       s.replaceTempDocumentWithReal,
       s.setSelectedPageId,
+      s.refreshFileList,
+      s.fetchDocuments,
     ]);
+
+    const notionImport = useNotionImport({
+      createDocument,
+      currentFolderId: null,
+      libraryId: knowledgeBaseId ?? null,
+      refreshFileList,
+      t,
+    });
+
+    // Wrap handleNotionImport to ensure UI updates
+    const handleNotionImportWithLocalUpdate = async (
+      event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      await notionImport.handleNotionImport(event);
+      // Fetch documents to update the UI immediately
+      // The hook calls refreshFileList which invalidates SWR cache,
+      // but we need to explicitly fetch to update the zustand store
+      await fetchDocuments({ pageOnly: true });
+    };
 
     const handleCreateDocument = async (content: string, title: string) => {
       if (!content) {
@@ -210,8 +238,42 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
                 />
               </Flexbox>
             </Upload>
+
+            {/* Import from Notion */}
+            <Flexbox
+              className={styles.card}
+              onClick={notionImport.handleOpenNotionGuide}
+              padding={16}
+            >
+              <span className={styles.actionTitle}>{t('pageEditor.empty.importNotion')}</span>
+              <div className={styles.glow} style={{ background: theme.geekblue }} />
+              <FileTypeIcon
+                className={styles.icon}
+                color={theme.geekblue}
+                icon={<Notion color={'#fff'} />}
+                size={ICON_SIZE}
+                type={'file'}
+              />
+            </Flexbox>
           </Flexbox>
         </Center>
+        <GuideModal
+          cancelText={t('header.actions.notionGuide.cancel')}
+          cover={<GuideVideo height={269} src={NOTION_GUIDE_VIDEO_SRC} width={358} />}
+          desc={t('header.actions.notionGuide.desc')}
+          okText={t('header.actions.notionGuide.ok')}
+          onCancel={notionImport.handleCloseNotionGuide}
+          onOk={notionImport.handleStartNotionImport}
+          open={notionImport.notionGuideOpen}
+          title={t('header.actions.notionGuide.title')}
+        />
+        <input
+          accept=".zip"
+          onChange={handleNotionImportWithLocalUpdate}
+          ref={notionImport.notionInputRef}
+          style={{ display: 'none' }}
+          type="file"
+        />
       </>
     );
   },
