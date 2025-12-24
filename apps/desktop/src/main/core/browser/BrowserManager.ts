@@ -5,6 +5,7 @@ import { createLogger } from '@/utils/logger';
 
 import {
   AppBrowsersIdentifiers,
+  BrowsersIdentifiers,
   WindowTemplateIdentifiers,
   appBrowsers,
   windowTemplates,
@@ -29,7 +30,7 @@ export class BrowserManager {
   }
 
   getMainWindow() {
-    return this.retrieveByIdentifier('chat');
+    return this.retrieveByIdentifier(BrowsersIdentifiers.app);
   }
 
   showMainWindow() {
