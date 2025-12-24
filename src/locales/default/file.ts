@@ -96,6 +96,7 @@ export default {
   "pageList.selectNote": "Select a page to start editing",
   "pageList.title": "Pages",
   "pageList.untitled": "Untitled",
+  "portal.openInPageEditor": "Edit in Page",
   "preview.downloadFile": "Download File",
   "preview.unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>.",
   "searchFilePlaceholder": "Search Files",

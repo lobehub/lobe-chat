@@ -14,6 +14,8 @@ import { useNotebookStore } from '@/store/notebook';
 import { notebookSelectors } from '@/store/notebook/selectors';
 import { oneLineEllipsis } from '@/styles';
 
+import AutoSaveHint from './AutoSaveHint';
+
 const Header = () => {
   const { t } = useTranslation('file');
   const navigate = useNavigate();
@@ -56,15 +58,18 @@ const Header = () => {
           {document.title}
         </Text>
       </Flexbox>
-      <Button
-        icon={<ExternalLink size={14} />}
-        loading={loading}
-        onClick={handleOpenInPageEditor}
-        size={'small'}
-        type={'text'}
-      >
-        {t('portal.openInPageEditor')}
-      </Button>
+      <Flexbox align={'center'} gap={8} horizontal>
+        <AutoSaveHint />
+        <Button
+          icon={<ExternalLink size={14} />}
+          loading={loading}
+          onClick={handleOpenInPageEditor}
+          size={'small'}
+          type={'text'}
+        >
+          {t('portal.openInPageEditor')}
+        </Button>
+      </Flexbox>
     </Flexbox>
   );
 };
