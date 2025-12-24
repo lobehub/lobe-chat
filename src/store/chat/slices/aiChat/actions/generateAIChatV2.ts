@@ -9,6 +9,7 @@ import {
   MessageSemanticSearchChunk,
   SendMessageParams,
   SendMessageServerResponse,
+  ThreadItem,
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
@@ -30,7 +31,7 @@ import { getSessionStoreState } from '@/store/session';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../../selectors';
+import { chatSelectors, threadSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
 
 const n = setNamespace('ai');
@@ -231,10 +232,32 @@ export const generateAIChatV2: StateCreator<
 
     // Get the current messages to generate AI response
     // remove the latest assistant message id
+    const threads = threadSelectors.getThreadsByTopic(activeTopicId)(get());
+    let sourceMessageId = '';
+
+    threads?.forEach((item: ThreadItem) => {
+      if (item.id === activeThreadId) {
+        sourceMessageId = item.sourceMessageId;
+      }
+    });
+
+    let isParent = true;
     const baseMessages = chatSelectors
       .activeBaseChats(get())
-      .filter((item) => item.id !== data.assistantMessageId);
+      .filter((item) => item.id !== data.assistantMessageId)
+      .filter((item) => {
+        // eslint-disable-next-line eqeqeq
+        if (activeThreadId == null) {
+          // eslint-disable-next-line eqeqeq
+          return item.threadId == null;
+        }
 
+        const _isParent = isParent;
+        if (item.id === sourceMessageId) {
+          isParent = false;
+        }
+        return item.threadId === activeThreadId || _isParent;
+      });
     if (data.topicId) get().internal_updateTopicLoading(data.topicId, true);
 
     const summaryTitle = async () => {
