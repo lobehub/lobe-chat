@@ -3,9 +3,16 @@
  *
  * Handles web search and page crawling tool calls.
  */
-import { CrawlMultiPagesQuery, SEARCH_SEARXNG_NOT_CONFIG, SearchQuery } from '@lobechat/types';
+import {
+  CrawlMultiPagesQuery,
+  CrawlPluginState,
+  SEARCH_SEARXNG_NOT_CONFIG,
+  SearchQuery,
+} from '@lobechat/types';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
+import { CrawlSuccessResult } from '@lobechat/web-crawler';
 
+import { notebookService } from '@/services/notebook';
 import { searchService } from '@/services/search';
 import { WebBrowsingApiName, WebBrowsingManifest } from '@/tools/web-browsing';
 import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
@@ -102,9 +109,57 @@ class WebBrowsingExecutor extends BaseExecutor<typeof WebBrowsingApiName> {
       const result = await runtime.crawlMultiPages(params);
 
       if (result.success) {
+        // Save crawled pages as documents if topicId is available
+        const savedDocuments: Array<{ id: string; title: string; url: string }> = [];
+
+        if (ctx.topicId) {
+          const crawlState = result.state as CrawlPluginState;
+
+          // Create documents for each successfully crawled page
+          await Promise.all(
+            crawlState.results.map(async (crawlResult) => {
+              // Skip if there's an error
+              if ('errorMessage' in crawlResult.data) return;
+
+              const pageData = crawlResult.data as CrawlSuccessResult;
+              if (!pageData.content) return;
+
+              try {
+                const document = await notebookService.createDocument({
+                  content: pageData.content,
+                  description: pageData.description || `Crawled from ${pageData.url}`,
+                  title: pageData.title || pageData.url,
+                  topicId: ctx.topicId!,
+                  type: 'article',
+                });
+
+                savedDocuments.push({
+                  id: document.id,
+                  title: document.title || pageData.url,
+                  url: pageData.url,
+                });
+              } catch {
+                // Silently ignore document creation errors to not block the main flow
+              }
+            }),
+          );
+        }
+
+        // Append saved documents info to content
+        let content = result.content;
+        if (savedDocuments.length > 0) {
+          const savedDocsInfo = savedDocuments
+            .map((doc) => `- "${doc.title}" (ID: ${doc.id})`)
+            .join('\n');
+          content += `\n\n<saved_documents>\nThe crawled content has been saved as documents for future reference:\n${savedDocsInfo}\n</saved_documents>`;
+        }
+
         return {
-          content: result.content,
-          state: result.state,
+          content,
+          state: {
+            ...result.state,
+            savedDocuments,
+          },
           success: true,
         };
       }
