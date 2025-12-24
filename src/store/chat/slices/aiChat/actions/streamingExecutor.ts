@@ -7,6 +7,7 @@ import {
   GeneralChatAgent,
   computeStepContext,
 } from '@lobechat/agent-runtime';
+import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import { isDesktop } from '@lobechat/const';
 import {
   ChatImageItem,
@@ -16,6 +17,8 @@ import {
   MessageMapScope,
   MessageToolCall,
   ModelUsage,
+  RuntimeInitialContext,
+  RuntimeStepContext,
   TraceNameMap,
   UIChatMessage,
 } from '@lobechat/types';
@@ -39,6 +42,7 @@ import { getUserStoreState } from '@/store/user/store';
 import { topicSelectors } from '../../../selectors';
 import { cleanSpeakerTag } from '../../../utils/cleanSpeakerTag';
 import { messageMapKey } from '../../../utils/messageMapKey';
+import { pageAgentRuntime } from '../../builtinTool/actions/pageAgent';
 import { selectTodosFromMessages } from '../../message/selectors/dbMessage';
 
 const log = debug('lobe-store:streaming-executor');
@@ -85,6 +89,10 @@ export interface StreamingExecutorAction {
     operationId?: string;
     agentConfig?: any;
     traceId?: string;
+    /** Initial context for page editor (captured at operation start) */
+    initialContext?: RuntimeInitialContext;
+    /** Step context for page editor (updated each step) */
+    stepContext?: RuntimeStepContext;
   }) => Promise<{
     isFunctionCall: boolean;
     tools?: ChatToolPayload[];
@@ -199,6 +207,37 @@ export const streamingExecutor: StateCreator<
         userInterventionConfig,
       });
 
+    // Build initialContext for page editor if lobe-page-agent is enabled
+    let runtimeInitialContext: RuntimeInitialContext | undefined;
+
+    if (enabledToolIds.includes(PageAgentIdentifier)) {
+      try {
+        // Get page content context from page agent runtime
+        const pageContentContext = pageAgentRuntime.getPageContentContext('both');
+
+        runtimeInitialContext = {
+          pageEditor: {
+            markdown: pageContentContext.markdown || '',
+            xml: pageContentContext.xml || '',
+            metadata: {
+              title: pageContentContext.metadata.title,
+              charCount: pageContentContext.metadata.charCount,
+              lineCount: pageContentContext.metadata.lineCount,
+            },
+          },
+        };
+        console.log('runtimeInitialContext', runtimeInitialContext);
+        log(
+          '[internal_createAgentState] Page Agent detected, injected initialContext.pageEditor with title: %s',
+          pageContentContext.metadata.title,
+        );
+      } catch (error) {
+        // Page agent runtime may not be initialized (e.g., editor not set)
+        // This is expected in some scenarios, so we just log and continue
+        log('[internal_createAgentState] Failed to get page content context: %o', error);
+      }
+    }
+
     // Create initial context or use provided context
     const context: AgentRuntimeContext = initialContext || {
       phase: 'init',
@@ -213,6 +252,8 @@ export const streamingExecutor: StateCreator<
         status: state.status,
         stepCount: 0,
       },
+      // Inject initialContext if available
+      initialContext: runtimeInitialContext,
     };
 
     return { state, context };
@@ -226,6 +267,8 @@ export const streamingExecutor: StateCreator<
     operationId,
     agentConfig,
     traceId: traceIdParam,
+    initialContext,
+    stepContext,
   }) => {
     const {
       optimisticUpdateMessageContent,
@@ -355,6 +398,9 @@ export const streamingExecutor: StateCreator<
         plugins: finalAgentConfig.plugins,
       },
       historySummary: historySummary?.content,
+      // Pass page editor context from agent runtime
+      initialContext,
+      stepContext,
       trace: {
         traceId,
         topicId: topicId ?? undefined,
@@ -989,11 +1035,21 @@ export const streamingExecutor: StateCreator<
       const todos = selectTodosFromMessages(currentDBMessages);
       const stepContext = computeStepContext({ todos });
 
+      // If page agent is enabled, get the latest XML for stepPageEditor
+      if (nextContext.initialContext?.pageEditor) {
+        try {
+          const pageContentContext = pageAgentRuntime.getPageContentContext('xml');
+          stepContext.stepPageEditor = {
+            xml: pageContentContext.xml || '',
+          };
+        } catch (error) {
+          // Page agent runtime may not be available, ignore errors
+          log('[internal_execAgentRuntime] Failed to get page XML for step: %o', error);
+        }
+      }
+
       // Inject stepContext into the runtime context for this step
-      nextContext = {
-        ...nextContext,
-        stepContext,
-      };
+      nextContext = { ...nextContext, stepContext };
 
       log(
         '[internal_execAgentRuntime][step-%d]: phase=%s, status=%s, stepContext=%O',

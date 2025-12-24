@@ -1,4 +1,9 @@
-import { ChatToolPayload, ModelUsage, RuntimeStepContext } from '@lobechat/types';
+import {
+  ChatToolPayload,
+  ModelUsage,
+  RuntimeInitialContext,
+  RuntimeStepContext,
+} from '@lobechat/types';
 
 import type { FinishReason } from './event';
 import { AgentState, ToolRegistry } from './state';
@@ -8,6 +13,13 @@ import type { Cost, CostCalculationContext, Usage } from './usage';
  * Runtime execution context passed to Agent runner
  */
 export interface AgentRuntimeContext {
+  /**
+   * Initial context captured at operation start
+   * Contains static state like initial page content that doesn't change during execution
+   * Set once during initialization and passed through to Context Engine
+   */
+  initialContext?: RuntimeInitialContext;
+
   metadata?: Record<string, unknown>;
 
   /** Operation ID (links to Operation for business context) */

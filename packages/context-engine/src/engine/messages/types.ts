@@ -1,5 +1,6 @@
 /* eslint-disable typescript-sort-keys/interface */
-import type { FileContent, KnowledgeBaseInfo } from '@lobechat/prompts';
+import type { FileContent, KnowledgeBaseInfo, PageContentContext } from '@lobechat/prompts';
+import type { RuntimeInitialContext, RuntimeStepContext } from '@lobechat/types';
 
 import type { OpenAIChatMessage, UIChatMessage } from '@/types/index';
 
@@ -190,6 +191,23 @@ export interface MessagesEngineParams {
   groupAgentBuilderContext?: GroupAgentBuilderContext;
   /** User memory configuration */
   userMemory?: UserMemoryConfig;
+
+  // ========== Page Editor context ==========
+  /**
+   * Initial context captured at operation start (frontend runtime usage)
+   * Contains static state like initial page content that doesn't change during execution
+   */
+  initialContext?: RuntimeInitialContext;
+  /**
+   * Page content context for direct injection (server-side usage)
+   * When provided, takes precedence over initialContext/stepContext
+   */
+  pageContentContext?: PageContentContext;
+  /**
+   * Step context computed at the beginning of each step (frontend runtime usage)
+   * Contains dynamic state like latest XML that changes between steps
+   */
+  stepContext?: RuntimeStepContext;
 }
 
 /**

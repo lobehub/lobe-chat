@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { formatPageContentContext, PageContentContext } from '@lobechat/prompts';
+import { PageContentContext, formatPageContentContext } from '@lobechat/prompts';
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 import {
   IEditor,
@@ -281,7 +281,10 @@ export class PageAgentExecutionRuntime {
 
     if (format === 'markdown' || format === 'both') {
       const markdownRaw = editor.getDocument('markdown');
-      context.markdown = String(markdownRaw || '');
+      const markdown = String(markdownRaw || '');
+      context.markdown = markdown;
+      context.metadata.charCount = markdown.length;
+      context.metadata.lineCount = markdown.split('\n').length;
     }
 
     if (format === 'xml' || format === 'both') {

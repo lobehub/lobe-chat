@@ -9,7 +9,12 @@ import {
   MessagesEngine,
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
-import { OpenAIChatMessage, UIChatMessage } from '@lobechat/types';
+import {
+  OpenAIChatMessage,
+  RuntimeInitialContext,
+  RuntimeStepContext,
+  UIChatMessage,
+} from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 import debug from 'debug';
 
@@ -42,11 +47,21 @@ interface ContextEngineeringContext {
   groupId?: string;
   historyCount?: number;
   historySummary?: string;
+  /**
+   * Initial context from Agent Runtime
+   * Contains markdown and metadata captured at operation start
+   */
+  initialContext?: RuntimeInitialContext;
   inputTemplate?: string;
   messages: UIChatMessage[];
   model: string;
   provider: string;
   sessionId?: string;
+  /**
+   * Step context from Agent Runtime
+   * Contains latest XML structure updated each step
+   */
+  stepContext?: RuntimeStepContext;
   systemRole?: string;
   tools?: string[];
 }
@@ -66,6 +81,8 @@ export const contextEngineering = async ({
   agentBuilderContext,
   agentId,
   groupId,
+  initialContext,
+  stepContext,
 }: ContextEngineeringContext): Promise<OpenAIChatMessage[]> => {
   log('tools: %o', tools);
 
@@ -267,6 +284,10 @@ export const contextEngineering = async ({
     // Model info
     model,
     provider,
+
+    // runtime context
+    initialContext,
+    stepContext,
 
     // Tools configuration
     toolsConfig: {

@@ -24,6 +24,7 @@ import {
   GroupContextInjector,
   HistorySummaryProvider,
   KnowledgeInjector,
+  PageEditorContextInjector,
   SystemRoleInjector,
   ToolSystemRoleProvider,
   UserMemoryInjector,
@@ -121,6 +122,9 @@ export class MessagesEngine {
       groupAgentBuilderContext,
       agentGroup,
       userMemory,
+      initialContext,
+      stepContext,
+      pageContentContext,
     } = this.params;
 
     const isAgentBuilderEnabled = !!agentBuilderContext;
@@ -129,6 +133,8 @@ export class MessagesEngine {
     const isGroupContextEnabled =
       isAgentGroupEnabled || !!agentGroup?.currentAgentId || !!agentGroup?.members;
     const isUserMemoryEnabled = userMemory?.enabled && userMemory?.memories;
+    // Page editor is enabled if either direct pageContentContext or initialContext.pageEditor is provided
+    const isPageEditorEnabled = !!pageContentContext || !!initialContext?.pageEditor;
 
     return [
       // =============================================
@@ -207,6 +213,26 @@ export class MessagesEngine {
       new HistorySummaryProvider({
         formatHistorySummary,
         historySummary,
+      }),
+
+      // 10. Page Editor context injection
+      new PageEditorContextInjector({
+        enabled: isPageEditorEnabled,
+        // Use direct pageContentContext if provided (server-side), otherwise build from initialContext + stepContext (frontend)
+        pageContentContext: pageContentContext
+          ? pageContentContext
+          : initialContext?.pageEditor
+            ? {
+                markdown: initialContext.pageEditor.markdown,
+                metadata: {
+                  charCount: initialContext.pageEditor.metadata.charCount,
+                  lineCount: initialContext.pageEditor.metadata.lineCount,
+                  title: initialContext.pageEditor.metadata.title,
+                },
+                // Use latest XML from stepContext if available, otherwise fallback to initial XML
+                xml: stepContext?.stepPageEditor?.xml || initialContext.pageEditor.xml,
+              }
+            : undefined,
       }),
 
       // =============================================

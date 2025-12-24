@@ -73,7 +73,7 @@ export const createAgentExecutors = (context: {
      * Custom call_llm executor
      * Creates assistant message and calls internal_fetchAIChatMessage
      */
-    call_llm: async (instruction, state) => {
+    call_llm: async (instruction, state, runtimeContext) => {
       const sessionLogId = `${state.operationId}:${state.stepCount}`;
       const stagePrefix = `[${sessionLogId}][call_llm]`;
 
@@ -157,6 +157,9 @@ export const createAgentExecutors = (context: {
         model: llmPayload.model,
         provider: llmPayload.provider,
         operationId: context.operationId,
+        // Pass runtime context for page editor injection
+        initialContext: runtimeContext?.initialContext,
+        stepContext: runtimeContext?.stepContext,
       });
 
       log(`[${sessionLogId}] finish model-runtime calling`);

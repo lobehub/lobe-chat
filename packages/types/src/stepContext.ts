@@ -28,6 +28,41 @@ export interface StepContextTodos {
 }
 
 /**
+ * Page Editor context for each step
+ * Contains the latest XML structure fetched at each step
+ */
+export interface StepPageEditorContext {
+  /**
+   * Current XML structure of the page
+   * Fetched at the beginning of each step to get latest state
+   */
+  xml: string;
+}
+
+/**
+ * Initial Page Editor context
+ * Stored at operation initialization and remains constant
+ */
+export interface InitialPageEditorContext {
+  /**
+   * Initial markdown content of the page
+   */
+  markdown: string;
+  /**
+   * Document metadata
+   */
+  metadata: {
+    charCount?: number;
+    lineCount?: number;
+    title: string;
+  };
+  /**
+   * Initial XML structure (for reference)
+   */
+  xml: string;
+}
+
+/**
  * Runtime Step Context
  *
  * Contains dynamically computed state that changes between steps.
@@ -44,11 +79,27 @@ export interface StepContextTodos {
  */
 export interface RuntimeStepContext {
   /**
+   * Page Editor context for current step
+   * Contains the latest XML structure fetched at each step
+   */
+  stepPageEditor?: StepPageEditorContext;
+  /**
    * Current todo list state
    * Computed from the latest GTD tool message in the conversation
    */
   todos?: StepContextTodos;
+}
 
-  // Future extensions:
-  // plan: StepContextPlan | null;
+/**
+ * Initial Context
+ *
+ * Contains state captured at operation initialization.
+ * Remains constant throughout the operation lifecycle.
+ */
+export interface RuntimeInitialContext {
+  /**
+   * Initial Page Editor context
+   * Contains markdown content and metadata captured at operation start
+   */
+  pageEditor?: InitialPageEditorContext;
 }

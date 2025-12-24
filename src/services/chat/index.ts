@@ -9,7 +9,14 @@ import {
   standardizeAnimationStyle,
 } from '@lobechat/fetch-sse';
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
-import { ChatErrorType, TracePayload, TraceTagMap, UIChatMessage } from '@lobechat/types';
+import {
+  ChatErrorType,
+  RuntimeInitialContext,
+  RuntimeStepContext,
+  TracePayload,
+  TraceTagMap,
+  UIChatMessage,
+} from '@lobechat/types';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'es-toolkit/compat';
 import { ModelProvider } from 'model-bank';
@@ -79,7 +86,11 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
   historySummary?: string;
+  /** Initial context for page editor (captured at operation start) */
+  initialContext?: RuntimeInitialContext;
   params: GetChatCompletionPayload;
+  /** Step context for page editor (updated each step) */
+  stepContext?: RuntimeStepContext;
   trace?: TracePayload;
 }
 
@@ -209,11 +220,14 @@ class ChatService {
       groupId,
       historyCount:
         chatConfigByIdSelectors.getHistoryCountById(targetAgentId)(getAgentStoreState()) + 2,
+      // Page editor context from agent runtime
+      initialContext: options?.initialContext,
       inputTemplate: chatConfig.inputTemplate,
       messages,
       model: payload.model,
       provider: payload.provider!,
       sessionId: options?.trace?.sessionId,
+      stepContext: options?.stepContext,
       systemRole: agentConfig.systemRole,
       tools: enabledToolIds,
     });
@@ -249,14 +263,18 @@ class ChatService {
     onFinish,
     trace,
     historySummary,
+    initialContext,
+    stepContext,
   }: CreateAssistantMessageStream) => {
     await this.createAssistantMessage(params, {
       historySummary,
+      initialContext,
       onAbort,
       onErrorHandle,
       onFinish,
       onMessageHandle,
       signal: abortController?.signal,
+      stepContext,
       trace: this.mapTrace(trace, TraceTagMap.Chat),
     });
   };
