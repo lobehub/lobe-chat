@@ -63,7 +63,7 @@ const Tool = memo<GroupToolProps>(
 
     useEffect(() => {
       if (needExpand) {
-        handleExpand?.(true);
+        setTimeout(() => handleExpand?.(true), 100);
       }
     }, [needExpand]);
 
