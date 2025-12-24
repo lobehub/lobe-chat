@@ -34,7 +34,7 @@
   "proSettings.title2": "Versuche, einige gängige Tools zu verknüpfen～",
   "proSettings.title3": "Lass uns alles für produktives Arbeiten vorbereiten!",
   "responseLanguage.auto": "Automatisch (Systemsprache folgen)",
-  "responseLanguage.desc": "Wähle die Sprache, in der der KI-Assistent antworten soll",
+  "responseLanguage.desc": "Wähle die Sprache, in der der KI-Agent antworten soll",
   "responseLanguage.hint": "Nach Auswahl wird die KI in dieser Sprache antworten und die Oberfläche entsprechend angepasst",
   "responseLanguage.title": "In welcher Sprache sollen wir kommunizieren?",
   "responseLanguage.title2": "Verständigung beginnt mit Sprache.",

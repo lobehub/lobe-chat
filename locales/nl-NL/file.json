@@ -56,7 +56,7 @@
   "menu.allFiles": "Alle bestanden",
   "menu.allPages": "Alle documenten",
   "networkError": "Kan de bibliotheek niet ophalen. Controleer je netwerkverbinding en probeer het opnieuw.",
-  "notSupportGuide.desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeHub Cloud</3>",
   "notSupportGuide.features.allKind.desc": "Ondersteunt gangbare bestandstypen, waaronder Word, PPT, Excel, PDF, TXT en andere veelvoorkomende documentformaten, evenals JS, Python en andere gangbare codebestanden",
   "notSupportGuide.features.allKind.title": "Meerdere bestandstype-analyse",
   "notSupportGuide.features.embeddings.desc": "Gebruik hoogwaardige vectormodellen om tekstdelen te vectoriseren, waardoor semantische zoekopdrachten in de inhoud van bestanden mogelijk zijn",

@@ -1,8 +1,8 @@
 {
   "guide.agents.replaceBtn": "Weitere Vorschläge",
   "guide.agents.title": "Empfohlene neue Assistenten:",
-  "guide.defaultMessage": "Ich bin dein persönlicher intelligenter Assistent {{appName}}. Wobei kann ich dir heute helfen?<br />Wenn du einen professionelleren oder individuelleren Assistenten brauchst, klicke auf <plus />, um einen eigenen zu erstellen.",
-  "guide.defaultMessageWithoutCreate": "Ich bin dein persönlicher intelligenter Assistent {{appName}}. Wobei kann ich dir heute helfen?",
+  "guide.defaultMessage": "Ich bin dein persönlicher intelligenter Agent {{appName}}. Wobei kann ich dir heute helfen?<br />Wenn du einen professionelleren oder individuelleren Assistenten brauchst, klicke auf <plus />, um einen eigenen zu erstellen.",
+  "guide.defaultMessageWithoutCreate": "Ich bin dein persönlicher intelligenter Agent {{appName}}. Wobei kann ich dir heute helfen?",
   "guide.groupActivities.analysis.codeReview.description": "Technische Diskussionen und Peer-Reviews von Codeänderungen und Implementierungen",
   "guide.groupActivities.analysis.codeReview.emoji": "💻",
   "guide.groupActivities.analysis.codeReview.prompt": "Lass uns gemeinsam Code überprüfen. Kannst du uns helfen, den Code zu analysieren und Verbesserungsmöglichkeiten zu finden?",
@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "Du bist ein Datenanalyst, der Muster und Trends durch Diagramme und statistische Analysen erkennt.",
       "title": "Datenanalyst"
     },
@@ -265,7 +267,7 @@
   "header": "Willkommen",
   "pickAgent": "Oder wähle aus den folgenden Assistenten-Vorlagen",
   "skip": "Erstellen überspringen",
-  "slogan.desc1": "Aktiviere dein Denknetzwerk und entfache kreative Funken. Dein intelligenter Assistent ist immer für dich da.",
+  "slogan.desc1": "Aktiviere dein Denknetzwerk und entfache kreative Funken. Dein intelligenter Agent ist immer für dich da.",
   "slogan.desc2": "Erstelle deinen ersten Assistenten und leg los~",
   "slogan.title": "Gib dir selbst ein klügeres Gehirn",
   "welcomeMessages": {

@@ -1,6 +1,6 @@
 export default {
-  'actions.confirmRemoveThread':
-    '将删除该子话题，删除后不可恢复。建议先复制需要保留的内容，再确认继续',
-  'newPortalThread.includeContext': '包含话题上下文',
-  'newPortalThread.title': '开启新的子话题',
-};
+  "actions.confirmRemoveThread": "You are about to delete this subtopic. Once deleted, it cannot be recovered. Please proceed with caution.",
+  "newPortalThread.includeContext": "Include topic context",
+  "newPortalThread.title": "Start a new subtopic",
+  "notSupportMultiModals": "Subtopics do not currently support file/image uploads. If you have any requests, feel free to leave a message: <1>💬 Discussion Area</1>"
+}

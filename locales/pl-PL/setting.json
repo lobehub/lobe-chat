@@ -529,7 +529,7 @@
   "tools.notInstalled": "Nie zainstalowano",
   "tools.notInstalledWarning": "Ta wtyczka nie została jeszcze zainstalowana, co może wpłynąć na działanie asystenta",
   "tools.plugins.enabled": "Włączone {{num}}",
-  "tools.plugins.groupName": "Wtyczki",
+  "tools.plugins.groupName": "Skille",
   "tools.plugins.noEnabled": "Brak włączonych wtyczek",
   "tools.plugins.store": "Sklep z wtyczkami",
   "tools.tabs.all": "Wszystko",

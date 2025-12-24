@@ -1,6 +1,10 @@
 export default {
-  'desc': '这里会不定期更新我们正在探索的新功能，欢迎试用！',
-  'features.inputMarkdown.desc': '在输入区域实时渲染 Markdown（粗体、代码块、表格等）',
-  'features.inputMarkdown.title': '输入框 Markdown 渲染',
-  'title': '实验室',
-};
+  "desc": "Here you'll find occasional updates on new features we're exploring—feel free to try them out!",
+  "features.assistantMessageGroup.desc": "Group agent messages and their tool call results together for display",
+  "features.assistantMessageGroup.title": "Agent Message Grouping",
+  "features.groupChat.desc": "Enable multi-agent group chat coordination.",
+  "features.groupChat.title": "Group Chat (Multi-Agent)",
+  "features.inputMarkdown.desc": "Render Markdown in the input area in real time (bold text, code blocks, tables, etc.).",
+  "features.inputMarkdown.title": "Input Markdown Rendering",
+  "title": "Labs"
+}
