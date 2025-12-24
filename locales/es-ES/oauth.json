@@ -12,7 +12,7 @@
   "consent.redirecting": "Autorización exitosa, redirigiendo...",
   "consent.scope.email": "Acceder a su dirección de correo electrónico",
   "consent.scope.offline_access": "Permitir que el cliente acceda a sus datos",
-  "consent.scope.openid": "Autenticarse con su cuenta de LobeChat",
+  "consent.scope.openid": "Autenticarse con su cuenta de LobeHub",
   "consent.scope.profile": "Acceder a su información básica de perfil (nombre, foto, etc.)",
   "consent.scope.sync-read": "Leer sus datos sincronizados",
   "consent.scope.sync-write": "Escribir y actualizar sus datos sincronizados",

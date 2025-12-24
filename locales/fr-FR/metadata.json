@@ -11,7 +11,7 @@
   "discover.models.description": "Explorez les modèles AI populaires OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
   "discover.models.title": "Communauté des Modèles",
   "discover.plugins.description": "Découvrez des capacités enrichies pour votre assistant avec des plugins pour la génération de graphiques, la recherche académique, la génération d'images, la génération de vidéos, la génération de voix et l'automatisation des flux de travail.",
-  "discover.plugins.title": "Communauté des Plugins",
+  "discover.plugins.title": "Communauté des Skills",
   "discover.providers.description": "Explorez les principaux fournisseurs de modèles OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter.",
   "discover.providers.title": "Communauté des Fournisseurs de Modèles",
   "discover.search": "Recherche",
@@ -19,7 +19,7 @@
   "image.description": "{{appName}} vous offre la meilleure expérience d'utilisation de GPT Image, Flux, Midjourney, Stable Diffusion",
   "image.title": "Peinture IA",
   "plugins.description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération de voix, flux de travail automatisés, personnalisez les capacités de plugins ToolCall pour ChatGPT / Claude",
-  "plugins.title": "Communauté des Plugins",
+  "plugins.title": "Communauté des Skills",
   "welcome.description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
   "welcome.title": "Bienvenue sur {{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent"
 }

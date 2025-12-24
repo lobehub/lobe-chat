@@ -45,7 +45,7 @@
   "generation.metadata.count": "{{count}} afbeeldingen",
   "generation.status.failed": "Generatie mislukt",
   "generation.status.generating": "Bezig met genereren...",
-  "notSupportGuide.desc": "De huidige implementatie gebruikt een client-database modus en ondersteunt geen AI-beeldgeneratie. Schakel over naar de <1>server-database modus</1> of gebruik direct <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "De huidige implementatie gebruikt een client-database modus en ondersteunt geen AI-beeldgeneratie. Schakel over naar de <1>server-database modus</1> of gebruik direct <3>LobeHub Cloud</3>",
   "notSupportGuide.features.fileIntegration.desc": "Diepe integratie met het bestandsbeheersysteem, gegenereerde afbeeldingen worden automatisch opgeslagen in het bestandssysteem voor gecentraliseerd beheer en organisatie",
   "notSupportGuide.features.fileIntegration.title": "Bestandssysteem integratie",
   "notSupportGuide.features.llmAssisted.desc": "Combineert de kracht van grote taalmodellen om prompts intelligent te optimaliseren en uit te breiden, wat de beeldgeneratiekwaliteit verbetert (Binnenkort beschikbaar)",

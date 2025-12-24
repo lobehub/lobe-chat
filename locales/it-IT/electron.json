@@ -37,7 +37,7 @@
   "proxy.validation.usernameRequired": "Il nome utente è obbligatorio quando l'autenticazione è abilitata",
   "remoteServer.authError": "Autenticazione fallita: {{error}}",
   "remoteServer.authPending": "Completa l'autenticazione nel browser",
-  "remoteServer.configDesc": "Collegati al server LobeChat remoto per abilitare la sincronizzazione dei dati",
+  "remoteServer.configDesc": "Collegati al server LobeHub remoto per abilitare la sincronizzazione dei dati",
   "remoteServer.configError": "Errore di configurazione",
   "remoteServer.configTitle": "Configura la sincronizzazione cloud",
   "remoteServer.connect": "Collegati e autorizza",

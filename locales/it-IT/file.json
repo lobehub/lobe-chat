@@ -56,7 +56,7 @@
   "menu.allFiles": "Tutti i file",
   "menu.allPages": "Tutti i documenti",
   "networkError": "Impossibile recuperare le librerie. Controlla la connessione di rete e riprova.",
-  "notSupportGuide.desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeHub Cloud</3>",
   "notSupportGuide.features.allKind.desc": "Supporta i formati di file più comuni, inclusi Word, PPT, Excel, PDF, TXT e altri formati di documenti, così come file di codice comuni come JS e Python",
   "notSupportGuide.features.allKind.title": "Analisi di vari tipi di file",
   "notSupportGuide.features.embeddings.desc": "Utilizza modelli vettoriali ad alte prestazioni per vettorizzare i blocchi di testo, consentendo la ricerca semantica del contenuto dei file",

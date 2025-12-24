@@ -45,7 +45,7 @@
   "generation.metadata.count": "{{count}} Bilder",
   "generation.status.failed": "Generierung fehlgeschlagen",
   "generation.status.generating": "Wird generiert...",
-  "notSupportGuide.desc": "Die aktuell eingesetzte Instanz verwendet den Client-Datenbankmodus und unterstützt die KI-Bilderzeugung nicht. Bitte wechseln Sie zum <1>Server-Datenbankmodus</1> oder nutzen Sie direkt <3>LobeChat Cloud</3>.",
+  "notSupportGuide.desc": "Die aktuell eingesetzte Instanz verwendet den Client-Datenbankmodus und unterstützt die KI-Bilderzeugung nicht. Bitte wechseln Sie zum <1>Server-Datenbankmodus</1> oder nutzen Sie direkt <3>LobeHub Cloud</3>.",
   "notSupportGuide.features.fileIntegration.desc": "Tiefgreifende Integration mit dem Dateimanagementsystem, generierte Bilder werden automatisch im Dateisystem gespeichert und können zentral verwaltet und organisiert werden.",
   "notSupportGuide.features.fileIntegration.title": "Dateisystem-Integration",
   "notSupportGuide.features.llmAssisted.desc": "Kombiniert die Fähigkeiten großer Sprachmodelle zur intelligenten Optimierung und Erweiterung von Prompts, um die Bildqualität zu verbessern (bald verfügbar).",

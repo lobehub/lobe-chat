@@ -37,7 +37,7 @@
   "proxy.validation.usernameRequired": "Gebruikersnaam is verplicht bij ingeschakelde authenticatie",
   "remoteServer.authError": "Autorisatiefout: {{error}}",
   "remoteServer.authPending": "Voltooi de autorisatie in de browser",
-  "remoteServer.configDesc": "Verbind met de externe LobeChat-server om gegevenssynchronisatie in te schakelen",
+  "remoteServer.configDesc": "Verbind met de externe LobeHub-server om gegevenssynchronisatie in te schakelen",
   "remoteServer.configError": "Configuratiefout",
   "remoteServer.configTitle": "Cloud-synchronisatie configureren",
   "remoteServer.connect": "Verbinden en autoriseren",

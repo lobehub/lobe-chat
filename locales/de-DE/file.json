@@ -56,7 +56,7 @@
   "menu.allFiles": "Alle Dateien",
   "menu.allPages": "Alle Dokumente",
   "networkError": "Fehler beim Laden der Bibliothek. Bitte überprüfe deine Netzwerkverbindung und versuche es erneut.",
-  "notSupportGuide.desc": "Die aktuelle Bereitstellung ist im Client-Datenbankmodus und unterstützt keine Dateiverwaltungsfunktionen. Bitte wechseln Sie zu <1>Server-Datenbank-Bereitstellungsmodus</1> oder verwenden Sie direkt <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "Die aktuelle Bereitstellung ist im Client-Datenbankmodus und unterstützt keine Dateiverwaltungsfunktionen. Bitte wechseln Sie zu <1>Server-Datenbank-Bereitstellungsmodus</1> oder verwenden Sie direkt <3>LobeHub Cloud</3>",
   "notSupportGuide.features.allKind.desc": "Unterstützt gängige Dateitypen, einschließlich Word, PPT, Excel, PDF, TXT und andere gängige Dokumentformate sowie JS, Python und andere gängige Code-Dateien",
   "notSupportGuide.features.allKind.title": "Verschiedene Dateitypen analysieren",
   "notSupportGuide.features.embeddings.desc": "Verwendet leistungsstarke Vektormodelle zur Vektorisierung von Textteilen, um eine semantische Suche nach Dateiinhalten zu ermöglichen",
