@@ -33,7 +33,7 @@ const OllamaModelDownloader = memo<OllamaModelDownloaderProps>(
 
     const theme = useTheme();
 
-    // 定义进度回调函数
+    // Define progress callback function
     const handleProgress = useCallback((progress: ModelProgressInfo) => {
       if (progress.completed) setCompleted(progress.completed);
       if (progress.total) setTotal(progress.total);

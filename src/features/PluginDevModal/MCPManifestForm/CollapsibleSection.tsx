@@ -32,11 +32,11 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 interface CollapsibleSectionProps {
-  /** 子组件内容 */
+  /** Child component content */
   children: ReactNode;
-  /** 默认是否展开 */
+  /** Whether to expand by default */
   defaultExpanded?: boolean;
-  /** 标题文本 */
+  /** Title text */
   title: string;
 }
 

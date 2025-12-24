@@ -29,7 +29,7 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
     const { t } = useTranslation('plugin');
     const [loading, setLoading] = useState(false);
 
-    // 跟踪配置更新
+    // Track configuration updates
     const [updatedConfig, setUpdatedConfig] = useState<{
       env?: Record<string, string>;
       headers?: Record<string, string>;
@@ -39,7 +39,7 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
     const testMcpConnection = useToolStore((s) => s.testMcpConnection);
     const togglePlugin = useAgentStore((s) => s.togglePlugin);
 
-    // 为自定义插件测试连接生成唯一标识符
+    // Generate unique identifier for custom plugin connection testing
     const identifier = installRequest?.schema?.identifier || '';
     const testState = useToolStore(mcpStoreSelectors.getMCPConnectionTestState(identifier));
 
@@ -48,7 +48,7 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
     const marketplace =
       isMarketplace && marketId ? TRUSTED_MARKETPLACES[marketId as TrustedMarketplaceId] : null;
 
-    // 重置加载状态和配置
+    // Reset loading state and configuration
     useEffect(() => {
       if (!installRequest) {
         setLoading(false);
@@ -61,17 +61,17 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
 
       setLoading(true);
       try {
-        // 第三方市场和自定义插件：构建自定义插件数据
+        // Third-party marketplace and custom plugins: build custom plugin data
         let customPlugin: LobeToolCustomPlugin;
 
-        // 合并原始配置和用户更新的配置
+        // Merge original configuration with user-updated configuration
         const finalConfig = {
           ...schema.config,
           env: updatedConfig.env || schema.config.env,
           headers: updatedConfig.headers || schema.config.headers,
         };
 
-        // 自定义插件：先测试连接获取真实的 manifest
+        // Custom plugin: test connection first to get the actual manifest
         const testParams: McpConnectionParams = {
           connection: finalConfig,
           identifier: identifier,
@@ -92,18 +92,18 @@ const CustomPluginInstallModal = memo<CustomPluginInstallModalProps>(
           throw new Error(t('protocolInstall.messages.manifestNotFound'));
         }
 
-        // 使用测试连接获取的真实 manifest
+        // Use the actual manifest obtained from connection test
         customPlugin = {
           customParams: {
             avatar: schema.icon,
             description: schema.description,
             mcp: {
-              ...finalConfig, // 使用合并后的配置
+              ...finalConfig, // Use merged configuration
               headers: finalConfig.type === 'http' ? finalConfig.headers : undefined,
             },
           },
           identifier: schema.identifier,
-          manifest: testResult.manifest, // 使用真实的 manifest
+          manifest: testResult.manifest, // Use the actual manifest
           type: 'customPlugin',
         };
 

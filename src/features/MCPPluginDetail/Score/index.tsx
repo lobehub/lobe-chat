@@ -29,11 +29,11 @@ const Score = memo(() => {
     deploymentOptions,
   } = useDetailContext();
 
-  // 使用工具函数计算所有的 has* 值
+  // Use utility function to calculate all has* values
   const scoreFlags = calculateScoreFlags({
     deploymentOptions,
     github,
-    isClaimed: false, // 详情页暂时没有 claimed 状态
+    isClaimed: false, // Detail page doesn't have claimed status yet
     isValidated,
     overview,
     promptsCount,
@@ -41,19 +41,19 @@ const Score = memo(() => {
     toolsCount,
   });
 
-  // 计算总分和评级
+  // Calculate total score and rating
   const scoreItems = createScoreItems(scoreFlags);
   const scoreResult = calculateScore(scoreItems);
 
-  // 使用新的 hook 创建评分项目列表
+  // Use new hook to create score item list
   const scoreListItems = useScoreList();
 
-  // 使用工具函数排序
+  // Sort using utility function
   const sortedScoreListItems = sortItemsByPriority(scoreListItems);
 
   return (
     <Flexbox gap={16}>
-      {/* 总分显示 */}
+      {/* Total score display */}
       <TotalScore
         isValidated={isValidated}
         scoreItems={scoreListItems.map((item) => ({
@@ -65,7 +65,7 @@ const Score = memo(() => {
         scoreResult={scoreResult}
       />
 
-      {/* 评分明细 */}
+      {/* Score details */}
 
       <Grid rows={2}>
         <Flexbox gap={16}>

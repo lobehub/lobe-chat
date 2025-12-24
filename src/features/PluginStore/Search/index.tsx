@@ -14,7 +14,7 @@ export const Search = memo(() => {
     s.pluginSearchKeywords,
   ]);
 
-  // 根据当前选项卡决定使用哪个关键词
+  // Determine which keyword to use based on the current tab
   const keywords = listType === PluginStoreTabs.MCP ? mcpKeywords : pluginKeywords;
 
   return (
