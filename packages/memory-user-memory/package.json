@@ -13,8 +13,7 @@
   "scripts": {
     "test": "vitest --run",
     "build:gen-response-formats": "tsx scripts/generate-response-formats.ts",
-    "type-check": "tsgo --noEmit -p tsconfig.json",
-    "typecheck": "tsgo --noEmit -p tsconfig.json"
+    "type-check": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@lobechat/context-engine": "workspace:*",

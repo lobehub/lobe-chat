@@ -4,9 +4,10 @@ import {
   RetrievalUserMemoryContextProvider,
   RetrievalUserMemoryIdentitiesProvider,
 } from './existingUserMemory';
+import { MemorySourceType } from '@lobechat/types';
 
 const job = {
-  source: 'chat_topic' as const,
+  source: MemorySourceType.ChatTopic,
   sourceId: 'topic-1',
   userId: 'user-1',
 };

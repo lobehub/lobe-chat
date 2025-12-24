@@ -1,4 +1,5 @@
 import type { LayersEnum } from './shared';
+import type { MemorySourceType } from './list';
 
 export type MemoryExtractionAgent =
   | 'gatekeeper'
@@ -6,8 +7,6 @@ export type MemoryExtractionAgent =
   | 'layer-experience'
   | 'layer-identity'
   | 'layer-preference';
-
-export type MemoryExtractionSourceType = 'chat_topic' | 'lark' | 'notion' | 'obsidian';
 
 export interface MemoryExtractionTraceError {
   message: string;
@@ -41,7 +40,7 @@ export interface MemoryExtractionTraceContexts {
 export interface MemoryExtractionTraceJob {
   force?: boolean;
   layers?: LayersEnum[];
-  source: MemoryExtractionSourceType;
+  source: MemorySourceType;
   sourceId: string;
   sourceUpdatedAt?: string | Date;
   userId: string;
@@ -84,7 +83,7 @@ export interface MemoryExtractionTracePayload<
   memories?: MemoryExtractionTraceMemories;
   result?: MemoryExtractionTraceResult<TExtraction>;
   source?: MemoryExtractionTraceSource;
-  sourceType?: MemoryExtractionSourceType;
+  sourceType?: MemorySourceType;
   userId?: string;
   userState?: unknown;
 }
