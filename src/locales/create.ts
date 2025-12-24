@@ -18,9 +18,11 @@ export const createI18nNext = (lang?: string) => {
     .use(LanguageDetector)
     .use(
       resourcesToBackend(async (lng: string, ns: string) => {
-        if (isDev && lng === 'zh-CN') return import(`./default/${ns}`);
+        if (ns === 'models' || ns === 'providers') {
+          return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
+        }
 
-        return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
+        return import(`./default/${ns}`);
       }),
     );
   // Dynamically set HTML direction on language change
