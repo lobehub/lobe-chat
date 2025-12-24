@@ -57,10 +57,8 @@ jobs:
       - name: Build with bundle analyzer
         run: bun run build:analyze
         env:
-          NODE_OPTIONS: --max-old-space-size=6144
-          KEY_VAULTS_SECRET: ${{ steps.generate-secret.outputs.secret }}
-          S3_PUBLIC_DOMAIN: https://example.com
-          APP_URL: https://example.com
+          NODE_OPTIONS: --max-old-space-size=8192
+          KEY_VAULTS_SECRET: ${{ secrets.KEY_VAULTS_SECRET || steps.generate-secret.outputs.secret }}
 
       - name: Prepare analyzer reports
         run: |
