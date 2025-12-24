@@ -4,7 +4,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import * as AgentModelModule from '@/database/models/agent';
 import * as ChatGroupModelModule from '@/database/models/chatGroup';
+import * as UserModelModule from '@/database/models/user';
 import * as AgentGroupRepoModule from '@/database/repositories/agentGroup';
+import * as ChatGroupServiceModule from '@/server/services/chatGroup';
 
 import { agentGroupRouter } from '../agentGroup';
 
@@ -14,6 +16,8 @@ describe('agentGroupRouter', () => {
   let agentModelMock: any;
   let chatGroupModelMock: any;
   let agentGroupRepoMock: any;
+  let userModelMock: any;
+  let chatGroupServiceMock: any;
 
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -41,6 +45,19 @@ describe('agentGroupRouter', () => {
       removeAgentsFromGroup: vi.fn(),
     };
 
+    userModelMock = {
+      getUserSettingsDefaultAgentConfig: vi.fn().mockResolvedValue({}),
+    };
+
+    chatGroupServiceMock = {
+      getGroupDetail: vi.fn(),
+      getGroups: vi.fn(),
+      mergeAgentsDefaultConfig: vi.fn((_, agents) => agents),
+      normalizeGroupConfig: vi.fn((config) =>
+        config ? { ...DEFAULT_CHAT_GROUP_CHAT_CONFIG, ...config } : undefined,
+      ),
+    };
+
     // Use vi.spyOn to mock the class constructors to return our mock instances
     vi.spyOn(AgentModelModule, 'AgentModel').mockImplementation(() => agentModelMock as any);
     vi.spyOn(ChatGroupModelModule, 'ChatGroupModel').mockImplementation(
@@ -48,6 +65,10 @@ describe('agentGroupRouter', () => {
     );
     vi.spyOn(AgentGroupRepoModule, 'AgentGroupRepository').mockImplementation(
       () => agentGroupRepoMock as any,
+    );
+    vi.spyOn(UserModelModule, 'UserModel').mockImplementation(() => userModelMock as any);
+    vi.spyOn(ChatGroupServiceModule, 'ChatGroupService').mockImplementation(
+      () => chatGroupServiceMock as any,
     );
 
     mockCtx = {
@@ -208,17 +229,17 @@ describe('agentGroupRouter', () => {
         ],
       };
 
-      agentGroupRepoMock.findByIdWithAgents.mockResolvedValue(mockGroupDetail);
+      chatGroupServiceMock.getGroupDetail.mockResolvedValue(mockGroupDetail);
 
       const caller = agentGroupRouter.createCaller(mockCtx);
       const result = await caller.getGroupDetail({ id: 'group-1' });
 
-      expect(agentGroupRepoMock.findByIdWithAgents).toHaveBeenCalledWith('group-1');
+      expect(chatGroupServiceMock.getGroupDetail).toHaveBeenCalledWith('group-1');
       expect(result).toEqual(mockGroupDetail);
     });
 
     it('should return null if group not found', async () => {
-      agentGroupRepoMock.findByIdWithAgents.mockResolvedValue(null);
+      chatGroupServiceMock.getGroupDetail.mockResolvedValue(null);
 
       const caller = agentGroupRouter.createCaller(mockCtx);
       const result = await caller.getGroupDetail({ id: 'non-existent' });
@@ -247,16 +268,16 @@ describe('agentGroupRouter', () => {
   describe('getGroups', () => {
     it('should get all groups with member details', async () => {
       const mockGroups = [
-        { id: 'group-1', title: 'Group 1' },
-        { id: 'group-2', title: 'Group 2' },
+        { id: 'group-1', title: 'Group 1', agents: [] },
+        { id: 'group-2', title: 'Group 2', agents: [] },
       ];
 
-      chatGroupModelMock.queryWithMemberDetails.mockResolvedValue(mockGroups);
+      chatGroupServiceMock.getGroups.mockResolvedValue(mockGroups);
 
       const caller = agentGroupRouter.createCaller(mockCtx);
       const result = await caller.getGroups();
 
-      expect(chatGroupModelMock.queryWithMemberDetails).toHaveBeenCalled();
+      expect(chatGroupServiceMock.getGroups).toHaveBeenCalled();
       expect(result).toEqual(mockGroups);
     });
   });
