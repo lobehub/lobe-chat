@@ -28,46 +28,6 @@ const logBetterAuth = debug('middleware:better-auth');
 const OIDC_SESSION_HEADER = 'x-oidc-session-sync';
 
 export function defineConfig() {
-  const config = {
-    matcher: [
-      // include any files in the api or trpc folders that might have an extension
-      '/(api|trpc|webapi)(.*)',
-      // include the /
-      '/',
-      '/community',
-      '/community(.*)',
-      '/labs',
-      '/agent',
-      '/agent(.*)',
-      '/group',
-      '/group(.*)',
-      '/changelog(.*)',
-      '/settings(.*)',
-      '/image',
-      '/resource',
-      '/resource(.*)',
-      '/profile(.*)',
-      '/page',
-      '/page(.*)',
-      '/me',
-      '/me(.*)',
-      '/desktop-onboarding',
-      '/desktop-onboarding(.*)',
-      '/onboarding',
-
-      '/login(.*)',
-      '/signup(.*)',
-      '/signin(.*)',
-      '/verify-email(.*)',
-      '/reset-password(.*)',
-      '/auth-error(.*)',
-      '/next-auth/(.*)',
-      '/oauth(.*)',
-      '/oidc(.*)',
-      '/market-auth-callback(.*)',
-    ],
-  };
-
   const backendApiEndpoints = ['/api', '/trpc', '/webapi', '/oidc'];
 
   const defaultMiddleware = (request: NextRequest) => {
