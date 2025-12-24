@@ -1,10 +1,10 @@
 import { Flexbox } from '@lobehub/ui';
 import { Outlet } from 'react-router-dom';
 
-import Footer from '@/features/Setting/Footer';
 import WideScreenContainer from '@/features/WideScreenContainer';
 
 import { MAX_WIDTH } from '../../features/const';
+import Footer from './Footer';
 import Header from './Header';
 
 const Layout = () => {

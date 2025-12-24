@@ -135,6 +135,8 @@ export default {
   'filterBy.timePeriod.title': '时间范围',
   'filterBy.timePeriod.week': '近 7 天',
   'filterBy.timePeriod.year': '近一年',
+  'footer.desc': '轻松将你的助理、资源提交至 LobeHub 社区，与全球 AI 用户一起使用、反馈与演进。',
+  'footer.title': '此时此刻，就在 LobeHub 社区发布你的创作',
   'home.communityAgents': '社区助理',
   'home.featuredAssistants': '推荐助理',
   'home.featuredModels': '推荐模型',
