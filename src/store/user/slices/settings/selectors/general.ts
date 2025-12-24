@@ -17,9 +17,11 @@ const contextMenuMode = (s: UserStore) => {
   if (config !== undefined) return config;
   return isDesktop ? 'default' : 'disabled';
 };
+const autoScroll = (s: UserStore) => generalConfig(s).autoScroll;
 
 export const userGeneralSettingsSelectors = {
   animationMode,
+  autoScroll,
   config: generalConfig,
   contextMenuMode,
   fontSize,
