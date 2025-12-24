@@ -107,6 +107,7 @@ export default {
   'confirm': '确认',
   'debug.arguments': '调用参数',
   'debug.function_call': '函数调用',
+  'debug.intervention': '技能干涉',
   'debug.off': '关闭调试',
   'debug.on': '查看技能调用信息',
   'debug.payload': '技能载荷',

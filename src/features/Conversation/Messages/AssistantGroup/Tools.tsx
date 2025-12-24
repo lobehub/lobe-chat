@@ -1,6 +1,6 @@
 import { ChatToolPayloadWithResult } from '@lobechat/types';
 import { Accordion } from '@lobehub/ui';
-import { type Key, memo, useCallback, useState } from 'react';
+import { type Key, memo, useState } from 'react';
 
 import Tool from './Tool';
 
@@ -11,19 +11,6 @@ interface ToolsRendererProps {
 
 export const Tools = memo<ToolsRendererProps>(({ messageId, tools }) => {
   const [showToolContents, setShowToolDetails] = useState<Key[]>([]);
-
-  const handleExpand = useCallback(
-    (id: string) => (expand?: boolean) => {
-      if (expand) {
-        if (!showToolContents.includes(id)) {
-          setShowToolDetails([...showToolContents, id]);
-        }
-      } else {
-        setShowToolDetails(showToolContents.filter((key) => key !== id));
-      }
-    },
-    [showToolContents],
-  );
 
   if (!tools || tools.length === 0) return null;
 
@@ -40,7 +27,19 @@ export const Tools = memo<ToolsRendererProps>(({ messageId, tools }) => {
             arguments={tool.arguments}
             assistantMessageId={messageId}
             expand={showToolContents.includes(tool.id)}
-            handleExpand={handleExpand(tool.id)}
+            handleExpand={(expand?: boolean) => {
+              setShowToolDetails((prev = []) => {
+                if (expand) {
+                  if (!prev.includes(tool.id)) {
+                    return [...prev, tool.id];
+                  } else {
+                    return prev;
+                  }
+                } else {
+                  return prev.filter((key) => key !== tool.id);
+                }
+              });
+            }}
             id={tool.id}
             identifier={tool.identifier}
             intervention={tool.intervention}

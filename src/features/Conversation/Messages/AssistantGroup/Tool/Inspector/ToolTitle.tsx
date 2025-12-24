@@ -11,6 +11,9 @@ import { shinyTextStylish } from '@/styles/loading';
 import { builtinToolIdentifiers } from '@/tools/identifiers';
 
 export const useStyles = createStyles(({ css, token }) => ({
+  aborted: css`
+    color: ${token.colorTextQuaternary};
+  `,
   root: css`
     overflow: hidden;
     display: -webkit-box;
@@ -25,10 +28,11 @@ export const useStyles = createStyles(({ css, token }) => ({
 interface ToolTitleProps {
   apiName: string;
   identifier: string;
+  isAborted?: boolean;
   isLoading?: boolean;
 }
 
-const ToolTitle = memo<ToolTitleProps>(({ identifier, apiName, isLoading }) => {
+const ToolTitle = memo<ToolTitleProps>(({ identifier, apiName, isLoading, isAborted }) => {
   const { t } = useTranslation('plugin');
   const { styles, cx } = useStyles();
 
@@ -37,7 +41,7 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, apiName, isLoading }) => {
   const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
   return (
-    <div className={cx(styles.root, isLoading && styles.shinyText)}>
+    <div className={cx(styles.root, isLoading && styles.shinyText, isAborted && styles.aborted)}>
       <span>
         {isBuiltinPlugin
           ? t(`builtins.${identifier}.title`, {

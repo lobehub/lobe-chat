@@ -57,7 +57,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
       style={{ height: '100%' }}
     >
       {displayItems.map((item) => (
-        <Flexbox gap={1} key={item.id} padding={'4px 8px'}>
+        <Flexbox key={item.id} paddingBlock={1} paddingInline={4}>
           {item.type === 'group' ? <GroupItem item={item} /> : <AgentItem item={item} />}
         </Flexbox>
       ))}
