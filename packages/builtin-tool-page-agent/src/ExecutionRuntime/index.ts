@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { formatPageContentContext, PageContentContext } from '@lobechat/prompts';
 import { BuiltinServerRuntimeOutput } from '@lobechat/types';
 import {
   IEditor,
@@ -236,67 +237,20 @@ export class PageAgentExecutionRuntime {
    */
   async getPageContent(args: GetPageContentArgs): Promise<BuiltinServerRuntimeOutput> {
     try {
-      const editor = this.getEditor();
-      if (!editor) {
-        throw new Error('Editor instance not found');
-      }
-
-      const { getter: getTitleFn } = this.getTitleHandlers();
-      if (!getTitleFn) {
-        throw new Error('Title getter not found');
-      }
-
-      const format = args.format || 'both';
-      const title = getTitleFn() || 'Untitled';
-
-      // Get document in JSON format
-      const docJson = editor.getDocument('json') as any;
-      const pageXML = editor.getDocument('litexml') as any;
-      log('docJson:', JSON.stringify(docJson, null, 2));
-
-      // Prepare state object
-      const state: GetPageContentState = {
-        documentId: 'current',
-        metadata: {
-          title,
-        },
-      };
-
-      // Get markdown format if requested
-      if (format === 'markdown' || format === 'both') {
-        const markdownRaw = editor.getDocument('markdown');
-        log('markdownRaw:', markdownRaw);
-        const markdown = String(markdownRaw || '');
-        state.markdown = markdown;
-      }
-
-      // Convert to XML if requested
-      if (format === 'xml' || format === 'both') {
-        if (pageXML) {
-          state.xml = pageXML;
-        } else {
-          state.xml = '';
-        }
-      }
-
-      // Build content message
-      let contentMsg = `Successfully retrieved page content.\n\n**Title**: ${title}\n`;
-
-      if (state.markdown) {
-        const charCount = state.markdown.length;
-        const lineCount = state.markdown.split('\n').length;
-        contentMsg += `**Markdown**: ${charCount} characters, ${lineCount} lines\n`;
-        state.metadata.totalCharCount = charCount;
-        state.metadata.totalLineCount = lineCount;
-      }
-
-      if (state.xml) {
-        contentMsg += `**XML Structure**: ${state.xml}\n`;
-      }
+      const context = this.getPageContentContext(args.format);
 
       return {
-        content: contentMsg,
-        state,
+        content: formatPageContentContext(context),
+        state: {
+          documentId: this.currentDocId || 'current',
+          markdown: context.markdown,
+          metadata: {
+            title: context.metadata.title,
+            totalCharCount: context.metadata.charCount,
+            totalLineCount: context.metadata.lineCount,
+          },
+          xml: context.xml,
+        } as GetPageContentState,
         success: true,
       };
     } catch (error) {
@@ -307,6 +261,34 @@ export class PageAgentExecutionRuntime {
         success: false,
       };
     }
+  }
+
+  /**
+   * Get page content context for system prompt injection
+   */
+  getPageContentContext(format: 'xml' | 'markdown' | 'both' = 'both'): PageContentContext {
+    const editor = this.getEditor();
+    const { getter: getTitleFn } = this.getTitleHandlers();
+
+    const title = getTitleFn() || 'Untitled';
+    const pageXML = editor.getDocument('litexml') as unknown as string;
+
+    log('Getting page content context, format:', format);
+
+    const context: PageContentContext = {
+      metadata: { title },
+    };
+
+    if (format === 'markdown' || format === 'both') {
+      const markdownRaw = editor.getDocument('markdown');
+      context.markdown = String(markdownRaw || '');
+    }
+
+    if (format === 'xml' || format === 'both') {
+      context.xml = pageXML || '';
+    }
+
+    return context;
   }
 
   // ==================== Helper Methods ====================
