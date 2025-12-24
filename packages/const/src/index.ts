@@ -1,4 +1,3 @@
-export * from '../../business/const/src/branding';
 export * from './auth';
 export * from './currency';
 export * from './desktop';
