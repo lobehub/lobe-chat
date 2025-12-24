@@ -4,6 +4,7 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
+import { cloudModelIdMapping } from '@lobechat/business-const';
 import { ModelProvider } from 'model-bank';
 
 import { hasTemperatureTopPConflict } from '../../const/models';
@@ -233,7 +234,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       accept: 'application/json',
       body: JSON.stringify(anthropicPayload),
       contentType: 'application/json',
-      modelId: model,
+      modelId: cloudModelIdMapping[model] || model,
     });
 
     try {
