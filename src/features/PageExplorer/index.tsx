@@ -31,7 +31,6 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
     s.getOptimisticDocuments(), // Call inside selector to subscribe to changes
     s.fetchDocuments,
     s.fetchDocumentDetail,
-    s.deletePage,
     s.isDocumentListLoading,
   ]);
 
@@ -43,18 +42,27 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
     fetchDocuments({ pageOnly: true });
   }, [fetchDocuments]);
 
+  // Check if pageId is valid (not undefined or "docs_undefined")
+  const isValidPageId = pageId && !pageId.includes('undefined');
+
   // When pageId prop changes (from URL navigation), update selected page and fetch details
   // Use ref to only sync when pageId actually changes, avoiding conflicts with sidebar selection
   useEffect(() => {
-    if (pageId && pageId !== prevPageIdRef.current) {
+    if (isValidPageId && pageId !== prevPageIdRef.current) {
       prevPageIdRef.current = pageId;
       setSelectedPageId(pageId, false);
       // Fetch the document detail to ensure it's loaded in the local map
       fetchDocumentDetail(pageId);
+    } else if (!isValidPageId && prevPageIdRef.current !== undefined) {
+      // When navigating to /page without a doc id, clear the selection
+      prevPageIdRef.current = undefined;
+      setSelectedPageId(null, false);
     }
-  }, [pageId, setSelectedPageId, fetchDocumentDetail]);
+  }, [pageId, isValidPageId, setSelectedPageId, fetchDocumentDetail]);
 
-  const currentPageId = selectedPageId || pageId;
+  // Prioritize selectedPageId from store for immediate updates when clicking from sidebar
+  // Only show placeholder when both selectedPageId is null AND pageId is invalid
+  const currentPageId = selectedPageId || (isValidPageId ? pageId : undefined);
 
   // Check if the current page exists in the pages list
   const currentPageExists = currentPageId && pages.some((page) => page.id === currentPageId);
@@ -64,7 +72,7 @@ const PageExplorer = memo<PageExplorerProps>(({ pageId }) => {
   // This prevents the placeholder flash on page refresh.
   const isWaitingForDocuments = pages.length === 0 || isDocumentListLoading;
   const shouldShowEditor =
-    currentPageId && (currentPageExists || (pageId && isWaitingForDocuments));
+    currentPageId && (currentPageExists || (isValidPageId && isWaitingForDocuments));
 
   if (!shouldShowEditor) {
     return <PageExplorerPlaceholder hasPages={pages?.length > 0} />;
