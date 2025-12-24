@@ -100,7 +100,7 @@
   "createGuide.func1.tag": "方法1",
   "createGuide.func1.title": "LobeChatを通じて提出",
   "createGuide.func2.button": "Githubアシスタントリポジトリに移動",
-  "createGuide.func2.desc": "アシスタントをインデックスに追加したい場合は、pluginsディレクトリにagent-template.jsonまたはagent-template-full.jsonを使用してエントリを作成し、簡単な説明を書いて適切にタグ付けし、プルリクエストを作成してください。",
+  "createGuide.func2.desc": "アシスタントをインデックスに追加したい場合は、スキルsディレクトリにagent-template.jsonまたはagent-template-full.jsonを使用してエントリを作成し、簡単な説明を書いて適切にタグ付けし、プルリクエストを作成してください。",
   "createGuide.func2.tag": "方法2",
   "createGuide.func2.title": "Githubを通じて提出",
   "dislike": "嫌い",

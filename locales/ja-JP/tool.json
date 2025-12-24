@@ -1,5 +1,5 @@
 {
-  "agentGroupManagement.executeTask.agent": "エージェントを実行",
+  "agentGroupManagement.executeTask.agent": "アシスタントを実行",
   "agentGroupManagement.executeTask.cancelled": "キャンセルされました",
   "agentGroupManagement.executeTask.completed": "タスク完了",
   "agentGroupManagement.executeTask.cost": "費用",
