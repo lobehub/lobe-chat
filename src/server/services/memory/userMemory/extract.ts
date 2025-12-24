@@ -9,14 +9,16 @@ import {
   MemoryExtractionService,
   RetrievalUserMemoryContextProvider,
   RetrievalUserMemoryIdentitiesProvider,
+  BenchmarkLocomoContextProvider,
 } from '@lobechat/memory-user-memory';
 import type {
   MemoryExtractionAgent,
   MemoryExtractionJob,
   MemoryExtractionResult,
-  MemoryExtractionSourceType,
+  BenchmarkLocomoPart,
   PersistedMemoryResult,
 } from '@lobechat/memory-user-memory';
+import { UserMemorySourceModel } from '@/database/models/userMemory/source';
 import { ModelRuntime } from '@lobechat/model-runtime';
 import type {
   Embeddings,
@@ -61,16 +63,14 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
 import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
-import { LayersEnum, MergeStrategyEnum, TypesEnum } from '@/types/userMemory';
+import { LayersEnum, MergeStrategyEnum, TypesEnum, MemorySourceType } from '@/types/userMemory';
 import { encodeAsync } from '@/utils/tokenizer';
 
-const SOURCE_ALIAS_MAP: Record<string, MemoryExtractionSourceType> = {
-  chatTopic: 'chat_topic',
-  chatTopics: 'chat_topic',
-  chat_topic: 'chat_topic',
-  lark: 'lark',
-  notion: 'notion',
-  obsidian: 'obsidian',
+const SOURCE_ALIAS_MAP: Record<string, MemorySourceType> = {
+  benchmark_locomo: MemorySourceType.BenchmarkLocomo,
+  chatTopic: MemorySourceType.ChatTopic,
+  chatTopics: MemorySourceType.ChatTopic,
+  chat_topic: MemorySourceType.ChatTopic,
 };
 
 const LAYER_ALIAS = new Set<LayersEnum>([
@@ -107,7 +107,8 @@ export interface MemoryExtractionNormalizedPayload {
    * - `direct` processes the extraction within the webhook request itself.
    */
   mode: 'workflow' | 'direct';
-  sources: MemoryExtractionSourceType[];
+  sourceIds?: string[];
+  sources: MemorySourceType[];
   to?: Date;
   topicCursor?: TopicWorkflowCursor;
   topicIds: string[];
@@ -121,8 +122,9 @@ export const memoryExtractionPayloadSchema = z.object({
   forceAll: z.boolean().optional(),
   forceTopics: z.boolean().optional(),
   fromDate: z.coerce.date().optional(),
-  layers: z.array(z.string()).optional(),
+  layers: z.array(z.nativeEnum(LayersEnum)).optional(),
   mode: z.enum(['workflow', 'direct']).optional(),
+  sourceIds: z.array(z.string()).optional(),
   sources: z.array(z.string()).optional(),
   toDate: z.coerce.date().optional(),
   topicCursor: z
@@ -145,12 +147,12 @@ export const memoryExtractionPayloadSchema = z.object({
 
 export type MemoryExtractionPayloadInput = z.infer<typeof memoryExtractionPayloadSchema>;
 
-const normalizeSources = (sources?: string[]): MemoryExtractionSourceType[] => {
+const normalizeSources = (sources?: string[]): MemorySourceType[] => {
   if (!sources) return [];
 
   const normalized = sources
     .map((source) => SOURCE_ALIAS_MAP[source as keyof typeof SOURCE_ALIAS_MAP])
-    .filter(Boolean) as MemoryExtractionSourceType[];
+    .filter(Boolean) as MemorySourceType[];
 
   return Array.from(new Set(normalized));
 };
@@ -180,6 +182,7 @@ export const normalizeMemoryExtractionPayload = (
     from: parsed.fromDate,
     layers: normalizeLayers(parsed.layers),
     mode: parsed.mode ?? 'workflow',
+    sourceIds: Array.from(new Set(parsed.sourceIds || [])).filter(Boolean),
     sources: normalizeSources(parsed.sources),
     to: parsed.toDate,
     topicCursor: parsed.topicCursor,
@@ -208,6 +211,7 @@ export const buildWorkflowPayloadInput = (
   fromDate: payload.from,
   layers: payload.layers,
   mode: payload.mode,
+  sourceIds: payload.sourceIds,
   sources: payload.sources,
   toDate: payload.to,
   topicCursor: payload.topicCursor,
@@ -288,7 +292,7 @@ export interface TopicExtractionJob {
   forceTopics: boolean;
   from?: Date;
   layers: LayersEnum[];
-  source: MemoryExtractionSourceType;
+  source: MemorySourceType;
   to?: Date;
   topicId: string;
   userId: string;
@@ -1247,14 +1251,8 @@ export class MemoryExtractionExecutor {
   }
 
   async runDirect(payload: MemoryExtractionNormalizedPayload) {
-    if (!payload.sources.includes('chat_topic')) {
-      return { message: 'Direct execution currently supports chat_topic only.', processed: 0 };
-    }
     if (!payload.userIds.length) {
       throw new Error('Direct execution requires at least one user id.');
-    }
-    if (!payload.topicIds.length) {
-      throw new Error('Direct execution requires topicIds for chat_topic sources.');
     }
 
     const results: {
@@ -1265,21 +1263,66 @@ export class MemoryExtractionExecutor {
       userId: string;
     }[] = [];
 
-    for (const userId of payload.userIds) {
-      const topicIds = await this.filterTopicIdsForUser(userId, payload.topicIds);
-      for (const topicId of topicIds) {
-        const extracted = await this.extractTopic({
-          forceAll: payload.forceAll,
-          forceTopics: payload.forceTopics,
-          from: payload.from,
-          layers: payload.layers,
-          source: 'chat_topic',
-          to: payload.to,
-          topicId,
-          userId,
-        });
+    const includesChatTopic = payload.sources.includes(MemorySourceType.ChatTopic);
+    const includesBenchmark = payload.sources.includes(MemorySourceType.BenchmarkLocomo);
 
-        results.push({ ...extracted, topicId, userId });
+    if (includesChatTopic) {
+      if (!payload.topicIds.length) {
+        throw new Error('Direct chat_topic execution requires topicIds.');
+      }
+
+      for (const userId of payload.userIds) {
+        const topicIds = await this.filterTopicIdsForUser(userId, payload.topicIds);
+        for (const topicId of topicIds) {
+          const extracted = await this.extractTopic({
+            forceAll: payload.forceAll,
+            forceTopics: payload.forceTopics,
+            from: payload.from,
+            layers: payload.layers,
+            source: MemorySourceType.ChatTopic,
+            to: payload.to,
+            topicId,
+            userId,
+          });
+
+          results.push({ ...extracted, topicId, userId });
+        }
+      }
+    }
+
+    if (includesBenchmark) {
+      const benchmarkSourceIds =
+        payload.sourceIds && payload.sourceIds.length > 0 ? payload.sourceIds : payload.topicIds;
+      if (!benchmarkSourceIds.length) {
+        throw new Error('Direct benchmark_locomo execution requires sourceIds.');
+      }
+
+      for (const userId of payload.userIds) {
+        const sourceModel = new UserMemorySourceModel(userId);
+        for (const sourceId of benchmarkSourceIds) {
+          const parts = await sourceModel.listParts(sourceId);
+          if (!parts.length) {
+            results.push({
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              topicId: sourceId,
+              userId,
+            });
+            continue;
+          }
+
+          const extraction = await this.extractBenchmarkSource({
+            forceAll: payload.forceAll,
+            layers: payload.layers,
+            parts: parts as unknown as BenchmarkLocomoPart[],
+            source: MemorySourceType.BenchmarkLocomo,
+            sourceId,
+            userId,
+          });
+
+          results.push({ ...extraction, topicId: sourceId, userId });
+        }
       }
     }
 
@@ -1545,6 +1588,172 @@ export class MemoryExtractionExecutor {
     this.runtimeCache.set(userId, runtimes);
 
     return runtimes;
+  }
+
+  async extractBenchmarkSource(params: {
+    contextProvider?: BenchmarkLocomoContextProvider;
+    forceAll?: boolean;
+    language?: string;
+    layers?: LayersEnum[];
+    parts: BenchmarkLocomoPart[];
+    source: MemorySourceType;
+    sourceId: string;
+    userId: string;
+  }) {
+    const attributes = {
+      source: params.source,
+      source_id: params.sourceId,
+      user_id: params.userId,
+    };
+
+    return tracer.startActiveSpan(
+      'Memory User Memory: Extract Benchmark LoCoMo',
+      { attributes },
+      async (span) => {
+        const startTime = Date.now();
+        let extractionJob: MemoryExtractionJob | null = null;
+        let extraction: MemoryExtractionResult | null = null;
+
+        try {
+          const db = await this.db;
+          const userModel = new UserModel(db, params.userId);
+          const userState = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+          const keyVaults = userState.settings?.keyVaults as UserKeyVaults | undefined;
+          const language = params.language || userState.settings?.general?.responseLanguage;
+
+          const runtimes = await this.getRuntime(params.userId, keyVaults);
+          const contextProvider =
+            params.contextProvider ||
+            new BenchmarkLocomoContextProvider({
+              parts: params.parts,
+              sampleId: params.sourceId,
+              sourceId: params.sourceId,
+              userId: params.userId,
+            });
+
+          extractionJob = {
+            force: params.forceAll ?? true,
+            layers: params.layers,
+            source: params.source,
+            sourceId: params.sourceId,
+            sourceUpdatedAt: params.parts.at(-1)?.createdAt
+              ? new Date(params.parts.at(-1)!.createdAt as Date)
+              : new Date(),
+            userId: params.userId,
+          };
+
+          const builtContext = await contextProvider.buildContext(extractionJob);
+          const extractorContextLimit = this.privateConfig.agentLayerExtractor.contextLimit;
+          const trimmedContext = this.trimTextToTokenLimit(
+            builtContext.context,
+            extractorContextLimit,
+          );
+
+          const agentCalls: Partial<
+            Record<
+              MemoryExtractionAgent,
+              MemoryExtractionAgentCallTrace<GenerateObjectPayload, unknown>
+            >
+          > = {};
+          const agentStartedAt: Partial<Record<MemoryExtractionAgent, number>> = {};
+
+          const recordRequest = (agent: MemoryExtractionAgent, request: GenerateObjectPayload) => {
+            agentStartedAt[agent] = Date.now();
+            agentCalls[agent] = { ...agentCalls[agent], request };
+          };
+
+          const recordResponse = (agent: MemoryExtractionAgent, response: unknown) => {
+            const duration = agentStartedAt[agent]
+              ? Date.now() - agentStartedAt[agent]!
+              : undefined;
+            agentCalls[agent] = { ...agentCalls[agent], durationMs: duration, response };
+          };
+
+          const recordError = (agent: MemoryExtractionAgent, error: unknown) => {
+            const duration = agentStartedAt[agent]
+              ? Date.now() - agentStartedAt[agent]!
+              : undefined;
+            agentCalls[agent] = {
+              ...agentCalls[agent],
+              durationMs: duration,
+              error: serializeError(error),
+            };
+          };
+
+          const service = new MemoryExtractionService({
+            config: this.modelConfig,
+            db,
+            language,
+            runtimes,
+          });
+
+          extraction = await service.run(extractionJob, {
+            callbacks: {
+              onExtractError: async (agent, error) => {
+                recordError(agent, error);
+              },
+              onExtractRequest: async (agent, payload) => {
+                recordRequest(agent, payload);
+              },
+              onExtractResponse: async (agent, response) => {
+                recordResponse(agent, response);
+              },
+            },
+            contextProvider,
+            gatekeeperLanguage: this.privateConfig.agentGateKeeper.language || 'English',
+            language,
+            retrievedContexts: [trimmedContext],
+            retrievedIdentitiesContext: undefined,
+            sessionDate: new Date().toISOString(),
+            topK: 10,
+            username:
+              userState.fullName || `${userState.firstName} ${userState.lastName}`.trim() || 'User',
+          });
+
+          if (!extraction) {
+            this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
+            span.setStatus({ code: SpanStatusCode.OK, message: 'no_extraction' });
+            return {
+              extracted: false,
+              layers: {},
+              memoryIds: [],
+              traceId: span.spanContext().traceId,
+            };
+          }
+
+          const persistedRes = await this.persistExtraction(
+            extractionJob,
+            [],
+            extraction,
+            runtimes,
+            db,
+          );
+
+          this.recordJobMetrics(extractionJob, 'completed', Date.now() - startTime);
+          span.setStatus({ code: SpanStatusCode.OK });
+          span.setAttribute('memory.persisted_count', persistedRes.createdIds.length);
+
+          return {
+            extracted: true,
+            layers: persistedRes.layers,
+            memoryIds: persistedRes.createdIds,
+            traceId: span.spanContext().traceId,
+          };
+        } catch (error) {
+          if (extractionJob) {
+            this.recordJobMetrics(extractionJob, 'failed', Date.now() - startTime);
+          }
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: error instanceof Error ? error.message : 'Extraction failed',
+          });
+          span.recordException(error as Error);
+          throw error;
+        } finally {
+          span.end();
+        }
+      },
+    );
   }
 }
 
