@@ -1,8 +1,8 @@
 {
   "guide.agents.replaceBtn": "Refresh",
   "guide.agents.title": "New Agent Recommendations:",
-  "guide.defaultMessage": "I'm your personal AI agent {{appName}}. How can I help you today?<br />If you need a more professional or customized agent, click <plus /> to create your own.",
-  "guide.defaultMessageWithoutCreate": "I'm your personal AI agent {{appName}}. How can I help you today?",
+  "guide.defaultMessage": "I’m your Agent {{appName}}. Start with any idea.<br />Need a more specialized Agent? Click <plus /> to create one.",
+  "guide.defaultMessageWithoutCreate": "Welcome to {{appName}}. One sentence is enough—just state your goal.",
   "guide.groupActivities.analysis.codeReview.description": "Technical discussions and peer reviews of code changes and implementations",
   "guide.groupActivities.analysis.codeReview.emoji": "💻",
   "guide.groupActivities.analysis.codeReview.prompt": "Let's review some code together. Can you help us analyze it and identify areas for improvement?",
@@ -39,9 +39,9 @@
   "guide.groupActivities.game.debateClub.emoji": "⚖️",
   "guide.groupActivities.game.debateClub.prompt": "Let's have a structured debate. Can you help us organize a well-reasoned discussion on this topic?",
   "guide.groupActivities.game.debateClub.title": "Debate Club",
-  "guide.groupActivities.game.gameNight.description": "Fun interactive games and activities to build team bonds and enjoy together",
+  "guide.groupActivities.game.gameNight.description": "Fun interactive games and activities to build bonds and enjoy together",
   "guide.groupActivities.game.gameNight.emoji": "🎲",
-  "guide.groupActivities.game.gameNight.prompt": "Game night is on! Can you help us organize some fun interactive games to build team spirit?",
+  "guide.groupActivities.game.gameNight.prompt": "Game night is on! Can you help us organize some fun interactive games to bring everyone together?",
   "guide.groupActivities.game.gameNight.title": "Game Night",
   "guide.groupActivities.game.modelUN.description": "Simulated UN debates and diplomatic negotiations on global issues",
   "guide.groupActivities.game.modelUN.emoji": "🌍",
@@ -116,7 +116,7 @@
   "guide.groupActivities.writing.studyGroup.emoji": "📚",
   "guide.groupActivities.writing.studyGroup.prompt": "Let's form a study group. Can you help us understand these concepts and solve problems together?",
   "guide.groupActivities.writing.studyGroup.title": "Study Group",
-  "guide.groupMessage": "Welcome to group chat! Collaborate with multiple AI agents in a shared conversation space.",
+  "guide.groupMessage": "Welcome to Groups. In one shared conversation, let Agents move the task forward together.",
   "guide.groupTemplates.analysis.description": "Data-driven insights and in-depth research analysis",
   "guide.groupTemplates.analysis.members": [
     {
@@ -217,7 +217,7 @@
       "title": "Culinary R&D Expert"
     }
   ],
-  "guide.groupTemplates.planning.title": "Culinary R&D Team",
+  "guide.groupTemplates.planning.title": "Culinary R&D Group",
   "guide.groupTemplates.product.description": "Product design and development to build high-quality products",
   "guide.groupTemplates.product.members": [
     {
@@ -239,7 +239,7 @@
       "title": "Full-Stack Engineer"
     }
   ],
-  "guide.groupTemplates.product.title": "Product Development Team",
+  "guide.groupTemplates.product.title": "Product Development Group",
   "guide.groupTemplates.writing.description": "Content creation and editing to craft high-quality copy",
   "guide.groupTemplates.writing.members": [
     {
@@ -265,7 +265,7 @@
   "header": "Welcome",
   "pickAgent": "Or choose from the agent templates below",
   "skip": "Skip Creation",
-  "slogan.desc1": "Activate your brain cluster and spark new ideas. Your AI agent is always here.",
+  "slogan.desc1": "Here, Agents are always on call. Ideas can collaborate, capture, and evolve.",
   "slogan.desc2": "Create your first agent and let's get started~",
   "slogan.title": "Give yourself a smarter mind",
   "welcomeMessages": {
