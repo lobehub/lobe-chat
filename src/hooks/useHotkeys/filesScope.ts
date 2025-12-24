@@ -20,7 +20,7 @@ export const useToggleFilesLeftPanelHotkey = () => {
   );
 };
 
-// 注册聚合
+// Registration aggregation
 
 export const useRegisterFilesHotkeys = () => {
   const { enableScope, disableScope } = useHotkeysContext();
