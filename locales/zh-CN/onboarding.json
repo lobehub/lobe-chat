@@ -40,7 +40,7 @@
   "responseLanguage.title2": "从语言开始，建立理解",
   "responseLanguage.title3": "说得清楚，听得明白",
   "telemetry.agreement": "我们仅收集匿名数据，用于改进产品体验。继续即表示你已阅读并同意<terms>服务条款</terms>与<privacy>隐私政策</privacy>",
-  "telemetry.desc": "我是你的助理管家。随时陪你思考、创作，帮你管理助理团队",
+  "telemetry.desc": "我是你的助理管家。随时陪你思考、创作，帮你管理助理与群组",
   "telemetry.helpImprove": "帮助改进 {{appName}}",
   "telemetry.next": "开始",
   "telemetry.privacy": "隐私政策",

@@ -99,7 +99,7 @@
   "guide.groupActivities.product.techExchange.emoji": "🚀",
   "guide.groupActivities.product.techExchange.prompt": "让我们进行技术交流吧！你能帮助我们讨论新兴技术和行业趋势吗？",
   "guide.groupActivities.product.techExchange.title": "技术交流",
-  "guide.groupActivities.title": "团队聊天用法推荐",
+  "guide.groupActivities.title": "群组聊天用法推荐",
   "guide.groupActivities.writing.bookClub.description": "对书籍、故事和文学作品进行文学讨论和分析",
   "guide.groupActivities.writing.bookClub.emoji": "📖",
   "guide.groupActivities.writing.bookClub.prompt": "让我们开始读书俱乐部讨论。你能帮助我们分析这本书并一起探讨其主题吗？",
@@ -122,7 +122,9 @@
     {
       "avatar": "📊",
       "backgroundColor": "#E8F8F5",
-      "plugins": ["steam"],
+      "plugins": [
+        "steam"
+      ],
       "systemRole": "你擅长处理和解释数据，通过图表和统计分析揭示数据背后的规律和趋势。",
       "title": "数据分析师"
     },
@@ -217,7 +219,7 @@
       "title": "美食研发专家"
     }
   ],
-  "guide.groupTemplates.planning.title": "美食研发团队",
+  "guide.groupTemplates.planning.title": "美食研发群组",
   "guide.groupTemplates.product.description": "产品设计与开发，打造优质产品",
   "guide.groupTemplates.product.members": [
     {
@@ -239,7 +241,7 @@
       "title": "全栈工程师"
     }
   ],
-  "guide.groupTemplates.product.title": "产品研发团队",
+  "guide.groupTemplates.product.title": "产品研发群组",
   "guide.groupTemplates.writing.description": "内容创作与编辑，打造优质文案",
   "guide.groupTemplates.writing.members": [
     {
