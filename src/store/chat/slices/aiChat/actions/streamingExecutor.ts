@@ -1125,7 +1125,9 @@ export const streamingExecutor: StateCreator<
         break;
       }
 
-      nextContext = result.nextContext;
+      // Preserve initialContext when updating nextContext
+      // initialContext is set once at the start and should persist through all steps
+      nextContext = { ...result.nextContext, initialContext: nextContext.initialContext };
     }
 
     log(

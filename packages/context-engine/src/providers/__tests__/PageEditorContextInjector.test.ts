@@ -65,6 +65,36 @@ describe('PageEditorContextInjector', () => {
       expect(result.messages[0].content).toContain('Only question');
       expect(result.messages[0].content).toContain('<current_page title="Test Document">');
     });
+
+    it('should inject to last user message when last message is tool', async () => {
+      const injector = new PageEditorContextInjector({
+        enabled: true,
+        pageContentContext: createMinimalPageContentContext(),
+      });
+
+      const context = createContext([
+        { content: 'First question', role: 'user' },
+        { content: 'First answer', role: 'assistant' },
+        { content: 'User request to modify', role: 'user' },
+        {
+          content: 'I will modify the document',
+          role: 'assistant',
+          tool_calls: [{ id: 'call_1', function: { name: 'modifyNodes', arguments: '{}' } }],
+        },
+        { content: 'Successfully modified', role: 'tool', tool_call_id: 'call_1' },
+      ]);
+
+      const result = await injector.process(context);
+
+      expect(result.messages).toHaveLength(5);
+      // First user message should NOT have injection
+      expect(result.messages[0].content).toBe('First question');
+      // Last user message (index 2) should have the context appended
+      expect(result.messages[2].content).toContain('User request to modify');
+      expect(result.messages[2].content).toContain('<current_page title="Test Document">');
+      // Tool message should remain unchanged
+      expect(result.messages[4].content).toBe('Successfully modified');
+    });
   });
 
   describe('injection format with markdown and xml', () => {
