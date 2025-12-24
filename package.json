@@ -27,6 +27,7 @@
   "sideEffects": false,
   "workspaces": [
     "packages/*",
+    "packages/business/*",
     "e2e",
     "apps/desktop/src/main"
   ],
