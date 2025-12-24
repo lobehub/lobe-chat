@@ -1,3 +1,34 @@
+/**
+ * Page Agent / Document Tool identifier
+ */
+export const PageAgentIdentifier = 'lobe-page-agent';
+
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+export const DocumentApiName = {
+  // Initialize
+  initPage: 'initPage',
+
+  // Document Metadata
+  editTitle: 'editTitle',
+
+  // Query & Read
+  getPageContent: 'getPageContent',
+
+  // Unified CRUD - replaces createNode, updateNode, deleteNode
+  modifyNodes: 'modifyNodes',
+
+  // Legacy CRUD (deprecated, kept for backward compatibility)
+  createNode: 'createNode',
+  deleteNode: 'deleteNode',
+  duplicateNode: 'duplicateNode',
+  moveNode: 'moveNode',
+  updateNode: 'updateNode',
+
+  // Text Operations
+  replaceText: 'replaceText',
+};
+/* eslint-enable sort-keys-fix/sort-keys-fix */
+
 // Node position types
 export type NodePosition = 'before' | 'after' | 'prepend' | 'append';
 

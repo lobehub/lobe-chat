@@ -5,6 +5,7 @@ import { GTDManifest } from '@lobechat/builtin-tool-gtd';
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { NotebookManifest } from '@lobechat/builtin-tool-notebook';
+import { PageAgentManifest } from '@lobechat/builtin-tool-page-agent';
 import { LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
@@ -12,7 +13,6 @@ import { isDesktop } from '@/const/version';
 import { ArtifactsManifest } from './artifacts';
 import { CodeInterpreterManifest } from './code-interpreter';
 import { KnowledgeBaseManifest } from './knowledge-base';
-import { PageAgentManifest } from './page-agent';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [

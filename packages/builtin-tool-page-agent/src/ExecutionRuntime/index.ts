@@ -78,7 +78,7 @@ import type {
   UpdateNodeState,
   WrapNodesArgs,
   WrapNodesState,
-} from '../type';
+} from '../types';
 
 const log = debug('page:page-agent');
 
