@@ -33,6 +33,7 @@ export const NotebookManifest: BuiltinToolManifest = {
         required: ['title', 'description', 'content'],
         type: 'object',
       },
+      renderDisplayControl: 'alwaysExpand',
     },
     {
       description:
