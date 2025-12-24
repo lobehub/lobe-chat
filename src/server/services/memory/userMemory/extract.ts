@@ -18,7 +18,7 @@ import type {
   BenchmarkLocomoPart,
   PersistedMemoryResult,
 } from '@lobechat/memory-user-memory';
-import { UserMemorySourceModel } from '@/database/models/userMemory/source';
+import { UserMemorySourceBenchmarkLoCoMoModel } from '@/database/models/userMemory/sources/benchmarkLoCoMo';
 import { ModelRuntime } from '@lobechat/model-runtime';
 import type {
   Embeddings,
@@ -1298,7 +1298,7 @@ export class MemoryExtractionExecutor {
       }
 
       for (const userId of payload.userIds) {
-        const sourceModel = new UserMemorySourceModel(userId);
+        const sourceModel = new UserMemorySourceBenchmarkLoCoMoModel(userId);
         for (const sourceId of benchmarkSourceIds) {
           const parts = await sourceModel.listParts(sourceId);
           if (!parts.length) {
