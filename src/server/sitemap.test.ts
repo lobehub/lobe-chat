@@ -49,14 +49,14 @@ describe('Sitemap', () => {
           priority: 0.4,
         }),
       );
+      // /discover has been replaced with /community routes
       expect(pageSitemap).toContainEqual(
         expect.objectContaining({
-          url: getCanonicalUrl('/discover'),
+          url: getCanonicalUrl('/community'),
           changeFrequency: 'daily',
           priority: 0.7,
         }),
       );
-      // Note: The actual implementation generates URLs like /discover/assistant and /discover/plugin (not category-specific)
       expect(pageSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/community/assistant'),

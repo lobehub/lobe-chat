@@ -34,10 +34,11 @@ vi.mock('@/store/global/selectors', () => ({
 }));
 
 describe('useFetchTopics', () => {
-  const mockUseFetchTopicsFn = vi.fn();
+  const mockUseFetchTopicsFn = vi.fn().mockReturnValue({ isValidating: false, data: [] });
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseFetchTopicsFn.mockReturnValue({ isValidating: false, data: [] });
     mockUseGlobalStore.mockImplementation((selector) => selector({ topicPageSize: 20 }));
     // Default: not inbox agent
     mockUseAgentStore.mockImplementation((selector) => selector({ isInboxAgent: false }));
