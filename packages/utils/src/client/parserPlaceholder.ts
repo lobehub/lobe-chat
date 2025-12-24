@@ -6,6 +6,7 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
 import { uuid } from '../uuid';
+import { globalAgentContextManager } from './GlobalAgentContextManager';
 
 const placeholderVariablesRegex = /{{(.*?)}}/g;
 
@@ -125,6 +126,30 @@ export const VARIABLE_GENERATORS = {
    */
   model: () => agentSelectors.currentAgentModel(useAgentStore.getState()),
   provider: () => agentSelectors.currentAgentModelProvider(useAgentStore.getState()),
+
+  /**
+   * Desktop app path-related template variables (only available in Electron)
+   *
+   * | Value | Example |
+   * |-------|---------|
+   * | `{{homePath}}` | /Users/username |
+   * | `{{desktopPath}}` | /Users/username/Desktop |
+   * | `{{documentsPath}}` | /Users/username/Documents |
+   * | `{{downloadsPath}}` | /Users/username/Downloads |
+   * | `{{musicPath}}` | /Users/username/Music |
+   * | `{{picturesPath}}` | /Users/username/Pictures |
+   * | `{{videosPath}}` | /Users/username/Videos |
+   * | `{{userDataPath}}` | /Users/username/Library/Application Support/LobeChat |
+   *
+   */
+  homePath: () => globalAgentContextManager.getContext().homePath ?? '',
+  desktopPath: () => globalAgentContextManager.getContext().desktopPath ?? '',
+  documentsPath: () => globalAgentContextManager.getContext().documentsPath ?? '',
+  downloadsPath: () => globalAgentContextManager.getContext().downloadsPath ?? '',
+  musicPath: () => globalAgentContextManager.getContext().musicPath ?? '',
+  picturesPath: () => globalAgentContextManager.getContext().picturesPath ?? '',
+  videosPath: () => globalAgentContextManager.getContext().videosPath ?? '',
+  userDataPath: () => globalAgentContextManager.getContext().userDataPath ?? '',
 } as Record<string, () => string>;
 
 /**

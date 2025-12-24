@@ -24,17 +24,10 @@ import { useCommandMenu } from './useCommandMenu';
 const CommandMenuContent = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const {
-    closeCommandMenu,
-    handleBack,
-    hasSearch,
-    isSearching,
-    searchQuery,
-    searchResults,
-  } = useCommandMenu();
+  const { closeCommandMenu, handleBack, hasSearch, isSearching, searchQuery, searchResults } =
+    useCommandMenu();
 
-  const { viewMode, setPages, page, pages, search, setTypeFilter, typeFilter } =
-    useCommandMenuContext();
+  const { setPages, page, pages, search, setTypeFilter, typeFilter } = useCommandMenuContext();
 
   return (
     <div className={styles.overlay} onClick={closeCommandMenu}>

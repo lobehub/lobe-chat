@@ -55,6 +55,7 @@ const MarketAuthConfirmModal = memo<MarketAuthConfirmModalProps>(
         paddings={{
           desktop: 24,
         }}
+        // size={440}
         title={null}
         width={440}
       >

@@ -65,19 +65,6 @@ const CustomRender = memo<CustomRenderProps>(
 
     // Show plugin custom UI if applicable
     if (showPluginRender) {
-      console.log(
-        <PluginRender
-          arguments={plugin?.arguments}
-          content={content}
-          identifier={plugin?.identifier}
-          loading={false}
-          messageId={messageId}
-          payload={plugin}
-          pluginState={pluginState}
-          toolCallId={toolCallId}
-          type={plugin?.type}
-        />,
-      );
       return (
         <Flexbox gap={12} id={toolCallId} width={'100%'}>
           <PluginRender

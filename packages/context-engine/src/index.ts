@@ -2,6 +2,7 @@
 export * from './types';
 
 // Base classes
+export { BaseFirstUserContentProvider } from './base/BaseFirstUserContentProvider';
 export { BaseLastUserContentProvider } from './base/BaseLastUserContentProvider';
 export { BaseProcessor } from './base/BaseProcessor';
 export { BaseProvider } from './base/BaseProvider';

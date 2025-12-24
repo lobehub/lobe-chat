@@ -5,8 +5,6 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { MetaData } from '@/types/meta';
 import { LobeToolMeta } from '@/types/tool/tool';
-import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
-import { hydrationPrompt } from '@/utils/promptTemplate';
 
 import { pluginHelpers } from '../helpers';
 import { ToolStoreState } from '../initialState';
@@ -27,14 +25,6 @@ const enabledSystemRoles =
         const meta = manifest.meta || {};
 
         const title = pluginHelpers.getPluginTitle(meta) || manifest.identifier;
-        let systemRole = manifest.systemRole || pluginHelpers.getPluginDesc(meta);
-
-        // Use the global context manager to fill the template
-        if (systemRole) {
-          const context = globalAgentContextManager.getContext();
-
-          systemRole = hydrationPrompt(systemRole, context);
-        }
 
         return {
           apis: manifest.api.map((m) => ({
@@ -43,7 +33,7 @@ const enabledSystemRoles =
           })),
           identifier: manifest.identifier,
           name: title,
-          systemRole,
+          systemRole: manifest.systemRole,
         };
       });
 

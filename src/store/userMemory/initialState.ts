@@ -1,12 +1,15 @@
+import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@lobechat/types';
+
 import {
   DisplayContextMemory,
   DisplayExperienceMemory,
-  DisplayIdentityMemory,
   DisplayPreferenceMemory,
 } from '@/database/repositories/userMemory';
-import type { RetrieveMemoryParams, RetrieveMemoryResult, TypesEnum } from '@/types/userMemory';
 
-export interface UserMemoryStoreState {
+import { type AgentMemorySliceState, agentMemoryInitialState } from './slices/agent';
+import { type IdentitySliceState, identityInitialState } from './slices/identity';
+
+export interface UserMemoryStoreState extends AgentMemorySliceState, IdentitySliceState {
   activeParams?: RetrieveMemoryParams;
   activeParamsKey?: string;
   contexts: DisplayContextMemory[];
@@ -28,14 +31,6 @@ export interface UserMemoryStoreState {
   experiencesSearchLoading?: boolean;
   experiencesSort?: 'scoreConfidence';
   experiencesTotal: number;
-  identities: DisplayIdentityMemory[];
-  identitiesHasMore: boolean;
-  identitiesInit: boolean;
-  identitiesPage: number;
-  identitiesQuery?: string;
-  identitiesSearchLoading?: boolean;
-  identitiesTotal: number;
-  identitiesTypes?: TypesEnum[];
   memoryFetchedAtMap: Record<string, number>;
   memoryMap: Record<string, RetrieveMemoryResult>;
   preferences: DisplayPreferenceMemory[];
@@ -52,6 +47,8 @@ export interface UserMemoryStoreState {
 }
 
 export const initialState: UserMemoryStoreState = {
+  ...agentMemoryInitialState,
+  ...identityInitialState,
   activeParams: undefined,
   activeParamsKey: undefined,
   contexts: [],
@@ -71,13 +68,6 @@ export const initialState: UserMemoryStoreState = {
   experiencesQuery: undefined,
   experiencesSort: undefined,
   experiencesTotal: 0,
-  identities: [],
-  identitiesHasMore: true,
-  identitiesInit: false,
-  identitiesPage: 1,
-  identitiesQuery: undefined,
-  identitiesTotal: 0,
-  identitiesTypes: undefined,
   memoryFetchedAtMap: {},
   memoryMap: {},
   preferences: [],

@@ -5,7 +5,7 @@ import * as isCanUseFCModule from '@/helpers/isCanUseFC';
 
 import * as helpers from '../helper';
 import { contextEngineering } from './contextEngineering';
-import type { UserMemoriesResult } from './memoryManager';
+import * as memoryManager from './memoryManager';
 
 // Mock VARIABLE_GENERATORS
 vi.mock('@/utils/client/parserPlaceholder', () => ({
@@ -448,46 +448,47 @@ describe('contextEngineering', () => {
         },
       ];
 
-      const userMemories: UserMemoriesResult = {
-        fetchedAt: Date.now(),
-        memories: {
-          contexts: [
-            {
-              accessedAt: new Date('2024-01-01T00:00:00.000Z'),
-              associatedObjects: [],
-              associatedSubjects: [],
-              createdAt: new Date('2024-01-01T00:00:00.000Z'),
-              currentStatus: 'active',
-              description: 'Weekly syncs for LobeHub',
-              id: 'ctx-1',
-              metadata: {},
-              scoreImpact: 0.8,
-              scoreUrgency: 0.5,
-              tags: ['project'],
-              title: 'LobeHub',
-              type: 'project',
-              updatedAt: new Date('2024-01-02T00:00:00.000Z'),
-              userMemoryIds: ['mem-1'],
-            },
-          ],
-          experiences: [],
-          preferences: [],
-        },
-      };
+      // Mock topic memories and global identities separately
+      vi.spyOn(memoryManager, 'resolveTopicMemories').mockResolvedValue({
+        contexts: [
+          {
+            accessedAt: new Date('2024-01-01T00:00:00.000Z'),
+            associatedObjects: [],
+            associatedSubjects: [],
+            createdAt: new Date('2024-01-01T00:00:00.000Z'),
+            currentStatus: 'active',
+            description: 'Weekly syncs for LobeHub',
+            id: 'ctx-1',
+            metadata: {},
+            scoreImpact: 0.8,
+            scoreUrgency: 0.5,
+            tags: ['project'],
+            title: 'LobeHub',
+            type: 'project',
+            updatedAt: new Date('2024-01-02T00:00:00.000Z'),
+            userMemoryIds: ['mem-1'],
+          },
+        ],
+        experiences: [],
+        preferences: [],
+      });
+      vi.spyOn(memoryManager, 'resolveGlobalIdentities').mockReturnValue([]);
 
       const result = await contextEngineering({
-        userMemories,
+        enableUserMemories: true,
         messages,
         model: 'gpt-4',
         provider: 'openai',
       });
 
       expect(result[0].role).toBe('system');
+      // Check the memory context is injected (memory_fetched_at is optional now)
+      expect(result[0].content).toContain('<user_memories');
+      expect(result[0].content).toContain('contexts="1"');
+      expect(result[0].content).toContain('experiences="0"');
+      expect(result[0].content).toContain('preferences="0"');
       expect(result[0].content).toContain(
-        '<user_memories contexts="1" experiences="0" memory_fetched_at="',
-      );
-      expect(result[0].content).toContain(
-        '" preferences="0"><user_memories_context id="ctx-1"><context_title>LobeHub</context_title><context_description>Weekly syncs for LobeHub</context_description></user_memories_context></user_memories>',
+        '<user_memories_context id="ctx-1"><context_title>LobeHub</context_title><context_description>Weekly syncs for LobeHub</context_description></user_memories_context>',
       );
       expect(result[0].content).toContain('<context_title>LobeHub</context_title>');
       expect(result[1].content).toBe(
