@@ -3,7 +3,7 @@ import type {
   ModelRuntime,
   OpenAIChatMessage,
 } from '@lobechat/model-runtime';
-import type { LayersEnum } from '@lobechat/types';
+import type { LayersEnum, MemorySourceType } from '@lobechat/types';
 
 import type {
   ContextExtractor,
@@ -73,7 +73,7 @@ export interface MemoryExtractionLLMConfig {
 export interface MemoryExtractionJob {
   force?: boolean;
   layers?: LayersEnum[];
-  source: MemoryExtractionSourceType;
+  source: MemorySourceType;
   sourceId: string;
   sourceUpdatedAt?: Date;
   userId: string;
@@ -87,8 +87,6 @@ export interface MemoryExtractionSourceMetadata {
   status?: 'pending' | 'completed' | 'failed';
   version?: string;
 }
-
-export type MemoryExtractionSourceType = 'chat_topic' | 'obsidian' | 'notion' | 'lark';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type ContextOptions<P extends Record<string, unknown>> = P;

@@ -195,6 +195,7 @@ export abstract class BaseMemoryExtractor<
                 console.error('onExtractError callback error', err);
                 // ignore
               }
+
               throw error;
             } finally {
               span.end();
@@ -206,8 +207,8 @@ export abstract class BaseMemoryExtractor<
           code: SpanStatusCode.ERROR,
           message: error instanceof Error ? error.message : 'Structured call failed',
         });
-
         span.recordException(error as Error);
+
         throw error;
       } finally {
         span.end();
