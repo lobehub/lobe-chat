@@ -31,6 +31,7 @@ import {
   desc,
   eq,
   gt,
+  gte,
   inArray,
   isNotNull,
   isNull,
@@ -265,13 +266,30 @@ export class MessageModel {
       .limit(pageSize)
       .offset(offset);
 
+    const messageIds = result.map((message) => message.id as string);
+
     // 2. Query MessageGroups for this topic (if topicId is available)
+    // For pagination support:
+    // - First page (current === 0): fetch all MessageGroup nodes (no time filter)
+    // - Subsequent pages: only fetch groups within the current page's time range
     let messageGroupNodes: UIChatMessage[] = [];
-    if (topicId) {
+    if (topicId && result.length > 0) {
+      if (current === 0) {
+        // First page: fetch all groups to include compressed history
+        messageGroupNodes = await this.queryMessageGroupNodes(topicId);
+      } else {
+        // Subsequent pages: filter by time range to avoid duplicates
+        const firstMessageTime = result[0].createdAt;
+        const lastMessageTime = result.at(-1).createdAt;
+        messageGroupNodes = await this.queryMessageGroupNodes(topicId, {
+          endTime: lastMessageTime,
+          startTime: firstMessageTime,
+        });
+      }
+    } else if (topicId && current === 0) {
+      // First page with no messages: still fetch all groups
       messageGroupNodes = await this.queryMessageGroupNodes(topicId);
     }
-
-    const messageIds = result.map((message) => message.id as string);
 
     // If no messages and no group nodes, return empty
     if (messageIds.length === 0 && messageGroupNodes.length === 0) return [];
@@ -500,13 +518,32 @@ export class MessageModel {
    * Query MessageGroup nodes for a topic
    * - compressedGroup: includes pinnedMessages array
    * - compareGroup: includes children array
+   *
+   * @param topicId - The topic ID to query groups for
+   * @param timeRange - Optional time range to filter groups (for pagination support)
    */
-  private queryMessageGroupNodes = async (topicId: string): Promise<UIChatMessage[]> => {
-    // 1. Query all MessageGroups for this topic
+  private queryMessageGroupNodes = async (
+    topicId: string,
+    timeRange?: { endTime: Date; startTime: Date },
+  ): Promise<UIChatMessage[]> => {
+    // 1. Query MessageGroups for this topic, optionally filtered by time range
+    const whereConditions = [
+      eq(messageGroups.userId, this.userId),
+      eq(messageGroups.topicId, topicId),
+    ];
+
+    // Add time range filter if provided (for pagination)
+    if (timeRange) {
+      whereConditions.push(
+        gte(messageGroups.createdAt, timeRange.startTime),
+        lte(messageGroups.createdAt, timeRange.endTime),
+      );
+    }
+
     const groups = await this.db
       .select()
       .from(messageGroups)
-      .where(and(eq(messageGroups.userId, this.userId), eq(messageGroups.topicId, topicId)))
+      .where(and(...whereConditions))
       .orderBy(asc(messageGroups.createdAt));
 
     if (groups.length === 0) return [];
