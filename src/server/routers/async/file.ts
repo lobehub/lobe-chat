@@ -4,6 +4,7 @@ import { chunk } from 'es-toolkit/compat';
 import pMap from 'p-map';
 import { z } from 'zod';
 
+import { checkEmbeddingUsage } from '@/business/trpc/middlewares/async';
 import { serverDBEnv } from '@/config/db';
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
@@ -43,6 +44,7 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
 
 export const fileRouter = router({
   embeddingChunks: fileProcedure
+    .use(checkEmbeddingUsage)
     .input(
       z.object({
         fileId: z.string(),
