@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.177](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.176...v2.0.0-next.177)
+
+<sup>Released on **2025-12-24**</sup>
+
+#### ✨ Features
+
+- **ci**: Add bundle analyzer workflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **ci**: Add bundle analyzer workflow, closes [#10932](https://github.com/lobehub/lobe-chat/issues/10932) ([c470cfb](https://github.com/lobehub/lobe-chat/commit/c470cfb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.176](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.175...v2.0.0-next.176)
 
 <sup>Released on **2025-12-23**</sup>
