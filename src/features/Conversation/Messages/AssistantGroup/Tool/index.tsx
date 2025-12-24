@@ -29,6 +29,11 @@ export interface GroupToolProps {
   id: string;
   identifier: string;
   intervention?: ToolIntervention;
+  /**
+   * Callback to register whether this tool can be collapsed
+   * Used by parent Accordion to prevent collapsing when alwaysExpand is set
+   */
+  onCollapsibleChange?: (canCollapse: boolean) => void;
   result?: ChatToolResult;
   toolMessageId?: string;
   type?: string;
@@ -42,6 +47,7 @@ const Tool = memo<GroupToolProps>(
     id,
     intervention,
     identifier,
+    onCollapsibleChange,
     result,
     type,
     toolMessageId,
@@ -58,21 +64,36 @@ const Tool = memo<GroupToolProps>(
     const isReject = intervention?.status === 'rejected';
     const isAbort = intervention?.status === 'aborted';
     const needExpand = renderDisplayControl !== 'collapsed' || isPending;
+    const isAlwaysExpand = renderDisplayControl === 'alwaysExpand';
 
     const showCustomPluginRender = !isPending && !isReject && !isAbort;
 
+    // Wrap handleExpand to prevent collapsing when alwaysExpand is set
+    const wrappedHandleExpand = (expand?: boolean) => {
+      // Block collapse action when alwaysExpand is set
+      if (isAlwaysExpand && expand === false) {
+        return;
+      }
+      handleExpand?.(expand);
+    };
+
     useEffect(() => {
       if (needExpand) {
-        setTimeout(() => handleExpand?.(true), 100);
+        setTimeout(() => wrappedHandleExpand(true), 100);
       }
     }, [needExpand]);
+
+    // Notify parent about collapsibility
+    useEffect(() => {
+      onCollapsibleChange?.(!isAlwaysExpand);
+    }, [isAlwaysExpand, onCollapsibleChange]);
 
     return (
       <AccordionItem
         action={
           <Actions
             assistantMessageId={assistantMessageId}
-            handleExpand={handleExpand}
+            handleExpand={wrappedHandleExpand}
             identifier={identifier}
             setShowDebug={setShowDebug}
             setShowPluginRender={setShowPluginRender}

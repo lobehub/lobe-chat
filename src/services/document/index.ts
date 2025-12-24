@@ -16,6 +16,7 @@ export interface CreateDocumentParams {
 export interface UpdateDocumentParams {
   content?: string;
   editorData?: string;
+  fileType?: string;
   id: string;
   metadata?: Record<string, any>;
   parentId?: string | null;

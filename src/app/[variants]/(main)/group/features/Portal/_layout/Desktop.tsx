@@ -1,15 +1,10 @@
-import { PropsWithChildren } from 'react';
-
-import { PortalHeader } from '@/features/Portal/router';
+import { PortalContent } from '@/features/Portal/router';
 
 import Body from '../features/Body';
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = () => {
   return (
-    <>
-      <PortalHeader />
-      <Body>{children}</Body>
-    </>
+    <PortalContent renderBody={(body) => <Body>{body}</Body>} />
   );
 };
 

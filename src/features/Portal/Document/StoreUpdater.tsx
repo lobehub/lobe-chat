@@ -48,17 +48,16 @@ const StoreUpdater = memo<StoreUpdaterProps>(({ documentId, topicId }) => {
       try {
         log('Loading content for document:', documentId);
 
-        if (document.content) {
-          editor.setDocument('markdown', document.content);
-          storeApi.setState({
-            lastSavedContent: document.content,
-          });
-        } else {
-          editor.setDocument('markdown', ' ');
-          storeApi.setState({
-            lastSavedContent: '',
-          });
-        }
+        const content = document.content || '';
+
+        // Set state before setDocument to ensure lastSavedContent is correct
+        // when handleContentChange is triggered
+        storeApi.setState({
+          currentTitle: document.title || '',
+          lastSavedContent: content,
+        });
+
+        editor.setDocument('markdown', content || ' ');
 
         lastLoadedDocIdRef.current = documentId;
         setContentInit(true);

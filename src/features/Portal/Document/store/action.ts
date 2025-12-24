@@ -14,7 +14,9 @@ const log = debug('portal:document-editor');
 export interface DocumentEditorAction {
   flushSave: () => void;
   handleContentChange: () => void;
+  handleTitleSubmit: () => Promise<void>;
   performSave: () => Promise<void>;
+  setCurrentTitle: (title: string) => void;
 }
 
 export type DocumentEditorStore = DocumentEditorState & DocumentEditorAction;
@@ -63,8 +65,14 @@ export const createDocumentEditorStore: (
       }
     },
 
+    handleTitleSubmit: async () => {
+      const { performSave, editor } = get();
+      await performSave();
+      editor?.focus();
+    },
+
     performSave: async () => {
-      const { editor, documentId, topicId, isDirty } = get();
+      const { editor, documentId, topicId, isDirty, currentTitle } = get();
 
       if (!editor || !documentId || !topicId) return;
 
@@ -79,6 +87,7 @@ export const createDocumentEditorStore: (
           {
             content: currentContent,
             id: documentId,
+            title: currentTitle || undefined,
           },
           topicId,
         );
@@ -86,6 +95,7 @@ export const createDocumentEditorStore: (
         set({
           isDirty: false,
           lastSavedContent: currentContent,
+          lastUpdatedTime: new Date(),
           saveStatus: 'saved',
         });
 
@@ -94,6 +104,11 @@ export const createDocumentEditorStore: (
         log('Failed to save document:', error);
         set({ saveStatus: 'idle' });
       }
+    },
+
+    setCurrentTitle: (title: string) => {
+      set({ currentTitle: title, isDirty: true });
+      debouncedSave();
     },
   };
 };

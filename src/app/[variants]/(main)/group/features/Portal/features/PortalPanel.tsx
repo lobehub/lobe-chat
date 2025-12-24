@@ -1,10 +1,8 @@
-import { Suspense, lazy, memo } from 'react';
+import { Suspense, memo } from 'react';
 
-import DesktopLayout from '@/app/[variants]/(main)/chat/features/Portal/_layout/Desktop';
-import MobileLayout from '@/app/[variants]/(main)/chat/features/Portal/_layout/Mobile';
+import DesktopLayout from '@/app/[variants]/(main)/group/features/Portal/_layout/Desktop';
+import MobileLayout from '@/app/[variants]/(main)/group/features/Portal/_layout/Mobile';
 import Loading from '@/components/Loading/BrandTextLoading';
-
-const PortalBody = lazy(() => import('@/features/Portal/router'));
 
 interface PortalPanelProps {
   mobile?: boolean;
@@ -15,9 +13,7 @@ const PortalPanel = memo<PortalPanelProps>(({ mobile }) => {
 
   return (
     <Suspense fallback={<Loading debugId="PortalPanel" />}>
-      <Layout>
-        <PortalBody />
-      </Layout>
+      <Layout />
     </Suspense>
   );
 });
