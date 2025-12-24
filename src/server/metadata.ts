@@ -1,9 +1,10 @@
-import { BRANDING_NAME } from '@lobechat/business-const';
-import { OG_URL } from '@lobechat/const';
+import { BRANDING_NAME, ORG_NAME } from '@lobechat/business-const';
 import { Metadata } from 'next';
 import qs from 'query-string';
 
 import { DEFAULT_LANG } from '@/const/locale';
+import { OG_URL } from '@/const/url';
+import { isCustomORG } from '@/const/version';
 import { Locales, locales } from '@/locales/resources';
 import { getCanonicalUrl } from '@/server/utils/url';
 import { formatDescLength, formatTitleLength } from '@/utils/genOG';
@@ -90,7 +91,7 @@ export class Meta {
       card: 'summary_large_image',
       description,
       images: [image],
-      site: '@lobehub',
+      site: isCustomORG ? `@${ORG_NAME}` : '@lobehub',
       title,
       url,
     };
@@ -122,7 +123,7 @@ export class Meta {
         },
       ],
       locale,
-      siteName: 'LobeChat',
+      siteName: BRANDING_NAME,
       title,
       type,
       url,
