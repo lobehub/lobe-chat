@@ -5,6 +5,7 @@ import {
   MemoryExtractionPayloadInput,
   normalizeMemoryExtractionPayload,
 } from '@/server/services/memory/userMemory/extract';
+import { MemorySourceType } from '@lobechat/types';
 
 export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
   const params = normalizeMemoryExtractionPayload(context.requestPayload || {});
@@ -14,7 +15,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
   if (!params.topicIds.length) {
     return { message: 'No topic ids provided for extraction.' };
   }
-  if (!params.sources.includes('chat_topic')) {
+  if (!params.sources.includes(MemorySourceType.ChatTopic)) {
     return { message: 'Source not supported in topic batch.' };
   }
 
@@ -32,7 +33,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
           forceTopics: params.forceTopics,
           from: params.from,
           layers: params.layers,
-          source: 'chat_topic',
+          source: MemorySourceType.ChatTopic,
           to: params.to,
           topicId,
           userId,
