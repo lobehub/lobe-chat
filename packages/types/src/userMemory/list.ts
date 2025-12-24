@@ -27,6 +27,7 @@ export interface TopicSource {
 export type MemorySource = TopicSource;
 
 export enum MemorySourceType {
+  BenchmarkLocomo = 'benchmark_locomo',
   ChatTopic = 'chat_topic',
 }
 

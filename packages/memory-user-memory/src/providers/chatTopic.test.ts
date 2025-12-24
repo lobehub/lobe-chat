@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { MemorySourceType } from '@lobechat/types';
 
 import { LobeChatTopicContextProvider } from './chatTopic';
 
 const job = {
-  source: 'chat_topic' as const,
+  source: MemorySourceType.ChatTopic,
   sourceId: 'topic-1',
   userId: 'user-1',
 };
