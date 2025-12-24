@@ -172,6 +172,7 @@ export class DocumentService {
     params: {
       content?: string;
       editorData?: Record<string, any>;
+      fileType?: string;
       metadata?: Record<string, any>;
       parentId?: string | null;
       title?: string;
@@ -187,6 +188,10 @@ export class DocumentService {
 
     if (params.editorData !== undefined) {
       updates.editorData = params.editorData;
+    }
+
+    if (params.fileType !== undefined) {
+      updates.fileType = params.fileType;
     }
 
     if (params.title !== undefined) {

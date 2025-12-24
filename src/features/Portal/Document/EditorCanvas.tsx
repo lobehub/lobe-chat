@@ -4,6 +4,7 @@ import {
   ReactCodePlugin,
   ReactCodeblockPlugin,
   ReactHRPlugin,
+  ReactImagePlugin,
   ReactLinkPlugin,
   ReactListPlugin,
   ReactMathPlugin,
@@ -44,6 +45,9 @@ const EditorCanvas = memo(() => {
           ReactLinkPlugin,
           ReactTablePlugin,
           ReactMathPlugin,
+          Editor.withProps(ReactImagePlugin, {
+            defaultBlockImage: true,
+          }),
         ]}
         style={{
           paddingBottom: 64,

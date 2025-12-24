@@ -1,9 +1,13 @@
 'use client';
 
-import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
+import { ActionIcon, Button, Flexbox, Text } from '@lobehub/ui';
 import { cx } from 'antd-style';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
+import { documentService } from '@/services/document';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { useNotebookStore } from '@/store/notebook';
@@ -11,6 +15,10 @@ import { notebookSelectors } from '@/store/notebook/selectors';
 import { oneLineEllipsis } from '@/styles';
 
 const Header = () => {
+  const { t } = useTranslation('file');
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [topicId, documentId, closeDocument] = useChatStore((s) => [
     s.activeTopicId,
     chatPortalSelectors.portalDocumentId(s),
@@ -18,6 +26,25 @@ const Header = () => {
   ]);
 
   const document = useNotebookStore(notebookSelectors.getDocumentById(topicId, documentId));
+
+  const handleOpenInPageEditor = async () => {
+    if (!documentId) return;
+
+    setLoading(true);
+    try {
+      // Update fileType to custom/document so it appears in page list
+      await documentService.updateDocument({
+        fileType: 'custom/document',
+        id: documentId,
+      });
+
+      // Navigate to the page editor
+      // Note: /page route automatically adds 'docs_' prefix to the id
+      navigate(`/page/${documentId.replace(/^docs_/, '')}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!document) return null;
 
@@ -29,6 +56,15 @@ const Header = () => {
           {document.title}
         </Text>
       </Flexbox>
+      <Button
+        icon={<ExternalLink size={14} />}
+        loading={loading}
+        onClick={handleOpenInPageEditor}
+        size={'small'}
+        type={'text'}
+      >
+        {t('portal.openInPageEditor')}
+      </Button>
     </Flexbox>
   );
 };
