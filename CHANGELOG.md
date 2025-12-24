@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 2.0.0-next.178](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.177...v2.0.0-next.178)
+
+<sup>Released on **2025-12-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **ci**: Always continue build to upload bundle analyzer report, skip backend routes in bundle analyzer build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **ci**: Always continue build to upload bundle analyzer report, closes [#10946](https://github.com/lobehub/lobe-chat/issues/10946) ([8d37811](https://github.com/lobehub/lobe-chat/commit/8d37811))
+- **ci**: Skip backend routes in bundle analyzer build, closes [#10944](https://github.com/lobehub/lobe-chat/issues/10944) ([0276b87](https://github.com/lobehub/lobe-chat/commit/0276b87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.177](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.176...v2.0.0-next.177)
 
 <sup>Released on **2025-12-24**</sup>
