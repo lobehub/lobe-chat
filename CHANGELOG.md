@@ -2,6 +2,317 @@
 
 # Changelog
 
+## [Version 2.0.0-next.176](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.175...v2.0.0-next.176)
+
+<sup>Released on **2025-12-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Mobile native better auth support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Mobile native better auth support, closes [#10871](https://github.com/lobehub/lobe-chat/issues/10871) ([8c42a93](https://github.com/lobehub/lobe-chat/commit/8c42a93))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.175](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.174...v2.0.0-next.175)
+
+<sup>Released on **2025-12-21**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.174](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.173...v2.0.0-next.174)
+
+<sup>Released on **2025-12-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor database schema.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor database schema, closes [#10860](https://github.com/lobehub/lobe-chat/issues/10860) ([5c489bc](https://github.com/lobehub/lobe-chat/commit/5c489bc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.173](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.172...v2.0.0-next.173)
+
+<sup>Released on **2025-12-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Request to gpt5 series should not with `top_p`, temperature when reasoning effort is not none.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Request to gpt5 series should not with `top_p`, temperature when reasoning effort is not none, closes [#10800](https://github.com/lobehub/lobe-chat/issues/10800) ([b4ad470](https://github.com/lobehub/lobe-chat/commit/b4ad470))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.172](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.171...v2.0.0-next.172)
+
+<sup>Released on **2025-12-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#10759](https://github.com/lobehub/lobe-chat/issues/10759) ([24cae77](https://github.com/lobehub/lobe-chat/commit/24cae77))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.171](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.170...v2.0.0-next.171)
+
+<sup>Released on **2025-12-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update GPT-5.2 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update GPT-5.2 models, closes [#10749](https://github.com/lobehub/lobe-chat/issues/10749) ([0446127](https://github.com/lobehub/lobe-chat/commit/0446127))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.170](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.169...v2.0.0-next.170)
+
+<sup>Released on **2025-12-12**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.169](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.168...v2.0.0-next.169)
+
+<sup>Released on **2025-12-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix CVE errors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix CVE errors, closes [#10748](https://github.com/lobehub/lobe-chat/issues/10748) ([6591f3c](https://github.com/lobehub/lobe-chat/commit/6591f3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.168](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.167...v2.0.0-next.168)
+
+<sup>Released on **2025-12-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Slove market oidc error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Slove market oidc error, closes [#10715](https://github.com/lobehub/lobe-chat/issues/10715) ([108d2a7](https://github.com/lobehub/lobe-chat/commit/108d2a7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.167](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.166...v2.0.0-next.167)
+
+<sup>Released on **2025-12-11**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Replicate image provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Replicate image provider ([542f4d9](https://github.com/lobehub/lobe-chat/commit/542f4d9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.166](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.165...v2.0.0-next.166)
+
+<sup>Released on **2025-12-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **Dockerfile**: Electron main typing pkg.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **Dockerfile**: Electron main typing pkg, closes [#10693](https://github.com/lobehub/lobe-chat/issues/10693) ([f3357b0](https://github.com/lobehub/lobe-chat/commit/f3357b0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.165](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.164...v2.0.0-next.165)
+
+<sup>Released on **2025-12-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **electron-main**: Client ipc decorate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **electron-main**: Client ipc decorate, closes [#10679](https://github.com/lobehub/lobe-chat/issues/10679) ([f74befa](https://github.com/lobehub/lobe-chat/commit/f74befa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 2.0.0-next.164](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.163...v2.0.0-next.164)
+
+<sup>Released on **2025-12-08**</sup>
+
+#### 💄 Styles
+
+- **profile**: Add mobile responsive layout and signup improvements.
+- **misc**: Update link handling in PlanTag component to use react-router-dom.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **profile**: Add mobile responsive layout and signup improvements, closes [#10669](https://github.com/lobehub/lobe-chat/issues/10669) ([1afd471](https://github.com/lobehub/lobe-chat/commit/1afd471))
+- **misc**: Update link handling in PlanTag component to use react-router-dom, closes [#10673](https://github.com/lobehub/lobe-chat/issues/10673) ([3aceeb6](https://github.com/lobehub/lobe-chat/commit/3aceeb6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.163](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.162...v2.0.0-next.163)
 
 <sup>Released on **2025-12-06**</sup>

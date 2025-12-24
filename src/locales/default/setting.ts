@@ -806,6 +806,7 @@ export default {
       noEnabled: '暂无启用插件',
       store: '插件商店',
     },
+
     tabs: {
       all: '全部',
       installed: '已启用',

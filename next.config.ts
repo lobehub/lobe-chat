@@ -192,6 +192,33 @@ const nextConfig: NextConfig = {
         ],
         source: '/apple-touch-icon.png',
       },
+      // Passkey configuration files for iOS and Android
+      {
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/json',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600',
+          },
+        ],
+        source: '/.well-known/apple-app-site-association',
+      },
+      {
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/json',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600',
+          },
+        ],
+        source: '/.well-known/assetlinks.json',
+      },
     ];
   },
   logging: {

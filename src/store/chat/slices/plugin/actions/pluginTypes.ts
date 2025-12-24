@@ -101,7 +101,7 @@ export const pluginTypes: StateCreator<
 
     let data: MCPToolCallResult | undefined;
 
-    // Get message to extract sessionId/topicId
+    // Get message to extract agentId/topicId
     const message = dbMessageSelectors.getDbMessageById(id)(get());
 
     // Get abort controller from operation

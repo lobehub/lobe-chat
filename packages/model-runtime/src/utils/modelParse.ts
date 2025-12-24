@@ -88,6 +88,18 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-', '!-max-'],
     visionKeywords: ['qvq', '-vl', '-omni'],
   },
+  replicate: {
+    imageOutputKeywords: [
+      'flux',
+      'stable-diffusion',
+      'sdxl',
+      'ideogram',
+      'canny',
+      'depth',
+      'fill',
+      'redux',
+    ],
+  },
   v0: {
     functionCallKeywords: ['v0'],
     reasoningKeywords: ['v0-1.5'],
@@ -132,6 +144,7 @@ export const MODEL_OWNER_DETECTION_CONFIG = {
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
+  replicate: [],
   v0: ['v0'],
   volcengine: ['doubao'],
   wenxin: ['ernie', 'qianfan'],

@@ -1,10 +1,11 @@
 import { isDesktop } from '@lobechat/const';
-import { ProxyTRPCRequestParams, dispatch, streamInvoke } from '@lobechat/electron-client-ipc';
+import { ProxyTRPCRequestParams, streamInvoke } from '@lobechat/electron-client-ipc';
 import { getRequestBody, headersToRecord } from '@lobechat/fetch-sse';
 import debug from 'debug';
 
 import { getElectronStoreState } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';
+import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 const log = debug('utils:desktopRemoteRPCFetch');
 
@@ -30,7 +31,7 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
         urlPath,
       };
 
-      const ipcResult = await dispatch('proxyTRPCRequest', params);
+      const ipcResult = await ensureElectronIpc().remoteServerSync.proxyTRPCRequest(params);
 
       log(`Received ${url} IPC proxy response:`, { status: ipcResult.status });
       const response = new Response(ipcResult.body, {

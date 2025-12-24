@@ -15,7 +15,7 @@ import { defaultProxySettings } from '@/const/store';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 // Create logger
 const logger = createLogger('controllers:RemoteServerSyncCtr');
@@ -25,6 +25,7 @@ const logger = createLogger('controllers:RemoteServerSyncCtr');
  * For handling data synchronization with remote servers via IPC.
  */
 export default class RemoteServerSyncCtr extends ControllerModule {
+  static override readonly groupName = 'remoteServerSync';
   /**
    * Cached instance of RemoteServerConfigCtr
    */
@@ -345,7 +346,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
    * Handles the 'proxy-trpc-request' IPC call from the renderer process.
    * This method should be invoked by the ipcMain.handle setup in your main process entry point.
    */
-  @ipcClientEvent('proxyTRPCRequest')
+  @IpcMethod()
   public async proxyTRPCRequest(args: ProxyTRPCRequestParams): Promise<ProxyTRPCRequestResult> {
     logger.debug('Received proxyTRPCRequest IPC call:', {
       headers: args.headers,

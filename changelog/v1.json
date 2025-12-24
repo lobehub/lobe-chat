@@ -1,6 +1,91 @@
 [
   {
     "children": {
+      "features": ["Mobile native better auth support."]
+    },
+    "date": "2025-12-23",
+    "version": "2.0.0-next.176"
+  },
+  {
+    "children": {},
+    "date": "2025-12-21",
+    "version": "2.0.0-next.175"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor database schema."]
+    },
+    "date": "2025-12-20",
+    "version": "2.0.0-next.174"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Request to gpt5 series should not with top_p, temperature when reasoning effort is not none."
+      ]
+    },
+    "date": "2025-12-16",
+    "version": "2.0.0-next.173"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-12-15",
+    "version": "2.0.0-next.172"
+  },
+  {
+    "children": {
+      "improvements": ["Update GPT-5.2 models."]
+    },
+    "date": "2025-12-14",
+    "version": "2.0.0-next.171"
+  },
+  {
+    "children": {},
+    "date": "2025-12-12",
+    "version": "2.0.0-next.170"
+  },
+  {
+    "children": {
+      "fixes": ["Fix CVE errors."]
+    },
+    "date": "2025-12-12",
+    "version": "2.0.0-next.169"
+  },
+  {
+    "children": {
+      "fixes": ["Slove market oidc error."]
+    },
+    "date": "2025-12-12",
+    "version": "2.0.0-next.168"
+  },
+  {
+    "children": {
+      "features": ["Add Replicate image provider."]
+    },
+    "date": "2025-12-11",
+    "version": "2.0.0-next.167"
+  },
+  {
+    "children": {},
+    "date": "2025-12-09",
+    "version": "2.0.0-next.166"
+  },
+  {
+    "children": {},
+    "date": "2025-12-09",
+    "version": "2.0.0-next.165"
+  },
+  {
+    "children": {
+      "improvements": ["Update link handling in PlanTag component to use react-router-dom."]
+    },
+    "date": "2025-12-08",
+    "version": "2.0.0-next.164"
+  },
+  {
+    "children": {
       "fixes": ["Add smooth scroll to top on 'More' button click in Title component."]
     },
     "date": "2025-12-06",

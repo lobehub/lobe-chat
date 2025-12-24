@@ -189,7 +189,7 @@ export const createDocumentSlice: StateCreator<
     set({ isDocumentListLoading: true }, false, n('fetchDocuments/start'));
 
     try {
-      const documentItems = await documentService.queryDocuments();
+      const { items: documentItems } = await documentService.queryDocuments();
       const documents = documentItems.filter(isAllowedDocument).map((doc) => ({
         ...doc,
         filename: doc.filename ?? doc.title ?? 'Untitled',

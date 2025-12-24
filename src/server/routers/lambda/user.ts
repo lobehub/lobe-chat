@@ -10,6 +10,7 @@ import {
   UserSettingsSchema,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
+import { after } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
@@ -55,6 +56,18 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
+    try {
+      after(async () => {
+        try {
+          await ctx.userModel.updateUser({ lastActiveAt: new Date() });
+        } catch (err) {
+          console.error('update lastActiveAt failed, error:', err);
+        }
+      });
+    } catch {
+      // `after` may fail outside request scope (e.g., in tests), ignore silently
+    }
+
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
     // get or create first-time user

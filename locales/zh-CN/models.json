@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview 是百度新一代原生多模态文心模型，擅长多模态理解、指令遵循、创作、事实问答与工具调用。"
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - 更快更优的 FLUX Pro 版本，具有出色的图像质量和提示词遵循能力。"
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - FLUX 开发版本，仅供非商业用途使用。"
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - 专业版 FLUX 模型，输出高质量图像。"
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - 专为速度优化的快速图像生成模型。"
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse 是一款高性能的 32B 多语言模型，旨在通过指令调优、数据套利、偏好训练和模型合并的创新，挑战单语言模型的表现。它支持 23 种语言。"
   },
@@ -1216,6 +1228,9 @@
   },
   "deepseek_r1_distill_qwen_32b": {
     "description": "DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。"
+  },
+  "devstral-2:123b": {
+    "description": "Devstral 2 123B 模型，擅长使用工具探索代码库、编辑多个文件并为软件工程代理提供支持。"
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。"
@@ -1924,6 +1939,15 @@
   },
   "gpt-5.1-codex-mini": {
     "description": "GPT-5.1 Codex mini：体积更小、成本更低的 Codex 变体，针对 agentic 编码任务进行了优化。"
+  },
+  "gpt-5.2": {
+    "description": "GPT-5.2 — 面向编码与 agentic 工作流的旗舰模型，提供更强推理与长上下文能力。"
+  },
+  "gpt-5.2-chat-latest": {
+    "description": "GPT-5.2 Chat：ChatGPT 使用的 GPT-5.2 变体（chat-latest），用于体验最新对话改进。"
+  },
+  "gpt-5.2-pro": {
+    "description": "GPT-5.2 pro：更聪明、更精确的 GPT-5.2 版本（Responses API Only），适合高难度问题与更长的多轮推理。"
   },
   "gpt-audio": {
     "description": "GPT Audio 是面向音频输入输出的通用聊天模型，支持在 Chat Completions API 中使用音频 I/O。"

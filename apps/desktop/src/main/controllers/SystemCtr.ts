@@ -1,18 +1,16 @@
 import { ElectronAppState, ThemeMode } from '@lobechat/electron-client-ipc';
 import { app, nativeTheme, shell, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 import process from 'node:process';
 
-import { DB_SCHEMA_HASH_FILENAME, LOCAL_DATABASE_DIR, userDataDir } from '@/const/dir';
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent, ipcServerEvent } from './index';
+import { ControllerModule, IpcMethod } from './index';
 
 const logger = createLogger('controllers:SystemCtr');
 
 export default class SystemController extends ControllerModule {
+  static override readonly groupName = 'system';
   private systemThemeListenerInitialized = false;
 
   /**
@@ -26,7 +24,7 @@ export default class SystemController extends ControllerModule {
    * Handles the 'getDesktopAppState' IPC request.
    * Gathers essential application and system information.
    */
-  @ipcClientEvent('getDesktopAppState')
+  @IpcMethod()
   async getAppState(): Promise<ElectronAppState> {
     const platform = process.platform;
     const arch = process.arch;
@@ -56,13 +54,13 @@ export default class SystemController extends ControllerModule {
   /**
    * 检查可用性
    */
-  @ipcClientEvent('checkSystemAccessibility')
+  @IpcMethod()
   checkAccessibilityForMacOS() {
     if (!macOS()) return;
     return systemPreferences.isTrustedAccessibilityClient(true);
   }
 
-  @ipcClientEvent('openExternalLink')
+  @IpcMethod()
   openExternalLink(url: string) {
     return shell.openExternal(url);
   }
@@ -70,7 +68,7 @@ export default class SystemController extends ControllerModule {
   /**
    * 更新应用语言设置
    */
-  @ipcClientEvent('updateLocale')
+  @IpcMethod()
   async updateLocale(locale: string) {
     // 保存语言设置
     this.app.storeManager.set('locale', locale);
@@ -82,41 +80,13 @@ export default class SystemController extends ControllerModule {
     return { success: true };
   }
 
-  @ipcClientEvent('updateThemeMode')
+  @IpcMethod()
   async updateThemeModeHandler(themeMode: ThemeMode) {
     this.app.storeManager.set('themeMode', themeMode);
     this.app.browserManager.broadcastToAllWindows('themeChanged', { themeMode });
 
     // Apply visual effects to all browser windows when theme mode changes
     this.app.browserManager.handleAppThemeChange();
-  }
-
-  @ipcServerEvent('getDatabasePath')
-  async getDatabasePath() {
-    return join(this.app.appStoragePath, LOCAL_DATABASE_DIR);
-  }
-
-  @ipcServerEvent('getDatabaseSchemaHash')
-  async getDatabaseSchemaHash() {
-    try {
-      return readFileSync(this.DB_SCHEMA_HASH_PATH, 'utf8');
-    } catch {
-      return undefined;
-    }
-  }
-
-  @ipcServerEvent('getUserDataPath')
-  async getUserDataPath() {
-    return userDataDir;
-  }
-
-  @ipcServerEvent('setDatabaseSchemaHash')
-  async setDatabaseSchemaHash(hash: string) {
-    writeFileSync(this.DB_SCHEMA_HASH_PATH, hash, 'utf8');
-  }
-
-  private get DB_SCHEMA_HASH_PATH() {
-    return join(this.app.appStoragePath, DB_SCHEMA_HASH_FILENAME);
   }
 
   /**

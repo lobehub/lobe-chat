@@ -767,6 +767,18 @@
   "baidu/ernie-5.0-thinking-preview": {
     "description": "ERNIE 5.0 Thinking Preview, Baidu’nun yeni nesil yerel çok modlu Wenxin modelidir; çok modlu anlama, komut takibi, yaratım, gerçeklere dayalı soru-cevap ve araç çağırma konularında uzmandır."
   },
+  "black-forest-labs/flux-1.1-pro": {
+    "description": "FLUX 1.1 Pro - Daha hızlı ve daha gelişmiş FLUX Pro sürümü, üstün görsel kalite ve komutlara yüksek uyum sağlar."
+  },
+  "black-forest-labs/flux-dev": {
+    "description": "FLUX Dev - FLUX'un geliştirme sürümü, yalnızca ticari olmayan kullanım içindir."
+  },
+  "black-forest-labs/flux-pro": {
+    "description": "FLUX Pro - Yüksek kaliteli görseller üreten profesyonel FLUX modeli."
+  },
+  "black-forest-labs/flux-schnell": {
+    "description": "FLUX Schnell - Hız için optimize edilmiş, hızlı görsel üretim modeli."
+  },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse, talimat ayarlama, veri arbitrajı, tercih eğitimi ve model birleştirme yenilikleri ile tek dilli modellerin performansını zorlamak için tasarlanmış yüksek performanslı bir 32B çok dilli modeldir. 23 dili desteklemektedir."
   },
@@ -1216,6 +1228,9 @@
   },
   "deepseek_r1_distill_qwen_32b": {
     "description": "DeepSeek-R1-Distill-Qwen-32B, Qwen2.5-32B temel alınarak bilgi damıtma ile elde edilen bir modeldir. Bu model, DeepSeek-R1 tarafından üretilen 800.000 seçkin örnek ile ince ayar yapılmış ve matematik, programlama ve çıkarım gibi birçok alanda olağanüstü performans sergilemektedir."
+  },
+  "devstral-2:123b": {
+    "description": "Devstral 2 123B modeli, araçları kullanarak kod tabanlarını keşfetme, birden fazla dosyayı düzenleme ve yazılım mühendisliği ajanlarına destek sağlama konularında uzmandır."
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite, tamamen yeni nesil hafif modeldir, olağanüstü yanıt hızı ile etkisi ve gecikmesi dünya standartlarında bir seviyeye ulaşmıştır."
@@ -1924,6 +1939,15 @@
   },
   "gpt-5.1-codex-mini": {
     "description": "GPT-5.1 Codex mini: Daha küçük boyutlu ve daha düşük maliyetli Codex varyantı; ajan tabanlı kodlama görevleri için optimize edilmiştir."
+  },
+  "gpt-5.2": {
+    "description": "GPT-5.2 — kodlama ve ajans temelli iş akışları için geliştirilmiş amiral gemisi modelidir; daha güçlü akıl yürütme ve uzun bağlam yetenekleri sunar."
+  },
+  "gpt-5.2-chat-latest": {
+    "description": "GPT-5.2 Chat: ChatGPT tarafından kullanılan GPT-5.2 varyantı (chat-latest), en yeni sohbet iyileştirmelerini deneyimlemek için tasarlanmıştır."
+  },
+  "gpt-5.2-pro": {
+    "description": "GPT-5.2 pro: daha akıllı ve daha hassas bir GPT-5.2 sürümü (Yalnızca Yanıtlar API'si), zorlu sorular ve daha uzun çok adımlı akıl yürütmeler için uygundur."
   },
   "gpt-audio": {
     "description": "GPT Audio, ses giriş ve çıkışına yönelik genel sohbet modelidir ve Chat Completions API’de ses I/O kullanımını destekler."

@@ -137,6 +137,9 @@
   "qwen": {
     "description": "通義千問是阿里雲自主研發的超大規模語言模型，具有強大的自然語言理解和生成能力。它可以回答各種問題、創作文字內容、表達觀點看法、撰寫代碼等，在多個領域發揮作用。"
   },
+  "replicate": {
+    "description": "Replicate 透過簡單的雲端 API 執行 FLUX 和 Stable Diffusion 等開源影像模型。"
+  },
   "sambanova": {
     "description": "SambaNova Cloud 讓開發者輕鬆使用最佳的開源模型，並享受最快的推理速度。"
   },

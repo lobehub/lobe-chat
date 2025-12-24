@@ -137,6 +137,9 @@
   "qwen": {
     "description": "Tongyi Qianwen to samodzielnie opracowany przez Alibaba Cloud model językowy o dużej skali, charakteryzujący się silnymi zdolnościami rozumienia i generowania języka naturalnego. Może odpowiadać na różnorodne pytania, tworzyć treści pisemne, wyrażać opinie, pisać kod i działać w wielu dziedzinach."
   },
+  "replicate": {
+    "description": "Replicate umożliwia uruchamianie otwartych modeli generowania obrazów, takich jak FLUX i Stable Diffusion, za pomocą prostego interfejsu API w chmurze."
+  },
   "sambanova": {
     "description": "SambaNova Cloud umożliwia deweloperom łatwe korzystanie z najlepszych modeli open source oraz cieszenie się najszybszą prędkością wnioskowania."
   },
