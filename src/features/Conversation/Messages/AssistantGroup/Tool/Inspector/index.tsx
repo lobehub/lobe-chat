@@ -20,12 +20,18 @@ const Inspectors = memo<InspectorProps>(({ identifier, apiName, result, interven
   const hasResult = hasSuccessResult || hasError;
 
   const isPending = intervention?.status === 'pending';
-  const isTitleLoading = !hasResult && !isPending;
+  const isAborted = intervention?.status === 'aborted';
+  const isTitleLoading = !hasResult && !isPending && !isAborted;
 
   return (
     <Flexbox align={'center'} gap={6} horizontal>
       <StatusIndicator intervention={intervention} result={result} />
-      <ToolTitle apiName={apiName} identifier={identifier} isLoading={isTitleLoading} />
+      <ToolTitle
+        apiName={apiName}
+        identifier={identifier}
+        isAborted={isAborted}
+        isLoading={isTitleLoading}
+      />
     </Flexbox>
   );
 });

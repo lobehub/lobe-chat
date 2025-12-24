@@ -57,14 +57,15 @@ const Tool = memo<GroupToolProps>(
     const isPending = intervention?.status === 'pending';
     const isReject = intervention?.status === 'rejected';
     const isAbort = intervention?.status === 'aborted';
+    const needExpand = renderDisplayControl !== 'collapsed' || isPending;
 
     const showCustomPluginRender = !isPending && !isReject && !isAbort;
 
     useEffect(() => {
-      if (renderDisplayControl !== 'collapsed') {
+      if (needExpand) {
         handleExpand?.(true);
       }
-    }, [renderDisplayControl]);
+    }, [needExpand]);
 
     return (
       <AccordionItem
@@ -97,6 +98,7 @@ const Tool = memo<GroupToolProps>(
             <Debug
               apiName={apiName}
               identifier={identifier}
+              intervention={intervention}
               requestArgs={requestArgs}
               result={result}
               toolCallId={id}

@@ -44,6 +44,7 @@ const SideBarDrawer = memo<SideBarDrawerProps>(
             padding: 0,
           },
           header: {
+            background: theme.colorBgLayout,
             borderBottom: 'none',
             padding: 0,
           },
