@@ -42,6 +42,7 @@ describe('AgentService', () => {
   // Default mock for UserModel that returns empty settings
   const mockUserModel = {
     getUserSettings: vi.fn().mockResolvedValue({}),
+    getUserSettingsDefaultAgentConfig: vi.fn().mockResolvedValue({}),
   };
 
   beforeEach(() => {
@@ -176,7 +177,7 @@ describe('AgentService', () => {
       const result = await newService.getBuiltinAgent('inbox');
 
       // Avatar should be merged from BUILTIN_AGENTS definition
-      expect((result as any)?.avatar).toBe('/icons/icon-lobe.png');
+      expect((result as any)?.avatar).toBe('/avatars/lobe-ai.png');
     });
 
     it('should not include avatar for non-builtin agents', async () => {

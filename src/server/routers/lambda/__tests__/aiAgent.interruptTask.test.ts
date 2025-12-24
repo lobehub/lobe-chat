@@ -22,11 +22,6 @@ vi.mock('@/server/services/agentRuntime', () => ({
   })),
 }));
 
-// Mock AiAgentService
-vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(() => ({})),
-}));
-
 // Mock AiChatService
 vi.mock('@/server/services/aiChat', () => ({
   AiChatService: vi.fn().mockImplementation(() => ({})),
