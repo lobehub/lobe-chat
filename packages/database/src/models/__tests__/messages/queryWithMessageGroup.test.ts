@@ -37,7 +37,7 @@ afterEach(async () => {
   await serverDB.delete(users);
 });
 
-describe('MessageModel.query with MessageGroup aggregation (LOBE-2066)', () => {
+describe('MessageModel.query with MessageGroup aggregation', () => {
   /**
    * Test Scenario 1: Basic query without compression groups
    * Expected: All messages should be returned normally
