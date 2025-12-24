@@ -9,7 +9,7 @@ import Search from './Search';
 
 const Inspector = memo<BuiltinPortalProps>(({ arguments: args, messageId, state, apiName }) => {
   switch (apiName) {
-    // 兼容旧版数据
+    // Compatible with legacy data
     case 'searchWithSearXNG':
     case WebBrowsingApiName.search: {
       return <Search messageId={messageId} query={args as SearchQuery} response={state} />;

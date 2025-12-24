@@ -12,7 +12,7 @@ const ResultFileGallery = memo<{ files: CodeInterpreterFileItem[] }>(({ files })
     return null;
   }
 
-  // 分离图片和其他文件
+  // Separate images and other files
   const imageFiles = [];
   const otherFiles = [];
   for (const file of files) {
@@ -25,11 +25,11 @@ const ResultFileGallery = memo<{ files: CodeInterpreterFileItem[] }>(({ files })
 
   return (
     <Flexbox gap={16}>
-      {/* 图片预览组 */}
+      {/* Image preview group */}
       {imageFiles.length > 0 && (
         <PreviewGroup>
           {imageFiles.length === 1 ? (
-            // 单张图片时占据更大空间
+            // Single image takes up more space
             <Flexbox style={{ maxWidth: 400 }}>
               <ResultImage {...imageFiles[0]} />
             </Flexbox>
@@ -42,7 +42,7 @@ const ResultFileGallery = memo<{ files: CodeInterpreterFileItem[] }>(({ files })
         </PreviewGroup>
       )}
 
-      {/* 其他文件列表 */}
+      {/* Other file list */}
       {otherFiles.length > 0 && (
         <Flexbox gap={8} horizontal wrap="wrap">
           {otherFiles.map((file, index) => (

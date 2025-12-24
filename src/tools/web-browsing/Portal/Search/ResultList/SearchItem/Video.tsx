@@ -70,7 +70,7 @@ const VideoItem = memo<SearchResultProps>(
 
     const [expand, setExpand] = useState(false);
 
-    const videoUrl = iframeSrc || (res as any).iframe_src; // iframe_src 是 SearchXNG 的字段，兼容老的数据结构
+    const videoUrl = iframeSrc || (res as any).iframe_src; // iframe_src is a SearchXNG field, compatible with legacy data structure
     return (
       <Flexbox gap={12}>
         <Flexbox className={styles.container} onClick={() => setExpand(!expand)}>
