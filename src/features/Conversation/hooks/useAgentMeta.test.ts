@@ -1,21 +1,39 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useAgentStore } from '@/store/agent';
+// Mock the AgentStore to avoid importing the real store (which pulls in client-side UI deps via services).
+vi.mock('@/store/agent', async () => {
+  const { shallow } = await import('zustand/shallow');
+  const { createWithEqualityFn } = await import('zustand/traditional');
 
-import { useConversationStore } from '../store';
-import { useAgentMeta, useIsBuiltinAgent } from './useAgentMeta';
+  const useAgentStore = createWithEqualityFn<{
+    agentMap: Record<string, any>;
+    builtinAgentIdMap: Record<string, string>;
+  }>()(
+    () => ({
+      agentMap: {},
+      builtinAgentIdMap: {},
+    }),
+    shallow,
+  );
 
-vi.mock('zustand/traditional');
+  const getAgentStoreState = () => useAgentStore.getState();
+
+  return { getAgentStoreState, useAgentStore };
+});
 
 // Mock the ConversationStore
-vi.mock('../store', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../store')>();
-  return {
-    ...actual,
-    useConversationStore: vi.fn(),
-  };
-});
+// Keep it minimal to avoid importing the real store (which would pull in many client deps).
+vi.mock('../store', () => ({
+  contextSelectors: {
+    agentId: (s: any) => s.context.agentId,
+  },
+  useConversationStore: vi.fn(),
+}));
+
+const { useAgentStore } = await import('@/store/agent');
+const { useConversationStore } = await import('../store');
+const { useAgentMeta, useIsBuiltinAgent } = await import('./useAgentMeta');
 
 describe('useAgentMeta', () => {
   it('should return agent meta for regular (non-builtin) agents', () => {

@@ -24,6 +24,21 @@ vi.mock('@lobehub/analytics/react', () => ({
   }),
 }));
 
+// Global mock for @lobehub/fluent-emoji
+// Reason: upstream package uses an ESM directory import (`./FluentEmoji`) that Node can't resolve in Vitest.
+function fluentEmojiMockFactory() {
+  return {
+    FluentEmoji: () => null,
+    getEmoji: (emoji?: string) => emoji,
+    getEmojiNameByCharacter: (emoji?: string) => emoji,
+    getFluentEmojiCDN: () => '',
+  };
+}
+
+vi.mock('@lobehub/fluent-emoji', fluentEmojiMockFactory);
+vi.mock('@lobehub/fluent-emoji/es', fluentEmojiMockFactory);
+vi.mock('@lobehub/fluent-emoji/es/index.js', fluentEmojiMockFactory);
+
 // node runtime
 if (typeof window === 'undefined') {
   // test with polyfill crypto
