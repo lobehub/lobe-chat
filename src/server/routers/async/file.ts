@@ -112,9 +112,9 @@ export const fileRouter = router({
               },
               { concurrency: CONCURRENCY },
             );
-          } catch (e) {
+          } catch (e: any) {
             throw {
-              message: (e as any).errorType,
+              message: e.errorType ?? e.message ?? JSON.stringify(e),
               name: AsyncTaskErrorType.EmbeddingError,
             };
           }
