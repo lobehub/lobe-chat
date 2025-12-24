@@ -17,5 +17,6 @@
   "notebook.delete": "删除",
   "notebook.empty": "暂无文档，当前话题关联的文档将会显示在这里",
   "notebook.title": "Notebook",
+  "openInPageEditor": "在文稿中编辑",
   "title": "工作区"
 }

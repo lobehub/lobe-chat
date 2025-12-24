@@ -18,5 +18,6 @@ export default {
   "notebook.delete": "Delete",
   "notebook.empty": "No pages yet. Pages linked to this Topic will show up here.",
   "notebook.title": "Notebook",
+  "openInPageEditor": "Edit in Page",
   "title": "Workspace"
 }

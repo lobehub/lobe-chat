@@ -17,7 +17,7 @@ import { oneLineEllipsis } from '@/styles';
 import AutoSaveHint from './AutoSaveHint';
 
 const Header = () => {
-  const { t } = useTranslation('file');
+  const { t } = useTranslation('portal');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -67,7 +67,7 @@ const Header = () => {
           size={'small'}
           type={'text'}
         >
-          {t('portal.openInPageEditor')}
+          {t('openInPageEditor')}
         </Button>
       </Flexbox>
     </Flexbox>
