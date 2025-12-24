@@ -280,7 +280,7 @@ export class MessageModel {
       } else {
         // Subsequent pages: filter by time range to avoid duplicates
         const firstMessageTime = result[0].createdAt;
-        const lastMessageTime = result.at(-1).createdAt;
+        const lastMessageTime = result.at(-1)!.createdAt;
         messageGroupNodes = await this.queryMessageGroupNodes(topicId, {
           endTime: lastMessageTime,
           startTime: firstMessageTime,
