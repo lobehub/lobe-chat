@@ -6,5 +6,7 @@
     ".": "./src/index.ts"
   },
   "main": "./src/index.ts",
-  "dependencies": {}
+  "dependencies": {
+    "model-bank": "workspace:*"
+  }
 }
