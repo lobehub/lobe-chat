@@ -69,8 +69,12 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
         label: appName,
         submenu: [
           {
+            click: async () => {
+              const mainWindow = this.app.browserManager.getMainWindow();
+              mainWindow.show();
+              mainWindow.broadcast('navigate', { path: '/settings/about' });
+            },
             label: t('macOS.about', { appName }),
-            role: 'about',
           },
           {
             click: () => {
