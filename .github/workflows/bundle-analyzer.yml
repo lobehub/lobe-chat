@@ -50,10 +50,17 @@ jobs:
             mv .npmrc.bak .npmrc
           fi
 
+      - name: Generate build secrets
+        id: generate-secret
+        run: echo "secret=$(openssl rand -base64 32)" >> $GITHUB_OUTPUT
+
       - name: Build with bundle analyzer
         run: bun run build:analyze
         env:
           NODE_OPTIONS: --max-old-space-size=6144
+          KEY_VAULTS_SECRET: ${{ steps.generate-secret.outputs.secret }}
+          S3_PUBLIC_DOMAIN: https://example.com
+          APP_URL: https://example.com
 
       - name: Prepare analyzer reports
         run: |
