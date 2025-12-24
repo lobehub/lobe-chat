@@ -9,6 +9,7 @@ import {
   buildWorkflowPayloadInput,
   normalizeMemoryExtractionPayload,
 } from '@/server/services/memory/userMemory/extract';
+import { MemorySourceType } from '@lobechat/types';
 
 const TOPIC_PAGE_SIZE = 50;
 const TOPIC_BATCH_SIZE = 10;
@@ -18,7 +19,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
   if (!params.userIds.length) {
     return { message: 'No user ids provided for topic processing.' };
   }
-  if (!params.sources.includes('chat_topic')) {
+  if (!params.sources.includes(MemorySourceType.ChatTopic)) {
     return { message: 'No supported sources requested, skip topic processing.' };
   }
 
