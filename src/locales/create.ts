@@ -7,7 +7,7 @@ import { isRtlLang } from 'rtl-detect';
 import { DEFAULT_LANG } from '@/const/locale';
 import { getDebugConfig } from '@/envs/debug';
 import { normalizeLocale } from '@/locales/resources';
-import { isDev, isOnServerSide } from '@/utils/env';
+import { isOnServerSide } from '@/utils/env';
 
 const { I18N_DEBUG, I18N_DEBUG_BROWSER, I18N_DEBUG_SERVER } = getDebugConfig();
 const debugMode = (I18N_DEBUG ?? isOnServerSide) ? I18N_DEBUG_SERVER : I18N_DEBUG_BROWSER;
@@ -22,7 +22,11 @@ export const createI18nNext = (lang?: string) => {
           return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
         }
 
-        return import(`./default/${ns}`);
+        if (lng === DEFAULT_LANG) {
+          return import(`./default/${ns}`);
+        }
+
+        return import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
       }),
     );
   // Dynamically set HTML direction on language change

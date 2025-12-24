@@ -13,8 +13,13 @@ export const translation = async (ns: NS = 'common', hl: string) => {
   let i18ns = {};
   const lng = await getLocale(hl);
   try {
-    if (isDev && lng === 'zh-CN') i18ns = await import(`@/locales/default/${ns}`);
-    i18ns = await import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
+    if (ns === 'models' || ns === 'providers') {
+      i18ns = await import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
+    } else if (lng === DEFAULT_LANG) {
+      i18ns = await import(`@/locales/default/${ns}`);
+    } else {
+      i18ns = await import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
+    }
   } catch (e) {
     console.error('Error while reading translation file', e);
   }
