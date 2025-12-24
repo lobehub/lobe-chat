@@ -1,4 +1,5 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { RelationshipEnum } from '@lobechat/types';
+import { and, desc, eq, isNull, or } from 'drizzle-orm';
 
 import {
   NewUserMemoryIdentity,
@@ -77,5 +78,36 @@ export class UserMemoryIdentityModel {
       .where(
         and(eq(userMemoriesIdentities.id, id), eq(userMemoriesIdentities.userId, this.userId)),
       );
+  };
+
+  /**
+   * Query identities for chat context injection
+   * Only returns user's own identities (relationship === 'self' or null/undefined)
+   * Limited to most recent entries for performance
+   */
+  queryForInjection = async (limit = 50) => {
+    return this.db
+      .select({
+        capturedAt: userMemoriesIdentities.capturedAt,
+        createdAt: userMemoriesIdentities.createdAt,
+        description: userMemoriesIdentities.description,
+        id: userMemoriesIdentities.id,
+        role: userMemoriesIdentities.role,
+        type: userMemoriesIdentities.type,
+        updatedAt: userMemoriesIdentities.updatedAt,
+      })
+      .from(userMemoriesIdentities)
+      .where(
+        and(
+          eq(userMemoriesIdentities.userId, this.userId),
+          // Only include self identities (relationship is 'self' or null/not set)
+          or(
+            eq(userMemoriesIdentities.relationship, RelationshipEnum.Self),
+            isNull(userMemoriesIdentities.relationship),
+          ),
+        ),
+      )
+      .orderBy(desc(userMemoriesIdentities.capturedAt))
+      .limit(limit);
   };
 }

@@ -5,6 +5,8 @@ import {
   UserMemoryPreferencesWithoutVectors,
 } from '../../schemas';
 
+export { UserMemoryTopicRepository } from './UserMemoryTopicRepository';
+
 export interface MemorySource {
   agentId: string | null;
   id: string;

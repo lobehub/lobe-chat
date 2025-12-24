@@ -5,7 +5,7 @@ import { QueryIdentityRolesResult } from '@/database/models/userMemory';
 import { useClientDataSWR } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
 
-import { UserMemoryStore } from '../../store';
+import type { UserMemoryStore } from '../../store';
 
 const FETCH_TAGS_KEY = 'useFetchTags';
 const n = (namespace: string) => namespace;

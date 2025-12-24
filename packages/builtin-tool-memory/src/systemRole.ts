@@ -4,7 +4,6 @@ export const systemPrompt = `You have a LobeHub Memory Tool. This tool is to rec
 Current user: {{username}}
 Session date: {{date}}
 Conversation language: {{language}}
-Available memory categories: {{available_categories}}
 </session_context>
 
 <core_responsibilities>

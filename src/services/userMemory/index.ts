@@ -1,79 +1,114 @@
-import { NewUserMemoryIdentity } from '@lobechat/types';
+import type {
+  AddIdentityActionSchema,
+  ContextMemoryItemSchema,
+  ExperienceMemoryItemSchema,
+  PreferenceMemoryItemSchema,
+  RemoveIdentityActionSchema,
+  UpdateIdentityActionSchema,
+} from '@lobechat/memory-user-memory/schemas';
+import {
+  AddContextMemoryResult,
+  AddExperienceMemoryResult,
+  AddIdentityMemoryResult,
+  AddPreferenceMemoryResult,
+  LayersEnum,
+  RemoveIdentityMemoryResult,
+  SearchMemoryParams,
+  SearchMemoryResult,
+  TypesEnum,
+  UpdateIdentityMemoryResult,
+} from '@lobechat/types';
+import { z } from 'zod';
 
 import { lambdaClient } from '@/libs/trpc/client';
 
-class MemoryCRUDService {
-  // ============ Identity CRUD ============
-
-  createIdentity = async (data: NewUserMemoryIdentity) => {
-    return lambdaClient.userMemory.createIdentity.mutate(data);
+class UserMemoryService {
+  addContextMemory = async (
+    params: z.infer<typeof ContextMemoryItemSchema>,
+  ): Promise<AddContextMemoryResult> => {
+    return lambdaClient.userMemories.toolAddContextMemory.mutate(params);
   };
 
-  deleteIdentity = async (id: string) => {
-    return lambdaClient.userMemory.deleteIdentity.mutate({ id });
+  addExperienceMemory = async (
+    params: z.infer<typeof ExperienceMemoryItemSchema>,
+  ): Promise<AddExperienceMemoryResult> => {
+    return lambdaClient.userMemories.toolAddExperienceMemory.mutate(params);
   };
 
-  getIdentities = async () => {
-    return lambdaClient.userMemory.getIdentities.query();
+  addIdentityMemory = async (
+    params: z.infer<typeof AddIdentityActionSchema>,
+  ): Promise<AddIdentityMemoryResult> => {
+    return lambdaClient.userMemories.toolAddIdentityMemory.mutate(params);
   };
 
-  updateIdentity = async (id: string, data: Partial<NewUserMemoryIdentity>) => {
-    return lambdaClient.userMemory.updateIdentity.mutate({ data, id });
+  addPreferenceMemory = async (
+    params: z.infer<typeof PreferenceMemoryItemSchema>,
+  ): Promise<AddPreferenceMemoryResult> => {
+    return lambdaClient.userMemories.toolAddPreferenceMemory.mutate(params);
   };
 
-  // ============ Context CRUD ============
-
-  deleteContext = async (id: string) => {
-    return lambdaClient.userMemory.deleteContext.mutate({ id });
+  removeIdentityMemory = async (
+    params: z.infer<typeof RemoveIdentityActionSchema>,
+  ): Promise<RemoveIdentityMemoryResult> => {
+    return lambdaClient.userMemories.toolRemoveIdentityMemory.mutate(params);
   };
 
-  getContexts = async () => {
-    return lambdaClient.userMemory.getContexts.query();
+  getMemoryDetail = async (params: { id: string; layer: LayersEnum }) => {
+    return lambdaClient.userMemories.getMemoryDetail.query(params);
   };
 
-  updateContext = async (
-    id: string,
-    data: { currentStatus?: string; description?: string; title?: string },
-  ) => {
-    return lambdaClient.userMemory.updateContext.mutate({ data, id });
+  retrieveMemory = async (params: SearchMemoryParams): Promise<SearchMemoryResult> => {
+    return lambdaClient.userMemories.toolSearchMemory.query(params);
   };
 
-  // ============ Experience CRUD ============
-
-  deleteExperience = async (id: string) => {
-    return lambdaClient.userMemory.deleteExperience.mutate({ id });
+  /**
+   * Retrieve memories for a specific topic
+   * Uses the topic's historySummary as the search query
+   */
+  retrieveMemoryForTopic = async (topicId: string): Promise<SearchMemoryResult> => {
+    return lambdaClient.userMemories.retrieveMemoryForTopic.query({ topicId });
   };
 
-  getExperiences = async () => {
-    return lambdaClient.userMemory.getExperiences.query();
+  searchMemory = async (params: SearchMemoryParams): Promise<SearchMemoryResult> => {
+    return lambdaClient.userMemories.toolSearchMemory.query(params);
   };
 
-  updateExperience = async (
-    id: string,
-    data: { action?: string; keyLearning?: string; situation?: string },
-  ) => {
-    return lambdaClient.userMemory.updateExperience.mutate({ data, id });
+  queryTags = async (params?: { layers?: LayersEnum[]; page?: number; size?: number }) => {
+    return lambdaClient.userMemories.queryTags.query(params);
   };
 
-  // ============ Preference CRUD ============
-
-  deletePreference = async (id: string) => {
-    return lambdaClient.userMemory.deletePreference.mutate({ id });
+  queryIdentityRoles = async (params?: { page?: number; size?: number }) => {
+    return lambdaClient.userMemories.queryIdentityRoles.query(params);
   };
 
-  getPreferences = async () => {
-    return lambdaClient.userMemory.getPreferences.query();
+  /**
+   * Query identities for chat context injection
+   * Only returns user's own identities (relationship === 'self' or null)
+   */
+  queryIdentitiesForInjection = async (params?: { limit?: number }) => {
+    return lambdaClient.userMemories.queryIdentitiesForInjection.query(params);
   };
 
-  updatePreference = async (
-    id: string,
-    data: { conclusionDirectives?: string; suggestions?: string },
-  ) => {
-    return lambdaClient.userMemory.updatePreference.mutate({ data, id });
+  queryMemories = async (params?: {
+    categories?: string[];
+    layer?: LayersEnum;
+    order?: 'asc' | 'desc';
+    page?: number;
+    pageSize?: number;
+    q?: string;
+    sort?: 'scoreConfidence' | 'scoreImpact' | 'scorePriority' | 'scoreUrgency';
+    tags?: string[];
+    types?: TypesEnum[];
+  }) => {
+    return lambdaClient.userMemories.queryMemories.query(params);
+  };
+
+  updateIdentityMemory = async (
+    params: z.infer<typeof UpdateIdentityActionSchema>,
+  ): Promise<UpdateIdentityMemoryResult> => {
+    return lambdaClient.userMemories.toolUpdateIdentityMemory.mutate(params);
   };
 }
 
-export const memoryCRUDService = new MemoryCRUDService();
-
-// Backward compatibility alias
-export const memoryService = memoryCRUDService;
+export const userMemoryService = new UserMemoryService();
+export { memoryCRUDService } from './crud';

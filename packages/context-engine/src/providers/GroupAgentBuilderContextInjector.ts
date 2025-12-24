@@ -163,7 +163,7 @@ const defaultFormatGroupContext = (context: GroupAgentBuilderContext): string =>
     }
     if (context.supervisorConfig.plugins && context.supervisorConfig.plugins.length > 0) {
       supervisorFields.push(
-        `  <enabled_plugins>${context.supervisorConfig.plugins.join(', ')}</enabled_plugins>`,
+        `  <enabled_skills>${context.supervisorConfig.plugins.join(', ')}</enabled_skills>`,
       );
     }
 

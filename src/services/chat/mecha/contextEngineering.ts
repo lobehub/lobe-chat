@@ -23,7 +23,11 @@ import { getToolStoreState } from '@/store/tool';
 import { builtinToolSelectors, klavisStoreSelectors, toolSelectors } from '@/store/tool/selectors';
 
 import { isCanUseVideo, isCanUseVision } from '../helper';
-import type { UserMemoriesResult } from './memoryManager';
+import {
+  combineUserMemoryData,
+  resolveGlobalIdentities,
+  resolveTopicMemories,
+} from './memoryManager';
 
 const log = debug('context-engine:contextEngineering');
 
@@ -33,6 +37,7 @@ interface ContextEngineeringContext {
   /** The agent ID that will respond (for group context injection) */
   agentId?: string;
   enableHistoryCount?: boolean;
+  enableUserMemories?: boolean;
   /** Group ID for multi-agent scenarios */
   groupId?: string;
   historyCount?: number;
@@ -44,7 +49,6 @@ interface ContextEngineeringContext {
   sessionId?: string;
   systemRole?: string;
   tools?: string[];
-  userMemories?: UserMemoriesResult;
 }
 
 // REVIEW：可能这里可以约束一下 identity，preference，exp 的 重新排序或者裁切过的上下文进来而不是全部丢进来
@@ -55,7 +59,7 @@ export const contextEngineering = async ({
   provider,
   systemRole,
   inputTemplate,
-  userMemories,
+  enableUserMemories,
   enableHistoryCount,
   historyCount,
   historySummary,
@@ -220,6 +224,16 @@ export const contextEngineering = async ({
     .filter((kb) => kb.enabled)
     .map((kb) => ({ description: kb.description, id: kb.id, name: kb.name }));
 
+  // Resolve user memories: topic memories and global identities are independent layers
+  let userMemoryData;
+  if (enableUserMemories) {
+    const [topicMemories, globalIdentities] = await Promise.all([
+      resolveTopicMemories(),
+      Promise.resolve(resolveGlobalIdentities()),
+    ]);
+    userMemoryData = combineUserMemoryData(topicMemories, globalIdentities);
+  }
+
   // Create MessagesEngine with injected dependencies
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   const engine = new MessagesEngine({
@@ -261,13 +275,13 @@ export const contextEngineering = async ({
     },
 
     // User memory configuration
-    userMemory: userMemories
-      ? {
-          enabled: !!userMemories.memories,
-          fetchedAt: userMemories.fetchedAt,
-          memories: userMemories.memories,
-        }
-      : undefined,
+    userMemory:
+      enableUserMemories && userMemoryData
+        ? {
+            enabled: true,
+            memories: userMemoryData,
+          }
+        : undefined,
 
     // Variable generators
     variableGenerators: VARIABLE_GENERATORS,

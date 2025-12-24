@@ -48,7 +48,6 @@ import {
   initializeWithClientStore,
   resolveAgentConfig,
   resolveModelExtendParams,
-  resolveUserMemories,
 } from './mecha';
 import { FetchOptions } from './types';
 
@@ -131,14 +130,7 @@ class ChatService {
 
     // =================== 1.1 process user memories =================== //
 
-    const isMemoryPluginEnabled =
-      pluginIds.includes(MemoryManifest.identifier) ||
-      enabledToolIds.includes(MemoryManifest.identifier);
-
-    const userMemories = await resolveUserMemories({
-      isMemoryPluginEnabled,
-      messages,
-    });
+    const isMemoryPluginEnabled = enabledToolIds.includes(MemoryManifest.identifier);
 
     // =================== 1.2 build agent builder context =================== //
 
@@ -213,6 +205,7 @@ class ChatService {
       agentId: targetAgentId,
       enableHistoryCount:
         chatConfigByIdSelectors.getEnableHistoryCountById(targetAgentId)(getAgentStoreState()),
+      enableUserMemories: isMemoryPluginEnabled,
       groupId,
       historyCount:
         chatConfigByIdSelectors.getHistoryCountById(targetAgentId)(getAgentStoreState()) + 2,
@@ -223,7 +216,6 @@ class ChatService {
       sessionId: options?.trace?.sessionId,
       systemRole: agentConfig.systemRole,
       tools: enabledToolIds,
-      userMemories,
     });
 
     // ============  3. process extend params   ============ //
