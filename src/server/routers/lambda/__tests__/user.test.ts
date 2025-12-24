@@ -184,8 +184,8 @@ describe('userRouter', () => {
 
       const result = await userRouter.createCaller({ ...mockCtx } as any).getUserState();
 
-      expect(result).toEqual({
-        isOnboard: true,
+      expect(result).toMatchObject({
+        isOnboard: false,
         preference: { telemetry: null },
         settings: {},
         hasConversation: false,

@@ -34,16 +34,15 @@ describe('agentChatConfigSelectors', () => {
       expect(agentChatConfigSelectors.currentChatConfig(state)).toMatchObject({ historyCount: 10 });
     });
 
-    it('should return default chatConfig when no chatConfig specified', () => {
+    it('should return empty chatConfig when no chatConfig specified', () => {
       const state = createState({
         activeAgentId: 'agent-1',
         agentMap: { 'agent-1': {} },
       });
 
-      // Returns merged default config, not empty object
-      expect(agentChatConfigSelectors.currentChatConfig(state)).toMatchObject({
-        historyCount: DEFAULT_AGENT_CHAT_CONFIG.historyCount,
-      });
+      // Returns empty object when no chatConfig exists
+      // Individual selectors apply defaults via ?? operator
+      expect(agentChatConfigSelectors.currentChatConfig(state)).toEqual({});
     });
   });
 
