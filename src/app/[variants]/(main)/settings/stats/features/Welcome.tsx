@@ -61,7 +61,7 @@ const Welcome = memo<{ mobile?: boolean }>(({ mobile }) => {
                 i18n.language === 'en-US'
                   ? formatEnglishNumber(Number(data?.duration || 1))
                   : formatIntergerNumber(Number(data?.duration || 1)),
-              username: nickname || username,
+              name: nickname || username,
             }}
           />
         </div>

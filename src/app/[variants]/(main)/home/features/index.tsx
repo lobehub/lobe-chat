@@ -1,7 +1,8 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
@@ -15,10 +16,14 @@ import RecentTopic from './RecentTopic';
 import WelcomeText from './WelcomeText';
 
 const Home = memo(() => {
+  const { i18n } = useTranslation();
   const isLogin = useUserStore(authSelectors.isLogin);
+
+  const Welcome = useCallback(() => <WelcomeText />, [i18n.language]);
+
   return (
     <Flexbox gap={40}>
-      <WelcomeText />
+      <Welcome />
       <InputArea />
       {isLogin && (
         <>

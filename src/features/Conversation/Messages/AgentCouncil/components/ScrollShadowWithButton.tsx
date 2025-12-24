@@ -1,7 +1,7 @@
 import { Button, Flexbox, FlexboxProps, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 const useStyles = createStyles(({ css, token }) => ({
   button: css`
@@ -71,6 +71,10 @@ const ScrollShadowWithButton = memo<FlexboxProps>(({ children, ...rest }) => {
     },
     [checkScrollability],
   );
+
+  useEffect(() => {
+    checkScrollability();
+  }, []);
 
   return (
     <Flexbox className={styles.container} horizontal width={'100%'} {...rest}>

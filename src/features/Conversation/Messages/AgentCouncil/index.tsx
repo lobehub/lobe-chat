@@ -24,7 +24,7 @@ const AgentCouncilMessage = memo<AgentCouncilMessageProps>(({ id }) => {
   const [displayMode, setDisplayMode] = useState<DisplayMode>('horizontal');
   const [activeTab, setActiveTab] = useState(0);
   const item = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual)!;
-  const members = (item as UIChatMessage)?.members as UIChatMessage[] | undefined;
+  const members = (item as UIChatMessage)?.members?.filter(Boolean) as UIChatMessage[] | undefined;
   if (!members || members.length === 0) {
     return null;
   }

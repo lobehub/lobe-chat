@@ -1,9 +1,9 @@
 import { usePathname } from 'next/navigation';
 import { useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import urlJoin from 'url-join';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { useAgentGroupStore } from '@/store/agentGroup';
 import { useChatStore } from '@/store/chat';
 import { useGlobalStore } from '@/store/global';
 
@@ -13,33 +13,33 @@ import { useGlobalStore } from '@/store/global';
  */
 export const useTopicNavigation = () => {
   const pathname = usePathname();
-  const params = useParams();
+  const activeGroupId = useAgentGroupStore((s) => s.activeGroupId);
   const router = useQueryRoute();
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const switchTopic = useChatStore((s) => s.switchTopic);
 
   const isInAgentSubRoute = useCallback(() => {
-    if (!params.aid) return false;
-    const agentBasePath = `/agent/${params.aid}`;
+    if (!activeGroupId) return false;
+    const agentBasePath = `/group/${activeGroupId}`;
     // If pathname has more segments after /agent/:aid, it's a sub-route
     return (
       pathname.startsWith(agentBasePath) &&
       pathname !== agentBasePath &&
       pathname !== `${agentBasePath}/`
     );
-  }, [pathname, params.aid]);
+  }, [pathname, activeGroupId]);
 
   const navigateToTopic = useCallback(
     (topicId?: string) => {
       // If in agent sub-route, navigate back to agent chat first
-      if (isInAgentSubRoute() && params.aid) {
-        router.push(urlJoin('/agent', params.aid as string));
+      if (isInAgentSubRoute() && activeGroupId) {
+        router.push(urlJoin('/group', activeGroupId as string));
       }
 
       switchTopic(topicId);
       toggleConfig(false);
     },
-    [params.aid, router, switchTopic, toggleConfig, isInAgentSubRoute],
+    [activeGroupId, router, switchTopic, toggleConfig, isInAgentSubRoute],
   );
 
   return {

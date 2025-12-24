@@ -276,7 +276,7 @@ const CenterAvatar = memo(() => {
         pointerEvents: 'none',
       }}
     >
-      <UserAvatar size={80} />
+      <UserAvatar shape={'circle'} size={80} />
     </Html>
   );
 });

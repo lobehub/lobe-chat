@@ -53,7 +53,7 @@ const CouncilList = memo<CouncilListProps>(({ members, displayMode, activeTab })
       }
       const MIN_WIDTH = CONVERSATION_MIN_WIDTH / 2;
       return (
-        <ScrollShadowWithButton>
+        <ScrollShadowWithButton justify={wideScreen ? 'flex-start' : 'center'}>
           <Flexbox
             horizontal
             justify={wideScreen ? 'flex-start' : 'center'}

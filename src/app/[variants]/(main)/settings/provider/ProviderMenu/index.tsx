@@ -1,16 +1,17 @@
 'use client';
 
-import { Flexbox, SearchBar } from '@lobehub/ui';
+import { Flexbox, Icon, SearchBar } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
+import { SearchIcon } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import { useAiInfraStore } from '@/store/aiInfra/store';
 
 import AddNew from './AddNew';
 import ProviderList from './List';
 import SearchResult from './SearchResult';
-import SkeletonList from './SkeletonList';
 
 interface ProviderMenuProps {
   children: ReactNode;
@@ -40,6 +41,7 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
       width={width}
     >
       <Flexbox
+        align={'center'}
         gap={8}
         horizontal
         justify={'space-between'}
@@ -54,11 +56,28 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
       >
         <SearchBar
           allowClear
-          onChange={(e) => useAiInfraStore.setState({ providerSearchKeyword: e.target.value })}
+          defaultValue={providerSearchKeyword}
+          onInputChange={(v) => {
+            if (!v) useAiInfraStore.setState({ providerSearchKeyword: '' });
+          }}
+          onSearch={(v) => useAiInfraStore.setState({ providerSearchKeyword: v })}
           placeholder={t('menu.searchProviders')}
+          prefix={
+            <Icon
+              color={theme.colorTextDescription}
+              icon={SearchIcon}
+              style={{
+                marginRight: 12,
+              }}
+            />
+          }
           style={{ width: '100%' }}
-          value={providerSearchKeyword}
-          variant={'filled'}
+          styles={{
+            input: {
+              paddingLeft: 6,
+            },
+          }}
+          variant={'borderless'}
         />
         <AddNew />
       </Flexbox>
