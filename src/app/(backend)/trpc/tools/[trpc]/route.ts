@@ -6,8 +6,6 @@ import { createLambdaContext } from '@/libs/trpc/lambda/context';
 import { prepareRequestForTRPC } from '@/libs/trpc/utils/request-adapter';
 import { toolsRouter } from '@/server/routers/tools';
 
-export { TRPC_TOOLS_MAX_DURATION as maxDuration } from '@lobechat/business-config/server';
-
 const handler = (req: NextRequest) => {
   // Clone the request to avoid "Response body object should not be disturbed or locked" error
   // in Next.js 16 when the body stream has been consumed by Next.js internal mechanisms
