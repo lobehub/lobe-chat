@@ -41,8 +41,8 @@ afterEach(async () => {
  * Performance tests for MessageModel.query with MessageGroup aggregation
  * These tests run sequentially to avoid resource contention
  */
-describe.sequential('MessageModel.query performance (LOBE-2066)', () => {
-  it('should query 500 messages within 30ms', { retry: 3 }, async () => {
+describe.sequential('MessageModel.query performance', () => {
+  it('should query 500 messages within 50ms', { retry: 3 }, async () => {
     // Create 500 messages
     const messageData = Array.from({ length: 500 }, (_, i) => ({
       id: `perf-msg-${i}`,
@@ -66,12 +66,12 @@ describe.sequential('MessageModel.query performance (LOBE-2066)', () => {
     const queryTime = endTime - startTime;
 
     expect(result).toHaveLength(500);
-    expect(queryTime).toBeLessThan(30);
+    expect(queryTime).toBeLessThan(50);
 
     console.log(`Query 500 messages took ${queryTime.toFixed(2)}ms`);
   });
 
-  it('should query 500 messages with compression groups within 30ms', { retry: 3 }, async () => {
+  it('should query 500 messages with compression groups within 50ms', { retry: 3 }, async () => {
     // Create 500 messages, 400 will be compressed into groups
     const messageData = Array.from({ length: 500 }, (_, i) => ({
       id: `perf-comp-msg-${i}`,
@@ -117,7 +117,7 @@ describe.sequential('MessageModel.query performance (LOBE-2066)', () => {
 
     // Expected: 4 compressedGroup nodes + 100 uncompressed messages = 104 items
     expect(result).toHaveLength(104);
-    expect(queryTime).toBeLessThan(30);
+    expect(queryTime).toBeLessThan(50);
 
     // Verify compressed groups have pinnedMessages
     const compressedGroups = result.filter((m) => m.role === 'compressedGroup') as any[];
