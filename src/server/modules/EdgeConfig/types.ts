@@ -1,9 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+import type { BusinessEdgeConfigData } from '@lobechat/business-config/server';
 
 /**
  * EdgeConfig 完整配置类型
  */
-export interface EdgeConfigData {
+export interface EdgeConfigData extends BusinessEdgeConfigData {
   /**
    * Assistant blacklist
    */

@@ -1,3 +1,4 @@
+import { ASYNC_TASK_TIMEOUT } from '@lobechat/business-config/server';
 import { TRPCError } from '@trpc/server';
 import { chunk } from 'es-toolkit/compat';
 import pMap from 'p-map';
@@ -5,7 +6,7 @@ import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
-import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask';
+import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
 import { EmbeddingModel } from '@/database/models/embedding';
 import { FileModel } from '@/database/models/file';
@@ -113,7 +114,7 @@ export const fileRouter = router({
             );
           } catch (e) {
             throw {
-              message: JSON.stringify(e),
+              message: (e as any).errorType,
               name: AsyncTaskErrorType.EmbeddingError,
             };
           }
