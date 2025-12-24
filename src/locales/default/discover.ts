@@ -120,8 +120,6 @@ export default {
     'To add an Agent to the index, create an entry in `plugins/` using `agent-template.json` or `agent-template-full.json`, add a short description and tags, then open a pull request.',
   'createGuide.func2.tag': 'Option 2',
   'createGuide.func2.title': 'Submit on GitHub',
-  'footer.desc': 'Easily submit your Agents and resources to the LobeHub Community, and use, give feedback, and evolve with AI users worldwide.',
-  'footer.title': 'Publish your creation on LobeHub Community right now',
   'dislike': 'Dislike',
   'filter': 'Filter',
   'filterBy.authorRange.everyone': 'All Authors',
@@ -142,6 +140,9 @@ export default {
   'filterBy.timePeriod.title': 'Time Range',
   'filterBy.timePeriod.week': 'Last 7 Days',
   'filterBy.timePeriod.year': 'Last Year',
+  'footer.desc':
+    'Easily submit your Agents and resources to the LobeHub Community, and use, give feedback, and evolve with AI users worldwide.',
+  'footer.title': 'Publish your creation on LobeHub Community right now',
   'home.communityAgents': 'Community Agents',
   'home.featuredAssistants': 'Featured Agents',
   'home.featuredModels': 'Featured Models',
