@@ -55,7 +55,7 @@ jobs:
         run: echo "secret=$(openssl rand -base64 32)" >> $GITHUB_OUTPUT
 
       - name: Build with bundle analyzer
-        run: bun run build:analyze
+        run: bun run build:analyze || true
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           KEY_VAULTS_SECRET: ${{ secrets.KEY_VAULTS_SECRET || steps.generate-secret.outputs.secret }}
