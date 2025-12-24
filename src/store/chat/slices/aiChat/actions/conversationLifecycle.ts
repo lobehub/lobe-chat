@@ -220,7 +220,7 @@ export const conversationLifecycle: StateCreator<
           newTopic: !topicId
             ? {
                 topicMessageIds: messages.map((m) => m.id),
-                title: message.slice(0, 10) || t('defaultTitle', { ns: 'topic' }),
+                title: message.slice(0, 20) || t('defaultTitle', { ns: 'topic' }),
               }
             : undefined,
           agentId: operationContext.agentId,
