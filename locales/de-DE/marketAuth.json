@@ -32,7 +32,7 @@
   "errors.stateMissing": "Autorisierungsstatus nicht gefunden, bitte erneut versuchen.",
   "messages.authorized": "LobeHub-Dienst erfolgreich autorisiert",
   "messages.loading": "Autorisierungsvorgang wird gestartet...",
-  "messages.success.cloudMcpInstall": "Autorisierung erfolgreich! Sie können jetzt das Cloud MCP-Plugin installieren.",
+  "messages.success.cloudMcpInstall": "Autorisierung erfolgreich! Sie können jetzt das Cloud MCP-Skill installieren.",
   "messages.success.submit": "Autorisierung erfolgreich! Du kannst jetzt einen Assistenten veröffentlichen.",
   "messages.success.upload": "Autorisierung erfolgreich! Du kannst jetzt eine neue Version veröffentlichen.",
   "profileSetup.cancel": "Abbrechen",

@@ -1,7 +1,7 @@
 {
   "ModelSwitch.title": "Przełącz model",
   "active": "aktywny",
-  "agentBuilder.installPlugin.authRequired": "Wtyczka MCP w chmurze wymaga uwierzytelnienia",
+  "agentBuilder.installPlugin.authRequired": "Skill MCP w chmurze wymaga uwierzytelnienia",
   "agentBuilder.installPlugin.cancel": "Anuluj",
   "agentBuilder.installPlugin.clickApproveToConnect": "Kliknij „Zatwierdź”, aby połączyć i autoryzować tę integrację",
   "agentBuilder.installPlugin.clickApproveToInstall": "Kliknij „Zatwierdź”, aby zainstalować tę wtyczkę",

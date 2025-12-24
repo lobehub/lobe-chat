@@ -1,9 +1,9 @@
 {
   "agentSelection.empty": "Keine verfügbaren Assistenten",
   "agentSelection.noAvailable": "Derzeit können keine Assistenten hinzugefügt werden",
-  "agentSelection.noSelected": "Es wurde noch kein Assistent ausgewählt",
-  "agentSelection.search": "Kein passender Assistent gefunden",
-  "starter.createAgent": "Assistent erstellen",
+  "agentSelection.noSelected": "Es wurde noch kein Agent ausgewählt",
+  "agentSelection.search": "Kein passender Agent gefunden",
+  "starter.createAgent": "Agent erstellen",
   "starter.createGroup": "Gruppe erstellen",
   "starter.deepResearch": "Tiefenrecherche",
   "starter.developing": "In Entwicklung",

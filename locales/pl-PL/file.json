@@ -56,7 +56,7 @@
   "menu.allFiles": "Wszystkie pliki",
   "menu.allPages": "Wszystkie dokumenty",
   "networkError": "Nie udało się pobrać biblioteki. Sprawdź połączenie z siecią i spróbuj ponownie.",
-  "notSupportGuide.desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeHub Cloud</3>",
   "notSupportGuide.features.allKind.desc": "Obsługuje popularne typy plików, w tym formaty dokumentów takie jak Word, PPT, Excel, PDF, TXT oraz popularne pliki kodu, takie jak JS, Python",
   "notSupportGuide.features.allKind.title": "Analiza różnych typów plików",
   "notSupportGuide.features.embeddings.desc": "Wykorzystuje wysokowydajne modele wektorowe do indeksowania fragmentów tekstu, umożliwiając semantyczne przeszukiwanie treści plików",

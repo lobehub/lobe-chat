@@ -8,7 +8,7 @@
   "agentBuilder.installPlugin.connectedAndEnabled": "Verbonden en ingeschakeld",
   "agentBuilder.installPlugin.connectionFailed": "Verbinding mislukt",
   "agentBuilder.installPlugin.installFailed": "Installatie mislukt",
-  "agentBuilder.installPlugin.installPlugin": "Plug-in installeren",
+  "agentBuilder.installPlugin.installPlugin": "Skill installeren",
   "agentBuilder.installPlugin.installToEnable": "Installeer deze plug-in om de assistent in te schakelen",
   "agentBuilder.installPlugin.installedAndEnabled": "Geïnstalleerd en ingeschakeld",
   "agentBuilder.installPlugin.requiresAuth": "Autorisatie vereist, klik op 'Goedkeuren' om verbinding te maken",

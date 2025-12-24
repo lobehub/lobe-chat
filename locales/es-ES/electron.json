@@ -37,7 +37,7 @@
   "proxy.validation.usernameRequired": "El nombre de usuario es obligatorio cuando la autenticación está habilitada",
   "remoteServer.authError": "Error de autorización: {{error}}",
   "remoteServer.authPending": "Complete la autorización en el navegador",
-  "remoteServer.configDesc": "Conéctese al servidor LobeChat remoto para habilitar la sincronización de datos",
+  "remoteServer.configDesc": "Conéctese al servidor LobeHub remoto para habilitar la sincronización de datos",
   "remoteServer.configError": "Error de configuración",
   "remoteServer.configTitle": "Configurar sincronización en la nube",
   "remoteServer.connect": "Conectar y autorizar",

@@ -45,7 +45,7 @@
   "generation.metadata.count": "{{count}} imágenes",
   "generation.status.failed": "Generación fallida",
   "generation.status.generating": "Generando...",
-  "notSupportGuide.desc": "La instancia desplegada actual está en modo base de datos cliente y no soporta la función de generación de imágenes AI. Por favor, cambia al <1>modo de despliegue con base de datos servidor</1> o utiliza directamente <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "La instancia desplegada actual está en modo base de datos cliente y no soporta la función de generación de imágenes AI. Por favor, cambia al <1>modo de despliegue con base de datos servidor</1> o utiliza directamente <3>LobeHub Cloud</3>",
   "notSupportGuide.features.fileIntegration.desc": "Integración profunda con el sistema de gestión de archivos, las imágenes generadas se guardan automáticamente en el sistema de archivos para una gestión y organización unificada",
   "notSupportGuide.features.fileIntegration.title": "Interoperabilidad con sistema de archivos",
   "notSupportGuide.features.llmAssisted.desc": "Combinación con capacidades de modelos de lenguaje grandes para optimizar y expandir inteligentemente los textos de indicación, mejorando la calidad de generación de imágenes (Próximamente)",
