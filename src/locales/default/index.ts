@@ -54,6 +54,7 @@ const resources = {
   image,
   knowledgeBase,
   labs,
+
   marketAuth,
   memory,
   metadata,

@@ -56,7 +56,7 @@
   "menu.allFiles": "Todos los archivos",
   "menu.allPages": "Todos los documentos",
   "networkError": "No se pudo obtener la biblioteca. Verifica tu conexión a internet e inténtalo de nuevo.",
-  "notSupportGuide.desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeHub Cloud</3>",
   "notSupportGuide.features.allKind.desc": "Soporta los tipos de archivos más comunes, incluyendo formatos de documentos como Word, PPT, Excel, PDF, TXT, así como archivos de código como JS, Python, etc.",
   "notSupportGuide.features.allKind.title": "Análisis de múltiples tipos de archivos",
   "notSupportGuide.features.embeddings.desc": "Utiliza modelos de vectores de alto rendimiento para vectorizar fragmentos de texto, permitiendo la búsqueda semántica del contenido del archivo",

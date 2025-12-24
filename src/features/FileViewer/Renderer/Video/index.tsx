@@ -1,6 +1,8 @@
-import { DocRenderer } from '@cyntler/react-doc-viewer';
+'use client';
+
 import { Center } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -27,18 +29,21 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const VideoRenderer: DocRenderer = ({ mainState: { currentDocument } }) => {
-  const { uri } = currentDocument || {};
+interface VideoViewerProps {
+  fileId: string;
+  url: string | null;
+}
+
+const VideoViewer = memo<VideoViewerProps>(({ url }) => {
   const { styles } = useStyles();
+
+  if (!url) return null;
 
   return (
     <Center className={styles.container} height={'100%'} width={'100%'}>
-      <video className={styles.video} controls height={'100%'} src={uri} width={'100%'} />
+      <video className={styles.video} controls height={'100%'} src={url} width={'100%'} />
     </Center>
   );
-};
+});
 
-export default VideoRenderer;
-
-VideoRenderer.fileTypes = ['mp4', 'video/mp4', 'webm', 'video/webm', 'ogg', 'video/ogg'];
-VideoRenderer.weight = 0;
+export default VideoViewer;

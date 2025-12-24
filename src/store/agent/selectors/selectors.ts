@@ -1,9 +1,9 @@
+import { DEFAULT_PROVIDER } from '@lobechat/business-const';
 import {
   DEFAULT_AGENT_CONFIG,
   DEFAULT_AVATAR,
   DEFAULT_BACKGROUND_COLOR,
   DEFAULT_MODEL,
-  DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
 } from '@lobechat/const';
 import {

@@ -51,7 +51,7 @@
   "duplicateSession.success": "复制成功",
   "duplicateSession.title": "{{title}} 副本",
   "duplicateTitle": "{{title}} 副本",
-  "emptyAgent": "还没有助理。从第一个助理开始，慢慢搭建你的团队",
+  "emptyAgent": "还没有助理。从第一个助理开始，慢慢搭建你的助理体系",
   "emptyAgentAction": "创建助理",
   "extendParams.disableContextCaching.desc": "可显著降低单次对话成本并提升响应速度（<1>了解更多</1>）。开启后将自动禁用历史消息数限制",
   "extendParams.disableContextCaching.title": "开启上下文缓存",

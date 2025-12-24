@@ -1,3 +1,4 @@
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { ActionIcon, Flexbox, FormItem, Input } from '@lobehub/ui';
 import { Checkbox, Form, FormInstance } from 'antd';
@@ -6,7 +7,6 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import { BRANDING_NAME } from '@/const/branding';
 import { toolService } from '@/services/tool';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';

@@ -1,7 +1,8 @@
 'use client';
 
-import { BRANDING_NAME, DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@lobechat/const';
-import { Button, Text , Skeleton } from '@lobehub/ui';
+import { BRANDING_NAME } from '@lobechat/business-const';
+import { DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@lobechat/const';
+import { Button, Skeleton, Text } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { Col, Flex, Row } from 'antd';
 import { createStyles } from 'antd-style';

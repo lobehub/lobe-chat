@@ -45,7 +45,7 @@
   "generation.metadata.count": "{{count}} obrazów",
   "generation.status.failed": "Generowanie nie powiodło się",
   "generation.status.generating": "Generowanie...",
-  "notSupportGuide.desc": "Aktualna instancja wdrożeniowa działa w trybie bazy danych klienta i nie obsługuje funkcji generowania obrazów AI. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio skorzystać z <3>LobeChat Cloud</3>",
+  "notSupportGuide.desc": "Aktualna instancja wdrożeniowa działa w trybie bazy danych klienta i nie obsługuje funkcji generowania obrazów AI. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio skorzystać z <3>LobeHub Cloud</3>",
   "notSupportGuide.features.fileIntegration.desc": "Głęboka integracja z systemem zarządzania plikami, generowane obrazy są automatycznie zapisywane w systemie plików, umożliwiając ich centralne zarządzanie i organizację",
   "notSupportGuide.features.fileIntegration.title": "Integracja z systemem plików",
   "notSupportGuide.features.llmAssisted.desc": "Wykorzystanie możliwości dużych modeli językowych do inteligentnej optymalizacji i rozszerzania tekstów podpowiedzi, poprawiając jakość generowanych obrazów (wkrótce)",

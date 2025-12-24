@@ -27,6 +27,7 @@
   "sideEffects": false,
   "workspaces": [
     "packages/*",
+    "packages/business/*",
     "e2e",
     "apps/desktop/src/main"
   ],
@@ -151,7 +152,6 @@
     "@clerk/nextjs": "^6.36.5",
     "@clerk/themes": "^2.4.46",
     "@codesandbox/sandpack-react": "^2.20.0",
-    "@cyntler/react-doc-viewer": "^1.17.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/utilities": "^3.2.2",
     "@electric-sql/pglite": "0.2.17",
@@ -174,6 +174,9 @@
     "@lobechat/builtin-tool-local-system": "workspace:*",
     "@lobechat/builtin-tool-memory": "workspace:*",
     "@lobechat/builtin-tool-notebook": "workspace:*",
+    "@lobechat/business-config": "workspace:*",
+    "@lobechat/business-const": "workspace:*",
+    "@lobechat/config": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/conversation-flow": "workspace:*",

@@ -1,5 +1,6 @@
 'use client';
 
+import { BRANDING_EMAIL, SOCIAL_URL } from '@lobechat/business-const';
 import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
 import { DiscordIcon } from '@lobehub/ui/icons';
@@ -9,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 
 import ChangelogModal from '@/components/ChangelogModal';
 import LabsModal from '@/components/LabsModal';
-import { BRANDING_EMAIL, SOCIAL_URL } from '@/const/branding';
 import { DOCUMENTS_REFER_URL, GITHUB, GITHUB_ISSUES, mailTo } from '@/const/url';
 import ThemeButton from '@/features/User/UserPanel/ThemeButton';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';

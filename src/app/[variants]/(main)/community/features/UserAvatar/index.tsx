@@ -2,7 +2,7 @@
 
 import { Avatar, Button, Skeleton } from '@lobehub/ui';
 import { UserCircleIcon } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import { useMarketAuth, useMarketUserProfile } from '@/layout/AuthProvider/Marke
 const UserAvatar = memo(() => {
   const { t } = useTranslation('discover');
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const { isAuthenticated, isLoading, getCurrentUserInfo, signIn } = useMarketAuth();
 
   const userInfo = getCurrentUserInfo();
@@ -21,11 +21,13 @@ const UserAvatar = memo(() => {
   const { data: userProfile } = useMarketUserProfile(username);
 
   const handleSignIn = useCallback(async () => {
+    setLoading(true);
     try {
       await signIn();
     } catch {
       // User cancelled or error occurred
     }
+    setLoading(false);
   }, [signIn]);
 
   const handleNavigateToProfile = useCallback(() => {
@@ -44,6 +46,7 @@ const UserAvatar = memo(() => {
     return (
       <Button
         icon={UserCircleIcon}
+        loading={loading}
         onClick={handleSignIn}
         style={{
           height: 30,

@@ -1,9 +1,12 @@
-import { DocRenderer, textFileLoader } from '@cyntler/react-doc-viewer';
+'use client';
+
 import { Center, Flexbox, Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import React from 'react';
+import { memo } from 'react';
 
 import CircleLoading from '@/components/Loading/CircleLoading';
+
+import { useTextFileLoader } from '../../hooks/useTextFileLoader';
 
 const useStyles = createStyles(({ css, token }) => ({
   page: css`
@@ -35,15 +38,22 @@ const getLanguage = (fileName?: string): string => {
   }
 };
 
-const JavaScriptViewer: DocRenderer = ({ mainState: { currentDocument } }) => {
+interface JavaScriptViewerProps {
+  fileId: string;
+  fileName?: string;
+  url: string | null;
+}
+
+const JavaScriptViewer = memo<JavaScriptViewerProps>(({ url, fileName }) => {
   const { styles } = useStyles();
-  const language = getLanguage(currentDocument?.fileName);
+  const { fileData, loading } = useTextFileLoader(url);
+  const language = getLanguage(fileName);
 
   return (
     <Flexbox className={styles.page} id="javascript-renderer">
-      {!!currentDocument?.fileData ? (
+      {!loading && fileData ? (
         <Highlighter language={language} showLanguage={false} variant={'borderless'}>
-          {currentDocument?.fileData as string}
+          {fileData}
         </Highlighter>
       ) : (
         <Center height={'100%'}>
@@ -52,20 +62,6 @@ const JavaScriptViewer: DocRenderer = ({ mainState: { currentDocument } }) => {
       )}
     </Flexbox>
   );
-};
+});
 
 export default JavaScriptViewer;
-
-JavaScriptViewer.fileTypes = [
-  'js',
-  'jsx',
-  'ts',
-  'tsx',
-  'application/javascript',
-  'application/x-javascript',
-  'text/javascript',
-  'application/typescript',
-  'text/typescript',
-];
-JavaScriptViewer.weight = 0;
-JavaScriptViewer.fileLoader = textFileLoader;

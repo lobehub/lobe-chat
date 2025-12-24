@@ -19,7 +19,7 @@
   "notFound.desc": "We kunnen de pagina die je zoekt niet vinden",
   "notFound.title": "Betreden onbekend terrein?",
   "pluginSettings.desc": "Voltooi de volgende instellingen om de plugin te gebruiken",
-  "pluginSettings.title": "{{name}} Plugin Instellingen",
+  "pluginSettings.title": "{{name}} Skill Instellingen",
   "response.400": "Sorry, de server begrijpt uw verzoek niet. Controleer of uw verzoekparameters juist zijn",
   "response.401": "Sorry, de server heeft uw verzoek geweigerd vanwege onvoldoende rechten of ongeldige authenticatie",
   "response.403": "Sorry, de server heeft uw verzoek geweigerd omdat u geen toegang heeft tot deze inhoud",

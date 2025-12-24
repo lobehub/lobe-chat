@@ -12,4 +12,5 @@ const FilePreview = memo<{ id: string }>(({ id }) => {
 
   return <FileViewer {...file} />;
 });
+
 export default FilePreview;

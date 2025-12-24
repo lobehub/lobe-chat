@@ -37,7 +37,7 @@
   "proxy.validation.usernameRequired": "Nazwa użytkownika jest wymagana, gdy uwierzytelnianie jest włączone",
   "remoteServer.authError": "Błąd autoryzacji: {{error}}",
   "remoteServer.authPending": "Proszę zakończyć autoryzację w przeglądarce",
-  "remoteServer.configDesc": "Połącz z zdalnym serwerem LobeChat, aby włączyć synchronizację danych",
+  "remoteServer.configDesc": "Połącz z zdalnym serwerem LobeHub, aby włączyć synchronizację danych",
   "remoteServer.configError": "Błąd konfiguracji",
   "remoteServer.configTitle": "Konfiguracja synchronizacji w chmurze",
   "remoteServer.connect": "Połącz i autoryzuj",

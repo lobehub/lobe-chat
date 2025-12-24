@@ -1,12 +1,30 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Block, Modal, Text } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { PRIVACY_URL, TERMS_URL } from '@/const/url';
 import AuthCard from '@/features/AuthCard';
+
+const useStyles = createStyles(({ css, isDarkMode }) => {
+  const image = isDarkMode
+    ? '/images/community_header_dark.webp'
+    : '/images/community_header_light.webp';
+  return {
+    container: css`
+      padding-block-start: 32px;
+
+      background-image: url(${image});
+      background-repeat: no-repeat;
+      background-position: 400% 0;
+      background-size: 400px auto;
+      background-blend-mode: ${isDarkMode ? 'screen' : 'multiply'};
+    `,
+  };
+});
 
 interface MarketAuthConfirmModalProps {
   onCancel: () => void;
@@ -17,6 +35,7 @@ interface MarketAuthConfirmModalProps {
 const MarketAuthConfirmModal = memo<MarketAuthConfirmModalProps>(
   ({ open, onConfirm, onCancel }) => {
     const { t } = useTranslation('marketAuth');
+    const { styles } = useStyles();
 
     const footer = (
       <Text align={'center'} as={'div'} fontSize={13} type={'secondary'}>
@@ -48,6 +67,9 @@ const MarketAuthConfirmModal = memo<MarketAuthConfirmModalProps>(
       <Modal
         cancelText={t('authorize.cancel')}
         centered
+        classNames={{
+          container: styles.container,
+        }}
         okText={t('authorize.confirm')}
         onCancel={onCancel}
         onOk={onConfirm}
@@ -55,7 +77,6 @@ const MarketAuthConfirmModal = memo<MarketAuthConfirmModalProps>(
         paddings={{
           desktop: 24,
         }}
-        // size={440}
         title={null}
         width={440}
       >

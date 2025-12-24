@@ -1,9 +1,12 @@
-import { DocRenderer, textFileLoader } from '@cyntler/react-doc-viewer';
+'use client';
+
 import { Center, Flexbox, Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import React from 'react';
+import { memo } from 'react';
 
 import CircleLoading from '@/components/Loading/CircleLoading';
+
+import { useTextFileLoader } from '../../hooks/useTextFileLoader';
 
 const useStyles = createStyles(({ css, token }) => ({
   page: css`
@@ -13,18 +16,25 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const MarkdownViewer: DocRenderer = ({ mainState: { currentDocument } }) => {
+interface MarkdownViewerProps {
+  fileId: string;
+  url: string | null;
+}
+
+const MarkdownViewer = memo<MarkdownViewerProps>(({ url }) => {
   const { styles } = useStyles();
+  const { fileData, loading } = useTextFileLoader(url);
+
   return (
     <Flexbox className={styles.page} id="markdown-renderer">
-      {!!currentDocument?.fileData ? (
+      {!loading && fileData ? (
         <Highlighter
           copyable={false}
           language={'markdown'}
           showLanguage={false}
           variant={'borderless'}
         >
-          {currentDocument?.fileData as string}
+          {fileData}
         </Highlighter>
       ) : (
         <Center height={'100%'}>
@@ -33,10 +43,6 @@ const MarkdownViewer: DocRenderer = ({ mainState: { currentDocument } }) => {
       )}
     </Flexbox>
   );
-};
+});
 
 export default MarkdownViewer;
-
-MarkdownViewer.fileTypes = ['md', 'mdx', 'text/markdown', 'text/x-markdown'];
-MarkdownViewer.weight = 0;
-MarkdownViewer.fileLoader = textFileLoader;

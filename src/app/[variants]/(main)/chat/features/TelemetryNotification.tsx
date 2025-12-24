@@ -1,5 +1,6 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Avatar, Button, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideArrowUpRightFromSquare, TelescopeIcon } from 'lucide-react';
@@ -8,7 +9,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Notification from '@/components/Notification';
-import { BRANDING_NAME } from '@/const/branding';
 import { PRIVACY_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';

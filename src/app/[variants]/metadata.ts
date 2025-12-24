@@ -1,6 +1,8 @@
-import { BRANDING_LOGO_URL, BRANDING_NAME, ORG_NAME } from '@/const/branding';
+import { BRANDING_LOGO_URL, BRANDING_NAME, ORG_NAME } from '@lobechat/business-const';
+import { OG_URL } from '@lobechat/const';
+
 import { DEFAULT_LANG } from '@/const/locale';
-import { OFFICIAL_URL, OG_URL } from '@/const/url';
+import { OFFICIAL_URL } from '@/const/url';
 import { isCustomBranding, isCustomORG } from '@/const/version';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
