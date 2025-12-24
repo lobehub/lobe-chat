@@ -1,10 +1,11 @@
+import { ASYNC_TASK_TIMEOUT } from '@lobechat/business-config/server';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@lobechat/types';
 import debug from 'debug';
 import { RuntimeImageGenParams } from 'model-bank';
 import { z } from 'zod';
 
-import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask';
+import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { FileModel } from '@/database/models/file';
 import { GenerationModel } from '@/database/models/generation';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
@@ -282,7 +283,8 @@ export const imageRouter = router({
           generationId,
           {
             height: height ?? image.height,
-            originalUrl: imageUrl,
+            // If imageUrl is base64 data, use uploadedImageUrl instead to avoid storing large base64 in DB
+            originalUrl: imageUrl.startsWith('data:') ? uploadedImageUrl : imageUrl,
             thumbnailUrl: thumbnailImageUrl,
             type: 'image',
             url: uploadedImageUrl,

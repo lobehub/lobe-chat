@@ -1,5 +1,6 @@
 'use client';
 
+import { UTM_SOURCE } from '@lobechat/business-const';
 import { Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { Database, FileImage, Network, Sparkles } from 'lucide-react';
@@ -7,7 +8,7 @@ import Link from 'next/link';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FeatureList from '@/components/FeatureList';
-import { DATABASE_SELF_HOSTING_URL, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
+import { DATABASE_SELF_HOSTING_URL, OFFICIAL_URL } from '@/const/url';
 
 const BLOCK_SIZE = 100;
 const ICON_SIZE = { size: 72, strokeWidth: 1.5 };
@@ -137,7 +138,7 @@ const NotSupportClient = () => {
               <Link
                 href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}&utm_medium=client_not_support_image`}
                 key="3"
-               />,
+              />,
             ]}
             i18nKey={'notSupportGuide.desc'}
             ns={'image'}

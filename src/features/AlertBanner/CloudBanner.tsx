@@ -1,5 +1,6 @@
 'use client';
 
+import { LOBE_CHAT_CLOUD, UTM_SOURCE } from '@lobechat/business-const';
 import { Button, Center, Flexbox, Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { createStyles } from 'antd-style';
@@ -9,8 +10,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import Marquee from 'react-fast-marquee';
 import { useTranslation } from 'react-i18next';
 
-import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
+import { OFFICIAL_URL } from '@/const/url';
 import { isOnServerSide } from '@/utils/env';
 
 export const BANNER_HEIGHT = 40;

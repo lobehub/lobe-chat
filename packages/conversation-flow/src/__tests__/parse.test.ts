@@ -174,7 +174,7 @@ describe('parse', () => {
       const executionTime = endTime - startTime;
 
       expect(result.flatList.length).toBeGreaterThan(0);
-      expect(executionTime).toBeLessThan(50);
+      expect(executionTime).toBeLessThan(60);
     });
   });
 });

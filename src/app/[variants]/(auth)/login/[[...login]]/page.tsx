@@ -1,8 +1,8 @@
 import { SignIn } from '@clerk/nextjs';
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { notFound } from 'next/navigation';
 
 import { enableClerk } from '@/const/auth';
-import { BRANDING_NAME } from '@/const/branding';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';

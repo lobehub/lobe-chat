@@ -1,5 +1,6 @@
 'use client';
 
+import { SOCIAL_URL } from '@lobechat/business-const';
 import { Flexbox, Icon, Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookOpenIcon, BrainCircuitIcon, ListIcon } from 'lucide-react';
@@ -8,7 +9,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import { SOCIAL_URL } from '@/const/branding';
 import { ProviderNavKey } from '@/types/discover';
 
 import { useDetailContext } from '../DetailProvider';

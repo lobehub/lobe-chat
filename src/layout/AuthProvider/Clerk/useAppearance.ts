@@ -2,9 +2,8 @@
 
 import { dark } from '@clerk/themes';
 import { ElementsConfig, Theme } from '@clerk/types';
+import { BRANDING_URL } from '@lobechat/business-const';
 import { createStyles, useThemeMode } from 'antd-style';
-
-import { BRANDING_URL } from '@/const/branding';
 
 const prefixCls = 'cl';
 

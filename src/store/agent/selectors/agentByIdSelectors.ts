@@ -1,4 +1,5 @@
-import { DEFAULT_MODEL, DEFAULT_PROVIDER, DEFAUTT_AGENT_TTS_CONFIG } from '@lobechat/const';
+import { DEFAULT_PROVIDER } from '@lobechat/business-const';
+import { DEFAULT_MODEL, DEFAUTT_AGENT_TTS_CONFIG } from '@lobechat/const';
 import type { AgentBuilderContext } from '@lobechat/context-engine';
 import { LobeAgentTTSConfig } from '@lobechat/types';
 

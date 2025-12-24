@@ -1,4 +1,4 @@
-import { BRANDING_NAME } from '@lobechat/const';
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { downloadFile, exportJSONFile } from '@lobechat/utils/client';
 import dayjs from 'dayjs';
 

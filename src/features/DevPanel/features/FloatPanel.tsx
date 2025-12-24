@@ -1,5 +1,6 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { ActionIcon, Flexbox, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
 import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
@@ -8,7 +9,6 @@ import { usePathname } from 'next/navigation';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 
-import { BRANDING_NAME } from '@/const/branding';
 import { isDesktop } from '@/const/version';
 
 // 定义样式

@@ -27,6 +27,7 @@
   "sideEffects": false,
   "workspaces": [
     "packages/*",
+    "packages/business/*",
     "e2e",
     "apps/desktop/src/main"
   ],
@@ -173,6 +174,9 @@
     "@lobechat/builtin-tool-local-system": "workspace:*",
     "@lobechat/builtin-tool-memory": "workspace:*",
     "@lobechat/builtin-tool-notebook": "workspace:*",
+    "@lobechat/business-config": "workspace:*",
+    "@lobechat/business-const": "workspace:*",
+    "@lobechat/config": "workspace:*",
     "@lobechat/const": "workspace:*",
     "@lobechat/context-engine": "workspace:*",
     "@lobechat/conversation-flow": "workspace:*",

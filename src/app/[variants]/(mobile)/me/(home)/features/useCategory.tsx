@@ -1,3 +1,5 @@
+import { UTM_SOURCE , LOBE_CHAT_CLOUD } from '@lobechat/business-const';
+import { OFFICIAL_URL } from '@lobechat/const';
 import {
   Book,
   CircleUserRound,
@@ -11,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { CellProps } from '@/components/Cell';
-import { DOCUMENTS, FEEDBACK, LOBE_CHAT_CLOUD, OFFICIAL_URL, UTM_SOURCE } from '@/const/index';
+import { DOCUMENTS, FEEDBACK } from '@/const/index';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';

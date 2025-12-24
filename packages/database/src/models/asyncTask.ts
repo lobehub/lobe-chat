@@ -1,3 +1,4 @@
+import { ASYNC_TASK_TIMEOUT } from '@lobechat/business-config/server';
 import {
   AsyncTaskError,
   AsyncTaskErrorType,
@@ -8,9 +9,6 @@ import { and, eq, inArray, lt } from 'drizzle-orm';
 
 import { AsyncTaskSelectItem, NewAsyncTaskItem, asyncTasks } from '../schemas';
 import { LobeChatDatabase } from '../type';
-
-// set timeout to about 5 minutes, and give 2s padding time
-export const ASYNC_TASK_TIMEOUT = 298 * 1000;
 
 export class AsyncTaskModel {
   private userId: string;

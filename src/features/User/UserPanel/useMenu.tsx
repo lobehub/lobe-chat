@@ -1,3 +1,4 @@
+import { LOBE_CHAT_CLOUD, UTM_SOURCE } from '@lobechat/business-const';
 import { isDesktop } from '@lobechat/const';
 import { Flexbox, Hotkey, Icon } from '@lobehub/ui';
 import { Badge } from 'antd';
@@ -8,9 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import type { MenuProps } from '@/components/Menu';
-import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_DESKTOP_HOTKEY_CONFIG } from '@/const/desktop';
-import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
+import { OFFICIAL_URL } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';

@@ -80,3 +80,5 @@ export const POST = async (req: Request) => {
 
   return res;
 };
+
+export { WEBAPI_PLUGIN_GATEWAY_MAX_DURATION as maxDuration } from '@lobechat/business-config/server';

@@ -34,3 +34,5 @@ const handler = (req: NextRequest) => {
 };
 
 export { handler as GET, handler as POST };
+
+export { TRPC_ASYNC_MAX_DURATION as maxDuration } from '@lobechat/business-config/server';

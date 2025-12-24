@@ -1,5 +1,6 @@
 'use client';
 
+import { BRANDING_NAME } from '@lobechat/business-const';
 import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquareHeart } from 'lucide-react';
@@ -9,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 
 import GuideModal from '@/components/GuideModal';
 import GuideVideo from '@/components/GuideVideo';
-import { BRANDING_NAME } from '@/const/branding';
 import { GITHUB, GITHUB_ISSUES } from '@/const/url';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { isOnServerSide } from '@/utils/env';

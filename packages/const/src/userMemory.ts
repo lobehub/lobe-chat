@@ -1,4 +1,6 @@
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_EMBEDDING_PROVIDER } from './settings';
+import { DEFAULT_EMBEDDING_PROVIDER } from '@lobechat/business-const';
+
+import { DEFAULT_EMBEDDING_MODEL } from './settings';
 
 export const DEFAULT_SEARCH_USER_MEMORY_TOP_K = {
   contexts: 0,
