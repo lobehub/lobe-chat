@@ -10,7 +10,7 @@ const CategoryContainer: FC<PropsWithChildren<{ top?: number }>> = ({ children, 
       hideScrollBar
       size={4}
       style={{ paddingBottom: 16, position: 'sticky', top }}
-      width={220}
+      width={280}
     >
       {children}
     </ScrollShadow>

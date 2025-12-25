@@ -51,7 +51,8 @@ const ModelSelect = memo<ModelSelectProps>(
             : provider.children;
 
         return models.map((model) => ({
-          label: <ModelItemRender {...model} {...model.abilities} showInfoTag={showAbility} />,
+          ...model,
+          label: <ModelItemRender {...model} {...model.abilities} showInfoTag={false} />,
           provider: provider.id,
           value: `${provider.id}/${model.id}`,
         }));
@@ -96,10 +97,16 @@ const ModelSelect = memo<ModelSelectProps>(
             const model = value.split('/').slice(1).join('/');
             onChange?.({ model, provider: (option as unknown as ModelOption).provider });
           }}
+          optionRender={(option) => (
+            <ModelItemRender {...option.data} {...option.data.abilities} showInfoTag />
+          )}
           options={options}
           popupMatchSelectWidth={false}
           size={size}
-          style={style}
+          style={{
+            minWidth: 200,
+            ...style,
+          }}
           value={`${value?.provider}/${value?.model}`}
           variant={variant}
         />

@@ -324,7 +324,9 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
             <Form.Item>
               <EmojiPicker
                 allowDelete={!!avatarUrl}
-                allowUpload
+                allowUpload={{
+                  enableEmoji: false,
+                }}
                 loading={avatarUploading}
                 locale={locale}
                 onChange={handleAvatarChange}
