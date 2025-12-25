@@ -108,6 +108,7 @@ const Tool = memo<GroupToolProps>(
         title={
           <Inspectors
             apiName={apiName}
+            arguments={requestArgs}
             identifier={identifier}
             intervention={intervention}
             result={result}

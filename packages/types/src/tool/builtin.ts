@@ -172,6 +172,38 @@ export interface BuiltinPlaceholderProps<T extends Record<string, any> = any> {
 
 export type BuiltinPlaceholder = (props: BuiltinPlaceholderProps) => ReactNode;
 
+// ==================== Inspector Renderer Types ====================
+
+export interface BuiltinInspectorProps<Arguments = any, State = any> {
+  apiName: string;
+  args: Arguments;
+  identifier: string;
+  isLoading?: boolean;
+  pluginState?: State;
+  result?: { content: string | null; error?: any };
+}
+
+export type BuiltinInspector = <A = any, S = any>(
+  props: BuiltinInspectorProps<A, S>,
+) => ReactNode;
+
+// ==================== Streaming Renderer Types ====================
+
+/**
+ * Props for streaming render components
+ * Note: During streaming phase, only basic info is available.
+ * pluginState and streaming content should be fetched from store inside the component.
+ */
+export interface BuiltinStreamingProps<Arguments = any> {
+  apiName: string;
+  args: Arguments;
+  identifier: string;
+  messageId: string;
+  toolCallId: string;
+}
+
+export type BuiltinStreaming = <A = any>(props: BuiltinStreamingProps<A>) => ReactNode;
+
 export interface BuiltinServerRuntimeOutput {
   content: string;
   error?: any;
