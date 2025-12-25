@@ -1,12 +1,13 @@
 import { Flexbox, Tag, Tooltip } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 import { useFileStore } from '@/store/file';
 import { UPLOAD_STATUS_SET, UploadFileItem } from '@/types/files/upload';
 
 import Content from './Content';
+import FilePreviewModal from './FilePreviewModal';
 import { getFileBasename } from './utils';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -62,31 +63,39 @@ const ContextItem = memo<FileItemProps>((props) => {
   const { file, id, status, uploadState } = props;
   const { styles } = useStyles();
   const [removeChatUploadFile] = useFileStore((s) => [s.removeChatUploadFile]);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const basename = getFileBasename(file.name);
   const isUploading = UPLOAD_STATUS_SET.has(status);
   const progress = uploadState?.progress ?? 0;
 
+  const handleClick = () => {
+    setPreviewOpen(true);
+  };
+
   return (
-    <Tag closable onClose={() => removeChatUploadFile(id)} size={'large'}>
-      <Flexbox className={styles.icon}>
-        <Content {...props} />
-        {isUploading && (
-          <div className={styles.progress}>
-            <Progress
-              percent={progress}
-              showInfo={false}
-              size={14}
-              strokeWidth={2}
-              type="circle"
-            />
-          </div>
-        )}
-      </Flexbox>
-      <Tooltip title={file.name}>
-        <span className={styles.name}>{basename}</span>
-      </Tooltip>
-    </Tag>
+    <>
+      <Tag closable onClick={handleClick} onClose={() => removeChatUploadFile(id)} size={'large'}>
+        <Flexbox className={styles.icon}>
+          <Content {...props} />
+          {isUploading && (
+            <div className={styles.progress}>
+              <Progress
+                percent={progress}
+                showInfo={false}
+                size={14}
+                strokeWidth={2}
+                type="circle"
+              />
+            </div>
+          )}
+        </Flexbox>
+        <Tooltip title={file.name}>
+          <span className={styles.name}>{basename}</span>
+        </Tooltip>
+      </Tag>
+      <FilePreviewModal file={props} onClose={() => setPreviewOpen(false)} open={previewOpen} />
+    </>
   );
 });
 
