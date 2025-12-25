@@ -62,6 +62,10 @@ export interface OpenAIChatMessage {
 export interface ChatStreamPayload {
   apiMode?: 'chatCompletion' | 'responses';
   /**
+   * @Title Gemini 是否开启代码执行
+   */
+  codeExecution?: boolean;
+  /**
    * 开启上下文缓存
    */
   enabledContextCaching?: boolean;

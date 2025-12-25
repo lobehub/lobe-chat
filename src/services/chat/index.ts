@@ -204,6 +204,10 @@ class ChatService {
         extendParams.urlContext = chatConfig.urlContext;
       }
 
+      if (modelExtendParams!.includes('codeExecution') && chatConfig.codeExecution) {
+        extendParams.codeExecution = chatConfig.codeExecution;
+      }
+
       if (modelExtendParams!.includes('imageAspectRatio') && chatConfig.imageAspectRatio) {
         extendParams.imageAspectRatio = chatConfig.imageAspectRatio;
       }
