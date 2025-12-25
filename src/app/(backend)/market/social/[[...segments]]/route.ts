@@ -80,20 +80,20 @@ export const POST = async (req: NextRequest, context: RouteContext) => {
 
       // Like actions
       case 'like': {
-        const { targetType, targetId } = body;
-        await market.likes.like(targetType, targetId);
+        const { targetType, targetId, identifier } = body;
+        await market.likes.like(targetType, identifier ?? targetId);
         return NextResponse.json({ success: true });
       }
 
       case 'unlike': {
-        const { targetType, targetId } = body;
-        await market.likes.unlike(targetType, targetId);
+        const { targetType, targetId, identifier } = body;
+        await market.likes.unlike(targetType, identifier ?? targetId);
         return NextResponse.json({ success: true });
       }
 
       case 'toggle-like': {
-        const { targetType, targetId } = body;
-        const result = await market.likes.toggleLike(targetType, targetId);
+        const { targetType, targetId, identifier } = body;
+        const result = await market.likes.toggleLike(targetType, identifier ?? targetId);
         return NextResponse.json(result);
       }
 
@@ -226,6 +226,18 @@ export const GET = async (req: NextRequest, context: RouteContext) => {
       }
 
       // Like queries
+      case 'like-status': {
+        const targetType = segments[1] as 'agent' | 'plugin';
+        const targetIdOrIdentifier = segments[2];
+        if (!accessToken) {
+          return NextResponse.json({ isLiked: false });
+        }
+        const isNumeric = /^\d+$/.test(targetIdOrIdentifier);
+        const targetValue = isNumeric ? Number(targetIdOrIdentifier) : targetIdOrIdentifier;
+        const result = await market.likes.checkLike(targetType, targetValue as number);
+        return NextResponse.json(result);
+      }
+
       case 'liked-agents': {
         const userId = Number(segments[1]);
         const result = await market.likes.getUserLikedAgents(userId, paginationParams);

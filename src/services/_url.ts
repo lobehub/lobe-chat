@@ -96,6 +96,10 @@ export const MARKET_ENDPOINTS = {
   like: withElectronProtocolIfElectron('/market/social/like'),
   unlike: withElectronProtocolIfElectron('/market/social/unlike'),
   toggleLike: withElectronProtocolIfElectron('/market/social/toggle-like'),
+  likeStatus: (targetType: 'agent' | 'plugin', targetIdOrIdentifier: number | string) =>
+    withElectronProtocolIfElectron(
+      `/market/social/like-status/${targetType}/${encodeURIComponent(targetIdOrIdentifier)}`,
+    ),
   likedAgents: (userId: number) =>
     withElectronProtocolIfElectron(`/market/social/liked-agents/${userId}`),
   likedPlugins: (userId: number) =>

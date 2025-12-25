@@ -16,6 +16,10 @@ export interface FavoriteStatus {
   isFavorited: boolean;
 }
 
+export interface LikeStatus {
+  isLiked: boolean;
+}
+
 export interface ToggleLikeResult {
   liked: boolean;
 }
@@ -262,23 +266,56 @@ class SocialService {
 
   // ==================== Like ====================
 
-  async like(targetType: SocialTargetType, targetId: number): Promise<void> {
+  async like(
+    targetType: SocialTargetType,
+    targetIdOrIdentifier: number | string,
+  ): Promise<void> {
+    const body =
+      typeof targetIdOrIdentifier === 'string'
+        ? { identifier: targetIdOrIdentifier, targetType }
+        : { targetId: targetIdOrIdentifier, targetType };
+
     await this.request(MARKET_ENDPOINTS.like, {
-      body: JSON.stringify({ targetId, targetType }),
+      body: JSON.stringify(body),
       method: 'POST',
     });
   }
 
-  async unlike(targetType: SocialTargetType, targetId: number): Promise<void> {
+  async unlike(
+    targetType: SocialTargetType,
+    targetIdOrIdentifier: number | string,
+  ): Promise<void> {
+    const body =
+      typeof targetIdOrIdentifier === 'string'
+        ? { identifier: targetIdOrIdentifier, targetType }
+        : { targetId: targetIdOrIdentifier, targetType };
+
     await this.request(MARKET_ENDPOINTS.unlike, {
-      body: JSON.stringify({ targetId, targetType }),
+      body: JSON.stringify(body),
       method: 'POST',
     });
   }
 
-  async toggleLike(targetType: SocialTargetType, targetId: number): Promise<ToggleLikeResult> {
+  async checkLikeStatus(
+    targetType: SocialTargetType,
+    targetIdOrIdentifier: number | string,
+  ): Promise<LikeStatus> {
+    return this.request(MARKET_ENDPOINTS.likeStatus(targetType, targetIdOrIdentifier), {
+      method: 'GET',
+    });
+  }
+
+  async toggleLike(
+    targetType: SocialTargetType,
+    targetIdOrIdentifier: number | string,
+  ): Promise<ToggleLikeResult> {
+    const body =
+      typeof targetIdOrIdentifier === 'string'
+        ? { identifier: targetIdOrIdentifier, targetType }
+        : { targetId: targetIdOrIdentifier, targetType };
+
     return this.request(MARKET_ENDPOINTS.toggleLike, {
-      body: JSON.stringify({ targetId, targetType }),
+      body: JSON.stringify(body),
       method: 'POST',
     });
   }
