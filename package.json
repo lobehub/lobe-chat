@@ -33,7 +33,8 @@
   ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts && npm run lint",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build --webpack",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build --webpack --profile",
+    "build:profile": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build --webpack --profile",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
