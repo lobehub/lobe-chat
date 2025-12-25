@@ -61,6 +61,7 @@ import { LobeVLLMAI } from './providers/vllm';
 import { LobeVolcengineAI } from './providers/volcengine';
 import { LobeWenxinAI } from './providers/wenxin';
 import { LobeXAI } from './providers/xai';
+import { LobeXiaomiMiMoAI } from './providers/xiaomimimo';
 import { LobeXinferenceAI } from './providers/xinference';
 import { LobeZenMuxAI } from './providers/zenmux';
 import { LobeZeroOneAI } from './providers/zeroone';
@@ -131,6 +132,7 @@ export const providerRuntimeMap = {
   volcengine: LobeVolcengineAI,
   wenxin: LobeWenxinAI,
   xai: LobeXAI,
+  xiaomimimo: LobeXiaomiMiMoAI,
   xinference: LobeXinferenceAI,
   zenmux: LobeZenMuxAI,
   zeroone: LobeZeroOneAI,
