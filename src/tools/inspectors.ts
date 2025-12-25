@@ -1,6 +1,8 @@
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinInspector } from '@lobechat/types';
 
+import { CodeInterpreterInspectors } from './code-interpreter/Inspector';
+import { CodeInterpreterIdentifier } from './code-interpreter/index';
 import { LocalSystemInspectors } from './local-system/Inspector';
 import { WebBrowsingInspectors } from './web-browsing/Inspector';
 import { WebBrowsingManifest } from './web-browsing/index';
@@ -13,6 +15,7 @@ import { WebBrowsingManifest } from './web-browsing/index';
  * of tool calls in the conversation UI.
  */
 const BuiltinToolInspectors: Record<string, Record<string, BuiltinInspector>> = {
+  [CodeInterpreterIdentifier]: CodeInterpreterInspectors as Record<string, BuiltinInspector>,
   [LocalSystemManifest.identifier]: LocalSystemInspectors as Record<string, BuiltinInspector>,
   [WebBrowsingManifest.identifier]: WebBrowsingInspectors as Record<string, BuiltinInspector>,
 };

@@ -1,7 +1,10 @@
 import { LOADING_FLAT } from '@lobechat/const';
 import { type ChatToolResult, type ToolIntervention } from '@lobechat/types';
+import { safeParsePartialJSON } from '@lobechat/utils';
 import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
+
+import { getBuiltinStreaming } from '@/tools/streamings';
 
 import AbortResponse from './AbortResponse';
 import CustomRender from './CustomRender';
@@ -16,6 +19,7 @@ interface RenderProps {
   arguments?: string;
   identifier: string;
   intervention?: ToolIntervention;
+  isArgumentsStreaming?: boolean;
   /**
    * ContentBlock ID (not the group message ID)
    */
@@ -47,7 +51,31 @@ const Render = memo<RenderProps>(
     type,
     intervention,
     toolMessageId,
+    isArgumentsStreaming,
   }) => {
+    // Handle arguments streaming state
+    if (isArgumentsStreaming) {
+      // Check if there's a custom streaming renderer for this tool
+      const StreamingRenderer = getBuiltinStreaming(identifier, apiName);
+
+      if (StreamingRenderer) {
+        const args = safeParsePartialJSON(requestArgs);
+
+        return (
+          <StreamingRenderer
+            apiName={apiName}
+            args={args}
+            identifier={identifier}
+            messageId={messageId}
+            toolCallId={toolCallId}
+          />
+        );
+      }
+
+      // No custom streaming renderer, return null
+      return null;
+    }
+
     if (toolMessageId && intervention?.status === 'pending') {
       return (
         <Intervention

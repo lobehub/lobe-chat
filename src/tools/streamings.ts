@@ -1,4 +1,9 @@
+import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinStreaming } from '@lobechat/types';
+
+import { CodeInterpreterIdentifier } from './code-interpreter';
+import { CodeInterpreterStreamings } from './code-interpreter/Streaming';
+import { LocalSystemStreamings } from './local-system/Streaming';
 
 /**
  * Builtin tools streaming renderer registry
@@ -9,10 +14,8 @@ import { BuiltinStreaming } from '@lobechat/types';
  * The component should fetch streaming content from store internally.
  */
 const BuiltinToolStreamings: Record<string, Record<string, BuiltinStreaming>> = {
-  // Example:
-  // [CodeInterpreterManifest.identifier]: {
-  //   [CodeInterpreterApiName.executeCode]: ExecuteCodeStreaming,
-  // },
+  [CodeInterpreterIdentifier]: CodeInterpreterStreamings as Record<string, BuiltinStreaming>,
+  [LocalSystemManifest.identifier]: LocalSystemStreamings as Record<string, BuiltinStreaming>,
 };
 
 /**

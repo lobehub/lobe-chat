@@ -178,14 +178,18 @@ export interface BuiltinInspectorProps<Arguments = any, State = any> {
   apiName: string;
   args: Arguments;
   identifier: string;
+  /**
+   * Whether the tool arguments are currently streaming (not yet complete)
+   * Use this to distinguish between "arguments streaming" vs "tool executing" states
+   */
+  isArgumentsStreaming?: boolean;
   isLoading?: boolean;
+  partialArgs?: Arguments;
   pluginState?: State;
   result?: { content: string | null; error?: any };
 }
 
-export type BuiltinInspector = <A = any, S = any>(
-  props: BuiltinInspectorProps<A, S>,
-) => ReactNode;
+export type BuiltinInspector = <A = any, S = any>(props: BuiltinInspectorProps<A, S>) => ReactNode;
 
 // ==================== Streaming Renderer Types ====================
 
