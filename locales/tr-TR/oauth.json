@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "Yetki oturumu süresi dolmuş veya geçersiz, lütfen yetkilendirme sürecini yeniden başlatın.",
   "consent.error.sessionInvalid.title": "Yetki oturumu geçersiz",
   "consent.error.title": "Bir hata oluştu",
+  "consent.error.unknown.message": "Yetki ayrıntıları alınırken bilinmeyen bir hata oluştu",
   "consent.error.unsupportedInteraction.message": "Desteklenmeyen etkileşim türü: {promptName}",
   "consent.error.unsupportedInteraction.title": "Desteklenmeyen etkileşim türü",
   "consent.permissionsTitle": "Aşağıdaki izinleri talep et:",

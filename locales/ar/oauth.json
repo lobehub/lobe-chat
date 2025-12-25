@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "جلسة التفويض منتهية أو غير صالحة، يرجى إعادة بدء عملية التفويض.",
   "consent.error.sessionInvalid.title": "جلسة التفويض غير صالحة",
   "consent.error.title": "حدث خطأ",
+  "consent.error.unknown.message": "حدث خطأ غير معروف أثناء الحصول على تفاصيل التفويض",
   "consent.error.unsupportedInteraction.message": "نوع التفاعل غير مدعوم: {promptName}",
   "consent.error.unsupportedInteraction.title": "نوع التفاعل غير مدعوم",
   "consent.permissionsTitle": "طلب الأذونات التالية:",

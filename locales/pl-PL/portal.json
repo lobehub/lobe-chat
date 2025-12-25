@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artefakty",
   "FilePreview.tabs.chunk": "Część",
   "FilePreview.tabs.file": "Plik",
   "Plugins": "Skille",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "Aktualna lista wiedzy jest pusta. Proszę otworzyć bazę wiedzy w trakcie rozmowy, aby ją przeglądać.",
   "files": "Pliki",
   "messageDetail": "Szczegóły wiadomości",
+  "notebook.confirmDelete": "Czy na pewno chcesz usunąć ten dokument?",
+  "notebook.delete": "Usuń",
+  "notebook.empty": "Brak dokumentów. Dokumenty powiązane z bieżącym tematem pojawią się tutaj.",
+  "notebook.title": "Notatnik",
+  "openInPageEditor": "Edytuj w edytorze dokumentów",
   "title": "Okno rozszerzenia"
 }

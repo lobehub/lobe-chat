@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artefactos",
   "FilePreview.tabs.chunk": "Fragmento",
   "FilePreview.tabs.file": "Archivo",
   "Plugins": "Skills",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "La lista de conocimientos actual está vacía. Por favor, activa la base de conocimientos según sea necesario en la conversación antes de volver a revisar.",
   "files": "archivos",
   "messageDetail": "Detalles del mensaje",
+  "notebook.confirmDelete": "¿Estás seguro de que deseas eliminar este documento?",
+  "notebook.delete": "Eliminar",
+  "notebook.empty": "No hay documentos por el momento. Los documentos relacionados con este tema se mostrarán aquí.",
+  "notebook.title": "Cuaderno",
+  "openInPageEditor": "Editar en el documento",
   "title": "Ventana de expansión"
 }

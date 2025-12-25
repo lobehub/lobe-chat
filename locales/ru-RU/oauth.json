@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "Сессия авторизации истекла или недействительна, пожалуйста, начните процесс авторизации заново.",
   "consent.error.sessionInvalid.title": "Недействительная сессия авторизации",
   "consent.error.title": "Произошла ошибка",
+  "consent.error.unknown.message": "Произошла неизвестная ошибка при получении сведений об авторизации",
   "consent.error.unsupportedInteraction.message": "Неподдерживаемый тип взаимодействия: {promptName}",
   "consent.error.unsupportedInteraction.title": "Неподдерживаемый тип взаимодействия",
   "consent.permissionsTitle": "Запросить следующие разрешения:",

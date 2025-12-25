@@ -1,5 +1,4 @@
 {
-  "Artifacts": "アーティファクト",
   "FilePreview.tabs.chunk": "チャンク",
   "FilePreview.tabs.file": "ファイル",
   "Plugins": "プラグイン",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "現在の知識リストは空です。会話中に必要に応じて知識ベースを開いてからご覧ください。",
   "files": "ファイル",
   "messageDetail": "メッセージの詳細",
+  "notebook.confirmDelete": "このドキュメントを削除してもよろしいですか？",
+  "notebook.delete": "削除",
+  "notebook.empty": "現在ドキュメントはありません。このトピックに関連するドキュメントはここに表示されます。",
+  "notebook.title": "ノートブック",
+  "openInPageEditor": "ドキュメントで編集",
   "title": "拡張ウィンドウ"
 }

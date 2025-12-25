@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artefaktlar",
   "FilePreview.tabs.chunk": "Parça",
   "FilePreview.tabs.file": "Dosya",
   "Plugins": "Eklentiler",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "Mevcut bilgi listesi boş. Lütfen sohbet sırasında ihtiyaç duyduğunuz bilgi havuzunu açtıktan sonra tekrar kontrol edin.",
   "files": "Dosyalar",
   "messageDetail": "Mesaj Detayı",
+  "notebook.confirmDelete": "Bu belgeyi silmek istediğinizden emin misiniz?",
+  "notebook.delete": "Sil",
+  "notebook.empty": "Henüz belge yok, bu konuyla ilişkili belgeler burada görünecek",
+  "notebook.title": "Not Defteri",
+  "openInPageEditor": "Belge düzenleyicisinde aç",
   "title": "Genişletme Penceresi"
 }

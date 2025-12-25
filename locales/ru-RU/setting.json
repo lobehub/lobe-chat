@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "За исключением адреса по умолчанию, должен включать http(s)://",
   "llm.proxyUrl.title": "Адрес прокси API",
   "llm.waitingForMore": "Больше моделей доступно в <1>плане подключения</1>, ожидайте",
+  "llm.waitingForMoreLinkAriaLabel": "Открыть форму запроса на подключение поставщика модели",
   "marketPublish.modal.changelog.extra": "Опишите основные изменения и улучшения в этой версии",
   "marketPublish.modal.changelog.label": "Журнал изменений",
   "marketPublish.modal.changelog.maxLengthError": "Журнал изменений не должен превышать 500 символов",

@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Включващ адреса по подразбиране, трябва да включва http(s)://",
   "llm.proxyUrl.title": "Адрес на API прокси",
   "llm.waitingForMore": "Още модели са <1>планирани да бъдат добавени</1>, очаквайте",
+  "llm.waitingForMoreLinkAriaLabel": "Отворете формуляра за заявка за свързване с доставчик на модели",
   "marketPublish.modal.changelog.extra": "Опишете основните промени и подобрения в тази версия",
   "marketPublish.modal.changelog.label": "Дневник на промените",
   "marketPublish.modal.changelog.maxLengthError": "Дневникът на промените не може да надвишава 500 знака",

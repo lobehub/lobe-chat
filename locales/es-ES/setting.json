@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Además de la dirección predeterminada, debe incluir http(s)://",
   "llm.proxyUrl.title": "Dirección del proxy de la API",
   "llm.waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!",
+  "llm.waitingForMoreLinkAriaLabel": "Abrir el formulario de solicitud para integrar proveedores de modelos",
   "marketPublish.modal.changelog.extra": "Describe los principales cambios y mejoras de esta versión",
   "marketPublish.modal.changelog.label": "Registro de cambios",
   "marketPublish.modal.changelog.maxLengthError": "El registro de cambios no puede superar los 500 caracteres",

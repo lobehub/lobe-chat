@@ -25,7 +25,7 @@
   "modifier.accept": "보류",
   "modifier.acceptAll": "모두 수락",
   "modifier.reject": "취소",
-  "modifier.rejectedAll": "모두 거부",
+  "modifier.rejectAll": "모두 취소",
   "slash.h1": "제목 1",
   "slash.h2": "제목 2",
   "slash.h3": "제목 3",

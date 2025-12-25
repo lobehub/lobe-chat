@@ -1,5 +1,4 @@
 {
-  "Artifacts": "아티팩트",
   "FilePreview.tabs.chunk": "청크",
   "FilePreview.tabs.file": "파일",
   "Plugins": "기능",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "현재 지식 목록이 비어 있습니다. 지식 베이스를 활성화한 후 다시 확인해 주세요.",
   "files": "파일",
   "messageDetail": "메시지 상세",
+  "notebook.confirmDelete": "이 문서를 삭제하시겠습니까?",
+  "notebook.delete": "삭제",
+  "notebook.empty": "문서가 없습니다. 현재 주제와 관련된 문서는 여기에 표시됩니다.",
+  "notebook.title": "노트북",
+  "openInPageEditor": "문서에서 편집",
   "title": "작업 공간"
 }

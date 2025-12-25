@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Tác Phẩm",
   "FilePreview.tabs.chunk": "Phân đoạn",
   "FilePreview.tabs.file": "Tập tin",
   "Plugins": "Tiện ích",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "Danh sách kiến thức hiện tại trống, vui lòng mở kho kiến thức khi cần trong cuộc trò chuyện trước khi xem",
   "files": "Tập tin",
   "messageDetail": "Chi tiết tin nhắn",
+  "notebook.confirmDelete": "Bạn có chắc chắn muốn xóa tài liệu này không?",
+  "notebook.delete": "Xóa",
+  "notebook.empty": "Chưa có tài liệu nào, các tài liệu liên quan đến chủ đề hiện tại sẽ hiển thị tại đây",
+  "notebook.title": "Sổ tay",
+  "openInPageEditor": "Chỉnh sửa trong tài liệu",
   "title": "Cửa sổ mở rộng"
 }

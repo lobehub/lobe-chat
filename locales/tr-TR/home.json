@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "Şu anda eklenebilecek asistan yok",
   "agentSelection.noSelected": "Henüz herhangi bir asistan seçilmedi",
   "agentSelection.search": "Eşleşen asistan bulunamadı",
+  "project.create": "Yeni Proje Oluştur",
+  "project.deleteConfirm": "Bu proje silinmek üzere. Silindikten sonra geri getirilemez, lütfen işleminizi onaylayın.",
   "starter.createAgent": "Asistan Oluştur",
   "starter.createGroup": "Grup Oluştur",
   "starter.deepResearch": "Derinlemesine Araştırma",

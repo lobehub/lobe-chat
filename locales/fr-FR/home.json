@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "Aucun assistant ne peut être ajouté actuellement",
   "agentSelection.noSelected": "Aucun assistant sélectionné",
   "agentSelection.search": "Aucun assistant correspondant trouvé",
+  "project.create": "Nouveau projet",
+  "project.deleteConfirm": "Ce projet va être supprimé. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
   "starter.createAgent": "Créer un assistant",
   "starter.createGroup": "Créer un groupe",
   "starter.deepResearch": "Recherche approfondie",

@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "Понастоящем няма асистенти за добавяне",
   "agentSelection.noSelected": "Все още не е избран асистент",
   "agentSelection.search": "Няма намерени съвпадащи асистенти",
+  "project.create": "Създаване на нов проект",
+  "project.deleteConfirm": "Проектът ще бъде изтрит и няма да може да бъде възстановен. Моля, потвърдете действието си.",
   "starter.createAgent": "Създаване на асистент",
   "starter.createGroup": "Създаване на група",
   "starter.deepResearch": "Задълбочено проучване",

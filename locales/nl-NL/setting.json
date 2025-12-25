@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Moet http(s):// bevatten, naast het standaardadres",
   "llm.proxyUrl.title": "API Proxy Adres",
   "llm.waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte",
+  "llm.waitingForMoreLinkAriaLabel": "Open het aanvraagformulier voor modelproviders",
   "marketPublish.modal.changelog.extra": "Beschrijf de belangrijkste wijzigingen en verbeteringen in deze versie",
   "marketPublish.modal.changelog.label": "Wijzigingslogboek",
   "marketPublish.modal.changelog.maxLengthError": "Het wijzigingslogboek mag niet meer dan 500 tekens bevatten",

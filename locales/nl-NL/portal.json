@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artifacts",
   "FilePreview.tabs.chunk": "Chunk",
   "FilePreview.tabs.file": "Bestand",
   "Plugins": "Skills",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "De huidige kennislijst is leeg. Gelieve de kennisbank in de sessie te openen voordat u deze bekijkt.",
   "files": "Bestanden",
   "messageDetail": "Berichtdetails",
+  "notebook.confirmDelete": "Weet je zeker dat je dit document wilt verwijderen?",
+  "notebook.delete": "Verwijderen",
+  "notebook.empty": "Er zijn momenteel geen documenten. Documenten die aan dit onderwerp zijn gekoppeld, worden hier weergegeven.",
+  "notebook.title": "Notitieboek",
+  "openInPageEditor": "Bewerken in documenteditor",
   "title": "Uitbreidingsvenster"
 }

@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "Hiện tại không có trợ lý nào để thêm",
   "agentSelection.noSelected": "Chưa chọn trợ lý nào",
   "agentSelection.search": "Không tìm thấy trợ lý phù hợp",
+  "project.create": "Tạo dự án mới",
+  "project.deleteConfirm": "Sắp xóa dự án này. Sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
   "starter.createAgent": "Tạo trợ lý",
   "starter.createGroup": "Tạo nhóm",
   "starter.deepResearch": "Nghiên cứu chuyên sâu",

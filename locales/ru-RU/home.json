@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "В данный момент нет помощников для добавления",
   "agentSelection.noSelected": "Помощники ещё не выбраны",
   "agentSelection.search": "Совпадающих помощников не найдено",
+  "project.create": "Создать новый проект",
+  "project.deleteConfirm": "Вы собираетесь удалить этот проект. После удаления восстановление будет невозможно. Пожалуйста, подтвердите своё действие.",
   "starter.createAgent": "Создать помощника",
   "starter.createGroup": "Создать группу",
   "starter.deepResearch": "Исследование",

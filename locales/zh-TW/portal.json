@@ -1,5 +1,4 @@
 {
-  "Artifacts": "文物",
   "FilePreview.tabs.chunk": "分塊",
   "FilePreview.tabs.file": "檔案",
   "Plugins": "外掛",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "當前知識列表為空，請在會話中按需開啟知識庫後再查看",
   "files": "檔案",
   "messageDetail": "消息詳情",
+  "notebook.confirmDelete": "確定要刪除這份文件嗎？",
+  "notebook.delete": "刪除",
+  "notebook.empty": "暫無文件，當前主題關聯的文件將會顯示在這裡",
+  "notebook.title": "筆記本",
+  "openInPageEditor": "在文稿中編輯",
   "title": "擴展視窗"
 }

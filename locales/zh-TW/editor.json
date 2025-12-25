@@ -25,7 +25,7 @@
   "modifier.accept": "保留",
   "modifier.acceptAll": "全部接受",
   "modifier.reject": "撤銷",
-  "modifier.rejectedAll": "全部拒絕",
+  "modifier.rejectAll": "全部取消",
   "slash.h1": "一級標題",
   "slash.h2": "二級標題",
   "slash.h3": "三級標題",

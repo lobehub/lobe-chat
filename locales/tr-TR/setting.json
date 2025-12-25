@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Varsayılan adres dışında, http(s):// içermelidir",
   "llm.proxyUrl.title": "API Proxy Adresi",
   "llm.waitingForMore": "Daha fazla model eklenmesi planlanıyor",
+  "llm.waitingForMoreLinkAriaLabel": "Model sağlayıcı başvuru formunu aç",
   "marketPublish.modal.changelog.extra": "Bu sürümdeki başlıca değişiklikleri ve iyileştirmeleri açıklayın",
   "marketPublish.modal.changelog.label": "Değişiklik Günlüğü",
   "marketPublish.modal.changelog.maxLengthError": "Değişiklik günlüğü 500 karakteri geçemez",

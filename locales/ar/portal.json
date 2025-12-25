@@ -1,5 +1,4 @@
 {
-  "Artifacts": "القطع الأثرية",
   "FilePreview.tabs.chunk": "جزء",
   "FilePreview.tabs.file": "ملف",
   "Plugins": "ملحقات",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "قائمة المعرفة الحالية فارغة، يرجى فتح قاعدة المعرفة حسب الحاجة في المحادثة قبل العرض",
   "files": "ملفات",
   "messageDetail": "تفاصيل الرسالة",
+  "notebook.confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المستند؟",
+  "notebook.delete": "حذف",
+  "notebook.empty": "لا توجد مستندات حالياً، ستظهر المستندات المرتبطة بالموضوع هنا",
+  "notebook.title": "دفتر الملاحظات",
+  "openInPageEditor": "تحرير في المستند",
   "title": "نافذة موسعة"
 }

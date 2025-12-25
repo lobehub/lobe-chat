@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "必須包含 http(s):// 以外的預設地址",
   "llm.proxyUrl.title": "API 代理位址",
   "llm.waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待",
+  "llm.waitingForMoreLinkAriaLabel": "開啟模型服務商接入需求表單",
   "marketPublish.modal.changelog.extra": "描述此版本的主要變更與改進",
   "marketPublish.modal.changelog.label": "變更日誌",
   "marketPublish.modal.changelog.maxLengthError": "變更日誌不能超過 500 個字元",

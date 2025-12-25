@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "يجب أن يتضمن عنوان الوكيل API بالإضافة إلى العنوان الافتراضي http(s)://",
   "llm.proxyUrl.title": "عنوان وكيل API",
   "llm.waitingForMore": "يتم <1>التخطيط لتوفير</1> المزيد من النماذج، ترقبوا المزيد",
+  "llm.waitingForMoreLinkAriaLabel": "افتح نموذج طلب دمج مزود الخدمة النموذجية",
   "marketPublish.modal.changelog.extra": "صف التغييرات والتحسينات الرئيسية في هذا الإصدار",
   "marketPublish.modal.changelog.label": "سجل التغييرات",
   "marketPublish.modal.changelog.maxLengthError": "لا يمكن أن يتجاوز سجل التغييرات 500 حرف",

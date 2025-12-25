@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "Сесията за разрешение е изтекла или невалидна, моля, стартирайте отново процеса на разрешение.",
   "consent.error.sessionInvalid.title": "Невалидна сесия за разрешение",
   "consent.error.title": "Възникна грешка",
+  "consent.error.unknown.message": "Възникна неизвестна грешка при получаване на информация за разрешението",
   "consent.error.unsupportedInteraction.message": "Неподдържан тип взаимодействие: {promptName}",
   "consent.error.unsupportedInteraction.title": "Неподдържан тип взаимодействие",
   "consent.permissionsTitle": "Искаме следните разрешения:",

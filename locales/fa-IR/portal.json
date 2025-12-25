@@ -1,5 +1,4 @@
 {
-  "Artifacts": "مصنوعات",
   "FilePreview.tabs.chunk": "بخش",
   "FilePreview.tabs.file": "فایل",
   "Plugins": "افزونه‌ها",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "فهرست دانش فعلی خالی است",
   "files": "فایل‌ها",
   "messageDetail": "جزئیات پیام",
+  "notebook.confirmDelete": "آیا مطمئن هستید که می‌خواهید این سند را حذف کنید؟",
+  "notebook.delete": "حذف",
+  "notebook.empty": "هیچ سندی موجود نیست. اسناد مرتبط با موضوع فعلی در اینجا نمایش داده خواهند شد.",
+  "notebook.title": "دفترچه",
+  "openInPageEditor": "ویرایش در سند",
   "title": "فضای کاری"
 }
