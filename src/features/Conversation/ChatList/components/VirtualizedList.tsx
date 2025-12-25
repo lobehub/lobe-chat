@@ -161,11 +161,11 @@ const SlotRow = memo<SlotRowProps>(
         style={{
           boxSizing: 'border-box',
           left: 0,
-          minHeight: active ? vItem.size : 0,
+          minHeight: active && vItem ? vItem.size : 0,
           pointerEvents: active ? 'auto' : 'none',
           position: 'absolute',
           top: 0,
-          transform: `translateY(${active ? vItem.start : -999_999}px)`,
+          transform: `translateY(${active && vItem ? vItem.start : -999_999}px)`,
           visibility: active ? 'visible' : 'hidden',
           width: '100%',
           willChange: 'transform',
