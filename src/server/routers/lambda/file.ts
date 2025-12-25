@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
-import { checkFileStorageUsage } from '@/business/trpc/middlewares/lambda';
+import { checkFileStorageUsage } from '@/business/server/trpc-middlewares/lambda';
 import { serverDBEnv } from '@/config/db';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
