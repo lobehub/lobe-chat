@@ -13,13 +13,7 @@ import {
 } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
-import {
-  BookTextIcon,
-  BookmarkCheckIcon,
-  BookmarkIcon,
-  CoinsIcon,
-  DotIcon,
-} from 'lucide-react';
+import { BookTextIcon, BookmarkCheckIcon, BookmarkIcon, CoinsIcon, DotIcon } from 'lucide-react';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,7 +64,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { mobile = isMobile } = useResponsive();
   const { isAuthenticated, signIn, session } = useMarketAuth();
   const [favoriteLoading, setFavoriteLoading] = useState(false);
-  const [likeLoading, setLikeLoading] = useState(false);
+  const [, setLikeLoading] = useState(false);
 
   // Set access token for social service
   if (session?.accessToken) {
@@ -121,6 +115,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
     }
   };
 
+  // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
   const handleLikeClick = async () => {
     if (!isAuthenticated) {
       await signIn();

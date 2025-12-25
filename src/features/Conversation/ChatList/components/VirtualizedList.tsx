@@ -123,7 +123,7 @@ const useSlotAssignments = (virtualItems: VirtualItem[], poolSize: number) => {
     for (const item of virtualItems) {
       if (!indexToSlot.current.has(item.index)) {
         const slot = freeSlots.current.pop();
-        if (slot == null) continue;
+        if (slot === undefined) continue;
         indexToSlot.current.set(item.index, slot);
         slotToIndexRef.current[slot] = item.index;
       }
@@ -138,10 +138,10 @@ const useSlotAssignments = (virtualItems: VirtualItem[], poolSize: number) => {
 const SlotRow = memo<SlotRowProps>(
   ({ slotId, index, vItem, messageId, itemContent, virtualizer }) => {
     const lastAssignedRef = useRef<{ id: string; index: number } | null>(null);
-    const active = index != null && vItem != null && messageId != null;
+    const active = index !== null && vItem !== null && messageId !== null;
 
     useLayoutEffect(() => {
-      if (index == null || messageId == null) return;
+      if (index === null || messageId === null) return;
       lastAssignedRef.current = { id: messageId, index };
     }, [index, messageId]);
 
@@ -150,7 +150,7 @@ const SlotRow = memo<SlotRowProps>(
     const renderIndex = active ? index : (stable?.index ?? null);
 
     const content =
-      renderId != null && renderIndex != null ? itemContent(renderIndex, renderId) : null;
+      renderId !== null && renderIndex !== null ? itemContent(renderIndex, renderId) : null;
     const isAgentCouncil = renderId?.includes('agentCouncil') ?? false;
 
     return (
@@ -238,7 +238,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
     setScrollEl(node);
   }, []);
 
-  const { overscan, poolSize } = useDynamicPoolSize({
+  const { poolSize } = useDynamicPoolSize({
     estimateSize,
     scrollEl,
   });
@@ -327,8 +327,8 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
         <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
           {Array.from({ length: poolSize }, (_, slotId) => {
             const index = slotToIndex[slotId] ?? null;
-            const vItem = index != null ? vItemByIndex.get(index) : undefined;
-            const messageId = index != null ? dataSource[index] : null;
+            const vItem = index !== null ? vItemByIndex.get(index) : undefined;
+            const messageId = index !== null ? dataSource[index] : null;
 
             return (
               <SlotRow
