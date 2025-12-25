@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "Die Autorisierungssitzung ist abgelaufen oder ungültig. Bitte starten Sie den Autorisierungsprozess erneut.",
   "consent.error.sessionInvalid.title": "Ungültige Autorisierungssitzung",
   "consent.error.title": "Ein Fehler ist aufgetreten",
+  "consent.error.unknown.message": "Beim Abrufen der Autorisierungsdetails ist ein unbekannter Fehler aufgetreten",
   "consent.error.unsupportedInteraction.message": "Nicht unterstützter Interaktionstyp: {promptName}",
   "consent.error.unsupportedInteraction.title": "Nicht unterstützter Interaktionstyp",
   "consent.permissionsTitle": "Anforderung der folgenden Berechtigungen:",

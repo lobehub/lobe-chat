@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "Phiên ủy quyền đã hết hạn hoặc không hợp lệ, vui lòng khởi động lại quy trình ủy quyền.",
   "consent.error.sessionInvalid.title": "Phiên ủy quyền không hợp lệ",
   "consent.error.title": "Đã xảy ra lỗi",
+  "consent.error.unknown.message": "Đã xảy ra lỗi không xác định khi lấy thông tin ủy quyền",
   "consent.error.unsupportedInteraction.message": "Loại tương tác không được hỗ trợ: {promptName}",
   "consent.error.unsupportedInteraction.title": "Loại tương tác không được hỗ trợ",
   "consent.permissionsTitle": "Yêu cầu các quyền sau:",

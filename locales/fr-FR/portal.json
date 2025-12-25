@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artifacts",
   "FilePreview.tabs.chunk": "Fragment",
   "FilePreview.tabs.file": "Fichier",
   "Plugins": "Skills",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "La liste des connaissances est actuellement vide. Veuillez activer la base de connaissances selon vos besoins dans la conversation avant de consulter.",
   "files": "Fichiers",
   "messageDetail": "Détails du message",
+  "notebook.confirmDelete": "Êtes-vous sûr de vouloir supprimer ce document ?",
+  "notebook.delete": "Supprimer",
+  "notebook.empty": "Aucun document pour le moment. Les documents liés à ce sujet s'afficheront ici.",
+  "notebook.title": "Carnet de notes",
+  "openInPageEditor": "Modifier dans le document",
   "title": "Fenêtre d'extension"
 }

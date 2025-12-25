@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "در حال حاضر هیچ دستیاری برای افزودن وجود ندارد",
   "agentSelection.noSelected": "هیچ دستیاری انتخاب نشده است",
   "agentSelection.search": "دستیار مطابقی یافت نشد",
+  "project.create": "ایجاد پروژه جدید",
+  "project.deleteConfirm": "این پروژه در شرف حذف شدن است. پس از حذف، امکان بازیابی آن وجود ندارد. لطفاً از تصمیم خود اطمینان حاصل کنید.",
   "starter.createAgent": "ایجاد دستیار",
   "starter.createGroup": "ایجاد گروه",
   "starter.deepResearch": "پژوهش عمیق",

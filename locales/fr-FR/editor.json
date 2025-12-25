@@ -25,7 +25,7 @@
   "modifier.accept": "Conserver",
   "modifier.acceptAll": "Tout accepter",
   "modifier.reject": "Annuler",
-  "modifier.rejectedAll": "Tout refuser",
+  "modifier.rejectAll": "Tout annuler",
   "slash.h1": "Titre de niveau 1",
   "slash.h2": "Titre de niveau 2",
   "slash.h3": "Titre de niveau 3",

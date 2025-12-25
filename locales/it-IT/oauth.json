@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "La sessione di autorizzazione è scaduta o non valida, per favore riavvia il processo di autorizzazione.",
   "consent.error.sessionInvalid.title": "Sessione di autorizzazione non valida",
   "consent.error.title": "Si è verificato un errore",
+  "consent.error.unknown.message": "Si è verificato un errore sconosciuto durante il recupero dei dettagli dell'autorizzazione",
   "consent.error.unsupportedInteraction.message": "Tipo di interazione non supportato: {promptName}",
   "consent.error.unsupportedInteraction.title": "Tipo di interazione non supportato",
   "consent.permissionsTitle": "Richiesta delle seguenti autorizzazioni:",

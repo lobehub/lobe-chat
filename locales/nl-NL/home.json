@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "Er zijn momenteel geen assistenten toe te voegen",
   "agentSelection.noSelected": "Er is nog geen assistent geselecteerd",
   "agentSelection.search": "Geen overeenkomende assistenten gevonden",
+  "project.create": "Nieuw project aanmaken",
+  "project.deleteConfirm": "Je staat op het punt dit project te verwijderen. Na verwijdering kan het niet worden hersteld. Bevestig je actie alstublieft.",
   "starter.createAgent": "Assistent aanmaken",
   "starter.createGroup": "Groep aanmaken",
   "starter.deepResearch": "Diepgaand onderzoek",

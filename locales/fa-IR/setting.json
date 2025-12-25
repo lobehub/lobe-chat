@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "باید شامل http(s):// باشد، به جز آدرس پیش‌فرض",
   "llm.proxyUrl.title": "آدرس پروکسی API",
   "llm.waitingForMore": "مدل‌های بیشتری در حال <1>برنامه‌ریزی برای اضافه شدن</1> هستند، لطفاً منتظر بمانید",
+  "llm.waitingForMoreLinkAriaLabel": "فرم درخواست اتصال به ارائه‌دهنده خدمات مدل را باز کنید",
   "marketPublish.modal.changelog.extra": "توضیحی درباره تغییرات و بهبودهای اصلی این نسخه ارائه دهید",
   "marketPublish.modal.changelog.label": "گزارش تغییرات",
   "marketPublish.modal.changelog.maxLengthError": "گزارش تغییرات نباید بیش از ۵۰۰ کاراکتر باشد",

@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Außer der Standardadresse muss http(s):// enthalten sein",
   "llm.proxyUrl.title": "API-Proxy-Adresse",
   "llm.waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates",
+  "llm.waitingForMoreLinkAriaLabel": "Formular für Anforderungen an Modellanbieter öffnen",
   "marketPublish.modal.changelog.extra": "Beschreiben Sie die wichtigsten Änderungen und Verbesserungen in dieser Version",
   "marketPublish.modal.changelog.label": "Änderungsprotokoll",
   "marketPublish.modal.changelog.maxLengthError": "Das Änderungsprotokoll darf maximal 500 Zeichen enthalten",

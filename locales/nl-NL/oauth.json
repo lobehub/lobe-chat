@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "De autorisatiesessie is verlopen of ongeldig, start het autorisatieproces opnieuw.",
   "consent.error.sessionInvalid.title": "Ongeldige autorisatiesessie",
   "consent.error.title": "Er is een fout opgetreden",
+  "consent.error.unknown.message": "Er is een onbekende fout opgetreden bij het ophalen van de toestemmingsgegevens",
   "consent.error.unsupportedInteraction.message": "Niet-ondersteund interactietype: {promptName}",
   "consent.error.unsupportedInteraction.title": "Niet-ondersteund interactietype",
   "consent.permissionsTitle": "Vraag om de volgende toestemmingen:",

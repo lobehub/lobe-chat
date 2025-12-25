@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
   "llm.proxyUrl.title": "Địa chỉ Proxy API",
   "llm.waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi",
+  "llm.waitingForMoreLinkAriaLabel": "Mở biểu mẫu yêu cầu tích hợp nhà cung cấp mô hình",
   "marketPublish.modal.changelog.extra": "Mô tả những thay đổi và cải tiến chính trong phiên bản này",
   "marketPublish.modal.changelog.label": "Nhật ký thay đổi",
   "marketPublish.modal.changelog.maxLengthError": "Nhật ký thay đổi không được vượt quá 500 ký tự",

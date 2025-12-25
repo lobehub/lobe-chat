@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "La sesión de autorización ha expirado o es inválida, por favor inicie nuevamente el proceso de autorización.",
   "consent.error.sessionInvalid.title": "Sesión de autorización inválida",
   "consent.error.title": "Ocurrió un error",
+  "consent.error.unknown.message": "Se produjo un error desconocido al obtener los detalles de la autorización",
   "consent.error.unsupportedInteraction.message": "Tipo de interacción no soportado: {promptName}",
   "consent.error.unsupportedInteraction.title": "Tipo de interacción no soportado",
   "consent.permissionsTitle": "Solicitar los siguientes permisos:",

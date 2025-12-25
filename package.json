@@ -360,7 +360,7 @@
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.19.74",
     "@lobechat/types": "workspace:*",
-    "@lobehub/i18n-cli": "^1.25.1",
+    "@lobehub/i18n-cli": "^1.26.0",
     "@lobehub/lint": "^1.26.3",
     "@lobehub/market-types": "^1.11.5",
     "@lobehub/seo-cli": "^1.7.0",

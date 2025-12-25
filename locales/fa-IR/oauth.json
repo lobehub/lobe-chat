@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "جلسه مجوز منقضی یا نامعتبر است، لطفاً فرآیند مجوز را دوباره آغاز کنید.",
   "consent.error.sessionInvalid.title": "جلسه مجوز نامعتبر",
   "consent.error.title": "خطا رخ داده است",
+  "consent.error.unknown.message": "خطای ناشناخته‌ای هنگام دریافت جزئیات مجوز رخ داد",
   "consent.error.unsupportedInteraction.message": "نوع تعامل پشتیبانی نمی‌شود: {promptName}",
   "consent.error.unsupportedInteraction.title": "نوع تعامل پشتیبانی نمی‌شود",
   "consent.permissionsTitle": "درخواست مجوزهای زیر:",

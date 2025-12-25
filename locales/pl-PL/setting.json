@@ -124,6 +124,7 @@
   "llm.proxyUrl.desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
   "llm.proxyUrl.title": "Adres proxy API",
   "llm.waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość",
+  "llm.waitingForMoreLinkAriaLabel": "Otwórz formularz zgłoszeniowy dla dostawców usług modelu",
   "marketPublish.modal.changelog.extra": "Opisz główne zmiany i ulepszenia w tej wersji",
   "marketPublish.modal.changelog.label": "Dziennik zmian",
   "marketPublish.modal.changelog.maxLengthError": "Dziennik zmian nie może przekraczać 500 znaków",

@@ -3,6 +3,8 @@
   "agentSelection.noAvailable": "Obecnie brak asystentów do dodania",
   "agentSelection.noSelected": "Nie wybrano żadnego asystenta",
   "agentSelection.search": "Nie znaleziono pasujących asystentów",
+  "project.create": "Utwórz nowy projekt",
+  "project.deleteConfirm": "Projekt zostanie usunięty. Po usunięciu nie będzie można go odzyskać. Proszę potwierdzić swoją decyzję.",
   "starter.createAgent": "Utwórz Asystenta",
   "starter.createGroup": "Utwórz grupę",
   "starter.deepResearch": "Dogłębne Badania",

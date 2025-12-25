@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artefakte",
   "FilePreview.tabs.chunk": "Chunk",
   "FilePreview.tabs.file": "Datei",
   "Plugins": "Skills",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "Die aktuelle Wissensliste ist leer. Bitte aktivieren Sie die Wissensdatenbank nach Bedarf in der Sitzung, um sie anzuzeigen.",
   "files": "Dateien",
   "messageDetail": "Nachrichtendetails",
+  "notebook.confirmDelete": "Möchten Sie dieses Dokument wirklich löschen?",
+  "notebook.delete": "Löschen",
+  "notebook.empty": "Keine Dokumente vorhanden. Die mit diesem Thema verknüpften Dokumente werden hier angezeigt.",
+  "notebook.title": "Notizbuch",
+  "openInPageEditor": "Im Dokumenteditor bearbeiten",
   "title": "Erweiterungsfenster"
 }

@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artefatti",
   "FilePreview.tabs.chunk": "Blocco",
   "FilePreview.tabs.file": "File",
   "Plugins": "Skill",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "L'elenco delle conoscenze attuale è vuoto. Si prega di attivare il database delle conoscenze durante la conversazione per visualizzarlo.",
   "files": "File",
   "messageDetail": "Dettagli del messaggio",
+  "notebook.confirmDelete": "Sei sicuro di voler eliminare questo documento?",
+  "notebook.delete": "Elimina",
+  "notebook.empty": "Nessun documento disponibile. I documenti associati all'argomento corrente verranno visualizzati qui.",
+  "notebook.title": "Taccuino",
+  "openInPageEditor": "Modifica nel documento",
   "title": "Finestra di espansione"
 }

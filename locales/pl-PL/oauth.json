@@ -5,6 +5,7 @@
   "consent.error.sessionInvalid.message": "Sesja autoryzacyjna wygasła lub jest nieprawidłowa, proszę ponownie rozpocząć proces autoryzacji.",
   "consent.error.sessionInvalid.title": "Sesja autoryzacyjna nieprawidłowa",
   "consent.error.title": "Wystąpił błąd",
+  "consent.error.unknown.message": "Wystąpił nieznany błąd podczas pobierania szczegółów autoryzacji",
   "consent.error.unsupportedInteraction.message": "Nieobsługiwany typ interakcji: {promptName}",
   "consent.error.unsupportedInteraction.title": "Nieobsługiwany typ interakcji",
   "consent.permissionsTitle": "Proszę o następujące uprawnienia:",

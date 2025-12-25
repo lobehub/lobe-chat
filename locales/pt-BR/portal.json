@@ -1,5 +1,4 @@
 {
-  "Artifacts": "Artefatos",
   "FilePreview.tabs.chunk": "Parte",
   "FilePreview.tabs.file": "Arquivo",
   "Plugins": "Skills",
@@ -14,5 +13,10 @@
   "emptyKnowledgeList": "A lista de conhecimentos atual está vazia. Por favor, ative o repositório de conhecimentos conforme necessário durante a conversa antes de visualizar.",
   "files": "Arquivos",
   "messageDetail": "Detalhes da mensagem",
+  "notebook.confirmDelete": "Tem certeza de que deseja excluir este documento?",
+  "notebook.delete": "Excluir",
+  "notebook.empty": "Nenhum documento disponível no momento. Os documentos relacionados a este tópico serão exibidos aqui.",
+  "notebook.title": "Bloco de Notas",
+  "openInPageEditor": "Editar no editor de páginas",
   "title": "Janela de Expansão"
 }
