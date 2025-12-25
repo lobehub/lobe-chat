@@ -7,16 +7,13 @@ import { useLocation } from 'react-router-dom';
 import StoreSearchBar from '@/app/[variants]/(main)/community/features/Search';
 import UserAvatar from '@/app/[variants]/(main)/community/features/UserAvatar';
 import NavHeader from '@/features/NavHeader';
-import { DiscoverTab } from '@/types/discover';
 
-import { useNav } from '../../features/useNav';
-import MarketSourceSwitch from '../assistant/features/MarketSourceSwitch';
 import SortButton from '../features/SortButton';
 
 const Header = memo(() => {
   const theme = useTheme();
   const location = useLocation();
-  const { activeKey } = useNav();
+  // const { activeKey } = useNav();
   const isHome = location.pathname === '/';
 
   return (
@@ -25,7 +22,7 @@ const Header = memo(() => {
       right={
         !isHome && (
           <>
-            {activeKey === DiscoverTab.Assistants && <MarketSourceSwitch />}
+            {/*{activeKey === DiscoverTab.Assistants && <MarketSourceSwitch />}*/}
             <SortButton />
             <UserAvatar />
           </>

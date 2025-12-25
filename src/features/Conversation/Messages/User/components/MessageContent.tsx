@@ -14,14 +14,10 @@ const UserMessageContent = memo<UIChatMessage>(
     const markdownProps = useMarkdown(id);
     return (
       <Flexbox gap={8} id={id}>
-        <MarkdownMessage {...markdownProps}>{content}</MarkdownMessage>
+        {content && <MarkdownMessage {...markdownProps}>{content}</MarkdownMessage>}
         {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
         {videoList && videoList?.length > 0 && <VideoFileListViewer items={videoList} />}
-        {fileList && fileList?.length > 0 && (
-          <div style={{ marginTop: 8 }}>
-            <FileListViewer items={fileList} />
-          </div>
-        )}
+        {fileList && fileList?.length > 0 && <FileListViewer items={fileList} />}
       </Flexbox>
     );
   },

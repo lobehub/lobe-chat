@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@lobehub/ui';
-import { UserMinus, UserPlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -53,10 +52,14 @@ const FollowButton = memo<FollowButtonProps>(({ userId }) => {
 
   return (
     <Button
-      icon={isFollowing ? UserMinus : UserPlus}
       loading={loading}
       onClick={handleClick}
       shape={'round'}
+      size={'large'}
+      style={{
+        fontWeight: 500,
+        minWidth: 120,
+      }}
       type={isFollowing ? 'default' : 'primary'}
     >
       {isFollowing ? t('user.unfollow') : t('user.follow')}

@@ -5,16 +5,16 @@ import { ActionIcon, Avatar, Button, Flexbox, Icon, Tag, Text, Tooltip } from '@
 import { App } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import {
+  BookmarkIcon,
+  BookmarkMinusIcon,
   CircleIcon,
   DotIcon,
   DownloadIcon,
-  Heart,
-  type LucideProps,
   ScaleIcon,
   StarIcon,
 } from 'lucide-react';
 import qs from 'query-string';
-import { useState , memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
@@ -192,16 +192,6 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
               {!mobile && scores}
             </Flexbox>
             <Flexbox align={'center'} gap={6} horizontal>
-              <Tooltip title={isFavorited ? t('assistant.unfavorite') : t('assistant.favorite')}>
-                <ActionIcon
-                  icon={(props: LucideProps) => (
-                    <Heart {...props} fill={isFavorited ? 'currentColor' : 'none'} />
-                  )}
-                  loading={favoriteLoading}
-                  onClick={handleFavoriteClick}
-                  style={isFavorited ? { color: 'var(--lobe-color-error)' } : undefined}
-                />
-              </Tooltip>
               {recommendedDeployment?.installationMethod && (
                 <InstallationIcon type={recommendedDeployment.installationMethod} />
               )}
@@ -215,6 +205,14 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
                   <ActionIcon fill={theme.colorTextDescription} icon={Github} />
                 </a>
               )}
+              <Tooltip title={isFavorited ? t('assistant.unfavorite') : t('assistant.favorite')}>
+                <ActionIcon
+                  icon={isFavorited ? BookmarkMinusIcon : BookmarkIcon}
+                  loading={favoriteLoading}
+                  onClick={handleFavoriteClick}
+                  variant={isFavorited ? 'outlined' : undefined}
+                />
+              </Tooltip>
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>

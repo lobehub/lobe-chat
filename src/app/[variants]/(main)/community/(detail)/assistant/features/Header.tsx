@@ -1,10 +1,25 @@
 'use client';
 
 import { MCP } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Flexbox, Icon, Text, Tooltip, TooltipGroup } from '@lobehub/ui';
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Flexbox,
+  Icon,
+  Text,
+  Tooltip,
+  TooltipGroup,
+} from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
-import { BookTextIcon, CoinsIcon, DotIcon, Heart, type LucideProps } from 'lucide-react';
+import {
+  BookTextIcon,
+  BookmarkCheckIcon,
+  BookmarkIcon,
+  CoinsIcon,
+  DotIcon,
+} from 'lucide-react';
 import qs from 'query-string';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -154,12 +169,10 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
             </Flexbox>
             <Tooltip title={isFavorited ? t('assistant.unfavorite') : t('assistant.favorite')}>
               <ActionIcon
-                icon={(props: LucideProps) => (
-                  <Heart {...props} fill={isFavorited ? 'currentColor' : 'none'} />
-                )}
+                icon={isFavorited ? BookmarkCheckIcon : BookmarkIcon}
                 loading={favoriteLoading}
                 onClick={handleFavoriteClick}
-                style={isFavorited ? { color: 'var(--lobe-color-error)' } : undefined}
+                variant={isFavorited ? 'outlined' : undefined}
               />
             </Tooltip>
           </Flexbox>
