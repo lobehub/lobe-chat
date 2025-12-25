@@ -7,7 +7,7 @@ import { memo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import PageEditor from '@/features/PageEditor';
+import { PageEditor } from '@/features/PageEditor';
 import { documentService } from '@/services/document';
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
