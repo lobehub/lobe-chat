@@ -178,6 +178,7 @@ IMPORTANT:
 - For modify operations, the litexml MUST include the id attribute of the node to update
 - Never use <span> tags in content. Use plain text directly with inline formatting tags (<b>, <i>, <u>, <s>)
 - Batch operations are more efficient and apply all changes atomically
+- CRITICAL: If the text content in litexml contains double quote characters (", ", "), you MUST escape them as \\" to avoid breaking JSON parsing. For example: '<p id="abc">He said \\"hello\\"</p>' or '<p id="abc">这是\\"开放\\"的时代</p>'
 
 ## Page Metadata
 
