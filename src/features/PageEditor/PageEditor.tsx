@@ -74,7 +74,7 @@ const PageEditorCanvas = memo(() => {
  *
  * A reusable component. Should NOT depend on context.
  */
-const PageEditor: FC<PageEditorProps> = ({
+export const PageEditor: FC<PageEditorProps> = ({
   pageId,
   knowledgeBaseId,
   onDocumentIdChange,
@@ -106,5 +106,3 @@ const PageEditor: FC<PageEditorProps> = ({
     </PageAgentProvider>
   );
 };
-
-export default PageEditor;

@@ -226,7 +226,6 @@ export const streamingExecutor: StateCreator<
             },
           },
         };
-        console.log('runtimeInitialContext', runtimeInitialContext);
         log(
           '[internal_createAgentState] Page Agent detected, injected initialContext.pageEditor with title: %s',
           pageContentContext.metadata.title,
