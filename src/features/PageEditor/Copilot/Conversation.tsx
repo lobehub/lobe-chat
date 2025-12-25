@@ -1,10 +1,14 @@
 import { Flexbox } from '@lobehub/ui';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
+import DragUploadZone from '@/components/DragUploadZone';
 import type { ActionKeys } from '@/features/ChatInput';
 import { ChatInput, ChatList } from '@/features/Conversation';
+import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
+import { useFileStore } from '@/store/file';
 
 import CopilotToolbar from './Toolbar';
 import Welcome from './Welcome';
@@ -29,20 +33,46 @@ const Conversation = memo<ConversationProps>(({ agentId }) => {
 
   const currentAgentId = activeAgentId || agentId;
 
+  // Get agent's model info for vision support check
+  const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(currentAgentId)(s));
+  const provider = useAgentStore((s) =>
+    agentByIdSelectors.getAgentModelProviderById(currentAgentId)(s),
+  );
+  const canUploadImage = useModelSupportVision(model, provider);
+  const uploadFiles = useFileStore((s) => s.uploadChatFiles);
+
+  const handleUploadFiles = useCallback(
+    async (files: File[]) => {
+      const filteredFiles = files.filter((file) => {
+        if (canUploadImage) return true;
+        return !file.type.startsWith('image');
+      });
+
+      if (filteredFiles.length > 0) {
+        uploadFiles(filteredFiles);
+      }
+    },
+    [canUploadImage, uploadFiles],
+  );
+
   return (
-    <Flexbox
-      flex={1}
-      height={'100%'}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ minWidth: 300 }}
+    <DragUploadZone
+      onUploadFiles={handleUploadFiles}
+      style={{ flex: 1, height: '100%', minWidth: 300 }}
     >
-      <CopilotToolbar agentId={currentAgentId} isHovered={isHovered} />
-      <Flexbox flex={1} style={{ overflow: 'hidden' }}>
-        <ChatList welcome={<Welcome />} />
+      <Flexbox
+        flex={1}
+        height={'100%'}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <CopilotToolbar agentId={currentAgentId} isHovered={isHovered} />
+        <Flexbox flex={1} style={{ overflow: 'hidden' }}>
+          <ChatList welcome={<Welcome />} />
+        </Flexbox>
+        <ChatInput leftActions={actions} />
       </Flexbox>
-      <ChatInput leftActions={actions} />
-    </Flexbox>
+    </DragUploadZone>
   );
 });
 

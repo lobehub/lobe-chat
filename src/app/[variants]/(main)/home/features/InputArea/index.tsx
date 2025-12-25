@@ -1,8 +1,13 @@
 import { Flexbox } from '@lobehub/ui';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 
+import DragUploadZone from '@/components/DragUploadZone';
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
+import { useModelSupportVision } from '@/hooks/useModelSupportVision';
+import { useAgentStore } from '@/store/agent';
+import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
+import { useFileStore } from '@/store/file';
 import { useHomeStore } from '@/store/home';
 
 import ModeHeader from './ModeHeader';
@@ -14,6 +19,28 @@ const leftActions: ActionKeys[] = ['model', 'search', 'fileUpload'];
 const InputArea = memo(() => {
   const { loading, send, inboxAgentId } = useSend();
   const inputActiveMode = useHomeStore((s) => s.inputActiveMode);
+
+  // Get agent's model info for vision support check
+  const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(inboxAgentId)(s));
+  const provider = useAgentStore((s) =>
+    agentByIdSelectors.getAgentModelProviderById(inboxAgentId)(s),
+  );
+  const canUploadImage = useModelSupportVision(model, provider);
+  const uploadFiles = useFileStore((s) => s.uploadChatFiles);
+
+  const handleUploadFiles = useCallback(
+    async (files: File[]) => {
+      const filteredFiles = files.filter((file) => {
+        if (canUploadImage) return true;
+        return !file.type.startsWith('image');
+      });
+
+      if (filteredFiles.length > 0) {
+        uploadFiles(filteredFiles);
+      }
+    },
+    [canUploadImage, uploadFiles],
+  );
 
   // A slot to insert content above the chat input
   // Override some default behavior of the chat input
@@ -31,30 +58,32 @@ const InputArea = memo(() => {
 
   return (
     <Flexbox gap={16} style={{ marginBottom: 16 }}>
-      <ChatInputProvider
-        agentId={inboxAgentId}
-        chatInputEditorRef={(instance) => {
-          if (!instance) return;
-          useChatStore.setState({ mainInputEditor: instance });
-        }}
-        leftActions={leftActions}
-        onMarkdownContentChange={(content) => {
-          useChatStore.setState({ inputMessage: content });
-        }}
-        onSend={send}
-        sendButtonProps={{
-          disabled: loading,
-          generating: loading,
-          onStop: () => {},
-          shape: 'round',
-        }}
-      >
-        <DesktopChatInput
-          dropdownPlacement="bottomLeft"
-          extenHeaderContent={inputActiveMode ? <ModeHeader /> : undefined}
-          inputContainerProps={inputContainerProps}
-        />
-      </ChatInputProvider>
+      <DragUploadZone onUploadFiles={handleUploadFiles}>
+        <ChatInputProvider
+          agentId={inboxAgentId}
+          chatInputEditorRef={(instance) => {
+            if (!instance) return;
+            useChatStore.setState({ mainInputEditor: instance });
+          }}
+          leftActions={leftActions}
+          onMarkdownContentChange={(content) => {
+            useChatStore.setState({ inputMessage: content });
+          }}
+          onSend={send}
+          sendButtonProps={{
+            disabled: loading,
+            generating: loading,
+            onStop: () => {},
+            shape: 'round',
+          }}
+        >
+          <DesktopChatInput
+            dropdownPlacement="bottomLeft"
+            extenHeaderContent={inputActiveMode ? <ModeHeader /> : undefined}
+            inputContainerProps={inputContainerProps}
+          />
+        </ChatInputProvider>
+      </DragUploadZone>
 
       <StarterList />
     </Flexbox>
