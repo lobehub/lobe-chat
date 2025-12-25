@@ -77,7 +77,7 @@ const buildTurnText = (turn: LocomoTurn, includeImageCaptions?: boolean) => {
 };
 
 const extractSessions = (conversation: Record<string, unknown>): LocomoSession[] => {
-  const sessions: LocomoSession[] = [];
+  const sessions: { session: LocomoSession; order: number }[] = [];
 
   Object.entries(conversation).forEach(([key, value]) => {
     const match = key.match(SESSION_KEY_REGEX);
@@ -86,10 +86,12 @@ const extractSessions = (conversation: Record<string, unknown>): LocomoSession[]
     const dateTime = conversation[`${key}_date_time`] as string | undefined;
     const turns = (value as unknown[]).filter(Boolean) as LocomoTurn[];
 
-    sessions.push({ dateTime, id: key, turns });
+    sessions.push({ order: Number.parseInt(match[1], 10), session: { dateTime, id: key, turns } });
   });
 
-  return sessions.sort((a, b) => a.id.localeCompare(b.id));
+  return sessions
+    .sort((a, b) => a.order - b.order)
+    .map(({ session }) => session);
 };
 
 const resolveRole = (

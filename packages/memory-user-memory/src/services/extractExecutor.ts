@@ -22,13 +22,12 @@ import {
   ExtractorOptions,
   GatekeeperDecision,
   MemoryExtractionAgent,
-  MemoryContextProvider,
   MemoryExtractionJob,
   MemoryExtractionLLMConfig,
   MemoryExtractionLayerOutputs,
   MemoryExtractionResult,
-  MemoryResultRecorder,
   GatekeeperOptions,
+  ExtractorRunOptions,
 } from '../types';
 import { resolvePromptRoot } from '../utils/path';
 import { attributesCommon } from '@lobechat/observability-otel/node';
@@ -214,14 +213,7 @@ export class MemoryExtractionService<RO> {
 
   async run(
     job: MemoryExtractionJob,
-    options: {
-      contextProvider: MemoryContextProvider<{ topK?: number }>;
-      resultRecorder?: MemoryResultRecorder<RO>;
-    } & ExtractorOptions & {
-      existingIdentitiesContext?: string;
-    } & {
-      gatekeeperLanguage?: string;
-    },
+    options: ExtractorRunOptions<RO>,
   ): Promise<MemoryExtractionResult | null> {
     try {
       const decision = await this.runGatekeeper(job, { ...options });

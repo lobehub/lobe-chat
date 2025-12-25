@@ -19,6 +19,13 @@ export type MemoryExtractionAgent =
   | 'layer-identity'
   | 'layer-preference';
 
+export interface ExtractorRunOptions<RO> extends ExtractorOptions {
+  contextProvider: MemoryContextProvider<{ topK?: number }>;
+  existingIdentitiesContext?: string;
+  gatekeeperLanguage?: string;
+  resultRecorder?: MemoryResultRecorder<RO>;
+}
+
 export interface ExtractorOptions extends ExtractorTemplateProps {
   additionalMessages?: OpenAIChatMessage[];
   callbacks?: {

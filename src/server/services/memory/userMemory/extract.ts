@@ -101,6 +101,7 @@ export interface MemoryExtractionNormalizedPayload {
   forceAll: boolean;
   forceTopics: boolean;
   from?: Date;
+  identityCursor: number;
   layers: LayersEnum[];
   /**
    * - `workflow` depends on Upstash Workflows to process the extraction asynchronously.
@@ -122,6 +123,7 @@ export const memoryExtractionPayloadSchema = z.object({
   forceAll: z.boolean().optional(),
   forceTopics: z.boolean().optional(),
   fromDate: z.coerce.date().optional(),
+  identityCursor: z.coerce.number().int().nonnegative().optional(),
   layers: z.array(z.nativeEnum(LayersEnum)).optional(),
   mode: z.enum(['workflow', 'direct']).optional(),
   sourceIds: z.array(z.string()).optional(),
@@ -180,6 +182,7 @@ export const normalizeMemoryExtractionPayload = (
     forceAll: parsed.forceAll ?? false,
     forceTopics: parsed.forceTopics ?? false,
     from: parsed.fromDate,
+    identityCursor: parsed.identityCursor ?? 0,
     layers: normalizeLayers(parsed.layers),
     mode: parsed.mode ?? 'workflow',
     sourceIds: Array.from(new Set(parsed.sourceIds || [])).filter(Boolean),
@@ -209,6 +212,7 @@ export const buildWorkflowPayloadInput = (
   forceAll: payload.forceAll,
   forceTopics: payload.forceTopics,
   fromDate: payload.from,
+  identityCursor: payload.identityCursor,
   layers: payload.layers,
   mode: payload.mode,
   sourceIds: payload.sourceIds,
@@ -1758,9 +1762,15 @@ export class MemoryExtractionExecutor {
 }
 
 const WORKFLOW_PATHS = {
-  topicBatch: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-topic',
+  topicBatch: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-topics',
   userTopics: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-user-topics',
   users: '/api/workflows/memory-user-memory/pipelines/chat-topic/process-users',
+} as const;
+
+export const TOPIC_WORKFLOW_NAMES = {
+  cep: 'memory:user-memory:extract:users:topics:extract-layers:cep',
+  identity: 'memory:user-memory:extract:users:topics:extract-layers:identity',
+  orchestrator: 'memory:user-memory:extract:users:topics:extract-layers:orchestrator',
 } as const;
 
 const getWorkflowUrl = (path: string, baseUrl: string) => {
@@ -1817,6 +1827,10 @@ export class MemoryExtractionWorkflowService {
     }
 
     const url = getWorkflowUrl(WORKFLOW_PATHS.topicBatch, payload.baseUrl);
-    return this.getClient().trigger({ body: payload, url });
+    return this.getClient().trigger({
+      body: payload,
+      headers: { 'Upstash-Workflow-Name': TOPIC_WORKFLOW_NAMES.orchestrator },
+      url,
+    });
   }
 }
