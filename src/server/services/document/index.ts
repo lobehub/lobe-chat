@@ -224,6 +224,59 @@ export class DocumentService {
   }
 
   /**
+   * Parse file and create a document for page editor (without page tags)
+   */
+  async parseDocument(fileId: string): Promise<LobeDocument> {
+    const { filePath, file, cleanup } = await this.fileService.downloadFileToLocal(fileId);
+
+    const logPrefix = `[${file.name}]`;
+    log(`${logPrefix} 开始解析文件为文档, 路径: ${filePath}`);
+
+    try {
+      // 使用loadFile加载文件内容
+      const fileDocument = await loadFile(filePath);
+
+      log(`${logPrefix} 文件解析成功 %O`, {
+        fileType: fileDocument.fileType,
+        size: fileDocument.content.length,
+      });
+
+      // Extract title from metadata or use file name (remove extension)
+      const title =
+        fileDocument.metadata?.title ||
+        file.name.replace(/\.(pdf|docx?|md|markdown)$/i, '') ||
+        'Untitled';
+
+      // Clean up content - remove <page> tags if present
+      let cleanContent = fileDocument.content;
+      if (cleanContent.includes('<page')) {
+        cleanContent = cleanContent.replace(/<page[^>]*>([\s\S]*?)<\/page>/g, '$1').trim();
+      }
+
+      const document = await this.documentModel.create({
+        content: cleanContent,
+        fileId,
+        fileType: 'custom/document',
+        filename: title,
+        metadata: fileDocument.metadata,
+        parentId: file.parentId,
+        source: file.url,
+        sourceType: 'file',
+        title,
+        totalCharCount: cleanContent.length,
+        totalLineCount: cleanContent.split('\n').length,
+      });
+
+      return document as LobeDocument;
+    } catch (error) {
+      console.error(`${logPrefix} 文件解析失败:`, error);
+      throw error;
+    } finally {
+      cleanup();
+    }
+  }
+
+  /**
    * 解析文件内容
    *
    */
@@ -242,16 +295,23 @@ export class DocumentService {
         size: fileDocument.content.length,
       });
 
+      // Extract title from metadata or use file name (remove extension)
+      const title =
+        fileDocument.metadata?.title ||
+        file.name.replace(/\.(pdf|docx?|md|markdown)$/i, '') ||
+        'Untitled';
+
       const document = await this.documentModel.create({
         content: fileDocument.content,
         fileId,
-        fileType: file.fileType,
+        fileType: 'custom/document', // Use custom/document for all parsed files
+        filename: title,
         metadata: fileDocument.metadata,
         pages: fileDocument.pages,
         parentId: file.parentId,
         source: file.url,
         sourceType: 'file',
-        title: fileDocument.metadata?.title,
+        title,
         totalCharCount: fileDocument.totalCharCount,
         totalLineCount: fileDocument.totalLineCount,
       });

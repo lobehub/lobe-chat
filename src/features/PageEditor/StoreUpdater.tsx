@@ -125,15 +125,21 @@ const StoreUpdater = memo<StoreUpdaterProps>(
 
           storeApi.setState({ lastUpdatedTime: null });
 
+          // Check if editorData is valid and non-empty
+          const hasValidEditorData =
+            currentPage?.editorData &&
+            typeof currentPage.editorData === 'object' &&
+            Object.keys(currentPage.editorData).length > 0;
+
           // Load from editorData if available
-          if (currentPage?.editorData && Object.keys(currentPage.editorData).length > 0) {
+          if (hasValidEditorData) {
             log('Loading from editorData');
             editor.setDocument('json', JSON.stringify(currentPage.editorData));
             const textContent = currentPage.content || '';
             storeApi.setState({ wordCount: calculateWordCount(textContent) });
           } else if (currentPage?.content && currentPage.content.trim()) {
-            log('Loading from content (markdown)');
-            // Fallback to markdown content (e.g., from Notion imports)
+            log('Loading from content - no valid editorData found');
+            // Fallback to content (markdown or plain text from parsed files)
             editor.setDocument('markdown', currentPage.content);
             storeApi.setState({ wordCount: calculateWordCount(currentPage.content) });
           } else if (currentPage?.pages) {

@@ -98,6 +98,18 @@ export const documentRouter = router({
       return chain;
     }),
 
+  parseDocument: documentProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const lobeDocument = await ctx.documentService.parseDocument(input.id);
+
+      return lobeDocument;
+    }),
+
   parseFileContent: documentProcedure
     .input(
       z.object({

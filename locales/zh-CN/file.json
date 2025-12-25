@@ -76,7 +76,7 @@
   "pageEditor.editorPlaceholder": "输入文稿内容，按 / 打开命令菜单",
   "pageEditor.empty.createNewDocument": "创建新文稿",
   "pageEditor.empty.title": "选择一个文稿以开始",
-  "pageEditor.empty.uploadMarkdown": "上传 Markdown 文件",
+  "pageEditor.empty.uploadFiles": "上传文件",
   "pageEditor.linkCopied": "链接已复制",
   "pageEditor.menu.copyLink": "复制链接",
   "pageEditor.menu.exportDocument": "导出文稿",

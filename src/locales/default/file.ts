@@ -87,7 +87,7 @@ export default {
   'pageEditor.empty.createNewDocument': 'Create New Page',
   'pageEditor.empty.importNotion': 'Import from Notion',
   'pageEditor.empty.title': 'Select a page to get started',
-  'pageEditor.empty.uploadMarkdown': 'Upload Markdown File',
+  'pageEditor.empty.uploadFiles': 'Upload Files',
   'pageEditor.linkCopied': 'Link copied',
   'pageEditor.menu.copyLink': 'Copy Link',
   'pageEditor.menu.exportDocument': 'Export Page',

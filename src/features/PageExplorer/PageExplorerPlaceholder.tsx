@@ -167,17 +167,79 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
       }
     };
 
-    const handleUploadMarkdown = async (file: File) => {
+    const handleUploadFile = async (file: File) => {
       try {
         setIsUploading(true);
 
-        // Read markdown file content
-        const content = await file.text();
+        const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
-        // Create page with markdown content
-        await handleCreateDocument(content, file.name.replace(/\.md$|\.markdown$/i, ''));
+        // For markdown files, read content directly
+        if (fileExtension === 'md' || fileExtension === 'markdown') {
+          const content = await file.text();
+          await handleCreateDocument(content, file.name.replace(/\.md$|\.markdown$/i, ''));
+        }
+        // For PDF and DOCX files, upload to server and parse
+        else if (fileExtension === 'pdf' || fileExtension === 'docx') {
+          // Create optimistic document first
+          const fileName = file.name.replace(/\.(pdf|docx)$/i, '');
+          const tempPageId = createOptimisticDocument(fileName);
+          setSelectedPageId(tempPageId, false);
+
+          try {
+            // Upload file to server
+            const uploadResult = await useFileStore.getState().uploadWithProgress({
+              file,
+              knowledgeBaseId,
+            });
+
+            if (!uploadResult) {
+              throw new Error('Failed to upload file');
+            }
+
+            // Parse file as document on server - this creates a clean document from the file
+            const { lambdaClient } = await import('@/libs/trpc/client');
+            const parsedDocument = await lambdaClient.document.parseDocument.mutate({
+              id: uploadResult.id,
+            });
+
+            // Convert to LobeDocument format
+            const realPage = {
+              content: parsedDocument.content || '',
+              createdAt: parsedDocument.createdAt
+                ? new Date(parsedDocument.createdAt)
+                : new Date(),
+              editorData:
+                typeof parsedDocument.editorData === 'string'
+                  ? JSON.parse(parsedDocument.editorData)
+                  : parsedDocument.editorData || null,
+              fileType: parsedDocument.fileType || 'custom/document',
+              filename: parsedDocument.filename || fileName,
+              id: parsedDocument.id,
+              metadata: parsedDocument.metadata || {},
+              source: parsedDocument.source || 'document',
+              sourceType: parsedDocument.sourceType || 'file',
+              title: parsedDocument.title || fileName,
+              totalCharCount: parsedDocument.totalCharCount || 0,
+              totalLineCount: parsedDocument.totalLineCount || 0,
+              updatedAt: parsedDocument.updatedAt
+                ? new Date(parsedDocument.updatedAt)
+                : new Date(),
+            };
+
+            // Replace optimistic with real document
+            replaceTempDocumentWithReal(tempPageId, realPage);
+            // Update selected page ID to the real page
+            setSelectedPageId(parsedDocument.id);
+          } catch (error) {
+            console.error('Failed to upload and parse file:', error);
+            // Remove temp document on error
+            useFileStore.getState().removeTempDocument(tempPageId);
+            setSelectedPageId(null);
+            throw error;
+          }
+        }
       } catch (error) {
-        console.error('Failed to upload markdown:', error);
+        console.error('Failed to upload file:', error);
       } finally {
         setIsUploading(false);
       }
@@ -212,10 +274,10 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
               />
             </Flexbox>
 
-            {/* Upload Markdown File */}
+            {/* Upload Files (PDF, DOCX, Markdown) */}
             <Upload
-              accept=".md,.markdown"
-              beforeUpload={handleUploadMarkdown}
+              accept=".md,.markdown,.pdf,.docx"
+              beforeUpload={handleUploadFile}
               disabled={isUploading}
               multiple={false}
               showUploadList={false}
@@ -226,7 +288,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
                 style={{ opacity: isUploading ? 0.5 : 1 }}
               >
                 <span className={styles.actionTitle}>
-                  {isUploading ? 'Uploading...' : t('pageEditor.empty.uploadMarkdown')}
+                  {isUploading ? 'Uploading...' : t('pageEditor.empty.uploadFiles')}
                 </span>
                 <div className={styles.glow} style={{ background: theme.gold }} />
                 <FileTypeIcon
