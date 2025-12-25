@@ -3,11 +3,13 @@ import { expo } from '@better-auth/expo';
 import { passkey } from '@better-auth/passkey';
 import { createNanoId, idGenerator, serverDB } from '@lobechat/database';
 import * as schema from '@lobechat/database/schemas';
+import bcrypt from 'bcryptjs';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { BetterAuthOptions, betterAuth } from 'better-auth/minimal';
+import { verifyPassword as defaultVerifyPassword } from 'better-auth/crypto';
+import { betterAuth } from 'better-auth/minimal';
 import { admin, emailOTP, genericOAuth, magicLink } from 'better-auth/plugins';
-import { BetterAuthPlugin } from 'better-auth/types';
+import type { BetterAuthOptions, BetterAuthPlugin } from 'better-auth/types';
 
 import { authEnv } from '@/envs/auth';
 import {
@@ -83,6 +85,22 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
       maxPasswordLength: 64,
       minPasswordLength: 8,
       requireEmailVerification: authEnv.NEXT_PUBLIC_AUTH_EMAIL_VERIFICATION,
+
+      // Compatible with bcrypt password hashes migrated from Clerk; after login, you can re-hash in the backend using BetterAuth's default scrypt.
+      password: {
+        // New passwords continue to use BetterAuth's default hash to stay consistent with the official configuration.
+        async verify({ hash, password }: { hash: string; password: string }): Promise<boolean> {
+          if (!hash) return false;
+
+          // Compatible with bcrypt hashes exported from Clerk (starting with $2a$ or $2b$)
+          if (hash.startsWith('$2a$') || hash.startsWith('$2b$')) {
+            return bcrypt.compare(password, hash);
+          }
+
+          // For all other cases, use BetterAuth's default verification
+          return defaultVerifyPassword({ hash, password });
+        },
+      },
 
       sendResetPassword: async ({ user, url }) => {
         const template = getResetPasswordEmailTemplate({ url });
