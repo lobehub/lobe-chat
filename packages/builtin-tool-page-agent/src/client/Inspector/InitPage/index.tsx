@@ -9,6 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { InitDocumentArgs, InitDocumentState } from '../../../types';
+import { AnimatedNumber } from '../../components/AnimatedNumber';
 
 const useStyles = createStyles(({ css, token }) => ({
   chars: css`
@@ -55,10 +56,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const formatNumber = (num: number): string => {
-  return num.toLocaleString();
-};
-
 export const InitPageInspector = memo<BuiltinInspectorProps<InitDocumentArgs, InitDocumentState>>(
   ({ args, partialArgs, isArgumentsStreaming, pluginState }) => {
     const { t } = useTranslation('plugin');
@@ -90,15 +87,15 @@ export const InitPageInspector = memo<BuiltinInspectorProps<InitDocumentArgs, In
         {displayLines > 0 && (
           <span className={styles.lines}>
             <Icon icon={Plus} size={12} />
-            {t('builtins.lobe-page-agent.apiName.initPage.lines', {
-              lines: formatNumber(displayLines),
-            })}
+            <AnimatedNumber value={displayLines} />
+            {t('builtins.lobe-page-agent.apiName.initPage.lines')}
           </span>
         )}
         {chars > 0 && (
           <span className={styles.chars}>
             {' '}
-            {t('builtins.lobe-page-agent.apiName.initPage.chars', { chars: formatNumber(chars) })}
+            <AnimatedNumber value={chars} />
+            {t('builtins.lobe-page-agent.apiName.initPage.chars')}
           </span>
         )}
       </div>
