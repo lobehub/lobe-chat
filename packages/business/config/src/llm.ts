@@ -27,9 +27,6 @@ export const DEFAULT_LLM_CONFIG = genUserLLMConfig({
   lmstudio: {
     fetchOnClient: true,
   },
-  lobehub: {
-    enabled: true,
-  },
   ollama: {
     enabled: true,
     fetchOnClient: true,
