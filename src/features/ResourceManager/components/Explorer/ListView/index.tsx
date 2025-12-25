@@ -140,7 +140,13 @@ const ListView = memo<ListViewProps>(
 
     return (
       <Flexbox height={'100%'}>
-        <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8} style={{ fontSize: 12 }}>
+        <Flexbox
+          align={'center'}
+          className={styles.header}
+          horizontal
+          paddingInline={8}
+          style={{ fontSize: 12 }}
+        >
           <Center height={40} style={{ paddingInline: 4 }}>
             <Checkbox
               checked={allSelected}
@@ -180,7 +186,7 @@ const ListView = memo<ListViewProps>(
                 return (
                   <Center className={styles.loadMoreContainer} key="load-more">
                     <Button loading={isLoadingMore} onClick={handleLoadMore} type="default">
-                      {t('loadMore', { ns: 'file', defaultValue: 'Load More' })}
+                      {t('loadMore', { defaultValue: 'Load More', ns: 'file' })}
                     </Button>
                   </Center>
                 );

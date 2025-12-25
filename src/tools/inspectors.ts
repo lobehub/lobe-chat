@@ -1,5 +1,5 @@
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
-import { BuiltinInspector } from '@lobechat/types';
+import { type BuiltinInspector } from '@lobechat/types';
 
 import { CodeInterpreterInspectors } from './code-interpreter/Inspector';
 import { CodeInterpreterIdentifier } from './code-interpreter/index';

@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinInspectorProps } from '@lobechat/types';
+import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
@@ -32,17 +32,6 @@ export const CrawlSinglePageInspector = memo<BuiltinInspectorProps<CrawlSinglePa
   ({ args, isLoading }) => {
     const { t } = useTranslation('plugin');
     const { styles, cx } = useStyles();
-
-    // Extract domain from URL for display
-    let displayUrl = '';
-    if (args?.url) {
-      try {
-        const url = new URL(args.url);
-        displayUrl = url.hostname;
-      } catch {
-        displayUrl = args.url;
-      }
-    }
 
     // When loading, show "联网搜索 > 读取页面内容"
     if (isLoading) {

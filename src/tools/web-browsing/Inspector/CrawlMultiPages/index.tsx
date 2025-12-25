@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinInspectorProps } from '@lobechat/types';
+import { type BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';

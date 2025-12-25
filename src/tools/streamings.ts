@@ -1,5 +1,5 @@
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
-import { BuiltinStreaming } from '@lobechat/types';
+import { type BuiltinStreaming } from '@lobechat/types';
 
 import { CodeInterpreterIdentifier } from './code-interpreter';
 import { CodeInterpreterStreamings } from './code-interpreter/Streaming';

@@ -2,8 +2,9 @@
 
 import { Modal } from '@lobehub/ui';
 import { memo } from 'react';
+
 import FileViewer from '@/features/FileViewer';
-import { UploadFileItem } from '@/types/files/upload';
+import { type UploadFileItem } from '@/types/files/upload';
 
 interface FilePreviewModalProps {
   file: UploadFileItem;
@@ -12,7 +13,6 @@ interface FilePreviewModalProps {
 }
 
 const FilePreviewModal = memo<FilePreviewModalProps>(({ file, open, onClose }) => {
-
   // Get the best available URL for preview
   const previewUrl = file.previewUrl || file.fileUrl || file.base64Url || '';
 

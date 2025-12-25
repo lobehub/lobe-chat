@@ -1,7 +1,7 @@
 'use client';
 
-import { RunCommandParams, RunCommandResult } from '@lobechat/electron-client-ipc';
-import { BuiltinInspectorProps } from '@lobechat/types';
+import { type RunCommandParams, type RunCommandResult } from '@lobechat/electron-client-ipc';
+import { type BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';

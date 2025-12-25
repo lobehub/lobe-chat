@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinInspectorProps } from '@lobechat/types';
+import { type BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { shinyTextStylish } from '@/styles/loading';
 
-import { ExecuteCodeState } from '../../type';
+import { type ExecuteCodeState } from '../../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`

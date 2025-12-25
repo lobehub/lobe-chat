@@ -1,12 +1,12 @@
+import { LayersEnum, MemorySourceType } from '@lobechat/types';
 import { createWorkflow, serveMany } from '@upstash/workflow/nextjs';
 
 import {
   MemoryExtractionExecutor,
-  MemoryExtractionPayloadInput,
-  normalizeMemoryExtractionPayload,
+  type MemoryExtractionPayloadInput,
   TOPIC_WORKFLOW_NAMES,
+  normalizeMemoryExtractionPayload,
 } from '@/server/services/memory/userMemory/extract';
-import { LayersEnum, MemorySourceType } from '@lobechat/types';
 
 type ExtractionResult = {
   extracted: boolean;
@@ -95,13 +95,28 @@ const orchestratorWorkflow = createWorkflow<
 >(async (context) => {
   const params = normalizeMemoryExtractionPayload(context.requestPayload || {});
   if (!params.userIds.length) {
-    return { message: 'No user id provided for topic batch.', nextIdentityCursor: null, processedCep: 0, processedIdentity: 0 };
+    return {
+      message: 'No user id provided for topic batch.',
+      nextIdentityCursor: null,
+      processedCep: 0,
+      processedIdentity: 0,
+    };
   }
   if (!params.topicIds.length) {
-    return { message: 'No topic ids provided for extraction.', nextIdentityCursor: null, processedCep: 0, processedIdentity: 0 };
+    return {
+      message: 'No topic ids provided for extraction.',
+      nextIdentityCursor: null,
+      processedCep: 0,
+      processedIdentity: 0,
+    };
   }
   if (!params.sources.includes(MemorySourceType.ChatTopic)) {
-    return { message: 'Source not supported in topic batch.', nextIdentityCursor: null, processedCep: 0, processedIdentity: 0 };
+    return {
+      message: 'Source not supported in topic batch.',
+      nextIdentityCursor: null,
+      processedCep: 0,
+      processedIdentity: 0,
+    };
   }
 
   const userId = params.userIds[0];
@@ -119,7 +134,13 @@ const orchestratorWorkflow = createWorkflow<
 
   const invokeIdentity = (topicId: string, pointer: number) =>
     context.invoke(`memory:user-memory:extract:users:${userId}:topics:identity:${pointer}`, {
-      body: { ...params, identityCursor: undefined, topicIds: [topicId], userId, userIds: [userId] },
+      body: {
+        ...params,
+        identityCursor: undefined,
+        topicIds: [topicId],
+        userId,
+        userIds: [userId],
+      },
       flowControl: { key: `memory:user:${userId}:identity`, parallelism: 1 },
       workflow: identityWorkflow,
     });

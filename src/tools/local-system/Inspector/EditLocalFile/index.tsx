@@ -1,8 +1,8 @@
 'use client';
 
-import { EditLocalFileState } from '@lobechat/builtin-tool-local-system';
-import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
-import { BuiltinInspectorProps } from '@lobechat/types';
+import { type EditLocalFileState } from '@lobechat/builtin-tool-local-system';
+import { type EditLocalFileParams } from '@lobechat/electron-client-ipc';
+import { type BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';

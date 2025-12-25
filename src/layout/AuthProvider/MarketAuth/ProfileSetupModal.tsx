@@ -2,7 +2,7 @@
 
 import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
 import { Center, Flexbox, Icon, Input, Modal, Text, TextArea, Tooltip } from '@lobehub/ui';
-import { App, Divider, Form, Upload, type UploadProps } from 'antd';
+import { App, Form, Upload, type UploadProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { CircleHelp, Globe, ImagePlus, Trash2 } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
