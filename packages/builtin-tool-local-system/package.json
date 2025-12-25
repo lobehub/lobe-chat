@@ -8,7 +8,9 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/electron-client-ipc": "workspace:*",
+    "@lobechat/electron-client-ipc": "workspace:*"
+  },
+  "devDependencies": {
     "@lobechat/types": "workspace:*"
   }
 }

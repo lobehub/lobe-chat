@@ -11,6 +11,7 @@ import { message as antdMessage } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
 import { AppConfigContext } from 'antd/es/app/context';
+import * as motion from 'motion/react-m';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode, memo, useEffect, useMemo } from 'react';
@@ -166,6 +167,7 @@ const AppTheme = memo<AppThemeProps>(
               imgUnoptimized: true,
               proxy: globalCDN ? 'unpkg' : undefined,
             }}
+            motion={motion}
           >
             {children}
           </ConfigProvider>

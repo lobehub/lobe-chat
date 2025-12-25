@@ -1,8 +1,7 @@
 'use client';
 
 import type { SlashOptions } from '@lobehub/editor';
-import { Alert, Flexbox } from '@lobehub/ui';
-import type { MenuProps } from '@lobehub/ui/es/Menu/index.mjs';
+import { Alert, Flexbox, type MenuProps } from '@lobehub/ui';
 import { type ReactNode, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 

@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@lobechat/prompts": "workspace:*",
-    "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
     "debug": "^4.4.3",
     "es-toolkit": "^1.43.0",
@@ -30,6 +29,7 @@
     "xastscript": "^4.0.0"
   },
   "devDependencies": {
+    "@lobechat/types": "workspace:*",
     "@types/debug": "^4.1.12"
   }
 }

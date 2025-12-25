@@ -10,7 +10,9 @@
   "dependencies": {
     "@lobechat/business-const": "workspace:*",
     "@lobechat/const": "workspace:*",
-    "@lobechat/types": "workspace:*",
     "model-bank": "workspace:*"
+  },
+  "devDependencies": {
+    "@lobechat/types": "workspace:*"
   }
 }

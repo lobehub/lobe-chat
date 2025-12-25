@@ -8,7 +8,9 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/builtin-tool-agent-builder": "workspace:*",
+    "@lobechat/builtin-tool-agent-builder": "workspace:*"
+  },
+  "devDependencies": {
     "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
