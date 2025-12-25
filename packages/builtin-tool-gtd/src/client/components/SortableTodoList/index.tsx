@@ -34,7 +34,7 @@ export interface SortableTodoListProps {
 }
 
 const SortableTodoList = memo<SortableTodoListProps>(
-  ({ defaultItems = [], placeholder = 'Enter todo item...', onSave, registerBeforeApprove }) => {
+  ({ defaultItems = [], placeholder, onSave, registerBeforeApprove }) => {
     // Create store instance once with onSave callback
     const store = useMemo(() => createTodoListStore(defaultItems, onSave), []);
 

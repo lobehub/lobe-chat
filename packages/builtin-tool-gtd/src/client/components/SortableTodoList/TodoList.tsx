@@ -1,26 +1,17 @@
 'use client';
 
-import { SortableList , Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { SortableList } from '@lobehub/ui';
 import { memo, useCallback } from 'react';
 
 import AddItemRow from './AddItemRow';
 import SortableItem from './SortableItem';
 import { TodoListItem, useTodoListStore } from './store';
 
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    width: 100%;
-  `,
-}));
-
 interface TodoListProps {
   placeholder?: string;
 }
 
 const TodoList = memo<TodoListProps>(({ placeholder }) => {
-  const { styles } = useStyles();
-
   const items = useTodoListStore((s) => s.items);
   const sortItems = useTodoListStore((s) => s.sortItems);
 
@@ -40,11 +31,7 @@ const TodoList = memo<TodoListProps>(({ placeholder }) => {
 
   // Empty state
   if (items.length === 0) {
-    return (
-      <Flexbox className={styles.container} gap={0}>
-        <AddItemRow placeholder={placeholder} showDragHandle={false} />
-      </Flexbox>
-    );
+    return <AddItemRow placeholder={placeholder} showDragHandle={false} />;
   }
 
   // Use items length as key to force remount when items change structure
@@ -52,8 +39,9 @@ const TodoList = memo<TodoListProps>(({ placeholder }) => {
   const listKey = items.map((i) => i.id).join('-');
 
   return (
-    <Flexbox paddingBlock={8} paddingInline={4} width={'100%'}>
+    <>
       <SortableList
+        gap={0}
         items={items}
         key={listKey}
         onChange={handleSortEnd}
@@ -61,7 +49,7 @@ const TodoList = memo<TodoListProps>(({ placeholder }) => {
         style={{ marginBottom: 0 }}
       />
       <AddItemRow placeholder={placeholder} />
-    </Flexbox>
+    </>
   );
 });
 

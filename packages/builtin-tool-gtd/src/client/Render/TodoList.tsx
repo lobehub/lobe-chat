@@ -1,9 +1,8 @@
 'use client';
 
 import { BuiltinRenderProps } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
+import { Block, Checkbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { CheckCircle2, Circle } from 'lucide-react';
 import { memo } from 'react';
 
 import type { TodoItem, TodoList as TodoListType } from '../../types';
@@ -14,39 +13,15 @@ export interface TodoListRenderState {
 
 // Styles matching TodoItemRow in SortableTodoList
 const useStyles = createStyles(({ css, token }) => ({
-  checkbox: css`
-    flex-shrink: 0;
-    color: ${token.colorTextQuaternary};
-  `,
-  checkboxChecked: css`
-    color: ${token.colorSuccess};
-  `,
-  // Outer container - matches AddTodoIntervention container style
-  container: css`
-    padding-block: 12px;
-    padding-inline: 4px;
-    border-radius: ${token.borderRadius}px;
-    background: ${token.colorFillQuaternary};
-  `,
-  // Placeholder to match DragHandle width
-  dragHandlePlaceholder: css`
-    flex-shrink: 0;
-    width: 16px;
-    height: 24px;
-  `,
-  // Item row - matches TodoItemRow itemRow style
   itemRow: css`
-    padding-block: 2px;
-    border-block-end: 1px solid ${token.colorBorderSecondary};
+    width: 100%;
+    padding-block: 10px;
+    padding-inline: 12px;
+    border-block-end: 1px dashed ${token.colorBorderSecondary};
 
     &:last-child {
       border-block-end: none;
     }
-  `,
-  text: css`
-    flex: 1;
-    font-size: 14px;
-    line-height: 32px;
   `,
   textChecked: css`
     color: ${token.colorTextQuaternary};
@@ -63,16 +38,21 @@ interface ReadOnlyTodoItemProps {
  * Read-only todo item row, matching the style of TodoItemRow in SortableTodoList
  */
 const ReadOnlyTodoItem = memo<ReadOnlyTodoItemProps>(({ text, completed }) => {
-  const { styles, cx } = useStyles();
-
-  const CheckIcon = completed ? CheckCircle2 : Circle;
+  const { styles, theme } = useStyles();
 
   return (
-    <Flexbox align="center" className={styles.itemRow} gap={8} horizontal width="100%">
-      <div className={styles.dragHandlePlaceholder} />
-      <CheckIcon className={cx(styles.checkbox, completed && styles.checkboxChecked)} size={16} />
-      <span className={cx(styles.text, completed && styles.textChecked)}>{text}</span>
-    </Flexbox>
+    <Checkbox
+      backgroundColor={theme.colorSuccess}
+      checked={completed}
+      classNames={{ text: completed ? styles.textChecked : undefined, wrapper: styles.itemRow }}
+      shape={'circle'}
+      style={{ borderWidth: 1.5, cursor: 'default' }}
+      textProps={{
+        type: completed ? 'secondary' : undefined,
+      }}
+    >
+      {text}
+    </Checkbox>
   );
 });
 
@@ -87,21 +67,17 @@ interface TodoListUIProps {
  * Displays todo items in a style matching the editable SortableTodoList
  */
 const TodoListUI = memo<TodoListUIProps>(({ items }) => {
-  const { styles } = useStyles();
-
   if (items.length === 0) {
     return null;
   }
 
   return (
     // Outer container with background - matches AddTodoIntervention
-    <Flexbox className={styles.container}>
-      <Flexbox width="100%">
-        {items.map((item, index) => (
-          <ReadOnlyTodoItem completed={item.completed} key={index} text={item.text} />
-        ))}
-      </Flexbox>
-    </Flexbox>
+    <Block variant={'outlined'} width="100%">
+      {items.map((item, index) => (
+        <ReadOnlyTodoItem completed={item.completed} key={index} text={item.text} />
+      ))}
+    </Block>
   );
 });
 

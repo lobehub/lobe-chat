@@ -1,26 +1,17 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { Block } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { CreateTodosParams, TodoItem } from '../../types';
 import { SortableTodoList } from '../components';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    padding-block: 12px;
-    padding-inline: 4px;
-    border-radius: ${token.borderRadius}px;
-    background: ${token.colorFillQuaternary};
-  `,
-}));
-
 const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
   ({ args, onArgsChange, registerBeforeApprove }) => {
-    const { styles } = useStyles();
+    const { t } = useTranslation('tool');
 
     // Handle both formats:
     // - Initial AI input: { adds: string[] } (from AI)
@@ -38,14 +29,14 @@ const AddTodoIntervention = memo<BuiltinInterventionProps<CreateTodosParams>>(
     );
 
     return (
-      <Flexbox className={styles.container}>
+      <Block variant={'outlined'}>
         <SortableTodoList
           defaultItems={defaultItems}
           onSave={handleSave}
-          placeholder="Add a todo item..."
+          placeholder={t('lobe-gtd.addTodo.placeholder')}
           registerBeforeApprove={registerBeforeApprove}
         />
-      </Flexbox>
+      </Block>
     );
   },
   isEqual,

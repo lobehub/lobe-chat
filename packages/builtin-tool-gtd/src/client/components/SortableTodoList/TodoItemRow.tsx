@@ -1,31 +1,15 @@
 'use client';
 
-import { ActionIcon, SortableList , Flexbox } from '@lobehub/ui';
+import { ActionIcon, Checkbox, Flexbox, SortableList } from '@lobehub/ui';
 import { Input, InputRef } from 'antd';
 import { createStyles } from 'antd-style';
-import { CheckCircle2, Circle, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { ChangeEvent, KeyboardEvent, memo, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useTodoListStore } from './store';
 
 const useStyles = createStyles(({ css, token }) => ({
-  checkbox: css`
-    cursor: pointer;
-    flex-shrink: 0;
-    color: ${token.colorTextQuaternary};
-    transition: color 0.2s;
-
-    &:hover {
-      color: ${token.colorPrimary};
-    }
-  `,
-  checkboxChecked: css`
-    color: ${token.colorSuccess};
-
-    &:hover {
-      color: ${token.colorSuccessHover};
-    }
-  `,
   deleteIcon: css`
     flex-shrink: 0;
     opacity: 0;
@@ -38,12 +22,10 @@ const useStyles = createStyles(({ css, token }) => ({
     transition: opacity 0.2s;
   `,
   itemRow: css`
-    padding-block: 2px;
-    border-block-end: 1px solid ${token.colorBorderSecondary};
-
-    &:last-child {
-      border-block-end: none;
-    }
+    width: 100%;
+    padding-block: 10px;
+    padding-inline: 4px 12px;
+    border-block-end: 1px dashed ${token.colorBorderSecondary};
 
     &:hover {
       .drag-handle,
@@ -63,9 +45,11 @@ interface TodoItemRowProps {
   placeholder?: string;
 }
 
-const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder = 'Enter todo item...' }) => {
-  const { styles, cx } = useStyles();
+const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder }) => {
+  const { styles, cx, theme } = useStyles();
+  const { t } = useTranslation('tool');
   const inputRef = useRef<InputRef>(null);
+  const defaultPlaceholder = placeholder || t('lobe-gtd.todoItem.placeholder');
 
   // Find item by stable id
   const item = useTodoListStore((s) => s.items.find((item) => item.id === id));
@@ -137,22 +121,22 @@ const TodoItemRow = memo<TodoItemRowProps>(({ id, placeholder = 'Enter todo item
     toggleItem(id);
   }, [id, toggleItem]);
 
-  const CheckIcon = completed ? CheckCircle2 : Circle;
-
   return (
     <Flexbox align="center" className={styles.itemRow} gap={4} horizontal width="100%">
       <SortableList.DragHandle className={cx(styles.dragHandle, 'drag-handle')} size="small" />
-      <CheckIcon
-        className={cx(styles.checkbox, completed && styles.checkboxChecked)}
-        onClick={handleToggle}
-        size={16}
+      <Checkbox
+        backgroundColor={theme.colorSuccess}
+        checked={completed}
+        onChange={handleToggle}
+        shape={'circle'}
+        style={{ borderWidth: 1.5 }}
       />
       <Input
         className={cx(completed && styles.textChecked)}
         onChange={handleChange}
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
+        placeholder={defaultPlaceholder}
         ref={inputRef}
         size="small"
         style={{ flex: 1 }}

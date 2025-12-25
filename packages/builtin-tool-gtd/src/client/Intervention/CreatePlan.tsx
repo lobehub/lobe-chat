@@ -1,30 +1,16 @@
 'use client';
 
 import { BuiltinInterventionProps } from '@lobechat/types';
-import { Flexbox, Input, TextArea } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { Flexbox, Input, Text, TextArea } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { CreatePlanParams } from '../../types';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    padding: 12px;
-    border-radius: ${token.borderRadius}px;
-    background: ${token.colorFillQuaternary};
-  `,
-  label: css`
-    margin-block-end: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    color: ${token.colorTextSecondary};
-  `,
-}));
-
 const CreatePlanIntervention = memo<BuiltinInterventionProps<CreatePlanParams>>(
   ({ args, onArgsChange, registerBeforeApprove }) => {
-    const { styles } = useStyles();
+    const { t } = useTranslation('tool');
 
     const [goal, setGoal] = useState(args?.goal || '');
     const [description, setDescription] = useState(args?.description || '');
@@ -81,29 +67,29 @@ const CreatePlanIntervention = memo<BuiltinInterventionProps<CreatePlanParams>>(
     );
 
     return (
-      <Flexbox className={styles.container} gap={12}>
-        <Flexbox>
-          <div className={styles.label}>Goal</div>
+      <Flexbox gap={12}>
+        <Flexbox gap={8}>
+          <Text>{t('lobe-gtd.createPlan.goal.label')}</Text>
           <Input
             onChange={(e) => handleGoalChange(e.target.value)}
-            placeholder="What do you want to achieve?"
+            placeholder={t('lobe-gtd.createPlan.goal.placeholder')}
             value={goal}
           />
         </Flexbox>
-        <Flexbox>
-          <div className={styles.label}>Description</div>
+        <Flexbox gap={8}>
+          <Text>{t('lobe-gtd.createPlan.description.label')}</Text>
           <Input
             onChange={(e) => handleDescriptionChange(e.target.value)}
-            placeholder="Brief summary of the plan"
+            placeholder={t('lobe-gtd.createPlan.description.placeholder')}
             value={description}
           />
         </Flexbox>
-        <Flexbox>
-          <div className={styles.label}>Context (optional)</div>
+        <Flexbox gap={8}>
+          <Text>{t('lobe-gtd.createPlan.context.label')}</Text>
           <TextArea
             autoSize={{ minRows: 10 }}
             onChange={(e) => handleContextChange(e.target.value)}
-            placeholder="Background, constraints, considerations..."
+            placeholder={t('lobe-gtd.createPlan.context.placeholder')}
             value={context}
           />
         </Flexbox>
