@@ -8,7 +8,6 @@ import {
   buildWorkflowPayloadInput,
   normalizeMemoryExtractionPayload,
 } from '@/server/services/memory/userMemory/extract';
-import { MemorySourceType } from '@lobechat/types';
 
 const USER_PAGE_SIZE = 50;
 const USER_BATCH_SIZE = 10;
