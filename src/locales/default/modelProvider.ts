@@ -334,6 +334,47 @@ export default {
           placeholder: '请输入模型的展示名称，例如 ChatGPT、GPT-4 等',
           title: '模型展示名称',
         },
+        extendParams: {
+          extra:
+            '根据模型支持的能力选择扩展参数，鼠标悬停选项可预览控件。注意：错误配置可能导致请求失败',
+          options: {
+            disableContextCaching: {
+              hint: '适用于 Claude 系列模型，开启后可降低成本并提升响应速度',
+            },
+            enableReasoning: {
+              hint: '适用于 Claude, DeepSeek 等推理模型，开启后可解锁深度思考能力',
+            },
+            gpt5ReasoningEffort: {
+              hint: '适用于 GPT-5 系列模型，控制推理强度',
+            },
+            gpt5_1ReasoningEffort: {
+              hint: '适用于 GPT-5.1 系列模型，控制推理强度',
+            },
+            reasoningBudgetToken: {
+              hint: '适用于 Claude, Qwen3 等推理模型，控制思考消耗的 Token 数',
+            },
+            reasoningEffort: {
+              hint: '适用于 OpenAI 等推理模型，控制推理强度',
+            },
+            textVerbosity: {
+              hint: '适用于 GPT-5 系列模型，控制输出文本的详细程度',
+            },
+            thinking: {
+              hint: '适用于 Doubao 部分模型，允许模型自行判断是否进行深度思考',
+            },
+            thinkingBudget: {
+              hint: '适用于 Gemini 系列模型，控制思考预算',
+            },
+            thinkingLevel: {
+              hint: '适用于 Gemini 3 系列模型，控制思考深度',
+            },
+            urlContext: {
+              hint: '适用于 Gemini 系列模型，支持 URL 解析上下文链接',
+            },
+          },
+          placeholder: '请选择需要启用的扩展参数',
+          title: '扩展功能参数',
+        },
         files: {
           extra: '当前文件上传实现仅为一种 Hack 方案，仅限自行尝试。完整文件上传能力请等待后续实现',
           title: '支持文件上传',

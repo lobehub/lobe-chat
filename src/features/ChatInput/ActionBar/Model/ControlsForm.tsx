@@ -147,7 +147,7 @@ const ControlsForm = memo(() => {
     },
     {
       children: <ThinkingBudgetSlider />,
-      label: t('extendParams.reasoningBudgetToken.title'),
+      label: t('extendParams.thinkingBudget.title'),
       layout: 'vertical',
       minWidth: 460,
       name: 'thinkingBudget',
@@ -167,7 +167,7 @@ const ControlsForm = memo(() => {
       layout: isNarrow ? 'vertical' : 'horizontal',
       minWidth: undefined,
       name: 'urlContext',
-      style: isNarrow ? undefined : { width: 445 },
+      // style: isNarrow ? undefined : { width: 445 },
       tag: 'urlContext',
     },
     {
@@ -189,6 +189,7 @@ const ControlsForm = memo(() => {
       style: {
         paddingBottom: 0,
       },
+      tag: 'thinkingLevel',
     },
     {
       children: <ImageAspectRatioSelect />,

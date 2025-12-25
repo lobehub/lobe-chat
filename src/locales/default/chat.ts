@@ -54,6 +54,12 @@ export default {
       desc: '基于 Claude Thinking 机制限制（<1>了解更多</1>），开启后将自动禁用历史消息数限制',
       title: '开启深度思考',
     },
+    gpt5ReasoningEffort: {
+      title: '推理强度 (GPT-5)',
+    },
+    gpt5_1ReasoningEffort: {
+      title: '推理强度 (GPT-5.1)',
+    },
     imageAspectRatio: {
       title: '图片宽高比',
     },
@@ -71,6 +77,9 @@ export default {
     },
     thinking: {
       title: '深度思考开关',
+    },
+    thinkingBudget: {
+      title: '思考预算',
     },
     thinkingLevel: {
       title: '思考水平',

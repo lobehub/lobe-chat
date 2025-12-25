@@ -699,7 +699,6 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -746,7 +745,6 @@ const openrouterChatModels: AIChatModelCard[] = [
     releasedAt: '2025-09-30',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },

@@ -1,4 +1,4 @@
-import { AiModelType, ModelParamsSchema, Pricing } from 'model-bank';
+import { AiModelSettings, AiModelType, ModelParamsSchema, Pricing } from 'model-bank';
 import { ReactNode } from 'react';
 
 import { AiProviderSettings } from './aiProvider';
@@ -63,6 +63,8 @@ export interface ChatModelCard {
    *  whether model supports search
    */
   search?: boolean;
+
+  settings?: AiModelSettings;
 
   type?: AiModelType;
 
@@ -130,12 +132,12 @@ export interface ModelProviderCard {
    * @deprecated
    */
   proxyUrl?:
-    | {
-        desc?: string;
-        placeholder: string;
-        title?: string;
-      }
-    | false;
+  | {
+    desc?: string;
+    placeholder: string;
+    title?: string;
+  }
+  | false;
 
   settings: AiProviderSettings;
   /**
