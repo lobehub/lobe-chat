@@ -8,6 +8,7 @@ import ReactComponentName from 'react-scan/react-component-name/webpack';
 interface CustomNextConfig {
   headers?: Header[];
   redirects?: Redirect[];
+  turbopack?: NextConfig['turbopack'];
 }
 
 export function defineConfig(config: CustomNextConfig) {
@@ -317,6 +318,7 @@ export function defineConfig(config: CustomNextConfig) {
             bundler: 'turbopack',
             hotKeys: ['altKey', 'ctrlKey'],
           }),
+      ...config.turbopack,
     },
 
     typescript: {
