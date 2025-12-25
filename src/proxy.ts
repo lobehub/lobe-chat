@@ -1,4 +1,4 @@
-import { defineConfig } from '@/libs/proxy/define-config';
+import { defineConfig } from '@/libs/next/proxy/define-config';
 
 const { middleware } = defineConfig();
 
