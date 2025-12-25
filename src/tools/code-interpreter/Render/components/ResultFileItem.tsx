@@ -56,7 +56,7 @@ function basename(filename: string) {
   return filename.split('/').pop() ?? filename;
 }
 
-// 图片显示子组件
+// Image display component
 const ResultImage = memo<CodeInterpreterFileItem>(({ filename, previewUrl, fileId }) => {
   const [useFetchPythonFileItem] = useChatStore((s) => [s.useFetchInterpreterFileItem]);
   const { data } = useFetchPythonFileItem(fileId);
@@ -78,7 +78,7 @@ const ResultImage = memo<CodeInterpreterFileItem>(({ filename, previewUrl, fileI
   return null;
 });
 
-// 文件显示子组件
+// File display component
 const ResultFile = memo<CodeInterpreterFileItem>(({ filename, fileId, previewUrl }) => {
   const { styles } = useFileStyles();
   const baseName = basename(filename);

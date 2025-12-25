@@ -30,7 +30,7 @@ const CodeInterpreter = memo<
 
   return (
     <Flexbox gap={12}>
-      {/* 代码显示 */}
+      {/* Code display */}
       <Flexbox>
         <Highlighter
           actionIconSize="small"
@@ -42,7 +42,7 @@ const CodeInterpreter = memo<
         </Highlighter>
       </Flexbox>
 
-      {/* 执行状态 */}
+      {/* Execution status */}
       {isExecuting && (
         <Flexbox gap={8} horizontal>
           <BubblesLoading />
@@ -50,7 +50,7 @@ const CodeInterpreter = memo<
         </Flexbox>
       )}
 
-      {/* 执行错误 */}
+      {/* Execution error */}
       {!isExecuting && pluginState?.error && (
         <Alert
           description={String(pluginState.error)}
@@ -62,7 +62,7 @@ const CodeInterpreter = memo<
 
       {!isExecuting && content && (
         <Flexbox gap={8}>
-          {/* 返回值 */}
+          {/* Return value */}
           {content.result && (
             <Flexbox>
               <Text strong style={{ marginBottom: 4 }}>
@@ -74,7 +74,7 @@ const CodeInterpreter = memo<
             </Flexbox>
           )}
 
-          {/* 输出 */}
+          {/* Output */}
           {content?.output && content.output.length > 0 && (
             <Flexbox>
               <Text strong style={{ marginBottom: 4 }}>
@@ -101,7 +101,7 @@ const CodeInterpreter = memo<
             </Flexbox>
           )}
 
-          {/* 文件显示 */}
+          {/* File display */}
           {content?.files && content.files.length > 0 && (
             <Flexbox>
               <Text strong style={{ marginBottom: 8 }}>

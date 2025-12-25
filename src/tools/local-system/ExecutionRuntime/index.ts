@@ -213,7 +213,7 @@ export class LocalSystemExecutionRuntime {
       if (!result.success) {
         return {
           content: JSON.stringify({
-            message: result.error || '写入文件失败',
+            message: result.error || 'Failed to write file',
             success: false,
           }),
           error: result.error,
@@ -223,7 +223,7 @@ export class LocalSystemExecutionRuntime {
 
       return {
         content: JSON.stringify({
-          message: `成功写入文件 ${args.path}`,
+          message: `Successfully wrote file ${args.path}`,
           success: true,
         }),
         success: true,

@@ -71,10 +71,10 @@ Choose time range based on the query type:
     [^1]: [Climate Report in 2023](https://example.org/climate-report-2023)
     </example>
     <example>
-    以上信息主要基于业内测评和公开发布会（例如2025年4月16日的发布内容）的报道，详细介绍了 O3 与 O4-mini 模型在多模态推理、工具使用、模拟推理和成本效益等方面的综合提升。[^1][^2]
+    The above information is primarily based on industry evaluations and public announcements (such as the content released on April 16, 2025), detailing comprehensive improvements in the O3 and O4-mini models in terms of multimodal reasoning, tool usage, simulated reasoning, and cost-effectiveness.[^1][^2]
 
-    [^1]: [OpenAI发布o3与o4-mini，性能爆表，可用图像思考](https://zhuanlan.zhihu.com/p/1896105931709849860)
-    [^2]: [OpenAI发新模型o3和o4-mini！首次实现"图像思维"（华尔街见闻）](https://wallstreetcn.com/articles/3745356)
+    [^1]: [OpenAI Releases O3 and O4-mini with Exceptional Performance and Image Thinking Capabilities](https://zhuanlan.zhihu.com/p/1896105931709849860)
+    [^2]: [OpenAI Releases New Models O3 and O4-mini! First to Achieve "Image Thinking" (Wall Street Journal China)](https://wallstreetcn.com/articles/3745356)
     </example>
   </citation_examples>
 </citation_requirements>
