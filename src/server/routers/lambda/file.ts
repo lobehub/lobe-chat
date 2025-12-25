@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { checkFileStorageUsage } from '@/business/server/trpc-middlewares/lambda';
 import { serverDBEnv } from '@/config/db';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { ChunkModel } from '@/database/models/chunk';
@@ -30,12 +31,14 @@ const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
 
 export const fileRouter = router({
   checkFileHash: fileProcedure
+    .use(checkFileStorageUsage)
     .input(z.object({ hash: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.fileModel.checkHash(input.hash);
     }),
 
   createFile: fileProcedure
+    .use(checkFileStorageUsage)
     .input(
       UploadFileSchema.omit({ url: true }).extend({
         parentId: z.string().optional(),

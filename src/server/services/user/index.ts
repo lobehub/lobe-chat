@@ -1,6 +1,8 @@
 import { UserJSON } from '@clerk/backend';
+import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { LobeChatDatabase } from '@lobechat/database';
 
+import { initNewUserForBusiness } from '@/business/server/user';
 import { UserModel } from '@/database/models/user';
 import { initializeServerAnalytics } from '@/libs/analytics';
 import { pino } from '@/libs/logger';
@@ -8,6 +10,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { FileS3 } from '@/server/modules/S3';
 
 type CreatedUser = {
+  createdAt?: Date | null;
   email?: string | null;
   firstName?: string | null;
   id: string;
@@ -24,8 +27,14 @@ export class UserService {
   }
 
   async initUser(user: CreatedUser) {
-    /* ↓ cloud slot ↓ */
-    /* ↑ cloud slot ↑ */
+    if (ENABLE_BUSINESS_FEATURES) {
+      try {
+        await initNewUserForBusiness(user.id, user.createdAt);
+      } catch (error) {
+        console.error(error);
+        console.error('Failed to init new user for business');
+      }
+    }
 
     const analytics = await initializeServerAnalytics();
     analytics?.identify(user.id, {

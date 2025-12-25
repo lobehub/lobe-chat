@@ -2,6 +2,7 @@ import { UserJSON } from '@clerk/backend';
 import { enableClerk, isDesktop } from '@lobechat/const';
 import {
   NextAuthAccountSchame,
+  Plans,
   UserGuideSchema,
   UserInitializationState,
   UserOnboardingSchema,
@@ -15,6 +16,7 @@ import { after } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
+import { getReferralStatus, getSubscriptionPlan } from '@/business/server/user';
 import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
@@ -126,15 +128,18 @@ export const userRouter = router({
     };
 
     // Run user state fetch and count queries in parallel
-    const [state, messageCount, hasExtraSession] = await Promise.all([
-      getOrCreateUserState(),
-      ctx.messageModel.countUpTo(5),
-      ctx.sessionModel.hasMoreThanN(1),
-    ]);
+    const [state, messageCount, hasExtraSession, referralStatus, subscriptionPlan] =
+      await Promise.all([
+        getOrCreateUserState(),
+        ctx.messageModel.countUpTo(5),
+        ctx.sessionModel.hasMoreThanN(1),
+        getReferralStatus(ctx.userId),
+        getSubscriptionPlan(ctx.userId),
+      ]);
 
     const hasMoreThan4Messages = messageCount > 4;
     const hasAnyMessages = messageCount > 0;
-
+    /* eslint-disable sort-keys-fix/sort-keys-fix */
     return {
       avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
@@ -156,7 +161,13 @@ export const userRouter = router({
       settings: state.settings,
       userId: ctx.userId,
       username: state.username,
+
+      // business features
+      referralStatus,
+      subscriptionPlan,
+      isFreePlan: !subscriptionPlan || subscriptionPlan === Plans.Free,
     } satisfies UserInitializationState;
+    /* eslint-enable sort-keys-fix/sort-keys-fix */
   }),
 
   makeUserOnboarded: userProcedure.mutation(async ({ ctx }) => {

@@ -1,10 +1,12 @@
 import { ASYNC_TASK_TIMEOUT } from '@lobechat/business-config/server';
+import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { AgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@lobechat/types';
 import debug from 'debug';
 import { RuntimeImageGenParams } from 'model-bank';
 import { z } from 'zod';
 
+import { chargeAfterGenerate } from '@/business/server/image-generation/chargeAfterGenerate';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import { FileModel } from '@/database/models/file';
 import { GenerationModel } from '@/database/models/generation';
@@ -32,7 +34,9 @@ const imageProcedure = asyncAuthedProcedure.use(async (opts) => {
 });
 
 const createImageInputSchema = z.object({
+  generationBatchId: z.string(),
   generationId: z.string(),
+  generationTopicId: z.string(),
   model: z.string(),
   params: z
     .object({
@@ -184,7 +188,8 @@ const categorizeError = (
 
 export const imageRouter = router({
   createImage: imageProcedure.input(createImageInputSchema).mutation(async ({ input, ctx }) => {
-    const { taskId, generationId, provider, model, params } = input;
+    const { taskId, generationId, generationBatchId, generationTopicId, provider, model, params } =
+      input;
 
     log('Starting async image generation: %O', {
       generationId,
@@ -235,6 +240,22 @@ export const imageRouter = router({
             ? response.imageUrl.slice(0, IMAGE_URL_PREVIEW_LENGTH) + '...'
             : response.imageUrl,
         });
+
+        const { modelUsage } = response;
+
+        if (ENABLE_BUSINESS_FEATURES) {
+          await chargeAfterGenerate({
+            metadata: {
+              asyncTaskId: taskId,
+              generationBatchId: generationBatchId,
+              modelId: model,
+              topicId: generationTopicId,
+            },
+            modelUsage,
+            provider,
+            userId: ctx.userId,
+          });
+        }
 
         // Check if operation has been cancelled
         checkAbortSignal(signal);
