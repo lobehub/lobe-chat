@@ -2,6 +2,7 @@ import { LazyMotion, domMax } from 'motion/react';
 import { ReactNode, Suspense } from 'react';
 
 import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
+import { DragUploadProvider } from '@/components/DragUploadZone/DragUploadProvider';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { appEnv } from '@/envs/app';
 import DevPanel from '@/features/DevPanel';
@@ -60,9 +61,11 @@ const GlobalLayout = async ({
           >
             <QueryProvider>
               <GroupWizardProvider>
-                <LazyMotion features={domMax}>
-                  <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
-                </LazyMotion>
+                <DragUploadProvider>
+                  <LazyMotion features={domMax}>
+                    <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+                  </LazyMotion>
+                </DragUploadProvider>
               </GroupWizardProvider>
             </QueryProvider>
             <StoreInitialization />
