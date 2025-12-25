@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 2.0.0-next.179](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.178...v2.0.0-next.179)
+
+<sup>Released on **2025-12-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **scripts**: Fix syntax error in prebuild.mts.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **scripts**: Fix syntax error in prebuild.mts, closes [#10952](https://github.com/lobehub/lobe-chat/issues/10952) ([3d46c13](https://github.com/lobehub/lobe-chat/commit/3d46c13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 2.0.0-next.178](https://github.com/lobehub/lobe-chat/compare/v2.0.0-next.177...v2.0.0-next.178)
 
 <sup>Released on **2025-12-24**</sup>
