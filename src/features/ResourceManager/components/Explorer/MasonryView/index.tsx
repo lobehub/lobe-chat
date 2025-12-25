@@ -1,7 +1,10 @@
 'use client';
 
+import { Center } from '@lobehub/ui';
 import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { Button } from 'antd';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { FileListItem } from '@/types/files';
@@ -21,8 +24,9 @@ interface MasonryViewProps {
 
 const MasonryView = memo<MasonryViewProps>(
   ({ data, hasMore, isMasonryReady, loadMore, onOpenFile, selectFileIds, setSelectedFileIds }) => {
+    const { t } = useTranslation('file');
     const columnCount = useMasonryColumnCount();
-    const isLoadingMore = useRef(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
     const libraryId = useResourceManagerStore((s) => s.libraryId);
 
@@ -36,15 +40,17 @@ const MasonryView = memo<MasonryViewProps>(
       [onOpenFile, libraryId, selectFileIds, setSelectedFileIds],
     );
 
-    // Handle end reached to load more items
-    const handleEndReached = useCallback(() => {
-      if (!hasMore || isLoadingMore.current) return;
+    // Handle load more button click
+    const handleLoadMore = useCallback(async () => {
+      if (!hasMore || isLoadingMore) return;
 
-      isLoadingMore.current = true;
-      loadMore().finally(() => {
-        isLoadingMore.current = false;
-      });
-    }, [hasMore, loadMore]);
+      setIsLoadingMore(true);
+      try {
+        await loadMore();
+      } finally {
+        setIsLoadingMore(false);
+      }
+    }, [hasMore, loadMore, isLoadingMore]);
 
     return (
       <div
@@ -56,20 +62,7 @@ const MasonryView = memo<MasonryViewProps>(
           transition: 'opacity 0.2s ease-in-out',
         }}
       >
-        <div
-          onScroll={(e) => {
-            const target = e.currentTarget;
-            const scrollHeight = target.scrollHeight;
-            const scrollTop = target.scrollTop;
-            const clientHeight = target.clientHeight;
-
-            // Trigger load more when within 200px of the bottom
-            if (scrollHeight - scrollTop - clientHeight <= 200) {
-              handleEndReached();
-            }
-          }}
-          style={{ paddingBlockEnd: 64, paddingBlockStart: 12, paddingInline: 24 }}
-        >
+        <div style={{ paddingBlockEnd: 24, paddingBlockStart: 12, paddingInline: 24 }}>
           <VirtuosoMasonry
             ItemContent={MasonryItemWrapper}
             columnCount={columnCount}
@@ -79,6 +72,13 @@ const MasonryView = memo<MasonryViewProps>(
               gap: '16px',
             }}
           />
+          {hasMore && (
+            <Center style={{ marginBlockStart: 24 }}>
+              <Button loading={isLoadingMore} onClick={handleLoadMore} type="default">
+                {t('loadMore', { defaultValue: 'Load More' })}
+              </Button>
+            </Center>
+          )}
         </div>
       </div>
     );

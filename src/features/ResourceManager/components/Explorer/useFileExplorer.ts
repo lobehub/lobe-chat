@@ -88,13 +88,16 @@ export const useFileExplorer = ({ category: categoryProp, libraryId }: UseFileEx
   const { data: folderBreadcrumb } = useFetchFolderBreadcrumb(currentFolderSlug);
 
   // Fetch data
-  const { data: rawData, isLoading } = useFetchKnowledgeItems({
+  const { data: swrData, isLoading } = useFetchKnowledgeItems({
     category,
     knowledgeBaseId: libraryId,
     parentId: currentFolderSlug || null,
     q: query ?? undefined,
     showFilesInKnowledgeBase: false,
   });
+
+  // Use fileList from store (which includes paginated data) instead of SWR data
+  const rawData = fileList.length > 0 ? fileList : swrData;
 
   // Client-side sorting
   const data = useMemo(() => {

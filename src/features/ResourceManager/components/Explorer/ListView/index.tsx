@@ -1,7 +1,7 @@
 'use client';
 
 import { Center, Flexbox } from '@lobehub/ui';
-import { Checkbox } from 'antd';
+import { Button, Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
@@ -35,6 +35,10 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     padding-block: 0;
     padding-inline: 0 24px;
   `,
+  loadMoreContainer: css`
+    padding: 16px;
+    border-block-start: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
+  `,
 }));
 
 interface ListViewProps {
@@ -62,10 +66,10 @@ const ListView = memo<ListViewProps>(
     selectFileIds,
     setSelectedFileIds,
   }) => {
-    const { t } = useTranslation('components');
+    const { t } = useTranslation(['components', 'file']);
     const { styles, cx } = useStyles();
     const virtuaRef = useRef<VListHandle>(null);
-    const isLoadingMore = useRef(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
     const isDragActive = useDragActive();
     const [isDropZoneActive, setIsDropZoneActive] = useState(false);
 
@@ -95,24 +99,17 @@ const ListView = memo<ListViewProps>(
       }
     };
 
-    // Handle scroll to detect when reaching bottom
-    const handleScroll = useCallback(() => {
-      const ref = virtuaRef.current;
-      if (!ref || !hasMore || isLoadingMore.current) return;
+    // Handle load more button click
+    const handleLoadMore = useCallback(async () => {
+      if (!hasMore || isLoadingMore) return;
 
-      const scrollOffset = ref.scrollOffset;
-      const scrollSize = ref.scrollSize;
-      const viewportSize = ref.viewportSize;
-
-      // Trigger load more when within 200px of the bottom
-      const threshold = 200;
-      if (scrollSize - scrollOffset - viewportSize <= threshold) {
-        isLoadingMore.current = true;
-        loadMore().finally(() => {
-          isLoadingMore.current = false;
-        });
+      setIsLoadingMore(true);
+      try {
+        await loadMore();
+      } finally {
+        setIsLoadingMore(false);
       }
-    }, [hasMore, loadMore]);
+    }, [hasMore, loadMore, isLoadingMore]);
 
     // Drop zone handlers for dragging to blank space
     const handleDropZoneDragOver = useCallback(
@@ -133,26 +130,32 @@ const ListView = memo<ListViewProps>(
       setIsDropZoneActive(false);
     }, []);
 
+    // Add virtual "load more" item to data if there's more to load
+    const displayData = useMemo(() => {
+      if (!data) return data;
+      if (!hasMore) return data;
+      // Add a fake item at the end to represent the Load More button
+      return [...data, { id: '__load_more__', isLoadMorePlaceholder: true } as any];
+    }, [data, hasMore]);
+
     return (
-      <>
-        <Flexbox style={{ fontSize: 12 }}>
-          <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
-            <Center height={40} style={{ paddingInline: 4 }}>
-              <Checkbox
-                checked={allSelected}
-                indeterminate={indeterminate}
-                onChange={handleSelectAll}
-              />
-            </Center>
-            <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 8 }}>
-              {t('FileManager.title.title')}
-            </Flexbox>
-            <Flexbox className={styles.headerItem} width={FILE_DATE_WIDTH}>
-              {t('FileManager.title.createdAt')}
-            </Flexbox>
-            <Flexbox className={styles.headerItem} width={FILE_SIZE_WIDTH}>
-              {t('FileManager.title.size')}
-            </Flexbox>
+      <Flexbox height={'100%'}>
+        <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8} style={{ fontSize: 12 }}>
+          <Center height={40} style={{ paddingInline: 4 }}>
+            <Checkbox
+              checked={allSelected}
+              indeterminate={indeterminate}
+              onChange={handleSelectAll}
+            />
+          </Center>
+          <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 8 }}>
+            {t('FileManager.title.title')}
+          </Flexbox>
+          <Flexbox className={styles.headerItem} width={FILE_DATE_WIDTH}>
+            {t('FileManager.title.createdAt')}
+          </Flexbox>
+          <Flexbox className={styles.headerItem} width={FILE_SIZE_WIDTH}>
+            {t('FileManager.title.size')}
           </Flexbox>
         </Flexbox>
         <div
@@ -162,28 +165,42 @@ const ListView = memo<ListViewProps>(
           onDragLeave={handleDropZoneDragLeave}
           onDragOver={handleDropZoneDragOver}
           onDrop={handleDropZoneDrop}
+          style={{ flex: 1, overflow: 'hidden', position: 'relative' }}
         >
           <VList
             bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
-            data={data}
+            data={displayData}
             itemSize={48}
-            onScroll={handleScroll}
             ref={virtuaRef}
             style={{ height: '100%' }}
           >
-            {(item, index) => (
-              <FileListItem
-                index={index}
-                key={item.id}
-                onSelectedChange={onSelectionChange}
-                pendingRenameItemId={pendingRenameItemId}
-                selected={selectFileIds.includes(item.id)}
-                {...item}
-              />
-            )}
+            {(item, index) => {
+              // Render Load More button for the placeholder item
+              if (item.isLoadMorePlaceholder) {
+                return (
+                  <Center className={styles.loadMoreContainer} key="load-more">
+                    <Button loading={isLoadingMore} onClick={handleLoadMore} type="default">
+                      {t('loadMore', { ns: 'file', defaultValue: 'Load More' })}
+                    </Button>
+                  </Center>
+                );
+              }
+
+              // Render normal file item
+              return (
+                <FileListItem
+                  index={index}
+                  key={item.id}
+                  onSelectedChange={onSelectionChange}
+                  pendingRenameItemId={pendingRenameItemId}
+                  selected={selectFileIds.includes(item.id)}
+                  {...item}
+                />
+              );
+            }}
           </VList>
         </div>
-      </>
+      </Flexbox>
     );
   },
 );

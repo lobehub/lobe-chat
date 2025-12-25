@@ -56,6 +56,7 @@ export default {
   'library.list.empty': 'Click <1>+</1> to create a new library',
   'library.new': 'New Library',
   'library.title': 'Library',
+  'loadMore': 'Load More',
   'menu.allFiles': 'All Files',
   'menu.allPages': 'All Pages',
   'networkError':
