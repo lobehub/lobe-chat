@@ -9,7 +9,8 @@ const moonshotChatModels: AIChatModelCard[] = [
       structuredOutput: true,
     },
     contextWindowTokens: 262_144,
-    description: 'K2 长思考模型，支持 256k 上下文，支持多步工具调用与思考，擅长解决更复杂的问题。',
+    description:
+      'K2 长思考模型，支持 256k 上下文，支持多步工具调用与思考，擅长解决更复杂的问题。',
     displayName: 'Kimi K2 Thinking',
     enabled: true,
     id: 'kimi-k2-thinking',
@@ -59,6 +60,7 @@ const moonshotChatModels: AIChatModelCard[] = [
     displayName: 'Kimi K2 0905',
     enabled: true,
     id: 'kimi-k2-0905-preview',
+    maxOutput: 65_536,
     pricing: {
       currency: 'CNY',
       units: [

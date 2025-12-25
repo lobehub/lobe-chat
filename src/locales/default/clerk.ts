@@ -731,7 +731,7 @@ export default {
       passkeysSection: {
         menuAction__destructive: '删除',
         menuAction__rename: '重命名',
-        title: '密码',
+        title: '通行密钥',
       },
       passwordSection: {
         primaryButton__setPassword: '设置密码',
