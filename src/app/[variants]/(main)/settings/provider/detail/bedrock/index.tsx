@@ -1,11 +1,11 @@
 'use client';
 
 import { Select } from '@lobehub/ui';
+import { BedrockProviderCard } from 'model-bank/modelProviders';
 import { useTranslation } from 'react-i18next';
 
 import { FormPassword } from '@/components/FormInput';
 import { SkeletonInput } from '@/components/Skeleton';
-import { BedrockProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 

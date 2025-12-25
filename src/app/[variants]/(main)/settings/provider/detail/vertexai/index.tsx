@@ -2,11 +2,11 @@
 
 import { Markdown, Select } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { VertexAIProviderCard } from 'model-bank/modelProviders';
 import { useTranslation } from 'react-i18next';
 
 import { FormPassword } from '@/components/FormInput';
 import { SkeletonInput } from '@/components/Skeleton';
-import { VertexAIProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 

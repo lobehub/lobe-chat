@@ -3,11 +3,11 @@
 import { AutoComplete, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ModelProvider } from 'model-bank';
+import { AzureProviderCard } from 'model-bank/modelProviders';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { SkeletonInput } from '@/components/Skeleton';
-import { AzureProviderCard } from '@/config/modelProviders';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';

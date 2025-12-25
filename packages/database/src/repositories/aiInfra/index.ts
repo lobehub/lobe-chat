@@ -13,9 +13,9 @@ import {
   EnabledAiModel,
 } from 'model-bank';
 import * as modelBank from 'model-bank';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 import pMap from 'p-map';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { merge, mergeArrayById } from '@/utils/merge';
 
 import { AiModelModel } from '../../models/aiModel';

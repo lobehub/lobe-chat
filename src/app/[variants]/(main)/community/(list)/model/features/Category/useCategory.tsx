@@ -1,10 +1,9 @@
 import { ProviderIcon } from '@lobehub/icons';
 import { uniqBy } from 'es-toolkit/compat';
 import { LayoutPanelTopIcon } from 'lucide-react';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 
 export const useCategory = () => {
   const { t } = useTranslation('discover');

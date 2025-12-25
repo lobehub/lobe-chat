@@ -5,9 +5,9 @@ import type {
   EnabledProvider,
 } from '@lobechat/types';
 import { AiProviderModelListItem, EnabledAiModel } from 'model-bank';
+import { DEFAULT_MODEL_PROVIDER_LIST } from 'model-bank/modelProviders';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { clientDB, initializeDB } from '@/database/client/db';
 
 import { AiInfraRepos } from './index';

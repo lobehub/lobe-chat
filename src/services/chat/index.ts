@@ -369,7 +369,7 @@ class ChatService {
       provider,
     });
 
-    const { DEFAULT_MODEL_PROVIDER_LIST } = await import('@/config/modelProviders');
+    const { DEFAULT_MODEL_PROVIDER_LIST } = await import('model-bank/modelProviders');
     const providerConfig = DEFAULT_MODEL_PROVIDER_LIST.find((item) => item.id === provider);
 
     const userPreferTransitionMode =

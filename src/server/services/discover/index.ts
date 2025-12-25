@@ -1190,7 +1190,7 @@ export class DiscoverService {
     log('_getProviderList: fetching provider list');
     const [{ LOBE_DEFAULT_MODEL_LIST }, { DEFAULT_MODEL_PROVIDER_LIST }] = await Promise.all([
       import('model-bank'),
-      import('@/config/modelProviders'),
+      import('model-bank/modelProviders'),
     ]);
     const result = DEFAULT_MODEL_PROVIDER_LIST.map((item) => {
       const models = uniq(
@@ -1480,7 +1480,7 @@ export class DiscoverService {
     log('getModelDetail: params=%O', params);
     const [{ LOBE_DEFAULT_MODEL_LIST }, { DEFAULT_MODEL_PROVIDER_LIST }] = await Promise.all([
       import('model-bank'),
-      import('@/config/modelProviders'),
+      import('model-bank/modelProviders'),
     ]);
     const { identifier } = params;
     const all = await this._getModelList();

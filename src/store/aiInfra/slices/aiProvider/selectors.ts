@@ -1,4 +1,5 @@
-import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
+import { isProviderDisableBrowserRequest } from 'model-bank/modelProviders';
+
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiProviderRuntimeConfig, AiProviderSourceEnum } from '@/types/aiProvider';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
