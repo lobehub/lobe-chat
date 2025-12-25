@@ -9,7 +9,7 @@ import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 import ToggleLeftPanelButton from './ToggleLeftPanelButton';
-import BackButton, { BACK_BUTTON_ID } from './components/BackButton';
+import BackButton from './components/BackButton';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => ({
   breadcrumb: css`
@@ -34,19 +34,6 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   container: css`
     overflow: hidden;
     margin-block-start: 8px;
-
-    #${BACK_BUTTON_ID} {
-      width: 0 !important;
-      opacity: 0;
-      transition: all 0.2s ${token.motionEaseOut};
-    }
-
-    &:hover {
-      #${BACK_BUTTON_ID} {
-        width: 24px !important;
-        opacity: 1;
-      }
-    }
   `,
 }));
 

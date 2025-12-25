@@ -24,10 +24,7 @@ const AddTopicButon = memo(() => {
   const pathname = usePathname();
   const isProfileActive = pathname.includes('/profile');
   const router = useQueryRoute();
-  const [hasTopic, openNewTopicOrSaveTopic] = useChatStore((s) => [
-    !!s.activeTopicId,
-    s.openNewTopicOrSaveTopic,
-  ]);
+  const [openNewTopicOrSaveTopic] = useChatStore((s) => [s.openNewTopicOrSaveTopic]);
 
   const { mutate, isValidating } = useActionSWR('openNewTopicOrSaveTopic', openNewTopicOrSaveTopic);
   const handleNewTopic = () => {
@@ -37,8 +34,6 @@ const AddTopicButon = memo(() => {
     }
     mutate();
   };
-
-  if (!hasTopic && !isProfileActive) return;
 
   return (
     <ActionIcon

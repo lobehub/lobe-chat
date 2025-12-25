@@ -19,14 +19,12 @@ const AddTopicButon = memo(() => {
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SaveTopic));
   const activeGroupId = useAgentGroupStore((s) => s.activeGroupId);
   const router = useQueryRoute();
-  const hasTopic = useChatStore((s) => !!s.activeTopicId);
-
-  if (!hasTopic || !activeGroupId) return null;
 
   return (
     <ActionIcon
       icon={MessageSquarePlusIcon}
       onClick={() => {
+        if (!activeGroupId) return;
         useChatStore.setState({ activeTopicId: undefined });
         router.push(urlJoin('/group', activeGroupId), { query: { thread: null, topic: null } });
       }}

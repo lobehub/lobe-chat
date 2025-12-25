@@ -11,6 +11,7 @@ import { TOGGLE_BUTTON_ID } from '@/features/NavPanel/ToggleLeftPanelButton';
 import { isMacOS } from '@/utils/platform';
 
 import Sidebar from '../../app/[variants]/(main)/home/_layout/Sidebar';
+import { BACK_BUTTON_ID } from './components/BackButton';
 import { useNavPanel } from './hooks/useNavPanel';
 
 export const NAV_PANEL_RIGHT_DRAWER_ID = 'nav-panel-drawer';
@@ -61,6 +62,12 @@ export const useStyles = createStyles(({ css, token }) => ({
         width 0.2s ${token.motionEaseOut};
     }
 
+    #${BACK_BUTTON_ID} {
+      width: 0 !important;
+      opacity: 0;
+      transition: all 0.2s ${token.motionEaseOut};
+    }
+
     &:hover {
       #${TOGGLE_BUTTON_ID} {
         width: 32px !important;
@@ -70,6 +77,13 @@ export const useStyles = createStyles(({ css, token }) => ({
       #${USER_DROPDOWN_ICON_ID} {
         width: 14px !important;
         opacity: 1;
+      }
+
+      &:hover {
+        #${BACK_BUTTON_ID} {
+          width: 24px !important;
+          opacity: 1;
+        }
       }
     }
   `,
