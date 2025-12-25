@@ -5,9 +5,9 @@ import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
-  MouseEvent,
-  ReactNode,
-  RefObject,
+  type MouseEvent,
+  type ReactNode,
+  type RefObject,
   Suspense,
   memo,
   useCallback,
@@ -27,6 +27,7 @@ import {
   useConversationStore,
   virtuaListSelectors,
 } from '../store';
+import type { RenderRole } from '../types/ui';
 import AgentCouncilMessage from './AgentCouncil';
 import AssistantMessage from './Assistant';
 import AssistantGroupMessage from './AssistantGroup';
@@ -58,6 +59,68 @@ export interface MessageItemProps {
   isLatestItem?: boolean;
 }
 
+interface MessageContentProps {
+  disableEditing?: boolean;
+  id: string;
+  index: number;
+  isLatestItem?: boolean;
+  role: RenderRole;
+}
+
+const MessageContent = memo<MessageContentProps>(
+  ({ role, disableEditing, id, index, isLatestItem }) => {
+    switch (role) {
+      case 'user': {
+        return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
+      }
+
+      case 'assistant': {
+        return (
+          <AssistantMessage
+            disableEditing={disableEditing}
+            id={id}
+            index={index}
+            isLatestItem={isLatestItem}
+          />
+        );
+      }
+
+      case 'assistantGroup': {
+        return (
+          <AssistantGroupMessage
+            disableEditing={disableEditing}
+            id={id}
+            index={index}
+            isLatestItem={isLatestItem}
+          />
+        );
+      }
+      case 'task': {
+        return (
+          <TaskMessage
+            disableEditing={disableEditing}
+            id={id}
+            index={index}
+            isLatestItem={isLatestItem}
+          />
+        );
+      }
+
+      case 'agentCouncil': {
+        return <AgentCouncilMessage id={id} index={index} />;
+      }
+
+      case 'tool': {
+        return <ToolMessage id={id} index={index} />;
+      }
+    }
+
+    return null;
+  },
+);
+
+MessageContent.displayName = 'MessageContent';
+
 const MessageItem = memo<MessageItemProps>(
   ({
     className,
@@ -76,7 +139,6 @@ const MessageItem = memo<MessageItemProps>(
 
     // Get message and actionsBar from ConversationStore
     const message = useConversationStore(dataSelectors.getDisplayMessageById(id), isEqual);
-    const actionsBar = useConversationStore((s) => s.actionsBar);
     const role = message?.role;
 
     const [editing, isMessageCreating] = useConversationStore((s) => [
@@ -135,56 +197,6 @@ const MessageItem = memo<MessageItemProps>(
       [virtuaScrollMethods],
     );
 
-    const renderContent = useCallback(() => {
-      switch (role) {
-        case 'user': {
-          return <UserMessage disableEditing={disableEditing} id={id} index={index} />;
-        }
-
-        case 'assistant': {
-          return (
-            <AssistantMessage
-              disableEditing={disableEditing}
-              id={id}
-              index={index}
-              isLatestItem={isLatestItem}
-            />
-          );
-        }
-
-        case 'assistantGroup': {
-          return (
-            <AssistantGroupMessage
-              disableEditing={disableEditing}
-              id={id}
-              index={index}
-              isLatestItem={isLatestItem}
-            />
-          );
-        }
-        case 'task': {
-          return (
-            <TaskMessage
-              disableEditing={disableEditing}
-              id={id}
-              index={index}
-              isLatestItem={isLatestItem}
-            />
-          );
-        }
-
-        case 'agentCouncil': {
-          return <AgentCouncilMessage id={id} index={index} />;
-        }
-
-        case 'tool': {
-          return <ToolMessage id={id} index={index} />;
-        }
-      }
-
-      return null;
-    }, [role, disableEditing, id, index, isLatestItem, actionsBar]);
-
     if (!role) return;
 
     return (
@@ -196,7 +208,15 @@ const MessageItem = memo<MessageItemProps>(
           onContextMenu={onContextMenu}
           ref={setContainerRef}
         >
-          <Suspense fallback={<BubblesLoading />}>{renderContent()}</Suspense>
+          <Suspense fallback={<BubblesLoading />}>
+            <MessageContent
+              disableEditing={disableEditing}
+              id={id}
+              index={index}
+              isLatestItem={isLatestItem}
+              role={role}
+            />
+          </Suspense>
           {endRender}
         </Flexbox>
         <ContextMenu
@@ -213,7 +233,6 @@ const MessageItem = memo<MessageItemProps>(
       </>
     );
   },
-  isEqual,
 );
 
 MessageItem.displayName = 'MessageItem';

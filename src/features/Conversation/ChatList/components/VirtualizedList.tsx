@@ -1,8 +1,18 @@
 'use client';
 
+import { type VirtualItem, type Virtualizer, useVirtualizer } from '@tanstack/react-virtual';
 import isEqual from 'fast-deep-equal';
-import { ReactElement, type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
-import { VList, VListHandle } from 'virtua';
+import {
+  type ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 
 import WideScreenContainer from '../../../WideScreenContainer';
 import { useConversationStore, virtuaListSelectors } from '../../store';
@@ -17,15 +27,174 @@ interface VirtualizedListProps {
   itemContent: (index: number, data: string) => ReactNode;
 }
 
+interface SlotRowProps {
+  index: number | null;
+  itemContent: (index: number, data: string) => ReactNode;
+  messageId: string | null;
+  slotId: number;
+  vItem?: VirtualItem;
+  virtualizer: Virtualizer<HTMLDivElement, Element>;
+}
+
+const useDynamicPoolSize = (opts: {
+  batch?: number;
+  estimateSize: number;
+  scrollEl: HTMLDivElement | null;
+}) => {
+  const { scrollEl, estimateSize, batch = 8 } = opts;
+  const [target, setTarget] = useState(0);
+  const [poolSize, setPoolSize] = useState(0);
+  const [overscan, setOverscan] = useState(8);
+
+  useLayoutEffect(() => {
+    if (!scrollEl) return;
+
+    const compute = () => {
+      const height = scrollEl.clientHeight || 0;
+      const visibleCount = Math.max(1, Math.ceil(height / estimateSize));
+      const nextOverscan = visibleCount;
+      const nextTarget = Math.max(0, visibleCount * 3 + 2);
+      setOverscan(nextOverscan);
+      setTarget(nextTarget);
+    };
+
+    compute();
+
+    const observer = new ResizeObserver(() => compute());
+    observer.observe(scrollEl);
+
+    return () => observer.disconnect();
+  }, [scrollEl, estimateSize]);
+
+  useEffect(() => {
+    if (poolSize >= target) return;
+
+    let raf = 0;
+    const step = () => {
+      setPoolSize((prev) => Math.min(target, prev + batch));
+      raf = requestAnimationFrame(step);
+    };
+
+    raf = requestAnimationFrame(step);
+
+    return () => cancelAnimationFrame(raf);
+  }, [batch, poolSize, target]);
+
+  useEffect(() => {
+    if (poolSize > target + batch * 4) {
+      setPoolSize(target);
+    }
+  }, [batch, poolSize, target]);
+
+  return { overscan, poolSize, target };
+};
+
+const useSlotAssignments = (virtualItems: VirtualItem[], poolSize: number) => {
+  const indexToSlot = useRef(new Map<number, number>());
+  const slotToIndexRef = useRef<(number | null)[]>([]);
+  const freeSlots = useRef<number[]>([]);
+  const [, force] = useReducer((value: number) => value + 1, 0);
+
+  useLayoutEffect(() => {
+    if (poolSize <= 0) {
+      indexToSlot.current.clear();
+      slotToIndexRef.current = [];
+      freeSlots.current = [];
+      force();
+      return;
+    }
+
+    if (slotToIndexRef.current.length !== poolSize) {
+      indexToSlot.current.clear();
+      slotToIndexRef.current = Array.from({ length: poolSize }, () => null);
+      freeSlots.current = Array.from({ length: poolSize }, (_, i) => i).reverse();
+    }
+
+    const visible = new Set(virtualItems.map((item) => item.index));
+
+    for (const [index, slot] of indexToSlot.current) {
+      if (!visible.has(index)) {
+        indexToSlot.current.delete(index);
+        slotToIndexRef.current[slot] = null;
+        freeSlots.current.push(slot);
+      }
+    }
+
+    for (const item of virtualItems) {
+      if (!indexToSlot.current.has(item.index)) {
+        const slot = freeSlots.current.pop();
+        if (slot == null) continue;
+        indexToSlot.current.set(item.index, slot);
+        slotToIndexRef.current[slot] = item.index;
+      }
+    }
+
+    force();
+  }, [poolSize, virtualItems]);
+
+  return slotToIndexRef.current;
+};
+
+const SlotRow = memo<SlotRowProps>(
+  ({ slotId, index, vItem, messageId, itemContent, virtualizer }) => {
+    const lastAssignedRef = useRef<{ id: string; index: number } | null>(null);
+    const active = index != null && vItem != null && messageId != null;
+
+    useLayoutEffect(() => {
+      if (index == null || messageId == null) return;
+      lastAssignedRef.current = { id: messageId, index };
+    }, [index, messageId]);
+
+    const stable = lastAssignedRef.current;
+    const renderId = active ? messageId : (stable?.id ?? null);
+    const renderIndex = active ? index : (stable?.index ?? null);
+
+    const content =
+      renderId != null && renderIndex != null ? itemContent(renderIndex, renderId) : null;
+    const isAgentCouncil = renderId?.includes('agentCouncil') ?? false;
+
+    return (
+      <div
+        data-index={active ? index : -1}
+        data-slot={slotId}
+        ref={active ? virtualizer.measureElement : undefined}
+        style={{
+          boxSizing: 'border-box',
+          left: 0,
+          minHeight: active ? vItem.size : 0,
+          pointerEvents: active ? 'auto' : 'none',
+          position: 'absolute',
+          top: 0,
+          transform: `translateY(${active ? vItem.start : -999_999}px)`,
+          visibility: active ? 'visible' : 'hidden',
+          width: '100%',
+          willChange: 'transform',
+        }}
+      >
+        {content ? (
+          isAgentCouncil ? (
+            <div style={{ position: 'relative', width: '100%' }}>{content}</div>
+          ) : (
+            <WideScreenContainer style={{ position: 'relative' }}>{content}</WideScreenContainer>
+          )
+        ) : null}
+      </div>
+    );
+  },
+);
+
 /**
  * VirtualizedList for Conversation
  *
  * Based on ConversationStore data flow, no dependency on global ChatStore.
  */
 const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, isGenerating }) => {
-  const virtuaRef = useRef<VListHandle>(null);
   const prevDataLengthRef = useRef(dataSource.length);
   const scrollEndTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
+
+  const estimateSize = 120;
+  const bottomPadding = 24;
 
   const atBottomThreshold = 200;
 
@@ -38,15 +207,13 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
 
   // Check if at bottom based on scroll position
   const checkAtBottom = useCallback(() => {
-    const ref = virtuaRef.current;
-    if (!ref) return false;
-
-    const scrollOffset = ref.scrollOffset;
-    const scrollSize = ref.scrollSize;
-    const viewportSize = ref.viewportSize;
+    if (!scrollEl) return false;
+    const scrollOffset = scrollEl.scrollTop;
+    const scrollSize = scrollEl.scrollHeight;
+    const viewportSize = scrollEl.clientHeight;
 
     return scrollSize - scrollOffset - viewportSize <= atBottomThreshold;
-  }, [atBottomThreshold]);
+  }, [atBottomThreshold, scrollEl]);
 
   // Handle scroll events
   const handleScroll = useCallback(() => {
@@ -67,26 +234,46 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
     }, 150);
   }, [checkAtBottom, setScrollState]);
 
-  const handleScrollEnd = useCallback(() => {
-    setScrollState({ isScrolling: false });
-  }, [setScrollState]);
+  const setScrollRef = useCallback((node: HTMLDivElement | null) => {
+    setScrollEl(node);
+  }, []);
+
+  const { overscan, poolSize } = useDynamicPoolSize({
+    estimateSize,
+    scrollEl,
+  });
+
+  const virtualizer = useVirtualizer({
+    count: dataSource.length,
+    estimateSize: () => estimateSize,
+    getScrollElement: () => scrollEl,
+    overscan: 1,
+  });
+
+  useLayoutEffect(() => {
+    if (!scrollEl) return;
+    virtualizer.measure();
+  }, [scrollEl, virtualizer]);
 
   // Register scroll methods to store on mount
   useEffect(() => {
-    const ref = virtuaRef.current;
-    if (ref) {
-      registerVirtuaScrollMethods({
-        getScrollOffset: () => ref.scrollOffset,
-        getScrollSize: () => ref.scrollSize,
-        getViewportSize: () => ref.viewportSize,
-        scrollToIndex: (index, options) => ref.scrollToIndex(index, options),
-      });
-    }
+    if (!scrollEl) return;
+
+    registerVirtuaScrollMethods({
+      getScrollOffset: () => scrollEl.scrollTop,
+      getScrollSize: () => scrollEl.scrollHeight,
+      getViewportSize: () => scrollEl.clientHeight,
+      scrollToIndex: (index, options) =>
+        virtualizer.scrollToIndex(index, {
+          align: options?.align ?? 'auto',
+          behavior: options?.smooth ? 'smooth' : 'auto',
+        }),
+    });
 
     return () => {
       registerVirtuaScrollMethods(null);
     };
-  }, [registerVirtuaScrollMethods]);
+  }, [registerVirtuaScrollMethods, scrollEl, virtualizer]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -103,48 +290,60 @@ const VirtualizedList = memo<VirtualizedListProps>(({ dataSource, itemContent, i
     const shouldScroll = dataSource.length > prevDataLengthRef.current;
     prevDataLengthRef.current = dataSource.length;
 
-    if (shouldScroll && virtuaRef.current) {
-      virtuaRef.current.scrollToIndex(dataSource.length - 2, { align: 'start', smooth: true });
+    if (shouldScroll) {
+      const targetIndex = Math.max(0, dataSource.length - 2);
+      virtualizer.scrollToIndex(targetIndex, {
+        align: 'start',
+        behavior: 'smooth',
+      });
     }
-  }, [dataSource.length]);
+  }, [dataSource.length, virtualizer]);
 
   // Scroll to bottom on initial render
   useEffect(() => {
-    if (virtuaRef.current && dataSource.length > 0) {
-      virtuaRef.current.scrollToIndex(dataSource.length - 1, { align: 'end' });
+    if (scrollEl && dataSource.length > 0) {
+      virtualizer.scrollToIndex(dataSource.length - 1, { align: 'end' });
     }
-  }, []);
+  }, [dataSource.length, scrollEl, virtualizer]);
+
+  const virtualItems = virtualizer.getVirtualItems();
+  const slotToIndex = useSlotAssignments(virtualItems, poolSize);
+
+  const vItemByIndex = useMemo(() => {
+    const map = new Map<number, VirtualItem>();
+    for (const item of virtualItems) {
+      map.set(item.index, item);
+    }
+    return map;
+  }, [virtualItems]);
 
   return (
     <>
-      <VList
-        bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
-        data={dataSource}
+      <div
         onScroll={handleScroll}
-        onScrollEnd={handleScrollEnd}
-        ref={virtuaRef}
-        style={{ height: '100%', paddingBottom: 24 }}
+        ref={setScrollRef}
+        style={{ height: '100%', overflowY: 'auto', paddingBottom: bottomPadding }}
       >
-        {(messageId, index): ReactElement => {
-          const isAgentCouncil = messageId.includes('agentCouncil');
-          const content = itemContent(index, messageId);
+        <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
+          {Array.from({ length: poolSize }, (_, slotId) => {
+            const index = slotToIndex[slotId] ?? null;
+            const vItem = index != null ? vItemByIndex.get(index) : undefined;
+            const messageId = index != null ? dataSource[index] : null;
 
-          if (isAgentCouncil) {
-            // AgentCouncil needs full width for horizontal scroll
             return (
-              <div key={messageId} style={{ position: 'relative', width: '100%' }}>
-                {content}
-              </div>
+              <SlotRow
+                index={index}
+                itemContent={itemContent}
+                key={slotId}
+                messageId={messageId}
+                slotId={slotId}
+                vItem={vItem}
+                virtualizer={virtualizer}
+              />
             );
-          }
-
-          return (
-            <WideScreenContainer key={messageId} style={{ position: 'relative' }}>
-              {content}
-            </WideScreenContainer>
-          );
-        }}
-      </VList>
+          })}
+        </div>
+      </div>
       <WideScreenContainer
         onChange={() => {
           if (!atBottom) return;
