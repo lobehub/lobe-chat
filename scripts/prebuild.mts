@@ -15,7 +15,7 @@ const partialBuildPages = [
     name: 'backend-routes',
     disabled: isBundleAnalyzer,
     paths: ['src/app/(backend)'],
-  ],
+  },
   // no need for desktop
   // {
   //   name: 'changelog',
