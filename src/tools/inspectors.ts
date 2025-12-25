@@ -1,4 +1,5 @@
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
+import { PageAgentIdentifier, PageAgentInspectors } from '@lobechat/builtin-tool-page-agent/client';
 import { type BuiltinInspector } from '@lobechat/types';
 
 import { CodeInterpreterInspectors } from './code-interpreter/Inspector';
@@ -17,6 +18,7 @@ import { WebBrowsingManifest } from './web-browsing/index';
 const BuiltinToolInspectors: Record<string, Record<string, BuiltinInspector>> = {
   [CodeInterpreterIdentifier]: CodeInterpreterInspectors as Record<string, BuiltinInspector>,
   [LocalSystemManifest.identifier]: LocalSystemInspectors as Record<string, BuiltinInspector>,
+  [PageAgentIdentifier]: PageAgentInspectors as Record<string, BuiltinInspector>,
   [WebBrowsingManifest.identifier]: WebBrowsingInspectors as Record<string, BuiltinInspector>,
 };
 

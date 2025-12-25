@@ -1,7 +1,9 @@
 'use client';
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Plus } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,9 +11,13 @@ import { useTranslation } from 'react-i18next';
 import type { InitDocumentArgs, InitDocumentState } from '../../../types';
 
 const useStyles = createStyles(({ css, token }) => ({
-  desc: css`
+  chars: css`
     font-family: ${token.fontFamilyCode};
-    color: ${token.colorTextSecondary};
+    color: ${token.colorTextDescription};
+  `,
+  lines: css`
+    font-family: ${token.fontFamilyCode};
+    color: ${token.colorSuccess};
   `,
   root: css`
     overflow: hidden;
@@ -44,6 +50,7 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   title: css`
+    margin-inline-end: 8px;
     color: ${token.colorText};
   `,
 }));
@@ -80,13 +87,20 @@ export const InitPageInspector = memo<BuiltinInspectorProps<InitDocumentArgs, In
         <span className={styles.title}>
           {t('builtins.lobe-page-agent.apiName.initPage.result')}
         </span>
-        <span className={styles.desc}>
-          {' '}
-          {t('builtins.lobe-page-agent.apiName.initPage.stats', {
-            chars: formatNumber(chars),
-            lines: formatNumber(displayLines),
-          })}
-        </span>
+        {displayLines > 0 && (
+          <span className={styles.lines}>
+            <Icon icon={Plus} size={12} />
+            {t('builtins.lobe-page-agent.apiName.initPage.lines', {
+              lines: formatNumber(displayLines),
+            })}
+          </span>
+        )}
+        {chars > 0 && (
+          <span className={styles.chars}>
+            {' '}
+            {t('builtins.lobe-page-agent.apiName.initPage.chars', { chars: formatNumber(chars) })}
+          </span>
+        )}
       </div>
     );
   },
