@@ -35,6 +35,9 @@ export interface MemoryExtractionPrivateConfig {
   agentLayerExtractor: MemoryLayerExtractorConfig;
   concurrency?: number;
   embedding: MemoryAgentConfig;
+  featureFlags: {
+    enableBenchmarkLoCoMo: boolean;
+  },
   observabilityS3?: {
     accessKeyId?: string;
     bucketName?: string;
@@ -162,6 +165,9 @@ export const parseMemoryExtractionConfig = (): MemoryExtractionPrivateConfig => 
     agentGateKeeper.apiKey || agentLayerExtractor.apiKey,
   );
   const extractorObservabilityS3 = parseExtractorAgentObservabilityS3();
+  const featureFlags = {
+    enableBenchmarkLoCoMo: process.env.MEMORY_USER_MEMORY_FEATURE_FLAG_BENCHMARK_LOCOMO === 'true'
+  }
   const concurrencyRaw = process.env.MEMORY_USER_MEMORY_CONCURRENCY;
   const concurrency =
     concurrencyRaw !== undefined
@@ -189,6 +195,7 @@ export const parseMemoryExtractionConfig = (): MemoryExtractionPrivateConfig => 
     agentLayerExtractor,
     concurrency,
     embedding,
+    featureFlags,
     observabilityS3: extractorObservabilityS3,
     webhookHeaders,
     whitelistUsers,
