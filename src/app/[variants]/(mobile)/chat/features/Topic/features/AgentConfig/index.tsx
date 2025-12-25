@@ -2,7 +2,7 @@
 
 import { ActionIcon } from '@lobehub/ui';
 import { Edit } from 'lucide-react';
-import { MouseEvent, memo, useState } from 'react';
+import { type MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useMergeState from 'use-merge-value';
 

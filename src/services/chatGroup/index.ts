@@ -1,10 +1,10 @@
-import { AgentGroupDetail, AgentItem } from '@lobechat/types';
+import { type AgentGroupDetail, type AgentItem } from '@lobechat/types';
 
 import {
-  ChatGroupAgentItem,
-  ChatGroupItem,
-  NewChatGroup,
-  NewChatGroupAgent,
+  type ChatGroupAgentItem,
+  type ChatGroupItem,
+  type NewChatGroup,
+  type NewChatGroupAgent,
 } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 

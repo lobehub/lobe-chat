@@ -1,5 +1,5 @@
 import { deserializeParts } from '@lobechat/utils';
-import { MarkdownProps } from '@lobehub/ui';
+import { type MarkdownProps } from '@lobehub/ui';
 import { memo } from 'react';
 
 import BubblesLoading from '@/components/BubblesLoading';

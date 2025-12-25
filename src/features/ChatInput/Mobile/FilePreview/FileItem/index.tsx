@@ -1,7 +1,7 @@
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 
 import { useFileStore } from '@/store/file';
-import { UploadFileItem } from '@/types/files';
+import { type UploadFileItem } from '@/types/files';
 
 import File from './File';
 import Image from './Image';

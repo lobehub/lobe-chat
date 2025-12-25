@@ -1,19 +1,19 @@
 import {
   LayersEnum,
-  NewUserMemoryIdentity,
-  TypesEnum,
-  UpdateUserMemoryIdentity,
+  type NewUserMemoryIdentity,
+  type TypesEnum,
+  type UpdateUserMemoryIdentity,
 } from '@lobechat/types';
 import { uniqBy } from 'es-toolkit/compat';
 import { produce } from 'immer';
-import useSWR, { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import useSWR, { type SWRResponse } from 'swr';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { AddIdentityEntryResult } from '@/database/models/userMemory';
+import { type AddIdentityEntryResult } from '@/database/models/userMemory';
 import { memoryCRUDService, userMemoryService } from '@/services/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { UserMemoryStore } from '../../store';
+import { type UserMemoryStore } from '../../store';
 
 const n = setNamespace('userMemory/identity');
 

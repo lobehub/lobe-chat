@@ -21,7 +21,7 @@ import DisabledModels from './DisabledModels';
 import EmptyModels from './EmptyModels';
 import EnabledModelList from './EnabledModelList';
 import ModelTitle from './ModelTitle';
-import { ProviderSettingsContext, ProviderSettingsContextValue } from './ProviderSettingsContext';
+import { ProviderSettingsContext, type ProviderSettingsContextValue } from './ProviderSettingsContext';
 import SearchResult from './SearchResult';
 import SkeletonList from './SkeletonList';
 

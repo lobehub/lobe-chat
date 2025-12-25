@@ -1,6 +1,6 @@
 import type { LocalReadFileState } from '@lobechat/builtin-tool-local-system';
-import { RenameLocalFileParams } from '@lobechat/electron-client-ipc';
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type RenameLocalFileParams } from '@lobechat/electron-client-ipc';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRightIcon } from 'lucide-react';

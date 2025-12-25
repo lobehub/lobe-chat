@@ -5,7 +5,7 @@ import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquareHeart } from 'lucide-react';
 import Link from 'next/link';
-import { PropsWithChildren, memo, useState } from 'react';
+import { type PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import GuideModal from '@/components/GuideModal';

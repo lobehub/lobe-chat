@@ -1,5 +1,5 @@
-import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
-import { BuiltinPlaceholderProps } from '@lobechat/types';
+import { type LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
+import { type BuiltinPlaceholderProps } from '@lobechat/types';
 import { Center, Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';

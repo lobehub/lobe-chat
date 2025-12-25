@@ -1,7 +1,7 @@
 import { CopyOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button } from '@lobehub/ui';
 import { App, Flex } from 'antd';
-import { FC, useState } from 'react';
+import { type FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ApiKeyDisplayProps {

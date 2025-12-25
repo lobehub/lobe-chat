@@ -3,8 +3,7 @@ import { CreateBotIcon } from '@lobehub/ui/icons';
 import { Dropdown } from 'antd';
 import { useTheme } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
-import type React from 'react';
-import { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';

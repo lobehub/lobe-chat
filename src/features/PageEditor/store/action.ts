@@ -1,14 +1,14 @@
 import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
 import debug from 'debug';
 import { debounce } from 'es-toolkit/compat';
-import { StateCreator } from 'zustand';
+import { type StateCreator } from 'zustand';
 
 import { documentService } from '@/services/document';
 import { pageAgentRuntime } from '@/store/chat/slices/builtinTool/actions/pageAgent';
 import { useFileStore } from '@/store/file';
-import { DocumentSourceType, LobeDocument } from '@/types/document';
+import { DocumentSourceType, type LobeDocument } from '@/types/document';
 
-import { State, initialState } from './initialState';
+import { type State, initialState } from './initialState';
 
 const log = debug('page:editor');
 

@@ -14,6 +14,15 @@
     "tts",
     "stt"
   ],
+  "workspaces": [
+    "packages/*",
+    "packages/business/*",
+    "e2e",
+    "apps/desktop/src/main"
+  ],
+  "overrides": {
+    "stylelint-config-clean-order": "7.0.0"
+  },
   "homepage": "https://github.com/lobehub/lobe-chat",
   "bugs": {
     "url": "https://github.com/lobehub/lobe-chat/issues/new/choose"
@@ -25,12 +34,6 @@
   "license": "MIT",
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
-  "workspaces": [
-    "packages/*",
-    "packages/business/*",
-    "e2e",
-    "apps/desktop/src/main"
-  ],
   "scripts": {
     "prebuild": "tsx scripts/prebuild.mts && npm run lint",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build --webpack",
@@ -130,9 +133,6 @@
       "stylelint --fix",
       "eslint --fix"
     ]
-  },
-  "overrides": {
-    "stylelint-config-clean-order": "7.0.0"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
@@ -450,14 +450,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@vercel/speed-insights"
-    ],
-    "overrides": {
-      "jose": "^6.1.3",
-      "stylelint-config-clean-order": "7.0.0"
-    }
   }
 }

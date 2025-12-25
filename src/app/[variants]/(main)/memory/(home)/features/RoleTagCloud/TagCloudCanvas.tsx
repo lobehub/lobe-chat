@@ -4,7 +4,7 @@ import { useTheme } from 'antd-style';
 import { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 
-import { QueryTagsResult } from '@/database/models/userMemory';
+import { type QueryTagsResult } from '@/database/models/userMemory';
 import UserAvatar from '@/features/User/UserAvatar';
 
 // 配置常量

@@ -1,8 +1,7 @@
 import { isProviderDisableBrowserRequest } from 'model-bank/modelProviders';
-
-import { AIProviderStoreState } from '@/store/aiInfra/initialState';
-import { AiProviderRuntimeConfig, AiProviderSourceEnum } from '@/types/aiProvider';
-import { GlobalLLMProviderKey } from '@/types/user/settings';
+import { type AIProviderStoreState } from '@/store/aiInfra/initialState';
+import { type AiProviderRuntimeConfig, AiProviderSourceEnum } from '@/types/aiProvider';
+import { type GlobalLLMProviderKey } from '@/types/user/settings';
 
 // List
 const enabledAiProviderList = (s: AIProviderStoreState) =>

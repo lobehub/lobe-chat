@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
 import KnowledgeIcon from '@/components/KnowledgeIcon';
-import { KnowledgeItem } from '@/types/knowledgeBase';
+import { type KnowledgeItem } from '@/types/knowledgeBase';
 
 import Actions from './Action';
 

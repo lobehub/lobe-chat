@@ -2,7 +2,7 @@ import urlJoin from 'url-join';
 
 import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { appEnv } from '@/envs/app';
-import { Locales, normalizeLocale } from '@/locales/resources';
+import { type Locales, normalizeLocale } from '@/locales/resources';
 import { EdgeConfig } from '@/server/modules/EdgeConfig';
 import { CacheRevalidate, CacheTag } from '@/types/discover';
 

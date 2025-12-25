@@ -1,6 +1,6 @@
 import { Icon, copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
-import { ItemType } from 'antd/es/menu/interface';
+import { type ItemType } from 'antd/es/menu/interface';
 import {
   BookMinusIcon,
   BookPlusIcon,
@@ -10,7 +10,7 @@ import {
   PencilIcon,
   Trash,
 } from 'lucide-react';
-import { ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import RepoIcon from '@/components/LibIcon';

@@ -2,7 +2,7 @@
 
 import { DEFAULT_INBOX_AVATAR, SESSION_CHAT_URL } from '@lobechat/const';
 import { Avatar } from '@lobehub/ui';
-import { CSSProperties, memo, useCallback } from 'react';
+import { type CSSProperties, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import NavItem from '@/features/NavPanel/components/NavItem';

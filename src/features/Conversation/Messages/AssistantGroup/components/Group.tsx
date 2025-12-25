@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 
-import { AssistantContentBlock } from '@/types/index';
+import { type AssistantContentBlock } from '@/types/index';
 
 import { messageStateSelectors, useConversationStore } from '../../../store';
 import { CollapsedMessage } from './CollapsedMessage';

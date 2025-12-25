@@ -12,7 +12,7 @@ import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
 import { useMarketAuth } from '@/layout/AuthProvider/MarketAuth';
-import { FavoritePluginItem, socialService } from '@/services/social';
+import { type FavoritePluginItem, socialService } from '@/services/social';
 import { useDiscoverStore } from '@/store/discover';
 
 import { useUserDetailContext } from './DetailProvider';

@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DiscoverModelItem } from '@/types/discover';
+import { type DiscoverModelItem } from '@/types/discover';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

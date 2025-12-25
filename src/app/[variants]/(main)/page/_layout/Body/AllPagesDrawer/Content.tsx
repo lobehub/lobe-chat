@@ -2,12 +2,12 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useRef } from 'react';
-import { VList, VListHandle } from 'virtua';
+import { VList, type VListHandle } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import PageEmpty from '@/features/PageEmpty';
 import { documentSelectors, useFileStore } from '@/store/file';
-import { LobeDocument } from '@/types/document';
+import { type LobeDocument } from '@/types/document';
 
 import Item from '../List/Item';
 

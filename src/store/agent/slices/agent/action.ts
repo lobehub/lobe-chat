@@ -3,19 +3,19 @@ import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import type { SWRResponse } from 'swr';
 import type { PartialDeep } from 'type-fest';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { mutate, useClientDataSWR } from '@/libs/swr';
-import { CreateAgentParams, CreateAgentResult, agentService } from '@/services/agent';
+import { type CreateAgentParams, type CreateAgentResult, agentService } from '@/services/agent';
 import { getUserStoreState } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
-import { MetaData } from '@/types/meta';
+import { type LobeAgentChatConfig, type LobeAgentConfig } from '@/types/agent';
+import { type MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 import type { AgentStore } from '../../store';
-import { AgentSliceState, LoadingState, SaveStatus } from './initialState';
+import { type AgentSliceState, type LoadingState, type SaveStatus } from './initialState';
 
 const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
 

@@ -1,5 +1,5 @@
 import type { LocalFileSearchState } from '@lobechat/builtin-tool-local-system';
-import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
+import { type LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
 import { ActionIcon, Button, Flexbox, Icon, SearchBar } from '@lobehub/ui';
 import { SearchIcon, XIcon } from 'lucide-react';
 import { memo, useState } from 'react';

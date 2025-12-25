@@ -1,7 +1,7 @@
-import { Grid, type GridProps, Icon, IconProps, Text } from '@lobehub/ui';
+import { Grid, type GridProps, Icon, type IconProps, Text } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { CSSProperties, ReactNode, memo } from 'react';
+import { type CSSProperties, type ReactNode, memo } from 'react';
 
 import CopyableLabel from '../CopyableLabel';
 

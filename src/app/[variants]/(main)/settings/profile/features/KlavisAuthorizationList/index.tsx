@@ -7,8 +7,8 @@ import { modal } from '@/components/AntdStaticMethods';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useToolStore } from '@/store/tool';
-import { KlavisServer, KlavisServerStatus } from '@/store/tool/slices/klavisStore';
-import { ToolStore } from '@/store/tool/store';
+import { type KlavisServer, KlavisServerStatus } from '@/store/tool/slices/klavisStore';
+import { type ToolStore } from '@/store/tool/store';
 
 interface KlavisAuthItemProps {
   server: KlavisServer;

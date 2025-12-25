@@ -56,14 +56,14 @@ import { UserMemoryModel } from '@/database/models/userMemory';
 import { getServerDB } from '@/database/server';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import {
-  MemoryAgentConfig,
+  type MemoryAgentConfig,
   parseMemoryExtractionConfig,
 } from '@/server/globalConfig/parseMemoryExtractionConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
 import type { GlobalMemoryLayer } from '@/types/serverConfig';
 import type { UserKeyVaults } from '@/types/user/settings';
-import { LayersEnum, MergeStrategyEnum, TypesEnum, MemorySourceType } from '@/types/userMemory';
+import { LayersEnum, type MergeStrategyEnum, TypesEnum, MemorySourceType } from '@/types/userMemory';
 import { encodeAsync } from '@/utils/tokenizer';
 
 const SOURCE_ALIAS_MAP: Record<string, MemorySourceType> = {

@@ -1,5 +1,5 @@
-import { CrawlPluginState } from '@lobechat/types';
-import { CrawlErrorResult } from '@lobechat/web-crawler';
+import { type CrawlPluginState } from '@lobechat/types';
+import { type CrawlErrorResult } from '@lobechat/web-crawler';
 import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 

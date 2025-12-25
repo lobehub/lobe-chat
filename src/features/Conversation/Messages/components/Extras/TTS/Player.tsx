@@ -1,5 +1,5 @@
-import { ChatMessageError } from '@lobechat/types';
-import { AudioPlayer, AudioPlayerProps } from '@lobehub/tts/react';
+import { type ChatMessageError } from '@lobechat/types';
+import { AudioPlayer, type AudioPlayerProps } from '@lobehub/tts/react';
 import { ActionIcon, Alert, Button, Flexbox, Highlighter } from '@lobehub/ui';
 import { TrashIcon } from 'lucide-react';
 import { memo } from 'react';

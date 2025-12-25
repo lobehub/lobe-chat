@@ -7,9 +7,9 @@ import bcrypt from 'bcryptjs';
 import { emailHarmony } from 'better-auth-harmony';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { verifyPassword as defaultVerifyPassword } from 'better-auth/crypto';
-import { betterAuth } from 'better-auth/minimal';
+import { type BetterAuthOptions, betterAuth } from 'better-auth/minimal';
 import { admin, emailOTP, genericOAuth, magicLink } from 'better-auth/plugins';
-import type { BetterAuthOptions, BetterAuthPlugin } from 'better-auth/types';
+import { type BetterAuthPlugin } from 'better-auth/types';
 
 import { authEnv } from '@/envs/auth';
 import {

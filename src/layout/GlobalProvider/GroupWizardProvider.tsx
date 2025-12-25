@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, Suspense, createContext, lazy, memo, useContext, useState } from 'react';
+import { type ReactNode, Suspense, createContext, lazy, memo, useContext, useState } from 'react';
 
 // Lazy load ChatGroupWizard to avoid bundling it globally
 const ChatGroupWizard = lazy(() =>

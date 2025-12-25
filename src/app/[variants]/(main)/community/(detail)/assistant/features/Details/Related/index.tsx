@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useQuery } from '@/hooks/useQuery';
-import { AssistantMarketSource } from '@/types/discover';
+import { type AssistantMarketSource } from '@/types/discover';
 
 import McpList from '../../../../../(list)/assistant/features/List';
 import Title from '../../../../../features/Title';

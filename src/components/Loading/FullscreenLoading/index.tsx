@@ -1,8 +1,8 @@
 import { Center, Flexbox } from '@lobehub/ui';
-import React, { ReactNode, memo } from 'react';
+import React, { type ReactNode, memo } from 'react';
 
 import { ProductLogo } from '@/components/Branding';
-import InitProgress, { StageItem } from '@/components/InitProgress';
+import InitProgress, { type StageItem } from '@/components/InitProgress';
 
 interface FullscreenLoadingProps {
   activeStage: number;

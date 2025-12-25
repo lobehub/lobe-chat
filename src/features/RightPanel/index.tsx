@@ -1,4 +1,4 @@
-import { DraggablePanel, DraggablePanelProps } from '@lobehub/ui';
+import { DraggablePanel, type DraggablePanelProps } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Suspense, memo, useState } from 'react';
 

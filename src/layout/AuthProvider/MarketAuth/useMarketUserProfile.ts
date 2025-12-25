@@ -2,7 +2,7 @@ import useSWR from 'swr';
 
 import { MARKET_ENDPOINTS } from '@/services/_url';
 
-import { MarketUserProfile } from './types';
+import { type MarketUserProfile } from './types';
 
 /**
  * Fetcher function for user profile

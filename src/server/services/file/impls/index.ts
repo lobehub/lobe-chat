@@ -2,7 +2,7 @@ import { isDesktop } from '@/const/version';
 
 import { DesktopLocalFileImpl } from './local';
 import { S3StaticFileImpl } from './s3';
-import { FileServiceImpl } from './type';
+import { type FileServiceImpl } from './type';
 
 /**
  * Create file service module

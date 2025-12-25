@@ -1,14 +1,14 @@
-import { LobeChatDatabase } from '@lobechat/database';
+import { type LobeChatDatabase } from '@lobechat/database';
 import { inferContentTypeFromImageUrl, nanoid, uuid } from '@lobechat/utils';
 import { TRPCError } from '@trpc/server';
 import { sha256 } from 'js-sha256';
 
 import { serverDBEnv } from '@/config/db';
 import { FileModel } from '@/database/models/file';
-import { FileItem } from '@/database/schemas';
+import { type FileItem } from '@/database/schemas';
 import { TempFileManager } from '@/server/utils/tempFileManager';
 
-import { FileServiceImpl, createFileServiceModule } from './impls';
+import { type FileServiceImpl, createFileServiceModule } from './impls';
 
 /**
  * File service class

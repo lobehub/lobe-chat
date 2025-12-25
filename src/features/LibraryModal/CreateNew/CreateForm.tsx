@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { CreateKnowledgeBaseParams } from '@/types/knowledgeBase';
+import { type CreateKnowledgeBaseParams } from '@/types/knowledgeBase';
 
 interface CreateFormProps {
   onClose?: () => void;

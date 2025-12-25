@@ -1,4 +1,4 @@
-import { BuiltinPortalProps, CrawlPluginState, SearchQuery } from '@lobechat/types';
+import { type BuiltinPortalProps, type CrawlPluginState, type SearchQuery } from '@lobechat/types';
 import { memo } from 'react';
 
 import { WebBrowsingApiName } from '@/tools/web-browsing';

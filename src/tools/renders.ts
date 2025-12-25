@@ -9,7 +9,7 @@ import { GTDManifest, GTDRenders } from '@lobechat/builtin-tool-gtd/client';
 // local-system
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { NotebookManifest, NotebookRenders } from '@lobechat/builtin-tool-notebook/client';
-import { BuiltinRender } from '@lobechat/types';
+import { type BuiltinRender } from '@lobechat/types';
 
 // code-interpreter
 import { CodeInterpreterManifest } from './code-interpreter';

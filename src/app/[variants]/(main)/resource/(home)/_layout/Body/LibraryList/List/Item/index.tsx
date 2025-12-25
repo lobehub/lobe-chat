@@ -2,7 +2,7 @@ import { Icon, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
-import React, { CSSProperties, memo, useCallback, useMemo } from 'react';
+import React, { type CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';

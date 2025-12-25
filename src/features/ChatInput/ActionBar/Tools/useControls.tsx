@@ -1,5 +1,5 @@
-import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Avatar, Flexbox, Icon, Image, ItemType } from '@lobehub/ui';
+import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
+import { Avatar, Flexbox, Icon, Image, type ItemType } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Store, ToyBrick } from 'lucide-react';

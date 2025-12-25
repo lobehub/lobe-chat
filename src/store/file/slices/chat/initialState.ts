@@ -1,6 +1,6 @@
-import { ChatContextContent } from '@lobechat/types';
+import { type ChatContextContent } from '@lobechat/types';
 
-import { UploadFileItem } from '@/types/files/upload';
+import { type UploadFileItem } from '@/types/files/upload';
 
 export interface ImageFileState {
   chatContextSelections: ChatContextContent[];

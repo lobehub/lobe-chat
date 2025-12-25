@@ -1,7 +1,7 @@
 import { Center, Flexbox, Icon , Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Atom, Box, CircleSlash, Sparkle, Zap } from 'lucide-react';
-import { CSSProperties, MouseEvent, memo } from 'react';
+import { type CSSProperties, type MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Plans } from '@/types/subscription';

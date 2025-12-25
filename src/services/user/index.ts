@@ -2,13 +2,13 @@ import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import {
-  SSOProvider,
-  UserGuide,
-  UserInitializationState,
-  UserOnboarding,
-  UserPreference,
+  type SSOProvider,
+  type UserGuide,
+  type UserInitializationState,
+  type UserOnboarding,
+  type UserPreference,
 } from '@/types/user';
-import { UserSettings } from '@/types/user/settings';
+import { type UserSettings } from '@/types/user/settings';
 
 export class UserService {
   getUserRegistrationDuration = async (): Promise<{

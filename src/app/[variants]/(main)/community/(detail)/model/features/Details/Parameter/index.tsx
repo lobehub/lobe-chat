@@ -5,7 +5,7 @@ import {
   ChartColumnBig,
   Delete,
   FileMinus,
-  LucideIcon,
+  type LucideIcon,
   MessageSquareText,
   Pickaxe,
   Thermometer,

@@ -1,8 +1,8 @@
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ResouceManagerMode } from '@/features/ResourceManager';
+import { type ResouceManagerMode } from '@/features/ResourceManager';
 
-import { State, initialState } from './initialState';
+import { type State, initialState } from './initialState';
 
 export interface Action {
   /**

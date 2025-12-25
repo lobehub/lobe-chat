@@ -1,8 +1,8 @@
 import type { ThemeMode } from 'antd-style';
 import type { NavigateFunction } from 'react-router-dom';
 
-import { DatabaseLoadingState, MigrationSQL, MigrationTableItem } from '@/types/clientDB';
-import { LocaleMode } from '@/types/locale';
+import { DatabaseLoadingState, type MigrationSQL, type MigrationTableItem } from '@/types/clientDB';
+import { type LocaleMode } from '@/types/locale';
 import { SessionDefaultGroup } from '@/types/session';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 

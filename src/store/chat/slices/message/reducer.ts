@@ -1,10 +1,10 @@
 import {
-  ChatMessageExtra,
-  ChatPluginPayload,
-  ChatToolPayload,
-  CreateMessageParams,
-  MessagePluginItem,
-  UIChatMessage,
+  type ChatMessageExtra,
+  type ChatPluginPayload,
+  type ChatToolPayload,
+  type CreateMessageParams,
+  type MessagePluginItem,
+  type UIChatMessage,
 } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import i18n from 'i18next';

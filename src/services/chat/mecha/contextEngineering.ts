@@ -2,18 +2,18 @@ import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import { GroupAgentBuilderIdentifier } from '@lobechat/builtin-tool-group-agent-builder';
 import { KLAVIS_SERVER_TYPES, isDesktop } from '@lobechat/const';
 import {
-  AgentBuilderContext,
-  AgentGroupConfig,
-  GroupAgentBuilderContext,
-  GroupOfficialToolItem,
+  type AgentBuilderContext,
+  type AgentGroupConfig,
+  type GroupAgentBuilderContext,
+  type GroupOfficialToolItem,
   MessagesEngine,
 } from '@lobechat/context-engine';
 import { historySummaryPrompt } from '@lobechat/prompts';
 import {
-  OpenAIChatMessage,
-  RuntimeInitialContext,
-  RuntimeStepContext,
-  UIChatMessage,
+  type OpenAIChatMessage,
+  type RuntimeInitialContext,
+  type RuntimeStepContext,
+  type UIChatMessage,
 } from '@lobechat/types';
 import { VARIABLE_GENERATORS } from '@lobechat/utils/client';
 import debug from 'debug';

@@ -14,7 +14,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
-import NavItem, { NavItemProps } from '@/features/NavPanel/components/NavItem';
+import NavItem, { type NavItemProps } from '@/features/NavPanel/components/NavItem';
 import { useGlobalStore } from '@/store/global';
 
 interface Item {

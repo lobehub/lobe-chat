@@ -7,11 +7,11 @@ import {
   DEFAUTT_AGENT_TTS_CONFIG,
 } from '@lobechat/const';
 import {
-  KnowledgeItem,
+  type KnowledgeItem,
   KnowledgeType,
-  LobeAgentConfig,
-  LobeAgentTTSConfig,
-  MetaData,
+  type LobeAgentConfig,
+  type LobeAgentTTSConfig,
+  type MetaData,
 } from '@lobechat/types';
 import { VoiceList } from '@lobehub/tts';
 

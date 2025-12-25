@@ -2,13 +2,13 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
-import { MouseEvent, memo } from 'react';
+import { type MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import GroupInfo from '@/features/GroupInfo';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
-import { LobeSession } from '@/types/session';
+import { type LobeSession } from '@/types/session';
 
 import { useStyles } from './style';
 

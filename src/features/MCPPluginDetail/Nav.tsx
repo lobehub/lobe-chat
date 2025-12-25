@@ -1,7 +1,7 @@
 'use client';
 
 import { SOCIAL_URL } from '@lobechat/business-const';
-import { Flexbox, Icon, Tabs, TabsProps, Tag } from '@lobehub/ui';
+import { Flexbox, Icon, Tabs, type TabsProps, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import {
   BookOpenIcon,

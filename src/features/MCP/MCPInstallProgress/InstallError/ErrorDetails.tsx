@@ -5,7 +5,7 @@ import * as motion from 'motion/react-m';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { MCPErrorInfoMetadata } from '@/types/plugins';
+import { type MCPErrorInfoMetadata } from '@/types/plugins';
 
 const ErrorDetails = memo<{
   errorInfo: MCPErrorInfoMetadata;

@@ -1,4 +1,4 @@
-import { ChatPluginPayload } from '@lobechat/types';
+import { type ChatPluginPayload } from '@lobechat/types';
 import { Block, Flexbox, Highlighter } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { memo, useEffect, useMemo } from 'react';

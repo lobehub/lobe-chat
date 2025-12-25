@@ -1,7 +1,7 @@
-import { ActionIcon, Image, ImageProps } from '@lobehub/ui';
+import { ActionIcon, Image, type ImageProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 
 import { usePlatform } from '@/hooks/usePlatform';
 

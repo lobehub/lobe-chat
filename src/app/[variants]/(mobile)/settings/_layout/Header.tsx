@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { enableAuth } from '@/const/auth';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
-import { SettingsTabs } from '@/store/global/initialState';
+import { type SettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 

@@ -1,9 +1,9 @@
-import { ChatToolPayload, CreateMessageParams, SearchQuery } from '@lobechat/types';
+import { type ChatToolPayload, type CreateMessageParams, type SearchQuery } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { dbMessageSelectors } from '@/store/chat/selectors';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 import { WebBrowsingApiName, WebBrowsingManifest } from '@/tools/web-browsing';
 
 export interface SearchAction {

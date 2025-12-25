@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useFileStore } from '@/store/file';
 import { AsyncTaskStatus } from '@/types/asyncTask';
-import { FileListItem } from '@/types/files';
+import { type FileListItem } from '@/types/files';
 
 export const useCheckTaskStatus = (data: FileListItem[] | undefined) => {
   const [refreshFileList] = useFileStore((s) => [s.refreshFileList]);

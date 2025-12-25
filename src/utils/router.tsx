@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  ComponentType,
-  ReactElement,
+  type ComponentType,
+  type ReactElement,
   Suspense,
   createElement,
   lazy,

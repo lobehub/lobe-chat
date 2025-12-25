@@ -6,7 +6,7 @@ import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { NotebookManifest } from '@lobechat/builtin-tool-notebook';
 import { PageAgentManifest } from '@lobechat/builtin-tool-page-agent';
-import { LobeBuiltinTool } from '@lobechat/types';
+import { type LobeBuiltinTool } from '@lobechat/types';
 
 import { isDesktop } from '@/const/version';
 

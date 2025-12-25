@@ -1,12 +1,12 @@
 // sort-imports-ignore
-import { ChatToolState, initialToolState } from './slices/builtinTool/initialState';
-import { ChatPortalState, initialChatPortalState } from './slices/portal/initialState';
-import { ChatMessageState, initialMessageState } from './slices/message/initialState';
-import { ChatTopicState, initialTopicState } from './slices/topic/initialState';
-import { ChatAIChatState, initialAiChatState } from './slices/aiChat/initialState';
-import { ChatThreadState, initialThreadState } from './slices/thread/initialState';
-import { ChatOperationState, initialOperationState } from './slices/operation/initialState';
-import { initialAiAgentState, ChatAIAgentState } from './slices/aiAgent/initialState';
+import { type ChatToolState, initialToolState } from './slices/builtinTool/initialState';
+import { type ChatPortalState, initialChatPortalState } from './slices/portal/initialState';
+import { type ChatMessageState, initialMessageState } from './slices/message/initialState';
+import { type ChatTopicState, initialTopicState } from './slices/topic/initialState';
+import { type ChatAIChatState, initialAiChatState } from './slices/aiChat/initialState';
+import { type ChatThreadState, initialThreadState } from './slices/thread/initialState';
+import { type ChatOperationState, initialOperationState } from './slices/operation/initialState';
+import { initialAiAgentState, type ChatAIAgentState } from './slices/aiAgent/initialState';
 
 export type ChatStoreState = ChatTopicState &
   ChatMessageState &

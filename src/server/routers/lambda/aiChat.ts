@@ -1,6 +1,6 @@
 import {
   AiSendMessageServerSchema,
-  SendMessageServerResponse,
+  type SendMessageServerResponse,
   StructureOutputSchema,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';

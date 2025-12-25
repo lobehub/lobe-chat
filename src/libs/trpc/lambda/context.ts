@@ -1,8 +1,8 @@
-import { ClientSecretPayload } from '@lobechat/types';
+import { type ClientSecretPayload } from '@lobechat/types';
 import { parse } from 'cookie';
 import debug from 'debug';
-import { User } from 'next-auth';
-import { NextRequest } from 'next/server';
+import { type User } from 'next-auth';
+import { type NextRequest } from 'next/server';
 
 import {
   LOBE_CHAT_AUTH_HEADER,
@@ -12,7 +12,7 @@ import {
   enableNextAuth,
 } from '@/const/auth';
 import { oidcEnv } from '@/envs/oidc';
-import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
+import { ClerkAuth, type IClerkAuth } from '@/libs/clerk-auth';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 
 // Create context logger namespace

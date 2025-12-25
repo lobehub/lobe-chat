@@ -1,8 +1,8 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { ThemeAppearance } from 'antd-style';
-import { ResolvingViewport } from 'next';
+import { type ThemeAppearance } from 'antd-style';
+import { type ResolvingViewport } from 'next';
 import Script from 'next/script';
-import { ReactNode, Suspense } from 'react';
+import { type ReactNode, Suspense } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
@@ -11,8 +11,8 @@ import { isDesktop } from '@/const/version';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
-import { Locales } from '@/locales/resources';
-import { DynamicLayoutProps } from '@/types/next';
+import { type Locales } from '@/locales/resources';
+import { type DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 const inVercel = process.env.VERCEL === '1';

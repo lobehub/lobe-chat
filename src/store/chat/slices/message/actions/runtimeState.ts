@@ -1,7 +1,7 @@
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ChatStore } from '@/store/chat/store';
-import { Action } from '@/utils/storeDebug';
+import { type ChatStore } from '@/store/chat/store';
+import { type Action } from '@/utils/storeDebug';
 
 import type { ChatStoreState } from '../../../initialState';
 import { preventLeavingFn, toggleBooleanList } from '../../../utils';

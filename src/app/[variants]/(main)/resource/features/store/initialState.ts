@@ -1,4 +1,4 @@
-import { ResouceManagerMode } from '@/features/ResourceManager';
+import { type ResouceManagerMode } from '@/features/ResourceManager';
 import { FilesTabs } from '@/types/files';
 
 export type ViewMode = 'list' | 'masonry';

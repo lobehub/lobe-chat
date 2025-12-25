@@ -2,7 +2,7 @@ import { Text } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import { memo } from 'react';
 
-import { ChatItemProps } from '../type';
+import { type ChatItemProps } from '../type';
 
 export interface TitleProps {
   avatar: ChatItemProps['avatar'];

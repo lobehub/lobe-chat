@@ -1,5 +1,5 @@
 import { FORM_STYLE } from '@lobechat/const';
-import { TopicExportMode } from '@lobechat/types';
+import { type TopicExportMode } from '@lobechat/types';
 import { exportFile } from '@lobechat/utils/client';
 import { Button, Form, type FormItemProps, copyToClipboard } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
@@ -19,7 +19,7 @@ import { useStyles } from '../style';
 import Preview from './Preview';
 import { generateFullExport } from './generateFullExport';
 import { generateMessages } from './generateMessages';
-import { FieldType } from './type';
+import { type FieldType } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   exportMode: 'full',

@@ -1,7 +1,7 @@
 import { get } from 'es-toolkit/compat';
 
 import { DEFAULT_LANG } from '@/const/locale';
-import { Locales, NS, normalizeLocale } from '@/locales/resources';
+import { type Locales, type NS, normalizeLocale } from '@/locales/resources';
 
 export const getLocale = async (hl?: string): Promise<Locales> => {
   if (hl) return normalizeLocale(hl) as Locales;

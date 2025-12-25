@@ -1,4 +1,4 @@
-import { FileMetadata } from '@lobechat/types';
+import { type FileMetadata } from '@lobechat/types';
 
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 

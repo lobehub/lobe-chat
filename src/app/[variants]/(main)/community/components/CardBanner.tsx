@@ -1,6 +1,6 @@
-import { Avatar, DivProps, Flexbox } from '@lobehub/ui';
+import { Avatar, type DivProps, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 export const useStyles = createStyles(({ css, token }) => ({
   banner: css`

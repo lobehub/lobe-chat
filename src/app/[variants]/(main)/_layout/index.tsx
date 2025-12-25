@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { FC, Suspense } from 'react';
+import { type FC, Suspense } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Outlet } from 'react-router-dom';
 

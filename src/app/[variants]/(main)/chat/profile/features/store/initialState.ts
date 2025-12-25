@@ -1,5 +1,5 @@
-import { IEditor } from '@lobehub/editor';
-import { EditorState } from '@lobehub/editor/react';
+import { type IEditor } from '@lobehub/editor';
+import { type EditorState } from '@lobehub/editor/react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PublicState {}

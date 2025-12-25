@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { type ModelProviderCard } from '@/types/llm';
 
 // ref: https://302.ai/pricing/
 const Ai302: ModelProviderCard = {

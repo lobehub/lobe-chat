@@ -2,9 +2,9 @@ import { Avatar, Center, Markdown, Tag } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 
-import { MetaData } from '@/types/meta';
+import { type MetaData } from '@/types/meta';
 
 const useStyles = createStyles(({ css, token }) => ({
   avatar: css`

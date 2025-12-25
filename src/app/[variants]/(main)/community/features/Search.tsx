@@ -1,6 +1,6 @@
 'use client';
 
-import { SearchBar, SearchBarProps } from '@lobehub/ui';
+import { SearchBar, type SearchBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

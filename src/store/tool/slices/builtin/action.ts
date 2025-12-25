@@ -1,9 +1,9 @@
 import debug from 'debug';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { setNamespace } from '@/utils/storeDebug';
 
-import { ToolStore } from '../../store';
+import { type ToolStore } from '../../store';
 import { invokeExecutor } from './executors/index';
 import type { BuiltinToolContext, BuiltinToolResult } from './types';
 

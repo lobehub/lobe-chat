@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 
 import Loading from '@/components/Loading/BrandTextLoading';
-import { DynamicLayoutProps } from '@/types/next';
+import { type DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import DesktopRouter from './router';

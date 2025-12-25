@@ -10,31 +10,31 @@ import {
 import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import { isDesktop } from '@lobechat/const';
 import {
-  ChatImageItem,
-  ChatToolPayload,
-  ConversationContext,
-  MessageContentPart,
-  MessageMapScope,
-  MessageToolCall,
-  ModelUsage,
-  RuntimeInitialContext,
-  RuntimeStepContext,
+  type ChatImageItem,
+  type ChatToolPayload,
+  type ConversationContext,
+  type MessageContentPart,
+  type MessageMapScope,
+  type MessageToolCall,
+  type ModelUsage,
+  type RuntimeInitialContext,
+  type RuntimeStepContext,
   TraceNameMap,
-  UIChatMessage,
+  type UIChatMessage,
 } from '@lobechat/types';
 import { serializePartsForStorage } from '@lobechat/utils';
 import debug from 'debug';
 import { throttle } from 'es-toolkit/compat';
 import { t } from 'i18next';
 import pMap from 'p-map';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { createAgentToolsEngine } from '@/helpers/toolEngineering';
 import { chatService } from '@/services/chat';
 import { resolveAgentConfig } from '@/services/chat/mecha';
 import { messageService } from '@/services/message';
 import { createAgentExecutors } from '@/store/chat/agents/createAgentExecutors';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 import { getUserStoreState } from '@/store/user/store';

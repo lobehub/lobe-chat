@@ -1,12 +1,12 @@
 'use client';
 
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Block, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { File, Folder } from 'lucide-react';
 import { memo } from 'react';
 
-import { ListLocalFilesState } from '../../type';
+import { type ListLocalFilesState } from '../../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

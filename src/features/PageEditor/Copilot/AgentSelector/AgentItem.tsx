@@ -1,4 +1,4 @@
-import { GroupMemberAvatar } from '@lobechat/types';
+import { type GroupMemberAvatar } from '@lobechat/types';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

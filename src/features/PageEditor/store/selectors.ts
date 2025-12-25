@@ -1,4 +1,4 @@
-import { Store } from './action';
+import { type Store } from './action';
 
 export const selectors = {
   currentDocId: (s: Store) => s.currentDocId,

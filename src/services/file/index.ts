@@ -1,10 +1,10 @@
 import { lambdaClient } from '@/libs/trpc/client';
 import {
-  CheckFileHashResult,
-  FileItem,
-  QueryFileListParams,
-  QueryFileListSchemaType,
-  UploadFileParams,
+  type CheckFileHashResult,
+  type FileItem,
+  type QueryFileListParams,
+  type QueryFileListSchemaType,
+  type UploadFileParams,
 } from '@/types/files';
 
 interface CreateFileParams extends Omit<UploadFileParams, 'url'> {

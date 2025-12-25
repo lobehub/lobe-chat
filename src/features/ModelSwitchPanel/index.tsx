@@ -2,7 +2,7 @@ import { ActionIcon, Flexbox, Icon, TooltipGroup } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
-import { AiModelForSelect } from 'model-bank';
+import { type AiModelForSelect } from 'model-bank';
 import { type ReactNode, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Rnd } from 'react-rnd';
@@ -13,7 +13,7 @@ import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { EnabledProviderWithModels } from '@/types/aiProvider';
+import { type EnabledProviderWithModels } from '@/types/aiProvider';
 
 const STORAGE_KEY = 'MODEL_SWITCH_PANEL_WIDTH';
 const DEFAULT_WIDTH = 320;

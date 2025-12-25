@@ -1,4 +1,4 @@
-import { ChatToolPayloadWithResult } from '@lobechat/types';
+import { type ChatToolPayloadWithResult } from '@lobechat/types';
 import { Accordion } from '@lobehub/ui';
 import { type Key, memo, useCallback, useRef, useState } from 'react';
 

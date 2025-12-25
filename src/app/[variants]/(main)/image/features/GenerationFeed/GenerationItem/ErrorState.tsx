@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ActionButtons } from './ActionButtons';
 import { useStyles } from './styles';
-import { ErrorStateProps } from './types';
+import { type ErrorStateProps } from './types';
 import { getThumbnailMaxWidth } from './utils';
 
 // 错误状态组件

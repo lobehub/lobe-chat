@@ -1,10 +1,10 @@
 import type { LobeAgentConfig } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { chatGroupService } from '@/services/chatGroup';
 import { getAgentStoreState } from '@/store/agent';
-import { ChatGroupStore } from '@/store/agentGroup/store';
+import { type ChatGroupStore } from '@/store/agentGroup/store';
 
 export interface ChatGroupMemberAction {
   addAgentsToGroup: (groupId: string, agentIds: string[]) => Promise<void>;

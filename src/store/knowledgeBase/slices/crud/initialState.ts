@@ -1,4 +1,4 @@
-import { KnowledgeBaseItem } from '@/types/knowledgeBase';
+import { type KnowledgeBaseItem } from '@/types/knowledgeBase';
 
 export interface KnowledgeBaseState {
   activeKnowledgeBaseId: string | null;

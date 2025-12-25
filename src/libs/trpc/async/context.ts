@@ -1,7 +1,7 @@
-import { LobeChatDatabase } from '@lobechat/database';
-import { ClientSecretPayload } from '@lobechat/types';
+import { type LobeChatDatabase } from '@lobechat/database';
+import { type ClientSecretPayload } from '@lobechat/types';
 import debug from 'debug';
-import { NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';

@@ -1,6 +1,6 @@
 'use client';
 
-import { IEditor } from '@lobehub/editor';
+import { type IEditor } from '@lobehub/editor';
 
 export interface DocumentEditorState {
   currentTitle: string;

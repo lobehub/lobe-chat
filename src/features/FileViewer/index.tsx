@@ -1,8 +1,8 @@
 'use client';
 
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 
-import { FileListItem } from '@/types/files';
+import { type FileListItem } from '@/types/files';
 
 import NotSupport from './NotSupport';
 import ImageViewer from './Renderer/Image';

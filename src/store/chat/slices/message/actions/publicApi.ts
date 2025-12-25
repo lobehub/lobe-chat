@@ -2,16 +2,16 @@
 import { TraceEventType } from '@lobechat/types';
 import { copyToClipboard } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { dbMessageSelectors, displayMessageSelectors } from '../../../selectors';
 import { toggleBooleanList } from '../../../utils';
-import { OptimisticUpdateContext } from './optimisticUpdate';
+import { type OptimisticUpdateContext } from './optimisticUpdate';
 
 const n = setNamespace('m');
 

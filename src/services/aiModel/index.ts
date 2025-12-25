@@ -1,9 +1,9 @@
 import {
-  AiModelSortMap,
-  AiProviderModelListItem,
-  CreateAiModelParams,
-  ToggleAiModelEnableParams,
-  UpdateAiModelParams,
+  type AiModelSortMap,
+  type AiProviderModelListItem,
+  type CreateAiModelParams,
+  type ToggleAiModelEnableParams,
+  type UpdateAiModelParams,
 } from 'model-bank';
 
 import { lambdaClient } from '@/libs/trpc/client';

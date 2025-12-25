@@ -1,12 +1,12 @@
 'use client';
 
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { WriteLocalFileState } from '../../type';
+import { type WriteLocalFileState } from '../../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

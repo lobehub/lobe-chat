@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthCard } from '../../../../../features/AuthCard';
-import { SignUpFormValues, useSignUp } from './useSignUp';
+import { type SignUpFormValues, useSignUp } from './useSignUp';
 
 const BetterAuthSignUpForm = () => {
   const [form] = Form.useForm<SignUpFormValues>();

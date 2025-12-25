@@ -1,6 +1,7 @@
-import { UserJSON } from '@clerk/backend';
+ 
 import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
-import { LobeChatDatabase } from '@lobechat/database';
+import { type UserJSON } from '@clerk/backend';
+import { type LobeChatDatabase } from '@lobechat/database';
 
 import { initNewUserForBusiness } from '@/business/server/user';
 import { UserModel } from '@/database/models/user';

@@ -1,8 +1,8 @@
-import { IEditor, SlashOptions } from '@lobehub/editor';
+import { type IEditor, type SlashOptions } from '@lobehub/editor';
 import type { ChatInputProps } from '@lobehub/editor/react';
 import type { MenuProps } from '@lobehub/ui';
 
-import { ActionKeys } from '@/features/ChatInput';
+import { type ActionKeys } from '@/features/ChatInput';
 
 export type SendButtonHandler = (params: {
   clearContent: () => void;

@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { type ModelProviderCard } from '@/types/llm';
 
 // Ref: https://replicate.com/docs
 const Replicate: ModelProviderCard = {

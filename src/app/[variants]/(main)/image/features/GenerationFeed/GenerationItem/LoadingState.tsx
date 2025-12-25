@@ -10,7 +10,7 @@ import { AsyncTaskStatus } from '@/types/asyncTask';
 import { ActionButtons } from './ActionButtons';
 import { ElapsedTime } from './ElapsedTime';
 import { useStyles } from './styles';
-import { LoadingStateProps } from './types';
+import { type LoadingStateProps } from './types';
 import { getThumbnailMaxWidth } from './utils';
 
 // 加载状态组件

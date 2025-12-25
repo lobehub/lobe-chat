@@ -3,7 +3,7 @@ import type { SidebarAgentItem } from '@lobechat/types';
 import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2, PinIcon } from 'lucide-react';
-import { CSSProperties, DragEvent, memo, useCallback, useMemo } from 'react';
+import { type CSSProperties, type DragEvent, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 

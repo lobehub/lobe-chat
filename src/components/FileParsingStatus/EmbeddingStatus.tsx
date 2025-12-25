@@ -5,7 +5,7 @@ import { darken, lighten } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AsyncTaskStatus, FileParsingTask } from '@/types/asyncTask';
+import { AsyncTaskStatus, type FileParsingTask } from '@/types/asyncTask';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   errorReason: css`

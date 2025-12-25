@@ -1,9 +1,9 @@
 import { and, eq, inArray } from 'drizzle-orm';
 
 import { agentsToSessions } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
+import { type LobeChatDatabase } from '@/database/type';
 
-import { ConversationContextInput } from '../_schema/context';
+import { type ConversationContextInput } from '../_schema/context';
 
 export interface ResolvedContext {
   agentId: string | null;

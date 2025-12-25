@@ -1,7 +1,7 @@
 'use client';
 
-import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { Avatar, Button, Flexbox, Icon, ItemType, Segmented } from '@lobehub/ui';
+import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
+import { Avatar, Button, Flexbox, Icon, type ItemType, Segmented } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, PlusIcon, Store, ToyBrick } from 'lucide-react';

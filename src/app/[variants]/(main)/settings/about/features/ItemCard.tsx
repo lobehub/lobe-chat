@@ -1,6 +1,6 @@
 import { Block, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 

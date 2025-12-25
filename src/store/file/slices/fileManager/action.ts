@@ -1,21 +1,21 @@
 import { buildFolderTree, sanitizeFolderName, topologicalSortFolders } from '@lobechat/utils';
 import pMap from 'p-map';
 import type { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { FileService, fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
 import {
-  UploadFileListDispatch,
+  type UploadFileListDispatch,
   uploadFileListReducer,
 } from '@/store/file/reducers/uploadFileList';
-import { FileListItem, QueryFileListParams } from '@/types/files';
+import { type FileListItem, type QueryFileListParams } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { unzipFile } from '@/utils/unzipFile';
 
-import { FileStore } from '../../store';
+import { type FileStore } from '../../store';
 import { fileManagerSelectors } from './selectors';
 
 const serverFileService = new FileService();

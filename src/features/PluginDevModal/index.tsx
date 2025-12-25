@@ -8,7 +8,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { WIKI_PLUGIN_GUIDE } from '@/const/url';
 import { isDesktop } from '@/const/version';
 import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
-import { LobeToolCustomPlugin } from '@/types/tool/plugin';
+import { type LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import MCPManifestForm from './MCPManifestForm';
 import PluginPreview from './PluginPreview';

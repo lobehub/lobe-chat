@@ -1,4 +1,4 @@
-import { ThreadItem, UIChatMessage } from '@lobechat/types';
+import { type ThreadItem, type UIChatMessage } from '@lobechat/types';
 
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';

@@ -17,7 +17,7 @@ import SkeletonList from '@/features/Conversation/components/SkeletonList';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
-import { MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { type MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 import ThreadDivider from './ThreadDivider';
 import { useThreadActionsBarConfig } from './useThreadActionsBarConfig';

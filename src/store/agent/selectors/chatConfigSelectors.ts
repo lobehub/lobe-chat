@@ -1,6 +1,6 @@
-import { LobeAgentChatConfig } from '@lobechat/types';
+import { type LobeAgentChatConfig } from '@lobechat/types';
 
-import { AgentStoreState } from '@/store/agent/initialState';
+import { type AgentStoreState } from '@/store/agent/initialState';
 
 import { chatConfigByIdSelectors } from './chatConfigByIdSelectors';
 

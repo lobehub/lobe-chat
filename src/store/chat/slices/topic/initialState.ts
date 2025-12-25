@@ -1,4 +1,4 @@
-import { ChatTopic } from '@/types/topic';
+import { type ChatTopic } from '@/types/topic';
 
 /**
  * Unified topic data structure for each agent

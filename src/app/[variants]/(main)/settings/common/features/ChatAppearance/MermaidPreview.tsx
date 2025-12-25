@@ -1,4 +1,4 @@
-import { Block, MermaidProps } from '@lobehub/ui';
+import { Block, type MermaidProps } from '@lobehub/ui';
 import { ChatItem } from '@lobehub/ui/chat';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';

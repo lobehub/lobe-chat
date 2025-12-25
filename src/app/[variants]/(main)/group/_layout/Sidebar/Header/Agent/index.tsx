@@ -2,7 +2,7 @@
 
 import { ActionIcon, Block, GroupAvatar, Text } from '@lobehub/ui';
 import { ChevronsUpDownIcon } from 'lucide-react';
-import React, { PropsWithChildren, memo } from 'react';
+import React, { type PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';

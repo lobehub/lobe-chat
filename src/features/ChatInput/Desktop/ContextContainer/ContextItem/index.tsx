@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 
 import { useFileStore } from '@/store/file';
-import { UPLOAD_STATUS_SET, UploadFileItem } from '@/types/files/upload';
+import { UPLOAD_STATUS_SET, type UploadFileItem } from '@/types/files/upload';
 
 import Content from './Content';
 import FilePreviewModal from './FilePreviewModal';

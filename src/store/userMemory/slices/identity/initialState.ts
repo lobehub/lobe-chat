@@ -1,4 +1,4 @@
-import { DisplayIdentityMemory } from '@/database/repositories/userMemory';
+import { type DisplayIdentityMemory } from '@/database/repositories/userMemory';
 import type { TypesEnum } from '@/types/userMemory';
 
 import type { IdentityForInjection } from '../../types';

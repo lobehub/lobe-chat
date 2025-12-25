@@ -7,12 +7,12 @@
  * Note: listDocuments is not exposed as a tool - it's automatically injected by the system.
  */
 import {
-  CreateDocumentArgs,
-  DeleteDocumentArgs,
-  GetDocumentArgs,
+  type CreateDocumentArgs,
+  type DeleteDocumentArgs,
+  type GetDocumentArgs,
   NotebookApiName,
   NotebookIdentifier,
-  UpdateDocumentArgs,
+  type UpdateDocumentArgs,
 } from '@lobechat/builtin-tool-notebook';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
 

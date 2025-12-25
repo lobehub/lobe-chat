@@ -1,6 +1,6 @@
-import { Flexbox, FlexboxProps, Icon, IconProps, Text } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps, Icon, type IconProps, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, Suspense, memo, useState } from 'react';
+import { type ReactNode, Suspense, memo, useState } from 'react';
 
 interface GroupBlockProps extends Omit<FlexboxProps, 'title'> {
   action?: ReactNode;

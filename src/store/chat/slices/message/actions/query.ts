@@ -1,12 +1,12 @@
 import { parse } from '@lobechat/conversation-flow';
-import { ConversationContext, UIChatMessage } from '@lobechat/types';
+import { type ConversationContext, type UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { mutate } from '@/libs/swr';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
-import { MessageMapKeyInput, messageMapKey } from '../../../utils/messageMapKey';
+import { type MessageMapKeyInput, messageMapKey } from '../../../utils/messageMapKey';
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 

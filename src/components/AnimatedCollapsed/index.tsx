@@ -1,5 +1,5 @@
 import { AnimatePresence, m as motion } from 'motion/react';
-import { CSSProperties, ReactNode, memo } from 'react';
+import { type CSSProperties, type ReactNode, memo } from 'react';
 
 interface AnimatedCollapsedProps {
   children: ReactNode;

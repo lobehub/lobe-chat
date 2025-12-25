@@ -1,5 +1,5 @@
 import { LocalSystemApiName, LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
-import { BuiltinPlaceholder } from '@lobechat/types';
+import { type BuiltinPlaceholder } from '@lobechat/types';
 
 import { ListFiles as LocalSystemListFiles } from './local-system/Placeholder/ListFiles';
 import LocalSystemSearchFiles from './local-system/Placeholder/SearchFiles';

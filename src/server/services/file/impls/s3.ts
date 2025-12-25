@@ -3,7 +3,7 @@ import urlJoin from 'url-join';
 import { fileEnv } from '@/envs/file';
 import { FileS3 } from '@/server/modules/S3';
 
-import { FileServiceImpl } from './type';
+import { type FileServiceImpl } from './type';
 import { extractKeyFromUrlOrReturnOriginal } from './utils';
 
 /**

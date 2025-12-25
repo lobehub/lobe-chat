@@ -6,7 +6,7 @@ import { useServerConfigStore } from '@/store/serverConfig';
 
 import AgentSettingsContent from './AgentSettingsContent';
 import { AgentSettingsProvider } from './AgentSettingsProvider';
-import { StoreUpdaterProps } from './StoreUpdater';
+import { type StoreUpdaterProps } from './StoreUpdater';
 
 export interface AgentSettingsProps extends StoreUpdaterProps {
   tab: ChatSettingsTabs;

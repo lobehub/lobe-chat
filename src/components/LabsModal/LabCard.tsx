@@ -4,7 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import Image from 'next/image';
-import { PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren, memo } from 'react';
 
 import { SkeletonSwitch } from '@/components/Skeleton';
 

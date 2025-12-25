@@ -1,5 +1,5 @@
 import { Flexbox } from '@lobehub/ui';
-import { CSSProperties, ReactNode, memo } from 'react';
+import { type CSSProperties, type ReactNode, memo } from 'react';
 
 import { MAX_SIZE_DESKTOP, MIN_IMAGE_SIZE, useStyles } from './style';
 

@@ -3,11 +3,11 @@
 import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
 import debug from 'debug';
 import { debounce } from 'es-toolkit/compat';
-import { StateCreator } from 'zustand';
+import { type StateCreator } from 'zustand';
 
 import { useNotebookStore } from '@/store/notebook';
 
-import { DocumentEditorState, initialDocumentEditorState } from './initialState';
+import { type DocumentEditorState, initialDocumentEditorState } from './initialState';
 
 const log = debug('portal:document-editor');
 

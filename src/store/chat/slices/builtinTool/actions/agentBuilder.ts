@@ -7,10 +7,10 @@ import type {
 } from '@lobechat/builtin-tool-agent-builder';
 import { AgentBuilderExecutionRuntime } from '@lobechat/builtin-tool-agent-builder/executionRuntime';
 import debug from 'debug';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { getAgentStoreState } from '@/store/agent';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
 const log = debug('lobe-store:builtin-tool:agent-builder');
 

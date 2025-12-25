@@ -2,7 +2,7 @@ import {
   ActionIcon,
   Avatar,
   Button,
-  ButtonProps,
+  type ButtonProps,
   Center,
   CopyButton,
   Flexbox,
@@ -16,7 +16,7 @@ import { createStyles } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
 import { LinkIcon, Share2Icon } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo, useState } from 'react';
+import { type ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useShare } from '@/hooks/useShare';

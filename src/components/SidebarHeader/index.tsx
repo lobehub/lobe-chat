@@ -1,4 +1,4 @@
-import { Flexbox, FlexboxProps } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 

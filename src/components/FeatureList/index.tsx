@@ -1,6 +1,6 @@
 import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token, isDarkMode, responsive }) => ({

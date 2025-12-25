@@ -16,16 +16,16 @@ import { Checkbox, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { omit } from 'es-toolkit/compat';
 import { Users } from 'lucide-react';
-import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import ModelSelect from '@/features/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useSessionStore } from '@/store/session';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { type LobeAgentSession, LobeSessionType } from '@/types/session';
 
-import { GroupTemplate, useGroupTemplates } from './templates';
+import { type GroupTemplate, useGroupTemplates } from './templates';
 
 const TemplateItem = memo<{
   cx: (..._args: any[]) => string;

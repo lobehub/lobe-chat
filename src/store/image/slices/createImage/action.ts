@@ -1,8 +1,8 @@
-import { StateCreator } from 'zustand';
+import { type StateCreator } from 'zustand';
 
 import { imageService } from '@/services/image';
 
-import { ImageStore } from '../../store';
+import { type ImageStore } from '../../store';
 import { generationBatchSelectors } from '../generationBatch/selectors';
 import { imageGenerationConfigSelectors } from '../generationConfig/selectors';
 import { generationTopicSelectors } from '../generationTopic';

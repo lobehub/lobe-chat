@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { agentSelectors } from '../../selectors';
 import type { AgentStore } from '../../store';

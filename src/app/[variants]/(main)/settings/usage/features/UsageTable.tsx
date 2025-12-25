@@ -1,6 +1,6 @@
 import { ProviderIcon } from '@lobehub/icons';
 import { Flexbox, Tag, Text } from '@lobehub/ui';
-import { Table, TableColumnType } from 'antd';
+import { Table, type TableColumnType } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { usageService } from '@/services/usage';
 import { formatDate, formatNumber } from '@/utils/format';
 
-import { UsageChartProps } from '../Client';
+import { type UsageChartProps } from '../Client';
 
 const UsageTable = memo<UsageChartProps>(({ dateStrings }) => {
   const theme = useTheme();

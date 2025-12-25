@@ -1,8 +1,8 @@
 import { Flexbox, Icon, Modal } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import { rgba } from 'polished';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 const useStyles = createStyles(({ css, token, prefixCls, isDarkMode }) => ({
   modalTitle: css`

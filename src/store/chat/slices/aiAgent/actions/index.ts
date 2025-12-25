@@ -1,10 +1,10 @@
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
-import { ChatGroupChatAction, agentGroupSlice } from './agentGroup';
-import { GroupOrchestrationAction, groupOrchestrationSlice } from './groupOrchestration';
-import { AgentAction, agentSlice } from './runAgent';
+import { type ChatGroupChatAction, agentGroupSlice } from './agentGroup';
+import { type GroupOrchestrationAction, groupOrchestrationSlice } from './groupOrchestration';
+import { type AgentAction, agentSlice } from './runAgent';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ChatAIAgentAction extends AgentAction, ChatGroupChatAction, GroupOrchestrationAction {

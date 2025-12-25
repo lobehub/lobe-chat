@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithChildren, memo, useEffect } from 'react';
+import { type PropsWithChildren, memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useUserStore } from '@/store/user';

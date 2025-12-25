@@ -12,7 +12,7 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
-import { FileListItem, QueryFileListSchema, UploadFileSchema } from '@/types/files';
+import { type FileListItem, QueryFileListSchema, UploadFileSchema } from '@/types/files';
 
 const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;

@@ -10,7 +10,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
-import { LobeToolType } from '@/types/tool/tool';
+import { type LobeToolType } from '@/types/tool/tool';
 
 import EditCustomPlugin from '../../EditCustomPlugin';
 

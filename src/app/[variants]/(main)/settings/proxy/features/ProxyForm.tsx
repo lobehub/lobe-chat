@@ -1,6 +1,6 @@
 'use client';
 
-import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { type NetworkProxySettings } from '@lobechat/electron-client-ipc';
 import { Alert, Block, Flexbox, Skeleton, Text , Button } from '@lobehub/ui';
 import { App, Divider, Form, Input, Radio, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';

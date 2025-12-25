@@ -5,7 +5,7 @@ import { App } from 'antd';
 import { useTheme } from 'antd-style';
 import { FileText, FolderIcon } from 'lucide-react';
 import {
-  PropsWithChildren,
+  type PropsWithChildren,
   createContext,
   memo,
   useContext,

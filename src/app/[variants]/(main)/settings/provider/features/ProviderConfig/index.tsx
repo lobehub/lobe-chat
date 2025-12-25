@@ -16,7 +16,7 @@ import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo, useCallback, useLayoutEffect, useRef } from 'react';
+import { type ReactNode, memo, useCallback, useLayoutEffect, useRef } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 import { z } from 'zod';
@@ -25,13 +25,13 @@ import { FormInput, FormPassword } from '@/components/FormInput';
 import { SkeletonInput, SkeletonSwitch } from '@/components/Skeleton';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import {
-  AiProviderDetailItem,
+  type AiProviderDetailItem,
   AiProviderSourceEnum,
-  AiProviderSourceType,
+  type AiProviderSourceType,
 } from '@/types/aiProvider';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
-import Checker, { CheckErrorRender } from './Checker';
+import Checker, { type CheckErrorRender } from './Checker';
 import EnableSwitch from './EnableSwitch';
 import UpdateProviderInfo from './UpdateProviderInfo';
 

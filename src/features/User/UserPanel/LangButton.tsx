@@ -8,7 +8,7 @@ import Menu, { type MenuProps } from '@/components/Menu';
 import { localeOptions } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
-import { LocaleMode } from '@/types/locale';
+import { type LocaleMode } from '@/types/locale';
 
 const LangButton = memo<{ placement?: PopoverProps['placement']; size?: number }>(
   ({ placement = 'right', size }) => {

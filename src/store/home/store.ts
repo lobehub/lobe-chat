@@ -6,12 +6,12 @@ import type { StateCreator } from 'zustand/vanilla';
 import { isDev } from '@/utils/env';
 
 import { createDevtools } from '../middleware/createDevtools';
-import { HomeStoreState, initialState } from './initialState';
-import { AgentListAction, createAgentListSlice } from './slices/agentList/action';
-import { GroupAction, createGroupSlice } from './slices/group/action';
-import { HomeInputAction, createHomeInputSlice } from './slices/homeInput/action';
-import { RecentAction, createRecentSlice } from './slices/recent/action';
-import { SidebarUIAction, createSidebarUISlice } from './slices/sidebarUI/action';
+import { type HomeStoreState, initialState } from './initialState';
+import { type AgentListAction, createAgentListSlice } from './slices/agentList/action';
+import { type GroupAction, createGroupSlice } from './slices/group/action';
+import { type HomeInputAction, createHomeInputSlice } from './slices/homeInput/action';
+import { type RecentAction, createRecentSlice } from './slices/recent/action';
+import { type SidebarUIAction, createSidebarUISlice } from './slices/sidebarUI/action';
 
 //  ===============  Aggregate createStoreFn ============ //
 

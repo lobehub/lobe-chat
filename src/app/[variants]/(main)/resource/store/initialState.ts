@@ -1,4 +1,4 @@
-import { ResouceManagerMode } from '@/features/ResourceManager';
+import { type ResouceManagerMode } from '@/features/ResourceManager';
 
 export interface State {
   currentViewItemId?: string;

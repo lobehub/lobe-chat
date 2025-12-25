@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 
-import { ChatTopic, CreateTopicParams } from '@/types/topic';
+import { type ChatTopic, type CreateTopicParams } from '@/types/topic';
 
 interface AddChatTopicAction {
   type: 'addTopic';

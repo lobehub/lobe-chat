@@ -1,9 +1,9 @@
-import { DocumentType } from '@lobechat/builtin-tool-notebook';
-import { DocumentItem } from '@lobechat/database/schemas';
-import { NotebookDocument } from '@lobechat/types';
+import { type DocumentType } from '@lobechat/builtin-tool-notebook';
+import { type DocumentItem } from '@lobechat/database/schemas';
+import { type NotebookDocument } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
-import { SWRResponse, mutate } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type SWRResponse, mutate } from 'swr';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { notebookService } from '@/services/notebook';

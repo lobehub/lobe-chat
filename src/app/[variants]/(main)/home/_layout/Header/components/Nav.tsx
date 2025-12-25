@@ -11,7 +11,7 @@ import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import NavItem, { NavItemProps } from '../../../../../../../features/NavPanel/components/NavItem';
+import NavItem, { type NavItemProps } from '../../../../../../../features/NavPanel/components/NavItem';
 
 interface Item {
   hidden?: boolean | undefined;

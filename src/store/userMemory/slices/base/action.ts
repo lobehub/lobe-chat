@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import type { SWRResponse } from 'swr';
 import useSWR from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { mutate, useClientDataSWR, useClientDataSWRWithSync } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
@@ -9,7 +9,7 @@ import { LayersEnum } from '@/types/userMemory';
 import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { UserMemoryStore } from '../../store';
+import { type UserMemoryStore } from '../../store';
 import type { IdentityForInjection } from '../../types';
 import { userMemoryCacheKey } from '../../utils/cacheKey';
 import { createMemorySearchParams } from '../../utils/searchParams';

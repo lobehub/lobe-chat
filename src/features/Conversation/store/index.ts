@@ -7,7 +7,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 
 import { createDevtools } from '@/store/middleware/createDevtools';
 
-import { CreateStoreParams, type Store, createStoreAction } from './action';
+import { type CreateStoreParams, type Store, createStoreAction } from './action';
 
 export type { Store as ConversationStore, ConversationStore as Store } from './action';
 export type { State } from './initialState';

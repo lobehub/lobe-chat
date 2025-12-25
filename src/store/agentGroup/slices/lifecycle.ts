@@ -1,9 +1,9 @@
 import type { NewChatGroup } from '@lobechat/types';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { chatGroupService } from '@/services/chatGroup';
-import { ChatGroupStore } from '@/store/agentGroup/store';
+import { type ChatGroupStore } from '@/store/agentGroup/store';
 import { getSessionStoreState } from '@/store/session';
 
 export interface ChatGroupLifecycleAction {

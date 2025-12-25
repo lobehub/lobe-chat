@@ -1,9 +1,9 @@
 'use client';
 
-import { Block, BlockProps, Center, Flexbox, Icon, IconProps, Text } from '@lobehub/ui';
+import { Block, type BlockProps, Center, Flexbox, Icon, type IconProps, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 const ACTION_CLASS_NAME = 'nav-item-actions';
 

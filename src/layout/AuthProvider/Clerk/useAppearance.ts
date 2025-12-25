@@ -1,7 +1,7 @@
 'use client';
 
 import { dark } from '@clerk/themes';
-import { ElementsConfig, Theme } from '@clerk/types';
+import { type ElementsConfig, type Theme } from '@clerk/types';
 import { BRANDING_URL } from '@lobechat/business-const';
 import { createStyles, useThemeMode } from 'antd-style';
 

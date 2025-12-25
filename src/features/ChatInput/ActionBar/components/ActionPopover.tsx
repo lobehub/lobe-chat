@@ -1,9 +1,9 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Popover, PopoverProps } from 'antd';
+import { Popover, type PopoverProps } from 'antd';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 import UpdateLoading from '@/components/Loading/UpdateLoading';
 import { useIsMobile } from '@/hooks/useIsMobile';

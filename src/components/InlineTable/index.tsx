@@ -1,4 +1,4 @@
-import { ConfigProvider, Table, TableProps } from 'antd';
+import { ConfigProvider, Table, type TableProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 

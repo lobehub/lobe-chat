@@ -6,7 +6,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/slices/preference/selectors';
 
-import { ActionKeys, actionMap } from '../ActionBar/config';
+import { type ActionKeys, actionMap } from '../ActionBar/config';
 import { useChatInputStore } from '../store';
 import { ActionBarContext, type DropdownPlacement } from './context';
 

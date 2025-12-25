@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
+import { type DisplayExperienceMemory } from '@/database/repositories/userMemory';
 import { useUserMemoryStore } from '@/store/userMemory';
 
 import { GridView } from '../../../../features/GridView';

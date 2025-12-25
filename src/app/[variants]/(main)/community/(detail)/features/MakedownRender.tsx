@@ -3,7 +3,7 @@
 import { Center, Empty, Markdown } from '@lobehub/ui';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { H1, H2, H3, H4, H5 } from './Toc/Heading';

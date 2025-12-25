@@ -1,4 +1,4 @@
-import { CodeInterpreterToolName, MarketSDK } from '@lobehub/market-sdk';
+import { type CodeInterpreterToolName, MarketSDK } from '@lobehub/market-sdk';
 import debug from 'debug';
 import { z } from 'zod';
 

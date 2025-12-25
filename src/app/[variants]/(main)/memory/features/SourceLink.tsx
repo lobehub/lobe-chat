@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { MemorySource } from '@/database/repositories/userMemory';
+import { type MemorySource } from '@/database/repositories/userMemory';
 
 const SourceLink = memo<{ source?: MemorySource | null }>(({ source }) => {
   const theme = useTheme();

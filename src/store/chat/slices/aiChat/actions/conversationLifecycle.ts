@@ -2,21 +2,21 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { LOADING_FLAT } from '@lobechat/const';
 import {
-  ChatImageItem,
-  ChatVideoItem,
-  ConversationContext,
-  SendMessageParams,
-  SendMessageServerResponse,
+  type ChatImageItem,
+  type ChatVideoItem,
+  type ConversationContext,
+  type SendMessageParams,
+  type SendMessageServerResponse,
 } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { aiChatService } from '@/services/aiChat';
 import { getAgentStoreState } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 import { getFileStoreState } from '@/store/file/store';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';

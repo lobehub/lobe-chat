@@ -10,7 +10,7 @@ import {
 } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
 import { documentService } from '@/services/document';
-import { FileListItem } from '@/types/files';
+import { type FileListItem } from '@/types/files';
 
 import DropdownMenu from '../../ItemDropdown/DropdownMenu';
 import DefaultFileItem from './DefaultFileItem';

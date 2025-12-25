@@ -1,6 +1,6 @@
 import { Block, Center, Flexbox, Tag, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 import HashTags from '../HashTags';
 import Time from '../Time';

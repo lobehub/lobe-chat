@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/user';
 import { toolInterventionSelectors } from '@/store/user/selectors';
 
-import { ApprovalMode } from './index';
+import { type ApprovalMode } from './index';
 
 const useStyles = createStyles(({ css, token }) => ({
   icon: css`

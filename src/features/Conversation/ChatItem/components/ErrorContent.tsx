@@ -3,7 +3,7 @@ import { Suspense, memo } from 'react';
 
 import { useConversationStore } from '@/features/Conversation';
 
-import { ChatItemProps } from '../type';
+import { type ChatItemProps } from '../type';
 
 export interface ErrorContentProps {
   customErrorRender?: ChatItemProps['customErrorRender'];

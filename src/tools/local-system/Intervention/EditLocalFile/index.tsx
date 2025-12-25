@@ -1,5 +1,5 @@
-import { EditLocalFileParams } from '@lobechat/electron-client-ipc';
-import { BuiltinInterventionProps } from '@lobechat/types';
+import { type EditLocalFileParams } from '@lobechat/electron-client-ipc';
+import { type BuiltinInterventionProps } from '@lobechat/types';
 import { Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import { createPatch } from 'diff';

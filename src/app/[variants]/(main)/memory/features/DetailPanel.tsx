@@ -1,7 +1,7 @@
-import { Flexbox, FlexboxProps } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { memo } from 'react';
 
-import NavHeader, { NavHeaderProps } from '@/features/NavHeader';
+import NavHeader, { type NavHeaderProps } from '@/features/NavHeader';
 import RightPanel from '@/features/RightPanel';
 import ToggleRightPanelButton from '@/features/RightPanel/ToggleRightPanelButton';
 

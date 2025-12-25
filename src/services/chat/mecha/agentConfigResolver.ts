@@ -1,5 +1,5 @@
 import { BUILTIN_AGENT_SLUGS, getAgentRuntimeConfig } from '@lobechat/builtin-agents';
-import { LobeAgentChatConfig, LobeAgentConfig } from '@lobechat/types';
+import { type LobeAgentChatConfig, type LobeAgentConfig } from '@lobechat/types';
 import { produce } from 'immer';
 
 import { getAgentStoreState } from '@/store/agent';

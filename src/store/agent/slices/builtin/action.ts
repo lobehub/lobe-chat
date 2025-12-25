@@ -1,7 +1,7 @@
-import { AgentItem, LobeAgentConfig } from '@lobechat/types';
-import { SWRResponse } from 'swr';
+import { type AgentItem, type LobeAgentConfig } from '@lobechat/types';
+import { type SWRResponse } from 'swr';
 import type { PartialDeep } from 'type-fest';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { agentService } from '@/services/agent';

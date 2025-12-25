@@ -2,8 +2,8 @@
 
 import { type ReactNode, createContext, memo, use } from 'react';
 
-import { MarketUserProfile } from '@/layout/AuthProvider/MarketAuth/types';
-import { DiscoverAssistantItem, DiscoverUserInfo } from '@/types/discover';
+import { type MarketUserProfile } from '@/layout/AuthProvider/MarketAuth/types';
+import { type DiscoverAssistantItem, type DiscoverUserInfo } from '@/types/discover';
 
 export interface UserDetailContextConfig {
   agentCount: number;

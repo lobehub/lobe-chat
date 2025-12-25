@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, MenuProps } from '@lobehub/ui';
+import { Menu, type MenuProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 

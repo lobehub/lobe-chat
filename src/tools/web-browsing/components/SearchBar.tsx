@@ -1,8 +1,8 @@
-import { SearchQuery } from '@lobechat/types';
+import { type SearchQuery } from '@lobechat/types';
 import { Button, Flexbox, Input, Select, Text, Tooltip } from '@lobehub/ui';
 import { Checkbox, Radio, Space } from 'antd';
 import { SearchIcon } from 'lucide-react';
-import { ReactNode, memo, useState } from 'react';
+import { type ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useIsMobile } from '@/hooks/useIsMobile';

@@ -1,12 +1,12 @@
 'use client';
 
-import { ActionIconGroup, ActionIconGroupProps, type ActionIconProps } from '@lobehub/ui';
+import { ActionIconGroup, type ActionIconGroupProps, type ActionIconProps } from '@lobehub/ui';
 import { Dices, Download, Trash2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useStyles } from './styles';
-import { ActionButtonsProps } from './types';
+import { type ActionButtonsProps } from './types';
 
 const actionIconProps: Partial<Omit<ActionIconProps, 'size' | 'ref' | 'icon'>> = {
   tooltipProps: { placement: 'left' },

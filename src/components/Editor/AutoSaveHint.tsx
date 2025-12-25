@@ -4,7 +4,7 @@ import { Icon, Tag } from '@lobehub/ui';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { CloudIcon, Loader2Icon } from 'lucide-react';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 dayjs.extend(relativeTime);

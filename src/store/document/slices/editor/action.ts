@@ -1,7 +1,7 @@
 import { EDITOR_DEBOUNCE_TIME, EDITOR_MAX_WAIT } from '@lobechat/const';
-import { IEditor } from '@lobehub/editor';
+import { type IEditor } from '@lobehub/editor';
 import { debounce } from 'es-toolkit/compat';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { setNamespace } from '@/utils/storeDebug';
 

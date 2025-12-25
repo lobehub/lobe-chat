@@ -6,7 +6,7 @@ import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { ReactNode, memo, useEffect, useState } from 'react';
+import { type ReactNode, memo, useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 
 import { isDesktop } from '@/const/version';

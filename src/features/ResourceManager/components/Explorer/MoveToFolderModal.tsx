@@ -3,7 +3,7 @@ import { App } from 'antd';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import FolderTree, { FolderTreeItem } from '@/features/ResourceManager/components/FolderTree';
+import FolderTree, { type FolderTreeItem } from '@/features/ResourceManager/components/FolderTree';
 import { clearTreeFolderCache } from '@/features/ResourceManager/components/Tree';
 import { fileService } from '@/services/file';
 import { useFileStore } from '@/store/file';

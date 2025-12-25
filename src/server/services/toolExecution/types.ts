@@ -1,5 +1,5 @@
-import { LobeToolManifest } from '@lobechat/context-engine';
-import { ChatToolPayload, ClientSecretPayload } from '@lobechat/types';
+import { type LobeToolManifest } from '@lobechat/context-engine';
+import { type ChatToolPayload, type ClientSecretPayload } from '@lobechat/types';
 
 export interface ToolExecutionContext {
   toolManifestMap: Record<string, LobeToolManifest>;

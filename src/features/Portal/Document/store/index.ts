@@ -1,13 +1,13 @@
 'use client';
 
-import { StoreApiWithSelector } from '@lobechat/types';
+import { type StoreApiWithSelector } from '@lobechat/types';
 import { createContext } from 'zustand-utils';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-import { DocumentEditorStore, createDocumentEditorStore } from './action';
-import { DocumentEditorState } from './initialState';
+import { type DocumentEditorStore, createDocumentEditorStore } from './action';
+import { type DocumentEditorState } from './initialState';
 
 export type { DocumentEditorState } from './initialState';
 

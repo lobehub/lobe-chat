@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinPlaceholderProps } from '@lobechat/types';
+import { type BuiltinPlaceholderProps } from '@lobechat/types';
 import { memo } from 'react';
 
 import LoadingCard from '../Render/PageContent/Loading';

@@ -3,7 +3,7 @@
  */
 import { ToolsEngine } from '@lobechat/context-engine';
 import type { PluginEnableChecker } from '@lobechat/context-engine';
-import { ChatCompletionTool, WorkingModel } from '@lobechat/types';
+import { type ChatCompletionTool, type WorkingModel } from '@lobechat/types';
 import type { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { getAgentStoreState } from '@/store/agent';

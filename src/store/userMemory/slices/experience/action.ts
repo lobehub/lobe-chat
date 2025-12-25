@@ -1,14 +1,14 @@
 import { uniqBy } from 'es-toolkit/compat';
 import { produce } from 'immer';
-import useSWR, { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import useSWR, { type SWRResponse } from 'swr';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
 import { memoryCRUDService } from '@/services/userMemory/index';
 import { LayersEnum } from '@/types/userMemory';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { UserMemoryStore } from '../../store';
+import { type UserMemoryStore } from '../../store';
 
 const n = setNamespace('userMemory/experience');
 

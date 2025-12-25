@@ -1,4 +1,4 @@
-import { HealthCheckResult, QueueMessage, QueueStats } from '../types';
+import { type HealthCheckResult, type QueueMessage, type QueueStats } from '../types';
 
 /**
  * Queue service implementation interface

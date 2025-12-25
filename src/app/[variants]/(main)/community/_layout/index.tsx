@@ -1,6 +1,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';

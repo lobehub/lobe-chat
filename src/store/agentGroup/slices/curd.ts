@@ -1,10 +1,10 @@
 import type { LobeChatGroupConfig } from '@lobechat/types';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_CHAT_GROUP_CHAT_CONFIG } from '@/const/settings';
 import type { ChatGroupItem } from '@/database/schemas/chatGroup';
 import { chatGroupService } from '@/services/chatGroup';
-import { ChatGroupStore } from '@/store/agentGroup/store';
+import { type ChatGroupStore } from '@/store/agentGroup/store';
 
 import { agentGroupSelectors } from '../selectors';
 

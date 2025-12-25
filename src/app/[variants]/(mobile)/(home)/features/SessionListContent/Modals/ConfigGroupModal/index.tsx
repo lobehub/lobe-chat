@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
 import { sessionGroupSelectors } from '@/store/session/selectors';
-import { SessionGroupItem } from '@/types/session';
+import { type SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
 

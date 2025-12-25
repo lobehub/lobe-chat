@@ -1,6 +1,6 @@
-import { ReferralStatusString } from '@lobechat/types';
+import { type ReferralStatusString } from '@lobechat/types';
 
-import { Plans } from '@/types/subscription';
+import { type Plans } from '@/types/subscription';
 
 export interface CommonState {
   isFreePlan?: boolean;

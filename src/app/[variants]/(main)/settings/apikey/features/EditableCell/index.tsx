@@ -1,9 +1,9 @@
 'use client';
 
 import { ActionIcon, Input } from '@lobehub/ui';
-import { App, InputRef } from 'antd';
+import { App, type InputRef } from 'antd';
 import { createStyles } from 'antd-style';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import { Check, Edit, X } from 'lucide-react';
 import React, { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 
 import StatisticCard from '@/components/StatisticCard';
 import TitleWithPercentage from '@/components/StatisticCard/TitleWithPercentage';
-import { UsageLog } from '@/types/usage/usageRecord';
+import { type UsageLog } from '@/types/usage/usageRecord';
 import { formatNumber } from '@/utils/format';
 
-import { GroupBy, UsageChartProps } from '../../../Client';
+import { GroupBy, type UsageChartProps } from '../../../Client';
 import ModelTable from './ModelTable';
 
 const computeList = (data: UsageLog[], groupBy: GroupBy): string[] => {

@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useQuery } from '@/hooks/useQuery';
-import { AssistantMarketSource } from '@/types/discover';
+import { type AssistantMarketSource } from '@/types/discover';
 
 const useStyles = createStyles(({ token, css }) => {
   return {

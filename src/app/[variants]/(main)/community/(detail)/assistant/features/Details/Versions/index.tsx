@@ -10,7 +10,7 @@ import { usePathname } from '@/app/[variants]/(main)/hooks/usePathname';
 import { useQuery } from '@/app/[variants]/(main)/hooks/useQuery';
 import InlineTable from '@/components/InlineTable';
 import PublishedTime from '@/components/PublishedTime';
-import { AssistantMarketSource, AssistantNavKey } from '@/types/discover';
+import { type AssistantMarketSource, AssistantNavKey } from '@/types/discover';
 
 import Title from '../../../../../features/Title';
 import { useDetailContext } from '../../DetailProvider';

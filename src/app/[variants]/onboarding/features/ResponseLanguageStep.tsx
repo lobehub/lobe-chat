@@ -7,7 +7,7 @@ import { Undo2Icon } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Locales, localeOptions, normalizeLocale } from '@/locales/resources';
+import { type Locales, localeOptions, normalizeLocale } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
 

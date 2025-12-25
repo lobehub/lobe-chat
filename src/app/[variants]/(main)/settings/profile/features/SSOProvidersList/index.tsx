@@ -1,7 +1,7 @@
 import { isDesktop } from '@lobechat/const';
 import { ActionIcon, Dropdown, Flexbox, type MenuProps, Text } from '@lobehub/ui';
 import { ArrowRight, Plus, Unlink } from 'lucide-react';
-import { CSSProperties, memo, useMemo } from 'react';
+import { type CSSProperties, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { modal, notification } from '@/components/AntdStaticMethods';

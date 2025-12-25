@@ -1,6 +1,6 @@
 import { Flexbox, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { Loader2, LucideIcon } from 'lucide-react';
+import { Loader2, type LucideIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const TimeLabel = memo<{

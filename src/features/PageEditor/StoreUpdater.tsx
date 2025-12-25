@@ -9,7 +9,7 @@ import { pageAgentRuntime } from '@/store/chat/slices/builtinTool/actions/pageAg
 import { useFileStore } from '@/store/file';
 import { documentSelectors } from '@/store/file/slices/document/selectors';
 
-import { PublicState, usePageEditorStore, useStoreApi } from './store';
+import { type PublicState, usePageEditorStore, useStoreApi } from './store';
 
 const log = debug('page:store-updater');
 

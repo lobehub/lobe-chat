@@ -1,4 +1,4 @@
-import { IdentityEntryBasePayload, IdentityEntryPayload, UserMemoryModel } from '@/database/models/userMemory';
+import { type IdentityEntryBasePayload, type IdentityEntryPayload, UserMemoryModel } from '@/database/models/userMemory';
 import { searchMemorySchema } from '@/types/userMemory';
 import {
   ContextMemoryItemSchema,

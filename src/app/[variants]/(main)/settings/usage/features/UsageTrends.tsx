@@ -4,10 +4,10 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import StatisticCard from '@/components/StatisticCard';
-import { UsageLog } from '@/types/usage/usageRecord';
+import { type UsageLog } from '@/types/usage/usageRecord';
 import { formatNumber } from '@/utils/format';
 
-import { GroupBy, UsageChartProps } from '../Client';
+import { GroupBy, type UsageChartProps } from '../Client';
 import { UsageBarChart } from './components/UsageBarChart';
 
 const groupByType = (

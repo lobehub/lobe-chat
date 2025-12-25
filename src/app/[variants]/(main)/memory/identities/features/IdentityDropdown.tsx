@@ -1,7 +1,7 @@
-import { ActionIcon, ActionIconProps, Dropdown } from '@lobehub/ui';
+import { ActionIcon, type ActionIconProps, Dropdown } from '@lobehub/ui';
 import { App } from 'antd';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
-import { KeyboardEvent, MouseEvent, memo } from 'react';
+import { type KeyboardEvent, type MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserMemoryStore } from '@/store/userMemory';

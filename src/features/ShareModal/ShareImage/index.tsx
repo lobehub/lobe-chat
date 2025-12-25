@@ -14,7 +14,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
-import { FieldType, WidthMode } from './type';
+import { type FieldType, WidthMode } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,

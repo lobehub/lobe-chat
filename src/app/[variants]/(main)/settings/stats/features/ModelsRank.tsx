@@ -1,4 +1,4 @@
-import { ModelRankItem } from '@lobechat/types';
+import { type ModelRankItem } from '@lobechat/types';
 import { BarList } from '@lobehub/charts';
 import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Flexbox, FormGroup, Modal } from '@lobehub/ui';

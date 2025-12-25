@@ -1,4 +1,4 @@
-import { IThreadType, ThreadItem, ThreadType } from '@lobechat/types';
+import { type IThreadType, type ThreadItem, ThreadType } from '@lobechat/types';
 
 export interface ChatThreadState {
   activeThreadId?: string;

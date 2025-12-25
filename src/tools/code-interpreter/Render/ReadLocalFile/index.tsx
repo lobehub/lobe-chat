@@ -1,11 +1,11 @@
 'use client';
 
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { ReadLocalFileState } from '../../type';
+import { type ReadLocalFileState } from '../../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

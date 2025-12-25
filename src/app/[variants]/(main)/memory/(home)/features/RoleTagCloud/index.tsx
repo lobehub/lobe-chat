@@ -6,7 +6,7 @@ import { memo, useEffect, useState } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { QueryTagsResult } from '@/database/models/userMemory';
+import { type QueryTagsResult } from '@/database/models/userMemory';
 
 const TagCloudCanvas = dynamic(() => import('./TagCloudCanvas'), {
   loading: () => <Loading debugId={'TagCloud'} />,

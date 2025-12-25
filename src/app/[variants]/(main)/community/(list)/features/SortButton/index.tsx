@@ -1,4 +1,4 @@
-import { Dropdown, DropdownMenuItemType, Icon , Button } from '@lobehub/ui';
+import { Dropdown, type DropdownMenuItemType, Icon , Button } from '@lobehub/ui';
 import { ArrowDownWideNarrow, ChevronDown } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';

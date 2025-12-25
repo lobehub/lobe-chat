@@ -1,7 +1,7 @@
 'use client';
 
 import { Alert, Highlighter } from '@lobehub/ui';
-import { ErrorInfo, memo } from 'react';
+import { type ErrorInfo, memo } from 'react';
 
 interface ErrorDisplayProps {
   apiName?: string;

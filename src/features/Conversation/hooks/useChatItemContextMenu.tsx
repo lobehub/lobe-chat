@@ -1,5 +1,6 @@
 import { type ActionIconGroupEvent } from '@lobehub/ui';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { MSG_CONTENT_CLASSNAME } from '@/features/Conversation/ChatItem/components/MessageContent';
 import { useUserStore } from '@/store/user';

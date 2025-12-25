@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinPlaceholderProps } from '@lobechat/types';
+import { type BuiltinPlaceholderProps } from '@lobechat/types';
 import { ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 

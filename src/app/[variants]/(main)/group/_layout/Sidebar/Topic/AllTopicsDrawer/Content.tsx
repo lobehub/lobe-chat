@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
-import { VList, VListHandle } from 'virtua';
+import { VList, type VListHandle } from 'virtua';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import TopicEmpty from '@/features/TopicEmpty';

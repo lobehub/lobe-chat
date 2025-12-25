@@ -1,7 +1,7 @@
-import { ActionIcon, Center, Flexbox, FlexboxProps } from '@lobehub/ui';
+import { ActionIcon, Center, Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`

@@ -2,7 +2,7 @@
 
 import { type ReactNode, createContext, memo, use } from 'react';
 
-import { DiscoverProviderDetail } from '@/types/discover';
+import { type DiscoverProviderDetail } from '@/types/discover';
 
 export type DetailContextConfig = Partial<DiscoverProviderDetail>;
 

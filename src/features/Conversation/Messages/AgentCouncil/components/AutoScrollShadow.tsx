@@ -1,5 +1,5 @@
 import { ScrollShadow } from '@lobehub/ui';
-import { PropsWithChildren, RefObject, memo, useEffect, useRef } from 'react';
+import { type PropsWithChildren, type RefObject, memo, useEffect, useRef } from 'react';
 
 const AutoScrollShadow = memo<PropsWithChildren>(({ children }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);

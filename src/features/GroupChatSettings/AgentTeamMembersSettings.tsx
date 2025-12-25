@@ -11,7 +11,7 @@ import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { LobeAgentSession, LobeGroupSession, LobeSessionType } from '@/types/session';
+import { type LobeAgentSession, type LobeGroupSession, LobeSessionType } from '@/types/session';
 
 import AgentCard from './AgentCard';
 import HostMemberCard from './HostMemberCard';

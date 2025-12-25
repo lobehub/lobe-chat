@@ -12,7 +12,7 @@ import Item from './Item';
 import MasonryItemWrapper from './Item/MasonryItemWrapper';
 import Loading from './Loading';
 import MasonrySkeleton from './MasonrySkeleton';
-import ViewSwitcher, { ViewMode } from './ViewSwitcher';
+import ViewSwitcher, { type ViewMode } from './ViewSwitcher';
 
 export const List = memo(() => {
   const { t } = useTranslation('file');

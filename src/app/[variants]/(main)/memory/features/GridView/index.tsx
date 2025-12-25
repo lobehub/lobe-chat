@@ -1,5 +1,5 @@
-import { DivProps, Grid } from '@lobehub/ui';
-import { ReactNode, forwardRef, memo } from 'react';
+import { type DivProps, Grid } from '@lobehub/ui';
+import { type ReactNode, forwardRef, memo } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
 
 import Loading from '@/app/[variants]/(main)/memory/features/Loading';

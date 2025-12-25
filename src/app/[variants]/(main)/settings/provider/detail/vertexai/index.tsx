@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { FormPassword } from '@/components/FormInput';
 import { SkeletonInput } from '@/components/Skeleton';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { GlobalLLMProviderKey } from '@/types/user/settings';
+import { type GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey } from '../../const';
-import { ProviderItem } from '../../type';
+import { type ProviderItem } from '../../type';
 import ProviderDetail from '../default';
 
 const useStyles = createStyles(({ css, token }) => ({

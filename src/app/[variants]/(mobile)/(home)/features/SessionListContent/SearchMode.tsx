@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
-import { LobeAgentSession, LobeSessionType, LobeSessions } from '@/types/session';
+import { type LobeAgentSession, LobeSessionType, type LobeSessions } from '@/types/session';
 
 import SkeletonList from '../SkeletonList';
 import SessionList from './List';

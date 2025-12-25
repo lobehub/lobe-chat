@@ -1,9 +1,9 @@
-import { MenuRenderProps } from '@lobehub/editor/es/plugins/slash/react/type';
+import { type MenuRenderProps } from '@lobehub/editor/es/plugins/slash/react/type';
 import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { ReactNode, memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { MentionListOption } from './types';
+import { type MentionListOption } from './types';
 
 /**
  * Get cursor position from browser selection API

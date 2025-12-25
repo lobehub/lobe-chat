@@ -1,12 +1,12 @@
 import { ModelProvider } from 'model-bank';
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
-import { UserMemoryModel } from '@/database/models/userMemory';
+import { type UserMemoryModel } from '@/database/models/userMemory';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
-import { ClientSecretPayload } from '@/types/auth';
-import { SearchMemoryResult, searchMemorySchema } from '@/types/userMemory';
+import { type ClientSecretPayload } from '@/types/auth';
+import { type SearchMemoryResult, searchMemorySchema } from '@/types/userMemory';
 
 import { EMBEDDING_VECTOR_DIMENSION, memoryProcedure, router } from './shared';
 

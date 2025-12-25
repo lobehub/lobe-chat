@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix,typescript-sort-keys/interface */
 import { t } from 'i18next';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { agentService } from '@/services/agent';
@@ -9,7 +9,7 @@ import { homeService } from '@/services/home';
 import { sessionService } from '@/services/session';
 import type { HomeStore } from '@/store/home/store';
 import { getSessionStoreState } from '@/store/session';
-import { SessionGroupItem } from '@/types/session';
+import { type SessionGroupItem } from '@/types/session';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('sidebarUI');

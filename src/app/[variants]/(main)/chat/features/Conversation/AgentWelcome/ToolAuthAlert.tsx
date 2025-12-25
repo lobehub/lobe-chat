@@ -1,6 +1,6 @@
 'use client';
 
-import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
+import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
 import { Alert, Avatar, Button, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
@@ -14,7 +14,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
 import {
-  KlavisServer,
+  type KlavisServer,
   KlavisServerStatus,
   klavisStoreSelectors,
 } from '@/store/tool/slices/klavisStore';

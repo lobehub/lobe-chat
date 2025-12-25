@@ -1,10 +1,10 @@
 'use client';
 
-import { ForwardedRef, memo, useImperativeHandle } from 'react';
+import { type ForwardedRef, memo, useImperativeHandle } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
-import { ChatInputEditor, useChatInputEditor } from './hooks/useChatInputEditor';
-import { PublicState, useStoreApi } from './store';
+import { type ChatInputEditor, useChatInputEditor } from './hooks/useChatInputEditor';
+import { type PublicState, useStoreApi } from './store';
 
 export interface StoreUpdaterProps extends Partial<PublicState> {
   chatInputEditorRef?: ForwardedRef<ChatInputEditor | null>;

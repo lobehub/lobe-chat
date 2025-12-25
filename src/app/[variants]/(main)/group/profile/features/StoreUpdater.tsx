@@ -3,7 +3,7 @@
 import { useEditorState } from '@lobehub/editor/react';
 import { memo, useEffect } from 'react';
 
-import { PublicState, useProfileStore, useStoreApi } from './store';
+import { type PublicState, useProfileStore, useStoreApi } from './store';
 
 export type StoreUpdaterProps = Partial<PublicState>;
 

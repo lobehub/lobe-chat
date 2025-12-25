@@ -1,8 +1,8 @@
 import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { LobeAgentConfig } from '@/types/agent';
-import { GlobalRuntimeConfig } from '@/types/serverConfig';
+import { type LobeAgentConfig } from '@/types/agent';
+import { type GlobalRuntimeConfig } from '@/types/serverConfig';
 
 const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat/latest';
 
