@@ -97,6 +97,8 @@ describe('MacOSMenu', () => {
     });
 
     it('should include developer menu when showDevItems is true', () => {
+      macOSMenu.buildAndSetAppMenu({ showDevItems: true });
+
       expect(Menu.buildFromTemplate).toHaveBeenCalled();
       const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
       const devMenu = template.find((item: any) => item.label === 'Development');
@@ -104,6 +106,8 @@ describe('MacOSMenu', () => {
     });
 
     it('should not include developer menu when showDevItems is false', () => {
+      macOSMenu.buildAndSetAppMenu({ showDevItems: false });
+
       expect(Menu.buildFromTemplate).toHaveBeenCalled();
       const template = (Menu.buildFromTemplate as any).mock.calls[0][0];
       const devMenu = template.find((item: any) => item.label === 'Development');
