@@ -1,40 +1,16 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeCoordinator } from '../AgentRuntimeCoordinator';
-import { AgentStateManager } from '../AgentStateManager';
-import { StreamEventManager } from '../StreamEventManager';
+import { createAgentStateManager, createStreamEventManager } from '../factory';
 
-// Mock AgentStateManager
-vi.mock('../AgentStateManager', () => ({
-  AgentStateManager: vi.fn(() => ({
-    cleanupExpiredOperations: vi.fn(),
-    createOperationMetadata: vi.fn(),
-    deleteAgentOperation: vi.fn(),
-    disconnect: vi.fn(),
-    getActiveOperations: vi.fn(),
-    getExecutionHistory: vi.fn(),
-    getOperationMetadata: vi.fn(),
-    getStats: vi.fn(),
-    loadAgentState: vi.fn(),
-    saveAgentState: vi.fn(),
-    saveStepResult: vi.fn(),
-  })),
-}));
-
-// Mock StreamEventManager
-vi.mock('../StreamEventManager', () => ({
-  StreamEventManager: vi.fn(() => ({
-    cleanupOperation: vi.fn(),
-    disconnect: vi.fn(),
-    publishAgentRuntimeEnd: vi.fn(),
-    publishAgentRuntimeInit: vi.fn(),
-    publishStreamEvent: vi.fn(),
-  })),
+// Mock factory module to avoid Redis/env access
+vi.mock('../factory', () => ({
+  createAgentStateManager: vi.fn(),
+  createStreamEventManager: vi.fn(),
+  isRedisAvailable: vi.fn(() => false),
 }));
 
 describe('AgentRuntimeCoordinator', () => {
-  const MockedAgentStateManager = AgentStateManager as any;
-  const MockedStreamEventManager = StreamEventManager as any;
   let coordinator: AgentRuntimeCoordinator;
   let mockStateManager: any;
   let mockStreamManager: any;
@@ -64,8 +40,8 @@ describe('AgentRuntimeCoordinator', () => {
       publishStreamEvent: vi.fn(),
     };
 
-    MockedAgentStateManager.mockImplementation(() => mockStateManager);
-    MockedStreamEventManager.mockImplementation(() => mockStreamManager);
+    vi.mocked(createAgentStateManager).mockReturnValue(mockStateManager);
+    vi.mocked(createStreamEventManager).mockReturnValue(mockStreamManager);
 
     coordinator = new AgentRuntimeCoordinator();
   });

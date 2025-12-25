@@ -1,9 +1,9 @@
-import { UIChatMessage } from '@lobechat/types';
+import type { UIChatMessage } from '@lobechat/types';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { mutate } from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
+import { mutate } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -13,6 +13,15 @@ import { useSessionStore } from '@/store/session';
 import { ChatTopic } from '@/types/topic';
 
 import { useChatStore } from '../../store';
+
+// Mock @/libs/swr mutate
+vi.mock('@/libs/swr', async () => {
+  const actual = await vi.importActual('@/libs/swr');
+  return {
+    ...actual,
+    mutate: vi.fn(),
+  };
+});
 
 vi.mock('zustand/traditional');
 // Mock topicService 和 messageService
