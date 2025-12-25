@@ -1,5 +1,5 @@
 /* eslint-disable unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars */
-import { Plans, ReferralStatusString } from '@lobechat/types';
+import { type Plans, type ReferralStatusString } from '@lobechat/types';
 
 export async function getReferralStatus(userId: string): Promise<ReferralStatusString | undefined> {
   return undefined;

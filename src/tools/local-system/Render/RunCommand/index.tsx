@@ -1,10 +1,8 @@
-import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { type RunCommandParams, type RunCommandResult } from '@lobechat/electron-client-ipc';
 import { type BuiltinRenderProps } from '@lobechat/types';
-import { ActionIcon, Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
+import { Block, Flexbox, Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -39,69 +37,27 @@ interface RunCommandState {
 
 const RunCommand = memo<BuiltinRenderProps<RunCommandParams, RunCommandState>>(
   ({ args, pluginState }) => {
-    const { styles, theme } = useStyles();
-    const { result, message } = pluginState || {};
-    const isSuccess = result?.success;
-    const [expanded, setExpanded] = useState(false);
+    const { styles } = useStyles();
+    const { result } = pluginState || {};
 
     return (
       <Flexbox className={styles.container} gap={8}>
-        {/* Header: Description + Status */}
-        <Flexbox align={'center'} className={styles.header} horizontal justify={'space-between'}>
-          <Flexbox gap={8} horizontal>
-            <Flexbox gap={4} horizontal>
-              {!result ? null : isSuccess ? (
-                <CheckCircleFilled
-                  className={styles.statusIcon}
-                  style={{ color: theme.colorSuccess }}
-                />
-              ) : (
-                <CloseCircleFilled
-                  className={styles.statusIcon}
-                  style={{ color: theme.colorError }}
-                />
-              )}
-              {args.description && <Text className={styles.head}>{args.description}</Text>}
-            </Flexbox>
-            {message && (
-              <Flexbox align={'center'} gap={4} horizontal>
-                <Text className={styles.head} type={'secondary'}>
-                  {message}
-                </Text>
-              </Flexbox>
-            )}
-          </Flexbox>
-          <Flexbox align={'center'} gap={8} horizontal>
-            <ActionIcon
-              className={`action-icon`}
-              icon={expanded ? ChevronUp : ChevronDown}
-              onClick={() => setExpanded(!expanded)}
-              size={'small'}
-              style={{ opacity: expanded ? 1 : undefined }}
-              title={expanded ? 'Collapse' : 'Expand'}
-            />
-          </Flexbox>
-        </Flexbox>
-
-        {/* Command & Output */}
-        {expanded && (
-          <Block gap={8} padding={8} variant={'outlined'}>
-            <Highlighter
-              language={'sh'}
-              showLanguage={false}
-              style={{ paddingInline: 8 }}
-              variant={'borderless'}
-              wrap
-            >
-              {args.command}
+        <Block gap={8} padding={8} variant={'outlined'}>
+          <Highlighter
+            language={'sh'}
+            showLanguage={false}
+            style={{ paddingInline: 8 }}
+            variant={'borderless'}
+            wrap
+          >
+            {args.command}
+          </Highlighter>
+          {result?.output && (
+            <Highlighter language={'text'} showLanguage={false} variant={'filled'} wrap>
+              {result.output}
             </Highlighter>
-            {result?.output && (
-              <Highlighter language={'text'} showLanguage={false} variant={'filled'} wrap>
-                {result.output}
-              </Highlighter>
-            )}
-          </Block>
-        )}
+          )}
+        </Block>
       </Flexbox>
     );
   },

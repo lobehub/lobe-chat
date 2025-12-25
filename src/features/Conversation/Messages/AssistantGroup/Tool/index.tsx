@@ -7,6 +7,7 @@ import { memo, useEffect, useState } from 'react';
 import Actions from '@/features/Conversation/Messages/AssistantGroup/Tool/Actions';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { getBuiltinStreaming } from '@/tools/streamings';
 
 import Inspectors from './Inspector';
 
@@ -68,6 +69,16 @@ const Tool = memo<GroupToolProps>(
 
     const showCustomPluginRender = !isPending && !isReject && !isAbort;
 
+    let isArgumentsStreaming = false;
+    try {
+      JSON.parse(requestArgs || '{}');
+    } catch {
+      isArgumentsStreaming = true;
+    }
+
+    const hasStreamingRenderer = !!getBuiltinStreaming(identifier, apiName);
+    const forceShowStreamingRender = isArgumentsStreaming && hasStreamingRenderer;
+
     // Wrap handleExpand to prevent collapsing when alwaysExpand is set
     const wrappedHandleExpand = (expand?: boolean) => {
       // Block collapse action when alwaysExpand is set
@@ -87,6 +98,10 @@ const Tool = memo<GroupToolProps>(
     useEffect(() => {
       onCollapsibleChange?.(!isAlwaysExpand);
     }, [isAlwaysExpand, onCollapsibleChange]);
+
+    useEffect(() => {
+      handleExpand?.(forceShowStreamingRender);
+    }, [forceShowStreamingRender]);
 
     return (
       <AccordionItem
@@ -108,8 +123,10 @@ const Tool = memo<GroupToolProps>(
         title={
           <Inspectors
             apiName={apiName}
+            arguments={requestArgs}
             identifier={identifier}
             intervention={intervention}
+            isArgumentsStreaming={isArgumentsStreaming}
             result={result}
           />
         }
@@ -131,6 +148,7 @@ const Tool = memo<GroupToolProps>(
             arguments={requestArgs}
             identifier={identifier}
             intervention={intervention}
+            isArgumentsStreaming={isArgumentsStreaming}
             messageId={assistantMessageId}
             result={result}
             setShowPluginRender={setShowPluginRender}

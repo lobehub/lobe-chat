@@ -21,6 +21,7 @@ export const CodeInterpreterApiName = {
 
 export const CodeInterpreterIdentifier = 'lobe-cloud-code-interpreter';
 
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 export const CodeInterpreterManifest: BuiltinToolManifest = {
   api: [
     {
@@ -30,8 +31,9 @@ export const CodeInterpreterManifest: BuiltinToolManifest = {
       name: CodeInterpreterApiName.executeCode,
       parameters: {
         properties: {
-          code: {
-            description: 'The code to execute',
+          description: {
+            description:
+              'A brief description of what this code does (required for user understanding)',
             type: 'string',
           },
           language: {
@@ -39,8 +41,12 @@ export const CodeInterpreterManifest: BuiltinToolManifest = {
             enum: ['python', 'javascript', 'typescript'],
             type: 'string',
           },
+          code: {
+            description: 'The code to execute',
+            type: 'string',
+          },
         },
-        required: ['code'],
+        required: ['description', 'language', 'code'],
         type: 'object',
       },
     },

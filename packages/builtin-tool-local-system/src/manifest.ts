@@ -242,7 +242,7 @@ export const LocalSystemManifest: BuiltinToolManifest = {
             type: 'number',
           },
         },
-        required: ['command'],
+        required: ['description', 'command'],
         type: 'object',
       },
     },

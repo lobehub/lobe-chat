@@ -1,14 +1,17 @@
+import { MemorySourceType } from '@lobechat/types';
 import { createWorkflow, serveMany } from '@upstash/workflow/nextjs';
 
 import {
   MemoryExtractionExecutor,
-  MemoryExtractionPayloadInput,
+  type MemoryExtractionPayloadInput,
   normalizeMemoryExtractionPayload,
 } from '@/server/services/memory/userMemory/extract';
-import { MemorySourceType } from '@lobechat/types';
 
 export const { POST } = serveMany({
-  'memory:user-memory:extract:users:topics:extract-layers:other-layers': createWorkflow<MemoryExtractionPayloadInput, { processed: number, results: any[] }>(async (context) => {
+  'memory:user-memory:extract:users:topics:extract-layers:other-layers': createWorkflow<
+    MemoryExtractionPayloadInput,
+    { processed: number; results: any[] }
+  >(async (context) => {
     const params = normalizeMemoryExtractionPayload(context.requestPayload || {});
     if (!params.userIds.length) {
       return { message: 'No user id provided for topic batch.', processed: 0, results: [] };
@@ -23,7 +26,13 @@ export const { POST } = serveMany({
     const userId = params.userIds[0];
     const executor = await MemoryExtractionExecutor.create();
 
-    const results: { extracted: boolean; layers: Record<string, number>; memoryIds: string[]; topicId: string, userId: string }[] = [];
+    const results: {
+      extracted: boolean;
+      layers: Record<string, number>;
+      memoryIds: string[];
+      topicId: string;
+      userId: string;
+    }[] = [];
 
     for (const topicId of params.topicIds) {
       const extracted = await context.run(
@@ -45,5 +54,5 @@ export const { POST } = serveMany({
     }
 
     return { processed: results.length, results };
-  })
+  }),
 });
