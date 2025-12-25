@@ -1,7 +1,7 @@
-import { ThemeMode } from 'antd-style';
+import { type ThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { gt, parse, valid } from 'semver';
-import { SWRResponse } from 'swr';
+import { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
@@ -9,7 +9,7 @@ import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { globalService } from '@/services/global';
 import type { SystemStatus } from '@/store/global/initialState';
-import { LocaleMode } from '@/types/locale';
+import { type LocaleMode } from '@/types/locale';
 import { setCookie } from '@/utils/client/cookie';
 import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';

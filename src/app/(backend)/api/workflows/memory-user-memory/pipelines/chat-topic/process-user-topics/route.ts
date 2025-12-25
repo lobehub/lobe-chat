@@ -4,7 +4,7 @@ import { chunk } from 'es-toolkit/compat';
 import type { ListTopicsForMemoryExtractorCursor } from '@/database/models/topic';
 import {
   MemoryExtractionExecutor,
-  MemoryExtractionPayloadInput,
+  type MemoryExtractionPayloadInput,
   MemoryExtractionWorkflowService,
   buildWorkflowPayloadInput,
   normalizeMemoryExtractionPayload,

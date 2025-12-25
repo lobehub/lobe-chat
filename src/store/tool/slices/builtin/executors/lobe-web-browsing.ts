@@ -4,13 +4,13 @@
  * Handles web search and page crawling tool calls.
  */
 import {
-  CrawlMultiPagesQuery,
-  CrawlPluginState,
+  type CrawlMultiPagesQuery,
+  type CrawlPluginState,
   SEARCH_SEARXNG_NOT_CONFIG,
-  SearchQuery,
+  type SearchQuery,
 } from '@lobechat/types';
 import { BaseExecutor, type BuiltinToolContext, type BuiltinToolResult } from '@lobechat/types';
-import { CrawlSuccessResult } from '@lobechat/web-crawler';
+import { type CrawlSuccessResult } from '@lobechat/web-crawler';
 
 import { notebookService } from '@/services/notebook';
 import { searchService } from '@/services/search';

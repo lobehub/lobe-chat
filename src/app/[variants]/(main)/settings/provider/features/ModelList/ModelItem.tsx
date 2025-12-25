@@ -3,7 +3,7 @@ import { ActionIcon, Flexbox, Tag, Text, copyToClipboard } from '@lobehub/ui';
 import { App, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
-import { AiModelSourceEnum, AiProviderModelListItem } from 'model-bank';
+import { AiModelSourceEnum, type AiProviderModelListItem } from 'model-bank';
 import React, { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

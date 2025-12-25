@@ -3,7 +3,7 @@ import { chunk } from 'es-toolkit/compat';
 
 import {
   MemoryExtractionExecutor,
-  MemoryExtractionPayloadInput,
+  type MemoryExtractionPayloadInput,
   MemoryExtractionWorkflowService,
   buildWorkflowPayloadInput,
   normalizeMemoryExtractionPayload,

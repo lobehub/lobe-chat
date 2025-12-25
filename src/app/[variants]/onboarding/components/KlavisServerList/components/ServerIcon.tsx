@@ -1,6 +1,6 @@
 import { Avatar, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import { memo } from 'react';
 
 interface ServerIconProps {

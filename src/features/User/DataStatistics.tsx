@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, FlexboxProps, Icon, Tooltip } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps, Icon, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
 import { isUndefined } from 'es-toolkit/compat';

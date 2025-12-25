@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
 import ProgressIcon from '@/app/[variants]/(main)/memory/features/ProgressIcon';
-import { DisplayExperienceMemory } from '@/database/repositories/userMemory';
+import { type DisplayExperienceMemory } from '@/database/repositories/userMemory';
 
 import ExperienceDropdown from '../../ExperienceDropdown';
 

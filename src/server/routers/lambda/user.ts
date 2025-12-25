@@ -1,14 +1,14 @@
-import { UserJSON } from '@clerk/backend';
+import { type UserJSON } from '@clerk/backend';
 import { enableClerk, isDesktop } from '@lobechat/const';
 import {
   NextAuthAccountSchame,
   Plans,
   UserGuideSchema,
-  UserInitializationState,
+  type UserInitializationState,
   UserOnboardingSchema,
-  UserPreference,
+  type UserPreference,
   UserPreferenceSchema,
-  UserSettings,
+  type UserSettings,
   UserSettingsSchema,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';

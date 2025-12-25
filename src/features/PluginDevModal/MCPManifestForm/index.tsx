@@ -1,5 +1,5 @@
 import { Alert, Flexbox, FormItem, Input, InputPassword , Button } from '@lobehub/ui';
-import { Divider, Form, FormInstance, Radio } from 'antd';
+import { Divider, Form, type FormInstance, Radio } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

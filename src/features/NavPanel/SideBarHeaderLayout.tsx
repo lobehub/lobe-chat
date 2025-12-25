@@ -1,10 +1,10 @@
 'use client';
 
 import { Flexbox, Icon, Text } from '@lobehub/ui';
-import { Breadcrumb, BreadcrumbProps } from 'antd';
+import { Breadcrumb, type BreadcrumbProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronRightIcon, HomeIcon } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 

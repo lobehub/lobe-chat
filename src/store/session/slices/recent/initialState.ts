@@ -1,5 +1,5 @@
-import { FileListItem } from '@/types/files';
-import { RecentTopic } from '@/types/topic';
+import { type FileListItem } from '@/types/files';
+import { type RecentTopic } from '@/types/topic';
 
 export interface RecentState {
   isRecentPagesInit: boolean;

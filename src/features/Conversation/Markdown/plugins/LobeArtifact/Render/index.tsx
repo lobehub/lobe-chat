@@ -8,7 +8,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, messageStateSelectors } from '@/store/chat/selectors';
 import { dotLoading } from '@/styles/loading';
 
-import { MarkdownElementProps } from '../../type';
+import { type MarkdownElementProps } from '../../type';
 import ArtifactIcon from './Icon';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({

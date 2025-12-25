@@ -1,6 +1,6 @@
 'use client';
 
-import { UIChatMessage } from '@lobechat/types';
+import { type UIChatMessage } from '@lobechat/types';
 import { ActionIcon } from '@lobehub/ui';
 import type { ActionIconGroupEvent, ActionIconGroupItemType } from '@lobehub/ui';
 import { Dropdown, type MenuProps } from 'antd';
@@ -8,8 +8,8 @@ import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
-  ComponentType,
-  ReactNode,
+  type ComponentType,
+  type ReactNode,
   type RefObject,
   isValidElement,
   memo,

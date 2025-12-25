@@ -2,7 +2,7 @@
 
 import { ActionIcon } from '@lobehub/ui';
 import { XIcon } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 import SidebarHeader from '@/components/SidebarHeader';
 import { useChatStore } from '@/store/chat';

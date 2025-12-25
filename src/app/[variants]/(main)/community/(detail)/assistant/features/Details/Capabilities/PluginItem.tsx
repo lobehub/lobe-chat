@@ -1,5 +1,5 @@
-import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
-import { DiscoverPluginDetail, PluginSource } from '@lobechat/types';
+import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
+import { type DiscoverPluginDetail, type PluginSource } from '@lobechat/types';
 import { Avatar, Block, Flexbox, Icon, Image, Skeleton, Tag, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';

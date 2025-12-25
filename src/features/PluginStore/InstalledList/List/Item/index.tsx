@@ -3,8 +3,8 @@ import { memo } from 'react';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import PluginTag from '@/components/Plugins/PluginTag';
-import { DiscoverPluginItem } from '@/types/discover';
-import { LobeToolType } from '@/types/tool/tool';
+import { type DiscoverPluginItem } from '@/types/discover';
+import { type LobeToolType } from '@/types/tool/tool';
 
 import Actions from './Action';
 

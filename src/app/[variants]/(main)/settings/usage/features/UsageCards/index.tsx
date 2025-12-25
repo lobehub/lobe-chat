@@ -1,7 +1,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { UsageChartProps } from '../../Client';
+import { type UsageChartProps } from '../../Client';
 import ActiveModels from './ActiveModels';
 import MonthSpend from './MonthSpend';
 import TodaySpend from './TodaySpend';

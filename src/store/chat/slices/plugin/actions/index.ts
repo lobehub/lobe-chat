@@ -1,15 +1,15 @@
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
-import { PluginInternalsAction, pluginInternals } from './internals';
+import { type PluginInternalsAction, pluginInternals } from './internals';
 import {
-  PluginOptimisticUpdateAction,
+  type PluginOptimisticUpdateAction,
   pluginOptimisticUpdate,
 } from './optimisticUpdate';
-import { PluginTypesAction, pluginTypes } from './pluginTypes';
-import { PluginPublicApiAction, pluginPublicApi } from './publicApi';
-import { PluginWorkflowAction, pluginWorkflow } from './workflow';
+import { type PluginTypesAction, pluginTypes } from './pluginTypes';
+import { type PluginPublicApiAction, pluginPublicApi } from './publicApi';
+import { type PluginWorkflowAction, pluginWorkflow } from './workflow';
 
 /**
  * Combined plugin action interface

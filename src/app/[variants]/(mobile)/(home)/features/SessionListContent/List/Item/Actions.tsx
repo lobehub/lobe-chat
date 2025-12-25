@@ -1,7 +1,7 @@
 import { ActionIcon, Dropdown, Icon } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
-import { ItemType } from 'antd/es/menu/interface';
+import { type ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import {
   Check,

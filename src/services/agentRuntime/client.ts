@@ -1,7 +1,7 @@
 import { fetchEventSource } from '@lobechat/utils/client';
 import debug from 'debug';
 
-import { StreamConnectionOptions, StreamEvent } from './type';
+import { type StreamConnectionOptions, type StreamEvent } from './type';
 
 const log = debug('lobe-agent-runtime:client');
 

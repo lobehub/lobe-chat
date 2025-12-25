@@ -1,10 +1,10 @@
 import { DEFAULT_USER_MEMORY_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
 
 import {
-  GlobalMemoryExtractionConfig,
-  GlobalMemoryLayer,
-  MemoryAgentPublicConfig,
-  MemoryLayerExtractorPublicConfig,
+  type GlobalMemoryExtractionConfig,
+  type GlobalMemoryLayer,
+  type MemoryAgentPublicConfig,
+  type MemoryLayerExtractorPublicConfig,
 } from '@/types/serverConfig';
 
 const MEMORY_LAYERS: GlobalMemoryLayer[] = ['context', 'experience', 'identity', 'preference'];

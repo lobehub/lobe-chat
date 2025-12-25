@@ -8,7 +8,7 @@ import { useUserStore } from '@/store/user';
 
 import { useConversationStore } from '../../../../../store';
 import { useGroupMessage } from '../../../components/GroupContext';
-import { ApprovalMode } from './index';
+import { type ApprovalMode } from './index';
 
 interface ApprovalActionsProps {
   apiName: string;

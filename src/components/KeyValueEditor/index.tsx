@@ -2,13 +2,13 @@ import { ActionIcon, Flexbox, Icon , Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import fastDeepEqual from 'fast-deep-equal';
 import { LucidePlus, LucideTrash } from 'lucide-react';
-import { CSSProperties, memo, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FormInput } from '@/components/FormInput';
 
-import { KeyValueItem, localListToRecord, recordToLocalList } from './utils';
+import { type KeyValueItem, localListToRecord, recordToLocalList } from './utils';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

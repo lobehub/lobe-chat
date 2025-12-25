@@ -1,5 +1,5 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
-import { Block, MarkdownProps } from '@lobehub/ui';
+import { Block, type MarkdownProps } from '@lobehub/ui';
 import { ChatItem } from '@lobehub/ui/chat';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';

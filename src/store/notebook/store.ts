@@ -1,10 +1,10 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
-import { NotebookAction, createNotebookAction } from './action';
-import { NotebookState, initialNotebookState } from './initialState';
+import { type NotebookAction, createNotebookAction } from './action';
+import { type NotebookState, initialNotebookState } from './initialState';
 
 export type NotebookStore = NotebookState & NotebookAction;
 

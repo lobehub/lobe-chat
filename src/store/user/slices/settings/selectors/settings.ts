@@ -8,11 +8,11 @@ import {
   DEFAULT_TTS_CONFIG,
 } from '@lobechat/const';
 import {
-  GlobalLLMProviderKey,
-  HotkeyId,
-  ProviderConfig,
-  UserModelProviderConfig,
-  UserSettings,
+  type GlobalLLMProviderKey,
+  type HotkeyId,
+  type ProviderConfig,
+  type UserModelProviderConfig,
+  type UserSettings,
 } from '@lobechat/types';
 
 import type { UserStore } from '@/store/user';

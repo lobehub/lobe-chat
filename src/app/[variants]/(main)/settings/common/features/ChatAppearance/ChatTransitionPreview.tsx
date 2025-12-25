@@ -6,7 +6,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { UserGeneralConfig } from '@/types/user/settings';
+import { type UserGeneralConfig } from '@/types/user/settings';
 
 const data = `
 ### Features

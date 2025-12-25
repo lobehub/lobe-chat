@@ -1,7 +1,7 @@
-import { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type SWRResponse } from 'swr';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { QueryIdentityRolesResult } from '@/database/models/userMemory';
+import { type QueryIdentityRolesResult } from '@/database/models/userMemory';
 import { useClientDataSWR } from '@/libs/swr';
 import { userMemoryService } from '@/services/userMemory';
 

@@ -1,12 +1,12 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
-import { EditorAction, EditorState, createEditorSlice, initialEditorState } from './slices/editor';
+import { type EditorAction, type EditorState, createEditorSlice, initialEditorState } from './slices/editor';
 import {
-  NotebookAction,
-  NotebookState,
+  type NotebookAction,
+  type NotebookState,
   createNotebookSlice,
   initialNotebookState,
 } from './slices/notebook';

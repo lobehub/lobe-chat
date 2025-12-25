@@ -1,5 +1,5 @@
 import { ActionIcon, Button, Flexbox, Icon, Input } from '@lobehub/ui';
-import { App, Form, FormInstance } from 'antd';
+import { App, Form, type FormInstance } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucidePlus, LucideTrash } from 'lucide-react';
 import { memo, useEffect, useRef, useState } from 'react';

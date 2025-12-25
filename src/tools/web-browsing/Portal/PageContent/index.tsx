@@ -1,5 +1,5 @@
-import { CrawlResult } from '@lobechat/types';
-import { CrawlSuccessResult } from '@lobechat/web-crawler';
+import { type CrawlResult } from '@lobechat/types';
+import { type CrawlSuccessResult } from '@lobechat/web-crawler';
 import {
   Alert,
   CopyButton,

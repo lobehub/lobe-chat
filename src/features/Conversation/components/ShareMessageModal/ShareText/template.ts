@@ -1,4 +1,4 @@
-import { UIChatMessage } from '@lobechat/types';
+import { type UIChatMessage } from '@lobechat/types';
 import { template } from 'es-toolkit/compat';
 
 import { LOADING_FLAT } from '@/const/message';

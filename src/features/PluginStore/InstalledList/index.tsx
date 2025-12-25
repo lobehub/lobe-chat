@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { LobeToolType } from '@/types/tool/tool';
+import { type LobeToolType } from '@/types/tool/tool';
 
 import PluginEmpty from '../PluginEmpty';
 import Detail from './Detail';

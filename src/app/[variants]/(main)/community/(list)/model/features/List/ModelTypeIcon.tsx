@@ -5,14 +5,14 @@ import {
   AudioLines,
   BoltIcon,
   ImageIcon,
-  LucideIcon,
+  type LucideIcon,
   MessageSquareTextIcon,
   MicIcon,
   MusicIcon,
   PhoneIcon,
   VideoIcon,
 } from 'lucide-react';
-import { AiModelType } from 'model-bank';
+import { type AiModelType } from 'model-bank';
 import { memo } from 'react';
 
 const icons: Record<AiModelType, LucideIcon> = {

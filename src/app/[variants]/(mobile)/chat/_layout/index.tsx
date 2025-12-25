@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { type FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import AgentIdSync from '@/app/[variants]/(main)/chat/_layout/AgentIdSync';

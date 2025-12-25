@@ -5,9 +5,9 @@ import { Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
-  MouseEvent,
-  ReactNode,
-  RefObject,
+  type MouseEvent,
+  type ReactNode,
+  type RefObject,
   Suspense,
   memo,
   useCallback,

@@ -1,4 +1,4 @@
-import { UIChatMessage } from '@lobechat/types';
+import { type UIChatMessage } from '@lobechat/types';
 import { Button, Form, type FormItemProps, Segmented } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
 import { Switch } from 'antd';
@@ -15,7 +15,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
-import { FieldType } from './type';
+import { type FieldType } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,

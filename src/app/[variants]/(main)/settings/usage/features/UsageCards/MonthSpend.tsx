@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import Statistic from '@/components/Statistic';
 import StatisticCard from '@/components/StatisticCard';
 import TitleWithPercentage from '@/components/StatisticCard/TitleWithPercentage';
-import { UsageLog } from '@/types/usage/usageRecord';
+import { type UsageLog } from '@/types/usage/usageRecord';
 import { formatNumber } from '@/utils/format';
 
-import { UsageChartProps } from '../../Client';
+import { type UsageChartProps } from '../../Client';
 
 const computeMonth = (
   data: UsageLog[],

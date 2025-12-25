@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { chargeBeforeGenerate } from '@/business/server/image-generation/chargeBeforeGenerate';
 import { AsyncTaskModel } from '@/database/models/asyncTask';
 import {
-  NewGeneration,
-  NewGenerationBatch,
+  type NewGeneration,
+  type NewGenerationBatch,
   asyncTasks,
   generationBatches,
   generations,

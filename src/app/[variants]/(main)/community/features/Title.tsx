@@ -1,10 +1,10 @@
 'use client';
 
-import { Flexbox, FlexboxProps, Icon } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import NextLink from 'next/link';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 const useStyles = createStyles(({ css, token }) => ({

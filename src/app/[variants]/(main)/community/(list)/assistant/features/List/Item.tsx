@@ -9,7 +9,7 @@ import urlJoin from 'url-join';
 
 import PublishedTime from '@/components/PublishedTime';
 import { useQuery } from '@/hooks/useQuery';
-import { AssistantMarketSource, DiscoverAssistantItem } from '@/types/discover';
+import { type AssistantMarketSource, type DiscoverAssistantItem } from '@/types/discover';
 
 import TokenTag from './TokenTag';
 

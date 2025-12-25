@@ -1,6 +1,6 @@
 import {
   StatisticCard as AntdStatisticCard,
-  StatisticCardProps as AntdStatisticCardProps,
+  type StatisticCardProps as AntdStatisticCardProps,
 } from '@ant-design/pro-components';
 import { Text } from '@lobehub/ui';
 import { Spin } from 'antd';

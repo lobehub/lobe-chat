@@ -1,7 +1,7 @@
 import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';

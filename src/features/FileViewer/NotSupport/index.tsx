@@ -1,7 +1,7 @@
 import { Button, Center, Flexbox, FluentEmoji } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
-import { CSSProperties, ComponentType, useState } from 'react';
+import { type CSSProperties, type ComponentType, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { MORE_FILE_PREVIEW_REQUEST_URL } from '@/const/url';

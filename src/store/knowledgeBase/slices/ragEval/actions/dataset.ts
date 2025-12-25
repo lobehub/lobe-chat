@@ -1,17 +1,17 @@
 import {
-  CreateNewEvalDatasets,
-  EvalDatasetRecord,
-  RAGEvalDataSetItem,
+  type CreateNewEvalDatasets,
+  type EvalDatasetRecord,
+  type RAGEvalDataSetItem,
   insertEvalDatasetRecordSchema,
 } from '@lobechat/types';
 import i18n from 'i18next';
 import type { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { ragEvalService } from '@/services/ragEval';
-import { KnowledgeBaseStore } from '@/store/knowledgeBase/store';
+import { type KnowledgeBaseStore } from '@/store/knowledgeBase/store';
 
 const FETCH_DATASET_LIST_KEY = 'FETCH_DATASET_LIST';
 const FETCH_DATASET_RECORD_KEY = 'FETCH_DATASET_RECORD_KEY';

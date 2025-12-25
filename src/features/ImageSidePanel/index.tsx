@@ -3,7 +3,7 @@
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { type PropsWithChildren, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PanelTitle from '@/components/PanelTitle';

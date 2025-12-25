@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { CellProps } from '@/components/Cell';
+import { type CellProps } from '@/components/Cell';
 import { DOCUMENTS, FEEDBACK } from '@/const/index';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';

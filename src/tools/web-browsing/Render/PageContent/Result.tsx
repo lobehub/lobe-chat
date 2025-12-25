@@ -1,6 +1,6 @@
 'use client';
 
-import { CrawlErrorResult, CrawlSuccessResult } from '@lobechat/web-crawler';
+import { type CrawlErrorResult, type CrawlSuccessResult } from '@lobechat/web-crawler';
 import { Alert, Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';

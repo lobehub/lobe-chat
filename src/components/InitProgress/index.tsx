@@ -2,7 +2,7 @@ import { Center, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import { Loader2 } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 export interface StageObjectItem {
   icon?: ReactNode;

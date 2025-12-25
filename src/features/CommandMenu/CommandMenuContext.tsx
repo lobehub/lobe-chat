@@ -3,7 +3,7 @@
 import { type Dispatch, type ReactNode, type SetStateAction, createContext, useContext, useEffect, useState } from 'react';
 
 import type { ValidSearchType } from './utils/queryParser';
-import { MenuContext, PageType } from './types';
+import { type MenuContext, type PageType } from './types';
 import { detectContext } from './utils/context';
 
 interface CommandMenuContextValue {

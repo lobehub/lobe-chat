@@ -6,7 +6,7 @@ import { UserModel } from '@/database/models/user';
 import { AgentGroupRepository } from '@/database/repositories/agentGroup';
 import { insertAgentSchema } from '@/database/schemas';
 import { insertChatGroupSchema } from '@/database/schemas/chatGroup';
-import { ChatGroupConfig } from '@/database/types/chatGroup';
+import { type ChatGroupConfig } from '@/database/types/chatGroup';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { ChatGroupService } from '@/server/services/chatGroup';

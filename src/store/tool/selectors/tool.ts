@@ -1,13 +1,13 @@
 import { ToolNameResolver } from '@lobechat/context-engine';
 import { pluginPrompts } from '@lobechat/prompts';
-import { RenderDisplayControl } from '@lobechat/types';
+import { type RenderDisplayControl } from '@lobechat/types';
 import type { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-import { MetaData } from '@/types/meta';
-import { LobeToolMeta } from '@/types/tool/tool';
+import { type MetaData } from '@/types/meta';
+import { type LobeToolMeta } from '@/types/tool/tool';
 
 import { pluginHelpers } from '../helpers';
-import { ToolStoreState } from '../initialState';
+import { type ToolStoreState } from '../initialState';
 import { builtinToolSelectors } from '../slices/builtin/selectors';
 import { pluginSelectors } from '../slices/plugin/selectors';
 

@@ -1,6 +1,6 @@
 import { Flexbox, Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { LucideIcon, SquareArrowOutUpRight } from 'lucide-react';
+import { type LucideIcon, SquareArrowOutUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 

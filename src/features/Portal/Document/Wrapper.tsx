@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren, memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';

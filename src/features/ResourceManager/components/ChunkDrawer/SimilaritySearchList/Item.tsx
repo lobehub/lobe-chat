@@ -2,7 +2,7 @@ import { Flexbox, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 
-import { SemanticSearchChunk } from '@/types/chunk';
+import { type SemanticSearchChunk } from '@/types/chunk';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

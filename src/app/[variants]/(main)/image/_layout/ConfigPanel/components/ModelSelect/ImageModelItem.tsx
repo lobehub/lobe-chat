@@ -2,7 +2,7 @@ import { ModelIcon } from '@lobehub/icons';
 import { Flexbox, Text } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { AiModelForSelect } from 'model-bank';
+import { type AiModelForSelect } from 'model-bank';
 import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 

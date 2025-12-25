@@ -1,6 +1,6 @@
 'use client';
 
-import { type FormItemProps, FormModal, FormModalProps, Segmented } from '@lobehub/ui';
+import { type FormItemProps, FormModal, type FormModalProps, Segmented } from '@lobehub/ui';
 import { Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';

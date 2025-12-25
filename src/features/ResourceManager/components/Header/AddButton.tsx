@@ -2,7 +2,7 @@
 
 import { FILE_URL } from '@lobechat/business-const';
 import { Notion } from '@lobehub/icons';
-import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
+import { Button, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FilePenLine, FileUp, FolderIcon, FolderUp, Link, Plus } from 'lucide-react';

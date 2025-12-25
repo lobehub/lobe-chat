@@ -1,5 +1,5 @@
 import type { AgentRuntimeContext, AgentState } from '@lobechat/agent-runtime';
-import { LobeChatDatabase } from '@lobechat/database';
+import { type LobeChatDatabase } from '@lobechat/database';
 import type {
   ExecAgentParams,
   ExecAgentResult,

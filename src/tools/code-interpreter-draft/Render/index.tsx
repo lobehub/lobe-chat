@@ -1,8 +1,8 @@
 import {
-  BuiltinRenderProps,
-  CodeInterpreterParams,
-  CodeInterpreterResponse,
-  CodeInterpreterState,
+  type BuiltinRenderProps,
+  type CodeInterpreterParams,
+  type CodeInterpreterResponse,
+  type CodeInterpreterState,
 } from '@lobechat/types';
 import { Alert, Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';

@@ -1,8 +1,8 @@
 'use client';
 
 import isEqual from 'fast-deep-equal';
-import { ReactElement, type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
-import { VList, VListHandle } from 'virtua';
+import { type ReactElement, type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
+import { VList, type VListHandle } from 'virtua';
 
 import WideScreenContainer from '../../../WideScreenContainer';
 import { useConversationStore, virtuaListSelectors } from '../../store';

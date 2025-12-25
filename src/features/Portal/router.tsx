@@ -12,7 +12,7 @@ import { Notebook } from './Notebook';
 import { Plugins } from './Plugins';
 import { Thread } from './Thread';
 import Header from './components/Header';
-import { PortalImpl } from './type';
+import { type PortalImpl } from './type';
 
 // Keep GroupThread before Thread so group DM threads take precedence when enabled
 // Document should be before Notebook so detail view takes precedence

@@ -1,4 +1,4 @@
-import { ServerConfigStore } from './store';
+import { type ServerConfigStore } from './store';
 
 export const featureFlagsSelectors = (s: ServerConfigStore) => s.featureFlags;
 

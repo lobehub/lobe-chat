@@ -1,9 +1,9 @@
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ResouceManagerMode } from '@/features/ResourceManager';
-import { FilesTabs } from '@/types/files';
+import { type ResouceManagerMode } from '@/features/ResourceManager';
+import { type FilesTabs } from '@/types/files';
 
-import { State, ViewMode, initialState } from './initialState';
+import { type State, type ViewMode, initialState } from './initialState';
 
 export interface Action {
   /**

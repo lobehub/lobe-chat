@@ -1,5 +1,5 @@
 import { validateVideoFileSize } from '@lobechat/utils/client';
-import { MenuProps, Tooltip } from '@lobehub/ui';
+import { type MenuProps, Tooltip } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';

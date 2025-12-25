@@ -13,7 +13,7 @@ import { useDragAndDrop } from '@/app/[variants]/(main)/image/_layout/ConfigPane
 import { useUploadFilesValidation } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useUploadFilesValidation';
 import { useConfigPanelStyles } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/style';
 import { useFileStore } from '@/store/file';
-import { FileUploadStatus } from '@/types/files/upload';
+import { type FileUploadStatus } from '@/types/files/upload';
 
 import ImageManageModal, { type ImageItem } from './ImageManageModal';
 

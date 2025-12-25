@@ -2,16 +2,16 @@ import useSWR, { type SWRResponse, mutate } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import {
-  FavoriteAgentItem,
-  FavoritePluginItem,
-  FollowCounts,
-  FollowStatus,
-  FollowUserItem,
-  PaginatedResponse,
-  SocialTargetType,
+  type FavoriteAgentItem,
+  type FavoritePluginItem,
+  type FollowCounts,
+  type FollowStatus,
+  type FollowUserItem,
+  type PaginatedResponse,
+  type SocialTargetType,
   socialService,
 } from '@/services/social';
-import { DiscoverStore } from '@/store/discover';
+import { type DiscoverStore } from '@/store/discover';
 
 export interface SocialAction {
   // Favorite actions

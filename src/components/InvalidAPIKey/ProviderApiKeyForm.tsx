@@ -1,13 +1,13 @@
 import { Button, Icon } from '@lobehub/ui';
 import { Loader2Icon, Network } from 'lucide-react';
-import { ReactNode, memo, useContext, useState } from 'react';
+import { type ReactNode, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { FormAction } from '@/features/Conversation/Error/style';
 import { useProviderName } from '@/hooks/useProviderName';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { GlobalLLMProviderKey } from '@/types/user/settings';
+import { type GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { LoadingContext } from './LoadingContext';
 import { useApiKey } from './useApiKey';

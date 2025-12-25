@@ -1,6 +1,6 @@
-import { KnowledgeItem } from '@lobechat/types';
+import { type KnowledgeItem } from '@lobechat/types';
 import type { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { agentService } from '@/services/agent';

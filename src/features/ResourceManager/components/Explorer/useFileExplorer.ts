@@ -7,7 +7,7 @@ import { useAddFilesToKnowledgeBaseModal } from '@/features/LibraryModal';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { FilesTabs, SortType } from '@/types/files';
+import { type FilesTabs, SortType } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import type { MultiSelectActionType } from './ToolBar/MultiSelectActions';

@@ -12,7 +12,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useClientDataSWR } from '@/libs/swr';
 import { topicService } from '@/services/topic';
-import { TopicRankItem } from '@/types/topic';
+import { type TopicRankItem } from '@/types/topic';
 
 export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [open, setOpen] = useState(false);

@@ -2,7 +2,7 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 import Footer from '@/features/Setting/Footer';
 

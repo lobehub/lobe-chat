@@ -2,16 +2,16 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { LOADING_FLAT } from '@lobechat/const';
 import { chainSummaryTitle } from '@lobechat/prompts';
-import { CreateMessageParams, IThreadType, ThreadItem, UIChatMessage } from '@lobechat/types';
+import { type CreateMessageParams, type IThreadType, type ThreadItem, type UIChatMessage } from '@lobechat/types';
 import isEqual from 'fast-deep-equal';
 import type { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
 import { threadSelectors } from '@/store/chat/selectors';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
@@ -19,7 +19,7 @@ import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { displayMessageSelectors } from '../message/selectors';
-import { ThreadDispatch, threadReducer } from './reducer';
+import { type ThreadDispatch, threadReducer } from './reducer';
 import { genParentMessages } from './selectors';
 
 const n = setNamespace('thd');

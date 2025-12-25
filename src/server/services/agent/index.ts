@@ -1,7 +1,7 @@
-import { BUILTIN_AGENTS, BuiltinAgentSlug } from '@lobechat/builtin-agents';
+import { BUILTIN_AGENTS, type BuiltinAgentSlug } from '@lobechat/builtin-agents';
 import { DEFAULT_AGENT_CONFIG } from '@lobechat/const';
-import { LobeChatDatabase } from '@lobechat/database';
-import { AgentItem, LobeAgentConfig } from '@lobechat/types';
+import { type LobeChatDatabase } from '@lobechat/database';
+import { type AgentItem, type LobeAgentConfig } from '@lobechat/types';
 import { cleanObject, merge } from '@lobechat/utils';
 import type { PartialDeep } from 'type-fest';
 
@@ -10,7 +10,7 @@ import { SessionModel } from '@/database/models/session';
 import { UserModel } from '@/database/models/user';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
 
-import { UpdateAgentResult } from './type';
+import { type UpdateAgentResult } from './type';
 
 /**
  * Agent Service

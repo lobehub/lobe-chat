@@ -1,4 +1,4 @@
-import { State } from './initialState';
+import { type State } from './initialState';
 
 export const selectors = {
   category: (s: State) => s.category,

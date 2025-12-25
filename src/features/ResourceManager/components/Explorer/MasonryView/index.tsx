@@ -4,7 +4,7 @@ import { VirtuosoMasonry } from '@virtuoso.dev/masonry';
 import { memo, useCallback, useMemo, useRef } from 'react';
 
 import { useResourceManagerStore } from '@/app/[variants]/(main)/resource/features/store';
-import { FileListItem } from '@/types/files';
+import { type FileListItem } from '@/types/files';
 
 import { useMasonryColumnCount } from '../useMasonryColumnCount';
 import MasonryItemWrapper from './MasonryFileItem/MasonryItemWrapper';

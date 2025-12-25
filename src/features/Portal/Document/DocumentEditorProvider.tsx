@@ -1,7 +1,7 @@
 'use client';
 
 import { useEditor } from '@lobehub/editor/react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 import StoreUpdater from './StoreUpdater';
 import { DocumentEditorProvider as Provider, createStore } from './store';

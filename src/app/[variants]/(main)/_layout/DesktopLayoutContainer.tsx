@@ -1,6 +1,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 import { isDesktop } from '@/const/version';
 import { useGlobalStore } from '@/store/global';

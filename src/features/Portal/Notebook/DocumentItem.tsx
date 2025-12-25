@@ -1,9 +1,9 @@
-import { NotebookDocument } from '@lobechat/types';
+import { type NotebookDocument } from '@lobechat/types';
 import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { FileTextIcon, Trash2Icon } from 'lucide-react';
-import { MouseEvent, memo, useState } from 'react';
+import { type MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';

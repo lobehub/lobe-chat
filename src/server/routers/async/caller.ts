@@ -1,4 +1,4 @@
-import { ClientSecretPayload } from '@lobechat/types';
+import { type ClientSecretPayload } from '@lobechat/types';
 import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 import urlJoin from 'url-join';

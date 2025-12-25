@@ -3,7 +3,7 @@
 import { Flexbox, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowLeft } from 'lucide-react';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 

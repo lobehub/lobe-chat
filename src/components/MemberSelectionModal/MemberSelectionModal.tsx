@@ -23,7 +23,7 @@ import AgentSelectionEmpty from '@/features/AgentSelectionEmpty';
 import ModelSelect from '@/features/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useSessionStore } from '@/store/session';
-import { LobeAgentSession, LobeSessionType } from '@/types/session';
+import { type LobeAgentSession, LobeSessionType } from '@/types/session';
 
 const AvailableAgentItem = memo<{
   agent: LobeAgentSession;

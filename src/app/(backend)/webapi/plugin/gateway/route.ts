@@ -1,5 +1,5 @@
 import { AgentRuntimeError } from '@lobechat/model-runtime';
-import { ChatErrorType, ErrorType, TraceNameMap } from '@lobechat/types';
+import { ChatErrorType, type ErrorType, TraceNameMap } from '@lobechat/types';
 import { getXorPayload } from '@lobechat/utils/server';
 import type { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';

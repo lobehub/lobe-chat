@@ -1,4 +1,4 @@
-import { UniformSearchResult } from '@lobechat/types';
+import { type UniformSearchResult } from '@lobechat/types';
 import { Avatar, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';

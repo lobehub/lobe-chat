@@ -1,9 +1,9 @@
 'use client';
 
-import { Button, Flexbox, FlexboxProps, Icon, Tag } from '@lobehub/ui';
+import { Button, Flexbox, type FlexboxProps, Icon, Tag } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { SCROLL_PARENT_ID } from '../features/const';

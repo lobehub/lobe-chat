@@ -6,12 +6,12 @@ import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { VList, VListHandle } from 'virtua';
+import { VList, type VListHandle } from 'virtua';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';
 import { useFileStore } from '@/store/file';
-import { FileListItem as FileListItemType } from '@/types/files';
+import { type FileListItem as FileListItemType } from '@/types/files';
 
 import FileListItem, { FILE_DATE_WIDTH, FILE_SIZE_WIDTH } from './ListItem';
 

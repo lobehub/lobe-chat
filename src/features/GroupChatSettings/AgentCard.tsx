@@ -8,7 +8,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
-import { LobeAgentSession } from '@/types/session';
+import { type LobeAgentSession } from '@/types/session';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`

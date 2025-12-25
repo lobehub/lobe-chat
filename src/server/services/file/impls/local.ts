@@ -6,7 +6,7 @@ import path from 'node:path';
 import { electronIpcClient } from '@/server/modules/ElectronIPCClient';
 import { inferContentTypeFromImageUrl } from '@/utils/url';
 
-import { FileServiceImpl } from './type';
+import { type FileServiceImpl } from './type';
 import { extractKeyFromUrlOrReturnOriginal } from './utils';
 
 const log = debug('lobe-file:desktop-local');

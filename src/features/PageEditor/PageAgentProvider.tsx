@@ -1,9 +1,9 @@
-import { ReactNode, memo, useMemo } from 'react';
+import { type ReactNode, memo, useMemo } from 'react';
 
 import { ConversationProvider } from '@/features/Conversation';
 import { useOperationState } from '@/hooks/useOperationState';
 import { useChatStore } from '@/store/chat';
-import { MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { type MessageMapKeyInput, messageMapKey } from '@/store/chat/utils/messageMapKey';
 
 interface PageAgentProviderProps {
   children: ReactNode;

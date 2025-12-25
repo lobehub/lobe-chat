@@ -5,7 +5,7 @@ import { memo, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
-import { AiProviderListItem, AiProviderSourceEnum } from '@/types/aiProvider';
+import { type AiProviderListItem, AiProviderSourceEnum } from '@/types/aiProvider';
 
 interface ProviderItemProps extends AiProviderListItem {
   onClick: (id: string) => void;

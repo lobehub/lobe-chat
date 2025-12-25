@@ -2,9 +2,9 @@ import useSWR, { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { discoverService } from '@/services/discover';
-import { DiscoverStore } from '@/store/discover';
+import { type DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
-import { DiscoverUserProfile } from '@/types/discover';
+import { type DiscoverUserProfile } from '@/types/discover';
 
 export interface UserAction {
   useUserProfile: (params: { username: string }) => SWRResponse<DiscoverUserProfile | undefined>;

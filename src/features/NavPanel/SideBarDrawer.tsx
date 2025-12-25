@@ -4,7 +4,7 @@ import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { Drawer } from 'antd';
 import { useTheme } from 'antd-style';
 import { XIcon } from 'lucide-react';
-import { ReactNode, Suspense, memo } from 'react';
+import { type ReactNode, Suspense, memo } from 'react';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 

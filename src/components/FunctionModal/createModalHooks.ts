@@ -1,6 +1,6 @@
 import { App } from 'antd';
-import { ModalFuncProps } from 'antd/es/modal/interface';
-import { MutableRefObject, ReactNode, RefObject, useRef } from 'react';
+import { type ModalFuncProps } from 'antd/es/modal/interface';
+import { type MutableRefObject, type ReactNode, type RefObject, useRef } from 'react';
 
 import { closeIcon, useStyles } from './style';
 

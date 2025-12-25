@@ -1,6 +1,6 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { isDesktop } from '@lobechat/const';
-import { LobeUser, SSOProvider } from '@lobechat/types';
+import { type LobeUser, type SSOProvider } from '@lobechat/types';
 import { t } from 'i18next';
 
 import { enableAuth, enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';

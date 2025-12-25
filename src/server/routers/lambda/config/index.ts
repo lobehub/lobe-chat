@@ -3,7 +3,7 @@ import debug from 'debug';
 import { getServerFeatureFlagsStateFromEdgeConfig } from '@/config/featureFlags';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { getServerDefaultAgentConfig, getServerGlobalConfig } from '@/server/globalConfig';
-import { GlobalRuntimeConfig } from '@/types/serverConfig';
+import { type GlobalRuntimeConfig } from '@/types/serverConfig';
 
 const log = debug('config-router');
 

@@ -1,8 +1,8 @@
 import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { ConfigProvider, Popover, TooltipProps } from 'antd';
+import { ConfigProvider, Popover, type TooltipProps } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { XIcon } from 'lucide-react';
-import { CSSProperties, type FC, type ReactNode } from 'react';
+import { type CSSProperties, type FC, type ReactNode } from 'react';
 
 const useStyle = createStyles(({ css }) => {
   return {

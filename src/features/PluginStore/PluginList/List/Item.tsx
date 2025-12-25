@@ -10,8 +10,8 @@ import PluginTag from '@/components/Plugins/PluginTag';
 import { useToolStore } from '@/store/tool';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { PluginInstallStep } from '@/store/tool/slices/oldStore/initialState';
-import { DiscoverPluginItem } from '@/types/discover';
-import { LobeToolType } from '@/types/tool/tool';
+import { type DiscoverPluginItem } from '@/types/discover';
+import { type LobeToolType } from '@/types/tool/tool';
 
 import Actions from './Action';
 

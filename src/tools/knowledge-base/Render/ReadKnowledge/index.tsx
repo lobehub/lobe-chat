@@ -1,7 +1,7 @@
 'use client';
 
 import { ReadKnowledge as BaseReadKnowledge } from '@lobechat/builtin-tool-knowledge-base/client';
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

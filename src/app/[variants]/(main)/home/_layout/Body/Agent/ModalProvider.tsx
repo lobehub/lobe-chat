@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, createContext, memo, useContext, useMemo, useState } from 'react';
+import { type ReactNode, createContext, memo, useContext, useMemo, useState } from 'react';
 
 import { ChatGroupWizard } from '@/components/ChatGroupWizard';
 import { MemberSelectionModal } from '@/components/MemberSelectionModal';

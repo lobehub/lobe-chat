@@ -8,9 +8,9 @@ import { useTheme } from 'antd-style';
 import { BriefcaseIcon } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
 import {
-  CSSProperties,
-  ChangeEvent,
-  ReactNode,
+  type CSSProperties,
+  type ChangeEvent,
+  type ReactNode,
   memo,
   useCallback,
   useEffect,

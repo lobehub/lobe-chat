@@ -1,4 +1,4 @@
-import { ChatToolResult, ToolIntervention } from '@lobechat/types';
+import { type ChatToolResult, type ToolIntervention } from '@lobechat/types';
 import { AccordionItem, Flexbox, Skeleton } from '@lobehub/ui';
 import { Divider } from 'antd';
 import dynamic from 'next/dynamic';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEditor } from '@lobehub/editor/react';
-import { PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren, memo } from 'react';
 
 import StoreUpdater from './StoreUpdater';
 import { Provider, createStore } from './store';

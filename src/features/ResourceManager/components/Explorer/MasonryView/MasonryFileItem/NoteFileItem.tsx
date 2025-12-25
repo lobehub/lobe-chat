@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
-import { AsyncTaskStatus, IAsyncTaskError } from '@/types/asyncTask';
+import { type AsyncTaskStatus, type IAsyncTaskError } from '@/types/asyncTask';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import ChunksBadge from '../../ListView/ListItem/ChunkTag';

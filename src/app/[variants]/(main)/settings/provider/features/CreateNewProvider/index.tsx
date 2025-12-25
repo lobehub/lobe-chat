@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useAiInfraStore } from '@/store/aiInfra/store';
-import { CreateAiProviderParams } from '@/types/aiProvider';
+import { type CreateAiProviderParams } from '@/types/aiProvider';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import { CUSTOM_PROVIDER_SDK_OPTIONS } from '../customProviderSdkOptions';

@@ -11,7 +11,7 @@ import { DEFAULT_AVATAR } from '@/const/index';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import { MarkdownElementProps } from '../type';
+import { type MarkdownElementProps } from '../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   mention: css`

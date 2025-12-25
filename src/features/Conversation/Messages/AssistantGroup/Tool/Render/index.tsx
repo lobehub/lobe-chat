@@ -1,5 +1,5 @@
 import { LOADING_FLAT } from '@lobechat/const';
-import { ChatToolResult, ToolIntervention } from '@lobechat/types';
+import { type ChatToolResult, type ToolIntervention } from '@lobechat/types';
 import { Flexbox } from '@lobehub/ui';
 import { Suspense, memo } from 'react';
 

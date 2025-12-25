@@ -17,7 +17,7 @@ import { displayMessageSelectors, topicSelectors } from '@/store/chat/selectors'
 import { useStyles } from '../style';
 import Preview from './Preview';
 import { generateMarkdown } from './template';
-import { FieldType } from './type';
+import { type FieldType } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   includeTool: true,

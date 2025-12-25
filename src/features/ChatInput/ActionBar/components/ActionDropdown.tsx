@@ -1,6 +1,6 @@
 'use client';
 
-import { Dropdown, DropdownProps } from '@lobehub/ui';
+import { Dropdown, type DropdownProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 

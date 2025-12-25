@@ -1,6 +1,6 @@
 import { Accordion, AccordionItem, Flexbox, Skeleton } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
-import { CSSProperties, memo, useState } from 'react';
+import { type CSSProperties, memo, useState } from 'react';
 
 import Actions from '@/features/Conversation/Messages/AssistantGroup/Tool/Actions';
 

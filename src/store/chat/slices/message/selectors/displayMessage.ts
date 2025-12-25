@@ -1,4 +1,4 @@
-import { AssistantContentBlock, UIChatMessage } from '@lobechat/types';
+import { type AssistantContentBlock, type UIChatMessage } from '@lobechat/types';
 
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';

@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { TaskDetail, ThreadStatus } from '@/types/index';
+import { type TaskDetail, ThreadStatus } from '@/types/index';
 
 import CompletedState from './CompletedState';
 import ErrorState from './ErrorState';

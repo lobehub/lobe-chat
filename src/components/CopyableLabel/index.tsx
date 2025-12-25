@@ -1,5 +1,5 @@
 import { CopyButton, Flexbox, Text } from '@lobehub/ui';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 
 interface CopyableLabelProps {
   className?: string;

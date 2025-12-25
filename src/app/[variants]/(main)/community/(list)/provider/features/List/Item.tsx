@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import urlJoin from 'url-join';
 
-import { DiscoverProviderItem } from '@/types/discover';
+import { type DiscoverProviderItem } from '@/types/discover';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

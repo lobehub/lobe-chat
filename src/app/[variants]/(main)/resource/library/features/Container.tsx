@@ -2,7 +2,7 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 
 const Container: FC<PropsWithChildren> = ({ children }) => {
   const theme = useTheme();

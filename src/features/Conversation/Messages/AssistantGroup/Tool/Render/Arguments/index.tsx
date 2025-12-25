@@ -3,10 +3,10 @@ import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { parse } from 'partial-json';
 import { rgba } from 'polished';
-import { ReactNode, memo, useMemo } from 'react';
+import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Descriptions, { DescriptionItem } from '@/components/Descriptions';
+import Descriptions, { type DescriptionItem } from '@/components/Descriptions';
 import { useYamlArguments } from '@/hooks/useYamlArguments';
 import { shinyTextStylish } from '@/styles/loading';
 

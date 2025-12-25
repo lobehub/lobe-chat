@@ -1,7 +1,7 @@
-import { GoogleGenAIOptions } from '@google/genai';
+import { type GoogleGenAIOptions } from '@google/genai';
 import { ModelRuntime } from '@lobechat/model-runtime';
 import { LobeVertexAI } from '@lobechat/model-runtime/vertexai';
-import { ClientSecretPayload } from '@lobechat/types';
+import { type ClientSecretPayload } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
 import { ModelProvider } from 'model-bank';
 

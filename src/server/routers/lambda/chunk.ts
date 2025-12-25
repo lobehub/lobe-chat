@@ -1,8 +1,8 @@
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@lobechat/const';
 import {
-  ChatSemanticSearchChunk,
-  FileSearchResult,
-  ProviderConfig,
+  type ChatSemanticSearchChunk,
+  type FileSearchResult,
+  type ProviderConfig,
   SemanticSearchSchema,
 } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';

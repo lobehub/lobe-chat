@@ -3,9 +3,9 @@
 import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
-import { GroupBy } from './index';
+import { type GroupBy } from './index';
 
 const useStyles = createStyles(({ css, token }) => ({
   itemWrapper: css`

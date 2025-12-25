@@ -1,6 +1,6 @@
 import { Flexbox, Icon, Tag } from '@lobehub/ui';
 import { BrainCircuitIcon } from 'lucide-react';
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { type FC, memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/memory/features/TimeLineView/useScrollParent';
@@ -13,7 +13,7 @@ import { useUserMemoryStore } from '@/store/userMemory';
 import EditableModal from '../features/EditableModal';
 import FilterBar from '../features/FilterBar';
 import Loading from '../features/Loading';
-import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
+import ViewModeSwitcher, { type ViewMode } from '../features/ViewModeSwitcher';
 import ExperienceRightPanel from './features/ExperienceRightPanel';
 import List from './features/List';
 

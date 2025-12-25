@@ -13,7 +13,7 @@ import {
   ReactToolbarPlugin,
 } from '@lobehub/editor';
 import { Editor } from '@lobehub/editor/react';
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePageEditorStore } from '../store';

@@ -1,7 +1,7 @@
-import { CheckMcpInstallResult, CustomPluginMetadata } from '@lobechat/types';
+import { type CheckMcpInstallResult, type CustomPluginMetadata } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
 import type { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
-import { DeploymentOption } from '@lobehub/market-sdk';
+import { type DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
 import retry from 'async-retry';
@@ -9,14 +9,14 @@ import debug from 'debug';
 
 import {
   MCPClient,
-  MCPClientParams,
-  McpPrompt,
-  McpResource,
-  McpTool,
-  StdioMCPParams,
+  type MCPClientParams,
+  type McpPrompt,
+  type McpResource,
+  type McpTool,
+  type StdioMCPParams,
 } from '@/libs/mcp';
 
-import { ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
+import { type ProcessContentBlocksFn, contentBlocksToString } from './contentProcessor';
 import { mcpSystemDepsCheckService } from './deps';
 
 const log = debug('lobe-mcp:service');

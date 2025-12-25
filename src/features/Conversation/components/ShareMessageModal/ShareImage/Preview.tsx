@@ -1,5 +1,5 @@
 import { OFFICIAL_DOMAIN } from '@lobechat/const';
-import { UIChatMessage } from '@lobechat/types';
+import { type UIChatMessage } from '@lobechat/types';
 import { ModelTag } from '@lobehub/icons';
 import { Avatar, Flexbox } from '@lobehub/ui';
 import { ChatHeaderTitle } from '@lobehub/ui/chat';
@@ -15,7 +15,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useAgentMeta, useIsBuiltinAgent } from '../../../hooks';
 import { useContainerStyles } from '../style';
 import { useStyles } from './style';
-import { FieldType } from './type';
+import { type FieldType } from './type';
 
 interface PreviewProps extends FieldType {
   message: UIChatMessage;

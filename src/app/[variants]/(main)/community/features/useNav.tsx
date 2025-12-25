@@ -1,7 +1,7 @@
 import { MCP } from '@lobehub/icons';
 import { Icon } from '@lobehub/ui';
 import { Bot, Brain, BrainCircuit, House } from 'lucide-react';
-import { ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 

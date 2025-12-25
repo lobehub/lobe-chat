@@ -4,7 +4,7 @@ import type { AgentItem } from '@lobechat/types';
 import { Avatar, Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { PropsWithChildren, memo, useState } from 'react';
+import { type PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';

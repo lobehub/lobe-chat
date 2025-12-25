@@ -1,8 +1,8 @@
 'use client';
 
-import { ActionIcon, ActionIconProps } from '@lobehub/ui';
+import { ActionIcon, type ActionIconProps } from '@lobehub/ui';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';

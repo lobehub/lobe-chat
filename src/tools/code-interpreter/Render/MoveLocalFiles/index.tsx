@@ -1,13 +1,13 @@
 'use client';
 
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Block, Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
 
-import { MoveLocalFilesState } from '../../type';
+import { type MoveLocalFilesState } from '../../type';
 
 const useStyles = createStyles(({ css, token }) => ({
   arrow: css`

@@ -1,6 +1,6 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { RunCommandParams, RunCommandResult } from '@lobechat/electron-client-ipc';
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type RunCommandParams, type RunCommandResult } from '@lobechat/electron-client-ipc';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { ActionIcon, Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';

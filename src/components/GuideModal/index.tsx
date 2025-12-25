@@ -4,7 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { ConfigProvider, Modal, type ModalProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { lighten } from 'polished';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => {
   return {

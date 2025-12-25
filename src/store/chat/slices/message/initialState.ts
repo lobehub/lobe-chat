@@ -1,6 +1,6 @@
-import { UIChatMessage } from '@lobechat/types';
+import { type UIChatMessage } from '@lobechat/types';
 
-import { ChatGroupAgentItem } from '@/database/schemas/chatGroup';
+import { type ChatGroupAgentItem } from '@/database/schemas/chatGroup';
 
 import type { SupervisorTodoItem } from './supervisor';
 

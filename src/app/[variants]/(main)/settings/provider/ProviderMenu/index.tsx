@@ -3,7 +3,7 @@
 import { Flexbox, Icon, SearchBar } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';

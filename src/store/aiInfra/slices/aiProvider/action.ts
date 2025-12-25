@@ -2,32 +2,32 @@ import { DESKTOP_USER_ID, isDesktop } from '@lobechat/const';
 import { getModelPropertyWithFallback, resolveImageSinglePrice } from '@lobechat/model-runtime';
 import { uniqBy } from 'es-toolkit/compat';
 import {
-  AIImageModelCard,
-  EnabledAiModel,
-  LobeDefaultAiModelListItem,
-  ModelAbilities,
-  ModelParamsSchema,
-  Pricing,
+  type AIImageModelCard,
+  type EnabledAiModel,
+  type LobeDefaultAiModelListItem,
+  type ModelAbilities,
+  type ModelParamsSchema,
+  type Pricing,
 } from 'model-bank';
 import type { SWRResponse } from 'swr';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { mutate, useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
-import { AiInfraStore } from '@/store/aiInfra/store';
+import { type AiInfraStore } from '@/store/aiInfra/store';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 import {
-  AiProviderDetailItem,
-  AiProviderListItem,
-  AiProviderRuntimeState,
-  AiProviderSortMap,
+  type AiProviderDetailItem,
+  type AiProviderListItem,
+  type AiProviderRuntimeState,
+  type AiProviderSortMap,
   AiProviderSourceEnum,
-  CreateAiProviderParams,
-  EnabledProvider,
-  EnabledProviderWithModels,
-  UpdateAiProviderConfigParams,
-  UpdateAiProviderParams,
+  type CreateAiProviderParams,
+  type EnabledProvider,
+  type EnabledProviderWithModels,
+  type UpdateAiProviderConfigParams,
+  type UpdateAiProviderParams,
 } from '@/types/aiProvider';
 
 export type ProviderModelListItem = {

@@ -1,10 +1,10 @@
-import { MarkdownProps } from '@lobehub/ui';
+import { type MarkdownProps } from '@lobehub/ui';
 import { useMemo } from 'react';
 
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-import { MarkdownElement, markdownElements } from '../../Markdown/plugins';
+import { type MarkdownElement, markdownElements } from '../../Markdown/plugins';
 import { messageStateSelectors, useConversationStore } from '../../store';
 
 const rehypePlugins = markdownElements

@@ -1,4 +1,4 @@
-import { ChatToolPayload } from '@lobechat/types';
+import { type ChatToolPayload } from '@lobechat/types';
 import debug from 'debug';
 import type { Redis } from 'ioredis';
 

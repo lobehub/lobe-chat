@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronLeftIcon } from 'lucide-react';
-import { PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 

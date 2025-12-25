@@ -1,14 +1,14 @@
 import { getMessageError } from '@lobechat/fetch-sse';
-import { ChatMessageError } from '@lobechat/types';
+import { type ChatMessageError } from '@lobechat/types';
 import { AudioPlayer } from '@lobehub/tts/react';
-import { Alert, Button, Flexbox, Highlighter, Select, SelectProps } from '@lobehub/ui';
-import { RefSelectProps } from 'antd';
+import { Alert, Button, Flexbox, Highlighter, Select, type SelectProps } from '@lobehub/ui';
+import { type RefSelectProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { forwardRef, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useTTS } from '@/hooks/useTTS';
-import { TTSServer } from '@/types/agent';
+import { type TTSServer } from '@/types/agent';
 
 interface SelectWithTTSPreviewProps extends SelectProps {
   server: TTSServer;

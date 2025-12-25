@@ -6,12 +6,12 @@ import type {
   RemoveIdentityActionSchema,
   UpdateIdentityActionSchema,
 } from '@lobechat/memory-user-memory/schemas';
-import { z } from 'zod';
-import { StateCreator } from 'zustand/vanilla';
+import { type z } from 'zod';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { userMemoryService } from '@/services/userMemory';
-import { ChatStore } from '@/store/chat/store';
-import { SearchMemoryParams } from '@/types/userMemory';
+import { type ChatStore } from '@/store/chat/store';
+import { type SearchMemoryParams } from '@/types/userMemory';
 
 export interface UserMemoryAction {
   addContextMemory: (

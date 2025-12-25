@@ -1,4 +1,4 @@
-import { ChatToolPayload } from '@lobechat/types';
+import { type ChatToolPayload } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
 import debug from 'debug';
 
@@ -6,7 +6,7 @@ import { SearchService } from '@/server/services/search';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WebBrowsingExecutionRuntime } from '@/tools/web-browsing/ExecutionRuntime';
 
-import { IToolExecutor, ToolExecutionContext, ToolExecutionResult } from './types';
+import { type IToolExecutor, type ToolExecutionContext, type ToolExecutionResult } from './types';
 
 const log = debug('lobe-server:builtin-tools-executor');
 

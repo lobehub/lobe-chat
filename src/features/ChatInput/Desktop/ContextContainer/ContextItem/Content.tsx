@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
 import FileIcon from '@/components/FileIcon';
-import { UploadFileItem } from '@/types/files/upload';
+import { type UploadFileItem } from '@/types/files/upload';
 
 const useStyles = createStyles(({ css }) => ({
   image: css`

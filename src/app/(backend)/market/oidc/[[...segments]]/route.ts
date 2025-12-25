@@ -1,5 +1,5 @@
 import { MarketSDK } from '@lobehub/market-sdk';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 type RouteContext = {
   params: Promise<{

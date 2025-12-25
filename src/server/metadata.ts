@@ -1,11 +1,11 @@
 import { BRANDING_NAME, ORG_NAME } from '@lobechat/business-const';
-import { Metadata } from 'next';
+import { type Metadata } from 'next';
 import qs from 'query-string';
 
 import { DEFAULT_LANG } from '@/const/locale';
 import { OG_URL } from '@/const/url';
 import { isCustomORG } from '@/const/version';
-import { Locales, locales } from '@/locales/resources';
+import { type Locales, locales } from '@/locales/resources';
 import { getCanonicalUrl } from '@/server/utils/url';
 import { formatDescLength, formatTitleLength } from '@/utils/genOG';
 

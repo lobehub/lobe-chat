@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar } from '@lobehub/ui';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import NavItem from '@/features/NavPanel/components/NavItem';

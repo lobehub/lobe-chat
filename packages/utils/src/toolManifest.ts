@@ -108,14 +108,11 @@ export const getToolManifest = async (
     // avoid https://github.com/lobehub/lobe-chat/issues/9059
     if (typeof window !== 'undefined') {
       try {
-        const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
-
-        const convertor = new OpenAPIConvertor(openapiJson);
-        const openAPIs = await convertor.convertOpenAPIToPluginSchema();
-
-        data.api = [...data.api, ...openAPIs];
-
-        data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
+        // const { OpenAPIConvertor } = await import('@lobehub/chat-plugin-sdk/openapi');
+        // const convertor = new OpenAPIConvertor(openapiJson);
+        // const openAPIs = await convertor.convertOpenAPIToPluginSchema();
+        // data.api = [...data.api, ...openAPIs];
+        // data.settings = await convertor.convertAuthToSettingsSchema(data.settings);
       } catch (error) {
         throw new TypeError('openAPIInvalid', { cause: error });
       }

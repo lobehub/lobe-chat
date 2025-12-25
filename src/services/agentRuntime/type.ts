@@ -1,4 +1,4 @@
-import { OpenAIChatMessage } from '@/types/openai/chat';
+import { type OpenAIChatMessage } from '@/types/openai/chat';
 
 export interface StreamEvent {
   data?: any;

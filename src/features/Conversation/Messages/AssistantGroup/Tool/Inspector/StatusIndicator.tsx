@@ -1,4 +1,4 @@
-import { ToolIntervention } from '@lobechat/types';
+import { type ToolIntervention } from '@lobechat/types';
 import { Block, Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import {

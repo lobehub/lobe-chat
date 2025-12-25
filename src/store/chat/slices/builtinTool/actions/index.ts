@@ -1,15 +1,15 @@
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
-import { AgentBuilderAction, agentBuilderSlice } from './agentBuilder';
-import { GroupAgentBuilderAction, groupAgentBuilderSlice } from './groupAgentBuilder';
-import { ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
-import { KnowledgeBaseAction, knowledgeBaseSlice } from './knowledgeBase';
-import { LocalFileAction, localSystemSlice } from './localSystem';
-import { PageAgentAction, pageAgentSlice } from './pageAgent';
-import { SearchAction, searchSlice } from './search';
-import { UserMemoryAction, userMemorySlice } from './userMemory';
+import { type AgentBuilderAction, agentBuilderSlice } from './agentBuilder';
+import { type GroupAgentBuilderAction, groupAgentBuilderSlice } from './groupAgentBuilder';
+import { type ChatCodeInterpreterAction, codeInterpreterSlice } from './interpreter';
+import { type KnowledgeBaseAction, knowledgeBaseSlice } from './knowledgeBase';
+import { type LocalFileAction, localSystemSlice } from './localSystem';
+import { type PageAgentAction, pageAgentSlice } from './pageAgent';
+import { type SearchAction, searchSlice } from './search';
+import { type UserMemoryAction, userMemorySlice } from './userMemory';
 
 export interface ChatBuiltinToolAction
   extends

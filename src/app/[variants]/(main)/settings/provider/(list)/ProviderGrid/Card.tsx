@@ -4,7 +4,7 @@ import { Divider } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AiProviderListItem } from '@/types/aiProvider';
+import { type AiProviderListItem } from '@/types/aiProvider';
 
 import EnableSwitch from './EnableSwitch';
 import { useStyles } from './style';

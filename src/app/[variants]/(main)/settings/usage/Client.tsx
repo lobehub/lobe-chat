@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox, Icon, Segmented } from '@lobehub/ui';
-import { Col, DatePicker, DatePickerProps, Row } from 'antd';
+import { Col, DatePicker, type DatePickerProps, Row } from 'antd';
 import dayjs from 'dayjs';
 import { Brain, Codesandbox } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useClientDataSWR } from '@/libs/swr';
 import { usageService } from '@/services/usage';
-import { UsageLog } from '@/types/usage/usageRecord';
+import { type UsageLog } from '@/types/usage/usageRecord';
 
 import Welcome from '../stats/features/Welcome';
 import UsageCards from './features/UsageCards';

@@ -1,29 +1,29 @@
-import { MessageTextChunk } from '@lobechat/fetch-sse';
+import { type MessageTextChunk } from '@lobechat/fetch-sse';
 import {
   chainPickEmoji,
   chainSummaryAgentName,
   chainSummaryDescription,
   chainSummaryTags,
 } from '@lobechat/prompts';
-import { TraceNameMap, TracePayload, TraceTopicType } from '@lobechat/types';
+import { TraceNameMap, type TracePayload, TraceTopicType } from '@lobechat/types';
 import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import type { PartialDeep } from 'type-fest';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { chatService } from '@/services/chat';
 import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/slices/settings/selectors';
-import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
-import { MetaData } from '@/types/meta';
-import { SystemAgentItem } from '@/types/user/settings';
+import { type LobeAgentChatConfig, type LobeAgentConfig } from '@/types/agent';
+import { type MetaData } from '@/types/meta';
+import { type SystemAgentItem } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { LoadingState, SaveStatus } from '../store/initialState';
-import { State, initialState } from './initialState';
-import { ConfigDispatch, configReducer } from './reducers/config';
-import { MetaDataDispatch, metaDataReducer } from './reducers/meta';
+import { type LoadingState, type SaveStatus } from '../store/initialState';
+import { type State, initialState } from './initialState';
+import { type ConfigDispatch, configReducer } from './reducers/config';
+import { type MetaDataDispatch, metaDataReducer } from './reducers/meta';
 
 export interface PublicAction {
   /**

@@ -6,7 +6,7 @@ import { Loader2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
+import { type FileUploadState, type FileUploadStatus } from '@/types/files/upload';
 import { formatSize } from '@/utils/format';
 
 interface UploadStateProps {

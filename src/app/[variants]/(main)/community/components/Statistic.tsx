@@ -1,7 +1,7 @@
-import { Flexbox, FlexboxProps, Icon, Text, Tooltip } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps, Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { HelpCircleIcon } from 'lucide-react';
-import { CSSProperties, ReactNode, memo } from 'react';
+import { type CSSProperties, type ReactNode, memo } from 'react';
 
 export const useStyles = createStyles(({ css, token }) => ({
   container: css`

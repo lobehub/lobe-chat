@@ -1,4 +1,4 @@
-import { ConnectionConfig } from '@lobehub/market-types';
+import { type ConnectionConfig } from '@lobehub/market-types';
 import { Block, Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';

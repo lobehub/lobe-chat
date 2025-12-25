@@ -1,8 +1,8 @@
 import { PageAgentExecutionRuntime } from '@lobechat/builtin-tool-page-agent/executionRuntime';
 import debug from 'debug';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
 const log = debug('page:page-agent');
 

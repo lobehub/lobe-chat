@@ -7,7 +7,7 @@ import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
 import FilePlayer from './FilePlayer';
-import InitPlayer, { TTSProps } from './InitPlayer';
+import InitPlayer, { type TTSProps } from './InitPlayer';
 
 const TTS = memo<TTSProps>(
   (props) => {

@@ -1,6 +1,6 @@
-import { Avatar, Center, CenterProps, Flexbox } from '@lobehub/ui';
+import { Avatar, Center, type CenterProps, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 
 export const useStyles = createStyles(({ css, token }) => ({
   container: css`

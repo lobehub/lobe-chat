@@ -1,4 +1,4 @@
-import { PortalArtifact } from '@/types/artifact';
+import { type PortalArtifact } from '@/types/artifact';
 
 export enum ArtifactDisplayMode {
   Code = 'code',

@@ -1,7 +1,7 @@
 import {
-  DataSyncConfig,
-  ElectronAppState,
-  NetworkProxySettings,
+  type DataSyncConfig,
+  type ElectronAppState,
+  type NetworkProxySettings,
 } from '@lobechat/electron-client-ipc';
 
 export type RemoteServerError = 'CONFIG_ERROR' | 'AUTH_ERROR' | 'DISCONNECT_ERROR';

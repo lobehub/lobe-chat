@@ -1,4 +1,4 @@
-import { CustomSessionGroup, LobeSessionGroups } from '@/types/session';
+import { type CustomSessionGroup, type LobeSessionGroups } from '@/types/session';
 
 export interface SessionGroupState {
   customSessionGroups: CustomSessionGroup[];

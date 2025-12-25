@@ -1,31 +1,31 @@
-import { CategoryItem, CategoryListQuery, PluginManifest } from '@lobehub/market-sdk';
-import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
+import { type CategoryItem, type CategoryListQuery, type PluginManifest } from '@lobehub/market-sdk';
+import { type CallReportRequest, type InstallReportRequest } from '@lobehub/market-types';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import {
-  AssistantListResponse,
-  AssistantMarketSource,
-  AssistantQueryParams,
-  DiscoverAssistantDetail,
-  DiscoverMcpDetail,
-  DiscoverModelDetail,
-  DiscoverPluginDetail,
-  DiscoverProviderDetail,
-  DiscoverUserProfile,
-  IdentifiersResponse,
-  McpListResponse,
-  McpQueryParams,
-  ModelListResponse,
-  ModelQueryParams,
-  PluginListResponse,
-  PluginQueryParams,
-  ProviderListResponse,
-  ProviderQueryParams,
+  type AssistantListResponse,
+  type AssistantMarketSource,
+  type AssistantQueryParams,
+  type DiscoverAssistantDetail,
+  type DiscoverMcpDetail,
+  type DiscoverModelDetail,
+  type DiscoverPluginDetail,
+  type DiscoverProviderDetail,
+  type DiscoverUserProfile,
+  type IdentifiersResponse,
+  type McpListResponse,
+  type McpQueryParams,
+  type ModelListResponse,
+  type ModelQueryParams,
+  type PluginListResponse,
+  type PluginQueryParams,
+  type ProviderListResponse,
+  type ProviderQueryParams,
 } from '@/types/discover';
-import { MCPPluginListParams } from '@/types/plugins';
+import { type MCPPluginListParams } from '@/types/plugins';
 import { cleanObject } from '@/utils/object';
 
 class DiscoverService {

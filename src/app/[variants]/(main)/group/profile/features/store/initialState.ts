@@ -1,4 +1,4 @@
-import { IEditor } from '@lobehub/editor';
+import { type IEditor } from '@lobehub/editor';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PublicState {}

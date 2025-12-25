@@ -1,7 +1,7 @@
 'use client';
 
 import { ProDescriptions } from '@ant-design/pro-components';
-import { AgentItemDetail } from '@lobehub/market-sdk';
+import { type AgentItemDetail } from '@lobehub/market-sdk';
 import { Flexbox, Tag } from '@lobehub/ui';
 import Image from 'next/image';
 import { memo } from 'react';

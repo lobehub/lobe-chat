@@ -13,11 +13,11 @@ import type {
 } from '@lobechat/builtin-tool-group-agent-builder';
 import { GroupAgentBuilderExecutionRuntime } from '@lobechat/builtin-tool-group-agent-builder/executionRuntime';
 import debug from 'debug';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { getAgentStoreState } from '@/store/agent';
 import { getChatGroupStoreState } from '@/store/agentGroup';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
 const log = debug('lobe-store:builtin-tool:group-agent-builder');
 

@@ -1,6 +1,6 @@
 import { Flexbox } from '@lobehub/ui';
 import { useResponsive } from 'antd-style';
-import { ReactNode, memo, useMemo } from 'react';
+import { type ReactNode, memo, useMemo } from 'react';
 
 import Grid from './Grid';
 import { MAX_SIZE_DESKTOP, MAX_SIZE_MOBILE } from './style';

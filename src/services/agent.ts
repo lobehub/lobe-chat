@@ -1,4 +1,4 @@
-import { AgentItem, LobeAgentConfig, MetaData } from '@lobechat/types';
+import { type AgentItem, type LobeAgentConfig, type MetaData } from '@lobechat/types';
 import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';

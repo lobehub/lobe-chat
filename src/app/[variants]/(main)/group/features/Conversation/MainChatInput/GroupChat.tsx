@@ -1,6 +1,6 @@
 'use client';
 
-import { SlashOptions } from '@lobehub/editor';
+import { type SlashOptions } from '@lobehub/editor';
 import { Alert, Avatar, Flexbox, GroupAvatar } from '@lobehub/ui';
 import { isEqual } from 'es-toolkit/compat';
 import { Suspense, memo, useMemo } from 'react';

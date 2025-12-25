@@ -1,4 +1,4 @@
-import { ImageType } from '@/hooks/useScreenshot';
+import { type ImageType } from '@/hooks/useScreenshot';
 
 export type FieldType = {
   imageType: ImageType;

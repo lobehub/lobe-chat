@@ -1,6 +1,6 @@
 import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren, memo } from 'react';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

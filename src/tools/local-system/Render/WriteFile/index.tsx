@@ -1,5 +1,5 @@
-import { WriteLocalFileParams } from '@lobechat/electron-client-ipc';
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type WriteLocalFileParams } from '@lobechat/electron-client-ipc';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { ChevronRight } from 'lucide-react';
 import path from 'path-browserify-esm';

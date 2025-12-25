@@ -7,7 +7,7 @@ import { authedProcedure,  } from '@/libs/trpc/lambda';
 import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
-import { ClientSecretPayload } from '@/types/auth';
+import { type ClientSecretPayload } from '@/types/auth';
 
 
 

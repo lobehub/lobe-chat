@@ -1,12 +1,12 @@
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { BatchTaskResult } from '@/types/service';
+import { type BatchTaskResult } from '@/types/service';
 import {
-  ChatTopic,
-  CreateTopicParams,
-  QueryTopicParams,
-  RecentTopic,
-  TopicRankItem,
+  type ChatTopic,
+  type CreateTopicParams,
+  type QueryTopicParams,
+  type RecentTopic,
+  type TopicRankItem,
 } from '@/types/topic';
 
 export class TopicService {

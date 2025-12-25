@@ -3,18 +3,18 @@
 import {
   ConfigProvider,
   FontLoader,
-  NeutralColors,
-  PrimaryColors,
+  type NeutralColors,
+  type PrimaryColors,
   ThemeProvider,
 } from '@lobehub/ui';
 import { message as antdMessage } from 'antd';
-import { ThemeAppearance, createStyles } from 'antd-style';
+import { type ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
 import { AppConfigContext } from 'antd/es/app/context';
 import * as motion from 'motion/react-m';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ReactNode, memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
 import {

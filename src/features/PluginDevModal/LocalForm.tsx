@@ -1,5 +1,5 @@
-import { Form, FormItemProps, Input, TextArea } from '@lobehub/ui';
-import { FormInstance } from 'antd';
+import { Form, type FormItemProps, Input, TextArea } from '@lobehub/ui';
+import { type FormInstance } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

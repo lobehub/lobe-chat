@@ -1,9 +1,9 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { CreateMessageParams } from '@lobechat/types';
-import { StateCreator } from 'zustand/vanilla';
+import { type CreateMessageParams } from '@lobechat/types';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { messageService } from '@/services/message';
-import { ChatStore } from '@/store/chat/store';
+import { type ChatStore } from '@/store/chat/store';
 
 import { dbMessageSelectors, displayMessageSelectors } from '../../message/selectors';
 import { threadSelectors } from '../../thread/selectors';

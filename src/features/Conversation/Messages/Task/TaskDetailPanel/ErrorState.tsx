@@ -6,7 +6,7 @@ import { CircleX, MessageSquare, Timer, Wrench } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TaskDetail, ThreadStatus } from '@/types/index';
+import { type TaskDetail, ThreadStatus } from '@/types/index';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

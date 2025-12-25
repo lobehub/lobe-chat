@@ -1,6 +1,6 @@
 'use client';
 
-import { UserImageConfig } from '@lobechat/types';
+import { type UserImageConfig } from '@lobechat/types';
 import { Form, type FormGroupItemType, Icon } from '@lobehub/ui';
 import { Skeleton } from '@lobehub/ui';
 import { Loader2Icon } from 'lucide-react';

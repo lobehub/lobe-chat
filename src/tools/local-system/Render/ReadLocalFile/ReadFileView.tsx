@@ -1,4 +1,4 @@
-import { LocalReadFileResult } from '@lobechat/electron-client-ipc';
+import { type LocalReadFileResult } from '@lobechat/electron-client-ipc';
 import { ActionIcon, Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AlignLeft, Asterisk, ExternalLink, FolderOpen } from 'lucide-react';

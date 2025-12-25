@@ -14,7 +14,7 @@ import InstallationIcon from '@/components/MCPDepsIcon';
 import OfficialIcon from '@/components/OfficialIcon';
 import PublishedTime from '@/components/PublishedTime';
 import Scores from '@/features/MCP/Scores';
-import { DiscoverMcpItem } from '@/types/discover';
+import { type DiscoverMcpItem } from '@/types/discover';
 
 import ConnectionTypeTag from './ConnectionTypeTag';
 import MetaInfo from './MetaInfo';

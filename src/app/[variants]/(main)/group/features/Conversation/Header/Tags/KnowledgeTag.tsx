@@ -7,7 +7,7 @@ import { memo } from 'react';
 
 import KnowledgeIcon from '@/components/KnowledgeIcon';
 import { oneLineEllipsis } from '@/styles';
-import { KnowledgeItem } from '@/types/knowledgeBase';
+import { type KnowledgeItem } from '@/types/knowledgeBase';
 
 export interface PluginTagProps {
   data: KnowledgeItem[];

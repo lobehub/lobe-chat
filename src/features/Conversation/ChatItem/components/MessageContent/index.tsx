@@ -5,7 +5,7 @@ import { type ReactNode, Suspense, memo, useCallback } from 'react';
 
 import { useConversationStore } from '@/features/Conversation/store';
 
-import { ChatItemProps } from '../../type';
+import { type ChatItemProps } from '../../type';
 
 const EditableModal = dynamic(() => import('./EditableModal'), { ssr: false });
 

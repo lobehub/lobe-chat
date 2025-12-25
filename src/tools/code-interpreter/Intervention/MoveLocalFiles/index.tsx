@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinInterventionProps } from '@lobechat/types';
+import { type BuiltinInterventionProps } from '@lobechat/types';
 import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRight } from 'lucide-react';

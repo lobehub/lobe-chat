@@ -1,7 +1,6 @@
-import { ActionIcon, type ActionIconProps } from '@lobehub/ui';
-import { Flexbox, FlexboxProps } from '@lobehub/ui';
+import { ActionIcon, type ActionIconProps , Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 const useStyles = createStyles(({ token, css }) => ({
   header: css`

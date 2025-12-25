@@ -1,10 +1,10 @@
 import { Flexbox, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode, memo, useMemo } from 'react';
+import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import FileIcon from '@/components/FileIcon';
-import { UploadFileItem } from '@/types/files/upload';
+import { type UploadFileItem } from '@/types/files/upload';
 import { formatSize, formatSpeed, formatTime } from '@/utils/format';
 
 const useStyles = createStyles(({ css, token }) => {

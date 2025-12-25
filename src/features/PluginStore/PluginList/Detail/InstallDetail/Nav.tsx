@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, Icon, Tabs, TabsProps } from '@lobehub/ui';
+import { Flexbox, Icon, Tabs, type TabsProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookOpenIcon, HammerIcon } from 'lucide-react';
 import { memo } from 'react';

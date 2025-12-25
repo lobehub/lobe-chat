@@ -11,15 +11,15 @@ import {
   RemoveIdentityActionSchema,
   UpdateIdentityActionSchema,
 } from '@lobechat/memory-user-memory';
-import { LayersEnum, SearchMemoryResult, searchMemorySchema } from '@lobechat/types';
+import { LayersEnum, type SearchMemoryResult, searchMemorySchema } from '@lobechat/types';
 import { type SQL, and, asc, eq, gte, lte } from 'drizzle-orm';
 import { ModelProvider } from 'model-bank';
 import pMap from 'p-map';
 import { z } from 'zod';
 
 import {
-  IdentityEntryBasePayload,
-  IdentityEntryPayload,
+  type IdentityEntryBasePayload,
+  type IdentityEntryPayload,
   UserMemoryIdentityModel,
   UserMemoryModel,
 } from '@/database/models/userMemory';
@@ -35,7 +35,7 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
-import { ClientSecretPayload } from '@/types/auth';
+import { type ClientSecretPayload } from '@/types/auth';
 
 const EMPTY_SEARCH_RESULT: SearchMemoryResult = {
   contexts: [],

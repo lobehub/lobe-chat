@@ -3,7 +3,7 @@
 import { Flexbox, Skeleton } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { createStyles } from 'antd-style';
-import { MouseEvent, memo } from 'react';
+import { type MouseEvent, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AgentInfo from '@/features/AgentInfo';

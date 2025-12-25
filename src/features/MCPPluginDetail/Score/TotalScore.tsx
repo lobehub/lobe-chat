@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ScoreResult, getGradeColor, sortItemsByPriority } from '../../MCP/calculateScore';
+import { type ScoreResult, getGradeColor, sortItemsByPriority } from '../../MCP/calculateScore';
 
 const useStyles = createStyles(({ css, token }) => ({
   colorDot: css`

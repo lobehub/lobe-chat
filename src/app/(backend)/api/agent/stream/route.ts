@@ -1,6 +1,6 @@
 import { createSSEHeaders, createSSEWriter } from '@lobechat/utils/server';
 import debug from 'debug';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { StreamEventManager } from '@/server/modules/AgentRuntime';
 

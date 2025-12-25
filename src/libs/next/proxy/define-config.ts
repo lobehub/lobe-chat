@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { parseDefaultThemeFromCountry } from '@lobechat/utils/server';
 import debug from 'debug';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
@@ -14,7 +14,7 @@ import { appEnv } from '@/envs/app';
 import { authEnv } from '@/envs/auth';
 import { oidcEnv } from '@/envs/oidc';
 import NextAuth from '@/libs/next-auth';
-import { Locales } from '@/locales/resources';
+import { type Locales } from '@/locales/resources';
 import { parseBrowserLanguage } from '@/utils/locale';
 import { RouteVariants } from '@/utils/server/routeVariants';
 

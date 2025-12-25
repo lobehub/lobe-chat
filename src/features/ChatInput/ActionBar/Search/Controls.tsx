@@ -2,14 +2,14 @@ import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
-import { LucideIcon, SparkleIcon } from 'lucide-react';
+import { type LucideIcon, SparkleIcon } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { SearchMode } from '@/types/search';
+import { type SearchMode } from '@/types/search';
 
 import { useAgentId } from '../../hooks/useAgentId';
 import { useUpdateAgentConfig } from '../../hooks/useUpdateAgentConfig';

@@ -1,4 +1,4 @@
-import { GlobalState, INITIAL_STATUS } from '../initialState';
+import { type GlobalState, INITIAL_STATUS } from '../initialState';
 
 export const systemStatus = (s: GlobalState) => s.status;
 

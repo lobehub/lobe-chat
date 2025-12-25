@@ -1,9 +1,9 @@
 import type { RetrieveMemoryParams, RetrieveMemoryResult } from '@lobechat/types';
 
 import {
-  DisplayContextMemory,
-  DisplayExperienceMemory,
-  DisplayPreferenceMemory,
+  type DisplayContextMemory,
+  type DisplayExperienceMemory,
+  type DisplayPreferenceMemory,
 } from '@/database/repositories/userMemory';
 
 import { type AgentMemorySliceState, agentMemoryInitialState } from './slices/agent';

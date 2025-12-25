@@ -1,7 +1,7 @@
 'use client';
 
 import { BRANDING_NAME } from '@lobechat/business-const';
-import { Block, Button, Flexbox, Icon, IconProps, Text } from '@lobehub/ui';
+import { Block, Button, Flexbox, Icon, type IconProps, Text } from '@lobehub/ui';
 import { TypewriterEffect } from '@lobehub/ui/awesome';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { Steps, Switch } from 'antd';

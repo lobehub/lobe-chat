@@ -13,7 +13,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useElectronStore } from '@/store/electron';
 import { desktopHotkeysSelectors } from '@/store/electron/selectors';
-import { DesktopHotkeyItem } from '@/types/hotkey';
+import { type DesktopHotkeyItem } from '@/types/hotkey';
 
 const HotkeySetting = memo(() => {
   const { t } = useTranslation(['setting', 'hotkey']);

@@ -1,4 +1,4 @@
-import useSWR, { SWRHook } from 'swr';
+import useSWR, { type SWRHook } from 'swr';
 
 import { isDesktop } from '@/const/version';
 

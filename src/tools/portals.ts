@@ -1,4 +1,4 @@
-import { BuiltinPortal } from '@lobechat/types';
+import { type BuiltinPortal } from '@lobechat/types';
 
 import { WebBrowsingManifest } from './web-browsing';
 import WebBrowsing from './web-browsing/Portal';

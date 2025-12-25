@@ -1,5 +1,5 @@
 import { Icon } from '@lobehub/ui';
-import { Collapse, CollapseProps } from 'antd';
+import { Collapse, type CollapseProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDown } from 'lucide-react';
 import { memo } from 'react';

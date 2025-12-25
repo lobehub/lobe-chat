@@ -1,6 +1,6 @@
 'use client';
 
-import { KLAVIS_SERVER_TYPES, KlavisServerType } from '@lobechat/const';
+import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
 import { Avatar, Icon, Tag } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';

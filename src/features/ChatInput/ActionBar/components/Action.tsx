@@ -8,8 +8,8 @@ import useMergeState from 'use-merge-value';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 import { useActionBarContext } from '../context';
-import ActionDropdown, { ActionDropdownProps } from './ActionDropdown';
-import ActionPopover, { ActionPopoverProps } from './ActionPopover';
+import ActionDropdown, { type ActionDropdownProps } from './ActionDropdown';
+import ActionPopover, { type ActionPopoverProps } from './ActionPopover';
 
 interface ActionProps extends Omit<ActionIconProps, 'popover'> {
   dropdown?: ActionDropdownProps;

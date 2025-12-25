@@ -22,6 +22,14 @@ config.rules['unicorn/prefer-query-selector'] = 0;
 config.rules['unicorn/no-array-callback-reference'] = 0;
 // FIXME: Linting error in src/app/[variants]/(main)/chat/features/Migration/DBReader.ts, the fundamental solution should be upgrading typescript-eslint
 config.rules['@typescript-eslint/no-useless-constructor'] = 0;
+config.rules['@typescript-eslint/consistent-type-imports'] = [
+  'error',
+  {
+    disallowTypeAnnotations: false,
+    fixStyle: 'inline-type-imports',
+    prefer: 'type-imports',
+  },
+];
 
 config.overrides = [
   {
@@ -35,6 +43,26 @@ config.overrides = [
     },
     settings: {
       'mdx/code-blocks': false,
+    },
+  },
+
+  // Desktop app enables `emitDecoratorMetadata`, so some "type-only" references may be required at runtime
+  // for metadata reflection. Avoid auto-converting imports to `import type` in this scope.
+  {
+    files: ['apps/desktop/**/*.{ts,tsx,cts,mts}'],
+    parserOptions: {
+      project: ['./apps/desktop/tsconfig.json'],
+      tsconfigRootDir: __dirname,
+    },
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          disallowTypeAnnotations: false,
+          fixStyle: 'inline-type-imports',
+          prefer: 'no-type-imports',
+        },
+      ],
     },
   },
 

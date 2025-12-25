@@ -1,5 +1,5 @@
-import { SSOProvider } from '@lobechat/types';
-import { StateCreator } from 'zustand/vanilla';
+import { type SSOProvider } from '@lobechat/types';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { enableAuth, enableBetterAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import { userService } from '@/services/user';

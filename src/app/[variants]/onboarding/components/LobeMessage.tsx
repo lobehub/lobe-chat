@@ -1,5 +1,5 @@
-import { Flexbox, FlexboxProps, Text } from '@lobehub/ui';
-import { TypewriterEffect, TypewriterEffectProps } from '@lobehub/ui/awesome';
+import { Flexbox, type FlexboxProps, Text } from '@lobehub/ui';
+import { TypewriterEffect, type TypewriterEffectProps } from '@lobehub/ui/awesome';
 import { LoadingDots } from '@lobehub/ui/chat';
 import { memo } from 'react';
 

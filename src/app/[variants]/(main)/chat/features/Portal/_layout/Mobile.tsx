@@ -2,7 +2,7 @@
 
 import { Flexbox, Modal } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PortalContent } from '@/features/Portal/router';

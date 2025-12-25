@@ -18,7 +18,7 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { LocaleMode } from '@/types/locale';
+import { type LocaleMode } from '@/types/locale';
 
 const Common = memo(() => {
   const { t } = useTranslation('setting');

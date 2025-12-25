@@ -1,7 +1,7 @@
 import { useGlobalStore } from '@/store/global';
-import { LobeDocument } from '@/types/document';
+import { type LobeDocument } from '@/types/document';
 
-import { FilesStoreState } from '../../initialState';
+import { type FilesStoreState } from '../../initialState';
 
 const getDocumentById = (documentId: string | undefined) => (s: FilesStoreState) => {
   if (!documentId) return undefined;

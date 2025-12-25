@@ -1,13 +1,13 @@
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { LOADING_FLAT } from '@lobechat/const';
-import { SendGroupMessageParams } from '@lobechat/types';
+import { type SendGroupMessageParams } from '@lobechat/types';
 import { nanoid } from '@lobechat/utils';
 import debug from 'debug';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { StreamEvent, agentRuntimeClient } from '@/services/agentRuntime';
-import { ChatStore } from '@/store/chat/store';
+import { type StreamEvent, agentRuntimeClient } from '@/services/agentRuntime';
+import { type ChatStore } from '@/store/chat/store';
 import { setNamespace } from '@/utils/storeDebug';
 
 const log = debug('store:chat:ai-agent:agentGroup');

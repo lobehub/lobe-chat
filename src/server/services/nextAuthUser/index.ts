@@ -1,11 +1,11 @@
-import { LobeChatDatabase } from '@lobechat/database';
+import { type LobeChatDatabase } from '@lobechat/database';
 import { and, eq } from 'drizzle-orm';
-import { Adapter, AdapterAccount } from 'next-auth/adapters';
+import { type Adapter, type AdapterAccount } from 'next-auth/adapters';
 import { NextResponse } from 'next/server';
 
 import { UserModel } from '@/database/models/user';
 import {
-  UserItem,
+  type UserItem,
   nextauthAccounts,
   nextauthAuthenticators,
   nextauthSessions,

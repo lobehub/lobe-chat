@@ -4,7 +4,7 @@ import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } fro
 import { Flexbox } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo, useState } from 'react';
+import { type PropsWithChildren, memo, useState } from 'react';
 
 import {
   CHAT_PORTAL_MAX_WIDTH,

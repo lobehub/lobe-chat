@@ -1,6 +1,6 @@
 'use client';
 
-import { Flexbox, FlexboxProps, Skeleton } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps, Skeleton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 

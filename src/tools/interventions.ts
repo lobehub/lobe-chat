@@ -10,7 +10,7 @@ import { GTDInterventions, GTDManifest } from '@lobechat/builtin-tool-gtd/client
 import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { NotebookManifest } from '@lobechat/builtin-tool-notebook';
 import { NotebookInterventions } from '@lobechat/builtin-tool-notebook/client';
-import { BuiltinIntervention } from '@lobechat/types';
+import { type BuiltinIntervention } from '@lobechat/types';
 
 import { CodeInterpreterManifest as CloudCodeInterpreterManifest } from './code-interpreter';
 import { CodeInterpreterInterventions } from './code-interpreter/Intervention';

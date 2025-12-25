@@ -1,11 +1,11 @@
 import { crawlResultsPrompt, searchResultsPrompt } from '@lobechat/prompts';
 import {
-  BuiltinServerRuntimeOutput,
-  CrawlMultiPagesQuery,
-  CrawlSinglePageQuery,
-  SearchContent,
-  SearchQuery,
-  SearchServiceImpl,
+  type BuiltinServerRuntimeOutput,
+  type CrawlMultiPagesQuery,
+  type CrawlSinglePageQuery,
+  type SearchContent,
+  type SearchQuery,
+  type SearchServiceImpl,
 } from '@lobechat/types';
 
 import { CRAWL_CONTENT_LIMITED_COUNT, SEARCH_ITEM_LIMITED_COUNT } from '../const';

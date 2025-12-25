@@ -1,10 +1,10 @@
 import { getMessageError } from '@lobechat/fetch-sse';
-import { ChatMessageError } from '@lobechat/types';
-import { SpeechRecognitionOptions, useSpeechRecognition } from '@lobehub/tts/react';
+import { type ChatMessageError } from '@lobechat/types';
+import { type SpeechRecognitionOptions, useSpeechRecognition } from '@lobehub/tts/react';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SWRConfiguration } from 'swr';
+import { type SWRConfiguration } from 'swr';
 
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';

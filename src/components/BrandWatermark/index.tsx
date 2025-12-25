@@ -1,7 +1,7 @@
 'use client';
 
 import { ORG_NAME, UTM_SOURCE } from '@lobechat/business-const';
-import { Flexbox, FlexboxProps } from '@lobehub/ui';
+import { Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';

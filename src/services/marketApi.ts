@@ -1,4 +1,4 @@
-import { AgentItemDetail, AgentListResponse } from '@lobehub/market-sdk';
+import { type AgentItemDetail, type AgentListResponse } from '@lobehub/market-sdk';
 
 import { MARKET_ENDPOINTS } from '@/services/_url';
 

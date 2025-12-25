@@ -1,6 +1,6 @@
 import { RouteVariants } from '@lobechat/desktop-bridge';
 
-import { DynamicLayoutProps } from '@/types/next';
+import { type DynamicLayoutProps } from '@/types/next';
 
 export {
   DEFAULT_LANG,

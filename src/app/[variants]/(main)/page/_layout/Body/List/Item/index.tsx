@@ -1,7 +1,7 @@
 import { Avatar, type MenuProps } from '@lobehub/ui';
 import { Dropdown } from '@lobehub/ui';
 import { FileTextIcon } from 'lucide-react';
-import { CSSProperties, memo, useCallback, useMemo } from 'react';
+import { type CSSProperties, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';

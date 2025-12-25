@@ -1,5 +1,5 @@
-import { ToolIntervention } from '@lobechat/types';
-import { Block, Highlighter, Icon, Tabs, TabsProps } from '@lobehub/ui';
+import { type ToolIntervention } from '@lobechat/types';
+import { Block, Highlighter, Icon, Tabs, type TabsProps } from '@lobehub/ui';
 import {
   BracesIcon,
   FunctionSquareIcon,

@@ -1,4 +1,4 @@
-import { CollapseProps } from 'antd';
+import { type CollapseProps } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,9 +11,9 @@ import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import {
-  LobeAgentSession,
+  type LobeAgentSession,
   LobeSessionType,
-  LobeSessions,
+  type LobeSessions,
   SessionDefaultGroup,
 } from '@/types/session';
 

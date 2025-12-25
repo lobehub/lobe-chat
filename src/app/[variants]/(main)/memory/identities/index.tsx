@@ -1,6 +1,6 @@
 import { Flexbox, Icon, Tag } from '@lobehub/ui';
 import { BrainCircuitIcon } from 'lucide-react';
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { type FC, memo, useCallback, useEffect, useState } from 'react';
 
 import CommonFilterBar from '@/app/[variants]/(main)/memory/features/FilterBar';
 import NavHeader from '@/features/NavHeader';
@@ -8,14 +8,14 @@ import WideScreenContainer from '@/features/WideScreenContainer';
 import WideScreenButton from '@/features/WideScreenContainer/WideScreenButton';
 import { useQueryState } from '@/hooks/useQueryParam';
 import { useUserMemoryStore } from '@/store/userMemory';
-import { TypesEnum } from '@/types/userMemory';
+import { type TypesEnum } from '@/types/userMemory';
 
 import EditableModal from '../features/EditableModal';
 import Loading from '../features/Loading';
 import { SCROLL_PARENT_ID } from '../features/TimeLineView/useScrollParent';
-import ViewModeSwitcher, { ViewMode } from '../features/ViewModeSwitcher';
+import ViewModeSwitcher, { type ViewMode } from '../features/ViewModeSwitcher';
 import IdentityRightPanel from './features/IdentityRightPanel';
-import List, { IdentityType } from './features/List';
+import List, { type IdentityType } from './features/List';
 import SegmentedBar from './features/SegmentedBar';
 
 const IdentitiesArea = memo(() => {

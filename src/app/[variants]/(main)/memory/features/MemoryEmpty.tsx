@@ -1,4 +1,4 @@
-import { Center, Empty, EmptyProps } from '@lobehub/ui';
+import { Center, Empty, type EmptyProps } from '@lobehub/ui';
 import { BrainCircuitIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

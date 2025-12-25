@@ -6,8 +6,8 @@ import semver from 'semver';
 import urlJoin from 'url-join';
 
 import { FetchCacheTag } from '@/const/cacheControl';
-import { Locales } from '@/locales/resources';
-import { ChangelogIndexItem } from '@/types/changelog';
+import { type Locales } from '@/locales/resources';
+import { type ChangelogIndexItem } from '@/types/changelog';
 
 const URL_TEMPLATE = 'https://raw.githubusercontent.com/{{user}}/{{repo}}/{{branch}}/{{path}}';
 const LAST_MODIFIED = new Date().toISOString();

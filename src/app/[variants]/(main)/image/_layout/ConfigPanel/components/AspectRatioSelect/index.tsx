@@ -1,6 +1,6 @@
 'use client';
 
-import { Block, Center, Grid, GridProps, Text } from '@lobehub/ui';
+import { Block, Center, Grid, type GridProps, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import useMergeState from 'use-merge-value';

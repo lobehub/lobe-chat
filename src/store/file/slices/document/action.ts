@@ -1,13 +1,13 @@
 import { createNanoId } from '@lobechat/utils';
-import { StateCreator } from 'zustand/vanilla';
+import { type StateCreator } from 'zustand/vanilla';
 
 import { documentService } from '@/services/document';
 import { useGlobalStore } from '@/store/global';
-import { DocumentSourceType, LobeDocument } from '@/types/document';
+import { DocumentSourceType, type LobeDocument } from '@/types/document';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { FileStore } from '../../store';
-import { DocumentQueryFilter } from './initialState';
+import { type FileStore } from '../../store';
+import { type DocumentQueryFilter } from './initialState';
 
 const n = setNamespace('document');
 

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import GridCard from '@/app/[variants]/(main)/memory/features/GridView/GridCard';
-import { DisplayIdentityMemory } from '@/database/repositories/userMemory';
+import { type DisplayIdentityMemory } from '@/database/repositories/userMemory';
 
 import IdentityDropdown from '../../IdentityDropdown';
 

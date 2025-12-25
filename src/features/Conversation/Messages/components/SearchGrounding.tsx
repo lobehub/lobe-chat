@@ -7,7 +7,7 @@ import { rgba } from 'polished';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { GroundingSearch } from '@/types/search';
+import { type GroundingSearch } from '@/types/search';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`

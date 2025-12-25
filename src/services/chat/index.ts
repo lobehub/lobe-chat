@@ -3,21 +3,21 @@ import { MemoryManifest } from '@lobechat/builtin-tool-memory';
 import { KLAVIS_SERVER_TYPES } from '@lobechat/const';
 import type { OfficialToolItem } from '@lobechat/context-engine';
 import {
-  FetchSSEOptions,
+  type FetchSSEOptions,
   fetchSSE,
   getMessageError,
   standardizeAnimationStyle,
 } from '@lobechat/fetch-sse';
-import { AgentRuntimeError, ChatCompletionErrorPayload } from '@lobechat/model-runtime';
+import { AgentRuntimeError, type ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import {
   ChatErrorType,
-  RuntimeInitialContext,
-  RuntimeStepContext,
-  TracePayload,
+  type RuntimeInitialContext,
+  type RuntimeStepContext,
+  type TracePayload,
   TraceTagMap,
-  UIChatMessage,
+  type UIChatMessage,
 } from '@lobechat/types';
-import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
+import { type PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { merge } from 'es-toolkit/compat';
 import { ModelProvider } from 'model-bank';
 
@@ -56,7 +56,7 @@ import {
   resolveAgentConfig,
   resolveModelExtendParams,
 } from './mecha';
-import { FetchOptions } from './types';
+import { type FetchOptions } from './types';
 
 interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'messages'>> {
   agentId?: string;

@@ -1,6 +1,6 @@
 import { Skeleton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { FC } from 'react';
+import { type FC } from 'react';
 
 import InstantSwitch from '@/components/InstantSwitch';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';

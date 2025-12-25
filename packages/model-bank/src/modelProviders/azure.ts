@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { type ModelProviderCard } from '@/types/llm';
 
 // ref: https://learn.microsoft.com/azure/ai-services/openai/concepts/models
 const Azure: ModelProviderCard = {

@@ -2,7 +2,7 @@
 
 import { AccordionItem, ActionIcon, Flexbox, Text } from '@lobehub/ui';
 import { Loader2Icon, UserPlus } from 'lucide-react';
-import { MouseEvent, memo, useState } from 'react';
+import { type MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useInitGroupConfig } from '@/hooks/useInitGroupConfig';

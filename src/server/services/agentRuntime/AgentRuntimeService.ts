@@ -1,21 +1,21 @@
 import {
   AgentRuntime,
-  AgentRuntimeContext,
-  AgentState,
+  type AgentRuntimeContext,
+  type AgentState,
   GeneralChatAgent,
 } from '@lobechat/agent-runtime';
 import debug from 'debug';
 import urlJoin from 'url-join';
 
 import { MessageModel } from '@/database/models/message';
-import { LobeChatDatabase } from '@/database/type';
+import { type LobeChatDatabase } from '@/database/type';
 import {
   AgentRuntimeCoordinator,
   type AgentRuntimeCoordinatorOptions,
   createStreamEventManager,
 } from '@/server/modules/AgentRuntime';
 import {
-  RuntimeExecutorContext,
+  type RuntimeExecutorContext,
   createRuntimeExecutors,
 } from '@/server/modules/AgentRuntime/RuntimeExecutors';
 import type { IStreamEventManager } from '@/server/modules/AgentRuntime/types';

@@ -2,7 +2,7 @@
 
 import { type ReactNode, createContext, memo, use } from 'react';
 
-import { DiscoverModelDetail } from '@/types/discover';
+import { type DiscoverModelDetail } from '@/types/discover';
 
 export type DetailContextConfig = Partial<DiscoverModelDetail>;
 

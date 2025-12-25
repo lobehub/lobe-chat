@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox, Text } from '@lobehub/ui';
-import { ReactNode, memo } from 'react';
+import { type ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFetchAiImageConfig } from '@/hooks/useFetchAiImageConfig';

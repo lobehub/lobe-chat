@@ -5,7 +5,7 @@ import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { InstallPluginMeta } from '@/types/tool/plugin';
+import { type InstallPluginMeta } from '@/types/tool/plugin';
 
 const useStyles = createStyles(({ css, token }) => ({
   community: css`

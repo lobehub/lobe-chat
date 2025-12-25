@@ -4,7 +4,7 @@ import { Block, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { TaskDetail } from '@/types/index';
+import { type TaskDetail } from '@/types/index';
 
 import StatusContent from './StatusContent';
 

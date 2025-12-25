@@ -2,7 +2,7 @@
 
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { PropsWithChildren, Suspense, memo, useState } from 'react';
+import { type PropsWithChildren, Suspense, memo, useState } from 'react';
 
 import { isDesktop } from '@/const/version';
 

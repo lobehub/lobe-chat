@@ -1,4 +1,4 @@
-import { MouseEventHandler, useCallback } from 'react';
+import { type MouseEventHandler, useCallback } from 'react';
 
 import { useConversationStore } from '../store';
 

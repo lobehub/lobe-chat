@@ -1,9 +1,9 @@
 'use client';
 
 import { Flexbox, Grid } from '@lobehub/ui';
-import { FC, memo } from 'react';
+import { type FC, memo } from 'react';
 
-import { ItemCardProps } from './ItemCard';
+import { type ItemCardProps } from './ItemCard';
 
 interface AboutListProps {
   ItemRender: FC<ItemCardProps>;

@@ -1,4 +1,4 @@
-import { IEditor } from '@lobehub/editor';
+import { type IEditor } from '@lobehub/editor';
 
 export interface EditorState {
   /**

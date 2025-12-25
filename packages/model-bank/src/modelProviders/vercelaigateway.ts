@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/types/llm';
+import { type ModelProviderCard } from '@/types/llm';
 
 const VercelAIGateway: ModelProviderCard = {
   apiKeyUrl: 'https://vercel.com/dashboard/ai-gateway',

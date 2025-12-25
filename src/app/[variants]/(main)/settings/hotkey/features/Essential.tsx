@@ -12,7 +12,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { HotkeyGroupEnum, HotkeyItem } from '@/types/hotkey';
+import { HotkeyGroupEnum, type HotkeyItem } from '@/types/hotkey';
 
 const HotkeySetting = memo(() => {
   const { t } = useTranslation(['setting', 'hotkey']);

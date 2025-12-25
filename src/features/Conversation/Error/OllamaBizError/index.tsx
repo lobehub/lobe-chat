@@ -1,5 +1,5 @@
-import { ChatMessageError } from '@lobechat/types';
-import { AlertProps , Skeleton } from '@lobehub/ui';
+import { type ChatMessageError } from '@lobechat/types';
+import { type AlertProps , Skeleton } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 

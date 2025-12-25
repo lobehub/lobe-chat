@@ -1,11 +1,11 @@
 import { CURRENT_VERSION, isDesktop } from '@lobechat/const';
-import { ChatToolPayload, CheckMcpInstallResult, CustomPluginMetadata } from '@lobechat/types';
+import { type ChatToolPayload, type CheckMcpInstallResult, type CustomPluginMetadata } from '@lobechat/types';
 import { isLocalOrPrivateUrl, safeParseJSON } from '@lobechat/utils';
-import { PluginManifest } from '@lobehub/market-sdk';
-import { CallReportRequest } from '@lobehub/market-types';
+import { type PluginManifest } from '@lobehub/market-sdk';
+import { type CallReportRequest } from '@lobehub/market-types';
 import superjson from 'superjson';
 
-import { MCPToolCallResult } from '@/libs/mcp';
+import { type MCPToolCallResult } from '@/libs/mcp';
 import { lambdaClient, toolsClient } from '@/libs/trpc/client';
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 

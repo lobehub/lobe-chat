@@ -5,7 +5,7 @@ import { memo } from 'react';
 
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
-import { DiscoverTab, McpQueryParams } from '@/types/discover';
+import { DiscoverTab, type McpQueryParams } from '@/types/discover';
 
 import Pagination from '../features/Pagination';
 import List from './features/List';
