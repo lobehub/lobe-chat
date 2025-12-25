@@ -8,8 +8,9 @@ import { MemoryExtractionExecutor } from '@/server/services/memory/userMemory/ex
 import { LayersEnum } from '@/types/userMemory';
 import { parseMemoryExtractionConfig } from '@/server/globalConfig/parseMemoryExtractionConfig';
 
+
 const turnSchema = z.object({
-  createdAt: z.string().optional(),
+  createdAt: z.string(),
   diaId: z.string().optional(),
   imageCaption: z.string().optional(),
   imageUrls: z.array(z.string()).optional(),
@@ -33,12 +34,6 @@ const ingestSchema = z.object({
   sourceId: z.string().optional(),
   userId: z.string(),
 });
-
-const parseDate = (value?: string) => {
-  if (!value) return new Date();
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
-};
 
 const normalizeLayers = (layers?: string[]) => {
   if (!layers?.length) return [] as LayersEnum[];
@@ -86,7 +81,7 @@ export const POST = async (req: Request) => {
     let partCounter = 0;
     const parts = parsed.sessions.flatMap((session) => {
       return session.turns.map((turn) => {
-        const createdAt = parseDate(turn.createdAt || session.timestamp);
+        const createdAt = new Date(turn.createdAt);
         const metadata: Record<string, unknown> = {
           diaId: turn.diaId,
           imageCaption: turn.imageCaption,
