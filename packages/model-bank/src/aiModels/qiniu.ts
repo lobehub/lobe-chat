@@ -56,13 +56,15 @@ const qiniuChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
-    description: '美团开源的专为对话交互和智能体任务优化的非思维型基础模型，在工具调用和复杂多轮交互场景中表现突出',
+    description:
+      '美团开源的专为对话交互和智能体任务优化的非思维型基础模型，在工具调用和复杂多轮交互场景中表现突出',
     displayName: 'LongCat Flash Chat',
     enabled: true,
     id: 'meituan/longcat-flash-chat',
-    maxOutput: 65536,
+    maxOutput: 65_536,
     pricing: {
       currency: 'CNY',
       units: [
@@ -84,7 +86,8 @@ const qiniuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 200_000,
-    description: '智谱最新旗舰模型 GLM-4.6，在高级编码、长文本处理、推理与智能体能力上全面超越前代。',
+    description:
+      '智谱最新旗舰模型 GLM-4.6，在高级编码、长文本处理、推理与智能体能力上全面超越前代。',
     displayName: 'GLM-4.6',
     enabled: true,
     id: 'z-ai/glm-4.6',
@@ -111,8 +114,7 @@ const qiniuChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 2_000_000,
-    description:
-      '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
+    description: '我们很高兴发布 Grok 4 Fast，这是我们在成本效益推理模型方面的最新进展。',
     displayName: 'Grok 4 Fast',
     enabled: true,
     id: 'x-ai/grok-4-fast',
