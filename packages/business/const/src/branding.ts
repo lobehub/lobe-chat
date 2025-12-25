@@ -25,6 +25,10 @@ export const SOCIAL_URL = {
   youtube: 'https://www.youtube.com/@lobehub',
 };
 
+export const FILE_URL = {
+  importFromNotionGuide: 'https://hub-apac-1.lobeobjects.space/assets/notion.mp4',
+};
+
 export const BRANDING_EMAIL = {
   business: 'hello@lobehub.com',
   support: 'support@lobehub.com',

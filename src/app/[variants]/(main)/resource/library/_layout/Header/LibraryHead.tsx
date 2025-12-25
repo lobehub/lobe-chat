@@ -2,8 +2,11 @@
 
 import { useDroppable } from '@dnd-kit/core';
 import { Center, Flexbox, Skeleton, Text } from '@lobehub/ui';
+import { Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo, useCallback } from 'react';
+import { ChevronsUpDown } from 'lucide-react';
+import { memo, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
@@ -29,6 +32,17 @@ const useStyles = createStyles(({ css, token }) => ({
       color: ${token.colorBgElevated} !important;
     }
   `,
+  icon: css`
+    color: ${token.colorTextSecondary};
+    transition: all 0.2s;
+
+    &:hover {
+      color: ${token.colorText};
+    }
+  `,
+  menuIcon: css`
+    color: ${token.colorTextTertiary};
+  `,
 }));
 
 const Head = memo<{ id: string }>(({ id }) => {
@@ -37,6 +51,9 @@ const Head = memo<{ id: string }>(({ id }) => {
   const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));
   const setMode = useResourceManagerStore((s) => s.setMode);
   const isDragActive = useDragActive();
+
+  const useFetchKnowledgeBaseList = useKnowledgeBaseStore((s) => s.useFetchKnowledgeBaseList);
+  const { data: libraries } = useFetchKnowledgeBaseList();
 
   // Special droppable ID for root folder - matches the pattern expected by DndContextWrapper
   const ROOT_DROP_ID = `__root__:${id}`;
@@ -57,15 +74,38 @@ const Head = memo<{ id: string }>(({ id }) => {
     setMode('explorer');
   }, [id, navigate, setMode]);
 
+  const handleLibrarySwitch = useCallback(
+    (libraryId: string) => {
+      navigate(`/resource/library/${libraryId}`);
+      setMode('explorer');
+    },
+    [navigate, setMode],
+  );
+
+  const menuItems: MenuProps['items'] = useMemo(() => {
+    if (!libraries) return [];
+
+    return libraries.map((library) => ({
+      icon: (
+        <Center className={styles.menuIcon} style={{ minWidth: 16 }} width={16}>
+          <RepoIcon size={14} />
+        </Center>
+      ),
+      key: library.id,
+      label: library.name,
+      onClick: () => handleLibrarySwitch(library.id),
+      style: library.id === id ? { backgroundColor: 'var(--ant-control-item-bg-active)' } : {},
+    }));
+  }, [libraries, handleLibrarySwitch, id, styles.menuIcon]);
+
   return (
     <Flexbox
       align={'center'}
       className={cx(styles.clickableHeader, isOver && styles.dropZoneActive)}
       gap={8}
       horizontal
-      onClick={handleClick}
       paddingBlock={6}
-      paddingInline={'10px 6px'}
+      paddingInline={'12px 14px'}
       ref={setNodeRef}
     >
       <Center style={{ minWidth: 24 }} width={24}>
@@ -74,9 +114,21 @@ const Head = memo<{ id: string }>(({ id }) => {
       {!name ? (
         <Skeleton active paragraph={false} title={{ style: { marginBottom: 0 }, width: 80 }} />
       ) : (
-        <Text ellipsis strong style={{ fontSize: 16 }}>
-          {name}
-        </Text>
+        <Flexbox align={'center'} flex={1} gap={4} horizontal onClick={handleClick}>
+          <Text ellipsis strong style={{ flex: 1, fontSize: 16 }}>
+            {name}
+          </Text>
+        </Flexbox>
+      )}
+      {name && (
+        <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={['click']}>
+          <ChevronsUpDown
+            className={styles.icon}
+            onClick={(e) => e.stopPropagation()}
+            size={16}
+            style={{ cursor: 'pointer', flex: 'none' }}
+          />
+        </Dropdown>
       )}
     </Flexbox>
   );

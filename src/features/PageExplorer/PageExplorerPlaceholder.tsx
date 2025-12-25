@@ -1,3 +1,4 @@
+import { FILE_URL } from '@lobechat/business-const';
 import { Notion } from '@lobehub/icons';
 import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
@@ -14,7 +15,6 @@ import { useFileStore } from '@/store/file';
 import { DocumentSourceType } from '@/types/document';
 
 const ICON_SIZE = 80;
-const NOTION_GUIDE_VIDEO_SRC = 'https://hub-apac-1.lobeobjects.space/assets/notion.mp4';
 
 const useStyles = createStyles(({ css, token }) => ({
   actionTitle: css`
@@ -259,7 +259,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
         </Center>
         <GuideModal
           cancelText={t('header.actions.notionGuide.cancel')}
-          cover={<GuideVideo height={269} src={NOTION_GUIDE_VIDEO_SRC} width={358} />}
+          cover={<GuideVideo height={269} src={FILE_URL.importFromNotionGuide} width={358} />}
           desc={t('header.actions.notionGuide.desc')}
           okText={t('header.actions.notionGuide.ok')}
           onCancel={notionImport.handleCloseNotionGuide}

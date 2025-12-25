@@ -1,5 +1,6 @@
 'use client';
 
+import { FILE_URL } from '@lobechat/business-const';
 import { Notion } from '@lobehub/icons';
 import { Button, Dropdown, Icon, MenuProps } from '@lobehub/ui';
 import { Upload } from 'antd';
@@ -26,8 +27,6 @@ const hotArea = css`
     background-color: transparent;
   }
 `;
-
-const NOTION_GUIDE_VIDEO_SRC = 'https://hub-apac-1.lobeobjects.space/assets/notion.mp4';
 
 const AddButton = () => {
   const { t } = useTranslation('file');
@@ -219,7 +218,7 @@ const AddButton = () => {
       </Dropdown>
       <GuideModal
         cancelText={t('header.actions.notionGuide.cancel')}
-        cover={<GuideVideo height={269} src={NOTION_GUIDE_VIDEO_SRC} width={358} />}
+        cover={<GuideVideo height={269} src={FILE_URL.importFromNotionGuide} width={358} />}
         desc={t('header.actions.notionGuide.desc')}
         okText={t('header.actions.notionGuide.ok')}
         onCancel={handleCloseNotionGuide}
