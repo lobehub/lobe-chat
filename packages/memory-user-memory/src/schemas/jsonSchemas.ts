@@ -1,5 +1,5 @@
 import { searchMemorySchema } from '@lobechat/types';
-import { PluginSchema } from '@lobehub/chat-plugin-sdk';
+import type { PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
 import { ContextMemoryItemSchema } from './context';

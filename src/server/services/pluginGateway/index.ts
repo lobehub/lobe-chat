@@ -1,6 +1,6 @@
 import { ChatToolPayload } from '@lobechat/types';
 import { safeParseJSON } from '@lobechat/utils';
-import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
+import type { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { GatewaySuccessResponse } from '@lobehub/chat-plugins-gateway';
 import debug from 'debug';
 

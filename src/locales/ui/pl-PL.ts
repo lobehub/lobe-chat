@@ -1,0 +1,71 @@
+import type { TranslationResourcesMap } from '@lobehub/ui/i18n';
+
+const resources = {
+  chat: {
+    'chat.avatar': 'awatar',
+    'chat.placeholder': '...',
+    'tokenTag.overload': 'Przekroczono',
+    'tokenTag.remained': 'Pozostało',
+    'tokenTag.used': 'Użyto',
+  },
+  common: {
+    'common.cancel': 'Anuluj',
+    'common.confirm': 'Potwierdź',
+    'common.delete': 'Usuń',
+    'common.edit': 'Edytuj',
+  },
+  editableMessage: {
+    'editableMessage.addProps': 'Dodaj właściwości',
+    'editableMessage.delete': 'Usuń',
+    'editableMessage.input': 'Wejście',
+    'editableMessage.inputPlaceholder': 'Wpisz przykładową treść wejściową',
+    'editableMessage.output': 'Wyjście',
+    'editableMessage.outputPlaceholder': 'Wpisz przykładową treść wyjściową',
+    'editableMessage.system': 'System',
+  },
+  emojiPicker: {
+    'emojiPicker.delete': 'Usuń',
+    'emojiPicker.draggerDesc': 'Kliknij lub przeciągnij obraz do tego obszaru, aby przesłać',
+    'emojiPicker.emoji': 'Emoji',
+    'emojiPicker.fileTypeError': 'Możesz przesyłać tylko pliki obrazów!',
+    'emojiPicker.upload': 'Prześlij',
+    'emojiPicker.uploadBtn': 'Przytnij i prześlij',
+  },
+  form: {
+    'form.reset': 'Resetuj',
+    'form.submit': 'Wyślij',
+    'form.unsavedChanges': 'Niezapisane zmiany',
+    'form.unsavedWarning': 'Masz niezapisane zmiany. Czy na pewno chcesz wyjść?',
+  },
+  hotkey: {
+    'hotkey.conflict': 'Ten skrót koliduje z istniejącym.',
+    'hotkey.invalidCombination':
+      'Skrót musi zawierać klawisz modyfikujący (Ctrl, Alt, Shift) i tylko jeden zwykły klawisz.',
+    'hotkey.placeholder': 'Naciśnij klawisze, aby nagrać skrót',
+    'hotkey.reset': 'Przywróć domyślne',
+  },
+  messageModal: {
+    'messageModal.cancel': 'Anuluj',
+    'messageModal.confirm': 'Potwierdź',
+    'messageModal.edit': 'Edytuj',
+  },
+  sideNav: {
+    'sideNav.collapse': 'Zwiń pasek boczny',
+    'sideNav.demoActiveLabel': 'Aktywny',
+    'sideNav.demoFeatureAutoCollapseDesc': 'Przeciągnij poniżej progu, aby inteligentnie zwinąć',
+    'sideNav.demoFeatureAutoCollapseTitle': 'Automatyczne zwijanie',
+    'sideNav.demoFeaturePerformanceDesc': 'Brak narzutu animacji dla lepszej wydajności',
+    'sideNav.demoFeaturePerformanceTitle': 'Wydajność',
+    'sideNav.demoFeatureResizeDesc': 'Przeciągnij, aby dostosować szerokość panelu',
+    'sideNav.demoFeatureResizeTitle': 'Elastyczna zmiana rozmiaru',
+    'sideNav.demoFeatureSmartHandleDesc': 'Najedź, aby pokazać przycisk przełączania',
+    'sideNav.demoFeatureSmartHandleTitle': 'Inteligentny uchwyt',
+    'sideNav.demoFeaturesTitle': 'Funkcje',
+    'sideNav.demoHint': 'Spróbuj przeciągnąć krawędź panelu i użyć przycisku ->',
+    'sideNav.demoSubtitle': 'Boczny panel w stylu workspace z możliwością zmiany rozmiaru',
+    'sideNav.demoTitle': 'Demo DraggableSideNav',
+    'sideNav.expand': 'Rozwiń pasek boczny',
+  },
+} satisfies TranslationResourcesMap;
+
+export default resources;

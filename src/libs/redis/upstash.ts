@@ -1,5 +1,5 @@
 import { Redis, RedisConfigNodejs } from '@upstash/redis';
-import { Buffer } from 'node:buffer';
+import { Buffer } from 'buffer';
 
 import {
   BaseRedisProvider,

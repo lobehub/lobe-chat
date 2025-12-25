@@ -1,0 +1,53 @@
+import { describe, expect, it } from 'vitest';
+
+import { getUILocaleAndResources } from './getUILocaleAndResources';
+
+describe('getUILocaleAndResources', () => {
+  it('should return zh-CN locale and zhCn resources for zh-CN', async () => {
+    const result = await getUILocaleAndResources('zh-CN');
+    expect(result.locale).toBe('zh-CN');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return zh-CN locale and zhCn resources for zh-TW', async () => {
+    const result = await getUILocaleAndResources('zh-TW');
+    expect(result.locale).toBe('zh-CN');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return en-US locale and en resources for en-US', async () => {
+    const result = await getUILocaleAndResources('en-US');
+    expect(result.locale).toBe('en-US');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return en-US locale and en resources for en', async () => {
+    const result = await getUILocaleAndResources('en');
+    expect(result.locale).toBe('en-US');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return en-US locale and en resources for auto', async () => {
+    const result = await getUILocaleAndResources('auto');
+    expect(result.locale).toBe('en-US');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return en-US locale and custom resources for ar', async () => {
+    const result = await getUILocaleAndResources('ar');
+    expect(result.locale).toBe('en-US');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return en-US locale and custom resources for de-DE', async () => {
+    const result = await getUILocaleAndResources('de-DE');
+    expect(result.locale).toBe('en-US');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should return en-US locale and custom resources for es-ES', async () => {
+    const result = await getUILocaleAndResources('es-ES');
+    expect(result.locale).toBe('en-US');
+    expect(result.resources).toBeDefined();
+  });
+});

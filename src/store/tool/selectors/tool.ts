@@ -1,7 +1,7 @@
 import { ToolNameResolver } from '@lobechat/context-engine';
 import { pluginPrompts } from '@lobechat/prompts';
 import { RenderDisplayControl } from '@lobechat/types';
-import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
+import type { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
 import { MetaData } from '@/types/meta';
 import { LobeToolMeta } from '@/types/tool/tool';
