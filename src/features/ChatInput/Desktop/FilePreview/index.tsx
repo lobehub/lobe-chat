@@ -1,42 +1,12 @@
 import { memo } from 'react';
 
-import DragUpload from '@/components/DragUpload';
-import { useModelSupportVision } from '@/hooks/useModelSupportVision';
-import { useAgentStore } from '@/store/agent';
-import { agentByIdSelectors } from '@/store/agent/selectors';
-import { useFileStore } from '@/store/file';
-
-import { useAgentId } from '../../hooks/useAgentId';
 import FileItemList from './FileList';
 
+/**
+ * Note: Drag upload is now handled by DragUploadZone in the parent Desktop component.
+ */
 const FilePreview = memo(() => {
-  const agentId = useAgentId();
-  const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(agentId)(s));
-  const provider = useAgentStore((s) => agentByIdSelectors.getAgentModelProviderById(agentId)(s));
-
-  const canUploadImage = useModelSupportVision(model, provider);
-
-  const [uploadFiles] = useFileStore((s) => [s.uploadChatFiles]);
-
-  const upload = async (fileList: FileList | File[] | undefined) => {
-    if (!fileList || fileList.length === 0) return;
-
-    // Filter out files that are not images if the model does not support image uploads
-    const files = Array.from(fileList).filter((file) => {
-      if (canUploadImage) return true;
-
-      return !file.type.startsWith('image');
-    });
-
-    uploadFiles(files);
-  };
-
-  return (
-    <>
-      <DragUpload onUploadFiles={upload} />
-      <FileItemList />
-    </>
-  );
+  return <FileItemList />;
 });
 
 export default FilePreview;

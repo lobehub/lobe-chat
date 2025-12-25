@@ -1,9 +1,11 @@
 import { Flexbox, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo, useEffect, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 
 import { fileChatSelectors, useFileStore } from '@/store/file';
+import { UPLOAD_STATUS_SET } from '@/types/files/upload';
 
+import FileItem from '../FilePreview/FileItem';
 import { useAgentId } from '../../hooks/useAgentId';
 import ContextItem from './ContextItem';
 import SelectionItem from './SelectionItem';
@@ -12,6 +14,11 @@ const useStyles = createStyles(({ css }) => ({
   container: css`
     overflow-x: scroll;
     width: 100%;
+  `,
+  uploadingContainer: css`
+    overflow-x: auto;
+    width: 100%;
+    padding-block: 8px;
   `,
 }));
 
@@ -38,25 +45,69 @@ const ContextList = memo(() => {
     (item, index, self) => index === self.findIndex((t) => t.preview === item.preview),
   );
 
-  if ((!inputFilesList.length || !showFileList) && !showSelectionList) return null;
+  // Separate files into uploading/error and completed
+  const { uploadingFiles, completedFiles } = useMemo(() => {
+    const uploading = inputFilesList.filter(
+      (file) => UPLOAD_STATUS_SET.has(file.status) || file.status === 'error',
+    );
+    const completed = inputFilesList.filter(
+      (file) => !UPLOAD_STATUS_SET.has(file.status) && file.status !== 'error',
+    );
+    return { completedFiles: completed, uploadingFiles: uploading };
+  }, [inputFilesList]);
+
+  const hasUploadingFiles = uploadingFiles.length > 0;
+  const hasCompletedFiles = completedFiles.length > 0;
+  const hasSelections = showSelectionList && selectionList.length > 0;
+
+  if (!showFileList && !showSelectionList) return null;
+  if (!hasUploadingFiles && !hasCompletedFiles && !hasSelections) return null;
 
   return (
-    <ScrollShadow
-      className={styles.container}
-      hideScrollBar
-      horizontal
-      orientation={'horizontal'}
-      size={8}
-    >
-      <Flexbox gap={4} horizontal paddingInline={0} style={{ paddingBlockStart: 8 }} wrap={'wrap'}>
-        {selectionList.map((item) => (
-          <SelectionItem key={item.id} {...item} />
-        ))}
-        {inputFilesList.map((item) => (
-          <ContextItem key={item.id} {...item} />
-        ))}
-      </Flexbox>
-    </ScrollShadow>
+    <Flexbox gap={0}>
+      {/* Uploading/Error files - show with detailed FileItem */}
+      {hasUploadingFiles && (
+        <ScrollShadow
+          className={styles.uploadingContainer}
+          hideScrollBar
+          horizontal
+          orientation={'horizontal'}
+          size={8}
+        >
+          <Flexbox gap={8} horizontal>
+            {uploadingFiles.map((item) => (
+              <FileItem key={item.id} {...item} />
+            ))}
+          </Flexbox>
+        </ScrollShadow>
+      )}
+
+      {/* Completed files and selections - show with compact Tag */}
+      {(hasCompletedFiles || hasSelections) && (
+        <ScrollShadow
+          className={styles.container}
+          hideScrollBar
+          horizontal
+          orientation={'horizontal'}
+          size={8}
+        >
+          <Flexbox
+            gap={4}
+            horizontal
+            paddingInline={0}
+            style={{ paddingBlockStart: 8 }}
+            wrap={'wrap'}
+          >
+            {selectionList.map((item) => (
+              <SelectionItem key={item.id} {...item} />
+            ))}
+            {completedFiles.map((item) => (
+              <ContextItem key={item.id} {...item} />
+            ))}
+          </Flexbox>
+        </ScrollShadow>
+      )}
+    </Flexbox>
   );
 });
 
