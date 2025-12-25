@@ -274,7 +274,6 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
       <TokenTag
         maxValue={maxTokens}
         mode={'used'}
-        style={{ marginLeft: 8 }}
         text={{
           overload: t('tokenTag.overload'),
           remained: t('tokenTag.remained'),
