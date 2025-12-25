@@ -25,27 +25,21 @@ vi.mock('@/utils/env', () => ({
   isDev: false,
 }));
 
-// 模拟动态导入结果
-const mockTranslations = {
+// Use `en-US` (DEFAULT_LANG) as the baseline and mock default locale modules.
+// We provide dotted keys directly to avoid Vitest's mocked-module export checks.
+vi.mock('@/locales/default/common', () => ({
   key1: 'Value 1',
   key2: 'Value 2 with {{param}}',
-  nested: { key: 'Nested value' },
-};
+  'nested.key': 'Nested value',
+  multiParam: 'Hello {{name}}, you have {{count}} messages',
+  simpleText: 'Just a simple text',
+  withParam: 'Text with {{param}}',
+  'very.deeply.nested.key': 'Found the nested value',
+}));
 
-const mockDefaultTranslations = {
-  key1: '默认值 1',
-  key2: '默认值 2 带 {{param}}',
-  nested: { key: '默认嵌套值' },
-};
-
-// 重写导入函数
-vi.mock('@/../locales/en-US/common.json', async () => {
-  return mockTranslations;
-});
-
-vi.mock('@/locales/default/common', async () => {
-  return mockDefaultTranslations;
-});
+vi.mock('@/locales/default/chat', () => ({
+  welcome: 'Welcome to the chat',
+}));
 
 describe('getLocale', () => {
   const mockCookieStore = {
@@ -73,10 +67,6 @@ describe('getLocale', () => {
 describe('translation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // 重置 import 模拟
-    vi.doMock('@/../locales/en-US/common.json', async () => {
-      return mockTranslations;
-    });
   });
 
   it('should return correct translation object', async () => {
@@ -94,55 +84,26 @@ describe('translation', () => {
   });
 
   it('should handle multiple parameters in translation string', async () => {
-    // 模拟多参数翻译
-    vi.doMock('@/../locales/en-US/common.json', async () => ({
-      multiParam: 'Hello {{name}}, you have {{count}} messages',
-    }));
-
     const { t } = await translation('common', 'en-US');
     expect(t('multiParam', { name: 'John', count: '5' })).toBe('Hello John, you have 5 messages');
   });
 
   it('should handle different namespaces', async () => {
-    // 模拟另一个命名空间
-    vi.doMock('@/../locales/en-US/chat.json', async () => ({
-      welcome: 'Welcome to the chat',
-    }));
-
     const { t } = await translation('chat', 'en-US');
     expect(t('welcome')).toBe('Welcome to the chat');
   });
 
   it('should handle deep nested objects in translations', async () => {
-    // 模拟深层嵌套对象
-    vi.doMock('@/../locales/en-US/common.json', async () => ({
-      very: {
-        deeply: {
-          nested: {
-            key: 'Found the nested value',
-          },
-        },
-      },
-    }));
-
     const { t } = await translation('common', 'en-US');
     expect(t('very.deeply.nested.key')).toBe('Found the nested value');
   });
 
   it('should handle empty parameters object', async () => {
-    vi.doMock('@/../locales/en-US/common.json', async () => ({
-      simpleText: 'Just a simple text',
-    }));
-
     const { t } = await translation('common', 'en-US');
     expect(t('simpleText', {})).toBe('Just a simple text');
   });
 
   it('should handle missing parameters in translation string', async () => {
-    vi.doMock('@/../locales/en-US/common.json', async () => ({
-      withParam: 'Text with {{param}}',
-    }));
-
     const { t } = await translation('common', 'en-US');
     // 当缺少参数时应保留占位符
     expect(t('withParam')).toBe('Text with {{param}}');
