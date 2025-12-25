@@ -42,7 +42,11 @@ const getTheadParentMessages = (s: ChatStoreState, data: UIChatMessage[]) => {
   }
 
   const portalThread = currentPortalThread(s);
-  return genMessage(data, portalThread?.sourceMessageId, portalThread?.type);
+  return (
+    genMessage(data, portalThread?.sourceMessageId, portalThread?.type)
+      // eslint-disable-next-line eqeqeq
+      .filter((m) => m.threadId == null || m.threadId === portalThread?.id)
+  );
 };
 
 // ======= Portal Thread Display Chats ======= //
