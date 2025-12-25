@@ -215,7 +215,6 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro',
-    enabled: true,
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
@@ -434,7 +433,6 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
     displayName: 'Nano Banana',
-    enabled: true,
     id: 'gemini-2.5-flash-image',
     maxOutput: 8192,
     pricing: {
@@ -664,43 +662,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 32_768,
-    description:
-      'LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。',
-    displayName: 'LearnLM 2.0 Flash Experimental',
-    id: 'learnlm-2.0-flash-experimental',
-    maxOutput: 32_768,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 40_959,
-    description:
-      'LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。',
-    displayName: 'LearnLM 1.5 Pro Experimental',
-    id: 'learnlm-1.5-pro-experimental',
-    maxOutput: 8192,
-    pricing: {
-      units: [
-        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'millionTokens' },
-      ],
-    },
-    releasedAt: '2024-11-19',
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
       vision: true,
     },
@@ -917,7 +878,6 @@ const googleImageModels: AIImageModelCard[] = [
   {
     displayName: 'Nano Banana',
     id: 'gemini-2.5-flash-image:image',
-    enabled: true,
     type: 'image',
     description:
       'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',

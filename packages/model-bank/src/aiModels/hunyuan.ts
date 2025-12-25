@@ -5,6 +5,45 @@ const hunyuanChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      '模型底座从TurboS升级为混元2.0，模型能力全面提升。显著增强模型的复杂指令遵循、多轮及长文理解、代码、Agent、推理能力。',
+    displayName: 'Tencent HY 2.0 Think',
+    enabled: true,
+    id: 'hunyuan-2.0-thinking-20251109',
+    maxOutput: 64_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-09',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    description:
+      '模型底座从TurboS升级为混元2.0，模型能力全面提升。显著增强模型的指令遵循、多轮及长文理解、文学创作、知识准确性、代码及推理能力。',
+    displayName: 'Tencent HY 2.0 Instruct',
+    enabled: true,
+    id: 'hunyuan-2.0-instruct-20251111',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.8, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
+    releasedAt: '2025-11-11',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 256_000,
@@ -14,6 +53,13 @@ const hunyuanChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'hunyuan-a13b',
     maxOutput: 32_000,
+    pricing: {
+      currency: 'CNY',
+      units: [
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'millionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'millionTokens' },
+      ],
+    },
     releasedAt: '2025-06-25',
     settings: {
       extendParams: ['enableReasoning'],
@@ -213,7 +259,6 @@ const hunyuanChatModels: AIChatModelCard[] = [
     description:
       'Hunyuan-large 模型总参数量约 389B，激活参数量约 52B，是当前业界参数规模最大、效果最好的 Transformer 架构的开源 MoE 模型。',
     displayName: 'Hunyuan Large',
-    enabled: true,
     id: 'hunyuan-large',
     maxOutput: 4000,
     pricing: {
@@ -332,7 +377,6 @@ const hunyuanChatModels: AIChatModelCard[] = [
     contextWindowTokens: 44_000,
     description: 'hunyuan-TurboS 混元旗舰大模型最新版本，具备更强的思考能力，更优的体验效果。',
     displayName: 'Hunyuan TurboS',
-    enabled: true,
     id: 'hunyuan-turbos-latest',
     maxOutput: 16_000,
     pricing: {
