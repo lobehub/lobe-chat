@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom';
 import Loading from '@/components/Loading/BrandTextLoading';
 import PageExplorer from '@/features/PageExplorer';
 
+import PageTitle from './features/PageTitle';
+
 /**
  * Pages route - dedicated page for managing documents/pages
  * This is extracted from the /resource route to have its own dedicated space
@@ -14,9 +16,12 @@ const PagesPage = memo(() => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <Suspense fallback={<Loading debugId="PagesPage" />}>
-      <PageExplorer pageId={`docs_${id}`} />
-    </Suspense>
+    <>
+      <PageTitle />
+      <Suspense fallback={<Loading debugId="PagesPage" />}>
+        <PageExplorer pageId={`docs_${id}`} />
+      </Suspense>
+    </>
   );
 });
 
