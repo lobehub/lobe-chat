@@ -1,5 +1,5 @@
 import { LobeTool } from '@lobechat/types';
-import { PluginSchema } from '@lobehub/chat-plugin-sdk';
+import type { PluginSchema } from '@lobehub/chat-plugin-sdk';
 
 import { MetaData } from '@/types/meta';
 

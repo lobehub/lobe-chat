@@ -14,7 +14,7 @@ import { AppConfigContext } from 'antd/es/app/context';
 import * as motion from 'motion/react-m';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ReactNode, memo, useEffect, useMemo } from 'react';
+import { ReactNode, memo, useEffect, useMemo, useState } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
 import {
@@ -24,6 +24,7 @@ import {
 } from '@/const/theme';
 import { isDesktop } from '@/const/version';
 import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
+import { getUILocaleAndResources } from '@/libs/getUILocaleAndResources';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
@@ -108,6 +109,7 @@ const AppTheme = memo<AppThemeProps>(
     customFontFamily,
   }) => {
     const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
+    const language = useGlobalStore(systemStatusSelectors.language);
     const { styles, cx, theme } = useStyles();
     const [primaryColor, neutralColor, animationMode] = useUserStore((s) => [
       userGeneralSettingsSelectors.primaryColor(s),
@@ -119,6 +121,25 @@ const AppTheme = memo<AppThemeProps>(
       () => (messageTop === undefined ? {} : { message: { top: messageTop } }),
       [messageTop],
     );
+
+    const [uiResources, setUIResources] = useState<any>(null);
+    const uiLocale = useMemo(() => {
+      if (language.startsWith('zh')) return 'zh-CN';
+      if (language.startsWith('en')) return 'en-US';
+      return 'en-US';
+    }, [language]);
+
+    useEffect(() => {
+      let mounted = true;
+      getUILocaleAndResources(language).then(({ resources }) => {
+        if (mounted) {
+          setUIResources(resources);
+        }
+      });
+      return () => {
+        mounted = false;
+      };
+    }, [language]);
 
     useEffect(() => {
       setCookie(LOBE_THEME_PRIMARY_COLOR, primaryColor);
@@ -167,7 +188,9 @@ const AppTheme = memo<AppThemeProps>(
               imgUnoptimized: true,
               proxy: globalCDN ? 'unpkg' : undefined,
             }}
+            locale={uiLocale}
             motion={motion}
+            resources={uiResources}
           >
             {children}
           </ConfigProvider>
