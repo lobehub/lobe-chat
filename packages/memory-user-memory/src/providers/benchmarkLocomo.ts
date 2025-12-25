@@ -31,9 +31,7 @@ export class BenchmarkLocomoContextProvider
   }
 
   private buildMessageNode(part: BenchmarkLocomoPart, index: number) {
-    const attributes: Record<string, string> = {
-      index: index.toString(),
-    };
+    const attributes: Record<string, string> = { index: index.toString() };
 
     if (part.speaker) attributes.speaker = part.speaker;
     if (part.createdAt) attributes.created_at = new Date(part.createdAt).toISOString();
