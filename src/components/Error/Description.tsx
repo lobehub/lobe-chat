@@ -1,22 +1,9 @@
 'use client';
 
-import { Flexbox, Icon, Skeleton } from '@lobehub/ui';
-import { css, cx } from 'antd-style';
+import { Flexbox, Highlighter, Icon } from '@lobehub/ui';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-const container = css`
-  pre.shiki {
-    padding: 8px !important;
-  }
-`;
-
-const Highlighter = dynamic(() => import('@lobehub/ui/es/Highlighter/index.mjs'), {
-  loading: () => <Skeleton avatar={false} title={false} />,
-  ssr: false,
-});
 
 const Description = memo<{ message: string; status: number }>(({ message, status }) => {
   const { t } = useTranslation('error');
@@ -34,11 +21,7 @@ const Description = memo<{ message: string; status: number }>(({ message, status
       >
         {t('fetchError.detail')} <Icon icon={show ? ChevronUp : ChevronDown} />
       </Flexbox>
-      <Highlighter
-        className={cx(container)}
-        language={'text'}
-        style={{ display: show ? undefined : 'none', maxHeight: 80 }}
-      >
+      <Highlighter language={'text'} style={{ display: show ? undefined : 'none', maxHeight: 80 }}>
         {message}
       </Highlighter>
     </Flexbox>

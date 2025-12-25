@@ -9,14 +9,16 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/prompts": "workspace:*",
-    "@lobechat/types": "workspace:*",
-    "lucide-react": "*",
-    "react": "*"
+    "@lobechat/prompts": "workspace:*"
+  },
+  "devDependencies": {
+    "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
-    "@lobehub/ui": "^3",
+    "@lobehub/ui": "^4",
     "antd": "^6",
-    "antd-style": "*"
+    "antd-style": "*",
+    "lucide-react": "*",
+    "react": "*"
   }
 }

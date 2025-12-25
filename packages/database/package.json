@@ -16,15 +16,12 @@
   "dependencies": {
     "@lobechat/builtin-agents": "workspace:*",
     "@lobechat/const": "workspace:*",
-    "@lobechat/types": "workspace:*",
     "@lobechat/utils": "workspace:*",
-    "@lobehub/charts": "^2.1.2",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@neondatabase/serverless": "^1.0.2",
     "@trpc/server": "^11.7.1",
     "debug": "^4.4.3",
     "drizzle-zod": "^0.5.1",
-    "lodash-es": "^4.17.21",
     "model-bank": "workspace:*",
     "next-auth": "5.0.0-beta.30",
     "p-map": "^7.0.4",
@@ -34,11 +31,13 @@
     "ws": "^8.18.3"
   },
   "devDependencies": {
+    "@lobechat/types": "workspace:*",
     "dotenv": "^17.2.3",
     "fake-indexeddb": "^6.2.5"
   },
   "peerDependencies": {
     "@electric-sql/pglite": "^0.2.17",
+    "@lobehub/charts": "^4",
     "dayjs": ">=1.11.19",
     "drizzle-orm": ">=0.44.7",
     "nanoid": ">=5.1.6",

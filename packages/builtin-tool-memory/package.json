@@ -7,7 +7,9 @@
   },
   "main": "./src/index.ts",
   "dependencies": {
-    "@lobechat/memory-user-memory": "workspace:*",
+    "@lobechat/memory-user-memory": "workspace:*"
+  },
+  "devDependencies": {
     "@lobechat/types": "workspace:*"
   }
 }

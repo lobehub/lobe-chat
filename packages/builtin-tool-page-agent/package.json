@@ -7,11 +7,11 @@
     "./executionRuntime": "./src/ExecutionRuntime/index.ts"
   },
   "main": "./src/index.ts",
-  "dependencies": {
+  "devDependencies": {
     "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
-    "@lobehub/editor": "*",
+    "@lobehub/editor": "^3",
     "debug": "*"
   }
 }
