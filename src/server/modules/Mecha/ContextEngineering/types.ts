@@ -2,9 +2,9 @@ import type {
   AgentBuilderContext,
   FileContent,
   KnowledgeBaseInfo,
-  PageEditorContext,
   UserMemoryData,
 } from '@lobechat/context-engine';
+import type { PageContentContext } from '@lobechat/prompts';
 import type { UIChatMessage } from '@lobechat/types';
 
 /**
@@ -57,13 +57,13 @@ export interface ServerUserMemoryConfig {
  */
 export interface ServerMessagesEngineParams {
   // ========== Extended contexts ==========
-/** Agent Builder context (optional, for editing agents) */
+  /** Agent Builder context (optional, for editing agents) */
   agentBuilderContext?: AgentBuilderContext;
   // ========== Capability injection ==========
-/** Model capability checkers */
+  /** Model capability checkers */
   capabilities?: ServerModelCapabilities;
   // ========== Agent configuration ==========
-/** Whether to enable history message count limit */
+  /** Whether to enable history message count limit */
   enableHistoryCount?: boolean;
 
   /** Function to format history summary */
@@ -75,17 +75,17 @@ export interface ServerMessagesEngineParams {
   /** Input template */
   inputTemplate?: string;
   // ========== Knowledge ==========
-/** Knowledge configuration */
+  /** Knowledge configuration */
   knowledge?: ServerKnowledgeConfig;
   // ========== Required parameters ==========
-/** Original message list */
+  /** Original message list */
   messages: UIChatMessage[];
 
   /** Model ID */
   model: string;
 
-  /** Page Editor context (optional, for document editing) */
-  pageEditorContext?: PageEditorContext;
+  /** Page content context (optional, for document editing) */
+  pageContentContext?: PageContentContext;
 
   /** Provider ID */
   provider: string;
@@ -94,14 +94,19 @@ export interface ServerMessagesEngineParams {
   systemRole?: string;
 
   // ========== Tools ==========
-/** Tools configuration */
+  /** Tools configuration */
   toolsConfig?: ServerToolsConfig;
   // ========== User memory ==========
-/** User memory configuration */
+  /** User memory configuration */
   userMemory?: ServerUserMemoryConfig;
 }
 
 // Re-export types for convenience
 
-
-export {type AgentBuilderContext, type FileContent, type KnowledgeBaseInfo, type PageEditorContext, type UserMemoryData} from '@lobechat/context-engine';
+export {
+  type AgentBuilderContext,
+  type FileContent,
+  type KnowledgeBaseInfo,
+  type UserMemoryData,
+} from '@lobechat/context-engine';
+export type { PageContentContext } from '@lobechat/prompts';

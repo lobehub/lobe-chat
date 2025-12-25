@@ -1256,6 +1256,166 @@ describe('StreamingExecutor actions', () => {
     });
   });
 
+  describe('initialContext preservation', () => {
+    it('should preserve initialContext through multiple steps in agent runtime loop', async () => {
+      act(() => {
+        useChatStore.setState({ internal_execAgentRuntime: realExecAgentRuntime });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = {
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.USER_MESSAGE,
+        sessionId: TEST_IDS.SESSION_ID,
+        topicId: TEST_IDS.TOPIC_ID,
+      } as UIChatMessage;
+
+      // Track initialContext passed to chatService across multiple calls
+      const capturedInitialContexts: any[] = [];
+      let streamCallCount = 0;
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onFinish, initialContext }) => {
+          streamCallCount++;
+          capturedInitialContexts.push(initialContext);
+
+          if (streamCallCount === 1) {
+            // First LLM call returns tool calls
+            await onFinish?.(TEST_CONTENT.AI_RESPONSE, {
+              toolCalls: [
+                { id: 'tool-1', type: 'function', function: { name: 'test', arguments: '{}' } },
+              ],
+            } as any);
+          } else {
+            // Second LLM call (after tool execution) returns final response
+            await onFinish?.('Final response', {} as any);
+          }
+        });
+
+      // Mock internal_createAgentState to include initialContext
+      const mockInitialContext = {
+        pageEditor: {
+          markdown: '# Test Document',
+          xml: '<root><h1>Test</h1></root>',
+          metadata: { title: 'Test Doc', charCount: 15, lineCount: 1 },
+        },
+      };
+
+      const originalCreateAgentState = result.current.internal_createAgentState;
+      vi.spyOn(result.current, 'internal_createAgentState').mockImplementation((params) => {
+        const baseResult = originalCreateAgentState(params);
+        return {
+          ...baseResult,
+          context: {
+            ...baseResult.context,
+            initialContext: mockInitialContext,
+          },
+        };
+      });
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+          messages: [userMessage],
+          parentMessageId: userMessage.id,
+          parentMessageType: 'user',
+        });
+      });
+
+      // Verify that initialContext was passed to all LLM calls
+      // Note: The first call should have initialContext, and subsequent calls should preserve it
+      expect(capturedInitialContexts.length).toBeGreaterThanOrEqual(1);
+
+      // All captured initialContexts should be the same (preserved through steps)
+      capturedInitialContexts.forEach((ctx, index) => {
+        expect(ctx).toEqual(mockInitialContext);
+      });
+
+      streamSpy.mockRestore();
+    });
+
+    it('should preserve initialContext when result.nextContext does not include it', async () => {
+      act(() => {
+        useChatStore.setState({ internal_execAgentRuntime: realExecAgentRuntime });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+      const userMessage = {
+        id: TEST_IDS.USER_MESSAGE_ID,
+        role: 'user',
+        content: TEST_CONTENT.USER_MESSAGE,
+        sessionId: TEST_IDS.SESSION_ID,
+        topicId: TEST_IDS.TOPIC_ID,
+      } as UIChatMessage;
+
+      const capturedInitialContexts: any[] = [];
+      let streamCallCount = 0;
+
+      const streamSpy = vi
+        .spyOn(chatService, 'createAssistantMessageStream')
+        .mockImplementation(async ({ onFinish, initialContext }) => {
+          streamCallCount++;
+          capturedInitialContexts.push(initialContext);
+
+          if (streamCallCount < 3) {
+            // Return tool calls to continue the loop
+            await onFinish?.(TEST_CONTENT.AI_RESPONSE, {
+              toolCalls: [
+                {
+                  id: `tool-${streamCallCount}`,
+                  type: 'function',
+                  function: { name: 'test', arguments: '{}' },
+                },
+              ],
+            } as any);
+          } else {
+            // Final response without tool calls
+            await onFinish?.('Final response', {} as any);
+          }
+        });
+
+      const mockInitialContext = {
+        pageEditor: {
+          markdown: '# Preserved Context',
+          xml: '<doc>preserved</doc>',
+          metadata: { title: 'Preserved', charCount: 20, lineCount: 1 },
+        },
+      };
+
+      const originalCreateAgentState = result.current.internal_createAgentState;
+      vi.spyOn(result.current, 'internal_createAgentState').mockImplementation((params) => {
+        const baseResult = originalCreateAgentState(params);
+        return {
+          ...baseResult,
+          context: {
+            ...baseResult.context,
+            initialContext: mockInitialContext,
+          },
+        };
+      });
+
+      await act(async () => {
+        await result.current.internal_execAgentRuntime({
+          context: { agentId: TEST_IDS.SESSION_ID, topicId: TEST_IDS.TOPIC_ID },
+          messages: [userMessage],
+          parentMessageId: userMessage.id,
+          parentMessageType: 'user',
+        });
+      });
+
+      // Verify initialContext was preserved across all LLM calls
+      // Even though result.nextContext from executors doesn't include initialContext,
+      // the loop should preserve it from the original context
+      capturedInitialContexts.forEach((ctx) => {
+        expect(ctx).toEqual(mockInitialContext);
+      });
+
+      streamSpy.mockRestore();
+    });
+  });
+
   describe('operation status handling', () => {
     it('should complete operation when state is waiting_for_human', async () => {
       const { result } = renderHook(() => useChatStore());

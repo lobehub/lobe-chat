@@ -14,6 +14,7 @@ import { useFileStore } from '@/store/file';
 
 import Body from './Body';
 import Copilot from './Copilot';
+import DiffAllToolbar from './DiffAllToolbar';
 import Header from './Header';
 import PageAgentProvider from './PageAgentProvider';
 import { PageEditorProvider } from './PageEditorProvider';
@@ -48,7 +49,7 @@ const PageEditorCanvas = memo(() => {
         style={{ backgroundColor: theme.colorBgContainer }}
         width={'100%'}
       >
-        <Flexbox flex={1} height={'100%'}>
+        <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>
           <Header />
           <Flexbox
             height={'100%'}
@@ -60,6 +61,7 @@ const PageEditorCanvas = memo(() => {
               <Body />
             </WideScreenContainer>
           </Flexbox>
+          <DiffAllToolbar />
         </Flexbox>
         <Copilot />
       </Flexbox>

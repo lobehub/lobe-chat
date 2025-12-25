@@ -283,12 +283,14 @@ describe('serverMessagesEngine', () => {
       const result = await serverMessagesEngine({
         messages,
         model: 'gpt-4',
-        pageEditorContext: {
-          content: 'Page content',
-          document: {
-            id: 'doc-1',
+        pageContentContext: {
+          markdown: '# Test Document\n\nPage content',
+          metadata: {
+            charCount: 30,
+            lineCount: 3,
             title: 'Test Document',
           },
+          xml: '<doc><h1 id="1">Test Document</h1><p id="2">Page content</p></doc>',
         },
         provider: 'openai',
       });

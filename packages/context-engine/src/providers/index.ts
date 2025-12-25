@@ -27,10 +27,7 @@ export type {
 } from './GroupContextInjector';
 export type { HistorySummaryConfig } from './HistorySummary';
 export type { KnowledgeInjectorConfig } from './KnowledgeInjector';
-export type {
-  PageEditorContext,
-  PageEditorContextInjectorConfig,
-} from './PageEditorContextInjector';
+export type { PageEditorContextInjectorConfig } from './PageEditorContextInjector';
 export type { SystemRoleInjectorConfig } from './SystemRoleInjector';
 export type { ToolSystemRoleConfig } from './ToolSystemRole';
 export type { UserMemoryInjectorConfig } from './UserMemoryInjector';
