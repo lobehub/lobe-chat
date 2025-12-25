@@ -1,12 +1,12 @@
 import { AccordionItem, ActionIcon, Text } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useCreateNewModal } from '@/features/LibraryModal';
 
-import KnowledgeBaseList from './KnowledgeBaseList';
+import LibraryList from './LibraryList';
 
 const Collection = memo<{ itemKey: string }>(({ itemKey }) => {
   const { t } = useTranslation('file');
@@ -42,7 +42,7 @@ const Collection = memo<{ itemKey: string }>(({ itemKey }) => {
         </Text>
       }
     >
-      <KnowledgeBaseList />
+      <LibraryList />
     </AccordionItem>
   );
 });
