@@ -43,8 +43,6 @@ export const ReadLocalFileInspector = memo<
 
   return (
     <div className={cx(styles.root, isLoading && styles.shinyText)}>
-      <span>{t('builtins.lobe-local-system.title')}</span>
-      <Icon icon={ChevronRight} style={{ marginInline: 4 }} />
       <span>{t('builtins.lobe-local-system.apiName.readLocalFile')}</span>
       {displayPath && (
         <>

@@ -2,6 +2,8 @@ import { LocalSystemManifest } from '@lobechat/builtin-tool-local-system';
 import { BuiltinInspector } from '@lobechat/types';
 
 import { LocalSystemInspectors } from './local-system/Inspector';
+import { WebBrowsingInspectors } from './web-browsing/Inspector';
+import { WebBrowsingManifest } from './web-browsing/index';
 
 /**
  * Builtin tools inspector registry
@@ -12,6 +14,7 @@ import { LocalSystemInspectors } from './local-system/Inspector';
  */
 const BuiltinToolInspectors: Record<string, Record<string, BuiltinInspector>> = {
   [LocalSystemManifest.identifier]: LocalSystemInspectors as Record<string, BuiltinInspector>,
+  [WebBrowsingManifest.identifier]: WebBrowsingInspectors as Record<string, BuiltinInspector>,
 };
 
 /**
