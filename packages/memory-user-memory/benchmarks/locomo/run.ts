@@ -1,7 +1,6 @@
 import { MemorySourceType } from '@lobechat/types';
 import { convertLocomoFile } from '../../src/converters/locomo';
 import { exit } from 'node:process';
-import { writeFile } from 'node:fs/promises';
 
 const baseUrl = process.env.MEMORY_USER_MEMORY_LOBEHUB_BASE_URL;
 const benchmarkLoCoMoFile = process.env.MEMORY_USER_MEMORY_BENCHMARKS_LOCOMO_DATASETS;
@@ -37,12 +36,6 @@ async function main() {
     source: MemorySourceType.BenchmarkLocomo,
     speakerRoles: { defaultRole: 'user', speakerA: 'user', speakerB: 'assistant' },
     topicIdPrefix: 'sample',
-  });
-  writeFile(
-    'locomo-ingest-payloads.json',
-    JSON.stringify(payloads, null, 2),
-  ).catch(() => {
-    // ignore
   });
 
   console.log(
