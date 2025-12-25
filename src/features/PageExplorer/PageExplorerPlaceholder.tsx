@@ -4,7 +4,7 @@ import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import GuideModal from '@/components/GuideModal';
