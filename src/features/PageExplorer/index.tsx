@@ -2,7 +2,7 @@
 
 import { memo, useEffect, useRef } from 'react';
 
-import PageEditor from '@/features/PageEditor';
+import { PageEditor } from '@/features/PageEditor';
 import { useFileStore } from '@/store/file';
 
 import PageExplorerPlaceholder from './PageExplorerPlaceholder';

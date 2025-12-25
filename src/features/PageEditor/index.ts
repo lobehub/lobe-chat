@@ -1,2 +1,2 @@
-export { default } from './PageEditor';
+export { PageEditor } from './PageEditor';
 export { PageEditorProvider } from './PageEditorProvider';
