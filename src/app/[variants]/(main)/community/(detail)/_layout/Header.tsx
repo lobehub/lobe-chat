@@ -5,6 +5,7 @@ import { useTheme } from 'antd-style';
 import { ArrowLeft } from 'lucide-react';
 import { memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import urlJoin from 'url-join';
 
 import StoreSearchBar from '@/app/[variants]/(main)/community/features/Search';
 import UserAvatar from '@/app/[variants]/(main)/community/features/UserAvatar';
@@ -15,17 +16,20 @@ const Header = memo(() => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Extract the path segment (assistant, model, provider, mcp)
-  const path = location.pathname.split('/').find(Boolean);
-
   const handleGoBack = () => {
-    navigate(`/${path}`);
+    // Extract the path segment (assistant, model, provider, mcp)
+    const path = location.pathname.split('/').filter(Boolean);
+    if (path[1] && path[1] !== 'user') {
+      navigate(urlJoin('/community', path[1]));
+    } else {
+      navigate('/community');
+    }
   };
 
   return (
     <NavHeader
       left={
-        <Flexbox align={'center'} gap={8} horizontal>
+        <Flexbox align={'center'} flex={1} gap={8} horizontal>
           <ActionIcon icon={ArrowLeft} onClick={handleGoBack} size={'small'} />
           <StoreSearchBar />
         </Flexbox>

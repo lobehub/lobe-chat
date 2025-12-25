@@ -1,8 +1,8 @@
 'use client';
 
 import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
-import { Center, Flexbox, Modal, Text , Tooltip } from '@lobehub/ui';
-import { App, Divider, Form, Input, Upload, UploadProps } from 'antd';
+import { Center, Flexbox, Icon, Input, Modal, Text, TextArea, Tooltip } from '@lobehub/ui';
+import { App, Form, Upload, UploadProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { CircleHelp, Globe, ImagePlus, Trash2 } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -254,9 +254,12 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         onCancel={handleCancel}
         onOk={handleSubmit}
         open={open}
-        title={isFirstTimeSetup ? t('profileSetup.titleFirstTime') : t('profileSetup.titleEdit')}
-        width={480}
+        title={false}
+        width={640}
       >
+        <Text fontSize={20} strong style={{ marginTop: 16 }}>
+          {isFirstTimeSetup ? t('profileSetup.titleFirstTime') : t('profileSetup.titleEdit')}
+        </Text>
         <Text style={{ display: 'block', marginBottom: 24 }} type="secondary">
           {isFirstTimeSetup
             ? t('profileSetup.descriptionFirstTime')
@@ -264,74 +267,77 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         </Text>
 
         <Form form={form} layout="vertical">
-          {/* Avatar Section */}
-          <Form.Item label={t('profileSetup.fields.avatar.label')}>
-            <EmojiPicker
-              allowDelete={!!avatarUrl}
-              allowUpload
-              loading={avatarUploading}
-              locale={locale}
-              onChange={handleAvatarChange}
-              onDelete={handleAvatarDelete}
-              onUpload={handleAvatarUpload}
-              shape="square"
-              size={80}
-              value={avatarUrl || undefined}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={t('profileSetup.fields.displayName.label')}
-            name="displayName"
-            rules={[
-              { message: t('profileSetup.fields.displayName.required'), required: true },
-              {
-                max: 50,
-                message: t('profileSetup.fields.displayName.maxLength'),
-              },
-            ]}
-          >
-            <Input
-              maxLength={50}
-              placeholder={t('profileSetup.fields.displayName.placeholder')}
-              showCount
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={
-              <Flexbox align="center" gap={4} horizontal>
-                {t('profileSetup.fields.userName.label')}
-                <Tooltip title={t('profileSetup.fields.userName.tooltip')}>
-                  <CircleHelp size={14} style={{ cursor: 'help', opacity: 0.5 }} />
-                </Tooltip>
-              </Flexbox>
-            }
-            name="userName"
-            rules={[
-              { message: t('profileSetup.fields.userName.required'), required: true },
-              {
-                message: t('profileSetup.fields.userName.pattern'),
-                pattern: /^[\w-]+$/,
-              },
-              {
-                max: 32,
-                message: t('profileSetup.fields.userName.maxLength'),
-              },
-              {
-                message: t('profileSetup.fields.userName.minLength'),
-                min: 3,
-              },
-            ]}
-          >
-            <Input
-              maxLength={32}
-              placeholder={t('profileSetup.fields.userName.placeholder')}
-              prefix="@"
-              showCount
-            />
-          </Form.Item>
-
+          <Flexbox gap={24} horizontal>
+            <Flexbox flex={1}>
+              <Form.Item
+                label={t('profileSetup.fields.displayName.label')}
+                name="displayName"
+                rules={[
+                  { message: t('profileSetup.fields.displayName.required'), required: true },
+                  {
+                    max: 50,
+                    message: t('profileSetup.fields.displayName.maxLength'),
+                  },
+                ]}
+              >
+                <Input
+                  maxLength={50}
+                  placeholder={t('profileSetup.fields.displayName.placeholder')}
+                  showCount
+                />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <Flexbox align="center" gap={4} horizontal>
+                    {t('profileSetup.fields.userName.label')}
+                    <Tooltip title={t('profileSetup.fields.userName.tooltip')}>
+                      <CircleHelp size={14} style={{ cursor: 'help', opacity: 0.5 }} />
+                    </Tooltip>
+                  </Flexbox>
+                }
+                name="userName"
+                rules={[
+                  { message: t('profileSetup.fields.userName.required'), required: true },
+                  {
+                    message: t('profileSetup.fields.userName.pattern'),
+                    pattern: /^[\w-]+$/,
+                  },
+                  {
+                    max: 32,
+                    message: t('profileSetup.fields.userName.maxLength'),
+                  },
+                  {
+                    message: t('profileSetup.fields.userName.minLength'),
+                    min: 3,
+                  },
+                ]}
+              >
+                <Input
+                  maxLength={32}
+                  placeholder={t('profileSetup.fields.userName.placeholder')}
+                  prefix="@"
+                  showCount
+                />
+              </Form.Item>
+            </Flexbox>
+            {/* Avatar Section */}
+            <Form.Item>
+              <EmojiPicker
+                allowDelete={!!avatarUrl}
+                allowUpload={{
+                  enableEmoji: false,
+                }}
+                loading={avatarUploading}
+                locale={locale}
+                onChange={handleAvatarChange}
+                onDelete={handleAvatarDelete}
+                onUpload={handleAvatarUpload}
+                shape="square"
+                size={80}
+                value={avatarUrl || undefined}
+              />
+            </Form.Item>
+          </Flexbox>
           <Form.Item
             label={t('profileSetup.fields.description.label')}
             name="description"
@@ -342,7 +348,7 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
               },
             ]}
           >
-            <Input.TextArea
+            <TextArea
               maxLength={200}
               placeholder={t('profileSetup.fields.description.placeholder')}
               rows={3}
@@ -353,8 +359,6 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
           {/* Only show banner and social links in edit mode, not first-time setup */}
           {!isFirstTimeSetup && (
             <>
-              <Divider style={{ margin: '16px 0' }} />
-
               {/* Banner Upload Section */}
               <Form.Item
                 label={
@@ -445,8 +449,6 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
                 </Flexbox>
               </Form.Item>
 
-              <Divider style={{ margin: '16px 0' }} />
-
               <Text style={{ display: 'block', marginBottom: 12 }} type="secondary">
                 {t('profileSetup.socialLinks.title')}
               </Text>
@@ -454,14 +456,22 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
               <Form.Item name="github">
                 <Input
                   placeholder={t('profileSetup.fields.github.placeholder')}
-                  prefix={<SiGithub size={14} style={{ opacity: 0.5 }} />}
+                  prefix={
+                    <Icon
+                      fill={theme.colorTextSecondary}
+                      icon={SiGithub}
+                      style={{ marginRight: 8 }}
+                    />
+                  }
                 />
               </Form.Item>
 
               <Form.Item name="twitter">
                 <Input
                   placeholder={t('profileSetup.fields.twitter.placeholder')}
-                  prefix={<SiX size={14} style={{ opacity: 0.5 }} />}
+                  prefix={
+                    <Icon fill={theme.colorTextSecondary} icon={SiX} style={{ marginRight: 8 }} />
+                  }
                 />
               </Form.Item>
 
@@ -476,7 +486,13 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
               >
                 <Input
                   placeholder={t('profileSetup.fields.website.placeholder')}
-                  prefix={<Globe size={14} style={{ opacity: 0.5 }} />}
+                  prefix={
+                    <Icon
+                      color={theme.colorTextSecondary}
+                      icon={Globe}
+                      style={{ marginRight: 8 }}
+                    />
+                  }
                 />
               </Form.Item>
             </>

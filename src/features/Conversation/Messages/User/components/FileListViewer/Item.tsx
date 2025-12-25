@@ -1,5 +1,4 @@
-import { Flexbox, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { Block, Flexbox, Text } from '@lobehub/ui';
 import { memo } from 'react';
 
 import FileIcon from '@/components/FileIcon';
@@ -7,45 +6,31 @@ import { useChatStore } from '@/store/chat';
 import { ChatFileItem } from '@/types/index';
 import { formatSize } from '@/utils/format';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
-  container: css`
-    cursor: pointer;
-
-    overflow: hidden;
-
-    max-width: 420px;
-    padding-block: 8px;
-    padding-inline: 12px 32px;
-    border: 1px solid ${isDarkMode ? token.colorBorder : token.colorSplit};
-    border-radius: 8px;
-
-    &:hover {
-      background: ${token.colorFillTertiary};
-    }
-  `,
-}));
-
 const FileItem = memo<ChatFileItem>(({ id, fileType, size, name }) => {
-  const { styles } = useStyles();
-
   const openFilePreview = useChatStore((s) => s.openFilePreview);
 
   return (
-    <Flexbox
-      className={styles.container}
+    <Block
+      align={'center'}
+      clickable
       gap={12}
       horizontal
       key={id}
       onClick={() => {
         openFilePreview({ fileId: id });
       }}
+      paddingBlock={8}
+      paddingInline={'12px 16px'}
+      variant={'outlined'}
     >
-      <FileIcon fileName={name} fileType={fileType} />
+      <FileIcon fileName={name} fileType={fileType} size={32} />
       <Flexbox style={{ overflow: 'hidden' }}>
         <Text ellipsis>{name}</Text>
-        <Text type={'secondary'}>{formatSize(size)}</Text>
+        <Text fontSize={12} type={'secondary'}>
+          {formatSize(size)}
+        </Text>
       </Flexbox>
-    </Flexbox>
+    </Block>
   );
 });
 export default FileItem;

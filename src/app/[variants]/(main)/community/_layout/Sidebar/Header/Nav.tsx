@@ -47,7 +47,7 @@ const Nav = memo(() => {
       {
         icon: McpIcon,
         key: DiscoverTab.Mcp,
-        title: `MCP ${t('tab.plugin')}`,
+        title: `MCP`,
         url: '/community/mcp',
       },
       {

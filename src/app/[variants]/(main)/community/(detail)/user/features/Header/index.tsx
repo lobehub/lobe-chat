@@ -62,7 +62,7 @@ const UserHeader = memo(() => {
         <TooltipGroup>
           <Flexbox align={'center'} gap={8} horizontal>
             {user.socialLinks?.github && (
-              <Tooltip title="GitHub">
+              <Tooltip title={`@${user.socialLinks?.github}`}>
                 <a
                   href={`https://github.com/${user?.socialLinks?.github}`}
                   rel="noopener noreferrer"
@@ -73,7 +73,7 @@ const UserHeader = memo(() => {
               </Tooltip>
             )}
             {user.socialLinks?.twitter && (
-              <Tooltip title="Twitter">
+              <Tooltip title={`@${user.socialLinks?.twitter}`}>
                 <a
                   href={`https://twitter.com/${user?.socialLinks?.twitter}`}
                   rel="noopener noreferrer"
@@ -84,7 +84,7 @@ const UserHeader = memo(() => {
               </Tooltip>
             )}
             {user.socialLinks?.website && (
-              <Tooltip title={t('user.website')}>
+              <Tooltip title={user.socialLinks?.website}>
                 <a href={user?.socialLinks?.website} rel="noopener noreferrer" target="_blank">
                   <ActionIcon icon={Globe} size={20} variant={'outlined'} />
                 </a>

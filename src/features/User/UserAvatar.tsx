@@ -50,7 +50,7 @@ export interface UserAvatarProps extends AvatarProps {
 
 const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
   ({ size = 40, background, clickable, className, style, ...rest }, ref) => {
-    const { styles, cx } = useStyles();
+    const { styles, cx, theme } = useStyles();
     const [avatar, nickName, username] = useUserStore((s) => [
       userProfileSelectors.userAvatar(s),
       userProfileSelectors.nickName(s),
@@ -82,7 +82,7 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
         ref={ref}
         shape={'square'}
         size={size}
-        style={{ flex: 'none', ...style }}
+        style={{ color: theme.colorText, flex: 'none', ...style }}
         {...rest}
       />
     );

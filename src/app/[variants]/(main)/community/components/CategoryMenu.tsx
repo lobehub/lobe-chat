@@ -13,11 +13,11 @@ const useStyles = createStyles(({ css, prefixCls }) => {
         gap: 4px;
 
         width: 100%;
-        height: 44px;
+        height: 36px;
         margin-inline: 0;
-        padding-inline-start: 24px !important;
+        padding-inline-start: 12px !important;
 
-        font-size: 16px;
+        font-size: 14px;
 
         .${prefixCls}-menu-title-content > a {
           overflow: hidden;
