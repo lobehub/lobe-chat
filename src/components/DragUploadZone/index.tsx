@@ -185,4 +185,5 @@ const DragUploadZone = memo<DragUploadZoneProps>(
 
 DragUploadZone.displayName = 'DragUploadZone';
 
+export { useUploadFiles } from './useUploadFiles';
 export default DragUploadZone;

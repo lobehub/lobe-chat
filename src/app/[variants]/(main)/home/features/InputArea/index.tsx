@@ -1,13 +1,11 @@
 import { Flexbox } from '@lobehub/ui';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
-import DragUploadZone from '@/components/DragUploadZone';
+import DragUploadZone, { useUploadFiles } from '@/components/DragUploadZone';
 import { type ActionKeys, ChatInputProvider, DesktopChatInput } from '@/features/ChatInput';
-import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentByIdSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { useFileStore } from '@/store/file';
 import { useHomeStore } from '@/store/home';
 
 import ModeHeader from './ModeHeader';
@@ -25,22 +23,7 @@ const InputArea = memo(() => {
   const provider = useAgentStore((s) =>
     agentByIdSelectors.getAgentModelProviderById(inboxAgentId)(s),
   );
-  const canUploadImage = useModelSupportVision(model, provider);
-  const uploadFiles = useFileStore((s) => s.uploadChatFiles);
-
-  const handleUploadFiles = useCallback(
-    async (files: File[]) => {
-      const filteredFiles = files.filter((file) => {
-        if (canUploadImage) return true;
-        return !file.type.startsWith('image');
-      });
-
-      if (filteredFiles.length > 0) {
-        uploadFiles(filteredFiles);
-      }
-    },
-    [canUploadImage, uploadFiles],
-  );
+  const { handleUploadFiles } = useUploadFiles({ model, provider });
 
   // A slot to insert content above the chat input
   // Override some default behavior of the chat input

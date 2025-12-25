@@ -1,11 +1,9 @@
 import { Flexbox } from '@lobehub/ui';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
-import DragUploadZone from '@/components/DragUploadZone';
-import { useModelSupportVision } from '@/hooks/useModelSupportVision';
+import DragUploadZone, { useUploadFiles } from '@/components/DragUploadZone';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -18,22 +16,7 @@ const ChatConversation = memo(() => {
   // Get current agent's model info for vision support check
   const model = useAgentStore(agentSelectors.currentAgentModel);
   const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
-  const canUploadImage = useModelSupportVision(model, provider);
-  const uploadFiles = useFileStore((s) => s.uploadChatFiles);
-
-  const handleUploadFiles = useCallback(
-    async (files: File[]) => {
-      const filteredFiles = files.filter((file) => {
-        if (canUploadImage) return true;
-        return !file.type.startsWith('image');
-      });
-
-      if (filteredFiles.length > 0) {
-        uploadFiles(filteredFiles);
-      }
-    },
-    [canUploadImage, uploadFiles],
-  );
+  const { handleUploadFiles } = useUploadFiles({ model, provider });
 
   return (
     <DragUploadZone onUploadFiles={handleUploadFiles} style={{ height: '100%', width: '100%' }}>
