@@ -11,8 +11,8 @@ const getUILocale = (locale: string): string => {
 
 const loadCustomResources = async (locale: string) => {
   try {
-    const module = await import(`@/locales/ui/${locale}.ts`);
-    return module.default;
+    const locates = await import(`@/locales/ui/${locale}.ts`);
+    return locates.default;
   } catch (error) {
     console.warn(`Failed to load UI resources for locale ${locale}:`, error);
     return null;
