@@ -14,7 +14,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import type { VListHandle } from 'virtua';
+import type { VListHandle } from '@/components/VirtualList';
 
 import BubblesLoading from '@/components/BubblesLoading';
 

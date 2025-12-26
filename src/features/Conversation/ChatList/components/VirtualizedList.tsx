@@ -2,7 +2,7 @@
 
 import isEqual from 'fast-deep-equal';
 import { type ReactElement, type ReactNode, memo, useCallback, useEffect, useRef } from 'react';
-import { VList, type VListHandle } from 'virtua';
+import { VList, type VListHandle } from '@/components/VirtualList';
 
 import WideScreenContainer from '../../../WideScreenContainer';
 import { useConversationStore, virtuaListSelectors } from '../../store';

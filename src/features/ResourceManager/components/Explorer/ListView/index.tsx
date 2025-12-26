@@ -5,7 +5,7 @@ import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { VList, type VListHandle } from 'virtua';
+import { VList, type VListHandle } from '@/components/VirtualList';
 
 import { useDragActive } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
 import { useFolderPath } from '@/app/[variants]/(main)/resource/features/hooks/useFolderPath';

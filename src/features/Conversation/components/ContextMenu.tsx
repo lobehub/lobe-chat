@@ -19,7 +19,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import type { VListHandle } from 'virtua';
+import type { VListHandle } from '@/components/VirtualList';
 
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';

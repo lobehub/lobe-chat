@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback, useEffect, useRef } from 'react';
-import { VList, type VListHandle } from 'virtua';
+import { VList, type VListHandle } from '@/components/VirtualList';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import TopicEmpty from '@/features/TopicEmpty';
@@ -153,6 +153,7 @@ const Content = memo<ContentProps>(({ open, searchKeyword }) => {
   return (
     <VList
       bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
+      itemSize={ITEM_HEIGHT}
       onScroll={handleScroll}
       ref={virtuaRef}
       style={{ height: '100%' }}

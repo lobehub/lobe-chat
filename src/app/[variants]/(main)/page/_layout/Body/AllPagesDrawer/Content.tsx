@@ -2,7 +2,7 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { memo, useCallback, useMemo, useRef } from 'react';
-import { VList, type VListHandle } from 'virtua';
+import { VList, type VListHandle } from '@/components/VirtualList';
 
 import SkeletonList from '@/features/NavPanel/components/SkeletonList';
 import PageEmpty from '@/features/PageEmpty';
@@ -14,6 +14,8 @@ import Item from '../List/Item';
 interface ContentProps {
   searchKeyword: string;
 }
+
+const ITEM_HEIGHT = 44;
 
 const Content = memo<ContentProps>(({ searchKeyword }) => {
   const virtuaRef = useRef<VListHandle>(null);
@@ -70,6 +72,7 @@ const Content = memo<ContentProps>(({ searchKeyword }) => {
   return (
     <VList
       bufferSize={typeof window !== 'undefined' ? window.innerHeight : 0}
+      itemSize={ITEM_HEIGHT}
       onScroll={handleScroll}
       ref={virtuaRef}
       style={{ height: '100%' }}

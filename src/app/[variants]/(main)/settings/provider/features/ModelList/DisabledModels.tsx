@@ -2,6 +2,7 @@ import { ActionIcon, Button, Dropdown, Flexbox, Icon, Text, TooltipGroup } from 
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, ChevronDown, LucideCheck } from 'lucide-react';
+import type { ComponentProps } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +12,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import ModelItem from './ModelItem';
+import RecycleList, { type RecycleListSlotProps } from '@/components/RecycleList';
 
 interface DisabledModelsProps {
   activeTab: string;
@@ -24,6 +26,9 @@ enum SortType {
   ReleasedAt = 'releasedAt',
   ReleasedAtDesc = 'releasedAtDesc',
 }
+
+const DISABLED_MODEL_ITEM_HEIGHT = 72;
+const DISABLED_MODEL_LIST_MAX_HEIGHT = 480;
 
 const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
   const { t } = useTranslation('modelProvider');
@@ -103,6 +108,15 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
 
   const displayModels = showMore ? sortedDisabledModels : sortedDisabledModels.slice(0, 10);
 
+  const virtualListHeight = useMemo(
+    () =>
+      Math.min(
+        sortedDisabledModels.length * DISABLED_MODEL_ITEM_HEIGHT,
+        DISABLED_MODEL_LIST_MAX_HEIGHT,
+      ),
+    [sortedDisabledModels.length],
+  );
+
   return (
     filteredDisabledModels.length > 0 && (
       <Flexbox>
@@ -170,9 +184,19 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
           )}
         </Flexbox>
         <TooltipGroup>
-          {displayModels.map((item) => (
-            <ModelItem {...item} key={item.id} />
-          ))}
+          {showMore ? (
+            <RecycleList<DisabledModelItemProps>
+              estimateItemSize={DISABLED_MODEL_ITEM_HEIGHT}
+              height={virtualListHeight}
+              items={sortedDisabledModels as DisabledModelItemProps[]}
+              overscan={1}
+              style={{ overscrollBehavior: 'contain' }}
+            >
+              <DisabledModelSlot />
+            </RecycleList>
+          ) : (
+            displayModels.map((item) => <ModelItem {...item} key={item.id} />)
+          )}
         </TooltipGroup>
         {!showMore && sortedDisabledModels.length > 10 && (
           <Button
@@ -192,3 +216,9 @@ const DisabledModels = memo<DisabledModelsProps>(({ activeTab }) => {
 });
 
 export default DisabledModels;
+
+type DisabledModelItemProps = ComponentProps<typeof ModelItem>;
+const DisabledModelSlot = ({ item }: Partial<RecycleListSlotProps<DisabledModelItemProps>>) => {
+  if (!item) return null;
+  return <ModelItem {...item} />;
+};

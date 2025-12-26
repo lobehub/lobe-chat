@@ -93,6 +93,16 @@ const ModelItem = memo<ModelItemProps>(
     const [checked, setChecked] = useState(enabled);
     const [showConfig, setShowConfig] = useState(false);
 
+    // NOTE: This component can be "recycled" (reused by virtual list slots),
+    // so we must sync internal state when the bound model changes.
+    React.useEffect(() => {
+      setChecked(enabled);
+    }, [enabled, id]);
+
+    React.useEffect(() => {
+      setShowConfig(false);
+    }, [id]);
+
     const formatPricing = (): string[] => {
       if (!pricing) return [];
 
