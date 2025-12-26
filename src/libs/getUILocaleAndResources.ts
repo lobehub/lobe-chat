@@ -1,18 +1,15 @@
-const loadBuiltinResources = async () => {
-  const { en, zhCn } = await import('@lobehub/ui/i18n');
-  return { en, zhCn };
-};
+import { normalizeLocale } from '@/locales/resources';
 
 const getUILocale = (locale: string): string => {
   if (locale.startsWith('zh')) return 'zh-CN';
   if (locale.startsWith('en')) return 'en-US';
-  return 'en-US';
+  return locale;
 };
 
-const loadCustomResources = async (locale: string) => {
+const loadResourcesFromJSON = async (locale: string) => {
   try {
-    const locates = await import(`@/locales/ui/${locale}.ts`);
-    return locates.default;
+    const resourcesModule = await import(`../../locales/${locale}/ui.json`);
+    return resourcesModule.default;
   } catch (error) {
     console.warn(`Failed to load UI resources for locale ${locale}:`, error);
     return null;
@@ -23,23 +20,23 @@ export const getUILocaleAndResources = async (
   locale: string | 'auto',
 ): Promise<{ locale: string; resources: any }> => {
   const effectiveLocale = locale === 'auto' ? 'en-US' : locale;
-  const uiLocale = getUILocale(effectiveLocale);
+  const normalizedLocale = normalizeLocale(effectiveLocale);
+  const uiLocale = getUILocale(normalizedLocale);
 
-  const { en, zhCn } = await loadBuiltinResources();
+  // Load resources from JSON files
+  const resources = await loadResourcesFromJSON(normalizedLocale);
 
-  let resources;
-
-  if (effectiveLocale.startsWith('zh-CN')) {
-    resources = zhCn;
-  } else if (effectiveLocale.startsWith('en')) {
-    resources = en;
-  } else {
-    const customResources = await loadCustomResources(effectiveLocale);
-    resources = customResources || en;
+  // Fallback to en-US if resources not found
+  if (!resources && normalizedLocale !== 'en-US') {
+    const fallbackResources = await loadResourcesFromJSON('en-US');
+    return {
+      locale: uiLocale,
+      resources: fallbackResources || {},
+    };
   }
 
   return {
     locale: uiLocale,
-    resources,
+    resources: resources || {},
   };
 };
