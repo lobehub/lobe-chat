@@ -48,8 +48,8 @@ const ProfileEditor = memo(() => {
           <ModelSelect
             onChange={updateConfig}
             value={{
-              model: config.model,
-              provider: config.provider,
+              model: config?.model, 
+              provider: config?.provider,
             }}
           />
         </Flexbox>
