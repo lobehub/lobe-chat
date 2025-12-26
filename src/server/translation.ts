@@ -14,7 +14,7 @@ export const translation = async (ns: NS = 'common', hl: string) => {
   try {
     if (ns === 'models' || ns === 'providers') {
       i18ns = await import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
-    } else if (lng === DEFAULT_LANG) {
+    } else if (lng === DEFAULT_LANG || lng.startsWith('en')) {
       i18ns = await import(`@/locales/default/${ns}`);
     } else {
       i18ns = await import(`@/../locales/${normalizeLocale(lng)}/${ns}.json`);
