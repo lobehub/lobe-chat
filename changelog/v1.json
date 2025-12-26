@@ -1,6 +1,11 @@
 [
   {
     "children": {},
+    "date": "2025-12-26",
+    "version": "2.0.0-next.180"
+  },
+  {
+    "children": {},
     "date": "2025-12-25",
     "version": "2.0.0-next.179"
   },
