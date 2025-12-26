@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ErrorType } from '../../fetch';
 
 /**
- * 聊天消息错误对象
+ * Chat message error object
  */
 export interface ChatMessageError {
   body?: any;

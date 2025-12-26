@@ -47,7 +47,7 @@ export interface LobeGroupSession {
 
 export interface LobeAgentSettings {
   /**
-   * 语言模型角色设定
+   * Language model role configuration
    */
   config: LobeAgentConfig;
   meta: MetaData;
