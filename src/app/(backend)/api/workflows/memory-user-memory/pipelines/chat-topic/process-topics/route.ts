@@ -28,7 +28,7 @@ const intersectLayers = (requested: LayersEnum[], allowed: LayersEnum[]) => {
   return allowed.filter((layer) => requestedSet.has(layer));
 };
 
-const createLayerWorkflow = (allowedLayers: LayersEnum[]) =>
+export const createLayerWorkflow = (allowedLayers: LayersEnum[]) =>
   createWorkflow<MemoryExtractionPayloadInput, { processed: number; results: ExtractionResult[] }>(
     async (context) => {
       const params = normalizeMemoryExtractionPayload(context.requestPayload || {});
@@ -82,10 +82,10 @@ const createLayerWorkflow = (allowedLayers: LayersEnum[]) =>
     },
   );
 
-const cepWorkflow = createLayerWorkflow(CEP_LAYERS);
-const identityWorkflow = createLayerWorkflow(IDENTITY_LAYERS);
+export const cepWorkflow = createLayerWorkflow(CEP_LAYERS);
+export const identityWorkflow = createLayerWorkflow(IDENTITY_LAYERS);
 
-const orchestratorWorkflow = createWorkflow<
+export const orchestratorWorkflow = createWorkflow<
   MemoryExtractionPayloadInput,
   {
     nextIdentityCursor: number | null;

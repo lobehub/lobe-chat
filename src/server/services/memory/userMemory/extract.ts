@@ -1820,17 +1820,4 @@ export class MemoryExtractionWorkflowService {
     const url = getWorkflowUrl(WORKFLOW_PATHS.userTopics, payload.baseUrl);
     return this.getClient().trigger({ body: payload, url });
   }
-
-  static triggerProcessTopicBatch(payload: TopicBatchWorkflowPayload) {
-    if (!payload.baseUrl) {
-      throw new Error('Missing baseUrl for workflow trigger');
-    }
-
-    const url = getWorkflowUrl(WORKFLOW_PATHS.topicBatch, payload.baseUrl);
-    return this.getClient().trigger({
-      body: payload,
-      headers: { 'Upstash-Workflow-Name': TOPIC_WORKFLOW_NAMES.orchestrator },
-      url,
-    });
-  }
 }
