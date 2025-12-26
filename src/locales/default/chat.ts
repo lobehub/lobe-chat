@@ -239,7 +239,7 @@ export default {
   'search.mode.off.title': 'Off',
   'search.mode.on.desc': 'Always search the web for the latest information.',
   'search.mode.on.title': 'Always on',
-  'search.mode.useModelBuiltin': "Use the model's built-in search engine",
+  'search.mode.useModelBuiltin': 'Use model built-in web search',
   'search.searchModel.desc':
     'The current model does not support function calls, so it needs to be paired with a model that does support function calls for online searching.',
   'search.searchModel.title': 'Search helper model',

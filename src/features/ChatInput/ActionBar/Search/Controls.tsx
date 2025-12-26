@@ -148,6 +148,7 @@ const Controls = memo(() => {
       ];
 
   const showModelBuiltinSearch =
+    searchMode !== 'off' &&
     !isModelBuiltinSearchInternal &&
     (isModelHasBuiltinSearchConfig || isProviderHasBuiltinSearchConfig);
 

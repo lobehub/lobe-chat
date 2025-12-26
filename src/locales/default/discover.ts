@@ -146,8 +146,8 @@ export default {
   'filterBy.timePeriod.week': 'Last 7 Days',
   'filterBy.timePeriod.year': 'Last Year',
   'footer.desc':
-    'Easily submit your Agents and resources to the LobeHub Community, and use, give feedback, and evolve with AI users worldwide.',
-  'footer.title': 'Publish your creation on LobeHub Community right now',
+    'Evolve with AI users worldwide. Become a creator to submit your agents and skills to the LobeHub Community.',
+  'footer.title': 'Share your creation on LobeHub Community today',
   'home.communityAgents': 'Community Agents',
   'home.featuredAssistants': 'Featured Agents',
   'home.featuredModels': 'Featured Models',
