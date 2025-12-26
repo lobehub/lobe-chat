@@ -33,21 +33,21 @@ describe('getUILocaleAndResources', () => {
     expect(result.resources).toBeDefined();
   });
 
-  it('should return en-US locale and custom resources for ar', async () => {
+  it('should return ar locale and custom resources for ar', async () => {
     const result = await getUILocaleAndResources('ar');
-    expect(result.locale).toBe('en-US');
+    expect(result.locale).toBe('ar');
     expect(result.resources).toBeDefined();
   });
 
-  it('should return en-US locale and custom resources for de-DE', async () => {
+  it('should return de-DE locale and custom resources for de-DE', async () => {
     const result = await getUILocaleAndResources('de-DE');
-    expect(result.locale).toBe('en-US');
+    expect(result.locale).toBe('de-DE');
     expect(result.resources).toBeDefined();
   });
 
-  it('should return en-US locale and custom resources for es-ES', async () => {
+  it('should return es-ES locale and custom resources for es-ES', async () => {
     const result = await getUILocaleAndResources('es-ES');
-    expect(result.locale).toBe('en-US');
+    expect(result.locale).toBe('es-ES');
     expect(result.resources).toBeDefined();
   });
 });

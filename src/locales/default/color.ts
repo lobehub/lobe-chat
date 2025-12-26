@@ -1,6 +1,5 @@
 export default {
   "blue": "Dawn Blue",
-  "custom": "Custom",
   "cyan": "Bright Cyan",
   "default": "Default",
   "geekblue": "Geek Blue",
@@ -11,7 +10,6 @@ export default {
   "mauve": "Wisteria Purple",
   "olive": "Olive Green",
   "orange": "Sunset",
-  "presets": "Presets",
   "purple": "Eggplant Purple",
   "red": "Twilight",
   "sage": "Sage Green",
