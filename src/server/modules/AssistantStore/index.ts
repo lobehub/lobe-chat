@@ -1,9 +1,9 @@
+import { EdgeConfig } from '@lobechat/edge-config';
 import urlJoin from 'url-join';
 
 import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { appEnv } from '@/envs/app';
 import { type Locales, normalizeLocale } from '@/locales/resources';
-import { EdgeConfig } from '@/server/modules/EdgeConfig';
 import { CacheRevalidate, CacheTag } from '@/types/discover';
 
 export class AssistantStore {

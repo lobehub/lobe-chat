@@ -1,7 +1,6 @@
 // @vitest-environment node
+import { EdgeConfig } from '@lobechat/edge-config';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { EdgeConfig } from '@/server/modules/EdgeConfig';
 
 import { AssistantStore } from './index';
 
