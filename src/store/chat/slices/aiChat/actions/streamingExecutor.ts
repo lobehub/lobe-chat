@@ -164,10 +164,17 @@ export const streamingExecutor: StateCreator<
     // - agentId is used for session ID (message storage location)
     const effectiveAgentId = paramSubAgentId || agentId;
 
+    // Get scope from operation context if available
+    const operation = operationId ? get().operations[operationId] : undefined;
+    const scope = operation?.context.scope;
+
+    console.log('[internal_createAgentState] Operation scope:', { operationId, scope });
+
     // Resolve agent config with builtin agent runtime config merged
     // This ensures runtime plugins (e.g., 'lobe-agent-builder' for Agent Builder) are included
     const { agentConfig: agentConfigData, plugins: pluginIds } = resolveAgentConfig({
       agentId: effectiveAgentId || '',
+      scope, // Pass scope from operation context
     });
 
     // Get tools manifest map
@@ -338,7 +345,10 @@ export const streamingExecutor: StateCreator<
     // Otherwise, resolve from mecha layer which handles:
     // - Builtin agent runtime config merging
     // - max_tokens/reasoning_effort based on chatConfig settings
-    const resolved = resolveAgentConfig({ agentId: effectiveAgentId });
+    const resolved = resolveAgentConfig({
+      agentId: effectiveAgentId,
+      scope, // scope is already available from line 329
+    });
     const finalAgentConfig = agentConfig || resolved.agentConfig;
     const chatConfig = resolved.chatConfig;
 
@@ -393,6 +403,7 @@ export const streamingExecutor: StateCreator<
         messages,
         model,
         provider,
+        scope, // Pass scope to chat service for page-agent injection
         ...finalAgentConfig.params,
         plugins: finalAgentConfig.plugins,
       },
@@ -929,12 +940,15 @@ export const streamingExecutor: StateCreator<
     // Create a new array to avoid modifying the original messages
     let messages = [...originalMessages];
 
+    console.log('[internal_execAgentRuntime] Context scope:', { scope: context.scope, agentId: effectiveAgentId });
+
     // Use effectiveAgentId to get agent config (subAgentId in group orchestration, agentId otherwise)
     // resolveAgentConfig handles:
     // - Builtin agent runtime config merging
     // - max_tokens/reasoning_effort based on chatConfig settings
     const { agentConfig: agentConfigData, chatConfig } = resolveAgentConfig({
       agentId: effectiveAgentId || '',
+      scope: context.scope, // Pass scope from context parameter (available at line 883)
     });
 
     // Use agent config from agentId

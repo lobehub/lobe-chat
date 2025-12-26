@@ -1,4 +1,5 @@
 import * as builtinAgents from '@lobechat/builtin-agents';
+import { PageAgentIdentifier } from '@lobechat/builtin-tool-page-agent';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as agentStore from '@/store/agent';
@@ -402,6 +403,184 @@ describe('resolveAgentConfig', () => {
       const result = resolveAgentConfig({ agentId: 'builtin-agent' });
 
       expect(result.chatConfig).toEqual(mockChatConfig);
+    });
+  });
+
+  describe('Page Editor Integration (scope: page)', () => {
+    beforeEach(() => {
+      // No slug means regular agent
+      vi.spyOn(agentSelectors.agentSelectors, 'getAgentSlugById').mockReturnValue(() => undefined);
+
+      // Mock page-agent runtime config
+      vi.spyOn(builtinAgents, 'getAgentRuntimeConfig').mockReturnValue({
+        plugins: [PageAgentIdentifier],
+        systemRole: 'Page agent system prompt with XML instructions...',
+      });
+    });
+
+    it('should inject page-agent tools for custom agent in page scope', () => {
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      expect(result.plugins).toContain(PageAgentIdentifier);
+      expect(result.plugins).toEqual([PageAgentIdentifier, 'plugin-a', 'plugin-b']);
+      expect(result.chatConfig.enableHistoryCount).toBe(false);
+      expect(result.isBuiltinAgent).toBe(false);
+    });
+
+    it('should preserve existing plugins when injecting page-agent', () => {
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        plugins: ['web-search', 'memory'],
+        scope: 'page',
+      });
+
+      expect(result.plugins).toEqual([PageAgentIdentifier, 'web-search', 'memory']);
+    });
+
+    it('should merge custom system role with page-agent system role', () => {
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      expect(result.agentConfig.systemRole).toContain('You are a helpful assistant');
+      expect(result.agentConfig.systemRole).toContain('Page agent system prompt');
+      expect(result.agentConfig.systemRole).toMatch(
+        /You are a helpful assistant\n\nPage agent system prompt/,
+      );
+    });
+
+    it('should use page-agent system role when custom role is empty', () => {
+      vi.spyOn(agentSelectors.agentSelectors, 'getAgentConfigById').mockReturnValue(
+        () =>
+          ({
+            ...mockAgentConfig,
+            systemRole: '',
+          }) as any,
+      );
+
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      expect(result.agentConfig.systemRole).toBe('Page agent system prompt with XML instructions...');
+    });
+
+    it('should not inject page-agent for non-page scope', () => {
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'main',
+      });
+
+      expect(result.plugins).not.toContain(PageAgentIdentifier);
+      expect(result.plugins).toEqual(['plugin-a', 'plugin-b']);
+      expect(result.chatConfig.enableHistoryCount).toBeUndefined();
+    });
+
+    it('should not inject page-agent when scope is undefined', () => {
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+      });
+
+      expect(result.plugins).not.toContain(PageAgentIdentifier);
+      expect(result.plugins).toEqual(['plugin-a', 'plugin-b']);
+    });
+
+    it('should not duplicate PageAgentIdentifier if already present', () => {
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        plugins: [PageAgentIdentifier, 'other-plugin'],
+        scope: 'page',
+      });
+
+      expect(result.plugins.filter((p) => p === PageAgentIdentifier)).toHaveLength(1);
+      expect(result.plugins).toEqual([PageAgentIdentifier, 'other-plugin']);
+    });
+
+    it('should apply chatConfig overrides for page editor', () => {
+      vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
+        () =>
+          ({
+            enableHistoryCount: true,
+            enableStreaming: true,
+            historyCount: 20,
+          }) as any,
+      );
+
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      expect(result.chatConfig.enableHistoryCount).toBe(false);
+      expect(result.chatConfig.enableStreaming).toBe(true);
+      expect(result.chatConfig.historyCount).toBe(20);
+    });
+
+    it('should preserve params adjustments in page scope', () => {
+      vi.spyOn(agentSelectors.agentSelectors, 'getAgentConfigById').mockReturnValue(
+        () =>
+          ({
+            model: 'gpt-4',
+            params: {
+              max_tokens: 4096,
+              reasoning_effort: 'high',
+              temperature: 0.7,
+            },
+            plugins: ['plugin-a'],
+            systemRole: 'You are a helpful assistant',
+          }) as any,
+      );
+      vi.spyOn(agentSelectors.chatConfigByIdSelectors, 'getChatConfigById').mockReturnValue(
+        () =>
+          ({
+            enableMaxTokens: false,
+            enableReasoningEffort: true,
+          }) as any,
+      );
+
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      expect(result.agentConfig.params.max_tokens).toBeUndefined();
+      expect(result.agentConfig.params.reasoning_effort).toBe('high');
+      expect(result.agentConfig.params.temperature).toBe(0.7);
+    });
+
+    it('should handle gracefully when page-agent runtime is unavailable', () => {
+      vi.spyOn(builtinAgents, 'getAgentRuntimeConfig').mockReturnValue(undefined);
+
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      // Should still inject PageAgentIdentifier but with empty systemRole
+      expect(result.plugins).toContain(PageAgentIdentifier);
+      expect(result.agentConfig.systemRole).toBe('You are a helpful assistant');
+      expect(result.chatConfig.enableHistoryCount).toBe(false);
+    });
+
+    it('should handle gracefully when page-agent runtime has no systemRole', () => {
+      vi.spyOn(builtinAgents, 'getAgentRuntimeConfig').mockReturnValue({
+        plugins: [PageAgentIdentifier],
+        systemRole: undefined as any,
+      });
+
+      const result = resolveAgentConfig({
+        agentId: 'custom-agent',
+        scope: 'page',
+      });
+
+      expect(result.plugins).toContain(PageAgentIdentifier);
+      expect(result.agentConfig.systemRole).toBe('You are a helpful assistant');
+      expect(result.chatConfig.enableHistoryCount).toBe(false);
     });
   });
 });

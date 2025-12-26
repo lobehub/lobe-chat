@@ -11,6 +11,7 @@ import {
 import { AgentRuntimeError, type ChatCompletionErrorPayload } from '@lobechat/model-runtime';
 import {
   ChatErrorType,
+  type MessageMapScope,
   type RuntimeInitialContext,
   type RuntimeStepContext,
   type TracePayload,
@@ -62,6 +63,7 @@ interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'mess
   agentId?: string;
   groupId?: string;
   messages: UIChatMessage[];
+  scope?: MessageMapScope;
 }
 
 type ChatStreamInputParams = Partial<Omit<ChatStreamPayload, 'messages'>> & {
@@ -96,7 +98,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
 
 class ChatService {
   createAssistantMessage = async (
-    { plugins: enabledPlugins, messages, agentId, groupId, ...params }: GetChatCompletionPayload,
+    { plugins: enabledPlugins, messages, agentId, groupId, scope, ...params }: GetChatCompletionPayload,
     options?: FetchOptions,
   ) => {
     const payload = merge(
@@ -112,6 +114,8 @@ class ChatService {
 
     const targetAgentId = getTargetAgentId(agentId);
 
+    console.log('[chatService.createAssistantMessage] Resolving with scope:', scope);
+
     // Resolve agent config with builtin agent runtime config merged
     // plugins is already merged (runtime plugins > agent config plugins)
     const {
@@ -123,6 +127,7 @@ class ChatService {
       model: payload.model,
       plugins: enabledPlugins,
       provider: payload.provider,
+      scope, // Pass scope to preserve page-agent injection
     });
 
     // Get search config with agentId for agent-specific settings
