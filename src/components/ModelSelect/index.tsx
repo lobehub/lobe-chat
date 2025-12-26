@@ -49,6 +49,16 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+type TooltipStyles = ReturnType<typeof useStyles>['styles'];
+
+const DEFAULT_TOOLTIP_STYLES = {
+  root: { pointerEvents: 'none' },
+} as const satisfies ComponentProps<typeof Tooltip>['styles'];
+
+const FUNCTION_CALL_TOOLTIP_STYLES = {
+  root: { maxWidth: 'unset', pointerEvents: 'none' },
+} as const satisfies ComponentProps<typeof Tooltip>['styles'];
+
 interface ModelInfoTagsProps extends ModelAbilities {
   contextWindowTokens?: number | null;
   directionReverse?: boolean;
@@ -63,40 +73,172 @@ interface ModelInfoTagsProps extends ModelAbilities {
   withTooltip?: boolean;
 }
 
+interface FeatureTagsProps extends Pick<
+  ModelAbilities,
+  'files' | 'imageOutput' | 'vision' | 'video' | 'functionCall' | 'reasoning' | 'search'
+> {
+  placement: 'top' | 'right';
+  tagClassName: string;
+  withTooltip: boolean;
+}
+
+interface FeatureTagItemProps {
+  className: string;
+  color: Parameters<typeof Tag>[0]['color'];
+  enabled: boolean | undefined;
+  icon: Parameters<typeof Icon>[0]['icon'];
+  placement: 'top' | 'right';
+  title: string;
+  tooltipStyles?: ComponentProps<typeof Tooltip>['styles'];
+  withTooltip: boolean;
+}
+
+const FeatureTagItem = memo<FeatureTagItemProps>(
+  ({ className, color, enabled, icon, placement, title, tooltipStyles, withTooltip }) => {
+    if (!enabled) return null;
+
+    const tag = (
+      <Tag className={className} color={color} size={'small'}>
+        <Icon icon={icon} />
+      </Tag>
+    );
+
+    if (!withTooltip) return tag;
+
+    return (
+      <Tooltip placement={placement} styles={tooltipStyles ?? DEFAULT_TOOLTIP_STYLES} title={title}>
+        {tag}
+      </Tooltip>
+    );
+  },
+);
+
+const FeatureTags = memo<FeatureTagsProps>(
+  ({
+    files,
+    functionCall,
+    imageOutput,
+    placement,
+    reasoning,
+    search,
+    tagClassName,
+    video,
+    vision,
+    withTooltip,
+  }) => {
+    const { t } = useTranslation('components');
+
+    return (
+      <>
+        <FeatureTagItem
+          className={tagClassName}
+          color={'success'}
+          enabled={files}
+          icon={LucidePaperclip}
+          placement={placement}
+          title={t('ModelSelect.featureTag.file')}
+          withTooltip={withTooltip}
+        />
+        <FeatureTagItem
+          className={tagClassName}
+          color={'success'}
+          enabled={imageOutput}
+          icon={LucideImage}
+          placement={placement}
+          title={t('ModelSelect.featureTag.imageOutput')}
+          withTooltip={withTooltip}
+        />
+        <FeatureTagItem
+          className={tagClassName}
+          color={'success'}
+          enabled={vision}
+          icon={LucideEye}
+          placement={placement}
+          title={t('ModelSelect.featureTag.vision')}
+          withTooltip={withTooltip}
+        />
+        <FeatureTagItem
+          className={tagClassName}
+          color={'magenta'}
+          enabled={video}
+          icon={Video}
+          placement={placement}
+          title={t('ModelSelect.featureTag.video')}
+          withTooltip={withTooltip}
+        />
+        <FeatureTagItem
+          className={tagClassName}
+          color={'info'}
+          enabled={functionCall}
+          icon={ToyBrick}
+          placement={placement}
+          title={t('ModelSelect.featureTag.functionCall')}
+          tooltipStyles={FUNCTION_CALL_TOOLTIP_STYLES}
+          withTooltip={withTooltip}
+        />
+        <FeatureTagItem
+          className={tagClassName}
+          color={'purple'}
+          enabled={reasoning}
+          icon={AtomIcon}
+          placement={placement}
+          title={t('ModelSelect.featureTag.reasoning')}
+          withTooltip={withTooltip}
+        />
+        <FeatureTagItem
+          className={tagClassName}
+          color={'cyan'}
+          enabled={search}
+          icon={LucideGlobe}
+          placement={placement}
+          title={t('ModelSelect.featureTag.search')}
+          withTooltip={withTooltip}
+        />
+      </>
+    );
+  },
+);
+
+const Context = memo(
+  ({
+    contextWindowTokens,
+    withTooltip,
+    placement,
+    styles,
+  }: {
+    contextWindowTokens: number;
+    placement: 'top' | 'right';
+    styles: TooltipStyles;
+    withTooltip: boolean;
+  }) => {
+    const { t } = useTranslation('components');
+    const tokensText = contextWindowTokens === 0 ? '∞' : formatTokenNumber(contextWindowTokens);
+
+    const tag = (
+      <Tag className={styles.token} size={'small'}>
+        {contextWindowTokens === 0 ? <Infinity size={17} strokeWidth={1.6} /> : tokensText}
+      </Tag>
+    );
+
+    if (!withTooltip) return tag;
+
+    return (
+      <Tooltip
+        placement={placement}
+        // styles={styles}
+        title={t('ModelSelect.featureTag.tokens', {
+          tokens: contextWindowTokens === 0 ? '∞' : numeral(contextWindowTokens).format('0,0'),
+        })}
+      >
+        {tag}
+      </Tooltip>
+    );
+  },
+);
+
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
   ({ directionReverse, placement = 'top', withTooltip = true, ...model }) => {
-    const { t } = useTranslation('components');
     const { styles } = useStyles();
-
-    const renderTag = (
-      enabled: boolean | undefined,
-      getTitle: () => string,
-      color: Parameters<typeof Tag>[0]['color'],
-      icon: Parameters<typeof Icon>[0]['icon'],
-      className = styles.tag,
-      tooltipStyles?: ComponentProps<typeof Tooltip>['styles'],
-    ) => {
-      if (!enabled) return null;
-
-      const tag = (
-        <Tag className={className} color={color} size={'small'}>
-          <Icon icon={icon} />
-        </Tag>
-      );
-
-      if (!withTooltip) return tag;
-
-      const title = getTitle();
-      return (
-        <Tooltip
-          placement={placement}
-          styles={tooltipStyles ?? { root: { pointerEvents: 'none' } }}
-          title={title}
-        >
-          {tag}
-        </Tooltip>
-      );
-    };
 
     return (
       <Flexbox
@@ -106,66 +248,26 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         style={{ marginLeft: 'auto' }}
         width={'fit-content'}
       >
-        {renderTag(model.files, () => t('ModelSelect.featureTag.file'), 'success', LucidePaperclip)}
-        {renderTag(
-          model.imageOutput,
-          () => t('ModelSelect.featureTag.imageOutput'),
-          'success',
-          LucideImage,
+        <FeatureTags
+          files={model.files}
+          functionCall={model.functionCall}
+          imageOutput={model.imageOutput}
+          placement={placement}
+          reasoning={model.reasoning}
+          search={model.search}
+          tagClassName={styles.tag}
+          video={model.video}
+          vision={model.vision}
+          withTooltip={withTooltip}
+        />
+        {typeof model.contextWindowTokens === 'number' && (
+          <Context
+            contextWindowTokens={model.contextWindowTokens}
+            placement={placement}
+            styles={styles}
+            withTooltip={withTooltip}
+          />
         )}
-        {renderTag(model.vision, () => t('ModelSelect.featureTag.vision'), 'success', LucideEye)}
-        {renderTag(model.video, () => t('ModelSelect.featureTag.video'), 'magenta', Video)}
-        {renderTag(
-          model.functionCall,
-          () => t('ModelSelect.featureTag.functionCall'),
-          'info',
-          ToyBrick,
-          styles.tag,
-          {
-            root: { maxWidth: 'unset', pointerEvents: 'none' },
-          },
-        )}
-        {renderTag(
-          model.reasoning,
-          () => t('ModelSelect.featureTag.reasoning'),
-          'purple',
-          AtomIcon,
-        )}
-        {renderTag(model.search, () => t('ModelSelect.featureTag.search'), 'cyan', LucideGlobe)}
-        {typeof model.contextWindowTokens === 'number' &&
-          (() => {
-            const tokensText =
-              model.contextWindowTokens === 0 ? '∞' : formatTokenNumber(model.contextWindowTokens);
-
-            const tag = (
-              <Tag className={styles.token} size={'small'}>
-                {model.contextWindowTokens === 0 ? (
-                  <Infinity size={17} strokeWidth={1.6} />
-                ) : (
-                  tokensText
-                )}
-              </Tag>
-            );
-
-            if (!withTooltip) return tag;
-
-            return (
-              <Tooltip
-                placement={placement}
-                styles={{
-                  root: { maxWidth: 'unset', pointerEvents: 'none' },
-                }}
-                title={t('ModelSelect.featureTag.tokens', {
-                  tokens:
-                    model.contextWindowTokens === 0
-                      ? '∞'
-                      : numeral(model.contextWindowTokens).format('0,0'),
-                })}
-              >
-                {tag}
-              </Tooltip>
-            );
-          })()}
       </Flexbox>
     );
   },
