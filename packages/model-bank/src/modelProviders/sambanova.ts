@@ -3,7 +3,8 @@ import { type ModelProviderCard } from '@/types/llm';
 const SambaNova: ModelProviderCard = {
   chatModels: [],
   checkModel: 'Meta-Llama-3.2-1B-Instruct',
-  description: 'SambaNova Cloud 可让开发者轻松使用最佳的开源模型，并享受最快的推理速度。',
+  description:
+    'SambaNova Cloud lets developers use top open-source models with extremely fast inference.',
   disableBrowserRequest: true,
   id: 'sambanova',
   modelsUrl: 'https://cloud.sambanova.ai/plans/pricing',

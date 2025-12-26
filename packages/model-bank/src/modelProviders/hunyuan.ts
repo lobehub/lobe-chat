@@ -5,7 +5,7 @@ const Hunyuan: ModelProviderCard = {
   chatModels: [],
   checkModel: 'hunyuan-lite',
   description:
-    '由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力',
+    'A Tencent-developed LLM with strong Chinese writing, solid reasoning in complex contexts, and reliable task execution.',
   disableBrowserRequest: true,
   id: 'hunyuan',
   modelList: { showModelFetcher: true },

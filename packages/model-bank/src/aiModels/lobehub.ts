@@ -12,7 +12,7 @@ const lobehubChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 400_000,
-    description: ' GPT-5.2 — OpenAI 旗舰模型，专为编码和 agent 任务优化，适用于各行业场景。',
+    description: "GPT-5.2 — OpenAI's flagship model optimized for coding and agent tasks across industries.",
     displayName: 'GPT-5.2',
     enabled: true,
     id: 'gpt-5.2',
@@ -40,7 +40,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 400_000,
     description:
-      'GPT-5.1 — 针对编码和 agent 任务优化的旗舰模型，支持可配置的推理强度与更长上下文。',
+      'GPT-5.1 — a flagship model optimized for coding and agent tasks with configurable reasoning effort and longer context.',
     displayName: 'GPT-5.1',
     enabled: true,
     id: 'gpt-5.1',
@@ -68,7 +68,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 400_000,
     description:
-      '跨领域编码和代理任务的最佳模型。GPT-5 在准确性、速度、推理、上下文识别、结构化思维和问题解决方面实现了飞跃。',
+      'The best model for cross-domain coding and agent tasks. GPT-5 leaps in accuracy, speed, reasoning, context awareness, structured thinking, and problem solving.',
     displayName: 'GPT-5',
     enabled: true,
     id: 'gpt-5',
@@ -96,7 +96,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 400_000,
     description:
-      '更快、更经济高效的 GPT-5 版本，适用于明确定义的任务。在保持高质量输出的同时，提供更快的响应速度。',
+      'A faster, more cost-efficient GPT-5 variant for well-defined tasks, delivering quicker responses while maintaining quality.',
     displayName: 'GPT-5 mini',
     enabled: true,
     id: 'gpt-5-mini',
@@ -122,7 +122,8 @@ const lobehubChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 400_000,
-    description: '最快、最经济高效的 GPT-5 版本。非常适合需要快速响应且成本敏感的应用场景。',
+    description:
+      'The fastest and most cost-effective GPT-5 variant, ideal for latency- and cost-sensitive applications.',
     displayName: 'GPT-5 nano',
     id: 'gpt-5-nano',
     maxOutput: 128_000,
@@ -142,7 +143,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 400_000,
     description:
-      'ChatGPT 中使用的 GPT-5 模型。结合了强大的语言理解与生成能力，适合对话式交互应用。',
+      'The GPT-5 model used in ChatGPT, combining strong understanding and generation for conversational applications.',
     displayName: 'GPT-5 Chat',
     enabled: true,
     id: 'gpt-5-chat-latest',
@@ -163,7 +164,7 @@ const lobehubChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_047_576,
-    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    description: 'GPT-4.1 is our flagship model for complex tasks and cross-domain problem solving.',
     displayName: 'GPT-4.1',
     enabled: true,
     id: 'gpt-4.1',
@@ -185,7 +186,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_047_576,
     description:
-      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+      'GPT-4.1 mini balances intelligence, speed, and cost, making it attractive for many use cases.',
     displayName: 'GPT-4.1 mini',
     id: 'gpt-4.1-mini',
     maxOutput: 32_768,
@@ -206,7 +207,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_047_576,
     description:
-      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+      'GPT-4.1 mini balances intelligence, speed, and cost, making it attractive for many use cases.',
     displayName: 'GPT-4.1 nano',
     id: 'gpt-4.1-nano',
     maxOutput: 32_768,
@@ -227,7 +228,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description:
-      'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
+      'GPT-4o mini is OpenAI’s latest model after GPT-4 Omni, supporting text+image input with text output. It is their most advanced small model, far cheaper than recent frontier models and over 60% cheaper than GPT-3.5 Turbo, while maintaining top-tier intelligence (82% MMLU).',
     displayName: 'GPT-4o mini',
     id: 'gpt-4o-mini',
     maxOutput: 16_385,
@@ -248,7 +249,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description:
-      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+      'ChatGPT-4o is a dynamic model updated in real time. It combines strong understanding and generation for large-scale use cases like customer support, education, and technical support.',
     displayName: 'GPT-4o',
     id: 'gpt-4o',
     pricing: {
@@ -267,7 +268,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description:
-      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+      'ChatGPT-4o is a dynamic model updated in real time. It combines strong understanding and generation for large-scale use cases like customer support, education, and technical support.',
     displayName: 'ChatGPT-4o',
     id: 'chatgpt-4o-latest',
     pricing: {
@@ -286,7 +287,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description:
-      '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
+      'The latest GPT-4 Turbo adds vision. Visual requests support JSON mode and function calling. It is a cost-effective multimodal model that balances accuracy and efficiency for real-time applications.',
     displayName: 'GPT-4 Turbo',
     id: 'gpt-4-turbo',
     pricing: {
@@ -305,7 +306,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
+      'o3 is a strong all-round model that sets a new bar for math, science, programming, and visual reasoning. It excels at technical writing and instruction following, and can analyze text, code, and images for multi-step problems.',
     displayName: 'o3',
     enabled: true,
     id: 'o3',
@@ -331,7 +332,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+      'o4-mini is the latest small o-series model, optimized for fast, effective reasoning with high efficiency in coding and vision tasks.',
     displayName: 'o4-mini',
     enabled: true,
     id: 'o4-mini',
@@ -352,7 +353,7 @@ const lobehubChatModels: AIChatModelCard[] = [
   // {
   //   contextWindowTokens: 128_000,
   //   description:
-  //     'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
+  //     'o1 is OpenAI’s new reasoning model for complex tasks requiring broad general knowledge. It has a 128K context window and an October 2023 knowledge cutoff.',
   //   displayName: 'OpenAI o1-preview',
   //   enabled: true,
   //   id: 'o1-preview',
@@ -372,7 +373,7 @@ const lobehubChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'Claude Sonnet 4.5 是 Anthropic 迄今为止最智能的模型。',
+    description: 'Claude Sonnet 4.5 is Anthropic’s most intelligent model to date.',
     displayName: 'Claude Sonnet 4.5',
     enabled: true,
     id: 'claude-sonnet-4-5-20250929',
@@ -400,7 +401,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Sonnet 4 是 Anthropic 迄今为止最智能的模型。Claude 4 Sonnet 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
+      'Claude Sonnet 4 is Anthropic’s most intelligent model to date, offering near-instant responses or extended step-by-step thinking with fine-grained control for API users.',
     displayName: 'Claude Sonnet 4',
     id: 'claude-sonnet-4-20250514',
     maxOutput: 8192,
@@ -432,7 +433,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Sonnet 3.7 是 Anthropic 迄今为止最智能的模型，也是市场上首个混合推理模型。Claude Sonnet 3.7 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
+      'Claude Sonnet 3.7 is Anthropic’s most intelligent model and the first hybrid reasoning model on the market, supporting near-instant responses or extended thinking with fine-grained control.',
     displayName: 'Claude Sonnet 3.7',
     id: 'claude-3-7-sonnet-20250219',
     maxOutput: 8192,
@@ -464,7 +465,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Opus 4.5 是 Anthropic 的旗舰模型，结合了卓越的智能与可扩展性能，适合需要最高质量回应和推理能力的复杂任务。',
+      'Claude Opus 4.5 is Anthropic’s flagship model, combining excellent intelligence and scalable performance for the highest-quality reasoning tasks.',
     displayName: 'Claude Opus 4.5',
     enabled: true,
     id: 'claude-opus-4-5-20251101',
@@ -497,7 +498,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Opus 4.1 是 Anthropic 最新的用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
+      'Claude Opus 4.1 is Anthropic’s latest and most capable model for highly complex tasks, excelling in performance, intelligence, fluency, and understanding.',
     displayName: 'Claude Opus 4.1',
     id: 'claude-opus-4-1-20250805',
     maxOutput: 32_000,
@@ -529,7 +530,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Opus 4 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
+      'Claude Opus 4 is Anthropic’s most powerful model for highly complex tasks, excelling in performance, intelligence, fluency, and understanding.',
     displayName: 'Claude Opus 4',
     id: 'claude-opus-4-20250514',
     maxOutput: 32_000,
@@ -563,7 +564,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Haiku 4.5 是 Anthropic 最快且最智能的 Haiku 模型，具有闪电般的速度和扩展思考能力。',
+      'Claude Haiku 4.5 is Anthropic’s fastest and most intelligent Haiku model, with lightning speed and extended thinking.',
     displayName: 'Claude Haiku 4.5',
     enabled: true,
     id: 'claude-haiku-4-5-20251001',
@@ -594,7 +595,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
+      'Claude 3.5 Haiku is Anthropic’s fastest next-gen model, improving across skills and surpassing the previous flagship Claude 3 Opus on many benchmarks.',
     displayName: 'Claude 3.5 Haiku',
     id: 'claude-3-5-haiku-20241022',
     maxOutput: 8192,
@@ -627,7 +628,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 3 Pro 是全球最佳的多模态理解模型，也是 Google 迄今为止最强大的智能体和氛围编程模型，提供更丰富的视觉效果和更深层次的交互性，所有这些都建立在最先进的推理能力基础之上。',
+      "Gemini 3 Pro is Google’s most powerful agent and vibe-coding model, delivering richer visuals and deeper interaction on top of state-of-the-art reasoning.",
     displayName: 'Gemini 3 Pro Preview',
     enabled: true,
     id: 'gemini-3-pro-preview',
@@ -687,7 +688,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 3 Flash Preview 是 Google 最新一代高性价比模型，在 Gemini 2.5 Flash 基础上进一步提升性能。',
+      'Gemini 3 Flash Preview is Google’s latest best-value model, improving on Gemini 2.5 Flash.',
     displayName: 'Gemini 3 Flash Preview',
     enabled: true,
     id: 'gemini-3-flash-preview',
@@ -727,7 +728,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
+      "Gemini 2.5 Pro is Google’s most advanced reasoning model, able to reason over code, math, and STEM problems and analyze large datasets, codebases, and documents with long context.",
     displayName: 'Gemini 2.5 Pro',
     enabled: true,
     id: 'gemini-2.5-pro',
@@ -779,7 +780,7 @@ const lobehubChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
-    description: 'Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。',
+    description: "Gemini 2.5 Flash is Google’s best-value model with full capabilities.",
     displayName: 'Gemini 2.5 Flash',
     enabled: true,
     id: 'gemini-2.5-flash',
@@ -818,7 +819,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072 + 32_768,
     description:
-      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+      "Gemini 3 Pro Image (Nano Banana Pro) is Google’s image generation model and also supports multimodal chat.",
     displayName: 'Nano Banana Pro',
     enabled: true,
     id: 'gemini-3-pro-image-preview',
@@ -844,7 +845,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768 + 32_768,
     description:
-      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+      "Nano Banana is Google’s newest, fastest, and most efficient native multimodal model, enabling conversational image generation and editing.",
     displayName: 'Nano Banana',
     enabled: true,
     id: 'gemini-2.5-flash-image-preview',
@@ -866,7 +867,7 @@ const lobehubChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description: 'Gemini 2.0 Flash 实验模型，支持图像生成',
+    description: 'Gemini 2.0 Flash experimental model with image generation support.',
     displayName: 'Gemini 2.0 Flash (Image Generation) Experimental',
     enabled: true,
     id: 'gemini-2.0-flash-exp-image-generation',
@@ -889,7 +890,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 65_536,
     description:
-      'DeepSeek V3.2 平衡推理能力与输出长度，适合日常问答与 Agent 任务。公开推理基准达到 GPT-5 水平，首个将思考融入工具调用的模型，Agent 评测达开源最高水平。',
+      'DeepSeek V3.2 balances reasoning and output length for daily QA and agent tasks. Public benchmarks reach GPT-5 levels, and it is the first to integrate thinking into tool use, leading open-source agent evaluations.',
     displayName: 'DeepSeek V3.2',
     enabled: true,
     id: 'deepseek-chat',
@@ -910,7 +911,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 65_536,
     description:
-      'DeepSeek V3.2 Thinking 深度推理模型，输出前先生成思维链内容以提升准确性。在 IMO、CMO、ICPC 世界总决赛及 IOI 2025 均获金牌，推理能力媲美 Gemini-3.0-Pro。',
+      'DeepSeek V3.2 Thinking is a deep reasoning model that generates chain-of-thought before outputs for higher accuracy, with top competition results and reasoning comparable to Gemini-3.0-Pro.',
     displayName: 'DeepSeek V3.2 Thinking',
     enabled: true,
     id: 'deepseek-reasoner',
@@ -931,7 +932,7 @@ const lobehubChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 204_800,
-    description: '专为高效编码与 Agent 工作流而生',
+    description: 'Built for efficient coding and agent workflows.',
     displayName: 'MiniMax M2',
     enabled: true,
     id: 'MiniMax-M2-Stable',
@@ -968,7 +969,7 @@ const lobehubChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
-      'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+      'kimi-k2 is an MoE foundation model with strong coding and agent capabilities (1T total params, 32B active), outperforming other mainstream open models across reasoning, programming, math, and agent benchmarks.',
     displayName: 'Kimi K2',
     enabled: true,
     id: 'kimi-k2-0711-preview',
@@ -1038,7 +1039,7 @@ export const nanoBananaProParameters: ModelParamsSchema = {
 const lobehubImageModels: AIImageModelCard[] = [
   {
     description:
-      'Gemini 3 Pro Image（Nano Banana Pro）是 Google 的图像生成模型，同时支持多模态对话。',
+      "Gemini 3 Pro Image (Nano Banana Pro) is Google’s image generation model and also supports multimodal chat.",
     displayName: 'Nano Banana Pro',
     enabled: true,
     id: 'gemini-3-pro-image-preview:image',
@@ -1056,7 +1057,7 @@ const lobehubImageModels: AIImageModelCard[] = [
   },
   {
     description:
-      'Nano Banana 是 Google 最新、最快、最高效的原生多模态模型，它允许您通过对话生成和编辑图像。',
+      "Nano Banana is Google’s newest, fastest, and most efficient native multimodal model, enabling conversational image generation and editing.",
     displayName: 'Nano Banana',
     enabled: true,
     id: 'gemini-2.5-flash-image-preview:image',
@@ -1113,7 +1114,7 @@ const lobehubImageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: 'ChatGPT 原生多模态图片生成模型',
+    description: 'ChatGPT native multimodal image generation model.',
     displayName: 'GPT Image 1',
     enabled: true,
     id: 'gpt-image-1',
@@ -1139,7 +1140,7 @@ const lobehubImageModels: AIImageModelCard[] = [
   },
   {
     description:
-      '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',
+      'The latest DALL·E model, released in November 2023, supports more realistic, accurate image generation with stronger detail.',
     displayName: 'DALL·E 3',
     enabled: false,
     id: 'dall-e-3',
@@ -1180,7 +1181,7 @@ const lobehubImageModels: AIImageModelCard[] = [
   },
   {
     description:
-      'Seedream 4.0 图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。基于文本提示词生成图片。',
+      'Seedream 4.0, built by ByteDance Seed, supports text and image inputs for highly controllable, high-quality image generation from prompts.',
     displayName: 'Seedream 4.0',
     enabled: true,
     id: 'fal-ai/bytedance/seedream/v4',
@@ -1200,13 +1201,13 @@ const lobehubImageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: '一个强大的原生多模态图像生成模型',
+    description: 'A powerful native multimodal image generation model.',
     displayName: 'HunyuanImage 3.0',
     enabled: true,
     id: 'fal-ai/hunyuan-image/v3',
     parameters: huanyuanImageParamsSchema,
     pricing: {
-      // 原价：0.1 x 1024 x 1024 / 100_0000 = 0.1048576$
+      // Original price: 0.1 x 1024 x 1024 / 100_0000 = 0.1048576$
       units: [{ name: 'imageGeneration', rate: 0.11, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-09-28',
@@ -1214,14 +1215,14 @@ const lobehubImageModels: AIImageModelCard[] = [
   },
   {
     description:
-      'Qwen 团队发布的专业图像编辑模型，支持语义编辑和外观编辑，能够精确编辑中英文文字，实现风格转换、对象旋转等高质量图像编辑。',
+      'A professional image editing model from the Qwen team, supporting semantic and appearance edits, precise Chinese/English text editing, style transfer, rotation, and more.',
     displayName: 'Qwen Edit',
     enabled: true,
     id: 'fal-ai/qwen-image-edit',
     parameters: qwenEditParamsSchema,
     pricing: {
       // https://fal.ai/models/fal-ai/qwen-image-edit
-      // 原价：0.03 x 1328 x 1328 / 100_0000 = 0.05290752
+      // Original price: 0.03 x 1328 x 1328 / 100_0000 = 0.05290752
       units: [{ name: 'imageGeneration', rate: 0.06, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-08-19',
@@ -1229,13 +1230,13 @@ const lobehubImageModels: AIImageModelCard[] = [
   },
   {
     description:
-      'Qwen 团队带来的强大生图模型，具有令人印象深刻的中文文字生成能力和多样图片视觉风格。',
+      'A powerful image generation model from the Qwen team with strong Chinese text rendering and diverse visual styles.',
     displayName: 'Qwen Image',
     enabled: true,
     id: 'fal-ai/qwen-image',
     parameters: qwenImageParamsSchema,
     pricing: {
-      // 原价：0.02 x 1328 x 1328 / 100_0000 = 0.03527168
+      // Original price: 0.02 x 1328 x 1328 / 100_0000 = 0.03527168
       units: [{ name: 'imageGeneration', rate: 0.04, strategy: 'fixed', unit: 'image' }],
     },
     releasedAt: '2025-08-04',

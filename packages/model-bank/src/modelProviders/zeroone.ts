@@ -5,7 +5,7 @@ const ZeroOne: ModelProviderCard = {
   chatModels: [],
   checkModel: 'yi-lightning',
   description:
-    '零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。',
+    '01.AI drives a human-centered AI 2.0 revolution, using LLMs to create economic and social value and build new AI ecosystems and business models.',
   id: 'zeroone',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.lingyiwanwu.com/docs#模型与计费',

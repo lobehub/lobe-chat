@@ -5,7 +5,7 @@ const Perplexity: ModelProviderCard = {
   chatModels: [],
   checkModel: 'sonar',
   description:
-    'Perplexity 是一家领先的对话生成模型提供商，提供多种先进的Llama 3.1模型，支持在线和离线应用，特别适用于复杂的自然语言处理任务。',
+    'Perplexity provides advanced chat models, including Llama 3.1 variants, for online and offline use and complex NLP workloads.',
   id: 'perplexity',
   modelsUrl: 'https://docs.perplexity.ai/guides/model-cards',
   name: 'Perplexity',

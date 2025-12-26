@@ -7,7 +7,7 @@ const Bedrock: ModelProviderCard = {
   chatModels: [],
   checkModel: 'anthropic.claude-instant-v1',
   description:
-    'Bedrock 是亚马逊 AWS 提供的一项服务，专注于为企业提供先进的 AI 语言模型和视觉模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵盖从轻量级到高性能的多种选择，支持文本生成、对话、图像处理等多种任务，适用于不同规模和需求的企业应用。',
+    'Amazon Bedrock provides enterprises with advanced language and vision models, including Anthropic Claude and Meta Llama 3.1, spanning lightweight to high-performance options for text, chat, and image tasks.',
   id: 'bedrock',
   modelsUrl: 'https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html',
   name: 'Bedrock',

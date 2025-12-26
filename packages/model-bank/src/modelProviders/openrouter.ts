@@ -5,7 +5,7 @@ const OpenRouter: ModelProviderCard = {
   chatModels: [],
   checkModel: 'google/gemma-2-9b-it:free',
   description:
-    'OpenRouter 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、LLaMA 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力AI体验的提升。',
+    'OpenRouter provides access to many frontier models from OpenAI, Anthropic, LLaMA, and more, letting users pick the best model and price for their use case.',
   id: 'openrouter',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://openrouter.ai/models',

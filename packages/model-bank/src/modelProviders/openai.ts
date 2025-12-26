@@ -6,7 +6,7 @@ const OpenAI: ModelProviderCard = {
   chatModels: [],
   checkModel: 'gpt-5-nano',
   description:
-    'OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。',
+    'OpenAI is a leading AI research lab whose GPT models advanced natural language processing, delivering high performance and strong value across research, business, and innovation.',
   enabled: true,
   id: 'openai',
   modelList: { showModelFetcher: true },

@@ -5,7 +5,8 @@ import { type ModelProviderCard } from '@/types/llm';
 const SenseNova: ModelProviderCard = {
   chatModels: [],
   checkModel: 'SenseChat-Turbo',
-  description: '商汤日日新，依托商汤大装置的强大的基础支撑，提供高效易用的全栈大模型服务。',
+  description:
+    'SenseNova delivers efficient, easy-to-use full-stack LLM services backed by SenseTime infrastructure.',
   disableBrowserRequest: true,
   id: 'sensenova',
   modelList: { showModelFetcher: true },

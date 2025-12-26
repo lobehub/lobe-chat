@@ -4,7 +4,7 @@ const ZhiPu: ModelProviderCard = {
   chatModels: [],
   checkModel: 'glm-4.5-flash',
   description:
-    '智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。',
+    'ZhiPu AI provides an open platform for multimodal and language models across text processing, image understanding, and coding assistance.',
   id: 'zhipu',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://open.bigmodel.cn/dev/howuse/model',

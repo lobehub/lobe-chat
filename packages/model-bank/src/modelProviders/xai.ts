@@ -5,7 +5,7 @@ const XAI: ModelProviderCard = {
   chatModels: [],
   checkModel: 'grok-2-1212',
   description:
-    'xAI 是一家致力于构建人工智能以加速人类科学发现的公司。我们的使命是推动我们对宇宙的共同理解。',
+    'xAI builds AI to accelerate scientific discovery, with a mission to deepen humanity’s understanding of the universe.',
   id: 'xai',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.x.ai/docs#models',
