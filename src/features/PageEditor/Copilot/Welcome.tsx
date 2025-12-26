@@ -24,7 +24,7 @@ const AgentBuilderWelcome = memo(() => {
         }}
         width={'100%'}
       >
-        <Avatar avatar={agent.avatar || DEFAULT_INBOX_AVATAR} shape={'square'} size={78} />
+        <Avatar avatar={agent?.avatar || DEFAULT_INBOX_AVATAR} shape={'square'} size={78} />
         <Text fontSize={24} weight={'bold'}>
           {t('pageCopilot.title')}
         </Text>

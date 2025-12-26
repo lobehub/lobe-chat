@@ -12,14 +12,16 @@ import CopilotToolbar from './Toolbar';
 import Welcome from './Welcome';
 
 interface ConversationProps {
+  // Default agent id
   agentId: string;
 }
 const actions: ActionKeys[] = ['model', 'search'];
 
 const Conversation = memo<ConversationProps>(({ agentId }) => {
-  const [activeAgentId, setActiveAgentId] = useAgentStore((s) => [
+  const [activeAgentId, setActiveAgentId, useFetchAgentConfig] = useAgentStore((s) => [
     s.activeAgentId,
     s.setActiveAgentId,
+    s.useFetchAgentConfig,
   ]);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -30,6 +32,10 @@ const Conversation = memo<ConversationProps>(({ agentId }) => {
   }, [agentId, setActiveAgentId]);
 
   const currentAgentId = activeAgentId || agentId;
+
+  // Fetch agent config when activeAgentId changes to ensure it's loaded in the store
+  // This is needed when user switches to a different agent
+  useFetchAgentConfig(true, currentAgentId);
 
   // Get agent's model info for vision support check
   const model = useAgentStore((s) => agentByIdSelectors.getAgentModelById(currentAgentId)(s));
