@@ -12,7 +12,8 @@
     "@lobechat/prompts": "workspace:*"
   },
   "devDependencies": {
-    "@lobechat/types": "workspace:*"
+    "@lobechat/types": "workspace:*",
+    "@lobehub/ui": "^4.3.1"
   },
   "peerDependencies": {
     "@lobehub/ui": "^4",

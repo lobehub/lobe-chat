@@ -1,6 +1,6 @@
 'use client';
 
-import { BuiltinRenderProps } from '@lobechat/types';
+import { type BuiltinRenderProps } from '@lobechat/types';
 import { Block, Checkbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
