@@ -13,6 +13,10 @@ import { MARKET_ENDPOINTS } from '@/services/_url';
 import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import { type MarketUserProfile } from './types';
 
@@ -66,6 +70,12 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
     const [loading, setLoading] = useState(false);
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
+    // 检查是否是自动授权模式
+    const enableMarketTrustedClient = useServerConfigStore(serverConfigSelectors.enableMarketTrustedClient);
+
+    // 获取当前用户头像作为默认值
+    const currentUserAvatar = useUserStore(userProfileSelectors.userAvatar);
+
     // Avatar state
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [avatarUploading, setAvatarUploading] = useState(false);
@@ -99,10 +109,11 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
         });
 
         // Reset avatar and banner
-        setAvatarUrl(userProfile?.avatarUrl || null);
+        // 如果 userProfile 有 avatarUrl 就用它，否则用当前用户头像作为默认值
+        setAvatarUrl(userProfile?.avatarUrl || currentUserAvatar || null);
         setBannerUrl(userProfile?.bannerUrl || null);
       }
-    }, [open, userProfile, defaultDisplayName, form]);
+    }, [open, userProfile, defaultDisplayName, form, currentUserAvatar]);
 
     // Handle avatar change (emoji)
     const handleAvatarChange = useCallback((emoji: string) => {
@@ -173,7 +184,8 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
     }, []);
 
     const handleSubmit = useCallback(async () => {
-      if (!accessToken) {
+      // 如果不是自动授权模式，需要校验 accessToken
+      if (!enableMarketTrustedClient && !accessToken) {
         message.error(t('profileSetup.errors.notAuthenticated'));
         return;
       }
@@ -233,7 +245,7 @@ const ProfileSetupModal = memo<ProfileSetupModalProps>(
       } finally {
         setLoading(false);
       }
-    }, [accessToken, avatarUrl, bannerUrl, form, message, onClose, onSuccess, t]);
+    }, [accessToken, avatarUrl, bannerUrl, enableMarketTrustedClient, form, message, onClose, onSuccess, t]);
 
     const handleCancel = useCallback(() => {
       if (!isFirstTimeSetup) {

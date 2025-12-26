@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { mutate as globalMutate } from 'swr';
 
 import { MARKET_ENDPOINTS, MARKET_OIDC_ENDPOINTS } from '@/services/_url';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors/settings';
 
@@ -31,8 +33,9 @@ interface MarketAuthProviderProps {
 
 /**
  * 获取用户信息（从 OIDC userinfo endpoint）
+ * @param accessToken - 可选的 access token，如果不传则后端会尝试使用 trustedClientToken
  */
-const fetchUserInfo = async (accessToken: string): Promise<MarketUserInfo | null> => {
+const fetchUserInfo = async (accessToken?: string): Promise<MarketUserInfo | null> => {
   try {
     const response = await fetch(MARKET_OIDC_ENDPOINTS.userinfo, {
       body: JSON.stringify({ token: accessToken }),
@@ -173,6 +176,9 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   // 订阅 user store 的初始化状态，当 isUserStateInit 为 true 时，settings 数据已加载完成
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
 
+  // 检查是否启用了 Market Trusted Client 认证
+  const enableMarketTrustedClient = useServerConfigStore(serverConfigSelectors.enableMarketTrustedClient);
+
   // 初始化 OIDC 客户端（仅在客户端）
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -200,6 +206,32 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
   const initializeSession = async () => {
     setStatus('loading');
 
+    // 如果启用了 Trusted Client 认证，直接通过后端获取用户信息（不传 token）
+    if (enableMarketTrustedClient) {
+      const userInfo = await fetchUserInfo();
+
+      if (userInfo) {
+        // 使用 Trusted Client 时，创建一个虚拟的 session（无需真实 token）
+        const trustedSession: MarketAuthSession = {
+          accessToken: '', // Trusted Client 不需要前端 token
+          expiresAt: Number.MAX_SAFE_INTEGER, // 不过期
+          expiresIn: Number.MAX_SAFE_INTEGER,
+          scope: 'openid profile email',
+          tokenType: 'Bearer',
+          userInfo,
+        };
+
+        setSession(trustedSession);
+        setStatus('authenticated');
+        return;
+      }
+
+      // 如果获取失败，设置为未认证状态
+      setStatus('unauthenticated');
+      return;
+    }
+
+    // 原有的 OIDC token 认证流程
     const dbTokens = getMarketTokensFromDB();
 
     // 检查 DB 中是否有 token
@@ -324,6 +356,20 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
    */
   const handleConfirmAuth = async () => {
     setShowConfirmModal(false);
+
+    // 如果是 trustedClient 模式，直接打开 ProfileSetupModal 完善资料
+    if (enableMarketTrustedClient) {
+      setIsFirstTimeSetup(true);
+      setShowProfileSetupModal(true);
+      if (pendingSignInResolve) {
+        pendingSignInResolve(session?.userInfo?.accountId ?? null);
+        setPendingSignInResolve(null);
+        setPendingSignInReject(null);
+      }
+      return;
+    }
+
+    // 原有的 OIDC 流程
     try {
       const result = await handleActualSignIn();
       if (pendingSignInResolve) {
@@ -415,13 +461,14 @@ export const MarketAuthProvider = ({ children, isDesktop }: MarketAuthProviderPr
     if (isUserStateInit) {
       initializeSession();
     }
-  }, [isUserStateInit]);
+  }, [isUserStateInit, enableMarketTrustedClient]);
 
   const contextValue: MarketAuthContextType = {
     getAccessToken,
     getCurrentUserInfo,
     getRefreshToken,
-    isAuthenticated: status === 'authenticated',
+    // 当启用 Trusted Client 认证时，自动视为已认证（后端会自动使用 trustedClientToken）
+    isAuthenticated: enableMarketTrustedClient || status === 'authenticated',
     isLoading: status === 'loading',
     openProfileSetup,
     refreshToken,

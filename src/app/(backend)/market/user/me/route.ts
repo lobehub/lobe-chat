@@ -1,6 +1,8 @@
 import { MarketSDK } from '@lobehub/market-sdk';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { getTrustedClientTokenForSession } from '@/libs/trusted-client';
+
 const MARKET_BASE_URL = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'https://market.lobehub.com';
 
 const extractAccessToken = (req: NextRequest) => {
@@ -17,7 +19,7 @@ const extractAccessToken = (req: NextRequest) => {
  * PUT /market/user/me
  *
  * Updates the authenticated user's profile information.
- * Requires authentication via Bearer token.
+ * Requires authentication via Bearer token or trusted client token.
  *
  * Request body:
  * - userName?: string - User's unique username
@@ -27,8 +29,16 @@ const extractAccessToken = (req: NextRequest) => {
  */
 export const PUT = async (req: NextRequest) => {
   const accessToken = extractAccessToken(req);
+  const trustedClientToken = await getTrustedClientTokenForSession();
 
-  if (!accessToken) {
+  const market = new MarketSDK({
+    accessToken,
+    baseURL: MARKET_BASE_URL,
+    trustedClientToken,
+  });
+
+  // Only require accessToken if trusted client token is not available
+  if (!accessToken && !trustedClientToken) {
     return NextResponse.json(
       {
         error: 'unauthorized',
@@ -38,11 +48,6 @@ export const PUT = async (req: NextRequest) => {
       { status: 401 },
     );
   }
-
-  const market = new MarketSDK({
-    accessToken,
-    baseURL: MARKET_BASE_URL,
-  });
 
   try {
     const payload = await req.json();
@@ -59,7 +64,13 @@ export const PUT = async (req: NextRequest) => {
       );
     }
 
-    const response = await market.user.updateUserInfo(payload);
+    // Ensure meta is at least an empty object
+    const normalizedPayload = {
+      ...payload,
+      meta: payload.meta ?? {},
+    };
+
+    const response = await market.user.updateUserInfo(normalizedPayload);
 
     return NextResponse.json(response);
   } catch (error) {

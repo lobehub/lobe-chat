@@ -5,12 +5,13 @@ import { z } from 'zod';
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
-import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { marketUserInfo, serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { generateTrustedClientToken } from '@/libs/trusted-client';
 import { FileS3 } from '@/server/modules/S3';
 
 const log = debug('lobe-server:tools:code-interpreter');
 
-const codeInterpreterProcedure = authedProcedure;
+const codeInterpreterProcedure = authedProcedure.use(serverDatabase).use(marketUserInfo);
 
 // Schema for tool call request
 const callToolSchema = z.object({
@@ -82,7 +83,7 @@ export interface SaveExportedFileContentResult {
 }
 
 export const codeInterpreterRouter = router({
-  callTool: codeInterpreterProcedure.input(callToolSchema).mutation(async ({ input }) => {
+  callTool: codeInterpreterProcedure.input(callToolSchema).mutation(async ({ input, ctx }) => {
     const { toolName, params, userId, topicId, marketAccessToken } = input;
 
     log('Calling cloud code interpreter tool: %s with params: %O', toolName, {
@@ -92,11 +93,17 @@ export const codeInterpreterRouter = router({
     });
     log('Market access token available: %s', marketAccessToken ? 'yes' : 'no');
 
+    // Generate trusted client token if user info is available
+    const trustedClientToken = ctx.marketUserInfo
+      ? generateTrustedClientToken(ctx.marketUserInfo)
+      : undefined;
+
     try {
-      // Initialize MarketSDK with market access token from OIDC (passed via input)
+      // Initialize MarketSDK with market access token and trusted client token
       const market = new MarketSDK({
         accessToken: marketAccessToken,
         baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL,
+        trustedClientToken,
       });
 
       // Call market-sdk's runBuildInTool
