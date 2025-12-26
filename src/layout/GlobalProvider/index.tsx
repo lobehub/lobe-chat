@@ -1,6 +1,8 @@
+import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { LazyMotion, domMax } from 'motion/react';
 import { type ReactNode, Suspense } from 'react';
 
+import { ReferralProvider } from '@/business/client/ReferralProvider';
 import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
 import { DragUploadProvider } from '@/components/DragUploadZone/DragUploadProvider';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
@@ -70,6 +72,7 @@ const GlobalLayout = async ({
             </QueryProvider>
             <StoreInitialization />
             <Suspense>
+              {ENABLE_BUSINESS_FEATURES ? <ReferralProvider /> : null}
               <ImportSettings />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
