@@ -103,9 +103,9 @@ export const globalWorkspaceSlice: StateCreator<
     get().updateSystemStatus({ showSystemRole }, n('toggleMobileTopic', newValue));
   },
   toggleWideScreen: (newValue) => {
-    const wideScreen = typeof newValue === 'boolean' ? newValue : !get().status.noWideScreen;
+    const noWideScreen = typeof newValue === 'boolean' ? !newValue : !get().status.noWideScreen;
 
-    get().updateSystemStatus({ noWideScreen: wideScreen }, n('toggleWideScreen', newValue));
+    get().updateSystemStatus({ noWideScreen }, n('toggleWideScreen', newValue));
   },
   toggleZenMode: () => {
     const { status } = get();

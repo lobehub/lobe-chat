@@ -1,11 +1,12 @@
 import { Flexbox, Icon } from '@lobehub/ui';
-import { App } from 'antd';
+import { App, Switch } from 'antd';
 import { useResponsive, useTheme } from 'antd-style';
 import dayjs from 'dayjs';
-import { Link2, PanelLeftRightDashedIcon, SquareChartGanttIcon, Trash2 } from 'lucide-react';
+import { CopyPlus, Download, Link2, Trash2 } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -20,6 +21,9 @@ export const useMenu = (): { menuItems: any[] } => {
 
   const lastUpdatedTime = usePageEditorStore((s) => s.lastUpdatedTime);
   const wordCount = usePageEditorStore((s) => s.wordCount);
+  const currentDocId = usePageEditorStore((s) => s.currentDocId);
+
+  const duplicateDocument = useFileStore((s) => s.duplicateDocument);
 
   const [wideScreen, toggleWideScreen] = useGlobalStore((s) => [
     systemStatusSelectors.wideScreen(s),
@@ -29,67 +33,58 @@ export const useMenu = (): { menuItems: any[] } => {
   // Wide screen mode only makes sense when screen is large enough
   const showViewModeSwitch = lg;
 
+  const handleDuplicate = async () => {
+    if (!currentDocId) return;
+    try {
+      await duplicateDocument(currentDocId);
+      message.success(t('pageEditor.duplicateSuccess'));
+    } catch (error) {
+      console.error('Failed to duplicate page:', error);
+      message.error(t('pageEditor.duplicateError'));
+    }
+  };
+
+  const handleExportMarkdown = () => {
+    const state = storeApi.getState();
+    const { editor, currentTitle } = state;
+
+    if (!editor) return;
+
+    try {
+      const markdown = (editor.getDocument('markdown') as unknown as string) || '';
+      const blob = new Blob([markdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentTitle || 'Untitled'}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      message.success(t('pageEditor.exportSuccess'));
+    } catch (error) {
+      console.error('Failed to export markdown:', error);
+      message.error(t('pageEditor.exportError'));
+    }
+  };
+
   const menuItems = useMemo(
     () => [
       ...(showViewModeSwitch
         ? [
             {
-              disabled: true,
-              key: 'view-mode',
+              key: 'full-width',
               label: (
-                <Flexbox gap={8} horizontal>
-                  <Flexbox
-                    align="center"
-                    gap={4}
-                    onClick={() => {
-                      if (wideScreen) toggleWideScreen();
+                <Flexbox align="center" horizontal justify="space-between">
+                  <span>{t('viewMode.fullWidth', { ns: 'chat' })}</span>
+                  <Switch
+                    checked={wideScreen}
+                    onChange={toggleWideScreen}
+                    onClick={(checked, event) => {
+                      event.stopPropagation();
                     }}
-                    style={{
-                      backgroundColor: !wideScreen ? theme.colorFillSecondary : 'transparent',
-                      borderRadius: theme.borderRadius,
-                      cursor: 'pointer',
-                      flex: 1,
-                      padding: '8px 12px',
-                      pointerEvents: 'auto',
-                      transition: `background-color ${theme.motionDurationMid}`,
-                    }}
-                  >
-                    <Icon icon={PanelLeftRightDashedIcon} size={20} />
-                    <span
-                      style={{
-                        color: !wideScreen ? theme.colorText : theme.colorTextSecondary,
-                        fontSize: 12,
-                      }}
-                    >
-                      {t('viewMode.normal', { ns: 'chat' })}
-                    </span>
-                  </Flexbox>
-                  <Flexbox
-                    align="center"
-                    gap={4}
-                    onClick={() => {
-                      if (!wideScreen) toggleWideScreen();
-                    }}
-                    style={{
-                      backgroundColor: wideScreen ? theme.colorFillSecondary : 'transparent',
-                      borderRadius: theme.borderRadius,
-                      cursor: 'pointer',
-                      flex: 1,
-                      padding: '8px 12px',
-                      pointerEvents: 'auto',
-                      transition: `background-color ${theme.motionDurationMid}`,
-                    }}
-                  >
-                    <Icon icon={SquareChartGanttIcon} size={20} />
-                    <span
-                      style={{
-                        color: wideScreen ? theme.colorText : theme.colorTextSecondary,
-                        fontSize: 12,
-                      }}
-                    >
-                      {t('viewMode.wideScreen', { ns: 'chat' })}
-                    </span>
-                  </Flexbox>
+                    size="small"
+                  />
                 </Flexbox>
               ),
             },
@@ -98,6 +93,12 @@ export const useMenu = (): { menuItems: any[] } => {
             },
           ]
         : []),
+      {
+        icon: <Icon icon={CopyPlus} />,
+        key: 'duplicate',
+        label: t('pageList.duplicate'),
+        onClick: handleDuplicate,
+      },
       {
         icon: <Icon icon={Link2} />,
         key: 'copy-link',
@@ -116,6 +117,21 @@ export const useMenu = (): { menuItems: any[] } => {
           const state = storeApi.getState();
           await state.handleDelete(t as any, message, modal, state.onDelete);
         },
+      },
+      {
+        type: 'divider' as const,
+      },
+      {
+        children: [
+          {
+            key: 'export-markdown',
+            label: t('pageEditor.menu.export.markdown'),
+            onClick: handleExportMarkdown,
+          },
+        ],
+        icon: <Icon icon={Download} />,
+        key: 'export',
+        label: t('pageEditor.menu.export'),
       },
       {
         type: 'divider' as const,
@@ -148,6 +164,8 @@ export const useMenu = (): { menuItems: any[] } => {
       wideScreen,
       toggleWideScreen,
       showViewModeSwitch,
+      handleDuplicate,
+      handleExportMarkdown,
     ],
   );
 
