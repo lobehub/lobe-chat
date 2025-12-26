@@ -27,16 +27,23 @@ export const getUILocaleAndResources = async (
   const resources = await loadResourcesFromJSON(normalizedLocale);
 
   // Fallback to en-US if resources not found
-  if (!resources && normalizedLocale !== 'en-US') {
-    const fallbackResources = await loadResourcesFromJSON('en-US');
-    return {
-      locale: uiLocale,
-      resources: fallbackResources || {},
-    };
+  if (!resources) {
+    if (normalizedLocale !== 'en-US') {
+      const fallbackResources = await loadResourcesFromJSON('en-US');
+      if (fallbackResources) {
+        console.warn(`UI resources for locale ${normalizedLocale} not found, using en-US fallback`);
+        return {
+          locale: uiLocale,
+          resources: fallbackResources,
+        };
+      }
+    }
+    // If even en-US fallback fails, this is a critical error
+    throw new Error(`Failed to load UI resources for locale ${normalizedLocale} and en-US fallback`);
   }
 
   return {
     locale: uiLocale,
-    resources: resources || {},
+    resources,
   };
 };
