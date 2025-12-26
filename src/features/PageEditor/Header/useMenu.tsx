@@ -12,6 +12,9 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { usePageEditorStore, useStoreApi } from '../store';
 
+/**
+ * Action menu for the page editor.
+ */
 export const useMenu = (): { menuItems: any[] } => {
   const { t } = useTranslation(['file', 'common', 'chat']);
   const { message, modal } = App.useApp();

@@ -4,6 +4,7 @@ import { type StateCreator } from 'zustand/vanilla';
 import { documentService } from '@/services/document';
 import { useGlobalStore } from '@/store/global';
 import { DocumentSourceType, type LobeDocument } from '@/types/document';
+import { standardizeIdentifier } from '@/utils/identifier';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { type FileStore } from '../../store';
@@ -16,7 +17,7 @@ const ALLOWED_DOCUMENT_FILE_TYPES = new Set(['custom/document', 'application/pdf
 const EDITOR_DOCUMENT_FILE_TYPE = 'custom/document';
 
 const updateUrl = (docId: string | null) => {
-  const dryPageId = docId?.replace('docs_', '');
+  const dryPageId = standardizeIdentifier(docId ?? '') ?? '';
 
   const newPath = dryPageId ? `/page/${dryPageId}` : '/page';
   window.history.replaceState({}, '', newPath);

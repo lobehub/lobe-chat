@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
 import PageExplorer from '@/features/PageExplorer';
+import { standardizeIdentifier } from '@/utils/identifier';
 
 import PageTitle from './features/PageTitle';
 
@@ -19,7 +20,7 @@ const PagesPage = memo(() => {
     <>
       <PageTitle />
       <Suspense fallback={<Loading debugId="PagesPage" />}>
-        <PageExplorer pageId={`docs_${id}`} />
+        <PageExplorer pageId={standardizeIdentifier(id ?? '', 'docs')} />
       </Suspense>
     </>
   );

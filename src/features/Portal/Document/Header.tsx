@@ -13,6 +13,7 @@ import { chatPortalSelectors } from '@/store/chat/selectors';
 import { useNotebookStore } from '@/store/notebook';
 import { notebookSelectors } from '@/store/notebook/selectors';
 import { oneLineEllipsis } from '@/styles';
+import { standardizeIdentifier } from '@/utils/identifier';
 
 import AutoSaveHint from './AutoSaveHint';
 
@@ -42,7 +43,7 @@ const Header = () => {
 
       // Navigate to the page editor
       // Note: /page route automatically adds 'docs_' prefix to the id
-      navigate(`/page/${documentId.replace(/^docs_/, '')}`);
+      navigate(`/page/${standardizeIdentifier(documentId)}`);
     } finally {
       setLoading(false);
     }
