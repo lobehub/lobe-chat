@@ -134,7 +134,8 @@ export const imageRouter = router({
     // 防御性检测：确保没有完整URL进入数据库
     validateNoUrlsInConfig(configForDatabase, 'configForDatabase');
 
-    await chargeBeforeGenerate({
+    const chargeResult = await chargeBeforeGenerate({
+      configForDatabase,
       generationParams: params,
       generationTopicId,
       imageNum,
@@ -142,6 +143,9 @@ export const imageRouter = router({
       provider,
       userId,
     });
+    if (chargeResult) {
+      return chargeResult;
+    }
 
     // 步骤 1: 在事务中原子性地创建所有数据库记录
     const { batch: createdBatch, generationsWithTasks } = await serverDB.transaction(async (tx) => {
