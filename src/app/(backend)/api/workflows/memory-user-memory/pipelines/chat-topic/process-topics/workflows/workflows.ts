@@ -1,5 +1,5 @@
 import { LayersEnum, MemorySourceType } from '@lobechat/types';
-import { createWorkflow, serveMany } from '@upstash/workflow/nextjs';
+import { createWorkflow } from '@upstash/workflow/nextjs';
 
 import {
   MemoryExtractionExecutor,
@@ -176,8 +176,7 @@ export const orchestratorWorkflow = createWorkflow<
   };
 });
 
-export const { POST } = serveMany({
-  [TOPIC_WORKFLOW_NAMES.orchestrator]: orchestratorWorkflow,
-  [TOPIC_WORKFLOW_NAMES.cep]: cepWorkflow,
-  [TOPIC_WORKFLOW_NAMES.identity]: identityWorkflow,
-});
+// Explicitly set workflow ids to keep context.invoke working even before serveMany assigns them
+cepWorkflow.workflowId = TOPIC_WORKFLOW_NAMES.cep;
+identityWorkflow.workflowId = TOPIC_WORKFLOW_NAMES.identity;
+orchestratorWorkflow.workflowId = TOPIC_WORKFLOW_NAMES.orchestrator;
