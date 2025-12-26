@@ -10,6 +10,8 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import type { MarketPublishAction } from './types';
 import { generateDefaultChangelog, generateMarketIdentifier } from './utils';
@@ -23,6 +25,7 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
   const { t } = useTranslation('setting');
   const [isPublishing, setIsPublishing] = useState(false);
   const { isAuthenticated, session } = useMarketAuth();
+  const enableMarketTrustedClient = useServerConfigStore(serverConfigSelectors.enableMarketTrustedClient);
 
   // Agent data from store
   const meta = useAgentStore(agentSelectors.currentAgentMeta, isEqual);
@@ -41,7 +44,9 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
   const isSubmit = action === 'submit';
 
   const publish = useCallback(async () => {
-    if (!isAuthenticated || !session?.accessToken) {
+    // 如果启用了 trustedClient，只需要检查 isAuthenticated
+    // 因为后端会自动注入 trustedClientToken
+    if (!isAuthenticated || (!enableMarketTrustedClient && !session?.accessToken)) {
       return { success: false };
     }
 
@@ -57,7 +62,10 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
     try {
       setIsPublishing(true);
       message.loading({ content: loadingMessage, key: messageKey });
-      marketApiService.setAccessToken(session.accessToken);
+      // 只有在非 trustedClient 模式下才需要设置 accessToken
+      if (session?.accessToken) {
+        marketApiService.setAccessToken(session.accessToken);
+      }
 
       if (isSubmit) {
         identifier = generateMarketIdentifier();
@@ -163,6 +171,7 @@ export const useMarketPublish = ({ action, onSuccess }: UseMarketPublishOptions)
     chatConfig?.historyCount,
     chatConfig?.searchMode,
     editorData,
+    enableMarketTrustedClient,
     isAuthenticated,
     isSubmit,
     language,
