@@ -12,6 +12,7 @@ import ModelSelect from '@/features/ModelSelect';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useChatStore } from '@/store/chat';
 
 import EditorCanvas from '../EditorCanvas';
 import AgentHeader from './AgentHeader';
@@ -22,6 +23,7 @@ const ProfileEditor = memo(() => {
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const updateConfig = useAgentStore((s) => s.updateAgentConfig);
   const agentId = useAgentStore((s) => s.activeAgentId);
+  const switchTopic = useChatStore((s) => s.switchTopic);
   const router = useQueryRoute();
 
   return (
@@ -63,6 +65,8 @@ const ProfileEditor = memo(() => {
             icon={PlayIcon}
             onClick={() => {
               if (!agentId) return;
+              // Clear topicId before navigating to prevent stale state
+              switchTopic(undefined, true);
               router.push(urlJoin('/agent', agentId));
             }}
             type={'primary'}
