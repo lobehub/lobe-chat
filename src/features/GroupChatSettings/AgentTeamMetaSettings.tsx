@@ -75,13 +75,7 @@ const AgentTeamMetaSettings = memo(() => {
     <Form
       footer={
         <Form.SubmitFooter
-          texts={{
-            reset: t('submitFooter.reset'),
-            submit: t('submitFooter.submit'),
-            unSaved: t('submitFooter.unSaved'),
-            unSavedWarning: t('submitFooter.unSavedWarning'),
-          }}
-        />
+/>
       }
       form={form}
       initialValues={{ ...meta, scene: config.scene }}

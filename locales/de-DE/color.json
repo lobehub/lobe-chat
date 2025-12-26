@@ -1,6 +1,5 @@
 {
   "blue": "Morgendämmerungsblau",
-  "custom": "Benutzerdefiniert",
   "cyan": "Helles Cyan",
   "default": "Standard",
   "geekblue": "Geekblau",
@@ -11,7 +10,6 @@
   "mauve": "Wisteria-Violett",
   "olive": "Olivengrün",
   "orange": "Sonnenuntergang",
-  "presets": "Voreinstellungen",
   "purple": "Pflaume",
   "red": "Dämmerungsrot",
   "sage": "Salbeigrün",

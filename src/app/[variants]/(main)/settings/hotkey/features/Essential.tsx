@@ -39,12 +39,7 @@ const HotkeySetting = memo(() => {
           hotkeyConflicts={hotkeyConflicts}
           placeholder={t('hotkey.record')}
           resetValue={item.keys}
-          texts={{
-            conflicts: t('hotkey.conflicts'),
-            invalidCombination: t('hotkey.invalidCombination'),
-            reset: t('hotkey.reset'),
-          }}
-        />
+/>
       ),
       desc: hotkeyMeta[`${item.id}.desc`] ? t(`${item.id}.desc`, { ns: 'hotkey' }) : undefined,
       label: t(`${item.id}.title`, { ns: 'hotkey' }),

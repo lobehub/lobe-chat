@@ -57,12 +57,7 @@ const HotkeySetting = memo(() => {
         }}
         placeholder={t('hotkey.record')}
         resetValue={item.keys}
-        texts={{
-          conflicts: t('hotkey.conflicts'),
-          invalidCombination: t('hotkey.invalidCombination'),
-          reset: t('hotkey.reset'),
-        }}
-        value={hotkeys[item.id]}
+value={hotkeys[item.id]}
       />
     ),
 

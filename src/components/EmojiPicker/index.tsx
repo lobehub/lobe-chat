@@ -14,16 +14,7 @@ export const EmojiPicker = memo<EmojiPickerProps>(({ shape = 'square', ...rest }
       shape={shape}
       {...rest}
       defaultAvatar={null as any}
-      locale={locale}
-      texts={{
-        delete: t('EmojiPicker.delete'),
-        draggerDesc: t('EmojiPicker.draggerDesc'),
-        emoji: t('EmojiPicker.emoji'),
-        fileTypeError: t('EmojiPicker.fileTypeError'),
-        upload: t('EmojiPicker.upload'),
-        uploadBtn: t('EmojiPicker.uploadBtn'),
-      }}
-    />
+      locale={locale}/>
   );
 });
 

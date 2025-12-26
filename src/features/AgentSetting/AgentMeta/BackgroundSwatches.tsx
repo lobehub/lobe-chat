@@ -79,11 +79,7 @@ const BackgroundSwatches = memo<BackgroundSwatchesProps>(
           onChange?.(v);
           onValuesChange?.(v);
         }}
-        texts={{
-          custom: t('custom'),
-          presets: t('presets'),
-        }}
-        value={value}
+value={value}
         {...rest}
       />
     );

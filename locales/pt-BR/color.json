@@ -1,6 +1,5 @@
 {
   "blue": "Azul do Amanhecer",
-  "custom": "Personalizado",
   "cyan": "Ciano Claro",
   "default": "Padrão",
   "geekblue": "Azul Geek",
@@ -11,7 +10,6 @@
   "mauve": "Roxo Malva",
   "olive": "Verde Oliva",
   "orange": "Laranja do Crepúsculo",
-  "presets": "Predefinições",
   "purple": "Roxo Escuro",
   "red": "Vermelho do Crepúsculo",
   "sage": "Verde Sálvia",
