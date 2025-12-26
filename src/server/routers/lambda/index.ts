@@ -1,6 +1,10 @@
 /**
  * This file contains the root router of Lobe Chat tRPC-backend
  */
+import { referralRouter } from '@/business/server/lambda-routers/referral';
+import { spendRouter } from '@/business/server/lambda-routers/spend';
+import { subscriptionRouter } from '@/business/server/lambda-routers/subscription';
+import { topUpRouter } from '@/business/server/lambda-routers/topUp';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 
 import { agentRouter } from './agent';
@@ -78,6 +82,12 @@ export const lambdaRouter = router({
   user: userRouter,
   userMemories: userMemoriesRouter,
   userMemory: userMemoryRouter,
+  /* eslint-disable sort-keys-fix/sort-keys-fix */
+  referral: referralRouter,
+  spend: spendRouter,
+  subscription: subscriptionRouter,
+  topUp: topUpRouter,
+  /* eslint-enable sort-keys-fix/sort-keys-fix */
 });
 
 export type LambdaRouter = typeof lambdaRouter;
