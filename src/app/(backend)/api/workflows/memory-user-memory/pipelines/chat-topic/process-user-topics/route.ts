@@ -10,6 +10,7 @@ import {
   normalizeMemoryExtractionPayload,
 } from '@/server/services/memory/userMemory/extract';
 import { MemorySourceType } from '@lobechat/types';
+import { orchestratorWorkflow } from '../process-topics/route';
 
 const TOPIC_PAGE_SIZE = 50;
 const TOPIC_BATCH_SIZE = 10;
@@ -90,16 +91,18 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
     const batches = chunk(ids, TOPIC_BATCH_SIZE);
     await Promise.all(
       batches.map((topicIds, index) =>
-        context.run(
+        context.invoke(
           `memory:user-memory:extract:users:${userId}:process-topics-batch:${index}`,
-          () =>
-            MemoryExtractionWorkflowService.triggerProcessTopicBatch({
+          {
+            body: {
               ...buildWorkflowPayloadInput(params),
               topicCursor: undefined,
               topicIds,
               userId,
               userIds: [userId],
-            }),
+            },
+            workflow: orchestratorWorkflow
+          }
         ),
       ),
     );
