@@ -79,7 +79,7 @@ const BackgroundSwatches = memo<BackgroundSwatchesProps>(
           onChange?.(v);
           onValuesChange?.(v);
         }}
-value={value}
+        value={value}
         {...rest}
       />
     );

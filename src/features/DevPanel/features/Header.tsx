@@ -1,4 +1,4 @@
-import { ActionIcon, type ActionIconProps , Flexbox, type FlexboxProps } from '@lobehub/ui';
+import { ActionIcon, type ActionIconProps, Flexbox, type FlexboxProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import React, { type ReactNode } from 'react';
 

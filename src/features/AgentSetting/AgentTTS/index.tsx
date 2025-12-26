@@ -95,10 +95,7 @@ const AgentTTS = memo(() => {
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-/>
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={{
         [TTS_SETTING_KEY]: config,

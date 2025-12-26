@@ -1,4 +1,4 @@
-import { Flexbox, Modal , Button } from '@lobehub/ui';
+import { Button, Flexbox, Modal } from '@lobehub/ui';
 import { App } from 'antd';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

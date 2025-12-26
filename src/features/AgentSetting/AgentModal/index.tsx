@@ -300,10 +300,7 @@ const AgentModal = memo(() => {
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-/>
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={config}
       items={[model]}

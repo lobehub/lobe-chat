@@ -66,10 +66,7 @@ const AgentChat = memo(() => {
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-/>
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={config}
       items={[chat]}

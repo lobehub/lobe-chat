@@ -1,10 +1,18 @@
 'use client';
 
-import { type Dispatch, type ReactNode, type SetStateAction, createContext, useContext, useEffect, useState } from 'react';
+import {
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-import type { ValidSearchType } from './utils/queryParser';
 import { type MenuContext, type PageType } from './types';
 import { detectContext } from './utils/context';
+import type { ValidSearchType } from './utils/queryParser';
 
 interface CommandMenuContextValue {
   menuContext: MenuContext;

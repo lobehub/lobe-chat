@@ -134,10 +134,7 @@ const AgentMeta = memo(() => {
   return (
     <Form
       disabled={!isAgentEditable}
-      footer={
-        <Form.SubmitFooter
-/>
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={meta}
       items={[metaData]}

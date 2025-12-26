@@ -41,12 +41,7 @@ const AskAIMenu = memo(() => {
   return (
     <Command.Group heading={heading}>
       <Command.Item onSelect={handleAskLobeAI} value="lobe-ai">
-        <Avatar
-          avatar={DEFAULT_INBOX_AVATAR}
-          emojiScaleWithBackground
-          shape="square"
-          size={18}
-        />
+        <Avatar avatar={DEFAULT_INBOX_AVATAR} emojiScaleWithBackground shape="square" size={18} />
         <div className={styles.itemContent}>
           <div className={styles.itemLabel}>Lobe AI</div>
         </div>

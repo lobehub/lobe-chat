@@ -29,10 +29,7 @@ const OllamaDesktopSetupGuide = memo<{ id?: string }>(({ id }) => {
       avatar={<Ollama.Avatar shape={'square'} size={40} />}
       desc={
         <Trans
-          components={[
-            <span key="0" />,
-            <Link href={'https://ollama.com/download'} key="1" />,
-          ]}
+          components={[<span key="0" />, <Link href={'https://ollama.com/download'} key="1" />]}
           i18nKey={'OllamaSetupGuide.install.description'}
           ns={'components'}
         />

@@ -73,10 +73,7 @@ const AgentTeamMetaSettings = memo(() => {
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-/>
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={{ ...meta, scene: config.scene }}
       items={[groupSettings]}
