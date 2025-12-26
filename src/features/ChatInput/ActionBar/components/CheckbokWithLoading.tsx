@@ -1,5 +1,4 @@
-import { Center, Flexbox, Icon } from '@lobehub/ui';
-import { Checkbox } from 'antd';
+import { Center, Flexbox, Icon , Checkbox } from '@lobehub/ui';
 import { Loader2 } from 'lucide-react';
 import { type ReactNode, memo, useState } from 'react';
 

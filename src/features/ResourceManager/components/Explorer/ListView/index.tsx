@@ -1,7 +1,6 @@
 'use client';
 
-import { Center, Flexbox } from '@lobehub/ui';
-import { Button, Checkbox } from 'antd';
+import { Button, Center, Checkbox, Flexbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';

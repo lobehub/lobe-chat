@@ -10,9 +10,9 @@ import {
   SearchBar,
   Text,
   Tooltip,
-} from '@lobehub/ui';
+ Checkbox } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { List as AntdList, Checkbox, Switch } from 'antd';
+import { List as AntdList, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { type ChangeEvent, memo, useCallback, useMemo, useRef, useState } from 'react';

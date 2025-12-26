@@ -1,6 +1,6 @@
 import { Form, type FormItemProps, Tag } from '@lobehub/ui';
-import { Flexbox } from '@lobehub/ui';
-import { Form as AntdForm, Checkbox } from 'antd';
+import { Flexbox , Checkbox } from '@lobehub/ui';
+import { Form as AntdForm } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'es-toolkit/compat';
 import isEqual from 'fast-deep-equal';
@@ -80,10 +80,10 @@ const ParamControlWrapper = memo<ParamControlWrapperProps>(
         <Checkbox
           checked={checked}
           className={styles.checkbox}
-          onChange={(e) => {
-            e.stopPropagation();
-            onToggle(e.target.checked);
+          onChange={(v) => {
+            onToggle(v);
           }}
+          onClick={(e) => e.stopPropagation()}
         />
         <div style={{ flex: 1 }}>
           <Component disabled={disabled} onChange={onChange} value={value} />

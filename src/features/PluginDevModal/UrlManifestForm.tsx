@@ -1,7 +1,7 @@
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { type LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { ActionIcon, Flexbox, FormItem, Input } from '@lobehub/ui';
-import { Checkbox, Form, type FormInstance } from 'antd';
+import { ActionIcon, Flexbox, FormItem, Input , Checkbox } from '@lobehub/ui';
+import { Form, type FormInstance } from 'antd';
 import { FileCode, RotateCwIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

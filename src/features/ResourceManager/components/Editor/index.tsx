@@ -46,6 +46,7 @@ const FileEditor = memo(() => {
                 setMode('explorer');
                 setCurrentViewItemId(undefined);
               }}
+              size={'small'}
               title={t('back')}
             />
             <Flexbox align={'center'} style={{ marginLeft: 8 }}>

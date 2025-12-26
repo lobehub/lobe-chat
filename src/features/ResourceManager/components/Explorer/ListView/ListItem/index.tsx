@@ -1,5 +1,5 @@
-import { Button, Center, Flexbox, Icon, Tooltip } from '@lobehub/ui';
-import { App, Checkbox, Input } from 'antd';
+import { Button, Center, Flexbox, Icon, Tooltip , Checkbox } from '@lobehub/ui';
+import { App, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -35,7 +35,6 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     opacity: 0;
   `;
   return {
-    checkbox: hover,
     container: css`
       cursor: pointer;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
@@ -358,11 +357,7 @@ const FileListItem = memo<FileListItemProps>(
               onPointerDown={(e) => e.stopPropagation()}
               style={{ paddingInline: 4 }}
             >
-              <Checkbox
-                checked={selected}
-                className={selected ? '' : styles.hover}
-                style={{ borderRadius: '50%' }}
-              />
+              <Checkbox checked={selected} />
             </Center>
             <Flexbox
               align={'center'}

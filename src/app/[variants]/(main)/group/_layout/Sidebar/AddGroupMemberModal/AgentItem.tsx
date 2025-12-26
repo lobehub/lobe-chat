@@ -1,8 +1,7 @@
 'use client';
 
-import { Avatar, Flexbox, Text } from '@lobehub/ui';
+import { Avatar, Flexbox, Text , Checkbox } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import { X } from 'lucide-react';
 import { memo, useRef } from 'react';

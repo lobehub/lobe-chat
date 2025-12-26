@@ -1,4 +1,4 @@
-import { Checkbox } from 'antd';
+import { Checkbox } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';

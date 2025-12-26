@@ -1,5 +1,5 @@
-import { Button, Flexbox, Icon, Skeleton } from '@lobehub/ui';
-import { App, Checkbox } from 'antd';
+import { Button, Flexbox, Icon, Skeleton , Checkbox } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { BookMinusIcon, BookPlusIcon, FileBoxIcon, Trash2Icon } from 'lucide-react';
 import { rgba } from 'polished';
