@@ -1,10 +1,10 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { mutate } from 'swr';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
 import { message } from '@/components/AntdStaticMethods';
 import { FILE_UPLOAD_BLACKLIST, MAX_UPLOAD_FILE_COUNT } from '@/const/file';
+import { mutate } from '@/libs/swr';
 import { lambdaClient } from '@/libs/trpc/client';
 import { fileService } from '@/services/file';
 import { ragService } from '@/services/rag';
@@ -47,9 +47,9 @@ vi.mock('p-map', () => ({
   }),
 }));
 
-// Mock SWR
-vi.mock('swr', async () => {
-  const actual = await vi.importActual('swr');
+// Mock @/libs/swr mutate
+vi.mock('@/libs/swr', async () => {
+  const actual = await vi.importActual('@/libs/swr');
   return {
     ...actual,
     mutate: vi.fn(),

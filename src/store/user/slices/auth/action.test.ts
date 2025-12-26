@@ -1,15 +1,16 @@
 import { act, renderHook } from '@testing-library/react';
-import { mutate } from 'swr';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { mutate } from '@/libs/swr';
 import { useUserStore } from '@/store/user';
 
 vi.mock('zustand/traditional');
 
-vi.mock('swr', async (importOriginal) => {
-  const modules = await importOriginal();
+// Mock @/libs/swr mutate
+vi.mock('@/libs/swr', async () => {
+  const actual = await vi.importActual('@/libs/swr');
   return {
-    ...(modules as any),
+    ...actual,
     mutate: vi.fn(),
   };
 });

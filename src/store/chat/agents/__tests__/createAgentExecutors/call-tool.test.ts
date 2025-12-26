@@ -88,6 +88,7 @@ describe('call_tool executor', () => {
       expect(mockStore.internal_invokeDifferentTypePlugin).toHaveBeenCalledWith(
         createdMessage.id,
         toolCall,
+        undefined, // stepContext is undefined when not provided
       );
     });
 
@@ -321,6 +322,7 @@ describe('call_tool executor', () => {
       expect(mockStore.internal_invokeDifferentTypePlugin).toHaveBeenCalledWith(
         'msg_existing_tool',
         expect.any(Object),
+        undefined, // stepContext is undefined when not provided
       );
     });
 
@@ -374,6 +376,7 @@ describe('call_tool executor', () => {
       expect(mockStore.internal_invokeDifferentTypePlugin).toHaveBeenCalledWith(
         'msg_tool_reuse',
         toolCall,
+        undefined, // stepContext is undefined when not provided
       );
     });
   });
@@ -1633,6 +1636,7 @@ describe('call_tool executor', () => {
       expect(mockStore.internal_invokeDifferentTypePlugin).toHaveBeenCalledWith(
         expect.any(String),
         toolCall,
+        undefined, // stepContext is undefined when not provided
       );
     });
 
