@@ -46,3 +46,5 @@ export class EdgeConfig {
     return featureFlags;
   };
 }
+
+export * from './types';
