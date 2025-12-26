@@ -1,6 +1,6 @@
 interface RouterInstance {
   apiType: string;
-  models: string[];
+  models?: string[];
   options: {
     accessKeyId?: string;
     accessKeySecret?: string;
@@ -22,6 +22,7 @@ interface LobehubRouterRuntimeOptions {
 export const lobehubRouterRuntimeOptions: LobehubRouterRuntimeOptions = {
   id: 'lobehub',
 
+  // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
   routers: async (options, { model: _model }) => {
     return [];
   },
