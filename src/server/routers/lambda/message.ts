@@ -64,7 +64,7 @@ export const messageRouter = router({
     return ctx.messageModel.getHeatmaps();
   }),
 
-  // TODO: 未来这部分方法也需要使用 authedProcedure
+  // TODO: In the future, these methods should also use authedProcedure
   getMessages: publicProcedure
     .input(
       z.object({
