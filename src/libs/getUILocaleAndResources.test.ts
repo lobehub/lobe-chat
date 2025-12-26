@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { getUILocaleAndResources } from './getUILocaleAndResources';
 
@@ -48,6 +48,16 @@ describe('getUILocaleAndResources', () => {
   it('should return es-ES locale and custom resources for es-ES', async () => {
     const result = await getUILocaleAndResources('es-ES');
     expect(result.locale).toBe('es-ES');
+    expect(result.resources).toBeDefined();
+  });
+
+  it('should fallback to @lobehub/ui builtin resources if business ui.json is missing', async () => {
+    vi.resetModules();
+    vi.doMock('@/../locales/en-US/ui.json', () => ({ default: null }));
+
+    const { getUILocaleAndResources: getWithFallback } = await import('./getUILocaleAndResources');
+    const result = await getWithFallback('unknown-locale');
+    expect(result.locale).toBe('en-US');
     expect(result.resources).toBeDefined();
   });
 });
