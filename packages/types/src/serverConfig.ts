@@ -50,6 +50,7 @@ export interface GlobalServerConfig {
   aiProvider: ServerLanguageModel;
   defaultAgent?: PartialDeep<UserDefaultAgent>;
   enableKlavis?: boolean;
+  enableMarketTrustedClient?: boolean;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
   /**

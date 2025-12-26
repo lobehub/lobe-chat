@@ -66,6 +66,7 @@ export const getServerGlobalConfig = async () => {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
     enableKlavis: !!klavisEnv.KLAVIS_API_KEY,
+    enableMarketTrustedClient: !!(appEnv.MARKET_TRUSTED_CLIENT_SECRET && appEnv.MARKET_TRUSTED_CLIENT_ID),
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enabledAccessCode: ACCESS_CODES?.length > 0,
 

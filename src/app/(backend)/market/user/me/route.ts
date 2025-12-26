@@ -64,7 +64,13 @@ export const PUT = async (req: NextRequest) => {
       );
     }
 
-    const response = await market.user.updateUserInfo(payload);
+    // Ensure meta is at least an empty object
+    const normalizedPayload = {
+      ...payload,
+      meta: payload.meta ?? {},
+    };
+
+    const response = await market.user.updateUserInfo(normalizedPayload);
 
     return NextResponse.json(response);
   } catch (error) {
