@@ -9,7 +9,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen3-vl-plus',
+      deploymentName: 'qwen3-vl-plus-2025-12-19',
     },
     contextWindowTokens: 262_144,
     description:
