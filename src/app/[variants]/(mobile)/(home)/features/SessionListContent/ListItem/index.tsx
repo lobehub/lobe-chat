@@ -1,8 +1,9 @@
-import { Avatar, GroupAvatar, List, type ListItemProps } from '@lobehub/ui';
+import { Avatar, List, type ListItemProps } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { createStyles } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
 
+import GroupAvatar from '@/features/GroupAvatar';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 const { Item } = List;

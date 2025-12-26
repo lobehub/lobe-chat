@@ -1,24 +1,16 @@
 'use client';
 
-import { Block, GroupAvatar } from '@lobehub/ui';
+import { Block } from '@lobehub/ui';
 import { memo } from 'react';
 
-import { DEFAULT_AVATAR } from '@/const/meta';
+import GroupAvatar from '@/features/GroupAvatar';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
-import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
 
 const HeaderAvatar = memo<{ size?: number }>(() => {
-  const groupMeta = useAgentGroupStore(agentGroupSelectors.currentGroupMeta);
   const currentGroup = useAgentGroupStore(agentGroupSelectors.currentGroup);
   const agents = currentGroup?.agents || [];
-
-  const currentUser = useUserStore((s) => ({
-    avatar: userProfileSelectors.userAvatar(s),
-    name: userProfileSelectors.displayUserName(s) || userProfileSelectors.nickName(s) || 'You',
-  }));
 
   const openChatSettings = useOpenChatSettings();
 
@@ -39,19 +31,11 @@ const HeaderAvatar = memo<{ size?: number }>(() => {
       width={32}
     >
       <GroupAvatar
-        avatarShape={'square'}
-        avatars={[
-          {
-            avatar: currentUser.avatar || DEFAULT_AVATAR,
-          },
-          ...agents.map((agent) => ({
-            avatar: agent.avatar || DEFAULT_AVATAR,
-            background: agent.backgroundColor || undefined,
-          })),
-        ]}
-        cornerShape={'square'}
+        avatars={agents.map((agent) => ({
+          avatar: agent.avatar,
+          background: agent.backgroundColor || undefined,
+        }))}
         size={28}
-        title={groupMeta.title || undefined}
       />
     </Block>
   );

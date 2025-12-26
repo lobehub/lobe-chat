@@ -2,16 +2,16 @@
 
 import {
   Avatar,
+  Button,
   Collapse,
   Empty,
   Flexbox,
-  GroupAvatar,
   List,
   Modal,
   SearchBar,
   Text,
   Tooltip,
- Button } from '@lobehub/ui';
+} from '@lobehub/ui';
 import { Checkbox, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { omit } from 'es-toolkit/compat';
@@ -20,6 +20,7 @@ import { type ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useSta
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
+import GroupAvatar from '@/features/GroupAvatar';
 import ModelSelect from '@/features/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useSessionStore } from '@/store/session';

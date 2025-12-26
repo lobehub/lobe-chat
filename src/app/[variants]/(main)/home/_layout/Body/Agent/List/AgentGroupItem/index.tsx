@@ -7,13 +7,13 @@ import { type CSSProperties, type DragEvent, memo, useCallback, useMemo } from '
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import GroupAvatar from '@/features/GroupAvatar';
 import NavItem from '@/features/NavPanel/components/NavItem';
 import { useGlobalStore } from '@/store/global';
 import { useHomeStore } from '@/store/home';
 
 import Actions from '../Item/Actions';
 import { useDropdownMenu } from '../Item/useDropdownMenu';
-import Avatar from './Avatar';
 import Editing from './Editing';
 
 interface GroupItemProps {
@@ -83,7 +83,7 @@ const GroupItem = memo<GroupItemProps>(({ item, style, className }) => {
     if (isUpdating) {
       return <Icon color={theme.colorTextDescription} icon={Loader2} size={18} spin />;
     }
-    return <Avatar avatar={avatar ?? null} />;
+    return <GroupAvatar avatars={(avatar as any) || []} size={22} />;
   }, [isUpdating, avatar, theme.colorTextDescription]);
 
   const dropdownMenu: MenuProps['items'] = useDropdownMenu({

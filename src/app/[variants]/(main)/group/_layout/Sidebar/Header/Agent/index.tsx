@@ -1,11 +1,12 @@
 'use client';
 
-import { ActionIcon, Block, GroupAvatar, Text } from '@lobehub/ui';
+import { ActionIcon, Block, Text } from '@lobehub/ui';
 import { ChevronsUpDownIcon } from 'lucide-react';
 import React, { type PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
+import GroupAvatar from '@/features/GroupAvatar';
 import { SkeletonItem } from '@/features/NavPanel/components/SkeletonList';
 import { useAgentGroupStore } from '@/store/agentGroup';
 import { agentGroupSelectors } from '@/store/agentGroup/selectors';
@@ -40,15 +41,11 @@ const Agent = memo<PropsWithChildren>(() => {
         variant={'borderless'}
       >
         <GroupAvatar
-          avatarShape={'square'}
           avatars={agents.map((agent) => ({
             avatar: agent.avatar || DEFAULT_AVATAR,
             background: agent.backgroundColor || undefined,
-            style: { borderRadius: 3 },
           }))}
-          cornerShape={'square'}
           size={28}
-          title={groupMeta?.title || undefined}
         />
         <Text ellipsis weight={500}>
           {displayTitle}
