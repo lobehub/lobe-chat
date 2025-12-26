@@ -29,7 +29,6 @@
     "mime": "^4.1.0",
     "model-bank": "workspace:*",
     "nanoid": "^5.1.6",
-    "next": "^16.0.1",
     "numeral": "^2.0.6",
     "pure-rand": "^7.0.1",
     "remark": "^15.0.1",
