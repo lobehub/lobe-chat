@@ -374,7 +374,6 @@
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/async-retry": "^1.4.9",
-    "@types/bcryptjs": "^3.0.0",
     "@types/chroma-js": "^3.1.2",
     "@types/crypto-js": "^4.2.2",
     "@types/debug": "^4.1.12",
