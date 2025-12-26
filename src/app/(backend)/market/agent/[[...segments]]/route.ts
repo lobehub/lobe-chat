@@ -1,6 +1,8 @@
 import { MarketSDK } from '@lobehub/market-sdk';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { getTrustedClientTokenForSession } from '@/libs/trusted-client';
+
 type RouteContext = {
   params: Promise<{
     segments?: string[];
@@ -54,9 +56,12 @@ const notFound = (reason: string) =>
 
 const handleAgent = async (req: NextRequest, segments: string[]) => {
   const accessToken = extractAccessToken(req);
+  const trustedClientToken = await getTrustedClientTokenForSession();
+
   const market = new MarketSDK({
     accessToken,
     baseURL: MARKET_BASE_URL,
+    trustedClientToken,
   });
 
   if (segments.length === 0) {

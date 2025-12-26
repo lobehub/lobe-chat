@@ -42,7 +42,12 @@ import {
   getTextInputUnitRate,
   getTextOutputUnitRate,
 } from '@lobechat/utils';
-import { type CategoryItem, type CategoryListQuery, MarketSDK, type UserInfoResponse } from '@lobehub/market-sdk';
+import {
+  type CategoryItem,
+  type CategoryListQuery,
+  MarketSDK,
+  type UserInfoResponse,
+} from '@lobehub/market-sdk';
 import { type CallReportRequest, type InstallReportRequest } from '@lobehub/market-types';
 import dayjs from 'dayjs';
 import debug from 'debug';
@@ -50,25 +55,41 @@ import { cloneDeep, countBy, isString, merge, uniq, uniqBy } from 'es-toolkit/co
 import matter from 'gray-matter';
 import urlJoin from 'url-join';
 
+import { type TrustedClientUserInfo, generateTrustedClientToken } from '@/libs/trusted-client';
 import { normalizeLocale } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
 import { PluginStore } from '@/server/modules/PluginStore';
 
 const log = debug('lobe-server:discover');
 
+export interface DiscoverServiceOptions {
+  /** Access token from OIDC flow (legacy) */
+  accessToken?: string;
+  /** User info for generating trusted client token */
+  userInfo?: TrustedClientUserInfo;
+}
+
 export class DiscoverService {
   assistantStore = new AssistantStore();
   pluginStore = new PluginStore();
   market: MarketSDK;
 
-  constructor({ accessToken }: { accessToken?: string } = {}) {
+  constructor(options: DiscoverServiceOptions = {}) {
+    const { accessToken, userInfo } = options;
+
+    // Generate trusted client token if user info is available
+    const trustedClientToken = userInfo ? generateTrustedClientToken(userInfo) : undefined;
+
     this.market = new MarketSDK({
       accessToken,
       baseURL: process.env.NEXT_PUBLIC_MARKET_BASE_URL,
+      trustedClientToken,
     });
     log(
-      'DiscoverService initialized with market baseURL: %s',
+      'DiscoverService initialized with market baseURL: %s, hasTrustedToken: %s, userId: %s',
       process.env.NEXT_PUBLIC_MARKET_BASE_URL,
+      !!trustedClientToken,
+      userInfo?.userId,
     );
   }
 

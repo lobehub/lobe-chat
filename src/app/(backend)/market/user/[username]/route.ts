@@ -1,6 +1,8 @@
 import { MarketSDK } from '@lobehub/market-sdk';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { getTrustedClientTokenForSession } from '@/libs/trusted-client';
+
 type RouteContext = {
   params: Promise<{
     username: string;
@@ -18,9 +20,11 @@ const MARKET_BASE_URL = process.env.NEXT_PUBLIC_MARKET_BASE_URL || 'https://mark
 export const GET = async (req: NextRequest, context: RouteContext) => {
   const { username } = await context.params;
   const decodedUsername = decodeURIComponent(username);
+  const trustedClientToken = await getTrustedClientTokenForSession();
 
   const market = new MarketSDK({
     baseURL: MARKET_BASE_URL,
+    trustedClientToken,
   });
 
   try {

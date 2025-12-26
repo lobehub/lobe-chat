@@ -1,6 +1,8 @@
 import { MarketSDK } from '@lobehub/market-sdk';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { getTrustedClientTokenForSession } from '@/libs/trusted-client';
+
 type RouteContext = {
   params: Promise<{
     segments?: string[];
@@ -33,18 +35,21 @@ export const POST = async (req: NextRequest, context: RouteContext) => {
   const { segments = [] } = await context.params;
   const action = segments[0];
   const accessToken = getAccessToken(req);
+  const trustedClientToken = await getTrustedClientTokenForSession();
 
-  if (!accessToken) {
+  const market = new MarketSDK({
+    accessToken,
+    baseURL: MARKET_BASE_URL,
+    trustedClientToken,
+  });
+
+  // Only require accessToken if trusted client token is not available
+  if (!accessToken && !trustedClientToken) {
     return NextResponse.json(
       { error: 'unauthorized', message: 'Access token required' },
       { status: 401 },
     );
   }
-
-  const market = new MarketSDK({
-    accessToken,
-    baseURL: MARKET_BASE_URL,
-  });
 
   try {
     const body = await req.json();
@@ -131,10 +136,12 @@ export const GET = async (req: NextRequest, context: RouteContext) => {
   const { segments = [] } = await context.params;
   const action = segments[0];
   const accessToken = getAccessToken(req);
+  const trustedClientToken = await getTrustedClientTokenForSession();
 
   const market = new MarketSDK({
     accessToken,
     baseURL: MARKET_BASE_URL,
+    trustedClientToken,
   });
 
   const url = new URL(req.url);

@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { type ToolCallContent } from '@/libs/mcp';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
-import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { marketUserInfo, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { DiscoverService } from '@/server/services/discover';
 import { FileService } from '@/server/services/file';
 import {
@@ -26,27 +26,40 @@ const log = debug('lambda-router:market');
 
 const marketSourceSchema = z.enum(['legacy', 'new']);
 
-const marketProcedure = publicProcedure.use(async ({ ctx, next }) => {
-  return next({
-    ctx: {
-      discoverService: new DiscoverService({ accessToken: ctx.marketAccessToken }),
-    },
+// Public procedure with optional user info for trusted client token
+const marketProcedure = publicProcedure
+  .use(serverDatabase)
+  .use(marketUserInfo)
+  .use(async ({ ctx, next }) => {
+    return next({
+      ctx: {
+        discoverService: new DiscoverService({
+          accessToken: ctx.marketAccessToken,
+          userInfo: ctx.marketUserInfo,
+        }),
+      },
+    });
   });
-});
 
 // Procedure with user authentication for operations requiring user access token
-const authedMarketProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next }) => {
-  const { UserModel } = await import('@/database/models/user');
-  const userModel = new UserModel(ctx.serverDB, ctx.userId);
+const authedMarketProcedure = authedProcedure
+  .use(serverDatabase)
+  .use(marketUserInfo)
+  .use(async ({ ctx, next }) => {
+    const { UserModel } = await import('@/database/models/user');
+    const userModel = new UserModel(ctx.serverDB, ctx.userId);
 
-  return next({
-    ctx: {
-      discoverService: new DiscoverService({ accessToken: ctx.marketAccessToken }),
-      fileService: new FileService(ctx.serverDB, ctx.userId),
-      userModel,
-    },
+    return next({
+      ctx: {
+        discoverService: new DiscoverService({
+          accessToken: ctx.marketAccessToken,
+          userInfo: ctx.marketUserInfo,
+        }),
+        fileService: new FileService(ctx.serverDB, ctx.userId),
+        userModel,
+      },
+    });
   });
-});
 
 export const marketRouter = router({
   // ============================== Cloud MCP Gateway ==============================
