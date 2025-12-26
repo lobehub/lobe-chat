@@ -1,5 +1,6 @@
 import { ModelProvider } from 'model-bank';
 
+import { transformSiliconCloudMessages } from '../../core/contextBuilders/siliconcloud';
 import {
   OpenAICompatibleFactoryOptions,
   createOpenAICompatibleRuntime,
@@ -73,6 +74,7 @@ export const params = {
       }
       return result;
     },
+    transformMessages: transformSiliconCloudMessages,
   },
   createImage: createSiliconCloudImage,
   debug: {
