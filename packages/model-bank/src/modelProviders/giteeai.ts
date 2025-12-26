@@ -4,7 +4,7 @@ import { type ModelProviderCard } from '@/types/llm';
 const GiteeAI: ModelProviderCard = {
   chatModels: [],
   checkModel: 'Qwen2.5-72B-Instruct',
-  description: 'Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。',
+  description: 'Gitee AI Serverless APIs provide plug-and-play LLM inference services for developers.',
   disableBrowserRequest: true,
   id: 'giteeai',
   modelList: { showModelFetcher: true },

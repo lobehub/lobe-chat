@@ -4,7 +4,7 @@ const InternLM: ModelProviderCard = {
   chatModels: [],
   checkModel: 'internlm2.5-latest',
   description:
-    '致力于大模型研究与开发工具链的开源组织。为所有 AI 开发者提供高效、易用的开源平台，让最前沿的大模型与算法技术触手可及',
+    'An open-source organization focused on large-model research and tooling, providing an efficient, easy-to-use platform that makes cutting-edge models and algorithms accessible.',
   disableBrowserRequest: true,
   id: 'internlm',
   modelList: { showModelFetcher: true },

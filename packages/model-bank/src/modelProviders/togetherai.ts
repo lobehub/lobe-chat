@@ -6,7 +6,7 @@ const TogetherAI: ModelProviderCard = {
   chatModels: [],
   checkModel: 'meta-llama/Llama-Vision-Free',
   description:
-    'Together AI 致力于通过创新的 AI 模型实现领先的性能，提供广泛的自定义能力，包括快速扩展支持和直观的部署流程，满足企业的各种需求。',
+    'Together AI delivers leading performance with innovative models, broad customization, rapid scaling, and straightforward deployment for enterprise needs.',
   id: 'togetherai',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.together.ai/docs/chat-models',

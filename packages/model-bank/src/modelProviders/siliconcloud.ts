@@ -4,7 +4,7 @@ import { type ModelProviderCard } from '@/types/llm';
 const SiliconCloud: ModelProviderCard = {
   chatModels: [],
   checkModel: 'Pro/Qwen/Qwen2-7B-Instruct',
-  description: 'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
+  description: 'SiliconCloud is a cost-effective GenAI cloud service built on strong open-source base models.',
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://siliconflow.cn/zh-cn/models',

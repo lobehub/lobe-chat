@@ -4,7 +4,7 @@ const OllamaCloud: ModelProviderCard = {
     chatModels: [],
     checkModel: 'gpt-oss:20b',
     description:
-        'Ollama Cloud 提供官方托管的推理服务，开箱即用地访问 Ollama 模型库，并支持 OpenAI 兼容接口。',
+        'Ollama Cloud provides managed inference with out-of-the-box access to the Ollama model library and OpenAI-compatible APIs.',
     id: 'ollamacloud',
     modelsUrl: 'https://ollama.com/library',
     name: 'Ollama Cloud',

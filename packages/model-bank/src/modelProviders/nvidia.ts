@@ -4,7 +4,7 @@ const Nvidia: ModelProviderCard = {
   chatModels: [],
   checkModel: 'meta/llama-3.2-1b-instruct',
   description:
-    'NVIDIA NIM™ 提供容器，可用于自托管 GPU 加速推理微服务，支持在云端、数据中心、RTX™ AI 个人电脑和工作站上部署预训练和自定义 AI 模型。',
+    'NVIDIA NIM provides containers for self-hosted, GPU-accelerated inference microservices across cloud, data centers, RTX AI PCs, and workstations for pre-trained and custom models.',
   id: 'nvidia',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://build.nvidia.com/models',

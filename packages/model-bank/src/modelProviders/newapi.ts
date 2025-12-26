@@ -3,7 +3,7 @@ import { type ModelProviderCard } from '@/types/llm';
 const NewAPI: ModelProviderCard = {
   chatModels: [],
   checkModel: 'gpt-4o-mini',
-  description: '开源的多个 AI 服务聚合统一转发平台',
+  description: 'An open-source aggregation and routing platform for multiple AI services.',
   enabled: true,
   id: 'newapi',
   name: 'New API',

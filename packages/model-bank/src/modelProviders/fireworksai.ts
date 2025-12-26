@@ -6,7 +6,7 @@ const FireworksAI: ModelProviderCard = {
   chatModels: [],
   checkModel: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
   description:
-    'Fireworks AI 是一家领先的高级语言模型服务商，专注于功能调用和多模态处理。其最新模型 Firefunction V2 基于 Llama-3，优化用于函数调用、对话及指令跟随。视觉语言模型 FireLLaVA-13B 支持图像和文本混合输入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多语言指令跟随与生成支持。',
+    'Fireworks AI provides advanced language model services with function calling and multimodal processing. Firefunction V2 (based on Llama-3) is optimized for function calls, chat, and instruction following, while FireLLaVA-13B supports mixed image-text inputs. Other notable models include the Llama and Mixtral families.',
   id: 'fireworksai',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://fireworks.ai/models?show=Serverless',

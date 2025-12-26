@@ -5,7 +5,7 @@ import { type ModelProviderCard } from '@/types/llm';
 const Cloudflare: ModelProviderCard = {
   chatModels: [],
   checkModel: '@hf/meta-llama/meta-llama-3-8b-instruct',
-  description: '在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。',
+  description: 'Run serverless GPU-powered ML models across Cloudflare’s global network.',
   disableBrowserRequest: true,
   id: 'cloudflare',
   modelList: {

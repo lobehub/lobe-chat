@@ -11,7 +11,7 @@ import { type ModelProviderCard } from '@/types/llm';
 const ComfyUI: ModelProviderCard = {
   chatModels: [],
   description:
-    '强大的开源图像、视频、音频生成工作流引擎，支持 SD FLUX Qwen Hunyuan WAN 等先进模型，提供节点化工作流编辑和私有化部署能力',
+    'A powerful open-source workflow engine for image, video, and audio generation, supporting models like SD, FLUX, Qwen, Hunyuan, and WAN with node-based editing and private deployment.',
   enabled: true,
   id: 'comfyui',
   name: 'ComfyUI',

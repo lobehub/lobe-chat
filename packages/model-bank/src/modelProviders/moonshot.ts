@@ -5,7 +5,7 @@ const Moonshot: ModelProviderCard = {
   chatModels: [],
   checkModel: 'kimi-latest',
   description:
-    'Moonshot 是由北京月之暗面科技有限公司推出的开源平台，提供多种自然语言处理模型，应用领域广泛，包括但不限于内容创作、学术研究、智能推荐、医疗诊断等，支持长文本处理和复杂生成任务。',
+    'Moonshot, from Moonshot AI (Beijing Moonshot Technology), offers multiple NLP models for use cases like content creation, research, recommendations, and medical analysis, with strong long-context and complex generation support.',
   id: 'moonshot',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.moonshot.cn/docs/intro',

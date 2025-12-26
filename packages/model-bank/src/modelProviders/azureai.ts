@@ -4,7 +4,7 @@ import { type ModelProviderCard } from '@/types/llm';
 const Azure: ModelProviderCard = {
   chatModels: [],
   description:
-    'Azure 提供多种先进的AI模型，包括GPT-3.5和最新的GPT-4系列，支持多种数据类型和复杂任务，致力于安全、可靠和可持续的AI解决方案。',
+    'Azure provides advanced AI models, including GPT-3.5 and GPT-4 series, for diverse data types and complex tasks with a focus on safe, reliable, and sustainable AI.',
   id: 'azureai',
   modelsUrl: 'https://ai.azure.com/explore/models',
   name: 'Azure AI',
