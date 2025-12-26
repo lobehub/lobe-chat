@@ -101,7 +101,7 @@ export const { POST } = serve<MemoryExtractionPayloadInput>(async (context) => {
               userId,
               userIds: [userId],
             },
-            workflow: orchestratorWorkflow
+            workflow: orchestratorWorkflow,
           }
         ),
       ),

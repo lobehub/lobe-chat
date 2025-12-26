@@ -1768,9 +1768,9 @@ const WORKFLOW_PATHS = {
 } as const;
 
 export const TOPIC_WORKFLOW_NAMES = {
-  cep: 'memory:user-memory:extract:users:topics:extract-layers:cep',
-  identity: 'memory:user-memory:extract:users:topics:extract-layers:identity',
-  orchestrator: 'memory:user-memory:extract:users:topics:extract-layers:orchestrator',
+  cep: 'process-topics/extract-layers/cep',
+  identity: 'process-topics/extract-layers/identity',
+  orchestrator: 'process-topics/extract-layers/orchestrator',
 } as const;
 
 const getWorkflowUrl = (path: string, baseUrl: string) => {
