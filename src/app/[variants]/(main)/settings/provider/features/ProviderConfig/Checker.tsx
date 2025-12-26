@@ -21,7 +21,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
     <Flexbox gap={8} style={{ maxWidth: 600, width: '100%' }}>
       <Alert
         extra={
-          <Flexbox>
+          <Flexbox paddingBlock={8} paddingInline={16}>
             <Highlighter
               actionIconSize={'small'}
               language={'json'}
