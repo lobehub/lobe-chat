@@ -5,6 +5,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./modelProviders": "./src/modelProviders/index.ts",
+    "./modelProviders/lobehub": "./src/modelProviders/lobehub.ts",
     "./ai21": "./src/aiModels/ai21.ts",
     "./ai302": "./src/aiModels/ai302.ts",
     "./ai360": "./src/aiModels/ai360.ts",
