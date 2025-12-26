@@ -1,4 +1,4 @@
-import { ActionIcon, Flexbox, Tag } from '@lobehub/ui';
+import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
@@ -19,8 +19,11 @@ const useStyles = createStyles(({ css, token }) => ({
   time: css`
     font-size: 12px;
     color: ${token.colorTextTertiary};
+    margin-left: 6px;
   `,
   title: css`
+    font-size: 14px;
+    font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -61,7 +64,7 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
         return {
           key: topic.id,
           label: (
-            <Flexbox gap={4} horizontal justify="space-between" width="100%">
+            <Flexbox align="center" gap={4} horizontal justify="space-between" width="100%">
               <span className={styles.title}>{topic.title}</span>
               <span className={styles.time}>{displayTime}</span>
             </Flexbox>
@@ -74,7 +77,9 @@ const TopicSelector = memo<TopicSelectorProps>(({ agentId }) => {
 
   return (
     <NavHeader
-      left={activeTopic?.title ? <Tag>{activeTopic.title}</Tag> : undefined}
+      left={
+        activeTopic?.title ? <span className={styles.title}>{activeTopic.title}</span> : undefined
+      }
       right={
         <>
           <ActionIcon

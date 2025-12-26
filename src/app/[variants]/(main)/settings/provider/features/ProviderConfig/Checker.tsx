@@ -21,7 +21,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
     <Flexbox gap={8} style={{ maxWidth: 600, width: '100%' }}>
       <Alert
         extra={
-          <Flexbox>
+          <Flexbox paddingBlock={8} paddingInline={16}>
             <Highlighter
               actionIconSize={'small'}
               language={'json'}
@@ -62,8 +62,6 @@ const Checker = memo<ConnectionCheckerProps>(
       aiProviderSelectors.isProviderConfigUpdating(provider),
     );
     const totalModels = useAiInfraStore(aiModelSelectors.aiProviderChatModelListIds);
-    const updateAiProviderConfig = useAiInfraStore((s) => s.updateAiProviderConfig);
-    const currentConfig = useAiInfraStore(aiProviderSelectors.providerConfigById(provider));
 
     const [loading, setLoading] = useState(false);
     const [pass, setPass] = useState(false);
@@ -109,12 +107,12 @@ const Checker = memo<ConnectionCheckerProps>(
               role: 'user',
             },
           ],
-          model,
+          model: checkModel,
           provider,
         },
         trace: {
           sessionId: `connection:${provider}`,
-          topicId: model,
+          topicId: checkModel,
           traceName: TraceNameMap.ConnectivityChecker,
         },
       });
@@ -134,11 +132,11 @@ const Checker = memo<ConnectionCheckerProps>(
           <Select
             listItemHeight={36}
             onSelect={async (value) => {
+              // Changing the check model should be a local UI concern only.
+              // Persisting it to provider config would trigger global refresh/revalidation.
               setCheckModel(value);
-              await updateAiProviderConfig(provider, {
-                ...currentConfig,
-                checkModel: value,
-              });
+              setPass(false);
+              setError(undefined);
             }}
             optionRender={({ value }) => {
               return (
@@ -159,6 +157,15 @@ const Checker = memo<ConnectionCheckerProps>(
           />
           <Button
             disabled={isProviderConfigUpdating}
+            icon={
+              pass ? (
+                <CheckCircleFilled
+                  style={{
+                    color: theme.colorSuccess,
+                  }}
+                />
+              ) : undefined
+            }
             loading={loading}
             onClick={async () => {
               await onBeforeCheck();
@@ -168,21 +175,18 @@ const Checker = memo<ConnectionCheckerProps>(
                 await onAfterCheck();
               }
             }}
+            style={
+              pass
+                ? {
+                    borderColor: theme.colorSuccess,
+                    color: theme.colorSuccess,
+                  }
+                : undefined
+            }
           >
-            {t('llm.checker.button')}
+            {pass ? t('llm.checker.pass') : t('llm.checker.button')}
           </Button>
         </Flexbox>
-
-        {pass && (
-          <Flexbox gap={4} horizontal>
-            <CheckCircleFilled
-              style={{
-                color: theme.colorSuccess,
-              }}
-            />
-            {t('llm.checker.pass')}
-          </Flexbox>
-        )}
         {error && errorContent}
       </Flexbox>
     );

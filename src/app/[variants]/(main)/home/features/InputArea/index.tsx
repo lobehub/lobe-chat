@@ -14,7 +14,7 @@ import { useSend } from './useSend';
 
 const leftActions: ActionKeys[] = ['model', 'search', 'fileUpload'];
 
-const InputArea = memo(() => {
+const InputArea = () => {
   const { loading, send, inboxAgentId } = useSend();
   const inputActiveMode = useHomeStore((s) => s.inputActiveMode);
 
@@ -71,6 +71,6 @@ const InputArea = memo(() => {
       <StarterList />
     </Flexbox>
   );
-});
+};
 
 export default InputArea;

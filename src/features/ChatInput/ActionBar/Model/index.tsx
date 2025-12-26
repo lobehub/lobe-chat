@@ -17,7 +17,7 @@ import ControlsForm from './ControlsForm';
 
 const useStyles = createStyles(({ css, token, cx }) => ({
   container: css`
-    border-radius: 20px;
+    border-radius: 10px;
     background: ${token.colorFillTertiary};
   `,
   icon: cx(
@@ -41,7 +41,7 @@ const useStyles = createStyles(({ css, token, cx }) => ({
     }
   `,
   modelWithControl: css`
-    border-radius: 20px;
+    border-radius: 12px;
 
     :hover {
       background: ${token.colorFillTertiary};
@@ -105,7 +105,7 @@ const ModelSwitch = memo(() => {
             placement: 'topLeft',
           }}
           showTooltip={false}
-          style={{ borderRadius: 20, marginInlineStart: -4 }}
+          style={{ borderRadius: 12, marginInlineStart: -4 }}
           title={t('extendParams.title')}
         />
       )}

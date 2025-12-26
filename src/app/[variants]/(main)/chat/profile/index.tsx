@@ -49,7 +49,6 @@ const ProfileArea = memo(() => {
     </>
   );
 });
-
 const AgentProfile: FC = () => {
   return (
     <Suspense fallback={<Loading debugId="AgentProfile" />}>
