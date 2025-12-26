@@ -66,16 +66,7 @@ const AgentChat = memo(() => {
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-          texts={{
-            reset: t('submitFooter.reset'),
-            submit: t('settingChat.submit'),
-            unSaved: t('submitFooter.unSaved'),
-            unSavedWarning: t('submitFooter.unSavedWarning'),
-          }}
-        />
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={config}
       items={[chat]}

@@ -205,9 +205,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
             // Convert to LobeDocument format
             const realPage = {
               content: parsedDocument.content || '',
-              createdAt: parsedDocument.createdAt
-                ? new Date(parsedDocument.createdAt)
-                : new Date(),
+              createdAt: parsedDocument.createdAt ? new Date(parsedDocument.createdAt) : new Date(),
               editorData:
                 typeof parsedDocument.editorData === 'string'
                   ? JSON.parse(parsedDocument.editorData)
@@ -221,9 +219,7 @@ const PageExplorerPlaceholder = memo<PageExplorerPlaceholderProps>(
               title: parsedDocument.title || fileName,
               totalCharCount: parsedDocument.totalCharCount || 0,
               totalLineCount: parsedDocument.totalLineCount || 0,
-              updatedAt: parsedDocument.updatedAt
-                ? new Date(parsedDocument.updatedAt)
-                : new Date(),
+              updatedAt: parsedDocument.updatedAt ? new Date(parsedDocument.updatedAt) : new Date(),
             };
 
             // Replace optimistic with real document

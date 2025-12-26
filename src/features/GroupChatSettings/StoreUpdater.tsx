@@ -6,10 +6,9 @@ import { createStoreUpdater } from 'zustand-utils';
 import { type GroupChatSettingsInstance, useGroupChatSettings } from './hooks/useGroupChatSettings';
 import { type State, useStoreApi } from './store';
 
-export interface StoreUpdaterProps
-  extends Partial<
-    Pick<State, 'onMetaChange' | 'onConfigChange' | 'meta' | 'config' | 'id' | 'loading'>
-  > {
+export interface StoreUpdaterProps extends Partial<
+  Pick<State, 'onMetaChange' | 'onConfigChange' | 'meta' | 'config' | 'id' | 'loading'>
+> {
   instanceRef?: ForwardedRef<GroupChatSettingsInstance> | null;
 }
 

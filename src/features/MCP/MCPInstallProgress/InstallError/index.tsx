@@ -1,4 +1,4 @@
-import { Alert, Flexbox , Button } from '@lobehub/ui';
+import { Alert, Button, Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

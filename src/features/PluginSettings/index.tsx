@@ -4,7 +4,6 @@ import { Form as AForm } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
@@ -42,8 +41,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) => {
   const { styles } = useStyles();
-  const { t } = useTranslation('setting');
-
   const [updatePluginSettings] = useToolStore((s) => [s.updatePluginSettings]);
   const pluginSetting = useToolStore(pluginSelectors.getPluginSettingsById(id), isEqual);
 
@@ -53,16 +50,7 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-          texts={{
-            reset: t('submitFooter.reset'),
-            submit: t('submitFooter.submit'),
-            unSaved: t('submitFooter.unSaved'),
-            unSavedWarning: t('submitFooter.unSavedWarning'),
-          }}
-        />
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       gap={16}
       initialValues={pluginSetting}

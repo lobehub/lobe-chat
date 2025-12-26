@@ -1,5 +1,5 @@
 import { type LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { Block, Flexbox, Icon, Text , Button } from '@lobehub/ui';
+import { Block, Button, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Form as AForm, type FormInstance } from 'antd';
 import { useTheme } from 'antd-style';
 import { FileCode } from 'lucide-react';

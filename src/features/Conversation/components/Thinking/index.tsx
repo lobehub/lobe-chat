@@ -1,6 +1,14 @@
 import { Accordion, AccordionItem, ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { type CSSProperties, type ReactNode, type RefObject, memo, useEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  type RefObject,
+  memo,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import MarkdownMessage from '@/features/Conversation/Markdown';
 import { type ChatCitationItem } from '@/types/index';

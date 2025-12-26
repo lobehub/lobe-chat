@@ -300,16 +300,7 @@ const AgentModal = memo(() => {
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-          texts={{
-            reset: t('submitFooter.reset'),
-            submit: t('settingModel.submit'),
-            unSaved: t('submitFooter.unSaved'),
-            unSavedWarning: t('submitFooter.unSavedWarning'),
-          }}
-        />
-      }
+      footer={<Form.SubmitFooter />}
       form={form}
       initialValues={config}
       items={[model]}

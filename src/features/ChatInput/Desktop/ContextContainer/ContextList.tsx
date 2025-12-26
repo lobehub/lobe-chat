@@ -5,8 +5,8 @@ import { memo, useEffect, useMemo, useRef } from 'react';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 import { UPLOAD_STATUS_SET } from '@/types/files/upload';
 
-import FileItem from '../FilePreview/FileItem';
 import { useAgentId } from '../../hooks/useAgentId';
+import FileItem from '../FilePreview/FileItem';
 import ContextItem from './ContextItem';
 import SelectionItem from './SelectionItem';
 

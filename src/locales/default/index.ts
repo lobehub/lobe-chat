@@ -33,6 +33,7 @@ import subscription from './subscription';
 import thread from './thread';
 import tool from './tool';
 import topic from './topic';
+import ui from './ui';
 import welcome from './welcome';
 
 const resources = {
@@ -72,6 +73,7 @@ const resources = {
   thread,
   tool,
   topic,
+  ui,
   welcome,
 } as const;
 

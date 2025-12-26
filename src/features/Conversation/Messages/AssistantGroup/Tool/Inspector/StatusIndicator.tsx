@@ -1,14 +1,7 @@
 import { type ToolIntervention } from '@lobechat/types';
 import { Block, Icon, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import {
-  Ban,
-  Check,
-  HandIcon,
-  Loader2Icon,
-  PauseIcon,
-  X,
-} from 'lucide-react';
+import { Ban, Check, HandIcon, Loader2Icon, PauseIcon, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 

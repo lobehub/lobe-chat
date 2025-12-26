@@ -3,7 +3,13 @@
 import { DraggablePanel } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { AnimatePresence, motion } from 'motion/react';
-import { type PropsWithChildren, type ReactNode, memo, useLayoutEffect, useSyncExternalStore } from 'react';
+import {
+  type PropsWithChildren,
+  type ReactNode,
+  memo,
+  useLayoutEffect,
+  useSyncExternalStore,
+} from 'react';
 
 import { USER_DROPDOWN_ICON_ID } from '@/app/[variants]/(main)/home/_layout/Header/components/User';
 import { isDesktop } from '@/const/version';

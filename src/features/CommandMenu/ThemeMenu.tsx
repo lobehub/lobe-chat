@@ -3,8 +3,8 @@ import { Monitor, Moon, Sun } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useCommandMenu } from './useCommandMenu';
 import { useStyles } from './styles';
+import { useCommandMenu } from './useCommandMenu';
 
 const ThemeMenu = memo(() => {
   const { t } = useTranslation('common');
