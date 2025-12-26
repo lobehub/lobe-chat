@@ -48,6 +48,8 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
         padding={8}
         style={{
           background: theme.colorBgContainer,
+          borderBottom: `1px solid ${theme.colorBorderSecondary}`,
+          marginBottom: 8,
           position: 'sticky',
           top: 0,
           zIndex: 50,
@@ -74,6 +76,7 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
           style={{ width: '100%' }}
           styles={{
             input: {
+              paddingBlock: 3,
               paddingLeft: 6,
             },
           }}

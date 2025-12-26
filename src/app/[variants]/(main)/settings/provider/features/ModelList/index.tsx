@@ -21,7 +21,10 @@ import DisabledModels from './DisabledModels';
 import EmptyModels from './EmptyModels';
 import EnabledModelList from './EnabledModelList';
 import ModelTitle from './ModelTitle';
-import { ProviderSettingsContext, type ProviderSettingsContextValue } from './ProviderSettingsContext';
+import {
+  ProviderSettingsContext,
+  type ProviderSettingsContextValue,
+} from './ProviderSettingsContext';
 import SearchResult from './SearchResult';
 import SkeletonList from './SkeletonList';
 
@@ -129,7 +132,7 @@ const Content = memo<ContentProps>(({ id }) => {
         items={tabs}
         onChange={setActiveTab}
         size="small"
-        style={{ marginBottom: 12 }}
+        style={{ marginBottom: 12, marginLeft: -6 }}
       />
       <EnabledModelList activeTab={currentActiveTab} />
       <DisabledModels activeTab={currentActiveTab} />
