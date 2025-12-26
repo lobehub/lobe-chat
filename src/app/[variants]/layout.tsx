@@ -17,7 +17,7 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 const inVercel = process.env.VERCEL === '1';
 
-interface RootLayoutProps extends DynamicLayoutProps {
+export interface RootLayoutProps extends DynamicLayoutProps {
   children: ReactNode;
 }
 
