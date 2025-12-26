@@ -112,7 +112,7 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
     <>
       {
         // desktop devtools 下隐藏
-        pathname !== '/desktop/devtools' && (
+        pathname !== '/desktop/devtools' && isDesktop && (
           <FloatButton
             className={styles.floatButton}
             icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
