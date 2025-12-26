@@ -6,9 +6,9 @@ import {
 
 export interface TrayDispatchEvents {
   /**
-   * 显示托盘通知
-   * @param params 通知参数
-   * @returns 操作结果
+   * Show tray notification
+   * @param params Notification parameters
+   * @returns Operation result
    */
   showTrayNotification: (params: ShowTrayNotificationParams) => {
     error?: string;
@@ -16,16 +16,16 @@ export interface TrayDispatchEvents {
   };
 
   /**
-   * 更新托盘图标
-   * @param params 图标参数
-   * @returns 操作结果
+   * Update tray icon
+   * @param params Icon parameters
+   * @returns Operation result
    */
   updateTrayIcon: (params: UpdateTrayIconParams) => { error?: string; success: boolean };
 
   /**
-   * 更新托盘提示文本
-   * @param params 提示文本参数
-   * @returns 操作结果
+   * Update tray tooltip text
+   * @param params Tooltip text parameters
+   * @returns Operation result
    */
   updateTrayTooltip: (params: UpdateTrayTooltipParams) => { error?: string; success: boolean };
 }

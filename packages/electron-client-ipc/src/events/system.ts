@@ -8,8 +8,8 @@ export interface SystemDispatchEvents {
   minimizeWindow: () => void;
   openExternalLink: (url: string) => void;
   /**
-   * 更新应用语言设置
-   * @param locale 语言设置
+   * Update application language settings
+   * @param locale Language setting
    */
   updateLocale: (locale: string) => { success: boolean };
   updateThemeMode: (themeMode: ThemeMode) => void;
