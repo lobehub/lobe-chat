@@ -3,14 +3,14 @@
 import { Center, Flexbox, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { cx, useThemeMode } from 'antd-style';
-import { type PropsWithChildren, memo } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 
 import LangButton from '@/features/User/UserPanel/LangButton';
 import ThemeButton from '@/features/User/UserPanel/ThemeButton';
 
 import { styles } from './style';
 
-const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
+const OnBoardingContainer: FC<PropsWithChildren> = ({ children }) => {
   const { isDarkMode } = useThemeMode();
   return (
     <Flexbox className={styles.outerContainer} height={'100%'} padding={8} width={'100%'}>
@@ -30,7 +30,7 @@ const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
           <div />
           <Flexbox align={'center'} horizontal>
             <LangButton placement={'bottomRight'} size={18} />
-            <Divider className={styles.divider} type={'vertical'} />
+            <Divider className={styles.divider} orientation={'vertical'} />
             <ThemeButton placement={'bottomRight'} size={18} />
           </Flexbox>
         </Flexbox>
@@ -45,7 +45,7 @@ const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
       </Flexbox>
     </Flexbox>
   );
-});
+};
 
 OnBoardingContainer.displayName = 'OnBoardingContainer';
 
