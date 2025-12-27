@@ -1,5 +1,5 @@
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import { rgba } from 'polished';
 import { useLayoutEffect } from 'react';
 
@@ -21,8 +21,6 @@ export const useWatchThemeUpdate = () => {
     s.switchThemeMode,
     s.switchLocale,
   ]);
-
-  const theme = useTheme();
 
   useWatchBroadcast('themeChanged', ({ themeMode }) => {
     switchThemeMode(themeMode, { skipBroadcast: true });
@@ -46,6 +44,6 @@ export const useWatchThemeUpdate = () => {
 
     // https://x.com/alanblogsooo/status/1939208908993896684
 
-    document.body.style.background = rgba(theme.colorBgLayout, 0.66);
-  }, [theme, systemAppearance, isAppStateInit, isMac]);
+    document.body.style.background = rgba(cssVar.colorBgLayout, 0.66);
+  }, [systemAppearance, isAppStateInit, isMac]);
 };

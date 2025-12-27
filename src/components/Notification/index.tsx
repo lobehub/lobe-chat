@@ -1,12 +1,12 @@
 'use client';
 
 import { ActionIcon, Flexbox, type FlexboxProps } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStyles, useThemeMode } from 'antd-style';
 import { XIcon } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }, isDarkMode: boolean) => ({
   cancelIcon: css`
     position: absolute;
     z-index: 100;
@@ -65,7 +65,8 @@ const Notification = memo<NotificationProps>(
     className,
     ...rest
   }) => {
-    const { styles, cx } = useStyles();
+    const { isDarkMode } = useThemeMode();
+    const { styles, cx } = useStyles(isDarkMode);
     const { className: wrapperClassName, ...restWrapper } = wrapper;
     return (
       show && (

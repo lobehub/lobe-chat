@@ -1,5 +1,5 @@
 import { Flexbox } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { cssVar, useTheme, useThemeMode } from 'antd-style';
 import { Activity, type FC, type ReactNode, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -13,7 +13,8 @@ interface LayoutProps {
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
-  const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
+  const theme = useTheme(); // Keep for colorBgContainerSecondary (not in cssVar)
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isHomeRoute = pathname === '/';
@@ -47,8 +48,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           flex={1}
           height={'100%'}
           style={{
-            background: theme.isDarkMode
-              ? `linear-gradient(to bottom, ${theme.colorBgContainer}, ${theme.colorBgContainerSecondary})`
+            background: isDarkMode
+              ? `linear-gradient(to bottom, ${cssVar.colorBgContainer}, ${theme.colorBgContainerSecondary})`
               : theme.colorBgContainerSecondary,
             overflow: 'hidden',
           }}

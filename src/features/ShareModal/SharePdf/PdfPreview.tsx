@@ -1,7 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Flexbox } from '@lobehub/ui';
 import { Input, Modal, Spin } from 'antd';
-import { createStyles, cx } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { ChevronLeft, ChevronRight, Expand, FileText } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,7 @@ import { useContainerStyles } from '../style';
 // Set PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `https://registry.npmmirror.com/pdfjs-dist/${pdfjs.version}/files/build/pdf.worker.min.mjs`;
 
-const useStyles = createStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   containerWrapper: css`
     position: relative;
     width: 100%;
@@ -51,9 +51,9 @@ const useStyles = createStyles(({ css }) => ({
     inset-inline: 0 0;
 
     padding: 12px;
-    border-block-start: 1px solid rgba(0, 0, 0, 10%);
+    border-block-start: 1px solid color-mix(in srgb, black 10%, transparent);
 
-    background: rgba(255, 255, 255, 90%);
+    background: color-mix(in srgb, white 90%, transparent);
     backdrop-filter: blur(8px);
   `,
   fullscreenButton: css`
@@ -84,7 +84,7 @@ const useStyles = createStyles(({ css }) => ({
     padding-inline: 20px;
     border-radius: 8px;
 
-    background: rgba(0, 0, 0, 70%);
+    background: color-mix(in srgb, black 70%, transparent);
     backdrop-filter: blur(8px);
   `,
   fullscreenPageInput: css`
@@ -131,8 +131,8 @@ interface PdfPreviewProps {
 }
 
 const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) => {
-  const { styles } = useContainerStyles();
-  const { styles: localStyles } = useStyles();
+  const { styles: containerStyles } = useContainerStyles();
+  const localStyles = styles;
   const { t } = useTranslation('chat');
   const isMobile = useIsMobile();
 
@@ -192,7 +192,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
 
   if (loading) {
     return (
-      <div className={styles.preview} style={{ padding: 12 }}>
+      <div className={containerStyles.preview} style={{ padding: 12 }}>
         <div className={localStyles.loadingState}>
           <Spin indicator={<LoadingOutlined spin style={{ fontSize: 24 }} />} />
           <div className={localStyles.loadingText}>{t('shareModal.generatingPdf')}</div>
@@ -203,7 +203,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
 
   if (!pdfData) {
     return (
-      <div className={styles.preview} style={{ padding: 12 }}>
+      <div className={containerStyles.preview} style={{ padding: 12 }}>
         <div className={localStyles.emptyState}>
           <Button icon={<FileText size={20} />} onClick={onGeneratePdf} size="large" type="primary">
             {t('shareModal.generatePdf')}
@@ -229,7 +229,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
           />
         )}
 
-        <div className={cx(styles.preview, localStyles.previewContainer)}>
+        <div className={cx(containerStyles.preview, localStyles.previewContainer)}>
           <Document
             file={pdfDataUri}
             loading={

@@ -2,7 +2,7 @@
 
 import { Center } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
@@ -42,27 +42,27 @@ interface UploadState {
 
 // ======== Styles ======== //
 
-const useStyles = createStyles(({ css, token }) => {
+const styles = createStaticStyles(({ css }) => {
   return {
     changeButton: css`
       cursor: pointer;
 
       padding-block: 8px;
       padding-inline: 16px;
-      border: 1px solid ${token.colorBorder};
-      border-radius: ${token.borderRadius}px;
+      border: 1px solid ${cssVar.colorBorder};
+      border-radius: ${cssVar.borderRadius};
 
       font-size: 12px;
       font-weight: 500;
-      color: ${token.colorText};
+      color: ${cssVar.colorText};
 
-      background: ${token.colorBgContainer};
-      box-shadow: ${token.boxShadowSecondary};
+      background: ${cssVar.colorBgContainer};
+      box-shadow: ${cssVar.boxShadowSecondary};
 
       &:hover {
-        border-color: ${token.colorPrimary};
-        color: ${token.colorPrimary};
-        background: ${token.colorBgElevated};
+        border-color: ${cssVar.colorPrimary};
+        color: ${cssVar.colorPrimary};
+        background: ${cssVar.colorBgElevated};
       }
     `,
     changeOverlay: css`
@@ -75,9 +75,9 @@ const useStyles = createStyles(({ css, token }) => {
       justify-content: center;
 
       opacity: 0;
-      background: ${token.colorBgMask};
+      background: ${cssVar.colorBgMask};
 
-      transition: opacity ${token.motionDurationMid} ease;
+      transition: opacity ${cssVar.motionDurationMid} ease;
     `,
     container: css`
       width: 100%;
@@ -98,16 +98,16 @@ const useStyles = createStyles(({ css, token }) => {
       height: 24px;
       border-radius: 50%;
 
-      color: ${token.colorTextLightSolid};
+      color: ${cssVar.colorTextLightSolid};
 
       opacity: 0;
-      background: ${token.colorBgMask};
+      background: ${cssVar.colorBgMask};
 
-      transition: opacity ${token.motionDurationMid} ease;
+      transition: opacity ${cssVar.motionDurationMid} ease;
 
       &:hover {
-        color: ${token.colorError};
-        background: ${token.colorErrorBg};
+        color: ${cssVar.colorError};
+        background: ${cssVar.colorErrorBg};
       }
     `,
     placeholder: css`
@@ -115,30 +115,30 @@ const useStyles = createStyles(({ css, token }) => {
 
       width: 100%;
       height: 160px;
-      border: 1px solid ${token.colorBorder};
-      border-radius: ${token.borderRadiusLG}px;
+      border: 1px solid ${cssVar.colorBorder};
+      border-radius: ${cssVar.borderRadiusLG};
 
-      background: ${token.colorFillTertiary};
+      background: ${cssVar.colorFillTertiary};
 
-      transition: all ${token.motionDurationMid} ease;
+      transition: all ${cssVar.motionDurationMid} ease;
 
       &:hover {
-        background: ${token.colorFillSecondary};
+        background: ${cssVar.colorFillSecondary};
       }
 
       &.drag-over {
         transform: scale(1.02);
-        border-color: ${token.colorPrimary};
-        background: ${token.colorPrimaryBg};
+        border-color: ${cssVar.colorPrimary};
+        background: ${cssVar.colorPrimaryBg};
       }
     `,
     placeholderIcon: css`
-      color: ${token.colorTextTertiary};
+      color: ${cssVar.colorTextTertiary};
     `,
     placeholderText: css`
       font-size: 12px;
       line-height: 1.4;
-      color: ${token.colorTextSecondary};
+      color: ${cssVar.colorTextSecondary};
       text-align: center;
     `,
     successDisplay: css`
@@ -151,11 +151,11 @@ const useStyles = createStyles(({ css, token }) => {
       width: 100%;
       height: 160px;
       border: 2px solid transparent;
-      border-radius: ${token.borderRadiusLG}px;
+      border-radius: ${cssVar.borderRadiusLG};
 
-      background: ${token.colorBgContainer};
+      background: ${cssVar.colorBgContainer};
 
-      transition: all ${token.motionDurationMid} ease;
+      transition: all ${cssVar.motionDurationMid} ease;
 
       &:hover .change-overlay {
         opacity: 1;
@@ -167,8 +167,8 @@ const useStyles = createStyles(({ css, token }) => {
 
       &.drag-over {
         transform: scale(1.02);
-        border-color: ${token.colorPrimary};
-        background: ${token.colorPrimaryBg};
+        border-color: ${cssVar.colorPrimary};
+        background: ${cssVar.colorPrimaryBg};
       }
     `,
     uploadingDisplay: css`
@@ -178,10 +178,10 @@ const useStyles = createStyles(({ css, token }) => {
 
       width: 100%;
       height: 160px;
-      border: 2px solid ${token.colorPrimary};
-      border-radius: ${token.borderRadiusLG}px;
+      border: 2px solid ${cssVar.colorPrimary};
+      border-radius: ${cssVar.borderRadiusLG};
 
-      background: ${token.colorFillSecondary};
+      background: ${cssVar.colorFillSecondary};
     `,
     uploadingOverlay: css`
       position: absolute;
@@ -192,7 +192,7 @@ const useStyles = createStyles(({ css, token }) => {
       align-items: center;
       justify-content: center;
 
-      background: ${token.colorBgMask};
+      background: ${cssVar.colorBgMask};
     `,
   };
 });
@@ -218,8 +218,6 @@ interface CircularProgressProps {
 
 const CircularProgress: FC<CircularProgressProps> = memo(
   ({ value, size = 60, strokeWidth = 6, showText = true }) => {
-    const theme = useTheme();
-
     // Ensure value is between 0 and 100
     const progress = Math.min(100, Math.max(0, value));
 
@@ -250,7 +248,7 @@ const CircularProgress: FC<CircularProgressProps> = memo(
             cy={size / 2}
             fill="none"
             r={radius}
-            stroke={theme.colorBorder}
+            stroke={cssVar.colorBorder}
             strokeWidth={strokeWidth}
           />
         </svg>
@@ -266,7 +264,7 @@ const CircularProgress: FC<CircularProgressProps> = memo(
             cy={size / 2}
             fill="none"
             r={radius}
-            stroke={theme.colorPrimary}
+            stroke={cssVar.colorPrimary}
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             strokeLinecap="round"
@@ -281,7 +279,7 @@ const CircularProgress: FC<CircularProgressProps> = memo(
         {showText && (
           <span
             style={{
-              color: theme.colorPrimary,
+              color: cssVar.colorPrimary,
               fontSize: '12px',
               fontWeight: 600,
               position: 'relative',
@@ -307,7 +305,6 @@ interface PlaceholderProps {
 }
 
 const Placeholder: FC<PlaceholderProps> = memo(({ isDragOver, onClick }) => {
-  const { styles } = useStyles();
   const { styles: configStyles } = useConfigPanelStyles();
   const { t } = useTranslation('components');
 
@@ -343,8 +340,6 @@ interface UploadingDisplayProps {
 }
 
 const UploadingDisplay: FC<UploadingDisplayProps> = memo(({ previewUrl, progress }) => {
-  const { styles } = useStyles();
-
   return (
     <div className={styles.uploadingDisplay}>
       <Image
@@ -375,7 +370,6 @@ interface SuccessDisplayProps {
 
 const SuccessDisplay: FC<SuccessDisplayProps> = memo(
   ({ imageUrl, isDragOver, onDelete, onChangeImage }) => {
-    const { styles } = useStyles();
     const { styles: configStyles } = useConfigPanelStyles();
     const { t } = useTranslation('components');
 

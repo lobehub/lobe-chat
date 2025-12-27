@@ -1,10 +1,10 @@
-import { createStyles, cx } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { Check, X } from 'lucide-react';
 import { motion } from 'motion/react';
 
 import { LogoBrand } from './LogoBrand';
 
-const useAuthResultStyles = createStyles(({ token, css }) => ({
+const authResultStyles = createStaticStyles(({ css, cssVar }) => ({
   connectionLine: css`
     position: relative;
     width: 60px;
@@ -27,7 +27,7 @@ const useAuthResultStyles = createStyles(({ token, css }) => ({
     max-width: 400px;
     margin: 0;
 
-    font-size: ${token.fontSize}px;
+    font-size: ${cssVar.fontSize};
     line-height: 1.5;
     color: rgba(255, 255, 255, 60%);
   `,
@@ -41,7 +41,7 @@ const useAuthResultStyles = createStyles(({ token, css }) => ({
 
     width: 80px;
     height: 72px;
-    border-radius: ${token.borderRadiusLG}px;
+    border-radius: ${cssVar.borderRadiusLG};
 
     background: #2d2d2d;
 
@@ -73,7 +73,7 @@ const useAuthResultStyles = createStyles(({ token, css }) => ({
 
   errorIcon: css`
     color: white;
-    background: ${token.colorError};
+    background: ${cssVar.colorError};
   `,
 
   iconContainer: css`
@@ -94,7 +94,7 @@ const useAuthResultStyles = createStyles(({ token, css }) => ({
     border: 1px solid rgba(255, 255, 255, 10%);
     border-radius: 50%;
 
-    background: ${token.colorBgElevated};
+    background: ${cssVar.colorBgElevated};
   `,
 
   statusIcon: css`
@@ -114,17 +114,17 @@ const useAuthResultStyles = createStyles(({ token, css }) => ({
 
   successIcon: css`
     color: white;
-    background: ${token.colorSuccess};
+    background: ${cssVar.colorSuccess};
   `,
 
   title: css`
     margin-block: 0 16px;
     margin-inline: 0;
 
-    font-family: ${token.fontFamily};
+    font-family: ${cssVar.fontFamily};
     font-size: 28px;
     font-weight: 600;
-    color: ${token.colorTextBase};
+    color: ${cssVar.colorTextBase};
   `,
 }));
 
@@ -136,7 +136,7 @@ interface AuthResultProps {
 }
 
 export const AuthResult = ({ success, title, description, animated = true }: AuthResultProps) => {
-  const { styles } = useAuthResultStyles();
+  const styles = authResultStyles;
 
   const defaultTitle = success ? 'Authorization Successful' : 'Authorization Failed';
   const defaultDescription = success

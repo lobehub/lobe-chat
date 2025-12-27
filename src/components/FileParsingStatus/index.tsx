@@ -1,6 +1,6 @@
 import { Button, Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, useThemeMode } from 'antd-style';
 import { BoltIcon, Loader2Icon, RotateCwIcon } from 'lucide-react';
 import { darken, lighten } from 'polished';
 import { memo } from 'react';
@@ -10,7 +10,7 @@ import { AsyncTaskStatus, type FileParsingTask } from '@/types/asyncTask';
 
 import EmbeddingStatus from './EmbeddingStatus';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }, isDarkMode: boolean) => ({
   errorReason: css`
     padding: 4px;
     border-radius: 4px;
@@ -47,7 +47,8 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
     hideEmbeddingButton,
   }) => {
     const { t } = useTranslation(['components', 'common']);
-    const { styles, cx } = useStyles();
+    const { isDarkMode } = useThemeMode();
+    const { styles, cx } = useStyles(isDarkMode);
 
     switch (chunkingStatus) {
       case AsyncTaskStatus.Processing: {

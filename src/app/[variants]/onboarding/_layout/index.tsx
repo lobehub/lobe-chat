@@ -2,14 +2,14 @@
 
 import { Center, Flexbox, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
-import { useTheme } from 'antd-style';
+import { cssVar, useThemeMode } from 'antd-style';
 import { type PropsWithChildren, memo } from 'react';
 
 import LangButton from '@/features/User/UserPanel/LangButton';
 import ThemeButton from '@/features/User/UserPanel/ThemeButton';
 
 const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
-  const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
   return (
     <Flexbox
       height={'100%'}
@@ -22,9 +22,9 @@ const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
       <Flexbox
         height={'100%'}
         style={{
-          background: theme.colorBgContainer,
-          border: `1px solid ${theme.isDarkMode ? theme.colorBorderSecondary : theme.colorBorder}`,
-          borderRadius: theme.borderRadius,
+          background: cssVar.colorBgContainer,
+          border: `1px solid ${isDarkMode ? cssVar.colorBorderSecondary : cssVar.colorBorder}`,
+          borderRadius: cssVar.borderRadius,
           overflow: 'hidden',
           position: 'relative',
         }}

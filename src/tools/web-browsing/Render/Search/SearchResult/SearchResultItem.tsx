@@ -1,12 +1,12 @@
 import { type UniformSearchResult } from '@lobechat/types';
 import { Flexbox, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 
 import WebFavicon from '@/components/WebFavicon';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     cursor: pointer;
 
@@ -17,10 +17,10 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 12px;
     color: initial;
 
-    background: ${token.colorFillQuaternary};
+    background: ${cssVar.colorFillQuaternary};
 
     &:hover {
-      background: ${token.colorFillTertiary};
+      background: ${cssVar.colorFillTertiary};
     }
   `,
   title: css`
@@ -29,7 +29,7 @@ const useStyles = createStyles(({ css, token }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
     text-overflow: ellipsis;
   `,
   url: css`
@@ -43,8 +43,6 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const SearchResultItem = memo<UniformSearchResult>(({ url, title }) => {
-  const { styles } = useStyles();
-
   const urlObj = new URL(url);
   const host = urlObj.hostname;
   return (

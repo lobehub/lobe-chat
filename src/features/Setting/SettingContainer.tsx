@@ -12,7 +12,7 @@ interface SettingContainerProps extends FlexboxProps {
 }
 const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
   ({ variant, maxWidth = 1024, children, addonAfter, addonBefore, style, ...rest }) => {
-    const theme = useTheme();
+    const theme = useTheme(); // Keep for colorBgContainerSecondary (not in cssVar)
     return (
       <Flexbox
         align={'center'}

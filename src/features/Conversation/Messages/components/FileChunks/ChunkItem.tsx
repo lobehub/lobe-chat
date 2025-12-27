@@ -1,5 +1,6 @@
 import { type ChatFileChunk } from '@lobechat/types';
 import { Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
+import { cx, useThemeMode } from 'antd-style';
 import { memo } from 'react';
 
 import FileIcon from '@/components/FileIcon';
@@ -12,6 +13,7 @@ export interface ChunkItemProps extends ChatFileChunk {
 }
 
 const ChunkItem = memo<ChunkItemProps>(({ id, fileId, similarity, text, filename, fileType }) => {
+  const { isDarkMode } = useThemeMode();
   const { styles } = useStyles();
   // Note: openFilePreview is a portal action, kept in ChatStore as it's a global UI state
   const openFilePreview = useChatStore((s) => s.openFilePreview);
@@ -19,7 +21,7 @@ const ChunkItem = memo<ChunkItemProps>(({ id, fileId, similarity, text, filename
   return (
     <Flexbox
       align={'center'}
-      className={styles.container}
+      className={cx(styles.container, isDarkMode ? styles.containerDark : styles.containerLight)}
       gap={4}
       horizontal
       key={id}

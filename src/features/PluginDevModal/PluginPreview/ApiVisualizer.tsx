@@ -2,7 +2,7 @@
 
 import { Block, Flexbox, Icon, Tag } from '@lobehub/ui';
 import { Input, Space } from 'antd';
-import { createStaticStyles, cssVar, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -98,7 +98,6 @@ interface ApiItemProps {
 }
 
 const ApiItem = memo<ApiItemProps>(({ api }) => {
-  const theme = useTheme();
   const [expanded, setExpanded] = useState(false);
   const { t } = useTranslation('plugin');
 
@@ -118,7 +117,7 @@ const ApiItem = memo<ApiItemProps>(({ api }) => {
         <Flexbox
           gap={12}
           padding={16}
-          style={{ background: theme.colorFillQuaternary, borderRadius: 6 }}
+          style={{ background: cssVar.colorFillQuaternary, borderRadius: 6 }}
         >
           {params.length === 0 ? (
             <div className={styles.params}>{t('dev.preview.api.noParams')}</div>

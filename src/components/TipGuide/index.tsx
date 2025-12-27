@@ -1,6 +1,6 @@
 import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { ConfigProvider, Popover, type TooltipProps } from 'antd';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { XIcon } from 'lucide-react';
 import { type CSSProperties, type FC, type ReactNode } from 'react';
 
@@ -89,19 +89,17 @@ const TipGuide: FC<TipGuideProps> = ({
   open,
   onOpenChange: setOpen,
 }) => {
-  const token = useTheme();
-
   return (
     <ConfigProvider
       theme={{
         components: {
           Badge: { fontSize: 12, lineHeight: 1 },
-          Button: { colorPrimary: token.blue7 },
+          Button: { colorPrimary: cssVar.blue7 },
           Checkbox: {
-            colorPrimary: token.blue7,
-            colorText: token.colorTextLightSolid,
+            colorPrimary: cssVar.blue7,
+            colorText: cssVar.colorTextLightSolid,
           },
-          Popover: { colorText: token.colorTextLightSolid },
+          Popover: { colorText: cssVar.colorTextLightSolid },
         },
       }}
     >

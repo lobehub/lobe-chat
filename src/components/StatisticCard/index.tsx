@@ -4,15 +4,14 @@ import {
 } from '@ant-design/pro-components';
 import { Text } from '@lobehub/ui';
 import { Spin } from 'antd';
-import { createStyles, useResponsive , responsive } from 'antd-style';
+import { createStyles, responsive, useResponsive, useThemeMode } from 'antd-style';
 import { adjustHue } from 'polished';
 import { memo } from 'react';
 
 const prefixCls = 'ant';
 
-const useStyles = createStyles(({ isDarkMode, css, cssVar }, highlight: string = '#000') => ({
+const useStyles = createStyles(({ css, cssVar }, highlight: string = '#000') => ({
   card: css`
-    border: 1px solid ${isDarkMode ? cssVar.colorFillTertiary : cssVar.colorFillSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
     ${responsive.sm} {
@@ -20,6 +19,12 @@ const useStyles = createStyles(({ isDarkMode, css, cssVar }, highlight: string =
       border-radius: 0;
       background: ${cssVar.colorBgContainer};
     }
+  `,
+  cardDark: css`
+    border: 1px solid ${cssVar.colorFillTertiary};
+  `,
+  cardLight: css`
+    border: 1px solid ${cssVar.colorFillSecondary};
   `,
   container: css`
     ${responsive.sm} {
@@ -133,7 +138,6 @@ const useStyles = createStyles(({ isDarkMode, css, cssVar }, highlight: string =
       height: 50%;
       border-radius: 50%;
 
-      opacity: ${isDarkMode ? 1 : 0.33};
       background-image: linear-gradient(60deg, ${adjustHue(-30, highlight)} 20%, ${highlight} 80%);
       background-repeat: no-repeat;
       background-position: center left;
@@ -143,6 +147,16 @@ const useStyles = createStyles(({ isDarkMode, css, cssVar }, highlight: string =
 
     > div {
       z-index: 1;
+    }
+  `,
+  highlightDark: css`
+    &::before {
+      opacity: 1;
+    }
+  `,
+  highlightLight: css`
+    &::before {
+      opacity: 0.33;
     }
   `,
   icon: css`
@@ -162,6 +176,7 @@ interface StatisticCardProps extends AntdStatisticCardProps {
 
 const StatisticCard = memo<StatisticCardProps>(
   ({ title, className, highlight, variant, loading, extra, ...rest }) => {
+    const { isDarkMode } = useThemeMode();
     const { cx, styles } = useStyles(highlight);
     const { mobile } = useResponsive();
     const isPure = variant === 'raw';
@@ -170,8 +185,9 @@ const StatisticCard = memo<StatisticCardProps>(
         bordered={!mobile}
         className={cx(
           styles.container,
-          isPure ? styles.raw : styles.card,
-          highlight && styles.highlight,
+          isPure ? styles.raw : cx(styles.card, isDarkMode ? styles.cardDark : styles.cardLight),
+          highlight &&
+            cx(styles.highlight, isDarkMode ? styles.highlightDark : styles.highlightLight),
           className,
         )}
         extra={loading ? <Spin percent={'auto'} size={'small'} /> : extra}

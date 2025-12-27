@@ -2,7 +2,7 @@
 
 import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Collapse, Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar, useResponsive, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -32,7 +32,6 @@ const styles = createStaticStyles(({ css }) => {
 
 const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile, inModal }) => {
   const { author, identifier, createdAt, avatar, title, tags, description } = useDetailContext();
-  const theme = useTheme();
   const { mobile = isMobile } = useResponsive();
   const { t } = useTranslation('discover');
 
@@ -86,7 +85,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
                   onClick={(e) => e.stopPropagation()}
                   target={'_blank'}
                 >
-                  <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+                  <ActionIcon fill={cssVar.colorTextDescription} icon={Github} />
                 </Link>
               </Flexbox>
             )}

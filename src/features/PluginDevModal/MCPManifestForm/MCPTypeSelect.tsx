@@ -1,5 +1,5 @@
 import { Center, Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { CheckIcon, RouterIcon, TerminalIcon } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -86,11 +86,10 @@ const styles = createStaticStyles(({ css }) => ({
 
 // Helper component for feature list items (moved from MCPManifestForm)
 const FeatureItem = memo(({ children }: { children: React.ReactNode }) => {
-  const theme = useTheme();
   return (
     <div className={styles.featureItem}>
       <Center className={styles.featureIcon}>
-        <CheckIcon color={theme.colorSuccess} size={16} />
+        <CheckIcon color={cssVar.colorSuccess} size={16} />
       </Center>
       <div className={styles.featureText}>{children}</div>
     </div>
