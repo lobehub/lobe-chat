@@ -98,15 +98,15 @@ const UploadDock = memo(() => {
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = convertAlphaToSolid(
-            theme.colorFillTertiary,
-            theme.colorBgContainer,
+            cssVar.colorFillTertiary,
+            cssVar.colorBgContainer,
           );
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = theme.colorBgContainer;
+          e.currentTarget.style.background = cssVar.colorBgContainer;
         }}
         style={{
-          background: theme.colorBgContainer,
+          background: cssVar.colorBgContainer,
           borderBottom: expand ? `1px solid ${cssVar.colorSplit}` : undefined,
           borderBottomLeftRadius: expand ? 0 : undefined,
           borderBottomRightRadius: expand ? 0 : undefined,

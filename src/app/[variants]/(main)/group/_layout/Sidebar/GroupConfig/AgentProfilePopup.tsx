@@ -3,7 +3,7 @@
 import type { AgentItem } from '@lobechat/types';
 import { Avatar, Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { type PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -74,7 +74,6 @@ interface AgentProfilePopupProps extends PropsWithChildren {
 
 const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, children }) => {
   const { t } = useTranslation('chat');
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -103,7 +102,7 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, childr
       <Center
         className={styles.banner}
         style={{
-          background: theme.colorFillTertiary,
+          background: cssVar.colorFillTertiary,
         }}
       >
         <Avatar
@@ -125,7 +124,7 @@ const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, childr
           shape={'square'}
           size={48}
           style={{
-            border: `2px solid ${theme.colorBgElevated}`,
+            border: `2px solid ${cssVar.colorBgElevated}`,
           }}
         />
         <Flexbox gap={2}>

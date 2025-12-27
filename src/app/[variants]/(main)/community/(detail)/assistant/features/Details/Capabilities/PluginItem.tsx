@@ -1,7 +1,7 @@
 import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
 import { type DiscoverPluginDetail, type PluginSource } from '@lobechat/types';
 import { Avatar, Block, Flexbox, Icon, Image, Skeleton, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -15,14 +15,12 @@ import { useDiscoverStore } from '@/store/discover';
  * For IconType type icon, use Icon component to render with theme fill color
  */
 const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label }) => {
-  const theme = useTheme();
-
   if (typeof icon === 'string') {
     return <Image alt={label} height={40} src={icon} style={{ flex: 'none' }} width={40} />;
   }
 
   // Use theme color fill, automatically adapts in dark mode
-  return <Icon fill={theme.colorText} icon={icon} size={40} />;
+  return <Icon fill={cssVar.colorText} icon={icon} size={40} />;
 });
 
 KlavisIcon.displayName = 'KlavisIcon';

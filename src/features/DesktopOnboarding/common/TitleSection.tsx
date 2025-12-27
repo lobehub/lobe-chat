@@ -1,7 +1,7 @@
 import { createStaticStyles, cx } from 'antd-style';
 import { motion } from 'motion/react';
 
-import { useTypographyStyles } from '../styles';
+import { typographyStyles } from '../styles';
 
 // TitleSection 组件的样式
 const titleSectionStyles = createStaticStyles(({ css }) => ({
@@ -45,7 +45,6 @@ export const TitleSection = ({
   className,
 }: TitleSectionProps) => {
   const styles = titleSectionStyles;
-  const { styles: typographyStyles } = useTypographyStyles();
 
   const content = (
     <>

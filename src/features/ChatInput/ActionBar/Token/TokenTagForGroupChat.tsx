@@ -1,7 +1,7 @@
 import { type GroupMemberInfo, groupChatPrompts, groupSupervisorPrompts } from '@lobechat/prompts';
 import { Center, Flexbox, Tooltip } from '@lobehub/ui';
 import { TokenTag } from '@lobehub/ui/chat';
-import { cssVar, useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,6 @@ interface TokenTagForGroupChatProps {
 
 const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageString }) => {
   const { t } = useTranslation(['chat', 'components']);
-  const theme = useTheme(); // Keep for dynamic colors (magenta, geekblue, purple, gold)
 
   const input = useChatStore((s) => s.inputMessage);
   const activeTopicId = useChatStore((s) => s.activeTopicId);
@@ -218,13 +217,13 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
       <TokenProgress
         data={[
           {
-            color: theme.magenta,
+            color: cssVar.magenta,
             id: 'systemRole',
             title: t('tokenDetails.systemRole'),
             value: systemRoleToken,
           },
           {
-            color: theme.geekblue,
+            color: cssVar.geekblue,
             id: 'tools',
             title: t('tokenDetails.tools'),
             value: toolsToken,
@@ -232,7 +231,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
           ...(supervisorToken > 0
             ? [
                 {
-                  color: theme.purple,
+                  color: cssVar.purple,
                   id: 'supervisor',
                   title: t('tokenDetails.supervisor'),
                   value: supervisorToken,
@@ -240,7 +239,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
               ]
             : []),
           {
-            color: theme.gold,
+            color: cssVar.gold,
             id: 'chats',
             title: t('tokenDetails.chats'),
             value: chatsToken,

@@ -2,32 +2,21 @@
 
 import { Center, Flexbox, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
-import { cssVar, useThemeMode } from 'antd-style';
+import { cx, useThemeMode } from 'antd-style';
 import { type PropsWithChildren, memo } from 'react';
 
 import LangButton from '@/features/User/UserPanel/LangButton';
 import ThemeButton from '@/features/User/UserPanel/ThemeButton';
 
+import { styles } from './style';
+
 const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
   const { isDarkMode } = useThemeMode();
   return (
-    <Flexbox
-      height={'100%'}
-      padding={8}
-      style={{
-        position: 'relative',
-      }}
-      width={'100%'}
-    >
+    <Flexbox className={styles.outerContainer} height={'100%'} padding={8} width={'100%'}>
       <Flexbox
+        className={cx(isDarkMode ? styles.innerContainerDark : styles.innerContainerLight)}
         height={'100%'}
-        style={{
-          background: cssVar.colorBgContainer,
-          border: `1px solid ${isDarkMode ? cssVar.colorBorderSecondary : cssVar.colorBorder}`,
-          borderRadius: cssVar.borderRadius,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
         width={'100%'}
       >
         <Flexbox
@@ -41,12 +30,7 @@ const OnBoardingContainer = memo(({ children }: PropsWithChildren) => {
           <div />
           <Flexbox align={'center'} horizontal>
             <LangButton placement={'bottomRight'} size={18} />
-            <Divider
-              style={{
-                height: 24,
-              }}
-              type={'vertical'}
-            />
+            <Divider className={styles.divider} type={'vertical'} />
             <ThemeButton placement={'bottomRight'} size={18} />
           </Flexbox>
         </Flexbox>

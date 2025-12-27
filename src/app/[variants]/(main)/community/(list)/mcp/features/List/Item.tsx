@@ -3,7 +3,7 @@
 import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Block, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { Spotlight } from '@lobehub/ui/awesome';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -75,7 +75,6 @@ const McpItem = memo<DiscoverMcpItem>(
     github,
   }) => {
     const { t } = useTranslation('discover');
-    const theme = useTheme();
     const navigate = useNavigate();
     const link = urlJoin('/community/mcp', identifier);
     return (
@@ -150,7 +149,7 @@ const McpItem = memo<DiscoverMcpItem>(
                 rel="noopener noreferrer"
                 target={'_blank'}
               >
-                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+                <ActionIcon fill={cssVar.colorTextDescription} icon={Github} />
               </a>
             )}
           </Flexbox>

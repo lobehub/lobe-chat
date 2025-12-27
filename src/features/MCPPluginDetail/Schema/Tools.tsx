@@ -1,5 +1,5 @@
 import { Block, Collapse, Empty, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import { CheckIcon, MinusIcon, Wrench } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
@@ -23,7 +23,6 @@ interface ToolsProps {
 const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
   const { t } = useTranslation(['discover', 'plugin']);
   const { tools } = useDetailContext();
-  const theme = useTheme();
 
   if (!tools)
     return (
@@ -79,7 +78,7 @@ const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
                               <span
                                 className={styles.code}
                                 style={{
-                                  color: theme.gold,
+                                  color: cssVar.gold,
                                 }}
                               >
                                 {record.name}
@@ -97,7 +96,9 @@ const Tools = memo<ToolsProps>(({ mode, activeKey = [], setActiveKey }) => {
                             render: (_, record) => (
                               <Icon
                                 color={
-                                  record.required ? theme.colorSuccess : theme.colorTextDescription
+                                  record.required
+                                    ? cssVar.colorSuccess
+                                    : cssVar.colorTextDescription
                                 }
                                 icon={record.required ? CheckIcon : MinusIcon}
                               />

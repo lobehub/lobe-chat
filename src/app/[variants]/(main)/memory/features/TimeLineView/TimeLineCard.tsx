@@ -1,5 +1,5 @@
 import { Block, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { Link2 } from 'lucide-react';
 import { type ReactNode, memo } from 'react';
 
@@ -40,7 +40,6 @@ interface TimeLineCardProps {
 
 const TimeLineCard = memo<TimeLineCardProps>(
   ({ title, titleAddon, cate, children, actions, onClick, updatedAt, hashTags }) => {
-    const theme = useTheme();
     return (
       <Block
         className={styles.timelineCard}
@@ -78,7 +77,7 @@ const TimeLineCard = memo<TimeLineCardProps>(
           </Flexbox>
         )}
         {typeof children === 'string' ? (
-          <Text as={'p'} color={theme.colorTextSecondary} ellipsis={{ rows: 3 }}>
+          <Text as={'p'} color={cssVar.colorTextSecondary} ellipsis={{ rows: 3 }}>
             {children}
           </Text>
         ) : (

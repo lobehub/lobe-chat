@@ -1,6 +1,6 @@
 import { Github, ModelTag, ProviderCombine } from '@lobehub/icons';
 import { ActionIcon, Block, Flexbox, MaskShadow, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { GlobeIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,6 @@ const styles = createStaticStyles(({ css, cssVar }) => {
 
 const ProviderItem = memo<DiscoverProviderItem>(
   ({ url, name, description, identifier, models }) => {
-    const theme = useTheme();
     const navigate = useNavigate();
     const link = urlJoin('/community/provider', identifier);
     const { t } = useTranslation(['discover', 'providers']);
@@ -91,7 +90,7 @@ const ProviderItem = memo<DiscoverProviderItem>(
               rel="noopener noreferrer"
               target={'_blank'}
             >
-              <ActionIcon color={theme.colorTextDescription} icon={GlobeIcon} />
+              <ActionIcon color={cssVar.colorTextDescription} icon={GlobeIcon} />
             </a>
             <a
               href={`https://github.com/lobehub/lobe-chat/blob/main/src/config/modelProviders/${identifier}.ts`}
@@ -99,7 +98,7 @@ const ProviderItem = memo<DiscoverProviderItem>(
               rel="noopener noreferrer"
               target={'_blank'}
             >
-              <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+              <ActionIcon fill={cssVar.colorTextDescription} icon={Github} />
             </a>
           </Flexbox>
         </Flexbox>

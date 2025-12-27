@@ -3,7 +3,7 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { Block, Flexbox, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
 
@@ -43,8 +43,6 @@ interface MoveLocalFilesParams {
 
 const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams, MoveLocalFilesState>>(
   ({ pluginState }) => {
-    const theme = useTheme();
-
     if (!pluginState?.results) {
       return null;
     }
@@ -58,10 +56,10 @@ const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams, MoveLocalFi
           {allSuccess ? (
             <CheckCircleFilled
               className={styles.statusIcon}
-              style={{ color: theme.colorSuccess }}
+              style={{ color: cssVar.colorSuccess }}
             />
           ) : (
-            <CloseCircleFilled className={styles.statusIcon} style={{ color: theme.colorError }} />
+            <CloseCircleFilled className={styles.statusIcon} style={{ color: cssVar.colorError }} />
           )}
           <Text className={styles.header}>
             Moved {pluginState.successCount}/{pluginState.totalCount} items
@@ -79,13 +77,13 @@ const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams, MoveLocalFi
                 horizontal
                 key={index}
                 style={{
-                  background: result.success ? theme.colorSuccessBg : theme.colorErrorBg,
+                  background: result.success ? cssVar.colorSuccessBg : cssVar.colorErrorBg,
                 }}
               >
                 {result.success ? (
-                  <CheckCircleFilled style={{ color: theme.colorSuccess, fontSize: 12 }} />
+                  <CheckCircleFilled style={{ color: cssVar.colorSuccess, fontSize: 12 }} />
                 ) : (
-                  <CloseCircleFilled style={{ color: theme.colorError, fontSize: 12 }} />
+                  <CloseCircleFilled style={{ color: cssVar.colorError, fontSize: 12 }} />
                 )}
                 <Text className={styles.path} ellipsis style={{ maxWidth: 200 }}>
                   {result.source}

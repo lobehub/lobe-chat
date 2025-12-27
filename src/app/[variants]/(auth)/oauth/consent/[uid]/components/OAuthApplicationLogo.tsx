@@ -1,5 +1,5 @@
 import { Avatar, Center, Flexbox, FluentEmoji, Icon } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { Link2Icon } from 'lucide-react';
 import React, { memo } from 'react';
 
@@ -35,7 +35,6 @@ interface OAuthApplicationLogoProps {
 
 const OAuthApplicationLogo = memo<OAuthApplicationLogoProps>(
   ({ isFirstParty, clientDisplayName, logoUrl, size = 72 }) => {
-    const theme = useTheme();
     return isFirstParty ? (
       <Avatar alt={clientDisplayName} avatar={logoUrl!} shape={'square'} size={size} />
     ) : (
@@ -47,7 +46,7 @@ const OAuthApplicationLogo = memo<OAuthApplicationLogoProps>(
         )}
         <div className={styles.connectorLine} />
         <Center className={styles.connector}>
-          <Icon icon={Link2Icon} style={{ color: theme.colorTextSecondary, fontSize: 20 }} />
+          <Icon icon={Link2Icon} style={{ color: cssVar.colorTextSecondary, fontSize: 20 }} />
         </Center>
         <div className={styles.connectorLine} />
         <ProductLogo size={size} />

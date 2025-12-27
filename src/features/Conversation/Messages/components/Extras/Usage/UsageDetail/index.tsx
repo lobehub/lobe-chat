@@ -1,7 +1,7 @@
 import { type ModelPerformance, type ModelUsage } from '@lobechat/types';
 import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
-import { cssVar, useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import { BadgeCent, CoinsIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,6 @@ interface TokenDetailProps {
 
 const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provider }) => {
   const { t } = useTranslation('chat');
-  const theme = useTheme(); // Keep for dynamic colors (cyan9, orange, green, pink, purple, yellow)
 
   // 使用 systemStatus 管理短格式显示状态
   const isShortFormat = useGlobalStore(systemStatusSelectors.tokenDisplayFormatShort);
@@ -38,19 +37,19 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
   const detailTokens = getDetailsToken(usage, modelCard);
   const inputDetails = [
     !!detailTokens.inputAudio && {
-      color: theme.cyan9,
+      color: cssVar.cyan9,
       id: 'reasoning',
       title: t('messages.tokenDetails.inputAudio'),
       value: isShowCredit ? detailTokens.inputAudio.credit : detailTokens.inputAudio.token,
     },
     !!detailTokens.inputCitation && {
-      color: theme.orange,
+      color: cssVar.orange,
       id: 'inputText',
       title: t('messages.tokenDetails.inputCitation'),
       value: isShowCredit ? detailTokens.inputCitation.credit : detailTokens.inputCitation.token,
     },
     !!detailTokens.inputText && {
-      color: theme.green,
+      color: cssVar.green,
       id: 'inputText',
       title: t('messages.tokenDetails.inputText'),
       value: isShowCredit ? detailTokens.inputText.credit : detailTokens.inputText.token,
@@ -59,7 +58,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
 
   const outputDetails = [
     !!detailTokens.outputReasoning && {
-      color: theme.pink,
+      color: cssVar.pink,
       id: 'reasoning',
       title: t('messages.tokenDetails.reasoning'),
       value: isShowCredit
@@ -67,19 +66,19 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
         : detailTokens.outputReasoning.token,
     },
     !!detailTokens.outputImage && {
-      color: theme.purple,
+      color: cssVar.purple,
       id: 'outputImage',
       title: t('messages.tokenDetails.outputImage'),
       value: isShowCredit ? detailTokens.outputImage.credit : detailTokens.outputImage.token,
     },
     !!detailTokens.outputAudio && {
-      color: theme.cyan9,
+      color: cssVar.cyan9,
       id: 'outputAudio',
       title: t('messages.tokenDetails.outputAudio'),
       value: isShowCredit ? detailTokens.outputAudio.credit : detailTokens.outputAudio.token,
     },
     !!detailTokens.outputText && {
-      color: theme.green,
+      color: cssVar.green,
       id: 'outputText',
       title: t('messages.tokenDetails.outputText'),
       value: isShowCredit ? detailTokens.outputText.credit : detailTokens.outputText.token,
@@ -95,13 +94,13 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
       value: isShowCredit ? detailTokens.inputCacheMiss.credit : detailTokens.inputCacheMiss.token,
     },
     !!detailTokens.inputCached && {
-      color: theme.orange,
+      color: cssVar.orange,
       id: 'inputCached',
       title: t('messages.tokenDetails.inputCached'),
       value: isShowCredit ? detailTokens.inputCached.credit : detailTokens.inputCached.token,
     },
     !!detailTokens.inputCachedWrite && {
-      color: theme.yellow,
+      color: cssVar.yellow,
       id: 'cachedWriteInput',
       title: t('messages.tokenDetails.inputWriteCached'),
       value: isShowCredit

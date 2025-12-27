@@ -1,7 +1,7 @@
 import { createStaticStyles, cx } from 'antd-style';
 import { Bell, Check, FolderOpen, Mic, MonitorCog } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useCallback, useEffect, useState } from 'react';
+import { CSSProperties, useCallback, useEffect, useState } from 'react';
 
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 
@@ -21,8 +21,15 @@ const screen3Styles = createStaticStyles(({ css, cssVar }) => ({
     gap: 4px;
   `,
 
+  
+  // 图标样式
+icon: css`
+    color: var(--permission-icon-color, currentColor);
+  `,
+
+  
   // 图标容器
-  iconWrapper: css`
+iconWrapper: css`
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -337,8 +344,11 @@ export const Screen3 = ({ onScreenConfigChange }: Screen3Props) => {
               }}
             >
               {/* 图标 */}
-              <div className={screen3Styles.iconWrapper}>
-                <permission.icon size={24} style={{ color: permission.iconColor }} />
+              <div
+                className={screen3Styles.iconWrapper}
+                style={{ '--permission-icon-color': permission.iconColor } as CSSProperties}
+              >
+                <permission.icon className={screen3Styles.icon} size={24} />
               </div>
 
               {/* 内容 */}

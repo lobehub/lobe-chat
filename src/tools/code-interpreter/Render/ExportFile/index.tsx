@@ -3,7 +3,7 @@
 import { CheckCircleFilled, CloseCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { memo, useCallback } from 'react';
 
 import { type ExportFileState } from '../../type';
@@ -28,7 +28,6 @@ interface ExportFileParams {
 
 const ExportFile = memo<BuiltinRenderProps<ExportFileParams, ExportFileState>>(
   ({ args, pluginState }) => {
-    const theme = useTheme();
     const isSuccess = pluginState?.success;
 
     const handleDownload = useCallback(async () => {
@@ -62,10 +61,10 @@ const ExportFile = memo<BuiltinRenderProps<ExportFileParams, ExportFileState>>(
           {pluginState === undefined ? null : isSuccess ? (
             <CheckCircleFilled
               className={styles.statusIcon}
-              style={{ color: theme.colorSuccess }}
+              style={{ color: cssVar.colorSuccess }}
             />
           ) : (
-            <CloseCircleFilled className={styles.statusIcon} style={{ color: theme.colorError }} />
+            <CloseCircleFilled className={styles.statusIcon} style={{ color: cssVar.colorError }} />
           )}
           <Text className={styles.filename}>
             {isSuccess

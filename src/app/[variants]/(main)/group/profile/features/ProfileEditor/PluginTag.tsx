@@ -2,7 +2,7 @@
 
 import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
 import { Avatar, Icon, Tag } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { AlertCircle, X } from 'lucide-react';
 import Image from 'next/image';
@@ -23,15 +23,13 @@ import {
  * Klavis 服务器图标组件
  */
 const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label }) => {
-  const theme = useTheme();
-
   if (typeof icon === 'string') {
     return (
       <Image alt={label} height={16} src={icon} style={{ flexShrink: 0 }} unoptimized width={16} />
     );
   }
 
-  return <Icon fill={theme.colorText} icon={icon} size={16} />;
+  return <Icon fill={cssVar.colorText} icon={icon} size={16} />;
 });
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -55,7 +53,7 @@ interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
-  const theme = useTheme();
+  const { isDarkMode } = useThemeMode();
   const { t } = useTranslation('setting');
 
   // Extract identifier
@@ -167,7 +165,7 @@ const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
           ? undefined
           : t('tools.notInstalledWarning', { defaultValue: 'This tool is not installed' })
       }
-      variant={theme.isDarkMode ? 'filled' : 'outlined'}
+      variant={isDarkMode ? 'filled' : 'outlined'}
     >
       {!meta.isInstalled
         ? `${displayTitle} (${t('tools.notInstalled', { defaultValue: 'Not Installed' })})`

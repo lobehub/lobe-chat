@@ -3,7 +3,7 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { Flexbox, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { memo } from 'react';
 
 import { type WriteLocalFileState } from '../../type';
@@ -30,7 +30,6 @@ interface WriteLocalFileParams {
 
 const WriteFile = memo<BuiltinRenderProps<WriteLocalFileParams, WriteLocalFileState>>(
   ({ args, pluginState }) => {
-    const theme = useTheme();
     const isSuccess = pluginState?.success;
 
     return (
@@ -39,10 +38,10 @@ const WriteFile = memo<BuiltinRenderProps<WriteLocalFileParams, WriteLocalFileSt
           {pluginState === undefined ? null : isSuccess ? (
             <CheckCircleFilled
               className={styles.statusIcon}
-              style={{ color: theme.colorSuccess }}
+              style={{ color: cssVar.colorSuccess }}
             />
           ) : (
-            <CloseCircleFilled className={styles.statusIcon} style={{ color: theme.colorError }} />
+            <CloseCircleFilled className={styles.statusIcon} style={{ color: cssVar.colorError }} />
           )}
           <Text className={styles.path}>
             {isSuccess ? `✅ Written to ${args.path}` : `❌ Failed to write ${args.path}`}

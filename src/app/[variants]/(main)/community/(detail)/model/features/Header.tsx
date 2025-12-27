@@ -2,7 +2,7 @@
 
 import { ModelIcon } from '@lobehub/icons';
 import { Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, useResponsive, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,6 @@ const styles = createStaticStyles(({ css, cssVar }) => {
 const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
   const { identifier, releasedAt, displayName, type, abilities, contextWindowTokens } =
     useDetailContext();
-  const theme = useTheme();
   const { mobile = isMobile } = useResponsive();
   const { t } = useTranslation('models');
 
@@ -99,7 +98,7 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
       </Flexbox>
       <div
         style={{
-          color: theme.colorTextSecondary,
+          color: cssVar.colorTextSecondary,
         }}
       >
         {t(`${identifier}.description`)}

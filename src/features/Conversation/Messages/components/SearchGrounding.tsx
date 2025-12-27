@@ -1,5 +1,5 @@
 import { Flexbox, Icon, SearchResultCards, Tag } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme, useThemeMode } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useThemeMode } from 'antd-style';
 import { ChevronDown, ChevronRight, Globe } from 'lucide-react';
 import { AnimatePresence, m as motion } from 'motion/react';
 import Image from 'next/image';
@@ -46,7 +46,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 const SearchGrounding = memo<GroundingSearch>(({ searchQueries, citations }) => {
   const { t } = useTranslation('chat');
-  const theme = useTheme();
   const { isDarkMode } = useThemeMode();
 
   const [showDetail, setShowDetail] = useState(false);
@@ -83,7 +82,7 @@ const SearchGrounding = memo<GroundingSearch>(({ searchQueries, citations }) => 
                   key={`${item.url}-${index}`}
                   src={`https://icons.duckduckgo.com/ip3/${new URL(item.url).host}.ico`}
                   style={{
-                    background: theme.colorBgContainer,
+                    background: cssVar.colorBgContainer,
                     borderRadius: 8,
                     marginInline: -2,
                     padding: 2,

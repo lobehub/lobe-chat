@@ -1,6 +1,6 @@
 import { Flexbox, Highlighter, Text } from '@lobehub/ui';
 import { Divider } from 'antd';
-import { cx, useTheme } from 'antd-style';
+import { cssVar, cx } from 'antd-style';
 import { parse } from 'partial-json';
 import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +30,6 @@ export interface ArgumentsProps {
 
 const Arguments = memo<ArgumentsProps>(({ arguments: args = '', loading, actions }) => {
   const { t } = useTranslation('plugin');
-  const theme = useTheme();
 
   const displayArgs = useMemo(() => {
     try {
@@ -74,7 +73,7 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', loading, actions
           maxItemWidth={'100%'}
           styles={{
             label: loading
-              ? { color: `color-mix(in srgb, ${theme.colorText} 33%, transparent)` }
+              ? { color: `color-mix(in srgb, ${cssVar.colorText} 33%, transparent)` }
               : {},
           }}
         />

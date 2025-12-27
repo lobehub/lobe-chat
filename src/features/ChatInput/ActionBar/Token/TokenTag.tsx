@@ -1,6 +1,6 @@
 import { Center, Flexbox, Tooltip } from '@lobehub/ui';
 import { TokenTag } from '@lobehub/ui/chat';
-import { cssVar, useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,6 @@ interface TokenTagProps {
 }
 const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const { t } = useTranslation(['chat', 'components']);
-  const theme = useTheme(); // Keep for dynamic colors (magenta, geekblue, orange, gold)
 
   const [input, historySummary] = useChatStore((s) => [
     s.inputMessage,
@@ -120,25 +119,25 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
       <TokenProgress
         data={[
           {
-            color: theme.magenta,
+            color: cssVar.magenta,
             id: 'systemRole',
             title: t('tokenDetails.systemRole'),
             value: systemRoleToken,
           },
           {
-            color: theme.geekblue,
+            color: cssVar.geekblue,
             id: 'tools',
             title: t('tokenDetails.tools'),
             value: toolsToken,
           },
           {
-            color: theme.orange,
+            color: cssVar.orange,
             id: 'historySummary',
             title: t('tokenDetails.historySummary'),
             value: historySummaryToken,
           },
           {
-            color: theme.gold,
+            color: cssVar.gold,
             id: 'chats',
             title: t('tokenDetails.chats'),
             value: chatsToken,

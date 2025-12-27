@@ -2,7 +2,7 @@
 
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { Avatar, Button, Flexbox, Icon } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { LucideArrowUpRightFromSquare, TelescopeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -24,8 +24,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const theme = useTheme();
-
   const { t } = useTranslation('common');
   const isPreferenceInit = useUserStore(preferenceSelectors.isPreferenceInit);
 
@@ -46,8 +44,8 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Flexbox>
         <Avatar
           avatar={<TelescopeIcon />}
-          background={theme.geekblue1}
-          style={{ color: theme.geekblue7 }}
+          background={cssVar.geekblue1}
+          style={{ color: cssVar.geekblue7 }}
         />
       </Flexbox>
       <Flexbox gap={16}>

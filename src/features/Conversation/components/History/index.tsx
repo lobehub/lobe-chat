@@ -1,6 +1,6 @@
 import { ModelTag } from '@lobehub/icons';
 import { Center, Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { ScrollText } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 const History = memo(() => {
-  const theme = useTheme();
   const { t } = useTranslation('chat');
   const [content, model] = useConversationStore(() => {
     const history = dataSelectors.currentTopicSummary();
@@ -45,7 +44,7 @@ const History = memo(() => {
         <Flexbox className={styles.container} gap={8}>
           <Flexbox align={'flex-start'} gap={8} horizontal>
             <Center height={20} width={20}>
-              <Icon icon={ScrollText} size={16} style={{ color: theme.colorTextDescription }} />
+              <Icon icon={ScrollText} size={16} style={{ color: cssVar.colorTextDescription }} />
             </Center>
             <Text type={'secondary'}>{t('historySummary')}</Text>
             {model && (

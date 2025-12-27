@@ -1,6 +1,6 @@
 import { Button, Flexbox, Markdown, Snippet, Text } from '@lobehub/ui';
 import { Card, Space } from 'antd';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { AlertTriangle, CheckCircle, ExternalLink, Terminal } from 'lucide-react';
 import * as motion from 'motion/react-m';
 import { memo } from 'react';
@@ -71,7 +71,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 const MCPDependenciesGuide = memo<MCPDependenciesGuideProps>(
   ({ identifier, systemDependencies }) => {
-    const theme = useTheme();
     const { t } = useTranslation(['plugin', 'common']);
     const [installMCPPlugin, cancelInstallMCPPlugin] = useToolStore((s) => [
       s.installMCPPlugin,
@@ -107,7 +106,7 @@ const MCPDependenciesGuide = memo<MCPDependenciesGuideProps>(
         >
           <Flexbox gap={8}>
             <Flexbox align="center" gap={8} horizontal>
-              <AlertTriangle color={theme.colorWarning} size={16} />
+              <AlertTriangle color={cssVar.colorWarning} size={16} />
               <Text as={'h5'} style={{ margin: 0 }}>
                 {t('mcpInstall.dependenciesRequired')}
               </Text>
@@ -141,14 +140,14 @@ const MCPDependenciesGuide = memo<MCPDependenciesGuideProps>(
                     <div className={styles.statusIcon}>
                       {dep.meetRequirement ? (
                         <>
-                          <CheckCircle color={theme.colorSuccess} size={14} />
+                          <CheckCircle color={cssVar.colorSuccess} size={14} />
                           <Text style={{ fontSize: 12 }} type="success">
                             {t('mcpInstall.dependencyStatus.installed')}
                           </Text>
                         </>
                       ) : (
                         <>
-                          <AlertTriangle color={theme.colorWarning} size={14} />
+                          <AlertTriangle color={cssVar.colorWarning} size={14} />
                           <Text style={{ fontSize: 12 }} type="warning">
                             {t('mcpInstall.dependencyStatus.notInstalled')}
                           </Text>

@@ -1,6 +1,6 @@
 import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -62,7 +62,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 const EmptyPlaceholder = () => {
   const { t } = useTranslation('components');
-  const theme = useTheme();
 
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
 
@@ -88,10 +87,10 @@ const EmptyPlaceholder = () => {
             <span className={styles.actionTitle}>
               {t('FileManager.emptyStatus.actions.knowledgeBase')}
             </span>
-            <div className={styles.glow} style={{ background: theme.purple }} />
+            <div className={styles.glow} style={{ background: cssVar.purple }} />
             <FileTypeIcon
               className={styles.icon}
-              color={theme.purple}
+              color={cssVar.purple}
               icon={<Icon color={'#fff'} icon={PlusIcon} />}
               size={ICON_SIZE}
               type={'folder'}
@@ -109,10 +108,10 @@ const EmptyPlaceholder = () => {
         >
           <Flexbox className={styles.card} padding={16}>
             <span className={styles.actionTitle}>{t('FileManager.emptyStatus.actions.file')}</span>
-            <div className={styles.glow} style={{ background: theme.gold }} />
+            <div className={styles.glow} style={{ background: cssVar.gold }} />
             <FileTypeIcon
               className={styles.icon}
-              color={theme.gold}
+              color={cssVar.gold}
               icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
               size={ICON_SIZE}
             />
@@ -132,10 +131,10 @@ const EmptyPlaceholder = () => {
             <span className={styles.actionTitle}>
               {t('FileManager.emptyStatus.actions.folder')}
             </span>
-            <div className={styles.glow} style={{ background: theme.geekblue }} />
+            <div className={styles.glow} style={{ background: cssVar.geekblue }} />
             <FileTypeIcon
               className={styles.icon}
-              color={theme.geekblue}
+              color={cssVar.geekblue}
               icon={<Icon color={'#fff'} icon={ArrowUpIcon} />}
               size={ICON_SIZE}
               type={'folder'}

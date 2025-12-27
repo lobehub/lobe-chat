@@ -3,7 +3,7 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { ActionIcon, Block, Flexbox, Highlighter, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { memo, useState } from 'react';
 
@@ -48,7 +48,6 @@ interface EditLocalFileParams {
 
 const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFileState>>(
   ({ args, pluginState }) => {
-    const theme = useTheme();
     const [expanded, setExpanded] = useState(false);
     const isSuccess = pluginState && pluginState.replacements > 0;
 
@@ -65,12 +64,12 @@ const EditLocalFile = memo<BuiltinRenderProps<EditLocalFileParams, EditLocalFile
             {pluginState === undefined ? null : isSuccess ? (
               <CheckCircleFilled
                 className={styles.statusIcon}
-                style={{ color: theme.colorSuccess }}
+                style={{ color: cssVar.colorSuccess }}
               />
             ) : (
               <CloseCircleFilled
                 className={styles.statusIcon}
-                style={{ color: theme.colorError }}
+                style={{ color: cssVar.colorError }}
               />
             )}
             <Text className={styles.path}>

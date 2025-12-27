@@ -3,7 +3,7 @@
 import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Button, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStaticStyles, cssVar, useResponsive, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import {
   BookmarkIcon,
   BookmarkMinusIcon,
@@ -69,7 +69,6 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
     isClaimed,
     isOfficial,
   } = useDetailContext();
-  const theme = useTheme();
   const { mobile = isMobile } = useResponsive();
   const { isAuthenticated, signIn, session } = useMarketAuth();
   const [favoriteLoading, setFavoriteLoading] = useState(false);
@@ -202,7 +201,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
                   rel="noreferrer"
                   target={'_blank'}
                 >
-                  <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+                  <ActionIcon fill={cssVar.colorTextDescription} icon={Github} />
                 </a>
               )}
               <Tooltip title={isFavorited ? t('assistant.unfavorite') : t('assistant.favorite')}>
@@ -240,7 +239,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
         gap={mobile ? 12 : 24}
         horizontal
         style={{
-          color: theme.colorTextSecondary,
+          color: cssVar.colorTextSecondary,
         }}
         wrap={'wrap'}
       >
@@ -250,7 +249,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
           {Boolean(github?.language) && (
             <Flexbox align={'center'} gap={6} horizontal>
               <Icon
-                color={theme.colorFillTertiary}
+                color={cssVar.colorFillTertiary}
                 fill={getLanguageColor(github?.language)}
                 icon={CircleIcon}
                 size={12}

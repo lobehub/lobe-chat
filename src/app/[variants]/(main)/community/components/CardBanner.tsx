@@ -1,5 +1,5 @@
 import { Avatar, type DivProps, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 
 export const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -29,14 +29,12 @@ interface CardBannerProps extends DivProps {
 
 const CardBanner = memo<CardBannerProps>(
   ({ avatar, className, size = 600, children, ...props }) => {
-    const theme = useTheme();
-
     return (
       <Flexbox
         align={'center'}
         className={cx(styles.banner, className)}
         justify={'center'}
-        style={avatar ? {} : { backgroundColor: theme.colorFillTertiary }}
+        style={avatar ? {} : { backgroundColor: cssVar.colorFillTertiary }}
         width={'100%'}
         {...props}
       >

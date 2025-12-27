@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { kebabCase } from 'es-toolkit/compat';
 import { Heading2, Heading3, Heading4, Heading5 } from 'lucide-react';
 import Link from 'next/link';
@@ -61,7 +61,6 @@ const createHeading = (Tag: `h${1 | 2 | 3 | 4 | 5 | 6}`) => {
     const { setToc, setFinished } = useToc();
     const text = useMemo(() => extractTextChildren(children), [children]);
     const id = kebabCase(text);
-    const theme = useTheme();
 
     useEffect(() => {
       if (!setToc) return;
@@ -80,7 +79,7 @@ const createHeading = (Tag: `h${1 | 2 | 3 | 4 | 5 | 6}`) => {
 
     if (Tag === 'h1')
       return (
-        <Tag style={{ color: theme.colorText, ...style }} {...props} id={id}>
+        <Tag style={{ color: cssVar.colorText, ...style }} {...props} id={id}>
           {children}
         </Tag>
       );
@@ -88,7 +87,7 @@ const createHeading = (Tag: `h${1 | 2 | 3 | 4 | 5 | 6}`) => {
     return (
       <Tag
         className={cx(styles.container, className)}
-        style={{ color: theme.colorText, ...style }}
+        style={{ color: cssVar.colorText, ...style }}
         {...props}
         id={id}
       >

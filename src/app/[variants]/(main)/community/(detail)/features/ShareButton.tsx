@@ -12,7 +12,7 @@ import {
   Tag,
   Text,
 } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
 import { LinkIcon, Share2Icon } from 'lucide-react';
 import Link from 'next/link';
@@ -80,7 +80,6 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
     ...meta,
   });
   const { t } = useTranslation('common');
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   let content;
@@ -94,7 +93,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
             flex={'none'}
             height={72}
             style={{
-              backgroundColor: theme.colorBgContainer,
+              backgroundColor: cssVar.colorBgContainer,
               borderRadius: '50%',
               overflow: 'hidden',
               zIndex: 2,
@@ -105,7 +104,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
           </Center>
           <Center padding={12} width={'100%'}>
             <h3 style={{ fontWeight: 'bold', textAlign: 'center' }}>{meta.title}</h3>
-            <Text as={'p'} style={{ color: theme.colorTextSecondary, textAlign: 'center' }}>
+            <Text as={'p'} style={{ color: cssVar.colorTextSecondary, textAlign: 'center' }}>
               {meta.desc}
             </Text>
             {meta.hashtags && (
@@ -137,7 +136,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
           <Input value={meta.url} variant={'filled'} />
           <CopyButton
             className={styles.copy}
-            color={theme.colorBgLayout}
+            color={cssVar.colorBgLayout}
             content={meta.url}
             icon={LinkIcon}
             size={{ blockSize: 36, size: 16 }}

@@ -1,5 +1,5 @@
 import { Block, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { memo } from 'react';
 
 const styles = createStaticStyles(({ css, cssVar }) => {
@@ -59,7 +59,6 @@ const AgentItem = memo<{
   active?: boolean;
   color?: string;
 }>(({ active, color }) => {
-  const theme = useTheme();
   return (
     <Flexbox
       align={'center'}
@@ -79,7 +78,7 @@ const AgentItem = memo<{
           className={styles.icon}
           height={2}
           style={{
-            background: theme.colorTextTertiary,
+            background: cssVar.colorTextTertiary,
           }}
           width={'66%'}
         />
@@ -87,7 +86,7 @@ const AgentItem = memo<{
           className={styles.icon}
           height={2}
           style={{
-            background: theme.colorTextQuaternary,
+            background: cssVar.colorTextQuaternary,
           }}
           width={'100%'}
         />
@@ -97,14 +96,12 @@ const AgentItem = memo<{
 });
 
 const Preview = memo(() => {
-  const theme = useTheme();
-
   const nav = (
     <Flexbox align={'center'} className={styles.nav} gap={8} width={24}>
       <Flexbox
         className={styles.icon}
         height={14}
-        style={{ border: `2px solid ${theme.colorPrimary}`, borderRadius: '50%' }}
+        style={{ border: `2px solid ${cssVar.colorPrimary}`, borderRadius: '50%' }}
         width={14}
       />
       <Flexbox className={styles.icon} height={12} width={12} />
@@ -127,7 +124,7 @@ const Preview = memo(() => {
           className={styles.icon}
           height={8}
           style={{
-            background: theme.colorFillTertiary,
+            background: cssVar.colorFillTertiary,
           }}
           width={'100%'}
         />
@@ -170,7 +167,7 @@ const Preview = memo(() => {
         className={styles.icon}
         height={12}
         style={{
-          background: theme.colorPrimary,
+          background: cssVar.colorPrimary,
         }}
         width={32}
       />
@@ -190,7 +187,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'100%'}
               />
@@ -198,7 +195,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'66%'}
               />
@@ -222,7 +219,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'100%'}
               />
@@ -230,7 +227,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'66%'}
               />
@@ -238,7 +235,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'100%'}
               />
@@ -246,7 +243,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'100%'}
               />
@@ -254,7 +251,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'33%'}
               />
@@ -266,7 +263,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'100%'}
               />
@@ -274,7 +271,7 @@ const Preview = memo(() => {
                 className={styles.icon}
                 height={2}
                 style={{
-                  background: theme.colorTextQuaternary,
+                  background: cssVar.colorTextQuaternary,
                 }}
                 width={'66%'}
               />
