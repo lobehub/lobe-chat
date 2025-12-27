@@ -1,9 +1,8 @@
 import { createStaticStyles } from 'antd-style';
 
 export const styles = createStaticStyles(({ css, cssVar }) => ({
-  
   // 内层容器
-innerContainer: css`
+  innerContainer: css`
     position: relative;
 
     overflow: hidden;
@@ -14,9 +13,8 @@ innerContainer: css`
     background: ${cssVar.colorBgContainer};
   `,
 
-  
   // 外层容器
-outerContainer: css`
+  outerContainer: css`
     position: relative;
 
     overflow: hidden;
