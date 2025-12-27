@@ -2,26 +2,25 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { DiffIcon, Minus, Plus } from 'lucide-react';
-import { rgba } from 'polished';
 import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ModifyNodesArgs, ModifyNodesState } from '../../../types';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   insert: css`
-    font-family: ${token.fontFamilyCode};
-    color: ${token.colorSuccess};
+    font-family: ${cssVar.fontFamilyCode};
+    color: ${cssVar.colorSuccess};
   `,
   modify: css`
-    font-family: ${token.fontFamilyCode};
-    color: ${token.colorWarning};
+    font-family: ${cssVar.fontFamilyCode};
+    color: ${cssVar.colorWarning};
   `,
   remove: css`
-    font-family: ${token.fontFamilyCode};
-    color: ${token.colorError};
+    font-family: ${cssVar.fontFamilyCode};
+    color: ${cssVar.colorError};
   `,
   root: css`
     overflow: hidden;
@@ -31,16 +30,16 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   separator: css`
     margin-inline: 2px;
-    color: ${token.colorTextQuaternary};
+    color: ${cssVar.colorTextQuaternary};
   `,
   shinyText: css`
-    color: ${rgba(token.colorText, 0.45)};
+    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
 
     background: linear-gradient(
       120deg,
-      ${rgba(token.colorTextBase, 0)} 40%,
-      ${token.colorTextSecondary} 50%,
-      ${rgba(token.colorTextBase, 0)} 60%
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
+      ${cssVar.colorTextSecondary} 50%,
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
     );
     background-clip: text;
     background-size: 200% 100%;
@@ -59,14 +58,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   title: css`
     margin-inline-end: 8px;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
   `,
 }));
 
 export const ModifyNodesInspector = memo<BuiltinInspectorProps<ModifyNodesArgs, ModifyNodesState>>(
   ({ args, partialArgs, isArgumentsStreaming }) => {
     const { t } = useTranslation('plugin');
-    const { styles, cx } = useStyles();
 
     // Count operations by type
     const counts = useMemo(() => {

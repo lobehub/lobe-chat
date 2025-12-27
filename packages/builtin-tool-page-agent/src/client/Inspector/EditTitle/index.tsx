@@ -1,18 +1,17 @@
 'use client';
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
-import { createStyles } from 'antd-style';
-import { rgba } from 'polished';
+import { createStaticStyles, cx } from 'antd-style';
 import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import type { EditTitleArgs, EditTitleState } from '../../../types';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   highlight: css`
     padding-block-end: 1px;
-    color: ${token.colorText};
-    background: linear-gradient(to top, ${token.gold3} 40%, transparent 40%);
+    color: ${cssVar.colorText};
+    background: linear-gradient(to top, ${cssVar.gold3} 40%, transparent 40%);
   `,
   root: css`
     overflow: hidden;
@@ -20,16 +19,16 @@ const useStyles = createStyles(({ css, token }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   shinyText: css`
-    color: ${rgba(token.colorText, 0.45)};
+    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
 
     background: linear-gradient(
       120deg,
-      ${rgba(token.colorTextBase, 0)} 40%,
-      ${token.colorTextSecondary} 50%,
-      ${rgba(token.colorTextBase, 0)} 60%
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
+      ${cssVar.colorTextSecondary} 50%,
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
     );
     background-clip: text;
     background-size: 200% 100%;
@@ -51,7 +50,6 @@ const useStyles = createStyles(({ css, token }) => ({
 export const EditTitleInspector = memo<BuiltinInspectorProps<EditTitleArgs, EditTitleState>>(
   ({ args, partialArgs, isArgumentsStreaming }) => {
     const { t } = useTranslation('plugin');
-    const { styles, cx } = useStyles();
 
     const title = args?.title || partialArgs?.title;
 

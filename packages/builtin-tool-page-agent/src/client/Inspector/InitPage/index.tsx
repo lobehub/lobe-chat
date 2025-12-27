@@ -2,23 +2,22 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { Plus } from 'lucide-react';
-import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { InitDocumentArgs, InitDocumentState } from '../../../types';
 import { AnimatedNumber } from '../../components/AnimatedNumber';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   chars: css`
-    font-family: ${token.fontFamilyCode};
-    color: ${token.colorTextDescription};
+    font-family: ${cssVar.fontFamilyCode};
+    color: ${cssVar.colorTextDescription};
   `,
   lines: css`
-    font-family: ${token.fontFamilyCode};
-    color: ${token.colorSuccess};
+    font-family: ${cssVar.fontFamilyCode};
+    color: ${cssVar.colorSuccess};
   `,
   root: css`
     overflow: hidden;
@@ -27,13 +26,13 @@ const useStyles = createStyles(({ css, token }) => ({
     -webkit-line-clamp: 1;
   `,
   shinyText: css`
-    color: ${rgba(token.colorText, 0.45)};
+    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
 
     background: linear-gradient(
       120deg,
-      ${rgba(token.colorTextBase, 0)} 40%,
-      ${token.colorTextSecondary} 50%,
-      ${rgba(token.colorTextBase, 0)} 60%
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
+      ${cssVar.colorTextSecondary} 50%,
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
     );
     background-clip: text;
     background-size: 200% 100%;
@@ -52,14 +51,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   title: css`
     margin-inline-end: 8px;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
   `,
 }));
 
 export const InitPageInspector = memo<BuiltinInspectorProps<InitDocumentArgs, InitDocumentState>>(
   ({ args, partialArgs, isArgumentsStreaming, pluginState }) => {
     const { t } = useTranslation('plugin');
-    const { styles, cx } = useStyles();
 
     // Calculate lines and chars from markdown content
     const markdown = args?.markdown || partialArgs?.markdown || '';

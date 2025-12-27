@@ -2,27 +2,26 @@
 
 import type { BuiltinInspectorProps } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { ArrowRight } from 'lucide-react';
-import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { ReplaceTextArgs, ReplaceTextState } from '../../../types';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   arrow: css`
     margin-inline: 4px;
-    color: ${token.colorTextQuaternary};
+    color: ${cssVar.colorTextQuaternary};
   `,
   from: css`
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
     text-decoration: line-through;
   `,
   highlight: css`
     padding-block-end: 1px;
-    color: ${token.colorText};
-    background: linear-gradient(to top, ${token.gold3} 40%, transparent 40%);
+    color: ${cssVar.colorText};
+    background: linear-gradient(to top, ${cssVar.gold3} 40%, transparent 40%);
   `,
   root: css`
     overflow: hidden;
@@ -30,16 +29,16 @@ const useStyles = createStyles(({ css, token }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   shinyText: css`
-    color: ${rgba(token.colorText, 0.45)};
+    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
 
     background: linear-gradient(
       120deg,
-      ${rgba(token.colorTextBase, 0)} 40%,
-      ${token.colorTextSecondary} 50%,
-      ${rgba(token.colorTextBase, 0)} 60%
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
+      ${cssVar.colorTextSecondary} 50%,
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
     );
     background-clip: text;
     background-size: 200% 100%;
@@ -57,19 +56,18 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   stats: css`
-    font-family: ${token.fontFamilyCode};
-    color: ${token.colorTextSecondary};
+    font-family: ${cssVar.fontFamilyCode};
+    color: ${cssVar.colorTextSecondary};
   `,
   title: css`
     margin-inline-end: 8px;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
   `,
 }));
 
 export const ReplaceTextInspector = memo<BuiltinInspectorProps<ReplaceTextArgs, ReplaceTextState>>(
   ({ args, partialArgs, isArgumentsStreaming, pluginState }) => {
     const { t } = useTranslation('plugin');
-    const { styles, cx } = useStyles();
 
     const from = args?.searchText || partialArgs?.searchText;
     const to = args?.newText ?? partialArgs?.newText;

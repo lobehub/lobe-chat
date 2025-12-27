@@ -1,6 +1,6 @@
-import { Button, Center, Flexbox, Icon, Tooltip , Checkbox } from '@lobehub/ui';
+import { Button, Center, Checkbox, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { App, Input } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useThemeMode } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'es-toolkit/compat';
@@ -30,17 +30,16 @@ dayjs.extend(relativeTime);
 export const FILE_DATE_WIDTH = 160;
 export const FILE_SIZE_WIDTH = 140;
 
-const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
+const styles = createStaticStyles(({ css }) => {
   const hover = css`
     opacity: 0;
   `;
   return {
     container: css`
       cursor: pointer;
-      border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
 
       &:hover {
-        background: ${token.colorFillTertiary};
+        background: ${cssVar.colorFillTertiary};
 
         .${cx(hover)} {
           opacity: 1;
@@ -53,11 +52,11 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     `,
 
     dragOver: css`
-      color: ${token.colorBgElevated} !important;
-      background-color: ${token.colorText} !important;
+      color: ${cssVar.colorBgElevated} !important;
+      background-color: ${cssVar.colorText} !important;
 
       * {
-        color: ${token.colorBgElevated} !important;
+        color: ${cssVar.colorBgElevated} !important;
       }
     `,
 
@@ -70,7 +69,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
     item: css`
       padding-block: 0;
       padding-inline: 0 24px;
-      color: ${token.colorTextSecondary};
+      color: ${cssVar.colorTextSecondary};
     `,
     name: css`
       overflow: hidden;
@@ -79,7 +78,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
       min-width: 0;
       margin-inline-start: 12px;
 
-      color: ${token.colorText};
+      color: ${cssVar.colorText};
       text-overflow: ellipsis;
       white-space: nowrap;
     `,
@@ -90,10 +89,10 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
       max-width: 600px;
     `,
     selected: css`
-      background: ${token.colorFillTertiary};
+      background: ${cssVar.colorFillTertiary};
 
       &:hover {
-        background: ${token.colorFillSecondary};
+        background: ${cssVar.colorFillSecondary};
       }
     `,
   };
@@ -130,7 +129,7 @@ const FileListItem = memo<FileListItemProps>(
     pendingRenameItemId,
   }) => {
     const { t } = useTranslation(['components', 'file']);
-    const { styles, cx } = useStyles();
+    const { isDarkMode } = useThemeMode();
     const { message } = App.useApp();
     const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
@@ -304,6 +303,9 @@ const FileListItem = memo<FileListItemProps>(
         onDragStart={handleDragStart}
         onDrop={handleDrop}
         paddingInline={8}
+        style={{
+          borderBlockEnd: `1px solid ${isDarkMode ? cssVar.colorSplit : rgba(cssVar.colorSplit, 0.06)}`,
+        }}
       >
         <Flexbox
           align={'center'}
