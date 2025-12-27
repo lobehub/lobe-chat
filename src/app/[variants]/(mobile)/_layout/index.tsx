@@ -5,6 +5,7 @@ import { type FC, Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Loading from '@/components/Loading/BrandTextLoading';
+import { useWhitelistCheck } from '@/hooks/useWhitelistCheck';
 import { MarketAuthProvider } from '@/layout/AuthProvider/MarketAuth';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { NavigatorRegistrar } from '@/utils/router';
@@ -28,6 +29,13 @@ const MobileMainLayout: FC = () => {
   const location = useLocation();
   const pathname = location.pathname;
   const showNav = MOBILE_NAV_ROUTES.has(pathname);
+  const { isChecking } = useWhitelistCheck();
+
+  // Show loading while checking whitelist
+  if (isChecking) {
+    return <Loading debugId="MobileMainLayout > WhitelistCheck" />;
+  }
+
   return (
     <>
       <NavigatorRegistrar />

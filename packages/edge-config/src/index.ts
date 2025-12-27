@@ -45,6 +45,17 @@ export class EdgeConfig {
     debug('Feature flags retrieved: %O', featureFlags);
     return featureFlags;
   };
+
+  /**
+   * Get user whitelist from EdgeConfig
+   * @returns Array of allowed email addresses
+   */
+  getWhitelist = async () => {
+    const whitelist = await this.getValue('lobehub_whitelist');
+    console.log('[EdgeConfig.getWhitelist] whitelist:', whitelist);
+    debug('Whitelist retrieved: %O', whitelist);
+    return whitelist;
+  };
 }
 
 export * from './types';

@@ -388,6 +388,12 @@ export const desktopRoutes: RouteConfig[] = [
     errorElement: <ErrorBoundary resetPath="/" />,
     path: '/onboarding',
   },
+  // Waitlist route (outside main layout)
+  {
+    element: dynamicElement(() => import('../waitlist'), 'Desktop > Waitlist'),
+    errorElement: <ErrorBoundary resetPath="/" />,
+    path: '/waitlist',
+  },
 ];
 
 // Desktop onboarding route (SPA-only)
