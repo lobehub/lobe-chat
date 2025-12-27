@@ -1,6 +1,6 @@
 import { ModelTag } from '@lobehub/icons';
 import { Center, Flexbox, Icon, Markdown, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { ScrollText } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,23 +11,23 @@ import { useAgentStore } from '@/store/agent/store';
 import { dataSelectors, useConversationStore } from '../../store';
 import HistoryDivider from './HistoryDivider';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     padding-inline: 12px;
     border-radius: 12px;
   `,
   content: css`
-    color: ${token.colorTextDescription};
+    color: ${cssVar.colorTextDescription};
   `,
   line: css`
     width: 3px;
     height: 100%;
-    background: ${token.colorBorder};
+    background: ${cssVar.colorBorder};
   `,
 }));
 
 const History = memo(() => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation('chat');
   const [content, model] = useConversationStore(() => {
     const history = dataSelectors.currentTopicSummary();

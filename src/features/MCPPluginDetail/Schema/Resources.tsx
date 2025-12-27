@@ -1,4 +1,5 @@
 import { Block, Empty, Highlighter, Tag } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { Database } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import InlineTable from '@/components/InlineTable';
 
 import { useDetailContext } from '../DetailProvider';
-import { useStyles } from './style';
+import { styles } from './style';
 import { ModeType } from './types';
 
 const Resources = memo<{ mode?: ModeType }>(({ mode }) => {
   const { t } = useTranslation(['discover', 'plugin']);
   const { resources } = useDetailContext();
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
 
   if (!resources)
     return (

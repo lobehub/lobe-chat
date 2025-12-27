@@ -1,4 +1,5 @@
 import { Block, Collapse, Empty, Highlighter, Icon, Markdown } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { CheckIcon, MessageSquare, MinusIcon } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
 import { memo } from 'react';
@@ -10,7 +11,7 @@ import Title from '../../../app/[variants]/(main)/community/features/Title';
 import CollapseDesc from '../CollapseDesc';
 import CollapseLayout from '../CollapseLayout';
 import { useDetailContext } from '../DetailProvider';
-import { useStyles } from './style';
+import { styles } from './style';
 import { ModeType } from './types';
 
 interface PromptsProps {
@@ -22,7 +23,7 @@ interface PromptsProps {
 const Prompts = memo<PromptsProps>(({ mode, activeKey = [], setActiveKey }) => {
   const { t } = useTranslation(['discover', 'plugin']);
   const { prompts } = useDetailContext();
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
 
   if (!prompts)
     return (
