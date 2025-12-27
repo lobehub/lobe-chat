@@ -1,9 +1,8 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { ActionIcon, Center, Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, cssVar, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { UploadIcon, XIcon } from 'lucide-react';
-import { lighten } from 'polished';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -49,7 +48,6 @@ const styles = createStaticStyles(({ css }) => {
 });
 
 const UploadDock = memo(() => {
-  const theme = useTheme();
   const { t } = useTranslation('file');
   const [expand, setExpand] = useState(true);
   const [show, setShow] = useState(true);
@@ -137,7 +135,7 @@ const UploadDock = memo(() => {
         <Flexbox
           justify={'space-between'}
           style={{
-            background: lighten(0.05, theme.colorBgLayout),
+            background: `color-mix(in srgb, ${cssVar.colorBgLayout} 95%, white)`,
             borderRadius: 8,
             height: 400,
           }}
