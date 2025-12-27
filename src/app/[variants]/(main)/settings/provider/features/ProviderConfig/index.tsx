@@ -1,5 +1,6 @@
 'use client';
 
+import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL, FORM_STYLE, isDesktop } from '@lobechat/const';
 import { ProviderCombine } from '@lobehub/icons';
 import {
@@ -13,7 +14,7 @@ import {
 import { Center, Flexbox, Skeleton } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { Switch } from 'antd';
-import { createStaticStyles, cssVar, cx , responsive } from 'antd-style';
+import { createStaticStyles, cssVar, cx, responsive } from 'antd-style';
 import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
 import { type ReactNode, memo, useCallback, useLayoutEffect, useRef } from 'react';
@@ -368,7 +369,9 @@ const ProviderConfig = memo<ProviderConfigProps>(
           {extra}
 
           {isCustom && <UpdateProviderInfo />}
-          {canDeactivate && <EnableSwitch id={id} />}
+          {canDeactivate && !(ENABLE_BUSINESS_FEATURES && id === 'lobehub') && (
+            <EnableSwitch id={id} />
+          )}
         </Flexbox>
       ),
       title: (
