@@ -74,7 +74,7 @@ const Menu = memo<MenuProps>(({ className, selectable = false, compact, ...rest 
             controlHeightLG: 36,
             iconMarginInlineEnd: 8,
             iconSize: 16,
-            itemBorderRadius: Number.parseFloat(cssVar.borderRadius),
+            itemBorderRadius: 8,
             itemColor: selectable ? cssVar.colorTextSecondary : cssVar.colorText,
             itemHoverBg: cssVar.colorFillTertiary,
             itemMarginBlock: compact ? 0 : 4,

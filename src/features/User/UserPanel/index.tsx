@@ -36,7 +36,7 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
           open={open}
           placement={'topRight'}
           styles={{
-            container: { padding: 0 },
+            container: { borderRadius: 10, padding: 0 },
           }}
           trigger={['click']}
         >
