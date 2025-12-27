@@ -2,16 +2,16 @@
 
 import { type BuiltinInspectorProps, type SearchQuery } from '@lobechat/types';
 import { Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { shinyTextStylish } from '@/styles/loading';
+import { shinyTextStyles } from '@/styles';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   content: css`
-    font-family: ${token.fontFamilyCode};
+    font-family: ${cssVar.fontFamilyCode};
   `,
   root: css`
     overflow: hidden;
@@ -19,21 +19,19 @@ const useStyles = createStyles(({ css, token }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 
-    color: ${token.colorTextDescription};
+    color: ${cssVar.colorTextDescription};
   `,
-  shinyText: shinyTextStylish(token),
 }));
 
 export const SearchInspector = memo<BuiltinInspectorProps<SearchQuery>>(({ args, isLoading }) => {
   const { t } = useTranslation('plugin');
-  const { styles, cx } = useStyles();
 
   const query = args?.query || '';
 
   // When loading, show "联网搜索 > 搜索页面"
   if (isLoading) {
     return (
-      <div className={cx(styles.root, styles.shinyText)}>
+      <div className={cx(styles.root, shinyTextStyles.shinyText)}>
         <span>{t('builtins.lobe-web-browsing.title')}</span>
         <Icon icon={ChevronRight} style={{ marginInline: 4 }} />
         <span>{t('builtins.lobe-web-browsing.apiName.search')}</span>

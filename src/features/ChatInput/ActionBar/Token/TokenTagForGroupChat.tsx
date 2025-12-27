@@ -1,7 +1,7 @@
 import { type GroupMemberInfo, groupChatPrompts, groupSupervisorPrompts } from '@lobechat/prompts';
 import { Center, Flexbox, Tooltip } from '@lobehub/ui';
 import { TokenTag } from '@lobehub/ui/chat';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import numeral from 'numeral';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,6 @@ interface TokenTagForGroupChatProps {
 
 const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageString }) => {
   const { t } = useTranslation(['chat', 'components']);
-  const theme = useTheme();
 
   const input = useChatStore((s) => s.inputMessage);
   const activeTopicId = useChatStore((s) => s.activeTopicId);
@@ -192,7 +191,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
   const content = (
     <Flexbox gap={12} style={{ minWidth: 200 }}>
       <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
-        <div style={{ color: theme.colorTextDescription }}>{t('tokenDetails.title')}</div>
+        <div style={{ color: cssVar.colorTextDescription }}>{t('tokenDetails.title')}</div>
         <Tooltip
           styles={{ root: { maxWidth: 'unset', pointerEvents: 'none' } }}
           title={t('ModelSelect.featureTag.tokens', {
@@ -204,10 +203,10 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
             height={20}
             paddingInline={4}
             style={{
-              background: theme.colorFillTertiary,
+              background: cssVar.colorFillTertiary,
               borderRadius: 4,
-              color: theme.colorTextSecondary,
-              fontFamily: theme.fontFamilyCode,
+              color: cssVar.colorTextSecondary,
+              fontFamily: cssVar.fontFamilyCode,
               fontSize: 11,
             }}
           >
@@ -218,13 +217,13 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
       <TokenProgress
         data={[
           {
-            color: theme.magenta,
+            color: cssVar.magenta,
             id: 'systemRole',
             title: t('tokenDetails.systemRole'),
             value: systemRoleToken,
           },
           {
-            color: theme.geekblue,
+            color: cssVar.geekblue,
             id: 'tools',
             title: t('tokenDetails.tools'),
             value: toolsToken,
@@ -232,7 +231,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
           ...(supervisorToken > 0
             ? [
                 {
-                  color: theme.purple,
+                  color: cssVar.purple,
                   id: 'supervisor',
                   title: t('tokenDetails.supervisor'),
                   value: supervisorToken,
@@ -240,7 +239,7 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
               ]
             : []),
           {
-            color: theme.gold,
+            color: cssVar.gold,
             id: 'chats',
             title: t('tokenDetails.chats'),
             value: chatsToken,
@@ -251,13 +250,13 @@ const TokenTagForGroupChat = memo<TokenTagForGroupChatProps>(({ total: messageSt
       <TokenProgress
         data={[
           {
-            color: theme.colorSuccess,
+            color: cssVar.colorSuccess,
             id: 'used',
             title: t('tokenDetails.used'),
             value: totalToken,
           },
           {
-            color: theme.colorFill,
+            color: cssVar.colorFill,
             id: 'rest',
             title: t('tokenDetails.rest'),
             value: maxTokens - totalToken,

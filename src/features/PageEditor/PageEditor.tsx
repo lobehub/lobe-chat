@@ -2,7 +2,7 @@
 
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { Flexbox } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import { type FC, memo } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
@@ -34,8 +34,6 @@ const PageEditorCanvas = memo(() => {
   const editor = usePageEditorStore((s) => s.editor);
   const flushSave = usePageEditorStore((s) => s.flushSave);
 
-  const theme = useTheme();
-
   // Register Files scope and save document hotkey
   useRegisterFilesHotkeys();
   useSaveDocumentHotkey(flushSave);
@@ -46,7 +44,7 @@ const PageEditorCanvas = memo(() => {
       <Flexbox
         height={'100%'}
         horizontal
-        style={{ backgroundColor: theme.colorBgContainer }}
+        style={{ backgroundColor: cssVar.colorBgContainer }}
         width={'100%'}
       >
         <Flexbox flex={1} height={'100%'} style={{ position: 'relative' }}>

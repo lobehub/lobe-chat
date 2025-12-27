@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Flexbox, Icon, TextArea } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import { SmilePlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,6 @@ import { usePageEditorStore } from '../store';
 
 const Title = memo(() => {
   const { t } = useTranslation('file');
-  const theme = useTheme();
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
   const currentEmoji = usePageEditorStore((s) => s.currentEmoji);
@@ -75,7 +74,7 @@ const Title = memo(() => {
           size="small"
           style={{
             opacity: isHoveringTitle ? 1 : 0,
-            transition: `opacity ${theme.motionDurationMid} ${theme.motionEaseInOut}`,
+            transition: `opacity ${cssVar.motionDurationMid} ${cssVar.motionEaseInOut}`,
             width: 'fit-content',
           }}
           type="text"

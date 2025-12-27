@@ -3,14 +3,14 @@
 import { DiffAction, LITEXML_DIFFNODE_ALL_COMMAND } from '@lobehub/editor';
 import { Block, Icon } from '@lobehub/ui';
 import { Button, Space } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useThemeMode } from 'antd-style';
 import { Check, X } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePageEditorStore } from './store';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const styles = createStaticStyles(({ css }) => ({
   container: css`
     position: absolute;
     z-index: 1000;
@@ -19,17 +19,24 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     transform: translateX(-50%);
   `,
   toolbar: css`
-    border-color: ${token.colorFillSecondary};
-    background: ${token.colorBgElevated};
-    box-shadow: ${isDarkMode
-      ? '0px 14px 28px -6px #0003, 0px 2px 4px -1px #0000001f'
-      : '0 14px 28px -6px #0000001a, 0 2px 4px -1px #0000000f'};
+    border-color: ${cssVar.colorFillSecondary};
+    background: ${cssVar.colorBgElevated};
+  `,
+  toolbarDark: css`
+    box-shadow:
+      0 14px 28px -6px #0003,
+      0 2px 4px -1px #0000001f;
+  `,
+  toolbarLight: css`
+    box-shadow:
+      0 14px 28px -6px #0000001a,
+      0 2px 4px -1px #0000000f;
   `,
 }));
 
 const DiffAllToolbar = memo(() => {
   const { t } = useTranslation('editor');
-  const { styles } = useStyles();
+  const { isDarkMode } = useThemeMode();
   const editor = usePageEditorStore((s) => s.editor);
   const [hasPendingDiffs, setHasPendingDiffs] = useState(false);
 
@@ -70,7 +77,14 @@ const DiffAllToolbar = memo(() => {
 
   return (
     <div className={styles.container}>
-      <Block className={styles.toolbar} gap={8} horizontal padding={4} shadow variant="outlined">
+      <Block
+        className={cx(styles.toolbar, isDarkMode ? styles.toolbarDark : styles.toolbarLight)}
+        gap={8}
+        horizontal
+        padding={4}
+        shadow
+        variant="outlined"
+      >
         <Space>
           <Button
             // danger

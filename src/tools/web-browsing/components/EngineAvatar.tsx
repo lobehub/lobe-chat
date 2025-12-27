@@ -1,5 +1,5 @@
 import { Avatar } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import { memo } from 'react';
 
 import { ENGINE_ICON_MAP } from '../const';
@@ -17,12 +17,11 @@ export const EngineAvatar = memo<EngineAvatarProps>(({ engine }) => (
 ));
 
 export const EngineAvatarGroup = memo<EngineAvatarGroupProps>(({ engines }) => {
-  const theme = useTheme();
   return (
     <Avatar.Group
       items={engines.map((engine) => ({
         avatar: ENGINE_ICON_MAP[engine],
-        background: theme.colorBgLayout,
+        background: cssVar.colorBgLayout,
         key: engine,
         title: engine,
       }))}

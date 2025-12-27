@@ -1,17 +1,17 @@
 import { Flexbox, Icon, Skeleton, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { shinyTextStylish } from '@/styles/loading';
+import { shinyTextStyles } from '@/styles';
 
 import { EngineAvatarGroup } from '../../../components/EngineAvatar';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   font: css`
     font-size: 12px;
-    color: ${token.colorTextTertiary};
+    color: ${cssVar.colorTextTertiary};
   `,
   query: css`
     cursor: pointer;
@@ -21,13 +21,12 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 8px;
 
     font-size: 12px;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
 
     &:hover {
-      background: ${token.colorFillTertiary};
+      background: ${cssVar.colorFillTertiary};
     }
   `,
-  shinyText: shinyTextStylish(token),
 }));
 
 interface SearchBarProps {
@@ -41,7 +40,6 @@ interface SearchBarProps {
 const SearchBar = memo<SearchBarProps>(
   ({ defaultEngines, defaultQuery, resultsNumber, onEditingChange, searching }) => {
     const isMobile = useIsMobile();
-    const { styles, cx } = useStyles();
     return (
       <Flexbox
         align={isMobile ? 'flex-start' : 'center'}
@@ -52,7 +50,7 @@ const SearchBar = memo<SearchBarProps>(
       >
         <Flexbox
           align={'center'}
-          className={cx(styles.query, searching && styles.shinyText)}
+          className={cx(styles.query, searching && shinyTextStyles.shinyText)}
           gap={8}
           horizontal
           onClick={() => {
