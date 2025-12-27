@@ -23,7 +23,7 @@ interface PluginItemProps extends DiscoverPluginItem {
 const Item = memo<PluginItemProps>(
   ({ title, description, avatar, onClick, active, identifier, author }) => {
     const { t } = useTranslation('plugin');
-    const theme = useTheme();
+    const theme = useTheme(); // Keep for dynamic colors (blue, geekblue)
     const installProgress = useToolStore(
       pluginStoreSelectors.getPluginInstallProgress(identifier),
       isEqual,

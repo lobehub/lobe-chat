@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Modal } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { Upload, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
@@ -321,7 +321,7 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
 
       return (
         <div
-          className={`${styles.thumbnail} ${index === selectedIndex ? 'selected' : ''}`}
+          className={cx(styles.thumbnail, index === selectedIndex && 'selected')}
           key={item.id}
           onClick={() => setSelectedIndex(index)}
         >
@@ -342,7 +342,7 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
 
           {/* 删除按钮 */}
           <div
-            className={`${styles.thumbnailDelete} thumbnail-delete`}
+            className={cx(styles.thumbnailDelete, 'thumbnail-delete')}
             onClick={(e) => handleThumbnailDelete(index, e)}
           >
             <X size={12} />

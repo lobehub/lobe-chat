@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { CheckCircle, HeartHandshake, Shield } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCallback, useEffect } from 'react';
@@ -234,10 +234,10 @@ export const Screen4 = ({ onScreenConfigChange }: Screen4Props) => {
           >
             {/* 共享数据选项 */}
             <div
-              className={`${screen4Styles.optionCard} ${selectedMode === 'share' ? 'selected' : ''}`}
+              className={cx(screen4Styles.optionCard, selectedMode === 'share' && 'selected')}
               onClick={() => setMode('share')}
             >
-              <CheckCircle className={`${screen4Styles.checkIcon} check-icon`} size={24} />
+              <CheckCircle className={cx(screen4Styles.checkIcon, 'check-icon')} size={24} />
 
               <div className={screen4Styles.cardHeader}>
                 <HeartHandshake color={themeToken.colorGreen} size={48} />
@@ -257,10 +257,10 @@ export const Screen4 = ({ onScreenConfigChange }: Screen4Props) => {
 
             {/* 隐私模式选项 */}
             <div
-              className={`${screen4Styles.optionCard} ${selectedMode === 'privacy' ? 'selected' : ''}`}
+              className={cx(screen4Styles.optionCard, selectedMode === 'privacy' && 'selected')}
               onClick={() => setMode('privacy')}
             >
-              <CheckCircle className={`${screen4Styles.checkIcon} check-icon`} size={24} />
+              <CheckCircle className={cx(screen4Styles.checkIcon, 'check-icon')} size={24} />
 
               <div className={screen4Styles.cardHeader}>
                 <Shield color={themeToken.colorBlue} size={48} />

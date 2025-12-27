@@ -2,7 +2,7 @@
 
 import { Avatar, Block, Flexbox, Grid, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { ClockIcon, DownloadIcon, Heart } from 'lucide-react';
 import qs from 'query-string';
 import { memo, useCallback } from 'react';
@@ -119,7 +119,7 @@ const FavoriteAgentCard = memo<FavoriteAgentCardProps>(
         {showUnfavorite && (
           <Tooltip title={t('user.unfavorite')}>
             <div
-              className={`favorite-button ${styles.favoriteButton}`}
+              className={cx('favorite-button', styles.favoriteButton)}
               onClick={(e) => {
                 e.stopPropagation();
                 onUnfavorite(identifier);

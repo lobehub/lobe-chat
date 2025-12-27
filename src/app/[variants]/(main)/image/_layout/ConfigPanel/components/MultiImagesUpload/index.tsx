@@ -2,7 +2,7 @@
 
 // Removed Image import - using img tags instead
 import { Center } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
+import { createStyles, cx, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
@@ -300,7 +300,7 @@ const ImageUploadPlaceholder: FC<ImageUploadPlaceholderProps> = memo(({ isDragOv
 
   return (
     <Center
-      className={`${styles.placeholder} ${isDragOver ? 'drag-over' : ''}`}
+      className={cx(styles.placeholder, isDragOver && 'drag-over')}
       gap={16}
       horizontal={false}
       onClick={onClick}
@@ -482,7 +482,7 @@ const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
           />
           {!showOverlay && (
             <div
-              className={`${styles.deleteIcon} delete-icon`}
+              className={cx(styles.deleteIcon, 'delete-icon')}
               onClick={(e) => handleDelete(index, e)}
             >
               <X size={12} />
@@ -495,7 +495,11 @@ const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
 
     return (
       <div
-        className={`${styles.imageThumbnails} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+        className={cx(
+          styles.imageThumbnails,
+          configStyles.dragTransition,
+          isDragOver && configStyles.dragOver,
+        )}
         onClick={onClick}
       >
         {displayImages.map(renderImageItem)}
@@ -531,7 +535,11 @@ const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(
 
     return (
       <div
-        className={`${styles.singleImageDisplay} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+        className={cx(
+          styles.singleImageDisplay,
+          configStyles.dragTransition,
+          isDragOver && configStyles.dragOver,
+        )}
       >
         <Image
           alt="Uploaded image"
@@ -542,13 +550,13 @@ const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(
         />
 
         {/* Delete button */}
-        <div className={`${styles.deleteIcon} delete-icon`} onClick={handleDelete}>
+        <div className={cx(styles.deleteIcon, 'delete-icon')} onClick={handleDelete}>
           <X size={12} />
         </div>
 
         {/* Upload more overlay */}
         <div
-          className={`${styles.uploadMoreOverlay} upload-more-overlay`}
+          className={cx(styles.uploadMoreOverlay, 'upload-more-overlay')}
           onClick={handleOverlayClick}
         >
           <button className={styles.uploadMoreButton} type="button">
@@ -788,9 +796,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
 
         {/* Conditional rendering based on state */}
         {isUploading ? (
-          <div
-            className={`${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
-          >
+          <div className={cx(configStyles.dragTransition, isDragOver && configStyles.dragOver)}>
             <ImageUploadProgress
               completedCount={completedFiles}
               currentProgress={overallProgress}

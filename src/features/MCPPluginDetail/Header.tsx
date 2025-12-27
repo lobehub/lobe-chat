@@ -3,7 +3,7 @@
 import { Github } from '@lobehub/icons';
 import { ActionIcon, Avatar, Button, Flexbox, Icon, Tag, Text, Tooltip } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive, useTheme } from 'antd-style';
 import {
   BookmarkIcon,
   BookmarkMinusIcon,
@@ -30,17 +30,17 @@ import InstallationIcon from '../../components/MCPDepsIcon';
 import PublishedTime from '../../components/PublishedTime';
 import { useDetailContext } from './DetailProvider';
 
-const useStyles = createStyles(({ css, token }) => {
+const styles = createStaticStyles(({ css }) => {
   return {
     desc: css`
-      color: ${token.colorTextSecondary};
+      color: ${cssVar.colorTextSecondary};
     `,
     time: css`
       font-size: 12px;
-      color: ${token.colorTextDescription};
+      color: ${cssVar.colorTextDescription};
     `,
     version: css`
-      font-family: ${token.fontFamilyCode};
+      font-family: ${cssVar.fontFamilyCode};
       font-size: 13px;
     `,
   };
@@ -69,7 +69,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
     isClaimed,
     isOfficial,
   } = useDetailContext();
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { mobile = isMobile } = useResponsive();
   const { isAuthenticated, signIn, session } = useMarketAuth();
   const [favoriteLoading, setFavoriteLoading] = useState(false);

@@ -16,7 +16,8 @@ import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 
 import { generateMarkdown } from '../ShareText/template';
 import { type FieldType } from '../ShareText/type';
-import { useContainerStyles, useStyles } from '../style';
+import { styles } from '../style';
+import { useContainerStyles } from '../useContainerStyles';
 import PdfPreview from './PdfPreview';
 import { usePdfGeneration } from './usePdfGeneration';
 
@@ -30,7 +31,6 @@ const DEFAULT_FIELD_VALUE: FieldType = {
 const SharePdf = memo((props: { message?: UIChatMessage }) => {
   const [fieldValue, setFieldValue] = useState(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
-  const { styles } = useStyles();
   const { styles: containerStyles } = useContainerStyles();
   const { message } = App.useApp();
 

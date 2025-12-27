@@ -1,7 +1,7 @@
 'use client';
 
 import { ConfigProvider } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { AnimatePresence, motion } from 'motion/react';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -233,7 +233,7 @@ export const OnboardingContainer: React.FC<OnboardingContainerProps> = ({ onComp
   return (
     <div className={styles.container}>
       {/* Title Bar Drag Region */}
-      <div className={`${styles.titleBar} ${electronStylish.draggable}`} />
+      <div className={cx(styles.titleBar, electronStylish.draggable)} />
 
       {/* LightRays Background Layer */}
       {renderBackground()}

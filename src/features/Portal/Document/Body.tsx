@@ -1,13 +1,13 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles } from 'antd-style';
 import { memo } from 'react';
 
 import EditorCanvas from './EditorCanvas';
 import Title from './Title';
 
-const useStyles = createStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   content: css`
     overflow: auto;
     flex: 1;
@@ -16,8 +16,6 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const DocumentBody = memo(() => {
-  const { styles } = useStyles();
-
   return (
     <Flexbox flex={1} height={'100%'} style={{ overflow: 'hidden' }}>
       <div className={styles.content}>

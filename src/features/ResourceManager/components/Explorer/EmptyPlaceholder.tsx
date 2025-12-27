@@ -1,6 +1,6 @@
 import { Center, FileTypeIcon, Flexbox, Icon, Text } from '@lobehub/ui';
 import { Upload } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,11 +10,11 @@ import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 80;
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   actionTitle: css`
     margin-block-start: 12px;
     font-size: 16px;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   card: css`
     cursor: pointer;
@@ -25,18 +25,18 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: 200px;
     height: 140px;
-    border-radius: ${token.borderRadiusLG}px;
+    border-radius: ${cssVar.borderRadiusLG};
 
     font-weight: 500;
     text-align: center;
 
-    background: ${token.colorFillTertiary};
-    box-shadow: 0 0 0 1px ${token.colorFillTertiary} inset;
+    background: ${cssVar.colorFillTertiary};
+    box-shadow: 0 0 0 1px ${cssVar.colorFillTertiary} inset;
 
     transition: background 0.3s ease-in-out;
 
     &:hover {
-      background: ${token.colorFillSecondary};
+      background: ${cssVar.colorFillSecondary};
     }
   `,
   glow: css`
@@ -63,7 +63,6 @@ const useStyles = createStyles(({ css, token }) => ({
 const EmptyPlaceholder = () => {
   const { t } = useTranslation('components');
   const theme = useTheme();
-  const { styles } = useStyles();
 
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
 

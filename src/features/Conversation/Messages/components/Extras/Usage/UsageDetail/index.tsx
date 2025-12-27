@@ -1,7 +1,7 @@
 import { type ModelPerformance, type ModelUsage } from '@lobechat/types';
 import { Center, Flexbox, Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
-import { useTheme } from 'antd-style';
+import { cssVar, useTheme } from 'antd-style';
 import { BadgeCent, CoinsIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,7 @@ interface TokenDetailProps {
 
 const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provider }) => {
   const { t } = useTranslation('chat');
-  const theme = useTheme();
+  const theme = useTheme(); // Keep for dynamic colors (cyan9, orange, green, pink, purple, yellow)
 
   // 使用 systemStatus 管理短格式显示状态
   const isShortFormat = useGlobalStore(systemStatusSelectors.tokenDisplayFormatShort);
@@ -88,7 +88,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
 
   const totalDetail = [
     !!detailTokens.inputCacheMiss && {
-      color: theme.colorFill,
+      color: cssVar.colorFill,
 
       id: 'uncachedInput',
       title: t('messages.tokenDetails.inputUncached'),
@@ -109,7 +109,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
         : detailTokens.inputCachedWrite.token,
     },
     !!detailTokens.totalOutput && {
-      color: theme.colorSuccess,
+      color: cssVar.colorSuccess,
       id: 'output',
       title: t('messages.tokenDetails.output'),
       value: isShowCredit ? detailTokens.totalOutput.credit : detailTokens.totalOutput.token,
@@ -148,7 +148,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
                   justify={'space-between'}
                   width={'100%'}
                 >
-                  <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
+                  <div style={{ color: cssVar.colorTextDescription, fontSize: 12 }}>
                     {t('messages.tokenDetails.inputTitle')}
                   </div>
                 </Flexbox>
@@ -164,7 +164,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
                   justify={'space-between'}
                   width={'100%'}
                 >
-                  <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
+                  <div style={{ color: cssVar.colorTextDescription, fontSize: 12 }}>
                     {t('messages.tokenDetails.outputTitle')}
                   </div>
                 </Flexbox>
@@ -175,14 +175,14 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
               <TokenProgress data={totalDetail} showIcon />
               <Divider style={{ marginBlock: 8 }} />
               <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
-                <div style={{ color: theme.colorTextSecondary }}>
+                <div style={{ color: cssVar.colorTextSecondary }}>
                   {t('messages.tokenDetails.total')}
                 </div>
                 <div style={{ fontWeight: 500 }}>{detailTotal}</div>
               </Flexbox>
               {isShowCredit && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
-                  <div style={{ color: theme.colorTextSecondary }}>
+                  <div style={{ color: cssVar.colorTextSecondary }}>
                     {t('messages.tokenDetails.average')}
                   </div>
                   <div style={{ fontWeight: 500 }}>{averagePricing}</div>
@@ -191,7 +191,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
               {tps && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
                   <Flexbox gap={8} horizontal>
-                    <div style={{ color: theme.colorTextSecondary }}>
+                    <div style={{ color: cssVar.colorTextSecondary }}>
                       {t('messages.tokenDetails.speed.tps.title')}
                     </div>
                     <InfoTooltip title={t('messages.tokenDetails.speed.tps.tooltip')} />
@@ -202,7 +202,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, performance, model, provide
               {ttft && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
                   <Flexbox gap={8} horizontal>
-                    <div style={{ color: theme.colorTextSecondary }}>
+                    <div style={{ color: cssVar.colorTextSecondary }}>
                       {t('messages.tokenDetails.speed.ttft.title')}
                     </div>
                     <InfoTooltip title={t('messages.tokenDetails.speed.ttft.tooltip')} />

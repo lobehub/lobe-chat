@@ -1,7 +1,7 @@
 import { type ChatPluginPayload } from '@lobechat/types';
 import { Avatar, Button, Center, Flexbox } from '@lobehub/ui';
 import { Divider } from 'antd';
-import { useTheme } from 'antd-style';
+import { cssVar } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,6 @@ interface PluginSettingsProps {
 const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
-  const theme = useTheme();
   const [resend, deleteMessage] = useConversationStore((s) => [
     s.delAndRegenerateMessage,
     s.deleteMessage,
@@ -36,7 +35,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
         <Center gap={16} style={{ maxWidth: 400 }}>
           <Avatar
             avatar={pluginHelpers.getPluginAvatar(pluginMeta) || '⚙️'}
-            background={theme.colorFillContent}
+            background={cssVar.colorFillContent}
             gap={12}
             shape={'square'}
             size={80}

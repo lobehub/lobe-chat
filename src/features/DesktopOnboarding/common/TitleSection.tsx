@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { motion } from 'motion/react';
 
 import { useTypographyStyles } from '../styles';
@@ -59,7 +59,7 @@ export const TitleSection = ({
     return (
       <motion.div
         animate={animation.animate}
-        className={`${styles.titleSection} ${className || ''}`}
+        className={cx(styles.titleSection, className)}
         initial={animation.initial}
         transition={animation.transition}
       >
@@ -69,5 +69,5 @@ export const TitleSection = ({
   }
 
   // 静态版本（不带动画）
-  return <div className={`${styles.titleSection} ${className || ''}`}>{content}</div>;
+  return <div className={cx(styles.titleSection, className)}>{content}</div>;
 };

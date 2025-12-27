@@ -1,7 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Flexbox } from '@lobehub/ui';
 import { Input, Modal, Spin } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { ChevronLeft, ChevronRight, Expand, FileText } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -229,7 +229,7 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
           />
         )}
 
-        <div className={`${styles.preview} ${localStyles.previewContainer}`}>
+        <div className={cx(styles.preview, localStyles.previewContainer)}>
           <Document
             file={pdfDataUri}
             loading={

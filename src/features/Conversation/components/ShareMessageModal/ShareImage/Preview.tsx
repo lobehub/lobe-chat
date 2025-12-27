@@ -13,7 +13,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
 import { useAgentMeta, useIsBuiltinAgent } from '../../../hooks';
-import { useContainerStyles } from '../style';
+import { styles as containerStyles } from '../style';
 import { useStyles } from './style';
 import { type FieldType } from './type';
 
@@ -35,7 +35,6 @@ const Preview = memo<PreviewProps>(
 
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
-    const { styles: containerStyles } = useContainerStyles();
 
     const displayTitle = agentMeta.title || title;
     const displayDesc = isBuiltinAgent ? t('inbox.desc') : agentMeta.description;

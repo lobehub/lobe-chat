@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { Check, X } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -152,9 +152,7 @@ export const AuthResult = ({ success, title, description, animated = true }: Aut
 
         {/* 连接线和状态图标 */}
         <div className={styles.connectionLine}>
-          <div
-            className={`${styles.statusIcon} ${success ? styles.successIcon : styles.errorIcon}`}
-          >
+          <div className={cx(styles.statusIcon, success ? styles.successIcon : styles.errorIcon)}>
             {success ? <Check size={14} /> : <X size={14} />}
           </div>
         </div>

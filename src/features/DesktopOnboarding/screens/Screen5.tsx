@@ -1,5 +1,5 @@
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { Cloud, Server } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
@@ -484,7 +484,7 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
               {/* 重新登录按钮 */}
               <motion.button
                 animate={{ opacity: 1, y: 0 }}
-                className={`${screen4Styles.signInButton}`}
+                className={screen4Styles.signInButton}
                 initial={{ opacity: 0, y: 30 }}
                 key="cloud-retry"
                 onClick={handleReturnToLogin}
@@ -525,7 +525,10 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
             {/* 登录按钮 */}
             <motion.button
               animate={{ opacity: 1, y: 0 }}
-              className={`${screen4Styles.signInButton} ${cloudLoginStatus === 'loading' ? screen4Styles.loadingButton : ''}`}
+              className={cx(
+                screen4Styles.signInButton,
+                cloudLoginStatus === 'loading' && screen4Styles.loadingButton,
+              )}
               disabled={cloudLoginStatus === 'loading' || isConnectingServer}
               initial={{ opacity: 0, y: 30 }}
               key="cloud-button"
@@ -555,7 +558,7 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
               {/* 重新连接按钮 */}
               <motion.button
                 animate={{ opacity: 1, y: 0 }}
-                className={`${screen4Styles.signInButton}`}
+                className={screen4Styles.signInButton}
                 initial={{ opacity: 0, y: 30 }}
                 key="selfhost-retry"
                 onClick={handleReturnToLogin}
@@ -601,13 +604,11 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
 
               <motion.button
                 animate={{ opacity: 1, y: 0 }}
-                className={`${screen4Styles.signInButton} ${
-                  selfhostLoginStatus === 'loading'
-                    ? screen4Styles.loadingButton
-                    : !endpoint.trim()
-                      ? screen4Styles.disabledButton
-                      : ''
-                }`}
+                className={cx(
+                  screen4Styles.signInButton,
+                  selfhostLoginStatus === 'loading' && screen4Styles.loadingButton,
+                  !endpoint.trim() && screen4Styles.disabledButton,
+                )}
                 disabled={
                   !endpoint.trim() || selfhostLoginStatus === 'loading' || isConnectingServer
                 }
@@ -659,7 +660,10 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
               <div className={screen4Styles.methodOptions}>
                 {Object.values(loginMethods).map((method) => (
                   <motion.div
-                    className={`${screen4Styles.methodCard} ${currentMethod === method.id ? 'active' : ''}`}
+                    className={cx(
+                      screen4Styles.methodCard,
+                      currentMethod === method.id && 'active',
+                    )}
                     key={method.id}
                     onClick={() => handleMethodChange(method.id)}
                     whileHover={{ scale: 1.02 }}

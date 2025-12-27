@@ -12,7 +12,7 @@ import {
   TooltipGroup,
 } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import {
   AlertTriangle,
   ClockIcon,
@@ -261,7 +261,7 @@ const UserAgentCard = memo<UserAgentCardProps>(
         {isOwner && (
           <Dropdown menu={{ items: menuItems }} trigger={['click']}>
             <div
-              className={`more-button ${styles.moreButton}`}
+              className={cx('more-button', styles.moreButton)}
               onClick={(e) => e.stopPropagation()}
             >
               <Icon icon={MoreVerticalIcon} size={16} style={{ cursor: 'pointer' }} />

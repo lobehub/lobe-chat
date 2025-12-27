@@ -2,7 +2,7 @@
 
 import { Center } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { createStyles, cx, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
@@ -313,7 +313,11 @@ const Placeholder: FC<PlaceholderProps> = memo(({ isDragOver, onClick }) => {
 
   return (
     <Center
-      className={`${styles.placeholder} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+      className={cx(
+        styles.placeholder,
+        configStyles.dragTransition,
+        isDragOver && configStyles.dragOver,
+      )}
       gap={16}
       horizontal={false}
       onClick={onClick}
@@ -387,7 +391,11 @@ const SuccessDisplay: FC<SuccessDisplayProps> = memo(
 
     return (
       <div
-        className={`${styles.successDisplay} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+        className={cx(
+          styles.successDisplay,
+          configStyles.dragTransition,
+          isDragOver && configStyles.dragOver,
+        )}
         onClick={onChangeImage}
       >
         <Image
@@ -399,12 +407,12 @@ const SuccessDisplay: FC<SuccessDisplayProps> = memo(
         />
 
         {/* Delete button */}
-        <div className={`${styles.deleteIcon} delete-icon`} onClick={handleDelete}>
+        <div className={cx(styles.deleteIcon, 'delete-icon')} onClick={handleDelete}>
           <X size={14} />
         </div>
 
         {/* Change image overlay */}
-        <div className={`${styles.changeOverlay} change-overlay`} onClick={handleChangeImage}>
+        <div className={cx(styles.changeOverlay, 'change-overlay')} onClick={handleChangeImage}>
           <button className={styles.changeButton} type="button">
             {t('ImageUpload.actions.changeImage')}
           </button>

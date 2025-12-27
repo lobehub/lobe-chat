@@ -2,7 +2,7 @@ import { SiApple, SiLinux } from '@icons-pack/react-simple-icons';
 import { Microsoft } from '@lobehub/icons';
 import { ActionIcon, Block, Collapse, Empty, Flexbox, Icon, Snippet, Tag } from '@lobehub/ui';
 import { Divider, Popover, Steps } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cssVar, useTheme } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
 import {
   CheckIcon,
@@ -27,16 +27,16 @@ import CollapseLayout from '../CollapseLayout';
 import { useDetailContext } from '../DetailProvider';
 import Platform from './Platform';
 
-const useStyles = createStyles(({ css, token }) => {
+const styles = createStaticStyles(({ css }) => {
   return {
     code: css`
-      font-family: ${token.fontFamilyCode};
+      font-family: ${cssVar.fontFamilyCode};
     `,
   };
 });
 
 const Deployment = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation(['discover', 'plugin']);
   const { deploymentOptions = [], identifier } = useDetailContext();
   const [activeKey, setActiveKey] = useState<string[]>(['0']);

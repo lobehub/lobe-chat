@@ -1,10 +1,10 @@
 import { ActionIcon, Flexbox } from '@lobehub/ui';
 import { ConfigProvider, Popover, type TooltipProps } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { XIcon } from 'lucide-react';
 import { type CSSProperties, type FC, type ReactNode } from 'react';
 
-const useStyle = createStyles(({ css }) => {
+const styles = createStaticStyles(({ css }) => {
   return {
     close: css`
       color: white;
@@ -90,7 +90,6 @@ const TipGuide: FC<TipGuideProps> = ({
   onOpenChange: setOpen,
 }) => {
   const token = useTheme();
-  const { styles, cx } = useStyle();
 
   return (
     <ConfigProvider

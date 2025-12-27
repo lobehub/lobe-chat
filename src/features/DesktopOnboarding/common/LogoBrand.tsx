@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { motion } from 'motion/react';
 
 const logoImage = new URL('../assets/lobe256.png', import.meta.url).href;
@@ -65,7 +65,7 @@ export const LogoBrand = ({
 
   if (animated) {
     return (
-      <motion.div className={`${styles.logoContainer} ${className || ''}`}>
+      <motion.div className={cx(styles.logoContainer, className)}>
         {/* Logo 图片 */}
         <motion.div
           animate={{
@@ -118,7 +118,7 @@ export const LogoBrand = ({
 
   // 静态版本（不带动画）
   return (
-    <div className={`${styles.logoContainer} ${className || ''}`}>
+    <div className={cx(styles.logoContainer, className)}>
       {/* Logo 图片 */}
       <div style={{ marginBottom: spacing }}>
         <img

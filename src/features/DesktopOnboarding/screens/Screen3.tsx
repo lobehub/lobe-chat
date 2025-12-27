@@ -1,4 +1,4 @@
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { Bell, Check, FolderOpen, Mic, MonitorCog } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -352,7 +352,7 @@ export const Screen3 = ({ onScreenConfigChange }: Screen3Props) => {
 
               {/* 按钮 */}
               <button
-                className={`${screen3Styles.permissionButton} ${permission.granted ? 'granted' : ''}`}
+                className={cx(screen3Styles.permissionButton, permission.granted && 'granted')}
                 disabled={permission.granted && permission.id !== 2}
                 onClick={() => handlePermissionRequest(permission.id)}
                 type="button"

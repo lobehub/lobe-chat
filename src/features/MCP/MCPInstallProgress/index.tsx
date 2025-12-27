@@ -21,7 +21,7 @@ const MCPInstallProgress = memo<{ identifier: string }>(({ identifier }) => {
     isEqual,
   );
 
-  const theme = useTheme();
+  const theme = useTheme(); // Keep for dynamic colors (blue, geekblue)
 
   const stepText = installProgress ? t(`mcpInstall.${installProgress.step}` as any) : undefined;
   const needsConfig = installProgress?.needsConfig;

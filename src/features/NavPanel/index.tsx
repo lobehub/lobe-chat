@@ -1,7 +1,7 @@
 'use client';
 
 import { DraggablePanel } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   type PropsWithChildren,
@@ -41,12 +41,12 @@ const setNavPanelSnapshot = (snapshot: NavPanelSnapshot) => {
   listeners.forEach((listener) => listener());
 };
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const styles = createStaticStyles(({ css, cssVar }) => ({
   panel: css`
     user-select: none;
     height: 100%;
-    color: ${token.colorTextSecondary};
-    background: ${isDesktop && isMacOS() ? 'transparent' : token.colorBgLayout};
+    color: ${cssVar.colorTextSecondary};
+    background: ${isDesktop && isMacOS() ? 'transparent' : cssVar.colorBgLayout};
 
     * {
       user-select: none;
@@ -57,7 +57,7 @@ export const useStyles = createStyles(({ css, token }) => ({
       opacity: 0;
       transition:
         opacity,
-        width 0.2s ${token.motionEaseOut};
+        width 0.2s ${cssVar.motionEaseOut};
     }
 
     #${USER_DROPDOWN_ICON_ID} {
@@ -65,13 +65,13 @@ export const useStyles = createStyles(({ css, token }) => ({
       opacity: 0;
       transition:
         opacity,
-        width 0.2s ${token.motionEaseOut};
+        width 0.2s ${cssVar.motionEaseOut};
     }
 
     #${BACK_BUTTON_ID} {
       width: 0 !important;
       opacity: 0;
-      transition: all 0.2s ${token.motionEaseOut};
+      transition: all 0.2s ${cssVar.motionEaseOut};
     }
 
     &:hover {
@@ -96,7 +96,6 @@ export const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const NavPanel = memo(() => {
-  const { styles } = useStyles();
   const { expand, handleSizeChange, width, togglePanel } = useNavPanel();
   const panelContent = useSyncExternalStore(
     subscribeNavPanel,
@@ -107,7 +106,6 @@ const NavPanel = memo(() => {
   // Use home Content as fallback when no portal content is provided
   const activeContent = panelContent || { key: 'home', node: <Sidebar /> };
 
-  const theme = useTheme();
   return (
     <>
       <DraggablePanel
@@ -122,7 +120,7 @@ const NavPanel = memo(() => {
         placement="left"
         showBorder={false}
         style={{
-          background: isDesktop && isMacOS() ? 'transparent' : theme.colorBgLayout,
+          background: isDesktop && isMacOS() ? 'transparent' : cssVar.colorBgLayout,
           zIndex: 11,
         }}
       >

@@ -1,12 +1,12 @@
 import { Block, Center, Flexbox } from '@lobehub/ui';
 import { Popover, Progress } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cssVar, useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { type ScoreResult, getGradeColor, sortItemsByPriority } from '../../MCP/calculateScore';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css }) => ({
   colorDot: css`
     width: 8px;
     height: 8px;
@@ -14,14 +14,14 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   container: css`
     padding: 24px;
-    border: 1px solid ${token.colorBorderSecondary};
+    border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: 12px;
-    background: ${token.colorFillQuaternary};
+    background: ${cssVar.colorFillQuaternary};
   `,
   description: css`
     margin-block-start: 8px;
     font-size: 14px;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   gradeBadge: css`
     flex: none;
@@ -67,17 +67,17 @@ const useStyles = createStyles(({ css, token }) => ({
   scoreText: css`
     font-size: 24px;
     font-weight: 600;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
   `,
   sectionTitle: css`
     margin-block: 12px 6px;
     margin-inline: 0;
     padding-block-start: 8px;
-    border-block-start: 1px solid ${token.colorBorderSecondary};
+    border-block-start: 1px solid ${cssVar.colorBorderSecondary};
 
     font-size: 14px;
     font-weight: 600;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
 
     &:first-of-type {
       padding-block-start: 0;
@@ -104,7 +104,7 @@ interface TotalScoreProps {
 }
 
 const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [], isValidated }) => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation('discover');
 
   const { totalScore, maxScore, percentage, grade } = scoreResult;

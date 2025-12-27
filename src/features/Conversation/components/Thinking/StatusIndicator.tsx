@@ -1,5 +1,5 @@
 import { Block, Icon } from '@lobehub/ui';
-import { useTheme } from 'antd-style';
+import { cssVar, useTheme } from 'antd-style';
 import { AtomIcon, Loader2Icon } from 'lucide-react';
 import { memo } from 'react';
 
@@ -9,13 +9,13 @@ interface StatusIndicatorProps {
 }
 
 const StatusIndicator = memo<StatusIndicatorProps>(({ thinking, showDetail }) => {
-  const theme = useTheme();
+  const theme = useTheme(); // Keep for dynamic color (purple)
   let icon;
 
   if (thinking) {
-    icon = <Icon color={theme.colorTextDescription} icon={Loader2Icon} spin />;
+    icon = <Icon color={cssVar.colorTextDescription} icon={Loader2Icon} spin />;
   } else {
-    icon = <Icon color={showDetail ? theme.purple : theme.colorTextDescription} icon={AtomIcon} />;
+    icon = <Icon color={showDetail ? theme.purple : cssVar.colorTextDescription} icon={AtomIcon} />;
   }
 
   return (

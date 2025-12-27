@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStyles, cx } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import { type CSSProperties, type ReactNode, memo } from 'react';
 
@@ -74,7 +74,7 @@ const ConfigLayout = memo<ConfigLayoutProps>(
       <Flexbox align="center" gap={2} horizontal>
         {actions}
         <ActionIcon
-          className={`${styles.chevron} ${expanded ? styles.chevronExpanded : ''}`}
+          className={cx(styles.chevron, expanded && styles.chevronExpanded)}
           icon={ChevronRight}
           onClick={handleHeaderClick}
           size="small"
