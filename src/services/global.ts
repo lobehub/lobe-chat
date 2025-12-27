@@ -1,6 +1,6 @@
 import type { PartialDeep } from 'type-fest';
 
-import { BusinessGlobalService } from '@/business/client/services/BusinessGlobalService';
+import { BusinessGlobalService } from '@/business/client/services/BusinessGlobalServices';
 import { lambdaClient } from '@/libs/trpc/client';
 import { type LobeAgentConfig } from '@/types/agent';
 import { type GlobalRuntimeConfig } from '@/types/serverConfig';
