@@ -1,8 +1,7 @@
 'use client';
 
 import { Button, Center, Checkbox, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar, cx, useThemeMode } from 'antd-style';
-import { rgba } from 'polished';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { type DragEvent, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VList, type VListHandle } from 'virtua';
@@ -64,7 +63,6 @@ const ListView = memo<ListViewProps>(
     setSelectedFileIds,
   }) => {
     const { t } = useTranslation(['components', 'file']);
-    const { isDarkMode } = useThemeMode();
     const virtuaRef = useRef<VListHandle>(null);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const isDragActive = useDragActive();
@@ -143,7 +141,7 @@ const ListView = memo<ListViewProps>(
           horizontal
           paddingInline={8}
           style={{
-            borderBlockEnd: `1px solid ${isDarkMode ? cssVar.colorSplit : rgba(cssVar.colorSplit, 0.06)}`,
+            borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`,
             fontSize: 12,
           }}
         >
@@ -188,7 +186,7 @@ const ListView = memo<ListViewProps>(
                     className={styles.loadMoreContainer}
                     key="load-more"
                     style={{
-                      borderBlockStart: `1px solid ${isDarkMode ? cssVar.colorSplit : rgba(cssVar.colorSplit, 0.06)}`,
+                      borderBlockStart: `1px solid ${cssVar.colorBorderSecondary}`,
                     }}
                   >
                     <Button loading={isLoadingMore} onClick={handleLoadMore} type="default">

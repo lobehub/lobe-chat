@@ -1,21 +1,21 @@
 import { Flexbox, Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { AlertTriangle } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     padding-block: 8px;
     padding-inline: 6px;
   `,
   reason: css`
     font-size: 12px;
-    color: ${token.colorTextTertiary};
+    color: ${cssVar.colorTextTertiary};
   `,
   title: css`
     font-size: 14px;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
 }));
 
@@ -25,7 +25,7 @@ interface RejectedResponseProps {
 
 const RejectedResponse = memo<RejectedResponseProps>(({ reason }) => {
   const { t } = useTranslation('chat');
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
 
   return (
     <Flexbox className={styles.container} gap={8}>

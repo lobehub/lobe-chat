@@ -3,18 +3,18 @@
 import { CheckCircleFilled, CloseCircleFilled, DownloadOutlined } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { memo, useCallback } from 'react';
 
 import { type ExportFileState } from '../../type';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     overflow: hidden;
     padding-inline: 8px 0;
   `,
   filename: css`
-    font-family: ${token.fontFamilyCode};
+    font-family: ${cssVar.fontFamilyCode};
     font-size: 12px;
   `,
   statusIcon: css`
@@ -28,7 +28,7 @@ interface ExportFileParams {
 
 const ExportFile = memo<BuiltinRenderProps<ExportFileParams, ExportFileState>>(
   ({ args, pluginState }) => {
-    const { styles, theme } = useStyles();
+    const theme = useTheme();
     const isSuccess = pluginState?.success;
 
     const handleDownload = useCallback(async () => {

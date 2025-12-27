@@ -1,8 +1,8 @@
 import { Avatar, type DivProps, Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const styles = createStaticStyles(({ css, cssVar }) => ({
   banner: css`
     position: relative;
 
@@ -11,7 +11,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     height: 64px;
     margin-block-end: -56px;
 
-    background: ${token.colorFillSecondary};
+    background: ${cssVar.colorFillSecondary};
   `,
   bannerImg: css`
     position: absolute;
@@ -29,7 +29,7 @@ interface CardBannerProps extends DivProps {
 
 const CardBanner = memo<CardBannerProps>(
   ({ avatar, className, size = 600, children, ...props }) => {
-    const { styles, theme, cx } = useStyles();
+    const theme = useTheme();
 
     return (
       <Flexbox

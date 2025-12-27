@@ -2,7 +2,7 @@
 
 import { Avatar, Flexbox, Text } from '@lobehub/ui';
 import { Steps } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,11 +21,11 @@ import { LayersEnum } from '@/types/userMemory';
 
 import ExperienceDropdown from './ExperienceDropdown';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   content: css`
     font-size: 14px;
     line-height: 1.8;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
     white-space: pre-wrap;
   `,
   stepsContainer: css`
@@ -41,7 +41,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const ExperienceRightPanel = memo(() => {
   const { t } = useTranslation('memory');
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const [experienceId] = useQueryState('experienceId', { clearOnDefault: true });
   const useFetchMemoryDetail = useUserMemoryStore((s) => s.useFetchMemoryDetail);
 

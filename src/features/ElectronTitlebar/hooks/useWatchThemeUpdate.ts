@@ -1,6 +1,5 @@
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
 import { cssVar } from 'antd-style';
-import { rgba } from 'polished';
 import { useLayoutEffect } from 'react';
 
 import { useElectronStore } from '@/store/electron';
@@ -44,6 +43,6 @@ export const useWatchThemeUpdate = () => {
 
     // https://x.com/alanblogsooo/status/1939208908993896684
 
-    document.body.style.background = rgba(cssVar.colorBgLayout, 0.66);
+    document.body.style.background = `color-mix(in srgb, ${cssVar.colorBgLayout} 66%, transparent)`;
   }, [systemAppearance, isAppStateInit, isMac]);
 };

@@ -4,6 +4,8 @@ import { SearchIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { shinyTextStyles } from '@/styles';
+
 const styles = createStaticStyles(({ css, cssVar }) => ({
   font: css`
     font-size: 12px;
@@ -23,30 +25,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
       background: ${cssVar.colorFillTertiary};
     }
   `,
-  shinyText: css`
-    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
-
-    background: linear-gradient(
-      120deg,
-      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
-      ${cssVar.colorTextSecondary} 50%,
-      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
-    );
-    background-clip: text;
-    background-size: 200% 100%;
-
-    animation: shine 1.5s linear infinite;
-
-    @keyframes shine {
-      0% {
-        background-position: 100%;
-      }
-
-      100% {
-        background-position: -100%;
-      }
-    }
-  `,
 }));
 
 interface SearchBarProps {
@@ -63,7 +41,7 @@ const SearchBar = memo<SearchBarProps>(
       <Flexbox align={'center'} distribution={'space-between'} gap={40} height={26} horizontal>
         <Flexbox
           align={'center'}
-          className={cx(styles.query, searching && styles.shinyText)}
+          className={cx(styles.query, searching && shinyTextStyles.shinyText)}
           gap={8}
           horizontal
           onClick={() => {

@@ -1,11 +1,10 @@
 import { Button, Center, Checkbox, Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { App, Input } from 'antd';
-import { createStaticStyles, cssVar, cx, useThemeMode } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { isNull } from 'es-toolkit/compat';
 import { FileBoxIcon, FileText, FolderIcon } from 'lucide-react';
-import { rgba } from 'polished';
 import { type DragEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -129,7 +128,6 @@ const FileListItem = memo<FileListItemProps>(
     pendingRenameItemId,
   }) => {
     const { t } = useTranslation(['components', 'file']);
-    const { isDarkMode } = useThemeMode();
     const { message } = App.useApp();
     const navigate = useNavigate();
     const [, setSearchParams] = useSearchParams();
@@ -304,7 +302,7 @@ const FileListItem = memo<FileListItemProps>(
         onDrop={handleDrop}
         paddingInline={8}
         style={{
-          borderBlockEnd: `1px solid ${isDarkMode ? cssVar.colorSplit : rgba(cssVar.colorSplit, 0.06)}`,
+          borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`,
         }}
       >
         <Flexbox

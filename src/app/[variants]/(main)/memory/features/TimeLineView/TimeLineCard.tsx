@@ -1,5 +1,5 @@
 import { Block, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { Link2 } from 'lucide-react';
 import { type ReactNode, memo } from 'react';
 
@@ -9,7 +9,7 @@ import Time from '../Time';
 
 const ACTION_CLASSNAME = 'memory-actions';
 
-const useStyles = createStyles(({ css }) => ({
+const styles = createStaticStyles(({ css }) => ({
   actions: css`
     transition: opacity 0.15s ease;
   `,
@@ -40,7 +40,7 @@ interface TimeLineCardProps {
 
 const TimeLineCard = memo<TimeLineCardProps>(
   ({ title, titleAddon, cate, children, actions, onClick, updatedAt, hashTags }) => {
-    const { theme, cx, styles } = useStyles();
+    const theme = useTheme();
     return (
       <Block
         className={styles.timelineCard}

@@ -1,5 +1,4 @@
-import { css } from 'antd-style';
-import type { FullToken } from 'antd-style/lib/types';
+import { createStaticStyles, css, keyframes } from 'antd-style';
 
 export const dotLoading = css`
   &::after {
@@ -28,34 +27,29 @@ export const dotLoading = css`
   }
 `;
 
-export const shinyTextStylish = (tokenOrCssVar: FullToken | any) => {
-  // Support both token and cssVar
-  const colorText = tokenOrCssVar.colorText || tokenOrCssVar;
-  const colorTextBase = tokenOrCssVar.colorTextBase || tokenOrCssVar;
-  const colorTextSecondary = tokenOrCssVar.colorTextSecondary || tokenOrCssVar;
+const shine = keyframes`
+  0% {
+    background-position: 100%;
+  }
 
-  return css`
-    color: color-mix(in srgb, ${colorText} 45%, transparent);
+  100% {
+    background-position: -100%;
+  }
+`;
+
+export const shinyTextStyles = createStaticStyles(({ css, cssVar }) => ({
+  shinyText: css`
+    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
 
     background: linear-gradient(
       120deg,
-      color-mix(in srgb, ${colorTextBase} 0%, transparent) 40%,
-      ${colorTextSecondary} 50%,
-      color-mix(in srgb, ${colorTextBase} 0%, transparent) 60%
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
+      ${cssVar.colorTextSecondary} 50%,
+      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
     );
     background-clip: text;
     background-size: 200% 100%;
 
-    animation: shine 1.5s linear infinite;
-
-    @keyframes shine {
-      0% {
-        background-position: 100%;
-      }
-
-      100% {
-        background-position: -100%;
-      }
-    }
-  ` as any;
-};
+    animation: ${shine} 1.5s linear infinite;
+  `,
+}));

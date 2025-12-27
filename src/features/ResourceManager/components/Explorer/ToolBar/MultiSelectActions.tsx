@@ -1,8 +1,7 @@
 import { Button, Checkbox, Flexbox, Icon, Skeleton } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStaticStyles, cssVar, useThemeMode } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { BookMinusIcon, BookPlusIcon, FileBoxIcon, Trash2Icon } from 'lucide-react';
-import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -33,7 +32,6 @@ interface MultiSelectActionsProps {
 const MultiSelectActions = memo<MultiSelectActionsProps>(
   ({ selectCount, total, onActionClick, onClickCheckbox }) => {
     const { t } = useTranslation(['components', 'common']);
-    const { isDarkMode } = useThemeMode();
 
     const isSelectedFiles = selectCount > 0;
     const { modal, message } = App.useApp();
@@ -46,7 +44,7 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
         gap={12}
         horizontal
         style={{
-          borderBlockEnd: `1px solid ${isDarkMode ? cssVar.colorSplit : rgba(cssVar.colorSplit, 0.06)}`,
+          borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`,
           height: 40,
           paddingBlockEnd: 12,
         }}

@@ -3,18 +3,18 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { Flexbox, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { memo } from 'react';
 
 import { type WriteLocalFileState } from '../../type';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     overflow: hidden;
     padding-inline: 8px 0;
   `,
   path: css`
-    font-family: ${token.fontFamilyCode};
+    font-family: ${cssVar.fontFamilyCode};
     font-size: 12px;
   `,
   statusIcon: css`
@@ -30,7 +30,7 @@ interface WriteLocalFileParams {
 
 const WriteFile = memo<BuiltinRenderProps<WriteLocalFileParams, WriteLocalFileState>>(
   ({ args, pluginState }) => {
-    const { styles, theme } = useStyles();
+    const theme = useTheme();
     const isSuccess = pluginState?.success;
 
     return (

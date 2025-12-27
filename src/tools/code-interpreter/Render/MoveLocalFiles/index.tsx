@@ -3,15 +3,15 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
 import { type BuiltinRenderProps } from '@lobechat/types';
 import { Block, Flexbox, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
 
 import { type MoveLocalFilesState } from '../../type';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   arrow: css`
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   container: css`
     overflow: hidden;
@@ -26,7 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 4px;
   `,
   path: css`
-    font-family: ${token.fontFamilyCode};
+    font-family: ${cssVar.fontFamilyCode};
     font-size: 11px;
   `,
   statusIcon: css`
@@ -43,7 +43,7 @@ interface MoveLocalFilesParams {
 
 const MoveLocalFiles = memo<BuiltinRenderProps<MoveLocalFilesParams, MoveLocalFilesState>>(
   ({ pluginState }) => {
-    const { styles, theme } = useStyles();
+    const theme = useTheme();
 
     if (!pluginState?.results) {
       return null;

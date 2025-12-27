@@ -1,15 +1,10 @@
 import { Flexbox, Text } from '@lobehub/ui';
-import { createStaticStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { shinyTextStylish } from '@/styles/loading';
+import { shinyTextStyles } from '@/styles';
 
 import StatusIndicator from './StatusIndicator';
-
-const styles = createStaticStyles(({ cssVar }) => ({
-  shinyText: shinyTextStylish(cssVar) as string,
-}));
 
 interface ThinkingTitleProps {
   duration?: number;
@@ -24,7 +19,7 @@ const ThinkingTitle = memo<ThinkingTitleProps>(({ showDetail, thinking, duration
     <Flexbox align={'center'} gap={6} horizontal>
       <StatusIndicator showDetail={showDetail} thinking={thinking} />
       {thinking ? (
-        <span className={styles.shinyText}>{t('Thinking.thinking')}</span>
+        <span className={shinyTextStyles.shinyText}>{t('Thinking.thinking')}</span>
       ) : (
         <Text type={'secondary'}>
           {!duration

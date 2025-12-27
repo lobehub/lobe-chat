@@ -12,7 +12,7 @@ import {
   Tag,
   Text,
 } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { startCase } from 'es-toolkit/compat';
 import { LinkIcon, Share2Icon } from 'lucide-react';
 import Link from 'next/link';
@@ -23,36 +23,36 @@ import { useShare } from '@/hooks/useShare';
 
 import CardBanner from '../../components/CardBanner';
 
-const useStyles = createStyles(({ css, token }) => {
+const styles = createStaticStyles(({ css, cssVar }) => {
   return {
     banner: css`
       overflow: hidden;
 
-      border: 1px solid ${token.colorBorderSecondary};
-      border-radius: ${token.borderRadiusLG}px;
+      border: 1px solid ${cssVar.colorBorderSecondary};
+      border-radius: ${cssVar.borderRadiusLG};
 
-      background: ${token.colorBgContainer};
-      box-shadow: ${token.boxShadowTertiary};
+      background: ${cssVar.colorBgContainer};
+      box-shadow: ${cssVar.boxShadowTertiary};
     `,
     copy: css`
-      background: ${token.colorPrimary};
+      background: ${cssVar.colorPrimary};
 
       &:hover {
-        background: ${token.colorPrimaryHover};
+        background: ${cssVar.colorPrimaryHover};
       }
     `,
     icon: css`
-      border: 1px solid ${token.colorFillSecondary};
+      border: 1px solid ${cssVar.colorFillSecondary};
 
       svg {
-        fill: ${token.colorTextSecondary};
+        fill: ${cssVar.colorTextSecondary};
       }
 
       &:hover {
-        border: 1px solid ${token.colorBorderSecondary};
+        border: 1px solid ${cssVar.colorBorderSecondary};
 
         svg {
-          fill: ${token.colorText};
+          fill: ${cssVar.colorText};
         }
       }
     `,
@@ -80,7 +80,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
     ...meta,
   });
   const { t } = useTranslation('common');
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
 
   let content;

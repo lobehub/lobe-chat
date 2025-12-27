@@ -7,6 +7,8 @@ import { ArrowRight } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { shinyTextStyles } from '@/styles';
+
 import type { ReplaceTextArgs, ReplaceTextState } from '../../../types';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
@@ -31,30 +33,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
     color: ${cssVar.colorTextSecondary};
   `,
-  shinyText: css`
-    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
-
-    background: linear-gradient(
-      120deg,
-      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
-      ${cssVar.colorTextSecondary} 50%,
-      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
-    );
-    background-clip: text;
-    background-size: 200% 100%;
-
-    animation: shine 1.5s linear infinite;
-
-    @keyframes shine {
-      0% {
-        background-position: 100%;
-      }
-
-      100% {
-        background-position: -100%;
-      }
-    }
-  `,
   stats: css`
     font-family: ${cssVar.fontFamilyCode};
     color: ${cssVar.colorTextSecondary};
@@ -75,7 +53,7 @@ export const ReplaceTextInspector = memo<BuiltinInspectorProps<ReplaceTextArgs, 
     // During streaming without searchText yet, show init message
     if (isArgumentsStreaming && !from) {
       return (
-        <div className={cx(styles.root, styles.shinyText)}>
+        <div className={cx(styles.root, shinyTextStyles.shinyText)}>
           <span>{t('builtins.lobe-page-agent.apiName.replaceText.init')}</span>
         </div>
       );
@@ -85,7 +63,7 @@ export const ReplaceTextInspector = memo<BuiltinInspectorProps<ReplaceTextArgs, 
     const hasResult = from && to !== undefined;
 
     return (
-      <div className={cx(styles.root, isArgumentsStreaming && styles.shinyText)}>
+      <div className={cx(styles.root, isArgumentsStreaming && shinyTextStyles.shinyText)}>
         <span className={styles.title}>{t('builtins.lobe-page-agent.apiName.replaceText')}</span>
         {hasResult && (
           <>

@@ -1,5 +1,5 @@
 import { Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,7 @@ import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import { EngineAvatarGroup } from '../../../components/EngineAvatar';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     cursor: pointer;
 
@@ -19,10 +19,10 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 12px;
     color: initial;
 
-    background: ${token.colorFillQuaternary};
+    background: ${cssVar.colorFillQuaternary};
 
     &:hover {
-      background: ${token.colorFillTertiary};
+      background: ${cssVar.colorFillTertiary};
     }
   `,
   title: css`
@@ -41,7 +41,6 @@ interface ShowMoreProps {
   resultsNumber: number;
 }
 const ShowMore = memo<ShowMoreProps>(({ messageId, engines, resultsNumber }) => {
-  const { styles } = useStyles();
   const [openToolUI] = useChatStore((s) => [s.openToolUI]);
 
   const { t } = useTranslation('tool');

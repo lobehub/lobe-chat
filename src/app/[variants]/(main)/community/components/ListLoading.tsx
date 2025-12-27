@@ -1,19 +1,17 @@
 'use client';
 
 import { Block, Flexbox, Grid, Skeleton } from '@lobehub/ui';
-import { createStyles, useResponsive, useTheme } from 'antd-style';
+import { createStaticStyles, useResponsive, useTheme } from 'antd-style';
 import { memo } from 'react';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   footer: css`
-    border-block-start: 1px dashed ${token.colorBorder};
-    background: ${token.colorBgContainerSecondary};
+    border-block-start: 1px dashed ${cssVar.colorBorder};
+    background: ${cssVar.colorBgContainer};
   `,
 }));
 
 const ListLoading = memo<{ length?: number; rows?: number }>(({ rows = 3, length = 12 }) => {
-  const { styles } = useStyles();
-
   return (
     <Grid rows={rows} width={'100%'}>
       {Array.from({ length }).map((_, index) => (

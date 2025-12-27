@@ -1,6 +1,6 @@
 import { Button, Flexbox, Markdown, Snippet, Text } from '@lobehub/ui';
 import { Card, Space } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { AlertTriangle, CheckCircle, ExternalLink, Terminal } from 'lucide-react';
 import * as motion from 'motion/react-m';
 import { memo } from 'react';
@@ -14,36 +14,36 @@ interface MCPDependenciesGuideProps {
   systemDependencies: SystemDependencyCheckResult[];
 }
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   commandBlock: css`
     position: relative;
 
-    padding-block: ${token.paddingXS}px;
-    padding-inline: ${token.paddingSM}px;
-    border: 1px solid ${token.colorBorder};
-    border-radius: ${token.borderRadiusSM}px;
+    padding-block: ${cssVar.paddingXS};
+    padding-inline: ${cssVar.paddingSM};
+    border: 1px solid ${cssVar.colorBorder};
+    border-radius: ${cssVar.borderRadiusSM};
 
-    font-family: ${token.fontFamilyCode};
-    font-size: ${token.fontSizeSM}px;
+    font-family: ${cssVar.fontFamilyCode};
+    font-size: ${cssVar.fontSizeSM};
 
-    background-color: ${token.colorFillTertiary};
+    background-color: ${cssVar.colorFillTertiary};
 
     &:hover {
-      background-color: ${token.colorFillSecondary};
+      background-color: ${cssVar.colorFillSecondary};
     }
   `,
   container: css`
-    margin-block-start: ${token.marginXS}px;
-    padding: ${token.padding}px;
-    border: 1px solid ${token.colorBorder};
-    border-radius: ${token.borderRadius}px;
+    margin-block-start: ${cssVar.marginXS};
+    padding: ${cssVar.padding};
+    border: 1px solid ${cssVar.colorBorder};
+    border-radius: ${cssVar.borderRadius};
 
-    background-color: ${token.colorBgContainer};
+    background-color: ${cssVar.colorBgContainer};
   `,
   copyButton: css`
     position: absolute;
-    inset-block-start: ${token.paddingXXS}px;
-    inset-inline-end: ${token.paddingXXS}px;
+    inset-block-start: ${cssVar.paddingXXS};
+    inset-inline-end: ${cssVar.paddingXXS};
 
     height: auto;
     min-height: auto;
@@ -53,25 +53,25 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 12px;
   `,
   dependencyCard: css`
-    border: 1px solid ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusSM}px;
+    border: 1px solid ${cssVar.colorBorderSecondary};
+    border-radius: ${cssVar.borderRadiusSM};
   `,
   footer: css`
     display: flex;
-    gap: ${token.marginXS}px;
+    gap: ${cssVar.marginXS};
     justify-content: flex-end;
-    margin-block-start: ${token.marginXS}px;
+    margin-block-start: ${cssVar.marginXS};
   `,
   statusIcon: css`
     display: flex;
-    gap: ${token.marginXXS}px;
+    gap: ${cssVar.marginXXS};
     align-items: center;
   `,
 }));
 
 const MCPDependenciesGuide = memo<MCPDependenciesGuideProps>(
   ({ identifier, systemDependencies }) => {
-    const { styles, theme } = useStyles();
+    const theme = useTheme();
     const { t } = useTranslation(['plugin', 'common']);
     const [installMCPPlugin, cancelInstallMCPPlugin] = useToolStore((s) => [
       s.installMCPPlugin,

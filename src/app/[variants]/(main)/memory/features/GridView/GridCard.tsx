@@ -1,5 +1,5 @@
 import { Block, Center, Flexbox, Tag, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 
 import HashTags from '../HashTags';
@@ -8,15 +8,15 @@ import { useCateColor } from '../useCateColor';
 
 const ACTION_CLASSNAME = 'memory-masonry-actions';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   actions: css`
     transition: opacity 0.15s ease;
   `,
   masonryCard: css`
     cursor: pointer;
     position: relative;
-    background: ${token.colorFillQuaternary};
-    box-shadow: 0 0 0 1px ${token.colorFillTertiary} inset;
+    background: ${cssVar.colorFillQuaternary};
+    box-shadow: 0 0 0 1px ${cssVar.colorFillTertiary} inset;
     .${ACTION_CLASSNAME} {
       opacity: 0;
     }
@@ -55,7 +55,7 @@ const GridCard = memo<GridCardProps>(
     footer,
     updatedAt,
   }) => {
-    const { theme, cx, styles } = useStyles();
+    const theme = useTheme();
     const cateColor = useCateColor(cate);
     return (
       <Block

@@ -1,14 +1,14 @@
 import { Avatar, Center, type CenterProps, Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     border-radius: 8px;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
   `,
   desc: css`
-    color: ${token.colorTextTertiary};
+    color: ${cssVar.colorTextTertiary};
     text-align: center;
   `,
   form: css`
@@ -38,7 +38,7 @@ export const FormAction = memo<
     gap = 16,
     ...rest
   }) => {
-    const { cx, styles, theme } = useStyles();
+    const theme = useTheme();
 
     return (
       <Center className={cx(styles.form, className)} gap={gap} {...rest}>

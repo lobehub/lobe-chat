@@ -1,11 +1,19 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { kebabCase } from 'es-toolkit/compat';
 import { Heading2, Heading3, Heading4, Heading5 } from 'lucide-react';
 import Link from 'next/link';
-import { Children, type ComponentProps, type FC, type ReactNode, isValidElement, useEffect, useMemo } from 'react';
+import {
+  Children,
+  type ComponentProps,
+  type FC,
+  type ReactNode,
+  isValidElement,
+  useEffect,
+  useMemo,
+} from 'react';
 
 import { useToc } from './useToc';
 
@@ -30,28 +38,27 @@ const HeadingIcon: any = {
   h5: Heading5,
 };
 
-const useStyles = createStyles(({ css, cx, token }) => {
-  const anchor = cx(css`
-    display: none;
-    margin-inline-start: 0.5rem;
-    color: ${token.colorTextDescription} !important;
-  `);
-  return {
-    anchor,
-    container: css`
-      &:hover {
-        .${anchor} {
-          display: inline;
-        }
-      }
+const styles = createStaticStyles(({ cx, css, cssVar }) => ({
+  anchor: cx(
+    'toc-anchor',
+    css`
+      display: none;
+      margin-inline-start: 0.5rem;
+      color: ${cssVar.colorTextDescription} !important;
     `,
-  };
-});
+  ),
+  container: css`
+    &:hover {
+      .toc-anchor {
+        display: inline;
+      }
+    }
+  `,
+}));
 
 const createHeading = (Tag: `h${1 | 2 | 3 | 4 | 5 | 6}`) => {
   const Heading: FC<ComponentProps<'h2'>> = ({ children, className, style, ...props }) => {
     const { setToc, setFinished } = useToc();
-    const { cx, styles } = useStyles();
     const text = useMemo(() => extractTextChildren(children), [children]);
     const id = kebabCase(text);
     const theme = useTheme();

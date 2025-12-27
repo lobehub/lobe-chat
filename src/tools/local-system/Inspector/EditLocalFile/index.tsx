@@ -10,6 +10,8 @@ import path from 'path-browserify-esm';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { shinyTextStyles } from '@/styles';
+
 const styles = createStaticStyles(({ css, cssVar }) => ({
   content: css`
     font-family: ${cssVar.fontFamilyCode};
@@ -21,30 +23,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     -webkit-line-clamp: 1;
 
     color: ${cssVar.colorTextDescription};
-  `,
-  shinyText: css`
-    color: color-mix(in srgb, ${cssVar.colorText} 45%, transparent);
-
-    background: linear-gradient(
-      120deg,
-      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 40%,
-      ${cssVar.colorTextSecondary} 50%,
-      color-mix(in srgb, ${cssVar.colorTextBase} 0%, transparent) 60%
-    );
-    background-clip: text;
-    background-size: 200% 100%;
-
-    animation: shine 1.5s linear infinite;
-
-    @keyframes shine {
-      0% {
-        background-position: 100%;
-      }
-
-      100% {
-        background-position: -100%;
-      }
-    }
   `,
 }));
 
@@ -62,7 +40,7 @@ export const EditLocalFileInspector = memo<
   }
 
   return (
-    <div className={cx(styles.root, isLoading && styles.shinyText)}>
+    <div className={cx(styles.root, isLoading && shinyTextStyles.shinyText)}>
       <span>{t('builtins.lobe-local-system.apiName.editLocalFile')}</span>
       {displayPath && (
         <>
