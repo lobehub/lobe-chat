@@ -82,7 +82,7 @@ const AiHeatmaps = memo<
         color={'gold'}
         icon={<Icon color={fillColor} fill={fillColor} icon={FlameIcon} />}
         style={{
-          background: theme.gold,
+          background: cssVar.gold,
           color: fillColor,
           fontWeight: 500,
           margin: 0,
