@@ -1,7 +1,7 @@
 import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
 import { type DiscoverPluginDetail, type PluginSource } from '@lobechat/types';
 import { Avatar, Block, Flexbox, Icon, Image, Skeleton, Tag, Text } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -27,14 +27,14 @@ const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label
 
 KlavisIcon.displayName = 'KlavisIcon';
 
-const useStyles = createStyles(({ css, token }) => {
+const styles = createStaticStyles(({ css, cssVar }) => {
   return {
     clickable: css`
       cursor: pointer;
 
       &:hover {
         .plugin-title {
-          color: ${token.colorLink};
+          color: ${cssVar.colorLink};
         }
       }
     `,
@@ -42,7 +42,7 @@ const useStyles = createStyles(({ css, token }) => {
       flex: 1;
       margin: 0 !important;
       font-size: 14px !important;
-      color: ${token.colorTextSecondary};
+      color: ${cssVar.colorTextSecondary};
     `,
     noLink: css`
       cursor: default;
@@ -71,7 +71,6 @@ const PluginItem = memo<PluginItemProps>(({ identifier }) => {
   const { t } = useTranslation('discover');
   const usePluginDetail = useDiscoverStore((s) => s.usePluginDetail);
   const { data: apiData, isLoading } = usePluginDetail({ identifier, withManifest: false });
-  const { styles, cx } = useStyles();
 
   // Try to get Klavis tool info if API returns no data
   const klavisTool = useMemo(() => {
