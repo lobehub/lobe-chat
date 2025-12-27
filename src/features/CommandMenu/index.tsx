@@ -15,7 +15,7 @@ import SearchResults from './SearchResults';
 import ThemeMenu from './ThemeMenu';
 import CommandFooter from './components/CommandFooter';
 import CommandInput from './components/CommandInput';
-import { useStyles } from './styles';
+import { styles } from './styles';
 import { useCommandMenu } from './useCommandMenu';
 
 /**
@@ -23,7 +23,6 @@ import { useCommandMenu } from './useCommandMenu';
  */
 const CommandMenuContent = memo(() => {
   const { t } = useTranslation('common');
-  const { styles } = useStyles();
   const { closeCommandMenu, handleBack, hasSearch, isSearching, searchQuery, searchResults } =
     useCommandMenu();
 

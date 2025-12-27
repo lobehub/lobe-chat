@@ -1,7 +1,6 @@
 import { lobeStaticStylish } from '@lobehub/ui';
 import { createStaticStyles, cx, responsive } from 'antd-style';
 
-
 export const styles = createStaticStyles(({ css, cssVar }) => ({
   preview: cx(
     lobeStaticStylish.noScrollbar,

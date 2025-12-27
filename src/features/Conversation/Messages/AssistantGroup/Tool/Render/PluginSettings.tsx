@@ -10,7 +10,7 @@ import PluginSettingsConfig from '@/features/PluginSettings';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import { ErrorActionContainer, useStyles } from '../../../../Error/style';
+import { ErrorActionContainer, styles as errorStyles } from '../../../../Error/style';
 import { useConversationStore } from '../../../../store';
 
 interface PluginSettingsProps {
@@ -19,7 +19,6 @@ interface PluginSettingsProps {
 }
 
 const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
-  const { styles } = useStyles();
   const { t } = useTranslation('error');
   const [resend, deleteMessage] = useConversationStore((s) => [
     s.delAndRegenerateMessage,
@@ -43,7 +42,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
           <Flexbox style={{ fontSize: 20 }}>
             {t('pluginSettings.title', { name: pluginHelpers.getPluginTitle(pluginMeta) })}
           </Flexbox>
-          <Flexbox className={styles.desc}>{t('pluginSettings.desc')}</Flexbox>
+          <Flexbox className={errorStyles.desc}>{t('pluginSettings.desc')}</Flexbox>
           <Divider style={{ margin: '0 16px' }} />
           {manifest.settings && (
             <PluginSettingsConfig id={manifest.identifier} schema={manifest.settings} />

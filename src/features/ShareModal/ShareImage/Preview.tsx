@@ -13,7 +13,7 @@ import { agentSelectors, builtinAgentSelectors } from '@/store/agent/selectors';
 import pkg from '../../../../package.json';
 import { containerStyles } from '../style';
 import ChatList from './ChatList';
-import { useStyles } from './style';
+import { styles } from './style';
 import { WidthMode } from './type';
 import { type FieldType } from './type';
 
@@ -31,7 +31,6 @@ const Preview = memo<FieldType & { title?: string }>(
       ]);
 
     const { t } = useTranslation('chat');
-    const { styles } = useStyles(withBackground);
 
     const displayTitle = isInbox ? 'Lobe AI' : title;
     const displayDesc = isInbox ? t('inbox.desc') : description;
@@ -46,7 +45,10 @@ const Preview = memo<FieldType & { title?: string }>(
         )}
       >
         <div className={withBackground ? styles.background : undefined} id={'preview'}>
-          <Flexbox className={styles.container} gap={16}>
+          <Flexbox
+            className={cx(styles.container, withBackground && styles.container_withBackground_true)}
+            gap={16}
+          >
             <div className={styles.header}>
               <Flexbox align={'flex-start'} gap={12} horizontal>
                 <Avatar

@@ -2,10 +2,10 @@
 
 import { UserProfile } from '@clerk/nextjs';
 import { type ElementsConfig } from '@clerk/types';
-import { createStyles , responsive } from 'antd-style';
+import { createStaticStyles, responsive } from 'antd-style';
 import { memo } from 'react';
 
-export const useStyles = createStyles(
+export const styles = createStaticStyles(
   ({ css, cssVar }) =>
     ({
       cardBox: css`
@@ -53,9 +53,7 @@ export const useStyles = createStyles(
     }) as Partial<Record<keyof ElementsConfig, any>>,
 );
 
-const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { styles } = useStyles(mobile);
-
+const Client = memo(() => {
   return (
     <UserProfile
       appearance={{
