@@ -1,6 +1,5 @@
 'use client';
 
-import { ENABLE_BUSINESS_FEATURES } from '@lobechat/business-const';
 import { Flexbox } from '@lobehub/ui';
 import { cx } from 'antd-style';
 import dynamic from 'next/dynamic';
@@ -9,7 +8,6 @@ import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Outlet } from 'react-router-dom';
 
 import { DndContextWrapper } from '@/app/[variants]/(main)/resource/features/DndContextWrapper';
-import { useMainLayoutRenderingChecking } from '@/business/client/useMainLayoutRendingChecking';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { isDesktop } from '@/const/version';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
@@ -35,11 +33,6 @@ const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const Layout: FC = () => {
   const { isPWA } = usePlatform();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
-
-  const { isChecking, loadingComponent } = useMainLayoutRenderingChecking();
-  if (ENABLE_BUSINESS_FEATURES && isChecking) {
-    return loadingComponent;
-  }
 
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
