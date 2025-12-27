@@ -33,6 +33,7 @@ import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, threadSelectors, topicSelectors } from '../../../selectors';
 import { messageMapKey } from '../../../utils/messageMapKey';
+import {isNull} from "@/utils/type";
 
 const n = setNamespace('ai');
 
@@ -246,13 +247,11 @@ export const generateAIChatV2: StateCreator<
       .activeBaseChats(get())
       .filter((item) => item.id !== data.assistantMessageId)
       .filter((item) => {
-        // eslint-disable-next-line eqeqeq
-        if (activeThreadId == null) {
-          // eslint-disable-next-line eqeqeq
-          return item.threadId == null;
+        if (isNull(activeThreadId)) {
+          return isNull(item.threadId);
         }
 
-        const _isParent = isParent;
+        const _isParent = isNull(item.threadId)  && isParent;
         if (item.id === sourceMessageId) {
           isParent = false;
         }

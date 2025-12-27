@@ -8,6 +8,7 @@ import { chatHelpers } from '@/store/chat/helpers';
 
 import { chatSelectors } from '../../message/selectors';
 import { genMessage } from './util';
+import {isNull} from "@/utils/type";
 
 const currentTopicThreads = (s: ChatStoreState) => {
   if (!s.activeTopicId) return [];
@@ -44,8 +45,7 @@ const getTheadParentMessages = (s: ChatStoreState, data: UIChatMessage[]) => {
   const portalThread = currentPortalThread(s);
   return (
     genMessage(data, portalThread?.sourceMessageId, portalThread?.type)
-      // eslint-disable-next-line eqeqeq
-      .filter((m) => m.threadId == null || m.threadId === portalThread?.id)
+      .filter((m) => isNull(m.threadId) || m.threadId === portalThread?.id)
   );
 };
 

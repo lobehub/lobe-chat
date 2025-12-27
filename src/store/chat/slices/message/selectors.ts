@@ -12,6 +12,7 @@ import { userProfileSelectors } from '@/store/user/selectors';
 
 import { chatHelpers } from '../../helpers';
 import type { ChatStoreState } from '../../initialState';
+import { isNull } from "@/utils/type";
 
 const getMeta = (message: UIChatMessage) => {
   switch (message.role) {
@@ -76,7 +77,8 @@ const getChatsWithThread = (s: ChatStoreState, messages: UIChatMessage[]) => {
   if (!thread) return messages.filter((m) => !m.threadId);
 
   const sourceIndex = messages.findIndex((m) => m.id === thread.sourceMessageId);
-  const sliced = messages.slice(0, sourceIndex + 1);
+  const sliced = messages.slice(0, sourceIndex + 1)
+    .filter((m) => isNull(m.threadId));
 
   return [...sliced, ...messages.filter((m) => m.threadId === s.activeThreadId)];
 };
