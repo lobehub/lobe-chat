@@ -1,7 +1,7 @@
-import { createStaticStyles , responsive } from 'antd-style';
+import { createStaticStyles, responsive } from 'antd-style';
 
-// Dynamic styles with widthMode prop - keep as createStyles
-export { useContainerStyles } from './useContainerStyles';
+// Dynamic styles with widthMode prop - converted to CSS variables
+export { styles as containerStyles } from './useContainerStyles';
 
 export const styles = createStaticStyles(({ css, cssVar }) => ({
   body: css`

@@ -4,13 +4,13 @@ import {
 } from '@ant-design/pro-components';
 import { Text } from '@lobehub/ui';
 import { Spin } from 'antd';
-import { createStyles, responsive, useResponsive, useThemeMode } from 'antd-style';
+import { createStaticStyles, cx, responsive, useResponsive, useThemeMode } from 'antd-style';
 import { adjustHue } from 'polished';
-import { memo } from 'react';
+import { type CSSProperties, memo, useMemo } from 'react';
 
 const prefixCls = 'ant';
 
-const useStyles = createStyles(({ css, cssVar }, highlight: string = '#000') => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -138,7 +138,11 @@ const useStyles = createStyles(({ css, cssVar }, highlight: string = '#000') => 
       height: 50%;
       border-radius: 50%;
 
-      background-image: linear-gradient(60deg, ${adjustHue(-30, highlight)} 20%, ${highlight} 80%);
+      background-image: linear-gradient(
+        60deg,
+        var(--highlight-adjusted, #000) 20%,
+        var(--highlight-color, #000) 80%
+      );
       background-repeat: no-repeat;
       background-position: center left;
       background-size: contain;
@@ -177,9 +181,20 @@ interface StatisticCardProps extends AntdStatisticCardProps {
 const StatisticCard = memo<StatisticCardProps>(
   ({ title, className, highlight, variant, loading, extra, ...rest }) => {
     const { isDarkMode } = useThemeMode();
-    const { cx, styles } = useStyles(highlight);
     const { mobile } = useResponsive();
     const isPure = variant === 'raw';
+
+    const highlightStyles = useMemo<CSSProperties>(
+      () =>
+        highlight
+          ? ({
+              '--highlight-adjusted': adjustHue(-30, highlight),
+              '--highlight-color': highlight,
+            } as CSSProperties)
+          : {},
+      [highlight],
+    );
+
     return (
       <AntdStatisticCard
         bordered={!mobile}
@@ -191,6 +206,10 @@ const StatisticCard = memo<StatisticCardProps>(
           className,
         )}
         extra={loading ? <Spin percent={'auto'} size={'small'} /> : extra}
+        style={{
+          ...highlightStyles,
+          ...rest.style,
+        }}
         title={
           typeof title === 'string' ? (
             <Text

@@ -1,6 +1,5 @@
 import { css } from 'antd-style';
 import type { FullToken } from 'antd-style/lib/types';
-import { rgba } from 'polished';
 
 export const dotLoading = css`
   &::after {
@@ -29,27 +28,34 @@ export const dotLoading = css`
   }
 `;
 
-export const shinyTextStylish = (token: FullToken) => css`
-  color: ${rgba(token.colorText, 0.45)};
+export const shinyTextStylish = (tokenOrCssVar: FullToken | any) => {
+  // Support both token and cssVar
+  const colorText = tokenOrCssVar.colorText || tokenOrCssVar;
+  const colorTextBase = tokenOrCssVar.colorTextBase || tokenOrCssVar;
+  const colorTextSecondary = tokenOrCssVar.colorTextSecondary || tokenOrCssVar;
 
-  background: linear-gradient(
-    120deg,
-    ${rgba(token.colorTextBase, 0)} 40%,
-    ${token.colorTextSecondary} 50%,
-    ${rgba(token.colorTextBase, 0)} 60%
-  );
-  background-clip: text;
-  background-size: 200% 100%;
+  return css`
+    color: color-mix(in srgb, ${colorText} 45%, transparent);
 
-  animation: shine 1.5s linear infinite;
+    background: linear-gradient(
+      120deg,
+      color-mix(in srgb, ${colorTextBase} 0%, transparent) 40%,
+      ${colorTextSecondary} 50%,
+      color-mix(in srgb, ${colorTextBase} 0%, transparent) 60%
+    );
+    background-clip: text;
+    background-size: 200% 100%;
 
-  @keyframes shine {
-    0% {
-      background-position: 100%;
+    animation: shine 1.5s linear infinite;
+
+    @keyframes shine {
+      0% {
+        background-position: 100%;
+      }
+
+      100% {
+        background-position: -100%;
+      }
     }
-
-    100% {
-      background-position: -100%;
-    }
-  }
-`;
+  ` as any;
+};

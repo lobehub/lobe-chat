@@ -6,7 +6,7 @@ import { memo } from 'react';
 import FileIcon from '@/components/FileIcon';
 import { useChatStore } from '@/store/chat';
 
-import { useStyles } from './style';
+import { styles } from './style';
 
 export interface ChunkItemProps extends ChatFileChunk {
   index: number;
@@ -14,7 +14,6 @@ export interface ChunkItemProps extends ChatFileChunk {
 
 const ChunkItem = memo<ChunkItemProps>(({ id, fileId, similarity, text, filename, fileType }) => {
   const { isDarkMode } = useThemeMode();
-  const { styles } = useStyles();
   // Note: openFilePreview is a portal action, kept in ChatStore as it's a global UI state
   const openFilePreview = useChatStore((s) => s.openFilePreview);
 

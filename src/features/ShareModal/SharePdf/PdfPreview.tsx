@@ -9,7 +9,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-import { useContainerStyles } from '../style';
+import { containerStyles } from '../style';
 
 // Set PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `https://registry.npmmirror.com/pdfjs-dist/${pdfjs.version}/files/build/pdf.worker.min.mjs`;
@@ -131,7 +131,6 @@ interface PdfPreviewProps {
 }
 
 const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) => {
-  const { styles: containerStyles } = useContainerStyles();
   const localStyles = styles;
   const { t } = useTranslation('chat');
   const isMobile = useIsMobile();
@@ -192,7 +191,10 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
 
   if (loading) {
     return (
-      <div className={containerStyles.preview} style={{ padding: 12 }}>
+      <div
+        className={cx(containerStyles.preview, containerStyles.previewWide)}
+        style={{ padding: 12 }}
+      >
         <div className={localStyles.loadingState}>
           <Spin indicator={<LoadingOutlined spin style={{ fontSize: 24 }} />} />
           <div className={localStyles.loadingText}>{t('shareModal.generatingPdf')}</div>
@@ -203,7 +205,10 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
 
   if (!pdfData) {
     return (
-      <div className={containerStyles.preview} style={{ padding: 12 }}>
+      <div
+        className={cx(containerStyles.preview, containerStyles.previewWide)}
+        style={{ padding: 12 }}
+      >
         <div className={localStyles.emptyState}>
           <Button icon={<FileText size={20} />} onClick={onGeneratePdf} size="large" type="primary">
             {t('shareModal.generatePdf')}
@@ -229,7 +234,13 @@ const PdfPreview = memo<PdfPreviewProps>(({ loading, pdfData, onGeneratePdf }) =
           />
         )}
 
-        <div className={cx(containerStyles.preview, localStyles.previewContainer)}>
+        <div
+          className={cx(
+            containerStyles.preview,
+            containerStyles.previewWide,
+            localStyles.previewContainer,
+          )}
+        >
           <Document
             file={pdfDataUri}
             loading={
