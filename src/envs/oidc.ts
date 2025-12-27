@@ -8,11 +8,11 @@ export const oidcEnv = createEnv({
     OIDC_JWKS_KEY: process.env.OIDC_JWKS_KEY,
   },
   server: {
-    // 是否启用 OIDC
+    // Whether to enable OIDC
     ENABLE_OIDC: z.boolean().optional().default(false),
-    // OIDC 签名密钥
-    // 必须是一个包含私钥的 JWKS (JSON Web Key Set) 格式的 JSON 字符串。
-    // 可以使用 `node scripts/generate-oidc-jwk.mjs` 命令生成。
+    // OIDC signing key
+    // Must be a JSON string in JWKS (JSON Web Key Set) format containing a private key.
+    // Can be generated using the `node scripts/generate-oidc-jwk.mjs` command.
     OIDC_JWKS_KEY: z.string().optional(),
   },
 });

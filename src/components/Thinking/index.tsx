@@ -95,13 +95,13 @@ const Thinking = memo<ThinkingProps>((props) => {
     setShowDetail(!!thinking);
   }, [thinking]);
 
-  // 当内容变更且正在思考时，如果用户接近底部则自动滚动到底部
+  // Auto-scroll to bottom when content changes and thinking, if user is near the bottom
   useEffect(() => {
     if (!thinking || !showDetail) return;
     const container = contentRef.current;
     if (!container) return;
 
-    // 仅当用户接近底部时才自动滚动，避免打断用户查看上方内容
+    // Only auto-scroll when user is near the bottom, to avoid interrupting when viewing content above
     const distanceToBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
     const isNearBottom = distanceToBottom < 120;
 
@@ -112,7 +112,7 @@ const Thinking = memo<ThinkingProps>((props) => {
     }
   }, [content, thinking, showDetail]);
 
-  // 展开时滚动到底部，便于查看最新内容
+  // Scroll to bottom when expanded, for easier viewing of latest content
   useEffect(() => {
     if (!showDetail) return;
     const container = contentRef.current;
@@ -178,7 +178,7 @@ const Thinking = memo<ThinkingProps>((props) => {
             style={{ overflow: 'hidden' }}
             transition={{
               duration: 0.2,
-              ease: [0.4, 0, 0.2, 1], // 使用 ease-out 缓动函数
+              ease: [0.4, 0, 0.2, 1], // Use ease-out easing function
             }}
             variants={{
               collapsed: { opacity: 0, width: 'auto' },
