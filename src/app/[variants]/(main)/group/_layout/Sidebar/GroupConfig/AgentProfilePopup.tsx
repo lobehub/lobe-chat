@@ -3,7 +3,7 @@
 import type { AgentItem } from '@lobechat/types';
 import { Avatar, Center, Flexbox, Text, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { type PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,7 @@ import { DEFAULT_AVATAR } from '@/const/meta';
 import ModelSelect from '@/features/ModelSelect';
 import { useAgentGroupStore } from '@/store/agentGroup';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   banner: css`
     position: relative;
     overflow: hidden;
@@ -26,7 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     overflow: hidden;
     width: 280px;
-    background: ${token.colorBgElevated};
+    background: ${cssVar.colorBgElevated};
   `,
   description: css`
     overflow: hidden;
@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
     font-size: 12px;
     line-height: 1.5;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
     text-overflow: ellipsis;
   `,
   header: css`
@@ -45,12 +45,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   modelLabel: css`
     font-size: 12px;
-    color: ${token.colorTextTertiary};
+    color: ${cssVar.colorTextTertiary};
   `,
   name: css`
     font-size: 16px;
     font-weight: 600;
-    color: ${token.colorText};
+    color: ${cssVar.colorText};
   `,
   section: css`
     padding-block: 12px;
@@ -61,7 +61,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
     font-size: 11px;
     font-weight: 600;
-    color: ${token.colorTextTertiary};
+    color: ${cssVar.colorTextTertiary};
     text-transform: uppercase;
   `,
 }));
@@ -74,7 +74,7 @@ interface AgentProfilePopupProps extends PropsWithChildren {
 
 const AgentProfilePopup = memo<AgentProfilePopupProps>(({ agent, groupId, children }) => {
   const { t } = useTranslation('chat');
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

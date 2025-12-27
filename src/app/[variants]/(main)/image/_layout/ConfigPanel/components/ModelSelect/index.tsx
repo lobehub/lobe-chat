@@ -1,6 +1,6 @@
 import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
 import { Flexbox } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +15,9 @@ import { type EnabledProviderWithModels } from '@/types/index';
 
 import ImageModelItem from './ImageModelItem';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
+const prefixCls = 'ant';
+
+const styles = createStaticStyles(({ css }) => ({
   popup: css`
     &.${prefixCls}-select-dropdown .${prefixCls}-select-item-option-grouped {
       padding-inline-start: 12px;
@@ -30,7 +32,6 @@ interface ModelOption {
 }
 
 const ModelSelect = memo(() => {
-  const { styles } = useStyles();
   const { t } = useTranslation('components');
   const theme = useTheme();
   const navigate = useNavigate();

@@ -2,7 +2,7 @@
 
 import { KLAVIS_SERVER_TYPES, type KlavisServerType } from '@lobechat/const';
 import { Avatar, Icon, Tag } from '@lobehub/ui';
-import { createStyles, useTheme } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { AlertCircle, X } from 'lucide-react';
 import Image from 'next/image';
@@ -34,18 +34,18 @@ const KlavisIcon = memo<Pick<KlavisServerType, 'icon' | 'label'>>(({ icon, label
   return <Icon fill={theme.colorText} icon={icon} size={16} />;
 });
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   notInstalledTag: css`
-    border-color: ${token.colorWarningBorder};
-    background: ${token.colorWarningBg};
+    border-color: ${cssVar.colorWarningBorder};
+    background: ${cssVar.colorWarningBg};
   `,
   tag: css`
     height: 28px !important;
-    border-radius: ${token.borderRadiusSM}px !important;
+    border-radius: ${cssVar.borderRadiusSM}px !important;
   `,
   warningIcon: css`
     flex-shrink: 0;
-    color: ${token.colorWarning};
+    color: ${cssVar.colorWarning};
   `,
 }));
 
@@ -55,7 +55,7 @@ interface PluginTagProps {
 }
 
 const PluginTag = memo<PluginTagProps>(({ pluginId, onRemove }) => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation('setting');
 
   // Extract identifier

@@ -1,6 +1,6 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
 import { Button, type ButtonProps, Center, Tooltip } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, UsersIcon } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,18 +9,18 @@ import { useNavigate } from 'react-router-dom';
 import { useInitBuiltinAgent } from '@/hooks/useInitBuiltinAgent';
 import { type StarterMode, useHomeStore } from '@/store/home';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   active: css`
-    border-color: ${token.colorPrimary};
-    background: ${token.colorPrimaryBg};
+    border-color: ${cssVar.colorPrimary};
+    background: ${cssVar.colorPrimaryBg};
   `,
   button: css`
     height: 40px;
-    background: ${token.colorBgContainerSecondary};
+    background: ${cssVar.colorBgContainer};
 
     &:hover {
-      border-color: ${token.colorBorder};
-      background: ${token.colorFillTertiary};
+      border-color: ${cssVar.colorBorder};
+      background: ${cssVar.colorFillTertiary};
     }
   `,
 }));
@@ -40,7 +40,7 @@ interface StarterItem {
 }
 
 const StarterList = memo(() => {
-  const { styles, cx, theme } = useStyles();
+  const theme = useTheme();
   const navigate = useNavigate();
   const { t } = useTranslation('home');
 

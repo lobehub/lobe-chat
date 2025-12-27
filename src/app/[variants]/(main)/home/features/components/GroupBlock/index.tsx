@@ -1,5 +1,5 @@
 import { Flexbox, type FlexboxProps, Icon, type IconProps, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, cx, useTheme } from 'antd-style';
 import { type ReactNode, Suspense, memo, useState } from 'react';
 
 interface GroupBlockProps extends Omit<FlexboxProps, 'title'> {
@@ -8,10 +8,10 @@ interface GroupBlockProps extends Omit<FlexboxProps, 'title'> {
   title?: ReactNode;
 }
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   action: css`
     opacity: 0;
-    transition: opacity ${token.motionDurationMid} ${token.motionEaseInOut};
+    transition: opacity ${cssVar.motionDurationMid} ${cssVar.motionEaseInOut};
   `,
   actionVisible: css`
     opacity: 1;
@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const GroupBlock = memo<GroupBlockProps>(({ title, action, children, icon, ...rest }) => {
-  const { styles, cx, theme } = useStyles();
+  const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
 
   return (

@@ -2,7 +2,7 @@
 
 import { BRANDING_NAME } from '@lobechat/business-const';
 import { Avatar, Button, Flexbox, Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { LucideArrowUpRightFromSquare, TelescopeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -13,9 +13,9 @@ import { PRIVACY_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   desc: css`
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
   title: css`
     font-size: 18px;
@@ -24,7 +24,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
 
   const { t } = useTranslation('common');
   const isPreferenceInit = useUserStore(preferenceSelectors.isPreferenceInit);

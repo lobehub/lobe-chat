@@ -1,22 +1,22 @@
 import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { createStaticStyles, useTheme } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, UsersIcon, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useHomeStore } from '@/store/home';
 
-const useStyles = createStyles(({ css, token }) => ({
+const styles = createStaticStyles(({ css, cssVar }) => ({
   container: css`
     padding-block: 6px;
     padding-inline: 12px;
-    border-block-end: 1px solid ${token.colorBorderSecondary};
-    background: ${token.colorFillQuaternary};
+    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
+    background: ${cssVar.colorFillQuaternary};
   `,
   title: css`
     font-size: 13px;
     font-weight: 500;
-    color: ${token.colorTextSecondary};
+    color: ${cssVar.colorTextSecondary};
   `,
 }));
 
@@ -29,7 +29,7 @@ const modeConfig = {
 } as const;
 
 const ModeHeader = memo(() => {
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation('home');
 
   const [inputActiveMode, clearInputMode] = useHomeStore((s) => [
