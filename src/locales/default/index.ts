@@ -1,3 +1,5 @@
+import { businessLocales } from '@/business/business-locales';
+
 import auth from './auth';
 import authError from './authError';
 import changelog from './changelog';
@@ -75,6 +77,8 @@ const resources = {
   topic,
   ui,
   welcome,
+
+  ...businessLocales,
 } as const;
 
 export default resources;
