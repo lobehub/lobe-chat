@@ -247,10 +247,4 @@ export const mobileRoutes: RouteConfig[] = [
     errorElement: <ErrorBoundary resetPath="/" />,
     path: '/onboarding',
   },
-  // Waitlist route (outside main layout)
-  {
-    element: dynamicElement(() => import('../../waitlist'), 'Mobile > Waitlist'),
-    errorElement: <ErrorBoundary resetPath="/" />,
-    path: '/waitlist',
-  },
 ];

@@ -18,11 +18,6 @@ export interface EdgeConfigData extends BusinessEdgeConfigData {
    * Feature flags configuration
    */
   feature_flags?: Record<string, boolean | string[]>;
-
-  /**
-   * LobeHub user whitelist - array of allowed email addresses
-   */
-  lobehub_whitelist?: string[];
 }
 
 export type EdgeConfigKeys = keyof EdgeConfigData;

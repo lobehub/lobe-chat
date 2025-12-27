@@ -16,7 +16,6 @@ import TitleBar, { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
 import NavPanel from '@/features/NavPanel';
 import { usePlatform } from '@/hooks/usePlatform';
-import { useWhitelistCheck } from '@/hooks/useWhitelistCheck';
 import { MarketAuthProvider } from '@/layout/AuthProvider/MarketAuth';
 import CmdkLazy from '@/layout/GlobalProvider/CmdkLazy';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -34,12 +33,6 @@ const Layout: FC = () => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
-  const { isChecking } = useWhitelistCheck();
-
-  // Show loading while checking whitelist
-  if (isChecking) {
-    return <Loading debugId="DesktopMainLayout > WhitelistCheck" />;
-  }
 
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>

@@ -1,4 +1,3 @@
-import { EdgeConfig } from '@lobechat/edge-config';
 import debug from 'debug';
 
 import { getServerFeatureFlagsStateFromEdgeConfig } from '@/config/featureFlags';
@@ -34,25 +33,5 @@ export const configRouter = router({
     );
 
     return result;
-  }),
-
-  /**
-   * Get user whitelist from EdgeConfig
-   */
-  getWhitelist: publicProcedure.query(async () => {
-    if (!EdgeConfig.isEnabled()) {
-      log('[Whitelist] EdgeConfig not enabled, returning empty whitelist');
-      return [];
-    }
-
-    try {
-      const edgeConfig = new EdgeConfig();
-      const whitelist = await edgeConfig.getWhitelist();
-      log('[Whitelist] Retrieved whitelist with %d entries', whitelist?.length ?? 0);
-      return whitelist ?? [];
-    } catch (error) {
-      log('[Whitelist] Failed to fetch whitelist:', error);
-      return [];
-    }
   }),
 });

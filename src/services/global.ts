@@ -24,13 +24,6 @@ class GlobalService {
   getDefaultAgentConfig = async (): Promise<PartialDeep<LobeAgentConfig>> => {
     return lambdaClient.config.getDefaultAgentConfig.query();
   };
-
-  /**
-   * Get user whitelist from EdgeConfig
-   */
-  getWhitelist = async (): Promise<string[]> => {
-    return lambdaClient.config.getWhitelist.query();
-  };
 }
 
 export const globalService = new GlobalService();
