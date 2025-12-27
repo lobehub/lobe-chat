@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { CONFIG_PANEL_WIDTH } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/constants';
 import { useDragAndDrop } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useDragAndDrop';
 import { useUploadFilesValidation } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useUploadFilesValidation';
-import { useConfigPanelStyles } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/style';
+import { configPanelStyles } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/style';
 import { useFileStore } from '@/store/file';
 import { type FileUploadStatus } from '@/types/files/upload';
 
@@ -451,7 +451,7 @@ interface ImageThumbnailsProps {
 
 const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
   ({ images, isDragOver, onClick, onDelete }) => {
-    const { styles: configStyles } = useConfigPanelStyles();
+    const configStyles = configPanelStyles;
 
     // Display max 4 images, with overflow indication
     const displayImages = images.slice(0, 4);
@@ -514,7 +514,7 @@ interface SingleImageDisplayProps {
 
 const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(
   ({ imageUrl, isDragOver, onClick, onDelete }) => {
-    const { styles: configStyles } = useConfigPanelStyles();
+    const configStyles = configPanelStyles;
     const { t } = useTranslation('components');
 
     const handleDelete = (event: React.MouseEvent) => {
@@ -572,7 +572,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
     const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
     const [displayItems, setDisplayItems] = useState<DisplayItem[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const { styles: configStyles } = useConfigPanelStyles();
+    const configStyles = configPanelStyles;
     const { validateFiles } = useUploadFilesValidation(maxCount, maxFileSize);
 
     // Cleanup blob URLs to prevent memory leaks

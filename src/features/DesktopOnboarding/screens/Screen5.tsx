@@ -10,7 +10,7 @@ import { setDesktopAutoOidcFirstOpenHandled } from '@/utils/electron/autoOidc';
 import { AuthResult } from '../common/AuthResult';
 import { LogoBrand } from '../common/LogoBrand';
 import { TitleSection } from '../common/TitleSection';
-import { useLayoutStyles } from '../styles';
+import { layoutStyles } from '../styles';
 import { getThemeToken } from '../styles/theme';
 
 const themeToken = getThemeToken();
@@ -343,8 +343,6 @@ export const Screen5 = ({ onScreenConfigChange }: Screen5Props) => {
       onScreenConfigChange(CONFIG.screenConfig);
     }
   }, [onScreenConfigChange, currentMethod, cloudLoginStatus, selfhostLoginStatus]);
-
-  const { styles: layoutStyles } = useLayoutStyles();
 
   // 处理登录方式切换
   const handleMethodChange = (method: LoginMethod) => {

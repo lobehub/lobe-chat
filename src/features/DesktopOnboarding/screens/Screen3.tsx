@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ensureElectronIpc } from '@/utils/electron/ipc';
 
 import { TitleSection } from '../common/TitleSection';
-import { useLayoutStyles } from '../styles';
+import { layoutStyles } from '../styles';
 import { getThemeToken } from '../styles/theme';
 
 const themeToken = getThemeToken();
@@ -309,8 +309,6 @@ export const Screen3 = ({ onScreenConfigChange }: Screen3Props) => {
       onScreenConfigChange(CONFIG.screenConfig);
     }
   }, [onScreenConfigChange]);
-
-  const { styles: layoutStyles } = useLayoutStyles();
 
   return (
     <div className={layoutStyles.fullScreen}>

@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { useEffect } from 'react';
 
 import { TitleSection } from '../common/TitleSection';
-import { useLayoutStyles } from '../styles';
+import { layoutStyles } from '../styles';
 import { getThemeToken } from '../styles/theme';
 
 const themeToken = getThemeToken();
@@ -180,8 +180,7 @@ export const Screen2 = ({ onScreenConfigChange }: Screen2Props) => {
     }
   }, [onScreenConfigChange]);
 
-  // 使用样式 hooks
-  const { styles: layoutStyles } = useLayoutStyles();
+  // 使用样式
   const { styles: screen2Styles, cx } = useScreen2Styles();
 
   return (

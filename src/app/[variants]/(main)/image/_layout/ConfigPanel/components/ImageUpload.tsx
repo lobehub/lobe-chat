@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useDragAndDrop } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useDragAndDrop';
 import { useUploadFilesValidation } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/hooks/useUploadFilesValidation';
-import { useConfigPanelStyles } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/style';
+import { configPanelStyles } from '@/app/[variants]/(main)/image/_layout/ConfigPanel/style';
 import { useFileStore } from '@/store/file';
 import { type FileUploadStatus } from '@/types/files/upload';
 
@@ -305,7 +305,7 @@ interface PlaceholderProps {
 }
 
 const Placeholder: FC<PlaceholderProps> = memo(({ isDragOver, onClick }) => {
-  const { styles: configStyles } = useConfigPanelStyles();
+  const configStyles = configPanelStyles;
   const { t } = useTranslation('components');
 
   return (
@@ -370,7 +370,7 @@ interface SuccessDisplayProps {
 
 const SuccessDisplay: FC<SuccessDisplayProps> = memo(
   ({ imageUrl, isDragOver, onDelete, onChangeImage }) => {
-    const { styles: configStyles } = useConfigPanelStyles();
+    const configStyles = configPanelStyles;
     const { t } = useTranslation('components');
 
     const handleDelete = (event: React.MouseEvent) => {

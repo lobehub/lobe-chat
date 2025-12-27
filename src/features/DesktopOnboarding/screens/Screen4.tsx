@@ -7,7 +7,7 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { TitleSection } from '../common/TitleSection';
-import { useLayoutStyles } from '../styles';
+import { layoutStyles } from '../styles';
 import { getThemeToken } from '../styles/theme';
 
 const themeToken = getThemeToken();
@@ -208,8 +208,6 @@ export const Screen4 = ({ onScreenConfigChange }: Screen4Props) => {
       onScreenConfigChange(CONFIG.screenConfig);
     }
   }, [onScreenConfigChange]);
-
-  const { styles: layoutStyles } = useLayoutStyles();
 
   return (
     <div className={layoutStyles.fullScreen}>

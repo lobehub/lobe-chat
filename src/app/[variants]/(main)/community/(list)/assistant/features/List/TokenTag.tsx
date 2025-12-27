@@ -1,6 +1,6 @@
 import { MCP } from '@lobehub/icons';
 import { Flexbox, Icon, Tag, Tooltip } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DownloadIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,6 @@ interface TokenTagProps {
 
 const TokenTag = memo<TokenTagProps>(
   ({ tokenUsage, pluginCount, knowledgeCount, installCount, placement = 'right' }) => {
-    const theme = useTheme();
     const { t } = useTranslation('discover');
     return (
       <Flexbox align={'center'} gap={4} horizontal>
@@ -61,7 +60,7 @@ const TokenTag = memo<TokenTagProps>(
             styles={{ root: { pointerEvents: 'none' } }}
             title={t('assistants.withPlugin')}
           >
-            <Tag icon={<Icon fill={theme.colorTextSecondary} icon={MCP} />}>{pluginCount}</Tag>
+            <Tag icon={<Icon fill={cssVar.colorTextSecondary} icon={MCP} />}>{pluginCount}</Tag>
           </Tooltip>
         )}
         {Boolean(knowledgeCount && knowledgeCount > 0) && (

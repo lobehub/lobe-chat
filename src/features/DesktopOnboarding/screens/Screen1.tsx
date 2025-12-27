@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { LogoBrand } from '../common/LogoBrand';
-import { useLayoutStyles, useMediaStyles, useTypographyStyles } from '../styles';
+import { layoutStyles, mediaStyles, useTypographyStyles } from '../styles';
 
 const introVideo = new URL('../assets/intro-video.mp4', import.meta.url).href;
 interface Screen1Props {
@@ -185,10 +185,8 @@ export const Screen1 = ({ onScreenConfigChange }: Screen1Props) => {
     };
   }, [shouldStartAnimation, shouldStartFadeOut, animationPhase]);
 
-  // 使用多个样式 hooks
-  const { styles: layoutStyles } = useLayoutStyles();
+  // 使用多个样式
   const { styles: typographyStyles } = useTypographyStyles();
-  const { styles: mediaStyles } = useMediaStyles();
 
   return (
     <motion.div

@@ -1,5 +1,5 @@
 import { ActionIcon, Flexbox } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { BotIcon, ImageIcon, MicroscopeIcon, PenLineIcon, UsersIcon, X } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,6 @@ const modeConfig = {
 } as const;
 
 const ModeHeader = memo(() => {
-  const theme = useTheme();
   const { t } = useTranslation('home');
 
   const [inputActiveMode, clearInputMode] = useHomeStore((s) => [
@@ -45,7 +44,7 @@ const ModeHeader = memo(() => {
   return (
     <Flexbox align="center" className={styles.container} horizontal justify="space-between">
       <Flexbox align="center" gap={6} horizontal>
-        <Icon color={theme.colorPrimary} size={14} />
+        <Icon color={cssVar.colorPrimary} size={14} />
         <span className={styles.title}>{t(config.titleKey)}</span>
       </Flexbox>
       <ActionIcon icon={X} onClick={clearInputMode} size="small" />

@@ -1,5 +1,5 @@
 import { Flexbox, type FlexboxProps, Icon, type IconProps, Text } from '@lobehub/ui';
-import { createStaticStyles, cx, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { type ReactNode, Suspense, memo, useState } from 'react';
 
 interface GroupBlockProps extends Omit<FlexboxProps, 'title'> {
@@ -19,7 +19,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 }));
 
 const GroupBlock = memo<GroupBlockProps>(({ title, action, children, icon, ...rest }) => {
-  const theme = useTheme();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -38,8 +37,8 @@ const GroupBlock = memo<GroupBlockProps>(({ title, action, children, icon, ...re
           justify={'flex-start'}
           style={{ overflow: 'hidden' }}
         >
-          <Icon color={theme.colorTextDescription} icon={icon} size={18} />
-          <Text color={theme.colorTextSecondary} ellipsis>
+          <Icon color={cssVar.colorTextDescription} icon={icon} size={18} />
+          <Text color={cssVar.colorTextSecondary} ellipsis>
             {title}
           </Text>
         </Flexbox>

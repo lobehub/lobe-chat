@@ -3,7 +3,7 @@
 import { dark } from '@clerk/themes';
 import { type ElementsConfig, type Theme } from '@clerk/types';
 import { BRANDING_URL } from '@lobechat/business-const';
-import { createStaticStyles, cx, useTheme, useThemeMode } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useThemeMode } from 'antd-style';
 
 const prefixCls = 'cl';
 
@@ -96,7 +96,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 export const useAppearance = () => {
   const { isDarkMode } = useThemeMode();
-  const theme = useTheme();
 
   const navbarStyle = cx(styles.navbar, isDarkMode && (styles as any).navbar_dark);
   const scrollBoxStyle = cx(styles.scrollBox, isDarkMode && (styles as any).scrollBox_dark);
@@ -117,17 +116,16 @@ export const useAppearance = () => {
       termsPageUrl: BRANDING_URL.terms ?? 'https://lobehub.com/terms',
     },
     variables: {
-      borderRadius: `${theme.borderRadius}px`,
-      colorBackground: theme.colorBgContainer,
-      colorDanger: theme.colorError,
-      colorInputBackground: theme.colorFillTertiary,
-      colorNeutral: theme.colorText,
-
-      colorSuccess: theme.colorSuccess,
-      colorText: theme.colorText,
-      colorTextSecondary: theme.colorTextDescription,
-      colorWarning: theme.colorWarning,
-      fontSize: `${theme.fontSize}px`,
+      borderRadius: cssVar.borderRadius,
+      colorBackground: cssVar.colorBgContainer,
+      colorDanger: cssVar.colorError,
+      colorInputBackground: cssVar.colorFillTertiary,
+      colorNeutral: cssVar.colorText,
+      colorSuccess: cssVar.colorSuccess,
+      colorText: cssVar.colorText,
+      colorTextSecondary: cssVar.colorTextDescription,
+      colorWarning: cssVar.colorWarning,
+      fontSize: cssVar.fontSize,
     },
   } as Theme;
 };

@@ -2,7 +2,7 @@
 
 import { UTM_SOURCE } from '@lobechat/business-const';
 import { Center, Flexbox, Icon, Text } from '@lobehub/ui';
-import { createStaticStyles, useTheme } from 'antd-style';
+import { createStaticStyles, cssVar } from 'antd-style';
 import { Database, FileImage, Network, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { Trans, useTranslation } from 'react-i18next';
@@ -65,7 +65,6 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
 
 const NotSupportClient = () => {
   const { t } = useTranslation('image');
-  const theme = useTheme();
 
   const features = [
     {
@@ -92,7 +91,7 @@ const NotSupportClient = () => {
           className={styles.icon}
           height={BLOCK_SIZE * 1.25}
           style={{
-            background: theme.purple,
+            background: cssVar.purple,
             transform: 'rotateZ(-20deg) translateX(10px)',
           }}
           width={BLOCK_SIZE}
@@ -103,7 +102,7 @@ const NotSupportClient = () => {
           className={styles.icon}
           height={BLOCK_SIZE * 1.25}
           style={{
-            background: theme.gold,
+            background: cssVar.gold,
             transform: 'translateY(-22px)',
             zIndex: 1,
           }}
@@ -115,7 +114,7 @@ const NotSupportClient = () => {
           className={styles.icon}
           height={BLOCK_SIZE * 1.25}
           style={{
-            background: theme.geekblue,
+            background: cssVar.geekblue,
             transform: 'rotateZ(20deg) translateX(-10px)',
           }}
           width={BLOCK_SIZE}
