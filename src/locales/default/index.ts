@@ -1,4 +1,4 @@
-import { businessLocales } from '@/business/business-locales';
+import { businessLocales } from '@/business/locales/index';
 
 import auth from './auth';
 import authError from './authError';

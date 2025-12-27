@@ -1,3 +1,5 @@
+import { businessErrorsLocales } from '@/business/locales/errors';
+
 export default {
   'clerkAuth.loginSuccess.action': 'Continue Session',
   'clerkAuth.loginSuccess.desc':
@@ -234,4 +236,5 @@ export default {
   'upload.title': 'File upload failed. Please check your network connection or try again later',
   'upload.unknownError': 'Error reason: {{reason}}',
   'upload.uploadFailed': 'File upload failed.',
+  ...businessErrorsLocales,
 };
