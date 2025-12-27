@@ -73,7 +73,7 @@ const StoreInitialization = memo(() => {
   // init user state
   useInitUserState(isLoginOnInit, serverConfig, {
     onSuccess: (state) => {
-      if (!state.isInWaitList) {
+      if (!state.isInWaitList && !pathname?.includes('/waitlist')) {
         window.location.href = '/waitlist';
         return;
       }
