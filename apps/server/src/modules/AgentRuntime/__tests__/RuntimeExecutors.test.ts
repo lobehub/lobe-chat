@@ -2225,7 +2225,7 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           ...overrides,
         });
 
-      const callWithMessages = async (
+      const callAndGetMessages = async (
         messages: any[],
         state: AgentState,
         contextOverrides?: Partial<RuntimeExecutorContext>,
@@ -2242,12 +2242,21 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           state,
         );
 
-        // The shared context rules may prepend an agent-management block as its
-        // own user turn; the TODO state rides on the actual user message.
-        return mockChat.mock.calls[0][0].messages.findLast(
-          (message: { role?: string }) => message.role === 'user',
-        )?.content as string;
+        return mockChat.mock.calls[0][0].messages as Array<{
+          content?: unknown;
+          role?: string;
+        }>;
       };
+
+      const callWithMessages = async (
+        messages: any[],
+        state: AgentState,
+        contextOverrides?: Partial<RuntimeExecutorContext>,
+      ) =>
+        (await callAndGetMessages(messages, state, contextOverrides))
+          .filter((message) => message.role === 'user')
+          .map((message) => String(message.content))
+          .join('\n\n');
 
       it('injects the newest valid message TODO state and skips Notebook', async () => {
         mockFindPlanDocuments.mockResolvedValue([
@@ -2282,6 +2291,44 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
         // The plan document is still read for the plan block, but history wins
         // for the TODO state.
         expect(content).not.toContain('Stale metadata task');
+      });
+
+      it('keeps tool-loop history unchanged and injects pluginState todos at the tail', async () => {
+        const messages = await callAndGetMessages(
+          [
+            { content: 'Refactor the parser', role: 'user' },
+            {
+              content: '',
+              role: 'assistant',
+              tool_calls: [
+                {
+                  function: { arguments: '{}', name: 'createTodos' },
+                  id: 'call-1',
+                  type: 'function',
+                },
+              ],
+            },
+            {
+              content: 'created',
+              pluginState: {
+                todos: {
+                  items: [{ status: 'processing', text: 'Write parser tests' }],
+                  updatedAt: 'new',
+                },
+              },
+              role: 'tool',
+              tool_call_id: 'call-1',
+            },
+          ],
+          stateWithLobeAgent(),
+        );
+        const userMessages = messages.filter((message) => message.role === 'user');
+
+        expect(userMessages).toHaveLength(2);
+        expect(userMessages[0].content).toBe('Refactor the parser');
+        expect(userMessages[1].content).toContain('<todo_context>');
+        expect(userMessages[1].content).toContain('Write parser tests');
+        expect(messages.at(-1)?.role).toBe('user');
       });
 
       it.each([{ items: [], updatedAt: 'canonical-clear' }, []])(
