@@ -508,7 +508,10 @@ export class MessagesEngine {
         onboardingContext,
       }),
       // Todo list (standalone virtual tail message)
-      new TodoInjector({ enabled: isTodoEnabled, todos: effectiveTodos }),
+      new TodoInjector({
+        enabled: isTodoEnabled && planTodo?.injectTodos !== false,
+        todos: effectiveTodos,
+      }),
       new RuntimeAdditionalContextProvider({ additionalContexts }),
 
       // =============================================

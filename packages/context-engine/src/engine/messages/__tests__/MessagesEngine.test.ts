@@ -169,6 +169,18 @@ describe('MessagesEngine', () => {
         expect(result.messages.at(-1)?.content).toContain('Metadata task');
       });
 
+      it('skips TODO injection when disabled for the current LLM call', async () => {
+        const result = await new MessagesEngine(
+          createBasicParams({
+            planTodo: { enabled: true, injectTodos: false, todos: metadataTodos },
+          }),
+        ).process();
+
+        expect(
+          result.messages.some((message) => String(message.content).includes('<todo_context>')),
+        ).toBe(false);
+      });
+
       it('keeps the historical prefix stable across create, update, and clear', async () => {
         const createResult = await new MessagesEngine(
           createBasicParams({ stepContext: { todos: metadataTodos } }),

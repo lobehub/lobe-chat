@@ -2258,6 +2258,75 @@ describe('RuntimeExecutors', { timeout: 60_000 }, () => {
           .map((message) => String(message.content))
           .join('\n\n');
 
+      it.each([
+        { apiNames: ['listDocuments'], expected: false, stepCount: 1, stepIndex: 1 },
+        { apiNames: ['updateTodos'], expected: true, stepCount: 1, stepIndex: 1 },
+        {
+          apiNames: ['updateTodos', 'listDocuments'],
+          expected: true,
+          stepCount: 1,
+          stepIndex: 1,
+        },
+        { apiNames: ['listDocuments'], expected: true, stepCount: 11, stepIndex: 10 },
+      ])(
+        'injects TODOs=$expected after $apiNames at runtime step $stepIndex',
+        async ({ apiNames, expected, stepCount, stepIndex }) => {
+          const todos = {
+            items: [{ status: 'processing', text: 'Review the cache report' }],
+            updatedAt: 'now',
+          };
+          const content = await callWithMessages(
+            [
+              { content: 'Keep going', role: 'user' },
+              {
+                content: '',
+                role: 'assistant',
+                tool_calls: [
+                  {
+                    function: { arguments: '{}', name: 'lobe-agent____createTodos' },
+                    id: 'create-call',
+                    type: 'function',
+                  },
+                ],
+              },
+              {
+                content: 'created',
+                plugin: { apiName: 'createTodos', identifier: 'lobe-agent' },
+                pluginState: { todos },
+                role: 'tool',
+                tool_call_id: 'create-call',
+              },
+              {
+                content: '',
+                role: 'assistant',
+                tool_calls: apiNames.map((apiName, index) => ({
+                  function: {
+                    arguments: '{}',
+                    name: `${apiName === 'listDocuments' ? 'docs' : 'lobe-agent'}____${apiName}`,
+                  },
+                  id: `current-call-${index}`,
+                  type: 'function',
+                })),
+              },
+              ...apiNames.map((apiName, index) => ({
+                content: 'result',
+                plugin: {
+                  apiName,
+                  identifier: apiName === 'listDocuments' ? 'docs' : 'lobe-agent',
+                },
+                ...(apiName === 'updateTodos' && { pluginState: { todos } }),
+                role: 'tool',
+                tool_call_id: `current-call-${index}`,
+              })),
+            ],
+            stateWithLobeAgent({ stepCount }),
+            { stepIndex },
+          );
+
+          expect(content.includes('<todo_context>')).toBe(expected);
+        },
+      );
+
       it('injects the newest valid message TODO state and skips Notebook', async () => {
         mockFindPlanDocuments.mockResolvedValue([
           {
