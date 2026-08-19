@@ -178,7 +178,9 @@ const createGrokAcpProc = ({
 
 const createFakeAcpProc = ({
   promptAutoComplete = true,
-}: { promptAutoComplete?: boolean } = {}) => {
+  responseText = 'TRAE response',
+  sessionId = 'trae-session-1',
+}: { promptAutoComplete?: boolean; responseText?: string; sessionId?: string } = {}) => {
   const proc = new EventEmitter() as any;
   const stdout = new PassThrough();
   const stderr = new PassThrough();
@@ -221,7 +223,7 @@ const createFakeAcpProc = ({
                     type: 'select',
                   },
                 ],
-                sessionId: 'trae-session-1',
+                sessionId,
               },
             });
             return;
@@ -235,9 +237,9 @@ const createFakeAcpProc = ({
             send({
               method: 'session/update',
               params: {
-                sessionId: 'trae-session-1',
+                sessionId,
                 update: {
-                  content: { text: 'TRAE response', type: 'text' },
+                  content: { text: responseText, type: 'text' },
                   sessionUpdate: 'agent_message_chunk',
                 },
               },
@@ -562,6 +564,43 @@ describe('spawnAgent', () => {
     expect(handle.sessionId).toBe('cursor-session');
     expect(events).toContainEqual(expect.objectContaining({ type: 'agent_runtime_end' }));
     killSpy.mockRestore();
+  });
+
+  it('runs Devin through ACP behind the standard handle contract', async () => {
+    const fake = createFakeAcpProc({
+      responseText: 'Devin response',
+      sessionId: 'devin-session-1',
+    });
+    nextFakeProc = fake.proc;
+    const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+
+    try {
+      const { spawnAgent } = await import('./spawnAgent');
+      const handle = await spawnAgent({
+        agentType: 'devin',
+        extraArgs: ['--model', 'sonnet'],
+        initialModel: 'sonnet',
+        operationId: 'op-devin',
+        prompt: 'do a thing',
+      });
+      const events = [];
+      for await (const event of handle.events) events.push(event);
+
+      await expect(handle.exit).resolves.toEqual({ code: 0, signal: null });
+      expect(spawnCalls[0]).toMatchObject({
+        args: ['acp', '--model', 'sonnet'],
+        command: 'devin',
+      });
+      expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
+        'initialize',
+        'session/new',
+        'session/prompt',
+      ]);
+      expect(handle.sessionId).toBe('devin-session-1');
+      expect(events).toContainEqual(expect.objectContaining({ type: 'agent_runtime_end' }));
+    } finally {
+      killSpy.mockRestore();
+    }
   });
 
   it('runs TRAE through ACP behind the standard handle contract', async () => {

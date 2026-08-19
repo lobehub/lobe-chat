@@ -273,6 +273,34 @@ describe('hetero exec command', () => {
     );
   });
 
+  it('runs Devin through ACP with its selected model and native arguments', async () => {
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'devin',
+      '--prompt',
+      'do thing',
+      '--model',
+      'claude-sonnet-4-6-thinking',
+      '--agent-arg=--agent-type',
+      '--agent-arg=coding',
+    ]);
+
+    expect(mockResolveHeteroSpawnCommand).toHaveBeenCalledWith('devin', undefined);
+    expect(mockSpawnAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentType: 'devin',
+        command: 'devin',
+        extraArgs: ['--agent-type', 'coding', '--model', 'claude-sonnet-4-6-thinking'],
+        initialModel: 'claude-sonnet-4-6-thinking',
+        prompt: 'do thing',
+      }),
+    );
+  });
+
   it('runs TRAE Enterprise with ACP model selection and only native provider arguments', async () => {
     mockResolveHeteroSpawnCommand.mockResolvedValue({ command: 'traecli' });
     mockSpawnAgent.mockReturnValue(createFakeHandle());
@@ -611,6 +639,32 @@ describe('hetero exec command', () => {
     expect(mockSpawnAgent).toHaveBeenCalledWith(
       expect.objectContaining({
         agentType: 'cursor',
+        askUserBridge: expect.objectContaining({ pending: expect.any(Function) }),
+      }),
+    );
+  });
+
+  it('passes an intervention bridge to server-ingest Devin runs', async () => {
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd([
+      'hetero',
+      'exec',
+      '--type',
+      'devin',
+      '--prompt',
+      'do thing',
+      '--topic',
+      'topic-1',
+      '--operation-id',
+      'op-devin-server',
+      '--render',
+      'none',
+    ]);
+
+    expect(mockSpawnAgent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        agentType: 'devin',
         askUserBridge: expect.objectContaining({ pending: expect.any(Function) }),
       }),
     );
