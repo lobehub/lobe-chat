@@ -9,7 +9,6 @@ import { AcpRpcResponseError, AcpServerRequestError } from './acpStdioClient';
 import type { BuildAgentInputOptions } from './input';
 import { normalizeImage } from './input';
 
-const AUTH_METHOD = 'devin-browser';
 const TRANSPORT = 'devin-acp' as const;
 
 export interface DevinAcpTextPromptBlock {
@@ -30,7 +29,6 @@ interface DevinAcpInitializeResult {
     loadSession?: boolean;
     promptCapabilities?: { image?: boolean };
   };
-  authMethods?: Array<{ id?: string }>;
   protocolVersion?: number | string;
 }
 
@@ -152,15 +150,6 @@ export class DevinAcpSession extends AcpAgentSession<
   }
 
   protected async establishSession(initialized: DevinAcpInitializeResult): Promise<string> {
-    const authMethods = initialized.authMethods?.flatMap(({ id }) =>
-      typeof id === 'string' ? [id] : [],
-    );
-    if (authMethods?.length && !authMethods.includes(AUTH_METHOD)) {
-      throw new Error('Devin could not authenticate. Run `devin auth login`, then retry.');
-    }
-    if (authMethods?.includes(AUTH_METHOD)) {
-      await this.client.request('authenticate', { methodId: AUTH_METHOD });
-    }
     if (
       this.options.prompt.some((block) => block.type === 'image') &&
       initialized.agentCapabilities?.promptCapabilities?.image !== true

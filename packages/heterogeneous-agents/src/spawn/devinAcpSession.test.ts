@@ -248,7 +248,7 @@ describe('Devin ACP helpers', () => {
 });
 
 describe('DevinAcpSession', () => {
-  it('authenticates, starts a session, normalizes tools, and streams the response', async () => {
+  it('uses cached credentials without starting browser authentication', async () => {
     const fake = createAcpProcess();
     spawnMock.mockReturnValue(fake.child);
     vi.spyOn(process, 'kill').mockImplementation(() => true);
@@ -267,7 +267,6 @@ describe('DevinAcpSession', () => {
     );
     expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
       'initialize',
-      'authenticate',
       'session/new',
       'session/prompt',
     ]);
