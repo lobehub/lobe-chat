@@ -211,6 +211,32 @@ describe('Devin ACP helpers', () => {
     expect(buildDevinAcpArgs(['--model', 'sonnet'])).toEqual(['acp', '--model', 'sonnet']);
   });
 
+  it('places a permission mode before the acp subcommand', () => {
+    expect(buildDevinAcpArgs(['--model', 'sonnet'], 'bypass')).toEqual([
+      '--permission-mode',
+      'bypass',
+      'acp',
+      '--model',
+      'sonnet',
+    ]);
+  });
+
+  it('moves a permission mode already in extra args before the acp subcommand', () => {
+    expect(
+      buildDevinAcpArgs(['--permission-mode', 'dangerous', '--model', 'sonnet'], 'bypass'),
+    ).toEqual(['--permission-mode', 'dangerous', 'acp', '--model', 'sonnet']);
+  });
+
+  it('supports --permission-mode=<value> in extra args', () => {
+    expect(buildDevinAcpArgs(['--permission-mode=normal', '--model', 'sonnet'])).toEqual([
+      '--permission-mode',
+      'normal',
+      'acp',
+      '--model',
+      'sonnet',
+    ]);
+  });
+
   it('builds text and image prompt blocks', async () => {
     await expect(
       buildDevinAcpPrompt([

@@ -67,6 +67,8 @@ export interface SpawnAgentOptions {
    * events still carry the conventional shape.
    */
   operationId: string;
+  /** (Devin ACP only) Global `--permission-mode` value, placed before `acp`. */
+  permissionMode?: string;
   /**
    * User prompt. A plain string is sugar for a single text block; the array
    * form supports mixed text + image content blocks (URL / path / base64).
@@ -620,6 +622,7 @@ const spawnDevinAcpAgent = async (
     env: { ...process.env, ...options.env },
     initialModel: options.initialModel,
     onEvents: bridge.onEvents,
+    permissionMode: options.permissionMode,
     onRawMessage: teeAcpRawStdout(options.onRawStdout),
     onRuntimeStatus: () => {},
     onSessionId: () => {},

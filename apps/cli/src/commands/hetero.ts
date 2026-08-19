@@ -877,6 +877,9 @@ const exec = async (options: ExecOptions): Promise<void> => {
   // ENOENT on a stale global install. Custom commands are used verbatim.
   const resolvedCommand = await resolveHeteroSpawnCommand(agentType, options.command);
   const commandEnv = resolvedCommand.pathEnv ? { PATH: resolvedCommand.pathEnv } : undefined;
+  // Devin ACP's `--permission-mode` is a global flag; default to bypass (yolo)
+  // so headless connected-device runs do not block on permission prompts.
+  const permissionMode = options.type === 'devin' ? 'bypass' : undefined;
 
   const first = await runOneAgent(
     {
@@ -886,6 +889,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
       cwd: options.cwd || process.cwd(),
       env: commandEnv,
       extraArgs,
+      permissionMode,
       // Device and sandbox executions are observed through the same gateway
       // stream as native server agents. Ask Claude Code for content-block
       // deltas so the current conversation receives text while the process is
@@ -934,6 +938,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
             ? options.model
             : undefined,
         operationId,
+        permissionMode,
         prompt: resolved.resumeFallbackPrompt ?? resolved.prompt,
         uploadImage,
         // No resumeSessionId — start fresh

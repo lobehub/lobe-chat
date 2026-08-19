@@ -68,10 +68,34 @@ export interface DevinAcpSessionOptions extends AcpAgentSessionOptions {
   askUserBridge?: AskUserBridge;
   initialModel?: string;
   onModel?: (model: string) => void;
+  /** Devin permission mode, applied as a global flag before `acp`. */
+  permissionMode?: string;
   prompt: DevinAcpPromptBlock[];
 }
 
-export const buildDevinAcpArgs = (extraArgs: string[] = []): string[] => ['acp', ...extraArgs];
+export const buildDevinAcpArgs = (extraArgs: string[] = [], permissionMode?: string): string[] => {
+  const args = [...extraArgs];
+  let resolvedMode = permissionMode;
+
+  // A user-supplied --permission-mode in extraArgs wins and must be moved
+  // before the `acp` subcommand, since it is a `devin` global option.
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i];
+    if (arg === '--permission-mode') {
+      resolvedMode = args[i + 1];
+      args.splice(i, 2);
+      break;
+    }
+    if (arg.startsWith('--permission-mode=')) {
+      resolvedMode = arg.slice('--permission-mode='.length);
+      args.splice(i, 1);
+      break;
+    }
+  }
+
+  if (!resolvedMode) return ['acp', ...args];
+  return ['--permission-mode', resolvedMode, 'acp', ...args];
+};
 
 export const buildDevinAcpPrompt = async (
   prompt: AgentPromptInput,
@@ -115,7 +139,7 @@ export class DevinAcpSession extends AcpAgentSession<
 
   constructor(options: DevinAcpSessionOptions) {
     super(options, {
-      args: buildDevinAcpArgs(options.args),
+      args: buildDevinAcpArgs(options.args, options.permissionMode),
       pipeline: { agentType: 'devin', cwd: options.cwd },
       processLabel: 'Devin ACP',
       transport: TRANSPORT,

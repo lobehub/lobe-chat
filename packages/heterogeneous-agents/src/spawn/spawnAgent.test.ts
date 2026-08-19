@@ -603,6 +603,39 @@ describe('spawnAgent', () => {
     }
   });
 
+  it('runs Devin ACP with a permission mode placed before the acp subcommand', async () => {
+    const fake = createFakeAcpProc({
+      responseText: 'Devin response',
+      sessionId: 'devin-session-1',
+    });
+    nextFakeProc = fake.proc;
+    const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+
+    try {
+      const { spawnAgent } = await import('./spawnAgent');
+      const handle = await spawnAgent({
+        agentType: 'devin',
+        extraArgs: ['--model', 'sonnet'],
+        initialModel: 'sonnet',
+        operationId: 'op-devin',
+        permissionMode: 'bypass',
+        prompt: 'do a thing',
+      });
+      const events = [];
+      for await (const event of handle.events) events.push(event);
+
+      await expect(handle.exit).resolves.toEqual({ code: 0, signal: null });
+      expect(spawnCalls[0]).toMatchObject({
+        args: ['--permission-mode', 'bypass', 'acp', '--model', 'sonnet'],
+        command: 'devin',
+      });
+      expect(handle.sessionId).toBe('devin-session-1');
+      expect(events).toContainEqual(expect.objectContaining({ type: 'agent_runtime_end' }));
+    } finally {
+      killSpy.mockRestore();
+    }
+  });
+
   it('runs TRAE through ACP behind the standard handle contract', async () => {
     const fake = createFakeAcpProc();
     nextFakeProc = fake.proc;
