@@ -203,14 +203,15 @@ export class DevinAcpSession extends AcpAgentSession<
     const sessionId = sessionResult.sessionId ?? this.options.resumeSessionId;
     if (!sessionId) throw new Error('Devin ACP returned no session id');
 
-    let model = await this.applyInitialModel(sessionId, sessionResult);
+    const model = await this.applyInitialModel(sessionId, sessionResult);
     if (this.resolvedPermissionMode) {
-      const setResult = await this.client.request<DevinAcpSetConfigOptionResult>(
-        'session/set_config_option',
-        { configId: 'mode', sessionId, value: this.resolvedPermissionMode },
-      );
-      const updatedModel = this.resolveCurrentModel(setResult.configOptions);
-      if (updatedModel) model = updatedModel;
+      await this.client.request<DevinAcpSetConfigOptionResult>('session/set_config_option', {
+        configId: 'mode',
+        sessionId,
+        value: this.resolvedPermissionMode,
+      });
+      // Permission mode should not clobber the model selected above. The model
+      // resolved from the model set_config_option is authoritative.
     }
     if (model) {
       this.pipeline.configureSession({ model });
