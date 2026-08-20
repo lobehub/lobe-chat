@@ -37,6 +37,10 @@ interface DevinAcpSessionResult {
   sessionId?: string;
 }
 
+interface DevinAcpSetConfigOptionResult {
+  configOptions?: unknown;
+}
+
 interface DevinAcpPromptResult {
   stopReason?: string;
 }
@@ -136,14 +140,17 @@ export class DevinAcpSession extends AcpAgentSession<
   DevinAcpSessionOptions
 > {
   private acceptUpdates = false;
+  private readonly resolvedPermissionMode?: string;
 
   constructor(options: DevinAcpSessionOptions) {
+    const devinArgs = buildDevinAcpArgs(options.args, options.permissionMode);
     super(options, {
-      args: buildDevinAcpArgs(options.args, options.permissionMode),
+      args: devinArgs,
       pipeline: { agentType: 'devin', cwd: options.cwd },
       processLabel: 'Devin ACP',
       transport: TRANSPORT,
     });
+    this.resolvedPermissionMode = devinArgs[0] === '--permission-mode' ? devinArgs[1] : undefined;
   }
 
   get sessionId(): string | undefined {
@@ -195,8 +202,15 @@ export class DevinAcpSession extends AcpAgentSession<
     const sessionId = sessionResult.sessionId ?? this.options.resumeSessionId;
     if (!sessionId) throw new Error('Devin ACP returned no session id');
 
-    const model =
-      this.resolveCurrentModel(sessionResult.configOptions) ?? this.options.initialModel;
+    let model = this.resolveCurrentModel(sessionResult.configOptions) ?? this.options.initialModel;
+    if (this.resolvedPermissionMode) {
+      const setResult = await this.client.request<DevinAcpSetConfigOptionResult>(
+        'session/set_config_option',
+        { configId: 'mode', sessionId, value: this.resolvedPermissionMode },
+      );
+      const updatedModel = this.resolveCurrentModel(setResult.configOptions);
+      if (updatedModel) model = updatedModel;
+    }
     if (model) {
       this.pipeline.configureSession({ model });
       this.options.onModel?.(model);

@@ -102,6 +102,28 @@ const createAcpProcess = ({
               );
               return;
             }
+            case 'session/set_config_option': {
+              send({
+                id: message.id,
+                result: {
+                  configOptions: [
+                    {
+                      category: 'mode',
+                      currentValue: (message.params as { value?: string } | undefined)?.value,
+                      id: 'mode',
+                      name: 'Session Mode',
+                    },
+                    {
+                      category: 'model',
+                      currentValue: 'claude-sonnet-4-6-thinking',
+                      id: 'model',
+                      name: 'Model',
+                    },
+                  ],
+                },
+              });
+              return;
+            }
             case 'session/prompt': {
               promptRequest = message;
               send({
@@ -392,6 +414,86 @@ describe('DevinAcpSession', () => {
 
     expect(fake.requests.find(({ id }) => id === 'permission-1')?.result).toEqual({
       outcome: { outcome: 'cancelled' },
+    });
+  });
+
+  it('sets the ACP session mode when a permission mode is configured', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({ permissionMode: 'bypass' });
+
+    await new DevinAcpSession(options).run();
+
+    expect(spawnMock).toHaveBeenCalledWith(
+      'devin',
+      ['--permission-mode', 'bypass', 'acp', '--model', 'sonnet'],
+      expect.objectContaining({ cwd: '/workspace', stdio: ['pipe', 'pipe', 'pipe'] }),
+    );
+    expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
+      'initialize',
+      'session/new',
+      'session/set_config_option',
+      'session/prompt',
+    ]);
+    expect(
+      fake.requests.find(({ method }) => method === 'session/set_config_option')?.params,
+    ).toEqual({
+      configId: 'mode',
+      sessionId: 'devin-session-1',
+      value: 'bypass',
+    });
+    expect(options.onSessionId).toHaveBeenCalledWith('devin-session-1');
+  });
+
+  it('lets a user-supplied --permission-mode in args override the default', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({
+      args: ['--permission-mode', 'dangerous', '--model', 'sonnet'],
+      permissionMode: 'bypass',
+    });
+
+    await new DevinAcpSession(options).run();
+
+    expect(spawnMock).toHaveBeenCalledWith(
+      'devin',
+      ['--permission-mode', 'dangerous', 'acp', '--model', 'sonnet'],
+      expect.objectContaining({ cwd: '/workspace', stdio: ['pipe', 'pipe', 'pipe'] }),
+    );
+    expect(
+      fake.requests.find(({ method }) => method === 'session/set_config_option')?.params,
+    ).toEqual({
+      configId: 'mode',
+      sessionId: 'devin-session-1',
+      value: 'dangerous',
+    });
+  });
+
+  it('sets the ACP session mode on a resumed session', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({
+      permissionMode: 'bypass',
+      resumeSessionId: 'saved-session',
+    });
+
+    await new DevinAcpSession(options).run();
+
+    expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
+      'initialize',
+      'session/load',
+      'session/set_config_option',
+      'session/prompt',
+    ]);
+    expect(
+      fake.requests.find(({ method }) => method === 'session/set_config_option')?.params,
+    ).toEqual({
+      configId: 'mode',
+      sessionId: 'saved-session',
+      value: 'bypass',
     });
   });
 });
