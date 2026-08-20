@@ -72,14 +72,14 @@ export interface DevinAcpSessionOptions extends AcpAgentSessionOptions {
   askUserBridge?: AskUserBridge;
   initialModel?: string;
   onModel?: (model: string) => void;
-  /** Devin permission mode, applied as a global flag before `acp`. */
+  /** Devin ACP permission mode, applied via `session/set_config_option`. */
   permissionMode?: string;
   prompt: DevinAcpPromptBlock[];
 }
 
-export const buildDevinAcpArgs = (extraArgs: string[] = [], permissionMode?: string): string[] => {
+export const buildDevinAcpArgs = (extraArgs: string[] = []): string[] => {
   const args = [...extraArgs];
-  let resolvedMode = permissionMode;
+  let resolvedMode: string | undefined;
 
   // A user-supplied --permission-mode in extraArgs wins and must be moved
   // before the `acp` subcommand, since it is a `devin` global option.
@@ -143,14 +143,15 @@ export class DevinAcpSession extends AcpAgentSession<
   private readonly resolvedPermissionMode?: string;
 
   constructor(options: DevinAcpSessionOptions) {
-    const devinArgs = buildDevinAcpArgs(options.args, options.permissionMode);
+    const devinArgs = buildDevinAcpArgs(options.args);
     super(options, {
       args: devinArgs,
       pipeline: { agentType: 'devin', cwd: options.cwd },
       processLabel: 'Devin ACP',
       transport: TRANSPORT,
     });
-    this.resolvedPermissionMode = devinArgs[0] === '--permission-mode' ? devinArgs[1] : undefined;
+    this.resolvedPermissionMode =
+      devinArgs[0] === '--permission-mode' ? devinArgs[1] : (options.permissionMode ?? undefined);
   }
 
   get sessionId(): string | undefined {

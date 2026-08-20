@@ -243,20 +243,18 @@ describe('Devin ACP helpers', () => {
     expect(buildDevinAcpArgs(['--model', 'sonnet'])).toEqual(['acp', '--model', 'sonnet']);
   });
 
-  it('places a permission mode before the acp subcommand', () => {
-    expect(buildDevinAcpArgs(['--model', 'sonnet'], 'bypass')).toEqual([
+  it('does not inject a default permission mode', () => {
+    expect(buildDevinAcpArgs(['--model', 'sonnet'])).toEqual(['acp', '--model', 'sonnet']);
+  });
+
+  it('moves a permission mode already in extra args before the acp subcommand', () => {
+    expect(buildDevinAcpArgs(['--permission-mode', 'dangerous', '--model', 'sonnet'])).toEqual([
       '--permission-mode',
-      'bypass',
+      'dangerous',
       'acp',
       '--model',
       'sonnet',
     ]);
-  });
-
-  it('moves a permission mode already in extra args before the acp subcommand', () => {
-    expect(
-      buildDevinAcpArgs(['--permission-mode', 'dangerous', '--model', 'sonnet'], 'bypass'),
-    ).toEqual(['--permission-mode', 'dangerous', 'acp', '--model', 'sonnet']);
   });
 
   it('supports --permission-mode=<value> in extra args', () => {
@@ -437,7 +435,7 @@ describe('DevinAcpSession', () => {
 
     expect(spawnMock).toHaveBeenCalledWith(
       'devin',
-      ['--permission-mode', 'bypass', 'acp', '--model', 'sonnet'],
+      ['acp', '--model', 'sonnet'],
       expect.objectContaining({ cwd: '/workspace', stdio: ['pipe', 'pipe', 'pipe'] }),
     );
     expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([

@@ -614,7 +614,7 @@ describe('spawnAgent', () => {
     }
   });
 
-  it('runs Devin ACP with a permission mode placed before the acp subcommand', async () => {
+  it('applies a permission mode through ACP session/set_config_option', async () => {
     const fake = createFakeAcpProc({
       responseText: 'Devin response',
       sessionId: 'devin-session-1',
@@ -637,9 +637,19 @@ describe('spawnAgent', () => {
 
       await expect(handle.exit).resolves.toEqual({ code: 0, signal: null });
       expect(spawnCalls[0]).toMatchObject({
-        args: ['--permission-mode', 'bypass', 'acp', '--model', 'sonnet'],
+        args: ['acp', '--model', 'sonnet'],
         command: 'devin',
       });
+      const setConfigRequests = fake.requests.filter(
+        ({ method }) => method === 'session/set_config_option',
+      );
+      expect(setConfigRequests).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            params: { configId: 'mode', sessionId: 'devin-session-1', value: 'bypass' },
+          }),
+        ]),
+      );
       expect(handle.sessionId).toBe('devin-session-1');
       expect(events).toContainEqual(expect.objectContaining({ type: 'agent_runtime_end' }));
     } finally {
