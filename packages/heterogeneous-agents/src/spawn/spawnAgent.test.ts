@@ -219,7 +219,10 @@ const createFakeAcpProc = ({
                     currentValue: 'seed-2.0-code',
                     id: 'model',
                     name: 'Model',
-                    options: [{ name: 'GPT 5.4', value: 'gpt-5.4' }],
+                    options: [
+                      { name: 'GPT 5.4', value: 'gpt-5.4' },
+                      { name: 'Sonnet', value: 'sonnet' },
+                    ],
                     type: 'select',
                   },
                 ],
@@ -594,8 +597,16 @@ describe('spawnAgent', () => {
       expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
         'initialize',
         'session/new',
+        'session/set_config_option',
         'session/prompt',
       ]);
+      expect(
+        fake.requests.find(({ method }) => method === 'session/set_config_option')?.params,
+      ).toEqual({
+        configId: 'model',
+        sessionId: 'devin-session-1',
+        value: 'sonnet',
+      });
       expect(handle.sessionId).toBe('devin-session-1');
       expect(events).toContainEqual(expect.objectContaining({ type: 'agent_runtime_end' }));
     } finally {

@@ -202,7 +202,7 @@ export class DevinAcpSession extends AcpAgentSession<
     const sessionId = sessionResult.sessionId ?? this.options.resumeSessionId;
     if (!sessionId) throw new Error('Devin ACP returned no session id');
 
-    let model = this.resolveCurrentModel(sessionResult.configOptions) ?? this.options.initialModel;
+    let model = await this.applyInitialModel(sessionId, sessionResult);
     if (this.resolvedPermissionMode) {
       const setResult = await this.client.request<DevinAcpSetConfigOptionResult>(
         'session/set_config_option',
@@ -291,6 +291,67 @@ export class DevinAcpSession extends AcpAgentSession<
     return isRecord(modelConfig) && typeof modelConfig.currentValue === 'string'
       ? modelConfig.currentValue
       : undefined;
+  }
+
+  private async applyInitialModel(
+    sessionId: string,
+    sessionResult: DevinAcpSessionResult,
+  ): Promise<string | undefined> {
+    const requestedModel = this.options.initialModel?.trim();
+    if (!requestedModel || requestedModel === 'default') {
+      return this.resolveCurrentModel(sessionResult.configOptions);
+    }
+
+    const currentModel = this.resolveCurrentModel(sessionResult.configOptions);
+    if (
+      currentModel &&
+      this.normalizeModelId(currentModel) === this.normalizeModelId(requestedModel)
+    ) {
+      return currentModel;
+    }
+
+    const modelConfig = this.resolveModelConfig(sessionResult.configOptions);
+    if (!modelConfig) {
+      return this.setModelOption(sessionId, requestedModel);
+    }
+
+    const options = (Array.isArray(modelConfig.options) ? modelConfig.options : []).filter(
+      isRecord,
+    );
+    const selected = options.find((option) =>
+      [String(option.value), String(option.name)].some(
+        (candidate) => this.normalizeModelId(candidate) === this.normalizeModelId(requestedModel),
+      ),
+    );
+
+    if (!selected) {
+      throw new Error(`Devin ACP model is unavailable: ${requestedModel}`);
+    }
+
+    return this.setModelOption(sessionId, String(selected.value));
+  }
+
+  private async setModelOption(sessionId: string, value: string): Promise<string | undefined> {
+    const setResult = await this.client.request<DevinAcpSetConfigOptionResult>(
+      'session/set_config_option',
+      { configId: 'model', sessionId, value },
+    );
+    return this.resolveCurrentModel(setResult.configOptions) ?? value;
+  }
+
+  private resolveModelConfig(configOptions: unknown): Record<string, unknown> | undefined {
+    if (!Array.isArray(configOptions)) return;
+
+    const modelConfig = configOptions.find(
+      (item) =>
+        isRecord(item) &&
+        (item.category === 'model' || item.id === 'model' || item.name === 'Model'),
+    );
+    return isRecord(modelConfig) ? modelConfig : undefined;
+  }
+
+  private normalizeModelId(value: string): string {
+    return value.toLowerCase().replaceAll(/[^a-z0-9]/g, '');
   }
 
   private parsePermissionRequest(value: unknown): DevinAcpPermissionRequest {

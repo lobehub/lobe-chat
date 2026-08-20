@@ -44,6 +44,8 @@ const createAcpProcess = ({
   const stderr = new PassThrough();
   const requests: RpcMessage[] = [];
   let promptRequest: RpcMessage | undefined;
+  let currentMode = 'accept-edits';
+  let currentModel = 'claude-sonnet-4-6-thinking';
   const send = (message: Record<string, unknown>) =>
     stdout.write(`${JSON.stringify({ jsonrpc: '2.0', ...message })}\n`);
 
@@ -86,9 +88,14 @@ const createAcpProcess = ({
                   configOptions: [
                     {
                       category: 'model',
-                      currentValue: 'claude-sonnet-4-6-thinking',
+                      currentValue: currentModel,
                       id: 'model',
                       name: 'Model',
+                      options: [
+                        { name: 'Claude Sonnet 4.6 Thinking', value: 'claude-sonnet-4-6-thinking' },
+                        { name: 'GLM 5.2', value: 'glm-5-2' },
+                        { name: 'SWE 1.7 Medium', value: 'swe-1-7-medium' },
+                      ],
                     },
                   ],
                   sessionId: 'devin-session-1',
@@ -103,19 +110,22 @@ const createAcpProcess = ({
               return;
             }
             case 'session/set_config_option': {
+              const params = message.params as { configId?: string; value?: string } | undefined;
+              if (params?.configId === 'mode' && params.value) currentMode = params.value;
+              if (params?.configId === 'model' && params.value) currentModel = params.value;
               send({
                 id: message.id,
                 result: {
                   configOptions: [
                     {
                       category: 'mode',
-                      currentValue: (message.params as { value?: string } | undefined)?.value,
+                      currentValue: currentMode,
                       id: 'mode',
                       name: 'Session Mode',
                     },
                     {
                       category: 'model',
-                      currentValue: 'claude-sonnet-4-6-thinking',
+                      currentValue: currentModel,
                       id: 'model',
                       name: 'Model',
                     },
@@ -495,5 +505,93 @@ describe('DevinAcpSession', () => {
       sessionId: 'saved-session',
       value: 'bypass',
     });
+  });
+
+  it('applies initialModel through session/set_config_option when it differs from the default', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({ initialModel: 'glm-5-2' });
+
+    await new DevinAcpSession(options).run();
+
+    expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
+      'initialize',
+      'session/new',
+      'session/set_config_option',
+      'session/prompt',
+    ]);
+    expect(
+      fake.requests.find(({ method }) => method === 'session/set_config_option')?.params,
+    ).toEqual({
+      configId: 'model',
+      sessionId: 'devin-session-1',
+      value: 'glm-5-2',
+    });
+    expect(options.onModel).toHaveBeenCalledWith('glm-5-2');
+  });
+
+  it('matches a human-readable model label to the ACP model value', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({ initialModel: 'glm 5.2' });
+
+    await new DevinAcpSession(options).run();
+
+    expect(
+      fake.requests.find(({ method }) => method === 'session/set_config_option')?.params,
+    ).toEqual({
+      configId: 'model',
+      sessionId: 'devin-session-1',
+      value: 'glm-5-2',
+    });
+    expect(options.onModel).toHaveBeenCalledWith('glm-5-2');
+  });
+
+  it('does not call session/set_config_option for model when initialModel matches the default', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({ initialModel: 'claude-sonnet-4-6-thinking' });
+
+    await new DevinAcpSession(options).run();
+
+    expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
+      'initialize',
+      'session/new',
+      'session/prompt',
+    ]);
+  });
+
+  it('sets both permission mode and model when both are configured', async () => {
+    const fake = createAcpProcess();
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const options = createSessionOptions({ initialModel: 'glm-5-2', permissionMode: 'bypass' });
+
+    await new DevinAcpSession(options).run();
+
+    expect(fake.requests.map(({ method }) => method).filter(Boolean)).toEqual([
+      'initialize',
+      'session/new',
+      'session/set_config_option',
+      'session/set_config_option',
+      'session/prompt',
+    ]);
+    const setConfigRequests = fake.requests.filter(
+      ({ method }) => method === 'session/set_config_option',
+    );
+    expect(setConfigRequests[0]?.params).toEqual({
+      configId: 'model',
+      sessionId: 'devin-session-1',
+      value: 'glm-5-2',
+    });
+    expect(setConfigRequests[1]?.params).toEqual({
+      configId: 'mode',
+      sessionId: 'devin-session-1',
+      value: 'bypass',
+    });
+    expect(options.onModel).toHaveBeenCalledWith('glm-5-2');
   });
 });
