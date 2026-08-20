@@ -43,6 +43,8 @@ interface DevinAcpSetConfigOptionResult {
 
 interface DevinAcpPromptResult {
   stopReason?: string;
+  /** ACP experimental `Usage` from `session/prompt` result. */
+  usage?: unknown;
 }
 
 interface DevinAcpPermissionOption {
@@ -232,9 +234,11 @@ export class DevinAcpSession extends AcpAgentSession<
 
   protected override async settlePrompt(result: unknown): Promise<void> {
     await this.client.drain();
+    const promptResult = isRecord(result) ? result : undefined;
     await this.pushToPipeline({
-      stopReason: (result as DevinAcpPromptResult | undefined)?.stopReason,
+      stopReason: (promptResult as DevinAcpPromptResult | undefined)?.stopReason,
       type: 'devin_prompt_completed',
+      usage: (promptResult as DevinAcpPromptResult | undefined)?.usage,
     });
   }
 
