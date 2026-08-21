@@ -184,7 +184,11 @@ const createFakeAcpProc = ({
   const proc = new EventEmitter() as any;
   const stdout = new PassThrough();
   const stderr = new PassThrough();
-  const requests: Array<{ id?: number; method?: string }> = [];
+  const requests: Array<{
+    id?: number;
+    method?: string;
+    params?: Record<string, unknown>;
+  }> = [];
   const send = (message: Record<string, unknown>) =>
     stdout.write(`${JSON.stringify({ jsonrpc: '2.0', ...message })}\n`);
   proc.stdout = stdout;
@@ -195,7 +199,11 @@ const createFakeAcpProc = ({
   proc.stdin = {
     once: vi.fn(),
     write: vi.fn((chunk: string) => {
-      const message = JSON.parse(chunk.trim()) as { id?: number; method?: string };
+      const message = JSON.parse(chunk.trim()) as {
+        id?: number;
+        method?: string;
+        params?: Record<string, unknown>;
+      };
       requests.push(message);
       queueMicrotask(() => {
         switch (message.method) {
