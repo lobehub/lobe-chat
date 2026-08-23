@@ -6,6 +6,7 @@ import { NIGHTLY_REVIEW } from './agents/nightly-review';
 import { ONBOARDING_TASK_RECOMMENDER } from './agents/onboarding-task-recommender';
 import { ONBOARDING_UNDERSTANDING } from './agents/onboarding-understanding';
 import { PAGE_AGENT } from './agents/page-agent';
+import { QUICK_NOTE_DISCOVERY, QUICK_NOTE_DIVE } from './agents/quick-note';
 import { SELF_FEEDBACK_INTENT } from './agents/self-feedback-intent';
 import { SELF_REFLECTION } from './agents/self-reflection';
 import { SKILL_MANAGEMENT } from './agents/skill-management';
@@ -29,6 +30,7 @@ export { ONBOARDING_UNDERSTANDING } from './agents/onboarding-understanding';
 export { PAGE_AGENT } from './agents/page-agent';
 export type { ProjectCoordinatorContext } from './agents/project-coordinator';
 export { createProjectCoordinatorAgentConfig } from './agents/project-coordinator';
+export { QUICK_NOTE_DISCOVERY, QUICK_NOTE_DIVE } from './agents/quick-note';
 export { SELF_FEEDBACK_INTENT } from './agents/self-feedback-intent';
 export { SELF_REFLECTION } from './agents/self-reflection';
 export { SKILL_MANAGEMENT } from './agents/skill-management';
@@ -48,6 +50,8 @@ export const BUILTIN_AGENTS: Record<BuiltinAgentSlug, BuiltinAgentDefinition> = 
   [BUILTIN_AGENT_SLUGS.onboardingUnderstanding]: ONBOARDING_UNDERSTANDING,
   [BUILTIN_AGENT_SLUGS.onboardingTaskRecommender]: ONBOARDING_TASK_RECOMMENDER,
   [BUILTIN_AGENT_SLUGS.pageAgent]: PAGE_AGENT,
+  [BUILTIN_AGENT_SLUGS.quickNoteDiscovery]: QUICK_NOTE_DISCOVERY,
+  [BUILTIN_AGENT_SLUGS.quickNoteDive]: QUICK_NOTE_DIVE,
   [BUILTIN_AGENT_SLUGS.selfFeedbackIntent]: SELF_FEEDBACK_INTENT,
   [BUILTIN_AGENT_SLUGS.selfReflection]: SELF_REFLECTION,
   [BUILTIN_AGENT_SLUGS.skillManagement]: SKILL_MANAGEMENT,

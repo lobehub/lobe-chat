@@ -14,6 +14,8 @@ export const BUILTIN_AGENT_SLUGS = {
   onboardingUnderstanding: 'onboarding-understanding',
   onboardingTaskRecommender: 'onboarding-task-recommender',
   pageAgent: 'page-agent',
+  quickNoteDiscovery: 'quick-note-discovery',
+  quickNoteDive: 'quick-note-dive',
   selfFeedbackIntent: 'self-feedback-intent',
   selfReflection: 'self-reflection',
   skillManagement: 'skill-management',

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { type QuickNoteItem, quickNoteService } from '@/services/quickNote';
 
-import { AUTO_TAG_DELAY, PERSIST_DEBOUNCE } from './action';
+import { DIVE_POLL_INTERVAL, PERSIST_DEBOUNCE } from './action';
 import { initialState, type QuickNoteState } from './initialState';
 import { quickNoteSelectors } from './selectors';
 import { useQuickNoteStore } from './store';
@@ -82,7 +82,16 @@ describe('quickNote actions', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     resetStore();
-    vi.spyOn(quickNoteService, 'saveNotes').mockResolvedValue();
+    vi.spyOn(quickNoteService, 'claimDiscovery').mockResolvedValue({ accepted: false });
+    vi.spyOn(quickNoteService, 'createNote').mockResolvedValue(createNoteItem({ id: 'created' }));
+    vi.spyOn(quickNoteService, 'dive').mockResolvedValue({
+      id: 'run-1',
+      kind: 'dive',
+      operationId: 'op-1',
+      status: 'running',
+    } as Awaited<ReturnType<typeof quickNoteService.dive>>);
+    vi.spyOn(quickNoteService, 'removeNote').mockResolvedValue();
+    vi.spyOn(quickNoteService, 'updateNoteContent').mockResolvedValue();
   });
 
   afterEach(() => {
@@ -103,13 +112,39 @@ describe('quickNote actions', () => {
     expect(useQuickNoteStore.getState().notesInit).toBe(true);
   });
 
-  it('createNote prepends a note and persists after debounce', async () => {
+  /** @example An active Dive restored from the server keeps polling until its operation finishes. */
+  it('resumes polling an active Dive after initialization', async () => {
+    const running = createNoteItem({
+      content: '恢复 Dive',
+      id: 'active-dive',
+      run: { kind: 'dive', operationId: 'op-1', status: 'running' },
+    });
+    const completed = {
+      ...running,
+      annotation: { content: '已完成', divedAt: 2000 },
+      run: { ...running.run!, status: 'completed' as const },
+    };
+    const getNotes = vi
+      .spyOn(quickNoteService, 'getNotes')
+      .mockResolvedValueOnce([running])
+      .mockResolvedValueOnce([completed]);
+
+    await useQuickNoteStore.getState().initNotes();
+    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
+
+    /** @example Refresh recovery performs a follow-up status request. */
+    expect(getNotes).toHaveBeenCalledTimes(2);
+    /** @example The recovered terminal projection leaves the note out of the active Dive set. */
+    expect(useQuickNoteStore.getState().divingNoteIds).toEqual([]);
+    /** @example The accepted Annotation is projected into the existing panel state. */
+    expect(useQuickNoteStore.getState().notes[0].annotation?.content).toBe('已完成');
+  });
+
+  it('createNote prepends the server-created note', async () => {
     const id = await useQuickNoteStore.getState().createNote();
 
     expect(useQuickNoteStore.getState().notes[0].id).toBe(id);
-
-    await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
-    expect(quickNoteService.saveNotes).toHaveBeenCalledWith(useQuickNoteStore.getState().notes);
+    expect(quickNoteService.createNote).toHaveBeenCalledTimes(1);
   });
 
   it('updateNoteContent tracks save status through the debounce window', async () => {
@@ -121,10 +156,44 @@ describe('quickNote actions', () => {
 
     await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
     expect(useQuickNoteStore.getState().saveStatus).toBe('saved');
+    expect(quickNoteService.updateNoteContent).toHaveBeenCalledWith('a', 'hello', {
+      markdown: 'hello',
+    });
+  });
+
+  /** @example A second edit arriving during the first request remains queued for persistence. */
+  it('does not drop edits made while an earlier save is in flight', async () => {
+    let resolveFirstSave: (() => void) | undefined;
+    const updateNoteContent = vi
+      .spyOn(quickNoteService, 'updateNoteContent')
+      .mockImplementationOnce(
+        () =>
+          new Promise<void>((resolve) => {
+            resolveFirstSave = resolve;
+          }),
+      )
+      .mockResolvedValue();
+    resetStore({ notes: [createNoteItem({ id: 'a' })], notesInit: true });
+
+    useQuickNoteStore.getState().updateNoteContent('a', 'first', { revision: 1 });
+    await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
+    useQuickNoteStore.getState().updateNoteContent('a', 'second', { revision: 2 });
+    resolveFirstSave?.();
+    await Promise.resolve();
+
+    /** @example Completing the stale request does not report the newer edit as saved. */
+    expect(useQuickNoteStore.getState().saveStatus).toBe('saving');
+
+    await vi.advanceTimersByTimeAsync(PERSIST_DEBOUNCE);
+
+    /** @example Both source revisions reach the service in order. */
+    expect(updateNoteContent).toHaveBeenNthCalledWith(1, 'a', 'first', { revision: 1 });
+    expect(updateNoteContent).toHaveBeenNthCalledWith(2, 'a', 'second', { revision: 2 });
+    expect(useQuickNoteStore.getState().saveStatus).toBe('saved');
   });
 
   it('marks the save as failed when persistence throws', async () => {
-    vi.spyOn(quickNoteService, 'saveNotes').mockRejectedValue(new Error('quota exceeded'));
+    vi.spyOn(quickNoteService, 'updateNoteContent').mockRejectedValue(new Error('offline'));
     resetStore({ notes: [createNoteItem({ id: 'a' })], notesInit: true });
 
     useQuickNoteStore.getState().updateNoteContent('a', 'hello');
@@ -134,9 +203,9 @@ describe('quickNote actions', () => {
   });
 
   it('retrySave flushes immediately and recovers to saved', async () => {
-    const saveNotes = vi
-      .spyOn(quickNoteService, 'saveNotes')
-      .mockRejectedValueOnce(new Error('quota exceeded'))
+    const updateNoteContent = vi
+      .spyOn(quickNoteService, 'updateNoteContent')
+      .mockRejectedValueOnce(new Error('offline'))
       .mockResolvedValue();
     resetStore({ notes: [createNoteItem({ id: 'a', tags: ['manual'] })], notesInit: true });
 
@@ -147,40 +216,47 @@ describe('quickNote actions', () => {
     useQuickNoteStore.getState().retrySave();
     await vi.runAllTimersAsync();
 
-    expect(saveNotes).toHaveBeenCalledTimes(2);
+    expect(updateNoteContent).toHaveBeenCalledTimes(2);
     expect(useQuickNoteStore.getState().saveStatus).toBe('saved');
   });
 
-  it('auto-tags an untagged note after the settle delay', async () => {
-    resetStore({ notes: [createNoteItem({ id: 'a' })], notesInit: true });
-
-    useQuickNoteStore.getState().updateNoteContent('a', '[截图] 这个 bug 不对');
-
-    await vi.advanceTimersByTimeAsync(AUTO_TAG_DELAY + PERSIST_DEBOUNCE);
-    expect(useQuickNoteStore.getState().notes[0].tags).toEqual(['截图', 'Bug']);
-  });
-
-  it('keeps existing tags untouched by auto-tagging', async () => {
-    resetStore({ notes: [createNoteItem({ id: 'a', tags: ['manual'] })], notesInit: true });
-
-    useQuickNoteStore.getState().updateNoteContent('a', '新内容');
-
-    await vi.advanceTimersByTimeAsync(AUTO_TAG_DELAY + PERSIST_DEBOUNCE);
-    expect(useQuickNoteStore.getState().notes[0].tags).toEqual(['manual']);
-  });
-
-  it('diveInto streams an annotation to completion', async () => {
+  it('diveInto recovers the completed Annotation from server state', async () => {
     resetStore({ notes: [createNoteItem({ content: '记一下', id: 'a' })], notesInit: true });
+    vi.spyOn(quickNoteService, 'getNotes').mockResolvedValue([
+      createNoteItem({
+        annotation: { content: '解释', divedAt: 2000 },
+        content: '记一下',
+        id: 'a',
+        run: { kind: 'dive', operationId: 'op-1', status: 'completed' },
+      }),
+    ]);
 
-    useQuickNoteStore.getState().diveInto('a');
+    await useQuickNoteStore.getState().diveInto('a');
     expect(quickNoteSelectors.isDiving('a')(useQuickNoteStore.getState())).toBe(true);
 
-    await vi.runAllTimersAsync();
+    await vi.advanceTimersByTimeAsync(DIVE_POLL_INTERVAL);
 
     const state = useQuickNoteStore.getState();
     expect(quickNoteSelectors.isDiving('a')(state)).toBe(false);
     expect(state.notes[0].annotation?.divedAt).toBeTruthy();
-    expect(state.notes[0].annotation?.content).toContain('记一下');
+    expect(state.notes[0].annotation?.content).toBe('解释');
+  });
+
+  /** @example Dive flushes a pending rich-text revision before the server claims its snapshot. */
+  it('persists the latest editor revision before starting Dive', async () => {
+    resetStore({ notes: [createNoteItem({ content: '旧内容', id: 'a' })], notesInit: true });
+
+    useQuickNoteStore.getState().updateNoteContent('a', '最新内容', { revision: 2 });
+    await useQuickNoteStore.getState().diveInto('a');
+
+    /** @example Persistence precedes the Dive mutation against the same Quick Note. */
+    expect(quickNoteService.updateNoteContent).toHaveBeenCalledWith('a', '最新内容', {
+      revision: 2,
+    });
+    /** @example The server cannot pin a stale revision before the editor save completes. */
+    expect(vi.mocked(quickNoteService.updateNoteContent).mock.invocationCallOrder[0]).toBeLessThan(
+      vi.mocked(quickNoteService.dive).mock.invocationCallOrder[0],
+    );
   });
 
   it('diveInto ignores empty notes', () => {
@@ -209,10 +285,10 @@ describe('quickNote actions', () => {
     expect(useQuickNoteStore.getState().activeTag).toBeNull();
   });
 
-  it('removeNote clears the active note when it is deleted', async () => {
+  it('removeNote clears the active note after the server delete succeeds', async () => {
     resetStore({ activeNoteId: 'a', notes: [createNoteItem({ id: 'a' })], notesInit: true });
 
-    useQuickNoteStore.getState().removeNote('a');
+    await useQuickNoteStore.getState().removeNote('a');
 
     expect(useQuickNoteStore.getState().notes).toEqual([]);
     expect(useQuickNoteStore.getState().activeNoteId).toBeUndefined();

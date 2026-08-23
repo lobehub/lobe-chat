@@ -6,6 +6,7 @@ export const DEFAULT_COMMON_SETTINGS: UserGeneralConfig = {
   animationMode: 'agile',
   // contextMenuMode not set default value, use env to calc
   costEstimateWarningThreshold: DEFAULT_COST_ESTIMATE_WARNING_THRESHOLD,
+  enableQuickNoteAutomaticDiscovery: false,
   fontSize: 14,
   highlighterTheme: 'lobe-theme',
   isDevMode: false,

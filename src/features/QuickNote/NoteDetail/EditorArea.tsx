@@ -87,7 +87,11 @@ const EditorArea = memo<{ noteId: string }>(({ noteId }) => {
             placeholder={t('editor.placeholder')}
             type={initial.type}
             onTextChange={(currentEditor) =>
-              updateNoteContent(noteId, String(currentEditor.getDocument('markdown') ?? ''))
+              updateNoteContent(
+                noteId,
+                String(currentEditor.getDocument('markdown') ?? ''),
+                (currentEditor.getDocument('json') ?? {}) as Record<string, unknown>,
+              )
             }
           />
         </Flexbox>

@@ -16,6 +16,7 @@ export const AGENT_SIGNAL_SOURCE_TYPES = {
   clientGatewayStreamStart: 'client.gateway.stream_start',
   clientRuntimeComplete: 'client.runtime.complete',
   clientRuntimeStart: 'client.runtime.start',
+  quickNoteDiscoveryRequested: 'quick_note.discovery.requested',
   runtimeAfterStep: 'runtime.after_step',
   runtimeBeforeStep: 'runtime.before_step',
   toolOutcomeCompleted: 'tool.outcome.completed',
@@ -208,6 +209,12 @@ export interface AgentSignalSourcePayloadMap {
     /** Message that initiated the source or run, usually the user message. */
     triggerMessageId?: string;
   };
+  [AGENT_SIGNAL_SOURCE_TYPES.quickNoteDiscoveryRequested]: {
+    quickNoteId: string;
+    runId: string;
+    sourceHistoryId: string;
+    userId: string;
+  };
   [AGENT_SIGNAL_SOURCE_TYPES.runtimeAfterStep]: {
     agentId?: string;
     operationId: string;
@@ -324,6 +331,10 @@ export type SourceClientRuntimeStart = AgentSignalSourceVariant<'client.runtime.
 /** Client runtime-complete source variant. */
 export type SourceClientRuntimeComplete = AgentSignalSourceVariant<'client.runtime.complete'>;
 
+/** Quick Note Automatic Discovery request source variant. */
+export type SourceQuickNoteDiscoveryRequested =
+  AgentSignalSourceVariant<'quick_note.discovery.requested'>;
+
 /** Tool outcome-completed source variant. */
 export type SourceToolOutcomeCompleted = AgentSignalSourceVariant<'tool.outcome.completed'>;
 
@@ -350,8 +361,7 @@ export type SourceEventAgentSelfFeedbackIntentDeclared =
 
 /** Normalized tool outcome source event. */
 export type SourceEventToolOutcome =
-  | AgentSignalSourceEvent<'tool.outcome.completed'>
-  | AgentSignalSourceEvent<'tool.outcome.failed'>;
+  AgentSignalSourceEvent<'tool.outcome.completed'> | AgentSignalSourceEvent<'tool.outcome.failed'>;
 
 /** Source types accepted by browser producers through the authenticated edge. */
 export const AGENT_SIGNAL_CLIENT_SOURCE_TYPES = [
