@@ -3324,6 +3324,12 @@ export default class HeterogeneousAgentCtr {
     topicId: string;
     /** Topic/run workspace — forwarded as `LOBEHUB_WORKSPACE_ID` for ingest. */
     workspaceId?: string;
+    /**
+     * Called once the child process has spawned (pid available). The caller
+     * (gateway dispatcher) uses this to register the process so a later
+     * `cancelHeteroTask` can kill it by operationId.
+     */
+    onChildSpawned?: (child: ChildProcess) => void;
   }): Promise<{ reason?: string; status: 'accepted' | 'rejected' }> {
     const {
       agentType,
@@ -3333,6 +3339,7 @@ export default class HeterogeneousAgentCtr {
       imageList,
       jwt,
       operationId,
+      onChildSpawned,
       prompt,
       resumeFallbackSystemContext,
       resumeSessionId,
@@ -3411,8 +3418,12 @@ export default class HeterogeneousAgentCtr {
     // Execute the CLI shipped with this desktop build. A bare `lh` would prefer
     // an older global install earlier on PATH, letting model discovery report a
     // capability that the actual execution runtime does not support.
+    // `detached: true` puts the CLI in its own process group so
+    // `killPlatformProcessTree(-pid, signal)` from `cancelHeteroTask` reaches
+    // the CLI and its children without signalling the desktop app itself.
     const child = spawn(process.execPath, [cliScript, ...args], {
       cwd: spawnCwd,
+      detached: true,
       env,
       stdio: ['pipe', 'inherit', 'inherit'],
     });
@@ -3458,6 +3469,12 @@ export default class HeterogeneousAgentCtr {
       });
 
       child.once('spawn', () => {
+        // Register the child with the gateway's platform task registry so a
+        // later `cancelHeteroTask` (triggered by the user clicking Stop in the
+        // web UI) can find and kill this process by operationId. Without this
+        // the CLI keeps running after the user cancels — the server only marks
+        // its own operation state as interrupted, never signalling the device.
+        onChildSpawned?.(child);
         try {
           child.stdin.write(stdinPayload);
           child.stdin.end();

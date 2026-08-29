@@ -1,4 +1,4 @@
-import { execFileSync, spawn } from 'node:child_process';
+import { type ChildProcess, execFileSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -127,7 +127,7 @@ const safeJsonParse = (input: string): unknown => {
 export default class GatewayConnectionCtr extends ControllerModule {
   static override readonly groupName = 'gatewayConnection';
 
-  /** In-memory registry for running platform agent tasks (openclaw / hermes). */
+  /** In-memory registry for running hetero agent tasks (openclaw / hermes / local-cli dispatch). */
   private readonly platformTasks = new Map<string, PlatformTaskEntry>();
   private readonly platformTaskKillTimers = new Map<number, NodeJS.Timeout>();
 
@@ -327,6 +327,31 @@ export default class GatewayConnectionCtr extends ControllerModule {
         systemContext: request.systemContext,
         topicId: request.topicId,
         workspaceId: request.ingestWorkspaceId ?? request.workspaceId,
+        // Register the spawned CLI process so `cancelHeteroTask` (sent by the
+        // server's `interruptTask` when the user clicks Stop) can find and kill
+        // it by operationId. The entry is cleaned up on child exit below.
+        onChildSpawned: (child: ChildProcess) => {
+          const pid = child.pid;
+          if (pid === undefined) return;
+          const taskId = request.operationId;
+          this.platformTasks.set(taskId, {
+            agentType: request.agentType,
+            operationId: request.operationId,
+            pid,
+            topicId: request.topicId,
+            workspaceId: request.ingestWorkspaceId ?? request.workspaceId,
+          });
+          child.once('exit', () => {
+            // Only clear if this exit belongs to the current entry — a
+            // superseding run for the same operationId may have already
+            // replaced it.
+            const current = this.platformTasks.get(taskId);
+            if (current?.pid === pid) {
+              this.platformTasks.delete(taskId);
+              this.clearPlatformTaskKillTimer(pid);
+            }
+          });
+        },
       });
     } catch (err) {
       const reason = err instanceof Error ? err.message : String(err);
