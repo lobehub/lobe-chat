@@ -431,6 +431,10 @@ interface LhHeteroExecTask {
   process: ChildProcess;
 }
 
+interface InteractiveAcpSession {
+  run: () => Promise<void>;
+}
+
 /**
  * External Agent Controller — manages external agent CLI processes via Electron IPC.
  *
@@ -2235,44 +2239,16 @@ export default class HeterogeneousAgentCtr {
     });
     session.cursorAcpSession = cursorAcpSession;
 
-    try {
-      await cursorAcpSession.run();
-      void this.writeCliTraceJson(traceSession, 'exit.json', {
-        finishedAt: new Date().toISOString(),
-        transport: 'cursor-acp',
-      });
-      await this.flushCliTrace(traceSession);
-      this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
-    } catch (error) {
-      void this.writeCliTraceJson(traceSession, 'process-error.json', {
-        message: this.getErrorMessage(error),
-        transport: 'cursor-acp',
-      });
-      await this.flushCliTrace(traceSession);
-      if (session.cancelledByUs) {
-        this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
-        return;
-      }
-      const stderr = stderrChunks.join('').trim();
-      const errorForClassification = isCursorAcpSessionNotFoundError(error)
-        ? error
-        : stderr
-          ? new Error([this.getErrorMessage(error), stderr].filter(Boolean).join('\n'), {
-              cause: error,
-            })
-          : error;
-      const sessionError = this.getSessionErrorPayload(errorForClassification, session);
-      this.broadcast('heteroAgentSessionError', {
-        error: sessionError,
-        sessionId: session.sessionId,
-      });
-      throw new Error(typeof sessionError === 'string' ? sessionError : sessionError.message, {
-        cause: error,
-      });
-    } finally {
-      await intervention.cleanup();
-      if (session.cursorAcpSession === cursorAcpSession) session.cursorAcpSession = undefined;
-    }
+    await this.runInteractiveAcpSession({
+      acpSession: cursorAcpSession,
+      activeSessionKey: 'cursorAcpSession',
+      cleanup: intervention.cleanup,
+      isResumeError: isCursorAcpSessionNotFoundError,
+      session,
+      stderrChunks,
+      traceSession,
+      transport: 'cursor-acp',
+    });
   }
 
   private async sendPromptWithDroidAcp(
@@ -2439,18 +2415,49 @@ export default class HeterogeneousAgentCtr {
     });
     session.devinAcpSession = devinAcpSession;
 
+    await this.runInteractiveAcpSession({
+      acpSession: devinAcpSession,
+      activeSessionKey: 'devinAcpSession',
+      cleanup: intervention.cleanup,
+      isResumeError: isDevinAcpSessionNotFoundError,
+      session,
+      stderrChunks,
+      traceSession,
+      transport: 'devin-acp',
+    });
+  }
+
+  private async runInteractiveAcpSession({
+    acpSession,
+    activeSessionKey,
+    cleanup,
+    isResumeError,
+    session,
+    stderrChunks,
+    traceSession,
+    transport,
+  }: {
+    acpSession: InteractiveAcpSession;
+    activeSessionKey: 'cursorAcpSession' | 'devinAcpSession' | 'traeAcpSession';
+    cleanup?: () => Promise<void>;
+    isResumeError?: (error: unknown) => boolean;
+    session: AgentSession;
+    stderrChunks: string[];
+    traceSession: CliTraceSession | undefined;
+    transport: 'cursor-acp' | 'devin-acp' | 'trae-acp';
+  }): Promise<void> {
     try {
-      await devinAcpSession.run();
+      await acpSession.run();
       void this.writeCliTraceJson(traceSession, 'exit.json', {
         finishedAt: new Date().toISOString(),
-        transport: 'devin-acp',
+        transport,
       });
       await this.flushCliTrace(traceSession);
       this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
     } catch (error) {
       void this.writeCliTraceJson(traceSession, 'process-error.json', {
         message: this.getErrorMessage(error),
-        transport: 'devin-acp',
+        transport,
       });
       await this.flushCliTrace(traceSession);
       if (session.cancelledByUs) {
@@ -2458,7 +2465,7 @@ export default class HeterogeneousAgentCtr {
         return;
       }
       const stderr = stderrChunks.join('').trim();
-      const errorForClassification = isDevinAcpSessionNotFoundError(error)
+      const errorForClassification = isResumeError?.(error)
         ? error
         : stderr
           ? new Error([this.getErrorMessage(error), stderr].filter(Boolean).join('\n'), {
@@ -2474,8 +2481,14 @@ export default class HeterogeneousAgentCtr {
         cause: error,
       });
     } finally {
-      await intervention.cleanup();
-      if (session.devinAcpSession === devinAcpSession) session.devinAcpSession = undefined;
+      await cleanup?.();
+      if (activeSessionKey === 'cursorAcpSession' && session.cursorAcpSession === acpSession) {
+        session.cursorAcpSession = undefined;
+      } else if (activeSessionKey === 'devinAcpSession' && session.devinAcpSession === acpSession) {
+        session.devinAcpSession = undefined;
+      } else if (activeSessionKey === 'traeAcpSession' && session.traeAcpSession === acpSession) {
+        session.traeAcpSession = undefined;
+      }
     }
   }
 
@@ -2541,42 +2554,17 @@ export default class HeterogeneousAgentCtr {
     });
     session.traeAcpSession = traeAcpSession;
 
-    try {
-      await traeAcpSession.run();
-      void this.writeCliTraceJson(traceSession, 'exit.json', {
-        finishedAt: new Date().toISOString(),
-        transport: 'trae-acp',
-      });
-      await this.flushCliTrace(traceSession);
-      this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
-    } catch (error) {
-      void this.writeCliTraceJson(traceSession, 'process-error.json', {
-        message: this.getErrorMessage(error),
-        transport: 'trae-acp',
-      });
-      await this.flushCliTrace(traceSession);
-      if (session.cancelledByUs) {
-        this.broadcast('heteroAgentSessionComplete', { sessionId: session.sessionId });
-        return;
-      }
-      const stderr = stderrChunks.join('').trim();
-      const errorForClassification = stderr
-        ? new Error([this.getErrorMessage(error), stderr].filter(Boolean).join('\n'), {
-            cause: error,
-          })
-        : error;
-      const sessionError = this.getSessionErrorPayload(errorForClassification, session);
-      this.broadcast('heteroAgentSessionError', {
-        error: sessionError,
-        sessionId: session.sessionId,
-      });
-      throw new Error(typeof sessionError === 'string' ? sessionError : sessionError.message, {
-        cause: error,
-      });
-    } finally {
-      await session.hostedProviderBinding?.cleanup();
-      if (session.traeAcpSession === traeAcpSession) session.traeAcpSession = undefined;
-    }
+    await this.runInteractiveAcpSession({
+      acpSession: traeAcpSession,
+      activeSessionKey: 'traeAcpSession',
+      cleanup: async () => {
+        await session.hostedProviderBinding?.cleanup();
+      },
+      session,
+      stderrChunks,
+      traceSession,
+      transport: 'trae-acp',
+    });
   }
 
   private async verifyCodexSessionModel({

@@ -486,6 +486,35 @@ const createAcpSpawnBridge = () => {
   return { attach, events, onEvents, onStderr, stderr };
 };
 
+interface AcpSpawnSession {
+  close: (signal?: NodeJS.Signals) => void;
+  interrupt: () => void;
+  pid?: number;
+  run: () => Promise<void>;
+  sessionId?: string;
+}
+
+const createAcpSpawnHandle = (
+  bridge: ReturnType<typeof createAcpSpawnBridge>,
+  session: AcpSpawnSession,
+  getSessionId: () => string | undefined = () => session.sessionId,
+): SpawnAgentHandle => {
+  const { exit, kill } = bridge.attach(session);
+
+  return {
+    events: bridge.events,
+    exit,
+    kill,
+    get pid() {
+      return session.pid;
+    },
+    get sessionId() {
+      return getSessionId();
+    },
+    stderr: bridge.stderr,
+  };
+};
+
 const spawnGrokAcpAgent = async (
   options: SpawnAgentOptions,
   command: string,
@@ -509,20 +538,7 @@ const spawnGrokAcpAgent = async (
     resumeSessionId: options.resumeSessionId,
     sessionId: options.operationId,
   });
-  const { exit, kill } = bridge.attach(session);
-
-  return {
-    events: bridge.events,
-    exit,
-    kill,
-    get pid() {
-      return session.pid;
-    },
-    get sessionId() {
-      return session.sessionId;
-    },
-    stderr: bridge.stderr,
-  };
+  return createAcpSpawnHandle(bridge, session);
 };
 
 const spawnCursorAcpAgent = async (
@@ -549,20 +565,7 @@ const spawnCursorAcpAgent = async (
     resumeSessionId: options.resumeSessionId,
     sessionId: options.operationId,
   });
-  const { exit, kill } = bridge.attach(session);
-
-  return {
-    events: bridge.events,
-    exit,
-    kill,
-    get pid() {
-      return session.pid;
-    },
-    get sessionId() {
-      return session.sessionId;
-    },
-    stderr: bridge.stderr,
-  };
+  return createAcpSpawnHandle(bridge, session);
 };
 
 const spawnDroidAcpAgent = async (
@@ -632,20 +635,7 @@ const spawnDevinAcpAgent = async (
     resumeSessionId: options.resumeSessionId,
     sessionId: options.operationId,
   });
-  const { exit, kill } = bridge.attach(session);
-
-  return {
-    events: bridge.events,
-    exit,
-    kill,
-    get pid() {
-      return session.pid;
-    },
-    get sessionId() {
-      return session.sessionId;
-    },
-    stderr: bridge.stderr,
-  };
+  return createAcpSpawnHandle(bridge, session);
 };
 
 /**
@@ -904,18 +894,5 @@ export const spawnTraeAcpAgent = async (options: SpawnAgentOptions): Promise<Spa
     resumeSessionId: options.resumeSessionId,
     sessionId: options.operationId,
   });
-  const { exit, kill } = bridge.attach(session);
-
-  return {
-    events: bridge.events,
-    exit,
-    kill,
-    get pid() {
-      return session.pid;
-    },
-    get sessionId() {
-      return session.nativeSessionId;
-    },
-    stderr: bridge.stderr,
-  };
+  return createAcpSpawnHandle(bridge, session, () => session.nativeSessionId);
 };

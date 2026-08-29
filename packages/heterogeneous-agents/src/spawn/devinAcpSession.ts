@@ -7,22 +7,18 @@ import { ACP_PROTOCOL_VERSION, AcpAgentSession } from './acpAgentSession';
 import type { AcpRpcMessage } from './acpStdioClient';
 import { AcpRpcResponseError, AcpServerRequestError } from './acpStdioClient';
 import type { BuildAgentInputOptions } from './input';
-import { normalizeImage } from './input';
+import type {
+  TraeAcpImagePromptBlock,
+  TraeAcpPromptBlock,
+  TraeAcpTextPromptBlock,
+} from './traeAcpSession';
+import { buildTraeAcpPrompt, parseTraeAcpModelCatalog } from './traeAcpSession';
 
 const TRANSPORT = 'devin-acp' as const;
 
-export interface DevinAcpTextPromptBlock {
-  text: string;
-  type: 'text';
-}
-
-export interface DevinAcpImagePromptBlock {
-  data: string;
-  mimeType: string;
-  type: 'image';
-}
-
-export type DevinAcpPromptBlock = DevinAcpImagePromptBlock | DevinAcpTextPromptBlock;
+export type DevinAcpTextPromptBlock = TraeAcpTextPromptBlock;
+export type DevinAcpImagePromptBlock = TraeAcpImagePromptBlock;
+export type DevinAcpPromptBlock = TraeAcpPromptBlock;
 
 interface DevinAcpInitializeResult {
   agentCapabilities?: {
@@ -48,7 +44,6 @@ interface DevinAcpPromptResult {
 }
 
 interface DevinAcpPermissionOption {
-  kind: string;
   name: string;
   optionId: string;
 }
@@ -103,28 +98,10 @@ export const buildDevinAcpArgs = (extraArgs: string[] = []): string[] => {
   return ['--permission-mode', resolvedMode, 'acp', ...args];
 };
 
-export const buildDevinAcpPrompt = async (
+export const buildDevinAcpPrompt = (
   prompt: AgentPromptInput,
   options: BuildAgentInputOptions = {},
-): Promise<DevinAcpPromptBlock[]> => {
-  const blocks = typeof prompt === 'string' ? [{ text: prompt, type: 'text' as const }] : prompt;
-  const result: DevinAcpPromptBlock[] = [];
-
-  for (const block of blocks) {
-    if (block.type === 'text') {
-      result.push({ text: block.text, type: 'text' });
-    } else {
-      const image = await normalizeImage(block.source, options);
-      result.push({
-        data: image.buffer.toString('base64'),
-        mimeType: image.mediaType,
-        type: 'image',
-      });
-    }
-  }
-
-  return result;
-};
+): Promise<DevinAcpPromptBlock[]> => buildTraeAcpPrompt(prompt, options);
 
 export const isDevinAcpSessionNotFoundError = (error: unknown): error is AcpRpcResponseError => {
   if (!(error instanceof AcpRpcResponseError) || error.method !== 'session/load') return false;
@@ -287,16 +264,7 @@ export class DevinAcpSession extends AcpAgentSession<
   }
 
   private resolveCurrentModel(configOptions: unknown): string | undefined {
-    if (!Array.isArray(configOptions)) return;
-
-    const modelConfig = configOptions.find(
-      (value) =>
-        isRecord(value) &&
-        (value.category === 'model' || value.id === 'model' || value.name === 'Model'),
-    );
-    return isRecord(modelConfig) && typeof modelConfig.currentValue === 'string'
-      ? modelConfig.currentValue
-      : undefined;
+    return parseTraeAcpModelCatalog({ configOptions })?.currentModelId;
   }
 
   private async applyInitialModel(
@@ -316,17 +284,16 @@ export class DevinAcpSession extends AcpAgentSession<
       return currentModel;
     }
 
-    const modelConfig = this.resolveModelConfig(sessionResult.configOptions);
-    if (!modelConfig) {
+    const catalog = parseTraeAcpModelCatalog({ configOptions: sessionResult.configOptions });
+    if (!catalog) {
       return this.setModelOption(sessionId, requestedModel);
     }
 
-    const options = (Array.isArray(modelConfig.options) ? modelConfig.options : []).filter(
-      isRecord,
-    );
-    const selected = options.find((option) =>
-      [String(option.value), String(option.name)].some(
-        (candidate) => this.normalizeModelId(candidate) === this.normalizeModelId(requestedModel),
+    const selected = catalog.models.find((model) =>
+      [model.id, model.label].some(
+        (candidate) =>
+          typeof candidate === 'string' &&
+          this.normalizeModelId(candidate) === this.normalizeModelId(requestedModel),
       ),
     );
 
@@ -334,7 +301,7 @@ export class DevinAcpSession extends AcpAgentSession<
       throw new Error(`Devin ACP model is unavailable: ${requestedModel}`);
     }
 
-    return this.setModelOption(sessionId, String(selected.value));
+    return this.setModelOption(sessionId, selected.id);
   }
 
   private async setModelOption(sessionId: string, value: string): Promise<string | undefined> {
@@ -343,17 +310,6 @@ export class DevinAcpSession extends AcpAgentSession<
       { configId: 'model', sessionId, value },
     );
     return this.resolveCurrentModel(setResult.configOptions) ?? value;
-  }
-
-  private resolveModelConfig(configOptions: unknown): Record<string, unknown> | undefined {
-    if (!Array.isArray(configOptions)) return;
-
-    const modelConfig = configOptions.find(
-      (item) =>
-        isRecord(item) &&
-        (item.category === 'model' || item.id === 'model' || item.name === 'Model'),
-    );
-    return isRecord(modelConfig) ? modelConfig : undefined;
   }
 
   private normalizeModelId(value: string): string {
@@ -366,11 +322,8 @@ export class DevinAcpSession extends AcpAgentSession<
     }
 
     const options = value.options.flatMap((option) =>
-      isRecord(option) &&
-      typeof option.kind === 'string' &&
-      typeof option.name === 'string' &&
-      typeof option.optionId === 'string'
-        ? [{ kind: option.kind, name: option.name, optionId: option.optionId }]
+      isRecord(option) && typeof option.name === 'string' && typeof option.optionId === 'string'
+        ? [{ name: option.name, optionId: option.optionId }]
         : [],
     );
     if (
