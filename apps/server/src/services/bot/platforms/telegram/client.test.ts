@@ -207,6 +207,30 @@ describe('TelegramWebhookClient.extractFiles', () => {
     ]);
   });
 
+  it('extracts a direct Telegram video note using raw.video_note', async () => {
+    const buffer = Buffer.from('video-note-bytes');
+    downloadFileSpy.mockResolvedValue(buffer);
+
+    const client = createClient();
+    const result = await client.extractFiles!(
+      makeMessage({
+        attachments: [{ size: 2048, type: 'video' }],
+        raw: {
+          video_note: {
+            file_id: 'tg-video-note',
+            file_size: 2048,
+            length: 320,
+          },
+        },
+      }),
+    );
+
+    expect(downloadFileSpy).toHaveBeenCalledWith('tg-video-note');
+    expect((result as ExtractFilesResult)?.files).toEqual([
+      { buffer, mimeType: 'video/mp4', name: 'video.mp4', size: 2048 },
+    ]);
+  });
+
   it('extracts a Telegram document using file_id from raw.document', async () => {
     const buffer = Buffer.from('pdf-bytes');
     downloadFileSpy.mockResolvedValue(buffer);
@@ -456,6 +480,119 @@ describe('TelegramWebhookClient.extractFiles', () => {
 
     expect(downloadFileSpy).toHaveBeenCalledTimes(1);
     expect(result).toBeUndefined();
+  });
+
+  it('downloads photo/video/document from reply_to_message when the summon has no attachments', async () => {
+    const buffer = Buffer.from('quoted-photo');
+    downloadFileSpy.mockResolvedValue(buffer);
+
+    const client = createClient();
+    const result = await client.extractFiles!(
+      makeMessage({
+        attachments: [],
+        raw: {
+          reply_to_message: {
+            caption: 'a cat',
+            photo: [
+              { file_id: 'small', file_size: 100 },
+              { file_id: 'quoted-large', file_size: 20_000 },
+            ],
+          },
+          text: '@bot what is this',
+        },
+      }),
+    );
+
+    expect(downloadFileSpy).toHaveBeenCalledTimes(1);
+    expect(downloadFileSpy).toHaveBeenCalledWith('quoted-large');
+    expect((result as ExtractFilesResult)?.files).toEqual([
+      { buffer, mimeType: 'image/jpeg', name: 'image.jpg', size: 20_000 },
+    ]);
+  });
+
+  it('downloads a document on reply_to_message', async () => {
+    const buffer = Buffer.from('quoted-pdf');
+    downloadFileSpy.mockResolvedValue(buffer);
+
+    const client = createClient();
+    const result = await client.extractFiles!(
+      makeMessage({
+        raw: {
+          reply_to_message: {
+            document: {
+              file_id: 'quoted-doc',
+              file_name: 'notes.pdf',
+              file_size: 2048,
+              mime_type: 'application/pdf',
+            },
+          },
+        },
+      }),
+    );
+
+    expect(downloadFileSpy).toHaveBeenCalledWith('quoted-doc');
+    expect((result as ExtractFilesResult)?.files).toEqual([
+      { buffer, mimeType: 'application/pdf', name: 'notes.pdf', size: 2048 },
+    ]);
+  });
+
+  it('downloads a video note on reply_to_message', async () => {
+    const buffer = Buffer.from('quoted-video-note');
+    downloadFileSpy.mockResolvedValue(buffer);
+
+    const client = createClient();
+    const result = await client.extractFiles!(
+      makeMessage({
+        raw: {
+          reply_to_message: {
+            video_note: {
+              file_id: 'quoted-video-note',
+              file_size: 4096,
+              length: 320,
+            },
+          },
+        },
+      }),
+    );
+
+    expect(downloadFileSpy).toHaveBeenCalledWith('quoted-video-note');
+    expect((result as ExtractFilesResult)?.files).toEqual([
+      { buffer, mimeType: 'video/mp4', name: 'video.mp4', size: 4096 },
+    ]);
+  });
+
+  it('keeps direct attachments and still pulls reply_to_message media', async () => {
+    downloadFileSpy
+      .mockResolvedValueOnce(Buffer.from('direct'))
+      .mockResolvedValueOnce(Buffer.from('quoted'));
+
+    const client = createClient();
+    const result = await client.extractFiles!(
+      makeMessage({
+        attachments: [{ size: 10, type: 'image' }],
+        raw: {
+          photo: [{ file_id: 'direct-photo' }],
+          reply_to_message: {
+            video: {
+              file_id: 'quoted-video',
+              file_name: 'clip.mp4',
+              file_size: 88,
+              mime_type: 'video/mp4',
+            },
+          },
+        },
+      }),
+    );
+
+    expect(downloadFileSpy).toHaveBeenCalledWith('direct-photo');
+    expect(downloadFileSpy).toHaveBeenCalledWith('quoted-video');
+    expect((result as ExtractFilesResult)?.files).toHaveLength(2);
+    expect((result as ExtractFilesResult)?.files?.[1]).toEqual({
+      buffer: Buffer.from('quoted'),
+      mimeType: 'video/mp4',
+      name: 'clip.mp4',
+      size: 88,
+    });
   });
 });
 
