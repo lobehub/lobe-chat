@@ -7,6 +7,7 @@ import {
 import { resolveHeteroSpawnCwd } from '@lobechat/heterogeneous-agents/workingDirectory';
 
 import { getTask, removeTask, saveTask } from '../daemon/taskRegistry';
+import { log } from '../utils/logger';
 import { registerAgentRun } from './agentRunRegistry';
 
 export interface SpawnHeteroAgentRunParams {
@@ -169,6 +170,11 @@ export function spawnHeteroAgentRun(
           topicId,
           workspaceId,
         });
+        log.info(
+          `[cancel-trace] task registered: taskId=${operationId} pid=${pid} agentType=${agentType}`,
+        );
+      } else {
+        log.warn(`[cancel-trace] spawn event fired but pid is undefined (op=${operationId})`);
       }
 
       // Only safe to write stdin once the process actually started.
@@ -192,8 +198,16 @@ export function spawnHeteroAgentRun(
       // Only remove the registry entry if the exiting PID still owns this
       // task — a newer run that reused the same operationId must not be
       // cleared by a stale exit event.
-      if (pid !== undefined && getTask(operationId)?.pid === pid) {
+      const current = pid !== undefined ? getTask(operationId) : undefined;
+      if (current && current.pid === pid) {
         removeTask(operationId);
+        log.info(
+          `[cancel-trace] task removed on exit: taskId=${operationId} pid=${pid} code=${code} signal=${signal}`,
+        );
+      } else {
+        log.info(
+          `[cancel-trace] exit ignored (stale or no entry): taskId=${operationId} pid=${pid} code=${code} signal=${signal}`,
+        );
       }
       logger?.info?.(`hetero exec exited (op=${operationId}) code=${code} signal=${signal}`);
     });

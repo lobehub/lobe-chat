@@ -417,13 +417,19 @@ export async function runHeteroTask(params: RunHeteroTaskParams): Promise<string
 
 export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<string> {
   const { signal = 'SIGINT', taskId } = params;
+  log.info(`[cancel-trace] cancelHeteroTask received: taskId=${taskId} signal=${signal}`);
   const local = await cancelAgentRun(taskId, signal);
   if (local) return JSON.stringify({ ...local, taskId, success: local.exited });
   const entry = getTask(taskId);
 
   if (!entry) {
+    log.warn(`[cancel-trace] no task found for taskId=${taskId}`);
     return JSON.stringify({ message: `No task found with taskId: ${taskId}`, success: false });
   }
+
+  log.info(
+    `[cancel-trace] found task: taskId=${taskId} pid=${entry.pid} agentType=${entry.agentType}`,
+  );
 
   // Kill the whole process group so the CLI wrapper, the ACP client, and any
   // agent subprocesses all receive the signal. `detached: true` at spawn time
@@ -432,15 +438,15 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
   // signal, so fall back to `taskkill /T /F` which kills the tree.
   try {
     if (process.platform === 'win32') {
+      log.info(`[cancel-trace] taskkill /T /F /pid ${entry.pid}`);
       spawn('taskkill', ['/pid', String(entry.pid), '/T', '/F'], { stdio: 'ignore' });
     } else {
+      log.info(`[cancel-trace] process.kill(-${entry.pid}, ${signal})`);
       process.kill(-entry.pid, signal);
     }
   } catch (err) {
     // Process already exited — exit handler won't fire; clean up manually.
-    log.warn(
-      `Failed to send ${signal} to pid ${entry.pid}: ${err instanceof Error ? err.message : String(err)}`,
-    );
+    log.warn(`[cancel-trace] kill failed: ${err instanceof Error ? err.message : String(err)}`);
     removeTask(taskId);
     await sendAutoNotify(
       entry.topicId,
@@ -464,6 +470,7 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
         if (process.platform === 'win32') {
           spawn('taskkill', ['/pid', String(entry.pid), '/T', '/F'], { stdio: 'ignore' });
         } else {
+          log.info(`[cancel-trace] escalating to SIGKILL: process.kill(-${entry.pid}, SIGKILL)`);
           process.kill(-entry.pid, 'SIGKILL');
         }
       } catch {
