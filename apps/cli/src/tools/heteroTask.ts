@@ -425,9 +425,17 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
     return JSON.stringify({ message: `No task found with taskId: ${taskId}`, success: false });
   }
 
-  // Both openclaw and hermes: kill by PID and let the child's close handler send the notify.
+  // Kill the whole process group so the CLI wrapper, the ACP client, and any
+  // agent subprocesses all receive the signal. `detached: true` at spawn time
+  // placed the child in its own group, so a negative-PID signal is safe and
+  // never reaches the connect daemon. On Windows there is no process-group
+  // signal, so fall back to `taskkill /T /F` which kills the tree.
   try {
-    process.kill(entry.pid, signal);
+    if (process.platform === 'win32') {
+      spawn('taskkill', ['/pid', String(entry.pid), '/T', '/F'], { stdio: 'ignore' });
+    } else {
+      process.kill(-entry.pid, signal);
+    }
   } catch (err) {
     // Process already exited — exit handler won't fire; clean up manually.
     log.warn(
@@ -442,6 +450,26 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
       entry.operationId,
       entry.workspaceId,
     );
+    return JSON.stringify({ pid: entry.pid, signal, taskId });
+  }
+
+  // Escalate to SIGKILL after a grace period if the process group is still
+  // alive — some agent CLIs swallow SIGINT while their tool subprocesses
+  // keep running.
+  if (signal !== 'SIGKILL') {
+    setTimeout(() => {
+      const current = getTask(taskId);
+      if (!current || current.pid !== entry.pid) return;
+      try {
+        if (process.platform === 'win32') {
+          spawn('taskkill', ['/pid', String(entry.pid), '/T', '/F'], { stdio: 'ignore' });
+        } else {
+          process.kill(-entry.pid, 'SIGKILL');
+        }
+      } catch {
+        // Already exited — the exit handler will have cleaned up.
+      }
+    }, 2_000).unref();
   }
 
   return JSON.stringify({ pid: entry.pid, signal, taskId });
