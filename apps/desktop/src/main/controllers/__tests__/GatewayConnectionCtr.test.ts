@@ -1258,6 +1258,35 @@ describe('GatewayConnectionCtr', () => {
         expect(parsed.success).toBe(false);
         expect(parsed.message).toContain('No task found');
       });
+
+      it('keeps the process-group escalation after the wrapper exits', async () => {
+        const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+        let capturedOnChildSpawned: ((child: any) => void) | undefined;
+        vi.mocked(mockHeterogeneousAgentCtr.spawnLhHeteroExec).mockImplementationOnce(
+          (params: any) => {
+            capturedOnChildSpawned = params.onChildSpawned;
+            return Promise.resolve({ status: 'accepted' });
+          },
+        );
+
+        const client = await connectAndOpen();
+        client.simulateAgentRunRequest('devin', 'op-orphan');
+        await vi.advanceTimersByTimeAsync(0);
+
+        const mockChild = new EventEmitter() as any;
+        mockChild.pid = 67900;
+        capturedOnChildSpawned?.(mockChild);
+        await ctr['cancelHeteroTask']({ signal: 'SIGINT', taskId: 'op-orphan' });
+
+        // The wrapper honors SIGINT, while process.kill(-pid, 0) still reports
+        // that a detached descendant remains in the process group.
+        mockChild.emit('exit', null, 'SIGINT');
+        await vi.advanceTimersByTimeAsync(2_000);
+
+        expect(killSpy).toHaveBeenCalledWith(-67900, 'SIGINT');
+        expect(killSpy).toHaveBeenCalledWith(-67900, 'SIGKILL');
+        killSpy.mockRestore();
+      });
     });
   });
 

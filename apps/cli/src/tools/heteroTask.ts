@@ -456,18 +456,15 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
   // Escalate to SIGKILL after a grace period if the process group is still
   // alive — some agent CLIs swallow SIGINT while their tool subprocesses
   // keep running.
-  if (signal !== 'SIGKILL') {
+  if (signal !== 'SIGKILL' && process.platform !== 'win32') {
     setTimeout(() => {
-      const current = getTask(taskId);
-      if (!current || current.pid !== entry.pid) return;
       try {
-        if (process.platform === 'win32') {
-          spawn('taskkill', ['/pid', String(entry.pid), '/T', '/F'], { stdio: 'ignore' });
-        } else {
-          process.kill(-entry.pid, 'SIGKILL');
-        }
+        // The wrapper may have already exited and removed its registry entry
+        // while a descendant that ignored SIGINT still owns the process group.
+        // Escalation therefore follows the captured group id, not taskRegistry.
+        process.kill(-entry.pid, 'SIGKILL');
       } catch {
-        // Already exited — the exit handler will have cleaned up.
+        // The complete process group already exited.
       }
     }, 2_000).unref();
   }

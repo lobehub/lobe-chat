@@ -729,6 +729,30 @@ describe('cancelHeteroTask (process-group kill)', () => {
     killSpy.mockRestore();
   });
 
+  it('still escalates after the wrapper exits and removes its registry entry', async () => {
+    vi.useFakeTimers();
+    const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+    taskStore['op-cli-orphan'] = {
+      agentType: 'devin',
+      operationId: 'op-cli-orphan',
+      pid: 4343,
+      startedAt: new Date().toISOString(),
+      taskId: 'op-cli-orphan',
+      topicId: 'tpc-cli',
+    };
+
+    try {
+      await cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-cli-orphan' });
+      removeTask('op-cli-orphan');
+      await vi.advanceTimersByTimeAsync(2_000);
+
+      expect(killSpy).toHaveBeenCalledWith(-4343, 'SIGINT');
+      expect(killSpy).toHaveBeenCalledWith(-4343, 'SIGKILL');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('returns No task found when the task is not registered', async () => {
     const result = await cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-missing' });
 

@@ -348,7 +348,6 @@ export default class GatewayConnectionCtr extends ControllerModule {
             const current = this.platformTasks.get(taskId);
             if (current?.pid === pid) {
               this.platformTasks.delete(taskId);
-              this.clearPlatformTaskKillTimer(pid);
             }
           });
         },
