@@ -1766,7 +1766,11 @@ describe('HeterogeneousAgentCtr', () => {
           'heteroAgentEvent',
           expect.objectContaining({
             event: expect.objectContaining({
-              data: expect.objectContaining({ toolCallId: 'devin-permission-1' }),
+              data: expect.objectContaining({
+                identifier: 'devin',
+                provider: 'devin',
+                toolCallId: 'devin-permission-1',
+              }),
               type: 'agent_intervention_request',
             }),
             sessionId,
@@ -4248,6 +4252,7 @@ describe('HeterogeneousAgentCtr', () => {
         'op-gateway',
       ]);
       expect(spawnCall.options.cwd).toBe(process.cwd());
+      expect(spawnCall.options.windowsHide).toBe(true);
       expect(spawnCall.options.env).toEqual(
         expect.objectContaining({
           ELECTRON_RUN_AS_NODE: '1',

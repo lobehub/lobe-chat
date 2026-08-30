@@ -105,6 +105,7 @@ describe('spawnHeteroAgentRun', () => {
         LOBEHUB_JWT: 'jwt-token',
         LOBEHUB_SERVER: 'https://app.lobehub.com',
       }),
+      windowsHide: true,
     });
     expect(opts.env).not.toHaveProperty('LOBEHUB_WORKSPACE_ID');
 

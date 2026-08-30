@@ -149,6 +149,7 @@ export function spawnHeteroAgentRun(
         ...(workspaceId ? { LOBEHUB_WORKSPACE_ID: workspaceId } : {}),
       },
       stdio: ['pipe', 'inherit', 'inherit'],
+      windowsHide: true,
     });
 
     child.once('spawn', () => {

@@ -27,6 +27,7 @@ import {
   resolveHeterogeneousAgentCommand,
   resolveHeterogeneousProviderBinding,
 } from '@lobechat/heterogeneous-agents';
+import type { AskUserBridgeOptions } from '@lobechat/heterogeneous-agents/askUser';
 import { AskUserBridge } from '@lobechat/heterogeneous-agents/askUser';
 import type {
   LobeBuiltinMcpServer,
@@ -1163,7 +1164,7 @@ export default class HeterogeneousAgentCtr {
   private setupAcpInterventionForOp(
     operationId: string,
     sessionId: string,
-    provider: 'cursor' | 'droid',
+    provider: NonNullable<AskUserBridgeOptions['provider']>,
   ): {
     bridge: AskUserBridge;
     cleanup: () => Promise<void>;
@@ -2381,7 +2382,11 @@ export default class HeterogeneousAgentCtr {
     });
     void this.writeCliTraceFile(traceSession, 'stdin.txt', tracePayload);
     const stderrChunks: string[] = [];
-    const intervention = this.setupAcpInterventionForOp(params.operationId, session.sessionId);
+    const intervention = this.setupAcpInterventionForOp(
+      params.operationId,
+      session.sessionId,
+      'devin',
+    );
     const devinAcpSession = new DevinAcpSession({
       args: session.args,
       askUserBridge: intervention.bridge,
@@ -3414,6 +3419,7 @@ export default class HeterogeneousAgentCtr {
       detached: true,
       env,
       stdio: ['pipe', 'inherit', 'inherit'],
+      windowsHide: true,
     });
 
     // Keep the wrapper reachable by the gateway cancellation tool. The wrapper
