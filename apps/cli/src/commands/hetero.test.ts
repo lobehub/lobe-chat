@@ -230,6 +230,43 @@ describe('hetero exec command', () => {
     expect(mockSpawnAgent).toHaveBeenCalledWith(expect.objectContaining({ detached: false }));
   });
 
+  it('does not duplicate Unix group signals inside an inherited wrapper group', async () => {
+    vi.stubEnv(HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV, '1');
+    let sigintHandler: (() => void) | undefined;
+    vi.spyOn(process, 'on').mockImplementation(((event: string, listener: () => void) => {
+      if (event === 'SIGINT') sigintHandler = listener;
+      return process;
+    }) as typeof process.on);
+
+    let resolveExit:
+      ((result: { code: number | null; signal: NodeJS.Signals | null }) => void) | undefined;
+    const stderr = new PassThrough();
+    setImmediate(() => stderr.end());
+    const kill = vi.fn();
+    mockSpawnAgent.mockResolvedValue({
+      events: {
+        [Symbol.asyncIterator]: () => ({
+          next: async () => ({ done: true, value: undefined }),
+        }),
+      },
+      exit: new Promise((resolve) => {
+        resolveExit = resolve;
+      }),
+      kill,
+      pid: 12_345,
+      stderr,
+    });
+
+    const command = runCmd(['hetero', 'exec', '--type', 'codex', '--prompt', 'hi']);
+    for (let i = 0; i < 20 && !sigintHandler; i += 1) await Promise.resolve();
+
+    sigintHandler?.();
+    expect(kill).not.toHaveBeenCalled();
+
+    resolveExit?.({ code: null, signal: 'SIGINT' });
+    await command;
+  });
+
   it('runs Qoder with its default command and forwards model and effort', async () => {
     mockSpawnAgent.mockReturnValue(createFakeHandle());
 

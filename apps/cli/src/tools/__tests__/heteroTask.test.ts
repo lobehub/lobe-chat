@@ -711,7 +711,14 @@ describe('cancelHeteroTask (process-group kill)', () => {
   });
 
   it('signals the whole process group via negative PID on Unix', async () => {
-    const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+    let groupAlive = true;
+    const killSpy = vi.spyOn(process, 'kill').mockImplementation((_pid, signal) => {
+      if (signal === 'SIGINT') groupAlive = false;
+      if (signal === 0 && !groupAlive) {
+        throw Object.assign(new Error('No such process'), { code: 'ESRCH' });
+      }
+      return true;
+    });
     // Simulate a registered local CLI agent task.
     taskStore['op-cli-cancel'] = {
       agentType: 'devin',
@@ -725,13 +732,25 @@ describe('cancelHeteroTask (process-group kill)', () => {
     const result = await cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-cli-cancel' });
 
     expect(killSpy).toHaveBeenCalledWith(-4242, 'SIGINT');
-    expect(JSON.parse(result)).toEqual({ pid: 4242, signal: 'SIGINT', taskId: 'op-cli-cancel' });
+    expect(result).toEqual({
+      exited: true,
+      pid: 4242,
+      signal: 'SIGINT',
+      taskId: 'op-cli-cancel',
+    });
     killSpy.mockRestore();
   });
 
   it('still escalates after the wrapper exits and removes its registry entry', async () => {
     vi.useFakeTimers();
-    const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+    let groupAlive = true;
+    const killSpy = vi.spyOn(process, 'kill').mockImplementation((_pid, signal) => {
+      if (signal === 'SIGKILL') groupAlive = false;
+      if (signal === 0 && !groupAlive) {
+        throw Object.assign(new Error('No such process'), { code: 'ESRCH' });
+      }
+      return true;
+    });
     taskStore['op-cli-orphan'] = {
       agentType: 'devin',
       operationId: 'op-cli-orphan',
@@ -742,12 +761,48 @@ describe('cancelHeteroTask (process-group kill)', () => {
     };
 
     try {
-      await cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-cli-orphan' });
+      const cancellation = cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-cli-orphan' });
+      await Promise.resolve();
       removeTask('op-cli-orphan');
       await vi.advanceTimersByTimeAsync(2_000);
+      const result = await cancellation;
 
       expect(killSpy).toHaveBeenCalledWith(-4343, 'SIGINT');
       expect(killSpy).toHaveBeenCalledWith(-4343, 'SIGKILL');
+      expect(result).toEqual({
+        exited: true,
+        pid: 4343,
+        signal: 'SIGINT',
+        taskId: 'op-cli-orphan',
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('reports an unconfirmed cancellation when the group survives SIGKILL', async () => {
+    vi.useFakeTimers();
+    const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
+    taskStore['op-cli-stuck'] = {
+      agentType: 'codex',
+      operationId: 'op-cli-stuck',
+      pid: 4444,
+      startedAt: new Date().toISOString(),
+      taskId: 'op-cli-stuck',
+      topicId: 'tpc-cli',
+    };
+
+    try {
+      const cancellation = cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-cli-stuck' });
+      await vi.advanceTimersByTimeAsync(5_100);
+
+      await expect(cancellation).resolves.toEqual({
+        exited: false,
+        pid: 4444,
+        signal: 'SIGINT',
+        taskId: 'op-cli-stuck',
+      });
+      expect(killSpy).toHaveBeenCalledWith(-4444, 'SIGKILL');
     } finally {
       vi.useRealTimers();
     }
@@ -756,7 +811,7 @@ describe('cancelHeteroTask (process-group kill)', () => {
   it('returns No task found when the task is not registered', async () => {
     const result = await cancelHeteroTask({ signal: 'SIGINT', taskId: 'op-missing' });
 
-    expect(JSON.parse(result)).toEqual({
+    expect(result).toEqual({
       message: 'No task found with taskId: op-missing',
       success: false,
     });
@@ -764,7 +819,7 @@ describe('cancelHeteroTask (process-group kill)', () => {
 
   it('cleans up the registry and notifies when the process already exited', async () => {
     const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => {
-      throw new Error('No such process');
+      throw Object.assign(new Error('No such process'), { code: 'ESRCH' });
     });
     taskStore['op-gone'] = {
       agentType: 'claude-code',
@@ -779,7 +834,12 @@ describe('cancelHeteroTask (process-group kill)', () => {
 
     expect(removeTask).toHaveBeenCalledWith('op-gone');
     expect(notifyMutateMock).toHaveBeenCalledWith(expect.objectContaining({ topicId: 'tpc-gone' }));
-    expect(JSON.parse(result)).toEqual({ pid: 5555, signal: 'SIGINT', taskId: 'op-gone' });
+    expect(result).toEqual({
+      exited: true,
+      pid: 5555,
+      signal: 'SIGINT',
+      taskId: 'op-gone',
+    });
     killSpy.mockRestore();
   });
 });

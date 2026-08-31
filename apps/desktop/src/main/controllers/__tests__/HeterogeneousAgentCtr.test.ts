@@ -4417,9 +4417,9 @@ describe('HeterogeneousAgentCtr', () => {
     });
 
     /**
-     * @example A replacement waits until operation A's wrapper exits before operation B starts.
+     * @example A replacement waits until operation A's process group exits before operation B starts.
      */
-    it('waits for the gateway CLI wrapper to exit when cancelling its operation', async () => {
+    it('waits for the complete gateway CLI process group before confirming cancellation', async () => {
       // ROOT CAUSE:
       //
       // Device-dispatched Codex wrappers were not registered by operation id, so
@@ -4427,7 +4427,17 @@ describe('HeterogeneousAgentCtr', () => {
       // writer. A replacement resume then failed with `already has an active writer`.
       //
       // Before: spawnLhHeteroExec acknowledged the child and discarded its handle.
-      // After: cancelLhHeteroExec signals that handle and resolves only after exit.
+      // After: cancelLhHeteroExec signals the wrapper-owned process group and
+      // resolves only after the complete group disappears.
+      vi.useFakeTimers();
+      let groupAlive = true;
+      const killSpy = vi.spyOn(process, 'kill').mockImplementation((_pid, signal) => {
+        if (signal === 'SIGKILL') groupAlive = false;
+        if (signal === 0 && !groupAlive) {
+          throw Object.assign(new Error('No such process'), { code: 'ESRCH' });
+        }
+        return true;
+      });
       const proc = createGatewayCliProc();
       nextFakeProc = proc;
       const ctr = new HeterogeneousAgentCtr({
@@ -4435,29 +4445,39 @@ describe('HeterogeneousAgentCtr', () => {
         storeManager: { get: vi.fn() },
       } as any);
 
-      const ack = ctr.spawnLhHeteroExec(params);
-      proc.emit('spawn');
-      await ack;
+      try {
+        const ack = ctr.spawnLhHeteroExec(params);
+        proc.emit('spawn');
+        await ack;
 
-      let cancellationSettled = false;
-      const cancellation = ctr
-        .cancelLhHeteroExec({ operationId: params.operationId })
-        .then((result) => {
-          cancellationSettled = true;
-          return result;
+        let cancellationSettled = false;
+        const cancellation = ctr
+          .cancelLhHeteroExec({ operationId: params.operationId })
+          .then((result) => {
+            cancellationSettled = true;
+            return result;
+          });
+        await Promise.resolve();
+
+        expect(killSpy).toHaveBeenCalledWith(-4321, 'SIGINT');
+        expect(cancellationSettled).toBe(false);
+
+        // The wrapper can exit while a native agent or tool descendant remains.
+        proc.emit('exit', 130, 'SIGINT');
+        await vi.advanceTimersByTimeAsync(1950);
+        expect(cancellationSettled).toBe(false);
+
+        await vi.advanceTimersByTimeAsync(100);
+        expect(killSpy).toHaveBeenCalledWith(-4321, 'SIGKILL');
+        await expect(cancellation).resolves.toEqual({
+          exited: true,
+          pid: 4321,
+          signal: 'SIGINT',
         });
-      await Promise.resolve();
-
-      expect(proc.kill).toHaveBeenCalledWith('SIGINT');
-      expect(cancellationSettled).toBe(false);
-
-      proc.emit('exit', 130, 'SIGINT');
-
-      await expect(cancellation).resolves.toEqual({
-        exited: true,
-        pid: 4321,
-        signal: 'SIGINT',
-      });
+      } finally {
+        killSpy.mockRestore();
+        vi.useRealTimers();
+      }
     });
   });
 

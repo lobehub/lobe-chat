@@ -34,7 +34,11 @@ import type {
   McpToolResult,
 } from '@lobechat/heterogeneous-agents/builtinMcp';
 import { listHeterogeneousAgentModels } from '@lobechat/heterogeneous-agents/models';
-import type { HeteroExecImageRef } from '@lobechat/heterogeneous-agents/protocol';
+import type {
+  HeteroExecImageRef,
+  HeterogeneousAgentCancellationResult,
+  HeterogeneousAgentCancellationSignal,
+} from '@lobechat/heterogeneous-agents/protocol';
 import {
   buildHeteroExecStdinPayload,
   buildHeterogeneousPrompt,
@@ -97,6 +101,7 @@ import type {
   HeteroSessionImportMessage,
   ListHeterogeneousAgentModelsParams,
 } from '@lobechat/types';
+import { sleep } from '@lobechat/utils/sleep';
 import { app as electronApp, BrowserWindow } from 'electron';
 import { isPlainObject } from 'es-toolkit';
 import semver from 'semver';
@@ -417,15 +422,7 @@ interface CliTraceSession {
   writeQueue: Promise<void>;
 }
 
-/** Result of cancelling a device-gateway CLI wrapper. */
-export interface LhHeteroExecCancellationResult {
-  /** Whether the wrapper emitted its exit/error terminal signal before the bounded wait elapsed. */
-  exited: boolean;
-  /** Operating-system process id when Node assigned one before cancellation. */
-  pid?: number;
-  /** Initial signal requested by the server cancellation call. */
-  signal: NodeJS.Signals;
-}
+export type LhHeteroExecCancellationResult = HeterogeneousAgentCancellationResult;
 
 interface LhHeteroExecTask {
   cancellation?: Promise<LhHeteroExecCancellationResult>;
@@ -2997,6 +2994,39 @@ export default class HeterogeneousAgentCtr {
     }
   }
 
+  private isProcessGroupAlive(pid: number): boolean {
+    try {
+      process.kill(-pid, 0);
+      return true;
+    } catch (error) {
+      return (error as NodeJS.ErrnoException).code !== 'ESRCH';
+    }
+  }
+
+  private async waitForProcessTreeExit(
+    task: LhHeteroExecTask,
+    timeoutMs: number,
+  ): Promise<boolean> {
+    if (process.platform === 'win32') {
+      let timer: NodeJS.Timeout | undefined;
+      const timedOut = new Promise<false>((resolve) => {
+        timer = setTimeout(() => resolve(false), timeoutMs);
+      });
+      const exited = await Promise.race([task.exit.then(() => true as const), timedOut]);
+      if (timer) clearTimeout(timer);
+      return exited;
+    }
+    if (!task.process.pid) return true;
+
+    const deadline = Date.now() + timeoutMs;
+    while (this.isProcessGroupAlive(task.process.pid)) {
+      if (Date.now() >= deadline) return false;
+      await sleep(50);
+    }
+
+    return true;
+  }
+
   /**
    * Waits for a spawned CLI process to release its OS process handle.
    *
@@ -3431,10 +3461,10 @@ export default class HeterogeneousAgentCtr {
       windowsHide: true,
     });
 
-    // Keep the wrapper reachable by the gateway cancellation tool. The wrapper
-    // owns the inner agent handle and forwards SIGINT/SIGTERM into the native
-    // CLI process group, so signalling this process is the only reliable way
-    // to release a Codex thread writer before a replacement turn starts.
+    // Keep the wrapper reachable by the gateway cancellation tool. Its pid is
+    // also the inherited process-group id shared by the native agent and tool
+    // descendants, so the gateway can confirm the complete writer tree exited
+    // before a replacement turn starts.
     const exit = new Promise<void>((resolve) => {
       child.once('exit', () => resolve());
       child.once('error', () => resolve());
@@ -3516,7 +3546,7 @@ export default class HeterogeneousAgentCtr {
    */
   async cancelLhHeteroExec(params: {
     operationId: string;
-    signal?: NodeJS.Signals;
+    signal?: HeterogeneousAgentCancellationSignal;
   }): Promise<LhHeteroExecCancellationResult | undefined> {
     const { operationId, signal = 'SIGINT' } = params;
     const task = this.lhHeteroExecTasks.get(operationId);
@@ -3524,35 +3554,14 @@ export default class HeterogeneousAgentCtr {
     if (task.cancellation) return task.cancellation;
 
     task.cancellation = (async () => {
-      const waitForExit = async (timeoutMs: number): Promise<boolean> => {
-        // Bound cancellation so an unresponsive wrapper cannot hold the gateway
-        // request forever. The timeout only gates waiting; the second signal below
-        // escalates the inner agent through the wrapper's repeated-SIGINT handler.
-        let timer: NodeJS.Timeout | undefined;
-        const timedOut = new Promise<false>((resolve) => {
-          timer = setTimeout(() => resolve(false), timeoutMs);
-        });
-        const exited = await Promise.race([task.exit.then(() => true as const), timedOut]);
-        if (timer) clearTimeout(timer);
-        return exited;
-      };
-
-      task.process.kill(signal);
-      let exited = await waitForExit(2000);
+      this.killProcessTree(task.process, signal);
+      let exited = await this.waitForProcessTreeExit(task, 2000);
 
       if (!exited) {
-        // `lh hetero exec` treats a repeated SIGINT as an explicit SIGKILL of the
-        // inner native process group. Give that path a short drain window so its
-        // heteroFinish callback can settle before the replacement starts.
-        task.process.kill(signal === 'SIGINT' ? 'SIGINT' : 'SIGKILL');
-        exited = await waitForExit(2000);
-      }
-
-      if (!exited) {
-        // Last resort: terminate the wrapper itself. This is intentionally after
-        // the cooperative path because a direct SIGKILL cannot run its finish hook.
-        task.process.kill('SIGKILL');
-        exited = await waitForExit(1000);
+        // The wrapper and native agent inherit one detached group. Escalate that
+        // complete group instead of relying on a second wrapper-only SIGINT.
+        this.killProcessTree(task.process, 'SIGKILL');
+        exited = await this.waitForProcessTreeExit(task, 3000);
       }
 
       return { exited, pid: task.process.pid, signal };

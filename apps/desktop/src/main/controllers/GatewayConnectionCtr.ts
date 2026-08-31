@@ -6,6 +6,7 @@ import path from 'node:path';
 import type { DeviceControlDeps } from '@lobechat/device-control';
 import type { AgentRunRequestMessage, GatewayMcpParams } from '@lobechat/device-gateway-client';
 import type { GatewayConnectionStatus } from '@lobechat/electron-client-ipc';
+import type { HeterogeneousAgentCancellationSignal } from '@lobechat/heterogeneous-agents/protocol';
 import type { RemotePlatformCommandRuntime } from '@lobechat/heterogeneous-agents/scanHost';
 import {
   resolveRemotePlatformCommand,
@@ -1131,7 +1132,7 @@ export default class GatewayConnectionCtr extends ControllerModule {
     const { signal = 'SIGINT', taskId } = args;
     const localExec = await this.heterogeneousAgentCtr.cancelLhHeteroExec({
       operationId: taskId,
-      signal: signal as NodeJS.Signals,
+      signal: signal as HeterogeneousAgentCancellationSignal,
     });
     if (localExec) {
       return JSON.stringify({ ...localExec, taskId });

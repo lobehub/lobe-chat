@@ -733,10 +733,17 @@ const exec = async (options: ExecOptions): Promise<void> => {
       return { code: 1, signal: null as NodeJS.Signals | null };
     });
 
-    // Ctrl-C → SIGINT to the child's process group.
-    // Repeated Ctrl-C escalates to SIGKILL.
+    // Direct CLI runs own a detached child group and forward terminal signals.
+    // Device-dispatched wrappers share their outer detached group, so the
+    // gateway cancellation owner signals that group directly instead.
+    const inheritsWrapperProcessGroup =
+      process.platform !== 'win32' && process.env[HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV] === '1';
     let interrupted = false;
     const onSigint = () => {
+      if (inheritsWrapperProcessGroup) {
+        interrupted = true;
+        return;
+      }
       if (interrupted) {
         handle.kill('SIGKILL');
         return;
@@ -746,7 +753,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
     };
     const onSigterm = () => {
       interrupted = true;
-      handle.kill('SIGTERM');
+      if (!inheritsWrapperProcessGroup) handle.kill('SIGTERM');
     };
     process.on('SIGINT', onSigint);
     process.on('SIGTERM', onSigterm);
