@@ -2,6 +2,7 @@ import { EventEmitter } from 'node:events';
 import { statSync } from 'node:fs';
 import os from 'node:os';
 
+import { HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV } from '@lobechat/heterogeneous-agents/protocol';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { spawnHeteroAgentRun } from './agentRun';
@@ -101,6 +102,7 @@ describe('spawnHeteroAgentRun', () => {
       cwd: '/work/dir',
       detached: true,
       env: expect.objectContaining({
+        [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',
         LOBEHUB_ASSISTANT_MESSAGE_ID: 'asst',
         LOBEHUB_JWT: 'jwt-token',
         LOBEHUB_SERVER: 'https://app.lobehub.com',

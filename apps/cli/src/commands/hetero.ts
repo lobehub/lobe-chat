@@ -12,6 +12,7 @@ import {
 } from '@lobechat/heterogeneous-agents';
 import { AskUserBridge } from '@lobechat/heterogeneous-agents/askUser';
 import { LobeBuiltinMcpServer } from '@lobechat/heterogeneous-agents/builtinMcp';
+import { HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV } from '@lobechat/heterogeneous-agents/protocol';
 import { resolveHeteroSpawnCommand } from '@lobechat/heterogeneous-agents/resolveCliCommand';
 import type {
   AgentContentBlock,
@@ -888,6 +889,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
       askUserBridge: askBridge,
       command: resolvedCommand.command,
       cwd: options.cwd || process.cwd(),
+      detached: process.env[HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV] !== '1',
       env: commandEnv,
       extraArgs,
       permissionMode,
@@ -931,6 +933,7 @@ const exec = async (options: ExecOptions): Promise<void> => {
         askUserBridge: askBridge,
         command: resolvedCommand.command,
         cwd: options.cwd || process.cwd(),
+        detached: process.env[HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV] !== '1',
         env: commandEnv,
         extraArgs,
         includePartialMessages: options.type === 'claude-code',

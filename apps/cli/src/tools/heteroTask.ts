@@ -425,11 +425,10 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
     return JSON.stringify({ message: `No task found with taskId: ${taskId}`, success: false });
   }
 
-  // Kill the whole process group so the CLI wrapper, the ACP client, and any
-  // agent subprocesses all receive the signal. `detached: true` at spawn time
-  // placed the child in its own group, so a negative-PID signal is safe and
-  // never reaches the connect daemon. On Windows there is no process-group
-  // signal, so fall back to `taskkill /T /F` which kills the tree.
+  // Kill the whole process group so the CLI wrapper, its inherited-group agent,
+  // and tool subprocesses all receive the signal. `detached: true` at wrapper
+  // spawn time made this negative-PID signal safe for the connect daemon. On
+  // Windows there is no process-group signal, so use `taskkill /T /F`.
   try {
     if (process.platform === 'win32') {
       spawn('taskkill', ['/pid', String(entry.pid), '/T', '/F'], { stdio: 'ignore' });
@@ -460,7 +459,7 @@ export async function cancelHeteroTask(params: CancelHeteroTaskParams): Promise<
     setTimeout(() => {
       try {
         // The wrapper may have already exited and removed its registry entry
-        // while a descendant that ignored SIGINT still owns the process group.
+        // while its inherited-group agent still owns the process group.
         // Escalation therefore follows the captured group id, not taskRegistry.
         process.kill(-entry.pid, 'SIGKILL');
       } catch {

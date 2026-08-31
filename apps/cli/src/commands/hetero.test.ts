@@ -5,6 +5,7 @@ import { PassThrough } from 'node:stream';
 
 import type { LocalHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import { HETEROGENEOUS_AGENT_CONFIGS } from '@lobechat/heterogeneous-agents';
+import { HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV } from '@lobechat/heterogeneous-agents/protocol';
 import type * as HeteroSpawn from '@lobechat/heterogeneous-agents/spawn';
 import { Command } from 'commander';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -125,6 +126,7 @@ describe('hetero exec command', () => {
     exitSpy.mockRestore();
     stdoutSpy.mockRestore();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   /** Build a fresh program with the hetero command registered. */
@@ -217,6 +219,15 @@ describe('hetero exec command', () => {
     });
     // operationId auto-generated when omitted (uuid v4 shape)
     expect(call.operationId).toMatch(/^[0-9a-f-]{36}$/i);
+  });
+
+  it('keeps the agent in the detached wrapper process group when requested by dispatch', async () => {
+    vi.stubEnv(HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV, '1');
+    mockSpawnAgent.mockReturnValue(createFakeHandle());
+
+    await runCmd(['hetero', 'exec', '--type', 'codex', '--prompt', 'do thing']);
+
+    expect(mockSpawnAgent).toHaveBeenCalledWith(expect.objectContaining({ detached: false }));
   });
 
   it('runs Qoder with its default command and forwards model and effort', async () => {

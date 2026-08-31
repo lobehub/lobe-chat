@@ -7,6 +7,7 @@ import { PassThrough } from 'node:stream';
 
 import type { CodexQuotaSnapshot } from '@lobechat/electron-client-ipc';
 import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
+import { HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV } from '@lobechat/heterogeneous-agents/protocol';
 import { AcpRpcResponseError } from '@lobechat/heterogeneous-agents/spawn';
 // `electron` is mocked below; this binding is the mock object so tests can
 // flip `isPackaged` to exercise the packaged-build tracing gate.
@@ -4146,6 +4147,14 @@ describe('HeterogeneousAgentCtr', () => {
         useCodexAppServer: false,
       },
       {
+        agentType: 'devin',
+        command: 'devin',
+        constructMock: devinAcpSessionConstructMock,
+        label: 'Devin ACP',
+        runMock: devinAcpSessionRunMock,
+        useCodexAppServer: false,
+      },
+      {
         agentType: 'trae',
         command: 'traecli',
         constructMock: traeAcpSessionConstructMock,
@@ -4256,6 +4265,7 @@ describe('HeterogeneousAgentCtr', () => {
       expect(spawnCall.options.env).toEqual(
         expect.objectContaining({
           ELECTRON_RUN_AS_NODE: '1',
+          [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',
           LOBEHUB_ASSISTANT_MESSAGE_ID: 'asst-gateway',
           LOBEHUB_JWT: 'device-jwt',
           LOBEHUB_SERVER: 'https://server.example.com',

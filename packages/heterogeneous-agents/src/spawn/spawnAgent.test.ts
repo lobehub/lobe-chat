@@ -396,6 +396,32 @@ describe('spawnAgent', () => {
     for (const event of events) expect(event.operationId).toBe('op-1');
   });
 
+  it('inherits an outer wrapper process group instead of detaching again', async () => {
+    const fake = createFakeProc({ stdoutChunks: [ccInit] });
+    nextFakeProc = fake.proc;
+    const processKill = vi.spyOn(process, 'kill').mockImplementation(() => true);
+
+    const { spawnAgent } = await import('./spawnAgent');
+    const handle = await spawnAgent({
+      agentType: 'claude-code',
+      detached: false,
+      operationId: 'op-inherited-group',
+      prompt: 'do a thing',
+    });
+
+    expect(spawnCalls[0].options.detached).toBe(false);
+    handle.kill('SIGKILL');
+    expect(fake.proc.kill).toHaveBeenCalledWith('SIGKILL');
+    expect(processKill).not.toHaveBeenCalled();
+
+    fake.start();
+    for await (const _event of handle.events) {
+      // Drain the adapted stream so the fake process can settle cleanly.
+    }
+    await handle.exit;
+    processKill.mockRestore();
+  });
+
   it('runs Grok Build through ACP and exposes its native session to CLI callers', async () => {
     const fake = createGrokAcpProc();
     nextFakeProc = fake.proc;

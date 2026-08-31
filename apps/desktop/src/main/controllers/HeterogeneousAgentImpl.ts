@@ -38,6 +38,7 @@ import type { HeteroExecImageRef } from '@lobechat/heterogeneous-agents/protocol
 import {
   buildHeteroExecStdinPayload,
   buildHeterogeneousPrompt,
+  HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
 } from '@lobechat/heterogeneous-agents/protocol';
 import {
   CLAUDE_CODE_QUOTA_FRESH_MS,
@@ -2381,6 +2382,12 @@ export default class HeterogeneousAgentCtr {
       stdinPayload: tracePayload,
     });
     void this.writeCliTraceFile(traceSession, 'stdin.txt', tracePayload);
+
+    if (session.cancelledByUs) {
+      await this.completeCancelledSessionBeforeLaunch(session);
+      return;
+    }
+
     const stderrChunks: string[] = [];
     const intervention = this.setupAcpInterventionForOp(
       params.operationId,
@@ -3397,6 +3404,7 @@ export default class HeterogeneousAgentCtr {
       ...process.env,
       ...buildProxyEnv(this.app.storeManager.get('networkProxy')),
       ELECTRON_RUN_AS_NODE: '1',
+      [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',
       LOBEHUB_JWT: jwt,
       ...(assistantMessageId ? { LOBEHUB_ASSISTANT_MESSAGE_ID: assistantMessageId } : {}),
       LOBEHUB_SERVER: serverUrl,
@@ -3412,8 +3420,9 @@ export default class HeterogeneousAgentCtr {
     // an older global install earlier on PATH, letting model discovery report a
     // capability that the actual execution runtime does not support.
     // `detached: true` puts the CLI in its own process group so
-    // `killPlatformProcessTree(-pid, signal)` from `cancelHeteroTask` reaches
-    // the CLI and its children without signalling the desktop app itself.
+    // `killPlatformProcessTree(-pid, signal)` reaches the CLI and its children;
+    // the inherited-group env contract prevents the inner agent from detaching
+    // into a second, unreachable group.
     const child = spawn(process.execPath, [cliScript, ...args], {
       cwd: spawnCwd,
       detached: true,

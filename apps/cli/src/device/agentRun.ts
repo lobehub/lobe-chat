@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 
 import {
   buildHeteroExecStdinPayload,
+  HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV,
   type HeteroExecImageRef,
 } from '@lobechat/heterogeneous-agents/protocol';
 import { resolveHeteroSpawnCwd } from '@lobechat/heterogeneous-agents/workingDirectory';
@@ -142,6 +143,7 @@ export function spawnHeteroAgentRun(
       env: {
         ...childEnv,
         ...(assistantMessageId ? { LOBEHUB_ASSISTANT_MESSAGE_ID: assistantMessageId } : {}),
+        [HETERO_EXEC_INHERIT_PROCESS_GROUP_ENV]: '1',
         LOBEHUB_JWT: jwt,
         LOBEHUB_OPERATION_ID: operationId,
         LOBEHUB_SERVER: serverUrl,
@@ -157,8 +159,8 @@ export function spawnHeteroAgentRun(
       // Register the child into the task registry so `cancelHeteroTask`
       // dispatched from the server can resolve it by operationId and signal
       // the whole process group. `detached: true` places the CLI in its own
-      // group so a negative-PID signal reaches the ACP descendants without
-      // affecting the connect daemon.
+      // group; the inherited-group env contract keeps its agent descendants
+      // in that same group without affecting the connect daemon.
       pid = child.pid;
       if (pid !== undefined) {
         saveTask({
