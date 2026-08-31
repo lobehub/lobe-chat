@@ -60,7 +60,7 @@ interface CanonicalAskQuestionArgs {
   questions: Array<{
     header: string;
     multiSelect: false;
-    options: Array<{ label: string }>;
+    options: Array<{ id: string; label: string }>;
     question: string;
   }>;
 }
@@ -360,7 +360,7 @@ export class DevinAcpSession extends AcpAgentSession<
         {
           header: 'Permission required',
           multiSelect: false,
-          options: request.options.map(({ name }) => ({ label: name })),
+          options: request.options.map(({ name, optionId }) => ({ id: optionId, label: name })),
           question: request.toolCall.title,
         },
       ],
@@ -372,7 +372,11 @@ export class DevinAcpSession extends AcpAgentSession<
       title: 'askUserQuestion',
       toolCallId,
     });
-    const answer = await this.options.askUserBridge.pending({ arguments: arguments_, toolCallId });
+    const answer = await this.options.askUserBridge.pending({
+      arguments: arguments_,
+      interactionKind: 'permission',
+      toolCallId,
+    });
     await this.pushToPipeline({
       rawOutput: answer,
       sessionUpdate: 'tool_call_update',
@@ -381,9 +385,7 @@ export class DevinAcpSession extends AcpAgentSession<
     });
 
     const selections = this.getAnswerSelections(answer, request.toolCall.title);
-    return request.options.find(
-      ({ name, optionId }) => selections.includes(name) || selections.includes(optionId),
-    );
+    return request.options.find(({ optionId }) => selections.includes(optionId));
   }
 
   private getAnswerSelections(answer: InterventionAnswer, question: string): string[] {

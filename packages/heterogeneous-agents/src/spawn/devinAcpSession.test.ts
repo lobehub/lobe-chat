@@ -389,6 +389,7 @@ describe('DevinAcpSession', () => {
     expect(intervention.value).toMatchObject({
       data: {
         apiName: 'askUserQuestion',
+        interactionKind: 'permission',
         toolCallId: 'devin-permission-permission-1-tool-1',
       },
       type: 'agent_intervention_request',
@@ -398,18 +399,40 @@ describe('DevinAcpSession', () => {
         {
           header: 'Permission required',
           multiSelect: false,
-          options: [{ label: 'Allow' }, { label: 'Allow for this session' }, { label: 'Reject' }],
+          options: [
+            { id: 'allow_once', label: 'Allow' },
+            { id: 'allow_session', label: 'Allow for this session' },
+            { id: 'reject_once', label: 'Reject' },
+          ],
           question: 'printf test',
         },
       ],
     });
+    bridge.resolve(intervention.value!.data.toolCallId, {
+      result: { 'printf test': 'allow_session' },
+    });
+    await run;
+
+    expect(fake.requests.find(({ id }) => id === 'permission-1')?.result).toEqual({
+      outcome: { optionId: 'allow_session', outcome: 'selected' },
+    });
+  });
+
+  it('does not resolve permission choices by their display label', async () => {
+    const fake = createAcpProcess({ permissionRequest: true });
+    spawnMock.mockReturnValue(fake.child);
+    vi.spyOn(process, 'kill').mockImplementation(() => true);
+    const bridge = new AskUserBridge('operation-1');
+    const run = new DevinAcpSession(createSessionOptions({ askUserBridge: bridge })).run();
+    const intervention = await bridge.events()[Symbol.asyncIterator]().next();
+
     bridge.resolve(intervention.value!.data.toolCallId, {
       result: { 'printf test': 'Allow for this session' },
     });
     await run;
 
     expect(fake.requests.find(({ id }) => id === 'permission-1')?.result).toEqual({
-      outcome: { optionId: 'allow_session', outcome: 'selected' },
+      outcome: { outcome: 'cancelled' },
     });
   });
 
