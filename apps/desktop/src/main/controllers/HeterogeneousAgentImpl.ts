@@ -62,10 +62,10 @@ import {
   buildCodexAppServerThreadParams,
   buildCursorAcpArgs,
   buildCursorAcpPrompt,
-  buildDroidAcpArgs,
-  buildDroidAcpPrompt,
   buildDevinAcpArgs,
   buildDevinAcpPrompt,
+  buildDroidAcpArgs,
+  buildDroidAcpPrompt,
   buildGrokAcpArgs,
   buildGrokAcpPrompt,
   buildTraeAcpArgs,
@@ -75,15 +75,15 @@ import {
   CodexThreadSession,
   createFileStoreImageUploader,
   CursorAcpSession,
-  DroidAcpSession,
   DevinAcpSession,
+  DroidAcpSession,
   ensureClaudeCodeResumeTranscript,
   getCodexAppServerUnsupportedArgs,
   GrokAcpSession,
   isCodexAppServerCompatibilityError,
   isCursorAcpSessionNotFoundError,
-  isDroidAcpSessionNotFoundError,
   isDevinAcpSessionNotFoundError,
+  isDroidAcpSessionNotFoundError,
   readCodexSessionModel,
   resolveCliSpawnPlan,
   resolveCodexInitialModel,
@@ -374,8 +374,8 @@ interface AgentSession {
   command: string;
   cursorAcpSession?: CursorAcpSession;
   cwd?: string;
-  droidAcpSession?: DroidAcpSession;
   devinAcpSession?: DevinAcpSession;
+  droidAcpSession?: DroidAcpSession;
   env?: Record<string, string>;
   grokAcpSession?: GrokAcpSession;
   hostedProviderBinding?: HostedProviderBinding;

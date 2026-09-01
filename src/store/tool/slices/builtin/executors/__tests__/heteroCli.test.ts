@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   claudeCodeExecutor,
   codexExecutor,
-  droidExecutor,
   devinExecutor,
+  droidExecutor,
   grokBuildExecutor,
   kimiCodeExecutor,
   openCodeExecutor,

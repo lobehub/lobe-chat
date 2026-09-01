@@ -358,7 +358,7 @@ describe('aiAgentRouter.interruptTask', () => {
             apiName: 'cancelHeteroTask',
             identifier: 'cancelHeteroTask',
           }),
-          5_000,
+          10_000,
         );
 
         // The signal should be SIGINT (graceful) and taskId should match the
