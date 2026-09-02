@@ -11,6 +11,8 @@ import {
   renderFinalReply,
   renderGroupRejected,
   renderGuestCopy,
+  renderGuestPairing,
+  renderGuestRejected,
   renderGuestTruncated,
   renderInlineError,
   renderLLMGenerating,
@@ -654,6 +656,21 @@ describe('replyTemplate', () => {
     it('renders disabled and allowlist Chinese copy when locale is zh-CN', () => {
       expect(renderGroupRejected('disabled', 'zh-CN')).toContain('不在群组或频道中响应');
       expect(renderGroupRejected('allowlist', 'zh-CN')).toContain('未在此频道启用');
+    });
+  });
+
+  describe('Guest Policy replies', () => {
+    it('renders Guest-specific rejection copy in English and Chinese', () => {
+      expect(renderGuestRejected('disabled')).toContain('Guest Mode is disabled');
+      expect(renderGuestRejected('allowlist')).toContain("aren't authorized to use this bot");
+      expect(renderGuestRejected('disabled', 'zh-CN')).toContain('已禁用访客模式');
+    });
+
+    it('renders Guest pairing codes and operational failures', () => {
+      expect(renderGuestPairing('code', 'en-US', { code: 'PAIR123' })).toContain('PAIR123');
+      expect(renderGuestPairing('code', 'en-US', { code: 'PAIR123' })).toContain('Guest Mode');
+      expect(renderGuestPairing('capacity-exceeded')).toContain('too many Guest Mode');
+      expect(renderGuestPairing('unavailable', 'zh-CN')).toContain('暂时不可用');
     });
   });
 

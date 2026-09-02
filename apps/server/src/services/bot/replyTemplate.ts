@@ -279,6 +279,11 @@ type SystemStrings = {
   guestLinkPromptDm: string;
   guestLinkTitle: string;
   guestMediaUnavailable: string;
+  guestPairingCapacityExceeded: string;
+  guestPairingCode: (code: string) => string;
+  guestPairingUnavailable: string;
+  guestRejectedAllowlist: string;
+  guestRejectedDisabled: string;
   guestTextTruncated: (limit: number) => string;
   inlineError: (message: string) => string;
   processing: string;
@@ -385,6 +390,15 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
       'Open a private chat with this bot and send /start to link your LobeHub account.',
     guestLinkTitle: 'Link LobeHub',
     guestMediaUnavailable: 'This attachment can’t be delivered in Telegram Guest Mode.',
+    guestPairingCapacityExceeded:
+      'This bot is handling too many Guest Mode access requests right now. Please try again in a few minutes.',
+    guestPairingCode: (code) =>
+      `To use this bot in Guest Mode, send this pairing code to the bot's owner: \`${code}\`. They run \`/approve ${code}\` to grant you access. The code expires in 1 hour.`,
+    guestPairingUnavailable:
+      'Guest Mode pairing is temporarily unavailable on this bot. Please try again later.',
+    guestRejectedAllowlist:
+      "Sorry, you aren't authorized to use this bot in Guest Mode. Please contact the bot's owner if you need access.",
+    guestRejectedDisabled: 'Guest Mode is disabled for this bot.',
     guestTextTruncated: (limit) =>
       `Response truncated because Telegram Guest Mode supports one ${limit}-character reply.`,
     inlineError: (message) => `**Error**: ${message}`,
@@ -476,6 +490,13 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     guestLinkPromptDm: '请私聊该机器人并发送 /start，以完成 LobeHub 账户关联。',
     guestLinkTitle: '关联 LobeHub',
     guestMediaUnavailable: '该附件无法通过 Telegram 访客模式送达。',
+    guestPairingCapacityExceeded: '该机器人当前待处理的访客模式访问请求过多，请稍后再试。',
+    guestPairingCode: (code) =>
+      `若要通过访客模式使用该机器人，请把以下配对码发给机器人管理员：\`${code}\`，他们将通过 \`/approve ${code}\` 命令为你授权。配对码 1 小时后失效。`,
+    guestPairingUnavailable: '访客模式配对功能暂时不可用，请稍后再试。',
+    guestRejectedAllowlist:
+      '抱歉，您没有通过访客模式使用该机器人的权限。如需访问请联系机器人管理员。',
+    guestRejectedDisabled: '该机器人已禁用访客模式。',
     guestTextTruncated: (limit) =>
       `回复已被截断：Telegram 访客模式仅支持一条 ${limit} 字符的回复。`,
     inlineError: (message) => `**错误**：${message}`,
@@ -761,6 +782,17 @@ export function renderDmPairing(
   return strings.dmPairingUnavailable;
 }
 
+export function renderGuestPairing(
+  variant: 'capacity-exceeded' | 'code' | 'unavailable',
+  lng?: BotReplyLocale,
+  params?: { code?: string },
+): string {
+  const strings = getSystemStrings(lng);
+  if (variant === 'code' && params?.code) return strings.guestPairingCode(params.code);
+  if (variant === 'capacity-exceeded') return strings.guestPairingCapacityExceeded;
+  return strings.guestPairingUnavailable;
+}
+
 /**
  * Render the system message shown to a sender whose DM was blocked by the
  * channel's DM Policy. We split disabled vs allowlist so the user can act on
@@ -782,6 +814,14 @@ export function renderGroupRejected(
 ): string {
   const strings = getSystemStrings(lng);
   return reason === 'disabled' ? strings.groupRejectedDisabled : strings.groupRejectedAllowlist;
+}
+
+export function renderGuestRejected(
+  reason: 'disabled' | 'allowlist',
+  lng?: BotReplyLocale,
+): string {
+  const strings = getSystemStrings(lng);
+  return reason === 'disabled' ? strings.guestRejectedDisabled : strings.guestRejectedAllowlist;
 }
 
 /**
