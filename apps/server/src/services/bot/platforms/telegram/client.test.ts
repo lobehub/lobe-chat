@@ -8,11 +8,13 @@ import { resolveTelegramSecretToken } from './helpers';
 
 const { createTelegramAdapterMock } = vi.hoisted(() => ({
   // Typed parameter so `mock.calls[n][0]` is a config object, not `never`.
-  createTelegramAdapterMock: vi.fn((_config: Record<string, unknown>) => ({ name: 'telegram' })),
+  createTelegramAdapterMock: vi.fn((_config: Record<string, unknown>, _sessionScope: string) => ({
+    name: 'telegram',
+  })),
 }));
 
-vi.mock('@chat-adapter/telegram', () => ({
-  createTelegramAdapter: createTelegramAdapterMock,
+vi.mock('./guestAdapter', () => ({
+  createLobeTelegramAdapter: createTelegramAdapterMock,
 }));
 
 vi.mock('@/server/services/gateway/runtimeStatus', () => ({
@@ -27,6 +29,7 @@ vi.mock('@/server/services/gateway/runtimeStatus', () => ({
 }));
 
 const BOT_TOKEN = 'test-bot-token';
+const GUEST_THREAD_ID = 'telegram:guest:-100:bot:test-bot-token:message:10';
 
 const createClient = (credentials: Record<string, string> = {}) =>
   new TelegramClientFactory().createClient(
@@ -60,19 +63,25 @@ describe('TelegramWebhookClient.createAdapter', () => {
   it('treats an empty-string secretToken as not configured and derives the same value', () => {
     createClient({ secretToken: '' }).createAdapter();
 
-    expect(createTelegramAdapterMock).toHaveBeenCalledWith({
-      botToken: BOT_TOKEN,
-      secretToken: resolveTelegramSecretToken({ botToken: BOT_TOKEN }),
-    });
+    expect(createTelegramAdapterMock).toHaveBeenCalledWith(
+      {
+        botToken: BOT_TOKEN,
+        secretToken: resolveTelegramSecretToken({ botToken: BOT_TOKEN }),
+      },
+      BOT_TOKEN,
+    );
   });
 
   it('uses the operator-provided secretToken when configured', () => {
     createClient({ secretToken: 'my-webhook-secret' }).createAdapter();
 
-    expect(createTelegramAdapterMock).toHaveBeenCalledWith({
-      botToken: BOT_TOKEN,
-      secretToken: 'my-webhook-secret',
-    });
+    expect(createTelegramAdapterMock).toHaveBeenCalledWith(
+      {
+        botToken: BOT_TOKEN,
+        secretToken: 'my-webhook-secret',
+      },
+      BOT_TOKEN,
+    );
   });
 });
 
@@ -611,5 +620,70 @@ describe('TelegramWebhookClient.extractAuthorLocale', () => {
     expect(
       client.extractAuthorLocale!(makeMessage({ raw: { from: { language_code: '' } } })),
     ).toBeUndefined();
+  });
+});
+
+describe('TelegramWebhookClient thread ids', () => {
+  it('extractChatId does not return "guest" for guest thread ids', () => {
+    const client = createClient();
+    expect(client.extractChatId('telegram:guest:-100123')).toBe('-100123');
+    expect(client.extractChatId('telegram:-100123')).toBe('-100123');
+    expect(client.extractChatId('telegram:guest:-100123:4')).toBe('-100123');
+  });
+
+  it('does not subscribe one-shot guest threads', () => {
+    const client = createClient();
+    expect(client.shouldSubscribe?.(GUEST_THREAD_ID)).toBe(false);
+    expect(client.shouldSubscribe?.('telegram:-100123')).toBe(true);
+  });
+});
+
+describe('TelegramWebhookClient guest messenger', () => {
+  const okResponse = (body: Record<string, unknown>) =>
+    new Response(JSON.stringify({ ok: true, result: body }), {
+      headers: { 'Content-Type': 'application/json' },
+      status: 200,
+    });
+
+  let fetchSpy: MockInstance<typeof fetch>;
+  let resetSessions: () => void;
+
+  beforeEach(async () => {
+    const guestSession = await import('./guestSession');
+    resetSessions = guestSession.resetTelegramGuestSessionsForTest;
+    resetSessions();
+    const client = createClient();
+    await guestSession.saveTelegramGuestSession(client.applicationId, GUEST_THREAD_ID, {
+      guestQueryId: 'gq-1',
+    });
+    fetchSpy = vi.spyOn(globalThis, 'fetch');
+  });
+
+  afterEach(() => {
+    resetSessions();
+    fetchSpy.mockRestore();
+  });
+
+  it('createMessage answers the guest query instead of sendMessage', async () => {
+    fetchSpy.mockResolvedValueOnce(okResponse({ inline_message_id: 'inline-9' }));
+    const client = createClient();
+    const messenger = client.getMessenger(GUEST_THREAD_ID);
+
+    await messenger.createMessage('thinking');
+    await messenger.addReaction?.('1', '👀');
+
+    // Guest messengers must NOT expose `triggerTyping`: its presence makes
+    // AgentBridgeService treat the thread as typing-capable and skip the
+    // initial placeholder post when the message gateway is enabled, leaving
+    // the one-shot guest query unanswered until agent completion.
+    expect(messenger.triggerTyping).toBeUndefined();
+
+    expect(String(fetchSpy.mock.calls[0]![0])).toContain('/answerGuestQuery');
+    expect(fetchSpy.mock.calls.some((call) => String(call[0]).includes('/sendMessage'))).toBe(
+      false,
+    );
+    expect(fetchSpy.mock.calls.some((call) => String(call[0]).includes('/sendChatAction'))).toBe(
+      false,
+    );
   });
 });

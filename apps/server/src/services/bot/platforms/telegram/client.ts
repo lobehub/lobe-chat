@@ -1,4 +1,3 @@
-import { createTelegramAdapter } from '@chat-adapter/telegram';
 import type { Message } from 'chat';
 import debug from 'debug';
 
@@ -22,9 +21,12 @@ import {
 } from '../types';
 import { formatUsageStats } from '../utils';
 import { TELEGRAM_API_BASE, TelegramApi } from './api';
+import { createLobeTelegramAdapter } from './guestAdapter';
+import { deliverGuestCreate, deliverGuestEdit } from './guestOutbound';
 import { extractBotId, resolveTelegramSecretToken, setTelegramWebhook } from './helpers';
 import { markdownToTelegramHTML } from './markdownToHTML';
 import { sendTelegramAttachments } from './sendAttachments';
+import { isGuestTelegramThreadId, parseTelegramThreadId } from './threadId';
 
 const log = debug('bot-platform:telegram:bot');
 
@@ -36,7 +38,7 @@ const log = debug('bot-platform:telegram:bot');
 const TELEGRAM_MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
 
 function extractChatId(platformThreadId: string): string {
-  return platformThreadId.split(':')[1];
+  return parseTelegramThreadId(platformThreadId).chatId;
 }
 
 function parseTelegramMessageId(compositeId: string): number {
@@ -227,18 +229,49 @@ class TelegramWebhookClient implements PlatformClient {
 
   createAdapter(): Record<string, any> {
     return {
-      telegram: createTelegramAdapter({
-        botToken: this.config.credentials.botToken,
-        // Always verified: the operator's secret when set, otherwise the same
-        // derived secret `start()` registered with Telegram. We never pass
-        // `allowUnverifiedWebhooks` — see `resolveTelegramSecretToken`.
-        secretToken: resolveTelegramSecretToken(this.config.credentials),
-      }),
+      telegram: createLobeTelegramAdapter(
+        {
+          botToken: this.config.credentials.botToken,
+          // Always verified: the operator's secret when set, otherwise the same
+          // derived secret `start()` registered with Telegram. We never pass
+          // `allowUnverifiedWebhooks` — see `resolveTelegramSecretToken`.
+          secretToken: resolveTelegramSecretToken(this.config.credentials),
+        },
+        this.applicationId,
+      ),
     };
   }
 
   getMessenger(platformThreadId: string): PlatformMessenger {
     const telegram = new TelegramApi(this.config.credentials.botToken);
+    if (isGuestTelegramThreadId(platformThreadId)) {
+      return {
+        addReaction: async () => {},
+        createMessage: async (content) => {
+          await deliverGuestCreate(telegram, this.applicationId, platformThreadId, content);
+        },
+        editMessage: async (messageId, content) => {
+          await deliverGuestEdit(
+            telegram,
+            this.applicationId,
+            platformThreadId,
+            messageId,
+            content,
+          );
+        },
+        // No `triggerTyping` here, on purpose. AgentBridgeService treats a
+        // present `triggerTyping` as "platform can show typing" and, when the
+        // message gateway is enabled, skips the initial placeholder post.
+        // Guest summons are one-shot `guest_query_id`s that must be answered
+        // quickly - deferring the first `createMessage` to agent completion
+        // risks blowing Telegram's guest-query response window. Leaving
+        // `triggerTyping` undefined forces the bridge to post the placeholder
+        // immediately, which consumes the query via `answerGuestQuery`.
+        removeReaction: async () => {},
+        replaceReaction: async () => {},
+      };
+    }
+
     const chatId = extractChatId(platformThreadId);
     return {
       addReaction: (messageId, emoji) =>
@@ -329,10 +362,10 @@ class TelegramWebhookClient implements PlatformClient {
    * Bot API does not return `mime_type` / `file_name` for `photo` payloads,
    * so we must provide them.
    *
-   * Quoted media lives on `raw.reply_to_message`. Chat SDK only lists
-   * attachments on the triggering message, so we recover photo/video/audio/document
-   * from that nested payload the same way Discord recovers
-   * `referenced_message.attachments`.
+   * Quoted media lives on `raw.reply_to_message` (Guest Mode summons and
+   * ordinary replies). Chat SDK only lists attachments on the triggering
+   * message, so we recover photo/video/audio/document from that nested
+   * payload the same way Discord recovers `referenced_message.attachments`.
    *
    * Per-attachment errors are swallowed and logged so a single failed
    * download doesn't drop the rest of the message's attachments.
@@ -455,6 +488,10 @@ class TelegramWebhookClient implements PlatformClient {
 
   parseMessageId(compositeId: string): number {
     return parseTelegramMessageId(compositeId);
+  }
+
+  shouldSubscribe(threadId: string): boolean {
+    return !isGuestTelegramThreadId(threadId);
   }
 }
 
