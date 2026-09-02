@@ -1,6 +1,11 @@
 import type { StepPresentationData } from '../agentRuntime/types';
 import { getExtremeAck } from './ackPhrases';
-import { type BotReplyLocale, formatDuration } from './platforms';
+// Import from the leaf modules (`const` / `utils`) instead of the
+// `./platforms` barrel: the barrel instantiates every platform definition
+// (and its ClientFactory) at import time, and platform leaf files such as the
+// Telegram Guest outbound path import this template for localized copy.
+import { type BotReplyLocale } from './platforms/const';
+import { formatDuration } from './platforms/utils';
 
 // Use raw Unicode emoji instead of Chat SDK emoji placeholders,
 // because bot-callback webhooks send via DiscordPlatformClient directly
@@ -114,7 +119,7 @@ function formatCompletedTools(
     .join('\n');
 }
 
-export { formatDuration, formatTokens } from './platforms';
+export { formatDuration, formatTokens } from './platforms/utils';
 
 function renderProgressHeader(
   params: { elapsedMs?: number; totalToolCalls?: number },
@@ -261,6 +266,20 @@ type SystemStrings = {
   errorWithId: (operationId: string) => string;
   groupRejectedAllowlist: string;
   groupRejectedDisabled: string;
+  /**
+   * Telegram Guest Mode strings. Unlike the rest of this dictionary these
+   * carry Telegram HTML (not Markdown), because the Guest outbound pipeline
+   * (`guestOutbound` / `answerGuestQuery`) renders Telegram HTML directly.
+   * Locale comes from the summoning user's `language_code`, not the
+   * platform default.
+   */
+  guestAttachmentOverflow: string;
+  guestLinkButton: string;
+  guestLinkPromptChat: string;
+  guestLinkPromptDm: string;
+  guestLinkTitle: string;
+  guestMediaUnavailable: string;
+  guestTextTruncated: (limit: number) => string;
   inlineError: (message: string) => string;
   processing: string;
   /**
@@ -358,6 +377,16 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
       "This bot isn't enabled in this channel. Please contact the bot's owner if you need access.",
     groupRejectedDisabled:
       "This bot doesn't respond in groups or channels. Please reach out via direct message instead.",
+    guestAttachmentOverflow:
+      '<i>Additional attachments could not be listed in this Guest Mode reply.</i>',
+    guestLinkButton: 'Open Bot',
+    guestLinkPromptChat: 'Continue in a private chat with this bot to link your LobeHub account.',
+    guestLinkPromptDm:
+      'Open a private chat with this bot and send /start to link your LobeHub account.',
+    guestLinkTitle: 'Link LobeHub',
+    guestMediaUnavailable: 'This attachment can’t be delivered in Telegram Guest Mode.',
+    guestTextTruncated: (limit) =>
+      `Response truncated because Telegram Guest Mode supports one ${limit}-character reply.`,
     inlineError: (message) => `**Error**: ${message}`,
     processing: 'Processing...',
     senderRejected:
@@ -441,6 +470,14 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     errorWithId: (operationId) => `**Agent 执行失败**\nOperation ID: \`${operationId}\``,
     groupRejectedAllowlist: '该机器人未在此频道启用。如需访问请联系机器人管理员。',
     groupRejectedDisabled: '该机器人不在群组或频道中响应。请通过私信联系。',
+    guestAttachmentOverflow: '<i>更多附件无法在这条访客模式回复中列出。</i>',
+    guestLinkButton: '打开机器人',
+    guestLinkPromptChat: '请在私聊中继续，以完成 LobeHub 账户关联。',
+    guestLinkPromptDm: '请私聊该机器人并发送 /start，以完成 LobeHub 账户关联。',
+    guestLinkTitle: '关联 LobeHub',
+    guestMediaUnavailable: '该附件无法通过 Telegram 访客模式送达。',
+    guestTextTruncated: (limit) =>
+      `回复已被截断：Telegram 访客模式仅支持一条 ${limit} 字符的回复。`,
     inlineError: (message) => `**错误**：${message}`,
     processing: '处理中…',
     senderRejected: '抱歉，您没有与该机器人交互的权限。如需访问请联系机器人管理员。',
@@ -644,6 +681,31 @@ export type CommandReplyKey =
  */
 export function renderCommandReply(key: CommandReplyKey, lng?: BotReplyLocale): string {
   return getSystemStrings(lng)[key];
+}
+
+export type GuestCopyKey =
+  | 'guestAttachmentOverflow'
+  | 'guestLinkButton'
+  | 'guestLinkPromptChat'
+  | 'guestLinkPromptDm'
+  | 'guestLinkTitle'
+  | 'guestMediaUnavailable';
+
+/**
+ * Render a Telegram Guest Mode system string (link prompts, truncation and
+ * attachment notices). Unlike command replies the locale is not the platform
+ * default: a Guest summon can come from any Telegram user, so callers pass
+ * the summoning user's normalized `language_code` when known and fall back
+ * to the platform default otherwise. The values carry Telegram HTML, not
+ * Markdown - the Guest outbound pipeline renders Telegram HTML directly.
+ */
+export function renderGuestCopy(key: GuestCopyKey, lng?: BotReplyLocale): string {
+  return getSystemStrings(lng)[key];
+}
+
+/** Truncation notice for the Guest Mode single-reply budget (text 4096 / caption 1024). */
+export function renderGuestTruncated(limit: number, lng?: BotReplyLocale): string {
+  return getSystemStrings(lng).guestTextTruncated(limit);
 }
 
 /**
