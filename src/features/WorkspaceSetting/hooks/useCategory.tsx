@@ -25,6 +25,7 @@ import {
   ScrollText,
   Sparkles,
   TagIcon,
+  Trash2,
   Users,
 } from 'lucide-react';
 import { useMemo } from 'react';
@@ -258,14 +259,19 @@ export const useWorkspaceSettingCategory = (): WorkspaceSettingCategoryGroup[] =
         },
         // System group: Storage stays in Admin because it is workspace-scoped
         // there; About is informational and visible to every role.
-        !hideDocs && {
+        {
           items: [
             {
+              icon: Trash2,
+              key: WorkspaceSettingsTabs.Trash,
+              label: t('tab.trash'),
+            },
+            !hideDocs && {
               icon: Info,
               key: WorkspaceSettingsTabs.About,
               label: t('tab.about'),
             },
-          ],
+          ].filter(Boolean) as WorkspaceSettingCategoryItem[],
           key: WorkspaceSettingsGroupKey.System,
           title: t('group.system'),
         },
