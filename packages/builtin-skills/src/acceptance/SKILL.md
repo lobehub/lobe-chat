@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.4.1
+version: 0.5.0
 description: >
   Delegated end-to-end verification with primary-agent evidence review for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -16,15 +16,15 @@ description: >
 
 # Acceptance (Delegated Execution, Primary Review)
 
-The primary agent owns the delivery judgment. When a suitable lower-cost model
-can be selected, use one worker for environment inspection, plan drafting, and
-case execution, plus a separate worker for the final independent audit. A check that
+The primary agent owns the delivery judgment. Use one execution worker for
+environment inspection, plan drafting, and case execution. Settle the plan with
+the primary before execution; the primary reviews all evidence at the end. A check that
 declares `requiredEvidence` **cannot pass on your text alone**: a missing artifact
 marks it `uncertain` and holds the delivery.
 
 ```
-worker A: environment → plan ↔ primary discussion → cases → primary reviews each case
-worker B: fresh whole-round audit → primary publishes
+one worker: environment → plan ↔ primary discussion → execute agreed cases autonomously
+primary: review completed evidence → resolve findings → publish
 ```
 
 ## Delegate work, retain judgment
@@ -32,21 +32,22 @@ worker B: fresh whole-round audit → primary publishes
 Before dispatch, explicitly select a suitable lower-cost model through the current
 host's supported controls, or verify an explicitly configured worker default.
 An absent setting may inherit the primary model; never assume it means cheap.
-If a lower-cost selection cannot be established, use the reduced workflow in
-[delegation.md](references/delegation.md#when-lower-cost-delegation-is-unavailable)
-instead of multiplying same-model workers. Do not change the user's configuration.
-Reuse worker A across stages and cases; these are stages, not separate agents.
-Delegate a complete case, not individual clicks or commands. The
-primary must inspect each case's original evidence before accepting its result;
-a worker's pass summary is not sufficient. In the full workflow, a fresh-context
-subagent then audits the full requirement, plan, and evidence before publication.
+If a lower-cost selection cannot be established, follow the selection/fallback
+rules in [delegation.md](references/delegation.md#select-the-worker-without-assuming-cheap-defaults).
+Do not change user configuration. Reuse one worker across stages and cases.
+After plan agreement, routine cases proceed without primary approval between
+cases. Escalate requirement ambiguity, failures, or blockers; otherwise notify
+the primary when the complete report is ready. Wait for these notifications
+rather than reading files to infer progress. The primary then inspects every
+case's original evidence; worker pass labels are insufficient. Do not create a
+separate final audit agent.
 
 If a case fails, the implementer repairs it, the acceptance worker reruns it,
 and the primary reviews the new evidence. Missing evidence goes back to the
 executor. A repairer's self-check never replaces this re-verification.
 
 Read [delegation.md](references/delegation.md) before dispatch. It defines the
-handoffs, multi-round plan discussion, per-case review, repair loop, and fallback
+handoffs, plan discussion, autonomous execution, final review, repair, and fallback
 when lower-cost selection or delegation is unavailable. These are the responsibilities throughout
 the surface guides; references to "you" do not require the primary to perform
 every tool call. Existing user authorization and host restrictions still apply.

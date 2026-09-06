@@ -130,10 +130,11 @@ supersedes? }`.
 5. **`report.md` is the narrative tail only** — this-round notes, follow-ups,
    score. Do NOT repeat the scope block or a case table; those double up on the
    page. Write it in the language the user is conversing in.
-6. **Review, then publish:** complete the primary's per-case evidence reviews and
-   the independent stages for the selected mode from [delegation.md](delegation.md).
-   Record mode, role/run/model provenance, reduced-mode omissions, and unresolved
-   findings in the narrative tail.
+6. **Review, then publish:** the worker hands off the complete round, then the
+   primary reviews all original evidence as defined in [delegation.md](delegation.md).
+   No intermediate approval per case or separate audit agent is required.
+   Record role/run/model provenance, any missing independent execution, and
+   unresolved findings in the narrative tail.
    The primary owns the final publication decision.
 
    ```bash

@@ -1,178 +1,145 @@
 # Acceptance delegation
 
-The primary agent makes the acceptance decisions. Workers perform the tool-heavy
-work; a fresh worker audits the resulting round. This separates implementation
-claims from evidence without making the primary repeat every command.
-Here, "worker" means a subagent. One worker may handle environment inspection,
-plan drafting, and execution; these stages do not require separate dispatches.
-Only the final auditor needs a fresh context and a separate role.
+Default to **one primary agent and one execution worker**. The worker checks the
+environment, drafts the plan, executes it, and prepares evidence. The primary
+challenges the plan before execution and reviews the complete evidence at the
+end. Do not require primary approval after every case or create a separate final
+audit worker. Reuse the execution worker across stages and repairs.
 
-## Choose the execution mode before dispatch
+## Select the worker without assuming cheap defaults
 
-No manual worker-model configuration is required when the host supports a
-per-dispatch choice. Read the current tool schema or host instructions, select
-an available lower-cost model capable of the task, and explicitly pass the value
-accepted by that tool's schema. This may be an enum alias rather than a full
-model ID. Do not pass an invented tier such as `cheap`.
-For Claude Code, use the native agent tool's model selector when exposed; for
-Codex, use its supported spawn model/configuration controls. Tool names, allowed
-models, context inheritance, and resume mechanisms come from the current host,
-not this skill. Never copy one host's API into another or guess a CLI flag.
-When per-dispatch selection is available, use it directly; checking user defaults
-is unnecessary.
+Read the current host's tool schema or instructions and explicitly select the
+least expensive available model capable of the task. Pass the supported value,
+which may be an enum alias rather than a full model ID; do not invent `cheap` as
+a model name. Claude Code and Codex use their own native controls. Do not copy
+one host's API into another or guess CLI flags. Per-dispatch selection avoids
+the need to inspect user defaults.
 
-An explicitly configured worker default is usable only when its effective
-selection is known and suitable. Missing settings, `inherit`, or an unknown
-effective model do not establish a lower-cost worker. Do not inspect secrets or
-change user settings to resolve this. If the host cannot establish the selection,
-use the reduced workflow below. Record the selected model, how it was selected,
-and the actual reported model when available; leave unreported values unknown.
-Lower per-token cost is not proof of lower total cost. Claim measured savings
-only when comparable usage evidence exists.
+An explicitly configured worker default is usable when its effective selection
+is known and suitable. Missing settings, `inherit`, or unknown models do not
+establish a lower-cost worker. Do not read secrets or change user settings to
+resolve this. If lower-cost selection is unavailable, retain at most the single
+execution worker when independent execution is needed; otherwise the primary
+may execute directly and disclose builder self-verification. Honor explicit user
+requirements for independent execution. Never add a reviewer as a fallback.
 
-With a suitable lower-cost model, default to **two workers total**: A checks the
-environment, drafts the plan, and executes the cases; B independently audits the
-round. Start with the least expensive suitable model for each, including planning
-and audit. Do not automatically upgrade a role because it involves judgment;
-escalate only for a concrete capability gap within host/user limits.
-Split A only for independent cases with isolated state or to replace an unavailable
-worker. Send bounded briefs and artifact paths instead of the full parent history.
-Return decisive evidence and observations, not copied logs; the primary reviews
-the originals without rerunning successful execution.
+Record the selected model and selection mechanism, plus the reported model when
+available. Leave unknown values unknown. Lower per-token cost does not prove
+lower total cost; claim savings only with comparable usage evidence. Escalate
+only for a concrete capability gap within host/user limits. Send bounded briefs
+and artifact paths instead of the full parent history; do not delegate individual
+clicks or commands or spawn recursively from the worker.
 
-### When lower-cost delegation is unavailable
+## 1. Check the environment
 
-Avoid the full pipeline of inherited-model workers. Use at most one independent
-worker by default: if the primary implemented the change, assign that worker
-environment inspection, planning, and execution; the primary reviews its evidence.
-Otherwise, the primary prepares and executes the cases, then uses the worker for
-the final independent audit. This preserves some independence but is a reduced
-workflow: disclose the omitted stage and do not claim the full delegated process
-or cost savings. If delegation itself is unavailable, use the fallback at the end
-of this file. An explicit user requirement for all independent stages still holds;
-report any unmet stage rather than silently lowering that requirement.
+Give the worker the original requirement, changed behavior, target revision,
+authorized surface, and relevant project-adapter paths. It inventories existing
+instances and checks dependencies, authentication, and available probes before
+drafting executable cases. It may prepare the environment within existing
+authority; environment mechanics do not create new permissions.
 
-## 1. Worker checks the environment
+Maintain a run ledger with process/session identities, owner, stop commands,
+fixtures and restoration steps. The worker owns cleanup; keep the review
+environment available until the primary releases it after final review, following
+the project's teardown order. The primary collects its terminal result before
+final handoff. If the host cannot resume the worker, hand its replacement
+the ledger and artifacts. Verify ownership and liveness before replacing it so
+an existing task is not accidentally started twice.
 
-Sections 1–4 describe the full two-worker workflow. In reduced mode, apply the
-selected role assignment above and disclose omitted independent stages.
+## 2. Settle the plan before execution
 
-Give a worker the user's original requirement, repository, target revision or
-working-tree scope, and authorized surface. The worker reads the project adapter
-and relevant living logs, inventories existing instances, checks dependencies and
-authentication, and reports the usable entry point, ownership, and blockers.
-It may prepare the environment within existing authority. Record every started
-process/session in a shared run ledger alongside the report, including its owner,
-stop command, fixtures, and probes, so later workers reuse it safely. The
-environment worker owns teardown; the primary collects its completion result.
-Do not inspect credentials or invent authorization to resolve a blocker.
-Write the ledger even for a single-worker run. If the host cannot resume a
-worker, hand its replacement the ledger and artifacts, including live session
-identities; a new dispatch does not inherit the old worker's memory or ownership.
+The primary supplies requirements and implementation facts separately from
+hypotheses. The worker drafts the plan using the existing report schema:
 
-## 2. Worker proposes the plan; primary challenges it
+- Each case's user-visible outcome and connection to the requirement.
+- Preconditions, actions, expected behavior, and explicit failure conditions.
+- Required evidence types, capture strategy, and relevant dependencies.
 
-The primary supplies the original user requirements, a factual account of the
-changes, the tested revision, and known limitations. Separate these facts from
-hypotheses; do not supply a desired pass verdict. The planning worker drafts the
-plan using the report schema, including for each case:
+Preserve supplied checks and stable IDs. The primary challenges omissions,
+ambiguous expectations, and probes that cannot distinguish success from failure.
+Discuss until material concerns are resolved; additional discussion needs a new
+substantive question, not agreement for its own sake. Record the settled plan
+before execution. Apply project approval gates within existing user authority;
+internal agreement is not user authorization.
 
-- The user-visible outcome and its link to the requirement.
-- Preconditions, actions, expected behavior, and what would make it fail.
-- Required evidence types and a feasible capture method on the checked environment.
+Agree up front on which failures stop dependent cases, which cases can continue
+independently, and what requires renewed requirement discussion. The worker must
+not silently weaken criteria to obtain a pass. Reopen the affected part of the
+plan only when new evidence invalidates it or material ambiguity is discovered.
 
-When a verify plan was supplied, preserve its checks and stable ids; propose
-execution details and identify gaps instead of silently replacing it.
-The primary challenges omissions, weak failure conditions, and evidence that
-cannot prove the claim. Allow multiple discussion rounds: ask the worker to test
-counterarguments and revise the plan, not to agree. Finish when material concerns
-are resolved; unresolved product intent goes to the user, not an endless debate.
-Record the settled plan before execution. Apply any project approval gate using
-existing authorization; internal plan agreement does not create new permissions.
-The primary handles user communication and any required confirmation. An already
-agreed plan need not be debated again unless new evidence changes its validity.
+## 3. Execute autonomously; escalate exceptions
 
-## 3. Worker executes each case; primary reviews each result
+The worker executes the agreed cases, records observations and evidence, and
+proceeds without waiting for primary approval after each case. It may use an
+earlier case's observed result to run an agreed dependent case when that case's
+precondition is satisfied. The primary does not monitor every artifact or repeat
+successful execution. Shared fixtures and fault injections remain serialized.
 
-Dispatch a case with its stable id, preconditions, expected behavior, required
-evidence, environment/session ownership, artifact destination, relevant surface
-guide and living-log paths, and explicit authorization boundaries. Reuse workers
-and runtime sessions where useful. Parallelize only cases with disjoint mutable
-state or isolated environments; serialize shared fixtures and fault injections.
-Workers execute real product paths and may prepare fixtures or temporary probes
-within scope. Product repairs belong to the implementer, not the case executor.
+Notify the primary when requirement ambiguity, a product failure, an environment
+blocker, or an evidence problem prevents credible verification. Include affected
+case IDs, expected versus observed behavior, tested revision, decisive evidence
+paths, and the decision needed. Pause affected dependent cases; independent cases
+may continue. Routine successful cases need no individual approval message.
 
-After each case, the worker returns raw evidence, commands/actions, actual
-observations, the tested revision, any injected conditions, cleanup state, and a
-proposed verdict. It does not publish the round or declare final acceptance.
-Identify the decisive artifacts and relevant timestamps or record sections so
-review does not require searching an undifferentiated log dump.
-The primary reviews each completed case before accepting it or dispatching a
-dependent case. Independent cases may continue while that review happens.
+Product repair belongs to the implementation owner: the primary or the existing
+implementation agent. Keep the acceptance executor separate from the repairer;
+the primary retains the final judgment even when it makes the repair itself.
+After a repair, identify which earlier evidence the change invalidates and rerun
+affected cases on the changed revision. Preserve unaffected evidence only with
+its original revision and reuse clearly labeled; an earlier pass does not carry
+across a relevant change. Missing evidence belongs to the executor, without implying a
+product change. If probe repair repeats without new evidence or a credible next
+step, escalate the concrete failure instead of continuing blind attempts.
 
-The primary opens screenshots, inspects temporal evidence for transitions or
-flicker, and checks request/output records for behavioral claims. Evidence from
-an earlier run must be labeled as reused; reviewing it is not independent execution.
-Record a per-case decision: accept, return for more evidence, or return for repair,
-with the concrete reason. Do not rerun successful commands merely to repeat work.
-The primary applies the required living-log checklists before accepting a case.
+Give each execution an attempt ID and preserve its evidence. Snapshot relevant
+live-log excerpts rather than citing a growing log. Supplemental evidence from
+the same execution may use new files; a rerun uses a new attempt ID. Record the
+current attempt and exact evidence paths per case in the ledger, marking replaced
+attempts so the final review does not confuse discarded and current results.
 
-### Who owns a failed case?
+## Communicate completion; do not poll files
 
-The table describes full mode. In reduced mode, "acceptance worker" means the
-assigned executor, which may be the primary; do not invent an omitted audit role.
+At dispatch, specify a parent-visible message/completion channel and a bounded
+checkpoint for long work. Worker-local commentary may not reach the primary.
+Use notifications for exceptions, an agreed long-work checkpoint, report readiness,
+and cleanup completion. Writing files alone is not a handoff. If the host only
+delivers terminal results, return at the agreed checkpoint and continue the same
+worker role using native resume or the ledger; do not force one dispatch per case.
 
-| Finding                                      | Who acts next                                                                                          | Who verifies the next result                                                                                                    |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| Product behavior is wrong                    | The implementer repairs the product; the primary may delegate that repair to an implementation worker. | The acceptance worker reruns affected cases; the primary inspects the new evidence and decides.                                 |
-| Evidence is missing or inconclusive          | The original acceptance worker improves the probe or captures the missing evidence.                    | The primary reviews the new evidence; no product change is implied.                                                             |
-| Environment or fixture failed                | The environment/execution worker restores the authorized test setup and reruns the case.               | The primary checks the resulting product evidence; an environment failure is not a product pass.                                |
-| The final audit finds a gap or contradiction | The primary routes it to the appropriate owner above.                                                  | The acceptance worker supplies fresh evidence, the primary reviews it, and the final auditor rechecks the affected conclusions. |
+The primary waits for notifications and reads cited files to make decisions, not
+to infer progress. Do not repeatedly list directories, check modification times,
+or reopen unfinished drafts. On an overdue checkpoint, ask the running worker
+once for its operation/session and blocker if the host supports that channel.
+Otherwise, or if delivery fails, inspect the ledger and recorded process. Silence
+alone does not establish that a worker died; verify before interrupting it.
 
-Keep the acceptance executor separate from whoever repairs the product. Reuse the
-original acceptance worker when available; otherwise hand the case and failure
-record to a replacement. The repairer's own checks support the handoff but do not
-replace full-mode acceptance. The primary retains the final case decision even
-when it also implemented the repair. Full mode requires the independent executor
-and final audit; reduced mode must disclose whichever independent stage is absent.
+## 4. Primary reviews the completed round
 
-After a repair, rerun affected cases against the changed code and check which
-earlier evidence is now stale. A prior pass does not carry across a relevant
-change. Published rounds remain immutable; publish any repair as a new round.
+The worker sends a report-ready handoff after checking plan/case mapping and
+evidence references. Every planned case must have an explicit outcome, including
+blocked or unexecuted cases. Supply completed report paths, the attempt ledger,
+tested revisions, evidence reuse, and cleanup state. Keep submitted evidence and
+the report stable while the primary reviews them.
 
-## 4. Fresh worker audits the whole round
+The primary reviews the whole requirement, plan, and original evidence at this
+point. Open the screenshots, inspect temporal evidence for flicker or transitions,
+and check request/output records for behavioral claims. A worker's pass label is
+not proof. Check missing required evidence, contradictions, stale revisions, and
+ineffective injection. Apply the skill's living-log checklists and record case
+decisions in the report; a final review still covers every case.
 
-Use a fresh-context worker that did not implement or execute these cases. Give
-it the original requirements, settled plan, raw artifacts, per-case observations,
-revision history, and primary review decisions. Require an independent judgment;
-prior pass labels are claims to test, not instructions to agree.
+Route findings to the implementer or executor as above. Review corrected evidence
+and affected conclusions without rerunning unrelated passing cases or restarting
+the entire review. Publish only after the primary's final review is complete,
+with remaining failures or uncertainty reported explicitly. Follow the project's
+cleanup sequence and collect cleanup completion before the final user handoff.
+Published rounds remain immutable; repairs after publication create a new round.
 
-The audit checks requirement coverage, whether evidence supports each expected
-outcome, missing required types, contradictory cases, stale revisions, ineffective
-fault injection, and open cleanup or blocker items. It returns findings by stable
-case id and an overall readiness assessment. It need not rerun every case; request
-targeted execution when existing evidence cannot settle a concern.
+## Reporting
 
-The primary resolves findings, obtains fresh evidence where needed, and has the
-auditor recheck affected conclusions before publication. Collect all delegated
-terminal results. Publish only after per-case reviews and the independent stages
-required by the selected mode are complete;
-report remaining failures or uncertainty honestly rather than omitting them.
-If plan discussion, repair, or audit repeats without new evidence or a credible
-next step, stop that loop and report the concrete blocker. Do not lower the
-criterion to obtain a pass. Continue independent cases where useful.
-
-## Reporting and fallback
-
-Keep the existing plan/case/evidence schema. In the report's narrative tail record
-which roles performed implementation, execution, primary review, and final audit;
-include the execution mode, worker/run identifiers and model selections, tested
-revisions, reused evidence, omitted stages, and limitations.
-Distinguish builder self-verification, independent execution, and evidence-only
-audit. A second agent alone does not guarantee an objective result.
-
-If delegation is unavailable or prohibited, the primary may execute within the
-user's authority, but must disclose the missing independent stages. If the user
-explicitly requires independence, report that requirement as unmet rather than
-claiming a substitute is equivalent. Do not spawn recursively from workers;
-coordination stays with the primary and follows the host's delegation rules.
+Keep the existing plan/case/evidence schema. The narrative tail records who
+implemented, executed, and performed the final review, worker/run/model provenance,
+tested revisions, reused evidence, and limitations. Distinguish independent
+execution from builder self-verification; no separate final audit is claimed or
+required by this workflow. If delegation is unavailable or prohibited, the primary
+may execute within authority and disclose the missing independent execution.

@@ -26,9 +26,10 @@ export const AcceptanceIdentifier = 'acceptance';
 
 /**
  * The delegated acceptance skill: the primary agent owns the delivery judgment;
- * workers inspect the environment, draft and execute the plan, and perform the
- * final audit. It runs from any task's working directory, with or without a
- * LobeHub operation/topic, and depends on no repository-local script.
+ * one worker inspects the environment, drafts and executes the agreed plan,
+ * and the primary reviews the completed evidence. It runs from any task's working
+ * directory, with or without a LobeHub operation/topic, and depends on no
+ * repository-local script.
  * Surface-specific tools stay explicit: agent-browser for Web/Electron,
  * shell-level native automation for macOS, and an installed Simulator
  * HID/Accessibility CLI plus Xcode/simctl for iOS.
