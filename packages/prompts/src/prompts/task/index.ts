@@ -749,7 +749,7 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
       `Goal loop${goalLoop.round ? ` — round ${goalLoop.round}${budget}` : ''}: earlier rounds did not fully meet the acceptance criteria. Focus on closing the gaps below instead of redoing finished work.`,
     );
     if (goalLoop.rejectComment) {
-      taskLines.push('  User feedback on the last delivery (address this first):');
+      taskLines.push('  Review feedback on the last delivery (address this first):');
       taskLines.push(`    "${goalLoop.rejectComment}"`);
     }
     if (goalLoop.failedChecks && goalLoop.failedChecks.length > 0) {

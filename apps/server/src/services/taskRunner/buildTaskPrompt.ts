@@ -56,6 +56,17 @@ const resolveGoalLoopContext = async (
       if (comment) context.rejectComment = comment;
     }
 
+    const automaticReview = [...runs].reverse().find((run) => run.metadata?.goalReview)
+      ?.metadata?.goalReview;
+    if (automaticReview && automaticReview.status !== 'passed') {
+      context.rejectComment = [
+        context.rejectComment,
+        `Automatic Acceptance review:\n${automaticReview.feedback}`,
+      ]
+        .filter(Boolean)
+        .join('\n\n');
+    }
+
     const plan = (last.plan ?? []) as Array<{ id: string; title: string }>;
     const results = await new VerifyCheckResultModel(db, userId, workspaceId).listByRun(last.id);
     const byItem = new Map(results.map((r) => [r.checkItemId, r]));
