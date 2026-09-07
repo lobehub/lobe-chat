@@ -1,12 +1,13 @@
 import type { VerifyRunMetadata } from '@lobechat/types';
 
 import { GoalModel } from '@/database/models/goal';
+import { VerifyEvidenceModel } from '@/database/models/verifyEvidence';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import type { LobeChatDatabase } from '@/database/type';
 
 import { AcceptanceService, buildAcceptanceCheckUnion } from './acceptanceService';
 import { mapWithConcurrency } from './concurrency';
-import { REVIEW_PREDICT_MODEL_CONFIG } from './modelConfig';
+import { resolveGoalReviewModelConfig } from './goalReviewModelConfig';
 import { REVIEW_PREDICT_CONCURRENCY, VerifyReviewPredictorService } from './reviewPredictor';
 
 /** Called under the verify run's task-drive claim, before completing a Goal task. */
@@ -41,6 +42,27 @@ export const reviewGoalDelivery = async (
     ).filter((check) => check.required);
     if (!checks.length) throw new Error('Goal Acceptance has no required checks');
 
+    const evidenceModel = new VerifyEvidenceModel(db, userId, workspaceId);
+    const evidence = await Promise.all(
+      checks.map((check) =>
+        check.result ? evidenceModel.listByCheckResult(check.result.id) : Promise.resolve([]),
+      ),
+    );
+    let modelConfigPromise: ReturnType<typeof resolveGoalReviewModelConfig> | undefined;
+    const getModelConfig = () => {
+      modelConfigPromise ??= resolveGoalReviewModelConfig(
+        db,
+        userId,
+        {
+          requiresVision: evidence.flat().some((item) => ['screenshot', 'gif'].includes(item.type)),
+          taskId,
+          verifierAgentId: acceptance.config?.verifierAgentId,
+        },
+        workspaceId,
+      );
+      return modelConfigPromise;
+    };
+
     const predictor = new VerifyReviewPredictorService(db, userId, workspaceId);
     const feedback: string[] = [];
     await mapWithConcurrency(checks, REVIEW_PREDICT_CONCURRENCY, async (check) => {
@@ -58,12 +80,20 @@ export const reviewGoalDelivery = async (
         );
         return;
       }
+      const modelConfig = await getModelConfig();
+      if (!modelConfig) {
+        review.status = 'errored';
+        feedback.push(
+          'Configure an available model on the Acceptance verifier agent and retry the review.',
+        );
+        return;
+      }
       const prediction = await predictor
         .predict({
           checkResultId: check.result.id,
           includeTextEvidence: true,
           instructionDocumentId: check.planItem?.documentId,
-          modelConfig: REVIEW_PREDICT_MODEL_CONFIG,
+          modelConfig,
           requirement: acceptance.requirement,
           surface: check.surface,
         })
@@ -86,7 +116,7 @@ export const reviewGoalDelivery = async (
     console.error('[goal-review] Acceptance review failed:', error);
     review.status = 'errored';
     review.feedback =
-      'Automatic Acceptance review could not complete. Retry the review before advancing.';
+      'Automatic Acceptance review could not complete. Configure an available model on the Acceptance verifier agent and retry the review before advancing.';
   }
   if (run) {
     // Preserve the task-drive claim and the run's existing policy/provenance.

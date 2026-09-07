@@ -13,6 +13,11 @@ const mocks = vi.hoisted(() => ({
   acceptance: vi.fn(),
   rounds: vi.fn(),
   predict: vi.fn(),
+  reviewModel: vi.fn(),
+}));
+vi.mock('../goalReviewModelConfig', () => ({ resolveGoalReviewModelConfig: mocks.reviewModel }));
+vi.mock('@/database/models/verifyEvidence', () => ({
+  VerifyEvidenceModel: vi.fn(() => ({ listByCheckResult: vi.fn().mockResolvedValue([]) })),
 }));
 vi.mock('@/database/models/goal', () => ({
   GoalModel: vi.fn(() => ({ findByGraphTask: mocks.goal })),
@@ -51,6 +56,10 @@ const result = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.reviewModel.mockResolvedValue({
+    model: 'configured-model',
+    provider: 'configured-provider',
+  });
   mocks.goal.mockResolvedValue({ id: 'goal1' });
   mocks.run.mockResolvedValue({
     id: 'r1',
@@ -128,6 +137,32 @@ describe('Goal automatic Acceptance review', () => {
   it('sends missing evidence back and does not mistake skipped review for approval', async () => {
     mocks.predict.mockResolvedValue({ id: 'p1', status: 'skipped', statusReason: 'no evidence' });
     expect(await reviewGoalDelivery(db, 'u1', 't1', 'op1')).toMatchObject({ status: 'rejected' });
+  });
+
+  it('uses the resolved reviewer instead of requiring the Google pin', async () => {
+    await reviewGoalDelivery(db, 'u1', 't1', 'op1');
+    expect(mocks.predict.mock.calls[0][0].modelConfig).toEqual({
+      model: 'configured-model',
+      provider: 'configured-provider',
+    });
+  });
+
+  it('holds with configuration guidance when no reviewer is available', async () => {
+    mocks.reviewModel.mockResolvedValue(undefined);
+    const review = await reviewGoalDelivery(db, 'u1', 't1', 'op1');
+    expect(review?.status).toBe('errored');
+    expect(review?.feedback).toContain('Configure an available model');
+    expect(mocks.predict).not.toHaveBeenCalled();
+  });
+
+  it('does not require a model to honor an existing human approval', async () => {
+    mocks.rounds.mockResolvedValue({
+      runs: [{ id: 'r1', roundIndex: 1, plan: [check] }],
+      results: [{ ...result, userDecision: 'accepted' }],
+    });
+    mocks.reviewModel.mockResolvedValue(undefined);
+    expect((await reviewGoalDelivery(db, 'u1', 't1', 'op1'))?.status).toBe('passed');
+    expect(mocks.reviewModel).not.toHaveBeenCalled();
   });
 
   it('holds on a reviewer error instead of approving or requesting a product fix', async () => {

@@ -91,12 +91,14 @@ export const shouldSurfaceProposal = <
  * current model's row was cleared for re-judging.
  */
 export const isCurrentReviewPrediction = (
-  prediction: { model: string; promptVersion: string; provider: string },
+  prediction: { id?: string; model: string; promptVersion: string; provider: string },
   modelConfig: { model: string; provider: string },
+  automaticPredictionIds?: ReadonlySet<string>,
 ): boolean =>
-  prediction.provider === modelConfig.provider &&
-  prediction.model === modelConfig.model &&
-  prediction.promptVersion === REVIEW_PREDICT_PROMPT_VERSION;
+  Boolean(prediction.id && automaticPredictionIds?.has(prediction.id)) ||
+  (prediction.provider === modelConfig.provider &&
+    prediction.model === modelConfig.model &&
+    prediction.promptVersion === REVIEW_PREDICT_PROMPT_VERSION);
 
 /**
  * Produces an automated second opinion on a check the verifier already judged.
