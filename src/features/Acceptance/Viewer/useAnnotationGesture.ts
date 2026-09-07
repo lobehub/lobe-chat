@@ -9,6 +9,9 @@ type Gesture =
   | { index: number; kind: 'move'; origin: Rect; start: { x: number; y: number } }
   | { index: number; kind: 'resize'; origin: Rect };
 
+// Keep the minimum in displayed CSS pixels, independent of aspect ratio and zoom.
+const MIN_REGION_PX = 3;
+
 const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
 export const useAnnotationGesture = ({
@@ -50,7 +53,9 @@ export const useAnnotationGesture = ({
     if (!point) return;
     const rect = toRect(gesture.start, point);
     // Ignore accidental clicks — a region needs real area to comment on.
-    if (rect.width < 0.01 || rect.height < 0.01) return;
+    const box = imageRef.current?.getBoundingClientRect();
+    if (!box || rect.width * box.width < MIN_REGION_PX || rect.height * box.height < MIN_REGION_PX)
+      return;
     onDraw(rect);
   };
 
@@ -99,9 +104,11 @@ export const useAnnotationGesture = ({
         return;
       }
       // resize — the origin's top-left corner stays anchored.
+      const box = imageRef.current?.getBoundingClientRect();
+      if (!box || box.width === 0 || box.height === 0) return;
       onUpdate(index, {
-        height: Math.max(point.y - origin.y, 0.01),
-        width: Math.max(point.x - origin.x, 0.01),
+        height: Math.min(Math.max(point.y - origin.y, MIN_REGION_PX / box.height), 1 - origin.y),
+        width: Math.min(Math.max(point.x - origin.x, MIN_REGION_PX / box.width), 1 - origin.x),
         x: origin.x,
         y: origin.y,
       });
