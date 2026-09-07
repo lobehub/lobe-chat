@@ -71,7 +71,7 @@ const AcceptanceLedgerRail = () => {
 
   if (!data || !canViewAcceptanceHistory(data.isOwner)) return null;
 
-  const urlRoundRaw = searchParams.get('r');
+  const urlRoundRaw = searchParams.get('report');
   const reportRound = embedded ? null : resolveRoundParam(data.rounds, urlRoundRaw);
   const reviewableChecks = data.checks;
   const reviewByRound = (() => {
@@ -92,8 +92,8 @@ const AcceptanceLedgerRail = () => {
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev);
-        if (round?.run.roundIndex == null) next.delete('r');
-        else next.set('r', String(round.run.roundIndex));
+        if (round?.run.roundIndex == null) next.delete('report');
+        else next.set('report', String(round.run.roundIndex));
         return next;
       },
       { replace: true },

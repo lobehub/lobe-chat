@@ -33,6 +33,10 @@ const styles = createStaticStyles(({ css }) => ({
     max-width: ${CONTENT_MAX_WIDTH}px;
     margin-inline: auto;
     padding-inline: 24px;
+
+    @media (width <= 767px) {
+      padding-inline: 16px;
+    }
   `,
   contentFrame: css`
     overflow: ${acceptanceScrollLayout.frameOverflow};

@@ -10,6 +10,7 @@ import {
   Ban,
   Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   CircleDashed,
   HelpCircle,
@@ -36,6 +37,17 @@ import {
 import { acceptanceFocusedLayout, acceptanceScrollLayout } from './layout';
 
 const styles = createStaticStyles(({ css }) => ({
+  mobileNavigation: css`
+    position: sticky;
+    z-index: 2;
+    inset-block-start: -16px;
+
+    flex: none;
+
+    padding-block: 8px;
+
+    background: ${cssVar.colorBgContainer};
+  `,
   countBadge: css`
     padding-block: 1px;
     padding-inline: 7px;
@@ -57,6 +69,9 @@ const styles = createStaticStyles(({ css }) => ({
 
     @media (width <= 900px) {
       grid-template-columns: 1fr;
+      grid-template-rows: auto minmax(0, 1fr);
+      flex: 1;
+      min-height: 0;
     }
   `,
   outline: css`
@@ -93,10 +108,13 @@ const styles = createStaticStyles(({ css }) => ({
     padding-inline: 32px;
 
     @media (width <= 767px) {
+      overflow: auto;
+      min-height: 0;
       padding: 16px;
     }
   `,
   content: css`
+    flex: none;
     width: min(880px, 100%);
     margin-inline: auto;
   `,
@@ -151,21 +169,22 @@ const AcceptanceFocusReview = ({
   const { md = true } = useResponsive();
   const [outlineOpen, setOutlineOpen] = useState(false);
   const focusedStates = focusedCheckStates(focusedCheck);
+  const currentIndex = orderedChecks.findIndex((check) => check.id === focusedCheck.id);
 
   return (
     <div className={styles.layout}>
       <Flexbox className={styles.outline}>
-        <Flexbox flex={'none'} gap={10} paddingBlock={8} paddingInline={4}>
+        <Flexbox flex={'none'} gap={md ? 10 : 0} paddingBlock={8} paddingInline={4}>
           <Button
             icon={<Icon icon={ArrowLeft} />}
             size={'small'}
-            style={{ alignSelf: 'flex-start' }}
+            style={{ alignSelf: 'flex-start', minHeight: md ? undefined : 44 }}
             type={'text'}
             onClick={onBack}
           >
             {t('acceptance.focus.back')}
           </Button>
-          <Flexbox gap={4} paddingInline={4}>
+          <Flexbox gap={4} paddingInline={4} style={!md ? { display: 'none' } : undefined}>
             <Text strong style={{ fontSize: 15 }}>
               {subjectTitle}
             </Text>
@@ -176,7 +195,13 @@ const AcceptanceFocusReview = ({
               </Text>
             </Flexbox>
           </Flexbox>
-          <Flexbox horizontal align={'center'} gap={8} paddingInline={4}>
+          <Flexbox
+            horizontal
+            align={'center'}
+            gap={8}
+            paddingInline={4}
+            style={!md ? { display: 'none' } : undefined}
+          >
             <Text strong style={{ fontSize: 13 }}>
               {t('acceptance.checks.title')}
             </Text>
@@ -202,7 +227,7 @@ const AcceptanceFocusReview = ({
             type={'text'}
             onClick={() => setOutlineOpen((open) => !open)}
           >
-            {t('acceptance.checks.title')} · {focusedCheck.title}
+            {t('acceptance.checks.title')} · {currentIndex + 1} / {orderedChecks.length}
           </Button>
         )}
         {(md || outlineOpen) && (
@@ -288,7 +313,28 @@ const AcceptanceFocusReview = ({
         )}
       </Flexbox>
 
-      <Flexbox className={styles.main}>
+      <Flexbox className={styles.main} key={focusedCheck.id}>
+        {!md && (
+          <Flexbox horizontal align={'center'} className={styles.mobileNavigation} gap={8}>
+            <Button
+              aria-label={t('acceptance.focus.previous')}
+              disabled={currentIndex <= 0}
+              icon={<Icon icon={ChevronLeft} />}
+              style={{ minHeight: 44, minWidth: 44 }}
+              onClick={() => onSelectCheck(orderedChecks[currentIndex - 1].id)}
+            />
+            <Text style={{ flex: 1, textAlign: 'center' }}>
+              {currentIndex + 1} / {orderedChecks.length}
+            </Text>
+            <Button
+              aria-label={t('acceptance.focus.next')}
+              disabled={currentIndex >= orderedChecks.length - 1}
+              icon={<Icon icon={ChevronRight} />}
+              style={{ minHeight: 44, minWidth: 44 }}
+              onClick={() => onSelectCheck(orderedChecks[currentIndex + 1].id)}
+            />
+          </Flexbox>
+        )}
         <Flexbox className={styles.content} gap={16}>
           <Flexbox gap={acceptanceFocusedLayout.headerGap}>
             <Flexbox
@@ -363,15 +409,15 @@ const AcceptanceFocusReview = ({
               >
                 C{focusedCheck.seq}
               </Text>
-              <Text as={'h2'} style={{ fontSize: 22, margin: 0 }}>
+              <Text as={'h2'} style={{ fontSize: md ? 22 : 18, margin: 0 }}>
                 {focusedCheck.title}
               </Text>
             </Flexbox>
-            <Text fontSize={13} type={'secondary'}>
+            <Text fontSize={13} style={!md ? { display: 'none' } : undefined} type={'secondary'}>
               {t(`acceptance.focus.verifierDescription.${focusedStates.verifierLabel}`)}
             </Text>
           </Flexbox>
-          {onCheckWork && isCheckWorkActionable(focusedCheck) && (
+          {md && onCheckWork && isCheckWorkActionable(focusedCheck) && (
             <Flexbox horizontal align={'center'} className={styles.work} gap={16}>
               <Flexbox flex={1} gap={3}>
                 <Text strong>{t('acceptance.checkWork.title')}</Text>
@@ -392,6 +438,15 @@ const AcceptanceFocusReview = ({
             onReview={onReview}
             onRound={onRound}
           />
+          {!md && onCheckWork && isCheckWorkActionable(focusedCheck) && (
+            <Button
+              style={{ alignSelf: 'flex-start', minHeight: 44 }}
+              type={'text'}
+              onClick={onCheckWork}
+            >
+              {t('acceptance.checkWork.copy')}
+            </Button>
+          )}
         </Flexbox>
       </Flexbox>
     </div>

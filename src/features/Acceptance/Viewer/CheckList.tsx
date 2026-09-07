@@ -9,7 +9,7 @@ import type {
 } from '@lobechat/types';
 import { copyToClipboard, Empty, Flexbox, Icon, Image, TextArea, Tooltip } from '@lobehub/ui';
 import { ActionIcon, Button, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
 import dayjs from 'dayjs';
 import {
   AudioLines,
@@ -443,6 +443,7 @@ const comparisonContent = (item: AcceptanceEvidence) => {
 
 const EvidenceList = memo<{
   evidence: AcceptanceEvidence[];
+  onReviewEvidence?: (id: string) => void;
   /**
    * Regions to draw over an evidence image, keyed by evidence id. Used by the
    * AI proposal: rather than the card rendering its own copy of the screenshot
@@ -453,7 +454,8 @@ const EvidenceList = memo<{
     string,
     { comment?: string; label?: number; rect: AcceptanceReviewAnnotation['rect'] }[]
   >;
-}>(({ evidence, overlays }) => {
+}>(({ evidence, overlays, onReviewEvidence }) => {
+  const { md = true } = useResponsive();
   const sorted = [...evidence].sort((a, b) => (isVisual(b) ? 1 : 0) - (isVisual(a) ? 1 : 0));
   if (sorted.length === 0) return null;
 
@@ -489,7 +491,7 @@ const EvidenceList = memo<{
     <Flexbox gap={12}>
       {sorted.map((item) => {
         if (consumedScreenshotIds.has(item.id)) return null;
-        if (pairedIds.has(item.id)) {
+        if (pairedIds.has(item.id) && (md || !onReviewEvidence)) {
           const comparison = readEvidenceComparison(item.metadata)!;
           // The pair renders once, anchored at its `before` half.
           if (comparison.role !== 'before') return null;
@@ -531,6 +533,36 @@ const EvidenceList = memo<{
               {caption}
             </Flexbox>
           );
+        if (!md && onReviewEvidence && item.fileUrl && IMAGE_EVIDENCE.has(item.type)) {
+          return (
+            <button
+              key={item.id}
+              type={'button'}
+              style={{
+                padding: 0,
+                border: 0,
+                background: 'none',
+                textAlign: 'start',
+                cursor: 'pointer',
+              }}
+              onClick={() => onReviewEvidence(item.id)}
+            >
+              <img
+                alt={item.description ?? item.fileName ?? item.type}
+                loading={'lazy'}
+                src={item.fileUrl}
+                style={{
+                  display: 'block',
+                  maxWidth: '100%',
+                  maxHeight: 420,
+                  objectFit: 'contain',
+                  borderRadius: 8,
+                }}
+              />
+              {caption}
+            </button>
+          );
+        }
         const overlay = overlays?.get(item.id);
         if (item.fileUrl && item.type === 'screenshot') {
           const run = [item];
@@ -999,8 +1031,12 @@ export const AcceptanceCheckRow = memo<{
      *   model's note and regions, and the submitted result is diffed against it
      *   so the signal records WHICH part of the proposal was wrong.
      */
-    const openReject = (fromProposal?: CheckProposal) =>
+    const openReject = (fromProposal?: CheckProposal, initialEvidenceId?: string) =>
       openCheckRejectModal({
+        initialEvidenceId,
+        previousAnnotations:
+          activeReview?.action === 'reject' ? activeReview.annotations : undefined,
+        previousComment: activeReview?.action === 'reject' ? activeReview.comment : undefined,
         checkDescription: check.planItem?.description,
         checkTitle: `C${check.seq} · ${title}`,
         draftKey: check.id,
@@ -1352,7 +1388,11 @@ export const AcceptanceCheckRow = memo<{
                 </Flexbox>
               )}
             {visualization && <VisualizationRenderer manifest={visualization} />}
-            <EvidenceList evidence={check.evidence} overlays={proposalOverlays} />
+            <EvidenceList
+              evidence={check.evidence}
+              overlays={proposalOverlays}
+              onReviewEvidence={canReview ? (id) => openReject(undefined, id) : undefined}
+            />
 
             {check.state === 'not_executed' && (
               <Flexbox

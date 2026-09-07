@@ -48,7 +48,7 @@ const AcceptanceViewReportLink = () => {
         setSearchParams(
           (prev) => {
             const params = new URLSearchParams(prev);
-            params.set('r', String(round.run.roundIndex));
+            params.set('report', String(round.run.roundIndex));
             return params;
           },
           { replace: true },

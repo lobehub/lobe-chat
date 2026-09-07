@@ -1,4 +1,12 @@
 export default {
+  'acceptance.focus.previous': 'Previous check',
+  'acceptance.focus.next': 'Next check',
+  'acceptance.review.previousImage': 'Previous image',
+  'acceptance.review.nextImage': 'Next image',
+  'acceptance.review.imageNumber': 'Image {{current}} / {{total}}',
+  'acceptance.review.drawRegion': 'Draw region',
+  'acceptance.review.browseImage': 'Browse',
+
   'acceptance.accept.exceptionsHint':
     'Accepting means you have seen these exceptions and take the delivery with them.',
   'acceptance.accept.exceptionsTitle': '{{count}} exception(s) still unresolved:',

@@ -3,8 +3,8 @@
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { Flexbox, TextArea } from '@lobehub/ui';
 import { ActionIcon, Button, createModal, Text, useModalContext } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { ZoomIn, ZoomOut } from 'lucide-react';
+import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
+import { ChevronLeft, ChevronRight, Trash2, ZoomIn, ZoomOut } from 'lucide-react';
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +16,27 @@ export const CHECK_REJECT_MODAL_SIZE = { height: '98dvh', width: '98vw' } as con
 export const TEXT_REJECT_MODAL_WIDTH = 'min(560px, calc(100vw - 32px))';
 
 const styles = createStaticStyles(({ css }) => ({
+  mobileClose: css`
+    @media (width <= 640px) {
+      inset-block-start: max(4px, env(safe-area-inset-top));
+      inset-inline-end: 4px;
+      width: 44px;
+      height: 44px;
+    }
+  `,
+  mobileHeader: css`
+    @media (width <= 640px) {
+      min-height: 56px;
+      padding-block: max(12px, env(safe-area-inset-top)) 12px;
+      padding-inline: 12px 52px;
+    }
+  `,
+  mobileContent: css`
+    @media (width <= 640px) {
+      padding-block: 0 max(12px, env(safe-area-inset-bottom));
+      padding-inline: 12px;
+    }
+  `,
   modalPopup: css`
     > div {
       display: flex;
@@ -27,6 +48,15 @@ const styles = createStaticStyles(({ css }) => ({
       width: ${CHECK_REJECT_MODAL_SIZE.width};
       max-width: ${CHECK_REJECT_MODAL_SIZE.width};
       height: ${CHECK_REJECT_MODAL_SIZE.height};
+
+      @media (width <= 640px) {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding: 0;
+        border-radius: 0;
+      }
     }
   `,
   fullscreenBody: css`
@@ -81,7 +111,7 @@ const styles = createStaticStyles(({ css }) => ({
     @media (width <= 640px) {
       flex: 0 1 auto;
       width: 100%;
-      max-height: 36%;
+      max-height: 120px;
     }
   `,
   thumb: css`
@@ -109,10 +139,12 @@ const styles = createStaticStyles(({ css }) => ({
       fits the stage, and scrolls from the edges once it grows past it. */
   viewport: css`
     overflow: auto;
+    overscroll-behavior: contain;
     display: flex;
     flex: 1;
 
     min-width: 0;
+    min-height: 120px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -143,6 +175,12 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgElevated};
     box-shadow: ${cssVar.boxShadowSecondary};
+
+    @media (width <= 640px) {
+      position: static;
+      transform: none;
+      align-self: center;
+    }
   `,
   zoomLabel: css`
     min-width: 44px;
@@ -178,6 +216,15 @@ interface RejectDraft {
   comment: string;
 }
 
+export const serializeReviewAnnotations = (
+  annotations: DraftAnnotationEntry[],
+): AcceptanceReviewAnnotation[] =>
+  annotations.map(({ comment, evidenceId, rect }) => ({
+    comment: comment.trim() || undefined,
+    evidenceId,
+    rect,
+  }));
+
 const draftStorageKey = (key: string) => `acceptance-reject-draft:${key}`;
 
 const readDraft = (key: string | undefined): RejectDraft | null => {
@@ -201,6 +248,9 @@ export const checkRejectModalShell = (evidenceCount: number) => {
   const modalSize = checkRejectModalSize(evidenceCount);
   return {
     classNames: {
+      close: styles.mobileClose,
+      content: styles.mobileContent,
+      header: styles.mobileHeader,
       popup: cx(styles.modalPopup, evidenceCount > 0 && styles.modalPopupMedia),
     },
     styles: {
@@ -232,12 +282,15 @@ interface CheckRejectModalProps {
   initialAnnotations?: AcceptanceReviewAnnotation[];
   /** Feedback already typed in the focused detail before opening annotation. */
   initialComment?: string;
+  initialEvidenceId?: string;
   /** Perform the reject; resolve true to close, false to stay open. */
   onConfirm: (value: {
     annotations: AcceptanceReviewAnnotation[];
     comment: string;
     fileIds: string[];
   }) => Promise<boolean>;
+  previousAnnotations?: AcceptanceReviewAnnotation[];
+  previousComment?: string;
 }
 
 export const mergeRejectComments = (initialComment = '', storedComment = '') => {
@@ -249,8 +302,21 @@ export const mergeRejectComments = (initialComment = '', storedComment = '') => 
 };
 
 const CheckRejectModalContent = memo<CheckRejectModalProps>(
-  ({ checkTitle, draftKey, evidence, initialAnnotations, initialComment, onConfirm }) => {
+  ({
+    checkTitle,
+    draftKey,
+    evidence,
+    initialAnnotations,
+    initialComment,
+    initialEvidenceId,
+    previousAnnotations,
+    previousComment,
+    onConfirm,
+  }) => {
     const { t: translate } = useTranslation('verify');
+    const { md = true } = useResponsive();
+    const [drawing, setDrawing] = useState(false);
+    const swipeStart = useRef<{ x: number; y: number } | null>(null);
     const { close, setCanDismissByClickOutside } = useModalContext();
     const [draft] = useState(() => readDraft(draftKey));
     const [comment, setComment] = useState(() =>
@@ -259,12 +325,14 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       // feedback neither party wrote.
       initialAnnotations?.length
         ? (initialComment ?? '')
-        : mergeRejectComments(initialComment, draft?.comment),
+        : mergeRejectComments(initialComment, draft?.comment ?? previousComment),
     );
     const [loading, setLoading] = useState(false);
-    const [activeEvidenceId, setActiveEvidenceId] = useState(evidence[0]?.id);
+    const [activeEvidenceId, setActiveEvidenceId] = useState(initialEvidenceId ?? evidence[0]?.id);
     const [annotations, setAnnotations] = useState<DraftAnnotationEntry[]>(() => {
-      const source = initialAnnotations?.length ? initialAnnotations : (draft?.annotations ?? []);
+      const source = initialAnnotations?.length
+        ? initialAnnotations
+        : (draft?.annotations ?? previousAnnotations ?? []);
       return (
         source
           // Only restore regions whose evidence still exists — a new round may
@@ -334,6 +402,13 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       }
     }, [annotations, comment, draftKey]);
 
+    const activeIndex = evidence.findIndex((item) => item.id === activeEvidenceId);
+    const selectEvidence = (index: number) => {
+      if (!evidence[index]) return;
+      setActiveEvidenceId(evidence[index].id);
+      setZoom(1);
+      viewportRef.current?.scrollTo(0, 0);
+    };
     const activeEvidence = evidence.find((item) => item.id === activeEvidenceId);
     const activeAnnotations = annotations.filter((item) => item.evidenceId === activeEvidenceId);
 
@@ -355,13 +430,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       setLoading(true);
       try {
         const confirmed = await onConfirm({
-          annotations: annotations
-            .filter((annotation) => annotation.comment.trim())
-            .map((annotation) => ({
-              comment: annotation.comment.trim(),
-              evidenceId: annotation.evidenceId,
-              rect: annotation.rect,
-            })),
+          annotations: serializeReviewAnnotations(annotations),
           comment: comment.trim(),
           fileIds,
         });
@@ -416,19 +485,32 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
             )
           }
         />
+        <ActionIcon
+          aria-label={translate('acceptance.review.removeRegion', { index: index + 1 })}
+          icon={Trash2}
+          size={{ blockSize: 44, size: 18 }}
+          onClick={() => canvasHandlers.onRemove(index)}
+        />
       </Flexbox>
     ));
 
     const thumbnails = evidence.length > 1 && (
-      <Flexbox horizontal gap={8} wrap={'wrap'}>
+      <Flexbox horizontal gap={8} style={{ overflowX: 'auto', flex: 'none' }}>
         {evidence.map((item) => (
-          <div
+          <button
+            aria-pressed={item.id === activeEvidenceId}
             className={cx(styles.thumb, item.id === activeEvidenceId && styles.thumbActive)}
             key={item.id}
-            onClick={() => setActiveEvidenceId(item.id)}
+            style={{ flexShrink: 0 }}
+            type={'button'}
+            aria-label={translate('acceptance.review.imageNumber', {
+              current: evidence.indexOf(item) + 1,
+              total: evidence.length,
+            })}
+            onClick={() => selectEvidence(evidence.indexOf(item))}
           >
             <img alt={''} src={item.fileUrl} />
-          </div>
+          </button>
         ))}
       </Flexbox>
     );
@@ -457,12 +539,13 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
               onRemove={remove}
             />
           </Flexbox>
-          <Button disabled={loading} onClick={close}>
+          <Button disabled={loading} style={{ minHeight: md ? undefined : 44 }} onClick={close}>
             {translate('acceptance.actions.cancel')}
           </Button>
           <Button
             disabled={!canSubmit || uploading}
             loading={loading}
+            style={{ minHeight: md ? undefined : 44 }}
             type={'primary'}
             onClick={handleConfirm}
           >
@@ -477,12 +560,69 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
         {activeEvidence && (
           <Flexbox flex={1} gap={12} style={{ minHeight: 0 }}>
             <Flexbox gap={12} height={'100%'} style={{ minHeight: 0 }}>
-              {thumbnails}
+              {md && thumbnails}
+              {!md && (
+                <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
+                  <ActionIcon
+                    aria-label={translate('acceptance.review.previousImage')}
+                    disabled={activeIndex <= 0}
+                    icon={ChevronLeft}
+                    size={{ blockSize: 44, size: 20 }}
+                    onClick={() => selectEvidence(activeIndex - 1)}
+                  />
+                  <Text style={{ flex: 1 }}>
+                    {translate('acceptance.review.imageNumber', {
+                      current: activeIndex + 1,
+                      total: evidence.length,
+                    })}
+                  </Text>
+                  <ActionIcon
+                    aria-label={translate('acceptance.review.nextImage')}
+                    disabled={activeIndex >= evidence.length - 1}
+                    icon={ChevronRight}
+                    size={{ blockSize: 44, size: 20 }}
+                    onClick={() => selectEvidence(activeIndex + 1)}
+                  />
+                  <Button
+                    aria-pressed={drawing}
+                    style={{ minHeight: 44 }}
+                    onClick={() => setDrawing(!drawing)}
+                  >
+                    {translate(
+                      drawing ? 'acceptance.review.browseImage' : 'acceptance.review.drawRegion',
+                    )}
+                  </Button>
+                </Flexbox>
+              )}
               <div className={styles.fullscreenBody} style={{ position: 'relative' }}>
-                <div className={styles.viewport} ref={viewportRef}>
+                <div
+                  className={styles.viewport}
+                  ref={viewportRef}
+                  style={{
+                    touchAction: !md && !drawing && zoom === 1 ? 'pan-y pinch-zoom' : undefined,
+                  }}
+                  onTouchEnd={(event) => {
+                    const start = swipeStart.current;
+                    swipeStart.current = null;
+                    const touch = event.changedTouches[0];
+                    if (!start || !touch) return;
+                    const dx = touch.clientX - start.x;
+                    const dy = touch.clientY - start.y;
+                    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5)
+                      selectEvidence(activeIndex + (dx < 0 ? 1 : -1));
+                  }}
+                  onTouchStart={(event) => {
+                    const touch = event.touches[0];
+                    swipeStart.current =
+                      !md && !drawing && zoom === 1 && event.touches.length === 1
+                        ? { x: touch.clientX, y: touch.clientY }
+                        : null;
+                  }}
+                >
                   <div className={styles.viewportInner}>
                     <AnnotationCanvas
                       annotations={activeAnnotations}
+                      drawing={md || drawing}
                       imageWidth={viewportWidth ? Math.max(viewportWidth * zoom - 2, 0) : undefined}
                       src={activeEvidence.fileUrl}
                       {...canvasHandlers}
@@ -493,7 +633,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
                   <ActionIcon
                     disabled={zoom <= ZOOM_STEPS[0]}
                     icon={ZoomOut}
-                    size={'small'}
+                    size={md ? 'small' : { blockSize: 44, size: 20 }}
                     title={translate('acceptance.review.zoomOut')}
                     onClick={() => stepZoom(-1)}
                   />
@@ -501,12 +641,19 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
                   <ActionIcon
                     disabled={zoom >= ZOOM_STEPS.at(-1)!}
                     icon={ZoomIn}
-                    size={'small'}
+                    size={md ? 'small' : { blockSize: 44, size: 20 }}
                     title={translate('acceptance.review.zoomIn')}
                     onClick={() => stepZoom(1)}
                   />
                 </div>
-                <div className={styles.sidePanel}>
+                <div
+                  className={styles.sidePanel}
+                  style={
+                    !md && !drawing && activeAnnotations.length === 0
+                      ? { display: 'none' }
+                      : undefined
+                  }
+                >
                   <Flexbox gap={2}>
                     <Text strong fontSize={13}>
                       {translate('acceptance.review.regionComments')}
@@ -546,7 +693,9 @@ export const openCheckRejectModal = (options: CheckRejectModalProps) => {
     maskClosable: true,
     title: (
       <Flexbox gap={2}>
-        <Text strong>{modalTitle.title}</Text>
+        <Text strong style={{ overflowWrap: 'anywhere', whiteSpace: 'normal' }}>
+          {modalTitle.title}
+        </Text>
         {modalTitle.description && (
           <Text fontSize={12} type={'secondary'}>
             {modalTitle.description}
