@@ -3,19 +3,21 @@
  * this repo's own pipelines. When this repo is checked out as a submodule of
  * a superproject that ships its own `check` script, the run is delegated to
  * that entry instead (see `delegate.ts`), so the unified host behavior
- * applies no matter which directory the command is invoked from.
+ * applies when using the selected checkout's own entrypoint from within
+ * that checkout. Foreign entrypoints are rejected before delegation.
  */
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { detectHostCheckRoot } from './delegate';
+import { assertCheckRoot, detectHostCheckRoot } from './delegate';
 import { runCli } from './index';
 import { lobehubPipelines } from './pipelines';
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
 const main = async () => {
+  await assertCheckRoot(rootDir);
   const hostRoot = await detectHostCheckRoot(rootDir);
   if (hostRoot) {
     console.log(`→ submodule checkout: delegating to the superproject check (${hostRoot})`);

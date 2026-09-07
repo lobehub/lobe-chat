@@ -1,6 +1,6 @@
 ---
 name: agent-tracing
-description: 'Agent tracing CLI for execution snapshots. Use for agent-tracing, traces, snapshots, LLM call inspection, context engine data, agent step analysis, execution debugging, or pulling remote/production traces ("拉线上 tracing") by operation id. Also the first stop for debugging agent tool calls — wrong or missing tool_calls, unexpected tool arguments or results, which tools were available at a step, or why a tool ran where it did.'
+description: 'Inspect agent traces by operation ID (拉线上 tracing). First stop for tool-call failures, arguments/results, available tools and execution location; also LLM calls, context snapshots and step analysis.'
 user-invocable: false
 ---
 
