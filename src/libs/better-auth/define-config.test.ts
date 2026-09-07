@@ -86,6 +86,10 @@ vi.mock('@/libs/better-auth/plugins/email-whitelist', () => ({
   emailWhitelist: vi.fn(() => ({ id: 'email-whitelist' })),
 }));
 
+vi.mock('@/libs/better-auth/plugins/desktop-oidc', () => ({
+  desktopOIDC: vi.fn(() => ({ id: 'desktop-oidc' })),
+}));
+
 vi.mock('@/libs/better-auth/sso', () => ({
   initBetterAuthSSOProviders: vi.fn(() => ({
     genericOAuthProviders: [],

@@ -20,6 +20,7 @@ import {
   getVerificationEmailTemplate,
   getVerificationOTPEmailTemplate,
 } from '@/libs/better-auth/email-templates';
+import { desktopOIDC } from '@/libs/better-auth/plugins/desktop-oidc';
 import { emailWhitelist } from '@/libs/better-auth/plugins/email-whitelist';
 import { initBetterAuthSSOProviders } from '@/libs/better-auth/sso';
 import { createSecondaryStorage, getTrustedOrigins } from '@/libs/better-auth/utils/config';
@@ -325,6 +326,7 @@ export function defineConfig(customOptions: CustomBetterAuthOptions) {
     plugins: [
       ...customOptions.plugins,
       emailWhitelist(),
+      desktopOIDC(),
       expo(),
       admin(),
       // Email OTP plugin for mobile verification

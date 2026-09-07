@@ -10,6 +10,8 @@ import { type auth } from '@/auth';
 import { electronSyncSelectors } from '@/store/electron/selectors/sync';
 import { getElectronStoreState } from '@/store/electron/store';
 
+import { desktopAccountFetch } from './desktop-account-fetch';
+
 let _client: any = null;
 
 function getClient() {
@@ -18,6 +20,7 @@ function getClient() {
 
     _client = createAuthClient({
       baseURL,
+      fetchOptions: { customFetchImpl: desktopAccountFetch },
       plugins: [
         adminClient(),
         inferAdditionalFields<typeof auth>(),
