@@ -1,0 +1,103 @@
+diff --git a/sample.py b/sample.py
+index d25d6e0..035a852 100644
+--- a/sample.py
++++ b/sample.py
+@@ -5,12 +5,13 @@ import os
+ import pickle
+ from contextlib import nullcontext
+ import torch
+-import tiktoken
++# [nanogpt-agentic patch] tiktoken imported lazily below (only needed for GPT-2 fallback)
+ from model import GPTConfig, GPT
+ 
+ # -----------------------------------------------------------------------------
+ init_from = 'resume' # either 'resume' (from an out_dir) or a gpt2 variant (e.g. 'gpt2-xl')
+ out_dir = 'out' # ignored if init_from is not 'resume'
++ckpt_name = 'ckpt.pt' # [nanogpt-agentic patch] allow sampling from ckpt_final.pt
+ start = "\n" # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE:prompt.txt"
+ num_samples = 10 # number of samples to draw
+ max_new_tokens = 500 # number of tokens generated in each sample
+@@ -34,7 +35,7 @@ ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=
+ # model
+ if init_from == 'resume':
+     # init from a model saved in a specific directory
+-    ckpt_path = os.path.join(out_dir, 'ckpt.pt')
++    ckpt_path = os.path.join(out_dir, ckpt_name) # [nanogpt-agentic patch] was: 'ckpt.pt'
+     checkpoint = torch.load(ckpt_path, map_location=device)
+     gptconf = GPTConfig(**checkpoint['model_args'])
+     model = GPT(gptconf)
+@@ -62,13 +63,27 @@ if load_meta:
+     print(f"Loading meta from {meta_path}...")
+     with open(meta_path, 'rb') as f:
+         meta = pickle.load(f)
+-    # TODO want to make this more general to arbitrary encoder/decoder schemes
+-    stoi, itos = meta['stoi'], meta['itos']
+-    encode = lambda s: [stoi[c] for c in s]
+-    decode = lambda l: ''.join([itos[i] for i in l])
++    # [nanogpt-agentic patch] byte-level tokenizer branch: ids 0..255 are raw bytes,
++    # id 256 is the <|eot|> document separator (rendered as a visible marker, not decoded)
++    if meta.get('encoding') == 'byte257':
++        encode = lambda s: list(s.encode('utf-8'))
++        def decode(l):
++            out = bytearray()
++            for i in l:
++                if i == 256:
++                    out += b'\n<|eot|>\n'
++                elif i < 256:
++                    out.append(i)
++            return out.decode('utf-8', errors='replace')
++    else:
++        # TODO want to make this more general to arbitrary encoder/decoder schemes
++        stoi, itos = meta['stoi'], meta['itos']
++        encode = lambda s: [stoi[c] for c in s]
++        decode = lambda l: ''.join([itos[i] for i in l])
+ else:
+     # ok let's assume gpt-2 encodings by default
+     print("No meta.pkl found, assuming GPT-2 encodings...")
++    import tiktoken # [nanogpt-agentic patch] lazy import (not installed in this env)
+     enc = tiktoken.get_encoding("gpt2")
+     encode = lambda s: enc.encode(s, allowed_special={"<|endoftext|>"})
+     decode = lambda l: enc.decode(l)
+diff --git a/train.py b/train.py
+index de57850..5b8132b 100644
+--- a/train.py
++++ b/train.py
+@@ -72,6 +72,7 @@ backend = 'nccl' # 'nccl', 'gloo', etc.
+ device = 'cuda' # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1' etc., or try 'mps' on macbooks
+ dtype = 'bfloat16' if torch.cuda.is_available() and torch.cuda.is_bf16_supported() else 'float16' # 'float32', 'bfloat16', or 'float16', the latter will auto implement a GradScaler
+ compile = True # use PyTorch 2.0 to compile the model to be faster
++seed = 1337 # [nanogpt-agentic patch] make the RNG seed configurable (upstream hardcoded 1337)
+ # -----------------------------------------------------------------------------
+ config_keys = [k for k,v in globals().items() if not k.startswith('_') and isinstance(v, (int, float, bool, str))]
+ exec(open('configurator.py').read()) # overrides from command line or config file
+@@ -103,7 +104,7 @@ print(f"tokens per iteration will be: {tokens_per_iter:,}")
+ 
+ if master_process:
+     os.makedirs(out_dir, exist_ok=True)
+-torch.manual_seed(1337 + seed_offset)
++torch.manual_seed(seed + seed_offset) # [nanogpt-agentic patch] was: torch.manual_seed(1337 + seed_offset)
+ torch.backends.cuda.matmul.allow_tf32 = True # allow tf32 on matmul
+ torch.backends.cudnn.allow_tf32 = True # allow tf32 on cudnn
+ device_type = 'cuda' if 'cuda' in device else 'cpu' # for later use in torch.autocast
+@@ -332,5 +333,21 @@ while True:
+     if iter_num > max_iters:
+         break
+ 
++# [nanogpt-agentic patch] save a final checkpoint at loop exit. Upstream only saves
++# ckpt.pt at the top of eval iterations, so with max_iters=1999 (= exactly 2000
++# optimizer updates, iters 0..1999) the state after the last update would never be
++# persisted. ckpt_final.pt records the true final state; resume still reads ckpt.pt.
++if master_process and not eval_only:
++    checkpoint = {
++        'model': raw_model.state_dict(),
++        'optimizer': optimizer.state_dict(),
++        'model_args': model_args,
++        'iter_num': iter_num,
++        'best_val_loss': best_val_loss,
++        'config': config,
++    }
++    print(f"saving final checkpoint (iter_num={iter_num}) to {out_dir}/ckpt_final.pt")
++    torch.save(checkpoint, os.path.join(out_dir, 'ckpt_final.pt'))
++
+ if ddp:
+     destroy_process_group()

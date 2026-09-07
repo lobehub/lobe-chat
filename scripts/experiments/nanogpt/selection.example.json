@@ -1,0 +1,14 @@
+{
+  "agents": [
+    { "label": "agent-a", "agent_id": "agt_XXXXXXXXXXXX" },
+    { "label": "agent-b", "agent_id": "agt_YYYYYYYYYYYY" },
+    { "label": "agent-c", "agent_id": "agt_ZZZZZZZZZZZZ" }
+  ],
+  "cutoff": "2026-09-07T17:30:00Z",
+  "exclude_title_keywords": ["synthetic", "acceptance"],
+  "exclude_topic_ids": ["tpc_XXXXXXXXXXXX"],
+  "max_messages_per_topic": 200,
+  "page_size": 100,
+  "per_agent_candidates": 20,
+  "target_total": 30
+}

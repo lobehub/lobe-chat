@@ -1,0 +1,127 @@
+{
+  "arms": {
+    "public_plain": "公共领域文本 tiny-shakespeare,连续 70/15/15 切分",
+    "agentic_full": "个人 agentic 轨迹(角色标记行 + 正文 + 工具名标记)",
+    "agentic_norole": "与 agentic_full 同一 ledger 渲染,仅删生成的角色/工具标记行,正文逐字节一致(构建时逐 topic 断言)"
+  },
+  "data": {
+    "agentic_source": "lh CLI 读取本用户 3 个 coding-agent(claude/codex/kimi)topic;选择规则先于抓取冻结于 scripts/experiments/nanogpt/selection_rule.md;agent/topic ID 存私有 .records/nanogpt/private/selection.json",
+    "cutoff": "2026-09-07T17:30:00Z",
+    "selection": "每 agent 最近 20 候选过滤后取前 10,共 30 topic;排除当前 topic/验收/synthetic",
+    "caps": "每 topic ≤200 消息、≤100KB(共享 ledger 消息边界截断),全局 ≤3MB",
+    "redaction": "EMAIL/PATH/URL(保 host 去参数)/JWT/KEY/长 TOKEN 统一占位替换,序列化前应用于正文;tools 仅取工具名",
+    "split": "topic 级 70/15/15,seed=20260907,按字节贪心,topic 不跨 split",
+    "dedup": "exact paragraph(>=50 字符,空行分段,sha1);与 val/test 碰撞的 train 段落从共享 ledger 删除(两 arm 删相同正文,优先保留 test/val);报告去重前后跨 split 重复率",
+    "public_source": "tiny-shakespeare input.txt sha256=86c4e6aa9db7c042ec79f339dcb96d42b0075e16b8fc2e86bf0ca57e2dc565ed",
+    "public_split": "连续 70/15/15(换行边界);train 未达 agentic train 规模,epoch-equivalent 更高(如实报告)",
+    "language_confound": "public=早期现代英文;agentic=中英混杂+代码+工具结构;语言/内容混杂为已知混杂因素",
+    "epoch_equivalent": { "agentic_full": 2.528, "agentic_norole": 2.58, "public_plain": 5.246 }
+  },
+  "evaluation": {
+    "script": "scripts/experiments/nanogpt/eval_loss.py(独立脚本,不复制训练日志指标)",
+    "test_sets": [
+      "public(=public_plain test.bin)",
+      "agentic_full test.bin",
+      "agentic_norole test.bin"
+    ],
+    "windows": "冻结:offset 0 起,stride=block_size(128) 非重叠,x/y 错位 1",
+    "metrics": [
+      "nll_per_token(含 eot 目标)",
+      "bits_per_token_incl_eot",
+      "bits_per_byte_excl_eot(公开主指标:分子分母均排除 eot 目标,即仅字节目标的 NLL 均值 / ln2)"
+    ],
+    "reporting": "9 run × 3 test set 矩阵;每 seed 值 + mean/std(population) + 同 seed 配对差值;n=3,不做强显著性断言",
+    "claims_boundary": "仅报告 next-byte 预测误差差异;结构消融受结构 token 目标与内容曝光差别限制,不声称 agent 任务能力提升或纯因果收益"
+  },
+  "experiment": "nanogpt-agentic",
+  "frozen_at": "2026-09-08",
+  "model": {
+    "arch": "GPT",
+    "n_layer": 4,
+    "n_head": 4,
+    "n_embd": 128,
+    "block_size": 128,
+    "dropout": 0.0,
+    "bias": false,
+    "params_approx": "0.84M"
+  },
+  "privacy": {
+    "private": [".records/nanogpt/private/**(raw/redacted/bins/runs/samples)", "训练日志 logs/"],
+    "public_whitelist": [
+      "opaque run id",
+      "arm/seed",
+      "架构/超参",
+      "匿名计数",
+      "指标",
+      "耗时",
+      "upstream/protocol/code hash",
+      "命令模板",
+      "phase 成功证明"
+    ],
+    "never_public": ["原始 topic id/正文", "用户路径", "凭据", "样本/权重", "未脱敏日志"]
+  },
+  "resume_proof": {
+    "run": "agentic_full seed=1337",
+    "segment_a": "max_iters=1000, eval_interval=1000 → ckpt.pt 在 iter 1000 顶部保存(=恰好 1000 updates 后状态);该进程共执行 1001 次 update,第 1001 次在保存之后被丢弃",
+    "segment_b": "init_from=resume 加载 model+optimizer+iter_num,相同 LR 计划(warmup100/cosine 至 2000/min 6e-5),iter 1000..1999 = 额外恰好 1000 updates,final ckpt @2000",
+    "bitwise": "不保证与不中断 run 逐位一致(RNG 重新播种,data order 不恢复);model/optimizer/iter 均真实恢复"
+  },
+  "revisions": [
+    "2026-09-08 训练前方法审查(pre-training method review,主代理暂停上一轮,未训练任何正式 run)后合并修复:共享消息片段 ledger 先截断再分别渲染 full/norole;两 arm 删除相同正文段落;strip 标记后正文逐字节一致的构建时断言;去重后跨 split 重叠率复算(0);fetch_agentic.py 个人 ID 移至私有 selection.json;新增可执行不变量测试(抓取前通过);BPB 主指标排除 eot 目标;resume 段 A/B 保持完整 2000 步 LR 计划;冒烟验证 seed 真实生效",
+    "2026-09-08 角色标记由 <|user|> 改为 <|role:user|> 形式,降低与正文撞车概率;strip 算法按 ledger 段位置消费,不受正文中类标记文本影响",
+    "2026-09-08 bits_per_byte_excl_eot 口径定稿为分子分母均排除 eot 目标(仅字节目标 NLL/ln2/字节目标数),与合成回归测试 test_eval_loss.py 一致;以上均在正式训练前完成并重冻结 hash"
+  ],
+  "sampling": "每 arm(seed 1337)sample.py 4 样本 × 400 tokens;样本留 private,公开仅成功数/字节数/sha256",
+  "seed_policy": "train.py seed 配置项驱动 torch.manual_seed;模型初始化与 data order(torch.randint)均由该 seed 决定;3 个 seed 在 3 个 arm 间配对(同 seed 同初始化策略);冒烟阶段验证同 seed 可复现、异 seed 不同",
+  "seeds": [1337, 2024, 4242],
+  "status": "frozen before formal training",
+  "supersedes": ".records/nanogpt/plan.md (早期方案,已标 superseded)",
+  "tokenizer": {
+    "type": "shared byte-level",
+    "vocab": "0..255 原始字节 + 256 <|eot|> 文档分隔符",
+    "vocab_size": 257,
+    "deterministic": true,
+    "note": "无 BPE 训练,跨 arm 完全公平"
+  },
+  "training": {
+    "optimizer_updates_per_run": 2000,
+    "max_iters_cli": 1999,
+    "max_iters_note": "上游终止条件为 iter_num > max_iters,iter 0..1999 恰好 2000 次 optimizer update",
+    "tokens_per_iter": 2048,
+    "batch_size": 16,
+    "block_size": 128,
+    "gradient_accumulation_steps": 1,
+    "train_tokens_per_run": 4096000,
+    "optimizer": "AdamW",
+    "learning_rate": 6e-4,
+    "warmup_iters": 100,
+    "lr_schedule": "cosine decay to min_lr at lr_decay_iters=2000",
+    "min_lr": 6e-5,
+    "beta1": 0.9,
+    "beta2": 0.95,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0,
+    "dtype": "float32",
+    "compile": false,
+    "device": "mps",
+    "ddp": false,
+    "eval_interval": 500,
+    "eval_iters": 100,
+    "eval_purpose": "val 仅监控,不用于选 ckpt/早停",
+    "final_ckpt": "ckpt_final.pt @ iter_num=2000(所有比较统一使用该固定步数 ckpt)"
+  },
+  "upstream": {
+    "repo": "https://github.com/karpathy/nanoGPT",
+    "commit": "3adf61e154c3fe3fca428ad6bc3818b27a3b8291",
+    "patches_file": ".records/nanogpt/patches/upstream.diff",
+    "patches": [
+      "train.py: 新增 seed 配置项(上游硬编码 1337),torch.manual_seed(seed + seed_offset)",
+      "train.py: 循环结束后保存 ckpt_final.pt(上游只在 eval 顶部保存 ckpt.pt,max_iters=1999 时末次 update 后的状态不会落盘);resume 仍读 ckpt.pt",
+      "sample.py: tiktoken 改为懒加载(环境未安装,且 byte tokenizer 不需要)",
+      "sample.py: 新增 ckpt_name 配置以便从 ckpt_final.pt 采样",
+      "sample.py: meta.encoding=='byte257' 时使用字节编解码(id 0..255 为字节,256 渲染为 <|eot|>)"
+    ],
+    "checkpoint_loading": "torch 2.8 默认 weights_only=True 可加载本实验 ckpt(已实测),无需 patch;自写 eval_loss.py 显式 weights_only=False",
+    "loop_unchanged": "训练循环/数据加载/优化器为上游原生实现,未替换为自写训练器"
+  }
+}
