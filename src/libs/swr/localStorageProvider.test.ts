@@ -65,7 +65,7 @@ describe('createCacheProvider — tiering', () => {
     const options = { idbPatterns: [...CACHE_TIERS.idb], localPatterns: [...CACHE_TIERS.local] };
     const { provider } = buildProvider(scope, options);
     await provider.hydrateScope?.();
-    const key = JSON.stringify(builtinAgentKeys.init('inbox'));
+    const key = JSON.stringify(builtinAgentKeys.init('inbox', 's1'));
     const data = { data: { id: 'inbox-1', profile: { fullBodyArtwork: '/custom.webp' } } };
     provider().set(key, data);
     await until(async () => (await localDataCache.entriesByScope('s1')).length > 0);

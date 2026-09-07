@@ -23,9 +23,12 @@ const UserUpdater = memo(({ children }: PropsWithChildren) => {
   const [retryAttempt, setRetryAttempt] = useState(0);
   const [recoveryVisible, setRecoveryVisible] = useState(false);
   const appPainted = useAppPainted();
+  /** Background session failures must not block an identity that already resolved. */
+  const isInitialIdentityUnresolved = !useUserStore((state) => state.isLoaded);
   const status = error?.status;
   const retryable = !!error && (!status || status >= 500 || status === 408 || status === 429);
-  const failed = !!error && status !== 401 && (!retryable || retryAttempt >= 3);
+  const failed =
+    isInitialIdentityUnresolved && !!error && status !== 401 && (!retryable || retryAttempt >= 3);
   /** A confirmed sign-out still needs a painted destination after recovery removed the splash. */
   const showRecovery =
     failed ||

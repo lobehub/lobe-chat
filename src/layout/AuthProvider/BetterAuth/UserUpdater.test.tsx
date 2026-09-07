@@ -155,6 +155,34 @@ describe('UserUpdater', () => {
     unmount();
   });
 
+  it('keeps the rendered application usable when background session retries are exhausted', async () => {
+    vi.useFakeTimers();
+    const refetch = vi.fn().mockResolvedValue(undefined);
+    useUserStore.setState({ user: { id: 'u1' }, isSignedIn: true, isLoaded: true });
+    useSessionMock.mockReturnValue({
+      data: null,
+      error: { status: 503 },
+      isPending: false,
+      refetch,
+    });
+    const { unmount } = render(
+      <UserUpdater>
+        <span>Application</span>
+      </UserUpdater>,
+    );
+
+    for (const delay of [1000, 2000, 4000]) {
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(delay);
+      });
+    }
+
+    expect(refetch).toHaveBeenCalledTimes(3);
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.getByText('Application').closest('[inert]')).toBeNull();
+    unmount();
+  });
+
   it('restores the application after a manual retry succeeds', () => {
     useSessionMock.mockReturnValue({
       data: null,

@@ -131,16 +131,17 @@ describe('AgentSlice Actions', () => {
       hook.unmount();
     });
 
-    it('revalidates the startup snapshot after changing the builtin agent name', async () => {
+    it('seeds the startup snapshot without refetching after changing the builtin agent name', async () => {
       const scopedMutate = vi.fn().mockResolvedValue(undefined);
       setScopedMutate(scopedMutate);
       useAgentStore.setState({ builtinAgentIdMap: { inbox: 'inbox-1' } });
-      vi.mocked(agentService.getBuiltinAgent).mockResolvedValue({
+      const updatedAgent = {
         id: 'inbox-1',
         name: 'Renamed chief',
-      } as Awaited<ReturnType<typeof agentService.getBuiltinAgent>>);
+        profile: { fullBodyArtwork: '/custom-chief.webp' },
+      } as LobeAgentConfig;
       vi.mocked(agentService.updateAgentMeta).mockResolvedValue({
-        agent: { id: 'inbox-1', name: 'Renamed chief' } as LobeAgentConfig,
+        agent: updatedAgent,
         success: true,
       });
 
@@ -148,13 +149,74 @@ describe('AgentSlice Actions', () => {
         .getState()
         .optimisticUpdateAgentMeta('inbox-1', { name: 'Renamed chief' });
 
+      expect(agentService.getBuiltinAgent).not.toHaveBeenCalled();
+      expect(scopedMutate).toHaveBeenCalledWith(agentConfigKeys.config('inbox-1'), updatedAgent, {
+        revalidate: false,
+      });
+      expect(scopedMutate).toHaveBeenCalledWith(
+        builtinAgentKeys.init('inbox', cacheScopeModule.getCacheScope()),
+        updatedAgent,
+        { revalidate: false },
+      );
+    });
+
+    it('does not seed a metadata response into a changed cache scope', async () => {
+      let scope = 'user-a:personal';
+      vi.spyOn(cacheScopeModule, 'getCacheScope').mockImplementation(() => scope);
+      const scopedMutate = vi.fn().mockResolvedValue(undefined);
+      setScopedMutate(scopedMutate);
+      useAgentStore.setState({ builtinAgentIdMap: { inbox: 'inbox-1' } });
+
+      let resolveUpdate!: (value: any) => void;
+      vi.mocked(agentService.updateAgentMeta).mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveUpdate = resolve;
+          }),
+      );
+
+      let save!: Promise<void>;
+      act(() => {
+        save = useAgentStore
+          .getState()
+          .optimisticUpdateAgentMeta('inbox-1', { name: 'Renamed chief' });
+      });
+      await waitFor(() => expect(resolveUpdate).toBeDefined());
+
+      scope = 'user-b:personal';
+      useAgentStore.setState({ agentMap: {}, builtinAgentIdMap: {} });
+      await act(async () => {
+        resolveUpdate({
+          agent: { id: 'inbox-1', name: 'Renamed chief' } as LobeAgentConfig,
+          success: true,
+        });
+        await save;
+      });
+
+      expect(useAgentStore.getState().agentMap['inbox-1']).toBeUndefined();
       expect(
         scopedMutate.mock.calls.some(
           ([key]) =>
+            JSON.stringify(key) === JSON.stringify(agentConfigKeys.config('inbox-1')) ||
             JSON.stringify(key) ===
-            JSON.stringify(builtinAgentKeys.init('inbox', cacheScopeModule.getCacheScope())),
+              JSON.stringify(builtinAgentKeys.init('inbox', 'user-b:personal')),
         ),
-      ).toBe(true);
+      ).toBe(false);
+    });
+
+    it('keeps the network refresh for an explicit builtin config refresh', async () => {
+      const scopedMutate = vi.fn().mockResolvedValue(undefined);
+      setScopedMutate(scopedMutate);
+      useAgentStore.setState({ builtinAgentIdMap: { inbox: 'inbox-1' } });
+      vi.mocked(agentService.getBuiltinAgent).mockResolvedValue({
+        id: 'inbox-1',
+      } as Awaited<ReturnType<typeof agentService.getBuiltinAgent>>);
+
+      await act(async () => {
+        await useAgentStore.getState().internal_refreshAgentConfig('inbox-1');
+      });
+
+      expect(agentService.getBuiltinAgent).toHaveBeenCalledWith('inbox');
     });
 
     it('restores the inbox identity and custom artwork while revalidation is pending', () => {

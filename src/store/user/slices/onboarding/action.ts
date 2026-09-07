@@ -96,7 +96,7 @@ export class OnboardingActionImpl {
   };
 
   toggleInboxAgentDefaultPlugin = async (id: string, open?: boolean): Promise<void> => {
-    /** Defer the cross-store dependency until both stores have initialized. */
+    /** Break the user → agent → cache-scope → user initialization cycle. */
     const { getAgentStoreState } = await import('@/store/agent');
     const currentSettings = settingsSelectors.currentSettings(this.#get());
     const isDefaultPinned =
