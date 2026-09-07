@@ -17,9 +17,9 @@ import { lobehubPipelines } from './pipelines';
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 
 const main = async () => {
-  await assertCheckRoot(rootDir);
   const hostRoot = await detectHostCheckRoot(rootDir);
   if (hostRoot) {
+    await assertCheckRoot(rootDir);
     console.log(`→ submodule checkout: delegating to the superproject check (${hostRoot})`);
     // Absolute file args survive the cwd change; flags pass through untouched.
     const args = process.argv

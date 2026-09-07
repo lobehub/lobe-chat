@@ -94,7 +94,7 @@ The implementer may open only the sub-issue, not the parent — don't rely on co
 
 Close out each issue before starting the next; do not defer all Linear updates to the end. Reuse existing authorization for that issue's status updates and comments without asking again.
 
-1. Complete implementation and the repository-required checks, including related tests; use the repository's **quality-check** skill for code changes.
+1. Complete implementation and the repository-required checks, including related tests; follow the Quality Check section of the repository's `AGENTS.md` (`bun run check` in LobeHub).
 2. Create a PR when needed using the **pr** skill. Include `Fixes LOBE-123` (or `Closes` / `Resolves`) in the PR body so Linear can link it and close the issue on merge.
 3. Update the issue to **In Review** while its PR awaits merge, then **Done** after merge. For work that needs no PR, mark **Done** when its outcome and verification are complete.
 4. Proactively add or update a concise completion comment with the resulting behavior, important changes, validation, and PR link. PR linkage does not replace this human-readable summary. If an existing comment already covers the same result, do not post a duplicate.

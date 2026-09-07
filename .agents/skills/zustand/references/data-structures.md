@@ -302,10 +302,3 @@ export interface BenchmarkListItem {
 // agentEvalDataset.ts
 // agentEvalRun.ts
 ```
-
----
-
-## Related Skills
-
-- `data-fetching-architecture` — how to fetch and update this data
-- `zustand` — general Zustand patterns
