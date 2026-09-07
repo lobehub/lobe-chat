@@ -4,7 +4,12 @@ import type OpenAI from 'openai';
 import { createOpenAICompatibleRuntime } from '../../core/openaiCompatibleFactory';
 import { createRouterRuntime } from '../../core/RouterRuntime';
 import type { CreateRouterRuntimeOptions } from '../../core/RouterRuntime/createRuntime';
-import type { ChatStreamPayload } from '../../types';
+import type {
+  ChatMethodOptions,
+  ChatStreamPayload,
+  GenerateObjectOptions,
+  GenerateObjectPayload,
+} from '../../types';
 import { processMultiProviderModelList } from '../../utils/modelParse';
 import {
   isKimiNativeThinkingModel,
@@ -522,4 +527,36 @@ export const params = {
   },
 } satisfies CreateRouterRuntimeOptions;
 
-export const LobeOpenCodeCodingPlanAI = createRouterRuntime(params);
+export class LobeOpenCodeCodingPlanAI extends createRouterRuntime(params) {
+  private getSessionHeaders(metadata?: Record<string, unknown>) {
+    const topicId = metadata?.topicId;
+
+    return {
+      'User-Agent': 'lobehub',
+      'x-opencode-client': 'lobehub',
+      // Topics survive runtime recreation and agent tool-call rounds. Requests
+      // without a topic are standalone operations, not one shared session.
+      'x-opencode-session': typeof topicId === 'string' && topicId ? topicId : crypto.randomUUID(),
+    };
+  }
+
+  override async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
+    return super.chat(payload, {
+      ...options,
+      requestHeaders: {
+        ...this.getSessionHeaders(options?.metadata),
+        ...options?.requestHeaders,
+      },
+    });
+  }
+
+  override async generateObject(payload: GenerateObjectPayload, options?: GenerateObjectOptions) {
+    return super.generateObject(payload, {
+      ...options,
+      headers: {
+        ...this.getSessionHeaders(options?.metadata),
+        ...options?.headers,
+      },
+    });
+  }
+}
