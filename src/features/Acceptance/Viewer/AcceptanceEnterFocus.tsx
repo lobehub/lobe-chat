@@ -25,7 +25,7 @@ const AcceptanceEnterFocus = () => {
     <Button
       icon={<Icon icon={ChevronRight} />}
       size={'small'}
-      style={{ alignSelf: 'flex-start' }}
+      style={{ alignSelf: 'flex-start', minHeight: 44 }}
       type={'text'}
       onClick={() =>
         navigate(

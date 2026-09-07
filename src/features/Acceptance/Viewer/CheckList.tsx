@@ -540,6 +540,7 @@ const EvidenceList = memo<{
               type={'button'}
               style={{
                 padding: 0,
+                width: '100%',
                 border: 0,
                 background: 'none',
                 textAlign: 'start',
@@ -554,8 +555,10 @@ const EvidenceList = memo<{
                 style={{
                   display: 'block',
                   maxWidth: '100%',
-                  maxHeight: 420,
-                  objectFit: 'contain',
+                  width: '100%',
+                  height: 180,
+                  objectFit: 'cover',
+                  objectPosition: 'top',
                   borderRadius: 8,
                 }}
               />
@@ -981,6 +984,7 @@ export const AcceptanceCheckRow = memo<{
     reviewPending,
   }) => {
     const { t } = useTranslation('verify');
+    const { md: desktop = true } = useResponsive();
     // The judging narrative stays collapsed: level one is title + evidence.
     const [historyOpen, setHistoryOpen] = useState(false);
     const [seqCopied, setSeqCopied] = useState(false);
@@ -1034,12 +1038,18 @@ export const AcceptanceCheckRow = memo<{
     const openReject = (fromProposal?: CheckProposal, initialEvidenceId?: string) =>
       openCheckRejectModal({
         initialEvidenceId,
+        previousAttachments:
+          activeReview?.action === 'reject'
+            ? activeReview.attachments
+                ?.filter((item) => item.url)
+                .map((item) => ({ id: item.id, name: item.name, url: item.url! }))
+            : undefined,
         previousAnnotations:
           activeReview?.action === 'reject' ? activeReview.annotations : undefined,
         previousComment: activeReview?.action === 'reject' ? activeReview.comment : undefined,
         checkDescription: check.planItem?.description,
         checkTitle: `C${check.seq} · ${title}`,
-        draftKey: check.id,
+        draftKey: `${check.result?.id ?? 'unexecuted'}:${check.id}`,
         evidence: check.evidence
           .filter((item) => isAnnotatable(item))
           .map((item) => ({ fileUrl: item.fileUrl!, id: item.id })),
@@ -1157,10 +1167,22 @@ export const AcceptanceCheckRow = memo<{
           <Flexbox
             horizontal
             align={'flex-start'}
+            aria-expanded={expanded}
             className={styles.rowHeader}
             data-expanded={expanded ? '' : undefined}
             gap={10}
+            role={'button'}
+            tabIndex={0}
             onClick={onToggle}
+            onKeyDown={(event) => {
+              if (
+                event.target === event.currentTarget &&
+                (event.key === 'Enter' || event.key === ' ')
+              ) {
+                event.preventDefault();
+                onToggle();
+              }
+            }}
           >
             {reviewState === 'rejected' ? (
               <Tooltip title={t('acceptance.review.rejectedHint')}>{headIconNode}</Tooltip>
@@ -1191,8 +1213,8 @@ export const AcceptanceCheckRow = memo<{
               wrap={expanded ? 'wrap' : 'nowrap'}
             >
               <Text
-                className={expanded ? undefined : styles.titleEllipsis}
-                style={{ fontSize: 13, minWidth: 0 }}
+                className={expanded || !desktop ? undefined : styles.titleEllipsis}
+                style={{ fontSize: desktop ? 13 : 14, minWidth: 0 }}
               >
                 {title}
               </Text>
@@ -1205,7 +1227,7 @@ export const AcceptanceCheckRow = memo<{
               far right: the claim you judge and the judgement you give land in
               one glance, so a long checklist needs no eye round-trip across the
               row (and no mis-click onto a neighbour's buttons). */}
-              {reviewable && reviewState === 'pending' && (
+              {desktop && reviewable && reviewState === 'pending' && (
                 <Flexbox
                   horizontal
                   align={'center'}

@@ -1,10 +1,11 @@
 'use client';
 
 import { copyToClipboard, Flexbox } from '@lobehub/ui';
-import { toast } from '@lobehub/ui/base-ui';
+import { Button, Text, toast } from '@lobehub/ui/base-ui';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
 import { useIsHydrated } from '@/hooks/useIsHydrated';
 import { mutate as globalMutate } from '@/libs/swr';
@@ -17,8 +18,9 @@ import { buildRepairPrompt } from './checkWork';
 import DecisionBar from './DecisionBar';
 import FeedbackDrawer, { type FeedbackListEntry } from './FeedbackDrawer';
 import { openAcceptModal, openGroupFeedbackModal, openRejectModal } from './modals';
-import { dispatchRepairRerun } from './repairRerun';
+import { acceptanceCheckPath } from './routes';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
+import { useAcceptanceTurn } from './useAcceptanceTurn';
 import { formatAcceptanceCountsText, LIVE_ACCEPTANCE_STATUSES } from './verdict';
 import { canReviewAcceptance } from './visibility';
 
@@ -28,18 +30,25 @@ interface AcceptanceDecisionProps {
 
 const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
   const { t } = useTranslation('verify');
+  const navigate = useNavigate();
   const hydrated = useIsHydrated();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
+  const { turn, setTurn } = useAcceptanceTurn(embedded);
   const [pending, setPending] = useState(false);
-  const [rerunPending, setRerunPending] = useState(false);
-  // Latched once a standalone dispatch reaches the server: the repair run has
-  // started, so Fix must not offer a retry even if later bookkeeping failed.
-  const [rerunDispatched, setRerunDispatched] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   if (!data || !canReviewAcceptance(data) || data.acceptance.status === 'closed') return null;
 
-  const { acceptance, checks, origin, rounds } = data;
+  if (turn !== null && turn !== data.rounds.at(-1)?.run.roundIndex)
+    return (
+      <Flexbox gap={8}>
+        <Text type={'secondary'}>{t('acceptance.review.historicalReadOnly')}</Text>
+        <Button style={{ minHeight: 44 }} onClick={() => setTurn(null)}>
+          {t('acceptance.filter.roundAll')}
+        </Button>
+      </Flexbox>
+    );
+  const { acceptance, checks, rounds } = data;
   const currentRound = rounds.at(-1);
   const acceptedCount = checks.filter((check) => checkFilterState(check) === 'accepted').length;
   const needsFixCount = checks.filter((check) => checkFilterState(check) === 'needsFix').length;
@@ -146,6 +155,10 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
       await mutate();
       void globalMutate(isAcceptanceListKey);
       return true;
+    } catch (cause) {
+      console.error('[acceptance:decision]', cause);
+      toast.error(cause instanceof Error ? cause.message : t('acceptance.actionError'));
+      return false;
     } finally {
       setPending(false);
     }
@@ -163,8 +176,8 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         needsFixCount={needsFixCount}
         pending={pending}
         repairing={acceptance.status === 'repairing'}
-        rerunAvailable={embedded || (Boolean(origin?.topic) && !rerunDispatched)}
-        rerunPending={rerunPending}
+        rerunAvailable={embedded}
+        rerunPending={false}
         state={barState}
         statusText={barTexts.statusText}
         subText={barTexts.subText}
@@ -196,8 +209,7 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         onCopyReview={async () => {
           await copyToClipboard(repairPrompt);
           toast.success({
-            placement: 'bottom',
-            style: { marginBlockEnd: 88 },
+            placement: 'top',
             title: t('acceptance.bar.copied'),
           });
         }}
@@ -216,48 +228,17 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
             // to the clipboard so the click always hands the prompt over.
             if (onDraftToComposer?.(repairPrompt)) {
               toast.success({
-                placement: 'bottom',
-                style: { marginBlockEnd: 88 },
+                placement: 'top',
                 title: t('acceptance.bar.rerunDrafted'),
               });
             } else {
               await copyToClipboard(repairPrompt);
               toast.success({
-                placement: 'bottom',
-                style: { marginBlockEnd: 88 },
+                placement: 'top',
                 title: t('acceptance.bar.copied'),
               });
             }
             return;
-          }
-          if (!origin?.topic) return;
-          setRerunPending(true);
-          try {
-            await dispatchRepairRerun({
-              dispatch: () =>
-                verifyService.dispatchAcceptanceRepair({
-                  agentId: origin.agent?.id,
-                  content: repairPrompt,
-                  topicId: origin.topic!.id,
-                }),
-              markRepairing: () => verifyService.markAcceptanceRepairing(acceptance.id),
-            });
-            // The run is live from here — even if the refresh below throws or
-            // the repairing stamp failed (dispatchRepairRerun swallows it; the
-            // aggregate converges once the repair round lands), the
-            // `rerunDispatched` latch keeps Fix from double-running the repair.
-            setRerunDispatched(true);
-            await mutate();
-            void globalMutate(isAcceptanceListKey);
-            toast.success({
-              placement: 'bottom',
-              style: { marginBlockEnd: 88 },
-              title: t('acceptance.bar.rerunSent'),
-            });
-          } catch (cause) {
-            toast.error(cause instanceof Error ? cause.message : t('acceptance.actionError'));
-          } finally {
-            setRerunPending(false);
           }
         }}
       />
@@ -268,6 +249,10 @@ const AcceptanceDecision = ({ onDraftToComposer }: AcceptanceDecisionProps) => {
         onClose={() => setFeedbackOpen(false)}
         onJumpToCheck={(checkId) => {
           setFeedbackOpen(false);
+          if (!embedded) {
+            navigate(acceptanceCheckPath(acceptanceId, checkId));
+            return;
+          }
           setTimeout(() => {
             document
               .querySelector(`[data-check-row="${checkId}"]`)

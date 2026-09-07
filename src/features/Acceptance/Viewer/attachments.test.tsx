@@ -1,8 +1,8 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, renderHook, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { AttachmentThumbs } from './attachments';
+import { AttachmentStrip, AttachmentThumbs, useFeedbackAttachments } from './attachments';
 
 vi.mock('@/store/file', () => ({ useFileStore: () => vi.fn() }));
 
@@ -42,4 +42,18 @@ describe('AttachmentThumbs', () => {
 
     expect(onRowClick).toHaveBeenCalledTimes(1);
   });
+});
+
+it('restores uploaded attachments with the feedback draft and removes them', () => {
+  const { result } = renderHook(() => useFeedbackAttachments(6, attachments));
+  expect(result.current.fileIds).toEqual(['att-1']);
+  act(() => result.current.remove('att-1'));
+  expect(result.current.fileIds).toEqual([]);
+});
+
+it('exposes attachment removal without hover', async () => {
+  const onRemove = vi.fn();
+  render(<AttachmentStrip attachments={attachments} onRemove={onRemove} />);
+  await userEvent.click(screen.getByRole('button'));
+  expect(onRemove).toHaveBeenCalledWith('att-1');
 });

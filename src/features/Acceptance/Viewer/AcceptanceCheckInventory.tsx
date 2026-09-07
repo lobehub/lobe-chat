@@ -44,7 +44,7 @@ const AcceptanceCheckInventory = ({
   toolbar,
 }: AcceptanceCheckInventoryProps) => {
   const { t } = useTranslation('verify');
-  const { lg = true } = useResponsive();
+  const { lg = true, md = true } = useResponsive();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const compactToolbar = embedded || !lg;
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
@@ -98,6 +98,7 @@ const AcceptanceCheckInventory = ({
         data.checks
           .filter(
             (check) =>
+              window.matchMedia('(min-width: 768px)').matches &&
               userReviewState(check) !== 'accepted' &&
               (isException(check) || hasVisualEvidence(check)),
           )
@@ -137,6 +138,7 @@ const AcceptanceCheckInventory = ({
     t,
     urlFilterRaw,
     roundFilter,
+    md,
   ]);
 
   if (!data) return null;

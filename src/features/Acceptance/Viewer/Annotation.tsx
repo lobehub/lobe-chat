@@ -65,6 +65,10 @@ const styles = createStaticStyles(({ css }) => ({
     &:hover {
       filter: brightness(1.15);
     }
+
+    @media (width <= 767px) {
+      display: none;
+    }
   `,
   canvas: css`
     cursor: crosshair;
@@ -112,6 +116,12 @@ const styles = createStaticStyles(({ css }) => ({
     border-radius: 50%;
 
     background: ${cssVar.colorBgContainer};
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -16px;
+    }
   `,
 }));
 
@@ -233,7 +243,7 @@ export const AnnotationCanvas = memo<AnnotationCanvasProps>(
           <div
             className={`${styles.rect} ${styles.editableRect}`}
             key={index}
-            style={rectStyle(annotation.rect)}
+            style={{ ...rectStyle(annotation.rect), pointerEvents: drawing ? 'auto' : 'none' }}
             onPointerDown={(event) => startEdit(event, index, annotation.rect, 'move')}
           >
             <span className={styles.badge}>{index + 1}</span>

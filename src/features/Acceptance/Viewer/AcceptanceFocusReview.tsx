@@ -174,16 +174,39 @@ const AcceptanceFocusReview = ({
   return (
     <div className={styles.layout}>
       <Flexbox className={styles.outline}>
-        <Flexbox flex={'none'} gap={md ? 10 : 0} paddingBlock={8} paddingInline={4}>
+        <Flexbox
+          align={md ? undefined : 'center'}
+          flex={'none'}
+          gap={md ? 10 : 0}
+          horizontal={!md}
+          paddingBlock={8}
+          paddingInline={4}
+        >
           <Button
+            aria-label={t('acceptance.focus.back')}
             icon={<Icon icon={ArrowLeft} />}
             size={'small'}
-            style={{ alignSelf: 'flex-start', minHeight: md ? undefined : 44 }}
             type={'text'}
+            style={{
+              alignSelf: 'flex-start',
+              minHeight: md ? undefined : 44,
+              minWidth: md ? undefined : 44,
+            }}
             onClick={onBack}
           >
-            {t('acceptance.focus.back')}
+            {md ? t('acceptance.focus.back') : null}
           </Button>
+          {!md && (
+            <Button
+              aria-expanded={outlineOpen}
+              icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} />}
+              style={{ height: 'auto', minHeight: 44, textAlign: 'start', whiteSpace: 'normal' }}
+              type={'text'}
+              onClick={() => setOutlineOpen((open) => !open)}
+            >
+              {t('acceptance.checks.title')} · {currentIndex + 1} / {orderedChecks.length}
+            </Button>
+          )}
           <Flexbox gap={4} paddingInline={4} style={!md ? { display: 'none' } : undefined}>
             <Text strong style={{ fontSize: 15 }}>
               {subjectTitle}
@@ -219,17 +242,6 @@ const AcceptanceFocusReview = ({
             )}
           </Flexbox>
         </Flexbox>
-        {!md && (
-          <Button
-            aria-expanded={outlineOpen}
-            icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} />}
-            style={{ height: 'auto', minHeight: 44, textAlign: 'start', whiteSpace: 'normal' }}
-            type={'text'}
-            onClick={() => setOutlineOpen((open) => !open)}
-          >
-            {t('acceptance.checks.title')} · {currentIndex + 1} / {orderedChecks.length}
-          </Button>
-        )}
         {(md || outlineOpen) && (
           <Flexbox className={styles.outlineList} flex={1}>
             {orderedChecks.map((check) => {

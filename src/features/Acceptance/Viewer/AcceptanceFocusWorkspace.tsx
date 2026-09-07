@@ -12,20 +12,12 @@ import { verifyService } from '@/services/verify';
 import AcceptanceFocusReview from './AcceptanceFocusReview';
 import { useAcceptanceScope } from './AcceptanceScope';
 import { openAddCheckModal } from './AddCheckModal';
-import { type CheckFilter, checkFilterState } from './CheckList';
 import { copyCheckRepairPrompt } from './checkWork';
 import { acceptanceCheckPath, acceptanceOverviewPath } from './routes';
 import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
 import { useAcceptanceTurn } from './useAcceptanceTurn';
 import { canReviewAcceptance } from './visibility';
-
-const CHECK_REVIEW_ORDER: Record<Exclude<CheckFilter, 'all'>, number> = {
-  pending: 0,
-  needsFix: 1,
-  accepted: 2,
-  ignored: 3,
-};
 
 const AcceptanceFocusWorkspace = () => {
   const { t } = useTranslation('verify');
@@ -40,11 +32,7 @@ const AcceptanceFocusWorkspace = () => {
   const focusedCheck = turnChecks.find((check) => check.id === params.checkId);
   if (!data || !focusedCheck) return null;
 
-  const orderedChecks = [...turnChecks].sort(
-    (a, b) =>
-      CHECK_REVIEW_ORDER[checkFilterState(a)] - CHECK_REVIEW_ORDER[checkFilterState(b)] ||
-      a.seq - b.seq,
-  );
+  const orderedChecks = [...turnChecks].sort((a, b) => a.seq - b.seq);
   const standing = (data.acceptance.config?.checklist ?? []).filter(
     (item) => !data.checks.some((check) => check.id === item.id),
   );
