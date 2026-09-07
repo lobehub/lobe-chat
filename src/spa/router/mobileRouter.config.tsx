@@ -142,6 +142,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
                 ),
               'Mobile > Discover > List > Workspace',
             ),
+            handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
             path: 'workspace',
           },
         ],

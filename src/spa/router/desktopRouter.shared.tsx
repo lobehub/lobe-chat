@@ -518,6 +518,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               () => import('@/routes/(main)/community/(detail)/workspace'),
               'Desktop > Discover > List > Workspace',
             ),
+            handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
             path: 'workspace',
           },
           {
@@ -910,6 +911,7 @@ export const sharedMainAreaChildren: RouteObject[] = [
               () => import('@/routes/(main)/eval/bench/[benchmarkId]'),
               'Desktop > Eval > Benchmark Detail',
             ),
+            handle: { meta: routeMeta({ Skeleton: createSurfaceSkeleton('detail') }) },
             index: true,
           },
           {
