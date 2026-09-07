@@ -2913,8 +2913,10 @@ export class MessageModel {
       const parsed = typeof rawPlan === 'string' ? JSON.parse(rawPlan) : rawPlan;
       const parsedRows = Number((parsed as any)?.[0]?.['Plan']?.['Plan Rows']);
       if (Number.isFinite(parsedRows)) estimate = parsedRows;
-    } catch {
-      // estimate is best-effort — fall through to the capped exact count
+    } catch (error) {
+      // Best-effort — fall through to the capped exact count, but surface the
+      // degradation: past-cap accounts will all read as `cap + 1` until fixed.
+      console.error('countApproximate: planner estimate failed, using capped count only:', error);
     }
 
     if (estimate !== undefined && estimate > cap * 2) return roundEstimate(estimate);
