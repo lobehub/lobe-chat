@@ -48,9 +48,9 @@ import MessageWorks from '../MessageWorks';
 import SignalCallbacks from '../SignalCallbacks';
 import FileListViewer from '../User/components/FileListViewer';
 import Group from './components/Group';
-import type { GroupChainInput } from './components/groupChain';
 import { resolveWorkflowExpandLevel } from './components/segments';
 import type { WorkflowExpandLevelDefault } from './components/WorkflowCollapse';
+import { buildContinuationChains, collectSignalCallbacks } from './utils/continuations';
 
 const EditState = dynamic(() => import('./components/EditState'), {
   ssr: false,
@@ -124,18 +124,17 @@ const GroupMessage = memo<GroupMessageProps>(
       (s) => continuations.map((c) => dataSelectors.getDisplayMessageById(c.groupId)(s)),
       isEqual,
     );
-    const chains = useMemo<GroupChainInput[]>(
-      () =>
-        continuations.flatMap((c, i) => {
-          const message = continuationMessages[i];
-          if (!message) return [];
-          const blocks =
-            message.role === 'assistant'
-              ? [message as unknown as AssistantContentBlock]
-              : (message.children ?? []);
-          return [{ blocks, id: c.groupId, steerUserId: c.steerUserId }];
-        }),
+    const chains = useMemo(
+      () => buildContinuationChains(continuations, continuationMessages),
       [continuationMessages, continuations],
+    );
+    const allSignalCallbacks = useMemo(
+      () =>
+        collectSignalCallbacks(
+          signalCallbacks as UISignalCallbacksBlock[] | undefined,
+          continuationMessages,
+        ),
+      [continuationMessages, signalCallbacks],
     );
     const tailMessage = continuationMessages.at(-1);
     const tailId = chains.at(-1)?.id ?? id;
@@ -389,7 +388,7 @@ const GroupMessage = memo<GroupMessageProps>(
               messageIndex={index}
             />
           )}
-          {(signalCallbacks as UISignalCallbacksBlock[] | undefined)?.map((block) => (
+          {allSignalCallbacks.map((block) => (
             <SignalCallbacks block={block} key={block.sourceToolMessageId} />
           ))}
           {taskCompletions && taskCompletions.length > 0 && (
