@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "ein entfernter Benutzer",
   "taskDetail.activities.assignment.memberAssigned": "hat die Aufgabe zugewiesen an",
   "taskDetail.activities.assignment.memberUnassigned": "hat den Zuständigen entfernt",
+  "taskDetail.activities.assignment.systemActor": "System",
   "taskDetail.activities.fallback.brief": "hat ein Briefing erstellt",
   "taskDetail.activities.fallback.comment": "hat einen Kommentar hinterlassen",
   "taskDetail.activities.fallback.created": "hat die Aufgabe erstellt",

@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "削除されたメンバー",
   "taskDetail.activities.assignment.memberAssigned": "タスクを担当者に割り当てました",
   "taskDetail.activities.assignment.memberUnassigned": "担当者を削除しました",
+  "taskDetail.activities.assignment.systemActor": "システム",
   "taskDetail.activities.fallback.brief": "概要を投稿しました",
   "taskDetail.activities.fallback.comment": "コメントを残しました",
   "taskDetail.activities.fallback.created": "タスクを作成しました",

@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "удаленный участник",
   "taskDetail.activities.assignment.memberAssigned": "назначил задачу участнику",
   "taskDetail.activities.assignment.memberUnassigned": "удалил назначение",
+  "taskDetail.activities.assignment.systemActor": "Система",
   "taskDetail.activities.fallback.brief": "опубликовал(а) краткое описание",
   "taskDetail.activities.fallback.comment": "оставил(а) комментарий",
   "taskDetail.activities.fallback.created": "создал(а) задачу",

@@ -85,6 +85,7 @@ describe('TaskService', () => {
 
   const mockTaskModel = {
     addActivity: vi.fn(),
+    updateWithAssignmentLog: vi.fn(),
     create: vi.fn(),
     delete: vi.fn(),
     findById: vi.fn(),
@@ -1732,57 +1733,23 @@ describe('TaskService', () => {
   });
 
   describe('assignee activity log', () => {
-    it('records one row per assignee slot that actually changed', async () => {
-      const service = new TaskService(db, userId, 'ws-1');
+    it('routes the update through the transactional logging path with the actor', async () => {
+      mockTaskModel.updateWithAssignmentLog.mockResolvedValue({ id: 'task_001' });
 
-      await service.recordAssigneeChanges(
+      await new TaskService(db, userId, 'ws-1').updateTaskWithAssigneeLock(
         'task_001',
-        { assigneeAgentId: 'agt_old', assigneeUserId: 'user_a' },
-        { assigneeAgentId: 'agt_new', assigneeUserId: 'user_a' },
-        { userId: 'user_actor' },
-      );
-
-      expect(mockTaskModel.addActivity).toHaveBeenCalledTimes(1);
-      expect(mockTaskModel.addActivity).toHaveBeenCalledWith({
-        actorAgentId: null,
-        actorUserId: 'user_actor',
-        payload: { fromId: 'agt_old', toId: 'agt_new' },
-        taskId: 'task_001',
-        type: 'assignee_agent',
-      });
-    });
-
-    it('stays silent when the assignees are re-saved unchanged', async () => {
-      const service = new TaskService(db, userId, 'ws-1');
-
-      await service.recordAssigneeChanges(
-        'task_001',
-        { assigneeAgentId: 'agt_1', assigneeUserId: 'user_a' },
-        { assigneeAgentId: 'agt_1', assigneeUserId: 'user_a' },
-        { userId: 'user_actor' },
-      );
-
-      expect(mockTaskModel.addActivity).not.toHaveBeenCalled();
-    });
-
-    it('logs both slots and attributes an agent-driven edit to the agent', async () => {
-      const service = new TaskService(db, userId, 'ws-1');
-
-      await service.recordAssigneeChanges(
-        'task_001',
-        { assigneeAgentId: 'agt_old', assigneeUserId: 'user_a' },
-        { assigneeAgentId: null, assigneeUserId: null },
+        { assigneeAgentId: 'agt_new' },
         { agentId: 'agt_actor', userId: 'user_actor' },
       );
 
-      expect(mockTaskModel.addActivity).toHaveBeenCalledTimes(2);
-      expect(mockTaskModel.addActivity).toHaveBeenCalledWith({
-        actorAgentId: 'agt_actor',
-        actorUserId: null,
-        payload: { fromId: 'user_a', toId: null },
-        taskId: 'task_001',
-        type: 'assignee_user',
-      });
+      // The diff + insert live inside the model's transaction, so the service
+      // must not fall back to the plain `update` that skips them.
+      expect(mockTaskModel.update).not.toHaveBeenCalled();
+      expect(mockTaskModel.updateWithAssignmentLog).toHaveBeenCalledWith(
+        'task_001',
+        { assigneeAgentId: 'agt_new' },
+        { agentId: 'agt_actor', userId: 'user_actor' },
+      );
     });
 
     it('renders assignment logs as activities with both sides resolved', async () => {

@@ -1,6 +1,8 @@
 import type {
   CheckpointConfig,
   NewTask,
+  TaskActivityLogPayload,
+  TaskActivityLogType,
   TaskItem,
   TaskSubtaskProgress,
   TaskVerifyConfig,
@@ -1873,6 +1875,82 @@ export class TaskModel {
       })
       .returning();
     return activity;
+  }
+
+  /**
+   * Update a task and append the matching assignment events in ONE transaction,
+   * deriving the previous assignees from a **locked** read of the task row.
+   *
+   * The lock is the point. Reading the "before" value outside the write lets two
+   * concurrent reassignments both observe the same origin: an A→B and an A→C
+   * racing on the same task persist A→B then B→C, while a lock-free recorder
+   * logs A→B and A→C and the history loses the middle state entirely. Rows are
+   * also inserted next to the write they describe, so their order can never
+   * disagree with the order the updates actually landed in.
+   *
+   * Every caller that moves an assignee column goes through here — the update
+   * procedure, the agent `editTask` tool, and the runner's inbox fallback — so
+   * an assignee cannot change without the feed being able to explain it.
+   */
+  async updateWithAssignmentLog(
+    id: string,
+    data: Partial<Omit<NewTask, 'id' | 'identifier' | 'seq' | 'createdByUserId'>>,
+    actor: { agentId?: string | null; userId?: string | null },
+  ): Promise<TaskItem | null> {
+    // Nothing to diff against: without an assignee field in the payload this is
+    // an ordinary update, and the extra lock would only add contention.
+    if (data.assigneeAgentId === undefined && data.assigneeUserId === undefined) {
+      return this.update(id, data);
+    }
+
+    return this.db.transaction(async (tx) => {
+      const runner = tx as LobeChatDatabase;
+      const [before] = await runner
+        .select({
+          assigneeAgentId: tasks.assigneeAgentId,
+          assigneeUserId: tasks.assigneeUserId,
+        })
+        .from(tasks)
+        .where(and(eq(tasks.id, id), this.ownership()))
+        .for('update')
+        .limit(1);
+      if (!before) return null;
+
+      const scoped = new TaskModel(runner, this.userId, this.workspaceId);
+      const updated = await scoped.update(id, data);
+      if (!updated) return null;
+
+      const changes: { payload: TaskActivityLogPayload; type: TaskActivityLogType }[] = [];
+      if (before.assigneeAgentId !== updated.assigneeAgentId) {
+        changes.push({
+          payload: { fromId: before.assigneeAgentId, toId: updated.assigneeAgentId },
+          type: 'assignee_agent',
+        });
+      }
+      // The two slots are independent — one edit can move both, and each gets
+      // its own row so the feed reads one change per line.
+      if (before.assigneeUserId !== updated.assigneeUserId) {
+        changes.push({
+          payload: { fromId: before.assigneeUserId, toId: updated.assigneeUserId },
+          type: 'assignee_user',
+        });
+      }
+
+      for (const change of changes) {
+        await scoped.addActivity({
+          actorAgentId: actor.agentId ?? null,
+          // An agent-driven edit is attributed to the agent, not to the session
+          // owner whose credentials it borrowed. Both null means the system did
+          // it on nobody's behalf (the runner's inbox fallback).
+          actorUserId: actor.agentId ? null : (actor.userId ?? null),
+          payload: change.payload,
+          taskId: id,
+          type: change.type,
+        });
+      }
+
+      return updated;
+    });
   }
 
   async getActivities(taskId: string): Promise<TaskActivityItem[]> {

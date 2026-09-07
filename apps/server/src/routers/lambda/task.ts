@@ -107,10 +107,6 @@ const createSchema = z.object({
 });
 
 const updateSchema = z.object({
-  // Attribution for the activity log only — never written to `tasks`. Set by
-  // agent-driven callers (the editTask builtin) so a reassignment made by an
-  // agent is not recorded under the session owner who lent it credentials.
-  actorAgentId: z.string().optional(),
   assigneeAgentId: z.string().nullish(),
   assigneeUserId: z.string().nullish(),
   automationMode: z.enum(['heartbeat', 'schedule']).nullish(),
@@ -1420,7 +1416,7 @@ export const taskRouter = router({
     }),
 
   update: taskProcedureWrite.input(idInput.merge(updateSchema)).mutation(async ({ input, ctx }) => {
-    const { id, actorAgentId, parentTaskId, status, ...data } = input;
+    const { id, parentTaskId, status, ...data } = input;
     try {
       const model = ctx.taskModel;
       await assertAssigneeAgentBelongsToUser(
@@ -1486,38 +1482,35 @@ export const taskRouter = router({
         updateData.instruction !== undefined && updateData.editorData === undefined
           ? { ...updateData, editorData: null }
           : updateData;
+      // Agent attribution rides the caller's context, never the request
+      // payload — see `AuthContext.actingAgentId`. The assignment activity is
+      // written inside this update's own transaction (see
+      // `TaskModel.updateWithAssignmentLog`), so a concurrent reassignment
+      // cannot interleave between reading the old assignee and recording it.
+      const actor = { agentId: ctx.actingAgentId, userId: ctx.userId };
       const task = status
         ? await ctx.serverDB.transaction(async (tx) => {
             const taskService = new TaskService(tx, ctx.userId, ctx.workspaceId ?? undefined);
             const updated = await taskService.updateTaskWithAssigneeLock(
               resolved.id,
               normalizedUpdateData,
+              actor,
             );
             if (!updated) return null;
 
             const result = await taskService.updateStatus({ id: resolved.id, status });
             return result.task;
           })
-        : await ctx.taskService.updateTaskWithAssigneeLock(resolved.id, normalizedUpdateData);
+        : await ctx.taskService.updateTaskWithAssigneeLock(
+            resolved.id,
+            normalizedUpdateData,
+            actor,
+          );
       if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
       // Only an actual assignee change notifies — re-saving the same assignee
       // stays silent (self-assignment is filtered inside the helper).
       if (task.assigneeUserId !== resolved.assigneeUserId) {
         notifyAssignedBestEffort(ctx, task);
-      }
-      // Same diff, different purpose: the notification pings the new assignee,
-      // this leaves the durable "who reassigned this, and when" trace the task
-      // detail feed renders. Awaited rather than deferred like the notification
-      // — the client refetches the detail as soon as this mutation resolves, so
-      // a row written after the response would miss that refetch. Failures are
-      // swallowed: the log records a save that already succeeded.
-      try {
-        await ctx.taskService.recordAssigneeChanges(resolved.id, resolved, task, {
-          agentId: actorAgentId,
-          userId: ctx.userId,
-        });
-      } catch (error) {
-        console.error('[task:update] failed to record assignee activity', error);
       }
       return { data: task, message: 'Task updated', success: true };
     } catch (error) {

@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "премахнат член",
   "taskDetail.activities.assignment.memberAssigned": "назначи задачата на",
   "taskDetail.activities.assignment.memberUnassigned": "премахна изпълнителя",
+  "taskDetail.activities.assignment.systemActor": "Система",
   "taskDetail.activities.fallback.brief": "публикува кратко описание",
   "taskDetail.activities.fallback.comment": "остави коментар",
   "taskDetail.activities.fallback.created": "създаде задачата",

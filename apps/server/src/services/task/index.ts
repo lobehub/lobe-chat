@@ -3,8 +3,6 @@ import { randomUUID } from 'node:crypto';
 import { UNFINISHED_TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { TASK_ASSIGNEE_PERMISSION_CODES } from '@lobechat/const/rbac';
 import type {
-  TaskActivityLogPayload,
-  TaskActivityLogType,
   TaskAssignmentKind,
   TaskContext,
   TaskDetailActivity,
@@ -797,56 +795,10 @@ export class TaskService {
   async updateTaskWithAssigneeLock(
     taskId: string,
     data: Parameters<TaskModel['update']>[1],
+    actor: { agentId?: string | null; userId?: string | null } = {},
   ): Promise<TaskItem | null> {
     return this.withAssigneeUserLock(data.assigneeUserId, (db) =>
-      new TaskModel(db, this.userId, this.workspaceId).update(taskId, data),
-    );
-  }
-
-  /**
-   * Append one `task_activities` row per assignee slot that actually changed.
-   *
-   * Reassignment only rewrites a column on `tasks`, so without this the detail
-   * feed has no way to say who moved the task and when. Best-effort by
-   * contract — the log records a write that already succeeded, so callers fire
-   * it after the update and swallow failures rather than fail the mutation.
-   */
-  async recordAssigneeChanges(
-    taskId: string,
-    before: Pick<TaskItem, 'assigneeAgentId' | 'assigneeUserId'>,
-    after: Pick<TaskItem, 'assigneeAgentId' | 'assigneeUserId'>,
-    actor: { agentId?: string | null; userId?: string | null },
-  ): Promise<void> {
-    const changes: { payload: TaskActivityLogPayload; type: TaskActivityLogType }[] = [];
-
-    if (before.assigneeAgentId !== after.assigneeAgentId) {
-      changes.push({
-        payload: { fromId: before.assigneeAgentId, toId: after.assigneeAgentId },
-        type: 'assignee_agent',
-      });
-    }
-    // The two assignee slots are independent — an edit can move both at once,
-    // and each gets its own row so the feed reads one change per line.
-    if (before.assigneeUserId !== after.assigneeUserId) {
-      changes.push({
-        payload: { fromId: before.assigneeUserId, toId: after.assigneeUserId },
-        type: 'assignee_user',
-      });
-    }
-    if (changes.length === 0) return;
-
-    await Promise.all(
-      changes.map((change) =>
-        this.taskModel.addActivity({
-          actorAgentId: actor.agentId ?? null,
-          // An agent-driven edit is attributed to the agent, not to the session
-          // owner whose credentials it borrowed.
-          actorUserId: actor.agentId ? null : (actor.userId ?? null),
-          payload: change.payload,
-          taskId,
-          type: change.type,
-        }),
-      ),
+      new TaskModel(db, this.userId, this.workspaceId).updateWithAssignmentLog(taskId, data, actor),
     );
   }
 

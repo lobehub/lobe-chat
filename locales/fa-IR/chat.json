@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "یک عضو حذف‌شده",
   "taskDetail.activities.assignment.memberAssigned": "وظیفه به اختصاص داده شد",
   "taskDetail.activities.assignment.memberUnassigned": "مسئولیت حذف شد",
+  "taskDetail.activities.assignment.systemActor": "سیستم",
   "taskDetail.activities.fallback.brief": "یک خلاصه ارسال کرد",
   "taskDetail.activities.fallback.comment": "دیدگاهی گذاشت",
   "taskDetail.activities.fallback.created": "وظیفه را ایجاد کرد",

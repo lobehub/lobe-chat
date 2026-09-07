@@ -440,15 +440,9 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       }
 
       if (Object.keys(updateData).length > 0) {
-        // Attribution only: the activity log should name the agent that made
-        // the edit, not the session owner whose credentials it runs under.
-        ops.push(
-          taskCaller().update({
-            id: task.id,
-            ...updateData,
-            ...(agentId ? { actorAgentId: agentId } : {}),
-          }),
-        );
+        // Attribution rides the caller's context, not this payload — see
+        // `AuthContext.actingAgentId`.
+        ops.push(taskCaller().update({ id: task.id, ...updateData }));
       }
 
       const applyDeps = async (
@@ -981,7 +975,10 @@ export const taskRuntime: ServerRuntimeRegistration = {
       agentModel: new AgentModel(db, userId),
       taskModel: new TaskModel(db, userId),
       taskService: new TaskService(db, userId),
-      taskCaller: taskRouter.createCaller({ userId }),
+      // `actingAgentId` names the agent for durable attribution (task
+      // reassignment activity). Server-side only by contract — it must never
+      // reach the router through a client-supplied field.
+      taskCaller: taskRouter.createCaller({ actingAgentId: agentId, userId }),
     } as TaskRuntimeDeps;
 
     let resolved = false;

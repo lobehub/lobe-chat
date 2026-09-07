@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "een verwijderde lid",
   "taskDetail.activities.assignment.memberAssigned": "wees de taak toe aan",
   "taskDetail.activities.assignment.memberUnassigned": "verwijderde de toegewezene",
+  "taskDetail.activities.assignment.systemActor": "Systeem",
   "taskDetail.activities.fallback.brief": "plaatste een brief",
   "taskDetail.activities.fallback.comment": "liet een reactie achter",
   "taskDetail.activities.fallback.created": "heeft de taak aangemaakt",

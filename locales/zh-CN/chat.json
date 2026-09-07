@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "已移除的成员",
   "taskDetail.activities.assignment.memberAssigned": "将任务指派给",
   "taskDetail.activities.assignment.memberUnassigned": "取消了成员指派",
+  "taskDetail.activities.assignment.systemActor": "系统",
   "taskDetail.activities.fallback.brief": "发布了简要说明",
   "taskDetail.activities.fallback.comment": "留下了评论",
   "taskDetail.activities.fallback.created": "创建了任务",

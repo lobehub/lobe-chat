@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "un miembro eliminado",
   "taskDetail.activities.assignment.memberAssigned": "asignó la tarea a",
   "taskDetail.activities.assignment.memberUnassigned": "eliminó al asignado",
+  "taskDetail.activities.assignment.systemActor": "Sistema",
   "taskDetail.activities.fallback.brief": "publicó un informe",
   "taskDetail.activities.fallback.comment": "dejó un comentario",
   "taskDetail.activities.fallback.created": "creó la tarea",

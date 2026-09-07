@@ -13,6 +13,12 @@ type DeletedTargetKey =
 export interface AssignmentActivityCopy {
   /** Name shown when the target id no longer resolves to a live member/agent. */
   deletedTargetKey: DeletedTargetKey;
+  /**
+   * Name for the actor slot when nobody is recorded — the runner assigning its
+   * fallback inbox agent so an unassigned task can execute at all. Without it
+   * the row reads as a headless "set the agent to …".
+   */
+  systemActorKey: 'taskDetail.activities.assignment.systemActor';
   /** What the actor did — reads as "<actor> <verb> <target>". */
   verbKey: AssignmentVerbKey;
 }
@@ -31,6 +37,7 @@ export const resolveAssignmentActivityCopy = (
   const assigned = Boolean(assignment?.to);
 
   return {
+    systemActorKey: 'taskDetail.activities.assignment.systemActor',
     deletedTargetKey: isAgentSlot
       ? 'taskDetail.activities.assignment.deletedAgent'
       : 'taskDetail.activities.assignment.deletedMember',

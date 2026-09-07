@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "عضو محذوف",
   "taskDetail.activities.assignment.memberAssigned": "تم تعيين المهمة إلى",
   "taskDetail.activities.assignment.memberUnassigned": "تم إزالة المكلف",
+  "taskDetail.activities.assignment.systemActor": "النظام",
   "taskDetail.activities.fallback.brief": "نشر موجزًا",
   "taskDetail.activities.fallback.comment": "ترك تعليقًا",
   "taskDetail.activities.fallback.created": "أنشأ المهمة",

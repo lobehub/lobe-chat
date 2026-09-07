@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "kaldırılmış bir üye",
   "taskDetail.activities.assignment.memberAssigned": "görevi atadı",
   "taskDetail.activities.assignment.memberUnassigned": "atananı kaldırdı",
+  "taskDetail.activities.assignment.systemActor": "Sistem",
   "taskDetail.activities.fallback.brief": "bir özet paylaştı",
   "taskDetail.activities.fallback.comment": "bir yorum bıraktı",
   "taskDetail.activities.fallback.created": "görevi oluşturdu",

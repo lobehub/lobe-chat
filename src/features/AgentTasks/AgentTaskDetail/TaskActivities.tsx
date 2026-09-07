@@ -158,11 +158,15 @@ const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   const assignment = activity.assignment;
   const isAgentSlot = assignment?.kind === 'agent';
   const target = assignment?.to;
-  const { deletedTargetKey, verbKey } = resolveAssignmentActivityCopy(assignment);
+  const { deletedTargetKey, systemActorKey, verbKey } = resolveAssignmentActivityCopy(assignment);
 
   return (
     <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9} wrap={'wrap'}>
-      <ActivityAuthor author={activity.author} fallbackIcon={UserRoundCog} />
+      <ActivityAuthor
+        author={activity.author}
+        fallbackIcon={UserRoundCog}
+        fallbackName={t(systemActorKey)}
+      />
       <Text style={{ color: cssVar.colorTextSecondary, flexShrink: 0 }}>{t(verbKey)}</Text>
       {target && (
         <ActivityAuthor

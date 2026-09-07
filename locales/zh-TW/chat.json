@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "已移除的成員",
   "taskDetail.activities.assignment.memberAssigned": "將任務分配給",
   "taskDetail.activities.assignment.memberUnassigned": "移除受指派者",
+  "taskDetail.activities.assignment.systemActor": "系統",
   "taskDetail.activities.fallback.brief": "張貼了簡述",
   "taskDetail.activities.fallback.comment": "留下了評論",
   "taskDetail.activities.fallback.created": "建立了此任務",

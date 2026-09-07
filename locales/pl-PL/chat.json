@@ -1601,6 +1601,7 @@
   "taskDetail.activities.assignment.deletedMember": "usunięty członek",
   "taskDetail.activities.assignment.memberAssigned": "przypisano zadanie do",
   "taskDetail.activities.assignment.memberUnassigned": "usunięto przypisanie",
+  "taskDetail.activities.assignment.systemActor": "System",
   "taskDetail.activities.fallback.brief": "opublikował(a) szkic",
   "taskDetail.activities.fallback.comment": "zostawił(a) komentarz",
   "taskDetail.activities.fallback.created": "utworzył zadanie",
