@@ -172,6 +172,8 @@ export default {
   'builtins.codex.mcpTool.result': 'Result',
   'builtins.codex.mcpTool.unknownTool': 'MCP tool',
   'builtins.codex.webSearch.query': 'Query',
+  'builtins.lobe-auv.apiName.runCommand': 'AUV command',
+  'builtins.lobe-auv.title': 'AUV',
   'builtins.lobe-browser.apiName.click': 'Clicked element',
   'builtins.lobe-browser.apiName.fill': 'Filled input',
   'builtins.lobe-browser.apiName.navigate': 'Opened page',

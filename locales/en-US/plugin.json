@@ -176,6 +176,8 @@
   "builtins.lobe-agent.todos.completedStep": "Completed",
   "builtins.lobe-agent.todos.currentStep": "Current step",
   "builtins.lobe-agent.todos.todos": "Todos",
+  "builtins.lobe-auv.apiName.runCommand": "AUV command",
+  "builtins.lobe-auv.title": "AUV",
   "builtins.lobe-browser.apiName.click": "Clicked element",
   "builtins.lobe-browser.apiName.fill": "Filled input",
   "builtins.lobe-browser.apiName.navigate": "Opened page",

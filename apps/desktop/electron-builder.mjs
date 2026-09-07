@@ -268,6 +268,13 @@ const config = {
     'dist/renderer/**/*',
     '!resources/locales',
     '!resources/dmg.png',
+    // NOTICE:
+    // AUV must execute from the external bin directory, so its ASAR copy is unnecessary.
+    // The resources glob otherwise duplicates the binary copied by extraResources below.
+    // Source: PR #19051 ASAR Size Gate; resources/bin is staged in beforePack above.
+    // Remove these exclusions only if AUV no longer ships through extraResources.
+    '!resources/bin/auv',
+    '!resources/bin/auv.exe',
     // Exclude all node_modules first
     '!node_modules',
     // Then explicitly include native modules using object form (handles pnpm symlinks)

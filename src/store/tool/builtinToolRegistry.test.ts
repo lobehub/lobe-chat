@@ -1,5 +1,5 @@
 import { WEB_ONBOARDING } from '@lobechat/builtin-agents';
-import { AuvIdentifier } from '@lobechat/builtin-tool-auv/client';
+import { AuvApiName, AuvIdentifier } from '@lobechat/builtin-tool-auv/client';
 import {
   BrowserApiName,
   BrowserIdentifier,
@@ -44,9 +44,14 @@ import { getBuiltinIntervention } from '@lobechat/builtin-tools/interventions';
 import { registerBuiltinToolSurfaces } from '@lobechat/builtin-tools/register';
 import { getBuiltinRender } from '@lobechat/builtin-tools/renders';
 import { getBuiltinStreaming } from '@lobechat/builtin-tools/streamings';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { shinyTextStyles } from '@lobechat/shared-tool-ui/styles';
+import { cleanup, render } from '@testing-library/react';
+import { createElement } from 'react';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 describe('builtin tool registry', () => {
+  afterEach(cleanup);
+
   beforeAll(() => {
     registerBuiltinToolSurfaces();
   });
@@ -61,6 +66,96 @@ describe('builtin tool registry', () => {
 
   it('includes AUV in builtin identifiers', () => {
     expect(builtinToolIdentifiers).toContain(AuvIdentifier);
+  });
+
+  /** @example AUV command calls resolve a custom header instead of the generic API label. */
+  it('registers an inspector for the AUV CLI entry point', () => {
+    // ROOT CAUSE:
+    //
+    // AUV was registered as a builtin without a matching inspector registration.
+    // The chat therefore fell back to the API name and hid the command being invoked.
+    // Registering the AUV inspector makes command context available in every lifecycle phase.
+    /** @example lobe-auv/runCommand resolves a component in the central registry. */
+    expect(getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand)).toBeDefined();
+  });
+
+  /** @example A command with a spaced argument stays readable after execution. */
+  it('renders AUV argv through its registered inspector without losing argument boundaries', () => {
+    const Inspector = getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand);
+    if (!Inspector) throw new Error('AUV inspector is not registered');
+
+    const view = render(
+      createElement(Inspector, {
+        apiName: AuvApiName.runCommand,
+        args: { argv: ['invoke', 'input.type', '--text', 'hello world', ''] },
+        identifier: AuvIdentifier,
+        pluginState: { output: { ok: true } },
+      }),
+    );
+
+    /** @example A single "hello world" argument and an empty argument remain distinguishable. */
+    expect(view.getByText('auv invoke input.type --text "hello world" ""')).toBeVisible();
+    /** @example AUV uses a localized command label instead of the raw runCommand API name. */
+    expect(view.getByText('builtins.lobe-auv.apiName.runCommand:')).toBeVisible();
+  });
+
+  /** @example Streaming begins with a label and progressively reveals the AUV command. */
+  it('keeps the AUV header visible while arguments stream and execution loads', () => {
+    const Inspector = getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand);
+    if (!Inspector) throw new Error('AUV inspector is not registered');
+
+    const baseProps = { apiName: AuvApiName.runCommand, args: {}, identifier: AuvIdentifier };
+    const view = render(createElement(Inspector, { ...baseProps, isArgumentsStreaming: true }));
+    /** @example The empty streaming phase pulses a non-empty localized title. */
+    expect(view.getByText('builtins.lobe-auv.apiName.runCommand')).toHaveClass(
+      shinyTextStyles.shinyText,
+    );
+
+    view.rerender(
+      createElement(Inspector, {
+        ...baseProps,
+        isArgumentsStreaming: true,
+        partialArgs: { argv: ['invoke', 'display.'] },
+      }),
+    );
+    /** @example Partial argv is displayed before final arguments are available. */
+    expect(view.getByText('auv invoke display.')).toBeVisible();
+
+    view.rerender(
+      createElement(Inspector, {
+        ...baseProps,
+        args: { argv: ['invoke', 'display.list'] },
+        isLoading: true,
+        partialArgs: { argv: ['invoke', 'display.'] },
+      }),
+    );
+    /** @example Completed arguments supersede the partial command during execution. */
+    expect(view.getByText('auv invoke display.list')).toBeVisible();
+    /** @example Execution keeps the shared loading animation. */
+    expect(view.getByText('builtins.lobe-auv.apiName.runCommand:')).toHaveClass(
+      shinyTextStyles.shinyText,
+    );
+  });
+
+  /** @example Failed calls retain their command context even without pluginState. */
+  it('renders failed AUV calls without requiring a successful result payload', () => {
+    const Inspector = getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand);
+    if (!Inspector) throw new Error('AUV inspector is not registered');
+
+    const view = render(
+      createElement(Inspector, {
+        apiName: AuvApiName.runCommand,
+        args: { argv: ['invoke', 'display.capture'] },
+        identifier: AuvIdentifier,
+        result: { content: null, error: { message: 'Screen recording permission denied' } },
+      }),
+    );
+    /** @example The failed command is still identifiable in conversation history. */
+    expect(view.getByText('auv invoke display.capture')).toBeVisible();
+    /** @example A finished failure does not keep pulsing as if it were running. */
+    expect(view.getByText('builtins.lobe-auv.apiName.runCommand:')).not.toHaveClass(
+      shinyTextStyles.shinyText,
+    );
   });
 
   it('keeps the single AUV CLI entry point directly available behind its runtime gate', () => {
