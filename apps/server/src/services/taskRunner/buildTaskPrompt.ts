@@ -59,12 +59,7 @@ const resolveGoalLoopContext = async (
     const automaticReview = [...runs].reverse().find((run) => run.metadata?.goalReview)
       ?.metadata?.goalReview;
     if (automaticReview && automaticReview.status !== 'passed') {
-      context.rejectComment = [
-        context.rejectComment,
-        `Automatic Acceptance review:\n${automaticReview.feedback}`,
-      ]
-        .filter(Boolean)
-        .join('\n\n');
+      context.automaticReviewFeedback = automaticReview.feedback;
     }
 
     const plan = (last.plan ?? []) as Array<{ id: string; title: string }>;

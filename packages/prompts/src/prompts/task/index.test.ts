@@ -701,6 +701,38 @@ describe('buildTaskRunPrompt', () => {
     expect(result).toContain('`lh task topic view TASK-1 <seq>`');
   });
 
+  it.each([undefined, 'Keep the existing table.'])(
+    'renders automatic review feedback alongside optional user feedback (%s)',
+    (rejectComment) => {
+      const result = buildTaskRunPrompt(
+        {
+          goalLoop: {
+            automaticReviewFeedback: 'Add the missing total row.',
+            rejectComment,
+            round: 2,
+          },
+          task: {
+            ...baseTask,
+            identifier: 'TASK-1',
+            name: 'Report',
+            instruction: 'Finish the report.',
+          },
+        },
+        NOW,
+      );
+
+      expect(result).toContain('Review feedback on the last delivery');
+      expect(result).toContain('Automatic Acceptance review:\nAdd the missing total row.');
+      expect(result).not.toContain('undefined');
+      if (rejectComment) {
+        expect(result).toContain(rejectComment);
+        expect(result.indexOf(rejectComment)).toBeLessThan(
+          result.indexOf('Automatic Acceptance review:'),
+        );
+      }
+    },
+  );
+
   it('omits the round budget suffix for uncapped goals', () => {
     const result = buildTaskRunPrompt(
       {
