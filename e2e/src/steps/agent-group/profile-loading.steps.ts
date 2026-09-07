@@ -16,7 +16,10 @@ Given('a group profile exists for the loading regression', async function (this:
 });
 
 When('I open the group profile', { timeout: 120_000 }, async function (this: CustomWorld) {
-  await this.page.goto(`/group/${this.testContext.loadingRegressionGroupId}/profile`);
+  await this.page.goto(`/group/${this.testContext.loadingRegressionGroupId}/profile`, {
+    timeout: 90_000,
+    waitUntil: 'domcontentloaded',
+  });
   await expect(
     this.page.getByText('Loading regression group', { exact: true }).first(),
   ).toBeVisible({ timeout: 90_000 });
@@ -48,4 +51,47 @@ After({ tags: '@agent-group' }, async function (this: CustomWorld) {
   } finally {
     await api.dispose();
   }
+});
+
+Given(
+  'a topic exists for the group profile navigation regression',
+  async function (this: CustomWorld) {
+    const groupId = this.testContext.loadingRegressionGroupId;
+    const topicResponse = await this.page.request.post('/trpc/lambda/topic.createTopic', {
+      data: { json: { groupId, title: 'Profile navigation regression', trigger: 'chat' } },
+    });
+    expect(topicResponse.ok()).toBe(true);
+    const topicId = (await topicResponse.json()).result.data.json;
+    this.testContext.loadingRegressionTopicId = topicId;
+
+    const messageResponse = await this.page.request.post('/trpc/lambda/message.createMessage', {
+      data: {
+        json: {
+          content: 'Group topic must survive leaving profile',
+          groupId,
+          role: 'user',
+          topicId,
+        },
+      },
+    });
+    expect(messageResponse.ok()).toBe(true);
+  },
+);
+
+Then('I can return to the selected group topic', async function (this: CustomWorld) {
+  await expect(this.page.getByRole('button', { name: /Start Conversation|开始对话/ })).toBeVisible({
+    timeout: 15_000,
+  });
+  await this.page.getByRole('link', { name: 'Profile navigation regression', exact: true }).click();
+  await expect(
+    this.page.locator('[data-message-id]').getByText('Group topic must survive leaving profile', {
+      exact: true,
+    }),
+  ).toBeVisible({ timeout: 15_000 });
+  await expect(this.page).toHaveURL(
+    new RegExp(
+      `/group/${this.testContext.loadingRegressionGroupId}/${this.testContext.loadingRegressionTopicId}`,
+    ),
+  );
+  this.attach(await this.takeScreenshot('group-profile-return-topic'), 'image/png');
 });

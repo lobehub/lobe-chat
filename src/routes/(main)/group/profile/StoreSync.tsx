@@ -33,10 +33,9 @@ const StoreSync = memo(() => {
     const urlTopicId = builderTopicId ?? undefined;
     useChatStore.setState({ activeTopicId: urlTopicId });
 
-    return () => {
-      // Clear activeTopicId when unmounting (leaving group profile page)
-      useChatStore.setState({ activeTopicId: undefined }, false, 'GroupProfileUnmounted');
-    };
+    // The destination route owns its next topic. A passive unmount cleanup
+    // runs after that route has selected/hydrated it and would erase it.
+    // GroupIdSync clears the global context when leaving the group entirely.
   }, [builderTopicId]);
 
   // Register hotkeys

@@ -171,6 +171,6 @@ export const useProjectSkills = (
     onOpenFile,
     onOpenSkill,
     projectItems,
-    raw: data,
+    raw: data ?? undefined,
   };
 };
