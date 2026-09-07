@@ -13,6 +13,14 @@ file wins; about _what may be published_, the skill wins.
 PLAN (0–2)  →  EXECUTE (3–5)  →  FINISH (6)
 ```
 
+Follow the skill's [delegation workflow](../skills/acceptance/references/delegation.md).
+The steps below define project mechanics. Keep environment ownership with the
+delegated run through this project's teardown step.
+For delegated runs, Step 1 is only a tentative scope outline: the worker checks
+the environment in Step 2 before drafting the executable plan for discussion.
+The primary handles the approval gate. An already agreed plan can be reused
+unless new evidence invalidates it.
+
 Do not enter Execute until Plan has confirmed both the environment state and the
 plan. Loading skills and reading logs is silent preparation — never narrate it.
 The first user-visible message of a session is about the user's test, not setup.
@@ -226,6 +234,9 @@ made in a real LobeHub round. The generic set is in the skill's SKILL.md.
 | "The fix is in and the tests are green"                                   | Reproduce the failure's precondition first (here: the empty→non-empty task-list transition swaps the composer instance). A run that cannot fail proves nothing; when the mocked seam is the suspect, drop the mock and drive the real kernel. (was L-S18, now generic M31)                                                     |
 
 ### Step 5 — Report and publish
+
+Apply the skill's [final review and publication contract](../skills/acceptance/references/delegation.md#4-primary-reviews-the-completed-round)
+before the repository-specific publishing steps below.
 
 The report schema, the language rule, visual/dual-text/structured-visualization
 evidence rules, and the immutable-round rules are the skill's

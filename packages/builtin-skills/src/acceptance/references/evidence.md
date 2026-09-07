@@ -4,6 +4,31 @@ This reference defines the artifact contract shared by every surface. Capture
 commands belong to the selected surface guide; do not load another surface's
 instructions merely to learn how to submit an artifact.
 
+## Capture first, publish after review
+
+During execution, save artifacts and the attempt ledger locally. All upload and
+`result submit` examples in surface guides and this reference are publication
+commands for the primary **after reviewing the complete round**, not capture
+steps for the worker. Never rerun a command inside `--content`; submit the saved
+output that was actually reviewed. Follow [plan-format.md](plan-format.md) for
+plan-driven submission or [report.md](report.md) for authored ingestion.
+
+Use the project adapter's report root when specified; otherwise create a unique
+round directory under `.acceptances/` and ensure Git ignores it before writing
+artifacts. Set `EVIDENCE_DIR` to an absolute attempt directory within that round.
+Examples using `./proof` or `./out` are placeholders for this directory, not
+instructions to write in the repository root. Save an `attempt-ledger.json` in
+the round directory with case/attempt IDs, revisions, evidence paths and current
+status. Record the round path in the handoff so a resumed worker can find it.
+Before publishing, the primary reads the reviewed attempt's absolute artifact
+paths, attempt ID and tested revision from this ledger and sets any example
+variables in its own shell. Worker shell variables are not shared with the primary.
+Persist artifacts as they are captured and update the ledger after each attempt.
+Keep the directory across worker exits, review and upload retries until publication
+and uploaded coverage are confirmed. Do not rely on shell variables or terminal
+output as the only copy. Local storage survives process exits, not disk loss or
+external temporary-file cleanup; lost evidence requires recapture, never a pass.
+
 ## Evidence media
 
 | Type           | Use when                                                                                          |
@@ -27,7 +52,7 @@ a file exists. Upload the clip itself with `--type audio` and the acceptance
 page gives the reviewer a player.
 
 ```bash
-# The generated file is the evidence — attach the artifact the feature produced,
+# Publication only, after primary review. Attach the artifact the feature produced,
 # not a re-encode and not a screenshot of the player.
 lh acceptance run result submit --operation "$OPERATION_ID" --item "$CHECK_ITEM_ID" \
   --type audio --file ./out/tts-zh-female.mp3 --by program \

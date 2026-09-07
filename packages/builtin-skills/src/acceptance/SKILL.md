@@ -1,8 +1,8 @@
 ---
 name: acceptance
-version: 0.3.0
+version: 0.5.1
 description: >
-  End-to-end verification and self-evidence for a delivery in any repository,
+  Delegated end-to-end verification with primary-agent evidence review for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
   one was handed to this run; otherwise author checks and publish a standalone
   acceptance. Pick the proving surface (CLI / web / desktop / iOS Simulator),
@@ -14,16 +14,43 @@ description: >
   ambient ids, and never depends on running inside a LobeHub conversation.
 ---
 
-# Acceptance (Builder Self-Evidence)
+# Acceptance (Delegated Execution, Primary Review)
 
-You are the **builder** for a delivery. A separate review step judges it against
-a **plan** — checks you author, or a verify plan handed to this run. A check that
+The primary agent owns the delivery judgment. Use one execution worker for
+environment inspection, plan drafting, and case execution. Settle the plan with
+the primary before execution; the primary reviews all evidence at the end. A check that
 declares `requiredEvidence` **cannot pass on your text alone**: a missing artifact
 marks it `uncertain` and holds the delivery.
 
 ```
-author (or discover) the plan  →  pick the surface  →  capture evidence  →  publish the round  →  self-check coverage
+one worker: environment → select surface + plan ↔ primary discussion → execute agreed cases
+primary: review completed evidence → resolve findings → publish → verify uploaded coverage
 ```
+
+## Delegate work, retain judgment
+
+Before dispatch, explicitly select a suitable lower-cost model through the current
+host's supported controls, or verify an explicitly configured worker default.
+An absent setting may inherit the primary model; never assume it means cheap.
+If a lower-cost selection cannot be established, follow the selection/fallback
+rules in [delegation.md](references/delegation.md#select-the-worker-without-assuming-cheap-defaults).
+Do not change user configuration. Reuse one worker across stages and cases.
+After plan agreement, routine cases proceed without primary approval between
+cases. Escalate requirement ambiguity, failures, or blockers; otherwise notify
+the primary when the complete report is ready. Wait for these notifications
+rather than reading files to infer progress. The primary then inspects every
+case's original evidence; worker pass labels are insufficient. Do not create a
+separate final audit agent.
+
+If a case fails, the implementer repairs it, the acceptance worker reruns it,
+and the primary reviews the new evidence. Missing evidence goes back to the
+executor. A repairer's self-check never replaces this re-verification.
+
+Read [delegation.md](references/delegation.md) before dispatch. It defines the
+handoffs, plan discussion, autonomous execution, final review, repair, and fallback
+when lower-cost selection or delegation is unavailable. These are the responsibilities throughout
+the surface guides; references to "you" do not require the primary to perform
+every tool call. Existing user authorization and host restrictions still apply.
 
 ## Read the project layer first
 
@@ -186,10 +213,11 @@ Coverage: 2/2 criteria, all required evidence uploaded
 
 - **Engine-level capture over OS capture.** `agent-browser screenshot` / `dom` /
   `eval` run headless; `screencapture` / osascript are macOS-only. iOS: `xcrun
-simctl io` over host-window capture. Rounds land under `.acceptances/`, which
-  the CLI keeps out of git.
-- **Upload as you go.** Evidence keyed to its check mid-run survives a crash near
-  the end.
+simctl io` over host-window capture. Use the project report root or the ignored
+  `.acceptances/` fallback defined in [evidence.md](references/evidence.md#capture-first-publish-after-review).
+- **Save evidence as you go; publish after review.** Preserve local artifacts and
+  the attempt ledger during execution. For plan-driven rounds, defer `result submit`
+  until the primary reviews the completed round; see [plan-format.md](references/plan-format.md).
 - **Don't invent evidence.** Capture only the types a check declares.
 
 ## Reference map
