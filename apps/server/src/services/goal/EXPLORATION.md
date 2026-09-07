@@ -36,7 +36,7 @@ Goal acceptance. At the cap, insufficient evidence pauses the Goal rather than
 marking it achieved. Increase the cap with:
 
 ```sh
-lh goal set-budget 6 < goal-id > --max-experiments
+lh goal set-budget goal_id --max-experiments 6
 ```
 
 A cap-stopped Goal resumes when the limit is raised; an explicitly user-paused
