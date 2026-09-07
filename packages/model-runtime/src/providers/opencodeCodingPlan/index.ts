@@ -1,3 +1,4 @@
+import { pickNonEmptyString } from '@lobechat/utils/object';
 import { LOBE_DEFAULT_MODEL_LIST, ModelProvider } from 'model-bank';
 import type OpenAI from 'openai';
 
@@ -529,14 +530,15 @@ export const params = {
 
 export class LobeOpenCodeCodingPlanAI extends createRouterRuntime(params) {
   private getSessionHeaders(metadata?: Record<string, unknown>) {
-    const topicId = metadata?.topicId;
-
     return {
       'User-Agent': 'lobehub',
       'x-opencode-client': 'lobehub',
-      // Topics survive runtime recreation and agent tool-call rounds. Requests
-      // without a topic are standalone operations, not one shared session.
-      'x-opencode-session': typeof topicId === 'string' && topicId ? topicId : crypto.randomUUID(),
+      // Callers preserve topic identity or reuse a task ID across related calls.
+      // Only requests without either identity receive a standalone session.
+      'x-opencode-session':
+        pickNonEmptyString(metadata?.topicId) ??
+        pickNonEmptyString(metadata?.taskId) ??
+        crypto.randomUUID(),
     };
   }
 

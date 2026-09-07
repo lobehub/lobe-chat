@@ -59,13 +59,15 @@ describe('MemoryExtractionService topic metadata', () => {
     await service.run(job, buildOptions());
 
     expect(generateObject).toHaveBeenCalledTimes(6);
+    const taskId = generateObject.mock.calls[4][1]?.metadata.taskId;
+    expect(taskId).toMatch(/^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/);
     expect(generateObject.mock.calls.map(([, options]) => options?.metadata)).toEqual([
       { topicId: 'topic-a', trigger: 'memory' },
       { topicId: 'topic-a', trigger: 'memory' },
       { topicId: 'topic-b', trigger: 'memory' },
       { topicId: 'topic-b', trigger: 'memory' },
-      { trigger: 'memory' },
-      { trigger: 'memory' },
+      { taskId, trigger: 'memory' },
+      { taskId, trigger: 'memory' },
     ]);
   });
 });

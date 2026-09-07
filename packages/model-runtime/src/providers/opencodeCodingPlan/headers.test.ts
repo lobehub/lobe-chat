@@ -120,7 +120,48 @@ describe('OpenCode Go session headers', () => {
     },
   );
 
-  it('assigns separate UUIDs to standalone requests without a topic', async () => {
+  it('reuses a topicless task ID across chat and structured output', async () => {
+    for (const taskId of ['task-1', 'task-1', 'task-2']) {
+      const runtime = createRuntime();
+      const response = await runtime.chat(
+        { messages, model: 'glm-5', stream: false },
+        { metadata: { taskId } },
+      );
+      await response.text();
+      await runtime.generateObject(
+        {
+          messages,
+          model: 'glm-5',
+          schema: {
+            name: 'result',
+            schema: { properties: { ok: { type: 'boolean' } }, type: 'object' },
+          },
+        },
+        { metadata: { taskId } },
+      );
+    }
+
+    expect(requests.map(({ headers }) => headers.get('x-opencode-session'))).toEqual([
+      'task-1',
+      'task-1',
+      'task-1',
+      'task-1',
+      'task-2',
+      'task-2',
+    ]);
+  });
+
+  it('prefers the topic over a task ID', async () => {
+    const response = await createRuntime().chat(
+      { messages, model: 'glm-5', stream: false },
+      { metadata: { taskId: 'task-1', topicId: 'topic-1' } },
+    );
+    await response.text();
+
+    expect(requests[0].headers.get('x-opencode-session')).toBe('topic-1');
+  });
+
+  it('assigns separate UUIDs to standalone requests without a topic or task', async () => {
     const runtime = createRuntime();
     for (let i = 0; i < 2; i++) {
       const response = await runtime.chat({ messages, model: 'glm-5', stream: false });

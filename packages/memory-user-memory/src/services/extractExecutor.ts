@@ -216,10 +216,15 @@ export class MemoryExtractionService<RO> {
     job: MemoryExtractionJob,
     options: ExtractorRunOptions<RO>,
   ): Promise<MemoryExtractionResult | null> {
+    const runOptions = {
+      ...options,
+      taskId: options.taskId || (options.topicId ? undefined : crypto.randomUUID()),
+    };
+
     try {
-      const decision = await this.runGatekeeper(job, { ...options });
+      const decision = await this.runGatekeeper(job, runOptions);
       const layersToExtract = this.resolveJobLayers(decision, job.layers);
-      const outputs = await this.runLayers(job, layersToExtract, { ...options });
+      const outputs = await this.runLayers(job, layersToExtract, runOptions);
 
       const processedLayersCount = {
         activity: outputs.activity?.data ? outputs.activity?.data?.memories?.length : 0,
@@ -271,6 +276,7 @@ export class MemoryExtractionService<RO> {
         callbacks: options.callbacks,
         gateKeeperLanguage: options.gateKeeperLanguage || 'English',
         retrievedContexts: options.retrievedContexts,
+        taskId: options.taskId,
         topicId: options.topicId,
         topK: options.topK,
       });
