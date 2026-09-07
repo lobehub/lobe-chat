@@ -115,6 +115,9 @@ export class RecentModel {
               // surface a visitor's conversation in the creator's own Recent feed.
               notShareVisitorTopic(),
               mineTopicWhere,
+              // Topic scope alone is insufficient: stale/mismatched rows can
+              // point at a personal or foreign-workspace agent/group. Check
+              // the parent scope before returning titles or loading previews.
               or(
                 and(isNotNull(topics.groupId), buildWorkspaceWhere(scope, chatGroups)),
                 and(
