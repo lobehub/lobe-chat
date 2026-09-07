@@ -6,7 +6,7 @@ import type { TFunction } from 'i18next';
 import type { LucideIcon } from 'lucide-react';
 import { BotMessageSquare, CircleDot, CirclePlus, MessageCircle, UserRoundCog } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import AgentProfilePopup from '@/features/AgentProfileCard/AgentProfilePopup';
 import type { BriefItem } from '@/features/DailyBrief/types';
@@ -84,7 +84,14 @@ const ActivityAuthor = memo<{
   const name = author?.name || fallbackName;
 
   const node = (
-    <Flexbox horizontal align={'center'} gap={6} style={{ flexShrink: 0 }}>
+    <Flexbox
+      horizontal
+      align={'center'}
+      gap={6}
+      // Inline so it can sit inside a translated sentence without breaking the
+      // line — the assignment row renders participants through <Trans>.
+      style={{ display: 'inline-flex', flexShrink: 0, verticalAlign: 'middle' }}
+    >
       {author?.avatar ? (
         <Avatar avatar={author.avatar} size={24} />
       ) : (
@@ -162,20 +169,32 @@ const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
 
   return (
     <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9} wrap={'wrap'}>
-      <ActivityAuthor
-        author={activity.author}
-        fallbackIcon={UserRoundCog}
-        fallbackName={t(systemActorKey)}
-      />
-      <Text style={{ color: cssVar.colorTextSecondary, flexShrink: 0 }}>{t(verbKey)}</Text>
-      {target && (
-        <ActivityAuthor
-          author={target}
-          fallbackIcon={isAgentSlot ? BotMessageSquare : UserRoundCog}
-          fallbackName={t(deletedTargetKey)}
+      {/*
+        The whole line is one translated sentence rather than actor + verb +
+        target concatenated in the DOM: verb-final languages (ja, ko, …) put
+        the target before the verb, which fixed node order cannot express.
+      */}
+      <Text style={{ color: cssVar.colorTextSecondary }}>
+        <Trans
+          i18nKey={verbKey}
+          ns={'chat'}
+          components={{
+            actor: (
+              <ActivityAuthor
+                author={activity.author}
+                fallbackIcon={UserRoundCog}
+                fallbackName={t(systemActorKey)}
+              />
+            ),
+            target: (
+              <ActivityAuthor
+                author={target}
+                fallbackIcon={isAgentSlot ? BotMessageSquare : UserRoundCog}
+                fallbackName={t(deletedTargetKey)}
+              />
+            ),
+          }}
         />
-      )}
-      <Text ellipsis style={{ color: cssVar.colorTextSecondary, flex: 1, minWidth: 0 }}>
         <RelativeTime time={activity.time} />
       </Text>
     </Flexbox>

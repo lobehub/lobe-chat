@@ -994,7 +994,14 @@ export const taskRuntime: ServerRuntimeRegistration = {
       deps.agentModel = new AgentModel(db, userId, wsId);
       deps.taskModel = new TaskModel(db, userId, wsId);
       deps.taskService = new TaskService(db, userId, wsId);
-      deps.taskCaller = taskRouter.createCaller({ userId, workspaceId: wsId });
+      // MUST keep `actingAgentId`: this replaces the caller built above, and
+      // every exported method awaits `ensureModels()` first — dropping it here
+      // silently attributes every agent-driven task edit to the session user.
+      deps.taskCaller = taskRouter.createCaller({
+        actingAgentId: agentId,
+        userId,
+        workspaceId: wsId,
+      });
     };
 
     const baseRuntime = createTaskRuntime(deps);

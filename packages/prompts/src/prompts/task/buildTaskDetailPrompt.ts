@@ -108,8 +108,12 @@ export const buildTaskDetailPrompt = (input: BuildTaskDetailPromptInput, now?: D
         const side = (party?: { id: string; name?: string | null } | null) =>
           party?.name || party?.id || 'unassigned';
         const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
+        // No author means the system did it (the runner assigning its fallback
+        // inbox agent), not an unnamed person — `someone` would be false
+        // provenance in the context an agent reads.
+        const actor = act.author ? act.author.name || act.author.id : 'system';
         lines.push(
-          `  👥 ${ago} ${act.author?.name || 'someone'} set ${slot} assignee: ${side(act.assignment?.from)} → ${side(act.assignment?.to)}${idSuffix}`,
+          `  👥 ${ago} ${actor} set ${slot} assignee: ${side(act.assignment?.from)} → ${side(act.assignment?.to)}${idSuffix}`,
         );
       }
     }
