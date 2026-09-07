@@ -3,12 +3,13 @@
 import type { AcceptanceChecklistItem } from '@lobechat/types';
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Button, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import {
   ArrowLeft,
   BadgeCheck,
   Ban,
   Check,
+  ChevronDown,
   ChevronRight,
   CircleDashed,
   HelpCircle,
@@ -17,6 +18,7 @@ import {
   RotateCcw,
   XCircle,
 } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import NavItem from '@/features/NavPanel/components/NavItem';
@@ -78,12 +80,21 @@ const styles = createStaticStyles(({ css }) => ({
     > * {
       flex-shrink: 0;
     }
+
+    @media (width <= 767px) {
+      overflow: auto;
+      max-height: 40dvh;
+    }
   `,
   main: css`
     overflow: ${acceptanceScrollLayout.paneOverflow};
     min-width: 0;
     padding-block: ${acceptanceFocusedLayout.contentPaddingBlock};
     padding-inline: 32px;
+
+    @media (width <= 767px) {
+      padding: 16px;
+    }
   `,
   content: css`
     width: min(880px, 100%);
@@ -137,6 +148,8 @@ const AcceptanceFocusReview = ({
   subjectTitle,
 }: AcceptanceFocusReviewProps) => {
   const { t } = useTranslation('verify');
+  const { md = true } = useResponsive();
+  const [outlineOpen, setOutlineOpen] = useState(false);
   const focusedStates = focusedCheckStates(focusedCheck);
 
   return (
@@ -181,82 +194,98 @@ const AcceptanceFocusReview = ({
             )}
           </Flexbox>
         </Flexbox>
-        <Flexbox className={styles.outlineList} flex={1}>
-          {orderedChecks.map((check) => {
-            const state = checkFilterState(check);
-            const icon =
-              state === 'accepted'
-                ? BadgeCheck
-                : state === 'needsFix'
-                  ? RotateCcw
-                  : state === 'ignored'
-                    ? Ban
-                    : CircleDashed;
-            const color =
-              state === 'accepted' ? 'success' : state === 'needsFix' ? 'error' : 'default';
+        {!md && (
+          <Button
+            aria-expanded={outlineOpen}
+            icon={<Icon icon={outlineOpen ? ChevronDown : ChevronRight} />}
+            style={{ height: 'auto', minHeight: 44, textAlign: 'start', whiteSpace: 'normal' }}
+            type={'text'}
+            onClick={() => setOutlineOpen((open) => !open)}
+          >
+            {t('acceptance.checks.title')} · {focusedCheck.title}
+          </Button>
+        )}
+        {(md || outlineOpen) && (
+          <Flexbox className={styles.outlineList} flex={1}>
+            {orderedChecks.map((check) => {
+              const state = checkFilterState(check);
+              const icon =
+                state === 'accepted'
+                  ? BadgeCheck
+                  : state === 'needsFix'
+                    ? RotateCcw
+                    : state === 'ignored'
+                      ? Ban
+                      : CircleDashed;
+              const color =
+                state === 'accepted' ? 'success' : state === 'needsFix' ? 'error' : 'default';
 
-            return (
-              <NavItem
-                active={check.id === focusedCheck.id}
-                extra={<Icon color={cssVar.colorTextQuaternary} icon={ChevronRight} size={14} />}
-                key={check.id}
-                paddingBlock={acceptanceFocusedLayout.outlineItemPaddingBlock}
-                paddingInline={acceptanceFocusedLayout.outlineItemPaddingInline}
-                title={check.title}
-                titleColor={cssVar.colorText}
-                description={
-                  <Flexbox horizontal align={'center'} gap={8}>
-                    <Tag color={color} icon={<Icon icon={icon} />} size={'small'}>
-                      {t(`acceptance.focus.state.${state}`)}
-                    </Tag>
-                    <Text fontSize={12} type={'secondary'}>
-                      {t('acceptance.focus.evidenceCount', { count: check.evidence.length })}
-                    </Text>
-                  </Flexbox>
-                }
-                slots={{
-                  titlePrefix: (
-                    <Flexbox align={'center'} height={22} style={{ alignSelf: 'flex-start' }}>
-                      <Text
-                        style={{
-                          color: cssVar.colorTextQuaternary,
-                          fontFamily: cssVar.fontFamilyCode,
-                          fontSize: 11,
-                        }}
-                      >
-                        C{check.seq}
-                      </Text>
-                    </Flexbox>
-                  ),
-                }}
-                onClick={() => onSelectCheck(check.id)}
-              />
-            );
-          })}
-          {standingChecks.length > 0 && onEditStandingCheck && (
-            <Flexbox gap={4} paddingBlock={8} paddingInline={8}>
-              <Text fontSize={11} type={'secondary'}>
-                {t('acceptance.checkCreate.pendingGroup')}
-              </Text>
-              {standingChecks.map((item) => (
+              return (
                 <NavItem
-                  extra={<Icon color={cssVar.colorTextQuaternary} icon={PencilLine} />}
-                  key={item.id}
+                  active={check.id === focusedCheck.id}
+                  extra={<Icon color={cssVar.colorTextQuaternary} icon={ChevronRight} size={14} />}
+                  key={check.id}
                   paddingBlock={acceptanceFocusedLayout.outlineItemPaddingBlock}
                   paddingInline={acceptanceFocusedLayout.outlineItemPaddingInline}
-                  title={item.name}
+                  title={check.title}
                   titleColor={cssVar.colorText}
                   description={
-                    <Text fontSize={12} type={'secondary'}>
-                      {item.method || t('acceptance.checkCreate.pendingDescription')}
-                    </Text>
+                    <Flexbox horizontal align={'center'} gap={8}>
+                      <Tag color={color} icon={<Icon icon={icon} />} size={'small'}>
+                        {t(`acceptance.focus.state.${state}`)}
+                      </Tag>
+                      <Text fontSize={12} type={'secondary'}>
+                        {t('acceptance.focus.evidenceCount', { count: check.evidence.length })}
+                      </Text>
+                    </Flexbox>
                   }
-                  onClick={() => onEditStandingCheck(item)}
+                  slots={{
+                    titlePrefix: (
+                      <Flexbox align={'center'} height={22} style={{ alignSelf: 'flex-start' }}>
+                        <Text
+                          style={{
+                            color: cssVar.colorTextQuaternary,
+                            fontFamily: cssVar.fontFamilyCode,
+                            fontSize: 11,
+                          }}
+                        >
+                          C{check.seq}
+                        </Text>
+                      </Flexbox>
+                    ),
+                  }}
+                  onClick={() => {
+                    onSelectCheck(check.id);
+                    setOutlineOpen(false);
+                  }}
                 />
-              ))}
-            </Flexbox>
-          )}
-        </Flexbox>
+              );
+            })}
+            {standingChecks.length > 0 && onEditStandingCheck && (
+              <Flexbox gap={4} paddingBlock={8} paddingInline={8}>
+                <Text fontSize={11} type={'secondary'}>
+                  {t('acceptance.checkCreate.pendingGroup')}
+                </Text>
+                {standingChecks.map((item) => (
+                  <NavItem
+                    extra={<Icon color={cssVar.colorTextQuaternary} icon={PencilLine} />}
+                    key={item.id}
+                    paddingBlock={acceptanceFocusedLayout.outlineItemPaddingBlock}
+                    paddingInline={acceptanceFocusedLayout.outlineItemPaddingInline}
+                    title={item.name}
+                    titleColor={cssVar.colorText}
+                    description={
+                      <Text fontSize={12} type={'secondary'}>
+                        {item.method || t('acceptance.checkCreate.pendingDescription')}
+                      </Text>
+                    }
+                    onClick={() => onEditStandingCheck(item)}
+                  />
+                ))}
+              </Flexbox>
+            )}
+          </Flexbox>
+        )}
       </Flexbox>
 
       <Flexbox className={styles.main}>
