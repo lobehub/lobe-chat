@@ -122,10 +122,11 @@ const AcceptanceLedgerRail = () => {
   const topic =
     topicProps && TopicPanel ? (
       <TopicPanel
+        agentAvatar={topicProps.agentAvatar}
+        agentBackgroundColor={topicProps.agentBackgroundColor}
         agentId={topicProps.agentId}
         title={topicProps.title}
         topicId={topicProps.topicId}
-        onBack={() => originConversation?.closeTopicDrawer()}
         onCollapse={() => setExpand(false)}
       />
     ) : null;
