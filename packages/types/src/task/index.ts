@@ -8,7 +8,7 @@ export type TaskStatus =
 
 export type TaskPriority = 0 | 1 | 2 | 3 | 4;
 
-export type TaskActivityType = 'brief' | 'comment' | 'created' | 'topic';
+export type TaskActivityType = 'assignment' | 'brief' | 'comment' | 'created' | 'topic';
 
 /**
  * Persisted event kinds in `task_activities`. Kept as a plain union (the column
@@ -22,6 +22,9 @@ export interface TaskActivityLogPayload {
   fromId?: string | null;
   toId?: string | null;
 }
+
+/** Which assignee slot an `assignment` activity describes. */
+export type TaskAssignmentKind = 'agent' | 'member';
 
 // null = no automation
 export type TaskAutomationMode = 'heartbeat' | 'schedule';
@@ -448,6 +451,16 @@ export interface TaskDetailActivity {
   agent?: TaskDetailActivityAgent | null;
   agentId?: string | null;
   artifacts?: BriefArtifacts | null;
+  /**
+   * Assignment-only: which assignee slot changed and what it moved between.
+   * `null` on either side means "unassigned"; `author` carries who made the
+   * change.
+   */
+  assignment?: {
+    from?: TaskDetailActivityAuthor | null;
+    kind: TaskAssignmentKind;
+    to?: TaskDetailActivityAuthor | null;
+  };
   author?: TaskDetailActivityAuthor;
   briefType?: string;
   /**

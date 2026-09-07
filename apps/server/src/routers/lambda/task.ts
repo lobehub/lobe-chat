@@ -107,6 +107,10 @@ const createSchema = z.object({
 });
 
 const updateSchema = z.object({
+  // Attribution for the activity log only — never written to `tasks`. Set by
+  // agent-driven callers (the editTask builtin) so a reassignment made by an
+  // agent is not recorded under the session owner who lent it credentials.
+  actorAgentId: z.string().optional(),
   assigneeAgentId: z.string().nullish(),
   assigneeUserId: z.string().nullish(),
   automationMode: z.enum(['heartbeat', 'schedule']).nullish(),
@@ -1416,7 +1420,7 @@ export const taskRouter = router({
     }),
 
   update: taskProcedureWrite.input(idInput.merge(updateSchema)).mutation(async ({ input, ctx }) => {
-    const { id, parentTaskId, status, ...data } = input;
+    const { id, actorAgentId, parentTaskId, status, ...data } = input;
     try {
       const model = ctx.taskModel;
       await assertAssigneeAgentBelongsToUser(
@@ -1500,6 +1504,20 @@ export const taskRouter = router({
       // stays silent (self-assignment is filtered inside the helper).
       if (task.assigneeUserId !== resolved.assigneeUserId) {
         notifyAssignedBestEffort(ctx, task);
+      }
+      // Same diff, different purpose: the notification pings the new assignee,
+      // this leaves the durable "who reassigned this, and when" trace the task
+      // detail feed renders. Awaited rather than deferred like the notification
+      // — the client refetches the detail as soon as this mutation resolves, so
+      // a row written after the response would miss that refetch. Failures are
+      // swallowed: the log records a save that already succeeded.
+      try {
+        await ctx.taskService.recordAssigneeChanges(resolved.id, resolved, task, {
+          agentId: actorAgentId,
+          userId: ctx.userId,
+        });
+      } catch (error) {
+        console.error('[task:update] failed to record assignee activity', error);
       }
       return { data: task, message: 'Task updated', success: true };
     } catch (error) {

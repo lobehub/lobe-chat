@@ -3,6 +3,9 @@ import { randomUUID } from 'node:crypto';
 import { UNFINISHED_TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { TASK_ASSIGNEE_PERMISSION_CODES } from '@lobechat/const/rbac';
 import type {
+  TaskActivityLogPayload,
+  TaskActivityLogType,
+  TaskAssignmentKind,
   TaskContext,
   TaskDetailActivity,
   TaskDetailActivityAuthor,
@@ -800,6 +803,53 @@ export class TaskService {
     );
   }
 
+  /**
+   * Append one `task_activities` row per assignee slot that actually changed.
+   *
+   * Reassignment only rewrites a column on `tasks`, so without this the detail
+   * feed has no way to say who moved the task and when. Best-effort by
+   * contract — the log records a write that already succeeded, so callers fire
+   * it after the update and swallow failures rather than fail the mutation.
+   */
+  async recordAssigneeChanges(
+    taskId: string,
+    before: Pick<TaskItem, 'assigneeAgentId' | 'assigneeUserId'>,
+    after: Pick<TaskItem, 'assigneeAgentId' | 'assigneeUserId'>,
+    actor: { agentId?: string | null; userId?: string | null },
+  ): Promise<void> {
+    const changes: { payload: TaskActivityLogPayload; type: TaskActivityLogType }[] = [];
+
+    if (before.assigneeAgentId !== after.assigneeAgentId) {
+      changes.push({
+        payload: { fromId: before.assigneeAgentId, toId: after.assigneeAgentId },
+        type: 'assignee_agent',
+      });
+    }
+    // The two assignee slots are independent — an edit can move both at once,
+    // and each gets its own row so the feed reads one change per line.
+    if (before.assigneeUserId !== after.assigneeUserId) {
+      changes.push({
+        payload: { fromId: before.assigneeUserId, toId: after.assigneeUserId },
+        type: 'assignee_user',
+      });
+    }
+    if (changes.length === 0) return;
+
+    await Promise.all(
+      changes.map((change) =>
+        this.taskModel.addActivity({
+          actorAgentId: actor.agentId ?? null,
+          // An agent-driven edit is attributed to the agent, not to the session
+          // owner whose credentials it borrowed.
+          actorUserId: actor.agentId ? null : (actor.userId ?? null),
+          payload: change.payload,
+          taskId,
+          type: change.type,
+        }),
+      ),
+    );
+  }
+
   private async resolveOrThrow(idOrIdentifier: string): Promise<TaskItem> {
     const task = await this.taskModel.resolve(idOrIdentifier);
     if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
@@ -831,19 +881,23 @@ export class TaskService {
     // brief-type activities — the UI converges on Task Run. Briefs are therefore
     // not fetched/enriched here (see the omitted brief spread below). The brief
     // lifecycle, model and data are untouched; revert this to bring them back.
-    const [allDescendants, dependencies, directTopics, comments, workspace, acceptance] =
-      await Promise.all([
-        this.taskModel.findAllDescendants(task.id),
-        this.taskModel.getDependencies(task.id),
-        this.taskTopicModel
-          .findWithHandoff(task.id, TASK_DETAIL_DIRECT_TOPIC_LIMIT)
-          .catch(() => []),
-        this.taskModel.getComments(task.id).catch(() => []),
-        this.taskModel.getTreePinnedDocuments(task.id).catch(() => emptyWorkspace),
-        resolveTaskAcceptance(this.db, this.userId, task.id, this.workspaceId).catch(
-          () => undefined,
-        ),
-      ]);
+    const [
+      allDescendants,
+      dependencies,
+      directTopics,
+      comments,
+      activityLogs,
+      workspace,
+      acceptance,
+    ] = await Promise.all([
+      this.taskModel.findAllDescendants(task.id),
+      this.taskModel.getDependencies(task.id),
+      this.taskTopicModel.findWithHandoff(task.id, TASK_DETAIL_DIRECT_TOPIC_LIMIT).catch(() => []),
+      this.taskModel.getComments(task.id).catch(() => []),
+      this.taskModel.getActivities(task.id).catch(() => []),
+      this.taskModel.getTreePinnedDocuments(task.id).catch(() => emptyWorkspace),
+      resolveTaskAcceptance(this.db, this.userId, task.id, this.workspaceId).catch(() => undefined),
+    ]);
 
     const allDescendantIds = allDescendants.map((s) => s.id);
     const descendantTaskMap = new Map(allDescendants.map((s) => [s.id, s]));
@@ -1043,6 +1097,14 @@ export class TaskService {
     // Creator of the task itself (agent takes precedence over user)
     if (task.createdByAgentId) agentIds.add(task.createdByAgentId);
     else if (task.createdByUserId) userIds.add(task.createdByUserId);
+    // Assignment events carry an actor plus both sides of the change; which
+    // set an id belongs to is decided by the event type, not by the column.
+    for (const log of activityLogs) {
+      if (log.actorAgentId) agentIds.add(log.actorAgentId);
+      if (log.actorUserId) userIds.add(log.actorUserId);
+      const target = log.type === 'assignee_agent' ? agentIds : userIds;
+      for (const id of [log.payload?.fromId, log.payload?.toId]) if (id) target.add(id);
+    }
 
     const authorMap = await this.resolveAuthors(agentIds, userIds);
 
@@ -1121,6 +1183,32 @@ export class TaskService {
           id: c.id,
           time: toISO(c.createdAt),
           type: 'comment' as const,
+        };
+      }),
+      ...activityLogs.map((log) => {
+        const kind: TaskAssignmentKind = log.type === 'assignee_agent' ? 'agent' : 'member';
+        // A missing author row means the member or agent has since been
+        // deleted. Keep a bare stub instead of collapsing to `null`: `null`
+        // reads as "unassigned" in the feed, which would turn a reassignment
+        // into a removal.
+        const resolveSide = (id?: string | null): TaskDetailActivityAuthor | null => {
+          if (!id) return null;
+          return authorMap.get(id) ?? { id, name: null, type: kind === 'agent' ? 'agent' : 'user' };
+        };
+        return {
+          assignment: {
+            from: resolveSide(log.payload?.fromId),
+            kind,
+            to: resolveSide(log.payload?.toId),
+          },
+          author: log.actorAgentId
+            ? authorMap.get(log.actorAgentId)
+            : log.actorUserId
+              ? authorMap.get(log.actorUserId)
+              : undefined,
+          id: log.id,
+          time: toISO(log.createdAt),
+          type: 'assignment' as const,
         };
       }),
     ].sort((a, b) => {

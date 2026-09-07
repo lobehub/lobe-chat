@@ -466,6 +466,7 @@ describe('createTaskRuntime', () => {
       expect(result.success).toBe(true);
       expect(deps.agentModel.existsById).not.toHaveBeenCalled();
       expect(deps.taskCaller.update).toHaveBeenCalledWith({
+        actorAgentId: 'agt-manager',
         assigneeAgentId: null,
         id: 'task-1',
       });
@@ -489,7 +490,11 @@ describe('createTaskRuntime', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(deps.taskCaller.update).toHaveBeenCalledWith({ id: 'task-1', parentTaskId: 'T-43' });
+      expect(deps.taskCaller.update).toHaveBeenCalledWith({
+        actorAgentId: 'agt-manager',
+        id: 'task-1',
+        parentTaskId: 'T-43',
+      });
       expect(deps.taskModel.update).not.toHaveBeenCalled();
       expect(result.content).toContain('parent → T-43');
     });
@@ -511,7 +516,11 @@ describe('createTaskRuntime', () => {
       });
 
       expect(result.success).toBe(true);
-      expect(deps.taskCaller.update).toHaveBeenCalledWith({ id: 'task-1', parentTaskId: null });
+      expect(deps.taskCaller.update).toHaveBeenCalledWith({
+        actorAgentId: 'agt-manager',
+        id: 'task-1',
+        parentTaskId: null,
+      });
       expect(deps.taskModel.update).not.toHaveBeenCalled();
       expect(result.content).toContain('parent cleared');
     });
@@ -535,7 +544,13 @@ describe('createTaskRuntime', () => {
 
       expect(result.success).toBe(true);
       expect(result.content).toContain('name → "Edited"');
-      expect(deps.taskCaller.update).toHaveBeenCalledWith({ id: 'task-1', name: 'Edited' });
+      // The acting agent rides along so the activity log names the agent, not
+      // the session owner whose credentials it borrowed.
+      expect(deps.taskCaller.update).toHaveBeenCalledWith({
+        actorAgentId: 'agt-manager',
+        id: 'task-1',
+        name: 'Edited',
+      });
     });
 
     it('returns failure when no fields are provided', async () => {

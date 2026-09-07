@@ -102,6 +102,15 @@ export const buildTaskDetailPrompt = (input: BuildTaskDetailPromptInput, now?: D
         const content = act.content || '';
         const truncated = content.length > 200 ? content.slice(0, 200) + '...' : content;
         lines.push(`  💭 ${ago} ${author} ${truncated}${idSuffix}`);
+      } else if (act.type === 'assignment') {
+        // Who owns this task has changed hands before; the agent reading the
+        // detail should see that history, not just the current chip.
+        const side = (party?: { id: string; name?: string | null } | null) =>
+          party?.name || party?.id || 'unassigned';
+        const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
+        lines.push(
+          `  👥 ${ago} ${act.author?.name || 'someone'} set ${slot} assignee: ${side(act.assignment?.from)} → ${side(act.assignment?.to)}${idSuffix}`,
+        );
       }
     }
   }

@@ -1,9 +1,10 @@
-import type { BriefType, TaskDetailActivity } from '@lobechat/types';
+import type { BriefType, TaskDetailActivity, TaskDetailActivityAuthor } from '@lobechat/types';
 import { Accordion, AccordionItem, Empty, Flexbox, Icon } from '@lobehub/ui';
 import { Avatar, Tag, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import type { TFunction } from 'i18next';
-import { BotMessageSquare, CircleDot, CirclePlus, MessageCircle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { BotMessageSquare, CircleDot, CirclePlus, MessageCircle, UserRoundCog } from 'lucide-react';
 import { memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +15,7 @@ import { useTaskStore } from '@/store/task';
 import { taskActivitySelectors, taskDetailSelectors } from '@/store/task/selectors';
 
 import { styles } from '../shared/style';
+import { resolveAssignmentActivityCopy } from './assignmentActivityCopy';
 import CommentCard from './CommentCard';
 import CommentInput from './CommentInput';
 import TaskBriefCard from './TaskBriefCard';
@@ -21,6 +23,7 @@ import TaskRunReport from './TaskRunReport';
 import TopicCard from './TopicCard';
 
 const ROW_TYPE_ICON = {
+  assignment: UserRoundCog,
   comment: MessageCircle,
   created: CirclePlus,
   topic: CircleDot,
@@ -66,31 +69,35 @@ const getRowText = (act: TaskDetailActivity, t: TFunction<'chat'>): string => {
   return '';
 };
 
-/** Compact one-line row for topic / comment activities. */
-const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
+/**
+ * Avatar + name (+ agent tag) for one participant of an activity row. Shared by
+ * the actor of every row and by the target of an assignment, so both sides of
+ * "A assigned the task to B" render identically.
+ */
+const ActivityAuthor = memo<{
+  author?: TaskDetailActivityAuthor | null;
+  fallbackIcon: LucideIcon;
+  fallbackName?: string;
+}>(({ author, fallbackIcon: FallbackIcon, fallbackName }) => {
   const { t } = useTranslation('chat');
-  const TypeIcon = ROW_TYPE_ICON[activity.type as keyof typeof ROW_TYPE_ICON] ?? MessageCircle;
-  const { text: relTime, title: relTimeTitle } = useActivityTime(activity.time);
-  const text = getRowText(activity, t);
+  const isAgent = author?.type === 'agent';
+  const name = author?.name || fallbackName;
 
-  const isAgent = activity.author?.type === 'agent';
-  const avatarNode = activity.author?.avatar ? (
-    <Avatar avatar={activity.author.avatar} size={24} />
-  ) : (
-    <div className={styles.activityAvatar}>
-      <TypeIcon size={12} />
-    </div>
-  );
-
-  const authorNode = (
+  const node = (
     <Flexbox horizontal align={'center'} gap={6} style={{ flexShrink: 0 }}>
-      {avatarNode}
-      {activity.author?.name && (
+      {author?.avatar ? (
+        <Avatar avatar={author.avatar} size={24} />
+      ) : (
+        <div className={styles.activityAvatar}>
+          <FallbackIcon size={12} />
+        </div>
+      )}
+      {name && (
         <Text
           className={isAgent ? styles.agentAuthorName : undefined}
           style={isAgent ? undefined : { color: cssVar.colorTextSecondary, fontWeight: 500 }}
         >
-          {activity.author.name}
+          {name}
         </Text>
       )}
       {isAgent && (
@@ -101,29 +108,71 @@ const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
     </Flexbox>
   );
 
+  if (!isAgent || !author?.id) return node;
+
+  return (
+    <AgentProfilePopup
+      agent={{ avatar: author.avatar, title: author.name }}
+      agentId={author.id}
+      trigger={'hover'}
+    >
+      {node}
+    </AgentProfilePopup>
+  );
+});
+
+const RelativeTime = memo<{ time?: string }>(({ time }) => {
+  const { text, title } = useActivityTime(time);
+  if (!text) return null;
+  return (
+    <span style={{ color: cssVar.colorTextQuaternary, marginInlineStart: 4 }} title={title}>
+      · {text}
+    </span>
+  );
+});
+
+/** Compact one-line row for topic / comment activities. */
+const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
+  const { t } = useTranslation('chat');
+  const TypeIcon = ROW_TYPE_ICON[activity.type as keyof typeof ROW_TYPE_ICON] ?? MessageCircle;
+  const text = getRowText(activity, t);
+
   return (
     <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9}>
-      {isAgent && activity.author?.id ? (
-        <AgentProfilePopup
-          agent={{ avatar: activity.author.avatar, title: activity.author.name }}
-          agentId={activity.author.id}
-          trigger={'hover'}
-        >
-          {authorNode}
-        </AgentProfilePopup>
-      ) : (
-        authorNode
-      )}
+      <ActivityAuthor author={activity.author} fallbackIcon={TypeIcon} />
       <Text ellipsis style={{ color: cssVar.colorTextSecondary, flex: 1, minWidth: 0 }}>
         {text}
-        {relTime && (
-          <span
-            style={{ color: cssVar.colorTextQuaternary, marginInlineStart: 4 }}
-            title={relTimeTitle}
-          >
-            · {relTime}
-          </span>
-        )}
+        <RelativeTime time={activity.time} />
+      </Text>
+    </Flexbox>
+  );
+});
+
+/**
+ * "Alice assigned the task to Bob" / "Alice removed the agent" — the durable
+ * trace of a reassignment, which otherwise only shows up as a silently changed
+ * chip in the header.
+ */
+const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
+  const { t } = useTranslation('chat');
+  const assignment = activity.assignment;
+  const isAgentSlot = assignment?.kind === 'agent';
+  const target = assignment?.to;
+  const { deletedTargetKey, verbKey } = resolveAssignmentActivityCopy(assignment);
+
+  return (
+    <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9} wrap={'wrap'}>
+      <ActivityAuthor author={activity.author} fallbackIcon={UserRoundCog} />
+      <Text style={{ color: cssVar.colorTextSecondary, flexShrink: 0 }}>{t(verbKey)}</Text>
+      {target && (
+        <ActivityAuthor
+          author={target}
+          fallbackIcon={isAgentSlot ? BotMessageSquare : UserRoundCog}
+          fallbackName={t(deletedTargetKey)}
+        />
+      )}
+      <Text ellipsis style={{ color: cssVar.colorTextSecondary, flex: 1, minWidth: 0 }}>
+        <RelativeTime time={activity.time} />
       </Text>
     </Flexbox>
   );
@@ -191,6 +240,9 @@ const TaskActivities = memo<TaskActivitiesProps>(({ variant = 'activity' }) => {
         // to the activity timeline; in a result panel it is a row between the
         // reader and the report.
         if (variant === 'result') return null;
+        if (activity.type === 'assignment') {
+          return <AssignmentRow activity={activity} key={key} />;
+        }
         return <ActivityRow activity={activity} key={key} />;
       })
     ) : (

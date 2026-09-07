@@ -440,7 +440,15 @@ export const createTaskRuntime = (deps: TaskRuntimeDeps) => {
       }
 
       if (Object.keys(updateData).length > 0) {
-        ops.push(taskCaller().update({ id: task.id, ...updateData }));
+        // Attribution only: the activity log should name the agent that made
+        // the edit, not the session owner whose credentials it runs under.
+        ops.push(
+          taskCaller().update({
+            id: task.id,
+            ...updateData,
+            ...(agentId ? { actorAgentId: agentId } : {}),
+          }),
+        );
       }
 
       const applyDeps = async (

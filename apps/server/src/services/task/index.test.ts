@@ -84,11 +84,13 @@ describe('TaskService', () => {
   };
 
   const mockTaskModel = {
+    addActivity: vi.fn(),
     create: vi.fn(),
     delete: vi.fn(),
     findById: vi.fn(),
     findByIds: vi.fn(),
     findAllDescendants: vi.fn(),
+    getActivities: vi.fn().mockResolvedValue([]),
     getCheckpointConfig: vi.fn(),
     getComments: vi.fn(),
     getCommentFileIdsMap: vi.fn().mockResolvedValue({}),
@@ -132,6 +134,7 @@ describe('TaskService', () => {
     scheduleNextTopic.mockResolvedValue('tick-new');
     resolveTaskAcceptance.mockResolvedValue(undefined);
     mockTaskTopicModel.findRunningByTaskIds.mockResolvedValue([]);
+    mockTaskModel.getActivities.mockResolvedValue([]);
     (AgentModel as any).mockImplementation(() => mockAgentModel);
     (TaskModel as any).mockImplementation(() => mockTaskModel);
     (TaskTopicModel as any).mockImplementation(() => mockTaskTopicModel);
@@ -1725,6 +1728,128 @@ describe('TaskService', () => {
     it('assertParentVisibilityCompat allows public child under public parent', () => {
       const service = new TaskService(db, userId, 'ws-1');
       expect(() => service.assertParentVisibilityCompat('public', 'public')).not.toThrow();
+    });
+  });
+
+  describe('assignee activity log', () => {
+    it('records one row per assignee slot that actually changed', async () => {
+      const service = new TaskService(db, userId, 'ws-1');
+
+      await service.recordAssigneeChanges(
+        'task_001',
+        { assigneeAgentId: 'agt_old', assigneeUserId: 'user_a' },
+        { assigneeAgentId: 'agt_new', assigneeUserId: 'user_a' },
+        { userId: 'user_actor' },
+      );
+
+      expect(mockTaskModel.addActivity).toHaveBeenCalledTimes(1);
+      expect(mockTaskModel.addActivity).toHaveBeenCalledWith({
+        actorAgentId: null,
+        actorUserId: 'user_actor',
+        payload: { fromId: 'agt_old', toId: 'agt_new' },
+        taskId: 'task_001',
+        type: 'assignee_agent',
+      });
+    });
+
+    it('stays silent when the assignees are re-saved unchanged', async () => {
+      const service = new TaskService(db, userId, 'ws-1');
+
+      await service.recordAssigneeChanges(
+        'task_001',
+        { assigneeAgentId: 'agt_1', assigneeUserId: 'user_a' },
+        { assigneeAgentId: 'agt_1', assigneeUserId: 'user_a' },
+        { userId: 'user_actor' },
+      );
+
+      expect(mockTaskModel.addActivity).not.toHaveBeenCalled();
+    });
+
+    it('logs both slots and attributes an agent-driven edit to the agent', async () => {
+      const service = new TaskService(db, userId, 'ws-1');
+
+      await service.recordAssigneeChanges(
+        'task_001',
+        { assigneeAgentId: 'agt_old', assigneeUserId: 'user_a' },
+        { assigneeAgentId: null, assigneeUserId: null },
+        { agentId: 'agt_actor', userId: 'user_actor' },
+      );
+
+      expect(mockTaskModel.addActivity).toHaveBeenCalledTimes(2);
+      expect(mockTaskModel.addActivity).toHaveBeenCalledWith({
+        actorAgentId: 'agt_actor',
+        actorUserId: null,
+        payload: { fromId: 'user_a', toId: null },
+        taskId: 'task_001',
+        type: 'assignee_user',
+      });
+    });
+
+    it('renders assignment logs as activities with both sides resolved', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        createdAt: null,
+        heartbeatInterval: null,
+        heartbeatTimeout: null,
+        id: 'task_001',
+        identifier: 'TASK-1',
+        instruction: 'Do something',
+        lastHeartbeatAt: null,
+        parentTaskId: null,
+        priority: 'normal',
+        status: 'todo',
+      });
+      mockTaskModel.findAllDescendants.mockResolvedValue([]);
+      mockTaskModel.getDependencies.mockResolvedValue([]);
+      mockTaskTopicModel.findWithHandoff.mockResolvedValue([]);
+      mockTaskModel.getComments.mockResolvedValue([]);
+      mockTaskModel.getTreePinnedDocuments.mockResolvedValue({ nodeMap: {}, tree: [] });
+      mockTaskModel.findByIds.mockResolvedValue([]);
+      mockTaskModel.getCheckpointConfig.mockReturnValue({});
+      mockTaskModel.getVerifyConfig.mockReturnValue(undefined);
+      mockTaskModel.getActivities.mockResolvedValue([
+        {
+          actorAgentId: null,
+          actorUserId: 'user_alice',
+          createdAt: new Date('2024-01-01T00:05:00Z'),
+          id: 'tac_1',
+          payload: { fromId: null, toId: 'user_bob' },
+          type: 'assignee_user',
+        },
+        {
+          actorAgentId: null,
+          actorUserId: 'user_alice',
+          createdAt: new Date('2024-01-01T00:06:00Z'),
+          id: 'tac_2',
+          payload: { fromId: 'agt_gone', toId: null },
+          type: 'assignee_agent',
+        },
+      ]);
+      mockAgentModel.getAgentAvatarsByIds.mockResolvedValue([]);
+      vi.mocked(UserModel.findByIds).mockResolvedValue([
+        { avatar: null, fullName: 'Alice', id: 'user_alice' } as any,
+        { avatar: null, fullName: 'Bob', id: 'user_bob' } as any,
+      ]);
+
+      const result = await new TaskService(db, userId, 'ws-1').getTaskDetail('TASK-1');
+
+      const assignments = result?.activities?.filter((a) => a.type === 'assignment');
+      expect(assignments).toHaveLength(2);
+      expect(assignments?.[0]).toMatchObject({
+        assignment: {
+          from: null,
+          kind: 'member',
+          to: { id: 'user_bob', name: 'Bob', type: 'user' },
+        },
+        author: { id: 'user_alice', name: 'Alice', type: 'user' },
+        time: '2024-01-01T00:05:00.000Z',
+      });
+      // An unresolvable id keeps a stub instead of collapsing to null, so a
+      // reassignment away from a deleted agent is not read as "never assigned".
+      expect(assignments?.[1]?.assignment).toEqual({
+        from: { id: 'agt_gone', name: null, type: 'agent' },
+        kind: 'agent',
+        to: null,
+      });
     });
   });
 });
