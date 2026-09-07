@@ -63,6 +63,27 @@ describe.each([true, false])('concurrent interruption (tool-parent=%s)', (toolPa
     );
     expect(visibleIds(messages).has('interrupt')).toBe(false);
   });
+  it('recovers an explicitly selected interruption and its descendants after reload', () => {
+    const messages = buildMessages(toolParent).map((m) =>
+      m.id === 'working' ? { ...m, metadata: { activeBranchIndex: 0 } } : m,
+    );
+    for (const input of [messages, structuredClone(messages)]) {
+      const ids = visibleIds(input);
+      for (const id of ['interrupt', 'supervisor-reply', 'next-user']) {
+        expect(ids.has(id), id).toBe(true);
+      }
+      expect(parse(input).flatList.at(-1)?.id).toBe('next-user');
+    }
+  });
+  it('does not recover an old interruption while a new branch is being created', () => {
+    const messages = buildMessages(toolParent).map((m) =>
+      m.id === 'working' ? { ...m, metadata: { activeBranchIndex: toolParent ? 1 : 2 } } : m,
+    );
+    const ids = visibleIds(messages);
+    for (const id of ['interrupt', 'supervisor-reply', 'next-user']) {
+      expect(ids.has(id), id).toBe(false);
+    }
+  });
   it('does not override an explicit branch selection', () => {
     const messages = buildMessages(toolParent).map((m) =>
       m.id === 'working' ? { ...m, metadata: { activeBranchIndex: 1 } } : m,

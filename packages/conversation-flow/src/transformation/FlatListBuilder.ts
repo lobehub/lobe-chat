@@ -593,9 +593,8 @@ export class FlatListBuilder {
     if (!tail) return;
 
     for (const assistant of assistantChain.slice(0, -1)) {
-      if (typeof assistant.metadata?.activeBranchIndex === 'number') continue;
-
-      const interruptions = (this.childrenMap.get(assistant.id) ?? []).filter((id) => {
+      const childIds = this.childrenMap.get(assistant.id) ?? [];
+      const interruptions = childIds.filter((id) => {
         const message = this.messageMap.get(id);
         return (
           message?.role === 'user' &&
@@ -611,8 +610,10 @@ export class FlatListBuilder {
         assistant,
         interruptions,
         this.childrenMap,
+        this.branchResolver.getMetadataBranchIds(childIds),
       );
-      if (activeId) {
+      // Explicit indices use all non-tool siblings, not only interruptions.
+      if (activeId && interruptions.includes(activeId)) {
         this.buildFlatListRecursiveForChild(
           assistant.id,
           activeId,
