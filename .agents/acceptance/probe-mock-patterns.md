@@ -2438,3 +2438,19 @@ stub's answer-mode off the NAME of the last `function_call` instead.
   `Detailed references` — never after the closing sections, or the taxonomy drifts.
 - Give it the next `P<nn>` id in its heading, an `**applies-to:**` line right under the
   heading, and one row in the `## Index` table. Ids are stable — never renumber.
+
+#### Acceptance evidence rendering in Electron uses the Portal
+
+The standalone `/acceptance/:id` route is Web-only. Adding that URL as an
+Electron tab can fall back to Home without exercising the Acceptance viewer.
+For desktop verification, open a real conversation and use the existing
+`chat.openAcceptance(id)` action to mount the canonical Acceptance Portal.
+When reusing a reviewed fixture, select the inventory's All filter before
+expanding its evidence; the default pending filter can legitimately be empty.
+
+When checking media or error-card spacing, inspect the complete rendered
+ancestor chain. `@lobehub/ui` Image has its own rounded root inside
+ScreenshotTiles, and Highlighter's `styles.content` styles a container whose
+`pre` has separate padding. An outer wrapper or `img` override alone does not
+prove the visible edge or total inset changed. Measure the settled DOM, then
+inspect a screenshot before declaring the styling verified.

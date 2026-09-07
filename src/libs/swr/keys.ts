@@ -1386,7 +1386,11 @@ export const userKeys = {
   initState: def('user:initState', () => ['user:initState']),
 };
 export const builtinAgentKeys = {
-  init: def('builtinAgent:init', (slug: string) => ['builtinAgent:init', slug]),
+  init: def('builtinAgent:init', (slug: string, scope: string) => [
+    'builtinAgent:init',
+    slug,
+    scope,
+  ]),
 };
 export const imessageKeys = {
   bridgeStatus: def('imessage:bridgeStatus', () => ['imessage:bridgeStatus']),

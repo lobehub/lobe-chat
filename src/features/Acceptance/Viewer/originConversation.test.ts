@@ -20,7 +20,7 @@ const wrapper = ({ children }: { children?: ReactNode }) =>
 
 describe('originTopicPanelProps', () => {
   const origin = {
-    agent: { id: 'agent-1' },
+    agent: { avatar: '🤖', backgroundColor: '#abcdef', id: 'agent-1' },
     topic: { id: 'topic-1', title: 'Origin topic' },
   };
 
@@ -42,6 +42,8 @@ describe('originTopicPanelProps', () => {
         subjectTitle: 'Subject',
       }),
     ).toEqual({
+      agentAvatar: '🤖',
+      agentBackgroundColor: '#abcdef',
       agentId: 'agent-1',
       title: 'Origin topic',
       topicId: 'topic-1',

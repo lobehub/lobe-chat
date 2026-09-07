@@ -1,6 +1,6 @@
 ---
 name: spa-routes
-description: 'LobeHub SPA route architecture. Use when editing src/routes, src/features delegation, desktop/mobile/popup router configs, .desktop variants, route segments, redirects, or new pages.'
+description: 'Use for SPA routes and page segments: Web/desktop/mobile/popup routers, redirects and src/routes-to-features boundaries.'
 user-invocable: false
 ---
 

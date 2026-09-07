@@ -3,7 +3,15 @@ import { and, desc, eq, inArray, isNotNull, isNull, ne, not, or, sql } from 'dri
 import { unionAll } from 'drizzle-orm/pg-core';
 import removeMarkdown from 'remove-markdown';
 
-import { agents, DOCUMENT_FOLDER_TYPE, documents, messages, tasks, topics } from '../schemas';
+import {
+  agents,
+  chatGroups,
+  DOCUMENT_FOLDER_TYPE,
+  documents,
+  messages,
+  tasks,
+  topics,
+} from '../schemas';
 import type { LobeChatDatabase } from '../type';
 import { notShareVisitorTopic } from '../utils/shareVisitor';
 import { buildWorkspaceWhere } from '../utils/workspace';
@@ -97,6 +105,7 @@ export class RecentModel {
       })
       .from(topics)
       .leftJoin(agents, eq(topics.agentId, agents.id))
+      .leftJoin(chatGroups, eq(topics.groupId, chatGroups.id))
       .where(
         requestedTypes && !requestedTypes.has('topic')
           ? sql`false`
@@ -106,10 +115,16 @@ export class RecentModel {
               // surface a visitor's conversation in the creator's own Recent feed.
               notShareVisitorTopic(),
               mineTopicWhere,
+              // Topic scope alone is insufficient: stale/mismatched rows can
+              // point at a personal or foreign-workspace agent/group. Check
+              // the parent scope before returning titles or loading previews.
               or(
-                isNotNull(topics.groupId),
-                eq(agents.slug, 'inbox'),
-                and(isNull(topics.groupId), ne(agents.virtual, true)),
+                and(isNotNull(topics.groupId), buildWorkspaceWhere(scope, chatGroups)),
+                and(
+                  isNull(topics.groupId),
+                  buildWorkspaceWhere(scope, agents),
+                  or(eq(agents.slug, 'inbox'), ne(agents.virtual, true)),
+                ),
               ),
               or(isNull(topics.trigger), not(inArray(topics.trigger, SYSTEM_TOPIC_TRIGGERS))),
               or(isNull(topics.status), not(inArray(topics.status, TOPIC_INBOX_STATUSES))),

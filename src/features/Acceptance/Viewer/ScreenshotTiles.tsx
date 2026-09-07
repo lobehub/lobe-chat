@@ -2,7 +2,7 @@
 
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { Flexbox, Image } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { memo, type ReactNode, useState } from 'react';
 
 import {
@@ -46,6 +46,10 @@ const styles = createStaticStyles(({ css }) => ({
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
   `,
+  frameFlat: css`
+    border: none;
+    border-radius: 0;
+  `,
   rect: css`
     pointer-events: none;
 
@@ -64,11 +68,13 @@ interface ScreenshotTilesProps {
   caption?: ReactNode;
   fileHeight?: number | null;
   fileWidth?: number | null;
+  /** The surrounding comparison card already frames the screenshot. */
+  flat?: boolean;
   src: string;
 }
 
 export const ScreenshotTiles = memo<ScreenshotTilesProps>(
-  ({ alt, annotations, caption, fileHeight, fileWidth, src }) => {
+  ({ alt, annotations, caption, fileHeight, fileWidth, flat = false, src }) => {
     const [natural, setNatural] = useState(
       fileWidth && fileHeight ? { height: fileHeight, width: fileWidth } : undefined,
     );
@@ -95,11 +101,15 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
     if (!natural) {
       return shell(
         '100%',
-        <div className={styles.frame} style={{ maxWidth: '100%', width: '100%' }}>
+        <div
+          className={cx(styles.frame, flat && styles.frameFlat)}
+          style={{ maxWidth: '100%', width: '100%' }}
+        >
           <Image
             alt={alt}
             loading={'lazy'}
             src={src}
+            style={flat ? { borderRadius: 0 } : undefined}
             variant={'borderless'}
             width={'100%'}
             onLoad={rememberSize}
@@ -123,7 +133,7 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
 
             return (
               <div
-                className={styles.frame}
+                className={cx(styles.frame, flat && styles.frameFlat)}
                 key={slice.index}
                 style={{
                   aspectRatio: `${natural.width} / ${slice.height}`,
@@ -138,7 +148,7 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
                   maxWidth={'none'}
                   objectFit={'cover'}
                   src={src}
-                  style={{ height: '100%', width: '100%' }}
+                  style={{ borderRadius: flat ? 0 : undefined, height: '100%', width: '100%' }}
                   variant={'borderless'}
                   width={'100%'}
                   styles={{
@@ -180,7 +190,7 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
     return shell(
       portrait ? screenshotTileWidth(natural.width) : '100%',
       <div
-        className={styles.frame}
+        className={cx(styles.frame, flat && styles.frameFlat)}
         style={{
           aspectRatio: `${natural.width} / ${natural.height}`,
           maxWidth: '100%',
@@ -194,7 +204,7 @@ export const ScreenshotTiles = memo<ScreenshotTilesProps>(
           maxWidth={'none'}
           objectFit={'contain'}
           src={src}
-          style={{ width: '100%' }}
+          style={{ borderRadius: flat ? 0 : undefined, width: '100%' }}
           variant={'borderless'}
           width={'100%'}
         />

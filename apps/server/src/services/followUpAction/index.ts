@@ -79,6 +79,7 @@ export class FollowUpActionService {
           schema: FOLLOW_UP_JSON_SCHEMA,
         },
         {
+          metadata: { topicId },
           tracing: {
             promptVersion: FOLLOW_UP_PROMPT_VERSION,
             scenario: TRACING_SCENARIOS.FollowUp,

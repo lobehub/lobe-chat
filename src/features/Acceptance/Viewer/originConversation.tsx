@@ -7,8 +7,9 @@ import { createContext, use, useMemo, useState } from 'react';
 // provider so origin-conversation affordances stay hidden. Open state lives
 // here — not the task-store topic drawer, which is unmounted on this page.
 export interface OriginTopicPanelProps {
+  agentAvatar?: string | null;
+  agentBackgroundColor?: string | null;
   agentId: string;
-  onBack: () => void;
   onCollapse: () => void;
   title: string;
   topicId: string;
@@ -28,13 +29,15 @@ export const originTopicPanelProps = ({
 }: {
   isOpen: boolean;
   origin?: {
-    agent?: { id: string } | null;
+    agent?: { avatar?: string | null; backgroundColor?: string | null; id: string } | null;
     topic?: { id: string; title?: string | null } | null;
   } | null;
   subjectTitle?: string | null;
-}): Omit<OriginTopicPanelProps, 'onBack' | 'onCollapse'> | null => {
+}): Omit<OriginTopicPanelProps, 'onCollapse'> | null => {
   if (!isOpen || !origin?.agent?.id || !origin.topic) return null;
   return {
+    agentAvatar: origin.agent.avatar,
+    agentBackgroundColor: origin.agent.backgroundColor,
     agentId: origin.agent.id,
     title: origin.topic.title ?? subjectTitle ?? origin.topic.id,
     topicId: origin.topic.id,

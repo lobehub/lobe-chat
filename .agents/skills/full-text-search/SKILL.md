@@ -1,6 +1,6 @@
 ---
 name: full-text-search
-description: 'LobeHub product full-text search architecture and operations. Use for FtsSearchRepo, pg_search or Elasticsearch providers, search projections and mappings, reindexing, Outbox capture/sync, provider switching, search analytics, or search performance. Not for agent web-browsing tools.'
+description: 'Use for product search: FtsSearchRepo, pg_search/Elasticsearch, projections, Outbox sync, reindexing and performance. Excludes agent web search.'
 ---
 
 # Product Full-Text Search
