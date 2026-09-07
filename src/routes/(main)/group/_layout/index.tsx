@@ -24,7 +24,7 @@ const Layout: FC = () => {
         {/* Keep the sidebar interactive when the routed group is gone (deleted
             or made private) — only the content area collapses to the 404 card. */}
         <GroupNotFoundGuard>
-          <SWRConfig value={{ suspense: true }}>
+          <SWRConfig value={{ suspense: false }}>
             <SuspenseRouteBoundary>
               <Outlet />
             </SuspenseRouteBoundary>
