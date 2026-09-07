@@ -349,6 +349,8 @@
   "sortModal.success": "تم تحديث الترتيب بنجاح",
   "sortModal.title": "ترتيب مخصص",
   "sortModal.update": "تحديث",
+  "unsloth.checker.guidance": "بالنسبة لأخطاء الشبكة في المتصفح، تحقق من أن Studio يسمح لهذه الصفحة عبر CORS. بالنسبة لأخطاء المصادقة، أدخل مفتاح API حقيقي لـ Studio؛ الوصول إلى الطرفية بدون مفتاح لا يمنح الوصول عبر المتصفح.",
+  "unsloth.checker.setupGuide": "دليل إعداد اتصال Unsloth",
   "updateAiProvider.confirmDelete": "هل تريد حذف مزود الذكاء الاصطناعي هذا؟",
   "updateAiProvider.confirmDeleteDescription": "بعد الحذف، لا يمكن استعادة هذا المزود.",
   "updateAiProvider.deleteSuccess": "تم الحذف بنجاح",

@@ -349,6 +349,8 @@
   "sortModal.success": "Pomyślnie zaktualizowano sortowanie",
   "sortModal.title": "Niestandardowa kolejność",
   "sortModal.update": "Aktualizuj",
+  "unsloth.checker.guidance": "W przypadku błędów sieciowych w przeglądarce sprawdź, czy Studio zezwala na tę stronę przez CORS. W przypadku błędów uwierzytelniania wprowadź prawdziwy klucz API Studio; dostęp terminalowy bez klucza nie zapewnia dostępu przez przeglądarkę.",
+  "unsloth.checker.setupGuide": "Przewodnik konfiguracji połączenia Unsloth",
   "updateAiProvider.confirmDelete": "Usunąć tego dostawcę AI?",
   "updateAiProvider.confirmDeleteDescription": "Po usunięciu tego dostawcy AI nie będzie można go odzyskać.",
   "updateAiProvider.deleteSuccess": "Usunięto pomyślnie",

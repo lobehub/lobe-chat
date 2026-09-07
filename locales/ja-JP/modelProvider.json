@@ -349,6 +349,8 @@
   "sortModal.success": "ソートが更新されました",
   "sortModal.title": "カスタムソート",
   "sortModal.update": "更新",
+  "unsloth.checker.guidance": "ブラウザのネットワークエラーの場合、StudioがこのページをCORSで許可していることを確認してください。認証エラーの場合、有効なStudio APIキーを入力してください。キーなしのターミナルアクセスではブラウザアクセスは許可されません。",
+  "unsloth.checker.setupGuide": "Unsloth接続設定ガイド",
   "updateAiProvider.confirmDelete": "この AI サービスプロバイダーを削除しますか？",
   "updateAiProvider.confirmDeleteDescription": "削除後はこの AI サービスプロバイダーを復元できません。",
   "updateAiProvider.deleteSuccess": "削除に成功しました",

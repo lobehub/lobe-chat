@@ -349,6 +349,8 @@
   "sortModal.success": "Orden actualizado con éxito",
   "sortModal.title": "Orden personalizado",
   "sortModal.update": "Actualizar",
+  "unsloth.checker.guidance": "Para errores de red del navegador, verifica que Studio permita esta página a través de CORS. Para errores de autenticación, ingresa una clave API real de Studio; el acceso sin clave desde el terminal no otorga acceso desde el navegador.",
+  "unsloth.checker.setupGuide": "Guía de configuración de conexión de Unsloth",
   "updateAiProvider.confirmDelete": "¿Eliminar este proveedor de IA?",
   "updateAiProvider.confirmDeleteDescription": "Una vez eliminado, este proveedor de IA no se puede recuperar.",
   "updateAiProvider.deleteSuccess": "Eliminación exitosa",
