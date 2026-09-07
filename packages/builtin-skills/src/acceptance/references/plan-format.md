@@ -94,15 +94,14 @@ the primary's evidence review does not replace that verifier. Add
 `--verdict` only when the task explicitly asks you to self-assert. Keep the
 printed run URL internal.
 
-The primary also records the reviewed role/run/model provenance and limitations
-in this round's narrative with `lh acceptance run report upsert --run "$VERIFY_RUN_ID" --content "$REVIEWED_NARRATIVE"`.
-After submission, read `lh acceptance run result list --operation "$OP" --json`
-and set `VERIFY_RUN_ID` from the returned rows' `verifyRunId`, not their `id` or
-the operation ID. Confirm the rows belong to the intended single round; if no
-rows exist or the run is ambiguous, resolve that before writing the narrative.
-Omit `--verdict` unless self-assertion was explicitly
-requested. This is part of initial publication, not permission to rewrite a
-published round after a repair.
+For this path, save the reviewed role/run/model provenance and limitations in a
+local narrative file, and submit it as supplementary `markdown` evidence on an
+existing planned item using the same `result submit` command without `--verdict`.
+Identify it as round-level provenance in the description; it does not replace any
+required evidence. This is the plan-driven equivalent of the authored narrative
+tail. Do not use `report upsert` merely to add this text: omitted report fields
+are overwritten with null, which can erase the configured verifier's verdict,
+summary and counts. Leave that verifier's report intact.
 
 ## Self-check coverage (do not skip)
 
@@ -114,7 +113,7 @@ Once you've submitted, the result rows exist. Map each `checkItemId` to its
 [
   {
     "id": "vcr_x9y8z7", // checkResultId (created by submit)
-    "verifyRunId": "vrn_a1b2c3", // report upsert --run uses this value
+    "verifyRunId": "vrn_a1b2c3", // verification round, distinct from the operation
     "checkItemId": "vci_a1b2c3", // joins back to verifyPlan[].id
     "status": "running",
   },
