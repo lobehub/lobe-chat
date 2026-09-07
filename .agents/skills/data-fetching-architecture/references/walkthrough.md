@@ -84,7 +84,7 @@ them. If a reducer updates the list, dispatch into that same parent bucket. Dele
 only after server success; optimistic create/update must recover on failure as
 described in the [main skill](../SKILL.md#mutations).
 
-Keep item details keyed by item id, following `store-data-structures`, rather than
+Keep item details keyed by item id, following [Zustand data structures](../../zustand/references/data-structures.md), rather than
 introducing one shared `datasetDetail` slot that can display the previous item's data.
 For a conditional detail request, pass `undefined` while the surface is inactive and
 map it to a `null` SWR key. When active, consume its error/retry state just as for a list.

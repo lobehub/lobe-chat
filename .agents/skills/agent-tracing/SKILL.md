@@ -1,6 +1,6 @@
 ---
 name: agent-tracing
-description: 'Inspect agent traces by operation ID (拉线上 tracing). First stop for tool-call failures, arguments/results, available tools and execution location; also LLM calls, context snapshots and step analysis.'
+description: 'Use for agent traces by operation ID (拉线上 tracing): failed tools, arguments/results, available tools, execution location, LLM calls and context.'
 user-invocable: false
 ---
 

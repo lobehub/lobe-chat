@@ -1,6 +1,6 @@
 ---
 name: deep-review
-description: 'Review PRs, diffs, or branches for problems using an independent reviewer. Not for explanation-only requests. Full multi-agent review requires an explicit deep-review request.'
+description: 'Use for independent PR, diff or branch review; not explanations. Full multi-agent review requires an explicit deep-review request.'
 ---
 
 # Deep Review

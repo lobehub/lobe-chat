@@ -1,6 +1,6 @@
 ---
 name: db-migrations
-description: 'Use for database rollout strategy, Drizzle migrations, online index creation, data backfills, migration regeneration, sequence conflicts after rebase, idempotent SQL review, or migration renames.'
+description: 'Use for Drizzle migration rollout, online indexes, backfills, idempotent SQL and migration regeneration or rebase conflicts.'
 user-invocable: false
 ---
 

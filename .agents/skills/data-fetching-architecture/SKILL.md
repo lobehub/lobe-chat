@@ -22,7 +22,7 @@ Component → Store useFetchXxx hook → Service → lambdaClient
   `useEffect` or duplicate server data in component `useState`.
 - Use `useFetchXxx` for read hooks and `refreshXxx` for cache invalidation.
 - For list/detail types, maps, reducers, and shared type sources, use
-  [store-data-structures](../store-data-structures/SKILL.md). For action classes,
+  [Zustand data structures](../zustand/references/data-structures.md). For action classes,
   internal actions, and `flattenActions`, use [zustand](../zustand/SKILL.md).
 
 ## Home First Paint and Persistent Caches

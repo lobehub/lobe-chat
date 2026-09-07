@@ -1,6 +1,6 @@
 # Type Definitions in Detail
 
-The skill body's Type Definitions section covers the rules; this file holds the full worked examples to keep SKILL.md lean.
+The [data-shape guide](../data-structures.md#type-definitions) covers the rules; this file holds the full worked examples.
 
 ## Organization
 

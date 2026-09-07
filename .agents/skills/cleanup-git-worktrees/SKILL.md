@@ -1,6 +1,6 @@
 ---
 name: cleanup-git-worktrees
-description: Audit and safely clean Git worktrees and stale local branches. Use when asked to list worktrees, identify completed or merged branches, remove worktrees whose remote branches are gone, prune stale worktree registrations, or clean local branches without losing uncommitted work.
+description: 'Use for auditing or cleaning worktrees, stale registrations and local branches while preserving uncommitted work.'
 ---
 
 # Cleanup Git Worktrees

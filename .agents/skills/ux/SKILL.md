@@ -1,6 +1,6 @@
 ---
 name: ux
-description: 'LobeHub product design values / principles / checklists. Use whenever the work touches user-interface features or implementation — designing or building any user-facing flow — to get better UX results.'
+description: 'Use for product design principles and UX checks when designing or implementing user-facing flows.'
 user-invocable: false
 ---
 

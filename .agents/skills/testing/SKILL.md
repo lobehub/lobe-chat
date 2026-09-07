@@ -1,6 +1,6 @@
 ---
 name: testing
-description: 'Vitest testing guide. Use when writing or updating tests, fixing failing tests, improving coverage, debugging test issues, or setting up mocks.'
+description: 'Use for Vitest tests, mocks, coverage and failing-test diagnosis.'
 user-invocable: false
 ---
 
