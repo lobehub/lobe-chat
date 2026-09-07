@@ -48,11 +48,12 @@ const Layout: FC = () => {
 
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
+      {isDesktop && <DesktopAutoOidcOnFirstOpen />}
+      {isDesktop && <AuthRequiredModal />}
       <WorkspaceContextSlot>
         <RouteMetaBridge />
         {isDesktop && <TabCacheBridges />}
         <Suspense fallback={null}>
-          {isDesktop && <DesktopAutoOidcOnFirstOpen />}
           {isDesktop && <DesktopNavigationBridge />}
           {isDesktop && <DesktopFileMenuBridge />}
           {isDesktop && <DesktopBrowserGatewayBridge />}
@@ -61,7 +62,6 @@ const Layout: FC = () => {
           {isDesktop && <OverlayMessageDispatcher />}
           {showCloudPromotion && <CloudBanner />}
         </Suspense>
-        {isDesktop && <AuthRequiredModal />}
         {isDesktop && <ZoomHUD />}
 
         <Suspense fallback={null}>{isDesktop && <TitleBar />}</Suspense>
