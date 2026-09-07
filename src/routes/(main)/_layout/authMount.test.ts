@@ -51,12 +51,15 @@ const nameOf = (type: unknown): string | undefined =>
   (type as { displayName?: string; name?: string } | null)?.displayName ??
   (type as { name?: string } | null)?.name;
 
-const findByName = (node: ReactNode, name: string): ReactElement | undefined => {
-  let hit: ReactElement | undefined;
+const findByName = (
+  node: ReactNode,
+  name: string,
+): ReactElement<{ children?: ReactNode }> | undefined => {
+  let hit: ReactElement<{ children?: ReactNode }> | undefined;
   Children.forEach(node, (child) => {
     if (hit || !isValidElement(child)) return;
     if (nameOf(child.type) === name) {
-      hit = child;
+      hit = child as ReactElement<{ children?: ReactNode }>;
       return;
     }
     hit = findByName((child.props as { children?: ReactNode }).children, name);
@@ -76,7 +79,7 @@ describe.each(layouts)('main layout (%s)', (_name, load) => {
     async () => {
       const { default: Layout } = await load();
 
-      const tree = (Layout as FC)({});
+      const tree = await (Layout as FC)({});
       const slot = findByName(tree, 'WorkspaceContextSlot');
 
       expect(slot).toBeDefined();
