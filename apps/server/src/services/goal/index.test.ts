@@ -90,6 +90,23 @@ describe('GoalService', () => {
     expect(byId.get(criteriaIds[1])?.documentId).toBeTruthy();
   });
 
+  it('persists the reviewed goal document verbatim when structured criteria are supplied', async () => {
+    const service = new GoalService(serverDB, userId);
+    const instruction = '将办公体验提升到可交付水平，支持 PPT、XLSX、Word 的创建和定向修改。';
+    const graph = await service.create({
+      criteria: [{ instruction: '打开并编辑最终文件', title: '三类办公文档端到端可用' }],
+      problemDescription: instruction,
+      requirement: instruction,
+      tasks: ['Only task'],
+      title: '办公体验',
+    });
+
+    const persisted = await service.graph(graph.goal.id);
+    expect(persisted.goal.requirement).toBe(instruction);
+    expect(persisted.nodes.find((node) => node.kind === 'problem')?.description).toBe(instruction);
+    expect(persisted.goal.config?.acceptance?.criteriaIds).toHaveLength(1);
+  });
+
   it('rebinding criteria also updates the dispatched terminal acceptance task', async () => {
     // Editing the standard after the terminal Goal-acceptance Task exists must
     // not leave that Task's Acceptance gating on the stale id list.
