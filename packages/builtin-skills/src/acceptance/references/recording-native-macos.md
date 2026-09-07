@@ -36,6 +36,5 @@ notification, or secret entered the host-screen capture. Tag direct
 `screencapture` output as `--by cli` and FFmpeg-derived media as `--by program`.
 
 For input and Accessibility commands, use
-[computer-use.md](./computer-use.md). Choose `gif` versus `video` and save locally;
-the primary publishes after reviewing the complete round, using the shared
-contract in [evidence.md](./evidence.md).
+[computer-use.md](./computer-use.md). Choose `gif` versus `video` and submit using
+the shared contract in [evidence.md](./evidence.md).

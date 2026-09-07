@@ -64,6 +64,5 @@ published; it is useful when a reviewer asks about a one-frame defect.
   assembled media artifact.
 - `agent-browser` and `ffmpeg`/`ffprobe` are required. Probe them before the run.
 
-Choose `gif` versus `video` and save the artifact locally. The primary publishes
-it after reviewing the complete round, using the shared contract in
+Choose `gif` versus `video` and submit the artifact using the shared contract in
 [evidence.md](./evidence.md).
