@@ -1,9 +1,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { type FC } from 'react';
 import { Outlet } from 'react-router';
-import { SWRConfig } from 'swr';
 
-import SuspenseRouteBoundary from '@/components/SuspenseRouteBoundary';
 import { isDesktop } from '@/const/version';
 import { GroupNotFoundGuard } from '@/features/GroupNotFound';
 import ProtocolUrlHandler from '@/features/ProtocolUrlHandler';
@@ -24,11 +22,7 @@ const Layout: FC = () => {
         {/* Keep the sidebar interactive when the routed group is gone (deleted
             or made private) — only the content area collapses to the 404 card. */}
         <GroupNotFoundGuard>
-          <SWRConfig value={{ suspense: true }}>
-            <SuspenseRouteBoundary>
-              <Outlet />
-            </SuspenseRouteBoundary>
-          </SWRConfig>
+          <Outlet />
         </GroupNotFoundGuard>
       </Flexbox>
       <RegisterHotkeys />

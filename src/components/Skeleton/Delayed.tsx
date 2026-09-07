@@ -2,6 +2,8 @@
 
 import { type ReactNode, useEffect, useState } from 'react';
 
+import { isSkeletonHandover } from './skeletonHandover';
+
 /**
  * Matches `BOOT_SHELL_DELAY`: below this, a placeholder is on screen for less
  * time than it takes to read as one, so it registers as a flicker between two
@@ -20,12 +22,13 @@ interface DelayedFallbackProps {
  * previous screen simply stays until the next one paints.
  */
 const DelayedFallback = ({ children, delay = FALLBACK_DELAY }: DelayedFallbackProps) => {
-  const [elapsed, setElapsed] = useState(false);
+  const [elapsed, setElapsed] = useState(() => isSkeletonHandover());
 
   useEffect(() => {
+    if (elapsed) return;
     const timer = setTimeout(() => setElapsed(true), delay);
     return () => clearTimeout(timer);
-  }, [delay]);
+  }, [delay, elapsed]);
 
   return elapsed ? children : null;
 };

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { ReactElement } from 'react';
+import { isValidElement, type ReactElement, Suspense } from 'react';
 import type { RouteObject } from 'react-router';
 import { matchRoutes } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
@@ -383,6 +383,28 @@ describe('desktop router shared definition', () => {
       }
     },
   );
+
+  it.each([
+    ['Web', () => webDesktopRoutes.find((route) => route.path === '/')?.children ?? []],
+    ['Electron', () => createTabRouter('/').routes[0]?.children ?? []],
+  ])('%s declares a skeleton on every lazy main-area page', (_, getRoutes) => {
+    const undeclared: string[] = [];
+    const walk = (routes: RouteObject[], base: string, chain: RouteObject[]) => {
+      for (const route of routes) {
+        const pathname = route.index ? `${base}/(index)` : `${base}/${route.path ?? ''}`;
+        const nextChain = [...chain, route];
+        if (route.children?.length) {
+          walk(route.children, route.index ? base : pathname, nextChain);
+          continue;
+        }
+        const isLazyPage = isValidElement(route.element) && route.element.type === Suspense;
+        if (isLazyPage && !resolveRouteSkeleton(nextChain)) undeclared.push(pathname);
+      }
+    };
+    walk(getRoutes(), '', []);
+
+    expect(undeclared).toEqual([]);
+  });
 
   it.each([
     ['Web', (_pathname: string) => webDesktopRoutes],
