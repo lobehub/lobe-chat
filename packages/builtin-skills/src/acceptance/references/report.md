@@ -132,7 +132,7 @@ supersedes? }`.
    page. Write it in the language the user is conversing in.
 6. **Review, then publish:** the worker hands off the complete round, then the
    primary reviews all original evidence as defined in [delegation.md](delegation.md).
-   No intermediate approval per case or separate audit agent is required.
+   Do not require intermediate approval per case or create a separate audit agent.
    Record role/run/model provenance, any missing independent execution, and
    unresolved findings in the narrative tail.
    The primary owns the final publication decision.

@@ -241,7 +241,8 @@ CLI interactions may mutate live data. Use a test fixture when possible. If an
 exploratory command appends a reaction, message, or other irreversible record,
 disclose the exact side effect in the report.
 
-Publish the artifacts with the plan-driven submit flow or place them under the
-structured report's `assets/` directory and ingest the whole round. Tag direct
+Stage artifacts locally under the [storage contract](../references/evidence.md#capture-first-publish-after-review).
+After reviewing the complete round, the primary publishes with the plan-driven
+submit flow or ingests the authored report and its `assets/` directory. Tag direct
 AXe/`simctl` captures as `--by cli`, deterministic UI-test/media-transform output
 as `--by program`, and preserve the device identity in every artifact description.

@@ -51,7 +51,7 @@ export const AcceptanceIdentifier = 'acceptance';
  *
  * `version` is read from SKILL.md's own frontmatter rather than declared here,
  * so there is one place to bump and an installed copy on disk always states the
- * version it carries. Bump it whenever a change alters what a builder must DO —
+ * version it carries. Bump it whenever a change alters what an acceptance agent must DO —
  * a new required step, a changed contract or vocabulary, a moved reference —
  * not for a typo or a reworded sentence.
  */

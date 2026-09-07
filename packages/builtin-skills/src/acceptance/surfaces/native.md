@@ -30,7 +30,10 @@ sleep 2 # let the result settle
 screencapture -l "$(osascript -e "tell application \"System Events\" to tell process \"$APP\" to get id of window 1")" ./proof/native-result.png
 ```
 
-Upload as evidence (provenance `cli`, since osascript/screencapture are
+Save under the current attempt directory using the
+[storage contract](../references/evidence.md#capture-first-publish-after-review);
+`./proof` above is a placeholder. After reviewing the complete round, the primary
+uploads the saved evidence (provenance `cli`, since osascript/screencapture are
 shell-driven):
 
 ```bash

@@ -221,7 +221,8 @@ Providers: `agentcore`, `browserbase`, `browserless`, `browseruse`, `kernel`.
 - **`snapshot -i` doesn't find contenteditable** — use `snapshot -i -C` for rich
   text editors; `fill` doesn't work on contenteditable, use `type`.
 - **Screenshots written to a path are easiest** — `agent-browser screenshot
-./proof/x.png` then upload that path; with no path they land in
+"$EVIDENCE_DIR/x.png"` saves an artifact for the primary to review and publish
+  after the complete round; with no path screenshots land in
   `~/.agent-browser/tmp/screenshots/`.
 - **Dialogs block all commands** — if commands time out, check
   `agent-browser dialog status`.

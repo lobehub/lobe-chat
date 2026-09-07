@@ -33,7 +33,10 @@ clicks or commands or spawn recursively from the worker.
 ## 1. Check the environment
 
 Give the worker the original requirement, changed behavior, target revision,
-authorized surface, and relevant project-adapter paths. It inventories existing
+authorized surface, this skill, relevant project-adapter paths, and both the generic
+and project living-log paths. The worker loads the common-mistakes checklists and
+probe-pattern indexes before planning, and rereads both checklists before marking
+any case `pass`, following the skill's living-log retrieval rules. It inventories existing
 instances and checks dependencies, authentication, and available probes before
 drafting executable cases. It may prepare the environment within existing
 authority; environment mechanics do not create new permissions.
@@ -87,8 +90,8 @@ the primary retains the final judgment even when it makes the repair itself.
 After a repair, identify which earlier evidence the change invalidates and rerun
 affected cases on the changed revision. Preserve unaffected evidence only with
 its original revision and reuse clearly labeled; an earlier pass does not carry
-across a relevant change. Missing evidence belongs to the executor, without implying a
-product change. If probe repair repeats without new evidence or a credible next
+across a relevant change. Missing evidence belongs to the executor, without implying
+a product change. If probe repair repeats without new evidence or a credible next
 step, escalate the concrete failure instead of continuing blind attempts.
 
 Give each execution an attempt ID and preserve its evidence. Snapshot relevant
@@ -130,16 +133,21 @@ decisions in the report; a final review still covers every case.
 
 Route findings to the implementer or executor as above. Review corrected evidence
 and affected conclusions without rerunning unrelated passing cases or restarting
-the entire review. Publish only after the primary's final review is complete,
+the entire review. The primary executes publication and owns the final handoff
+for both authored and plan-driven rounds. Publish only after its final review is complete,
 with remaining failures or uncertainty reported explicitly. Follow the project's
 cleanup sequence and collect cleanup completion before the final user handoff.
 Published rounds remain immutable; repairs after publication create a new round.
+For a plan-driven round, the worker stages evidence locally and the primary submits
+only reviewed attempts after the complete review, following
+[plan-format.md](plan-format.md#review-before-submission). Server result IDs are not
+attempt IDs; the local ledger preserves execution history.
 
 ## Reporting
 
 Keep the existing plan/case/evidence schema. The narrative tail records who
 implemented, executed, and performed the final review, worker/run/model provenance,
 tested revisions, reused evidence, and limitations. Distinguish independent
-execution from builder self-verification; no separate final audit is claimed or
-required by this workflow. If delegation is unavailable or prohibited, the primary
+execution from builder self-verification. Do not create a separate final audit
+agent or claim that one reviewed this round. If delegation is unavailable or prohibited, the primary
 may execute within authority and disclose the missing independent execution.

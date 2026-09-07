@@ -13,16 +13,9 @@ file wins; about _what may be published_, the skill wins.
 PLAN (0–2)  →  EXECUTE (3–5)  →  FINISH (6)
 ```
 
-Use the skill's [delegation workflow](../skills/acceptance/references/delegation.md):
-first resolve an explicit suitable lower-cost model selection; an absent default
-may inherit the primary model. Reuse one worker for environment, plan, and case
-execution. The primary settles requirements and evidence criteria before the
-worker executes autonomously, then reviews the complete round at the end.
-Routine cases need no intermediate approval; ambiguity, failures, and blockers
-are escalated. No separate final audit worker is required. Apply the skill's
-model-selection fallback when needed. The steps below define
-project mechanics, not a requirement for the primary to run every command. Keep
-environment ownership with the delegated run through teardown.
+Follow the skill's [delegation workflow](../skills/acceptance/references/delegation.md).
+The steps below define project mechanics. Keep environment ownership with the
+delegated run through this project's teardown step.
 For delegated runs, Step 1 is only a tentative scope outline: the worker checks
 the environment in Step 2 before drafting the executable plan for discussion.
 The primary handles the approval gate. An already agreed plan can be reused
@@ -242,12 +235,8 @@ made in a real LobeHub round. The generic set is in the skill's SKILL.md.
 
 ### Step 5 — Report and publish
 
-Once the worker reports the complete round ready, the primary reviews every
-case's original evidence. Resolve findings or record failures and uncertainty
-explicitly; no separate audit agent is required.
-The primary owns publication and final handoff; workers prepare the artifacts.
-Record role/run provenance and evidence reuse in the report narrative using the
-skill's delegation contract.
+Apply the skill's [final review and publication contract](../skills/acceptance/references/delegation.md#4-primary-reviews-the-completed-round)
+before the repository-specific publishing steps below.
 
 The report schema, the language rule, visual/dual-text/structured-visualization
 evidence rules, and the immutable-round rules are the skill's

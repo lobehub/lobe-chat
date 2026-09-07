@@ -13,25 +13,26 @@ about rendered UI.
 
 1. Run the command, test, or query that exercises the change. Prefer a machine
    output mode (`--json`, a structured dump) so the proof is assertable, not prose.
-2. Capture the output and upload it as `text` evidence — inline with `--content`
-   for short output, or `--file` for a larger dump.
+2. Save the output as `text` evidence in the current attempt directory, using the
+   storage contract in [evidence.md](../references/evidence.md#capture-first-publish-after-review).
+3. After the primary reviews the complete round, the primary publishes the saved
+   artifact. The commands below separate capture from plan-driven publication;
+   authored rounds instead include the artifact in their report.
 
 ```bash
+# Worker: capture the actual product command's output, not a test-suite verdict.
+your-cli command --json > "$EVIDENCE_DIR/result.json"
+
+# Primary: publication only, after reviewing the completed round.
+# First read the current reviewed attempt from attempt-ledger.json. Replace these
+# placeholders with that record's values in the primary's own shell.
+ARTIFACT_PATH='/absolute/path/from/ledger/result.json'
+ATTEMPT_ID='reviewed-attempt-id-from-ledger'
+TESTED_REVISION='tested-revision-from-ledger'
 # CHECK_ITEM_ID is the criterion's plan item id (from `lh verify plan state`).
-# short result → inline
 lh acceptance run result submit --operation "$OPERATION_ID" --item "$CHECK_ITEM_ID" --type text \
-  --content "$(your-cli command --json)" \
-  --by cli --desc "command reports the new field after the change"
-
-# larger output (test log, full dump) → file
-your-cli command --json > ./proof/result.json
-lh acceptance run result submit --operation "$OPERATION_ID" --item "$CHECK_ITEM_ID" --type text \
-  --file ./proof/result.json --by cli --desc "full result set"
-
-# a test run is itself proof
-your-test-runner path/to/spec > ./proof/test.log 2>&1
-lh acceptance run result submit --operation "$OPERATION_ID" --item "$CHECK_ITEM_ID" --type text \
-  --file ./proof/test.log --by program --desc "regression spec passes"
+  --file "$ARTIFACT_PATH" --by cli \
+  --desc "Attempt $ATTEMPT_ID at $TESTED_REVISION: command reports the new field"
 ```
 
 Provenance: `cli` for command stdout, `program` for a script/test you ran. See

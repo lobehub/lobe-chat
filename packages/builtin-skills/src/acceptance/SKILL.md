@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.5.0
+version: 0.5.1
 description: >
   Delegated end-to-end verification with primary-agent evidence review for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -23,8 +23,8 @@ declares `requiredEvidence` **cannot pass on your text alone**: a missing artifa
 marks it `uncertain` and holds the delivery.
 
 ```
-one worker: environment → plan ↔ primary discussion → execute agreed cases autonomously
-primary: review completed evidence → resolve findings → publish
+one worker: environment → select surface + plan ↔ primary discussion → execute agreed cases
+primary: review completed evidence → resolve findings → publish → verify uploaded coverage
 ```
 
 ## Delegate work, retain judgment
@@ -213,10 +213,11 @@ Coverage: 2/2 criteria, all required evidence uploaded
 
 - **Engine-level capture over OS capture.** `agent-browser screenshot` / `dom` /
   `eval` run headless; `screencapture` / osascript are macOS-only. iOS: `xcrun
-simctl io` over host-window capture. Rounds land under `.acceptances/`, which
-  the CLI keeps out of git.
-- **Upload as you go.** Evidence keyed to its check mid-run survives a crash near
-  the end.
+simctl io` over host-window capture. Use the project report root or the ignored
+  `.acceptances/` fallback defined in [evidence.md](references/evidence.md#capture-first-publish-after-review).
+- **Save evidence as you go; publish after review.** Preserve local artifacts and
+  the attempt ledger during execution. For plan-driven rounds, defer `result submit`
+  until the primary reviews the completed round; see [plan-format.md](references/plan-format.md).
 - **Don't invent evidence.** Capture only the types a check declares.
 
 ## Reference map
