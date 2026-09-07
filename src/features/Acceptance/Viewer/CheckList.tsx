@@ -422,6 +422,7 @@ const comparisonContent = (item: AcceptanceEvidence) => {
   if (item.type === 'screenshot' && item.fileUrl)
     return (
       <ScreenshotTiles
+        flat
         alt={item.description ?? item.fileName ?? item.type}
         fileHeight={item.fileHeight}
         fileWidth={item.fileWidth}
