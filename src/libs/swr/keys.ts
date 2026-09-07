@@ -820,6 +820,11 @@ export const knowledgeBaseKeys = {
 
 // ---- device -------------------------------------------------------------
 export const deviceKeys = {
+  browseDirectory: def(
+    'device:browseDirectory',
+    (workspaceId: string | null, deviceId: string, path?: string, cursor?: string) =>
+      ['device:browseDirectory', workspaceId, deviceId, path, cursor] as const,
+  ),
   gitAheadBehind: def('device:gitAheadBehind', (deviceId: string, path: string) => [
     'device:gitAheadBehind',
     deviceId,
