@@ -686,7 +686,9 @@ describe('RecentModel', () => {
         await serverDB
           .insert(workspaces)
           .values({ id: workspaceId, name: 'ws', primaryOwnerId: userId, slug: workspaceId });
-        await serverDB.insert(agents).values({ id: 'agent-ws', userId, slug: 'inbox' });
+        await serverDB
+          .insert(agents)
+          .values({ id: 'agent-ws', userId, slug: 'inbox', workspaceId });
         await serverDB.insert(topics).values([
           {
             agentId: 'agent-ws',
@@ -720,6 +722,66 @@ describe('RecentModel', () => {
         expect(result.map((r) => r.id)).toEqual(['topic-ws-mine']);
         expect(result[0].userId).toBe(userId);
       });
+
+      it.each(['agent', 'group'] as const)(
+        'filters private %s topics by resource owner before pagination and preview loading',
+        async (kind) => {
+          const resources = [
+            { id: 'recent-private-mine', userId, visibility: 'private' as const, workspaceId },
+            {
+              id: 'recent-private-other',
+              userId: otherUserId,
+              visibility: 'private' as const,
+              workspaceId,
+            },
+            {
+              id: 'recent-public-other',
+              userId: otherUserId,
+              visibility: 'public' as const,
+              workspaceId,
+            },
+          ];
+          if (kind === 'agent') await serverDB.insert(agents).values(resources);
+          else await serverDB.insert(chatGroups).values(resources);
+
+          await serverDB.insert(topics).values(
+            resources.map((resource, index) => ({
+              agentId: kind === 'agent' ? resource.id : null,
+              groupId: kind === 'group' ? resource.id : null,
+              id: `topic-${resource.id}`,
+              title: resource.id,
+              updatedAt: minutesAgo(-10 + index),
+              // Access follows the resource owner, not the topic author.
+              userId,
+              workspaceId,
+            })),
+          );
+          await serverDB.insert(messages).values({
+            content: 'Private reply',
+            role: 'assistant',
+            topicId: 'topic-recent-private-other',
+            userId: otherUserId,
+            workspaceId,
+          });
+
+          for (const mineOnly of [false, true]) {
+            const result = await workspaceModel.queryRecent(2, ['topic'], true, mineOnly);
+            expect(result.map((row) => row.id)).toEqual([
+              'topic-recent-private-mine',
+              'topic-recent-public-other',
+            ]);
+            expect(result.every((row) => row.lastAssistantMessage === null)).toBe(true);
+          }
+
+          const otherModel = new RecentModel(serverDB, otherUserId, workspaceId);
+          const result = await otherModel.queryRecent(2, ['topic'], true);
+          expect(result.map((row) => row.id)).toEqual([
+            'topic-recent-private-other',
+            'topic-recent-public-other',
+          ]);
+          expect(result[0].lastAssistantMessage).toBe('Private reply');
+        },
+      );
     });
   });
 });
