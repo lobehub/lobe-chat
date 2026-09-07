@@ -9,3 +9,12 @@ export const acceptanceScrollLayout = {
   frameOverflow: 'auto',
   paneOverflow: 'visible',
 } as const;
+
+export const acceptanceReportScrollLayout = {
+  drawerBodyMinHeight: 0,
+  drawerBodyOverflow: 'hidden',
+  drawerContentOverflow: 'hidden',
+  paneFlex: 1,
+  paneMinHeight: 0,
+  paneOverflow: 'hidden',
+} as const;

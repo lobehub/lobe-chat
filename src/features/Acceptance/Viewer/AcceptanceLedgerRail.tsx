@@ -11,6 +11,7 @@ import ReportViewer from '../Report/ReportViewer';
 import { resolveRoundParam } from '../utils';
 import { useAcceptanceScope } from './AcceptanceScope';
 import { checkFilterState } from './CheckList';
+import { acceptanceReportScrollLayout } from './layout';
 import LedgerPanel, { type AcceptanceRound } from './LedgerPanel';
 import { originTopicPanelProps } from './originConversation';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
@@ -176,12 +177,25 @@ const AcceptanceLedgerRail = () => {
         placement={'right'}
         width={'min(960px, 92vw)'}
         styles={{
-          bodyContent: { height: '100%', minHeight: 0, overflow: 'hidden', padding: 0 },
+          bodyContent: {
+            height: '100%',
+            minHeight: acceptanceReportScrollLayout.drawerBodyMinHeight,
+            overflow: acceptanceReportScrollLayout.drawerBodyOverflow,
+            padding: 0,
+          },
+          content: { overflow: acceptanceReportScrollLayout.drawerContentOverflow },
         }}
         onClose={() => openReport(null)}
       >
         {reportRound && (
-          <Flexbox style={{ height: '100%', position: 'relative' }}>
+          <Flexbox
+            style={{
+              flex: acceptanceReportScrollLayout.paneFlex,
+              minHeight: acceptanceReportScrollLayout.paneMinHeight,
+              overflow: acceptanceReportScrollLayout.paneOverflow,
+              position: 'relative',
+            }}
+          >
             <ReportViewer runId={reportRound.run.id} />
           </Flexbox>
         )}

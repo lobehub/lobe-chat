@@ -74,8 +74,9 @@ import { VisualizationRenderer } from './VisualizationRenderer';
 const styles = createStaticStyles(({ css }) => ({
   scroll: css`
     overflow: auto;
+    flex: 1;
     width: 100%;
-    height: 100%;
+    min-height: 0;
   `,
   page: css`
     width: 100%;
