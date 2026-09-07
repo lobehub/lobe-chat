@@ -11,8 +11,8 @@ import { electronDevtoolsService } from '@/services/electron/devtools';
 
 import { devDockPanelStyles } from '../../panelStyles';
 import { useAppProcessMetrics } from '../appProcessMetrics';
+import { formatCompactSize } from '../memoryFormat';
 import { type MemorySample, useMemorySamples } from '../memorySamples';
-import { formatCompactSize } from '../MemoryWidget';
 import DumpTree from './DumpTree';
 import HistoryChart from './HistoryChart';
 import { styles } from './styles';

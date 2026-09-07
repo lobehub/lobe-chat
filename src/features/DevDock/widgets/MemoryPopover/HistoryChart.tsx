@@ -3,8 +3,8 @@
 import { cssVar } from 'antd-style';
 import { memo } from 'react';
 
+import { formatCompactSize } from '../memoryFormat';
 import { MAX_HISTORY, type MemorySample } from '../memorySamples';
-import { formatCompactSize } from '../MemoryWidget';
 import { styles } from './styles';
 
 const HEIGHT = 72;

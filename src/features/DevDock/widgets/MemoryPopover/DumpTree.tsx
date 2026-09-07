@@ -5,7 +5,7 @@ import { cx } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Fragment, memo, useState } from 'react';
 
-import { formatCompactSize } from '../MemoryWidget';
+import { formatCompactSize } from '../memoryFormat';
 import { styles } from './styles';
 
 const OBJECT_COUNT_KEYS = [

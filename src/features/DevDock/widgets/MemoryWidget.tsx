@@ -4,16 +4,12 @@ import { Popover } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { memo, useState } from 'react';
 
-import { formatSize } from '@/utils/format';
-
 import { DOCK_Z_INDEX } from '../const';
 import { barButtonStyles } from './BarButton';
+import { formatCompactSize } from './memoryFormat';
 import MemoryPopover from './MemoryPopover';
 import { isMemorySamplingSupported, useMemorySamples } from './memorySamples';
 import { isMemoryHigh } from './metricUtils';
-
-export const formatCompactSize = (bytes: number) =>
-  formatSize(bytes).replace(' ', '').replace('B', '');
 
 const styles = createStaticStyles(({ css }) => ({
   active: css`
