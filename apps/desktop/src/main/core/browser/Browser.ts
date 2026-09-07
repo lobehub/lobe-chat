@@ -10,12 +10,12 @@ import { preloadDir, resourcesDir } from '@/const/dir';
 import { DESKTOP_EXTERNAL_NAVIGATION_HOSTS, isMac } from '@/const/env';
 import RemoteServerConfigCtr from '@/controllers/RemoteServerConfigCtr';
 import { backendProxyProtocolManager } from '@/core/infrastructure/BackendProxyProtocolManager';
-import { appendVercelCookie, setResponseHeader } from '@/utils/http-headers';
 import { createLogger } from '@/utils/logger';
 import { getSystemLanguage, resolveUILocale } from '@/utils/system-language';
 import { SYSTEM_LANGUAGE_ARG_PREFIX } from '~common/systemLanguage';
 
 import type { App } from '../App';
+import { setupCORSBypass } from './cors';
 import { WindowStateManager } from './WindowStateManager';
 import { WindowThemeManager } from './WindowThemeManager';
 
@@ -648,47 +648,7 @@ export default class Browser {
   private setupCORSBypass(browserWindow: BrowserWindow): void {
     logger.debug(`[${this.identifier}] Setting up CORS bypass for all requests`);
 
-    const session = browserWindow.webContents.session;
-    const originMap = new Map<number, string>();
-
-    session.webRequest.onBeforeSendHeaders((details, callback) => {
-      const requestHeaders = { ...details.requestHeaders };
-
-      if (requestHeaders['Origin']) {
-        originMap.set(details.id, requestHeaders['Origin']);
-        delete requestHeaders['Origin'];
-        logger.debug(`[${this.identifier}] Removed Origin header for: ${details.url}`);
-      }
-
-      appendVercelCookie(requestHeaders);
-
-      callback({ requestHeaders });
-    });
-
-    session.webRequest.onHeadersReceived((details, callback) => {
-      const responseHeaders = details.responseHeaders || {};
-      const origin = originMap.get(details.id) || '*';
-
-      // Force set CORS headers (replace existing to avoid duplicates from case-insensitive keys)
-      setResponseHeader(responseHeaders, 'Access-Control-Allow-Origin', origin);
-      setResponseHeader(
-        responseHeaders,
-        'Access-Control-Allow-Methods',
-        'GET, POST, PUT, DELETE, OPTIONS, PATCH',
-      );
-      setResponseHeader(responseHeaders, 'Access-Control-Allow-Headers', '*');
-      setResponseHeader(responseHeaders, 'Access-Control-Allow-Credentials', 'true');
-
-      originMap.delete(details.id);
-
-      if (details.method === 'OPTIONS') {
-        setResponseHeader(responseHeaders, 'Access-Control-Max-Age', '86400');
-        callback({ responseHeaders, statusLine: 'HTTP/1.1 200 OK' });
-        return;
-      }
-
-      callback({ responseHeaders });
-    });
+    setupCORSBypass(browserWindow.webContents.session);
 
     logger.debug(`[${this.identifier}] CORS bypass setup completed`);
   }

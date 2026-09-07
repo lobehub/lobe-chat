@@ -46,6 +46,7 @@ const {
       session: {
         webRequest: {
           onBeforeSendHeaders: vi.fn(),
+          onErrorOccurred: vi.fn(),
           onHeadersReceived: vi.fn(),
         },
       },
