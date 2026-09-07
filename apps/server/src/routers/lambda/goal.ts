@@ -48,8 +48,11 @@ export const goalRouter = router({
     .input(
       idInput.extend({
         kind: z.enum([
+          'contains',
+          'answers',
           'decomposes',
           'depends_on',
+          'derived_from',
           'investigates',
           'produces',
           'supports',
@@ -80,7 +83,9 @@ export const goalRouter = router({
     .input(
       idInput.extend({
         description: z.string().optional(),
-        kind: z.enum(['problem', 'task', 'finding', 'decision']),
+        kind: z.enum(['problem', 'experiment', 'task', 'finding', 'decision']),
+        scopeId: z.string().uuid().optional(),
+        questionId: z.string().uuid().optional(),
         priority: z.number().int().optional(),
         status: z
           .enum(['proposed', 'active', 'waiting', 'resolved', 'rejected', 'retired'])
@@ -122,6 +127,12 @@ export const goalRouter = router({
               .optional(),
             // Bounds mirror `resolveMaxConcurrentTasks`, so a rejected value and
             // a clamped one cannot disagree about what the cap may be.
+            exploration: z
+              .object({
+                instruction: z.string().min(1).max(8000),
+                maxExperiments: z.number().int().min(1).max(200),
+              })
+              .optional(),
             maxConcurrentTasks: z.number().int().min(1).max(10).nullable().optional(),
             recovery: z
               .object({
@@ -396,6 +407,7 @@ export const goalRouter = router({
       idInput.extend({
         /** ISO-8601 calendar-time budget; null clears the deadline. */
         deadline: z.string().datetime().nullable().optional(),
+        maxExperiments: z.number().int().min(1).max(200).optional(),
         maxRounds: z.number().int().positive().nullable().optional(),
         maxTotalCost: z.number().positive().nullable().optional(),
       }),

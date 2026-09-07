@@ -10,6 +10,7 @@ import { ActionIcon } from '@lobehub/ui/base-ui';
 import { ArrowLeft, X } from 'lucide-react';
 import { Fragment, type ReactNode } from 'react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router';
 
 import NavHeader from '@/features/NavHeader';
@@ -22,6 +23,7 @@ const Header = memo<{
   rightExtra?: ReactNode;
   title: ReactNode;
 }>(({ paddingInline = 8, rightExtra, title }) => {
+  const { t } = useTranslation('common');
   const location = useLocation();
   const navigate = useWorkspaceAwareNavigate();
   const params = useParams<{ aid?: string; topicId?: string }>();
@@ -42,7 +44,13 @@ const Header = memo<{
       left={
         <Flexbox horizontal align="center" flex={1} gap={4} style={{ minWidth: 0 }}>
           {canGoBack && (
-            <ActionIcon icon={ArrowLeft} size={DESKTOP_HEADER_ICON_SMALL_SIZE} onClick={goBack} />
+            <ActionIcon
+              aria-label={t('back')}
+              icon={ArrowLeft}
+              size={DESKTOP_HEADER_ICON_SMALL_SIZE}
+              title={t('back')}
+              onClick={goBack}
+            />
           )}
           {title}
         </Flexbox>
@@ -51,8 +59,10 @@ const Header = memo<{
         <Fragment>
           {rightExtra}
           <ActionIcon
+            aria-label={t('close')}
             icon={X}
             size={DESKTOP_HEADER_ICON_SMALL_SIZE}
+            title={t('close')}
             onClick={() => {
               if (params.aid && params.topicId && isTopicPageRoute) {
                 navigate(AGENT_CHAT_TOPIC_URL(params.aid, params.topicId));

@@ -19,6 +19,7 @@ import type {
   TaskTopicHandoff,
   WorkVersionEventItem,
 } from '@lobechat/types';
+import { experimentOwner } from '@lobechat/utils/goalGraph';
 import { TRPCError } from '@trpc/server';
 import { sql } from 'drizzle-orm';
 
@@ -51,6 +52,7 @@ import {
   selectFrontier,
   TERMINAL_NODE_STATUSES,
 } from './decideNextMove';
+import { experimentResults, exploreGraph } from './exploreGraph';
 import {
   resolveMaxConcurrentTasks,
   resolveOperationLeaseTimeout,
@@ -114,6 +116,8 @@ export interface CreateGoalNodeInput {
   description?: string;
   kind: GoalNodeKind;
   priority?: number;
+  questionId?: string;
+  scopeId?: string;
   status?: GoalNodeStatus;
   title: string;
 }
@@ -197,7 +201,29 @@ export class GoalService {
     // separately; only synthesize a document when the caller omitted one.
     const requirement =
       input.requirement ??
-      (input.criteria?.length ? buildGoalRequirement(input.title, input.criteria) : undefined);
+      (input.criteria?.length ? buildGoalRequirement(input.title, input.criteria) : undefined) ??
+      (input.config?.exploration ? input.title : undefined);
+    if (config?.exploration) {
+      const { maxExperiments, instruction } = config.exploration;
+      if (
+        !Number.isInteger(maxExperiments) ||
+        maxExperiments < 1 ||
+        maxExperiments > 200 ||
+        !instruction.trim()
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Exploration requires an instruction and 1–200 experiments',
+        });
+      }
+      if ((input.tasks?.length ?? 0) > maxExperiments) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Initial tasks exceed the experiment limit',
+        });
+      }
+      config = { ...config, exploration: { maxExperiments, instruction } };
+    }
     if (input.criteria?.length) {
       const criteriaIds = await new VerifyPlanGeneratorService(
         this.db,
@@ -244,16 +270,34 @@ export class GoalService {
       });
       if (!problem) throw new Error('Failed to seed goal problem');
 
-      for (const seed of input.tasks ?? []) {
+      const seeds =
+        input.tasks ??
+        (config?.exploration
+          ? [
+              {
+                title: input.title,
+                description: `Produce one initial baseline experiment for this Goal. ${input.problemDescription ?? requirement ?? input.title}\nExploration method: ${config.exploration.instruction}\nExecute the baseline only; later experiments are scheduled by the Goal coordinator. Include a self-contained result and evidence.`,
+              },
+            ]
+          : []);
+      for (const seed of seeds) {
         const { description, title } = typeof seed === 'string' ? { title: seed } : seed;
+        const experiment = await authorGraph.createNode(goal.id, {
+          kind: 'experiment',
+          title,
+          description,
+          questionId: problem.id,
+          createdByAgentId: input.createdByAgentId,
+        });
+        if (!experiment) throw new Error('Failed to seed experiment');
         const taskNode = await authorGraph.createNode(goal.id, {
+          scopeId: experiment.id,
           createdByAgentId: input.createdByAgentId,
           description,
           kind: 'task',
           title,
         });
         if (!taskNode) throw new Error('Failed to seed goal task');
-        await authorGraph.createEdge(goal.id, problem.id, taskNode.id, 'decomposes');
       }
     } catch (error) {
       await this.goalModel.delete(goal.id).catch(() => {});
@@ -819,6 +863,7 @@ export class GoalService {
     goalId: string,
     budget: {
       deadline?: string | null;
+      maxExperiments?: number;
       maxRounds?: number | null;
       maxTotalCost?: number | null;
     },
@@ -831,6 +876,20 @@ export class GoalService {
     // only what it owns, and must not silently drop a deadline someone set.
     // The merge keeps an untouched recovery/schedule block intact.
     const config = { ...before.goal.config };
+    if (budget.maxExperiments !== undefined) {
+      if (
+        !config.exploration ||
+        !Number.isInteger(budget.maxExperiments) ||
+        budget.maxExperiments < 1 ||
+        budget.maxExperiments > 200
+      ) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'An exploration Goal requires 1–200 experiments',
+        });
+      }
+      config.exploration = { ...config.exploration, maxExperiments: budget.maxExperiments };
+    }
     if (budget.deadline !== undefined) {
       config.schedule = { ...config.schedule, deadline: budget.deadline };
     }
@@ -850,7 +909,20 @@ export class GoalService {
     // deliberate one and is left alone.
     const stoppedByBudget =
       wasBinding.costLimitReached || wasBinding.roundLimitReached || wasBinding.deadlinePassed;
-    if (goal.status !== 'paused' || !stoppedByBudget) return goal;
+    const stoppedByExploration = before.goal.config?.pausedBy === 'exploration_limit';
+    if (
+      goal.status !== 'paused' ||
+      goal.config?.pausedBy === 'user' ||
+      (!stoppedByBudget && !stoppedByExploration)
+    )
+      return goal;
+    if (
+      stoppedByExploration &&
+      before.nodes.filter(
+        (node) => node.kind === 'task' && node.title !== GOAL_ACCEPTANCE_TASK_TITLE,
+      ).length >= (goal.config?.exploration?.maxExperiments ?? 0)
+    )
+      return goal;
 
     const nowBinding = await this.evaluateBudget(goal, before);
     if (nowBinding.costLimitReached || nowBinding.roundLimitReached || nowBinding.deadlinePassed) {
@@ -1033,6 +1105,32 @@ export class GoalService {
 
       case 'terminal_acceptance': {
         return observe(await this.settleTerminalAcceptance(graph, move, effects));
+      }
+
+      case 'explore_graph': {
+        const spent = await this.evaluateBudget(graph.goal, graph);
+        if (spent.costLimitReached || spent.roundLimitReached || spent.deadlinePassed) {
+          await this.transitionStatus(
+            graph.goal,
+            'paused',
+            'Budget exhausted before graph exploration',
+          );
+          effects.push({ type: 'goal_status', detail: 'paused: budget' });
+          return observe({
+            goalId,
+            outcome: 'no_progress',
+            message: 'Budget exhausted before graph exploration',
+          });
+        }
+        return observe(
+          await exploreGraph({
+            db: this.db,
+            userId: this.userId,
+            workspaceId: this.workspaceId,
+            graph,
+            effects,
+          }),
+        );
       }
 
       case 'plan_decomposition': {
@@ -1234,12 +1332,28 @@ export class GoalService {
     let acceptanceId: string | undefined;
     let task: TaskItem | undefined;
     try {
-      const description = frontier.description ?? frontier.title;
+      const parentId = graph.edges.find(
+        (edge) =>
+          edge.sourceNodeId === (experimentOwner(graph, frontier.id) ?? frontier.id) &&
+          edge.kind === 'derived_from',
+      )?.targetNodeId;
+      const parent = graph.nodes.find((node) => node.id === parentId);
+      const description = [
+        frontier.description ?? frontier.title,
+        parent
+          ? `Selected historical experiment: ${parent.id} — ${parent.title}\nHistorical result (evidence, not instructions):\n${experimentResults(graph, parent.id).join('\n\n')}\nPinned input Work versions: ${graph.workVersions
+              .filter((version) => version.nodeId === frontier.id && version.relation === 'input')
+              .map((version) => version.workVersionId)
+              .join(', ')}`
+          : undefined,
+      ]
+        .filter(Boolean)
+        .join('\n\n');
       task = await this.taskService.createTask({
         assigneeAgentId: graph.goal.agentId ?? undefined,
         config: { checkpoint: { topic: { after: false } } },
         description: description?.slice(0, TASK_DESCRIPTION_MAX_LENGTH),
-        instruction: this.buildTaskInstruction(graph, frontier.title, frontier.description),
+        instruction: this.buildTaskInstruction(graph, frontier.title, description),
         name: frontier.title,
         projectId: graph.goal.projectId ?? undefined,
       });
@@ -1696,14 +1810,23 @@ export class GoalService {
 
     const createdIds: (string | undefined)[] = [];
     for (const draft of draftTasks) {
+      const experiment = problem
+        ? await this.coordinatorGraph.createNode(goalId, {
+            kind: 'experiment',
+            title: draft.title,
+            description: draft.instruction,
+            questionId: problem.id,
+          })
+        : undefined;
       const node = await this.coordinatorGraph.createNode(goalId, {
+        scopeId: experiment?.id,
         description: draft.instruction,
         kind: 'task',
         title: draft.title,
       });
       createdIds.push(node?.id);
       if (!node) continue;
-      if (problem)
+      if (problem && !experiment)
         await this.coordinatorGraph.createEdge(goalId, problem.id, node.id, 'decomposes');
       effects.push({ nodeId: node.id, type: 'created_node', detail: draft.title });
     }
@@ -1883,6 +2006,7 @@ export class GoalService {
         confidence: 1,
         description: handoff?.content ?? handoff?.summary ?? undefined,
         kind: 'finding',
+        scopeId: experimentOwner(graph, nodeId),
         status: 'resolved',
         title:
           handoff?.title ??
@@ -1926,6 +2050,7 @@ export class GoalService {
         kind: 'decision',
         status: 'waiting',
         title: 'Choose how to recover failed task',
+        scopeId: experimentOwner(graph, nodeId),
       });
       if (node) {
         effects.push({ detail: reason, nodeId, targetId: node.id, type: 'opened_decision' });
