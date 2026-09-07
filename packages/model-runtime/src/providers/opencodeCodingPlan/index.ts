@@ -441,6 +441,11 @@ const LobeOpenCodeCodingPlanOpenAI = createOpenAICompatibleRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_OPENCODE_GO_CHAT_COMPLETION === '1',
   },
+  generateObject: {
+    get useResponseModels() {
+      return [...getResponsesModelIds()];
+    },
+  },
 });
 
 // Anthropic SDK auto-appends /v1/messages to baseURL, so strip trailing /v1
