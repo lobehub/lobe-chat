@@ -348,6 +348,7 @@ export class ChatTopicActionImpl {
             messagesForTitle,
             userGeneralSettingsSelectors.currentResponseLanguage(useUserStore.getState()),
           ),
+          metadata: { topicId },
           model,
           provider,
           schema: TOPIC_TITLE_JSON_SCHEMA,

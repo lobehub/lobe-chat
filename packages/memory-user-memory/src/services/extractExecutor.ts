@@ -271,6 +271,7 @@ export class MemoryExtractionService<RO> {
         callbacks: options.callbacks,
         gateKeeperLanguage: options.gateKeeperLanguage || 'English',
         retrievedContexts: options.retrievedContexts,
+        topicId: options.topicId,
         topK: options.topK,
       });
       this.recordGatekeeperMetrics(job, Date.now() - start, 'ok');
@@ -362,32 +363,27 @@ export class MemoryExtractionService<RO> {
       switch (layer) {
         case LayersEnum.Context: {
           outputs.context = result as
-            | { data: MemoryExtractionLayerOutputTypes[typeof layer] }
-            | { error: unknown };
+            { data: MemoryExtractionLayerOutputTypes[typeof layer] } | { error: unknown };
           break;
         }
         case LayersEnum.Activity: {
           outputs.activity = result as
-            | { data: MemoryExtractionLayerOutputTypes[typeof layer] }
-            | { error: unknown };
+            { data: MemoryExtractionLayerOutputTypes[typeof layer] } | { error: unknown };
           break;
         }
         case LayersEnum.Experience: {
           outputs.experience = result as
-            | { data: MemoryExtractionLayerOutputTypes[typeof layer] }
-            | { error: unknown };
+            { data: MemoryExtractionLayerOutputTypes[typeof layer] } | { error: unknown };
           break;
         }
         case LayersEnum.Preference: {
           outputs.preference = result as
-            | { data: MemoryExtractionLayerOutputTypes[typeof layer] }
-            | { error: unknown };
+            { data: MemoryExtractionLayerOutputTypes[typeof layer] } | { error: unknown };
           break;
         }
         case LayersEnum.Identity: {
           outputs.identity = result as
-            | { data: MemoryExtractionLayerOutputTypes[typeof layer] }
-            | { error: unknown };
+            { data: MemoryExtractionLayerOutputTypes[typeof layer] } | { error: unknown };
           break;
         }
         default: {

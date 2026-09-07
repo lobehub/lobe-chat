@@ -164,6 +164,7 @@ export abstract class BaseMemoryExtractor<
                   ...(options?.parentMemoryTraceKey
                     ? { parent_memory_trace_key: options.parentMemoryTraceKey }
                     : {}),
+                  ...(options?.topicId ? { topicId: options.topicId } : {}),
                   trigger: RequestTrigger.Memory,
                 },
               });
