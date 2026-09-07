@@ -434,6 +434,13 @@ export interface TaskDetailActivityAuthor {
   id: string;
   name?: string | null;
   type: 'agent' | 'user';
+  /**
+   * The id is recorded but no live row backs it — deleted, or owned by someone
+   * else and filtered out of this viewer's scope. Distinct from a resolved row
+   * whose display name happens to be empty, and from no author at all (which
+   * means the system acted). Collapsing the three misattributes history.
+   */
+  unresolved?: boolean;
 }
 
 export interface TaskDetailActivityAgent {

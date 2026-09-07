@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/>이(가) 작업을 <target/>에게 할당했습니다",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/>이(가) 담당자를 제거했습니다",
   "taskDetail.activities.assignment.systemActor": "시스템",
+  "taskDetail.activities.assignment.unnamedParticipant": "이름 없음",
   "taskDetail.activities.fallback.brief": "브리프를 게시했습니다",
   "taskDetail.activities.fallback.comment": "댓글을 남겼습니다",
   "taskDetail.activities.fallback.created": "작업을 생성함",

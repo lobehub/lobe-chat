@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> назначил задачу <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> удалил исполнителя",
   "taskDetail.activities.assignment.systemActor": "Система",
+  "taskDetail.activities.assignment.unnamedParticipant": "Безымянный",
   "taskDetail.activities.fallback.brief": "опубликовал(а) краткое описание",
   "taskDetail.activities.fallback.comment": "оставил(а) комментарий",
   "taskDetail.activities.fallback.created": "создал(а) задачу",

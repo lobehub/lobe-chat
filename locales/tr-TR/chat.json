@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> görevi <target/> kişisine atadı",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> atanan kişiyi kaldırdı",
   "taskDetail.activities.assignment.systemActor": "Sistem",
+  "taskDetail.activities.assignment.unnamedParticipant": "Adsız",
   "taskDetail.activities.fallback.brief": "bir özet paylaştı",
   "taskDetail.activities.fallback.comment": "bir yorum bıraktı",
   "taskDetail.activities.fallback.created": "görevi oluşturdu",

@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> przypisał zadanie do <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> usunął przypisanego użytkownika",
   "taskDetail.activities.assignment.systemActor": "System",
+  "taskDetail.activities.assignment.unnamedParticipant": "Nieznany",
   "taskDetail.activities.fallback.brief": "opublikował(a) szkic",
   "taskDetail.activities.fallback.comment": "zostawił(a) komentarz",
   "taskDetail.activities.fallback.created": "utworzył zadanie",

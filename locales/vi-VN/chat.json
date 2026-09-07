@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> đã giao nhiệm vụ cho <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> đã xóa người được giao nhiệm vụ",
   "taskDetail.activities.assignment.systemActor": "Hệ thống",
+  "taskDetail.activities.assignment.unnamedParticipant": "Chưa đặt tên",
   "taskDetail.activities.fallback.brief": "đã đăng một bản tóm tắt",
   "taskDetail.activities.fallback.comment": "đã để lại bình luận",
   "taskDetail.activities.fallback.created": "đã tạo nhiệm vụ",

@@ -480,6 +480,19 @@ export function registerTaskCommand(program: Command) {
             } else if (act.type === 'comment') {
               const author = act.agentId ? `🤖 ${act.agentId}` : '👤 user';
               console.log(`  💭 ${pc.dim(ago.padStart(7))} ${pc.cyan(author)} ${act.content}`);
+            } else if (act.type === 'assignment') {
+              // Same three-state naming as `assignmentParticipantLabel` in
+              // @lobechat/prompts; inlined rather than adding a package
+              // dependency for three lines.
+              const label = (
+                party?: { id: string; name?: string | null } | null,
+                absent = 'unassigned',
+              ) => (party ? party.name || party.id : absent);
+              const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
+              const actor = label(act.author, 'system');
+              console.log(
+                `  👥 ${pc.dim(ago.padStart(7))} ${pc.cyan(actor)} set ${slot} assignee: ${label(act.assignment?.from)} → ${label(act.assignment?.to)}${idSuffix}`,
+              );
             }
           }
         }

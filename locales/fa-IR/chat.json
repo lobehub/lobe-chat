@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> وظیفه را به <target/> اختصاص داد",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> مسئول را حذف کرد",
   "taskDetail.activities.assignment.systemActor": "سیستم",
+  "taskDetail.activities.assignment.unnamedParticipant": "نام‌گذاری نشده",
   "taskDetail.activities.fallback.brief": "یک خلاصه ارسال کرد",
   "taskDetail.activities.fallback.comment": "دیدگاهی گذاشت",
   "taskDetail.activities.fallback.created": "وظیفه را ایجاد کرد",

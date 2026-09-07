@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> قام بتعيين المهمة إلى <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> قام بإزالة المُكلف",
   "taskDetail.activities.assignment.systemActor": "النظام",
+  "taskDetail.activities.assignment.unnamedParticipant": "غير مسمى",
   "taskDetail.activities.fallback.brief": "نشر موجزًا",
   "taskDetail.activities.fallback.comment": "ترك تعليقًا",
   "taskDetail.activities.fallback.created": "أنشأ المهمة",

@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> ha assegnato il compito a <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> ha rimosso l'assegnatario",
   "taskDetail.activities.assignment.systemActor": "Sistema",
+  "taskDetail.activities.assignment.unnamedParticipant": "Senza nome",
   "taskDetail.activities.fallback.brief": "ha pubblicato un brief",
   "taskDetail.activities.fallback.comment": "ha lasciato un commento",
   "taskDetail.activities.fallback.created": "ha creato l’attività",

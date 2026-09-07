@@ -1139,13 +1139,20 @@ export class TaskService {
       }),
       ...activityLogs.map((log) => {
         const kind: TaskAssignmentKind = log.type === 'assignee_agent' ? 'agent' : 'member';
-        // A missing author row means the member or agent has since been
-        // deleted. Keep a bare stub instead of collapsing to `null`: `null`
-        // reads as "unassigned" in the feed, which would turn a reassignment
-        // into a removal.
+        // A missing author row means the participant is gone, or is private to
+        // another member and filtered out of this viewer's scope. Keep a stub
+        // instead of collapsing to `null`/`undefined`: `null` reads as
+        // "unassigned" (turning a reassignment into a removal) and an absent
+        // actor reads as the system (falsely crediting it for an agent's work).
+        const stub = (id: string, type: 'agent' | 'user'): TaskDetailActivityAuthor => ({
+          id,
+          name: null,
+          type,
+          unresolved: true,
+        });
         const resolveSide = (id?: string | null): TaskDetailActivityAuthor | null => {
           if (!id) return null;
-          return authorMap.get(id) ?? { id, name: null, type: kind === 'agent' ? 'agent' : 'user' };
+          return authorMap.get(id) ?? stub(id, kind === 'agent' ? 'agent' : 'user');
         };
         return {
           assignment: {
@@ -1154,10 +1161,11 @@ export class TaskService {
             to: resolveSide(log.payload?.toId),
           },
           author: log.actorAgentId
-            ? authorMap.get(log.actorAgentId)
+            ? (authorMap.get(log.actorAgentId) ?? stub(log.actorAgentId, 'agent'))
             : log.actorUserId
-              ? authorMap.get(log.actorUserId)
-              : undefined,
+              ? (authorMap.get(log.actorUserId) ?? stub(log.actorUserId, 'user'))
+              : // Genuinely nobody: the runner's system fallback.
+                undefined,
           id: log.id,
           time: toISO(log.createdAt),
           type: 'assignment' as const,
@@ -1245,11 +1253,14 @@ export class TaskService {
       UserModel.findByIds(this.db, [...userIds]),
     ]);
 
+    // Both display columns are nullable, so fall back to the other one the
+    // query already returns rather than letting a live participant render as
+    // nameless — the UI reserves its nameless labels for absent identities.
     for (const a of agentRows) {
-      map.set(a.id, { avatar: a.avatar, id: a.id, name: a.title, type: 'agent' });
+      map.set(a.id, { avatar: a.avatar, id: a.id, name: a.title || a.name, type: 'agent' });
     }
     for (const u of userRows) {
-      map.set(u.id, { avatar: u.avatar, id: u.id, name: u.fullName, type: 'user' });
+      map.set(u.id, { avatar: u.avatar, id: u.id, name: u.fullName || u.username, type: 'user' });
     }
 
     return map;

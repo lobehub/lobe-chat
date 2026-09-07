@@ -1733,6 +1733,55 @@ describe('TaskService', () => {
   });
 
   describe('assignee activity log', () => {
+    it('keeps the actor identity when the agent is invisible to this viewer', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        createdAt: null,
+        heartbeatInterval: null,
+        heartbeatTimeout: null,
+        id: 'task_001',
+        identifier: 'TASK-1',
+        instruction: 'Do something',
+        lastHeartbeatAt: null,
+        parentTaskId: null,
+        priority: 'normal',
+        status: 'todo',
+      });
+      mockTaskModel.findAllDescendants.mockResolvedValue([]);
+      mockTaskModel.getDependencies.mockResolvedValue([]);
+      mockTaskTopicModel.findWithHandoff.mockResolvedValue([]);
+      mockTaskModel.getComments.mockResolvedValue([]);
+      mockTaskModel.getTreePinnedDocuments.mockResolvedValue({ nodeMap: {}, tree: [] });
+      mockTaskModel.findByIds.mockResolvedValue([]);
+      mockTaskModel.getCheckpointConfig.mockReturnValue({});
+      mockTaskModel.getVerifyConfig.mockReturnValue(undefined);
+      mockTaskModel.getActivities.mockResolvedValue([
+        {
+          actorAgentId: 'agt_private_to_someone_else',
+          actorUserId: null,
+          createdAt: new Date('2024-01-01T00:05:00Z'),
+          id: 'tac_1',
+          payload: { fromId: null, toId: 'agt_x' },
+          type: 'assignee_agent',
+        },
+      ]);
+      // `getAgentAvatarsByIds` filters by ownership, so another member's
+      // private agent resolves to nothing here.
+      mockAgentModel.getAgentAvatarsByIds.mockResolvedValue([]);
+      vi.mocked(UserModel.findByIds).mockResolvedValue([]);
+
+      const result = await new TaskService(db, userId, 'ws-1').getTaskDetail('TASK-1');
+      const [assignment] = result?.activities?.filter((a) => a.type === 'assignment') ?? [];
+
+      // An absent author means the SYSTEM acted. An agent we simply cannot see
+      // must not borrow that meaning.
+      expect(assignment?.author).toEqual({
+        id: 'agt_private_to_someone_else',
+        name: null,
+        type: 'agent',
+        unresolved: true,
+      });
+    });
+
     it('routes the update through the transactional logging path with the actor', async () => {
       mockTaskModel.updateWithAssignmentLog.mockResolvedValue({ id: 'task_001' });
 
@@ -1812,8 +1861,10 @@ describe('TaskService', () => {
       });
       // An unresolvable id keeps a stub instead of collapsing to null, so a
       // reassignment away from a deleted agent is not read as "never assigned".
+      // The stub is flagged `unresolved` so the renderers can tell "gone or
+      // invisible to me" apart from a live participant with an empty name.
       expect(assignments?.[1]?.assignment).toEqual({
-        from: { id: 'agt_gone', name: null, type: 'agent' },
+        from: { id: 'agt_gone', name: null, type: 'agent', unresolved: true },
         kind: 'agent',
         to: null,
       });

@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> 将任务指派给 <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> 取消了成员指派",
   "taskDetail.activities.assignment.systemActor": "系统",
+  "taskDetail.activities.assignment.unnamedParticipant": "未命名",
   "taskDetail.activities.fallback.brief": "发布了简要说明",
   "taskDetail.activities.fallback.comment": "留下了评论",
   "taskDetail.activities.fallback.created": "创建了任务",

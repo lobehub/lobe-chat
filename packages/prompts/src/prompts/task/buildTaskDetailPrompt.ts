@@ -1,5 +1,5 @@
 import type { TaskDetailData, TaskDetailWorkspaceNode } from './index';
-import { briefIcon, priorityLabel, statusIcon, timeAgo } from './index';
+import { assignmentParticipantLabel, briefIcon, priorityLabel, statusIcon, timeAgo } from './index';
 import type { TaskManagerPromptDefaults } from './taskManagerDefaults';
 import { buildTaskManagerDefaultsBlock } from './taskManagerDefaults';
 
@@ -105,15 +105,10 @@ export const buildTaskDetailPrompt = (input: BuildTaskDetailPromptInput, now?: D
       } else if (act.type === 'assignment') {
         // Who owns this task has changed hands before; the agent reading the
         // detail should see that history, not just the current chip.
-        const side = (party?: { id: string; name?: string | null } | null) =>
-          party?.name || party?.id || 'unassigned';
         const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
-        // No author means the system did it (the runner assigning its fallback
-        // inbox agent), not an unnamed person — `someone` would be false
-        // provenance in the context an agent reads.
-        const actor = act.author ? act.author.name || act.author.id : 'system';
+        const actor = assignmentParticipantLabel(act.author, 'system');
         lines.push(
-          `  👥 ${ago} ${actor} set ${slot} assignee: ${side(act.assignment?.from)} → ${side(act.assignment?.to)}${idSuffix}`,
+          `  👥 ${ago} ${actor} set ${slot} assignee: ${assignmentParticipantLabel(act.assignment?.from)} → ${assignmentParticipantLabel(act.assignment?.to)}${idSuffix}`,
         );
       }
     }

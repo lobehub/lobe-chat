@@ -77,11 +77,23 @@ const getRowText = (act: TaskDetailActivity, t: TFunction<'chat'>): string => {
 const ActivityAuthor = memo<{
   author?: TaskDetailActivityAuthor | null;
   fallbackIcon: LucideIcon;
+  /** Shown when there is no author at all — an assignment nobody requested. */
   fallbackName?: string;
-}>(({ author, fallbackIcon: FallbackIcon, fallbackName }) => {
+  /** Shown when the id is recorded but no live row backs it. */
+  unresolvedName?: string;
+}>(({ author, fallbackIcon: FallbackIcon, fallbackName, unresolvedName }) => {
   const { t } = useTranslation('chat');
   const isAgent = author?.type === 'agent';
-  const name = author?.name || fallbackName;
+  // Three states, deliberately not collapsed: no author is the system; a
+  // recorded id with no live row is gone or invisible to this viewer; a
+  // resolved row with an empty display name is still a real participant and
+  // must not borrow either of the other two labels.
+  const name = author
+    ? author.name ||
+      (author.unresolved
+        ? unresolvedName
+        : t('taskDetail.activities.assignment.unnamedParticipant'))
+    : fallbackName;
 
   const node = (
     <Flexbox
@@ -184,13 +196,18 @@ const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
                 author={activity.author}
                 fallbackIcon={UserRoundCog}
                 fallbackName={t(systemActorKey)}
+                unresolvedName={t(
+                  activity.author?.type === 'agent'
+                    ? 'taskDetail.activities.assignment.deletedAgent'
+                    : 'taskDetail.activities.assignment.deletedMember',
+                )}
               />
             ),
             target: (
               <ActivityAuthor
                 author={target}
                 fallbackIcon={isAgentSlot ? BotMessageSquare : UserRoundCog}
-                fallbackName={t(deletedTargetKey)}
+                unresolvedName={t(deletedTargetKey)}
               />
             ),
           }}

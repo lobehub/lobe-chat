@@ -1544,6 +1544,7 @@ export default {
   'taskDetail.activities.assignment.memberAssigned': '<actor/> assigned the task to <target/>',
   'taskDetail.activities.assignment.memberUnassigned': '<actor/> removed the assignee',
   'taskDetail.activities.assignment.systemActor': 'System',
+  'taskDetail.activities.assignment.unnamedParticipant': 'Unnamed',
   'taskDetail.activities.fallback.brief': 'posted a brief',
   'taskDetail.activities.fallback.comment': 'left a comment',
   'taskDetail.activities.fallback.created': 'created the task',

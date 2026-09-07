@@ -65,6 +65,23 @@ export interface TaskSummary {
  * resolve a relative path against. Omit it only for in-app (SPA) rendering,
  * where a relative path resolves against the current origin and is more durable.
  */
+/**
+ * One rule for naming an assignment participant, so every task-detail surface
+ * tells the same story about who acted.
+ *
+ * The three states are deliberately distinct: no author means the system acted
+ * (the runner assigning its fallback agent); a recorded id with no live row is
+ * deleted or invisible to this reader; a resolved row with an empty display
+ * name is still a real participant.
+ */
+export const assignmentParticipantLabel = (
+  party?: { id: string; name?: string | null; unresolved?: boolean } | null,
+  absentLabel = 'unassigned',
+): string => {
+  if (!party) return absentLabel;
+  return party.name || party.id;
+};
+
 export const taskDetailHref = (identifier: string, baseUrl?: string): string => {
   const path = `/task/${identifier}`;
   return baseUrl ? `${baseUrl.replace(/\/$/, '')}${path}` : path;
@@ -296,6 +313,14 @@ export const formatTaskDetail = (t: TaskDetailData): string => {
         const content = act.content || '';
         const truncated = content.length > 80 ? content.slice(0, 80) + '...' : content;
         lines.push(`  💭 ${act.time || ''} ${author} ${truncated}${idSuffix}`);
+      } else if (act.type === 'assignment') {
+        // Who owns the task changed hands; a formatter that drops the event
+        // shows a reader an assignee they cannot account for.
+        const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
+        const actor = assignmentParticipantLabel(act.author, 'system');
+        lines.push(
+          `  👥 ${act.time || ''} ${actor} set ${slot} assignee: ${assignmentParticipantLabel(act.assignment?.from)} → ${assignmentParticipantLabel(act.assignment?.to)}${idSuffix}`,
+        );
       }
     }
   }

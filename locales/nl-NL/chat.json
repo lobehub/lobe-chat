@@ -1602,6 +1602,7 @@
   "taskDetail.activities.assignment.memberAssigned": "<actor/> heeft de taak toegewezen aan <target/>",
   "taskDetail.activities.assignment.memberUnassigned": "<actor/> heeft de toegewezene verwijderd",
   "taskDetail.activities.assignment.systemActor": "Systeem",
+  "taskDetail.activities.assignment.unnamedParticipant": "Naamloos",
   "taskDetail.activities.fallback.brief": "plaatste een brief",
   "taskDetail.activities.fallback.comment": "liet een reactie achter",
   "taskDetail.activities.fallback.created": "heeft de taak aangemaakt",
