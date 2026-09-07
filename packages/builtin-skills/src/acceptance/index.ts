@@ -14,6 +14,7 @@ import recordingCdp from './references/recording-cdp.md';
 import recordingIosSimulator from './references/recording-ios-simulator.md';
 import recordingNativeMacos from './references/recording-native-macos.md';
 import report from './references/report.md';
+import testerReview from './references/tester-review.md';
 import content from './SKILL.md';
 import cli from './surfaces/cli.md';
 import electron from './surfaces/electron.md';
@@ -74,6 +75,7 @@ export const AcceptanceSkill: BuiltinSkill = {
     'references/recording-ios-simulator.md': recordingIosSimulator,
     'references/recording-native-macos.md': recordingNativeMacos,
     'references/report.md': report,
+    'references/tester-review.md': testerReview,
     'surfaces/cli.md': cli,
     'surfaces/electron.md': electron,
     'surfaces/ios-simulator.md': iosSimulator,

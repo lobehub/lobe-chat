@@ -56,9 +56,7 @@ export class ElectronGatewayActionImpl {
 
   useFetchGatewayDeviceInfo = (): SWRResponse<GatewayDeviceInfo> => {
     return useSWR<GatewayDeviceInfo>(
-      // Desktop-only IPC: on web there is no electronAPI, and under a
-      // suspense-mode SWRConfig a rejected fetch throws into the route
-      // boundary instead of staying in `error` — so never fetch off-desktop.
+      // Desktop-only IPC: on web there is no electronAPI, so never fetch off-desktop.
       isDesktop ? electronKeys.gatewayDeviceInfo() : null,
       async () => gatewayConnectionService.getDeviceInfo() as Promise<GatewayDeviceInfo>,
       {

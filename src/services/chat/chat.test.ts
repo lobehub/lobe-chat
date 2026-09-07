@@ -17,8 +17,10 @@ import { agentSelectors, chatConfigByIdSelectors } from '@/store/agent/selectors
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useChatStore } from '@/store/chat';
 import { useToolStore } from '@/store/tool';
+import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
+import * as chatHelper from './helper';
 import { chatService } from './index';
 import * as mechaModule from './mecha';
 import { type ResolvedAgentConfig } from './mecha';
@@ -1777,6 +1779,29 @@ describe('ChatService', () => {
       mockFetchSSE = vi.fn().mockResolvedValue(new Response('mock response'));
       vi.mocked(fetchSSE).mockImplementation(mockFetchSSE);
       mockCreateHeaderWithAuth.mockClear();
+    });
+
+    it('should preserve the topic ID when using the browser runtime', async () => {
+      vi.spyOn(chatHelper, 'isEnableFetchOnClient').mockReturnValue(true);
+      useUserStore.setState({ isSignedIn: true });
+      const runtime = await import('@lobechat/model-runtime');
+      const chat = vi.fn().mockResolvedValue(new Response('ok'));
+      vi.spyOn(mechaModule, 'initializeWithClientStore').mockResolvedValue(
+        new runtime.ModelRuntime({ chat }),
+      );
+      mockFetchSSE.mockImplementation(
+        async (_url: string, options: { fetcher: () => Promise<Response> }) => options.fetcher(),
+      );
+
+      await chatService.getChatCompletion(
+        { messages: [], model: 'glm-5', provider: ModelProvider.OpenCodeCodingPlan },
+        { topicId: 'topic-browser' },
+      );
+
+      expect(chat).toHaveBeenCalledWith(
+        expect.not.objectContaining({ topicId: expect.anything() }),
+        expect.objectContaining({ metadata: { topicId: 'topic-browser' } }),
+      );
     });
 
     it('should make a POST request with the correct payload', async () => {

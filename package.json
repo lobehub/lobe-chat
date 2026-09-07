@@ -26,6 +26,7 @@
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": [
     "./src/initialize.ts",
+    "./src/libs/providerIcon.ts",
     "./src/spa/entry.auth.tsx",
     "./src/spa/entry.desktop.tsx",
     "./src/spa/entry.mobile.tsx",
@@ -309,7 +310,7 @@
     "@lobehub/charts": "^5.4.0",
     "@lobehub/desktop-ipc-typings": "workspace:*",
     "@lobehub/editor": "^4.23.1",
-    "@lobehub/icons": "^5.15.0",
+    "@lobehub/icons": "^5.18.0",
     "@lobehub/market-sdk": "0.41.0",
     "@lobehub/tts": "^5.1.2",
     "@lobehub/ui": "^5.38.0",

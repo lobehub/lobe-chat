@@ -30,8 +30,20 @@ import type { AnyPgColumn } from 'drizzle-orm/pg-core';
 import { merge } from '@/utils/merge';
 
 import { documents } from '../schemas/file';
-import type { NewTaskComment, TaskCommentItem } from '../schemas/task';
-import { taskComments, taskDependencies, taskDocuments, tasks, taskTopics } from '../schemas/task';
+import type {
+  NewTaskActivity,
+  NewTaskComment,
+  TaskActivityItem,
+  TaskCommentItem,
+} from '../schemas/task';
+import {
+  taskActivities,
+  taskComments,
+  taskDependencies,
+  taskDocuments,
+  tasks,
+  taskTopics,
+} from '../schemas/task';
 import { topics } from '../schemas/topic';
 import { acceptances } from '../schemas/verify';
 import { works } from '../schemas/work';
@@ -485,6 +497,11 @@ export class TaskModel {
           .update(taskComments)
           .set({ visibility })
           .where(and(inArray(taskComments.taskId, taskIds), this.commentsOwnership()));
+
+        await tx
+          .update(taskActivities)
+          .set({ visibility })
+          .where(and(inArray(taskActivities.taskId, taskIds), this.activitiesOwnership()));
       }
 
       return updated ?? null;
@@ -1828,6 +1845,44 @@ export class TaskModel {
     return comment;
   }
 
+  // ========== Activities ==========
+
+  private activitiesOwnership = () =>
+    this.childOwnership({
+      userId: taskActivities.userId,
+      visibility: taskActivities.visibility,
+      workspaceId: taskActivities.workspaceId,
+    });
+
+  /**
+   * Append one event row. Mirrors the parent task's visibility onto the row so
+   * subsequent reads can be filtered without a JOIN — same contract as
+   * `addComment`.
+   */
+  async addActivity(
+    data: Omit<NewTaskActivity, 'id' | 'userId' | 'workspaceId' | 'visibility'>,
+  ): Promise<TaskActivityItem> {
+    const visibility = await this.getTaskVisibility(data.taskId);
+    const [activity] = await this.db
+      .insert(taskActivities)
+      .values({
+        ...data,
+        userId: this.userId,
+        visibility,
+        workspaceId: this.workspaceId ?? null,
+      })
+      .returning();
+    return activity;
+  }
+
+  async getActivities(taskId: string): Promise<TaskActivityItem[]> {
+    return this.db
+      .select()
+      .from(taskActivities)
+      .where(and(eq(taskActivities.taskId, taskId), this.activitiesOwnership()))
+      .orderBy(taskActivities.createdAt);
+  }
+
   // ========== Transfer / Copy ==========
 
   /**
@@ -1879,9 +1934,14 @@ export class TaskModel {
 
   /**
    * Transfer a task subtree to another workspace / personal scope. Reallocates
-   * `identifier`/`seq` in the target scope and rewrites every dependent child
-   * table (`task_dependencies`, `task_documents`, `task_topics`,
-   * `task_comments`, `briefs`) so the ownership predicates remain consistent.
+   * `identifier`/`seq` in the target scope and rewrites the child tables that
+   * mirror the parent's ownership (`task_dependencies`, `task_documents`,
+   * `task_comments`, `task_activities`) so the ownership predicates keep
+   * resolving after the move — those mirrored columns are what authorizes
+   * reads, so a child left behind goes invisible in the destination scope.
+   *
+   * NOTE: `task_topics` and `briefs` carry the same mirrored columns but are
+   * not rewritten here. Pre-existing gap, called out rather than widened.
    *
    * Cross-scope references that may no longer be valid are cleared:
    *   - `assigneeAgentId` (workspace move: agent likely doesn't exist there)
@@ -1958,6 +2018,10 @@ export class TaskModel {
         .update(taskComments)
         .set({ ...ownershipUpdate, ...visibilityUpdate })
         .where(inArray(taskComments.taskId, ids));
+      await (trx as LobeChatDatabase)
+        .update(taskActivities)
+        .set({ ...ownershipUpdate, ...visibilityUpdate })
+        .where(inArray(taskActivities.taskId, ids));
 
       return { taskIds: ids };
     });

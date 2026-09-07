@@ -1002,7 +1002,9 @@ export default {
   'settingAgent.modelPolicy.fixedTip':
     'The model is fixed in Agent Profile and cannot be switched while chatting.',
   'settingAgent.modelPolicy.title': 'Model',
-  'settingAgent.runtimeConfig.title': 'Model & Tools',
+  'settingAgent.runtimeConfig.reasoningEffortHint':
+    'Your default reasoning effort for this model. Shared by every agent using it; each topic keeps the effort it started with and can change it from the chat input.',
+  'settingAgent.runtimeConfig.title': 'Model & Reasoning Effort',
   'settingAgent.selectionPolicy.membersCannotSwitch': 'Locked',
   'settingAgent.selectionPolicy.membersCannotSwitchWhenShared': 'Locked when shared',
   'settingAgent.selectionPolicy.membersCanSwitch': 'Can switch',
@@ -3324,12 +3326,6 @@ When I am ___, I need ___
   'workspaceSetting.tab.labels': 'Labels',
   'workspaceSetting.tab.members': 'Members',
   'workspaceSetting.storage.comingSoon': 'Workspace-scoped data import & export is coming soon.',
-  'workspaceSetting.storage.danger.reset.confirm.content':
-    'Every workspace setting goes back to its default, for everyone in the workspace. Agents, conversations, and files are not touched.',
-  'workspaceSetting.storage.danger.reset.confirm.ok': 'Reset Settings',
-  'workspaceSetting.storage.danger.reset.desc':
-    'Restore all workspace settings to defaults. Workspace data will not be deleted.',
-  'workspaceSetting.storage.danger.reset.title': 'Reset Workspace Settings',
   'workspaceSetting.storage.telemetry.desc':
     'Help us improve {{appName}} with anonymous workspace usage data',
   'workspaceSetting.storage.telemetry.title': 'Send Anonymous Workspace Usage Data',

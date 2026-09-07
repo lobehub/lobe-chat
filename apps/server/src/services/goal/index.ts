@@ -418,17 +418,32 @@ export class GoalService {
     );
   };
 
-  setMetricCriteria = async (goalId: string, metrics: GoalMetricCriterion[]) => {
+  setMetricCriteria = async (
+    goalId: string,
+    metrics: GoalMetricCriterion[],
+    /**
+     * `merge` upserts by key into the list as it stands on the server —
+     * for callers declaring one clause, whose own snapshot may be stale.
+     * A client-built replacement array would silently drop whatever a
+     * concurrent editor or agent declared since that snapshot was read.
+     */
+    mode: 'merge' | 'replace' = 'replace',
+  ) => {
     const before = await this.coordinatorGraph.getGraph(goalId);
     if (!before) throw new TRPCError({ code: 'NOT_FOUND', message: 'Goal not found' });
     const parkedOnGate = this.isParkedOnMeasuredGate(before);
     const goal = before.goal;
+    const current = goal.config?.acceptance?.metrics ?? [];
+    const next =
+      mode === 'merge'
+        ? [...current.filter((item) => !metrics.some((m) => m.key === item.key)), ...metrics]
+        : metrics;
     await this.goalModel.update(goalId, {
       config: {
         ...goal.config,
         acceptance: {
           ...goal.config?.acceptance,
-          metrics: metrics.length > 0 ? metrics : undefined,
+          metrics: next.length > 0 ? next : undefined,
         },
       },
     });
@@ -1616,6 +1631,8 @@ export class GoalService {
       description,
       'Execute only the Current Task contract. Do not implement, validate, or pre-empt any sibling or downstream Task node, even when the overall goal context describes it.',
       'The complete requirements for this Task are included here. Do not inspect unrelated agent documents to recover requirements. This Task carries its own Acceptance: run it inside this Task — drive the real product surface, capture the evidence, and submit it against your own criteria while you work. Submit evidence only; an independent verifier judges whether this Task is complete.',
+      'For a Task that owns implementation, missing or broken capabilities within its scope are work to implement or repair, not a reason to stop at a capability report or ask the user for a finished implementation. Establish the runnable environment needed to exercise your changes, within the authorized scope. After failed verification, use the feedback to change the implementation or resolve the prerequisite before repeating the same checks; report a blocker only when progress requires unavailable external access, a user decision, or work outside this Task.',
+      'For an investigation-only Task, deliver supported findings, gaps, and actionable next steps; do not silently expand into implementation. For a verification-only Task, report missing behavior honestly and identify the prerequisite or implementation work needed. Never claim a working product from a report or weaken the Current Task pass conditions to make it pass.',
       'Create implementation-level subtasks when useful. Finish the operation once the Current Task deliverable and its concrete evidence are ready; Acceptance verification will decide whether this Task is complete.',
       'Make the final delivery self-contained for an independent verifier that may not have workspace access. Include the relevant artifact contents or exact excerpts and the raw outputs of decisive verification commands; file paths and claims that checks passed are not sufficient evidence by themselves.',
       // A path on the machine that happened to run the task is not a

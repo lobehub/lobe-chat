@@ -49,3 +49,53 @@ test('stripHash removes the trailing rolldown hash including hashes starting wit
   assert.equal(stripHash('assets/es-DBDe-NCK.js'), 'assets/es.js');
   assert.equal(stripHash('assets/index-CDFWou5k.js'), 'assets/index.js');
 });
+
+const { spawnSync } = require('node:child_process');
+
+const runCheck = ({ baselineCount, currentCount, maxChunks }) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'size-gate-'));
+  const graph = (count) => ({
+    chunks: Object.fromEntries(
+      Array.from({ length: count }, (_, i) => [`assets/chunk-${i}.js`, 1]),
+    ),
+    count,
+    entry: 'assets/index.js',
+    gz: count,
+  });
+  const write = (name, count) =>
+    fs.writeFileSync(
+      path.join(root, name),
+      JSON.stringify({
+        graphs: { 'dist/desktop': graph(count) },
+        sizes: { 'dist/desktop': count },
+      }),
+    );
+  write('baseline.json', baselineCount);
+  write('current.json', currentCount);
+
+  return spawnSync(
+    process.execPath,
+    [
+      path.join(__dirname, 'bundle-size-gate.cjs'),
+      'check',
+      '--current',
+      path.join(root, 'current.json'),
+      '--baseline',
+      path.join(root, 'baseline.json'),
+      '--max-chunks',
+      String(maxChunks),
+    ],
+    { encoding: 'utf8' },
+  );
+};
+
+test('chunk count over the fixed ceiling fails the gate', () => {
+  const result = runCheck({ baselineCount: 3, currentCount: 5, maxChunks: 4 });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /more than 4 chunks/);
+});
+
+test('new chunk names alone do not fail the gate while under the ceiling', () => {
+  const result = runCheck({ baselineCount: 1, currentCount: 4, maxChunks: 4 });
+  assert.equal(result.status, 0);
+});

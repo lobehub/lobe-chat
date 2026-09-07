@@ -12,7 +12,6 @@ import { Outlet } from 'react-router';
 import WorkspaceContextSlot from '@/business/client/WorkspaceContextSlot';
 import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
 import { isDesktop } from '@/const/version';
-import { useIsAgentShareVisitorRoute } from '@/features/AgentRoute/useAgentShareVisitorRoute';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import DesktopBrowserGatewayBridge from '@/features/DesktopBrowserGatewayBridge';
 import DesktopFileMenuBridge from '@/features/DesktopFileMenuBridge';
@@ -46,17 +45,15 @@ const GlobalApprovalNotification = dynamic(() => import('@/features/GlobalApprov
 const Layout: FC = () => {
   const { isPWA } = usePlatform();
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
-  // An agent-share visitor has no access to the nav's data, so the panel would
-  // stay a grey skeleton — unmount it for that branch of `/agent/:aid`.
-  const isShareVisitor = useIsAgentShareVisitorRoute();
 
   return (
     <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
+      {isDesktop && <DesktopAutoOidcOnFirstOpen />}
+      {isDesktop && <AuthRequiredModal />}
       <WorkspaceContextSlot>
         <RouteMetaBridge />
         {isDesktop && <TabCacheBridges />}
         <Suspense fallback={null}>
-          {isDesktop && <DesktopAutoOidcOnFirstOpen />}
           {isDesktop && <DesktopNavigationBridge />}
           {isDesktop && <DesktopFileMenuBridge />}
           {isDesktop && <DesktopBrowserGatewayBridge />}
@@ -65,7 +62,6 @@ const Layout: FC = () => {
           {isDesktop && <OverlayMessageDispatcher />}
           {showCloudPromotion && <CloudBanner />}
         </Suspense>
-        {isDesktop && <AuthRequiredModal />}
         {isDesktop && <ZoomHUD />}
 
         <Suspense fallback={null}>{isDesktop && <TitleBar />}</Suspense>
@@ -82,7 +78,7 @@ const Layout: FC = () => {
                   : '100%'
             }
           >
-            {!isShareVisitor && <NavPanelShell />}
+            <NavPanelShell />
             <DesktopLayoutContainer>
               <DesktopHomeLayout>
                 <DesktopHome />

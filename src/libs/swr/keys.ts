@@ -347,6 +347,7 @@ export const isMyTaskListKey = (key: unknown): boolean =>
  */
 export const goalKeys = {
   graph: def('goal:graph', (goalId: string) => ['goal:graph', goalId]),
+  metricSeries: def('goal:metricSeries', (goalId: string) => ['goal:metricSeries', goalId]),
 };
 
 export const taskKeys = {
@@ -819,6 +820,11 @@ export const knowledgeBaseKeys = {
 
 // ---- device -------------------------------------------------------------
 export const deviceKeys = {
+  browseDirectory: def(
+    'device:browseDirectory',
+    (workspaceId: string | null, deviceId: string, path?: string, cursor?: string) =>
+      ['device:browseDirectory', workspaceId, deviceId, path, cursor] as const,
+  ),
   gitAheadBehind: def('device:gitAheadBehind', (deviceId: string, path: string) => [
     'device:gitAheadBehind',
     deviceId,
@@ -1385,7 +1391,11 @@ export const userKeys = {
   initState: def('user:initState', () => ['user:initState']),
 };
 export const builtinAgentKeys = {
-  init: def('builtinAgent:init', (slug: string) => ['builtinAgent:init', slug]),
+  init: def('builtinAgent:init', (slug: string, scope: string) => [
+    'builtinAgent:init',
+    slug,
+    scope,
+  ]),
 };
 export const imessageKeys = {
   bridgeStatus: def('imessage:bridgeStatus', () => ['imessage:bridgeStatus']),

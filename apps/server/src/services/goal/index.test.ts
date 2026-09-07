@@ -840,6 +840,16 @@ describe('GoalService', () => {
       'Current Task contract (authoritative execution scope): Generate training data',
     );
     expect(task?.instruction).toContain('Do not implement, validate, or pre-empt any sibling');
+    expect(task?.instruction).toContain(
+      'missing or broken capabilities within its scope are work to implement or repair',
+    );
+    expect(task?.instruction).toContain(
+      'resolve the prerequisite before repeating the same checks',
+    );
+    expect(task?.instruction).toContain(
+      'For an investigation-only Task, deliver supported findings',
+    );
+    expect(task?.instruction).toContain('do not silently expand into implementation');
     expect(task?.instruction).toContain('run it inside this Task');
     expect(task?.instruction).toContain(
       'Include the relevant artifact contents or exact excerpts and the raw outputs of decisive verification commands',
@@ -1211,6 +1221,38 @@ describe('GoalService', () => {
 
     const rebound = await new GoalModel(serverDB, userId).findById(graph.goal.id);
     expect(rebound?.config?.acceptance?.metrics).toEqual([{ key: 'followers', target: 1000 }]);
+  });
+
+  it('merges a declared clause into the server-side list instead of replacing it', async () => {
+    // Two editors declaring from the same stale snapshot must not erase each
+    // other: merge upserts by key against the list as it stands on the server.
+    const service = new GoalService(serverDB, userId);
+    const goalModel = new GoalModel(serverDB, userId);
+    const graph = await service.create({
+      config: { acceptance: { metrics: [{ key: 'followers', target: 1000 }] } },
+      requirement: 'Grow the account',
+      tasks: ['Publish'],
+      title: 'Merge-mode goal',
+    });
+
+    // A "concurrent" declaration this client never saw.
+    await service.setMetricCriteria(
+      graph.goal.id,
+      [{ key: 'retention', op: 'gte', target: 80 }],
+      'merge',
+    );
+    // This client merges its own clause from a snapshot that predates it.
+    await service.setMetricCriteria(
+      graph.goal.id,
+      [{ key: 'followers', target: 2000, title: '粉丝' }],
+      'merge',
+    );
+
+    const metrics = (await goalModel.findById(graph.goal.id))?.config?.acceptance?.metrics;
+    expect(metrics).toHaveLength(2);
+    expect(metrics).toContainEqual({ key: 'retention', op: 'gte', target: 80 });
+    // Same-key merge upserts rather than duplicating.
+    expect(metrics).toContainEqual({ key: 'followers', target: 2000, title: '粉丝' });
   });
 
   it('declares numeric clauses after creation without touching the criteria binding', async () => {
