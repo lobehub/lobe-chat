@@ -19,6 +19,7 @@ import {
   checkRejectModalSize,
   mergeRejectComments,
   rejectModalTitle,
+  serializeReviewAnnotations,
   TEXT_REJECT_MODAL_WIDTH,
 } from './CheckRejectModal';
 
@@ -350,4 +351,19 @@ describe('focusedCheckStates', () => {
       });
     },
   );
+});
+
+describe('review annotation payload', () => {
+  it('keeps circles described by the overall comment and their image identity', () => {
+    const rect = { x: 0.1, y: 0.2, width: 0.3, height: 0.4 };
+    expect(
+      serializeReviewAnnotations([
+        { key: 1, evidenceId: 'first-image', comment: '', rect },
+        { key: 2, evidenceId: 'second-image', comment: ' Note ', rect },
+      ]),
+    ).toEqual([
+      { evidenceId: 'first-image', comment: undefined, rect },
+      { evidenceId: 'second-image', comment: 'Note', rect },
+    ]);
+  });
 });

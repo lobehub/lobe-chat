@@ -10,7 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { useIsHydrated } from '@/hooks/useIsHydrated';
 
 import { useAcceptanceScope } from './AcceptanceScope';
+import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
+import { useAcceptanceTurn } from './useAcceptanceTurn';
 
 const styles = createStaticStyles(({ css }) => ({
   /**
@@ -82,12 +84,13 @@ const AcceptanceResources = () => {
   const { t } = useTranslation('verify');
   const { lg = true, md = true } = useResponsive();
   const hydrated = useIsHydrated();
-  const { acceptanceId } = useAcceptanceScope();
+  const { acceptanceId, embedded } = useAcceptanceScope();
+  const { turn } = useAcceptanceTurn(embedded);
   const { data } = useAcceptanceBundle(acceptanceId);
   if (!data) return null;
 
   const seen = new Set<string>();
-  const items = data.checks
+  const items = checksForTurn(data, turn)
     .flatMap((check) =>
       (check.evidence ?? []).map((evidence) => ({ check: check.title, evidence })),
     )

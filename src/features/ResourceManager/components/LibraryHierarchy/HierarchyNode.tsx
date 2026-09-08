@@ -26,6 +26,7 @@ import { useTreeStore } from '@/store/tree';
 import { useFileItemClick } from '../Explorer/hooks/useFileItemClick';
 import { useFileItemDropdown } from '../Explorer/ItemDropdown/useFileItemDropdown';
 import FolderAddButton from './FolderAddButton';
+import HierarchyNodeMenuButton from './HierarchyNodeMenuButton';
 import { isHierarchyNodeActive, resolveDeletedFolderRedirect } from './selection';
 import { styles } from './styles';
 
@@ -372,7 +373,10 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
                 </span>
               )}
             </Flexbox>
-            {!flat && <FolderAddButton folderId={item.id} />}
+            <Flexbox horizontal align={'center'}>
+              {!flat && <FolderAddButton folderId={item.id} />}
+              <HierarchyNodeMenuButton menuItems={menuItems} />
+            </Flexbox>
           </Block>
         </Flexbox>
       );
@@ -433,6 +437,7 @@ export const HierarchyNode = memo<HierarchyNodeProps>(
               {item.name}
             </span>
           </Flexbox>
+          <HierarchyNodeMenuButton menuItems={menuItems} />
         </Block>
       </Flexbox>
     );

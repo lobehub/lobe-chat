@@ -1,6 +1,6 @@
 'use client';
 
-import { buildGoalRequirement, resolveGoalAttemptBudget } from '@lobechat/builtin-tool-goal';
+import { resolveGoalAttemptBudget } from '@lobechat/builtin-tool-goal';
 import type { CreateGoalParams, GoalCriterionDraft } from '@lobechat/builtin-tool-task';
 import { DEFAULT_GOAL_MAX_ROUNDS } from '@lobechat/const/verify';
 import { useEditor } from '@lobehub/editor/react';
@@ -18,7 +18,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { type KeyboardEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type KeyboardEvent, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import GeneratingBorder from '@/components/GeneratingBorder';
@@ -35,7 +35,7 @@ import { usePermission } from '@/hooks/usePermission';
 import { goalService } from '@/services/goal';
 import { shinyTextStyles } from '@/styles';
 
-import { buildGoalCreateInput } from './goalConfig';
+import { buildGoalCreateInput, buildReviewedGoalContent } from './goalConfig';
 import { createFallbackGoalCriterion, generateGoalCriteria } from './goalCriteria';
 import { deriveGoalTitle } from './goalTitle';
 
@@ -195,13 +195,6 @@ export const formatGoalGenerationRemainingTime = (seconds: number) => {
   return `${minutes}:${rest.toString().padStart(2, '0')}`;
 };
 
-const criterionRequirement = (drafts: GoalCriterionDraft[]) =>
-  drafts
-    .map((draft) => draft.title.trim())
-    .filter(Boolean)
-    .map((title) => `- ${title}`)
-    .join('\n');
-
 export interface CreateGoalContentProps {
   /** The agent that owns the goal. Goals are always agent-scoped. */
   agentId?: string;
@@ -243,7 +236,6 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
 
   const editor = useEditor();
   const instructionRef = useRef(plan.instruction);
-  const requirement = useMemo(() => criterionRequirement(plan.criteria), [plan.criteria]);
 
   useEffect(() => {
     if (step !== 'preparing') return;
@@ -365,7 +357,6 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
     const budget = buildGoalCreateInput({
       costBudget: plan.maxTotalCost,
       instruction,
-      requirement,
     });
 
     setIsCreating(true);
@@ -388,9 +379,8 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
         maxTotalCost: budget.maxTotalCost ?? undefined,
         // No seed tasks: the coordinator plans the decomposition on first
         // advance, turning a complex ask into several explorable directions.
-        problemDescription: instruction,
+        ...buildReviewedGoalContent(instruction),
         projectId,
-        requirement: buildGoalRequirement(title, reviewedCriteria, budget.requirement),
         title,
       });
       // `goal.create` already queued the first advance server-side, but on a
@@ -407,7 +397,7 @@ const CreateGoalContent = memo<CreateGoalContentProps>((props) => {
     } finally {
       setIsCreating(false);
     }
-  }, [agentId, canCreate, close, onCreated, plan, projectId, requirement, t]);
+  }, [agentId, canCreate, close, onCreated, plan, projectId, t]);
 
   const handlePrimaryAction =
     step === 'describe' ? handleNext : step === 'review' ? handleSubmit : undefined;

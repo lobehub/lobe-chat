@@ -10,7 +10,7 @@ import type {
   VerifyVerdict,
 } from '@lobechat/types';
 import { Block, Center, Empty, Flexbox, Icon, Image, Markdown } from '@lobehub/ui';
-import { Button, Drawer, Text } from '@lobehub/ui/base-ui';
+import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import type { TFunction } from 'i18next';
 import {
@@ -46,6 +46,7 @@ import Loading from '@/components/Loading/BrandTextLoading';
 import AudioPlayer from '@/features/AudioPlayer';
 import type { VerifyEvidenceWithUrl } from '@/services/verify';
 
+import { AcceptanceDrawer } from '../AcceptanceDrawer';
 import { useVerifyReportBundle } from '../hooks';
 import {
   buildCheckRows,
@@ -86,6 +87,12 @@ const styles = createStaticStyles(({ css }) => ({
     /* Start-aligned with the 46px gutter a check row's body sits at, so the hero
        prose and the expanded check prose share one text edge. */
     padding-inline: 46px 32px;
+
+    @media (width <= 767px) {
+      padding-block: 16px calc(24px + env(safe-area-inset-bottom));
+      padding-inline: 16px;
+      overflow-wrap: anywhere;
+    }
   `,
 
   /* hero */
@@ -187,7 +194,7 @@ const styles = createStaticStyles(({ css }) => ({
     align-items: center;
 
     min-width: 0;
-    max-width: 360px;
+    max-width: min(360px, 100%);
 
     color: ${cssVar.colorTextTertiary};
 
@@ -400,6 +407,12 @@ const styles = createStaticStyles(({ css }) => ({
     &:hover {
       background: ${cssVar.colorFillQuaternary};
     }
+
+    @media (width <= 767px) {
+      grid-template-columns: 20px minmax(0, 1fr);
+      gap: 6px 8px;
+      padding: 12px;
+    }
   `,
   rowTitle: css`
     overflow: hidden;
@@ -412,11 +425,21 @@ const styles = createStaticStyles(({ css }) => ({
     &[data-failed='true'] {
       font-weight: 600;
     }
+
+    @media (width <= 767px) {
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
   `,
   rowSide: css`
     display: flex;
     gap: 8px;
     align-items: center;
+
+    @media (width <= 767px) {
+      grid-column: 2;
+      flex-wrap: wrap;
+    }
   `,
   softTag: css`
     padding-block: 1px;
@@ -443,6 +466,10 @@ const styles = createStaticStyles(({ css }) => ({
 
     padding-block: 2px 16px;
     padding-inline: 46px 16px;
+
+    @media (width <= 767px) {
+      padding-inline: 12px;
+    }
   `,
   reasoning: css`
     font-size: 13px;
@@ -467,6 +494,12 @@ const styles = createStaticStyles(({ css }) => ({
     font-size: 13px;
     line-height: 1.6;
     color: ${cssVar.colorTextTertiary};
+
+    @media (width <= 767px) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+      color: ${cssVar.colorTextSecondary};
+    }
   `,
   planDetailLabel: css`
     color: ${cssVar.colorTextQuaternary};
@@ -621,11 +654,11 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   evidenceDoc: css`
     overflow: hidden;
+    display: flex;
+    flex: 1;
 
     width: 100%;
-    height: 320px;
-    border: 1px solid ${cssVar.colorBorderSecondary};
-    border-radius: ${cssVar.borderRadius};
+    min-height: 0;
   `,
 }));
 
@@ -749,12 +782,16 @@ const EvidenceItem = memo<{
   // Inline media (image/gif/video) speaks for itself — the raw filename header
   // is visual noise, so only keep a meaningful caption (description) for it.
   const isMedia = isInlineVisualEvidence(e);
+  const isDocument = Boolean(e.fileUrl) && !isMedia && e.type !== 'audio';
   const isInlineProse = Boolean(e.content) && markdownTextEvidenceTypes.has(e.type);
   const hideLabel =
-    isMedia || (markdownTextEvidenceTypes.has(e.type) && isFilenameLike(label)) || isInlineProse;
+    isDocument ||
+    isMedia ||
+    (markdownTextEvidenceTypes.has(e.type) && isFilenameLike(label)) ||
+    isInlineProse;
 
   return (
-    <Flexbox gap={6}>
+    <Flexbox gap={6} style={isDocument ? { flex: 1, minHeight: 0 } : undefined}>
       {!hideLabel && (
         <Text strong fontSize={13}>
           {label}
@@ -853,7 +890,7 @@ const EvidenceDrawer = memo<{
   open: boolean;
   title: string;
 }>(({ evidence, onClose, open, title }) => (
-  <Drawer
+  <AcceptanceDrawer
     containerMaxWidth={'100%'}
     open={open}
     placement={'right'}
@@ -880,7 +917,7 @@ const EvidenceDrawer = memo<{
         <EvidenceItem evidence={e} index={index + 1} key={e.id} />
       ))}
     </Flexbox>
-  </Drawer>
+  </AcceptanceDrawer>
 ));
 
 EvidenceItem.displayName = 'EvidenceItem';
@@ -968,6 +1005,7 @@ const CheckRow = memo<{ defaultOpen: boolean; row: CheckRowData }>(({ defaultOpe
   return (
     <div className={styles.row}>
       <button
+        aria-expanded={hasBody ? open : undefined}
         className={styles.rowHead}
         type={'button'}
         onClick={() => hasBody && setOpen((o) => !o)}

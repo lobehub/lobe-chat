@@ -1,7 +1,7 @@
 'use client';
 
 import { Center, Flexbox, Highlighter, Icon, Markdown } from '@lobehub/ui';
-import { Drawer, Text } from '@lobehub/ui/base-ui';
+import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { ChevronRight, FileText } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import Loading from '@/components/Loading/BrandTextLoading';
 import { useTextFileLoader } from '@/features/FileViewer/hooks/useTextFileLoader';
 import { getLanguageFromFilename } from '@/utils/fileLanguage';
+
+import { AcceptanceDrawer } from '../AcceptanceDrawer';
 
 /**
  * Prose evidence (root-cause write-ups, findings) renders as body markdown, not
@@ -30,6 +32,10 @@ const styles = createStaticStyles(({ css }) => ({
   foldBody: css`
     padding-block: 4px 8px;
     padding-inline: 22px 0;
+
+    @media (width <= 767px) {
+      padding-inline: 0;
+    }
   `,
   /* Reviewer-directed: no fill, no border — the row is just a line of text
      with a chevron; the surrounding check card provides the container. */
@@ -65,6 +71,10 @@ const styles = createStaticStyles(({ css }) => ({
     &:hover [data-fold-title] {
       color: ${cssVar.colorText};
     }
+
+    @media (width <= 767px), (pointer: coarse) {
+      min-height: 44px;
+    }
   `,
   foldTitle: css`
     overflow: hidden;
@@ -76,6 +86,11 @@ const styles = createStaticStyles(({ css }) => ({
     white-space: nowrap;
 
     transition: color 120ms ease;
+
+    @media (width <= 767px) {
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
   `,
   /* A plain block, deliberately not a Flexbox: `Markdown`'s root is
      `overflow: hidden`, so as a flex item its automatic minimum size collapses
@@ -89,6 +104,10 @@ const styles = createStaticStyles(({ css }) => ({
     min-height: 0;
     padding-block: 12px;
     padding-inline: 16px;
+
+    > * {
+      flex-shrink: 0;
+    }
   `,
   fileCard: css`
     cursor: pointer;
@@ -334,7 +353,7 @@ export const EvidenceFileCard = memo<{
         </span>
       </button>
       {open && (
-        <Drawer
+        <AcceptanceDrawer
           containerMaxWidth={'100%'}
           open={open}
           placement={'right'}
@@ -346,7 +365,7 @@ export const EvidenceFileCard = memo<{
           onClose={() => setOpen(false)}
         >
           <DocumentViewer fileName={name} markdown={markdown} url={url} />
-        </Drawer>
+        </AcceptanceDrawer>
       )}
     </>
   );

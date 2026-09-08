@@ -668,6 +668,7 @@ export default {
   'userPanel.moveGuide': 'The settings button has been moved here',
   'userPanel.myUsage': 'My Usage',
   'userPanel.plans': 'Subscription Plans',
+  'userPanel.quota': 'Quota',
   'userPanel.profile': 'Account',
   'userPanel.setting': 'Settings',
   'userPanel.upgradePlan': 'Upgrade Plan',

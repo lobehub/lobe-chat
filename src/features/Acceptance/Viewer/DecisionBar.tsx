@@ -2,7 +2,7 @@
 
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import {
   BadgeCheck,
   CircleAlert,
@@ -34,6 +34,27 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgElevated};
     box-shadow: ${cssVar.boxShadowTertiary};
+
+    @media (width <= 767px) {
+      inset-block-end: max(8px, env(safe-area-inset-bottom));
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+
+      > button {
+        min-height: 44px;
+      }
+
+      > .acceptance-decision-actions {
+        flex-wrap: wrap;
+        width: 100%;
+      }
+
+      .acceptance-decision-actions > button {
+        flex: 1;
+        min-height: 44px;
+      }
+    }
   `,
   // The completion mark springs in the instant review finishes — the felt beat
   // the abrupt ring→disc swap never had, landing at the decision bar where the
@@ -46,7 +67,7 @@ const styles = createStaticStyles(({ css }) => ({
       }
 
       55% {
-        transform: scale(1.18);
+        transform: scale(1);
       }
 
       100% {
@@ -55,7 +76,11 @@ const styles = createStaticStyles(({ css }) => ({
       }
     }
 
-    animation: acceptance-decision-complete-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation: acceptance-decision-complete-pop 0.2s ease-out both;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   `,
 }));
 
@@ -147,7 +172,7 @@ interface DecisionBarProps {
   /** Open the aggregate reject dialog (comment required). */
   onRejectComment: () => void;
   /** Start the repair round: embedded, drafts the prompt into the composer
-      beside the bar; standalone, dispatches it to the origin conversation. */
+      beside the bar. Standalone pages only copy the repair prompt. */
   onRerun: () => void;
   pending: boolean;
   /** A live round that is a dispatched repair — coloured as an in-progress task
@@ -168,8 +193,7 @@ interface DecisionBarProps {
  * clearing-list opener, and the closing actions. What the actions are follows
  * the review state — feedback queued for the next round turns the bar into a
  * repair handoff (打回重跑: embedded drafts the prompt into the composer
- * beside the bar, standalone dispatches to the origin conversation, with copy
- * as the standalone-only manual fallback);
+ * beside the bar; standalone copies the repair prompt);
  * a clean review offers reject-with-comment and accept, with accept gaining
  * primary weight only once every check is signed off.
  */
@@ -196,6 +220,7 @@ const DecisionBar = memo<DecisionBarProps>(
     totalCount,
   }) => {
     const { t } = useTranslation('verify');
+    const { md = true } = useResponsive();
 
     const stateMeta = {
       accepted: { color: cssVar.colorSuccess, icon: BadgeCheck },
@@ -264,7 +289,9 @@ const DecisionBar = memo<DecisionBarProps>(
         )}
         <Flexbox gap={2} style={{ flex: '0 1 auto', minWidth: 0 }}>
           <Text ellipsis strong style={{ fontSize: 14 }}>
-            {statusText}
+            {!md && state === 'settled'
+              ? t('acceptance.bar.mobileProgress', { done: decidedCount, total: totalCount })
+              : statusText}
           </Text>
           {subText && (
             <Text ellipsis fontSize={12} type={'secondary'}>
@@ -288,77 +315,87 @@ const DecisionBar = memo<DecisionBarProps>(
           </Button>
         )}
 
-        <div style={{ flex: 1, minWidth: 8 }} />
-
-        {/* A dispatched send-back (repairing) keeps the copy entry alive —
+        <Flexbox
+          horizontal
+          className={'acceptance-decision-actions'}
+          gap={8}
+          style={{ marginInlineStart: 'auto' }}
+        >
+          {/* A dispatched send-back (repairing) keeps the copy entry alive —
             the reviewer may still hand the prompt to another agent. Embedded,
             the composer beside it already receives the draft. */}
-        {state === 'live' && hasFeedback && !embedded && (
-          <Button disabled={pending} style={{ flex: 'none' }} type={'fill'} onClick={onCopyReview}>
-            {t('acceptance.bar.copyReview')}
-          </Button>
-        )}
+          {state === 'live' && hasFeedback && !embedded && (
+            <Button
+              disabled={pending}
+              style={{ flex: 'none' }}
+              type={'fill'}
+              onClick={onCopyReview}
+            >
+              {t('acceptance.bar.copyReview')}
+            </Button>
+          )}
 
-        {state === 'settled' &&
-          (hasFeedback ? (
-            // Feedback is queued — the delivery isn't being accepted now; the
-            // bar's job is getting the repair round started.
-            <>
-              {!embedded && (
+          {(state === 'settled' || state === 'rejected') &&
+            (hasFeedback || state === 'rejected' ? (
+              // Feedback is queued — the delivery isn't being accepted now; the
+              // bar's job is getting the repair round started.
+              <>
+                {!embedded && (
+                  <Button
+                    disabled={pending}
+                    style={{ flex: 'none' }}
+                    type={'primary'}
+                    onClick={onCopyReview}
+                  >
+                    {t('acceptance.bar.copyReview')}
+                  </Button>
+                )}
+                {/* Last words before the repair leaves — a global note the next
+                  round reads, for what the queued per-check feedback missed. */}
                 <Button
                   disabled={pending}
+                  icon={<Icon icon={MessageSquarePlus} />}
                   style={{ flex: 'none' }}
                   type={'fill'}
-                  onClick={onCopyReview}
+                  onClick={onAddComment}
                 >
-                  {t('acceptance.bar.copyReview')}
+                  {t('acceptance.bar.addComment')}
                 </Button>
-              )}
-              {/* Last words before the repair leaves — a global note the next
-                  round reads, for what the queued per-check feedback missed. */}
-              <Button
-                disabled={pending}
-                icon={<Icon icon={MessageSquarePlus} />}
-                style={{ flex: 'none' }}
-                type={'fill'}
-                onClick={onAddComment}
-              >
-                {t('acceptance.bar.addComment')}
-              </Button>
-              {rerunAvailable && (
+                {embedded && rerunAvailable && (
+                  <Button
+                    disabled={pending}
+                    loading={rerunPending}
+                    style={{ flex: 'none' }}
+                    type={'primary'}
+                    onClick={onRerun}
+                  >
+                    {t('acceptance.bar.rerun')}
+                  </Button>
+                )}
+              </>
+            ) : (
+              // Clean review — accept carries primary weight only once every
+              // check is signed off; before that it stays a quiet option.
+              <>
                 <Button
                   disabled={pending}
-                  loading={rerunPending}
                   style={{ flex: 'none' }}
-                  type={'primary'}
-                  onClick={onRerun}
+                  type={'text'}
+                  onClick={onRejectComment}
                 >
-                  {t('acceptance.bar.rerun')}
+                  {t('acceptance.bar.rejectComment')}
                 </Button>
-              )}
-            </>
-          ) : (
-            // Clean review — accept carries primary weight only once every
-            // check is signed off; before that it stays a quiet option.
-            <>
-              <Button
-                disabled={pending}
-                style={{ flex: 'none' }}
-                type={'text'}
-                onClick={onRejectComment}
-              >
-                {t('acceptance.bar.rejectComment')}
-              </Button>
-              <Button
-                disabled={pending}
-                style={{ flex: 'none' }}
-                type={allConfirmed ? 'primary' : 'fill'}
-                onClick={onAccept}
-              >
-                {t('acceptance.actions.accept')}
-              </Button>
-            </>
-          ))}
+                <Button
+                  disabled={pending}
+                  style={{ flex: 'none' }}
+                  type={allConfirmed ? 'primary' : 'fill'}
+                  onClick={onAccept}
+                >
+                  {t('acceptance.actions.accept')}
+                </Button>
+              </>
+            ))}
+        </Flexbox>
       </div>
     );
   },
