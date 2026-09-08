@@ -45,6 +45,7 @@ import {
 } from '@/helpers/executionTarget';
 import { buildConnectorManifests } from '@/libs/mcp/buildConnectorManifests';
 import { patchManifestWithPermissions } from '@/libs/mcp/connectorPermissionCheck';
+import { resolveModelMediaCapabilities } from '@/server/modules/AgentRuntime/resolveModelMediaCapabilities';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import type { ServerAgentToolsContext } from '@/server/modules/Mecha';
 import { createServerAgentToolsEngine } from '@/server/modules/Mecha';
@@ -577,9 +578,12 @@ export const discoverTools = async (
 
     // Dynamically inject turn-scoped builtin tools.
     const hasTopicReference = /refer_topic/.test(prompt ?? '');
-    const modelAbilities =
-      builtinModels.find((item) => item.id === model && item.providerId === provider)?.abilities ??
-      builtinModels.find((item) => item.id === model)?.abilities;
+    const modelAbilities = resolveModelMediaCapabilities({
+      builtinModels,
+      model,
+      provider,
+      userAbilities: activeModelAbilities,
+    });
     const externalFileTypes = files?.map((file) => file.mimeType ?? '') ?? [];
     let attachedFileTypes: string[] = [];
     if (attachedFileIds && attachedFileIds.length > 0) {
