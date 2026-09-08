@@ -236,6 +236,8 @@ export default {
 
   'cmdk.noResults': 'No Results found',
 
+  'cmdk.note': 'Quick Note',
+
   'cmdk.openSettings': 'Open Settings',
 
   'cmdk.pages': 'Pages',
@@ -614,6 +616,7 @@ export default {
   'tab.marketplace': 'Marketplace',
   'tab.me': 'Me',
   'tab.memory': 'Memory',
+  'tab.note': 'Quick Note',
   'tab.pages': 'Pages',
   'tab.resource': 'Resources',
   'tab.search': 'Search',
