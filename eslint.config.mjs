@@ -181,6 +181,12 @@ export default eslint(
       'src/spa/**/*.{ts,tsx}',
       'src/store/**/*.{ts,tsx}',
       'src/utils/**/*.{ts,tsx}',
+      // The main layout and the home route are the first navigation's closure.
+      'src/routes/**/_layout/**/*.{ts,tsx}',
+      'src/routes/(main)/home/**/*.{ts,tsx}',
+      'src/features/Home/**/*.{ts,tsx}',
+      'src/features/HomeSidebar/**/*.{ts,tsx}',
+      'src/features/NavPanel/**/*.{ts,tsx}',
     ],
     ignores: ['src/**/*.test.{ts,tsx}', 'src/layout/AuthProvider/MarketAuth/ProfileSetupModal.tsx'],
     rules: {
