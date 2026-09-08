@@ -307,7 +307,16 @@ export const deviceRouter = router({
         cwd: z.string().optional(),
         deviceId: z.string(),
         env: z.record(z.string(), z.string()).optional(),
-        type: z.enum(['codebuddy', 'cursor', 'grok-build', 'opencode', 'pi', 'qoder', 'trae']),
+        type: z.enum([
+          'codebuddy',
+          'cursor',
+          'droid',
+          'grok-build',
+          'opencode',
+          'pi',
+          'qoder',
+          'trae',
+        ]),
       }),
     )
     .query(async ({ ctx, input }) =>
@@ -597,13 +606,55 @@ export const deviceRouter = router({
     }),
 
   /**
+   * Browse one directory level on a remote device. Personal devices belong to
+   * the caller. A workspace device may expose new paths only to its enroller or
+   * a workspace owner; other members continue to use its approved recents.
+   */
+  browseDirectory: deviceProcedure
+    .input(
+      z.object({
+        cursor: z.string().optional(),
+        deviceId: z.string(),
+        limit: z.number().int().positive().max(1000).optional(),
+        path: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (ctx.workspaceId) {
+        const row = await ctx.deviceModel.findWorkspaceDeviceById(input.deviceId);
+        if (!row) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Workspace device not found.' });
+        }
+        const role = (ctx as { workspaceRole?: WorkspaceRole }).workspaceRole;
+        if (!canEditWorkspaceDevice(role, ctx.userId, row.userId)) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Only the enrolling member or a workspace owner can browse this device.',
+          });
+        }
+      }
+
+      const result = await deviceGateway.browseDirectory({
+        cursor: input.cursor,
+        deviceId: input.deviceId,
+        limit: input.limit,
+        path: input.path,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId,
+      });
+      return result ?? null;
+    }),
+
+  /**
    * Search project files on a remote device. The device performs the match and
    * returns only the result subtree needed by the UI.
    */
   searchProjectFiles: deviceProcedure
     .input(
       z.object({
+        changedOnly: z.boolean().optional(),
         deviceId: z.string(),
+        excludeIgnored: z.boolean().optional(),
         limit: z.number().int().positive().max(500).optional(),
         query: z.string(),
         scope: z.string(),
@@ -611,7 +662,9 @@ export const deviceRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const result = await deviceGateway.searchProjectFiles({
+        changedOnly: input.changedOnly,
         deviceId: input.deviceId,
+        excludeIgnored: input.excludeIgnored,
         limit: input.limit,
         query: input.query,
         scope: input.scope,

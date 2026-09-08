@@ -64,6 +64,29 @@ export interface StatPathResult {
   repoType?: 'git' | 'github';
 }
 
+export interface BrowseDirectoryParams {
+  cursor?: string;
+  limit?: number;
+  path?: string;
+}
+
+export interface BrowseDirectoryEntry {
+  isSymlink: boolean;
+  name: string;
+  path: string;
+  readable: boolean;
+}
+
+export interface BrowseDirectoryResult {
+  entries: BrowseDirectoryEntry[];
+  nextCursor?: string;
+  parentPath: string | null;
+  path: string;
+  pathSeparator: '/' | '\\';
+  roots: string[];
+  truncated: boolean;
+}
+
 // ─── File preview ───
 
 export type LocalFilePreviewAccept = 'image';
@@ -138,6 +161,8 @@ export interface ProjectFileIndexResult {
 }
 
 export interface ProjectFileSearchParams extends ProjectFileIndexParams {
+  changedOnly?: boolean;
+  excludeIgnored?: boolean;
   limit?: number;
   query: string;
 }
@@ -242,7 +267,7 @@ export interface ListHeterogeneousAgentModelsParams {
   command?: string;
   cwd?: string;
   env?: Record<string, string>;
-  type: 'codebuddy' | 'cursor' | 'grok-build' | 'opencode' | 'pi' | 'qoder' | 'trae';
+  type: 'codebuddy' | 'cursor' | 'droid' | 'grok-build' | 'opencode' | 'pi' | 'qoder' | 'trae';
 }
 
 export interface HeterogeneousAgentModelCatalogItem {

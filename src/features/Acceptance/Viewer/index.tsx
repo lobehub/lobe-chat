@@ -2,6 +2,7 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { createStaticStyles, cssVar } from 'antd-style';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 
 import { extractUuid } from '../utils';
@@ -15,14 +16,39 @@ import AcceptanceGoalEdit from './AcceptanceGoalEdit';
 import AcceptanceIdentity from './AcceptanceIdentity';
 import AcceptanceLedgerRail from './AcceptanceLedgerRail';
 import AcceptanceOriginTopic from './AcceptanceOriginTopic';
-import { AcceptanceBundleGate, AcceptanceScope } from './AcceptanceScope';
+import AcceptanceResources from './AcceptanceResources';
+import { AcceptanceBundleGate, AcceptanceScope, useAcceptanceScope } from './AcceptanceScope';
+import AcceptanceSharedNotice from './AcceptanceSharedNotice';
 import AcceptanceStatusControl from './AcceptanceStatusControl';
-import AcceptanceViewReportLink from './AcceptanceViewReportLink';
+import type { AcceptanceTabKey } from './AcceptanceTabs';
+import AcceptanceTabs from './AcceptanceTabs';
 import { acceptanceScrollLayout } from './layout';
+import { checksForTurn } from './turnChecks';
+import { useAcceptanceBundle } from './useAcceptanceBundle';
+import { useAcceptanceTurn } from './useAcceptanceTurn';
+
+const CONTENT_MAX_WIDTH = 920;
 
 const styles = createStaticStyles(({ css }) => ({
+  column: css`
+    width: 100%;
+    max-width: ${CONTENT_MAX_WIDTH}px;
+    margin-inline: auto;
+    padding-inline: 24px;
+
+    @media (width <= 767px) {
+      padding-inline: 16px;
+    }
+  `,
   contentFrame: css`
     overflow: ${acceptanceScrollLayout.frameOverflow};
+  `,
+  /* Spans the frame, not the reading column — the rule is the page's own
+     horizon line, so cutting it at 920 would read as a card edge. */
+  headerBand: css`
+    flex: none;
+    padding-block: 20px 0;
+    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
   `,
   page: css`
     position: relative;
@@ -40,6 +66,64 @@ interface AcceptancePageProps {
   acceptanceId?: string;
   onDraftToComposer?: (text: string) => boolean;
 }
+
+/**
+ * The record's own body: an identity band that ends in the full-width rule,
+ * then whichever face of the delivery the tabs select.
+ */
+const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraftToComposer'>) => {
+  const { acceptanceId, embedded } = useAcceptanceScope();
+  const { turn } = useAcceptanceTurn(embedded);
+  const { data } = useAcceptanceBundle(acceptanceId);
+  const [tab, setTab] = useState<AcceptanceTabKey>('checks');
+
+  const checks = data ? checksForTurn(data, turn) : [];
+  const resourceCount = new Set(
+    checks.flatMap((check) =>
+      (check.evidence ?? [])
+        .filter((evidence) => evidence.fileUrl || evidence.documentId)
+        .map((evidence) => evidence.fileId ?? evidence.documentId ?? evidence.id),
+    ),
+  ).size;
+
+  return (
+    <>
+      <Flexbox className={styles.headerBand}>
+        <Flexbox className={styles.column} gap={12}>
+          <AcceptanceSharedNotice />
+          <AcceptanceIdentity
+            focusSlot={<AcceptanceEnterFocus />}
+            statusSlot={<AcceptanceStatusControl />}
+            topicSlot={<AcceptanceOriginTopic />}
+          />
+          <AcceptanceGoal editSlot={<AcceptanceGoalEdit />} />
+          {/* The requirement needs room to land before the tabs start a new
+              thought — at the band's uniform gap it read as another row of
+              the same list. */}
+          <Flexbox style={{ paddingBlockStart: 16 }}>
+            <AcceptanceTabs
+              active={tab}
+              checkCount={checks.length}
+              resourceCount={resourceCount}
+              onChange={setTab}
+            />
+          </Flexbox>
+        </Flexbox>
+      </Flexbox>
+
+      <Flexbox className={styles.column} gap={16} paddingBlock={20}>
+        {tab === 'checks' ? (
+          <>
+            <AcceptanceCheckInventory toolbar={<AcceptanceCheckOwnerToolbar />} />
+            <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
+          </>
+        ) : (
+          <AcceptanceResources />
+        )}
+      </Flexbox>
+    </>
+  );
+};
 
 const AcceptancePage = ({
   acceptanceId: explicitAcceptanceId,
@@ -60,33 +144,22 @@ const AcceptancePage = ({
             <Flexbox
               flex={focused ? 1 : undefined}
               gap={16}
-              paddingBlock={focused ? 0 : 20}
-              paddingInline={focused ? 0 : 24}
-              style={{
-                margin: focused ? 0 : '0 auto',
-                maxWidth: focused ? 'none' : 920,
-                minHeight: focused ? 0 : undefined,
-                width: '100%',
-              }}
+              style={{ minHeight: focused ? 0 : undefined, width: '100%' }}
             >
               {focused ? (
-                <AcceptanceFocusWorkspace />
-              ) : (
                 <>
-                  <AcceptanceIdentity
-                    statusSlot={<AcceptanceStatusControl />}
-                    topicSlot={<AcceptanceOriginTopic />}
+                  {/* The focused branch zeroes the frame padding, so the
+                      notice carries its own margins. A shared viewer needs
+                      the capability explanation here MOST — this is where
+                      the owner-only review controls are visibly absent. */}
+                  <AcceptanceSharedNotice
+                    style={{ marginBlockStart: 16, marginInline: 20, width: 'auto' }}
                   />
-                  <AcceptanceEnterFocus />
-                  <AcceptanceGoal
-                    editSlot={<AcceptanceGoalEdit />}
-                    reportSlot={<AcceptanceViewReportLink />}
-                  />
-                  <AcceptanceCheckInventory canReview toolbar={<AcceptanceCheckOwnerToolbar />} />
-                  <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
+                  <AcceptanceFocusWorkspace />
                 </>
-              )}
+              ) : null}
             </Flexbox>
+            {!focused && <AcceptanceBody onDraftToComposer={onDraftToComposer} />}
           </Flexbox>
           <AcceptanceLedgerRail />
         </Flexbox>

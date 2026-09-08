@@ -3,41 +3,36 @@
 import { copyToClipboard } from '@lobehub/ui';
 import { toast } from '@lobehub/ui/base-ui';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 
 import { mutate as globalMutate } from '@/libs/swr';
-import { verifyKeys } from '@/libs/swr/keys';
+import { isAcceptanceListKey } from '@/libs/swr/keys';
 import { verifyService } from '@/services/verify';
 
 import AcceptanceFocusReview from './AcceptanceFocusReview';
 import { useAcceptanceScope } from './AcceptanceScope';
 import { openAddCheckModal } from './AddCheckModal';
-import { type CheckFilter, checkFilterState } from './CheckList';
 import { copyCheckRepairPrompt } from './checkWork';
 import { acceptanceCheckPath, acceptanceOverviewPath } from './routes';
+import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
-
-const CHECK_REVIEW_ORDER: Record<Exclude<CheckFilter, 'all'>, number> = {
-  pending: 0,
-  needsFix: 1,
-  accepted: 2,
-  ignored: 3,
-};
+import { useAcceptanceTurn } from './useAcceptanceTurn';
+import { canReviewAcceptance } from './visibility';
 
 const AcceptanceFocusWorkspace = () => {
   const { t } = useTranslation('verify');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const query = searchParams.toString() ? `?${searchParams}` : '';
   const params = useParams<{ checkId?: string }>();
   const { acceptanceId } = useAcceptanceScope();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
-  const focusedCheck = data?.checks.find((check) => check.id === params.checkId);
+  const { turn } = useAcceptanceTurn();
+  const turnChecks = data ? checksForTurn(data, turn) : [];
+  const focusedCheck = turnChecks.find((check) => check.id === params.checkId);
   if (!data || !focusedCheck) return null;
 
-  const orderedChecks = [...data.checks].sort(
-    (a, b) =>
-      CHECK_REVIEW_ORDER[checkFilterState(a)] - CHECK_REVIEW_ORDER[checkFilterState(b)] ||
-      a.seq - b.seq,
-  );
+  const orderedChecks = [...turnChecks].sort((a, b) => a.seq - b.seq);
   const standing = (data.acceptance.config?.checklist ?? []).filter(
     (item) => !data.checks.some((check) => check.id === item.id),
   );
@@ -45,14 +40,13 @@ const AcceptanceFocusWorkspace = () => {
   const saveStanding = async (checklist: typeof standing) => {
     await verifyService.saveAcceptanceChecklist(data.subject.type, data.subject.id, checklist);
     await mutate();
-    void globalMutate(verifyKeys.acceptances());
+    void globalMutate(isAcceptanceListKey);
     toast.success(t('acceptance.checkCreate.saved'));
   };
 
   return (
     <AcceptanceFocusReview
-      canReview={data.isOwner}
-      checks={data.checks}
+      checks={turnChecks}
       focusedCheck={focusedCheck}
       orderedChecks={orderedChecks}
       reviewPending={false}
@@ -60,8 +54,15 @@ const AcceptanceFocusWorkspace = () => {
       standingChecks={standing}
       status={data.acceptance.status}
       subjectTitle={data.subject.title ?? data.subject.id}
-      onBack={() => navigate(acceptanceOverviewPath(acceptanceId), { replace: true })}
-      onSelectCheck={(id) => navigate(acceptanceCheckPath(acceptanceId, id), { replace: true })}
+      canReview={
+        canReviewAcceptance(data) && (turn === null || turn === data.rounds.at(-1)?.run.roundIndex)
+      }
+      onBack={() => navigate(acceptanceOverviewPath(acceptanceId) + query, { replace: true })}
+      onSelectCheck={(id) =>
+        navigate(acceptanceCheckPath(acceptanceId, id) + query, { replace: true })
+      }
+      // Checklist authoring writes through the subject — creator-only until that
+      // path is reviewer-aware. Reviewing the checks themselves is not.
       onAddChecks={
         data.isOwner
           ? () =>
@@ -73,7 +74,7 @@ const AcceptanceFocusWorkspace = () => {
           : undefined
       }
       onCheckWork={
-        data.isOwner && data.acceptance.status !== 'closed'
+        canReviewAcceptance(data) && data.acceptance.status !== 'closed'
           ? async () => {
               await copyCheckRepairPrompt(data.acceptance.id, focusedCheck, copyToClipboard);
               toast.success({ title: t('acceptance.checkWork.copied') });
@@ -100,11 +101,19 @@ const AcceptanceFocusWorkspace = () => {
             }
           : undefined
       }
+      // A rejected write must settle the row, not escape as an unhandled
+      // rejection that leaves its button spinning with the reason in the console.
       onReview={async (input) => {
-        await verifyService.reviewChecks({ id: data.acceptance.id, ...input });
-        await mutate();
-        void globalMutate(verifyKeys.acceptances());
-        return true;
+        try {
+          await verifyService.reviewChecks({ id: data.acceptance.id, ...input });
+          await mutate();
+          void globalMutate(isAcceptanceListKey);
+          return true;
+        } catch (cause) {
+          console.error('[acceptance:review]', cause);
+          toast.error(cause instanceof Error ? cause.message : t('acceptance.actionError'));
+          return false;
+        }
       }}
     />
   );

@@ -1,8 +1,9 @@
 'use client';
 
-import { ActionIcon, Flexbox, Icon, Text } from '@lobehub/ui';
+import { Flexbox } from '@lobehub/ui';
+import { ActionIcon, Avatar, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
-import { ArrowLeft, MessagesSquare, PanelRightClose } from 'lucide-react';
+import { PanelRightClose } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,11 +17,14 @@ import type { OriginTopicPanelProps } from './originConversation';
  * mounting the floating drawer chrome.
  */
 const TopicPanel = memo<OriginTopicPanelProps>(
-  ({ agentId, onBack, onCollapse, title, topicId }) => {
+  ({ agentAvatar, agentBackgroundColor, agentId, onCollapse, title, topicId }) => {
     const { t } = useTranslation('verify');
 
     return (
-      <Flexbox height={'100%'} style={{ minHeight: 0, overflow: 'hidden' }}>
+      <Flexbox
+        height={'100%'}
+        style={{ background: cssVar.colorBgContainer, minHeight: 0, overflow: 'hidden' }}
+      >
         <Flexbox
           horizontal
           align={'center'}
@@ -29,13 +33,11 @@ const TopicPanel = memo<OriginTopicPanelProps>(
           paddingInline={12}
           style={{ borderBlockEnd: `1px solid ${cssVar.colorBorderSecondary}`, flexShrink: 0 }}
         >
-          <ActionIcon
-            icon={ArrowLeft}
-            size={'small'}
-            title={t('acceptance.origin.backToRuns')}
-            onClick={onBack}
+          <Avatar
+            avatar={agentAvatar ?? undefined}
+            background={agentBackgroundColor ?? undefined}
+            size={20}
           />
-          <Icon color={cssVar.colorTextSecondary} icon={MessagesSquare} size={16} />
           <Text ellipsis strong style={{ flex: 1, minWidth: 0, fontSize: 13 }}>
             {title}
           </Text>

@@ -161,6 +161,7 @@ describe('agentRouter', () => {
       getAgentAssignedKnowledge: vi.fn(),
       getAgentVisibility: vi.fn().mockResolvedValue(null),
       publishToWorkspace: vi.fn(),
+      resolveIdBySlug: vi.fn().mockResolvedValue(null),
       toggleFile: vi.fn(),
       toggleKnowledgeBase: vi.fn(),
       update: vi.fn(),
@@ -1018,6 +1019,35 @@ describe('agentRouter', () => {
 
         expect(publishResourceEventMock).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('resolveAgentRoute (released-client compatibility)', () => {
+    it('treats an id-shaped param as an own agent without touching the database', async () => {
+      const caller = agentRouter.createCaller(mockCtx);
+      const result = await caller.resolveAgentRoute({ slugOrId: 'agt_abc123' });
+
+      expect(result).toEqual({ agentId: 'agt_abc123', kind: 'own' });
+      expect(agentModelMock.resolveIdBySlug).not.toHaveBeenCalled();
+    });
+
+    it('resolves an own agent slug to its id', async () => {
+      agentModelMock.resolveIdBySlug.mockResolvedValue('agt_from_slug');
+
+      const caller = agentRouter.createCaller(mockCtx);
+      const result = await caller.resolveAgentRoute({ slugOrId: 'my-bot' });
+
+      expect(result).toEqual({ agentId: 'agt_from_slug', kind: 'own' });
+    });
+
+    // The lookup is ownership-scoped, so a stranger's slug is indistinguishable
+    // from a missing one and this resolver cannot become a slug oracle.
+    it('reports not found when no agent of the caller claims the slug', async () => {
+      agentModelMock.resolveIdBySlug.mockResolvedValue(null);
+
+      const caller = agentRouter.createCaller(mockCtx);
+
+      expect(await caller.resolveAgentRoute({ slugOrId: 'nope' })).toEqual({ kind: 'notFound' });
     });
   });
 });

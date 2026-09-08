@@ -1,6 +1,7 @@
 'use client';
 
-import { Avatar, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
+import { Flexbox, Icon } from '@lobehub/ui';
+import { Avatar, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import dayjs from 'dayjs';
 import { GitPullRequest } from 'lucide-react';
@@ -16,6 +17,11 @@ import { useAcceptanceBundle } from './useAcceptanceBundle';
 import { formatAcceptanceCountsText } from './verdict';
 
 const styles = createStaticStyles(({ css }) => ({
+  statusRow: css`
+    @media (width <= 767px) {
+      padding-inline-end: 48px;
+    }
+  `,
   scopeChip: css`
     font-size: 12px;
     color: ${cssVar.colorTextSecondary};
@@ -32,11 +38,25 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 interface AcceptanceIdentityProps {
+  /** Rendered on the meta line — the per-check entry point. */
+  focusSlot?: ReactNode;
   statusSlot?: ReactNode;
   topicSlot?: ReactNode;
 }
 
-const AcceptanceIdentity = ({ statusSlot, topicSlot }: AcceptanceIdentityProps) => {
+/**
+ * Identity, state and provenance in two lines.
+ *
+ * They used to take four: the status pill led a line of its own, the title a
+ * second, the per-check entry a third and the provenance chips a fourth — so
+ * the delivery's name, the one thing you scan for, sat in the middle of a
+ * stack of qualifiers. Now the title anchors line one with its state beside
+ * it, and everything that merely QUALIFIES it (counts, when it last ran, where
+ * it came from, how to open it check by check) collapses onto one meta line
+ * underneath.
+ */
+
+const AcceptanceIdentity = ({ focusSlot, statusSlot, topicSlot }: AcceptanceIdentityProps) => {
   const { t } = useTranslation('verify');
   const hydrated = useIsHydrated();
   const { acceptanceId, embedded } = useAcceptanceScope();
@@ -64,18 +84,22 @@ const AcceptanceIdentity = ({ statusSlot, topicSlot }: AcceptanceIdentityProps) 
 
   return (
     <Flexbox gap={10}>
-      <Flexbox horizontal align={'center'} gap={10} wrap={'wrap'}>
+      <Flexbox horizontal align={'center'} className={styles.statusRow} gap={10} wrap={'wrap'}>
         {statusSlot ?? <AcceptanceStatusPill status={acceptance.status} />}
         <Text fontSize={12} type={'secondary'}>
           {[countsText, latestAt].filter(Boolean).join(' · ')}
         </Text>
+        {focusSlot}
       </Flexbox>
 
-      <Flexbox horizontal align={'center'} gap={10}>
-        <Text as={'h1'} style={{ fontSize: 18, margin: 0 }}>
+      {/* No subject-type tag beside the name. Which KIND of thing was
+          delivered is a fact about the plumbing, not about the delivery a
+          reader came to judge — and it sat where the title's own meaning
+          should carry. */}
+      <Flexbox horizontal align={'center'} gap={10} wrap={'wrap'}>
+        <Text ellipsis as={'h1'} style={{ fontSize: 18, margin: 0, minWidth: 0 }}>
           {subject.title ?? subject.id}
         </Text>
-        <Tag size={'small'}>{t(`acceptance.subject.${subject.type}`)}</Tag>
       </Flexbox>
 
       {showOrigin && (

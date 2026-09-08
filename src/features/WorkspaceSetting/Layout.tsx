@@ -1,10 +1,11 @@
 'use client';
 
-import { Text } from '@lobehub/ui';
+import { Text } from '@lobehub/ui/base-ui';
 import { type FC, memo } from 'react';
 import { Outlet, useMatch } from 'react-router';
 
 import NavHeader from '@/features/NavHeader';
+import { RouteSkeletonChromeProvider } from '@/spa/router/routeSkeletonChrome';
 import { WorkspaceSettingsTabs } from '@/types/workspaceSettings';
 
 import Container from './Container';
@@ -37,7 +38,9 @@ const WorkspaceSettingsLayout: FC = () => {
   return (
     <>
       <SideBar />
-      <Outlet />
+      <RouteSkeletonChromeProvider>
+        <Outlet />
+      </RouteSkeletonChromeProvider>
     </>
   );
 };

@@ -1,6 +1,6 @@
 ---
 name: cleanup-git-worktrees
-description: Audit and safely clean Git worktrees and stale local branches. Use when asked to list worktrees, identify completed or merged branches, remove worktrees whose remote branches are gone, prune stale worktree registrations, or clean local branches without losing uncommitted work.
+description: 'Use for stale-worktree, Git registration and branch audits. Managed removal uses the repo lifecycle.'
 ---
 
 # Cleanup Git Worktrees
@@ -29,7 +29,10 @@ Use the bundled script to make classification deterministic. Treat cleanup as a 
 
 3. Present a compact table containing path, branch, dirty count, upstream state, base containment, and classification. Keep `candidate-merged` separate from `candidate-gone`; do not describe `[gone]` as proof of merge.
 
-4. After approval, pass exact branch names to cleanup:
+4. After approval, use the repository's worktree lifecycle workflow when it manages
+   services or other resources alongside a checkout. The Git-only cleanup script
+   does not tear those resources down. For plain Git worktrees, pass exact branch
+   names to cleanup:
 
    ```bash
    bash .agents/skills/cleanup-git-worktrees/scripts/cleanup.sh clean \

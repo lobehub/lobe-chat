@@ -2,7 +2,7 @@ import { mkdtemp, readFile, stat, utimes } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   gcHostedProviderBindingProfiles,
@@ -48,10 +48,12 @@ const makeParams = async (driver: HeterogeneousAgentDriver) => {
 
 describe('prepareHostedProviderBinding', () => {
   it('creates private profile/run directories, keeps profile state, and cleans the run', async () => {
+    const cleanup = vi.fn().mockResolvedValue(undefined);
     const driver: HeterogeneousAgentDriver = {
       buildSpawnPlan: async () => ({ args: [] }),
       prepareProviderBinding: ({ profileDir }) => ({
         args: ['--model', 'gpt-test'],
+        cleanup,
         env: { CODEX_HOME: profileDir, SECRET_ENV: 'secret' },
         profileFiles: [{ content: 'env_key = "SECRET_ENV"\n', path: 'config.toml' }],
         runFiles: [{ content: 'temporary', path: 'request.tmp' }],
@@ -68,15 +70,18 @@ describe('prepareHostedProviderBinding', () => {
     );
 
     await binding.cleanup();
+    expect(cleanup).toHaveBeenCalledOnce();
     await expect(stat(binding.runDir)).rejects.toThrow();
     await expect(stat(binding.profileDir)).resolves.toBeDefined();
   });
 
   it('rejects file traversal and cleans the partially created run directory', async () => {
+    const cleanup = vi.fn().mockResolvedValue(undefined);
     const driver: HeterogeneousAgentDriver = {
       buildSpawnPlan: async () => ({ args: [] }),
       prepareProviderBinding: () => ({
         args: [],
+        cleanup,
         env: {},
         runFiles: [{ content: 'escape', path: '../escape' }],
       }),
@@ -86,6 +91,21 @@ describe('prepareHostedProviderBinding', () => {
     await expect(
       stat(path.join(params.appStoragePath, 'heteroAgent', 'runs', params.sessionId)),
     ).rejects.toThrow();
+    expect(cleanup).toHaveBeenCalledOnce();
+  });
+
+  it('releases driver resources synchronously during app shutdown', async () => {
+    const cleanupSync = vi.fn();
+    const driver: HeterogeneousAgentDriver = {
+      buildSpawnPlan: async () => ({ args: [] }),
+      prepareProviderBinding: () => ({ args: [], cleanupSync, env: {} }),
+    };
+    const binding = await prepareHostedProviderBinding(await makeParams(driver));
+
+    binding.cleanupSync();
+
+    expect(cleanupSync).toHaveBeenCalledOnce();
+    await expect(stat(binding.runDir)).rejects.toThrow();
   });
 
   it('isolates Pi profiles by model while reusing an identity after API-key rotation', async () => {
@@ -134,6 +154,51 @@ describe('prepareHostedProviderBinding', () => {
     expect(await readFile(path.join(first.profileDir, 'models.json'), 'utf8')).toBe('model-a');
     expect(await readFile(path.join(second.profileDir, 'models.json'), 'utf8')).toBe('model-b');
   });
+
+  it.each(['grok-build', 'trae'] as const)(
+    'isolates %s profiles by model because the managed catalog is profile-scoped',
+    async (agentType) => {
+      const driver: HeterogeneousAgentDriver = {
+        buildSpawnPlan: async () => ({ args: [] }),
+        prepareProviderBinding: ({ profileDir }) => ({
+          args: [],
+          env: { PROFILE_HOME: profileDir },
+        }),
+      };
+      const base = await makeParams(driver);
+      const firstParams = {
+        ...base,
+        agentType,
+        reference: {
+          ...base.reference,
+          apiConfig: { ...base.reference.apiConfig, model: 'model-a' },
+        },
+        resolution: {
+          ...base.resolution,
+          agentType,
+          apiConfig: { ...base.resolution.apiConfig, model: 'model-a' },
+        },
+      };
+      const secondParams = {
+        ...firstParams,
+        reference: {
+          ...firstParams.reference,
+          apiConfig: { ...firstParams.reference.apiConfig, model: 'model-b' },
+        },
+        resolution: {
+          ...firstParams.resolution,
+          apiConfig: { ...firstParams.resolution.apiConfig, model: 'model-b' },
+        },
+        sessionId: 'session-test-2',
+      };
+
+      const first = await prepareHostedProviderBinding(firstParams);
+      const second = await prepareHostedProviderBinding(secondParams);
+
+      expect(second.profileDir).not.toBe(first.profileDir);
+      expect(second.bindingKey).not.toBe(first.bindingKey);
+    },
+  );
 });
 
 describe('prepareHostedServerDefaultBinding', () => {
@@ -145,6 +210,7 @@ describe('prepareHostedServerDefaultBinding', () => {
     prepareServerDefaultBinding: ({ profileDir }) => ({
       args: [],
       env: { CLAUDE_CONFIG_DIR: profileDir },
+      operationTokenEnvKey: 'ANTHROPIC_AUTH_TOKEN',
     }),
   };
 
@@ -167,6 +233,7 @@ describe('prepareHostedServerDefaultBinding', () => {
 
     expect((await stat(binding.profileDir)).mode & 0o777).toBe(0o700);
     expect((await stat(binding.runDir)).mode & 0o777).toBe(0o700);
+    expect(binding.operationTokenEnvKey).toBe('ANTHROPIC_AUTH_TOKEN');
 
     await binding.cleanup();
     await expect(stat(binding.runDir)).rejects.toThrow();

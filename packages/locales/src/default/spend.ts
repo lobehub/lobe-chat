@@ -12,6 +12,7 @@ export default {
   'table.columns.spend': 'Credits',
   'table.columns.time': 'Time',
   'table.columns.totalTokens': 'Token Usage',
+  'table.columns.trigger.enums.agent_share': 'Agent Share',
   'table.columns.trigger.enums.agent_signal': 'Agent Signal',
   'table.columns.trigger.enums.api': 'API Call',
   'table.columns.trigger.enums.bot': 'Bot Message',
@@ -37,6 +38,8 @@ export default {
   'table.columns.type.enums.imageGeneration': 'Image Generation',
   'table.columns.type.enums.videoGeneration': 'Video Generation',
   'table.columns.type.title': 'Type',
+  'table.agentShareDesc':
+    'Every model call a visitor of this share triggered, billed to your account.',
   'table.desc': 'Details of credit usage for text generation, embedding, image generation, etc.',
   'table.filters.allTypes': 'All types',
   'table.filters.endDate': 'End date',

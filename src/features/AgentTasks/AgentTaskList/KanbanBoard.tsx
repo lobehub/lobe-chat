@@ -27,6 +27,7 @@ import type { TaskListItem } from '@/store/task/slices/list/initialState';
 import { createTaskModal } from '../CreateTaskModal';
 import type { TaskItemRouteScope } from '../features/AgentTaskItem';
 import AgentTaskItem from '../features/AgentTaskItem';
+import { useTaskStatusChange } from '../features/useTaskStatusChange';
 import { taskDetailPath } from '../shared/taskDetailPath';
 import HiddenColumnsPanel from './HiddenColumnsPanel';
 import {
@@ -72,9 +73,9 @@ const KanbanBoard = memo<KanbanBoardProps>(({ agentId, options, projectId, route
   // Keep the SWR handle only for `error` + `mutate` (the error/Retry state).
   const { error, isLoading, isQueryScopeCurrent, mutate } = useFetchTaskGroupList(
     projectId
-      ? { excludeStatuses, groupBy, projectId }
+      ? { automated: false, excludeStatuses, groupBy, projectId }
       : agentId
-        ? { agentId, excludeStatuses, groupBy }
+        ? { agentId, automated: false, excludeStatuses, groupBy }
         : { allAgents: true, automated: false, excludeStatuses, groupBy },
   );
   // Drive the loading/empty boundary off the store's own init flag, NOT SWR's
@@ -92,7 +93,7 @@ const KanbanBoard = memo<KanbanBoardProps>(({ agentId, options, projectId, route
     [isQueryScopeCurrent, taskGroups],
   );
   const updateTask = useTaskStore((s) => s.updateTask);
-  const updateTaskStatus = useTaskStore((s) => s.updateTaskStatus);
+  const changeTaskStatus = useTaskStatusChange();
 
   const hiddenColumns = useGlobalStore(systemStatusSelectors.taskKanbanHiddenColumns);
   const hiddenPanelCollapsed = useGlobalStore(systemStatusSelectors.taskKanbanHiddenPanelCollapsed);
@@ -136,9 +137,11 @@ const KanbanBoard = memo<KanbanBoardProps>(({ agentId, options, projectId, route
       const patch = getKanbanTaskPatch(groupBy, column);
       if (!patch) return;
       const assigneeUpdate =
-        groupBy === 'assignee' ? getKanbanAssigneeUpdate(task, patch) : undefined;
+        groupBy === 'assignee' || groupBy === 'member'
+          ? getKanbanAssigneeUpdate(task, patch)
+          : undefined;
       if (groupBy === 'status' && task.status === patch.status) return;
-      if (groupBy === 'assignee' && !assigneeUpdate) return;
+      if ((groupBy === 'assignee' || groupBy === 'member') && !assigneeUpdate) return;
       if (groupBy === 'priority' && (task.priority ?? 0) === (patch.priority ?? 0)) return;
 
       const prevGroups = useTaskStore.getState().taskGroups;
@@ -147,8 +150,11 @@ const KanbanBoard = memo<KanbanBoardProps>(({ agentId, options, projectId, route
 
       try {
         if (groupBy === 'status' && column.targetStatus) {
-          await updateTaskStatus(task.identifier, column.targetStatus);
-        } else if (groupBy === 'assignee' && assigneeUpdate) {
+          const changed = await changeTaskStatus(task.identifier, column.targetStatus);
+          if (!changed) {
+            useTaskStore.setState({ taskGroups: prevGroups }, false, 'kanban/cancelMove');
+          }
+        } else if ((groupBy === 'assignee' || groupBy === 'member') && assigneeUpdate) {
           await updateTask(task.identifier, assigneeUpdate);
         } else if (groupBy === 'priority') {
           await updateTask(task.identifier, { priority: patch.priority ?? 0 });
@@ -157,7 +163,7 @@ const KanbanBoard = memo<KanbanBoardProps>(({ agentId, options, projectId, route
         useTaskStore.setState({ taskGroups: prevGroups }, false, 'kanban/revertMove');
       }
     },
-    [canEditTask, columns, groupBy, updateTask, updateTaskStatus],
+    [canEditTask, changeTaskStatus, columns, groupBy, updateTask],
   );
 
   const handleDragCancel = useCallback(() => {

@@ -8,7 +8,14 @@ import type {
   ResolveHeterogeneousProviderBindingResult,
 } from './types';
 
-export const HETEROGENEOUS_PROVIDER_BINDING_AGENT_TYPES = ['claude-code', 'codex', 'pi'] as const;
+export const HETEROGENEOUS_PROVIDER_BINDING_AGENT_TYPES = [
+  'claude-code',
+  'codex',
+  'grok-build',
+  'kimi-code',
+  'pi',
+  'trae',
+] as const;
 
 const CAPABILITIES: Partial<
   Record<LocalHeterogeneousAgentType, HeterogeneousProviderBindingCapability>
@@ -21,6 +28,14 @@ const CAPABILITIES: Partial<
     agentType: 'codex',
     protocols: ['openai-responses'],
   },
+  'grok-build': {
+    agentType: 'grok-build',
+    protocols: ['openai-responses', 'openai-chat-completions', 'anthropic-messages'],
+  },
+  'kimi-code': {
+    agentType: 'kimi-code',
+    protocols: ['anthropic-messages', 'openai-chat-completions'],
+  },
   'pi': {
     agentType: 'pi',
     protocols: [
@@ -29,6 +44,10 @@ const CAPABILITIES: Partial<
       'anthropic-messages',
       'google-generative-ai',
     ],
+  },
+  'trae': {
+    agentType: 'trae',
+    protocols: ['openai-responses'],
   },
 };
 
@@ -131,12 +150,12 @@ const resolveEndpointError = (
   if (endpoint) return { endpoint };
 
   const defaultEndpoint =
-    agentType === 'pi' || protocol === 'openai-responses'
+    agentType === 'pi' || agentType === 'grok-build' || protocol === 'openai-responses'
       ? DEFAULT_PROVIDER_ENDPOINTS[protocol]?.[providerId]
       : undefined;
   if (defaultEndpoint) return { endpoint: defaultEndpoint };
 
-  if (protocol === 'openai-responses' || agentType === 'pi') {
+  if (protocol === 'openai-responses' || agentType === 'pi' || agentType === 'grok-build') {
     return { error: { code: 'endpointMissing', providerId } };
   }
 
@@ -183,6 +202,20 @@ export const resolveHeterogeneousProviderBinding = ({
     protocol,
   );
   if (endpointResult.error) return { error: endpointResult.error };
+  if (
+    capability.agentType === 'kimi-code' &&
+    !endpointResult.endpoint &&
+    !(
+      (protocol === 'anthropic-messages' && apiConfig.providerId === 'anthropic') ||
+      (protocol === 'openai-chat-completions' && apiConfig.providerId === 'openai')
+    )
+  ) {
+    // Kimi only knows the selected wire protocol, not LobeHub's provider id.
+    // Without an explicit endpoint, its SDK would silently use OpenAI or
+    // Anthropic instead of a third-party provider whose URL LobeHub normally
+    // supplies inside that provider's own model runtime.
+    return { error: { code: 'endpointMissing', providerId: apiConfig.providerId } };
+  }
 
   let modelMetadata: HeterogeneousProviderBindingResolution['modelMetadata'];
   if (enabledModels) {

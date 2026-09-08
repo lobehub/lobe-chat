@@ -1,8 +1,8 @@
 'use client';
 
-import { ActionIcon, Flexbox, Text } from '@lobehub/ui';
-import { Select } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
+import { Flexbox } from '@lobehub/ui';
+import { ActionIcon, Select, Text, toast } from '@lobehub/ui/base-ui';
+import { useResponsive } from 'antd-style';
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -11,9 +11,10 @@ import { useSearchParams } from 'react-router';
 
 import { useSingleton } from '@/hooks/useSingleton';
 import { mutate as globalMutate } from '@/libs/swr';
-import { verifyKeys } from '@/libs/swr/keys';
+import { isAcceptanceListKey } from '@/libs/swr/keys';
 import { verifyService } from '@/services/verify';
 
+import AcceptanceInteractionCost from './AcceptanceInteractionCost';
 import { useAcceptanceScope } from './AcceptanceScope';
 import CheckList, {
   type CheckFilter,
@@ -26,36 +27,24 @@ import CheckList, {
   userReviewState,
 } from './CheckList';
 import { EMPTY_ID_SET, setAggregateEntry } from './expandState';
+import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
-
-const styles = createStaticStyles(({ css }) => ({
-  countBadge: css`
-    padding-block: 1px;
-    padding-inline: 7px;
-    border-radius: 99px;
-
-    font-size: 12px;
-    color: ${cssVar.colorTextSecondary};
-
-    background: ${cssVar.colorFillTertiary};
-  `,
-}));
+import { useAcceptanceTurn } from './useAcceptanceTurn';
+import { canReviewAcceptance } from './visibility';
 
 interface AcceptanceCheckInventoryProps {
-  canReview?: boolean;
   children?: ReactNode;
   onOpenTrace?: (verifierOperationId: string) => void | Promise<void>;
   toolbar?: ReactNode;
 }
 
 const AcceptanceCheckInventory = ({
-  canReview = false,
   children,
   onOpenTrace,
   toolbar,
 }: AcceptanceCheckInventoryProps) => {
   const { t } = useTranslation('verify');
-  const { lg = true } = useResponsive();
+  const { lg = true, md = true } = useResponsive();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const compactToolbar = embedded || !lg;
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
@@ -83,7 +72,7 @@ const AcceptanceCheckInventory = ({
       { replace: true },
     );
   };
-  const [roundFilter, setRoundFilter] = useState<number | null>(null);
+  const { turn: roundFilter, setTurn: setRoundFilter } = useAcceptanceTurn(embedded);
   const [expandedById, setExpandedById] = useState<Map<string, Set<string>>>(() => new Map());
   const [collapsedById, setCollapsedById] = useState<Map<string, Set<string>>>(() => new Map());
   const expanded = expandedById.get(acceptanceId) ?? EMPTY_ID_SET;
@@ -109,6 +98,7 @@ const AcceptanceCheckInventory = ({
         data.checks
           .filter(
             (check) =>
+              window.matchMedia('(min-width: 768px)').matches &&
               userReviewState(check) !== 'accepted' &&
               (isException(check) || hasVisualEvidence(check)),
           )
@@ -127,7 +117,7 @@ const AcceptanceCheckInventory = ({
     const defaultFilter: CheckFilter = data.rounds.length > 1 ? 'pending' : 'all';
     if (embedded) {
       setLocalFilter(defaultFilter);
-    } else if (!urlFilterRaw && defaultFilter !== 'all') {
+    } else if (!urlFilterRaw && !roundFilter && defaultFilter !== 'all') {
       setSearchParams(
         (prev) => {
           const params = new URLSearchParams(prev);
@@ -147,11 +137,37 @@ const AcceptanceCheckInventory = ({
     setSearchParams,
     t,
     urlFilterRaw,
+    roundFilter,
+    md,
   ]);
 
   if (!data) return null;
 
-  const checks = data.checks;
+  const canReview =
+    canReviewAcceptance(data) &&
+    (roundFilter === null || roundFilter === data.rounds.at(-1)?.run.roundIndex);
+  const checks = checksForTurn(data, roundFilter);
+
+  /**
+   * Every mutation the checklist fires goes through here.
+   *
+   * A rejected promise handed back to CheckList would escape as an unhandled
+   * rejection AND strand the row's own pending flag — the row that raised it
+   * spins forever, with the reason only in the console. Failing loudly and
+   * returning `false` lets the row settle and say what happened.
+   */
+  const runReviewMutation = async (action: () => Promise<unknown>) => {
+    try {
+      await action();
+      await mutate();
+      void globalMutate(isAcceptanceListKey);
+      return true;
+    } catch (cause) {
+      console.error('[acceptance:review]', cause);
+      toast.error(cause instanceof Error ? cause.message : t('acceptance.actionError'));
+      return false;
+    }
+  };
   const counts = {
     accepted: checks.filter((check) => checkFilterState(check) === 'accepted').length,
     ignored: checks.filter((check) => checkFilterState(check) === 'ignored').length,
@@ -175,16 +191,15 @@ const AcceptanceCheckInventory = ({
 
   return (
     <>
-      <Flexbox horizontal align={'center'} gap={8} wrap={compactToolbar ? 'nowrap' : 'wrap'}>
+      <Flexbox horizontal align={'center'} gap={8} wrap={'wrap'}>
         <Text strong style={{ fontSize: 14, whiteSpace: 'nowrap' }}>
           {t('acceptance.checks.title')}
         </Text>
-        <span className={styles.countBadge}>{counts.total}</span>
         <Flexbox flex={1} />
         {toolbar}
         <Select
           size={'small'}
-          style={{ height: 34, width: 118 }}
+          style={{ height: compactToolbar ? 44 : 34, width: 118 }}
           value={filter}
           variant={'filled'}
           options={[
@@ -202,10 +217,10 @@ const AcceptanceCheckInventory = ({
           ]}
           onChange={(value) => setFilter(value as CheckFilter)}
         />
-        {data.rounds.length > 1 && canReview && (
+        {data.rounds.length > 1 && (
           <Select
             size={'small'}
-            style={{ height: 34, width: 110 }}
+            style={{ height: compactToolbar ? 44 : 34, width: 110 }}
             value={roundFilter === null ? 'all' : String(roundFilter)}
             variant={'filled'}
             options={[
@@ -243,37 +258,36 @@ const AcceptanceCheckInventory = ({
         reviewPending={false}
         round={roundFilter}
         onOpenTrace={onOpenTrace}
+        onRound={setRoundFilter}
         onDismissProposal={
           canReview
             ? async (input) => {
-                await verifyService.adjudicateProposal({
-                  adjudication: input.adjudication,
-                  id: data.acceptance.id,
-                  predictionId: input.predictionId,
-                });
-                await mutate();
-                void globalMutate(verifyKeys.acceptances());
+                await runReviewMutation(() =>
+                  verifyService.adjudicateProposal({
+                    adjudication: input.adjudication,
+                    id: data.acceptance.id,
+                    predictionId: input.predictionId,
+                  }),
+                );
               }
             : undefined
         }
         onGroupFeedback={async (category, comment, fileIds) => {
           if (!canReview) return false;
-          await verifyService.addGroupFeedback({
-            category,
-            comment,
-            fileIds: fileIds.length > 0 ? fileIds : undefined,
-            id: data.acceptance.id,
-          });
-          await mutate();
-          void globalMutate(verifyKeys.acceptances());
-          return true;
+          return runReviewMutation(() =>
+            verifyService.addGroupFeedback({
+              category,
+              comment,
+              fileIds: fileIds.length > 0 ? fileIds : undefined,
+              id: data.acceptance.id,
+            }),
+          );
         }}
         onReview={async (input) => {
           if (!canReview) return false;
-          await verifyService.reviewChecks({ id: data.acceptance.id, ...input });
-          await mutate();
-          void globalMutate(verifyKeys.acceptances());
-          return true;
+          return runReviewMutation(() =>
+            verifyService.reviewChecks({ id: data.acceptance.id, ...input }),
+          );
         }}
         onToggleGroup={(key) =>
           setCollapsedGroups((previous) => {
@@ -302,6 +316,9 @@ const AcceptanceCheckInventory = ({
           })
         }
       />
+      {/* After the list, never inside it: the checks are the decision surface,
+          and a row sitting among them reads as one more thing to review. */}
+      <AcceptanceInteractionCost data={data} />
     </>
   );
 };

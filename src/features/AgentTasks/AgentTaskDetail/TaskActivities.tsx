@@ -1,5 +1,6 @@
 import type { BriefType, TaskDetailActivity } from '@lobechat/types';
-import { Accordion, AccordionItem, Avatar, Empty, Flexbox, Icon, Tag, Text } from '@lobehub/ui';
+import { Accordion, AccordionItem, Empty, Flexbox, Icon } from '@lobehub/ui';
+import { Avatar, Tag, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import type { TFunction } from 'i18next';
 import { BotMessageSquare, CircleDot, CirclePlus, MessageCircle } from 'lucide-react';
@@ -16,6 +17,7 @@ import { styles } from '../shared/style';
 import CommentCard from './CommentCard';
 import CommentInput from './CommentInput';
 import TaskBriefCard from './TaskBriefCard';
+import TaskRunReport from './TaskRunReport';
 import TopicCard from './TopicCard';
 
 const ROW_TYPE_ICON = {
@@ -127,7 +129,12 @@ const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   );
 });
 
-const TaskActivities = memo(() => {
+interface TaskActivitiesProps {
+  /** Result review leads with run output and leaves the reply composer after the evidence. */
+  variant?: 'activity' | 'result';
+}
+
+const TaskActivities = memo<TaskActivitiesProps>(({ variant = 'activity' }) => {
   const { t } = useTranslation('chat');
   const activities = useTaskStore(taskActivitySelectors.activeTaskActivities);
   const activeTaskId = useTaskStore(taskDetailSelectors.activeTaskId);
@@ -149,6 +156,60 @@ const TaskActivities = memo(() => {
     [activities],
   );
 
+  const commentInput = activeTaskId ? <CommentInput taskId={activeTaskId} /> : null;
+
+  // A goal loop can produce many rounds; only the newest run opens by default so
+  // the latest result is not buried under older ones.
+  const firstTopicKey = items.find(({ activity }) => activity.type === 'topic')?.key;
+  const rows =
+    items.length > 0 ? (
+      items.map(({ activity, brief, key }) => {
+        if (brief) {
+          return (
+            <TaskBriefCard
+              brief={brief}
+              key={key}
+              onAfterAddComment={refreshActiveTask}
+              onAfterDelete={refreshActiveTask}
+              onAfterResolve={refreshActiveTask}
+            />
+          );
+        }
+        if (activity.type === 'topic') {
+          // The result panel's newest run is not a row in a list — it is the
+          // agent's report of what this task produced, so it gets its own
+          // presentation rather than the activity card's chrome.
+          if (variant === 'result' && key === firstTopicKey) {
+            return <TaskRunReport activity={activity} key={key} />;
+          }
+          return <TopicCard activity={activity} defaultExpanded={false} key={key} />;
+        }
+        if (activity.type === 'comment') {
+          return <CommentCard activity={activity} key={key} />;
+        }
+        // Lifecycle bookkeeping ("created the task", reassignments). It belongs
+        // to the activity timeline; in a result panel it is a row between the
+        // reader and the report.
+        if (variant === 'result') return null;
+        return <ActivityRow activity={activity} key={key} />;
+      })
+    ) : (
+      <Empty
+        description={t('taskDetail.activitiesEmpty')}
+        icon={BotMessageSquare}
+        style={{ marginTop: 8 }}
+      />
+    );
+
+  // The Portal header already names the task and the report is the only thing
+  // in this section, so a collapsible "运行结果" band above it labels a section
+  // of one and eats the top of the reading surface.
+  // No comment composer here: the result panel is for reading what came back.
+  // Leaving a note for the next run is one of the report's own actions, which
+  // opens the editor on demand instead of parking an empty box under every
+  // report.
+  if (variant === 'result') return <Flexbox gap={12}>{rows}</Flexbox>;
+
   return (
     <Accordion defaultExpandedKeys={['activities']} gap={0}>
       <AccordionItem
@@ -165,46 +226,8 @@ const TaskActivities = memo(() => {
         }
       >
         <Flexbox gap={12} paddingBlock={12} paddingInline={12}>
-          {activeTaskId && <CommentInput taskId={activeTaskId} />}
-          {items.length > 0 ? (
-            // A goal loop can produce many rounds; only the newest run opens by
-            // default so the latest result is not buried under older ones.
-            (() => {
-              const firstTopicKey = items.find(({ activity }) => activity.type === 'topic')?.key;
-              return items.map(({ activity, brief, key }) => {
-                if (brief) {
-                  return (
-                    <TaskBriefCard
-                      brief={brief}
-                      key={key}
-                      onAfterAddComment={refreshActiveTask}
-                      onAfterDelete={refreshActiveTask}
-                      onAfterResolve={refreshActiveTask}
-                    />
-                  );
-                }
-                if (activity.type === 'topic') {
-                  return (
-                    <TopicCard
-                      activity={activity}
-                      defaultExpanded={key === firstTopicKey}
-                      key={key}
-                    />
-                  );
-                }
-                if (activity.type === 'comment') {
-                  return <CommentCard activity={activity} key={key} />;
-                }
-                return <ActivityRow activity={activity} key={key} />;
-              });
-            })()
-          ) : (
-            <Empty
-              description={t('taskDetail.activitiesEmpty')}
-              icon={BotMessageSquare}
-              style={{ marginTop: 8 }}
-            />
-          )}
+          {commentInput}
+          {rows}
         </Flexbox>
       </AccordionItem>
     </Accordion>

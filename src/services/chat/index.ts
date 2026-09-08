@@ -1,7 +1,6 @@
 import { AgentBuilderIdentifier } from '@lobechat/builtin-tool-agent-builder';
 import {
-  COMPOSIO_APP_TYPES,
-  LOBEHUB_SKILL_PROVIDERS,
+  getConnectorCatalog,
   REQUEST_AGENT_ID_HEADER,
   REQUEST_TOPIC_ID_HEADER,
   REQUEST_TRIGGER_HEADER,
@@ -36,6 +35,7 @@ import {
 } from '@/store/agent/selectors';
 import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getChatStoreState } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/slices/topic/selectors';
 import { getToolStoreState } from '@/store/tool';
 import {
   builtinToolSelectors,
@@ -221,13 +221,29 @@ class ChatService {
 
       const officialTools: OfficialToolItem[] = [];
 
-      // Get builtin tools (excluding Composio tools)
+      const isComposioEnabled = Boolean(
+        typeof window !== 'undefined' &&
+        window.global_serverConfigStore?.getState()?.serverConfig?.enableComposio,
+      );
+      const isLobehubSkillEnabled = Boolean(
+        typeof window !== 'undefined' &&
+        window.global_serverConfigStore?.getState()?.serverConfig?.enableLobehubSkill,
+      );
+      const connectorCatalog = getConnectorCatalog({
+        composio: isComposioEnabled,
+        lobehub: isLobehubSkillEnabled,
+      });
+      const connectorIdentifiers = new Set(
+        connectorCatalog.map((item) =>
+          item.type === 'lobehub' ? item.provider.id : item.serverType.identifier,
+        ),
+      );
+
+      // Get builtin tools (excluding connectors rendered through their canonical owner)
       const builtinTools = builtinToolSelectors.metaList(toolState);
-      const composioIdentifiers = new Set(COMPOSIO_APP_TYPES.map((t) => t.identifier));
 
       for (const tool of builtinTools) {
-        // Skip Composio tools in builtin list (they'll be shown separately)
-        if (composioIdentifiers.has(tool.identifier)) continue;
+        if (connectorIdentifiers.has(tool.identifier)) continue;
 
         officialTools.push({
           description: tool.meta?.description,
@@ -239,48 +255,35 @@ class ChatService {
         });
       }
 
-      // Get Composio tools (if enabled)
-      const isComposioEnabled =
-        typeof window !== 'undefined' &&
-        window.global_serverConfigStore?.getState()?.serverConfig?.enableComposio;
-
-      if (isComposioEnabled) {
-        const allComposioServers = composioStoreSelectors.getServers(toolState);
-
-        for (const composioType of COMPOSIO_APP_TYPES) {
-          const server = allComposioServers.find((s) => s.identifier === composioType.identifier);
-
+      const allComposioServers = composioStoreSelectors.getServers(toolState);
+      const allLobehubSkillServers = lobehubSkillStoreSelectors.getServers(toolState);
+      for (const connector of connectorCatalog) {
+        if (connector.type === 'composio') {
+          const { serverType } = connector;
+          const server = allComposioServers.find(
+            (item) => item.identifier === serverType.identifier,
+          );
           officialTools.push({
-            description: `LobeHub Mcp Server: ${composioType.label}`,
-            enabled: enabledPlugins.includes(composioType.identifier),
-            identifier: composioType.identifier,
+            description: `LobeHub Mcp Server: ${serverType.label}`,
+            enabled: enabledPlugins.includes(serverType.identifier),
+            identifier: serverType.identifier,
             installed: !!server,
-            name: composioType.label,
+            name: serverType.label,
             type: 'composio',
           });
+          continue;
         }
-      }
 
-      // Get LobehubSkill providers (if enabled)
-      const isLobehubSkillEnabled =
-        typeof window !== 'undefined' &&
-        window.global_serverConfigStore?.getState()?.serverConfig?.enableLobehubSkill;
-
-      if (isLobehubSkillEnabled) {
-        const allLobehubSkillServers = lobehubSkillStoreSelectors.getServers(toolState);
-
-        for (const provider of LOBEHUB_SKILL_PROVIDERS) {
-          const server = allLobehubSkillServers.find((s) => s.identifier === provider.id);
-
-          officialTools.push({
-            description: `LobeHub Skill Provider: ${provider.label}`,
-            enabled: enabledPlugins.includes(provider.id),
-            identifier: provider.id,
-            installed: !!server,
-            name: provider.label,
-            type: 'lobehub-skill',
-          });
-        }
+        const { provider } = connector;
+        const server = allLobehubSkillServers.find((item) => item.identifier === provider.id);
+        officialTools.push({
+          description: `LobeHub Skill Provider: ${provider.label}`,
+          enabled: enabledPlugins.includes(provider.id),
+          identifier: provider.id,
+          installed: !!server,
+          name: provider.label,
+          type: 'lobehub-skill',
+        });
       }
 
       agentBuilderContext = {
@@ -338,6 +341,15 @@ class ChatService {
       model: payload.model,
       provider: payload.provider!,
       subAgentChatConfigOverride: resolvedAgentConfig.subAgentChatConfigOverride,
+      // The topic's own effort pin (only when pinned for this very model — a
+      // sub-agent modelOverride must not inherit the parent topic's effort).
+      topicReasoningConfig: topicId
+        ? topicSelectors.getTopicReasoningConfigForModel(
+            topicId,
+            payload.model,
+            payload.provider!,
+          )(getChatStoreState())
+        : undefined,
     });
 
     // For models governed by the reasoning extend-params family the user-level
@@ -478,7 +490,13 @@ class ChatService {
        */
       fetcher = async () => {
         try {
-          return await this.fetchOnClient({ payload, provider, runtimeProvider: sdkType, signal });
+          return await this.fetchOnClient({
+            payload,
+            provider,
+            runtimeProvider: sdkType,
+            signal,
+            topicId,
+          });
         } catch (e) {
           const {
             errorType = ChatErrorType.BadRequest,
@@ -613,6 +631,7 @@ class ChatService {
     provider: string;
     runtimeProvider: string;
     signal?: AbortSignal;
+    topicId?: string;
   }) => {
     /**
      * if enable login and not signed in, return unauthorized error
@@ -629,7 +648,10 @@ class ChatService {
     });
     const data = params.payload as ChatStreamPayload;
 
-    return agentRuntime.chat(data, { signal: params.signal });
+    return agentRuntime.chat(data, {
+      metadata: { topicId: params.topicId },
+      signal: params.signal,
+    });
   };
 }
 

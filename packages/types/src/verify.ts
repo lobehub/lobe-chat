@@ -507,6 +507,8 @@ export interface VerifyInteractionCostOperators {
 export interface VerifyInteractionCostPhase {
   actionCount?: number;
   activeSeconds?: number;
+  /** Wall-clock the agent actually spent here — not the user-equivalent price. */
+  actualAgentSeconds?: number;
   checkItemId?: string;
   id: string;
   label?: string;
@@ -552,6 +554,12 @@ export interface VerifyRubricConfig {
  */
 export interface VerifyRunMetadata {
   [key: string]: unknown;
+  /** Autonomous Goal review, kept separate from human decisions and verifier verdicts. */
+  goalReview?: {
+    feedback: string;
+    predictionIds: string[];
+    status: 'passed' | 'rejected' | 'errored';
+  };
   interactionCost?: VerifyInteractionCost;
   /**
    * Per-run override for the repair-round cap, taking precedence over the

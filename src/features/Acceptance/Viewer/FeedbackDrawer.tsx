@@ -1,8 +1,8 @@
 'use client';
 
 import type { AcceptanceAttachment } from '@lobechat/types';
-import { Flexbox, Text } from '@lobehub/ui';
-import { Drawer } from '@lobehub/ui/base-ui';
+import { Flexbox } from '@lobehub/ui';
+import { Drawer, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import dayjs from 'dayjs';
 import { memo } from 'react';
@@ -98,10 +98,22 @@ const EntryRow = memo<{
     <Flexbox
       className={cx(styles.row, entry.checkId && styles.clickable)}
       gap={8}
+      role={entry.checkId ? 'button' : undefined}
       style={entry.stale ? { opacity: 0.55 } : undefined}
+      tabIndex={entry.checkId ? 0 : undefined}
       onClick={entry.checkId ? () => onJumpToCheck(entry.checkId!) : undefined}
+      onKeyDown={(event) => {
+        if (
+          event.target === event.currentTarget &&
+          entry.checkId &&
+          (event.key === 'Enter' || event.key === ' ')
+        ) {
+          event.preventDefault();
+          onJumpToCheck(entry.checkId);
+        }
+      }}
     >
-      <Flexbox horizontal align={'center'} gap={6}>
+      <Flexbox horizontal align={'center'} gap={6} wrap={'wrap'}>
         {isCheck ? (
           <>
             <span className={styles.seq}>C{entry.checkSeq}</span>

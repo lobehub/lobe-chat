@@ -18,10 +18,11 @@ export {
 export { default as ReportViewer } from './Report/ReportViewer';
 export { default as CheckerDock } from './Run/CheckerDock';
 export { default as RunResult } from './Run/RunResult';
-export { countResults, isDraftUnconfirmed, phaseFromStatus } from './utils';
+export { checkDisplayTitle, countResults, isDraftUnconfirmed, phaseFromStatus } from './utils';
 export { default as AcceptanceViewer } from './Viewer';
 export type { AcceptanceCheck, CheckReviewInput } from './Viewer/CheckList';
 export {
+  AcceptanceCheckRow,
   checkHeadMeta,
   FocusedCheckDetails,
   groupChecks,

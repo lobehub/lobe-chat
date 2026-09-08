@@ -1,5 +1,5 @@
 import { type Context as OtContext } from '@lobechat/observability-otel/api';
-import { type ClientSecretPayload } from '@lobechat/types';
+import { type ClientSecretPayload, type SpendOrigin } from '@lobechat/types';
 import type { ClientMetadata } from '@lobechat/utils/server';
 import { parseClientMetadata } from '@lobechat/utils/server';
 import { parse } from 'cookie';
@@ -17,6 +17,7 @@ import { assertOIDCUserActive, isOIDCUserInactiveError } from '@/libs/oidc-provi
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { isApiKeyExpired, validateApiKeyFormat } from '@/utils/apiKey';
 
+import { describeOIDCAuthFailure, setAuthFailureHeader } from '../utils/authFailure';
 import { HETERO_OPERATION_JWT_PURPOSE } from '../utils/internalJwt';
 
 // Create context logger namespace
@@ -99,6 +100,17 @@ export interface AuthContext {
   oidcAuth?: OIDCAuth | null;
   oidcClientId?: string;
   resHeaders?: Headers;
+  /**
+   * Origin attribution for spend produced by this call, forwarded to the
+   * billing points the procedure reaches.
+   *
+   * SECURITY: never derived from request headers or any other client input —
+   * it decides who a charge is billed against, so a client could otherwise
+   * forge another user's attribution. Populated ONLY by a server-side
+   * `createCaller` (see the tool-execution server runtimes), where the values
+   * come from the already-authorized run context.
+   */
+  spendOrigin?: SpendOrigin;
   traceContext?: OtContext;
   userAgent?: string;
   userId?: string | null;
@@ -111,11 +123,14 @@ export interface AuthContext {
  */
 export const createContextInner = async (params?: {
   apiKeyScopes?: string[] | null;
+  authFailure?: string;
   clientMetadata?: ClientMetadata;
   clientIp?: string | null;
   marketAccessToken?: string;
   oidcAuth?: OIDCAuth | null;
   oidcClientId?: string;
+  /** See {@link AuthContext.spendOrigin} — server-side callers only. */
+  spendOrigin?: SpendOrigin;
   traceContext?: OtContext;
   userAgent?: string;
   userId?: string | null;
@@ -123,6 +138,9 @@ export const createContextInner = async (params?: {
 }): Promise<AuthContext> => {
   log('createContextInner called with params: %O', params);
   const responseHeaders = new Headers();
+  if (params?.authFailure && !params.userId) {
+    setAuthFailureHeader(responseHeaders, params.authFailure);
+  }
 
   return {
     apiKeyScopes: params?.apiKeyScopes,
@@ -132,6 +150,7 @@ export const createContextInner = async (params?: {
     oidcAuth: params?.oidcAuth,
     oidcClientId: params?.oidcClientId,
     resHeaders: responseHeaders,
+    spendOrigin: params?.spendOrigin,
     traceContext: params?.traceContext,
     userAgent: params?.userAgent,
     userId: params?.userId,
@@ -273,12 +292,14 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
 
   let userId;
   let oidcAuth;
+  let authFailure: string | undefined;
 
   // Prioritize checking for OIDC authentication (both standard Authorization and custom Oidc-Auth headers)
   if (authEnv.ENABLE_OIDC) {
     log('OIDC enabled, attempting OIDC authentication');
     const oidcAuthToken = request.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
     log('Oidc-Auth header: %s', oidcAuthToken ? 'exists' : 'not found');
+    if (!oidcAuthToken) authFailure = 'no_token';
 
     try {
       if (oidcAuthToken) {
@@ -327,6 +348,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
         console.error('OIDC authentication failed for inactive user:', error);
         return createContextInner({
           ...commonContext,
+          authFailure: 'user_inactive',
           traceContext,
           userId: null,
         });
@@ -334,7 +356,8 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
 
       // If OIDC authentication fails, log error and continue with other authentication methods
       if (oidcAuthToken) {
-        log('OIDC authentication failed, error: %O', error);
+        authFailure = describeOIDCAuthFailure(error);
+        log('OIDC authentication failed (%s), error: %O', authFailure, error);
         console.error('OIDC authentication failed, trying other methods:', error);
       }
     }
@@ -356,6 +379,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
 
     return createContextInner({
       ...commonContext,
+      authFailure,
       traceContext,
       userId,
     });
@@ -369,5 +393,5 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
     'All authentication methods attempted, returning final context, userId: %s',
     userId || 'not authenticated',
   );
-  return createContextInner({ ...commonContext, traceContext, userId });
+  return createContextInner({ ...commonContext, authFailure, traceContext, userId });
 };
