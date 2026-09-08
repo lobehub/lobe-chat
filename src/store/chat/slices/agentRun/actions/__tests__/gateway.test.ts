@@ -101,8 +101,8 @@ vi.mock('@/const/version', async (importOriginal) => {
   };
 });
 
-vi.mock('@/services/electron/gatewayConnection', () => ({
-  gatewayConnectionService: { getDeviceInfo: mockGateway.getDeviceInfo },
+vi.mock('../transports/gateway/localDeviceInfo', () => ({
+  getLocalDeviceInfo: mockGateway.getDeviceInfo,
 }));
 
 vi.mock('@/store/agent', () => ({ getAgentStoreState: () => mockAgentStore.state }));
