@@ -45,9 +45,8 @@ const AcceptanceCheckInventory = ({
   toolbar,
 }: AcceptanceCheckInventoryProps) => {
   const { t } = useTranslation('verify');
-  const { lg = true, md = true } = useResponsive();
+  const { md = true } = useResponsive();
   const { acceptanceId, embedded } = useAcceptanceScope();
-  const compactToolbar = embedded || !lg;
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
   const [searchParams, setSearchParams] = useSearchParams();
   const [localFilter, setLocalFilter] = useState<CheckFilter>('all');
@@ -200,7 +199,7 @@ const AcceptanceCheckInventory = ({
         {toolbar}
         <Select
           size={'small'}
-          style={{ height: compactToolbar ? 44 : 34, width: 118 }}
+          style={{ width: 118 }}
           value={filter}
           variant={'filled'}
           options={[
@@ -221,7 +220,7 @@ const AcceptanceCheckInventory = ({
         {data.rounds.length > 1 && (
           <Select
             size={'small'}
-            style={{ height: compactToolbar ? 44 : 34, width: 110 }}
+            style={{ width: 110 }}
             value={roundFilter === null ? 'all' : String(roundFilter)}
             variant={'filled'}
             options={[

@@ -29,12 +29,8 @@ const styles = createStaticStyles(({ css }) => ({
   `,
   tab: css`
     cursor: pointer;
-
     position: relative;
-
-    padding-block: 8px;
     padding-inline: 10px;
-
     white-space: nowrap;
 
     &:hover {
@@ -95,7 +91,6 @@ const AcceptanceTabs = ({
             aria-pressed={tab.key === active}
             className={cx(styles.tab, tab.key === active && styles.tabActive)}
             key={tab.key}
-            style={{ minHeight: 44 }}
             type={'text'}
             onClick={() => onChange(tab.key)}
           >

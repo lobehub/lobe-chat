@@ -438,7 +438,7 @@ export const AcceptanceCheckRow = memo<{
                 </Tooltip>
               )}
             </Flexbox>
-            <Flexbox align={'center'} height={22}>
+            <Flexbox align={'center'} className={styles.rowChevron} height={22}>
               <Icon
                 color={cssVar.colorTextQuaternary}
                 icon={ChevronRight}

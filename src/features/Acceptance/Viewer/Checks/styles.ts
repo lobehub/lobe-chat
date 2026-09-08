@@ -113,8 +113,23 @@ export const styles = createStaticStyles(({ css }) => ({
     opacity: 0;
     transition: opacity 0.2s;
   `,
+  rowChevron: css`
+    @media (width <= 767px) {
+      grid-area: 1 / 4;
+    }
+  `,
   rowMeta: css`
     transition: opacity 0.2s;
+
+    @media (width <= 767px) {
+      grid-column: 3 / -1;
+      flex-wrap: wrap;
+      min-width: 0;
+
+      &:empty {
+        display: none;
+      }
+    }
 
     @media (hover: hover) and (pointer: fine) {
       pointer-events: none;
@@ -143,6 +158,12 @@ export const styles = createStaticStyles(({ css }) => ({
        white page just severs the title from its content, so no wash there. */
     &:not([data-expanded]):hover {
       background: ${cssVar.colorFillQuaternary};
+    }
+
+    @media (width <= 767px) {
+      display: grid;
+      grid-template-columns: 16px max-content minmax(0, 1fr) 14px;
+      row-gap: 6px;
     }
   `,
   stepDot: css`
