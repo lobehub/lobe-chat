@@ -91,10 +91,19 @@ export const formatPropertyValue = (field: string | undefined, value: unknown): 
   if (typeof value === 'object') {
     const v = value as {
       heartbeatInterval?: number | null;
+      maxExecutions?: number | null;
       mode?: string | null;
       schedulePattern?: string | null;
+      scheduleTimezone?: string | null;
     };
-    if (v.mode === 'schedule') return `schedule(${v.schedulePattern ?? '?'})`;
+    if (v.mode === 'schedule') {
+      // Every part a user can edit shows, or a timezone-only or cap-only
+      // change reads as "from X to X".
+      const parts = [v.schedulePattern ?? '?'];
+      if (v.scheduleTimezone) parts.push(v.scheduleTimezone);
+      if (typeof v.maxExecutions === 'number') parts.push(`max ${v.maxExecutions}`);
+      return `schedule(${parts.join(', ')})`;
+    }
     if (v.mode === 'heartbeat') return `heartbeat(${v.heartbeatInterval ?? '?'}s)`;
     return JSON.stringify(value);
   }

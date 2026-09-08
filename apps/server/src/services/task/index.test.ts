@@ -89,8 +89,10 @@ describe('TaskService', () => {
   };
 
   const mockTaskModel = {
+    addActivities: vi.fn(),
     addActivity: vi.fn(),
     findSubtasks: vi.fn(),
+    lockForStatusChange: vi.fn(),
     updateStatusForIds: vi.fn(),
     updateWithLog: vi.fn(),
     create: vi.fn(),
@@ -1791,26 +1793,39 @@ describe('TaskService', () => {
         { ...parent, status: 'canceled' },
         { ...openChild, status: 'canceled' },
       ]);
+      // What each task is *leaving* comes from the locked read inside the
+      // transaction, not the dialog-time snapshot: the child moved backlog →
+      // paused in between, and the log must say so.
+      mockTaskModel.lockForStatusChange.mockResolvedValue([
+        { id: 'task-p', status: 'running', visibility: 'public' },
+        { id: 'task-c1', status: 'paused', visibility: 'private' },
+      ]);
       mockTaskTopicModel.cancelRunningByTaskIds.mockResolvedValue([]);
       (db as any).transaction = async (fn: (tx: unknown) => Promise<void>) => fn(db);
 
       const service = new TaskService(db, userId);
       await service.updateStatusCascade({ id: 'P-1', status: 'canceled' }, { userId });
 
-      expect(mockTaskModel.addActivity).toHaveBeenCalledTimes(2);
-      expect(mockTaskModel.addActivity).toHaveBeenCalledWith({
-        actorAgentId: null,
-        actorUserId: userId,
-        payload: { actorKind: 'user', from: 'running', to: 'canceled' },
-        taskId: 'task-p',
-        type: 'status',
-      });
-      expect(mockTaskModel.addActivity).toHaveBeenCalledWith(
-        expect.objectContaining({
-          payload: { actorKind: 'user', from: 'backlog', to: 'canceled' },
+      expect(mockTaskModel.lockForStatusChange).toHaveBeenCalledWith(['task-p', 'task-c1']);
+      expect(mockTaskModel.addActivities).toHaveBeenCalledTimes(1);
+      expect(mockTaskModel.addActivities).toHaveBeenCalledWith([
+        {
+          actorAgentId: null,
+          actorUserId: userId,
+          payload: { actorKind: 'user', from: 'running', to: 'canceled' },
+          taskId: 'task-p',
+          type: 'status',
+          visibility: 'public',
+        },
+        {
+          actorAgentId: null,
+          actorUserId: userId,
+          payload: { actorKind: 'user', from: 'paused', to: 'canceled' },
           taskId: 'task-c1',
-        }),
-      );
+          type: 'status',
+          visibility: 'private',
+        },
+      ]);
     });
 
     it('stays silent for a system cascade', async () => {
@@ -1823,7 +1838,8 @@ describe('TaskService', () => {
 
       await new TaskService(db, userId).updateStatusCascade({ id: 'P-1', status: 'canceled' });
 
-      expect(mockTaskModel.addActivity).not.toHaveBeenCalled();
+      expect(mockTaskModel.lockForStatusChange).not.toHaveBeenCalled();
+      expect(mockTaskModel.addActivities).not.toHaveBeenCalled();
     });
   });
 

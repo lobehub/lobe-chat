@@ -59,6 +59,9 @@ const TRACKED_TASK_COLUMNS = [
   'assigneeAgentId',
   'assigneeUserId',
   'automationMode',
+  // Only for `schedule.maxExecutions`, which lives in the JSONB pocket; the
+  // rest of `config` is not diffed.
+  'config',
   'heartbeatInterval',
   'priority',
   'schedulePattern',
@@ -90,6 +93,7 @@ export const taskActivityActor = (actor: {
 
 const snapshotAutomation = (row: {
   automationMode: TaskAutomationMode | null;
+  config: unknown;
   heartbeatInterval: number | null;
   schedulePattern: string | null;
   scheduleTimezone: string | null;
@@ -97,8 +101,11 @@ const snapshotAutomation = (row: {
   // No mode means automation is off; the leftover pattern / interval columns
   // are configuration in waiting, not something the user turned on.
   if (!row.automationMode) return null;
+  const maxExecutions = (row.config as { schedule?: { maxExecutions?: number | null } } | null)
+    ?.schedule?.maxExecutions;
   return {
     heartbeatInterval: row.heartbeatInterval,
+    maxExecutions: typeof maxExecutions === 'number' ? maxExecutions : null,
     mode: row.automationMode,
     schedulePattern: row.schedulePattern,
     scheduleTimezone: row.scheduleTimezone,
@@ -1931,6 +1938,41 @@ export class TaskModel {
   }
 
   /**
+   * Append several event rows in one INSERT. Unlike `addActivity`, the caller
+   * supplies each row's visibility — meant for a bulk write that has already
+   * read (and locked) the tasks it describes.
+   */
+  async addActivities(
+    rows: Omit<NewTaskActivity, 'id' | 'userId' | 'workspaceId'>[],
+  ): Promise<TaskActivityItem[]> {
+    if (rows.length === 0) return [];
+    return this.db
+      .insert(taskActivities)
+      .values(
+        rows.map((row) => ({ ...row, userId: this.userId, workspaceId: this.workspaceId ?? null })),
+      )
+      .returning();
+  }
+
+  /**
+   * Lock a set of tasks for the rest of the transaction and return what a
+   * bulk status write needs to describe them afterwards: the status each one
+   * is leaving and the visibility its activity row inherits. Reading these
+   * before the lock would let a concurrent edit slip in between and the log
+   * would name a transition that never happened.
+   */
+  async lockForStatusChange(
+    ids: string[],
+  ): Promise<{ id: string; status: string; visibility: 'private' | 'public' }[]> {
+    if (ids.length === 0) return [];
+    return this.db
+      .select({ id: tasks.id, status: tasks.status, visibility: tasks.visibility })
+      .from(tasks)
+      .where(and(inArray(tasks.id, ids), this.ownership()))
+      .for('update');
+  }
+
+  /**
    * Update a task and append one event per tracked field that actually
    * changed, in ONE transaction, with the previous values taken from a
    * **locked** read of the row.
@@ -1965,6 +2007,7 @@ export class TaskModel {
           assigneeAgentId: tasks.assigneeAgentId,
           assigneeUserId: tasks.assigneeUserId,
           automationMode: tasks.automationMode,
+          config: tasks.config,
           heartbeatInterval: tasks.heartbeatInterval,
           priority: tasks.priority,
           schedulePattern: tasks.schedulePattern,

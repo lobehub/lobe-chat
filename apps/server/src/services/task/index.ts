@@ -628,22 +628,27 @@ export class TaskService {
       // topic that started between the snapshot and this transaction is still
       // closed together with the status update.
       canceledTopics = await taskTopicModel.cancelRunningByTaskIds(targetIds);
+      // The pre-transaction snapshot only chose *which* tasks; what each one
+      // is leaving is read under the lock, so a collaborator's edit between
+      // the dialog and this write is logged as it really was.
+      const locked = actor ? await taskModel.lockForStatusChange(targetIds) : [];
       updatedTasks = await taskModel.updateStatusForIds(targetIds, input.status, { completedAt });
 
-      // A person confirmed this for the whole family, so every member gets
-      // its own row — the snapshot above holds each one's previous status.
+      // A person confirmed this for the whole family, so every member that
+      // moved gets its own row — one INSERT, not one per task.
       if (actor) {
         const { actorKind, ...actorColumns } = taskActivityActor(actor);
-        for (const before of targetTasks) {
-          if (before.status === input.status) continue;
-          if (!updatedTasks.some((updated) => updated.id === before.id)) continue;
-          await taskModel.addActivity({
-            ...actorColumns,
-            payload: { actorKind, from: before.status, to: input.status },
-            taskId: before.id,
-            type: 'status',
-          });
-        }
+        await taskModel.addActivities(
+          locked
+            .filter((before) => before.status !== input.status)
+            .map((before) => ({
+              ...actorColumns,
+              payload: { actorKind, from: before.status, to: input.status },
+              taskId: before.id,
+              type: 'status' as const,
+              visibility: before.visibility,
+            })),
+        );
       }
     });
 

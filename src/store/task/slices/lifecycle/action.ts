@@ -197,6 +197,18 @@ export class TaskLifecycleSliceActionImpl {
           if (this.#statusTransitionVersions.get(id) !== transitionVersion) return;
 
           if (previousStatus) this.#patchTaskCollectionsStatus(id, previousStatus);
+          // The transition did not happen, so its row must go even when the
+          // server-truth refetch below cannot run (offline).
+          if (statusRow) {
+            const latest = this.#get().taskDetailMap[id];
+            this.#get().internal_dispatchTaskDetail({
+              id,
+              type: 'updateTaskDetail',
+              value: {
+                activities: (latest?.activities ?? []).filter((a) => a.id !== statusRow.id),
+              },
+            });
+          }
           try {
             await this.#get().internal_refreshTaskDetail(id);
           } catch (refreshError) {

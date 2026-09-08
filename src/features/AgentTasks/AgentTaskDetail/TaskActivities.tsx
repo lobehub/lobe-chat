@@ -274,11 +274,20 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   // Values are plain words in the sentence, not chips: the feed is a quiet
   // record under the task, and "moved from A to B" reads best as prose.
   const tag = (label: ReactNode) => <span style={{ color: cssVar.colorText }}>{label}</span>;
+  // A schedule is pattern + timezone + cap; naming only the pattern would
+  // make a timezone-only edit read as "from X to X". The extra parts are
+  // machine values, so they ride outside the translated phrase.
   const automationLabel = (snapshot: TaskAutomationSnapshot) =>
     snapshot.mode === 'schedule'
-      ? t('taskDetail.activities.automation.mode.schedule', {
-          pattern: snapshot.schedulePattern ?? '',
-        })
+      ? [
+          t('taskDetail.activities.automation.mode.schedule', {
+            pattern: snapshot.schedulePattern ?? '',
+          }),
+          snapshot.scheduleTimezone,
+          typeof snapshot.maxExecutions === 'number' ? `×${snapshot.maxExecutions}` : null,
+        ]
+          .filter(Boolean)
+          .join(' · ')
       : t('taskDetail.activities.automation.mode.heartbeat', {
           seconds: snapshot.heartbeatInterval ?? 0,
         });

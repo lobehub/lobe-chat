@@ -45,6 +45,8 @@ export interface TaskActivityLogPayload {
  */
 export interface TaskAutomationSnapshot {
   heartbeatInterval: number | null;
+  /** `config.schedule.maxExecutions`; null = unlimited. Part of the schedule a user edits. */
+  maxExecutions: number | null;
   mode: TaskAutomationMode | null;
   schedulePattern: string | null;
   scheduleTimezone: string | null;

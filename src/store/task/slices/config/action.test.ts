@@ -369,18 +369,47 @@ describe('TaskConfigSliceAction', () => {
           field: 'automation',
           from: {
             heartbeatInterval: null,
+            maxExecutions: null,
             mode: 'schedule',
             schedulePattern: '0 9 * * *',
             scheduleTimezone: 'UTC',
           },
           to: {
             heartbeatInterval: null,
+            maxExecutions: null,
             mode: 'schedule',
             schedulePattern: '0 18 * * *',
             scheduleTimezone: 'Asia/Shanghai',
           },
         },
       ]);
+    });
+
+    it('logs a cap-only edit: the execution cap is part of the schedule', async () => {
+      signIn();
+      vi.mocked(taskService.update).mockResolvedValue({ success: true } as any);
+      useTaskStore.setState({
+        taskDetailMap: {
+          'T-1': {
+            ...mockDetail,
+            activities: [],
+            automationMode: 'schedule',
+            schedule: { maxExecutions: null, pattern: '0 9 * * *', timezone: 'UTC' },
+          },
+        },
+      });
+
+      await useTaskStore.getState().updateSchedule('T-1', {
+        maxExecutions: 5,
+        pattern: '0 9 * * *',
+        timezone: 'UTC',
+      });
+
+      expect(rows()).toHaveLength(1);
+      expect(rows()[0]).toMatchObject({
+        from: expect.objectContaining({ maxExecutions: null }),
+        to: expect.objectContaining({ maxExecutions: 5 }),
+      });
     });
 
     it('does not log a schedule edit while automation is off — the server does not either', async () => {
@@ -427,6 +456,7 @@ describe('TaskConfigSliceAction', () => {
           field: 'automation',
           from: {
             heartbeatInterval: 600,
+            maxExecutions: null,
             mode: 'heartbeat',
             schedulePattern: '0 9 * * *',
             scheduleTimezone: 'UTC',

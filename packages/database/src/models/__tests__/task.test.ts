@@ -17,7 +17,7 @@ import { taskTopics } from '../../schemas/task';
 import { works } from '../../schemas/work';
 import type { LobeChatDatabase } from '../../type';
 import { ProjectModel } from '../project';
-import { TaskModel } from '../task';
+import { taskActivityActor, TaskModel } from '../task';
 import { WorkModel } from '../work';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -1801,6 +1801,63 @@ describe('TaskModel', () => {
 
       const recent = await model.getActivities(task.id, 2);
       expect(recent.map((a) => a.payload?.to)).toEqual([3, 4]);
+    });
+
+    it('treats the execution cap as part of the schedule', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+      await model.updateWithLog(
+        task.id,
+        { automationMode: 'schedule', schedulePattern: '0 9 * * *' },
+        { userId },
+      );
+
+      // A cap-only edit changes nothing but the JSONB pocket.
+      await model.updateWithLog(
+        task.id,
+        { config: { schedule: { maxExecutions: 3 } } },
+        { userId },
+      );
+
+      const activities = await model.getActivities(task.id);
+      expect(activities).toHaveLength(2);
+      expect(activities[1].payload).toMatchObject({
+        from: expect.objectContaining({ maxExecutions: null }),
+        to: expect.objectContaining({ maxExecutions: 3 }),
+      });
+    });
+
+    it('locks a family for a bulk status write and inserts its rows in one go', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const parent = await model.create({ instruction: 'Parent', status: 'running' });
+      const child = await model.create({
+        instruction: 'Child',
+        parentTaskId: parent.id,
+        status: 'paused',
+      });
+
+      const locked = await model.lockForStatusChange([parent.id, child.id]);
+      expect(locked.map((r) => [r.id, r.status]).sort()).toEqual(
+        [
+          [parent.id, 'running'],
+          [child.id, 'paused'],
+        ].sort(),
+      );
+
+      const { actorKind, ...actorColumns } = taskActivityActor({ userId });
+      await model.addActivities(
+        locked.map((row) => ({
+          ...actorColumns,
+          payload: { actorKind, from: row.status, to: 'canceled' },
+          taskId: row.id,
+          type: 'status' as const,
+          visibility: row.visibility,
+        })),
+      );
+
+      expect(await model.getActivities(parent.id)).toHaveLength(1);
+      const [childRow] = await model.getActivities(child.id);
+      expect(childRow.payload).toEqual({ actorKind: 'user', from: 'paused', to: 'canceled' });
     });
 
     it('folds the automation columns into one event per save', async () => {

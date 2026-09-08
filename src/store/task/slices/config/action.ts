@@ -49,6 +49,7 @@ const snapshotAutomationFromDetail = (
   detail?.automationMode
     ? {
         heartbeatInterval: detail.heartbeat?.interval ?? null,
+        maxExecutions: detail.schedule?.maxExecutions ?? null,
         mode: detail.automationMode,
         schedulePattern: detail.schedule?.pattern ?? null,
         scheduleTimezone: detail.schedule?.timezone ?? null,
@@ -240,6 +241,7 @@ export class TaskConfigSliceActionImpl {
     const after: TaskAutomationSnapshot | null = mode
       ? {
           heartbeatInterval: update.heartbeatInterval ?? detail?.heartbeat?.interval ?? null,
+          maxExecutions: detail?.schedule?.maxExecutions ?? null,
           mode,
           schedulePattern: update.schedulePattern ?? detail?.schedule?.pattern ?? null,
           scheduleTimezone: update.scheduleTimezone ?? detail?.schedule?.timezone ?? null,
@@ -324,7 +326,12 @@ export class TaskConfigSliceActionImpl {
     const detail = this.#get().taskDetailMap[id];
     const before = snapshotAutomationFromDetail(detail);
     const after: TaskAutomationSnapshot | null = before
-      ? { ...before, schedulePattern: schedule.pattern, scheduleTimezone: schedule.timezone }
+      ? {
+          ...before,
+          maxExecutions: schedule.maxExecutions,
+          schedulePattern: schedule.pattern,
+          scheduleTimezone: schedule.timezone,
+        }
       : null;
     const userState = useUserStore.getState();
     const actorId = userProfileSelectors.userId(userState);
