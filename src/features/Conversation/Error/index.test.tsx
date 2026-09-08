@@ -569,7 +569,7 @@ describe('ErrorMessageExtra', () => {
     expect(screen.getByText('guide:claude-code:rate_limit')).toBeInTheDocument();
     fireEvent.click(screen.getByText('transfer'));
     expect(createTopicForwardModalMock).toHaveBeenCalledWith({
-      onForwardSuccess: undefined,
+      onForwardSuccess: expect.any(Function),
       sourceAgentId: 'source-agent',
       topicId: 'source-topic',
       topicTitle: '',

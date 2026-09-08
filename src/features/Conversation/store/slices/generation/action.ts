@@ -508,7 +508,7 @@ const regenerateUserMessageFromSource = async (
  * Handles generation control (stop, cancel, regenerate, continue)
  */
 export interface GenerationAction {
-  cancelHeteroContinuation: (topicId?: string) => Promise<void>;
+  cancelHeteroContinuation: (topicId?: string | null) => Promise<void>;
   /**
    * Cancel a specific operation
    */
@@ -693,6 +693,13 @@ export const generationSlice: StateCreator<
     if (!topicId) return;
 
     const chatStore = useChatStore.getState();
+    const topic = topicSelectors.getTopicById(topicId)(chatStore);
+    if (
+      topic?.status !== 'scheduled' ||
+      topic.metadata?.scheduledRun?.kind !== 'resume_after_rate_limit'
+    )
+      return;
+
     await chatStore.updateTopicStatus({ status: 'failed', topicId });
     await chatStore.updateTopicMetadata(topicId, { scheduledRun: null });
   },

@@ -55,7 +55,7 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 export interface TopicForwardContentProps {
-  onForwardSuccess?: () => void;
+  onForwardSuccess?: () => void | Promise<void>;
   sourceAgentId: string;
   topicId: string;
   topicTitle: string;

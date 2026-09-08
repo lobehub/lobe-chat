@@ -29,7 +29,7 @@ export interface ForwardResult {
 export interface ForwardMessagesParams extends ForwardContentOptions {
   messages: UIChatMessage[];
   note?: string;
-  onTopicCreated?: (target: ForwardTarget, topicId: string) => void;
+  onTopicCreated?: (target: ForwardTarget, topicId: string) => void | Promise<void>;
   targets: ForwardTarget[];
 }
 

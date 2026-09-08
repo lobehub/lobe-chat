@@ -9,7 +9,7 @@ import type { ForwardTarget } from '@/store/chat/slices/forward/action';
 
 interface ForwardTopicSource {
   agentId: string;
-  onSuccess?: () => void;
+  onSuccess?: () => void | Promise<void>;
   topicId: string;
 }
 
@@ -25,10 +25,19 @@ export const useForwardTopic = ({ agentId, onSuccess, topicId }: ForwardTopicSou
       if (targets.length === 0) return;
 
       const primaryTarget = targets[0];
+      let acceptance: Promise<void> | undefined;
       void forwardTopic({
         header: t('messageForward.topic.header'),
         note,
-        onTopicCreated: (target, createdTopicId) => {
+        onTopicCreated: async (target, createdTopicId) => {
+          // A persisted target owns the handoff; do not wait for its run to finish.
+          acceptance ??= Promise.resolve()
+            .then(onSuccess)
+            .catch((error) => {
+              console.error('[useForwardTopic] Handoff follow-up failed:', error);
+              toast.error(t('messageForward.failed'));
+            });
+          await acceptance;
           if (target.id !== primaryTarget.id) return;
           clearPortalStack();
           navigate(AGENT_CHAT_TOPIC_URL(target.id, createdTopicId));
@@ -41,7 +50,6 @@ export const useForwardTopic = ({ agentId, onSuccess, topicId }: ForwardTopicSou
       })
         .then((result) => {
           if (result.succeeded.length > 0) {
-            onSuccess?.();
             toast.success(
               targets.length === 1
                 ? t('messageForward.success', { title: primaryTarget.title || '' })
@@ -50,7 +58,10 @@ export const useForwardTopic = ({ agentId, onSuccess, topicId }: ForwardTopicSou
           }
           if (result.failed.length > 0) toast.error(t('messageForward.failed'));
         })
-        .catch(() => toast.error(t('messageForward.topic.loadFailed')));
+        .catch((error) => {
+          console.error('[useForwardTopic] Forwarding failed:', error);
+          toast.error(t('messageForward.topic.loadFailed'));
+        });
     },
     [agentId, clearPortalStack, forwardTopic, navigate, onSuccess, t, topicId],
   );
