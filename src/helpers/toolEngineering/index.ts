@@ -196,10 +196,13 @@ export const createToolsEngine = (config: ToolsEngineConfig = {}): ToolsEngine =
   // enableChecker rules) — a plugin, skill, connector, or user-toggleable
   // builtin tool the agent has explicitly disabled must not be discoverable/
   // activatable at all, matching the server-side (aiAgent gateway) treatment.
-  const allManifests =
-    disabledPluginIds.length === 0
-      ? combinedManifests
-      : combinedManifests.filter((m) => !disabledPluginIds.includes(m.identifier));
+  // Explicit activation bypasses enable rules; a plain Web client must not
+  // acquire the Electron IPC executor. Gateway execution uses the server engine.
+  const allManifests = combinedManifests.filter(
+    (m) =>
+      !disabledPluginIds.includes(m.identifier) &&
+      (m.identifier !== AuvManifest.identifier || isToolAvailableInCurrentEnv(m.identifier)),
+  );
 
   return new ToolsEngine({
     defaultToolIds,
@@ -266,7 +269,6 @@ export const createAgentToolsEngine = (
     // Browser rides the same local-runtime gate as local-system because the
     // control IPC only exists in the desktop main process.
     [BrowserManifest.identifier]: agentChatConfigSelectors.isLocalSystemEnabled(agentState),
-    [AuvManifest.identifier]: agentChatConfigSelectors.isLocalSystemEnabled(agentState),
     [CloudSandboxManifest.identifier]: agentChatConfigSelectors.isCloudSandboxEnabled(agentState),
     [KnowledgeBaseManifest.identifier]: kbEnabled,
     [LocalSystemManifest.identifier]: agentChatConfigSelectors.isLocalSystemEnabled(agentState),

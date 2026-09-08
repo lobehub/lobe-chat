@@ -308,8 +308,8 @@ describe('builtin tool registry', () => {
     expect(view.getByText('builtins.lobe-computer-use.inspector.keyboard:')).toBeVisible();
   });
 
-  it('keeps the single AUV CLI entry point directly available behind its runtime gate', () => {
-    expect(alwaysOnToolIds).toContain(AuvIdentifier);
+  it('keeps Computer Use out of the always-on tools', () => {
+    expect(alwaysOnToolIds).not.toContain(AuvIdentifier);
   });
 
   it('registers skill store inspectors and renders for market flows', () => {

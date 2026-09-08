@@ -35,7 +35,8 @@ export const AuvManifest: BuiltinToolManifest = {
   identifier: AuvIdentifier,
   meta: {
     avatar: '🖱️',
-    description: 'Use desktop applications, interact with controls, and capture the screen',
+    description:
+      'Uses the active desktop device, including from Web through a connected device. Activate lobe-computer-use with activateTools only when the task needs native application controls, mouse or keyboard input, or screenshots. Do not activate for ordinary conversation, web research, or file and shell operations.',
     readme:
       'Interact with desktop applications, use mouse and keyboard controls, enter text, and capture the screen on the active device. View captured images to inspect the result of each step.',
     title: 'Computer Use',

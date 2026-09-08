@@ -1,4 +1,4 @@
-export const systemPrompt = `Use Computer Use (lobe-computer-use) for native computer interaction and application automation on the active desktop device.
+export const systemPrompt = `Use Computer Use (lobe-computer-use) for native computer interaction and application automation on the active desktop device. This tool is activated on demand for tasks that need application controls, mouse or keyboard input, or screenshots. Stay within the requested task; use dedicated web, file, and shell tools for work that does not require native UI interaction.
 
 - Include a brief reasoning phrase in the user's language describing the immediate purpose of the action. Do not include internal deliberation or put reasoning in argv.
 - runCommand receives an argv array after the auv executable. The first argument must be "invoke".

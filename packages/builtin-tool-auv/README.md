@@ -2,6 +2,20 @@
 
 Provides `lobe-computer-use/runCommand` for typed native computer commands on the active desktop device.
 
+## Activation
+
+Computer Use is available on demand through an active desktop device. By default it is not loaded in the initial tool set.
+Explicit user pins and tools already activated in the conversation retain their existing behavior.
+When a task needs native application controls, mouse/keyboard input, or screen capture,
+the agent calls `lobe-activator.activateTools` with `identifiers: ["lobe-computer-use"]`
+and a short `reason`. The next model call receives the API schema and operation guidance.
+Ordinary conversation, web research, and file or shell work do not need this tool.
+
+Web conversations can activate Computer Use when their execution target is a connected
+desktop that reports support. A browser alone cannot execute native commands. Both the
+Gateway route and direct Electron client execution retain their existing device gates.
+Tool activation does not activate an application or verify a UI operation.
+
 ## Usage
 
 Pass CLI arguments after the executable name, for example:

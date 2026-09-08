@@ -333,13 +333,6 @@ export const createServerAgentToolsEngine = (
       hasDeviceProxy &&
       !!deviceContext?.deviceOnline &&
       !!deviceContext?.autoActivated,
-    [AuvManifest.identifier]:
-      !!deviceContext?.supportedTools?.includes(AuvManifest.identifier) &&
-      !disableLocalSystem &&
-      runtimeMode === 'local' &&
-      hasDeviceProxy &&
-      !!deviceContext?.deviceOnline &&
-      !!deviceContext?.autoActivated,
     [MemoryManifest.identifier]: globalMemoryEnabled,
     // Only auto-enable in bot conversations; otherwise let user's plugin selection take effect
     ...(isBotConversation && { [MessageManifest.identifier]: true }),

@@ -233,6 +233,27 @@ describe('AiAgentService.execAgent - device tool pipeline ()', () => {
     });
   });
 
+  // https://github.com/lobehub/lobehub/pull/19051
+  it('exposes Computer Use for Web activation through an online desktop', async () => {
+    const { deviceGateway } = await import('@/server/services/deviceGateway');
+    vi.spyOn(deviceGateway, 'isConfigured', 'get').mockReturnValue(true);
+    mockQueryDeviceList.mockResolvedValue([
+      { deviceId: 'dev-1', hostname: 'Mac', online: true, platform: 'darwin' },
+    ]);
+    mockQueryDeviceSystemInfo.mockResolvedValue({ supportedTools: [AuvManifest.identifier] });
+    mockGetAgentConfig.mockResolvedValue(
+      createBaseAgentConfig({
+        agencyConfig: { executionTarget: 'local' },
+        plugins: [AuvManifest.identifier],
+      }),
+    );
+    mockGetEnabledPluginManifests.mockReturnValue(new Map([[AuvManifest.identifier, AuvManifest]]));
+    await service.execAgent({ agentId: 'agent-1', prompt: 'Hello', deviceId: 'dev-1' });
+    expect(
+      mockCreateOperation.mock.calls[0][0].toolSet.manifestMap[AuvManifest.identifier],
+    ).toBeDefined();
+  });
+
   it.each([undefined, ['lobe-computer-use']])(
     'gates Computer Use discovery on reported support %j',
     async (supportedTools) => {

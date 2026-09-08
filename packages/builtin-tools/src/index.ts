@@ -57,7 +57,6 @@ export const defaultToolIds = [
   KnowledgeBaseManifest.identifier,
   MemoryManifest.identifier,
   LocalSystemManifest.identifier,
-  AuvManifest.identifier,
   BrowserManifest.identifier,
   CloudSandboxManifest.identifier,
   TopicReferenceManifest.identifier,
@@ -83,10 +82,6 @@ export const defaultToolIds = [
  */
 export const alwaysOnToolIds = [
   LobeAgentManifest.identifier,
-  // AUV intentionally exposes one CLI-style entry point instead of one model tool per
-  // native command. Keep that single entry point available whenever the runtime gate
-  // resolves to a local desktop/device; the later AUV rule still disables it elsewhere.
-  AuvManifest.identifier,
   LobeActivatorManifest.identifier,
   SkillsManifest.identifier,
   SkillStoreManifest.identifier,
@@ -166,7 +161,6 @@ export const groupSupervisorToolIds = [GroupManagementManifest.identifier];
  */
 export const runtimeManagedToolIds = [
   BrowserManifest.identifier,
-  AuvManifest.identifier,
   CloudSandboxManifest.identifier,
   KnowledgeBaseManifest.identifier,
   LocalSystemManifest.identifier,
