@@ -3,19 +3,57 @@
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
 import { Flexbox, TextArea } from '@lobehub/ui';
 import { ActionIcon, Button, createModal, Text, useModalContext } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { ZoomIn, ZoomOut } from 'lucide-react';
+import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
+import { Trash2, ZoomIn, ZoomOut } from 'lucide-react';
 import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AnnotationCanvas } from './Annotation';
+import type { PendingAttachment } from './attachments';
 import { AttachmentStrip, AttachmentUploadButton, useFeedbackAttachments } from './attachments';
+import { MobileEvidenceReview } from './MobileEvidenceReview';
 import { frostedModalStyles } from './modals';
+import { useReviewSubmit } from './useReviewSubmit';
 
 export const CHECK_REJECT_MODAL_SIZE = { height: '98dvh', width: '98vw' } as const;
 export const TEXT_REJECT_MODAL_WIDTH = 'min(560px, calc(100vw - 32px))';
 
 const styles = createStaticStyles(({ css }) => ({
+  mobilePopup: css`
+    @media (width <= 767px) {
+      max-width: 100vw !important;
+
+      > div {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding: 0;
+        border-radius: 0;
+      }
+    }
+  `,
+  mobileClose: css`
+    @media (width <= 767px) {
+      inset-block-start: max(4px, env(safe-area-inset-top));
+      inset-inline-end: 4px;
+      width: 44px;
+      height: 44px;
+    }
+  `,
+  mobileHeader: css`
+    @media (width <= 767px) {
+      min-height: 56px;
+      padding-block: max(12px, env(safe-area-inset-top)) 12px;
+      padding-inline: 12px 52px;
+    }
+  `,
+  mobileContent: css`
+    @media (width <= 767px) {
+      padding-block: 0 max(12px, env(safe-area-inset-bottom));
+      padding-inline: 12px;
+    }
+  `,
   modalPopup: css`
     > div {
       display: flex;
@@ -27,6 +65,15 @@ const styles = createStaticStyles(({ css }) => ({
       width: ${CHECK_REJECT_MODAL_SIZE.width};
       max-width: ${CHECK_REJECT_MODAL_SIZE.width};
       height: ${CHECK_REJECT_MODAL_SIZE.height};
+
+      @media (width <= 767px) {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding: 0;
+        border-radius: 0;
+      }
     }
   `,
   fullscreenBody: css`
@@ -35,7 +82,7 @@ const styles = createStaticStyles(({ css }) => ({
     gap: 16px;
     min-height: 0;
 
-    @media (width <= 640px) {
+    @media (width <= 767px) {
       flex-direction: column;
       gap: 12px;
     }
@@ -78,10 +125,10 @@ const styles = createStaticStyles(({ css }) => ({
     width: 320px;
     min-width: 0;
 
-    @media (width <= 640px) {
+    @media (width <= 767px) {
       flex: 0 1 auto;
       width: 100%;
-      max-height: 36%;
+      max-height: none;
     }
   `,
   thumb: css`
@@ -109,10 +156,12 @@ const styles = createStaticStyles(({ css }) => ({
       fits the stage, and scrolls from the edges once it grows past it. */
   viewport: css`
     overflow: auto;
+    overscroll-behavior: contain;
     display: flex;
     flex: 1;
 
     min-width: 0;
+    min-height: 120px;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -143,6 +192,12 @@ const styles = createStaticStyles(({ css }) => ({
 
     background: ${cssVar.colorBgElevated};
     box-shadow: ${cssVar.boxShadowSecondary};
+
+    @media (width <= 767px) {
+      position: static;
+      transform: none;
+      align-self: center;
+    }
   `,
   zoomLabel: css`
     min-width: 44px;
@@ -175,8 +230,18 @@ const nextAnnotationKey = () => ++draftAnnotationSeq;
 /** What survives a refresh — typed feedback is too costly to lose to one F5. */
 interface RejectDraft {
   annotations: DraftAnnotationEntry[];
+  attachments?: PendingAttachment[];
   comment: string;
 }
+
+export const serializeReviewAnnotations = (
+  annotations: DraftAnnotationEntry[],
+): AcceptanceReviewAnnotation[] =>
+  annotations.map(({ comment, evidenceId, rect }) => ({
+    comment: comment.trim() || undefined,
+    evidenceId,
+    rect,
+  }));
 
 const draftStorageKey = (key: string) => `acceptance-reject-draft:${key}`;
 
@@ -201,7 +266,10 @@ export const checkRejectModalShell = (evidenceCount: number) => {
   const modalSize = checkRejectModalSize(evidenceCount);
   return {
     classNames: {
-      popup: cx(styles.modalPopup, evidenceCount > 0 && styles.modalPopupMedia),
+      close: styles.mobileClose,
+      content: styles.mobileContent,
+      header: styles.mobileHeader,
+      popup: cx(styles.modalPopup, styles.mobilePopup, evidenceCount > 0 && styles.modalPopupMedia),
     },
     styles: {
       ...frostedModalStyles,
@@ -232,12 +300,16 @@ interface CheckRejectModalProps {
   initialAnnotations?: AcceptanceReviewAnnotation[];
   /** Feedback already typed in the focused detail before opening annotation. */
   initialComment?: string;
+  initialEvidenceId?: string;
   /** Perform the reject; resolve true to close, false to stay open. */
   onConfirm: (value: {
     annotations: AcceptanceReviewAnnotation[];
     comment: string;
     fileIds: string[];
   }) => Promise<boolean>;
+  previousAnnotations?: AcceptanceReviewAnnotation[];
+  previousAttachments?: PendingAttachment[];
+  previousComment?: string;
 }
 
 export const mergeRejectComments = (initialComment = '', storedComment = '') => {
@@ -249,8 +321,23 @@ export const mergeRejectComments = (initialComment = '', storedComment = '') => 
 };
 
 const CheckRejectModalContent = memo<CheckRejectModalProps>(
-  ({ checkTitle, draftKey, evidence, initialAnnotations, initialComment, onConfirm }) => {
+  ({
+    checkTitle,
+    draftKey,
+    evidence,
+    initialAnnotations,
+    initialComment,
+    initialEvidenceId,
+    previousAnnotations,
+    previousAttachments,
+    previousComment,
+    onConfirm,
+  }) => {
     const { t: translate } = useTranslation('verify');
+    const { md = true } = useResponsive();
+    const [drawing, setDrawing] = useState(false);
+    const [showFeedback, setShowFeedback] = useState(evidence.length === 0);
+    const swipeStart = useRef<{ x: number; y: number } | null>(null);
     const { close, setCanDismissByClickOutside } = useModalContext();
     const [draft] = useState(() => readDraft(draftKey));
     const [comment, setComment] = useState(() =>
@@ -259,12 +346,14 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       // feedback neither party wrote.
       initialAnnotations?.length
         ? (initialComment ?? '')
-        : mergeRejectComments(initialComment, draft?.comment),
+        : mergeRejectComments(initialComment, draft?.comment ?? previousComment),
     );
-    const [loading, setLoading] = useState(false);
-    const [activeEvidenceId, setActiveEvidenceId] = useState(evidence[0]?.id);
+    const { failed, loading, submit } = useReviewSubmit();
+    const [activeEvidenceId, setActiveEvidenceId] = useState(initialEvidenceId ?? evidence[0]?.id);
     const [annotations, setAnnotations] = useState<DraftAnnotationEntry[]>(() => {
-      const source = initialAnnotations?.length ? initialAnnotations : (draft?.annotations ?? []);
+      const source = initialAnnotations?.length
+        ? initialAnnotations
+        : (draft?.annotations ?? previousAnnotations ?? []);
       return (
         source
           // Only restore regions whose evidence still exists — a new round may
@@ -286,7 +375,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
     // Your own screenshots (paste or upload) — attached to the reject alongside
     // the note and any circled regions.
     const { attachments, fileIds, handlePaste, remove, uploadFiles, uploading } =
-      useFeedbackAttachments();
+      useFeedbackAttachments(6, draft?.attachments ?? previousAttachments);
 
     const [zoom, setZoom] = useState(1);
     const viewportRef = useRef<HTMLDivElement>(null);
@@ -315,25 +404,32 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
         cancelAnimationFrame(raf);
         observer?.disconnect();
       };
-    }, [activeEvidenceId, evidence.length]);
+    }, [activeEvidenceId, evidence.length, showFeedback]);
 
     // Persist the draft as it is typed; an empty draft cleans the slot up.
     useEffect(() => {
       if (!draftKey) return;
       try {
-        if (!comment && annotations.length === 0) {
+        if (!comment && annotations.length === 0 && attachments.length === 0) {
           localStorage.removeItem(draftStorageKey(draftKey));
         } else {
           localStorage.setItem(
             draftStorageKey(draftKey),
-            JSON.stringify({ annotations, comment } satisfies RejectDraft),
+            JSON.stringify({ annotations, attachments, comment } satisfies RejectDraft),
           );
         }
       } catch {
         /* quota/private mode — the draft is a convenience, never a blocker */
       }
-    }, [annotations, comment, draftKey]);
+    }, [annotations, attachments, comment, draftKey]);
 
+    const activeIndex = evidence.findIndex((item) => item.id === activeEvidenceId);
+    const selectEvidence = (index: number) => {
+      if (!evidence[index]) return;
+      setActiveEvidenceId(evidence[index].id);
+      setZoom(1);
+      viewportRef.current?.scrollTo(0, 0);
+    };
     const activeEvidence = evidence.find((item) => item.id === activeEvidenceId);
     const activeAnnotations = annotations.filter((item) => item.evidenceId === activeEvidenceId);
 
@@ -352,36 +448,32 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       fileIds.length > 0;
 
     const handleConfirm = async () => {
-      setLoading(true);
-      try {
-        const confirmed = await onConfirm({
-          annotations: annotations
-            .filter((annotation) => annotation.comment.trim())
-            .map((annotation) => ({
-              comment: annotation.comment.trim(),
-              evidenceId: annotation.evidenceId,
-              rect: annotation.rect,
-            })),
+      const confirmed = await submit(() =>
+        onConfirm({
+          annotations: serializeReviewAnnotations(annotations),
           comment: comment.trim(),
           fileIds,
-        });
-        if (confirmed) {
-          if (draftKey) localStorage.removeItem(draftStorageKey(draftKey));
-          close();
-        }
-      } finally {
-        setLoading(false);
+        }),
+      );
+      if (confirmed) {
+        if (draftKey) localStorage.removeItem(draftStorageKey(draftKey));
+        close();
       }
     };
 
     const hasEvidence = evidence.length > 0;
 
     const canvasHandlers = {
-      onDraw: (rect: AcceptanceReviewAnnotation['rect']) =>
+      onDraw: (rect: AcceptanceReviewAnnotation['rect']) => {
         setAnnotations((previous) => [
           ...previous,
           { comment: '', evidenceId: activeEvidence!.id, key: nextAnnotationKey(), rect },
-        ]),
+        ]);
+        if (!md) {
+          setDrawing(false);
+          setShowFeedback(true);
+        }
+      },
       onRemove: (index: number) => {
         const target = activeAnnotations[index];
         if (target)
@@ -396,39 +488,82 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       },
     };
 
-    const annotationInputs = activeAnnotations.map((annotation, index) => (
-      <Flexbox horizontal align={'flex-start'} gap={8} key={annotation.key}>
-        <span className={styles.regionIndex} style={{ marginBlockStart: 6 }}>
-          {index + 1}
-        </span>
-        <TextArea
-          autoSize={{ maxRows: 5, minRows: 1 }}
-          style={{ flex: 1 }}
-          value={annotation.comment}
-          placeholder={translate('acceptance.review.annotationPlaceholder', {
-            index: index + 1,
-          })}
-          onChange={(event) =>
-            setAnnotations((previous) =>
-              previous.map((item) =>
-                item.key === annotation.key ? { ...item, comment: event.target.value } : item,
-              ),
-            )
-          }
-        />
+    const annotationInputs = (md ? activeAnnotations : annotations).map((annotation, index) => (
+      <Flexbox gap={8} key={annotation.key}>
+        {!md && (
+          <Button
+            style={{ alignSelf: 'flex-start', minHeight: 44 }}
+            type={'text'}
+            onClick={() => {
+              selectEvidence(evidence.findIndex((item) => item.id === annotation.evidenceId));
+              setDrawing(true);
+              setShowFeedback(false);
+            }}
+          >
+            {translate('acceptance.review.regionImage', {
+              image: evidence.findIndex((item) => item.id === annotation.evidenceId) + 1,
+              region:
+                annotations
+                  .filter((item) => item.evidenceId === annotation.evidenceId)
+                  .findIndex((item) => item.key === annotation.key) + 1,
+            })}
+          </Button>
+        )}
+        <Flexbox horizontal align={'flex-start'} gap={8}>
+          <span
+            className={styles.regionIndex}
+            style={{ marginBlockStart: 6, display: md ? undefined : 'none' }}
+          >
+            {index + 1}
+          </span>
+          <TextArea
+            aria-label={translate('acceptance.review.annotationPlaceholder', { index: index + 1 })}
+            autoSize={{ maxRows: 5, minRows: 1 }}
+            style={{ flex: 1, fontSize: md ? undefined : 16 }}
+            value={annotation.comment}
+            placeholder={translate(
+              md
+                ? 'acceptance.review.annotationPlaceholder'
+                : 'acceptance.review.rejectPlaceholder',
+              { index: index + 1 },
+            )}
+            onChange={(event) =>
+              setAnnotations((previous) =>
+                previous.map((item) =>
+                  item.key === annotation.key ? { ...item, comment: event.target.value } : item,
+                ),
+              )
+            }
+          />
+          <ActionIcon
+            aria-label={translate('acceptance.review.removeRegion', { index: index + 1 })}
+            icon={Trash2}
+            size={{ blockSize: 44, size: 18 }}
+            onClick={() =>
+              setAnnotations((previous) => previous.filter((item) => item.key !== annotation.key))
+            }
+          />
+        </Flexbox>
       </Flexbox>
     ));
 
     const thumbnails = evidence.length > 1 && (
-      <Flexbox horizontal gap={8} wrap={'wrap'}>
+      <Flexbox horizontal gap={8} style={{ overflowX: 'auto', flex: 'none' }}>
         {evidence.map((item) => (
-          <div
+          <button
+            aria-pressed={item.id === activeEvidenceId}
             className={cx(styles.thumb, item.id === activeEvidenceId && styles.thumbActive)}
             key={item.id}
-            onClick={() => setActiveEvidenceId(item.id)}
+            style={{ flexShrink: 0 }}
+            type={'button'}
+            aria-label={translate('acceptance.review.imageNumber', {
+              current: evidence.indexOf(item) + 1,
+              total: evidence.length,
+            })}
+            onClick={() => selectEvidence(evidence.indexOf(item))}
           >
             <img alt={''} src={item.fileUrl} />
-          </div>
+          </button>
         ))}
       </Flexbox>
     );
@@ -457,12 +592,13 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
               onRemove={remove}
             />
           </Flexbox>
-          <Button disabled={loading} onClick={close}>
+          <Button disabled={loading} style={{ minHeight: md ? undefined : 44 }} onClick={close}>
             {translate('acceptance.actions.cancel')}
           </Button>
           <Button
             disabled={!canSubmit || uploading}
             loading={loading}
+            style={{ minHeight: md ? undefined : 44 }}
             type={'primary'}
             onClick={handleConfirm}
           >
@@ -472,28 +608,106 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       </Flexbox>
     );
 
+    const imageStage = activeEvidence && (
+      <div
+        className={styles.viewport}
+        ref={viewportRef}
+        style={{
+          touchAction: !md && !drawing && zoom === 1 ? 'pan-y pinch-zoom' : undefined,
+        }}
+        onTouchEnd={(event) => {
+          const start = swipeStart.current;
+          swipeStart.current = null;
+          const touch = event.changedTouches[0];
+          if (!start || !touch) return;
+          const dx = touch.clientX - start.x;
+          const dy = touch.clientY - start.y;
+          if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5)
+            selectEvidence(activeIndex + (dx < 0 ? 1 : -1));
+        }}
+        onTouchStart={(event) => {
+          const touch = event.touches[0];
+          swipeStart.current =
+            !md && !drawing && zoom === 1 && event.touches.length === 1
+              ? { x: touch.clientX, y: touch.clientY }
+              : null;
+        }}
+      >
+        <div className={styles.viewportInner}>
+          <AnnotationCanvas
+            annotations={activeAnnotations}
+            drawing={md || drawing}
+            imageWidth={viewportWidth ? Math.max(viewportWidth * zoom - 2, 0) : undefined}
+            src={activeEvidence!.fileUrl}
+            {...canvasHandlers}
+          />
+        </div>
+      </div>
+    );
+
+    if (!md)
+      return (
+        <MobileEvidenceReview
+          canSubmit={canSubmit && !uploading}
+          drawing={drawing}
+          failed={failed}
+          image={imageStage}
+          imageCount={evidence.length}
+          imageIndex={activeIndex}
+          loading={loading}
+          showFeedback={showFeedback}
+          zoom={zoom}
+          editor={
+            <Flexbox gap={16}>
+              {annotations.length > 0 && (
+                <>
+                  <Text strong>{translate('acceptance.review.regionComments')}</Text>
+                  {annotationInputs}
+                </>
+              )}
+              <Text strong>{translate('acceptance.review.supplement')}</Text>
+              <TextArea
+                aria-label={translate('acceptance.review.supplement')}
+                autoSize={{ minRows: 4, maxRows: 10 }}
+                placeholder={translate('acceptance.review.rejectPlaceholder')}
+                style={{ fontSize: 16 }}
+                value={comment}
+                onChange={(event) => setComment(event.target.value)}
+                onPaste={handlePaste}
+              />
+              <AttachmentUploadButton disabled={loading} onFiles={uploadFiles} />
+              <AttachmentStrip
+                attachments={attachments}
+                disabled={loading}
+                uploading={uploading}
+                onRemove={remove}
+              />
+              <Text fontSize={12} type={'secondary'}>
+                {translate('acceptance.review.draftSaved')}
+              </Text>
+            </Flexbox>
+          }
+          onConfirm={handleConfirm}
+          onDrawingChange={setDrawing}
+          onImageChange={selectEvidence}
+          onShowFeedback={setShowFeedback}
+          onZoom={stepZoom}
+        />
+      );
+
     return (
       <div className={styles.modalBody}>
         {activeEvidence && (
           <Flexbox flex={1} gap={12} style={{ minHeight: 0 }}>
             <Flexbox gap={12} height={'100%'} style={{ minHeight: 0 }}>
-              {thumbnails}
+              {md && thumbnails}
               <div className={styles.fullscreenBody} style={{ position: 'relative' }}>
-                <div className={styles.viewport} ref={viewportRef}>
-                  <div className={styles.viewportInner}>
-                    <AnnotationCanvas
-                      annotations={activeAnnotations}
-                      imageWidth={viewportWidth ? Math.max(viewportWidth * zoom - 2, 0) : undefined}
-                      src={activeEvidence.fileUrl}
-                      {...canvasHandlers}
-                    />
-                  </div>
-                </div>
+                {imageStage}
                 <div className={styles.zoomBar}>
                   <ActionIcon
                     disabled={zoom <= ZOOM_STEPS[0]}
                     icon={ZoomOut}
-                    size={'small'}
+                    size={md ? 'small' : { blockSize: 44, size: 20 }}
                     title={translate('acceptance.review.zoomOut')}
                     onClick={() => stepZoom(-1)}
                   />
@@ -501,12 +715,19 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
                   <ActionIcon
                     disabled={zoom >= ZOOM_STEPS.at(-1)!}
                     icon={ZoomIn}
-                    size={'small'}
+                    size={md ? 'small' : { blockSize: 44, size: 20 }}
                     title={translate('acceptance.review.zoomIn')}
                     onClick={() => stepZoom(1)}
                   />
                 </div>
-                <div className={styles.sidePanel}>
+                <div
+                  className={styles.sidePanel}
+                  style={
+                    !md && !drawing && activeAnnotations.length === 0
+                      ? { display: 'none' }
+                      : undefined
+                  }
+                >
                   <Flexbox gap={2}>
                     <Text strong fontSize={13}>
                       {translate('acceptance.review.regionComments')}
@@ -526,7 +747,14 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
             </Flexbox>
           </Flexbox>
         )}
-        <div className={styles.modalFooter}>{footer}</div>
+        <div className={styles.modalFooter}>
+          {failed && (
+            <Text role={'alert'} type={'danger'}>
+              {translate('acceptance.review.submitFailed')}
+            </Text>
+          )}
+          {footer}
+        </div>
       </div>
     );
   },
@@ -546,7 +774,9 @@ export const openCheckRejectModal = (options: CheckRejectModalProps) => {
     maskClosable: true,
     title: (
       <Flexbox gap={2}>
-        <Text strong>{modalTitle.title}</Text>
+        <Text strong style={{ overflowWrap: 'anywhere', whiteSpace: 'normal' }}>
+          {modalTitle.title}
+        </Text>
         {modalTitle.description && (
           <Text fontSize={12} type={'secondary'}>
             {modalTitle.description}

@@ -478,6 +478,8 @@ export interface TaskRunPromptWorkspaceNode {
  * up without re-discovering everything.
  */
 export interface TaskRunPromptGoalLoop {
+  /** Feedback from the automatic Acceptance review of the previous delivery. */
+  automaticReviewFeedback?: string;
   /** Checks that did not pass in the previous round, with the verifier's why/suggestion. */
   failedChecks?: Array<{ title: string; why?: string }>;
   /** Round budget. Null/undefined = uncapped. */
@@ -748,9 +750,16 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
     taskLines.push(
       `Goal loop${goalLoop.round ? ` — round ${goalLoop.round}${budget}` : ''}: earlier rounds did not fully meet the acceptance criteria. Focus on closing the gaps below instead of redoing finished work.`,
     );
-    if (goalLoop.rejectComment) {
-      taskLines.push('  User feedback on the last delivery (address this first):');
-      taskLines.push(`    "${goalLoop.rejectComment}"`);
+    const reviewFeedback = [
+      goalLoop.rejectComment,
+      goalLoop.automaticReviewFeedback &&
+        `Automatic Acceptance review:\n${goalLoop.automaticReviewFeedback}`,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+    if (reviewFeedback) {
+      taskLines.push('  Review feedback on the last delivery (address this first):');
+      taskLines.push(`    "${reviewFeedback}"`);
     }
     if (goalLoop.failedChecks && goalLoop.failedChecks.length > 0) {
       taskLines.push('  Unresolved checks from the last round:');

@@ -17,6 +17,11 @@ import { useAcceptanceBundle } from './useAcceptanceBundle';
 import { formatAcceptanceCountsText } from './verdict';
 
 const styles = createStaticStyles(({ css }) => ({
+  statusRow: css`
+    @media (width <= 767px) {
+      padding-inline-end: 48px;
+    }
+  `,
   scopeChip: css`
     font-size: 12px;
     color: ${cssVar.colorTextSecondary};
@@ -78,12 +83,8 @@ const AcceptanceIdentity = ({ focusSlot, statusSlot, topicSlot }: AcceptanceIden
   const showOrigin = Boolean(originAgent || topicSlot || pullRequest?.number);
 
   return (
-    <Flexbox gap={6}>
-      {/* State leads, on its own line above the name — the delivery's standing
-          is what a reader checks first, and it stops competing with the title
-          for the same row. The per-check entry rides along with it: it acts on
-          exactly the counts stated beside it. */}
-      <Flexbox horizontal align={'center'} gap={10} wrap={'wrap'}>
+    <Flexbox gap={10}>
+      <Flexbox horizontal align={'center'} className={styles.statusRow} gap={10} wrap={'wrap'}>
         {statusSlot ?? <AcceptanceStatusPill status={acceptance.status} />}
         <Text fontSize={12} type={'secondary'}>
           {[countsText, latestAt].filter(Boolean).join(' · ')}

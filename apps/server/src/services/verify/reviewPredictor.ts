@@ -6,6 +6,7 @@ import {
   REVIEW_PREDICTION_JSON_SCHEMA,
 } from '@lobechat/prompts';
 import type { AcceptanceReviewAnnotation } from '@lobechat/types';
+import { pickTrimmedString, toRecord } from '@lobechat/utils/object';
 import debug from 'debug';
 
 import { DocumentModel } from '@/database/models/document';
@@ -47,6 +48,8 @@ export const REVIEW_PREDICT_CONCURRENCY = 4;
 export interface PredictReviewParams {
   /** The check result to re-judge. */
   checkResultId: string;
+  /** Goal reviews also inspect original nonvisual evidence. */
+  includeTextEvidence?: boolean;
   /** The check's detailed judging rubric, when the criterion links one. */
   instructionDocumentId?: string | null;
   modelConfig: { model: string; provider: string };
@@ -88,12 +91,14 @@ export const shouldSurfaceProposal = <
  * current model's row was cleared for re-judging.
  */
 export const isCurrentReviewPrediction = (
-  prediction: { model: string; promptVersion: string; provider: string },
+  prediction: { id?: string; model: string; promptVersion: string; provider: string },
   modelConfig: { model: string; provider: string },
+  automaticPredictionIds?: ReadonlySet<string>,
 ): boolean =>
-  prediction.provider === modelConfig.provider &&
-  prediction.model === modelConfig.model &&
-  prediction.promptVersion === REVIEW_PREDICT_PROMPT_VERSION;
+  Boolean(prediction.id && automaticPredictionIds?.has(prediction.id)) ||
+  (prediction.provider === modelConfig.provider &&
+    prediction.model === modelConfig.model &&
+    prediction.promptVersion === REVIEW_PREDICT_PROMPT_VERSION);
 
 /**
  * Produces an automated second opinion on a check the verifier already judged.
@@ -177,7 +182,10 @@ export class VerifyReviewPredictorService {
     // Nothing to look at means nothing this reviewer can honestly say. A
     // text-only opinion here would be the model paraphrasing the verifier's own
     // reasoning back at the user, which is worse than silence.
-    if (visuals.length === 0) {
+    const textEvidence = params.includeTextEvidence
+      ? await this.collectTextEvidence(result.id)
+      : undefined;
+    if (visuals.length === 0 && !textEvidence) {
       log('predict: %s has no visual evidence, skipping', checkResultId);
       return this.record(params, 'skipped', 'no visual evidence to judge');
     }
@@ -188,6 +196,7 @@ export class VerifyReviewPredictorService {
 
     const chain = chainVerifyReviewPrediction({
       instruction,
+      textEvidence,
       requirement: params.requirement ?? undefined,
       surface: params.surface ?? undefined,
       title: result.checkItemTitle ?? 'Acceptance check',
@@ -218,7 +227,16 @@ export class VerifyReviewPredictorService {
       );
     } catch (error) {
       log('predict: model call failed for %s — %O', checkResultId, error);
-      return this.record(params, 'errored', error instanceof Error ? error.message : String(error));
+      const detail = toRecord(error);
+      const message =
+        pickTrimmedString(detail?.message) ??
+        pickTrimmedString(toRecord(detail?.error)?.message) ??
+        pickTrimmedString(error);
+      const errorType = pickTrimmedString(detail?.errorType);
+      const reason =
+        message ??
+        `Review model ${modelConfig.provider}/${modelConfig.model} could not run${errorType ? ` (${errorType})` : ''}. Check the provider configuration and retry the review.`;
+      return this.record(params, 'errored', reason);
     }
 
     const parsed = ReviewPredictionSchema.safeParse(raw);
@@ -263,6 +281,29 @@ export class VerifyReviewPredictorService {
       status,
       statusReason: reason,
     });
+  }
+
+  private async collectTextEvidence(resultId: string) {
+    const evidence = await this.evidenceModel.listByCheckResult(resultId);
+    const parts: string[] = [];
+    let remaining = 60_000;
+    for (const row of evidence) {
+      if (remaining <= 0) break;
+      if (!['text', 'markdown', 'dom_snapshot', 'transcript'].includes(row.type)) continue;
+      let content = row.content;
+      if (!content && row.documentId) {
+        content = (await this.documentModel.findById(row.documentId))?.content ?? null;
+      }
+      if (!content && row.fileId) {
+        const file = await this.fileModel.findById(row.fileId);
+        if (file && file.size <= 1_000_000)
+          content = await this.fileService.getFileContent(file.url);
+      }
+      if (!content) continue;
+      parts.push(`[Evidence ${row.id}]\n${content.slice(0, remaining)}`);
+      remaining -= content.length;
+    }
+    return parts.join('\n\n');
   }
 
   /**

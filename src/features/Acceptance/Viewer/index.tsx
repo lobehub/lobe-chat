@@ -23,7 +23,9 @@ import AcceptanceStatusControl from './AcceptanceStatusControl';
 import type { AcceptanceTabKey } from './AcceptanceTabs';
 import AcceptanceTabs from './AcceptanceTabs';
 import { acceptanceScrollLayout } from './layout';
+import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
+import { useAcceptanceTurn } from './useAcceptanceTurn';
 
 const CONTENT_MAX_WIDTH = 920;
 
@@ -33,6 +35,10 @@ const styles = createStaticStyles(({ css }) => ({
     max-width: ${CONTENT_MAX_WIDTH}px;
     margin-inline: auto;
     padding-inline: 24px;
+
+    @media (width <= 767px) {
+      padding-inline: 16px;
+    }
   `,
   contentFrame: css`
     overflow: ${acceptanceScrollLayout.frameOverflow};
@@ -66,12 +72,14 @@ interface AcceptancePageProps {
  * then whichever face of the delivery the tabs select.
  */
 const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraftToComposer'>) => {
-  const { acceptanceId } = useAcceptanceScope();
+  const { acceptanceId, embedded } = useAcceptanceScope();
+  const { turn } = useAcceptanceTurn(embedded);
   const { data } = useAcceptanceBundle(acceptanceId);
   const [tab, setTab] = useState<AcceptanceTabKey>('checks');
 
+  const checks = data ? checksForTurn(data, turn) : [];
   const resourceCount = new Set(
-    (data?.checks ?? []).flatMap((check) =>
+    checks.flatMap((check) =>
       (check.evidence ?? [])
         .filter((evidence) => evidence.fileUrl || evidence.documentId)
         .map((evidence) => evidence.fileId ?? evidence.documentId ?? evidence.id),
@@ -95,7 +103,7 @@ const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraf
           <Flexbox style={{ paddingBlockStart: 16 }}>
             <AcceptanceTabs
               active={tab}
-              checkCount={data?.checks.length ?? 0}
+              checkCount={checks.length}
               resourceCount={resourceCount}
               onChange={setTab}
             />

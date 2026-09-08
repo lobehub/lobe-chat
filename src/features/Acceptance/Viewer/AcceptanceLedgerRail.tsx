@@ -1,12 +1,13 @@
 'use client';
 
 import { DraggablePanel, Flexbox, Icon } from '@lobehub/ui';
-import { Drawer, Text } from '@lobehub/ui/base-ui';
+import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import { PanelRightOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
 
+import { AcceptanceDrawer } from '../AcceptanceDrawer';
 import ReportViewer from '../Report/ReportViewer';
 import { resolveRoundParam } from '../utils';
 import { useAcceptanceScope } from './AcceptanceScope';
@@ -70,7 +71,7 @@ const AcceptanceLedgerRail = () => {
 
   if (!data || !canViewAcceptanceHistory(data.isOwner)) return null;
 
-  const urlRoundRaw = searchParams.get('r');
+  const urlRoundRaw = searchParams.get('report');
   const reportRound = embedded ? null : resolveRoundParam(data.rounds, urlRoundRaw);
   const reviewableChecks = data.checks;
   const reviewByRound = (() => {
@@ -91,8 +92,8 @@ const AcceptanceLedgerRail = () => {
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev);
-        if (round?.run.roundIndex == null) next.delete('r');
-        else next.set('r', String(round.run.roundIndex));
+        if (round?.run.roundIndex == null) next.delete('report');
+        else next.set('report', String(round.run.roundIndex));
         return next;
       },
       { replace: true },
@@ -119,6 +120,7 @@ const AcceptanceLedgerRail = () => {
 
   const ledger = (
     <LedgerPanel
+      hideCollapse={isNarrowViewport}
       highlight={highlightRound}
       reviewByRound={reviewByRound}
       rounds={data.rounds}
@@ -142,18 +144,18 @@ const AcceptanceLedgerRail = () => {
         </Flexbox>
       )}
       {isNarrowViewport ? (
-        <Drawer
+        <AcceptanceDrawer
           noHeader
-          closable={false}
           containerMaxWidth={'100%'}
           open={expand}
           placement={'right'}
           styles={{ bodyContent: { padding: 0 } }}
+          title={t('acceptance.ledger.title')}
           width={'min(340px, 88vw)'}
           onClose={() => onExpandChange(false)}
         >
           {topic ?? ledger}
-        </Drawer>
+        </AcceptanceDrawer>
       ) : (
         <DraggablePanel
           stableLayout
@@ -169,11 +171,12 @@ const AcceptanceLedgerRail = () => {
           </Flexbox>
         </DraggablePanel>
       )}
-      <Drawer
+      <AcceptanceDrawer
         noHeader
         containerMaxWidth={'100%'}
         open={reportRound !== null}
         placement={'right'}
+        title={t('report.titleFallback')}
         width={'min(960px, 92vw)'}
         styles={{
           bodyContent: { height: '100%', minHeight: 0, overflow: 'hidden', padding: 0 },
@@ -185,7 +188,7 @@ const AcceptanceLedgerRail = () => {
             <ReportViewer runId={reportRound.run.id} />
           </Flexbox>
         )}
-      </Drawer>
+      </AcceptanceDrawer>
     </>
   );
 };

@@ -193,19 +193,11 @@ export class GoalService {
     // goal config so the page can edit them and the terminal acceptance Task
     // is gated on exactly these checks (not an AI re-derivation of the prose).
     let config = input.config;
-    let requirement = input.requirement;
-    if (input.criteria?.length) {
-      // The prose requirement must keep carrying the full standard (the goal
-      // page's 什么算完成 block and every Task's execution context read it).
-      // Callers normally compose it via `buildGoalRequirement`; guard API
-      // callers that pass criteria with a bare requirement.
-      const carriesCriteria = input.criteria.every((item) =>
-        input.requirement?.includes(item.title),
-      );
-      if (!carriesCriteria) {
-        requirement = buildGoalRequirement(input.title, input.criteria, input.requirement);
-      }
-    }
+    // A supplied requirement is the user-reviewed goal document. Criteria live
+    // separately; only synthesize a document when the caller omitted one.
+    const requirement =
+      input.requirement ??
+      (input.criteria?.length ? buildGoalRequirement(input.title, input.criteria) : undefined);
     if (input.criteria?.length) {
       const criteriaIds = await new VerifyPlanGeneratorService(
         this.db,

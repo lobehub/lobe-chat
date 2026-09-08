@@ -9,7 +9,7 @@ import type {
 } from '@lobechat/types';
 import { copyToClipboard, Empty, Flexbox, Icon, Image, TextArea, Tooltip } from '@lobehub/ui';
 import { ActionIcon, Button, Tag, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
 import dayjs from 'dayjs';
 import {
   AudioLines,
@@ -443,6 +443,7 @@ const comparisonContent = (item: AcceptanceEvidence) => {
 
 const EvidenceList = memo<{
   evidence: AcceptanceEvidence[];
+  onReviewEvidence?: (id: string) => void;
   /**
    * Regions to draw over an evidence image, keyed by evidence id. Used by the
    * AI proposal: rather than the card rendering its own copy of the screenshot
@@ -453,7 +454,8 @@ const EvidenceList = memo<{
     string,
     { comment?: string; label?: number; rect: AcceptanceReviewAnnotation['rect'] }[]
   >;
-}>(({ evidence, overlays }) => {
+}>(({ evidence, overlays, onReviewEvidence }) => {
+  const { md = true } = useResponsive();
   const sorted = [...evidence].sort((a, b) => (isVisual(b) ? 1 : 0) - (isVisual(a) ? 1 : 0));
   if (sorted.length === 0) return null;
 
@@ -489,7 +491,7 @@ const EvidenceList = memo<{
     <Flexbox gap={12}>
       {sorted.map((item) => {
         if (consumedScreenshotIds.has(item.id)) return null;
-        if (pairedIds.has(item.id)) {
+        if (pairedIds.has(item.id) && (md || !onReviewEvidence)) {
           const comparison = readEvidenceComparison(item.metadata)!;
           // The pair renders once, anchored at its `before` half.
           if (comparison.role !== 'before') return null;
@@ -531,6 +533,39 @@ const EvidenceList = memo<{
               {caption}
             </Flexbox>
           );
+        if (!md && onReviewEvidence && item.fileUrl && IMAGE_EVIDENCE.has(item.type)) {
+          return (
+            <button
+              key={item.id}
+              type={'button'}
+              style={{
+                padding: 0,
+                width: '100%',
+                border: 0,
+                background: 'none',
+                textAlign: 'start',
+                cursor: 'pointer',
+              }}
+              onClick={() => onReviewEvidence(item.id)}
+            >
+              <img
+                alt={item.description ?? item.fileName ?? item.type}
+                loading={'lazy'}
+                src={item.fileUrl}
+                style={{
+                  display: 'block',
+                  maxWidth: '100%',
+                  width: '100%',
+                  height: 180,
+                  objectFit: 'cover',
+                  objectPosition: 'top',
+                  borderRadius: 8,
+                }}
+              />
+              {caption}
+            </button>
+          );
+        }
         const overlay = overlays?.get(item.id);
         if (item.fileUrl && item.type === 'screenshot') {
           const run = [item];
@@ -949,6 +984,7 @@ export const AcceptanceCheckRow = memo<{
     reviewPending,
   }) => {
     const { t } = useTranslation('verify');
+    const { md: desktop = true } = useResponsive();
     // The judging narrative stays collapsed: level one is title + evidence.
     const [historyOpen, setHistoryOpen] = useState(false);
     const [seqCopied, setSeqCopied] = useState(false);
@@ -999,11 +1035,21 @@ export const AcceptanceCheckRow = memo<{
      *   model's note and regions, and the submitted result is diffed against it
      *   so the signal records WHICH part of the proposal was wrong.
      */
-    const openReject = (fromProposal?: CheckProposal) =>
+    const openReject = (fromProposal?: CheckProposal, initialEvidenceId?: string) =>
       openCheckRejectModal({
+        initialEvidenceId,
+        previousAttachments:
+          activeReview?.action === 'reject'
+            ? activeReview.attachments
+                ?.filter((item) => item.url)
+                .map((item) => ({ id: item.id, name: item.name, url: item.url! }))
+            : undefined,
+        previousAnnotations:
+          activeReview?.action === 'reject' ? activeReview.annotations : undefined,
+        previousComment: activeReview?.action === 'reject' ? activeReview.comment : undefined,
         checkDescription: check.planItem?.description,
         checkTitle: `C${check.seq} · ${title}`,
-        draftKey: check.id,
+        draftKey: `${check.result?.id ?? 'unexecuted'}:${check.id}`,
         evidence: check.evidence
           .filter((item) => isAnnotatable(item))
           .map((item) => ({ fileUrl: item.fileUrl!, id: item.id })),
@@ -1121,10 +1167,22 @@ export const AcceptanceCheckRow = memo<{
           <Flexbox
             horizontal
             align={'flex-start'}
+            aria-expanded={expanded}
             className={styles.rowHeader}
             data-expanded={expanded ? '' : undefined}
             gap={10}
+            role={'button'}
+            tabIndex={0}
             onClick={onToggle}
+            onKeyDown={(event) => {
+              if (
+                event.target === event.currentTarget &&
+                (event.key === 'Enter' || event.key === ' ')
+              ) {
+                event.preventDefault();
+                onToggle();
+              }
+            }}
           >
             {reviewState === 'rejected' ? (
               <Tooltip title={t('acceptance.review.rejectedHint')}>{headIconNode}</Tooltip>
@@ -1155,8 +1213,8 @@ export const AcceptanceCheckRow = memo<{
               wrap={expanded ? 'wrap' : 'nowrap'}
             >
               <Text
-                className={expanded ? undefined : styles.titleEllipsis}
-                style={{ fontSize: 13, minWidth: 0 }}
+                className={expanded || !desktop ? undefined : styles.titleEllipsis}
+                style={{ fontSize: desktop ? 13 : 14, minWidth: 0 }}
               >
                 {title}
               </Text>
@@ -1169,7 +1227,7 @@ export const AcceptanceCheckRow = memo<{
               far right: the claim you judge and the judgement you give land in
               one glance, so a long checklist needs no eye round-trip across the
               row (and no mis-click onto a neighbour's buttons). */}
-              {reviewable && reviewState === 'pending' && (
+              {desktop && reviewable && reviewState === 'pending' && (
                 <Flexbox
                   horizontal
                   align={'center'}
@@ -1352,7 +1410,11 @@ export const AcceptanceCheckRow = memo<{
                 </Flexbox>
               )}
             {visualization && <VisualizationRenderer manifest={visualization} />}
-            <EvidenceList evidence={check.evidence} overlays={proposalOverlays} />
+            <EvidenceList
+              evidence={check.evidence}
+              overlays={proposalOverlays}
+              onReviewEvidence={canReview ? (id) => openReject(undefined, id) : undefined}
+            />
 
             {check.state === 'not_executed' && (
               <Flexbox
