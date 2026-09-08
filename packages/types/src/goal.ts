@@ -196,6 +196,7 @@ export const summarizeGoalSupervision = (state?: GoalSupervisionState): GoalSupe
 
 /** A CLI-capable agent owns planning; the coordinator owns execution and acceptance. */
 export interface GoalManagerPolicy {
+  /** Server-resolved creator identity; not a separately selectable manager. */
   agentId: string;
   instruction?: string;
   maxTurns?: number;
@@ -244,6 +245,11 @@ export interface GoalConfig {
   /** Durable supervisor topic and bounded incident ledger. */
   supervisorState?: GoalSupervisionState;
 }
+
+/** Creation accepts planning options, never a separate manager identity or runtime receipt. */
+export type GoalCreateConfig = Omit<GoalConfig, 'manager' | 'managerState' | 'supervisorState'> & {
+  manager?: Omit<GoalManagerPolicy, 'agentId'>;
+};
 
 /**
  * The goal entity as exposed to clients — a mirror of the `goals` table row.

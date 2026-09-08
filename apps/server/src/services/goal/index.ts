@@ -3,6 +3,7 @@ import { buildGoalRequirement } from '@lobechat/builtin-tool-goal';
 import { GOAL_COORDINATOR_ACTOR_ID } from '@lobechat/const/goal';
 import type {
   GoalConfig,
+  GoalCreateConfig,
   GoalEdgeKind,
   GoalGraphNode,
   GoalGraphSnapshot,
@@ -81,7 +82,7 @@ export interface CreateGoalTaskInput {
 
 export interface CreateGoalGraphInput {
   agentId?: string;
-  config?: GoalConfig;
+  config?: GoalCreateConfig;
   /**
    * The agent that made this call, when a tool did. Distinct from `agentId`,
    * which is the agent the goal is assigned to — creating a goal from the modal
@@ -198,25 +199,42 @@ export class GoalService {
     // Persist the structured acceptance criteria first: their ids ride on the
     // goal config so the page can edit them and the terminal acceptance Task
     // is gated on exactly these checks (not an AI re-derivation of the prose).
-    let config = input.config;
-    if (config?.manager) {
-      const turns = config.manager.maxTurns ?? 12;
+    const creatorAgentId = input.createdByAgentId ?? input.agentId;
+    const { manager: managerOptions, ...options } = input.config ?? {};
+    const managed =
+      managerOptions !== undefined ||
+      Boolean(
+        creatorAgentId &&
+        !options.exploration &&
+        !options.supervision?.enabled &&
+        !input.tasks?.length,
+      );
+    let config: GoalConfig | undefined = input.config ? options : undefined;
+    if (managed) {
+      if (!creatorAgentId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'A main Agent requires the creating or selected Agent',
+        });
+      }
+      const turns = managerOptions?.maxTurns ?? 12;
       if (!Number.isInteger(turns) || turns < 1 || turns > 100)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Main Agent requires 1–100 management turns',
         });
-      if (config.exploration || config.supervision?.enabled || input.tasks?.length) {
+      if (options.exploration || options.supervision?.enabled || input.tasks?.length) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message:
             'Manager mode owns initial and subsequent planning; do not combine with exploration, supervision or seed tasks',
         });
       }
-      await assertAgentUsableBy(this.db, config.manager.agentId, {
+      await assertAgentUsableBy(this.db, creatorAgentId, {
         userId: this.userId,
         workspaceId: this.workspaceId,
       });
+      config = { ...options, manager: { ...managerOptions, agentId: creatorAgentId } };
     }
     // A supplied requirement is the user-reviewed goal document. Criteria live
     // separately; only synthesize a document when the caller omitted one.
@@ -267,7 +285,7 @@ export class GoalService {
     }
 
     const goal = await this.goalModel.create({
-      agentId: input.agentId,
+      agentId: input.agentId ?? creatorAgentId,
       config,
       maxRounds: input.maxRounds,
       maxTotalCost: input.maxTotalCost,

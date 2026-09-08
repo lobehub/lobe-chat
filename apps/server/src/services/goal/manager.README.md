@@ -1,12 +1,21 @@
 # CLI main Agent Goals
 
-`lh goal create "Research objective" --agent <worker-id> --manager <main-agent-id> --requirement "Delivery contract" --max-manager-turns 12 --max-rounds 10`
+`lh goal create "Research objective" --agent <agent-id> --requirement "Delivery contract" --max-manager-turns 12 --max-rounds 10`
 
 The main Agent must have a working shell and an authenticated `lh` CLI in its
 execution environment (for example a configured device Kimi/Codex Agent). Its
 normal Agent configuration selects the runtime; dispatch uses the same
 `execAgent` service as `lh agent run`. There is no exclusive supervisor tool set.
-Use separate main/worker Agents so planning and execution have distinct roles.
+An Agent-created, unseeded Goal automatically uses its creating Agent as the
+main Agent. The application tool supplies `createdByAgentId`; the CLI inherits
+`LOBEHUB_AGENT_ID`. A person creating a Goal uses the selected `--agent` instead.
+No separate `--manager` identity is accepted. Planning options such as
+`--max-manager-turns` only tune this same Agent's loop. The server persists the
+resolved identity for later turns in the management Topic; it does not create
+another Agent. Task assignees can differ, and changing them does not replace
+the creating main Agent. Explicit seed/exploration/legacy supervision paths
+retain their existing planning behavior. Without any creating or selected
+Agent, the existing coordinator planner remains available.
 
 The main Agent reads `lh goal show`, `lh task view`, `lh topic view`, and document
 commands. It submits a JSON file through `lh goal plan <goal-id> --token <turn> --file plan.json`. The runtime supplies `LOBEHUB_OPERATION_ID`. Plan actions:

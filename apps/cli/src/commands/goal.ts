@@ -197,8 +197,7 @@ export function registerGoalCommand(program: Command) {
 
   goal
     .command('create <title>')
-    .option('--manager <agent-id>', 'CLI-capable main Agent responsible for all planning')
-    .option('--max-manager-turns <n>', 'Maximum management turns', '12')
+    .option('--max-manager-turns <n>', 'Maximum management turns (default 12)')
     .description('Create a standalone goal and seed its graph')
     .option('-r, --requirement <text>', 'Acceptance requirement')
     .option(
@@ -236,9 +235,10 @@ export function registerGoalCommand(program: Command) {
       const client = await getTrpcClient();
       const buildUrl = await resolveAppUrlBuilder(client);
       const result = await client.goal.create.mutate({
-        agentId: options.agent,
+        agentId: options.agent ?? process.env.LOBEHUB_AGENT_ID,
+        createdByAgentId: process.env.LOBEHUB_AGENT_ID,
         config:
-          options.manager ||
+          options.maxManagerTurns ||
           options.explore ||
           options.supervise ||
           options.maxAttemptsPerTask ||
@@ -246,8 +246,8 @@ export function registerGoalCommand(program: Command) {
           options.operationLeaseTimeoutMs ||
           options.maxConcurrentTasks
             ? {
-                manager: options.manager
-                  ? { agentId: options.manager, maxTurns: Number(options.maxManagerTurns) }
+                manager: options.maxManagerTurns
+                  ? { maxTurns: Number(options.maxManagerTurns) }
                   : undefined,
                 exploration: options.explore
                   ? {
@@ -483,6 +483,28 @@ export function registerGoalCommand(program: Command) {
         log.info(result.message);
       },
     );
+
+  goal
+    .command('set-agent <id> <agent>')
+    .description('Hand the goal to a different responsible agent (unfinished tasks follow)')
+    .option('--goal-only', 'Only change the goal-level agent; leave existing tasks as assigned')
+    .action(async (id: string, agentId: string, options: { goalOnly?: boolean }) => {
+      const result = await (
+        await getTrpcClient()
+      ).goal.setAgent.mutate({ agentId, goalOnly: options.goalOnly, id });
+      log.info(result.message);
+    });
+
+  goal
+    .command('restart <id>')
+    .description('Start every unfinished task over (cancel stale runs, reset to backlog)')
+    .option('--agent <id>', 'Also hand the goal and restarted tasks to this agent')
+    .action(async (id: string, options: { agent?: string }) => {
+      const result = await (
+        await getTrpcClient()
+      ).goal.restart.mutate({ agentId: options.agent, id });
+      log.info(`${result.message}. Resume ticking with: lh goal run ${id}`);
+    });
 
   goal
     .command('decisions <id>')

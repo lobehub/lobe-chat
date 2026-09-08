@@ -91,7 +91,8 @@ afterEach(async () => {
 async function start(maxTurns = 4) {
   const graph = await service().create({
     title: 'Managed research',
-    config: { manager: { agentId, maxTurns } },
+    createdByAgentId: agentId,
+    config: { manager: { maxTurns } },
   });
   expect((await service().tick(graph.goal.id)).outcome).toBe('waiting_external');
   const state = (await model().findById(graph.goal.id))!.config!.managerState!;
@@ -100,6 +101,54 @@ async function start(maxTurns = 4) {
 }
 
 describe('CLI main Agent planning', () => {
+  it('automatically dispatches the creator instead of the default Task assignee', async () => {
+    await db.insert(agents).values({ id: 'task-worker', userId });
+    const graph = await service().create({
+      agentId: 'task-worker',
+      createdByAgentId: agentId,
+      title: 'Creator-managed goal',
+    });
+    expect(graph.goal.config?.manager?.agentId).toBe(agentId);
+    expect((await service().tick(graph.goal.id)).outcome).toBe('waiting_external');
+    const state = (await model().findById(graph.goal.id))!.config!.managerState!;
+    const op = await ops().findByTopicSourceMessage(
+      state.topicId,
+      `msg_goal_manager_${state.token}`,
+    );
+    expect(op?.agentId).toBe(agentId);
+    expect(
+      (await service().graph(graph.goal.id)).nodes.filter((n) => n.kind === 'task'),
+    ).toHaveLength(0);
+  });
+
+  it('uses the selected Agent for a user-created goal without attributing authorship to it', async () => {
+    const graph = await service().create({ agentId, title: 'Selected agent' });
+    expect(graph.goal.config?.manager?.agentId).toBe(agentId);
+    expect(graph.events.every((event) => event.actorType === 'user')).toBe(true);
+  });
+
+  it('cannot select a different manager through a legacy config object', async () => {
+    const config = { manager: { agentId: 'unrelated-agent', maxTurns: 5 } };
+    const graph = await service().create({
+      createdByAgentId: agentId,
+      config,
+      title: 'Bound creator',
+    });
+    expect(graph.goal.config?.manager).toEqual({ agentId, maxTurns: 5 });
+    await db.insert(agents).values({ id: 'new-task-worker', userId });
+    await service().setAgent(graph.goal.id, 'new-task-worker');
+    expect((await model().findById(graph.goal.id))?.config?.manager?.agentId).toBe(agentId);
+  });
+
+  it('requires an accessible creator when planning options are supplied', async () => {
+    await expect(
+      service().create({ title: 'Missing creator', config: { manager: {} } }),
+    ).rejects.toThrow('creating or selected Agent');
+    await expect(
+      service().create({ title: 'Unknown creator', createdByAgentId: 'unrelated-agent' }),
+    ).rejects.toThrow();
+  });
+
   it('commits once and does not dispatch graph work until the main turn exits', async () => {
     const { id, state, op } = await start();
     expect(await manager().submit(id, state.token, op.id, taskPlan)).toEqual({
@@ -265,7 +314,7 @@ describe('CLI main Agent planning', () => {
     async (limits) => {
       const graph = await service().create({
         title: 'No budget',
-        config: { manager: { agentId } },
+        createdByAgentId: agentId,
       });
       await db.update(goals).set(limits).where(eq(goals.id, graph.goal.id));
       expect((await service().tick(graph.goal.id)).outcome).toBe('no_progress');
@@ -406,8 +455,9 @@ describe('CLI main Agent planning', () => {
     await expect(
       service().create({
         title: 'Mixed',
+        createdByAgentId: agentId,
         config: {
-          manager: { agentId },
+          manager: {},
           exploration: { instruction: 'Other planner', maxExperiments: 2 },
         },
       }),

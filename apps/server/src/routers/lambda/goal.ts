@@ -157,7 +157,6 @@ export const goalRouter = router({
               .optional(),
             manager: z
               .object({
-                agentId: z.string().min(1),
                 instruction: z.string().max(8000).optional(),
                 maxTurns: z.number().int().min(1).max(100).optional(),
               })

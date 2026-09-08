@@ -299,9 +299,55 @@ describe('goal show command', () => {
 });
 
 describe('goal create command', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  it.each([undefined, 'task-worker'])(
+    'inherits the calling Agent with Task assignee %s',
+    async (worker) => {
+      vi.stubEnv('LOBEHUB_AGENT_ID', 'creating-agent');
+      mockClient.goal.create.mutate.mockResolvedValue({ data: { goal: { id: 'goal-1' } } });
+      await createProgram().parseAsync([
+        'node',
+        'test',
+        'goal',
+        'create',
+        'Creator goal',
+        '--json',
+        ...(worker ? ['--agent', worker] : []),
+        '--max-manager-turns',
+        '5',
+      ]);
+      expect(mockClient.goal.create.mutate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          agentId: worker ?? 'creating-agent',
+          createdByAgentId: 'creating-agent',
+          config: expect.objectContaining({ manager: { maxTurns: 5 } }),
+        }),
+      );
+    },
+  );
+
+  it('allows a person to select an Agent without inventing Agent authorship', async () => {
+    vi.stubEnv('LOBEHUB_AGENT_ID', undefined);
+    mockClient.goal.create.mutate.mockResolvedValue({ data: { goal: { id: 'goal-1' } } });
+    await createProgram().parseAsync([
+      'node',
+      'test',
+      'goal',
+      'create',
+      'User goal',
+      '--agent',
+      'selected-agent',
+      '--json',
+    ]);
+    expect(mockClient.goal.create.mutate).toHaveBeenCalledWith(
+      expect.objectContaining({ agentId: 'selected-agent', createdByAgentId: undefined }),
+    );
   });
 
   it('links to the created goal rather than to /goal/undefined', async () => {
