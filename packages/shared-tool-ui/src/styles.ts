@@ -1,5 +1,5 @@
 import { textStyles } from '@lobehub/ui/base-ui';
-import { createStaticStyles } from 'antd-style';
+import { createStaticStyles, cx } from 'antd-style';
 
 const localTextGroupStyles = createStaticStyles(({ css }) => ({
   shinyGroup: css`
@@ -60,10 +60,17 @@ export const highlightTextStyles = createStaticStyles(({ css, cssVar }) => {
 });
 
 /**
- * Shiny loading text animation
+ * Shiny loading text animation, toned down to the secondary text color so a
+ * shimmering label sits at the same visual weight as the static text next to it.
  */
+const shinyToneStyles = createStaticStyles(({ css, cssVar }) => ({
+  secondary: css`
+    --shiny-color: ${cssVar.colorTextSecondary};
+  `,
+}));
+
 export const shinyTextStyles = {
-  shinyText: textStyles.shiny,
+  shinyText: cx(textStyles.shiny, shinyToneStyles.secondary),
 };
 
 export const shinyGroupStyles = {
