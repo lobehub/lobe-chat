@@ -29,8 +29,6 @@ beforeEach(async () => {
   const second = randomUUID();
   definition = {
     title: 'Send and retry',
-    goal: 'Recover from failed send',
-    preconditions: ['Signed in'],
     entryNodeId: first,
     nodes: [
       {
@@ -193,6 +191,49 @@ describe('check assets and round snapshots', () => {
     expect(
       await db.select().from(verifyCriteria).where(eq(verifyCriteria.userId, owner)),
     ).toHaveLength(2);
+  });
+
+  it('keeps two business flows and their results separate in one verification round', async () => {
+    definition.nodes[0].check!.definition.preconditions = ['Signed in'];
+    const first = await model.publish(acceptanceId, definition);
+    const nodeId = randomUUID();
+    const second = await model.publish(acceptanceId, {
+      title: 'View group profile',
+      entryNodeId: nodeId,
+      nodes: [{ id: nodeId, criterionId: definition.nodes[0].check!.id }],
+      edges: [],
+    });
+    const run = await model.start(acceptanceId, first.flowId);
+    await model.start(acceptanceId, second.flowId, run.id);
+    const round = await roundPlan(run.id);
+    expect(round.flowSnapshots?.map((flow) => flow.flowId)).toEqual([first.flowId, second.flowId]);
+    expect(round.plan).toHaveLength(4);
+    const firstItems = round.plan!.filter((item) => item.sourceFlowNode?.flowId === first.flowId);
+    const secondItem = round.plan!.find((item) => item.sourceFlowNode?.flowId === second.flowId)!;
+    expect(secondItem.definition?.preconditions).toEqual(['Signed in']);
+    expect(new Set(round.plan!.map((item) => item.id)).size).toBe(4);
+    for (const item of firstItems)
+      await model.record(acceptanceId, {
+        verifyRunId: run.id,
+        checkItemId: item.id,
+        verdict: 'passed',
+        observation: 'Verified',
+      });
+    await expect(model.complete(acceptanceId, run.id)).rejects.toThrow('Required flow branches');
+    const views = await model.list(acceptanceId);
+    const viewFor = (flowId: string) =>
+      views.find((flow) => flow.id === flowId)!.versions.find((v) => v.runs[0]?.id === run.id)!;
+    expect(viewFor(first.flowId).runs[0].attempts).toHaveLength(3);
+    expect(viewFor(second.flowId).runs[0].attempts).toHaveLength(0);
+    await model.record(acceptanceId, {
+      verifyRunId: run.id,
+      checkItemId: secondItem.id,
+      verdict: 'passed',
+      observation: 'Profile ready',
+    });
+    await model.complete(acceptanceId, run.id);
+    expect((await roundPlan(run.id)).status).toBe('delivered');
+    expect((await roundPlan(run.id)).flowSnapshots).toEqual(round.flowSnapshots);
   });
 
   it('rejects unreachable nodes and missing entry points', () => {

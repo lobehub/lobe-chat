@@ -20,8 +20,6 @@ CREATE TABLE IF NOT EXISTS "acceptance_flows" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"acceptance_id" uuid NOT NULL,
 	"title" text NOT NULL,
-	"goal" text NOT NULL,
-	"preconditions" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL

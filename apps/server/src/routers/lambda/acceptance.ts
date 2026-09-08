@@ -47,8 +47,6 @@ import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManag
 
 const flowDefinitionSchema = z.object({
   title: z.string().min(1).max(200),
-  goal: z.string().max(4000),
-  preconditions: z.array(z.string().max(4000)),
   entryNodeId: z.string().uuid(),
   nodes: z
     .array(

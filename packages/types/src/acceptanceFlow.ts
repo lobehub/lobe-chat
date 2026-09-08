@@ -42,18 +42,14 @@ export interface AcceptanceFlowEdgeInput {
 export interface AcceptanceFlowDefinition {
   edges: AcceptanceFlowEdgeInput[];
   entryNodeId: string;
-  goal: string;
   nodes: AcceptanceFlowNodeInput[];
-  preconditions: string[];
   title: string;
 }
 export interface VerifyFlowSnapshot {
   edges: AcceptanceFlowEdgeInput[];
   entryNodeId: string;
   flowId: string;
-  goal: string;
   nodes: { id: string; criterionId: string; checkItemIds: string[] }[];
-  preconditions: string[];
   title: string;
 }
 export type AcceptanceFlowVerdict = 'passed' | 'failed' | 'uncertain' | 'blocked';

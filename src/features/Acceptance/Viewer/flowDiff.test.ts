@@ -4,8 +4,6 @@ import { diffFlowVersions, type FlowDefinitionSnapshot } from './flowDiff';
 
 const base: FlowDefinitionSnapshot = {
   title: 'Chat',
-  goal: 'Send',
-  preconditions: null,
   entryNodeKey: 'ready',
   nodes: [{ nodeKey: 'ready', title: 'Ready', instruction: 'Open', expected: 'Composer' }],
   edges: [

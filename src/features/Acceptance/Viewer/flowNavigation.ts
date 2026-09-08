@@ -31,7 +31,8 @@ export const getFlowRoundViews = (flows: Bundle['flows'] = [], rounds: Bundle['r
       }
       for (const run of version.runs) {
         const roundIndex = roundNumbers.get(run.verifyRunId);
-        if (roundIndex != null) views.push({ id: run.id, roundIndex, run, version });
+        if (roundIndex != null)
+          views.push({ id: `${version.id}:${run.id}`, roundIndex, run, version });
       }
     }
   }

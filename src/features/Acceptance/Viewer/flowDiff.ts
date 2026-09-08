@@ -9,16 +9,12 @@ export interface FlowDefinitionSnapshot {
     required: boolean;
   }[];
   entryNodeKey: string;
-  goal: string;
   nodes: { nodeKey: string; title: string; instruction: string; expected: string }[];
-  preconditions: string | null;
   title: string;
 }
 
 type FlowField =
   | 'title'
-  | 'goal'
-  | 'preconditions'
   | 'entryNodeKey'
   | 'instruction'
   | 'expected'
@@ -75,7 +71,7 @@ export function diffFlowVersions(
     [after],
     () => 'flow',
     (v) => v.title,
-    ['title', 'goal', 'preconditions', 'entryNodeKey'],
+    ['title', 'entryNodeKey'],
   );
   compare(
     'node',

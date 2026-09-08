@@ -22,8 +22,6 @@ export const acceptanceFlows = pgTable(
       .notNull()
       .references(() => acceptances.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
-    goal: text('goal').notNull(),
-    preconditions: jsonb('preconditions').$type<string[]>().notNull().default([]),
     ...timestamps,
   },
   (t) => [index('acceptance_flows_acceptance_idx').on(t.acceptanceId)],

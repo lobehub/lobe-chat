@@ -37,8 +37,8 @@ it('uses acceptance round numbers across versions, not version-local run positio
   const views = getFlowRoundViews(makeFlows(), rounds);
   expect(views.map(({ id, roundIndex, version }) => [id, roundIndex, version.id])).toEqual([
     ['v2', undefined, 'v2'],
-    ['visit-b', 9, 'v1'],
-    ['visit-a', 4, 'v1'],
+    ['v1:visit-b', 9, 'v1'],
+    ['v1:visit-a', 4, 'v1'],
   ]);
 });
 
@@ -54,4 +54,19 @@ it('keeps an older populated definition available when the newest has no nodes',
   const flows = makeFlows();
   flows[0].versions[0].nodes = [];
   expect(getFlowNodeCount(flows)).toBe(1);
+});
+
+it('keeps each business flow selectable when they share a verification round', () => {
+  const flows = makeFlows();
+  const first = flows[0].versions[1];
+  first.runs = [{ ...first.runs[0], id: 'round-b' }];
+  flows.push({ ...flows[0], versions: [{ ...first, id: 'other-flow-version' }] });
+  const rounds = [{ run: { id: 'round-b', roundIndex: 9 } }] as Parameters<
+    typeof getFlowRoundViews
+  >[1];
+  const views = getFlowRoundViews(flows, rounds).filter((view) => view.roundIndex === 9);
+  expect(views).toHaveLength(2);
+  expect(new Set(views.map((view) => view.id)).size).toBe(2);
+  for (const view of views)
+    expect(views.find((candidate) => candidate.id === view.id)?.version).toBe(view.version);
 });

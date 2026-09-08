@@ -33,8 +33,6 @@ table acceptance_flows {
   id uuid [pk, not null, default: `gen_random_uuid()`]
   acceptance_id uuid [not null]
   title text [not null]
-  goal text [not null]
-  preconditions jsonb [not null, default: `[]`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

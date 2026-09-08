@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "482dbc49-3b83-4403-a377-0f15db639879",
+  "id": "6b0b156c-cc85-4982-92a3-debaead7479d",
   "policies": {},
   "prevId": "f8af0c0c-e7ec-4407-b65a-fe7b7cd4aa5c",
   "roles": {},
@@ -291,19 +291,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "goal": {
-          "name": "goal",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "preconditions": {
-          "name": "preconditions",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'[]'::jsonb"
         },
         "accessed_at": {
           "name": "accessed_at",

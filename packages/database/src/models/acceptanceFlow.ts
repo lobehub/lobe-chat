@@ -113,8 +113,6 @@ export class AcceptanceFlowModel {
           .values({
             acceptanceId,
             title: definition.title,
-            goal: definition.goal,
-            preconditions: definition.preconditions,
           })
           .returning();
       }
@@ -177,8 +175,6 @@ export class AcceptanceFlowModel {
         .update(flows)
         .set({
           title: definition.title,
-          goal: definition.goal,
-          preconditions: definition.preconditions,
           updatedAt: new Date(),
         })
         .where(eq(flows.id, flow.id));
@@ -205,8 +201,6 @@ export class AcceptanceFlowModel {
     const snapshot: VerifyFlowSnapshot = {
       flowId,
       title: flow.title,
-      goal: flow.goal,
-      preconditions: flow.preconditions,
       entryNodeId: entry ?? '',
       edges: edgeRows.map(({ flowId: _, ...edge }) => ({
         ...edge,
@@ -251,7 +245,6 @@ export class AcceptanceFlowModel {
           definition: {
             ...definition,
             preconditions: [
-              ...flow.preconditions,
               ...(definition.preconditions ?? []),
               ...(branch ? [branch.trigger, ...(branch.condition ? [branch.condition] : [])] : []),
             ],
@@ -547,8 +540,6 @@ export class AcceptanceFlowModel {
       flowId: snapshot.flowId,
       version: round?.roundIndex ?? 0,
       title: snapshot.title,
-      goal: snapshot.goal,
-      preconditions: snapshot.preconditions.join('\n'),
       entryNodeKey: snapshot.entryNodeId,
       nodes: snapshot.nodes.map((node) => {
         const item = plan.find((p) => node.checkItemIds.includes(p.id));
@@ -628,15 +619,11 @@ export class AcceptanceFlowModel {
               nodes: h.nodes,
               edges: h.edges,
               title: h.title,
-              goal: h.goal,
-              preconditions: h.preconditions,
             }) ===
             fingerprint({
               nodes: currentView.nodes,
               edges: currentView.edges,
               title: currentView.title,
-              goal: currentView.goal,
-              preconditions: currentView.preconditions,
             }),
         );
         return {
