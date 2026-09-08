@@ -23,14 +23,15 @@ it('starts the requested flow version without triggering the root CLI version op
     'flow',
     'start',
     'acceptance-id',
-    '--flow-version',
+    '--flow',
     'version-id',
     '--run',
     'verify-run',
   ]);
   expect(startFlow).toHaveBeenCalledWith({
     id: 'acceptance-id',
-    versionId: 'version-id',
+    flowId: 'version-id',
+    sourceRunId: undefined,
     verifyRunId: 'verify-run',
   });
   expect(outputJson).toHaveBeenCalledWith({ id: 'flow-run' });
@@ -47,12 +48,13 @@ it('allows a fresh verification round when --run is omitted', async () => {
     'flow',
     'start',
     'acceptance-id',
-    '--flow-version',
+    '--flow',
     'version-id',
   ]);
   expect(startFlow).toHaveBeenCalledWith({
     id: 'acceptance-id',
-    versionId: 'version-id',
+    flowId: 'version-id',
+    sourceRunId: undefined,
     verifyRunId: undefined,
   });
 });

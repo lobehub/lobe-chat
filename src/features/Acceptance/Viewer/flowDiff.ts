@@ -5,7 +5,7 @@ export interface FlowDefinitionSnapshot {
     sourceNodeKey: string;
     targetNodeKey: string;
     trigger: string;
-    condition: string | null;
+    condition?: string | null;
     required: boolean;
   }[];
   entryNodeKey: string;

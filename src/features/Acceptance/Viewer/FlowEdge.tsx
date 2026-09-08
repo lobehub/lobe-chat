@@ -24,12 +24,19 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-type TransitionEdge = Edge<{ onSelect: (id: string) => void }>;
+type TransitionEdge = Edge<{ onSelect: (id: string) => void; laneOffset?: number }>;
 
 /** Keep branch labels readable when the map fits a wide graph into the viewport. */
 export function FlowEdge(props: EdgeProps<TransitionEdge>) {
   const { zoom } = useViewport();
-  const [path, labelX, labelY] = getSmoothStepPath({ ...props, borderRadius: 20, offset: 32 });
+  const lane = props.data?.laneOffset ?? 0;
+  const [path, labelX, labelY] = lane
+    ? ([
+        `M ${props.sourceX},${props.sourceY} C ${props.sourceX + (props.targetX - props.sourceX) / 3},${props.sourceY + lane} ${props.targetX - (props.targetX - props.sourceX) / 3},${props.targetY + lane} ${props.targetX},${props.targetY}`,
+        (props.sourceX + props.targetX) / 2,
+        (props.sourceY + props.targetY) / 2 + lane * 0.75,
+      ] as const)
+    : getSmoothStepPath({ ...props, borderRadius: 20, offset: 32 });
   return (
     <>
       <BaseEdge id={props.id} markerEnd={props.markerEnd} path={path} style={props.style} />

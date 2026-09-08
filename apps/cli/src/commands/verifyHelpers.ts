@@ -27,6 +27,7 @@ import type {
   VerifyVisualizationValue,
   VerifyVisualizationView,
 } from '@lobechat/types';
+import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { parseKlmTrace, summarizeKlmTrace } from '@lobechat/utils/verify/interactionCost';
 import pc from 'picocolors';
 
@@ -756,6 +757,11 @@ export function planFromResult(result: Record<string, unknown>, droppedIds?: Set
       {
         ...(category === undefined ? {} : { category }),
         description: firstString(item.description),
+        sourceCriterionId: firstString(item.sourceCriterionId),
+        definition:
+          item.definition === undefined
+            ? undefined
+            : verifyCheckDefinitionSchema.parse(item.definition),
         id,
         index,
         onFail: 'manual' as const,

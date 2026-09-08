@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { createHash } from 'node:crypto';
 
 import type {
   AcceptanceFlowDefinition,
@@ -6,43 +6,65 @@ import type {
   AcceptanceFlowVerdict,
   AcceptanceReviewAnnotation,
   VerifyCheckItem,
+  VerifyFlowSnapshot,
 } from '@lobechat/types';
+import { verifyCheckDefinitionSchema } from '@lobechat/types';
+import { isPlainRecord } from '@lobechat/utils/object';
 import { and, asc, desc, eq, inArray } from 'drizzle-orm';
 
 import {
   acceptanceFlowEdges as edges,
   acceptanceFlowNodes as nodes,
-  acceptanceFlowRuns as runs,
   acceptanceFlows as flows,
-  acceptanceFlowStepAttempts as attempts,
-  acceptanceFlowVersions as versions,
 } from '../schemas/acceptanceFlow';
-import { acceptances, verifyCheckResults, verifyEvidence, verifyRuns } from '../schemas/verify';
-import type { LobeChatDatabase } from '../type';
+import {
+  acceptances,
+  verifyCheckResults,
+  verifyCriteria,
+  verifyEvidence,
+  verifyRuns,
+} from '../schemas/verify';
+import type { LobeChatDatabase, Transaction } from '../type';
+import { buildWorkspaceWhere } from '../utils/workspace';
+import { VerifyCriterionModel } from './verifyCriterion';
 
 export function validateFlow(definition: AcceptanceFlowDefinition) {
-  const nodeKeys = new Set(definition.nodes.map((n) => n.key));
-  if (nodeKeys.size !== definition.nodes.length) throw new Error('Duplicate node keys');
-  if (!nodeKeys.has(definition.entryNodeKey)) throw new Error('Entry node not found');
-  if (new Set(definition.edges.map((e) => e.key)).size !== definition.edges.length)
-    throw new Error('Duplicate edge keys');
-  for (const edge of definition.edges) {
-    if (!nodeKeys.has(edge.source) || !nodeKeys.has(edge.target))
+  const ids = new Set(definition.nodes.map((n) => n.id));
+  if (ids.size !== definition.nodes.length) throw new Error('Duplicate node ids');
+  if (!ids.has(definition.entryNodeId)) throw new Error('Entry node not found');
+  if (new Set(definition.edges.map((e) => e.id)).size !== definition.edges.length)
+    throw new Error('Duplicate edge ids');
+  for (const edge of definition.edges)
+    if (!ids.has(edge.sourceNodeId) || !ids.has(edge.targetNodeId))
       throw new Error('Unknown edge endpoint');
-  }
-  const reached = new Set([definition.entryNodeKey]);
+  const reached = new Set([definition.entryNodeId]);
   for (let changed = true; changed;) {
     changed = false;
     for (const edge of definition.edges)
-      if (reached.has(edge.source) && !reached.has(edge.target)) {
-        reached.add(edge.target);
+      if (reached.has(edge.sourceNodeId) && !reached.has(edge.targetNodeId)) {
+        reached.add(edge.targetNodeId);
         changed = true;
       }
   }
-  if (reached.size !== nodeKeys.size) throw new Error('Unreachable nodes');
+  if (reached.size !== ids.size) throw new Error('Unreachable nodes');
+  for (const node of definition.nodes)
+    if (Boolean(node.criterionId) === Boolean(node.check))
+      throw new Error('Provide a criterionId or a new check');
 }
 
-/** Access is inherited from the acceptance; the router binds the authorized owner. */
+/** Canonical graph fingerprint, also used for optimistic editing and pending-plan detection. */
+function fingerprint(value: unknown) {
+  return createHash('sha256')
+    .update(
+      JSON.stringify(value, (_key, item: unknown) =>
+        isPlainRecord(item)
+          ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b)))
+          : item,
+      ),
+    )
+    .digest('hex');
+}
+
 export class AcceptanceFlowModel {
   constructor(
     private db: LobeChatDatabase,
@@ -58,181 +80,264 @@ export class AcceptanceFlowModel {
     return row;
   }
 
-  async publish(acceptanceId: string, definition: AcceptanceFlowDefinition, flowId?: string) {
+  async publish(
+    acceptanceId: string,
+    definition: AcceptanceFlowDefinition,
+    flowId?: string,
+    expectedHash?: string,
+  ) {
     validateFlow(definition);
-    await this.owned(acceptanceId);
+    const acceptance = await this.owned(acceptanceId);
     return this.db.transaction(async (tx) => {
-      const [acceptance] = await tx
+      const [locked] = await tx
         .select()
         .from(acceptances)
         .where(eq(acceptances.id, acceptanceId))
         .for('update');
-      if (['accepted', 'closed'].includes(acceptance.status))
+      if (['accepted', 'closed'].includes(locked.status))
         throw new Error('Reopen acceptance before publishing');
       let flow;
       if (flowId) {
         [flow] = await tx
           .select()
           .from(flows)
-          .where(and(eq(flows.id, flowId), eq(flows.acceptanceId, acceptanceId)));
+          .where(and(eq(flows.id, flowId), eq(flows.acceptanceId, acceptanceId)))
+          .for('update');
         if (!flow) throw new Error('Flow not found');
+        const current = await this.graph(flow.id, tx);
+        if (!expectedHash || expectedHash !== current.hash)
+          throw new Error('Flow changed; reload before editing');
       } else {
         [flow] = await tx
           .insert(flows)
-          .values({ acceptanceId, title: definition.title })
+          .values({
+            acceptanceId,
+            title: definition.title,
+            goal: definition.goal,
+            preconditions: definition.preconditions,
+          })
           .returning();
       }
-      const [last] = await tx
-        .select()
-        .from(versions)
-        .where(eq(versions.flowId, flow.id))
-        .orderBy(desc(versions.version))
-        .limit(1);
-      const [version] = await tx
-        .insert(versions)
-        .values({
-          flowId: flow.id,
-          version: (last?.version ?? 0) + 1,
-          title: definition.title,
-          goal: definition.goal,
-          preconditions: definition.preconditions,
-          entryNodeKey: definition.entryNodeKey,
-        })
-        .returning();
+      const scope = buildWorkspaceWhere(
+        { userId: acceptance.userId, workspaceId: acceptance.workspaceId ?? undefined },
+        verifyCriteria,
+      );
+      for (const node of definition.nodes) {
+        if (node.check) {
+          const { check } = node;
+          verifyCheckDefinitionSchema.parse(check.definition);
+          await tx
+            .insert(verifyCriteria)
+            .values({
+              id: check.id,
+              userId: acceptance.userId,
+              workspaceId: acceptance.workspaceId,
+              title: check.title,
+              description: check.description,
+              definition: check.definition,
+              verifierType: 'agent',
+            })
+            .onConflictDoNothing();
+          const [asset] = await tx
+            .select()
+            .from(verifyCriteria)
+            .where(and(eq(verifyCriteria.id, check.id), scope));
+          if (
+            !asset ||
+            asset.archivedAt ||
+            asset.title !== check.title ||
+            fingerprint(asset.definition) !== fingerprint(check.definition)
+          )
+            throw new Error('Check asset id already used');
+        } else {
+          const [asset] = await tx
+            .select()
+            .from(verifyCriteria)
+            .where(and(eq(verifyCriteria.id, node.criterionId!), scope));
+          if (!asset) throw new Error('Check asset not found');
+        }
+      }
+      // Replacing positions is atomic; stable caller-supplied ids preserve round diffs.
+      await tx.delete(edges).where(eq(edges.flowId, flow.id));
+      await tx.delete(nodes).where(eq(nodes.flowId, flow.id));
       await tx.insert(nodes).values(
-        definition.nodes.map(({ key, ...node }) => ({
-          ...node,
-          flowVersionId: version.id,
-          nodeKey: key,
+        definition.nodes.map((node) => ({
+          id: node.id,
+          flowId: flow.id,
+          criterionId: node.criterionId ?? node.check!.id,
+          isEntry: node.id === definition.entryNodeId,
+          overrides: node.overrides,
         })),
       );
       if (definition.edges.length)
-        await tx.insert(edges).values(
-          definition.edges.map(({ key, source, target, ...edge }) => ({
-            ...edge,
-            flowVersionId: version.id,
-            edgeKey: key,
-            sourceNodeKey: source,
-            targetNodeKey: target,
-          })),
-        );
-      return { flowId: flow.id, versionId: version.id, version: version.version };
+        await tx
+          .insert(edges)
+          .values(definition.edges.map((edge) => ({ ...edge, flowId: flow.id })));
+      await tx
+        .update(flows)
+        .set({
+          title: definition.title,
+          goal: definition.goal,
+          preconditions: definition.preconditions,
+          updatedAt: new Date(),
+        })
+        .where(eq(flows.id, flow.id));
+      return { flowId: flow.id, hash: (await this.graph(flow.id, tx)).hash };
     });
   }
 
-  async list(acceptanceId: string) {
-    await this.owned(acceptanceId);
-    const flowRows = await this.db
+  private async graph(flowId: string, database: LobeChatDatabase | Transaction = this.db) {
+    const [flow] = await database.select().from(flows).where(eq(flows.id, flowId));
+    if (!flow) throw new Error('Flow not found');
+    const nodeRows = await database
+      .select({ node: nodes, asset: verifyCriteria })
+      .from(nodes)
+      .innerJoin(verifyCriteria, eq(nodes.criterionId, verifyCriteria.id))
+      .where(eq(nodes.flowId, flowId))
+      .orderBy(asc(nodes.id));
+    const edgeRows = await database
       .select()
-      .from(flows)
-      .where(eq(flows.acceptanceId, acceptanceId))
-      .orderBy(asc(flows.createdAt));
-    return Promise.all(
-      flowRows.map(async (flow) => {
-        const versionRows = await this.db
-          .select()
-          .from(versions)
-          .where(eq(versions.flowId, flow.id))
-          .orderBy(desc(versions.version));
-        return {
-          ...flow,
-          versions: await Promise.all(
-            versionRows.map(async (version) => {
-              const [nodeRows, edgeRows, runRows] = await Promise.all([
-                this.db.select().from(nodes).where(eq(nodes.flowVersionId, version.id)),
-                this.db.select().from(edges).where(eq(edges.flowVersionId, version.id)),
-                this.db
-                  .select()
-                  .from(runs)
-                  .where(eq(runs.flowVersionId, version.id))
-                  .orderBy(desc(runs.createdAt)),
-              ]);
-              return {
-                ...version,
-                nodes: nodeRows,
-                edges: edgeRows,
-                runs: await Promise.all(
-                  runRows.map(async (run) => {
-                    const visits = await this.db
-                      .select()
-                      .from(attempts)
-                      .where(eq(attempts.flowRunId, run.id))
-                      .orderBy(asc(attempts.sequence));
-                    const evidence = visits.length
-                      ? await this.db
-                          .select()
-                          .from(verifyEvidence)
-                          .where(
-                            inArray(
-                              verifyEvidence.checkResultId,
-                              visits.map((v) => v.checkResultId),
-                            ),
-                          )
-                      : [];
-                    const results = visits.length
-                      ? await this.db
-                          .select()
-                          .from(verifyCheckResults)
-                          .where(
-                            inArray(
-                              verifyCheckResults.id,
-                              visits.map((v) => v.checkResultId),
-                            ),
-                          )
-                      : [];
-                    const resultById = new Map(results.map((result) => [result.id, result]));
-                    return {
-                      ...run,
-                      attempts: visits.map((visit) => ({
-                        ...visit,
-                        reviewComment:
-                          resultById.get(visit.checkResultId)?.userDecisionDetail?.comment ?? null,
-                        review:
-                          resultById.get(visit.checkResultId)?.userDecision === 'accepted'
-                            ? ('accepted' as const)
-                            : resultById.get(visit.checkResultId)?.userDecision === 'rejected'
-                              ? ('rejected' as const)
-                              : null,
-                        reviewDetail:
-                          resultById.get(visit.checkResultId)?.userDecisionDetail ?? null,
-                        evidence: evidence.filter((e) => e.checkResultId === visit.checkResultId),
-                      })),
-                    };
-                  }),
-                ),
-              };
-            }),
-          ),
-        };
-      }),
-    );
+      .from(edges)
+      .where(eq(edges.flowId, flowId))
+      .orderBy(asc(edges.id));
+    const entry = nodeRows.find(({ node }) => node.isEntry)?.node.id;
+    const plan: VerifyCheckItem[] = [];
+    const snapshot: VerifyFlowSnapshot = {
+      flowId,
+      title: flow.title,
+      goal: flow.goal,
+      preconditions: flow.preconditions,
+      entryNodeId: entry ?? '',
+      edges: edgeRows.map(({ flowId: _, ...edge }) => ({
+        ...edge,
+        condition: edge.condition ?? undefined,
+      })),
+      nodes: [],
+    };
+    for (const { node, asset } of nodeRows) {
+      const branches: ((typeof edgeRows)[number] | undefined)[] = edgeRows.filter(
+        (e) => e.targetNodeId === node.id,
+      );
+      if (node.isEntry) branches.unshift(undefined);
+      const definition = structuredClone(
+        asset.definition ?? {
+          expected:
+            typeof asset.verifierConfig?.expected === 'string'
+              ? asset.verifierConfig.expected
+              : undefined,
+          steps:
+            typeof asset.verifierConfig?.method === 'string'
+              ? [{ id: 'legacy-method', instruction: asset.verifierConfig.method }]
+              : undefined,
+        },
+      );
+      for (const [fixtureId, data] of Object.entries(node.overrides?.fixtureData ?? {})) {
+        const fixture = definition.fixtures?.find((f) => f.id === fixtureId);
+        if (!fixture) throw new Error('Unknown fixture override');
+        fixture.data = data;
+      }
+      const itemIds: string[] = [];
+      for (const branch of branches) {
+        const id = `${node.id}:${branch?.id ?? 'entry'}`;
+        itemIds.push(id);
+        plan.push({
+          id,
+          index: plan.length,
+          title: asset.title,
+          description: asset.description ?? undefined,
+          category: flow.title,
+          sourceCriterionId: asset.id,
+          sourceFlowNode: { flowId, nodeId: node.id, incomingEdgeId: branch?.id },
+          definition: {
+            ...definition,
+            preconditions: [
+              ...flow.preconditions,
+              ...(definition.preconditions ?? []),
+              ...(branch ? [branch.trigger, ...(branch.condition ? [branch.condition] : [])] : []),
+            ],
+          },
+          documentId: asset.documentId,
+          verifierType: asset.verifierType,
+          verifierConfig: asset.verifierConfig ?? {},
+          onFail: node.overrides?.onFail ?? asset.onFail,
+          required: node.overrides?.required ?? branch?.required ?? true,
+        });
+      }
+      snapshot.nodes.push({ id: node.id, criterionId: asset.id, checkItemIds: itemIds });
+    }
+    const acceptance = await this.owned(flow.acceptanceId, database);
+    const frozen = await new VerifyCriterionModel(
+      database,
+      acceptance.userId,
+      acceptance.workspaceId ?? undefined,
+    ).materialize(plan, flow.acceptanceId);
+    for (const item of frozen) {
+      const oldId = item.id;
+      item.id = `${oldId}:${fingerprint({ title: item.title, definition: item.definition, resources: item.resourceSnapshot, verifierConfig: item.verifierConfig }).slice(0, 12)}`;
+      for (const node of snapshot.nodes)
+        node.checkItemIds = node.checkItemIds.map((id) => (id === oldId ? item.id : id));
+    }
+    return { snapshot, plan: frozen, hash: fingerprint({ snapshot, plan: frozen }) };
   }
 
-  private async version(
-    acceptanceId: string,
-    versionId: string,
-    database: Pick<LobeChatDatabase, 'select'> = this.db,
-  ) {
-    await this.owned(acceptanceId, database);
-    const [row] = await database
-      .select({ version: versions })
-      .from(versions)
-      .innerJoin(flows, eq(flows.id, versions.flowId))
-      .where(and(eq(versions.id, versionId), eq(flows.acceptanceId, acceptanceId)));
-    if (!row) throw new Error('Flow version not found');
-    return row.version;
-  }
-
-  async start(acceptanceId: string, versionId: string, verifyRunId?: string) {
-    const version = await this.version(acceptanceId, versionId);
+  async start(acceptanceId: string, flowId: string, verifyRunId?: string, sourceRunId?: string) {
+    const acceptance = await this.owned(acceptanceId);
     return this.db.transaction(async (tx) => {
-      const [acceptance] = await tx
+      const [locked] = await tx
         .select()
         .from(acceptances)
         .where(eq(acceptances.id, acceptanceId))
         .for('update');
-      if (acceptance.status === 'closed' || (verifyRunId && acceptance.status === 'accepted'))
+      if (locked.status === 'closed' || (verifyRunId && locked.status === 'accepted'))
         throw new Error('Acceptance is closed');
+      const [flow] = await tx
+        .select()
+        .from(flows)
+        .where(and(eq(flows.id, flowId), eq(flows.acceptanceId, acceptanceId)))
+        .for('update');
+      if (!flow) throw new Error('Flow not found');
+      let graph;
+      if (sourceRunId) {
+        const [source] = await tx
+          .select()
+          .from(verifyRuns)
+          .where(and(eq(verifyRuns.id, sourceRunId), eq(verifyRuns.acceptanceId, acceptanceId)));
+        const snapshot = source?.flowSnapshots?.find((s) => s.flowId === flowId);
+        if (!snapshot) throw new Error('Flow snapshot not found');
+        graph = {
+          snapshot,
+          plan: (source.plan ?? []).filter((p) => p.sourceFlowNode?.flowId === flowId),
+        };
+      } else graph = await this.graph(flowId, tx);
+      if (!graph.snapshot.nodes.length) throw new Error('Empty flow');
+      graph.plan = await new VerifyCriterionModel(
+        tx,
+        acceptance.userId,
+        acceptance.workspaceId ?? undefined,
+      ).materialize(graph.plan, acceptanceId);
+      if (!sourceRunId) {
+        const priorRounds = await tx
+          .select({ plan: verifyRuns.plan })
+          .from(verifyRuns)
+          .where(eq(verifyRuns.acceptanceId, acceptanceId));
+        graph.plan = graph.plan.map((item) => {
+          const supersedes = [
+            ...new Set(
+              priorRounds
+                .flatMap((r) => r.plan ?? [])
+                .filter(
+                  (p) =>
+                    p.id !== item.id &&
+                    p.sourceFlowNode?.flowId === flowId &&
+                    p.sourceFlowNode.nodeId === item.sourceFlowNode?.nodeId &&
+                    p.sourceFlowNode.incomingEdgeId === item.sourceFlowNode?.incomingEdgeId,
+                )
+                .map((p) => p.id),
+            ),
+          ];
+          return supersedes.length ? { ...item, supersedes } : item;
+        });
+      }
       if (!verifyRunId) {
         const [last] = await tx
           .select()
@@ -246,8 +351,9 @@ export class AcceptanceFlowModel {
             acceptanceId,
             userId: acceptance.userId,
             workspaceId: acceptance.workspaceId,
+            visibility: acceptance.visibility,
             roundIndex: (last?.roundIndex ?? 0) + 1,
-            title: version.title,
+            title: flow.title,
             status: 'planned',
           })
           .returning();
@@ -256,160 +362,90 @@ export class AcceptanceFlowModel {
       const [round] = await tx
         .select()
         .from(verifyRuns)
-        .where(and(eq(verifyRuns.id, verifyRunId), eq(verifyRuns.acceptanceId, acceptanceId)));
+        .where(and(eq(verifyRuns.id, verifyRunId), eq(verifyRuns.acceptanceId, acceptanceId)))
+        .for('update');
       if (!round || round.userDecision) throw new Error('An open verification round is required');
-      const [run] = await tx
-        .insert(runs)
-        .values({ flowVersionId: versionId, verifyRunId })
-        .onConflictDoNothing()
-        .returning();
-      if (run) {
-        if (round.plan?.some((item) => item.sourceFlowNode?.flowId === version.flowId))
-          throw new Error('This flow already belongs to the verification round');
-        const graphNodes = await tx.select().from(nodes).where(eq(nodes.flowVersionId, versionId));
-        const graphEdges = await tx.select().from(edges).where(eq(edges.flowVersionId, versionId));
-        const plan: VerifyCheckItem[] = graphNodes.map((node, index) => ({
-          id: `${version.flowId}:${node.nodeKey}`,
-          index: (round.plan?.length ?? 0) + index,
-          title: node.title,
-          category: version.title,
-          description: node.instruction,
-          required:
-            node.nodeKey === version.entryNodeKey ||
-            graphEdges.some((edge) => edge.targetNodeKey === node.nodeKey && edge.required),
-          onFail: 'manual',
-          verifierType: 'agent',
-          verifierConfig: { method: node.instruction, expected: node.expected },
-          sourceFlowNode: {
-            flowId: version.flowId,
-            versionId,
-            nodeId: node.id,
-            nodeKey: node.nodeKey,
-          },
-        }));
-        await tx
-          .update(verifyRuns)
-          .set({ plan: [...(round.plan ?? []), ...plan] })
-          .where(eq(verifyRuns.id, verifyRunId));
-        await tx
-          .update(acceptances)
-          .set({ status: 'planned', completedAt: null })
-          .where(eq(acceptances.id, acceptanceId));
-        return run;
-      }
-      const [existing] = await tx
-        .select()
-        .from(runs)
-        .where(and(eq(runs.flowVersionId, versionId), eq(runs.verifyRunId, verifyRunId)));
-      return existing;
+      if (round.flowSnapshots?.some((s) => s.flowId === flowId))
+        return { id: round.id, verifyRunId: round.id, flowId };
+      if (round.planConfirmedAt || ![null, 'planned'].includes(round.status))
+        throw new Error('Verification plan is already frozen');
+      await tx
+        .update(verifyRuns)
+        .set({
+          plan: [
+            ...(round.plan ?? []),
+            ...graph.plan.map((p, i) => ({ ...p, index: (round.plan?.length ?? 0) + i })),
+          ],
+          flowSnapshots: [...(round.flowSnapshots ?? []), graph.snapshot],
+        })
+        .where(eq(verifyRuns.id, round.id));
+      await tx
+        .update(acceptances)
+        .set({ status: 'planned', completedAt: null })
+        .where(eq(acceptances.id, acceptanceId));
+      return { id: round.id, verifyRunId: round.id, flowId };
     });
   }
 
   async record(
     acceptanceId: string,
     input: {
-      flowRunId: string;
-      nodeKey: string;
-      incomingEdgeKey?: string;
-      previousAttemptId?: string;
-      requestId: string;
+      verifyRunId: string;
+      checkItemId: string;
       observation: string;
       verdict: AcceptanceFlowVerdict;
     },
   ) {
     const acceptance = await this.owned(acceptanceId);
     return this.db.transaction(async (tx) => {
-      const [run] = await tx.select().from(runs).where(eq(runs.id, input.flowRunId)).for('update');
-      if (!run) throw new Error('Flow run not found');
-      await this.version(acceptanceId, run.flowVersionId, tx);
+      const [round] = await tx
+        .select()
+        .from(verifyRuns)
+        .where(and(eq(verifyRuns.id, input.verifyRunId), eq(verifyRuns.acceptanceId, acceptanceId)))
+        .for('update');
+      if (!round) throw new Error('Verification round not found');
+      const item = round.plan?.find((p) => p.id === input.checkItemId && p.sourceFlowNode);
+      if (!item) throw new Error('Flow check item not found');
       const [existing] = await tx
         .select()
-        .from(attempts)
-        .where(and(eq(attempts.flowRunId, run.id), eq(attempts.requestId, input.requestId)));
+        .from(verifyCheckResults)
+        .where(
+          and(
+            eq(verifyCheckResults.verifyRunId, round.id),
+            eq(verifyCheckResults.checkItemId, item.id),
+          ),
+        );
+      const verdict = input.verdict === 'blocked' ? 'uncertain' : input.verdict;
       if (existing) {
-        const [existingNode] = await tx.select().from(nodes).where(eq(nodes.id, existing.nodeId));
-        const [existingEdge] = existing.incomingEdgeId
-          ? await tx.select().from(edges).where(eq(edges.id, existing.incomingEdgeId))
-          : [];
-        if (
-          existing.observation !== input.observation ||
-          existing.verdict !== input.verdict ||
-          existingNode.nodeKey !== input.nodeKey ||
-          (existingEdge?.edgeKey ?? undefined) !== input.incomingEdgeKey ||
-          (existing.previousAttemptId ?? undefined) !== input.previousAttemptId
-        )
-          throw new Error('Request id already used');
-        return existing;
+        if (existing.verdict === verdict && existing.toulmin?.evidence === input.observation)
+          return existing;
+        throw new Error('Result already recorded; create a new verification round');
       }
-      if (run.status !== 'running') throw new Error('Flow run is complete');
-      const [round] = await tx.select().from(verifyRuns).where(eq(verifyRuns.id, run.verifyRunId));
-      if (round.userDecision || ['accepted', 'closed'].includes(acceptance.status))
+      if (
+        round.userDecision ||
+        round.status === 'delivered' ||
+        ['accepted', 'closed'].includes(acceptance.status)
+      )
         throw new Error('Acceptance is closed');
-      const [version] = await tx.select().from(versions).where(eq(versions.id, run.flowVersionId));
-      const [node] = await tx
-        .select()
-        .from(nodes)
-        .where(and(eq(nodes.flowVersionId, version.id), eq(nodes.nodeKey, input.nodeKey)));
-      if (!node) throw new Error('Node not found');
-      let edgeId: string | undefined;
-      if (input.incomingEdgeKey) {
-        const [edge] = await tx
-          .select()
-          .from(edges)
-          .where(
-            and(eq(edges.flowVersionId, version.id), eq(edges.edgeKey, input.incomingEdgeKey)),
-          );
-        const [previous] = input.previousAttemptId
-          ? await tx
-              .select({ attempt: attempts, node: nodes })
-              .from(attempts)
-              .innerJoin(nodes, eq(nodes.id, attempts.nodeId))
-              .where(and(eq(attempts.id, input.previousAttemptId), eq(attempts.flowRunId, run.id)))
-          : [];
-        if (
-          !edge ||
-          edge.targetNodeKey !== node.nodeKey ||
-          !previous ||
-          previous.node.nodeKey !== edge.sourceNodeKey
-        )
-          throw new Error('Invalid path transition');
-        if (previous.attempt.verdict !== 'passed')
-          throw new Error('Previous state has not been verified');
-        edgeId = edge.id;
-      } else if (node.nodeKey !== version.entryNodeKey || input.previousAttemptId)
-        throw new Error('A path must start at the entry node');
-      const [last] = await tx
-        .select()
-        .from(attempts)
-        .where(eq(attempts.flowRunId, run.id))
-        .orderBy(desc(attempts.sequence))
-        .limit(1);
-      await tx
-        .update(verifyRuns)
-        .set({ status: 'collecting_evidence' })
-        .where(eq(verifyRuns.id, run.verifyRunId));
-      await tx
-        .update(acceptances)
-        .set({ status: 'verifying' })
-        .where(eq(acceptances.id, acceptanceId));
-      const attemptId = randomUUID();
       const [result] = await tx
         .insert(verifyCheckResults)
         .values({
-          verifyRunId: run.verifyRunId,
+          verifyRunId: round.id,
           userId: acceptance.userId,
           workspaceId: acceptance.workspaceId,
-          checkItemId: attemptId,
-          checkItemTitle: node.title,
-          verifierType: 'agent',
+          checkItemId: item.id,
+          sourceCriterionId: item.sourceCriterionId,
+          checkItemTitle: item.title,
+          required: item.required,
+          verifierType: item.verifierType,
           status:
             input.verdict === 'passed'
               ? 'passed'
               : input.verdict === 'blocked'
                 ? 'skipped'
                 : 'failed',
-          verdict: input.verdict === 'blocked' ? 'uncertain' : input.verdict,
-          toulmin: { evidence: input.observation, reasoning: node.expected },
+          verdict,
+          toulmin: { evidence: input.observation, reasoning: item.definition?.expected ?? '' },
         })
         .returning();
       await tx.insert(verifyEvidence).values({
@@ -418,167 +454,232 @@ export class AcceptanceFlowModel {
         workspaceId: acceptance.workspaceId,
         type: 'text',
         content: input.observation,
-        description: node.title,
+        description: item.title,
         capturedBy: 'cli',
       });
-      const [attempt] = await tx
-        .insert(attempts)
-        .values({
-          id: attemptId,
-          flowRunId: run.id,
-          nodeId: node.id,
-          incomingEdgeId: edgeId,
-          previousAttemptId: input.previousAttemptId,
-          requestId: input.requestId,
-          sequence: (last?.sequence ?? 0) + 1,
-          observation: input.observation,
-          verdict: input.verdict,
-          checkResultId: result.id,
+      await tx
+        .update(verifyRuns)
+        .set({
+          status: 'collecting_evidence',
+          planConfirmedAt: round.planConfirmedAt ?? new Date(),
         })
-        .returning();
-      return attempt;
+        .where(eq(verifyRuns.id, round.id));
+      await tx
+        .update(acceptances)
+        .set({ status: 'verifying' })
+        .where(eq(acceptances.id, acceptanceId));
+      return result;
     });
   }
 
-  async complete(acceptanceId: string, flowRunId: string) {
+  async complete(acceptanceId: string, verifyRunId: string) {
     await this.owned(acceptanceId);
     return this.db.transaction(async (tx) => {
-      const [run] = await tx.select().from(runs).where(eq(runs.id, flowRunId)).for('update');
-      if (!run) throw new Error('Flow run not found');
-      const version = await this.version(acceptanceId, run.flowVersionId, tx);
-      const [graphEdges, graphNodes, visits] = await Promise.all([
-        tx.select().from(edges).where(eq(edges.flowVersionId, version.id)),
-        tx.select().from(nodes).where(eq(nodes.flowVersionId, version.id)),
-        tx
-          .select()
-          .from(attempts)
-          .where(eq(attempts.flowRunId, run.id))
-          .orderBy(asc(attempts.sequence)),
-      ]);
-      const latest = new Map(visits.map((v) => [v.incomingEdgeId ?? 'entry', v]));
-      const entry = graphNodes.find((n) => n.nodeKey === version.entryNodeKey);
+      const [round] = await tx
+        .select()
+        .from(verifyRuns)
+        .where(and(eq(verifyRuns.id, verifyRunId), eq(verifyRuns.acceptanceId, acceptanceId)))
+        .for('update');
+      if (!round || !round.flowSnapshots?.length) throw new Error('Flow round not found');
+      if (round.userDecision) throw new Error('Round already reviewed');
+      const results = await tx
+        .select()
+        .from(verifyCheckResults)
+        .where(eq(verifyCheckResults.verifyRunId, round.id));
       if (
-        latest.get('entry')?.nodeId !== entry?.id ||
-        latest.get('entry')?.verdict !== 'passed' ||
-        graphEdges.some((e) => e.required && latest.get(e.id)?.verdict !== 'passed')
+        round.plan?.some(
+          (p) =>
+            p.required && !results.some((r) => r.checkItemId === p.id && r.verdict === 'passed'),
+        )
       )
         throw new Error('Required flow branches have not passed');
       const [updated] = await tx
-        .update(runs)
-        .set({ status: 'completed' })
-        .where(eq(runs.id, run.id))
+        .update(verifyRuns)
+        .set({ status: 'delivered', planConfirmedAt: round.planConfirmedAt ?? new Date() })
+        .where(eq(verifyRuns.id, round.id))
         .returning();
-      const [round] = await tx.select().from(verifyRuns).where(eq(verifyRuns.id, run.verifyRunId));
-      const siblings = await tx.select().from(runs).where(eq(runs.verifyRunId, run.verifyRunId));
-      if (
-        round.plan?.every((item) => item.sourceFlowNode) &&
-        siblings.every((sibling) => sibling.status === 'completed')
-      ) {
-        await tx
-          .update(verifyRuns)
-          .set({ status: 'delivered' })
-          .where(eq(verifyRuns.id, run.verifyRunId));
-      }
       return updated;
     });
   }
 
+  /** Compatibility presentation projection: versions are round snapshots, attempts are check results. */
+  async list(acceptanceId: string) {
+    await this.owned(acceptanceId);
+    const flowRows = await this.db
+      .select()
+      .from(flows)
+      .where(eq(flows.acceptanceId, acceptanceId))
+      .orderBy(asc(flows.createdAt));
+    const rounds = await this.db
+      .select()
+      .from(verifyRuns)
+      .where(eq(verifyRuns.acceptanceId, acceptanceId))
+      .orderBy(desc(verifyRuns.roundIndex));
+    const results = rounds.length
+      ? await this.db
+          .select()
+          .from(verifyCheckResults)
+          .where(
+            inArray(
+              verifyCheckResults.verifyRunId,
+              rounds.map((r) => r.id),
+            ),
+          )
+          .orderBy(asc(verifyCheckResults.createdAt), asc(verifyCheckResults.id))
+      : [];
+    const evidence = results.length
+      ? await this.db
+          .select()
+          .from(verifyEvidence)
+          .where(
+            inArray(
+              verifyEvidence.checkResultId,
+              results.map((r) => r.id),
+            ),
+          )
+      : [];
+    const render = (
+      snapshot: VerifyFlowSnapshot,
+      plan: VerifyCheckItem[],
+      round?: (typeof rounds)[number],
+    ) => ({
+      id: round ? `${round.id}:${snapshot.flowId}` : snapshot.flowId,
+      flowId: snapshot.flowId,
+      version: round?.roundIndex ?? 0,
+      title: snapshot.title,
+      goal: snapshot.goal,
+      preconditions: snapshot.preconditions.join('\n'),
+      entryNodeKey: snapshot.entryNodeId,
+      nodes: snapshot.nodes.map((node) => {
+        const item = plan.find((p) => node.checkItemIds.includes(p.id));
+        return {
+          id: node.id,
+          nodeKey: node.id,
+          criterionId: node.criterionId,
+          entryRequired:
+            plan.find(
+              (p) => p.sourceFlowNode?.nodeId === node.id && !p.sourceFlowNode.incomingEdgeId,
+            )?.required ?? true,
+          title: item?.title ?? '',
+          instruction: item?.definition?.steps?.map((s) => s.instruction).join('\n') ?? '',
+          expected: item?.definition?.expected ?? '',
+          definition: item?.definition,
+          resourceSnapshot: item?.resourceSnapshot,
+        };
+      }),
+      edges: snapshot.edges.map((edge) => ({
+        ...edge,
+        required:
+          plan.find((p) => p.sourceFlowNode?.incomingEdgeId === edge.id)?.required ?? edge.required,
+        edgeKey: edge.id,
+        sourceNodeKey: edge.sourceNodeId,
+        targetNodeKey: edge.targetNodeId,
+      })),
+      runs: round
+        ? [
+            {
+              id: round.id,
+              verifyRunId: round.id,
+              status: round.status,
+              attempts: results
+                .filter(
+                  (r) =>
+                    r.verifyRunId === round.id &&
+                    plan.some(
+                      (p) => p.id === r.checkItemId && p.sourceFlowNode?.flowId === snapshot.flowId,
+                    ),
+                )
+                .map((r, index) => {
+                  const item = plan.find((p) => p.id === r.checkItemId)!;
+                  return {
+                    id: r.id,
+                    checkResultId: r.id,
+                    checkItemId: r.checkItemId,
+                    nodeId: item.sourceFlowNode!.nodeId,
+                    incomingEdgeId: item.sourceFlowNode!.incomingEdgeId ?? null,
+                    sequence: index + 1,
+                    observation: r.toulmin?.evidence ?? '',
+                    verdict: (r.verdict ?? 'uncertain') as AcceptanceFlowVerdict,
+                    review:
+                      r.userDecision === 'accepted' || r.userDecision === 'rejected'
+                        ? r.userDecision
+                        : null,
+                    reviewComment: r.userDecisionDetail?.comment ?? null,
+                    reviewDetail: r.userDecisionDetail ?? null,
+                    evidence: evidence.filter((e) => e.checkResultId === r.id),
+                  };
+                }),
+            },
+          ]
+        : [],
+    });
+    return Promise.all(
+      flowRows.map(async (flow) => {
+        const current = await this.graph(flow.id);
+        const history = rounds.flatMap((round) =>
+          (round.flowSnapshots ?? [])
+            .filter((s) => s.flowId === flow.id)
+            .map((s) => render(s, round.plan ?? [], round)),
+        );
+        const currentView = render(current.snapshot, current.plan);
+        const sameDefinition = history.some(
+          (h) =>
+            fingerprint({
+              nodes: h.nodes,
+              edges: h.edges,
+              title: h.title,
+              goal: h.goal,
+              preconditions: h.preconditions,
+            }) ===
+            fingerprint({
+              nodes: currentView.nodes,
+              edges: currentView.edges,
+              title: currentView.title,
+              goal: currentView.goal,
+              preconditions: currentView.preconditions,
+            }),
+        );
+        return {
+          ...flow,
+          hash: current.hash,
+          versions: sameDefinition ? history : [currentView, ...history],
+        };
+      }),
+    );
+  }
+
   async review(
     acceptanceId: string,
-    attemptId: string,
+    resultId: string,
     review: AcceptanceFlowReview,
     comment: string,
     actor: string,
     feedback?: { annotations?: AcceptanceReviewAnnotation[]; fileIds?: string[] },
   ) {
     const data = await this.list(acceptanceId);
-    const visit = data
+    const result = data
       .flatMap((f) => f.versions.flatMap((v) => v.runs.flatMap((r) => r.attempts)))
-      .find((a) => a.id === attemptId);
-    if (!visit) throw new Error('Attempt not found');
+      .find((r) => r.id === resultId);
+    if (!result) throw new Error('Result not found');
     if (
       feedback?.annotations?.some(
-        (annotation) =>
-          !visit.evidence.some(
-            (evidence) => evidence.id === annotation.evidenceId && evidence.type === 'screenshot',
-          ),
+        (a) => !result.evidence.some((e) => e.id === a.evidenceId && e.type === 'screenshot'),
       )
     )
       throw new Error('Annotation must reference this result screenshot');
-    return this.db.transaction(async (tx) => {
-      const [updated] = await tx
-        .update(attempts)
-        .set({ review, reviewComment: comment, reviewedBy: actor })
-        .where(eq(attempts.id, attemptId))
-        .returning();
-      await tx
-        .update(verifyCheckResults)
-        .set({
-          userDecision: review === 'accepted' ? 'accepted' : 'rejected',
-          userDecisionDetail: {
-            ...feedback,
-            comment,
-            decidedBy: actor,
-            decidedAt: new Date().toISOString(),
-          },
-        })
-        .where(eq(verifyCheckResults.id, visit.checkResultId));
-      return updated;
-    });
+    const [updated] = await this.db
+      .update(verifyCheckResults)
+      .set({
+        userDecision: review,
+        userDecisionDetail: {
+          ...feedback,
+          comment,
+          decidedBy: actor,
+          decidedAt: new Date().toISOString(),
+        },
+      })
+      .where(eq(verifyCheckResults.id, resultId))
+      .returning();
+    return updated;
   }
-}
-
-/** Fold immutable path attempts into one check outcome per node per verification round. */
-export function projectFlowCheckResults(
-  results: (typeof verifyCheckResults.$inferSelect)[],
-  flowData: Awaited<ReturnType<AcceptanceFlowModel['list']>>,
-) {
-  const attemptIds = new Set(
-    flowData.flatMap((flow) =>
-      flow.versions.flatMap((version) =>
-        version.runs.flatMap((run) => run.attempts.map((attempt) => attempt.checkResultId)),
-      ),
-    ),
-  );
-  const byId = new Map(results.map((result) => [result.id, result]));
-  const projected = results.filter((result) => !attemptIds.has(result.id));
-  for (const flow of flowData)
-    for (const version of flow.versions)
-      for (const run of version.runs) {
-        const latest = new Map(
-          run.attempts.map((visit) => [visit.incomingEdgeId ?? 'entry', visit]),
-        );
-        for (const node of version.nodes) {
-          const keys = version.edges
-            .filter(
-              (edge) =>
-                edge.targetNodeKey === node.nodeKey && (edge.required || latest.has(edge.id)),
-            )
-            .map((edge) => edge.id);
-          if (node.nodeKey === version.entryNodeKey) keys.push('entry');
-          const visits = keys.map((key) => latest.get(key));
-          const observed = visits
-            .filter((visit) => visit !== undefined)
-            .sort((a, b) => b.sequence - a.sequence);
-          const failed = observed.find((visit) => visit.verdict === 'failed');
-          const uncertain = observed.find((visit) => visit.verdict !== 'passed');
-          const chosen = failed ?? uncertain ?? observed[0];
-          if (!chosen) continue;
-          const result = byId.get(chosen.checkResultId);
-          if (!result) continue;
-          const verdict = failed
-            ? 'failed'
-            : visits.every((visit) => visit?.verdict === 'passed')
-              ? 'passed'
-              : 'uncertain';
-          projected.push({
-            ...result,
-            checkItemId: `${flow.id}:${node.nodeKey}`,
-            checkItemTitle: node.title,
-            verdict,
-            status: verdict === 'passed' ? 'passed' : 'failed',
-          });
-        }
-      }
-  return projected;
 }

@@ -256,7 +256,6 @@ const AcceptanceCheckInventory = ({
         filter={filter}
         groupFeedback={groupFeedback}
         reviewPending={false}
-        round={roundFilter}
         onOpenTrace={onOpenTrace}
         onRound={setRoundFilter}
         onDismissProposal={

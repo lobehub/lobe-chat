@@ -289,7 +289,7 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
                     ...a,
                     region: formatAnnotationRegion(a, evidenceLabels),
                   })),
-                  checkId: attempt.id,
+                  checkId: attempt.checkItemId,
                   comment: attempt.reviewComment ?? '',
                   createdAt: attempt.reviewDetail?.decidedAt,
                   fileIds: attempt.reviewDetail?.fileIds,
@@ -297,7 +297,7 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
                   roundIndex:
                     bundle.rounds.find((round) => round.run.id === run.verifyRunId)?.run
                       .roundIndex ?? 0,
-                  title: `${version.nodes.find((node) => node.id === attempt.nodeId)?.title ?? ''} · v${version.version} · #${attempt.sequence}`,
+                  title: `${version.nodes.find((node) => node.id === attempt.nodeId)?.title ?? ''} · #${attempt.sequence}`,
                 });
               }
             }

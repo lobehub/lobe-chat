@@ -17,7 +17,6 @@ import type {
 import debug from 'debug';
 
 import { AcceptanceModel } from '@/database/models/acceptance';
-import { AcceptanceFlowModel, projectFlowCheckResults } from '@/database/models/acceptanceFlow';
 import { AgentModel } from '@/database/models/agent';
 import { DocumentModel } from '@/database/models/document';
 import { ProjectModel } from '@/database/models/project';
@@ -179,11 +178,14 @@ export const buildAcceptanceCheckUnion = (rounds: RoundInput[]): AcceptanceCheck
     const plan = (run.plan ?? []) as VerifyCheckItem[];
     const planById = new Map(plan.map((item) => [item.id, item]));
     const logicalIdByCheckItemId = new Map(
-      plan.map((item) => [item.id, item.sourceCriterionId ?? item.id]),
+      plan.map((item) => [
+        item.id,
+        item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id),
+      ]),
     );
 
     for (const item of plan) {
-      const logicalId = item.sourceCriterionId ?? item.id;
+      const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
       const row = ensureRow(logicalId, roundIndex);
       // The latest snapshot wins: repair rounds may refine method/expected.
       if (item.sourceFlowNode) {
@@ -591,7 +593,7 @@ export class AcceptanceService {
     // physical ids alone lets both routes write into a settled row unblocked.
     const candidates = new Map<string, string>();
     for (const item of run.plan ?? []) {
-      const logicalId = item.sourceCriterionId ?? item.id;
+      const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
       if (logicalId) candidates.set(logicalId, item.id);
       if (item.id) candidates.set(item.id, item.id);
       for (const superseded of item.supersedes ?? []) {
@@ -1285,7 +1287,6 @@ export class AcceptanceService {
       this.evidenceModel.listByRuns(runIds),
       this.reportModel.findByRuns(runIds),
     ]);
-    const flows = await new AcceptanceFlowModel(this.db, this.userId).list(acceptanceId);
-    return { evidence, reports, results: projectFlowCheckResults(results, flows), runs };
+    return { evidence, reports, results, runs };
   };
 }

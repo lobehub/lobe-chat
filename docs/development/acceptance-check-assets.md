@@ -1,6 +1,6 @@
 # 检查资产与验收流程：表结构修订方案
 
-状态：待实现的替代方案。本文替代本分支 `acceptance-flows.md` 中的版本表、执行表和访问记录表设计；当前运行代码尚未切换。
+状态：本分支按此方案实现；具体 CLI 契约见 `acceptance-flows.md`。验证记录单独发布到原 acceptance。
 
 ## 目标与实体边界
 
@@ -88,13 +88,13 @@ acceptance\_id 增加普通索引。整体图更新在事务中锁定 flow，读
 
 ## 3. acceptance\_flow\_nodes：检查资产的流程引用
 
-| 列            | 类型    | 约束 / 用途                                   |
-| ------------- | ------- | --------------------------------------------- |
-| id            | uuid    | 主键，流程编辑时保留稳定 ID                   |
-| flow\_id      | uuid    | 非空，FK flows，ON DELETE CASCADE             |
-| criterion\_id | uuid    | 非空，FK verify\_criteria，ON DELETE RESTRICT |
-| is\_entry     | boolean | 非空，默认 false                              |
-| overrides     | jsonb   | 可空，类型化的场景覆盖                        |
+| 列            | 类型    | 约束 / 用途                                                          |
+| ------------- | ------- | -------------------------------------------------------------------- |
+| id            | uuid    | 主键，流程编辑时保留稳定 ID                                          |
+| flow\_id      | uuid    | 非空，FK flows，ON DELETE CASCADE                                    |
+| criterion\_id | uuid    | 非空，FK verify\_criteria，ON DELETE NO ACTION，延迟到事务提交时检查 |
+| is\_entry     | boolean | 非空，默认 false                                                     |
+| overrides     | jsonb   | 可空，类型化的场景覆盖                                               |
 
 新增 UNIQUE (flow\_id, id)，供连线的复合外键使用；criterion\_id 普通索引用于反向查找使用该资产的流程。对 flow\_id WHERE is\_entry 建部分唯一索引，限制每图最多一个入口；服务校验非空可执行图至少一个入口。
 
@@ -174,4 +174,4 @@ acceptance\_id 增加普通索引。整体图更新在事务中锁定 flow，读
 3. 同步资产 model/router、计划生成与 ingest、flow CLI/API、bundle 和 UI 读取；保留原检查清单交互。
 4. 原版本 /attempt 测试改为资产引用、分支检查项及快照隔离测试。
 5. 验证不同 workspace 不可互相引用、同资产多节点、原图修改不改变历史、归档不破坏已有引用、必需分支缺失不通过、重试不重复创建资产。
-6. 执行相关 lint/test/type，复跑真实产品并将结果写回原 acceptance。当前文档不表示这些实现和验证已经完成。
+6. 执行相关 lint/test/type，复跑真实产品并将结果写回原 acceptance。测试和验收结果以对应轮次记录为准。

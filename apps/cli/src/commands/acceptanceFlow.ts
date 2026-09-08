@@ -24,24 +24,23 @@ export function attachAcceptanceFlowCommands(acceptance: Command) {
   });
   flow
     .command('start <acceptanceId>')
-    .requiredOption('--flow-version <id>')
-    .option('--run <id>', 'Existing round; omit to create a fresh round for this version')
-    .action(async (id: string, options: { flowVersion: string; run?: string }) => {
+    .requiredOption('--flow <id>')
+    .option('--run <id>', 'Existing round; omit to create a fresh round for this flow')
+    .option('--from-run <id>', 'Replay the frozen definition from a previous round')
+    .action(async (id: string, options: { flow: string; run?: string; fromRun?: string }) => {
       const client = await getTrpcClient();
       outputJson(
         await client.acceptance.startFlow.mutate({
           id,
-          versionId: options.flowVersion,
+          flowId: options.flow,
           verifyRunId: options.run,
+          sourceRunId: options.fromRun,
         }),
       );
     });
   flow
     .command('record <acceptanceId>')
-    .requiredOption(
-      '--file <path>',
-      'JSON visit with flowRunId, nodeKey, requestId, verdict, observation and optional previousAttemptId/incomingEdgeKey',
-    )
+    .requiredOption('--file <path>', 'JSON: verifyRunId, checkItemId, verdict, observation')
     .action(async (id: string, options: { file: string }) => {
       const client = await getTrpcClient();
       const input = JSON.parse(await readFile(options.file, 'utf8'));
@@ -49,9 +48,9 @@ export function attachAcceptanceFlowCommands(acceptance: Command) {
     });
   flow
     .command('complete <acceptanceId>')
-    .requiredOption('--flow-run <id>')
-    .action(async (id: string, options: { flowRun: string }) => {
+    .requiredOption('--run <id>')
+    .action(async (id: string, options: { run: string }) => {
       const client = await getTrpcClient();
-      outputJson(await client.acceptance.completeFlow.mutate({ id, flowRunId: options.flowRun }));
+      outputJson(await client.acceptance.completeFlow.mutate({ id, verifyRunId: options.run }));
     });
 }

@@ -66,7 +66,13 @@ export function AcceptanceFlow() {
     const depth = depths.get(n.nodeKey) ?? 0;
     const row = rows.get(depth) ?? 0;
     rows.set(depth, row + 1);
-    const state = getFlowNodeState(n.nodeKey, version.entryNodeKey, version.edges, visits);
+    const state = getFlowNodeState(
+      n.nodeKey,
+      version.entryNodeKey,
+      version.edges,
+      visits,
+      n.entryRequired,
+    );
     return {
       id: n.id,
       type: 'state',
@@ -92,7 +98,16 @@ export function AcceptanceFlow() {
     target: version.nodes.find((n) => n.nodeKey === e.targetNodeKey)!.id,
     label: e.trigger,
     type: 'transition',
-    data: { onSelect: setSelected },
+    data: {
+      onSelect: setSelected,
+      laneOffset: (() => {
+        const peers = version.edges.filter(
+          (other) =>
+            other.sourceNodeKey === e.sourceNodeKey && other.targetNodeKey === e.targetNodeKey,
+        );
+        return (peers.findIndex((other) => other.id === e.id) - (peers.length - 1) / 2) * 64;
+      })(),
+    },
     sourceHandle:
       depths.get(e.targetNodeKey)! <= depths.get(e.sourceNodeKey)! ? 'return-out' : 'out',
     targetHandle: depths.get(e.targetNodeKey)! <= depths.get(e.sourceNodeKey)! ? 'return-in' : 'in',
@@ -159,11 +174,16 @@ export function AcceptanceFlow() {
             <FlowResults
               acceptanceId={acceptanceId!}
               attempts={attempts}
-              canReview={Boolean(data?.canReview)}
               edges={version.edges}
               key={`${version.id}:${run?.id}:${selected}`}
               node={node}
               selectedEdge={selectedEdge}
+              canReview={Boolean(
+                data?.canReview &&
+                view.roundIndex != null &&
+                view.roundIndex ===
+                  Math.max(...(data?.rounds.map((r) => r.run.roundIndex ?? 0) ?? [0])),
+              )}
               onClose={() => setSelected(undefined)}
               onSaved={mutate}
             />,

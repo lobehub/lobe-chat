@@ -37,7 +37,7 @@ const result = (
 describe('buildAcceptanceCheckUnion', () => {
   it('resets a flow check for a new run while keeping earlier evidence and review in history', () => {
     const item = planItem('node', {
-      sourceFlowNode: { flowId: 'flow', versionId: 'v1', nodeId: 'n1', nodeKey: 'ready' },
+      sourceFlowNode: { flowId: 'flow', nodeId: 'n1' },
     });
     const previous = result('node', 'passed', {
       userDecision: 'accepted',
@@ -74,6 +74,21 @@ describe('buildAcceptanceCheckUnion', () => {
       '2:failed',
       '3:passed',
     ]);
+  });
+
+  it('keeps flow positions and branches separate when they reuse one asset', () => {
+    const plan = ['entry', 'branch-a', 'branch-b'].map((id) =>
+      planItem(id, {
+        sourceCriterionId: 'shared-asset',
+        sourceFlowNode: { flowId: 'flow', nodeId: 'node', incomingEdgeId: id },
+      }),
+    );
+    const rows = buildAcceptanceCheckUnion([
+      { results: [result('entry', 'passed')], run: run('r1', 1, plan) },
+    ]);
+    expect(rows).toHaveLength(3);
+    expect(rows.find((row) => row.id === 'entry')?.state).toBe('passed');
+    expect(rows.filter((row) => row.result)).toHaveLength(1);
   });
 
   it('joins different run-local item ids through their stable source criterion', () => {

@@ -22,6 +22,7 @@ it('includes flow regions and attachments, excluding superseded attempts from ac
   const attempt = {
     id: 'latest',
     checkResultId: 'flow-result',
+    checkItemId: 'flow-check',
     nodeId: 'node',
     sequence: 2,
     incomingEdgeId: 'edge',
@@ -76,7 +77,7 @@ it('includes flow regions and attachments, excluding superseded attempts from ac
   expect(result.entries).toHaveLength(1);
   expect(result.entries[0]).toMatchObject({
     kind: 'flow',
-    checkId: 'latest',
+    checkId: 'flow-check',
     comment: 'Fix image',
     fileIds: ['attachment'],
     annotations: [{ ...region, region: expect.stringContaining('proof.png') }],

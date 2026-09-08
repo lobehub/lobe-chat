@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "ad1dd85a-30db-4bd4-9b28-c5bd67adb13f",
+  "id": "482dbc49-3b83-4403-a377-0f15db639879",
   "policies": {},
   "prevId": "f8af0c0c-e7ec-4407-b65a-fe7b7cd4aa5c",
   "roles": {},
@@ -35,27 +35,21 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "flow_version_id": {
-          "name": "flow_version_id",
+        "flow_id": {
+          "name": "flow_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "edge_key": {
-          "name": "edge_key",
-          "type": "text",
+        "source_node_id": {
+          "name": "source_node_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "source_node_key": {
-          "name": "source_node_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "target_node_key": {
-          "name": "target_node_key",
-          "type": "text",
+        "target_node_id": {
+          "name": "target_node_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -80,53 +74,74 @@
         }
       },
       "indexes": {
-        "acceptance_flow_edge_key_unique": {
-          "name": "acceptance_flow_edge_key_unique",
+        "acceptance_flow_edges_source_idx": {
+          "name": "acceptance_flow_edges_source_idx",
           "columns": [
             {
-              "expression": "flow_version_id",
+              "expression": "flow_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "edge_key",
+              "expression": "source_node_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "isUnique": true,
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "acceptance_flow_edges_target_idx": {
+          "name": "acceptance_flow_edges_target_idx",
+          "columns": [
+            {
+              "expression": "flow_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "target_node_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}
         }
       },
       "foreignKeys": {
-        "acceptance_flow_edges_flow_version_id_acceptance_flow_versions_id_fk": {
-          "name": "acceptance_flow_edges_flow_version_id_acceptance_flow_versions_id_fk",
+        "acceptance_flow_edges_flow_id_acceptance_flows_id_fk": {
+          "name": "acceptance_flow_edges_flow_id_acceptance_flows_id_fk",
           "tableFrom": "acceptance_flow_edges",
-          "tableTo": "acceptance_flow_versions",
-          "columnsFrom": ["flow_version_id"],
+          "tableTo": "acceptance_flows",
+          "columnsFrom": ["flow_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "acceptance_flow_edges_flow_version_id_source_node_key_acceptance_flow_nodes_flow_version_id_node_key_fk": {
-          "name": "acceptance_flow_edges_flow_version_id_source_node_key_acceptance_flow_nodes_flow_version_id_node_key_fk",
+        "acceptance_flow_edges_flow_id_source_node_id_acceptance_flow_nodes_flow_id_id_fk": {
+          "name": "acceptance_flow_edges_flow_id_source_node_id_acceptance_flow_nodes_flow_id_id_fk",
           "tableFrom": "acceptance_flow_edges",
           "tableTo": "acceptance_flow_nodes",
-          "columnsFrom": ["flow_version_id", "source_node_key"],
-          "columnsTo": ["flow_version_id", "node_key"],
+          "columnsFrom": ["flow_id", "source_node_id"],
+          "columnsTo": ["flow_id", "id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "acceptance_flow_edges_flow_version_id_target_node_key_acceptance_flow_nodes_flow_version_id_node_key_fk": {
-          "name": "acceptance_flow_edges_flow_version_id_target_node_key_acceptance_flow_nodes_flow_version_id_node_key_fk",
+        "acceptance_flow_edges_flow_id_target_node_id_acceptance_flow_nodes_flow_id_id_fk": {
+          "name": "acceptance_flow_edges_flow_id_target_node_id_acceptance_flow_nodes_flow_id_id_fk",
           "tableFrom": "acceptance_flow_edges",
           "tableTo": "acceptance_flow_nodes",
-          "columnsFrom": ["flow_version_id", "target_node_key"],
-          "columnsTo": ["flow_version_id", "node_key"],
+          "columnsFrom": ["flow_id", "target_node_id"],
+          "columnsTo": ["flow_id", "id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -148,443 +163,35 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "flow_version_id": {
-          "name": "flow_version_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "node_key": {
-          "name": "node_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "instruction": {
-          "name": "instruction",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expected": {
-          "name": "expected",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "acceptance_flow_node_key_unique": {
-          "name": "acceptance_flow_node_key_unique",
-          "columns": [
-            {
-              "expression": "flow_version_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "node_key",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "acceptance_flow_nodes_flow_version_id_acceptance_flow_versions_id_fk": {
-          "name": "acceptance_flow_nodes_flow_version_id_acceptance_flow_versions_id_fk",
-          "tableFrom": "acceptance_flow_nodes",
-          "tableTo": "acceptance_flow_versions",
-          "columnsFrom": ["flow_version_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.acceptance_flow_runs": {
-      "name": "acceptance_flow_runs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "flow_version_id": {
-          "name": "flow_version_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "verify_run_id": {
-          "name": "verify_run_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'running'"
-        },
-        "accessed_at": {
-          "name": "accessed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "acceptance_flow_run_round_unique": {
-          "name": "acceptance_flow_run_round_unique",
-          "columns": [
-            {
-              "expression": "flow_version_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "verify_run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "acceptance_flow_runs_flow_version_id_acceptance_flow_versions_id_fk": {
-          "name": "acceptance_flow_runs_flow_version_id_acceptance_flow_versions_id_fk",
-          "tableFrom": "acceptance_flow_runs",
-          "tableTo": "acceptance_flow_versions",
-          "columnsFrom": ["flow_version_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "acceptance_flow_runs_verify_run_id_verify_runs_id_fk": {
-          "name": "acceptance_flow_runs_verify_run_id_verify_runs_id_fk",
-          "tableFrom": "acceptance_flow_runs",
-          "tableTo": "verify_runs",
-          "columnsFrom": ["verify_run_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.acceptance_flow_step_attempts": {
-      "name": "acceptance_flow_step_attempts",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "flow_run_id": {
-          "name": "flow_run_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "node_id": {
-          "name": "node_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "incoming_edge_id": {
-          "name": "incoming_edge_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "previous_attempt_id": {
-          "name": "previous_attempt_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "request_id": {
-          "name": "request_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sequence": {
-          "name": "sequence",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "observation": {
-          "name": "observation",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "verdict": {
-          "name": "verdict",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "check_result_id": {
-          "name": "check_result_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "review": {
-          "name": "review",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "review_comment": {
-          "name": "review_comment",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reviewed_by": {
-          "name": "reviewed_by",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "accessed_at": {
-          "name": "accessed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "acceptance_flow_attempt_request_unique": {
-          "name": "acceptance_flow_attempt_request_unique",
-          "columns": [
-            {
-              "expression": "flow_run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "request_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "acceptance_flow_attempt_sequence_unique": {
-          "name": "acceptance_flow_attempt_sequence_unique",
-          "columns": [
-            {
-              "expression": "flow_run_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "sequence",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "acceptance_flow_step_attempts_flow_run_id_acceptance_flow_runs_id_fk": {
-          "name": "acceptance_flow_step_attempts_flow_run_id_acceptance_flow_runs_id_fk",
-          "tableFrom": "acceptance_flow_step_attempts",
-          "tableTo": "acceptance_flow_runs",
-          "columnsFrom": ["flow_run_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "acceptance_flow_step_attempts_node_id_acceptance_flow_nodes_id_fk": {
-          "name": "acceptance_flow_step_attempts_node_id_acceptance_flow_nodes_id_fk",
-          "tableFrom": "acceptance_flow_step_attempts",
-          "tableTo": "acceptance_flow_nodes",
-          "columnsFrom": ["node_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "acceptance_flow_step_attempts_incoming_edge_id_acceptance_flow_edges_id_fk": {
-          "name": "acceptance_flow_step_attempts_incoming_edge_id_acceptance_flow_edges_id_fk",
-          "tableFrom": "acceptance_flow_step_attempts",
-          "tableTo": "acceptance_flow_edges",
-          "columnsFrom": ["incoming_edge_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "acceptance_flow_step_attempts_check_result_id_verify_check_results_id_fk": {
-          "name": "acceptance_flow_step_attempts_check_result_id_verify_check_results_id_fk",
-          "tableFrom": "acceptance_flow_step_attempts",
-          "tableTo": "verify_check_results",
-          "columnsFrom": ["check_result_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.acceptance_flow_versions": {
-      "name": "acceptance_flow_versions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "flow_id": {
           "name": "flow_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "version": {
-          "name": "version",
-          "type": "integer",
+        "criterion_id": {
+          "name": "criterion_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "goal": {
-          "name": "goal",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "preconditions": {
-          "name": "preconditions",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "entry_node_key": {
-          "name": "entry_node_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "accessed_at": {
-          "name": "accessed_at",
-          "type": "timestamp with time zone",
+        "is_entry": {
+          "name": "is_entry",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "default": false
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
+        "overrides": {
+          "name": "overrides",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": false
         }
       },
       "indexes": {
-        "acceptance_flow_version_unique": {
-          "name": "acceptance_flow_version_unique",
+        "acceptance_flow_nodes_flow_id_unique": {
+          "name": "acceptance_flow_nodes_flow_id_unique",
           "columns": [
             {
               "expression": "flow_id",
@@ -593,7 +200,7 @@
               "nulls": "last"
             },
             {
-              "expression": "version",
+              "expression": "id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -603,16 +210,56 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "acceptance_flow_nodes_entry_unique": {
+          "name": "acceptance_flow_nodes_entry_unique",
+          "columns": [
+            {
+              "expression": "flow_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"acceptance_flow_nodes\".\"is_entry\" = true",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "acceptance_flow_nodes_criterion_idx": {
+          "name": "acceptance_flow_nodes_criterion_idx",
+          "columns": [
+            {
+              "expression": "criterion_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "acceptance_flow_versions_flow_id_acceptance_flows_id_fk": {
-          "name": "acceptance_flow_versions_flow_id_acceptance_flows_id_fk",
-          "tableFrom": "acceptance_flow_versions",
+        "acceptance_flow_nodes_flow_id_acceptance_flows_id_fk": {
+          "name": "acceptance_flow_nodes_flow_id_acceptance_flows_id_fk",
+          "tableFrom": "acceptance_flow_nodes",
           "tableTo": "acceptance_flows",
           "columnsFrom": ["flow_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "acceptance_flow_nodes_criterion_id_verify_criteria_id_fk": {
+          "name": "acceptance_flow_nodes_criterion_id_verify_criteria_id_fk",
+          "tableFrom": "acceptance_flow_nodes",
+          "tableTo": "verify_criteria",
+          "columnsFrom": ["criterion_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -645,6 +292,19 @@
           "primaryKey": false,
           "notNull": true
         },
+        "goal": {
+          "name": "goal",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preconditions": {
+          "name": "preconditions",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
         "accessed_at": {
           "name": "accessed_at",
           "type": "timestamp with time zone",
@@ -667,7 +327,23 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "acceptance_flows_acceptance_idx": {
+          "name": "acceptance_flows_acceptance_idx",
+          "columns": [
+            {
+              "expression": "acceptance_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "acceptance_flows_acceptance_id_acceptances_id_fk": {
           "name": "acceptance_flows_acceptance_id_acceptances_id_fk",
@@ -32954,6 +32630,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "source_criterion_id": {
+          "name": "source_criterion_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "check_item_title": {
           "name": "check_item_title",
           "type": "text",
@@ -33085,6 +32767,27 @@
         }
       },
       "indexes": {
+        "verify_check_results_criterion_created_idx": {
+          "name": "verify_check_results_criterion_created_idx",
+          "columns": [
+            {
+              "expression": "source_criterion_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "verify_check_results_verify_run_id_idx": {
           "name": "verify_check_results_verify_run_id_idx",
           "columns": [
@@ -33294,6 +32997,15 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "verify_check_results_source_criterion_id_verify_criteria_id_fk": {
+          "name": "verify_check_results_source_criterion_id_verify_criteria_id_fk",
+          "tableFrom": "verify_check_results",
+          "tableTo": "verify_criteria",
+          "columnsFrom": ["source_criterion_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "verify_check_results_verifier_operation_id_agent_operations_id_fk": {
           "name": "verify_check_results_verifier_operation_id_agent_operations_id_fk",
           "tableFrom": "verify_check_results",
@@ -33354,6 +33066,25 @@
         "description": {
           "name": "description",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "definition": {
+          "name": "definition",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "archived_at": {
+          "name": "archived_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
@@ -34569,6 +34300,12 @@
         },
         "plan": {
           "name": "plan",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "flow_snapshots": {
+          "name": "flow_snapshots",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false

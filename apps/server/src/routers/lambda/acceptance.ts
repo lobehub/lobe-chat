@@ -7,6 +7,7 @@ import {
   reviewProposalEdits,
 } from '@lobechat/const/verify';
 import type { AcceptanceAttachment } from '@lobechat/types';
+import { verifyCheckDefinitionSchema } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
@@ -46,16 +47,29 @@ import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManag
 
 const flowDefinitionSchema = z.object({
   title: z.string().min(1).max(200),
-  goal: z.string().min(1).max(4000),
-  preconditions: z.string().max(4000),
-  entryNodeKey: z.string().min(1),
+  goal: z.string().max(4000),
+  preconditions: z.array(z.string().max(4000)),
+  entryNodeId: z.string().uuid(),
   nodes: z
     .array(
       z.object({
-        key: z.string().min(1).max(100),
-        title: z.string().min(1).max(200),
-        instruction: z.string().max(4000),
-        expected: z.string().min(1).max(4000),
+        id: z.string().uuid(),
+        criterionId: z.string().uuid().optional(),
+        check: z
+          .object({
+            id: z.string().uuid(),
+            title: z.string().min(1).max(200),
+            description: z.string().optional(),
+            definition: verifyCheckDefinitionSchema,
+          })
+          .optional(),
+        overrides: z
+          .object({
+            required: z.boolean().optional(),
+            onFail: z.enum(['manual', 'auto_repair']).optional(),
+            fixtureData: z.record(z.string(), z.record(z.string(), z.unknown())).optional(),
+          })
+          .optional(),
       }),
     )
     .min(1)
@@ -63,9 +77,9 @@ const flowDefinitionSchema = z.object({
   edges: z
     .array(
       z.object({
-        key: z.string().min(1).max(100),
-        source: z.string().min(1),
-        target: z.string().min(1),
+        id: z.string().uuid(),
+        sourceNodeId: z.string().uuid(),
+        targetNodeId: z.string().uuid(),
         trigger: z.string().min(1).max(1000),
         condition: z.string().max(2000).optional(),
         required: z.boolean(),
@@ -196,6 +210,7 @@ export const acceptanceRouter = router({
         id: z.string().uuid(),
         definition: flowDefinitionSchema,
         flowId: z.string().uuid().optional(),
+        expectedHash: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -204,13 +219,15 @@ export const acceptanceRouter = router({
         input.id,
         input.definition,
         input.flowId,
+        input.expectedHash,
       );
     }),
   startFlow: acceptanceWriteProcedure
     .input(
       z.object({
         id: z.string().uuid(),
-        versionId: z.string().uuid(),
+        flowId: z.string().uuid(),
+        sourceRunId: z.string().uuid().optional(),
         verifyRunId: z.string().uuid().optional(),
       }),
     )
@@ -218,8 +235,9 @@ export const acceptanceRouter = router({
       const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
       const result = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).start(
         input.id,
-        input.versionId,
+        input.flowId,
         input.verifyRunId,
+        input.sourceRunId,
       );
       await service.recomputeStatus(input.id);
       return result;
@@ -228,11 +246,8 @@ export const acceptanceRouter = router({
     .input(
       z.object({
         id: z.string().uuid(),
-        flowRunId: z.string().uuid(),
-        nodeKey: z.string().min(1),
-        incomingEdgeKey: z.string().optional(),
-        previousAttemptId: z.string().uuid().optional(),
-        requestId: z.string().min(1).max(100),
+        verifyRunId: z.string().uuid(),
+        checkItemId: z.string().min(1),
         observation: z.string().min(1).max(20000),
         verdict: z.enum(['passed', 'failed', 'uncertain', 'blocked']),
       }),
@@ -242,12 +257,12 @@ export const acceptanceRouter = router({
       return new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).record(input.id, input);
     }),
   completeFlow: acceptanceWriteProcedure
-    .input(z.object({ id: z.string().uuid(), flowRunId: z.string().uuid() }))
+    .input(z.object({ id: z.string().uuid(), verifyRunId: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
       const result = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).complete(
         input.id,
-        input.flowRunId,
+        input.verifyRunId,
       );
       await service.recomputeStatus(input.id);
       return result;

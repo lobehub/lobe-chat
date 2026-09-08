@@ -32,3 +32,15 @@ describe('shared graph and checklist status', () => {
     ).toBe('passed');
   });
 });
+
+it('does not require an optional entry when its required return branch passed', () => {
+  expect(
+    getFlowNodeState(
+      'done',
+      'done',
+      [{ id: 'a', targetNodeKey: 'done', required: true }],
+      [{ incomingEdgeId: 'a', verdict: 'passed' }],
+      false,
+    ),
+  ).toBe('passed');
+});

@@ -1785,8 +1785,6 @@ interface CheckListProps {
   onToggleGroupItems: (ids: string[], open: boolean) => void;
   onToggleItem: (id: string) => void;
   reviewPending: boolean;
-  /** Show only checks that round executed (any step of their timeline). */
-  round?: number | null;
 }
 
 /** The union check list: one joined card, collapsible business groups. */
@@ -1808,17 +1806,13 @@ const CheckList = memo<CheckListProps>(
     onToggleGroupItems,
     onToggleItem,
     reviewPending,
-    round,
   }) => {
     const { t } = useTranslation('verify');
     const hydrated = useIsHydrated();
     const [acceptingGroup, setAcceptingGroup] = useState<string | null>(null);
 
     const visible = (check: AcceptanceCheck) =>
-      (filter === 'all' || checkFilterState(check) === filter) &&
-      (round === null ||
-        round === undefined ||
-        check.timeline.some((step) => step.roundIndex === round));
+      filter === 'all' || checkFilterState(check) === filter;
 
     const visibleRows = checks
       .filter(visible)
