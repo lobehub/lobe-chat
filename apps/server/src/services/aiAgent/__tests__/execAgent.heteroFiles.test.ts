@@ -347,6 +347,22 @@ describe('AiAgentService.execAgent - hetero early-exit file attachments', () => 
     expect(topicMock.tryReserveTaskCallback).not.toHaveBeenCalled();
   });
 
+  it('persists the triggering message identity for durable CLI-run adoption', async () => {
+    mockMessageCreate.mockImplementation(async (_message, id) => ({
+      id: id ?? 'generated-message',
+    }));
+    await service.execAgent({
+      agentId: 'agent-1',
+      clientIds: { userMessageId: 'msg-manager-turn' },
+      prompt: 'Inspect the Goal',
+    });
+    expect(recordStartSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        appContext: expect.objectContaining({ sourceMessageId: 'msg-manager-turn' }),
+      }),
+    );
+  });
+
   it('should attach fileIds to the user message (SPA gateway device/sandbox mode)', async () => {
     // regression: the hetero early exit used to create the user message
     // without `files`, so images attached in device mode were never linked

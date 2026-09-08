@@ -10,6 +10,7 @@ import { router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { GoalService } from '@/server/services/goal';
 import { advanceGoal } from '@/server/services/goal/advanceGoal';
+import { GoalManagerService, goalPlanSchema } from '@/server/services/goal/manager';
 import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
 
 import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
@@ -44,6 +45,27 @@ function mapGoalError(error: unknown, operation: string): never {
 }
 
 export const goalRouter = router({
+  submitPlan: goalWriteProcedure
+    .input(
+      idInput.extend({
+        token: z.string().min(1),
+        operationId: z.string().min(1),
+        plan: goalPlanSchema,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const data = await new GoalManagerService(
+        ctx.serverDB,
+        ctx.userId,
+        ctx.workspaceId ?? undefined,
+      ).submit(input.id, input.token, input.operationId, input.plan);
+      await scheduleGoalAdvance({
+        goalId: input.id,
+        userId: ctx.userId,
+        workspaceId: ctx.workspaceId ?? undefined,
+      });
+      return { data, success: true };
+    }),
   addEdge: goalWriteProcedure
     .input(
       idInput.extend({
@@ -131,6 +153,13 @@ export const goalRouter = router({
               .object({
                 instruction: z.string().min(1).max(8000),
                 maxExperiments: z.number().int().min(1).max(200),
+              })
+              .optional(),
+            manager: z
+              .object({
+                agentId: z.string().min(1),
+                instruction: z.string().max(8000).optional(),
+                maxTurns: z.number().int().min(1).max(100).optional(),
               })
               .optional(),
             maxConcurrentTasks: z.number().int().min(1).max(10).nullable().optional(),

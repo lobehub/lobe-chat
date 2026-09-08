@@ -16,7 +16,7 @@ export const recoveryEligibility = (
   task: TaskItem,
   operation?: AgentOperationItem,
 ): { eligible: boolean; reason: string } => {
-  if (!graph.goal.config?.supervision?.enabled)
+  if (!graph.goal.config?.supervision?.enabled && !graph.goal.config?.manager)
     return { eligible: false, reason: 'Supervision is disabled' };
   if (graph.goal.status !== 'running' || graph.decisions.some((d) => d.status === 'pending')) {
     return { eligible: false, reason: 'Goal is stopped or has a pending decision' };

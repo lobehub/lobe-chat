@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+
 import type {
   GoalEdgeKind,
   GoalGraphDecision,
@@ -163,9 +165,40 @@ function printTick(result: GoalTickResult) {
 
 export function registerGoalCommand(program: Command) {
   const goal = program.command('goal').description('Run long-horizon Goal Graphs');
+  goal
+    .command('plan <id>')
+    .description('Atomically submit the current main Agent plan')
+    .requiredOption(
+      '--file <path>',
+      'JSON plan: action tasks/verify/retry/escalate, reason and action fields',
+    )
+    .requiredOption('--token <token>', 'Current server-issued planning turn token')
+    .option('--operation <id>', 'Defaults to LOBEHUB_OPERATION_ID')
+    .option('--json', 'Output JSON')
+    .action(
+      async (
+        id: string,
+        options: { file: string; token: string; operation?: string; json?: boolean },
+      ) => {
+        const operationId = options.operation ?? process.env.LOBEHUB_OPERATION_ID;
+        if (!operationId) throw new Error('Current manager operation ID required');
+        const client = await getTrpcClient();
+        const result = await client.goal.submitPlan.mutate({
+          id,
+          token: options.token,
+          operationId,
+          plan: JSON.parse(await readFile(options.file, 'utf8')),
+        });
+        if (options.json) outputJson(result.data);
+        else
+          console.log('Plan recorded; the coordinator will continue after this Agent turn exits.');
+      },
+    );
 
   goal
     .command('create <title>')
+    .option('--manager <agent-id>', 'CLI-capable main Agent responsible for all planning')
+    .option('--max-manager-turns <n>', 'Maximum management turns', '12')
     .description('Create a standalone goal and seed its graph')
     .option('-r, --requirement <text>', 'Acceptance requirement')
     .option(
@@ -205,6 +238,7 @@ export function registerGoalCommand(program: Command) {
       const result = await client.goal.create.mutate({
         agentId: options.agent,
         config:
+          options.manager ||
           options.explore ||
           options.supervise ||
           options.maxAttemptsPerTask ||
@@ -212,6 +246,9 @@ export function registerGoalCommand(program: Command) {
           options.operationLeaseTimeoutMs ||
           options.maxConcurrentTasks
             ? {
+                manager: options.manager
+                  ? { agentId: options.manager, maxTurns: Number(options.maxManagerTurns) }
+                  : undefined,
                 exploration: options.explore
                   ? {
                       instruction: options.explore,

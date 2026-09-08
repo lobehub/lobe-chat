@@ -267,6 +267,7 @@ export const dispatchHeteroAgent = async (
     deps.workspaceId,
   ).recordStart({
     agentId: persistAgentId,
+    appContext: { ...appContext, sourceMessageId: userMessageId },
     chatGroupId: appContext?.groupId ?? null,
     maxSteps,
     metadata: {

@@ -53,6 +53,7 @@ import {
   TERMINAL_NODE_STATUSES,
 } from './decideNextMove';
 import { experimentResults, exploreGraph } from './exploreGraph';
+import { GoalManagerService } from './manager';
 import {
   resolveMaxConcurrentTasks,
   resolveOperationLeaseTimeout,
@@ -198,6 +199,25 @@ export class GoalService {
     // goal config so the page can edit them and the terminal acceptance Task
     // is gated on exactly these checks (not an AI re-derivation of the prose).
     let config = input.config;
+    if (config?.manager) {
+      const turns = config.manager.maxTurns ?? 12;
+      if (!Number.isInteger(turns) || turns < 1 || turns > 100)
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Main Agent requires 1–100 management turns',
+        });
+      if (config.exploration || config.supervision?.enabled || input.tasks?.length) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message:
+            'Manager mode owns initial and subsequent planning; do not combine with exploration, supervision or seed tasks',
+        });
+      }
+      await assertAgentUsableBy(this.db, config.manager.agentId, {
+        userId: this.userId,
+        workspaceId: this.workspaceId,
+      });
+    }
     // A supplied requirement is the user-reviewed goal document. Criteria live
     // separately; only synthesize a document when the caller omitted one.
     const requirement =
@@ -689,7 +709,26 @@ export class GoalService {
    * they are ordinary tasks with their own history and acceptance.
    */
   delete = async (goalId: string) => {
-    const graph = await this.graphModel.getGraph(goalId);
+    let graph = await this.graphModel.getGraph(goalId);
+    const managed = !!graph?.goal.config?.manager;
+    if (managed) {
+      // Fence new claims before cancellation, then read the latest claimed turn.
+      await this.db.transaction(async (db) => {
+        const model = new GoalModel(db, this.userId, this.workspaceId);
+        const current = await model.lockById(goalId);
+        if (current && current.status !== 'paused') {
+          await model.updateStatus(goalId, 'paused');
+          await new GoalGraphModel(db, this.userId, this.workspaceId).recordGoalStatus(
+            goalId,
+            current.status,
+            'paused',
+            'Stopping Goal before deletion',
+          );
+        }
+      });
+      graph = await this.graphModel.getGraph(goalId);
+      if (graph) await new GoalManagerService(this.db, this.userId, this.workspaceId).stop(graph);
+    }
     const taskIds = graph?.nodes.flatMap((node) => (node.taskId ? [node.taskId] : [])) ?? [];
 
     for (const taskId of taskIds) {
@@ -716,6 +755,24 @@ export class GoalService {
         .catch((error) => console.error('[GoalService.delete] failed to pause task:', error));
     }
 
+    if (managed) {
+      return this.db.transaction(async (db) => {
+        const model = new GoalModel(db, this.userId, this.workspaceId);
+        const current = await model.lockById(goalId);
+        if (
+          current &&
+          (current.status !== 'paused' ||
+            current.config?.managerState?.token !== graph?.goal.config?.managerState?.token ||
+            current.config?.managerState?.turns !== graph?.goal.config?.managerState?.turns)
+        ) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'Goal changed during cancellation; it was not deleted',
+          });
+        }
+        return model.delete(goalId);
+      });
+    }
     return this.goalModel.delete(goalId);
   };
 
@@ -845,18 +902,21 @@ export class GoalService {
    * that number is larger for a goal whose Tasks spawned Tasks.
    */
   private resolveSpend = async (graph: GoalGraphSnapshot) => {
-    const [spend, supervision] = await Promise.all([
+    const [spend, supervision, management] = await Promise.all([
       this.taskTopicModel.sumRunCostByTaskIds(
         graph.nodes.flatMap((node) => (node.taskId ? [node.taskId] : [])),
       ),
       new GoalSupervisorService(this.db, this.userId, this.workspaceId).usage(
         graph.goal.config?.supervisorState,
       ),
+      new GoalManagerService(this.db, this.userId, this.workspaceId).usage(
+        graph.goal.config?.managerState,
+      ),
     ]);
     return {
       ...spend,
-      totalCost: spend.totalCost + supervision.totalCost,
-      totalTokens: spend.totalTokens + supervision.totalTokens,
+      totalCost: spend.totalCost + supervision.totalCost + management.totalCost,
+      totalTokens: spend.totalTokens + supervision.totalTokens + management.totalTokens,
     };
   };
 
@@ -1143,6 +1203,12 @@ export class GoalService {
   tick = async (goalId: string, options?: GoalTickOptions): Promise<GoalTickResult> => {
     const at = Date.now();
     const graph = await this.requireGraph(goalId);
+    if (graph.goal.config?.manager) {
+      const result = await new GoalManagerService(this.db, this.userId, this.workspaceId).advance(
+        graph,
+      );
+      if (result) return result;
+    }
     const frontier = selectFrontier(graph);
 
     // Every candidate's task, not just the head's: the scheduler has to know
@@ -1724,11 +1790,14 @@ export class GoalService {
 
     try {
       const run = await new TaskRunnerService(this.db, this.userId, this.workspaceId).runTask({
-        extraPrompt: new GoalSupervisorService(
-          this.db,
-          this.userId,
-          this.workspaceId,
-        ).recoveryInstruction(graph, task.id),
+        extraPrompt:
+          new GoalSupervisorService(this.db, this.userId, this.workspaceId).recoveryInstruction(
+            graph,
+            task.id,
+          ) ??
+          (graph.goal.config?.managerState?.submitted?.taskId === task.id
+            ? graph.goal.config.managerState.submitted.reason
+            : undefined),
         maxSteps: resolveTaskMaxSteps(graph.goal),
         taskId: task.id,
         trigger: 'goal',

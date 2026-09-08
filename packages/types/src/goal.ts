@@ -194,10 +194,36 @@ export const summarizeGoalSupervision = (state?: GoalSupervisionState): GoalSupe
   };
 };
 
+/** A CLI-capable agent owns planning; the coordinator owns execution and acceptance. */
+export interface GoalManagerPolicy {
+  agentId: string;
+  instruction?: string;
+  maxTurns?: number;
+}
+
+/** Server-owned dispatch receipt, retained across backend restarts. */
+export interface GoalManagerState {
+  consumed?: boolean;
+  operationId?: string;
+  readyForAcceptance?: boolean;
+  snapshot: string;
+  startedAt: string;
+  submitted?: {
+    action: 'tasks' | 'verify' | 'retry' | 'escalate';
+    reason: string;
+    taskId?: string;
+  };
+  token: string;
+  topicId: string;
+  turns: number;
+}
+
 export interface GoalConfig {
   acceptance?: GoalAcceptancePolicy;
 
   exploration?: GoalExplorationConfig;
+  manager?: GoalManagerPolicy;
+  managerState?: GoalManagerState;
   /**
    * How many of a goal's Tasks may be in flight at once. Independent Tasks are
    * the common case — four bug fixes that share no code have no reason to run
