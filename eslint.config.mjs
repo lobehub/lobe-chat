@@ -8,11 +8,20 @@ const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
 
 const baseRestrictedImportOptions = restrictedImports.rules['no-restricted-imports'][1];
 
+// Shared by every src/** no-restricted-imports block: flat config replaces a
+// rule per file instead of merging it, so a scoped override would otherwise
+// drop these.
 const performanceRestrictedImportPaths = [
   {
     message:
       'Import the imperative facade from "@/features/ShareModal" so the modal implementation stays outside initial chunks.',
     name: '@/features/ShareModal/Modal',
+  },
+  {
+    allowTypeImports: true,
+    message:
+      'Do not import the model-bank root barrel; it re-exports the full aiModels catalog (1.4 MB raw). Use a subpath such as "model-bank/aiModel", "model-bank/modelProvider", "model-bank/standardParameters" or "model-bank/utils".',
+    name: 'model-bank',
   },
 ];
 
@@ -153,6 +162,13 @@ export default eslint(
     files: ['src/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': createRestrictedImportRule(),
+    },
+  },
+  {
+    // Bundle-size restrictions target shipped code; tests may reach the barrels.
+    files: ['src/**/*.test.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', baseRestrictedImportOptions],
     },
   },
   {
