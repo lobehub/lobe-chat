@@ -350,7 +350,7 @@
   "acceptance.workspace.merge.title": "合并验收",
   "acceptance.workspace.merge.windowHint": "这里只列出最近 {{count}} 条验收。",
   "acceptance.workspace.onboarding.agent.description": "复制这段提示词发送给编程 Agent，由它完成安装。",
-  "acceptance.workspace.onboarding.agent.prompt": "阅读 https://lobehub.com/acceptance/skill.md，并按照说明安装 Acceptance。",
+  "acceptance.workspace.onboarding.agent.prompt": "阅读 https://app.lobehub.com/acceptance/skill.md，并按照说明安装 Acceptance。",
   "acceptance.workspace.onboarding.agent.title": "使用 Agent 安装",
   "acceptance.workspace.onboarding.description": "将 Acceptance Skill 安装到项目中，再从编程 Agent 发起验收。",
   "acceptance.workspace.onboarding.enable.description": "在项目根目录执行。",

@@ -117,6 +117,8 @@ COPY --from=builder /app/.next/static /app/.next/static
 COPY --from=builder /app/public/_spa /app/public/_spa
 COPY --from=builder /app/public/_spa-share /app/public/_spa-share
 COPY --from=builder /app/public/_spa-workbench /app/public/_spa-workbench
+# Public Acceptance installation guide
+COPY --from=builder /app/public/acceptance /app/public/acceptance
 # Copy database migrations
 COPY --from=builder /app/packages/database/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs

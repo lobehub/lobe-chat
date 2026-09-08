@@ -390,7 +390,7 @@ export default {
   'acceptance.workspace.onboarding.agent.description':
     'Copy this prompt to your coding agent and let it complete the setup.',
   'acceptance.workspace.onboarding.agent.prompt':
-    'Read https://lobehub.com/acceptance/skill.md and follow the instructions to install Acceptance.',
+    'Read https://app.lobehub.com/acceptance/skill.md and follow the instructions to install Acceptance.',
   'acceptance.workspace.onboarding.agent.title': 'Install with an Agent',
   'acceptance.workspace.onboarding.enable.description': 'Run this from your project root.',
   'acceptance.workspace.onboarding.enable.title': 'Enable Acceptance',

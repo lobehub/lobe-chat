@@ -350,7 +350,7 @@
   "acceptance.workspace.merge.title": "Merge acceptance",
   "acceptance.workspace.merge.windowHint": "Only the {{count}} most recent acceptances are listed here.",
   "acceptance.workspace.onboarding.agent.description": "Copy this prompt to your coding agent and let it complete the setup.",
-  "acceptance.workspace.onboarding.agent.prompt": "Read https://lobehub.com/acceptance/skill.md and follow the instructions to install Acceptance.",
+  "acceptance.workspace.onboarding.agent.prompt": "Read https://app.lobehub.com/acceptance/skill.md and follow the instructions to install Acceptance.",
   "acceptance.workspace.onboarding.agent.title": "Install with an Agent",
   "acceptance.workspace.onboarding.description": "Add the Acceptance skill to your project, then start a review from your coding agent.",
   "acceptance.workspace.onboarding.enable.description": "Run this from your project root.",
