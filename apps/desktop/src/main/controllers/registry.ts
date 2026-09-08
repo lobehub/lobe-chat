@@ -26,6 +26,7 @@ import ScreenCaptureCtr from './ScreenCaptureCtr';
 import ShellCommandCtr from './ShellCommandCtr';
 import ShortcutController from './ShortcutCtr';
 import SystemController from './SystemCtr';
+import TabPreviewCtr from './TabPreviewCtr';
 import TerminalCtr from './TerminalCtr';
 import TrayMenuCtr from './TrayMenuCtr';
 import UpdaterCtr from './UpdaterCtr';
@@ -57,6 +58,7 @@ export const controllerIpcConstructors = [
   ShellCommandCtr,
   ShortcutController,
   SystemController,
+  TabPreviewCtr,
   TerminalCtr,
   BinaryCtr,
   TrayMenuCtr,
