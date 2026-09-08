@@ -2639,7 +2639,7 @@ export default {
   'workingPanel.works.documentDeleted': 'Document deleted',
   'workingPanel.works.remove': 'Remove work',
   'workingPanel.works.removeConfirm':
-    'Remove this work card? Its version history will be removed as well. This cannot be undone.',
+    'Remove this work card? Its version history, project pins and goal evidence links will be removed as well. This cannot be undone.',
   'workingPanel.works.resourceDeleted': 'Resource deleted',
   'workingPanel.works.taskDeleted': 'Task deleted',
   'workingPanel.works.title': 'Works',

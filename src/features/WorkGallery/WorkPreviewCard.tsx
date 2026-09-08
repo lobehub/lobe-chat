@@ -75,6 +75,11 @@ const styles = createStaticStyles(({ css }) => ({
     .work-preview-card:hover & {
       opacity: 1;
     }
+
+    /* Touch devices have no hover to reveal it; keep the only removal control visible. */
+    @media (hover: none) {
+      opacity: 1;
+    }
   `,
   footer: css`
     overflow: hidden;

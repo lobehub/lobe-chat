@@ -2562,7 +2562,7 @@
   "workingPanel.works.emptyVersions": "暂无版本",
   "workingPanel.works.error": "产物加载失败",
   "workingPanel.works.remove": "移除产物",
-  "workingPanel.works.removeConfirm": "确认移除该产物卡片吗？其版本历史将一并移除，且无法恢复。",
+  "workingPanel.works.removeConfirm": "确认移除该产物卡片吗？其版本历史、项目置顶和目标证据关联将一并移除，且无法恢复。",
   "workingPanel.works.resourceDeleted": "资源已删除",
   "workingPanel.works.taskDeleted": "任务已删除",
   "workingPanel.works.title": "产物",

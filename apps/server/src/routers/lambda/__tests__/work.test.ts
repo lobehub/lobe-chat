@@ -85,10 +85,9 @@ describe('workRouter — per-procedure write permission gates', () => {
     expect(mockHandleSkillToolResult).not.toHaveBeenCalled();
   });
 
-  it('deleteWork stays ungated: the model restricts it to the caller-owned row', async () => {
-    mockDeleteWork.mockResolvedValue(undefined);
-    await expect(createCaller().deleteWork({ id: 'work-1' })).resolves.toBeUndefined();
-    expect(mockDeleteWork).toHaveBeenCalledWith({ id: 'work-1' });
+  it('deleteWork gates on agent:update (workspace write, like other Work mutations)', async () => {
+    await expect(createCaller().deleteWork({ id: 'work-1' })).rejects.toThrow('GATE:agent:update');
+    expect(mockDeleteWork).not.toHaveBeenCalled();
   });
 
   it('read-only list procedures stay ungated', async () => {

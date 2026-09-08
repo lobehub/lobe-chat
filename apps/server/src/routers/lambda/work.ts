@@ -174,10 +174,12 @@ export const workRouter = router({
     .input(z.object({ taskId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => ctx.workModel.deleteTaskWork(input)),
 
-  // User-initiated removal of an orphaned Work card. No scoped RBAC gate: the
-  // model restricts the delete to the caller's own rows whose backing
+  // User-initiated removal of an orphaned Work card. The Work is polymorphic,
+  // so this takes the general `agent:update` workspace-write gate (the same one
+  // Work, project and goal mutations use) rather than a per-resource gate; the
+  // model further restricts the delete to the caller's own rows whose backing
   // task / document is already gone, so a live Work cannot be removed here.
-  deleteWork: workProcedure
+  deleteWork: skillWorkProcedureWrite
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => ctx.workModel.deleteWork(input)),
 
