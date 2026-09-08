@@ -15,7 +15,13 @@ export interface WorkspaceContextInfo {
   workspace?: WorkspaceContextWorkspace | null;
 }
 
-const trimTrailingSlashes = (value: string): string => value.replace(/\/+$/, '');
+const trimTrailingSlashes = (value: string): string => {
+  // Character loop instead of a trailing-anchored regex: the origin is URL input
+  // and a trailing-anchored quantifier is polynomial on long runs of '/'.
+  let end = value.length;
+  while (end > 0 && value[end - 1] === '/') end -= 1;
+  return value.slice(0, end);
+};
 
 /**
  * In-app routes the model may need to link to. Mirrors the SPA router
