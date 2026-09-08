@@ -13,6 +13,26 @@ const baseRestrictedImportOptions = restrictedImports.rules['no-restricted-impor
 // drop these.
 const performanceRestrictedImportPaths = [
   {
+    allowTypeImports: true,
+    importNames: ['ModelIcon', 'ModelTag', 'ProviderCombine', 'ProviderIcon'],
+    message:
+      'These features statically import every brand icon (~3 MB). Import them from "@/components/LobeIcons", which mounts them through lazy().',
+    name: '@lobehub/icons',
+  },
+  {
+    allowTypeImports: true,
+    message:
+      'Import ProviderIcon / ProviderCombine from "@/components/LobeIcons", which mounts them through lazy().',
+    name: '@/libs/providerIcon',
+  },
+  {
+    allowTypeImports: true,
+    importNames: ['EmojiPicker'],
+    message:
+      'EmojiPicker carries the emoji-mart dataset. Use "@/components/EmojiPicker", which mounts it through lazy().',
+    name: '@lobehub/ui',
+  },
+  {
     message:
       'Import the imperative facade from "@/features/ShareModal" so the modal implementation stays outside initial chunks.',
     name: '@/features/ShareModal/Modal',
