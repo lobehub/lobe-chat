@@ -17,6 +17,7 @@ import type {
   ToolDiscoveryConfig,
   TopicReferenceItem,
   UserMemoryData,
+  WorkspaceContext,
 } from '@lobechat/context-engine';
 import type { AgentIdentityContext, PageContentContext } from '@lobechat/prompts';
 import type {
@@ -105,6 +106,8 @@ export interface ServerMessagesEngineParams {
   capabilities?: ServerModelCapabilities;
   /** Bot platform context for injecting platform capabilities (e.g. markdown support) */
   botPlatformContext?: BotPlatformContext;
+  /** App origin + workspace slug so the model writes links that resolve to the right scope */
+  workspaceContext?: WorkspaceContext;
   /** Discord context for injecting channel/guild info */
   discordContext?: DiscordContext;
   // ========== Eval context ==========

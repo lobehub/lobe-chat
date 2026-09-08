@@ -18,8 +18,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAcceptanceBySubject } from '@/features/Acceptance';
-import { acceptanceOverviewPath } from '@/features/Acceptance/Viewer/routes';
-import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
+import { useChatStore } from '@/store/chat';
+import { useGlobalStore } from '@/store/global';
 import { useTaskStore } from '@/store/task';
 import { taskDetailSelectors } from '@/store/task/selectors';
 
@@ -30,7 +30,11 @@ import { taskDetailSelectors } from '@/store/task/selectors';
  * editable scheduling control. Whether the delivery is ACCEPTED is a separate
  * question with its own lifecycle — this read-only row expresses it in the same
  * top-right block, instead of a floating banner or a badge buried in the
- * acceptance section. Clicking it goes to where the decision is made.
+ * acceptance section. Clicking it opens the acceptance in the panel beside the
+ * task — the same destination the checklist and run tags use. The standalone
+ * `/acceptance/:id` page is a public, workspace-less route: navigating there
+ * from a workspace task drops the slug from the URL and flips the whole app
+ * back to personal scope (LOBE-13898).
  *
  * `delivered` alone cannot be rendered honestly: a converged delivery and a
  * budget-exhausted one both land there. The latest round's verdict (shipped
@@ -92,7 +96,8 @@ const resolveState = (status: string, latestRunStatus?: string | null): StateKey
 
 const TaskAcceptanceStateRow = memo(() => {
   const { t } = useTranslation('chat');
-  const navigate = useWorkspaceAwareNavigate();
+  const openAcceptance = useChatStore((state) => state.openAcceptance);
+  const showTaskAgentPanel = useGlobalStore((state) => state.toggleTaskAgentPanel);
   const taskDatabaseId = useTaskStore(taskDetailSelectors.activeTaskDatabaseId);
   const { data: acceptance } = useAcceptanceBySubject('task', taskDatabaseId ?? null);
 
@@ -104,6 +109,7 @@ const TaskAcceptanceStateRow = memo(() => {
   if (!state) return null;
 
   const meta = STATE_META[state];
+  const label = t(`taskDetail.acceptanceState.${meta.labelKey}`);
 
   return (
     <Block
@@ -113,9 +119,14 @@ const TaskAcceptanceStateRow = memo(() => {
       gap={10}
       paddingBlock={4}
       paddingInline={8}
-      title={t('taskDetail.acceptanceState.hint')}
+      // The label may be truncated below, so the hover title carries it in
+      // full ahead of the "click to review" hint.
+      title={`${label} · ${t('taskDetail.acceptanceState.hint')}`}
       variant={'borderless'}
-      onClick={() => navigate(acceptanceOverviewPath(acceptance.id))}
+      onClick={() => {
+        showTaskAgentPanel(true);
+        openAcceptance(acceptance.id);
+      }}
     >
       <Icon
         color={meta.color}
@@ -124,7 +135,12 @@ const TaskAcceptanceStateRow = memo(() => {
         spin={'spin' in meta && meta.spin}
         style={{ flex: 'none' }}
       />
-      <Text weight={500}>{t(`taskDetail.acceptanceState.${meta.labelKey}`)}</Text>
+      {/* The 200px properties block is narrower than several labels; one
+          line with an ellipsis keeps every row the same height, and the
+          `title` above still carries the full label and hint on hover. */}
+      <Text ellipsis style={{ minWidth: 0 }} weight={500}>
+        {label}
+      </Text>
     </Block>
   );
 });

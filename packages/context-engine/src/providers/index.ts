@@ -54,6 +54,7 @@ export { ToolDiscoveryProvider } from './ToolDiscoveryProvider';
 export { selectToolPromptManifests, ToolSystemRoleProvider } from './ToolSystemRole';
 export { TopicReferenceContextInjector } from './TopicReferenceContextInjector';
 export { UserMemoryInjector } from './UserMemoryInjector';
+export { WorkspaceContextInjector } from './WorkspaceContextInjector';
 
 // Re-export types
 export type { ActiveTopicDocumentContextInjectorConfig } from './ActiveTopicDocumentContextInjector';
@@ -130,3 +131,4 @@ export type {
   TopicReferenceItem,
 } from './TopicReferenceContextInjector';
 export type { MemoryContext, UserMemoryInjectorConfig } from './UserMemoryInjector';
+export type { WorkspaceContext, WorkspaceContextInjectorConfig } from './WorkspaceContextInjector';
