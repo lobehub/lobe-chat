@@ -24,7 +24,9 @@ describe('workspaceContextPrompt', () => {
       'knowledge base: https://app.lobehub.com/lobehub/resource/library/<knowledgeBaseId>',
     );
     expect(result).toContain('reuse it verbatim');
-    expect(result).toContain('never use a bare marketing domain such as lobehub.com');
+    expect(result).toContain('apply only to links into this LobeHub app');
+    expect(result).toContain('never place in-app resources under the marketing site lobehub.com');
+    expect(result).toContain('including the LobeHub homepage itself, are not affected');
   });
 
   it('trims trailing slashes from the app origin', () => {

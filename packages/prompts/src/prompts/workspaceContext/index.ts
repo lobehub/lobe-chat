@@ -89,7 +89,7 @@ export const workspaceContextPrompt = ({ appUrl, workspace }: WorkspaceContextIn
     `  <routes>`,
     ...ROUTE_HINTS.map(([label, path]) => `    ${label}: ${linkBase}${path}`),
     `  </routes>`,
-    `  <link_rules>When a tool result already contains a URL, reuse it verbatim. Only compose a link yourself from the routes above with an id you actually hold; never invent hosts, paths, slugs, or ids, and never use a bare marketing domain such as lobehub.com.</link_rules>`,
+    `  <link_rules>These rules apply only to links into this LobeHub app (agents, tasks, documents, pages, knowledge bases, files, settings). When a tool result already contains such a URL, reuse it verbatim. Compose one yourself only from the routes above with an id you actually hold; never invent hosts, paths, slugs, or ids, and never place in-app resources under the marketing site lobehub.com. Links to other websites, including the LobeHub homepage itself, are not affected.</link_rules>`,
     '</workspace_context>',
   );
 
