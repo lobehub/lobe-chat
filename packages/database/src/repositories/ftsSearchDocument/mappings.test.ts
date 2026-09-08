@@ -13,7 +13,7 @@ import {
   FTS_SEARCH_DOCUMENT_ENTITIES,
   FTS_SEARCH_DOCUMENT_SCHEMAS,
   FTS_SEARCH_MEMORY_DOCUMENT_ENTITIES,
-} from './schema';
+} from './zodSchema';
 
 /**
  * Declared generation of every entity index. When a mapping or the shared analysis changes, its

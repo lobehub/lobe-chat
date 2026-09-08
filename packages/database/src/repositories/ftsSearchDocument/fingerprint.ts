@@ -5,7 +5,7 @@ import {
   FTS_SEARCH_INDEX_DEFINITIONS,
   getFtsSearchIndexSchemaVersion,
 } from './mappings';
-import type { FtsSearchDocumentEntity } from './schema';
+import type { FtsSearchDocumentEntity } from './zodSchema';
 
 /** Deterministic JSON with sorted object keys so semantically equal inputs hash identically. */
 export const stableStringify = (value: unknown): string => {

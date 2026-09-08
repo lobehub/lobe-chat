@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { FTS_SEARCH_DOCUMENT_FIXTURES } from './__tests__/fixtures';
-import { FTS_SEARCH_DOCUMENT_ENTITIES, parseFtsSearchDocumentSource } from './schema';
+import { FTS_SEARCH_DOCUMENT_ENTITIES, parseFtsSearchDocumentSource } from './zodSchema';
 
 describe('search document schemas', () => {
   it.each(FTS_SEARCH_DOCUMENT_ENTITIES)('parses the fixed %s fixture', (entity) => {

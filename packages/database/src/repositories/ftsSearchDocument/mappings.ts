@@ -1,4 +1,4 @@
-import type { FtsSearchDocumentEntity, FtsSearchDocumentSourceMap } from './schema';
+import type { FtsSearchDocumentEntity, FtsSearchDocumentSourceMap } from './zodSchema';
 
 export type ElasticsearchFtsSearchFieldType = 'boolean' | 'date' | 'integer' | 'keyword' | 'text';
 
