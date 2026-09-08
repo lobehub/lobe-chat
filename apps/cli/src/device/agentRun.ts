@@ -111,6 +111,19 @@ export function spawnHeteroAgentRun(
     systemContext,
   });
 
+  // A connector can itself be started inside another agent run. Its ambient
+  // identity belongs to the launcher, not this dispatched conversation; CLI
+  // evidence commands must never attach this run's outputs to that ancestor.
+  const childEnv = { ...process.env };
+  for (const key of [
+    'LOBEHUB_AGENT_ID',
+    'LOBEHUB_ASSISTANT_MESSAGE_ID',
+    'LOBEHUB_TASK_ID',
+    'LOBEHUB_WORKSPACE_ID',
+  ]) {
+    delete childEnv[key];
+  }
+
   return new Promise<AgentRunAckResult>((resolve) => {
     let settled = false;
     const settle = (result: AgentRunAckResult) => {
@@ -122,10 +135,12 @@ export function spawnHeteroAgentRun(
     const child = spawn(process.execPath, [...process.execArgv, ...cliArgs], {
       cwd: spawnCwd,
       env: {
-        ...process.env,
+        ...childEnv,
         ...(assistantMessageId ? { LOBEHUB_ASSISTANT_MESSAGE_ID: assistantMessageId } : {}),
         LOBEHUB_JWT: jwt,
+        LOBEHUB_OPERATION_ID: operationId,
         LOBEHUB_SERVER: serverUrl,
+        LOBEHUB_TOPIC_ID: topicId,
         ...(workspaceId ? { LOBEHUB_WORKSPACE_ID: workspaceId } : {}),
       },
       stdio: ['pipe', 'inherit', 'inherit'],

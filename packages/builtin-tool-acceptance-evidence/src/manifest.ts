@@ -28,7 +28,11 @@ export const AcceptanceEvidenceManifest: BuiltinToolManifest = {
             items: {
               properties: {
                 content: { description: 'Inline evidence content.', type: 'string' },
-                description: { description: 'What this evidence demonstrates.', type: 'string' },
+                description: {
+                  description:
+                    'Required for file artifacts, including file contents submitted inline. A non-empty, reviewer-facing sentence explaining what the artifact contains and what it demonstrates for this criterion. A filename, path, id, or generic label alone is insufficient.',
+                  type: 'string',
+                },
                 documentId: {
                   description:
                     'An existing LobeHub document id from documents.id. Do not use an agent_documents.id binding id.',

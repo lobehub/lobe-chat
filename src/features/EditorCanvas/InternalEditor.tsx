@@ -22,6 +22,7 @@ import { type EditorCanvasProps } from './EditorCanvas';
 import InlineToolbar from './InlineToolbar';
 import LinearFilePlugin from './LinearFilePlugin';
 import { registerAttachmentClickOpen } from './registerAttachmentClickOpen';
+import { registerBlockDecoratorCaretGuard } from './registerBlockDecoratorCaretGuard';
 import { useFileUpload, useImageUpload } from './useImageUpload';
 
 const IMAGE_FILTERS = [
@@ -98,6 +99,7 @@ export interface InternalEditorProps extends EditorCanvasProps {
  */
 const InternalEditor = memo<InternalEditorProps>(
   ({
+    blockImageCaretGuard = false,
     contentChangeLockRef,
     contentStyle,
     disabled,
@@ -219,6 +221,15 @@ const InternalEditor = memo<InternalEditorProps>(
       const unregister = registerAttachmentClickOpen(editor);
       return () => unregister?.();
     }, [editor]);
+
+    // Opt-in (comment editors): keep the caret out of the root node around
+    // block images by pushing an empty paragraph next to the image instead of
+    // showing Lexical's horizontal root-level caret (LOBE-13882).
+    useEffect(() => {
+      if (!editor || !blockImageCaretGuard) return;
+      const unregister = registerBlockDecoratorCaretGuard(editor);
+      return () => unregister?.();
+    }, [blockImageCaretGuard, editor]);
 
     const onInitRef = useRef(onInit);
     const initializedEditorRef = useRef<IEditor | null>(null);

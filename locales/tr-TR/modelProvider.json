@@ -349,6 +349,8 @@
   "sortModal.success": "Sıralama güncellemesi başarılı",
   "sortModal.title": "Özel Sıralama",
   "sortModal.update": "Güncelle",
+  "unsloth.checker.guidance": "Tarayıcı ağ hataları için, Studio'nun bu sayfaya CORS üzerinden izin verdiğini kontrol edin. Kimlik doğrulama hataları için, gerçek bir Studio API anahtarı girin; anahtarsız terminal erişimi tarayıcı erişimi sağlamaz.",
+  "unsloth.checker.setupGuide": "Unsloth bağlantı kurulum kılavuzu",
   "updateAiProvider.confirmDelete": "Bu yapay zeka sağlayıcısı silinsin mi?",
   "updateAiProvider.confirmDeleteDescription": "Silindikten sonra bu yapay zeka sağlayıcısı geri alınamaz.",
   "updateAiProvider.deleteSuccess": "Silme işlemi başarılı",

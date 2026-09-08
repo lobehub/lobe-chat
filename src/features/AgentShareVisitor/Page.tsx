@@ -61,7 +61,7 @@ const VisitorShell = ({
  */
 const AgentShareVisitorPage = memo(() => {
   const { t } = useTranslation('agent');
-  const { slugOrId } = useParams<{ slugOrId: string }>();
+  const { slugOrId, topicId } = useParams<{ slugOrId: string; topicId: string }>();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const RouteSkeleton = useRouteSkeleton();
@@ -79,7 +79,7 @@ const AgentShareVisitorPage = memo(() => {
     const state = resolveShareAccessState(error);
 
     if (state === 'signIn') {
-      const signInUrl = buildAgentShareSignInUrl(slugOrId ?? '');
+      const signInUrl = buildAgentShareSignInUrl(slugOrId ?? '', topicId);
 
       return (
         <VisitorShell slugOrId={slugOrId}>

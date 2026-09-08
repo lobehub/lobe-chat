@@ -12,8 +12,14 @@ describe('mobileRouter agent share route', () => {
     const matches = matchRoutes(mobileRoutes, '/a/my-agent');
 
     expect(matches).toHaveLength(1);
-    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId');
+    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
     expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-agent' });
+  });
+
+  it('opens a visitor topic directly without the owner layout', () => {
+    const matches = matchRoutes(mobileRoutes, '/a/my-agent/tpc_saved');
+    expect(matches).toHaveLength(1);
+    expect(matches?.[0]?.params).toEqual({ slugOrId: 'my-agent', topicId: 'tpc_saved' });
   });
 
   it('keeps the creator agent surface on /agent/:aid', () => {

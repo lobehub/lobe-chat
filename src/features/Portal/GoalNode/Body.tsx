@@ -6,6 +6,8 @@ import { SquareArrowOutUpRight } from 'lucide-react';
 import { memo, type ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ExperimentDetail } from '@/features/AgentGoals/Experiments/Detail';
+import { isExperiment } from '@/features/AgentGoals/Experiments/model';
 import {
   coordinatorGateReason,
   coordinatorReasonCopy,
@@ -139,11 +141,17 @@ const Body = memo(() => {
   const snapshot = useGoalStore(goalSelectors.goalGraph(view?.goalId ?? ''));
 
   const graph = useMemo(() => (snapshot ? buildGoalGraphView(snapshot) : undefined), [snapshot]);
-  if (!view || !graph) return null;
+  if (!view || !graph || !snapshot) return null;
 
   const nodeView = graph.byId[view.nodeId];
   if (!nodeView) return null;
   const { node } = nodeView;
+  if (isExperiment(graph, nodeView))
+    return (
+      <ExperimentDetail graph={graph} snapshot={snapshot} view={nodeView}>
+        <AttemptLedger view={nodeView} />
+      </ExperimentDetail>
+    );
   const isFinding = node.kind === 'finding';
 
   // Coordinator gates localize; arbitrary gates keep their stored copy.

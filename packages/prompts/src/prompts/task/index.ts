@@ -65,6 +65,51 @@ export interface TaskSummary {
  * resolve a relative path against. Omit it only for in-app (SPA) rendering,
  * where a relative path resolves against the current origin and is more durable.
  */
+/**
+ * One rule for naming an assignment participant, so every task-detail surface
+ * tells the same story about who acted.
+ *
+ * The three states are deliberately distinct: no author means the system acted
+ * (the runner assigning its fallback agent); a recorded id with no live row is
+ * deleted or invisible to this reader; a resolved row with an empty display
+ * name is still a real participant.
+ */
+export const assignmentParticipantLabel = (
+  party?: { id: string; name?: string | null; unresolved?: boolean } | null,
+  absentLabel = 'unassigned',
+): string => {
+  if (!party) return absentLabel;
+  // A recorded participant whose row is gone keeps its id when one survived;
+  // a deleted actor leaves no id at all and must still read as a person.
+  return party.name || party.id || (party.unresolved ? 'a deleted participant' : 'unnamed');
+};
+
+/** Render one side of a property change for a text surface. */
+export const formatPropertyValue = (field: string | undefined, value: unknown): string => {
+  if (value === null || value === undefined) return field === 'automation' ? 'off' : 'none';
+  if (field === 'priority') return priorityLabel(value as number);
+  if (typeof value === 'object') {
+    const v = value as {
+      heartbeatInterval?: number | null;
+      maxExecutions?: number | null;
+      mode?: string | null;
+      schedulePattern?: string | null;
+      scheduleTimezone?: string | null;
+    };
+    if (v.mode === 'schedule') {
+      // Every part a user can edit shows, or a timezone-only or cap-only
+      // change reads as "from X to X".
+      const parts = [v.schedulePattern ?? '?'];
+      if (v.scheduleTimezone) parts.push(v.scheduleTimezone);
+      if (typeof v.maxExecutions === 'number') parts.push(`max ${v.maxExecutions}`);
+      return `schedule(${parts.join(', ')})`;
+    }
+    if (v.mode === 'heartbeat') return `heartbeat(${v.heartbeatInterval ?? '?'}s)`;
+    return JSON.stringify(value);
+  }
+  return String(value);
+};
+
 export const taskDetailHref = (identifier: string, baseUrl?: string): string => {
   const path = `/task/${identifier}`;
   return baseUrl ? `${baseUrl.replace(/\/$/, '')}${path}` : path;
@@ -296,6 +341,20 @@ export const formatTaskDetail = (t: TaskDetailData): string => {
         const content = act.content || '';
         const truncated = content.length > 80 ? content.slice(0, 80) + '...' : content;
         lines.push(`  💭 ${act.time || ''} ${author} ${truncated}${idSuffix}`);
+      } else if (act.type === 'property') {
+        const actor = assignmentParticipantLabel(act.author, 'system');
+        const change = act.propertyChange;
+        lines.push(
+          `  🔁 ${act.time || ''} ${actor} changed ${change?.field}: ${formatPropertyValue(change?.field, change?.from)} → ${formatPropertyValue(change?.field, change?.to)}${idSuffix}`,
+        );
+      } else if (act.type === 'assignment') {
+        // Who owns the task changed hands; a formatter that drops the event
+        // shows a reader an assignee they cannot account for.
+        const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
+        const actor = assignmentParticipantLabel(act.author, 'system');
+        lines.push(
+          `  👥 ${act.time || ''} ${actor} set ${slot} assignee: ${assignmentParticipantLabel(act.assignment?.from)} → ${assignmentParticipantLabel(act.assignment?.to)}${idSuffix}`,
+        );
       }
     }
   }
@@ -478,6 +537,8 @@ export interface TaskRunPromptWorkspaceNode {
  * up without re-discovering everything.
  */
 export interface TaskRunPromptGoalLoop {
+  /** Feedback from the automatic Acceptance review of the previous delivery. */
+  automaticReviewFeedback?: string;
   /** Checks that did not pass in the previous round, with the verifier's why/suggestion. */
   failedChecks?: Array<{ title: string; why?: string }>;
   /** Round budget. Null/undefined = uncapped. */
@@ -748,9 +809,16 @@ export const buildTaskRunPrompt = (input: TaskRunPromptInput, now?: Date): strin
     taskLines.push(
       `Goal loop${goalLoop.round ? ` — round ${goalLoop.round}${budget}` : ''}: earlier rounds did not fully meet the acceptance criteria. Focus on closing the gaps below instead of redoing finished work.`,
     );
-    if (goalLoop.rejectComment) {
-      taskLines.push('  User feedback on the last delivery (address this first):');
-      taskLines.push(`    "${goalLoop.rejectComment}"`);
+    const reviewFeedback = [
+      goalLoop.rejectComment,
+      goalLoop.automaticReviewFeedback &&
+        `Automatic Acceptance review:\n${goalLoop.automaticReviewFeedback}`,
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+    if (reviewFeedback) {
+      taskLines.push('  Review feedback on the last delivery (address this first):');
+      taskLines.push(`    "${reviewFeedback}"`);
     }
     if (goalLoop.failedChecks && goalLoop.failedChecks.length > 0) {
       taskLines.push('  Unresolved checks from the last round:');

@@ -174,6 +174,12 @@ needed.
   into `interaction-trace.jsonl`; optional, never hand-written —
   [interaction-cost.md](references/interaction-cost.md).
 
+**Every file submission MUST include a non-empty, reviewer-facing description**
+(`--desc` for CLI submissions; `description` for tools and ingest entries).
+Identify what the file contains and what it demonstrates for this criterion.
+A filename, path, artifact id, or generic label such as "evidence" is not a
+sufficient description. This also applies when a text file is stored inline.
+
 Shared rules for every artifact — media types, provenance, file vs inline,
 safety — are in [evidence.md](references/evidence.md).
 

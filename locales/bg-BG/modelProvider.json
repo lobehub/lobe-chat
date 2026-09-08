@@ -349,6 +349,8 @@
   "sortModal.success": "Сортирането е успешно обновено",
   "sortModal.title": "Персонализиран ред",
   "sortModal.update": "Обнови",
+  "unsloth.checker.guidance": "За грешки в мрежата на браузъра проверете дали Studio позволява тази страница чрез CORS. За грешки при удостоверяване въведете реален API ключ на Studio; достъпът до терминала без ключ не предоставя достъп през браузъра.",
+  "unsloth.checker.setupGuide": "Ръководство за настройка на връзката с Unsloth",
   "updateAiProvider.confirmDelete": "Изтриване на този AI доставчик?",
   "updateAiProvider.confirmDeleteDescription": "След изтриване AI доставчикът не може да бъде възстановен.",
   "updateAiProvider.deleteSuccess": "Успешно изтриване",

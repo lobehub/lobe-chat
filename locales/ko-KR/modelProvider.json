@@ -349,6 +349,8 @@
   "sortModal.success": "정렬이 성공적으로 업데이트되었습니다",
   "sortModal.title": "사용자 지정 정렬",
   "sortModal.update": "업데이트",
+  "unsloth.checker.guidance": "브라우저 네트워크 오류의 경우, Studio가 이 페이지를 CORS를 통해 허용하는지 확인하세요. 인증 오류의 경우, 실제 Studio API 키를 입력하세요; 키 없이 터미널 접근은 브라우저 접근 권한을 부여하지 않습니다.",
+  "unsloth.checker.setupGuide": "Unsloth 연결 설정 가이드",
   "updateAiProvider.confirmDelete": "이 AI 서비스 제공자를 삭제하시겠습니까?",
   "updateAiProvider.confirmDeleteDescription": "삭제 후에는 이 AI 서비스 제공자를 복구할 수 없습니다.",
   "updateAiProvider.deleteSuccess": "삭제 성공",

@@ -349,6 +349,8 @@
   "sortModal.success": "Tri mis à jour avec succès",
   "sortModal.title": "Ordre personnalisé",
   "sortModal.update": "Mettre à jour",
+  "unsloth.checker.guidance": "Pour les erreurs réseau du navigateur, vérifiez que Studio autorise cette page via CORS. Pour les erreurs d'authentification, entrez une véritable clé API Studio ; l'accès terminal sans clé ne permet pas l'accès via le navigateur.",
+  "unsloth.checker.setupGuide": "Guide de configuration de la connexion Unsloth",
   "updateAiProvider.confirmDelete": "Supprimer ce fournisseur IA ?",
   "updateAiProvider.confirmDeleteDescription": "Une fois supprimé, ce fournisseur IA ne pourra pas être récupéré.",
   "updateAiProvider.deleteSuccess": "Suppression réussie",

@@ -650,7 +650,10 @@ const EvidenceList = memo<{
           return (
             // An authored alt/description becomes the fold row's title itself —
             // the supplement below the row duplicated it one line later.
-            <CollapsibleMarkdownEvidence key={item.id} title={description ?? undefined}>
+            <CollapsibleMarkdownEvidence
+              key={item.id}
+              title={item.description?.trim() || item.fileName?.trim() || undefined}
+            >
               {item.content}
             </CollapsibleMarkdownEvidence>
           );

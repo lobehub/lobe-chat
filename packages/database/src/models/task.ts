@@ -1,6 +1,10 @@
 import type {
   CheckpointConfig,
   NewTask,
+  TaskActivityLogPayload,
+  TaskActivityLogType,
+  TaskAutomationMode,
+  TaskAutomationSnapshot,
   TaskItem,
   TaskSubtaskProgress,
   TaskVerifyConfig,
@@ -49,6 +53,64 @@ import { acceptances } from '../schemas/verify';
 import { works } from '../schemas/work';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspaceWhere } from '../utils/workspace';
+
+/** Columns whose change is worth a line in the task activity feed. */
+const TRACKED_TASK_COLUMNS = [
+  'assigneeAgentId',
+  'assigneeUserId',
+  'automationMode',
+  // Only for `schedule.maxExecutions`, which lives in the JSONB pocket; the
+  // rest of `config` is not diffed.
+  'config',
+  'heartbeatInterval',
+  'priority',
+  'schedulePattern',
+  'scheduleTimezone',
+  'status',
+] as const;
+
+/** The automation columns folded into one value — see `TaskAutomationSnapshot`. */
+/**
+ * The actor columns plus the payload tombstone for one activity row. An
+ * agent-driven edit is attributed to the agent, not to the session owner
+ * whose credentials it borrowed. Both ids null means the system did it on
+ * nobody's behalf (the runner's inbox fallback). `actorKind` repeats that in
+ * the payload because the id columns are cleared when the actor is deleted,
+ * and "someone who is gone" must not read as "the system".
+ */
+export const taskActivityActor = (actor: {
+  agentId?: string | null;
+  userId?: string | null;
+}): {
+  actorAgentId: string | null;
+  actorKind: 'agent' | 'system' | 'user';
+  actorUserId: string | null;
+} => ({
+  actorAgentId: actor.agentId ?? null,
+  actorKind: actor.agentId ? 'agent' : actor.userId ? 'user' : 'system',
+  actorUserId: actor.agentId ? null : (actor.userId ?? null),
+});
+
+const snapshotAutomation = (row: {
+  automationMode: TaskAutomationMode | null;
+  config: unknown;
+  heartbeatInterval: number | null;
+  schedulePattern: string | null;
+  scheduleTimezone: string | null;
+}): TaskAutomationSnapshot | null => {
+  // No mode means automation is off; the leftover pattern / interval columns
+  // are configuration in waiting, not something the user turned on.
+  if (!row.automationMode) return null;
+  const maxExecutions = (row.config as { schedule?: { maxExecutions?: number | null } } | null)
+    ?.schedule?.maxExecutions;
+  return {
+    heartbeatInterval: row.heartbeatInterval,
+    maxExecutions: typeof maxExecutions === 'number' ? maxExecutions : null,
+    mode: row.automationMode,
+    schedulePattern: row.schedulePattern,
+    scheduleTimezone: row.scheduleTimezone,
+  };
+};
 
 export const isTaskIdentifierUniqueViolation = (error: unknown): boolean => {
   const message = error instanceof Error ? error.message : String(error);
@@ -1875,12 +1937,158 @@ export class TaskModel {
     return activity;
   }
 
-  async getActivities(taskId: string): Promise<TaskActivityItem[]> {
+  /**
+   * Append several event rows in one INSERT. Unlike `addActivity`, the caller
+   * supplies each row's visibility — meant for a bulk write that has already
+   * read (and locked) the tasks it describes.
+   */
+  async addActivities(
+    rows: Omit<NewTaskActivity, 'id' | 'userId' | 'workspaceId'>[],
+  ): Promise<TaskActivityItem[]> {
+    if (rows.length === 0) return [];
     return this.db
+      .insert(taskActivities)
+      .values(
+        rows.map((row) => ({ ...row, userId: this.userId, workspaceId: this.workspaceId ?? null })),
+      )
+      .returning();
+  }
+
+  /**
+   * Lock a set of tasks for the rest of the transaction and return what a
+   * bulk status write needs to describe them afterwards: the status each one
+   * is leaving and the visibility its activity row inherits. Reading these
+   * before the lock would let a concurrent edit slip in between and the log
+   * would name a transition that never happened.
+   */
+  async lockForStatusChange(
+    ids: string[],
+  ): Promise<{ id: string; status: string; visibility: 'private' | 'public' }[]> {
+    if (ids.length === 0) return [];
+    return this.db
+      .select({ id: tasks.id, status: tasks.status, visibility: tasks.visibility })
+      .from(tasks)
+      .where(and(inArray(tasks.id, ids), this.ownership()))
+      .for('update');
+  }
+
+  /**
+   * Update a task and append one event per tracked field that actually
+   * changed, in ONE transaction, with the previous values taken from a
+   * **locked** read of the row.
+   *
+   * The lock is the point. Reading the "before" value outside the write lets
+   * two concurrent edits both observe the same origin — an A→B and an A→C
+   * racing on one task persist A→B then B→C while a lock-free recorder logs
+   * A→B and A→C, losing the middle state. Rows are inserted next to the write
+   * they describe, so their order cannot disagree with the order the updates
+   * landed in.
+   *
+   * Which edits reach the feed is decided by the caller, not here: anything
+   * that goes through this method is logged. Person-made changes (the update
+   * procedure, the agent `editTask` tool, the status picker) and the runner's
+   * inbox fallback come here; the runner / lifecycle / watchdog status
+   * transitions use the plain writers, because the run row already tells that
+   * story.
+   */
+  async updateWithLog(
+    id: string,
+    data: Partial<Omit<NewTask, 'id' | 'identifier' | 'seq' | 'createdByUserId'>>,
+    actor: { agentId?: string | null; userId?: string | null },
+  ): Promise<TaskItem | null> {
+    const touched = TRACKED_TASK_COLUMNS.some((col) => data[col] !== undefined);
+    // Nothing to diff against: an ordinary rename should not pay for a lock.
+    if (!touched) return this.update(id, data);
+
+    return this.db.transaction(async (tx) => {
+      const runner = tx as LobeChatDatabase;
+      const [before] = await runner
+        .select({
+          assigneeAgentId: tasks.assigneeAgentId,
+          assigneeUserId: tasks.assigneeUserId,
+          automationMode: tasks.automationMode,
+          config: tasks.config,
+          heartbeatInterval: tasks.heartbeatInterval,
+          priority: tasks.priority,
+          schedulePattern: tasks.schedulePattern,
+          scheduleTimezone: tasks.scheduleTimezone,
+          status: tasks.status,
+        })
+        .from(tasks)
+        .where(and(eq(tasks.id, id), this.ownership()))
+        .for('update')
+        .limit(1);
+      if (!before) return null;
+
+      const scoped = new TaskModel(runner, this.userId, this.workspaceId);
+      const updated = await scoped.update(id, data);
+      if (!updated) return null;
+
+      const events: { payload: TaskActivityLogPayload; type: TaskActivityLogType }[] = [];
+
+      // The two assignee slots are independent — one edit can move both, and
+      // each gets its own row so the feed reads one change per line.
+      if (before.assigneeAgentId !== updated.assigneeAgentId) {
+        events.push({
+          payload: { fromId: before.assigneeAgentId, toId: updated.assigneeAgentId },
+          type: 'assignee_agent',
+        });
+      }
+      if (before.assigneeUserId !== updated.assigneeUserId) {
+        events.push({
+          payload: { fromId: before.assigneeUserId, toId: updated.assigneeUserId },
+          type: 'assignee_user',
+        });
+      }
+      if (before.status !== updated.status) {
+        events.push({ payload: { from: before.status, to: updated.status }, type: 'status' });
+      }
+      if ((before.priority ?? null) !== (updated.priority ?? null)) {
+        events.push({
+          payload: { from: before.priority ?? null, to: updated.priority ?? null },
+          type: 'priority',
+        });
+      }
+      const automationBefore = snapshotAutomation(before);
+      const automationAfter = snapshotAutomation(updated);
+      if (JSON.stringify(automationBefore) !== JSON.stringify(automationAfter)) {
+        events.push({
+          payload: { from: automationBefore, to: automationAfter },
+          type: 'automation',
+        });
+      }
+
+      const { actorKind, ...actorColumns } = taskActivityActor(actor);
+      for (const event of events) {
+        await scoped.addActivity({
+          ...actorColumns,
+          payload: { ...event.payload, actorKind },
+          taskId: id,
+          type: event.type,
+        });
+      }
+
+      return updated;
+    });
+  }
+
+  /**
+   * Oldest-first. `limit` keeps the newest N rows (still returned
+   * oldest-first) so a long-lived task does not ship its whole history on
+   * every detail poll; the table itself is the full audit trail.
+   */
+  async getActivities(taskId: string, limit?: number): Promise<TaskActivityItem[]> {
+    const where = and(eq(taskActivities.taskId, taskId), this.activitiesOwnership());
+    if (limit === undefined) {
+      return this.db.select().from(taskActivities).where(where).orderBy(taskActivities.createdAt);
+    }
+    const newest = await this.db
       .select()
       .from(taskActivities)
-      .where(and(eq(taskActivities.taskId, taskId), this.activitiesOwnership()))
-      .orderBy(taskActivities.createdAt);
+      .where(where)
+      .orderBy(desc(taskActivities.createdAt), desc(taskActivities.id))
+      .limit(limit);
+    return newest.reverse();
   }
 
   // ========== Transfer / Copy ==========
