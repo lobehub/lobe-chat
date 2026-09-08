@@ -38,6 +38,7 @@ import { type ReviewResult, TaskReviewService } from '../taskReview';
 import { TaskRunnerService } from '../taskRunner';
 import { createTaskSchedulerModule } from '../taskScheduler';
 import { resolveTaskAcceptance } from '../verify/taskAcceptance';
+import { collapseActivityLog } from './collapseActivityLog';
 
 const emptyWorkspace: WorkspaceData = { nodeMap: {}, tree: [] };
 const UNTITLED_TOPIC_TITLE = 'Untitled';
@@ -862,6 +863,12 @@ export class TaskService {
       resolveTaskAcceptance(this.db, this.userId, task.id, this.workspaceId).catch(() => undefined),
     ]);
 
+    // What the reader is shown, not what was written: a burst of edits to one
+    // property by one person folds into a single "from A to C", and a value
+    // that ended up where it started is not shown at all. The rows themselves
+    // stay append-only.
+    const shownLogs = collapseActivityLog(activityLogs);
+
     const allDescendantIds = allDescendants.map((s) => s.id);
     const descendantTaskMap = new Map(allDescendants.map((s) => [s.id, s]));
     const descendantTopics =
@@ -1062,7 +1069,7 @@ export class TaskService {
     else if (task.createdByUserId) userIds.add(task.createdByUserId);
     // Assignment events carry an actor plus both sides of the change; which
     // set an id belongs to is decided by the event type, not by the column.
-    for (const log of activityLogs) {
+    for (const log of shownLogs) {
       if (log.actorAgentId) agentIds.add(log.actorAgentId);
       if (log.actorUserId) userIds.add(log.actorUserId);
       // Property events carry values, not participant ids.
@@ -1150,7 +1157,7 @@ export class TaskService {
           type: 'comment' as const,
         };
       }),
-      ...activityLogs.map((log): TaskDetailActivity => {
+      ...shownLogs.map((log): TaskDetailActivity => {
         const stub = (id: string, type: 'agent' | 'user'): TaskDetailActivityAuthor => ({
           id,
           name: null,
