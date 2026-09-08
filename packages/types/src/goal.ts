@@ -206,6 +206,7 @@ export interface GoalManagerState {
   consumed?: boolean;
   operationId?: string;
   readyForAcceptance?: boolean;
+  reviewSnapshot?: string;
   snapshot: string;
   startedAt: string;
   submitted?: {

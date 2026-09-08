@@ -52,3 +52,10 @@ not the whole account or the operating system. Prompt instructions are not a
 shell sandbox. Do not install a broad personal credential in an untrusted runtime.
 
 Legacy `--supervise` Goals retain their existing behavior and cancellation fixes.
+
+Each new planning turn includes up to 20 recent Task comments (2,000 characters
+per comment); the main Agent can read full comments through `lh task view`. A
+comment digest rejects uncommitted plans when feedback changed since dispatch.
+That check is optimistic at read time: concurrent comment writes do not share
+the Goal lock, and feedback arriving after a committed plan does not stop
+already dispatched work. Stale feedback requires a new bounded planning turn.

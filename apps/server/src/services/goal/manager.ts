@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 
 import { GOAL_ACCEPTANCE_TASK_TITLE } from '@lobechat/const/goal';
+import { buildGoalManagerPrompt } from '@lobechat/prompts';
 import type { GoalGraphSnapshot, GoalManagerState, GoalTickResult } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { eq, sql } from 'drizzle-orm';
@@ -104,6 +105,36 @@ export class GoalManagerService {
   };
 
   private graph = (db = this.db) => new GoalGraphModel(db, this.userId, this.workspaceId);
+
+  private reviews = async (graph: GoalGraphSnapshot, db = this.db) => {
+    const tasks = new TaskModel(db, this.userId, this.workspaceId);
+    const visible = await tasks.findByIds(graph.nodes.flatMap((n) => (n.taskId ? [n.taskId] : [])));
+    const comments = (
+      await Promise.all(
+        visible.map(async (task) =>
+          (await tasks.getComments(task.id)).map((comment) => ({
+            taskId: task.id,
+            id: comment.id,
+            content: comment.content,
+            authorUserId: comment.authorUserId,
+            authorAgentId: comment.authorAgentId,
+            updatedAt: comment.updatedAt,
+          })),
+        ),
+      )
+    )
+      .flat()
+      .sort((a, b) => a.id.localeCompare(b.id));
+    return {
+      hash: createHash('sha256').update(JSON.stringify(comments)).digest('hex'),
+      notes: JSON.stringify(
+        [...comments]
+          .sort((a, b) => a.updatedAt.getTime() - b.updatedAt.getTime())
+          .slice(-20)
+          .map((c) => ({ ...c, content: c.content.slice(0, 2000) })),
+      ),
+    };
+  };
 
   private budgetBlocked = async (graph: GoalGraphSnapshot, db = this.db) => {
     const spend = await new TaskTopicModel(db, this.userId, this.workspaceId).sumRunCostByTaskIds(
@@ -270,7 +301,9 @@ export class GoalManagerService {
             title: `Goal management: ${goal.title}`,
           })
         ).id;
+      const reviews = await this.reviews(current, db);
       const next: GoalManagerState = {
+        reviewSnapshot: reviews.hash,
         topicId,
         turns: (state?.turns ?? 0) + 1,
         token: randomUUID(),
@@ -279,7 +312,7 @@ export class GoalManagerService {
       };
       await this.save(db, goal.id, next);
       if (fresh.status === 'planning') await model.updateStatus(goal.id, 'running');
-      return next;
+      return { ...next, reviewNotes: reviews.notes };
     });
     if (!claimed) return this.wait(goal.id, 'Another advance owns the planning turn');
     try {
@@ -292,7 +325,13 @@ export class GoalManagerService {
         autoStart: true,
         maxSteps: 80,
         userInterventionConfig: { approvalMode: 'headless' },
-        prompt: `You are the sole planning agent for Goal ${goal.id}. Use the available shell and lh CLI, not a supervisor tool set.\nRequirement: ${goal.requirement ?? goal.title}\n${policy.instruction ?? ''}\nFirst run lh goal show ${goal.id} --json. Inspect Task/Topic/document evidence with lh as needed. Plan the next bounded tasks, or request final independent verification when sufficient evidence exists. Do not run the research yourself, mark Tasks complete, accept your own work, modify budgets or resolve human Gates. Existing task workers execute and register deliverables through the normal lifecycle.\nWrite a JSON plan file and run lh goal plan ${goal.id} --token ${claimed.token} --file <path> --json. The current operation ID is provided by LOBEHUB_OPERATION_ID. Choose exactly one schema:\n{"action":"tasks","reason":"evidence-based rationale","tasks":[{"title":"specific task","description":"self-contained contract, inputs, output and acceptance"}]}\n{"action":"verify","reason":"why the existing evidence warrants independent Goal verification"}\n{"action":"retry","taskId":"failed Task ID","failedOperationId":"latest confirmed failure ID","reason":"diagnosis and checkpoint-aware recovery instruction"}\n{"action":"escalate","reason":"concrete blocker requiring human input"}\nSubmit one atomic plan, then exit. Do not start a poll loop or directly invoke task run/agent run for graph work: the server records and dispatches those runs under Goal budgets. Never lower the original requirement to produce a pass.`,
+        prompt: buildGoalManagerPrompt({
+          goalId: goal.id,
+          requirement: goal.requirement ?? goal.title,
+          instruction: policy.instruction,
+          token: claimed.token,
+          feedback: claimed.reviewNotes,
+        }),
       });
       await this.db.transaction(async (db) => {
         const fresh = await new GoalModel(db, this.userId, this.workspaceId).lockById(goal.id);
@@ -343,6 +382,12 @@ export class GoalManagerService {
       if (state.submitted) return { duplicate: true, plan: state.submitted };
       if (state.consumed || op.status !== 'running' || managerSnapshot(graph) !== state.snapshot)
         throw new TRPCError({ code: 'CONFLICT', message: 'Stale planning input; no plan applied' });
+      if (state.reviewSnapshot && (await this.reviews(graph, db)).hash !== state.reviewSnapshot)
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message:
+            'Task review feedback changed; exit without a plan so the next bounded turn can read it',
+        });
       if (await this.budgetBlocked(graph, db))
         throw new TRPCError({ code: 'CONFLICT', message: 'Goal budget exhausted' });
       const unfinished = graph.nodes.filter(

@@ -369,6 +369,39 @@ describe('CLI main Agent planning', () => {
     expect(await model().findById(id)).toBeTruthy();
   });
 
+  it('delivers Task review feedback to the next planner and rejects a plan after newer feedback', async () => {
+    const { id, state, op } = await start();
+    await manager().submit(id, state.token, op.id, taskPlan);
+    await ops().recordCompletion(op.id, { status: 'done' });
+    await service().tick(id);
+    const created = await service().tick(id);
+    const taskId = created.taskId!;
+    const node = (await service().graph(id)).nodes.find((n) => n.taskId === taskId)!;
+    await db.update(goalNodes).set({ status: 'resolved' }).where(eq(goalNodes.id, node.id));
+    const taskModel = new TaskModel(db, userId);
+    await taskModel.addComment({
+      taskId,
+      userId,
+      authorUserId: userId,
+      content:
+        'The recommendation baseline is not a training majority; correct it before prediction.',
+    });
+    await service().tick(id);
+    const prompt = vi.mocked(AiAgentService.prototype.execAgent).mock.calls.at(-1)![0].prompt;
+    expect(prompt).toContain('The recommendation baseline is not a training majority');
+    const next = (await model().findById(id))!.config!.managerState!;
+    await taskModel.addComment({
+      taskId,
+      userId,
+      authorUserId: userId,
+      content: 'New review: do not use future training cases.',
+    });
+    await expect(
+      manager().submit(id, next.token, next.operationId!, { action: 'verify', reason: 'Ready' }),
+    ).rejects.toThrow('feedback');
+    expect((await model().findById(id))!.config!.managerState!.readyForAcceptance).not.toBe(true);
+  });
+
   it('does not mix planning owners', async () => {
     await expect(
       service().create({
