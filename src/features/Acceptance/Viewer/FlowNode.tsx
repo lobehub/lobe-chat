@@ -36,7 +36,11 @@ export const flowStateColor = (state?: string) =>
 
 const styles = createStaticStyles(({ css }) => ({
   card: css`
+    display: flex;
+    flex-direction: column;
+
     width: 260px;
+    height: 100%;
     border: 1px solid ${cssVar.colorBorderSecondary};
     border-radius: ${cssVar.borderRadiusLG};
 
@@ -88,6 +92,7 @@ const styles = createStaticStyles(({ css }) => ({
     color: ${cssVar.colorTextTertiary};
   `,
   footer: css`
+    margin-block-start: auto;
     padding-block: 7px;
     padding-inline: 12px;
     border-block-start: 1px dashed ${cssVar.colorBorderSecondary};

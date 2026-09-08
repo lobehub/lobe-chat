@@ -2,6 +2,7 @@ import type { AcceptanceFlowNodeOverrides } from '@lobechat/types';
 import { sql } from 'drizzle-orm';
 import {
   boolean,
+  check,
   foreignKey,
   index,
   jsonb,
@@ -36,13 +37,20 @@ export const acceptanceFlowNodes = pgTable(
       .notNull()
       .references(() => acceptanceFlows.id, { onDelete: 'cascade' }),
     /** Migration defers this FK to commit so account/workspace cascades can remove the graph too. */
-    criterionId: uuid('criterion_id')
-      .notNull()
-      .references(() => verifyCriteria.id, { onDelete: 'no action' }),
+    criterionId: uuid('criterion_id').references(() => verifyCriteria.id, {
+      onDelete: 'no action',
+    }),
+    /** A subflow occurrence; check results remain scoped to this graph position. */
+    subFlowId: uuid('sub_flow_id').references(() => acceptanceFlows.id, { onDelete: 'no action' }),
     isEntry: boolean('is_entry').notNull().default(false),
     overrides: jsonb('overrides').$type<AcceptanceFlowNodeOverrides>(),
   },
   (t) => [
+    check(
+      'acceptance_flow_nodes_target_check',
+      sql`num_nonnulls(${t.criterionId}, ${t.subFlowId}) = 1`,
+    ),
+    index('acceptance_flow_nodes_sub_flow_idx').on(t.subFlowId),
     uniqueIndex('acceptance_flow_nodes_flow_id_unique').on(t.flowId, t.id),
     uniqueIndex('acceptance_flow_nodes_entry_unique')
       .on(t.flowId)

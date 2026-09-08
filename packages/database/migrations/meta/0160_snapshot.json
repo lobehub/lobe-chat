@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "6b0b156c-cc85-4982-92a3-debaead7479d",
+  "id": "cb6b6c02-37b2-4d1f-aff5-b5d666d205c4",
   "policies": {},
   "prevId": "f8af0c0c-e7ec-4407-b65a-fe7b7cd4aa5c",
   "roles": {},
@@ -173,7 +173,13 @@
           "name": "criterion_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "sub_flow_id": {
+          "name": "sub_flow_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "is_entry": {
           "name": "is_entry",
@@ -190,6 +196,21 @@
         }
       },
       "indexes": {
+        "acceptance_flow_nodes_sub_flow_idx": {
+          "name": "acceptance_flow_nodes_sub_flow_idx",
+          "columns": [
+            {
+              "expression": "sub_flow_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "acceptance_flow_nodes_flow_id_unique": {
           "name": "acceptance_flow_nodes_flow_id_unique",
           "columns": [
@@ -261,12 +282,26 @@
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "acceptance_flow_nodes_sub_flow_id_acceptance_flows_id_fk": {
+          "name": "acceptance_flow_nodes_sub_flow_id_acceptance_flows_id_fk",
+          "tableFrom": "acceptance_flow_nodes",
+          "tableTo": "acceptance_flows",
+          "columnsFrom": ["sub_flow_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "acceptance_flow_nodes_target_check": {
+          "name": "acceptance_flow_nodes_target_check",
+          "value": "num_nonnulls(\"acceptance_flow_nodes\".\"criterion_id\", \"acceptance_flow_nodes\".\"sub_flow_id\") = 1"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.acceptance_flows": {

@@ -30,6 +30,7 @@ export interface AcceptanceFlowNodeInput {
   criterionId?: string;
   id: string;
   overrides?: AcceptanceFlowNodeOverrides;
+  subFlowId?: string;
 }
 export interface AcceptanceFlowEdgeInput {
   condition?: string;
@@ -49,7 +50,15 @@ export interface VerifyFlowSnapshot {
   edges: AcceptanceFlowEdgeInput[];
   entryNodeId: string;
   flowId: string;
-  nodes: { id: string; criterionId: string; checkItemIds: string[] }[];
+  nodes: {
+    id: string;
+    criterionId?: string;
+    subFlowId?: string;
+    parentNodeId?: string;
+    title?: string;
+    isEntry?: boolean;
+    checkItemIds: string[];
+  }[];
   title: string;
 }
 export type AcceptanceFlowVerdict = 'passed' | 'failed' | 'uncertain' | 'blocked';

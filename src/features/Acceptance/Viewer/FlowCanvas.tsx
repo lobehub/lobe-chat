@@ -7,14 +7,16 @@ import {
   type NodeTypes,
   ReactFlow,
   useReactFlow,
+  type Viewport,
 } from '@xyflow/react';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useFitViewOnResize } from '@/features/AgentGoals/ProcessControl/Graph/useFitViewOnResize';
+import { useSingleton } from '@/hooks/useSingleton';
 
 import { FlowEdge } from './FlowEdge';
-import type { FlowNodeData } from './FlowNode';
+import type { FlowGraphData } from './flowGraph';
 
 const edgeTypes = { transition: FlowEdge };
 
@@ -22,13 +24,18 @@ const fitOptions = { maxZoom: 1, padding: 0.08 };
 const styles = createStaticStyles(({ css }) => ({
   canvas: css`
     overflow: hidden;
-    flex: 1 1 520px;
+    flex: none;
 
+    width: 100%;
     min-width: 320px;
-    height: 360px;
+    height: clamp(520px, calc(100dvh - 400px), 900px);
     border-radius: ${cssVar.borderRadiusLG};
 
     background: transparent;
+
+    .react-flow__edgelabel-renderer {
+      z-index: 5;
+    }
 
     .react-flow__controls-button {
       border-color: ${cssVar.colorBorderSecondary};
@@ -43,15 +50,41 @@ export function FlowCanvas({
   edges,
   nodeTypes,
   onSelect,
+  viewKey,
 }: {
-  nodes: Node<FlowNodeData>[];
+  nodes: Node<FlowGraphData>[];
   edges: Edge[];
   nodeTypes: NodeTypes;
   onSelect: (id: string) => void;
+  viewKey: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { fitView } = useReactFlow();
+  const { fitView, getViewport, setViewport } = useReactFlow();
+  const viewports = useSingleton(
+    () => new Map<string, { viewport: Viewport; width: number; height: number }>(),
+  );
   useFitViewOnResize(ref, fitView, fitOptions);
+  useEffect(() => {
+    const container = ref.current;
+    const frame = requestAnimationFrame(() => {
+      const saved = viewports.get(viewKey);
+      if (
+        saved &&
+        saved.width === container?.clientWidth &&
+        saved.height === container?.clientHeight
+      )
+        void setViewport(saved.viewport);
+      else void fitView(fitOptions);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      viewports.set(viewKey, {
+        viewport: getViewport(),
+        width: container?.clientWidth ?? 0,
+        height: container?.clientHeight ?? 0,
+      });
+    };
+  }, [viewKey, fitView, getViewport, setViewport, viewports]);
   return (
     <Flexbox className={styles.canvas} ref={ref}>
       <ReactFlow
@@ -66,7 +99,7 @@ export function FlowCanvas({
         edges={edges}
         fitViewOptions={fitOptions}
         maxZoom={1.5}
-        minZoom={0.25}
+        minZoom={0.08}
         nodeTypes={nodeTypes}
         nodes={nodes}
         nodesConnectable={false}

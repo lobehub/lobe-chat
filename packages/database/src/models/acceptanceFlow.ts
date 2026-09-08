@@ -48,8 +48,8 @@ export function validateFlow(definition: AcceptanceFlowDefinition) {
   }
   if (reached.size !== ids.size) throw new Error('Unreachable nodes');
   for (const node of definition.nodes)
-    if (Boolean(node.criterionId) === Boolean(node.check))
-      throw new Error('Provide a criterionId or a new check');
+    if ([node.criterionId, node.check, node.subFlowId].filter(Boolean).length !== 1)
+      throw new Error('Provide exactly one criterionId, check or subFlowId');
 }
 
 /** Canonical graph fingerprint, also used for optimistic editing and pending-plan detection. */
@@ -121,7 +121,15 @@ export class AcceptanceFlowModel {
         verifyCriteria,
       );
       for (const node of definition.nodes) {
-        if (node.check) {
+        if (node.subFlowId) {
+          const [child] = await tx
+            .select()
+            .from(flows)
+            .where(and(eq(flows.id, node.subFlowId), eq(flows.acceptanceId, acceptanceId)));
+          if (!child) throw new Error('Subflow must belong to the same acceptance');
+          if (node.overrides?.fixtureData)
+            throw new Error('Fixture overrides belong to check nodes');
+        } else if (node.check) {
           const { check } = node;
           verifyCheckDefinitionSchema.parse(check.definition);
           await tx
@@ -162,7 +170,8 @@ export class AcceptanceFlowModel {
         definition.nodes.map((node) => ({
           id: node.id,
           flowId: flow.id,
-          criterionId: node.criterionId ?? node.check!.id,
+          criterionId: node.criterionId ?? node.check?.id,
+          subFlowId: node.subFlowId,
           isEntry: node.id === definition.entryNodeId,
           overrides: node.overrides,
         })),
@@ -182,13 +191,19 @@ export class AcceptanceFlowModel {
     });
   }
 
-  private async graph(flowId: string, database: LobeChatDatabase | Transaction = this.db) {
+  private async graph(
+    flowId: string,
+    database: LobeChatDatabase | Transaction = this.db,
+    ancestors: string[] = [],
+  ): Promise<{ snapshot: VerifyFlowSnapshot; plan: VerifyCheckItem[]; hash: string }> {
+    if (ancestors.includes(flowId)) throw new Error('Recursive subflow reference');
+    if (ancestors.length >= 8) throw new Error('Subflow nesting exceeds 8 levels');
     const [flow] = await database.select().from(flows).where(eq(flows.id, flowId));
     if (!flow) throw new Error('Flow not found');
     const nodeRows = await database
       .select({ node: nodes, asset: verifyCriteria })
       .from(nodes)
-      .innerJoin(verifyCriteria, eq(nodes.criterionId, verifyCriteria.id))
+      .leftJoin(verifyCriteria, eq(nodes.criterionId, verifyCriteria.id))
       .where(eq(nodes.flowId, flowId))
       .orderBy(asc(nodes.id));
     const edgeRows = await database
@@ -213,6 +228,74 @@ export class AcceptanceFlowModel {
         (e) => e.targetNodeId === node.id,
       );
       if (node.isEntry) branches.unshift(undefined);
+      if (node.subFlowId) {
+        const child = await this.graph(node.subFlowId, database, [...ancestors, flowId]);
+        const group = {
+          id: node.id,
+          subFlowId: node.subFlowId,
+          title: child.snapshot.title,
+          checkItemIds: [] as string[],
+        };
+        snapshot.nodes.push(group);
+        for (const branch of branches) {
+          const prefix = `${node.id}/${branch?.id ?? 'entry'}/`;
+          const parentId = branches.length > 1 ? `${prefix}group` : node.id;
+          const ids = child.plan.map((item) => prefix + item.id);
+          group.checkItemIds.push(...ids);
+          if (branches.length > 1)
+            snapshot.nodes.push({
+              id: parentId,
+              parentNodeId: node.id,
+              title: branch?.trigger ?? child.snapshot.title,
+              subFlowId: node.subFlowId,
+              checkItemIds: ids,
+            });
+          snapshot.nodes.push(
+            ...child.snapshot.nodes.map((item) => ({
+              ...item,
+              id: prefix + item.id,
+              parentNodeId: item.parentNodeId ? prefix + item.parentNodeId : parentId,
+              checkItemIds: item.checkItemIds.map((id) => prefix + id),
+            })),
+          );
+          snapshot.edges.push(
+            ...child.snapshot.edges.map((edge) => ({
+              ...edge,
+              id: prefix + edge.id,
+              sourceNodeId: prefix + edge.sourceNodeId,
+              targetNodeId: prefix + edge.targetNodeId,
+            })),
+          );
+          plan.push(
+            ...child.plan.map((item) => ({
+              ...item,
+              id: prefix + item.id,
+              index: plan.length,
+              required: (node.overrides?.required ?? branch?.required ?? true) && item.required,
+              onFail: node.overrides?.onFail ?? item.onFail,
+              sourceFlowNode: {
+                flowId,
+                nodeId: prefix + item.sourceFlowNode!.nodeId,
+                incomingEdgeId: item.sourceFlowNode?.incomingEdgeId
+                  ? prefix + item.sourceFlowNode.incomingEdgeId
+                  : undefined,
+              },
+              definition: {
+                ...item.definition,
+                preconditions: [
+                  ...(item.definition?.preconditions ?? []),
+                  ...(branch
+                    ? [branch.trigger, ...(branch.condition ? [branch.condition] : [])]
+                    : []),
+                ],
+              },
+            })),
+          );
+        }
+        if (snapshot.nodes.length > 1000) throw new Error('Expanded flow exceeds 1000 nodes');
+        continue;
+      }
+      if (!asset) throw new Error('Check asset not found');
       const definition = structuredClone(
         asset.definition ?? {
           expected:
@@ -256,7 +339,12 @@ export class AcceptanceFlowModel {
           required: node.overrides?.required ?? branch?.required ?? true,
         });
       }
-      snapshot.nodes.push({ id: node.id, criterionId: asset.id, checkItemIds: itemIds });
+      snapshot.nodes.push({
+        id: node.id,
+        criterionId: asset.id,
+        isEntry: node.isEntry,
+        checkItemIds: itemIds,
+      });
     }
     const acceptance = await this.owned(flow.acceptanceId, database);
     const frozen = await new VerifyCriterionModel(
@@ -547,11 +635,18 @@ export class AcceptanceFlowModel {
           id: node.id,
           nodeKey: node.id,
           criterionId: node.criterionId,
+          subFlowId: node.subFlowId,
+          parentNodeId: node.parentNodeId,
+          isEntry: node.isEntry ?? node.id === snapshot.entryNodeId,
+          checkItemIds: node.checkItemIds,
+          requiredCheckItemIds: plan
+            .filter((p) => p.required && node.checkItemIds.includes(p.id))
+            .map((p) => p.id),
           entryRequired:
             plan.find(
               (p) => p.sourceFlowNode?.nodeId === node.id && !p.sourceFlowNode.incomingEdgeId,
             )?.required ?? true,
-          title: item?.title ?? '',
+          title: node.title ?? item?.title ?? '',
           instruction: item?.definition?.steps?.map((s) => s.instruction).join('\n') ?? '',
           expected: item?.definition?.expected ?? '',
           definition: item?.definition,

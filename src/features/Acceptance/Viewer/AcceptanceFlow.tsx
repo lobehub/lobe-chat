@@ -2,20 +2,20 @@
 
 import '@xyflow/react/dist/style.css';
 
-import { Empty, Flexbox, Icon } from '@lobehub/ui';
-import { Select, Text } from '@lobehub/ui/base-ui';
-import { MarkerType, Position, ReactFlowProvider } from '@xyflow/react';
+import { Empty, Flexbox } from '@lobehub/ui';
+import { Button, Select, Text } from '@lobehub/ui/base-ui';
+import { MarkerType, ReactFlowProvider } from '@xyflow/react';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { Route } from 'lucide-react';
 import { use, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useAcceptanceScope } from './AcceptanceScope';
 import { FlowCanvas } from './FlowCanvas';
+import { buildFlowGraph } from './flowGraph';
+import { FlowGroup } from './FlowGroup';
 import { getFlowRoundViews } from './flowNavigation';
 import { FlowNode } from './FlowNode';
-import { getFlowNodeState } from './flowNodeState';
 import { FlowPanelHostContext, FlowResults } from './FlowResults';
 import { acceptanceContentLayout } from './layout';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
@@ -27,169 +27,160 @@ const styles = createStaticStyles(({ css }) => ({
     margin-inline: auto;
   `,
 }));
+const nodeTypes = { state: FlowNode, flowGroup: FlowGroup };
 
-const nodeTypes = { state: FlowNode };
-
-/** State exploration owns its selection; the acceptance page owns only the tab. */
 export function AcceptanceFlow() {
   const { t } = useTranslation('verify');
   const panelHost = use(FlowPanelHostContext);
   const { acceptanceId } = useAcceptanceScope();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
-  const [viewId, setViewId] = useState<string>();
+  const [roundKey, setRoundKey] = useState<string>();
   const [selected, setSelected] = useState<string>();
+  const [focus, setFocus] = useState<string>();
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const views = getFlowRoundViews(data?.flows, data?.rounds);
-  const view = views.find((item) => item.id === viewId) ?? views[0];
-  if (!view) return <Empty description={t('flow.empty')} />;
-  const { version, run } = view;
-  const visits = run?.attempts ?? [];
-  const latest = new Map(visits.map((a) => [a.incomingEdgeId ?? 'entry', a]));
-  const selectedEdge = version.edges.find((e) => e.id === selected);
-  const node = version.nodes.find(
-    (n) => n.id === selected || (selectedEdge && n.nodeKey === selectedEdge.targetNodeKey),
+  const keys = [
+    ...new Set(
+      views.map((view) => (view.roundIndex == null ? 'pending' : String(view.roundIndex))),
+    ),
+  ];
+  const activeKey = keys.includes(roundKey ?? '') ? roundKey! : keys[0];
+  const candidates = views.filter(
+    (view) => (view.roundIndex == null ? 'pending' : String(view.roundIndex)) === activeKey,
   );
-  const attempts = visits.filter(
-    (a) => a.nodeId === node?.id && (!selectedEdge || a.incomingEdgeId === selectedEdge.id),
+  const referenced = new Set(
+    candidates.flatMap((view) =>
+      view.version.nodes.flatMap((node) => (node.subFlowId ? [node.subFlowId] : [])),
+    ),
   );
-  // Breadth-first columns preserve back edges without recursively expanding cycles.
-  const depths = new Map([[version.entryNodeKey, 0]]);
-  const queue = [version.entryNodeKey];
-  for (let i = 0; i < queue.length; i++)
-    for (const edge of version.edges.filter((e) => e.sourceNodeKey === queue[i])) {
-      if (!depths.has(edge.targetNodeKey)) {
-        depths.set(edge.targetNodeKey, depths.get(queue[i])! + 1);
-        queue.push(edge.targetNodeKey);
-      }
-    }
-  const rows = new Map<number, number>();
-  const graphNodes = version.nodes.map((n) => {
-    const depth = depths.get(n.nodeKey) ?? 0;
-    const row = rows.get(depth) ?? 0;
-    rows.set(depth, row + 1);
-    const state = getFlowNodeState(
-      n.nodeKey,
-      version.entryNodeKey,
-      version.edges,
-      visits,
-      n.entryRequired,
-    );
-    return {
-      id: n.id,
-      type: 'state',
-      position: { x: depth * 400, y: row * 220 },
-      sourcePosition: Position.Right,
-      targetPosition: Position.Left,
-      data: {
-        title: n.title,
-        expected: n.expected,
-        state,
-        selected: n.id === node?.id,
-        attempts: visits.filter((a) => a.nodeId === n.id).length,
-        evidence: visits
-          .filter((a) => a.nodeId === n.id)
-          .flatMap((a) => a.evidence.filter((e) => e.fileUrl)).length,
-      },
-      width: 260,
-    };
-  });
-  const graphEdges = version.edges.map((e) => ({
-    id: e.id,
-    source: version.nodes.find((n) => n.nodeKey === e.sourceNodeKey)!.id,
-    target: version.nodes.find((n) => n.nodeKey === e.targetNodeKey)!.id,
-    label: e.trigger,
-    type: 'transition',
-    data: {
-      onSelect: setSelected,
-      laneOffset: (() => {
-        const peers = version.edges.filter(
-          (other) =>
-            other.sourceNodeKey === e.sourceNodeKey && other.targetNodeKey === e.targetNodeKey,
-        );
-        return (peers.findIndex((other) => other.id === e.id) - (peers.length - 1) / 2) * 64;
-      })(),
+  const roots = candidates.filter((view) => !referenced.has(view.version.flowId));
+  const visibleViews = roots.length ? roots : candidates;
+  const graph = buildFlowGraph(
+    visibleViews,
+    collapsed,
+    selected,
+    (id) => {
+      setCollapsed((previous) => {
+        const next = new Set(previous);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
     },
-    sourceHandle:
-      depths.get(e.targetNodeKey)! <= depths.get(e.sourceNodeKey)! ? 'return-out' : 'out',
-    targetHandle: depths.get(e.targetNodeKey)! <= depths.get(e.sourceNodeKey)! ? 'return-in' : 'in',
+    setFocus,
+    setSelected,
+    focus,
+  );
+  if (!views.length) return <Empty description={t('flow.empty')} />;
+  const edgeSelection = graph.transitions.get(selected ?? '');
+  const checkSelection =
+    graph.checks.get(selected ?? '') ??
+    (edgeSelection
+      ? [...graph.checks.values()].find(
+          (item) =>
+            item.view.id === edgeSelection.view.id &&
+            item.node.id === edgeSelection.edge.targetNodeKey,
+        )
+      : undefined);
+  const attempts = (checkSelection?.view.run?.attempts ?? []).filter(
+    (a) =>
+      a.nodeId === checkSelection?.node.id &&
+      (!edgeSelection || a.incomingEdgeId === edgeSelection.edge.id),
+  );
+  const crumbs: { id: string; title: string }[] = [];
+  for (let id = focus; id && graph.groups.has(id); id = graph.groups.get(id)?.parent)
+    crumbs.unshift({ id, title: graph.groups.get(id)!.title });
+  const graphEdges = graph.edges.map((edge) => ({
+    ...edge,
     markerEnd: { type: MarkerType.Arrow, color: cssVar.colorTextQuaternary, width: 16, height: 16 },
     style: {
-      stroke:
-        e.id === selected
-          ? cssVar.colorPrimary
-          : latest.get(e.id)?.verdict === 'failed'
-            ? cssVar.colorErrorBorder
-            : cssVar.colorTextQuaternary,
-      strokeWidth: e.id === selected ? 2 : 1.5,
+      stroke: edge.id === selected ? cssVar.colorPrimary : cssVar.colorTextQuaternary,
+      strokeWidth: edge.id === selected ? 2 : 1.5,
     },
   }));
-
   return (
     <Flexbox gap={16}>
-      <Flexbox className={styles.toolbar} gap={12}>
-        <Flexbox horizontal align="center" gap={12} justify="space-between" wrap="wrap">
-          <Flexbox horizontal align="center" gap={8}>
-            <Icon icon={Route} size={18} style={{ color: cssVar.colorTextSecondary }} />
-            <Text strong fontSize={15}>
-              {version.title}
-            </Text>
-          </Flexbox>
-          <Flexbox horizontal align="center" gap={12} style={{ marginInlineStart: 'auto' }}>
-            <Select
-              size="small"
-              style={{ height: 34, minWidth: 110 }}
-              value={view.id}
-              variant="filled"
-              options={views.map((item) => ({
-                label: [
-                  item.roundIndex == null
-                    ? t('flow.pendingPlan')
-                    : t('acceptance.round', { round: item.roundIndex }),
-                  (data?.flows.length ?? 0) > 1 ? item.version.title : undefined,
-                ]
-                  .filter(Boolean)
-                  .join(' · '),
-                value: item.id,
-              }))}
-              onChange={(value: string) => {
-                if (!value) return;
-                setViewId(value);
-                setSelected(undefined);
-              }}
-            />
-          </Flexbox>
+      <Flexbox
+        horizontal
+        align="center"
+        className={styles.toolbar}
+        gap={8}
+        justify="space-between"
+        wrap="wrap"
+      >
+        <Flexbox horizontal align="center" gap={4}>
+          <Button size="small" type="text" onClick={() => setFocus(undefined)}>
+            {t('flow.allGroups')}
+          </Button>
+          {crumbs.map((crumb) => (
+            <Flexbox horizontal align="center" gap={4} key={crumb.id}>
+              <Text type="secondary">/</Text>
+              <Button size="small" type="text" onClick={() => setFocus(crumb.id)}>
+                {crumb.title}
+              </Button>
+            </Flexbox>
+          ))}
+        </Flexbox>
+        <Flexbox horizontal align="center" gap={8}>
+          <Button size="small" type="text" onClick={() => setCollapsed(new Set())}>
+            {t('flow.expandAll')}
+          </Button>
+          <Button
+            size="small"
+            type="text"
+            onClick={() => setCollapsed(new Set(graph.groups.keys()))}
+          >
+            {t('flow.collapseAll')}
+          </Button>
+          <Select
+            size="small"
+            style={{ minWidth: 120 }}
+            value={activeKey}
+            options={keys.map((key) => ({
+              value: key,
+              label:
+                key === 'pending'
+                  ? t('flow.pendingPlan')
+                  : t('acceptance.round', { round: Number(key) }),
+            }))}
+            onChange={(value: string) => {
+              setRoundKey(value);
+              setFocus(undefined);
+              setSelected(undefined);
+            }}
+          />
         </Flexbox>
       </Flexbox>
-      <Flexbox horizontal align="stretch" gap={16} wrap="wrap">
-        <ReactFlowProvider key={version.id}>
-          <FlowCanvas
-            edges={graphEdges}
-            nodeTypes={nodeTypes}
-            nodes={graphNodes}
-            onSelect={setSelected}
-          />
-        </ReactFlowProvider>
-        {node &&
-          panelHost &&
-          createPortal(
-            <FlowResults
-              acceptanceId={acceptanceId!}
-              attempts={attempts}
-              edges={version.edges}
-              key={`${version.id}:${run?.id}:${selected}`}
-              node={node}
-              selectedEdge={selectedEdge}
-              canReview={Boolean(
-                data?.canReview &&
-                view.roundIndex != null &&
-                view.roundIndex ===
-                  Math.max(...(data?.rounds.map((r) => r.run.roundIndex ?? 0) ?? [0])),
-              )}
-              onClose={() => setSelected(undefined)}
-              onSaved={mutate}
-            />,
-            panelHost,
-          )}
-      </Flexbox>
+      <ReactFlowProvider key={activeKey}>
+        <FlowCanvas
+          edges={graphEdges}
+          nodeTypes={nodeTypes}
+          nodes={graph.nodes}
+          viewKey={focus ?? activeKey}
+          onSelect={setSelected}
+        />
+      </ReactFlowProvider>
+      {checkSelection &&
+        panelHost &&
+        createPortal(
+          <FlowResults
+            acceptanceId={acceptanceId!}
+            attempts={attempts}
+            edges={checkSelection.view.version.edges}
+            key={`${checkSelection.view.id}:${selected}`}
+            node={checkSelection.node}
+            selectedEdge={edgeSelection?.edge}
+            canReview={Boolean(
+              data?.canReview &&
+              checkSelection.view.roundIndex != null &&
+              checkSelection.view.roundIndex ===
+                Math.max(...(data?.rounds.map((r) => r.run.roundIndex ?? 0) ?? [0])),
+            )}
+            onClose={() => setSelected(undefined)}
+            onSaved={mutate}
+          />,
+          panelHost,
+        )}
     </Flexbox>
   );
 }

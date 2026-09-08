@@ -18,11 +18,14 @@ table acceptance_flow_edges {
 table acceptance_flow_nodes {
   id uuid [pk, not null, default: `gen_random_uuid()`]
   flow_id uuid [not null]
-  criterion_id uuid [not null]
+  criterion_id uuid
+  sub_flow_id uuid
   is_entry boolean [not null, default: false]
   overrides jsonb
 
   indexes {
+
+    sub_flow_id [name: 'acceptance_flow_nodes_sub_flow_idx']
     (flow_id, id) [name: 'acceptance_flow_nodes_flow_id_unique', unique]
     flow_id [name: 'acceptance_flow_nodes_entry_unique', unique]
     criterion_id [name: 'acceptance_flow_nodes_criterion_idx']

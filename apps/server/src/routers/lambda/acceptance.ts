@@ -53,6 +53,7 @@ const flowDefinitionSchema = z.object({
       z.object({
         id: z.string().uuid(),
         criterionId: z.string().uuid().optional(),
+        subFlowId: z.string().uuid().optional(),
         check: z
           .object({
             id: z.string().uuid(),

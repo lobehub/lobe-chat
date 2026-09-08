@@ -11,9 +11,11 @@ CREATE TABLE IF NOT EXISTS "acceptance_flow_edges" (
 CREATE TABLE IF NOT EXISTS "acceptance_flow_nodes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"flow_id" uuid NOT NULL,
-	"criterion_id" uuid NOT NULL,
+	"criterion_id" uuid,
+	"sub_flow_id" uuid,
 	"is_entry" boolean DEFAULT false NOT NULL,
-	"overrides" jsonb
+	"overrides" jsonb,
+	CONSTRAINT "acceptance_flow_nodes_target_check" CHECK (num_nonnulls("acceptance_flow_nodes"."criterion_id", "acceptance_flow_nodes"."sub_flow_id") = 1)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "acceptance_flows" (
@@ -46,11 +48,15 @@ ALTER TABLE "acceptance_flow_nodes" ADD CONSTRAINT "acceptance_flow_nodes_flow_i
 ALTER TABLE "acceptance_flow_nodes" DROP CONSTRAINT IF EXISTS "acceptance_flow_nodes_criterion_id_verify_criteria_id_fk";
 --> statement-breakpoint
 ALTER TABLE "acceptance_flow_nodes" ADD CONSTRAINT "acceptance_flow_nodes_criterion_id_verify_criteria_id_fk" FOREIGN KEY ("criterion_id") REFERENCES "public"."verify_criteria"("id") ON DELETE no action ON UPDATE no action DEFERRABLE INITIALLY DEFERRED;--> statement-breakpoint
+ALTER TABLE "acceptance_flow_nodes" DROP CONSTRAINT IF EXISTS "acceptance_flow_nodes_sub_flow_id_acceptance_flows_id_fk";
+--> statement-breakpoint
+ALTER TABLE "acceptance_flow_nodes" ADD CONSTRAINT "acceptance_flow_nodes_sub_flow_id_acceptance_flows_id_fk" FOREIGN KEY ("sub_flow_id") REFERENCES "public"."acceptance_flows"("id") ON DELETE no action ON UPDATE no action DEFERRABLE INITIALLY DEFERRED;--> statement-breakpoint
 ALTER TABLE "acceptance_flows" DROP CONSTRAINT IF EXISTS "acceptance_flows_acceptance_id_acceptances_id_fk";
 --> statement-breakpoint
 ALTER TABLE "acceptance_flows" ADD CONSTRAINT "acceptance_flows_acceptance_id_acceptances_id_fk" FOREIGN KEY ("acceptance_id") REFERENCES "public"."acceptances"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "acceptance_flow_edges_source_idx" ON "acceptance_flow_edges" USING btree ("flow_id","source_node_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "acceptance_flow_edges_target_idx" ON "acceptance_flow_edges" USING btree ("flow_id","target_node_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "acceptance_flow_nodes_sub_flow_idx" ON "acceptance_flow_nodes" USING btree ("sub_flow_id");--> statement-breakpoint
 CREATE UNIQUE INDEX IF NOT EXISTS "acceptance_flow_nodes_entry_unique" ON "acceptance_flow_nodes" USING btree ("flow_id") WHERE "acceptance_flow_nodes"."is_entry" = true;--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "acceptance_flow_nodes_criterion_idx" ON "acceptance_flow_nodes" USING btree ("criterion_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "acceptance_flows_acceptance_idx" ON "acceptance_flows" USING btree ("acceptance_id");--> statement-breakpoint

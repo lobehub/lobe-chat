@@ -236,6 +236,78 @@ describe('check assets and round snapshots', () => {
     expect((await roundPlan(run.id)).flowSnapshots).toEqual(round.flowSnapshots);
   });
 
+  it('freezes composed flows and isolates repeated subflow occurrences', async () => {
+    const child = await model.publish(acceptanceId, definition);
+    const a = randomUUID(),
+      b = randomUUID();
+    const parentDefinition: AcceptanceFlowDefinition = {
+      title: 'End to end',
+      entryNodeId: a,
+      nodes: [
+        { id: a, subFlowId: child.flowId },
+        { id: b, subFlowId: child.flowId },
+      ],
+      edges: [
+        { id: randomUUID(), sourceNodeId: a, targetNodeId: b, trigger: 'Continue', required: true },
+      ],
+    };
+    const parent = await model.publish(acceptanceId, parentDefinition);
+    const run = await model.start(acceptanceId, parent.flowId);
+    const initial = await roundPlan(run.id);
+    expect(initial.plan).toHaveLength(6);
+    expect(new Set(initial.plan!.map((item) => item.id)).size).toBe(6);
+    const firstItems = initial.plan!.filter((item) =>
+      item.sourceFlowNode?.nodeId.startsWith(a + '/'),
+    );
+    expect(firstItems).toHaveLength(3);
+    for (const item of firstItems)
+      await model.record(acceptanceId, {
+        verifyRunId: run.id,
+        checkItemId: item.id,
+        verdict: 'passed',
+        observation: 'First occurrence only',
+      });
+    await expect(model.complete(acceptanceId, run.id)).rejects.toThrow('Required flow branches');
+    const version = (await model.list(acceptanceId))
+      .find((flow) => flow.id === parent.flowId)!
+      .versions.find((v) => v.runs[0]?.id === run.id)!;
+    expect(version.runs[0].attempts).toHaveLength(3);
+    expect(version.runs[0].attempts.every((visit) => visit.nodeId.startsWith(a + '/'))).toBe(true);
+    expect(version.nodes.filter((n) => n.subFlowId)).toHaveLength(2);
+    await model.publish(
+      acceptanceId,
+      { ...definition, title: 'Revised child' },
+      child.flowId,
+      child.hash,
+    );
+    const replay = await model.start(acceptanceId, parent.flowId, undefined, run.id);
+    expect((await roundPlan(replay.id)).flowSnapshots).toEqual(initial.flowSnapshots);
+    expect((await roundPlan(replay.id)).plan).toEqual(initial.plan);
+    const fresh = await model.start(acceptanceId, parent.flowId);
+    expect(
+      (await roundPlan(fresh.id)).flowSnapshots?.[0].nodes.find((n) => n.id === a)?.title,
+    ).toBe('Revised child');
+    await expect(
+      model.publish(
+        acceptanceId,
+        {
+          ...definition,
+          nodes: [{ id: definition.entryNodeId, subFlowId: parent.flowId }],
+          edges: [],
+        },
+        child.flowId,
+        (await model.list(acceptanceId)).find((flow) => flow.id === child.flowId)!.hash,
+      ),
+    ).rejects.toThrow('Recursive subflow');
+    const [otherAcceptance] = await db
+      .insert(acceptances)
+      .values({ userId: owner, subjectType: 'standalone', subjectId: randomUUID() })
+      .returning();
+    await expect(model.publish(otherAcceptance.id, parentDefinition)).rejects.toThrow(
+      'same acceptance',
+    );
+  });
+
   it('rejects unreachable nodes and missing entry points', () => {
     expect(() => validateFlow({ ...definition, entryNodeId: randomUUID() })).toThrow('Entry node');
     expect(() => validateFlow({ ...definition, edges: [] })).toThrow('Unreachable');
