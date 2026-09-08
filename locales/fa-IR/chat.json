@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "در حال تعمیر",
   "taskDetail.acceptanceState.verifying": "در حال بررسی",
   "taskDetail.activities": "فعالیت‌ها",
-  "taskDetail.activities.agentTag": "عامل",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> عامل را به <target/> تنظیم کرد",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> عامل را حذف کرد",
   "taskDetail.activities.assignment.deletedAgent": "یک عامل حذف‌شده",

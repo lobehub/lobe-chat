@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "Herstellen",
   "taskDetail.acceptanceState.verifying": "Verifiëren",
   "taskDetail.activities": "Activiteiten",
-  "taskDetail.activities.agentTag": "Agent",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> heeft de agent ingesteld op <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> heeft de agent verwijderd",
   "taskDetail.activities.assignment.deletedAgent": "een verwijderde agent",

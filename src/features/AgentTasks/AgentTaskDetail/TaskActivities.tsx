@@ -5,7 +5,7 @@ import type {
   TaskDetailActivityAuthor,
 } from '@lobechat/types';
 import { Accordion, AccordionItem, Empty, Flexbox, Icon } from '@lobehub/ui';
-import { Avatar, Tag, Text } from '@lobehub/ui/base-ui';
+import { Avatar, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import type { TFunction } from 'i18next';
 import type { LucideIcon } from 'lucide-react';
@@ -27,7 +27,6 @@ import { useActivityTime } from '@/hooks/useActivityTime';
 import { useTaskStore } from '@/store/task';
 import { taskActivitySelectors, taskDetailSelectors } from '@/store/task/selectors';
 
-import TaskPriorityTag from '../features/TaskPriorityTag';
 import { styles } from '../shared/style';
 import { resolveAssignmentActivityCopy } from './assignmentActivityCopy';
 import CommentCard from './CommentCard';
@@ -102,9 +101,14 @@ const ActivityAuthor = memo<{
   fallbackIcon: LucideIcon;
   /** Shown when there is no author at all — an assignment nobody requested. */
   fallbackName?: string;
+  /**
+   * Name only, no mark — for a participant mentioned inside the sentence
+   * ("assigned to Bob"); the mark belongs to the line's actor alone.
+   */
+  plain?: boolean;
   /** Shown when the id is recorded but no live row backs it. */
   unresolvedName?: string;
-}>(({ author, fallbackIcon: FallbackIcon, fallbackName, unresolvedName }) => {
+}>(({ author, fallbackIcon: FallbackIcon, fallbackName, plain, unresolvedName }) => {
   const { t } = useTranslation('chat');
   const isAgent = author?.type === 'agent';
   // Three states, deliberately not collapsed: no author is the system; a
@@ -127,25 +131,21 @@ const ActivityAuthor = memo<{
       // line — the assignment row renders participants through <Trans>.
       style={{ display: 'inline-flex', flexShrink: 0, verticalAlign: 'middle' }}
     >
-      {author?.avatar ? (
-        <Avatar avatar={author.avatar} size={24} />
-      ) : (
-        <div className={styles.activityAvatar}>
-          <FallbackIcon size={12} />
-        </div>
-      )}
+      {!plain &&
+        (author?.avatar ? (
+          <Avatar avatar={author.avatar} size={16} />
+        ) : (
+          <div className={styles.activityAuthorAvatar}>
+            <FallbackIcon size={10} />
+          </div>
+        ))}
       {name && (
         <Text
           className={isAgent ? styles.agentAuthorName : undefined}
-          style={isAgent ? undefined : { color: cssVar.colorTextSecondary, fontWeight: 500 }}
+          style={isAgent ? undefined : { color: cssVar.colorText }}
         >
           {name}
         </Text>
-      )}
-      {isAgent && (
-        <Tag size={'small'} style={{ flexShrink: 0 }}>
-          {t('taskDetail.activities.agentTag')}
-        </Tag>
       )}
     </Flexbox>
   );
@@ -228,6 +228,7 @@ const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
             ),
             target: (
               <ActivityAuthor
+                plain
                 author={target}
                 fallbackIcon={isAgentSlot ? BotMessageSquare : UserRoundCog}
                 unresolvedName={t(deletedTargetKey)}
@@ -270,11 +271,9 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
       )}
     />
   );
-  const tag = (label: ReactNode) => (
-    <Tag size={'small'} style={{ flexShrink: 0 }}>
-      {label}
-    </Tag>
-  );
+  // Values are plain words in the sentence, not chips: the feed is a quiet
+  // record under the task, and "moved from A to B" reads best as prose.
+  const tag = (label: ReactNode) => <span style={{ color: cssVar.colorText }}>{label}</span>;
   const automationLabel = (snapshot: TaskAutomationSnapshot) =>
     snapshot.mode === 'schedule'
       ? t('taskDetail.activities.automation.mode.schedule', {
@@ -301,14 +300,8 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
       break;
     }
     case 'priority': {
-      // The tag alone is an icon; in a sentence "from ··· to !" reads as
-      // noise, so the level's name rides along.
-      const priorityTag = (level: number | null) => (
-        <Tag size={'small'} style={{ flexShrink: 0 }}>
-          <TaskPriorityTag disableDropdown priority={level ?? 0} size={12} />
-          {t(`taskDetail.priority.${PRIORITY_NAME[level ?? 0] ?? 'none'}`)}
-        </Tag>
-      );
+      const priorityTag = (level: number | null) =>
+        tag(t(`taskDetail.priority.${PRIORITY_NAME[level ?? 0] ?? 'none'}`));
       sentence = (
         <Trans
           components={{ actor, from: priorityTag(change.from), to: priorityTag(change.to) }}

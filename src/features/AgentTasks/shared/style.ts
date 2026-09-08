@@ -83,6 +83,22 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     }
   `,
 
+  /** The 16px mark that leads a feed line — an issue tracker's, not a chat's. */
+  activityAuthorAvatar: css`
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+
+    color: ${cssVar.colorTextQuaternary};
+
+    background: ${cssVar.colorFillTertiary};
+  `,
+
   activityAvatar: css`
     display: flex;
     flex-shrink: 0;
@@ -120,8 +136,7 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
 
   agentAuthorName: css`
     cursor: pointer;
-    font-weight: 500;
-    color: ${cssVar.colorTextSecondary};
+    color: ${cssVar.colorText};
     transition: color 0.15s ease;
 
     &:hover {

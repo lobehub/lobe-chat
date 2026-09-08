@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "قيد الإصلاح",
   "taskDetail.acceptanceState.verifying": "قيد التحقق",
   "taskDetail.activities": "الأنشطة",
-  "taskDetail.activities.agentTag": "وكيل",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> قام بتعيين الوكيل إلى <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> قام بإزالة الوكيل",
   "taskDetail.activities.assignment.deletedAgent": "وكيل محذوف",

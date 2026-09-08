@@ -1802,7 +1802,10 @@ export const taskRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-        const result = await ctx.taskService.updateStatusCascade(input);
+        const result = await ctx.taskService.updateStatusCascade(
+          input,
+          await resolveActivityActor(ctx),
+        );
         return { data: result, message: `Task family ${input.status}`, success: true };
       } catch (error) {
         if (error instanceof TRPCError) throw error;

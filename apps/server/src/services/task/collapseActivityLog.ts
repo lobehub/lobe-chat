@@ -52,9 +52,9 @@ const isNetNoop = (payload: TaskActivityLogPayload | null): boolean =>
  * The merged entry keeps the LAST row's id and time (the feed sorts by it and
  * a reader wants "when did it settle"), the FIRST row's starting value, and the
  * last row's ending value. Different actors never merge: A moving it and B
- * moving it back are two decisions, not a cancelled one — and a run only
- * extends while each hop starts where the previous one ended, so another
- * person's edit in between splits it.
+ * moving it back are two decisions, not a cancelled one — a run only extends
+ * while each hop starts where the previous one ended, and any edit by someone
+ * else ends every other open run on that property.
  */
 export const collapseActivityLog = <T extends CollapsibleRow>(
   rows: T[],
@@ -83,6 +83,13 @@ export const collapseActivityLog = <T extends CollapsibleRow>(
     }
 
     out.push(row);
+    // Anyone touching the property closes everyone else's open run on it:
+    // once B has moved it, A's later edit is a reaction to B, not the tail
+    // of A's own fiddling — otherwise A 2→4, B 4→3→4, A 4→2 would fold both
+    // people's runs into no-ops and show nothing at all.
+    for (const otherKey of open.keys()) {
+      if (otherKey !== key && otherKey.startsWith(`${row.type}|`)) open.delete(otherKey);
+    }
     open.set(key, { first: row, index: out.length - 1, last: row });
   }
 

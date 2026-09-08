@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "修复中",
   "taskDetail.acceptanceState.verifying": "验证中",
   "taskDetail.activities": "活动",
-  "taskDetail.activities.agentTag": "智能体",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> 将 Agent 设为 <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> 取消了 Agent 指派",
   "taskDetail.activities.assignment.deletedAgent": "已删除的 Agent",

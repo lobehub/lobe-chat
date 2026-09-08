@@ -85,6 +85,21 @@ describe('collapseActivityLog', () => {
     ]);
   });
 
+  it('ends a run when someone else moves the property, even if they move it back', () => {
+    // A 2→4, B 4→3→4, A 4→2: continuity alone would let A's run survive B's
+    // round trip and fold everything into nothing.
+    const out = collapseActivityLog([
+      row('a', 0, { from: 2, to: 4 }),
+      row('b', 1, { from: 4, to: 3 }, 'user_b'),
+      row('c', 2, { from: 3, to: 4 }, 'user_b'),
+      row('d', 3, { from: 4, to: 2 }),
+    ]);
+    expect(out.map((r) => [r.id, r.payload.from, r.payload.to])).toEqual([
+      ['a', 2, 4],
+      ['d', 4, 2],
+    ]);
+  });
+
   it('applies the continuity rule to assignee ids too', () => {
     const out = collapseActivityLog([
       row('a', 0, { fromId: 'x', toId: 'y' }, 'user_a', 'assignee_agent'),

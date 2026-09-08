@@ -22,7 +22,11 @@ import { TRPCError } from '@trpc/server';
 import { AgentModel } from '@/database/models/agent';
 import { ProjectModel } from '@/database/models/project';
 import { RbacModel } from '@/database/models/rbac';
-import { isTaskIdentifierUniqueViolation, TaskModel } from '@/database/models/task';
+import {
+  isTaskIdentifierUniqueViolation,
+  taskActivityActor,
+  TaskModel,
+} from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { TopicModel } from '@/database/models/topic';
 import { UserModel } from '@/database/models/user';
@@ -518,7 +522,11 @@ export class TaskService {
         // persistence was the failing step.
         if (tickMessageId) await scheduler.cancelScheduled(tickMessageId).catch(() => undefined);
         await this.taskModel.update(task.id, { context: resolved.context });
-        await this.taskModel.updateStatus(task.id, resolved.status);
+        // The logged transition really happened and is now being undone, so
+        // the undo is logged too (same actor, back to the same value): the
+        // audit trail stays truthful and the feed folds the pair away.
+        if (actor) await this.taskModel.updateWithLog(task.id, { status: resolved.status }, actor);
+        else await this.taskModel.updateStatus(task.id, resolved.status);
         throw error;
       }
 
@@ -564,10 +572,14 @@ export class TaskService {
    * family has reached the target status, so dependency edges cannot start a
    * sibling in the middle of the cascade.
    */
-  async updateStatusCascade(input: {
-    id: string;
-    status: 'canceled' | 'completed';
-  }): Promise<UpdateStatusCascadeResult> {
+  async updateStatusCascade(
+    input: {
+      id: string;
+      status: 'canceled' | 'completed';
+    },
+    /** The person confirming "include subtasks"; absent for system callers. */
+    actor?: { agentId?: string | null; userId?: string | null },
+  ): Promise<UpdateStatusCascadeResult> {
     const resolved = await this.resolveOrThrow(input.id);
     const subtasks = await this.taskModel.findSubtasks(resolved.id);
     const unfinishedStatuses = new Set<string>(UNFINISHED_TASK_STATUSES);
@@ -617,6 +629,22 @@ export class TaskService {
       // closed together with the status update.
       canceledTopics = await taskTopicModel.cancelRunningByTaskIds(targetIds);
       updatedTasks = await taskModel.updateStatusForIds(targetIds, input.status, { completedAt });
+
+      // A person confirmed this for the whole family, so every member gets
+      // its own row — the snapshot above holds each one's previous status.
+      if (actor) {
+        const { actorKind, ...actorColumns } = taskActivityActor(actor);
+        for (const before of targetTasks) {
+          if (before.status === input.status) continue;
+          if (!updatedTasks.some((updated) => updated.id === before.id)) continue;
+          await taskModel.addActivity({
+            ...actorColumns,
+            payload: { actorKind, from: before.status, to: input.status },
+            taskId: before.id,
+            type: 'status',
+          });
+        }
+      }
     });
 
     // Best-effort: stop any operation discovered only inside the transaction.

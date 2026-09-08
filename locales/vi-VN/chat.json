@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "Đang sửa chữa",
   "taskDetail.acceptanceState.verifying": "Đang xác minh",
   "taskDetail.activities": "Hoạt động",
-  "taskDetail.activities.agentTag": "Tác tử",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> đã đặt tác nhân thành <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> đã xóa tác nhân",
   "taskDetail.activities.assignment.deletedAgent": "một ajan đã bị xóa",

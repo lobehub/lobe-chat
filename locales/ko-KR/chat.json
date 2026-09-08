@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "수리 중",
   "taskDetail.acceptanceState.verifying": "검증 중",
   "taskDetail.activities": "활동",
-  "taskDetail.activities.agentTag": "에이전트",
   "taskDetail.activities.assignment.agentAssigned": "<actor/>이(가) 에이전트를 <target/>으로 설정했습니다",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/>이(가) 에이전트를 제거했습니다",
   "taskDetail.activities.assignment.deletedAgent": "삭제된 에이전트",

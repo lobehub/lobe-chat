@@ -67,6 +67,27 @@ const TRACKED_TASK_COLUMNS = [
 ] as const;
 
 /** The automation columns folded into one value — see `TaskAutomationSnapshot`. */
+/**
+ * The actor columns plus the payload tombstone for one activity row. An
+ * agent-driven edit is attributed to the agent, not to the session owner
+ * whose credentials it borrowed. Both ids null means the system did it on
+ * nobody's behalf (the runner's inbox fallback). `actorKind` repeats that in
+ * the payload because the id columns are cleared when the actor is deleted,
+ * and "someone who is gone" must not read as "the system".
+ */
+export const taskActivityActor = (actor: {
+  agentId?: string | null;
+  userId?: string | null;
+}): {
+  actorAgentId: string | null;
+  actorKind: 'agent' | 'system' | 'user';
+  actorUserId: string | null;
+} => ({
+  actorAgentId: actor.agentId ?? null,
+  actorKind: actor.agentId ? 'agent' : actor.userId ? 'user' : 'system',
+  actorUserId: actor.agentId ? null : (actor.userId ?? null),
+});
+
 const snapshotAutomation = (row: {
   automationMode: TaskAutomationMode | null;
   heartbeatInterval: number | null;
@@ -1994,16 +2015,10 @@ export class TaskModel {
         });
       }
 
-      // An agent-driven edit is attributed to the agent, not to the session
-      // owner whose credentials it borrowed. Both null means the system did it
-      // on nobody's behalf (the runner's inbox fallback). `actorKind` repeats
-      // that in the payload because the id columns are cleared when the actor
-      // is deleted, and "someone who is gone" must not read as "the system".
-      const actorKind = actor.agentId ? 'agent' : actor.userId ? 'user' : 'system';
+      const { actorKind, ...actorColumns } = taskActivityActor(actor);
       for (const event of events) {
         await scoped.addActivity({
-          actorAgentId: actor.agentId ?? null,
-          actorUserId: actor.agentId ? null : (actor.userId ?? null),
+          ...actorColumns,
           payload: { ...event.payload, actorKind },
           taskId: id,
           type: event.type,

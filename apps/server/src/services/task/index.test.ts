@@ -23,6 +23,11 @@ vi.mock('@/database/models/agent', () => ({
 
 vi.mock('@/database/models/task', () => ({
   TaskModel: vi.fn(),
+  taskActivityActor: (actor: { agentId?: string | null; userId?: string | null }) => ({
+    actorAgentId: actor.agentId ?? null,
+    actorKind: actor.agentId ? 'agent' : actor.userId ? 'user' : 'system',
+    actorUserId: actor.agentId ? null : (actor.userId ?? null),
+  }),
 }));
 
 vi.mock('@/database/models/taskTopic', () => ({
@@ -85,6 +90,8 @@ describe('TaskService', () => {
 
   const mockTaskModel = {
     addActivity: vi.fn(),
+    findSubtasks: vi.fn(),
+    updateStatusForIds: vi.fn(),
     updateWithLog: vi.fn(),
     create: vi.fn(),
     delete: vi.fn(),
@@ -110,6 +117,7 @@ describe('TaskService', () => {
 
   const mockTaskTopicModel = {
     cancelIfRunning: vi.fn(),
+    cancelRunningByTaskIds: vi.fn(),
     findByTaskId: vi.fn(),
     findRunningByTaskIds: vi.fn().mockResolvedValue([]),
     findWithHandoff: vi.fn(),
@@ -1576,6 +1584,40 @@ describe('TaskService', () => {
       expect(mockTaskModel.update).toHaveBeenCalledWith('task-1', { context: {} });
     });
 
+    it('logs the undo when a person-made start is rolled back after the tick fails', async () => {
+      const prev = baseTask({
+        automationMode: 'heartbeat',
+        context: {},
+        heartbeatInterval: 3600,
+        status: 'paused',
+      });
+      const next = baseTask({
+        automationMode: 'heartbeat',
+        heartbeatInterval: 3600,
+        status: 'scheduled',
+      });
+      mockTaskModel.resolve.mockResolvedValue(prev);
+      mockTaskModel.updateWithLog.mockResolvedValue(next);
+      scheduleNextTopic.mockRejectedValueOnce(new Error('qstash unavailable'));
+
+      const service = new TaskService(db, userId);
+      const actor = { userId };
+
+      await expect(
+        service.updateStatus({ id: 'T-1', status: 'scheduled' as any }, actor),
+      ).rejects.toThrow('qstash unavailable');
+
+      // The paused→scheduled row is already committed; restoring through the
+      // plain writer would leave it orphaned, so the restore is logged too.
+      expect(mockTaskModel.updateWithLog).toHaveBeenNthCalledWith(
+        2,
+        'task-1',
+        { status: 'paused' },
+        actor,
+      );
+      expect(mockTaskModel.updateStatus).not.toHaveBeenCalled();
+    });
+
     it('does NOT stamp when the new status is not scheduled', async () => {
       const prev = baseTask({ status: 'backlog' });
       const next = baseTask({ status: 'paused' });
@@ -1729,6 +1771,59 @@ describe('TaskService', () => {
     it('assertParentVisibilityCompat allows public child under public parent', () => {
       const service = new TaskService(db, userId, 'ws-1');
       expect(() => service.assertParentVisibilityCompat('public', 'public')).not.toThrow();
+    });
+  });
+
+  describe('updateStatusCascade activity log', () => {
+    const baseTask = (overrides: Record<string, unknown>) => ({
+      context: {},
+      parentTaskId: null,
+      ...overrides,
+    });
+    it('writes one status row per family member a person cascaded', async () => {
+      const parent = baseTask({ id: 'task-p', identifier: 'P-1', status: 'running' });
+      const openChild = baseTask({ id: 'task-c1', identifier: 'C-1', status: 'backlog' });
+      // Already finished: not part of the cascade, so no row.
+      const doneChild = baseTask({ id: 'task-c2', identifier: 'C-2', status: 'completed' });
+      mockTaskModel.resolve.mockResolvedValue(parent);
+      mockTaskModel.findSubtasks.mockResolvedValue([openChild, doneChild]);
+      mockTaskModel.updateStatusForIds.mockResolvedValue([
+        { ...parent, status: 'canceled' },
+        { ...openChild, status: 'canceled' },
+      ]);
+      mockTaskTopicModel.cancelRunningByTaskIds.mockResolvedValue([]);
+      (db as any).transaction = async (fn: (tx: unknown) => Promise<void>) => fn(db);
+
+      const service = new TaskService(db, userId);
+      await service.updateStatusCascade({ id: 'P-1', status: 'canceled' }, { userId });
+
+      expect(mockTaskModel.addActivity).toHaveBeenCalledTimes(2);
+      expect(mockTaskModel.addActivity).toHaveBeenCalledWith({
+        actorAgentId: null,
+        actorUserId: userId,
+        payload: { actorKind: 'user', from: 'running', to: 'canceled' },
+        taskId: 'task-p',
+        type: 'status',
+      });
+      expect(mockTaskModel.addActivity).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: { actorKind: 'user', from: 'backlog', to: 'canceled' },
+          taskId: 'task-c1',
+        }),
+      );
+    });
+
+    it('stays silent for a system cascade', async () => {
+      const parent = baseTask({ id: 'task-p', identifier: 'P-1', status: 'running' });
+      mockTaskModel.resolve.mockResolvedValue(parent);
+      mockTaskModel.findSubtasks.mockResolvedValue([]);
+      mockTaskModel.updateStatusForIds.mockResolvedValue([{ ...parent, status: 'canceled' }]);
+      mockTaskTopicModel.cancelRunningByTaskIds.mockResolvedValue([]);
+      (db as any).transaction = async (fn: (tx: unknown) => Promise<void>) => fn(db);
+
+      await new TaskService(db, userId).updateStatusCascade({ id: 'P-1', status: 'canceled' });
+
+      expect(mockTaskModel.addActivity).not.toHaveBeenCalled();
     });
   });
 

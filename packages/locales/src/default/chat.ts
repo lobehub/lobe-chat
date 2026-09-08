@@ -1536,7 +1536,6 @@ export default {
   'taskDetail.artifactMenu.deleteConfirm.title': 'Remove this artifact?',
   'taskDetail.artifactInaccessible': 'Unavailable document — no access',
   'taskDetail.artifactSize': '{{value}} chars',
-  'taskDetail.activities.agentTag': 'Agent',
   'taskDetail.activities.assignment.agentAssigned': '<actor/> set the agent to <target/>',
   'taskDetail.activities.assignment.agentUnassigned': '<actor/> removed the agent',
   'taskDetail.activities.assignment.deletedAgent': 'a deleted agent',

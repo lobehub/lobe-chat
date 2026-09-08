@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "修正中",
   "taskDetail.acceptanceState.verifying": "検証中",
   "taskDetail.activities": "アクティビティ",
-  "taskDetail.activities.agentTag": "エージェント",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> がエージェントを <target/> に設定しました",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> がエージェントを削除しました",
   "taskDetail.activities.assignment.deletedAgent": "削除されたエージェント",

@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "Поправка",
   "taskDetail.acceptanceState.verifying": "Проверка",
   "taskDetail.activities": "Дейности",
-  "taskDetail.activities.agentTag": "Агент",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> зададе агента на <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> премахна агента",
   "taskDetail.activities.assignment.deletedAgent": "изтрит агент",

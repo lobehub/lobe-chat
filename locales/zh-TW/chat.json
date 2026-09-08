@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "修復中",
   "taskDetail.acceptanceState.verifying": "驗證中",
   "taskDetail.activities": "活動",
-  "taskDetail.activities.agentTag": "代理",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> 將代理人設為 <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> 移除了代理人",
   "taskDetail.activities.assignment.deletedAgent": "已刪除的代理人",

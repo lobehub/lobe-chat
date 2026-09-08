@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "Onarılıyor",
   "taskDetail.acceptanceState.verifying": "Doğrulanıyor",
   "taskDetail.activities": "Aktiviteler",
-  "taskDetail.activities.agentTag": "Ajan",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> ajanı <target/> olarak ayarladı",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> ajanı kaldırdı",
   "taskDetail.activities.assignment.deletedAgent": "silinmiş bir ajan",

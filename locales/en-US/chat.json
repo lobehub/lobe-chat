@@ -1594,7 +1594,6 @@
   "taskDetail.acceptanceState.repairing": "Repairing",
   "taskDetail.acceptanceState.verifying": "Verifying",
   "taskDetail.activities": "Activities",
-  "taskDetail.activities.agentTag": "Agent",
   "taskDetail.activities.assignment.agentAssigned": "<actor/> set the agent to <target/>",
   "taskDetail.activities.assignment.agentUnassigned": "<actor/> removed the agent",
   "taskDetail.activities.assignment.deletedAgent": "a deleted agent",
