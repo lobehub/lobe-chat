@@ -83,6 +83,29 @@ async function roundPlan(id: string) {
 }
 
 describe('check assets and round snapshots', () => {
+  it.each(['accepted', 'closed'] as const)(
+    'requires reopening a %s acceptance before starting or replaying',
+    async (status) => {
+      const published = await model.publish(acceptanceId, definition);
+      const original = await model.start(acceptanceId, published.flowId);
+      await db.update(acceptances).set({ status }).where(eq(acceptances.id, acceptanceId));
+      await expect(model.start(acceptanceId, published.flowId)).rejects.toThrow(
+        'Acceptance is closed',
+      );
+      await expect(
+        model.start(acceptanceId, published.flowId, undefined, original.id),
+      ).rejects.toThrow('Acceptance is closed');
+      await expect(model.start(acceptanceId, published.flowId, original.id)).rejects.toThrow(
+        'Acceptance is closed',
+      );
+      expect(
+        await db.select().from(verifyRuns).where(eq(verifyRuns.acceptanceId, acceptanceId)),
+      ).toHaveLength(1);
+      const [current] = await db.select().from(acceptances).where(eq(acceptances.id, acceptanceId));
+      expect(current.status).toBe(status);
+    },
+  );
+
   it('creates assets before execution and instantiates each incoming branch in the canonical plan', async () => {
     const published = await model.publish(acceptanceId, definition);
     expect(

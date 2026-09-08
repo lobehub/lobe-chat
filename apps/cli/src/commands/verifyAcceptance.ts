@@ -241,9 +241,8 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
           ),
         );
         for (const check of bundle.checks) {
-          if (check.result && flowResultIds.has(check.result.id)) continue;
           for (const review of check.reviews) {
-            if (review.action !== 'reject') continue;
+            if (review.action !== 'reject' || flowResultIds.has(review.id)) continue;
             // Standing = this reject is the check's latest verdict and no newer
             // round has consumed it yet.
             const standing = Boolean(
@@ -273,7 +272,7 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
           for (const version of flow.versions) {
             for (const run of version.runs) {
               const latest = new Map(
-                run.attempts.map((attempt) => [attempt.incomingEdgeId ?? 'entry', attempt.id]),
+                run.attempts.map((attempt) => [attempt.checkItemId, attempt.id]),
               );
               for (const attempt of run.attempts) {
                 if (attempt.review !== 'rejected') continue;
@@ -284,7 +283,7 @@ export function registerAcceptanceCommands(parent: Command, options?: { deprecat
                   actionable:
                     version.id === flow.versions[0]?.id &&
                     run.id === version.runs[0]?.id &&
-                    latest.get(attempt.incomingEdgeId ?? 'entry') === attempt.id,
+                    latest.get(attempt.checkItemId) === attempt.id,
                   annotations: attempt.reviewDetail?.annotations?.map((a) => ({
                     ...a,
                     region: formatAnnotationRegion(a, evidenceLabels),

@@ -369,8 +369,7 @@ export class AcceptanceFlowModel {
         .from(acceptances)
         .where(eq(acceptances.id, acceptanceId))
         .for('update');
-      if (locked.status === 'closed' || (verifyRunId && locked.status === 'accepted'))
-        throw new Error('Acceptance is closed');
+      if (['accepted', 'closed'].includes(locked.status)) throw new Error('Acceptance is closed');
       const [flow] = await tx
         .select()
         .from(flows)

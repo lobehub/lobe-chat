@@ -1,5 +1,6 @@
-import type { VerifyOnFailStrategy } from '@lobechat/const/verify';
 import { z } from 'zod';
+
+import type { VerifyOnFailStrategy } from './verify';
 
 export interface VerifyCheckDefinition {
   expected?: string;

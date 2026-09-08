@@ -19,18 +19,11 @@ export const useAcceptanceBundle = (acceptanceId: string | null) => {
   );
 
   const status = swr.data?.acceptance.status;
-  const hasActiveFlow = swr.data?.flows?.some(
-    (flow) =>
-      flow.versions[0]?.runs.length === 0 ||
-      flow.versions.some((version) =>
-        version.runs.some((run) => run.status === 'collecting_evidence'),
-      ),
-  );
   useEffect(() => {
-    if (!hasActiveFlow && (!status || !LIVE_ACCEPTANCE_STATUSES.has(status))) return;
+    if (!status || !LIVE_ACCEPTANCE_STATUSES.has(status)) return;
     const timer = setInterval(() => void swr.mutate(), 5000);
     return () => clearInterval(timer);
-  }, [status, hasActiveFlow, swr.mutate]);
+  }, [status, swr.mutate]);
 
   return swr;
 };

@@ -23,10 +23,10 @@ import AcceptanceSharedNotice from './AcceptanceSharedNotice';
 import AcceptanceStatusControl from './AcceptanceStatusControl';
 import type { AcceptanceTabKey } from './AcceptanceTabs';
 import AcceptanceTabs from './AcceptanceTabs';
-import { checksForTurn } from './turnChecks';
 import { getFlowNodeCount, resolveAcceptanceTab } from './flowNavigation';
 import { FlowPanelHostContext } from './FlowResults';
 import { acceptanceContentLayout, acceptanceScrollLayout } from './layout';
+import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
 import { useAcceptanceTurn } from './useAcceptanceTurn';
 
@@ -60,6 +60,12 @@ const styles = createStaticStyles(({ css }) => ({
     &:empty {
       display: none;
     }
+
+    @media (width <= 767px) {
+      width: 100%;
+      height: 50%;
+      border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+    }
   `,
   page: css`
     position: relative;
@@ -70,6 +76,10 @@ const styles = createStaticStyles(({ css }) => ({
     height: 100%;
 
     background: ${cssVar.colorBgContainer};
+
+    @media (width <= 767px) {
+      flex-direction: column;
+    }
   `,
 }));
 
@@ -165,7 +175,11 @@ const AcceptancePage = ({
       <AcceptanceBundleGate>
         <FlowPanelHostContext value={flowPanelHost}>
           <Flexbox horizontal className={styles.page}>
-            <Flexbox horizontal flex={1} style={{ minWidth: 0, position: 'relative' }}>
+            <Flexbox
+              horizontal
+              flex={1}
+              style={{ minHeight: 0, minWidth: 0, position: 'relative' }}
+            >
               <Flexbox className={styles.contentFrame} flex={1} style={{ minWidth: 0 }}>
                 <Flexbox
                   flex={focused ? 1 : undefined}
