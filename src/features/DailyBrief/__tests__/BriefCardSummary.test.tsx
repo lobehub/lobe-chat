@@ -29,6 +29,14 @@ describe('BriefCardSummary', () => {
     ).toBeInTheDocument();
   });
 
+  it('measures an eagerly mounted wrapper so the lazy markdown is observed', () => {
+    vi.mocked(useSize).mockReturnValue(undefined);
+    render(<BriefCardSummary summary="Test summary content" />);
+
+    const ref = vi.mocked(useSize).mock.calls.at(-1)![0] as { current: HTMLElement | null };
+    expect(ref.current).toBeInstanceOf(HTMLElement);
+  });
+
   it('should not show expand link when content does not overflow', () => {
     vi.mocked(useSize).mockReturnValue({ height: COLLAPSED_MAX_HEIGHT - 10, width: 100 });
     render(<BriefCardSummary summary="Short" />);

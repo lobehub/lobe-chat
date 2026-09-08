@@ -27,12 +27,16 @@ const BriefCardSummary = memo<BriefCardSummaryProps>(({ summary }) => {
     setIsOverflow(size.height > COLLAPSED_MAX_HEIGHT);
   }, [size]);
 
+  // The ref must land on an eagerly mounted element: while Markdown suspends,
+  // the boundary renders its fallback and useSize would never observe it.
   const content = (
-    <Suspense fallback={null}>
-      <Markdown ref={ref} style={{ overflow: 'unset' }} variant={'chat'}>
-        {summary}
-      </Markdown>
-    </Suspense>
+    <div ref={ref}>
+      <Suspense fallback={null}>
+        <Markdown style={{ overflow: 'unset' }} variant={'chat'}>
+          {summary}
+        </Markdown>
+      </Suspense>
+    </div>
   );
 
   return (
