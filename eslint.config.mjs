@@ -236,6 +236,18 @@ export default eslint(
               'Boot-path modules must load EmojiPicker with lazy(); it carries the emoji-mart dataset.',
             name: '@/components/EmojiPicker',
           },
+          {
+            allowTypeImports: true,
+            message:
+              'Boot-path modules must not import @lobehub/analytics; it bundles posthog-js. Use "@/libs/analytics/client", which loads it after first paint and queues events.',
+            name: '@lobehub/analytics',
+          },
+          {
+            allowTypeImports: true,
+            message:
+              'Boot-path modules must not import @lobehub/analytics/react; use useAnalytics from "@/libs/analytics/client".',
+            name: '@lobehub/analytics/react',
+          },
         ],
         patterns: [
           {
