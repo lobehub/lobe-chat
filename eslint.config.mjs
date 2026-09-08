@@ -8,7 +8,30 @@ const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
 
 const baseRestrictedImportOptions = restrictedImports.rules['no-restricted-imports'][1];
 
+// Shared by every src/** no-restricted-imports block: flat config replaces a
+// rule per file instead of merging it, so a scoped override would otherwise
+// drop these.
 const performanceRestrictedImportPaths = [
+  {
+    allowTypeImports: true,
+    importNames: ['ModelIcon', 'ModelTag', 'ProviderCombine', 'ProviderIcon'],
+    message:
+      'These features statically import every brand icon (~3 MB). Import them from "@/components/LobeIcons", which mounts them through lazy().',
+    name: '@lobehub/icons',
+  },
+  {
+    allowTypeImports: true,
+    message:
+      'Import ProviderIcon / ProviderCombine from "@/components/LobeIcons", which mounts them through lazy().',
+    name: '@/libs/providerIcon',
+  },
+  {
+    allowTypeImports: true,
+    importNames: ['EmojiPicker'],
+    message:
+      'EmojiPicker carries the emoji-mart dataset. Use "@/components/EmojiPicker", which mounts it through lazy().',
+    name: '@lobehub/ui',
+  },
   {
     message:
       'Import the imperative facade from "@/features/ShareModal" so the modal implementation stays outside initial chunks.',
@@ -156,6 +179,13 @@ export default eslint(
     },
   },
   {
+    // Bundle-size restrictions target shipped code; tests may reach the barrels.
+    files: ['src/**/*.test.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', baseRestrictedImportOptions],
+    },
+  },
+  {
     // Boot-path trees are statically reachable from the SPA entry. A heavy
     // @lobehub/ui member imported here lands in the first-screen chunk together
     // with shiki / katex / elkjs / emoji data; the CI entry-graph gate catches
@@ -200,41 +230,6 @@ export default eslint(
             message:
               'The builtin tool client barrel exports the whole render registry. Import the dedicated subpath (e.g. "/client/displayControls") or resolve renders lazily.',
             regex: '^@lobechat/builtin-tool-[^/]+/client(?:$|/index$)',
-          },
-        ],
-      }),
-    },
-  },
-  {
-    // Catalog-backed icon features and the emoji picker statically import the
-    // whole brand-icon set / emoji-mart dataset into the importing route's
-    // closure; the wrappers mount them through lazy().
-    files: ['src/**/*.{ts,tsx}'],
-    ignores: [
-      'src/**/*.test.{ts,tsx}',
-      'src/components/EmojiPicker/index.tsx',
-      'src/components/LobeIcons/index.tsx',
-      'src/libs/providerIcon.ts',
-    ],
-    rules: {
-      'no-restricted-imports': createRestrictedImportRule({
-        paths: [
-          {
-            importNames: ['ModelIcon', 'ModelTag', 'ProviderCombine', 'ProviderIcon'],
-            message:
-              'These features statically import every brand icon. Import them from "@/components/LobeIcons", which mounts them through lazy().',
-            name: '@lobehub/icons',
-          },
-          {
-            message:
-              'Import ProviderIcon / ProviderCombine from "@/components/LobeIcons", which mounts them through lazy().',
-            name: '@/libs/providerIcon',
-          },
-          {
-            importNames: ['EmojiPicker'],
-            message:
-              'EmojiPicker carries the emoji-mart dataset. Use "@/components/EmojiPicker", which mounts it through lazy().',
-            name: '@lobehub/ui',
           },
         ],
       }),
