@@ -24,24 +24,26 @@ const seedAgentMap = (agentId: string, agentMeta: SharedAgentIdentity['agentMeta
 
 /**
  * Seeds the agent/chat stores for the visitor-facing share surface and reports
- * whether the one-time destructive init has landed yet.
+ * whether the URL selection has landed before mounting the conversation.
  *
  * Split into two effects with different dependencies on purpose:
- * - **identity effect** (`agentId`/`shareId`): the one destructive init —
- *   resets chat-store selection state (`activeTopicId` and friends). Must
- *   only fire when the agent/share identity actually changes.
+ * - **selection effect** (`agentId`/`shareId`/`topicId`): initializes the
+ *   chat-store selection from the URL, including browser history navigation.
  * - **metadata effect** (`agentMeta`): non-destructive agentMap re-seed so
  *   the header avatar/name/title stay fresh. An SWR revalidation hands back a
  *   brand-new `agentMeta` object even when the identity hasn't changed;
  *   folding this into the identity effect would wipe `activeTopicId` on every
  *   metadata refresh and yank the visitor into a new conversation mid-chat.
  */
-export const useVisitorConversationSeed = ({
-  agentId,
-  agentMeta,
-  shareId,
-}: SharedAgentIdentity): boolean => {
-  const [seeded, setSeeded] = useState(false);
+export const useVisitorConversationSeed = (
+  { agentId, agentMeta, shareId }: SharedAgentIdentity,
+  topicId?: string,
+): boolean => {
+  const [seeded, setSeeded] = useState<{
+    agentId: string;
+    shareId: string;
+    topicId?: string;
+  }>();
 
   useLayoutEffect(() => {
     seedAgentMap(agentId, agentMeta);
@@ -51,20 +53,18 @@ export const useVisitorConversationSeed = ({
         activeAgentId: agentId,
         activeGroupId: undefined,
         activeThreadId: undefined,
-        activeTopicId: undefined,
+        activeTopicId: topicId,
       },
       false,
       'AgentShareVisitor/sync',
     );
-    setSeeded(true);
-    // Deliberately keyed on the agent/share identity only — the metadata
-    // effect below handles `agentMeta` changes without touching chat-store
-    // selection state. See the doc comment above for why.
-  }, [agentId, shareId]);
+    setSeeded({ agentId, shareId, topicId });
+    // Metadata refreshes must not reset selection while a new topic is being created.
+  }, [agentId, shareId, topicId]);
 
   useLayoutEffect(() => {
     seedAgentMap(agentId, agentMeta);
   }, [agentId, agentMeta]);
 
-  return seeded;
+  return seeded?.agentId === agentId && seeded?.shareId === shareId && seeded?.topicId === topicId;
 };

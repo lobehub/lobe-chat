@@ -1598,7 +1598,7 @@ export const createSharedDesktopRoutes = ({
     ),
     errorElement: <ErrorBoundary />,
     handle: { meta: agentShareVisitorRouteMeta },
-    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId`,
+    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:topicId?`,
   },
   ...BusinessDesktopRoutesWithoutMainLayout,
   ...platformRoutes,

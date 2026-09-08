@@ -627,7 +627,7 @@ export const mobileRoutes: RouteObject[] = [
     ),
     errorElement: <ErrorBoundary />,
     handle: { meta: agentShareVisitorRouteMeta },
-    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId`,
+    path: `${AGENT_SHARE_VISITOR_PATH}/:slugOrId/:topicId?`,
   },
 
   // Messenger verify route (outside main layout)
