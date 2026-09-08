@@ -10,7 +10,7 @@
  * Thresholds (env, overridable per check via --percent / --floor / --max-chunks):
  *   SIZE_GATE_PERCENT      max allowed increase in percent (default 3)
  *   SIZE_GATE_FLOOR_BYTES  min absolute increase before failing (default 512 KiB)
- *   SIZE_GATE_MAX_CHUNKS   max chunks in the first-screen static graph (default 100)
+ *   SIZE_GATE_MAX_CHUNKS   max chunks in the first-screen static graph (default 40)
  *
  * An entry fails when: increase > max(baseline * percent / 100, floor).
  *
@@ -232,7 +232,7 @@ const check = (args) => {
 
   const percent = Number(args.percent || process.env.SIZE_GATE_PERCENT || 3);
   const floor = Number(args.floor || process.env.SIZE_GATE_FLOOR_BYTES || 512 * 1024);
-  const maxChunks = Number(args['max-chunks'] || process.env.SIZE_GATE_MAX_CHUNKS || 100);
+  const maxChunks = Number(args['max-chunks'] || process.env.SIZE_GATE_MAX_CHUNKS || 40);
 
   const keys = [...new Set([...Object.keys(baselineSizes), ...Object.keys(currentSizes)])];
   const rows = [];
