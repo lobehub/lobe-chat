@@ -383,6 +383,24 @@ describe('chatDockSlice', () => {
   });
 
   describe('goal drill-down', () => {
+    it('preserves experiment history and returns to an already visited node without cycles', () => {
+      const { result } = renderHook(() => useChatStore());
+      act(() => {
+        result.current.openGoalNode('goal_1', 'third');
+        result.current.drillIntoGoalNode('goal_1', 'first');
+      });
+      expect(result.current.portalStack).toHaveLength(2);
+      expect(chatPortalSelectors.goalNodeView(result.current)?.nodeId).toBe('first');
+      act(() => result.current.goBack());
+      expect(chatPortalSelectors.goalNodeView(result.current)?.nodeId).toBe('third');
+      act(() => {
+        result.current.drillIntoGoalNode('goal_1', 'first');
+        result.current.drillIntoGoalNode('goal_1', 'third');
+      });
+      expect(result.current.portalStack).toHaveLength(1);
+      expect(chatPortalSelectors.goalNodeView(result.current)?.nodeId).toBe('third');
+    });
+
     it('openGoalNode pushes a GoalNode view and exposes it via selector', () => {
       const { result } = renderHook(() => useChatStore());
 

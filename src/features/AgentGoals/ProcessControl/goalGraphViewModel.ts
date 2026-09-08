@@ -8,6 +8,7 @@ import type {
   GoalNodeAcceptance,
   WorkType,
 } from '@lobechat/types';
+import { experimentMembers } from '@lobechat/utils/goalGraph';
 
 /**
  * Read model for the Goal process-control surface.
@@ -316,7 +317,10 @@ export const buildGoalGraphView = (
     ]);
 
   let seq = 0;
+  let experimentSeq = 0;
   const views: GoalNodeView[] = nodes.map((node) => {
+    const members =
+      node.kind === 'experiment' ? experimentMembers(snapshot, node.id) : new Set<string>();
     const nodeDecisions = decisionsByNode.get(node.id) ?? [];
     const attempts = buildAttempts(node, events);
     const open = attempts.at(-1);
@@ -349,7 +353,10 @@ export const buildGoalGraphView = (
 
     return {
       answers: supportsByFinding.get(node.id) ?? [],
-      artifacts: artifactsByNode.get(node.id) ?? [],
+      artifacts:
+        node.kind === 'experiment'
+          ? [...members].flatMap((id) => artifactsByNode.get(id) ?? [])
+          : (artifactsByNode.get(node.id) ?? []),
       ...(acceptances?.[node.id] ? { acceptance: acceptances[node.id] } : {}),
       attempts,
       blockers: (dependsOn.get(node.id) ?? [])
@@ -357,7 +364,10 @@ export const buildGoalGraphView = (
         .filter((dep): dep is GoalGraphNode => !!dep && !TERMINAL_NODE_STATUSES.has(dep.status)),
       decision: nodeDecisions.find((d) => d.status === 'pending'),
       dependsOn: dependsOn.get(node.id) ?? [],
-      findings: producesByTask.get(node.id) ?? [],
+      findings:
+        node.kind === 'experiment'
+          ? nodes.filter((item) => members.has(item.id) && item.kind === 'finding')
+          : (producesByTask.get(node.id) ?? []),
       gateSubjectId: gateSubject.get(node.id),
       heartbeatAt,
       humanTouches: nodeDecisions.filter((d) => d.status === 'resolved' && !!d.resolvedByUserId),
@@ -369,7 +379,7 @@ export const buildGoalGraphView = (
       isVerifying,
       node,
       producedBy: producedByFinding.get(node.id),
-      seq: node.kind === 'task' ? ++seq : undefined,
+      seq: node.kind === 'experiment' ? ++experimentSeq : node.kind === 'task' ? ++seq : undefined,
       startedAt: isRunningAttempt ? open.startedAt : undefined,
     };
   });

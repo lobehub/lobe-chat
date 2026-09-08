@@ -49,6 +49,16 @@ describe('layoutGraph', () => {
     expect(boxes.w1.y).toBeLessThan(boxes.w2.y);
   });
 
+  it('keeps branches from an older experiment on the same generation', () => {
+    const boxes = layoutGraph(
+      [node('baseline'), node('second'), node('third')],
+      [edge('second', 'baseline', 'derived_from'), edge('third', 'baseline', 'derived_from')],
+    );
+    expect(boxes.baseline.y).toBeLessThan(boxes.second.y);
+    expect(boxes.second.y).toBe(boxes.third.y);
+    expect(boxes.second.x).not.toBe(boxes.third.x);
+  });
+
   it('does not let a finding-to-problem support edge push the problem down', () => {
     const boxes = layoutGraph(
       [node('p1', 'problem'), node('w1'), node('f1', 'finding')],
@@ -143,4 +153,26 @@ describe('hideKinds', () => {
 
     expect(bridges).toEqual([{ sourceNodeId: 'p1', targetNodeId: 'f1' }]);
   });
+});
+
+it('filters experiment nodes independently of execution tasks while preserving graph depth', () => {
+  const nodes = [
+    node('problem', 'problem'),
+    { ...node('experiment'), kind: 'experiment' as const },
+    node('acceptance'),
+    node('result', 'finding'),
+  ];
+  const edges = [
+    edge('problem', 'experiment', 'decomposes'),
+    edge('experiment', 'result', 'produces'),
+  ];
+  expect(hideKinds(nodes, edges, new Set(['task'])).visibleIds).toEqual(
+    new Set(['problem', 'experiment', 'result']),
+  );
+  const hidden = hideKinds(nodes, edges, new Set(['experiment']));
+  expect(hidden.visibleIds).toEqual(new Set(['problem', 'acceptance', 'result']));
+  expect(hidden.bridges).toEqual([{ sourceNodeId: 'problem', targetNodeId: 'result' }]);
+  const boxes = layoutGraph(nodes, edges);
+  expect(boxes.experiment.y).toBeGreaterThan(boxes.problem.y);
+  expect(boxes.result.y).toBeGreaterThan(boxes.experiment.y);
 });

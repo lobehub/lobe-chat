@@ -16,6 +16,7 @@ export const TRACING_SCENARIOS = {
   FollowUp: 'follow_up',
   GoalCriteriaGen: 'goal_criteria_gen',
   GoalDecompose: 'goal_decompose',
+  GoalExplore: 'goal_explore',
   HomeBrief: 'home_brief',
   InputCompletion: 'input_completion',
   MemoryExtract: 'memory_extract',
