@@ -12,10 +12,10 @@ import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRightLeft,
   BotMessageSquare,
+  ChartNoAxesColumnIncreasing,
   CircleDot,
   CirclePlus,
   MessageCircle,
-  SignalHigh,
   Timer,
   UserRoundCog,
 } from 'lucide-react';
@@ -160,10 +160,22 @@ const FeedLine = memo<{ children: ReactNode; mark: ReactNode; time?: string }>(
   ),
 );
 
-/** The mark for a row that is about a kind of change rather than a person. */
-const TypeMark = ({ icon }: { icon: LucideIcon }) => (
-  <Icon color={cssVar.colorTextTertiary} icon={icon} size={14} />
-);
+/**
+ * The mark on the rail: the actor's face when we have one, otherwise an icon
+ * for the kind of change — the face says who, the icon only says what.
+ */
+const RowMark = ({
+  author,
+  icon,
+}: {
+  author?: TaskDetailActivityAuthor | null;
+  icon: LucideIcon;
+}) =>
+  author?.avatar ? (
+    <Avatar avatar={author.avatar} size={16} />
+  ) : (
+    <Icon color={cssVar.colorTextTertiary} icon={icon} size={14} />
+  );
 
 /** Compact one-line row for created / topic / comment bookkeeping. */
 const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
@@ -171,16 +183,9 @@ const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   const TypeIcon = ROW_TYPE_ICON[activity.type as keyof typeof ROW_TYPE_ICON] ?? MessageCircle;
   const text = getRowText(activity, t);
   const author = activity.author;
-  // The one row that is about a person doing something (creating the task)
-  // leads with their face, like the "created the issue" line of a tracker.
-  const mark = author?.avatar ? (
-    <Avatar avatar={author.avatar} size={16} />
-  ) : (
-    <TypeMark icon={TypeIcon} />
-  );
 
   return (
-    <FeedLine mark={mark} time={activity.time}>
+    <FeedLine mark={<RowMark author={author} icon={TypeIcon} />} time={activity.time}>
       {author && (
         <>
           <ActivityAuthor author={author} />{' '}
@@ -204,8 +209,10 @@ const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
 
   return (
     <FeedLine
-      mark={<TypeMark icon={isAgentSlot ? BotMessageSquare : UserRoundCog} />}
       time={activity.time}
+      mark={
+        <RowMark author={activity.author} icon={isAgentSlot ? BotMessageSquare : UserRoundCog} />
+      }
     >
       {/*
         The whole line is one translated sentence rather than actor + verb +
@@ -241,7 +248,7 @@ interface TaskActivitiesProps {
 
 const PROPERTY_ICON: Record<'automation' | 'priority' | 'status', LucideIcon> = {
   automation: Timer,
-  priority: SignalHigh,
+  priority: ChartNoAxesColumnIncreasing,
   status: CircleDot,
 };
 
@@ -348,7 +355,12 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   }
 
   return (
-    <FeedLine mark={<TypeMark icon={PROPERTY_ICON[change.field]} />} time={activity.time}>
+    <FeedLine
+      // A property row is about the property, so its mark is the property's
+      // icon — the face is for rows about people (created, assigned).
+      mark={<RowMark icon={PROPERTY_ICON[change.field]} />}
+      time={activity.time}
+    >
       {sentence}
     </FeedLine>
   );
