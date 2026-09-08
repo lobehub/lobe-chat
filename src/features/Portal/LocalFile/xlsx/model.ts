@@ -70,16 +70,12 @@ const formatNumber = (value: number, numFmt?: string): string => {
       (isPercentage ? '%' : '')
     );
   }
-  let body = Math.abs(displayValue).toFixed(decimals);
-  if (decimals > requiredDecimals) {
-    const [int, frac = ''] = body.split('.');
-    const trimmed = frac.replace(new RegExp(`0{0,${decimals - requiredDecimals}}$`), '');
-    body = trimmed ? `${int}.${trimmed}` : int;
-  }
-  if (pattern.includes('#,##')) {
-    const [int, frac] = body.split('.');
-    body = int.replaceAll(/\B(?=(\d{3})+(?!\d))/g, ',') + (frac ? '.' + frac : '');
-  }
+  const body = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: requiredDecimals,
+    useGrouping: pattern.includes('#,##'),
+  }).format(Math.abs(displayValue));
+
   return (displayValue < 0 ? '-' : '') + currency + body + (isPercentage ? '%' : '');
 };
 
