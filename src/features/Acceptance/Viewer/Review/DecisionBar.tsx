@@ -339,11 +339,6 @@ const DecisionBar = memo<DecisionBarProps>(
               // Feedback is queued — the delivery isn't being accepted now; the
               // bar's job is getting the repair round started.
               <>
-                {!embedded && (
-                  <Button disabled={pending} type={'primary'} onClick={onCopyReview}>
-                    {t('acceptance.bar.copyReview')}
-                  </Button>
-                )}
                 {/* Last words before the repair leaves — a global note the next
                   round reads, for what the queued per-check feedback missed. */}
                 <Button
@@ -354,6 +349,11 @@ const DecisionBar = memo<DecisionBarProps>(
                 >
                   {t('acceptance.bar.addComment')}
                 </Button>
+                {!embedded && (
+                  <Button disabled={pending} type={'primary'} onClick={onCopyReview}>
+                    {t('acceptance.bar.copyReview')}
+                  </Button>
+                )}
                 {embedded && rerunAvailable && (
                   <Button
                     disabled={pending}
