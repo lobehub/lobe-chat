@@ -12,11 +12,11 @@ import SafeBoundary from '@/components/ErrorBoundary';
 import { useUserStore } from '@/store/user';
 import { labPreferSelectors } from '@/store/user/selectors';
 
-import type { ChatRowContinuation } from '../ChatList/utils/chatRows';
 import History from '../components/History';
 import { useChatItemContextMenu } from '../hooks/useChatItemContextMenu';
 import MessageSelectionWrapper from '../MessageForward/MessageSelectionWrapper';
 import { dataSelectors, messageStateSelectors, useConversationStore } from '../store';
+import type { SteerContinuation } from '../store/slices/data/steerChains';
 import AgentCouncilMessage from './AgentCouncil';
 import AssistantMessage from './Assistant';
 import AssistantGroupMessage from './AssistantGroup';
@@ -50,7 +50,7 @@ const styles = createStaticStyles(({ css }) => ({
 
 export interface MessageItemProps {
   className?: string;
-  continuations?: ChatRowContinuation[];
+  continuations?: SteerContinuation[];
   defaultWorkflowExpandLevel?: WorkflowExpandLevelDefault;
   disableEditing?: boolean;
   enableHistoryDivider?: boolean;
@@ -58,7 +58,6 @@ export interface MessageItemProps {
   footerRender?: ReactNode;
   id: string;
   index: number;
-  inlineSteer?: boolean;
   inPortalThread?: boolean;
   isLatestItem?: boolean;
 }
@@ -75,7 +74,6 @@ const MessageItem = memo<MessageItemProps>(
     disableEditing,
     inPortalThread = false,
     index,
-    inlineSteer,
     isLatestItem,
   }) => {
     const topic = useConversationStore((s) => s.context.topicId);
@@ -181,7 +179,6 @@ const MessageItem = memo<MessageItemProps>(
               footerRender={footerRender}
               id={id}
               index={index}
-              inlineSteer={inlineSteer}
               isLatestItem={isLatestItem}
             />
           );
@@ -200,7 +197,6 @@ const MessageItem = memo<MessageItemProps>(
               footerRender={footerRender}
               id={id}
               index={index}
-              inlineSteer={inlineSteer}
               isLatestItem={isLatestItem}
             />
           );
@@ -254,7 +250,6 @@ const MessageItem = memo<MessageItemProps>(
       footerRender,
       id,
       index,
-      inlineSteer,
       isLatestItem,
     ]);
 

@@ -898,7 +898,6 @@ describe('Group', () => {
 
       const { container } = render(
         <Group
-          inlineSteer
           isLatestItem
           blocks={chain1}
           continuations={[{ blocks: chain2, id: 'group-2', steerUserId: 'steer-1' }]}
@@ -921,7 +920,7 @@ describe('Group', () => {
       expect(screen.queryByTestId('process-fold')).not.toBeInTheDocument();
     });
 
-    it('folds every earlier turn into one process and keeps only the last final answer', () => {
+    it('folds each turn separately and keeps the steer bubble between the folds', () => {
       mockOperations = [];
 
       const { container } = render(
@@ -935,19 +934,55 @@ describe('Group', () => {
         />,
       );
 
-      const fold = screen.getByTestId('process-fold');
-      expect(fold.getAttribute('data-step-count')).toBe('4');
-      expect(screen.queryByTestId('steer-message')).not.toBeInTheDocument();
+      const folds = screen.getAllByTestId('process-fold');
+      expect(folds.map((fold) => fold.getAttribute('data-step-count'))).toEqual(['2', '2']);
 
-      const foldedIds = Array.from(fold.querySelectorAll('[data-testid="answer-segment"]')).map(
-        (node) => JSON.parse(node.getAttribute('data-block') || '{}').id,
-      );
-      expect(foldedIds).toEqual(['a1', 'a2', 'b1']);
+      const steer = screen.getByTestId('steer-message');
+      expect(
+        folds[0]!.compareDocumentPosition(steer) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(
+        steer.compareDocumentPosition(folds[1]!) & Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
+      expect(folds.some((fold) => fold.contains(steer))).toBe(false);
+
+      const idsIn = (root: Element) =>
+        Array.from(root.querySelectorAll('[data-testid="answer-segment"]')).map(
+          (node) => JSON.parse(node.getAttribute('data-block') || '{}').id,
+        );
+      expect(idsIn(folds[0]!)).toEqual(['a1', 'a2']);
+      expect(idsIn(folds[1]!)).toEqual(['b1']);
 
       const outside = Array.from(container.querySelectorAll('[data-testid="answer-segment"]'))
-        .filter((node) => !fold.contains(node))
+        .filter((node) => !folds.some((fold) => fold.contains(node)))
         .map((node) => JSON.parse(node.getAttribute('data-block') || '{}').id);
       expect(outside).toEqual(['b2']);
+    });
+
+    it('skips the fold for a continuation whose whole output is the final answer', () => {
+      mockOperations = [];
+
+      render(
+        <Group
+          enableProcessFold
+          isLatestItem
+          blocks={chain1}
+          id="group-1"
+          messageIndex={0}
+          continuations={[
+            {
+              blocks: [blk({ content: 'Final answer.', id: 'b2' })],
+              id: 'group-2',
+              steerUserId: 'steer-1',
+            },
+          ]}
+        />,
+      );
+
+      const folds = screen.getAllByTestId('process-fold');
+      expect(folds).toHaveLength(1);
+      expect(folds[0]!.getAttribute('data-step-count')).toBe('2');
+      expect(screen.getByTestId('steer-message')).toBeInTheDocument();
     });
   });
 });

@@ -23,7 +23,6 @@ import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
-import type { ChatRowContinuation } from '../../ChatList/utils/chatRows';
 import { ReactionDisplay } from '../../components/Reaction';
 import { useAgentMeta } from '../../hooks';
 import {
@@ -32,6 +31,7 @@ import {
   messageStateSelectors,
   useConversationStore,
 } from '../../store';
+import type { SteerContinuation } from '../../store/slices/data/steerChains';
 import { getOperationFinalRootId } from '../../store/slices/data/workSummaries';
 import InterruptedHint from '../Assistant/components/InterruptedHint';
 import Usage from '../components/Extras/Usage';
@@ -80,17 +80,16 @@ const findLatestWorkRootOperationId = (
 
 interface GroupMessageProps {
   /** Later turns steered onto this one, rendered as one continuous chain. */
-  continuations?: ChatRowContinuation[];
+  continuations?: SteerContinuation[];
   defaultWorkflowExpandLevel?: WorkflowExpandLevelDefault;
   disableEditing?: boolean;
   footerRender?: ReactNode;
   id: string;
   index: number;
-  inlineSteer?: boolean;
   isLatestItem?: boolean;
 }
 
-const EMPTY_CONTINUATIONS: ChatRowContinuation[] = [];
+const EMPTY_CONTINUATIONS: SteerContinuation[] = [];
 
 const GroupMessage = memo<GroupMessageProps>(
   ({
@@ -100,7 +99,6 @@ const GroupMessage = memo<GroupMessageProps>(
     index,
     disableEditing,
     footerRender,
-    inlineSteer,
     isLatestItem,
   }) => {
     // Get message and actionsConfig from ConversationStore
@@ -383,7 +381,6 @@ const GroupMessage = memo<GroupMessageProps>(
               defaultWorkflowExpandLevel={workflowExpandLevel}
               disableEditing={disableEditing}
               id={id}
-              inlineSteer={inlineSteer}
               isLatestItem={isLatestItem}
               messageIndex={index}
             />

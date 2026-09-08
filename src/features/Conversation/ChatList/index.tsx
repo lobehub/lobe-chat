@@ -150,8 +150,8 @@ const ChatList = memo<ChatListProps>(
     // Steered follow-up turns fold into the turn they interrupted. Custom item
     // renderers address messages by id, so they keep the flat list.
     const rows = useMemo(
-      () => (itemContent ? undefined : buildChatRows(displayMessages, { isStreaming })),
-      [displayMessages, isStreaming, itemContent],
+      () => (itemContent ? undefined : buildChatRows(displayMessages)),
+      [displayMessages, itemContent],
     );
     const rowIds = useMemo(
       () => rows?.map((row) => row.id) ?? displayMessageIds,
@@ -159,8 +159,8 @@ const ChatList = memo<ChatListProps>(
     );
     const rowById = useMemo(() => new Map(rows?.map((row) => [row.id, row])), [rows]);
     const resolvedMessageDeepLink = useMemo(
-      () => resolveMessageDeepLink(displayMessages, messageDeepLink),
-      [displayMessages, messageDeepLink],
+      () => resolveMessageDeepLink(displayMessages, rowIds, messageDeepLink),
+      [displayMessages, messageDeepLink, rowIds],
     );
     const overlayHeight = useConversationStore(inputSelectors.chatInputOverlayHeight);
     const latestMessageId = displayMessageIds.at(-1);
@@ -229,7 +229,6 @@ const ChatList = memo<ChatListProps>(
             footerRender={receiptRender}
             id={id}
             index={index}
-            inlineSteer={row?.inlineSteer}
             isLatestItem={isLatestItem}
           />
         );

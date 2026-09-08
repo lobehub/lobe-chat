@@ -2,11 +2,11 @@ import type { UIChatMessage, UISignalCallbacksBlock } from '@lobechat/types';
 
 import type { AssistantContentBlock } from '@/types/index';
 
-import type { ChatRowContinuation } from '../../../ChatList/utils/chatRows';
+import type { SteerContinuation } from '../../../store/slices/data/steerChains';
 import type { GroupChainInput } from '../components/groupChain';
 
 export const buildContinuationChains = (
-  continuations: ChatRowContinuation[],
+  continuations: SteerContinuation[],
   continuationMessages: Array<UIChatMessage | undefined>,
 ): GroupChainInput[] =>
   continuations.flatMap((continuation, index) => {

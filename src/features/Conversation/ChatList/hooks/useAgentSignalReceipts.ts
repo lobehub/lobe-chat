@@ -5,6 +5,8 @@ import useSWR from 'swr';
 import { agentSignalKeys } from '@/libs/swr/keys';
 import { agentSignalService } from '@/services/agentSignal';
 
+import { collectSteerChains } from '../../store/slices/data/steerChains';
+
 /** Poll cadence for the active conversation's Agent Signal receipt surface. */
 const AGENT_SIGNAL_RECEIPT_INITIAL_REFRESH_INTERVAL_MS = 3000;
 
@@ -135,48 +137,14 @@ const resolveAssistantReplyFromTrigger = (
   )?.id;
 };
 
-const isTurnHost = (message?: UIChatMessage) =>
-  message?.role === 'assistantGroup' || message?.role === 'supervisor';
-
-const isTurnTail = (message?: UIChatMessage) =>
-  isTurnHost(message) || message?.role === 'assistant';
-
-const isSteerUser = (message?: UIChatMessage) =>
-  message?.role === 'user' && !!message.metadata?.steer;
-
-const resolveSteeredHostMessageId = (anchorMessageId: string, displayMessages: UIChatMessage[]) => {
-  let anchorIndex = displayMessages.findIndex((message) => message.id === anchorMessageId);
-  if (anchorIndex < 0) return undefined;
-
-  while (
-    anchorIndex >= 2 &&
-    isSteerUser(displayMessages[anchorIndex - 1]) &&
-    isTurnTail(displayMessages[anchorIndex])
-  ) {
-    const previousTurnIndex = anchorIndex - 2;
-    const previousTurn = displayMessages[previousTurnIndex];
-
-    if (!isTurnTail(previousTurn)) return undefined;
-
-    if (
-      previousTurnIndex >= 2 &&
-      isSteerUser(displayMessages[previousTurnIndex - 1]) &&
-      isTurnTail(previousTurn)
-    ) {
-      anchorIndex = previousTurnIndex;
-      continue;
-    }
-
-    return isTurnHost(previousTurn) ? previousTurn.id : undefined;
-  }
-};
-
 const resolveDisplayedAnchorMessageId = (
   anchorMessageId: string,
   displayMessages: UIChatMessage[],
 ) => {
+  const { hostOf } = collectSteerChains(displayMessages);
+
   if (displayMessages.some((message) => message.id === anchorMessageId)) {
-    return resolveSteeredHostMessageId(anchorMessageId, displayMessages) ?? anchorMessageId;
+    return hostOf.get(anchorMessageId) ?? anchorMessageId;
   }
 
   const assistantGroupId = displayMessages.find(
@@ -185,9 +153,7 @@ const resolveDisplayedAnchorMessageId = (
       message.children?.some((block) => block.id === anchorMessageId),
   )?.id;
 
-  return assistantGroupId
-    ? (resolveSteeredHostMessageId(assistantGroupId, displayMessages) ?? assistantGroupId)
-    : undefined;
+  return assistantGroupId ? (hostOf.get(assistantGroupId) ?? assistantGroupId) : undefined;
 };
 
 const resolveEffectiveAnchorMessageId = (

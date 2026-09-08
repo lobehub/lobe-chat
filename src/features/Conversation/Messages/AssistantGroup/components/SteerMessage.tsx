@@ -30,7 +30,7 @@ const SteerMessage = memo<SteerMessageProps>(({ id }) => {
   if (!item) return null;
 
   return (
-    <Flexbox align={'flex-end'} data-steer-message={id}>
+    <Flexbox align={'flex-end'} data-message-id={id} data-steer-message={id}>
       <Flexbox align={'flex-start'} className={styles.bubble} gap={4}>
         <Tag>{t('steer.tag')}</Tag>
         <UserMessageContent {...item} />

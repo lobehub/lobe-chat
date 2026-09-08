@@ -1,66 +1,22 @@
 import type { UIChatMessage } from '@lobechat/types';
 
-export interface ChatRowContinuation {
-  groupId: string;
-  steerUserId: string;
-}
+import type { SteerContinuation } from '../../store/slices/data/steerChains';
+import { collectSteerChains } from '../../store/slices/data/steerChains';
 
 export interface ChatRow {
-  continuations?: ChatRowContinuation[];
+  continuations?: SteerContinuation[];
   id: string;
-  /** Steer bubbles render inside the chain while it is still running; once it settles they are hoisted above it as regular rows. */
-  inlineSteer?: boolean;
 }
 
-const isTurnHost = (message?: UIChatMessage) =>
-  message?.role === 'assistantGroup' || message?.role === 'supervisor';
-
-const isTurnTail = (message?: UIChatMessage) =>
-  isTurnHost(message) || message?.role === 'assistant';
-
-const isSteerUser = (message?: UIChatMessage) =>
-  message?.role === 'user' && !!message.metadata?.steer;
-
-export const buildChatRows = (
-  messages: UIChatMessage[],
-  options: { isStreaming: boolean },
-): ChatRow[] => {
+export const buildChatRows = (messages: UIChatMessage[]): ChatRow[] => {
+  const { byHost, hostOf } = collectSteerChains(messages);
   const rows: ChatRow[] = [];
-  let chain: ChatRow | undefined;
 
-  for (let index = 0; index < messages.length; index += 1) {
-    const message = messages[index]!;
-    const next = messages[index + 1];
-
-    if (chain && isSteerUser(message) && isTurnTail(next)) {
-      chain.continuations = [
-        ...(chain.continuations ?? []),
-        { groupId: next!.id, steerUserId: message.id },
-      ];
-      index += 1;
-      continue;
-    }
-
-    const row: ChatRow = { id: message.id };
-    rows.push(row);
-    chain = isTurnHost(message) ? row : undefined;
+  for (const message of messages) {
+    if (hostOf.has(message.id)) continue;
+    const chain = byHost.get(message.id);
+    rows.push(chain ? { continuations: chain.continuations, id: message.id } : { id: message.id });
   }
 
-  const result: ChatRow[] = [];
-  rows.forEach((row, index) => {
-    if (!row.continuations) {
-      result.push(row);
-      return;
-    }
-
-    const inlineSteer = options.isStreaming && index === rows.length - 1;
-    if (!inlineSteer) {
-      for (const continuation of row.continuations) {
-        result.push({ id: continuation.steerUserId });
-      }
-    }
-    result.push({ ...row, inlineSteer });
-  });
-
-  return result;
+  return rows;
 };

@@ -1,5 +1,6 @@
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
+import { getForwardableMessages } from '@/store/chat/slices/forward/helpers';
 
 import { type State } from '../../initialState';
 import { dataSelectors } from '../data/selectors';
@@ -106,6 +107,23 @@ const isAssistantGroupItemGenerating = (id: string) => (s: State) => {
   return parentMessage ? isMessageGenerating(parentMessage.id)(s) : false;
 };
 
+const isRowGenerating = (id: string) => (s: State) =>
+  dataSelectors
+    .rowMemberIds(id)(s)
+    .some((memberId) => isAssistantGroupItemGenerating(memberId)(s));
+
+const selectedMemberMessageIds = (s: State) =>
+  s.selectedMessageIds.flatMap((id) => dataSelectors.rowMemberIds(id)(s));
+
+const selectedDeletableMessageIds = (s: State) => [
+  ...new Set(s.selectedMessageIds.flatMap((id) => dataSelectors.deletableRowMessageIds(id)(s))),
+];
+
+const forwardableSelectedMessages = (s: State) => {
+  const selected = new Set(selectedMemberMessageIds(s));
+  return getForwardableMessages(s.displayMessages.filter((m) => selected.has(m.id)));
+};
+
 /**
  * Check if a message is being regenerated
  */
@@ -190,6 +208,7 @@ const isThreadMode = (_s: State) => {
 };
 
 export const messageStateSelectors = {
+  forwardableSelectedMessages,
   hasThreadBySourceMsgId,
   isAIGenerating,
   isAssistantGroupItemGenerating,
@@ -207,12 +226,14 @@ export const messageStateSelectors = {
   isMessageRegenerating,
   isMessageSelected,
   isPluginApiInvoking,
+  isRowGenerating,
   isSelectionMode,
   isThreadMode,
   isToolApiNameShining,
   isToolCallStreaming,
   messageEditingIds,
   messageLoadingIds,
+  selectedDeletableMessageIds,
   selectedMessageCount,
   sendMessageError,
 };

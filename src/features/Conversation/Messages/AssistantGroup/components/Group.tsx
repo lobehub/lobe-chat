@@ -2,7 +2,7 @@ import { splitAssistantGroupFinalAnswer } from '@lobechat/conversation-flow';
 import { Flexbox } from '@lobehub/ui';
 import { createStaticStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { memo, useMemo } from 'react';
+import { Fragment, memo, useMemo } from 'react';
 
 import ContentLoading from '@/features/Conversation/Messages/components/ContentLoading';
 import { useChatStore } from '@/store/chat';
@@ -46,8 +46,6 @@ interface GroupChildrenProps {
   /** Lab flag: fold finished non-latest turns' process under a "已处理" header. */
   enableProcessFold?: boolean;
   id: string;
-  /** Render each continuation's steer message inside the chain (streaming); otherwise the list hoists them above. */
-  inlineSteer?: boolean;
   /** Whether this turn is the latest item in the conversation. */
   isLatestItem?: boolean;
   messageIndex: number;
@@ -63,7 +61,6 @@ const Group = memo<GroupChildrenProps>(
     messageIndex,
     id,
     content,
-    inlineSteer,
     isLatestItem,
     enableProcessFold,
   }) => {
@@ -98,7 +95,10 @@ const Group = memo<GroupChildrenProps>(
       isEqual,
     );
     const allBlocks = useMemo(() => chains.flatMap((chain) => chain.blocks), [chains]);
-    const turnDurationMs = useConversationStore((s) => getTurnDurationMs(s.dbMessages, allBlocks));
+    const chainDurations = useConversationStore(
+      (s) => chains.map((chain) => getTurnDurationMs(s.dbMessages, chain.blocks)),
+      isEqual,
+    );
     const lastBlock = allBlocks.at(-1);
     const lastBlockCreatedAt = useConversationStore((s) =>
       getLastBlockCreatedAt(s.dbMessages, lastBlock),
@@ -141,21 +141,15 @@ const Group = memo<GroupChildrenProps>(
     const renderChain = (
       view: GroupChainView,
       segments: GroupRenderSegment[],
-      options?: { withSteer?: boolean },
-    ) => {
-      const chainIndex = views.indexOf(view);
-      return (
-        <MessageAggregationContext
-          key={`${view.id}.${options?.withSteer ? 'process' : 'final'}`}
-          value={contextValues[chainIndex]!}
-        >
-          {options?.withSteer && inlineSteer && view.steerUserId && (
-            <SteerMessage id={view.steerUserId} />
-          )}
-          {segments.map((segment) => renderChainSegment(view, segment, renderOptions))}
-        </MessageAggregationContext>
-      );
-    };
+      variant: 'process' | 'final',
+    ) => (
+      <MessageAggregationContext
+        key={`${view.id}.${variant}`}
+        value={contextValues[views.indexOf(view)]!}
+      >
+        {segments.map((segment) => renderChainSegment(view, segment, renderOptions))}
+      </MessageAggregationContext>
+    );
 
     // Codex-style turn folding: once the turn's op has ended, fold its whole
     // process (reasoning + tools + intermediate prose) under a single "已处理
@@ -164,46 +158,49 @@ const Group = memo<GroupChildrenProps>(
     // that is the turn's payload; only the process collapses. The latest turn
     // is eligible only once its final answer exists (so a tool-only latest turn
     // does not collapse into a lone header); still-generating turns render in
-    // full. Steered continuations fold as one chain: every earlier turn's
-    // output is process, only the last turn's final answer stays visible.
+    // full. Steered continuations fold per turn: every earlier turn's output is
+    // process, only the last turn's final answer stays visible, and each steer
+    // bubble sits between the fold it interrupted and the fold it started.
     const { processSegments, finalSegments } = splitAssistantGroupFinalAnswer(lastView.segments);
-    const earlierViews = views.slice(0, -1);
-    const llmCallCount = views.reduce(
-      (sum, view) => sum + countAssistantLlmCalls(view.segments),
-      0,
-    );
+    const processSegmentsOf = (view: GroupChainView) =>
+      view === lastView ? processSegments : view.segments;
     const foldProcess = shouldFoldProcess({
       enabled: enableProcessFold,
       hasFinalAnswer: hasRenderableFinalAnswer(finalSegments),
       isGenerating,
       isLatestItem,
       operationEnded: !views.some((view) => view.hasActiveOperation),
-      processSegments: [...earlierViews.flatMap((view) => view.segments), ...processSegments],
+      processSegments: views.flatMap(processSegmentsOf),
     });
 
-    const durationText =
-      turnDurationMs >= 1000 ? formatReasoningDuration(turnDurationMs) : undefined;
+    const renderFold = (view: GroupChainView, index: number) => {
+      const segments = processSegmentsOf(view);
+      if (segments.length === 0) return null;
+      const durationMs = chainDurations[index] ?? 0;
+      return (
+        <ProcessFold
+          durationText={durationMs >= 1000 ? formatReasoningDuration(durationMs) : undefined}
+          key={view.id}
+          stepCount={countAssistantLlmCalls(view.segments)}
+        >
+          <Flexbox gap={8}>{renderChain(view, segments, 'process')}</Flexbox>
+        </ProcessFold>
+      );
+    };
 
     return (
       <Flexbox className={styles.container} gap={4}>
-        {foldProcess ? (
-          <>
-            <ProcessFold durationText={durationText} stepCount={llmCallCount}>
-              <Flexbox gap={8}>
-                {earlierViews.map((view) => renderChain(view, view.segments, { withSteer: true }))}
-                {renderChain(lastView, processSegments, { withSteer: true })}
-              </Flexbox>
-            </ProcessFold>
-            {renderChain(lastView, finalSegments)}
-          </>
-        ) : (
-          <>
-            {views.map((view) => renderChain(view, view.segments, { withSteer: true }))}
-            {lastView.showTailRunningIndicator && (
+        {views.map((view, index) => (
+          <Fragment key={view.id}>
+            {view.steerUserId && <SteerMessage id={view.steerUserId} />}
+            {foldProcess ? renderFold(view, index) : renderChain(view, view.segments, 'process')}
+          </Fragment>
+        ))}
+        {foldProcess
+          ? renderChain(lastView, finalSegments, 'final')
+          : lastView.showTailRunningIndicator && (
               <ContentLoading id={lastView.id} startTime={lastBlockCreatedAt} />
             )}
-          </>
-        )}
       </Flexbox>
     );
   },
