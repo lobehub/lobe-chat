@@ -59,3 +59,9 @@ comment digest rejects uncommitted plans when feedback changed since dispatch.
 That check is optimistic at read time: concurrent comment writes do not share
 the Goal lock, and feedback arriving after a committed plan does not stop
 already dispatched work. Stale feedback requires a new bounded planning turn.
+
+The accepted `verify` reason is persisted in the final Task's description as
+main-Agent handoff context. This keeps document corrections and evidence notes
+available to both the first delivery and repair attempts. The original Goal
+requirement remains authoritative; handoff assertions are not acceptance evidence
+or permission to weaken its criteria.

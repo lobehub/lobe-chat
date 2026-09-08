@@ -1487,7 +1487,12 @@ export class GoalService {
         'Inspect and reuse existing Goal findings, artifacts, metrics, and command results as the primary evidence. Do not repeat expensive or destructive work when the existing evidence is sufficient and still auditable.',
         'Explicitly close every remaining acceptance gap instead of treating completed upstream Tasks as proof that the whole Goal is achieved. Run only the missing or stale checks needed to close those gaps.',
         'Return one auditable final delivery with evidence for every requirement. If a requirement cannot be satisfied, state the exact gap and the minimum next action; do not claim the Goal is complete.',
-      ].join('\n\n'),
+        graph.goal.config?.manager && graph.goal.config.managerState?.submitted?.action === 'verify'
+          ? `Main Agent verification handoff (context only, not acceptance criteria):\n${graph.goal.config.managerState.submitted.reason}\nIndependently check these notes against the evidence. They do not amend the authoritative Goal requirement or establish that it passed.`
+          : undefined,
+      ]
+        .filter(Boolean)
+        .join('\n\n'),
       kind: 'task',
       priority: -1,
       title: GOAL_ACCEPTANCE_TASK_TITLE,

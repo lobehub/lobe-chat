@@ -250,6 +250,71 @@ describe('GoalService', () => {
     expect(acceptance?.config?.verifyCriteriaIds).toEqual([replacementId]);
   });
 
+  it.each([
+    { action: 'verify', managerEnabled: true },
+    { action: 'verify', managerEnabled: false },
+    { action: 'tasks', managerEnabled: true },
+  ] as const)(
+    'scopes the handoff to manager=$managerEnabled action=$action',
+    async ({ action, managerEnabled }) => {
+      const service = new GoalService(serverDB, userId);
+      const taskModel = new TaskModel(serverDB, userId);
+      const requirement = 'Deliver the original result with independently inspectable evidence';
+      const handoff =
+        'Clarify that zero calls means zero additional predictions, not zero LLM use.';
+      const graph = await service.create({
+        criteria: [{ title: 'Original evidence criterion' }],
+        requirement,
+        tasks: ['Prepare result'],
+        title: 'Handoff',
+      });
+      const prepared = await service.tick(graph.goal.id);
+      await taskModel.updateStatus(prepared.taskId!, 'completed');
+      await service.tick(graph.goal.id);
+      const originalConfig = (await service.graph(graph.goal.id)).goal.config;
+      await serverDB
+        .update(goals)
+        .set({
+          config: {
+            ...originalConfig,
+            manager: managerEnabled ? { agentId: 'manager' } : undefined,
+            managerState: {
+              consumed: true,
+              readyForAcceptance: true,
+              snapshot: 'settled',
+              startedAt: new Date().toISOString(),
+              submitted: { action, reason: handoff },
+              token: 'verified-turn',
+              topicId: 'management-topic',
+              turns: 1,
+            },
+          },
+        })
+        .where(eq(goals.id, graph.goal.id));
+
+      await service.tick(graph.goal.id);
+      const finalTask = await service.tick(graph.goal.id);
+      const task = await taskModel.findById(finalTask.taskId!);
+
+      if (managerEnabled && action === 'verify') {
+        expect(task?.instruction).toContain(handoff);
+        expect(task?.instruction).toContain('context only, not acceptance criteria');
+      } else {
+        expect(task?.instruction).not.toContain(handoff);
+      }
+      const acceptance = await new AcceptanceModel(serverDB, userId).findBySubject(
+        'task',
+        finalTask.taskId!,
+      );
+      expect(acceptance?.requirement).toContain(requirement);
+      expect(acceptance?.config?.verifyCriteriaIds).toEqual(
+        originalConfig?.acceptance?.criteriaIds,
+      );
+      expect(acceptance?.config?.verifyCriteriaIds).toHaveLength(1);
+      expect((await service.graph(graph.goal.id)).goal.requirement).toBe(requirement);
+    },
+  );
+
   it('creates only one responsible task when ticks race on the same task node', async () => {
     const service = new GoalService(serverDB, userId);
     const graph = await service.create({ tasks: ['Single owner task'], title: 'Concurrent goal' });
