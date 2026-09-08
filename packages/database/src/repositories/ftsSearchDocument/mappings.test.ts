@@ -11,6 +11,7 @@ import {
   getFtsSearchPhysicalIndexName,
 } from './mappings';
 import { FTS_SEARCH_CURRENT_MAPPING_MIGRATIONS } from './migration';
+import { FTS_SEARCH_RETAINED_SOURCE_PROPERTIES } from './policy';
 import {
   FTS_SEARCH_DOCUMENT_ENTITIES,
   FTS_SEARCH_DOCUMENT_SCHEMAS,
@@ -47,16 +48,25 @@ describe('search index schema generations', () => {
 describe('search index mappings', () => {
   it.each(FTS_SEARCH_DOCUMENT_ENTITIES)('matches every %s schema field exactly', (entity) => {
     const schemaFields = Object.keys(FTS_SEARCH_DOCUMENT_SCHEMAS[entity].shape).sort();
-    const mappingFields = Object.keys(
-      FTS_SEARCH_INDEX_DEFINITIONS[entity].mappings.properties,
-    ).sort();
+    const mappedFields = Object.keys(FTS_SEARCH_INDEX_DEFINITIONS[entity].mappings.properties);
+    const retainedFields = Object.keys(FTS_SEARCH_RETAINED_SOURCE_PROPERTIES[entity]);
 
-    expect(mappingFields).toEqual(schemaFields);
+    expect(mappedFields.filter((field) => retainedFields.includes(field))).toEqual([]);
+    expect([...mappedFields, ...retainedFields].sort()).toEqual(schemaFields);
     expect(FTS_SEARCH_INDEX_DEFINITIONS[entity].mappings.dynamic).toBe('strict');
   });
 
   it.each(FTS_SEARCH_DOCUMENT_ENTITIES)('only queries text fields for %s', (entity) => {
     const definition = FTS_SEARCH_INDEX_DEFINITIONS[entity];
+    const retainedFields = new Set(Object.keys(FTS_SEARCH_RETAINED_SOURCE_PROPERTIES[entity]));
+
+    for (const field of [
+      ...(definition.indexedOnlyFields ?? []),
+      ...(definition.longTextFields ?? []),
+      ...definition.queryFields,
+    ]) {
+      expect(retainedFields.has(field)).toBe(false);
+    }
 
     for (const field of definition.queryFields) {
       expect(Object.entries(definition.mappings.properties)).toContainEqual([

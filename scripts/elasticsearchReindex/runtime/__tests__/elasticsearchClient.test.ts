@@ -8,6 +8,7 @@ import {
 } from '../../../../packages/database/src/repositories/ftsSearchDocument';
 import { FtsSearchReindexHttpClient, parseGenerationVersion } from '../elasticsearchClient';
 import type { FtsSearchReindexIndexBody } from '../reindexService';
+import { getRetiredIndexProtectionTemplateName } from '../retiredIndexProtection';
 
 const response = (body: unknown, status = 200) =>
   new Response(body === undefined ? undefined : JSON.stringify(body), {
@@ -398,6 +399,14 @@ describe('FtsSearchReindexHttpClient', () => {
 
   it('describes open and closed generations of an alias', async () => {
     const openDetail = {
+      'lobehub-messages-v1': {
+        mappings: {
+          _meta: { ...reindexMeta, schema_version: 1 },
+          dynamic: 'strict',
+          properties: { id: { type: 'keyword' } },
+        },
+        settings: { index: { analysis: FTS_SEARCH_INDEX_ANALYSIS } },
+      },
       'lobehub-messages-v2': {
         mappings: {
           _meta: { ...reindexMeta, schema_version: 2 },
@@ -430,11 +439,11 @@ describe('FtsSearchReindexHttpClient', () => {
     await expect(client.describeGenerations('lobehub-messages')).resolves.toEqual([
       {
         aliased: false,
-        analysis: null,
+        analysis: FTS_SEARCH_INDEX_ANALYSIS,
         index: 'lobehub-messages-v1',
         isWriteIndex: false,
-        mappings: null,
-        meta: null,
+        mappings: openDetail['lobehub-messages-v1'].mappings,
+        meta: { ...reindexMeta, schema_version: 1 },
         state: 'closed',
         version: 1,
       },
@@ -456,9 +465,8 @@ describe('FtsSearchReindexHttpClient', () => {
     expect(String(fetchMock.mock.calls[1][0])).toBe(
       'https://search.example.com/_alias/lobehub-messages',
     );
-    // The closed generation cannot answer a mapping request, so only open ones are inspected.
     expect(String(fetchMock.mock.calls[2][0])).toBe(
-      'https://search.example.com/lobehub-messages-v2?filter_path=*.mappings,*.settings.index.analysis',
+      'https://search.example.com/lobehub-messages-v2,lobehub-messages-v1?expand_wildcards=all&filter_path=*.mappings,*.settings.index.analysis',
     );
   });
 
@@ -540,7 +548,7 @@ describe('FtsSearchReindexHttpClient', () => {
 
     expect(generations.map(({ index }) => index)).toEqual(['lobehub-messages-v3']);
     expect(String(fetchMock.mock.calls[2][0])).toBe(
-      'https://search.example.com/lobehub-messages-v3?filter_path=*.mappings,*.settings.index.analysis',
+      'https://search.example.com/lobehub-messages-v3?expand_wildcards=all&filter_path=*.mappings,*.settings.index.analysis',
     );
   });
 
@@ -575,7 +583,7 @@ describe('FtsSearchReindexHttpClient', () => {
       },
     ]);
     expect(String(fetchMock.mock.calls[2][0])).toBe(
-      'https://search.example.com/lobehub-messages-legacy?filter_path=*.mappings,*.settings.index.analysis',
+      'https://search.example.com/lobehub-messages-legacy?expand_wildcards=all&filter_path=*.mappings,*.settings.index.analysis',
     );
   });
 
@@ -775,6 +783,222 @@ describe('FtsSearchReindexHttpClient', () => {
     const [endpoint, init] = fetchMock.mock.calls[0];
     expect(String(endpoint)).toBe('https://search.example.com/lobehub-messages-v1');
     expect(init.method).toBe('DELETE');
+  });
+
+  it('installs an exact-index auto-create tombstone before deletion', async () => {
+    const index = 'lobehub-messages-v1';
+    const templateName = getRetiredIndexProtectionTemplateName(index);
+    const template = {
+      _meta: { index, owner: 'lobehub-fts-search-retirement' },
+      allow_auto_create: false,
+      index_patterns: [index],
+      priority: 1_000_000,
+      template: {},
+    };
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(response({ index_templates: [] }))
+      .mockResolvedValueOnce(response({ acknowledged: true }))
+      .mockResolvedValueOnce(
+        response({ index_templates: [{ index_template: template, name: templateName }] }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+    const beforeMutation = vi.fn().mockResolvedValue(undefined);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      beforeMutation,
+      url: 'https://search.example.com',
+    });
+
+    await expect(client.ensureRetiredIndexProtection(index)).resolves.toBeUndefined();
+
+    expect(beforeMutation).toHaveBeenCalledOnce();
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    expect(String(fetchMock.mock.calls[1][0])).toBe(
+      `https://search.example.com/_index_template/${templateName}?create=true`,
+    );
+    expect(fetchMock.mock.calls[1][1].method).toBe('PUT');
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual(template);
+  });
+
+  it('refuses a retired-index selector containing wildcards', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      url: 'https://search.example.com',
+    });
+
+    await expect(client.ensureRetiredIndexProtection('lobehub-messages-v*')).rejects.toThrow(
+      'must be one exact physical index name',
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('accepts an existing owned tombstone with Elasticsearch defaults', async () => {
+    const index = 'lobehub-messages-v1';
+    const templateName = getRetiredIndexProtectionTemplateName(index);
+    const fetchMock = vi.fn().mockResolvedValue(
+      response({
+        index_templates: [
+          {
+            index_template: {
+              _meta: { index, owner: 'lobehub-fts-search-retirement' },
+              allow_auto_create: false,
+              composed_of: [],
+              index_patterns: [index],
+              priority: 1_000_000,
+              template: {},
+            },
+            name: templateName,
+          },
+        ],
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const beforeMutation = vi.fn().mockResolvedValue(undefined);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      beforeMutation,
+      url: 'https://search.example.com',
+    });
+
+    await expect(client.ensureRetiredIndexProtection(index)).resolves.toBeUndefined();
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(beforeMutation).not.toHaveBeenCalled();
+  });
+
+  it('refuses to shadow an external template matching the retired index', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      response({
+        index_templates: [
+          {
+            index_template: { index_patterns: ['lobehub-*'], priority: 500, template: {} },
+            name: 'operator-defaults',
+          },
+        ],
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      url: 'https://search.example.com',
+    });
+
+    await expect(client.ensureRetiredIndexProtection('lobehub-messages-v1')).rejects.toThrow(
+      'overlaps external index template operator-defaults',
+    );
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it('refuses an unowned collision at the deterministic tombstone name', async () => {
+    const index = 'lobehub-messages-v1';
+    const templateName = getRetiredIndexProtectionTemplateName(index);
+    const fetchMock = vi.fn().mockResolvedValue(
+      response({
+        index_templates: [
+          {
+            index_template: { index_patterns: [index], template: {} },
+            name: templateName,
+          },
+        ],
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      url: 'https://search.example.com',
+    });
+
+    await expect(client.ensureRetiredIndexProtection(index)).rejects.toThrow(
+      `index template ${templateName} already exists but is not owned`,
+    );
+  });
+
+  it('blocks deletion when Elasticsearch does not acknowledge it', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(response({ acknowledged: false }));
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      url: 'https://search.example.com',
+    });
+
+    await expect(client.deleteIndex('lobehub-messages-v1')).rejects.toThrow(
+      'did not acknowledge deletion',
+    );
+  });
+
+  it.each([
+    {
+      expected: 'alias creation for lobehub-messages',
+      name: 'alias creation',
+      preflight404: true,
+      run: (client: FtsSearchReindexHttpClient) =>
+        client.ensureAlias('lobehub-messages', 'lobehub-messages-v1'),
+    },
+    {
+      expected: 'alias promotion for lobehub-messages',
+      name: 'alias promotion',
+      preflight404: false,
+      run: (client: FtsSearchReindexHttpClient) =>
+        client.promoteAlias('lobehub-messages', ['lobehub-messages-v1'], 'lobehub-messages-v2'),
+    },
+    {
+      expected: 'index close for lobehub-messages-v1',
+      name: 'index close',
+      preflight404: false,
+      run: (client: FtsSearchReindexHttpClient) => client.closeIndex('lobehub-messages-v1'),
+    },
+    {
+      expected: 'mapping upgrade for lobehub-messages-v1',
+      name: 'mapping upgrade',
+      preflight404: false,
+      run: (client: FtsSearchReindexHttpClient) =>
+        client.putMapping('lobehub-messages-v1', {
+          _meta: reindexMeta,
+          properties: FTS_SEARCH_INDEX_DEFINITIONS.agents.mappings.properties,
+        }),
+    },
+    {
+      expected: 'index creation for lobehub-messages-v1',
+      name: 'index creation',
+      preflight404: true,
+      run: (client: FtsSearchReindexHttpClient) =>
+        client.ensureIndex('lobehub-messages-v1', agentsIndexBody),
+    },
+  ])(
+    'blocks $name when Elasticsearch does not acknowledge it',
+    async ({ expected, preflight404, run }) => {
+      const fetchMock = vi.fn();
+      if (preflight404) fetchMock.mockResolvedValueOnce(response(undefined, 404));
+      fetchMock.mockResolvedValueOnce(response({ acknowledged: false }));
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new FtsSearchReindexHttpClient({
+        apiKey: 'secret-key',
+        url: 'https://search.example.com',
+      });
+
+      await expect(run(client)).rejects.toThrow(`Elasticsearch did not acknowledge ${expected}`);
+    },
+  );
+
+  it('runs the mutation guard immediately before mutable requests', async () => {
+    const events: string[] = [];
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+      events.push(`request:${init?.method}`);
+      return response({ acknowledged: true });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new FtsSearchReindexHttpClient({
+      apiKey: 'secret-key',
+      beforeMutation: async () => {
+        events.push('guard');
+      },
+      url: 'https://search.example.com',
+    });
+
+    await client.closeIndex('lobehub-messages-v1');
+    expect(events).toEqual(['guard', 'request:POST']);
   });
 
   it('reports a failed deletion of a retired generation', async () => {

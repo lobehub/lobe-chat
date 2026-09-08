@@ -9,7 +9,8 @@ For initial provider cutover and complete environment setup, use
 - Add a new numbered batch under `ftsSearchDocument/migration/` with complete definitions for the
   changed entities and bumped `schemaVersion` values; keep the current Zod schema and projection
   consistent. Register the batch and update current pointers in `migration/index.ts`, then append
-  expected fingerprints in `__tests__/schemaSnapshots.ts`. Preserve old batches and baselines.
+  expected fingerprints in `__tests__/schemaSnapshots.json`. Preserve old batches and baselines;
+  the PR history guard rejects changes to batch directories and JSON entries present in the base.
   The mapping and history tests reject missing registrations, stale pointers and version bumps
   without physical changes. Shared analysis changes require
   version bumps and rebuilds for every entity, even if only one uses the analyzer being changed.
@@ -17,6 +18,10 @@ For initial provider cutover and complete environment setup, use
   versions. A later entity version bump makes that entity eligible for upgrade.
 - Rebuild into a new generation for field type/analyzer changes, removals, or when rollback matters.
   Only entities whose declared version changes need a new generation.
+- Before removing or renaming a field, retain its Zod definition, builder output and old property
+  in `FTS_SEARCH_RETAINED_SOURCE_PROPERTIES` until every index needing it is closed. New index writes
+  omit retained source-only fields. Sync, apply and promotion reject incompatible open targets;
+  a type or semantic conversion is not supplied automatically.
 - Use `--in-place` only when status reports `upgrade_available` and `mappingChange: additive`.
   Currently this means new top-level fields; adding a multi-field to an existing field is classified
   as breaking. In-place still scans historical documents to populate the new fields. It preserves
@@ -43,10 +48,14 @@ mapping changed; the guide's `messages` and rollback version `1` are examples.
 - Rollback is an optional recovery branch: select a retained, open older generation first, then
   redeploy matching older code. Older sync code rejects a live generation newer than it declares.
   Unlike forward promotion, rollback may accept an older stamped generation without its checkpoint.
-- Retire only while the declared generation is serving and rollback is no longer needed. The first
-  invocation closes old open indexes; a later one deletes already-closed indexes. Before deletion,
-  let pre-close sync work finish and confirm a new drain resolves targets without the closed index.
-  Back-to-back calls can let an old drain auto-create a deleted index again; the CLI enforces no gap.
+- Retire only while the declared generation is serving and rollback is no longer needed. `--retire`
+  only closes eligible old indexes. Explicit `--purge` installs and verifies an exact-index template
+  with `allow_auto_create: false` before deletion, requiring `manage_index_templates`. Keep these
+  protection templates; conflicts fail closed. An empty Outbox is not a fence against paused workers.
+- Mutating commands acquire a non-expiring lock in `<namespace>-fts-search-control`. Status reads
+  `migrationLock` without acquiring one. Failed/interrupted commands may retain the lock; stop the
+  old process and resolve uncertain requests before `--release-lock=<owner> --yes`. Never use timeout
+  takeover. The lock and tombstones cannot protect against older CLI binaries or external mutations.
 - In-place widens the live mapping before backfill and pins the physical index in its checkpoint.
   Resume uses ordinary `--apply` with the same directory; no promote/retire step is needed for this
   operation. Metadata can already say `in_sync` while backfill is incomplete, so also inspect run and
@@ -64,12 +73,13 @@ entity to an existing generation reopens its checkpoint for that entity's backfi
 | Same checkpoint, incomplete run                 | Reuses run ID, skips completed entities, and continues after saved cursors. An uncheckpointed batch may be replayed.                                |
 | Missing checkpoint, existing indexes            | A new run can be rejected by `_meta.reindex_run_id`; restore the matching checkpoint. This is not a safe way to restart or adopt an existing index. |
 | New empty target                                | Only this initial installation uses `--apply --fresh-run --yes`. Do not use it to resume or override a conflict.                                    |
-| Two workers, same checkpoint directory          | Both can bulk-write the same batch. Cursor compare-and-swap prevents duplicate progress, but the file lock does not serialize the whole run.        |
-| Two workers, different directories, same target | They do not share a lock; their run identities can conflict. Keep a single owner rather than using separate checkpoints as isolation.               |
+| Two workers, same checkpoint directory          | The Elasticsearch namespace lock rejects the second migration owner.                                                                                |
+| Two workers, different directories, same target | The same namespace lock still rejects the second owner, including different source databases targeting that ES namespace.                           |
 
-These no-backfill guarantees concern `--apply`. Repeating `--promote` after the alias already serves
-the target returns an error. Repeating `--retire` can advance from closing to deletion; never treat
-all migration commands as interchangeable no-ops on retry.
+Repeating `--promote` for a valid already-live target returns `already_live`, without a new Outbox
+idle gate. Repeating `--retire` never advances to deletion; use `--purge` explicitly. If in-place
+mapping restamping succeeded before its checkpoint was created, repeat `--apply --in-place` after
+resolving any residual lock; exact mapping and identity checks allow that intermediate state.
 
 ## Large datasets and deployment automation
 

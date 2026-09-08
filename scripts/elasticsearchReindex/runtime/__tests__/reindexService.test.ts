@@ -186,6 +186,28 @@ beforeEach(() => {
 });
 
 describe('FtsSearchReindexService', () => {
+  it('omits source fields retained for older generations from current strict-mapping bulk writes', async () => {
+    const { builder, client, repository } = createDependencies();
+    const source = { id: 'message-1', content: 'current text', legacy_content: 'rollback text' };
+    builder.buildBatch.mockImplementation(async (entity, { afterId }) =>
+      entity === 'messages' && !afterId ? [{ entity, id: source.id, source }] : [],
+    );
+    vi.mocked(client.bulk).mockResolvedValue([{ status: 201 }]);
+    vi.mocked(client.count).mockImplementation(async (index) =>
+      index === 'test-messages-v1' ? 1 : 0,
+    );
+    const service = new FtsSearchReindexService(builder, repository, client);
+
+    await service.run('test', 1);
+
+    const body = vi.mocked(client.bulk).mock.calls[0][0];
+    expect(JSON.parse(body.trim().split('\n')[1])).toEqual({
+      id: source.id,
+      content: source.content,
+    });
+    expect(source.legacy_content).toBe('rollback text');
+  });
+
   it('uses defaults when optional batch limits are undefined', async () => {
     const { builder, client, repository } = createDependencies();
     const service = new FtsSearchReindexService(builder, repository, client, {
@@ -453,7 +475,7 @@ describe('FtsSearchReindexService', () => {
       return Array.from({ length: 4 }, (_, index) => ({
         entity: 'agents' as const,
         id: `agent-${index}`,
-        source: { content: 'x'.repeat(100), id: `agent-${index}` },
+        source: { id: `agent-${index}`, system_role: 'x'.repeat(100) },
       }));
     });
     let active = 0;
@@ -529,7 +551,7 @@ describe('FtsSearchReindexService', () => {
         entity: 'agents' as const,
         id: `agent-${index}`,
         source: {
-          get content() {
+          get system_role() {
             if (index === 2) {
               thirdDocumentEncodedAfterRequestStarted = firstRequestStarted;
             }
@@ -650,7 +672,7 @@ describe('FtsSearchReindexService', () => {
     const documents = Array.from({ length: 2 }, (_, index) => ({
       entity: 'agents' as const,
       id: `agent-${index}`,
-      source: { content: 'x'.repeat(100), id: `agent-${index}` },
+      source: { id: `agent-${index}`, system_role: 'x'.repeat(100) },
     }));
     builder.buildBatch.mockImplementation(async (entity, { afterId }) =>
       entity === 'agents' && !afterId ? documents : [],

@@ -7,6 +7,7 @@ import type {
   FtsSearchSyncWork,
 } from '@/database/repositories/ftsSearchSyncOutbox';
 
+import type { ElasticsearchFtsSearchSyncIndexFieldsResult } from '../ftsSearch/elasticsearch';
 import { ElasticsearchFtsSearchRequestError } from '../ftsSearch/elasticsearch';
 import { FtsSearchSyncService } from './service';
 
@@ -54,8 +55,15 @@ const createHarness = (
       Object.fromEntries(aliases.map((alias) => [alias, [`${alias}-v1`]])),
     ),
     /** Every generation maps every declared field unless a test narrows one. */
-    getFtsSearchSyncIndexFields: vi.fn(async (indexes: string[]) =>
-      Object.fromEntries(indexes.map((index) => [index, ALL_DECLARED_FIELDS])),
+    getFtsSearchSyncIndexFields: vi.fn(
+      async (
+        entitiesByIndex: Record<string, string>,
+      ): Promise<ElasticsearchFtsSearchSyncIndexFieldsResult> => ({
+        fieldsByIndex: Object.fromEntries(
+          Object.keys(entitiesByIndex).map((index) => [index, ALL_DECLARED_FIELDS]),
+        ),
+        incompatibilities: [],
+      }),
     ),
   };
 
@@ -183,8 +191,11 @@ describe('FtsSearchSyncService', () => {
       'lobehub-test-agents': ['lobehub-test-agents-v1', 'lobehub-test-agents-v2'],
     });
     harness.client.getFtsSearchSyncIndexFields.mockResolvedValue({
-      'lobehub-test-agents-v1': ['id', 'title'],
-      'lobehub-test-agents-v2': ['id', 'summary', 'title'],
+      fieldsByIndex: {
+        'lobehub-test-agents-v1': ['id', 'title'],
+        'lobehub-test-agents-v2': ['id', 'summary', 'title'],
+      },
+      incompatibilities: [],
     });
     harness.client.bulk.mockResolvedValue({
       errors: false,
@@ -199,10 +210,10 @@ describe('FtsSearchSyncService', () => {
 
     await service.drainOnce();
 
-    expect(harness.client.getFtsSearchSyncIndexFields).toHaveBeenCalledWith([
-      'lobehub-test-agents-v1',
-      'lobehub-test-agents-v2',
-    ]);
+    expect(harness.client.getFtsSearchSyncIndexFields).toHaveBeenCalledWith({
+      'lobehub-test-agents-v1': 'agents',
+      'lobehub-test-agents-v2': 'agents',
+    });
     const sources = (harness.client.bulk.mock.calls[0][0] as string)
       .trim()
       .split('\n')
@@ -235,6 +246,64 @@ describe('FtsSearchSyncService', () => {
       expect.not.objectContaining({ permanent: true }),
     ]);
     expect(result).toMatchObject({ acknowledged: 0, dead: 0, failed: 1 });
+  });
+
+  it('dead-letters only the incompatible entity and continues syncing compatible entities', async () => {
+    const works: FtsSearchSyncWork[] = [
+      work('agent', 3),
+      { documentId: 'topic', entity: 'topics', leaseToken: '4', revision: 4 },
+    ];
+    const harness = createHarness(
+      works,
+      new Map([
+        ['agent', { id: 'agent', title: 'agent' }],
+        ['topic', { id: 'topic', title: 'topic' }],
+      ]),
+    );
+    harness.client.getFtsSearchSyncIndexFields.mockResolvedValueOnce({
+      fieldsByIndex: {
+        'lobehub-test-agents-v1': ['id', 'legacy_title', 'title'],
+        'lobehub-test-topics-v1': ['id', 'title'],
+      },
+      incompatibilities: [
+        {
+          entity: 'agents',
+          index: 'lobehub-test-agents-v1',
+          message:
+            'Elasticsearch full-text search index lobehub-test-agents-v1 is incompatible with the current agents projection. Retain compatible source fields or retire the index before syncing agents.',
+        },
+      ],
+    });
+    harness.client.bulk.mockResolvedValue({ errors: false, items: [{ index: { status: 201 } }] });
+    const service = new FtsSearchSyncService(
+      harness.builder as never,
+      harness.outbox as never,
+      harness.client,
+      'lobehub-test',
+    );
+
+    const result = await service.drainOnce();
+
+    expect(harness.outbox.markFailures).toHaveBeenCalledWith([
+      expect.objectContaining({
+        documentId: 'agent',
+        entity: 'agents',
+        error: expect.objectContaining({
+          message: expect.stringContaining('Retain compatible source fields or retire the index'),
+        }),
+        permanent: true,
+      }),
+    ]);
+    expect(bulkActions(harness.client)).toEqual([
+      {
+        _id: 'topic',
+        _index: 'lobehub-test-topics-v1',
+        version: 4,
+        version_type: 'external',
+      },
+    ]);
+    expect(harness.outbox.acknowledgeMany).toHaveBeenCalledWith([works[1]]);
+    expect(result).toMatchObject({ acknowledged: 1, bulkItems: 1, dead: 1, failed: 1 });
   });
 
   it('writes every change to each live generation and settles it only when all of them hold it', async () => {

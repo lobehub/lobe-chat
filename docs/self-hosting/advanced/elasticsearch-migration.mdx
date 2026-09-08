@@ -337,6 +337,10 @@ After correcting a rejected source document or mapping, run `--apply --yes` agai
 operator deliberately accepts that one document with a non-retryable failure will be absent from
 the initial Elasticsearch snapshot, resolve the blocker explicitly and then resume:
 
+Both commands below require `ES_URL` and the deployment's Elasticsearch authentication settings,
+including `--skip-failure`: it acquires the same namespace migration lock before changing the
+checkpoint. Keep these settings exported from the earlier setup.
+
 ```bash
 ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
   bun run fts-search:reindex -- --skip-failure=agents:document-id --yes
@@ -375,6 +379,49 @@ same generation model, one entity at a time:
 3. Run `--status`. Each entity is classified as `in_sync`, `upgrade_available`, `drift` (the mapping
    changed without a bump), `rollback_required` (the alias serves a newer version than the code), or
    `unmanaged`, and the `mappingChange` field says whether the change is `additive` or `breaking`.
+   `mappingDiff` lists added, removed and changed fields, including analyzer and multi-field changes.
+   Each open generation reports `fieldCompatibility`; `retirementPlan` lists close/purge candidates
+   and blockers. Status is read-only.
+
+### Keep document projections compatible
+
+Removing a field from the new mapping does not remove the old index's need for that field. During
+the rollback window, keep producing it in the Zod schema and builder, and declare its old property
+in `FTS_SEARCH_RETAINED_SOURCE_PROPERTIES` in `ftsSearchDocument/policy.ts`. Reindex writes omit these
+retained fields from the new strict mapping; incremental sync still sends them to older mappings.
+Only remove the retained source field after every index needing it is closed and rollback to that
+code is no longer required. A rename follows the same process, with both old and new source fields
+produced during the transition.
+
+Sync rejects an open target whose fields or value types the current projection cannot represent.
+Affected entity records are retained as dead letters with an actionable error; compatible entities
+continue syncing. Monitor the Outbox `dead` count. Fix the projection or retire the incompatible
+generation, then explicitly repair/requeue the affected records; deployment alone does not retry
+dead letters. This is separate from `--skip-failure`, which handles backfill checkpoint failures.
+This checks field definitions, not whether an optional value is present in each document. Text and
+keyword both accept strings; other type changes need an explicitly compatible projection. The guard
+does not convert historical values or detect changes in the meaning of a field.
+
+### One migration operator per namespace
+
+Mutating commands acquire a non-expiring lock in `<namespace>-fts-search-control` in Elasticsearch.
+This covers separate processes and checkpoint directories targeting the same cluster and namespace.
+The migration key needs create/read/write/delete access to this control index. Sync does not take
+the lock and keeps running. A successful command releases its lock; a failed or interrupted command
+can retain it because a timed-out Elasticsearch mutation may still finish on the server.
+Failures after lock acquisition retain it conservatively, including validation failures before a
+write. Correcting the input alone does not release that lock; use the recovery procedure below.
+
+Inspect `migrationLock` in `--status`. Before explicitly releasing a residual lock, stop its previous
+process and resolve any uncertain request outcome; the owner UUID is an identifier, not proof that
+the process has stopped:
+
+```bash
+bun run fts-search:reindex -- --release-lock=<owner-uuid> --yes
+```
+
+There is no automatic timeout takeover. Do not run older CLI binaries that bypass the lock alongside
+these commands. Operator actions outside this CLI are not serialized by the lock.
 
 During a multi-generation upgrade, the consumer can split one change across bulk requests to keep
 each request within its byte limit. It acknowledges the change only after all surviving generations
@@ -405,8 +452,10 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
 The alias moves atomically to the newest generation that is fully backfilled and matches the declared
 mapping. Searches switch with it; nothing is deleted. To roll back, promote the previous generation
 explicitly (`--promote --entity=messages --version=1`), redeploy the matching code, and rebuild later.
-Promotion refuses to run while the Outbox has work, because the consumer must have written every
-change to the new generation first.
+Promotion refuses to change the alias while the Outbox has work, because the consumer must have
+written every change to the new generation first. Repeating a completed promotion returns
+`outcome: already_live` after identity checks, without moving the alias or requiring a newly idle
+Outbox.
 
 Retire the old generation only after the new one has served traffic and no rollback is planned:
 
@@ -415,11 +464,22 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
   bun run fts-search:reindex -- --retire --entity=messages --yes
 ```
 
-Retirement is two-phase and preserves indexes still attached to the entity's alias. The first run
-closes detached old indexes; a later run deletes indexes that are already closed. Before the deletion
-run, let every pre-close drain finish and confirm that a fresh drain resolves targets without the
-closed indexes. Do not run the command twice back-to-back: the CLI does not enforce this barrier,
-and a consumer holding an old target list can recreate a deleted index with a dynamic mapping.
+`--retire` only closes detached old generations; repeating it never deletes data. Indexes still
+attached to the entity's alias remain untouched. Permanently delete eligible closed generations
+with a separate command:
+
+```bash
+ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
+  bun run fts-search:reindex -- --purge --entity=messages --yes
+```
+
+Before deletion, the command installs and verifies a template for the exact retired index name with
+`allow_auto_create: false`. This requires `manage_index_templates` on the migration key. The retained
+template prevents a delayed physical-index bulk request from recreating the deleted index; a queue
+being empty alone would not prove that a paused old worker had stopped. Template conflicts or
+unverifiable protection block deletion. Keep the protection templates after deletion, including
+when restoring cluster state. They do not prevent explicit index creation or protect against an
+operator replacing the template, so do not rebuild purged generations with older CLI binaries.
 
 ### Add fields in place (additive change only)
 
@@ -435,6 +495,9 @@ The command adds the new fields and the new `_meta` to the live index, then back
 so the new fields are populated; concurrent consumer writes win through Elasticsearch versioning. The
 physical index keeps its original name (`lobehub-messages-v1`) while its `_meta` records `v2`;
 `--status` and the runtime read the version from `_meta`. Nothing is promoted or retired afterwards.
+If the command stopped after updating the mapping but before creating its checkpoint, repeat the
+same `--apply --in-place` command after resolving any residual lock. Matching metadata and mapping
+allow it to resume that specific intermediate state; `in_sync` alone does not prove backfill finished.
 
 The trade-off is rollback: there is no previous generation to promote back to. Rolling the code back
 after an in-place upgrade requires rebuilding the entity from the older code. Prefer a rebuild when a

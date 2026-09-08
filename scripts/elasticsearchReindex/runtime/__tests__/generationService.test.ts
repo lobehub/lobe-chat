@@ -21,9 +21,13 @@ import type {
 import {
   classifyMappingChange,
   describeEntityGeneration,
+  planRetiredGenerations,
   promoteGeneration,
+  purgeRetiredGenerations,
+  resolveInPlaceTarget,
   retireGenerations,
 } from '../generationService';
+import { diffFtsSearchMappings } from '../mappingDiff';
 
 const NAMESPACE = 'lobehub';
 const ENTITY: FtsSearchDocumentEntity = 'topics';
@@ -98,6 +102,9 @@ const createClient = (generations: FtsSearchReindexGenerationDescription[]) => (
   describeGenerations: vi
     .fn<FtsSearchGenerationElasticsearchClient['describeGenerations']>()
     .mockResolvedValue(generations),
+  ensureRetiredIndexProtection: vi
+    .fn<FtsSearchGenerationElasticsearchClient['ensureRetiredIndexProtection']>()
+    .mockResolvedValue(),
   promoteAlias: vi.fn<FtsSearchGenerationElasticsearchClient['promoteAlias']>().mockResolvedValue(),
 });
 
@@ -176,6 +183,40 @@ describe('classifyMappingChange', () => {
     live.properties.title.analyzer = 'standard';
 
     expect(classifyMappingChange(ENTITY, live, declaredAnalysis())).toBe('breaking');
+  });
+});
+
+describe('diffFtsSearchMappings', () => {
+  it('reports a deterministic field-level diff with actionable reasons', () => {
+    const live = declaredMappings();
+    delete live.properties.description;
+    live.properties.legacy_field = { type: 'keyword' };
+    live.properties.title = {
+      analyzer: 'standard',
+      fields: { legacy: { type: 'keyword' } },
+      ignore_above: 512,
+      type: 'keyword',
+    };
+
+    expect(
+      diffFtsSearchMappings({
+        declared: declaredMappings(),
+        declaredAnalysis: declaredAnalysis(),
+        live,
+        liveAnalysis: { analyzer: {} },
+      }),
+    ).toEqual({
+      added: ['description'],
+      analysisChanged: true,
+      changed: [
+        {
+          field: 'title',
+          reasons: ['type', 'analyzer', 'ignore_above', 'multifields'],
+        },
+      ],
+      dynamicChanged: false,
+      removed: ['legacy_field'],
+    });
   });
 });
 
@@ -356,6 +397,7 @@ describe('promoteGeneration', () => {
     await expect(result).resolves.toEqual({
       alias: ALIAS,
       from: [physicalIndex(1)],
+      outcome: 'promoted',
       to: physicalIndex(2),
     });
     expect(client.promoteAlias).toHaveBeenCalledExactlyOnceWith(
@@ -375,13 +417,41 @@ describe('promoteGeneration', () => {
     expect(client.promoteAlias).not.toHaveBeenCalled();
   });
 
-  it('rejects when the alias already serves the target', async () => {
+  it('returns already_live without checkpoint or Outbox gates when a valid target is live', async () => {
     const { client, result } = promote({
       generations: [buildManagedGeneration(2, { isWriteIndex: true })],
-      states: { 2: createRunState(2, 'completed') },
+      outboxStats: { ...IDLE_OUTBOX, dead: 1, pending: 2 },
     });
 
-    await expect(result).rejects.toThrow(`${ALIAS} already serves ${physicalIndex(2)}`);
+    await expect(result).resolves.toEqual({
+      alias: ALIAS,
+      from: [],
+      outcome: 'already_live',
+      to: physicalIndex(2),
+    });
+    expect(client.promoteAlias).not.toHaveBeenCalled();
+  });
+
+  it('rejects an already-live target whose backfill is still running', async () => {
+    const { client, result } = promote({
+      generations: [buildManagedGeneration(2, { isWriteIndex: true })],
+      states: { 2: createRunState(2, 'backfilling') },
+    });
+
+    await expect(result).rejects.toThrow(`${physicalIndex(2)} backfill is incomplete`);
+    expect(client.promoteAlias).not.toHaveBeenCalled();
+  });
+
+  it('rejects an already-live target whose declared mapping drifted', async () => {
+    const target = buildGeneration(physicalIndex(2), {
+      isWriteIndex: true,
+      meta: buildMeta({ fingerprint: 'stale-fingerprint', version: 2 }),
+    });
+    const { client, result } = promote({ generations: [target] });
+
+    await expect(result).rejects.toThrow(
+      `${physicalIndex(2)} was not built from the declared v2 mapping`,
+    );
     expect(client.promoteAlias).not.toHaveBeenCalled();
   });
 
@@ -464,6 +534,7 @@ describe('promoteGeneration', () => {
     await expect(result).resolves.toEqual({
       alias: ALIAS,
       from: [physicalIndex(2)],
+      outcome: 'promoted',
       to: physicalIndex(1),
     });
     expect(client.promoteAlias).toHaveBeenCalledExactlyOnceWith(
@@ -485,6 +556,25 @@ describe('promoteGeneration', () => {
 
     await expect(result).rejects.toThrow(
       `${physicalIndex(1)} has no checkpoint and no reindex _meta`,
+    );
+    expect(client.promoteAlias).not.toHaveBeenCalled();
+  });
+
+  it('rejects a rollback target that requires a source field the current projection removed', async () => {
+    const previousMappings = declaredMappings();
+    previousMappings.properties.legacy_title = { type: 'text' };
+    const previous = buildGeneration(physicalIndex(1), {
+      mappings: previousMappings,
+      meta: buildMeta({ fingerprint: 'legacy-fingerprint', reindexRunId: 'run-v1', version: 1 }),
+    });
+    const { client, result } = promote({
+      generations: [previous, buildManagedGeneration(2, { isWriteIndex: true })],
+      states: { 2: createRunState(2, 'completed') },
+      version: 1,
+    });
+
+    await expect(result).rejects.toThrow(
+      `${physicalIndex(1)} requires source fields the current projection cannot preserve: legacy_title (missing)`,
     );
     expect(client.promoteAlias).not.toHaveBeenCalled();
   });
@@ -530,7 +620,7 @@ describe('retireGenerations', () => {
     expect(client.deleteIndex).not.toHaveBeenCalled();
   });
 
-  it('closes open generations, deletes already closed ones and keeps the live index', async () => {
+  it('closes open generations and leaves already closed ones for explicit purge', async () => {
     setDeclaredVersion(ENTITY, 3);
     const { client, result } = retire({
       generations: [
@@ -542,13 +632,14 @@ describe('retireGenerations', () => {
     });
 
     await expect(result).resolves.toEqual({
+      alreadyClosed: [physicalIndex(2)],
       alias: ALIAS,
       closed: [physicalIndex(1)],
-      deleted: [physicalIndex(2)],
+      deleted: [],
       kept: physicalIndex(3),
     });
     expect(client.closeIndex).toHaveBeenCalledExactlyOnceWith(physicalIndex(1));
-    expect(client.deleteIndex).toHaveBeenCalledExactlyOnceWith(physicalIndex(2));
+    expect(client.deleteIndex).not.toHaveBeenCalled();
   });
 
   it.each(['open', 'closed'] as const)(
@@ -563,6 +654,7 @@ describe('retireGenerations', () => {
       });
 
       await expect(result).resolves.toEqual({
+        alreadyClosed: [],
         alias: ALIAS,
         closed: [],
         deleted: [],
@@ -582,6 +674,7 @@ describe('retireGenerations', () => {
     });
 
     await expect(result).resolves.toEqual({
+      alreadyClosed: [],
       alias: ALIAS,
       closed: [],
       deleted: [],
@@ -589,5 +682,143 @@ describe('retireGenerations', () => {
     });
     expect(client.closeIndex).not.toHaveBeenCalled();
     expect(client.deleteIndex).not.toHaveBeenCalled();
+  });
+});
+
+describe('purgeRetiredGenerations', () => {
+  it('deletes only closed, detached, managed generations after installing deletion protection', async () => {
+    setDeclaredVersion(ENTITY, 3);
+    const unmanaged = buildGeneration(physicalIndex(0), { aliased: false, state: 'closed' });
+    const client = createClient([
+      unmanaged,
+      buildManagedGeneration(1, { aliased: false, state: 'open' }),
+      buildManagedGeneration(2, { aliased: false, state: 'closed' }),
+      buildManagedGeneration(3, { isWriteIndex: true }),
+    ]);
+
+    await expect(
+      purgeRetiredGenerations({
+        client,
+        entity: ENTITY,
+        namespace: NAMESPACE,
+        readCheckpoint: createCheckpointReader({ 3: createRunState(3, 'completed') }),
+      }),
+    ).resolves.toEqual({ alias: ALIAS, deleted: [physicalIndex(2)], kept: physicalIndex(3) });
+    expect(client.ensureRetiredIndexProtection).toHaveBeenCalledExactlyOnceWith(physicalIndex(2));
+    expect(client.deleteIndex).toHaveBeenCalledExactlyOnceWith(physicalIndex(2));
+  });
+
+  it('rejects deletion while the retired generation checkpoint is still backfilling', async () => {
+    setDeclaredVersion(ENTITY, 2);
+    const client = createClient([
+      buildManagedGeneration(1, { aliased: false, state: 'closed' }),
+      buildManagedGeneration(2, { isWriteIndex: true }),
+    ]);
+
+    await expect(
+      purgeRetiredGenerations({
+        client,
+        entity: ENTITY,
+        namespace: NAMESPACE,
+        readCheckpoint: createCheckpointReader({
+          1: createRunState(1, 'backfilling'),
+          2: createRunState(2, 'completed'),
+        }),
+      }),
+    ).rejects.toThrow(`${physicalIndex(1)} backfill is still running`);
+    expect(client.ensureRetiredIndexProtection).not.toHaveBeenCalled();
+    expect(client.deleteIndex).not.toHaveBeenCalled();
+  });
+});
+
+describe('planRetiredGenerations', () => {
+  it('previews close and purge work with explicit blockers and no side effects', async () => {
+    setDeclaredVersion(ENTITY, 3);
+    const unmanaged = buildGeneration(physicalIndex(0), { aliased: false, state: 'closed' });
+    const client = createClient([
+      unmanaged,
+      buildManagedGeneration(1, { aliased: false, state: 'open' }),
+      buildManagedGeneration(2, { aliased: false, state: 'closed' }),
+      buildManagedGeneration(3, { isWriteIndex: true }),
+      buildManagedGeneration(4, { aliased: false, state: 'open' }),
+    ]);
+    const status = await describeEntityGeneration({
+      client,
+      entity: ENTITY,
+      namespace: NAMESPACE,
+      readCheckpoint: createCheckpointReader({ 3: createRunState(3, 'completed') }),
+    });
+
+    expect(planRetiredGenerations(status)).toEqual({
+      alreadyClosed: [physicalIndex(2)],
+      blockedBy: [
+        `${physicalIndex(0)} has no known managed reindex identity`,
+        `${physicalIndex(4)} is not older than the live generation`,
+      ],
+      close: [physicalIndex(1)],
+      purgeCandidates: [physicalIndex(2)],
+    });
+    expect(client.closeIndex).not.toHaveBeenCalled();
+    expect(client.deleteIndex).not.toHaveBeenCalled();
+  });
+
+  it('does not close an older generation while its checkpoint is backfilling', async () => {
+    setDeclaredVersion(ENTITY, 2);
+    const client = createClient([
+      buildManagedGeneration(1, { aliased: false, state: 'open' }),
+      buildManagedGeneration(2, { isWriteIndex: true }),
+    ]);
+    const status = await describeEntityGeneration({
+      client,
+      entity: ENTITY,
+      namespace: NAMESPACE,
+      readCheckpoint: createCheckpointReader({
+        1: createRunState(1, 'backfilling'),
+        2: createRunState(2, 'completed'),
+      }),
+    });
+
+    expect(planRetiredGenerations(status)).toMatchObject({
+      blockedBy: [`${physicalIndex(1)} backfill is still running`],
+      close: [],
+    });
+  });
+});
+
+describe('resolveInPlaceTarget', () => {
+  it('resumes the crash window after restamping and before checkpoint creation', async () => {
+    setDeclaredVersion(ENTITY, 2);
+    const client = createClient([
+      buildManagedGeneration(2, { index: physicalIndex(1), isWriteIndex: true }),
+    ]);
+    const status = await describeEntityGeneration({
+      client,
+      entity: ENTITY,
+      namespace: NAMESPACE,
+      readCheckpoint: createCheckpointReader(),
+    });
+
+    expect(resolveInPlaceTarget(status)).toBe(physicalIndex(1));
+  });
+
+  it('rejects a same-version live index with real physical mapping drift', async () => {
+    setDeclaredVersion(ENTITY, 2);
+    const mappings = declaredMappings();
+    mappings.properties.title.analyzer = 'standard';
+    const client = createClient([
+      buildManagedGeneration(2, {
+        index: physicalIndex(1),
+        isWriteIndex: true,
+        mappings,
+      }),
+    ]);
+    const status = await describeEntityGeneration({
+      client,
+      entity: ENTITY,
+      namespace: NAMESPACE,
+      readCheckpoint: createCheckpointReader(),
+    });
+
+    expect(() => resolveInPlaceTarget(status)).toThrow('physical mapping differs');
   });
 });

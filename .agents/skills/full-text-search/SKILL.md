@@ -63,8 +63,11 @@ applicable item:
 5. Capture functions/triggers or fanout queries in `captureInfrastructure.ts`.
 6. Reindex checkpoints, Outbox draining, metrics, and self-host documentation.
 
-Schema fields, mappings, builders, and fixed fixtures must agree exactly. A field that is not in the
-document schema must not appear in the mapping or query field list.
+Schema fields, mappings, builders, and fixed fixtures must agree. Current mapping fields plus
+explicit `FTS_SEARCH_RETAINED_SOURCE_PROPERTIES` must equal the current Zod fields, without overlap.
+Retained source properties keep older open indexes writable during field removals; keep the builder
+producing them until those indexes are closed. They must not appear in current query metadata.
+A field outside the document schema must not appear in a mapping or query field list.
 
 Elasticsearch `multi_match` query length is bounded by a shared leaf-clause budget divided by the
 selected query-field count. Adding a field reduces that entity's safe query length, and changing a
@@ -119,7 +122,7 @@ declares the target and Elasticsearch records the live state, per entity:
 - `FTS_SEARCH_INDEX_DEFINITIONS[entity].schemaVersion` is the declared generation; the fingerprint is
   `sha256` of the mapping plus the shared analysis. Add complete changed-entity definitions in a new
   `ftsSearchDocument/migration/NNNN-meaningful-name/` batch, register it and update current pointers
-  in `migration/index.ts`. Append expected fingerprints in `__tests__/schemaSnapshots.ts`; preserve
+  in `migration/index.ts`. Append expected fingerprints in `__tests__/schemaSnapshots.json`; preserve
   published batches and baselines. `mappings.test.ts` and `migration/index.test.ts` check current
   parity, history, version bumps and fingerprint changes. See `migration/README.md` for ownership.
   Shared analysis changes alter
@@ -142,13 +145,16 @@ schema_fingerprint}`; the alias marks the live generation. Indexes created befor
   completed first install creates aliases. Promoting a newer generation requires a completed
   checkpoint, a fingerprint match when targeting the declared version, and an idle Outbox. Rollback
   to an older stamped generation can use its metadata without a retained checkpoint;
-  `--retire` requires `in_sync` and closes before it deletes. `--in-place` requires
+  `--retire` requires `in_sync` and only closes old generations; explicit `--purge` installs
+  exact-index templates forbidding auto-creation before deleting eligible closed generations.
+  `--in-place` requires
   `mappingChange: additive`, widens the live index with `PUT _mapping`, pins the checkpoint to that
   index, and backfills with `external_gte` so concurrent sync writes win.
 - Checkpoints are local files, not Drizzle migration history. Preserve `ES_REINDEX_STATE_DIR` across
-  invocations. Completed runs skip backfill; incomplete runs resume from saved cursors. The file lock
-  protects checkpoint updates, not the whole migration: concurrent runs can repeat bulk work. Use
-  one migration worker per target and a persistent checkpoint directory for deployment automation.
+  invocations. Completed runs skip backfill; incomplete runs resume from saved cursors. Mutating CLI
+  commands share a non-expiring Elasticsearch namespace lock, independent of checkpoint location.
+  A failed command retains its lock when its outcome may be uncertain. Before `--release-lock=<owner> --yes`, stop the previous process and resolve pending requests; never assume age proves it stopped.
+  The lock does not serialize old binaries or external operator actions.
 - Reconciliation is exact only on a first install; once an alias serves an entity, concurrent sync
   writes make a higher Elasticsearch count legitimate and only a shortfall fails.
 - `scripts/elasticsearchReindex/runtime/generationService.ts` owns classification (`missing`,

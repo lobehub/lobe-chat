@@ -1,3 +1,4 @@
+import type { ElasticsearchFtsSearchMappingProperty } from './migration/types';
 import type { FtsSearchDocumentEntity, FtsSearchDocumentSourceMap } from './zodSchema';
 
 export interface FtsSearchIndexPolicy<Entity extends FtsSearchDocumentEntity> {
@@ -5,6 +6,33 @@ export interface FtsSearchIndexPolicy<Entity extends FtsSearchDocumentEntity> {
   longTextFields?: readonly (keyof FtsSearchDocumentSourceMap[Entity] & string)[];
   queryFields: readonly (keyof FtsSearchDocumentSourceMap[Entity] & string)[];
 }
+
+type FtsSearchRetainedSourceProperties = {
+  [Entity in FtsSearchDocumentEntity]: Partial<
+    Record<keyof FtsSearchDocumentSourceMap[Entity] & string, ElasticsearchFtsSearchMappingProperty>
+  >;
+};
+
+/**
+ * Fields retained in the current document source only to keep older open generations writable.
+ * They are excluded from the current physical mapping and must not be used by current queries.
+ */
+export const FTS_SEARCH_RETAINED_SOURCE_PROPERTIES = {
+  agents: {},
+  chatGroups: {},
+  documents: {},
+  files: {},
+  knowledgeBases: {},
+  memoryActivities: {},
+  memoryContexts: {},
+  memoryExperiences: {},
+  memoryIdentities: {},
+  memoryPreferences: {},
+  messages: {},
+  personaDocuments: {},
+  topics: {},
+  userMemories: {},
+} as const satisfies FtsSearchRetainedSourceProperties;
 
 /** Current document metadata, independent of physical mapping history. */
 export const FTS_SEARCH_INDEX_POLICY = {

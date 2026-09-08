@@ -224,6 +224,8 @@ docker run --rm --env-file .env \
 
 修正被拒绝的源数据或映射后，再执行 `--apply --yes` 即可重试。如果运维人员明确接受某一条不可重试的数据暂时不进入初始 Elasticsearch 快照，可以显式解除阻塞，然后继续回填：
 
+以下两个命令都需要 `ES_URL` 和当前部署的 Elasticsearch 认证配置，包括 `--skip-failure`：它在修改 checkpoint 前也会获取同一命名空间的迁移锁。请保留前面配置并导出的这些变量。
+
 ```bash
 ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
   bun run fts-search:reindex -- --skip-failure=agents:document-id --yes
@@ -246,6 +248,30 @@ Elasticsearch 不能修改已有字段，因此之后每次映射变更都按实
 2. 部署代码。别名仍指向旧一代时增量消费器照常运行：它会把每条变更写入该实体所有打开的索引代，并按每一代实际映射的字段裁剪文档，所以可以在线上索引旁边构建新一代。如果别名指向的一代比代码声明的更新，运行时会拒绝运行，因此回退代码后要先把别名切回去。
 3. 运行 `--status`。每类实体会被归类为 `in_sync`、`upgrade_available`、`drift`（映射变了但没提升版本）、`rollback_required`（别名指向的版本比代码更新）或 `unmanaged`，`mappingChange` 字段会说明这次变更是 `additive`（只新增字段）还是 `breaking`。
 
+`--status` 是只读操作。`mappingDiff` 列出新增、删除、修改的字段及分析器变化；各个打开的索引通过 `fieldCompatibility` 显示文档兼容性，`retirementPlan` 列出关闭、删除候选和阻塞原因。
+
+### 保留回滚所需的源字段
+
+从新映射删除字段时，旧索引可能仍然需要它。回滚窗口内，在 Zod schema 和 builder 中继续产出旧字段，并在 `ftsSearchDocument/policy.ts` 的 `FTS_SEARCH_RETAINED_SOURCE_PROPERTIES` 中声明它的旧属性。全量回填写入新索引前会过滤这些保留字段，增量同步仍会把它们写入旧映射。等所有需要旧字段的索引关闭、且不再需要回滚旧代码之后，才能删除保留字段。字段改名时同样需要在过渡期同时产出新旧字段。
+
+如果当前投影无法表示某个打开索引所需的字段或值类型，同步会拒绝写入。检查针对字段定义，不要求每个可选值都非空；text 和 keyword 可以互认字符串，其他类型变化需要兼容的投影。这项保护不会转换历史值，也无法判断字段业务含义是否变化。
+
+受影响实体的记录会保留为带错误说明的死信，其它兼容实体继续同步。需要监控增量队列的 `dead` 数量；修正投影或退役不兼容索引后，显式修复或重新入队这些记录，仅部署修复不会自动重试死信。这里与 `--skip-failure` 不同，后者只处理全量回填 checkpoint 中的失败。
+
+### 同一命名空间只运行一个迁移进程
+
+变更命令会在 Elasticsearch 的 `<namespace>-fts-search-control` 中获取不自动过期的锁，覆盖指向同一集群和命名空间的不同进程与检查点目录。迁移 key 需要对此控制索引具有创建、读取、写入和删除权限。增量同步不持有这个锁，仍可正常运行。命令成功后释放锁；失败或中断时可能保留锁，因为超时的 Elasticsearch 请求仍可能在服务端完成。
+
+获取锁后的失败统一保留锁，也包括尚未写入时的校验失败。仅修正输入不会释放这把锁，需要按下面的步骤显式恢复。
+
+通过 `--status` 的 `migrationLock` 查看持有者。先停止旧进程并确认结果不明的请求已结束，再显式释放遗留锁；owner UUID 只是标识，不代表旧进程已停止：
+
+```bash
+bun run fts-search:reindex -- --release-lock=<owner-uuid> --yes
+```
+
+锁不会超时后自动交给下一进程。不要同时运行绕过这项保护的旧版 CLI；CLI 之外的人工操作也不受该锁约束。
+
 ### 重建该实体（任何变更都适用）
 
 ```bash
@@ -264,6 +290,8 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
 
 别名会原子地切到已完成回填且与声明映射一致的最新一代，搜索随之切换，不会删除任何索引。需要回退时，显式切回上一代（`--promote --entity=messages --version=1`），重新部署对应版本的代码，之后再重建。只要增量队列还有待处理记录，切换就会被拒绝，因为消费器必须先把所有变更写进新一代。
 
+重复执行已经完成的切换，在身份校验通过后返回 `outcome: already_live`，不修改别名，也不要求此时新增的增量工作再次清空。
+
 新一代承担过流量、且确定不再回退后，再回收旧一代：
 
 ```bash
@@ -271,7 +299,14 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
   bun run fts-search:reindex -- --retire --entity=messages --yes
 ```
 
-回收分两阶段：第一次执行只关闭旧索引，使其退出消费器的写入目标；之后再执行一次才会删除已经关闭的索引。先关闭再删除，可以避免仍列着旧索引的消费器把删掉的索引以动态映射重新建出来。
+`--retire` 只关闭已脱离别名的旧索引，重复执行也不会删除数据。永久删除符合条件的已关闭索引需要单独执行：
+
+```bash
+ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
+  bun run fts-search:reindex -- --purge --entity=messages --yes
+```
+
+删除前，命令会为精确的旧索引名安装并验证 `allow_auto_create: false` 模板，迁移 key 需要 `manage_index_templates` 权限。保留该模板可以阻止迟到的 bulk 请求重新创建已删除索引；仅凭队列清空无法证明暂停的旧进程已停止。模板冲突或无法验证保护时拒绝删除。删除之后及恢复集群状态时都要保留保护模板。它不能阻止显式创建索引，也不能防止人工替换模板，因此不要再用旧版 CLI 重建已清理的版本。
 
 ### 原地新增字段（仅限只新增字段的变更）
 
@@ -283,6 +318,8 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
 ```
 
 命令会把新增字段和新的 `_meta` 加到线上索引上，然后回填全部文档以填充新字段；与消费器并发写入时由 Elasticsearch 的版本号裁决，较新的写入获胜。物理索引仍叫 `lobehub-messages-v1`，但 `_meta` 记录的是 `v2`；`--status` 和运行时都以 `_meta` 中的版本为准。之后不需要 `--promote` 或 `--retire`。
+
+如果更新 mapping 后、建立检查点前中断，处理遗留锁后可以重跑同一条 `--apply --in-place` 命令。只有元数据和映射都匹配时才允许继续；仅看到 `in_sync` 不代表回填已经完成。
 
 代价是回退能力：没有上一代索引可以切回去。原地升级后如果要回退代码，必须用旧版本代码重建该实体。可能需要回退时优先选择重建；实体很大且变更确定只是安全的新增字段时，再选择原地升级。
 

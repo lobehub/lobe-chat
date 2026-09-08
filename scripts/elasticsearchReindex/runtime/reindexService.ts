@@ -14,6 +14,7 @@ import {
   getFtsSearchIndexSchemaVersion,
   getFtsSearchPhysicalIndexName,
 } from '../../../packages/database/src/repositories/ftsSearchDocument';
+import { pruneFtsSearchDocumentForMapping } from '../../../packages/database/src/repositories/ftsSearchDocument/projectionCompatibility';
 import type {
   FtsSearchReindexBatchFailure,
   FtsSearchReindexFileRepository,
@@ -603,7 +604,12 @@ export class FtsSearchReindexService {
     };
 
     for (const document of documents) {
-      const operation = buildBulkOperation(document.id, physicalIndex, revision, document.source);
+      const operation = buildBulkOperation(
+        document.id,
+        physicalIndex,
+        revision,
+        pruneFtsSearchDocumentForMapping(entity, document.source),
+      );
       if (operation.bytes > this.options.bulkMaxBytes) {
         failures.push({
           documentId: document.id,

@@ -23,6 +23,7 @@ import {
 } from '../../packages/observability-otel/src/modules/fts-search-reindex';
 import { DiagLogLevel, register, shutdownSafely } from '../../packages/observability-otel/src/node';
 import { runWithLockRetry } from '../migrateServerDB/retry';
+import { resolveFtsSearchMigrationCommand } from './commandOptions';
 import {
   assertFtsSearchReindexElasticsearchHostname,
   assertFtsSearchReindexRangeCollation,
@@ -46,6 +47,13 @@ import {
   retireGenerations,
   summarizeFtsSearchReindexError,
 } from './runtime';
+import type { FtsSearchGenerationSummary } from './runtime/generationService';
+import {
+  planRetiredGenerations,
+  purgeRetiredGenerations,
+  resolveInPlaceTarget,
+} from './runtime/generationService';
+import { FtsSearchMigrationLockClient, FtsSearchMigrationLockError } from './runtime/migrationLock';
 
 const { Pool } = pg;
 
@@ -76,14 +84,14 @@ const readNonNegativeIntegerArgument = (name: string) => {
 };
 
 const args = new Set(process.argv.slice(2));
+const { command, releaseLockOwner } = resolveFtsSearchMigrationCommand(process.argv.slice(2));
 const apply = args.has('--apply');
 const freshRun = args.has('--fresh-run');
 const inPlace = args.has('--in-place');
 const promote = args.has('--promote');
 const retire = args.has('--retire');
+const purge = args.has('--purge');
 const skipFailureArgument = process.argv.find((item) => item.startsWith('--skip-failure='));
-const status = args.has('--status');
-const yes = args.has('--yes');
 const promoteVersion = readPositiveIntegerArgument('--version');
 const batchSize = readPositiveIntegerArgument('--batch-size');
 const bulkConcurrency = readPositiveIntegerArgument('--bulk-concurrency');
@@ -106,6 +114,7 @@ const knownArguments = new Set([
   '--in-place',
   '--promote',
   '--retire',
+  '--purge',
   '--status',
   '--yes',
 ]);
@@ -129,32 +138,12 @@ const unknownArgument = process.argv
       !item.startsWith('--max-request-retries=') &&
       !item.startsWith('--request-timeout-ms=') &&
       !item.startsWith('--retry-base-delay-ms=') &&
+      !item.startsWith('--release-lock=') &&
       !item.startsWith('--skip-failure=') &&
       !item.startsWith('--telemetry-environment=') &&
       !item.startsWith('--version='),
   );
 if (unknownArgument) throw new Error(`Unknown argument: ${unknownArgument}`);
-
-const mutationModes = [apply, promote, retire, Boolean(skipFailureArgument)].filter(Boolean).length;
-if (mutationModes > 1 || (status && mutationModes > 0)) {
-  throw new Error(
-    'Choose exactly one of --status, --apply, --promote, --retire, or --skip-failure',
-  );
-}
-if (mutationModes > 0 && !yes) {
-  throw new Error('Mutating commands require --yes after reviewing their documented effects');
-}
-if (freshRun && !apply) throw new Error('--fresh-run can only be used with --apply');
-if (inPlace && (!apply || freshRun)) {
-  throw new Error('--in-place can only be used with --apply on an existing generation');
-}
-if (inPlace && !entities) throw new Error('--in-place requires at least one --entity=<entity>');
-if (promoteVersion !== undefined && !promote) {
-  throw new Error('--version can only be used with --promote');
-}
-if ((promote || retire) && !entities) {
-  throw new Error(`--${promote ? 'promote' : 'retire'} requires at least one --entity=<entity>`);
-}
 
 const readFailureReference = ():
   { documentId: string; entity: FtsSearchDocumentEntity } | undefined => {
@@ -184,15 +173,9 @@ const configuredStateDirectory = process.env.ES_REINDEX_STATE_DIR;
 const stateDirectory = path.resolve(configuredStateDirectory ?? '.elasticsearch-reindex');
 
 /** Commands that talk to Elasticsearch; `--status` only inspects it when the URL is configured. */
-const elasticsearchMutation = apply
-  ? '--apply'
-  : promote
-    ? '--promote'
-    : retire
-      ? '--retire'
-      : null;
+const elasticsearchMutation = command === 'status' ? null : `--${command}`;
 
-if (!databaseUrl) throw new Error('DATABASE_URL is required');
+if (!databaseUrl && command !== 'release-lock') throw new Error('DATABASE_URL is required');
 if (!namespace) throw new Error('ES_INDEX_NAMESPACE is required');
 if (elasticsearchMutation && !elasticsearchApiKey && !allowInsecureHttp) {
   throw new Error(`${apiKeyEnvironmentName} is required with ${elasticsearchMutation}`);
@@ -255,10 +238,22 @@ const logErrorSummary = (message: string, error: unknown) => {
   console.error(message, summarizeFtsSearchReindexError(error));
 };
 
+let assertMigrationOwnership: (() => Promise<void>) | undefined;
+
+const createMigrationLockClient = () =>
+  new FtsSearchMigrationLockClient({
+    allowInsecureHttp,
+    apiKey: elasticsearchApiKey,
+    namespace,
+    requestTimeoutMs,
+    url: elasticsearchUrl!,
+  });
+
 const createElasticsearchClient = () =>
   new FtsSearchReindexHttpClient({
     allowInsecureHttp,
     apiKey: elasticsearchApiKey,
+    beforeMutation: assertMigrationOwnership,
     requestTimeoutMs,
     url: elasticsearchUrl!,
   });
@@ -275,6 +270,19 @@ const declaredGenerations = (): Array<[number, FtsSearchDocumentEntity[]]> => {
 
 const readCheckpoint = (checkpointNamespace: string, schemaVersion: number) =>
   repository.getTargetRun(checkpointNamespace, schemaVersion);
+
+const generationAuditValue = (generation: FtsSearchGenerationSummary) => ({
+  ...generation,
+  fieldCompatibility: generation.fieldCompatibility
+    ? {
+        ...generation.fieldCompatibility,
+        incompatibleFields: generation.fieldCompatibility.incompatibleFields.map((field) => ({
+          ...field,
+          targetType: field.targetType ?? null,
+        })),
+      }
+    : null,
+});
 
 const readStatus = async () => {
   const runs = [];
@@ -331,19 +339,28 @@ const readStatus = async () => {
       statuses.push({
         action: entityStatus.action,
         alias: entityStatus.alias,
-        candidates: entityStatus.candidates.map((candidate) => ({ ...candidate })),
+        candidates: entityStatus.candidates.map(generationAuditValue),
         classification: entityStatus.classification,
         declared: entityStatus.declared,
         entity: entityStatus.entity,
-        live: entityStatus.live ? { ...entityStatus.live } : null,
+        live: entityStatus.live ? generationAuditValue(entityStatus.live) : null,
         mappingChange: entityStatus.mappingChange,
+        mappingDiff: entityStatus.mappingDiff
+          ? {
+              ...entityStatus.mappingDiff,
+              changed: entityStatus.mappingDiff.changed.map((field) => ({ ...field })),
+            }
+          : null,
+        retirementPlan: { ...planRetiredGenerations(entityStatus) },
       });
     }
     generations = statuses;
   }
 
+  const migrationLock = elasticsearchUrl ? await createMigrationLockClient().read() : null;
   return {
     generations,
+    migrationLock: migrationLock ? { ...migrationLock } : null,
     namespace,
     outbox: {
       dead: outboxStats.dead,
@@ -398,12 +415,12 @@ const run = async () => {
     return;
   }
 
-  if (promote || retire) {
+  if (promote || retire || purge) {
     const client = createElasticsearchClient();
     const endpointHostname = new URL(elasticsearchUrl!).hostname;
     assertFtsSearchReindexElasticsearchHostname(endpointHostname, expectedHostPrefix);
     await runFtsSearchReindexCommand({
-      command: promote ? 'promote' : 'retire',
+      command: promote ? 'promote' : purge ? 'purge' : 'retire',
       installCaptureInfrastructure: () => outbox.installCaptureInfrastructure(),
       runWithLockRetry,
       run: async () => {
@@ -418,6 +435,14 @@ const run = async () => {
               version: promoteVersion,
             });
             console.log(JSON.stringify({ ...result, entity, type: 'generation_promoted' }));
+          } else if (purge) {
+            const result = await purgeRetiredGenerations({
+              client,
+              entity,
+              namespace,
+              readCheckpoint,
+            });
+            console.log(JSON.stringify({ ...result, entity, type: 'generations_purged' }));
           } else {
             const result = await retireGenerations({ client, entity, namespace, readCheckpoint });
             console.log(JSON.stringify({ ...result, entity, type: 'generations_retired' }));
@@ -451,6 +476,27 @@ const run = async () => {
   const endpointHostname = new URL(elasticsearchUrl!).hostname;
   assertFtsSearchReindexElasticsearchHostname(endpointHostname, expectedHostPrefix);
   const client = createElasticsearchClient();
+
+  /** Preserve old source fields while any open generation can still receive full-document writes. */
+  for (const entity of entities ?? FTS_SEARCH_DOCUMENT_ENTITIES) {
+    const generation = await describeEntityGeneration({
+      client,
+      entity,
+      namespace,
+      readCheckpoint,
+    });
+    for (const target of [
+      ...generation.candidates,
+      ...(generation.live ? [generation.live] : []),
+    ]) {
+      if (target.state !== 'open') continue;
+      if (!target.fieldCompatibility?.compatible) {
+        throw new Error(
+          `${target.index} cannot receive the current document projection; retain its source fields and compatible types until it is retired. Inspect --status fieldCompatibility before upgrading.`,
+        );
+      }
+    }
+  }
 
   /**
    * Each declared schema generation is backfilled by its own checkpoint. A first install has one
@@ -499,30 +545,22 @@ const applyGeneration = async ({
         continue;
       }
       const status = await describeEntityGeneration({ client, entity, namespace, readCheckpoint });
-      if (
-        status.classification !== 'upgrade_available' ||
-        status.mappingChange !== 'additive' ||
-        !status.live
-      ) {
-        throw new Error(
-          `${entity} cannot be upgraded in place (${status.classification}, mapping change: ${status.mappingChange ?? 'unknown'}); ${status.action}`,
-        );
-      }
+      const inPlaceIndex = resolveInPlaceTarget(status);
       /**
        * Widen the live index before the checkpoint reserves its base revision. From here on the
        * consumer writes the new fields into this index, so every change newer than the base
        * revision already carries them and the backfill only has to fill in older documents.
        * `prepareIndices` restamps `_meta.reindex_run_id` once the run exists.
        */
-      await client.putMapping(status.live.index, {
+      await client.putMapping(inPlaceIndex, {
         _meta: {
-          reindex_run_id: status.live.reindexRunId!,
+          reindex_run_id: status.live!.reindexRunId!,
           schema_fingerprint: status.declared.fingerprint,
           schema_version: status.declared.version,
         },
         properties: FTS_SEARCH_INDEX_DEFINITIONS[entity].mappings.properties,
       });
-      physicalIndexes[entity] = status.live.index;
+      physicalIndexes[entity] = inPlaceIndex;
     }
   }
   let mode: 'fresh' | 'resume' | 'upgrade' | 'upgrade_in_place';
@@ -683,14 +721,44 @@ const applyGeneration = async ({
   });
 };
 
-observeFtsSearchReindexRun(run)
+/** A lock never expires: a paused process must not overlap an automatic replacement worker. */
+const runWithMigrationLock = async () => {
+  if (command === 'status') return run();
+  assertFtsSearchReindexElasticsearchHostname(
+    new URL(elasticsearchUrl!).hostname,
+    expectedHostPrefix,
+  );
+  const lock = createMigrationLockClient();
+  if (command === 'release-lock') {
+    const result = await lock.release(releaseLockOwner!);
+    console.log(JSON.stringify({ result, type: 'migration_lock_released' }));
+    return;
+  }
+  return lock.withLock(command, async (handle) => {
+    assertMigrationOwnership = () => lock.assertOwner(handle);
+    try {
+      return await run();
+    } finally {
+      assertMigrationOwnership = undefined;
+    }
+  });
+};
+
+observeFtsSearchReindexRun(runWithMigrationLock)
   .catch(async (error) => {
-    const rootError = error instanceof FtsSearchReindexEntityError ? error.cause : error;
+    const operationError =
+      error instanceof FtsSearchMigrationLockError && error.cause !== undefined
+        ? error.cause
+        : error;
+    const rootError =
+      operationError instanceof FtsSearchReindexEntityError ? operationError.cause : operationError;
     logErrorSummary('❌ Elasticsearch reindex failed:', rootError);
+    if (operationError !== error) logErrorSummary('Migration lock recovery:', error);
     if (auditLogger) {
       const failure = {
         elapsedMs: Date.now() - executionStartedAt,
-        entity: error instanceof FtsSearchReindexEntityError ? error.entity : null,
+        entity:
+          operationError instanceof FtsSearchReindexEntityError ? operationError.entity : null,
         errorSummary: summarizeFtsSearchReindexError(rootError),
         errorType: rootError instanceof Error ? rootError.name.slice(0, 128) : 'UnknownError',
         type: 'session_failed' as const,

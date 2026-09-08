@@ -14,6 +14,7 @@ import type {
 import type {
   ElasticsearchFtsSearchBulkItem,
   ElasticsearchFtsSearchBulkResponse,
+  ElasticsearchFtsSearchSyncIndexFieldsResult,
 } from '../ftsSearch/elasticsearch';
 
 export const FTS_SEARCH_SYNC_BULK_MAX_BYTES = 50 * 1024 * 1024;
@@ -25,8 +26,10 @@ interface FtsSearchSyncElasticsearchClient {
   bulk: (body: string) => Promise<ElasticsearchFtsSearchBulkResponse>;
   /** Live physical generations per alias; every change is written to all of them. */
   getFtsSearchSyncGenerationTargets: (aliases: string[]) => Promise<Record<string, string[]>>;
-  /** Mapped top-level fields per physical index, used to prune documents per generation. */
-  getFtsSearchSyncIndexFields: (indexes: string[]) => Promise<Record<string, string[]>>;
+  /** Validated top-level fields per physical index, used to prune documents per generation. */
+  getFtsSearchSyncIndexFields: (
+    entitiesByIndex: Record<string, FtsSearchSyncWork['entity']>,
+  ) => Promise<ElasticsearchFtsSearchSyncIndexFieldsResult>;
 }
 
 /** One bulk action for one live generation of an Outbox change. */
@@ -460,13 +463,39 @@ export class FtsSearchSyncService {
             }
             targetsByEntity.set(entity, entityTargets);
           }
-          const indexes = [...new Set([...targetsByEntity.values()].flat())].sort();
-          const fields = await this.client.getFtsSearchSyncIndexFields(indexes);
+          const entitiesByIndex: Record<string, FtsSearchSyncWork['entity']> = {};
+          for (const [entity, indexes] of targetsByEntity) {
+            for (const index of indexes) entitiesByIndex[index] = entity;
+          }
+          const indexes = Object.keys(entitiesByIndex).sort();
+          const { fieldsByIndex: resolvedFieldsByIndex, incompatibilities } =
+            await this.client.getFtsSearchSyncIndexFields(entitiesByIndex);
+          const incompatibilityMessagesByEntity = new Map<FtsSearchSyncWork['entity'], string[]>();
+          for (const incompatibility of incompatibilities) {
+            const messages = incompatibilityMessagesByEntity.get(incompatibility.entity) ?? [];
+            messages.push(incompatibility.message);
+            incompatibilityMessagesByEntity.set(incompatibility.entity, messages);
+          }
+          if (incompatibilityMessagesByEntity.size > 0) {
+            await fail(
+              works
+                .filter(
+                  (work) =>
+                    unsettled.has(workKey(work)) &&
+                    incompatibilityMessagesByEntity.has(work.entity),
+                )
+                .map((work) => ({
+                  ...work,
+                  error: new Error(incompatibilityMessagesByEntity.get(work.entity)!.join(' ')),
+                  permanent: true,
+                })),
+            );
+          }
           for (const index of indexes) {
-            if (!fields[index]) {
+            if (!resolvedFieldsByIndex[index]) {
               throw new Error(`Elasticsearch returned no mapped fields for index ${index}`);
             }
-            fieldsByIndex.set(index, new Set(fields[index]));
+            fieldsByIndex.set(index, new Set(resolvedFieldsByIndex[index]));
           }
         } catch (error) {
           await fail(
@@ -528,8 +557,9 @@ export class FtsSearchSyncService {
         workProgress.set(workKey(work), progress);
         for (const operation of operations) {
           if (bulk.length > 0 && bulkBytes + operation.bytes > this.options.bulkMaxBytes) {
+            const deadBeforeFlush = result.dead;
             await flush();
-            if (result.dead > 0) {
+            if (result.dead > deadBeforeFlush) {
               stoppedForDeadLetter = true;
               break workLoop;
             }

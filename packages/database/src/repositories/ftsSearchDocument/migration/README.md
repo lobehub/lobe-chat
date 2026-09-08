@@ -14,11 +14,17 @@ complete physical definitions only for entities that change.
 For a new mapping, add the next numbered directory with a meaningful name, increment each affected
 entity's `schemaVersion`, register the batch and update its current pointers. Retain historical fields
 even when the current Zod schema removes them. Analysis is still global: changing it requires a new
-version for every current entity. Current mapping fields must match the current Zod schema exactly.
+version for every current entity. Current mapping fields plus explicitly retained source properties
+in `../policy.ts` must match the current Zod schema exactly, without overlap. Retain source fields
+and builder output while any old open index needs them; reindex omits source-only fields from the
+current strict mapping, while sync continues filling older mappings. Only remove the retained
+properties after the old indexes are closed and rollback to their code is no longer needed.
 
-Published batches and their fingerprint baselines are append-only by convention and code review.
-History tests detect accidental drift and missing registrations; editing both a historical snapshot
-and its expected fingerprint can bypass that check. Do not refresh an old baseline to accept a change.
+Append approved fingerprints to `../__tests__/schemaSnapshots.json`. The PR history check compares
+the merge result with the target commit: existing batch directories and JSON baseline entries cannot
+change, including when both mapping and fingerprint are edited together. New batches must have
+higher, unique ordinals. Keep this CI job required in repository rules to enforce the guard; tests
+still verify registration, current pointers, field coverage and version/fingerprint consistency.
 
 This catalog does not execute migrations or reconstruct old documents with the current builder.
-Build, promote, rollback and retire continue through the existing Elasticsearch reindex commands.
+Build, promote, rollback, retire and purge continue through the Elasticsearch reindex commands.

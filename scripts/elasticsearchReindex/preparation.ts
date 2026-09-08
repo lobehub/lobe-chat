@@ -1,4 +1,5 @@
-export type FtsSearchReindexCommand = 'apply' | 'promote' | 'retire' | 'skip-failure' | 'status';
+export type FtsSearchReindexCommand =
+  'apply' | 'promote' | 'purge' | 'retire' | 'skip-failure' | 'status';
 
 interface RunFtsSearchReindexCommandOptions<T> {
   command: FtsSearchReindexCommand;

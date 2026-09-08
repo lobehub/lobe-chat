@@ -16,6 +16,8 @@ import {
   getFtsSearchIndexAlias,
   sha256Json,
 } from '@/database/repositories/ftsSearchDocument';
+import type { FtsSearchTargetMappingProperties } from '@/database/repositories/ftsSearchDocument/projectionCompatibility';
+import { getFtsSearchProjectionCompatibility } from '@/database/repositories/ftsSearchDocument/projectionCompatibility';
 
 import type {
   ElasticsearchFtsSearchErrorCode,
@@ -67,7 +69,9 @@ const syncMappingResponseSchema = z.record(
   z.string(),
   z.object({
     mappings: z.object({
-      properties: z.record(z.string(), z.object({ type: z.string() }).passthrough()).default({}),
+      properties: z
+        .record(z.string(), z.object({ type: z.string().optional() }).passthrough())
+        .default({}),
     }),
   }),
 );
@@ -130,6 +134,17 @@ export interface ElasticsearchFtsSearchSyncIndexIdentity {
   schemaFingerprint: string | null;
   schemaVersion: number;
   settingsSha256: string;
+}
+
+export interface ElasticsearchFtsSearchSyncProjectionIncompatibility {
+  entity: FtsSearchDocumentEntity;
+  index: string;
+  message: string;
+}
+
+export interface ElasticsearchFtsSearchSyncIndexFieldsResult {
+  fieldsByIndex: Record<string, string[]>;
+  incompatibilities: ElasticsearchFtsSearchSyncProjectionIncompatibility[];
 }
 
 export class ElasticsearchFtsSearchRequestError extends Error {
@@ -406,12 +421,15 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
   }
 
   /**
-   * Mapped top-level fields of each physical index. Generations differ in their field sets, and
-   * every generation is `dynamic: strict`, so a document must be pruned to the target's fields
-   * before it is written there.
+   * Validates and returns mapped top-level fields for each physical index. Generations differ in
+   * their field sets, and every generation is `dynamic: strict`, so a document must be pruned to
+   * the target's fields before it is written there.
    */
-  async getFtsSearchSyncIndexFields(indexes: string[]): Promise<Record<string, string[]>> {
-    if (indexes.length === 0) return {};
+  async getFtsSearchSyncIndexFields(
+    entitiesByIndex: Record<string, FtsSearchDocumentEntity>,
+  ): Promise<ElasticsearchFtsSearchSyncIndexFieldsResult> {
+    const indexes = Object.keys(entitiesByIndex).sort();
+    if (indexes.length === 0) return { fieldsByIndex: {}, incompatibilities: [] };
 
     const response = await fetch(
       new URL(
@@ -439,7 +457,8 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
       );
     }
 
-    const fields: Record<string, string[]> = {};
+    const fieldsByIndex: Record<string, string[]> = {};
+    const incompatibilities: ElasticsearchFtsSearchSyncProjectionIncompatibility[] = [];
     for (const index of indexes) {
       const properties = payload.data[index]?.mappings.properties;
       if (!properties) {
@@ -447,9 +466,31 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
           `Elasticsearch full-text search sync field lookup is missing index ${index}`,
         );
       }
-      fields[index] = Object.keys(properties).sort();
+      const entity = entitiesByIndex[index];
+      const compatibility = getFtsSearchProjectionCompatibility(
+        entity,
+        properties satisfies FtsSearchTargetMappingProperties,
+      );
+      if (!compatibility.compatible) {
+        const details = [
+          ...compatibility.missingFields.map(
+            (field) =>
+              `target field ${field} (${properties[field].type ?? 'unknown type'}) is missing from the current mapping`,
+          ),
+          ...compatibility.incompatibleFields.map(
+            ({ currentType, field, targetType }) =>
+              `target field ${field} uses ${targetType ?? 'an unknown type'} but the current mapping uses ${currentType}`,
+          ),
+        ].join('; ');
+        incompatibilities.push({
+          entity,
+          index,
+          message: `Elasticsearch full-text search index ${index} is incompatible with the current ${entity} projection: ${details}. Retain compatible source fields in FTS_SEARCH_RETAINED_SOURCE_PROPERTIES and the document builder, or retire the index before syncing ${entity}.`,
+        });
+      }
+      fieldsByIndex[index] = Object.keys(properties).sort();
     }
-    return fields;
+    return { fieldsByIndex, incompatibilities };
   }
 
   /**
@@ -562,8 +603,9 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
 
   /**
    * Actions name physical generation indexes (see `getFtsSearchSyncGenerationTargets`), so
-   * `require_alias` cannot be used. Retirement closes old generations first; operators must wait
-   * for pre-close drains to finish before deleting them, or a stale action can auto-create an index.
+   * `require_alias` cannot be used. The migration CLI closes retired generations and installs an
+   * exact-name template with `allow_auto_create: false` before purging them, so late physical writes
+   * cannot recreate deleted indexes. Preserve those templates while delayed requests may exist.
    */
   async bulk(body: string): Promise<ElasticsearchFtsSearchBulkResponse> {
     const endpoint = new URL('/_bulk', this.url);

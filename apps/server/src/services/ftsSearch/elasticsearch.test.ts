@@ -710,7 +710,7 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
           mappings: {
             properties: {
               id: { type: 'keyword' },
-              summary: { type: 'text' },
+              content: { type: 'text' },
               title: { type: 'text' },
             },
           },
@@ -724,10 +724,16 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
     });
 
     await expect(
-      client.getFtsSearchSyncIndexFields(['lobehub-topics-v1', 'lobehub-topics-v2']),
+      client.getFtsSearchSyncIndexFields({
+        'lobehub-topics-v1': 'topics',
+        'lobehub-topics-v2': 'topics',
+      }),
     ).resolves.toEqual({
-      'lobehub-topics-v1': ['id', 'title'],
-      'lobehub-topics-v2': ['id', 'summary', 'title'],
+      fieldsByIndex: {
+        'lobehub-topics-v1': ['id', 'title'],
+        'lobehub-topics-v2': ['content', 'id', 'title'],
+      },
+      incompatibilities: [],
     });
     expect(fetchMock.mock.calls[0][0].toString()).toBe(
       'https://search.example.com/lobehub-topics-v1,lobehub-topics-v2/_mapping?filter_path=*.mappings.properties',
@@ -749,8 +755,49 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
     });
 
     await expect(
-      client.getFtsSearchSyncIndexFields(['lobehub-topics-v1', 'lobehub-topics-v2']),
+      client.getFtsSearchSyncIndexFields({
+        'lobehub-topics-v1': 'topics',
+        'lobehub-topics-v2': 'topics',
+      }),
     ).rejects.toThrow('field lookup is missing index lobehub-topics-v2');
+  });
+
+  it('reports a generation that requires a field missing from the current projection', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValueOnce(
+        Response.json({
+          'lobehub-agents-v1': {
+            mappings: {
+              properties: {
+                id: { type: 'keyword' },
+                legacy_title: { type: 'text' },
+              },
+            },
+          },
+        }),
+      ),
+    );
+    const client = new ElasticsearchFtsSearchHttpClient({
+      apiKey: 'test-api-key',
+      url: 'https://search.example.com',
+    });
+
+    await expect(
+      client.getFtsSearchSyncIndexFields({ 'lobehub-agents-v1': 'agents' }),
+    ).resolves.toEqual({
+      fieldsByIndex: {
+        'lobehub-agents-v1': ['id', 'legacy_title'],
+      },
+      incompatibilities: [
+        {
+          entity: 'agents',
+          index: 'lobehub-agents-v1',
+          message:
+            'Elasticsearch full-text search index lobehub-agents-v1 is incompatible with the current agents projection: target field legacy_title (text) is missing from the current mapping. Retain compatible source fields in FTS_SEARCH_RETAINED_SOURCE_PROPERTIES and the document builder, or retire the index before syncing agents.',
+        },
+      ],
+    });
   });
 
   it('rejects an alias whose live index was built from a drifted mapping of the same version', async () => {

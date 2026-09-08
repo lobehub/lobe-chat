@@ -11,6 +11,13 @@ import type {
   FtsSearchReindexIndexOptions,
   FtsSearchReindexMappingUpgrade,
 } from './reindexService';
+import {
+  assertExactRetiredIndexName,
+  assertRetiredIndexProtection,
+  getRetiredIndexProtectionTemplate,
+  getRetiredIndexProtectionTemplateName,
+  indexTemplateListResponseSchema,
+} from './retiredIndexProtection';
 
 const bulkResponseSchema = z.object({
   items: z.array(
@@ -21,6 +28,7 @@ const bulkResponseSchema = z.object({
 });
 
 const countResponseSchema = z.object({ count: z.number().int().nonnegative() });
+const acknowledgedResponseSchema = z.object({ acknowledged: z.literal(true) });
 
 const aliasResponseSchema = z.record(
   z.string(),
@@ -140,6 +148,8 @@ export interface FtsSearchReindexHttpClientOptions {
   allowInsecureHttp?: boolean;
   /** Required unless `allowInsecureHttp` is enabled; never sent over plaintext HTTP. */
   apiKey?: string;
+  /** Verifies that the caller still owns the operation lock immediately before a cluster write. */
+  beforeMutation?: () => Promise<void>;
   requestTimeoutMs?: number;
   url: string;
 }
@@ -157,17 +167,20 @@ export class FtsSearchReindexRequestError extends Error {
 /** Minimal credential-safe Elasticsearch transport for the self-host reindex command. */
 export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearchClient {
   private readonly authorizationHeader: string | undefined;
+  private readonly beforeMutation: () => Promise<void>;
   private readonly requestTimeoutMs: number;
   private readonly url: URL;
 
   constructor({
     allowInsecureHttp,
     apiKey,
+    beforeMutation = async () => {},
     requestTimeoutMs = 30_000,
     url,
   }: FtsSearchReindexHttpClientOptions) {
     const transport = resolveElasticsearchTransport({ allowInsecureHttp, apiKey, url });
     this.authorizationHeader = transport.authorizationHeader;
+    this.beforeMutation = beforeMutation;
     this.requestTimeoutMs = requestTimeoutMs;
     this.url = transport.url;
   }
@@ -181,6 +194,17 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
       },
       signal: AbortSignal.timeout(this.requestTimeoutMs),
     });
+  }
+
+  private async assertAcknowledged(response: Response, operation: string) {
+    const parsed = acknowledgedResponseSchema.safeParse(await response.json());
+    if (!parsed.success) {
+      throw new FtsSearchReindexRequestError(
+        `Elasticsearch did not acknowledge ${operation}`,
+        response.status,
+        parsed.error,
+      );
+    }
   }
 
   private assertMappingProperty(
@@ -279,6 +303,7 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
   }
 
   async bulk(body: string): Promise<FtsSearchReindexBulkItemResult[]> {
+    await this.beforeMutation();
     const response = await this.request('/_bulk', {
       body,
       headers: { 'Content-Type': 'application/x-ndjson' },
@@ -369,6 +394,7 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
       );
     }
 
+    await this.beforeMutation();
     const createResponse = await this.request('/_aliases', {
       body: JSON.stringify({
         actions: [{ add: { alias, index: physicalIndex, is_write_index: true } }],
@@ -382,13 +408,14 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
         createResponse.status,
       );
     }
+    await this.assertAcknowledged(createResponse, `alias creation for ${alias}`);
     return 'created';
   }
 
   /**
-   * Describes every physical generation of `alias`: open ones with their `_meta`, mapping, and
-   * analysis so drift can be classified, closed ones (mid-retirement) by name only, plus the
-   * index the alias currently serves even if an operator named it outside the `-v<n>` scheme.
+   * Describes every physical generation of `alias`, including the `_meta`, mapping, and analysis of
+   * closed generations so a purge can prove their managed identity before deletion. It also includes
+   * the index the alias currently serves if an operator named it outside the `-v<n>` scheme.
    */
   async describeGenerations(alias: string): Promise<FtsSearchReindexGenerationDescription[]> {
     const pattern = encodeURIComponent(`${alias}-v*`);
@@ -445,12 +472,12 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
       if (!states.has(index)) states.set(index, 'open');
     }
 
-    const openIndexes = [...states].filter(([, state]) => state === 'open').map(([index]) => index);
+    const indexes = [...states].map(([index]) => index);
     const details = new Map<string, z.infer<typeof generationDetailSchema>[string]>();
-    if (openIndexes.length > 0) {
-      const detailPath = openIndexes.map(encodeURIComponent).join(',');
+    if (indexes.length > 0) {
+      const detailPath = indexes.map(encodeURIComponent).join(',');
       const detailResponse = await this.request(
-        `/${detailPath}?filter_path=*.mappings,*.settings.index.analysis`,
+        `/${detailPath}?expand_wildcards=all&filter_path=*.mappings,*.settings.index.analysis`,
         { method: 'GET' },
       );
       if (!detailResponse.ok) {
@@ -498,6 +525,7 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
 
   /** Atomically repoints `alias` at `to` (as write index) and removes it from every `from` index. */
   async promoteAlias(alias: string, from: readonly string[], to: string): Promise<void> {
+    await this.beforeMutation();
     const response = await this.request('/_aliases', {
       body: JSON.stringify({
         actions: [
@@ -514,9 +542,11 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
         response.status,
       );
     }
+    await this.assertAcknowledged(response, `alias promotion for ${alias}`);
   }
 
   async closeIndex(index: string): Promise<void> {
+    await this.beforeMutation();
     const response = await this.request(`/${encodeURIComponent(index)}/_close`, { method: 'POST' });
     if (!response.ok) {
       throw new FtsSearchReindexRequestError(
@@ -524,14 +554,70 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
         response.status,
       );
     }
+    await this.assertAcknowledged(response, `index close for ${index}`);
   }
 
   async deleteIndex(index: string): Promise<void> {
+    assertExactRetiredIndexName(index);
+    await this.beforeMutation();
     const response = await this.request(`/${encodeURIComponent(index)}`, { method: 'DELETE' });
     if (!response.ok) {
       throw new FtsSearchReindexRequestError(
         `Elasticsearch index deletion failed for ${index} (${response.status})`,
         response.status,
+      );
+    }
+    await this.assertAcknowledged(response, `deletion of ${index}`);
+  }
+
+  /**
+   * Installs a persistent exact-index tombstone so a stale bulk writer cannot auto-create a retired
+   * physical index after deletion. The template deliberately remains after the index is deleted.
+   */
+  async ensureRetiredIndexProtection(index: string): Promise<void> {
+    assertExactRetiredIndexName(index);
+    const name = getRetiredIndexProtectionTemplateName(index);
+    const loadTemplates = async () => {
+      const response = await this.request('/_index_template', { method: 'GET' });
+      if (!response.ok) {
+        throw new FtsSearchReindexRequestError(
+          `Elasticsearch index template inspection failed for retired index ${index} (${response.status}); the reindex credential needs manage_index_templates`,
+          response.status,
+        );
+      }
+      const parsed = indexTemplateListResponseSchema.safeParse(await response.json());
+      if (!parsed.success) {
+        throw new FtsSearchReindexRequestError(
+          `Elasticsearch index template response has an invalid shape for retired index ${index}`,
+          response.status,
+          parsed.error,
+        );
+      }
+      return parsed.data.index_templates;
+    };
+
+    if (assertRetiredIndexProtection(index, await loadTemplates())) return;
+
+    await this.beforeMutation();
+    const createResponse = await this.request(
+      `/_index_template/${encodeURIComponent(name)}?create=true`,
+      {
+        body: JSON.stringify(getRetiredIndexProtectionTemplate(index)),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+      },
+    );
+    if (!createResponse.ok) {
+      throw new FtsSearchReindexRequestError(
+        `Elasticsearch retired-index protection creation failed for ${index} (${createResponse.status}); verify composable templates support allow_auto_create and the credential has manage_index_templates`,
+        createResponse.status,
+      );
+    }
+    await this.assertAcknowledged(createResponse, `retired-index protection for ${index}`);
+
+    if (!assertRetiredIndexProtection(index, await loadTemplates())) {
+      throw new FtsSearchReindexRequestError(
+        `Elasticsearch retired-index protection is not effective for ${index}`,
       );
     }
   }
@@ -542,6 +628,7 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
    * a non-additive change fails here with Elasticsearch's own error.
    */
   async putMapping(index: string, mappings: FtsSearchReindexMappingUpgrade): Promise<void> {
+    await this.beforeMutation();
     const response = await this.request(`/${encodeURIComponent(index)}/_mapping`, {
       body: JSON.stringify(mappings),
       headers: { 'Content-Type': 'application/json' },
@@ -553,6 +640,7 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
         response.status,
       );
     }
+    await this.assertAcknowledged(response, `mapping upgrade for ${index}`);
   }
 
   async ensureIndex(
@@ -579,6 +667,7 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
       );
     }
 
+    await this.beforeMutation();
     const response = await this.request(`/${encodeURIComponent(index)}`, {
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' },
@@ -590,9 +679,11 @@ export class FtsSearchReindexHttpClient implements FtsSearchReindexElasticsearch
         response.status,
       );
     }
+    await this.assertAcknowledged(response, `index creation for ${index}`);
   }
 
   async refresh(index: string): Promise<void> {
+    await this.beforeMutation();
     const response = await this.request(`/${encodeURIComponent(index)}/_refresh`, {
       method: 'POST',
     });

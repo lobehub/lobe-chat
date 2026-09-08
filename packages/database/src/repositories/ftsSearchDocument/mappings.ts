@@ -1,6 +1,6 @@
 import { FTS_SEARCH_CURRENT_MAPPINGS } from './migration';
 import type { ElasticsearchFtsSearchMappingProperty } from './migration/types';
-import type { FtsSearchIndexPolicy } from './policy';
+import type { FTS_SEARCH_RETAINED_SOURCE_PROPERTIES, FtsSearchIndexPolicy } from './policy';
 import { FTS_SEARCH_INDEX_POLICY } from './policy';
 import type { FtsSearchDocumentEntity, FtsSearchDocumentSourceMap } from './zodSchema';
 
@@ -16,7 +16,10 @@ export interface FtsSearchIndexDefinition<
   mappings: {
     dynamic: 'strict';
     properties: Record<
-      keyof FtsSearchDocumentSourceMap[Entity] & string,
+      Exclude<
+        keyof FtsSearchDocumentSourceMap[Entity] & string,
+        keyof (typeof FTS_SEARCH_RETAINED_SOURCE_PROPERTIES)[Entity]
+      >,
       ElasticsearchFtsSearchMappingProperty
     >;
   };
