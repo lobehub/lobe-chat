@@ -1,7 +1,8 @@
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { promisify } from 'node:util';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -54,6 +55,28 @@ describe('defaultGetProjectFileIndex', () => {
     // The intermediate directory is surfaced as its own entry.
     expect(result.entries.find((e) => e.relativePath === 'src/')?.isDirectory).toBe(true);
     expect(result).not.toHaveProperty('totalCount');
+  });
+
+  it('keeps ignored directories unique when git also lists their descendants', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'dc-index-ignored-parents-'));
+    cleanup.push(dir);
+    const git = promisify(execFile);
+    await git('git', ['-c', 'init.defaultBranch=main', 'init'], { cwd: dir });
+    await mkdir(path.join(dir, '.husky', '_'), { recursive: true });
+    await writeFile(path.join(dir, '.husky', '_', '.gitignore'), '**\n');
+    await writeFile(path.join(dir, '.husky', '_', 'hook'), 'hook\n');
+
+    const result = await defaultGetProjectFileIndex({ scope: dir });
+    const paths = result.entries.map((entry) => entry.relativePath);
+
+    expect(result.source).toBe('git');
+    expect(new Set(paths).size).toBe(paths.length);
+    for (const relativePath of ['.husky/', '.husky/_/']) {
+      expect(result.entries.filter((entry) => entry.relativePath === relativePath)).toEqual([
+        expect.objectContaining({ gitIgnored: true, isDirectory: true }),
+      ]);
+    }
+    expect(paths).toContain('.husky/_/hook');
   });
 
   it('falls back to a glob walk when the scope is not a git repo', async () => {

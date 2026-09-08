@@ -788,7 +788,8 @@ export default class LocalFileCtr extends ControllerModule {
         });
         const indexedPaths = [...fileEntries, ...uniqueIgnoredEntries].map((entry) => entry.path);
         const entries = [
-          ...collectProjectDirectories(indexedPaths, root),
+          // Explicit entries carry ignore metadata; only synthesize missing parents.
+          ...collectProjectDirectories(indexedPaths, root).filter((entry) => !seen.has(entry.path)),
           ...fileEntries,
           ...uniqueIgnoredEntries,
         ];

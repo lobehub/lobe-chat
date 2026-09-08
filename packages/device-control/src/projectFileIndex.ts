@@ -87,7 +87,12 @@ const buildEntries = (
 
   const indexedPaths = [...fileEntries, ...ignoredEntries].map((entry) => entry.path);
 
-  return [...collectProjectDirectories(indexedPaths, root), ...fileEntries, ...ignoredEntries];
+  // Explicit entries carry ignore metadata; only synthesize missing parents.
+  const directories = collectProjectDirectories(indexedPaths, root).filter(
+    (entry) => !seen.has(entry.path),
+  );
+
+  return [...directories, ...fileEntries, ...ignoredEntries];
 };
 
 const collectGlobFilePaths = async (scope: string): Promise<string[]> => {

@@ -829,6 +829,35 @@ describe('LocalFileCtr', () => {
       expect(result).not.toHaveProperty('totalCount');
     });
 
+    it('keeps ignored directories unique when git also lists their descendants', async () => {
+      execaMock
+        .mockResolvedValueOnce({ exitCode: 0, stdout: '/workspace/project' })
+        .mockResolvedValueOnce({ exitCode: 0, stdout: 'src/index.ts' })
+        .mockResolvedValueOnce({ exitCode: 0, stdout: '' })
+        .mockResolvedValueOnce({
+          exitCode: 0,
+          stdout: '.husky/\n.husky/_/\n.husky/_/hook\n.acceptances/\n.acceptances/report.html',
+        });
+
+      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
+      const paths = result.entries.map((entry) => entry.relativePath);
+
+      expect(new Set(paths).size).toBe(paths.length);
+      for (const relativePath of ['.husky/', '.husky/_/', '.acceptances/']) {
+        expect(result.entries.filter((entry) => entry.relativePath === relativePath)).toEqual([
+          expect.objectContaining({ gitIgnored: true, isDirectory: true }),
+        ]);
+      }
+      expect(paths).toEqual(
+        expect.arrayContaining([
+          'src/',
+          'src/index.ts',
+          '.husky/_/hook',
+          '.acceptances/report.html',
+        ]),
+      );
+    });
+
     it('should fall back to glob when git indexing fails', async () => {
       execaMock.mockResolvedValueOnce({ exitCode: 1, stdout: '' });
       mockSearchService.glob.mockResolvedValue({
