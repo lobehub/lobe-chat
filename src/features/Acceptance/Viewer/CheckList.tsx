@@ -96,10 +96,10 @@ export type UserReviewState = 'accepted' | 'ignored' | 'pending' | 'rejected';
 
 export const userReviewState = (check: AcceptanceCheck): UserReviewState => {
   const review = check.userReview;
-  if (!review) return 'pending';
+  if (!review || review.stale) return 'pending';
   if (review.action === 'accept') return 'accepted';
   if (review.action === 'ignore') return 'ignored';
-  return review.stale ? 'pending' : 'rejected';
+  return 'rejected';
 };
 
 /** Accepted and ignored checks are terminal — there is no remaining work to send back. */
@@ -441,7 +441,7 @@ const comparisonContent = (item: AcceptanceEvidence) => {
   );
 };
 
-const EvidenceList = memo<{
+export const EvidenceList = memo<{
   evidence: AcceptanceEvidence[];
   onReviewEvidence?: (id: string) => void;
   /**
@@ -1788,8 +1788,6 @@ interface CheckListProps {
   onToggleGroupItems: (ids: string[], open: boolean) => void;
   onToggleItem: (id: string) => void;
   reviewPending: boolean;
-  /** Show only checks that round executed (any step of their timeline). */
-  round?: number | null;
 }
 
 /** The union check list: one joined card, collapsible business groups. */
@@ -1811,17 +1809,13 @@ const CheckList = memo<CheckListProps>(
     onToggleGroupItems,
     onToggleItem,
     reviewPending,
-    round,
   }) => {
     const { t } = useTranslation('verify');
     const hydrated = useIsHydrated();
     const [acceptingGroup, setAcceptingGroup] = useState<string | null>(null);
 
     const visible = (check: AcceptanceCheck) =>
-      (filter === 'all' || checkFilterState(check) === filter) &&
-      (round === null ||
-        round === undefined ||
-        check.timeline.some((step) => step.roundIndex === round));
+      filter === 'all' || checkFilterState(check) === filter;
 
     const visibleRows = checks
       .filter(visible)

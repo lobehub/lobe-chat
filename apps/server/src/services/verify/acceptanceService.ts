@@ -178,13 +178,21 @@ export const buildAcceptanceCheckUnion = (rounds: RoundInput[]): AcceptanceCheck
     const plan = (run.plan ?? []) as VerifyCheckItem[];
     const planById = new Map(plan.map((item) => [item.id, item]));
     const logicalIdByCheckItemId = new Map(
-      plan.map((item) => [item.id, item.sourceCriterionId ?? item.id]),
+      plan.map((item) => [
+        item.id,
+        item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id),
+      ]),
     );
 
     for (const item of plan) {
-      const logicalId = item.sourceCriterionId ?? item.id;
+      const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
       const row = ensureRow(logicalId, roundIndex);
       // The latest snapshot wins: repair rounds may refine method/expected.
+      if (item.sourceFlowNode) {
+        // A rerun is a fresh execution; historical evidence stays in the timeline.
+        row.result = undefined;
+        row.resultRound = undefined;
+      }
       row.planItem = item;
       row.title = item.title;
       row.required = item.required;
@@ -314,7 +322,7 @@ export interface AcceptanceCheckReviewOverlay {
  * already folded their results into this row's timeline.
  */
 export const buildCheckReviewOverlay = (
-  check: Pick<AcceptanceCheckRow, 'timeline'>,
+  check: Pick<AcceptanceCheckRow, 'timeline'> & Partial<Pick<AcceptanceCheckRow, 'planItem'>>,
   resultsById: Map<string, VerifyCheckResultItem>,
   currentRoundIndex: number,
 ): AcceptanceCheckReviewOverlay => {
@@ -353,7 +361,9 @@ export const buildCheckReviewOverlay = (
       comment: latest.comment,
       createdAt: latest.createdAt,
       roundIndex: latest.roundIndex,
-      stale: latest.action === 'reject' && latest.roundIndex < currentRoundIndex,
+      stale:
+        (Boolean(check.planItem?.sourceFlowNode) || latest.action === 'reject') &&
+        latest.roundIndex < currentRoundIndex,
     },
   };
 };
@@ -583,7 +593,7 @@ export class AcceptanceService {
     // physical ids alone lets both routes write into a settled row unblocked.
     const candidates = new Map<string, string>();
     for (const item of run.plan ?? []) {
-      const logicalId = item.sourceCriterionId ?? item.id;
+      const logicalId = item.sourceFlowNode ? item.id : (item.sourceCriterionId ?? item.id);
       if (logicalId) candidates.set(logicalId, item.id);
       if (item.id) candidates.set(item.id, item.id);
       for (const superseded of item.supersedes ?? []) {

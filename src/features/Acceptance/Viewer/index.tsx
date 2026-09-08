@@ -10,6 +10,7 @@ import AcceptanceCheckInventory from './AcceptanceCheckInventory';
 import AcceptanceCheckOwnerToolbar from './AcceptanceCheckOwnerToolbar';
 import AcceptanceDecision from './AcceptanceDecision';
 import AcceptanceEnterFocus from './AcceptanceEnterFocus';
+import { AcceptanceFlow } from './AcceptanceFlow';
 import AcceptanceFocusWorkspace from './AcceptanceFocusWorkspace';
 import AcceptanceGoal from './AcceptanceGoal';
 import AcceptanceGoalEdit from './AcceptanceGoalEdit';
@@ -22,17 +23,17 @@ import AcceptanceSharedNotice from './AcceptanceSharedNotice';
 import AcceptanceStatusControl from './AcceptanceStatusControl';
 import type { AcceptanceTabKey } from './AcceptanceTabs';
 import AcceptanceTabs from './AcceptanceTabs';
-import { acceptanceScrollLayout } from './layout';
+import { getFlowNodeCount, resolveAcceptanceTab } from './flowNavigation';
+import { FlowPanelHostContext } from './FlowResults';
+import { acceptanceContentLayout, acceptanceScrollLayout } from './layout';
 import { checksForTurn } from './turnChecks';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
 import { useAcceptanceTurn } from './useAcceptanceTurn';
 
-const CONTENT_MAX_WIDTH = 920;
-
 const styles = createStaticStyles(({ css }) => ({
   column: css`
     width: 100%;
-    max-width: ${CONTENT_MAX_WIDTH}px;
+    max-width: ${acceptanceContentLayout.maxWidth}px;
     margin-inline: auto;
     padding-inline: 24px;
 
@@ -50,6 +51,22 @@ const styles = createStaticStyles(({ css }) => ({
     padding-block: 20px 0;
     border-block-end: 1px solid ${cssVar.colorBorderSecondary};
   `,
+  flowPanel: css`
+    flex: none;
+    width: min(440px, 42%);
+    height: 100%;
+    min-height: 0;
+
+    &:empty {
+      display: none;
+    }
+
+    @media (width <= 767px) {
+      width: 100%;
+      height: 50%;
+      border-block-start: 1px solid ${cssVar.colorBorderSecondary};
+    }
+  `,
   page: css`
     position: relative;
 
@@ -59,6 +76,10 @@ const styles = createStaticStyles(({ css }) => ({
     height: 100%;
 
     background: ${cssVar.colorBgContainer};
+
+    @media (width <= 767px) {
+      flex-direction: column;
+    }
   `,
 }));
 
@@ -75,8 +96,9 @@ const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraf
   const { acceptanceId, embedded } = useAcceptanceScope();
   const { turn } = useAcceptanceTurn(embedded);
   const { data } = useAcceptanceBundle(acceptanceId);
-  const [tab, setTab] = useState<AcceptanceTabKey>('checks');
-
+  const [requestedTab, setTab] = useState<AcceptanceTabKey>('checks');
+  const flowCount = getFlowNodeCount(data?.flows);
+  const tab = resolveAcceptanceTab(requestedTab, flowCount);
   const checks = data ? checksForTurn(data, turn) : [];
   const resourceCount = new Set(
     checks.flatMap((check) =>
@@ -104,6 +126,7 @@ const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraf
             <AcceptanceTabs
               active={tab}
               checkCount={checks.length}
+              flowCount={flowCount}
               resourceCount={resourceCount}
               onChange={setTab}
             />
@@ -111,8 +134,18 @@ const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraf
         </Flexbox>
       </Flexbox>
 
-      <Flexbox className={styles.column} gap={16} paddingBlock={20}>
-        {tab === 'checks' ? (
+      <Flexbox
+        className={styles.column}
+        gap={16}
+        paddingBlock={20}
+        style={tab === 'flow' ? { maxWidth: 1500 } : undefined}
+      >
+        {tab === 'flow' ? (
+          <>
+            <AcceptanceFlow />
+            <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
+          </>
+        ) : tab === 'checks' ? (
           <>
             <AcceptanceCheckInventory toolbar={<AcceptanceCheckOwnerToolbar />} />
             <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
@@ -131,6 +164,7 @@ const AcceptancePage = ({
 }: AcceptancePageProps) => {
   const params = useParams<{ acceptanceId: string; checkId: string }>();
   const acceptanceId = explicitAcceptanceId ?? extractUuid(params.acceptanceId);
+  const [flowPanelHost, setFlowPanelHostContext] = useState<HTMLDivElement | null>(null);
   const embedded = Boolean(explicitAcceptanceId);
   const focused = !embedded && Boolean(params.checkId);
 
@@ -139,30 +173,39 @@ const AcceptancePage = ({
   return (
     <AcceptanceScope acceptanceId={acceptanceId} embedded={embedded}>
       <AcceptanceBundleGate>
-        <Flexbox horizontal className={styles.page}>
-          <Flexbox className={styles.contentFrame} flex={1} style={{ minWidth: 0 }}>
+        <FlowPanelHostContext value={flowPanelHost}>
+          <Flexbox horizontal className={styles.page}>
             <Flexbox
-              flex={focused ? 1 : undefined}
-              gap={16}
-              style={{ minHeight: focused ? 0 : undefined, width: '100%' }}
+              horizontal
+              flex={1}
+              style={{ minHeight: 0, minWidth: 0, position: 'relative' }}
             >
-              {focused ? (
-                <>
-                  {/* The focused branch zeroes the frame padding, so the
+              <Flexbox className={styles.contentFrame} flex={1} style={{ minWidth: 0 }}>
+                <Flexbox
+                  flex={focused ? 1 : undefined}
+                  gap={16}
+                  style={{ minHeight: focused ? 0 : undefined, width: '100%' }}
+                >
+                  {focused ? (
+                    <>
+                      {/* The focused branch zeroes the frame padding, so the
                       notice carries its own margins. A shared viewer needs
                       the capability explanation here MOST — this is where
                       the owner-only review controls are visibly absent. */}
-                  <AcceptanceSharedNotice
-                    style={{ marginBlockStart: 16, marginInline: 20, width: 'auto' }}
-                  />
-                  <AcceptanceFocusWorkspace />
-                </>
-              ) : null}
+                      <AcceptanceSharedNotice
+                        style={{ marginBlockStart: 16, marginInline: 20, width: 'auto' }}
+                      />
+                      <AcceptanceFocusWorkspace />
+                    </>
+                  ) : null}
+                </Flexbox>
+                {!focused && <AcceptanceBody onDraftToComposer={onDraftToComposer} />}
+              </Flexbox>
+              <AcceptanceLedgerRail />
             </Flexbox>
-            {!focused && <AcceptanceBody onDraftToComposer={onDraftToComposer} />}
+            <div className={styles.flowPanel} ref={setFlowPanelHostContext} />
           </Flexbox>
-          <AcceptanceLedgerRail />
-        </Flexbox>
+        </FlowPanelHostContext>
       </AcceptanceBundleGate>
     </AcceptanceScope>
   );

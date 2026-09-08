@@ -810,6 +810,41 @@ describe('verify ingest-report — every run is an immutable acceptance round', 
     });
   });
 
+  it('reuses the asset when the acceptance row is keyed by criterion rather than plan item', async () => {
+    mockTrpcClient.acceptance.getBundle.query.mockResolvedValue({
+      acceptance: {
+        id: 'acceptance-existing',
+        status: 'delivered',
+        subjectId: 'subject',
+        subjectType: 'standalone',
+      },
+      checks: [
+        { id: 'criterion-1', planItem: { id: 'stable-check', sourceCriterionId: 'criterion-1' } },
+      ],
+    });
+    writeFileSync(
+      path.join(dir, 'result.json'),
+      JSON.stringify({
+        cases: [{ id: 'stable-check', name: '输入区域可用', status: 'pass' }],
+        plan: [
+          {
+            id: 'stable-check',
+            title: '输入区域可用',
+            verifier: 'agent',
+            method: '打开输入区域',
+            expected: '可以输入',
+          },
+        ],
+      }),
+    );
+    await run(['ingest-report', dir, '--acceptance', 'acceptance-existing', '--json']);
+    expect(mockTrpcClient.verify.createRun.mutate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        plan: [expect.objectContaining({ id: 'stable-check', sourceCriterionId: 'criterion-1' })],
+      }),
+    );
+  });
+
   it('appends a re-verification round directly to an existing acceptance', async () => {
     mockTrpcClient.acceptance.getBundle.query.mockResolvedValue({
       acceptance: {

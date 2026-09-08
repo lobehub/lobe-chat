@@ -3,14 +3,15 @@
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { ListChecks, Paperclip } from 'lucide-react';
+import { ListChecks, Paperclip, Route } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export type AcceptanceTabKey = 'checks' | 'resources';
+export type AcceptanceTabKey = 'checks' | 'resources' | 'flow';
 
 interface AcceptanceTabsProps {
   active: AcceptanceTabKey;
   checkCount: number;
+  flowCount?: number;
   onChange: (key: AcceptanceTabKey) => void;
   resourceCount: number;
 }
@@ -61,7 +62,13 @@ const styles = createStaticStyles(({ css }) => ({
  * rounds produced. They sit above the full-width rule so the rule reads as the
  * boundary between "what this delivery is" and "what you are looking at".
  */
-const AcceptanceTabs = ({ active, checkCount, onChange, resourceCount }: AcceptanceTabsProps) => {
+const AcceptanceTabs = ({
+  active,
+  checkCount,
+  flowCount = 0,
+  onChange,
+  resourceCount,
+}: AcceptanceTabsProps) => {
   const { t } = useTranslation('verify');
   const tabs = [
     {
@@ -70,6 +77,7 @@ const AcceptanceTabs = ({ active, checkCount, onChange, resourceCount }: Accepta
       key: 'checks' as const,
       label: t('acceptance.tabs.checks'),
     },
+    { count: flowCount, icon: Route, key: 'flow' as const, label: t('flow.title') },
     {
       count: resourceCount,
       icon: Paperclip,
@@ -80,7 +88,7 @@ const AcceptanceTabs = ({ active, checkCount, onChange, resourceCount }: Accepta
 
   return (
     <Flexbox horizontal align={'center'} gap={2}>
-      {tabs.map((tab) => (
+      {tabs.filter((tab) => tab.key !== 'flow' || flowCount > 0).map((tab) => (
         <Button
           aria-pressed={tab.key === active}
           className={cx(styles.tab, tab.key === active && styles.tabActive)}

@@ -41,3 +41,42 @@ describe('round evidence selection', () => {
     expect(checksForTurn(bundle, 3)).toEqual([]);
   });
 });
+
+it('shows a planned replay before it has results even when its old id was superseded', () => {
+  const data = {
+    ...bundle,
+    rounds: [
+      {
+        run: {
+          roundIndex: 3,
+          plan: [
+            {
+              id: 'old-check',
+              title: 'Frozen check',
+              required: true,
+              sourceFlowNode: { flowId: 'flow', nodeId: 'node' },
+            },
+          ],
+        },
+      },
+    ],
+    checks: [
+      {
+        ...bundle.checks[0],
+        id: 'replacement',
+        supersededIds: ['old-check'],
+        userReview: { action: 'accept' },
+      },
+    ],
+  } as unknown as AcceptanceBundle;
+  const [check] = checksForTurn(data, 3);
+  expect(check).toMatchObject({
+    id: 'old-check',
+    title: 'Frozen check',
+    state: 'not_executed',
+    evidence: [],
+    reviews: [],
+  });
+  expect(check.result).toBeUndefined();
+  expect(check.userReview).toBeUndefined();
+});

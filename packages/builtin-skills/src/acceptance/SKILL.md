@@ -100,6 +100,46 @@ data; an auth error means stop and surface it), and only the UI driver the
 selected surface needs is installed — probe before adding dependencies, and never
 substitute a private agent plugin.
 
+## Optional user-journey flows
+
+When acceptance depends on a sequence of user states, publish its graph before
+exercising the product. Keep the checklist paths above for independent checks;
+a graph is optional and does not replace evidence or human review.
+
+1. Use the named acceptance (or create one with `lh acceptance create --help`).
+   Write a JSON file with `definition: { title, entryNodeId, nodes, edges }`.
+   Give nodes and edges stable UUIDs. Each node has `id` and exactly one of
+   `criterionId` (existing check asset), `check: { id, title, definition }`
+   (a check asset with steps, fixtures, preconditions and expected outcome), or
+   `subFlowId` (another flow in this acceptance). Edges have `id`, `sourceNodeId`,
+   `targetNodeId`, `trigger`, `required`, and optional `condition`. Every node must
+   be reachable from the entry. Publish child flows before referencing them.
+2. `lh acceptance flow publish <acceptanceId> --file flow.json` saves the
+   definition and returns `flowId`. To edit it, include that `flowId` and the
+   current `expectedHash` in the file. `lh acceptance flow view <acceptanceId>`
+   reads definitions, snapshots and results. Publishing does not execute checks.
+3. `lh acceptance flow start <acceptanceId> --flow <flowId>` creates a round
+   with a frozen graph and plan. Add `--run <verifyRunId>` to attach another flow
+   to the same open round. Read `lh acceptance run get <verifyRunId> --json` for
+   the actual plan IDs: each branch and subflow invocation has its own
+   `checkItemId`; never substitute the reusable asset ID.
+4. Exercise the real product, then use
+   `lh acceptance flow record <acceptanceId> --file result.json`, containing
+   `verifyRunId`, `checkItemId`, `verdict` (`passed`, `failed`, `uncertain`, or
+   `blocked`) and `observation`. Record only what was observed. Use the returned
+   result ID to attach required artifacts through `lh acceptance run evidence`
+   (inspect its `--help`), following the same evidence rules as checklist checks.
+5. After all required checks are recorded and passed, run
+   `lh acceptance flow complete <acceptanceId> --run <verifyRunId>`. Completion
+   settles verification; it does not accept the delivery on the user's behalf.
+   Read back the round and verify evidence coverage before handing it over.
+
+To rerun the exact old graph, start with `--from-run <sourceVerifyRunId>` and
+omit `--run` for a fresh round. This preserves the old definition and starts
+without results. Accepted or closed acceptances must be explicitly reopened
+before starting. Edges describe business transitions; they do not automatically
+schedule execution. Continue to read `lh acceptance feedback <acceptanceId> --actionable` before repairs and publish new rounds into the same acceptance.
+
 ## HARD RULE — programmatic gates are NEVER acceptance checks
 
 Every check MUST be an outcome a **person decides about the delivery**: what the

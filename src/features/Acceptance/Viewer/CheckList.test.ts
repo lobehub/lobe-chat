@@ -198,6 +198,17 @@ describe('userReviewState', () => {
     expect(userReviewState(withReview(undefined))).toBe('pending');
   });
 
+  it.each(['accept', 'ignore'] as const)('a stale %s does not settle a new flow run', (action) => {
+    const check = withReview({
+      action,
+      createdAt: '2026-07-16T00:00:00.000Z',
+      roundIndex: 1,
+      stale: true,
+    });
+    expect(userReviewState(check)).toBe('pending');
+    expect(checkFilterState(check)).toBe('pending');
+  });
+
   it('an accept stays settled across rounds', () => {
     expect(
       userReviewState(

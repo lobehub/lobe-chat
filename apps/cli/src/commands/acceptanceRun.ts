@@ -621,7 +621,7 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
 
   // What the run set out to check, written before it ran. Paired with the
   // results by `id`, so the report can show a planned item that never ran.
-  const plan = planFromResult(result, droppedIds);
+  let plan = planFromResult(result, droppedIds);
 
   const goal = options.goal ?? (typeof result.focus === 'string' ? result.focus : undefined);
   const title = options.title ?? result.title;
@@ -673,6 +673,14 @@ async function ingestReportAction(reportDir: string, options: IngestReportOption
   if (requestedAcceptanceId) {
     const bundle = await client.acceptance.getBundle.query({ id: requestedAcceptanceId });
     acceptance = bundle.acceptance;
+    plan = plan?.map((item) => ({
+      ...item,
+      sourceCriterionId:
+        item.sourceCriterionId ??
+        bundle.checks?.find((check) => check.id === item.id || check.planItem?.id === item.id)
+          ?.planItem?.sourceCriterionId ??
+        undefined,
+    }));
     subject = {
       ref: {
         subjectId: acceptance.subjectId,
