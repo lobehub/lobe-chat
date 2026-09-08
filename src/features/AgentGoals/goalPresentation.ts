@@ -1,4 +1,3 @@
-import { AGENT_CHAT_TOPIC_URL } from '@lobechat/const';
 import type { GoalStatus } from '@lobechat/const/goal';
 import type { GoalConfig, GoalSpend, TaskStatus } from '@lobechat/types';
 
@@ -82,8 +81,10 @@ export const summarizeGoalBudget = (
 };
 
 /** The planner's persistent conversation belongs to the creator, not the task assignee. */
-export const goalManagerTraceUrl = (config: GoalConfig | null | undefined): string | undefined => {
+export const goalManagerConversation = (
+  config: GoalConfig | null | undefined,
+): { agentId: string; topicId: string } | undefined => {
   const agentId = config?.manager?.agentId;
   const topicId = config?.managerState?.topicId;
-  return agentId && topicId ? AGENT_CHAT_TOPIC_URL(agentId, topicId) : undefined;
+  return agentId && topicId ? { agentId, topicId } : undefined;
 };

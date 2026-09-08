@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   formatSpan,
   formatUsd,
-  goalManagerTraceUrl,
+  goalManagerConversation,
   goalStatusKey,
   summarizeGoalBudget,
 } from './goalPresentation';
@@ -73,15 +73,15 @@ describe('summarizeGoalBudget', () => {
   });
 });
 
-describe('goalManagerTraceUrl', () => {
-  it('does not offer a dead link before the first planning run', () => {
-    expect(goalManagerTraceUrl(undefined)).toBeUndefined();
-    expect(goalManagerTraceUrl({ manager: { agentId: 'creator' } })).toBeUndefined();
+describe('goalManagerConversation', () => {
+  it('does not offer a empty conversation before the first planning run', () => {
+    expect(goalManagerConversation(undefined)).toBeUndefined();
+    expect(goalManagerConversation({ manager: { agentId: 'creator' } })).toBeUndefined();
   });
 
   it('keeps the creator conversation available after a planning turn is consumed', () => {
     expect(
-      goalManagerTraceUrl({
+      goalManagerConversation({
         manager: { agentId: 'creator' },
         managerState: {
           consumed: true,
@@ -92,6 +92,6 @@ describe('goalManagerTraceUrl', () => {
           turns: 6,
         },
       }),
-    ).toBe('/agent/creator/persistent-topic');
+    ).toEqual({ agentId: 'creator', topicId: 'persistent-topic' });
   });
 });
