@@ -16,7 +16,7 @@ import {
   requireWorkspaceRoleWhenScoped,
   wsCompatProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
-import { AcceptanceFlowModel } from '@/database/models/acceptanceFlow';
+import { AcceptanceFlowModel, getFlowPlanHash } from '@/database/models/acceptanceFlow';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { ProjectModel } from '@/database/models/project';
 import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
@@ -240,6 +240,22 @@ export const acceptanceRouter = router({
       );
       await service.recomputeStatus(input.id);
       return result;
+    }),
+  confirmFlowPlan: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        verifyRunId: z.string().uuid(),
+        expectedHash: z.string().length(64),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance } = await resolveAcceptanceForWrite(ctx, input.id);
+      return new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).confirmPlan(
+        input.id,
+        input.verifyRunId,
+        input.expectedHash,
+      );
     }),
   recordFlowStep: acceptanceWriteProcedure
     .input(
@@ -644,6 +660,7 @@ export const acceptanceRouter = router({
         return {
           report: reportsByRun.get(run.id) ?? null,
           run: publicRun,
+          ...(run.flowSnapshots?.length ? { flowPlanHash: getFlowPlanHash(run) } : {}),
           usage: (run.operationId ? usageByOperation.get(run.operationId) : undefined) ?? null,
         };
       });

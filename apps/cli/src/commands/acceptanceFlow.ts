@@ -23,7 +23,9 @@ export function attachAcceptanceFlowCommands(acceptance: Command) {
     outputJson((await client.acceptance.getBundle.query({ id })).flows);
   });
   flow
-    .command('start <acceptanceId>')
+    .command('plan <acceptanceId>')
+    .alias('start')
+    .description('Prepare a frozen flow plan for user confirmation without executing checks')
     .requiredOption('--flow <id>')
     .option('--run <id>', 'Existing round; omit to create a fresh round for this flow')
     .option('--from-run <id>', 'Replay the frozen definition from a previous round')
@@ -35,6 +37,21 @@ export function attachAcceptanceFlowCommands(acceptance: Command) {
           flowId: options.flow,
           verifyRunId: options.run,
           sourceRunId: options.fromRun,
+        }),
+      );
+    });
+  flow
+    .command('confirm <acceptanceId>')
+    .description('Confirm the exact plan after explicit user approval')
+    .requiredOption('--run <id>')
+    .requiredOption('--hash <hash>', 'flowPlanHash from acceptance view --json')
+    .action(async (id: string, options: { run: string; hash: string }) => {
+      const client = await getTrpcClient();
+      outputJson(
+        await client.acceptance.confirmFlowPlan.mutate({
+          id,
+          verifyRunId: options.run,
+          expectedHash: options.hash,
         }),
       );
     });

@@ -555,6 +555,8 @@ export interface VerifyRubricConfig {
  */
 export interface VerifyRunMetadata {
   [key: string]: unknown;
+  /** Exact flow snapshot explicitly approved by the user, excluding legacy execution timestamps. */
+  flowPlanApprovalHash?: string;
   /** Autonomous Goal review, kept separate from human decisions and verifier verdicts. */
   goalReview?: {
     feedback: string;

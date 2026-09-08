@@ -1,4 +1,18 @@
 export default {
+  'flow.plan.awaitingTitle': 'Confirm the acceptance flow',
+  'flow.plan.awaitingDescription':
+    'Review the journeys, branches and expected outcomes before implementation begins.',
+  'flow.plan.confirmedTitle': 'Acceptance flow confirmed',
+  'flow.plan.confirmedDescription':
+    'Implementation can now follow this plan. Record verification results after exercising each check.',
+  'flow.plan.confirm': 'Confirm flow',
+  'flow.plan.requestChanges': 'Request changes',
+  'flow.plan.feedbackDescription':
+    'Describe which journeys, branches or expected outcomes need to change.',
+  'flow.plan.label': 'Acceptance flow plan',
+  'flow.plan.actionError':
+    'Unable to update the flow plan. Refresh and review the latest plan before retrying.',
+
   'acceptance.review.submitFailed': 'Could not submit. Your draft is saved; please try again.',
   'acceptance.bar.mobileProgress': 'Delivery: {{done}} / {{total}} reviewed',
   'acceptance.review.historicalReadOnly':

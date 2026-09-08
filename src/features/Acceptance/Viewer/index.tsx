@@ -6,50 +6,17 @@ import { useState } from 'react';
 import { useParams } from 'react-router';
 
 import { extractUuid } from '../utils';
-import AcceptanceCheckInventory from './AcceptanceCheckInventory';
-import AcceptanceCheckOwnerToolbar from './AcceptanceCheckOwnerToolbar';
-import AcceptanceDecision from './AcceptanceDecision';
-import AcceptanceEnterFocus from './AcceptanceEnterFocus';
-import { AcceptanceFlow } from './AcceptanceFlow';
-import AcceptanceFocusWorkspace from './AcceptanceFocusWorkspace';
-import AcceptanceGoal from './AcceptanceGoal';
-import AcceptanceGoalEdit from './AcceptanceGoalEdit';
-import AcceptanceIdentity from './AcceptanceIdentity';
-import AcceptanceLedgerRail from './AcceptanceLedgerRail';
-import AcceptanceOriginTopic from './AcceptanceOriginTopic';
-import AcceptanceResources from './AcceptanceResources';
-import { AcceptanceBundleGate, AcceptanceScope, useAcceptanceScope } from './AcceptanceScope';
-import AcceptanceSharedNotice from './AcceptanceSharedNotice';
-import AcceptanceStatusControl from './AcceptanceStatusControl';
-import type { AcceptanceTabKey } from './AcceptanceTabs';
-import AcceptanceTabs from './AcceptanceTabs';
-import { getFlowNodeCount, resolveAcceptanceTab } from './flowNavigation';
-import { FlowPanelHostContext } from './FlowResults';
-import { acceptanceContentLayout, acceptanceScrollLayout } from './layout';
-import { checksForTurn } from './turnChecks';
-import { useAcceptanceBundle } from './useAcceptanceBundle';
-import { useAcceptanceTurn } from './useAcceptanceTurn';
+import { AcceptanceOverview } from './AcceptanceOverview';
+import { AcceptanceBundleGate, AcceptanceScope } from './AcceptanceScope';
+import { FlowPanelHostContext } from './Flow/FlowPanelHost';
+import AcceptanceFocusWorkspace from './Focus/AcceptanceFocusWorkspace';
+import AcceptanceSharedNotice from './Header/AcceptanceSharedNotice';
+import AcceptanceLedgerRail from './History/AcceptanceLedgerRail';
+import { acceptanceScrollLayout } from './layout';
 
 const styles = createStaticStyles(({ css }) => ({
-  column: css`
-    width: 100%;
-    max-width: ${acceptanceContentLayout.maxWidth}px;
-    margin-inline: auto;
-    padding-inline: 24px;
-
-    @media (width <= 767px) {
-      padding-inline: 16px;
-    }
-  `,
   contentFrame: css`
     overflow: ${acceptanceScrollLayout.frameOverflow};
-  `,
-  /* Spans the frame, not the reading column — the rule is the page's own
-     horizon line, so cutting it at 920 would read as a card edge. */
-  headerBand: css`
-    flex: none;
-    padding-block: 20px 0;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
   `,
   flowPanel: css`
     flex: none;
@@ -82,81 +49,10 @@ const styles = createStaticStyles(({ css }) => ({
     }
   `,
 }));
-
 interface AcceptancePageProps {
   acceptanceId?: string;
   onDraftToComposer?: (text: string) => boolean;
 }
-
-/**
- * The record's own body: an identity band that ends in the full-width rule,
- * then whichever face of the delivery the tabs select.
- */
-const AcceptanceBody = ({ onDraftToComposer }: Pick<AcceptancePageProps, 'onDraftToComposer'>) => {
-  const { acceptanceId, embedded } = useAcceptanceScope();
-  const { turn } = useAcceptanceTurn(embedded);
-  const { data } = useAcceptanceBundle(acceptanceId);
-  const [requestedTab, setTab] = useState<AcceptanceTabKey>('checks');
-  const flowCount = getFlowNodeCount(data?.flows);
-  const tab = resolveAcceptanceTab(requestedTab, flowCount);
-  const checks = data ? checksForTurn(data, turn) : [];
-  const resourceCount = new Set(
-    checks.flatMap((check) =>
-      (check.evidence ?? [])
-        .filter((evidence) => evidence.fileUrl || evidence.documentId)
-        .map((evidence) => evidence.fileId ?? evidence.documentId ?? evidence.id),
-    ),
-  ).size;
-
-  return (
-    <>
-      <Flexbox className={styles.headerBand}>
-        <Flexbox className={styles.column} gap={12}>
-          <AcceptanceSharedNotice />
-          <AcceptanceIdentity
-            focusSlot={<AcceptanceEnterFocus />}
-            statusSlot={<AcceptanceStatusControl />}
-            topicSlot={<AcceptanceOriginTopic />}
-          />
-          <AcceptanceGoal editSlot={<AcceptanceGoalEdit />} />
-          {/* The requirement needs room to land before the tabs start a new
-              thought — at the band's uniform gap it read as another row of
-              the same list. */}
-          <Flexbox style={{ paddingBlockStart: 16 }}>
-            <AcceptanceTabs
-              active={tab}
-              checkCount={checks.length}
-              flowCount={flowCount}
-              resourceCount={resourceCount}
-              onChange={setTab}
-            />
-          </Flexbox>
-        </Flexbox>
-      </Flexbox>
-
-      <Flexbox
-        className={styles.column}
-        gap={16}
-        paddingBlock={20}
-        style={tab === 'flow' ? { maxWidth: 1500 } : undefined}
-      >
-        {tab === 'flow' ? (
-          <>
-            <AcceptanceFlow />
-            <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
-          </>
-        ) : tab === 'checks' ? (
-          <>
-            <AcceptanceCheckInventory toolbar={<AcceptanceCheckOwnerToolbar />} />
-            <AcceptanceDecision onDraftToComposer={onDraftToComposer} />
-          </>
-        ) : (
-          <AcceptanceResources />
-        )}
-      </Flexbox>
-    </>
-  );
-};
 
 const AcceptancePage = ({
   acceptanceId: explicitAcceptanceId,
@@ -199,7 +95,7 @@ const AcceptancePage = ({
                     </>
                   ) : null}
                 </Flexbox>
-                {!focused && <AcceptanceBody onDraftToComposer={onDraftToComposer} />}
+                {!focused && <AcceptanceOverview onDraftToComposer={onDraftToComposer} />}
               </Flexbox>
               <AcceptanceLedgerRail />
             </Flexbox>

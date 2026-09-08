@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '../../core/getTestDB';
 import { acceptances, users, verifyCheckResults, verifyCriteria, verifyRuns } from '../../schemas';
-import { AcceptanceFlowModel, validateFlow } from '../acceptanceFlow';
+import { AcceptanceFlowModel, getFlowPlanHash, validateFlow } from '../acceptanceFlow';
 
 const db = await getTestDB();
 const owner = 'flow-asset-owner';
@@ -82,6 +82,10 @@ async function roundPlan(id: string) {
   return run;
 }
 
+async function confirmRound(id: string) {
+  return model.confirmPlan(acceptanceId, id, getFlowPlanHash(await roundPlan(id)));
+}
+
 describe('check assets and round snapshots', () => {
   it.each(['accepted', 'closed'] as const)(
     'requires reopening a %s acceptance before starting or replaying',
@@ -105,6 +109,82 @@ describe('check assets and round snapshots', () => {
       expect(current.status).toBe(status);
     },
   );
+
+  it('keeps the proposed flow unexecuted until the user confirms its plan', async () => {
+    const flow = await model.publish(acceptanceId, definition);
+    const run = await model.start(acceptanceId, flow.flowId);
+    const round = await roundPlan(run.id);
+    await expect(
+      model.record(acceptanceId, {
+        verifyRunId: run.id,
+        checkItemId: round.plan![0].id,
+        verdict: 'passed',
+        observation: 'Must not start before approval',
+      }),
+    ).rejects.toThrow('Flow plan must be confirmed');
+    expect((await roundPlan(run.id)).planConfirmedAt).toBeNull();
+    expect(await db.select().from(verifyCheckResults)).toHaveLength(0);
+  });
+
+  it('confirms only the current reviewed snapshot and freezes its checks', async () => {
+    const flow = await model.publish(acceptanceId, definition);
+    const run = await model.start(acceptanceId, flow.flowId);
+    const hash = getFlowPlanHash(await roundPlan(run.id));
+    await expect(
+      new AcceptanceFlowModel(db, other).confirmPlan(acceptanceId, run.id, hash),
+    ).rejects.toThrow('Acceptance not found');
+    await expect(model.confirmPlan(acceptanceId, run.id, 'stale')).rejects.toThrow(
+      'Flow plan changed',
+    );
+    const confirmed = await confirmRound(run.id);
+    expect((await confirmRound(run.id)).planConfirmedAt).toEqual(confirmed.planConfirmedAt);
+    const replay = await model.start(acceptanceId, flow.flowId, undefined, run.id);
+    expect((await roundPlan(replay.id)).planConfirmedAt).toEqual(confirmed.planConfirmedAt);
+    const fresh = await model.start(acceptanceId, flow.flowId);
+    expect((await roundPlan(fresh.id)).planConfirmedAt).toBeNull();
+    await expect(model.confirmPlan(acceptanceId, run.id, hash)).rejects.toThrow(
+      'Current flow plan required',
+    );
+  });
+
+  it('does not treat a legacy execution timestamp as user approval when replaying', async () => {
+    const flow = await model.publish(acceptanceId, definition);
+    const run = await model.start(acceptanceId, flow.flowId);
+    await db
+      .update(verifyRuns)
+      .set({ planConfirmedAt: new Date() })
+      .where(eq(verifyRuns.id, run.id));
+    const replay = await model.start(acceptanceId, flow.flowId, undefined, run.id);
+    expect((await roundPlan(replay.id)).planConfirmedAt).toBeNull();
+  });
+
+  it('invalidates a pending approval when another flow is added to the draft round', async () => {
+    const first = await model.publish(acceptanceId, definition);
+    const run = await model.start(acceptanceId, first.flowId);
+    const oldHash = getFlowPlanHash(await roundPlan(run.id));
+    const node = randomUUID();
+    const second = await model.publish(acceptanceId, {
+      title: 'Second journey',
+      entryNodeId: node,
+      nodes: [{ id: node, criterionId: definition.nodes[0].check!.id }],
+      edges: [],
+    });
+    await model.start(acceptanceId, second.flowId, run.id);
+    await expect(model.confirmPlan(acceptanceId, run.id, oldHash)).rejects.toThrow(
+      'Flow plan changed',
+    );
+    await confirmRound(run.id);
+    const thirdNode = randomUUID();
+    const third = await model.publish(acceptanceId, {
+      title: 'Third journey',
+      entryNodeId: thirdNode,
+      nodes: [{ id: thirdNode, criterionId: definition.nodes[0].check!.id }],
+      edges: [],
+    });
+    await expect(model.start(acceptanceId, third.flowId, run.id)).rejects.toThrow('already frozen');
+    const partial = await model.start(acceptanceId, first.flowId, undefined, run.id);
+    expect((await roundPlan(partial.id)).planConfirmedAt).toBeNull();
+  });
 
   it('creates assets before execution and instantiates each incoming branch in the canonical plan', async () => {
     const published = await model.publish(acceptanceId, definition);
@@ -130,6 +210,7 @@ describe('check assets and round snapshots', () => {
       verdict: 'passed' as const,
       observation: 'Composer visible',
     };
+    await confirmRound(run.id);
     const result = await model.record(acceptanceId, input);
     expect((await model.record(acceptanceId, input)).id).toBe(result.id);
     expect(result.sourceCriterionId).toBe(plan[0].sourceCriterionId);
@@ -235,6 +316,7 @@ describe('check assets and round snapshots', () => {
     const secondItem = round.plan!.find((item) => item.sourceFlowNode?.flowId === second.flowId)!;
     expect(secondItem.definition?.preconditions).toEqual(['Signed in']);
     expect(new Set(round.plan!.map((item) => item.id)).size).toBe(4);
+    await confirmRound(run.id);
     for (const item of firstItems)
       await model.record(acceptanceId, {
         verifyRunId: run.id,
@@ -283,6 +365,7 @@ describe('check assets and round snapshots', () => {
       item.sourceFlowNode?.nodeId.startsWith(a + '/'),
     );
     expect(firstItems).toHaveLength(3);
+    await confirmRound(run.id);
     for (const item of firstItems)
       await model.record(acceptanceId, {
         verifyRunId: run.id,

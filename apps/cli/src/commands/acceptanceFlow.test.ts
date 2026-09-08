@@ -3,13 +3,16 @@ import { expect, it, vi } from 'vitest';
 
 import { attachAcceptanceFlowCommands } from './acceptanceFlow';
 
-const { startFlow, outputJson } = vi.hoisted(() => ({
+const { startFlow, confirmFlowPlan, outputJson } = vi.hoisted(() => ({
   startFlow: vi.fn().mockResolvedValue({ id: 'flow-run' }),
+  confirmFlowPlan: vi.fn().mockResolvedValue({ id: 'flow-run', planConfirmedAt: 'now' }),
   outputJson: vi.fn(),
 }));
 
 vi.mock('../api/client', () => ({
-  getTrpcClient: async () => ({ acceptance: { startFlow: { mutate: startFlow } } }),
+  getTrpcClient: async () => ({
+    acceptance: { startFlow: { mutate: startFlow }, confirmFlowPlan: { mutate: confirmFlowPlan } },
+  }),
 }));
 vi.mock('../utils/format', () => ({ outputJson }));
 
@@ -56,5 +59,50 @@ it('allows a fresh verification round when --run is omitted', async () => {
     flowId: 'version-id',
     sourceRunId: undefined,
     verifyRunId: undefined,
+  });
+});
+
+it('prepares a flow for review through the plan command', async () => {
+  startFlow.mockClear();
+  const program = new Command().exitOverride();
+  attachAcceptanceFlowCommands(program.command('acceptance'));
+  await program.parseAsync([
+    'node',
+    'lh',
+    'acceptance',
+    'flow',
+    'plan',
+    'acceptance-id',
+    '--flow',
+    'flow-id',
+  ]);
+  expect(startFlow).toHaveBeenCalledWith({
+    id: 'acceptance-id',
+    flowId: 'flow-id',
+    sourceRunId: undefined,
+    verifyRunId: undefined,
+  });
+  expect(confirmFlowPlan).not.toHaveBeenCalled();
+});
+
+it('confirms only the explicitly identified plan snapshot', async () => {
+  const program = new Command().exitOverride();
+  attachAcceptanceFlowCommands(program.command('acceptance'));
+  await program.parseAsync([
+    'node',
+    'lh',
+    'acceptance',
+    'flow',
+    'confirm',
+    'acceptance-id',
+    '--run',
+    'flow-run',
+    '--hash',
+    'reviewed-hash',
+  ]);
+  expect(confirmFlowPlan).toHaveBeenCalledWith({
+    id: 'acceptance-id',
+    verifyRunId: 'flow-run',
+    expectedHash: 'reviewed-hash',
   });
 });
