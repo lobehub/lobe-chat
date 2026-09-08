@@ -491,6 +491,7 @@ describe('buildRunLifecycle.afterRunComplete — client desktop notification bod
       await lifecycle('client', get).afterRunComplete(completeEvent('client', { runtimeStatus }));
 
       expect(store.summaryTopicTitle).not.toHaveBeenCalled();
+      expect(desktopNotificationMock.notifyDesktopAgentCompleted).not.toHaveBeenCalled();
     },
   );
 

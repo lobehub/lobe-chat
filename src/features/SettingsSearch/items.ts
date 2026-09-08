@@ -662,6 +662,22 @@ export const SETTINGS_SEARCH_ITEMS: SettingsSearchItem[] = [
   },
   // Notification
   {
+    anchor: 'notification-completion-sound',
+    descKey: 'completionSound.desc',
+    keywords: ['sound', 'audio', 'OpenPeon', 'completion'],
+    labelKey: 'completionSound.title',
+    tab: SettingsTabs.Notification,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
+    anchor: 'notification-banner-sound',
+    descKey: 'completionSound.banner.desc',
+    keywords: ['sound', 'notification', 'banner', 'background'],
+    labelKey: 'completionSound.banner.title',
+    tab: SettingsTabs.Notification,
+    visible: (ctx) => ctx.isDesktop,
+  },
+  {
     anchor: 'notification-inbox',
     keywords: ['inbox', 'in-app notification'],
     labelKey: 'notification.inbox.title',

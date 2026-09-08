@@ -1,4 +1,30 @@
 export default {
+  'completionSound.title': 'In-app completion sound',
+  'completionSound.enabled': 'Play completion sound',
+  'completionSound.desc':
+    'Play a chime when a chat finishes while LobeHub is in the foreground. The sound, volume and imports stay on this device and are not synced.',
+  'completionSound.sound': 'Sound',
+  'completionSound.default': 'LobeHub chime',
+  'completionSound.import': 'Import sound',
+  'completionSound.importHint':
+    'Choose WAV, MP3 or OGG (up to 1 MB), or openpeon.json from an extracted OpenPeon pack. Only task completion sounds are imported.',
+  'completionSound.preview': 'Preview',
+  'completionSound.reset': 'Use default',
+  'completionSound.volume': 'Volume',
+  'completionSound.error':
+    'Could not load, save or play the sound. Check the audio file or OpenPeon pack and try again.',
+  'completionSound.retry': 'Reload settings',
+  'completionSound.banner.title': 'Background notification',
+  'completionSound.banner.label': 'Notification sound',
+  'completionSound.banner.desc':
+    'Sound the notification banner carries when a chat finishes while LobeHub is in the background. macOS Focus and per-app notification settings still apply.',
+  'completionSound.banner.system': 'System default',
+  'completionSound.banner.lobehub': 'LobeHub chime',
+  'completionSound.banner.previewTitle': 'Notification preview',
+  'completionSound.banner.previewBody': 'This is how a finished chat will sound in the background.',
+  'completionSound.banner.systemMuted':
+    'macOS has notification sounds turned off for LobeHub, so background notifications stay silent. Turn them back on in System Settings › Notifications › LobeHub.',
+
   '_cloud.officialProvider': '{{name}} Official Model Service',
   'about.title': 'About',
   'agentImport.action': 'Copy to Workspace...',
