@@ -2380,6 +2380,8 @@
   "workingPanel.localFile.document.openWithDefaultApp": "用默认应用打开",
   "workingPanel.localFile.document.truncatedRows": "仅显示前 {{count}} 行",
   "workingPanel.localFile.document.unsupported": "此文档类型暂不支持应用内预览",
+  "workingPanel.localFile.document.xlsxOriginal": "原始版式",
+  "workingPanel.localFile.document.xlsxReflow": "重排",
   "workingPanel.localFile.error": "无法加载此文件",
   "workingPanel.localFile.preview.openExternal": "在浏览器中打开",
   "workingPanel.localFile.preview.raw": "原文",

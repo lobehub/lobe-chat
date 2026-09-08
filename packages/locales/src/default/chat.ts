@@ -2649,6 +2649,8 @@ export default {
   'workingPanel.localFile.document.download': 'Download',
   'workingPanel.localFile.document.openWithDefaultApp': 'Open with default app',
   'workingPanel.localFile.document.truncatedRows': 'Showing the first {{count}} rows',
+  'workingPanel.localFile.document.xlsxOriginal': 'Original layout',
+  'workingPanel.localFile.document.xlsxReflow': 'Reflow',
   'workingPanel.localFile.document.unsupported': "This document type can't be previewed in-app yet",
   'workingPanel.localFile.error': "Couldn't load this file",
   'workingPanel.localFile.preview.raw': 'Raw',
