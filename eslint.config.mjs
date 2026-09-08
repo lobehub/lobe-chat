@@ -206,6 +206,41 @@ export default eslint(
     },
   },
   {
+    // Catalog-backed icon features and the emoji picker statically import the
+    // whole brand-icon set / emoji-mart dataset into the importing route's
+    // closure; the wrappers mount them through lazy().
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: [
+      'src/**/*.test.{ts,tsx}',
+      'src/components/EmojiPicker/index.tsx',
+      'src/components/LobeIcons/index.tsx',
+      'src/libs/providerIcon.ts',
+    ],
+    rules: {
+      'no-restricted-imports': createRestrictedImportRule({
+        paths: [
+          {
+            importNames: ['ModelIcon', 'ModelTag', 'ProviderCombine', 'ProviderIcon'],
+            message:
+              'These features statically import every brand icon. Import them from "@/components/LobeIcons", which mounts them through lazy().',
+            name: '@lobehub/icons',
+          },
+          {
+            message:
+              'Import ProviderIcon / ProviderCombine from "@/components/LobeIcons", which mounts them through lazy().',
+            name: '@/libs/providerIcon',
+          },
+          {
+            importNames: ['EmojiPicker'],
+            message:
+              'EmojiPicker carries the emoji-mart dataset. Use "@/components/EmojiPicker", which mounts it through lazy().',
+            name: '@lobehub/ui',
+          },
+        ],
+      }),
+    },
+  },
+  {
     files: ['src/components/Skeleton/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': createRestrictedImportRule({
