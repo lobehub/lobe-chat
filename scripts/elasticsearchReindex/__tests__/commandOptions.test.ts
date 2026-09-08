@@ -52,4 +52,21 @@ describe('migration command intent', () => {
   ])('rejects misplaced modifiers %s', (...args) => {
     expect(() => resolveFtsSearchMigrationCommand(args)).toThrow();
   });
+
+  it('accepts the confirmed startup coordinator command', () => {
+    expect(resolveFtsSearchMigrationCommand(['--startup', '--yes']).command).toBe('startup');
+    expect(() => resolveFtsSearchMigrationCommand(['--startup'])).toThrow('--yes');
+  });
+
+  it.each([
+    '--entity=messages',
+    '--fresh-run',
+    '--in-place',
+    '--max-batches-per-entity=1',
+    '--version=2',
+  ])('rejects partial or operator-only startup option %s', (option) => {
+    expect(() => resolveFtsSearchMigrationCommand(['--startup', '--yes', option])).toThrow(
+      'cannot be used with --startup',
+    );
+  });
 });

@@ -1,10 +1,10 @@
 export type FtsSearchMigrationCommand =
-  'apply' | 'promote' | 'purge' | 'release-lock' | 'retire' | 'skip-failure' | 'status';
+  'apply' | 'promote' | 'purge' | 'release-lock' | 'retire' | 'skip-failure' | 'startup' | 'status';
 
 /** Keep destructive intent explicit: retrying retirement must never advance into deletion. */
 export const resolveFtsSearchMigrationCommand = (args: readonly string[]) => {
   const modes: FtsSearchMigrationCommand[] = [];
-  for (const name of ['apply', 'promote', 'purge', 'retire', 'status'] as const) {
+  for (const name of ['apply', 'promote', 'purge', 'retire', 'startup', 'status'] as const) {
     if (args.includes(`--${name}`)) modes.push(name);
   }
   if (args.some((argument) => argument.startsWith('--skip-failure='))) modes.push('skip-failure');
@@ -19,12 +19,25 @@ export const resolveFtsSearchMigrationCommand = (args: readonly string[]) => {
   }
   if (modes.length > 1) {
     throw new Error(
-      'Choose exactly one migration command: --status, --apply, --promote, --retire, --purge, --skip-failure, or --release-lock',
+      'Choose exactly one migration command: --status, --apply, --startup, --promote, --retire, --purge, --skip-failure, or --release-lock',
     );
   }
   const command = modes[0] ?? 'status';
   if (command !== 'status' && !args.includes('--yes')) {
     throw new Error('Mutating commands require --yes after reviewing their documented effects');
+  }
+  if (command === 'startup') {
+    const unsupported = args.find(
+      (argument) =>
+        argument === '--fresh-run' ||
+        argument === '--in-place' ||
+        argument.startsWith('--entity=') ||
+        argument.startsWith('--max-batches-per-entity=') ||
+        argument.startsWith('--version='),
+    );
+    if (unsupported) {
+      throw new Error(`${unsupported.split('=')[0]} cannot be used with --startup`);
+    }
   }
   if (args.includes('--fresh-run') && command !== 'apply') {
     throw new Error('--fresh-run can only be used with --apply');

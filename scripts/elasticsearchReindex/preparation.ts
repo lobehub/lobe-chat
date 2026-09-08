@@ -1,5 +1,5 @@
 export type FtsSearchReindexCommand =
-  'apply' | 'promote' | 'purge' | 'retire' | 'skip-failure' | 'status';
+  'apply' | 'promote' | 'purge' | 'retire' | 'skip-failure' | 'startup' | 'status';
 
 interface RunFtsSearchReindexCommandOptions<T> {
   command: FtsSearchReindexCommand;
@@ -21,7 +21,7 @@ export const runFtsSearchReindexCommand = async <T>({
   run,
   runWithLockRetry,
 }: RunFtsSearchReindexCommandOptions<T>): Promise<T> => {
-  if (command === 'apply') {
+  if (command === 'apply' || command === 'startup') {
     await runWithLockRetry(installCaptureInfrastructure);
   }
 

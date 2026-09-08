@@ -20,16 +20,17 @@ tags:
 
 在服务器上准备迁移使用的 `.env` 文件，填入以下配置。不要把该文件提交到代码仓库。
 
-| 变量                        | 设置                                    |
-| ------------------------- | ------------------------------------- |
-| `DATABASE_URL`            | 当前 Neon 数据库的直连地址，不使用带 `-pooler` 的连接地址 |
-| `DATABASE_DRIVER`         | 设为 `node`，使用上面的直连地址                   |
-| `KEY_VAULTS_SECRET`       | 沿用当前 LobeHub 应用的值，不要重新生成              |
-| `ES_URL`                  | Elasticsearch 地址，必须能从 Docker 容器中访问    |
-| `ES_API_KEY`              | 有创建索引和读写权限的 API Key                   |
-| `ES_INDEX_NAMESPACE`      | 索引前缀，例如 `lobehub`；应用和迁移工具保持一致         |
-| `FTS_SEARCH_PROVIDER`     | 暂时设为 `pg_search`                      |
-| `FTS_SEARCH_SYNC_ENABLED` | 暂时设为 `false`                          |
+| 变量                        | 设置                                         |
+| ------------------------- | ------------------------------------------ |
+| `DATABASE_URL`            | 当前 Neon 数据库的直连地址，不使用带 `-pooler` 的连接地址      |
+| `DATABASE_DRIVER`         | 设为 `node`，使用上面的直连地址                        |
+| `ES_REINDEX_STATE_DIR`    | 设为 `/app/.elasticsearch-reindex`，并按下文挂载进度卷 |
+| `KEY_VAULTS_SECRET`       | 沿用当前 LobeHub 应用的值，不要重新生成                   |
+| `ES_URL`                  | Elasticsearch 地址，必须能从 Docker 容器中访问         |
+| `ES_API_KEY`              | 有创建索引和读写权限的 API Key                        |
+| `ES_INDEX_NAMESPACE`      | 索引前缀，例如 `lobehub`；应用和迁移工具保持一致              |
+| `FTS_SEARCH_PROVIDER`     | 暂时设为 `pg_search`                           |
+| `FTS_SEARCH_SYNC_ENABLED` | 暂时设为 `false`                               |
 
 外部 Elasticsearch 服务使用 HTTPS 和 API Key。官方 Compose 的私有网络内置节点使用 `ES_ALLOW_INSECURE_HTTP=true`，无需 API Key；使用该节点时，本文的 `docker run` 命令都需要加上 `--network <Elasticsearch 所在网络名>`。容器中的 `localhost` 不是宿主机地址。
 
@@ -38,7 +39,7 @@ tags:
 ```bash
 export LOBE_MIGRATION_IMAGE='lobehub/lobehub:<本次部署的版本标签>'
 docker pull "$LOBE_MIGRATION_IMAGE"
-mkdir -m 700 -p .elasticsearch-reindex
+docker volume create lobehub-search-state
 ```
 
 暂停使用应用，执行该版本的数据库迁移，成功后继续：
@@ -53,21 +54,21 @@ docker run --rm --env-file .env \
 这一步创建搜索索引并导入现有数据：
 
 ```bash
-docker run --rm --user "$(id -u):$(id -g)" --env-file .env \
-  -e ES_REINDEX_STATE_DIR=/data/elasticsearch-reindex \
-  -v "$PWD/.elasticsearch-reindex:/data/elasticsearch-reindex" \
+docker run --rm --env-file .env \
+  -e ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex \
+  -v lobehub-search-state:/app/.elasticsearch-reindex \
   "$LOBE_MIGRATION_IMAGE" /app/fts-search-elasticsearch-reindex.cjs \
   --apply --fresh-run --yes
 ```
 
-迁移进度保存在当前目录的 `.elasticsearch-reindex` 中，请保留该目录。只有首次导入使用 `--fresh-run`，中断后重试时去掉这个参数。
+迁移进度保存在 `lobehub-search-state` 数据卷中，请保留该数据卷。只有首次导入使用 `--fresh-run`，中断后重试时去掉这个参数。
 
 检查迁移状态：
 
 ```bash
-docker run --rm --user "$(id -u):$(id -g)" --env-file .env \
-  -e ES_REINDEX_STATE_DIR=/data/elasticsearch-reindex \
-  -v "$PWD/.elasticsearch-reindex:/data/elasticsearch-reindex" \
+docker run --rm --env-file .env \
+  -e ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex \
+  -v lobehub-search-state:/app/.elasticsearch-reindex \
   "$LOBE_MIGRATION_IMAGE" /app/fts-search-elasticsearch-reindex.cjs --status
 ```
 
@@ -98,7 +99,7 @@ docker logs --tail 50 lobe-fts-search-sync
 
 ## 4. 切换搜索
 
-在 LobeHub 应用的部署配置中填写相同的 Elasticsearch 连接信息和索引前缀，将 `FTS_SEARCH_PROVIDER` 改为 `elasticsearch`，然后使用同版本镜像重新创建应用容器。只修改迁移用的 `.env` 文件不会自动更新已运行的应用。
+为 LobeHub 应用容器也挂载同一个进度卷：`-v lobehub-search-state:/app/.elasticsearch-reindex`，并设置 `ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex`。在应用的部署配置中填写相同的 Elasticsearch 连接信息和索引前缀，将 `FTS_SEARCH_PROVIDER` 改为 `elasticsearch`，然后使用同版本镜像重新创建应用容器。只修改迁移用的 `.env` 文件不会自动更新已运行的应用。
 
 搜索一条已有的聊天记录，再新增一条记录并确认稍后能够搜到。两项都正常，且同步容器没有报错，就可以恢复使用。
 
@@ -117,10 +118,18 @@ docker run --rm --env-file .env \
 
 这一步不会删除聊天记录等原始数据，但完成后不能再直接切回 `pg_search`。请在 Neon 要求停用该扩展的时间前完成。
 
+## 后续更新 LobeHub
+
+保留应用容器的进度卷挂载，使用同一新版本镜像重新创建应用和持续同步容器即可。应用启动时会先执行 PostgreSQL 迁移，再自动更新需要升级的 Elasticsearch 索引并切换搜索；已完成的索引不会重复导入。迁移成功后才启动应用，期间暂时无法使用。
+
+官方 Compose 已让应用与迁移工具共享进度卷。使用自己的 Docker 配置时，两者必须挂载同一个卷；如果首次迁移使用的是已有进度目录，继续挂载该目录，不要换成空卷，并确保应用容器有读写权限。
+
+迁移失败时应用不会启动，请查看应用容器日志并按下面的说明恢复。持续同步容器仍需保持运行，它不会由一次启动迁移替代。
+
 ## 迁移中断怎么办
 
-保留 `.elasticsearch-reindex` 目录，修正命令报告的问题后，重新执行导入命令，去掉 `--fresh-run`。
+保留 `lobehub-search-state` 数据卷。首次手动导入中断时，修正错误后重新执行导入命令，去掉 `--fresh-run`。应用启动时的自动迁移失败，则在修正错误、处理残留锁后重新启动应用容器，它会继续完成回填、追平和切换。
 
 如果提示迁移锁仍被占用，先确认上一次迁移进程已经退出，且它发出的 Elasticsearch 请求已经结束。再运行状态检查命令，找到锁的 owner，将导入命令最后的参数替换为 `--release-lock=<owner-uuid> --yes` 释放锁，然后重试导入。
 
-不要同时启动多个迁移任务，也不要通过删除进度目录或跳过失败记录来绕过错误。无法解决时，提供脱敏后的错误输出寻求帮助。
+不要同时启动多个迁移任务，也不要通过删除进度数据卷或跳过失败记录来绕过错误。无法解决时，提供脱敏后的错误输出寻求帮助。

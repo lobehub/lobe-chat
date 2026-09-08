@@ -24,6 +24,7 @@ On your server, prepare an `.env` file for the migration with the following sett
 | ------------------------- | ---------------------------------------------------------------------------------------------- |
 | `DATABASE_URL`            | Your existing Neon database's direct connection URL, without `-pooler` in the hostname         |
 | `DATABASE_DRIVER`         | Set to `node` to use the direct connection above                                               |
+| `ES_REINDEX_STATE_DIR`    | Set to `/app/.elasticsearch-reindex` and mount the progress volume as shown below              |
 | `KEY_VAULTS_SECRET`       | Reuse the value from your existing LobeHub application; do not generate a new one              |
 | `ES_URL`                  | Elasticsearch URL, reachable from the Docker containers                                        |
 | `ES_API_KEY`              | An API key with permission to create indexes and read and write data                           |
@@ -38,7 +39,7 @@ These commands use the official image and connect to the database specified in t
 ```bash
 export LOBE_MIGRATION_IMAGE='lobehub/lobehub:<deployment-version-tag>'
 docker pull "$LOBE_MIGRATION_IMAGE"
-mkdir -m 700 -p .elasticsearch-reindex
+docker volume create lobehub-search-state
 ```
 
 Pause use of the application and run that version's database migrations. Continue only after they succeed:
@@ -53,21 +54,21 @@ docker run --rm --env-file .env \
 Create the search indexes and import your existing data:
 
 ```bash
-docker run --rm --user "$(id -u):$(id -g)" --env-file .env \
-  -e ES_REINDEX_STATE_DIR=/data/elasticsearch-reindex \
-  -v "$PWD/.elasticsearch-reindex:/data/elasticsearch-reindex" \
+docker run --rm --env-file .env \
+  -e ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex \
+  -v lobehub-search-state:/app/.elasticsearch-reindex \
   "$LOBE_MIGRATION_IMAGE" /app/fts-search-elasticsearch-reindex.cjs \
   --apply --fresh-run --yes
 ```
 
-Migration progress is saved in `.elasticsearch-reindex` under the current directory. Keep this directory. Use `--fresh-run` only for the initial import; omit it when resuming after an interruption.
+Migration progress is saved in the `lobehub-search-state` volume. Keep this volume. Use `--fresh-run` only for the initial import; omit it when resuming after an interruption.
 
 Check the migration status:
 
 ```bash
-docker run --rm --user "$(id -u):$(id -g)" --env-file .env \
-  -e ES_REINDEX_STATE_DIR=/data/elasticsearch-reindex \
-  -v "$PWD/.elasticsearch-reindex:/data/elasticsearch-reindex" \
+docker run --rm --env-file .env \
+  -e ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex \
+  -v lobehub-search-state:/app/.elasticsearch-reindex \
   "$LOBE_MIGRATION_IMAGE" /app/fts-search-elasticsearch-reindex.cjs --status
 ```
 
@@ -98,7 +99,7 @@ Keep this container running after the switch. Otherwise, subsequent data changes
 
 ## 4. Switch search
 
-In your LobeHub application's deployment configuration, set the same Elasticsearch connection details and index prefix, and change `FTS_SEARCH_PROVIDER` to `elasticsearch`. Recreate the application container using the same image version. Editing only the migration's `.env` file does not update the running application.
+Mount the same progress volume on your LobeHub application container with `-v lobehub-search-state:/app/.elasticsearch-reindex` and set `ES_REINDEX_STATE_DIR=/app/.elasticsearch-reindex`. In the application's deployment configuration, set the same Elasticsearch connection details and index prefix, and change `FTS_SEARCH_PROVIDER` to `elasticsearch`. Recreate the application container using the same image version. Editing only the migration's `.env` file does not update the running application.
 
 Search for an existing chat message, then create a new message and confirm that it becomes searchable. Once both checks succeed and the sync container has no errors, resume normal use.
 
@@ -117,10 +118,18 @@ docker run --rm --env-file .env \
 
 This does not delete chat history or other source data, but you cannot switch directly back to `pg_search` afterward. Complete this step before Neon's deadline for disabling the extension.
 
+## Updating LobeHub later
+
+Keep the application container's progress volume mount, then recreate the application and continuous sync containers using the same new image version. At startup, the application runs PostgreSQL migrations, updates any Elasticsearch indexes that need upgrading, and switches search automatically. Completed indexes are not imported again. The application starts only after migration succeeds and is unavailable during this maintenance.
+
+The official Compose configuration shares the progress volume between the application and migration tools. With a custom Docker configuration, mount the same volume on both. If your initial migration used an existing progress directory, keep mounting that directory instead of switching to an empty volume, and ensure the application container can read and write it.
+
+If migration fails, the application will not start. Check the application container logs and follow the recovery instructions below. Keep the continuous sync container running; a startup migration does not replace it.
+
 ## If the migration is interrupted
 
-Keep the `.elasticsearch-reindex` directory. Resolve the error reported by the command, then run the import command again without `--fresh-run`.
+Keep the `lobehub-search-state` volume. For an interrupted initial manual import, resolve the error and run the import command again without `--fresh-run`. If automatic migration fails during application startup, resolve the error and any retained lock, then restart the application container. It will continue the backfill, catch-up, and switch.
 
 If the migration lock is still held, first confirm that the previous migration process has exited and its Elasticsearch requests have finished. Run the status command to find the lock owner. Replace the import command's final arguments with `--release-lock=<owner-uuid> --yes` to release the lock, then retry the import.
 
-Do not run multiple migration tasks at the same time, delete the progress directory, or skip failed records to bypass an error. If you need help, share the error output with sensitive information removed.
+Do not run multiple migration tasks at the same time, delete the progress volume, or skip failed records to bypass an error. If you need help, share the error output with sensitive information removed.

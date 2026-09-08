@@ -5,6 +5,8 @@ import type { FtsSearchDocumentEntity } from '@lobechat/types';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 
+import { ElasticsearchFtsSearchHttpClient } from '../../apps/server/src/services/ftsSearch/elasticsearch';
+import { FtsSearchSyncService } from '../../apps/server/src/services/ftsSearchSync/service';
 import {
   FTS_SEARCH_DOCUMENT_ENTITIES,
   FTS_SEARCH_INDEX_DEFINITIONS,
@@ -22,6 +24,7 @@ import {
   recordFtsSearchReindexReconciliation,
 } from '../../packages/observability-otel/src/modules/fts-search-reindex';
 import { DiagLogLevel, register, shutdownSafely } from '../../packages/observability-otel/src/node';
+import { runElasticsearchFtsSearchSync } from '../elasticsearchSync';
 import { runWithLockRetry } from '../migrateServerDB/retry';
 import { resolveFtsSearchMigrationCommand } from './commandOptions';
 import {
@@ -54,6 +57,10 @@ import {
   resolveInPlaceTarget,
 } from './runtime/generationService';
 import { FtsSearchMigrationLockClient, FtsSearchMigrationLockError } from './runtime/migrationLock';
+import {
+  assertFtsSearchStartupGenerationSafe,
+  runFtsSearchStartupMigration,
+} from './startupCoordinator';
 
 const { Pool } = pg;
 
@@ -86,6 +93,7 @@ const readNonNegativeIntegerArgument = (name: string) => {
 const args = new Set(process.argv.slice(2));
 const { command, releaseLockOwner } = resolveFtsSearchMigrationCommand(process.argv.slice(2));
 const apply = args.has('--apply');
+const startup = args.has('--startup');
 const freshRun = args.has('--fresh-run');
 const inPlace = args.has('--in-place');
 const promote = args.has('--promote');
@@ -116,6 +124,7 @@ const knownArguments = new Set([
   '--retire',
   '--purge',
   '--status',
+  '--startup',
   '--yes',
 ]);
 const unknownArgument = process.argv
@@ -183,7 +192,7 @@ if (elasticsearchMutation && !elasticsearchApiKey && !allowInsecureHttp) {
 if (elasticsearchMutation && !elasticsearchUrl) {
   throw new Error(`${urlEnvironmentName} is required with ${elasticsearchMutation}`);
 }
-if ((apply || failureReference) && !configuredStateDirectory) {
+if ((apply || startup || failureReference) && !configuredStateDirectory) {
   throw new Error('ES_REINDEX_STATE_DIR is required for reindex mutations and resume attempts');
 }
 if (process.env.ENABLE_TELEMETRY && !telemetryEnvironment) {
@@ -454,6 +463,99 @@ const run = async () => {
     return;
   }
 
+  if (startup) {
+    const endpointHostname = new URL(elasticsearchUrl!).hostname;
+    assertFtsSearchReindexElasticsearchHostname(endpointHostname, expectedHostPrefix);
+    const client = createElasticsearchClient();
+    const syncClient = new ElasticsearchFtsSearchHttpClient({
+      allowInsecureHttp,
+      apiKey: elasticsearchApiKey,
+      indexNamespace: namespace,
+      requestTimeoutMs: requestTimeoutMs ?? 20_000,
+      url: elasticsearchUrl!,
+    });
+    const syncService = new FtsSearchSyncService(
+      new FtsSearchDocumentBuilder(db),
+      outbox,
+      {
+        bulk: async (body) => {
+          await assertMigrationOwnership?.();
+          return syncClient.bulk(body);
+        },
+        getFtsSearchSyncGenerationTargets: (aliases) =>
+          syncClient.getFtsSearchSyncGenerationTargets(aliases),
+        getFtsSearchSyncIndexFields: (entitiesByIndex) =>
+          syncClient.getFtsSearchSyncIndexFields(entitiesByIndex),
+      },
+      namespace,
+    );
+    await runFtsSearchReindexCommand({
+      command: 'startup',
+      installCaptureInfrastructure: () => outbox.installCaptureInfrastructure(),
+      runWithLockRetry,
+      run: () =>
+        runFtsSearchStartupMigration({
+          applyGeneration: ({ freshRun, generationEntities, processEntities, schemaVersion }) =>
+            applyGeneration({
+              client,
+              endpointHostname,
+              freshRunForGeneration: freshRun,
+              generationEntities,
+              processEntities,
+              schemaVersion,
+            }),
+          describeEntity: (entity) =>
+            describeEntityGeneration({
+              client,
+              entity,
+              namespace,
+              readCheckpoint,
+            }),
+          drainIncrementalSync: async () => {
+            const aliases = FTS_SEARCH_DOCUMENT_ENTITIES.map((entity) =>
+              getFtsSearchIndexAlias(namespace, entity),
+            );
+            const summary = await runElasticsearchFtsSearchSync({
+              loadRuntime: async () => ({
+                getFtsSearchSyncService: () => syncService,
+                verifyFtsSearchSyncReadiness: async () => {
+                  await outbox.assertCaptureInfrastructure();
+                  await syncClient.assertFtsSearchSyncAliases(aliases);
+                },
+              }),
+              logStep: (step) =>
+                console.log(JSON.stringify({ ...step, type: 'fts_search_startup_sync_step' })),
+              maxSteps: 10_000,
+            });
+            return { hasMore: summary.hasMore };
+          },
+          generations: declaredGenerations().map(([schemaVersion, generationEntities]) => ({
+            entities: generationEntities,
+            schemaVersion,
+          })),
+          maxDrainRounds: 60,
+          promoteEntity: async (entity) => {
+            const result = await promoteGeneration({
+              client,
+              entity,
+              namespace,
+              outboxStats: await outbox.stats(),
+              readCheckpoint,
+            });
+            console.log(JSON.stringify({ ...result, entity, type: 'generation_promoted' }));
+          },
+          readCheckpointEntities: async (schemaVersion) => {
+            const checkpoint = await repository.getTargetRun(namespace, schemaVersion);
+            return checkpoint?.progress.map(({ entity }) => entity);
+          },
+          readOutboxStats: () => outbox.stats(),
+          waitForOutbox: () => new Promise((resolve) => setTimeout(resolve, 1000)),
+        }),
+    });
+    await printStatus();
+    return;
+  }
+
   if (!apply) {
     await runFtsSearchReindexCommand({
       command: 'status',
@@ -522,12 +624,14 @@ const applyGeneration = async ({
   client,
   endpointHostname,
   generationEntities,
+  freshRunForGeneration = freshRun,
   processEntities,
   schemaVersion,
 }: {
   client: FtsSearchReindexHttpClient;
   endpointHostname: string;
   generationEntities: FtsSearchDocumentEntity[];
+  freshRunForGeneration?: boolean;
   processEntities: FtsSearchDocumentEntity[];
   schemaVersion: number;
 }) => {
@@ -565,7 +669,7 @@ const applyGeneration = async ({
   }
   let mode: 'fresh' | 'resume' | 'upgrade' | 'upgrade_in_place';
   if (existing) {
-    if (freshRun) {
+    if (freshRunForGeneration) {
       throw new Error(
         `Checkpoint ${existing.run.id} already exists; omit --fresh-run to resume it`,
       );
@@ -584,14 +688,14 @@ const applyGeneration = async ({
       if (described.some((generation) => generation.isWriteIndex)) aliased.add(entity);
     }
     if (aliased.size === 0) {
-      if (!freshRun) {
+      if (!freshRunForGeneration) {
         throw new Error(
           `No checkpoint exists in ${stateDirectory} for v${schemaVersion}; pass --fresh-run only for a new, empty Elasticsearch target`,
         );
       }
       mode = 'fresh';
     } else if (aliased.size === generationEntities.length) {
-      if (freshRun) {
+      if (freshRunForGeneration) {
         throw new Error(
           `Aliases already exist for the v${schemaVersion} entities; this is a generation upgrade, omit --fresh-run`,
         );
@@ -733,6 +837,15 @@ const runWithMigrationLock = async () => {
     const result = await lock.release(releaseLockOwner!);
     console.log(JSON.stringify({ result, type: 'migration_lock_released' }));
     return;
+  }
+  if (command === 'startup') {
+    await pool.query('SELECT 1');
+    const client = createElasticsearchClient();
+    for (const entity of FTS_SEARCH_DOCUMENT_ENTITIES) {
+      assertFtsSearchStartupGenerationSafe(
+        await describeEntityGeneration({ client, entity, namespace, readCheckpoint }),
+      );
+    }
   }
   return lock.withLock(command, async (handle) => {
     assertMigrationOwnership = () => lock.assertOwner(handle);

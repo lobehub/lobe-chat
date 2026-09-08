@@ -14,8 +14,10 @@ For initial provider cutover and complete environment setup, use
   The mapping and history tests reject missing registrations, stale pointers and version bumps
   without physical changes. Shared analysis changes require
   version bumps and rebuilds for every entity, even if only one uses the analyzer being changed.
-- Merely deploying this migration capability does not start a backfill or increase declared
-  versions. A later entity version bump makes that entity eligible for upgrade.
+- Docker startup with `FTS_SEARCH_PROVIDER=elasticsearch` runs `--startup --yes` after PostgreSQL
+  migrations and before serving requests. It checks the declared versions, backfills required
+  generations, drains pending changes, and promotes them. An unchanged completed generation is
+  not scanned again. Other entrypoints retain explicit operator control.
 - Rebuild into a new generation for field type/analyzer changes, removals, or when rollback matters.
   Only entities whose declared version changes need a new generation.
 - Before removing or renaming a field, retain its Zod definition, builder output and old property
@@ -24,8 +26,8 @@ For initial provider cutover and complete environment setup, use
   a type or semantic conversion is not supplied automatically.
 - Incompatible same-name JSON type changes are not supported by the online migration path. Use a
   new field name and retain the old source key through the rollback window. If incompatible code
-  has already created dead letters, fix the mapping/projection first, then follow the public guide's
-  scoped PostgreSQL requeue procedure. There is no Outbox requeue CLI flag; `--skip-failure` only
+  has already created dead letters, fix the mapping/projection first, then requeue only reviewed
+  document ID/revision pairs in PostgreSQL. There is no Outbox requeue CLI flag; `--skip-failure` only
   resolves backfill checkpoint failures. The standalone sync CLI stops while any dead letters remain.
 - Use `--in-place` only when status reports `upgrade_available` and `mappingChange: additive`.
   Currently this means new top-level fields; adding a multi-field to an existing field is classified
@@ -34,10 +36,11 @@ For initial provider cutover and complete environment setup, use
 
 ## Operator prerequisites and recovery
 
-Follow the public guide's
-[Change a mapping later](../../../../docs/self-hosting/advanced/elasticsearch-migration.mdx#change-a-mapping-later)
-section for the build, promote, optional rollback, retire, and in-place commands. Use the entity whose
-mapping changed; the guide's `messages` and rollback version `1` are examples.
+For explicit operator control, use `bun run fts-search:reindex -- --apply --entity=<entity> --yes`, then
+`--promote --entity=<entity> --yes` after catch-up. Optional operations are `--retire`, `--purge`,
+`--apply --in-place`, and rollback with `--promote --version=<previous-version>`; each requires the
+target entity and confirmation. See `scripts/elasticsearchReindex/commandOptions.ts` for supported
+combinations and `runtime/generationService.ts` for the operation gates.
 
 - Configure the intended `DATABASE_URL`, `ES_INDEX_NAMESPACE`, `ES_URL`, and endpoint authentication
   (`ES_API_KEY` for authenticated endpoints; the explicit insecure-HTTP opt-in for an appropriate
@@ -91,15 +94,19 @@ resolving any residual lock; exact mapping and identity checks allow that interm
 Both rebuild and in-place backfill scale with the documents scanned, projected, transferred, and
 indexed. Measure a representative payload and real resource limits; a fast small synthetic dataset
 does not establish production duration. Use bounded `--batch-size`, `--bulk-max-bytes`, and concurrency
-options from the public migration guide. `--max-batches-per-entity` bounds a rehearsal or pause; exit
+options in `scripts/elasticsearchReindex/options.ts`. `--max-batches-per-entity` bounds a rehearsal or pause; exit
 code zero alone does not mean the backfill is complete.
 
-Do not append the full backfill to every application build as if it were Drizzle schema migration.
-The current CLI requires persistent local checkpoints and a single worker, and a large backfill may
-outlive the build's time budget. If automating, let the intended deployment trigger an independent
-durable job with task-level exclusion, restartable state, and visible terminal status. Keep preview
-targets isolated. Retain completion/fingerprint/Outbox gates before promotion; triggering a job does
-not mean the migration or traffic switch is complete.
+For Docker self-hosting, startup migration is a blocking maintenance step, not an image-build step.
+The application and manual migration tool must share the same durable `ES_REINDEX_STATE_DIR`.
+The official Compose file mounts the existing reindex volume on both. Do not silently adopt indexes
+after checkpoint loss or steal a retained lock: restore progress and use explicit owner recovery
+after confirming the old process and uncertain requests have stopped. Keep the separate continuous
+sync worker running on the same application version after startup.
+
+For large hosted deployments, keep the existing explicit migration workflow and isolated preview
+targets. Retain completion/fingerprint/Outbox gates before promotion; starting a migration does not
+mean the migration or traffic switch is complete. No durable task orchestration is supplied here.
 
 ## Local Docker rehearsal
 
