@@ -111,8 +111,10 @@ supersedes? }`.
    plausible-but-wrong nested shape parses as JSON, is dropped on ingest, and
    the round publishes green with its evidence silently degraded. Read every
    ingest warning as a failed publish.
-   Before execution, send the draft for [plan review](tester-review.md#1-plan-review)
-   and save the agreed plan and requirement mapping after resolving material gaps.
+   Before executing the **first round only**, send the draft for
+   [tester plan review](tester-review.md) and save the agreed plan and
+   requirement mapping after resolving material gaps. In follow-up rounds the
+   primary carries the agreed plan forward and inspects it itself.
 2. **Collect evidence into `assets/` as you test.** Screenshots must be
    **visually verified with the Read tool before being cited** — never cite an
    image you haven't looked at. For metrics, time series, model or benchmark
@@ -133,9 +135,12 @@ supersedes? }`.
    score. Do NOT repeat the scope block or a case table; those double up on the
    page. Write it in the language the user is conversing in.
 6. **Review, then publish:** hand the completed plan, report, and original evidence
-   to the tester using [tester-review.md](tester-review.md). Resolve findings and
-   record review limitations in the narrative tail before declaring a pass.
-   The primary publishes; the tester does not operate the product or upload results.
+   to the tester for a quick evidence review using [tester-review.md](tester-review.md)
+   (first round only; the tester reads no code and reviews no repair diff —
+   state any in-round repair and its affected cases in plain language). Resolve
+   findings and record review limitations in the narrative tail before declaring
+   a pass. The primary publishes; the tester does not operate the product or
+   upload results.
 
    ```bash
    lh acceptance run ingest "$REPORT_DIR" --source agent-testing --json

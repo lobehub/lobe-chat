@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.4.0
+version: 0.4.1
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -25,19 +25,26 @@ marks it `uncertain` and holds the delivery.
 author (or discover) the plan  →  pick the surface  →  capture evidence  →  publish the round  →  self-check coverage
 ```
 
-## Independent tester review
+## Independent tester review (first round only)
 
 The primary checks the environment, writes the plan, executes cases, inspects
-evidence, repairs failures, and publishes. Use one tester agent at two points:
-review requirement coverage before execution, then independently inspect the
-completed evidence before declaring acceptance complete. Reuse the tester when
-the host supports it; do not delegate execution or require per-case approval.
+evidence, repairs failures, and publishes. Use one tester agent at two points
+in the first round: review requirement coverage of the draft plan before
+execution, then a quick evidence review against the agreed criteria before
+publishing. The tester **is** the plan gate — never ask the user to approve a
+plan; ask the user only for a user-owned prerequisite or a product decision
+that changes the plan. The tester may read the diff once, during plan review,
+to understand what the change touches; in the evidence review it reads the
+plan, report, and artifacts only and returns contradictions to the primary
+instead of going to the code. Follow-up rounds have no tester: the primary
+re-runs, inspects, and publishes itself. Do not delegate execution or require
+per-case approval.
 
-Read [tester-review.md](references/tester-review.md) for the input/output contract,
-review boundaries, and repair follow-up. Tester review supplements the primary's
-own checks and any configured verifier; it does not replace either. If delegation
-or required media inspection is unavailable, disclose the missing review and
-unverified claims rather than claiming independent acceptance.
+Read [tester-review.md](references/tester-review.md) for the input/output
+contract, review boundaries, and follow-up rules. Tester review supplements the
+primary's own checks and any configured verifier; it does not replace either.
+If delegation or required media inspection is unavailable, disclose the missing
+review and unverified claims rather than claiming independent acceptance.
 
 ## Read the project layer first
 
@@ -46,7 +53,7 @@ Before touching an environment, check for `.agents/acceptance/`:
 | File                     | What it owns                                                 |
 | ------------------------ | ------------------------------------------------------------ |
 | `PROJECT.md`             | Start/stop commands, ports, services, auth, surfaces, probes |
-| `PROCESS.md`             | The run process: approval gate, execution rules, teardown    |
+| `PROCESS.md`             | The run process: plan gate, execution rules, teardown        |
 | `common-mistakes.md`     | Project living log — what earlier rounds got wrong here      |
 | `probe-mock-patterns.md` | Project living log — how to force state on this product      |
 
