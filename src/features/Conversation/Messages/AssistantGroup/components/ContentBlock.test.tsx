@@ -41,7 +41,7 @@ vi.mock('@/business/client/hooks/useRenderBusinessChatErrorMessageExtra', () => 
   default: () => undefined,
 }));
 
-vi.mock('@/features/Electron/HeterogeneousAgent/StatusGuide', () => ({
+vi.mock('@/features/HeterogeneousAgent/StatusGuide', () => ({
   default: ({
     agentType,
     error,

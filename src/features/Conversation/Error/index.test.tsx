@@ -103,7 +103,7 @@ vi.mock('@/features/Conversation/ChatItem/components/ErrorContent', () => ({
   ),
 }));
 
-vi.mock('@/features/Electron/HeterogeneousAgent/StatusGuide', () => ({
+vi.mock('@/features/HeterogeneousAgent/StatusGuide', () => ({
   default: ({
     agentType,
     error,

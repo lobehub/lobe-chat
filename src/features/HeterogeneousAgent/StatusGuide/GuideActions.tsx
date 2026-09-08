@@ -1,9 +1,8 @@
-import { isDesktop } from '@lobechat/const';
 import { Flexbox } from '@lobehub/ui';
 import { Button } from '@lobehub/ui/base-ui';
 import { ExternalLink, RotateCcw, Settings2 } from 'lucide-react';
 
-import { electronSystemService } from '@/services/electron/system';
+import { openExternalLink } from './openExternalLink';
 
 interface GuideActionsProps {
   docsUrl?: string;
@@ -55,11 +54,7 @@ const GuideActions = ({
           size="small"
           type="primary"
           onClick={() => {
-            const openLink = isDesktop
-              ? electronSystemService.openExternalLink(docsUrl)
-              : Promise.resolve(window.open(docsUrl, '_blank', 'noopener,noreferrer'));
-
-            openLink.catch(console.error);
+            openExternalLink(docsUrl).catch(console.error);
           }}
         >
           {openDocsLabel}

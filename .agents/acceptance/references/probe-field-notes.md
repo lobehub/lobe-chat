@@ -49,7 +49,7 @@
   requires `agentType` ∈ {`claude-code`, `codex`} **and** `code` ∈ {`auth_required`,
   `cli_not_found`, `overloaded`, `rate_limit`}. Anything else falls through to the generic
   error path. The switch
-  (`src/features/Electron/HeterogeneousAgent/StatusGuide/index.tsx:28-44`) maps AuthRequired →
+  (`src/features/HeterogeneousAgent/StatusGuide/index.tsx:28-44`) maps AuthRequired →
   `AuthRequiredState`, RateLimit → `RateLimitState`, Overloaded → `OverloadedState`,
   **default → `CliInstallState`**. There is no `InterruptedState`, and `interrupted` is not a
   `HeterogeneousAgentSessionErrorCode` at all (it is a `completionReason` / run-`status` value
