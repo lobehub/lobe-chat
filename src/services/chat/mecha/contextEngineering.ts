@@ -718,8 +718,7 @@ export const contextEngineering = async ({
 
   // Where the run lives (app origin + active workspace slug) so the model
   // writes in-app links that resolve to the right scope. Mirrors the server
-  // runtime's `resolveWorkspaceContext`; the workspace name is not available
-  // client-side, so the prompt falls back to the slug as the label.
+  // runtime's `resolveWorkspaceContext`.
   const workspaceContext = resolveClientWorkspaceContext();
 
   // Create MessagesEngine with injected dependencies

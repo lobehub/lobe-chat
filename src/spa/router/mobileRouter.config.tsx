@@ -484,6 +484,13 @@ export const mobileRoutes: RouteObject[] = [
               },
               {
                 element: dynamicElement(
+                  () => import('@/routes/(main)/[workspaceSlug]/settings/hotkey'),
+                  'Mobile > Workspace > Settings > Hotkey',
+                ),
+                path: 'hotkey',
+              },
+              {
+                element: dynamicElement(
                   () => import('@/routes/(main)/[workspaceSlug]/settings/messenger'),
                   'Mobile > Workspace > Settings > Messenger',
                 ),

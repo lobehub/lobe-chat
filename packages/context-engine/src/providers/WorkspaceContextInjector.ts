@@ -25,7 +25,7 @@ export interface WorkspaceContextInjectorConfig {
  * Workspace Context Injector
  *
  * Appends where the conversation lives — app origin and, inside a team
- * workspace, the workspace name/slug — to the system message, together with
+ * workspace, the workspace slug — to the system message, together with
  * the rule that in-app links must carry the `/{slug}` prefix. Without it the
  * model has no idea it is in a workspace and composes personal-space (or
  * training-data) URLs that open the wrong place.

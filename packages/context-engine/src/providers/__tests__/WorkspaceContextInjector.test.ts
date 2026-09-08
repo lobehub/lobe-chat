@@ -39,7 +39,7 @@ describe('WorkspaceContextInjector', () => {
     const provider = new WorkspaceContextInjector({
       context: {
         appUrl: 'https://app.lobehub.com',
-        workspace: { name: 'LobeHub', slug: 'lobehub' },
+        workspace: { slug: 'lobehub' },
       },
     });
 

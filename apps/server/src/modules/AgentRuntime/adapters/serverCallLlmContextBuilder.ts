@@ -322,7 +322,7 @@ export const buildServerCallLlmContext = async ({
     }
   }
 
-  // Where the run lives — app origin + workspace name/slug — so the model can
+  // Where the run lives — app origin + workspace slug — so the model can
   // write in-app links that resolve to the right scope. `workspaceId` is only
   // threaded through for DB scoping otherwise, so without this the model has no
   // idea it is inside a team workspace and composes personal-space (or
@@ -843,7 +843,7 @@ const resolveWorkspaceContext = async (
       return undefined;
     }
 
-    return { appUrl, workspace: { name: workspace.name, slug: workspace.slug } };
+    return { appUrl, workspace: { slug: workspace.slug } };
   } catch (error) {
     log('Failed to resolve workspace context for %s: %O', workspaceId, error);
     return undefined;

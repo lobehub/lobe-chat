@@ -135,7 +135,7 @@ describe('buildServerCallLlmContext - {{username}}/{{language}} placeholder sour
 });
 
 describe('buildServerCallLlmContext - workspace context', () => {
-  it('injects the app origin and workspace name/slug when the run is workspace-scoped', async () => {
+  it('injects the app origin and workspace slug when the run is workspace-scoped', async () => {
     workspaceFindByIdMock.mockResolvedValue({
       id: 'workspace-1',
       name: 'LobeHub Team',
@@ -156,7 +156,7 @@ describe('buildServerCallLlmContext - workspace context', () => {
       expect.objectContaining({
         workspaceContext: {
           appUrl: 'https://app.lobehub.com',
-          workspace: { name: 'LobeHub Team', slug: 'lobehub' },
+          workspace: { slug: 'lobehub' },
         },
       }),
     );
@@ -179,7 +179,7 @@ describe('buildServerCallLlmContext - workspace context', () => {
       expect.objectContaining({
         workspaceContext: {
           appUrl: 'https://app.lobehub.com',
-          workspace: { name: 'Acme', slug: 'acme' },
+          workspace: { slug: 'acme' },
         },
       }),
     );
