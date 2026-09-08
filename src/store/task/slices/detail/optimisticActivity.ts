@@ -1,7 +1,14 @@
 import type { TaskDetailActivity, TaskDetailActivityAuthor } from '@lobechat/types';
 
-/** Distinguishes a locally synthesized row from a persisted one until the refetch replaces it. */
-export const OPTIMISTIC_ASSIGNMENT_ID_PREFIX = 'optimistic-assignment-';
+/**
+ * Distinguishes a locally synthesized row from a persisted one until the
+ * refetch replaces it. Renderers use it to withhold actions (edit / delete)
+ * that would otherwise hit the server with an id it has never seen.
+ */
+export const OPTIMISTIC_ACTIVITY_ID_PREFIX = 'optimistic-';
+
+export const isOptimisticActivityId = (id?: string | null): boolean =>
+  !!id && id.startsWith(OPTIMISTIC_ACTIVITY_ID_PREFIX);
 
 export interface BuildOptimisticAssignmentInput {
   /** Who is making the change; without one no row is synthesized rather than inventing an actor. */
@@ -53,7 +60,7 @@ export const buildOptimisticAssignmentActivities = ({
         to: side(assigneeAgentId, 'agent'),
       },
       author: actor,
-      id: `${OPTIMISTIC_ASSIGNMENT_ID_PREFIX}agent-${now}`,
+      id: `${OPTIMISTIC_ACTIVITY_ID_PREFIX}assignment-agent-${now}`,
       time: now,
       type: 'assignment',
     });
@@ -67,11 +74,46 @@ export const buildOptimisticAssignmentActivities = ({
         to: side(assigneeUserId, 'user'),
       },
       author: actor,
-      id: `${OPTIMISTIC_ASSIGNMENT_ID_PREFIX}member-${now}`,
+      id: `${OPTIMISTIC_ACTIVITY_ID_PREFIX}assignment-member-${now}`,
       time: now,
       type: 'assignment',
     });
   }
 
   return rows;
+};
+
+export interface BuildOptimisticCommentInput {
+  actor?: TaskDetailActivityAuthor;
+  content: string;
+  editorData?: unknown;
+  now: string;
+  topicId?: string | null;
+}
+
+/**
+ * The comment the server is about to persist, shown the moment it is sent.
+ *
+ * Attachments are deliberately absent: their metadata (urls, sizes) only
+ * exists after the server has resolved the file ids, so they arrive with the
+ * refetch. Agent-authored comments (client-first runtime) are not synthesized
+ * — the store has no agent identity to attribute them to.
+ */
+export const buildOptimisticCommentActivity = ({
+  actor,
+  content,
+  editorData,
+  now,
+  topicId,
+}: BuildOptimisticCommentInput): TaskDetailActivity | undefined => {
+  if (!actor) return undefined;
+  return {
+    author: actor,
+    content,
+    editorData,
+    id: `${OPTIMISTIC_ACTIVITY_ID_PREFIX}comment-${now}`,
+    time: now,
+    topicId: topicId ?? null,
+    type: 'comment',
+  };
 };

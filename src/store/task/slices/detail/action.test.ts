@@ -117,6 +117,66 @@ describe('TaskDetailSliceAction', () => {
     });
   });
 
+  describe('addComment', () => {
+    const seed = () => {
+      useUserStore.setState({
+        isSignedIn: true,
+        user: { avatar: null, fullName: 'Me', id: 'user_me' } as any,
+      });
+      useTaskStore.setState({
+        activeTaskId: 'T-1',
+        taskDetailMap: {
+          'T-1': { activities: [], identifier: 'T-1', instruction: 'x', status: 'backlog' },
+        },
+      });
+    };
+
+    it('shows the comment on send, before the mutation resolves', async () => {
+      seed();
+      let release!: () => void;
+      vi.mocked(taskService.addComment).mockReturnValue(
+        new Promise((resolve) => {
+          release = () => resolve({ data: { id: 'cmt_1' } } as any);
+        }),
+      );
+
+      const pending = useTaskStore.getState().addComment('T-1', 'hello', { topicId: 'tpc_1' });
+
+      const activities = useTaskStore.getState().taskDetailMap['T-1'].activities ?? [];
+      expect(activities).toHaveLength(1);
+      expect(activities[0]).toMatchObject({
+        author: { id: 'user_me', name: 'Me', type: 'user' },
+        content: 'hello',
+        topicId: 'tpc_1',
+        type: 'comment',
+      });
+
+      release();
+      await pending;
+    });
+
+    it('rolls the synthesized row back through a refetch when the send fails', async () => {
+      seed();
+      vi.mocked(taskService.addComment).mockRejectedValue(new Error('boom'));
+      const { mutate } = await import('@/libs/swr');
+
+      await expect(useTaskStore.getState().addComment('T-1', 'hello')).rejects.toThrow('boom');
+
+      // The refetch is the rollback; the caller still sees the failure.
+      expect(mutate).toHaveBeenCalled();
+    });
+
+    it('leaves an agent-authored comment to the refetch', async () => {
+      seed();
+      vi.mocked(taskService.addComment).mockResolvedValue({ data: { id: 'cmt_1' } } as any);
+
+      await useTaskStore.getState().addComment('T-1', 'hi', { authorAgentId: 'agt_1' });
+
+      // Nothing synthesized: the store cannot name the agent.
+      expect(taskService.addComment).toHaveBeenCalledWith('T-1', 'hi', { authorAgentId: 'agt_1' });
+    });
+  });
+
   describe('updateTask', () => {
     it('should optimistically update taskDetailMap', async () => {
       useTaskStore.setState({

@@ -16,7 +16,10 @@ import type { SaveStatus } from '@/types/saveState';
 
 import type { TaskStore } from '../../store';
 import { useTaskStore } from '../../store';
-import { buildOptimisticAssignmentActivities } from './optimisticAssignment';
+import {
+  buildOptimisticAssignmentActivities,
+  buildOptimisticCommentActivity,
+} from './optimisticActivity';
 import type { TaskDetailDispatch } from './reducer';
 import { findSubtaskParentId, taskDetailReducer } from './reducer';
 
@@ -115,9 +118,48 @@ export class TaskDetailSliceActionImpl {
       topicId?: string;
     },
   ): Promise<Awaited<ReturnType<typeof taskService.addComment>>> => {
-    const result = await taskService.addComment(taskId, content, opts);
-    await this.internal_refreshTaskDetail(taskId);
-    return result;
+    // Same treatment as the assignee chip: the row appears on send, not after
+    // the mutation *and* the detail refetch. A comment posted on an agent's
+    // behalf (client-first runtime) is left to the refetch — the store has no
+    // agent identity to attribute it to.
+    const current = this.#get().taskDetailMap[taskId];
+    const userState = useUserStore.getState();
+    const actorId = userProfileSelectors.userId(userState);
+    const optimistic =
+      current && !opts?.authorAgentId
+        ? buildOptimisticCommentActivity({
+            actor: actorId
+              ? {
+                  avatar: userProfileSelectors.userAvatar(userState) || null,
+                  id: actorId,
+                  name: userProfileSelectors.displayUserName(userState) || null,
+                  type: 'user',
+                }
+              : undefined,
+            content,
+            editorData: opts?.editorData,
+            now: new Date().toISOString(),
+            topicId: opts?.topicId,
+          })
+        : undefined;
+    if (optimistic) {
+      this.internal_dispatchTaskDetail({
+        id: taskId,
+        type: 'updateTaskDetail',
+        value: { activities: [...(current?.activities ?? []), optimistic] },
+      });
+    }
+
+    try {
+      const result = await taskService.addComment(taskId, content, opts);
+      await this.internal_refreshTaskDetail(taskId);
+      return result;
+    } catch (error) {
+      // Rollback is a server-truth refetch: it drops the synthesized row and
+      // reconciles anything else that moved meanwhile.
+      if (optimistic) await this.internal_refreshTaskDetail(taskId).catch(() => {});
+      throw error;
+    }
   };
 
   deleteComment = async (commentId: string, taskId?: string): Promise<void> => {

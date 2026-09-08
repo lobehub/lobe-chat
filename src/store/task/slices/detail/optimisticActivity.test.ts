@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildOptimisticAssignmentActivities,
-  OPTIMISTIC_ASSIGNMENT_ID_PREFIX,
-} from './optimisticAssignment';
+  buildOptimisticCommentActivity,
+  isOptimisticActivityId,
+  OPTIMISTIC_ACTIVITY_ID_PREFIX,
+} from './optimisticActivity';
 
 const actor = { avatar: null, id: 'user_me', name: 'Me', type: 'user' as const };
 const now = '2024-01-01T00:00:00.000Z';
@@ -25,7 +27,7 @@ describe('buildOptimisticAssignmentActivities', () => {
       time: now,
       type: 'assignment',
     });
-    expect(rows[0].id?.startsWith(OPTIMISTIC_ASSIGNMENT_ID_PREFIX)).toBe(true);
+    expect(rows[0].id?.startsWith(OPTIMISTIC_ACTIVITY_ID_PREFIX)).toBe(true);
   });
 
   it('reads as a removal when the slot is cleared', () => {
@@ -74,5 +76,35 @@ describe('buildOptimisticAssignmentActivities', () => {
         now,
       }),
     ).toEqual([]);
+  });
+});
+
+describe('buildOptimisticCommentActivity', () => {
+  it('synthesizes the comment as the signed-in user, carrying the topic it replies to', () => {
+    const row = buildOptimisticCommentActivity({
+      actor,
+      content: 'hello',
+      editorData: { root: {} },
+      now,
+      topicId: 'tpc_1',
+    });
+    expect(row).toMatchObject({
+      author: actor,
+      content: 'hello',
+      editorData: { root: {} },
+      time: now,
+      topicId: 'tpc_1',
+      type: 'comment',
+    });
+    expect(isOptimisticActivityId(row?.id)).toBe(true);
+  });
+
+  it('does not invent an author when the viewer identity is unknown', () => {
+    expect(buildOptimisticCommentActivity({ content: 'x', now })).toBeUndefined();
+  });
+
+  it('never mistakes a persisted id for a synthesized one', () => {
+    expect(isOptimisticActivityId('cmt_abc')).toBe(false);
+    expect(isOptimisticActivityId(undefined)).toBe(false);
   });
 });
