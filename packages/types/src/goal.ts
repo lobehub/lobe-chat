@@ -127,6 +127,65 @@ export interface GoalExplorationConfig {
   maxExperiments: number;
 }
 
+/** Opt-in recovery supervision. It cannot grant new permissions or expand budgets. */
+export interface GoalSupervisionPolicy {
+  enabled: boolean;
+  /** Bounded incident ledger and paid diagnostic runs per Goal (default 10, maximum 100). */
+  maxIncidents?: number;
+}
+
+export interface GoalSupervisionIncident {
+  createdAt: string;
+  eligible: boolean;
+  failedOperationId: string;
+  id: string;
+  nodeId: string;
+  reason: string;
+  recoveryInstruction?: string;
+  recoveryOperationId?: string;
+  resolvedAt?: string;
+  status: 'diagnosing' | 'retrying' | 'recovered' | 'escalated' | 'unsuccessful' | 'human_resumed';
+  supervisorOperationId?: string;
+  taskId: string;
+}
+
+/** Server-owned state; never accepted as client configuration. */
+export interface GoalSupervisionState {
+  agentId: string;
+  incidents: GoalSupervisionIncident[];
+  revision: number;
+  topicId: string;
+}
+
+export interface GoalSupervisionSummary {
+  effectiveRecoveries: number;
+  /** Null when no eligible interruption has been observed. */
+  effectiveRecoveryRate: number | null;
+  eligibleInterruptions: number;
+  escalated: number;
+  interruptions: number;
+  pendingRecoveries: number;
+}
+
+export const summarizeGoalSupervision = (state?: GoalSupervisionState): GoalSupervisionSummary => {
+  const incidents = state?.incidents ?? [];
+  const eligibleInterruptions = incidents.filter((item) => item.eligible).length;
+  const effectiveRecoveries = incidents.filter(
+    (item) => item.eligible && item.status === 'recovered',
+  ).length;
+  return {
+    effectiveRecoveries,
+    effectiveRecoveryRate: eligibleInterruptions
+      ? effectiveRecoveries / eligibleInterruptions
+      : null,
+    eligibleInterruptions,
+    escalated: incidents.filter((item) => item.status === 'escalated').length,
+    interruptions: incidents.length,
+    pendingRecoveries: incidents.filter((item) => ['diagnosing', 'retrying'].includes(item.status))
+      .length,
+  };
+};
+
 export interface GoalConfig {
   acceptance?: GoalAcceptancePolicy;
 
@@ -146,6 +205,9 @@ export interface GoalConfig {
   planningProtocol?: 'lease-v1';
   recovery?: GoalRecoveryPolicy;
   schedule?: GoalSchedulePolicy;
+  supervision?: GoalSupervisionPolicy;
+  /** Durable supervisor topic and bounded incident ledger. */
+  supervisorState?: GoalSupervisionState;
 }
 
 /**

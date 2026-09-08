@@ -59,6 +59,7 @@ import {
   resolveTaskMaxSteps,
   VERIFY_SETTLE_GRACE_MS,
 } from './recoveryPolicy';
+import { GoalSupervisorService } from './supervisor';
 import { TaskRecoveryCoordinator } from './taskRecoveryCoordinator';
 import {
   type GoalTickOptions,
@@ -843,10 +844,21 @@ export class GoalService {
    * list's `totalRunCost`, which walks the whole `parent_task_id` subtree —
    * that number is larger for a goal whose Tasks spawned Tasks.
    */
-  private resolveSpend = async (graph: GoalGraphSnapshot) =>
-    this.taskTopicModel.sumRunCostByTaskIds(
-      graph.nodes.flatMap((node) => (node.taskId ? [node.taskId] : [])),
-    );
+  private resolveSpend = async (graph: GoalGraphSnapshot) => {
+    const [spend, supervision] = await Promise.all([
+      this.taskTopicModel.sumRunCostByTaskIds(
+        graph.nodes.flatMap((node) => (node.taskId ? [node.taskId] : [])),
+      ),
+      new GoalSupervisorService(this.db, this.userId, this.workspaceId).usage(
+        graph.goal.config?.supervisorState,
+      ),
+    ]);
+    return {
+      ...spend,
+      totalCost: spend.totalCost + supervision.totalCost,
+      totalTokens: spend.totalTokens + supervision.totalTokens,
+    };
+  };
 
   /**
    * Edit the goal's standing acceptance requirement in place. The next
@@ -1089,6 +1101,12 @@ export class GoalService {
     );
     const source = incoming && graph.nodes.find((node) => node.id === incoming.sourceNodeId);
     if (source?.kind === 'task') {
+      if (source.taskId)
+        await new GoalSupervisorService(this.db, this.userId, this.workspaceId).recordProgress(
+          graph,
+          source.taskId,
+          true,
+        );
       if (optionId === 'retry' && source.taskId) {
         await this.taskModel.updateStatus(source.taskId, 'backlog', { error: null });
         await this.graphModel.updateNodeStatus(goalId, source.id, 'active', resolution);
@@ -1313,6 +1331,12 @@ export class GoalService {
           }
 
           case 'failure_decision': {
+            const supervision = await new GoalSupervisorService(
+              this.db,
+              this.userId,
+              this.workspaceId,
+            ).reviewFailure(graph, acting!.id, task);
+            if (supervision) return observe(supervision);
             return observe(
               await this.openFailureDecision(graph, acting!.id, task.id, move.message, effects),
             );
@@ -1635,6 +1659,27 @@ export class GoalService {
         sql`SELECT pg_advisory_xact_lock(${GOAL_DISPATCH_LOCK_NAMESPACE}, hashtext(${goalId}))`,
       );
 
+      const currentGoal = await new GoalModel(tx, this.userId, this.workspaceId).lockById(goalId);
+      const currentGraph = await new GoalGraphModel(tx, this.userId, this.workspaceId).getGraph(
+        goalId,
+      );
+      if (
+        !currentGoal ||
+        !currentGraph ||
+        currentGoal.status !== 'running' ||
+        currentGraph.decisions.some((item) => item.status === 'pending')
+      )
+        return 'stopped' as const;
+      const currentBudget = await new GoalService(tx, this.userId, this.workspaceId).evaluateBudget(
+        currentGoal,
+        currentGraph,
+      );
+      if (
+        currentBudget.costLimitReached ||
+        currentBudget.roundLimitReached ||
+        currentBudget.deadlinePassed
+      )
+        return 'stopped' as const;
       const inFlight = await new GoalGraphModel(
         tx,
         this.userId,
@@ -1649,6 +1694,14 @@ export class GoalService {
         { error: null, startedAt: new Date() },
       );
     });
+
+    if (claimed === 'stopped')
+      return {
+        goalId,
+        message: 'Goal is stopped or its execution budget is exhausted',
+        outcome: 'no_progress',
+        taskId: task.id,
+      };
 
     if (claimed === 'at-capacity') {
       return {
@@ -1671,10 +1724,20 @@ export class GoalService {
 
     try {
       const run = await new TaskRunnerService(this.db, this.userId, this.workspaceId).runTask({
+        extraPrompt: new GoalSupervisorService(
+          this.db,
+          this.userId,
+          this.workspaceId,
+        ).recoveryInstruction(graph, task.id),
         maxSteps: resolveTaskMaxSteps(graph.goal),
         taskId: task.id,
         trigger: 'goal',
       });
+      await new GoalSupervisorService(this.db, this.userId, this.workspaceId).recordDispatch(
+        graph,
+        task.id,
+        run.operationId,
+      );
       effects.push({
         nodeId,
         operationId: run.operationId,
@@ -2170,6 +2233,12 @@ export class GoalService {
       'resolved',
       'Responsible task completed',
     );
+    await new GoalSupervisorService(this.db, this.userId, this.workspaceId).recordProgress(
+      graph,
+      taskId,
+      false,
+      latest?.status === 'completed' ? (latest.operationId ?? undefined) : undefined,
+    );
     return {
       goalId: graph.goal.id,
       message: 'Task outcome was synthesized into a finding',
@@ -2185,6 +2254,43 @@ export class GoalService {
     taskId: string,
     reason: string,
     effects: GoalAdvanceEffect[] = [],
+  ): Promise<GoalTickResult> => {
+    return this.db.transaction(async (tx) => {
+      const currentGoal = await new GoalModel(tx, this.userId, this.workspaceId).lockById(
+        graph.goal.id,
+      );
+      const service = new GoalService(tx, this.userId, this.workspaceId);
+      const current = await service.requireGraph(graph.goal.id);
+      if (
+        !currentGoal ||
+        ['paused', 'canceled', 'failed', 'achieved'].includes(currentGoal.status)
+      ) {
+        return {
+          goalId: graph.goal.id,
+          message: 'Goal was stopped while recovery was being evaluated',
+          outcome: 'no_progress',
+          taskId,
+        };
+      }
+      const task = await new TaskModel(tx, this.userId, this.workspaceId).findById(taskId);
+      if (task && ['running', 'backlog', 'completed'].includes(task.status)) {
+        return {
+          goalId: graph.goal.id,
+          message: 'Task state changed while recovery was being evaluated',
+          outcome: 'waiting_external',
+          taskId,
+        };
+      }
+      return service.openFailureDecisionLocked(current, nodeId, taskId, reason, effects);
+    });
+  };
+
+  private openFailureDecisionLocked = async (
+    graph: GoalGraphSnapshot,
+    nodeId: string,
+    taskId: string,
+    reason: string,
+    effects: GoalAdvanceEffect[],
   ): Promise<GoalTickResult> => {
     const existingDecisionNode = graph.edges
       .filter((edge) => edge.sourceNodeId === nodeId && edge.kind === 'leads_to')

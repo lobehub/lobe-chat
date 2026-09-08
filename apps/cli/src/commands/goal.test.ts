@@ -9,6 +9,7 @@ const { mockClient } = vi.hoisted(() => ({
     goal: {
       create: { mutate: vi.fn() },
       graph: { query: vi.fn() },
+      supervision: { query: vi.fn() },
       tick: { mutate: vi.fn() },
     },
   },
@@ -352,15 +353,36 @@ describe('goal create command', () => {
       'Repair',
       '--max-attempts-per-task',
       '4',
+      '--supervise',
+      '--max-supervision-incidents',
+      '6',
     ]);
 
     expect(mockClient.goal.create.mutate).toHaveBeenCalledWith(
       expect.objectContaining({
         config: expect.objectContaining({
           recovery: expect.objectContaining({ maxAttemptsPerTask: 4 }),
+          supervision: { enabled: true, maxIncidents: 6 },
         }),
         tasks: ['Inspect', 'Repair'],
       }),
     );
+  });
+});
+
+describe('goal supervision command', () => {
+  it('exposes diagnostic identity and recovery metrics without advancing the Goal', async () => {
+    vi.clearAllMocks();
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    const data = {
+      enabled: true,
+      state: { topicId: 'supervisor-topic' },
+      summary: { effectiveRecoveries: 0 },
+    };
+    mockClient.goal.supervision.query.mockResolvedValue({ data });
+    await createProgram().parseAsync(['node', 'test', 'goal', 'supervision', 'goal-1']);
+    expect(mockClient.goal.supervision.query).toHaveBeenCalledWith({ id: 'goal-1' });
+    expect(JSON.parse(String(vi.mocked(console.log).mock.calls.at(-1)?.[0]))).toEqual(data);
+    expect(mockClient.goal.tick.mutate).not.toHaveBeenCalled();
   });
 });

@@ -1,5 +1,5 @@
 import { goalStatuses } from '@lobechat/const/goal';
-import { MAX_GOAL_METRIC_CRITERIA } from '@lobechat/types';
+import { MAX_GOAL_METRIC_CRITERIA, summarizeGoalSupervision } from '@lobechat/types';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -134,6 +134,12 @@ export const goalRouter = router({
               })
               .optional(),
             maxConcurrentTasks: z.number().int().min(1).max(10).nullable().optional(),
+            supervision: z
+              .object({
+                enabled: z.boolean(),
+                maxIncidents: z.number().int().min(1).max(100).optional(),
+              })
+              .optional(),
             recovery: z
               .object({
                 maxAttemptsPerTask: z.number().int().positive().optional(),
@@ -489,6 +495,19 @@ export const goalRouter = router({
         mapGoalError(error, 'setBudget');
       }
     }),
+
+  supervision: goalProcedure.input(idInput).query(async ({ ctx, input }) => {
+    const graph = await ctx.goalService.graph(input.id);
+    const state = graph.goal.config?.supervisorState;
+    return {
+      data: {
+        enabled: graph.goal.config?.supervision?.enabled ?? false,
+        state,
+        summary: summarizeGoalSupervision(state),
+      },
+      success: true,
+    };
+  }),
 
   tick: goalWriteProcedure.input(idInput).mutation(async ({ ctx, input }) => {
     try {
