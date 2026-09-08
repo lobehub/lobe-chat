@@ -1,6 +1,14 @@
 import { isRecord } from '@lobechat/utils/object';
 import type { LobeDefaultAiModelListItem, ModelAbilities } from 'model-bank';
 
+interface ResolveModelMediaCapabilitiesParams {
+  builtinModels: LobeDefaultAiModelListItem[];
+  model: string;
+  provider: string;
+  /** The database stores abilities as an untyped JSON column. */
+  userAbilities?: unknown;
+}
+
 /**
  * Match the client's enabled-model merge: a nonempty user abilities object
  * replaces the bundled abilities, including explicit false values. Media
@@ -11,13 +19,8 @@ export const resolveModelMediaCapabilities = ({
   model,
   provider,
   userAbilities,
-}: {
-  builtinModels: LobeDefaultAiModelListItem[];
-  model: string;
-  provider: string;
-  /** The database stores abilities as an untyped JSON column. */
-  userAbilities?: unknown;
-}): Pick<ModelAbilities, 'audio' | 'video' | 'vision'> | undefined => {
+}: ResolveModelMediaCapabilitiesParams):
+  Pick<ModelAbilities, 'audio' | 'video' | 'vision'> | undefined => {
   if (isRecord(userAbilities) && Object.keys(userAbilities).length > 0) {
     return {
       audio: userAbilities.audio === true,
