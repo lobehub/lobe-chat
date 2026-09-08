@@ -2,6 +2,12 @@ import type { StoreHandle } from '@/store/utils/optimisticEngine';
 
 export interface TreeItem {
   /**
+   * Row creation time, so the sidebar can order a folder newest-first like the
+   * explorer's default sort does. Optional because optimistic stubs and older
+   * cached payloads carry no timestamp; those fall back to A-Z.
+   */
+  createdAt?: Date | string;
+  /**
    * Underlying `files.id` for file nodes. The unified resource list addresses
    * a file that backs a derived page by the page id, so file-table lookups
    * (e.g. the messenger push) must go through this instead of `id`.
