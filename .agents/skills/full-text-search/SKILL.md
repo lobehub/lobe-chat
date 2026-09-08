@@ -1,6 +1,6 @@
 ---
 name: full-text-search
-description: 'Use for product search: FtsSearchRepo, pg_search/Elasticsearch, projections, Outbox sync, reindexing and performance. Excludes agent web search.'
+description: 'Use for product search: FtsSearchRepo, pg_search/Elasticsearch, mapping migrations, projections, Outbox sync, reindexing and performance. Excludes agent web search.'
 ---
 
 # Product Full-Text Search
@@ -89,20 +89,19 @@ field-count regression tests.
   fail, or release work reclaimed by another worker.
 - Permanent failures and exhausted retries become durable dead letters. A drain that creates or
   observes dead work must fail instead of continuing to publish a successful cutover signal.
-- Full backfill does not replace continuous sync and does not switch product traffic. Keep the
-  application on PostgreSQL until aliases are ready and the Outbox is empty and stable, then switch
-  explicitly.
+- Full backfill does not replace continuous sync. For the initial PostgreSQL-to-Elasticsearch
+  cutover, keep the application on PostgreSQL until aliases are ready and the Outbox is empty and
+  stable, then switch explicitly. Later mapping upgrades keep searches on the existing Elasticsearch
+  alias until promotion.
 
-The supported operator entrypoints are:
+The supported operator entrypoints below run from the OSS repository root. A wrapping repository
+may expose different package scripts; check its `package.json` before invoking these or the mapping
+migration commands linked below.
 
 ```bash
 bun run db:install-fts-search-capture
 bun run fts-search:reindex -- --status
 bun run fts-search:reindex -- --apply --yes
-bun run fts-search:reindex -- --apply --entity= < entity > --yes            # build a new generation
-bun run fts-search:reindex -- --apply --in-place --entity= < entity > --yes # additive change only
-bun run fts-search:reindex -- --promote --entity= --yes < entity > [--version= < n > ]
-bun run fts-search:reindex -- --retire --entity= < entity > --yes # close first, delete next run
 bun run fts-search:sync -- --max-steps=8 --yes
 bun run scripts/pgSearchCleanup/index.ts --status
 bun run scripts/pgSearchCleanup/index.ts --apply --yes
@@ -110,17 +109,24 @@ bun run scripts/pgSearchCleanup/index.ts --apply --yes
 
 ## Mapping Generations
 
-Elasticsearch cannot alter an existing field, so the code declares the target and Elasticsearch
-records the live state, per entity:
+For mapping changes, generation operations, repeat/resume behavior, or deployment integration, read
+[Mapping migration workflow](references/mapping-migrations.md). It routes to the public command guide
+and adds recovery, automation, and local Docker rehearsal rules.
+
+Elasticsearch cannot change an existing field's type or index-time analyzer in place. The code
+declares the target and Elasticsearch records the live state, per entity:
 
 - `FTS_SEARCH_INDEX_DEFINITIONS[entity].schemaVersion` is the declared generation; the fingerprint is
   `sha256` of the mapping plus the shared analysis. `mappings.test.ts` holds a snapshot of both and
   fails when a mapping changes without a version bump, or a bump carries no mapping change. Bump the
-  version and refresh the snapshot in the same change.
+  version and refresh the expected fingerprint in the same change. Shared analysis changes alter
+  every entity fingerprint and classify as breaking for every entity; bump all affected versions
+  and rebuild rather than using in-place upgrades.
 - Every physical index `<alias>-v<n>` carries `_meta.{reindex_run_id, schema_version,
 schema_fingerprint}`; the alias marks the live generation. Indexes created before fingerprints
-  existed are accepted on version alone. `_meta.schema_version` wins over the `-v<n>` suffix because
-  an in-place upgrade advances `_meta` without renaming the index.
+  existed may omit the fingerprint, but still need a valid run ID and schema version for sync
+  readiness. `_meta.schema_version` wins over the `-v<n>` suffix because an in-place upgrade advances
+  `_meta` without renaming the index.
 - The sync runtime accepts an alias that still serves an older generation (upgrade in progress) and
   refuses one that serves a newer generation or a different fingerprint of the declared version. It
   writes every change to all open `<alias>-v*` indexes plus the alias write index, pruning each
@@ -129,11 +135,17 @@ schema_fingerprint}`; the alias marks the live generation. Indexes created befor
   every existing generation accepted it (2xx or 409 conflict).
 - One reindex checkpoint per `(namespace, schemaVersion)` covers the entities on that generation.
   `--apply` groups the requested entities by declared version, treats existing aliases as an
-  upgrade (no `--fresh-run`), never moves an alias, and emits `promotion_pending`. `--promote`
-  requires a completed checkpoint, a fingerprint match for the declared version, and an idle Outbox;
+  upgrade (no `--fresh-run`), leaves existing aliases in place, and emits `promotion_pending`. A
+  completed first install creates aliases. Promoting a newer generation requires a completed
+  checkpoint, a fingerprint match when targeting the declared version, and an idle Outbox. Rollback
+  to an older stamped generation can use its metadata without a retained checkpoint;
   `--retire` requires `in_sync` and closes before it deletes. `--in-place` requires
   `mappingChange: additive`, widens the live index with `PUT _mapping`, pins the checkpoint to that
   index, and backfills with `external_gte` so concurrent sync writes win.
+- Checkpoints are local files, not Drizzle migration history. Preserve `ES_REINDEX_STATE_DIR` across
+  invocations. Completed runs skip backfill; incomplete runs resume from saved cursors. The file lock
+  protects checkpoint updates, not the whole migration: concurrent runs can repeat bulk work. Use
+  one migration worker per target and a persistent checkpoint directory for deployment automation.
 - Reconciliation is exact only on a first install; once an alias serves an entity, concurrent sync
   writes make a higher Elasticsearch count legitimate and only a shortfall fails.
 - `scripts/elasticsearchReindex/runtime/generationService.ts` owns classification (`missing`,
