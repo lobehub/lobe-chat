@@ -8,7 +8,7 @@ import { memo, useState } from 'react';
 import TaskPriorityTag from '@/features/AgentTasks/features/TaskPriorityTag';
 import TaskStatusTag from '@/features/AgentTasks/features/TaskStatusTag';
 import { getWorkTypeDescriptor, isSafeExternalUrl } from '@/features/Work/descriptors';
-import ResourceDeletedTag from '@/features/Work/ResourceDeletedTag';
+import { useResourceDeletedPrompt } from '@/features/Work/useResourceDeletedPrompt';
 import { useChatStore } from '@/store/chat';
 
 import VersionList from './VersionList';
@@ -65,9 +65,10 @@ const WorkVersionHistoryCard = memo<{ work: WorkListItem }>(({ work }) => {
     s.openTaskDetail,
   ]);
   const ToggleIcon = expanded ? ChevronDownIcon : ChevronRightIcon;
+  const promptResourceDeleted = useResourceDeletedPrompt();
   // The underlying resource (task / document) was deleted outside the tool path
   // — the Work survives as an orphan rendered from its snapshot, and opening the
-  // gone resource 404s, so the title loses its click affordance.
+  // gone resource 404s, so a title click explains that and offers removal.
   const resourceDeleted = work.resourceDeleted;
 
   const descriptor = getWorkTypeDescriptor(work);
@@ -83,7 +84,9 @@ const WorkVersionHistoryCard = memo<{ work: WorkListItem }>(({ work }) => {
     if (!openTarget) return undefined;
     switch (openTarget.kind) {
       case 'document': {
-        return resourceDeleted ? undefined : () => openDocument(openTarget.documentId);
+        return resourceDeleted
+          ? () => promptResourceDeleted(work)
+          : () => openDocument(openTarget.documentId);
       }
       case 'external': {
         // Defense in depth: only ever hand http(s) to shell.openExternal.
@@ -95,7 +98,9 @@ const WorkVersionHistoryCard = memo<{ work: WorkListItem }>(({ work }) => {
         return () => openFilePreview({ fileId: openTarget.fileId });
       }
       case 'task': {
-        return resourceDeleted ? undefined : () => openTaskDetail(openTarget.identifier);
+        return resourceDeleted
+          ? () => promptResourceDeleted(work)
+          : () => openTaskDetail(openTarget.identifier);
       }
     }
   })();
@@ -121,7 +126,6 @@ const WorkVersionHistoryCard = memo<{ work: WorkListItem }>(({ work }) => {
         <Text className={styles.context} style={{ flexShrink: 0 }}>
           {label}
         </Text>
-        {resourceDeleted && <ResourceDeletedTag item={work} />}
         {title && (
           <Text
             ellipsis

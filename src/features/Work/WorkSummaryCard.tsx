@@ -14,7 +14,7 @@ import { getWorkVersionTotalTokens } from '@/utils/workCumulativeUsage';
 import { formatWorkVersionCost } from '@/utils/workVersionCost';
 
 import { getWorkTypeDescriptor, isSafeExternalUrl } from './descriptors';
-import ResourceDeletedTag from './ResourceDeletedTag';
+import { useResourceDeletedPrompt } from './useResourceDeletedPrompt';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
@@ -117,8 +117,9 @@ interface WorkSummaryCardProps {
    * Override the click target. The default opens the chat portal (task detail /
    * document), which only renders inside the conversation UI; surfaces without
    * that portal (e.g. the resource page's 产物 gallery) pass their own
-   * navigation here. Only ever receives a clickable item — the card still gates
-   * clickability on external-url presence and resource-deleted state.
+   * navigation here. Only ever receives a clickable, non-orphaned item — the
+   * card still gates clickability on external-url presence and routes
+   * resource-deleted items to the deleted notice before reaching this.
    */
   onOpen?: (item: WorkSummaryItem) => void;
   /**
@@ -136,6 +137,7 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
     const openDocument = useChatStore((s) => s.openDocument);
     const openFilePreview = useChatStore((s) => s.openFilePreview);
     const openTaskDetail = useChatStore((s) => s.openTaskDetail);
+    const promptResourceDeleted = useResourceDeletedPrompt();
     const cost = formatWorkVersionCost(item.totalCost);
     const totalTokens = getWorkVersionTotalTokens(item.event.cumulativeUsage);
     const usage = cost
@@ -165,11 +167,16 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
     const openTarget = descriptor.getOpenTarget(item);
     // The backing resource (task / document) was deleted outside the tool path:
     // the Work lingers as an orphan rendered from its snapshot, and opening the
-    // gone resource 404s, so strip the click affordance and surface a badge.
+    // gone resource 404s. The card keeps its normal look and a click explains
+    // that the resource is gone and offers to remove the card.
     const resourceDeleted = item.resourceDeleted;
-    const clickable = !!openTarget && !resourceDeleted;
+    const clickable = !!openTarget;
 
     const handleOpen = () => {
+      if (resourceDeleted) {
+        promptResourceDeleted(item);
+        return;
+      }
       if (onOpen) {
         onOpen(item);
         return;
@@ -213,7 +220,6 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
                 {title}
               </Text>
               {showIdentifier && <span className={styles.inlineIdentifier}>{identifier}</span>}
-              {resourceDeleted && <ResourceDeletedTag item={item} />}
             </Flexbox>
             {description && (
               <Text ellipsis className={styles.inlineDescription}>
@@ -253,7 +259,6 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
                   {identifier}
                 </Text>
               )}
-              {resourceDeleted && <ResourceDeletedTag item={item} />}
             </Flexbox>
             {usage && (
               <Center horizontal className={styles.cost} gap={2} title={usageTitle}>

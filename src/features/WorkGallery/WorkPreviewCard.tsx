@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { formatTaskItemDate } from '@/features/AgentTasks/features/formatTaskItemDate';
 import { useAgentDisplayMeta } from '@/features/AgentTasks/shared/useAgentDisplayMeta';
 import { getWorkTypeDescriptor } from '@/features/Work/descriptors';
-import ResourceDeletedTag from '@/features/Work/ResourceDeletedTag';
 import { useRemoveWork } from '@/features/Work/useRemoveWork';
+import { useResourceDeletedPrompt } from '@/features/Work/useResourceDeletedPrompt';
 import { getWorkVersionTotalTokens } from '@/utils/workCumulativeUsage';
 import { formatWorkVersionCost } from '@/utils/workVersionCost';
 
@@ -146,6 +146,8 @@ const styles = createStaticStyles(({ css }) => ({
 interface WorkPreviewCardProps {
   item: WorkSummaryItem;
   onOpen: (item: WorkSummaryItem) => void;
+  /** Refresh the owning (infinite) list after an orphan card is removed; see `useRemoveWork`. */
+  onRemoved?: () => void | Promise<void>;
 }
 
 const workTypeKey = (item: WorkSummaryItem) => {
@@ -174,10 +176,11 @@ const workTypeKey = (item: WorkSummaryItem) => {
   }
 };
 
-const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
+const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen, onRemoved }) => {
   const { t, i18n } = useTranslation(['chat', 'common', 'file']);
   const agent = useAgentDisplayMeta(item.originAgentId);
-  const removeWork = useRemoveWork();
+  const removeWork = useRemoveWork({ onRemoved });
+  const promptResourceDeleted = useResourceDeletedPrompt({ onRemoved });
   const descriptor = getWorkTypeDescriptor(item);
   const title =
     descriptor.getTitle(item)?.trim() ||
@@ -190,13 +193,14 @@ const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
       ? `#${identifier.split('#').at(-1)}`
       : identifier;
   // The backing resource was deleted outside the tool path: the Work lingers as
-  // an orphan rendered from its snapshot and opening it would 404, so strip the
-  // click affordance, badge it, and offer removal — the only way the user can
-  // clear the card, since the resource it points at is already gone.
+  // an orphan rendered from its snapshot and opening it would 404. The card
+  // keeps its normal look; a click explains that the resource is gone and
+  // offers removal in the same dialog — the only way the user can clear the
+  // card, since the resource it points at is already gone. The hover trash
+  // action reaches the same confirm for users who already know.
   const resourceDeleted = item.resourceDeleted;
   const openTarget = descriptor.getOpenTarget(item);
-  const actionable = !!openTarget && (openTarget.kind !== 'filePreview' || !!openTarget.url);
-  const clickable = actionable && !resourceDeleted;
+  const clickable = !!openTarget && (openTarget.kind !== 'filePreview' || !!openTarget.url);
   const eventDate = item.event.changeType === 'created' ? item.createdAt : item.updatedAt;
   const eventAt = formatTaskItemDate(eventDate, {
     formatOtherYear: t('time.formatOtherYear', { ns: 'common' }),
@@ -213,7 +217,9 @@ const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
   return (
     <Flexbox
       className={cx('work-preview-card', styles.card, clickable && styles.clickable)}
-      onClick={clickable ? () => onOpen(item) : undefined}
+      onClick={
+        clickable ? () => (resourceDeleted ? promptResourceDeleted(item) : onOpen(item)) : undefined
+      }
     >
       {resourceDeleted && (
         <ActionIcon
@@ -246,7 +252,6 @@ const WorkPreviewCard = memo<WorkPreviewCardProps>(({ item, onOpen }) => {
               {item.status}
             </Tag>
           )}
-          {resourceDeleted && <ResourceDeletedTag item={item} />}
         </Flexbox>
         <div className={styles.title}>{title}</div>
         <Flexbox horizontal align={'baseline'} className={styles.footer} gap={7}>
