@@ -2,7 +2,7 @@
 
 import { Flexbox } from '@lobehub/ui';
 import { ActionIcon, Select, Text, toast } from '@lobehub/ui/base-ui';
-import { useResponsive } from 'antd-style';
+import { createStaticStyles, useResponsive } from 'antd-style';
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -32,6 +32,28 @@ import {
   userReviewState,
 } from './checkState';
 import { EMPTY_ID_SET, setAggregateEntry } from './expandState';
+
+const styles = createStaticStyles(({ css }) => ({
+  filters: css`
+    @media (width <= 767px) {
+      width: 100%;
+    }
+  `,
+  filterSelect: css`
+    width: 118px;
+
+    @media (width <= 767px) {
+      flex: 1;
+      width: 0;
+      min-width: 0;
+    }
+  `,
+  toolbarHeading: css`
+    @media (width <= 767px) {
+      flex-basis: 100%;
+    }
+  `,
+}));
 
 interface AcceptanceCheckInventoryProps {
   children?: ReactNode;
@@ -192,59 +214,69 @@ const AcceptanceCheckInventory = ({
   return (
     <>
       <Flexbox horizontal align={'center'} gap={8} wrap={'wrap'}>
-        <Text strong style={{ fontSize: 14, whiteSpace: 'nowrap' }}>
-          {t('acceptance.checks.title')}
-        </Text>
-        <Flexbox flex={1} />
-        {toolbar}
-        <Select
-          size={'small'}
-          style={{ width: 118 }}
-          value={filter}
-          variant={'filled'}
-          options={[
-            { label: t('acceptance.filter.all', { count: counts.total }), value: 'all' },
-            { label: t('acceptance.filter.pending', { count: counts.pending }), value: 'pending' },
-            {
-              label: t('acceptance.filter.needsFix', { count: counts.needsFix }),
-              value: 'needsFix',
-            },
-            {
-              label: t('acceptance.filter.accepted', { count: counts.accepted }),
-              value: 'accepted',
-            },
-            { label: t('acceptance.filter.ignored', { count: counts.ignored }), value: 'ignored' },
-          ]}
-          onChange={(value) => setFilter(value as CheckFilter)}
-        />
-        {data.rounds.length > 1 && (
+        <Flexbox horizontal align={'center'} className={styles.toolbarHeading} flex={1} gap={8}>
+          <Text strong style={{ fontSize: 14, whiteSpace: 'nowrap' }}>
+            {t('acceptance.checks.title')}
+          </Text>
+          <Flexbox flex={1} />
+          {toolbar}
+        </Flexbox>
+        <Flexbox horizontal align={'center'} className={styles.filters} gap={8}>
           <Select
-            size={'small'}
-            style={{ width: 110 }}
-            value={roundFilter === null ? 'all' : String(roundFilter)}
+            className={styles.filterSelect}
+            value={filter}
             variant={'filled'}
             options={[
-              { label: t('acceptance.filter.roundAll'), value: 'all' },
-              ...[...data.rounds].reverse().map((round) => ({
-                label: t('acceptance.round', { round: round.run.roundIndex }),
-                value: String(round.run.roundIndex),
-              })),
+              { label: t('acceptance.filter.all', { count: counts.total }), value: 'all' },
+              {
+                label: t('acceptance.filter.pending', { count: counts.pending }),
+                value: 'pending',
+              },
+              {
+                label: t('acceptance.filter.needsFix', { count: counts.needsFix }),
+                value: 'needsFix',
+              },
+              {
+                label: t('acceptance.filter.accepted', { count: counts.accepted }),
+                value: 'accepted',
+              },
+              {
+                label: t('acceptance.filter.ignored', { count: counts.ignored }),
+                value: 'ignored',
+              },
             ]}
-            onChange={(value) => setRoundFilter(value === 'all' ? null : Number(value))}
+            onChange={(value) => setFilter(value as CheckFilter)}
           />
-        )}
-        {grouped && (
-          <ActionIcon
-            icon={allGroupsCollapsed ? ChevronsUpDown : ChevronsDownUp}
-            size={'small'}
-            title={
-              allGroupsCollapsed
-                ? t('acceptance.group.expandAll')
-                : t('acceptance.group.collapseAll')
-            }
-            onClick={() => setCollapsedGroups(allGroupsCollapsed ? new Set() : new Set(groupKeys))}
-          />
-        )}
+          {data.rounds.length > 1 && (
+            <Select
+              className={styles.filterSelect}
+              value={roundFilter === null ? 'all' : String(roundFilter)}
+              variant={'filled'}
+              options={[
+                { label: t('acceptance.filter.roundAll'), value: 'all' },
+                ...[...data.rounds].reverse().map((round) => ({
+                  label: t('acceptance.round', { round: round.run.roundIndex }),
+                  value: String(round.run.roundIndex),
+                })),
+              ]}
+              onChange={(value) => setRoundFilter(value === 'all' ? null : Number(value))}
+            />
+          )}
+          {grouped && (
+            <ActionIcon
+              icon={allGroupsCollapsed ? ChevronsUpDown : ChevronsDownUp}
+              size={'small'}
+              title={
+                allGroupsCollapsed
+                  ? t('acceptance.group.expandAll')
+                  : t('acceptance.group.collapseAll')
+              }
+              onClick={() =>
+                setCollapsedGroups(allGroupsCollapsed ? new Set() : new Set(groupKeys))
+              }
+            />
+          )}
+        </Flexbox>
       </Flexbox>
       {children}
       <CheckList
