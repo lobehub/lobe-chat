@@ -42,6 +42,19 @@ describe('useVisitorTopicRoute', () => {
     expect(result.current.topicId).toBe('tpc_1');
   });
 
+  it('does not push a duplicate entry when the destination is already current', async () => {
+    const { result, getRouter } = setup('/a/my-bot');
+    const initialKey = getRouter().state.location.key;
+    await act(() => result.current.selectTopic());
+    expect(getRouter().state.location.key).toBe(initialKey);
+    // A first message that was still creating its topic must still land in the URL.
+    await act(() => result.current.onTopicCreated('tpc_created'));
+    expect(getRouter().state.location.pathname).toBe('/a/my-bot/tpc_created');
+    const createdKey = getRouter().state.location.key;
+    await act(() => result.current.selectTopic('tpc_created'));
+    expect(getRouter().state.location.key).toBe(createdKey);
+  });
+
   it('does not navigate back when a send finishes after selecting another topic', async () => {
     const { result, getRouter } = setup('/a/my-bot');
     const onTopicCreated = result.current.onTopicCreated;

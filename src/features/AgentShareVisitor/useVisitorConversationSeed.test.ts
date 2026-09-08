@@ -1,3 +1,4 @@
+import type { SharedAgentData } from '@lobechat/types';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -20,9 +21,17 @@ vi.mock('@/store/chat', () => ({
   },
 }));
 
-const identity = {
+const agentMeta = (name: string): SharedAgentData['agentMeta'] => ({
+  avatar: null,
+  backgroundColor: null,
+  description: null,
+  name,
+  title: null,
+});
+
+const identity: Pick<SharedAgentData, 'agentId' | 'agentMeta' | 'shareId'> = {
   agentId: 'agt_shared',
-  agentMeta: { name: 'Shared assistant' },
+  agentMeta: agentMeta('Shared assistant'),
   shareId: 'share_1',
 };
 
@@ -34,7 +43,7 @@ describe('useVisitorConversationSeed', () => {
   it('restores the URL topic on direct entry and follows history navigation', () => {
     const { result, rerender } = renderHook(
       ({ topicId }: { topicId?: string }) => useVisitorConversationSeed(identity, topicId),
-      { initialProps: { topicId: 'tpc_1' } },
+      { initialProps: { topicId: 'tpc_1' } as { topicId?: string } },
     );
     expect(result.current).toBe(true);
     expect(mocks.chatState).toMatchObject({ activeAgentId: 'agt_shared', activeTopicId: 'tpc_1' });
@@ -53,7 +62,7 @@ describe('useVisitorConversationSeed', () => {
     act(() => {
       mocks.chatState.activeTopicId = 'tpc_created';
     });
-    rerender({ ...identity, agentMeta: { name: 'Renamed assistant' } });
+    rerender({ ...identity, agentMeta: agentMeta('Renamed assistant') });
     expect(mocks.chatState.activeTopicId).toBe('tpc_created');
     rerender({ ...identity, agentId: 'agt_other', shareId: 'share_2' });
     expect(mocks.chatState.activeTopicId).toBeUndefined();
