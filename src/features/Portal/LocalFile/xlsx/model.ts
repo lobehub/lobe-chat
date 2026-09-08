@@ -47,14 +47,16 @@ const hex = (color?: Partial<Color>): string | undefined => {
 const formatNumber = (value: number, numFmt?: string): string => {
   if (!numFmt || numFmt === 'General') return String(Math.round(value * 1e10) / 1e10);
   const pattern = numFmt.split(';')[0];
+  const isPercentage = pattern.includes('%');
+  const displayValue = isPercentage ? value * 100 : value;
   const decimals = pattern.match(/\.(0+)/)?.[1].length ?? 0;
   const currency = pattern.match(/[$£¥€]/)?.[0] ?? '';
-  let body = Math.abs(value).toFixed(decimals);
+  let body = Math.abs(displayValue).toFixed(decimals);
   if (pattern.includes('#,##')) {
     const [int, frac] = body.split('.');
     body = int.replaceAll(/\B(?=(\d{3})+(?!\d))/g, ',') + (frac ? '.' + frac : '');
   }
-  return (value < 0 ? '-' : '') + currency + body;
+  return (displayValue < 0 ? '-' : '') + currency + body + (isPercentage ? '%' : '');
 };
 
 const cellText = (cell: Cell): string => {
@@ -166,13 +168,13 @@ const readMerges = (sheet: Worksheet) => {
 
 const readSheet = (sheet: Worksheet): SheetModel => {
   const colCount = Math.max(sheet.actualColumnCount, 1);
-  const rowCount = Math.min(sheet.actualRowCount, MAX_PREVIEW_ROWS);
   const view = sheet.views?.[0] as { state?: string; xSplit?: number; ySplit?: number } | undefined;
   const { covered, spans } = readMerges(sheet);
 
   const rows: RowModel[] = [];
-  for (let rowIndex = 1; rowIndex <= rowCount; rowIndex++) {
-    const row: Row = sheet.getRow(rowIndex);
+  sheet.eachRow((row: Row) => {
+    if (rows.length >= MAX_PREVIEW_ROWS) return;
+    const rowIndex = row.number;
     const cells: CellModel[] = [];
     for (let colIndex = 1; colIndex <= colCount; colIndex++) {
       if (covered.has(`${rowIndex}:${colIndex}`)) continue;
@@ -192,7 +194,7 @@ const readSheet = (sheet: Worksheet): SheetModel => {
       });
     }
     rows.push({ cells, h: row.height ?? null, r: rowIndex });
-  }
+  });
 
   const cols: number[] = [];
   for (let colIndex = 1; colIndex <= colCount; colIndex++) {
@@ -203,7 +205,7 @@ const readSheet = (sheet: Worksheet): SheetModel => {
     cols,
     frozen: view?.state === 'frozen' ? { cols: view.xSplit ?? 0, rows: view.ySplit ?? 0 } : null,
     name: sheet.name,
-    rowCount,
+    rowCount: rows.length,
     rows,
     truncated: sheet.actualRowCount > MAX_PREVIEW_ROWS,
   };
