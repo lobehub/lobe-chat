@@ -312,8 +312,20 @@ export const resolveServerCallLlmContextHints = async ({
     ? (llmPayload.messages as UIChatMessage[])
     : stripAssistantReasoningForReplay(llmPayload.messages as UIChatMessage[]);
 
-  const findMediaCapabilities = (targetModel: string, targetProvider: string) =>
-    resolveModelMediaCapabilities({
+  const findMediaCapabilities = (targetModel: string, targetProvider: string) => {
+    const snapshot = ctx.modelRuntimeConfig;
+    // Tool discovery is fixed for the operation; keep native inputs on the same
+    // snapshot across retries, settings edits, and subsequent worker invocations.
+    if (
+      snapshot?.model === targetModel &&
+      snapshot.provider === targetProvider &&
+      snapshot.mediaCapabilities
+    ) {
+      return snapshot.mediaCapabilities;
+    }
+
+    // Older operations have no snapshot. Preserve their existing lookup path.
+    return resolveModelMediaCapabilities({
       builtinModels,
       model: targetModel,
       provider: targetProvider,
@@ -321,6 +333,7 @@ export const resolveServerCallLlmContextHints = async ({
       userAbilities:
         targetModel === model && targetProvider === provider ? userModelRow?.abilities : undefined,
     });
+  };
 
   return {
     capabilities: {

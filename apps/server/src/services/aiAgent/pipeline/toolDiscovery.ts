@@ -138,6 +138,7 @@ export interface ToolDiscoveryResult {
   hasAgentDocuments: boolean;
   hasEnabledKnowledgeBases: boolean;
   lobehubSkillManifests: LobeToolManifest[];
+  modelMediaCapabilities: Pick<ModelAbilities, 'audio' | 'video' | 'vision'>;
   onlineDevices: DeviceAttachment[];
   operationAgentGroup?: AgentGroupConfig;
   searchDecision: ReturnType<typeof resolveServerSearchDecision>;
@@ -287,6 +288,13 @@ export const discoverTools = async (
   const activeProviderMetadata =
     providerMetadataResult.status === 'fulfilled' ? providerMetadataResult.value : undefined;
   const activeModelAbilities = activeModelMetadata?.abilities as ModelAbilities | undefined;
+  const modelMediaCapabilities =
+    resolveModelMediaCapabilities({
+      builtinModels,
+      model,
+      provider,
+      userAbilities: activeModelAbilities,
+    }) ?? {};
   const searchDecision = resolveServerSearchDecision({
     builtinModels,
     chatConfig: agentConfig.chatConfig ?? undefined,
@@ -578,12 +586,9 @@ export const discoverTools = async (
 
     // Dynamically inject turn-scoped builtin tools.
     const hasTopicReference = /refer_topic/.test(prompt ?? '');
-    const modelAbilities = resolveModelMediaCapabilities({
-      builtinModels,
-      model,
-      provider,
-      userAbilities: activeModelAbilities,
-    });
+    const modelAbilities =
+      builtinModels.find((item) => item.id === model && item.providerId === provider)?.abilities ??
+      builtinModels.find((item) => item.id === model)?.abilities;
     const externalFileTypes = files?.map((file) => file.mimeType ?? '') ?? [];
     let attachedFileTypes: string[] = [];
     if (attachedFileIds && attachedFileIds.length > 0) {
@@ -598,22 +603,22 @@ export const discoverTools = async (
 
     if (
       multimodalUnderstandingConfigured &&
-      ((!modelAbilities?.audio && !inputMediaAvailability.hasAudios) ||
-        (!modelAbilities?.vision && !inputMediaAvailability.hasImages) ||
-        (!modelAbilities?.video && !inputMediaAvailability.hasVideos))
+      ((!modelMediaCapabilities?.audio && !inputMediaAvailability.hasAudios) ||
+        (!modelMediaCapabilities?.vision && !inputMediaAvailability.hasImages) ||
+        (!modelMediaCapabilities?.video && !inputMediaAvailability.hasVideos))
     ) {
       historyMediaAvailability = getMediaAvailabilityFromMessages(await loadHistoryMessages());
     }
 
     const needsAudioUnderstanding =
       (inputMediaAvailability.hasAudios || historyMediaAvailability.hasAudios) &&
-      !modelAbilities?.audio;
+      !modelMediaCapabilities?.audio;
     const needsImageUnderstanding =
       (inputMediaAvailability.hasImages || historyMediaAvailability.hasImages) &&
-      !modelAbilities?.vision;
+      !modelMediaCapabilities?.vision;
     const needsVideoUnderstanding =
       (inputMediaAvailability.hasVideos || historyMediaAvailability.hasVideos) &&
-      !modelAbilities?.video;
+      !modelMediaCapabilities?.video;
     const shouldEnableMultimodalUnderstanding =
       multimodalUnderstandingConfigured &&
       (needsAudioUnderstanding || needsImageUnderstanding || needsVideoUnderstanding);
@@ -1166,6 +1171,7 @@ export const discoverTools = async (
     hasAgentDocuments,
     hasEnabledKnowledgeBases,
     lobehubSkillManifests,
+    modelMediaCapabilities,
     onlineDevices,
     operationAgentGroup,
     searchDecision,

@@ -768,4 +768,24 @@ describe('AiAgentService.execAgent - builtin agent runtime config', () => {
       }),
     );
   });
+
+  it('should preserve builtin image output support when user abilities override vision', async () => {
+    mockGetAgentConfig.mockResolvedValue({
+      chatConfig: {},
+      id: 'agent-custom',
+      model: 'gemini-3.1-flash-image',
+      plugins: [],
+      provider: 'google',
+      systemRole: '',
+    });
+    mockGetModelMetadata.mockResolvedValue({ abilities: { vision: false } });
+
+    await service.execAgent({
+      agentId: 'agent-custom',
+      prompt: 'Generate an image',
+    });
+
+    const callArgs = vi.mocked(createServerAgentToolsEngine).mock.calls[0][1];
+    expect(callArgs.modelAbilities).toMatchObject({ imageOutput: true });
+  });
 });

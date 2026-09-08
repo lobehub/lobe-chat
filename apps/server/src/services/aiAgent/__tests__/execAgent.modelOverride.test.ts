@@ -332,7 +332,11 @@ describe('AiAgentService.execAgent - model/provider override', () => {
     const callArgs = mockCreateOperation.mock.calls[0][0];
     expect(callArgs.agentConfig.model).toBe('step-3.7-flash');
     expect(callArgs.agentConfig.provider).toBe('stepfun');
-    expect(callArgs.modelRuntimeConfig).toEqual({ model: 'step-3.7-flash', provider: 'stepfun' });
+    expect(callArgs.modelRuntimeConfig).toEqual({
+      mediaCapabilities: { video: true, vision: true },
+      model: 'step-3.7-flash',
+      provider: 'stepfun',
+    });
   });
 
   it('keeps the topic provider when only the model is overridden', async () => {
@@ -347,7 +351,11 @@ describe('AiAgentService.execAgent - model/provider override', () => {
     });
 
     const callArgs = mockCreateOperation.mock.calls[0][0];
-    expect(callArgs.modelRuntimeConfig).toEqual({ model: 'step-3.7-flash', provider: 'stepfun' });
+    expect(callArgs.modelRuntimeConfig).toEqual({
+      mediaCapabilities: { video: true, vision: true },
+      model: 'step-3.7-flash',
+      provider: 'stepfun',
+    });
   });
 
   it('uses the caller model preference when the workspace Agent allows member selection', async () => {

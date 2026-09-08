@@ -86,6 +86,72 @@ beforeEach(() => {
 });
 
 describe('resolveServerCallLlmContextHints - user media capabilities', () => {
+  it.each(['lookup failure', 'settings changed'])(
+    'preserves discovered vision after %s',
+    async (scenario) => {
+      if (scenario === 'lookup failure') {
+        findByIdAndProviderMock.mockRejectedValue(new Error('Temporary database failure'));
+      } else {
+        findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: false } });
+      }
+      const hints = await resolveServerCallLlmContextHints({
+        ctx: {
+          ...createCtx({}),
+          modelRuntimeConfig: {
+            mediaCapabilities: { vision: true },
+            model: 'custom-model',
+            provider: 'custom-provider',
+          },
+        },
+        llmPayload,
+        model: 'custom-model',
+        provider: 'custom-provider',
+      });
+
+      expect(hints.capabilities.isCanUseVision('custom-model', 'custom-provider')).toBe(true);
+    },
+  );
+
+  it.each([
+    { model: 'other-model', provider: 'custom-provider' },
+    { model: 'custom-model', provider: 'other-provider' },
+  ])('does not reuse a snapshot for $model/$provider', async ({ model, provider }) => {
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: {
+        ...createCtx({}),
+        modelRuntimeConfig: {
+          mediaCapabilities: { vision: true },
+          model: 'custom-model',
+          provider: 'custom-provider',
+        },
+      },
+      llmPayload,
+      model,
+      provider,
+    });
+
+    expect(hints.capabilities.isCanUseVision(model, provider)).toBe(false);
+  });
+
+  it('keeps an unknown-model snapshot disabled after settings change', async () => {
+    findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: true } });
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: {
+        ...createCtx({}),
+        modelRuntimeConfig: {
+          mediaCapabilities: {},
+          model: 'custom-model',
+          provider: 'custom-provider',
+        },
+      },
+      llmPayload,
+      model: 'custom-model',
+      provider: 'custom-provider',
+    });
+
+    expect(hints.capabilities.isCanUseVision('custom-model', 'custom-provider')).toBe(false);
+  });
+
   it('keeps custom-model images in the native payload and advertises user-enabled vision', async () => {
     findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: true } });
     const model = 'custom-vision-model';
