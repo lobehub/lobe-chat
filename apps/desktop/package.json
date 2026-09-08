@@ -48,6 +48,8 @@
     "update-server": "sh scripts/update-test/run-test.sh"
   },
   "dependencies": {
+    "@auv-js/cli": "0.0.16",
+    "@auv-js/sdk": "0.0.16",
     "@lobehub/fluent-emoji": "^4.1.0",
     "@lydell/node-pty": "1.2.0-beta.12",
     "electron-log": "^5.4.4",
@@ -94,7 +96,7 @@
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "electron": "43.2.0",
-    "electron-builder": "26.14.0",
+    "electron-builder": "26.16.1",
     "electron-store": "^8.2.0",
     "electron-updater": "^6.8.9",
     "electron-window-state": "^5.0.3",

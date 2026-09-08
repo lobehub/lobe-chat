@@ -22,6 +22,7 @@ const { mockDeviceProxy } = vi.hoisted(() => ({
   mockDeviceProxy: {
     isConfigured: false,
     queryDeviceList: vi.fn().mockResolvedValue([]),
+    queryDeviceSystemInfo: vi.fn().mockResolvedValue(undefined),
   },
 }));
 
