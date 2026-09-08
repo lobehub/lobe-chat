@@ -25,6 +25,13 @@ export type TaskActivityLogType =
  * status strings themselves (`from` / `to`).
  */
 export interface TaskActivityLogPayload {
+  /**
+   * Who kind of party made the change, recorded at write time. The actor
+   * columns are `ON DELETE SET NULL` foreign keys, so once the user or agent
+   * is deleted this is the only trace that somebody — not the system — did
+   * it. Absent on rows written before it was introduced; treated as system.
+   */
+  actorKind?: 'agent' | 'system' | 'user';
   from?: TaskActivityValue;
   fromId?: string | null;
   to?: TaskActivityValue;

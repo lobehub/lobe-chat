@@ -1994,14 +1994,17 @@ export class TaskModel {
         });
       }
 
+      // An agent-driven edit is attributed to the agent, not to the session
+      // owner whose credentials it borrowed. Both null means the system did it
+      // on nobody's behalf (the runner's inbox fallback). `actorKind` repeats
+      // that in the payload because the id columns are cleared when the actor
+      // is deleted, and "someone who is gone" must not read as "the system".
+      const actorKind = actor.agentId ? 'agent' : actor.userId ? 'user' : 'system';
       for (const event of events) {
         await scoped.addActivity({
           actorAgentId: actor.agentId ?? null,
-          // An agent-driven edit is attributed to the agent, not to the session
-          // owner whose credentials it borrowed. Both null means the system did
-          // it on nobody's behalf (the runner's inbox fallback).
           actorUserId: actor.agentId ? null : (actor.userId ?? null),
-          payload: event.payload,
+          payload: { ...event.payload, actorKind },
           taskId: id,
           type: event.type,
         });
@@ -2011,12 +2014,23 @@ export class TaskModel {
     });
   }
 
-  async getActivities(taskId: string): Promise<TaskActivityItem[]> {
-    return this.db
+  /**
+   * Oldest-first. `limit` keeps the newest N rows (still returned
+   * oldest-first) so a long-lived task does not ship its whole history on
+   * every detail poll; the table itself is the full audit trail.
+   */
+  async getActivities(taskId: string, limit?: number): Promise<TaskActivityItem[]> {
+    const where = and(eq(taskActivities.taskId, taskId), this.activitiesOwnership());
+    if (limit === undefined) {
+      return this.db.select().from(taskActivities).where(where).orderBy(taskActivities.createdAt);
+    }
+    const newest = await this.db
       .select()
       .from(taskActivities)
-      .where(and(eq(taskActivities.taskId, taskId), this.activitiesOwnership()))
-      .orderBy(taskActivities.createdAt);
+      .where(where)
+      .orderBy(desc(taskActivities.createdAt), desc(taskActivities.id))
+      .limit(limit);
+    return newest.reverse();
   }
 
   // ========== Transfer / Copy ==========

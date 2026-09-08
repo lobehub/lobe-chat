@@ -79,7 +79,9 @@ export const assignmentParticipantLabel = (
   absentLabel = 'unassigned',
 ): string => {
   if (!party) return absentLabel;
-  return party.name || party.id;
+  // A recorded participant whose row is gone keeps its id when one survived;
+  // a deleted actor leaves no id at all and must still read as a person.
+  return party.name || party.id || (party.unresolved ? 'a deleted participant' : 'unnamed');
 };
 
 /** Render one side of a property change for a text surface. */

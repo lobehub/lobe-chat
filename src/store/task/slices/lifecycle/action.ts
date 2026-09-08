@@ -9,7 +9,10 @@ import { runMutation } from '@/store/utils/runMutation';
 import { saveToast } from '@/store/utils/saveToast';
 
 import type { TaskStore } from '../../store';
-import { buildOptimisticPropertyActivity } from '../detail/optimisticActivity';
+import {
+  appendOptimisticPropertyActivity,
+  buildOptimisticPropertyActivity,
+} from '../detail/optimisticActivity';
 
 const log = debug('lobe-store:task-lifecycle');
 
@@ -106,9 +109,9 @@ export class TaskLifecycleSliceActionImpl {
   updateTaskStatus = async (
     id: string | undefined,
     status: TaskStatus,
-    options?: { error?: string },
+    options?: { actorAgentId?: string; error?: string },
   ): Promise<string> => {
-    const { error } = options ?? {};
+    const { actorAgentId, error } = options ?? {};
     const resolvedId = id ?? this.#get().activeTaskId;
 
     if (!resolvedId) {
@@ -120,7 +123,7 @@ export class TaskLifecycleSliceActionImpl {
       extraUpdate.error = error;
     }
 
-    await this.#transitionStatus(resolvedId, status, extraUpdate, error);
+    await this.#transitionStatus(resolvedId, status, extraUpdate, error, actorAgentId);
 
     return resolvedId;
   };
@@ -132,6 +135,8 @@ export class TaskLifecycleSliceActionImpl {
     status: TaskStatus,
     extraUpdate?: Partial<TaskDetailData>,
     error?: string,
+    /** The agent changing it in the client-first runtime; see TaskUpdateOptions. */
+    actorAgentId?: string,
   ): Promise<void> => {
     const transitionVersion = ++this.#nextStatusTransitionVersion;
     this.#statusTransitionVersions.set(id, transitionVersion);
@@ -151,7 +156,7 @@ export class TaskLifecycleSliceActionImpl {
     // synthesized row), and the failure path already refetches as its rollback.
     const detail = this.#get().taskDetailMap[id];
     const userState = useUserStore.getState();
-    const actorId = userProfileSelectors.userId(userState);
+    const actorId = actorAgentId ? undefined : userProfileSelectors.userId(userState);
     const statusRow =
       detail && previousStatus !== status
         ? buildOptimisticPropertyActivity({
@@ -173,7 +178,9 @@ export class TaskLifecycleSliceActionImpl {
       value: {
         status,
         ...extraUpdate,
-        ...(statusRow ? { activities: [...(detail?.activities ?? []), statusRow] } : {}),
+        ...(statusRow
+          ? { activities: appendOptimisticPropertyActivity(detail?.activities ?? [], statusRow) }
+          : {}),
       },
     });
     this.#patchTaskCollectionsStatus(id, status);
@@ -181,7 +188,8 @@ export class TaskLifecycleSliceActionImpl {
     try {
       await runMutation(this.#set, this.#get, {
         mutate: async () => {
-          await taskService.updateStatus(id, status, error);
+          if (actorAgentId) await taskService.updateStatus(id, status, error, { actorAgentId });
+          else await taskService.updateStatus(id, status, error);
         },
         name: 'transitionStatus',
         onError: async (err) => {
@@ -198,7 +206,7 @@ export class TaskLifecycleSliceActionImpl {
             );
           }
           saveToast(err, {
-            retry: () => void this.#transitionStatus(id, status, extraUpdate, error),
+            retry: () => void this.#transitionStatus(id, status, extraUpdate, error, actorAgentId),
           });
         },
         setStatus: (s) => {

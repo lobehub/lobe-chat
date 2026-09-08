@@ -1714,8 +1714,8 @@ describe('TaskModel', () => {
       // that is the difference a lock-free recorder loses under concurrency.
       const activities = await model.getActivities(task.id);
       expect(activities.map((a) => a.payload)).toEqual([
-        { fromId: null, toId: 'agt_log_b' },
-        { fromId: 'agt_log_b', toId: 'agt_log_c' },
+        { actorKind: 'user', fromId: null, toId: 'agt_log_b' },
+        { actorKind: 'user', fromId: 'agt_log_b', toId: 'agt_log_c' },
       ]);
     });
 
@@ -1776,6 +1776,31 @@ describe('TaskModel', () => {
 
       const [activity] = await model.getActivities(task.id);
       expect(activity).toMatchObject({ payload: { from: 0, to: 1 }, type: 'priority' });
+    });
+
+    it('stamps who kind of party acted into the payload, so a deleted actor never reads as the system', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+      await createAgent('agt_kind');
+
+      await model.updateWithLog(task.id, { priority: 3 }, { userId });
+      await model.updateWithLog(task.id, { priority: 4 }, { agentId: 'agt_kind', userId });
+      await model.updateWithLog(task.id, { priority: 2 }, {});
+
+      const kinds = (await model.getActivities(task.id)).map((a) => a.payload?.actorKind);
+      expect(kinds).toEqual(['user', 'agent', 'system']);
+    });
+
+    it('returns only the newest rows when a limit is given, still oldest first', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+
+      for (const priority of [1, 2, 3, 4]) {
+        await model.updateWithLog(task.id, { priority }, { userId });
+      }
+
+      const recent = await model.getActivities(task.id, 2);
+      expect(recent.map((a) => a.payload?.to)).toEqual([3, 4]);
     });
 
     it('folds the automation columns into one event per save', async () => {

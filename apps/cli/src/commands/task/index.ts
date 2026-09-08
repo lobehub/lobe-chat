@@ -493,9 +493,14 @@ export function registerTaskCommand(program: Command) {
               // @lobechat/prompts; inlined rather than adding a package
               // dependency for three lines.
               const label = (
-                party?: { id: string; name?: string | null } | null,
+                party?: { id: string; name?: string | null; unresolved?: boolean } | null,
                 absent = 'unassigned',
-              ) => (party ? party.name || party.id : absent);
+              ) =>
+                party
+                  ? party.name ||
+                    party.id ||
+                    (party.unresolved ? 'a deleted participant' : 'unnamed')
+                  : absent;
               const slot = act.assignment?.kind === 'agent' ? 'agent' : 'member';
               const actor = label(act.author, 'system');
               console.log(

@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  appendOptimisticPropertyActivity,
   buildOptimisticAssignmentActivities,
   buildOptimisticCommentActivity,
+  buildOptimisticPropertyActivity,
   isOptimisticActivityId,
   OPTIMISTIC_ACTIVITY_ID_PREFIX,
 } from './optimisticActivity';
@@ -106,5 +108,53 @@ describe('buildOptimisticCommentActivity', () => {
   it('never mistakes a persisted id for a synthesized one', () => {
     expect(isOptimisticActivityId('cmt_abc')).toBe(false);
     expect(isOptimisticActivityId(undefined)).toBe(false);
+  });
+});
+
+describe('appendOptimisticPropertyActivity', () => {
+  const hop = (from: unknown, to: unknown, at = now, who = actor) =>
+    buildOptimisticPropertyActivity({
+      actor: who,
+      change: { field: 'priority', from: from as number | null, to: to as number | null },
+      now: at,
+    })!;
+
+  it('folds a second hop by the same person into the open row, keeping the first start', () => {
+    const rows = appendOptimisticPropertyActivity([hop(1, 2)], hop(2, 3));
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0].propertyChange).toMatchObject({ field: 'priority', from: 1, to: 3 });
+  });
+
+  it('drops the row entirely when the value is back where it started', () => {
+    expect(appendOptimisticPropertyActivity([hop(1, 2)], hop(2, 1))).toEqual([]);
+  });
+
+  it('never folds into a server row — only synthesized ones are provisional', () => {
+    const persisted = { ...hop(1, 2), id: 'tac_real' };
+
+    expect(appendOptimisticPropertyActivity([persisted], hop(2, 3))).toHaveLength(2);
+  });
+
+  it('keeps two people apart', () => {
+    const other = { ...actor, id: 'user_other' };
+
+    expect(appendOptimisticPropertyActivity([hop(1, 2)], hop(2, 3, now, other))).toHaveLength(2);
+  });
+
+  it('starts a new row when the hop does not continue from the previous end', () => {
+    expect(appendOptimisticPropertyActivity([hop(1, 2)], hop(4, 3))).toHaveLength(2);
+  });
+
+  it('starts a new row once the collapse window has lapsed', () => {
+    const later = '2024-01-01T00:31:00.000Z';
+
+    expect(appendOptimisticPropertyActivity([hop(1, 2)], hop(2, 3, later))).toHaveLength(2);
+  });
+
+  it('is a no-op for an absent row', () => {
+    const existing = [hop(1, 2)];
+
+    expect(appendOptimisticPropertyActivity(existing, undefined)).toBe(existing);
   });
 });

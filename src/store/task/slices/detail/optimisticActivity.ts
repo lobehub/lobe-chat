@@ -143,3 +143,56 @@ export const buildOptimisticPropertyActivity = ({
     type: 'property',
   };
 };
+
+/**
+ * Mirror of the server's collapse window (`ACTIVITY_COLLAPSE_WINDOW_MS` in
+ * the task service): how long a run of edits to one property by one person
+ * stays a single line. Kept in step by hand — the client cannot import it.
+ */
+export const OPTIMISTIC_COLLAPSE_WINDOW_MS = 30 * 60_000;
+
+const sameValue = (a: unknown, b: unknown): boolean =>
+  JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+
+const at = (time?: string): number => (time ? new Date(time).getTime() : 0);
+
+/**
+ * Append a synthesized property row the way the server will show it once it
+ * reads back: a second hop on the same field by the same person, straight
+ * after the previous synthesized one and inside the collapse window, folds
+ * into that row (start of the first, end of the latest) — and vanishes when
+ * the value is back where it started. Without this, a path that never
+ * refetches (automation toggles) would show every hop until an unrelated
+ * refresh made the server's collapsed view replace them.
+ */
+export const appendOptimisticPropertyActivity = (
+  activities: TaskDetailActivity[],
+  row: TaskDetailActivity | undefined,
+  windowMs: number = OPTIMISTIC_COLLAPSE_WINDOW_MS,
+): TaskDetailActivity[] => {
+  const next = row?.propertyChange;
+  if (!row || !next) return activities;
+  const last = activities.at(-1);
+  const prev = last?.propertyChange;
+  const mergeable =
+    !!last &&
+    !!prev &&
+    isOptimisticActivityId(last.id) &&
+    prev.field === next.field &&
+    last.author?.id === row.author?.id &&
+    at(row.time) - at(last.time) <= windowMs &&
+    sameValue(prev.to, next.from);
+  if (!mergeable) return [...activities, row];
+
+  const head = activities.slice(0, -1);
+  if (sameValue(prev.from, next.to)) return head;
+  return [
+    ...head,
+    {
+      ...row,
+      propertyChange: { ...next, from: prev.from } as NonNullable<
+        TaskDetailActivity['propertyChange']
+      >,
+    },
+  ];
+};

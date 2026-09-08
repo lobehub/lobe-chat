@@ -43,6 +43,13 @@ import { collapseActivityLog } from './collapseActivityLog';
 const emptyWorkspace: WorkspaceData = { nodeMap: {}, tree: [] };
 const UNTITLED_TOPIC_TITLE = 'Untitled';
 const TASK_DETAIL_DIRECT_TOPIC_LIMIT = 100;
+/**
+ * Newest raw activity rows read per detail fetch, before collapsing. The
+ * detail page polls every few seconds while work is in flight, so it must not
+ * ship a long-lived task's whole append-only history each time; the table
+ * keeps everything for an audit view.
+ */
+const TASK_DETAIL_ACTIVITY_LIMIT = 200;
 const TASK_DETAIL_DESCENDANT_TOPIC_LIMIT = 300;
 
 type DirectTaskTopicActivityRow = Awaited<ReturnType<TaskTopicModel['findWithHandoff']>>[number];
@@ -858,7 +865,7 @@ export class TaskService {
       this.taskModel.getDependencies(task.id),
       this.taskTopicModel.findWithHandoff(task.id, TASK_DETAIL_DIRECT_TOPIC_LIMIT).catch(() => []),
       this.taskModel.getComments(task.id).catch(() => []),
-      this.taskModel.getActivities(task.id).catch(() => []),
+      this.taskModel.getActivities(task.id, TASK_DETAIL_ACTIVITY_LIMIT).catch(() => []),
       this.taskModel.getTreePinnedDocuments(task.id).catch(() => emptyWorkspace),
       resolveTaskAcceptance(this.db, this.userId, task.id, this.workspaceId).catch(() => undefined),
     ]);
@@ -1164,12 +1171,18 @@ export class TaskService {
           type,
           unresolved: true,
         });
+        const actorKind = log.payload?.actorKind;
         const author = log.actorAgentId
           ? (authorMap.get(log.actorAgentId) ?? stub(log.actorAgentId, 'agent'))
           : log.actorUserId
             ? (authorMap.get(log.actorUserId) ?? stub(log.actorUserId, 'user'))
-            : // Genuinely nobody: the runner's system fallback.
-              undefined;
+            : actorKind === 'agent' || actorKind === 'user'
+              ? // Somebody did it but their row is gone: the actor columns are
+                // cleared on delete, and only the payload remembers there was
+                // a person. Must not read as the system.
+                stub('', actorKind)
+              : // Genuinely nobody: the runner's system fallback.
+                undefined;
 
         if (log.type === 'status' || log.type === 'priority' || log.type === 'automation') {
           const from = log.payload?.from ?? null;

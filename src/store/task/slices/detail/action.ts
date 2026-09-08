@@ -17,6 +17,7 @@ import type { SaveStatus } from '@/types/saveState';
 import type { TaskStore } from '../../store';
 import { useTaskStore } from '../../store';
 import {
+  appendOptimisticPropertyActivity,
   buildOptimisticAssignmentActivities,
   buildOptimisticCommentActivity,
   buildOptimisticPropertyActivity,
@@ -44,6 +45,13 @@ export interface TaskUpdatePayload {
 }
 
 export interface TaskUpdateOptions {
+  /**
+   * The agent making the change when the task tool runs in the browser
+   * (client-first runtime), so the server attributes the activity to it. No
+   * row is synthesized in that case — the store cannot name the agent — the
+   * refetch shows it.
+   */
+  actorAgentId?: string;
   /**
    * Display metadata for the assignee being set, so the activity feed can show
    * the row immediately instead of after the detail refetch. Supplied by the
@@ -151,16 +159,29 @@ export class TaskDetailSliceActionImpl {
       });
     }
 
+    let result: Awaited<ReturnType<typeof taskService.addComment>>;
     try {
-      const result = await taskService.addComment(taskId, content, opts);
-      await this.internal_refreshTaskDetail(taskId);
-      return result;
+      result = await taskService.addComment(taskId, content, opts);
     } catch (error) {
-      // Rollback is a server-truth refetch: it drops the synthesized row and
-      // reconciles anything else that moved meanwhile.
-      if (optimistic) await this.internal_refreshTaskDetail(taskId).catch(() => {});
+      // The send failed, so the row must go even if the network is down and
+      // the server-truth refetch below cannot run — otherwise an unsaved
+      // comment keeps looking posted until something else refreshes.
+      if (optimistic) {
+        const latest = this.#get().taskDetailMap[taskId];
+        this.internal_dispatchTaskDetail({
+          id: taskId,
+          type: 'updateTaskDetail',
+          value: {
+            activities: (latest?.activities ?? []).filter((a) => a.id !== optimistic.id),
+          },
+        });
+        await this.internal_refreshTaskDetail(taskId).catch(() => {});
+      }
       throw error;
     }
+    // Post-success refresh failing is not the comment failing: it is saved.
+    await this.internal_refreshTaskDetail(taskId);
+    return result;
   };
 
   deleteComment = async (commentId: string, taskId?: string): Promise<void> => {
@@ -417,7 +438,7 @@ export class TaskDetailSliceActionImpl {
     // land in the same beat, not after the mutation *and* the detail refetch.
     const current = this.#get().taskDetailMap[id];
     const userState = useUserStore.getState();
-    const actorId = userProfileSelectors.userId(userState);
+    const actorId = options?.actorAgentId ? undefined : userProfileSelectors.userId(userState);
     const optimisticActivities = current
       ? buildOptimisticAssignmentActivities({
           actor: actorId
@@ -451,15 +472,17 @@ export class TaskDetailSliceActionImpl {
             now: new Date().toISOString(),
           })
         : undefined;
-    const synthesized = [...optimisticActivities, ...(priorityRow ? [priorityRow] : [])];
+    const activities = appendOptimisticPropertyActivity(
+      [...(current?.activities ?? []), ...optimisticActivities],
+      priorityRow,
+    );
     const optimistic: Partial<TaskDetailData> = {
       ...optimisticRest,
       ...(assigneeAgentId !== undefined ? { agentId: assigneeAgentId } : {}),
       ...(assigneeUserId !== undefined ? { userId: assigneeUserId } : {}),
-      ...(synthesized.length > 0
-        ? { activities: [...(current?.activities ?? []), ...synthesized] }
-        : {}),
+      ...(optimisticActivities.length > 0 || priorityRow ? { activities } : {}),
     };
+    const payload = options?.actorAgentId ? { ...data, actorAgentId: options.actorAgentId } : data;
 
     // Snapshot every map entry the optimistic patch will touch BEFORE dispatch.
     // activeTaskId can change mid-flight, and the patch can mutate a parent's
@@ -482,7 +505,7 @@ export class TaskDetailSliceActionImpl {
     );
 
     await runMutation(this.#set, this.#get, {
-      mutate: () => taskService.update(id, data),
+      mutate: () => taskService.update(id, payload),
       name: 'updateTask',
       // Rollback is a server-truth refetch (not a local snapshot), so the
       // optimistic dispatch above is reconciled from the source of record.

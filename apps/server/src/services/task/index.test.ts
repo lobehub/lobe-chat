@@ -1779,6 +1779,59 @@ describe('TaskService', () => {
       });
     });
 
+    it('keeps a deleted actor as a person, not the system, via the payload tombstone', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        createdAt: null,
+        heartbeatInterval: null,
+        heartbeatTimeout: null,
+        id: 'task_001',
+        identifier: 'TASK-1',
+        instruction: 'Do something',
+        lastHeartbeatAt: null,
+        parentTaskId: null,
+        priority: 'normal',
+        status: 'todo',
+      });
+      mockTaskModel.findAllDescendants.mockResolvedValue([]);
+      mockTaskModel.getDependencies.mockResolvedValue([]);
+      mockTaskTopicModel.findWithHandoff.mockResolvedValue([]);
+      mockTaskModel.getComments.mockResolvedValue([]);
+      mockTaskModel.getTreePinnedDocuments.mockResolvedValue({ nodeMap: {}, tree: [] });
+      mockTaskModel.findByIds.mockResolvedValue([]);
+      mockTaskModel.getCheckpointConfig.mockReturnValue({});
+      mockTaskModel.getVerifyConfig.mockReturnValue(undefined);
+      mockTaskModel.getActivities.mockResolvedValue([
+        // The actor columns are ON DELETE SET NULL: after the member is
+        // deleted only the payload remembers a person did this.
+        {
+          actorAgentId: null,
+          actorUserId: null,
+          createdAt: new Date('2024-01-01T00:05:00Z'),
+          id: 'tac_1',
+          payload: { actorKind: 'user', from: 'backlog', to: 'todo' },
+          type: 'status',
+        },
+        // A row written with no actor at all is the runner's system fallback.
+        {
+          actorAgentId: null,
+          actorUserId: null,
+          createdAt: new Date('2024-01-01T01:05:00Z'),
+          id: 'tac_2',
+          payload: { actorKind: 'system', fromId: null, toId: 'agt_inbox' },
+          type: 'assignee_agent',
+        },
+      ]);
+      mockAgentModel.getAgentAvatarsByIds.mockResolvedValue([]);
+      vi.mocked(UserModel.findByIds).mockResolvedValue([]);
+
+      const result = await new TaskService(db, userId, 'ws-1').getTaskDetail('TASK-1');
+      const [status] = result?.activities?.filter((a) => a.type === 'property') ?? [];
+      const [assignment] = result?.activities?.filter((a) => a.type === 'assignment') ?? [];
+
+      expect(status?.author).toEqual({ id: '', name: null, type: 'user', unresolved: true });
+      expect(assignment?.author).toBeUndefined();
+    });
+
     it('keeps the actor identity when the agent is invisible to this viewer', async () => {
       mockTaskModel.resolve.mockResolvedValue({
         createdAt: null,

@@ -14,7 +14,10 @@ import { runMutation } from '@/store/utils/runMutation';
 import { saveToast } from '@/store/utils/saveToast';
 
 import type { TaskStore } from '../../store';
-import { buildOptimisticPropertyActivity } from '../detail/optimisticActivity';
+import {
+  appendOptimisticPropertyActivity,
+  buildOptimisticPropertyActivity,
+} from '../detail/optimisticActivity';
 
 // Slice of TaskStore that the OptimisticEngine for setAutomationMode reads/writes.
 // Keeping it narrow ensures `extractAffectedPaths` produces `taskDetailMap.<id>`
@@ -260,7 +263,7 @@ export class TaskConfigSliceActionImpl {
       const target = draft.taskDetailMap[id];
       if (!target) return;
       target.automationMode = mode;
-      if (optimisticRow) target.activities = [...(target.activities ?? []), optimisticRow];
+      target.activities = appendOptimisticPropertyActivity(target.activities ?? [], optimisticRow);
       if (update.heartbeatInterval !== undefined) {
         target.heartbeat ??= {};
         target.heartbeat.interval = update.heartbeatInterval;
@@ -315,10 +318,36 @@ export class TaskConfigSliceActionImpl {
     // arrive after the user's next click and overwrite their input.
     const engine = this.#getAutomationEngine();
     const tx = engine.createTransaction(`updateSchedule(${id})`);
+    // The server logs a pattern / timezone edit as an automation change when
+    // the schedule is on; this path never refetches, so the feed row has to
+    // ride the same patch (see setAutomationMode).
+    const detail = this.#get().taskDetailMap[id];
+    const before = snapshotAutomationFromDetail(detail);
+    const after: TaskAutomationSnapshot | null = before
+      ? { ...before, schedulePattern: schedule.pattern, scheduleTimezone: schedule.timezone }
+      : null;
+    const userState = useUserStore.getState();
+    const actorId = userProfileSelectors.userId(userState);
+    const optimisticRow =
+      before && JSON.stringify(before) !== JSON.stringify(after)
+        ? buildOptimisticPropertyActivity({
+            actor: actorId
+              ? {
+                  avatar: userProfileSelectors.userAvatar(userState) || null,
+                  id: actorId,
+                  name: userProfileSelectors.displayUserName(userState) || null,
+                  type: 'user',
+                }
+              : undefined,
+            change: { field: 'automation', from: before, to: after },
+            now: new Date().toISOString(),
+          })
+        : undefined;
     tx.set((draft) => {
       const target = draft.taskDetailMap[id];
       if (!target) return;
       target.config = nextConfig;
+      target.activities = appendOptimisticPropertyActivity(target.activities ?? [], optimisticRow);
       target.schedule = {
         maxExecutions: schedule.maxExecutions,
         pattern: schedule.pattern,

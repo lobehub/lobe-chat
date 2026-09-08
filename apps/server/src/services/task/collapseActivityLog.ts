@@ -21,6 +21,17 @@ const at = (row: CollapsibleRow): number => new Date(row.createdAt).getTime();
 const sameValue = (a: unknown, b: unknown): boolean =>
   JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
+/**
+ * True when `next` picks up exactly where `prev` left off. A run only extends
+ * along an unbroken chain of values: if someone else moved the property in
+ * between, the chain is broken and the same person's next edit is a fresh
+ * decision — otherwise A's 2→4 and 3→2 around B's 4→3 would fold into a
+ * hidden no-op and leave B's row telling a story that never happened.
+ */
+const continues = (prev: CollapsibleRow, next: CollapsibleRow): boolean =>
+  sameValue(prev.payload?.to, next.payload?.from) &&
+  (prev.payload?.toId ?? null) === (next.payload?.fromId ?? null);
+
 /** True when the row's start and end are the same value — nothing to tell. */
 const isNetNoop = (payload: TaskActivityLogPayload | null): boolean =>
   !!payload &&
@@ -41,7 +52,9 @@ const isNetNoop = (payload: TaskActivityLogPayload | null): boolean =>
  * The merged entry keeps the LAST row's id and time (the feed sorts by it and
  * a reader wants "when did it settle"), the FIRST row's starting value, and the
  * last row's ending value. Different actors never merge: A moving it and B
- * moving it back are two decisions, not a cancelled one.
+ * moving it back are two decisions, not a cancelled one — and a run only
+ * extends while each hop starts where the previous one ended, so another
+ * person's edit in between splits it.
  */
 export const collapseActivityLog = <T extends CollapsibleRow>(
   rows: T[],
@@ -56,7 +69,7 @@ export const collapseActivityLog = <T extends CollapsibleRow>(
     const key = `${row.type}|${row.actorAgentId ?? ''}|${row.actorUserId ?? ''}`;
     const run = open.get(key);
 
-    if (run && at(row) - at(run.last) <= windowMs) {
+    if (run && at(row) - at(run.last) <= windowMs && continues(run.last, row)) {
       out[run.index] = {
         ...row,
         payload: {

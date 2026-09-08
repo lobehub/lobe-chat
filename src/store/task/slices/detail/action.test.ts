@@ -166,6 +166,18 @@ describe('TaskDetailSliceAction', () => {
       expect(mutate).toHaveBeenCalled();
     });
 
+    it('removes the synthesized row locally when the send AND the rollback refetch fail', async () => {
+      seed();
+      vi.mocked(taskService.addComment).mockRejectedValue(new Error('offline'));
+      const { mutate } = await import('@/libs/swr');
+      vi.mocked(mutate).mockRejectedValue(new Error('still offline'));
+
+      await expect(useTaskStore.getState().addComment('T-1', 'hello')).rejects.toThrow('offline');
+
+      // Nothing was saved, so nothing may keep looking saved.
+      expect(useTaskStore.getState().taskDetailMap['T-1'].activities).toEqual([]);
+    });
+
     it('leaves an agent-authored comment to the refetch', async () => {
       seed();
       vi.mocked(taskService.addComment).mockResolvedValue({ data: { id: 'cmt_1' } } as any);
