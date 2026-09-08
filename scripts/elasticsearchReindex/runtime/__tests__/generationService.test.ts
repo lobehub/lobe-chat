@@ -11,6 +11,10 @@ import {
   getFtsSearchIndexSchemaVersion,
   getFtsSearchPhysicalIndexName,
 } from '../../../../packages/database/src/repositories/ftsSearchDocument';
+import type {
+  FtsSearchSyncOutboxEntityStats,
+  FtsSearchSyncOutboxStats,
+} from '../../../../packages/database/src/repositories/ftsSearchSyncOutbox';
 import type { FtsSearchReindexRunState } from '../checkpointRepository';
 import type { FtsSearchReindexGenerationDescription } from '../elasticsearchClient';
 import { parseGenerationVersion } from '../elasticsearchClient';
@@ -33,7 +37,48 @@ const NAMESPACE = 'lobehub';
 const ENTITY: FtsSearchDocumentEntity = 'topics';
 const ALIAS = getFtsSearchIndexAlias(NAMESPACE, ENTITY);
 const DECLARED_FINGERPRINT = getFtsSearchIndexSchemaFingerprint(ENTITY);
-const IDLE_OUTBOX = { dead: 0, inFlight: 0, pending: 0, retrying: 0 };
+const IDLE_OUTBOX_ENTITY: FtsSearchSyncOutboxEntityStats = {
+  dead: 0,
+  expiredLeases: 0,
+  inFlight: 0,
+  oldestReadyAgeSeconds: 0,
+  pending: 0,
+  ready: 0,
+  retrying: 0,
+};
+
+const createOutboxStats = (
+  overrides: Partial<Record<FtsSearchDocumentEntity, Partial<FtsSearchSyncOutboxEntityStats>>> = {},
+): FtsSearchSyncOutboxStats => {
+  const entities = Object.fromEntries(
+    FTS_SEARCH_DOCUMENT_ENTITIES.map((entity) => [
+      entity,
+      { ...IDLE_OUTBOX_ENTITY, ...overrides[entity] },
+    ]),
+  ) as Record<FtsSearchDocumentEntity, FtsSearchSyncOutboxEntityStats>;
+  const totals = Object.values(entities).reduce(
+    (stats, entity) => ({
+      dead: stats.dead + entity.dead,
+      expiredLeases: stats.expiredLeases + entity.expiredLeases,
+      inFlight: stats.inFlight + entity.inFlight,
+      oldestReadyAgeSeconds: Math.max(stats.oldestReadyAgeSeconds, entity.oldestReadyAgeSeconds),
+      pending: stats.pending + entity.pending,
+      ready: stats.ready + entity.ready,
+      retrying: stats.retrying + entity.retrying,
+    }),
+    { ...IDLE_OUTBOX_ENTITY },
+  );
+
+  return {
+    ...totals,
+    entities,
+    highWaterRevision: 0,
+    oldestActiveRevision: null,
+    revisionLag: 0,
+  };
+};
+
+const IDLE_OUTBOX = createOutboxStats();
 
 type LiveMappings = NonNullable<FtsSearchReindexGenerationDescription['mappings']>;
 
@@ -78,15 +123,16 @@ const buildMeta = ({
 const buildGeneration = (
   index: string,
   overrides: Partial<FtsSearchReindexGenerationDescription> = {},
+  entity: FtsSearchDocumentEntity = ENTITY,
 ): FtsSearchReindexGenerationDescription => ({
   aliased: true,
   analysis: declaredAnalysis(),
   index,
   isWriteIndex: false,
-  mappings: declaredMappings(),
+  mappings: declaredMappings(entity),
   meta: null,
   state: 'open',
-  version: parseGenerationVersion(ALIAS, index) ?? null,
+  version: parseGenerationVersion(getFtsSearchIndexAlias(NAMESPACE, entity), index) ?? null,
   ...overrides,
 });
 
@@ -94,7 +140,16 @@ const buildGeneration = (
 const buildManagedGeneration = (
   version: number,
   overrides: Partial<FtsSearchReindexGenerationDescription> = {},
-) => buildGeneration(physicalIndex(version), { meta: buildMeta({ version }), ...overrides });
+  entity: FtsSearchDocumentEntity = ENTITY,
+) =>
+  buildGeneration(
+    physicalIndex(version, entity),
+    {
+      meta: buildMeta({ fingerprint: getFtsSearchIndexSchemaFingerprint(entity), version }),
+      ...overrides,
+    },
+    entity,
+  );
 
 const createClient = (generations: FtsSearchReindexGenerationDescription[]) => ({
   closeIndex: vi.fn<FtsSearchGenerationElasticsearchClient['closeIndex']>().mockResolvedValue(),
@@ -364,13 +419,15 @@ describe('promoteGeneration', () => {
   beforeEach(() => setDeclaredVersion(ENTITY, 2));
 
   const promote = ({
+    entity = ENTITY,
     generations,
     outboxStats = IDLE_OUTBOX,
     states = {},
     version,
   }: {
+    entity?: FtsSearchDocumentEntity;
     generations: FtsSearchReindexGenerationDescription[];
-    outboxStats?: typeof IDLE_OUTBOX;
+    outboxStats?: FtsSearchSyncOutboxStats;
     states?: Record<number, FtsSearchReindexRunState | undefined>;
     version?: number;
   }) => {
@@ -379,7 +436,7 @@ describe('promoteGeneration', () => {
       client,
       result: promoteGeneration({
         client,
-        entity: ENTITY,
+        entity,
         namespace: NAMESPACE,
         outboxStats,
         readCheckpoint: createCheckpointReader(states),
@@ -506,18 +563,45 @@ describe('promoteGeneration', () => {
   });
 
   it.each([
-    { name: 'pending rows', outboxStats: { ...IDLE_OUTBOX, pending: 3 } },
-    { name: 'leased rows', outboxStats: { ...IDLE_OUTBOX, inFlight: 1 } },
-    { name: 'dead rows', outboxStats: { ...IDLE_OUTBOX, dead: 2 } },
-  ])('rejects when the Outbox still has $name', async ({ outboxStats }) => {
+    { name: 'pending rows', stats: { pending: 3 } },
+    { name: 'leased rows', stats: { inFlight: 1 } },
+    { name: 'dead rows', stats: { dead: 2 } },
+  ])('rejects when the target entity Outbox still has $name', async ({ stats }) => {
+    const entity = 'messages';
+    setDeclaredVersion(entity, 2);
     const { client, result } = promote({
-      generations: [buildManagedGeneration(1, { isWriteIndex: true }), buildManagedGeneration(2)],
-      outboxStats,
+      entity,
+      generations: [
+        buildManagedGeneration(1, { isWriteIndex: true }, entity),
+        buildManagedGeneration(2, {}, entity),
+      ],
+      outboxStats: createOutboxStats({ [entity]: stats }),
       states: { 1: createRunState(1, 'completed'), 2: createRunState(2, 'completed') },
     });
 
     await expect(result).rejects.toThrow('Outbox is not idle');
     expect(client.promoteAlias).not.toHaveBeenCalled();
+  });
+
+  it('ignores pending and dead Outbox rows owned by another entity', async () => {
+    const entity = 'messages';
+    setDeclaredVersion(entity, 2);
+    const { client, result } = promote({
+      entity,
+      generations: [
+        buildManagedGeneration(1, { isWriteIndex: true }, entity),
+        buildManagedGeneration(2, {}, entity),
+      ],
+      outboxStats: createOutboxStats({ agents: { dead: 2, pending: 3 } }),
+      states: { 1: createRunState(1, 'completed'), 2: createRunState(2, 'completed') },
+    });
+
+    await expect(result).resolves.toMatchObject({ outcome: 'promoted' });
+    expect(client.promoteAlias).toHaveBeenCalledExactlyOnceWith(
+      getFtsSearchIndexAlias(NAMESPACE, entity),
+      [physicalIndex(1, entity)],
+      physicalIndex(2, entity),
+    );
   });
 
   it('rolls back to an older generation that carries reindex _meta', async () => {
@@ -786,6 +870,44 @@ describe('planRetiredGenerations', () => {
 });
 
 describe('resolveInPlaceTarget', () => {
+  it('uses the live index for a normal additive version upgrade', async () => {
+    setDeclaredVersion(ENTITY, 2);
+    const mappings = declaredMappings();
+    delete mappings.properties.title;
+    const client = createClient([buildManagedGeneration(1, { isWriteIndex: true, mappings })]);
+    const status = await describeEntityGeneration({
+      client,
+      entity: ENTITY,
+      namespace: NAMESPACE,
+      readCheckpoint: createCheckpointReader(),
+    });
+
+    expect(status).toMatchObject({
+      classification: 'upgrade_available',
+      mappingChange: 'additive',
+    });
+    expect(resolveInPlaceTarget(status)).toBe(physicalIndex(1));
+  });
+
+  it('rejects a normal breaking version upgrade', async () => {
+    setDeclaredVersion(ENTITY, 2);
+    const mappings = declaredMappings();
+    mappings.properties.title.type = 'keyword';
+    const client = createClient([buildManagedGeneration(1, { isWriteIndex: true, mappings })]);
+    const status = await describeEntityGeneration({
+      client,
+      entity: ENTITY,
+      namespace: NAMESPACE,
+      readCheckpoint: createCheckpointReader(),
+    });
+
+    expect(status).toMatchObject({
+      classification: 'upgrade_available',
+      mappingChange: 'breaking',
+    });
+    expect(() => resolveInPlaceTarget(status)).toThrow('cannot be upgraded in place');
+  });
+
   it('resumes the crash window after restamping and before checkpoint creation', async () => {
     setDeclaredVersion(ENTITY, 2);
     const client = createClient([

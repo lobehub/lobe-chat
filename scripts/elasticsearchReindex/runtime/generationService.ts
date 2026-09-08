@@ -244,7 +244,7 @@ export interface FtsSearchPromoteGenerationOptions {
   client: FtsSearchGenerationElasticsearchClient;
   entity: FtsSearchDocumentEntity;
   namespace: string;
-  outboxStats: Pick<FtsSearchSyncOutboxStats, 'dead' | 'inFlight' | 'pending' | 'retrying'>;
+  outboxStats: FtsSearchSyncOutboxStats;
   readCheckpoint: FtsSearchGenerationCheckpointReader;
   /** Target generation; defaults to the declared version. Any other existing version is a rollback. */
   version?: number;
@@ -331,10 +331,12 @@ export const promoteGeneration = async ({
       `No checkpoint proves ${target.index} finished its backfill; keep ES_REINDEX_STATE_DIR from the --apply run`,
     );
   }
-  const pendingWork = outboxStats.pending + outboxStats.retrying + outboxStats.inFlight;
-  if (outboxStats.dead > 0 || pendingWork > 0) {
+  const entityOutboxStats = outboxStats.entities[entity];
+  const pendingWork =
+    entityOutboxStats.pending + entityOutboxStats.retrying + entityOutboxStats.inFlight;
+  if (entityOutboxStats.dead > 0 || pendingWork > 0) {
     throw new Error(
-      `Outbox is not idle (pending=${outboxStats.pending}, retrying=${outboxStats.retrying}, inFlight=${outboxStats.inFlight}, dead=${outboxStats.dead}); let fts-search:sync drain before promoting`,
+      `${target.index}: Outbox is not idle (pending=${entityOutboxStats.pending}, retrying=${entityOutboxStats.retrying}, inFlight=${entityOutboxStats.inFlight}, dead=${entityOutboxStats.dead}); let fts-search:sync drain before promoting`,
     );
   }
 

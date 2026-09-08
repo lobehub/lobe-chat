@@ -315,9 +315,20 @@ describe('FtsSearchSyncService', () => {
     harness.client.getFtsSearchSyncGenerationTargets.mockResolvedValue({
       'lobehub-test-agents': ['lobehub-test-agents-v1', 'lobehub-test-agents-v2'],
     });
+    const errorType = `es_rejected_${'x'.repeat(200)}`;
     harness.client.bulk.mockResolvedValue({
       errors: true,
-      items: [201, 409, 201, 429].map((status) => ({ index: { status } })),
+      items: [
+        { index: { status: 201 } },
+        { index: { status: 409 } },
+        { index: { status: 201 } },
+        {
+          index: {
+            error: { reason: 'private source text', type: errorType },
+            status: 429,
+          },
+        },
+      ],
     });
     const service = new FtsSearchSyncService(
       harness.builder as never,
@@ -341,6 +352,11 @@ describe('FtsSearchSyncService', () => {
     expect(harness.outbox.markFailures).toHaveBeenCalledWith([
       expect.objectContaining({ documentId: 'b', permanent: false }),
     ]);
+    const failure = harness.outbox.markFailures.mock.calls[0][0][0];
+    expect(String(failure.error)).toBe(
+      `Error: Elasticsearch bulk item failed (429, type=${errorType.slice(0, 128)})`,
+    );
+    expect(String(failure.error)).not.toContain('private source text');
     expect(result).toMatchObject({ acknowledged: 1, bulkItems: 4, failed: 1 });
     expect(result.bulkRequestSamples[0].entities).toEqual({
       agents: { bytes: expect.any(Number), items: 4, result: 'mixed' },
@@ -356,7 +372,10 @@ describe('FtsSearchSyncService', () => {
     harness.client.getFtsSearchSyncGenerationTargets.mockResolvedValue({
       'lobehub-test-agents': ['lobehub-test-agents-v1', 'lobehub-test-agents-v2'],
     });
-    const notFound = { error: { type: 'index_not_found_exception' }, status: 404 };
+    const notFound = {
+      error: { reason: 'private source text', type: 'index_not_found_exception' },
+      status: 404,
+    };
     harness.client.bulk.mockResolvedValue({
       errors: true,
       items: [
@@ -380,6 +399,11 @@ describe('FtsSearchSyncService', () => {
     expect(harness.outbox.markFailures).toHaveBeenCalledWith([
       expect.objectContaining({ documentId: 'lost', permanent: true }),
     ]);
+    const failure = harness.outbox.markFailures.mock.calls[0][0][0];
+    expect(String(failure.error)).toBe(
+      'Error: Elasticsearch bulk item failed (404, type=index_not_found_exception)',
+    );
+    expect(String(failure.error)).not.toContain('private source text');
     expect(result).toMatchObject({ acknowledged: 1, dead: 1, failed: 1 });
   });
 

@@ -393,14 +393,55 @@ Only remove the retained source field after every index needing it is closed and
 code is no longer required. A rename follows the same process, with both old and new source fields
 produced during the transition.
 
+The online migration path does not support changing a field to an incompatible JSON value type
+under the same name. For example, replace a keyword `priority` with a new integer `priority_rank`,
+keep producing the old `priority` as a retained source field, and move queries to the new name after
+promotion. A version bump and rebuild alone do not provide a value conversion bridge.
+
 Sync rejects an open target whose fields or value types the current projection cannot represent.
 Affected entity records are retained as dead letters with an actionable error; compatible entities
-continue syncing. Monitor the Outbox `dead` count. Fix the projection or retire the incompatible
+can finish the current drain. The standalone sync CLI exits on dead letters and refuses later runs
+until they are repaired. Monitor the Outbox `dead` count. Fix the projection or retire the incompatible
 generation, then explicitly repair/requeue the affected records; deployment alone does not retry
 dead letters. This is separate from `--skip-failure`, which handles backfill checkpoint failures.
 This checks field definitions, not whether an optional value is present in each document. Text and
 keyword both accept strings; other type changes need an explicitly compatible projection. The guard
 does not convert historical values or detect changes in the meaning of a field.
+
+There is no Outbox requeue CLI flag. After fixing the cause and checking that every open target has
+compatible `fieldCompatibility` in `--status`, use your PostgreSQL administration client against
+the source database to inspect the affected rows:
+
+```sql
+SELECT entity, document_id, revision, attempts, last_error
+FROM fts_search_sync_outbox
+WHERE entity = 'messages' AND dead_at IS NOT NULL;
+```
+
+Replace the document ID and revision below with the pairs returned by your inspection, then requeue
+only those dead rows. Keep their revision unchanged so delayed writes cannot overtake newer source
+changes. Matching the inspected revision also avoids resetting a newer change that was revived and
+became dead again while you reviewed the original failure:
+
+```sql
+WITH reviewed(document_id, revision) AS (
+  VALUES ('replace-with-reviewed-document-id'::text, 123::bigint)
+)
+UPDATE fts_search_sync_outbox AS outbox
+SET dead_at = NULL, attempts = 0, available_at = now(),
+    locked_until = NULL, last_error = NULL, updated_at = now()
+FROM reviewed
+WHERE outbox.entity = 'messages'
+  AND outbox.document_id = reviewed.document_id
+  AND outbox.revision = reviewed.revision
+  AND outbox.dead_at IS NOT NULL
+RETURNING outbox.entity, outbox.document_id, outbox.revision;
+```
+
+Reinspect rows not returned by the update instead of retrying with a guessed revision. Repeat for
+any other reviewed dead letters, then restart the sync CLI and verify the target
+documents and `--status`. Do not clear the entire queue or modify source records just to retrigger
+capture. This database repair does not repair an incompatible mapping by itself.
 
 ### One migration operator per namespace
 
@@ -442,7 +483,8 @@ Because the consumer writes concurrently, the new index may legitimately hold mo
 the backfill wrote; only a shortfall fails reconciliation. When the backfill finishes, the alias is
 left on `v1` and the command reports `promotion_pending`.
 
-Promote once `--status` shows the Outbox idle (`pending`, `retrying`, `inFlight`, and `dead` all `0`):
+Promote once `--status` shows the target entity's Outbox idle (`pending`, `retrying`, `inFlight`,
+and `dead` all `0`). Other entities' work does not block this alias switch:
 
 ```bash
 ES_REINDEX_STATE_DIR=.elasticsearch-reindex \

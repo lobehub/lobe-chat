@@ -143,7 +143,7 @@ schema_fingerprint}`; the alias marks the live generation. Indexes created befor
   `--apply` groups the requested entities by declared version, treats existing aliases as an
   upgrade (no `--fresh-run`), leaves existing aliases in place, and emits `promotion_pending`. A
   completed first install creates aliases. Promoting a newer generation requires a completed
-  checkpoint, a fingerprint match when targeting the declared version, and an idle Outbox. Rollback
+  checkpoint, a fingerprint match when targeting the declared version, and an idle target-entity Outbox. Rollback
   to an older stamped generation can use its metadata without a retained checkpoint;
   `--retire` requires `in_sync` and only closes old generations; explicit `--purge` installs
   exact-index templates forbidding auto-creation before deleting eligible closed generations.

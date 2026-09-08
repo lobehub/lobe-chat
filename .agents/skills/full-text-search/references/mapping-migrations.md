@@ -22,6 +22,11 @@ For initial provider cutover and complete environment setup, use
   in `FTS_SEARCH_RETAINED_SOURCE_PROPERTIES` until every index needing it is closed. New index writes
   omit retained source-only fields. Sync, apply and promotion reject incompatible open targets;
   a type or semantic conversion is not supplied automatically.
+- Incompatible same-name JSON type changes are not supported by the online migration path. Use a
+  new field name and retain the old source key through the rollback window. If incompatible code
+  has already created dead letters, fix the mapping/projection first, then follow the public guide's
+  scoped PostgreSQL requeue procedure. There is no Outbox requeue CLI flag; `--skip-failure` only
+  resolves backfill checkpoint failures. The standalone sync CLI stops while any dead letters remain.
 - Use `--in-place` only when status reports `upgrade_available` and `mappingChange: additive`.
   Currently this means new top-level fields; adding a multi-field to an existing field is classified
   as breaking. In-place still scans historical documents to populate the new fields. It preserves
@@ -43,7 +48,7 @@ mapping changed; the guide's `messages` and rollback version `1` are examples.
   an upgrade through them. Live metadata still needs a valid run ID and schema version for sync
   readiness; only the legacy fingerprint may be absent.
 - Build beside the old live alias with incremental sync running, then promote after backfill
-  completion and an idle Outbox (`pending`, `retrying`, `inFlight`, `dead` all zero). A completed
+  completion and an idle target-entity Outbox (`pending`, `retrying`, `inFlight`, `dead` all zero). A completed
   backfill does not move an existing alias. Verify actual searches and catch-up before retirement.
 - Rollback is an optional recovery branch: select a retained, open older generation first, then
   redeploy matching older code. Older sync code rejects a live generation newer than it declares.

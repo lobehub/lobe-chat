@@ -132,6 +132,23 @@ const isAcceptedBulkItem = ({ index: item }: ElasticsearchFtsSearchBulkItem) =>
 const isRetiredGenerationBulkItem = ({ index: item }: ElasticsearchFtsSearchBulkItem) =>
   item.error?.type === 'index_not_found_exception' || item.error?.type === 'index_closed_exception';
 
+interface ElasticsearchBulkFailureSummary {
+  status: number;
+  type: string;
+}
+
+/** Retains only the bounded Elasticsearch error type; reasons may contain document source data. */
+const summarizeElasticsearchBulkFailure = ({
+  error,
+  status,
+}: ElasticsearchFtsSearchBulkItem['index']): ElasticsearchBulkFailureSummary => ({
+  status,
+  type: error?.type?.slice(0, 128) ?? 'unknown',
+});
+
+const describeElasticsearchBulkFailure = ({ status, type }: ElasticsearchBulkFailureSummary) =>
+  new Error(`Elasticsearch bulk item failed (${status}, type=${type})`);
+
 const summarizeBulkEntities = (
   operations: FtsSearchSyncOperation[],
   result: FtsSearchSyncBulkRequestResult,
@@ -238,7 +255,7 @@ export class FtsSearchSyncService {
     let bulkBytes = 0;
     const workProgress = new Map<
       string,
-      { accepted: number; remaining: number; retiredStatuses: number[] }
+      { accepted: number; remaining: number; retiredFailures: ElasticsearchBulkFailureSummary[] }
     >();
 
     const forget = (settledWorks: FtsSearchSyncWork[]) => {
@@ -337,7 +354,7 @@ export class FtsSearchSyncService {
           const failedItem = rejected[0].index;
           failures.push({
             ...work,
-            error: new Error(`Elasticsearch bulk item failed (${failedItem.status})`),
+            error: describeElasticsearchBulkFailure(summarizeElasticsearchBulkFailure(failedItem)),
             permanent: isPermanentElasticsearchStatus(failedItem.status),
           });
           continue;
@@ -346,8 +363,10 @@ export class FtsSearchSyncService {
         const progress = workProgress.get(key)!;
         progress.accepted += accepted;
         progress.remaining -= items.length;
-        progress.retiredStatuses.push(
-          ...items.filter(isRetiredGenerationBulkItem).map(({ index }) => index.status),
+        progress.retiredFailures.push(
+          ...items
+            .filter(isRetiredGenerationBulkItem)
+            .map(({ index }) => summarizeElasticsearchBulkFailure(index)),
         );
         if (progress.remaining > 0) continue;
 
@@ -361,11 +380,11 @@ export class FtsSearchSyncService {
           workProgress.delete(key);
           continue;
         }
-        const failedStatus = progress.retiredStatuses[0];
+        const failedItem = progress.retiredFailures[0];
         failures.push({
           ...work,
-          error: new Error(`Elasticsearch bulk item failed (${failedStatus})`),
-          permanent: isPermanentElasticsearchStatus(failedStatus),
+          error: describeElasticsearchBulkFailure(failedItem),
+          permanent: isPermanentElasticsearchStatus(failedItem.status),
         });
       }
 
@@ -552,7 +571,7 @@ export class FtsSearchSyncService {
         const progress = {
           accepted: 0,
           remaining: operations.length,
-          retiredStatuses: [],
+          retiredFailures: [],
         };
         workProgress.set(workKey(work), progress);
         for (const operation of operations) {

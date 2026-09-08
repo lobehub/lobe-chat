@@ -1,7 +1,8 @@
 name: FTS Search Mapping History
 
 on:
-  pull_request: {}
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: read

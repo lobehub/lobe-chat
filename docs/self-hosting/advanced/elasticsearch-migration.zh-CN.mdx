@@ -254,9 +254,38 @@ Elasticsearch 不能修改已有字段，因此之后每次映射变更都按实
 
 从新映射删除字段时，旧索引可能仍然需要它。回滚窗口内，在 Zod schema 和 builder 中继续产出旧字段，并在 `ftsSearchDocument/policy.ts` 的 `FTS_SEARCH_RETAINED_SOURCE_PROPERTIES` 中声明它的旧属性。全量回填写入新索引前会过滤这些保留字段，增量同步仍会把它们写入旧映射。等所有需要旧字段的索引关闭、且不再需要回滚旧代码之后，才能删除保留字段。字段改名时同样需要在过渡期同时产出新旧字段。
 
+在线迁移不支持在同一个字段名下改成不兼容的 JSON 值类型。例如，把 keyword 类型的 `priority` 改为整数时，新增 `priority_rank`，继续以保留源字段产出旧 `priority`，切换索引后再把查询改为新字段名。仅升版本并重建索引不能提供值转换能力。
+
 如果当前投影无法表示某个打开索引所需的字段或值类型，同步会拒绝写入。检查针对字段定义，不要求每个可选值都非空；text 和 keyword 可以互认字符串，其他类型变化需要兼容的投影。这项保护不会转换历史值，也无法判断字段业务含义是否变化。
 
-受影响实体的记录会保留为带错误说明的死信，其它兼容实体继续同步。需要监控增量队列的 `dead` 数量；修正投影或退役不兼容索引后，显式修复或重新入队这些记录，仅部署修复不会自动重试死信。这里与 `--skip-failure` 不同，后者只处理全量回填 checkpoint 中的失败。
+受影响实体的记录会保留为带错误说明的死信，其它兼容实体可以完成本轮消费。独立同步 CLI 遇到死信会退出，后续运行也会拒绝启动，直到死信修复。需要监控增量队列的 `dead` 数量；修正投影或退役不兼容索引后，显式修复或重新入队这些记录，仅部署修复不会自动重试死信。这里与 `--skip-failure` 不同，后者只处理全量回填 checkpoint 中的失败。
+
+目前没有 Outbox 重新入队的 CLI 参数。修复原因并通过 `--status` 确认所有打开目标的 `fieldCompatibility` 兼容后，使用 PostgreSQL 管理客户端连接源数据库，先检查受影响记录：
+
+```sql
+SELECT entity, document_id, revision, attempts, last_error
+FROM fts_search_sync_outbox
+WHERE entity = 'messages' AND dead_at IS NOT NULL;
+```
+
+把下面的文档 ID 和修订号替换为查询所得的配对值，只重新入队这些死信。保留原修订号，防止迟到写入覆盖更新的源数据。匹配已检查的修订号，还能避免误重置检查期间被源数据变更恢复、随后又失败的新任务：
+
+```sql
+WITH reviewed(document_id, revision) AS (
+  VALUES ('replace-with-reviewed-document-id'::text, 123::bigint)
+)
+UPDATE fts_search_sync_outbox AS outbox
+SET dead_at = NULL, attempts = 0, available_at = now(),
+    locked_until = NULL, last_error = NULL, updated_at = now()
+FROM reviewed
+WHERE outbox.entity = 'messages'
+  AND outbox.document_id = reviewed.document_id
+  AND outbox.revision = reviewed.revision
+  AND outbox.dead_at IS NOT NULL
+RETURNING outbox.entity, outbox.document_id, outbox.revision;
+```
+
+没有出现在 UPDATE 返回结果中的记录应重新检查，不能猜测新修订号重试。逐一处理其它已检查的死信，再启动同步 CLI，验证目标文档和 `--status`。不要清空整个队列，也不要只为重新触发采集而修改源记录。这项数据库修复本身不能修正不兼容的 mapping。
 
 ### 同一命名空间只运行一个迁移进程
 
@@ -281,7 +310,7 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
 
 不带 `--fresh-run` 时，命令会把已存在的别名识别为一次版本升级，在 `lobehub-messages-v1` 旁边构建 `lobehub-messages-v2`，并用独立的断点记录跟踪。只有声明版本变化的实体属于新一代，其余实体继续使用现有索引。由于消费器在并发写入，新索引里的文档数可以合理地多于回填写入的数量，只有少于时才会对账失败。回填完成后别名仍停留在 `v1`，命令会报告 `promotion_pending`。
 
-等 `--status` 显示增量队列空闲（`pending`、`retrying`、`inFlight`、`dead` 都为 `0`）后再切换：
+等 `--status` 显示目标实体的增量队列空闲（`pending`、`retrying`、`inFlight`、`dead` 都为 `0`）后再切换，其它实体的任务不阻塞这次别名切换：
 
 ```bash
 ES_REINDEX_STATE_DIR=.elasticsearch-reindex \

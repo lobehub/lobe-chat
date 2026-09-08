@@ -1,4 +1,8 @@
 // @vitest-environment node
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import type { FtsSearchDocumentEntity } from '@lobechat/types';
 import { FTS_SEARCH_DOCUMENT_ENTITIES } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -12,6 +16,7 @@ import {
   getFtsSearchPhysicalIndexName,
 } from '../../../../packages/database/src/repositories/ftsSearchDocument';
 import type { FtsSearchReindexFailure, FtsSearchReindexRunState } from '../checkpointRepository';
+import { FtsSearchReindexFileRepository } from '../checkpointRepository';
 import type { FtsSearchReindexGenerationDescription } from '../elasticsearchClient';
 import type {
   FtsSearchReindexElasticsearchClient,
@@ -177,7 +182,7 @@ const createDependencies = () => {
     }),
     resolveFailures: vi.fn().mockResolvedValue(0),
   };
-  return { builder, client, repository, state };
+  return { builder, client, failures, repository, state };
 };
 
 beforeEach(() => {
@@ -979,6 +984,69 @@ describe('FtsSearchReindexService', () => {
       expect.anything(),
       expect.anything(),
     );
+  });
+
+  it('finishes the current generation without cutting over a superseded checkpoint member', async () => {
+    const { builder, client, failures, repository, state } = createDependencies();
+    declaredSchemaVersions.set('topics', 2);
+    state.progress = state.progress.filter(
+      ({ entity }) => entity === 'topics' || entity === 'agents',
+    );
+    failures.set('topics', [{ documentId: 'superseded-topic' }]);
+    const service = new FtsSearchReindexService(builder, repository, client, {
+      entities: ['agents'],
+    });
+
+    await expect(service.run('test', 1, ['agents'])).resolves.toMatchObject({
+      status: 'ready_for_incremental_sync',
+    });
+
+    expect(state.progress.find(({ entity }) => entity === 'topics')).toMatchObject({
+      status: 'pending',
+    });
+    expect(client.ensureAlias).toHaveBeenCalledOnce();
+    expect(client.ensureAlias).toHaveBeenCalledWith('test-agents', 'test-agents-v1');
+    expect(client.ensureAlias).not.toHaveBeenCalledWith('test-topics', expect.anything());
+    expect(repository.markReadyForIncrementalSync).toHaveBeenCalledWith('run-1', ['agents']);
+  });
+
+  it('backfills a pending checkpoint member when it rejoins a ready generation', async () => {
+    const stateDirectory = await mkdtemp(path.join(tmpdir(), 'search-reindex-rejoin-test-'));
+    const repository = new FtsSearchReindexFileRepository({
+      readCaptureFingerprint: vi.fn(async () => 'capture-v1'),
+      readHighWaterRevision: vi.fn(async () => 12),
+      reserveRevisionWithWriteFence: vi.fn(async () => 11),
+      stateDirectory,
+    });
+    try {
+      const initial = await repository.createOrResume('test', 1, ['agents', 'topics']);
+      await repository.completeEntity(initial.run.id, 'agents');
+      await repository.markReadyForIncrementalSync(initial.run.id, ['agents']);
+      const { builder, client } = createDependencies();
+      const service = new FtsSearchReindexService(builder, repository, client, {
+        entities: ['topics'],
+      });
+
+      await expect(service.run('test', 1, ['agents', 'topics'])).resolves.toMatchObject({
+        status: 'ready_for_incremental_sync',
+      });
+
+      expect(builder.buildBatch).toHaveBeenCalledOnce();
+      expect(builder.buildBatch).toHaveBeenCalledWith('topics', {
+        afterId: undefined,
+        limit: 500,
+      });
+      expect(client.ensureAlias).toHaveBeenCalledTimes(2);
+      await expect(repository.getRun(initial.run.id)).resolves.toMatchObject({
+        progress: expect.arrayContaining([
+          expect.objectContaining({ entity: 'agents', status: 'completed' }),
+          expect.objectContaining({ entity: 'topics', status: 'completed' }),
+        ]),
+        run: { status: 'ready_for_incremental_sync' },
+      });
+    } finally {
+      await rm(stateDirectory, { force: true, recursive: true });
+    }
   });
 
   it('refuses to reuse an old generation for an entity that declared a new version', async () => {

@@ -1032,7 +1032,7 @@ export class FtsSearchReindexService {
 
     await this.prepareIndices(initialState);
 
-    const generationEntities = new Set(initialState.progress.map(({ entity }) => entity));
+    const generationEntities = new Set(runEntities);
     await mapWithConcurrency(
       this.options.entities.filter((entity) => generationEntities.has(entity)),
       this.options.entityConcurrency,
@@ -1049,14 +1049,23 @@ export class FtsSearchReindexService {
 
     const currentState = await this.repository.getRun(initialState.run.id);
     if (!currentState) throw new Error(`Missing reindex run ${initialState.run.id}`);
-    if (currentState.progress.some(({ status }) => status !== 'completed')) {
+    const currentGenerationProgress = currentState.progress.filter(({ entity }) =>
+      generationEntities.has(entity),
+    );
+    if (currentGenerationProgress.length !== generationEntities.size) {
+      const missing = [...generationEntities].find(
+        (entity) => !currentGenerationProgress.some((progress) => progress.entity === entity),
+      );
+      throw new Error(`Missing reindex progress for ${missing}`);
+    }
+    if (currentGenerationProgress.some(({ status }) => status !== 'completed')) {
       await this.emitProgress({ type: 'run_paused' });
       return { runId: initialState.run.id, status: 'backfilling' };
     }
 
     await this.options.validateIncrementalSyncSource();
     const outcomes = new Map<FtsSearchDocumentEntity, FtsSearchReindexAliasOutcome>();
-    for (const progress of currentState.progress) {
+    for (const progress of currentGenerationProgress) {
       outcomes.set(
         progress.entity,
         await this.client.ensureAlias(
@@ -1065,7 +1074,7 @@ export class FtsSearchReindexService {
         ),
       );
     }
-    await this.repository.markReadyForIncrementalSync(initialState.run.id);
+    await this.repository.markReadyForIncrementalSync(initialState.run.id, [...generationEntities]);
     if ([...outcomes.values()].includes('created')) {
       await this.emitProgress({ type: 'aliases_created' });
     }

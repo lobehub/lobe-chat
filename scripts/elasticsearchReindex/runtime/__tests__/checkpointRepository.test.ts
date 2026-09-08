@@ -162,9 +162,58 @@ describe('FtsSearchReindexFileRepository', () => {
   it('refuses to mark a run ready while entities are incomplete', async () => {
     const state = await repository.createOrResume('not-ready-search', 1);
 
-    await expect(repository.markReadyForIncrementalSync(state.run.id)).rejects.toThrow(
-      'Cannot create aliases',
-    );
+    await expect(
+      repository.markReadyForIncrementalSync(state.run.id, FTS_SEARCH_DOCUMENT_ENTITIES),
+    ).rejects.toThrow('Cannot create aliases');
+  });
+
+  it('gates readiness on current generation failures while preserving superseded history', async () => {
+    const state = await repository.createOrResume('membership-search', 1, ['topics', 'agents']);
+    await repository.checkpointBatch({
+      cursor: 'topic-1',
+      entity: 'topics',
+      failures: [{ documentId: 'topic-1', error: new Error('old mapping'), retryable: false }],
+      indexedCount: 0,
+      previousCursor: null,
+      processedCount: 1,
+      runId: state.run.id,
+    });
+    await repository.completeEntity(state.run.id, 'agents');
+
+    await expect(
+      repository.markReadyForIncrementalSync(state.run.id, ['agents']),
+    ).resolves.toBeUndefined();
+    await expect(repository.listUnresolvedFailures(state.run.id)).resolves.toEqual([
+      expect.objectContaining({ documentId: 'topic-1', entity: 'topics', resolvedAt: null }),
+    ]);
+    await expect(
+      repository.createOrResume('membership-search', 1, ['agents']),
+    ).resolves.toMatchObject({ run: { status: 'ready_for_incremental_sync' } });
+
+    const rejoined = await repository.createOrResume('membership-search', 1, ['agents', 'topics']);
+    expect(rejoined).toMatchObject({
+      progress: expect.arrayContaining([
+        expect.objectContaining({ cursor: 'topic-1', entity: 'topics', status: 'backfilling' }),
+      ]),
+      run: { status: 'backfilling' },
+    });
+    await expect(
+      repository.markReadyForIncrementalSync(state.run.id, ['agents', 'topics']),
+    ).rejects.toThrow('Cannot create aliases');
+
+    const blocked = await repository.createOrResume('current-failure-search', 1, ['agents']);
+    await repository.checkpointBatch({
+      cursor: 'agent-1',
+      entity: 'agents',
+      failures: [{ documentId: 'agent-1', error: new Error('current mapping'), retryable: false }],
+      indexedCount: 0,
+      previousCursor: null,
+      processedCount: 1,
+      runId: blocked.run.id,
+    });
+    await expect(
+      repository.markReadyForIncrementalSync(blocked.run.id, ['agents']),
+    ).rejects.toThrow('Cannot create aliases');
   });
 
   it('lets an operator skip a failed document without counting it as indexed', async () => {
@@ -215,7 +264,7 @@ describe('FtsSearchReindexFileRepository', () => {
       await repository.completeEntity(state.run.id, entity);
     }
 
-    await repository.markReadyForIncrementalSync(state.run.id);
+    await repository.markReadyForIncrementalSync(state.run.id, FTS_SEARCH_DOCUMENT_ENTITIES);
 
     const ready = await repository.getRun(state.run.id);
     expect(ready?.run).toMatchObject({
@@ -254,7 +303,7 @@ describe('FtsSearchReindexFileRepository', () => {
   it('appends a newly covered entity and reopens a ready generation', async () => {
     const created = await repository.createOrResume('growing-search', 1, ['topics']);
     await repository.completeEntity(created.run.id, 'topics');
-    await repository.markReadyForIncrementalSync(created.run.id);
+    await repository.markReadyForIncrementalSync(created.run.id, ['topics']);
 
     const resumed = await repository.createOrResume('growing-search', 1, ['topics', 'agents']);
 
@@ -277,7 +326,7 @@ describe('FtsSearchReindexFileRepository', () => {
   it('leaves a ready generation untouched when it already covers the requested entities', async () => {
     const created = await repository.createOrResume('stable-search', 1, ['topics']);
     await repository.completeEntity(created.run.id, 'topics');
-    await repository.markReadyForIncrementalSync(created.run.id);
+    await repository.markReadyForIncrementalSync(created.run.id, ['topics']);
     const ready = await repository.getRun(created.run.id);
 
     const resumed = await repository.createOrResume('stable-search', 1, ['topics']);
