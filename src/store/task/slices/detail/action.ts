@@ -1,4 +1,4 @@
-import type { TaskDetailData, TaskDetailSubtask } from '@lobechat/types';
+import type { TaskDetailActivityAuthor, TaskDetailData, TaskDetailSubtask } from '@lobechat/types';
 import { toast } from '@lobehub/ui/base-ui';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
@@ -8,12 +8,15 @@ import { taskKeys } from '@/libs/swr/keys';
 import { taskService } from '@/services/task';
 import { workService } from '@/services/work';
 import type { StoreSetter } from '@/store/types';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { runMutation } from '@/store/utils/runMutation';
 import { saveToast } from '@/store/utils/saveToast';
 import type { SaveStatus } from '@/types/saveState';
 
 import type { TaskStore } from '../../store';
 import { useTaskStore } from '../../store';
+import { buildOptimisticAssignmentActivities } from './optimisticAssignment';
 import type { TaskDetailDispatch } from './reducer';
 import { findSubtaskParentId, taskDetailReducer } from './reducer';
 
@@ -37,6 +40,13 @@ export interface TaskUpdatePayload {
 }
 
 export interface TaskUpdateOptions {
+  /**
+   * Display metadata for the assignee being set, so the activity feed can show
+   * the row immediately instead of after the detail refetch. Supplied by the
+   * picker, which already holds the chosen item — the store deliberately does
+   * not resolve members itself (that source is a business-layer hook).
+   */
+  optimisticAssignee?: TaskDetailActivityAuthor;
   /**
    * The mounted editor marks its own autosaves so they do not request an
    * external-content reload. Tool calls and refetches are authoritative by default.
@@ -360,10 +370,35 @@ export class TaskDetailSliceActionImpl {
     if (optimisticRest.instruction !== undefined && optimisticRest.editorData === undefined) {
       optimisticRest.editorData = null;
     }
+    // The assignee chip flips on this dispatch; the feed row it explains must
+    // land in the same beat, not after the mutation *and* the detail refetch.
+    const current = this.#get().taskDetailMap[id];
+    const userState = useUserStore.getState();
+    const actorId = userProfileSelectors.userId(userState);
+    const optimisticActivities = current
+      ? buildOptimisticAssignmentActivities({
+          actor: actorId
+            ? {
+                avatar: userProfileSelectors.userAvatar(userState) || null,
+                id: actorId,
+                name: userProfileSelectors.displayUserName(userState) || null,
+                type: 'user',
+              }
+            : undefined,
+          assigneeAgentId,
+          assigneeUserId,
+          current: { agentId: current.agentId, userId: current.userId },
+          now: new Date().toISOString(),
+          target: options?.optimisticAssignee,
+        })
+      : [];
     const optimistic: Partial<TaskDetailData> = {
       ...optimisticRest,
       ...(assigneeAgentId !== undefined ? { agentId: assigneeAgentId } : {}),
       ...(assigneeUserId !== undefined ? { userId: assigneeUserId } : {}),
+      ...(optimisticActivities.length > 0
+        ? { activities: [...(current?.activities ?? []), ...optimisticActivities] }
+        : {}),
     };
 
     // Snapshot every map entry the optimistic patch will touch BEFORE dispatch.

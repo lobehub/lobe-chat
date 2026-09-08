@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { taskService } from '@/services/task';
 import { workService } from '@/services/work';
 import { taskDetailSelectors } from '@/store/task/selectors';
+import { useUserStore } from '@/store/user';
 
 import { useTaskStore } from '../../store';
 
@@ -132,6 +133,51 @@ describe('TaskDetailSliceAction', () => {
       expect(useTaskStore.getState().taskDetailMap['T-1'].name).toBe('New Name');
       expect(taskService.update).toHaveBeenCalledWith('T-1', { name: 'New Name' });
       expect(useTaskStore.getState().taskSaveStatusMap['T-1']).toBe('saved');
+    });
+
+    it('surfaces the assignment activity in the same dispatch as the assignee chip', async () => {
+      useUserStore.setState({
+        isSignedIn: true,
+        user: { avatar: 'me.png', fullName: 'Me', id: 'user_me' } as any,
+      });
+      useTaskStore.setState({
+        activeTaskId: 'T-1',
+        taskDetailMap: {
+          'T-1': {
+            activities: [],
+            agentId: null,
+            identifier: 'T-1',
+            instruction: 'x',
+            status: 'backlog',
+          },
+        },
+      });
+      // Hold the mutation open so we can observe the optimistic state alone.
+      let release!: () => void;
+      vi.mocked(taskService.update).mockReturnValue(
+        new Promise((resolve) => {
+          release = () => resolve({ success: true } as any);
+        }),
+      );
+
+      const pending = useTaskStore
+        .getState()
+        .updateTask(
+          'T-1',
+          { assigneeAgentId: 'agt_1' },
+          { optimisticAssignee: { avatar: null, id: 'agt_1', name: 'Rika', type: 'agent' } },
+        );
+
+      const activities = useTaskStore.getState().taskDetailMap['T-1'].activities ?? [];
+      expect(activities).toHaveLength(1);
+      expect(activities[0]).toMatchObject({
+        assignment: { kind: 'agent', to: { id: 'agt_1', name: 'Rika' } },
+        author: { id: 'user_me', name: 'Me', type: 'user' },
+        type: 'assignment',
+      });
+
+      release();
+      await pending;
     });
 
     it('should clear stale editorData for instruction-only optimistic updates', async () => {
