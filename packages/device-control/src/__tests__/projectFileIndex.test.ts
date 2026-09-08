@@ -84,6 +84,10 @@ describe('defaultGetProjectFileIndex', () => {
     cleanup.push(dir);
     await mkdir(path.join(dir, 'nested', 'deep'), { recursive: true });
     await mkdir(path.join(dir, '.agents'), { recursive: true });
+    await mkdir(path.join(dir, 'empty'));
+    await mkdir(path.join(dir, '.hidden-empty'));
+    await mkdir(path.join(dir, 'node_modules', 'dependency'), { recursive: true });
+    await writeFile(path.join(dir, 'node_modules', 'dependency', 'index.js'), 'ignored');
     await writeFile(path.join(dir, 'one.txt'), '1\n');
     await writeFile(path.join(dir, 'nested', 'deep', 'two.txt'), '2\n');
     await writeFile(path.join(dir, '.agents', 'config.md'), '# cfg\n');
@@ -91,7 +95,12 @@ describe('defaultGetProjectFileIndex', () => {
     const result = await defaultGetProjectFileIndex({ scope: dir });
 
     expect(result.source).toBe('glob');
+    const rels = result.entries.map((entry) => entry.relativePath);
     const byRel = Object.fromEntries(result.entries.map((e) => [e.relativePath, e]));
+    expect(new Set(rels).size).toBe(rels.length);
+    expect(byRel['empty/']?.isDirectory).toBe(true);
+    expect(byRel['.hidden-empty/']?.isDirectory).toBe(true);
+    expect(rels.some((relativePath) => relativePath.startsWith('node_modules/'))).toBe(false);
 
     // Nested files are present and attached to synthesized directory entries.
     expect(byRel['nested/deep/two.txt']?.isDirectory).toBe(false);
