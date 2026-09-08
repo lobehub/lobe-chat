@@ -68,6 +68,9 @@ export const getLLMConfig = () => {
       ENABLED_OPENROUTER: z.boolean(),
       OPENROUTER_API_KEY: z.string().optional(),
 
+      ENABLED_TOKENSMARKET: z.boolean(),
+      TOKENSMARKET_API_KEY: z.string().optional(),
+
       ENABLED_ZEROONE: z.boolean(),
       ZEROONE_API_KEY: z.string().optional(),
 
@@ -305,6 +308,9 @@ export const getLLMConfig = () => {
 
       ENABLED_OPENROUTER: !!process.env.OPENROUTER_API_KEY,
       OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
+
+      ENABLED_TOKENSMARKET: !!process.env.TOKENSMARKET_API_KEY,
+      TOKENSMARKET_API_KEY: process.env.TOKENSMARKET_API_KEY,
 
       ENABLED_TOGETHERAI: !!process.env.TOGETHERAI_API_KEY,
       TOGETHERAI_API_KEY: process.env.TOGETHERAI_API_KEY,
