@@ -8,10 +8,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import AsyncError from '@/components/AsyncError';
-import { useChatStore } from '@/store/chat';
 
 import { getTopicPanelViewState } from './topicPanelViewState';
 import { isTopicRowActivationKey } from './topicRowActivation';
+import { useVisitorTopicRoute } from './useVisitorTopicRoute';
 import { useVisitorTopics } from './useVisitorTopics';
 
 /** Placeholder rows shown while the visitor's topic list is loading, sized like a typical topic title. */
@@ -34,8 +34,8 @@ const styles = createStaticStyles(({ css }) => ({
 
 /**
  * The visitor's topic list under the current share (server-scoped by
- * senderId). Selecting a topic drives the chat store's activeTopicId — the
- * same signal the conversation surface and composer key off.
+ * senderId). Selection follows the URL so bookmarks, refreshes, and browser
+ * history open the same conversation as the highlighted row.
  */
 const TopicPanel = memo<{
   /** Off for a non-interactive share (owner preview): skips the fetch that would only 403. */
@@ -45,12 +45,12 @@ const TopicPanel = memo<{
   showTitle?: boolean;
 }>(({ enabled = true, onSelect, shareId, showTitle = true }) => {
   const { t } = useTranslation('agent');
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
+  const { topicId: activeTopicId, selectTopic: navigateToTopic } = useVisitorTopicRoute();
   const { data: topics, error, isLoading, mutate } = useVisitorTopics(shareId, enabled);
   const viewState = getTopicPanelViewState(topics, error, isLoading);
 
   const selectTopic = (topicId?: string) => {
-    useChatStore.setState({ activeTopicId: topicId }, false, 'AgentShareVisitor/selectTopic');
+    navigateToTopic(topicId);
     onSelect?.();
   };
 

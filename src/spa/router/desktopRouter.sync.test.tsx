@@ -285,8 +285,8 @@ describe('desktop router shared definition', () => {
     // …and the agent-share visitor surface lives at `/a/:slugOrId`, a sibling
     // of the main layout on every platform (Web, Electron, and the mobile
     // router — see mobileRouter.test.tsx).
-    expect(webPaths).toContain('/a/:slugOrId');
-    expect(electronPaths).toContain('/a/:slugOrId');
+    expect(webPaths).toContain('/a/:slugOrId/:topicId?');
+    expect(electronPaths).toContain('/a/:slugOrId/:topicId?');
     expect(webPaths).not.toContain('/verify');
     expect(webPaths).toContain('/acceptance');
     expect(webPaths).toContain('/onboarding');
@@ -552,8 +552,12 @@ describe('desktop router shared definition', () => {
       const matches = matchRoutes(routes, '/a/my-bot');
 
       expect(matches).toHaveLength(1);
-      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId');
+      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
       expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-bot' });
+
+      const topicMatches = matchRoutes(routes, '/a/my-bot/tpc_saved');
+      expect(topicMatches).toHaveLength(1);
+      expect(topicMatches?.[0]?.params).toEqual({ slugOrId: 'my-bot', topicId: 'tpc_saved' });
     },
   );
 

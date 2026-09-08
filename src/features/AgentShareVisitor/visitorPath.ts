@@ -7,16 +7,16 @@
 export const AGENT_SHARE_VISITOR_PATH = '/a';
 
 /** Visitor page of an agent share, by custom slug or raw share id. */
-export const buildAgentShareVisitorPath = (slugOrId: string) =>
-  `${AGENT_SHARE_VISITOR_PATH}/${slugOrId}`;
+export const buildAgentShareVisitorPath = (slugOrId: string, topicId?: string) =>
+  `${AGENT_SHARE_VISITOR_PATH}/${slugOrId}${topicId ? `/${topicId}` : ''}`;
 
 /**
  * Sign-in URL that returns the visitor to the same share once signed in.
  * `/signin` is an auth shell outside the SPA router, so callers navigate to it
  * with a full document load.
  */
-export const buildAgentShareSignInUrl = (slugOrId: string) =>
-  `/signin?callbackUrl=${encodeURIComponent(buildAgentShareVisitorPath(slugOrId))}`;
+export const buildAgentShareSignInUrl = (slugOrId: string, topicId?: string) =>
+  `/signin?callbackUrl=${encodeURIComponent(buildAgentShareVisitorPath(slugOrId, topicId))}`;
 
 /**
  * Where the CREATOR lands when they open their own share link: the share

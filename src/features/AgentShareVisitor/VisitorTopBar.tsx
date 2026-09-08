@@ -4,7 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 
 import { ProductLogo } from '@/components/Branding';
 import UserAvatar from '@/features/User/UserAvatar';
@@ -62,7 +62,8 @@ interface VisitorTopBarProps {
 const VisitorTopBar = memo<VisitorTopBarProps>(({ slugOrId }) => {
   const { t } = useTranslation('agent');
   const isSignedIn = useUserStore(authSelectors.isLogin);
-  const homePath = isSignedIn ? '/' : buildAgentShareSignInUrl(slugOrId ?? '');
+  const { topicId } = useParams<{ topicId: string }>();
+  const homePath = isSignedIn ? '/' : buildAgentShareSignInUrl(slugOrId ?? '', topicId);
 
   return (
     <Flexbox
