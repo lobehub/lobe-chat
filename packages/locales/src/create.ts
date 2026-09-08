@@ -39,6 +39,9 @@ const overlayDevEnglishCopy = async (instance: typeof i18n) => {
   for (const [ns, loading] of Object.entries(overlays)) {
     instance.addResourceBundle(DEFAULT_LANG, ns, unwrapESMModule(await loading), true, true);
   }
+  // Consumers are not bound to the store (see react.bindI18nStore below), so
+  // one refresh after every overlay landed is what makes an edit visible.
+  instance.emit('languageChanged', instance.language);
 };
 
 const defaultResources = createBundledResources();
