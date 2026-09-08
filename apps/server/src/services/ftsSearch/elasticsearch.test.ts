@@ -118,7 +118,7 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
     expect(Object.keys(init.headers)).not.toContain('Authorization');
   });
 
-  it('returns no write targets without making requests when no aliases are provided', async () => {
+  it('returns no identities without making requests when no aliases are provided', async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const client = new ElasticsearchFtsSearchHttpClient({
@@ -126,7 +126,7 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
       url: 'https://search.example.com',
     });
 
-    await expect(client.getFtsSearchSyncWriteTargets([])).resolves.toEqual({});
+    await expect(client.getFtsSearchSyncIndexIdentities([])).resolves.toEqual({});
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -449,7 +449,7 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
     );
   });
 
-  it('verifies writable aliases, soft-delete mappings, and schema generations before synchronization', async () => {
+  it('verifies sync readiness from one alias lookup and its complete index identity', async () => {
     const aliasResponse = () =>
       Response.json({
         'lobehub-agents-v1': { aliases: { 'lobehub-agents': {} } },
@@ -459,21 +459,6 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
       });
     const fetchMock = vi
       .fn()
-      .mockResolvedValueOnce(aliasResponse())
-      .mockResolvedValueOnce(
-        Response.json({
-          'lobehub-agents-v1': {
-            mappings: {
-              properties: { fts_search_sync_deleted: { type: 'boolean' } },
-            },
-          },
-          'lobehub-topics-v1': {
-            mappings: {
-              properties: { fts_search_sync_deleted: { type: 'boolean' } },
-            },
-          },
-        }),
-      )
       .mockResolvedValueOnce(aliasResponse())
       .mockResolvedValueOnce(
         Response.json({
@@ -493,54 +478,42 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
     ).resolves.toBeUndefined();
     expect(fetchMock.mock.calls.map(([url]) => url.toString())).toEqual([
       'https://search.example.com/_alias/lobehub-agents,lobehub-topics',
-      'https://search.example.com/lobehub-agents-v1,lobehub-topics-v1?filter_path=*.mappings.properties.fts_search_sync_deleted',
-      'https://search.example.com/_alias/lobehub-agents,lobehub-topics',
       'https://search.example.com/lobehub-agents-v1,lobehub-topics-v1?filter_path=*.mappings,*.settings.index.analysis,*.settings.index.uuid',
     ]);
   });
 
-  it('returns writable physical indices in stable alias order', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
+  it.each(['missing', 'keyword'])(
+    'rejects sync readiness with a %s tombstone mapping',
+    async (type) => {
+      const identity = identityIndex('agents', 'agents-index-uuid');
+      const fetchMock = vi
         .fn()
         .mockResolvedValueOnce(
-          Response.json({
-            'lobehub-agents-v2': { aliases: { 'lobehub-agents': {} } },
-            'lobehub-topics-v2': { aliases: { 'lobehub-topics': {} } },
-          }),
+          Response.json({ 'lobehub-agents-v1': { aliases: { 'lobehub-agents': {} } } }),
         )
         .mockResolvedValueOnce(
           Response.json({
-            'lobehub-agents-v2': {
+            'lobehub-agents-v1': {
+              ...identity,
               mappings: {
-                properties: { fts_search_sync_deleted: { type: 'boolean' } },
-              },
-            },
-            'lobehub-topics-v2': {
-              mappings: {
-                properties: { fts_search_sync_deleted: { type: 'boolean' } },
+                ...identity.mappings,
+                properties: type === 'missing' ? {} : { fts_search_sync_deleted: { type } },
               },
             },
           }),
-        ),
-    );
-    const client = new ElasticsearchFtsSearchHttpClient({
-      apiKey: 'test-api-key',
-      url: 'https://search.example.com',
-    });
+        );
+      vi.stubGlobal('fetch', fetchMock);
+      const client = new ElasticsearchFtsSearchHttpClient({
+        apiKey: 'test-api-key',
+        indexNamespace: 'lobehub',
+        url: 'https://search.example.com',
+      });
 
-    const writeTargets = await client.getFtsSearchSyncWriteTargets([
-      'lobehub-topics',
-      'lobehub-agents',
-    ]);
-
-    expect(writeTargets).toEqual({
-      'lobehub-agents': 'lobehub-agents-v2',
-      'lobehub-topics': 'lobehub-topics-v2',
-    });
-    expect(Object.keys(writeTargets)).toEqual(['lobehub-agents', 'lobehub-topics']);
-  });
+      await expect(client.assertFtsSearchSyncAliases(['lobehub-agents'])).rejects.toThrow(
+        'Elasticsearch full-text search sync alias lacks a boolean fts_search_sync_deleted mapping: lobehub-agents',
+      );
+    },
+  );
 
   it('returns stable runtime identities for indices that implement the declared generations', async () => {
     const fetchMock = vi
@@ -842,22 +815,21 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
         )
         .mockResolvedValueOnce(
           Response.json({
-            'lobehub-agents-v2': {
-              mappings: {
-                properties: { fts_search_sync_deleted: { type: 'boolean' } },
-              },
-            },
+            'lobehub-agents-v2': identityIndex('agents', 'agents-index-uuid'),
           }),
         ),
     );
     const client = new ElasticsearchFtsSearchHttpClient({
       apiKey: 'test-api-key',
+      indexNamespace: 'lobehub',
       url: 'https://search.example.com',
     });
 
-    await expect(client.getFtsSearchSyncWriteTargets(['lobehub-agents'])).resolves.toEqual({
-      'lobehub-agents': 'lobehub-agents-v2',
-    });
+    await expect(client.getFtsSearchSyncIndexIdentities(['lobehub-agents'])).resolves.toMatchObject(
+      {
+        'lobehub-agents': { physicalIndex: 'lobehub-agents-v2' },
+      },
+    );
   });
 
   it('rejects a multi-target alias without an explicit write index', async () => {
@@ -870,32 +842,13 @@ describe('ElasticsearchFtsSearchHttpClient', () => {
     vi.stubGlobal('fetch', fetchMock);
     const client = new ElasticsearchFtsSearchHttpClient({
       apiKey: 'test-api-key',
+      indexNamespace: 'lobehub',
       url: 'https://search.example.com',
     });
 
-    await expect(client.getFtsSearchSyncWriteTargets(['lobehub-agents'])).rejects.toThrow(
+    await expect(client.assertFtsSearchSyncAliases(['lobehub-agents'])).rejects.toThrow(
       'Elasticsearch full-text search sync destination is not a writable alias: lobehub-agents',
     );
     expect(fetchMock).toHaveBeenCalledTimes(1);
-  });
-
-  it('rejects an alias whose write index lacks the soft-delete mapping', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi
-        .fn()
-        .mockResolvedValueOnce(
-          Response.json({ 'lobehub-agents-v1': { aliases: { 'lobehub-agents': {} } } }),
-        )
-        .mockResolvedValueOnce(Response.json({ 'lobehub-agents-v1': { mappings: {} } })),
-    );
-    const client = new ElasticsearchFtsSearchHttpClient({
-      apiKey: 'test-api-key',
-      url: 'https://search.example.com',
-    });
-
-    await expect(client.getFtsSearchSyncWriteTargets(['lobehub-agents'])).rejects.toThrow(
-      'Elasticsearch full-text search sync alias lacks a boolean fts_search_sync_deleted mapping: lobehub-agents',
-    );
   });
 });

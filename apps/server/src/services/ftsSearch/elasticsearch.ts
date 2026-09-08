@@ -72,6 +72,8 @@ const syncMappingResponseSchema = z.record(
   }),
 );
 
+const syncTombstoneMappingSchema = z.object({ type: z.literal('boolean') });
+
 const indexIdentityResponseSchema = z.record(
   z.string(),
   z.object({
@@ -84,11 +86,7 @@ const indexIdentityResponseSchema = z.record(
             schema_version: z.number().int().positive(),
           })
           .passthrough(),
-        properties: z
-          .object({
-            fts_search_sync_deleted: z.object({ type: z.literal('boolean') }).passthrough(),
-          })
-          .passthrough(),
+        properties: z.record(z.string(), z.unknown()).default({}),
       })
       .passthrough(),
     settings: z.object({
@@ -278,7 +276,6 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
    * whose live index implements the schema generation declared by the deployed code.
    */
   async assertFtsSearchSyncAliases(aliases: string[]): Promise<void> {
-    await this.getFtsSearchSyncWriteTargets(aliases);
     await this.getFtsSearchSyncIndexIdentities(aliases);
   }
 
@@ -455,57 +452,6 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
     return fields;
   }
 
-  /** Returns each alias's unique writable physical index after validating tombstone support. */
-  async getFtsSearchSyncWriteTargets(aliases: string[]): Promise<Record<string, string>> {
-    if (aliases.length === 0) return {};
-
-    const writeTargets = await this.getFtsSearchSyncWriteTargetMap(aliases);
-
-    const physicalPath = [...new Set(writeTargets.values())].map(encodeURIComponent).join(',');
-    const mappingResponse = await fetch(
-      new URL(
-        `/${physicalPath}?filter_path=*.mappings.properties.fts_search_sync_deleted`,
-        this.url,
-      ),
-      {
-        headers: this.headers(),
-        method: 'GET',
-        signal: AbortSignal.timeout(this.requestTimeoutMs),
-      },
-    );
-    if (!mappingResponse.ok) {
-      throw new ElasticsearchFtsSearchRequestError(
-        `Elasticsearch full-text search sync mapping check failed (${mappingResponse.status})`,
-        mappingResponse.status,
-      );
-    }
-
-    const mappingPayload = syncMappingResponseSchema.safeParse(await mappingResponse.json());
-    if (!mappingPayload.success) {
-      throw new ElasticsearchFtsSearchRequestError(
-        'Elasticsearch full-text search sync mapping response has an invalid shape',
-        mappingResponse.status,
-        mappingPayload.error,
-      );
-    }
-
-    for (const [alias, physicalIndex] of writeTargets) {
-      const mapping =
-        mappingPayload.data[physicalIndex]?.mappings.properties.fts_search_sync_deleted;
-      if (mapping?.type !== 'boolean') {
-        throw new ElasticsearchFtsSearchRequestError(
-          `Elasticsearch full-text search sync alias lacks a boolean fts_search_sync_deleted mapping: ${alias}`,
-        );
-      }
-    }
-
-    return Object.fromEntries(
-      [...writeTargets].sort(([leftAlias], [rightAlias]) =>
-        leftAlias < rightAlias ? -1 : leftAlias > rightAlias ? 1 : 0,
-      ),
-    );
-  }
-
   /**
    * Returns stable runtime identities after validating aliases, soft deletes, and reindex metadata.
    * Each alias is checked against its own entity's declared generation; entities may come from
@@ -566,6 +512,15 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
         );
       }
 
+      if (
+        !syncTombstoneMappingSchema.safeParse(index.mappings.properties.fts_search_sync_deleted)
+          .success
+      ) {
+        throw new ElasticsearchFtsSearchRequestError(
+          `Elasticsearch full-text search sync alias lacks a boolean fts_search_sync_deleted mapping: ${alias}`,
+        );
+      }
+
       const mismatch = findFtsSearchIndexSchemaMismatch(
         aliasEntities.get(alias)!,
         index.mappings._meta,
@@ -607,8 +562,8 @@ export class ElasticsearchFtsSearchHttpClient implements ElasticsearchFtsSearchC
 
   /**
    * Actions name physical generation indexes (see `getFtsSearchSyncGenerationTargets`), so
-   * `require_alias` cannot be used. The live generation is never deleted while aliased, and retired
-   * generations leave the target list before deletion, so no action can auto-create an index.
+   * `require_alias` cannot be used. Retirement closes old generations first; operators must wait
+   * for pre-close drains to finish before deleting them, or a stale action can auto-create an index.
    */
   async bulk(body: string): Promise<ElasticsearchFtsSearchBulkResponse> {
     const endpoint = new URL('/_bulk', this.url);

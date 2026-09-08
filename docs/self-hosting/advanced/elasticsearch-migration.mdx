@@ -376,6 +376,11 @@ same generation model, one entity at a time:
    changed without a bump), `rollback_required` (the alias serves a newer version than the code), or
    `unmanaged`, and the `mappingChange` field says whether the change is `additive` or `breaking`.
 
+During a multi-generation upgrade, the consumer can split one change across bulk requests to keep
+each request within its byte limit. It acknowledges the change only after all surviving generations
+accept it. Its per-drain request budget stops new work, but lets an already-started change finish
+across generations; retaining more generations can therefore increase a drain's request count.
+
 ### Rebuild the entity (any change)
 
 ```bash
@@ -410,9 +415,11 @@ ES_REINDEX_STATE_DIR=.elasticsearch-reindex \
   bun run fts-search:reindex -- --retire --entity=messages --yes
 ```
 
-Retirement is two-phase. The first run closes the old index, which removes it from the consumer's
-write targets; a later run deletes indexes that are already closed. Closing first avoids a window in
-which a consumer that still lists the deleted index recreates it with a dynamic mapping.
+Retirement is two-phase and preserves indexes still attached to the entity's alias. The first run
+closes detached old indexes; a later run deletes indexes that are already closed. Before the deletion
+run, let every pre-close drain finish and confirm that a fresh drain resolves targets without the
+closed indexes. Do not run the command twice back-to-back: the CLI does not enforce this barrier,
+and a consumer holding an old target list can recreate a deleted index with a dynamic mapping.
 
 ### Add fields in place (additive change only)
 

@@ -50,6 +50,8 @@ export type FtsSearchGenerationClassification =
   'drift' | 'in_sync' | 'missing' | 'rollback_required' | 'unmanaged' | 'upgrade_available';
 
 export interface FtsSearchGenerationSummary {
+  /** Still attached to the entity's read alias, even when it is not the write index. */
+  aliased: boolean;
   /** Backfill state from the generation's checkpoint; `unknown` when no checkpoint is available. */
   backfill: 'backfilling' | 'completed' | 'unknown';
   fingerprint: string | null;
@@ -136,6 +138,7 @@ const summarize = (
   const progress = checkpoint?.progress.find((item) => item.entity === entity);
   const fingerprint = generation.meta?.schema_fingerprint ?? null;
   return {
+    aliased: generation.aliased,
     backfill:
       progress?.physicalIndex === generation.index
         ? progress.status === 'completed'
@@ -324,10 +327,10 @@ export interface FtsSearchRetireGenerationsResult {
 }
 
 /**
- * Retires every generation the alias does not serve, in two phases so incremental sync never
- * writes to a deleted index (Elasticsearch would silently auto-create it): an open generation is
- * closed first, which removes it from the sync target list on the next drain; a generation that
- * is already closed is deleted. Run the command twice, at least one sync interval apart.
+ * Retires generations detached from the alias in two phases: close open indexes, then delete
+ * already-closed indexes. Before the deletion pass, operators must let pre-close drains finish
+ * and confirm fresh target resolution excludes the closed indexes. The CLI does not enforce that
+ * barrier; a stale drain can otherwise auto-create a deleted index with a dynamic mapping.
  */
 export const retireGenerations = async ({
   client,
@@ -347,7 +350,7 @@ export const retireGenerations = async ({
   const closed: string[] = [];
   const deleted: string[] = [];
   for (const candidate of status.candidates) {
-    if (candidate.index === status.live.index) continue;
+    if (candidate.aliased || candidate.index === status.live.index) continue;
     if (candidate.state === 'open') {
       await client.closeIndex(candidate.index);
       closed.push(candidate.index);

@@ -534,8 +534,8 @@ describe('retireGenerations', () => {
     setDeclaredVersion(ENTITY, 3);
     const { client, result } = retire({
       generations: [
-        buildManagedGeneration(1, { state: 'open' }),
-        buildManagedGeneration(2, { state: 'closed' }),
+        buildManagedGeneration(1, { aliased: false, state: 'open' }),
+        buildManagedGeneration(2, { aliased: false, state: 'closed' }),
         buildManagedGeneration(3, { isWriteIndex: true }),
       ],
       states: { 3: createRunState(3, 'completed') },
@@ -549,5 +549,45 @@ describe('retireGenerations', () => {
     });
     expect(client.closeIndex).toHaveBeenCalledExactlyOnceWith(physicalIndex(1));
     expect(client.deleteIndex).toHaveBeenCalledExactlyOnceWith(physicalIndex(2));
+  });
+
+  it.each(['open', 'closed'] as const)(
+    'preserves an alias-attached generation in the %s state alongside the write index',
+    async (state) => {
+      setDeclaredVersion(ENTITY, 2);
+      const { client, result } = retire({
+        generations: [
+          buildManagedGeneration(1, { aliased: true, state }),
+          buildManagedGeneration(2, { isWriteIndex: true }),
+        ],
+      });
+
+      await expect(result).resolves.toEqual({
+        alias: ALIAS,
+        closed: [],
+        deleted: [],
+        kept: physicalIndex(2),
+      });
+      expect(client.closeIndex).not.toHaveBeenCalled();
+      expect(client.deleteIndex).not.toHaveBeenCalled();
+    },
+  );
+
+  it('preserves both alias targets when the description marks both as writable', async () => {
+    const { client, result } = retire({
+      generations: [
+        buildManagedGeneration(1, { isWriteIndex: true }),
+        buildManagedGeneration(2, { isWriteIndex: true }),
+      ],
+    });
+
+    await expect(result).resolves.toEqual({
+      alias: ALIAS,
+      closed: [],
+      deleted: [],
+      kept: physicalIndex(1),
+    });
+    expect(client.closeIndex).not.toHaveBeenCalled();
+    expect(client.deleteIndex).not.toHaveBeenCalled();
   });
 });

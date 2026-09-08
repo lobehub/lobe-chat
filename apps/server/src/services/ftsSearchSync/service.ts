@@ -29,11 +29,11 @@ interface FtsSearchSyncElasticsearchClient {
   getFtsSearchSyncIndexFields: (indexes: string[]) => Promise<Record<string, string[]>>;
 }
 
-/** One Outbox change expanded into one bulk action per live generation of its entity. */
+/** One bulk action for one live generation of an Outbox change. */
 interface FtsSearchSyncOperation {
   body: string;
   bytes: number;
-  /** Number of bulk actions (= generation targets) this change expands to. */
+  /** Number of Elasticsearch bulk items in this action. */
   items: number;
   work: FtsSearchSyncWork;
 }
@@ -41,6 +41,7 @@ interface FtsSearchSyncOperation {
 interface FtsSearchSyncServiceOptions {
   bulkMaxBytes: number;
   claimLimit: number;
+  /** Soft drain budget checked between works; a started multi-generation work is always finished. */
   maxBulkRequests: number;
   projectionBatchSize: number;
 }
@@ -90,12 +91,12 @@ const chunks = <Item>(items: Item[], size: number): Item[][] => {
   return result;
 };
 
-const buildOperation = (
+const buildOperations = (
   work: FtsSearchSyncWork,
   targets: string[],
   source: Record<string, unknown>,
   fieldsByIndex: ReadonlyMap<string, ReadonlySet<string>>,
-): FtsSearchSyncOperation => {
+): FtsSearchSyncOperation[] => {
   /**
    * The same revision goes to every generation with `version_type: external`, so a generation that
    * a concurrent rebuild already filled with a newer revision answers 409 and is settled as done.
@@ -103,24 +104,22 @@ const buildOperation = (
    * code, which may already declare fields an older generation lacks, and every generation is
    * `dynamic: strict`.
    */
-  const body = targets
-    .map((target) => {
-      const fields = fieldsByIndex.get(target);
-      const projected = fields
-        ? Object.fromEntries(Object.entries(source).filter(([field]) => fields.has(field)))
-        : source;
-      const metadata = {
-        index: {
-          _id: work.documentId,
-          _index: target,
-          version: work.revision,
-          version_type: 'external',
-        },
-      };
-      return `${JSON.stringify(metadata)}\n${JSON.stringify(projected)}\n`;
-    })
-    .join('');
-  return { body, bytes: Buffer.byteLength(body), items: targets.length, work };
+  return targets.map((target) => {
+    const fields = fieldsByIndex.get(target);
+    const projected = fields
+      ? Object.fromEntries(Object.entries(source).filter(([field]) => fields.has(field)))
+      : source;
+    const metadata = {
+      index: {
+        _id: work.documentId,
+        _index: target,
+        version: work.revision,
+        version_type: 'external',
+      },
+    };
+    const body = `${JSON.stringify(metadata)}\n${JSON.stringify(projected)}\n`;
+    return { body, bytes: Buffer.byteLength(body), items: 1, work };
+  });
 };
 
 const isAcceptedBulkItem = ({ index: item }: ElasticsearchFtsSearchBulkItem) =>
@@ -137,15 +136,15 @@ const summarizeBulkEntities = (
 ): FtsSearchSyncBulkRequestSample['entities'] => {
   const summaries = new Map<
     FtsSearchSyncWork['entity'],
-    { bytes: number; failed: number; items: number; works: number }
+    { actions: number; bytes: number; failed: number; items: number }
   >();
 
   for (const operation of operations) {
     const entity = operation.work.entity;
-    const current = summaries.get(entity) ?? { bytes: 0, failed: 0, items: 0, works: 0 };
+    const current = summaries.get(entity) ?? { actions: 0, bytes: 0, failed: 0, items: 0 };
     current.bytes += operation.bytes;
     current.items += operation.items;
-    current.works += 1;
+    current.actions += 1;
     if (failedWorkKeys?.has(workKey(operation.work))) current.failed += 1;
     summaries.set(entity, current);
   }
@@ -157,7 +156,7 @@ const summarizeBulkEntities = (
         ? result
         : summary.failed === 0
           ? 'success'
-          : summary.failed === summary.works
+          : summary.failed === summary.actions
             ? 'item_error'
             : 'mixed';
     entitySamples[entity] = {
@@ -234,6 +233,10 @@ export class FtsSearchSyncService {
     };
     let bulk: FtsSearchSyncOperation[] = [];
     let bulkBytes = 0;
+    const workProgress = new Map<
+      string,
+      { accepted: number; remaining: number; retiredStatuses: number[] }
+    >();
 
     const forget = (settledWorks: FtsSearchSyncWork[]) => {
       for (const work of settledWorks) unsettled.delete(workKey(work));
@@ -243,6 +246,7 @@ export class FtsSearchSyncService {
       result.dead += await this.outbox.markFailures(failures);
       result.failed += failures.length;
       forget(failures);
+      for (const failure of failures) workProgress.delete(workKey(failure));
     };
 
     const flush = async () => {
@@ -270,7 +274,11 @@ export class FtsSearchSyncService {
           result: 'request_error',
         });
         /** Request-level failures can be deployment or proxy faults; retry every item durably. */
-        await fail(operations.map(({ work }) => ({ ...work, error })));
+        await fail(
+          [...new Map(operations.map(({ work }) => [workKey(work), work])).values()].map(
+            (work) => ({ ...work, error }),
+          ),
+        );
         return;
       }
 
@@ -283,22 +291,35 @@ export class FtsSearchSyncService {
           result: 'response_error',
         });
         await fail(
-          operations.map(({ work }) => ({
-            ...work,
-            error: new Error(
-              `Elasticsearch bulk returned ${response.items.length} items for ${requestItems} operations`,
-            ),
-          })),
+          [...new Map(operations.map(({ work }) => [workKey(work), work])).values()].map(
+            (work) => ({
+              ...work,
+              error: new Error(
+                `Elasticsearch bulk returned ${response.items.length} items for ${requestItems} operations`,
+              ),
+            }),
+          ),
         );
         return;
       }
 
       const acknowledged: FtsSearchSyncWork[] = [];
       const failures: FtsSearchSyncFailure[] = [];
+      const itemsByWork = new Map<
+        string,
+        { items: ElasticsearchFtsSearchBulkItem[]; work: FtsSearchSyncWork }
+      >();
       let offset = 0;
       for (const operation of operations) {
         const items = response.items.slice(offset, offset + operation.items);
         offset += operation.items;
+        const key = workKey(operation.work);
+        const current = itemsByWork.get(key) ?? { items: [], work: operation.work };
+        current.items.push(...items);
+        itemsByWork.set(key, current);
+      }
+
+      for (const [key, { items, work }] of itemsByWork) {
         /**
          * A version conflict is safe to settle because two database fences preserve source order:
          * fresh reindexes reserve their base revision before capture activation, and same-document
@@ -309,25 +330,48 @@ export class FtsSearchSyncService {
         const rejected = items.filter(
           (item) => !isAcceptedBulkItem(item) && !isRetiredGenerationBulkItem(item),
         );
+        if (rejected.length > 0) {
+          const failedItem = rejected[0].index;
+          failures.push({
+            ...work,
+            error: new Error(`Elasticsearch bulk item failed (${failedItem.status})`),
+            permanent: isPermanentElasticsearchStatus(failedItem.status),
+          });
+          continue;
+        }
+
+        const progress = workProgress.get(key)!;
+        progress.accepted += accepted;
+        progress.remaining -= items.length;
+        progress.retiredStatuses.push(
+          ...items.filter(isRetiredGenerationBulkItem).map(({ index }) => index.status),
+        );
+        if (progress.remaining > 0) continue;
+
         /**
          * A change is done once every generation that still exists holds it. Retired generations
          * are ignored only when another generation accepted the write; if none did, the alias
          * itself is gone and the change must not be lost.
          */
-        if (rejected.length === 0 && accepted > 0) {
-          acknowledged.push(operation.work);
+        if (progress.accepted > 0) {
+          acknowledged.push(work);
+          workProgress.delete(key);
           continue;
         }
-        const failedItem = (rejected[0] ?? items[0]).index;
+        const failedStatus = progress.retiredStatuses[0];
         failures.push({
-          ...operation.work,
-          error: new Error(`Elasticsearch bulk item failed (${failedItem.status})`),
-          permanent: isPermanentElasticsearchStatus(failedItem.status),
+          ...work,
+          error: new Error(`Elasticsearch bulk item failed (${failedStatus})`),
+          permanent: isPermanentElasticsearchStatus(failedStatus),
         });
       }
 
       const bulkResult =
-        failures.length === 0 ? 'success' : acknowledged.length === 0 ? 'item_error' : 'mixed';
+        failures.length === 0
+          ? 'success'
+          : failures.length === itemsByWork.size
+            ? 'item_error'
+            : 'mixed';
       result.bulkRequestSamples.push({
         bytes: requestBytes,
         durationMs: Date.now() - startedAt,
@@ -336,10 +380,12 @@ export class FtsSearchSyncService {
         result: bulkResult,
       });
 
-      const deleted = await this.outbox.acknowledgeMany(acknowledged);
-      result.acknowledged += deleted.length;
-      forget(acknowledged);
-      await fail(failures);
+      if (acknowledged.length > 0) {
+        const deleted = await this.outbox.acknowledgeMany(acknowledged);
+        result.acknowledged += deleted.length;
+        forget(acknowledged);
+      }
+      if (failures.length > 0) await fail(failures);
     };
 
     let hasPrimaryError = false;
@@ -433,51 +479,74 @@ export class FtsSearchSyncService {
       }
 
       let exhaustedBulkBudget = false;
-      operations: for (const work of works) {
+      workLoop: for (const work of works) {
         if (stoppedForDeadLetter) break;
         if (!unsettled.has(workKey(work))) continue;
+        if (result.bulkRequests >= this.options.maxBulkRequests) {
+          /** Flush the tail of the previous started work, then stop before beginning another. */
+          await flush();
+          if (result.dead > 0) stoppedForDeadLetter = true;
+          exhaustedBulkBudget = true;
+          break workLoop;
+        }
         /** Soft tombstones prevent delayed external-version writes from resurrecting deletions. */
         const source =
           projectedSources.get(sourceKey(work.entity, work.documentId)) ??
           ({ id: work.documentId, fts_search_sync_deleted: true } as Record<string, unknown>);
-        const operation = buildOperation(
+        const operations = buildOperations(
           work,
           targetsByEntity.get(work.entity)!,
           source,
           fieldsByIndex,
         );
 
-        if (operation.bytes > this.options.bulkMaxBytes) {
+        const oversizedOperation = operations.find(
+          (operation) => operation.bytes > this.options.bulkMaxBytes,
+        );
+        if (oversizedOperation) {
           await fail([
             {
               ...work,
               error: new Error(
-                `Full-text search document is ${operation.bytes} bytes across ${operation.items} generation(s) and exceeds the ${this.options.bulkMaxBytes}-byte bulk limit`,
+                `Full-text search document generation is ${oversizedOperation.bytes} bytes and exceeds the ${this.options.bulkMaxBytes}-byte bulk limit`,
               ),
               permanent: true,
             },
           ]);
           if (result.dead > 0) {
             stoppedForDeadLetter = true;
-            break operations;
+            break workLoop;
           }
           continue;
         }
 
-        if (bulk.length > 0 && bulkBytes + operation.bytes > this.options.bulkMaxBytes) {
-          await flush();
-          if (result.dead > 0) {
-            stoppedForDeadLetter = true;
-            break operations;
+        const progress = {
+          accepted: 0,
+          remaining: operations.length,
+          retiredStatuses: [],
+        };
+        workProgress.set(workKey(work), progress);
+        for (const operation of operations) {
+          if (bulk.length > 0 && bulkBytes + operation.bytes > this.options.bulkMaxBytes) {
+            await flush();
+            if (result.dead > 0) {
+              stoppedForDeadLetter = true;
+              break workLoop;
+            }
+            if (!unsettled.has(workKey(work))) break;
+            /** Finish an already-started work even when it spans more requests than the budget. */
+            if (
+              result.bulkRequests >= this.options.maxBulkRequests &&
+              progress.remaining === operations.length
+            ) {
+              exhaustedBulkBudget = true;
+              break workLoop;
+            }
           }
-          if (result.bulkRequests >= this.options.maxBulkRequests) {
-            exhaustedBulkBudget = true;
-            break operations;
-          }
-        }
 
-        bulk.push(operation);
-        bulkBytes += operation.bytes;
+          bulk.push(operation);
+          bulkBytes += operation.bytes;
+        }
       }
 
       if (!exhaustedBulkBudget && !stoppedForDeadLetter && bulk.length > 0) await flush();
