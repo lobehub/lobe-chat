@@ -4,7 +4,7 @@ import { ActionIcon, confirmModal, Switch, Tag, Text, toast } from '@lobehub/ui/
 import { createStaticStyles, cssVar } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
 import { type AiProviderModelListItem } from 'model-bank';
-import { AiModelSourceEnum } from 'model-bank';
+import { AiModelSourceEnum } from 'model-bank/aiModel';
 import React, { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
