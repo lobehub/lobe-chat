@@ -349,6 +349,8 @@
   "sortModal.success": "Sortering succesvol bijgewerkt",
   "sortModal.title": "Aangepaste volgorde",
   "sortModal.update": "Bijwerken",
+  "unsloth.checker.guidance": "Controleer bij netwerkfouten in de browser of Studio deze pagina toestaat via CORS. Bij authenticatiefouten, voer een echte Studio API-sleutel in; toegang zonder sleutel via de terminal geeft geen toegang via de browser.",
+  "unsloth.checker.setupGuide": "Unsloth verbindingsinstallatiegids",
   "updateAiProvider.confirmDelete": "Deze AI-provider verwijderen?",
   "updateAiProvider.confirmDeleteDescription": "Na verwijdering kan deze AI-provider niet worden hersteld.",
   "updateAiProvider.deleteSuccess": "Verwijderen geslaagd",
