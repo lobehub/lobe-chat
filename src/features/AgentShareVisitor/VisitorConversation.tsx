@@ -4,12 +4,12 @@ import type { SharedAgentData } from '@lobechat/types';
 import { memo } from 'react';
 
 import { useGatewayReconnect } from '@/hooks/useGatewayReconnect';
-import { useChatStore } from '@/store/chat';
 
 import ReadOnlyConversationArea from './ReadOnlyConversationArea';
 import { resolveVisitorRunningOperation } from './resolveVisitorRunningOperation';
 import { isShareInteractive } from './shareInteractivity';
 import { useVisitorConversationSeed } from './useVisitorConversationSeed';
+import { useVisitorTopicRoute } from './useVisitorTopicRoute';
 import { useVisitorTopics } from './useVisitorTopics';
 import VisitorComposer from './VisitorComposer';
 
@@ -20,8 +20,8 @@ import VisitorComposer from './VisitorComposer';
  */
 const VisitorConversation = memo<{ data: SharedAgentData }>(({ data }) => {
   const { agentId, shareId } = data;
-  const seeded = useVisitorConversationSeed(data);
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
+  const { topicId: activeTopicId, onTopicCreated } = useVisitorTopicRoute();
+  const seeded = useVisitorConversationSeed(data, activeTopicId);
   const interactive = isShareInteractive(data.visibility);
   const { data: topics, mutate: refreshVisitorTopics } = useVisitorTopics(shareId, interactive);
 
@@ -51,7 +51,10 @@ const VisitorConversation = memo<{ data: SharedAgentData }>(({ data }) => {
         // The gateway transport already switched the store to the new topic
         // (`switchTopic`); refreshing the list makes it show up in the panel.
         topicId={activeTopicId}
-        onTopicCreated={() => void refreshVisitorTopics()}
+        onTopicCreated={(createdTopicId) => {
+          onTopicCreated(createdTopicId);
+          void refreshVisitorTopics();
+        }}
       />
     </>
   );

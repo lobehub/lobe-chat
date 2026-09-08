@@ -2,11 +2,13 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDB } from '@/database/core/getTestDB';
+import { AcceptanceModel } from '@/database/models/acceptance';
 import { BriefModel } from '@/database/models/brief';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
+import { VerifyRunModel } from '@/database/models/verifyRun';
 import {
   acceptances,
   goalEdges,
@@ -55,6 +57,22 @@ describe('buildTaskPrompt Goal loop context', () => {
       title: 'Close acceptance gap',
     });
     await graphModel.bindTask(goal.id, taskNode!.id, task.id);
+    const acceptance = await new AcceptanceModel(db, userId).create({
+      subjectType: 'task',
+      subjectId: task.id,
+    });
+    await new VerifyRunModel(db, userId).create({
+      acceptanceId: acceptance.id,
+      roundIndex: 1,
+      metadata: {
+        goalReview: {
+          status: 'rejected',
+          predictionIds: ['prediction-1'],
+          feedback:
+            'The exported document is missing its table. Restore the table and submit fresh evidence.',
+        },
+      },
+    });
     const currentTask = await taskModel.findById(task.id);
 
     const result = await buildTaskPrompt(currentTask!, {
@@ -65,6 +83,10 @@ describe('buildTaskPrompt Goal loop context', () => {
       userId,
     });
 
+    expect(result.prompt).toContain('Automatic Acceptance review:');
+    expect(result.prompt).toContain('Review feedback on the last delivery');
+    expect(result.prompt).not.toContain('User feedback on the last delivery');
+    expect(result.prompt).toContain('Restore the table and submit fresh evidence.');
     expect(result.prompt).toContain('Goal loop — round 2 of 2');
     expect(result.prompt).not.toContain('round 2 of 20');
   });

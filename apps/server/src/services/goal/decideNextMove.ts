@@ -406,6 +406,40 @@ const decideWithoutFrontier = (
     };
   }
 
+  if (
+    graph.nodes.some(
+      (node) => node.kind === 'experiment' && !TERMINAL_NODE_STATUSES.has(node.status),
+    )
+  ) {
+    return {
+      ...base,
+      branch: 'no_frontier',
+      outcome: 'no_progress',
+      message: 'An experiment still has unfinished work or an empty branch',
+    };
+  }
+
+  // Exploration consumes real completed results before deciding whether to
+  // extend the graph or hand the deliverable to the ordinary acceptance gate.
+  if (
+    graph.goal.config?.exploration &&
+    !(
+      graph.goal.config.exploration.checkpoint?.readyForAcceptance &&
+      taskNodes.every(
+        (node) =>
+          node.title === GOAL_ACCEPTANCE_TASK_TITLE ||
+          graph.goal.config!.exploration!.checkpoint!.reviewedNodeIds?.includes(node.id),
+      )
+    )
+  ) {
+    return {
+      ...base,
+      branch: 'explore_graph',
+      message: 'Evaluate completed experiments and choose the next graph expansion',
+      outcome: 'advanced',
+    };
+  }
+
   // Measured clauses gate the delivery contract, and are checked before it:
   // an unmet number is not something a verifier can talk its way past, so
   // creating (or re-running) the acceptance Task against it would only spend

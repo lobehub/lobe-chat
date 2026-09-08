@@ -1,7 +1,7 @@
 import { CUSTOM_FOLDER_FILE_TYPE } from '@lobechat/const';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { toTreeItem, TreeActionImpl } from './actions';
+import { sortTreeItems, toTreeItem, TreeActionImpl } from './actions';
 import type { TreeState } from './types';
 
 const {
@@ -606,5 +606,60 @@ describe('TreeActionImpl.dropNodes', () => {
 
     expect(state.children['']?.map((i) => i.id)).toEqual(['folder-a']);
     expect(revalidateSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('sortTreeItems', () => {
+  const doc = (id: string, name: string, createdAt?: string) =>
+    toTreeItem({ createdAt, fileType: 'custom/document', id, name });
+
+  it('puts a just-created page first instead of dropping it into the A-Z list', () => {
+    // LOBE-13814: creating a page inside a folder full of "<name> 周报 — 2026-Wxx"
+    // rows landed the new "Untitled" between "TC" and "xiaojie".
+    const rows = [
+      doc('report-tc', 'TC 周报 — 2026-W35', '2026-08-28T02:00:00.000Z'),
+      doc('untitled', 'Untitled', '2026-09-04T15:31:00.000Z'),
+      doc('report-xiaojie', 'xiaojie 周报 — 2026-W35', '2026-08-29T02:00:00.000Z'),
+    ];
+
+    expect(sortTreeItems(rows).map((item) => item.id)).toEqual([
+      'untitled',
+      'report-xiaojie',
+      'report-tc',
+    ]);
+  });
+
+  it('keeps folders ahead of documents no matter how new the document is', () => {
+    const folderRow = toTreeItem({
+      createdAt: '2026-01-01T00:00:00.000Z',
+      fileType: CUSTOM_FOLDER_FILE_TYPE,
+      id: 'folder-old',
+      name: '2026.08',
+    });
+    const newest = doc('doc-new', 'Untitled', '2026-09-04T15:31:00.000Z');
+
+    expect(sortTreeItems([newest, folderRow]).map((item) => item.id)).toEqual([
+      'folder-old',
+      'doc-new',
+    ]);
+  });
+
+  it('sends rows without a timestamp to the tail of their group in A-Z order', () => {
+    const rows = [
+      doc('stub-b', 'B stub'),
+      doc('dated', 'Dated', '2026-08-01T00:00:00.000Z'),
+      doc('stub-a', 'A stub'),
+    ];
+
+    expect(sortTreeItems(rows).map((item) => item.id)).toEqual(['dated', 'stub-a', 'stub-b']);
+  });
+
+  it('breaks a createdAt tie by name', () => {
+    const rows = [
+      doc('b', 'Beta', '2026-08-01T00:00:00.000Z'),
+      doc('a', 'Alpha', '2026-08-01T00:00:00.000Z'),
+    ];
+
+    expect(sortTreeItems(rows).map((item) => item.id)).toEqual(['a', 'b']);
   });
 });

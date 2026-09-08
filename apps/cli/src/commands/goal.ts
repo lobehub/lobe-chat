@@ -18,6 +18,7 @@ import { resolveAppUrlBuilder } from './task/url';
 // here after the type checker had signed off everywhere else.
 const nodeIcon: Record<GoalNodeKind, string> = {
   decision: '◆',
+  experiment: '⚗',
   finding: '●',
   problem: '◇',
   task: '▣',
@@ -29,9 +30,12 @@ const nodeIcon: Record<GoalNodeKind, string> = {
  * verb instead, so each entry is a true sentence about the row it sits on.
  */
 const inverseEdgeLabel: Record<GoalEdgeKind, string> = {
+  answers: 'answered by',
+  contains: 'inside',
   contradicts: 'contradicted by',
   decomposes: 'part of',
   depends_on: 'blocks',
+  derived_from: 'ancestor of',
   investigates: 'investigated by',
   leads_to: 'follows',
   produces: 'produced by',
@@ -171,6 +175,8 @@ export function registerGoalCommand(program: Command) {
     .option('-t, --task <title...>', 'Initial task node titles (omit to let the planner decompose)')
     .option('--agent <id>', 'Responsible agent ID')
     .option('--project <id>', 'Project ID')
+    .option('--explore <instruction>', 'Explore alternatives using completed experiment results')
+    .option('--max-experiments <n>', 'Maximum experiment nodes (requires --explore, default 10)')
     .option('--max-rounds <n>', 'Maximum goal rounds')
     .option('--max-cost <usd>', 'Maximum total cost in USD')
     .option('--max-attempts-per-task <n>', 'Attempts per Task before opening a decision gate')
@@ -186,16 +192,26 @@ export function registerGoalCommand(program: Command) {
     )
     .option('--json [fields]', 'Output JSON')
     .action(async (title: string, options) => {
+      if (options.maxExperiments && !options.explore) {
+        throw new Error('--max-experiments requires --explore');
+      }
       const client = await getTrpcClient();
       const buildUrl = await resolveAppUrlBuilder(client);
       const result = await client.goal.create.mutate({
         agentId: options.agent,
         config:
+          options.explore ||
           options.maxAttemptsPerTask ||
           options.maxStepsPerRun ||
           options.operationLeaseTimeoutMs ||
           options.maxConcurrentTasks
             ? {
+                exploration: options.explore
+                  ? {
+                      instruction: options.explore,
+                      maxExperiments: Number(options.maxExperiments ?? 10),
+                    }
+                  : undefined,
                 maxConcurrentTasks: options.maxConcurrentTasks
                   ? Number.parseInt(options.maxConcurrentTasks, 10)
                   : undefined,
@@ -382,24 +398,32 @@ export function registerGoalCommand(program: Command) {
     .description('Update limits; pass "none" to remove a limit')
     .option('--max-rounds <n>')
     .option('--max-cost <usd>')
-    .action(async (id: string, options: { maxCost?: string; maxRounds?: string }) => {
-      const parseLimit = (value: string | undefined, integer = false) =>
-        value === undefined
-          ? undefined
-          : value === 'none'
-            ? null
-            : integer
-              ? Number.parseInt(value, 10)
-              : Number.parseFloat(value);
-      const result = await (
-        await getTrpcClient()
-      ).goal.setBudget.mutate({
-        id,
-        maxRounds: parseLimit(options.maxRounds, true),
-        maxTotalCost: parseLimit(options.maxCost),
-      });
-      log.info(result.message);
-    });
+    .option('--max-experiments <n>', 'Exploration experiment cap (1–200)')
+    .action(
+      async (
+        id: string,
+        options: { maxCost?: string; maxRounds?: string; maxExperiments?: string },
+      ) => {
+        const parseLimit = (value: string | undefined, integer = false) =>
+          value === undefined
+            ? undefined
+            : value === 'none'
+              ? null
+              : integer
+                ? Number.parseInt(value, 10)
+                : Number.parseFloat(value);
+        const result = await (
+          await getTrpcClient()
+        ).goal.setBudget.mutate({
+          id,
+          maxExperiments:
+            options.maxExperiments === undefined ? undefined : Number(options.maxExperiments),
+          maxRounds: parseLimit(options.maxRounds, true),
+          maxTotalCost: parseLimit(options.maxCost),
+        });
+        log.info(result.message);
+      },
+    );
 
   goal
     .command('decisions <id>')
@@ -438,13 +462,15 @@ export function registerGoalCommand(program: Command) {
 
   goal
     .command('add-node <id> <kind> <title>')
-    .description('Add a problem, task, finding, or decision node')
+    .description('Add a question, experiment container, task, finding, or decision node')
+    .option('--scope <experiment-id>', 'Contain this node in an experiment')
+    .option('--question <node-id>', 'Question this experiment answers')
     .option('-d, --description <text>')
     .option('-p, --priority <n>')
     .action(
       async (
         id: string,
-        kind: 'decision' | 'finding' | 'problem' | 'task',
+        kind: 'decision' | 'experiment' | 'finding' | 'problem' | 'task',
         title: string,
         options,
       ) => {
@@ -452,6 +478,8 @@ export function registerGoalCommand(program: Command) {
           await getTrpcClient()
         ).goal.addNode.mutate({
           description: options.description,
+          scopeId: options.scope,
+          questionId: options.question,
           id,
           kind,
           priority: options.priority ? Number.parseInt(options.priority, 10) : undefined,

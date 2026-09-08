@@ -5,7 +5,9 @@ import { Flexbox, Icon } from '@lobehub/ui';
 import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { Trash2 } from 'lucide-react';
-import { memo, useRef, useState } from 'react';
+import { memo } from 'react';
+
+import { useAnnotationGesture } from './useAnnotationGesture';
 
 /**
  * Region-comment primitives for acceptance evidence images. Rects are stored
@@ -63,6 +65,10 @@ const styles = createStaticStyles(({ css }) => ({
     &:hover {
       filter: brightness(1.15);
     }
+
+    @media (width <= 767px) {
+      display: none;
+    }
   `,
   canvas: css`
     cursor: crosshair;
@@ -110,6 +116,12 @@ const styles = createStaticStyles(({ css }) => ({
     border-radius: 50%;
 
     background: ${cssVar.colorBgContainer};
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -16px;
+    }
   `,
 }));
 
@@ -178,6 +190,7 @@ export interface DraftAnnotation {
 
 interface AnnotationCanvasProps {
   annotations: DraftAnnotation[];
+  drawing?: boolean;
   /**
    * Explicit display width (CSS px) — the host computes viewport × zoom.
    * Rects are normalized to the image box, so zooming never remaps them; the
@@ -191,53 +204,17 @@ interface AnnotationCanvasProps {
   src: string;
 }
 
-/** An in-flight pointer gesture: drawing a new region, or moving/resizing one. */
-type Gesture =
-  | { kind: 'draw'; start: { x: number; y: number } }
-  | { index: number; kind: 'move'; origin: Rect; start: { x: number; y: number } }
-  | { index: number; kind: 'resize'; origin: Rect };
-
-const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
-
 /**
  * Drag on the image to circle a region; drag a region to move it, drag its
  * corner handle to resize; each region carries its own note.
  */
 export const AnnotationCanvas = memo<AnnotationCanvasProps>(
-  ({ annotations, imageWidth, onDraw, onRemove, onUpdate, src }) => {
-    const imageRef = useRef<HTMLImageElement>(null);
-    const [draft, setDraft] = useState<Rect | null>(null);
-    const gestureRef = useRef<Gesture | null>(null);
-
-    // Normalize against the image's own box — the frame may not equal it.
-    const normalize = (event: React.MouseEvent) => {
-      const box = imageRef.current?.getBoundingClientRect();
-      if (!box || box.width === 0 || box.height === 0) return null;
-      return {
-        x: clamp01((event.clientX - box.left) / box.width),
-        y: clamp01((event.clientY - box.top) / box.height),
-      };
-    };
-
-    const toRect = (a: { x: number; y: number }, b: { x: number; y: number }): Rect => ({
-      height: Math.abs(a.y - b.y),
-      width: Math.abs(a.x - b.x),
-      x: Math.min(a.x, b.x),
-      y: Math.min(a.y, b.y),
+  ({ annotations, drawing = true, imageWidth, onDraw, onRemove, onUpdate, src }) => {
+    const { draft, handlers, imageRef, startEdit } = useAnnotationGesture({
+      drawing,
+      onDraw,
+      onUpdate,
     });
-
-    const endGesture = (event: React.MouseEvent) => {
-      const gesture = gestureRef.current;
-      gestureRef.current = null;
-      setDraft(null);
-      if (gesture?.kind !== 'draw') return;
-      const point = normalize(event);
-      if (!point) return;
-      const rect = toRect(gesture.start, point);
-      // Ignore accidental clicks — a region needs real area to comment on.
-      if (rect.width < 0.01 || rect.height < 0.01) return;
-      onDraw(rect);
-    };
 
     return (
       <div
@@ -245,43 +222,12 @@ export const AnnotationCanvas = memo<AnnotationCanvasProps>(
         // With an explicit zoomed width the frame must OUTGROW its host —
         // capping at 100% would clip the image instead of letting the host
         // viewport scroll/pan over it.
-        style={imageWidth ? { maxWidth: 'none' } : undefined}
-        onMouseUp={endGesture}
-        onMouseDown={(event) => {
-          event.preventDefault();
-          const start = normalize(event);
-          if (start) gestureRef.current = { kind: 'draw', start };
+        style={{
+          maxWidth: imageWidth ? 'none' : undefined,
+          touchAction: drawing ? 'none' : 'pan-x pan-y',
+          cursor: drawing ? 'crosshair' : 'auto',
         }}
-        onMouseLeave={() => {
-          gestureRef.current = null;
-          setDraft(null);
-        }}
-        onMouseMove={(event) => {
-          const gesture = gestureRef.current;
-          if (!gesture) return;
-          const point = normalize(event);
-          if (!point) return;
-          if (gesture.kind === 'draw') {
-            setDraft(toRect(gesture.start, point));
-            return;
-          }
-          const { index, origin } = gesture;
-          if (gesture.kind === 'move') {
-            onUpdate(index, {
-              ...origin,
-              x: Math.min(Math.max(origin.x + (point.x - gesture.start.x), 0), 1 - origin.width),
-              y: Math.min(Math.max(origin.y + (point.y - gesture.start.y), 0), 1 - origin.height),
-            });
-            return;
-          }
-          // resize — the origin's top-left corner stays anchored.
-          onUpdate(index, {
-            height: Math.max(point.y - origin.y, 0.01),
-            width: Math.max(point.x - origin.x, 0.01),
-            x: origin.x,
-            y: origin.y,
-          });
-        }}
+        {...handlers}
       >
         <img
           alt={''}
@@ -297,20 +243,14 @@ export const AnnotationCanvas = memo<AnnotationCanvasProps>(
           <div
             className={`${styles.rect} ${styles.editableRect}`}
             key={index}
-            style={rectStyle(annotation.rect)}
-            onMouseDown={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              const start = normalize(event);
-              if (start)
-                gestureRef.current = { index, kind: 'move', origin: annotation.rect, start };
-            }}
+            style={{ ...rectStyle(annotation.rect), pointerEvents: drawing ? 'auto' : 'none' }}
+            onPointerDown={(event) => startEdit(event, index, annotation.rect, 'move')}
           >
             <span className={styles.badge}>{index + 1}</span>
             <button
               className={styles.badgeDelete}
               type={'button'}
-              onMouseDown={(event) => event.stopPropagation()}
+              onPointerDown={(event) => event.stopPropagation()}
               onClick={(event) => {
                 event.stopPropagation();
                 onRemove(index);
@@ -320,11 +260,7 @@ export const AnnotationCanvas = memo<AnnotationCanvasProps>(
             </button>
             <span
               className={styles.resizeHandle}
-              onMouseDown={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                gestureRef.current = { index, kind: 'resize', origin: annotation.rect };
-              }}
+              onPointerDown={(event) => startEdit(event, index, annotation.rect, 'resize')}
             />
           </div>
         ))}

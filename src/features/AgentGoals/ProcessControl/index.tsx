@@ -1,5 +1,6 @@
 'use client';
 
+import { experimentOwner } from '@lobechat/utils/goalGraph';
 import { Accordion, AccordionItem, Flexbox } from '@lobehub/ui';
 import { Tag, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles } from 'antd-style';
@@ -9,8 +10,10 @@ import { useTranslation } from 'react-i18next';
 import { usePermission } from '@/hooks/usePermission';
 import { goalService } from '@/services/goal';
 import { useChatStore } from '@/store/chat';
+import { chatPortalSelectors } from '@/store/chat/selectors';
 import { goalSelectors, useGoalStore } from '@/store/goal';
 
+import { isExperiment } from '../Experiments/model';
 import GoalAcceptanceCriteria from '../GoalAcceptanceCriteria';
 import Activity from './Activity';
 import Deliverables from './Deliverables';
@@ -44,7 +47,9 @@ const ProcessControl = memo<ProcessControlProps>(
   ({ goalId, graphFullscreen, onGraphFullscreenChange }) => {
     const { t } = useTranslation('chat');
     const { allowed: canEdit } = usePermission('create_content');
-    const [selectedId, setSelectedId] = useState<string>();
+    const [lastSelectedId, setSelectedId] = useState<string>();
+    const nodePortal = useChatStore(chatPortalSelectors.goalNodeView);
+    const selectedId = nodePortal?.goalId === goalId ? nodePortal.nodeId : lastSelectedId;
 
     const useFetchGoalGraph = useGoalStore((s) => s.useFetchGoalGraph);
     const decideGoal = useGoalStore((s) => s.decideGoal);
@@ -80,11 +85,19 @@ const ProcessControl = memo<ProcessControlProps>(
         setSelectedId(nodeId);
         const view = graph?.byId[nodeId];
         const taskId = view?.node.taskId;
-        if (!taskId) {
+        if (!taskId || (graph && view && isExperiment(graph, view))) {
           openGoalNode(goalId, nodeId);
           return;
         }
-        if (view && hasReviewableResult(view)) openTaskResult(taskId);
+        if (
+          graph &&
+          experimentOwner(
+            { nodes: graph.nodes.map((item) => item.node), edges: graph.edges },
+            nodeId,
+          )
+        )
+          openTaskDetail(taskId);
+        else if (view && hasReviewableResult(view)) openTaskResult(taskId);
         else openTaskDetail(taskId);
       },
       [goalId, graph, openGoalNode, openTaskDetail, openTaskResult],
@@ -113,9 +126,23 @@ const ProcessControl = memo<ProcessControlProps>(
     // only legitimate human control over its pace is pause/resume.
     const closed = ['achieved', 'canceled', 'failed'].includes(graph.goal.status);
     const canAct = canEdit && !closed;
+    const hasExperiments = graph.nodes.some((view) => view.node.kind === 'experiment');
+
+    const map = (
+      <Graph
+        fullscreen={graphFullscreen}
+        graph={graph}
+        key={goalId}
+        planning={planning}
+        selectedId={selectedId}
+        onFullscreenChange={onGraphFullscreenChange}
+        onSelect={select}
+      />
+    );
 
     return (
       <Flexbox gap={20}>
+        {hasExperiments && map}
         <Flexbox gap={12}>
           <Frontier
             actions={actions}
@@ -126,14 +153,7 @@ const ProcessControl = memo<ProcessControlProps>(
           />
         </Flexbox>
 
-        <Graph
-          fullscreen={graphFullscreen}
-          graph={graph}
-          planning={planning}
-          selectedId={selectedId}
-          onFullscreenChange={onGraphFullscreenChange}
-          onSelect={select}
-        />
+        {!hasExperiments && map}
 
         <Accordion defaultExpandedKeys={['deliverables', 'findings', 'activity']} gap={0}>
           {/* The structured acceptance standard the terminal goal acceptance is

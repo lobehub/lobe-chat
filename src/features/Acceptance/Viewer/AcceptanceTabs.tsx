@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox, Icon } from '@lobehub/ui';
-import { Text } from '@lobehub/ui/base-ui';
+import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 import { ListChecks, Paperclip } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -81,12 +81,12 @@ const AcceptanceTabs = ({ active, checkCount, onChange, resourceCount }: Accepta
   return (
     <Flexbox horizontal align={'center'} gap={2}>
       {tabs.map((tab) => (
-        <Flexbox
-          horizontal
-          align={'center'}
+        <Button
+          aria-pressed={tab.key === active}
           className={cx(styles.tab, tab.key === active && styles.tabActive)}
-          gap={6}
           key={tab.key}
+          style={{ minHeight: 44 }}
+          type={'text'}
           onClick={() => onChange(tab.key)}
         >
           <Icon icon={tab.icon} size={14} style={{ color: cssVar.colorTextTertiary }} />
@@ -94,7 +94,7 @@ const AcceptanceTabs = ({ active, checkCount, onChange, resourceCount }: Accepta
             {tab.label}
           </Text>
           <Text className={styles.count}>{tab.count}</Text>
-        </Flexbox>
+        </Button>
       ))}
     </Flexbox>
   );
