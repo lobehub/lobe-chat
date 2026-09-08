@@ -97,7 +97,7 @@ the user gave exact commands.
 
 Draft the surface, cases, expected evidence, assumptions, and deliverable — but
 do not send it for review yet: Step 2 must establish real environment state
-first, so the tester reviews one complete, evidence-backed plan.
+first, so the acceptance-checker reviews one complete, evidence-backed plan.
 
 Every case must be a delivery outcome a person can judge. Never plan the repo's
 own programmatic gates (tests, coverage, type-check, lint, build) — ingest drops
@@ -138,8 +138,8 @@ At the end of Step 2, for the **first round of every Acceptance** — including 
 standalone authored round whose Acceptance only comes into being at ingest — write
 the plan feedback (format and status markers:
 [`references/plan-feedback.md`](./references/plan-feedback.md)) into the round's
-review notes and hand it to the **tester** for plan review, per the skill's
-`references/tester-review.md`. The tester's "ready" decision — or its material
+review notes and hand it to the **acceptance-checker** for plan review, per the skill's
+`references/acceptance-checker.md`. The acceptance-checker's "ready" decision — or its material
 findings resolved — is the gate; execution starts without asking the user. Do
 not present the plan to the user for confirmation.
 
@@ -150,7 +150,7 @@ account; a materially changed business goal; or an environment change that
 invalidates the evidence strategy. Ask with one structured question and stop.
 
 On follow-up feedback: read the Acceptance, silently re-check environment and
-auth, repair, re-run the affected checks, and publish a new round. The tester is
+auth, repair, re-run the affected checks, and publish a new round. The acceptance-checker is
 not involved in follow-up rounds — it reviews the plan and the first round's
 evidence only; afterwards the primary inspects its own evidence. Code
 revisions, restarts, recaptures, retries, and new rounds never involve the

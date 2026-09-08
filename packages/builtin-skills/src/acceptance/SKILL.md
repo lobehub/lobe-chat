@@ -25,23 +25,32 @@ marks it `uncertain` and holds the delivery.
 author (or discover) the plan  →  pick the surface  →  capture evidence  →  publish the round  →  self-check coverage
 ```
 
-## Independent tester review (first round only)
+## Independent acceptance review (first round only)
 
 The primary checks the environment, writes the plan, executes cases, inspects
-evidence, repairs failures, and publishes. Use one tester agent at two points
-in the first round: review requirement coverage of the draft plan before
-execution, then a quick evidence review against the agreed criteria before
-publishing. The tester **is** the plan gate — never ask the user to approve a
+evidence, repairs failures, and publishes. Use one `acceptance-checker` agent at two points
+in the first acceptance round: give at most two feedback responses on the plan and cases
+before execution, then perform exactly one quick report/evidence check against
+the agreed criteria before publishing. A second plan check is optional, only
+to check the primary's revisions; there is no third plan-feedback response.
+Count the two stages separately. After
+either stage's limit, the primary owns remaining corrections and verification.
+The acceptance-checker **is** the plan gate — never ask the user to approve a
 plan; ask the user only for a user-owned prerequisite or a product decision
-that changes the plan. The tester may read the diff once, during plan review,
-to understand what the change touches; in the evidence review it reads the
-plan, report, and artifacts only and returns contradictions to the primary
-instead of going to the code. Follow-up rounds have no tester: the primary
+that changes the plan. In both stages, the primary supplies an explicit file
+list and the relevant diff text or prepared diff artifact paths. The acceptance-checker
+limits code reading to these materials; it must not run `git diff` or discover
+its own scope. This does not restrict inspection of the plan, report, or evidence.
+During evidence review, use it only to identify the updates and the agreed
+cases whose evidence needs checking; the core task is checking the report
+against the plan and artifacts. Do not reopen requirements, expand into code
+review, or investigate implementation details. Return contradictions to the
+primary for explanation or repair. Follow-up rounds have no acceptance-checker: the primary
 re-runs, inspects, and publishes itself. Do not delegate execution or require
 per-case approval.
 
-Read [tester-review.md](references/tester-review.md) for the input/output
-contract, review boundaries, and follow-up rules. Tester review supplements the
+Read [acceptance-checker.md](references/acceptance-checker.md) for the input/output
+contract, review boundaries, and follow-up rules. Acceptance review supplements the
 primary's own checks and any configured verifier; it does not replace either.
 If delegation or required media inspection is unavailable, disclose the missing
 review and unverified claims rather than claiming independent acceptance.
@@ -261,8 +270,8 @@ simctl io` over host-window capture. Rounds land under `.acceptances/`, which
 
 ## Reference map
 
-For both tester handoffs and review output, read
-[tester-review.md](references/tester-review.md).
+For both acceptance-checker handoffs and review output, read
+[acceptance-checker.md](references/acceptance-checker.md).
 
 | Need                                           | Reference                                                                                                                                                                               |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
