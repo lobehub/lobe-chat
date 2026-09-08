@@ -5,20 +5,21 @@
  *
  * Usage:
  *   node bundle-size-gate.js measure --type <web|asar|entry-graph> --out <file.json>
- *   node bundle-size-gate.js check --current <file.json> --baseline <file.json> [--label <name>] [--report <file.md>] [--percent <n>] [--floor <bytes>] [--max-chunks <n>]
+ *   node bundle-size-gate.js check --current <file.json> --baseline <file.json> [--label <name>] [--report <file.md>] [--percent <n>] [--floor <bytes>] [--js-chunk-percent <n>]
  *
- * Thresholds (env, overridable per check via --percent / --floor / --max-chunks):
- *   SIZE_GATE_PERCENT      max allowed increase in percent (default 3)
- *   SIZE_GATE_FLOOR_BYTES  min absolute increase before failing (default 512 KiB)
- *   SIZE_GATE_MAX_CHUNKS   max chunks in the first-screen static graph (default 100)
+ * Thresholds (env, overridable per check via --percent / --floor / --js-chunk-percent):
+ *   SIZE_GATE_PERCENT           max allowed size increase in percent (default 3)
+ *   SIZE_GATE_FLOOR_BYTES       min absolute size increase before failing (default 512 KiB)
+ *   SIZE_GATE_JS_CHUNK_PERCENT  max allowed Vite JS output file count increase (default 5)
  *
  * An entry fails when: increase > max(baseline * percent / 100, floor).
  *
  * `entry-graph` measures the gzip size of every JS chunk reachable from the SPA
  * entry through *static* imports only (dynamic `import()` excluded). Total dist
  * size cannot see a lazy chunk being pulled back into the sync graph; this can.
- * Its chunk count is gated against a fixed ceiling instead of the baseline, so
- * routine churn in chunk names does not fail the check.
+ * It also records the total number of Vite-emitted `.js` files under the dist
+ * targets and gates that total against the baseline with a separate percentage
+ * threshold.
  * Missing baseline or missing current report degrades to a warning + exit 0,
  * so the gate never blocks before the first baseline exists.
  */
@@ -32,6 +33,9 @@ const ENTRY_GRAPH_TARGETS = [
   { dir: 'dist/desktop', html: 'index.html' },
   { dir: 'dist/mobile', html: 'index.mobile.html' },
   { dir: 'dist/auth', html: 'index.auth.html' },
+];
+const VITE_JS_TARGETS = [
+  ...new Set([...WEB_TARGETS, ...ENTRY_GRAPH_TARGETS.map(({ dir }) => dir)]),
 ];
 const STATIC_IMPORT_RE =
   /(?:^|[;{}\s)])(?:import(?:[\w$*{},\s]+from\s*)?|export\s*(?:\*|\{[^}]*\})\s*from\s*)["']([^"']+\.js)["']/g;
@@ -64,6 +68,28 @@ const dirSize = (dir) => {
     else if (entry.isFile()) total += fs.statSync(full).size;
   }
   return total;
+};
+
+const countJsFiles = (dir) => {
+  let total = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) total += countJsFiles(full);
+    else if (entry.isFile() && entry.name.endsWith('.js')) total += 1;
+  }
+  return total;
+};
+
+const measureViteJsChunks = () => {
+  const targets = {};
+  for (const target of VITE_JS_TARGETS) {
+    if (!fs.existsSync(target)) continue;
+    targets[target] = countJsFiles(target);
+  }
+  return {
+    targets,
+    total: Object.values(targets).reduce((sum, count) => sum + count, 0),
+  };
 };
 
 /** Normalize runner os/arch so matrix naming differences (macos-latest vs macos-15) don't matter. */
@@ -161,7 +187,8 @@ const measure = (args) => {
       console.log(`   ${dir}: ${graph.count} chunks reachable from ${graph.entry}`);
     }
     if (Object.keys(sizes).length === 0) die('no dist targets found — did the build run?');
-    result = { graphs, sizes, type };
+    const jsChunks = measureViteJsChunks();
+    result = { graphs, jsChunks, sizes, type };
   } else if (type === 'asar') {
     const asarPath = findAsar(ASAR_SEARCH_ROOT);
     if (!asarPath) die(`app.asar not found under ${ASAR_SEARCH_ROOT}`);
@@ -181,6 +208,9 @@ const measure = (args) => {
   for (const [key, size] of Object.entries(result.sizes)) {
     console.log(`   ${key}: ${humanSize(size)}`);
   }
+  if (result.jsChunks) {
+    console.log(`   vite js chunks: ${result.jsChunks.total}`);
+  }
 };
 
 const humanSize = (bytes) => {
@@ -193,6 +223,8 @@ const formatDelta = (delta, baseline) => {
   const percent = baseline > 0 ? ` (${sign}${((delta / baseline) * 100).toFixed(2)}%)` : '';
   return `${sign}${humanSize(Math.abs(delta))}${percent}`;
 };
+
+const formatCountLimit = (count) => (Number.isInteger(count) ? String(count) : count.toFixed(2));
 
 const appendReport = (file, section) => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -232,7 +264,9 @@ const check = (args) => {
 
   const percent = Number(args.percent || process.env.SIZE_GATE_PERCENT || 3);
   const floor = Number(args.floor || process.env.SIZE_GATE_FLOOR_BYTES || 512 * 1024);
-  const maxChunks = Number(args['max-chunks'] || process.env.SIZE_GATE_MAX_CHUNKS || 100);
+  const jsChunkPercent = Number(
+    args['js-chunk-percent'] || process.env.SIZE_GATE_JS_CHUNK_PERCENT || 5,
+  );
 
   const keys = [...new Set([...Object.keys(baselineSizes), ...Object.keys(currentSizes)])];
   const rows = [];
@@ -265,10 +299,40 @@ const check = (args) => {
       const cur = currentReport.graphs[key];
       const added = base ? Object.keys(cur.chunks).filter((name) => !base.chunks[name]) : [];
       const removed = base ? Object.keys(base.chunks).filter((name) => !cur.chunks[name]) : [];
-      const over = cur.count > maxChunks;
-      if (over) failed = true;
       graphRows.push(
-        `| ${key} | ${base?.count ?? '—'} | ${cur.count} / ${maxChunks} | ${added.map((n) => `\`${n}\``).join(', ') || '—'} | ${removed.map((n) => `\`${n}\``).join(', ') || '—'} | ${over ? '❌' : '✅'} |`,
+        `| ${key} | ${base?.count ?? '—'} | ${cur.count} | ${added.map((n) => `\`${n}\``).join(', ') || '—'} | ${removed.map((n) => `\`${n}\``).join(', ') || '—'} |`,
+      );
+    }
+  }
+
+  const jsChunkRows = [];
+  const currentJsChunks = currentReport.jsChunks;
+  if (currentJsChunks) {
+    const baselineJsChunks = baselineReport.jsChunks;
+    if (typeof baselineJsChunks?.total === 'number') {
+      const chunkLimit = baselineJsChunks.total * (1 + jsChunkPercent / 100);
+      const over = currentJsChunks.total > chunkLimit;
+      if (over) failed = true;
+      const targetKeys = [
+        ...new Set([
+          ...Object.keys(baselineJsChunks.targets || {}),
+          ...Object.keys(currentJsChunks.targets || {}),
+        ]),
+      ];
+      for (const key of targetKeys) {
+        const base = baselineJsChunks.targets?.[key];
+        const cur = currentJsChunks.targets?.[key];
+        const delta = base !== undefined && cur !== undefined ? cur - base : null;
+        jsChunkRows.push(
+          `| ${key} | ${base ?? '—'} | ${cur ?? '—'} | ${delta === null ? '—' : `${delta >= 0 ? '+' : ''}${delta}`} | — | — |`,
+        );
+      }
+      jsChunkRows.push(
+        `| **Total** | **${baselineJsChunks.total}** | **${currentJsChunks.total}** | **${currentJsChunks.total >= baselineJsChunks.total ? '+' : ''}${currentJsChunks.total - baselineJsChunks.total}** | **+${jsChunkPercent}% (${formatCountLimit(chunkLimit)})** | **${over ? '❌' : '✅'}** |`,
+      );
+    } else {
+      jsChunkRows.push(
+        `| **Total** | **—** | **${currentJsChunks.total}** | **—** | **—** | **⚠️ baseline missing jsChunks** |`,
       );
     }
   }
@@ -281,14 +345,24 @@ const check = (args) => {
     ...rows,
     '',
     `> Gate: fails when increase > max(${percent}% of baseline, ${humanSize(floor)}). Baseline: latest canary build.`,
+    ...(jsChunkRows.length > 0
+      ? [
+          '',
+          `| Vite JS output | Baseline files | Current files | Δ | Limit | Result |`,
+          `| --- | --- | --- | --- | --- | --- |`,
+          ...jsChunkRows,
+          '',
+          `> Gate: fails when the total number of Vite-emitted JS files increases by more than ${jsChunkPercent}% from the canary baseline.`,
+        ]
+      : []),
     ...(graphRows.length > 0
       ? [
           '',
-          `| Entry | Baseline chunks | Current chunks | Added to sync graph | Removed | Result |`,
-          `| --- | --- | --- | --- | --- | --- |`,
+          `| Entry | Baseline reachable chunks | Current reachable chunks | Added to sync graph | Removed |`,
+          `| --- | --- | --- | --- | --- |`,
           ...graphRows,
           '',
-          `> Gate: fails when the first-screen static graph holds more than ${maxChunks} chunks. Added/removed chunk names are informational.`,
+          `> Static graph chunk names are informational; the gate above uses the total Vite JS output file count.`,
         ]
       : []),
   ].join('\n');
@@ -300,14 +374,14 @@ const check = (args) => {
 
   if (failed) {
     console.error(
-      `❌ ${label} exceeds the gate: size increase > max(${percent}%, ${humanSize(floor)}) or the first-screen static graph holds more than ${maxChunks} chunks. ` +
-        'Inspect the added dependencies or imports, or adjust SIZE_GATE_PERCENT / SIZE_GATE_FLOOR_BYTES / SIZE_GATE_MAX_CHUNKS if this is expected.',
+      `❌ ${label} exceeds the gate: size increase > max(${percent}%, ${humanSize(floor)}) or Vite JS output file count increases by more than ${jsChunkPercent}% from baseline. ` +
+        'Inspect the added dependencies or imports, or adjust SIZE_GATE_PERCENT / SIZE_GATE_FLOOR_BYTES / SIZE_GATE_JS_CHUNK_PERCENT if this is expected.',
     );
     process.exit(1);
   }
 };
 
-module.exports = { measureEntryGraph, stripHash };
+module.exports = { countJsFiles, measureEntryGraph, measureViteJsChunks, stripHash };
 
 if (require.main === module) {
   const [command, ...rest] = process.argv.slice(2);
