@@ -3,7 +3,7 @@
 import { Flexbox } from '@lobehub/ui';
 import { Button, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
-import { PauseIcon, PlayIcon } from 'lucide-react';
+import { ListTreeIcon, PauseIcon, PlayIcon } from 'lucide-react';
 import { memo, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -19,6 +19,7 @@ import { usePortalPanelWidth } from '@/features/Portal/usePortalPanelWidth';
 import RightPanel from '@/features/RightPanel';
 import ToggleRightPanelButton from '@/features/RightPanel/ToggleRightPanelButton';
 import WideScreenContainer from '@/features/WideScreenContainer';
+import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useActivityTime } from '@/hooks/useActivityTime';
 import { usePermission } from '@/hooks/usePermission';
 import { useChatStore } from '@/store/chat';
@@ -30,7 +31,13 @@ import { goalSelectors, useGoalStore } from '@/store/goal';
 
 import GoalChat from './GoalChat';
 import GoalDetailActions from './GoalDetailActions';
-import { formatSpan, formatUsd, goalStatusKey, summarizeGoalBudget } from './goalPresentation';
+import {
+  formatSpan,
+  formatUsd,
+  goalManagerTraceUrl,
+  goalStatusKey,
+  summarizeGoalBudget,
+} from './goalPresentation';
 import GoalRequirement from './GoalRequirement';
 import GoalStatusGlyph from './GoalStatusGlyph';
 import NorthStarMetrics from './NorthStarMetrics';
@@ -110,6 +117,7 @@ interface GoalDetailPageProps {
 
 const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
   const { t } = useTranslation('chat');
+  const navigate = useWorkspaceAwareNavigate();
   const { allowed: canEdit } = usePermission('create_content');
   const useFetchGoalGraph = useGoalStore((s) => s.useFetchGoalGraph);
   const { error, isLoading, mutate } = useFetchGoalGraph(goalId);
@@ -199,6 +207,7 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
     );
 
   const { goal, nodes } = snapshot;
+  const managerTraceUrl = goalManagerTraceUrl(goal.config);
   const tasks = nodes.filter((node) => node.kind === 'task').length;
   const findings = nodes.filter((node) => node.kind === 'finding').length;
   const open = (metric: GoalMetricKind) => () => openGoalMetric(goalId, metric);
@@ -351,6 +360,27 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                   onClick={open('liveness')}
                 />
               </Flexbox>
+              {goal.config?.manager && (
+                <Flexbox horizontal align={'center'} gap={12} wrap={'wrap'}>
+                  <Text weight={500}>{t('goalProcess.manager.title')}</Text>
+                  <Text fontSize={12} type={'secondary'}>
+                    {managerTraceUrl
+                      ? t('goalProcess.manager.turns', {
+                          count: goal.config.managerState?.turns ?? 0,
+                        })
+                      : t('goalProcess.manager.pending')}
+                  </Text>
+                  {managerTraceUrl && (
+                    <Button
+                      icon={ListTreeIcon}
+                      size={'small'}
+                      onClick={() => navigate(managerTraceUrl)}
+                    >
+                      {t('goalProcess.manager.viewTrace')}
+                    </Button>
+                  )}
+                </Flexbox>
+              )}
               {/* Pause/resume above the requirement document — its reviewed
                   home. The status glyph keeps the "running" animation; this
                   button is only the control. */}
