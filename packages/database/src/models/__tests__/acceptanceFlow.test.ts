@@ -83,6 +83,47 @@ async function roundPlan(id: string) {
 }
 
 describe('check assets and round snapshots', () => {
+  it('reads from the entry through each branch instead of sorting checks by UUID', async () => {
+    const ids = [9, 5, 1, 3].map((n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`);
+    const titles = ['Choose how to continue', 'Reassign', 'Handoff complete', 'Wait for recovery'];
+    const journey: AcceptanceFlowDefinition = {
+      title: 'Continue work',
+      entryNodeId: ids[0],
+      nodes: ids.map((id, i) => ({
+        id,
+        check: { id: randomUUID(), title: titles[i], definition: { expected: titles[i] } },
+      })),
+      edges: [
+        [0, 1],
+        [1, 2],
+        [0, 3],
+        [2, 0],
+        [3, 2],
+      ].map(([source, target], i) => ({
+        id: `00000000-0000-4000-9000-${String(i).padStart(12, '0')}`,
+        sourceNodeId: ids[source],
+        targetNodeId: ids[target],
+        trigger: `${titles[source]} to ${titles[target]}`,
+        required: true,
+      })),
+    };
+    const { flowId } = await model.publish(acceptanceId, journey);
+    const run = await model.start(acceptanceId, flowId);
+    const round = await roundPlan(run.id);
+    expect(round.flowSnapshots?.[0].nodes.map((node) => node.id)).toEqual(ids);
+    expect(round.plan?.map((item) => item.title)).toEqual([
+      titles[0],
+      titles[0],
+      titles[1],
+      titles[2],
+      titles[2],
+      titles[3],
+    ]);
+    expect(round.plan?.map((item) => item.index)).toEqual([0, 1, 2, 3, 4, 5]);
+    const replay = await model.start(acceptanceId, flowId, undefined, run.id);
+    expect((await roundPlan(replay.id)).plan).toEqual(round.plan);
+  });
+
   it.each(['accepted', 'closed'] as const)(
     'requires reopening a %s acceptance before starting or replaying',
     async (status) => {
@@ -295,6 +336,7 @@ describe('check assets and round snapshots', () => {
     const run = await model.start(acceptanceId, parent.flowId);
     const initial = await roundPlan(run.id);
     expect(initial.plan).toHaveLength(6);
+    expect(initial.plan!.map((item) => item.index)).toEqual([0, 1, 2, 3, 4, 5]);
     expect(new Set(initial.plan!.map((item) => item.id)).size).toBe(6);
     const firstItems = initial.plan!.filter((item) =>
       item.sourceFlowNode?.nodeId.startsWith(a + '/'),

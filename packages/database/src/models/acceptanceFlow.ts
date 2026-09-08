@@ -212,6 +212,28 @@ export class AcceptanceFlowModel {
       .where(eq(edges.flowId, flowId))
       .orderBy(asc(edges.id));
     const entry = nodeRows.find(({ node }) => node.isEntry)?.node.id;
+    // Read each journey from its entry, keeping a branch together. UUID order
+    // only breaks ties between sibling edges; it must not order the whole plan.
+    const rowsById = new Map(nodeRows.map((row) => [row.node.id, row]));
+    const outgoing = new Map<string, string[]>();
+    for (const edge of edgeRows) {
+      const targets = outgoing.get(edge.sourceNodeId) ?? [];
+      targets.push(edge.targetNodeId);
+      outgoing.set(edge.sourceNodeId, targets);
+    }
+    const orderedRows: typeof nodeRows = [];
+    const visited = new Set<string>();
+    const pending = entry ? [entry] : [];
+    while (pending.length) {
+      const id = pending.pop()!;
+      if (visited.has(id)) continue;
+      visited.add(id);
+      const row = rowsById.get(id);
+      if (!row) throw new Error('Unknown edge endpoint');
+      orderedRows.push(row);
+      pending.push(...(outgoing.get(id) ?? []).toReversed());
+    }
+    if (orderedRows.length !== nodeRows.length) throw new Error('Unreachable nodes');
     const plan: VerifyCheckItem[] = [];
     const snapshot: VerifyFlowSnapshot = {
       flowId,
@@ -223,7 +245,7 @@ export class AcceptanceFlowModel {
       })),
       nodes: [],
     };
-    for (const { node, asset } of nodeRows) {
+    for (const { node, asset } of orderedRows) {
       const branches: ((typeof edgeRows)[number] | undefined)[] = edgeRows.filter(
         (e) => e.targetNodeId === node.id,
       );
@@ -267,10 +289,10 @@ export class AcceptanceFlowModel {
             })),
           );
           plan.push(
-            ...child.plan.map((item) => ({
+            ...child.plan.map((item, index) => ({
               ...item,
               id: prefix + item.id,
-              index: plan.length,
+              index: plan.length + index,
               required: (node.overrides?.required ?? branch?.required ?? true) && item.required,
               onFail: node.overrides?.onFail ?? item.onFail,
               sourceFlowNode: {
