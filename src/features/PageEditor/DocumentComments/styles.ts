@@ -12,6 +12,16 @@ export const COMMENT_CONTENT_IMAGE_MAX_HEIGHT = 480;
  */
 export const COMMENT_INPUT_MAX_HEIGHT = 100_000;
 
+/**
+ * An image the user has explicitly resized. The editor's image plugin writes
+ * the dragged width to the `<img>` inline style (`width: 320px`) while an
+ * untouched image carries `width: inherit`; `LexicalRenderer` (published
+ * comments) only inlines `width` once the node has one. Everything else
+ * (`max-width`) never matches the leading-space form, so this is the one
+ * signal that separates "user picked a size" from "thumbnail default".
+ */
+const RESIZED_IMAGE = 'img[style*=" width:"]:not([style*=" width: inherit"])';
+
 export const styles = createStaticStyles(({ css }) => ({
   actions: css`
     margin-inline-start: 40px;
@@ -45,14 +55,34 @@ export const styles = createStaticStyles(({ css }) => ({
     }
 
     & img {
-      width: auto !important;
       max-width: 100% !important;
       height: auto !important;
+    }
+
+    /* Thumbnail default only for images the author never resized — a stored
+       width is the author's choice and is honoured exactly like the body. */
+    & img:not(${RESIZED_IMAGE}) {
+      width: auto !important;
       max-height: ${COMMENT_CONTENT_IMAGE_MAX_HEIGHT}px;
     }
   `,
   commentEditor: css`
     min-width: 0;
+
+    /* Horizontal breathing room for the editor body, on top of ChatInput's own
+       12px. Kept out of the editor's style prop: the editor forwards that prop
+       to its absolutely positioned placeholder too, so any inline padding
+       there would push the placeholder past the caret. */
+    padding-inline: 16px;
+
+    /* The placeholder carries a 4px top margin meant to mirror a paragraph's
+       default margin; the first block below has that margin removed, so drop
+       the placeholder's as well to keep it on the caret line. It is an
+       absolutely positioned later sibling of the editable area, after a
+       couple of empty plugin slots, hence the general sibling selector. */
+    & [contenteditable='true'] ~ div {
+      margin-block-start: 0 !important;
+    }
 
     /* Rich Markdown blocks carry document margins by default. A chat input
        keeps only inter-block rhythm so the first typed heading never jumps. */
@@ -80,9 +110,15 @@ export const styles = createStaticStyles(({ css }) => ({
     }
 
     & [contenteditable='true'] img {
-      width: auto !important;
       max-width: 100% !important;
       height: auto !important;
+    }
+
+    /* Only untouched images get the thumbnail treatment. Forcing width: auto
+       on every image would beat the inline width the resize handles write, so
+       dragging would appear to do nothing (LOBE-13874). */
+    & [contenteditable='true'] img:not(${RESIZED_IMAGE}) {
+      width: auto !important;
       max-height: ${COMMENT_EDITOR_IMAGE_MAX_HEIGHT}px;
     }
   `,
