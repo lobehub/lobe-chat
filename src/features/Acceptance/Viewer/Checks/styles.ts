@@ -124,6 +124,7 @@ export const styles = createStaticStyles(({ css }) => ({
     @media (width <= 767px) {
       grid-area: 1 / 3;
       flex-wrap: wrap;
+      justify-content: flex-end;
       min-width: 0;
 
       &:empty {
@@ -169,7 +170,9 @@ export const styles = createStaticStyles(({ css }) => ({
       display: grid;
       grid-template-columns: 16px max-content minmax(0, 1fr) 14px;
       row-gap: 4px;
+
       padding-block: 8px;
+      padding-inline: 0;
     }
   `,
   stepDot: css`
