@@ -90,14 +90,21 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
    */
   activityLine: css`
     position: relative;
+
+    /*
+     * Inset so the 16px mark is centred under the 24px avatar inside a comment
+     * card (8px card padding + 12px to the avatar's centre): the rail and the
+     * faces in the cards sit on one vertical line, the cards just run wider.
+     */
     padding-block: 5px;
+    padding-inline-start: 12px;
 
     &::before {
       content: '';
 
       position: absolute;
       inset-block: 0;
-      inset-inline-start: 7.5px;
+      inset-inline-start: 19.5px;
 
       width: 1px;
 
