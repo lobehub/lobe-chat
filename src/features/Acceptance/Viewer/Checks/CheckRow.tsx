@@ -301,6 +301,7 @@ export const AcceptanceCheckRow = memo<{
             <Flexbox
               horizontal
               align={'center'}
+              className={styles.rowTitle}
               flex={1}
               gap={8}
               style={{ minWidth: 0 }}

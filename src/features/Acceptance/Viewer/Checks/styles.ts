@@ -122,7 +122,7 @@ export const styles = createStaticStyles(({ css }) => ({
     transition: opacity 0.2s;
 
     @media (width <= 767px) {
-      grid-column: 3 / -1;
+      grid-area: 1 / 3;
       flex-wrap: wrap;
       min-width: 0;
 
@@ -134,6 +134,11 @@ export const styles = createStaticStyles(({ css }) => ({
     @media (hover: hover) and (pointer: fine) {
       pointer-events: none;
       opacity: 0;
+    }
+  `,
+  rowTitle: css`
+    @media (width <= 767px) {
+      grid-area: 2 / 1 / auto / -1;
     }
   `,
   rowHeader: css`
