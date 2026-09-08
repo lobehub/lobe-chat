@@ -1,3 +1,4 @@
+import { Tabs } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,16 +22,15 @@ const styles = createStaticStyles(({ css }) => ({
     flex: none;
     gap: 8px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
 
     padding-block: 6px;
     padding-inline: 8px;
     border-block-start: 1px solid ${cssVar.colorBorderSecondary};
   `,
   modes: css`
-    display: flex;
     flex: none;
-    gap: 4px;
+    width: auto;
   `,
   tab: css`
     cursor: pointer;
@@ -60,6 +60,7 @@ const styles = createStaticStyles(({ css }) => ({
     overflow-x: auto;
     display: flex;
     gap: 4px;
+    margin-inline-end: auto;
   `,
   truncatedNote: css`
     flex: none;
@@ -136,24 +137,22 @@ const XlsxPane = memo<XlsxPaneProps>(({ blob, onError }) => {
             </button>
           ))}
         </div>
-        <div className={styles.modes}>
-          <button
-            className={styles.tab}
-            data-active={resolvedMode === 'reflow'}
-            type={'button'}
-            onClick={() => setMode('reflow')}
-          >
-            {t('workingPanel.localFile.document.xlsxReflow')}
-          </button>
-          <button
-            className={styles.tab}
-            data-active={resolvedMode === 'fidelity'}
-            type={'button'}
-            onClick={() => setMode('fidelity')}
-          >
-            {t('workingPanel.localFile.document.xlsxOriginal')}
-          </button>
-        </div>
+        <Tabs
+          activeKey={resolvedMode}
+          className={styles.modes}
+          size={'small'}
+          items={[
+            {
+              key: 'reflow',
+              label: t('workingPanel.localFile.document.xlsxReflow'),
+            },
+            {
+              key: 'fidelity',
+              label: t('workingPanel.localFile.document.xlsxOriginal'),
+            },
+          ]}
+          onChange={(key) => setMode(key as 'fidelity' | 'reflow')}
+        />
       </div>
     </div>
   );
