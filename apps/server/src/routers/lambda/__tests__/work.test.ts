@@ -19,6 +19,7 @@ vi.mock('@/business/server/trpc-middlewares/rbacPermission', () => ({
 }));
 
 const mockDeleteTaskWork = vi.fn();
+const mockDeleteWork = vi.fn();
 const mockRegisterTask = vi.fn();
 const mockRegisterDocument = vi.fn();
 const mockHandleSkillToolResult = vi.fn();
@@ -27,6 +28,7 @@ const mockListByConversation = vi.fn();
 vi.mock('@/database/models/work', () => ({
   WorkModel: vi.fn(() => ({
     deleteTaskWork: mockDeleteTaskWork,
+    deleteWork: mockDeleteWork,
     handleSkillToolResult: mockHandleSkillToolResult,
     listByConversation: mockListByConversation,
     registerDocument: mockRegisterDocument,
@@ -81,6 +83,11 @@ describe('workRouter — per-procedure write permission gates', () => {
       createCaller().handleSkillToolResult({ provider: 'linear', toolName: 'createIssue' }),
     ).rejects.toThrow('GATE:agent:update');
     expect(mockHandleSkillToolResult).not.toHaveBeenCalled();
+  });
+
+  it('deleteWork gates on agent:update (workspace write, like other Work mutations)', async () => {
+    await expect(createCaller().deleteWork({ id: 'work-1' })).rejects.toThrow('GATE:agent:update');
+    expect(mockDeleteWork).not.toHaveBeenCalled();
   });
 
   it('read-only list procedures stay ungated', async () => {
