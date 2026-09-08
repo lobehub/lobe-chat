@@ -2,7 +2,7 @@
 
 import '@xyflow/react/dist/style.css';
 
-import { Empty, Flexbox } from '@lobehub/ui';
+import { Empty, Flexbox, useAppElement } from '@lobehub/ui';
 import { ActionIcon, Button, Select, Text } from '@lobehub/ui/base-ui';
 import { MarkerType, ReactFlowProvider } from '@xyflow/react';
 import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
@@ -63,6 +63,7 @@ const nodeTypes = { state: FlowNode, flowGroup: FlowGroup };
 
 export function AcceptanceFlow() {
   const { t } = useTranslation('verify');
+  const appElement = useAppElement();
   const panelHost = use(FlowPanelHostContext);
   const { md = true } = useResponsive();
   const [display, setDisplay] = useState<'graph' | 'outline'>();
@@ -250,5 +251,5 @@ export function AcceptanceFlow() {
       </Flexbox>
     </Flexbox>
   );
-  return fullscreen ? createPortal(content, document.body) : content;
+  return fullscreen ? createPortal(content, appElement ?? document.body) : content;
 }

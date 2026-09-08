@@ -3,6 +3,8 @@ import type { Edge, EdgeProps } from '@xyflow/react';
 import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath } from '@xyflow/react';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
 
+import { getFlowEdgeLabelLayout } from './flowEdgeLabel';
+
 const styles = createStaticStyles(({ css }) => ({
   label: css`
     pointer-events: all;
@@ -44,6 +46,7 @@ export function FlowEdge(props: EdgeProps<TransitionEdge>) {
         (props.sourceY + props.targetY) / 2 + lane * 0.75,
       ] as const)
     : getSmoothStepPath({ ...props, borderRadius: 20, offset: 32 });
+  const label = getFlowEdgeLabelLayout({ ...props, lane, labelX, labelY });
   return (
     <>
       <BaseEdge id={props.id} markerEnd={props.markerEnd} path={path} style={props.style} />
@@ -54,11 +57,8 @@ export function FlowEdge(props: EdgeProps<TransitionEdge>) {
           title={typeof props.label === 'string' ? props.label : undefined}
           type="text"
           style={{
-            maxWidth:
-              Math.abs(props.sourceY - props.targetY) < 24
-                ? Math.min(180, Math.max(40, Math.abs(props.targetX - props.sourceX) - 16))
-                : undefined,
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+            maxWidth: label.maxWidth,
+            transform: `translate(-50%, -50%) translate(${label.x}px, ${label.y}px)`,
           }}
           onClick={() => props.data?.onSelect(props.id)}
         >
