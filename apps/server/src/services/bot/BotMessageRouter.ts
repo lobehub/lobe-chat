@@ -56,8 +56,8 @@ import {
   type UserAllowlist,
   type WatchKeywordEntry,
 } from './platforms';
-import { renderThrownAgentError } from './renderThrownError';
 import { isGuestTelegramThreadId } from './platforms/telegram/threadId';
+import { renderThrownAgentError } from './renderThrownError';
 import {
   renderApproveSuccess,
   renderCommandReply,

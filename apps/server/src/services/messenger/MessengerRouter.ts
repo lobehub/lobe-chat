@@ -1254,10 +1254,33 @@ export class MessengerRouter {
    * active one — on platforms that implement `sendAgentPicker` the bot replies
    * with a tap-to-switch keyboard. Platforms without keyboard support fall
    * back to a numbered text list + `/agents <n>` syntax for switching.
+   *
+   * Use when:
+   * - A registered /agents text or slash command reaches the router.
+   *
+   * Expects:
+   * - The context identifies whether Telegram can send interactive replies.
+   *
+   * Returns:
+   * - A private selection response, or a safe DM instruction for Guest Mode.
+   *
+   * Triggering workflow / Call stack:
+   *
+   * {@link registerHandlers} / {@link handleSlashCommand}
+   *   -> {@link buildCommands} (`/agents`)
+   *     -> {@link runAgentsCommand}
+   *       -> {@link MessengerCommandContext.reply} / {@link MessengerPlatformBinder.sendAgentPicker}
    */
   private async runAgentsCommand(ctx: MessengerCommandContext): Promise<void> {
     const { binder, chatId, link, serverDB } = ctx;
     const strings = getMessengerSystemStrings(ctx.platform);
+
+    // Telegram Guest replies are visible in the originating chat. Redirect
+    // before fetching personal data or switching state, including /agents <n>.
+    if (ctx.platform === 'telegram' && !ctx.interactiveReplies) {
+      await ctx.reply(strings.agentsDirectMessageOnly);
+      return;
+    }
 
     if (!link) {
       await ctx.reply(strings.needLink);
@@ -1360,10 +1383,33 @@ export class MessengerRouter {
    * replies with a tap-to-switch keyboard (buttons emit `messenger:scope:<id>`
    * so the callback path can tell them apart from agent switches). Platforms
    * without keyboard support fall back to a numbered text list + `/switch <n>`.
+   *
+   * Use when:
+   * - A registered /switch text or slash command reaches the router.
+   *
+   * Expects:
+   * - The context identifies whether Telegram can send interactive replies.
+   *
+   * Returns:
+   * - A private selection response, or a safe DM instruction for Guest Mode.
+   *
+   * Triggering workflow / Call stack:
+   *
+   * {@link registerHandlers} / {@link handleSlashCommand}
+   *   -> {@link buildCommands} (`/switch`)
+   *     -> {@link runSwitchCommand}
+   *       -> {@link MessengerCommandContext.reply} / {@link MessengerPlatformBinder.sendAgentPicker}
    */
   private async runSwitchCommand(ctx: MessengerCommandContext): Promise<void> {
     const { binder, chatId, link, serverDB } = ctx;
     const strings = getMessengerSystemStrings(ctx.platform);
+
+    // Telegram Guest replies are visible in the originating chat. Redirect
+    // before fetching personal data or switching state, including /switch <n>.
+    if (ctx.platform === 'telegram' && !ctx.interactiveReplies) {
+      await ctx.reply(strings.switchDirectMessageOnly);
+      return;
+    }
     if (!link) {
       await ctx.reply(strings.needLink);
       return;
