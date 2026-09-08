@@ -102,6 +102,10 @@ vi.mock('@/store/chat/slices/agentRun/actions/lifecycle/agentSignalBridge', () =
 // the notification branch. The service is dynamically imported inside executeClientAgent.
 const desktopFlag = vi.hoisted(() => ({ value: false }));
 const desktopNotificationMock = vi.hoisted(() => ({ showNotification: vi.fn() }));
+const completionSoundMock = vi.hoisted(() => ({
+  getNotificationSoundFile: vi.fn(),
+  play: vi.fn(),
+}));
 vi.mock('@lobechat/const', async (importOriginal) => {
   const actual = await importOriginal<typeof LobeChatConst>();
   return {
@@ -113,6 +117,9 @@ vi.mock('@lobechat/const', async (importOriginal) => {
 });
 vi.mock('@/services/electron/desktopNotification', () => ({
   desktopNotificationService: desktopNotificationMock,
+}));
+vi.mock('@/services/electron/completionSound', () => ({
+  completionSoundService: completionSoundMock,
 }));
 vi.mock('@/store/serverConfig', () => ({
   getServerConfigStoreState: () => ({
@@ -188,6 +195,8 @@ beforeEach(() => {
   setupMockSelectors();
   spyOnMessageService();
   desktopFlag.value = false;
+  completionSoundMock.getNotificationSoundFile.mockReset().mockResolvedValue(undefined);
+  completionSoundMock.play.mockReset().mockResolvedValue(undefined);
   serverConfigMock.enableMultimodalUnderstanding = false;
 
   act(() => {
