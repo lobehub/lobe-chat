@@ -16,11 +16,16 @@ export const COMMENT_INPUT_MAX_HEIGHT = 100_000;
  * An image the user has explicitly resized. The editor's image plugin writes
  * the dragged width to the `<img>` inline style (`width: 320px`) while an
  * untouched image carries `width: inherit`; `LexicalRenderer` (published
- * comments) only inlines `width` once the node has one. Everything else
- * (`max-width`) never matches the leading-space form, so this is the one
+ * comments) only inlines `width` once the node has one. `width` may be the
+ * first declaration (a node without `maxWidth` renders `style="width: 320px"`)
+ * or follow `max-width`, so both the start-of-value and the leading-space forms
+ * are matched; `max-width` itself never matches either form. This is the one
  * signal that separates "user picked a size" from "thumbnail default".
  */
-const RESIZED_IMAGE = 'img[style*=" width:"]:not([style*=" width: inherit"])';
+export const RESIZED_IMAGE_SELECTOR =
+  'img:is([style^="width:"], [style*=" width:"]):not([style^="width: inherit"]):not([style*=" width: inherit"])';
+
+const RESIZED_IMAGE = RESIZED_IMAGE_SELECTOR;
 
 export const styles = createStaticStyles(({ css }) => ({
   actions: css`
