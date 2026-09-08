@@ -25,10 +25,12 @@ const SERVER = 'https://updates.test';
 
 let userDataDir: string;
 let builtinDir: string;
-const { updaterConfigMock } = vi.hoisted(() => ({
+const { loggerMock, updaterConfigMock } = vi.hoisted(() => ({
+  loggerMock: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
   updaterConfigMock: { buildChannel: 'stable' },
 }));
 
+vi.mock('@/utils/logger', () => ({ createLogger: () => loggerMock }));
 vi.mock('electron', () => ({
   app: { getPath: () => userDataDir, getVersion: () => APP_VERSION },
 }));
@@ -163,6 +165,7 @@ const loadManager = async (app: ReturnType<typeof makeApp>) => {
 };
 
 beforeEach(() => {
+  vi.clearAllMocks();
   updaterConfigMock.buildChannel = 'stable';
   userDataDir = mkdtempSync(path.join(tmpdir(), 'ota-user-'));
   builtinDir = mkdtempSync(path.join(tmpdir(), 'ota-builtin-'));
@@ -180,6 +183,37 @@ afterEach(() => {
 });
 
 describe('RendererUpdateManager V2 lifecycle', () => {
+  it('records both compatibility hashes and rejects the patch before downloading', async () => {
+    const app = makeApp();
+    const manager = await loadManager(app);
+    manager.initialize();
+    const feed = buildFeed('r1', {
+      'apps/desktop/index.html': entryHtml('v1'),
+      'assets/entry-e2e.js': 'console.log("v1")',
+    });
+    const { signature: _signature, ...unsigned } = feed.manifest;
+    feed.manifest = signManifest({ ...unsigned, mainHash: 'b'.repeat(64) });
+    stubFetch(feed);
+
+    await manager.checkForUpdates();
+
+    expect(loggerMock.info).toHaveBeenCalledWith('Renderer OTA manifest compatibility', {
+      localAppVersion: APP_VERSION,
+      localMainHash: MAIN_HASH,
+      remoteAppVersion: APP_VERSION,
+      remoteMainHash: 'b'.repeat(64),
+      remoteVersion: 'r1',
+    });
+    expect(loggerMock.error).toHaveBeenCalledWith(
+      'Renderer OTA check failed:',
+      expect.objectContaining({ message: 'Manifest mainHash mismatch' }),
+    );
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(manager.getStatus()).toMatchObject({ current: null, staged: null, state: 'idle' });
+    expect(app.browserManager.broadcastToAllWindows).not.toHaveBeenCalled();
+    expect(JSON.stringify(loggerMock.info.mock.calls)).not.toContain(PUBLIC_KEY_PEM);
+  });
+
   it('downloads one full pack, stages it, applies it, and commits after boot ping', async () => {
     const app = makeApp();
     const reloadIgnoringCache = vi.fn();

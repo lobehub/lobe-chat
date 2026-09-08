@@ -94,6 +94,18 @@ export class RendererUpdateManager {
   initialize = () => {
     this.cleanupLegacyV1();
 
+    logger.info('Renderer OTA configuration', {
+      appVersion: APP_VERSION,
+      arch: process.arch,
+      buildChannel: BUILD_CHANNEL,
+      channel: this.activeChannel,
+      enabled: this.enabled,
+      hasPublicKey: !!PUBLIC_KEY,
+      hasServerUrl: !!UPDATE_SERVER_URL,
+      mainHash: MAIN_HASH,
+      platform: process.platform,
+    });
+
     if (!this.enabled) {
       logger.info('Renderer OTA disabled (dev build or missing MAIN_HASH/key/server url)');
       return;
@@ -101,6 +113,7 @@ export class RendererUpdateManager {
 
     mkdirSync(path.join(this.otaDir, 'versions'), { recursive: true });
     this.pointer = readPointer(this.otaDir, MAIN_HASH);
+    logger.info('Renderer OTA boot state', this.pointer);
 
     if (this.pointer.staged && this.versionDirValid(this.pointer.staged)) {
       logger.info(`Applying staged renderer ${this.pointer.staged} on boot`);
@@ -120,6 +133,10 @@ export class RendererUpdateManager {
 
   startScheduledChecks = () => {
     if (!this.enabled) return;
+    logger.info('Renderer OTA checks scheduled', {
+      firstCheckDelayMs: FIRST_CHECK_DELAY,
+      intervalMs: CHECK_INTERVAL,
+    });
     this.checkTimer = setTimeout(() => this.checkForUpdates(), FIRST_CHECK_DELAY);
     setInterval(() => this.checkForUpdates(), CHECK_INTERVAL);
   };
@@ -196,12 +213,23 @@ export class RendererUpdateManager {
   });
 
   checkForUpdates = async () => {
-    if (!this.enabled || this.state !== 'idle') return;
+    if (!this.enabled || this.state !== 'idle') {
+      logger.info('Renderer OTA check skipped', this.getStatus());
+      return;
+    }
     const generation = this.checkGeneration;
     const channel = this.activeChannel;
     const otaDir = this.otaDir;
     const pointer = this.pointer;
+    const startedAt = Date.now();
     this.state = 'checking';
+    logger.info('Renderer OTA check started', {
+      appVersion: APP_VERSION,
+      channel,
+      current: pointer.current ?? 'r0',
+      mainHash: MAIN_HASH,
+      staged: pointer.staged,
+    });
 
     try {
       const rendererUrl = this.rendererUrl(channel);
@@ -214,6 +242,12 @@ export class RendererUpdateManager {
         pointer.blacklist.includes(manifest.version) ||
         pointer.staged === manifest.version
       ) {
+        logger.info('Renderer OTA patch not selected', {
+          blacklisted: pointer.blacklist.includes(manifest.version),
+          current: pointer.current ?? 'r0',
+          remote: manifest.version,
+          staged: pointer.staged,
+        });
         return;
       }
 
@@ -236,6 +270,12 @@ export class RendererUpdateManager {
       if (generation === this.checkGeneration) logger.error('Renderer OTA check failed:', error);
       rmSync(path.join(otaDir, 'staging'), { force: true, recursive: true });
     } finally {
+      logger.info('Renderer OTA check finished', {
+        channel,
+        elapsedMs: Date.now() - startedAt,
+        state: this.state,
+        superseded: generation !== this.checkGeneration,
+      });
       if (generation === this.checkGeneration && this.state !== 'staged') this.state = 'idle';
     }
   };
@@ -261,11 +301,19 @@ export class RendererUpdateManager {
 
   private async fetchManifest(rendererUrl: string): Promise<RendererManifest | null> {
     const res = await fetch(`${rendererUrl}/latest.json`, { cache: 'no-store' });
+    logger.info('Renderer OTA manifest response', { status: res.status });
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`Manifest fetch failed: ${res.status}`);
 
     const raw = await res.json();
     if (!isValidManifestShape(raw)) throw new Error('Manifest shape invalid');
+    logger.info('Renderer OTA manifest compatibility', {
+      localAppVersion: APP_VERSION,
+      localMainHash: MAIN_HASH,
+      remoteAppVersion: raw.appVersion,
+      remoteMainHash: raw.mainHash,
+      remoteVersion: raw.version,
+    });
     if (raw.appVersion !== APP_VERSION) throw new Error('Manifest appVersion mismatch');
     if (raw.mainHash !== MAIN_HASH) throw new Error('Manifest mainHash mismatch');
     if (!verifyManifestSignature(raw, PUBLIC_KEY)) throw new Error('Manifest signature invalid');
@@ -408,12 +456,22 @@ export class RendererUpdateManager {
     artifact: RendererArtifact,
     expected: Parameters<typeof decodeRendererPack>[1],
   ) {
+    const startedAt = Date.now();
+    logger.info('Renderer OTA pack download started', {
+      ...expected,
+      bytes: artifact.size,
+    });
     const res = await fetch(`${rendererUrl}/${artifact.path}`);
     if (!res.ok) throw new Error(`Renderer pack fetch failed (${res.status}): ${artifact.path}`);
     const content = Buffer.from(await res.arrayBuffer());
     if (content.byteLength !== artifact.size || sha256File(content) !== artifact.sha256) {
       throw new Error(`Renderer pack integrity mismatch: ${artifact.path}`);
     }
+    logger.info('Renderer OTA pack download verified', {
+      ...expected,
+      bytes: content.byteLength,
+      elapsedMs: Date.now() - startedAt,
+    });
     return decodeRendererPack(content, expected);
   }
 
