@@ -76,3 +76,14 @@ capabilities. Do not interpret the tool set as a complete strategic Goal manager
 The first-version research acceptance exercises both paths and records their
 provenance separately. Neither this tool set nor a backend restart test proves
 worker event durability or cross-device environment restoration.
+
+## Local execution cancellation
+
+Gateway-dispatched CLI wrappers are registered by operation ID before dispatch
+acknowledgement. Stopping a Task waits for the device to confirm wrapper exit;
+unconfirmed cancellation preserves the active Task and routing marker. Confirmed
+local exits settle the owned durable operation even when no native AgentRuntime
+state exists. Topic settlement matches the old operation so a newer marker is
+preserved. The device registry retains observed exits for five minutes to permit
+late acknowledgement retries. It is memory-only and does not survive restarting
+the CLI connection daemon; this is not a durable process journal.
