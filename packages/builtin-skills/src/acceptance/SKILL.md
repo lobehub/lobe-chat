@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.3.0
+version: 0.4.0
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -24,6 +24,20 @@ marks it `uncertain` and holds the delivery.
 ```
 author (or discover) the plan  →  pick the surface  →  capture evidence  →  publish the round  →  self-check coverage
 ```
+
+## Independent tester review
+
+The primary checks the environment, writes the plan, executes cases, inspects
+evidence, repairs failures, and publishes. Use one tester agent at two points:
+review requirement coverage before execution, then independently inspect the
+completed evidence before declaring acceptance complete. Reuse the tester when
+the host supports it; do not delegate execution or require per-case approval.
+
+Read [tester-review.md](references/tester-review.md) for the input/output contract,
+review boundaries, and repair follow-up. Tester review supplements the primary's
+own checks and any configured verifier; it does not replace either. If delegation
+or required media inspection is unavailable, disclose the missing review and
+unverified claims rather than claiming independent acceptance.
 
 ## Read the project layer first
 
@@ -193,6 +207,9 @@ simctl io` over host-window capture. Rounds land under `.acceptances/`, which
 - **Don't invent evidence.** Capture only the types a check declares.
 
 ## Reference map
+
+For both tester handoffs and review output, read
+[tester-review.md](references/tester-review.md).
 
 | Need                                           | Reference                                                                                                                                                                               |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

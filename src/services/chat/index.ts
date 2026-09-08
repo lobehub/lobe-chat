@@ -490,7 +490,13 @@ class ChatService {
        */
       fetcher = async () => {
         try {
-          return await this.fetchOnClient({ payload, provider, runtimeProvider: sdkType, signal });
+          return await this.fetchOnClient({
+            payload,
+            provider,
+            runtimeProvider: sdkType,
+            signal,
+            topicId,
+          });
         } catch (e) {
           const {
             errorType = ChatErrorType.BadRequest,
@@ -625,6 +631,7 @@ class ChatService {
     provider: string;
     runtimeProvider: string;
     signal?: AbortSignal;
+    topicId?: string;
   }) => {
     /**
      * if enable login and not signed in, return unauthorized error
@@ -641,7 +648,10 @@ class ChatService {
     });
     const data = params.payload as ChatStreamPayload;
 
-    return agentRuntime.chat(data, { signal: params.signal });
+    return agentRuntime.chat(data, {
+      metadata: { topicId: params.topicId },
+      signal: params.signal,
+    });
   };
 }
 

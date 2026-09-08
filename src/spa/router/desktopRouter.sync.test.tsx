@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { ReactElement } from 'react';
+import { isValidElement, type ReactElement, Suspense } from 'react';
 import type { RouteObject } from 'react-router';
 import { matchRoutes } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
@@ -285,8 +285,8 @@ describe('desktop router shared definition', () => {
     // …and the agent-share visitor surface lives at `/a/:slugOrId`, a sibling
     // of the main layout on every platform (Web, Electron, and the mobile
     // router — see mobileRouter.test.tsx).
-    expect(webPaths).toContain('/a/:slugOrId');
-    expect(electronPaths).toContain('/a/:slugOrId');
+    expect(webPaths).toContain('/a/:slugOrId/:topicId?');
+    expect(electronPaths).toContain('/a/:slugOrId/:topicId?');
     expect(webPaths).not.toContain('/verify');
     expect(webPaths).toContain('/acceptance');
     expect(webPaths).toContain('/onboarding');
@@ -383,6 +383,28 @@ describe('desktop router shared definition', () => {
       }
     },
   );
+
+  it.each([
+    ['Web', () => webDesktopRoutes.find((route) => route.path === '/')?.children ?? []],
+    ['Electron', () => createTabRouter('/').routes[0]?.children ?? []],
+  ])('%s declares a skeleton on every lazy main-area page', (_, getRoutes) => {
+    const undeclared: string[] = [];
+    const walk = (routes: RouteObject[], base: string, chain: RouteObject[]) => {
+      for (const route of routes) {
+        const pathname = route.index ? `${base}/(index)` : `${base}/${route.path ?? ''}`;
+        const nextChain = [...chain, route];
+        if (route.children?.length) {
+          walk(route.children, route.index ? base : pathname, nextChain);
+          continue;
+        }
+        const isLazyPage = isValidElement(route.element) && route.element.type === Suspense;
+        if (isLazyPage && !resolveRouteSkeleton(nextChain)) undeclared.push(pathname);
+      }
+    };
+    walk(getRoutes(), '', []);
+
+    expect(undeclared).toEqual([]);
+  });
 
   it.each([
     ['Web', (_pathname: string) => webDesktopRoutes],
@@ -530,8 +552,12 @@ describe('desktop router shared definition', () => {
       const matches = matchRoutes(routes, '/a/my-bot');
 
       expect(matches).toHaveLength(1);
-      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId');
+      expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
       expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-bot' });
+
+      const topicMatches = matchRoutes(routes, '/a/my-bot/tpc_saved');
+      expect(topicMatches).toHaveLength(1);
+      expect(topicMatches?.[0]?.params).toEqual({ slugOrId: 'my-bot', topicId: 'tpc_saved' });
     },
   );
 

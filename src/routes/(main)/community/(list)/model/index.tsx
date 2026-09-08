@@ -4,6 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { type ModelQueryParams } from '@/types/discover';
@@ -16,7 +17,7 @@ import List from './features/List';
 const ModelPage = memo<{ mobile?: boolean }>(() => {
   const { q, page, category, sort, order } = useQuery() as ModelQueryParams;
   const useModelList = useDiscoverStore((s) => s.useModelList);
-  const { data, error, mutate } = useModelList({
+  const { data, error, isLoading, mutate } = useModelList({
     category,
     order,
     page,
@@ -34,6 +35,8 @@ const ModelPage = memo<{ mobile?: boolean }>(() => {
       error={error}
       errorVariant={'page'}
       isEmpty={items.length === 0}
+      isLoading={isLoading}
+      loading={<RouteLoading />}
       onRetry={() => mutate()}
     >
       {data && (

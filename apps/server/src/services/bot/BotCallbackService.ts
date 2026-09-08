@@ -735,6 +735,7 @@ export class BotCallbackService {
         const systemAgent = new SystemAgentService(this.db, userId, body.workspaceId ?? undefined);
         const title = await systemAgent.generateTopicTitle({
           lastAssistantContent,
+          topicId,
           userPrompt,
         });
         if (!title) return;

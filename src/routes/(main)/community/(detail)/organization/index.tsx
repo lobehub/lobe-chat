@@ -4,6 +4,8 @@ import { memo, useEffect, useMemo } from 'react';
 import { useLocation, useParams } from 'react-router';
 
 import { useCommunityWorkspaceProfile } from '@/business/client/hooks/useCommunityWorkspaceProfile';
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useWorkspaceAwareNavigate } from '@/features/Workspace/useWorkspaceAwareNavigate';
 import { useDiscoverStore } from '@/store/discover';
 
@@ -25,7 +27,7 @@ const OrganizationDetailPage = memo<OrganizationDetailPageProps>(({ mobile }) =>
   const { isWorkspaceScope } = useCommunityWorkspaceProfile();
 
   const useUserProfile = useDiscoverStore((s) => s.useUserProfile);
-  const { data } = useUserProfile({ username });
+  const { data, error, isLoading, mutate } = useUserProfile({ username });
 
   useEffect(() => {
     const redirectTo = resolveWorkspaceCommunityProfileRedirect({
@@ -53,6 +55,10 @@ const OrganizationDetailPage = memo<OrganizationDetailPageProps>(({ mobile }) =>
       user,
     };
   }, [data, mobile]);
+  if (data === undefined) {
+    if (isLoading) return <RouteLoading />;
+    if (error) return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+  }
   if (!contextConfig) return <NotFound />;
 
   return (

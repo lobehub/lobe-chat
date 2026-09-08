@@ -4,6 +4,7 @@ import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 
 import AsyncBoundary from '@/components/AsyncBoundary';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { type ProviderQueryParams } from '@/types/discover';
@@ -16,7 +17,7 @@ import List from './features/List';
 const ProviderPage = memo(() => {
   const { q, page, sort, order } = useQuery() as ProviderQueryParams;
   const useProviderList = useDiscoverStore((s) => s.useProviderList);
-  const { data, error, mutate } = useProviderList({
+  const { data, error, isLoading, mutate } = useProviderList({
     order,
     page,
     pageSize: 21,
@@ -33,6 +34,8 @@ const ProviderPage = memo(() => {
       error={error}
       errorVariant={'page'}
       isEmpty={items.length === 0}
+      isLoading={isLoading}
+      loading={<RouteLoading />}
       onRetry={() => mutate()}
     >
       {data && (

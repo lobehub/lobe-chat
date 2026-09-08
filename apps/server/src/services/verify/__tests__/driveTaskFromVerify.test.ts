@@ -1,7 +1,12 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { scheduleGoalAdvance } from '@/server/services/goal/scheduler';
+
+import { reviewGoalDelivery } from '../goalReview';
 import { driveTaskFromVerify, finalizeVerifyRun } from '../settle';
+
+vi.mock('../goalReview', () => ({ reviewGoalDelivery: vi.fn() }));
 
 vi.mock('../repairService', () => ({
   maybeAutoRepair: vi.fn(),
@@ -11,6 +16,7 @@ vi.mock('../reporter', () => ({
 }));
 
 const {
+  goalFindByTask,
   runFindByOperation,
   runClaimTaskDrive,
   runSetMetadata,
@@ -23,6 +29,7 @@ const {
   statusRecompute,
   deliverMock,
 } = vi.hoisted(() => ({
+  goalFindByTask: vi.fn(),
   briefCreate: vi.fn(),
   briefModelConstruct: vi.fn(),
   deliverMock: vi.fn(),
@@ -71,7 +78,44 @@ vi.mock('@/server/services/taskResultBridge', () => ({
 const db = {} as any;
 
 describe('driveTaskFromVerify', () => {
+  it('automatically sends a Goal delivery back when Acceptance review rejects a Verify pass', async () => {
+    runFindByOperation.mockResolvedValue({
+      id: 'run-1',
+      acceptanceId: 'acceptance-1',
+      status: 'passed',
+    });
+    goalFindByTask.mockResolvedValue({ id: 'goal-1' });
+    vi.mocked(reviewGoalDelivery).mockResolvedValueOnce({
+      status: 'rejected',
+      feedback: 'Fix the table',
+      predictionIds: ['p1'],
+    });
+    await driveTaskFromVerify(db, 'u1', 'op-1');
+    expect(serviceUpdateStatus).not.toHaveBeenCalled();
+    expect(taskUpdateStatus).toHaveBeenCalledWith('task-1', 'paused', {
+      error: 'Delivery did not pass verification.',
+    });
+    expect(deliverMock).toHaveBeenCalledWith(expect.objectContaining({ reason: 'error' }));
+    expect(scheduleGoalAdvance).toHaveBeenCalledWith(
+      expect.objectContaining({ goalId: 'goal-1', trigger: 'settle' }),
+    );
+  });
+
+  it('does not launch a duplicate review when task drive is already claimed', async () => {
+    runFindByOperation.mockResolvedValue({
+      id: 'run-1',
+      acceptanceId: 'acceptance-1',
+      status: 'passed',
+    });
+    runClaimTaskDrive.mockResolvedValue(false);
+    await driveTaskFromVerify(db, 'u1', 'op-1');
+    expect(reviewGoalDelivery).not.toHaveBeenCalled();
+  });
+
   beforeEach(() => {
+    vi.mocked(reviewGoalDelivery).mockReset();
+    vi.mocked(scheduleGoalAdvance).mockClear();
+    goalFindByTask.mockReset();
     [
       runClaimTaskDrive,
       runFindByOperation,
@@ -279,3 +323,8 @@ describe('driveTaskFromVerify', () => {
     expect(briefCreate).not.toHaveBeenCalled();
   });
 });
+
+vi.mock('@/server/services/goal/scheduler', () => ({ scheduleGoalAdvance: vi.fn() }));
+vi.mock('@/database/models/goal', () => ({
+  GoalModel: vi.fn(() => ({ findByGraphTask: goalFindByTask })),
+}));

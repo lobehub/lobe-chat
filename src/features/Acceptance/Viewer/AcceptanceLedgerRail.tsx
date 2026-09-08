@@ -1,20 +1,21 @@
 'use client';
 
 import { DraggablePanel, Flexbox, Icon } from '@lobehub/ui';
-import { Drawer, Text } from '@lobehub/ui/base-ui';
+import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import { PanelRightOpen } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useSearchParams } from 'react-router';
 
+import { AcceptanceDrawer } from '../AcceptanceDrawer';
 import ReportViewer from '../Report/ReportViewer';
 import { resolveRoundParam } from '../utils';
 import { useAcceptanceScope } from './AcceptanceScope';
 import { checkFilterState } from './CheckList';
 import LedgerPanel, { type AcceptanceRound } from './LedgerPanel';
-import { originTopicPanelProps, useOriginConversation } from './originConversation';
+import { originTopicPanelProps } from './originConversation';
 import { useAcceptanceBundle } from './useAcceptanceBundle';
+import { useAcceptanceRailState } from './useAcceptanceRailState';
 import { canViewAcceptanceHistory } from './visibility';
 
 const styles = createStaticStyles(({ css }) => ({
@@ -60,31 +61,17 @@ const AcceptanceLedgerRail = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const { data } = useAcceptanceBundle(acceptanceId);
-  const originConversation = useOriginConversation();
-  const originTopicOpen = Boolean(originConversation?.isOpen);
-  /**
-   * Collapsed by default. The rounds are provenance — worth reaching for when
-   * a verdict is in question, not worth a permanent column beside every read.
-   */
-  const [expand, setExpand] = useState(false);
-  const highlightRound = null;
   const focused = Boolean(params.checkId);
-
-  useEffect(() => {
-    if (isNarrowViewport) setExpand(false);
-  }, [isNarrowViewport]);
-
-  useEffect(() => {
-    if (focused) setExpand(false);
-  }, [focused]);
-
-  useEffect(() => {
-    if (originTopicOpen && !focused) setExpand(true);
-  }, [focused, originTopicOpen]);
+  const { expand, onExpandChange, originConversation } = useAcceptanceRailState({
+    focused,
+    isNarrowViewport,
+  });
+  const originTopicOpen = Boolean(originConversation?.isOpen);
+  const highlightRound = null;
 
   if (!data || !canViewAcceptanceHistory(data.isOwner)) return null;
 
-  const urlRoundRaw = searchParams.get('r');
+  const urlRoundRaw = searchParams.get('report');
   const reportRound = embedded ? null : resolveRoundParam(data.rounds, urlRoundRaw);
   const reviewableChecks = data.checks;
   const reviewByRound = (() => {
@@ -105,8 +92,8 @@ const AcceptanceLedgerRail = () => {
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev);
-        if (round?.run.roundIndex == null) next.delete('r');
-        else next.set('r', String(round.run.roundIndex));
+        if (round?.run.roundIndex == null) next.delete('report');
+        else next.set('report', String(round.run.roundIndex));
         return next;
       },
       { replace: true },
@@ -122,20 +109,22 @@ const AcceptanceLedgerRail = () => {
   const topic =
     topicProps && TopicPanel ? (
       <TopicPanel
+        agentAvatar={topicProps.agentAvatar}
+        agentBackgroundColor={topicProps.agentBackgroundColor}
         agentId={topicProps.agentId}
         title={topicProps.title}
         topicId={topicProps.topicId}
-        onBack={() => originConversation?.closeTopicDrawer()}
-        onCollapse={() => setExpand(false)}
+        onCollapse={() => onExpandChange(false)}
       />
     ) : null;
 
   const ledger = (
     <LedgerPanel
+      hideCollapse={isNarrowViewport}
       highlight={highlightRound}
       reviewByRound={reviewByRound}
       rounds={data.rounds}
-      onCollapse={() => setExpand(false)}
+      onCollapse={() => onExpandChange(false)}
       onOpenReport={openReport}
     />
   );
@@ -148,25 +137,25 @@ const AcceptanceLedgerRail = () => {
           className={styles.toggle}
           gap={5}
           title={t('acceptance.ledger.expand')}
-          onClick={() => setExpand(true)}
+          onClick={() => onExpandChange(true)}
         >
           <Icon icon={PanelRightOpen} size={14} />
           <Text className={styles.chipCount}>{data.rounds.length}</Text>
         </Flexbox>
       )}
       {isNarrowViewport ? (
-        <Drawer
+        <AcceptanceDrawer
           noHeader
-          closable={false}
           containerMaxWidth={'100%'}
           open={expand}
           placement={'right'}
           styles={{ bodyContent: { padding: 0 } }}
+          title={t('acceptance.ledger.title')}
           width={'min(340px, 88vw)'}
-          onClose={() => setExpand(false)}
+          onClose={() => onExpandChange(false)}
         >
           {topic ?? ledger}
-        </Drawer>
+        </AcceptanceDrawer>
       ) : (
         <DraggablePanel
           stableLayout
@@ -175,18 +164,19 @@ const AcceptanceLedgerRail = () => {
           minWidth={300}
           placement={'right'}
           style={{ flex: 'none', height: '100%' }}
-          onExpandChange={setExpand}
+          onExpandChange={onExpandChange}
         >
           <Flexbox style={{ height: '100%', minHeight: 0, overflow: 'hidden' }}>
             {topic ?? <Flexbox style={{ height: '100%', overflow: 'auto' }}>{ledger}</Flexbox>}
           </Flexbox>
         </DraggablePanel>
       )}
-      <Drawer
+      <AcceptanceDrawer
         noHeader
         containerMaxWidth={'100%'}
         open={reportRound !== null}
         placement={'right'}
+        title={t('report.titleFallback')}
         width={'min(960px, 92vw)'}
         styles={{
           bodyContent: { height: '100%', minHeight: 0, overflow: 'hidden', padding: 0 },
@@ -198,7 +188,7 @@ const AcceptanceLedgerRail = () => {
             <ReportViewer runId={reportRound.run.id} />
           </Flexbox>
         )}
-      </Drawer>
+      </AcceptanceDrawer>
     </>
   );
 };

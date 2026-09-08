@@ -4,6 +4,8 @@ import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 import { useParams } from 'react-router';
 
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
 import Header from '@/features/MCPPluginDetail/Header';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
@@ -24,10 +26,14 @@ const McpDetailPage = memo<McpDetailPageProps>(({ mobile }) => {
 
   const { version } = useQuery() as { version?: string };
   const useMcpDetail = useDiscoverStore((s) => s.useFetchMcpDetail);
-  const { data } = useMcpDetail({ identifier, version });
+  const { data, error, isLoading, mutate } = useMcpDetail({ identifier, version });
 
   useFetchInstalledPlugins();
-  if (!data) return <NotFound />;
+  if (data === undefined) {
+    if (isLoading) return <RouteLoading />;
+    if (error) return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+    return <NotFound />;
+  }
 
   return (
     <TocProvider>

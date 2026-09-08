@@ -292,11 +292,6 @@ export class AiModelActionImpl {
   ): SWRResponse<AiModelReasoningConfig | null> => {
     return useClientDataSWR<AiModelReasoningConfig | null>(
       id && provider ? aiModelKeys.reasoningConfig(provider, id) : null,
-      // A model without a personalized config legitimately resolves to nothing.
-      // That MUST land as `null`, not `undefined`: SWR suspense mode treats
-      // undefined data as "not loaded yet" and refetches forever, so a
-      // suspense-wrapped host (e.g. the agent-doc layout) would hang on its
-      // Suspense fallback while hammering this endpoint.
       async ([, provider, id]) =>
         (await aiModelService.getAiModelReasoningConfig(id as string, provider as string)) ?? null,
       {

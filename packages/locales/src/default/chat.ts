@@ -2364,6 +2364,8 @@ export default {
   'upload.preview.status.error': 'Upload failed',
   'upload.preview.status.pending': 'Preparing to upload...',
   'upload.preview.status.processing': 'Processing file...',
+  'upload.preview.status.success': 'Upload complete',
+  'upload.preview.status.uploading': 'Uploading file...',
   'upload.validation.mediaNotSupported':
     'The current model cannot read these media files, so they were not added: {{files}}. Switch to a model that supports them, or upload a different file type.',
   'upload.validation.unsupportedFileType':
@@ -2647,6 +2649,8 @@ export default {
   'workingPanel.localFile.document.download': 'Download',
   'workingPanel.localFile.document.openWithDefaultApp': 'Open with default app',
   'workingPanel.localFile.document.truncatedRows': 'Showing the first {{count}} rows',
+  'workingPanel.localFile.document.xlsxOriginal': 'Original layout',
+  'workingPanel.localFile.document.xlsxReflow': 'Reflow',
   'workingPanel.localFile.document.unsupported': "This document type can't be previewed in-app yet",
   'workingPanel.localFile.error': "Couldn't load this file",
   'workingPanel.localFile.preview.raw': 'Raw',

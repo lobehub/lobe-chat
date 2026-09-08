@@ -3039,6 +3039,7 @@ describe('topic action', () => {
 
       expect(updateTitleSpy).toHaveBeenCalledWith(topicId, LOADING_FLAT);
       expect(generateSpy).toHaveBeenCalledOnce();
+      expect(generateSpy.mock.calls[0][0].metadata).toEqual({ topicId });
     });
 
     it('should summarize the final answer inside an assistant group for an audio-only conversation', async () => {

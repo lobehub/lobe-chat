@@ -2878,6 +2878,63 @@ export class MessageModel {
   };
 
   /**
+   * Approximate variant of {@link count} for dashboard totals. An exact
+   * COUNT over `messages` heap-fetches every row the user owns (tens of
+   * seconds for accounts with 100k+ messages), which no stats card needs.
+   *
+   * Strategy: ask the planner for a row estimate first (EXPLAIN, a few ms).
+   * Accounts the estimate marks as clearly heavy get the estimate, rounded
+   * to 3 significant digits so the number reads as the approximation it is.
+   * Everyone else — the vast majority — gets an exact count capped at
+   * `cap + 1` rows, which is cheap at that size. A user the planner
+   * underestimates still can't get a value below what the capped scan saw.
+   * Parallel workers are disabled for the EXPLAIN because parallel plans
+   * report per-worker row estimates, not totals.
+   */
+  countApproximate = async (
+    params?: MessageAnalyticsFilters,
+    { cap = 10_000 }: { cap?: number } = {},
+  ): Promise<number> => {
+    const where = genWhere(this.analyticsConditions(params));
+
+    const roundEstimate = (estimate: number) => {
+      const magnitude = 10 ** Math.max(0, Math.floor(Math.log10(estimate)) - 2);
+      return Math.round(estimate / magnitude) * magnitude;
+    };
+
+    let estimate: number | undefined;
+    try {
+      const estimateQuery = this.db.select({ id: messages.id }).from(messages).where(where);
+      const result = await this.db.transaction(async (trx) => {
+        await trx.execute(sql`SET LOCAL max_parallel_workers_per_gather = 0`);
+        return trx.execute(sql`EXPLAIN (FORMAT JSON) ${estimateQuery.getSQL()}`);
+      });
+      const rawPlan = result.rows[0]?.['QUERY PLAN'];
+      const parsed = typeof rawPlan === 'string' ? JSON.parse(rawPlan) : rawPlan;
+      const parsedRows = Number((parsed as any)?.[0]?.['Plan']?.['Plan Rows']);
+      if (Number.isFinite(parsedRows)) estimate = parsedRows;
+    } catch (error) {
+      // Best-effort — fall through to the capped exact count, but surface the
+      // degradation: past-cap accounts will all read as `cap + 1` until fixed.
+      console.error('countApproximate: planner estimate failed, using capped count only:', error);
+    }
+
+    if (estimate !== undefined && estimate > cap * 2) return roundEstimate(estimate);
+
+    const cappedRows = this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(where)
+      .limit(cap + 1)
+      .as('capped');
+    const capped = await this.db.select({ count: count() }).from(cappedRows);
+    const exact = capped[0].count;
+    if (exact <= cap) return exact;
+
+    return Math.max(estimate === undefined ? 0 : roundEstimate(estimate), exact);
+  };
+
+  /**
    * Count matching messages grouped by topic, sorted by count desc.
    * Topics without a `topicId` are excluded. Pushes the GROUP BY to the DB
    * so callers don't have to paginate raw rows and count client-side.

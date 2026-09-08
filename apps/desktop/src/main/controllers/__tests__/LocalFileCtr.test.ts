@@ -7,8 +7,8 @@ import { type App } from '@/core/App';
 
 import LocalFileCtr from '../LocalFileCtr';
 
-const { execaMock, ipcMainHandleMock, fetchMock } = vi.hoisted(() => ({
-  execaMock: vi.fn(),
+const { getProjectFileIndexMock, ipcMainHandleMock, fetchMock } = vi.hoisted(() => ({
+  getProjectFileIndexMock: vi.fn(),
   ipcMainHandleMock: vi.fn(),
   fetchMock: vi.fn(),
 }));
@@ -17,8 +17,8 @@ vi.mock('@/utils/net-fetch', () => ({
   netFetch: fetchMock,
 }));
 
-vi.mock('execa', () => ({
-  execa: execaMock,
+vi.mock('@lobechat/device-control/project-file-index', () => ({
+  defaultGetProjectFileIndex: getProjectFileIndexMock,
 }));
 
 // Mock file-loaders
@@ -781,109 +781,52 @@ describe('LocalFileCtr', () => {
   });
 
   describe('getProjectFileIndex', () => {
-    it('should build a project file index from git files', async () => {
-      execaMock
-        .mockResolvedValueOnce({ exitCode: 0, stdout: '/workspace/project' })
-        .mockResolvedValueOnce({
-          exitCode: 0,
-          stdout: 'src/index.ts\nsrc/components/Button.tsx',
-        })
-        .mockResolvedValueOnce({ exitCode: 0, stdout: 'tmp/local.ts' })
-        .mockResolvedValueOnce({ exitCode: 0, stdout: '.env.local\ncache/' });
+    it.each(['git', 'glob'] as const)(
+      'returns the shared %s index and authorizes its root for previews',
+      async (source) => {
+        const index = {
+          entries: [
+            {
+              gitIgnored: true,
+              isDirectory: true,
+              name: '.husky',
+              path: '/workspace/project/.husky',
+              relativePath: '.husky/',
+            },
+          ],
+          indexedAt: '2026-09-08T00:00:00.000Z',
+          root: '/workspace/project',
+          source,
+        };
+        getProjectFileIndexMock.mockResolvedValueOnce(index);
 
-      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
+        const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project/src' });
 
-      expect(result.source).toBe('git');
-      expect(result.root).toBe('/workspace/project');
-      expect(result.entries).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            isDirectory: true,
-            path: '/workspace/project/src',
-            relativePath: 'src/',
-          }),
-          expect.objectContaining({
-            isDirectory: false,
-            path: '/workspace/project/src/index.ts',
-            relativePath: 'src/index.ts',
-          }),
-          expect.objectContaining({
-            isDirectory: false,
-            path: '/workspace/project/tmp/local.ts',
-            relativePath: 'tmp/local.ts',
-          }),
-          expect.objectContaining({
-            gitIgnored: true,
-            isDirectory: false,
-            path: '/workspace/project/.env.local',
-            relativePath: '.env.local',
-          }),
-          expect.objectContaining({
-            gitIgnored: true,
-            isDirectory: true,
-            path: '/workspace/project/cache',
-            relativePath: 'cache/',
-          }),
-        ]),
+        expect(result).toEqual(index);
+        expect(getProjectFileIndexMock).toHaveBeenCalledWith({ scope: '/workspace/project/src' });
+        expect(
+          mockLocalFileProtocolManager.approveIndexedProjectRoot,
+        ).toHaveBeenCalledExactlyOnceWith('/workspace/project');
+      },
+    );
+
+    it('does not authorize a preview root when indexing fails', async () => {
+      getProjectFileIndexMock.mockRejectedValueOnce(new Error('Index unavailable'));
+
+      await expect(
+        localFileCtr.getProjectFileIndex({ scope: '/workspace/project' }),
+      ).rejects.toThrow('Index unavailable');
+      expect(mockLocalFileProtocolManager.approveIndexedProjectRoot).not.toHaveBeenCalled();
+    });
+
+    it('returns the index even when preview authorization fails', async () => {
+      const index = { entries: [], indexedAt: '', root: '/workspace/project', source: 'git' };
+      getProjectFileIndexMock.mockResolvedValueOnce(index);
+      mockLocalFileProtocolManager.approveIndexedProjectRoot.mockRejectedValueOnce(
+        new Error('Authorization unavailable'),
       );
-      expect(result).not.toHaveProperty('totalCount');
-    });
 
-    it('should fall back to glob when git indexing fails', async () => {
-      execaMock.mockResolvedValueOnce({ exitCode: 1, stdout: '' });
-      mockSearchService.glob.mockResolvedValue({
-        engine: 'fast-glob',
-        files: ['/workspace/project/src', '/workspace/project/src/index.ts'],
-        success: true,
-        total_files: 2,
-      });
-      vi.mocked(mockFsPromises.stat).mockImplementation(async (filePath: string) => ({
-        isDirectory: () => filePath === '/workspace/project/src',
-      }));
-
-      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
-
-      expect(mockSearchService.glob).toHaveBeenCalledWith({
-        limit: 5000,
-        pattern: '**/*',
-        scope: '/workspace/project',
-      });
-      expect(result.source).toBe('glob');
-      expect(result.entries).toEqual([
-        expect.objectContaining({
-          isDirectory: true,
-          path: '/workspace/project/src',
-          relativePath: 'src/',
-        }),
-        expect.objectContaining({
-          isDirectory: false,
-          path: '/workspace/project/src/index.ts',
-          relativePath: 'src/index.ts',
-        }),
-      ]);
-      expect(result).not.toHaveProperty('totalCount');
-    });
-
-    it('should mark glob entries as files when stat fails', async () => {
-      execaMock.mockResolvedValueOnce({ exitCode: 1, stdout: '' });
-      mockSearchService.glob.mockResolvedValue({
-        engine: 'fast-glob',
-        files: ['/workspace/project/src/index.ts'],
-        success: true,
-        total_files: 1,
-      });
-      vi.mocked(mockFsPromises.stat).mockRejectedValue(new Error('missing'));
-
-      const result = await localFileCtr.getProjectFileIndex({ scope: '/workspace/project' });
-
-      expect(result.source).toBe('glob');
-      expect(result.entries).toEqual([
-        expect.objectContaining({
-          isDirectory: false,
-          path: '/workspace/project/src/index.ts',
-          relativePath: 'src/index.ts',
-        }),
-      ]);
+      await expect(localFileCtr.getProjectFileIndex()).resolves.toEqual(index);
     });
   });
 

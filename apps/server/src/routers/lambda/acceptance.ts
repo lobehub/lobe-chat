@@ -513,12 +513,24 @@ export const acceptanceRouter = router({
       // plan that uses a distinct snapshot id: generation reports success and
       // no card ever renders.
       const predictionByResult = new Map<string, (typeof predictions)[number]>();
+      // Goal reviews may use the owner's configured model. Their persisted ids
+      // identify the actual automatic decision without admitting unrelated rows.
+      const automaticPredictionIds = new Set(
+        runs.flatMap((run) => run.metadata?.goalReview?.predictionIds ?? []),
+      );
       // Newest-first from the model, so the first write per check item wins and
       // later (older) rows are ignored.
       for (const prediction of predictions) {
         // Rows from an earlier pin (another model / prompt version) stay in
         // the table for the comparison set but are not this page's reviewer.
-        if (!isCurrentReviewPrediction(prediction, REVIEW_PREDICT_MODEL_CONFIG)) continue;
+        if (
+          !isCurrentReviewPrediction(
+            prediction,
+            REVIEW_PREDICT_MODEL_CONFIG,
+            automaticPredictionIds,
+          )
+        )
+          continue;
         if (!predictionByResult.has(prediction.checkResultId)) {
           predictionByResult.set(prediction.checkResultId, prediction);
         }

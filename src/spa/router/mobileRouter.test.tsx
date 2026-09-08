@@ -5,14 +5,21 @@ import { matchRoutes } from 'react-router';
 import { describe, expect, it } from 'vitest';
 
 import { mobileRoutes } from './mobileRouter.config';
+import { getRouteMetaFromHandle } from './routeMeta';
 
 describe('mobileRouter agent share route', () => {
   it('serves the agent-share visitor page on /a/:slugOrId outside the main layout', () => {
     const matches = matchRoutes(mobileRoutes, '/a/my-agent');
 
     expect(matches).toHaveLength(1);
-    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId');
+    expect(matches?.[0]?.route.path).toBe('/a/:slugOrId/:topicId?');
     expect(matches?.[0]?.params).toMatchObject({ slugOrId: 'my-agent' });
+  });
+
+  it('opens a visitor topic directly without the owner layout', () => {
+    const matches = matchRoutes(mobileRoutes, '/a/my-agent/tpc_saved');
+    expect(matches).toHaveLength(1);
+    expect(matches?.[0]?.params).toEqual({ slugOrId: 'my-agent', topicId: 'tpc_saved' });
   });
 
   it('keeps the creator agent surface on /agent/:aid', () => {
@@ -64,7 +71,7 @@ describe('mobileRouter workspace provider routes', () => {
 });
 
 describe('mobile community route layouts', () => {
-  it('wraps shared community list and detail pages in SWR suspense boundaries', async () => {
+  it('renders community list and detail pages without layout-level SWR suspense', async () => {
     const readLayout = (layoutPath: string) =>
       readFile(path.join(process.cwd(), layoutPath), 'utf8');
 
@@ -74,13 +81,22 @@ describe('mobile community route layouts', () => {
     ]);
 
     for (const source of [listLayout, detailLayout]) {
-      expect(source).toContain("import { SWRConfig } from 'swr'");
-      expect(source).toContain(
-        "import SuspenseRouteBoundary from '@/components/SuspenseRouteBoundary'",
-      );
-      expect(source).toContain('<SWRConfig value={{ suspense: true }}>');
-      expect(source).toContain('<SuspenseRouteBoundary>');
+      expect(source).not.toContain('SWRConfig');
+      expect(source).not.toContain('SuspenseRouteBoundary');
+      expect(source).toContain('<RouteSkeletonChromeProvider>');
       expect(source).toContain('<Outlet />');
     }
+  });
+
+  it('declares a route skeleton for the community list and detail layouts', () => {
+    const listMatches = matchRoutes(mobileRoutes, '/community/agent');
+    const detailMatches = matchRoutes(mobileRoutes, '/community/agent/my-agent');
+
+    expect(listMatches?.some((match) => getRouteMetaFromHandle(match.route.handle)?.Skeleton)).toBe(
+      true,
+    );
+    expect(
+      detailMatches?.some((match) => getRouteMetaFromHandle(match.route.handle)?.Skeleton),
+    ).toBe(true);
   });
 });

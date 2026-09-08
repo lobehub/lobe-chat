@@ -1,10 +1,11 @@
 import debug from 'debug';
 
+import { GoalModel } from '@/database/models/goal';
 import { TaskModel } from '@/database/models/task';
 import { VerifyRunModel } from '@/database/models/verifyRun';
 import type { LobeChatDatabase } from '@/database/type';
 
-import { AcceptanceService } from './acceptanceService';
+import { AcceptanceService, buildAcceptanceCheckUnion } from './acceptanceService';
 import { resolveVerifyModelConfig } from './modelConfig';
 import { VerifyPlanGeneratorService } from './planGenerator';
 import { resolveTaskAcceptance } from './taskAcceptance';
@@ -72,6 +73,30 @@ export const instantiateVerifyPlanOnStart = async (
     if (existing?.plan?.length) return;
 
     const goal = task?.instruction ?? task?.name ?? '';
+
+    // Goal retries re-verify the same acceptance checks, including supplementary
+    // checks submitted with the delivery. Generating new ids would leave the
+    // rejected evidence in the union forever instead of superseding it.
+    if (holistic && (await new GoalModel(db, userId, workspaceId).findByGraphTask(params.taskId))) {
+      const service = new AcceptanceService(db, userId, workspaceId);
+      const { results, runs } = await service.loadRounds(acceptance.id);
+      const previousPlan = buildAcceptanceCheckUnion(
+        runs.map((run) => ({
+          results: results.filter((result) => result.verifyRunId === run.id),
+          run,
+        })),
+      ).flatMap((check) => (check.planItem ? [{ ...check.planItem, id: check.id }] : []));
+      if (previousPlan.length) {
+        const retry = await runModel.ensureForOperation(params.operationId);
+        await runModel.setPlan(retry.id, previousPlan);
+        if (typeof verifyConfig.maxIterations === 'number') {
+          await runModel.setMetadata(retry.id, { maxRepairRounds: verifyConfig.maxIterations });
+        }
+        await runModel.confirmPlan(retry.id);
+        await service.attachPolicyRun(retry.id, acceptance.id);
+        return;
+      }
+    }
 
     const planGenerator = new VerifyPlanGeneratorService(db, userId, workspaceId);
     // Undecomposed acceptance (goal-dispatched Task, one-sentence requirement):

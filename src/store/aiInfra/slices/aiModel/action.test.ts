@@ -1054,8 +1054,8 @@ describe('AiModelAction', () => {
   describe('useFetchAiModelReasoningConfig', () => {
     it('resolves a missing config as null so SWR data is never undefined', async () => {
       // The server legitimately returns nothing when the user never customized
-      // this model's reasoning params. SWR suspense mode can only settle on
-      // defined data, so the fetcher must normalize that to null.
+      // this model's reasoning params; `null` keeps that distinguishable from a
+      // fetch that has not settled yet.
       vi.spyOn(aiModelService, 'getAiModelReasoningConfig').mockResolvedValue(undefined);
 
       const { result } = renderHook(

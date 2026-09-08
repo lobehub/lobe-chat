@@ -6,7 +6,7 @@ import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useNavigate } from 'react-router';
 
-import RouteSegmentSkeleton from '@/components/Skeleton/RouteSegment';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 
 import { useWorkspaceFromSlug } from './useWorkspaceFromSlug';
 
@@ -28,10 +28,7 @@ const WorkspaceSlugBoundary: FC = () => {
   const navigate = useNavigate();
   const result = useWorkspaceFromSlug();
 
-  // Workspaces are still being fetched. The parent layout has already resolved
-  // by now, so returning null would blank the content area between the lazy
-  // chunk's skeleton and the page's own — keep the same skeleton on screen.
-  if (result.status === 'loading') return <RouteSegmentSkeleton />;
+  if (result.status === 'loading') return <RouteLoading />;
 
   if (result.status === 'not-found') {
     return (

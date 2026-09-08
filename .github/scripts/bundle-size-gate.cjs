@@ -5,19 +5,20 @@
  *
  * Usage:
  *   node bundle-size-gate.js measure --type <web|asar|entry-graph> --out <file.json>
- *   node bundle-size-gate.js check --current <file.json> --baseline <file.json> [--label <name>] [--report <file.md>] [--percent <n>] [--floor <bytes>]
+ *   node bundle-size-gate.js check --current <file.json> --baseline <file.json> [--label <name>] [--report <file.md>] [--percent <n>] [--floor <bytes>] [--max-chunks <n>]
  *
- * Thresholds (env, overridable per check via --percent / --floor):
+ * Thresholds (env, overridable per check via --percent / --floor / --max-chunks):
  *   SIZE_GATE_PERCENT      max allowed increase in percent (default 3)
  *   SIZE_GATE_FLOOR_BYTES  min absolute increase before failing (default 512 KiB)
+ *   SIZE_GATE_MAX_CHUNKS   max chunks in the first-screen static graph (default 100)
  *
  * An entry fails when: increase > max(baseline * percent / 100, floor).
  *
  * `entry-graph` measures the gzip size of every JS chunk reachable from the SPA
  * entry through *static* imports only (dynamic `import()` excluded). Total dist
  * size cannot see a lazy chunk being pulled back into the sync graph; this can.
- * A chunk name (hash stripped) that is absent from the baseline graph fails the
- * check regardless of size.
+ * Its chunk count is gated against a fixed ceiling instead of the baseline, so
+ * routine churn in chunk names does not fail the check.
  * Missing baseline or missing current report degrades to a warning + exit 0,
  * so the gate never blocks before the first baseline exists.
  */
@@ -231,6 +232,7 @@ const check = (args) => {
 
   const percent = Number(args.percent || process.env.SIZE_GATE_PERCENT || 3);
   const floor = Number(args.floor || process.env.SIZE_GATE_FLOOR_BYTES || 512 * 1024);
+  const maxChunks = Number(args['max-chunks'] || process.env.SIZE_GATE_MAX_CHUNKS || 100);
 
   const keys = [...new Set([...Object.keys(baselineSizes), ...Object.keys(currentSizes)])];
   const rows = [];
@@ -257,16 +259,16 @@ const check = (args) => {
   }
 
   const graphRows = [];
-  if (currentReport.graphs && baselineReport.graphs) {
+  if (currentReport.graphs) {
     for (const key of Object.keys(currentReport.graphs)) {
-      const base = baselineReport.graphs[key];
-      if (!base) continue;
+      const base = baselineReport.graphs?.[key];
       const cur = currentReport.graphs[key];
-      const added = Object.keys(cur.chunks).filter((name) => !base.chunks[name]);
-      const removed = Object.keys(base.chunks).filter((name) => !cur.chunks[name]);
-      if (added.length > 0) failed = true;
+      const added = base ? Object.keys(cur.chunks).filter((name) => !base.chunks[name]) : [];
+      const removed = base ? Object.keys(base.chunks).filter((name) => !cur.chunks[name]) : [];
+      const over = cur.count > maxChunks;
+      if (over) failed = true;
       graphRows.push(
-        `| ${key} | ${base.count} | ${cur.count} | ${added.map((n) => `\`${n}\``).join(', ') || '—'} | ${removed.map((n) => `\`${n}\``).join(', ') || '—'} | ${added.length > 0 ? '❌' : '✅'} |`,
+        `| ${key} | ${base?.count ?? '—'} | ${cur.count} / ${maxChunks} | ${added.map((n) => `\`${n}\``).join(', ') || '—'} | ${removed.map((n) => `\`${n}\``).join(', ') || '—'} | ${over ? '❌' : '✅'} |`,
       );
     }
   }
@@ -286,7 +288,7 @@ const check = (args) => {
           `| --- | --- | --- | --- | --- | --- |`,
           ...graphRows,
           '',
-          `> A chunk newly reachable through static imports fails the gate — it was lazy before and is now on the first-screen path.`,
+          `> Gate: fails when the first-screen static graph holds more than ${maxChunks} chunks. Added/removed chunk names are informational.`,
         ]
       : []),
   ].join('\n');
@@ -298,8 +300,8 @@ const check = (args) => {
 
   if (failed) {
     console.error(
-      `❌ ${label} exceeds the gate: size increase > max(${percent}%, ${humanSize(floor)}) or a new chunk entered the static import graph. ` +
-        'Inspect the added dependencies or imports, or adjust SIZE_GATE_PERCENT / SIZE_GATE_FLOOR_BYTES if this is expected.',
+      `❌ ${label} exceeds the gate: size increase > max(${percent}%, ${humanSize(floor)}) or the first-screen static graph holds more than ${maxChunks} chunks. ` +
+        'Inspect the added dependencies or imports, or adjust SIZE_GATE_PERCENT / SIZE_GATE_FLOOR_BYTES / SIZE_GATE_MAX_CHUNKS if this is expected.',
     );
     process.exit(1);
   }

@@ -11,11 +11,21 @@ import { canViewAcceptanceHistory } from './visibility';
 const styles = createStaticStyles(({ css }) => ({
   link: css`
     cursor: pointer;
+
+    padding: 0;
+    border: 0;
+
     font-size: 12px;
     color: ${cssVar.colorTextQuaternary};
 
+    background: none;
+
     &:hover {
       color: ${cssVar.colorTextSecondary};
+    }
+
+    @media (width <= 767px) {
+      min-height: 44px;
     }
   `,
 }));
@@ -30,14 +40,15 @@ const AcceptanceViewReportLink = () => {
   const round = [...data.rounds].reverse().find((item) => item.report);
 
   return (
-    <span
+    <button
       className={styles.link}
+      type={'button'}
       onClick={() => {
         if (round?.run.roundIndex == null) return;
         setSearchParams(
           (prev) => {
             const params = new URLSearchParams(prev);
-            params.set('r', String(round.run.roundIndex));
+            params.set('report', String(round.run.roundIndex));
             return params;
           },
           { replace: true },
@@ -45,7 +56,7 @@ const AcceptanceViewReportLink = () => {
       }}
     >
       {t('acceptance.viewFullReport')}
-    </span>
+    </button>
   );
 };
 

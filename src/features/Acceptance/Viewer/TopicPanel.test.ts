@@ -39,13 +39,12 @@ vi.mock('@/features/AgentTasks/AgentTaskDetail/TopicChatDrawer', () => ({
 }));
 
 describe('TopicPanel', () => {
-  it('renders the topic conversation in the right rail and returns to runs', () => {
-    const onBack = vi.fn();
+  it('shows the agent avatar and only a collapse action in the conversation rail', () => {
     const onCollapse = vi.fn();
-    const { getByTestId, getByText, getByTitle } = render(
+    const { getByAltText, getByTestId, getByText, getByTitle, queryByTitle } = render(
       createElement(TopicPanel, {
+        agentAvatar: '🤖',
         agentId: 'agent-1',
-        onBack,
         onCollapse,
         title: 'Origin topic',
         topicId: 'topic-1',
@@ -63,8 +62,8 @@ describe('TopicPanel', () => {
     );
     expect(getByTestId('topic-conversation').textContent).toBe('agent-1:topic-1');
 
-    fireEvent.click(getByTitle('acceptance.origin.backToRuns'));
-    expect(onBack).toHaveBeenCalledOnce();
+    expect(getByAltText('🤖')).toBeTruthy();
+    expect(queryByTitle('acceptance.origin.backToRuns')).toBeNull();
 
     fireEvent.click(getByTitle('acceptance.ledger.collapse'));
     expect(onCollapse).toHaveBeenCalledOnce();

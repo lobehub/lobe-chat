@@ -28,25 +28,30 @@ const styles = createStaticStyles(({ css }) => ({
 
     position: absolute;
     z-index: 2;
-    inset-block-start: -6px;
-    inset-inline-end: -6px;
+    inset-block-start: 0;
+    inset-inline-end: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 18px;
-    height: 18px;
+    width: 28px;
+    height: 28px;
     padding: 0;
     border: none;
     border-radius: 50%;
 
     color: #fff;
 
-    opacity: 0;
+    opacity: 1;
     background: ${cssVar.colorError};
 
     transition: opacity 0.15s;
+
+    @media (pointer: coarse), (width <= 767px) {
+      width: 44px;
+      height: 44px;
+    }
   `,
   thumb: css`
     position: relative;
@@ -96,11 +101,11 @@ const pickImages = (files: File[]): File[] =>
  * attachment is a real file row the reject/group-feedback write references by
  * id (the same flywheel evidence uses), never a base64 blob on the note.
  */
-export const useFeedbackAttachments = (max = 6) => {
+export const useFeedbackAttachments = (max = 6, initialAttachments: PendingAttachment[] = []) => {
   const { t } = useTranslation('verify');
 
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
-  const [attachments, setAttachments] = useState<PendingAttachment[]>([]);
+  const [attachments, setAttachments] = useState<PendingAttachment[]>(initialAttachments);
   const [uploadingCount, setUploadingCount] = useState(0);
 
   const uploadFiles = useCallback(
@@ -180,6 +185,7 @@ interface AttachmentStripProps {
 /** The draft thumbnails in a compose surface — each removable, plus a spinner tile while uploading. */
 export const AttachmentStrip = memo<AttachmentStripProps>(
   ({ attachments, disabled, onRemove, uploading }) => {
+    const { t } = useTranslation('verify');
     if (attachments.length === 0 && !uploading) return null;
     return (
       <Flexbox horizontal gap={8} wrap={'wrap'}>
@@ -188,6 +194,7 @@ export const AttachmentStrip = memo<AttachmentStripProps>(
             <Image alt={attachment.name ?? ''} preview={false} src={attachment.url} />
             {!disabled && (
               <button
+                aria-label={t('acceptance.review.removeAttachment')}
                 className={cx('acceptance-attach-remove', styles.remove)}
                 type={'button'}
                 onClick={() => onRemove(attachment.id)}
@@ -231,10 +238,9 @@ export const AttachmentUploadButton = memo<AttachmentUploadButtonProps>(({ disab
       }}
     >
       <Button
-        outdent
         disabled={disabled}
         icon={<Icon icon={ImagePlus} />}
-        size={'small'}
+        style={{ minHeight: 44, alignSelf: 'flex-start' }}
         type={'text'}
       >
         {t('acceptance.review.attach')}

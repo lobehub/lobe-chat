@@ -4,6 +4,8 @@ import { Flexbox } from '@lobehub/ui';
 import { memo } from 'react';
 import { useParams } from 'react-router';
 
+import AsyncError from '@/components/AsyncError';
+import { RouteLoading } from '@/components/Skeleton/RouteSegment';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 
@@ -25,11 +27,13 @@ const GroupAgentDetailPage = memo<GroupAgentDetailPageProps>(({ mobile }) => {
 
   // Fetch group agent detail
   const useGroupAgentDetail = useDiscoverStore((s) => s.useGroupAgentDetail);
-  const { data } = useGroupAgentDetail({ identifier, version });
+  const { data, error, isLoading, mutate } = useGroupAgentDetail({ identifier, version });
 
-  if (!data) return <NotFound />;
-
-  // Check status and show appropriate page
+  if (data === undefined) {
+    if (isLoading) return <RouteLoading />;
+    if (error) return <AsyncError error={error} variant={'page'} onRetry={() => void mutate()} />;
+    return <NotFound />;
+  }
   const status = (data as any)?.group?.status || (data as any)?.status;
   if (status === 'unpublished' || status === 'archived' || status === 'deprecated') {
     return <StatusPage status={status} />;

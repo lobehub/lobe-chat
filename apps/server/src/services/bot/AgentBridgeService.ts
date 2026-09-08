@@ -1472,6 +1472,7 @@ export class AgentBridgeService {
                           );
                           const title = await systemAgent.generateTopicTitle({
                             lastAssistantContent,
+                            topicId: resolvedTopicId,
                             userPrompt: prompt,
                           });
                           if (!title) return;
