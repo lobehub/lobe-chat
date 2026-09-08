@@ -26,12 +26,12 @@ import {
   useAcceptanceBundle,
   useAcceptanceBySubject,
 } from '@/features/Acceptance';
-import AcceptanceCheckInventory from '@/features/Acceptance/Viewer/AcceptanceCheckInventory';
-import AcceptanceDecision from '@/features/Acceptance/Viewer/AcceptanceDecision';
 import {
   AcceptanceBundleGate,
   AcceptanceScope,
 } from '@/features/Acceptance/Viewer/AcceptanceScope';
+import AcceptanceCheckInventory from '@/features/Acceptance/Viewer/Checks/AcceptanceCheckInventory';
+import AcceptanceDecision from '@/features/Acceptance/Viewer/Review/AcceptanceDecision';
 import { usePermission } from '@/hooks/usePermission';
 import { verifyService } from '@/services/verify';
 import { useChatStore } from '@/store/chat';

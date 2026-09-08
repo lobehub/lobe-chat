@@ -23,7 +23,9 @@ export function attachAcceptanceFlowCommands(acceptance: Command) {
     outputJson((await client.acceptance.getBundle.query({ id })).flows);
   });
   flow
-    .command('start <acceptanceId>')
+    .command('plan <acceptanceId>')
+    .alias('start')
+    .description('Prepare a frozen flow plan for inspection without executing checks')
     .requiredOption('--flow <id>')
     .option('--run <id>', 'Existing round; omit to create a fresh round for this flow')
     .option('--from-run <id>', 'Replay the frozen definition from a previous round')

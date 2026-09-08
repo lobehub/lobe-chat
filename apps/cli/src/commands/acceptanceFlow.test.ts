@@ -9,7 +9,9 @@ const { startFlow, outputJson } = vi.hoisted(() => ({
 }));
 
 vi.mock('../api/client', () => ({
-  getTrpcClient: async () => ({ acceptance: { startFlow: { mutate: startFlow } } }),
+  getTrpcClient: async () => ({
+    acceptance: { startFlow: { mutate: startFlow } },
+  }),
 }));
 vi.mock('../utils/format', () => ({ outputJson }));
 
@@ -54,6 +56,28 @@ it('allows a fresh verification round when --run is omitted', async () => {
   expect(startFlow).toHaveBeenCalledWith({
     id: 'acceptance-id',
     flowId: 'version-id',
+    sourceRunId: undefined,
+    verifyRunId: undefined,
+  });
+});
+
+it('prepares a flow for review through the plan command', async () => {
+  startFlow.mockClear();
+  const program = new Command().exitOverride();
+  attachAcceptanceFlowCommands(program.command('acceptance'));
+  await program.parseAsync([
+    'node',
+    'lh',
+    'acceptance',
+    'flow',
+    'plan',
+    'acceptance-id',
+    '--flow',
+    'flow-id',
+  ]);
+  expect(startFlow).toHaveBeenCalledWith({
+    id: 'acceptance-id',
+    flowId: 'flow-id',
     sourceRunId: undefined,
     verifyRunId: undefined,
   });

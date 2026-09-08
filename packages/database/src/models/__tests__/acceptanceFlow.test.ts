@@ -106,6 +106,23 @@ describe('check assets and round snapshots', () => {
     },
   );
 
+  it('records a prepared draft without a separate confirmation and freezes it on execution', async () => {
+    const { flowId } = await model.publish(acceptanceId, definition);
+    const run = await model.start(acceptanceId, flowId);
+    const draft = await roundPlan(run.id);
+    expect(draft.planConfirmedAt).toBeNull();
+    await model.record(acceptanceId, {
+      verifyRunId: run.id,
+      checkItemId: draft.plan![0].id,
+      verdict: 'passed',
+      observation: 'Execution after inspecting the draft requires no extra confirmation',
+    });
+    expect((await roundPlan(run.id)).status).toBe('collecting_evidence');
+    expect((await roundPlan(run.id)).planConfirmedAt).not.toBeNull();
+    const replay = await model.start(acceptanceId, flowId, undefined, run.id);
+    expect((await roundPlan(replay.id)).planConfirmedAt).toBeNull();
+  });
+
   it('creates assets before execution and instantiates each incoming branch in the canonical plan', async () => {
     const published = await model.publish(acceptanceId, definition);
     expect(
