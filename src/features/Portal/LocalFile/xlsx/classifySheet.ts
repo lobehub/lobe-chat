@@ -182,9 +182,7 @@ export const classifySheet = (sheet: SheetModel): SheetOutline => {
         continue;
       }
 
-      const isTotal =
-        item.cells.every((cell) => Boolean(cell.s.bg)) ||
-        item.cells.some((cell) => TOTAL_WORDS.test(cell.t));
+      const isTotal = item.cells.some((cell) => TOTAL_WORDS.test(cell.t));
       section.body.push({ cells: inColumns, extras, kind: isTotal ? 'total' : 'data' });
       stats.table += 1;
     }

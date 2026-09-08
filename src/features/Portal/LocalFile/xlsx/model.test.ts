@@ -60,6 +60,34 @@ describe('readWorkbook', () => {
     expect(sheet.rows[2].cells[0].t).toBe('1.2');
   });
 
+  it('formats scientific notation without fixed-point rounding', async () => {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Scientific');
+
+    worksheet.getCell('A1').value = 0.001;
+    worksheet.getCell('A1').numFmt = '0.00E+00';
+    worksheet.getCell('A2').value = -123_000;
+    worksheet.getCell('A2').numFmt = '0.0E+00';
+
+    const sheet = await readWorksheet(workbook);
+
+    expect(sheet.rows[0].cells[0].t).toBe('1.00E-03');
+    expect(sheet.rows[1].cells[0].t).toBe('-1.2E+05');
+  });
+
+  it('clips merged cell spans to rendered preview rows', async () => {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Merges');
+
+    worksheet.getCell('A1').value = 'merged';
+    worksheet.mergeCells('A1:A1000');
+
+    const sheet = await readWorksheet(workbook);
+
+    expect(sheet.rows).toHaveLength(500);
+    expect(sheet.rows[0].cells[0]).toMatchObject({ rs: 500, t: 'merged' });
+  });
+
   it('formats cached date results from formula cells', async () => {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Formula Dates');

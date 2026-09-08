@@ -107,6 +107,25 @@ describe('classifySheet', () => {
     expect(outline.stats.aside).toBe(0);
   });
 
+  it('does not classify filled data rows as totals without a total marker', () => {
+    const outline = classifySheet(
+      sheet([
+        [
+          cell(1, '日期', { b: 1, bg: '#4472C4' }),
+          cell(2, '项目', { b: 1, bg: '#4472C4' }),
+          cell(3, '金额', { b: 1, bg: '#4472C4' }),
+        ],
+        [
+          cell(1, '9/15', { bg: '#EAF1FD' }),
+          cell(2, '住宿', { bg: '#EAF1FD' }),
+          cell(3, '346', { bg: '#EAF1FD' }),
+        ],
+      ]),
+    );
+
+    expect(outline.sections[0].body[0].kind).toBe('data');
+  });
+
   it('falls back to the fidelity grid when no structure is recognised', () => {
     const outline = classifySheet(
       sheet([
