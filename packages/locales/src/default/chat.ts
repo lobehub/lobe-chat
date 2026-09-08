@@ -2636,6 +2636,11 @@ export default {
   'workingPanel.works.error': 'Failed to load works',
   'workingPanel.works.changeType.created': 'Created',
   'workingPanel.works.changeType.updated': 'Updated',
+  'workingPanel.works.documentDeleted': 'Document deleted',
+  'workingPanel.works.remove': 'Remove work',
+  'workingPanel.works.removeConfirm':
+    'Remove this work card? Its version history will be removed as well. This cannot be undone.',
+  'workingPanel.works.resourceDeleted': 'Resource deleted',
   'workingPanel.works.taskDeleted': 'Task deleted',
   'workingPanel.works.title': 'Works',
   'workingPanel.works.versionError': 'Failed to load versions',

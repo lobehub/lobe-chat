@@ -3,9 +3,9 @@
 import type { WorkSummaryItem } from '@lobechat/types';
 import { formatUsageValue } from '@lobechat/utils';
 import { Center, Flexbox, Icon as LobeIcon } from '@lobehub/ui';
-import { Tag, Text } from '@lobehub/ui/base-ui';
+import { Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cx } from 'antd-style';
-import { CircleDollarSignIcon, CoinsIcon, Trash2Icon } from 'lucide-react';
+import { CircleDollarSignIcon, CoinsIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +14,7 @@ import { getWorkVersionTotalTokens } from '@/utils/workCumulativeUsage';
 import { formatWorkVersionCost } from '@/utils/workVersionCost';
 
 import { getWorkTypeDescriptor, isSafeExternalUrl } from './descriptors';
+import ResourceDeletedTag from './ResourceDeletedTag';
 
 const styles = createStaticStyles(({ css, cssVar }) => ({
   card: css`
@@ -162,11 +163,11 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
     const showIdentifier = !!identifier && identifier !== title;
     const description = descriptor.getDescription(item);
     const openTarget = descriptor.getOpenTarget(item);
-    // The backing task was deleted outside the tool path: the Work lingers as an
-    // orphan rendered from its snapshot, and opening the gone task detail 404s, so
-    // strip the click affordance and surface a "task deleted" badge.
-    const taskDeleted = item.resourceType === 'task' && item.taskDeleted;
-    const clickable = !!openTarget && !taskDeleted;
+    // The backing resource (task / document) was deleted outside the tool path:
+    // the Work lingers as an orphan rendered from its snapshot, and opening the
+    // gone resource 404s, so strip the click affordance and surface a badge.
+    const resourceDeleted = item.resourceDeleted;
+    const clickable = !!openTarget && !resourceDeleted;
 
     const handleOpen = () => {
       if (onOpen) {
@@ -212,11 +213,7 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
                 {title}
               </Text>
               {showIdentifier && <span className={styles.inlineIdentifier}>{identifier}</span>}
-              {taskDeleted && (
-                <Tag color={'warning'} icon={<Trash2Icon size={12} />} size={'small'}>
-                  {t('workingPanel.works.taskDeleted')}
-                </Tag>
-              )}
+              {resourceDeleted && <ResourceDeletedTag item={item} />}
             </Flexbox>
             {description && (
               <Text ellipsis className={styles.inlineDescription}>
@@ -256,11 +253,7 @@ const WorkSummaryCard = memo<WorkSummaryCardProps>(
                   {identifier}
                 </Text>
               )}
-              {taskDeleted && (
-                <Tag color={'warning'} icon={<Trash2Icon size={12} />} size={'small'}>
-                  {t('workingPanel.works.taskDeleted')}
-                </Tag>
-              )}
+              {resourceDeleted && <ResourceDeletedTag item={item} />}
             </Flexbox>
             {usage && (
               <Center horizontal className={styles.cost} gap={2} title={usageTitle}>

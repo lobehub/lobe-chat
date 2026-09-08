@@ -1,6 +1,7 @@
 import type {
   DeleteDocumentWorkParams,
   DeleteTaskWorkParams,
+  DeleteWorkParams,
   WorkDisplayField,
   WorkItem,
   WorkResourceType,
@@ -313,4 +314,20 @@ export const deleteTaskWork = async (
     .where(
       and(workOwnership(ctx), eq(works.resourceType, 'task'), eq(works.resourceId, params.taskId)),
     );
+};
+
+/**
+ * User-initiated removal of one Work card by its own id. Meant for orphaned
+ * Works (the backing task / document is gone — see `resourceDeleted`), where
+ * deleting the resource itself is no longer possible, so this is the only way
+ * the user can clear the card.
+ *
+ * Restricted to the Work's own `userId` (the resource owner stamped at
+ * registration), not every member who can see the row. Cascades
+ * `work_versions`, `project_works` and `goal_node_work_versions` via FK.
+ */
+export const deleteWork = async (ctx: WorkContext, params: DeleteWorkParams): Promise<void> => {
+  await ctx.db
+    .delete(works)
+    .where(and(workOwnership(ctx), eq(works.id, params.id), eq(works.userId, ctx.userId)));
 };

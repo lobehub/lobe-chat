@@ -174,6 +174,12 @@ export const workRouter = router({
     .input(z.object({ taskId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => ctx.workModel.deleteTaskWork(input)),
 
+  // User-initiated removal of a (typically orphaned) Work card. No scoped RBAC
+  // gate: the model restricts the delete to the caller's own Work rows.
+  deleteWork: workProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => ctx.workModel.deleteWork(input)),
+
   registerTask: taskWorkProcedureWrite
     .input(registerTaskSchema)
     .mutation(async ({ ctx, input }) => ctx.workModel.registerTask(input)),

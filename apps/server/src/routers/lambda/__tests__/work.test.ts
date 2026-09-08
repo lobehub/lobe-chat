@@ -19,6 +19,7 @@ vi.mock('@/business/server/trpc-middlewares/rbacPermission', () => ({
 }));
 
 const mockDeleteTaskWork = vi.fn();
+const mockDeleteWork = vi.fn();
 const mockRegisterTask = vi.fn();
 const mockRegisterDocument = vi.fn();
 const mockHandleSkillToolResult = vi.fn();
@@ -27,6 +28,7 @@ const mockListByConversation = vi.fn();
 vi.mock('@/database/models/work', () => ({
   WorkModel: vi.fn(() => ({
     deleteTaskWork: mockDeleteTaskWork,
+    deleteWork: mockDeleteWork,
     handleSkillToolResult: mockHandleSkillToolResult,
     listByConversation: mockListByConversation,
     registerDocument: mockRegisterDocument,
@@ -81,6 +83,12 @@ describe('workRouter — per-procedure write permission gates', () => {
       createCaller().handleSkillToolResult({ provider: 'linear', toolName: 'createIssue' }),
     ).rejects.toThrow('GATE:agent:update');
     expect(mockHandleSkillToolResult).not.toHaveBeenCalled();
+  });
+
+  it('deleteWork stays ungated: the model restricts it to the caller-owned row', async () => {
+    mockDeleteWork.mockResolvedValue(undefined);
+    await expect(createCaller().deleteWork({ id: 'work-1' })).resolves.toBeUndefined();
+    expect(mockDeleteWork).toHaveBeenCalledWith({ id: 'work-1' });
   });
 
   it('read-only list procedures stay ungated', async () => {
