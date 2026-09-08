@@ -6,9 +6,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDB } from '@/database/core/getTestDB';
 import { AgentOperationModel } from '@/database/models/agentOperation';
+import { DocumentModel } from '@/database/models/document';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
 import { TaskModel } from '@/database/models/task';
+import { WorkModel } from '@/database/models/work';
 import {
   acceptances,
   agentOperations,
@@ -18,7 +20,6 @@ import {
   goalNodeDecisions,
   goalNodes,
   goals,
-  messages,
   tasks,
   taskTopics,
   topics,
@@ -31,6 +32,7 @@ import { GoalService } from '../index';
 import * as modelConfig from '../modelConfig';
 import * as scheduler from '../scheduler';
 import { GoalSupervisorService } from './index';
+import { GoalSupervisorTools } from './tools';
 
 const db = await getTestDB();
 const userId = 'supervisor-test-user';
@@ -117,16 +119,22 @@ const failedGoal = async (enabled = true, error = 'fetch failed: ECONNRESET') =>
 const diagnose = async (goalId: string, action = 'retry') => {
   const state = (await goalModel.findById(goalId))!.config!.supervisorState!;
   const incident = state.incidents.at(-1)!;
-  await db.insert(messages).values({
-    content: JSON.stringify({
-      action,
-      instruction: 'Read existing checkpoint and only finish missing report delivery.',
-      reason: 'The delivery upload failed after existing work was saved.',
-    }),
-    metadata: { operationId: incident.supervisorOperationId },
-    role: 'assistant',
-    topicId: state.topicId,
+  const tool = new GoalSupervisorTools({
+    serverDB: db,
     userId,
+    agentId: state.agentId,
+    topicId: state.topicId,
+    operationId: incident.supervisorOperationId,
+    toolCallId: `resolve-${incident.id}`,
+  });
+  const scope = { goalId, incidentId: incident.id };
+  await tool.inspectGoal(scope);
+  await tool.inspectTask(scope);
+  await tool.resolveInterruption({
+    ...scope,
+    action: action as 'retry' | 'escalate',
+    instruction: 'Read existing checkpoint and only finish missing report delivery.',
+    reason: 'The delivery upload failed after existing work was saved.',
   });
   await operationModel.recordCompletion(incident.supervisorOperationId!, {
     completionReason: 'done',
@@ -137,6 +145,106 @@ const diagnose = async (goalId: string, action = 'retry') => {
 };
 
 describe('Goal Supervisor integration', () => {
+  it('requires scoped inspections, rejects unrelated callers, and records one idempotent action', async () => {
+    const { goalId } = await failedGoal();
+    await service().tick(goalId);
+    const state = (await goalModel.findById(goalId))!.config!.supervisorState!;
+    const incident = state.incidents[0];
+    const context = {
+      serverDB: db,
+      userId,
+      agentId: state.agentId,
+      topicId: state.topicId,
+      operationId: incident.supervisorOperationId,
+      toolCallId: 'resolve-1',
+    };
+    const tool = new GoalSupervisorTools(context);
+    const scope = { goalId, incidentId: incident.id };
+    const request = {
+      ...scope,
+      action: 'retry' as const,
+      instruction: 'Inspect and reuse the saved report.',
+      reason: 'Delivery transport failed.',
+    };
+    expect((await tool.resolveInterruption(request)).success).toBe(false);
+    for (const changed of [
+      { topicId: 'other-topic' },
+      { operationId: 'other-op' },
+      { agentId: 'other-agent' },
+      { userId: 'other-user' },
+    ]) {
+      expect(
+        (await new GoalSupervisorTools({ ...context, ...changed }).inspectGoal(scope)).success,
+      ).toBe(false);
+    }
+    expect((await tool.inspectGoal(scope)).success).toBe(true);
+    expect((await tool.inspectTask(scope)).success).toBe(true);
+    expect((await tool.readArtifact({ ...scope, workVersionId: 'not-linked' })).success).toBe(
+      false,
+    );
+    expect((await tool.resolveInterruption(request)).success).toBe(true);
+    expect((await tool.resolveInterruption({ ...request, action: 'escalate' })).success).toBe(true);
+    const current = (await goalModel.findById(goalId))!.config!.supervisorState!;
+    expect(current.incidents[0].resolution).toMatchObject({
+      action: 'retry',
+      toolCallId: 'resolve-1',
+    });
+    expect(current.incidents[0].status).toBe('diagnosing');
+    await service().pause(goalId);
+    expect((await tool.inspectTask(scope)).success).toBe(false);
+    expect((await tool.resolveInterruption(request)).success).toBe(false);
+  });
+
+  it('reads only linked accessible artifacts and labels mutable document text honestly', async () => {
+    const { goalId, nodeId } = await failedGoal();
+    const document = await new DocumentModel(db, userId).create({
+      title: 'Checkpoint',
+      content: 'saved result',
+      fileType: 'text/plain',
+      sourceType: 'api',
+      source: 'test',
+      totalCharCount: 12,
+      totalLineCount: 1,
+    });
+    const work = await new WorkModel(db, userId).registerDocument({
+      documentId: document.id,
+      changeType: 'created',
+      toolIdentifier: 'test',
+      toolName: 'save',
+    });
+    await new GoalGraphModel(db, userId).attachWorkVersion(
+      goalId,
+      nodeId,
+      work!.currentVersionId!,
+      'input',
+    );
+    await service().tick(goalId);
+    const state = (await goalModel.findById(goalId))!.config!.supervisorState!;
+    const incident = state.incidents[0];
+    const tool = new GoalSupervisorTools({
+      serverDB: db,
+      userId,
+      agentId: state.agentId,
+      topicId: state.topicId,
+      operationId: incident.supervisorOperationId,
+    });
+    const result = await tool.readArtifact({
+      goalId,
+      incidentId: incident.id,
+      workVersionId: work!.currentVersionId!,
+    });
+    expect(result.success).toBe(true);
+    expect(JSON.parse(result.content)).toMatchObject({
+      content: 'saved result',
+      source: 'current_document_not_version_snapshot',
+      truncated: false,
+    });
+    expect(
+      (await tool.readArtifact({ goalId, incidentId: incident.id, workVersionId: 'unrelated' }))
+        .success,
+    ).toBe(false);
+  });
+
   it('persists a diagnostic topic, schedules its wake, retries once, and counts only consumed delivery', async () => {
     const { goalId, taskId } = await failedGoal();
     expect((await service().tick(goalId)).outcome).toBe('waiting_external');

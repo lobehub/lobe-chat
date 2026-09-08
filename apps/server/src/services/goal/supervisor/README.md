@@ -12,9 +12,14 @@ repair/deploy the platform or diagnose arbitrary failures. This is a subset of
 the proposed general Goal supervisor, not a claim of unattended long-horizon
 operation. Agent-authored failures without a persisted operation are outside it.
 
-A virtual native agent diagnoses the failure in a separate durable Topic with
-all tools disabled. Its only accepted output is a validated retry/escalate
-recommendation. The server rechecks Goal status, pending decisions, current
+A virtual native agent investigates the failure in a separate durable Topic
+with an exclusive `lobe-goal-supervisor` tool set: `inspectGoal`, `inspectTask`,
+`readArtifact`, and `resolveInterruption`. Every call checks the server-created
+Goal/incident/topic/agent/operation binding. The model must inspect the Goal and
+Task before recording an idempotent recovery request; final prose/JSON is not an
+action. `readArtifact` checks Goal membership and Work visibility. It labels
+current document text explicitly: this is not an immutable historical document
+snapshot, filesystem checkpoint validation or cross-device artifact restoration. The server rechecks Goal status, pending decisions, current
 Task/run identity, original Task attempt limits and Goal budgets before queuing
 recovery through the ordinary dispatcher. Recovery instructions require checking
 and reusing saved work and reconciling external side effects before replay. This
@@ -37,7 +42,7 @@ An unbounded multi-month history should use a paginated incident table instead.
 
 Diagnostic spending is included in Goal graph spending and budget checks; Task
 attempt/round accounting remains unchanged. Each diagnostic run is additionally
-capped at three agent steps. Goal list rollups still describe Task spending;
+capped at sixteen agent steps. Goal list rollups still describe Task spending;
 the detailed graph includes supervision costs.
 
 ## Measurement
@@ -61,3 +66,13 @@ identical injected failure and saved output, supervision disabled versus enabled
 then actual queued diagnosis, Task execution and verification. Boundary evidence
 is reported independently; a high recovery rate cannot compensate for a user
 pause, approval or budget violation.
+
+## Planning ownership
+
+The supervisor currently owns interruption investigation and recovery requests.
+The existing Goal decomposition/exploration planner still owns initial and nested
+graph planning; terminal verification and scheduled waiting remain coordinator
+capabilities. Do not interpret the tool set as a complete strategic Goal manager.
+The first-version research acceptance exercises both paths and records their
+provenance separately. Neither this tool set nor a backend restart test proves
+worker event durability or cross-device environment restoration.

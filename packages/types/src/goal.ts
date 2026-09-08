@@ -139,10 +139,18 @@ export interface GoalSupervisionIncident {
   eligible: boolean;
   failedOperationId: string;
   id: string;
+  /** Server-recorded tool inspections and recovery request for this incident. */
+  inspected?: { goal?: boolean; task?: boolean; artifactVersionIds?: string[] };
   nodeId: string;
   reason: string;
   recoveryInstruction?: string;
   recoveryOperationId?: string;
+  resolution?: {
+    action: 'retry' | 'escalate';
+    instruction: string;
+    reason: string;
+    toolCallId: string;
+  };
   resolvedAt?: string;
   status: 'diagnosing' | 'retrying' | 'recovered' | 'escalated' | 'unsuccessful' | 'human_resumed';
   supervisorOperationId?: string;

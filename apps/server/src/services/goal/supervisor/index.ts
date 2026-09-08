@@ -1,3 +1,4 @@
+import { GoalSupervisorIdentifier } from '@lobechat/builtin-tool-goal/supervisor';
 import { buildGoalSupervisorPrompt, GOAL_SUPERVISOR_INSTRUCTIONS } from '@lobechat/prompts';
 import type {
   GoalGraphSnapshot,
@@ -6,13 +7,11 @@ import type {
   GoalTickResult,
   TaskItem,
 } from '@lobechat/types';
-import { z } from 'zod';
 
 import { AgentModel } from '@/database/models/agent';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { GoalModel } from '@/database/models/goal';
 import { GoalGraphModel } from '@/database/models/goalGraph';
-import { MessageModel } from '@/database/models/message';
 import { TaskModel } from '@/database/models/task';
 import { TaskTopicModel } from '@/database/models/taskTopic';
 import { TopicModel } from '@/database/models/topic';
@@ -23,15 +22,7 @@ import { resolveGoalModelConfig } from '../modelConfig';
 import { scheduleGoalAdvance } from '../scheduler';
 import { recoveryEligibility, supervisionLimit, SUPERVISOR_DIAGNOSIS_TIMEOUT_MS } from './policy';
 
-const diagnosisSchema = z
-  .object({
-    action: z.enum(['retry', 'escalate']),
-    instruction: z.string().min(1).max(4000),
-    reason: z.string().min(1).max(2000),
-  })
-  .strict();
-
-/** One durable diagnostic topic per Goal. No tools or direct mutation authority for the LLM. */
+/** Durable supervisor with a dedicated, incident-scoped tool set. */
 export class GoalSupervisorService {
   constructor(
     private readonly db: LobeChatDatabase,
@@ -181,13 +172,14 @@ export class GoalSupervisorService {
           clientIds: { userMessageId: `msg_goal_supervisor_${incident.id}` },
           autoStart: true,
           disableSelfFeedbackIntentTool: true,
-          disableTools: true,
+          exclusivePluginIds: [GoalSupervisorIdentifier],
           instructions: GOAL_SUPERVISOR_INSTRUCTIONS,
-          maxSteps: 3,
+          maxSteps: 16,
           model: modelConfig.model,
           prompt: buildGoalSupervisorPrompt({
             failedOperation: { error: failedOperation?.error, id: latest.operationId },
             goal: { requirement: graph.goal.requirement, title: graph.goal.title },
+            goalId,
             incidentId: incident.id,
             previousIncidents: claimed.incidents.slice(-5),
             task: {
@@ -247,16 +239,14 @@ export class GoalSupervisorService {
       });
       return null;
     }
-    const message = await new MessageModel(this.db, this.userId).findLatestAssistantByOperationId({
-      operationId: operation.id,
-      topicId: state.topicId,
-    });
-    let diagnosis: z.infer<typeof diagnosisSchema>;
-    try {
-      diagnosis = diagnosisSchema.parse(JSON.parse(message?.content ?? ''));
-    } catch {
+    // Only a scoped tool action is authority; prose/JSON in a final answer is not.
+    const fresh = await new GoalModel(this.db, this.userId, this.workspaceId).findById(goalId);
+    const diagnosis = fresh?.config?.supervisorState?.incidents.find(
+      (item) => item.id === incident.id,
+    )?.resolution;
+    if (!diagnosis) {
       await this.updateIncident(goalId, incident.id, {
-        reason: 'Supervisor returned no valid recovery decision',
+        reason: 'Supervisor did not submit a recovery action through its tools',
         status: 'escalated',
       });
       return null;
