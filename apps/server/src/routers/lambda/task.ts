@@ -1498,7 +1498,7 @@ export const taskRouter = router({
             );
             if (!updated) return null;
 
-            const result = await taskService.updateStatus({ id: resolved.id, status });
+            const result = await taskService.updateStatus({ id: resolved.id, status }, actor);
             return result.task;
           })
         : await ctx.taskService.updateTaskWithAssigneeLock(
@@ -1733,7 +1733,12 @@ export const taskRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-        const result = await ctx.taskService.updateStatus(input);
+        // A person (or their agent) changed it: record who. System
+        // transitions call the service without an actor and stay silent.
+        const result = await ctx.taskService.updateStatus(input, {
+          agentId: ctx.actingAgentId,
+          userId: ctx.userId,
+        });
         const { task, unlocked, paused, checkpointTriggered, allSubtasksDone, parentTaskId } =
           result;
         return {

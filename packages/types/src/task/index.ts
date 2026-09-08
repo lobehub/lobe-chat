@@ -8,20 +8,42 @@ export type TaskStatus =
 
 export type TaskPriority = 0 | 1 | 2 | 3 | 4;
 
-export type TaskActivityType = 'assignment' | 'brief' | 'comment' | 'created' | 'topic';
+export type TaskActivityType =
+  'assignment' | 'brief' | 'comment' | 'created' | 'property' | 'topic';
 
 /**
  * Persisted event kinds in `task_activities`. Kept as a plain union (the column
  * is `text`) so onboarding a new event — status, priority, … — is a type-only
  * change with no migration.
  */
-export type TaskActivityLogType = 'assignee_agent' | 'assignee_user';
+export type TaskActivityLogType =
+  'assignee_agent' | 'assignee_user' | 'automation' | 'priority' | 'status';
 
-/** Payload of a `task_activities` row: the before/after ids of the change. */
+/**
+ * Payload of a `task_activities` row: what the slot moved between.
+ * Assignee events carry ids (`fromId` / `toId`); a status event carries the
+ * status strings themselves (`from` / `to`).
+ */
 export interface TaskActivityLogPayload {
+  from?: TaskActivityValue;
   fromId?: string | null;
+  to?: TaskActivityValue;
   toId?: string | null;
 }
+
+/**
+ * The automation columns as one logical value. Turning a schedule on rewrites
+ * mode + pattern + timezone in a single save; logging each column would put
+ * three lines in the feed for one decision.
+ */
+export interface TaskAutomationSnapshot {
+  heartbeatInterval: number | null;
+  mode: TaskAutomationMode | null;
+  schedulePattern: string | null;
+  scheduleTimezone: string | null;
+}
+
+export type TaskActivityValue = number | string | TaskAutomationSnapshot | null;
 
 /** Which assignee slot an `assignment` activity describes. */
 export type TaskAssignmentKind = 'agent' | 'member';
@@ -494,6 +516,19 @@ export interface TaskDetailActivity {
    */
   operationId?: string | null;
   priority?: string | null;
+  /**
+   * Property-only: a field a person (or an agent acting for them) changed.
+   * System transitions — the runner starting or finishing a run — are not
+   * logged; the run row already carries them.
+   */
+  propertyChange?:
+    | {
+        field: 'automation';
+        from: TaskAutomationSnapshot | null;
+        to: TaskAutomationSnapshot | null;
+      }
+    | { field: 'priority'; from: number | null; to: number | null }
+    | { field: 'status'; from: TaskStatus | null; to: TaskStatus };
   readAt?: string | null;
   resolvedAction?: string | null;
   resolvedAt?: string | null;

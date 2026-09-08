@@ -85,7 +85,7 @@ describe('TaskService', () => {
 
   const mockTaskModel = {
     addActivity: vi.fn(),
-    updateWithAssignmentLog: vi.fn(),
+    updateWithLog: vi.fn(),
     create: vi.fn(),
     delete: vi.fn(),
     findById: vi.fn(),
@@ -1733,6 +1733,52 @@ describe('TaskService', () => {
   });
 
   describe('assignee activity log', () => {
+    it('renders a status log as a property activity', async () => {
+      mockTaskModel.resolve.mockResolvedValue({
+        createdAt: null,
+        heartbeatInterval: null,
+        heartbeatTimeout: null,
+        id: 'task_001',
+        identifier: 'TASK-1',
+        instruction: 'Do something',
+        lastHeartbeatAt: null,
+        parentTaskId: null,
+        priority: 'normal',
+        status: 'completed',
+      });
+      mockTaskModel.findAllDescendants.mockResolvedValue([]);
+      mockTaskModel.getDependencies.mockResolvedValue([]);
+      mockTaskTopicModel.findWithHandoff.mockResolvedValue([]);
+      mockTaskModel.getComments.mockResolvedValue([]);
+      mockTaskModel.getTreePinnedDocuments.mockResolvedValue({ nodeMap: {}, tree: [] });
+      mockTaskModel.findByIds.mockResolvedValue([]);
+      mockTaskModel.getCheckpointConfig.mockReturnValue({});
+      mockTaskModel.getVerifyConfig.mockReturnValue(undefined);
+      mockTaskModel.getActivities.mockResolvedValue([
+        {
+          actorAgentId: null,
+          actorUserId: 'user_alice',
+          createdAt: new Date('2024-01-01T00:05:00Z'),
+          id: 'tac_s1',
+          payload: { from: 'backlog', to: 'completed' },
+          type: 'status',
+        },
+      ]);
+      mockAgentModel.getAgentAvatarsByIds.mockResolvedValue([]);
+      vi.mocked(UserModel.findByIds).mockResolvedValue([
+        { avatar: null, fullName: 'Alice', id: 'user_alice' } as any,
+      ]);
+
+      const result = await new TaskService(db, userId, 'ws-1').getTaskDetail('TASK-1');
+      const [status] = result?.activities?.filter((a) => a.type === 'property') ?? [];
+
+      expect(status).toMatchObject({
+        author: { id: 'user_alice', name: 'Alice', type: 'user' },
+        propertyChange: { field: 'status', from: 'backlog', to: 'completed' },
+        time: '2024-01-01T00:05:00.000Z',
+      });
+    });
+
     it('keeps the actor identity when the agent is invisible to this viewer', async () => {
       mockTaskModel.resolve.mockResolvedValue({
         createdAt: null,
@@ -1783,7 +1829,7 @@ describe('TaskService', () => {
     });
 
     it('routes the update through the transactional logging path with the actor', async () => {
-      mockTaskModel.updateWithAssignmentLog.mockResolvedValue({ id: 'task_001' });
+      mockTaskModel.updateWithLog.mockResolvedValue({ id: 'task_001' });
 
       await new TaskService(db, userId, 'ws-1').updateTaskWithAssigneeLock(
         'task_001',
@@ -1794,7 +1840,7 @@ describe('TaskService', () => {
       // The diff + insert live inside the model's transaction, so the service
       // must not fall back to the plain `update` that skips them.
       expect(mockTaskModel.update).not.toHaveBeenCalled();
-      expect(mockTaskModel.updateWithAssignmentLog).toHaveBeenCalledWith(
+      expect(mockTaskModel.updateWithLog).toHaveBeenCalledWith(
         'task_001',
         { assigneeAgentId: 'agt_new' },
         { agentId: 'agt_actor', userId: 'user_actor' },

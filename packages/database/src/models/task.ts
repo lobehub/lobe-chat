@@ -3,6 +3,8 @@ import type {
   NewTask,
   TaskActivityLogPayload,
   TaskActivityLogType,
+  TaskAutomationMode,
+  TaskAutomationSnapshot,
   TaskItem,
   TaskSubtaskProgress,
   TaskVerifyConfig,
@@ -51,6 +53,36 @@ import { acceptances } from '../schemas/verify';
 import { works } from '../schemas/work';
 import type { LobeChatDatabase } from '../type';
 import { buildWorkspaceWhere } from '../utils/workspace';
+
+/** Columns whose change is worth a line in the task activity feed. */
+const TRACKED_TASK_COLUMNS = [
+  'assigneeAgentId',
+  'assigneeUserId',
+  'automationMode',
+  'heartbeatInterval',
+  'priority',
+  'schedulePattern',
+  'scheduleTimezone',
+  'status',
+] as const;
+
+/** The automation columns folded into one value — see `TaskAutomationSnapshot`. */
+const snapshotAutomation = (row: {
+  automationMode: TaskAutomationMode | null;
+  heartbeatInterval: number | null;
+  schedulePattern: string | null;
+  scheduleTimezone: string | null;
+}): TaskAutomationSnapshot | null => {
+  // No mode means automation is off; the leftover pattern / interval columns
+  // are configuration in waiting, not something the user turned on.
+  if (!row.automationMode) return null;
+  return {
+    heartbeatInterval: row.heartbeatInterval,
+    mode: row.automationMode,
+    schedulePattern: row.schedulePattern,
+    scheduleTimezone: row.scheduleTimezone,
+  };
+};
 
 export const isTaskIdentifierUniqueViolation = (error: unknown): boolean => {
   const message = error instanceof Error ? error.message : String(error);
@@ -1878,30 +1910,32 @@ export class TaskModel {
   }
 
   /**
-   * Update a task and append the matching assignment events in ONE transaction,
-   * deriving the previous assignees from a **locked** read of the task row.
+   * Update a task and append one event per tracked field that actually
+   * changed, in ONE transaction, with the previous values taken from a
+   * **locked** read of the row.
    *
-   * The lock is the point. Reading the "before" value outside the write lets two
-   * concurrent reassignments both observe the same origin: an A→B and an A→C
-   * racing on the same task persist A→B then B→C, while a lock-free recorder
-   * logs A→B and A→C and the history loses the middle state entirely. Rows are
-   * also inserted next to the write they describe, so their order can never
-   * disagree with the order the updates actually landed in.
+   * The lock is the point. Reading the "before" value outside the write lets
+   * two concurrent edits both observe the same origin — an A→B and an A→C
+   * racing on one task persist A→B then B→C while a lock-free recorder logs
+   * A→B and A→C, losing the middle state. Rows are inserted next to the write
+   * they describe, so their order cannot disagree with the order the updates
+   * landed in.
    *
-   * Every caller that moves an assignee column goes through here — the update
-   * procedure, the agent `editTask` tool, and the runner's inbox fallback — so
-   * an assignee cannot change without the feed being able to explain it.
+   * Which edits reach the feed is decided by the caller, not here: anything
+   * that goes through this method is logged. Person-made changes (the update
+   * procedure, the agent `editTask` tool, the status picker) and the runner's
+   * inbox fallback come here; the runner / lifecycle / watchdog status
+   * transitions use the plain writers, because the run row already tells that
+   * story.
    */
-  async updateWithAssignmentLog(
+  async updateWithLog(
     id: string,
     data: Partial<Omit<NewTask, 'id' | 'identifier' | 'seq' | 'createdByUserId'>>,
     actor: { agentId?: string | null; userId?: string | null },
   ): Promise<TaskItem | null> {
-    // Nothing to diff against: without an assignee field in the payload this is
-    // an ordinary update, and the extra lock would only add contention.
-    if (data.assigneeAgentId === undefined && data.assigneeUserId === undefined) {
-      return this.update(id, data);
-    }
+    const touched = TRACKED_TASK_COLUMNS.some((col) => data[col] !== undefined);
+    // Nothing to diff against: an ordinary rename should not pay for a lock.
+    if (!touched) return this.update(id, data);
 
     return this.db.transaction(async (tx) => {
       const runner = tx as LobeChatDatabase;
@@ -1909,6 +1943,12 @@ export class TaskModel {
         .select({
           assigneeAgentId: tasks.assigneeAgentId,
           assigneeUserId: tasks.assigneeUserId,
+          automationMode: tasks.automationMode,
+          heartbeatInterval: tasks.heartbeatInterval,
+          priority: tasks.priority,
+          schedulePattern: tasks.schedulePattern,
+          scheduleTimezone: tasks.scheduleTimezone,
+          status: tasks.status,
         })
         .from(tasks)
         .where(and(eq(tasks.id, id), this.ownership()))
@@ -1920,32 +1960,50 @@ export class TaskModel {
       const updated = await scoped.update(id, data);
       if (!updated) return null;
 
-      const changes: { payload: TaskActivityLogPayload; type: TaskActivityLogType }[] = [];
+      const events: { payload: TaskActivityLogPayload; type: TaskActivityLogType }[] = [];
+
+      // The two assignee slots are independent — one edit can move both, and
+      // each gets its own row so the feed reads one change per line.
       if (before.assigneeAgentId !== updated.assigneeAgentId) {
-        changes.push({
+        events.push({
           payload: { fromId: before.assigneeAgentId, toId: updated.assigneeAgentId },
           type: 'assignee_agent',
         });
       }
-      // The two slots are independent — one edit can move both, and each gets
-      // its own row so the feed reads one change per line.
       if (before.assigneeUserId !== updated.assigneeUserId) {
-        changes.push({
+        events.push({
           payload: { fromId: before.assigneeUserId, toId: updated.assigneeUserId },
           type: 'assignee_user',
         });
       }
+      if (before.status !== updated.status) {
+        events.push({ payload: { from: before.status, to: updated.status }, type: 'status' });
+      }
+      if ((before.priority ?? null) !== (updated.priority ?? null)) {
+        events.push({
+          payload: { from: before.priority ?? null, to: updated.priority ?? null },
+          type: 'priority',
+        });
+      }
+      const automationBefore = snapshotAutomation(before);
+      const automationAfter = snapshotAutomation(updated);
+      if (JSON.stringify(automationBefore) !== JSON.stringify(automationAfter)) {
+        events.push({
+          payload: { from: automationBefore, to: automationAfter },
+          type: 'automation',
+        });
+      }
 
-      for (const change of changes) {
+      for (const event of events) {
         await scoped.addActivity({
           actorAgentId: actor.agentId ?? null,
           // An agent-driven edit is attributed to the agent, not to the session
           // owner whose credentials it borrowed. Both null means the system did
           // it on nobody's behalf (the runner's inbox fallback).
           actorUserId: actor.agentId ? null : (actor.userId ?? null),
-          payload: change.payload,
+          payload: event.payload,
           taskId: id,
-          type: change.type,
+          type: event.type,
         });
       }
 

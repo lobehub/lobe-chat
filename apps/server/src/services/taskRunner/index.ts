@@ -105,11 +105,7 @@ export class TaskRunnerService {
           // chip visibly flips from unassigned to the inbox agent, so the feed
           // has to be able to say who did it. No actor — nobody asked for this
           // one, the runner needed an agent to execute with.
-          await this.taskModel.updateWithAssignmentLog(
-            task.id,
-            { assigneeAgentId: inboxAgent.id },
-            {},
-          );
+          await this.taskModel.updateWithLog(task.id, { assigneeAgentId: inboxAgent.id }, {});
         }
         task.assigneeAgentId = inboxAgent.id;
       }

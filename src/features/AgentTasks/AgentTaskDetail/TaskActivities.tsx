@@ -4,7 +4,15 @@ import { Avatar, Tag, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
 import type { TFunction } from 'i18next';
 import type { LucideIcon } from 'lucide-react';
-import { BotMessageSquare, CircleDot, CirclePlus, MessageCircle, UserRoundCog } from 'lucide-react';
+import {
+  ArrowRightLeft,
+  BotMessageSquare,
+  CircleDot,
+  CirclePlus,
+  MessageCircle,
+  UserRoundCog,
+} from 'lucide-react';
+import type { ReactNode } from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -14,6 +22,7 @@ import { useActivityTime } from '@/hooks/useActivityTime';
 import { useTaskStore } from '@/store/task';
 import { taskActivitySelectors, taskDetailSelectors } from '@/store/task/selectors';
 
+import TaskPriorityTag from '../features/TaskPriorityTag';
 import { styles } from '../shared/style';
 import { resolveAssignmentActivityCopy } from './assignmentActivityCopy';
 import CommentCard from './CommentCard';
@@ -24,6 +33,7 @@ import TopicCard from './TopicCard';
 
 const ROW_TYPE_ICON = {
   assignment: UserRoundCog,
+  property: ArrowRightLeft,
   comment: MessageCircle,
   created: CirclePlus,
   topic: CircleDot,
@@ -223,6 +233,101 @@ interface TaskActivitiesProps {
   variant?: 'activity' | 'result';
 }
 
+/**
+ * "<actor> changed the status to <tag>" / "set the priority to <tag>" /
+ * "set automation to <summary>". Only a change a person (or their agent) made
+ * reaches the feed — the runner's own start / finish transitions are already
+ * told by the run row, so they are never logged.
+ */
+const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
+  const { t } = useTranslation('chat');
+  const change = activity.propertyChange;
+  if (!change) return null;
+
+  const actor = (
+    <ActivityAuthor
+      author={activity.author}
+      fallbackIcon={ArrowRightLeft}
+      fallbackName={t('taskDetail.activities.assignment.systemActor')}
+      unresolvedName={t(
+        activity.author?.type === 'agent'
+          ? 'taskDetail.activities.assignment.deletedAgent'
+          : 'taskDetail.activities.assignment.deletedMember',
+      )}
+    />
+  );
+
+  let sentence: ReactNode;
+  switch (change.field) {
+    case 'status': {
+      sentence = (
+        <Trans
+          i18nKey={'taskDetail.activities.status.changed'}
+          ns={'chat'}
+          components={{
+            actor,
+            status: (
+              <Tag size={'small'} style={{ flexShrink: 0 }}>
+                {t(`taskDetail.status.${change.to}`)}
+              </Tag>
+            ),
+          }}
+        />
+      );
+      break;
+    }
+    case 'priority': {
+      sentence = (
+        <Trans
+          components={{ actor, value: <TaskPriorityTag disableDropdown priority={change.to} /> }}
+          i18nKey={'taskDetail.activities.priority.changed'}
+          ns={'chat'}
+        />
+      );
+      break;
+    }
+    case 'automation': {
+      const to = change.to;
+      sentence = to ? (
+        <Trans
+          i18nKey={'taskDetail.activities.automation.set'}
+          ns={'chat'}
+          components={{
+            actor,
+            value: (
+              <Tag size={'small'} style={{ flexShrink: 0 }}>
+                {to.mode === 'schedule'
+                  ? t('taskDetail.activities.automation.mode.schedule', {
+                      pattern: to.schedulePattern ?? '',
+                    })
+                  : t('taskDetail.activities.automation.mode.heartbeat', {
+                      seconds: to.heartbeatInterval ?? 0,
+                    })}
+              </Tag>
+            ),
+          }}
+        />
+      ) : (
+        <Trans
+          components={{ actor }}
+          i18nKey={'taskDetail.activities.automation.off'}
+          ns={'chat'}
+        />
+      );
+      break;
+    }
+  }
+
+  return (
+    <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9} wrap={'wrap'}>
+      <Text style={{ color: cssVar.colorTextSecondary }}>
+        {sentence}
+        <RelativeTime time={activity.time} />
+      </Text>
+    </Flexbox>
+  );
+});
+
 const TaskActivities = memo<TaskActivitiesProps>(({ variant = 'activity' }) => {
   const { t } = useTranslation('chat');
   const activities = useTaskStore(taskActivitySelectors.activeTaskActivities);
@@ -280,6 +385,9 @@ const TaskActivities = memo<TaskActivitiesProps>(({ variant = 'activity' }) => {
         // to the activity timeline; in a result panel it is a row between the
         // reader and the report.
         if (variant === 'result') return null;
+        if (activity.type === 'property') {
+          return <PropertyRow activity={activity} key={key} />;
+        }
         if (activity.type === 'assignment') {
           return <AssignmentRow activity={activity} key={key} />;
         }

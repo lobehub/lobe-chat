@@ -4,6 +4,7 @@ import { UNFINISHED_TASK_STATUSES } from '@lobechat/builtin-tool-task';
 import { TASK_ASSIGNEE_PERMISSION_CODES } from '@lobechat/const/rbac';
 import type {
   TaskAssignmentKind,
+  TaskAutomationSnapshot,
   TaskContext,
   TaskDetailActivity,
   TaskDetailActivityAuthor,
@@ -385,11 +386,19 @@ export class TaskService {
    *   - entering `completed`: check parent checkpoint, count sibling
    *     completions, kick off any newly-unlocked downstream tasks.
    */
-  async updateStatus(input: {
-    error?: string;
-    id: string;
-    status: TaskStatus;
-  }): Promise<UpdateStatusResult> {
+  async updateStatus(
+    input: {
+      error?: string;
+      id: string;
+      status: TaskStatus;
+    },
+    /**
+     * Present only for a change a person or their agent made; its absence is
+     * how system transitions (runner / lifecycle / watchdog) opt out of the
+     * activity feed.
+     */
+    actor?: { agentId?: string | null; userId?: string | null },
+  ): Promise<UpdateStatusResult> {
     const { id, status, error: errorMsg } = input;
 
     if (errorMsg && status !== 'failed') {
@@ -435,7 +444,9 @@ export class TaskService {
       extra.completedAt = new Date();
     if (errorMsg) extra.error = errorMsg;
 
-    const task = await this.taskModel.updateStatus(resolved.id, status, extra);
+    const task = actor
+      ? await this.taskModel.updateWithLog(resolved.id, { status, ...extra }, actor)
+      : await this.taskModel.updateStatus(resolved.id, status, extra);
     if (!task) throw new TRPCError({ code: 'NOT_FOUND', message: 'Task not found' });
 
     // Stamp the schedule run-count window each time the user (re)starts a
@@ -798,7 +809,7 @@ export class TaskService {
     actor: { agentId?: string | null; userId?: string | null } = {},
   ): Promise<TaskItem | null> {
     return this.withAssigneeUserLock(data.assigneeUserId, (db) =>
-      new TaskModel(db, this.userId, this.workspaceId).updateWithAssignmentLog(taskId, data, actor),
+      new TaskModel(db, this.userId, this.workspaceId).updateWithLog(taskId, data, actor),
     );
   }
 
@@ -1054,6 +1065,8 @@ export class TaskService {
     for (const log of activityLogs) {
       if (log.actorAgentId) agentIds.add(log.actorAgentId);
       if (log.actorUserId) userIds.add(log.actorUserId);
+      // Property events carry values, not participant ids.
+      if (log.type !== 'assignee_agent' && log.type !== 'assignee_user') continue;
       const target = log.type === 'assignee_agent' ? agentIds : userIds;
       for (const id of [log.payload?.fromId, log.payload?.toId]) if (id) target.add(id);
     }
@@ -1137,19 +1150,48 @@ export class TaskService {
           type: 'comment' as const,
         };
       }),
-      ...activityLogs.map((log) => {
-        const kind: TaskAssignmentKind = log.type === 'assignee_agent' ? 'agent' : 'member';
-        // A missing author row means the participant is gone, or is private to
-        // another member and filtered out of this viewer's scope. Keep a stub
-        // instead of collapsing to `null`/`undefined`: `null` reads as
-        // "unassigned" (turning a reassignment into a removal) and an absent
-        // actor reads as the system (falsely crediting it for an agent's work).
+      ...activityLogs.map((log): TaskDetailActivity => {
         const stub = (id: string, type: 'agent' | 'user'): TaskDetailActivityAuthor => ({
           id,
           name: null,
           type,
           unresolved: true,
         });
+        const author = log.actorAgentId
+          ? (authorMap.get(log.actorAgentId) ?? stub(log.actorAgentId, 'agent'))
+          : log.actorUserId
+            ? (authorMap.get(log.actorUserId) ?? stub(log.actorUserId, 'user'))
+            : // Genuinely nobody: the runner's system fallback.
+              undefined;
+
+        if (log.type === 'status' || log.type === 'priority' || log.type === 'automation') {
+          const from = log.payload?.from ?? null;
+          const to = log.payload?.to ?? null;
+          const propertyChange: NonNullable<TaskDetailActivity['propertyChange']> =
+            log.type === 'status'
+              ? { field: 'status', from: from as TaskStatus | null, to: to as TaskStatus }
+              : log.type === 'priority'
+                ? { field: 'priority', from: from as number | null, to: to as number | null }
+                : {
+                    field: 'automation',
+                    from: from as TaskAutomationSnapshot | null,
+                    to: to as TaskAutomationSnapshot | null,
+                  };
+          return {
+            author,
+            id: log.id,
+            propertyChange,
+            time: toISO(log.createdAt),
+            type: 'property',
+          };
+        }
+
+        const kind: TaskAssignmentKind = log.type === 'assignee_agent' ? 'agent' : 'member';
+        // A missing author row means the participant is gone, or is private to
+        // another member and filtered out of this viewer's scope. Keep a stub
+        // instead of collapsing to `null`/`undefined`: `null` reads as
+        // "unassigned" (turning a reassignment into a removal) and an absent
+        // actor reads as the system (falsely crediting it for an agent's work).
         const resolveSide = (id?: string | null): TaskDetailActivityAuthor | null => {
           if (!id) return null;
           return authorMap.get(id) ?? stub(id, kind === 'agent' ? 'agent' : 'user');
@@ -1160,12 +1202,7 @@ export class TaskService {
             kind,
             to: resolveSide(log.payload?.toId),
           },
-          author: log.actorAgentId
-            ? (authorMap.get(log.actorAgentId) ?? stub(log.actorAgentId, 'agent'))
-            : log.actorUserId
-              ? (authorMap.get(log.actorUserId) ?? stub(log.actorUserId, 'user'))
-              : // Genuinely nobody: the runner's system fallback.
-                undefined,
+          author,
           id: log.id,
           time: toISO(log.createdAt),
           type: 'assignment' as const,

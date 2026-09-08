@@ -82,6 +82,23 @@ export const assignmentParticipantLabel = (
   return party.name || party.id;
 };
 
+/** Render one side of a property change for a text surface. */
+export const formatPropertyValue = (field: string | undefined, value: unknown): string => {
+  if (value === null || value === undefined) return field === 'automation' ? 'off' : 'none';
+  if (field === 'priority') return priorityLabel(value as number);
+  if (typeof value === 'object') {
+    const v = value as {
+      heartbeatInterval?: number | null;
+      mode?: string | null;
+      schedulePattern?: string | null;
+    };
+    if (v.mode === 'schedule') return `schedule(${v.schedulePattern ?? '?'})`;
+    if (v.mode === 'heartbeat') return `heartbeat(${v.heartbeatInterval ?? '?'}s)`;
+    return JSON.stringify(value);
+  }
+  return String(value);
+};
+
 export const taskDetailHref = (identifier: string, baseUrl?: string): string => {
   const path = `/task/${identifier}`;
   return baseUrl ? `${baseUrl.replace(/\/$/, '')}${path}` : path;
@@ -313,6 +330,12 @@ export const formatTaskDetail = (t: TaskDetailData): string => {
         const content = act.content || '';
         const truncated = content.length > 80 ? content.slice(0, 80) + '...' : content;
         lines.push(`  💭 ${act.time || ''} ${author} ${truncated}${idSuffix}`);
+      } else if (act.type === 'property') {
+        const actor = assignmentParticipantLabel(act.author, 'system');
+        const change = act.propertyChange;
+        lines.push(
+          `  🔁 ${act.time || ''} ${actor} changed ${change?.field}: ${formatPropertyValue(change?.field, change?.from)} → ${formatPropertyValue(change?.field, change?.to)}${idSuffix}`,
+        );
       } else if (act.type === 'assignment') {
         // Who owns the task changed hands; a formatter that drops the event
         // shows a reader an assignee they cannot account for.

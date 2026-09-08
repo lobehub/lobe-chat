@@ -480,6 +480,14 @@ export function registerTaskCommand(program: Command) {
             } else if (act.type === 'comment') {
               const author = act.agentId ? `🤖 ${act.agentId}` : '👤 user';
               console.log(`  💭 ${pc.dim(ago.padStart(7))} ${pc.cyan(author)} ${act.content}`);
+            } else if (act.type === 'property') {
+              const actor = act.author ? act.author.name || act.author.id : 'system';
+              const change = act.propertyChange;
+              const show = (v: unknown) =>
+                v && typeof v === 'object' ? JSON.stringify(v) : String(v ?? 'none');
+              console.log(
+                `  🔁 ${pc.dim(ago.padStart(7))} ${pc.cyan(actor)} changed ${change?.field}: ${show(change?.from)} → ${show(change?.to)}${idSuffix}`,
+              );
             } else if (act.type === 'assignment') {
               // Same three-state naming as `assignmentParticipantLabel` in
               // @lobechat/prompts; inlined rather than adding a package

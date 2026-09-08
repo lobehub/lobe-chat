@@ -1688,7 +1688,7 @@ describe('TaskModel', () => {
       const task = await model.create({ instruction: 'Test' });
       await createAgent('agt_log_a');
 
-      const updated = await model.updateWithAssignmentLog(
+      const updated = await model.updateWithLog(
         task.id,
         { assigneeAgentId: 'agt_log_a', assigneeUserId: userId2 },
         { userId },
@@ -1707,8 +1707,8 @@ describe('TaskModel', () => {
       await createAgent('agt_log_b');
       await createAgent('agt_log_c');
 
-      await model.updateWithAssignmentLog(task.id, { assigneeAgentId: 'agt_log_b' }, { userId });
-      await model.updateWithAssignmentLog(task.id, { assigneeAgentId: 'agt_log_c' }, { userId });
+      await model.updateWithLog(task.id, { assigneeAgentId: 'agt_log_b' }, { userId });
+      await model.updateWithLog(task.id, { assigneeAgentId: 'agt_log_c' }, { userId });
 
       // The second write must chain off the first, not off the original null —
       // that is the difference a lock-free recorder loses under concurrency.
@@ -1724,8 +1724,8 @@ describe('TaskModel', () => {
       await createAgent('agt_log_same');
       const task = await model.create({ assigneeAgentId: 'agt_log_same', instruction: 'Test' });
 
-      await model.updateWithAssignmentLog(task.id, { assigneeAgentId: 'agt_log_same' }, { userId });
-      await model.updateWithAssignmentLog(task.id, { name: 'Renamed' }, { userId });
+      await model.updateWithLog(task.id, { assigneeAgentId: 'agt_log_same' }, { userId });
+      await model.updateWithLog(task.id, { name: 'Renamed' }, { userId });
 
       expect(await model.getActivities(task.id)).toHaveLength(0);
     });
@@ -1737,11 +1737,72 @@ describe('TaskModel', () => {
 
       // The runner's inbox fallback: nobody asked for it, so neither actor
       // column is set and the feed renders it as the system.
-      await model.updateWithAssignmentLog(task.id, { assigneeAgentId: 'agt_inbox' }, {});
+      await model.updateWithLog(task.id, { assigneeAgentId: 'agt_inbox' }, {});
 
       const [activity] = await model.getActivities(task.id);
       expect(activity.actorUserId).toBeNull();
       expect(activity.actorAgentId).toBeNull();
+    });
+
+    it('logs a status change made by a person, from the locked previous value', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+
+      const updated = await model.updateWithLog(task.id, { status: 'completed' }, { userId });
+
+      expect(updated!.status).toBe('completed');
+      const [activity] = await model.getActivities(task.id);
+      expect(activity).toMatchObject({
+        actorUserId: userId,
+        payload: { from: 'backlog', to: 'completed' },
+        type: 'status',
+      });
+    });
+
+    it('writes no status row when the status is re-saved unchanged', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+
+      await model.updateWithLog(task.id, { status: 'backlog' }, { userId });
+
+      expect(await model.getActivities(task.id)).toHaveLength(0);
+    });
+
+    it('logs a priority change', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+
+      await model.updateWithLog(task.id, { priority: 1 }, { userId });
+
+      const [activity] = await model.getActivities(task.id);
+      expect(activity).toMatchObject({ payload: { from: 0, to: 1 }, type: 'priority' });
+    });
+
+    it('folds the automation columns into one event per save', async () => {
+      const model = new TaskModel(serverDB, userId);
+      const task = await model.create({ instruction: 'Test' });
+
+      // Turning a schedule on rewrites three columns at once — one decision,
+      // one line in the feed.
+      await model.updateWithLog(
+        task.id,
+        {
+          automationMode: 'schedule',
+          schedulePattern: '0 9 * * *',
+          scheduleTimezone: 'Asia/Shanghai',
+        },
+        { userId },
+      );
+
+      const activities = await model.getActivities(task.id);
+      expect(activities).toHaveLength(1);
+      expect(activities[0]).toMatchObject({
+        payload: {
+          from: null,
+          to: { mode: 'schedule', schedulePattern: '0 9 * * *', scheduleTimezone: 'Asia/Shanghai' },
+        },
+        type: 'automation',
+      });
     });
 
     it('mirrors the parent task visibility onto the row', async () => {
