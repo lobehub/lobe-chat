@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import type { VerifyVisibility } from '@lobechat/const/verify';
 import type {
   VerifyCheckItem,
@@ -6,20 +8,7 @@ import type {
   VerifyRunSource,
   VerifyRunStatus,
 } from '@lobechat/types';
-import {
-  and,
-  asc,
-  desc,
-  eq,
-  gt,
-  ilike,
-  inArray,
-  isNotNull,
-  isNull,
-  lt,
-  or,
-  sql,
-} from 'drizzle-orm';
+import { and, asc, desc, eq, gt, ilike, inArray, isNotNull, lt, or, sql } from 'drizzle-orm';
 
 import { agentOperations } from '../schemas/agentOperations';
 import type { NewVerifyRun, VerifyRunItem } from '../schemas/verify';
@@ -27,6 +16,7 @@ import { verifyCheckResults, verifyRuns } from '../schemas/verify';
 import type { LobeChatDatabase } from '../type';
 import { isUuid } from '../utils/uuid';
 import { buildWorkspacePayload, buildWorkspaceWhere } from '../utils/workspace';
+import { VerifyCriterionModel } from './verifyCriterion';
 
 /**
  * Shape returned by the *State helpers — kept field-compatible with the legacy
@@ -145,16 +135,27 @@ export class VerifyRunModel {
     // reserve its unique operation_id (see {@link assertOperationOwned}).
     if (params.operationId) await this.assertOperationOwned(params.operationId);
 
-    const [run] = await this.db
-      .insert(verifyRuns)
-      .values(
-        buildWorkspacePayload(
-          { userId: this.userId, workspaceId: this.workspaceId },
-          { visibility: this.defaultVisibility(), ...params },
-        ),
-      )
-      .returning();
-    return run;
+    return this.db.transaction(async (tx) => {
+      params = { ...params, id: params.id ?? randomUUID() };
+      if (params.plan)
+        params = {
+          ...params,
+          plan: await new VerifyCriterionModel(tx, this.userId, this.workspaceId).materialize(
+            params.plan,
+            params.acceptanceId ?? params.id!,
+          ),
+        };
+      const [run] = await tx
+        .insert(verifyRuns)
+        .values(
+          buildWorkspacePayload(
+            { userId: this.userId, workspaceId: this.workspaceId },
+            { visibility: this.defaultVisibility(), ...params },
+          ),
+        )
+        .returning();
+      return run;
+    });
   };
 
   findById = async (id: string) => {
@@ -433,25 +434,39 @@ export class VerifyRunModel {
    * The plan is mutable while a draft; it is frozen on {@link confirmPlan}.
    */
   setPlan = async (runId: string, items: VerifyCheckItem[]): Promise<void> => {
-    await this.db
-      .update(verifyRuns)
-      .set({ plan: items, status: 'planned' })
-      .where(and(eq(verifyRuns.id, runId), this.ownership()));
+    await this.writeDraftPlan(runId, items, true);
   };
 
-  /** Replace the draft plan items (user edited the plan before confirming). */
   replacePlanItems = async (runId: string, items: VerifyCheckItem[]): Promise<void> => {
-    await this.db
-      .update(verifyRuns)
-      .set({ plan: items })
-      .where(
-        and(
-          eq(verifyRuns.id, runId),
-          // only a not-yet-confirmed plan may be edited
-          isNull(verifyRuns.planConfirmedAt),
-          this.ownership(),
-        ),
+    await this.writeDraftPlan(runId, items, false);
+  };
+
+  private writeDraftPlan = async (
+    runId: string,
+    items: VerifyCheckItem[],
+    markPlanned: boolean,
+  ) => {
+    await this.db.transaction(async (tx) => {
+      const [run] = await tx
+        .select()
+        .from(verifyRuns)
+        .where(and(eq(verifyRuns.id, runId), this.ownership()))
+        .for('update');
+      if (!run || run.planConfirmedAt) {
+        if (!markPlanned) return;
+        throw new Error('Draft verification round required');
+      }
+      if (run.flowSnapshots?.length)
+        throw new Error('Flow plans must be changed through a new flow round');
+      const plan = await new VerifyCriterionModel(tx, this.userId, this.workspaceId).materialize(
+        items,
+        run.acceptanceId ?? run.id,
       );
+      await tx
+        .update(verifyRuns)
+        .set({ plan, ...(markPlanned ? { status: 'planned' as const } : {}) })
+        .where(eq(verifyRuns.id, runId));
+    });
   };
 
   /** Freeze the plan (records confirmation time). Results relate to frozen items. */

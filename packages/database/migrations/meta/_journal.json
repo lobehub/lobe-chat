@@ -1120,6 +1120,13 @@
       "when": 1788751998345,
       "tag": "0159_task_activities",
       "breakpoints": true
+    },
+    {
+      "idx": 160,
+      "version": "7",
+      "when": 1788849739068,
+      "tag": "0160_acceptance_check_assets",
+      "breakpoints": true
     }
   ],
   "version": "6"

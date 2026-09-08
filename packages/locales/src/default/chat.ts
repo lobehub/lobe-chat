@@ -2692,7 +2692,14 @@ export default {
   'workingPanel.works.error': 'Failed to load works',
   'workingPanel.works.changeType.created': 'Created',
   'workingPanel.works.changeType.updated': 'Updated',
-  'workingPanel.works.taskDeleted': 'Task deleted',
+  'workingPanel.works.documentDeleted': 'This document has been deleted',
+  'workingPanel.works.remove': 'Remove work',
+  'workingPanel.works.removeConfirm':
+    'Remove this work card? Its version history, project pins and goal evidence links will be removed as well. This cannot be undone.',
+  'workingPanel.works.resourceDeleted': 'This resource has been deleted',
+  'workingPanel.works.resourceDeletedRemoveConfirm':
+    'It can no longer be opened. Remove this work card? Its version history, project pins and goal evidence links will be removed as well. This cannot be undone.',
+  'workingPanel.works.taskDeleted': 'This task has been deleted',
   'workingPanel.works.title': 'Works',
   'workingPanel.works.versionError': 'Failed to load versions',
   'workingPanel.works.viewMode.history': 'Version history',
