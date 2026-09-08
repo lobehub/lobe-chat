@@ -118,7 +118,7 @@ export const useCategory = () => {
         key: SettingsTabs.Hotkey,
         label: t('tab.hotkey'),
       },
-      enableBusinessFeatures && {
+      (enableBusinessFeatures || isDesktop) && {
         icon: BellIcon,
         key: SettingsTabs.Notification,
         label: t('tab.notification'),
