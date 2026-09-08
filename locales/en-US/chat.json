@@ -629,7 +629,7 @@
   "goalProcess.manager.pending": "Waiting for the first run",
   "goalProcess.manager.title": "Main agent",
   "goalProcess.manager.turns": "Planning rounds: {{count}}",
-  "goalProcess.manager.viewTrace": "View full execution flow",
+  "goalProcess.manager.viewTrace": "View supervision progress",
   "goalProcess.metricDetail.budget.controlTitle": "Budget control",
   "goalProcess.metricDetail.budget.perTaskEmpty": "No run has been billed yet.",
   "goalProcess.metricDetail.budget.perTaskTitle": "Where it went",

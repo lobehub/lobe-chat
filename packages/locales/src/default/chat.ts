@@ -2125,7 +2125,7 @@ export default {
   'goalProcess.manager.title': 'Main agent',
   'goalProcess.manager.turns': 'Planning rounds: {{count}}',
   'goalProcess.manager.pending': 'Waiting for the first run',
-  'goalProcess.manager.viewTrace': 'View full execution flow',
+  'goalProcess.manager.viewTrace': 'View supervision progress',
   'goalProcess.pause': 'Pause',
   'goalProcess.resume': 'Resume',
   'goalProcess.paused': 'Paused — no new work will start',
