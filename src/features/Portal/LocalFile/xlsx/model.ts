@@ -49,9 +49,16 @@ const formatNumber = (value: number, numFmt?: string): string => {
   const pattern = numFmt.split(';')[0];
   const isPercentage = pattern.includes('%');
   const displayValue = isPercentage ? value * 100 : value;
-  const decimals = pattern.match(/\.(0+)/)?.[1].length ?? 0;
+  const decimalPattern = pattern.match(/\.([0#]+)/)?.[1] ?? '';
+  const decimals = decimalPattern.length;
+  const requiredDecimals = decimalPattern.replaceAll('#', '').length;
   const currency = pattern.match(/[$£¥€]/)?.[0] ?? '';
   let body = Math.abs(displayValue).toFixed(decimals);
+  if (decimals > requiredDecimals) {
+    const [int, frac = ''] = body.split('.');
+    const trimmed = frac.replace(new RegExp(`0{0,${decimals - requiredDecimals}}$`), '');
+    body = trimmed ? `${int}.${trimmed}` : int;
+  }
   if (pattern.includes('#,##')) {
     const [int, frac] = body.split('.');
     body = int.replaceAll(/\B(?=(\d{3})+(?!\d))/g, ',') + (frac ? '.' + frac : '');
@@ -59,11 +66,10 @@ const formatNumber = (value: number, numFmt?: string): string => {
   return (displayValue < 0 ? '-' : '') + currency + body + (isPercentage ? '%' : '');
 };
 
-const cellText = (cell: Cell): string => {
-  const value = cell.value;
+const formatCellValue = (value: Cell['value'] | unknown, numFmt?: string): string => {
   if (value === null || value === undefined) return '';
   if (value instanceof Date) return value.toISOString().slice(0, 10);
-  if (typeof value === 'number') return formatNumber(value, cell.numFmt);
+  if (typeof value === 'number') return formatNumber(value, numFmt);
   if (typeof value === 'object') {
     const rich = value as {
       error?: string;
@@ -76,16 +82,15 @@ const cellText = (cell: Cell): string => {
     if (rich.richText) return rich.richText.map((run) => run.text).join('');
     if (rich.formula !== undefined || rich.sharedFormula !== undefined) {
       const result = rich.result;
-      if (result === null || result === undefined) return '';
-      if (typeof result === 'number') return formatNumber(result, cell.numFmt);
-      if (typeof result === 'object') return (result as { error?: string }).error ?? '';
-      return String(result);
+      return formatCellValue(result, numFmt);
     }
     if (rich.text !== undefined) return String(rich.text);
     return rich.error ?? '';
   }
   return String(value);
 };
+
+const cellText = (cell: Cell): string => formatCellValue(cell.value, cell.numFmt);
 
 const isNumericCell = (cell: Cell): boolean => {
   const value = cell.value;

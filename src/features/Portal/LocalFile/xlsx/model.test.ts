@@ -41,4 +41,33 @@ describe('readWorkbook', () => {
     expect(sheet.rows[0].cells[0].t).toBe('15%');
     expect(sheet.rows[1].cells[0].t).toBe('-12.5%');
   });
+
+  it('honors optional decimal placeholders', async () => {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Decimals');
+
+    worksheet.getCell('A1').value = 1.25;
+    worksheet.getCell('A1').numFmt = '0.##';
+    worksheet.getCell('A2').value = 1.25;
+    worksheet.getCell('A2').numFmt = '0.0#';
+    worksheet.getCell('A3').value = 1.2;
+    worksheet.getCell('A3').numFmt = '0.0#';
+
+    const sheet = await readWorksheet(workbook);
+
+    expect(sheet.rows[0].cells[0].t).toBe('1.25');
+    expect(sheet.rows[1].cells[0].t).toBe('1.25');
+    expect(sheet.rows[2].cells[0].t).toBe('1.2');
+  });
+
+  it('formats cached date results from formula cells', async () => {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Formula Dates');
+
+    worksheet.getCell('A1').value = { formula: 'DATE(2026,9,8)', result: new Date('2026-09-08') };
+
+    const sheet = await readWorksheet(workbook);
+
+    expect(sheet.rows[0].cells[0].t).toBe('2026-09-08');
+  });
 });

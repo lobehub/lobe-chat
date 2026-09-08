@@ -32,11 +32,16 @@ const SectionTable = memo<{
               <tr data-total={row.kind === 'total' ? '' : undefined} key={rowIndex}>
                 {columns.map((column, columnIndex) => {
                   const cell = byColumn.get(column);
-                  if (!cell) return <td key={column} />;
                   const extras =
                     columnIndex === columns.length - 1 && row.extras.length > 0
                       ? row.extras.map((item) => item.t).join(' · ')
                       : '';
+                  if (!cell)
+                    return (
+                      <td key={column}>
+                        {extras ? <span className={styles.extra}>{extras}</span> : null}
+                      </td>
+                    );
                   return (
                     <td data-align={alignOf(cell)} key={column}>
                       {cell.t}
