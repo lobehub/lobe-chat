@@ -19,6 +19,7 @@ import { useTaskStore } from '../../store';
 import {
   buildOptimisticAssignmentActivities,
   buildOptimisticCommentActivity,
+  buildOptimisticPropertyActivity,
 } from './optimisticActivity';
 import type { TaskDetailDispatch } from './reducer';
 import { findSubtaskParentId, taskDetailReducer } from './reducer';
@@ -434,12 +435,29 @@ export class TaskDetailSliceActionImpl {
           target: options?.optimisticAssignee,
         })
       : [];
+    // Priority rides the same dispatch as the assignee rows.
+    const priorityRow =
+      current && rest.priority !== undefined && rest.priority !== (current.priority ?? null)
+        ? buildOptimisticPropertyActivity({
+            actor: actorId
+              ? {
+                  avatar: userProfileSelectors.userAvatar(userState) || null,
+                  id: actorId,
+                  name: userProfileSelectors.displayUserName(userState) || null,
+                  type: 'user',
+                }
+              : undefined,
+            change: { field: 'priority', from: current.priority ?? null, to: rest.priority },
+            now: new Date().toISOString(),
+          })
+        : undefined;
+    const synthesized = [...optimisticActivities, ...(priorityRow ? [priorityRow] : [])];
     const optimistic: Partial<TaskDetailData> = {
       ...optimisticRest,
       ...(assigneeAgentId !== undefined ? { agentId: assigneeAgentId } : {}),
       ...(assigneeUserId !== undefined ? { userId: assigneeUserId } : {}),
-      ...(optimisticActivities.length > 0
-        ? { activities: [...(current?.activities ?? []), ...optimisticActivities] }
+      ...(synthesized.length > 0
+        ? { activities: [...(current?.activities ?? []), ...synthesized] }
         : {}),
     };
 

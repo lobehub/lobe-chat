@@ -3,10 +3,13 @@ import debug from 'debug';
 
 import { taskService } from '@/services/task';
 import type { StoreSetter } from '@/store/types';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { runMutation } from '@/store/utils/runMutation';
 import { saveToast } from '@/store/utils/saveToast';
 
 import type { TaskStore } from '../../store';
+import { buildOptimisticPropertyActivity } from '../detail/optimisticActivity';
 
 const log = debug('lobe-store:task-lifecycle');
 
@@ -143,10 +146,35 @@ export class TaskLifecycleSliceActionImpl {
       ? previousStatusCandidate
       : undefined;
 
+    // The feed row rides the same dispatch as the status chip. The refetch
+    // after the mutation replaces the whole activity array (retiring this
+    // synthesized row), and the failure path already refetches as its rollback.
+    const detail = this.#get().taskDetailMap[id];
+    const userState = useUserStore.getState();
+    const actorId = userProfileSelectors.userId(userState);
+    const statusRow =
+      detail && previousStatus !== status
+        ? buildOptimisticPropertyActivity({
+            actor: actorId
+              ? {
+                  avatar: userProfileSelectors.userAvatar(userState) || null,
+                  id: actorId,
+                  name: userProfileSelectors.displayUserName(userState) || null,
+                  type: 'user',
+                }
+              : undefined,
+            change: { field: 'status', from: previousStatus ?? null, to: status },
+            now: new Date().toISOString(),
+          })
+        : undefined;
     this.#get().internal_dispatchTaskDetail({
       id,
       type: 'updateTaskDetail',
-      value: { status, ...extraUpdate },
+      value: {
+        status,
+        ...extraUpdate,
+        ...(statusRow ? { activities: [...(detail?.activities ?? []), statusRow] } : {}),
+      },
     });
     this.#patchTaskCollectionsStatus(id, status);
 

@@ -36,6 +36,14 @@ import TaskBriefCard from './TaskBriefCard';
 import TaskRunReport from './TaskRunReport';
 import TopicCard from './TopicCard';
 
+const PRIORITY_NAME: Record<number, 'high' | 'low' | 'none' | 'normal' | 'urgent'> = {
+  0: 'none',
+  1: 'urgent',
+  2: 'high',
+  3: 'normal',
+  4: 'low',
+};
+
 const ROW_TYPE_ICON = {
   assignment: UserRoundCog,
   property: ArrowRightLeft,
@@ -293,15 +301,19 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
       break;
     }
     case 'priority': {
+      // The tag alone is an icon; in a sentence "from ··· to !" reads as
+      // noise, so the level's name rides along.
+      const priorityTag = (level: number | null) => (
+        <Tag size={'small'} style={{ flexShrink: 0 }}>
+          <TaskPriorityTag disableDropdown priority={level ?? 0} size={12} />
+          {t(`taskDetail.priority.${PRIORITY_NAME[level ?? 0] ?? 'none'}`)}
+        </Tag>
+      );
       sentence = (
         <Trans
+          components={{ actor, from: priorityTag(change.from), to: priorityTag(change.to) }}
           i18nKey={'taskDetail.activities.priority.changed'}
           ns={'chat'}
-          components={{
-            actor,
-            from: <TaskPriorityTag disableDropdown priority={change.from ?? 0} />,
-            to: <TaskPriorityTag disableDropdown priority={change.to ?? 0} />,
-          }}
         />
       );
       break;

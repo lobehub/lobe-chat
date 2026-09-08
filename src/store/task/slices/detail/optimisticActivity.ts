@@ -117,3 +117,29 @@ export const buildOptimisticCommentActivity = ({
     type: 'comment',
   };
 };
+
+export interface BuildOptimisticPropertyInput {
+  actor?: TaskDetailActivityAuthor;
+  change: NonNullable<TaskDetailActivity['propertyChange']>;
+  now: string;
+}
+
+/**
+ * A property row (status / priority / automation) shown the moment the pick is
+ * made. Same contract as the assignment rows: nothing is synthesized without a
+ * known actor, and the refetch that follows retires it.
+ */
+export const buildOptimisticPropertyActivity = ({
+  actor,
+  change,
+  now,
+}: BuildOptimisticPropertyInput): TaskDetailActivity | undefined => {
+  if (!actor) return undefined;
+  return {
+    author: actor,
+    id: `${OPTIMISTIC_ACTIVITY_ID_PREFIX}property-${change.field}-${now}`,
+    propertyChange: change,
+    time: now,
+    type: 'property',
+  };
+};
