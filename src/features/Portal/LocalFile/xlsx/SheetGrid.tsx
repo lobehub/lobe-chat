@@ -55,6 +55,9 @@ const styles = createStaticStyles(({ css }) => ({
       box-shadow: 0 1px 0 0 #9aa4b2;
     }
   `,
+  frozenColumnLast: css`
+    box-shadow: 1px 0 0 0 #9aa4b2;
+  `,
   gutter: css`
     position: sticky;
 
@@ -117,8 +120,30 @@ const toCssStyle = (style: CellStyle): Record<string, string> => {
   return css;
 };
 
-const GridCell = memo<{ cell: CellModel }>(({ cell }) => (
-  <td colSpan={cell.cs} rowSpan={cell.rs} style={toCssStyle(cell.s)}>
+const stickyColumnStyle = (
+  offset: number,
+  frozenRow: boolean,
+): Record<string, string | number> => ({
+  insetInlineStart: offset,
+  position: 'sticky',
+  zIndex: frozenRow ? 4 : 2,
+});
+
+const GridCell = memo<{
+  cell: CellModel;
+  frozenColOffset?: number;
+  frozenRow: boolean;
+  lastFrozenCol: boolean;
+}>(({ cell, frozenColOffset, frozenRow, lastFrozenCol }) => (
+  <td
+    className={lastFrozenCol ? styles.frozenColumnLast : undefined}
+    colSpan={cell.cs}
+    rowSpan={cell.rs}
+    style={{
+      ...toCssStyle(cell.s),
+      ...(frozenColOffset === undefined ? {} : stickyColumnStyle(frozenColOffset, frozenRow)),
+    }}
+  >
     {cell.t}
   </td>
 ));
@@ -132,6 +157,12 @@ interface SheetGridProps {
 const SheetGrid = memo<SheetGridProps>(({ sheet }) => {
   const container = useRef<HTMLDivElement>(null);
   const frozenRows = sheet.frozen?.rows ?? 0;
+  const frozenCols = sheet.frozen?.cols ?? 0;
+  const frozenColOffsets = sheet.cols.reduce<number[]>((offsets, _width, index) => {
+    if (index < frozenCols)
+      offsets.push((offsets.at(-1) ?? GUTTER_WIDTH) + (index === 0 ? 0 : sheet.cols[index - 1]));
+    return offsets;
+  }, []);
 
   // Sticky rows need their own resolved offsets; row heights are only known
   // once the browser has laid the table out.
@@ -161,7 +192,21 @@ const SheetGrid = memo<SheetGridProps>(({ sheet }) => {
           <tr>
             <th className={`${styles.gutter} ${styles.corner} ${styles.headCell}`} />
             {sheet.cols.map((_, index) => (
-              <th className={`${styles.gutter} ${styles.headCell}`} key={index}>
+              <th
+                key={index}
+                className={[
+                  styles.gutter,
+                  styles.headCell,
+                  index === frozenCols - 1 && styles.frozenColumnLast,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                style={
+                  index >= frozenCols
+                    ? undefined
+                    : { insetInlineStart: frozenColOffsets[index], zIndex: 4 }
+                }
+              >
                 {columnName(index + 1)}
               </th>
             ))}
@@ -185,7 +230,15 @@ const SheetGrid = memo<SheetGridProps>(({ sheet }) => {
               >
                 <th className={`${styles.gutter} ${styles.rowHead}`}>{row.r}</th>
                 {row.cells.map((cell) => (
-                  <GridCell cell={cell} key={cell.c} />
+                  <GridCell
+                    cell={cell}
+                    frozenRow={frozen}
+                    key={cell.c}
+                    lastFrozenCol={cell.c === frozenCols}
+                    frozenColOffset={
+                      cell.c <= frozenCols ? frozenColOffsets[cell.c - 1] : undefined
+                    }
+                  />
                 ))}
               </tr>
             );

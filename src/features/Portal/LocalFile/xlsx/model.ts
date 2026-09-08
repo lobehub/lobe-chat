@@ -46,37 +46,42 @@ const hex = (color?: Partial<Color>): string | undefined => {
 
 const formatNumber = (value: number, numFmt?: string): string => {
   if (!numFmt || numFmt === 'General') return String(Math.round(value * 1e10) / 1e10);
-  const pattern = numFmt.split(';')[0];
+  const sections = numFmt.split(';');
+  const usesNegativeSection = value < 0 && Boolean(sections[1]);
+  const pattern = usesNegativeSection
+    ? sections[1]
+    : value === 0 && sections[2]
+      ? sections[2]
+      : sections[0];
+  if (!/[0#]/.test(pattern)) return pattern.replaceAll('"', '');
+
   const isPercentage = pattern.includes('%');
-  const displayValue = isPercentage ? value * 100 : value;
+  const displayValue = Math.abs(isPercentage ? value * 100 : value);
   const scientific = /E[+-]?(0+)/i.exec(pattern);
   const decimalPattern = pattern.match(/\.([0#]+)/)?.[1] ?? '';
   const decimals = decimalPattern.length;
   const requiredDecimals = decimalPattern.replaceAll('#', '').length;
-  const currency = pattern.match(/[$£¥€]/)?.[0] ?? '';
+  const firstPlaceholder = pattern.search(/[0#]/);
+  const lastPlaceholder = Math.max(pattern.lastIndexOf('0'), pattern.lastIndexOf('#'));
+  const sign = value < 0 && !usesNegativeSection ? '-' : '';
+  const prefix = pattern.slice(0, firstPlaceholder).replaceAll('"', '');
+  const suffix = pattern.slice(lastPlaceholder + 1).replaceAll('"', '');
+
   if (scientific) {
-    const [mantissa, exponent] = Math.abs(displayValue).toExponential(decimals).split('e');
+    const [mantissa, exponent] = displayValue.toExponential(decimals).split('e');
     const exponentValue = Number(exponent);
     const exponentSign = exponentValue < 0 ? '-' : '+';
     const exponentBody = String(Math.abs(exponentValue)).padStart(scientific[1].length, '0');
 
-    return (
-      (displayValue < 0 ? '-' : '') +
-      currency +
-      mantissa +
-      'E' +
-      exponentSign +
-      exponentBody +
-      (isPercentage ? '%' : '')
-    );
+    return sign + prefix + mantissa + 'E' + exponentSign + exponentBody + suffix;
   }
   const body = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: decimals,
     minimumFractionDigits: requiredDecimals,
     useGrouping: pattern.includes('#,##'),
-  }).format(Math.abs(displayValue));
+  }).format(displayValue);
 
-  return (displayValue < 0 ? '-' : '') + currency + body + (isPercentage ? '%' : '');
+  return sign + prefix + body + suffix;
 };
 
 const formatCellValue = (value: Cell['value'] | unknown, numFmt?: string): string => {

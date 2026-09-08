@@ -98,4 +98,19 @@ describe('readWorkbook', () => {
 
     expect(sheet.rows[0].cells[0].t).toBe('2026-09-08');
   });
+
+  it('selects number format sections for negative and zero values', async () => {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Sections');
+
+    worksheet.getCell('A1').value = -1234;
+    worksheet.getCell('A1').numFmt = '$#,##0.00;($#,##0.00);-';
+    worksheet.getCell('A2').value = 0;
+    worksheet.getCell('A2').numFmt = '$#,##0.00;($#,##0.00);-';
+
+    const sheet = await readWorksheet(workbook);
+
+    expect(sheet.rows[0].cells[0].t).toBe('($1,234.00)');
+    expect(sheet.rows[1].cells[0].t).toBe('-');
+  });
 });
