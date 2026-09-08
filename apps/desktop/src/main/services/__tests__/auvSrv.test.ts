@@ -176,7 +176,9 @@ describe('AuvService', () => {
   it('runs a typed CLI command against the private endpoint and preserves image artifacts', async () => {
     const { runCli, service } = createHarness();
 
-    const result = await service.runCommand({ argv: ['invoke', 'display.capture'] });
+    // Display-only reasoning must never become a CLI argument.
+    const params = { argv: ['invoke', 'display.capture'], reasoning: 'Check the current screen' };
+    const result = await service.runCommand(params);
 
     expect(runCli).toHaveBeenCalledWith({
       argv: ['invoke', 'display.capture', '--json'],

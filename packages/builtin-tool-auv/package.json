@@ -15,6 +15,7 @@
     "@lobechat/types": "workspace:*"
   },
   "peerDependencies": {
+    "lucide-react": "*",
     "react": "*"
   }
 }

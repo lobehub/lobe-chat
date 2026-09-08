@@ -1,5 +1,5 @@
 import { WEB_ONBOARDING } from '@lobechat/builtin-agents';
-import { AuvApiName, AuvIdentifier } from '@lobechat/builtin-tool-auv/client';
+import { AuvApiName, AuvIdentifier, AuvManifest } from '@lobechat/builtin-tool-auv/client';
 import {
   BrowserApiName,
   BrowserIdentifier,
@@ -21,6 +21,7 @@ import { GroupAgentBuilderInspectors } from '@lobechat/builtin-tool-group-agent-
 import { LobeAgentApiName, LobeAgentIdentifier } from '@lobechat/builtin-tool-lobe-agent';
 import {
   LocalSystemApiName,
+  LocalSystemIdentifier,
   LocalSystemRenders,
   LocalSystemStreamings,
 } from '@lobechat/builtin-tool-local-system/client';
@@ -49,6 +50,8 @@ import { cleanup, render } from '@testing-library/react';
 import { createElement } from 'react';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import ToolInspector from '@/features/Conversation/Messages/AssistantGroup/Tool/Inspector';
+
 describe('builtin tool registry', () => {
   afterEach(cleanup);
 
@@ -65,6 +68,10 @@ describe('builtin tool registry', () => {
   });
 
   it('includes AUV in builtin identifiers', () => {
+    expect(AuvIdentifier).toBe('lobe-computer-use');
+    expect(AuvManifest.meta.title).toBe('Computer Use');
+    expect(AuvManifest.api[0].parameters.properties).toHaveProperty('reasoning');
+    expect(AuvManifest.api[0].parameters.required).toEqual(['argv']);
     expect(builtinToolIdentifiers).toContain(AuvIdentifier);
   });
 
@@ -75,7 +82,7 @@ describe('builtin tool registry', () => {
     // AUV was registered as a builtin without a matching inspector registration.
     // The chat therefore fell back to the API name and hid the command being invoked.
     // Registering the AUV inspector makes command context available in every lifecycle phase.
-    /** @example lobe-auv/runCommand resolves a component in the central registry. */
+    /** @example lobe-computer-use/runCommand resolves a component in the central registry. */
     expect(getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand)).toBeDefined();
   });
 
@@ -87,16 +94,16 @@ describe('builtin tool registry', () => {
     const view = render(
       createElement(Inspector, {
         apiName: AuvApiName.runCommand,
-        args: { argv: ['invoke', 'input.type', '--text', 'hello world', ''] },
+        args: { argv: ['invoke', 'input.typeText', 'hello world', ''] },
         identifier: AuvIdentifier,
         pluginState: { output: { ok: true } },
       }),
     );
 
     /** @example A single "hello world" argument and an empty argument remain distinguishable. */
-    expect(view.getByText('auv invoke input.type --text "hello world" ""')).toBeVisible();
+    expect(view.getByText('auv invoke input.typeText "hello world" ""')).toBeVisible();
     /** @example AUV uses a localized command label instead of the raw runCommand API name. */
-    expect(view.getByText('builtins.lobe-auv.apiName.runCommand:')).toBeVisible();
+    expect(view.getByText('builtins.lobe-computer-use.inspector.input:')).toBeVisible();
   });
 
   /** @example Streaming begins with a label and progressively reveals the AUV command. */
@@ -107,7 +114,7 @@ describe('builtin tool registry', () => {
     const baseProps = { apiName: AuvApiName.runCommand, args: {}, identifier: AuvIdentifier };
     const view = render(createElement(Inspector, { ...baseProps, isArgumentsStreaming: true }));
     /** @example The empty streaming phase pulses a non-empty localized title. */
-    expect(view.getByText('builtins.lobe-auv.apiName.runCommand')).toHaveClass(
+    expect(view.getByText('builtins.lobe-computer-use.inspector.operate.loading')).toHaveClass(
       shinyTextStyles.shinyText,
     );
 
@@ -132,7 +139,7 @@ describe('builtin tool registry', () => {
     /** @example Completed arguments supersede the partial command during execution. */
     expect(view.getByText('auv invoke display.list')).toBeVisible();
     /** @example Execution keeps the shared loading animation. */
-    expect(view.getByText('builtins.lobe-auv.apiName.runCommand:')).toHaveClass(
+    expect(view.getByText('builtins.lobe-computer-use.inspector.inspect.loading:')).toHaveClass(
       shinyTextStyles.shinyText,
     );
   });
@@ -153,9 +160,152 @@ describe('builtin tool registry', () => {
     /** @example The failed command is still identifiable in conversation history. */
     expect(view.getByText('auv invoke display.capture')).toBeVisible();
     /** @example A finished failure does not keep pulsing as if it were running. */
-    expect(view.getByText('builtins.lobe-auv.apiName.runCommand:')).not.toHaveClass(
+    expect(view.getByText('builtins.lobe-computer-use.inspector.capture:')).not.toHaveClass(
       shinyTextStyles.shinyText,
     );
+  });
+
+  // PR #19051: one CLI entry point must still describe the actual computer action.
+  it.each([
+    ['input.clickPoint', 'operate'],
+    ['input.typeText', 'input'],
+    ['input.pasteText', 'input'],
+    ['input.key', 'keyboard'],
+    ['input.keyboard', 'keyboard'],
+    ['input.focusText', 'focus'],
+    ['display.capture', 'capture'],
+    ['window.capture', 'capture'],
+    ['screen.captureRegion', 'capture'],
+    ['window.list', 'inspect'],
+    ['future.command', 'operate'],
+  ])('describes %s while it executes', (command, activity) => {
+    const Inspector = getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand)!;
+    const view = render(
+      createElement(Inspector, {
+        apiName: AuvApiName.runCommand,
+        args: { argv: ['invoke', command], reasoning: 'Find the search field' },
+        identifier: AuvIdentifier,
+        isLoading: true,
+      }),
+    );
+    expect(
+      view.getByText(`builtins.lobe-computer-use.inspector.${activity}.loading:`),
+    ).toBeVisible();
+    expect(view.getByText('Find the search field')).toBeVisible();
+    expect(view.queryByText(`auv invoke ${command}`)).toBeNull();
+  });
+
+  it('keeps streamed reasoning and uses help or dry-run labels before action labels', () => {
+    const Inspector = getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand)!;
+    const base = { apiName: AuvApiName.runCommand, identifier: AuvIdentifier, args: {} };
+    const view = render(
+      createElement(Inspector, {
+        ...base,
+        isArgumentsStreaming: true,
+        partialArgs: {
+          argv: ['invoke', 'display.capture', '--help'],
+          reasoning: 'Check capture options',
+        },
+      }),
+    );
+    expect(view.getByText('builtins.lobe-computer-use.inspector.help.loading:')).toBeVisible();
+    expect(view.getByText('Check capture options')).toBeVisible();
+    view.rerender(
+      createElement(Inspector, {
+        ...base,
+        args: { argv: ['invoke', 'input.typeText', 'hello', '--dry-run'] },
+        isLoading: true,
+      }),
+    );
+    expect(view.getByText('builtins.lobe-computer-use.inspector.preview.loading:')).toBeVisible();
+    view.rerender(
+      createElement(Inspector, {
+        ...base,
+        args: { argv: ['invoke', 'input.typeText', '--', '--help'] },
+        isLoading: true,
+      }),
+    );
+    expect(view.getByText('builtins.lobe-computer-use.inspector.input.loading:')).toBeVisible();
+  });
+
+  it('distinguishes reading an image from reading a text file', () => {
+    const Inspector = getBuiltinInspector(LocalSystemIdentifier, LocalSystemApiName.readFile)!;
+    const base = { apiName: LocalSystemApiName.readFile, identifier: LocalSystemIdentifier };
+    const view = render(
+      createElement(Inspector, {
+        ...base,
+        args: {},
+        partialArgs: { path: '/tmp/capture.PNG' },
+        isArgumentsStreaming: true,
+      }),
+    );
+    expect(view.getByText('builtins.lobe-local-system.inspector.viewImage.loading:')).toBeVisible();
+    view.rerender(
+      createElement(Inspector, {
+        ...base,
+        args: { path: '/tmp/capture' },
+        pluginState: { images: [{ mediaType: 'image/png', url: 'https://example.test/capture' }] },
+      }),
+    );
+    expect(view.getByText('builtins.lobe-local-system.inspector.viewImage:')).toBeVisible();
+    view.rerender(
+      createElement(Inspector, {
+        ...base,
+        args: { path: '/tmp/notes.md' },
+      }),
+    );
+    expect(view.getByText('builtins.lobe-local-system.apiName.readLocalFile:')).toBeVisible();
+  });
+
+  // PR #19051: collapsed chat rows bypassed the registered inspector entirely.
+  it('keeps action labels and reasoning in collapsed Computer Use chat rows', () => {
+    const view = render(
+      createElement(ToolInspector, {
+        apiName: AuvApiName.runCommand,
+        arguments: JSON.stringify({
+          argv: ['invoke', 'display.capture'],
+          reasoning: 'Check the search result',
+        }),
+        identifier: AuvIdentifier,
+        isExpanded: false,
+        isToolCalling: true,
+        toolCallId: 'computer-use-capture',
+      }),
+    );
+    expect(view.getByText('builtins.lobe-computer-use.inspector.capture.loading:')).toBeVisible();
+    expect(view.getByText('Check the search result')).toBeVisible();
+  });
+
+  it('keeps the image-reading label in collapsed chat rows', () => {
+    const view = render(
+      createElement(ToolInspector, {
+        apiName: LocalSystemApiName.readFile,
+        arguments: JSON.stringify({ path: '/tmp/capture.png' }),
+        identifier: LocalSystemIdentifier,
+        isExpanded: false,
+        isToolCalling: true,
+        toolCallId: 'computer-use-image',
+      }),
+    );
+    expect(view.getByText('builtins.lobe-local-system.inspector.viewImage.loading:')).toBeVisible();
+  });
+
+  it('renders historical AUV calls without advertising the retired identifier', () => {
+    expect(getBuiltinInspector('lobe-auv', AuvApiName.runCommand)).toBe(
+      getBuiltinInspector(AuvIdentifier, AuvApiName.runCommand),
+    );
+    expect(builtinToolIdentifiers).not.toContain('lobe-auv');
+    const view = render(
+      createElement(ToolInspector, {
+        apiName: AuvApiName.runCommand,
+        arguments: JSON.stringify({ argv: ['invoke', 'input.key', 'return'] }),
+        identifier: 'lobe-auv',
+        isExpanded: false,
+        result: { content: null, error: { message: 'Input failed' } },
+        toolCallId: 'historical-auv',
+      }),
+    );
+    expect(view.getByText('builtins.lobe-computer-use.inspector.keyboard:')).toBeVisible();
   });
 
   it('keeps the single AUV CLI entry point directly available behind its runtime gate', () => {

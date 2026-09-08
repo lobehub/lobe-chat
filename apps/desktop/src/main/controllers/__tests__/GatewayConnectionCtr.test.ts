@@ -671,7 +671,7 @@ describe('GatewayConnectionCtr', () => {
         'runCommand',
         { argv: ['invoke', 'display.capture'] },
         'auv-command',
-        'lobe-auv',
+        'lobe-computer-use',
       );
       await vi.advanceTimersByTimeAsync(0);
 

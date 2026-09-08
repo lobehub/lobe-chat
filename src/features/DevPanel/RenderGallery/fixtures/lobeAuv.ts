@@ -4,11 +4,38 @@ import { AuvApiName, AuvIdentifier } from '@lobechat/builtin-tool-auv';
 
 import { defineFixtures, variants } from './_helpers';
 
-/** AUV command examples for the gallery's streaming, loading, result, and failure modes. */
+/** Computer Use action examples for the gallery's streaming, loading, result, and failure modes. */
 export const lobeAuv = defineFixtures({
   identifier: AuvIdentifier,
   fixtures: {
     [AuvApiName.runCommand]: variants([
+      {
+        args: {
+          argv: ['invoke', 'input.clickPoint', '100', '200'],
+          reasoning: 'Focus the search field',
+        },
+        label: 'Mouse action with reasoning',
+        partialArgs: { reasoning: 'Focus the search' },
+      },
+      {
+        args: {
+          argv: ['invoke', 'input.typeText', "Arielle's Wish"],
+          reasoning: 'Enter the song title',
+        },
+        label: 'Text input',
+      },
+      {
+        args: { argv: ['invoke', 'input.key', 'return'], reasoning: 'Submit the search' },
+        label: 'Keyboard action',
+      },
+      {
+        args: { argv: ['invoke', 'display.capture'], reasoning: 'Check the current screen' },
+        label: 'Capture screen',
+      },
+      {
+        args: { argv: ['invoke', 'input.key', 'return', '--dry-run'] },
+        label: 'Validate without input',
+      },
       {
         args: { argv: ['invoke', 'display.list'] },
         label: 'List displays',

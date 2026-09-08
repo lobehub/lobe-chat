@@ -37,11 +37,11 @@ export const auvRuntime: ServerRuntimeRegistration = {
        * Triggering workflow:
        *
        * `BuiltinToolsExecutor.execute`
-       *   -> `lobe-auv/runCommand`
+       *   -> `lobe-computer-use/runCommand`
        *     -> {@link deviceGateway.executeToolCall}
        *
        * Upstream:
-       * - Server-side builtin tool execution for `lobe-auv/runCommand`
+       * - Server-side builtin tool execution for `lobe-computer-use/runCommand`
        *
        * Downstream:
        * - {@link deviceGateway.executeToolCall}

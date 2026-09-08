@@ -9,11 +9,16 @@ export const AuvManifest: BuiltinToolManifest = {
     {
       defaultTimeoutMs: 120_000,
       description:
-        'Run a typed AUV CLI invoke command on the active desktop device. Pass arguments after the auv executable, for example ["invoke", "display.list"]. Use ["invoke", "--help"] or ["invoke", "display.capture", "--help"] to inspect available commands and options. Successful invocations return parsed JSON, including artifacts[].file_path for captured images.',
+        'Use the computer by running a typed AUV CLI invoke command on the active desktop device. Pass arguments after the auv executable, for example ["invoke", "display.list"]. Use ["invoke", "--help"] or ["invoke", "display.capture", "--help"] to inspect available commands and options. Successful invocations return parsed JSON, including artifacts[].file_path for captured images.',
       humanIntervention: 'required',
       name: AuvApiName.runCommand,
       parameters: {
         properties: {
+          reasoning: {
+            description:
+              'Briefly describe the purpose of this action for the user, in their language. This is displayed in the tool inspector and is not a CLI argument.',
+            type: 'string',
+          },
           argv: {
             description:
               'Arguments after the auv executable. The first argument must be "invoke". Do not include shell syntax or the executable name.',
@@ -29,11 +34,11 @@ export const AuvManifest: BuiltinToolManifest = {
   ],
   identifier: AuvIdentifier,
   meta: {
-    avatar: '🛰️',
-    description: 'Run typed native computer-use commands through the private AUV CLI',
+    avatar: '🖱️',
+    description: 'Use desktop applications, interact with controls, and capture the screen',
     readme:
-      'AUV runs as an app-owned child process. LobeHub invokes its typed CLI over private local IPC and can pass image artifact paths to Local System readFile for visual analysis.',
-    title: 'AUV',
+      'Interact with desktop applications, use mouse and keyboard controls, enter text, and capture the screen on the active device. View captured images to inspect the result of each step.',
+    title: 'Computer Use',
   },
   systemRole: systemPrompt,
   type: 'builtin',

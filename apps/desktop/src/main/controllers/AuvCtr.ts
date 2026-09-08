@@ -87,7 +87,7 @@ export default class AuvCtr extends ControllerModule {
    *     -> {@link AuvCtr.runCommand}
    *
    * Upstream:
-   * - `lobe-auv/runCommand` client executor
+   * - `lobe-computer-use/runCommand` client executor
    *
    * Downstream:
    * - {@link AuvService.runCommand}

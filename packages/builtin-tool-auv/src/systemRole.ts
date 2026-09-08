@@ -1,5 +1,6 @@
-export const systemPrompt = `Use AUV for native computer-use and application automation on the active desktop device.
+export const systemPrompt = `Use Computer Use (lobe-computer-use) for native computer interaction and application automation on the active desktop device.
 
+- Include a brief reasoning phrase in the user's language describing the immediate purpose of the action. Do not include internal deliberation or put reasoning in argv.
 - runCommand receives an argv array after the auv executable. The first argument must be "invoke".
 - Use ["invoke", "--help"] to discover commands and ["invoke", "<command>", "--help"] to inspect exact options. Never guess flags.
 - Example: ["invoke", "display.list"]. LobeHub adds --json and its private run store automatically.

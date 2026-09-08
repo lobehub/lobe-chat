@@ -36,7 +36,7 @@ type AvailableRemotePlatformRuntime = Extract<RemotePlatformCommandRuntime, { av
 // Hardcoded (not imported) so the desktop main process keeps zero builtin-tool
 // package deps — importing one risks the @lobechat/types stub runtime leak.
 const BrowserIdentifier = 'lobe-browser';
-const AuvIdentifier = 'lobe-auv';
+const AuvIdentifier = 'lobe-computer-use';
 
 function parseHermesSessionId(stderr: string): string | undefined {
   for (const line of stderr.split(/\r?\n/).reverse()) {
@@ -522,7 +522,7 @@ export default class GatewayConnectionCtr extends ControllerModule {
    * Triggering workflow:
    *
    * {@link GatewayConnectionCtr.executeToolCall}
-   *   -> `lobe-auv/runCommand`
+   *   -> `lobe-computer-use/runCommand`
    *     -> {@link GatewayConnectionCtr.executeAuvToolCall}
    *
    * Upstream:
