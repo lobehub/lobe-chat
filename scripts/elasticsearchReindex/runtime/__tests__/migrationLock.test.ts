@@ -188,10 +188,12 @@ describe('FtsSearchMigrationLockClient', () => {
       .catch((cause: unknown) => cause);
 
     expect(error).toBeInstanceOf(FtsSearchMigrationLockError);
+    if (!(error instanceof FtsSearchMigrationLockError)) throw error;
     expect(error).toMatchObject({ cause: failure, recoveryOwner: expect.any(String) });
     expect(error.message).toContain('non-expiring lock was retained');
     const current = await client.read();
     expect(current?.owner).toBe(error.recoveryOwner);
+    if (!error.recoveryOwner) throw new Error('Expected a recovery owner');
     expect(await client.release(error.recoveryOwner)).toBe('released');
   });
 
@@ -358,6 +360,7 @@ describe('FtsSearchMigrationLockClient', () => {
       .catch((cause: unknown) => cause);
 
     expect(error).toMatchObject({ recoveryOwner: expect.any(String) });
+    if (!(error instanceof FtsSearchMigrationLockError)) throw error;
     expect(error.message).toContain(`recover with owner ${error.recoveryOwner}`);
   });
 
@@ -375,6 +378,7 @@ describe('FtsSearchMigrationLockClient', () => {
 
     const error = await client.read().catch((cause: unknown) => cause);
 
+    if (!(error instanceof FtsSearchMigrationLockError)) throw error;
     expect(error.message).toBe('Elasticsearch migration lock status failed (403)');
     expect(error.message).not.toContain(secret);
   });

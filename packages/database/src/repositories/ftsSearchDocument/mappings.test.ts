@@ -61,8 +61,8 @@ describe('search index mappings', () => {
     const retainedFields = new Set(Object.keys(FTS_SEARCH_RETAINED_SOURCE_PROPERTIES[entity]));
 
     for (const field of [
-      ...(definition.indexedOnlyFields ?? []),
-      ...(definition.longTextFields ?? []),
+      ...('indexedOnlyFields' in definition ? definition.indexedOnlyFields : []),
+      ...('longTextFields' in definition ? definition.longTextFields : []),
       ...definition.queryFields,
     ]) {
       expect(retainedFields.has(field)).toBe(false);
