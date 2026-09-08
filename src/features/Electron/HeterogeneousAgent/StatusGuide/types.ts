@@ -1,6 +1,6 @@
-import type { HeterogeneousAgentSessionError } from '@lobechat/electron-client-ipc';
 import type { LocalHeterogeneousAgentType } from '@lobechat/heterogeneous-agents';
 import { LOCAL_HETEROGENEOUS_AGENT_TYPES } from '@lobechat/heterogeneous-agents';
+import type { HeterogeneousAgentSessionError } from '@lobechat/types';
 import type { ComponentType } from 'react';
 
 export type HeterogeneousAgentStatusGuideVariant = 'compact' | 'embedded' | 'inline';

@@ -3,8 +3,6 @@ import type {
   AgentInterventionResponseData,
   AgentStreamEvent,
 } from '@lobechat/agent-gateway-client';
-import type { HeterogeneousAgentSessionError } from '@lobechat/electron-client-ipc';
-import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import {
   buildHeterogeneousAgentAuthRequiredError,
   createMainAgentRunState,
@@ -29,6 +27,7 @@ import type {
   ChatTopicStatus,
   ContextSelection,
   ConversationContext,
+  HeterogeneousAgentSessionError,
   HeterogeneousProviderConfig,
   MessageMapScope,
   ModelUsage,
@@ -40,6 +39,7 @@ import {
   AgentRuntimeErrorType,
   buildHeteroSpawnArgs,
   HETEROGENEOUS_AGENT_DEFAULT_SELECTION,
+  HeterogeneousAgentSessionErrorCode,
   normalizeHeterogeneousProviderConfig,
   ThreadStatus,
   ThreadType,

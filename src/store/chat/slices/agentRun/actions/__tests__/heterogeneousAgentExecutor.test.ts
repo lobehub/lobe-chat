@@ -14,11 +14,10 @@ import os from 'node:os';
 import path from 'node:path';
 
 import type * as LobeChatConst from '@lobechat/const';
-import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import type { AgentEventAdapter } from '@lobechat/heterogeneous-agents';
 import { createAdapter } from '@lobechat/heterogeneous-agents';
 import type { ChatTopicMetadata, HeterogeneousProviderConfig } from '@lobechat/types';
-import { ThreadStatus } from '@lobechat/types';
+import { HeterogeneousAgentSessionErrorCode, ThreadStatus } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useAiInfraStore } from '@/store/aiInfra';

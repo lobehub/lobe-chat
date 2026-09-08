@@ -1,9 +1,8 @@
 import { isDesktop } from '@lobechat/const';
-import { HeterogeneousAgentSessionErrorCode } from '@lobechat/electron-client-ipc';
 import { type ILobeAgentRuntimeErrorType } from '@lobechat/model-runtime';
 import { AgentRuntimeErrorType, getErrorCodeSpec } from '@lobechat/model-runtime';
+import { ChatErrorType, HeterogeneousAgentSessionErrorCode } from '@lobechat/types';
 import { type ChatMessageError, type ErrorType, type IToolErrorType } from '@lobechat/types';
-import { ChatErrorType } from '@lobechat/types';
 import { isRecord } from '@lobechat/utils/object';
 import { Block, Highlighter } from '@lobehub/ui';
 import { type AlertProps, Skeleton } from '@lobehub/ui/base-ui';
