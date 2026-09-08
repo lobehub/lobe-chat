@@ -4,9 +4,14 @@ import { filterBuiltinSkills } from '@/helpers/skillFilters';
 
 let loading: Promise<BuiltinSkill[]> | undefined;
 
-export const loadBuiltinSkills = () => {
+export const loadBuiltinSkills = async () => {
   loading ??= import('@lobechat/builtin-skills').then((m) => filterBuiltinSkills(m.builtinSkills));
-  return loading;
+  try {
+    return await loading;
+  } catch (error) {
+    loading = undefined;
+    throw error;
+  }
 };
 
 export const loadBuiltinSkill = async (identifier: string) =>
