@@ -129,7 +129,7 @@ a graph is optional and does not replace evidence or human review.
    `blocked`) and `observation`. Record only what was observed. Use the returned
    result ID to attach required artifacts through `lh acceptance run evidence`
    (inspect its `--help`), following the same evidence rules as checklist checks.
-5. After all required checks are recorded, run
+5. After all required checks are recorded and passed, run
    `lh acceptance flow complete <acceptanceId> --run <verifyRunId>`. Completion
    settles verification; it does not accept the delivery on the user's behalf.
    Read back the round and verify evidence coverage before handing it over.
