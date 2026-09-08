@@ -15,9 +15,10 @@ export const resolveAcceptanceTab = (
   tab: AcceptanceTabKey | undefined,
   nodeCount: number,
   reviewingPlan = false,
+  flowAvailable = true,
 ): AcceptanceTabKey => {
   const selected = tab ?? (reviewingPlan ? 'flow' : 'checks');
-  return selected === 'flow' && nodeCount === 0 ? 'checks' : selected;
+  return selected === 'flow' && (!flowAvailable || nodeCount === 0) ? 'checks' : selected;
 };
 
 /** Round numbers come from the same acceptance ledger as the checklist. */

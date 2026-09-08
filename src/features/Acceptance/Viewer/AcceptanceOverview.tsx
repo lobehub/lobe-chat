@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import { useState } from 'react';
 
 import { useAcceptanceScope } from './AcceptanceScope';
@@ -54,6 +54,7 @@ interface AcceptancePageProps {
 export const AcceptanceOverview = ({
   onDraftToComposer,
 }: Pick<AcceptancePageProps, 'onDraftToComposer'>) => {
+  const { md = false } = useResponsive();
   const { acceptanceId, embedded } = useAcceptanceScope();
   const { turn } = useAcceptanceTurn(embedded);
   const { data } = useAcceptanceBundle(acceptanceId);
@@ -63,6 +64,7 @@ export const AcceptanceOverview = ({
     requestedTab,
     flowCount,
     Boolean(flowPlanPhase(data?.rounds.at(-1))),
+    md,
   );
   const checks = data ? checksForTurn(data, turn) : [];
   const resourceCount = new Set(
@@ -91,7 +93,7 @@ export const AcceptanceOverview = ({
             <AcceptanceTabs
               active={tab}
               checkCount={checks.length}
-              flowCount={flowCount}
+              flowCount={md ? flowCount : 0}
               resourceCount={resourceCount}
               onChange={setTab}
             />

@@ -77,3 +77,10 @@ it('opens a proposed flow first while preserving an explicit user tab choice', (
   expect(resolveAcceptanceTab(undefined, 3, false)).toBe('checks');
   expect(resolveAcceptanceTab(undefined, 0, true)).toBe('checks');
 });
+
+it('falls back from draft and selected flows when the surface does not offer flows', () => {
+  expect(resolveAcceptanceTab(undefined, 3, true, false)).toBe('checks');
+  expect(resolveAcceptanceTab('flow', 3, false, false)).toBe('checks');
+  expect(resolveAcceptanceTab('resources', 3, true, false)).toBe('resources');
+  expect(resolveAcceptanceTab('flow', 3, false, true)).toBe('flow');
+});
