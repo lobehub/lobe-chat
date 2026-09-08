@@ -174,8 +174,9 @@ export const workRouter = router({
     .input(z.object({ taskId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => ctx.workModel.deleteTaskWork(input)),
 
-  // User-initiated removal of a (typically orphaned) Work card. No scoped RBAC
-  // gate: the model restricts the delete to the caller's own Work rows.
+  // User-initiated removal of an orphaned Work card. No scoped RBAC gate: the
+  // model restricts the delete to the caller's own rows whose backing
+  // task / document is already gone, so a live Work cannot be removed here.
   deleteWork: workProcedure
     .input(z.object({ id: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => ctx.workModel.deleteWork(input)),

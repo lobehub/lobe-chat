@@ -118,7 +118,7 @@ interface WorkSummaryCardProps {
    * document), which only renders inside the conversation UI; surfaces without
    * that portal (e.g. the resource page's 产物 gallery) pass their own
    * navigation here. Only ever receives a clickable item — the card still gates
-   * clickability on external-url presence and task-deleted state.
+   * clickability on external-url presence and resource-deleted state.
    */
   onOpen?: (item: WorkSummaryItem) => void;
   /**

@@ -11,6 +11,7 @@ import type {
 import { and, eq, sql } from 'drizzle-orm';
 
 import { documents } from '../../schemas/file';
+import { tasks } from '../../schemas/task';
 import { works, workVersions } from '../../schemas/work';
 import type { LobeChatDatabase } from '../../type';
 import { documentOwnership, type WorkContext, workOwnership } from './context';
@@ -323,11 +324,27 @@ export const deleteTaskWork = async (
  * the user can clear the card.
  *
  * Restricted to the Work's own `userId` (the resource owner stamped at
- * registration), not every member who can see the row. Cascades
- * `work_versions`, `project_works` and `goal_node_work_versions` via FK.
+ * registration), not every member who can see the row, and to rows whose
+ * backing task / document is actually gone: the endpoint has no scoped RBAC
+ * gate, so without this a caller could wipe a live Work's version history by
+ * id alone. `external` / `file` Works have no backing row and are always
+ * eligible. Cascades `work_versions`, `project_works` and
+ * `goal_node_work_versions` via FK.
  */
 export const deleteWork = async (ctx: WorkContext, params: DeleteWorkParams): Promise<void> => {
+  const backingResourceGone = sql<boolean>`case ${works.resourceType}
+    when 'task' then not exists (select 1 from ${tasks} where ${tasks.id} = ${works.resourceId})
+    when 'document' then not exists (select 1 from ${documents} where ${documents.id} = ${works.resourceId})
+    else true end`;
+
   await ctx.db
     .delete(works)
-    .where(and(workOwnership(ctx), eq(works.id, params.id), eq(works.userId, ctx.userId)));
+    .where(
+      and(
+        workOwnership(ctx),
+        eq(works.id, params.id),
+        eq(works.userId, ctx.userId),
+        backingResourceGone,
+      ),
+    );
 };

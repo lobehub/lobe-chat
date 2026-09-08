@@ -27,7 +27,8 @@ export const useRemoveWork = () => {
             // The orphan may be surfaced in the gallery, the sidebar and any
             // message it was registered from, so refresh every Work view.
             await workService.refreshAllConversations();
-          } catch {
+          } catch (error) {
+            console.error('[useRemoveWork] failed to delete work', error);
             toast.error(t('operationFailed', { ns: 'common' }));
           }
         },
