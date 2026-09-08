@@ -18,10 +18,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAcceptanceBySubject } from '@/features/Acceptance';
-import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
 import { useTaskStore } from '@/store/task';
 import { taskDetailSelectors } from '@/store/task/selectors';
+
+import { useOpenAcceptanceInPanel } from './useOpenAcceptanceInPanel';
 
 /**
  * The human layer of the task's two-layer state.
@@ -96,8 +96,7 @@ const resolveState = (status: string, latestRunStatus?: string | null): StateKey
 
 const TaskAcceptanceStateRow = memo(() => {
   const { t } = useTranslation('chat');
-  const openAcceptance = useChatStore((state) => state.openAcceptance);
-  const showTaskAgentPanel = useGlobalStore((state) => state.toggleTaskAgentPanel);
+  const openAcceptanceInPanel = useOpenAcceptanceInPanel();
   const taskDatabaseId = useTaskStore(taskDetailSelectors.activeTaskDatabaseId);
   const { data: acceptance } = useAcceptanceBySubject('task', taskDatabaseId ?? null);
 
@@ -123,10 +122,7 @@ const TaskAcceptanceStateRow = memo(() => {
       // full ahead of the "click to review" hint.
       title={`${label} · ${t('taskDetail.acceptanceState.hint')}`}
       variant={'borderless'}
-      onClick={() => {
-        showTaskAgentPanel(true);
-        openAcceptance(acceptance.id);
-      }}
+      onClick={() => openAcceptanceInPanel(acceptance.id)}
     >
       <Icon
         color={meta.color}
