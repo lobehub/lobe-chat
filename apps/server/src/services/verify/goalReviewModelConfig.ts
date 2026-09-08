@@ -1,4 +1,5 @@
 import { BUILTIN_AGENT_SLUGS } from '@lobechat/builtin-agents';
+import type { ProviderConfig } from '@lobechat/types';
 import { pickTrimmedString, toRecord } from '@lobechat/utils/object';
 
 import { AgentModel } from '@/database/models/agent';
@@ -20,12 +21,14 @@ export const resolveGoalReviewModelConfig = async (
   workspaceId?: string,
 ): Promise<VerifyModelConfig | undefined> => {
   const agents = new AgentModel(db, userId, workspaceId);
-  const infra = new AiInfraRepos(
-    db,
-    userId,
-    (await getServerGlobalConfig()).aiProvider,
-    workspaceId,
+  const { aiProvider } = await getServerGlobalConfig();
+  const providerConfigs: Record<string, ProviderConfig> = Object.fromEntries(
+    Object.entries(aiProvider).map<[string, ProviderConfig]>(([id, config]) => [
+      id,
+      { ...config, enabled: config?.enabled ?? false },
+    ]),
   );
+  const infra = new AiInfraRepos(db, userId, providerConfigs, workspaceId);
   const tried = new Set<string>();
   const usable = async (candidate?: { model?: string | null; provider?: string | null } | null) => {
     if (
