@@ -12,7 +12,6 @@ import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRightLeft,
   BotMessageSquare,
-  ChartNoAxesColumnIncreasing,
   CircleDot,
   CirclePlus,
   MessageCircle,
@@ -29,6 +28,7 @@ import { useActivityTime } from '@/hooks/useActivityTime';
 import { useTaskStore } from '@/store/task';
 import { taskActivitySelectors, taskDetailSelectors } from '@/store/task/selectors';
 
+import { PRIORITY_META } from '../features/TaskPriorityTag';
 import { styles } from '../shared/style';
 import { resolveAssignmentActivityCopy } from './assignmentActivityCopy';
 import CommentCard from './CommentCard';
@@ -246,10 +246,17 @@ interface TaskActivitiesProps {
   variant?: 'activity' | 'result';
 }
 
-const PROPERTY_ICON: Record<'automation' | 'priority' | 'status', LucideIcon> = {
+const PROPERTY_ICON: Record<'automation' | 'status', LucideIcon> = {
   automation: Timer,
-  priority: ChartNoAxesColumnIncreasing,
   status: CircleDot,
+};
+
+const PriorityMark = ({ level }: { level: number | null }) => {
+  const meta = PRIORITY_META[level ?? 0] ?? PRIORITY_META[0];
+  const IconRender = meta.icon;
+  return (
+    <IconRender color={meta.level === 1 ? cssVar.orange : cssVar.colorTextTertiary} size={14} />
+  );
 };
 
 /**
@@ -357,9 +364,16 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   return (
     <FeedLine
       // A property row is about the property, so its mark is the property's
-      // icon — the face is for rows about people (created, assigned).
-      mark={<RowMark icon={PROPERTY_ICON[change.field]} />}
+      // icon — the face is for rows about people (created, assigned). Priority
+      // uses the app's own solid bars, at the level it moved to.
       time={activity.time}
+      mark={
+        change.field === 'priority' ? (
+          <PriorityMark level={change.to} />
+        ) : (
+          <RowMark icon={PROPERTY_ICON[change.field]} />
+        )
+      }
     >
       {sentence}
     </FeedLine>
