@@ -720,6 +720,8 @@ export interface VerifyCheckItem {
   required: boolean;
   /** Provenance: the criterion this item was instantiated from, or null when agent-generated. */
   sourceCriterionId?: string | null;
+  /** Immutable reusable flow definition instantiated for this verification round. */
+  sourceFlowNode?: { flowId: string; versionId: string; nodeId: string; nodeKey: string };
   /** Provenance: the rubric (group) this item came in through, or null. */
   sourceRubricId?: string | null;
   /**

@@ -17,6 +17,7 @@ import type {
 import debug from 'debug';
 
 import { AcceptanceModel } from '@/database/models/acceptance';
+import { AcceptanceFlowModel, projectFlowCheckResults } from '@/database/models/acceptanceFlow';
 import { AgentModel } from '@/database/models/agent';
 import { DocumentModel } from '@/database/models/document';
 import { ProjectModel } from '@/database/models/project';
@@ -185,6 +186,11 @@ export const buildAcceptanceCheckUnion = (rounds: RoundInput[]): AcceptanceCheck
       const logicalId = item.sourceCriterionId ?? item.id;
       const row = ensureRow(logicalId, roundIndex);
       // The latest snapshot wins: repair rounds may refine method/expected.
+      if (item.sourceFlowNode) {
+        // A rerun is a fresh execution; historical evidence stays in the timeline.
+        row.result = undefined;
+        row.resultRound = undefined;
+      }
       row.planItem = item;
       row.title = item.title;
       row.required = item.required;
@@ -314,7 +320,7 @@ export interface AcceptanceCheckReviewOverlay {
  * already folded their results into this row's timeline.
  */
 export const buildCheckReviewOverlay = (
-  check: Pick<AcceptanceCheckRow, 'timeline'>,
+  check: Pick<AcceptanceCheckRow, 'timeline'> & Partial<Pick<AcceptanceCheckRow, 'planItem'>>,
   resultsById: Map<string, VerifyCheckResultItem>,
   currentRoundIndex: number,
 ): AcceptanceCheckReviewOverlay => {
@@ -353,7 +359,9 @@ export const buildCheckReviewOverlay = (
       comment: latest.comment,
       createdAt: latest.createdAt,
       roundIndex: latest.roundIndex,
-      stale: latest.action === 'reject' && latest.roundIndex < currentRoundIndex,
+      stale:
+        (Boolean(check.planItem?.sourceFlowNode) || latest.action === 'reject') &&
+        latest.roundIndex < currentRoundIndex,
     },
   };
 };
@@ -1277,6 +1285,7 @@ export class AcceptanceService {
       this.evidenceModel.listByRuns(runIds),
       this.reportModel.findByRuns(runIds),
     ]);
-    return { evidence, reports, results, runs };
+    const flows = await new AcceptanceFlowModel(this.db, this.userId).list(acceptanceId);
+    return { evidence, reports, results: projectFlowCheckResults(results, flows), runs };
   };
 }

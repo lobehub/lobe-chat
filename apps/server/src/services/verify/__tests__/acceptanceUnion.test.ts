@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { VerifyCheckResultItem, VerifyRunItem } from '@/database/schemas/verify';
 
-import { buildAcceptanceCheckUnion } from '../acceptanceService';
+import { buildAcceptanceCheckUnion, buildCheckReviewOverlay } from '../acceptanceService';
 
 const planItem = (id: string, overrides: Partial<VerifyCheckItem> = {}): VerifyCheckItem => ({
   id,
@@ -35,6 +35,26 @@ const result = (
   }) as VerifyCheckResultItem;
 
 describe('buildAcceptanceCheckUnion', () => {
+  it('resets a flow check for a new run while keeping earlier evidence and review in history', () => {
+    const item = planItem('node', {
+      sourceFlowNode: { flowId: 'flow', versionId: 'v1', nodeId: 'n1', nodeKey: 'ready' },
+    });
+    const previous = result('node', 'passed', {
+      userDecision: 'accepted',
+      userDecisionDetail: { decidedAt: '2026-09-08T00:00:00Z' },
+    });
+    const [check] = buildAcceptanceCheckUnion([
+      { run: run('r1', 1, [item]), results: [previous] },
+      { run: run('r2', 2, [item]), results: [] },
+    ]);
+    expect(check.state).toBe('not_executed');
+    expect(check.result).toBeUndefined();
+    expect(check.timeline).toHaveLength(1);
+    expect(
+      buildCheckReviewOverlay(check, new Map([[previous.id, previous]]), 2).userReview?.stale,
+    ).toBe(true);
+  });
+
   it('takes each item final verdict from its latest round and keeps the trail', () => {
     const plan = [planItem('badge')];
     const rows = buildAcceptanceCheckUnion([

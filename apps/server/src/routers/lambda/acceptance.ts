@@ -15,6 +15,7 @@ import {
   requireWorkspaceRoleWhenScoped,
   wsCompatProcedure,
 } from '@/business/server/trpc-middlewares/workspaceAuth';
+import { AcceptanceFlowModel } from '@/database/models/acceptanceFlow';
 import { AgentOperationModel } from '@/database/models/agentOperation';
 import { ProjectModel } from '@/database/models/project';
 import { VerifyReviewPredictionModel } from '@/database/models/verifyReviewPrediction';
@@ -42,6 +43,36 @@ import { after } from '@/server/utils/scheduleAfterResponse';
 
 import { canManageAcceptance, filterManageableAcceptances } from './_helpers/acceptanceWriteScope';
 import { assertWorkspaceRowManageable } from './_helpers/assertWorkspaceRowManageable';
+
+const flowDefinitionSchema = z.object({
+  title: z.string().min(1).max(200),
+  goal: z.string().min(1).max(4000),
+  preconditions: z.string().max(4000),
+  entryNodeKey: z.string().min(1),
+  nodes: z
+    .array(
+      z.object({
+        key: z.string().min(1).max(100),
+        title: z.string().min(1).max(200),
+        instruction: z.string().max(4000),
+        expected: z.string().min(1).max(4000),
+      }),
+    )
+    .min(1)
+    .max(100),
+  edges: z
+    .array(
+      z.object({
+        key: z.string().min(1).max(100),
+        source: z.string().min(1),
+        target: z.string().min(1),
+        trigger: z.string().min(1).max(1000),
+        condition: z.string().max(2000).optional(),
+        required: z.boolean(),
+      }),
+    )
+    .max(300),
+});
 
 const subjectTypeSchema = z.enum(acceptanceSubjectTypes);
 
@@ -159,6 +190,105 @@ const applyAcceptanceStatus = async (
 };
 
 export const acceptanceRouter = router({
+  publishFlow: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        definition: flowDefinitionSchema,
+        flowId: z.string().uuid().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance } = await resolveAcceptanceForWrite(ctx, input.id);
+      return new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).publish(
+        input.id,
+        input.definition,
+        input.flowId,
+      );
+    }),
+  startFlow: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        versionId: z.string().uuid(),
+        verifyRunId: z.string().uuid().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
+      const result = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).start(
+        input.id,
+        input.versionId,
+        input.verifyRunId,
+      );
+      await service.recomputeStatus(input.id);
+      return result;
+    }),
+  recordFlowStep: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        flowRunId: z.string().uuid(),
+        nodeKey: z.string().min(1),
+        incomingEdgeKey: z.string().optional(),
+        previousAttemptId: z.string().uuid().optional(),
+        requestId: z.string().min(1).max(100),
+        observation: z.string().min(1).max(20000),
+        verdict: z.enum(['passed', 'failed', 'uncertain', 'blocked']),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance } = await resolveAcceptanceForWrite(ctx, input.id);
+      return new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).record(input.id, input);
+    }),
+  completeFlow: acceptanceWriteProcedure
+    .input(z.object({ id: z.string().uuid(), flowRunId: z.string().uuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance, service } = await resolveAcceptanceForWrite(ctx, input.id);
+      const result = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).complete(
+        input.id,
+        input.flowRunId,
+      );
+      await service.recomputeStatus(input.id);
+      return result;
+    }),
+  reviewFlowStep: acceptanceWriteProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        attemptId: z.string().uuid(),
+        review: z.enum(['accepted', 'rejected']),
+        comment: z.string().max(4000),
+        annotations: z
+          .array(
+            z.object({
+              comment: z.string().max(2000).optional(),
+              evidenceId: z.string(),
+              rect: z.object({
+                height: z.number().min(0).max(1),
+                width: z.number().min(0).max(1),
+                x: z.number().min(0).max(1),
+                y: z.number().min(0).max(1),
+              }),
+            }),
+          )
+          .max(20)
+          .optional(),
+        fileIds: z.array(z.string()).max(10).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { acceptance } = await resolveAcceptanceForWrite(ctx, input.id);
+      return new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).review(
+        input.id,
+        input.attemptId,
+        input.review,
+        input.comment,
+        ctx.userId,
+        { annotations: input.annotations, fileIds: input.fileIds },
+      );
+    }),
+
   /**
    * The user accepts the delivery — the terminal business event that closes
    * the acceptance lifecycle. The verifier's verdict is a recommendation; this
@@ -383,6 +513,16 @@ export const acceptanceRouter = router({
         ownerService.loadRounds(acceptance.id),
       ]);
 
+      const flowData = await new AcceptanceFlowModel(ctx.serverDB, acceptance.userId).list(
+        acceptance.id,
+      );
+      const flowResultIds = new Set(
+        flowData.flatMap((flow) =>
+          flow.versions.flatMap((version) =>
+            version.runs.flatMap((run) => run.attempts.map((attempt) => attempt.checkResultId)),
+          ),
+        ),
+      );
       const resultsByRun = new Map<string, typeof results>();
       for (const result of results) {
         const key = result.verifyRunId!;
@@ -408,7 +548,9 @@ export const acceptanceRouter = router({
       );
       const enriched = await Promise.all(
         evidence
-          .filter((e) => timelineResultIds.has(e.checkResultId))
+          .filter(
+            (e) => timelineResultIds.has(e.checkResultId) || flowResultIds.has(e.checkResultId),
+          )
           .map(async (e) => ({ ...e, ...(await resolveFileMeta(e.fileId ?? null)) })),
       );
       const evidenceByResult = new Map<string, typeof enriched>();
@@ -421,7 +563,15 @@ export const acceptanceRouter = router({
       // Resolve the files backing user feedback (uploaded/pasted screenshots)
       // to URLs with the same owner-scoped resolver the evidence uses — one
       // batch for every attachment id across check rejects and group feedback.
-      const attachmentIds = new Set<string>();
+      const attachmentIds = new Set<string>(
+        flowData.flatMap((flow) =>
+          flow.versions.flatMap((version) =>
+            version.runs.flatMap((run) =>
+              run.attempts.flatMap((attempt) => attempt.reviewDetail?.fileIds ?? []),
+            ),
+          ),
+        ),
+      );
       for (const result of results)
         for (const id of result.userDecisionDetail?.fileIds ?? []) attachmentIds.add(id);
       for (const run of runs)
@@ -537,6 +687,20 @@ export const acceptanceRouter = router({
       }
 
       return {
+        flows: flowData.map((flow) => ({
+          ...flow,
+          versions: flow.versions.map((version) => ({
+            ...version,
+            runs: version.runs.map((run) => ({
+              ...run,
+              attempts: run.attempts.map((attempt) => ({
+                ...attempt,
+                reviewAttachments: toAttachments(attempt.reviewDetail?.fileIds),
+                evidence: evidenceByResult.get(attempt.checkResultId) ?? [],
+              })),
+            })),
+          })),
+        })),
         acceptance,
         canReview,
         isOwner,

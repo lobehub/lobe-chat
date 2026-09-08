@@ -156,6 +156,12 @@ export interface GenerateDraftPlanInput {
 
 /** Client wrapper around the `verify` lambda router. */
 export class VerifyService {
+  startFlow = (input: { id: string; versionId: string }) =>
+    lambdaClient.acceptance.startFlow.mutate(input);
+
+  reviewFlowStep = (input: Parameters<typeof lambdaClient.acceptance.reviewFlowStep.mutate>[0]) =>
+    lambdaClient.acceptance.reviewFlowStep.mutate(input);
+
   // ---- subject-level acceptance ----
   getAcceptanceBundle = (id: string): Promise<AcceptanceBundle> =>
     lambdaClient.acceptance.getBundle.query({ id });

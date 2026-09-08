@@ -1,3 +1,97 @@
+table acceptance_flow_edges {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  flow_version_id uuid [not null]
+  edge_key text [not null]
+  source_node_key text [not null]
+  target_node_key text [not null]
+  trigger text [not null]
+  condition text
+  required boolean [not null, default: true]
+
+  indexes {
+    (flow_version_id, edge_key) [name: 'acceptance_flow_edge_key_unique', unique]
+
+
+  }
+}
+
+table acceptance_flow_nodes {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  flow_version_id uuid [not null]
+  node_key text [not null]
+  title text [not null]
+  instruction text [not null]
+  expected text [not null]
+
+  indexes {
+    (flow_version_id, node_key) [name: 'acceptance_flow_node_key_unique', unique]
+  }
+}
+
+table acceptance_flow_runs {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  flow_version_id uuid [not null]
+  verify_run_id uuid [not null]
+  status text [not null, default: 'running']
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (flow_version_id, verify_run_id) [name: 'acceptance_flow_run_round_unique', unique]
+  }
+}
+
+table acceptance_flow_step_attempts {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  flow_run_id uuid [not null]
+  node_id uuid [not null]
+  incoming_edge_id uuid
+  previous_attempt_id uuid
+  request_id text [not null]
+  sequence integer [not null]
+  observation text [not null]
+  verdict text [not null]
+  check_result_id uuid [not null]
+  review text
+  review_comment text
+  reviewed_by text
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (flow_run_id, request_id) [name: 'acceptance_flow_attempt_request_unique', unique]
+    (flow_run_id, sequence) [name: 'acceptance_flow_attempt_sequence_unique', unique]
+  }
+}
+
+table acceptance_flow_versions {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  flow_id uuid [not null]
+  version integer [not null]
+  title text [not null]
+  goal text [not null]
+  preconditions text [not null]
+  entry_node_key text [not null]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (flow_id, version) [name: 'acceptance_flow_version_unique', unique]
+  }
+}
+
+table acceptance_flows {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  acceptance_id uuid [not null]
+  title text [not null]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
 table agents {
   id text [pk, not null]
   slug varchar(100)

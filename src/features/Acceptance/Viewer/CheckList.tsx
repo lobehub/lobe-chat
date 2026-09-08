@@ -96,10 +96,10 @@ export type UserReviewState = 'accepted' | 'ignored' | 'pending' | 'rejected';
 
 export const userReviewState = (check: AcceptanceCheck): UserReviewState => {
   const review = check.userReview;
-  if (!review) return 'pending';
+  if (!review || review.stale) return 'pending';
   if (review.action === 'accept') return 'accepted';
   if (review.action === 'ignore') return 'ignored';
-  return review.stale ? 'pending' : 'rejected';
+  return 'rejected';
 };
 
 /** Accepted and ignored checks are terminal — there is no remaining work to send back. */
@@ -441,7 +441,7 @@ const comparisonContent = (item: AcceptanceEvidence) => {
   );
 };
 
-const EvidenceList = memo<{
+export const EvidenceList = memo<{
   evidence: AcceptanceEvidence[];
   onReviewEvidence?: (id: string) => void;
   /**

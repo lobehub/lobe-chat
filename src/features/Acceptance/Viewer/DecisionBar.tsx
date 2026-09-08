@@ -15,6 +15,8 @@ import {
 import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { acceptanceContentLayout } from './layout';
+
 const styles = createStaticStyles(({ css }) => ({
   /* Floats over the scrolling checklist — the decision stays reachable
      however deep the review goes. */
@@ -27,6 +29,9 @@ const styles = createStaticStyles(({ css }) => ({
     gap: 10px;
     align-items: center;
 
+    width: 100%;
+    max-width: ${acceptanceContentLayout.maxWidth - 2 * acceptanceContentLayout.paddingInline}px;
+    margin-inline: auto;
     padding-block: 12px;
     padding-inline: 16px;
     border: 1px solid ${cssVar.colorBorderSecondary};
