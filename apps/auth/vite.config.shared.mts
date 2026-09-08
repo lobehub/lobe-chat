@@ -142,9 +142,12 @@ export const createAuthRrConfig = ({
     },
     name: 'auth-build-inputs-manifest',
     writeBundle(options) {
-      if (!options.dir?.includes('build/client')) return;
-      const manifest = [...buildInputIds].sort().join('\n');
-      writeFileSync(path.resolve(appRoot, 'build-inputs.txt'), `${manifest}\n`);
+      // React Router writes the client bundle first, then ssr/prerender — an
+      // assert gated on the client dir alone would never see those graphs.
+      if (options.dir?.includes('build/client')) {
+        const manifest = [...buildInputIds].sort().join('\n');
+        writeFileSync(path.resolve(appRoot, 'build-inputs.txt'), `${manifest}\n`);
+      }
       assertNoElectronBuildInputs('auth', buildInputIds);
     },
   });

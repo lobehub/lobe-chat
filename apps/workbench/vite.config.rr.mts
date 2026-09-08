@@ -34,10 +34,12 @@ const shikiVersion = JSON.parse(
   readFileSync(path.resolve(repoRoot, 'node_modules/shiki/package.json'), 'utf8'),
 ).version as string;
 
+const electronStubs = electronClientStubs();
+
 const ssrStubs: Record<string, string> = {
   '@/libs/trpc/client': path.resolve(import.meta.dirname, 'app/stubs/trpcClient.ts'),
   '@/services/global': path.resolve(import.meta.dirname, 'app/stubs/globalService.ts'),
-  '@/store/electron': path.resolve(import.meta.dirname, 'app/stubs/electronStore.ts'),
+  '@/store/electron': electronStubs['@/store/electron']!,
   '@/store/file': path.resolve(import.meta.dirname, 'app/stubs/fileStore.ts'),
   '@/utils/i18n/loadI18nNamespaceModule': path.resolve(
     import.meta.dirname,
@@ -61,7 +63,7 @@ const i18nClientStub = path.resolve(
 );
 
 const clientStubs: Record<string, string> = {
-  ...electronClientStubs(),
+  ...electronStubs,
   '@/libs/trpc/client': path.resolve(import.meta.dirname, 'app/stubs/trpcClient.client.ts'),
   '@/utils/i18n/loadI18nNamespaceModule': i18nClientStub,
 };

@@ -63,11 +63,13 @@ export const createShareRrConfig = ({
 
   const stub = (file: string) => path.resolve(appRoot, 'app/stubs', file);
 
+  const clientStubs = electronClientStubs();
+
   const ssrStubs: Record<string, string> = {
     '@/libs/trpc/client': stub('trpcClient.ts'),
     '@/services/global': stub('globalService.ts'),
     '@/spa/initialize/toolSurfaces': stub('toolSurfaces.ts'),
-    '@/store/electron': stub('electronStore.ts'),
+    '@/store/electron': clientStubs['@/store/electron']!,
     '@/store/file': stub('fileStore.ts'),
     '@/store/user': stub('userStore.ts'),
     '@/utils/i18n/loadI18nNamespaceModule': stub('loadI18nNamespaceModule.ts'),
@@ -75,8 +77,6 @@ export const createShareRrConfig = ({
     'shiki/wasm': stub('shikiWasm.ts'),
     ...extraSsrStubs,
   };
-
-  const clientStubs = electronClientStubs();
 
   const shareClientStubs = (): Plugin => ({
     applyToEnvironment: (environment) => environment.name === 'client',

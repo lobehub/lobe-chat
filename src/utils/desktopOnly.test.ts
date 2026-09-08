@@ -10,4 +10,12 @@ describe('desktopOnly', () => {
       'exampleService.someMethod is only available in the desktop app',
     );
   });
+
+  it('resolves to the proxy instead of throwing when awaited', async () => {
+    const service = desktopOnly<{ someMethod: () => void }>('exampleService');
+
+    const resolved = await service;
+
+    expect(resolved).toBe(service);
+  });
 });
