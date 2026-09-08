@@ -5,6 +5,10 @@ import path from 'node:path';
 
 import type { SkillDirectoryDeps } from '@lobechat/device-control';
 import {
+  defaultGetProjectFileIndex,
+  defaultSearchProjectFiles,
+} from '@lobechat/device-control/project-file-index';
+import {
   type AuditSafePathsParams,
   type AuditSafePathsResult,
   type EditLocalFileParams,
@@ -640,8 +644,6 @@ export default class LocalFileCtr extends ControllerModule {
   @IpcMethod()
   async getProjectFileIndex(params: ProjectFileIndexParams = {}): Promise<ProjectFileIndexResult> {
     const startedAt = Date.now();
-    const { defaultGetProjectFileIndex } =
-      await import('@lobechat/device-control/project-file-index');
     const result = await defaultGetProjectFileIndex(params);
 
     logger.debug('Project file index completed', {
@@ -659,8 +661,6 @@ export default class LocalFileCtr extends ControllerModule {
   @IpcMethod()
   async searchProjectFiles(params: ProjectFileSearchParams): Promise<ProjectFileSearchResult> {
     const startedAt = Date.now();
-    const { defaultSearchProjectFiles } =
-      await import('@lobechat/device-control/project-file-index');
     const result = await defaultSearchProjectFiles(params);
 
     logger.debug('Project file search completed', {
