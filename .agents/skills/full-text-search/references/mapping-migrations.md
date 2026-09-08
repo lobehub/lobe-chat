@@ -6,9 +6,12 @@ For initial provider cutover and complete environment setup, use
 
 ## Choose the operation
 
-- Bump the entity's `schemaVersion` with its mapping change; keep any affected document schema and
-  projection consistent. Update the expected fingerprint in `mappings.test.ts`; its guard rejects
-  mapping changes without a bump and bumps without mapping changes. Shared analysis changes require
+- Add a new numbered batch under `ftsSearchDocument/migration/` with complete definitions for the
+  changed entities and bumped `schemaVersion` values; keep the current Zod schema and projection
+  consistent. Register the batch and update current pointers in `migration/index.ts`, then append
+  expected fingerprints in `__tests__/schemaSnapshots.ts`. Preserve old batches and baselines.
+  The mapping and history tests reject missing registrations, stale pointers and version bumps
+  without physical changes. Shared analysis changes require
   version bumps and rebuilds for every entity, even if only one uses the analyzer being changed.
 - Merely deploying this migration capability does not start a backfill or increase declared
   versions. A later entity version bump makes that entity eligible for upgrade.

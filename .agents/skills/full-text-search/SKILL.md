@@ -117,9 +117,12 @@ Elasticsearch cannot change an existing field's type or index-time analyzer in p
 declares the target and Elasticsearch records the live state, per entity:
 
 - `FTS_SEARCH_INDEX_DEFINITIONS[entity].schemaVersion` is the declared generation; the fingerprint is
-  `sha256` of the mapping plus the shared analysis. `mappings.test.ts` holds a snapshot of both and
-  fails when a mapping changes without a version bump, or a bump carries no mapping change. Bump the
-  version and refresh the expected fingerprint in the same change. Shared analysis changes alter
+  `sha256` of the mapping plus the shared analysis. Add complete changed-entity definitions in a new
+  `ftsSearchDocument/migration/NNNN-meaningful-name/` batch, register it and update current pointers
+  in `migration/index.ts`. Append expected fingerprints in `__tests__/schemaSnapshots.ts`; preserve
+  published batches and baselines. `mappings.test.ts` and `migration/index.test.ts` check current
+  parity, history, version bumps and fingerprint changes. See `migration/README.md` for ownership.
+  Shared analysis changes alter
   every entity fingerprint and classify as breaking for every entity; bump all affected versions
   and rebuild rather than using in-place upgrades.
 - Every physical index `<alias>-v<n>` carries `_meta.{reindex_run_id, schema_version,
