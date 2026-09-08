@@ -9,6 +9,7 @@ import { defineConfig, type Plugin } from 'vite';
 import { electronClientStubs } from '../../plugins/vite/electronStubs';
 import { lobeIconImports } from '../../plugins/vite/lobeIconImports';
 import { viteMarkdownImport } from '../../plugins/vite/markdownImport';
+import { assertNoElectronBuildInputs } from '../../plugins/vite/microAppBuildInputs';
 import { viteNodeModuleStub } from '../../plugins/vite/nodeModuleStub';
 import { vitePlatformResolve } from '../../plugins/vite/platformResolve';
 import { sharedRendererDefine } from '../../plugins/vite/sharedRendererConfig';
@@ -218,6 +219,7 @@ const buildInputsManifest = (): Plugin => ({
     if (!options.dir?.includes('build/server')) return;
     const manifest = [...buildInputIds].sort().join('\n');
     writeFileSync(path.resolve(import.meta.dirname, 'build-inputs.txt'), `${manifest}\n`);
+    assertNoElectronBuildInputs('workbench', buildInputIds);
   },
 });
 

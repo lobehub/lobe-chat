@@ -7,6 +7,7 @@ import { defineConfig, type Plugin, type PluginOption } from 'vite';
 
 import { lobeIconImports } from '../../plugins/vite/lobeIconImports';
 import { viteMarkdownImport } from '../../plugins/vite/markdownImport';
+import { assertNoElectronBuildInputs } from '../../plugins/vite/microAppBuildInputs';
 import { viteNodeModuleStub } from '../../plugins/vite/nodeModuleStub';
 import { vitePlatformResolve } from '../../plugins/vite/platformResolve';
 import {
@@ -144,6 +145,7 @@ export const createAuthRrConfig = ({
       if (!options.dir?.includes('build/client')) return;
       const manifest = [...buildInputIds].sort().join('\n');
       writeFileSync(path.resolve(appRoot, 'build-inputs.txt'), `${manifest}\n`);
+      assertNoElectronBuildInputs('auth', buildInputIds);
     },
   });
 
