@@ -25,6 +25,7 @@ import {
   visualizationMetadata,
 } from './verify';
 import { registerAcceptanceCommands } from './verifyAcceptance';
+import { evidenceDescriptionForFile } from './verifyHelpers';
 
 const { mockTrpcClient } = vi.hoisted(() => ({
   mockTrpcClient: {
@@ -1416,5 +1417,24 @@ describe('formatAnnotationRegion', () => {
   it('returns undefined when there is no location at all', () => {
     expect(formatAnnotationRegion({ comment: 'just a note' })).toBeUndefined();
     expect(formatAnnotationRegion({ rect: { x: 0.1 } })).toBeUndefined();
+  });
+});
+
+describe('file evidence descriptions', () => {
+  it('preserves an explicit description', () => {
+    expect(evidenceDescriptionForFile('Goal final state', '/tmp/state.json')).toBe(
+      'Goal final state',
+    );
+  });
+
+  it('retains the basename when a file is inlined without a description', () => {
+    expect(evidenceDescriptionForFile(undefined, '/tmp/goal-final-state.json')).toBe(
+      'goal-final-state.json',
+    );
+    expect(evidenceDescriptionForFile('  ', '/tmp/events.json')).toBe('events.json');
+  });
+
+  it('does not invent a description for inline content', () => {
+    expect(evidenceDescriptionForFile(undefined)).toBeUndefined();
   });
 });

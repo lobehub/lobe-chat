@@ -980,3 +980,11 @@ export function formatAnnotationRegion(
   if (!position) return label;
   return label ? `${label} @ ${position}` : position;
 }
+
+/** Keep file identity when small text artifacts are stored inline. */
+export function evidenceDescriptionForFile(
+  description?: string,
+  file?: string,
+): string | undefined {
+  return description?.trim() || (file ? path.basename(file) : undefined);
+}
