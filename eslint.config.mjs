@@ -156,6 +156,24 @@ export default eslint(
     },
   },
   {
+    // Any static import of the model-bank root barrel drags the whole aiModels
+    // catalog (1.4 MB raw) into the importing route's closure.
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.test.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': createRestrictedImportRule({
+        paths: [
+          {
+            allowTypeImports: true,
+            message:
+              'Do not import the model-bank root barrel; it re-exports the full aiModels catalog. Use a subpath such as "model-bank/aiModel", "model-bank/modelProvider", "model-bank/standardParameters" or "model-bank/utils".',
+            name: 'model-bank',
+          },
+        ],
+      }),
+    },
+  },
+  {
     // Boot-path trees are statically reachable from the SPA entry. A heavy
     // @lobehub/ui member imported here lands in the first-screen chunk together
     // with shiki / katex / elkjs / emoji data; the CI entry-graph gate catches

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@lobehub/ui/base-ui';
-import { ModelProvider } from 'model-bank';
+import { ModelProvider } from 'model-bank/modelProvider';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
