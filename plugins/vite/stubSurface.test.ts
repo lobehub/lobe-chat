@@ -8,9 +8,9 @@ import {
   parseStubSurface,
   reportStubSurfaceGaps,
   stubUsageGaps,
-} from './surface';
+} from './stubSurface';
 
-const stubDir = import.meta.dirname;
+const stubDir = path.resolve(import.meta.dirname, '../../apps/workbench/app/stubs');
 
 describe('workbench stub surface', () => {
   it('treats reject() and createTRPCClient() as open members', () => {

@@ -6,6 +6,7 @@ import { lobeStaticCssPlugin } from '@lobehub/ui/static-css/vite';
 import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig, type Plugin, type PluginOption } from 'vite';
 
+import { electronClientStubs } from '../../plugins/vite/electronStubs';
 import { lobeIconImports } from '../../plugins/vite/lobeIconImports';
 import { viteMarkdownImport } from '../../plugins/vite/markdownImport';
 import { viteNodeModuleStub } from '../../plugins/vite/nodeModuleStub';
@@ -14,6 +15,7 @@ import {
   sharedRendererDedupe,
   sharedRendererDefine,
 } from '../../plugins/vite/sharedRendererConfig';
+import { stubSurfaceGuard } from '../../plugins/vite/stubSurfaceGuard';
 
 interface StaticCssOptions {
   hrefTemplate: (hash: string) => string;
@@ -38,6 +40,13 @@ export interface ShareRrConfigOptions {
   resolvePlugins?: PluginOption[];
   staticCss: { antd: StaticCssOptions; themeVars: StaticCssOptions };
 }
+
+const STUB_SKIP_PREFIXES = [
+  'apps/share/app/stubs/',
+  'lobehub/apps/share/app/stubs/',
+  'plugins/vite/electronStubs/',
+  'lobehub/plugins/vite/electronStubs/',
+];
 
 const CLIENT_MODULE_RE = /\.client(?:\.[jt]sx?)?$/;
 
@@ -65,6 +74,17 @@ export const createShareRrConfig = ({
     'shiki/wasm': stub('shikiWasm.ts'),
     ...extraSsrStubs,
   };
+
+  const clientStubs = electronClientStubs();
+
+  const shareClientStubs = (): Plugin => ({
+    applyToEnvironment: (environment) => environment.name === 'client',
+    enforce: 'pre',
+    name: 'share-client-stubs',
+    resolveId(source) {
+      return clientStubs[source];
+    },
+  });
 
   const shareSsrStubs = (): Plugin => ({
     applyToEnvironment: (environment) => environment.name === 'ssr',
@@ -218,7 +238,22 @@ export const createShareRrConfig = ({
       process.env.SHARE_CHUNK_REPORT ? ssrChunkReport() : undefined,
       process.env.SHARE_TRACE_MODULE ? ssrModuleTrace(process.env.SHARE_TRACE_MODULE) : undefined,
       shareSsrStubs(),
+      shareClientStubs(),
       shareClientOnlyStub(),
+      stubSurfaceGuard({
+        appName: 'Share',
+        env: 'ssr',
+        repoRoot,
+        skipPrefixes: STUB_SKIP_PREFIXES,
+        stubs: ssrStubs,
+      }),
+      stubSurfaceGuard({
+        appName: 'Share',
+        env: 'client',
+        repoRoot,
+        skipPrefixes: STUB_SKIP_PREFIXES,
+        stubs: clientStubs,
+      }),
       buildInputsManifest(),
       viteMarkdownImport(),
       viteNodeModuleStub(),
