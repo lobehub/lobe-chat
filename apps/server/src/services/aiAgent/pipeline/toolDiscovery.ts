@@ -746,6 +746,19 @@ export const discoverTools = async (
       });
     }
 
+    // Opt-in capability from the existing system-info RPC. Older desktop and CLI
+    // clients omit it, so they must never receive the new Computer Use manifest.
+    const supportedDeviceTools =
+      activeDeviceId && canUseDevice && !disableLocalSystem
+        ? (
+            await deviceGateway.queryDeviceSystemInfo(
+              deps.userId,
+              activeDeviceId,
+              activeDeviceScope === 'workspace' ? deps.workspaceId : undefined,
+            )
+          )?.supportedTools
+        : undefined;
+
     // Resolve the operation's group context ONCE here and snapshot it into op
     // metadata below — the per-step context engine reads it back without a DB
     // lookup, mirroring agentConfig/botContext. The same roster fetch also
@@ -812,6 +825,7 @@ export const discoverTools = async (
             boundDeviceId,
             deviceOnline,
             gatewayConfigured: true,
+            supportedTools: supportedDeviceTools,
           }
         : undefined,
       disableLocalSystem,
@@ -901,6 +915,12 @@ export const discoverTools = async (
     const isManifestIngestAllowed = (identifier: string): boolean => {
       if (exclusivePluginIds && !exclusivePluginIds.includes(identifier)) return false;
       if (disabledPluginIdSet.has(identifier)) return false;
+      if (
+        gatewayConfigured &&
+        identifier === AuvManifest.identifier &&
+        !supportedDeviceTools?.includes(identifier)
+      )
+        return false;
       if (!canUseDevice && isDeviceToolIdentifier(identifier)) return false;
       if (deviceLocked && REMOTE_DEVICE_TOOL_IDENTIFIERS.has(identifier)) return false;
       return true;
@@ -921,6 +941,7 @@ export const discoverTools = async (
       canUseDevice,
       deviceLocked,
       disableLocalSystem,
+      supportedDeviceTools: gatewayConfigured ? (supportedDeviceTools ?? []) : undefined,
     });
     // Effective runtimeMode from the plan's resolved target — same value the
     // engine derives, single derivation point.

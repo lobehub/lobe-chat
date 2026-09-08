@@ -40,3 +40,20 @@ the AUV backend name. Client, server, and Gateway routing use the new identifier
 alias preserves historical `lobe-auv` messages; it does not enable old execution requests. Local
 System image reads have a separate viewing label, including screenshot artifacts. They
 are called images because the read-file result does not identify screenshot provenance.
+
+## Runtime and compatibility
+
+Desktop ships matching `@auv-js/cli` and `@auv-js/sdk` 0.0.16. The existing device
+system-info response advertises `supportedTools: ['lobe-computer-use']`; the server
+filters discovery/activation and checks again before forwarding a call. Older
+Gateway clients omit this field and do not receive Computer Use. Standalone Electron
+retains its existing in-process client execution path. Capability-query failures
+also disable it. No gateway protocol migration or database migration is required.
+
+`runCommand` returns `{ argv, exitCode, output, stderr? }`. `output` preserves AUV's
+parsed JSON, including structured failures and artifacts on nonzero exits; help or
+non-JSON diagnostics remain text. Both local and Gateway tool results set `success`
+from `exitCode === 0`. Spawn and timeout errors remain host execution errors.
+An exit code of zero does not verify the intended UI effect: preserve AUV's
+`succeeded`, `verified`, and focus metadata and inspect the resulting application
+state when semantic completion matters. The host does not retry input operations.

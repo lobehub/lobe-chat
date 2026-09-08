@@ -9,7 +9,7 @@ export const AuvManifest: BuiltinToolManifest = {
     {
       defaultTimeoutMs: 120_000,
       description:
-        'Use the computer by running a typed AUV CLI invoke command on the active desktop device. Pass arguments after the auv executable, for example ["invoke", "display.list"]. Use ["invoke", "--help"] or ["invoke", "display.capture", "--help"] to inspect available commands and options. Successful invocations return parsed JSON, including artifacts[].file_path for captured images.',
+        'Use the computer by running a typed AUV CLI invoke command on the active desktop device. Pass arguments after the auv executable, for example ["invoke", "display.list"]. Use ["invoke", "--help"] or ["invoke", "display.capture", "--help"] to inspect available commands and options. Results include exitCode and parsed output, preserving structured failures on nonzero exits and artifacts[].file_path for captured images. A zero exit code does not verify the intended UI effect.',
       humanIntervention: 'required',
       name: AuvApiName.runCommand,
       parameters: {

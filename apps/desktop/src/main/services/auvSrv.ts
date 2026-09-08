@@ -1,4 +1,4 @@
-import { execFile } from 'node:child_process';
+import { execFile, type ExecFileException } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { access, chmod, mkdtemp, rmdir } from 'node:fs/promises';
 import os from 'node:os';
@@ -51,6 +51,8 @@ export interface AuvRunCommandParams {
 
 export interface AuvRunCommandResult {
   argv: string[];
+  /** Process exit status, not verification of the requested UI effect. */
+  exitCode: number;
   output: unknown;
   stderr?: string;
 }
@@ -305,22 +307,39 @@ export default class AuvService extends ServiceModule {
     return this.client!;
   }
 
-  /** Execute one allowlisted AUV CLI invocation against the private app-owned daemon. */
+  /**
+   * Triggering workflow: AuvCtr / GatewayConnectionCtr `runCommand` -> runCommand
+   * -> private app-owned CLI invocation; preserve output on nonzero exits.
+   */
   async runCommand(params: AuvRunCommandParams): Promise<AuvRunCommandResult> {
     const argv = normalizeCliArgv(params);
     await this.getClient();
     if (!this.binaryPath || !this.ipcEndpoint) throw new Error('AUV is not connected');
 
-    const { stderr, stdout } = await this.dependencies.runCli({
-      argv,
-      binaryPath: this.binaryPath,
-      endpoint: this.ipcEndpoint,
-      storeRoot: path.join(this.app.appStoragePath, 'auv', 'runs'),
-    });
+    let stdout: string;
+    let stderr: string;
+    let exitCode = 0;
+    try {
+      ({ stderr, stdout } = await this.dependencies.runCli({
+        argv,
+        binaryPath: this.binaryPath,
+        endpoint: this.ipcEndpoint,
+        storeRoot: path.join(this.app.appStoragePath, 'auv', 'runs'),
+      }));
+    } catch (error) {
+      // execFile rejects nonzero exits even when stdout contains AUV's structured
+      // failure. Return that envelope over IPC; spawn/timeout failures still throw.
+      const failure = error as ExecFileException & { stdout?: string; stderr?: string };
+      if (typeof failure?.code !== 'number' || failure.killed) throw error;
+      exitCode = failure.code;
+      stdout = failure.stdout ?? '';
+      stderr = failure.stderr ?? '';
+    }
     const stderrOutput = stderr.trim();
 
     return {
       argv: [...params.argv],
+      exitCode,
       output: parseCliOutput(stdout),
       ...(stderrOutput && { stderr: stderrOutput }),
     };

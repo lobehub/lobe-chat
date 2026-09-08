@@ -540,7 +540,14 @@ export default class GatewayConnectionCtr extends ControllerModule {
     }
 
     const result = await this.auvService.runCommand(args as AuvRunCommandParams);
-    return { content: JSON.stringify(result), state: result, success: true };
+    return {
+      content: JSON.stringify(result),
+      ...(result.exitCode !== 0 && {
+        error: result.stderr || `Computer Use exited with code ${result.exitCode}`,
+      }),
+      state: result,
+      success: result.exitCode === 0,
+    };
   }
 
   /**

@@ -334,6 +334,7 @@ export const createServerAgentToolsEngine = (
       !!deviceContext?.deviceOnline &&
       !!deviceContext?.autoActivated,
     [AuvManifest.identifier]:
+      !!deviceContext?.supportedTools?.includes(AuvManifest.identifier) &&
       !disableLocalSystem &&
       runtimeMode === 'local' &&
       hasDeviceProxy &&
@@ -361,6 +362,8 @@ export const createServerAgentToolsEngine = (
   };
 
   const excludedIdentifiers = new Set(disabledPluginIds);
+  if (hasDeviceProxy && !deviceContext?.supportedTools?.includes(AuvManifest.identifier))
+    excludedIdentifiers.add(AuvManifest.identifier);
   if (!canUseDevice) {
     for (const identifier of DEVICE_TOOL_IDENTIFIERS) excludedIdentifiers.add(identifier);
   } else if (deviceLocked) {
@@ -374,7 +377,12 @@ export const createServerAgentToolsEngine = (
     // denies them. Without this filter, `lobe-activator`'s explicit
     // activation could resolve the manifest and bypass the rule-layer
     // gates below ().
-    builtinTools: buildAllowedBuiltinTools({ canUseDevice, deviceLocked, disableLocalSystem }),
+    builtinTools: buildAllowedBuiltinTools({
+      canUseDevice,
+      deviceLocked,
+      disableLocalSystem,
+      supportedDeviceTools: hasDeviceProxy ? (deviceContext?.supportedTools ?? []) : undefined,
+    }),
     // Add default tools based on configuration. Custom mode = exactly the
     // agent's plugins; chat mode = strict allow-list; agent mode = full defaults.
     // Agent mode: the supervisor's orchestration tools are neither in the

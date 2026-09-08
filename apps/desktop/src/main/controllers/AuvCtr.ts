@@ -3,11 +3,8 @@ import AuvService, {
   type AuvRunCommandParams,
   type AuvRunCommandResult,
 } from '@/services/auvSrv';
-import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, IpcMethod } from './index';
-
-const logger = createLogger('controllers:AuvCtr');
 
 /** Electron IPC seam for the main-process AUV runtime. */
 export default class AuvCtr extends ControllerModule {
@@ -95,30 +92,5 @@ export default class AuvCtr extends ControllerModule {
   @IpcMethod()
   async runCommand(params: AuvRunCommandParams): Promise<AuvRunCommandResult> {
     return this.service.runCommand(params);
-  }
-
-  /**
-   * Development-only startup hook for exercising the real Electron lifecycle.
-   *
-   * Triggering workflow:
-   *
-   * `App.runControllerHooks('afterFirstFrame')`
-   *   -> `AUV_AUTO_CONNECT=1`
-   *     -> {@link AuvCtr.afterFirstFrame}
-   *
-   * Upstream:
-   * - Electron's first visible renderer frame
-   *
-   * Downstream:
-   * - {@link AuvService.connect}
-   */
-  async afterFirstFrame() {
-    if (process.env.AUV_AUTO_CONNECT !== '1') return;
-
-    try {
-      await this.service.connect();
-    } catch (error) {
-      logger.error('AUV auto-connect failed:', error);
-    }
   }
 }

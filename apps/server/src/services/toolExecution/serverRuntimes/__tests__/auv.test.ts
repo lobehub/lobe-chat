@@ -4,8 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type ToolExecutionContext } from '../../types';
 
 const executeToolCallMock = vi.fn();
+const queryDeviceSystemInfoMock = vi.fn();
 vi.mock('@/server/services/deviceGateway', () => ({
-  deviceGateway: { executeToolCall: (...args: unknown[]) => executeToolCallMock(...args) },
+  deviceGateway: {
+    queryDeviceSystemInfo: (...args: unknown[]) => queryDeviceSystemInfoMock(...args),
+    executeToolCall: (...args: unknown[]) => executeToolCallMock(...args),
+  },
 }));
 
 const { auvRuntime } = await import('../auv');
@@ -13,6 +17,7 @@ const { auvRuntime } = await import('../auv');
 describe('auvRuntime', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    queryDeviceSystemInfoMock.mockResolvedValue({ supportedTools: [AuvIdentifier] });
   });
 
   it('requires a user and active device', () => {
@@ -22,6 +27,19 @@ describe('auvRuntime', () => {
     expect(() => auvRuntime.factory({ toolManifestMap: {}, userId: 'user-1' })).toThrow(
       'activeDeviceId is required for AUV device proxy execution',
     );
+  });
+
+  it('rejects old clients before forwarding a tool call', async () => {
+    queryDeviceSystemInfoMock.mockResolvedValueOnce({ arch: 'arm64' });
+    const runtime = auvRuntime.factory({
+      userId: 'user-1',
+      activeDeviceId: 'device-1',
+      toolManifestMap: {},
+    });
+    await expect(runtime.runCommand({ argv: ['invoke', 'display.list'] })).rejects.toThrow(
+      'does not support Computer Use',
+    );
+    expect(executeToolCallMock).not.toHaveBeenCalled();
   });
 
   it('proxies runCommand to the active desktop device', async () => {

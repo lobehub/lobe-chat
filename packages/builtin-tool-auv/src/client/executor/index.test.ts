@@ -22,6 +22,7 @@ describe('auvExecutor', () => {
     const params = { argv: ['invoke', 'display.capture'] };
     const invocation = {
       argv: params.argv,
+      exitCode: 0,
       output: { artifacts: [{ file_path: '/tmp/capture.png' }] },
     };
     runCommandMock.mockResolvedValue(invocation);
@@ -35,6 +36,25 @@ describe('auvExecutor', () => {
       content: JSON.stringify(invocation),
       state: invocation,
       success: true,
+    });
+  });
+  it('preserves a nonzero CLI result as a failed tool call', async () => {
+    const invocation = {
+      argv: ['invoke', 'input.typeText'],
+      exitCode: 1,
+      output: { command_id: 'input.typeText', failure: { kind: 'target_resolution' } },
+      stderr: 'target not found',
+    };
+    runCommandMock.mockResolvedValueOnce(invocation);
+    const result = await auvExecutor.invoke(
+      AuvApiName.runCommand,
+      { argv: invocation.argv },
+      { messageId: 'failure' },
+    );
+    expect(result).toMatchObject({
+      content: JSON.stringify(invocation),
+      state: invocation,
+      success: false,
     });
   });
 });

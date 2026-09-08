@@ -14,21 +14,6 @@ export const auvRuntime: ServerRuntimeRegistration = {
 
     let workspaceIdPromise: Promise<string | undefined> | undefined;
     const getDeviceWorkspaceId = () => (workspaceIdPromise ??= resolveRunWorkspaceId(context));
-    const execute = async (apiName: string, args: unknown) =>
-      deviceGateway.executeToolCall(
-        {
-          deviceId: context.activeDeviceId!,
-          operationId: context.operationId,
-          userId: context.userId!,
-          workspaceId: await getDeviceWorkspaceId(),
-        },
-        {
-          apiName,
-          arguments: JSON.stringify(args ?? {}),
-          identifier: AuvIdentifier,
-        },
-        context.executionTimeoutMs,
-      );
 
     return {
       /**
@@ -44,9 +29,36 @@ export const auvRuntime: ServerRuntimeRegistration = {
        * - Server-side builtin tool execution for `lobe-computer-use/runCommand`
        *
        * Downstream:
+       * - {@link deviceGateway.queryDeviceSystemInfo}
        * - {@link deviceGateway.executeToolCall}
        */
-      runCommand: (args: unknown) => execute(AuvApiName.runCommand, args),
+      runCommand: async (args: unknown) => {
+        const workspaceId = await getDeviceWorkspaceId();
+        const systemInfo = await deviceGateway.queryDeviceSystemInfo(
+          context.userId!,
+          context.activeDeviceId!,
+          workspaceId,
+        );
+        if (!systemInfo?.supportedTools?.includes(AuvIdentifier)) {
+          throw new Error(
+            'The selected device does not support Computer Use. Update the desktop app and reconnect.',
+          );
+        }
+        return deviceGateway.executeToolCall(
+          {
+            deviceId: context.activeDeviceId!,
+            operationId: context.operationId,
+            userId: context.userId!,
+            workspaceId,
+          },
+          {
+            apiName: AuvApiName.runCommand,
+            arguments: JSON.stringify(args ?? {}),
+            identifier: AuvIdentifier,
+          },
+          context.executionTimeoutMs,
+        );
+      },
     };
   },
   identifier: AuvIdentifier,

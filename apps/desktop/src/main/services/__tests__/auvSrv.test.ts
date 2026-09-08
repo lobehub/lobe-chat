@@ -188,12 +188,48 @@ describe('AuvService', () => {
     });
     expect(result).toEqual({
       argv: ['invoke', 'display.capture'],
+      exitCode: 0,
       output: {
         artifacts: [{ file_path: '/tmp/lobehub-storage/auv/runs/capture.png' }],
         command_id: 'display.capture',
         status: 'completed',
       },
     });
+  });
+
+  // https://github.com/lobehub/lobehub/pull/19051
+  it('preserves structured CLI failure output across the IPC boundary', async () => {
+    const { runCli, service } = createHarness();
+    const failure = {
+      command_id: 'input.typeText',
+      failure: { kind: 'target_resolution', message: 'target application not found' },
+    };
+    runCli.mockRejectedValueOnce(
+      Object.assign(new Error('Command failed'), {
+        code: 1,
+        stderr: 'target application not found\n',
+        stdout: JSON.stringify(failure),
+      }),
+    );
+
+    await expect(
+      service.runCommand({
+        argv: ['invoke', 'input.typeText', 'hello', '--target', 'app:missing'],
+      }),
+    ).resolves.toEqual({
+      argv: ['invoke', 'input.typeText', 'hello', '--target', 'app:missing'],
+      exitCode: 1,
+      output: failure,
+      stderr: 'target application not found',
+    });
+  });
+
+  it('keeps process startup failures as errors', async () => {
+    const { runCli, service } = createHarness();
+    runCli.mockRejectedValueOnce(Object.assign(new Error('spawn ENOENT'), { code: 'ENOENT' }));
+    await expect(service.runCommand({ argv: ['invoke', 'display.list'] })).rejects.toThrow(
+      'spawn ENOENT',
+    );
   });
 
   it('returns CLI help as text without forcing JSON output', async () => {

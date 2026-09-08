@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { AuvManifest } from '@lobechat/builtin-tool-auv';
 import { CloudSandboxManifest } from '@lobechat/builtin-tool-cloud-sandbox';
 import { GroupAgentBuilderManifest } from '@lobechat/builtin-tool-group-agent-builder';
 import { GroupManagementManifest } from '@lobechat/builtin-tool-group-management';
@@ -219,6 +220,46 @@ describe('createServerToolsEngine', () => {
 });
 
 describe('createServerAgentToolsEngine', () => {
+  // https://github.com/lobehub/lobehub/pull/19051
+  it('cannot explicitly activate Computer Use on an older device', () => {
+    const engine = createServerAgentToolsEngine(createMockContext(), {
+      agentConfig: { plugins: [AuvManifest.identifier] },
+      canUseDevice: true,
+      deviceContext: { gatewayConfigured: true, deviceOnline: true, autoActivated: true },
+      model: 'gpt-4',
+      provider: 'openai',
+    });
+    const result = engine.generateToolsDetailed({
+      context: { isExplicitActivation: true },
+      model: 'gpt-4',
+      provider: 'openai',
+      toolIds: [AuvManifest.identifier],
+    });
+    expect(result.enabledToolIds).not.toContain(AuvManifest.identifier);
+  });
+
+  it('enables Computer Use when the routed device reports support', () => {
+    const engine = createServerAgentToolsEngine(createMockContext(), {
+      agentConfig: { plugins: [AuvManifest.identifier] },
+      canUseDevice: true,
+      deviceContext: {
+        gatewayConfigured: true,
+        deviceOnline: true,
+        autoActivated: true,
+        supportedTools: [AuvManifest.identifier],
+      },
+      model: 'gpt-4',
+      provider: 'openai',
+    });
+    expect(
+      engine.generateToolsDetailed({
+        model: 'gpt-4',
+        provider: 'openai',
+        toolIds: [AuvManifest.identifier],
+      }).enabledToolIds,
+    ).toContain(AuvManifest.identifier);
+  });
+
   it('should return a ToolsEngine instance', () => {
     const context = createMockContext();
     const engine = createServerAgentToolsEngine(context, {

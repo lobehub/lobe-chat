@@ -269,6 +269,7 @@ const mockImessageBridgeSrv = {
 const mockAuvSrv = {
   runCommand: vi.fn().mockResolvedValue({
     argv: ['invoke', 'display.capture'],
+    exitCode: 0,
     output: { artifacts: [{ file_path: '/tmp/capture.png' }] },
   }),
 } as unknown as AuvService;
@@ -683,9 +684,36 @@ describe('GatewayConnectionCtr', () => {
         result: expect.objectContaining({
           content: JSON.stringify({
             argv: ['invoke', 'display.capture'],
+            exitCode: 0,
             output: { artifacts: [{ file_path: '/tmp/capture.png' }] },
           }),
           success: true,
+        }),
+      });
+    });
+
+    it('preserves AUV failure details in the gateway response', async () => {
+      const client = await connectAndOpen();
+      const result = {
+        argv: ['invoke', 'input.typeText'],
+        exitCode: 1,
+        output: { command_id: 'input.typeText', failure: { kind: 'target_resolution' } },
+        stderr: 'target not found',
+      };
+      vi.mocked(mockAuvSrv.runCommand).mockResolvedValueOnce(result);
+      client.simulateToolCallRequest(
+        'runCommand',
+        { argv: result.argv },
+        'auv-failure',
+        'lobe-computer-use',
+      );
+      await vi.advanceTimersByTimeAsync(0);
+      expect(client.sendToolCallResponse).toHaveBeenCalledWith({
+        requestId: 'auv-failure',
+        result: expect.objectContaining({
+          content: JSON.stringify(result),
+          state: result,
+          success: false,
         }),
       });
     });
