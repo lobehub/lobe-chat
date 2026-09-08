@@ -16,7 +16,7 @@ next-byte 可预测性：公共普通文本 vs 个人 agentic 轨迹 (带 / 不�
 | `test_corpus_invariants.py`                     | 语料不变量可执行测试 (合成夹具)                                                         |
 | `test_payload_markers.py` / `test_eval_loss.py` | 回归测试 (正文含类标记文本 / EOT 排除口径)                                              |
 | `eval_loss.py`                                  | 独立 held-out 评估 (冻结窗口，NLL + bits/byte)                                          |
-| `run_matrix.py`                                 | 编排:smoke /train/resume /sample/eval                                                   |
+| `run_matrix.py`                                 | 编排:smoke /train/resume/sample/eval                                                    |
 
 ## 复跑
 
@@ -62,3 +62,11 @@ python3 scripts/experiments/nanogpt/run_matrix.py eval
 raw / 脱敏语料 /bin/checkpoint/ 样本全部留在 `.records/nanogpt/private/`, 不入库不发布；
 公开聚合 (`.records/nanogpt/public/`) 只含白名单字段 (opaque run id、arm/seed、超参、指标、
 耗时、hash、命令模板)。本目录代码不含任何个人 ID。
+
+## Goal 端到端验收
+
+[研究验收第 2 轮](https://app.lobehub.com/acceptance/0392da18-016d-40dc-ae9c-cae848eee75b?r=2) 复用本目录的数据准备与评估工具，由 Goal 调度 Kimi Code 新跑 public\_plain /agentic\_full 两臂，各 seed 1337、2000 次更新、4,096,000 byte-token 曝光。产物另存 `.records/nanogpt-goal-e2e`；本目录三臂三 seed 的 `protocol.record.json` 记录的是前一轮协议，不是本轮 Goal 的执行范围。
+
+本轮独立参数量为 836,864（共享 embedding /lm\_head 不重复计数）。在同一个人轨迹测试集，两模型 BPB 分别为 8.488657 与 3.148964；在同一公共测试集分别为 2.808069 与 3.995108。四个数值均经独立重新评估核对。该结果仅表明本次分布内预测学习价值，不能证明 Agent 任务成功率提升、轨迹结构的因果收益或混合预训练收益。
+
+Goal 自动完成最终验收并进入 achieved，但期间有人工修复、重试与报告纠错。整体验收为部分通过：科学结果与图导航通过，自主执行项不通过。运行链路修复与实验容器 UI 见 [Goal PR #19261](https://github.com/lobehub/lobehub/pull/19261)。
