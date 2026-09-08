@@ -30,10 +30,9 @@ const styles = createStaticStyles(({ css }) => ({
     background: ${cssVar.colorBgContainer};
   `,
   header: css`
-    height: 46px;
+    height: 36px;
     padding-inline: 16px;
-    border-block-end: 1px solid ${cssVar.colorBorderSecondary};
-    background: ${cssVar.colorFillQuaternary};
+    background: transparent;
   `,
   handle: css`
     width: 1px;
@@ -82,11 +81,11 @@ export function FlowGroup({ data }: { data: FlowGraphData }) {
             </Button>
           )}
           <Icon icon={statusIcon} size={18} style={{ color: flowStateColor(data.state) }} />
-          <Text ellipsis strong style={{ flex: 1 }}>
+          <Text ellipsis fontSize={13} style={{ flex: 1 }}>
             {data.title}
           </Text>
           <Text fontSize={12} type="secondary">
-            {t('flow.groupProgress', { passed: data.passed, total: data.total })}
+            {`${data.passed}/${data.total}`}
           </Text>
           {Boolean(data.reviewed) && (
             <Text fontSize={12} type="secondary">

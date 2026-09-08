@@ -65,12 +65,6 @@ function fingerprint(value: unknown) {
     .digest('hex');
 }
 
-/** Identifies exactly the frozen graph and checks the reviewer saw. */
-export const getFlowPlanHash = (round: {
-  plan: VerifyCheckItem[] | null;
-  flowSnapshots: VerifyFlowSnapshot[] | null;
-}) => fingerprint({ plan: round.plan, flowSnapshots: round.flowSnapshots });
-
 export class AcceptanceFlowModel {
   constructor(
     private db: LobeChatDatabase,
@@ -383,7 +377,6 @@ export class AcceptanceFlowModel {
         .for('update');
       if (!flow) throw new Error('Flow not found');
       let graph;
-      let replayApproval: { hash: string; confirmedAt: Date } | undefined;
       if (sourceRunId) {
         const [source] = await tx
           .select()
@@ -391,11 +384,6 @@ export class AcceptanceFlowModel {
           .where(and(eq(verifyRuns.id, sourceRunId), eq(verifyRuns.acceptanceId, acceptanceId)));
         const snapshot = source?.flowSnapshots?.find((s) => s.flowId === flowId);
         if (!snapshot) throw new Error('Flow snapshot not found');
-        if (
-          source.planConfirmedAt &&
-          source.metadata?.flowPlanApprovalHash === getFlowPlanHash(source)
-        )
-          replayApproval = { hash: getFlowPlanHash(source), confirmedAt: source.planConfirmedAt };
         graph = {
           snapshot,
           plan: (source.plan ?? []).filter((p) => p.sourceFlowNode?.flowId === flowId),
@@ -461,21 +449,14 @@ export class AcceptanceFlowModel {
         return { id: round.id, verifyRunId: round.id, flowId };
       if (round.planConfirmedAt || ![null, 'planned'].includes(round.status))
         throw new Error('Verification plan is already frozen');
-      const proposal = {
-        plan: [
-          ...(round.plan ?? []),
-          ...graph.plan.map((p, i) => ({ ...p, index: (round.plan?.length ?? 0) + i })),
-        ],
-        flowSnapshots: [...(round.flowSnapshots ?? []), graph.snapshot],
-      };
-      const approved =
-        replayApproval?.hash === getFlowPlanHash(proposal) ? replayApproval : undefined;
       await tx
         .update(verifyRuns)
         .set({
-          ...proposal,
-          metadata: { ...round.metadata, flowPlanApprovalHash: approved?.hash },
-          planConfirmedAt: approved?.confirmedAt ?? null,
+          plan: [
+            ...(round.plan ?? []),
+            ...graph.plan.map((p, i) => ({ ...p, index: (round.plan?.length ?? 0) + i })),
+          ],
+          flowSnapshots: [...(round.flowSnapshots ?? []), graph.snapshot],
         })
         .where(eq(verifyRuns.id, round.id));
       await tx
@@ -483,48 +464,6 @@ export class AcceptanceFlowModel {
         .set({ status: 'planned', completedAt: null })
         .where(eq(acceptances.id, acceptanceId));
       return { id: round.id, verifyRunId: round.id, flowId };
-    });
-  }
-
-  async confirmPlan(acceptanceId: string, verifyRunId: string, expectedHash: string) {
-    return this.db.transaction(async (tx) => {
-      const [acceptance] = await tx
-        .select()
-        .from(acceptances)
-        .where(and(eq(acceptances.id, acceptanceId), eq(acceptances.userId, this.userId)))
-        .for('update');
-      if (!acceptance) throw new Error('Acceptance not found');
-      if (['accepted', 'closed'].includes(acceptance.status))
-        throw new Error('Acceptance is closed');
-      const [latest] = await tx
-        .select()
-        .from(verifyRuns)
-        .where(eq(verifyRuns.acceptanceId, acceptanceId))
-        .orderBy(desc(verifyRuns.roundIndex))
-        .limit(1)
-        .for('update');
-      if (
-        !latest ||
-        latest.id !== verifyRunId ||
-        !latest.flowSnapshots?.length ||
-        !latest.plan?.length
-      )
-        throw new Error('Current flow plan required');
-      if (getFlowPlanHash(latest) !== expectedHash)
-        throw new Error('Flow plan changed; review it again');
-      if (latest.planConfirmedAt && latest.metadata?.flowPlanApprovalHash === expectedHash)
-        return { id: latest.id, planConfirmedAt: latest.planConfirmedAt };
-      if (latest.userDecision || latest.status !== 'planned')
-        throw new Error('Draft flow plan required');
-      const planConfirmedAt = new Date();
-      await tx
-        .update(verifyRuns)
-        .set({
-          planConfirmedAt,
-          metadata: { ...latest.metadata, flowPlanApprovalHash: expectedHash },
-        })
-        .where(eq(verifyRuns.id, latest.id));
-      return { id: latest.id, planConfirmedAt };
     });
   }
 
@@ -545,8 +484,6 @@ export class AcceptanceFlowModel {
         .where(and(eq(verifyRuns.id, input.verifyRunId), eq(verifyRuns.acceptanceId, acceptanceId)))
         .for('update');
       if (!round) throw new Error('Verification round not found');
-      if (!round.planConfirmedAt)
-        throw new Error('Flow plan must be confirmed before recording results');
       const item = round.plan?.find((p) => p.id === input.checkItemId && p.sourceFlowNode);
       if (!item) throw new Error('Flow check item not found');
       const [existing] = await tx
@@ -604,7 +541,7 @@ export class AcceptanceFlowModel {
         .update(verifyRuns)
         .set({
           status: 'collecting_evidence',
-          planConfirmedAt: round.planConfirmedAt,
+          planConfirmedAt: round.planConfirmedAt ?? new Date(),
         })
         .where(eq(verifyRuns.id, round.id));
       await tx
@@ -624,7 +561,6 @@ export class AcceptanceFlowModel {
         .where(and(eq(verifyRuns.id, verifyRunId), eq(verifyRuns.acceptanceId, acceptanceId)))
         .for('update');
       if (!round || !round.flowSnapshots?.length) throw new Error('Flow round not found');
-      if (!round.planConfirmedAt) throw new Error('Flow plan must be confirmed before completion');
       if (round.userDecision) throw new Error('Round already reviewed');
       const results = await tx
         .select()
@@ -639,7 +575,7 @@ export class AcceptanceFlowModel {
         throw new Error('Required flow branches have not passed');
       const [updated] = await tx
         .update(verifyRuns)
-        .set({ status: 'delivered' })
+        .set({ status: 'delivered', planConfirmedAt: round.planConfirmedAt ?? new Date() })
         .where(eq(verifyRuns.id, round.id))
         .returning();
       return updated;

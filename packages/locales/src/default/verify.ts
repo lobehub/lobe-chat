@@ -1,11 +1,6 @@
 export default {
-  'flow.plan.awaitingTitle': 'Confirm the acceptance flow',
-  'flow.plan.awaitingDescription':
-    'Review the journeys, branches and expected outcomes before implementation begins.',
-  'flow.plan.confirmedTitle': 'Acceptance flow confirmed',
-  'flow.plan.confirmedDescription':
-    'Implementation can now follow this plan. Record verification results after exercising each check.',
-  'flow.plan.confirm': 'Confirm flow',
+  'flow.graphView': 'Graph',
+  'flow.outlineView': 'Steps',
   'flow.plan.requestChanges': 'Request changes',
   'flow.plan.feedbackDescription':
     'Describe which journeys, branches or expected outcomes need to change.',

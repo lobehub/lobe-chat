@@ -1,7 +1,7 @@
 'use client';
 
 import { Flexbox } from '@lobehub/ui';
-import { Button, Text, toast } from '@lobehub/ui/base-ui';
+import { Button, toast } from '@lobehub/ui/base-ui';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +20,7 @@ export function AcceptancePlanReview({ runId }: { runId: string | undefined }) {
   const round = data?.rounds.find(({ run }) => run.id === runId);
   const phase = flowPlanPhase(round);
   if (!phase || !round || round.run.id !== data?.rounds.at(-1)?.run.id) return null;
-  const canConfirm = data.canReview && !['accepted', 'closed'].includes(data.acceptance.status);
+  const canComment = data.canReview && !['accepted', 'closed'].includes(data.acceptance.status);
 
   const runAction = async (action: () => Promise<unknown>) => {
     setPending(true);
@@ -39,32 +39,12 @@ export function AcceptancePlanReview({ runId }: { runId: string | undefined }) {
 
   return (
     <Flexbox gap={12}>
-      <Flexbox gap={4}>
-        <Text strong>{t(`flow.plan.${phase}Title`)}</Text>
-        <Text type="secondary">{t(`flow.plan.${phase}Description`)}</Text>
-      </Flexbox>
-      {canConfirm && phase === 'awaiting' && (
-        <Flexbox horizontal gap={8} wrap="wrap">
-          <Button
-            disabled={!round.flowPlanHash}
-            loading={pending}
-            type="primary"
-            onClick={async () => {
-              if (!round.flowPlanHash) return;
-              const saved = await runAction(() =>
-                verifyService.confirmFlowPlan({
-                  id: acceptanceId,
-                  verifyRunId: round.run.id,
-                  expectedHash: round.flowPlanHash!,
-                }),
-              );
-              if (saved) toast.success(t('flow.plan.confirmedTitle'));
-            }}
-          >
-            {t('flow.plan.confirm')}
-          </Button>
+      {canComment && (
+        <Flexbox horizontal justify="flex-end">
           <Button
             disabled={pending}
+            size="small"
+            type="text"
             onClick={() =>
               openGroupFeedbackModal({
                 title: t('flow.plan.requestChanges'),

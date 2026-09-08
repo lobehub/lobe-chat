@@ -166,9 +166,6 @@ export class VerifyService {
   startFlow = (input: Parameters<typeof lambdaClient.acceptance.startFlow.mutate>[0]) =>
     lambdaClient.acceptance.startFlow.mutate(input);
 
-  confirmFlowPlan = (input: Parameters<typeof lambdaClient.acceptance.confirmFlowPlan.mutate>[0]) =>
-    lambdaClient.acceptance.confirmFlowPlan.mutate(input);
-
   reviewFlowStep = (input: Parameters<typeof lambdaClient.acceptance.reviewFlowStep.mutate>[0]) =>
     lambdaClient.acceptance.reviewFlowStep.mutate(input);
 

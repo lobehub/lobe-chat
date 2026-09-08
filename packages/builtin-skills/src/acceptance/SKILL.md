@@ -123,17 +123,14 @@ a graph is optional and does not replace evidence or human review.
    to the same open round. Read `lh acceptance run get <verifyRunId> --json` for
    the actual plan IDs: each branch and subflow invocation has its own
    `checkItemId`; never substitute the reusable asset ID.
-4. Hand the acceptance link to the user for flow review, and pause implementation.
-   The user can inspect every node, request changes, or confirm the flow. Read
-   `lh acceptance view <acceptanceId> --json` and check that the selected latest
-   round has `planConfirmedAt` before proceeding. Publishing or preparing a plan
-   is not approval. Never confirm your own proposed plan implicitly. Only when
-   the user explicitly authorizes confirmation through the CLI may you run
-   `lh acceptance flow confirm <acceptanceId> --run <verifyRunId> --hash <flowPlanHash>`
-   using the exact hash from the reviewed round. A stale hash must be reviewed
-   again. If changes were requested, read actionable feedback, publish the
-   revised definition and prepare a new draft round in the same acceptance.
-5. After confirmation, implement the work and exercise the real product, then use
+4. Share the acceptance link so the user can inspect the proposed nodes, branches
+   and expected outcomes before implementation. Read and address any actionable
+   feedback. Preparing a plan neither executes checks nor approves delivery;
+   there is no separate flow-confirmation action. Continue within the user's
+   authorized scope, or pause if the user explicitly asked to review before work.
+   For requested changes, publish the revised definition and prepare a new draft
+   round in the same acceptance.
+5. Implement the work and exercise the real product, then use
    `lh acceptance flow record <acceptanceId> --file result.json`, containing
    `verifyRunId`, `checkItemId`, `verdict` (`passed`, `failed`, `uncertain`, or
    `blocked`) and `observation`. Record only what was observed. Use the returned
@@ -146,8 +143,8 @@ a graph is optional and does not replace evidence or human review.
 
 To rerun the exact old graph, prepare a plan with `--from-run <sourceVerifyRunId>` and
 omit `--run` for a fresh round. This preserves the old definition and starts
-without results. An exact replay of a previously confirmed complete plan retains
-that confirmation; a changed or partial plan must be reviewed again. Accepted or closed acceptances must be explicitly reopened
+without results. Each replay starts as an unexecuted draft. Accepted or closed
+acceptances must be explicitly reopened
 before starting. Edges describe business transitions; they do not automatically
 schedule execution. Continue to read `lh acceptance feedback <acceptanceId> --actionable` before repairs and publish new rounds into the same acceptance.
 

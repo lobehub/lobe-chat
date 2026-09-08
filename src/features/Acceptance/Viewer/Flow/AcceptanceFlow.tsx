@@ -5,7 +5,7 @@ import '@xyflow/react/dist/style.css';
 import { Empty, Flexbox } from '@lobehub/ui';
 import { Button, Select, Text } from '@lobehub/ui/base-ui';
 import { MarkerType, ReactFlowProvider } from '@xyflow/react';
-import { createStaticStyles, cssVar } from 'antd-style';
+import { createStaticStyles, cssVar, useResponsive } from 'antd-style';
 import { use, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ import { buildFlowGraph } from './flowGraph';
 import { FlowGroup } from './FlowGroup';
 import { getFlowRoundViews } from './flowNavigation';
 import { FlowNode } from './FlowNode';
+import { FlowOutline } from './FlowOutline';
 import { FlowPanelHostContext } from './FlowPanelHost';
 import { FlowResults } from './FlowResults';
 
@@ -34,6 +35,9 @@ const nodeTypes = { state: FlowNode, flowGroup: FlowGroup };
 export function AcceptanceFlow() {
   const { t } = useTranslation('verify');
   const panelHost = use(FlowPanelHostContext);
+  const { md = true } = useResponsive();
+  const [display, setDisplay] = useState<'graph' | 'outline'>();
+  const showOutline = (display ?? (md ? 'graph' : 'outline')) === 'outline';
   const { acceptanceId } = useAcceptanceScope();
   const { data, mutate } = useAcceptanceBundle(acceptanceId);
   const [roundKey, setRoundKey] = useState<string>();
@@ -124,19 +128,17 @@ export function AcceptanceFlow() {
           ))}
         </Flexbox>
         <Flexbox horizontal align="center" gap={8}>
-          <Button size="small" type="text" onClick={() => setCollapsed(new Set())}>
-            {t('flow.expandAll')}
-          </Button>
+          <AcceptancePlanReview runId={candidates[0]?.run?.verifyRunId} />
           <Button
             size="small"
             type="text"
-            onClick={() => setCollapsed(new Set(graph.groups.keys()))}
+            onClick={() => setDisplay(showOutline ? 'graph' : 'outline')}
           >
-            {t('flow.collapseAll')}
+            {t(showOutline ? 'flow.graphView' : 'flow.outlineView')}
           </Button>
           <Select
             size="small"
-            style={{ minWidth: 120 }}
+            style={{ width: 120, flexShrink: 0 }}
             value={activeKey}
             options={keys.map((key) => ({
               value: key,
@@ -153,16 +155,19 @@ export function AcceptanceFlow() {
           />
         </Flexbox>
       </Flexbox>
-      <AcceptancePlanReview runId={candidates[0]?.run?.verifyRunId} />
-      <ReactFlowProvider key={activeKey}>
-        <FlowCanvas
-          edges={graphEdges}
-          nodeTypes={nodeTypes}
-          nodes={graph.nodes}
-          viewKey={focus ?? activeKey}
-          onSelect={setSelected}
-        />
-      </ReactFlowProvider>
+      {showOutline ? (
+        <FlowOutline edges={graphEdges} nodes={graph.nodes} onSelect={setSelected} />
+      ) : (
+        <ReactFlowProvider key={activeKey}>
+          <FlowCanvas
+            edges={graphEdges}
+            nodeTypes={nodeTypes}
+            nodes={graph.nodes}
+            viewKey={focus ?? activeKey}
+            onSelect={setSelected}
+          />
+        </ReactFlowProvider>
+      )}
       {checkSelection &&
         panelHost &&
         createPortal(

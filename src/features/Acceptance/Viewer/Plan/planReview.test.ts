@@ -11,27 +11,19 @@ const snapshot = {
 };
 
 describe('flow plan review phase', () => {
-  it('distinguishes approval from execution and leaves checklist-only plans alone', () => {
+  it('distinguishes drafts from execution and leaves checklist-only plans alone', () => {
     expect(flowPlanPhase(undefined)).toBeUndefined();
-    expect(
-      flowPlanPhase({ run: { status: 'planned', flowSnapshots: null, planConfirmedAt: null } }),
-    ).toBeUndefined();
+    expect(flowPlanPhase({ run: { status: 'planned', flowSnapshots: null } })).toBeUndefined();
     expect(
       flowPlanPhase({
-        run: { status: 'planned', flowSnapshots: [snapshot], planConfirmedAt: null },
+        run: { status: 'planned', flowSnapshots: [snapshot] },
       }),
-    ).toBe('awaiting');
-    expect(
-      flowPlanPhase({
-        run: { status: 'planned', flowSnapshots: [snapshot], planConfirmedAt: new Date() },
-      }),
-    ).toBe('confirmed');
+    ).toBe('draft');
     expect(
       flowPlanPhase({
         run: {
           status: 'collecting_evidence',
           flowSnapshots: [snapshot],
-          planConfirmedAt: new Date(),
         },
       }),
     ).toBeUndefined();
