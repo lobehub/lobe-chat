@@ -22,7 +22,7 @@ import type {
 } from '@lobechat/types';
 
 import { lambdaClient } from '@/libs/trpc/client';
-import { electronGitService } from '@/services/electron/git';
+import { localGitService } from '@/services/localGit';
 
 /** Current branch + detached-HEAD state for a working directory (cheap read). */
 export interface GitBranchSummary {
@@ -58,7 +58,7 @@ class GitService {
   }): Promise<DeviceGitBranchListItem[]> {
     return deviceId
       ? lambdaClient.device.listGitBranches.query({ deviceId, path })
-      : electronGitService.listGitBranches(path);
+      : localGitService.listGitBranches(path);
   }
 
   /** Checkout (or create) a branch in a working directory. */
@@ -75,7 +75,7 @@ class GitService {
   }): Promise<DeviceGitCheckoutResult> {
     return deviceId
       ? lambdaClient.device.checkoutGitBranch.mutate({ branch, create, deviceId, path })
-      : electronGitService.checkoutGitBranch({ branch, create, path });
+      : localGitService.checkoutGitBranch({ branch, create, path });
   }
 
   /** Rename a branch in a working directory. */
@@ -92,7 +92,7 @@ class GitService {
   }): Promise<DeviceGitRenameBranchResult> {
     return deviceId
       ? lambdaClient.device.renameGitBranch.mutate({ deviceId, from, path, to })
-      : electronGitService.renameGitBranch({ from, path, to });
+      : localGitService.renameGitBranch({ from, path, to });
   }
 
   /** Delete a branch in a working directory. */
@@ -107,7 +107,7 @@ class GitService {
   }): Promise<DeviceGitDeleteBranchResult> {
     return deviceId
       ? lambdaClient.device.deleteGitBranch.mutate({ branch, deviceId, path })
-      : electronGitService.deleteGitBranch({ branch, path });
+      : localGitService.deleteGitBranch({ branch, path });
   }
 
   /** Remove a worktree from a working directory's repository. */
@@ -122,7 +122,7 @@ class GitService {
   }): Promise<DeviceGitRemoveWorktreeResult> {
     return deviceId
       ? lambdaClient.device.removeGitWorktree.mutate({ deviceId, path, worktreePath })
-      : electronGitService.removeGitWorktree({ path, worktreePath });
+      : localGitService.removeGitWorktree({ path, worktreePath });
   }
 
   /**
@@ -144,7 +144,7 @@ class GitService {
   }): Promise<DeviceGitAddWorktreeResult> {
     return deviceId
       ? lambdaClient.device.addGitWorktree.mutate({ branch, deviceId, path })
-      : electronGitService.addGitWorktree({ branch, path, worktreePath });
+      : localGitService.addGitWorktree({ branch, path, worktreePath });
   }
 
   /** Pull (`--ff-only`) the current branch of a working directory. */
@@ -157,7 +157,7 @@ class GitService {
   }): Promise<DeviceGitSyncResult> {
     return deviceId
       ? lambdaClient.device.pullGitBranch.mutate({ deviceId, path })
-      : electronGitService.pullGitBranch({ path });
+      : localGitService.pullGitBranch({ path });
   }
 
   /** Push the current branch of a working directory. */
@@ -170,7 +170,7 @@ class GitService {
   }): Promise<DeviceGitSyncResult> {
     return deviceId
       ? lambdaClient.device.pushGitBranch.mutate({ deviceId, path })
-      : electronGitService.pushGitBranch({ path });
+      : localGitService.pushGitBranch({ path });
   }
 
   /**
@@ -188,7 +188,7 @@ class GitService {
   }): Promise<GitBranchSummary> {
     const info = deviceId
       ? await lambdaClient.device.gitBranch.query({ deviceId, path })
-      : await electronGitService.getGitBranch(path);
+      : await localGitService.getGitBranch(path);
     return { branch: info?.branch, detached: info?.detached, upstream: info?.upstream };
   }
 
@@ -220,7 +220,7 @@ class GitService {
           path,
           pullRequestNumber,
         })
-      : await electronGitService.getLinkedPullRequest({ branch, path, pullRequestNumber });
+      : await localGitService.getLinkedPullRequest({ branch, path, pullRequestNumber });
     if (!pr) return undefined;
     return {
       extraCount: pr.extraCount,
@@ -241,7 +241,7 @@ class GitService {
   }): Promise<DeviceGitWorkingTreeStatus | undefined> {
     return deviceId
       ? ((await lambdaClient.device.gitWorkingTreeStatus.query({ deviceId, path })) ?? undefined)
-      : electronGitService.getGitWorkingTreeStatus(path);
+      : localGitService.getGitWorkingTreeStatus(path);
   }
 
   /** Ahead/behind commit counts for the current branch vs its upstream. */
@@ -254,7 +254,7 @@ class GitService {
   }): Promise<DeviceGitAheadBehind | undefined> {
     return deviceId
       ? ((await lambdaClient.device.gitAheadBehind.query({ deviceId, path })) ?? undefined)
-      : electronGitService.getGitAheadBehind(path);
+      : localGitService.getGitAheadBehind(path);
   }
 
   /** Working-tree (unstaged) per-file patches for a working directory. */
@@ -268,7 +268,7 @@ class GitService {
     return deviceId
       ? ((await lambdaClient.device.getGitWorkingTreePatches.query({ deviceId, path })) ??
           undefined)
-      : electronGitService.getGitWorkingTreePatches(path);
+      : localGitService.getGitWorkingTreePatches(path);
   }
 
   /** Repo-relative paths of dirty working-tree files (the Files tab git overlay). */
@@ -281,7 +281,7 @@ class GitService {
   }): Promise<GitWorkingTreeFiles | undefined> {
     return deviceId
       ? ((await lambdaClient.device.getGitWorkingTreeFiles.query({ deviceId, path })) ?? undefined)
-      : electronGitService.getGitWorkingTreeFiles(path);
+      : localGitService.getGitWorkingTreeFiles(path);
   }
 
   /** Branch diff (current branch vs base ref) per-file patches for a working directory. */
@@ -297,7 +297,7 @@ class GitService {
     return deviceId
       ? ((await lambdaClient.device.getGitBranchDiff.query({ baseRef, deviceId, path })) ??
           undefined)
-      : electronGitService.getGitBranchDiff({ baseRef, path });
+      : localGitService.getGitBranchDiff({ baseRef, path });
   }
 
   /** Remote branches (`refs/remotes/origin/*`) of a working directory. */
@@ -310,7 +310,7 @@ class GitService {
   }): Promise<GitRemoteBranchListItem[]> {
     return deviceId
       ? lambdaClient.device.listGitRemoteBranches.query({ deviceId, path })
-      : electronGitService.listGitRemoteBranches(path);
+      : localGitService.listGitRemoteBranches(path);
   }
 
   /** Git worktrees attached to the same repository as a working directory. */
@@ -323,7 +323,7 @@ class GitService {
   }): Promise<DeviceGitWorktreeListItem[]> {
     return deviceId
       ? lambdaClient.device.listGitWorktrees.query({ deviceId, path })
-      : electronGitService.listGitWorktrees(path);
+      : localGitService.listGitWorktrees(path);
   }
 
   /** Revert (discard working-tree changes to) a single file in a working directory. */
@@ -338,7 +338,7 @@ class GitService {
   }): Promise<GitFileRevertResult> {
     return deviceId
       ? lambdaClient.device.revertGitFile.mutate({ deviceId, filePath, path })
-      : electronGitService.revertGitFile({ filePath, path });
+      : localGitService.revertGitFile({ filePath, path });
   }
 }
 

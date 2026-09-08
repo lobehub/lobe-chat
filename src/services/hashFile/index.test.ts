@@ -2,21 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { hashFile } from './index';
 
-const { mockHashLocalFile, mockHashFileStream, desktopFlag } = vi.hoisted(() => ({
-  desktopFlag: { value: false },
+const { mockHashLocalFile, mockHashFileStream } = vi.hoisted(() => ({
   mockHashFileStream: vi.fn(async () => 'stream-hash'),
-  mockHashLocalFile: vi.fn(async () => 'main-hash'),
+  mockHashLocalFile: vi.fn(
+    async (_file: File, _signal?: AbortSignal) => undefined as string | undefined,
+  ),
 }));
 
-vi.mock('@lobechat/const', () => ({
-  get isDesktop() {
-    return desktopFlag.value;
-  },
-}));
-
-vi.mock('@/services/electron/localFileService', () => ({
-  localFileService: { hashLocalFile: mockHashLocalFile },
-}));
+vi.mock('./localFileHash', () => ({ hashLocalFile: mockHashLocalFile }));
 
 vi.mock('./stream', () => ({ hashFileStream: mockHashFileStream }));
 
@@ -47,13 +40,12 @@ describe('hashFile', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     FakeWorker.instances = [];
-    desktopFlag.value = false;
+    mockHashLocalFile.mockResolvedValue(undefined);
     (globalThis as any).Worker = FakeWorker;
   });
 
   afterEach(() => {
     (globalThis as any).Worker = originalWorker;
-    delete (globalThis as any).window.electron;
   });
 
   it('hashes in a worker on web and relays progress', async () => {
@@ -90,22 +82,17 @@ describe('hashFile', () => {
     await expect(hashFile(file)).resolves.toBe('stream-hash');
   });
 
-  it('hashes in the Electron main process when a local path resolves', async () => {
-    desktopFlag.value = true;
-    (globalThis as any).window.electron = { webUtils: { getPathForFile: () => '/abs/a.bin' } };
+  it('returns the local hash when hashLocalFile resolves one', async () => {
+    mockHashLocalFile.mockResolvedValue('local-hash');
 
-    await expect(hashFile(file)).resolves.toBe('main-hash');
+    await expect(hashFile(file)).resolves.toBe('local-hash');
 
-    expect(mockHashLocalFile).toHaveBeenCalledWith({ path: '/abs/a.bin' });
     expect(FakeWorker.instances).toHaveLength(0);
   });
 
-  it('uses the worker on Electron for in-memory files without a path', async () => {
-    desktopFlag.value = true;
-    (globalThis as any).window.electron = { webUtils: { getPathForFile: () => '' } };
+  it('falls back to the worker when hashLocalFile resolves undefined', async () => {
     FakeWorker.script = (worker) => worker.emit({ hash: 'worker-hash', type: 'done' });
 
     await expect(hashFile(file)).resolves.toBe('worker-hash');
-    expect(mockHashLocalFile).not.toHaveBeenCalled();
   });
 });

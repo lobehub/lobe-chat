@@ -1,9 +1,5 @@
-import { isDesktop } from '@lobechat/const';
-
-import { localFileService } from '@/services/electron/localFileService';
-import { getElectronLocalFilePath } from '@/utils/electron/localFilePath';
-
 import type { HashWorkerRequest, HashWorkerResponse } from './hash.worker';
+import { hashLocalFile } from './localFileHash';
 import { hashFileStream, type HashProgress } from './stream';
 
 const cancelledError = (signal: AbortSignal) =>
@@ -37,21 +33,13 @@ const hashFileInWorker = (file: File, signal?: AbortSignal, onProgress?: HashPro
     worker.postMessage({ file } satisfies HashWorkerRequest);
   });
 
-const hashFileInElectronMain = async (path: string, signal?: AbortSignal) => {
-  const hash = await localFileService.hashLocalFile({ path });
-  if (signal?.aborted) throw cancelledError(signal);
-  return hash;
-};
-
 export const hashFile = async (
   file: File,
   signal?: AbortSignal,
   onProgress?: HashProgress,
 ): Promise<string> => {
-  if (isDesktop) {
-    const path = getElectronLocalFilePath(file);
-    if (path) return hashFileInElectronMain(path, signal);
-  }
+  const localHash = await hashLocalFile(file, signal);
+  if (localHash) return localHash;
 
   if (typeof Worker === 'undefined') return hashFileStream(file, signal, onProgress);
 
