@@ -234,7 +234,7 @@ export default defineConfig(async (env) => {
           overlay: path.resolve(__dirname, 'overlay.html'),
           popup: path.resolve(__dirname, 'popup.html'),
         },
-        output: createSharedRolldownOutput({ strictExecutionOrder: true }),
+        output: createSharedRolldownOutput({ splitInitial: false, strictExecutionOrder: true }),
       },
       sourcemap: false,
       target: RENDERER_CHROME_TARGET,

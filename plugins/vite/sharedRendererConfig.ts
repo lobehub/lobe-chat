@@ -317,6 +317,10 @@ export const sharedRollupOutput = {
 };
 
 interface SharedRolldownOutputOptions {
+  // The $initial split assumes one HTML entry: a constant-name catch-all would
+  // merge every entry's static graph, so multi-entry builds (the desktop
+  // renderer's main/overlay/popup) keep rolldown's entry-set chunking.
+  splitInitial?: boolean;
   strictExecutionOrder?: boolean;
 }
 
@@ -333,26 +337,60 @@ const isUiCoreModule = (id: string) => {
   return Boolean(member && UI_CORE_MEMBER_RE.test(member));
 };
 
-// Rolldown groups also capture their modules' dependencies; a higher priority
-// keeps the explicit groups above (and antd) from being pulled into ui-core.
-export const createSharedRolldownOutput = (options: SharedRolldownOutputOptions = {}) => ({
-  chunkFileNames: sharedChunkFileNames,
-  strictExecutionOrder: options.strictExecutionOrder ?? true,
-  codeSplitting: {
-    groups: [
-      {
-        name: (moduleId: string) => sharedManualChunks(moduleId) ?? null,
-        priority: 3,
-      },
-      {
-        name: 'vendor-antd',
-        priority: 2,
-        test: /[\\/]node_modules[\\/](?:antd|@ant-design|@rc-component)[\\/]/,
-      },
-      { name: 'vendor-ui-core', priority: 1, test: isUiCoreModule },
-    ],
+interface Group {
+  name: string | ((id: string) => string | null);
+  priority: number;
+  test?: RegExp | ((id: string) => boolean);
+}
+
+// Groups apply to the entry's static graph only. Off the first screen, a
+// monolithic vendor chunk makes every route pay for members it never renders,
+// so lazy modules fall back to entry-set chunking. Named lazy chunks survive
+// only where the file name is a routing contract (i18n/, devtools/).
+const isNamedLazyChunk = (name: string) => name.startsWith('i18n-') || name.startsWith('devtools-');
+
+// Every module left over in the entry's static graph is needed for the first
+// paint anyway, so folding them into one chunk costs nothing on first load and
+// stops the entry-set splitter from fanning them out into dozens of small files.
+const splitByInitial = (groups: Group[]) => [
+  ...groups.map((g) => ({ ...g, priority: g.priority + 10, tags: ['$initial' as const] })),
+  {
+    name: (id: string) => {
+      const name = sharedManualChunks(id);
+      return name && isNamedLazyChunk(name) ? name : null;
+    },
+    priority: 3,
   },
-});
+  { name: 'app-initial', priority: 0, tags: ['$initial' as const] },
+];
+
+// Recursive dependency capture ignores the $initial tag: a lazy group would
+// drag first-screen modules into its chunk and the entry would then preload it.
+// Groups capture only matched modules; dependencies fall back to automatic
+// entry-set chunking. Requires preserveEntrySignatures: 'allow-extension'.
+export const createSharedRolldownOutput = (options: SharedRolldownOutputOptions = {}) => {
+  const groups: Group[] = [
+    {
+      name: (moduleId: string) => sharedManualChunks(moduleId) ?? null,
+      priority: 3,
+    },
+    {
+      name: 'vendor-antd',
+      priority: 2,
+      test: /[\\/]node_modules[\\/](?:antd|@ant-design|@rc-component)[\\/]/,
+    },
+    { name: 'vendor-ui-core', priority: 1, test: isUiCoreModule },
+  ];
+  const splitInitial = options.splitInitial ?? true;
+
+  return {
+    chunkFileNames: sharedChunkFileNames,
+    strictExecutionOrder: options.strictExecutionOrder ?? true,
+    codeSplitting: splitInitial
+      ? { groups: splitByInitial(groups), includeDependenciesRecursively: false }
+      : { groups },
+  };
+};
 
 type Platform = 'web' | 'mobile' | 'desktop' | 'auth';
 
