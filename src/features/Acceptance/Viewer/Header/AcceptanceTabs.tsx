@@ -1,8 +1,7 @@
 'use client';
 
 import { Flexbox, Icon } from '@lobehub/ui';
-import { Button, Text } from '@lobehub/ui/base-ui';
-import { createStaticStyles, cssVar, cx } from 'antd-style';
+import { Tabs, Tag } from '@lobehub/ui/base-ui';
 import { ListChecks, Paperclip, Route } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,47 +14,6 @@ interface AcceptanceTabsProps {
   onChange: (key: AcceptanceTabKey) => void;
   resourceCount: number;
 }
-
-const styles = createStaticStyles(({ css }) => ({
-  count: css`
-    padding-block: 0;
-    padding-inline: 6px;
-    border-radius: 99px;
-
-    font-size: 11px;
-    color: ${cssVar.colorTextSecondary};
-
-    background: ${cssVar.colorFillSecondary};
-  `,
-  tab: css`
-    cursor: pointer;
-
-    position: relative;
-
-    padding-block: 8px;
-    padding-inline: 10px;
-
-    white-space: nowrap;
-
-    &:hover {
-      color: ${cssVar.colorText};
-    }
-  `,
-  tabActive: css`
-    &::after {
-      content: '';
-
-      position: absolute;
-      inset-block-end: -1px;
-      inset-inline: 6px;
-
-      block-size: 2px;
-      border-radius: 2px;
-
-      background: ${cssVar.colorPrimary};
-    }
-  `,
-}));
 
 /**
  * The delivery's two faces: the checks a person judges, and the artefacts the
@@ -87,26 +45,24 @@ const AcceptanceTabs = ({
   ];
 
   return (
-    <Flexbox horizontal align={'center'} gap={2}>
-      {tabs
+    <Tabs
+      activeKey={active}
+      style={{ minWidth: 0, overflowX: 'auto' }}
+      variant={'square'}
+      items={tabs
         .filter((tab) => tab.key !== 'flow' || flowCount > 0)
-        .map((tab) => (
-          <Button
-            aria-pressed={tab.key === active}
-            className={cx(styles.tab, tab.key === active && styles.tabActive)}
-            key={tab.key}
-            style={{ minHeight: 44 }}
-            type={'text'}
-            onClick={() => onChange(tab.key)}
-          >
-            <Icon icon={tab.icon} size={14} style={{ color: cssVar.colorTextTertiary }} />
-            <Text fontSize={13} weight={tab.key === active ? 600 : 400}>
+        .map((tab) => ({
+          icon: <Icon icon={tab.icon} size={16} />,
+          key: tab.key,
+          label: (
+            <Flexbox horizontal align={'center'} gap={6}>
               {tab.label}
-            </Text>
-            <Text className={styles.count}>{tab.count}</Text>
-          </Button>
-        ))}
-    </Flexbox>
+              <Tag shape={'round'}>{tab.count}</Tag>
+            </Flexbox>
+          ),
+        }))}
+      onChange={(key) => onChange(key as AcceptanceTabKey)}
+    />
   );
 };
 

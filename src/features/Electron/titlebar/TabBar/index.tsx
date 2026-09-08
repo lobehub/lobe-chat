@@ -21,6 +21,7 @@ import * as m from 'motion/react-m';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { captureVisibleTabPreviews } from '@/features/Electron/TabHost';
 import { buildWorkspaceAwarePath } from '@/features/Workspace/workspaceAwarePath';
 import { useActiveLocation } from '@/hooks/useActiveLocation';
 import { useRegisterDesktopTabHotkeys } from '@/hooks/useHotkeys/desktopTabScope';
@@ -230,7 +231,14 @@ const TabBar = () => {
   if (tabs.length === 0) return null;
 
   return (
-    <Flexbox horizontal align={'center'} className={styles.container} gap={TAB_GAP} ref={stripRef}>
+    <Flexbox
+      horizontal
+      align={'center'}
+      className={styles.container}
+      gap={TAB_GAP}
+      ref={stripRef}
+      onPointerEnter={captureVisibleTabPreviews}
+    >
       <DndContext
         collisionDetection={closestCenter}
         modifiers={[restrictToHorizontalAxis]}

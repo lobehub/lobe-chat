@@ -1,6 +1,6 @@
 ---
 name: acceptance
-version: 0.4.0
+version: 0.4.1
 description: >
   End-to-end verification and self-evidence for a delivery in any repository,
   with or without a preconfigured verify plan. Discover an existing plan when
@@ -25,19 +25,35 @@ marks it `uncertain` and holds the delivery.
 author (or discover) the plan  →  pick the surface  →  capture evidence  →  publish the round  →  self-check coverage
 ```
 
-## Independent tester review
+## Independent acceptance review (first round only)
 
 The primary checks the environment, writes the plan, executes cases, inspects
-evidence, repairs failures, and publishes. Use one tester agent at two points:
-review requirement coverage before execution, then independently inspect the
-completed evidence before declaring acceptance complete. Reuse the tester when
-the host supports it; do not delegate execution or require per-case approval.
+evidence, repairs failures, and publishes. Use one `acceptance-checker` agent at two points
+in the first acceptance round: give at most two feedback responses on the plan and cases
+before execution, then perform exactly one quick report/evidence check against
+the agreed criteria before publishing. A second plan check is optional, only
+to check the primary's revisions; there is no third plan-feedback response.
+Count the two stages separately. After
+either stage's limit, the primary owns remaining corrections and verification.
+The acceptance-checker **is** the plan gate — never ask the user to approve a
+plan; ask the user only for a user-owned prerequisite or a product decision
+that changes the plan. In both stages, the primary supplies an explicit file
+list and the relevant diff text or prepared diff artifact paths. The acceptance-checker
+limits code reading to these materials; it must not run `git diff` or discover
+its own scope. This does not restrict inspection of the plan, report, or evidence.
+During evidence review, use it only to identify the updates and the agreed
+cases whose evidence needs checking; the core task is checking the report
+against the plan and artifacts. Do not reopen requirements, expand into code
+review, or investigate implementation details. Return contradictions to the
+primary for explanation or repair. Follow-up rounds have no acceptance-checker: the primary
+re-runs, inspects, and publishes itself. Do not delegate execution or require
+per-case approval.
 
-Read [tester-review.md](references/tester-review.md) for the input/output contract,
-review boundaries, and repair follow-up. Tester review supplements the primary's
-own checks and any configured verifier; it does not replace either. If delegation
-or required media inspection is unavailable, disclose the missing review and
-unverified claims rather than claiming independent acceptance.
+Read [acceptance-checker.md](references/acceptance-checker.md) for the input/output
+contract, review boundaries, and follow-up rules. Acceptance review supplements the
+primary's own checks and any configured verifier; it does not replace either.
+If delegation or required media inspection is unavailable, disclose the missing
+review and unverified claims rather than claiming independent acceptance.
 
 ## Read the project layer first
 
@@ -46,7 +62,7 @@ Before touching an environment, check for `.agents/acceptance/`:
 | File                     | What it owns                                                 |
 | ------------------------ | ------------------------------------------------------------ |
 | `PROJECT.md`             | Start/stop commands, ports, services, auth, surfaces, probes |
-| `PROCESS.md`             | The run process: approval gate, execution rules, teardown    |
+| `PROCESS.md`             | The run process: plan gate, execution rules, teardown        |
 | `common-mistakes.md`     | Project living log — what earlier rounds got wrong here      |
 | `probe-mock-patterns.md` | Project living log — how to force state on this product      |
 
@@ -262,8 +278,8 @@ simctl io` over host-window capture. Rounds land under `.acceptances/`, which
 
 ## Reference map
 
-For both tester handoffs and review output, read
-[tester-review.md](references/tester-review.md).
+For both acceptance-checker handoffs and review output, read
+[acceptance-checker.md](references/acceptance-checker.md).
 
 | Need                                           | Reference                                                                                                                                                                               |
 | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

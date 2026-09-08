@@ -113,12 +113,33 @@ export const styles = createStaticStyles(({ css }) => ({
     opacity: 0;
     transition: opacity 0.2s;
   `,
+  rowChevron: css`
+    @media (width <= 767px) {
+      grid-area: 1 / 4;
+    }
+  `,
   rowMeta: css`
     transition: opacity 0.2s;
+
+    @media (width <= 767px) {
+      grid-area: 1 / 3;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      min-width: 0;
+
+      &:empty {
+        display: none;
+      }
+    }
 
     @media (hover: hover) and (pointer: fine) {
       pointer-events: none;
       opacity: 0;
+    }
+  `,
+  rowTitle: css`
+    @media (width <= 767px) {
+      grid-area: 2 / 1 / auto / -1;
     }
   `,
   rowHeader: css`
@@ -143,6 +164,15 @@ export const styles = createStaticStyles(({ css }) => ({
        white page just severs the title from its content, so no wash there. */
     &:not([data-expanded]):hover {
       background: ${cssVar.colorFillQuaternary};
+    }
+
+    @media (width <= 767px) {
+      display: grid;
+      grid-template-columns: 16px max-content minmax(0, 1fr) 14px;
+      row-gap: 4px;
+
+      padding-block: 8px;
+      padding-inline: 0;
     }
   `,
   stepDot: css`
