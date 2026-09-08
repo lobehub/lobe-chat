@@ -48,6 +48,7 @@ const AcceptanceTabs = ({
     <Tabs
       activeKey={active}
       style={{ minWidth: 0, overflowX: 'auto' }}
+      variant={'square'}
       items={tabs
         .filter((tab) => tab.key !== 'flow' || flowCount > 0)
         .map((tab) => ({
