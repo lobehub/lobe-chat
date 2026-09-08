@@ -15,6 +15,8 @@ import {
   CircleDot,
   CirclePlus,
   MessageCircle,
+  SignalHigh,
+  Timer,
   UserRoundCog,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -92,23 +94,18 @@ const getRowText = (act: TaskDetailActivity, t: TFunction<'chat'>): string => {
 };
 
 /**
- * Avatar + name (+ agent tag) for one participant of an activity row. Shared by
- * the actor of every row and by the target of an assignment, so both sides of
- * "A assigned the task to B" render identically.
+ * A participant's name inside a feed sentence — the actor of a row, or the
+ * target of an assignment. Just the name: the line's mark is the type icon,
+ * so both "A assigned the task to B" and "A moved from X to Y" read as one
+ * quiet sentence the way an issue tracker's history does.
  */
 const ActivityAuthor = memo<{
   author?: TaskDetailActivityAuthor | null;
-  fallbackIcon: LucideIcon;
   /** Shown when there is no author at all — an assignment nobody requested. */
   fallbackName?: string;
-  /**
-   * Name only, no mark — for a participant mentioned inside the sentence
-   * ("assigned to Bob"); the mark belongs to the line's actor alone.
-   */
-  plain?: boolean;
   /** Shown when the id is recorded but no live row backs it. */
   unresolvedName?: string;
-}>(({ author, fallbackIcon: FallbackIcon, fallbackName, plain, unresolvedName }) => {
+}>(({ author, fallbackName, unresolvedName }) => {
   const { t } = useTranslation('chat');
   const isAgent = author?.type === 'agent';
   // Three states, deliberately not collapsed: no author is the system; a
@@ -122,35 +119,8 @@ const ActivityAuthor = memo<{
         : t('taskDetail.activities.assignment.unnamedParticipant'))
     : fallbackName;
 
-  const node = (
-    <Flexbox
-      horizontal
-      align={'center'}
-      gap={6}
-      // Inline so it can sit inside a translated sentence without breaking the
-      // line — the assignment row renders participants through <Trans>.
-      style={{ display: 'inline-flex', flexShrink: 0, verticalAlign: 'middle' }}
-    >
-      {!plain &&
-        (author?.avatar ? (
-          <Avatar avatar={author.avatar} size={16} />
-        ) : (
-          <div className={styles.activityAuthorAvatar}>
-            <FallbackIcon size={10} />
-          </div>
-        ))}
-      {name && (
-        <Text
-          className={isAgent ? styles.agentAuthorName : undefined}
-          style={isAgent ? undefined : { color: cssVar.colorText }}
-        >
-          {name}
-        </Text>
-      )}
-    </Flexbox>
-  );
-
-  if (!isAgent || !author?.id) return node;
+  if (!name) return null;
+  if (!isAgent || !author?.id) return <span>{name}</span>;
 
   return (
     <AgentProfilePopup
@@ -158,7 +128,7 @@ const ActivityAuthor = memo<{
       agentId={author.id}
       trigger={'hover'}
     >
-      {node}
+      <span className={styles.agentAuthorName}>{name}</span>
     </AgentProfilePopup>
   );
 });
@@ -173,20 +143,51 @@ const RelativeTime = memo<{ time?: string }>(({ time }) => {
   );
 });
 
-/** Compact one-line row for topic / comment activities. */
+/**
+ * One line of the timeline: a 16px mark on the rail, then a single sentence
+ * in one tone with the time at its end. Every compact row goes through here
+ * so the rail lines up whatever the row is about.
+ */
+const FeedLine = memo<{ children: ReactNode; mark: ReactNode; time?: string }>(
+  ({ children, mark, time }) => (
+    <Flexbox horizontal align={'center'} className={styles.activityLine} gap={8}>
+      <div className={styles.activityMark}>{mark}</div>
+      <Text ellipsis style={{ color: cssVar.colorTextSecondary, flex: 1, minWidth: 0 }}>
+        {children}
+        <RelativeTime time={time} />
+      </Text>
+    </Flexbox>
+  ),
+);
+
+/** The mark for a row that is about a kind of change rather than a person. */
+const TypeMark = ({ icon }: { icon: LucideIcon }) => (
+  <Icon color={cssVar.colorTextTertiary} icon={icon} size={14} />
+);
+
+/** Compact one-line row for created / topic / comment bookkeeping. */
 const ActivityRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   const { t } = useTranslation('chat');
   const TypeIcon = ROW_TYPE_ICON[activity.type as keyof typeof ROW_TYPE_ICON] ?? MessageCircle;
   const text = getRowText(activity, t);
+  const author = activity.author;
+  // The one row that is about a person doing something (creating the task)
+  // leads with their face, like the "created the issue" line of a tracker.
+  const mark = author?.avatar ? (
+    <Avatar avatar={author.avatar} size={16} />
+  ) : (
+    <TypeMark icon={TypeIcon} />
+  );
 
   return (
-    <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9}>
-      <ActivityAuthor author={activity.author} fallbackIcon={TypeIcon} />
-      <Text ellipsis style={{ color: cssVar.colorTextSecondary, flex: 1, minWidth: 0 }}>
-        {text}
-        <RelativeTime time={activity.time} />
-      </Text>
-    </Flexbox>
+    <FeedLine mark={mark} time={activity.time}>
+      {author && (
+        <>
+          <ActivityAuthor author={author} />{' '}
+        </>
+      )}
+      {text}
+    </FeedLine>
   );
 });
 
@@ -199,46 +200,37 @@ const AssignmentRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   const { t } = useTranslation('chat');
   const assignment = activity.assignment;
   const isAgentSlot = assignment?.kind === 'agent';
-  const target = assignment?.to;
   const { deletedTargetKey, systemActorKey, verbKey } = resolveAssignmentActivityCopy(assignment);
 
   return (
-    <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9} wrap={'wrap'}>
+    <FeedLine
+      mark={<TypeMark icon={isAgentSlot ? BotMessageSquare : UserRoundCog} />}
+      time={activity.time}
+    >
       {/*
         The whole line is one translated sentence rather than actor + verb +
         target concatenated in the DOM: verb-final languages (ja, ko, …) put
         the target before the verb, which fixed node order cannot express.
       */}
-      <Text style={{ color: cssVar.colorTextSecondary }}>
-        <Trans
-          i18nKey={verbKey}
-          ns={'chat'}
-          components={{
-            actor: (
-              <ActivityAuthor
-                author={activity.author}
-                fallbackIcon={UserRoundCog}
-                fallbackName={t(systemActorKey)}
-                unresolvedName={t(
-                  activity.author?.type === 'agent'
-                    ? 'taskDetail.activities.assignment.deletedAgent'
-                    : 'taskDetail.activities.assignment.deletedMember',
-                )}
-              />
-            ),
-            target: (
-              <ActivityAuthor
-                plain
-                author={target}
-                fallbackIcon={isAgentSlot ? BotMessageSquare : UserRoundCog}
-                unresolvedName={t(deletedTargetKey)}
-              />
-            ),
-          }}
-        />
-        <RelativeTime time={activity.time} />
-      </Text>
-    </Flexbox>
+      <Trans
+        i18nKey={verbKey}
+        ns={'chat'}
+        components={{
+          actor: (
+            <ActivityAuthor
+              author={activity.author}
+              fallbackName={t(systemActorKey)}
+              unresolvedName={t(
+                activity.author?.type === 'agent'
+                  ? 'taskDetail.activities.assignment.deletedAgent'
+                  : 'taskDetail.activities.assignment.deletedMember',
+              )}
+            />
+          ),
+          target: <ActivityAuthor author={assignment?.to} unresolvedName={t(deletedTargetKey)} />,
+        }}
+      />
+    </FeedLine>
   );
 });
 
@@ -247,8 +239,14 @@ interface TaskActivitiesProps {
   variant?: 'activity' | 'result';
 }
 
+const PROPERTY_ICON: Record<'automation' | 'priority' | 'status', LucideIcon> = {
+  automation: Timer,
+  priority: SignalHigh,
+  status: CircleDot,
+};
+
 /**
- * "<actor> changed the status from <tag> to <tag>" and its priority /
+ * "<actor> changed the status from <from> to <to>" and its priority /
  * automation siblings. A collapsed entry can span several hops, so the
  * starting value is what tells the reader how far the property moved. Only a
  * change a person (or their agent) made reaches the feed — the runner's own
@@ -262,7 +260,6 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   const actor = (
     <ActivityAuthor
       author={activity.author}
-      fallbackIcon={ArrowRightLeft}
       fallbackName={t('taskDetail.activities.assignment.systemActor')}
       unresolvedName={t(
         activity.author?.type === 'agent'
@@ -271,9 +268,8 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
       )}
     />
   );
-  // Values are plain words in the sentence, not chips: the feed is a quiet
-  // record under the task, and "moved from A to B" reads best as prose.
-  const tag = (label: ReactNode) => <span style={{ color: cssVar.colorText }}>{label}</span>;
+  // Values are words in the sentence, in the same tone as the rest of it.
+  const value = (label: ReactNode) => <span>{label}</span>;
   // A schedule is pattern + timezone + cap; naming only the pattern would
   // make a timezone-only edit read as "from X to X". The extra parts are
   // machine values, so they ride outside the translated phrase.
@@ -301,19 +297,19 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
           ns={'chat'}
           components={{
             actor,
-            from: tag(change.from ? t(`taskDetail.status.${change.from}`) : '—'),
-            to: tag(t(`taskDetail.status.${change.to}`)),
+            from: value(change.from ? t(`taskDetail.status.${change.from}`) : '—'),
+            to: value(t(`taskDetail.status.${change.to}`)),
           }}
         />
       );
       break;
     }
     case 'priority': {
-      const priorityTag = (level: number | null) =>
-        tag(t(`taskDetail.priority.${PRIORITY_NAME[level ?? 0] ?? 'none'}`));
+      const priorityLabel = (level: number | null) =>
+        value(t(`taskDetail.priority.${PRIORITY_NAME[level ?? 0] ?? 'none'}`));
       sentence = (
         <Trans
-          components={{ actor, from: priorityTag(change.from), to: priorityTag(change.to) }}
+          components={{ actor, from: priorityLabel(change.from), to: priorityLabel(change.to) }}
           i18nKey={'taskDetail.activities.priority.changed'}
           ns={'chat'}
         />
@@ -326,13 +322,17 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
       sentence =
         from && to ? (
           <Trans
-            components={{ actor, from: tag(automationLabel(from)), to: tag(automationLabel(to)) }}
             i18nKey={'taskDetail.activities.automation.changed'}
             ns={'chat'}
+            components={{
+              actor,
+              from: value(automationLabel(from)),
+              to: value(automationLabel(to)),
+            }}
           />
         ) : to ? (
           <Trans
-            components={{ actor, value: tag(automationLabel(to)) }}
+            components={{ actor, value: value(automationLabel(to)) }}
             i18nKey={'taskDetail.activities.automation.set'}
             ns={'chat'}
           />
@@ -348,12 +348,9 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   }
 
   return (
-    <Flexbox horizontal align={'center'} gap={8} paddingBlock={4} paddingInline={9} wrap={'wrap'}>
-      <Text style={{ color: cssVar.colorTextSecondary }}>
-        {sentence}
-        <RelativeTime time={activity.time} />
-      </Text>
-    </Flexbox>
+    <FeedLine mark={<TypeMark icon={PROPERTY_ICON[change.field]} />} time={activity.time}>
+      {sentence}
+    </FeedLine>
   );
 });
 
@@ -384,44 +381,76 @@ const TaskActivities = memo<TaskActivitiesProps>(({ variant = 'activity' }) => {
   // A goal loop can produce many rounds; only the newest run opens by default so
   // the latest result is not buried under older ones.
   const firstTopicKey = items.find(({ activity }) => activity.type === 'topic')?.key;
+  // Compact lines that sit next to each other share one rail, so the marks
+  // read as a timeline; a card (comment, run, brief) breaks the rail.
+  const withRail = (nodes: ReactNode[]): ReactNode[] => {
+    const out: ReactNode[] = [];
+    let run: ReactNode[] = [];
+    const flush = () => {
+      if (run.length === 0) return;
+      out.push(
+        <Flexbox className={styles.activityTimeline} key={`rail-${out.length}`}>
+          {run}
+        </Flexbox>,
+      );
+      run = [];
+    };
+    for (const node of nodes) {
+      if (node === null || node === undefined) continue;
+      const isLine =
+        typeof node === 'object' &&
+        'type' in node &&
+        (node.type === PropertyRow || node.type === AssignmentRow || node.type === ActivityRow);
+      if (isLine) run.push(node);
+      else {
+        flush();
+        out.push(node);
+      }
+    }
+    flush();
+    return out;
+  };
+
   const rows =
     items.length > 0 ? (
-      items.map(({ activity, brief, key }) => {
-        if (brief) {
-          return (
-            <TaskBriefCard
-              brief={brief}
-              key={key}
-              onAfterAddComment={refreshActiveTask}
-              onAfterDelete={refreshActiveTask}
-              onAfterResolve={refreshActiveTask}
-            />
-          );
-        }
-        if (activity.type === 'topic') {
-          // The result panel's newest run is not a row in a list — it is the
-          // agent's report of what this task produced, so it gets its own
-          // presentation rather than the activity card's chrome.
-          if (variant === 'result' && key === firstTopicKey) {
-            return <TaskRunReport activity={activity} key={key} />;
+      withRail(
+        items.map(({ activity, brief, key }) => {
+          if (brief) {
+            return (
+              <TaskBriefCard
+                brief={brief}
+                key={key}
+                onAfterAddComment={refreshActiveTask}
+                onAfterDelete={refreshActiveTask}
+                onAfterResolve={refreshActiveTask}
+              />
+            );
           }
-          return <TopicCard activity={activity} defaultExpanded={false} key={key} />;
-        }
-        if (activity.type === 'comment') {
-          return <CommentCard activity={activity} key={key} />;
-        }
-        // Lifecycle bookkeeping ("created the task", reassignments). It belongs
-        // to the activity timeline; in a result panel it is a row between the
-        // reader and the report.
-        if (variant === 'result') return null;
-        if (activity.type === 'property') {
-          return <PropertyRow activity={activity} key={key} />;
-        }
-        if (activity.type === 'assignment') {
-          return <AssignmentRow activity={activity} key={key} />;
-        }
-        return <ActivityRow activity={activity} key={key} />;
-      })
+          if (activity.type === 'topic') {
+            // The result panel's newest run is not a row in a list — it is the
+            // agent's report of what this task produced, so it gets its own
+            // presentation rather than the activity card's chrome.
+            if (variant === 'result' && key === firstTopicKey) {
+              return <TaskRunReport activity={activity} key={key} />;
+            }
+            return <TopicCard activity={activity} defaultExpanded={false} key={key} />;
+          }
+          if (activity.type === 'comment') {
+            return <CommentCard activity={activity} key={key} />;
+          }
+          // Lifecycle bookkeeping ("created the task", reassignments). It belongs
+          // to the activity timeline; in a result panel it is a row between the
+          // reader and the report.
+          if (variant === 'result') return null;
+          if (activity.type === 'property') {
+            return <PropertyRow activity={activity} key={key} />;
+          }
+          if (activity.type === 'assignment') {
+            return <AssignmentRow activity={activity} key={key} />;
+          }
+          return <ActivityRow activity={activity} key={key} />;
+        }),
+      )
     ) : (
       <Empty
         description={t('taskDetail.activitiesEmpty')}

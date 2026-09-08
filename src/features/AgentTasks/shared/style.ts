@@ -83,8 +83,45 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     }
   `,
 
-  /** The 16px mark that leads a feed line — an issue tracker's, not a chat's. */
-  activityAuthorAvatar: css`
+  /**
+   * One line of the activity timeline. The rail is drawn per line so a run of
+   * lines joins up; the first and last line of a run only draw their inner
+   * half, so the rail starts and ends at a mark.
+   */
+  activityLine: css`
+    position: relative;
+    padding-block: 5px;
+
+    &::before {
+      content: '';
+
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 7.5px;
+
+      width: 1px;
+
+      background: ${cssVar.colorBorderSecondary};
+    }
+
+    &:first-child::before {
+      inset-block-start: 50%;
+    }
+
+    &:last-child::before {
+      inset-block-end: 50%;
+    }
+
+    &:only-child::before {
+      display: none;
+    }
+  `,
+
+  /** The 16px mark on the rail: a type icon or a face. Opaque so it covers the rail. */
+  activityMark: css`
+    position: relative;
+    z-index: 1;
+
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -94,9 +131,12 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
     height: 16px;
     border-radius: 50%;
 
-    color: ${cssVar.colorTextQuaternary};
+    background: ${cssVar.colorBgContainer};
+  `,
 
-    background: ${cssVar.colorFillTertiary};
+  /** A run of adjacent lines; cancels the feed's card gap so they sit tight. */
+  activityTimeline: css`
+    margin-block: -4px;
   `,
 
   activityAvatar: css`
@@ -136,7 +176,6 @@ export const styles = createStaticStyles(({ css, cssVar }) => ({
 
   agentAuthorName: css`
     cursor: pointer;
-    color: ${cssVar.colorText};
     transition: color 0.15s ease;
 
     &:hover {
