@@ -1,4 +1,9 @@
-import type { BriefType, TaskDetailActivity, TaskDetailActivityAuthor } from '@lobechat/types';
+import type {
+  BriefType,
+  TaskAutomationSnapshot,
+  TaskDetailActivity,
+  TaskDetailActivityAuthor,
+} from '@lobechat/types';
 import { Accordion, AccordionItem, Empty, Flexbox, Icon } from '@lobehub/ui';
 import { Avatar, Tag, Text } from '@lobehub/ui/base-ui';
 import { cssVar } from 'antd-style';
@@ -234,10 +239,11 @@ interface TaskActivitiesProps {
 }
 
 /**
- * "<actor> changed the status to <tag>" / "set the priority to <tag>" /
- * "set automation to <summary>". Only a change a person (or their agent) made
- * reaches the feed — the runner's own start / finish transitions are already
- * told by the run row, so they are never logged.
+ * "<actor> changed the status from <tag> to <tag>" and its priority /
+ * automation siblings. A collapsed entry can span several hops, so the
+ * starting value is what tells the reader how far the property moved. Only a
+ * change a person (or their agent) made reaches the feed — the runner's own
+ * start / finish transitions are already told by the run row.
  */
 const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
   const { t } = useTranslation('chat');
@@ -256,6 +262,19 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
       )}
     />
   );
+  const tag = (label: ReactNode) => (
+    <Tag size={'small'} style={{ flexShrink: 0 }}>
+      {label}
+    </Tag>
+  );
+  const automationLabel = (snapshot: TaskAutomationSnapshot) =>
+    snapshot.mode === 'schedule'
+      ? t('taskDetail.activities.automation.mode.schedule', {
+          pattern: snapshot.schedulePattern ?? '',
+        })
+      : t('taskDetail.activities.automation.mode.heartbeat', {
+          seconds: snapshot.heartbeatInterval ?? 0,
+        });
 
   let sentence: ReactNode;
   switch (change.field) {
@@ -266,11 +285,8 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
           ns={'chat'}
           components={{
             actor,
-            status: (
-              <Tag size={'small'} style={{ flexShrink: 0 }}>
-                {t(`taskDetail.status.${change.to}`)}
-              </Tag>
-            ),
+            from: tag(change.from ? t(`taskDetail.status.${change.from}`) : '—'),
+            to: tag(t(`taskDetail.status.${change.to}`)),
           }}
         />
       );
@@ -279,41 +295,40 @@ const PropertyRow = memo<{ activity: TaskDetailActivity }>(({ activity }) => {
     case 'priority': {
       sentence = (
         <Trans
-          components={{ actor, value: <TaskPriorityTag disableDropdown priority={change.to} /> }}
           i18nKey={'taskDetail.activities.priority.changed'}
           ns={'chat'}
+          components={{
+            actor,
+            from: <TaskPriorityTag disableDropdown priority={change.from ?? 0} />,
+            to: <TaskPriorityTag disableDropdown priority={change.to ?? 0} />,
+          }}
         />
       );
       break;
     }
     case 'automation': {
-      const to = change.to;
-      sentence = to ? (
-        <Trans
-          i18nKey={'taskDetail.activities.automation.set'}
-          ns={'chat'}
-          components={{
-            actor,
-            value: (
-              <Tag size={'small'} style={{ flexShrink: 0 }}>
-                {to.mode === 'schedule'
-                  ? t('taskDetail.activities.automation.mode.schedule', {
-                      pattern: to.schedulePattern ?? '',
-                    })
-                  : t('taskDetail.activities.automation.mode.heartbeat', {
-                      seconds: to.heartbeatInterval ?? 0,
-                    })}
-              </Tag>
-            ),
-          }}
-        />
-      ) : (
-        <Trans
-          components={{ actor }}
-          i18nKey={'taskDetail.activities.automation.off'}
-          ns={'chat'}
-        />
-      );
+      const { from, to } = change;
+      // Three shapes, one per direction: turned on, turned off, reconfigured.
+      sentence =
+        from && to ? (
+          <Trans
+            components={{ actor, from: tag(automationLabel(from)), to: tag(automationLabel(to)) }}
+            i18nKey={'taskDetail.activities.automation.changed'}
+            ns={'chat'}
+          />
+        ) : to ? (
+          <Trans
+            components={{ actor, value: tag(automationLabel(to)) }}
+            i18nKey={'taskDetail.activities.automation.set'}
+            ns={'chat'}
+          />
+        ) : (
+          <Trans
+            components={{ actor }}
+            i18nKey={'taskDetail.activities.automation.off'}
+            ns={'chat'}
+          />
+        );
       break;
     }
   }
