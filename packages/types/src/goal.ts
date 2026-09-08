@@ -129,6 +129,7 @@ export interface GoalExplorationConfig {
 
 export interface GoalConfig {
   acceptance?: GoalAcceptancePolicy;
+
   exploration?: GoalExplorationConfig;
   /**
    * How many of a goal's Tasks may be in flight at once. Independent Tasks are
@@ -139,6 +140,8 @@ export interface GoalConfig {
   maxConcurrentTasks?: number | null;
   /** Who the current pause belongs to; cleared when the goal runs again. */
   pausedBy?: GoalPauseReason;
+  /** Coordinator-owned lease for initial decomposition; not a user policy. */
+  planningCheckpoint?: { expiresAt: string; token: string };
   recovery?: GoalRecoveryPolicy;
   schedule?: GoalSchedulePolicy;
 }

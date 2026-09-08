@@ -355,3 +355,31 @@ describe('GoalModel', () => {
     });
   });
 });
+
+describe('planning leases', () => {
+  it('allows one owner, fences expired owners, and preserves unrelated config on release', async () => {
+    const goal = await goalModel.create({ title: 'Planning lease', config: { pausedBy: 'user' } });
+    const first = await goalModel.claimPlanning(goal.id);
+    expect(first).toBeDefined();
+    expect(await goalModel.claimPlanning(goal.id)).toBeUndefined();
+    expect(await new GoalModel(serverDB, otherUserId).claimPlanning(goal.id)).toBeUndefined();
+    await new GoalModel(serverDB, otherUserId).releasePlanning(goal.id, first!.token);
+    expect((await goalModel.findById(goal.id))?.config?.planningCheckpoint?.token).toBe(
+      first!.token,
+    );
+    await goalModel.update(goal.id, {
+      config: {
+        pausedBy: 'user',
+        planningCheckpoint: { token: first!.token, expiresAt: '2000-01-01T00:00:00.000Z' },
+      },
+    });
+    const second = await goalModel.claimPlanning(goal.id);
+    expect(second?.token).not.toBe(first!.token);
+    await goalModel.releasePlanning(goal.id, first!.token);
+    expect((await goalModel.findById(goal.id))?.config?.planningCheckpoint?.token).toBe(
+      second!.token,
+    );
+    await goalModel.releasePlanning(goal.id, second!.token);
+    expect((await goalModel.findById(goal.id))?.config).toEqual({ pausedBy: 'user' });
+  });
+});

@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import type { GoalStatus } from '@lobechat/const/goal';
 import type { GoalNodeStatus } from '@lobechat/types';
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
@@ -114,23 +116,65 @@ export class GoalModel {
     return row as GoalItem | undefined;
   };
 
-  /**
-   * Atomically take `planning → running` as the decomposition claim: several
-   * concurrent advances can all see an unplanned goal, and only the one this
-   * conditional write succeeds for may seed the graph. `startedAt` is stamped
-   * here because the later dispatch transition becomes a same-status no-op.
-   */
-  claimPlanning = async (id: string) => {
+  /** Call inside a transaction when a coordinator needs to serialize a write. */
+  findByIdForUpdate = async (id: string) => {
     const [row] = await this.db
+      .select()
+      .from(goals)
+      .where(and(eq(goals.id, id), this.ownership()))
+      .limit(1)
+      .for('update');
+    return row;
+  };
+
+  /** Claim a bounded planning lease without holding a connection during the model call. */
+  claimPlanning = async (id: string) =>
+    this.db.transaction(async (tx) => {
+      const model = new GoalModel(tx, this.userId, this.workspaceId);
+      const goal = await model.findByIdForUpdate(id);
+      if (!goal || !['planning', 'running'].includes(goal.status)) return undefined;
+      const now = Date.now();
+      if (
+        goal.config?.planningCheckpoint &&
+        Date.parse(goal.config.planningCheckpoint.expiresAt) > now
+      )
+        return undefined;
+      const [task] = await tx
+        .select({ id: goalNodes.id })
+        .from(goalNodes)
+        .where(and(eq(goalNodes.goalId, id), eq(goalNodes.kind, 'task')))
+        .limit(1);
+      if (task) return undefined;
+      const checkpoint = {
+        token: randomUUID(),
+        expiresAt: new Date(now + 5 * 60_000).toISOString(),
+      };
+      await tx
+        .update(goals)
+        .set({
+          config: { ...goal.config, planningCheckpoint: checkpoint },
+          startedAt: goal.startedAt ?? new Date(now),
+          status: 'running',
+          updatedAt: new Date(now),
+        })
+        .where(eq(goals.id, id));
+      return { ...checkpoint, previousStatus: goal.status };
+    });
+
+  /** A late worker must never clear a newer worker's lease or other configuration. */
+  releasePlanning = async (id: string, token: string) => {
+    await this.db
       .update(goals)
       .set({
-        startedAt: sql`coalesce(${goals.startedAt}, now())`,
-        status: 'running',
-        updatedAt: new Date(),
+        config: sql`${goals.config} - 'planningCheckpoint'`,
       })
-      .where(and(eq(goals.id, id), eq(goals.status, 'planning'), this.ownership()))
-      .returning();
-    return row as GoalItem | undefined;
+      .where(
+        and(
+          eq(goals.id, id),
+          this.ownership(),
+          sql`${goals.config}->'planningCheckpoint'->>'token' = ${token}`,
+        ),
+      );
   };
 
   /**

@@ -1886,96 +1886,118 @@ export class GoalService {
     const problem = graph.nodes.find((node) => node.kind === 'problem');
     const requirement = graph.goal.requirement ?? problem?.description ?? graph.goal.title;
 
-    // Two advances can reach this branch together — the queued kickoff and the
-    // client's fire-and-forget fallback both see zero Tasks. The conditional
-    // `planning → running` write is the claim: the loser stops before even
-    // calling the planner, so nothing double-plans and nothing double-pays.
-    // `waiting_external` ends its advance loop — the winner carries the goal.
-    if (graph.goal.status === 'planning') {
-      const claimed = await this.goalModel.claimPlanning(goalId);
-      if (!claimed) {
-        return {
-          goalId,
-          message: 'Another advance is already planning this goal',
-          outcome: 'waiting_external' as const,
-        };
+    const claim = await this.goalModel.claimPlanning(goalId);
+    if (!claim)
+      return {
+        goalId,
+        message: 'Another advance is already planning this goal or tasks already exist',
+        outcome: 'waiting_external' as const,
+      };
+    try {
+      if (claim.previousStatus === 'planning') {
+        await this.coordinatorGraph
+          .recordGoalStatus(goalId, 'planning', 'running', 'decomposition claimed')
+          .catch((error) => console.error('[GoalService] failed to record goal status:', error));
       }
-      await this.coordinatorGraph
-        .recordGoalStatus(goalId, 'planning', 'running', 'decomposition claimed')
-        .catch((error) => console.error('[GoalService] failed to record goal status:', error));
-    }
 
-    const generator = new GoalCriteriaGeneratorService(this.db, this.userId, this.workspaceId);
-    const plan = await generator.decompose({ requirement }).catch(() => undefined);
+      const generator = new GoalCriteriaGeneratorService(this.db, this.userId, this.workspaceId);
+      const plan = await generator.decompose({ requirement }).catch(() => undefined);
 
-    // Rare shape: a goal already past `planning` whose Tasks were all removed.
-    // There is no status edge to claim on that path, so shrink the duplicate
-    // window to the instant before the inserts with a re-read instead.
-    if (graph.goal.status !== 'planning') {
-      const fresh = await this.graphModel.getGraph(goalId);
-      if (fresh?.nodes.some((node) => node.kind === 'task')) {
+      const draftTasks: GoalDecompositionDraft['tasks'] = plan?.tasks ?? [
+        { instruction: problem?.description ?? requirement, title: graph.goal.title },
+      ];
+
+      // Only the current lease owner may commit. The model call above does not
+      // hold a database lock; all graph changes below share one short transaction.
+      const committed = await this.db.transaction(async (tx) => {
+        const goalModel = new GoalModel(tx, this.userId, this.workspaceId);
+        const current = await goalModel.findByIdForUpdate(goalId);
+        const checkpoint = current?.config?.planningCheckpoint;
+        if (
+          !current ||
+          current.status !== 'running' ||
+          checkpoint?.token !== claim.token ||
+          Date.parse(checkpoint.expiresAt) <= Date.now()
+        )
+          return undefined;
+        const writer = new GoalGraphModel(tx, this.userId, this.workspaceId, {
+          id: GOAL_COORDINATOR_ACTOR_ID,
+          type: 'system',
+        });
+        const fresh = await writer.getGraph(goalId);
+        if (!fresh || fresh.nodes.some((node) => node.kind === 'task')) return undefined;
+        const currentProblem = fresh.nodes.find((node) => node.kind === 'problem');
+        if (
+          fresh.goal.requirement !== graph.goal.requirement ||
+          fresh.goal.title !== graph.goal.title ||
+          currentProblem?.description !== problem?.description
+        )
+          return undefined;
+        const committedEffects: GoalAdvanceEffect[] = [];
+
+        if (plan && currentProblem) {
+          // The node's description becomes the planner's own words for the core
+          // question — not the acceptance boilerplate the goal row keeps.
+          await writer.updateNodeDescription(goalId, currentProblem.id, plan.problemStatement);
+        }
+
+        const createdIds: string[] = [];
+        for (const draft of draftTasks) {
+          const experiment = currentProblem
+            ? await writer.createNode(goalId, {
+                kind: 'experiment',
+                title: draft.title,
+                description: draft.instruction,
+                questionId: currentProblem.id,
+              })
+            : undefined;
+          if (currentProblem && !experiment)
+            throw new Error('Failed to create a planned experiment');
+          const node = await writer.createNode(goalId, {
+            scopeId: experiment?.id,
+            description: draft.instruction,
+            kind: 'task',
+            title: draft.title,
+          });
+          if (!node) throw new Error('Failed to create a planned task');
+          createdIds.push(node.id);
+          committedEffects.push({ nodeId: node.id, type: 'created_node', detail: draft.title });
+        }
+
+        // The planner's `dependsOn` indices become `depends_on` edges, drawn
+        // dependent → prerequisite the way `decideNextMove` reads a blocker. Only
+        // earlier indices are honoured, so a hallucinated forward or self reference
+        // can never form a cycle that deadlocks the frontier.
+        for (const [index, draft] of draftTasks.entries()) {
+          const nodeId = createdIds[index];
+          if (!nodeId) continue;
+          for (const dep of new Set(draft.dependsOn ?? [])) {
+            const prerequisiteId = dep < index ? createdIds[dep] : undefined;
+            if (!prerequisiteId) continue;
+            await writer.createEdge(goalId, nodeId, prerequisiteId, 'depends_on');
+          }
+        }
+        return committedEffects;
+      });
+      if (!committed) {
         return {
           goalId,
-          message: 'Decomposition already planned by a concurrent advance',
+          message: 'Planning lease or input changed; re-read the graph',
           outcome: 'advanced' as const,
         };
       }
+      effects.push(...committed);
+
+      return {
+        goalId,
+        message: plan
+          ? `Planned ${draftTasks.length} exploration direction${draftTasks.length > 1 ? 's' : ''}`
+          : 'Planner unavailable; seeded a single task from the requirement',
+        outcome: 'advanced' as const,
+      };
+    } finally {
+      await this.goalModel.releasePlanning(goalId, claim.token);
     }
-
-    const draftTasks: GoalDecompositionDraft['tasks'] = plan?.tasks ?? [
-      { instruction: problem?.description ?? requirement, title: graph.goal.title },
-    ];
-
-    if (plan && problem) {
-      // The node's description becomes the planner's own words for the core
-      // question — not the acceptance boilerplate the goal row keeps.
-      await this.coordinatorGraph.updateNodeDescription(goalId, problem.id, plan.problemStatement);
-    }
-
-    const createdIds: (string | undefined)[] = [];
-    for (const draft of draftTasks) {
-      const experiment = problem
-        ? await this.coordinatorGraph.createNode(goalId, {
-            kind: 'experiment',
-            title: draft.title,
-            description: draft.instruction,
-            questionId: problem.id,
-          })
-        : undefined;
-      const node = await this.coordinatorGraph.createNode(goalId, {
-        scopeId: experiment?.id,
-        description: draft.instruction,
-        kind: 'task',
-        title: draft.title,
-      });
-      createdIds.push(node?.id);
-      if (!node) continue;
-      if (problem && !experiment)
-        await this.coordinatorGraph.createEdge(goalId, problem.id, node.id, 'decomposes');
-      effects.push({ nodeId: node.id, type: 'created_node', detail: draft.title });
-    }
-
-    // The planner's `dependsOn` indices become `depends_on` edges, drawn
-    // dependent → prerequisite the way `decideNextMove` reads a blocker. Only
-    // earlier indices are honoured, so a hallucinated forward or self reference
-    // can never form a cycle that deadlocks the frontier.
-    for (const [index, draft] of draftTasks.entries()) {
-      const nodeId = createdIds[index];
-      if (!nodeId) continue;
-      for (const dep of new Set(draft.dependsOn ?? [])) {
-        const prerequisiteId = dep < index ? createdIds[dep] : undefined;
-        if (!prerequisiteId) continue;
-        await this.coordinatorGraph.createEdge(goalId, nodeId, prerequisiteId, 'depends_on');
-      }
-    }
-
-    return {
-      goalId,
-      message: plan
-        ? `Planned ${draftTasks.length} exploration direction${draftTasks.length > 1 ? 's' : ''}`
-        : 'Planner unavailable; seeded a single task from the requirement',
-      outcome: 'advanced' as const,
-    };
   };
 
   private buildTaskAcceptanceRequirement = (
