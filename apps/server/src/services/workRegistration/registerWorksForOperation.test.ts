@@ -987,7 +987,7 @@ describe('registerWorksForOperation · shell github works', () => {
     expect(mockUpdateMessage).toHaveBeenCalledWith('msg-assistant', {
       metadata: { work: { rootOperationId: 'op-1' } },
     });
-    expect(outcome).toEqual({ attempted: 1, failed: 0 });
+    expect(outcome).toEqual({ anchorMessageId: 'msg-assistant', attempted: 1, failed: 0 });
   });
 
   it('counts a failed anchor stamp so the completion backstop retries', async () => {
@@ -1097,7 +1097,7 @@ describe('registerWorksForOperation · shell github works', () => {
     expect(mockUpdateMessage).toHaveBeenCalledWith('msg-owner-assistant', {
       metadata: { work: { rootOperationId: 'op-1' } },
     });
-    expect(outcome).toEqual({ attempted: 1, failed: 0 });
+    expect(outcome).toEqual({ anchorMessageId: 'msg-owner-assistant', attempted: 1, failed: 0 });
   });
 
   it('counts a missing anchor as failed so the completion marker is withheld', async () => {

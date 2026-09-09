@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { type Message, parse } from '@lobechat/conversation-flow';
 import { ChatErrorType, RequestTrigger } from '@lobechat/types';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { NotifyAgentInterventionRequiredParams } from '@/business/server/agent-run/agentInterventionReview';
 import * as agentSignalService from '@/server/services/agentSignal';
@@ -23,12 +23,20 @@ const {
   mockBuildRuntimeInterventionNotification,
   mockNotifyAgentInterventionRequired,
   mockNotifyAgentRunCompleted,
+  mockListWorks,
 } = vi.hoisted(() => ({
   mockBuildRuntimeInterventionNotification: vi.fn<
     () => Promise<NotifyAgentInterventionRequiredParams | undefined>
   >(async () => undefined),
   mockNotifyAgentInterventionRequired: vi.fn(async () => {}),
   mockNotifyAgentRunCompleted: vi.fn(async () => {}),
+  mockListWorks: vi.fn(async (): Promise<{ id: string }[]> => []),
+}));
+
+vi.mock('@/database/models/work', () => ({
+  WorkModel: vi.fn(function () {
+    return { listByRootOperation: mockListWorks };
+  }),
 }));
 
 vi.mock('@/business/server/agent-run/agentInterventionReview', () => ({
@@ -448,6 +456,34 @@ describe('CompletionLifecycle.buildLifecycleEvent', () => {
     expect(event.errorType).toBe('ProviderNetworkError');
     expect(event.errorAttribution).toBe('system');
     expect(event.errorMessage).toBe('fetch failed');
+  });
+
+  it('carries the budget context of an exhausted allowance onto the event', () => {
+    // Without this the bot reply can only say "not enough credits": which
+    // allowance ran out, and by how much, lived in the error body and stopped
+    // at the lifecycle boundary (LOBE-13726).
+    const state = {
+      error: {
+        budget: {
+          availableCredits: 7_242_747,
+          budgetTypeAtError: 'workspace_member',
+          requiredCredits: 197_391,
+          shortfallCredits: 0,
+        },
+        error: { message: 'Workspace budget exceeded' },
+        errorType: 'InsufficientBudgetForModel',
+      },
+      metadata: { agentId: 'agent-1', userId: 'user-1' },
+    };
+
+    const { event } = callBuild(state, 'error');
+
+    expect(event.errorBudget).toEqual({
+      availableCredits: 7_242_747,
+      budgetTypeAtError: 'workspace_member',
+      requiredCredits: 197_391,
+      shortfallCredits: 0,
+    });
   });
 
   it('leaves errorType + attribution undefined when there is no error', () => {
@@ -1442,6 +1478,98 @@ describe('CompletionLifecycle.emitSignalEvents — assistant anchor', () => {
 
 describe('CompletionLifecycle.registerFileWorks', () => {
   const mockRegister = vi.mocked(registerWorksForOperation);
+  beforeEach(() => {
+    mockListWorks.mockReset();
+  });
+
+  it('anchors an already registered Work after a folded tool turn with no file scan candidates', async () => {
+    mockRegister.mockResolvedValue({ attempted: 0, failed: 0 });
+    mockListWorks.mockResolvedValue([{ id: 'registered-document' }]);
+    const lifecycle = buildLifecycle();
+    const update = vi
+      .spyOn(lifecycle['messageModel'], 'update')
+      .mockResolvedValue({ success: true });
+    const state = {
+      messages: [{ id: 'display-group', role: 'assistantGroup', children: [] }],
+      metadata: { workAssistantMessageId: 'final-assistant', sourceMessageId: 'source-user' },
+    };
+
+    await lifecycle.registerFileWorks('op-1', state);
+
+    expect(mockListWorks).toHaveBeenCalledWith({
+      includeFileWorks: true,
+      limit: 1,
+      rootOperationId: 'op-1',
+    });
+    expect(update).toHaveBeenCalledWith('final-assistant', {
+      metadata: { work: { rootOperationId: 'op-1', userMessageId: 'source-user' } },
+    });
+    expect(state.metadata).toHaveProperty('_fileWorksRegistered', true);
+  });
+
+  it('does not anchor a reply when only other operations have Works', async () => {
+    mockRegister.mockResolvedValue({ attempted: 0, failed: 0 });
+    const lifecycle = buildLifecycle();
+    const update = vi
+      .spyOn(lifecycle['messageModel'], 'update')
+      .mockResolvedValue({ success: true });
+
+    await lifecycle.registerFileWorks('op-1', {
+      metadata: { assistantMessageId: 'final-assistant' },
+    });
+
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('withholds the completion marker when an anchor write fails and retries it', async () => {
+    mockRegister.mockResolvedValue({ attempted: 0, failed: 0 });
+    mockListWorks.mockResolvedValue([{ id: 'registered-document' }]);
+    const lifecycle = buildLifecycle();
+    const update = vi
+      .spyOn(lifecycle['messageModel'], 'update')
+      .mockResolvedValueOnce({ success: false })
+      .mockResolvedValueOnce({ success: true });
+    const state = { metadata: { assistantMessageId: 'final-assistant' } };
+    await lifecycle.registerFileWorks('op-1', state);
+    expect(state.metadata).not.toHaveProperty('_fileWorksRegistered');
+    await lifecycle.registerFileWorks('op-1', state);
+    expect(state.metadata).toHaveProperty('_fileWorksRegistered', true);
+    expect(update).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps registration retryable until the explicit final assistant id is available', async () => {
+    mockRegister.mockResolvedValue({ attempted: 0, failed: 0 });
+    mockListWorks.mockResolvedValue([{ id: 'registered-document' }]);
+    const lifecycle = buildLifecycle();
+    const update = vi
+      .spyOn(lifecycle['messageModel'], 'update')
+      .mockResolvedValue({ success: true });
+    const state: { metadata: { assistantMessageId?: string } } = { metadata: {} };
+    await lifecycle.registerFileWorks('op-1', state);
+    expect(update).not.toHaveBeenCalled();
+    expect(state.metadata).not.toHaveProperty('_fileWorksRegistered');
+    state.metadata.assistantMessageId = 'final-assistant';
+    await lifecycle.registerFileWorks('op-1', state);
+    expect(state.metadata).toHaveProperty('_fileWorksRegistered', true);
+  });
+
+  it('preserves completion idempotency when the shell scanner resolved a fallback anchor', async () => {
+    mockRegister.mockResolvedValue({ anchorMessageId: 'shell-assistant', attempted: 1, failed: 0 });
+    mockListWorks.mockResolvedValue([{ id: 'registered-shell-work' }]);
+    const lifecycle = buildLifecycle();
+    const update = vi
+      .spyOn(lifecycle['messageModel'], 'update')
+      .mockResolvedValue({ success: true });
+    const state = { metadata: {} };
+    await lifecycle.registerFileWorks('op-1', state);
+    expect(update).toHaveBeenCalledWith('shell-assistant', {
+      metadata: { work: { rootOperationId: 'op-1', userMessageId: undefined } },
+    });
+    expect(state.metadata).toHaveProperty('_fileWorksRegistered', true);
+    mockRegister.mockClear();
+    await lifecycle.registerFileWorks('op-1', state);
+    expect(mockRegister).not.toHaveBeenCalled();
+  });
 
   it('registers once and stamps the state marker so later calls skip', async () => {
     mockRegister.mockClear();

@@ -1,3 +1,4 @@
+import type { ChatErrorBudgetContext } from '@lobechat/types';
 import debug from 'debug';
 
 import type { MessengerPlatform } from '@/config/messenger';
@@ -85,6 +86,14 @@ export interface BotCallbackBody {
    * lifecycle event.
    */
   errorAttribution?: string;
+  /**
+   * Which spending allowance ran out, and by how much, when the run failed on
+   * an insufficient-credits code. Lets the reply name the exhausted allowance
+   * instead of the generic personal-credits copy (the figures themselves are
+   * never rendered — they belong to the billed owner, not the recipient).
+   * Forwarded verbatim from the agent lifecycle event.
+   */
+  errorBudget?: ChatErrorBudgetContext;
   errorMessage?: string;
   errorType?: string;
   executionTimeMs?: number;
@@ -425,6 +434,7 @@ export class BotCallbackService {
       reason,
       lastAssistantContent,
       errorAttribution,
+      errorBudget,
       errorMessage,
       errorType,
       operationId,
@@ -444,6 +454,7 @@ export class BotCallbackService {
         operationId,
         replyLocale,
         errorAttribution,
+        errorBudget,
       );
       const errorText = client.formatMarkdown?.(errorBody) ?? errorBody;
       if (deliveredChunkCount < 1) {
