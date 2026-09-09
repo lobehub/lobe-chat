@@ -46,6 +46,12 @@ export {
   SelectedToolInjector,
 } from './SelectedToolInjector';
 export { selectActivatedSkills, SkillContextProvider } from './SkillContextProvider';
+export {
+  extractSkillImportRoutes,
+  formatSkillImportRoutes,
+  SKILL_STORE_TOOL_ID,
+  SkillImportRouteInjector,
+} from './SkillImportRouteInjector';
 export { SystemDateProvider } from './SystemDateProvider';
 export { SystemRoleInjector } from './SystemRoleInjector';
 export { TaskManagerContextInjector } from './TaskManagerContextInjector';
@@ -120,6 +126,7 @@ export type { RuntimeAdditionalContextProviderConfig } from './RuntimeAdditional
 export type { SelectedSkillInjectorConfig } from './SelectedSkillInjector';
 export type { SelectedToolInjectorConfig } from './SelectedToolInjector';
 export type { SkillContextProviderConfig, SkillMeta } from './SkillContextProvider';
+export type { SkillImportRoute, SkillImportRouteInjectorConfig } from './SkillImportRouteInjector';
 export type { SystemDateProviderConfig } from './SystemDateProvider';
 export type { SystemRoleInjectorConfig } from './SystemRoleInjector';
 export type { TaskManagerContextInjectorConfig } from './TaskManagerContextInjector';

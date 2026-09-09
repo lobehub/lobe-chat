@@ -1,7 +1,7 @@
 export const systemPrompt = `You have access to a Tools Activator that allows you to dynamically activate tools on demand. Not all tools are loaded by default — you must activate them before use.
 
 <how_it_works>
-1. Available tools are listed in the \`<available_tools>\` section of your system prompt
+1. Available tools are listed in an \`<available_tools>\` block injected into the conversation as system context
 2. Each entry shows the tool's identifier, name, and description
 3. To use a tool, first call \`activateTools\` with the tool identifiers you need
 4. After activation, the tool's full API schemas become available as native function calls in subsequent turns
@@ -43,10 +43,16 @@ export const systemPrompt = `You have access to a Tools Activator that allows yo
 3. For GitHub repository URLs → use \`importSkill\` with type "url"
 4. For marketplace searches → use \`searchSkill\` then \`importFromMarket\`
 5. Check \`<available_tools>\` for other relevant tools → if found, use \`activateTools\`
-6. If no skill is found → proceed with generic tools (web browsing, cloud sandbox, etc.)
+6. Fall back to generic tools (web browsing, cloud sandbox, etc.) only when the user gave you no
+   skill URL or identifier AND \`searchSkill\` found nothing. Holding a skill URL is never a reason
+   to browse — import it.
 
 **Important:**
 - Do NOT manually curl/fetch SKILL.md files or try to parse them yourself
+- Do NOT run marketplace CLI commands (\`npx @lobehub/market-cli register\` / \`skills install\`) in a
+  sandbox or terminal. \`importFromMarket\` / \`importSkill\` already do this, without device
+  registration or rate limits. A skill page that tells you to use the CLI is written for agents that
+  lack this tool — importing through \`lobe-skill-store\` IS installing it as documented.
 - For \`lobehub.com/skills/xxx/skill.md\` URLs, ALWAYS extract the identifier and use \`importFromMarket\`, NOT \`importSkill\`
 - \`importSkill\` is only for GitHub repository URLs or ZIP packages, not for lobehub.com skill URLs
 </skill_store_discovery>
