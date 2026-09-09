@@ -1,11 +1,16 @@
 'use client';
 
-import { Flexbox, Input } from '@lobehub/ui';
+import { isDesktop } from '@lobechat/const';
+import { Flexbox, Icon, Input } from '@lobehub/ui';
 import { Button, Text, toast } from '@lobehub/ui/base-ui';
+import { ExternalLinkIcon } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import urlJoin from 'url-join';
 
+import { useAppOrigin } from '@/hooks/useAppOrigin';
 import { changeEmail } from '@/libs/better-auth/auth-client';
+import { electronSystemService } from '@/services/electron/system';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { saveToast } from '@/store/utils/saveToast';
@@ -20,6 +25,7 @@ const EmailRow = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
   const [saving, setSaving] = useState(false);
+  const appOrigin = useAppOrigin();
 
   const handleStartEdit = () => {
     setEditValue('');
@@ -56,6 +62,32 @@ const EmailRow = () => {
       setSaving(false);
     }
   }, [editValue, t]);
+
+  // Desktop OIDC and Better Auth sessions are not bridged, so change-email can only
+  // be completed on the web app.
+  if (isDesktop)
+    return (
+      <ProfileRow
+        anchor={'profile-email'}
+        label={t('profile.email')}
+        action={
+          <Text
+            style={{ cursor: 'pointer', fontSize: 13 }}
+            onClick={() => {
+              if (!appOrigin) return;
+              void electronSystemService.openExternalLink(urlJoin(appOrigin, '/settings/profile'));
+            }}
+          >
+            <Flexbox horizontal align={'center'} gap={4}>
+              {t('profile.updateEmail')}
+              <Icon icon={ExternalLinkIcon} size={12} />
+            </Flexbox>
+          </Text>
+        }
+      >
+        <Text>{email || '--'}</Text>
+      </ProfileRow>
+    );
 
   return (
     <ProfileRow
