@@ -952,6 +952,42 @@ describe('Task Router Integration', () => {
       expect(found.data.status).toBe('paused');
       expect(found.data.error).toContain('LLM failed');
     });
+
+    it('does not book a running topic when execAgent reports a dispatch failure', async () => {
+      // A heterogeneous dispatch or operation startup failure comes back as a
+      // result (`success: false`) rather than a throw: the topic and its error
+      // bubble already exist. Booking that dead operation as a running run left
+      // the Task in flight forever, with a goal coordinator recording a start.
+      mockExecAgent.mockResolvedValueOnce({
+        error:
+          'Heterogeneous agent provider binding is only supported for Desktop local execution.',
+        message: 'Heterogeneous agent provider binding requires Desktop local execution',
+        operationId: 'op_dead',
+        status: 'error',
+        success: false,
+        topicId: testTopicId,
+      });
+
+      const task = await caller.create({
+        assigneeAgentId: testAgentId,
+        instruction: 'Test',
+      });
+
+      await expect(caller.run({ id: task.data.id })).rejects.toThrow();
+
+      const found = await caller.find({ id: task.data.id });
+      expect(found.data.status).toBe('paused');
+      expect(found.data.error).toContain('Desktop local execution');
+
+      // The attempt stays visible, but as a failed run — never a running one.
+      const runs = await new TaskTopicModel(serverDB, userId).findByTaskId(task.data.id);
+      expect(runs.map((run) => [run.topicId, run.operationId, run.status])).toEqual([
+        [testTopicId, 'op_dead', 'failed'],
+      ]);
+      // ...so a fresh run is allowed instead of "already has a running topic".
+      await caller.run({ id: task.data.id });
+      expect((await caller.detail({ id: task.data.id })).data?.status).toBe('running');
+    });
   });
 
   describe('clearAll', () => {

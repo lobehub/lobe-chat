@@ -852,13 +852,34 @@ describe('GoalService', () => {
     expect(await service.graph(graph.goal.id)).toBeDefined();
   });
 
-  it('creates persistent answer containers by default without exploration enabled', async () => {
+  it('attaches seed tasks straight to the problem instead of wrapping each in an experiment', async () => {
+    // An experiment is a candidate answer under test. A caller-supplied seed is
+    // ordinary work, so it takes the same shape as a planned or manager-submitted
+    // Task: a `decomposes` edge from the problem, no answer container.
     const service = new GoalService(serverDB, userId);
-    const graph = await service.create({ title: 'Question', tasks: ['Candidate answer'] });
+    const graph = await service.create({ title: 'Question', tasks: ['Seed work'] });
+    const question = graph.nodes.find((n) => n.kind === 'problem')!;
+    const task = graph.nodes.find((n) => n.kind === 'task')!;
+    expect(graph.goal.config?.exploration).toBeUndefined();
+    expect(graph.nodes.filter((n) => n.kind === 'experiment')).toHaveLength(0);
+    expect(graph.edges).toEqual([
+      expect.objectContaining({
+        kind: 'decomposes',
+        sourceNodeId: question.id,
+        targetNodeId: task.id,
+      }),
+    ]);
+  });
+
+  it('seeds the exploration baseline inside an experiment container', async () => {
+    const service = new GoalService(serverDB, userId);
+    const graph = await service.create({
+      config: { exploration: { instruction: 'Compare evidence', maxExperiments: 3 } },
+      title: 'Explore',
+    });
     const question = graph.nodes.find((n) => n.kind === 'problem')!;
     const answer = graph.nodes.find((n) => n.kind === 'experiment')!;
     const task = graph.nodes.find((n) => n.kind === 'task')!;
-    expect(graph.goal.config?.exploration).toBeUndefined();
     expect(answer.taskId).toBeNull();
     expect(graph.edges).toEqual(
       expect.arrayContaining([
@@ -880,8 +901,13 @@ describe('GoalService', () => {
     vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
       problemStatement: '核心问题的一句话陈述',
       tasks: [
-        { dependsOn: [], instruction: '收集原始材料', title: '方向A:收集' },
-        { dependsOn: [0], instruction: '分析并综合结论', title: '方向B:分析' },
+        { dependsOn: [], hypothesis: null, instruction: '收集原始材料', title: '方向A:收集' },
+        {
+          dependsOn: [0],
+          hypothesis: '按模块聚类比按时间排序更能暴露根因',
+          instruction: '分析并综合结论',
+          title: '方向B:分析',
+        },
         // Self and forward references are planner hallucinations — dropped.
         { dependsOn: [1, 2, 9], instruction: '汇编最终报告', title: '方向C:汇编' },
       ],
@@ -905,14 +931,37 @@ describe('GoalService', () => {
       '方向B:分析',
       '方向C:汇编',
     ]);
-    expect(after.nodes.find((n) => n.kind === 'problem')?.description).toBe('核心问题的一句话陈述');
-    expect(after.nodes.filter((n) => n.kind === 'experiment')).toHaveLength(3);
-    expect(after.edges.filter((e) => e.kind === 'answers')).toHaveLength(3);
-    expect(after.edges.filter((e) => e.kind === 'contains')).toHaveLength(3);
+    const problem = after.nodes.find((n) => n.kind === 'problem')!;
+    expect(problem.description).toBe('核心问题的一句话陈述');
+
+    // Only the direction the planner marked as a hypothesis becomes a candidate
+    // answer: one experiment answering the problem and containing that Task.
+    // The certain steps attach straight to the problem.
+    const byTitle = new Map(after.nodes.map((n) => [n.title, n.id]));
+    const experiments = after.nodes.filter((n) => n.kind === 'experiment');
+    expect(experiments).toHaveLength(1);
+    expect(experiments[0]).toMatchObject({
+      description: '按模块聚类比按时间排序更能暴露根因',
+      title: '方向B:分析',
+    });
+    expect(after.edges.filter((e) => e.kind === 'answers')).toEqual([
+      expect.objectContaining({ sourceNodeId: experiments[0].id, targetNodeId: problem.id }),
+    ]);
+    expect(after.edges.filter((e) => e.kind === 'contains')).toEqual([
+      expect.objectContaining({
+        sourceNodeId: experiments[0].id,
+        targetNodeId: byTitle.get('方向B:分析'),
+      }),
+    ]);
+    expect(
+      after.edges
+        .filter((e) => e.kind === 'decomposes' && e.sourceNodeId === problem.id)
+        .map((e) => e.targetNodeId)
+        .sort(),
+    ).toEqual([byTitle.get('方向A:收集'), byTitle.get('方向C:汇编')].sort());
 
     // The planner's dependsOn indices become depends_on edges, dependent →
     // prerequisite; the self and forward references were dropped.
-    const byTitle = new Map(after.nodes.map((n) => [n.title, n.id]));
     const deps = after.edges
       .filter((e) => e.kind === 'depends_on')
       .map((e) => [e.sourceNodeId, e.targetNodeId]);
@@ -925,28 +974,34 @@ describe('GoalService', () => {
     );
   });
 
-  it('creates persistent answer containers by default without exploration enabled', async () => {
+  it('plans a goal without hypotheses as plain tasks under the problem', async () => {
+    vi.spyOn(GoalCriteriaGeneratorService.prototype, 'decompose').mockResolvedValue({
+      problemStatement: '修好最近三天的 bug',
+      tasks: [
+        { dependsOn: [], hypothesis: null, instruction: '列出 issue', title: '建立清单' },
+        { dependsOn: [0], hypothesis: null, instruction: '逐项修复', title: '实施修复' },
+      ],
+    });
     const service = new GoalService(serverDB, userId);
-    const graph = await service.create({ title: 'Question', tasks: ['Candidate answer'] });
-    const question = graph.nodes.find((n) => n.kind === 'problem')!;
-    const answer = graph.nodes.find((n) => n.kind === 'experiment')!;
-    const task = graph.nodes.find((n) => n.kind === 'task')!;
-    expect(graph.goal.config?.exploration).toBeUndefined();
-    expect(answer.taskId).toBeNull();
-    expect(graph.edges).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          kind: 'answers',
-          sourceNodeId: answer.id,
-          targetNodeId: question.id,
-        }),
-        expect.objectContaining({
-          kind: 'contains',
-          sourceNodeId: answer.id,
-          targetNodeId: task.id,
-        }),
-      ]),
+    const graph = await service.create({ title: 'Bug sweep' });
+
+    expect((await service.tick(graph.goal.id)).outcome).toBe('advanced');
+
+    const after = await service.graph(graph.goal.id);
+    const problem = after.nodes.find((n) => n.kind === 'problem')!;
+    const taskIds = after.nodes.filter((n) => n.kind === 'task').map((n) => n.id);
+    expect(taskIds).toHaveLength(2);
+    expect(after.nodes.filter((n) => n.kind === 'experiment')).toHaveLength(0);
+    expect(after.edges.filter((e) => e.kind === 'answers' || e.kind === 'contains')).toHaveLength(
+      0,
     );
+    expect(
+      after.edges
+        .filter((e) => e.kind === 'decomposes' && e.sourceNodeId === problem.id)
+        .map((e) => e.targetNodeId)
+        .sort(),
+    ).toEqual([...taskIds].sort());
+    expect(after.edges.filter((e) => e.kind === 'depends_on')).toHaveLength(1);
   });
 
   it('plans the decomposition once when two advances race through the planner', async () => {
@@ -1034,9 +1089,9 @@ describe('GoalService', () => {
     }
     const after = await service.graph(graph.goal.id);
     expect(after.nodes.filter((node) => node.kind === 'task')).toHaveLength(1);
-    expect(after.nodes.filter((node) => node.kind === 'experiment')).toHaveLength(1);
+    expect(after.nodes.filter((node) => node.kind === 'experiment')).toHaveLength(0);
     expect(after.nodes.find((node) => node.kind === 'problem')?.description).toBe('First plan');
-    expect(after.edges.filter((edge) => edge.kind === 'answers')).toHaveLength(1);
+    expect(after.edges.filter((edge) => edge.kind === 'decomposes')).toHaveLength(1);
   });
 
   it('rejects a late planner after an expired lease is taken over', async () => {
