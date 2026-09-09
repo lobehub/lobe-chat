@@ -193,6 +193,7 @@ export default class Browser {
         contextIsolation: true,
         preload: path.join(preloadDir, 'index.js'),
         sandbox: false,
+        scrollBounce: true,
         webviewTag: true,
       },
       width: resolvedState.width,
