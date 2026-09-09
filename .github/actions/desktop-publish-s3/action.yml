@@ -53,6 +53,12 @@ runs:
         echo ""
         echo "📋 Version: ${{ inputs.version }}, Channel: ${{ inputs.channel }}"
 
+    - name: Setup Node.js for renderer validation
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        package-manager-cache: false
+
     - name: Validate renderer OTA baseline before publishing
       shell: bash
       env:
