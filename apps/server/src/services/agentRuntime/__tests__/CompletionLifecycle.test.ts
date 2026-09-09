@@ -458,6 +458,34 @@ describe('CompletionLifecycle.buildLifecycleEvent', () => {
     expect(event.errorMessage).toBe('fetch failed');
   });
 
+  it('carries the budget context of an exhausted allowance onto the event', () => {
+    // Without this the bot reply can only say "not enough credits": which
+    // allowance ran out, and by how much, lived in the error body and stopped
+    // at the lifecycle boundary (LOBE-13726).
+    const state = {
+      error: {
+        budget: {
+          availableCredits: 7_242_747,
+          budgetTypeAtError: 'workspace_member',
+          requiredCredits: 197_391,
+          shortfallCredits: 0,
+        },
+        error: { message: 'Workspace budget exceeded' },
+        errorType: 'InsufficientBudgetForModel',
+      },
+      metadata: { agentId: 'agent-1', userId: 'user-1' },
+    };
+
+    const { event } = callBuild(state, 'error');
+
+    expect(event.errorBudget).toEqual({
+      availableCredits: 7_242_747,
+      budgetTypeAtError: 'workspace_member',
+      requiredCredits: 197_391,
+      shortfallCredits: 0,
+    });
+  });
+
   it('leaves errorType + attribution undefined when there is no error', () => {
     const { event } = callBuild({ messages: [], metadata: {} }, 'done');
 

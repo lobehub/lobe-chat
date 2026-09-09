@@ -1397,6 +1397,7 @@ export class AgentBridgeService {
                       event.operationId,
                       replyLocale,
                       event.errorAttribution,
+                      event.errorBudget,
                     );
                     // Wrap in `{ markdown }` so the Chat SDK adapter sets the
                     // platform's markdown parse_mode (e.g. Telegram `Markdown`,
