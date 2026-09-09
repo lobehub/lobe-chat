@@ -233,7 +233,7 @@ importers:
         version: 6.0.3
       undici:
         specifier: ^7.28.0
-        version: 7.28.0
+        version: 7.29.0
       uuid:
         specifier: ^14.0.1
         version: 14.0.1
@@ -276,7 +276,7 @@ importers:
         version: link:../model-bank
     devDependencies:
       vitest:
-        specifier: 3.2.6
+        specifier: ^3.2.6
         version: 3.2.6(@types/debug@4.1.13)(@types/node@24.13.3)(happy-dom@20.10.6)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@9.4.0)(tsx@4.23.0)(yaml@2.9.0)
 
   ../../packages/chat-adapter-imessage:
@@ -383,7 +383,7 @@ importers:
         specifier: workspace:*
         version: link:../heterogeneous-agents
       react:
-        specifier: 19.2.7
+        specifier: '*'
         version: 19.2.7
       sf-symbols-typescript:
         specifier: ^2.2.0
@@ -403,7 +403,7 @@ importers:
         specifier: ^8.5.0
         version: 8.9.0
       node-gyp:
-        specifier: ^12.4.0
+        specifier: ^11.4.2
         version: 12.4.0
 
   ../../packages/electron-server-ipc:
@@ -496,7 +496,7 @@ importers:
         specifier: ^8.0.4
         version: 8.0.4
       react:
-        specifier: 19.2.7
+        specifier: ^19.0.0
         version: 19.2.7
       zod:
         specifier: ^4.4.3
@@ -608,7 +608,7 @@ importers:
         specifier: workspace:*
         version: link:../model-bank
       react:
-        specifier: 19.2.7
+        specifier: '*'
         version: 19.2.7
       type-fest:
         specifier: ^4.41.0
@@ -2887,12 +2887,6 @@ packages:
 
   '@rc-component/upload@1.1.1':
     resolution: {integrity: sha512-GvYWSKeaJTOxxC5p6+nOSadzfvXA1h8C/iHFPFZX+szH3JUXrvs+DLiW8YUTBgvMh8m63mJeHrlYlJzAlg+pDA==}
-    peerDependencies:
-      react: 19.2.7
-      react-dom: 19.2.7
-
-  '@rc-component/util@1.11.1':
-    resolution: {integrity: sha512-awVlI3ub2vqfqkYxOBc/uQ0efm3jw0wcrhtO/YWLyZfxiKXczKwNbVuhlnyxytDt7H9pbbVQiqr+O6MLATtRYg==}
     peerDependencies:
       react: 19.2.7
       react-dom: 19.2.7
@@ -8467,8 +8461,8 @@ packages:
     resolution: {integrity: sha512-LIY910g9TI13YS95lrMFrs8Rm/u/irgHeTWoKCoteeJ04CUJ92eEfj0rVn+7VKMPBpUPiUoBKfhNyLI23EE/KA==}
     engines: {node: '>=18.17'}
 
-  undici@7.28.0:
-    resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
+  undici@7.29.0:
+    resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
     engines: {node: '>=20.18.1'}
 
   unescape-js@1.1.4:
@@ -9068,7 +9062,7 @@ snapshots:
       '@babel/runtime': 7.29.7
       '@emotion/hash': 0.8.0
       '@emotion/unitless': 0.7.5
-      '@rc-component/util': 1.11.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@rc-component/util': 1.13.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       clsx: 2.1.1
       csstype: 3.2.3
       react: 19.2.7
@@ -9508,7 +9502,7 @@ snapshots:
       semver: 7.8.5
       sumchecker: 3.0.1(supports-color@9.4.0)
     optionalDependencies:
-      undici: 7.28.0
+      undici: 7.29.0
     transitivePeerDependencies:
       - supports-color
 
@@ -10213,7 +10207,7 @@ snapshots:
       '@lobehub/ui': 5.20.0(@lobehub/fluent-emoji@4.1.0(@types/react@19.2.17)(antd@6.5.0(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@9.4.0))(@lobehub/icons@5.18.0)(@types/mdast@4.0.4)(@types/react@19.2.17)(antd@6.5.0(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(date-fns@4.4.0)(micromark-util-types@2.0.2)(micromark@4.0.2(supports-color@9.4.0))(motion@12.42.2(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@9.4.0)
       antd: 6.5.0(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       antd-style: 4.1.0(@types/react@19.2.17)(antd@6.5.0(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(supports-color@9.4.0)
-      es-toolkit: 1.51.0
+      es-toolkit: 1.52.0
       lucide-react: 0.469.0(react@19.2.7)
       polished: 4.3.1
       react: 19.2.7
@@ -11160,13 +11154,6 @@ snapshots:
       clsx: 2.1.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-
-  '@rc-component/util@1.11.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      is-mobile: 5.0.0
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      react-is: 18.3.1
 
   '@rc-component/util@1.13.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
@@ -13703,7 +13690,7 @@ snapshots:
   fetch-socks@1.3.3:
     dependencies:
       socks: 2.8.9
-      undici: 7.28.0
+      undici: 7.29.0
 
   fflate@0.8.3: {}
 
@@ -17411,7 +17398,7 @@ snapshots:
 
   undici@6.28.0: {}
 
-  undici@7.28.0: {}
+  undici@7.29.0: {}
 
   unescape-js@1.1.4:
     dependencies:
