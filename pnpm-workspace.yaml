@@ -28,7 +28,7 @@ packages:
   - apps/workbench
 
 minimumReleaseAgeExclude:
-  - '@lobehub/ui@5.20.2'
+  - '@lobehub/ui@5.20.2 || 5.41.0'
 
 # Build scripts run one at a time. Several peer-variant copies of
 # @lobehub/editor resolve in this workspace and every copy's postinstall

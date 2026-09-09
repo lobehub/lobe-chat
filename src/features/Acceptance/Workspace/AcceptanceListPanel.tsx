@@ -1,22 +1,14 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionItem,
-  Center,
-  DraggablePanel,
-  DraggablePanelContainer,
-  type DraggablePanelProps,
-  Empty,
-  Flexbox,
-  Icon,
-} from '@lobehub/ui';
-import type { DropdownItem } from '@lobehub/ui/base-ui';
+import { Accordion, AccordionItem, Center, Empty, Flexbox, Icon } from '@lobehub/ui';
+import type { DraggablePanelProps, DropdownItem } from '@lobehub/ui/base-ui';
 import {
   ActionIcon,
   Button,
   Checkbox,
   confirmModal,
+  DraggablePanel,
+  DraggablePanelContainer,
   DropdownMenu,
   Text,
   toast,
