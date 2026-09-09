@@ -252,9 +252,11 @@ type SystemStrings = {
   errorEmptyCompletion: string;
   errorModelRefusal: string;
   errorHarnessInternal: string;
+  errorFreePlanLimit: string;
   errorInsufficientCredits: string;
   errorInsufficientMemberBudget: string;
   errorInsufficientWorkspaceCredits: string;
+  errorSubscriptionPlanLimit: string;
   errorLocationNotSupported: string;
   errorModelNotFound: string;
   errorNoAvailableProvider: string;
@@ -351,12 +353,16 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
       '**The model declined to answer this request.**\nTry rephrasing it, or switch models in the agent settings and try again.',
     errorHarnessInternal:
       '**Something went wrong on our side.**\nThe agent run hit an internal error, which has been logged. Please try again — if it keeps happening, share the Operation ID below with support.',
+    errorFreePlanLimit:
+      '**Free plan limit reached.**\nThe free-plan allowance this bot runs on is used up. Ask the bot owner to upgrade to a paid plan on the LobeHub website to keep going.',
     errorInsufficientCredits:
-      "**Not enough credits.**\nYour remaining credits can't cover this model's estimated cost. Please top up credits or upgrade your plan on the LobeHub website, or switch to a less expensive model in the agent's settings.",
+      "**Not enough credits.**\nThe credits this bot runs on can't cover this model's estimated cost. Ask the bot owner to top up credits or upgrade their plan on the LobeHub website, or switch to a less expensive model in the agent's settings.",
     errorInsufficientMemberBudget:
-      "**Your budget in this workspace is used up.**\nYour own spending allowance in this workspace can't cover this run's estimated cost — topping up personally won't change it. Ask a workspace admin to raise your member budget, or switch to a less expensive model in the agent's settings.",
+      "**Member budget in this workspace is used up.**\nThe bot owner's spending allowance in this workspace can't cover this run's estimated cost — topping up credits won't change it. Ask a workspace admin to raise the bot owner's member budget, or switch to a less expensive model in the agent's settings.",
     errorInsufficientWorkspaceCredits:
       "**Workspace credits exhausted.**\nThis workspace's shared credits can't cover this run's estimated cost. Ask a workspace admin to top up or upgrade the workspace, or switch to a less expensive model in the agent's settings.",
+    errorSubscriptionPlanLimit:
+      "**Plan credits exhausted.**\nThe subscription credits this bot runs on are used up for this billing period. Ask the bot owner to top up credits or upgrade their plan on the LobeHub website, or configure a custom model API in the agent's provider settings.",
     errorInvalidProviderAPIKey:
       "**Invalid or missing API key.**\nThe configured model provider rejected its API key. Please verify the key in the agent's provider settings (it may be expired, revoked, or mistyped) and try again.",
     errorLocationNotSupported:
@@ -460,12 +466,16 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
       '**模型拒绝回答该请求**\n请尝试调整表述，或在 Agent 设置中切换其他模型后重试。',
     errorHarnessInternal:
       '**我们这边出了点问题**\nAgent 执行遇到内部错误，已记录。请重试；如果持续出现，请把下方 Operation ID 提供给支持人员。',
+    errorFreePlanLimit:
+      '**免费计划额度已用尽**\n该机器人所使用的免费计划额度已经用完。请联系机器人所有者前往 LobeHub 网页端升级到付费计划后继续。',
     errorInsufficientCredits:
-      '**积分余额不足**\n剩余积分不足以覆盖本次模型调用的预估费用。请前往 LobeHub 网页端充值积分或升级订阅计划，或在 Agent 设置中切换到费用更低的模型。',
+      '**积分余额不足**\n该机器人所使用的积分不足以覆盖本次模型调用的预估费用。请联系机器人所有者前往 LobeHub 网页端充值积分或升级订阅计划，或在 Agent 设置中切换到费用更低的模型。',
     errorInsufficientMemberBudget:
-      '**你在该工作区的预算已用尽**\n你在当前工作区的个人预算不足以覆盖本次运行的预估费用，个人充值不会改变该预算。请联系工作区管理员提高你的成员预算，或在 Agent 设置中切换到费用更低的模型。',
+      '**该工作区的成员预算已用尽**\n机器人所有者在当前工作区的成员预算不足以覆盖本次运行的预估费用，充值积分不会改变该预算。请联系工作区管理员提高机器人所有者的成员预算，或在 Agent 设置中切换到费用更低的模型。',
     errorInsufficientWorkspaceCredits:
       '**工作区额度已用尽**\n当前工作区的共享额度不足以覆盖本次运行的预估费用。请联系工作区管理员充值或升级工作区，或在 Agent 设置中切换到费用更低的模型。',
+    errorSubscriptionPlanLimit:
+      '**订阅额度已用尽**\n该机器人所使用的订阅积分在本周期内已用完。请联系机器人所有者前往 LobeHub 网页端充值积分或升级计划，或在 Agent 的 Provider 设置中配置自定义模型 API。',
     errorInvalidProviderAPIKey:
       '**API Key 无效或缺失**\n所配置的模型 Provider 拒绝了 API Key，可能已过期、被吊销或填写错误。请到 Agent 的 Provider 设置中检查并更新 API Key 后重试。',
     errorLocationNotSupported:
@@ -545,16 +555,17 @@ const FRIENDLY_ERROR_BY_TYPE: Record<string, keyof SystemStrings> = {
   // ── user-fixable config / input (attribution: user) ──
   ContentModeration: 'errorContentModeration',
   ExceededContextWindow: 'errorExceededContextWindow',
-  // Managed credits: the allowance ran out or can't cover the model's estimated
-  // cost, so the fix is topping up / upgrading — not editing the input. All
-  // three codes come out of the same admission gate (which one depends on the
-  // plan and on whether the run could be priced upfront), so they share copy;
-  // `budget` then refines it by the allowance that actually ran out. Without
-  // them here the plan-limit pair fell to the `user` tier's "check your input",
-  // which is not what happened at all.
-  FreePlanLimit: 'errorInsufficientCredits',
+  // Managed credits: all three codes come out of the same cost-admission gate,
+  // so the fix is topping up / upgrading — not editing the input (without them
+  // here the plan-limit pair fell to the `user` tier's "check your input").
+  // `InsufficientBudgetForModel` is "balance below this run's estimate";
+  // `FreePlanLimit` / `SubscriptionPlanLimit` mean the free / paid allowance
+  // itself is exhausted, so their copy points at the plan rather than at a
+  // cheaper model. `budget` then refines any of them by the allowance that
+  // actually ran out (see {@link BUDGET_SCOPE_ERROR}).
+  FreePlanLimit: 'errorFreePlanLimit',
   InsufficientBudgetForModel: 'errorInsufficientCredits',
-  SubscriptionPlanLimit: 'errorInsufficientCredits',
+  SubscriptionPlanLimit: 'errorSubscriptionPlanLimit',
   InsufficientQuota: 'errorQuotaLimitReached',
   InvalidProviderAPIKey: 'errorInvalidProviderAPIKey',
   LocationNotSupportError: 'errorLocationNotSupported',
@@ -605,17 +616,26 @@ const FALLBACK_ERROR_BY_ATTRIBUTION: Record<string, keyof SystemStrings> = {
  * actively misleading — for an allowance that isn't theirs to pay for: a
  * member whose own workspace allowance is spent can top up all day without
  * unblocking the run, and a shared workspace pool is the admin's to refill.
- * Tags this map doesn't recognize keep the default copy.
+ * Tags this map doesn't recognize keep the per-code copy.
  *
- * Only the *scope* is surfaced — never the figures. Runs triggered from a
- * shared channel are billed to the bot owner's allowance (see
- * `BotMessageRouter.registerHandlers`), so a reply that quoted
- * `availableCredits` would publish the owner's balance to whoever mentioned
- * the bot.
+ * Two things are deliberately NOT said. Runs triggered from a shared channel
+ * (or by any non-owner) are billed to the *bot owner's* allowance — see
+ * `BotMessageRouter.registerHandlers` — so the copy never addresses the reader
+ * as the payer ("your budget"): the person reading it usually can't act on it,
+ * the bot owner or a workspace admin can. And the figures are never quoted:
+ * a reply carrying `availableCredits` would publish the owner's balance to
+ * whoever mentioned the bot.
  */
 const BUDGET_SCOPE_ERROR = new Map<string, keyof SystemStrings>([
   ['workspace', 'errorInsufficientWorkspaceCredits'],
   ['workspace_member', 'errorInsufficientMemberBudget'],
+]);
+
+/** Copy keys produced by the cost-admission gate, i.e. the ones `budget` may refine. */
+const BUDGET_ADMISSION_KEYS = new Set<keyof SystemStrings>([
+  'errorFreePlanLimit',
+  'errorInsufficientCredits',
+  'errorSubscriptionPlanLimit',
 ]);
 
 /**
@@ -680,7 +700,7 @@ export function renderAgentError(
 
   const friendlyKey = errorType ? FRIENDLY_ERROR_BY_TYPE[errorType] : undefined;
   const stringKey =
-    (friendlyKey === 'errorInsufficientCredits' && budget?.budgetTypeAtError
+    (friendlyKey && BUDGET_ADMISSION_KEYS.has(friendlyKey) && budget?.budgetTypeAtError
       ? BUDGET_SCOPE_ERROR.get(budget.budgetTypeAtError)
       : undefined) ??
     friendlyKey ??

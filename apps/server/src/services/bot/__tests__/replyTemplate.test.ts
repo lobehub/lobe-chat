@@ -417,12 +417,35 @@ describe('replyTemplate', () => {
     // The admission gate emits one of three codes for the same "the allowance
     // can't cover this" outcome; the plan-limit pair used to fall to the `user`
     // tier and tell the user to check their input (LOBE-13726).
-    it('gives every budget-exhaustion code the credits copy, not "check your input"', () => {
-      for (const code of ['FreePlanLimit', 'InsufficientBudgetForModel', 'SubscriptionPlanLimit']) {
+    it('gives every budget-exhaustion code its own credits copy, not "check your input"', () => {
+      const expected: Record<string, string> = {
+        FreePlanLimit: 'Free plan limit reached',
+        InsufficientBudgetForModel: 'Not enough credits',
+        SubscriptionPlanLimit: 'Plan credits exhausted',
+      };
+
+      for (const [code, header] of Object.entries(expected)) {
         const out = renderAgentError(code, 'Budget exceeded', 'op-1', 'en-US', 'user');
 
-        expect(out).toContain('Not enough credits');
+        expect(out).toContain(header);
         expect(out).not.toContain("couldn't be completed");
+      }
+    });
+
+    // Runs are billed to the bot owner, not to whoever mentioned the bot, so
+    // the copy must point at the owner / admin instead of calling the reader
+    // the payer.
+    it('addresses the bot owner rather than the reader on every budget tier', () => {
+      const scoped = ['workspace', 'workspace_member', undefined];
+      for (const code of ['FreePlanLimit', 'InsufficientBudgetForModel', 'SubscriptionPlanLimit']) {
+        for (const budgetTypeAtError of scoped) {
+          const out = renderAgentError(code, undefined, 'op-1', 'en-US', 'user', {
+            budgetTypeAtError,
+          });
+
+          expect(out).not.toMatch(/\byour\b/i);
+          expect(out).toMatch(/bot owner|workspace admin/);
+        }
       }
     });
 
@@ -447,7 +470,7 @@ describe('replyTemplate', () => {
           budget,
         );
 
-        expect(en).toContain('Your budget in this workspace is used up');
+        expect(en).toContain('Member budget in this workspace is used up');
         expect(en).not.toContain('Not enough credits');
         expect(en).toContain('Operation ID: `op-1`');
 
@@ -460,8 +483,21 @@ describe('replyTemplate', () => {
           budget,
         );
 
-        expect(zh).toContain('你在该工作区的预算已用尽');
+        expect(zh).toContain('该工作区的成员预算已用尽');
         expect(zh).not.toContain('积分余额不足');
+      });
+
+      // The workspace gate throws SubscriptionPlanLimit (not
+      // InsufficientBudgetForModel) when the run couldn't be priced upfront; the
+      // scope still wins over the per-code copy.
+      it('refines the plan-limit codes by scope too', () => {
+        const out = renderAgentError('SubscriptionPlanLimit', undefined, 'op-1', 'en-US', 'user', {
+          ...budget,
+          budgetTypeAtError: 'workspace_member',
+        });
+
+        expect(out).toContain('Member budget in this workspace is used up');
+        expect(out).not.toContain('Plan credits exhausted');
       });
 
       it('names the shared workspace pool for a workspace-scoped allowance', () => {
