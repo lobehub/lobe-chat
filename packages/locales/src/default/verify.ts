@@ -16,6 +16,8 @@ export default {
   'acceptance.review.writeFeedback': 'Write feedback',
   'acceptance.review.mobileDrawHint': 'Drag to mark an issue',
   'acceptance.review.mobileBrowseHint': 'Swipe to switch · scroll to read',
+  'acceptance.review.mobileDrawnHint':
+    '{{count}} region(s) marked · drag to move, corner dot to resize',
   'acceptance.review.draftSaved': 'Your draft is saved on this device.',
   'acceptance.review.removeAttachment': 'Remove attachment',
   'acceptance.review.regionImage': 'Image {{image}} · Region {{region}}',

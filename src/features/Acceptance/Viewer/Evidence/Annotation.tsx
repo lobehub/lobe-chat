@@ -41,7 +41,9 @@ const styles = createStaticStyles(({ css }) => ({
     background: ${cssVar.colorError};
   `,
   /* Delete mirrors the index badge on the opposite corner — the same pink
-     disc, so which region the action removes reads at a glance. */
+     disc, so which region the action removes reads at a glance. Touch keeps
+     it: a phone reviewer who mis-drags a box has no keyboard escape, and the
+     only other way out used to be leaving the image entirely. */
   badgeDelete: css`
     cursor: pointer;
 
@@ -66,8 +68,11 @@ const styles = createStaticStyles(({ css }) => ({
       filter: brightness(1.15);
     }
 
-    @media (width <= 767px) {
-      display: none;
+    @media (pointer: coarse) {
+      inset-block-start: -12px;
+      inset-inline-end: -12px;
+      width: 24px;
+      height: 24px;
     }
   `,
   canvas: css`

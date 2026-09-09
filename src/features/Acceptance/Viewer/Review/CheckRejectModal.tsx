@@ -5,7 +5,7 @@ import { Flexbox, TextArea } from '@lobehub/ui';
 import { ActionIcon, Button, createModal, Text, useModalContext } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar, cx, useResponsive } from 'antd-style';
 import { Trash2, ZoomIn, ZoomOut } from 'lucide-react';
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AnnotationCanvas } from '../Evidence/Annotation';
@@ -16,6 +16,9 @@ import {
   useFeedbackAttachments,
 } from '../Evidence/attachments';
 import { MobileEvidenceReview } from '../Evidence/MobileEvidenceReview';
+import type { MobileReviewEvent } from '../Evidence/mobileReviewFlow';
+import { initialMobileReviewStep, nextMobileReviewStep } from '../Evidence/mobileReviewFlow';
+import { useMeasuredWidth } from '../Evidence/useMeasuredWidth';
 import { frostedModalStyles } from './modals';
 import { useReviewSubmit } from './useReviewSubmit';
 
@@ -324,7 +327,7 @@ export const mergeRejectComments = (initialComment = '', storedComment = '') => 
   return `${initial}\n\n${stored}`;
 };
 
-const CheckRejectModalContent = memo<CheckRejectModalProps>(
+export const CheckRejectModalContent = memo<CheckRejectModalProps>(
   ({
     checkTitle,
     draftKey,
@@ -339,8 +342,13 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
   }) => {
     const { t: translate } = useTranslation('verify');
     const { md = true } = useResponsive();
-    const [drawing, setDrawing] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(evidence.length === 0);
+    // Browsing / marking / writing are one flow, not two booleans that can
+    // disagree — see mobileReviewFlow for the transitions.
+    const [step, setStep] = useState(() => initialMobileReviewStep(evidence.length));
+    const advance = (event: MobileReviewEvent) =>
+      setStep((current) => nextMobileReviewStep(current, event));
+    const drawing = step === 'draw';
+    const showFeedback = step === 'feedback';
     const swipeStart = useRef<{ x: number; y: number } | null>(null);
     const { close, setCanDismissByClickOutside } = useModalContext();
     const [draft] = useState(() => readDraft(draftKey));
@@ -382,33 +390,14 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       useFeedbackAttachments(6, draft?.attachments ?? previousAttachments);
 
     const [zoom, setZoom] = useState(1);
-    const viewportRef = useRef<HTMLDivElement>(null);
-    const [viewportWidth, setViewportWidth] = useState<number>();
-    useLayoutEffect(() => {
-      if (evidence.length === 0) return;
-      let observer: ResizeObserver | undefined;
-      let raf = 0;
-      // The Modal body mounts async (portal + open animation), so the ref may
-      // be null on the first pass — retry on the next frame until it attaches,
-      // then track its width. Without this the image stays fit-width and zoom
-      // does nothing (viewportWidth never resolves).
-      const attach = () => {
-        const node = viewportRef.current;
-        if (!node) {
-          raf = requestAnimationFrame(attach);
-          return;
-        }
-        const measure = () => setViewportWidth(node.clientWidth);
-        measure();
-        observer = new ResizeObserver(measure);
-        observer.observe(node);
-      };
-      attach();
-      return () => {
-        cancelAnimationFrame(raf);
-        observer?.disconnect();
-      };
-    }, [activeEvidenceId, evidence.length, showFeedback]);
+    // The stage node is remounted by the responsive flip and by every step
+    // between the image and the feedback screen, so the measurement follows
+    // the node rather than a ref captured once — see useMeasuredWidth.
+    const {
+      node: viewportNode,
+      ref: viewportRef,
+      width: viewportWidth,
+    } = useMeasuredWidth<HTMLDivElement>();
 
     // Persist the draft as it is typed; an empty draft cleans the slot up.
     useEffect(() => {
@@ -432,7 +421,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
       if (!evidence[index]) return;
       setActiveEvidenceId(evidence[index].id);
       setZoom(1);
-      viewportRef.current?.scrollTo(0, 0);
+      viewportNode?.scrollTo(0, 0);
     };
     const activeEvidence = evidence.find((item) => item.id === activeEvidenceId);
     const activeAnnotations = annotations.filter((item) => item.evidenceId === activeEvidenceId);
@@ -473,10 +462,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
           ...previous,
           { comment: '', evidenceId: activeEvidence!.id, key: nextAnnotationKey(), rect },
         ]);
-        if (!md) {
-          setDrawing(false);
-          setShowFeedback(true);
-        }
+        advance('region-drawn');
       },
       onRemove: (index: number) => {
         const target = activeAnnotations[index];
@@ -500,8 +486,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
             type={'text'}
             onClick={() => {
               selectEvidence(evidence.findIndex((item) => item.id === annotation.evidenceId));
-              setDrawing(true);
-              setShowFeedback(false);
+              advance('edit-region');
             }}
           >
             {translate('acceptance.review.regionImage', {
@@ -652,6 +637,7 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
     if (!md)
       return (
         <MobileEvidenceReview
+          annotationCount={activeAnnotations.length}
           canSubmit={canSubmit && !uploading}
           drawing={drawing}
           failed={failed}
@@ -692,9 +678,8 @@ const CheckRejectModalContent = memo<CheckRejectModalProps>(
             </Flexbox>
           }
           onConfirm={handleConfirm}
-          onDrawingChange={setDrawing}
           onImageChange={selectEvidence}
-          onShowFeedback={setShowFeedback}
+          onStep={advance}
           onZoom={stepZoom}
         />
       );

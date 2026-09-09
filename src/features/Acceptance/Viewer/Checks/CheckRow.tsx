@@ -41,6 +41,7 @@ import {
 } from './CheckHistory';
 import { shouldCollapseAfterReview, userReviewState } from './checkState';
 import { STATE_META } from './checkStatus';
+import { checkRowDisclosure } from './rowDisclosure';
 import { styles } from './styles';
 import type { AcceptanceCheck, CheckReviewInput, ProposalDismissInput } from './types';
 
@@ -60,6 +61,12 @@ export const AcceptanceCheckRow = memo<{
   onDismissProposal?: (input: ProposalDismissInput) => Promise<void>;
   onReview: (input: CheckReviewInput) => Promise<boolean>;
   onRound?: (round: number) => void;
+  /**
+   * Open this check on its own page instead of disclosing it in place. Set on
+   * a phone, where a row that unfolds a full evidence review inside a scrolling
+   * list buries both the check above it and the one below.
+   */
+  onOpenDetail?: () => void;
   /** Open an agent judge's verification run (its trace IS the argument). */
   onOpenTrace?: (verifierOperationId: string) => void | Promise<void>;
   onToggle: () => void;
@@ -71,6 +78,7 @@ export const AcceptanceCheckRow = memo<{
     detailMode,
     expanded,
     onDismissProposal,
+    onOpenDetail,
     onOpenTrace,
     onReview,
     onRound,
@@ -90,6 +98,11 @@ export const AcceptanceCheckRow = memo<{
     // unreviewed check would push the evidence the reviewer came for below the fold.
     const [proposalOpen, setProposalOpen] = useState(false);
     const meta = STATE_META[check.state];
+    const { activate, ariaExpanded, open } = checkRowDisclosure({
+      expanded,
+      onOpenDetail,
+      onToggle,
+    });
     const title = checkDisplayTitle(check.title, t('acceptance.checks.holisticTitle'));
     const counts = evidenceCounts(check.evidence);
     const visualization = readVisualizationManifest(check.result?.metadata);
@@ -261,20 +274,20 @@ export const AcceptanceCheckRow = memo<{
           <Flexbox
             horizontal
             align={'flex-start'}
-            aria-expanded={expanded}
+            aria-expanded={ariaExpanded}
             className={styles.rowHeader}
-            data-expanded={expanded ? '' : undefined}
+            data-expanded={open ? '' : undefined}
             gap={10}
             role={'button'}
             tabIndex={0}
-            onClick={onToggle}
+            onClick={activate}
             onKeyDown={(event) => {
               if (
                 event.target === event.currentTarget &&
                 (event.key === 'Enter' || event.key === ' ')
               ) {
                 event.preventDefault();
-                onToggle();
+                activate();
               }
             }}
           >
@@ -305,10 +318,10 @@ export const AcceptanceCheckRow = memo<{
               flex={1}
               gap={8}
               style={{ minWidth: 0 }}
-              wrap={expanded ? 'wrap' : 'nowrap'}
+              wrap={open ? 'wrap' : 'nowrap'}
             >
               <Text
-                className={expanded || !desktop ? undefined : styles.titleEllipsis}
+                className={open || !desktop ? undefined : styles.titleEllipsis}
                 style={{ fontSize: desktop ? 13 : 14, minWidth: 0 }}
               >
                 {title}
@@ -445,7 +458,7 @@ export const AcceptanceCheckRow = memo<{
                 icon={ChevronRight}
                 size={14}
                 style={{
-                  transform: expanded ? 'rotate(90deg)' : 'none',
+                  transform: open ? 'rotate(90deg)' : 'none',
                   transition: 'transform 0.2s',
                 }}
               />
@@ -453,7 +466,7 @@ export const AcceptanceCheckRow = memo<{
           </Flexbox>
         )}
 
-        {expanded && (
+        {open && (
           <Flexbox
             gap={10}
             paddingBlock={detailMode ? 0 : '0 14px'}

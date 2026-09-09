@@ -7,6 +7,8 @@ import { ArrowLeft, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-re
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import type { MobileReviewEvent } from './mobileReviewFlow';
+
 const styles = createStaticStyles(({ css }) => ({
   body: css`
     display: flex;
@@ -45,6 +47,8 @@ const styles = createStaticStyles(({ css }) => ({
 }));
 
 interface MobileEvidenceReviewProps {
+  /** Regions already drawn on the image on screen. */
+  annotationCount: number;
   canSubmit: boolean;
   drawing: boolean;
   editor: ReactNode;
@@ -54,9 +58,9 @@ interface MobileEvidenceReviewProps {
   imageIndex: number;
   loading: boolean;
   onConfirm: () => void;
-  onDrawingChange: (value: boolean) => void;
   onImageChange: (index: number) => void;
-  onShowFeedback: (value: boolean) => void;
+  /** Move the browse / mark / write flow along — see mobileReviewFlow. */
+  onStep: (event: MobileReviewEvent) => void;
   onZoom: (direction: 1 | -1) => void;
   showFeedback: boolean;
   zoom: number;
@@ -64,6 +68,7 @@ interface MobileEvidenceReviewProps {
 
 /** Phone review has one task at a time: inspect/mark the image, then write feedback. */
 export const MobileEvidenceReview = ({
+  annotationCount,
   canSubmit,
   drawing,
   failed,
@@ -73,9 +78,8 @@ export const MobileEvidenceReview = ({
   imageIndex,
   loading,
   onConfirm,
-  onDrawingChange,
   onImageChange,
-  onShowFeedback,
+  onStep,
   onZoom,
   showFeedback,
   zoom,
@@ -90,7 +94,7 @@ export const MobileEvidenceReview = ({
               icon={<Icon icon={ArrowLeft} />}
               style={{ alignSelf: 'flex-start', minHeight: 44 }}
               type={'text'}
-              onClick={() => onShowFeedback(false)}
+              onClick={() => onStep('back-to-images')}
             >
               {t('acceptance.review.backToImages')}
             </Button>
@@ -130,10 +134,17 @@ export const MobileEvidenceReview = ({
           </Flexbox>
           {image}
           <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
+            {/* The hint is the only receipt a drawn box gets on a phone: it
+                says the region landed AND that it is still editable, which is
+                what the old jump-to-notes step took away. */}
             <Text fontSize={12} style={{ flex: 1 }} type={'secondary'}>
-              {t(
-                drawing ? 'acceptance.review.mobileDrawHint' : 'acceptance.review.mobileBrowseHint',
-              )}
+              {drawing && annotationCount > 0
+                ? t('acceptance.review.mobileDrawnHint', { count: annotationCount })
+                : t(
+                    drawing
+                      ? 'acceptance.review.mobileDrawHint'
+                      : 'acceptance.review.mobileBrowseHint',
+                  )}
             </Text>
             <ActionIcon
               aria-label={t('acceptance.review.zoomOut')}
@@ -152,10 +163,10 @@ export const MobileEvidenceReview = ({
             />
           </Flexbox>
           <div className={styles.footer}>
-            <Button aria-pressed={drawing} onClick={() => onDrawingChange(!drawing)}>
+            <Button aria-pressed={drawing} onClick={() => onStep('toggle-draw')}>
               {t(drawing ? 'acceptance.review.browseImage' : 'acceptance.review.drawRegion')}
             </Button>
-            <Button type={'primary'} onClick={() => onShowFeedback(true)}>
+            <Button type={'primary'} onClick={() => onStep('write-feedback')}>
               {t('acceptance.review.writeFeedback')}
             </Button>
           </div>

@@ -195,6 +195,7 @@
   "acceptance.review.imageNumber": "Image {{current}} / {{total}}",
   "acceptance.review.mobileBrowseHint": "Swipe to switch · scroll to read",
   "acceptance.review.mobileDrawHint": "Drag to mark an issue",
+  "acceptance.review.mobileDrawnHint": "{{count}} region(s) marked · drag to move, corner dot to resize",
   "acceptance.review.nextImage": "Next image",
   "acceptance.review.previousImage": "Previous image",
   "acceptance.review.regionComments": "Region comments",
