@@ -8,15 +8,19 @@ const mockIsQueueAgentRuntimeEnabled = vi.hoisted(() => vi.fn());
 const mockTopicFindById = vi.hoisted(() => vi.fn());
 
 vi.mock('@/database/models/topic', () => ({
-  TopicModel: vi.fn().mockImplementation(() => ({
-    findById: mockTopicFindById,
-  })),
+  TopicModel: vi.fn().mockImplementation(function () {
+    return {
+      findById: mockTopicFindById,
+    };
+  }),
 }));
 
 vi.mock('@/database/models/user', () => ({
-  UserModel: vi.fn().mockImplementation(() => ({
-    getUserSettings: mockGetUserSettings,
-  })),
+  UserModel: vi.fn().mockImplementation(function () {
+    return {
+      getUserSettings: mockGetUserSettings,
+    };
+  }),
 }));
 
 vi.mock('@/envs/app', () => ({
@@ -27,9 +31,11 @@ vi.mock('@/envs/app', () => ({
 }));
 
 vi.mock('@/server/services/aiAgent', () => ({
-  AiAgentService: vi.fn().mockImplementation(() => ({
-    execAgent: mockExecAgent,
-  })),
+  AiAgentService: vi.fn().mockImplementation(function () {
+    return {
+      execAgent: mockExecAgent,
+    };
+  }),
 }));
 
 vi.mock('@/server/services/gateway/MessageGatewayClient', () => ({
@@ -255,7 +261,7 @@ describe('AgentBridgeService', () => {
       const thread = createThread();
       const message = createMessage();
       const client = createClient();
-      client.extractChatId.mockImplementation(() => {
+      client.extractChatId.mockImplementation(function () {
         throw new Error('malformed threadId');
       });
       mockGetPlatform.mockReturnValue({ id: 'lark', name: 'Lark', supportsMessageEdit: true });

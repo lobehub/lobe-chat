@@ -553,7 +553,7 @@ describe('CompletionLifecycle.dispatchHooks — error persistence', () => {
     (lifecycle as any).messageModel = { update: updateMessage };
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await lifecycle.dispatchHooks(
       'op-1',
@@ -593,7 +593,7 @@ describe('CompletionLifecycle.dispatchHooks — error persistence', () => {
       .mockRejectedValue(
         new CriticalHookDeliveryError('task-on-complete', new Error('qstash down')),
       );
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await expect(
       lifecycle.dispatchHooks(
@@ -610,7 +610,7 @@ describe('CompletionLifecycle.dispatchHooks — error persistence', () => {
     const lifecycle = buildLifecycle();
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(false);
     const dispatch = vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await lifecycle.dispatchHooks(
       'op-reclaimed',
@@ -632,7 +632,7 @@ describe('CompletionLifecycle.dispatchHooks — verify plan race', () => {
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     vi.spyOn(lifecycle as any, 'createVerifyMessage').mockResolvedValue(undefined);
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     // Control exactly when the fire-and-forget instantiation settles.
     let settle: () => void = () => {};
@@ -694,7 +694,7 @@ describe('CompletionLifecycle.dispatchHooks — async-tool park', () => {
     const lifecycle = buildLifecycle();
     const persistSpy = vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     const dispatchSpy = vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    const unregisterSpy = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    const unregisterSpy = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await lifecycle.dispatchHooks('op-1', parkedState, 'waiting_for_async_tool');
 
@@ -707,7 +707,7 @@ describe('CompletionLifecycle.dispatchHooks — async-tool park', () => {
     const lifecycle = buildLifecycle();
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     const dispatchSpy = vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    const unregisterSpy = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    const unregisterSpy = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     const doneState = { metadata: { agentId: 'a', _hooks: [] }, status: 'done' };
     await lifecycle.dispatchHooks('op-1', doneState, 'done');
@@ -727,7 +727,7 @@ describe('CompletionLifecycle.dispatchHooks — completion notification', () => 
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     vi.spyOn(lifecycle as any, 'createVerifyMessage').mockResolvedValue(undefined);
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
     vi.spyOn(verifyServices, 'runVerifyOnCompletion').mockResolvedValue(undefined);
     // The recall gate falls back to the op row when metadata carries no trigger.
     (lifecycle as any).agentOperationModel = { findById: vi.fn(async () => null) };
@@ -1011,7 +1011,7 @@ describe('CompletionLifecycle.dispatchHooks — parks do not register file works
       }),
     };
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await lifecycle.dispatchHooks(
       'op-1',
@@ -1047,7 +1047,7 @@ describe('CompletionLifecycle.dispatchHooks — parks do not register file works
       }),
     };
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await expect(
       lifecycle.dispatchHooks(
@@ -1067,7 +1067,7 @@ describe('CompletionLifecycle.dispatchHooks — parks do not register file works
     mockNotifyAgentInterventionRequired.mockRejectedValueOnce(new Error('database unavailable'));
     stubDurablePendingRows(lifecycle);
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    const unregister = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    const unregister = vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await expect(
       lifecycle.dispatchHooks(
@@ -1096,7 +1096,7 @@ describe('CompletionLifecycle.dispatchHooks — parks do not register file works
     });
     stubDurablePendingRows(lifecycle);
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     await expect(
       lifecycle.dispatchHooks(
@@ -1134,7 +1134,7 @@ describe('CompletionLifecycle.dispatchHooks — parks do not register file works
     const lifecycle = buildLifecycle();
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
 
     const parkedState = { metadata: { _hooks: [], agentId: 'a' }, status: 'waiting_for_human' };
     await lifecycle.dispatchHooks('op-1', parkedState, 'waiting_for_human');
@@ -1177,8 +1177,8 @@ describe('CompletionLifecycle.dispatchHooks — lastAssistantContent DB recovery
     vi.spyOn(lifecycle as any, 'persistCompletion').mockResolvedValue(undefined);
     vi.spyOn(lifecycle as any, 'createVerifyMessage').mockResolvedValue(undefined);
     vi.spyOn(verifyServices, 'runVerifyOnCompletion').mockResolvedValue(undefined);
-    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(hookDispatcher, 'unregister').mockImplementation(function () {});
+    vi.spyOn(console, 'warn').mockImplementation(function () {});
     return vi.spyOn(hookDispatcher, 'dispatch').mockResolvedValue(undefined as any);
   };
 

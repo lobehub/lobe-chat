@@ -146,7 +146,7 @@ jobs:
         run: pnpm install
 
       - name: Run tests
-        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --shard=${{ matrix.shard }}/2 --exclude '**/apps/server/**'
+        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --project app --shard=${{ matrix.shard }}/2
 
       - name: Upload blob report
         if: ${{ !cancelled() }}
@@ -300,7 +300,7 @@ jobs:
         run: pnpm install
 
       - name: Test Server Coverage
-        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --coverage.reportsDirectory=./apps/server/coverage --dir apps/server --shard=${{ matrix.shard }}/2
+        run: bunx vitest --coverage --silent='passed-only' --reporter=default --reporter=blob --coverage.reportsDirectory=./apps/server/coverage --project server --shard=${{ matrix.shard }}/2
 
       - name: Upload blob report
         if: ${{ !cancelled() }}

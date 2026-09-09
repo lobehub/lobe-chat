@@ -29,36 +29,54 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@/business/server/lambda-routers/file', () => ({
   businessFileTransferStorageCheck: mocks.businessFileTransferStorageCheck,
 }));
-vi.mock('@/database/models/chunk', () => ({ ChunkModel: vi.fn(() => ({})) }));
+vi.mock('@/database/models/chunk', () => ({
+  ChunkModel: vi.fn(function () {
+    return {};
+  }),
+}));
 vi.mock('@/database/models/document', async (importOriginal) => ({
   DOCUMENT_TRANSFER_FOREIGN_ROWS: ((await importOriginal()) as Record<string, string>)
     .DOCUMENT_TRANSFER_FOREIGN_ROWS,
-  DocumentModel: vi.fn(() => ({
-    countFileUsageInSubtree: mocks.countFileUsageInSubtree,
-    findById: mocks.findById,
-    findByIds: mocks.findByIds,
-    findBySlug: mocks.findBySlug,
-    subtreeHasForeignRows: mocks.subtreeHasForeignRows,
-    transferTo: mocks.transferTo,
-  })),
+  DocumentModel: vi.fn(function () {
+    return {
+      countFileUsageInSubtree: mocks.countFileUsageInSubtree,
+      findById: mocks.findById,
+      findByIds: mocks.findByIds,
+      findBySlug: mocks.findBySlug,
+      subtreeHasForeignRows: mocks.subtreeHasForeignRows,
+      transferTo: mocks.transferTo,
+    };
+  }),
 }));
-vi.mock('@/database/models/file', () => ({ FileModel: vi.fn(() => ({})) }));
-vi.mock('@/database/models/message', () => ({ MessageModel: vi.fn(() => ({})) }));
+vi.mock('@/database/models/file', () => ({
+  FileModel: vi.fn(function () {
+    return {};
+  }),
+}));
+vi.mock('@/database/models/message', () => ({
+  MessageModel: vi.fn(function () {
+    return {};
+  }),
+}));
 vi.mock('@/database/models/resourcePermission', () => ({
-  ResourcePermissionModel: vi.fn(() => ({
-    getAccessLevel: mocks.getAccessLevel,
-    removeAll: vi.fn(),
-    setAccessLevel: mocks.setAccessLevel,
-  })),
+  ResourcePermissionModel: vi.fn(function () {
+    return {
+      getAccessLevel: mocks.getAccessLevel,
+      removeAll: vi.fn(),
+      setAccessLevel: mocks.setAccessLevel,
+    };
+  }),
 }));
 vi.mock('@/server/services/document', () => ({
-  DocumentService: vi.fn(() => ({
-    createDocument: mocks.createDocument,
-    deleteDocument: mocks.deleteDocument,
-    deleteDocuments: mocks.deleteDocuments,
-    publishToWorkspace: mocks.publishToWorkspace,
-    updateDocument: mocks.updateDocument,
-  })),
+  DocumentService: vi.fn(function () {
+    return {
+      createDocument: mocks.createDocument,
+      deleteDocument: mocks.deleteDocument,
+      deleteDocuments: mocks.deleteDocuments,
+      publishToWorkspace: mocks.publishToWorkspace,
+      updateDocument: mocks.updateDocument,
+    };
+  }),
 }));
 vi.mock('@/server/services/resourcePermission', () => ({
   assertCanEditResource: mocks.assertCanEditResource,

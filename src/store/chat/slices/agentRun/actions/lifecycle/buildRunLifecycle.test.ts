@@ -47,7 +47,7 @@ const makeStore = (afterCompletionCallbacks?: Array<() => void>) => {
     activeTopicId: 't1',
     completeOperation: vi.fn(),
     dbMessagesMap: {},
-    drainQueuedMessages: vi.fn(() => []),
+    drainQueuedMessages: vi.fn<ChatStore['drainQueuedMessages']>(() => []),
     failOperation: vi.fn(),
     internal_updateTopic: vi.fn(),
     markTopicUnread: vi.fn(),

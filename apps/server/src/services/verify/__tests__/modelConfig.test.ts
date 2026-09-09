@@ -18,10 +18,12 @@ const { getAgentModelConfigMock, getBuiltinAgentMock } = vi.hoisted(() => ({
 }));
 
 vi.mock('@/database/models/agent', () => ({
-  AgentModel: vi.fn().mockImplementation(() => ({
-    getAgentModelConfig: getAgentModelConfigMock,
-    getBuiltinAgent: getBuiltinAgentMock,
-  })),
+  AgentModel: vi.fn().mockImplementation(function () {
+    return {
+      getAgentModelConfig: getAgentModelConfigMock,
+      getBuiltinAgent: getBuiltinAgentMock,
+    };
+  }),
 }));
 
 const db = {} as any;

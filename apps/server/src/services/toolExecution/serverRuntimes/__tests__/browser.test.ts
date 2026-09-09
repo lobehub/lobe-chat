@@ -11,7 +11,9 @@ vi.mock('@/server/services/deviceGateway/authorizedToolCall', () => ({
 
 const mockUploadBase64 = vi.fn();
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => ({ uploadBase64: mockUploadBase64 })),
+  FileService: vi.fn(function () {
+    return { uploadBase64: mockUploadBase64 };
+  }),
 }));
 
 // Import after mock setup

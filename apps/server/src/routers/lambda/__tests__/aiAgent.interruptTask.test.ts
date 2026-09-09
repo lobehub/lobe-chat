@@ -12,21 +12,27 @@ import { cleanupTestUser, createTestUser } from './integration/setup';
 // Mock getServerDB to return our test database instance
 let testDB: LobeChatDatabase;
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => testDB),
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
 }));
 
 const mockInterruptOperation = vi.fn();
 
 // Mock AgentRuntimeService
 vi.mock('@/server/services/agentRuntime', () => ({
-  AgentRuntimeService: vi.fn().mockImplementation(() => ({
-    interruptOperation: mockInterruptOperation,
-  })),
+  AgentRuntimeService: vi.fn().mockImplementation(function () {
+    return {
+      interruptOperation: mockInterruptOperation,
+    };
+  }),
 }));
 
 // Mock AiChatService
 vi.mock('@/server/services/aiChat', () => ({
-  AiChatService: vi.fn().mockImplementation(() => ({})),
+  AiChatService: vi.fn().mockImplementation(function () {
+    return {};
+  }),
 }));
 
 // Mock deviceGateway so we can assert cancelHeteroTask dispatches without a

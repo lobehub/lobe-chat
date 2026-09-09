@@ -66,7 +66,9 @@ const {
       setActivationPolicy: vi.fn(),
       setBadgeCount: vi.fn(),
     },
-    MockBrowserWindow: vi.fn().mockImplementation(() => mockBrowserWindow),
+    MockBrowserWindow: vi.fn(function () {
+      return mockBrowserWindow;
+    }),
     mockBrowserWindow,
     mockEnv: {
       externalNavigationHosts: '',

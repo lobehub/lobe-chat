@@ -6,7 +6,9 @@ import type * as MessageModelModule from '@/database/models/message';
 import { createContextInner } from '@/libs/trpc/lambda/context';
 
 vi.mock('@/database/core/db-adaptor', () => ({
-  getServerDB: vi.fn(() => ({})),
+  getServerDB: vi.fn(function () {
+    return {};
+  }),
 }));
 
 // Pin the cloud-only capability open so the visitor procedures under test are
@@ -54,12 +56,14 @@ const mockFindById = vi.fn();
 const mockCountBySender = vi.fn();
 const mockQueryBySender = vi.fn();
 const mockIsRunningOperationAlive = vi.fn();
-const TopicModelMock = vi.fn(() => ({
-  countBySender: mockCountBySender,
-  findById: mockFindById,
-  isRunningOperationAlive: mockIsRunningOperationAlive,
-  queryBySender: mockQueryBySender,
-}));
+const TopicModelMock = vi.fn(function () {
+  return {
+    countBySender: mockCountBySender,
+    findById: mockFindById,
+    isRunningOperationAlive: mockIsRunningOperationAlive,
+    queryBySender: mockQueryBySender,
+  };
+});
 vi.mock('@/database/models/topic', () => ({
   TopicModel: TopicModelMock,
 }));
@@ -75,30 +79,38 @@ vi.mock('@/database/models/message', async (importOriginal) => {
   const actual = await importOriginal<typeof MessageModelModule>();
   return {
     ...actual,
-    MessageModel: vi.fn(() => ({
-      countByTopic: mockMessageCountByTopic,
-      query: mockMessageQuery,
-      queryForVisitor: mockMessageQueryForVisitor,
-    })),
+    MessageModel: vi.fn(function () {
+      return {
+        countByTopic: mockMessageCountByTopic,
+        query: mockMessageQuery,
+        queryForVisitor: mockMessageQueryForVisitor,
+      };
+    }),
   };
 });
 
 vi.mock('@/database/models/user', () => ({
-  UserModel: vi.fn(() => ({ getUserSettings: vi.fn().mockResolvedValue({}) })),
+  UserModel: vi.fn(function () {
+    return { getUserSettings: vi.fn().mockResolvedValue({}) };
+  }),
 }));
 
 const mockExecAgent = vi.fn();
 const mockInterruptTask = vi.fn();
-const AiAgentServiceMock = vi.fn(() => ({
-  execAgent: mockExecAgent,
-  interruptTask: mockInterruptTask,
-}));
+const AiAgentServiceMock = vi.fn(function () {
+  return {
+    execAgent: mockExecAgent,
+    interruptTask: mockInterruptTask,
+  };
+});
 vi.mock('@/server/services/aiAgent', () => ({
   AiAgentService: AiAgentServiceMock,
 }));
 
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => ({ getFileAccessUrl: vi.fn() })),
+  FileService: vi.fn(function () {
+    return { getFileAccessUrl: vi.fn() };
+  }),
 }));
 
 const mockSpendGate = vi.fn();

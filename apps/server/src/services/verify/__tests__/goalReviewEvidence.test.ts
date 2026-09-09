@@ -17,26 +17,42 @@ const mocks = vi.hoisted(() => ({
   content: vi.fn(),
 }));
 vi.mock('@/database/models/verifyCheckResult', () => ({
-  VerifyCheckResultModel: vi.fn(() => ({ findById: mocks.result })),
+  VerifyCheckResultModel: vi.fn(function () {
+    return { findById: mocks.result };
+  }),
 }));
 vi.mock('@/database/models/verifyEvidence', () => ({
-  VerifyEvidenceModel: vi.fn(() => ({ listByCheckResult: mocks.evidence })),
+  VerifyEvidenceModel: vi.fn(function () {
+    return { listByCheckResult: mocks.evidence };
+  }),
 }));
 vi.mock('@/database/models/verifyReviewPrediction', () => ({
-  VerifyReviewPredictionModel: vi.fn(() => ({
-    findAdjudicated: mocks.existing,
-    upsert: mocks.upsert,
-  })),
+  VerifyReviewPredictionModel: vi.fn(function () {
+    return {
+      findAdjudicated: mocks.existing,
+      upsert: mocks.upsert,
+    };
+  }),
 }));
 vi.mock('@/database/models/document', () => ({
-  DocumentModel: vi.fn(() => ({ findById: mocks.document })),
+  DocumentModel: vi.fn(function () {
+    return { findById: mocks.document };
+  }),
 }));
-vi.mock('@/database/models/file', () => ({ FileModel: vi.fn(() => ({ findById: mocks.file })) }));
+vi.mock('@/database/models/file', () => ({
+  FileModel: vi.fn(function () {
+    return { findById: mocks.file };
+  }),
+}));
 vi.mock('@/server/services/file', () => ({
-  FileService: vi.fn(() => ({ getFileContent: mocks.content })),
+  FileService: vi.fn(function () {
+    return { getFileContent: mocks.content };
+  }),
 }));
 vi.mock('@/server/services/aiGeneration', () => ({
-  AiGenerationService: vi.fn(() => ({ generateObject: mocks.generate })),
+  AiGenerationService: vi.fn(function () {
+    return { generateObject: mocks.generate };
+  }),
 }));
 
 beforeEach(() => {

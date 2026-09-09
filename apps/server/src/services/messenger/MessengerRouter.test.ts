@@ -89,7 +89,9 @@ const mockChatBot = {
   },
 };
 vi.mock('chat', () => ({
-  Chat: vi.fn().mockImplementation(() => mockChatBot),
+  Chat: vi.fn(function () {
+    return mockChatBot;
+  }),
   ConsoleLogger: vi.fn(),
 }));
 vi.mock('@chat-adapter/state-ioredis', () => ({
@@ -215,7 +217,9 @@ const mockSlackBinder = {
   sendDmText: vi.fn(),
 };
 vi.mock('./platforms/slack/binder', () => ({
-  MessengerSlackBinder: vi.fn().mockImplementation(() => mockSlackBinder),
+  MessengerSlackBinder: vi.fn(function () {
+    return mockSlackBinder;
+  }),
 }));
 
 const mockTelegramBinder = {
@@ -234,7 +238,9 @@ const mockTelegramBinder = {
   sendDmText: vi.fn(),
 };
 vi.mock('./platforms/telegram/binder', () => ({
-  MessengerTelegramBinder: vi.fn().mockImplementation(() => mockTelegramBinder),
+  MessengerTelegramBinder: vi.fn(function () {
+    return mockTelegramBinder;
+  }),
 }));
 
 const mockWechatBinder = {
@@ -247,7 +253,9 @@ const mockWechatBinder = {
   sendDmText: vi.fn(),
 };
 vi.mock('./platforms/wechat/binder', () => ({
-  MessengerWechatBinder: vi.fn().mockImplementation(() => mockWechatBinder),
+  MessengerWechatBinder: vi.fn(function () {
+    return mockWechatBinder;
+  }),
 }));
 
 const buildSlackRequest = (body: string, headers: Record<string, string> = {}): Request =>

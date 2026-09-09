@@ -11,7 +11,11 @@ import { cleanupTestUser, createTestUser } from './setup';
 let testDB: LobeChatDatabase;
 const notifyDocumentLiked = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 const revokeDocumentLikeNotification = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@/database/core/db-adaptor', () => ({ getServerDB: vi.fn(() => testDB) }));
+vi.mock('@/database/core/db-adaptor', () => ({
+  getServerDB: vi.fn(function () {
+    return testDB;
+  }),
+}));
 vi.mock('@/business/server/document-like/notifyActivity', () => ({
   notifyDocumentLiked,
   revokeDocumentLikeNotification,

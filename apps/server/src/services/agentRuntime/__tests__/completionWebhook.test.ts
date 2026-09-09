@@ -10,19 +10,23 @@ import { AgentRuntimeService } from '../AgentRuntimeService';
 
 // Mock database models
 vi.mock('@/database/models/message', () => ({
-  MessageModel: vi.fn().mockImplementation(() => ({
-    create: vi.fn().mockResolvedValue({ id: 'msg-1' }),
-    query: vi.fn().mockResolvedValue([]),
-    update: vi.fn().mockResolvedValue({}),
-  })),
+  MessageModel: vi.fn().mockImplementation(function () {
+    return {
+      create: vi.fn().mockResolvedValue({ id: 'msg-1' }),
+      query: vi.fn().mockResolvedValue([]),
+      update: vi.fn().mockResolvedValue({}),
+    };
+  }),
 }));
 
 // Mock ModelRuntime
 vi.mock('@/server/modules/ModelRuntime', () => ({
-  ApiKeyManager: vi.fn().mockImplementation(() => ({
-    getAllApiKeys: vi.fn(),
-    getApiKey: vi.fn(),
-  })),
+  ApiKeyManager: vi.fn().mockImplementation(function () {
+    return {
+      getAllApiKeys: vi.fn(),
+      getApiKey: vi.fn(),
+    };
+  }),
   initModelRuntimeFromDB: vi.fn().mockResolvedValue({
     chat: vi.fn(),
   }),
@@ -45,15 +49,19 @@ vi.mock('@/server/services/mcp', () => ({
 
 // Mock tool execution service
 vi.mock('@/server/services/toolExecution', () => ({
-  ToolExecutionService: vi.fn().mockImplementation(() => ({
-    executeToolCall: vi.fn().mockResolvedValue({ result: 'success' }),
-  })),
+  ToolExecutionService: vi.fn().mockImplementation(function () {
+    return {
+      executeToolCall: vi.fn().mockResolvedValue({ result: 'success' }),
+    };
+  }),
 }));
 
 vi.mock('@/server/services/toolExecution/builtin', () => ({
-  BuiltinToolsExecutor: vi.fn().mockImplementation(() => ({
-    execute: vi.fn(),
-  })),
+  BuiltinToolsExecutor: vi.fn().mockImplementation(function () {
+    return {
+      execute: vi.fn(),
+    };
+  }),
 }));
 
 describe('AgentRuntimeService - Completion Hooks via createOperation', () => {

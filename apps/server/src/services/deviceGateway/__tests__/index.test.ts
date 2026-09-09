@@ -1,3 +1,4 @@
+import type * as DeviceGatewayClientModule from '@lobechat/device-gateway-client';
 import { describe, expect, it, vi } from 'vitest';
 
 // Import after mocks are set up
@@ -18,7 +19,11 @@ const mockClient = vi.hoisted(() => ({
   queryDeviceStatus: vi.fn(),
 }));
 
-const MockGatewayHttpClient = vi.hoisted(() => vi.fn(() => mockClient));
+const MockGatewayHttpClient = vi.hoisted(() =>
+  vi.fn(function () {
+    return mockClient;
+  }),
+);
 
 vi.mock('@/envs/gateway', () => ({
   gatewayEnv: mockEnv,
@@ -28,7 +33,7 @@ vi.mock('@/envs/gateway', () => ({
 // describers are pure functions the service calls to phrase its errors, and
 // stubbing them would test nothing.
 vi.mock('@lobechat/device-gateway-client', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('@lobechat/device-gateway-client')>()),
+  ...(await importOriginal<typeof DeviceGatewayClientModule>()),
   GatewayHttpClient: MockGatewayHttpClient,
 }));
 
@@ -230,7 +235,7 @@ describe('DeviceGateway', () => {
       mockEnv.DEVICE_GATEWAY_URL = 'https://gateway.example.com';
       mockEnv.DEVICE_GATEWAY_SERVICE_TOKEN = 'token';
       mockClient.queryDeviceList.mockRejectedValue(new Error('fetch failed'));
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const warn = vi.spyOn(console, 'warn').mockImplementation(function () {});
 
       const result = await new DeviceGateway().queryDeviceList('user-1', 'ws-1');
 

@@ -68,11 +68,15 @@ describe('FileService', () => {
       writeTempFile: vi.fn(),
       cleanup: vi.fn(),
     };
-    vi.mocked(FileModel).mockImplementation(() => mockFileModel);
-    vi.mocked(TempFileManager).mockImplementation(() => mockTempManager);
+    vi.mocked(FileModel).mockImplementation(function () {
+      return mockFileModel;
+    });
+    vi.mocked(TempFileManager).mockImplementation(function () {
+      return mockTempManager;
+    });
 
     // Mock console.error to test error logging
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
 
     service = new FileService(mockDb, mockUserId);
   });
@@ -513,7 +517,7 @@ describe('FileService', () => {
       mockFileModel.checkHash.mockResolvedValue({ isExist: true, url: 'old/path.txt' });
       mockFileModel.create.mockResolvedValue({ id: 'file-id' });
       vi.mocked(service['impl'].getFileMetadata).mockRejectedValue(new Error('NoSuchKey'));
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(function () {});
 
       await service.createFileRecord({
         fileHash: 'existing-hash',
