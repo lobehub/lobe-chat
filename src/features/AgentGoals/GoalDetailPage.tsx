@@ -365,18 +365,6 @@ const GoalDetailPage = memo<GoalDetailPageProps>(({ agentId, goalId }) => {
                   onClick={open('liveness')}
                 />
               </Flexbox>
-              {goal.config?.manager && (
-                <Flexbox horizontal align={'center'} gap={12} wrap={'wrap'}>
-                  <Text weight={500}>{t('goalProcess.manager.title')}</Text>
-                  <Text fontSize={12} type={'secondary'}>
-                    {managerConversation
-                      ? t('goalProcess.manager.turns', {
-                          count: goal.config.managerState?.turns ?? 0,
-                        })
-                      : t('goalProcess.manager.pending')}
-                  </Text>
-                </Flexbox>
-              )}
               {/* Pause/resume above the requirement document — its reviewed
                   home. The status glyph keeps the "running" animation; this
                   button is only the control. */}
