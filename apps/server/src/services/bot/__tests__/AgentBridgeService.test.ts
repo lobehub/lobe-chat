@@ -649,6 +649,18 @@ describe('AgentBridgeService', () => {
       >;
     }
 
+    it('extracts queued files from each original message and preserves warnings', async () => {
+      const pdf = { id: 'pdf', raw: { item_list: [{ type: 4 }] } };
+      const text = { id: 'text', raw: { item_list: [{ type: 1 }] } };
+      const file = { buffer: Buffer.from('%PDF-fixture'), name: 'queued.pdf' };
+      const extractFiles = vi.fn(async (message) =>
+        message === pdf ? { files: [file], warnings: ['other file unavailable'] } : undefined,
+      );
+      const result = await callResolve({ ...text, sourceMessages: [pdf, text] }, { extractFiles });
+      expect(extractFiles.mock.calls.map(([message]) => message)).toEqual([pdf, text]);
+      expect(result).toEqual({ files: [file], warnings: ['other file unavailable'] });
+    });
+
     it('delegates to client.extractFiles when the client implements it', async () => {
       const clientResult = [
         { buffer: Buffer.from('via-client'), mimeType: 'image/jpeg', name: 'pic.jpg' },

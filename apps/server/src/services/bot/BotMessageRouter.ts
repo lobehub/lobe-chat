@@ -593,6 +593,8 @@ export class BotMessageRouter {
 
     return Object.assign(Object.create(Object.getPrototypeOf(message)), message, {
       attachments: mergedAttachments,
+      // Platform extractors need each original raw payload after Redis drops buffers.
+      sourceMessages: allMessages,
       text: mergedText,
     });
   }
