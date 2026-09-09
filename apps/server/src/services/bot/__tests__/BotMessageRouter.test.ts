@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BotMessageRouter } from '../BotMessageRouter';
 
@@ -952,6 +952,68 @@ describe('BotMessageRouter', () => {
       await handler(thread, message);
 
       expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
+    });
+
+    describe('platform-reported membership (isSoloBotConversation)', () => {
+      const defaultGetPlatform = mockGetPlatform.getMockImplementation()!;
+      afterEach(() => {
+        mockGetPlatform.mockImplementation(defaultGetPlatform);
+      });
+
+      /** Same client as the default factory, plus a membership lookup. */
+      function withMembershipLookup(isSoloBotConversation: ReturnType<typeof vi.fn>) {
+        // Persistent, not `Once`: the router resolves the platform more than
+        // once between registration and the first handled message.
+        mockGetPlatform.mockImplementation((platform: string) => {
+          const def = defaultGetPlatform(platform);
+          if (!def) return def;
+          const client = def.clientFactory.createClient();
+          return {
+            ...def,
+            clientFactory: {
+              createClient: vi.fn().mockReturnValue({ ...client, isSoloBotConversation }),
+            },
+          };
+        });
+      }
+
+      it('does not look up membership for a DM — the answer cannot change', async () => {
+        // A lapsed cache would otherwise put a platform round-trip in front of
+        // every direct message.
+        const isSoloBotConversation = vi.fn().mockResolvedValue(false);
+        withMembershipLookup(isSoloBotConversation);
+        const handler = await loadSubscribedHandler();
+
+        await handler(makeThread({ isDM: true }), makeMessage({ isMention: false, text: 'hi' }));
+
+        expect(isSoloBotConversation).not.toHaveBeenCalled();
+        expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not look up membership for an @mention either', async () => {
+        const isSoloBotConversation = vi.fn().mockResolvedValue(false);
+        withMembershipLookup(isSoloBotConversation);
+        const handler = await loadSubscribedHandler();
+
+        await handler(makeThread(), makeMessage({ isMention: true, text: '@bot hi' }));
+
+        expect(isSoloBotConversation).not.toHaveBeenCalled();
+        expect(mockHandleSubscribedMessage).toHaveBeenCalledTimes(1);
+      });
+
+      it('trusts membership over the speaker count for an unmentioned group message', async () => {
+        // Only one human has ever SPOKEN here (the old heuristic would let it
+        // through), but the platform says the chat is not 1:1 with the bot.
+        mockGetList.mockResolvedValue([]);
+        const isSoloBotConversation = vi.fn().mockResolvedValue(false);
+        withMembershipLookup(isSoloBotConversation);
+        const handler = await loadSubscribedHandler();
+
+        await handler(makeThread(), makeMessage({ isMention: false, text: 'just chatting' }));
+
+        expect(isSoloBotConversation).toHaveBeenCalledWith('telegram:chat-1');
+        expect(mockHandleSubscribedMessage).not.toHaveBeenCalled();
+      });
     });
 
     it('should respond when a debounced/skipped earlier message contained the mention', async () => {

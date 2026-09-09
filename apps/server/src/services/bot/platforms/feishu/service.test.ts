@@ -63,7 +63,7 @@ describe('FeishuMessageService.readMessages', () => {
       expect.objectContaining({ pageToken: 'prev', sortType: 'ByCreateTimeDesc' }),
     );
     expect(result.channelId).toBe('oc_chat_1');
-    expect(result.messages.map((m) => m.id)).toEqual(['om_oldest', 'om_middle', 'om_newest']);
+    expect(result.messages?.map((m) => m.id)).toEqual(['om_oldest', 'om_middle', 'om_newest']);
   });
 
   it.each([

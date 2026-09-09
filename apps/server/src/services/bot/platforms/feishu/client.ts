@@ -119,11 +119,13 @@ function createMessenger(
       if (next) {
         const { reactionId } = await api.addReaction(messageId, next);
         await writeReactionId(platform, applicationId, messageId, reactionId);
-      } else {
-        await deleteReactionId(platform, applicationId, messageId);
       }
 
       if (stale) await api.removeReaction(messageId, stale);
+      // On the final clear, forget the id only once the remote delete has
+      // succeeded — dropping it first would leave a transient failure with a
+      // visible reaction and nothing left to retry with.
+      if (!next) await deleteReactionId(platform, applicationId, messageId);
     },
   };
 }

@@ -289,6 +289,22 @@ describe('Feishu messenger reactions', () => {
     expect(mockRemoveReaction).not.toHaveBeenCalled();
   });
 
+  it('keeps the pointer when the final clear fails remotely, so it can be retried', async () => {
+    const m = messenger();
+    mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_working' });
+    await m.replaceReaction!('om_1', null, '\u{26A1}');
+
+    // Forgetting the id BEFORE the delete would leave the reaction visible
+    // with nothing left to delete it by.
+    mockRemoveReaction.mockRejectedValueOnce(new Error('network'));
+    await expect(m.replaceReaction!('om_1', '\u{26A1}', null)).rejects.toThrow('network');
+    expect([...reactionStore.keys()]).toHaveLength(1);
+
+    await m.replaceReaction!('om_1', '\u{26A1}', null);
+    expect(mockRemoveReaction).toHaveBeenLastCalledWith('om_1', 'rct_working');
+    expect([...reactionStore.keys()]).toHaveLength(0);
+  });
+
   it('keeps the stale pointer when the add fails, so the next swap retries cleanup', async () => {
     const m = messenger();
     mockAddReaction.mockResolvedValueOnce({ reactionId: 'rct_received' });

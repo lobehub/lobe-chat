@@ -1341,18 +1341,24 @@ export class BotMessageRouter {
       // Participants are tracked either way so the announcement gate below can
       // still see the 1-human-vs-many transition.
       const { count: humanCount } = await trackThreadParticipant(thread, message);
-      const isSoloBotConversation = client.isSoloBotConversation
-        ? await client.isSoloBotConversation(thread.id).catch((error) => {
-            // Fail closed: an unprovable chat stays mention-only.
-            log('onSubscribedMessage: isSoloBotConversation failed: %O', error);
-            return false;
-          })
-        : humanCount <= 1;
-      const isAddressedToBot =
+      const isExplicitlyAddressed =
         thread.isDM ||
         message.isMention === true ||
-        context?.skipped?.some((m) => m.isMention === true) === true ||
-        isSoloBotConversation;
+        context?.skipped?.some((m) => m.isMention === true) === true;
+      // Only consult membership when it can change the outcome: a DM or an
+      // @-mention is addressed to the bot regardless, and the platform lookup
+      // behind `isSoloBotConversation` is a network round-trip whenever its
+      // cache has lapsed — not something a direct message should wait on.
+      const isSoloBotConversation =
+        !isExplicitlyAddressed &&
+        (client.isSoloBotConversation
+          ? await client.isSoloBotConversation(thread.id).catch((error) => {
+              // Fail closed: an unprovable chat stays mention-only.
+              log('onSubscribedMessage: isSoloBotConversation failed: %O', error);
+              return false;
+            })
+          : humanCount <= 1);
+      const isAddressedToBot = isExplicitlyAddressed || isSoloBotConversation;
       const isCommand = looksLikeCommand(message.text);
       // operator-configured keyword match also wakes the bot in a
       // subscribed group thread. Skipped (debounced) siblings are inspected
