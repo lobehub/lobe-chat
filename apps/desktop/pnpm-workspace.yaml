@@ -51,6 +51,7 @@ allowBuilds:
   esbuild: false
   get-windows: false
   node-mac-permissions: true
+  protobufjs: false
 
 overrides:
   node-gyp: ^12.4.0
