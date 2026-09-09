@@ -454,8 +454,6 @@ export class MessagesEngine {
         contextPrompt: initialContext?.taskManager?.contextPrompt,
         enabled: !!initialContext?.taskManager?.contextPrompt,
       }),
-      // Todo list (at end of last user message)
-      new TodoInjector({ enabled: isTodoEnabled, todos: effectiveTodos }),
       // Topic Reference context (referenced topic summaries to last user message)
       new TopicReferenceContextInjector({
         enabled: !!(topicReferences && topicReferences.length > 0),
@@ -474,6 +472,8 @@ export class MessagesEngine {
         enabled: !!initialContext?.goalOverview,
         overview: initialContext?.goalOverview,
       }),
+      // Todo list (standalone virtual tail message)
+      new TodoInjector({ enabled: isTodoEnabled, todos: effectiveTodos }),
       // Onboarding synthetic state (fake getOnboardingState tool call pair to drive action loop)
       new OnboardingSyntheticStateInjector({
         enabled: !!onboardingContext?.phaseGuidance,
