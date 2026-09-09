@@ -28,7 +28,7 @@ describe('SkillsExecutionRuntime', () => {
       const result = await runtime[api]({ command: 'cat /tmp/input', description: 'Read input' });
 
       expect(result.content).toContain('sandbox session expired and was recreated');
-      expect(result.content).toContain('Do not silently regenerate');
+      expect(result.content).toContain('Inform the user and ask before regenerating previous work');
       expect(result.content).toContain('command output');
       expect(result.state).toMatchObject({ sessionExpiredAndRecreated: true, success });
       expect(result.success).toBe(success);
