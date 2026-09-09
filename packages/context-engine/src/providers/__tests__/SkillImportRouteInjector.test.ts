@@ -18,70 +18,145 @@ const createContext = (messages: any[] = []): PipelineContext => ({
 });
 
 describe('extractSkillImportRoutes', () => {
-  it('extracts the identifier from a skill.md URL', () => {
-    expect(
-      extractSkillImportRoutes('Read https://lobehub.com/skills/anthropics-skills-pptx/skill.md'),
-    ).toEqual([
-      {
-        identifier: 'anthropics-skills-pptx',
-        url: 'https://lobehub.com/skills/anthropics-skills-pptx',
-      },
-    ]);
-  });
+  describe('marketplace URLs → importFromMarket', () => {
+    it('extracts the identifier from a skill.md URL', () => {
+      expect(
+        extractSkillImportRoutes('Read https://lobehub.com/skills/anthropics-skills-pptx/skill.md'),
+      ).toEqual([
+        {
+          identifier: 'anthropics-skills-pptx',
+          method: 'importFromMarket',
+          url: 'https://lobehub.com/skills/anthropics-skills-pptx/skill.md',
+        },
+      ]);
+    });
 
-  it('extracts the identifier from a bare skill page URL', () => {
-    expect(extractSkillImportRoutes('https://lobehub.com/skills/openclaw-openclaw-github')).toEqual(
-      [
+    it('extracts the identifier from a bare skill page URL', () => {
+      expect(
+        extractSkillImportRoutes('https://lobehub.com/skills/openclaw-openclaw-github'),
+      ).toEqual([
         {
           identifier: 'openclaw-openclaw-github',
+          method: 'importFromMarket',
           url: 'https://lobehub.com/skills/openclaw-openclaw-github',
         },
-      ],
-    );
+      ]);
+    });
+
+    it('handles locale-prefixed and subdomain/API URLs', () => {
+      expect(
+        extractSkillImportRoutes(
+          'https://lobehub.com/zh-CN/skills/a-b and https://market.lobehub.com/api/v1/skills/c.d/download',
+        ).map((route) => route.identifier),
+      ).toEqual(['a-b', 'c.d']);
+    });
+
+    it('ignores a skills index URL with no identifier', () => {
+      expect(extractSkillImportRoutes('https://lobehub.com/skills')).toEqual([]);
+    });
+
+    // No identifier to extract, but it is still a SKILL.md, which importSkill accepts.
+    it('falls through to importSkill when the path has no identifier to extract', () => {
+      expect(extractSkillImportRoutes('https://lobehub.com/skills/skill.md')).toEqual([
+        { method: 'importSkill', type: 'url', url: 'https://lobehub.com/skills/skill.md' },
+      ]);
+    });
   });
 
-  it('handles locale-prefixed and subdomain/API URLs', () => {
-    expect(
-      extractSkillImportRoutes(
-        'https://lobehub.com/zh-CN/skills/a-b and https://market.lobehub.com/api/v1/skills/c.d/download',
-      ).map((route) => route.identifier),
-    ).toEqual(['a-b', 'c.d']);
+  // importSkill accepts a SKILL.md on any host, a GitHub repo or subdirectory, and a ZIP —
+  // the route must cover all of them, not only the marketplace.
+  describe('non-marketplace sources → importSkill', () => {
+    it('routes a SKILL.md on any host without needing install intent', () => {
+      expect(extractSkillImportRoutes('have a look at https://example.com/foo/SKILL.md')).toEqual([
+        { method: 'importSkill', type: 'url', url: 'https://example.com/foo/SKILL.md' },
+      ]);
+    });
+
+    it('routes a raw githubusercontent SKILL.md', () => {
+      const url = 'https://raw.githubusercontent.com/anthropics/skills/main/skills/pptx/SKILL.md';
+
+      expect(extractSkillImportRoutes(url)).toEqual([{ method: 'importSkill', type: 'url', url }]);
+    });
+
+    it('routes a GitHub skills subdirectory without needing install intent', () => {
+      const url = 'https://github.com/anthropics/skills/tree/main/skills/pptx';
+
+      expect(extractSkillImportRoutes(`see ${url}`)).toEqual([
+        { method: 'importSkill', type: 'url', url },
+      ]);
+    });
+
+    it('routes an ordinary GitHub repo when the message asks to install it', () => {
+      expect(extractSkillImportRoutes('install https://github.com/foo/bar-tools')).toEqual([
+        { method: 'importSkill', type: 'url', url: 'https://github.com/foo/bar-tools' },
+      ]);
+    });
+
+    it('routes a ZIP package when the message asks to import it', () => {
+      expect(extractSkillImportRoutes('导入 https://example.com/pack.zip')).toEqual([
+        { method: 'importSkill', type: 'zip', url: 'https://example.com/pack.zip' },
+      ]);
+    });
+
+    it('recognises Chinese install intent', () => {
+      expect(extractSkillImportRoutes('帮我安装 https://github.com/foo/bar')).toHaveLength(1);
+    });
   });
 
-  it('deduplicates repeated identifiers', () => {
-    expect(
-      extractSkillImportRoutes(
-        'https://lobehub.com/skills/x-y/skill.md then https://lobehub.com/skills/x-y',
-      ),
-    ).toHaveLength(1);
+  // A repo link in a message about reviewing code must not be read as "install this skill".
+  describe('false-positive guards', () => {
+    it('ignores a bare GitHub repo with no install intent', () => {
+      expect(extractSkillImportRoutes('what do you think of https://github.com/foo/bar')).toEqual(
+        [],
+      );
+    });
+
+    it('ignores a bare ZIP with no install intent', () => {
+      expect(extractSkillImportRoutes('unpack https://example.com/data.zip')).toEqual([]);
+    });
+
+    it('ignores unrelated URLs even when install intent is present', () => {
+      expect(
+        extractSkillImportRoutes('install deps then open https://lobehub.com/discover/assistants'),
+      ).toEqual([]);
+    });
+
+    it('returns nothing for empty input', () => {
+      expect(extractSkillImportRoutes('')).toEqual([]);
+    });
   });
 
-  it('caps the number of extracted routes', () => {
-    const text = Array.from({ length: 8 }, (_, i) => `https://lobehub.com/skills/skill-${i}`).join(
-      ' ',
-    );
+  describe('collection behaviour', () => {
+    it('mixes marketplace and non-marketplace sources in one message', () => {
+      expect(
+        extractSkillImportRoutes(
+          'https://lobehub.com/skills/a-b/skill.md and https://example.com/x/SKILL.md',
+        ).map((route) => route.method),
+      ).toEqual(['importFromMarket', 'importSkill']);
+    });
 
-    expect(extractSkillImportRoutes(text)).toHaveLength(5);
-  });
+    it('strips trailing sentence punctuation from a URL', () => {
+      expect(extractSkillImportRoutes('装一下 https://lobehub.com/skills/a-b。')[0].url).toBe(
+        'https://lobehub.com/skills/a-b',
+      );
+    });
 
-  it('ignores non-skill LobeHub URLs and other hosts', () => {
-    expect(
-      extractSkillImportRoutes(
-        'https://lobehub.com/discover/assistants https://github.com/anthropics/skills/tree/main/skills/pptx',
-      ),
-    ).toEqual([]);
-  });
+    it('deduplicates repeated URLs', () => {
+      expect(
+        extractSkillImportRoutes(
+          'https://lobehub.com/skills/x-y then https://lobehub.com/skills/x-y',
+        ),
+      ).toHaveLength(1);
+    });
 
-  it('ignores a skills index URL with no identifier', () => {
-    expect(extractSkillImportRoutes('https://lobehub.com/skills')).toEqual([]);
-  });
+    it('caps the number of extracted routes', () => {
+      const text = Array.from(
+        { length: 8 },
+        (_, i) => `https://lobehub.com/skills/skill-${i}`,
+      ).join(' ');
 
-  it('ignores skill.md as an identifier', () => {
-    expect(extractSkillImportRoutes('https://lobehub.com/skills/skill.md')).toEqual([]);
-  });
-
-  it('returns nothing for empty input', () => {
-    expect(extractSkillImportRoutes('')).toEqual([]);
+      expect(extractSkillImportRoutes(text)).toHaveLength(5);
+    });
   });
 });
 
@@ -89,7 +164,7 @@ describe('SkillImportRouteInjector', () => {
   // Regression: a `lobehub.com/skills/{id}/skill.md` URL used to reach the model with no
   // turn-local guidance, so it crawled the page and followed the marketplace CLI steps
   // printed there instead of calling `importFromMarket`.
-  it('injects the identifier and forbids crawling when a skill URL is present', async () => {
+  it('injects the resolved call and forbids crawling when a skill URL is present', async () => {
     const injector = new SkillImportRouteInjector({ enabled: true });
 
     const result = await injector.process(
@@ -105,12 +180,32 @@ describe('SkillImportRouteInjector', () => {
     const content = result.messages[0].content as string;
 
     expect(content).toContain('<skill_import_route>');
+    expect(content).toContain('install="importFromMarket"');
     expect(content).toContain('identifier="anthropics-skills-pptx"');
     expect(content).toContain('Do NOT crawl');
     expect(result.metadata.skillImportRoute).toEqual({
-      identifiers: ['anthropics-skills-pptx'],
       injected: true,
+      urls: ['https://lobehub.com/skills/anthropics-skills-pptx/skill.md'],
     });
+  });
+
+  it('names importSkill and its type for a non-marketplace source', async () => {
+    const injector = new SkillImportRouteInjector({ enabled: true });
+
+    const result = await injector.process(
+      createContext([
+        {
+          content: 'install https://github.com/anthropics/skills/tree/main/skills/pptx',
+          role: 'user',
+        },
+      ]),
+    );
+
+    const content = result.messages[0].content as string;
+
+    expect(content).toContain('install="importSkill"');
+    expect(content).toContain('type="url"');
+    expect(content).not.toContain('importFromMarket" identifier');
   });
 
   // The CLI is a genuine fallback for agents with no Skill Store tool, so it stays in the
@@ -129,11 +224,12 @@ describe('SkillImportRouteInjector', () => {
     );
 
     const content = result.messages[0].content as string;
+    const ladder = content.slice(content.indexOf('Install priority'));
 
-    expect(content).toContain('never skip up it');
-    expect(content.indexOf('importFromMarket')).toBeLessThan(content.indexOf('importSkill'));
-    expect(content.indexOf('importSkill')).toBeLessThan(content.indexOf('market-cli'));
-    expect(content).toContain('last resort');
+    expect(ladder).toContain('never skip up it');
+    expect(ladder.indexOf('importFromMarket')).toBeLessThan(ladder.indexOf('importSkill'));
+    expect(ladder.indexOf('importSkill')).toBeLessThan(ladder.indexOf('market-cli'));
+    expect(ladder).toContain('last resort');
     // The exact phrase that talked the model into the CLI in the original report.
     expect(content).toContain('install it as documented');
   });
@@ -173,7 +269,7 @@ describe('SkillImportRouteInjector', () => {
     expect(parts[1].text).toContain('identifier="a-b"');
   });
 
-  it('skips injection when no skill URL is present', async () => {
+  it('skips injection when no skill source is present', async () => {
     const injector = new SkillImportRouteInjector({ enabled: true });
 
     const result = await injector.process(
