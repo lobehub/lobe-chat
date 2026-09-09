@@ -193,13 +193,24 @@ jobs:
               ? fs.readFileSync('size-report/report.md', 'utf8')
               : 'Build did not reach the size gate step.';
             const comment = require('${{ github.workspace }}/.github/scripts/size-gate-comment.cjs');
-            const issueNumber =
+            let issueNumber =
               context.issue?.number ??
               (await github.rest.repos.listPullRequestsAssociatedWithCommit({
                 commit_sha: context.sha,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
               })).data.find((pr) => pr.state === 'open')?.number;
+            if (!issueNumber && context.ref?.startsWith('refs/heads/')) {
+              const branch = context.ref.replace('refs/heads/', '');
+              issueNumber = (
+                await github.rest.pulls.list({
+                  head: `${context.repo.owner}:${branch}`,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: 'open',
+                })
+              ).data[0]?.number;
+            }
             if (!issueNumber) {
               console.log('No open PR for this commit, skipping the size gate comment.');
               return;
