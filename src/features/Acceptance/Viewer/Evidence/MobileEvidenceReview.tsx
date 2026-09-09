@@ -1,13 +1,17 @@
 'use client';
 
-import { Flexbox } from '@lobehub/ui';
+import { Flexbox, TextArea } from '@lobehub/ui';
 import { ActionIcon, Button, Segmented, Text } from '@lobehub/ui/base-ui';
 import { createStaticStyles, cssVar } from 'antd-style';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import type { MobileReviewEvent } from './mobileReviewFlow';
+import { ZOOM_STEPS } from '../Review/rejectDraft';
+import type { RejectReviewModel } from '../Review/useRejectReview';
+import { AttachmentStrip, AttachmentUploadButton } from './attachments';
+import { EvidenceStage } from './EvidenceStage';
+import { MobileRegionNotes } from './RegionNotes';
 
 const styles = createStaticStyles(({ css }) => ({
   body: css`
@@ -39,7 +43,11 @@ const styles = createStaticStyles(({ css }) => ({
     min-height: 220px;
   `,
   editor: css`
+    display: flex;
     flex: none;
+    flex-direction: column;
+    gap: 16px;
+
     padding-block-start: 4px;
 
     textarea {
@@ -61,79 +69,74 @@ const styles = createStaticStyles(({ css }) => ({
   `,
 }));
 
-interface MobileEvidenceReviewProps {
-  /** Regions already drawn on the image on screen. */
-  annotationCount: number;
-  canSubmit: boolean;
-  drawing: boolean;
-  /** Region notes, the supplementary note and attachments — all under the image. */
-  editor: ReactNode;
-  failed: boolean;
-  image: ReactNode;
-  imageCount: number;
-  imageIndex: number;
-  loading: boolean;
-  onConfirm: () => void;
-  onImageChange: (index: number) => void;
-  /** Move the browse / mark flow along — see mobileReviewFlow. */
-  onStep: (event: MobileReviewEvent) => void;
-  onZoom: (direction: 1 | -1) => void;
-  zoom: number;
-}
-
 /**
  * Phone review on one page: look at the image, circle what is wrong, and write
  * the note right where the circle landed.
  */
-export const MobileEvidenceReview = ({
-  annotationCount,
-  canSubmit,
-  drawing,
-  failed,
-  editor,
-  image,
-  imageCount,
-  imageIndex,
-  loading,
-  onConfirm,
-  onImageChange,
-  onStep,
-  onZoom,
-  zoom,
-}: MobileEvidenceReviewProps) => {
+export const MobileEvidenceReview = memo<{ model: RejectReviewModel }>(({ model }) => {
   const { t } = useTranslation('verify');
+  const {
+    activeAnnotations,
+    activeEvidence,
+    activeIndex,
+    annotations,
+    attachments,
+    canSubmit,
+    canvas,
+    comment,
+    drawing,
+    evidence,
+    failed,
+    handlePaste,
+    loading,
+    uploading,
+    zoom,
+  } = model;
+
   return (
     <div className={styles.body}>
       <div className={styles.scroll}>
-        {imageCount > 0 && (
+        {activeEvidence && (
           <>
             <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
               <ActionIcon
                 aria-label={t('acceptance.review.previousImage')}
-                disabled={imageIndex <= 0}
+                disabled={activeIndex <= 0}
                 icon={ChevronLeft}
                 size={{ blockSize: 44, size: 20 }}
-                onClick={() => onImageChange(imageIndex - 1)}
+                onClick={() => model.selectEvidence(activeIndex - 1)}
               />
               <Text aria-live={'polite'} style={{ flex: 1, textAlign: 'center' }}>
                 {t('acceptance.review.imageNumber', {
-                  current: imageIndex + 1,
-                  total: imageCount,
+                  current: activeIndex + 1,
+                  total: evidence.length,
                 })}
               </Text>
               <ActionIcon
                 aria-label={t('acceptance.review.nextImage')}
-                disabled={imageIndex >= imageCount - 1}
+                disabled={activeIndex >= evidence.length - 1}
                 icon={ChevronRight}
                 size={{ blockSize: 44, size: 20 }}
-                onClick={() => onImageChange(imageIndex + 1)}
+                onClick={() => model.selectEvidence(activeIndex + 1)}
               />
             </Flexbox>
-            <div className={styles.stage}>{image}</div>
+            <div className={styles.stage}>
+              <EvidenceStage
+                touch
+                annotations={activeAnnotations}
+                drawing={drawing}
+                src={activeEvidence.fileUrl}
+                zoom={zoom}
+                onDraw={canvas.onDraw}
+                onRemove={canvas.onRemove}
+                onSwipe={(direction) => model.selectEvidence(activeIndex + direction)}
+                onUpdate={canvas.onUpdate}
+              />
+            </div>
             <Flexbox horizontal align={'center'} gap={8} style={{ flex: 'none' }}>
-              {/* A mode switch, not an action button. The old single button was
-                  labelled with the mode it would LEAVE, so it read as a stray
-                  box whose 44px slab said nothing about which mode was on. */}
+              {/* A mode switch, not an action button. A single button labelled
+                  with the mode it would LEAVE says nothing about which mode is
+                  on, and its 44px slab sat oddly beside the small zoom icons. */}
               <Segmented
                 size={'small'}
                 value={drawing ? 'draw' : 'browse'}
@@ -142,31 +145,31 @@ export const MobileEvidenceReview = ({
                   { label: t('acceptance.review.drawRegion'), value: 'draw' },
                 ]}
                 onChange={(value) => {
-                  if ((value === 'draw') !== drawing) onStep('toggle-draw');
+                  if ((value === 'draw') !== drawing) model.advance('toggle-draw');
                 }}
               />
               <Flexbox flex={1} />
               <ActionIcon
                 aria-label={t('acceptance.review.zoomOut')}
-                disabled={zoom <= 0.5}
+                disabled={zoom <= ZOOM_STEPS[0]}
                 icon={ZoomOut}
                 size={{ blockSize: 44, size: 20 }}
-                onClick={() => onZoom(-1)}
+                onClick={() => model.stepZoom(-1)}
               />
               <Text fontSize={12}>{Math.round(zoom * 100)}%</Text>
               <ActionIcon
                 aria-label={t('acceptance.review.zoomIn')}
-                disabled={zoom >= 4}
+                disabled={zoom >= ZOOM_STEPS.at(-1)!}
                 icon={ZoomIn}
                 size={{ blockSize: 44, size: 20 }}
-                onClick={() => onZoom(1)}
+                onClick={() => model.stepZoom(1)}
               />
             </Flexbox>
             {/* The hint is the region's receipt: it says the box landed AND
                 that it is still editable, right above the note it belongs to. */}
             <Text fontSize={12} style={{ flex: 'none' }} type={'secondary'}>
-              {drawing && annotationCount > 0
-                ? t('acceptance.review.mobileDrawnHint', { count: annotationCount })
+              {drawing && activeAnnotations.length > 0
+                ? t('acceptance.review.mobileDrawnHint', { count: activeAnnotations.length })
                 : t(
                     drawing
                       ? 'acceptance.review.mobileDrawHint'
@@ -175,7 +178,40 @@ export const MobileEvidenceReview = ({
             </Text>
           </>
         )}
-        <div className={styles.editor}>{editor}</div>
+        <div className={styles.editor}>
+          {annotations.length > 0 && (
+            <>
+              <Text strong>{t('acceptance.review.regionComments')}</Text>
+              <MobileRegionNotes
+                annotations={annotations}
+                evidence={evidence}
+                onChange={model.editAnnotation}
+                onJump={model.jumpToRegion}
+                onRemove={model.removeAnnotation}
+              />
+            </>
+          )}
+          <Text strong>{t('acceptance.review.supplement')}</Text>
+          <TextArea
+            aria-label={t('acceptance.review.supplement')}
+            autoSize={{ maxRows: 10, minRows: 4 }}
+            placeholder={t('acceptance.review.rejectPlaceholder')}
+            style={{ fontSize: 16 }}
+            value={comment}
+            onChange={(event) => model.setComment(event.target.value)}
+            onPaste={handlePaste}
+          />
+          <AttachmentUploadButton disabled={loading} onFiles={model.uploadFiles} />
+          <AttachmentStrip
+            attachments={attachments}
+            disabled={loading}
+            uploading={uploading}
+            onRemove={model.removeAttachment}
+          />
+          <Text fontSize={12} type={'secondary'}>
+            {t('acceptance.review.draftSaved')}
+          </Text>
+        </div>
       </div>
       <div className={styles.footer}>
         {failed && (
@@ -183,10 +219,17 @@ export const MobileEvidenceReview = ({
             {t('acceptance.review.submitFailed')}
           </Text>
         )}
-        <Button disabled={!canSubmit} loading={loading} type={'primary'} onClick={onConfirm}>
+        <Button
+          disabled={!canSubmit}
+          loading={loading}
+          type={'primary'}
+          onClick={model.submitReject}
+        >
           {t('acceptance.review.confirmReject')}
         </Button>
       </div>
     </div>
   );
-};
+});
+
+MobileEvidenceReview.displayName = 'AcceptanceMobileEvidenceReview';
