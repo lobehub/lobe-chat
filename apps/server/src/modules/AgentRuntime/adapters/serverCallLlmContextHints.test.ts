@@ -1,4 +1,6 @@
 import type { CallLLMPayload } from '@lobechat/agent-runtime';
+import { MessagesEngine } from '@lobechat/context-engine';
+import type { UIChatMessage } from '@lobechat/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { RuntimeExecutorContext } from '../context';
@@ -81,6 +83,168 @@ beforeEach(() => {
   findByIdAndProviderMock.mockResolvedValue(undefined);
   getModelReasoningConfigMock.mockResolvedValue(undefined);
   findTopicByIdMock.mockResolvedValue(undefined);
+});
+
+describe('resolveServerCallLlmContextHints - user media capabilities', () => {
+  it.each(['lookup failure', 'settings changed'])(
+    'preserves discovered vision after %s',
+    async (scenario) => {
+      if (scenario === 'lookup failure') {
+        findByIdAndProviderMock.mockRejectedValue(new Error('Temporary database failure'));
+      } else {
+        findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: false } });
+      }
+      const hints = await resolveServerCallLlmContextHints({
+        ctx: {
+          ...createCtx({}),
+          modelRuntimeConfig: {
+            mediaCapabilities: { vision: true },
+            model: 'custom-model',
+            provider: 'custom-provider',
+          },
+        },
+        llmPayload,
+        model: 'custom-model',
+        provider: 'custom-provider',
+      });
+
+      expect(hints.capabilities.isCanUseVision('custom-model', 'custom-provider')).toBe(true);
+    },
+  );
+
+  it.each([
+    { model: 'other-model', provider: 'custom-provider' },
+    { model: 'custom-model', provider: 'other-provider' },
+  ])('does not reuse a snapshot for $model/$provider', async ({ model, provider }) => {
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: {
+        ...createCtx({}),
+        modelRuntimeConfig: {
+          mediaCapabilities: { vision: true },
+          model: 'custom-model',
+          provider: 'custom-provider',
+        },
+      },
+      llmPayload,
+      model,
+      provider,
+    });
+
+    expect(hints.capabilities.isCanUseVision(model, provider)).toBe(false);
+  });
+
+  it('keeps an unknown-model snapshot disabled after settings change', async () => {
+    findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: true } });
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: {
+        ...createCtx({}),
+        modelRuntimeConfig: {
+          mediaCapabilities: {},
+          model: 'custom-model',
+          provider: 'custom-provider',
+        },
+      },
+      llmPayload,
+      model: 'custom-model',
+      provider: 'custom-provider',
+    });
+
+    expect(hints.capabilities.isCanUseVision('custom-model', 'custom-provider')).toBe(false);
+  });
+
+  it('keeps custom-model images in the native payload and advertises user-enabled vision', async () => {
+    findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: true } });
+    const model = 'custom-vision-model';
+    const provider = 'custom-provider';
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: createCtx({}),
+      llmPayload,
+      model,
+      provider,
+    });
+    const result = await new MessagesEngine({
+      capabilities: hints.capabilities,
+      enableSystemDate: false,
+      messages: [
+        {
+          content: 'Describe this image',
+          createdAt: 1,
+          id: 'message-1',
+          imageList: [{ id: 'image-1', url: 'https://example.com/image.png' }],
+          role: 'user',
+          updatedAt: 1,
+        } as UIChatMessage,
+      ],
+      model,
+      provider,
+    }).process();
+
+    expect
+      .soft(result.messages.find((message) => message.role === 'system')?.content)
+      .toContain('vision=true');
+    expect(result.messages.find((message) => message.role === 'user')?.content).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          image_url: expect.objectContaining({ url: 'https://example.com/image.png' }),
+          type: 'image_url',
+        }),
+      ]),
+    );
+  });
+
+  it.each(['audio', 'video', 'vision'] as const)(
+    'honors a user override for builtin %s capability',
+    async (ability) => {
+      loadModelsMock.mockResolvedValue([
+        { abilities: { [ability]: false }, id: 'model', providerId: 'provider' },
+      ]);
+      findByIdAndProviderMock.mockResolvedValue({ abilities: { [ability]: true } });
+      const hints = await resolveServerCallLlmContextHints({
+        ctx: createCtx({}),
+        llmPayload,
+        model: 'model',
+        provider: 'provider',
+      });
+      const selectors = {
+        audio: hints.capabilities.isCanUseAudio,
+        video: hints.capabilities.isCanUseVideo,
+        vision: hints.capabilities.isCanUseVision,
+      };
+      expect(selectors[ability]('model', 'provider')).toBe(true);
+      expect(selectors[ability]('model', 'another-provider')).toBe(false);
+    },
+  );
+
+  it.each([
+    { abilities: { vision: false }, expected: false },
+    { abilities: { functionCall: true }, expected: false },
+    { abilities: {}, expected: true },
+    { abilities: null, expected: true },
+    { abilities: undefined, expected: true },
+  ])('matches the client abilities replacement for $abilities', async ({ abilities, expected }) => {
+    loadModelsMock.mockResolvedValue([
+      { abilities: { vision: true }, id: 'model', providerId: 'provider' },
+    ]);
+    findByIdAndProviderMock.mockResolvedValue({ abilities });
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: createCtx({}),
+      llmPayload,
+      model: 'model',
+      provider: 'provider',
+    });
+    expect(hints.capabilities.isCanUseVision('model', 'provider')).toBe(expected);
+  });
+
+  it('does not apply the active row to a different model under the same provider', async () => {
+    findByIdAndProviderMock.mockResolvedValue({ abilities: { vision: true } });
+    const hints = await resolveServerCallLlmContextHints({
+      ctx: createCtx({}),
+      llmPayload,
+      model: 'custom-model',
+      provider: 'custom-provider',
+    });
+    expect(hints.capabilities.isCanUseVision('another-model', 'custom-provider')).toBe(false);
+  });
 });
 
 describe('resolveServerCallLlmContextHints - topic reasoning pin', () => {
