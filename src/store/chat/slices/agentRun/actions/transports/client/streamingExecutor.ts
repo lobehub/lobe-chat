@@ -376,6 +376,9 @@ export class StreamingExecutorActionImpl {
         agentId,
         groupId,
         scope,
+        // Resuming changes the parent message, but Works still belong to the original turn.
+        sourceMessageId:
+          baseState.metadata?.sourceMessageId ?? operation?.context.messageId ?? parentMessageId,
         subAgentId: paramSubAgentId,
         threadId,
         topicId,

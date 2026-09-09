@@ -128,14 +128,45 @@ const sanitizeStateToolCalls = (toolCalls: MessageToolCall[]) => {
   return sanitizedToolCalls.length > 0 ? sanitizedToolCalls : undefined;
 };
 
+interface WorkAnchorMessage {
+  children?: WorkAnchorMessage[];
+  compressedMessages?: WorkAnchorMessage[];
+  id?: string;
+  role?: string;
+  tool_calls?: unknown[];
+  tools?: { result?: { id?: string }; result_msg_id?: string }[];
+}
+
 /**
- * Work display anchor: Work cards render on the FINAL assistant message of a
- * turn (stable across the two-round tool flow), so stamp `metadata.work` only
- * when this LLM step ends the turn — i.e. it emits no new tool calls AND at
- * least one tool ran earlier in this operation (messages after
- * sourceMessageId, the triggering user message). Without the prior-tool check
- * every plain answer would get a work anchor; without the slice the scan
- * would see other turns' tool messages.
+ * Rehydration folds assistant/tool rows into groups. Visit their original IDs
+ * in conversation order so a nested source still excludes earlier tool calls.
+ * Group-level fields are summaries and must not count as new interactions.
+ */
+function* visitWorkAnchorMessages(
+  messages: WorkAnchorMessage[],
+): Generator<{ hasToolInteraction: boolean; id?: string }> {
+  for (const message of messages) {
+    const members = message.children ?? message.compressedMessages;
+    yield {
+      hasToolInteraction:
+        !members &&
+        (message.role === 'tool' || !!message.tool_calls?.length || !!message.tools?.length),
+      id: message.id,
+    };
+    if (members) {
+      yield* visitWorkAnchorMessages(members);
+    } else {
+      for (const tool of message.tools ?? []) {
+        const id = tool.result?.id ?? tool.result_msg_id;
+        if (id) yield { hasToolInteraction: true, id };
+      }
+    }
+  }
+}
+
+/**
+ * Stamp only the final assistant response after tool interaction in this turn.
+ * The source boundary prevents historical tools from anchoring plain answers.
  */
 const buildWorkAnchor = ({
   operationId,
@@ -149,22 +180,22 @@ const buildWorkAnchor = ({
   if (output.toolsCalling.length > 0 || output.toolCalls.length > 0) return undefined;
 
   const sourceMessageId = state.metadata?.sourceMessageId;
-  const sourceMessageIndex =
-    typeof sourceMessageId === 'string'
-      ? state.messages.findIndex((message) => message.id === sourceMessageId)
-      : -1;
-  const currentOperationMessages =
-    sourceMessageIndex >= 0 ? state.messages.slice(sourceMessageIndex + 1) : [];
-  const hasPriorToolInteraction = currentOperationMessages.some(
-    (message) =>
-      message.role === 'tool' ||
-      (Array.isArray(message.tool_calls) && message.tool_calls.length > 0),
-  );
+  if (typeof sourceMessageId !== 'string') return undefined;
+
+  let sourceFound = false;
+  let hasPriorToolInteraction = false;
+  for (const message of visitWorkAnchorMessages(state.messages)) {
+    if (sourceFound && message.hasToolInteraction) {
+      hasPriorToolInteraction = true;
+      break;
+    }
+    if (message.id === sourceMessageId) sourceFound = true;
+  }
   if (!hasPriorToolInteraction) return undefined;
 
   return {
     rootOperationId: operationId,
-    ...(typeof sourceMessageId === 'string' && { userMessageId: sourceMessageId }),
+    userMessageId: sourceMessageId,
   };
 };
 

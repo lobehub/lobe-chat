@@ -1009,6 +1009,37 @@ describe('StreamingExecutor actions', () => {
     });
   });
 
+  describe('Work source message', () => {
+    it.each([
+      { expected: 'parent', operationSource: undefined, restoredSource: undefined },
+      { expected: 'trigger', operationSource: 'trigger', restoredSource: undefined },
+      { expected: 'original', operationSource: 'trigger', restoredSource: 'original' },
+    ])(
+      'preserves the Work source as $expected',
+      ({ expected, operationSource, restoredSource }) => {
+        const store = useChatStore.getState();
+        const { operationId } = store.startOperation({
+          context: { agentId: TEST_IDS.SESSION_ID, messageId: operationSource },
+          type: 'execAgentRuntime',
+        });
+        const { state } = store.internal_createAgentState({
+          agentId: TEST_IDS.SESSION_ID,
+          initialState: restoredSource
+            ? agentRuntime.AgentRuntime.createInitialState({
+                metadata: { sourceMessageId: restoredSource },
+                operationId,
+              })
+            : undefined,
+          messages: [],
+          operationId,
+          parentMessageId: 'parent',
+        });
+
+        expect(state.metadata?.sourceMessageId).toBe(expected);
+      },
+    );
+  });
+
   describe('initialContext preservation', () => {
     it('should preserve initialContext through multiple steps in agent runtime loop', async () => {
       act(() => {

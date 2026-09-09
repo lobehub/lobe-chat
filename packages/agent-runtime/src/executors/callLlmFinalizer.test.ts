@@ -1,3 +1,4 @@
+import { type Message, parse } from '@lobechat/conversation-flow';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntime } from '../core/runtime';
@@ -439,6 +440,131 @@ describe('callLlmFinalizer', () => {
     });
     const [, plainUpdate] = vi.mocked(plainMessages.update).mock.calls[0];
     expect(plainUpdate.metadata ?? {}).not.toHaveProperty('work');
+  });
+
+  describe('Work anchors after message rehydration', () => {
+    const tool = {
+      apiName: 'createTask',
+      arguments: '{}',
+      id: 'call-1',
+      identifier: 'tasks',
+      type: 'default' as const,
+    };
+    const rows: Message[] = [
+      { content: 'Create a task', createdAt: 1, id: 'user-1', role: 'user' },
+      {
+        content: '',
+        createdAt: 2,
+        id: 'assistant-0',
+        parentId: 'user-1',
+        role: 'assistant',
+        tools: [tool],
+      },
+      {
+        content: 'created',
+        createdAt: 3,
+        id: 'tool-1',
+        parentId: 'assistant-0',
+        role: 'tool',
+        tool_call_id: 'call-1',
+      },
+      {
+        content: 'Continue',
+        createdAt: 4,
+        id: 'assistant-1',
+        parentId: 'tool-1',
+        role: 'assistant',
+      },
+    ];
+
+    const finalize = async (
+      messages: Message[],
+      sourceMessageId: string,
+      output = createOutput(),
+    ) => {
+      const transport = createMessageTransport();
+      await finalizeCallLlmTurn({
+        assistantMessageId: 'final',
+        events: [],
+        host: createHost(transport),
+        model: 'gpt-4',
+        output,
+        provider: 'openai',
+        shouldReplayAssistantReasoning: false,
+        state: AgentRuntime.createInitialState({
+          messages,
+          metadata: { sourceMessageId },
+          operationId: 'operation-1',
+        }),
+      });
+      return vi.mocked(transport.update).mock.calls[0][1].metadata?.work;
+    };
+
+    it.each(['assistantGroup', 'supervisor'] as const)(
+      'finds tools inside %s children',
+      async (role) => {
+        const parsed = parse(rows).flatList;
+        expect(parsed[1].role).toBe('assistantGroup');
+        const messages = [parsed[0], { ...parsed[1], role }];
+        expect(await finalize(messages, 'user-1')).toEqual({
+          rootOperationId: 'operation-1',
+          userMessageId: 'user-1',
+        });
+      },
+    );
+
+    it('preserves the source boundary inside compressed conversation messages', async () => {
+      const messages: Message[] = [
+        {
+          compressedMessages: parse(rows).flatList,
+          content: 'Summary',
+          createdAt: 5,
+          id: 'compressed-1',
+          role: 'compressedGroup',
+        },
+      ];
+      expect(await finalize(messages, 'user-1')).toEqual({
+        rootOperationId: 'operation-1',
+        userMessageId: 'user-1',
+      });
+      expect(await finalize(messages, 'assistant-1')).toBeUndefined();
+    });
+
+    it('finds a source assistant inside a parsed group', async () => {
+      expect(await finalize(parse(rows).flatList, 'assistant-0')).toEqual({
+        rootOperationId: 'operation-1',
+        userMessageId: 'assistant-0',
+      });
+    });
+
+    it('finds a source tool result before a later tool call in the same group', async () => {
+      const withLaterTool = rows.map((row) =>
+        row.id === 'assistant-1' ? { ...row, tools: [{ ...tool, id: 'call-2' }] } : row,
+      );
+      expect(await finalize(parse(withLaterTool).flatList, 'tool-1')).toEqual({
+        rootOperationId: 'operation-1',
+        userMessageId: 'tool-1',
+      });
+    });
+
+    it('does not count tools before a nested source or from a previous turn', async () => {
+      expect(await finalize(parse(rows).flatList, 'assistant-1')).toBeUndefined();
+      const nextTurn: Message = {
+        content: 'Hi',
+        createdAt: 5,
+        id: 'user-2',
+        parentId: 'assistant-1',
+        role: 'user',
+      };
+      expect(await finalize(parse([...rows, nextTurn]).flatList, 'user-2')).toBeUndefined();
+      expect(await finalize(parse(rows).flatList, 'missing')).toBeUndefined();
+    });
+
+    it('does not anchor an intermediate tool-calling response', async () => {
+      expect(
+        await finalize(parse(rows).flatList, 'user-1', createOutput({ toolsCalling: [tool] })),
+      ).toBeUndefined();
+    });
   });
 
   it('serializes multimodal parts and keeps the null grounding sentinel', async () => {
