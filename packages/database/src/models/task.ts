@@ -1480,6 +1480,27 @@ export class TaskModel {
       );
   }
 
+  // Heartbeat twin of {@link getScheduledTasks}: rows whose heartbeat loop
+  // should still be alive. `paused` requires user attention, `running` is
+  // already in flight (and `runTask` would CONFLICT anyway) — same exclusions
+  // as the schedule twin.
+  //
+  // Used by the local-queue startup sweep: a process restart wipes the
+  // LocalTaskScheduler's in-flight setTimeout timers, so every runnable
+  // heartbeat task must have its next tick re-armed from scratch.
+  static async findRunnableHeartbeatTasks(db: LobeChatDatabase): Promise<TaskItem[]> {
+    return db
+      .select()
+      .from(tasks)
+      .where(
+        and(
+          eq(tasks.automationMode, 'heartbeat'),
+          gt(tasks.heartbeatInterval, 0),
+          notInArray(tasks.status, ['canceled', 'completed', 'failed', 'paused', 'running']),
+        ),
+      );
+  }
+
   // Find stuck tasks (running but heartbeat timed out)
   // Only checks tasks that have both lastHeartbeatAt and heartbeatTimeout set
   static async findStuckTasks(db: LobeChatDatabase): Promise<TaskItem[]> {
