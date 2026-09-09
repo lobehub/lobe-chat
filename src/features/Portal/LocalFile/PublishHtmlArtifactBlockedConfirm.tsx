@@ -108,16 +108,16 @@ const BlockedConfirmContent = (input: OpenWorkspaceHtmlPublishBlockedConfirmInpu
               })}
             </Text>
           )}
-          <Flexbox gap={4}>
-            <Checkbox checked={force} onChange={setForce}>
-              {t('workingPanel.localFile.publish.outsideWorkspace.forceLabel', { ns: 'chat' })}
-            </Checkbox>
-            <Text style={{ color: cssVar.colorError }}>
-              {t('workingPanel.localFile.publish.outsideWorkspace.forceHint', { ns: 'chat' })}
-            </Text>
-          </Flexbox>
         </Flexbox>
       </ScrollArea>
+      <Flexbox gap={4} style={{ paddingBlock: '8px 4px', paddingInline: 16 }}>
+        <Checkbox checked={force} onChange={setForce}>
+          {t('workingPanel.localFile.publish.outsideWorkspace.forceLabel', { ns: 'chat' })}
+        </Checkbox>
+        <Text style={{ color: cssVar.colorError }}>
+          {t('workingPanel.localFile.publish.outsideWorkspace.forceHint', { ns: 'chat' })}
+        </Text>
+      </Flexbox>
       <Flexbox
         horizontal
         gap={8}
