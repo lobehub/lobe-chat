@@ -204,6 +204,55 @@ describe('AgentBridgeService', () => {
     expect(mockExecAgent.mock.calls[0][0].toolModeOverride).toBeUndefined();
   });
 
+  describe('current-conversation injection (LOBE-13803)', () => {
+    it('injects the platform + channelId the message tool needs into botPlatformContext', async () => {
+      const service = new AgentBridgeService(FAKE_DB, USER_ID);
+      const thread = createThread();
+      const message = createMessage();
+      const client = createClient();
+      // Feishu/Lark threadIds are `lark:group:oc_xxx`; the client's own decoder
+      // is what turns that into the `oc_xxx` the message service accepts.
+      client.extractChatId.mockReturnValue('oc_chat_1');
+      mockGetPlatform.mockReturnValue({ id: 'lark', name: 'Lark', supportsMessageEdit: true });
+
+      await service.handleMention(thread, message, {
+        agentId: 'agent-1',
+        botContext: { platform: 'lark', platformThreadId: 'lark:group:oc_chat_1' } as any,
+        client,
+      });
+
+      expect(client.extractChatId).toHaveBeenCalledWith('lark:group:oc_chat_1');
+      expect(mockExecAgent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          botPlatformContext: expect.objectContaining({
+            currentChannel: { id: 'oc_chat_1', platformId: 'lark' },
+          }),
+        }),
+      );
+    });
+
+    it('omits currentChannel when the platform client cannot decode the threadId', async () => {
+      const service = new AgentBridgeService(FAKE_DB, USER_ID);
+      const thread = createThread();
+      const message = createMessage();
+      const client = createClient();
+      client.extractChatId.mockImplementation(() => {
+        throw new Error('malformed threadId');
+      });
+      mockGetPlatform.mockReturnValue({ id: 'lark', name: 'Lark', supportsMessageEdit: true });
+
+      await service.handleMention(thread, message, {
+        agentId: 'agent-1',
+        botContext: { platform: 'lark', platformThreadId: 'garbage' } as any,
+        client,
+      });
+
+      // The run still completes — losing the shortcut must never break the reply.
+      expect(mockExecAgent).toHaveBeenCalled();
+      expect(mockExecAgent.mock.calls[0][0].botPlatformContext.currentChannel).toBeUndefined();
+    });
+  });
+
   it('constructs AiAgentService with workspaceId for workspace bot runs', async () => {
     const service = new AgentBridgeService(FAKE_DB, USER_ID, 'workspace-1');
     const thread = createThread();

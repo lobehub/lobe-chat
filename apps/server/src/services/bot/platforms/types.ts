@@ -317,9 +317,24 @@ export interface PlatformClient {
   /** Get a messenger for a specific thread (outbound messaging). */
   getMessenger: (platformThreadId: string) => PlatformMessenger;
 
+  readonly id: string;
+
   // --- Runtime Operations ---
 
-  readonly id: string;
+  /**
+   * Whether this conversation contains only the operator and this bot, so every
+   * message in it is implicitly addressed to the bot and no @-mention is needed.
+   *
+   * The router otherwise infers that from how many distinct humans have SPOKEN
+   * in the thread, which misreads a quiet group as private — badly so on
+   * platforms where the subscribed "thread" is the entire group chat. A platform
+   * that can report real membership should implement this and settle it.
+   *
+   * Must fail CLOSED: resolve `false` whenever membership can't be established,
+   * so an unprovable chat stays mention-only rather than the bot talking over a
+   * group. Platforms that can't tell omit the method.
+   */
+  isSoloBotConversation?: (platformThreadId: string) => Promise<boolean>;
 
   /**
    * Optional hook called from the router when a non-DM message wakes the

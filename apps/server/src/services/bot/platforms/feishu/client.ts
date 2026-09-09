@@ -4,6 +4,7 @@ import {
   downloadMediaFromRawMessage,
   LarkApiClient,
   type LarkRawMessage,
+  toFeishuEmojiType,
 } from '@lobechat/chat-adapter-feishu';
 import type { Chat as ChatBot, Message } from 'chat';
 import debug from 'debug';
@@ -27,7 +28,9 @@ import {
   type ValidationResult,
 } from '../types';
 import { formatUsageStats } from '../utils';
+import { isSoloBotChat } from './chatComposition';
 import { FeishuWSConnection } from './gateway';
+import { deleteReactionId, readReactionId, writeReactionId } from './reactionTracker';
 import { sendFeishuAttachments } from './sendAttachments';
 
 const log = debug('bot-platform:feishu:client');
@@ -62,8 +65,20 @@ function createMessenger(
 ): PlatformMessenger {
   const api = new LarkApiClient(config.applicationId, config.credentials.appSecret, domain);
   const chatId = extractChatId(platformThreadId);
+  const { applicationId, platform } = config;
   return {
-    addReaction: (messageId, emoji) => api.addReaction(messageId, emoji).then(() => {}),
+    // Feishu takes a named `emoji_type`, never unicode — see `./reactionEmoji`.
+    // An unmapped emoji is skipped rather than passed through: the API would
+    // reject it with `231001` and the failure would only surface in logs.
+    addReaction: async (messageId, emoji) => {
+      const emojiType = toFeishuEmojiType(emoji);
+      if (!emojiType) {
+        log('addReaction: no Feishu emoji_type for %s, skipping', emoji);
+        return;
+      }
+      const { reactionId } = await api.addReaction(messageId, emojiType);
+      await writeReactionId(platform, applicationId, messageId, reactionId);
+    },
     createMessage: async (content) => {
       const text = messengerContentText(content);
       const attachments = typeof content === 'string' ? undefined : content.attachments;
@@ -76,15 +91,39 @@ function createMessenger(
     },
     editMessage: (messageId, content) =>
       api.editMessage(messageId, messengerContentText(content)).then(() => {}),
-    // Feishu / Lark currently expose no authenticated removeReaction endpoint.
-    // Callers should treat this as a best-effort no-op — step swaps will stack
-    // additions rather than clear the previous emoji.
-    removeReaction: () => Promise.resolve(),
+    // Feishu's delete endpoint is keyed by `reaction_id` (protocol-spec §5.2),
+    // which only `./reactionTracker` remembers. Without a tracked id there is
+    // nothing to delete — that reaction was placed by someone else, or by a run
+    // whose key has expired.
+    removeReaction: async (messageId) => {
+      const reactionId = await readReactionId(platform, applicationId, messageId);
+      if (!reactionId) return;
+      await api.removeReaction(messageId, reactionId);
+      await deleteReactionId(platform, applicationId, messageId);
+    },
     replaceReaction: async (messageId, prevEmoji, nextEmoji) => {
-      if (prevEmoji === nextEmoji) return;
-      // No remove API upstream — we can only add. Step swaps therefore stack
-      // emoji on the user's message. Final cleanup is a no-op.
-      if (nextEmoji) await api.addReaction(messageId, nextEmoji);
+      // Compare the MAPPED values, not the unicode: several bridge emoji can
+      // resolve to the same `emoji_type`, and re-placing one that is already
+      // there would swap a live reaction for an identical one.
+      const next = toFeishuEmojiType(nextEmoji);
+      if (next && next === toFeishuEmojiType(prevEmoji)) return;
+
+      // Read the tracked id BEFORE adding — the add overwrites the very pointer
+      // the cleanup needs. If the add then throws, the key still names the old
+      // reaction, so the next swap retries the cleanup instead of leaking it.
+      const stale = await readReactionId(platform, applicationId, messageId);
+
+      // Add before remove, per the PlatformMessenger contract: the user should
+      // see at least one bot reaction throughout the transition. A null
+      // `nextEmoji` is the final clear — remove only.
+      if (next) {
+        const { reactionId } = await api.addReaction(messageId, next);
+        await writeReactionId(platform, applicationId, messageId, reactionId);
+      } else {
+        await deleteReactionId(platform, applicationId, messageId);
+      }
+
+      if (stale) await api.removeReaction(messageId, stale);
     },
   };
 }
@@ -230,6 +269,14 @@ class FeishuWebhookClient implements PlatformClient {
 
   extractChatId(platformThreadId: string): string {
     return extractChatId(platformThreadId);
+  }
+
+  /**
+   * A Feishu group holding exactly one user and one bot is this bot's private
+   * conversation — see `./chatComposition`. Anything else stays mention-only.
+   */
+  async isSoloBotConversation(platformThreadId: string): Promise<boolean> {
+    return isSoloBotChat(this.api, this.config.applicationId, extractChatId(platformThreadId));
   }
 
   formatMarkdown(markdown: string): string {
@@ -426,6 +473,14 @@ class FeishuWSClientImpl implements PlatformClient {
 
   extractChatId(platformThreadId: string): string {
     return extractChatId(platformThreadId);
+  }
+
+  /**
+   * A Feishu group holding exactly one user and one bot is this bot's private
+   * conversation — see `./chatComposition`. Anything else stays mention-only.
+   */
+  async isSoloBotConversation(platformThreadId: string): Promise<boolean> {
+    return isSoloBotChat(this.api, this.config.applicationId, extractChatId(platformThreadId));
   }
 
   formatMarkdown(markdown: string): string {
