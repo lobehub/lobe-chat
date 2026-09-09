@@ -49,7 +49,8 @@ interface AcceptancePageProps {
 
 /**
  * The record's own body: an identity band that ends in the full-width rule,
- * then whichever face of the delivery the tabs select.
+ * then whichever face of the delivery the tabs select. The rule is the band's;
+ * the tabs draw no line of their own, so the two never double up.
  */
 export const AcceptanceOverview = ({
   onDraftToComposer,

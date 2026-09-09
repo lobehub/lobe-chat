@@ -128,7 +128,8 @@ export function buildFlowGraph(
     if (stacked) for (const node of siblings) depths.set(node.id, 0);
     const parts = orderedSiblings.map((node) => {
       const id = graphId(view, node.id);
-      if (!node.subFlowId) return { node, id, width: 260, height: 116 };
+      // Two title lines, two expected lines and the footer; the card clamps to this box.
+      if (!node.subFlowId) return { node, id, width: 260, height: 132 };
       const child = collapsed.has(id) ? undefined : layout(view, node.id, id);
       return { node, id, child, width: child?.width ?? 320, height: child?.height ?? 96 };
     });
@@ -224,12 +225,21 @@ export function buildFlowGraph(
     );
     if (focus && focus !== view.id && !focusedNode) continue;
     const id = focus ?? view.id;
-    const child = collapsed.has(id) && !focus ? undefined : layout(view, focusedNode?.id, id);
+    // Inside a focused group the breadcrumb already names it, so render its members
+    // directly on the canvas instead of wrapping them in the group container.
+    if (focus) {
+      const focused = layout(view, focusedNode?.id, id);
+      for (const node of focused.nodes)
+        nodes.push(node.parentId === id ? { ...node, parentId: undefined } : node);
+      edges.push(...focused.edges);
+      continue;
+    }
+    const child = collapsed.has(id) ? undefined : layout(view, undefined, id);
     const leafNodes = view.version.nodes.filter((node) => !node.subFlowId);
     const summary = aggregate(
       view,
-      focusedNode?.checkItemIds ?? leafNodes.flatMap((n) => n.checkItemIds),
-      focusedNode?.requiredCheckItemIds ?? leafNodes.flatMap((n) => n.requiredCheckItemIds),
+      leafNodes.flatMap((n) => n.checkItemIds),
+      leafNodes.flatMap((n) => n.requiredCheckItemIds),
     );
     const height = child?.height ?? 96;
     nodes.push({
@@ -240,11 +250,11 @@ export function buildFlowGraph(
       height,
       style: { width: child?.width ?? 360, height },
       data: {
-        title: focusedNode?.title ?? view.version.title,
+        title: view.version.title,
         ...summary,
         collapsed: !child,
-        onToggle: focus ? undefined : () => onToggle(id),
-        onEnter: focus ? undefined : () => onEnter(id),
+        onToggle: () => onToggle(id),
+        onEnter: () => onEnter(id),
       },
     });
     if (child) {

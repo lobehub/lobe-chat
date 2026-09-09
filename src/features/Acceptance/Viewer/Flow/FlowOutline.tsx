@@ -12,18 +12,20 @@ import {
   CircleHelp,
   CirclePause,
   CircleX,
+  CornerDownRight,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import type { FlowGraphData } from './flowGraph';
 import { flowStateColor } from './FlowNode';
+import { buildOutlineTree, type OutlineBranch, type OutlineStep } from './flowOutlineTree';
 
 const styles = createStaticStyles(({ css }) => ({
   item: css`
     width: 100%;
     height: auto;
-    min-height: 44px;
-    padding-block: 10px;
+    min-height: 36px;
+    padding-block: 6px;
     padding-inline: 12px;
 
     text-align: start;
@@ -34,21 +36,22 @@ const styles = createStaticStyles(({ css }) => ({
 
     width: 100%;
     height: auto;
-    min-height: 44px;
-    padding-block: 8px;
+    min-height: 32px;
+    padding-block: 4px;
     padding-inline: 12px;
 
     color: ${cssVar.colorTextSecondary};
     text-align: start;
     white-space: normal;
   `,
-  group: css`
+  nested: css`
+    margin-inline-start: 18px;
     padding-inline-start: 8px;
     border-inline-start: 1px solid ${cssVar.colorBorderSecondary};
   `,
 }));
 
-/** A readable traversal of the same graph, including every branch and its target. */
+/** A readable traversal of the same graph: dependent steps are indented under the branch that leads to them. */
 export function FlowOutline({
   nodes,
   edges,
@@ -59,7 +62,7 @@ export function FlowOutline({
   onSelect: (id: string) => void;
 }) {
   const { t } = useTranslation('verify');
-  const renderNode = (node: Node<FlowGraphData>) => {
+  const renderItem = (node: Node<FlowGraphData>) => {
     const { data } = node;
     const group = node.type === 'flowGroup';
     const glyph =
@@ -75,65 +78,88 @@ export function FlowOutline({
                 ? CircleDot
                 : CircleDashed;
     return (
-      <Flexbox gap={4} key={node.id}>
-        <Button
-          aria-expanded={group ? !data.collapsed : undefined}
-          className={styles.item}
-          type={data.selected ? 'default' : 'text'}
-          onClick={() => (group ? data.onToggle?.() : onSelect(node.id))}
-        >
-          <Flexbox horizontal align="center" gap={10} width="100%">
-            {group && <Icon icon={data.collapsed ? ChevronRight : ChevronDown} size={14} />}
-            <Icon
-              aria-label={t(`flow.state.${data.state ?? 'pending'}`)}
-              icon={glyph}
-              size={18}
-              style={{ color: flowStateColor(data.state), flex: 'none' }}
-            />
-            <Flexbox flex={1} gap={4} style={{ minWidth: 0 }}>
-              <Text strong={group} style={{ overflowWrap: 'anywhere' }}>
-                {data.title}
-              </Text>
-              {!group && (
-                <Text fontSize={13} style={{ overflowWrap: 'anywhere' }} type="secondary">
-                  {String(data.expected ?? '')}
-                </Text>
-              )}
-            </Flexbox>
-            {group ? (
-              <Text fontSize={12} type="secondary">
-                {data.passed}/{data.total}
-              </Text>
-            ) : (
-              <Icon icon={ChevronRight} size={16} />
-            )}
-          </Flexbox>
-        </Button>
-        {group && !data.collapsed && (
-          <Flexbox className={styles.group} gap={12}>
-            {nodes.filter((child) => child.parentId === node.id).map(renderNode)}
-          </Flexbox>
-        )}
-        {edges
-          .filter((edge) => edge.source === node.id)
-          .map((edge) => (
-            <Button
-              className={styles.branch}
-              key={edge.id}
-              type="text"
-              onClick={() => onSelect(edge.id)}
-            >
-              <Flexbox horizontal align="center" gap={8}>
-                <Icon icon={ArrowRight} size={14} style={{ flex: 'none' }} />
-                <span>
-                  {String(edge.label ?? '')} →{' '}
-                  {nodes.find((target) => target.id === edge.target)?.data.title}
-                </span>
-              </Flexbox>
-            </Button>
-          ))}
-      </Flexbox>
+      <Button
+        aria-expanded={group ? !data.collapsed : undefined}
+        className={styles.item}
+        type={data.selected ? 'default' : 'text'}
+        onClick={() => (group ? data.onToggle?.() : onSelect(node.id))}
+      >
+        <Flexbox horizontal align="center" gap={10} width="100%">
+          {group && <Icon icon={data.collapsed ? ChevronRight : ChevronDown} size={14} />}
+          <Icon
+            aria-label={t(`flow.state.${data.state ?? 'pending'}`)}
+            icon={glyph}
+            size={18}
+            style={{ color: flowStateColor(data.state), flex: 'none' }}
+          />
+          <Text strong={group} style={{ flex: 1, minWidth: 0, overflowWrap: 'anywhere' }}>
+            {data.title}
+          </Text>
+          {group ? (
+            <Text fontSize={12} type="secondary">
+              {data.passed}/{data.total}
+            </Text>
+          ) : (
+            <Icon icon={ChevronRight} size={16} />
+          )}
+        </Flexbox>
+      </Button>
     );
   };
-  return <Flexbox gap={24}>{nodes.filter((node) => !node.parentId).map(renderNode)}</Flexbox>;
+  const renderBranchLabel = (branch: OutlineBranch, reference: boolean) => {
+    const label = String(branch.edge.label ?? '');
+    // A trigger that merely repeats the next step's title adds nothing above that step.
+    if (!reference && (!label || label === branch.target.data.title)) return null;
+    return (
+      <Button
+        className={styles.branch}
+        key={branch.edge.id}
+        type="text"
+        onClick={() => onSelect(branch.edge.id)}
+      >
+        <Flexbox horizontal align="center" gap={8}>
+          <Icon
+            icon={reference ? ArrowRight : CornerDownRight}
+            size={14}
+            style={{ flex: 'none' }}
+          />
+          <span>{reference ? `${label} → ${branch.target.data.title}` : label}</span>
+        </Flexbox>
+      </Button>
+    );
+  };
+  // A single continuation stays at the same level; a fork indents each path under its branch.
+  const renderSequence = (step: OutlineStep): React.ReactNode[] => {
+    const out: React.ReactNode[] = [
+      <Flexbox gap={2} key={step.node.id}>
+        {renderItem(step.node)}
+        {step.node.type === 'flowGroup' && !step.node.data.collapsed && (
+          <Flexbox className={styles.nested} gap={2}>
+            {step.members.flatMap(renderSequence)}
+          </Flexbox>
+        )}
+      </Flexbox>,
+    ];
+    const expanded = step.branches.filter((branch) => branch.step);
+    for (const branch of step.branches) {
+      const label = renderBranchLabel(branch, !branch.step);
+      if (!branch.step) {
+        if (label) out.push(label);
+        continue;
+      }
+      const steps = renderSequence(branch.step);
+      if (expanded.length === 1) out.push(label, ...steps);
+      else
+        out.push(
+          <Flexbox gap={2} key={`branch:${branch.edge.id}`}>
+            {label}
+            <Flexbox className={styles.nested} gap={2}>
+              {steps}
+            </Flexbox>
+          </Flexbox>,
+        );
+    }
+    return out;
+  };
+  return <Flexbox gap={2}>{buildOutlineTree(nodes, edges).flatMap(renderSequence)}</Flexbox>;
 }

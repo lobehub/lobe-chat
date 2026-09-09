@@ -2,10 +2,21 @@
 
 import { Flexbox, Icon } from '@lobehub/ui';
 import { Tabs, Tag } from '@lobehub/ui/base-ui';
+import { createStaticStyles } from 'antd-style';
 import { ListChecks, Paperclip, Route } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export type AcceptanceTabKey = 'checks' | 'resources' | 'flow';
+
+const styles = createStaticStyles(({ css }) => ({
+  // The square variant underlines its whole list; the band below already draws
+  // the full-width rule, so the list's own line would sit on top of it.
+  list: css`
+    && {
+      box-shadow: none;
+    }
+  `,
+}));
 
 interface AcceptanceTabsProps {
   active: AcceptanceTabKey;
@@ -17,8 +28,8 @@ interface AcceptanceTabsProps {
 
 /**
  * The delivery's two faces: the checks a person judges, and the artefacts the
- * rounds produced. They sit above the full-width rule so the rule reads as the
- * boundary between "what this delivery is" and "what you are looking at".
+ * rounds produced. They close the identity band; the active tab's underline is
+ * the boundary between "what this delivery is" and "what you are looking at".
  */
 const AcceptanceTabs = ({
   active,
@@ -47,6 +58,7 @@ const AcceptanceTabs = ({
   return (
     <Tabs
       activeKey={active}
+      classNames={{ list: styles.list }}
       style={{ minWidth: 0, overflowX: 'auto' }}
       variant={'square'}
       items={tabs

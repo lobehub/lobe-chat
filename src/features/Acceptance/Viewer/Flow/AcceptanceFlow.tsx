@@ -58,6 +58,16 @@ const styles = createStaticStyles(({ css }) => ({
     max-width: ${acceptanceContentLayout.maxWidth - 2 * acceptanceContentLayout.paddingInline}px;
     margin-inline: auto;
   `,
+  // The outline is reading material, so it keeps the page's text measure while
+  // the canvas next to it is allowed the full width.
+  outline: css`
+    overflow: auto;
+
+    width: 100%;
+    min-width: 0;
+    max-width: ${acceptanceContentLayout.maxWidth - 2 * acceptanceContentLayout.paddingInline}px;
+    margin-inline: auto;
+  `,
 }));
 const nodeTypes = { state: FlowNode, flowGroup: FlowGroup };
 
@@ -227,7 +237,7 @@ export function AcceptanceFlow() {
       </Flexbox>
       <Flexbox horizontal className={styles.workspace} flex={fullscreen ? 1 : undefined}>
         {showOutline ? (
-          <Flexbox flex={1} style={{ minWidth: 0, overflow: 'auto' }}>
+          <Flexbox className={styles.outline} flex={1}>
             <FlowOutline edges={graphEdges} nodes={graph.nodes} onSelect={setSelected} />
           </Flexbox>
         ) : (
