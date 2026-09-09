@@ -302,21 +302,15 @@ export class GoalService {
       });
       if (!problem) throw new Error('Failed to seed goal problem');
 
-      const seeds =
-        input.tasks ??
-        (config?.exploration
-          ? [
-              {
-                title: input.title,
-                description: `Produce one initial baseline experiment for this Goal. ${input.problemDescription ?? requirement ?? input.title}\nExploration method: ${config.exploration.instruction}\nExecute the baseline only; later experiments are scheduled by the Goal coordinator. Include a self-contained result and evidence.`,
-              },
-            ]
-          : []);
-      for (const seed of seeds) {
-        const { description, title } = typeof seed === 'string' ? { title: seed } : seed;
+      // An exploration baseline is the goal's first candidate answer, so it
+      // lives inside an experiment container the explorer can branch from.
+      // Caller-supplied seed tasks are ordinary work: they attach straight to
+      // the problem the way a planned or manager-submitted task does.
+      if (config?.exploration && !input.tasks) {
+        const description = `Produce one initial baseline experiment for this Goal. ${input.problemDescription ?? requirement ?? input.title}\nExploration method: ${config.exploration.instruction}\nExecute the baseline only; later experiments are scheduled by the Goal coordinator. Include a self-contained result and evidence.`;
         const experiment = await authorGraph.createNode(goal.id, {
           kind: 'experiment',
-          title,
+          title: input.title,
           description,
           questionId: problem.id,
           createdByAgentId: input.createdByAgentId,
@@ -327,9 +321,20 @@ export class GoalService {
           createdByAgentId: input.createdByAgentId,
           description,
           kind: 'task',
+          title: input.title,
+        });
+        if (!taskNode) throw new Error('Failed to seed goal task');
+      }
+      for (const seed of input.tasks ?? []) {
+        const { description, title } = typeof seed === 'string' ? { title: seed } : seed;
+        const taskNode = await authorGraph.createNode(goal.id, {
+          createdByAgentId: input.createdByAgentId,
+          description,
+          kind: 'task',
           title,
         });
         if (!taskNode) throw new Error('Failed to seed goal task');
+        await authorGraph.createEdge(goal.id, problem.id, taskNode.id, 'decomposes');
       }
     } catch (error) {
       await this.goalModel.delete(goal.id).catch(() => {});
@@ -2100,15 +2105,22 @@ export class GoalService {
 
         const createdIds: string[] = [];
         for (const draft of draftTasks) {
-          const experiment = currentProblem
-            ? await writer.createNode(goalId, {
-                kind: 'experiment',
-                title: draft.title,
-                description: draft.instruction,
-                questionId: currentProblem.id,
-              })
-            : undefined;
-          if (currentProblem && !experiment)
+          // An experiment is a container for a candidate answer, not the
+          // default shell around every planned step. Only a direction the
+          // planner marked with a hypothesis gets one; a certain delivery step
+          // attaches straight to the problem, the same shape a manager-planned
+          // Task takes.
+          const hypothesis = draft.hypothesis?.trim();
+          const experiment =
+            currentProblem && hypothesis
+              ? await writer.createNode(goalId, {
+                  kind: 'experiment',
+                  title: draft.title,
+                  description: hypothesis,
+                  questionId: currentProblem.id,
+                })
+              : undefined;
+          if (currentProblem && hypothesis && !experiment)
             throw new Error('Failed to create a planned experiment');
           const node = await writer.createNode(goalId, {
             scopeId: experiment?.id,
@@ -2117,6 +2129,8 @@ export class GoalService {
             title: draft.title,
           });
           if (!node) throw new Error('Failed to create a planned task');
+          if (!experiment && currentProblem)
+            await writer.createEdge(goalId, currentProblem.id, node.id, 'decomposes');
           createdIds.push(node.id);
           committedEffects.push({ nodeId: node.id, type: 'created_node', detail: draft.title });
         }
