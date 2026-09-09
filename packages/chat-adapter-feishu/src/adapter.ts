@@ -490,12 +490,20 @@ export class LarkAdapter implements Adapter<LarkThreadId, LarkRawMessage> {
   ): Promise<FetchResult<LarkRawMessage>> {
     const { chatId } = this.decodeThreadId(threadId);
 
+    // `backward` (the default) means "the most recent messages", but Feishu's
+    // own default sort is ascending — left alone, the first page would be the
+    // chat's oldest messages. Fetch newest-first for `backward` and flip the
+    // page so `FetchResult.messages` stays oldest-first as the contract says;
+    // `forward` maps straight onto Feishu's ascending order.
+    const forward = options?.direction === 'forward';
     const result = await this.api.listMessages(chatId, {
       pageSize: options?.limit || 50,
       pageToken: options?.cursor,
+      sortType: forward ? 'ByCreateTimeAsc' : 'ByCreateTimeDesc',
     });
 
     const messages = result.items.map((item: any) => this.parseMessage(item));
+    if (!forward) messages.reverse();
 
     return {
       messages,

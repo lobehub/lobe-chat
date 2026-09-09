@@ -54,13 +54,28 @@ export class LarkApiClient {
     return data.data;
   }
 
+  /**
+   * List messages in a chat.
+   *
+   * `sortType` defaults to `ByCreateTimeAsc` on Feishu's side, i.e. the FIRST
+   * page is the OLDEST messages in the chat. A caller that wants "what was
+   * just discussed" must ask for `ByCreateTimeDesc` — and keep passing the
+   * same value on every `pageToken` follow-up, which Feishu requires.
+   */
   async listMessages(
     chatId: string,
-    options?: { pageSize?: number; pageToken?: string; startTime?: string; endTime?: string },
+    options?: {
+      pageSize?: number;
+      pageToken?: string;
+      sortType?: 'ByCreateTimeAsc' | 'ByCreateTimeDesc';
+      startTime?: string;
+      endTime?: string;
+    },
   ): Promise<{ items: any[]; hasMore: boolean; pageToken?: string }> {
     const params = new URLSearchParams({ container_id_type: 'chat', container_id: chatId });
     if (options?.pageSize) params.set('page_size', String(options.pageSize));
     if (options?.pageToken) params.set('page_token', options.pageToken);
+    if (options?.sortType) params.set('sort_type', options.sortType);
     if (options?.startTime) params.set('start_time', options.startTime);
     if (options?.endTime) params.set('end_time', options.endTime);
 

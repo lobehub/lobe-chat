@@ -33,28 +33,37 @@ describe('FeishuMessageService.reactToMessage', () => {
 });
 
 describe('FeishuMessageService.readMessages', () => {
-  it('returns normalized messages on success', async () => {
+  it('asks for the NEWEST page and returns it in chronological order', async () => {
+    // Feishu's default sort is ascending, so an unsorted first page would be
+    // the oldest messages in the chat — useless for "what was just discussed".
+    const item = (id: string, createTime: string) => ({
+      body: { content: JSON.stringify({ text: id }) },
+      create_time: createTime,
+      message_id: id,
+      sender: { id: 'ou_1' },
+    });
     const listMessages = vi.fn().mockResolvedValue({
-      has_more: false,
-      hasMore: false,
+      hasMore: true,
       items: [
-        {
-          body: { content: JSON.stringify({ text: 'hi' }) },
-          create_time: '1700000000000',
-          message_id: 'om_1',
-          sender: { id: 'ou_1' },
-        },
+        item('om_newest', '1700000003000'),
+        item('om_middle', '1700000002000'),
+        item('om_oldest', '1700000001000'),
       ],
+      pageToken: 'next',
     });
 
     const result = await makeService(listMessages).readMessages({
       channelId: 'oc_chat_1',
+      cursor: 'prev',
       platform: 'feishu',
     } as any);
 
-    expect(listMessages).toHaveBeenCalledWith('oc_chat_1', expect.any(Object));
+    expect(listMessages).toHaveBeenCalledWith(
+      'oc_chat_1',
+      expect.objectContaining({ pageToken: 'prev', sortType: 'ByCreateTimeDesc' }),
+    );
     expect(result.channelId).toBe('oc_chat_1');
-    expect(result.messages).toHaveLength(1);
+    expect(result.messages.map((m) => m.id)).toEqual(['om_oldest', 'om_middle', 'om_newest']);
   });
 
   it.each([

@@ -20,15 +20,57 @@ const log = debug('bot-platform:feishu:chat-composition');
  * (群内用户的数量) and `bot_count` (群内机器人的数量). Exactly one of each means
  * the operator and this bot, and nobody else.
  *
- * Fails CLOSED: any error, missing field, or absent Redis resolves to `false`,
- * which means "require an @-mention". Staying quiet when we cannot prove the
- * chat is private is the safe direction — the opposite mistake is the bot
- * talking over a group.
+ * Fails CLOSED: any error or missing field resolves to `false`, which means
+ * "require an @-mention". Staying quiet when we cannot prove the chat is
+ * private is the safe direction — the opposite mistake is the bot talking over
+ * a group.
  */
-const TTL_SECONDS = 10 * 60;
+
+/**
+ * A "solo" verdict is the dangerous one to hold stale: the moment a second
+ * human or bot joins, every unmentioned message would still wake the bot until
+ * the entry expires. No membership event invalidates the key, so keep positive
+ * verdicts short — one minute bounds how long a freshly-shared group can be
+ * hijacked, while still collapsing a burst of DMs into one API call.
+ */
+const SOLO_TTL_SECONDS = 60;
+/** A shared group going back to 1:1 is rare and harmless to notice late. */
+const SHARED_TTL_SECONDS = 10 * 60;
 
 const buildKey = (applicationId: string, chatId: string): string =>
   `bot:feishu-chat-solo:${applicationId}:${chatId}`;
+
+/**
+ * Process-local fallback for deployments without agent-runtime Redis, so the
+ * verdict is still cached instead of costing one blocking Feishu request per
+ * inbound message (including chatter the bot goes on to ignore). Bounded so an
+ * app subscribed to many chats can't grow it without limit; entries expire on
+ * the same TTLs as Redis.
+ */
+const MEMORY_CACHE_MAX_ENTRIES = 1000;
+const memoryCache = new Map<string, { expiresAt: number; solo: boolean }>();
+
+const readMemoryCache = (key: string): boolean | undefined => {
+  const entry = memoryCache.get(key);
+  if (!entry) return undefined;
+  if (entry.expiresAt <= Date.now()) {
+    memoryCache.delete(key);
+    return undefined;
+  }
+  return entry.solo;
+};
+
+const writeMemoryCache = (key: string, solo: boolean, ttlSeconds: number): void => {
+  // Map iterates in insertion order, so the first key is the oldest write.
+  if (memoryCache.size >= MEMORY_CACHE_MAX_ENTRIES) {
+    const oldest = memoryCache.keys().next().value;
+    if (oldest !== undefined) memoryCache.delete(oldest);
+  }
+  memoryCache.set(key, { expiresAt: Date.now() + ttlSeconds * 1000, solo });
+};
+
+/** Test hook: the memory cache is module state and would leak across cases. */
+export const clearChatCompositionMemoryCache = (): void => memoryCache.clear();
 
 /** Feishu returns the counts as strings (`"bot_count": "3"`). */
 const toCount = (value: unknown): number | undefined => {
@@ -41,8 +83,9 @@ export async function isSoloBotChat(
   applicationId: string,
   chatId: string,
 ): Promise<boolean> {
-  // Membership changes rarely, and this is consulted on every inbound group
-  // message — cache it rather than spending an API round-trip per message.
+  // Consulted on every inbound group message — cache it rather than spending
+  // an API round-trip per message. Redis when available (queue-mode callbacks
+  // land in other processes), process memory otherwise.
   const redis = getAgentRuntimeRedisClient();
   const key = buildKey(applicationId, chatId);
   if (redis) {
@@ -53,6 +96,9 @@ export async function isSoloBotChat(
     } catch (error) {
       log('isSoloBotChat: cache read failed: %O', error);
     }
+  } else {
+    const cached = readMemoryCache(key);
+    if (cached !== undefined) return cached;
   }
 
   let solo: boolean;
@@ -75,12 +121,15 @@ export async function isSoloBotChat(
     return false;
   }
 
+  const ttlSeconds = solo ? SOLO_TTL_SECONDS : SHARED_TTL_SECONDS;
   if (redis) {
     try {
-      await redis.set(key, solo ? '1' : '0', 'EX', TTL_SECONDS);
+      await redis.set(key, solo ? '1' : '0', 'EX', ttlSeconds);
     } catch (error) {
       log('isSoloBotChat: cache write failed: %O', error);
     }
+  } else {
+    writeMemoryCache(key, solo, ttlSeconds);
   }
   return solo;
 }

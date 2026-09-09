@@ -140,17 +140,24 @@ export class FeishuMessageService implements MessageRuntimeService {
   };
 
   readMessages = async (params: ReadMessagesParams): Promise<ReadMessagesState> => {
+    // Feishu defaults to `ByCreateTimeAsc`, so an unsorted first page is the
+    // OLDEST messages in the chat — in any group past the 50-message cap the
+    // model would get the chat's beginnings instead of what was just said.
+    // Ask for newest-first, then flip the page so the tool's documented
+    // chronological order holds within the window. The same `sortType` goes on
+    // every cursor follow-up because Feishu requires it to stay constant.
     const result = await this.api
       .listMessages(params.channelId, {
         endTime: params.endTime,
         pageSize: Math.min(params.limit ?? DEFAULT_BOT_HISTORY_LIMIT, MAX_FEISHU_HISTORY_LIMIT),
         pageToken: params.cursor,
+        sortType: 'ByCreateTimeDesc',
         startTime: params.startTime,
       })
       .catch((error) => {
         throw explainHistoryReadError(error);
       });
-    const messages = result.items.map(toMessageItem);
+    const messages = result.items.map(toMessageItem).reverse();
     return {
       channelId: params.channelId,
       hasMore: result.hasMore,
