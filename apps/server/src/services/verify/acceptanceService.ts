@@ -1,4 +1,4 @@
-import { normalizeVerifySurface } from '@lobechat/const/verify';
+import { isDraftVerifyRun, normalizeVerifySurface } from '@lobechat/const/verify';
 import type {
   AcceptanceAttachment,
   AcceptanceCheckGroup,
@@ -687,6 +687,21 @@ export class AcceptanceService {
     }
 
     await this.assertPlanLeavesAcceptedChecksAlone(existing, acceptanceId);
+
+    // A round that is still only planned has nothing to preserve: the incoming
+    // run folds into it instead of pushing the ledger to yet another number.
+    const draft = (await this.runModel.listByAcceptance(acceptanceId)).find(isDraftVerifyRun);
+    if (draft) {
+      const folded = await this.runModel.foldIntoRound(runId, draft.id);
+      await this.recomputeStatus(acceptanceId);
+      log(
+        'run %s folded into draft round %d of acceptance %s',
+        runId,
+        folded.roundIndex,
+        acceptanceId,
+      );
+      return folded;
+    }
 
     // Rounds inherit the aggregate's visibility so a private acceptance's new
     // round never leaks through its own report URL.

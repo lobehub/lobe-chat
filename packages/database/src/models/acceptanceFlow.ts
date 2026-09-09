@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 
+import { isDraftVerifyRun } from '@lobechat/const/verify';
 import type {
   AcceptanceFlowDefinition,
   AcceptanceFlowReview,
@@ -63,6 +64,31 @@ function fingerprint(value: unknown) {
       ),
     )
     .digest('hex');
+}
+
+/** Link each occurrence to the plan items earlier rounds recorded at the same graph position. */
+function withSupersedes(
+  plan: VerifyCheckItem[],
+  priorPlans: (VerifyCheckItem[] | null | undefined)[],
+  flowId: string,
+) {
+  return plan.map((item) => {
+    const supersedes = [
+      ...new Set(
+        priorPlans
+          .flatMap((p) => p ?? [])
+          .filter(
+            (p) =>
+              p.id !== item.id &&
+              p.sourceFlowNode?.flowId === flowId &&
+              p.sourceFlowNode.nodeId === item.sourceFlowNode?.nodeId &&
+              p.sourceFlowNode.incomingEdgeId === item.sourceFlowNode?.incomingEdgeId,
+          )
+          .map((p) => p.id),
+      ),
+    ];
+    return supersedes.length ? { ...item, supersedes } : item;
+  });
 }
 
 export class AcceptanceFlowModel {
@@ -187,8 +213,56 @@ export class AcceptanceFlowModel {
           updatedAt: new Date(),
         })
         .where(eq(flows.id, flow.id));
+      await this.syncOpenRounds(acceptanceId, tx);
       return { flowId: flow.id, hash: (await this.graph(flow.id, tx)).hash };
     });
+  }
+
+  /**
+   * Editing a graph before any round executes must not fork a new version:
+   * refresh the snapshot and plan of every round that is still only planned,
+   * so the ledger keeps describing the graph the editor shows.
+   */
+  private async syncOpenRounds(acceptanceId: string, tx: Transaction) {
+    const rounds = await tx
+      .select()
+      .from(verifyRuns)
+      .where(eq(verifyRuns.acceptanceId, acceptanceId))
+      .orderBy(asc(verifyRuns.roundIndex))
+      .for('update');
+    for (const round of rounds) {
+      if (!isDraftVerifyRun(round) || !round.flowSnapshots?.length) continue;
+      let plan = round.plan ?? [];
+      const snapshots: VerifyFlowSnapshot[] = [];
+      let changed = false;
+      for (const snapshot of round.flowSnapshots) {
+        const current = await this.graph(snapshot.flowId, tx);
+        const existing = plan.filter((p) => p.sourceFlowNode?.flowId === snapshot.flowId);
+        if (
+          fingerprint(current.snapshot) === fingerprint(snapshot) &&
+          fingerprint(existing.map((p) => p.id)) === fingerprint(current.plan.map((p) => p.id))
+        ) {
+          snapshots.push(snapshot);
+          continue;
+        }
+        changed = true;
+        snapshots.push(current.snapshot);
+        const priorPlans = rounds.filter((r) => r.id !== round.id).map((r) => r.plan);
+        const items = withSupersedes(current.plan, priorPlans, snapshot.flowId);
+        const at = plan.findIndex((p) => p.sourceFlowNode?.flowId === snapshot.flowId);
+        const rest = plan.filter((p) => p.sourceFlowNode?.flowId !== snapshot.flowId);
+        plan =
+          at === -1 ? [...rest, ...items] : [...rest.slice(0, at), ...items, ...rest.slice(at)];
+      }
+      if (!changed) continue;
+      await tx
+        .update(verifyRuns)
+        .set({
+          plan: plan.map((item, index) => ({ ...item, index })),
+          flowSnapshots: snapshots,
+        })
+        .where(eq(verifyRuns.id, round.id));
+    }
   }
 
   private async graph(
@@ -437,23 +511,29 @@ export class AcceptanceFlowModel {
           .select({ plan: verifyRuns.plan })
           .from(verifyRuns)
           .where(eq(verifyRuns.acceptanceId, acceptanceId));
-        graph.plan = graph.plan.map((item) => {
-          const supersedes = [
-            ...new Set(
-              priorRounds
-                .flatMap((r) => r.plan ?? [])
-                .filter(
-                  (p) =>
-                    p.id !== item.id &&
-                    p.sourceFlowNode?.flowId === flowId &&
-                    p.sourceFlowNode.nodeId === item.sourceFlowNode?.nodeId &&
-                    p.sourceFlowNode.incomingEdgeId === item.sourceFlowNode?.incomingEdgeId,
-                )
-                .map((p) => p.id),
-            ),
-          ];
-          return supersedes.length ? { ...item, supersedes } : item;
-        });
+        graph.plan = withSupersedes(
+          graph.plan,
+          priorRounds.map((r) => r.plan),
+          flowId,
+        );
+      }
+      if (!verifyRunId && !sourceRunId) {
+        // Planning again is a refresh of the open draft, never another round.
+        const draft = (
+          await tx
+            .select()
+            .from(verifyRuns)
+            .where(eq(verifyRuns.acceptanceId, acceptanceId))
+            .orderBy(desc(verifyRuns.roundIndex))
+            .for('update')
+        ).find(isDraftVerifyRun);
+        if (draft) {
+          verifyRunId = draft.id;
+          if (draft.flowSnapshots?.some((s) => s.flowId === flowId)) {
+            await this.syncOpenRounds(acceptanceId, tx);
+            return { id: draft.id, verifyRunId: draft.id, flowId };
+          }
+        }
       }
       if (!verifyRunId) {
         const [last] = await tx

@@ -7,6 +7,8 @@ import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { isDraftVerifyRun } from '@lobechat/const/verify';
 import { useSearchParams } from 'react-router';
 
 import { useSingleton } from '@/hooks/useSingleton';
@@ -255,7 +257,9 @@ const AcceptanceCheckInventory = ({
               options={[
                 { label: t('acceptance.filter.roundAll'), value: 'all' },
                 ...[...data.rounds].reverse().map((round) => ({
-                  label: t('acceptance.round', { round: round.run.roundIndex }),
+                  label: isDraftVerifyRun(round.run)
+                    ? t('flow.pendingPlan')
+                    : t('acceptance.round', { round: round.run.roundIndex }),
                   value: String(round.run.roundIndex),
                 })),
               ]}

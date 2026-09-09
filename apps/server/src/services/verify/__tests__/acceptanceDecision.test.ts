@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   findPolicyById: vi.fn(),
   findReportByRun: vi.fn(),
   findRunById: vi.fn(),
+  foldIntoRound: vi.fn(),
   ensureForSubject: vi.fn(),
   listByAcceptance: vi.fn(),
   setDecision: vi.fn(),
@@ -31,6 +32,7 @@ vi.mock('@/database/models/verifyRun', () => ({
   VerifyRunModel: vi.fn(() => ({
     attachToAcceptance: mocks.attachToAcceptance,
     findById: mocks.findRunById,
+    foldIntoRound: mocks.foldIntoRound,
     listByAcceptance: mocks.listByAcceptance,
     setDecision: mocks.setDecision,
   })),
@@ -154,6 +156,19 @@ describe('AcceptanceService decision gating', () => {
       acceptanceId: 'acc-1',
     });
     expect(mocks.attachToAcceptance).toHaveBeenCalledWith('run-2', 'acc-1', undefined);
+  });
+
+  it('folds a new run into the draft round instead of opening another', async () => {
+    mocks.findById.mockResolvedValue(acceptance('planned'));
+    mocks.findRunById.mockResolvedValue({ acceptanceId: null, id: 'run-2', plan: [] });
+    mocks.listByAcceptance.mockResolvedValue([
+      { id: 'run-1', planConfirmedAt: null, roundIndex: 1, status: 'planned', userDecision: null },
+    ]);
+    mocks.foldIntoRound.mockResolvedValue({ acceptanceId: 'acc-1', id: 'run-1', roundIndex: 1 });
+
+    await expect(service().attachRun('run-2', 'acc-1')).resolves.toMatchObject({ id: 'run-1' });
+    expect(mocks.foldIntoRound).toHaveBeenCalledWith('run-2', 'run-1');
+    expect(mocks.attachToAcceptance).not.toHaveBeenCalled();
   });
 
   it.each(['delivered', 'errored'])('accepts a settled (%s) delivery', async (status) => {
