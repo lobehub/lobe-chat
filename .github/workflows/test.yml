@@ -153,7 +153,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: blob-report-${{ matrix.shard }}
-          path: .vitest-reports
+          path: .vitest/blob
           include-hidden-files: true
           retention-days: 1
 
@@ -183,7 +183,7 @@ jobs:
       - name: Download blob reports
         uses: actions/download-artifact@v7
         with:
-          path: .vitest-reports
+          path: .vitest/blob
           pattern: blob-report-*
           merge-multiple: true
 
@@ -307,7 +307,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: server-blob-report-${{ matrix.shard }}
-          path: .vitest-reports
+          path: .vitest/blob
           include-hidden-files: true
           retention-days: 1
 
@@ -337,7 +337,7 @@ jobs:
       - name: Download blob reports
         uses: actions/download-artifact@v7
         with:
-          path: .vitest-reports
+          path: .vitest/blob
           pattern: server-blob-report-*
           merge-multiple: true
 
