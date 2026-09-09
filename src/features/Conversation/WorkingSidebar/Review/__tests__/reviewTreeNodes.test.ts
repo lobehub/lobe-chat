@@ -71,4 +71,21 @@ describe('getDefaultExpandedKeys', () => {
       itemKey('/repo/sub', makePatch('5.ts')),
     ]);
   });
+
+  it('stops before the next diff would exceed the byte budget', () => {
+    const firstPatch = makePatch('small.ts');
+    const largePatch = makePatch('large.ts');
+    firstPatch.patch = 'x'.repeat(100 * 1024);
+    largePatch.patch = 'x';
+
+    expect(
+      getDefaultExpandedKeys([
+        { ...group('/repo', 'repo', []), patches: [firstPatch, largePatch] },
+      ]),
+    ).toEqual([itemKey('/repo', firstPatch)]);
+  });
+
+  it('returns no default expansions when every group is empty', () => {
+    expect(getDefaultExpandedKeys([group('/repo', 'repo', [])])).toEqual([]);
+  });
 });
