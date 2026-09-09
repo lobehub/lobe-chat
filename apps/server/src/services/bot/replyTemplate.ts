@@ -362,7 +362,7 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     errorInsufficientWorkspaceCredits:
       "**Workspace credits exhausted.**\nThis workspace's shared credits can't cover this run's estimated cost. Ask a workspace admin to top up or upgrade the workspace, or switch to a less expensive model in the agent's settings.",
     errorSubscriptionPlanLimit:
-      "**Plan credits exhausted.**\nThe subscription credits this bot runs on are used up for this billing period. Ask the bot owner to top up credits or upgrade their plan on the LobeHub website, or configure a custom model API in the agent's provider settings.",
+      "**Plan limit reached.**\nThe subscription plan this bot runs on can't cover this request — either its credits are used up for this billing period, or the plan doesn't include this model. Ask the bot owner to upgrade or top up their plan on the LobeHub website, or configure a custom model API in the agent's provider settings.",
     errorInvalidProviderAPIKey:
       "**Invalid or missing API key.**\nThe configured model provider rejected its API key. Please verify the key in the agent's provider settings (it may be expired, revoked, or mistyped) and try again.",
     errorLocationNotSupported:
@@ -475,7 +475,7 @@ const SYSTEM_STRINGS: Partial<Record<BotReplyLocale, SystemStrings>> = {
     errorInsufficientWorkspaceCredits:
       '**工作区额度已用尽**\n当前工作区的共享额度不足以覆盖本次运行的预估费用。请联系工作区管理员充值或升级工作区，或在 Agent 设置中切换到费用更低的模型。',
     errorSubscriptionPlanLimit:
-      '**订阅额度已用尽**\n该机器人所使用的订阅积分在本周期内已用完。请联系机器人所有者前往 LobeHub 网页端充值积分或升级计划，或在 Agent 的 Provider 设置中配置自定义模型 API。',
+      '**已达到订阅计划限制**\n该机器人所使用的订阅计划无法覆盖本次请求：可能是本周期的订阅积分已用完，也可能是当前计划不包含该模型。请联系机器人所有者前往 LobeHub 网页端升级计划或充值，或在 Agent 的 Provider 设置中配置自定义模型 API。',
     errorInvalidProviderAPIKey:
       '**API Key 无效或缺失**\n所配置的模型 Provider 拒绝了 API Key，可能已过期、被吊销或填写错误。请到 Agent 的 Provider 设置中检查并更新 API Key 后重试。',
     errorLocationNotSupported:
@@ -559,9 +559,10 @@ const FRIENDLY_ERROR_BY_TYPE: Record<string, keyof SystemStrings> = {
   // so the fix is topping up / upgrading — not editing the input (without them
   // here the plan-limit pair fell to the `user` tier's "check your input").
   // `InsufficientBudgetForModel` is "balance below this run's estimate";
-  // `FreePlanLimit` / `SubscriptionPlanLimit` mean the free / paid allowance
-  // itself is exhausted, so their copy points at the plan rather than at a
-  // cheaper model. `budget` then refines any of them by the allowance that
+  // `FreePlanLimit` / `SubscriptionPlanLimit` mean the plan itself is the
+  // limit — its allowance is exhausted, or (per the error taxonomy) the tier
+  // doesn't cover the requested model — so their copy points at the plan
+  // rather than at a cheaper model, and doesn't claim the credits are spent. `budget` then refines any of them by the allowance that
   // actually ran out (see {@link BUDGET_SCOPE_ERROR}).
   FreePlanLimit: 'errorFreePlanLimit',
   InsufficientBudgetForModel: 'errorInsufficientCredits',

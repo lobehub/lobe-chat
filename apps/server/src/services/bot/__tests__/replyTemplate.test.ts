@@ -421,7 +421,7 @@ describe('replyTemplate', () => {
       const expected: Record<string, string> = {
         FreePlanLimit: 'Free plan limit reached',
         InsufficientBudgetForModel: 'Not enough credits',
-        SubscriptionPlanLimit: 'Plan credits exhausted',
+        SubscriptionPlanLimit: 'Plan limit reached',
       };
 
       for (const [code, header] of Object.entries(expected)) {
@@ -497,7 +497,7 @@ describe('replyTemplate', () => {
         });
 
         expect(out).toContain('Member budget in this workspace is used up');
-        expect(out).not.toContain('Plan credits exhausted');
+        expect(out).not.toContain('Plan limit reached');
       });
 
       it('names the shared workspace pool for a workspace-scoped allowance', () => {
