@@ -27,6 +27,11 @@ import {
 } from './dmPairingStore';
 import { submitBotFeedback } from './feedbackSubmit';
 import {
+  BOT_QUEUE_RETENTION_MS,
+  configurePersistentBotState,
+  isPersistentBotQueueEnabled,
+} from './persistentBotQueue';
+import {
   type BotPlatformRuntimeContext,
   type BotReplyLocale,
   buildRuntimeKey,
@@ -560,6 +565,10 @@ export class BotMessageRouter {
       userName: `lobehub-bot-${label}`,
     };
 
+    if (isPersistentBotQueueEnabled()) {
+      config.concurrency = { strategy: 'queue', queueEntryTtlMs: BOT_QUEUE_RETENTION_MS };
+    }
+
     const redisClient = getAgentRuntimeRedisClient();
     if (redisClient) {
       config.state = createIoRedisState({
@@ -567,6 +576,7 @@ export class BotMessageRouter {
         keyPrefix: `chat-sdk:${label}`,
         logger: new ConsoleLogger(),
       });
+      if (isPersistentBotQueueEnabled()) configurePersistentBotState(config.state);
     }
 
     return new Chat(config);

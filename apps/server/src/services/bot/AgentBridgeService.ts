@@ -19,6 +19,7 @@ import { SystemAgentService } from '@/server/services/systemAgent';
 
 import { createBotCompletionWebhook } from './createBotCompletionHook';
 import { formatPrompt as formatPromptUtil } from './formatPrompt';
+import { isPersistentBotQueueEnabled, waitForBotOperation } from './persistentBotQueue';
 import type { BotReplyLocale, PlatformClient } from './platforms';
 import {
   getBotReplyLocale,
@@ -1217,6 +1218,17 @@ export class AgentBridgeService {
           );
         }
       }
+    }
+
+    if (result.operationId && isPersistentBotQueueEnabled()) {
+      // Keep the Chat SDK handler (and its Redis lease) open until the run settles.
+      // Otherwise a follow-up starts before the topic is available and is rejected
+      // before its user message is persisted.
+      const topicModel = new TopicModel(this.db, this.userId, this.workspaceId);
+      await waitForBotOperation(async () => {
+        const topic = await topicModel.findById(result.topicId);
+        return topic?.metadata?.runningOperation?.operationId === result.operationId;
+      });
     }
 
     return { reply: '', topicId: result.topicId };

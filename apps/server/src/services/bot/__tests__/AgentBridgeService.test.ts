@@ -131,6 +131,45 @@ describe('AgentBridgeService', () => {
     });
   });
 
+  it('keeps the subscribed handler open while its queued operation is running beyond 90 seconds', async () => {
+    vi.stubEnv('BOT_QUEUE_WAIT_FOR_COMPLETION', '1');
+    vi.stubEnv('VERCEL', '');
+    vi.useFakeTimers();
+    try {
+      mockTopicFindById.mockResolvedValue({
+        agentId: 'agent-1',
+        id: 'topic-1',
+        updatedAt: new Date(),
+        metadata: { runningOperation: { operationId: 'op-1' } },
+      });
+      mockExecAgent.mockResolvedValue({ success: true, operationId: 'op-1', topicId: 'topic-1' });
+      let finished = false;
+      const service = new AgentBridgeService(FAKE_DB, USER_ID);
+      const pending = service
+        .handleSubscribedMessage(createThread({ topicId: 'topic-1' }), createMessage(), {
+          agentId: 'agent-1',
+          client: createClient(),
+        })
+        .then(() => {
+          finished = true;
+        });
+      await vi.advanceTimersByTimeAsync(95_000);
+      expect(mockExecAgent).toHaveBeenCalledTimes(1);
+      expect(finished).toBe(false);
+      mockTopicFindById.mockResolvedValue({
+        agentId: 'agent-1',
+        id: 'topic-1',
+        metadata: { runningOperation: null },
+      });
+      await vi.advanceTimersByTimeAsync(1000);
+      await pending;
+      expect(finished).toBe(true);
+    } finally {
+      vi.useRealTimers();
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('calls execAgent with hooks in queue mode for mention', async () => {
     const service = new AgentBridgeService(FAKE_DB, USER_ID);
     const thread = createThread();
