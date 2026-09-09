@@ -147,6 +147,40 @@ interface DiscordChannelContext {
   thread?: { id: string; name?: string };
 }
 
+/**
+ * Resolve the `{ platform, channelId }` pair the `lobe-message` tool needs to
+ * act on the conversation this run is replying in.
+ *
+ * `PlatformClient.extractChatId` is the decoder each platform already uses for
+ * its own outbound calls, so what it returns is by construction what that
+ * platform's message service accepts as `channelId` — Feishu/Lark `oc_…`,
+ * Discord channel-or-thread id, Telegram chat id. A platform whose history
+ * read cannot be scoped that precisely (a Slack reply thread decodes to its
+ * parent channel) overrides `extractConversationId` and returns undefined, and
+ * the block is omitted rather than pointing the model at the wrong history.
+ *
+ * Returns undefined when we have no bot context or no client (e.g. a run that
+ * didn't originate from an IM thread) — the prompt block is then simply omitted.
+ */
+function resolveCurrentChannel(
+  botContext: ChatTopicBotContext | undefined,
+  client: PlatformClient | undefined,
+): { id: string; platformId: string } | undefined {
+  if (!botContext?.platformThreadId || !client) return undefined;
+  try {
+    const id = client.extractConversationId
+      ? client.extractConversationId(botContext.platformThreadId)
+      : client.extractChatId(botContext.platformThreadId);
+    if (!id) return undefined;
+    return { id, platformId: botContext.platform };
+  } catch (error) {
+    // A malformed/legacy threadId must never break the run — the model just
+    // loses the shortcut and falls back to asking, which is today's behavior.
+    log('resolveCurrentChannel: failed to extract chat id (non-fatal): %O', error);
+    return undefined;
+  }
+}
+
 interface ThreadState {
   channelContext?: DiscordChannelContext;
   /**
@@ -756,9 +790,18 @@ export class AgentBridgeService {
       opts.botContext?.platform,
       opts.botContext?.platformThreadId,
     )?.includes(MessageApiName.readMessages);
+    // The `channelId` the model must pass to `lobe-message` to act on THIS
+    // conversation. `extractChatId` is the same decoder each platform client
+    // already uses for its own outbound calls, so the injected value is exactly
+    // what the message service expects (Feishu `oc_…`, Discord channel/thread
+    // id, Slack channel id). Without it `readMessages` — whose `channelId` is
+    // required, and which most platforms have no `listChannels` to discover —
+    // is unusable, and the model falls back to asking the user for a group ID.
+    const currentChannel = resolveCurrentChannel(opts.botContext, opts.client);
     const botPlatformContext: BotPlatformContext | undefined = platformDef
       ? {
           canReadHistory,
+          ...(currentChannel && { currentChannel }),
           platformName: platformDef.name,
           supportsMarkdown: platformDef.supportsMarkdown !== false,
         }

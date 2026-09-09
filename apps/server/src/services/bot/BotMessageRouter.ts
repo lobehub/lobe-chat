@@ -1325,18 +1325,40 @@ export class BotMessageRouter {
       // type `/new` directly without mentioning the bot), but they are NOT exempt
       // from the access gates below.
       //
-      // a subscribed channel thread with only one human follower
-      // is functionally a private 1:1 with the bot, so the @mention
-      // requirement is dropped while `count <= 1`. Tracked + counted here
-      // regardless of which exemption ultimately fires so the
-      // 1-human-vs-many transition is visible to the announcement gate.
+      // A conversation holding only the operator and this bot is a private 1:1
+      // in all but name, so the @mention requirement is dropped there. Ask the
+      // platform when it can answer from real membership; only fall back to
+      // "how many distinct humans have SPOKEN here" when it can't.
+      //
+      // That fallback is a poor proxy and must not be trusted where the
+      // subscribed thread is an entire group chat: silent members are never
+      // counted, so a quiet 30-person group reads as private and the bot
+      // answers everything the one talkative person says — including messages
+      // @-ing a different bot. It survives only for platforms whose subscribed
+      // threads really are narrow sub-conversations (Discord/Slack), where
+      // speakers and participants are close to the same set.
+      //
+      // Participants are tracked either way so the announcement gate below can
+      // still see the 1-human-vs-many transition.
       const { count: humanCount } = await trackThreadParticipant(thread, message);
-      const isSingleHumanThread = humanCount <= 1;
-      const isAddressedToBot =
+      const isExplicitlyAddressed =
         thread.isDM ||
         message.isMention === true ||
-        context?.skipped?.some((m) => m.isMention === true) === true ||
-        isSingleHumanThread;
+        context?.skipped?.some((m) => m.isMention === true) === true;
+      // Only consult membership when it can change the outcome: a DM or an
+      // @-mention is addressed to the bot regardless, and the platform lookup
+      // behind `isSoloBotConversation` is a network round-trip whenever its
+      // cache has lapsed — not something a direct message should wait on.
+      const isSoloBotConversation =
+        !isExplicitlyAddressed &&
+        (client.isSoloBotConversation
+          ? await client.isSoloBotConversation(thread.id).catch((error) => {
+              // Fail closed: an unprovable chat stays mention-only.
+              log('onSubscribedMessage: isSoloBotConversation failed: %O', error);
+              return false;
+            })
+          : humanCount <= 1);
+      const isAddressedToBot = isExplicitlyAddressed || isSoloBotConversation;
       const isCommand = looksLikeCommand(message.text);
       // operator-configured keyword match also wakes the bot in a
       // subscribed group thread. Skipped (debounced) siblings are inspected
